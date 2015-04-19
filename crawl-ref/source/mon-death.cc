@@ -450,9 +450,10 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
     const monster_type corpse_class = fill_out_corpse(mons, mons->type,
                                                       corpse);
 
-    // Corpseless monsters still drop gold for Gozag. (Not firewood, though.)
+    // Corpseless monsters still drop gold for Gozag.
     if (corpse_class == MONS_NO_MONSTER &&
-        !(in_good_standing(GOD_GOZAG) && !mons_is_firewood(mons)))
+        !(in_good_standing(GOD_GOZAG)
+          && !mons_class_flag(mons->type, M_NO_EXP_GAIN)))
     {
         return -1;
     }
