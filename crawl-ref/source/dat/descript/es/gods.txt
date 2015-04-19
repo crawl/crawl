@@ -77,7 +77,7 @@ Kikubaaqudgha es un terrible dios demonio, al que sirven aquellos que quieren
 manipular los poderes de la muerte. Kikubaaqudgha es una deidad maligna y
 demanda muertes de criaturas vivas y de demonios tan a menudo como sea posible.
 A cambio, Kikubaaqudgha ofrece gran asistencia a quien aspire ser un
-nigromante: libros de hechizos repleto de magia negra, protección y una vasta
+nigromante: libros de hechizos repletos de magia negra, protección y una vasta
 fuente de cadáveres directamente del mausoleo de Kikubaaqudgha.
 %%%%
 Lugonu
@@ -100,7 +100,7 @@ malvado dios.
 %%%%
 Nemelex Xobeh
 
-Nemelex es un dios tramposo e impredecible, cutos poderes pueden ser invocados
+Nemelex es un dios tramposo e impredecible, cuyos poderes pueden ser invocados
 mediante paquetes de cartas mágicas pintadas con el icor de demonios. Sus
 seguidores deben explorar el mundo, a cambio recibirán barajas de cartas.
 Ellos deben confiar en las cartas y usarlas tanto como sea posible. Además,
@@ -117,7 +117,7 @@ a victorias fáciles. Okawaru menosprecia a quienes hieren a sus aliados.
 Qazlal
 
 Qazlal «invocador de tormentas» es un dios violento de la tempestad, quien 
-disfruta desencadenar las fuerzas de la naturaleza contra el desprevenido.
+disfruta desencadenando las fuerzas de la naturaleza contra el desprevenido.
 Quienes inviten la mirada de Qazlal se encontrarán en el ojo de la tormenta
 de destrucción elemental, del cuál sólo su dios puede protegerlos. Los 
 adoradores beatos de Qazlal ganarán la habilidad de dirigir y controlar el
@@ -193,7 +193,7 @@ la carne de seres inteligentes. Ellos deben diezmar una fracción de todo el
 dinero ganado, preferiblemente seguido de donaciones mayores. A cambio, sus
 seguidores podrán invocar la ira de Zin contra los pecadores, y eventualmente
 ganar varias protecciones divinas. Los seguidores de Zin se pueden convertir a
-Elyvilon o a the Shining One conservando una parte de su piedad.
+Elyvilon o a El Resplandeciente conservando una parte de su piedad.
 %%%%
 Zin powers
 
