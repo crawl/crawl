@@ -2,12 +2,18 @@
 #
 # An early portal vault featuring an ally. 
 # Many thanks to gammafunk, |amethyst, PleasingFungus!
+#
+# About ally placement:
+#  - early on, in the arrival subvault
+#  - with attributes att:friendly and no_staird
+#  - when placing uniques, provide a default to fall back on
+#  - unless you know what you are doing, no items
+#
+# Example:
+#   KMONS: @ = Sigmund att:friendly no_stairs ; nothing , \
+#              human att:friendly no_stairs ; nothing
 
 # TODO:
-#  - the ally should *not* leave the vault (perhaps needs a new monster
-#    flag ("will not leave level it is generated on) -- note that it may
-#    happen the player acquires other allies (e.g. via lucky Yredelemnul)
-#    which then should leave the vault
 #  - killing the ally should give a new milestone ("You killed your friend
 #    Sigmund.")
 #  - needs a dungeon depth for monster spawning purposes (scroll of summoning)
