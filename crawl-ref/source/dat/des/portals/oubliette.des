@@ -4,7 +4,6 @@
 # Many thanks to gammafunk, |amethyst, PleasingFungus!
 
 # TODO:
-#  - add timer
 #  - the ally should *not* leave the vault (perhaps needs a new monster
 #    flag ("will not leave level it is generated on) -- note that it may
 #    happen the player acquires other allies (e.g. via lucky Yredelemnul)
@@ -12,6 +11,7 @@
 #  - killing the ally should give a new milestone ("You killed your friend
 #    Sigmund.")
 #  - needs a depth for monster spawning purposes (scroll of summoning)
+#  - portal/rock colours/tiles are preliminary
 
 # Principal goal: a very early portal vault, like Sewer or Ossuary, which
 # starts with the player liberating or otherwise acquiring an ally, and then
@@ -87,29 +87,84 @@
 # should not be punished or commented on within the game. (The log will tell.)
 
 
+{{
+function oubliette_portal(e)
+  local timeout_turns = crawl.random_range(600, 800)
+
+  local messager =
+    timed_msg {
+      initmsg = { "You hear faint moaning.",
+                  "There is an entrance to an oubliette on this level. "
+                  .. "Hurry and find it before it's too late!" },
+      finalmsg = "The moan is almost imperceptible now.",
+
+      verb = 'moaning',
+      -- This is always preceded by an article, so...
+      noisemaker = 'moaning',
+      ranges = {
+        { 5000, 'steady ' },  { 4000, '' },
+        { 2500, 'desperate ' }, { 1500, 'hopeless ' },
+        { 0, 'moribound ' }
+      }
+    }
+
+  e.lua_marker('O',
+      timed_marker {
+        disappear = "The moaning has ceased.",
+        entity = 'staircase',
+        turns = timeout_turns,
+        single_timed = true,
+        floor = "expired_portal",
+        feat_tile = "dngn_portal_oubliette",
+        msg = messager })
+  e.tags("uniq_oubliette no_monster_gen chance_oubliette")
+  e.chance(10000)                   # CHANGE TO 500 AFTER TESTING!
+  e.kfeat("O = enter_oubliette")
+  e.colour("' = yellow")            # COPIED FROM OSSUARY
+  e.ftile("' = floor_sandstone")    # NEEDS SPECIFIC TILES!
+  e.tile("c = wall_tomb")           #
+end
+
+-- Use the following line in destination maps after all SUBSTs
+-- : oubliette_setup_features(_G)
+-- Note that the function also defines < to be the exit portal.
+function oubliette_setup_features(e)
+  e.kfeat("< = exit_oubliette")
+end
+
+############################################################
+# Portal entry vaults
+
+default-depth: D:2
+# TODO: Change to D:3-5 later on
+
 NAME:   portal_oubliette_entry_generic
-KFEAT:  O = enter_oubliette
-PLACE:  D:2
+: oubliette_portal(_G)
 MAP
-O
+...
+.O.
+...
 ENDMAP
 
-#### The destination Oubliette vaults ###
+#### The destination Oubliette vaults ######################
 
 default-depth: Oubli
 
 NAME:   oubliette_test
 ## Test vault
 ORIENT: encompass
-MONS:   Sigmund att:friendly
-KFEAT:  < = exit_oubliette
+KMONS:  @ = Sigmund att:friendly
+MONS:   hobgoblin
+: oubliette_setup_features(_G)
 MAP
 xxxxx
 x...x
 x.A.x
 x...x
-x.1.x
+x.@.x
 x...x
 x.<.x
+x...x
+x111x
 x...x
 xxxxx
