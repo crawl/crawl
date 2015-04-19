@@ -3480,7 +3480,7 @@ int monster::armour_class(bool calc_unid) const
 
     // Penalty due to bad temp mutations.
     if (has_ench(ENCH_WRETCHED))
-        ac -= 4 * get_ench(ENCH_WRETCHED).degree;
+        ac -= 8;
 
     // corrosion hurts.
     if (has_ench(ENCH_CORROSION))
