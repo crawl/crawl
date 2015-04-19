@@ -10,8 +10,10 @@
 #    which then should leave the vault
 #  - killing the ally should give a new milestone ("You killed your friend
 #    Sigmund.")
-#  - needs a depth for monster spawning purposes (scroll of summoning)
+#  - needs a dungeon depth for monster spawning purposes (scroll of summoning)
 #  - portal/rock colours/tiles are preliminary
+#  - timer announcement messages need care!
+#  - make sure that uniques haven't been encountered in this game already
 
 # Principal goal: a very early portal vault, like Sewer or Ossuary, which
 # starts with the player liberating or otherwise acquiring an ally, and then
@@ -148,24 +150,90 @@ MAP
 ENDMAP
 
 #### The destination Oubliette vaults ######################
+#
+# Each map is built out of several subvaults:
+#  - the arrival (containg stone arch, exit, and ally)
+#  - minor opposition
+#  - boss fight
 
 default-depth: Oubli
 
-NAME:   oubliette_test
-## Test vault
-ORIENT: encompass
-KMONS:  @ = Sigmund att:friendly
-MONS:   hobgoblin
-: oubliette_setup_features(_G)
+NAME:   oubliette_tiny_arrival_1
+TAGS:   oubliette_tiny_arrival_subvault
+KMONS:  @ = Sigmund att:friendly, human att:friendly
+KFEAT:  < = exit_oubliette
 MAP
 xxxxx
 x...x
-x.A.x
-x...x
-x.@.x
-x...x
-x.<.x
-x...x
-x111x
+x.A.xx
+x.@..+
+x.<.xx
 x...x
 xxxxx
+ENDMAP
+
+NAME:    oubliette_tiny_arrival_2
+TAGS:    oubliette_tiny_arrival_subvault
+KMONS:   @ = white imp att:friendly
+KFEAT:   < = exit_oubliette
+SHUFFLE: =m
+SUBST:   = : +
+MAP
+xxxxx
+x@=.x
+xmx.xx
+x..A.+
+xmx.xx
+x<=.x
+xxxxx
+ENDMAP
+
+NAME:   oubliette_tiny_minor_1
+TAGS:   oubliette_tiny_minor_subvault
+MONS:   hobgoblin / worm
+MAP
+xxxxxxxxx
+x...1...xx
+....1....
+x...1...xx
+xxxxxxxxx
+ENDMAP
+
+NAME:   oubliette_tiny_minor_2
+TAGS:   oubliette_tiny_minor_subvault
+MONS:   crimson imp
+MAP
+xxxxxxxxx
+x..xxx..xx
+....1....
+x..xxx..xx
+xxxxxxxxx
+ENDMAP
+
+NAME:   oubliette_tiny_boss_1
+TAGS:   oubliette_tiny_boss_subvault
+MONS:   ogre
+MAP
+xxxxxxx
+ x...*x
++..1.*x
+ x...*x
+xxxxxxx
+ENDMAP
+
+NAME:     oubliette_tiny
+ORIENT:   encompass
+TAGS:     no_rotate
+SUBVAULT: A : oubliette_tiny_arrival_subvault
+SUBVAULT: B : oubliette_tiny_minor_subvault
+SUBVAULT: C : oubliette_tiny_boss_subvault
+: oubliette_setup_features(_G)
+MAP
+AAAAA
+AAAAABBBBBBBBBCCCCCCC
+AAAAAABBBBBBBBBCCCCCC
+AAAAAABBBBBBBBCCCCCCC
+AAAAAABBBBBBBBBCCCCCC
+AAAAABBBBBBBBBCCCCCCC
+AAAAA
+ENDMAP
