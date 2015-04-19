@@ -160,7 +160,7 @@ default-depth: Oubli
 
 NAME:   oubliette_tiny_arrival_1
 TAGS:   oubliette_tiny_arrival_subvault
-KMONS:  @ = Sigmund att:friendly, human att:friendly
+KMONS:  @ = Sigmund att:friendly no_stairs, human att:friendly no_stairs
 KFEAT:  < = exit_oubliette
 MAP
 xxxxx
@@ -174,7 +174,7 @@ ENDMAP
 
 NAME:    oubliette_tiny_arrival_2
 TAGS:    oubliette_tiny_arrival_subvault
-KMONS:   @ = white imp att:friendly
+KMONS:   @ = white imp att:friendly no_stairs
 KFEAT:   < = exit_oubliette
 SHUFFLE: =m
 SUBST:   = : +
