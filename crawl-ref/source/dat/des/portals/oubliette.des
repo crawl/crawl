@@ -139,6 +139,23 @@ end
 function oubliette_setup_features(e)
   e.kfeat("< = exit_oubliette")
 end
+ 
+oubliette_ally = util.random_from({"Sigmund", "Dowan", "Duvessa", "Pikel", "random"}) 
+
+function place_ally(e)
+    if oubliette_ally == "Sigmund" then
+        e.kmons("@ = Sigmund att:friendly no_stairs ; nothing")
+    elseif oubliette_ally == "Dowan" then
+        e.kmons("@ = Dowan att:friendly no_stairs ; nothing")
+    elseif oubliette_ally == "Duvessa" then
+        e.kmons("@ = Duvessa att:friendly no_stairs ; nothing")
+    elseif oubliette_ally == "Pikel" then
+        e.kmons("@ = Pikel att:friendly no_stairs ; nothing")
+    else
+        e.kmons("@ = big kobold att:friendly no_stairs ; nothing")
+        e.kmons("@ = Dowan att:friendly no_stairs ; nothing")
+    end
+end
 }}
 
 ############################################################
@@ -168,8 +185,8 @@ default-depth: Oubli
 
 NAME:   oubliette_tiny_arrival_1
 TAGS:   oubliette_tiny_arrival_subvault
-KMONS:  @ = Sigmund att:friendly no_stairs, human att:friendly no_stairs
-KFEAT:  < = exit_oubliette
+: place_ally(_G)
+: oubliette_setup_features(_G)
 MAP
 xxxxx
 x...x
@@ -182,10 +199,10 @@ ENDMAP
 
 NAME:    oubliette_tiny_arrival_2
 TAGS:    oubliette_tiny_arrival_subvault
-KMONS:   @ = white imp att:friendly no_stairs
-KFEAT:   < = exit_oubliette
 SHUFFLE: =m
 SUBST:   = : +
+: place_ally(_G)
+: oubliette_setup_features(_G)
 MAP
 xxxxx
 x@=.x
@@ -198,10 +215,9 @@ ENDMAP
 
 NAME:    oubliette_tiny_arrival_infighting
 TAGS:    oubliette_tiny_arrival_subvault
-WEIGHT:  50000
-KMONS:   @ = Sigmund att:friendly no_stairs, human att:friendly no_stairs
-KFEAT:   < = exit_oubliette
 MONS:    rat generate_awake / jackal generate_awake w:5 / nothing
+: place_ally(_G)
+: oubliette_setup_features(_G)
 MAP
 xxxxx
 xA..x
@@ -241,13 +257,32 @@ ENDMAP
 NAME:   oubliette_tiny_boss_1
 TAGS:   oubliette_tiny_boss_subvault
 MONS:   ogre
+# FIXME: The following code is supposed to use the oubliette_ally variable
+#        (which is rolled correctly at the beginning) to affect the final
+#        subvault. It doesn't, though.
+#
+# {{ 
+#   if oubliette_ally == "Dowan" then
+#     e.nsubst("* = 1:X / *:*")
+#     e.kmons("X = Duvessa")
+#   elseif oubliette_ally == "Duvessa" then
+#     e.nsubst("* = 1:X / *:*")
+#     e.kmons("X = Dovan")
+#   else
+#     e.nsubst("* = 1:X / *:*")
+#     e.kitem("X = any scythe")     
+#   end
+# }}
 MAP
 xxxxxxx
  x...*x
-+..1.*x
++..1.*x	
  x...*x
 xxxxxxx
 ENDMAP
+
+
+#### The full oubliette vaults #############################
 
 NAME:     oubliette_tiny
 ORIENT:   encompass
