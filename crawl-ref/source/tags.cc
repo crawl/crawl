@@ -3536,6 +3536,13 @@ static void tag_read_you_dungeon(reader &th)
 #endif
         branch_bribe[j] = unmarshallInt(th);
     }
+    // Initialize data for any branches added after this save version.
+    for (int j = count; j < NUM_BRANCHES; ++j)
+    {
+        brdepth[j] = branches[j].numlevels;
+        brentry[j] = level_id(branches[j].parent_branch, branches[j].mindepth);
+        branch_bribe[j] = 0;
+    }
 #if TAG_MAJOR_VERSION == 34
     // Deepen the Abyss; this is okay since new abyssal stairs will be
     // generated as the place shifts.
