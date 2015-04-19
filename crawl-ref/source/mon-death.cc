@@ -431,6 +431,9 @@ void goldify_corpse(item_def &corpse)
 // Returns the item slot of a generated corpse, or -1 if no corpse.
 int place_monster_corpse(const monster* mons, bool silent, bool force)
 {
+    // Under Gozag, monsters turn into gold on death.
+    bool goldify = in_good_standing(GOD_GOZAG);
+
     // The game can attempt to place a corpse for an out-of-bounds monster
     // if a shifter turns into a giant spore and explodes. In this
     // case we place no corpse since the explosion means anything left
@@ -452,15 +455,14 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
 
     // Corpseless monsters still drop gold for Gozag.
     if (corpse_class == MONS_NO_MONSTER &&
-        !(in_good_standing(GOD_GOZAG)
-          && !mons_class_flag(mons->type, M_NO_EXP_GAIN)))
+        !(goldify && !mons_class_flag(mons->type, M_NO_EXP_GAIN)))
     {
         return -1;
     }
 
-    // Don't place a corpse?  If a zombified monster is somehow capable
+    // Don't place a corpse? If a zombified monster is somehow capable
     // of leaving a corpse, then always place it.
-    if (mons_class_is_zombified(mons->type))
+    if (mons_class_is_zombified(mons->type) && !goldify)
         force = true;
 
     const bool vault_forced =
@@ -472,11 +474,11 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
 
     // 50/50 chance of getting a corpse, unless it's forced by the caller or
     // the monster's flags.
-    // gozag always gets a "corpse". (gold.)
-    if (!force && !vault_forced && !in_good_standing(GOD_GOZAG) && coinflip())
+    // Gozag always gets a "corpse".
+    if (!force && !vault_forced && !goldify && coinflip())
         return -1;
 
-    if (!force && in_good_standing(GOD_GOZAG))
+    if (!force && goldify)
         goldify_corpse(corpse);
 
     int o = get_mitm_slot();
