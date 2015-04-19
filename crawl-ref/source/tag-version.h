@@ -161,6 +161,7 @@ enum tag_minor_version
     TAG_MINOR_ROTTING,             // Remove rot-over-time
     TAG_MINOR_STAT_ZERO_DURATION,  // Stat zero uses a duration
     TAG_MINOR_INT_REGEN,           // hp/mp regen are ints
+    TAG_MINOR_OUBLIETTE,           // Add the Oubliette portal
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

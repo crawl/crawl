@@ -3433,6 +3433,8 @@ static PlaceInfo unmarshallPlaceInfo(reader &th)
     if (br == -1)
         br = NUM_BRANCHES;
     ASSERT(br >= 0);
+    if (th.getMinorVersion() < TAG_MINOR_OUBLIETTE && br == BRANCH_OUBLIETTE)
+        br = NUM_BRANCHES;
     place_info.branch      = static_cast<branch_type>(br);
 #else
     place_info.branch      = static_cast<branch_type>(unmarshallInt(th));
