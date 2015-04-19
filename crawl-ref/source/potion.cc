@@ -724,7 +724,7 @@ public:
 
     bool can_quaff() const
     {
-        return you.can_safely_mutate();
+        return you.can_safely_mutate() && how_mutated() > 0;
     }
 
     bool effect(bool=true, int=40) const
@@ -747,6 +747,11 @@ public:
     {
         if (was_known && _disallow_mut())
             return false;
+        if (was_known && how_mutated() == 0)
+        {
+            mpr("You have no mutations to cure!");
+            return false;
+        }
         effect(was_known);
         return true;
     }
