@@ -2181,12 +2181,13 @@ int temp_mutation_roll()
 /**
  * How mutated is the player?
  *
- * @param innate Whether to count innate mutations.
- * @param levels Whether to add up mutation levels.
+ * @param innate Whether to count innate mutations (default false).
+ * @param levels Whether to add up mutation levels (default false).
+ * @param temp Whether to count temporary mutations (default true).
  * @return Either the number of matching mutations, or the sum of their
  *         levels, depending on \c levels
  */
-int how_mutated(bool innate, bool levels)
+int how_mutated(bool innate, bool levels, bool temp)
 {
     int j = 0;
 
@@ -2196,6 +2197,17 @@ int how_mutated(bool innate, bool levels)
         {
             if (!innate && you.innate_mutation[i] >= you.mutation[i])
                 continue;
+
+            if (!temp && you.temp_mutation[i] >= you.mutation[i])
+                continue;
+
+            // Innate mutation upgraded by a temporary mutation.
+            if (!temp && !innate
+                && you.temp_mutation[i] + you.innate_mutation[i]
+                   >= you.mutation[i])
+            {
+                continue;
+            }
 
             if (levels)
             {
