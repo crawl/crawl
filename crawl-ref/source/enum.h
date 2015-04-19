@@ -737,6 +737,7 @@ enum branch_type                // you.where_are_you
 #if TAG_MAJOR_VERSION == 34
     BRANCH_DEPTHS,
 #endif
+    BRANCH_OUBLIETTE,
     NUM_BRANCHES
 };
 
@@ -1655,6 +1656,9 @@ enum dungeon_feature_type
     DNGN_ENTER_ICE_CAVE,
     DNGN_ENTER_VOLCANO,
     DNGN_ENTER_WIZLAB,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_ENTER_OUBLIETTE,
+#endif
 #if TAG_MAJOR_VERSION == 34
     DNGN_UNUSED_ENTER_PORTAL_1,
 #endif
@@ -1669,6 +1673,9 @@ enum dungeon_feature_type
     DNGN_EXIT_VOLCANO,
     DNGN_EXIT_WIZLAB,
     DNGN_EXIT_LABYRINTH,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_EXIT_OUBLIETTE,
+#endif
 #if TAG_MAJOR_VERSION == 34
     DNGN_UNUSED_EXIT_PORTAL_1,
 
@@ -1678,8 +1685,9 @@ enum dungeon_feature_type
 
     DNGN_TRAP_SHADOW,
     DNGN_TRAP_SHADOW_DORMANT,
+    DNGN_ENTER_OUBLIETTE,
+    DNGN_EXIT_OUBLIETTE,
 #endif
-
     NUM_FEATURES
 };
 

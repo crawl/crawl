@@ -59,6 +59,7 @@ const Branch* branch_iterator::operator*() const
         BRANCH_TROVE,
         BRANCH_SEWER,
         BRANCH_OSSUARY,
+        BRANCH_OUBLIETTE,
         BRANCH_BAILEY,
         BRANCH_ICE_CAVE,
         BRANCH_VOLCANO,

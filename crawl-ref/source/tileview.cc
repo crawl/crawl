@@ -268,6 +268,11 @@ void tile_default_flv(branch_type br, int depth, tile_flavour &flv)
         flv.floor = TILE_FLOOR_NORMAL;
         return;
 
+    case BRANCH_OUBLIETTE:
+        flv.wall  = TILE_WALL_BRICK_BROWN;
+        flv.floor = TILE_FLOOR_COBBLE_BLOOD;
+        return;
+
     case NUM_BRANCHES:
         break;
     }

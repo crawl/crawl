@@ -259,6 +259,16 @@ const Branch branches[NUM_BRANCHES] =
       WHITE, YELLOW,
       '4', 0 },
 
+#if TAG_MAJOR_VERSION > 34
+    { BRANCH_OUBLIETTE, NUM_BRANCHES, -1, -1, 1, 5,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+      DNGN_ENTER_OUBLIETTE, DNGN_EXIT_OUBLIETTE,
+      "Oubliette", "an oubliette", "Oubli",
+      "Your help is needed right now!",
+      LIGHTGREY, BLUE,
+      '9', 0 },
+#endif
+
     { BRANCH_BAILEY, NUM_BRANCHES, -1, -1, 1, 11,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_BAILEY, DNGN_EXIT_BAILEY,
@@ -298,4 +308,14 @@ const Branch branches[NUM_BRANCHES] =
       nullptr,
       LIGHTGREY, BROWN,
       'U', 0 },
+
+#if TAG_MAJOR_VERSION == 34
+    { BRANCH_OUBLIETTE, NUM_BRANCHES, -1, -1, 1, 5,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+      DNGN_ENTER_OUBLIETTE, DNGN_EXIT_OUBLIETTE,
+      "Oubliette", "an oubliette", "Oubli",
+      "Your help is needed right now!",
+      LIGHTGREY, BLUE,
+      '9', 0 },
+#endif
 };

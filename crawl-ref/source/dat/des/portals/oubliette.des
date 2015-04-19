@@ -1,0 +1,100 @@
+# Principal goal: a very early portal vault, like Sewer or Ossuary, which
+# starts with the player liberating or otherwise acquiring an ally, and then
+# fighting as a team for the prize.
+#
+#   - depth range D:3-8 (in two sets: early=D:3-5 and late=D:6-8)
+#   - small levels (I think that some Sewer maps are already too big)
+#   - both ally or player alone are too weak to win the fight
+#
+# Because of the last goal, the portal vault makes a lot more sense in the
+# early game. Also place only one exit, right next to the entrance. (To make
+# it harder to skip ally & fighting, and just steal the loot.) The maps will
+# be made from subvaults. Choke points can exist, but don't have to.
+#
+# How to gain ally:
+#   1. Ally is fighting some monsters when the player arrives. If the player
+#      dawdles or fights badly, the ally dies.
+#   2. The ally is imprisoned and the player must defeat the guards. (Can use
+#      a small room with a runed door and some glass window. Ally may sleep.)
+#   3. Rarely, the ally is weak but has a scroll of summoning or a wand of
+#      enslavement (on the floor, in his prison).
+#
+# What kinds of allies:
+#   1. A humanoid: big kobold; gnoll; type 4 demon. Centaur?
+#   2. An early unique: Sigmund; Crazy Yiuf etc.
+#   3. An animal (presumably stored for food or labour): yak; two sheep.
+#   4. An undead (shut away by locals): strong zombie/skeleton; necrophage.
+#
+# The opposition:
+# Should be meat bag melee monsters, rangers may be okay. No casters or
+# summoners: this is very early game! The opposition should come in two or
+# three waves, so that the player can get a feeling for the combined power
+# of character + ally.
+#   1. Kobolds (with big kobold at end).
+#   2. Orcs (with orc warrior at end).
+#   3. Gnolls (having good weapons at the end).
+#   4. Hobgoblin (having axes; ogre at end).
+#   5. type 5 demons (type 4 demon at end).
+#
+# Loot:
+#   - the ally will not leave the vault, so is not part of the prize
+#   - early loot: some consumable of the ally (e.g. in the prison);
+#     should be pre-identified if the ally is intelligent (he can tell you)
+#   - I am not sure if I can do this in lua, but it would be cool if the
+#     prize could be a randart weapon (base type hand axe, club, spear) like
+#     "bane of kobolds", "Sigmund's Friendship", "[player]'s Pride"
+#
+# The combination ally vs opposition can be random, and in almost all cases a
+# player who wants to can make a story out of it. (E.g. gnolls have locked away
+# a big kobold, perhaps in a tribe war, or for theft. Or minor demons have
+# captured a humanoid, probably for a dark ritual.)
+#
+# There can also be pre-assigned combinations. Examples:
+#   - opposition consists of humanoids (orcs or gnolls or kobolds), the
+#     ally is one of them, imprisoned and carrying a wand of enslavement or
+#     a scroll of summoning
+#   - ally is Pikel, opposition are humans
+#   - ally is Duwan (or Duvessa); the other twin is at the end of the map
+#
+# For later:
+#   - Could sometimes employ religion: e.g. the humanoids who have captured a
+#     demon follow Elyvilon, or the kobolds who imprisoned some unique follow
+#     an evil god. Should player religion play a role? (We could rationalise
+#     this away by saying that you'd only be called for help if you would.)
+#   - If the player already has a god, the ally could sometimes have an altar
+#     to that god next to him in his prison)... probably made by him during
+#     custody. This would explain why and how he called for help.
+#   - It is possible to have speech lines depending on branch, I hope this
+#     includes special portal vaults. If so, we could have special lines for
+#     your buddy Sigmund fighting on your side...
+#
+# Note: the player can kill his ally (backstabbing). This is intentional and
+# should not be punished or commented on within the game. (The log will tell.)
+
+
+NAME:   portal_oubliette_entry_generic
+KFEAT:  O = enter_oubliette
+PLACE:  D:2
+MAP
+O
+ENDMAP
+
+#### The destination Oubliette vaults ###
+
+default-depth: Oubli
+
+NAME:   oubliette_test
+## Test vault
+ORIENT: encompass
+MONS:   Sigmund att:friendly
+KFEAT:  < = exit_oubliette
+MAP
+xxxxx
+x...x
+x.A.x
+x...x
+x.1.x
+x...x
+x.<.x
+x...x
+xxxxx
