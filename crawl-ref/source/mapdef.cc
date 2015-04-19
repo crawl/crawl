@@ -3822,6 +3822,9 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
         if (strip_tag(mon_str, "seen"))
             mspec.extra_monster_flags |= MF_SEEN;
 
+        if (strip_tag(mon_str, "no_stairs"))
+            mspec.props[MON_NO_STAIR_KEY] = true;
+
         if (strip_tag(mon_str, "always_corpse"))
             mspec.props["always_corpse"] = true;
 

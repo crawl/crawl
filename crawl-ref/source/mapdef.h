@@ -27,6 +27,7 @@
 #include "tags.h"
 #include "travel_defs.h"
 
+#define MON_NO_STAIR_KEY "no_stair"
 #define NEVER_CORPSE_KEY "never_corpse"
 
 #define RANDBK_OWNER_KEY "randbook_owner"

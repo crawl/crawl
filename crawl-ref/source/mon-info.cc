@@ -24,6 +24,7 @@
 #include "itemprop.h"
 #include "libutil.h"
 #include "los.h"
+#include "mapdef.h" // MON_NO_STAIR_KEY
 #include "message.h"
 #include "misc.h"
 #include "mon-book.h"
@@ -253,6 +254,7 @@ static bool _is_public_key(string key)
      || key == CHIMERA_WING_KEY
      || key == CHIMERA_LEGS_KEY
      || key == "custom_spells"
+     || key == MON_NO_STAIR_KEY
      || key == ELVEN_IS_ENERGIZED_KEY)
     {
         return true;

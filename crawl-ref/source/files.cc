@@ -50,6 +50,7 @@
 #include "kills.h"
 #include "libutil.h"
 #include "macro.h"
+#include "mapdef.h" // MON_NO_STAIR_KEY
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
@@ -917,6 +918,7 @@ static void _grab_followers()
 
     int non_stair_using_allies = 0;
     int non_stair_using_summons = 0;
+    int non_stair_vault_mons = 0;
 
     monster* dowan = nullptr;
     monster* duvessa = nullptr;
@@ -937,10 +939,11 @@ static void _grab_followers()
         if (fol->wont_attack() && !mons_can_use_stairs(fol))
         {
             non_stair_using_allies++;
-            // If the class can normally use stairs it
-            // must have been a summon
-            if (mons_class_can_use_stairs(fol->type))
+
+            if (fol->has_ench(ENCH_ABJ) || fol->has_ench(ENCH_FAKE_ABJURATION))
                 non_stair_using_summons++;
+            else if (mons_class_can_use_stairs(fol->type))
+                non_stair_vault_mons++; // had the no_stairs tag
         }
 
         if (fol->type == MONS_PLAYER_GHOST
@@ -978,9 +981,10 @@ static void _grab_followers()
         if (non_stair_using_allies > 0)
         {
             // Summons won't follow and will time out.
-            if (non_stair_using_summons > 0)
+            if (non_stair_using_summons + non_stair_vault_mons > 0)
             {
-                mprf("Your summoned %s left behind.",
+                mprf("Your %s%s left behind.",
+                     non_stair_using_summons > 1 ? "summoned " : "",
                      non_stair_using_allies > 1 ? "allies are" : "ally is");
             }
             else

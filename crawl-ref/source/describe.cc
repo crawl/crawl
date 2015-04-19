@@ -41,6 +41,7 @@
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
+#include "mapdef.h" // MON_NO_STAIR_KEY
 #include "message.h"
 #include "mon-book.h"
 #include "mon-cast.h" // mons_spell_range
@@ -3912,7 +3913,9 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     }
 
     bool stair_use = false;
-    if (!mons_class_can_use_stairs(mi.type))
+    if (!mons_class_can_use_stairs(mi.type)
+        || mi.props.exists(MON_NO_STAIR_KEY)
+           && mi.props[MON_NO_STAIR_KEY].get_bool())
     {
         inf.body << "\n" << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
                  << " is incapable of using stairs.\n";

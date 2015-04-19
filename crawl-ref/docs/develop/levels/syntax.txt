@@ -721,6 +721,9 @@ MONS:     (list of monsters)
           (without the quotes). Use this sparingly:
               MONS: patrolling guardian serpent
 
+          Monsters can be prevented from leaving the level with "no_stairs":
+              MONS: Sigmund att:friendly no_stairs
+
           Monsters can also be given colours that override their default
           colour. Use this *very* sparingly:
               MONS: col:darkgrey fungus

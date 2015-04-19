@@ -36,6 +36,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "mapdef.h" // MON_NO_STAIR_KEY
 #include "mapmark.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -1534,6 +1535,12 @@ bool mons_can_use_stairs(const monster* mon)
     // Summons can't use stairs.
     if (mon->has_ench(ENCH_ABJ) || mon->has_ench(ENCH_FAKE_ABJURATION))
         return false;
+
+    if (mon->props.exists(MON_NO_STAIR_KEY)
+        && mon->props[MON_NO_STAIR_KEY].get_bool())
+    {
+        return false;
+    }
 
     // Everything else is fine
     return true;
