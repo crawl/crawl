@@ -3091,15 +3091,11 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
     case CARD_SWINE:
-    {
-        const int piggified = transform(5 + power/10 + random2(power/10),
-                                        TRAN_PIG, true);
-        if (piggified == SPRET_SUCCESS)
+        if (transform(5 + power/10 + random2(power/10), TRAN_PIG, true))
             you.transform_uncancellable = true;
         else
             mpr("You feel a momentary urge to oink.");
         break;
-    }
 
 #if TAG_MAJOR_VERSION == 34
     case CARD_SHUFFLE:
