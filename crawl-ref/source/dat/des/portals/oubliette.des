@@ -1,3 +1,18 @@
+# Oubliette
+#
+# An early portal vault featuring an ally. 
+# Many thanks to gammafunk, |amethyst, PleasingFungus!
+
+# TODO:
+#  - add timer
+#  - the ally should *not* leave the vault (perhaps needs a new monster
+#    flag ("will not leave level it is generated on) -- note that it may
+#    happen the player acquires other allies (e.g. via lucky Yredelemnul)
+#    which then should leave the vault
+#  - killing the ally should give a new milestone ("You killed your friend
+#    Sigmund.")
+#  - needs a depth for monster spawning purposes (scroll of summoning)
+
 # Principal goal: a very early portal vault, like Sewer or Ossuary, which
 # starts with the player liberating or otherwise acquiring an ally, and then
 # fighting as a team for the prize.
