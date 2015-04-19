@@ -164,6 +164,8 @@ ENDMAP
 
 default-depth: Oubli
 
+#### arrival subvaults (entry, exit, ally) #################
+
 NAME:   oubliette_tiny_arrival_1
 TAGS:   oubliette_tiny_arrival_subvault
 KMONS:  @ = Sigmund att:friendly no_stairs, human att:friendly no_stairs
@@ -194,6 +196,24 @@ x<=.x
 xxxxx
 ENDMAP
 
+NAME:    oubliette_tiny_arrival_infighting
+TAGS:    oubliette_tiny_arrival_subvault
+WEIGHT:  50000
+KMONS:   @ = Sigmund att:friendly no_stairs, human att:friendly no_stairs
+KFEAT:   < = exit_oubliette
+MONS:    rat generate_awake / jackal generate_awake w:5 / nothing
+MAP
+xxxxx
+xA..x
+x..1xx
+x.1@1+
+x..1xx
+x<..x
+xxxxx
+ENDMAP
+
+#### minor subvaults #######################################
+
 NAME:   oubliette_tiny_minor_1
 TAGS:   oubliette_tiny_minor_subvault
 MONS:   hobgoblin / worm
@@ -215,6 +235,8 @@ x..xxx..xx
 x..xxx..xx
 xxxxxxxxx
 ENDMAP
+
+#### boss subvaults (end monster, loot) ####################
 
 NAME:   oubliette_tiny_boss_1
 TAGS:   oubliette_tiny_boss_subvault
