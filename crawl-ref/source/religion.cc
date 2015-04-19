@@ -3032,6 +3032,8 @@ void excommunication(god_type new_god, bool immediate)
         you.stop_train.insert(abil_skill(abil));
 
     update_can_train();
+    you.can_train.set(SK_INVOCATIONS, false);
+    reset_training();
 
     // Perhaps we abandoned Trog with everything but Spellcasting maxed out.
     check_selected_skills();
