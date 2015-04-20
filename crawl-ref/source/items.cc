@@ -3489,12 +3489,7 @@ colour_t item_def::food_colour() const
         case FOOD_FRUIT:
             return LIGHTGREEN;
         case FOOD_CHUNK:
-        {
-            const colour_t class_colour = mons_class_colour(mon_type);
-            if (class_colour == BLACK)
-                return LIGHTRED;
-            return class_colour;
-        }
+            return LIGHTRED;
         case FOOD_BEEF_JERKY:
         case FOOD_BREAD_RATION:
         case FOOD_MEAT_RATION:
