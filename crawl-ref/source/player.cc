@@ -334,6 +334,13 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         return false;
     }
 
+    if (mons->is_stationary() || mons->asleep() || mons->cannot_move())
+    {
+        if (!quiet)
+            simple_monster_message(mons, " cannot move out of your way!");
+        return false;
+    }
+
     // prompt when swapping into known zot traps
     if (!quiet && find_trap(loc) && find_trap(loc)->type == TRAP_ZOT
         && env.grid(loc) != DNGN_UNDISCOVERED_TRAP
