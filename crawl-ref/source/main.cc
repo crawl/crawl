@@ -3237,13 +3237,13 @@ static void _move_player(coord_def move)
     }
 
     // You can swap places with a friendly or good neutral monster if
-    // you're not confused, or if both of you are inside a sanctuary.
-    const bool can_swap_places = targ_monst
-                                 && !targ_monst->is_stationary()
-                                 && (targ_monst->wont_attack()
-                                       && !you.confused()
-                                     || is_sanctuary(you.pos())
-                                        && is_sanctuary(targ));
+    // you're not confused, or even with hostiles if both of you are inside
+    // a sanctuary.
+    const bool try_to_swap = targ_monst
+                             && (targ_monst->wont_attack()
+                                    && !you.confused()
+                                 || is_sanctuary(you.pos())
+                                    && is_sanctuary(targ));
 
     // You cannot move away from a siren but you CAN fight monsters on
     // neighbouring squares.
@@ -3267,7 +3267,7 @@ static void _move_player(coord_def move)
 
     if (targ_monst && !targ_monst->submerged())
     {
-        if (can_swap_places && !beholder && !fmonger)
+        if (try_to_swap && !beholder && !fmonger)
         {
             if (swap_check(targ_monst, mon_swap_dest))
                 swap = true;
@@ -3277,7 +3277,7 @@ static void _move_player(coord_def move)
                 moving = false;
             }
         }
-        else if (!can_swap_places) // attack!
+        else if (!try_to_swap) // attack!
         {
             // XXX: Moving into a normal wall does nothing and uses no
             // turns or energy, but moving into a wall which contains
