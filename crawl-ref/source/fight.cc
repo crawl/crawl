@@ -645,6 +645,10 @@ int weapon_min_delay(const item_def &weapon)
     // Round up the reduction from skill, so that min delay is rounded down.
     min_delay = max(min_delay, base - (MAX_SKILL_LEVEL + 1)/2);
 
+    // speed brand makes a weapon 1.5 times as fast, i.e. 2/3 as slow.
+    if (get_weapon_brand(weapon) == SPWPN_SPEED)
+        min_delay = min_delay * 2 / 3;
+
     // never go faster than speed 3 (ie 3.33 attacks per round)
     if (min_delay < 3)
         min_delay = 3;
