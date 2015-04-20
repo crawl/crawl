@@ -9,7 +9,7 @@ bendiciones y las maldiciones son todo la misma cosa.
 %%%%
 Beogh
 
-Beogh es una deidad malvada, adorado por los orcos de cuevas nativos del 
+Beogh es una deidad malvada, adorado por los orcos de cuevas nativos del
 calabozo. Sólo los orcos se pueden dedicar al servicio de Beogh, y ellos deben
 probar su devoción a través de la matanza. Los devotos de Beogh especialmente
 fervientes encontrarán a otros seguidores orcos acudiendo a su bandera: ésta es
@@ -116,10 +116,10 @@ a victorias fáciles. Okawaru menosprecia a quienes hieren a sus aliados.
 %%%%
 Qazlal
 
-Qazlal «invocador de tormentas» es un dios violento de la tempestad, quien 
+Qazlal «invocador de tormentas» es un dios violento de la tempestad, quien
 disfruta desencadenando las fuerzas de la naturaleza contra el desprevenido.
 Quienes inviten la mirada de Qazlal se encontrarán en el ojo de la tormenta
-de destrucción elemental, del cuál sólo su dios puede protegerlos. Los 
+de destrucción elemental, del cuál sólo su dios puede protegerlos. Los
 adoradores beatos de Qazlal ganarán la habilidad de dirigir y controlar el
 poder destructivo de la tormenta.
 %%%%
@@ -128,7 +128,7 @@ Ru
 Entre todos los dioses, sólo Ru se opone a la creación. No como una locura,
 sino como distracción. Los iniciados de Ru pueden abrir canales a los poderes
 subyacentes al mundo visible al renunciar a las cadenas que los atan aquí.
-Estos sacrificios no son para Ru, sino que se otorgan gratuita y 
+Estos sacrificios no son para Ru, sino que se otorgan gratuita y
 permanentemente. Sus seguidores pueden redirigir y contraatacar contra sus
 enemigos, regenerar su salud y magia, realizar poderosos saltos, y liberar una
 onda masiva de poder contra sus rivales.
