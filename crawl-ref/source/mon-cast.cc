@@ -444,10 +444,11 @@ static int _mons_spellpower(spell_type spell, const monster &mons)
  * @param mons      The monster in question.
  * @param cap       The maximum power of the spell.
  * @return          A spellpower value for the spell, with ENCH_POW_FACTOR
- *                  removed & capped at some maximum spellpower.
+ *                  removed & capped at maximum spellpower.
  */
-static int _ench_power(spell_type spell, const monster &mons, int cap = 200)
+static int _ench_power(spell_type spell, const monster &mons)
 {
+    const int cap = 200;
     return min(cap, _mons_spellpower(spell, mons) / ENCH_POW_FACTOR);
 }
 
