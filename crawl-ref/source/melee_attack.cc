@@ -56,14 +56,6 @@
     #include "notes.h"
 #endif
 
-// Odd helper function, why is this declared like this?
-#define DID_AFFECT() \
-{ \
-    if (miscast_level == 0) \
-        miscast_level = -1; \
-    return; \
-}
-
 /*
  **************************************************
  *             BEGIN PUBLIC FUNCTIONS             *
