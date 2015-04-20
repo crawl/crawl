@@ -18,11 +18,6 @@ struct mgen_data
     // Monster type.
     monster_type    cls;
 
-    // If the monster is zombie-like, or a specialised draconian, this
-    // is the base monster that the monster is based on - should be
-    // set to MONS_NO_MONSTER when not used.
-    monster_type    base_type;
-
     // Determines the behaviour of the monster after it is generated. This
     // behaviour is an unholy combination of monster attitude
     // (friendly, hostile) and monster initial state (asleep, wandering).
@@ -46,14 +41,6 @@ struct mgen_data
     // Where the monster will be created.
     coord_def       pos;
 
-    // A grid feature to prefer when finding a place to create monsters.
-    // For instance, using DNGN_FLOOR when placing flying monsters or
-    // merfolk in the Shoals will force them to appear on land.
-    // preferred_grid_feature will be ignored if it is incompatible with
-    // the monster's native habitat (for instance, if trying to place
-    // a electric eel with preferred_grid_feature DNGN_FLOOR).
-    dungeon_feature_type preferred_grid_feature;
-
     // The monster's foe, i.e. which monster it will want to attack. foe
     // may be an index into the monster array (0 - (MAX_MONSTERS-1)), or
     // it may be MHITYOU to indicate that the monster wants to attack the
@@ -68,6 +55,11 @@ struct mgen_data
     // are god gifts, to indicate which god sent them, and by priest
     // monsters, to indicate whose priest they are.
     god_type        god;
+
+    // If the monster is zombie-like, or a specialised draconian, this
+    // is the base monster that the monster is based on - should be
+    // set to MONS_NO_MONSTER when not used.
+    monster_type    base_type;
 
     // The number of hydra heads, the number of manticore attack volleys,
     // or the number of merged slime creatures.
@@ -87,15 +79,6 @@ struct mgen_data
     // the player is actually in.
     level_id        place;
 
-    // Some predefined vaults (aka maps) include flags to suppress random
-    // generation of monsters. When generating monsters, this is a mask of
-    // map flags to honour (such as MMT_NO_MONS to specify that we shouldn't
-    // randomly generate a monster inside a map that doesn't want it). These
-    // map flags are usually respected only when a dungeon level is being
-    // constructed, since at future points vault information may no longer
-    // be available (vault metadata is not preserved across game saves).
-    unsigned        map_mask;
-
     int             hd;
     int             hp;
 
@@ -111,6 +94,23 @@ struct mgen_data
 
     // This simply stores the initial shape-shifter type.
     monster_type    initial_shifter;
+
+    // A grid feature to prefer when finding a place to create monsters.
+    // For instance, using DNGN_FLOOR when placing flying monsters or
+    // merfolk in the Shoals will force them to appear on land.
+    // preferred_grid_feature will be ignored if it is incompatible with
+    // the monster's native habitat (for instance, if trying to place
+    // a electric eel with preferred_grid_feature DNGN_FLOOR).
+    dungeon_feature_type preferred_grid_feature = DNGN_UNSEEN;
+
+    // Some predefined vaults (aka maps) include flags to suppress random
+    // generation of monsters. When generating monsters, this is a mask of
+    // map flags to honour (such as MMT_NO_MONS to specify that we shouldn't
+    // randomly generate a monster inside a map that doesn't want it). These
+    // map flags are usually respected only when a dungeon level is being
+    // constructed, since at future points vault information may no longer
+    // be available (vault metadata is not preserved across game saves).
+    unsigned        map_mask = 0;
 
     // This simply stores chimera base monsters.
     vector<monster_type> chimera_mons;
@@ -138,13 +138,12 @@ struct mgen_data
               string nas = "",
               monster_type is = RANDOM_MONSTER)
 
-        : cls(mt), base_type(base), behaviour(beh), summoner(sner),
-          abjuration_duration(abj), summon_type(st), pos(p),
-          preferred_grid_feature(DNGN_UNSEEN), foe(mfoe), flags(genflags),
-          god(which_god), number(monnumber), colour(moncolour),
-          proximity(prox), place(_place), map_mask(0),
-          hd(mhd), hp(mhp), extra_flags(extflags), mname(monname),
-          non_actor_summoner(nas), initial_shifter(is), props()
+        : cls(mt), behaviour(beh), summoner(sner), abjuration_duration(abj),
+          summon_type(st), pos(p), foe(mfoe), flags(genflags), god(which_god),
+          base_type(base), number(monnumber), colour(moncolour),
+          proximity(prox), place(_place), hd(mhd), hp(mhp),
+          extra_flags(extflags), mname(monname), non_actor_summoner(nas),
+          initial_shifter(is)
     {
         ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6)
                || mt == MONS_BALL_LIGHTNING || mt == MONS_ORB_OF_DESTRUCTION
