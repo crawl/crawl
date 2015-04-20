@@ -29,9 +29,6 @@
 
 #define MIN_START_STAT       3
 
-static void _newgame_give_item(object_class_type base, int sub_type,
-                               int qty = 1, int plus = 0);
-
 static void _init_player()
 {
     you.init();
@@ -129,64 +126,59 @@ static void _unfocus_stats()
 // Some consumables to make the starts of Sprint and Zotdef a little easier.
 static void _give_bonus_items()
 {
-    _newgame_give_item(OBJ_POTIONS, POT_CURING);
-    _newgame_give_item(OBJ_POTIONS, POT_HEAL_WOUNDS);
-    _newgame_give_item(OBJ_POTIONS, POT_HASTE);
-    _newgame_give_item(OBJ_POTIONS, POT_MAGIC, 2);
-    _newgame_give_item(OBJ_POTIONS, POT_BERSERK_RAGE);
-    _newgame_give_item(OBJ_SCROLLS, SCR_BLINKING);
+    newgame_make_item(OBJ_POTIONS, POT_CURING);
+    newgame_make_item(OBJ_POTIONS, POT_HEAL_WOUNDS);
+    newgame_make_item(OBJ_POTIONS, POT_HASTE);
+    newgame_make_item(OBJ_POTIONS, POT_MAGIC, 2);
+    newgame_make_item(OBJ_POTIONS, POT_BERSERK_RAGE);
+    newgame_make_item(OBJ_SCROLLS, SCR_BLINKING);
 }
 
-void autopickup_starting_ammo(missile_type missile)
+static void _autopickup_ammo(missile_type missile)
 {
     if (Options.autopickup_starting_ammo)
         you.force_autopickup[OBJ_MISSILES][missile] = 1;
 }
 
-static void _newgame_make_item_tutorial(int slot, equipment_type eqslot,
-                                 object_class_type base,
-                                 int sub_type, int replacement = -1,
-                                 int qty = 1, int plus = 0)
-{
-    newgame_make_item(slot, eqslot, base, sub_type, replacement, qty, plus,
-                      true);
-}
-
-// Creates an item of a given base and sub type.
-// replacement is used when handing out armour that is not wearable for
-// some species; otherwise use -1.
-void newgame_make_item(int slot, equipment_type eqslot,
-                       object_class_type base,
-                       int sub_type, int replacement,
-                       int qty, int plus, bool force_tutorial)
+/**
+ * Make an item during character creation.
+ *
+ * Puts the item in the first available slot in the inventory, equipping or
+ * memorising the first spell from it as appropriate. If the item would be
+ * useless, we try with a possibly more useful sub_type, then, if it's still
+ * useless, give up and don't create any item.
+ *
+ * @param base, sub_type what the item is
+ * @param qty            what size stack to make
+ * @param plus           what the value of item_def::plus should be
+ * @param force_ego      what the value of item_def::special should be
+ * @param force_tutorial whether to create it even in the tutorial
+ * @returns a pointer to the item created, if any.
+ */
+item_def* newgame_make_item(object_class_type base,
+                            int sub_type, int qty, int plus,
+                            int force_ego, bool force_tutorial)
 {
     // Don't set normal equipment in the tutorial.
     if (!force_tutorial && crawl_state.game_is_tutorial())
-        return;
+        return nullptr;
 
-    if (slot == -1)
+    // not an actual item
+    if (sub_type == WPN_UNARMED)
+        return nullptr;
+
+    int slot;
+    for (slot = 0; slot < ENDOFPACK; ++slot)
     {
-        // If another of the item type is already there, add to the
-        // stack instead.
-        for (int i = 0; i < ENDOFPACK; ++i)
-        {
-            item_def& item = you.inv[i];
-            if (item.is_type(base, sub_type) && is_stackable_item(item))
-            {
-                item.quantity += qty;
-                return;
-            }
-        }
+        item_def& item = you.inv[slot];
+        if (!item.defined())
+            break;
 
-        for (int i = 0; i < ENDOFPACK; ++i)
+        if (item.is_type(base, sub_type) && is_stackable_item(item))
         {
-            if (!you.inv[i].defined())
-            {
-                slot = i;
-                break;
-            }
+            item.quantity += qty;
+            return &item;
         }
-        ASSERT(slot != -1);
     }
 
     item_def &item(you.inv[slot]);
@@ -194,128 +186,97 @@ void newgame_make_item(int slot, equipment_type eqslot,
     item.sub_type  = sub_type;
     item.quantity  = qty;
     item.plus      = plus;
-    item.special   = 0;
+    item.special   = force_ego;
 
-    if (is_deck(item))
-    {
-        item.plus = 6 + random2(6); // # of cards
-        item.special = DECK_RARITY_COMMON;
-        init_deck(item);
-    }
-
-    // If the character is restricted in wearing armour of equipment
-    // slot eqslot, hand out replacement instead.
-    if (item.base_type == OBJ_ARMOUR && replacement != -1
+    // If the character is restricted in wearing the requested armour,
+    // hand out a replacement instead.
+    if (item.base_type == OBJ_ARMOUR
         && !can_wear_armour(item, false, false))
     {
-        item.sub_type = replacement;
+        if (item.sub_type == ARM_HELMET)
+            item.sub_type = ARM_HAT;
+        else if (item.sub_type == ARM_BUCKLER)
+            item.sub_type = ARM_SHIELD;
+        else if (is_shield(item))
+            item.sub_type = ARM_BUCKLER;
+        else
+            item.sub_type = ARM_ROBE;
     }
-    if (eqslot == EQ_WEAPON && replacement != -1
-        && !can_wield(&item, false, false))
+
+    // If that didn't help, nothing will.
+    if (is_useless_item(item))
     {
-        item.sub_type = replacement;
+        item = item_def();
+        return nullptr;
     }
 
-    if (item.base_type == OBJ_ARMOUR && !can_wear_armour(item, false, false))
-        return;
-
-    if (is_shield(item) && you.weapon()
-        && is_shield_incompatible(*you.weapon(), &item))
+    if (item.base_type == OBJ_WEAPONS && can_wield(&item, false, false)
+        || item.base_type == OBJ_ARMOUR && can_wear_armour(item, false, false))
     {
-        return;
+        you.equip[get_item_slot(item)] = slot;
     }
 
-    if (eqslot == EQ_WEAPON && !can_wield(&item, false, false))
-        return;
+    if (item.base_type == OBJ_MISSILES)
+        _autopickup_ammo(static_cast<missile_type>(item.sub_type));
+    // You can get the books without the corresponding items as a wanderer.
+    else if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_GEOMANCY)
+        _autopickup_ammo(MI_STONE);
+    else if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_CHANGES)
+        _autopickup_ammo(MI_ARROW);
 
-    if (eqslot != EQ_NONE && you.equip[eqslot] == -1)
-        you.equip[eqslot] = slot;
+    origin_set_startequip(item);
+
+    // Wanderers may or may not already have a spell. - bwr
+    // Also, when this function gets called their possible randbook
+    // has not been initalised and will trigger an ASSERT.
+    if (item.base_type == OBJ_BOOKS && you.char_class != JOB_WANDERER)
+    {
+        spell_type which_spell = spells_in_book(i)[0];
+        if (!spell_is_useless(which_spell, false, true))
+            add_spell_to_memory(which_spell);
+    }
+
+    return;
 }
 
-static void _newgame_give_item(object_class_type base, int sub_type,
-                               int qty, int plus)
-{
-    newgame_make_item(-1, EQ_NONE, base, sub_type, -1, qty, plus);
+
+    return &item;
 }
 
-static void _newgame_clear_item(int slot)
+static void _give_ranged_weapon(weapon_type weapon, int plus, int skill)
 {
-    you.inv[slot] = item_def();
+    ASSERT(weapon != NUM_WEAPONS);
 
-    for (int i = EQ_WEAPON; i < NUM_EQUIP; ++i)
-        if (you.equip[i] == slot)
-            you.equip[i] = -1;
-}
-
-static void _update_weapon(const newgame_def& ng)
-{
-    ASSERT(ng.weapon != NUM_WEAPONS);
-
-    const int plus = you.char_class == JOB_HUNTER ? 1 : 0;
-
-    switch (ng.weapon)
+    switch (weapon)
     {
     case WPN_THROWN:
-        if (species_can_throw_large_rocks(ng.species))
-        {
-            newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1,
-                              4 + plus);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
-            autopickup_starting_ammo(MI_LARGE_ROCK);
-            autopickup_starting_ammo(MI_THROWING_NET);
-        }
-        else if (species_size(ng.species, PSIZE_TORSO) <= SIZE_SMALL)
-        {
-            newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_TOMAHAWK, -1,
-                              8 + 2 * plus);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
-            autopickup_starting_ammo(MI_TOMAHAWK);
-            autopickup_starting_ammo(MI_THROWING_NET);
-        }
+        if (species_can_throw_large_rocks(you.species))
+            newgame_make_item(OBJ_MISSILES, MI_LARGE_ROCK, 4 + plus);
+        else if (you.body_size(PSIZE_TORSO) <= SIZE_SMALL)
+            newgame_make_item(OBJ_MISSILES, MI_TOMAHAWK, 8 + 2 * plus);
         else
-        {
-            newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1,
-                              5 + plus);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
-            autopickup_starting_ammo(MI_JAVELIN);
-            autopickup_starting_ammo(MI_THROWING_NET);
-        }
+            newgame_make_item(OBJ_MISSILES, MI_JAVELIN, 5 + plus);
+        newgame_make_item(OBJ_MISSILES, MI_THROWING_NET, 2);
+        you.skills[SK_THROWING] = skill;
         break;
     case WPN_SHORTBOW:
-        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SHORTBOW, -1, 1, plus);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 20);
-        autopickup_starting_ammo(MI_ARROW);
-
-        // Wield the bow instead.
-        you.equip[EQ_WEAPON] = 1;
+        newgame_make_item(OBJ_WEAPONS, WPN_SHORTBOW, 1, plus);
+        newgame_make_item(OBJ_MISSILES, MI_ARROW, 20);
+        you.skills[SK_BOWS] = skill;
         break;
     case WPN_HAND_CROSSBOW:
-        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_HAND_CROSSBOW, -1, 1,
-                          plus);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 20);
-        autopickup_starting_ammo(MI_BOLT);
-
-        // Wield the crossbow instead.
-        you.equip[EQ_WEAPON] = 1;
+        newgame_make_item(OBJ_WEAPONS, WPN_HAND_CROSSBOW, 1, plus);
+        newgame_make_item(OBJ_MISSILES, MI_BOLT, 20);
+        you.skills[SK_CROSSBOWS] = skill;
         break;
     case WPN_HUNTING_SLING:
-        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_HUNTING_SLING, -1, 1,
-                          plus);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 20);
-        autopickup_starting_ammo(MI_SLING_BULLET);
-        autopickup_starting_ammo(MI_STONE);
-
-
-        // Wield the sling instead.
-        you.equip[EQ_WEAPON] = 1;
-        break;
-    case WPN_UNARMED:
-        _newgame_clear_item(0);
-        break;
-    case WPN_UNKNOWN:
+        newgame_make_item(OBJ_WEAPONS, WPN_HUNTING_SLING, 1, plus);
+        newgame_make_item(OBJ_MISSILES, MI_SLING_BULLET, 20);
+        you.skills[SK_SLINGS] = skill;
+        _autopickup_ammo(MI_STONE);
         break;
     default:
-        you.inv[0].sub_type = ng.weapon;
+        break;
     }
 }
 
@@ -327,15 +288,11 @@ static void _give_items_skills(const newgame_def& ng)
     {
     case JOB_FIGHTER:
         // Equipment.
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        _update_weapon(ng);
+        newgame_make_item(OBJ_WEAPONS, ng.weapon);
 
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL,
-                          ARM_ROBE);
-        newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR,
-                          you.body_size() >= SIZE_MEDIUM ? ARM_SHIELD
-                                                         : ARM_BUCKLER);
-        newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_MIGHT);
+        newgame_make_item(OBJ_ARMOUR, ARM_SCALE_MAIL);
+        newgame_make_item(OBJ_ARMOUR, ARM_SHIELD);
+        newgame_make_item(OBJ_POTIONS, POT_MIGHT);
 
         // Skills.
         you.skills[SK_FIGHTING] = 3;
@@ -348,14 +305,11 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_GLADIATOR:
         // Equipment.
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        _update_weapon(ng);
+        newgame_make_item(OBJ_WEAPONS, ng.weapon);
 
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                           ARM_ANIMAL_SKIN);
-        newgame_make_item(2, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET, ARM_HAT);
-        newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 3);
-        autopickup_starting_ammo(MI_THROWING_NET);
+        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
+        newgame_make_item(OBJ_ARMOUR, ARM_HELMET);
+        newgame_make_item(OBJ_MISSILES, MI_THROWING_NET, 3);
 
         // Skills.
         you.skills[SK_FIGHTING] = 2;
@@ -365,9 +319,7 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_MONK:
-        you.equip[EQ_WEAPON] = -1; // Monks fight unarmed.
-
-        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
 
         you.skills[SK_FIGHTING]       = 3;
         you.skills[SK_UNARMED_COMBAT] = 4;
@@ -380,11 +332,10 @@ static void _give_items_skills(const newgame_def& ng)
         you.piety = 35;
 
         // WEAPONS
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        _update_weapon(ng);
+        newgame_make_item(OBJ_WEAPONS, ng.weapon);
 
         // ARMOUR
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ANIMAL_SKIN);
+        newgame_make_item(OBJ_ARMOUR, ARM_ANIMAL_SKIN);
 
         // SKILLS
         you.skills[SK_FIGHTING] = 3;
@@ -406,12 +357,8 @@ static void _give_items_skills(const newgame_def& ng)
         you.piety = 100;
         you.gift_timeout = max(5, random2(40) + random2(40));
 
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        set_item_ego_type(you.inv[0], OBJ_WEAPONS, SPWPN_CHAOS);
-        _update_weapon(ng);
-
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                           ARM_ROBE, 1, 2);
+        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, 0, SPWPN_CHAOS);
+        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR, 1, 2);
 
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_ARMOUR]   = 1;
@@ -429,11 +376,8 @@ static void _give_items_skills(const newgame_def& ng)
             you.char_direction = GDT_GAME_START;
         you.piety = 38;
 
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, +1);
-        _update_weapon(ng);
-
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                              ARM_ROBE);
+        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
+        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
 
         you.skills[SK_FIGHTING]    = 3;
         you.skills[SK_ARMOUR]      = 1;
@@ -448,12 +392,9 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_SKALD:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, +0);
-        _update_weapon(ng);
-
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                           ARM_ROBE);
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_BATTLE);
+        newgame_make_item(OBJ_WEAPONS, ng.weapon);
+        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
+        newgame_make_item(OBJ_BOOKS, BOOK_BATTLE);
 
         you.skills[SK_FIGHTING]     = 2;
         you.skills[SK_ARMOUR]       = 1;
@@ -464,22 +405,14 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_WARPER:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        _update_weapon(ng);
+        newgame_make_item(OBJ_WEAPONS, ng.weapon);
 
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                           ARM_ROBE);
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_SPATIAL_TRANSLOCATIONS);
+        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
+        newgame_make_item(OBJ_BOOKS, BOOK_SPATIAL_TRANSLOCATIONS);
 
         // One free escape.
-        newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
-        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_TOMAHAWK, -1, 5);
-        set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_DISPERSAL);
-
-        // Felids can't ever use tomahawks, so don't put them on autopickup.
-        // The items we just gave will be destroyed later in _setup_generic.
-        if (!is_useless_item(you.inv[4]))
-            autopickup_starting_ammo(MI_TOMAHAWK);
+        newgame_make_item(OBJ_SCROLLS, SCR_BLINKING);
+        newgame_make_item(OBJ_MISSILES, MI_TOMAHAWK, 5, 0, SPMSL_DISPERSAL);
 
         you.skills[SK_FIGHTING]       = 2;
         you.skills[SK_ARMOUR]         = 1;
@@ -491,24 +424,22 @@ static void _give_items_skills(const newgame_def& ng)
     break;
 
     case JOB_ARCANE_MARKSMAN:
-        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _update_weapon(ng);
+        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
+        _give_ranged_weapon(ng.weapon, 0, 2);
 
-        // And give them a book
-        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_DEBILITATION);
+        newgame_make_item(OBJ_BOOKS, BOOK_DEBILITATION);
 
         you.skills[SK_FIGHTING]                   = 1;
-        you.skills[item_attack_skill(you.inv[1])] = 2;
         you.skills[SK_DODGING]                    = 2;
         you.skills[SK_SPELLCASTING]               = 1;
         you.skills[SK_HEXES]                      = 3;
         break;
 
     case JOB_WIZARD:
-        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(1, EQ_HELMET, OBJ_ARMOUR, ARM_HAT);
+        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(OBJ_ARMOUR, ARM_HAT);
 
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_MINOR_MAGIC);
+        newgame_make_item(OBJ_BOOKS, BOOK_MINOR_MAGIC);
 
         you.skills[SK_DODGING]        = 2;
         you.skills[SK_STEALTH]        = 2;
@@ -519,9 +450,9 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_CONJURER:
-        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
 
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CONJURATIONS);
+        newgame_make_item(OBJ_BOOKS, BOOK_CONJURATIONS);
 
         you.skills[SK_CONJURATIONS] = 4;
         you.skills[SK_SPELLCASTING] = 2;
@@ -530,9 +461,9 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_ENCHANTER:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1, 1, +1);
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, +1);
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_MALEDICT);
+        newgame_make_item(OBJ_WEAPONS, WPN_DAGGER, 1, +1);
+        newgame_make_item(OBJ_ARMOUR, ARM_ROBE, 1, +1);
+        newgame_make_item(OBJ_BOOKS, BOOK_MALEDICT);
 
         weap_skill = 1;
         you.skills[SK_HEXES]        = 3;
@@ -542,8 +473,8 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_SUMMONER:
-        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_CALLINGS);
+        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(OBJ_BOOKS, BOOK_CALLINGS);
 
         you.skills[SK_SUMMONINGS]   = 4;
         you.skills[SK_SPELLCASTING] = 2;
@@ -552,8 +483,8 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_NECROMANCER:
-        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
+        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(OBJ_BOOKS, BOOK_NECROMANCY);
 
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_NECROMANCY]   = 4;
@@ -562,15 +493,10 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_TRANSMUTER:
-        you.equip[EQ_WEAPON] = -1; // Transmuters fight unarmed.
-
         // Some sticks for sticks to snakes.
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 12);
-        newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_CHANGES);
-
-        // keep picking up sticks
-        autopickup_starting_ammo(MI_ARROW);
+        newgame_make_item(OBJ_MISSILES, MI_ARROW, 12);
+        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(OBJ_BOOKS, BOOK_CHANGES);
 
         you.skills[SK_FIGHTING]       = 1;
         you.skills[SK_UNARMED_COMBAT] = 3;
@@ -580,8 +506,8 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_FIRE_ELEMENTALIST:
-        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_FLAMES);
+        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(OBJ_BOOKS, BOOK_FLAMES);
 
         you.skills[SK_CONJURATIONS] = 1;
         you.skills[SK_FIRE_MAGIC]   = 3;
@@ -591,8 +517,8 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_ICE_ELEMENTALIST:
-        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_FROST);
+        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(OBJ_BOOKS, BOOK_FROST);
 
         you.skills[SK_CONJURATIONS] = 1;
         you.skills[SK_ICE_MAGIC]    = 3;
@@ -602,8 +528,8 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_AIR_ELEMENTALIST:
-        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_AIR);
+        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(OBJ_BOOKS, BOOK_AIR);
 
         you.skills[SK_CONJURATIONS] = 1;
         you.skills[SK_AIR_MAGIC]    = 3;
@@ -613,13 +539,9 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_EARTH_ELEMENTALIST:
-        // stones in switch slot (b)
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
-        newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
-
-        // sandblast goes through a lot of stones
-        autopickup_starting_ammo(MI_STONE);
+        newgame_make_item(OBJ_MISSILES, MI_STONE, 20);
+        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(OBJ_BOOKS, BOOK_GEOMANCY);
 
         you.skills[SK_TRANSMUTATIONS] = 1;
         you.skills[SK_EARTH_MAGIC]    = 3;
@@ -629,10 +551,8 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_VENOM_MAGE:
-        // Venom Mages don't need a starting weapon since acquiring a weapon
-        // to poison should be easy, and Sting is *powerful*.
-        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_YOUNG_POISONERS);
+        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(OBJ_BOOKS, BOOK_YOUNG_POISONERS);
 
         you.skills[SK_POISON_MAGIC] = 4;
         you.skills[SK_SPELLCASTING] = 2;
@@ -641,17 +561,14 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_ASSASSIN:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1, 1, +2);
-        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BLOWGUN);
+        newgame_make_item(OBJ_WEAPONS, WPN_DAGGER, 1, +2);
+        newgame_make_item(OBJ_WEAPONS, WPN_BLOWGUN);
 
-        newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
+        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(OBJ_ARMOUR, ARM_CLOAK);
 
-        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 8);
-        set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_POISONED);
-        newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 2);
-        set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
-        autopickup_starting_ammo(MI_NEEDLE);
+        newgame_make_item(OBJ_MISSILES, MI_NEEDLE, 8, 0, SPMSL_POISONED);
+        newgame_make_item(OBJ_MISSILES, MI_NEEDLE, 2, 0, SPMSL_CURARE);
 
         weap_skill = 2;
         you.skills[SK_FIGHTING]     = 2;
@@ -661,19 +578,15 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_HUNTER:
-        // Equipment.
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        _update_weapon(ng);
+        newgame_make_item(OBJ_WEAPONS, WPN_SHORT_SWORD);
+        _give_ranged_weapon(ng.weapon, 1, 4);
 
-        newgame_make_item(3, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                           ARM_ANIMAL_SKIN);
+        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
 
         // Skills.
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_DODGING]  = 2;
         you.skills[SK_STEALTH]  = 1;
-
-        you.skills[item_attack_skill(you.inv[1])] = 4;
         break;
 
     case JOB_WANDERER:
@@ -682,17 +595,13 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_ARTIFICER:
         // Equipment. Short sword, wands, and armour or robe.
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        newgame_make_item(OBJ_WEAPONS, WPN_SHORT_SWORD);
 
-        newgame_make_item(1, EQ_NONE, OBJ_WANDS, WAND_FLAME,
-                           -1, 1, 15, 0);
-        newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_ENSLAVEMENT,
-                           -1, 1, 15, 0);
-        newgame_make_item(3, EQ_NONE, OBJ_WANDS, WAND_RANDOM_EFFECTS,
-                           -1, 1, 15, 0);
+        newgame_make_item(OBJ_WANDS, WAND_FLAME, 1, 15);
+        newgame_make_item(OBJ_WANDS, WAND_ENSLAVEMENT, 1, 15);
+        newgame_make_item(OBJ_WANDS, WAND_RANDOM_EFFECTS, 1, 15);
 
-        newgame_make_item(4, EQ_BODY_ARMOUR, OBJ_ARMOUR,
-                           ARM_LEATHER_ARMOUR, ARM_ROBE);
+        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
 
         // Skills
         you.skills[SK_EVOCATIONS]  = 3;
@@ -708,12 +617,12 @@ static void _give_items_skills(const newgame_def& ng)
 
     // Deep Dwarves get a wand of heal wounds (5).
     if (you.species == SP_DEEP_DWARF)
-        newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEAL_WOUNDS, -1, 1, 5);
+        newgame_make_item(OBJ_WANDS, WAND_HEAL_WOUNDS, 1, 5);
 
     // Zotdef: everyone gets bonus two potions of curing.
 
     if (crawl_state.game_is_zotdef())
-        newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_CURING, -1, 2);
+        newgame_make_item(OBJ_POTIONS, POT_CURING, 2);
 
     if (weap_skill)
     {
@@ -726,11 +635,6 @@ static void _give_items_skills(const newgame_def& ng)
 
     if (you.species == SP_FELID)
     {
-        for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
-        {
-            you.skills[SK_UNARMED_COMBAT] += you.skills[i];
-            you.skills[i] = 0;
-        }
         you.skills[SK_THROWING] = 0;
         you.skills[SK_SHIELDS] = 0;
     }
@@ -750,28 +654,22 @@ static void _give_starting_food()
     if (you_foodless())
         return;
 
-    item_def item;
-    item.quantity = 1;
+    object_class_type base_type = OBJ_FOOD;
+    int sub_type = FOOD_BREAD_RATION;
+    int quantity = 1;
     if (you.species == SP_VAMPIRE)
     {
-        item.base_type = OBJ_POTIONS;
-        item.sub_type  = POT_BLOOD;
+        base_type = OBJ_POTIONS;
+        sub_type  = POT_BLOOD;
     }
-    else
-    {
-        item.base_type = OBJ_FOOD;
-        if (player_mutation_level(MUT_CARNIVOROUS))
-            item.sub_type = FOOD_MEAT_RATION;
-        else
-            item.sub_type = FOOD_BREAD_RATION;
-    }
+    else if (player_mutation_level(MUT_CARNIVOROUS))
+        sub_type = FOOD_MEAT_RATION;
 
     // Give another one for hungry species.
     if (player_mutation_level(MUT_FAST_METABOLISM))
-        item.quantity = 2;
+        quantity = 2;
 
-    const int slot = find_free_slot(item);
-    you.inv[slot]  = item;       // will ASSERT if couldn't find free slot
+    newgame_make_item(base_type, sub_type, quantity);
 }
 
 static void _setup_tutorial_miscs()
@@ -786,7 +684,7 @@ static void _setup_tutorial_miscs()
     // Give them some mana to play around with.
     you.mp_max_adj += 2;
 
-    _newgame_make_item_tutorial(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+    newgame_make_item(OBJ_ARMOUR, ARM_ROBE, 1, 0, 0, true);
 
     // No need for Shields skill without shield.
     you.skills[SK_SHIELDS] = 0;
@@ -794,83 +692,15 @@ static void _setup_tutorial_miscs()
     // Some spellcasting for the magic tutorial.
     if (crawl_state.map.find("tutorial_lesson4") != string::npos)
         you.skills[SK_SPELLCASTING] = 1;
-
-    // Set Str low enough for the burdened tutorial.
-    you.base_stats[STAT_STR] = 12;
 }
 
-static void _mark_starting_books()
-{
-    for (int i = 0; i < ENDOFPACK; ++i)
-        if (you.inv[i].defined() && you.inv[i].base_type == OBJ_BOOKS)
-            mark_had_book(you.inv[i]);
-}
-
-static void _give_basic_spells(job_type which_job)
-{
-    // Wanderers may or may not already have a spell. - bwr
-    if (which_job == JOB_WANDERER)
-        return;
-
-    spell_type which_spell = SPELL_NO_SPELL;
-
-    switch (which_job)
-    {
-    case JOB_WIZARD:
-    case JOB_CONJURER:
-        which_spell = SPELL_MAGIC_DART;
-        break;
-    case JOB_VENOM_MAGE:
-        which_spell = SPELL_STING;
-        break;
-    case JOB_SUMMONER:
-        which_spell = SPELL_SUMMON_SMALL_MAMMAL;
-        break;
-    case JOB_NECROMANCER:
-        which_spell = SPELL_PAIN;
-        break;
-    case JOB_ENCHANTER:
-    case JOB_ARCANE_MARKSMAN:
-        which_spell = SPELL_CORONA;
-        break;
-    case JOB_FIRE_ELEMENTALIST:
-        which_spell = SPELL_FLAME_TONGUE;
-        break;
-    case JOB_ICE_ELEMENTALIST:
-        which_spell = SPELL_FREEZE;
-        break;
-    case JOB_AIR_ELEMENTALIST:
-        which_spell = SPELL_SHOCK;
-        break;
-    case JOB_EARTH_ELEMENTALIST:
-        which_spell = SPELL_SANDBLAST;
-        break;
-    case JOB_SKALD:
-        which_spell = SPELL_INFUSION;
-        break;
-    case JOB_TRANSMUTER:
-        which_spell = SPELL_BEASTLY_APPENDAGE;
-        break;
-    case JOB_WARPER:
-        which_spell = SPELL_APPORTATION;
-        break;
-
-    default:
-        break;
-    }
-
-    if (which_spell != SPELL_NO_SPELL
-        && !spell_is_useless(which_spell, false, true))
-    {
-        add_spell_to_memory(which_spell);
-    }
-
-    return;
-}
-
-static void _give_basic_knowledge(job_type which_job)
+static void _give_basic_knowledge()
 {
     identify_inventory();
+
+    for (const item_def& i : you.inv)
+        if (i.base_type == OBJ_BOOKS)
+            mark_had_book(i);
 
     // Recognisable by appearance.
     you.type_ids[OBJ_POTIONS][POT_BLOOD] = ID_KNOWN_TYPE;
@@ -1002,20 +832,7 @@ static void _setup_generic(const newgame_def& ng)
     if (crawl_state.game_is_tutorial())
         _setup_tutorial_miscs();
 
-    _mark_starting_books();
-
-    _give_basic_spells(you.char_class);
-    _give_basic_knowledge(you.char_class);
-
-    // Clear known-useless items (potions for Mummies, etc).
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (you.inv[i].defined())
-        {
-            if (is_useless_item(you.inv[i]))
-                _newgame_clear_item(i);
-        }
-    }
+    _give_basic_knowledge();
 
     initialise_item_descriptions();
 
@@ -1059,9 +876,6 @@ static void _setup_generic(const newgame_def& ng)
     // Apply autoinscribe rules to inventory.
     request_autoinscribe();
     autoinscribe();
-
-    // Brand items as original equipment.
-    origin_set_inventory(origin_set_startequip);
 
     // We calculate hp and mp here; all relevant factors should be
     // finalised by now. (GDL)

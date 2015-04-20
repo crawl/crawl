@@ -181,7 +181,7 @@ void reassess_starting_skills()
             && (is_useless_skill(SK_ARMOUR)
                 || you_can_wear(EQ_BODY_ARMOUR) != MB_TRUE))
         {
-            // No one who can't wear mundane heavy armour shouldn't start with
+            // No one who can't wear mundane heavy armour should start with
             // the Armour skill -- D:1 dragon armour is too unlikely.
             you.skill_points[sk] += skill_exp_needed(you.skills[SK_ARMOUR],
                 SK_ARMOUR, SP_HUMAN) + 1;
