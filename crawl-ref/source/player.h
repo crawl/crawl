@@ -722,6 +722,7 @@ public:
     int silence_radius2() const;
     int liquefying_radius2() const;
     int umbra_radius2() const;
+    int stasis_radius2() const;
 #if TAG_MAJOR_VERSION == 34
     int heat_radius2() const;
 #endif

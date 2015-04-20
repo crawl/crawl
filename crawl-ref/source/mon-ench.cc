@@ -326,6 +326,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
+    case ENCH_STASIS:
         invalidate_agrid(true);
         break;
 
@@ -1078,6 +1079,17 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
             simple_monster_message(this, " is no longer unusually resistant.");
         break;
+        
+    case ENCH_STASIS:
+        invalidate_agrid();
+        if (!quiet)
+        {
+            if (alive())
+                simple_monster_message(this, " the surroundings become less static.");
+            else
+                mprf("As %s dies, the surroundings become less static.", name(DESC_THE).c_str());
+        }
+        break;
 
     default:
         break;
@@ -1483,6 +1495,12 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_BERSERK:
+        if (stasised(pos()))
+        {
+            del_ench(ENCH_BERSERK);
+            simple_monster_message(this, " is no longer berserk.");
+        }
+
         if (decay_enchantment(en))
         {
             simple_monster_message(this, " is no longer berserk.");
@@ -1513,6 +1531,14 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_SLOW:
     case ENCH_HASTE:
+        if (stasised(pos()))
+        {
+            del_ench(ENCH_SLOW);
+            del_ench(ENCH_HASTE);
+        }
+        
+        decay_enchantment(en);
+        break;
     case ENCH_SWIFT:
     case ENCH_MIGHT:
     case ENCH_FEAR:
@@ -1573,6 +1599,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_SILENCE:
     case ENCH_LIQUEFYING:
+    case ENCH_STASIS:
         decay_enchantment(en);
         invalidate_agrid();
         break;
@@ -1923,6 +1950,11 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_TP:
+        if (stasised(pos()))
+        {
+            del_ench(ENCH_TP);
+            simple_monster_message(this, " is no longer unstable.");
+        }
         if (decay_enchantment(en, true) && !no_tele(true, false))
             monster_teleport(this, true);
         break;
@@ -2327,7 +2359,7 @@ static const char *enchant_names[] =
     "negative_vuln",
 #endif
     "condensation_shield", "resistant",
-    "hexed", "corpse_armour", "chanting_fire_storm",
+    "hexed", "corpse_armour", "static", "chanting_fire_storm",
     "chanting_word_of_entropy", "buggy",
 };
 
@@ -2482,6 +2514,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_MIRROR_DAMAGE:
     case ENCH_DEATHS_DOOR:
     case ENCH_SAP_MAGIC:
+    case ENCH_STASIS:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:

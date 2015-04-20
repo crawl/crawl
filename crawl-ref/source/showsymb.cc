@@ -136,6 +136,8 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
         else if (cell.flags & MAP_HOT)
             colour = ETC_FIRE;
 #endif
+        else if (cell.flags & MAP_STASISED)
+                colour = BROWN;
     }
 
     if (Options.show_travel_trail && travel_trail_index(loc) >= 0)

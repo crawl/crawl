@@ -5399,6 +5399,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (!mon->has_ench(ENCH_HASTE)
             && !mon->is_stationary()
             && mon->add_ench(ENCH_HASTE))
+
         {
             if (!mons_is_immotile(mon)
                 && simple_monster_message(mon, " seems to speed up."))

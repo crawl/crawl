@@ -224,6 +224,10 @@ DEPTH:  D:3-4
 WEIGHT: 1
 : place_unique(_G, "Purgy")
 
+NAME:   uniq_myrmecia
+DEPTH:  Elf, Snake, Spider
+: place_unique(_G, "Myrmecia band")
+
 NAME:   uniq_roxanne
 DEPTH:  D:14-, Elf, Swamp, Snake, Shoals, Spider
 TAGS:   place_unique transparent

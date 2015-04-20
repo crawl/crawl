@@ -1,7 +1,7 @@
 #ifdef USE_TILE
 #ifndef TILECELL_H
 #define TILECELL_H
-
+ 
 enum halo_type
 {
     HALO_NONE = 0,
@@ -9,7 +9,7 @@ enum halo_type
     HALO_MONSTER = 2,
     HALO_UMBRA = 3,
 };
-
+ 
 struct packed_cell
 {
     // For anything that requires multiple dungeon tiles (such as waves)
@@ -17,12 +17,12 @@ struct packed_cell
     enum { MAX_DNGN_OVERLAY = 20 };
     int num_dngn_overlay;
     FixedVector<int, MAX_DNGN_OVERLAY> dngn_overlay;
-
+ 
     tileidx_t fg;
     tileidx_t bg;
     tile_flavour flv;
     tileidx_t cloud;
-
+ 
     bool is_bloody;
     bool is_silenced;
     char halo;
@@ -40,10 +40,11 @@ struct packed_cell
 #if TAG_MAJOR_VERSION == 34
     uint8_t heat_aura;
 #endif
-
+    bool is_stasised;
+ 
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
-
+ 
     packed_cell() : num_dngn_overlay(0), fg(0), bg(0), cloud(0), is_bloody(false),
                     is_silenced(false), halo(HALO_NONE), is_moldy(false),
                     glowing_mold(false), is_sanctuary(false), is_liquefied(false),
@@ -51,10 +52,11 @@ struct packed_cell
                     old_blood(false), travel_trail(0), quad_glow(false),
                     disjunct(false)
 #if TAG_MAJOR_VERSION == 34
-                    , heat_aura(false)
+                    , heat_aura(false),
 #endif
+                    is_stasised(false)
                     {}
-
+ 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
                                         fg(c->fg), bg(c->bg), flv(c->flv),
                                         cloud(c->cloud),
@@ -73,16 +75,17 @@ struct packed_cell
                                         quad_glow(c->quad_glow),
                                         disjunct(c->disjunct)
 #if TAG_MAJOR_VERSION == 34
-                                        , heat_aura(c->heat_aura)
+                                        , heat_aura(c->heat_aura),
 #endif
+                                        is_stasised(c->is_stasised)
                                         {}
-
+ 
     void clear();
 };
-
+ 
 // For a given location, pack any waves/ink/wall shadow tiles
 // that require knowledge of the surrounding env cells.
 void pack_cell_overlays(const coord_def &gc, packed_cell *cell);
-
+ 
 #endif // TILECELL_H
 #endif // USE_TILE

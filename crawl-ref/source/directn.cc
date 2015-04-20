@@ -1483,6 +1483,11 @@ string direction_chooser::target_silence_description() const
     return silenced(target()) ? "silenced" : "";
 }
 
+string direction_chooser::target_stasis_description() const
+{
+    return stasised(target()) ? "static" : "";
+}
+
 static void _push_back_if_nonempty(const string& str, vector<string>* vec)
 {
     if (!str.empty())
@@ -1540,6 +1545,7 @@ vector<string> direction_chooser::target_cell_description_suffixes() const
     _push_back_if_nonempty(target_cloud_description(), &suffixes);
     _push_back_if_nonempty(target_sanctuary_description(), &suffixes);
     _push_back_if_nonempty(target_silence_description(), &suffixes);
+    _push_back_if_nonempty(target_stasis_description(), &suffixes);
     _push_back_if_nonempty(target_interesting_terrain_description(), &suffixes);
 
     return suffixes;
@@ -3568,6 +3574,8 @@ static bool _print_cloud_desc(const coord_def where)
         areas.emplace_back("is covered in magical glow");
     if (disjunction_haloed(where))
         areas.emplace_back("is bathed in translocation energy");
+    if (stasised(where))
+        areas.emplace_back("is static");
     if (!areas.empty())
     {
         mprf("This square %s.",

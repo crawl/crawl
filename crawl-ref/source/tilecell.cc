@@ -41,6 +41,7 @@ void packed_cell::clear()
 #if TAG_MAJOR_VERSION == 34
     heat_aura        = 0;
 #endif
+    is_stasised      = false;
 }
 
 bool packed_cell::operator ==(const packed_cell &other) const
@@ -66,6 +67,7 @@ bool packed_cell::operator ==(const packed_cell &other) const
 #if TAG_MAJOR_VERSION == 34
     if (heat_aura != other.heat_aura) return false;
 #endif
+    if (is_stasised != other.is_stasised) return false;
 
     if (num_dngn_overlay != other.num_dngn_overlay) return false;
     for (int i = 0; i < num_dngn_overlay; ++i)

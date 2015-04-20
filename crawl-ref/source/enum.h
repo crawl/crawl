@@ -1848,6 +1848,7 @@ enum duration_type
     DUR_NEGATIVE_VULN,
 #endif
     DUR_CLEAVE,
+    DUR_STASIS,
     DUR_GOZAG_GOLD_AURA,
     DUR_COLLAPSE,
     DUR_BRAINLESS,
@@ -2001,6 +2002,7 @@ enum enchant_type
     ENCH_RESISTANCE,
     ENCH_HEXED,
     ENCH_BONE_ARMOUR,
+    ENCH_STASIS,
     ENCH_CHANT_FIRE_STORM, // chanting the fire storm spell
     ENCH_CHANT_WORD_OF_ENTROPY, // chanting word of entropy
     // Update enchantment names in mon-ench.cc when adding or removing
@@ -3183,6 +3185,7 @@ enum monster_type                      // menv[].type
     MONS_NATASHA,
     MONS_VASHNIA,
     MONS_ROBIN,
+    MONS_MYRMECIA,
     MONS_MOON_TROLL,
 #endif
     // Sprint uniques:
@@ -3369,6 +3372,9 @@ enum monster_type                      // menv[].type
 
     MONS_SHARD_SHRIKE,
     MONS_SINGULARITY,
+    
+    MONS_MYRMECIA,
+
     MONS_SALAMANDER_STORMCALLER,
     MONS_ENTROPY_WEAVER,
     MONS_MOON_TROLL,
@@ -4447,6 +4453,7 @@ enum spell_type
     SPELL_CIGOTUVIS_EMBRACE,
     SPELL_SINGULARITY,
     SPELL_GRAVITAS,
+    SPELL_STASIS,
     SPELL_CHANT_FIRE_STORM,
     SPELL_CHANT_WORD_OF_ENTROPY,
     NUM_SPELLS

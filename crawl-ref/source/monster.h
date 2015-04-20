@@ -420,6 +420,7 @@ public:
 #if TAG_MAJOR_VERSION == 34
     int heat_radius2() const;
 #endif
+    int stasis_radius2() const;
     bool glows_naturally() const;
     bool petrified() const;
     bool petrifying() const;
@@ -452,6 +453,7 @@ public:
     bool can_throw_large_rocks() const;
     bool can_speak();
     bool is_silenced() const;
+    bool is_stasised() const;
 
     int base_armour_class() const;
     int armour_class(bool calc_unid = true) const;

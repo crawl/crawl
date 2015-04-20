@@ -727,6 +727,11 @@ bool monster::is_silenced() const
                && !res_water_drowning();
 }
 
+bool monster::is_stasised() const
+{
+    return stasised(pos());
+}
+
 bool monster::search_slots(function<bool (const mon_spell_slot &)> func) const
 {
     return any_of(begin(spells), end(spells), func);
@@ -6816,6 +6821,13 @@ bool monster::stasis(bool calc_unid, bool items) const
 {
     if (mons_genus(type) == MONS_FORMICID
         || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID)
+
+    {
+        return true;
+    }
+    
+    if (stasised(pos()))
+    
     {
         return true;
     }

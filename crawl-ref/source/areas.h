@@ -15,6 +15,7 @@ enum area_centre_type
 #if TAG_MAJOR_VERSION == 34
     AREA_HOT,
 #endif
+    AREA_STASIS,
 };
 
 void invalidate_agrid(bool recheck_new = false);
@@ -53,4 +54,6 @@ bool umbraed(const coord_def& p);
 bool heated(const coord_def& p);
 #endif
 
+// ...or under stasis?
+bool stasised(const coord_def& p);
 #endif

@@ -5755,6 +5755,28 @@ VISUAL:@The_monster@ clenches @possessive@ claws.
 
 VISUAL:@The_monster@ looks very sad for a moment.
 %%%%
+############ Myrmecia ### A formicid warrior
+Myrmecia
+
+@_Myrmecia_common_@
+
+w:5
+@_Myrmecia_rare_@
+%%%%
+_Myrmecia_common_
+
+VISUAL:@The_monster@ throws a rock @at_foe@ with an extra hand.
+
+VISUAL:@The_monster@ waves @possessive@ antennae @at_foe@.
+
+@The_monster@ taunts @foe@, "Too scared to fight me!"
+
+%%%%
+_Myrmecia_rare_
+
+VISUAL:@The_monster@ feints @at_foe@.
+
+%%%%
 ############ ROXANNE ### a sapphire statue of an earth mage
 Roxanne
 

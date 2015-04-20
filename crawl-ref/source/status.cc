@@ -611,6 +611,16 @@ bool fill_status_info(int status, status_info* inf)
 
         break;
     }
+    
+    case STATUS_STATIC:
+        if (stasised(you.pos()) && !you.duration[DUR_STASIS])
+        {
+            inf->light_colour = BROWN;
+            inf->light_text   = "Stasis";
+            inf->short_text   = "static";
+            inf->long_text    = "You are under stasis.";
+        }
+        break;
 
     default:
         if (!found)
