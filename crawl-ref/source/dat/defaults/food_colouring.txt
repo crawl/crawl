@@ -14,6 +14,4 @@ inv += $preferred:.*preferred.*
 
 inv += $inedible:.*inedible.*
 
-# Mutagenic corpses/chunks. Only match the prefix (which comes before
-# the category prefix) and not the item name ("mutagenic chunk of flesh").
-inv += $mutagenic:.*mutagenic.*(food|corpse).*
+inv += $mutagenic:.*mutagenic.*
