@@ -1647,7 +1647,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *agent)
         behaviour_event(mon, ME_WHACK, agent);
 
         // Monster survived, remove any poison.
-        mon->del_ench(ENCH_POISON);
+        mon->del_ench(ENCH_POISON, true); // suppress spam
         print_wounds(mon);
     }
     else
