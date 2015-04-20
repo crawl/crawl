@@ -330,20 +330,12 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
         _update_weapon(ng);
 
-        if (species_is_draconian(you.species))
-        {
-            newgame_make_item(1, EQ_GLOVES, OBJ_ARMOUR, ARM_GLOVES);
-            newgame_make_item(3, EQ_BOOTS, OBJ_ARMOUR, ARM_BOOTS);
-        }
-        else
-        {
-            newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL,
-                              ARM_ROBE);
-        }
+        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL,
+                          ARM_ROBE);
         newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR,
                           you.body_size() >= SIZE_MEDIUM ? ARM_SHIELD
                                                          : ARM_BUCKLER);
-        newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_MIGHT);
+        newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_MIGHT);
 
         // Skills.
         you.skills[SK_FIGHTING] = 3;
