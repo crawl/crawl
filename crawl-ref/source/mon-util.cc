@@ -3644,8 +3644,8 @@ bool monster_shover(const monster* m)
     if (m->type == MONS_ROBIN)
         return false;
 
-    // no dumb creatures pushing, aside from jellies, which just kind of ooze.
-    return mons_intel(m) >= I_REPTILE || mons_genus(m->type) == MONS_JELLY;
+    // no mindless creatures pushing, aside from jellies, which just kind of ooze.
+    return mons_intel(m) > I_PLANT || mons_genus(m->type) == MONS_JELLY;
 }
 
 /**
@@ -3707,16 +3707,17 @@ bool monster_shover(const monster* m)
     {
         return true;
     }
+    const bool related = mons_genus(m1->type) == mons_genus(m2->type)
+                         || m1->holiness() == MH_DEMONIC
+                            && m2->holiness() == MH_DEMONIC;
 
-    // Aside from those special cases, only related monsters can push past
-    // each-other. (All demons are 'related'.)
-    if (mons_genus(m1->type) != mons_genus(m2->type)
-        && (m1->holiness() != MH_DEMONIC || m2->holiness() != MH_DEMONIC))
-    {
-        return false;
-    }
-
-    return fleeing || m1->get_hit_dice() > m2->get_hit_dice();
+    // Let all related monsters (all demons are 'related') push past ones that
+    // are weaker at all. Unrelated ones have to be quite a bit stronger, to
+    // reduce excessive swapping and because HD correlates only weakly with
+    // monster strength.
+    return related && fleeing
+           || related && m1->get_hit_dice() > m2->get_hit_dice()
+           || m1->get_hit_dice() > m2->get_hit_dice() + 5;
 }
 
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
