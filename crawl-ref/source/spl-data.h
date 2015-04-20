@@ -3456,7 +3456,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SIREN_SONG, "Siren Song",
      SPTYP_HEXES,
-     SPFLAG_AREA,
+     SPFLAG_AREA | SPFLAG_MR_CHECK,
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -3467,7 +3467,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_AVATAR_SONG, "Avatar Song",
      SPTYP_HEXES,
-     SPFLAG_AREA,
+     SPFLAG_AREA | SPFLAG_MR_CHECK,
      7,
      200,
      LOS_RADIUS, LOS_RADIUS,
