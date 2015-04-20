@@ -980,13 +980,6 @@ void origin_acquired(item_def &item, int agent)
     item.orig_monnum = -agent;
 }
 
-void origin_set_inventory(void (*oset)(item_def &item))
-{
-    for (int i = 0; i < ENDOFPACK; ++i)
-        if (you.inv[i].defined())
-            oset(you.inv[i]);
-}
-
 static string _milestone_rune(const item_def &item)
 {
     return string("found ") + item.name(DESC_A) + ".";
