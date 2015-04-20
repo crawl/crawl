@@ -202,6 +202,7 @@ orc CORPSE_ORC
 
 ## Human shaped ('p')
 human CORPSE_HUMAN
+entropy_weaver CORPSE_ENTROPY_WEAVER
 halfling CORPSE_HALFLING
 killer_klown_blue CORPSE_KILLER_KLOWN
 killer_klown_green
