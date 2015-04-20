@@ -3277,6 +3277,13 @@ static void _move_player(coord_def move)
                 moving = false;
             }
         }
+        else if (targ_monst->temp_attitude() == ATT_NEUTRAL)
+        {
+            simple_monster_message(targ_monst, " refuses to make way for you. "
+                                             "(Use ctrl+direction to attack)");
+            you.turn_is_over = false;
+            return;
+        }
         else if (!try_to_swap) // attack!
         {
             // XXX: Moving into a normal wall does nothing and uses no
