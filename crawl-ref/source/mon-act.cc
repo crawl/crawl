@@ -1410,14 +1410,12 @@ static bool _handle_wand(monster* mons, bolt &beem)
     //        out of sight of the player [rob]
     if (!mons_near(mons)
         || mons->asleep()
+        || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
         || mons->has_ench(ENCH_SUBMERGED)
         || coinflip())
     {
         return false;
     }
-
-    if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
-        return false;
 
     if (mons->inv[MSLOT_WEAPON] != NON_ITEM
         && mitm[mons->inv[MSLOT_WEAPON]].base_type == OBJ_RODS)
@@ -1425,15 +1423,25 @@ static bool _handle_wand(monster* mons, bolt &beem)
         return _handle_rod(mons, beem);
     }
 
-    if (mons->inv[MSLOT_WAND] == NON_ITEM
-        || mitm[mons->inv[MSLOT_WAND]].plus <= 0)
-    {
+    if (mons->inv[MSLOT_WAND] == NON_ITEM)
         return false;
-    }
+
+    item_def &wand = mitm[mons->inv[MSLOT_WAND]];
 
     // Make sure the item actually is a wand.
-    if (mitm[mons->inv[MSLOT_WAND]].base_type != OBJ_WANDS)
+    if (wand.base_type != OBJ_WANDS)
         return false;
+
+    if (wand.charges == 0 && wand.used_count != ZAPCOUNT_EMPTY)
+    {
+        if (simple_monster_message(mons, " zaps a wand."))
+            canned_msg(MSG_NOTHING_HAPPENS);
+        else if (!silenced(you.pos()))
+            mprf(MSGCH_SOUND, "You hear a zap.");
+        wand.used_count = ZAPCOUNT_EMPTY;
+        mons->lose_energy(EUT_ITEM);
+        return true;
+    }
 
     bool niceWand    = false;
     bool zap         = false;
@@ -1441,8 +1449,6 @@ static bool _handle_wand(monster* mons, bolt &beem)
 
     if (!_setup_wand_beam(beem, mons))
         return false;
-
-    item_def &wand = mitm[mons->inv[MSLOT_WAND]];
 
     const wand_type kind = (wand_type)wand.sub_type;
     switch (kind)
