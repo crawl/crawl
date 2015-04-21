@@ -362,7 +362,7 @@ static string _item_class_name(item_base_type base_type)
     return name;
 }
 
-static int _item_orig_sub_type(item_type &item)
+static int _item_orig_sub_type(const item_type &item)
 {
     int type;
     switch (item.base_type)
@@ -419,7 +419,7 @@ static int _item_max_sub_type(item_base_type base_type)
     return num;
 }
 
-static item_def _dummy_item(item_type &item)
+static item_def _dummy_item(const item_type &item)
 {
     item_def dummy_item;
     dummy_item.base_type = _item_orig_base_type(item.base_type);
@@ -502,12 +502,13 @@ static void _init_stats()
                 string max_field = _item_has_antiquity(base_type)
                     ? "AllNumMax" : "NumMax";
                 item_recs[lev].emplace_back();
-                item_recs[lev][i] = { };
-                rec_cutoff = _item_max_sub_type(base_type);
-                rec_cutoff = rec_cutoff == 1 ? 0 : rec_cutoff;
-                for (int  j = 0; j <= rec_cutoff; j++)
+                // An additional entry for the across-subtype summary if
+                // there's more than one.
+                int num_entries = _item_max_sub_type(base_type);
+                num_entries = num_entries == 1 ? 1 : num_entries + 1;
+                for (int  j = 0; j < num_entries; j++)
                 {
-                    item_recs[lev][i][j].emplace_back();
+                    item_recs[lev][i].emplace_back();
                     for (const string &field : item_fields[i])
                         item_recs[lev][i][j][field] = 0;
                     // For determining the NumSD, NumMin and NumMax fields.
@@ -517,21 +518,21 @@ static void _init_stats()
                 }
             }
             weapon_brands[lev] = { };
-            for (int i = 0; i <= NUM_WEAPONS; i++)
+            for (int i = 0; i < NUM_WEAPONS + 1; i++)
             {
                 weapon_brands[lev].emplace_back(3,
                         vector<int>(NUM_SPECIAL_WEAPONS, 0));
             }
 
-            weapon_brands[lev] = { };
-            for (int i = 0; i <= NUM_ARMOURS; i++)
+            armour_brands[lev] = { };
+            for (int i = 0; i < NUM_ARMOURS + 1; i++)
             {
                 armour_brands[lev].emplace_back(3,
                         vector<int>(NUM_SPECIAL_ARMOURS, 0));
             }
 
             missile_brands[lev] = { };
-            for (int i = 0; i <= NUM_MISSILES; i++)
+            for (int i = 0; i < NUM_MISSILES + 1; i++)
                 missile_brands[lev].emplace_back(NUM_SPECIAL_MISSILES, 0);
 
             for (const auto &mentry : valid_monsters)
@@ -547,26 +548,35 @@ static void _init_stats()
     }
 }
 
-static void _record_item_stat(level_id &lev, item_type &item, string field,
-                          double value)
+static void _record_item_stat(const level_id &lev, const item_type &item,
+                              string field, double value)
 {
     int class_sum = _item_max_sub_type(item.base_type);
     level_id br_lev(lev.branch, -1);
 
     item_recs[lev][item.base_type][item.sub_type][field] += value;
-    item_recs[lev][item.base_type][class_sum][field] += value;
+
     item_recs[br_lev][item.base_type][item.sub_type][field] += value;
-    item_recs[br_lev][item.base_type][class_sum][field] += value;
     item_recs[all_lev][item.base_type][item.sub_type][field] += value;
-    item_recs[all_lev][item.base_type][class_sum][field] += value;
+    // Only record a class summary if more than one subtype exists
+    if (class_sum > 1)
+    {
+        item_recs[lev][item.base_type][class_sum][field] += value;
+        item_recs[br_lev][item.base_type][class_sum][field] += value;
+        item_recs[all_lev][item.base_type][class_sum][field] += value;
+    }
 }
 
-static void _record_equip_brand(brand_records brands, level_id lev,
-                                item_type &item, bool is_arte, int brand)
+static void _record_equip_brand(brand_records &brands, const level_id &lev,
+                                const item_type &item, int quantity,
+                                bool is_arte, int brand)
 {
     ASSERT(item.base_type == ITEM_WEAPONS || item.base_type == ITEM_ARMOUR);
+
     int allst = _item_max_sub_type(item.base_type);
     int antiq = is_arte ? ANTIQ_ARTEFACT : ANTIQ_ORDINARY;
+    level_id br_lev(lev.branch, -1);
+
     brands[lev][item.sub_type][antiq][brand] += quantity;
     brands[lev][item.sub_type][ANTIQ_ALL][brand] += quantity;
     brands[lev][allst][antiq][brand] += quantity;
@@ -584,21 +594,20 @@ static void _record_equip_brand(brand_records brands, level_id lev,
 }
 
 
-static void _record_brand(level_id &lev, item_type &item, int quantity,
-                          bool is_arte, int brand)
+static void _record_brand(const level_id &lev, const item_type &item,
+                          int quantity, bool is_arte, int brand)
 {
     ASSERT(item.base_type == ITEM_WEAPONS || item.base_type == ITEM_ARMOUR
            || item.base_type == ITEM_MISSILES);
-    int allst = _item_max_sub_type(item.base_type);
-    int antiq = is_arte ? ANTIQ_ARTEFACT : ANTIQ_ORDINARY;
-    bool is_weap = item.base_type == ITEM_WEAPONS;
-    bool is_armour = item.base_type == ITEM_ARMOUR;
-    level_id br_lev(lev.branch, -1);
+    const int allst = _item_max_sub_type(item.base_type);
+    const bool is_weap = item.base_type == ITEM_WEAPONS;
+    const bool is_armour = item.base_type == ITEM_ARMOUR;
+    const level_id br_lev(lev.branch, -1);
 
     if (is_weap)
-        record_equip_brands(weapon_brands, lev, item, is_arte, brand);
+        _record_equip_brand(weapon_brands, lev, item, quantity, is_arte, brand);
     else if (is_armour)
-        record_equip_brands(armour_brands, lev, item, is_arte, brand);
+        _record_equip_brand(armour_brands, lev, item, quantity, is_arte, brand);
     else
     {
         missile_brands[lev][item.sub_type][brand] += quantity;
@@ -802,8 +811,8 @@ void objstat_record_item(item_def &item)
 static void _record_monster_stat(level_id &lev, int mons_ind, string field,
                                  double value)
 {
-    level_id br_lev(lev.branch, -1);
-    int sum_ind = valid_monsters[NUM_MONSTERS];
+    const level_id br_lev(lev.branch, -1);
+    const int sum_ind = valid_monsters[NUM_MONSTERS];
 
     monster_recs[lev][mons_ind][field] += value;
     monster_recs[lev][sum_ind][field] += value;
@@ -872,7 +881,9 @@ void objstat_iteration_stats()
             for (int i = 0; i < NUM_ITEM_BASE_TYPES; i++)
             {
                 item_base_type base_type = static_cast<item_base_type>(i);
-                for (int  j = 0; j <= _item_max_sub_type(base_type); j++)
+                int num_entries = _item_max_sub_type(base_type);
+                num_entries = num_entries == 1 ? 1 : num_entries + 1;
+                for (int  j = 0; j < num_entries ; j++)
                 {
                     bool use_all = _item_has_antiquity(base_type)
                         || base_type == ITEM_DECKS;
@@ -903,49 +914,11 @@ void objstat_iteration_stats()
     }
 }
 
-static void _write_level_headers(branch_type br, int num_fields)
+static void _write_stat_headers(const vector<string> &fields)
 {
-    unsigned int level_count = 0;
-    vector<level_id> &levels = stat_branches[br];
-
-    fprintf(stat_outf, "Place");
-    for (level_id lid : levels)
-    {
-        if (br == NUM_BRANCHES)
-            fprintf(stat_outf, "\tAllLevels");
-        else
-            fprintf(stat_outf, "\t%s", lid.describe().c_str());
-
-        for (int i = 0; i < num_fields - 1; i++)
-            fprintf(stat_outf, "\t");
-        if (++level_count == levels.size() && level_count > 1)
-        {
-            fprintf(stat_outf, "\t%s", branches[lid.branch].abbrevname);
-            for (int i = 0; i < num_fields - 1; i++)
-                fprintf(stat_outf, "\t");
-        }
-    }
-    fprintf(stat_outf, "\n");
-}
-
-static void _write_stat_headers(branch_type br, const vector<string> &fields)
-{
-    unsigned int level_count = 0;
-    vector<level_id> &levels = stat_branches[br];
-
-    fprintf(stat_outf, "Property");
-    for (level_id lid : levels)
-    {
-        UNUSED(lid);
-        for (const string &field : fields)
-            fprintf(stat_outf, "\t%s", field.c_str());
-
-        if (++level_count == levels.size() && level_count > 1)
-        {
-            for (const string &field : fields)
-                fprintf(stat_outf, "\t%s", field.c_str());
-        }
-    }
+    fprintf(stat_outf, "\tLevel");
+    for (const string &field : fields)
+        fprintf(stat_outf, "\t%s", field.c_str());
     fprintf(stat_outf, "\n");
 }
 
@@ -977,12 +950,12 @@ static void _write_stat(map<string, double> &stats, string field)
         value = stats[field] / stats["OrdNum"];
     else if (field == "NumSD" || field == "AllNumSD")
     {
-        string num_f = field == "NumSD" ? "Num" : "AllNum";
+        const string num_f = field == "NumSD" ? "Num" : "AllNum";
         if (SysEnv.map_gen_iters == 1)
             value = 0;
         else
         {
-            double mean = stats[num_f] / SysEnv.map_gen_iters;
+            const double mean = stats[num_f] / SysEnv.map_gen_iters;
             value = sqrt((SysEnv.map_gen_iters / (SysEnv.map_gen_iters - 1.0))
                          * (stats[field] / SysEnv.map_gen_iters - mean * mean));
         }
@@ -998,7 +971,7 @@ static void _write_stat(map<string, double> &stats, string field)
     fprintf(stat_outf, "%s", output.str().c_str());
 }
 
-static string _brand_name(item_type &item, int brand)
+static string _brand_name(const item_type &item, int brand)
  {
      string brand_name = "";
      item_def dummy_item = _dummy_item(item);
@@ -1026,38 +999,8 @@ static string _brand_name(item_type &item, int brand)
      return brand_name;
  }
 
-static void _write_brand_stats(vector<int> &brand_stats, item_type &item)
+static string _item_name(const item_type &item)
 {
-    ASSERT(item.base_type == ITEM_WEAPONS || item.base_type == ITEM_ARMOUR
-           || item.base_type == ITEM_MISSILES);
-    item_def dummy_item = _dummy_item(item);
-    unsigned int num_brands = brand_stats.size();
-    bool first_brand = true;
-    ostringstream brand_summary;
-
-    brand_summary.setf(ios_base::fixed);
-    brand_summary.precision(STAT_PRECISION);
-    for (unsigned int i = 0; i < num_brands; i++)
-    {
-        string brand_name = "";
-        double value = (double) brand_stats[i] / SysEnv.map_gen_iters;
-        if (brand_stats[i] == 0)
-            continue;
-
-        if (first_brand)
-            first_brand = false;
-        else
-            brand_summary << ",";
-
-        brand_name = _brand_name(item, i);
-        brand_summary << brand_name.c_str() << "(" << value << ")";
-    }
-    fprintf(stat_outf, "\t%s", brand_summary.str().c_str());
-}
-
-static string _item_name(item_type &item)
-{
-
     string name = "";
 
     if (item.sub_type == _item_max_sub_type(item.base_type))
@@ -1080,164 +1023,224 @@ static string _item_name(item_type &item)
     return name;
 }
 
-static void _write_item_stats(branch_type br, item_type &item)
+static string _level_name(level_id lev)
 {
-    bool is_weap = item.base_type == ITEM_WEAPONS;
-    bool is_armour = item.base_type == ITEM_ARMOUR;
-    bool is_missile = item.base_type == ITEM_MISSILES;
+    string name;
+    if (lev.branch == NUM_BRANCHES)
+        name = "AllLevels";
+    else if (lev.depth == -1)
+        name = lev.describe(false, false);
+    else
+        name = make_stringf("%s:%02d", lev.describe(false, false).c_str(),
+                            lev.depth);
+    return name;
+}
+
+static void _write_brand_stats(const vector<int> &brand_stats,
+                               const item_type &item)
+{
+    ASSERT(item.base_type == ITEM_WEAPONS || item.base_type == ITEM_ARMOUR
+           || item.base_type == ITEM_MISSILES);
+    const item_def dummy_item = _dummy_item(item);
+    const unsigned int num_brands = brand_stats.size();
+    bool first_brand = true;
+    ostringstream brand_summary;
+
+    brand_summary.setf(ios_base::fixed);
+    brand_summary.precision(STAT_PRECISION);
+    for (unsigned int i = 0; i < num_brands; i++)
+    {
+        if (brand_stats[i] == 0)
+            continue;
+
+        string brand_name = "";
+        const double value = (double) brand_stats[i] / SysEnv.map_gen_iters;
+
+        if (first_brand)
+            first_brand = false;
+        else
+            brand_summary << ";";
+        brand_name = _brand_name(item, i);
+        brand_summary << brand_name.c_str() << ":" << value;
+    }
+    fprintf(stat_outf, "\t%s", brand_summary.str().c_str());
+}
+
+static void _write_level_brand_stats(const level_id lev, const item_type &item)
+{
+    if (item.base_type == ITEM_WEAPONS)
+    {
+        for (int j = 0; j < 3; j++)
+            _write_brand_stats(weapon_brands[lev][item.sub_type][j], item);
+    }
+    else if (item.base_type == ITEM_ARMOUR)
+    {
+        for (int j = 0; j < 3; j++)
+            _write_brand_stats(armour_brands[lev][item.sub_type][j], item);
+    }
+    else if (item.base_type == ITEM_MISSILES)
+        _write_brand_stats(missile_brands[lev][item.sub_type], item);
+}
+
+static void _write_branch_item_stats(branch_type br, const item_type &item)
+{
     unsigned int level_count = 0;
     const vector<string> &fields = item_fields[item.base_type];
     vector<level_id>::const_iterator li;
+    const string name = _item_name(item);
+    const char *num_field = _item_has_antiquity(item.base_type) ? "AllNum"
+        : "Num";
+    const level_id br_lev(br, -1);
 
-    fprintf(stat_outf, "%s", _item_name(item).c_str());
     for (level_id lid : stat_branches[br])
     {
+        ++level_count;
+        if (item_recs[lid][item.base_type][item.sub_type][num_field] < 1)
+            continue;
+        fprintf(stat_outf, "%s\t%s", name.c_str(), _level_name(lid).c_str());
         map <string, double> &item_stats =
             item_recs[lid][item.base_type][item.sub_type];
         for (const string &field : fields)
             _write_stat(item_stats, field);
-
-        if (is_weap)
-            for (int j = 0; j < 3; j++)
-                _write_brand_stats(weapon_brands[lev][item.sub_types][j], item);
-        else if (is_armour)
-            for (int j = 0; j < 3; j++)
-                _write_brand_stats(armour_brands[lev][item.sub_types][j], item);
-        else if (is_missile)
-            _write_brand_stats(missile_brands[lid][item.sub_type], item);
-
-        if (++level_count == stat_branches[lid.branch].size() && level_count > 1)
-        {
-            level_id br_lev(lid.branch, -1);
-            map <string, double> &branch_stats =
-                item_recs[br_lev][item.base_type][item.sub_type];
-
-            for (const string &field : fields)
-                _write_stat(branch_stats, field);
-
-            if (is_weap)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    _write_brand_stats(weapon_brands[br_lev][item.sub_types][j],
-                                       item);
-                }
-            }
-            else if (is_armour)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    _write_brand_stats(armour_brands[br_lev][item.sub_types][j],
-                                       item);
-                }
-            }
-            else if (is_missile)
-                _write_brand_stats(missile_brands[br_lev][item.sub_type], item);
-        }
+        _write_level_brand_stats(lid, item);
+        fprintf(stat_outf, "\n");
     }
-    fprintf(stat_outf, "\n");
+    if (level_count > 1
+        && item_recs[br_lev][item.base_type][item.sub_type][num_field] > 0)
+    {
+        map <string, double> &branch_stats =
+            item_recs[br_lev][item.base_type][item.sub_type];
+        fprintf(stat_outf, "%s\t%s", name.c_str(), _level_name(br_lev).c_str());
+        for (const string &field : fields)
+            _write_stat(branch_stats, field);
+        _write_level_brand_stats(br_lev, item);
+        fprintf(stat_outf, "\n");
+    }
 }
 
-static void _write_monster_stats(branch_type br, monster_type mons_type,
-                                 int mons_ind)
+static void _write_branch_monster_stats(branch_type br, monster_type mons_type,
+                                        int mons_ind)
 {
     unsigned int level_count = 0;
     const vector<string> &fields = monster_fields;
+    string mons_name;
+    const level_id br_lev(br, -1);
 
     if (mons_ind == valid_monsters[NUM_MONSTERS])
-        fprintf(stat_outf, "All Monsters");
+        mons_name = "All Monsters";
     else
-        fprintf(stat_outf, "%s", mons_type_name(mons_type, DESC_PLAIN).c_str());
+        mons_name = mons_type_name(mons_type, DESC_PLAIN);
     for (level_id lid : stat_branches[br])
     {
+        ++level_count;
+        if (monster_recs[lid][mons_ind]["Num"] < 1)
+            continue;
+        fprintf(stat_outf, "%s\t%s", mons_name.c_str(),
+                _level_name(lid).c_str());
         for (const string &field : fields)
             _write_stat(monster_recs[lid][mons_ind], field);
-
-        if (++level_count == stat_branches[lid.branch].size() && level_count > 1)
-        {
-            level_id br_lev(lid.branch, -1);
-            for (const string &field : fields)
-                _write_stat(monster_recs[br_lev][mons_ind], field);
-        }
+        fprintf(stat_outf, "\n");
     }
-    fprintf(stat_outf, "\n");
+    // If there are multiple levels for this branch, print a branch summary.
+    if (level_count > 1 && monster_recs[br_lev][mons_ind]["Num"] > 0)
+    {
+        fprintf(stat_outf, "%s\t%s", mons_name.c_str(),
+                _level_name(br_lev).c_str());
+        for (const string &field : fields)
+            _write_stat(monster_recs[br_lev][mons_ind], field);
+        fprintf(stat_outf, "\n");
+    }
 }
 
-static void _write_branch_stats(branch_type br)
+static FILE * _open_stat_file(string stat_file)
 {
-    fprintf(stat_outf, "\n\nItem Generation Stats:");
-    for (int i = 0; i < NUM_ITEM_BASE_TYPES; i++)
+    FILE *stat_fh = NULL;
+    stat_fh = fopen(stat_file.c_str(), "w");
+    if (!stat_fh)
     {
-        item_base_type base_type = static_cast<item_base_type>(i);
-        int num_types = _item_max_sub_type(base_type);
-        vector<string> fields = item_fields[base_type];
-
-        fprintf(stat_outf, "\n%s\n", _item_class_name(base_type).c_str());
-        if (base_type == ITEM_WEAPONS || base_type == ITEM_ARMOUR)
-        {
-            for (int j = 0; j < 3; j++)
-                fields.push_back(equip_brand_fields[j]);
-        }
-        else if (base_type == ITEM_MISSILES)
-            fields.push_back(missile_brand_field);
-
-        _write_level_headers(br, fields.size());
-        _write_stat_headers(br, fields);
-        for (int j = 0; j <= num_types; j++)
-        {
-            item_type item(base_type, j);
-            _write_item_stats(br, item);
-        }
+        fprintf(stderr, "Unable to open objstat output file: %s\n"
+                "Error: %s", stat_file.c_str(), strerror(errno));
+        end(1);
     }
-    fprintf(stat_outf, "\n\nMonster Generation Stats:\n");
-    _write_level_headers(br, monster_fields.size());
-    _write_stat_headers(br, monster_fields);
+    return stat_fh;
+}
 
-    for (const auto &entry : valid_monsters)
-        _write_monster_stats(br, entry.first, entry.second);
+static void _write_item_stats(item_base_type base_type)
+{
+    ostringstream out_file;
+    out_file << stat_out_prefix << _item_class_name(base_type).c_str()
+             << stat_out_ext;
+    stat_outf = _open_stat_file(out_file.str());
+    const int num_types = _item_max_sub_type(base_type);
+    vector<string> fields = item_fields[base_type];
+    stat_outf = _open_stat_file(out_file.str());
+    if (base_type == ITEM_WEAPONS || base_type == ITEM_ARMOUR)
+    {
+        for (int j = 0; j < 3; j++)
+            fields.push_back(equip_brand_fields[j]);
+    }
+    else if (base_type == ITEM_MISSILES)
+        fields.push_back(missile_brand_field);
+
+    _write_stat_headers(fields);
+    // If there is more than one subtype, we have an additional entry for
+    // the sum across subtypes.
+    int num_entries = num_types == 1 ? 1 : num_types + 1;
+    for (int j = 0; j < num_entries; j++)
+    {
+        item_type item(base_type, j);
+        for (const auto &br : stat_branches)
+            _write_branch_item_stats(br.first, item);
+    }
+    fclose(stat_outf);
+    printf("Wrote %s item stats to %s.\n", _item_class_name(base_type).c_str(),
+           out_file.str().c_str());
+}
+
+static void _write_stat_info()
+{
+    string all_desc;
+    if (num_branches > 1)
+    {
+        if (SysEnv.map_gen_range.get())
+            all_desc = SysEnv.map_gen_range.get()->describe();
+        else
+            all_desc = "All Levels";
+        all_desc = "Levels included in AllLevels: " + all_desc + "\n";
+    }
+    ostringstream out_file;
+    out_file << stat_out_prefix << "Info" << stat_out_ext;
+    stat_outf = _open_stat_file(out_file.str());
+    fprintf(stat_outf, "Object Generation Stats\n"
+            "Number of iterations: %d\n"
+            "Number of branches: %d\n"
+            "%s"
+            "Number of levels: %d\n"
+            "Version: %s\n", SysEnv.map_gen_iters, num_branches,
+            all_desc.c_str(), num_levels, Version::Long);
+    fclose(stat_outf);
+    printf("Wrote Objstat Info to %s.\n", out_file.str().c_str());
 }
 
 static void _write_object_stats()
 {
     string all_desc = "";
-
-    for (const auto &entry : stat_branches)
+    _write_stat_info();
+    for (int i = 0; i < NUM_ITEM_BASE_TYPES; i++)
     {
-        string branch_name;
-        if (entry.first == NUM_BRANCHES)
-        {
-            if (num_branches == 1)
-                continue;
-            branch_name = "AllLevels";
-            if (SysEnv.map_gen_range.get())
-                all_desc = SysEnv.map_gen_range.get()->describe();
-            else
-                all_desc = "All Branches";
-            all_desc = "Levels included in AllLevels: " + all_desc + "\n";
-        }
-        else
-            branch_name = branches[entry.first].abbrevname;
-        ostringstream out_file;
-        out_file << stat_out_prefix << branch_name << stat_out_ext;
-        stat_outf = fopen(out_file.str().c_str(), "w");
-        if (!stat_outf)
-        {
-            fprintf(stderr, "Unable to open objstat output file: %s\n"
-                    "Error: %s", out_file.str().c_str(), strerror(errno));
-            end(1);
-        }
-        fprintf(stat_outf, "Object Generation Stats\n"
-                "Number of iterations: %d\n"
-                "Number of branches: %d\n"
-                "%s"
-                "Number of levels: %d\n"
-                "Version: %s\n", SysEnv.map_gen_iters, num_branches,
-                all_desc.c_str(), num_levels, Version::Long);
-        _write_branch_stats(entry.first);
-        fclose(stat_outf);
-        printf("Wrote statistics for branch %s to %s.\n", branch_name.c_str(),
-               out_file.str().c_str());
+        item_base_type base_type = static_cast<item_base_type>(i);
+        _write_item_stats(base_type);
     }
+    ostringstream out_file;
+    out_file << stat_out_prefix << "Monsters" << stat_out_ext;
+    stat_outf = _open_stat_file(out_file.str());
+    _write_stat_headers(monster_fields);
+    for (const auto &entry : valid_monsters)
+        for (const auto &br : stat_branches)
+            _write_branch_monster_stats(br.first, entry.first, entry.second);
+    printf("Wrote Monster stats to %s.\n", out_file.str().c_str());
+    fclose(stat_outf);
+
 }
 
 void objstat_generate_stats()
@@ -1255,6 +1258,8 @@ void objstat_generate_stats()
     run_map_local_preludes();
 
     // Populate a vector of the levels ids we've made
+    // This represents the AllLevels summary.
+    stat_branches[NUM_BRANCHES] = { level_id(NUM_BRANCHES, -1) };
     for (branch_iterator it; it; ++it)
     {
         if (brdepth[it->id] == -1)
@@ -1284,8 +1289,6 @@ void objstat_generate_stats()
             ++num_branches;
         }
     }
-    // This represents the AllLevels summary.
-    stat_branches[NUM_BRANCHES] = { level_id(NUM_BRANCHES, -1) };
     printf("Generating object statistics for %d iteration(s) of %d "
            "level(s) over %d branch(es).\n", SysEnv.map_gen_iters,
            num_levels, num_branches);
