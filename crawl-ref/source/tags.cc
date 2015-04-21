@@ -63,7 +63,6 @@
 #include "place.h"
 #include "religion.h"
 #include "skills.h"
-#include "species.h"
 #include "spl-wpnench.h"
 #include "state.h"
 #include "stringutil.h"
@@ -2787,10 +2786,16 @@ static void tag_read_you(reader &th)
         if (you.mutation[MUT_MP_WANDS] > 1)
             you.mutation[MUT_MP_WANDS] = 1;
     }
-#endif
 
-    // normally this does nothing but it's simpler than adding a tag
-    give_basic_mutations(you.species);
+    if (th.getMinorVersion() < TAG_MINOR_NAGA_METABOLISM)
+    {
+        if (you.species == SP_NAGA)
+        {
+            you.mutation[MUT_SLOW_METABOLISM] =
+                you.innate_mutation[MUT_SLOW_METABOLISM] = 1;
+        }
+    }
+#endif
 
     count = unmarshallUByte(th);
     you.demonic_traits.clear();
