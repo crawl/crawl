@@ -95,11 +95,13 @@ static int num_branches = 0;
 static int num_levels = 0;
 
 // item_recs[level_id][item.base_type][item.sub_type][field]
-static map<level_id, FixedVector<map<int, map<string, double> >, NUM_ITEM_BASE_TYPES> > item_recs;
+static map<level_id, vector< vector< map<string, double> > > > item_recs;
 
 // weapon_brands[level_id][item.base_type][item.sub_type][antiquity_level][brand];
-// arte_sum is 0 for ordinary, 1 for artefact, or 2 for all
-static map<level_id, vector <vector< vector< vector< int> > > > > equip_brands;
+typedef map<level_id, vector< vector< vector< int> > > > brand_records;
+static brand_records weapon_brands;
+static brand_records armour_brands;
+
 static map<level_id, vector< vector< int> > > missile_brands;
 
 // This must match the order of item_base_type
@@ -432,6 +434,11 @@ static item_def _dummy_item(item_type &item)
     return dummy_item;
 }
 
+/**
+ * Return true if the item type can ever be an artefact.
+ * @param base_type the item base type.
+ * @returns true if the item type can ever be an artefact.
+*/
 static bool _item_has_antiquity(item_base_type base_type)
 {
     switch (base_type)
@@ -486,6 +493,7 @@ static void _init_stats()
             }
             else
                 lev = (entry.second)[l];
+            item_recs[lev] = { };
             for (int i = 0; i < NUM_ITEM_BASE_TYPES; i++)
             {
                 item_base_type base_type = static_cast<item_base_type>(i);
@@ -493,8 +501,13 @@ static void _init_stats()
                     ? "AllNumMin" : "NumMin";
                 string max_field = _item_has_antiquity(base_type)
                     ? "AllNumMax" : "NumMax";
-                for (int  j = 0; j <= _item_max_sub_type(base_type); j++)
+                item_recs[lev].emplace_back();
+                item_recs[lev][i] = { };
+                rec_cutoff = _item_max_sub_type(base_type);
+                rec_cutoff = rec_cutoff == 1 ? 0 : rec_cutoff;
+                for (int  j = 0; j <= rec_cutoff; j++)
                 {
+                    item_recs[lev][i][j].emplace_back();
                     for (const string &field : item_fields[i])
                         item_recs[lev][i][j][field] = 0;
                     // For determining the NumSD, NumMin and NumMax fields.
@@ -503,22 +516,21 @@ static void _init_stats()
                     item_recs[lev][i][j][max_field] = -1;
                 }
             }
-            equip_brands[lev] = { };
-            equip_brands[lev].emplace_back();
+            weapon_brands[lev] = { };
             for (int i = 0; i <= NUM_WEAPONS; i++)
             {
-                equip_brands[lev][0].emplace_back(3,
+                weapon_brands[lev].emplace_back(3,
                         vector<int>(NUM_SPECIAL_WEAPONS, 0));
             }
 
-            equip_brands[lev].emplace_back();
+            weapon_brands[lev] = { };
             for (int i = 0; i <= NUM_ARMOURS; i++)
             {
-                equip_brands[lev][1].emplace_back(3,
+                armour_brands[lev].emplace_back(3,
                         vector<int>(NUM_SPECIAL_ARMOURS, 0));
             }
 
-            missile_brands[lev].emplace_back();
+            missile_brands[lev] = { };
             for (int i = 0; i <= NUM_MISSILES; i++)
                 missile_brands[lev].emplace_back(NUM_SPECIAL_MISSILES, 0);
 
@@ -549,44 +561,52 @@ static void _record_item_stat(level_id &lev, item_type &item, string field,
     item_recs[all_lev][item.base_type][class_sum][field] += value;
 }
 
+static void _record_equip_brand(brand_records brands, level_id lev,
+                                item_type &item, bool is_arte, int brand)
+{
+    ASSERT(item.base_type == ITEM_WEAPONS || item.base_type == ITEM_ARMOUR);
+    int allst = _item_max_sub_type(item.base_type);
+    int antiq = is_arte ? ANTIQ_ARTEFACT : ANTIQ_ORDINARY;
+    brands[lev][item.sub_type][antiq][brand] += quantity;
+    brands[lev][item.sub_type][ANTIQ_ALL][brand] += quantity;
+    brands[lev][allst][antiq][brand] += quantity;
+    brands[lev][allst][ANTIQ_ALL][brand] += quantity;
+
+    brands[br_lev][item.sub_type][antiq][brand] += quantity;
+    brands[br_lev][item.sub_type][ANTIQ_ALL][brand] += quantity;
+    brands[br_lev][allst][antiq][brand] += quantity;
+    brands[br_lev][allst][ANTIQ_ALL][brand] += quantity;
+
+    brands[all_lev][item.sub_type][antiq][brand] += quantity;
+    brands[all_lev][item.sub_type][ANTIQ_ALL][brand] += quantity;
+    brands[all_lev][allst][antiq][brand] += quantity;
+    brands[all_lev][allst][ANTIQ_ALL][brand] += quantity;
+}
+
+
 static void _record_brand(level_id &lev, item_type &item, int quantity,
-                             bool is_arte, int brand)
+                          bool is_arte, int brand)
 {
     ASSERT(item.base_type == ITEM_WEAPONS || item.base_type == ITEM_ARMOUR
            || item.base_type == ITEM_MISSILES);
-    int cst = _item_max_sub_type(item.base_type);
+    int allst = _item_max_sub_type(item.base_type);
     int antiq = is_arte ? ANTIQ_ARTEFACT : ANTIQ_ORDINARY;
-    bool is_equip = item.base_type == ITEM_WEAPONS
-        || item.base_type == ITEM_ARMOUR;
-    int bt = item.base_type == ITEM_WEAPONS ? 0 : 1;
-    int st = item.sub_type;
+    bool is_weap = item.base_type == ITEM_WEAPONS;
+    bool is_armour = item.base_type == ITEM_ARMOUR;
     level_id br_lev(lev.branch, -1);
 
-    if (is_equip)
-    {
-        equip_brands[lev][bt][st][antiq][brand] += quantity;
-        equip_brands[lev][bt][st][ANTIQ_ALL][brand] += quantity;
-        equip_brands[lev][bt][cst][antiq][brand] += quantity;
-        equip_brands[lev][bt][cst][ANTIQ_ALL][brand] += quantity;
-
-        equip_brands[br_lev][bt][st][antiq][brand] += quantity;
-        equip_brands[br_lev][bt][st][ANTIQ_ALL][brand] += quantity;
-        equip_brands[br_lev][bt][cst][antiq][brand] += quantity;
-        equip_brands[br_lev][bt][cst][ANTIQ_ALL][brand] += quantity;
-
-        equip_brands[all_lev][bt][st][antiq][brand] += quantity;
-        equip_brands[all_lev][bt][st][ANTIQ_ALL][brand] += quantity;
-        equip_brands[all_lev][bt][cst][antiq][brand] += quantity;
-        equip_brands[all_lev][bt][cst][ANTIQ_ALL][brand] += quantity;
-    }
+    if (is_weap)
+        record_equip_brands(weapon_brands, lev, item, is_arte, brand);
+    else if (is_armour)
+        record_equip_brands(armour_brands, lev, item, is_arte, brand);
     else
     {
-        missile_brands[lev][st][brand] += quantity;
-        missile_brands[lev][cst][brand] += quantity;
-        missile_brands[br_lev][st][brand] += quantity;
-        missile_brands[br_lev][cst][brand] += quantity;
-        missile_brands[all_lev][st][brand] += quantity;
-        missile_brands[all_lev][cst][brand] += quantity;
+        missile_brands[lev][item.sub_type][brand] += quantity;
+        missile_brands[lev][allst][brand] += quantity;
+        missile_brands[br_lev][item.sub_type][brand] += quantity;
+        missile_brands[br_lev][allst][brand] += quantity;
+        missile_brands[all_lev][item.sub_type][brand] += quantity;
+        missile_brands[all_lev][allst][brand] += quantity;
     }
 }
 
@@ -1062,10 +1082,9 @@ static string _item_name(item_type &item)
 
 static void _write_item_stats(branch_type br, item_type &item)
 {
-    bool is_brand_equip = item.base_type == ITEM_WEAPONS
-        || item.base_type == ITEM_ARMOUR;
-    int equip_ind = is_brand_equip
-        ? (item.base_type == ITEM_WEAPONS ? 0 : 1) : -1;
+    bool is_weap = item.base_type == ITEM_WEAPONS;
+    bool is_armour = item.base_type == ITEM_ARMOUR;
+    bool is_missile = item.base_type == ITEM_MISSILES;
     unsigned int level_count = 0;
     const vector<string> &fields = item_fields[item.base_type];
     vector<level_id>::const_iterator li;
@@ -1078,14 +1097,13 @@ static void _write_item_stats(branch_type br, item_type &item)
         for (const string &field : fields)
             _write_stat(item_stats, field);
 
-        if (is_brand_equip)
-        {
-            vector< vector<int> > &brand_stats =
-                equip_brands[lid][equip_ind][item.sub_type];
+        if (is_weap)
             for (int j = 0; j < 3; j++)
-                _write_brand_stats(brand_stats[j], item);
-        }
-        else if (item.base_type == ITEM_MISSILES)
+                _write_brand_stats(weapon_brands[lev][item.sub_types][j], item);
+        else if (is_armour)
+            for (int j = 0; j < 3; j++)
+                _write_brand_stats(armour_brands[lev][item.sub_types][j], item);
+        else if (is_missile)
             _write_brand_stats(missile_brands[lid][item.sub_type], item);
 
         if (++level_count == stat_branches[lid.branch].size() && level_count > 1)
@@ -1097,25 +1115,31 @@ static void _write_item_stats(branch_type br, item_type &item)
             for (const string &field : fields)
                 _write_stat(branch_stats, field);
 
-            if (is_brand_equip)
+            if (is_weap)
             {
-                vector< vector<int> > &branch_brand_stats =
-                    equip_brands[br_lev][equip_ind][item.sub_type];
                 for (int j = 0; j < 3; j++)
-                    _write_brand_stats(branch_brand_stats[j], item);
+                {
+                    _write_brand_stats(weapon_brands[br_lev][item.sub_types][j],
+                                       item);
+                }
             }
-            else if (item.base_type == ITEM_MISSILES)
+            else if (is_armour)
             {
-                _write_brand_stats(missile_brands[br_lev][item.sub_type],
-                                      item);
+                for (int j = 0; j < 3; j++)
+                {
+                    _write_brand_stats(armour_brands[br_lev][item.sub_types][j],
+                                       item);
+                }
             }
+            else if (is_missile)
+                _write_brand_stats(missile_brands[br_lev][item.sub_type], item);
         }
     }
     fprintf(stat_outf, "\n");
 }
 
 static void _write_monster_stats(branch_type br, monster_type mons_type,
-                                    int mons_ind)
+                                 int mons_ind)
 {
     unsigned int level_count = 0;
     const vector<string> &fields = monster_fields;
