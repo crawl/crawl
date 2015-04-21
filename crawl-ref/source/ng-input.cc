@@ -8,9 +8,11 @@
 #include "end.h"
 #include "files.h"
 #include "format.h"
+#include "itemname.h" // make_name
 #include "initfile.h"
 #include "libutil.h"
 #include "options.h"
+#include "random.h" // random_int for make_name
 #include "stringutil.h"
 #include "unicode.h"
 #include "version.h"
@@ -128,6 +130,9 @@ void enter_player_name(newgame_def *ng)
         if (!_read_player_name(ng->name))
             end(0);
         trim_string(ng->name);
+
+        if (ng->name.empty())
+            ng->name = make_name(random_int());
     }
     while (!is_good_name(ng->name, false, true));
 }
