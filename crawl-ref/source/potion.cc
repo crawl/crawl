@@ -622,34 +622,6 @@ public:
     }
 };
 
-class PotionRestoreAbilities : public PotionEffect
-{
-private:
-    PotionRestoreAbilities() : PotionEffect(POT_RESTORE_ABILITIES) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionRestoreAbilities);
-public:
-    static const PotionRestoreAbilities &instance()
-    {
-        static PotionRestoreAbilities inst; return inst;
-    }
-
-    bool effect(bool=true, int=40) const
-    {
-        bool nothing_happens = true;
-        if (you.duration[DUR_BREATH_WEAPON])
-        {
-            mprf(MSGCH_RECOVERY, "You have got your breath back.");
-            you.duration[DUR_BREATH_WEAPON] = 0;
-            nothing_happens = false;
-        }
-
-        // Give a message if no message otherwise.
-        if (!restore_stat(STAT_ALL, 0, false) && nothing_happens)
-            mpr("You feel refreshed.");
-        return nothing_happens;
-    }
-};
-
 class PotionBerserk : public PotionEffect
 {
 private:
@@ -1124,6 +1096,34 @@ public:
         return slow_player(10 + random2(pow));
     }
 };
+
+class PotionRestoreAbilities : public PotionEffect
+{
+private:
+    PotionRestoreAbilities() : PotionEffect(POT_RESTORE_ABILITIES) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionRestoreAbilities);
+public:
+    static const PotionRestoreAbilities &instance()
+    {
+        static PotionRestoreAbilities inst; return inst;
+    }
+
+    bool effect(bool=true, int=40) const
+    {
+        bool nothing_happens = true;
+        if (you.duration[DUR_BREATH_WEAPON])
+        {
+            mprf(MSGCH_RECOVERY, "You have got your breath back.");
+            you.duration[DUR_BREATH_WEAPON] = 0;
+            nothing_happens = false;
+        }
+
+        // Give a message if no message otherwise.
+        if (!restore_stat(STAT_ALL, 0, false) && nothing_happens)
+            mpr("You feel refreshed.");
+        return nothing_happens;
+    }
+};
 #endif
 
 // placeholder 'buggy' potion
@@ -1175,8 +1175,8 @@ static const PotionEffect* potion_effects[] =
 #endif
     &PotionExperience::instance(),
     &PotionMagic::instance(),
-    &PotionRestoreAbilities::instance(),
 #if TAG_MAJOR_VERSION == 34
+    &PotionRestoreAbilities::instance(),
     &PotionPoison::instance(),
 #endif
     &PotionBerserk::instance(),

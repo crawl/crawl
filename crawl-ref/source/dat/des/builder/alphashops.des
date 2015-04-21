@@ -147,7 +147,7 @@
        "rapier | amulet of resist corrosion | amulet of resist mutation | " ..
        "royal jelly | potion of resistance | scroll of recharging | robe | " ..
        "ring mail | scroll of random uselessness | scroll of remove curse | " ..
-       "wand of random effects | potion of restore abilities"
+       "wand of random effects"
 
       elseif s == "S" then i = "scimitar | amulet of stasis | short sword | " ..
        "sling bullet | scale mail | book of summonings | book of the sky | " ..
