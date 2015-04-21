@@ -116,6 +116,26 @@ static bool _read_player_name(string &name)
     }
 }
 
+/**
+ * Attempt to generate a random name for a character that doesn't collide with
+ * an existing save name.
+ *
+ * @return  A random name, or the empty string if no good name could be
+ *          generated after several tries.
+ */
+static string _random_name()
+{
+    for (int i = 0; i < 100; ++i)
+    {
+        const string name = make_name(random_int());
+        const string filename = get_save_filename(name);
+        if (!save_exists(filename))
+            return name;
+    }
+
+    return "";
+}
+
 // Reads a valid name from the player, writing it to ng.name.
 void enter_player_name(newgame_def *ng)
 {
@@ -132,7 +152,7 @@ void enter_player_name(newgame_def *ng)
         trim_string(ng->name);
 
         if (ng->name.empty())
-            ng->name = make_name(random_int());
+            ng->name = _random_name();
     }
     while (!is_good_name(ng->name, false, true));
 }
