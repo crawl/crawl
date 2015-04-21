@@ -60,10 +60,6 @@ public:
 
     bool can_quaff() const
     {
-        // heal
-        // XXX: don't count this when at mhp?
-        if (you.can_device_heal() && !you.duration[DUR_DEATHS_DOOR])
-            return true;
 
         // cure status effects
         if (you.duration[DUR_CONF]
@@ -73,7 +69,14 @@ public:
             return true;
         }
 
-        return false;
+        // heal
+        if (you.duration[DUR_DEATHS_DOOR] || !you.can_device_heal()
+            || (you.hp == you.hp_max && player_rotted() == 0))
+        {
+            return false;
+        }
+
+        return true;
     }
 
     bool effect(bool=true, int=40) const
