@@ -838,9 +838,9 @@ i-decay POT_REMOVEME5
 i-confusion POT_REMOVE_ME
 i-experience POT_EXPERIENCE
 i-magic POT_MAGIC
-i-restore-abilities POT_RESTORE_ABILITIES
-# please remove when TAG_MAJOR_VERSION is bumped
-i-strong-poison POT_STRONG_POISON
+# remove these 2 when TAG_MAJOR_VERSION is bumped
+i-restore-abilities POT_REMOVEME6
+i-strong-poison POT_REMOVEME7
 i-berserk-rage POT_BERSERK_RAGE
 i-cure-mutation POT_CURE_MUTATION
 i-mutation POT_MUTATION
