@@ -1507,7 +1507,6 @@ spret_type cast_irradiate(int powc, actor* who, bool fail)
                                " erupts in a fountain of uncontrolled magic!");
     }
 
-    // this looks terrible in tiles. TODO: make a decent sprite
     bolt beam;
     beam.name = "irradiate";
     beam.flavour = BEAM_VISUAL;
