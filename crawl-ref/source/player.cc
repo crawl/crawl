@@ -5875,13 +5875,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
         level = skill(sk, drain_scale, real, false);
         return max(0, (level - 30 * scale * you.attribute[ATTR_XP_DRAIN]) / (30 * 100));
     }
-    if ((sk == SK_LONG_BLADES || sk == SK_SHORT_BLADES)
-        && player_equip_unrand(UNRAND_FENCERS))
-    {
-        level = min(level + 4 * scale, 27 * scale);
-    }
-    if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
-        level = min(level + 5 * scale, 27 * scale);
+
     if (penance[GOD_ASHENZARI])
         level = max(level - 4 * scale, level / 2);
     else if (religion == GOD_ASHENZARI && piety_rank() > 3)
@@ -5892,7 +5886,13 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
             level = ash_skill_boost(sk, scale);
         }
     }
-
+    if ((sk == SK_LONG_BLADES || sk == SK_SHORT_BLADES)
+        && player_equip_unrand(UNRAND_FENCERS))
+    {
+        level = min(level + 4 * scale, 27 * scale);
+    }
+    if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
+        level = min(level + 5 * scale, 27 * scale);
     return level;
 }
 
