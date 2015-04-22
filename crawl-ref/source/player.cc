@@ -2568,10 +2568,8 @@ static void _recover_stat()
     }
 
     for (int i = 0; i < NUM_STATS; ++i)
-    {
-        if (recovered_stats[i] > 0);
+        if (recovered_stats[i] > 0)
             restore_stat((stat_type) i, recovered_stats[i], false, true);
-    }
 }
 
 int get_exp_progress()
