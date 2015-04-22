@@ -3233,7 +3233,7 @@ int gozag_service_fee()
         return 0;
 
     const int gold = you.attribute[ATTR_GOLD_GENERATED];
-    int fee = 50 + (int)(gold - gold / log10(gold + 10.0))/2;
+    int fee = (int)(gold - gold / log10(gold + 10.0))/2;
 
     dprf("found %d gold, fee %d", gold, fee);
     return fee;
