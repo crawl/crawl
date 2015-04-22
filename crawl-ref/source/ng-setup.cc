@@ -174,7 +174,7 @@ item_def* newgame_make_item(object_class_type base,
         if (!item.defined())
             break;
 
-        if (item.is_type(base, sub_type) && is_stackable_item(item))
+        if (item.is_type(base, sub_type) && item.special == force_ego && is_stackable_item(item))
         {
             item.quantity += qty;
             return &item;
