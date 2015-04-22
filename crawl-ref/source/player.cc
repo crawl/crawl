@@ -3457,7 +3457,7 @@ static void _display_movement_speed()
     const bool water  = you.in_liquid();
     const bool swim   = you.swimming();
 
-    const bool fly    = you.flight_mode();
+    const bool fly    = you.airborne();
     const bool swift  = (you.duration[DUR_SWIFTNESS] > 0
                          && you.attribute[ATTR_SWIFTNESS] >= 0);
     const bool antiswift = (you.duration[DUR_SWIFTNESS] > 0
@@ -5476,11 +5476,11 @@ player::~player()
     ASSERT(!save); // the save file should be closed or deleted
 }
 
-flight_type player::flight_mode() const
+bool player::airborne() const
 {
     // Might otherwise be airborne, but currently stuck to the ground
     if (you.duration[DUR_GRASPING_ROOTS] || get_form()->forbids_flight())
-        return FL_NONE;
+        return false;
 
     if (duration[DUR_FLIGHT]
 #if TAG_MAJOR_VERSION == 34
@@ -5489,10 +5489,10 @@ flight_type player::flight_mode() const
         || attribute[ATTR_PERM_FLIGHT]
         || get_form()->enables_flight())
     {
-        return FL_LEVITATE;
+        return true;
     }
 
-    return FL_NONE;
+    return false;
 }
 
 bool player::is_banished() const
@@ -6626,7 +6626,7 @@ bool player::racial_permanent_flight() const
 bool player::tengu_flight() const
 {
     // Only Tengu get perks for flying.
-    return species == SP_TENGU && flight_mode();
+    return species == SP_TENGU && airborne();
 }
 
 /**

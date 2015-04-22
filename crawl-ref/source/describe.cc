@@ -613,14 +613,15 @@ int str_to_trap(const string &s)
     return -1;
 }
 
-//---------------------------------------------------------------
-//
-// describe_demon
-//
-// Describes the random demons you find in Pandemonium.
-//
-//---------------------------------------------------------------
-static string _describe_demon(const string& name, flight_type fly)
+/**
+ * How should this panlord be described?
+ *
+ * @param name   The panlord's name; used as a seed for its appearance.
+ * @param flying Whether the panlord can fly.
+ * @returns a string including a description of its head, its body, its flight
+ *          mode (if any), and how it smells or looks.
+ */
+static string _describe_demon(const string& name, bool flying)
 {
     const uint32_t seed = hash32(&name[0], name.size());
     #define HRANDOM_ELEMENT(arr, id) arr[hash_rand(ARRAYSZ(arr), seed, id)]
@@ -657,10 +658,6 @@ static string _describe_demon(const string& name, flight_type fly)
         " with sparrow-like wings",
         " with hooked wings",
         " with strange knobs attached",
-    };
-
-    const char* lev_names[] =
-    {
         " which hovers in mid-air",
         " with sacs of gas hanging from its back",
     };
@@ -738,22 +735,11 @@ static string _describe_demon(const string& name, flight_type fly)
 
     string head_desc = HRANDOM_ELEMENT(head_names, 1);
 
-    switch (fly)
+    if (flying)
     {
-    case FL_WINGED:
         description << HRANDOM_ELEMENT(wing_names, 3);
         if (head_desc.find(" with") == 0)
             description << " and";
-        break;
-
-    case FL_LEVITATE:
-        description << HRANDOM_ELEMENT(lev_names, 3);
-        if (head_desc.find(" with") == 0)
-            description << " and";
-        break;
-
-    default:
-        break;
     }
 
     description << head_desc << ".";
@@ -3127,10 +3113,10 @@ static string _describe_chimera(const monster_info& mi)
         const monster_type leggy_part =
             get_chimera_part(&mi, mi.props[CHIMERA_LEGS_KEY].get_int());
         if (has_wings)
-            description += ", ";
+            description += ",";
         else
-            description += ", and ";
-        description += "the legs of ";
+            description += " and";
+        description += " the legs of ";
         description += apply_description(DESC_A,
                                          get_monster_data(leggy_part)->name);
     }
@@ -3141,18 +3127,11 @@ static string _describe_chimera(const monster_info& mi)
             get_chimera_part(&mi, mi.props[CHIMERA_BATTY_KEY].get_int())
             : get_chimera_part(&mi, mi.props[CHIMERA_WING_KEY].get_int());
 
-        switch (mons_class_flies(wing_part))
-        {
-        case FL_WINGED:
-            description += " and the wings of ";
-            break;
-        case FL_LEVITATE:
-            description += " and it hovers like ";
-            break;
-        case FL_NONE:
+        if (mons_class_flag(wing_part, M_FLIES))
+            description += " and it flies like ";
+        else
             description += " and it moves like "; // Unseen horrors
-            break;
-        }
+
         description += apply_description(DESC_A,
                                          get_monster_data(wing_part)->name);
     }
@@ -3693,21 +3672,8 @@ static string _monster_stat_description(const monster_info& mi)
     else if (did_speed)
         result << ".\n";
 
-    // Can the monster fly, and how?
-    // This doesn't give anything away since no (very) ugly things can
-    // fly, all ghosts can fly, and for demons it's already mentioned in
-    // their flavour description.
-    switch (mi.fly)
-    {
-    case FL_NONE:
-        break;
-    case FL_WINGED:
+    if (mi.airborne())
         result << uppercase_first(pronoun) << " can fly.\n";
-        break;
-    case FL_LEVITATE:
-        result << uppercase_first(pronoun) << " can fly magically.\n";
-        break;
-    }
 
     // Unusual regeneration rates.
     if (!mi.can_regenerate())
@@ -3872,7 +3838,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         break;
 
     case MONS_PANDEMONIUM_LORD:
-        inf.body << _describe_demon(mi.mname, mi.fly) << "\n";
+        inf.body << _describe_demon(mi.mname, mi.airborne()) << "\n";
         break;
 
     case MONS_CHIMERA:

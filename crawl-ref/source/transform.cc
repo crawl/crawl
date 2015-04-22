@@ -445,7 +445,7 @@ string Form::player_prayer_action() const
     // Otherwise, if you're flying, use the generic flying action.
     // XXX: if we ever get a default-permaflying species again that wants to
     // have a separate verb, we'll want to check for that right here.
-    if (you.flight_mode())
+    if (you.airborne())
         return "hover solemnly before";
     // Otherwise, if you have a verb, use that...
     if (prayer_action != "")
@@ -1693,7 +1693,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
                bool just_check)
 {
     const transformation_type previous_trans = you.form;
-    const flight_type was_flying = you.flight_mode();
+    const bool was_flying = you.airborne();
 
     // Zin's protection.
     if (!just_check && you_worship(GOD_ZIN)
@@ -1997,7 +1997,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
        you.transform_uncancellable = true;
 
     // Re-check terrain now that be may no longer be swimming or flying.
-    if (was_flying && !you.flight_mode()
+    if (was_flying && !you.airborne()
                    || feat_is_water(grd(you.pos()))
                       && (which_trans == TRAN_BLADE_HANDS
                           || which_trans == TRAN_APPENDAGE)
@@ -2024,7 +2024,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
  */
 void untransform(bool skip_move)
 {
-    const flight_type old_flight = you.flight_mode();
+    const bool was_flying = you.airborne();
 
     you.redraw_quiver       = true;
     you.redraw_evasion      = true;
@@ -2107,7 +2107,7 @@ void untransform(bool skip_move)
     _unmeld_equipment(melded);
 
     // Re-check terrain now that be may no longer be swimming or flying.
-    if (!skip_move && (old_flight && !you.flight_mode()
+    if (!skip_move && (was_flying && !you.airborne()
                        || (feat_is_water(grd(you.pos()))
                            && (old_form == TRAN_ICE_BEAST
                                || you.species == SP_MERFOLK))))

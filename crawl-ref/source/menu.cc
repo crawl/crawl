@@ -1001,8 +1001,7 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         tileset.emplace_back(idx, TEX_PLAYER);
     }
 
-    // A fake monster might not have its ghost member set up properly,
-    // and mons_flies() looks at ghost.
+    // A fake monster might not have its ghost member set up properly.
     if (!fake && m->ground_level())
     {
         if (ch == TILE_DNGN_LAVA)

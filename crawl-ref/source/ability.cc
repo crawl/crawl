@@ -1402,7 +1402,7 @@ void no_ability_msg()
     else if (player_mutation_level(MUT_TENGU_FLIGHT)
              || player_mutation_level(MUT_BIG_WINGS))
     {
-        if (you.flight_mode())
+        if (you.airborne())
             mpr("You're already flying!");
     }
     else
@@ -3698,7 +3698,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         if (!you.permanent_flight() || !you.racial_permanent_flight())
         {
             // You can still evoke perm flight if you have temporary one.
-            if (!you.flight_mode()
+            if (!you.airborne()
                 || !you.attribute[ATTR_PERM_FLIGHT]
                    && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
             {
@@ -3707,7 +3707,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             // Now you can only turn flight off if you have an
             // activatable item. Potions and spells will have to time
             // out.
-            if (you.flight_mode() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
+            if (you.airborne() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
                 _add_talent(talents, ABIL_STOP_FLYING, check_confused);
         }
     }

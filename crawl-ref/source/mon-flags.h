@@ -14,7 +14,8 @@ const uint64_t M_EAT_ITEMS         = 1<< 0;
 // monster crashes through doors rather than opening
 const uint64_t M_CRASH_DOORS       = 1<< 1;
 
-                                   //1<< 2;
+// monster flies all the time
+const uint64_t M_FLIES             = 1<< 2;
 
 // monster is skilled fighter
 const uint64_t M_FIGHTER           = 1<< 3;

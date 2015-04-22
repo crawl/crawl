@@ -152,7 +152,7 @@ void ghost_demon::reset()
     att_flav         = AF_PLAIN;
     resists          = 0;
     colour           = COLOUR_UNDEF;
-    fly              = FL_NONE;
+    flies            = false;
     acting_part      = MONS_0;
 }
 
@@ -226,9 +226,7 @@ void ghost_demon::init_pandemonium_lord()
     damage = 20 + roll_dice(2, 20);
 
     // Does demon fly?
-    fly = (one_chance_in(3) ? FL_NONE :
-           one_chance_in(5) ? FL_LEVITATE
-                            : FL_WINGED);
+    flies = x_chance_in_y(2, 3);
 
     // hit dice:
     xl = 10 + roll_dice(2, 10);
@@ -442,7 +440,7 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
     best_skill_level = you.skills[best_skill];
     xl = you.experience_level;
 
-    fly = FL_LEVITATE;
+    flies = true;
 
     add_spells(actual_ghost);
 }
@@ -631,7 +629,7 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
         power = 100;
 
     colour = weapon.get_colour();
-    fly = FL_LEVITATE;
+    flies = true;
 
     // We want Tukima to reward characters who invest heavily in
     // Hexes skill. Therefore, weapons benefit from very high skill.
@@ -675,7 +673,7 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon,
         wpn_skill = 270;
 
     colour = weapon.get_colour();
-    fly = FL_LEVITATE;
+    flies = true;
 
     // Hit dice (to hit) scales with weapon skill alone.
     // Damage scales with weapon skill, but how well depends on spell power.

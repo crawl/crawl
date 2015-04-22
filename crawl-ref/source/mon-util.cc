@@ -1797,54 +1797,6 @@ bool mons_zombifiable(monster_type mc)
     return !mons_class_flag(mc, M_NO_ZOMBIE) && mons_zombie_size(mc);
 }
 
-flight_type mons_class_flies(monster_type mc)
-{
-    const monsterentry *me = get_monster_data(mc);
-    return me ? me->fly : FL_NONE;
-}
-
-flight_type mons_flies(const monster* mon, bool temp)
-{
-    flight_type ret;
-    // For dancing weapons, this function can get called before their
-    // ghost_demon is created, so check for a nullptr ghost. -cao
-    if (mons_is_ghost_demon(mon->type) && mon->ghost.get())
-        ret = mon->ghost->fly;
-    else
-        ret = mons_class_flies(mons_base_type(mon));
-
-    // Handle the case where the zombified base monster can't fly, but
-    // the zombified monster can (e.g. spectral things).
-    if (mons_is_zombified(mon))
-        ret = max(ret, mons_class_flies(mon->type));
-
-    if (temp && ret < FL_LEVITATE)
-    {
-        if (mon->scan_artefacts(ARTP_FLY) > 0)
-            return FL_LEVITATE;
-
-        const int armour = mon->inv[MSLOT_ARMOUR];
-        if (armour != NON_ITEM
-            && mitm[armour].base_type == OBJ_ARMOUR
-            && mitm[armour].special == SPARM_FLYING)
-        {
-            return FL_LEVITATE;
-        }
-
-        const int jewellery = mon->inv[MSLOT_JEWELLERY];
-        if (jewellery != NON_ITEM
-            && mitm[jewellery].is_type(OBJ_JEWELLERY, RING_FLIGHT))
-        {
-            return FL_LEVITATE;
-        }
-
-        if (mon->has_ench(ENCH_FLIGHT))
-            return FL_LEVITATE;
-    }
-
-    return ret;
-}
-
 bool mons_flattens_trees(const monster* mon)
 {
     return mons_base_type(mon) == MONS_LERNAEAN_HYDRA;

@@ -101,10 +101,14 @@ bool feat_compatible(dungeon_feature_type feat_wanted,
                    || actual_feat == DNGN_FOUNTAIN_BLUE));
 }
 
-// Can this monster survive on actual_grid?
-//
-// If you have an actual monster, use this instead of the overloaded function
-// that uses only the monster class to make decisions.
+/**
+ * Can this monster survive on actual_grid?
+ *
+ * @param mon         the monster to be checked.
+ * @param actual_grid the feature type that mon might not be able to survive.
+ * @returns whether the monster can survive being in/over the feature,
+ *          regardless of whether it may be dangerous or harmful.
+ */
 bool monster_habitable_grid(const monster* mon,
                             dungeon_feature_type actual_grid)
 {
@@ -113,32 +117,18 @@ bool monster_habitable_grid(const monster* mon,
     const monster_type mt = fixup_zombie_type(mon->type,
                                               mons_base_type(mon));
 
-    return monster_habitable_grid(mt,
-                                  actual_grid,
-                                  DNGN_UNSEEN,
-                                  mons_flies(mon),
-                                  mon->cannot_move() || mon->caught());
+    return monster_habitable_grid(mt, actual_grid, DNGN_UNSEEN, mon->airborne());
 }
 
-bool mons_airborne(monster_type mcls, int flies, bool paralysed)
-{
-    if (flies == -1)
-        flies = mons_class_flies(mcls);
-
-    return paralysed ? flies == FL_LEVITATE : flies != FL_NONE;
-}
-
-// Can monsters of class monster_class live happily on actual_grid?
-// Use flies == true to pretend the monster can fly.
-//
-// [dshaligram] We're trying to harmonise the checks from various places into
-// one check, so we no longer care if a water elemental springs into existence
-// on dry land, because they're supposed to be able to move onto dry land
-// anyway.
+/**
+ * Can monsters of this class survive on actual_grid?
+ *
+ * XXX:refactor
+ */
 bool monster_habitable_grid(monster_type mt,
                             dungeon_feature_type actual_grid,
-                            dungeon_feature_type wanted_grid_feature,
-                            int flies, bool paralysed)
+                            dungeon_feature_type wanted_grid,
+                            bool flies)
 {
     // No monster may be placed on open sea.
     if (actual_grid == DNGN_OPEN_SEA || actual_grid == DNGN_LAVA_SEA)
@@ -153,17 +143,17 @@ bool monster_habitable_grid(monster_type mt,
     const dungeon_feature_type feat_nonpreferred =
         habitat2grid(mons_class_secondary_habitat(mt));
 
-    const bool monster_is_airborne = mons_airborne(mt, flies, paralysed);
+    const bool monster_is_airborne = mons_class_flag(mt, M_FLIES);
 
     // If the caller insists on a specific feature type, try to honour
     // the request. This allows the builder to place amphibious
     // creatures only on land, or flying creatures only on lava, etc.
-    if (wanted_grid_feature != DNGN_UNSEEN
-        && (feat_compatible(feat_preferred, wanted_grid_feature)
-            || feat_compatible(feat_nonpreferred, wanted_grid_feature)
-            || (monster_is_airborne && !feat_is_solid(wanted_grid_feature))))
+    if (wanted_grid != DNGN_UNSEEN
+        && (feat_compatible(feat_preferred, wanted_grid)
+            || feat_compatible(feat_nonpreferred, wanted_grid)
+            || (monster_is_airborne && !feat_is_solid(wanted_grid))))
     {
-        return feat_compatible(wanted_grid_feature, actual_grid);
+        return feat_compatible(wanted_grid, actual_grid);
     }
 
     // Special check for fire elementals since their habitat is floor which
@@ -496,16 +486,10 @@ bool can_place_on_trap(monster_type mon_type, trap_type trap)
     if (mons_is_tentacle_segment(mon_type))
         return true;
 
-    if (trap == TRAP_TELEPORT || trap == TRAP_TELEPORT_PERMANENT)
-        return false;
-
-    if (trap == TRAP_SHAFT)
+    if (trap == TRAP_TELEPORT || trap == TRAP_TELEPORT_PERMANENT
+        || trap == TRAP_SHAFT)
     {
-        if (_is_random_monster(mon_type))
-            return false;
-
-        return mons_class_flies(mon_type)
-               || get_monster_data(mon_type)->size == SIZE_TINY;
+        return false;
     }
 
     return true;
@@ -802,8 +786,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     }
 
     const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
-    if (!monster_habitable_grid(montype, grd(mg_pos), mg.preferred_grid_feature,
-                                mons_class_flies(montype), false)
+    if (!monster_habitable_grid(montype, grd(mg_pos), mg.preferred_grid_feature)
         || (mg.behaviour != BEH_FRIENDLY
             && is_sanctuary(mg_pos)
             && !mons_is_tentacle_segment(montype)))

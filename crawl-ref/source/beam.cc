@@ -1674,7 +1674,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     case BEAM_AIR:
         if (mons->res_wind())
             hurted = 0;
-        else if (mons->flight_mode())
+        else if (mons->airborne())
             hurted += hurted / 2;
         if (!hurted)
         {
@@ -6536,7 +6536,7 @@ bool bolt::can_knockback(const actor *act, int dam) const
 {
     return flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE
            || origin_spell == SPELL_CHILLING_BREATH
-              && (!act || act->flight_mode())
+              && (!act || act->airborne())
            || origin_spell == SPELL_FORCE_LANCE && dam;
 }
 

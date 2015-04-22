@@ -63,7 +63,7 @@ void ghost_demon::init_chimera(monster* mon, monster_type parts[])
     // speed of the winged monster.
     monster_type wings = get_chimera_wings(mon);
     if (wings != MONS_NO_MONSTER)
-        fly = mons_class_flies(wings);
+        flies = true;
     monster_type legs = get_chimera_legs(mon);
     if (legs == MONS_NO_MONSTER)
         legs = parts[0];
@@ -151,7 +151,7 @@ bool ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
 
     if (mons_is_batty(&dummy))
         mon->props[CHIMERA_BATTY_KEY].get_int() = partnum;
-    else if (mons_flies(&dummy))
+    else if (dummy.airborne())
         mon->props[CHIMERA_WING_KEY].get_int() = partnum;
 
     // Check for a legs part. Jumpy behaviour (jumping spiders) should

@@ -42,12 +42,6 @@ level_id actor::shaft_dest(bool known = false) const
     return generic_shaft_dest(pos(), known);
 }
 
-bool actor::airborne() const
-{
-    flight_type fly = flight_mode();
-    return fly == FL_LEVITATE || fly == FL_WINGED && !(cannot_move() || caught());
-}
-
 /**
  * Check if the actor is on the ground (or in water).
  */

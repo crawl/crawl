@@ -1452,7 +1452,7 @@ mcache_demon::mcache_demon(const monster_info& minf)
                                         element_colour(minf.colour()))
         + hash_rand(tile_player_count(TILEP_DEMON_BODY), seed, 2);
 
-    if (minf.fly)
+    if (minf.is(MB_AIRBORNE))
     {
         m_demon.wings = tile_player_coloured(TILEP_DEMON_WINGS,
                                              element_colour(minf.colour()))
