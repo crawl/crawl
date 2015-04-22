@@ -740,8 +740,8 @@ light enough to float on water.
 Ignite Poison spell
 
 This spell attempts to convert all nearby poison into liquid flame, burning
-poisoned creatures from within. It is very effective against innately poisonous
-creatures. The caster is not affected.
+poisoned creatures from within. It also turns clouds of poison and mephitic
+gases into flame. The caster is not affected directly.
 %%%%
 Infusion spell
 
