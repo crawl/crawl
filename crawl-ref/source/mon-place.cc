@@ -87,18 +87,21 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                    bool force_pos = false,
                                    bool dont_place = false);
 
-// Returns whether actual_feat is compatible with feat_wanted for monster
-// movement and generation.
-bool feat_compatible(dungeon_feature_type feat_wanted,
-                     dungeon_feature_type actual_feat)
+/**
+ * Is this feature "close enough" to the one we want for monster generation?
+ *
+ * @param wanted_feat the preferred feature
+ * @param actual_feat the feature to be compared to it
+ * @returns Whether wanted_feat is considered to be similar enough to
+ *          actual_feat that being able to survive in the former means you can
+ *          survive in the latter.
+ */
+static bool _feat_compatible(dungeon_feature_type wanted_feat,
+                             dungeon_feature_type actual_feat)
 {
-    if (feat_wanted == DNGN_FLOOR)
-        return feat_has_solid_floor(actual_feat);
-
-    return feat_wanted == actual_feat
-           || (feat_wanted == DNGN_DEEP_WATER
-               && (actual_feat == DNGN_SHALLOW_WATER
-                   || actual_feat == DNGN_FOUNTAIN_BLUE));
+    return wanted_feat == actual_feat
+           || wanted_feat == DNGN_DEEP_WATER && feat_is_watery(actual_feat)
+           || wanted_feat == DNGN_FLOOR && feat_has_solid_floor(actual_feat);
 }
 
 /**
@@ -123,15 +126,21 @@ bool monster_habitable_grid(const monster* mon,
 /**
  * Can monsters of this class survive on actual_grid?
  *
- * XXX:refactor
+ * @param mt the monster class to check against
+ * @param actual_grid the terrain feature being checked
+ * @param wanted_grid if == DNGN_UNSEEN, or if the monster can't survive on it,
+ *                    ignored. Otherwise, return false even if actual_grid is
+ *                    survivable, if actual_grid isn't similar to wanted_grid.
+ * @param flies if true, treat the monster as flying even if the monster class
+ *              can't usually fly.
  */
 bool monster_habitable_grid(monster_type mt,
                             dungeon_feature_type actual_grid,
                             dungeon_feature_type wanted_grid,
                             bool flies)
 {
-    // No monster may be placed on open sea.
-    if (actual_grid == DNGN_OPEN_SEA || actual_grid == DNGN_LAVA_SEA)
+    // No monster may be placed in walls etc.
+    if (!mons_class_can_pass(mt, actual_grid))
         return false;
 
     // Monsters can't use teleporters, and standing there would look just wrong.
@@ -143,17 +152,15 @@ bool monster_habitable_grid(monster_type mt,
     const dungeon_feature_type feat_nonpreferred =
         habitat2grid(mons_class_secondary_habitat(mt));
 
-    const bool monster_is_airborne = mons_class_flag(mt, M_FLIES);
+    const bool monster_is_airborne = mons_class_flag(mt, M_FLIES) || flies;
 
     // If the caller insists on a specific feature type, try to honour
     // the request. This allows the builder to place amphibious
     // creatures only on land, or flying creatures only on lava, etc.
     if (wanted_grid != DNGN_UNSEEN
-        && (feat_compatible(feat_preferred, wanted_grid)
-            || feat_compatible(feat_nonpreferred, wanted_grid)
-            || (monster_is_airborne && !feat_is_solid(wanted_grid))))
+        && monster_habitable_grid(mt, wanted_grid, DNGN_UNSEEN, flies))
     {
-        return feat_compatible(wanted_grid, actual_grid);
+        return _feat_compatible(wanted_grid, actual_grid);
     }
 
     // Special check for fire elementals since their habitat is floor which
@@ -161,25 +168,13 @@ bool monster_habitable_grid(monster_type mt,
     if (mt == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
         return false;
 
-    if (actual_grid == DNGN_MALIGN_GATEWAY)
-    {
-        if (mt == MONS_ELDRITCH_TENTACLE
-            || mt == MONS_ELDRITCH_TENTACLE_SEGMENT)
-        {
-            return true;
-        }
-        else
-            return false;
-    }
-
-    if (feat_compatible(feat_preferred, actual_grid)
-        || (feat_nonpreferred != feat_preferred
-            && feat_compatible(feat_nonpreferred, actual_grid)))
+    if (_feat_compatible(feat_preferred, actual_grid)
+        || _feat_compatible(feat_nonpreferred, actual_grid))
     {
         return true;
     }
 
-    // [dshaligram] Flying creatures are all DNGN_FLOOR, so we
+    // [dshaligram] Flying creatures are all HT_LAND, so we
     // only have to check for the additional valid grids of deep
     // water and lava.
     if (monster_is_airborne
@@ -3836,7 +3831,7 @@ public:
         {
             return false;
         }
-        if (!feat_compatible(feat_wanted, grd(dc)))
+        if (!_feat_compatible(feat_wanted, grd(dc)))
         {
             if (passable.count(grd(dc)))
                 good_square(dc);
