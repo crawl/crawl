@@ -34,7 +34,7 @@ static void _mark_neighbours_target_unreachable(monster* mon)
     if (intel > I_NORMAL)
         return;
 
-    const bool flies         = mons_flies(mon);
+    const bool flies         = mon->airborne();
     const bool amphibious    = (mons_habitat(mon) == HT_AMPHIBIOUS);
     const bool amph_lava     = (mons_habitat(mon) == HT_AMPHIBIOUS_LAVA);
     const habitat_type habit = mons_primary_habitat(mon);
@@ -68,7 +68,7 @@ static void _mark_neighbours_target_unreachable(monster* mon)
 
         // A flying monster has an advantage over a non-flying one.
         // Same for a swimming one.
-        if (!flies && mons_flies(m)
+        if (!flies && m->airborne()
             || !amphibious && mons_habitat(m) == HT_AMPHIBIOUS
             || !amph_lava  && mons_habitat(m) == HT_AMPHIBIOUS_LAVA)
         {

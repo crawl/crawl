@@ -1563,7 +1563,7 @@ static void _mons_indicate_level_exit(const monster* mon)
     {
         simple_monster_message(mon,
             make_stringf(" %s the shaft.",
-                mons_flies(mon) ? "goes down"
+                mon->airborne() ? "goes down"
                                 : "jumps into").c_str());
     }
 }

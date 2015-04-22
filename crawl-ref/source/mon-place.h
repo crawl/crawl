@@ -102,12 +102,9 @@ bool feat_compatible(dungeon_feature_type grid_wanted,
                      dungeon_feature_type actual_grid);
 bool monster_habitable_grid(const monster* mon,
                             dungeon_feature_type actual_grid);
-bool monster_habitable_grid(
-    monster_type mt,
-    dungeon_feature_type actual_grid,
-    dungeon_feature_type wanted_grid_feature = DNGN_UNSEEN,
-    int flies = -1,
-    bool paralysed = false);
+bool monster_habitable_grid(monster_type mt, dungeon_feature_type actual_grid,
+                            dungeon_feature_type wanted_grid = DNGN_UNSEEN,
+                            bool flies = false);
 bool monster_can_submerge(const monster* mon, dungeon_feature_type grid);
 coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
                               const monster* viable_mon = nullptr);
@@ -125,7 +122,6 @@ void setup_vault_mon_list();
 monster* get_free_monster();
 
 bool can_place_on_trap(monster_type mon_type, trap_type trap);
-bool mons_airborne(monster_type mcls, int flies, bool paralysed);
 void mons_add_blame(monster* mon, const string &blame_string);
 
 // Active monster band may influence gear generation on band followers.

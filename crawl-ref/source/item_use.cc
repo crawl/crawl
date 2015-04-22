@@ -1134,7 +1134,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
             && artefact_known_property(inf, ARTP_FLY);
 
     // assumes item can't grant flight twice
-    const bool removing_ends_flight = you.flight_mode()
+    const bool removing_ends_flight = you.airborne()
           && !you.racial_permanent_flight()
           && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
           && (you.evokable_flight() == 1);

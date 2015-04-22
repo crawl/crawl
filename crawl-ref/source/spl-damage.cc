@@ -1003,7 +1003,7 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
     set_attack_conducts(conducts, mons);
 
     mprf("The air twists around and %sstrikes %s!",
-         mons->flight_mode() ? "violently " : "",
+         mons->airborne() ? "violently " : "",
          mons->name(DESC_THE).c_str());
     noisy(spell_effect_noise(SPELL_AIRSTRIKE), beam.target);
 
@@ -1095,7 +1095,7 @@ static int _shatter_mon_dice(const monster *mon)
         else if (mon->is_insubstantial())
             return 0;
         // 1/3 damage to fliers and slimes.
-        else if (mons_flies(mon) || mons_is_slime(mon))
+        else if (mon->airborne() || mons_is_slime(mon))
             return 1;
         // 3/2 damage to ice.
         else if (mon->is_icy())

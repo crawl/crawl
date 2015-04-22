@@ -706,7 +706,7 @@ public:
     bool clarity(bool calc_unid = true, bool items = true) const;
     bool stasis(bool calc_unid = true, bool items = true) const;
 
-    flight_type flight_mode() const;
+    bool airborne() const;
     bool cancellable_flight() const;
     bool permanent_flight() const;
     bool racial_permanent_flight() const;

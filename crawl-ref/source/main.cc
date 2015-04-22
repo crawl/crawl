@@ -3185,7 +3185,7 @@ static void _move_player(coord_def move)
 
     const dungeon_feature_type targ_grid = grd(targ);
 
-    const string walkverb = you.flight_mode()           ? "fly"
+    const string walkverb = you.airborne()              ? "fly"
                           : you.form == TRAN_SPIDER     ? "crawl"
                           : (you.species == SP_NAGA
                              && form_keeps_mutations()) ? "slither"

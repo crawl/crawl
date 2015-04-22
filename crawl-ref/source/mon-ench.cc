@@ -1258,7 +1258,7 @@ static bool _apply_grasping_roots(monster* mons)
             continue;
 
         // Some messages are suppressed for monsters, to reduce message spam.
-        if (ai->flight_mode())
+        if (ai->airborne())
         {
             if (x_chance_in_y(3, 5))
                 continue;
@@ -1677,7 +1677,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_STICKY_FLAME:
     {
         if (feat_is_watery(grd(pos())) && (ground_level()
-              || mons_intel(this) >= I_NORMAL && flight_mode()))
+              || mons_intel(this) >= I_NORMAL && airborne()))
         {
             if (mons_near(this) && visible_to(&you))
             {

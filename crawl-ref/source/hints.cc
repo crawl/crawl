@@ -3998,7 +3998,7 @@ static bool _water_is_disturbed(int x, int y)
     if (!mon || grd(c) != DNGN_SHALLOW_WATER || !you.see_cell(c))
         return false;
 
-    return !mon->visible_to(&you) && !mons_flies(mon);
+    return !mon->visible_to(&you) && !mon->airborne();
 }
 
 bool hints_monster_interesting(const monster* mons)

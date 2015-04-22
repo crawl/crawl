@@ -389,7 +389,7 @@ public:
 
     bool stasis(bool calc_unid = true, bool items = true) const;
 
-    flight_type flight_mode() const;
+    bool airborne() const;
     bool can_cling_to_walls() const;
     bool is_banished() const;
     bool is_web_immune() const;
