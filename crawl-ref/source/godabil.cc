@@ -4391,7 +4391,7 @@ int gozag_price_for_shop(bool max)
     return max ? _gozag_faith_adjusted_price(price) : price;
 }
 
-static vector<level_id> _get_gozag_shop_candidates(int *max_absdepth)
+static vector<level_id> _get_gozag_shop_candidates()
 {
     vector<level_id> candidates;
 
@@ -4401,16 +4401,6 @@ static vector<level_id> _get_gozag_shop_candidates(int *max_absdepth)
         branch_type i = allowed_branches[ii];
 
         level_id lid(i, brdepth[i]);
-
-        // Base shop level number on the deepest we can place a shop
-        // in the given game; this is constant for as long as we can place
-        // shops and is intended to prevent scummy behaviour.
-        if (max_absdepth)
-        {
-            const int absdepth = branches[i].absdepth + brdepth[i] - 1;
-            if (absdepth > *max_absdepth)
-                *max_absdepth = absdepth;
-        }
 
         for (int j = 1; j <= brdepth[i] && candidates.size() < 4; j++)
         {
@@ -4444,8 +4434,7 @@ bool gozag_setup_call_merchant(bool quiet)
         return false;
     }
 
-    int max_absdepth = 0;
-    vector<level_id> candidates = _get_gozag_shop_candidates(&max_absdepth);
+    vector<level_id> candidates = _get_gozag_shop_candidates();
 
     if (!candidates.size())
     {
@@ -4722,7 +4711,7 @@ static void _gozag_place_shop_here(int index)
  */
 static void _gozag_place_shop(int index)
 {
-    vector<level_id> candidates = _get_gozag_shop_candidates(nullptr);
+    vector<level_id> candidates = _get_gozag_shop_candidates();
 
     if (candidates.size())
         _gozag_place_shop_offlevel(index, candidates);
