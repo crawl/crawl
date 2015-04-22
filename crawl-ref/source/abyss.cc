@@ -1707,14 +1707,13 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         const int offsetY = random2avg(4, 3) + random2(3);
         const coord_def p(pos.x + (coinflip()? offsetX : -offsetX),
                           pos.y + (coinflip()? offsetY : -offsetY));
-        if (!in_bounds(p) || actor_at(p)
-            || !feat_compatible(DNGN_FLOOR, grd(p)))
-        {
+        if (!in_bounds(p) || actor_at(p))
             continue;
-        }
 
         monster_type mons = pick_monster(level_id(BRANCH_ABYSS), _incorruptible);
         ASSERT(mons);
+        if (!monster_habitable_grid(mons, grd(p)))
+            continue;
         mgen_data mg(mons, beh, 0, 5, 0, p);
         mg.non_actor_summoner = "Lugonu's corruption";
         mg.place = BRANCH_ABYSS;

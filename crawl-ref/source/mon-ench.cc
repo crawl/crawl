@@ -827,8 +827,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     mprf("%s surfaces.", name(DESC_A, true).c_str());
             }
         }
-        else if (mons_near(this)
-                 && feat_compatible(grd(pos()), DNGN_DEEP_WATER))
+        else if (mons_near(this) && feat_is_watery(grd(pos())))
         {
             mpr("Something invisible bursts forth from the water.");
             interrupt_activity(AI_FORCE_INTERRUPT);
