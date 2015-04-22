@@ -251,7 +251,7 @@ brand_type player::damage_brand(int)
  * @param random        Whether to randomize delay, or provide a fixed value
  *                      for display (the worst-case scenario).
  * @param scaled        Whether to apply special delay modifiers (finesse)
- * @param shield        Whether to apply shield penalties.
+ * @param do_shield     Whether to apply shield slowdown and speed brand.
  * @return              The time taken by an attack with the given weapon &
  *                      projectile, in aut.
  */
@@ -311,7 +311,8 @@ random_var player::attack_delay(const item_def *weap,
             attk_delay = rv::max(attk_delay, weapon_min_delay(*weap));
 
             if (weap->base_type == OBJ_WEAPONS
-                && get_weapon_brand(*weap) == SPWPN_SPEED)
+                && get_weapon_brand(*weap) == SPWPN_SPEED
+                && do_shield)
             {
                 attk_delay = div_rand_round(constant(2) * attk_delay, 3);
             }
