@@ -1,4 +1,4 @@
-Stone Soup 0.17 (up to 0.17-a0-570-g4b92f67)
+Stone Soup 0.17 (up to 0.17-a0-762-gdd96e34)
 --------------------------------------------
 
 Branches, Environment
@@ -18,28 +18,48 @@ Character
 * Being at 0 in a stat no longer causes direct damage to the player.
 * Undead stat gain: Mummies get one of Str, Int, or Dex every 5 levels, and
   Vampires get either Int or Dex every 5 levels.
+* Vampires can now drink from anything that has blood, regardless of their
+  chunk type.
 * Headbutt aux attacks no longer apply a small stun and the hooves aux kicks no
   longer bypass AC.
+* Multi-turn actions, other than climbing/descending stairs, no longer reduce
+  EV by 5 for their duration.
+* Poison-immune characters (e.g. gargoyles, mummies) no longer take poison
+  damage.
+* Draconian Fighters no longer start with extra equipment.
 * Teleportitis only triggers when it would land the player in LOS of
   enemies. It triggers slightly more frequently as a result, but no longer
   triggers in Labyrinths or the Abyss.
 
 Gods
 ----
+* Gozag:
+  - The fee for entry has been reduced, especially early on.
+  - Gold distraction is now an effect centered on the player that's refreshed
+    whenever they find (make) new corpse-gold, rather than being centered on
+    the gold piles themselves.
+  - The cost of Potion Petition is higher initially, but no longer increases
+    with use.
+  - Corpseless monsters now drop gold.
 * Beogh's smite damage now scales better with invocations.
 * Finesse no longer gives contamination.
 * Lugonu and Trog no longer accept corpse sacrifices.
 * The Shining One no longer blesses allies' weapons and armour; their angel
   summoning ability is now slightly cheaper.
-* Gozag's gold distraction is now an effect centered on the player that's
-  refreshed whenever they find (make) new corpse-gold, rather than being
-  centered on the gold piles themselves.
 * Cheibriados' slouch damage is now based on monster movement speed.
 * Ashenzari now gives the Scrying ability at 2* piety.
 
 Items
 -----
+* New items:
+  - Maxwell's Etheric Cage, a helmet giving rElec and + MP, at the cost of
+    causing intermittent light contamination.
+  - The Crown of Eternal Torment, a hat that gives rN+++, sInv, complete
+    immunity to Torment effects, and -20% max HP while worn.
+* Poisonous chunks and rot chunks have been merged into 'inedible' chunks,
+  which are only edible by ghouls. Some monsters have had their meat cleaned.
 * The Cloak of Starlight is now +2 and gives Stlth--.
+* The fencer's gloves now give a bonus to Long Blades and Short Blades skills.
 * Warding now applies to ranged attacks.
 * Troll leather armour now provides regeneration to trolls.
 * Staves of summoning no longer have a chance of abjuring on hit.
@@ -47,6 +67,8 @@ Items
   no longer store MP when swapping.
 * For the player and for monsters, curare needles no longer have an effect that
   prevents the use of abilities relying on breath.
+* Scrolls of Holy Word now apply the Daze status effect instead of stunning
+  enemies.
 * Removed items:
   - The Cloak of Flash.
   - Potions of decay.
@@ -61,9 +83,14 @@ Monsters
 * XP and placement for many uniques has been adjusted; in general, uniques have
   been removed from depths at which they're no longer threatening, and their XP
   has increased considerably.
+* Poison now has a 1/3 chance of affecting rPois+ monsters (up from 0/3).
+* All nonliving monsters now have rPois+++.
 * rElec++ has been removed; monsters that previously had it now either have
   rElec+ or full immunity.
 * Non-magic-immune monsters are now always confuseable.
+* Unrelated monsters can now swap with each other.
+* Ghouls no longer cause rot with their attacks.
+* Monsters no longer eat corpses.
 * Revenants no longer ignore silence.
 * Phantasmal warriors' attacks no longer pierce shields & armour.
 * Death knights now have agony & haunt in addition to pain mirror.
@@ -80,6 +107,9 @@ Spells
 * Enslavement is replaced by Tukima's Dance in the Enchanter starting book, and
   by Gell's Gravitas in the Arcane Marksman starting book. Tukima's Dance no
   longer appears in the Book of Enchantments.
+* Ignite Poison is now level 3 Fire/Poison/Transmutations; it no longer ignites
+  items or poisonous creatures, only poisoned creatures and clouds, but does
+  dramatically more damage to the former, especially at low power.
 * Gell's Gravitas is now level 3 and smite-targeted, but no longer confuses
   enemies.
 * Summon Guardian Golem is now level 3.
