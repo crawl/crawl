@@ -325,12 +325,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\itemprop.cc" />
     <ClCompile Include="..\items.cc" />
     <ClCompile Include="..\jobs.cc" />
-    <ClCompile Include="..\json.cc">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\json.cc" />
     <ClCompile Include="..\kills.cc" />
     <ClCompile Include="..\lang-fake.cc" />
     <ClCompile Include="..\losglobal.cc" />
@@ -728,6 +723,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\items.h" />
     <ClInclude Include="..\jobs.h" />
     <ClInclude Include="..\json.h" />
+    <ClInclude Include="..\json-wrapper.h" />
     <ClInclude Include="..\kills.h" />
     <ClInclude Include="..\lang-fake.h" />
     <ClInclude Include="..\libconsole.h" />
