@@ -52,8 +52,8 @@ Gods
 Items
 -----
 * New items:
-  - Maxwell's Etheric Cage, a helmet giving rElec and + MP, at the cost of
-    causing intermittent light contamination.
+  - Maxwell's Etheric Cage, a helmet giving rElec, +4 MP and a large boost to
+    MP regen, at the cost of causing intermittent light contamination.
   - The Crown of Eternal Torment, a hat that gives rN+++, sInv, complete
     immunity to Torment effects, and -20% max HP while worn.
 * Poisonous chunks and rot chunks have been merged into 'inedible' chunks,
