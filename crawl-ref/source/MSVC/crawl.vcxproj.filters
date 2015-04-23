@@ -419,6 +419,7 @@
     <ClInclude Include="..\items.h" />
     <ClInclude Include="..\jobs.h" />
     <ClInclude Include="..\json.h" />
+    <ClInclude Include="..\json-wrapper.h" />
     <ClInclude Include="..\kills.h" />
     <ClInclude Include="..\lang-fake.h" />
     <ClInclude Include="..\libconsole.h" />
