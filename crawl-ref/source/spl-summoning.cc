@@ -1836,9 +1836,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (god == GOD_NO_GOD) // only Yred dead-raising lasts forever.
         mons->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
 
-    // If the original monster has been drained or levelled up, its HD
-    // might be different from its class HD, in which case its HP should
-    // be rerolled to match.
+    // If the original monster has been levelled up, its HD might be different
+    // from its class HD, in which case its HP should be rerolled to match.
     if (mons->get_experience_level() != hd)
     {
         mons->set_hit_dice(max(hd, 1));
@@ -1862,6 +1861,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         player_angers_monster(mons);
 
     // Bitfield for motions - determines text displayed when animating dead.
+    // XXX: could this use monster shape in some way?
     if (mons_class_primary_habitat(zombie_type)    == HT_WATER
         || mons_class_primary_habitat(zombie_type) == HT_LAVA)
     {
