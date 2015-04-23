@@ -686,7 +686,7 @@ string get_god_likes(god_type which_god, bool verbose)
     {
         string like = "you bless dead orcs";
         if (verbose)
-            like += " (by standing over their remains and <w>p</w>raying";
+            like += " (by standing over their remains and <w>p</w>raying)";
         likes.push_back(like);
         break;
     }
