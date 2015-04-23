@@ -1919,45 +1919,46 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
     // Search all the items on the ground for a corpse.
     for (stack_iterator si(a, true); si; ++si)
     {
-        if (si->base_type == OBJ_CORPSES
-            && (class_allowed == CORPSE_BODY
-                || si->sub_type == CORPSE_SKELETON))
+        if (si->base_type != OBJ_CORPSES)
+            continue;
+
+        if (class_allowed != CORPSE_BODY && si->sub_type != CORPSE_SKELETON)
+            continue;
+
+        number_found++;
+
+        if (!_animatable_remains(*si))
+            continue;
+
+        const bool was_draining = is_being_drained(*si);
+        const bool was_butchering = is_being_butchered(*si);
+
+        const bool success = _raise_remains(a, si.index(), beha, hitting,
+                                            as, nas, god, actual,
+                                            force_beh, mon, &motions);
+
+        if (actual && success)
         {
-            number_found++;
-
-            if (!_animatable_remains(*si))
-                continue;
-
-            const bool was_draining = is_being_drained(*si);
-            const bool was_butchering = is_being_butchered(*si);
-
-            const bool success = _raise_remains(a, si.index(), beha, hitting,
-                                                as, nas, god, actual,
-                                                force_beh, mon, &motions);
-
-            if (actual && success)
+            // Ignore quiet.
+            if (was_butchering || was_draining)
             {
-                // Ignore quiet.
-                if (was_butchering || was_draining)
-                {
-                    mprf("The corpse you are %s rises to %s!",
-                         was_draining ? "drinking from"
-                                      : "butchering",
-                         beha == BEH_FRIENDLY ? "join your ranks"
-                                              : "attack");
-                }
-
-                if (!quiet && you.see_cell(a))
-                    _display_undead_motions(motions);
-
-                if (was_butchering)
-                    xom_is_stimulated(200);
+                mprf("The corpse you are %s rises to %s!",
+                     was_draining ? "drinking from"
+                                  : "butchering",
+                     beha == BEH_FRIENDLY ? "join your ranks"
+                                          : "attack");
             }
 
-            any_success |= success;
+            if (!quiet && you.see_cell(a))
+                _display_undead_motions(motions);
 
-            break;
+            if (was_butchering)
+                xom_is_stimulated(200);
         }
+
+        any_success |= success;
+
+        break;
     }
 
     if (motions_r && you.see_cell(a))
