@@ -91,6 +91,7 @@ itemname.o \
 itemprop.o \
 items.o \
 jobs.o \
+json.o \
 kills.o \
 l_colour.o \
 l_crawl.o \
@@ -297,8 +298,7 @@ fontwrapper-ft.o
 
 WEBTILES_OBJECTS = \
 tileweb.o \
-tileweb-text.o \
-json.o
+tileweb-text.o
 
 YACC_OBJECTS = \
 util/levcomp.tab.o \
