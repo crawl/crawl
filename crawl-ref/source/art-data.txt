@@ -1202,6 +1202,8 @@ ENUM:    ETHERIC_CAGE
 NAME:    Maxwell's etheric cage
 OBJ:     OBJ_ARMOUR/ARM_HELMET
 COLOUR:  ETC_ELECTRICITY
+TILE:    urand_etheric_cage
+TILE_EQ: etheric_cage
 PLUS:    +0
 MP:      +4
 BOOL:    mutate, elec
