@@ -31,3 +31,6 @@
 [submodule "crawl-ref/source/contrib/sdl2-mixer"]
 	path = crawl-ref/source/contrib/sdl2-mixer
 	url = git://github.com/crawl/crawl-sdl2-mixer
+[submodule "crawl-ref/source/contrib/rapidjson"]
+	path = crawl-ref/source/contrib/rapidjson
+	url = git://github.com/crawl/rapidjson
