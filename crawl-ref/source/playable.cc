@@ -115,11 +115,17 @@ static JsonNode *_species_modifiers(species_type sp)
     return modifiers;
 }
 
-static JsonNode *_species_metadata(species_type sp)
+static JsonNode *_species_metadata(species_type sp,
+                                   species_type derives = SP_UNKNOWN)
 {
     JsonNode *species(json_mkobject());
     json_append_member(species, "name", json_mkstring(species_name(sp).c_str()));
     json_append_member(species, "abbr", json_mkstring(get_species_abbrev(sp)));
+    if (derives != SP_UNKNOWN)
+    {
+        json_append_member(species, "derives",
+                           json_mkstring(species_name(derives).c_str()));
+    }
     json_append_member(species, "apts", _species_apts(sp));
     json_append_member(species, "modifiers", _species_modifiers(sp));
     return species;
@@ -129,7 +135,19 @@ static JsonNode *_species_metadata_array()
 {
     JsonNode *species(json_mkarray());
     for (species_type sp : playable_species())
+    {
         json_append_element(species, _species_metadata(sp));
+        if (sp == SP_BASE_DRACONIAN)
+        {
+            for (int drac = SP_FIRST_NONBASE_DRACONIAN;
+                 drac <= SP_LAST_NONBASE_DRACONIAN; ++drac)
+            {
+                json_append_element(species,
+                                    _species_metadata(species_type(drac),
+                                                      SP_BASE_DRACONIAN));
+            }
+        }
+    }
     return species;
 }
 
