@@ -104,7 +104,7 @@ include Makefile.obj
 
 
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
-CFWARN :=
+CFWARN := 
 CFWARN_L := -Wall -Wformat-security -Wundef
 
 DEFINES := $(EXTERNAL_DEFINES)
@@ -222,7 +222,7 @@ ifeq ($(uname_S),Darwin)
 		BUILD_SDL2 = YesPlease
 		BUILD_SDL2IMAGE = YesPlease
 		ifdef SOUND
-			ifndef WIN32
+			ifndef WIN32 
 				BUILD_SDL2MIXER = YesPlease
 			endif
 		endif
@@ -245,7 +245,7 @@ ifdef BUILD_ALL
 	BUILD_SDL2 = YesPlease
 	BUILD_SDL2IMAGE = YesPlease
 	ifdef SOUND
-		ifndef WIN32
+		ifndef WIN32 
 			BUILD_SDL2MIXER = YesPlease
 		endif
 	endif
@@ -386,9 +386,8 @@ DATADIR := data
 SAVEDIR := ~/.crawl
 endif
 
-RAPIDJSON_I := contrib/rapidjson/include
 
-INCLUDES_L += -Iutil -I. -I$(RAPIDJSON_I)
+INCLUDES_L += -Iutil -I.
 
 ifdef APPLE_GCC
 
@@ -725,7 +724,7 @@ SDL2_LDFLAGS := $(shell $(PKGCONFIG) sdl2 --libs-only-L) $(shell $(PKGCONFIG) sd
 endif
 
 ifdef SOUND
-ifndef WIN32
+ifndef WIN32 
 LIBS += -lSDL2_mixer
 endif
 endif
@@ -1018,7 +1017,7 @@ endif
 
 ifdef BUILD_PCRE
 DEFINES += -DREGEX_PCRE
-else
+else 
   ifdef USE_PCRE
   DEFINES += -DREGEX_PCRE
   LIBS += -lpcre
