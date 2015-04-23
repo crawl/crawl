@@ -21,6 +21,7 @@
 #include "files.h"
 #include "itemname.h"
 #include "json.h"
+#include "json-wrapper.h"
 #include "lang-fake.h"
 #include "libutil.h"
 #include "map_knowledge.h"
@@ -58,34 +59,6 @@ static unsigned int get_milliseconds()
 
     return ((unsigned int) tv.tv_sec) * 1000 + tv.tv_usec / 1000;
 }
-
-// Helper for json.h
-struct JsonWrapper
-{
-    JsonWrapper(JsonNode* n) : node(n)
-    { }
-
-    ~JsonWrapper()
-    {
-        if (node)
-            json_delete(node);
-    }
-
-    JsonNode* operator->()
-    {
-        return node;
-    }
-
-    void check(JsonTag tag)
-    {
-        if (!node || node->tag != tag)
-            throw malformed;
-    }
-
-    JsonNode* node;
-
-    static class MalformedException { } malformed;
-};
 
 TilesFramework tiles;
 
