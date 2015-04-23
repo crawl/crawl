@@ -1909,6 +1909,9 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
     if (is_sanctuary(a))
         return 0;
 
+    if (grd(a) == DNGN_DEEP_WATER)
+        return 0; // trapped in davy jones' locker...
+
     int number_found = 0;
     bool any_success = false;
     int motions = 0;
