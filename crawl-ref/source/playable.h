@@ -24,6 +24,4 @@ vector<string> playable_job_names();
 vector<string> playable_species_names();
 vector<string> playable_combo_names();
 
-string playable_metadata_json();
-
 #endif
