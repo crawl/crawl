@@ -177,8 +177,6 @@ static const char* equip_brand_fields[] = {"OrdBrandNums", "ArteBrandNums",
                                            "AllBrandNums"};
 static const char* missile_brand_field = "BrandNums";
 
-static map<int, int> valid_foods;
-
 static const vector<string> monster_fields = {
     "Num", "NumMin", "NumMax", "NumSD", "MonsHD", "MonsHP",
     "MonsXP", "TotalXP", "MonsNumChunks", "TotalNutr"
@@ -186,21 +184,6 @@ static const vector<string> monster_fields = {
 
 static map<monster_type, int> valid_monsters;
 static map<level_id, map<int, map <string, double> > > monster_recs;
-
-static bool _is_valid_food_type(int sub_type)
-{
-    return sub_type != FOOD_CHUNK && food_type_name(sub_type) != "buggy";
-}
-
-static void _init_foods()
-{
-    int num_foods = 0;
-    for (int i = 0; i < NUM_FOODS; i++)
-    {
-        if (_is_valid_food_type(i))
-            valid_foods[i] = num_foods++;
-    }
-}
 
 static void _init_monsters()
 {
@@ -235,10 +218,7 @@ static item_base_type _item_base_type(item_def &item)
             type = ITEM_BOOKS;
         break;
     case OBJ_FOOD:
-        if (valid_foods.count(item.sub_type))
             type = ITEM_FOOD;
-        else
-            type = ITEM_IGNORE;
         break;
     case OBJ_GOLD:
         type = ITEM_GOLD;
@@ -331,17 +311,6 @@ static object_class_type _item_orig_base_type(item_base_type base_type)
     return type;
 }
 
-// Get the actual food subtype
-static int _orig_food_subtype(int sub_type)
-{
-    for (const auto &entry : valid_foods)
-        if (entry.second == sub_type)
-            return entry.first;
-
-    die("Invalid food subtype");
-    return 0;
-}
-
 static string _item_class_name(item_base_type base_type)
 {
     string name;
@@ -373,9 +342,6 @@ static int _item_orig_sub_type(const item_type &item)
     case ITEM_MISCELLANY:
         type = misc_types[item.sub_type];
         break;
-    case ITEM_FOOD:
-        type = _orig_food_subtype(item.sub_type);
-        break;
     case ITEM_ARTEBOOKS:
         type = item.sub_type + BOOK_RANDART_LEVEL;
         break;
@@ -394,9 +360,6 @@ static int _item_max_sub_type(item_base_type base_type)
     int num = 0;
     switch (base_type)
     {
-    case ITEM_FOOD:
-        num = valid_foods.size();
-        break;
     case ITEM_MISCELLANY:
         num = misc_types.size();
         break;
@@ -467,8 +430,6 @@ item_type::item_type(item_def &item)
                         - misc_types.begin();
         ASSERT(sub_type < (int) misc_types.size());
     }
-    else if (base_type == ITEM_FOOD)
-        sub_type = valid_foods[item.sub_type];
     else if (base_type == ITEM_ARTEBOOKS)
         sub_type = item.sub_type - BOOK_RANDART_LEVEL;
     else if (base_type == ITEM_MANUALS)
@@ -1294,7 +1255,6 @@ void objstat_generate_stats()
     printf("Generating object statistics for %d iteration(s) of %d "
            "level(s) over %d branch(es).\n", SysEnv.map_gen_iters,
            num_levels, num_branches);
-    _init_foods();
     _init_monsters();
     _init_stats();
     if (mapstat_build_levels())
