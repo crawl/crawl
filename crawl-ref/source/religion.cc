@@ -2952,6 +2952,8 @@ void excommunication(god_type new_god, bool immediate)
             mprf(MSGCH_GOD, old_god, "Your aura of darkness fades away.");
             invalidate_agrid(true);
         }
+        if (you.form == TRAN_SHADOW)
+            untransform();
         _set_penance(old_god, 25);
         break;
 
