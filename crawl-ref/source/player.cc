@@ -2020,6 +2020,8 @@ int player_movement_speed()
     // Cheibriados
     if (you_worship(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety, 20), 8);
+    else if (player_under_penance(GOD_CHEIBRIADOS))
+        mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
 
     // Tengu can move slightly faster when flying.
     if (you.tengu_flight())
