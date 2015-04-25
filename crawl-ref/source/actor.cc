@@ -212,7 +212,7 @@ void actor::shield_block_succeeded(actor *foe)
     }
 }
 
-bool actor::inaccuracy() const
+int actor::inaccuracy() const
 {
     return wearing(EQ_AMULET, AMU_INACCURACY);
 }

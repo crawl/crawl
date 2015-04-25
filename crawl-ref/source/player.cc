@@ -1396,6 +1396,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     // mutations:
     rf += player_mutation_level(MUT_HEAT_RESISTANCE, temp);
     rf -= player_mutation_level(MUT_HEAT_VULNERABILITY, temp);
+    rf -= player_mutation_level(MUT_TEMPERATURE_SENSITIVITY, temp);
     rf += player_mutation_level(MUT_MOLTEN_SCALES, temp) == 3 ? 1 : 0;
 
     // spells:
@@ -1512,6 +1513,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
     // mutations:
     rc += player_mutation_level(MUT_COLD_RESISTANCE, temp);
     rc -= player_mutation_level(MUT_COLD_VULNERABILITY, temp);
+    rc -= player_mutation_level(MUT_TEMPERATURE_SENSITIVITY, temp);
     rc += player_mutation_level(MUT_ICY_BLUE_SCALES, temp) == 3 ? 1 : 0;
     rc += player_mutation_level(MUT_SHAGGY_FUR, temp) == 3 ? 1 : 0;
 
@@ -8588,4 +8590,14 @@ void player::maybe_degrade_bone_armour(int mult)
         mpr("The last of your corpse armour falls away.");
 
     redraw_armour_class = true;
+}
+
+int player::inaccuracy() const
+{
+    int degree = 0;
+    if (wearing(EQ_AMULET, AMU_INACCURACY))
+        degree++;
+    if (player_mutation_level(MUT_MISSING_EYE))
+        degree += 2;
+    return degree;
 }

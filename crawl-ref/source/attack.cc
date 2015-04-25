@@ -258,9 +258,7 @@ int attack::calc_to_hit(bool random)
     }
 
     // Penalties for both players and monsters:
-
-    if (attacker->inaccuracy())
-        mhit -= 5;
+    mhit -= 5 * attacker->inaccuracy();
 
     // If you can't see yourself, you're a little less accurate.
     if (!attacker->visible_to(attacker))
