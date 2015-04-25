@@ -421,10 +421,8 @@ void goldify_corpse(item_def &corpse)
     // Apply the gold aura effect to the player.
     const int dur = corpse.quantity * 2;
     if (dur > you.duration[DUR_GOZAG_GOLD_AURA])
-    {
         you.set_duration(DUR_GOZAG_GOLD_AURA, dur);
-        redraw_screen();
-    }
+
     you.props["gozag_gold_aura_amount"].get_int()++;
 }
 
