@@ -173,4 +173,24 @@ static const sacrifice_def sac_data[] =
   nullptr,
   nullptr,
 },
+
+{ ABIL_RU_SACRIFICE_EYE, MUT_MISSING_EYE,
+  "sacrifice an eye",
+  "sacrificed an eye",
+
+  45,
+  SK_NONE,
+  nullptr,
+  nullptr,
+},
+
+{ ABIL_RU_SACRIFICE_RESISTANCE, MUT_TEMPERATURE_SENSITIVITY,
+  "sacrifice your resistance to extreme temperatures",
+  "sacrificed resistance",
+
+  70,
+  SK_NONE,
+  nullptr,
+  nullptr,
+},
 };

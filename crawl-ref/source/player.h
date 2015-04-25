@@ -521,6 +521,8 @@ public:
     int base_ac_from(const item_def &armour, int scale = 1) const;
     void maybe_degrade_bone_armour(int mult);
 
+    int inaccuracy() const;
+
     // actor
     int mindex() const;
     int get_hit_dice() const;

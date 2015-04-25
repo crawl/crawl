@@ -2142,4 +2142,24 @@ static const mutation_def mut_data[] =
 
    "claws that catch",
 },
+
+{ MUT_MISSING_EYE,                    0,  1, MUTFLAG_RU, false,
+  "missing an eye",
+
+  {"You are missing an eye, making it more difficult to aim.", "", ""},
+  {"Your right eye vanishes! The world loses its depth.", "", ""},
+  {"Your right eye suddenly reappears! The world regains its depth.", "", ""},
+
+   "a missing eye",
+},
+
+{ MUT_TEMPERATURE_SENSITIVITY,        0,  1, MUTFLAG_RU, false,
+  "temperature sensitive",
+
+  {"You are sensitive to extremes of temperature (rF-, rC-).", "", ""},
+  {"You feel sensitive to extremes of temperature.", "", ""},
+  {"You no longer feel sensitive to extremes of temperature", "", ""},
+
+   "temperature sensitivity (rF-, rC-)",
+},
 };

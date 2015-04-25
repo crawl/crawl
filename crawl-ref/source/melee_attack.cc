@@ -3614,8 +3614,7 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
                 + you.skill(SK_FIGHTING, 30);
     your_to_hit /= 100;
 
-    if (you.inaccuracy())
-        your_to_hit -= 5;
+    your_to_hit -= 5 * you.inaccuracy();
 
     if (player_mutation_level(MUT_EYEBALLS))
         your_to_hit += 2 * player_mutation_level(MUT_EYEBALLS) + 1;
