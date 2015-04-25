@@ -3916,7 +3916,7 @@ static int _find_ability_slot(const ability_def &abil)
       || abil.ability == ABIL_RU_SACRIFICE_RESISTANCE
       || abil.ability == ABIL_RU_REJECT_SACRIFICES)
     {
-        first_slot = letter_to_index('P');
+        first_slot = letter_to_index('G');
     }
 
 
