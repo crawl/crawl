@@ -2304,20 +2304,15 @@ void random_uselessness(int scroll_slot)
 
     int temp_rand = random2(8);
 
-    // If this isn't from a scroll, skip the first two possibilities.
+    // If this isn't from a scroll, skip the first possibilities.
     if (scroll_slot == -1)
         temp_rand = 2 + random2(6);
 
     switch (temp_rand)
     {
     case 0:
-        mprf("The dust glows %s!", weird_glowing_colour().c_str());
-        break;
-
     case 1:
-        mprf("The scroll reassembles itself in your %s!",
-             you.hand_name(true).c_str());
-        inc_inv_item_quantity(scroll_slot, 1);
+        mprf("The dust glows %s!", weird_glowing_colour().c_str());
         break;
 
     case 2:
