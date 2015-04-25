@@ -3674,6 +3674,7 @@ static string _monster_stat_description(const monster_info& mi)
 
     if (mi.type == MONS_SHADOW)
     {
+        // Cf. monster::action_energy() in monster.cc.
         result << uppercase_first(pronoun) << " covers ground more"
                << " quickly when invisible.\n";
     }

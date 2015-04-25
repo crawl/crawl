@@ -5923,7 +5923,8 @@ int monster::action_energy(energy_use_type et) const
     if (run())
         move_cost -= 1;
 
-    // Shadows move more quickly when blended with the darkness
+    // Shadows move more quickly when blended with the darkness.
+    // Change _monster_stat_description in describe.cc if you change this.
     if (type == MONS_SHADOW && invisible())
         move_cost -= 3;
 
