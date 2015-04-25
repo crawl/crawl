@@ -98,7 +98,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your ability to be loved",
   "sacrificed love",
 
-  22,
+  25,
   SK_NONE,
   nullptr,
   nullptr,
@@ -158,7 +158,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your experiences",
   "sacrificed experience",
 
-  28,
+  30,
   SK_NONE,
   nullptr,
   []() { return you.experience_level > RU_SAC_XP_LEVELS; }
