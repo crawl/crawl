@@ -2800,7 +2800,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_STRIP_RESISTANCE, "Strip Resistance",
      SPTYP_HEXES,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER | SPFLAG_MR_CHECK,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER,
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -3055,7 +3055,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SAP_MAGIC, "Sap Magic",
      SPTYP_HEXES,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER | SPFLAG_MR_CHECK,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER,
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
