@@ -286,6 +286,9 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (you.form == TRAN_BLADE_HANDS && mut == MUT_PAWS)
         return MUTACT_INACTIVE;
 
+    if (you_worship(GOD_DITHMENOS) && mut == MUT_IGNITE_BLOOD)
+        return MUTACT_INACTIVE;
+
     return MUTACT_FULL;
 }
 
