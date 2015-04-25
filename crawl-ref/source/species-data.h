@@ -571,7 +571,7 @@ static const map<species_type, species_def> species_data =
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     { { MUT_ACUTE_VISION, 1, 1 }, { MUT_SLOW, 2, 1 },  { MUT_DEFORMED, 1, 1 },
       { MUT_SPIT_POISON, 2, 1 },  { MUT_POISON_RESISTANCE, 1, 1 },
-      { MUT_CONSTRICTING_TAIL, 1, 13 }, },
+      { MUT_SLOW_METABOLISM, 1, 1 }, { MUT_CONSTRICTING_TAIL, 1, 13 } },
     { "You cannot wear boots." },
     {},
     { JOB_BERSERKER, JOB_TRANSMUTER, JOB_ENCHANTER, JOB_FIRE_ELEMENTALIST,

@@ -219,8 +219,6 @@ Extinguishment
 # pain and misery
 Infinite Pain
 
-Eternal Torment
-
 Dismemberment
 
 Terror

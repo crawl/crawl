@@ -1401,6 +1401,9 @@ void singularity_pull(const monster *singularity)
             continue;
         }
 
+        if (is_sanctuary(ai->pos()))
+            continue;
+
         const int range = isqrt((singularity->pos() - ai->pos()).abs());
         const int strength =
             min(4, (singularity->get_hit_dice()) / (range*range));

@@ -107,8 +107,8 @@ public:
   int disease;
   hunger_state_t hunger_state;
   uint8_t max_level;
-  uint8_t hit_points_regeneration;
-  uint8_t magic_points_regeneration;
+  int hit_points_regeneration;
+  int magic_points_regeneration;
   unsigned int experience;
   unsigned int total_experience; // Unaffected by draining. Used for skill cost.
   int experience_level;
@@ -117,6 +117,7 @@ public:
 
   FixedVector<int8_t, NUM_EQUIP> equip;
   FixedBitVector<NUM_EQUIP> melded;
+  // Whether these are unrands that we should run the _*_world_reacts func for
   FixedBitVector<NUM_EQUIP> unrand_reacts;
 
   FixedArray<int, NUM_OBJECT_CLASSES, MAX_SUBTYPES> force_autopickup;
@@ -400,10 +401,6 @@ public:
   // When other levels are loaded (e.g. viewing), is the player on this level?
   bool on_current_level;
 
-  // Did you spent this turn walking (/flying)?
-  // 0 = no, 1 = cardinal move, 2 = diagonal move
-  int walking;
-
   // View code clears and needs new data in places where we can't announce the
   // portal right away; delay the announcements then.
   int seen_portals;
@@ -524,6 +521,8 @@ public:
     int base_ac_from(const item_def &armour, int scale = 1) const;
     void maybe_degrade_bone_armour(int mult);
 
+    int inaccuracy() const;
+
     // actor
     int mindex() const;
     int get_hit_dice() const;
@@ -621,7 +620,6 @@ public:
                         bool quiet = false) const;
     bool go_berserk(bool intentional, bool potion = false);
     bool berserk() const;
-    bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate(bool temp = true) const;
     bool is_lifeless_undead(bool temp = true) const;
@@ -710,7 +708,7 @@ public:
     bool clarity(bool calc_unid = true, bool items = true) const;
     bool stasis(bool calc_unid = true, bool items = true) const;
 
-    flight_type flight_mode() const;
+    bool airborne() const;
     bool cancellable_flight() const;
     bool permanent_flight() const;
     bool racial_permanent_flight() const;
@@ -925,7 +923,7 @@ int player_res_cold(bool calc_unid = true, bool temp = true,
                     bool items = true);
 int player_res_acid(bool calc_unid = true, bool items = true);
 
-bool player_res_torment(bool random = true, bool temp = true);
+bool player_res_torment(bool random = true);
 bool player_kiku_res_torment();
 
 int player_likes_chunks(bool permanently = false);

@@ -15,7 +15,7 @@
 #include "ctest.h"
 #include "database.h"
 #include "dbg-maps.h"
-#include "dbg-scan.h"
+#include "dbg-objstat.h"
 #include "dungeon.h"
 #include "end.h"
 #include "exclude.h"
@@ -157,7 +157,7 @@ static void _initialize()
     if (Options.seed)
         seed_rng(Options.seed);
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
     if (crawl_state.map_stat_gen)
     {
         release_cli_signals();
@@ -342,9 +342,6 @@ static void _post_init(bool newc)
 
     if (newc) // start a new game
     {
-        // Mark items in inventory as of unknown origin.
-        origin_set_inventory(origin_set_unknown);
-
         // For a new game, wipe out monsters in LOS, and
         // for new hints mode games also the items.
         _zap_los_monsters(Hints.hints_events[HINT_SEEN_FIRST_OBJECT]);

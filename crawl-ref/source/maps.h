@@ -93,7 +93,7 @@ private:
     unwind_var<string_vector> mpar;
 };
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
 void mapstat_report_random_maps(FILE *outf, const level_id &place);
 #endif
 

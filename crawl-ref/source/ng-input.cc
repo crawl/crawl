@@ -8,9 +8,11 @@
 #include "end.h"
 #include "files.h"
 #include "format.h"
+#include "itemname.h" // make_name
 #include "initfile.h"
 #include "libutil.h"
 #include "options.h"
+#include "random.h" // random_int for make_name
 #include "stringutil.h"
 #include "unicode.h"
 #include "version.h"
@@ -114,6 +116,26 @@ static bool _read_player_name(string &name)
     }
 }
 
+/**
+ * Attempt to generate a random name for a character that doesn't collide with
+ * an existing save name.
+ *
+ * @return  A random name, or the empty string if no good name could be
+ *          generated after several tries.
+ */
+static string _random_name()
+{
+    for (int i = 0; i < 100; ++i)
+    {
+        const string name = make_name(random_int());
+        const string filename = get_save_filename(name);
+        if (!save_exists(filename))
+            return name;
+    }
+
+    return "";
+}
+
 // Reads a valid name from the player, writing it to ng.name.
 void enter_player_name(newgame_def *ng)
 {
@@ -128,6 +150,9 @@ void enter_player_name(newgame_def *ng)
         if (!_read_player_name(ng->name))
             end(0);
         trim_string(ng->name);
+
+        if (ng->name.empty())
+            ng->name = _random_name();
     }
     while (!is_good_name(ng->name, false, true));
 }

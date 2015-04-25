@@ -7,6 +7,7 @@
 
 #include "skill_menu.h"
 
+#include "art-enum.h"
 #include "cio.h"
 #include "clua.h"
 #include "command.h"
@@ -551,6 +552,8 @@ string SkillMenuSwitch::get_help()
                 causes.push_back("Ashenzari's power");
             if (_any_crosstrained())
                 causes.push_back("cross-training");
+            if (player_equip_unrand(UNRAND_FENCERS))
+                causes.push_back("the fencer's gloves");
             result = "Skills enhanced by "
                      + comma_separated_line(causes.begin(), causes.end())
                      + " are in <blue>blue</blue>.";

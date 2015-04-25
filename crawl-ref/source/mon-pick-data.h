@@ -42,7 +42,6 @@ static const pop_entry pop_d[] =
   {  6, 16,  825, SEMI, MONS_ORC_WARRIOR },
   {  6, 16,  335, SEMI, MONS_GIANT_SPORE },
   {  6, 16,  335, SEMI, MONS_WIGHT },
-  {  6, 16,  192, PEAK, MONS_MUMMY },
   {  7, 14,  415, SEMI, MONS_BIG_KOBOLD },
   {  7, 14,  500, SEMI, MONS_KILLER_BEE },
   {  7, 15,   89, PEAK, MONS_STEAM_DRAGON },

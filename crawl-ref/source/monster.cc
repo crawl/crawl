@@ -3480,7 +3480,7 @@ int monster::armour_class(bool calc_unid) const
 
     // Penalty due to bad temp mutations.
     if (has_ench(ENCH_WRETCHED))
-        ac -= 4 * get_ench(ENCH_WRETCHED).degree;
+        ac -= 8;
 
     // corrosion hurts.
     if (has_ench(ENCH_CORROSION))
@@ -4322,10 +4322,21 @@ bool monster::antimagic_susceptible() const
                         { return slot.flags & MON_SPELL_ANTIMAGIC_MASK; });
 }
 
-flight_type monster::flight_mode() const
+bool monster::airborne() const
 {
-    // Checking class flags is not enough - see mons_flies().
-    return mons_flies(this);
+    // For dancing weapons, this function can get called before their
+    // ghost_demon is created, so check for a nullptr ghost. -cao
+    return mons_is_ghost_demon(type) && ghost.get() && ghost->flies
+           // check both so spectral humans and zombified dragons both fly
+           || mons_class_flag(mons_base_type(this), M_FLIES)
+           || mons_class_flag(type, M_FLIES)
+           || scan_artefacts(ARTP_FLY) > 0
+           || mslot_item(MSLOT_ARMOUR)
+              && mslot_item(MSLOT_ARMOUR)->base_type == OBJ_ARMOUR
+              && mslot_item(MSLOT_ARMOUR)->brand == SPARM_FLYING
+           || mslot_item(MSLOT_JEWELLERY)
+              && mslot_item(MSLOT_JEWELLERY)->is_type(OBJ_JEWELLERY, RING_FLIGHT)
+           || has_ench(ENCH_FLIGHT);
 }
 
 bool monster::is_banished() const
@@ -5401,13 +5412,6 @@ bool monster::near_foe() const
            && summon_can_attack(this, afoe);
 }
 
-bool monster::has_lifeforce() const
-{
-    const mon_holy_type holi = holiness();
-
-    return holi == MH_NATURAL || holi == MH_PLANT;
-}
-
 /**
  * Can the monster be mutated?
  *
@@ -5919,7 +5923,8 @@ int monster::action_energy(energy_use_type et) const
     if (run())
         move_cost -= 1;
 
-    // Shadows move more quickly when blended with the darkness
+    // Shadows move more quickly when blended with the darkness.
+    // Change _monster_stat_description in describe.cc if you change this.
     if (type == MONS_SHADOW && invisible())
         move_cost -= 3;
 

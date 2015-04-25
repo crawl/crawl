@@ -1544,7 +1544,7 @@ const map_def *map_by_index(int index)
 }
 
 // Supporting map code for mapstat
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
 
 typedef pair<string, int> weighted_map_name;
 typedef vector<weighted_map_name> weighted_map_names;
@@ -1623,4 +1623,4 @@ void mapstat_report_random_maps(FILE *outf, const level_id &place)
     _report_random_vaults(outf, place, false);
 }
 
-#endif //DEBUG_DIAGNOSTICS
+#endif //DEBUG_STATISTICS

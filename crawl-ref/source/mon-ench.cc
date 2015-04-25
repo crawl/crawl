@@ -827,8 +827,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     mprf("%s surfaces.", name(DESC_A, true).c_str());
             }
         }
-        else if (mons_near(this)
-                 && feat_compatible(grd(pos()), DNGN_DEEP_WATER))
+        else if (mons_near(this) && feat_is_watery(grd(pos())))
         {
             mpr("Something invisible bursts forth from the water.");
             interrupt_activity(AI_FORCE_INTERRUPT);
@@ -1258,7 +1257,7 @@ static bool _apply_grasping_roots(monster* mons)
             continue;
 
         // Some messages are suppressed for monsters, to reduce message spam.
-        if (ai->flight_mode())
+        if (ai->airborne())
         {
             if (x_chance_in_y(3, 5))
                 continue;
@@ -1663,7 +1662,8 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (dam > 0)
         {
-            dprf("%s takes poison damage: %d", name(DESC_THE).c_str(), dam);
+            dprf("%s takes poison damage: %d (degree %d)",
+                 name(DESC_THE).c_str(), dam, me.degree);
 
             hurt(me.agent(), dam, BEAM_POISON);
         }
@@ -1676,7 +1676,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_STICKY_FLAME:
     {
         if (feat_is_watery(grd(pos())) && (ground_level()
-              || mons_intel(this) >= I_NORMAL && flight_mode()))
+              || mons_intel(this) >= I_NORMAL && airborne()))
         {
             if (mons_near(this) && visible_to(&you))
             {

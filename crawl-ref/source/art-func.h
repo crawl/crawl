@@ -177,7 +177,7 @@ static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
 {
     if (attacker->is_player())
         did_god_conduct(DID_NECROMANCY, 3);
-    if (!mondied && defender->has_lifeforce())
+    if (!mondied && defender->holiness() == MH_NATURAL)
     {
         MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_NECROMANCY,
                       random2(9), random2(70), "the Scythe of Curses",
@@ -299,15 +299,8 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
 static void _OLGREB_melee_effects(item_def* weapon, actor* attacker,
                                   actor* defender, bool mondied, int dam)
 {
-    int skill = attacker->skill(SK_POISON_MAGIC, 100);
-    if (defender->alive()
-        && (coinflip() || x_chance_in_y(skill, 800)))
-    {
-        defender->poison(attacker, 2, defender->has_lifeforce()
-                                      && x_chance_in_y(skill, 800));
-        if (attacker->is_player())
-            did_god_conduct(DID_POISON, 3);
-    }
+    if (defender->alive())
+        defender->poison(attacker, 2);
 }
 
 ////////////////////////////////////////////////////
@@ -503,7 +496,7 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
 ///////////////////////////////////////////////////
 
 // XXX: Always getting maximal vampiric drain is hardcoded in
-// melee_attack::apply_damage_brand()
+// attack::apply_damage_brand()
 
 static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
@@ -1279,4 +1272,64 @@ static void _CAPTAIN_melee_effects(item_def* weapon, actor* attacker,
         }
     }
 
+}
+
+///////////////////////////////////////////////////
+
+static void _FENCERS_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "En garde!");
+}
+
+///////////////////////////////////////////////////
+
+static void _ETHERIC_CAGE_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "You sense a greater flux of ambient magical fields.");
+}
+
+static void _ETHERIC_CAGE_world_reacts(item_def *item)
+{
+    const int delay = you.time_taken;
+    ASSERT(delay > 0);
+
+    // coinflip() chance of 1 MP per turn.
+    if (!(you.spirit_shield() && you.species == SP_DEEP_DWARF))
+        inc_mp(binomial(div_rand_round(delay, BASELINE_DELAY), 1, 2));
+    // It's more interesting to get a lump of contamination then to just add a
+    // small amount every turn, plus there's a small chance of rapid buildup.
+    if (one_chance_in(80))
+    {
+        // On average the player recovers 25 contam per turn, this should keep
+        // them in the gray a fair amount of time; be nicer if they're already
+        // in the yellow.
+        int contam = get_contamination_level() > 1 ? 300 : 1000;
+        contam = div_rand_round(contam * delay, BASELINE_DELAY);
+        contaminate_player(random_range(contam, contam * 2));
+    }
+}
+
+///////////////////////////////////////////////////
+
+static void _ETERNAL_TORMENT_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    calc_hp();
+}
+
+static void _ETERNAL_TORMENT_unequip(item_def *item, bool *show_msgs)
+{
+    calc_hp();
+}
+
+///////////////////////////////////////////////////
+
+// Vampiric effect triggers on every hit, see attack::apply_damage_brand()
+
+static void _LEECH_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    if (you.undead_state() == US_ALIVE && !you_foodless())
+        _equip_mpr(show_msgs, "You feel a powerful hunger.");
+    else if (you.species != SP_VAMPIRE)
+        _equip_mpr(show_msgs, "You feel very empty.");
+    // else let player-equip.cc handle message
 }

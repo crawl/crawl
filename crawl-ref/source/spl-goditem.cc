@@ -346,7 +346,9 @@ void debuff_player()
         int& dur = you.duration[i];
         if (duration_dispellable((duration_type) i) && dur > 0)
         {
-            if ((i == DUR_FLIGHT || i == DUR_TRANSFORMATION) && dur > 11)
+            if (i == DUR_TRANSFORMATION && you.form == TRAN_SHADOW)
+                continue;
+            else if ((i == DUR_FLIGHT || i == DUR_TRANSFORMATION) && dur > 11)
             {
                 dur = 11;
                 need_msg = true;

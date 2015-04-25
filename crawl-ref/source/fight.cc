@@ -460,7 +460,12 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
 
     if (res > 0)
     {
-        const bool immune_at_3_res = is_mon || flavour == BEAM_NEG;
+        const bool immune_at_3_res = is_mon
+                                     || flavour == BEAM_NEG
+                                     || flavour == BEAM_POISON
+                                     // just the resistible part
+                                     || flavour == BEAM_POISON_ARROW;
+
         if (immune_at_3_res && res >= 3 || res > 3)
             resistible = 0;
         else
@@ -619,6 +624,16 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
     }
 }
 
+/**
+ * How fast will this weapon get from your skill training?
+ *
+ * Does NOT take speed brand into account, since the brand shouldn't affect how
+ * long you will continue to gain benefits from training the weapon skill, just
+ * how big those benefits are.
+ * @param weapon the weapon to be considered.
+ * @returns How many aut the fastest possible attack with a weapon of this kind
+ *          would take.
+ */
 int weapon_min_delay(const item_def &weapon)
 {
     const int base = property(weapon, PWPN_SPEED);

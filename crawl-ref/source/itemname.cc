@@ -15,6 +15,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
+#include "asg.h" // for make_name()'s use
 #include "butcher.h"
 #include "colour.h"
 #include "command.h"
@@ -2808,37 +2809,15 @@ const size_t RCS_END = RCS_EM;
  */
 string make_name(uint32_t seed, makename_type name_type)
 {
+    uint32_t sarg[1] = { seed };
+    AsgKISS rng = AsgKISS(sarg, 1);
+
     string name;
 
     bool has_space  = false; // Keep track of whether the name contains a space.
 
-    const int var1 = (seed & 0xFF);
-    const int var2 = ((seed >>  8) & 0xFF);
-    const int var3 = ((seed >> 16) & 0xFF);
-    const int var4 = ((seed >> 24) & 0xFF);
-
-    const int numb[] = { // contains the random seeds used for the name
-        373 * var1 + 409 * var2 + 281 * var3,
-                     277 * var2 + 317 * var3 + 163 * var4,
-        257 * var1              +  83 * var3 + 179 * var4,
-        61  * var1 + 229 * var2              + 241 * var4,
-        79  * var1 + 263 * var2 + 149 * var3,
-                     383 * var2 + 311 * var3 + 233 * var4,
-        199 * var1              + 103 * var3 + 211 * var4,
-        139 * var1 + 109 * var2              + 349 * var4,
-        43  * var1 + 389 * var2 + 359 * var3,
-                     101 * var2 + 251 * var3 + 367 * var4,
-        293 * var1              + 151 * var3 +  59 * var4,
-        331 * var1 + 107 * var2              + 307 * var4,
-        73  * var1 + 157 * var2 + 347 * var3,
-                     353 * var2 + 227 * var3 + 379 * var4,
-        181 * var1              + 193 * var3 + 173 * var4,
-        131 * var1 + 167 * var2              +  53 * var4,
-        313 * var1 + 127 * var2 + 401 * var3 + 337 * var4,
-    };
-    static const int NUM_SEEDS = ARRAYSZ(numb);
-
-    size_t len = 3 + numb[0] % 5 + ((numb[1] % 5 == 0) ? numb[2] % 6 : 1);
+    size_t len = 3 + rng.get_uint32() % 5
+                   + ((rng.get_uint32() % 5 == 0) ? rng.get_uint32() % 6 : 1);
 
     if (name_type == MNAME_SCROLL)   // scrolls have longer names
         len += 6;
@@ -2848,13 +2827,9 @@ string make_name(uint32_t seed, makename_type name_type)
 
     ASSERT_RANGE(len, 1, ITEMNAME_SIZE + 1);
 
-    const int k = numb[4] % NUM_SEEDS;
-
     static const int MAX_ITERS = 150;
     for (int iters = 0; iters < MAX_ITERS && name.length() < len; ++iters)
     {
-        const int j = (numb[3] + iters + 1) % NUM_SEEDS;
-
         const char prev_char = name.length() ? name[name.length() - 1]
                                               : '\0';
         const char penult_char = name.length() > 1 ? name[name.length() - 2]
@@ -2868,11 +2843,11 @@ string make_name(uint32_t seed, makename_type name_type)
         else if (name.empty() || prev_char == ' ')
         {
             // Start the word with any letter.
-            name += 'a' + (numb[(k + 8 * j) % NUM_SEEDS] % 26);
+            name += 'a' + (rng.get_uint32() % 26);
         }
         else if (!has_space && name_type != MNAME_JIYVA
                  && name.length() > 5 && name.length() < len - 4
-                 && (numb[(k + 10 * j) % NUM_SEEDS] % 5) != 3) // 4/5 chance
+                 && rng.get_uint32() % 5 != 0) // 4/5 chance
         {
              // Hand out a space.
             name += ' ';
@@ -2882,10 +2857,10 @@ string make_name(uint32_t seed, makename_type name_type)
                      || (name.length() > 1
                          && !_is_consonant(prev_char)
                          && _is_consonant(penult_char)
-                         && (numb[(k + 4 * j) % NUM_SEEDS] % 5) <= 1))) // 2/5
+                         && rng.get_uint32() % 5 <= 1))) // 2/5
         {
             // Place a vowel.
-            const char vowel = _random_vowel(numb[(k + 7 * j) % NUM_SEEDS]);
+            const char vowel = _random_vowel(rng.get_uint32());
 
             if (vowel == ' ')
             {
@@ -2909,7 +2884,7 @@ string make_name(uint32_t seed, makename_type name_type)
             else if (name.length() > 1
                      && vowel == prev_char
                      && (vowel == 'y' || vowel == 'i'
-                         || (numb[(k + 12 * j) % NUM_SEEDS] % 5) <= 1))
+                         || rng.get_uint32() % 5 <= 1))
             {
                 // Replace the vowel with something else if the previous
                 // letter was the same, and it's a 'y', 'i' or with 2/5 chance.
@@ -2926,7 +2901,7 @@ string make_name(uint32_t seed, makename_type name_type)
 
             // Use one of number of predefined letter combinations.
             if ((len > 3 || !name.empty())
-                && (numb[(k + 13 * j) % NUM_SEEDS] % 7) <= 1 // 2/7 chance
+                && rng.get_uint32() % 7 <= 1 // 2/7 chance
                 && (!beg || !end))
             {
                 const int first = (beg ? RCS_BB : (end ? RCS_BE : RCS_BM));
@@ -2934,8 +2909,7 @@ string make_name(uint32_t seed, makename_type name_type)
 
                 const int range = last - first;
 
-                const int cons_seed = numb[(k + 11 * j) % NUM_SEEDS] % range
-                                      + first;
+                const int cons_seed = rng.get_uint32() % range + first;
 
                 const string consonant_set = _random_consonant_set(cons_seed);
 
@@ -2946,7 +2920,7 @@ string make_name(uint32_t seed, makename_type name_type)
             else // Place a single letter instead.
             {
                 // Pick a random consonant.
-                name += _random_cons(numb[(k + 3 * j) % NUM_SEEDS]);
+                name += _random_cons(rng.get_uint32());
             }
         }
 
@@ -2964,12 +2938,11 @@ string make_name(uint32_t seed, makename_type name_type)
         && last_char != 'y'
         && !_is_consonant(name[name.length() - 1])
         && (name.length() < len    // early exit
-            || (len < 8 && numb[16] % 3))) // 2/3 chance for other short names
+            || (len < 8
+                && rng.get_uint32() % 3 != 0))) // 2/3 chance for other short names
     {
         // Specifically, add a consonant.
-        const int cons_seed = (numb[3] + MAX_ITERS + 1) % NUM_SEEDS;
-        // ^ j if we broke out early, arbitrary otherwise
-        name += _random_cons(numb[cons_seed]);
+        name += _random_cons(rng.get_uint32());
     }
 
     if (maxlen != SIZE_MAX)
@@ -2979,12 +2952,9 @@ string make_name(uint32_t seed, makename_type name_type)
     // Fallback if the name was too short.
     if (name.length() < 4)
     {
+        // convolute & recurse
         if (name_type == MNAME_JIYVA)
-        {
-            // convolute & recurse
-            seed_rng(seed);
-            return make_name(random_int(), MNAME_JIYVA);
-        }
+            return make_name(rng.get_uint32(), MNAME_JIYVA);
 
         name = "plog";
     }

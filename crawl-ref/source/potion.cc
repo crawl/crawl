@@ -724,7 +724,7 @@ public:
 
     bool can_quaff() const
     {
-        return you.can_safely_mutate();
+        return you.can_safely_mutate() && how_mutated(false, false, false) > 0;
     }
 
     bool effect(bool=true, int=40) const
@@ -747,6 +747,12 @@ public:
     {
         if (was_known && _disallow_mut())
             return false;
+        if (was_known && how_mutated(false, false, false) == 0)
+        {
+            mprf("You have no %smutations to cure!",
+                 how_mutated(false, false, true) ? "permanent " : "");
+            return false;
+        }
         effect(was_known);
         return true;
     }

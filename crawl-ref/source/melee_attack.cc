@@ -56,14 +56,6 @@
     #include "notes.h"
 #endif
 
-// Odd helper function, why is this declared like this?
-#define DID_AFFECT() \
-{ \
-    if (miscast_level == 0) \
-        miscast_level = -1; \
-    return; \
-}
-
 /*
  **************************************************
  *             BEGIN PUBLIC FUNCTIONS             *
@@ -1381,10 +1373,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             defender->splash_with_acid(&you);
         }
 
-        // TODO: remove this? Unarmed poison attacks?
         if (damage_brand == SPWPN_VENOM && coinflip())
             poison_monster(defender->as_monster(), &you);
-
 
         // Normal vampiric biting attack, not if already got stabbing special.
         if (damage_brand == SPWPN_VAMPIRISM && you.species == SP_VAMPIRE
@@ -1863,19 +1853,9 @@ bool melee_attack::player_monattk_hit_effects()
 
     // Thirsty vampires will try to use a stabbing situation to draw blood.
     if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
-        && damage_done > 0 && stab_attempt && stab_bonus > 0
-        && _player_vampire_draws_blood(defender->as_monster(),
-                                       damage_done, true))
+        && damage_done > 0 && stab_attempt && stab_bonus > 0)
     {
-        // No further effects.
-    }
-    else if (you.species == SP_VAMPIRE
-             && damage_brand == SPWPN_VAMPIRISM
-             && you.weapon()
-             && _player_vampire_draws_blood(defender->as_monster(),
-                                            damage_done, false, 5))
-    {
-        // No further effects.
+        _player_vampire_draws_blood(defender->as_monster(), damage_done, true);
     }
 
     if (!defender->alive())
@@ -2291,11 +2271,8 @@ void melee_attack::apply_staff_damage()
             return;
 
         // Base chance at 50% -- like mundane weapons.
-        if (coinflip() || x_chance_in_y(attacker->skill(SK_POISON_MAGIC, 10), 80))
-        {
-            defender->poison(attacker, 2, defender->has_lifeforce()
-                & x_chance_in_y(attacker->skill(SK_POISON_MAGIC, 10), 160));
-        }
+        if (x_chance_in_y(80 + attacker->skill(SK_POISON_MAGIC, 10), 160))
+            defender->poison(attacker, 2);
         break;
     }
 
@@ -2513,17 +2490,6 @@ bool melee_attack::mons_do_poison()
     {
         amount = random_range(attacker->get_hit_dice() * 11 / 3,
                               attacker->get_hit_dice() * 13 / 2);
-
-        // strong poison pierces monster rpois (at half strength)
-        // (players have the usual 2/3rds chance to resist)
-        // XXX: do we really need the has_lifeforce() check...? force doesn't
-        // override rpois+++
-        if (defender->res_poison() > 0 && defender->has_lifeforce()
-            && defender->is_monster())
-        {
-            amount /= 2;
-            force = true;
-        }
     }
     else
     {
@@ -2649,6 +2615,14 @@ bool melee_attack::mons_attack_effects()
     if (defender->is_player())
         practise(EX_MONSTER_WILL_HIT);
 
+    // A tentacle may have banished its own parent/sibling and thus itself.
+    if (!attacker->alive())
+    {
+        if (miscast_target == defender)
+            do_miscast(); // Will handle a missing defender, too.
+        return false;
+    }
+
     // consider_decapitation() returns true if the wound was cauterized or the
     // last head was removed. In the former case, we shouldn't apply
     // the brand damage (so we return here). If the monster was killed
@@ -2677,14 +2651,12 @@ bool melee_attack::mons_attack_effects()
     if (!defender->alive())
     {
         do_miscast();
-        return true;
+        return attacker->alive();
     }
 
-    // Yredelemnul's injury mirroring can kill the attacker.
-    // Also, bail if the monster is attacking itself without a
-    // weapon, since intrinsic monster attack flavours aren't
-    // applied for self-attacks.
-    if (!attacker->alive() || (attacker == defender && !weapon))
+    // Bail if the monster is attacking itself without a weapon, since
+    // intrinsic monster attack flavours aren't applied for self-attacks.
+    if (attacker == defender && !weapon)
     {
         if (miscast_target == defender)
             do_miscast();
@@ -2694,13 +2666,13 @@ bool melee_attack::mons_attack_effects()
     if (!defender->alive())
     {
         do_miscast();
-        return true;
+        return attacker->alive();
     }
 
     if (miscast_target == defender)
         do_miscast();
 
-    // Yredelemnul's injury mirroring can kill the attacker.
+    // Miscast explosions may kill the attacker.
     if (!attacker->alive())
         return false;
 
@@ -2922,11 +2894,8 @@ void melee_attack::mons_apply_attack_flavour()
         }
 
         // doesn't affect poison-immune enemies
-        if (defender->res_poison() >= 3
-            || defender->is_monster() && defender->res_poison() >= 1)
-        {
+        if (defender->res_poison() >= 3)
             break;
-        }
 
         if (attacker->type == MONS_HORNET || one_chance_in(3))
         {
@@ -3645,8 +3614,7 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
                 + you.skill(SK_FIGHTING, 30);
     your_to_hit /= 100;
 
-    if (you.inaccuracy())
-        your_to_hit -= 5;
+    your_to_hit -= 5 * you.inaccuracy();
 
     if (player_mutation_level(MUT_EYEBALLS))
         your_to_hit += 2 * player_mutation_level(MUT_EYEBALLS) + 1;
@@ -3768,11 +3736,12 @@ int melee_attack::calc_damage()
  *
  * Should eventually remove in favor of player/monster symmetry
  *
- * Called when stabbing, for bite attacks, and vampires wielding vampiric weapons
+ * Called when stabbing and for bite attacks.
+ *
  * Returns true if blood was drawn.
  */
 bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int damage,
-                                               bool needs_bite_msg, int reduction)
+                                               bool needs_bite_msg)
 {
     ASSERT(you.species == SP_VAMPIRE);
 
@@ -3781,8 +3750,6 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     {
         return false;
     }
-
-    const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
 
     // Now print message, need biting unless already done (never for bat form!)
     if (needs_bite_msg && you.form != TRAN_BAT)
@@ -3800,9 +3767,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     // Regain hp.
     if (you.hp < you.hp_max)
     {
-        int heal = 1 + random2(damage);
-        if (chunk_type == CE_CLEAN)
-            heal += 1 + random2(damage);
+        int heal = 2 + random2(damage) + random2(damage);
         if (heal > you.experience_level)
             heal = you.experience_level;
 
@@ -3820,15 +3785,11 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     // Gain nutrition.
     if (you.hunger_state != HS_ENGORGED)
     {
-        int food_value = 0;
-        if (chunk_type == CE_CLEAN)
-            food_value = 30 + random2avg(59, 2);
+        int food_value = 30 + random2avg(59, 2);
 
         // Bats get rather less nutrition out of it.
         if (you.form == TRAN_BAT)
             food_value /= 2;
-
-        food_value /= reduction;
 
         lessen_hunger(food_value, false);
     }
@@ -3840,20 +3801,8 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
 
 bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
 {
-    if (you.species != SP_VAMPIRE)
-        return false;
-
-    if (you.hunger_state == HS_ENGORGED)
-        return false;
-
-    if (mon->is_summoned())
-        return false;
-
-    if (!mons_has_blood(mon->type))
-        return false;
-
-    const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
-
-    // Don't drink mutagenic or rotten blood.
-    return chunk_type == CE_CLEAN;
+    return you.species == SP_VAMPIRE
+           && you.hunger_state < HS_ENGORGED
+           && !mon->is_summoned()
+           && mons_has_blood(mon->type);
 }

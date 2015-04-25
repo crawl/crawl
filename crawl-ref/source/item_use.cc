@@ -1134,7 +1134,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
             && artefact_known_property(inf, ARTP_FLY);
 
     // assumes item can't grant flight twice
-    const bool removing_ends_flight = you.flight_mode()
+    const bool removing_ends_flight = you.airborne()
           && !you.racial_permanent_flight()
           && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
           && (you.evokable_flight() == 1);
@@ -2304,20 +2304,15 @@ void random_uselessness(int scroll_slot)
 
     int temp_rand = random2(8);
 
-    // If this isn't from a scroll, skip the first two possibilities.
+    // If this isn't from a scroll, skip the first possibilities.
     if (scroll_slot == -1)
         temp_rand = 2 + random2(6);
 
     switch (temp_rand)
     {
     case 0:
-        mprf("The dust glows %s!", weird_glowing_colour().c_str());
-        break;
-
     case 1:
-        mprf("The scroll reassembles itself in your %s!",
-             you.hand_name(true).c_str());
-        inc_inv_item_quantity(scroll_slot, 1);
+        mprf("The dust glows %s!", weird_glowing_colour().c_str());
         break;
 
     case 2:
@@ -2635,6 +2630,7 @@ void read(int slot)
             && !yesno("Really read with blurry vision while enemies are nearby?",
                       false, 'n'))
         {
+            you.turn_is_over = false;
             canned_msg(MSG_OK);
             return;
         }

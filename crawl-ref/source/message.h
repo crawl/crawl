@@ -134,6 +134,13 @@ namespace msg
         int m_param;
     };
 
+    struct capitalisation
+    {
+        capitalisation(bool cap);
+        bool m_cap;
+    };
+    extern capitalisation cap, nocap;
+
     struct mute
     {
         mute(bool value = true);
@@ -147,6 +154,7 @@ namespace msg
         virtual ~mpr_stream_buf() {}
         void set_param(int p);
         void set_muted(bool m);
+        void set_capitalise(bool m);
     protected:
         int overflow(int c);
     private:
@@ -155,6 +163,7 @@ namespace msg
         int internal_count;
         int param;
         bool muted;
+        bool capitalise;
         msg_channel_type channel;
     };
 
@@ -163,6 +172,7 @@ namespace msg
 }
 
 ostream& operator<<(ostream& os, const msg::setparam& sp);
+ostream& operator<<(ostream& os, const msg::capitalisation& cap);
 
 void set_msg_dump_file(FILE* file);
 

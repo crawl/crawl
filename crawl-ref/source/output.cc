@@ -1385,7 +1385,7 @@ void print_stats()
     if (you.species == SP_FELID)
     {
         // There are no circumstances under which Felids could quiver something.
-        // Reduce line counter for status display.y
+        // Reduce line counter for status display.
         yhack -= 1;
     }
     else if (you.redraw_quiver || you.wield_change)

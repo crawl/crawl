@@ -194,19 +194,11 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
     ld.update();
 
     const int max_chunks = max_corpse_chunks(corpse.mon_type);
-
-    int nchunks = 1;
+    const int nchunks = stepdown_value(1 + random2(max_chunks), 4, 4, 12, 12);
     if (corpse.base_type == OBJ_GOLD)
-        nchunks = corpse.quantity;
+        corpse.quantity = div_rand_round(corpse.quantity, nchunks);
     else
-    {
-        nchunks += random2(max_chunks);
-        nchunks = stepdown_value(nchunks, 4, 4, 12, 12);
-    }
-
-    // spray some blood
-    if (corpse.base_type != OBJ_GOLD)
-        blood_spray(where, corpse.mon_type, nchunks * 3);
+        blood_spray(where, corpse.mon_type, nchunks * 3); // spray some blood
 
     // Don't let the player evade food conducts by using OOD (!) or /disint
     // Spray blood, but no chunks. (The mighty hand of your God squashes them
@@ -224,7 +216,8 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
     }
 
     // spray chunks everywhere!
-    for (int ntries = 0; nchunks > 0 && ntries < 10000; ++ntries)
+    for (int ntries = 0, chunks_made = 0;
+         chunks_made < nchunks && ntries < 10000; ++ntries)
     {
         coord_def cp = where;
         cp.x += random_range(-LOS_RADIUS, LOS_RADIUS);
@@ -243,7 +236,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
         if (cell_is_solid(cp) || actor_at(cp))
             continue;
 
-        --nchunks;
+        ++chunks_made;
 
         dprf("Success");
 
@@ -428,16 +421,17 @@ void goldify_corpse(item_def &corpse)
     // Apply the gold aura effect to the player.
     const int dur = corpse.quantity * 2;
     if (dur > you.duration[DUR_GOZAG_GOLD_AURA])
-    {
         you.set_duration(DUR_GOZAG_GOLD_AURA, dur);
-        redraw_screen();
-    }
+
     you.props["gozag_gold_aura_amount"].get_int()++;
 }
 
 // Returns the item slot of a generated corpse, or -1 if no corpse.
 int place_monster_corpse(const monster* mons, bool silent, bool force)
 {
+    // Under Gozag, monsters turn into gold on death.
+    bool goldify = in_good_standing(GOD_GOZAG);
+
     // The game can attempt to place a corpse for an out-of-bounds monster
     // if a shifter turns into a giant spore and explodes. In this
     // case we place no corpse since the explosion means anything left
@@ -456,12 +450,17 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
     item_def corpse;
     const monster_type corpse_class = fill_out_corpse(mons, mons->type,
                                                       corpse);
-    if (corpse_class == MONS_NO_MONSTER)
-        return -1;
 
-    // Don't place a corpse?  If a zombified monster is somehow capable
+    // Corpseless monsters still drop gold for Gozag.
+    if (corpse_class == MONS_NO_MONSTER &&
+        !(goldify && !mons_class_flag(mons->type, M_NO_EXP_GAIN)))
+    {
+        return -1;
+    }
+
+    // Don't place a corpse? If a zombified monster is somehow capable
     // of leaving a corpse, then always place it.
-    if (mons_class_is_zombified(mons->type))
+    if (mons_class_is_zombified(mons->type) && !goldify)
         force = true;
 
     const bool vault_forced =
@@ -473,11 +472,11 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
 
     // 50/50 chance of getting a corpse, unless it's forced by the caller or
     // the monster's flags.
-    // gozag always gets a "corpse". (gold.)
-    if (!force && !vault_forced && !in_good_standing(GOD_GOZAG) && coinflip())
+    // Gozag always gets a "corpse".
+    if (!force && !vault_forced && !goldify && coinflip())
         return -1;
 
-    if (!force && in_good_standing(GOD_GOZAG))
+    if (!force && goldify)
         goldify_corpse(corpse);
 
     int o = get_mitm_slot();

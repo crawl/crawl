@@ -334,6 +334,13 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         return false;
     }
 
+    if (mons->is_stationary() || mons->asleep() || mons->cannot_move())
+    {
+        if (!quiet)
+            simple_monster_message(mons, " cannot move out of your way!");
+        return false;
+    }
+
     // prompt when swapping into known zot traps
     if (!quiet && find_trap(loc) && find_trap(loc)->type == TRAP_ZOT
         && env.grid(loc) != DNGN_UNDISCOVERED_TRAP
@@ -1281,7 +1288,7 @@ int player_hunger_rate(bool temp)
 
     // If Cheibriados has slowed your life processes, you will hunger less.
     if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
-        hunger = hunger * 3 / 4;
+        hunger /= 2;
 
     if (hunger < 1)
         hunger = 1;
@@ -1389,6 +1396,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     // mutations:
     rf += player_mutation_level(MUT_HEAT_RESISTANCE, temp);
     rf -= player_mutation_level(MUT_HEAT_VULNERABILITY, temp);
+    rf -= player_mutation_level(MUT_TEMPERATURE_SENSITIVITY, temp);
     rf += player_mutation_level(MUT_MOLTEN_SCALES, temp) == 3 ? 1 : 0;
 
     // spells:
@@ -1505,6 +1513,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
     // mutations:
     rc += player_mutation_level(MUT_COLD_RESISTANCE, temp);
     rc -= player_mutation_level(MUT_COLD_VULNERABILITY, temp);
+    rc -= player_mutation_level(MUT_TEMPERATURE_SENSITIVITY, temp);
     rc += player_mutation_level(MUT_ICY_BLUE_SCALES, temp) == 3 ? 1 : 0;
     rc += player_mutation_level(MUT_SHAGGY_FUR, temp) == 3 ? 1 : 0;
 
@@ -1616,11 +1625,10 @@ bool player_control_teleport(bool temp)
  * Is the player character immune to torment?
  *
  * @param random    Whether to include unreliable effects (stochastic resist)
- * @param temp      Whether to include temporary effects (forms, statuses...)
  * @return          Whether the player resists a given instance of torment; if
  *                  random is passed, the result may vary from call to call.
  */
-bool player_res_torment(bool random, bool temp)
+bool player_res_torment(bool random)
 {
     if (player_mutation_level(MUT_TORMENT_RESISTANCE))
         return true;
@@ -1632,12 +1640,10 @@ bool player_res_torment(bool random, bool temp)
         return true;
     }
 
-    if (!temp)
-        return false;
-
     return get_form()->res_neg() == 3
            || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
-           || you.petrified();
+           || you.petrified()
+           || player_equip_unrand(UNRAND_ETERNAL_TORMENT);
 }
 
 // Kiku protects you from torment to a degree.
@@ -2016,6 +2022,8 @@ int player_movement_speed()
     // Cheibriados
     if (you_worship(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety, 20), 8);
+    else if (player_under_penance(GOD_CHEIBRIADOS))
+        mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
 
     // Tengu can move slightly faster when flying.
     if (you.tengu_flight())
@@ -3453,7 +3461,7 @@ static void _display_movement_speed()
     const bool water  = you.in_liquid();
     const bool swim   = you.swimming();
 
-    const bool fly    = you.flight_mode();
+    const bool fly    = you.airborne();
     const bool swift  = (you.duration[DUR_SWIFTNESS] > 0
                          && you.attribute[ATTR_SWIFTNESS] >= 0);
     const bool antiswift = (you.duration[DUR_SWIFTNESS] > 0
@@ -4159,6 +4167,9 @@ int get_real_hp(bool trans, bool rotted)
 
     if (trans) // Some transformations give you extra hp.
         hitp = hitp * form_hp_mod() / 10;
+
+    if (trans && player_equip_unrand(UNRAND_ETERNAL_TORMENT))
+        hitp = hitp * 4 / 5;
 
     return max(1, hitp);
 }
@@ -5374,7 +5385,6 @@ void player::init()
 
     reset_escaped_death();
     on_current_level    = true;
-    walking             = 0;
     seen_portals        = 0;
     seen_invis          = false;
     frame_no            = 0;
@@ -5470,11 +5480,11 @@ player::~player()
     ASSERT(!save); // the save file should be closed or deleted
 }
 
-flight_type player::flight_mode() const
+bool player::airborne() const
 {
     // Might otherwise be airborne, but currently stuck to the ground
     if (you.duration[DUR_GRASPING_ROOTS] || get_form()->forbids_flight())
-        return FL_NONE;
+        return false;
 
     if (duration[DUR_FLIGHT]
 #if TAG_MAJOR_VERSION == 34
@@ -5483,10 +5493,10 @@ flight_type player::flight_mode() const
         || attribute[ATTR_PERM_FLIGHT]
         || get_form()->enables_flight())
     {
-        return FL_LEVITATE;
+        return true;
     }
 
-    return FL_NONE;
+    return false;
 }
 
 bool player::is_banished() const
@@ -5869,8 +5879,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
         level = skill(sk, drain_scale, real, false);
         return max(0, (level - 30 * scale * you.attribute[ATTR_XP_DRAIN]) / (30 * 100));
     }
-    if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
-        level = min(level + 5 * scale, 27 * scale);
+
     if (penance[GOD_ASHENZARI])
         level = max(level - 4 * scale, level / 2);
     else if (religion == GOD_ASHENZARI && piety_rank() > 3)
@@ -5881,7 +5890,13 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
             level = ash_skill_boost(sk, scale);
         }
     }
-
+    if ((sk == SK_LONG_BLADES || sk == SK_SHORT_BLADES)
+        && player_equip_unrand(UNRAND_FENCERS))
+    {
+        level = min(level + 4 * scale, 27 * scale);
+    }
+    if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
+        level = min(level + 5 * scale, 27 * scale);
     return level;
 }
 
@@ -6160,13 +6175,12 @@ int player::evasion(ev_ignore_type evit, const actor* act) const
     const int invis_penalty = attacker_invis && !(evit & EV_IGNORE_HELPLESS) ?
                               10 : 0;
 
-    const bool delayed = you_are_delayed()
-                         && !delay_is_run(current_delay_action())
-                         && current_delay_action() != DELAY_MACRO;
-    const int delay_penalty = delayed && !(evit & EV_IGNORE_HELPLESS) ?
-                              5 : 0;
+    const int stairs_penalty = player_stair_delay()
+                                && !(evit & EV_IGNORE_HELPLESS) ?
+                                    5 :
+                                    0;
 
-    return base_evasion - constrict_penalty - invis_penalty - delay_penalty;
+    return base_evasion - constrict_penalty - invis_penalty - stairs_penalty;
 }
 
 bool player::heal(int amount, bool max_too)
@@ -6616,7 +6630,7 @@ bool player::racial_permanent_flight() const
 bool player::tengu_flight() const
 {
     // Only Tengu get perks for flying.
-    return species == SP_TENGU && flight_mode();
+    return species == SP_TENGU && airborne();
 }
 
 /**
@@ -7286,13 +7300,6 @@ void player::backlight()
 
         increase_duration(DUR_CORONA, random_range(3, 5), 250);
     }
-}
-
-bool player::has_lifeforce() const
-{
-    const mon_holy_type holi = holiness();
-
-    return holi == MH_NATURAL || holi == MH_PLANT;
 }
 
 bool player::can_mutate() const
@@ -8583,4 +8590,14 @@ void player::maybe_degrade_bone_armour(int mult)
         mpr("The last of your corpse armour falls away.");
 
     redraw_armour_class = true;
+}
+
+int player::inaccuracy() const
+{
+    int degree = 0;
+    if (wearing(EQ_AMULET, AMU_INACCURACY))
+        degree++;
+    if (player_mutation_level(MUT_MISSING_EYE))
+        degree += 2;
+    return degree;
 }

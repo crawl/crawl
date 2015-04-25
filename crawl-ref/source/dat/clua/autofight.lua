@@ -298,7 +298,7 @@ function attack(allow_movement)
     attack_melee(x,y)
   elseif info.attack_type == 1 then
     attack_reach(x,y)
-  elseif allow_movement then
+  elseif allow_movement and crawl.weapon_check() then
     move_towards(x,y)
   elseif AUTOFIGHT_WAIT then
     crawl.process_keys('s')

@@ -10,11 +10,4 @@ void debug_item_scan();
 void debug_mons_scan();
 void check_map_validity();
 
-#ifdef DEBUG_DIAGNOSTICS
-void objstat_record_item(item_def &item);
-void objstat_generate_stats();
-void objstat_record_monster(monster *mons);
-void objstat_iteration_stats();
-#endif
-
 #endif

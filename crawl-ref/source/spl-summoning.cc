@@ -820,9 +820,8 @@ static bool _check_tukima_validity(const actor *target)
  *
  * @param pow               Spellpower.
  * @param target            The spell's target (monster or player)
- * @param force_friendly    Whether the weapon should always be pro-player.
  **/
-static void _animate_weapon(int pow, actor* target, bool force_friendly)
+static void _animate_weapon(int pow, actor* target)
 {
     bool target_is_player = target == &you;
     item_def* wpn = target->weapon();
@@ -842,7 +841,7 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
     // If sac love, the weapon will go after you, not the target.
     const bool sac_love = player_mutation_level(MUT_NO_LOVE);
     // Self-casting haunts yourself! MUT_NO_LOVE overrides force friendly.
-    const bool friendly = (force_friendly || !target_is_player) && !sac_love;
+    const bool friendly = !target_is_player && !sac_love;
     const int dur = min(2 + (random2(pow) / 5), 6);
 
     mgen_data mg(MONS_DANCING_WEAPON,
@@ -864,8 +863,8 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
         return;
     }
 
-    // Don't haunt yourself if the weapon is friendly or if sac love.
-    if (!force_friendly && !sac_love)
+    // Don't haunt yourself under sac love.
+    if (!sac_love)
     {
         mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
                                    INFINITE_DURATION));
@@ -911,16 +910,15 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
  *
  * @param pow               Spellpower.
  * @param where             The target grid.
- * @param force_friendly    Whether the weapon should always be pro-player.
  **/
-void cast_tukimas_dance(int pow, actor* target, bool force_friendly)
+void cast_tukimas_dance(int pow, actor* target)
 {
     ASSERT(target);
 
     if (!_check_tukima_validity(target))
         return;
 
-    _animate_weapon(pow, target, force_friendly);
+    _animate_weapon(pow, target);
 }
 
 spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
@@ -1835,9 +1833,11 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (!mons)
         return false;
 
-    // If the original monster has been drained or levelled up, its HD
-    // might be different from its class HD, in which case its HP should
-    // be rerolled to match.
+    if (god == GOD_NO_GOD) // only Yred dead-raising lasts forever.
+        mons->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+
+    // If the original monster has been levelled up, its HD might be different
+    // from its class HD, in which case its HP should be rerolled to match.
     if (mons->get_experience_level() != hd)
     {
         mons->set_hit_dice(max(hd, 1));
@@ -1861,12 +1861,13 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         player_angers_monster(mons);
 
     // Bitfield for motions - determines text displayed when animating dead.
+    // XXX: could this use monster shape in some way?
     if (mons_class_primary_habitat(zombie_type)    == HT_WATER
         || mons_class_primary_habitat(zombie_type) == HT_LAVA)
     {
         *motions_r |= DEAD_ARE_SWIMMING;
     }
-    else if (mons_class_flies(zombie_type))
+    else if (mons_class_flag(zombie_type, M_FLIES))
         *motions_r |= DEAD_ARE_FLYING;
     else if (mons_genus(zombie_type)    == MONS_SNAKE
              || mons_genus(zombie_type) == MONS_NAGA
@@ -1908,6 +1909,9 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
     if (is_sanctuary(a))
         return 0;
 
+    if (grd(a) == DNGN_DEEP_WATER)
+        return 0; // trapped in davy jones' locker...
+
     int number_found = 0;
     bool any_success = false;
     int motions = 0;
@@ -1915,45 +1919,46 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
     // Search all the items on the ground for a corpse.
     for (stack_iterator si(a, true); si; ++si)
     {
-        if (si->base_type == OBJ_CORPSES
-            && (class_allowed == CORPSE_BODY
-                || si->sub_type == CORPSE_SKELETON))
+        if (si->base_type != OBJ_CORPSES)
+            continue;
+
+        if (class_allowed != CORPSE_BODY && si->sub_type != CORPSE_SKELETON)
+            continue;
+
+        number_found++;
+
+        if (!_animatable_remains(*si))
+            continue;
+
+        const bool was_draining = is_being_drained(*si);
+        const bool was_butchering = is_being_butchered(*si);
+
+        const bool success = _raise_remains(a, si.index(), beha, hitting,
+                                            as, nas, god, actual,
+                                            force_beh, mon, &motions);
+
+        if (actual && success)
         {
-            number_found++;
-
-            if (!_animatable_remains(*si))
-                continue;
-
-            const bool was_draining = is_being_drained(*si);
-            const bool was_butchering = is_being_butchered(*si);
-
-            const bool success = _raise_remains(a, si.index(), beha, hitting,
-                                                as, nas, god, actual,
-                                                force_beh, mon, &motions);
-
-            if (actual && success)
+            // Ignore quiet.
+            if (was_butchering || was_draining)
             {
-                // Ignore quiet.
-                if (was_butchering || was_draining)
-                {
-                    mprf("The corpse you are %s rises to %s!",
-                         was_draining ? "drinking from"
-                                      : "butchering",
-                         beha == BEH_FRIENDLY ? "join your ranks"
-                                              : "attack");
-                }
-
-                if (!quiet && you.see_cell(a))
-                    _display_undead_motions(motions);
-
-                if (was_butchering)
-                    xom_is_stimulated(200);
+                mprf("The corpse you are %s rises to %s!",
+                     was_draining ? "drinking from"
+                                  : "butchering",
+                     beha == BEH_FRIENDLY ? "join your ranks"
+                                          : "attack");
             }
 
-            any_success |= success;
+            if (!quiet && you.see_cell(a))
+                _display_undead_motions(motions);
 
-            break;
+            if (was_butchering)
+                xom_is_stimulated(200);
         }
+
+        any_success |= success;
+
+        break;
     }
 
     if (motions_r && you.see_cell(a))

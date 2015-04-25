@@ -980,13 +980,6 @@ void origin_acquired(item_def &item, int agent)
     item.orig_monnum = -agent;
 }
 
-void origin_set_inventory(void (*oset)(item_def &item))
-{
-    for (int i = 0; i < ENDOFPACK; ++i)
-        if (you.inv[i].defined())
-            oset(you.inv[i]);
-}
-
 static string _milestone_rune(const item_def &item)
 {
     return string("found ") + item.name(DESC_A) + ".";
@@ -3489,12 +3482,7 @@ colour_t item_def::food_colour() const
         case FOOD_FRUIT:
             return LIGHTGREEN;
         case FOOD_CHUNK:
-        {
-            const colour_t class_colour = mons_class_colour(mon_type);
-            if (class_colour == BLACK)
-                return LIGHTRED;
-            return class_colour;
-        }
+            return LIGHTRED;
         case FOOD_BEEF_JERKY:
         case FOOD_BREAD_RATION:
         case FOOD_MEAT_RATION:

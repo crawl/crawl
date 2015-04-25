@@ -23,14 +23,13 @@ public:
     short xl;
 
     short max_hp, ev, ac, damage, speed, move_energy;
-    bool see_invis;
+    bool see_invis, flies;
     brand_type brand;
     attack_type att_type;
     attack_flavour att_flav;
     resists_t resists;
 
     colour_t colour;
-    flight_type fly;
 
     monster_spells spells;
 

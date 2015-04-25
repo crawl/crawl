@@ -579,8 +579,7 @@ your skills will be further drained when taking damage.
 Potion Petition ability
 
 Petition Gozag to sell you the effects of a set of potions. Gozag will offer
-three lists at a time, with varying prices. Prices will slowly increase as you
-purchase potions.
+three lists at a time, with varying prices.
 %%%%
 Call Merchant ability
 
@@ -802,6 +801,27 @@ Sacrifice Skill ability
 Adherents who choose to sacrifice their skills will get -1 to all of their
 skill aptitudes. This will likely cause the adherent to lose ranks in skills
 they have trained.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Sacrifice an Eye ability
+
+Adherents who choose to sacrifice their eye will have a much harder time hitting
+their targets, to the same degree as if they were wearing two amulets of
+inaccuracy at once.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Sacrifice Resistance ability
+
+Adherents who choose to sacrifice their resistance will become vulnerable to
+extreme heat and cold.
 
 If you make this sacrifice, your powers granted by Ru will become stronger in
 proportion to the value of the sacrifice, and you may gain new powers as well.

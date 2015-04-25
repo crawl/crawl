@@ -187,7 +187,6 @@ public:
     virtual bool is_icy() const = 0;
     virtual bool is_fiery() const = 0;
     virtual bool is_skeletal() const = 0;
-    virtual bool has_lifeforce() const = 0;
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate(bool temp = true) const = 0;
     virtual bool can_polymorph() const = 0;
@@ -304,7 +303,7 @@ public:
     virtual int check_res_magic(int power);
     virtual bool no_tele(bool calc_unid = true, bool permit_id = true,
                          bool blink = false) const = 0;
-    virtual bool inaccuracy() const;
+    virtual int inaccuracy() const;
     virtual bool antimagic_susceptible() const = 0;
 
     virtual bool gourmand(bool calc_unid = true, bool items = true) const;
@@ -329,7 +328,6 @@ public:
     virtual int evokable_flight(bool calc_unid = true) const;
     virtual int spirit_shield(bool calc_unid = true, bool items = true) const;
 
-    virtual flight_type flight_mode() const = 0;
     virtual bool is_wall_clinging() const;
     virtual bool is_banished() const = 0;
     virtual bool can_cling_to_walls() const = 0;
@@ -337,7 +335,7 @@ public:
     virtual bool check_clinging(bool stepped, bool door = false);
     virtual void clear_clinging();
     virtual bool is_web_immune() const = 0;
-    virtual bool airborne() const;
+    virtual bool airborne() const = 0;
     virtual bool ground_level() const;
     virtual bool stand_on_solid_ground() const;
 

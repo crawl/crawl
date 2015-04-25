@@ -269,6 +269,7 @@ public:
     bool        arena_list_eq;
 
     vector<message_filter> force_more_message;
+    vector<message_filter> flash_screen_message;
 
     int         tc_reachable;   // Colour for squares that are reachable
     int         tc_excluded;    // Colour for excluded squares.
@@ -593,6 +594,9 @@ enum use_animation_type
     UA_PLAYER           = (1 << 6),
     // animation when entering certain branches (abyss, zot, etc)
     UA_BRANCH_ENTRY     = (1 << 7),
+    // animations that can't be turned off (please don't use unless they can
+    // be turned off some other way)
+    UA_ALWAYS_ON        = (1 << 8),
 };
 
 #endif

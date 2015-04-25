@@ -686,7 +686,7 @@ string get_god_likes(god_type which_god, bool verbose)
     {
         string like = "you bless dead orcs";
         if (verbose)
-            like += " (by standing over their remains and <w>p</w>raying";
+            like += " (by standing over their remains and <w>p</w>raying)";
         likes.push_back(like);
         break;
     }
@@ -2952,6 +2952,8 @@ void excommunication(god_type new_god, bool immediate)
             mprf(MSGCH_GOD, old_god, "Your aura of darkness fades away.");
             invalidate_agrid(true);
         }
+        if (you.form == TRAN_SHADOW)
+            untransform();
         _set_penance(old_god, 25);
         break;
 
@@ -3006,6 +3008,9 @@ void excommunication(god_type new_god, bool immediate)
         break;
 
     case GOD_CHEIBRIADOS:
+        simple_god_message(" continues to slow your movements.", old_god);
+        _set_penance(old_god, 25);
+
     default:
         _set_penance(old_god, 25);
         break;
@@ -3032,6 +3037,8 @@ void excommunication(god_type new_god, bool immediate)
         you.stop_train.insert(abil_skill(abil));
 
     update_can_train();
+    you.can_train.set(SK_INVOCATIONS, false);
+    reset_training();
 
     // Perhaps we abandoned Trog with everything but Spellcasting maxed out.
     check_selected_skills();
@@ -3231,7 +3238,7 @@ int gozag_service_fee()
         return 0;
 
     const int gold = you.attribute[ATTR_GOLD_GENERATED];
-    int fee = 50 + (int)(gold - gold / log10(gold + 10.0))/2;
+    int fee = (int)(gold - gold / log10(gold + 10.0))/2;
 
     dprf("found %d gold, fee %d", gold, fee);
     return fee;
