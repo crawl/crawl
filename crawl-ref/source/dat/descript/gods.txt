@@ -99,9 +99,8 @@ Nemelex Xobeh
 Nemelex is a strange and unpredictable trickster god, whose powers are invoked
 through magical packs of cards painted in the ichor of demons. Followers are
 expected to explore the world, and will receive decks of cards in return.
-Followers are encouraged to trust in the cards and use them as
-much as possible. However, the Trickster can ensure that fortune favours the
-bold.
+Followers are encouraged to trust in the cards and use them as much as
+possible. However, the Trickster can ensure that fortune favours the bold.
 %%%%
 Okawaru
 
@@ -125,9 +124,10 @@ Ru
 Of all the gods, only Ru opposed creation. Not as folly, but as distraction.
 Initiates of Ru can open channels to the powers underlying the visible world by
 renouncing the fetters that bind them here. These sacrifices are not made to
-Ru, but rather given up freely and permanently. Initiates can redirect would-be
-attackers and retaliate against their enemies, replenish their health and
-magic, perform a mighty leap, and unleash a massive wave of power against foes.
+Ru, but rather given up freely and permanently. Having made such sacrifices,
+initiates will become able to draw upon this immense power to aid themselves,
+eventually gaining the ability to unleash its destructive might against their
+foes.
 %%%%
 Sif Muna
 
@@ -173,9 +173,9 @@ Yredelemnul
 Yredelemnul the Dark is a god worshipped by those who seek powers over death
 and the undead. Followers, who must oppose all things holy, can raise legions
 of servile undead, and gain a number of other useful (if unpleasant) powers.
-Yredelemnul appreciates killing, but has no interest in sacrifices, preferring
-corpses to be put to use. Destroying artificial beings is also appreciated, as
-they are neither truly alive nor subject to death or undeath.
+Yredelemnul appreciates killing living and holy creatures. Destroying
+artificial beings is also appreciated, as they are neither truly alive nor
+subject to death or undeath.
 %%%%
 Zin
 
@@ -210,7 +210,7 @@ for killing creatures who are faster than they are. Moving too quickly or using
 magically hastened weapons is frowned upon. Cheibriados rewards the faithful
 with a slowed metabolism, the power to slow other creatures, the power to
 distort the flow of time, the power to harm those who move more quickly than
-they do, and, finally, the ability to step out of the flow of time entirely.
+they do, and finally the ability to step out of the flow of time entirely.
 %%%%
 Dithmenos powers
 
@@ -243,7 +243,7 @@ rainstorms.
 Gozag powers
 
 For Gozag, both flesh and food are inferior to wealth, and therefore all
-corpses are turned into gold piles. Other monsters may then be briefly
+monsters are turned to gold upon death. Other monsters may then be briefly
 distracted by imaginings of great wealth. Stalwarts can order immediate help
 in the form of potions, with prices being dictated by the Greedy. Particularly
 well-off adherents may attract shopkeepers into the dungeon, and even bribe
