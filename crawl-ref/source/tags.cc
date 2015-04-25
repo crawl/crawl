@@ -1358,10 +1358,9 @@ static void tag_construct_you(writer &th)
 
     CANARY;
 
-    marshallByte(th, you.hit_points_regeneration);
-    marshallByte(th, you.magic_points_regeneration);
+    marshallInt(th, you.hit_points_regeneration);
+    marshallInt(th, you.magic_points_regeneration);
 
-    marshallShort(th, you.hit_points_regeneration * 100);
     marshallInt(th, you.experience);
     marshallInt(th, you.total_experience);
     marshallInt(th, you.gold);
@@ -2236,10 +2235,22 @@ static void tag_read_you(reader &th)
 #endif
     EAT_CANARY;
 
-    you.hit_points_regeneration   = unmarshallByte(th);
-    you.magic_points_regeneration = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_INT_REGEN)
+    {
+        you.hit_points_regeneration   = unmarshallByte(th);
+        you.magic_points_regeneration = unmarshallByte(th);
+        unmarshallShort(th);
+    }
+    else
+    {
+#endif
+    you.hit_points_regeneration   = unmarshallInt(th);
+    you.magic_points_regeneration = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
 
-    you.hit_points_regeneration   = unmarshallShort(th) / 100;
     you.experience                = unmarshallInt(th);
     you.total_experience = unmarshallInt(th);
     you.gold                      = unmarshallInt(th);
@@ -2774,6 +2785,15 @@ static void tag_read_you(reader &th)
     {
         if (you.mutation[MUT_MP_WANDS] > 1)
             you.mutation[MUT_MP_WANDS] = 1;
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_NAGA_METABOLISM)
+    {
+        if (you.species == SP_NAGA)
+        {
+            you.mutation[MUT_SLOW_METABOLISM] =
+                you.innate_mutation[MUT_SLOW_METABOLISM] = 1;
+        }
     }
 #endif
 
@@ -4591,7 +4611,6 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallByte(th, mi.menergy.special);
     marshallByte(th, mi.menergy.item);
     marshallByte(th, mi.menergy.pickup_percent);
-    marshallUnsigned(th, mi.fly);
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
         _marshall_mi_attack(th, mi.attack[i]);
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
@@ -4814,7 +4833,10 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
 
     // Some TAG_MAJOR_VERSION == 34 saves suffered data loss here, beware.
     // Should be harmless, hopefully.
-    unmarshallUnsigned(th, mi.fly);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_BOOL_FLIGHT)
+        unmarshallUnsigned(th);
+#endif
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_ATTACK_DESCS)
     {
@@ -6039,7 +6061,7 @@ static void marshallGhost(writer &th, const ghost_demon &ghost)
     marshallShort(th, ghost.att_flav);
     marshallInt(th, ghost.resists);
     marshallByte(th, ghost.colour);
-    marshallShort(th, ghost.fly);
+    marshallBoolean(th, ghost.flies);
 
     marshallSpells(th, ghost.spells);
 }
@@ -6087,7 +6109,12 @@ static ghost_demon unmarshallGhost(reader &th)
 #endif
     ghost.colour           = unmarshallByte(th);
 
-    ghost.fly              = static_cast<flight_type>(unmarshallShort(th));
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_BOOL_FLIGHT)
+        ghost.flies        = unmarshallShort(th);
+    else
+#endif
+    ghost.flies        = unmarshallBoolean(th);
 
     unmarshallSpells(th, ghost.spells
 #if TAG_MAJOR_VERSION == 34

@@ -388,7 +388,8 @@ experiments.
 %%%%
 fencer's gloves
 
-A pair of gloves made of white silk.
+A pair of gloves made of white silk. They greatly enhance their wearer's
+skill with blades.
 %%%%
 cloak of Starlight
 
@@ -587,4 +588,18 @@ quick blades "Gyre" and "Gimble"
 
 Two quick blades joined by a chain. Swinging one compels the wielder to swing
 the other, as if they have minds of their own.
+%%%%
+Maxwell's etheric cage
+
+A fine mesh cage designed to capture magical energy. Experimental notes suggest
+that research was abandoned when the cage began to capture magical contamination
+almost as effectively.
+
+Perhaps you could wear it on your head?
+%%%%
+crown of Eternal Torment
+
+A gold crown set with jet-black gems. It permanently afflicts its wearer with
+agonising pain, substantially reducing their resilience but rendering them
+immune to further torments.
 %%%%

@@ -484,10 +484,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     if (feat_is_closed_door(grd(npos)))
         return 2;
 
-    const monster_type mt = mons_base_type(mons);
-    const bool ground_level = !mons_airborne(mt, -1, false)
-                              && !(mons->can_cling_to_walls()
-                                   && cell_is_clingable(npos));
+    const bool ground_level = !(mons->airborne() || mons->can_cling_to(npos));
 
     // Travelling through water, entering or leaving water is more expensive
     // for non-amphibious monsters, so they'll avoid it where possible.

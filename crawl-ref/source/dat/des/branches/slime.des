@@ -646,6 +646,20 @@ MAP
   ...........
 ENDMAP
 
+# inspired by a comment of spacejung on SomethingAwful (dpeg)
+NAME:   dissolution_awaits
+DEPTH:  Slime:2-, !Slime:$
+KMONS:  1 = patrolling Dissolution, azure jelly / great orb of eyes
+MAP
+ .....
+...{...
+.......
+...1...
+.[...(.
+ .....
+ENDMAP
+
+
 ################################################################################
 # Slime Pit
 ################################################################################

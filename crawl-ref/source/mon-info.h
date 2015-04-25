@@ -141,6 +141,7 @@ enum monster_info_flags
     MB_BONE_ARMOUR,
     MB_CHANT_FIRE_STORM,
     MB_CHANT_WORD_OF_ENTROPY,
+    MB_AIRBORNE,
     NUM_MB_FLAGS
 };
 
@@ -176,7 +177,6 @@ struct monster_info_base
     mon_itemuse_type mitemuse;
     int mbase_speed;
     mon_energy_usage menergy;
-    flight_type fly;
     CrawlHashTable props;
     string constrictor_name;
     vector<string> constricting_name;

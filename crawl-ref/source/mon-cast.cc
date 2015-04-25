@@ -444,10 +444,11 @@ static int _mons_spellpower(spell_type spell, const monster &mons)
  * @param mons      The monster in question.
  * @param cap       The maximum power of the spell.
  * @return          A spellpower value for the spell, with ENCH_POW_FACTOR
- *                  removed & capped at some maximum spellpower.
+ *                  removed & capped at maximum spellpower.
  */
-static int _ench_power(spell_type spell, const monster &mons, int cap = 200)
+static int _ench_power(spell_type spell, const monster &mons)
 {
+    const int cap = 200;
     return min(cap, _mons_spellpower(spell, mons) / ENCH_POW_FACTOR);
 }
 
@@ -5210,7 +5211,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         if (you.can_see(foe))
         {
-            if (foe->flight_mode())
+            if (foe->airborne())
                 mprf("The water rises up and strikes %s!", foe->name(DESC_THE).c_str());
             else
                 mprf("The water swirls and strikes %s!", foe->name(DESC_THE).c_str());
@@ -5232,7 +5233,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         // Damage averages 14 for 5HD, 18 for 10HD, 28 for 20HD, +50% if flying.
         if (foe->is_player())
         {
-            if (you.flight_mode())
+            if (you.airborne())
                 mpr("The air twists around and violently strikes you in flight!");
             else
                 mpr("The air twists around and strikes you!");
@@ -5879,7 +5880,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         int dur = 60;
         if (you.can_see(mons))
         {
-            bool flying = mons->flight_mode();
+            bool flying = mons->airborne();
             mprf("A great vortex of raging winds appears %s%s%s!",
                  flying ? "around " : "and lifts ",
                  mons->name(DESC_THE).c_str(),

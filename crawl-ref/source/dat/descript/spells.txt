@@ -175,8 +175,8 @@ physical damage even to highly fire-resistant enemies.
 Borgnjor's Revivification spell
 
 This spell instantly heals any and all wounds suffered by the caster, but also
-permanently lessens his or her resilience to injury — to a degree dependent on
-(and inversely related to) magical skill.
+permanently lessens their resilience to injury — to a degree dependent on (and
+inversely related to) magical skill.
 
 The spell is powerful enough to literally pull someone out of Death's Door,
 although the shock will render the caster incapable of action for a while.
@@ -404,7 +404,7 @@ blindly.
 %%%%
 Death Channel spell
 
-This spell raises living creatures slain by the caster and his or her allies,
+This spell raises living creatures slain by the caster and their allies,
 reducing them to a state of spectral slavery.
 %%%%
 Death Rattle spell
@@ -740,8 +740,8 @@ light enough to float on water.
 Ignite Poison spell
 
 This spell attempts to convert all nearby poison into liquid flame, burning
-poisoned creatures from within. It is very effective against innately poisonous
-creatures. The caster is not affected.
+poisoned creatures from within. It also turns clouds of poison and mephitic
+gases into flame. The caster is not affected directly.
 %%%%
 Infusion spell
 
@@ -983,9 +983,9 @@ Ice Form.
 %%%%
 Ozocubu's Refrigeration spell
 
-This spell drains the heat from the caster and his or her surroundings, causing
-harm to all creatures not resistant to cold and preventing potion use for a
-brief duration.
+This spell drains the heat from the caster and their surroundings, causing
+harm to all creatures not resistant to cold and preventing the caster from
+using potions for a brief duration.
 %%%%
 Pain spell
 
@@ -1337,8 +1337,8 @@ Form.
 %%%%
 Strip Resistance spell
 
-This spell attempts to greatly reduce its target's magic resistance, making him
-or her more vulnerable to hexes and similar spells.
+This spell attempts to greatly reduce its target's magic resistance, making
+them more vulnerable to hexes and similar spells.
 %%%%
 Sublimation of Blood spell
 

@@ -4223,11 +4223,7 @@ int gozag_potion_price()
 {
     if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
         return 0;
-
-    int multiplier = GOZAG_POTION_BASE_MULTIPLIER
-                     + you.attribute[ATTR_GOZAG_POTIONS];
-    int price = multiplier * 15; // arbitrary
-    return _gozag_faith_adjusted_price(price);
+    return _gozag_faith_adjusted_price(GOZAG_POTION_PETITION_AMOUNT);
 }
 
 bool gozag_setup_potion_petition(bool quiet)
@@ -4263,8 +4259,7 @@ bool gozag_potion_petition()
             for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
             {
                 prices[i] = 0;
-                int multiplier = GOZAG_POTION_BASE_MULTIPLIER
-                                 + you.attribute[ATTR_GOZAG_POTIONS];
+                int multiplier = 25; // arbitrary
 
                 if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
                     multiplier = 0;
@@ -4353,8 +4348,6 @@ bool gozag_potion_petition()
 
     if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
         you.attribute[ATTR_GOZAG_FIRST_POTION] = 1;
-    else
-        you.attribute[ATTR_GOZAG_POTIONS]++;
 
     for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
     {
@@ -4398,7 +4391,7 @@ int gozag_price_for_shop(bool max)
     return max ? _gozag_faith_adjusted_price(price) : price;
 }
 
-static vector<level_id> _get_gozag_shop_candidates(int *max_absdepth)
+static vector<level_id> _get_gozag_shop_candidates()
 {
     vector<level_id> candidates;
 
@@ -4408,16 +4401,6 @@ static vector<level_id> _get_gozag_shop_candidates(int *max_absdepth)
         branch_type i = allowed_branches[ii];
 
         level_id lid(i, brdepth[i]);
-
-        // Base shop level number on the deepest we can place a shop
-        // in the given game; this is constant for as long as we can place
-        // shops and is intended to prevent scummy behaviour.
-        if (max_absdepth)
-        {
-            const int absdepth = branches[i].absdepth + brdepth[i] - 1;
-            if (absdepth > *max_absdepth)
-                *max_absdepth = absdepth;
-        }
 
         for (int j = 1; j <= brdepth[i] && candidates.size() < 4; j++)
         {
@@ -4451,8 +4434,7 @@ bool gozag_setup_call_merchant(bool quiet)
         return false;
     }
 
-    int max_absdepth = 0;
-    vector<level_id> candidates = _get_gozag_shop_candidates(&max_absdepth);
+    vector<level_id> candidates = _get_gozag_shop_candidates();
 
     if (!candidates.size())
     {
@@ -4729,7 +4711,7 @@ static void _gozag_place_shop_here(int index)
  */
 static void _gozag_place_shop(int index)
 {
-    vector<level_id> candidates = _get_gozag_shop_candidates(nullptr);
+    vector<level_id> candidates = _get_gozag_shop_candidates();
 
     if (candidates.size())
         _gozag_place_shop_offlevel(index, candidates);
@@ -6029,7 +6011,6 @@ static bool _execute_sacrifice(int piety_gain, const char* message)
 static void _ru_kill_skill(skill_type skill)
 {
     change_skill_points(skill, -you.skill_points[skill], true);
-    //you.stop_train.insert(skill);
     you.can_train.set(skill, false);
     reset_training();
     check_selected_skills();

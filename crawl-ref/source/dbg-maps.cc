@@ -10,7 +10,7 @@
 #include "branch.h"
 #include "chardump.h"
 #include "crash.h"
-#include "dbg-scan.h"
+#include "dbg-objstat.h"
 #include "dungeon.h"
 #include "env.h"
 #include "initfile.h"
@@ -23,7 +23,7 @@
 #include "stringutil.h"
 #include "view.h"
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
 // Map statistics generation.
 
 static map<string, int> try_count;
@@ -497,4 +497,4 @@ void mapstat_generate_stats()
     printf("Map stats complete.\n");
 }
 
-#endif // DEBUG_DIAGNOSTICS
+#endif // DEBUG_STATISTICS

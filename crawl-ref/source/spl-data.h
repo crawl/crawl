@@ -1331,10 +1331,10 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_IGNITE_POISON, "Ignite Poison",
-     SPTYP_FIRE | SPTYP_TRANSMUTATION,
+     SPTYP_FIRE | SPTYP_TRANSMUTATION | SPTYP_POISON,
      SPFLAG_AREA | SPFLAG_BATTLE,
-     5,
-     200,
+     3,
+     100,
      -1, -1,
      4, 0,
      nullptr,
@@ -2800,7 +2800,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_STRIP_RESISTANCE, "Strip Resistance",
      SPTYP_HEXES,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER | SPFLAG_MR_CHECK,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER,
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -3055,7 +3055,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SAP_MAGIC, "Sap Magic",
      SPTYP_HEXES,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER | SPFLAG_MR_CHECK,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER,
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -3456,7 +3456,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SIREN_SONG, "Siren Song",
      SPTYP_HEXES,
-     SPFLAG_AREA,
+     SPFLAG_AREA | SPFLAG_MR_CHECK,
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -3467,7 +3467,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_AVATAR_SONG, "Avatar Song",
      SPTYP_HEXES,
-     SPFLAG_AREA,
+     SPFLAG_AREA | SPFLAG_MR_CHECK,
      7,
      200,
      LOS_RADIUS, LOS_RADIUS,

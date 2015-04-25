@@ -326,7 +326,9 @@ enum ability_type
     ABIL_RU_SACRIFICE_HAND,
     ABIL_RU_SACRIFICE_EXPERIENCE,
     ABIL_RU_SACRIFICE_SKILL,
-        ABIL_FINAL_SACRIFICE = ABIL_RU_SACRIFICE_SKILL,
+    ABIL_RU_SACRIFICE_EYE,
+    ABIL_RU_SACRIFICE_RESISTANCE,
+        ABIL_FINAL_SACRIFICE = ABIL_RU_SACRIFICE_RESISTANCE,
     ABIL_RU_REJECT_SACRIFICES,
 
     // For both Yred and Beogh
@@ -468,7 +470,9 @@ enum attribute_type
     ATTR_GOD_WRATH_COUNT,      // Number of stored retributions
     ATTR_NEXT_DRAGON_TIME,     // aut remaining until Dragon's Call summons another
     ATTR_GOLD_GENERATED,       // Count gold generated this game.
+#if TAG_MAJOR_VERSION == 34
     ATTR_GOZAG_POTIONS,        // Number of times you've bought potions from Gozag.
+#endif
     ATTR_GOZAG_SHOPS,          // Number of shops you've funded from Gozag.
     ATTR_GOZAG_SHOPS_CURRENT,  // As above, but since most recent time worshipping.
 #if TAG_MAJOR_VERSION == 34
@@ -2306,13 +2310,6 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_SLIMIFIED,                    // only used by milestones and notes
 };
 
-enum flight_type
-{
-    FL_NONE = 0,
-    FL_WINGED,                         // wings, etc... paralysis == fall
-    FL_LEVITATE,                       // doesn't require physical effort
-};
-
 // Can't change this order without breaking saves.
 enum map_marker_type
 {
@@ -3665,6 +3662,8 @@ enum mutation_type
     MUT_MUMMY_RESTORATION,
     MUT_CONSTRICTING_TAIL,
     MUT_TENGU_FLIGHT,
+    MUT_MISSING_EYE,
+    MUT_TEMPERATURE_SENSITIVITY,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,

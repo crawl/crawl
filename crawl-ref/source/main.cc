@@ -525,10 +525,17 @@ static void _show_commandline_options_help()
     puts("  -arena \"<monster list> v <monster list> arena:<arena map>\"");
 #ifdef DEBUG_DIAGNOSTICS
     puts("");
+    puts("Diagnostic options:");
     puts("  -test               run all test cases in test/ except test/big/");
     puts("  -test foo,bar       run only tests \"foo\" and \"bar\"");
     puts("  -test list          list available tests");
     puts("  -script <name>      run script matching <name> in ./scripts");
+#endif
+#ifdef DEBUG_STATISTICS
+#ifndef DEBUG_DIAGNOSTICS
+    puts("");
+    puts("Diagnostic options:");
+#endif
     puts("  -mapstat [<levels>] run map stats on the given range of levels");
     puts("      Defaults to entire dungeon; level ranges follow des DEPTH "
          "syntax.");
@@ -545,7 +552,7 @@ static void _show_commandline_options_help()
 #ifndef TARGET_OS_WINDOWS
     puts("  -gdb/-no-gdb     produce gdb backtrace when a crash happens (default:on)");
 #endif
-    puts("  -list-combos     list playable species, jobs, and character combos.");
+    puts("  -playable-json   list playable species, jobs, and character combos.");
 
 #if defined(TARGET_OS_WINDOWS) && defined(USE_TILE_LOCAL)
     text_popup(help, L"Dungeon Crawl command line help");
@@ -1351,7 +1358,6 @@ static void _input()
     disable_check player_disabled(you.incapacitated());
     religion_turn_start();
     god_conduct_turn_start();
-    you.walking = 0;
 
     // Currently only set if Xom accidentally kills the player.
     you.reset_escaped_death();
@@ -3131,7 +3137,6 @@ static void _move_player(coord_def move)
         const coord_def new_targ = you.pos() + move;
         if (!in_bounds(new_targ) || !you.can_pass_through(new_targ))
         {
-            you.walking = move.abs();
             you.turn_is_over = true;
             if (you.digging) // no actual damage
             {
@@ -3180,7 +3185,7 @@ static void _move_player(coord_def move)
 
     const dungeon_feature_type targ_grid = grd(targ);
 
-    const string walkverb = you.flight_mode()           ? "fly"
+    const string walkverb = you.airborne()              ? "fly"
                           : you.form == TRAN_SPIDER     ? "crawl"
                           : (you.species == SP_NAGA
                              && form_keeps_mutations()) ? "slither"
@@ -3232,13 +3237,13 @@ static void _move_player(coord_def move)
     }
 
     // You can swap places with a friendly or good neutral monster if
-    // you're not confused, or if both of you are inside a sanctuary.
-    const bool can_swap_places = targ_monst
-                                 && !targ_monst->is_stationary()
-                                 && (targ_monst->wont_attack()
-                                       && !you.confused()
-                                     || is_sanctuary(you.pos())
-                                        && is_sanctuary(targ));
+    // you're not confused, or even with hostiles if both of you are inside
+    // a sanctuary.
+    const bool try_to_swap = targ_monst
+                             && (targ_monst->wont_attack()
+                                    && !you.confused()
+                                 || is_sanctuary(you.pos())
+                                    && is_sanctuary(targ));
 
     // You cannot move away from a siren but you CAN fight monsters on
     // neighbouring squares.
@@ -3262,7 +3267,7 @@ static void _move_player(coord_def move)
 
     if (targ_monst && !targ_monst->submerged())
     {
-        if (can_swap_places && !beholder && !fmonger)
+        if (try_to_swap && !beholder && !fmonger)
         {
             if (swap_check(targ_monst, mon_swap_dest))
                 swap = true;
@@ -3272,7 +3277,14 @@ static void _move_player(coord_def move)
                 moving = false;
             }
         }
-        else if (!can_swap_places) // attack!
+        else if (targ_monst->temp_attitude() == ATT_NEUTRAL)
+        {
+            simple_monster_message(targ_monst, " refuses to make way for you. "
+                                             "(Use ctrl+direction to attack)");
+            you.turn_is_over = false;
+            return;
+        }
+        else if (!try_to_swap) // attack!
         {
             // XXX: Moving into a normal wall does nothing and uses no
             // turns or energy, but moving into a wall which contains
@@ -3448,7 +3460,6 @@ static void _move_player(coord_def move)
             you.time_taken *= 1.4;
 #endif
 
-        you.walking = move.abs();
         you.prev_move = move;
         move.reset();
         you.turn_is_over = true;

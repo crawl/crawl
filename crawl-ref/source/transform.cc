@@ -30,6 +30,7 @@
 #include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
+#include "spl-cast.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -444,7 +445,7 @@ string Form::player_prayer_action() const
     // Otherwise, if you're flying, use the generic flying action.
     // XXX: if we ever get a default-permaflying species again that wants to
     // have a separate verb, we'll want to check for that right here.
-    if (you.flight_mode())
+    if (you.airborne())
         return "hover solemnly before";
     // Otherwise, if you have a verb, use that...
     if (prayer_action != "")
@@ -1383,17 +1384,6 @@ monster_type transform_mons()
     return get_form()->get_equivalent_mons();
 }
 
-static bool _abort_or_fizzle(bool just_check)
-{
-    if (!just_check && you.turn_is_over)
-    {
-        canned_msg(MSG_SPELL_FIZZLES);
-        move_player_to_grid(you.pos(), false);
-        return true; // pay the necessary costs
-    }
-    return false; // SPRET_ABORT
-}
-
 string blade_parts(bool terse)
 {
     string str;
@@ -1640,15 +1630,70 @@ static void _print_head_change_message(int old_heads, int new_heads)
         mpr("A new head grows.");
 }
 
-// Transforms you into the specified form. If involuntary, checks for
-// inscription warnings are skipped, and the transformation fails silently
-// (if it fails). If just_check is true the transformation doesn't actually
-// happen, but the method returns whether it would be successful.
+/**
+ * Is the player alive enough to become the given form?
+ *
+ * All undead can enter shadow form; vampires also can enter batform, and, when
+ * full, other forms (excepting lichform).
+ *
+ * @param which_trans   The tranformation which the player is undergoing.
+ * @return              True if the player is not blocked from entering the
+ *                      given form by their undead race; false otherwise.
+ */
+static bool _player_alive_enough_for(transformation_type which_trans)
+{
+    if (!you.undead_state(false))
+        return true; // not undead!
+
+    if (which_trans == TRAN_NONE)
+        return true; // everything can become itself
+
+    if (which_trans == TRAN_SHADOW)
+        return true; // even the undead can use dith's shadow form
+
+    if (you.species != SP_VAMPIRE)
+        return false; // ghouls & mummies can't become anything else, though
+
+    if (which_trans == TRAN_LICH)
+        return false; // vampires can never lichform
+
+    if (which_trans == TRAN_BAT)
+        return true; // ...but they can always batform.
+
+    // other forms can only be entered when full or above.
+    return you.hunger_state > HS_SATIATED;
+
+}
+
+/**
+ * Attempts to transform the player into the specified form.
+ *
+ * If the player is already in that form, attempt to refresh its duration and
+ * power.
+ *
+ * @param pow               Thw power of the transformation (equivalent to
+ *                          spellpower of form spells)
+ * @param which_trans       The form which the player should become.
+ * @param involuntary       Checks for inscription warnings are skipped, and
+ *                          failure is silent.
+ * @param just_check        A dry run; just check to see whether the player
+ *                          *can* enter the given form, but don't actually
+ *                          transform them.
+ * @return                  If the player was transformed, or if they were
+ *                          already in the given form, returns true.
+ *                          Otherwise, false.
+ *                          If just_check is set, returns true if the player
+ *                          could enter the form (or is in it already) and
+ *                          false otherwise.
+ *                          N.b. that transform() can fail even when a
+ *                          just_check run returns true; e.g. when Zin decides
+ *                          to intervene. (That may be the only case.)
+ */
 bool transform(int pow, transformation_type which_trans, bool involuntary,
                bool just_check)
 {
     const transformation_type previous_trans = you.form;
-    const flight_type was_flying = you.flight_mode();
+    const bool was_flying = you.airborne();
 
     // Zin's protection.
     if (!just_check && you_worship(GOD_ZIN)
@@ -1677,8 +1722,11 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     // This must occur before the untransform() and the undead_state() check.
     if (previous_trans == which_trans)
     {
+        if (just_check)
+            return true;
+
         // update power
-        if (!just_check && which_trans != TRAN_NONE)
+        if (which_trans != TRAN_NONE)
         {
             you.props[TRANSFORM_POW_KEY] = pow;
             you.redraw_armour_class = true;
@@ -1696,49 +1744,29 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         int dur = _transform_duration(which_trans, pow);
         if (you.duration[DUR_TRANSFORMATION] < dur * BASELINE_DELAY)
         {
-            if (just_check)
-                return true;
-
             mpr("You extend your transformation's duration.");
             you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
 
-            return true;
         }
-        else
-        {
-            if (!involuntary && which_trans != TRAN_NONE)
-                mpr("You fail to extend your transformation any further.");
-            return false;
-        }
+        else if (!involuntary && which_trans != TRAN_NONE)
+            mpr("You fail to extend your transformation any further.");
+
+        return true;
     }
 
-    // The actual transformation may still fail later (e.g. due to cursed
-    // equipment). Ideally, untransforming should cost a turn but nothing
-    // else (as does the "End Transformation" ability). As it is, you
-    // pay with mana and hunger if you already untransformed.
-    if (!just_check && previous_trans != TRAN_NONE)
-        untransform(true);
-
-    // Catch some conditions which prevent transformation.
-    if (you.undead_state()
-        && which_trans != TRAN_SHADOW
-        && (you.species != SP_VAMPIRE
-            || which_trans != TRAN_BAT && you.hunger_state <= HS_SATIATED
-            || which_trans == TRAN_LICH))
+    // the undead cannot enter most forms.
+    if (!_player_alive_enough_for(which_trans))
     {
         if (!involuntary)
             mpr("Your unliving flesh cannot be transformed in this way.");
-        return _abort_or_fizzle(just_check);
+        return false;
     }
 
     if (which_trans == TRAN_LICH && you.duration[DUR_DEATHS_DOOR])
     {
         if (!involuntary)
-        {
-            mpr("The transformation conflicts with an enchantment "
-                "already in effect.");
-        }
-        return _abort_or_fizzle(just_check);
+            mpr("You cannot become a lich while in Death's Door.");
+        return false;
     }
 
 #if TAG_MAJOR_VERSION == 34
@@ -1747,9 +1775,12 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     {
         if (!involuntary)
             mpr("Your temperature is too high to benefit from that spell.");
-        return _abort_or_fizzle(just_check);
+        return false;
     }
 #endif
+
+    if (!just_check && previous_trans != TRAN_NONE)
+        untransform(true);
 
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
@@ -1760,7 +1791,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         {
             if (!involuntary)
                 mpr("You have no appropriate body parts free.");
-            return false;
+            return false; // XXX: VERY dubious, since an untransform occurred
         }
 
         if (!just_check)
@@ -1966,7 +1997,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
        you.transform_uncancellable = true;
 
     // Re-check terrain now that be may no longer be swimming or flying.
-    if (was_flying && !you.flight_mode()
+    if (was_flying && !you.airborne()
                    || feat_is_water(grd(you.pos()))
                       && (which_trans == TRAN_BLADE_HANDS
                           || which_trans == TRAN_APPENDAGE)
@@ -1993,7 +2024,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
  */
 void untransform(bool skip_move)
 {
-    const flight_type old_flight = you.flight_mode();
+    const bool was_flying = you.airborne();
 
     you.redraw_quiver       = true;
     you.redraw_evasion      = true;
@@ -2076,7 +2107,7 @@ void untransform(bool skip_move)
     _unmeld_equipment(melded);
 
     // Re-check terrain now that be may no longer be swimming or flying.
-    if (!skip_move && (old_flight && !you.flight_mode()
+    if (!skip_move && (was_flying && !you.airborne()
                        || (feat_is_water(grd(you.pos()))
                            && (old_form == TRAN_ICE_BEAST
                                || you.species == SP_MERFOLK))))

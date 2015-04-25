@@ -176,19 +176,19 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
         else
         {
             mprf("You %s downwards.",
-                 you.flight_mode() ? "fly" : "slide");
+                 you.airborne() ? "fly" : "slide");
         }
     }
     else if (feat_is_gate(stair))
     {
         mprf("You %s %s through the gate.",
-             you.flight_mode() ? "fly" : "go",
+             you.airborne() ? "fly" : "go",
              going_up ? "up" : "down");
     }
     else
     {
         mprf("You %s %swards.",
-             you.flight_mode() ? "fly" : "climb",
+             you.airborne() ? "fly" : "climb",
              going_up ? "up" : "down");
     }
 }
@@ -546,8 +546,8 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         if (force_stair && shaft_depth > 1)
             howfar = make_stringf(" for %d floors", shaft_depth);
 
-        mprf("You %s a shaft%s!", you.flight_mode() ? "are sucked into"
-                                                    : "fall through",
+        mprf("You %s a shaft%s!", you.airborne() ? "are sucked into"
+                                                 : "fall through",
                                   howfar.c_str());
 
         // Shafts are one-time-use.

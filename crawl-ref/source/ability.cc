@@ -440,6 +440,10 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_SACRIFICE_SKILL, "Sacrifice Skill",
       0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
+    { ABIL_RU_SACRIFICE_EYE, "Sacrifice an Eye",
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
+    { ABIL_RU_SACRIFICE_RESISTANCE, "Sacrifice Resistance",
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_REJECT_SACRIFICES, "Reject Sacrifices",
       0, 0, 0, 0, 0, ABFLAG_NONE },
 
@@ -1170,6 +1174,8 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_RU_SACRIFICE_HAND:
     case ABIL_RU_SACRIFICE_EXPERIENCE:
     case ABIL_RU_SACRIFICE_SKILL:
+    case ABIL_RU_SACRIFICE_EYE:
+    case ABIL_RU_SACRIFICE_RESISTANCE:
     case ABIL_RU_REJECT_SACRIFICES:
     case ABIL_STOP_RECALL:
         invoc = true;
@@ -1402,7 +1408,7 @@ void no_ability_msg()
     else if (player_mutation_level(MUT_TENGU_FLIGHT)
              || player_mutation_level(MUT_BIG_WINGS))
     {
-        if (you.flight_mode())
+        if (you.airborne())
             mpr("You're already flying!");
     }
     else
@@ -3142,6 +3148,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_RU_SACRIFICE_HAND:
     case ABIL_RU_SACRIFICE_EXPERIENCE:
     case ABIL_RU_SACRIFICE_SKILL:
+    case ABIL_RU_SACRIFICE_EYE:
+    case ABIL_RU_SACRIFICE_RESISTANCE:
         fail_check();
         if (!ru_do_sacrifice(abil.ability))
             return SPRET_ABORT;
@@ -3698,7 +3706,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         if (!you.permanent_flight() || !you.racial_permanent_flight())
         {
             // You can still evoke perm flight if you have temporary one.
-            if (!you.flight_mode()
+            if (!you.airborne()
                 || !you.attribute[ATTR_PERM_FLIGHT]
                    && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
             {
@@ -3707,7 +3715,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             // Now you can only turn flight off if you have an
             // activatable item. Potions and spells will have to time
             // out.
-            if (you.flight_mode() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
+            if (you.airborne() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
                 _add_talent(talents, ABIL_STOP_FLYING, check_confused);
         }
     }
@@ -3904,9 +3912,11 @@ static int _find_ability_slot(const ability_def &abil)
       || abil.ability == ABIL_RU_SACRIFICE_HAND
       || abil.ability == ABIL_RU_SACRIFICE_EXPERIENCE
       || abil.ability == ABIL_RU_SACRIFICE_SKILL
+      || abil.ability == ABIL_RU_SACRIFICE_EYE
+      || abil.ability == ABIL_RU_SACRIFICE_RESISTANCE
       || abil.ability == ABIL_RU_REJECT_SACRIFICES)
     {
-        first_slot = letter_to_index('P');
+        first_slot = letter_to_index('G');
     }
 
 

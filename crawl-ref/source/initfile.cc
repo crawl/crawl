@@ -1098,7 +1098,8 @@ void game_options::reset_options()
                     "screenshot,monlist,kills,notes,action_counts");
 
     use_animations = (UA_BEAM | UA_RANGE | UA_HP | UA_MONSTER_IN_SIGHT
-                      | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY);
+                      | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY
+                      | UA_ALWAYS_ON);
 
     hp_colour.clear();
     hp_colour.emplace_back(50, YELLOW);
@@ -1134,6 +1135,7 @@ void game_options::reset_options()
     auto_spell_letters.clear();
     auto_item_letters.clear();
     force_more_message.clear();
+    flash_screen_message.clear();
     sound_mappings.clear();
     menu_colour_mappings.clear();
     message_colour_mappings.clear();
@@ -2557,6 +2559,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "explore_stop_pickup_ignore"
         && key != "stop_travel" && key != "sound"
         && key != "force_more_message"
+        && key != "flash_screen_message"
         && key != "drop_filter" && key != "lua_file" && key != "terp_file"
         && key != "note_items" && key != "autoinscribe"
         && key != "note_monsters" && key != "note_messages"
@@ -2722,7 +2725,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "use_animations")
     {
         if (plain)
-            use_animations = UA_NONE;
+            use_animations = UA_ALWAYS_ON;
 
         const int new_animations = read_use_animations(field);
         if (minus_equal)
@@ -3411,10 +3414,11 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(use_fake_cursor);
     else BOOL_OPTION(use_fake_player_cursor);
     else BOOL_OPTION(show_player_species);
-    else if (key == "force_more_message")
+    else if (key == "force_more_message" || key == "flash_screen_message")
     {
+        vector<message_filter> &filters = (key == "force_more_message" ? force_more_message : flash_screen_message);
         if (plain)
-            force_more_message.clear();
+            filters.clear();
 
         vector<message_filter> new_entries;
         vector<string> fragments = split_string(",", field);
@@ -3438,11 +3442,11 @@ void game_options::read_option_line(const string &str, bool runscript)
             }
 
             if (minus_equal)
-                remove_matching(force_more_message, mf);
+                remove_matching(filters, mf);
             else
                 new_entries.push_back(mf);
         }
-        _merge_lists(force_more_message, new_entries, caret_equal);
+        _merge_lists(filters, new_entries, caret_equal);
     }
     else LIST_OPTION(drop_filter);
     else if (key == "travel_avoid_terrain")
@@ -4251,7 +4255,7 @@ enum commandline_option_type
     CLO_NO_GDB, CLO_NOGDB,
     CLO_THROTTLE,
     CLO_NO_THROTTLE,
-    CLO_LIST_COMBOS, // List species, jobs, and legal combos, in that order.
+    CLO_PLAYABLE_JSON, // JSON metadata for species, jobs, combos.
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
     CLO_AWAIT_CONNECTION,
@@ -4269,7 +4273,8 @@ static const char *cmd_ops[] =
     "builddb", "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "tutorial", "wizard", "explore", "no-save",
-    "gdb", "no-gdb", "nogdb", "throttle", "no-throttle", "list-combos",
+    "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
+    "playable-json",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
@@ -4823,7 +4828,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_MAPSTAT:
         case CLO_OBJSTAT:
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
             if (o == CLO_MAPSTAT)
                 crawl_state.map_stat_gen = true;
             else
@@ -4844,11 +4849,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
             break;
 #else
             fprintf(stderr, "mapstat and objstat are available only in "
-                    "DEBUG_DIAGNOSTICS builds.\n");
+                    "DEBUG_STATISTICS builds.\n");
             end(1);
 #endif
         case CLO_ITERATIONS:
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
             if (!next_is_param || !isadigit(*next_arg))
             {
                 fprintf(stderr, "Integer argument required for -%s\n", arg);
@@ -4865,7 +4870,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             }
 #else
             fprintf(stderr, "mapstat and objstat are available only in "
-                    "DEBUG_DIAGNOSTICS builds.\n");
+                    "DEBUG_STATISTICS builds.\n");
             end(1);
 #endif
             break;
@@ -4888,17 +4893,9 @@ bool parse_args(int argc, char **argv, bool rc_only)
             crawl_state.dump_maps = true;
             break;
 
-        case CLO_LIST_COMBOS:
-        {
-            auto join = [](const vector<string> &vs) {
-                return comma_separated_line(vs.begin(), vs.end(), ",", ",");
-            };
-            fprintf(stdout, "%s\n%s\n%s\n",
-                    join(playable_species_names()).c_str(),
-                    join(playable_job_names()).c_str(),
-                    join(playable_combo_names()).c_str());
+        case CLO_PLAYABLE_JSON:
+            fprintf(stdout, "%s", playable_metadata_json().c_str());
             end(0);
-        }
 
         case CLO_TEST:
             crawl_state.test = true;

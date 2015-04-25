@@ -99,11 +99,13 @@
     Joe Buzzelli
     Policarpo Caballero
     Can of Worms
+    Edgar Carballo
     Cedor
     Rahul Chandra
     Thom Chiovoloni
     Henry Cipolla
     Nicholas Connelly
+    Tom Conrad
     Vitor 'Baconkid' Costa
     Aaron Curtis
     Simon Curtis
@@ -181,6 +183,7 @@
     nagdon
     Naruni
     nicolae
+    noxdominus
     Erkki Nurmi
     Mattias Nyberg
     nyra
@@ -194,6 +197,7 @@
     Pedro
     Arlen Phillips
     Lemuel Pitkin
+    Iago Porto
     pubby
     Derek Ray
     Terence Reeves

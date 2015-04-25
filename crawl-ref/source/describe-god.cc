@@ -330,7 +330,7 @@ static const char *divine_title[NUM_GODS][8] =
 
     // Ru -- enlightenment theme
     {"Sleeper",           "Questioner",             "Initiate",                 "Seeker of Truth",
-        "Walker of the Path","Lifter of the Veil",     "Drinker of Unreality",     "Transcendent"},
+        "@Walker@ of the Path","Lifter of the Veil",     "Transcendent",     "Drop of Water"},
 };
 
 string god_title(god_type which_god, species_type which_species, int piety)
@@ -347,6 +347,7 @@ string god_title(god_type which_god, species_type which_species, int piety)
     title = replace_all(title, "@Genus@", species_name(which_species, SPNAME_GENUS));
     title = replace_all(title, "@Adj@", species_name(which_species, SPNAME_ADJ));
     title = replace_all(title, "@Walking@", (species_walking_verb(which_species) + "ing"));
+    title = replace_all(title, "@Walker@", (species_walking_verb(which_species) + "er"));
 
     return title;
 }

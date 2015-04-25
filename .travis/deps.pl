@@ -46,5 +46,6 @@ sub retry {
     }
 
     print "Failed to run '@cmd' ($ret)\n";
-    exit($ret);
+    # 1 if there was a signal or system() failed, otherwise the exit status.
+    exit($ret & 127 ? 1 : $ret >> 8);
 }

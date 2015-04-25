@@ -383,7 +383,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     mbase_speed = mons_class_base_speed(type);
     menergy = mons_class_energy(type);
 
-    fly = max(mons_class_flies(type), mons_class_flies(base_type));
+    if (mons_class_flag(type, M_FLIES) || mons_class_flag(base_type, M_FLIES))
+        mb.set(MB_AIRBORNE);
 
     if (mons_class_wields_two_weapons(type)
         || mons_class_wields_two_weapons(base_type))
@@ -603,8 +604,9 @@ monster_info::monster_info(const monster* m, int milev)
     mitemuse = mons_itemuse(m);
     mbase_speed = mons_base_speed(m);
     menergy = mons_energy(m);
-    fly = mons_flies(m);
 
+    if (m->airborne())
+        mb.set(MB_AIRBORNE);
     if (mons_wields_two_weapons(m))
         mb.set(MB_TWO_WEAPONS);
     if (!mons_can_regenerate(m))
@@ -1801,7 +1803,7 @@ bool monster_info::cannot_move() const
 
 bool monster_info::airborne() const
 {
-    return fly == FL_LEVITATE || (fly == FL_WINGED && !cannot_move());
+    return is(MB_AIRBORNE);
 }
 
 bool monster_info::ground_level() const

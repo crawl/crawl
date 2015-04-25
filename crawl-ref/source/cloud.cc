@@ -1051,6 +1051,7 @@ static bool _mephitic_cloud_roll(const monster* mons)
 
 // Applies cloud messages and side-effects and returns true if the
 // cloud had a side-effect. This function does not check for cloud immunity.
+// ... but it's only called if the actor isn't immune
 static bool _actor_apply_cloud_side_effects(actor *act,
                                             const cloud_struct &cloud,
                                             int final_damage)
@@ -1483,7 +1484,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
                 return true;
 
         // We don't care about what's underneath the rain cloud if we can fly.
-        if (mons->flight_mode())
+        if (mons->airborne())
             return false;
 
         // These don't care about deep water.

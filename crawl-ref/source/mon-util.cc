@@ -315,8 +315,8 @@ int get_mons_class_ev(monster_type mc)
 
 static resists_t _apply_holiness_resists(resists_t resists, mon_holy_type mh)
 {
-    // Undead get full poison resistance.
-    if (mh == MH_UNDEAD)
+    // Undead and non-living beings get full poison resistance.
+    if (mh == MH_UNDEAD || mh == MH_NONLIVING)
         resists = (resists & ~(MR_RES_POISON * 7)) | (MR_RES_POISON * 3);
 
     // Everything but natural creatures have full rNeg. Set here for the
@@ -1795,54 +1795,6 @@ bool mons_skeleton(monster_type mc)
 bool mons_zombifiable(monster_type mc)
 {
     return !mons_class_flag(mc, M_NO_ZOMBIE) && mons_zombie_size(mc);
-}
-
-flight_type mons_class_flies(monster_type mc)
-{
-    const monsterentry *me = get_monster_data(mc);
-    return me ? me->fly : FL_NONE;
-}
-
-flight_type mons_flies(const monster* mon, bool temp)
-{
-    flight_type ret;
-    // For dancing weapons, this function can get called before their
-    // ghost_demon is created, so check for a nullptr ghost. -cao
-    if (mons_is_ghost_demon(mon->type) && mon->ghost.get())
-        ret = mon->ghost->fly;
-    else
-        ret = mons_class_flies(mons_base_type(mon));
-
-    // Handle the case where the zombified base monster can't fly, but
-    // the zombified monster can (e.g. spectral things).
-    if (mons_is_zombified(mon))
-        ret = max(ret, mons_class_flies(mon->type));
-
-    if (temp && ret < FL_LEVITATE)
-    {
-        if (mon->scan_artefacts(ARTP_FLY) > 0)
-            return FL_LEVITATE;
-
-        const int armour = mon->inv[MSLOT_ARMOUR];
-        if (armour != NON_ITEM
-            && mitm[armour].base_type == OBJ_ARMOUR
-            && mitm[armour].special == SPARM_FLYING)
-        {
-            return FL_LEVITATE;
-        }
-
-        const int jewellery = mon->inv[MSLOT_JEWELLERY];
-        if (jewellery != NON_ITEM
-            && mitm[jewellery].is_type(OBJ_JEWELLERY, RING_FLIGHT))
-        {
-            return FL_LEVITATE;
-        }
-
-        if (mon->has_ench(ENCH_FLIGHT))
-            return FL_LEVITATE;
-    }
-
-    return ret;
 }
 
 bool mons_flattens_trees(const monster* mon)
@@ -3644,8 +3596,8 @@ bool monster_shover(const monster* m)
     if (m->type == MONS_ROBIN)
         return false;
 
-    // no dumb creatures pushing, aside from jellies, which just kind of ooze.
-    return mons_intel(m) >= I_REPTILE || mons_genus(m->type) == MONS_JELLY;
+    // no mindless creatures pushing, aside from jellies, which just kind of ooze.
+    return mons_intel(m) > I_PLANT || mons_genus(m->type) == MONS_JELLY;
 }
 
 /**
@@ -3707,16 +3659,17 @@ bool monster_shover(const monster* m)
     {
         return true;
     }
+    const bool related = mons_genus(m1->type) == mons_genus(m2->type)
+                         || m1->holiness() == MH_DEMONIC
+                            && m2->holiness() == MH_DEMONIC;
 
-    // Aside from those special cases, only related monsters can push past
-    // each-other. (All demons are 'related'.)
-    if (mons_genus(m1->type) != mons_genus(m2->type)
-        && (m1->holiness() != MH_DEMONIC || m2->holiness() != MH_DEMONIC))
-    {
-        return false;
-    }
-
-    return fleeing || m1->get_hit_dice() > m2->get_hit_dice();
+    // Let all related monsters (all demons are 'related') push past ones that
+    // are weaker at all. Unrelated ones have to be quite a bit stronger, to
+    // reduce excessive swapping and because HD correlates only weakly with
+    // monster strength.
+    return related && fleeing
+           || related && m1->get_hit_dice() > m2->get_hit_dice()
+           || m1->get_hit_dice() > m2->get_hit_dice() + 5;
 }
 
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
@@ -4331,7 +4284,10 @@ mon_body_shape get_mon_shape(const monster* mon)
 mon_body_shape get_mon_shape(const monster_type mc)
 {
     if (mc == MONS_CHAOS_SPAWN)
-        return static_cast<mon_body_shape>(random2(MON_SHAPE_MISC + 1));
+    {
+        return static_cast<mon_body_shape>(random_range(MON_SHAPE_HUMANOID,
+                                                        MON_SHAPE_MISC));
+    }
 
     ASSERT_smc();
     return smc->shape;
@@ -4546,6 +4502,10 @@ void debug_mondata()
             MR = md->hpdice[0] * -MR * 4 / 3;
         if (md->resist_magic > 200 && md->resist_magic != MAG_IMMUNE)
             fails += make_stringf("%s has MR %d > 200\n", name, MR);
+        if (get_resist(md->resists, MR_RES_POISON) == 2)
+            fails += make_stringf("%s has rPois++\n", name);
+        if (get_resist(md->resists, MR_RES_ELEC) == 2)
+            fails += make_stringf("%s has rElec++\n", name);
 
         // Tests below apply only to real monsters.
         if (md->bitfields & M_CANT_SPAWN)

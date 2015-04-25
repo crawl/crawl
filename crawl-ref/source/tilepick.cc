@@ -3456,6 +3456,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SOLDIER_ANT;
     case MONS_QUEEN_ANT:
         return TILE_CORPSE_QUEEN_ANT;
+    case MONS_FORMICID:
+        return TILE_CORPSE_FORMICID;
 
     // bats and birds ('b')
     case MONS_BAT:
@@ -3636,6 +3638,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_WIZARD:
     case MONS_DEMIGOD: // haloed corpse looks abysmal
         return TILE_CORPSE_HUMAN;
+    case MONS_ENTROPY_WEAVER:
+        return TILE_CORPSE_ENTROPY_WEAVER;
     case MONS_HALFLING:
         return TILE_CORPSE_HALFLING;
     case MONS_SHAPESHIFTER:
