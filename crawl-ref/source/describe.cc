@@ -3672,6 +3672,12 @@ static string _monster_stat_description(const monster_info& mi)
     else if (did_speed)
         result << ".\n";
 
+    if (mi.type == MONS_SHADOW)
+    {
+        result << uppercase_first(pronoun) << " covers ground more"
+               << " quickly when invisible.\n";
+    }
+
     if (mi.airborne())
         result << uppercase_first(pronoun) << " can fly.\n";
 
