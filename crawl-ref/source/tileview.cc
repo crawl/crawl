@@ -352,7 +352,7 @@ static void _get_depths_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
         t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);  // ...and on Depths:$
 }
 
-int find_variants(tileidx_t idx, int variant, map<tileidx_t, int> &out)
+static int _find_variants(tileidx_t idx, int variant, map<tileidx_t, int> &out)
 {
     const int count = tile_dngn_count(idx);
     int total = 0;
@@ -392,7 +392,7 @@ tileidx_t pick_dngn_tile(tileidx_t idx, int value, int variant)
 {
     ASSERT_RANGE(idx, 0, TILE_DNGN_MAX);
     map<tileidx_t, int> choices;
-    int total = find_variants(idx, variant, choices);
+    int total = _find_variants(idx, variant, choices);
     if (choices.size() == 1) {
         return idx;
     }
