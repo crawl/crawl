@@ -592,7 +592,7 @@ static const mutation_def mut_data[] =
    "berserk rage",
 },
 
-{ MUT_DETERIORATION,                 10,  3,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT | MUTFLAG_RU, false,
+{ MUT_DETERIORATION,                 10,  3,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT, false,
   "deterioration",
 
   {"Your body is slowly deteriorating.",
