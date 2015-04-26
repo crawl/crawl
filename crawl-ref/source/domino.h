@@ -174,12 +174,11 @@ class Adjacency
 {
     public:
         Adjacency();
-        ~Adjacency();
         bool adjacent(Direction d, std::set<uint32_t>& open);
         bool permitted(Direction d, uint32_t id);
         void add(uint32_t adjacency, const std::set<Direction>& dir);
     private:
-        std::map<Direction, std::set<uint32_t>* > permitted_;
+        std::map<Direction, std::set<uint32_t> > permitted_;
 };
 
 class Domino
@@ -535,7 +534,9 @@ class DominoSet
                         T other = dominoes_.find(tiling.find(nb)->second)->second;
                         Direction dir;
                         asDirection(offset, dir);
-                        Adjacency* adj = adjacencies_.find(other.id())->second;
+                        auto res = adjacencies_.find(other.id());
+                        ASSERT(res != adjacencies_.end());
+                        Adjacency* adj = res->second;
                         adj->adjacent(dir, allowed);
                         for (auto itr : allowed)
                         {
