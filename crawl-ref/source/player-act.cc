@@ -281,13 +281,10 @@ random_var player::attack_delay(const item_def *weap,
         }
         else
         {
-            // UC/throwing attacks are slowed by heavy armour (aevp)
-            attk_delay = max(10, 7 + div_rand_round(armour_penalty,
-                                                    DELAY_SCALE));
-
-            // ...and sped up by skill (min delay (10 - 270/54) = 5)
+            // UC/throwing attacks are sped up by skill
+            // (min delay (10 - 270/54) = 5)
             skill_type sk = projectile ? SK_THROWING : SK_UNARMED_COMBAT;
-            attk_delay -= div_rand_round(constant(you.skill(sk, 10)), 54);
+            attk_delay = 10 - div_rand_round(constant(you.skill(sk, 10)), 54);
 
             // Bats are faster (for whatever good it does them).
             if (you.form == TRAN_BAT && !projectile)
