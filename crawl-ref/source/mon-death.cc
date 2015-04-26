@@ -430,7 +430,8 @@ void goldify_corpse(item_def &corpse)
 int place_monster_corpse(const monster* mons, bool silent, bool force)
 {
     // Under Gozag, monsters turn into gold on death.
-    bool goldify = in_good_standing(GOD_GOZAG);
+    bool goldify = in_good_standing(GOD_GOZAG)
+                   && !mons_class_flag(mons->type, M_NO_EXP_GAIN);
 
     // The game can attempt to place a corpse for an out-of-bounds monster
     // if a shifter turns into a giant spore and explodes. In this
@@ -448,15 +449,12 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
         return -1;
 
     item_def corpse;
-    const monster_type corpse_class = fill_out_corpse(mons, mons->type,
-                                                      corpse);
-
     // Corpseless monsters still drop gold for Gozag.
-    if (corpse_class == MONS_NO_MONSTER &&
-        !(goldify && !mons_class_flag(mons->type, M_NO_EXP_GAIN)))
-    {
+    const monster_type corpse_class = fill_out_corpse(mons, mons->type,
+                                                      corpse, goldify);
+
+    if (corpse_class == MONS_NO_MONSTER)
         return -1;
-    }
 
     // Don't place a corpse? If a zombified monster is somehow capable
     // of leaving a corpse, then always place it.
