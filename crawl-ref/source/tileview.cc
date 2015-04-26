@@ -356,16 +356,16 @@ static int _find_variants(tileidx_t idx, int variant, map<tileidx_t, int> &out)
 {
     const int count = tile_dngn_count(idx);
     int total = 0;
-    int curr_prob = tile_dngn_probs(idx);
-    int last_prob = 0;
     if (count == 1)
     {
         out[idx] = 0;
         return total;
     }
+
+    int curr_prob = 0;
     for (int i = 0; i < count; ++i)
     {
-        last_prob = curr_prob;
+        int last_prob = curr_prob;
         curr_prob = tile_dngn_probs(idx + i);
         if (tile_dngn_dominoes(idx + i) == variant)
         {
