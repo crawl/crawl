@@ -367,7 +367,6 @@ static int _find_variants(tileidx_t idx, int variant, map<tileidx_t, int> &out)
     {
         last_prob = curr_prob;
         curr_prob = tile_dngn_probs(idx + i);
-
         if (tile_dngn_dominoes(idx + i) == variant)
         {
             int weight = curr_prob - last_prob;
@@ -388,13 +387,13 @@ static int _find_variants(tileidx_t idx, int variant, map<tileidx_t, int> &out)
     return total;
 }
 
-tileidx_t pick_dngn_tile(tileidx_t idx, int value, int variant)
+tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
 {
     ASSERT_RANGE(idx, 0, TILE_DNGN_MAX);
     map<tileidx_t, int> choices;
-    int total = _find_variants(idx, variant, choices);
+    int total = _find_variants(idx, domino, choices);
     if (choices.size() == 1) {
-        return idx;
+        return choices.begin()->first;
     }
     int rand  = value % total;
 
@@ -454,7 +453,7 @@ void tile_init_flavour(const coord_def &gc, const int domino)
     uint32_t seed = you.birth_time + you.where_are_you +
         (you.depth << 8) + (gc.x << 16) + (gc.y << 24);
 
-    int rand1 = domino < 0 ? hash_rand(INT_MAX, seed, 0) : domino;
+    int rand1 = hash_rand(INT_MAX, seed, 0);
     int rand2 = hash_rand(INT_MAX, seed, 1);
 
     if (!env.tile_flv(gc).floor)
@@ -463,7 +462,7 @@ void tile_init_flavour(const coord_def &gc, const int domino)
         int colour = env.grid_colours(gc);
         if (colour)
             floor_base = tile_dngn_coloured(floor_base, colour);
-        env.tile_flv(gc).floor = pick_dngn_tile(floor_base, domino);
+        env.tile_flv(gc).floor = pick_dngn_tile(floor_base, rand1, domino);
     }
     else if (env.tile_flv(gc).floor != TILE_HALO_GRASS
              && env.tile_flv(gc).floor != TILE_HALO_GRASS2
