@@ -892,9 +892,7 @@ static void _animate_weapon(int pow, actor* target)
     }
 
     // Find out what our god thinks before killing the item.
-    conduct_type why = good_god_hates_item_handling(*wpn);
-    if (!why)
-        why = god_hates_item_handling(*wpn);
+    conduct_type why = god_hates_item_handling(*wpn);
 
     wpn->clear();
 
