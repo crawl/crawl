@@ -630,15 +630,6 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
             return false;
         }
 
-        // Holy monsters that aren't gifts/worshippers of chaotic gods
-        // and monsters that are gifts/worshippers of good gods won't
-        // use potentially unholy weapons.
-        if (((is_holy() && !is_chaotic_god(god)) || is_good_god(god))
-            && is_potentially_unholy_item(item))
-        {
-            return false;
-        }
-
         // Holy monsters and monsters that are gifts/worshippers of good
         // gods won't use unholy weapons.
         if ((is_holy() || is_good_god(god)) && is_unholy_item(item))

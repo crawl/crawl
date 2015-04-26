@@ -6,7 +6,6 @@
 #include "spl-util.h"
 
 bool is_holy_item(const item_def& item);
-bool is_potentially_unholy_item(const item_def& item);
 bool is_unholy_item(const item_def& item);
 bool is_potentially_evil_item(const item_def& item);
 bool is_corpse_violating_item(const item_def& item);
