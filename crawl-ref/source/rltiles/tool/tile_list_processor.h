@@ -7,6 +7,13 @@
 #include <vector>
 #include <stdio.h>
 
+struct domino {
+  int n;
+  int e;
+  int s;
+  int w;
+};
+
 class tile_list_processor
 {
 public:
@@ -54,6 +61,7 @@ protected:
     int m_variation_col;
     int m_weight;
     double m_alpha;
+    domino m_domino;
 
     typedef pair<tile_colour, tile_colour> palette_entry;
     typedef vector<palette_entry> palette_list;
