@@ -518,7 +518,7 @@ class DominoSet
 
             std::map<uint32_t, int> result_map;
             uint32_t neighbors = 0;
-            uint32_t mx = 0;
+            int mx = 0;
             for (int x = -1; x <= 1; ++x)
             {
                 for (int y = -1; y <= 1; ++y)
@@ -540,9 +540,7 @@ class DominoSet
                         for (auto itr : allowed)
                         {
                             result_map[itr] += 1;
-                            int val = result_map[itr];
-                            if (val > mx)
-                                mx = val;
+                            mx = std::max(mx, result_map[itr]);
                         }
                     }
                 }
