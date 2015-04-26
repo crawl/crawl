@@ -49,35 +49,26 @@ Adjacency::Adjacency()
     for (size_t i = FIRST_DIRECTION; i <= LAST_DIRECTION; ++i)
     {
         Direction d = static_cast<Direction>(i);
-        permitted_[d] = new set<uint32_t>();
-    }
-}
-
-Adjacency::~Adjacency()
-{
-    for (size_t i = FIRST_DIRECTION; i <= LAST_DIRECTION; ++i)
-    {
-        Direction d = static_cast<Direction>(i);
-        delete permitted_[d];
+        permitted_[d] = set<uint32_t>();
     }
 }
 
 bool Adjacency::adjacent(Direction d, set<uint32_t>& open)
 {
-    intersection(open, *permitted_[d]);
+    intersection(open, permitted_[d]);
     return !open.empty();
 }
 
 bool Adjacency::permitted(Direction d, uint32_t id)
 {
-    return *permitted_[d]->find(id) != *permitted_[d]->end();
+    return permitted_[d].find(id) != permitted_[d].end();
 }
 
 void Adjacency::add(uint32_t adjacency, const set<Direction>& dir)
 {
     set<Direction>::iterator itr = dir.begin();
     for (; itr != dir.end(); ++itr)
-        permitted_[*itr]->insert(adjacency);
+        permitted_[*itr].insert(adjacency);
 }
 
 bool CornerDomino::matches(const CornerDomino& o, Direction dir) const
