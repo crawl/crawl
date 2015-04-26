@@ -528,7 +528,7 @@ static bool _your_god_hates_spell(spell_type spell)
     return god_hates_spell(spell, you.religion);
 }
 
-conduct_type good_god_hates_item_handling(const item_def &item)
+static conduct_type good_god_hates_item_handling(const item_def &item)
 {
     if (!is_good_god(you.religion)
         || (!is_unholy_item(item) && !is_evil_item(item)))
@@ -552,6 +552,9 @@ conduct_type good_god_hates_item_handling(const item_def &item)
 
 conduct_type god_hates_item_handling(const item_def &item)
 {
+    if (good_god_hates_item_handling(item) != DID_NOTHING)
+        return good_god_hates_item_handling(item);
+
     switch (you.religion)
     {
     case GOD_ZIN:
@@ -637,8 +640,7 @@ conduct_type god_hates_item_handling(const item_def &item)
 
 bool god_hates_item(const item_def &item)
 {
-    return (good_god_hates_item_handling(item) != DID_NOTHING)
-            || (god_hates_item_handling(item) != DID_NOTHING);
+    return god_hates_item_handling(item) != DID_NOTHING;
 }
 
 bool god_dislikes_spell_type(spell_type spell, god_type god)
