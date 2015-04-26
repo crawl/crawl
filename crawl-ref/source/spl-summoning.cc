@@ -956,8 +956,8 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
 {
     const int dur = 2;
 
-    if (distance2(where, you.pos()) > dist_range(spell_range(SPELL_SUMMON_LIGHTNING_SPIRE,
-                                                      pow))
+    if (grid_distance(where, you.pos()) > spell_range(SPELL_SUMMON_LIGHTNING_SPIRE,
+                                                      pow)
         || !in_bounds(where))
     {
         mpr("That's too far away.");
@@ -2874,7 +2874,7 @@ bool trigger_battlesphere(actor* agent, bolt& beam)
             beam.determine_affected_cells(exp_map, coord_def(), 0,
                                           beam.ex_size, true, true);
 
-            for (radius_iterator ri(beam.target, beam.ex_size, C_ROUND);
+            for (radius_iterator ri(beam.target, beam.ex_size, C_SQUARE);
                  ri; ++ri)
             {
                 if (exp_map(*ri - beam.target + coord_def(9,9)) < INT_MAX)
@@ -3083,8 +3083,8 @@ bool fire_battlesphere(monster* mons)
 spret_type cast_fulminating_prism(actor* caster, int pow,
                                   const coord_def& where, bool fail)
 {
-    if (distance2(where, caster->pos())
-        > dist_range(spell_range(SPELL_FULMINANT_PRISM, pow)))
+    if (grid_distance(where, caster->pos())
+        > spell_range(SPELL_FULMINANT_PRISM, pow))
     {
         if (caster->is_player())
             mpr("That's too far away.");
@@ -3661,7 +3661,7 @@ void summon_twister(int power_level)
         random_near_space(&you, you.pos(), pos, true);
         tries++;
     }
-    while (distance2(pos, you.pos()) < 3 && tries < 50);
+    while (grid_distance(pos, you.pos()) < 2 && tries < 50);
 
     if (tries > 50)
         pos = you.pos();

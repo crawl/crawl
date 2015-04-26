@@ -2629,9 +2629,9 @@ int monster_die(monster* mons, killer_type killer,
         arena_monster_died(mons, killer, killer_index, silent, corpse);
 
     // Monsters haloes should be removed when they die.
-    if (mons->halo_radius2()
-        || mons->umbra_radius2()
-        || mons->silence_radius2())
+    if (mons->halo_radius()
+        || mons->umbra_radius()
+        || mons->silence_radius())
     {
         invalidate_agrid();
     }
@@ -3383,7 +3383,7 @@ void mons_felid_revive(monster* mons)
             || env.cgrid(revive_place) != EMPTY_CLOUD
             || monster_at(revive_place)
             || env.pgrid(revive_place) & FPROP_NO_TELE_INTO
-            || distance2(revive_place, mons->pos()) < dist_range(10))
+            || grid_distance(revive_place, mons->pos()) < 9)
         {
             tries--;
             continue;

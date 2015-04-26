@@ -166,7 +166,7 @@ static bool _bless_weapon(god_type god, brand_type brand, colour_t colour)
         holy_word(100, HOLY_WORD_TSO, you.pos(), true);
 
         // Un-bloodify surrounding squares.
-        for (radius_iterator ri(you.pos(), 3, C_ROUND, LOS_SOLID); ri; ++ri)
+        for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_SOLID); ri; ++ri)
             if (is_bloodcovered(*ri))
                 env.pgrid(*ri) &= ~FPROP_BLOODY;
     }
@@ -180,7 +180,7 @@ static bool _bless_weapon(god_type god, brand_type brand, colour_t colour)
         you.gift_timeout = 0; // protection after pain branding weapon
 
         // Bloodify surrounding squares (75% chance).
-        for (radius_iterator ri(you.pos(), 2, C_ROUND, LOS_SOLID); ri; ++ri)
+        for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID); ri; ++ri)
             if (!one_chance_in(4))
                 maybe_bloodify_square(*ri);
     }

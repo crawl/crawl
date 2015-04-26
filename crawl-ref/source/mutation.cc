@@ -2329,7 +2329,7 @@ void check_monster_detect()
     int radius = player_monster_detect_radius();
     if (radius <= 0)
         return;
-    for (radius_iterator ri(you.pos(), radius, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(you.pos(), radius, C_SQUARE); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
         map_cell& cell = env.map_knowledge(*ri);
@@ -2367,7 +2367,7 @@ void check_monster_detect()
                     continue;
                 }
 
-                for (radius_iterator ri2(mon->pos(), 2, C_ROUND); ri2; ++ri2)
+                for (radius_iterator ri2(mon->pos(), 2, C_SQUARE); ri2; ++ri2)
                     if (you.see_cell(*ri2))
                     {
                         mon->flags |= MF_SENSED;
@@ -2383,7 +2383,7 @@ int handle_pbd_corpses()
     int corpse_count = 0;
 
     for (radius_iterator ri(you.pos(),
-         player_mutation_level(MUT_POWERED_BY_DEATH) * 3, C_ROUND, LOS_DEFAULT);
+         player_mutation_level(MUT_POWERED_BY_DEATH) * 3, C_SQUARE, LOS_DEFAULT);
          ri; ++ri)
     {
         for (stack_iterator j(*ri); j; ++j)

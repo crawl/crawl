@@ -49,7 +49,7 @@ protected:
     vector<coord_def> path_taken; // Path beam took.
 private:
     bool penetrates_targets;
-    int range2;
+    int range;
     int min_expl_rad, max_expl_rad;
     explosion_map exp_map_min, exp_map_max;
 };
@@ -88,7 +88,7 @@ protected:
     int exp_range_min, exp_range_max;
     explosion_map exp_map_min, exp_map_max;
 private:
-    int range2;
+    int range;
     bool affects_walls;
     bool (*affects_pos)(const coord_def &);
 };
@@ -132,7 +132,7 @@ public:
     bool valid_aim(coord_def a);
     bool can_affect_outside_range();
     aff_type is_affected(coord_def loc);
-    int range2;
+    int range;
     int cnt_min, cnt_max;
     map<coord_def, aff_type> seen;
     vector<vector<coord_def> > queue;
@@ -151,12 +151,12 @@ class targetter_los : public targetter
 {
 public:
     targetter_los(const actor *act, los_type los = LOS_DEFAULT,
-                  int range = LOS_RADIUS, int range_max = 0);
+                  int ran = LOS_RADIUS, int ran_max = 0);
     bool valid_aim(coord_def a);
     aff_type is_affected(coord_def loc);
 private:
     los_type los;
-    int range2, range_max2;
+    int range, range_max;
 };
 
 class targetter_thunderbolt : public targetter
@@ -171,7 +171,7 @@ public:
     FixedVector<int, LOS_RADIUS + 1> arc_length;
 private:
     coord_def prev;
-    int range2;
+    int range;
 };
 
 class targetter_spray : public targetter
@@ -187,7 +187,6 @@ public:
 private:
     vector<vector<coord_def> > paths_taken;
     int _range;
-    int range2;
 };
 
 enum shadow_step_block_reason
@@ -203,7 +202,7 @@ enum shadow_step_block_reason
 class targetter_shadow_step : public targetter
 {
 public:
-    targetter_shadow_step(const actor* act, int r2);
+    targetter_shadow_step(const actor* act, int r);
 
     bool valid_aim(coord_def a);
     bool set_aim(coord_def a);
@@ -219,7 +218,7 @@ private:
     shadow_step_block_reason no_landing_reason;
     shadow_step_block_reason blocked_landing_reason;
     set<coord_def> temp_sites;
-    int range2;
+    int range;
 };
 
 class targetter_explosive_bolt : public targetter_beam
@@ -235,7 +234,7 @@ private:
 class targetter_cone : public targetter
 {
 public:
-    targetter_cone(const actor *act, int range);
+    targetter_cone(const actor *act, int r);
 
     bool valid_aim(coord_def a);
     bool set_aim(coord_def a);
@@ -243,7 +242,7 @@ public:
     map<coord_def, aff_type> zapped;
     FixedVector< map<coord_def, aff_type>, LOS_RADIUS + 1 > sweep;
 private:
-    int range2;
+    int range;
 };
 
 #define CLOUD_CONE_BEAM_COUNT 11
@@ -251,7 +250,7 @@ private:
 class targetter_shotgun : public targetter
 {
 public:
-    targetter_shotgun(const actor* act, size_t beam_count, int range);
+    targetter_shotgun(const actor* act, size_t beam_count, int r);
     bool valid_aim(coord_def a);
     bool set_aim(coord_def a);
     aff_type is_affected(coord_def loc);
@@ -259,7 +258,7 @@ public:
     map<coord_def, size_t> zapped;
 private:
     size_t num_beams;
-    int range2;
+    int range;
 };
 
 class targetter_list : public targetter

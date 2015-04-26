@@ -1591,7 +1591,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     if (spell_cast == SPELL_LEGENDARY_DESTRUCTION)
     {
         int range = _mons_spell_range(theBeam.origin_spell, *mons);
-        while (distance2(mons->pos(), mons->target) > dist_range(range))
+        while (grid_distance(mons->pos(), mons->target) > range)
         {
             theBeam = mons_spell_beam(mons, spell_cast, power);
             range = _mons_spell_range(theBeam.origin_spell, *mons);
@@ -2190,7 +2190,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
     if (!mons_near(warden) || warden->foe != MHITYOU)
         return false;
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND);
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE);
                  ri; ++ri)
     {
         if (grd(*ri) == DNGN_OPEN_DOOR)
@@ -2370,8 +2370,8 @@ static bool _incite_monsters(const monster* mon, bool actual)
     if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
         return false;
 
-    // Only things both in LOS of the inciter and within radius 4.
-    const int radius_sq = 4 * 4 + 1;
+    // Only things both in LOS of the inciter and within radius 3.
+    const int radius = 3;
     int goaded = 0;
     for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
     {
@@ -2391,7 +2391,7 @@ static bool _incite_monsters(const monster* mon, bool actual)
             continue;
         }
 
-        if (distance2(mon->pos(), mi->pos()) > radius_sq)
+        if (grid_distance(mon->pos(), mi->pos()) > radius)
             continue;
 
         const bool worked = _make_monster_angry(mon, *mi, actual);
@@ -2947,7 +2947,7 @@ static void _corrupting_pulse(monster *mons)
         }
     }
 
-    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_SQUARE); ri; ++ri)
     {
         monster *m = monster_at(*ri);
         if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE))
@@ -3285,7 +3285,7 @@ static coord_def _mons_prism_pos(monster* mon, actor* foe)
     // XXX: make this use coord_def when we have a hash<> for it
     unordered_set<int> possible_places;
 
-    for (radius_iterator ri(foe->pos(), rad, C_ROUND, LOS_NO_TRANS); ri; ++ri)
+    for (radius_iterator ri(foe->pos(), rad, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
         if (cell_is_solid(*ri))
             continue;
@@ -3310,7 +3310,7 @@ static coord_def _mons_prism_pos(monster* mon, actor* foe)
             continue;
         }
         int coverage = 0;
-        for (radius_iterator ri(*di, 2, C_ROUND, LOS_NO_TRANS); ri; ++ri)
+        for (radius_iterator ri(*di, 2, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
         {
             if (possible_places.find(ri->y * GYM + ri->x)
                 != possible_places.end())
@@ -3379,7 +3379,7 @@ static coord_def _mons_singularity_pos(const monster* mon)
 
         if (cell_is_solid(*di) || actor_at(*di))
             continue;
-        for (radius_iterator ri(*di, rad, C_ROUND, LOS_NO_TRANS); ri; ++ri)
+        for (radius_iterator ri(*di, rad, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
         {
             actor* victim = actor_at(*ri);
             if (!victim
@@ -7236,7 +7236,7 @@ static actor* _find_goblin_to_toss(const monster &mons)
             continue;
 
         // otherwise throw whoever's furthest from our target.
-        const int dist = distance2(goblin->pos(), foe->pos());
+        const int dist = grid_distance(goblin->pos(), foe->pos());
         if (dist > furthest_dist)
         {
             tossee = goblin;
@@ -7281,7 +7281,7 @@ static coord_def _find_goblin_toss_target(const monster &tosser,
             continue;
         }
 
-        const int dist = distance2(tosser.pos(), *ai);
+        const int dist = grid_distance(tosser.pos(), *ai);
         if (dist > furthest_dist)
         {
             best_sites.clear();
@@ -8385,7 +8385,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         // don't cast.
         for (monster_near_iterator mi(foe->pos(), LOS_NO_TRANS); mi; ++mi)
             if (mi->type == MONS_SINGULARITY && mi->summoner == mon->mid)
-                return distance2(foe->pos(), mi->pos()) <= mi->get_hit_dice();
+                return grid_distance(foe->pos(), mi->pos()) * grid_distance(foe->pos(), mi->pos()) <= mi->get_hit_dice();
         return false;
     }
 

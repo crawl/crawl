@@ -2774,7 +2774,7 @@ static void _storm_card(int power, deck_rarity_type rarity)
     {
         wind_blast(&you, (power_level == 0) ? 100 : 200, coord_def(), true);
 
-        for (radius_iterator ri(you.pos(), 5, C_ROUND, LOS_SOLID); ri; ++ri)
+        for (radius_iterator ri(you.pos(), 4, C_SQUARE, LOS_SOLID); ri; ++ri)
         {
             monster *mons = monster_at(*ri);
 
@@ -2801,7 +2801,7 @@ static void _water_card(int power, deck_rarity_type rarity)
     const int power_level = _get_power_level(power, rarity);
     create_feat_splash(you.pos(), 2 + random2(power_level), 10);
     create_feat_splash(you.pos(), 2, 10);
-    for (radius_iterator ri(you.pos(), power_level + 3, C_CIRCLE, LOS_NO_TRANS); ri; ++ri)
+    for (radius_iterator ri(you.pos(), power_level + 1, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
         if (grd(*ri) == DNGN_FLOOR)
         {

@@ -76,7 +76,8 @@ public:
 
 private:
     enum costate { RI_DONE, RI_START, RI_SE, RI_NE, RI_SW, RI_NW };
-    int x, y, cost_x, cost_y, credit_x, credit_y;
+    int x, y, cost_x, cost_y, credit, credit_x, credit_y, base_cost, inc_cost;
+    bool is_square;
 
     costate state;
     coord_def center;

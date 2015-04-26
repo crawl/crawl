@@ -14,6 +14,8 @@
 local ATT_HOSTILE = 0
 local ATT_NEUTRAL = 1
 
+local LOS_RADIUS = 7
+
 AUTOFIGHT_STOP = 30
 AUTOFIGHT_CAUGHT = false
 AUTOFIGHT_THROW = false
@@ -56,7 +58,7 @@ end
 
 local function have_reaching()
   local wp = items.equipped_at("weapon")
-  return wp and wp.reach_range == 8 and not wp.is_melded
+  return wp and wp.reach_range == 2 and not wp.is_melded
 end
 
 local function have_ranged()
@@ -201,8 +203,8 @@ local function get_target(no_move)
   bestx = 0
   besty = 0
   best_info = nil
-  for x = -8,8 do
-    for y = -8,8 do
+  for x = -LOS_RADIUS,LOS_RADIUS do
+    for y = -LOS_RADIUS,LOS_RADIUS do
       if is_candidate_for_attack(x, y) then
         new_info = get_monster_info(x, y, no_move)
         if (not best_info) or compare_monster_info(new_info, best_info) then

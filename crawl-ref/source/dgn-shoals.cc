@@ -901,10 +901,10 @@ static int _shoals_tide_at(coord_def pos, int base_tide)
         return base_tide;
 
     pos -= tide_caller->pos();
-    if (pos.abs() > sqr(TIDE_CALL_RADIUS) + 1)
+    if (pos.rdist() > TIDE_CALL_RADIUS)
         return base_tide;
 
-    return base_tide + max(0, tide_called_peak - pos.range() * 3);
+    return base_tide + max(0, tide_called_peak - pos.rdist() * 3);
 }
 
 static vector<coord_def> _shoals_extra_tide_seeds()

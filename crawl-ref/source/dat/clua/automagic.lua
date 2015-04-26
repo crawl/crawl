@@ -13,6 +13,8 @@
 local ATT_HOSTILE = 0
 local ATT_NEUTRAL = 1
 
+local LOS_RADIUS = 7
+
 if not AUTOMAGIC_SPELL_SLOT then
   initial_slot = true
   AUTOMAGIC_SPELL_SLOT = "a"
@@ -119,8 +121,9 @@ local function get_monster_info(dx,dy)
   info = {}
   info.distance = (abs(dx) > abs(dy)) and -abs(dx) or -abs(dy)
 
-  -- Decide what to do for target's range by circleLOS range
-  if (dx^2 + dy^2 <= spells.range(you.spell_table()[AUTOMAGIC_SPELL_SLOT])^2+1) then
+  -- Decide what to do for target's range by squareLOS range
+  range = spells.range(you.spell_table()[AUTOMAGIC_SPELL_SLOT])
+  if abs(dx) <= range and abs(dy) <= range then
     -- In range
     info.attack_type = 1
   else
@@ -176,8 +179,8 @@ local function get_target()
   bestx = 0
   besty = 0
   best_info = nil
-  for x = -8,8 do
-    for y = -8,8 do
+  for x = -LOS_RADIUS,LOS_RADIUS do
+    for y = -LOS_RADIUS,LOS_RADIUS do
       if is_candidate_for_attack(x, y) then
         new_info = get_monster_info(x, y)
         if (not best_info) or compare_monster_info(new_info, best_info) then
