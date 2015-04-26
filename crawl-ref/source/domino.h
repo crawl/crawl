@@ -199,7 +199,8 @@ class Domino
 class CornerDomino : public Domino
 {
     public:
-        CornerDomino() {
+        CornerDomino()
+        {
             id_ = -1;
         }
         ~CornerDomino() {}
@@ -282,7 +283,8 @@ class EdgeDomino : public Domino
             return colours_.n;
         }
 
-        colour e_colour() const {
+        colour e_colour() const
+        {
             return colours_.e;
         }
 
@@ -368,7 +370,8 @@ class OrientedDomino : public Domino
             return colours_.n;
         }
 
-        OrientedColour e_colour() const {
+        OrientedColour e_colour() const
+        {
             return colours_.e;
         }
 
@@ -417,9 +420,7 @@ class DominoSet
         ~DominoSet()
         {
             for (uint32_t i = 0; i < adjacencies_.size(); ++i)
-            {
                 delete adjacencies_[i];
-            }
         }
 
         uint32_t size() { return dominoes_.size(); }
@@ -435,9 +436,7 @@ class DominoSet
         {
             std::set<uint32_t> all_set;
             for (uint32_t i = 0; i < dominoes_.size(); ++i)
-            {
                 all_set.insert(i);
-            }
             const std::set<uint32_t> all = all_set;
 
             std::vector<Point> all_points;
@@ -537,9 +536,7 @@ class DominoSet
         {
             std::set<uint32_t> all_set;
             for (uint32_t i = 0; i < dominoes_.size(); ++i)
-            {
                 all_set.insert(i);
-            }
             const std::set<uint32_t> all = all_set;
 
             std::map<uint32_t, int> result_map;
@@ -567,9 +564,8 @@ class DominoSet
                         {
                             result_map[itr] += 1;
                             int val = result_map[itr];
-                            if (val > mx) {
+                            if (val > mx)
                                 mx = val;
-                            }
                         }
                     }
                 }
@@ -577,17 +573,13 @@ class DominoSet
             if (!neighbors)
             {
                 for (uint32_t v : all_set)
-                {
                     result.push_back(v);
-                }
                 return 0;
             }
             for (auto itr : result_map)
             {
                 if (itr.second == mx)
-                {
                     result.push_back(itr.first);
-                }
             }
             return 8 - mx;
         }
@@ -613,7 +605,8 @@ class DominoSet
                     tiling[itr] = rng() % adjacencies_.size();
             }
 
-        int Conflicts(Point pt, const std::map<Point, uint32_t>& tiling) const {
+        int Conflicts(Point pt, const std::map<Point, uint32_t>& tiling) const
+        {
             int conflicts = 0;
             int neighbors = 0;
             uint32_t id = tiling.find(pt)->second;
