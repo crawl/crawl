@@ -23,8 +23,7 @@ tile_list_processor::tile_list_processor() :
     m_variation_idx(-1),
     m_variation_col(-1),
     m_weight(1),
-    m_alpha(0.0),
-    m_domino{0,0,0,0}
+    m_alpha(0.0)
 {
 }
 
@@ -539,14 +538,6 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
             m_weight = tmp;
         }
-        else if (strcmp(arg, "domino") == 0)
-        {
-            CHECK_ARG(4);
-            m_domino.n = atoi(m_args[1]);
-            m_domino.e = atoi(m_args[2]);
-            m_domino.s = atoi(m_args[3]);
-            m_domino.w = atoi(m_args[4]);
-        }
         else if (strcmp(arg, "shrink") == 0)
         {
             CHECK_ARG(1);
@@ -822,11 +813,6 @@ void tile_list_processor::add_image(tile &img, const char *enumname)
     m_page.m_base_tiles.push_back(m_last_enum);
 
     m_page.m_probs.push_back(weight);
-    m_page.m_domino.push_back(
-          m_domino.n
-        | m_domino.e << 8
-        | m_domino.s << 16
-        | m_domino.w << 24);
 
     if (!m_categories.empty())
         m_ctg_counts[m_categories.size()-1]++;
@@ -1071,8 +1057,6 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp, "tileidx_t tile_%s_basetile(tileidx_t idx);\n", lcname.c_str());
         fprintf(fp, "int tile_%s_probs(tileidx_t idx);\n",
                 lcname.c_str());
-        fprintf(fp, "int tile_%s_dominoes(tileidx_t idx);\n",
-                lcname.c_str());
         fprintf(fp, "const char *tile_%s_name(tileidx_t idx);\n",
             lcname.c_str());
         fprintf(fp, "tile_info &tile_%s_info(tileidx_t idx);\n",
@@ -1160,20 +1144,6 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp, "    ASSERT_RANGE(idx, %s, %s);\n",
                 m_start_value.c_str(), max.c_str());
         fprintf(fp, "    return _tile_%s_probs[idx - %s];\n",
-                lcname.c_str(), m_start_value.c_str());
-        fprintf(fp, "}\n\n");
-
-        fprintf(fp, "static int _tile_%s_dominoes[%s - %s] =\n{\n",
-                lcname.c_str(), max.c_str(), m_start_value.c_str());
-        for (unsigned int i = 0; i < m_page.m_domino.size(); i++)
-            fprintf(fp, "    %d,\n", m_page.m_domino[i]);
-        fprintf(fp, "};\n\n");
-
-        fprintf(fp, "int tile_%s_dominoes(tileidx_t idx)\n{\n",
-                    lcname.c_str());
-        fprintf(fp, "    ASSERT_RANGE(idx, %s, %s);\n",
-                m_start_value.c_str(), max.c_str());
-        fprintf(fp, "    return _tile_%s_dominoes[idx - %s];\n",
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
