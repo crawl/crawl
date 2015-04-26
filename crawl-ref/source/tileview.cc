@@ -8,6 +8,8 @@
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
+#include "domino.h"
+#include "domino_data.h"
 #include "dungeon.h"
 #include "env.h"
 #include "fprop.h"
@@ -294,8 +296,22 @@ void tile_clear_flavour()
 // set them to a random instance of the default floor and wall tileset.
 void tile_init_flavour()
 {
+    vector<unsigned int> output;
+    {
+        domino::DominoSet<domino::EdgeDomino> dominoes(domino::cohen_set, 8);
+        uint32_t seed[] =
+        {
+            static_cast<uint32_t>(ui_random(INT_MAX)), 
+            static_cast<uint32_t>(ui_random(INT_MAX)), 
+        };
+        AsgKISS rng(seed, 2);
+        dominoes.Generate(X_WIDTH, Y_WIDTH, output, rng);
+    }
     for (rectangle_iterator ri(0); ri; ++ri)
-        tile_init_flavour(*ri);
+    {
+        unsigned int idx = ri->x + ri->y * GXM;
+        tile_init_flavour(*ri, output[idx]);
+    }
 }
 
 // 11111333333   55555555
@@ -394,7 +410,7 @@ static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
            || door == feat;
 }
 
-void tile_init_flavour(const coord_def &gc)
+void tile_init_flavour(const coord_def &gc, const int domino)
 {
     if (!map_bounds(gc))
         return;
@@ -402,7 +418,7 @@ void tile_init_flavour(const coord_def &gc)
     uint32_t seed = you.birth_time + you.where_are_you +
         (you.depth << 8) + (gc.x << 16) + (gc.y << 24);
 
-    int rand1 = hash_rand(INT_MAX, seed, 0);
+    int rand1 = domino < 0 ? hash_rand(INT_MAX, seed, 0) : domino;
     int rand2 = hash_rand(INT_MAX, seed, 1);
 
     if (!env.tile_flv(gc).floor)
@@ -411,7 +427,7 @@ void tile_init_flavour(const coord_def &gc)
         int colour = env.grid_colours(gc);
         if (colour)
             floor_base = tile_dngn_coloured(floor_base, colour);
-        env.tile_flv(gc).floor = pick_dngn_tile(floor_base, rand1);
+        env.tile_flv(gc).floor = pick_dngn_tile(floor_base, domino);
     }
     else if (env.tile_flv(gc).floor != TILE_HALO_GRASS
              && env.tile_flv(gc).floor != TILE_HALO_GRASS2
@@ -1165,7 +1181,7 @@ static int _get_door_offset(tileidx_t base_tile, bool opened, bool runed,
 }
 
 void apply_variations(const tile_flavour &flv, tileidx_t *bg,
-                      const coord_def &gc)
+                      const coord_def &gc, const unsigned int idx)
 {
     tileidx_t orig = (*bg) & TILE_FLAG_MASK;
     tileidx_t flag = (*bg) & (~TILE_FLAG_MASK);
@@ -1315,7 +1331,8 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (!map_bounds(gc))
         return;
 
-    apply_variations(env.tile_flv(gc), &cell.bg, gc);
+    unsigned int idx = gc.x + gc.y * GXM;
+    apply_variations(env.tile_flv(gc), &cell.bg, gc, idx);
 
     const map_cell& mc = env.map_knowledge(gc);
 
