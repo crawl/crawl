@@ -210,20 +210,12 @@ class CornerDomino : public Domino
         void intersect(const CornerDomino& other, std::set<Direction>& directions) const;
 
         CornerDomino(const CornerColours colours)
-        {
-            colours_.nw = colours.nw;
-            colours_.ne = colours.ne;
-            colours_.se = colours.se;
-            colours_.sw = colours.sw;
-        }
+            : colours_(colours)
+        {}
 
         CornerDomino(uint32_t nw, uint32_t ne, uint32_t se, uint32_t sw)
-        {
-            colours_.nw = nw;
-            colours_.ne = ne;
-            colours_.se = se;
-            colours_.sw = sw;
-        }
+            : colours_{nw, ne, sw, se}
+        {}
 
         colour nw_colour() const
         {
@@ -260,20 +252,11 @@ class EdgeDomino : public Domino
             id_ = -1;
         }
         EdgeDomino(const EdgeColours colours)
-        {
-            colours_.n = colours.n;
-            colours_.e = colours.e;
-            colours_.s = colours.s;
-            colours_.w = colours.w;
-        }
-
-        EdgeDomino(uint32_t n, uint32_t e, uint32_t s, uint32_t w)
-        {
-            colours_.n = n;
-            colours_.e = e;
-            colours_.s = s;
-            colours_.w = w;
-        }
+            : colours_(colours)
+        {}
+        EdgeDomino(colour n, colour e, colour s, colour w)
+            : colours_{n, e, s, w}
+        {}
         ~EdgeDomino() {}
 
         bool matches(const EdgeDomino& o, Direction dir) const;
@@ -315,30 +298,23 @@ class OrientedDomino : public Domino
         }
 
         OrientedDomino(const OrientedColours colours)
-        {
-            colours_.n = colours.n;
-            colours_.e = colours.e;
-            colours_.s = colours.s;
-            colours_.w = colours.w;
-        }
+            : colours_(colours)
+        {}
 
         OrientedDomino(const OrientedColour n, const OrientedColour e,
               const OrientedColour s, const OrientedColour w)
-        {
-            colours_.n = n;
-            colours_.e = e;
-            colours_.s = s;
-            colours_.w = w;
-        }
+            : colours_{n, e, s, w}
+        {}
 
         OrientedDomino(int32_t n, int32_t e, int32_t s, int32_t w)
         {
-            #define SIGN(x) (x < 0 ? NEGATIVE : POSITIVE)
-            colours_.n = { static_cast<uint32_t>(abs(n)), SIGN(n) };
-            colours_.e = { static_cast<uint32_t>(abs(e)), SIGN(e) };
-            colours_.s = { static_cast<uint32_t>(abs(s)), SIGN(s) };
-            colours_.w = { static_cast<uint32_t>(abs(w)), SIGN(w) };
-            #undef SIGN
+            #define O_COL(x) { static_cast<colour>(abs(x)), \
+                               (x < 0 ? NEGATIVE : POSITIVE) }
+            colours_.n = O_COL(n);
+            colours_.e = O_COL(e);
+            colours_.s = O_COL(s);
+            colours_.w = O_COL(w);
+            #undef O_COL
         }
 
         ~OrientedDomino() {}
