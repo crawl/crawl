@@ -43,6 +43,7 @@
 #define __DOMINO_H__
 
 #include <algorithm>
+#include <cstdlib>
 #include <map>
 #include <set>
 #include <stdint.h>

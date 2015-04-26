@@ -301,8 +301,8 @@ void tile_init_flavour()
         domino::DominoSet<domino::EdgeDomino> dominoes(domino::cohen_set, 8);
         uint32_t seed[] =
         {
-            static_cast<uint32_t>(ui_random(INT_MAX)), 
-            static_cast<uint32_t>(ui_random(INT_MAX)), 
+            static_cast<uint32_t>(ui_random(INT_MAX)),
+            static_cast<uint32_t>(ui_random(INT_MAX)),
         };
         AsgKISS rng(seed, 2);
         dominoes.Generate(X_WIDTH, Y_WIDTH, output, rng);
@@ -352,21 +352,56 @@ static void _get_depths_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
         t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);  // ...and on Depths:$
 }
 
-tileidx_t pick_dngn_tile(tileidx_t idx, int value)
+int find_variants(tileidx_t idx, int variant, map<tileidx_t, int> &out)
 {
-    ASSERT_RANGE(idx, 0, TILE_DNGN_MAX);
     const int count = tile_dngn_count(idx);
+    int total = 0;
+    int curr_prob = tile_dngn_probs(idx);
+    int last_prob = 0;
     if (count == 1)
-        return idx;
-
-    const int total = tile_dngn_probs(idx + count - 1);
-    const int rand  = value % total;
-
+    {
+        out[idx] = 0;
+        return total;
+    }
     for (int i = 0; i < count; ++i)
     {
-        tileidx_t curr = idx + i;
-        if (rand < tile_dngn_probs(curr))
-            return curr;
+        last_prob = curr_prob;
+        curr_prob = tile_dngn_probs(idx + i);
+
+        if (tile_dngn_dominoes(idx + i) == variant)
+        {
+            int weight = curr_prob - last_prob;
+            total += weight;
+            out[idx + i] = weight;
+        }
+    }
+    if (out.empty())
+    {
+        out[idx] = tile_dngn_probs(idx);
+        for (int i = 1; i < count; ++i)
+        {
+            out[idx + i] = tile_dngn_probs(idx + i) - tile_dngn_probs(idx + i - 1);
+        }
+        return tile_dngn_probs(idx + count - 1);
+    }
+    return total;
+}
+
+tileidx_t pick_dngn_tile(tileidx_t idx, int value, int variant)
+{
+    ASSERT_RANGE(idx, 0, TILE_DNGN_MAX);
+    map<tileidx_t, int> choices;
+    int total = find_variants(idx, variant, choices);
+    if (choices.size() == 1) {
+        return idx;
+    }
+    int rand  = value % total;
+
+    for (const auto& elem : choices)
+    {
+        rand -= elem.second;
+        if (rand <= 0)
+            return elem.first;
     }
 
     return idx;
@@ -1181,7 +1216,7 @@ static int _get_door_offset(tileidx_t base_tile, bool opened, bool runed,
 }
 
 void apply_variations(const tile_flavour &flv, tileidx_t *bg,
-                      const coord_def &gc, const unsigned int idx)
+                      const coord_def &gc)
 {
     tileidx_t orig = (*bg) & TILE_FLAG_MASK;
     tileidx_t flag = (*bg) & (~TILE_FLAG_MASK);
@@ -1331,8 +1366,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (!map_bounds(gc))
         return;
 
-    unsigned int idx = gc.x + gc.y * GXM;
-    apply_variations(env.tile_flv(gc), &cell.bg, gc, idx);
+    apply_variations(env.tile_flv(gc), &cell.bg, gc);
 
     const map_cell& mc = env.map_knowledge(gc);
 
