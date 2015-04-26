@@ -184,6 +184,11 @@ static brand_type _random_special_pan_lord_brand()
             spells.push_back(slot); \
     }
 
+static int _panlord_random_resist_level()
+{
+    return random_choose_weighted(1, -1, 3, 0, 3, 1, 3, 2, 0);
+}
+
 void ghost_demon::init_pandemonium_lord()
 {
     mon_spell_slot slot;
@@ -205,17 +210,8 @@ void ghost_demon::init_pandemonium_lord()
     see_invis = true;
 
     resists = 0;
-
-    if (!one_chance_in(3))
-        resists |= MR_RES_FIRE * random_range(1, 2);
-    else if (one_chance_in(10))
-        resists |= MR_VUL_FIRE;
-
-    if (!one_chance_in(3))
-        resists |= MR_RES_COLD * random_range(1, 2);
-    else
-        resists |= MR_VUL_COLD;
-
+    resists |= mrd(MR_RES_FIRE, _panlord_random_resist_level());
+    resists |= mrd(MR_RES_COLD, _panlord_random_resist_level());
     // Demons, like ghosts, automatically get poison res. and life prot.
 
     // resist electricity:
