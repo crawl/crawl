@@ -1396,7 +1396,7 @@ bool tile_list_processor::write_data(bool image, bool code)
 
         fprintf(fp, "int tile_%s_dominoes(tileidx_t idx)\n{\n",
                     lcname.c_str());
-        add_abstracts(fp, "return (tile_%s_probs(idx));", lc_enum, uc_max_enum);
+        add_abstracts(fp, "return (tile_%s_dominoes(idx));", lc_enum, uc_max_enum);
         fprintf(fp, "}\n\n");
 
         fprintf(fp, "const char *tile_%s_name(tileidx_t idx)\n{\n",
