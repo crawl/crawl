@@ -24,7 +24,7 @@ tile_list_processor::tile_list_processor() :
     m_variation_col(-1),
     m_weight(1),
     m_alpha(0.0),
-    m_domino{0,0,0,0}
+    m_domino(0)
 {
 }
 
@@ -541,11 +541,8 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         }
         else if (strcmp(arg, "domino") == 0)
         {
-            CHECK_ARG(4);
-            m_domino.n = atoi(m_args[1]);
-            m_domino.e = atoi(m_args[2]);
-            m_domino.s = atoi(m_args[3]);
-            m_domino.w = atoi(m_args[4]);
+            CHECK_ARG(1);
+            m_domino = atoi(m_args[1]);
         }
         else if (strcmp(arg, "shrink") == 0)
         {
@@ -822,11 +819,7 @@ void tile_list_processor::add_image(tile &img, const char *enumname)
     m_page.m_base_tiles.push_back(m_last_enum);
 
     m_page.m_probs.push_back(weight);
-    m_page.m_domino.push_back(
-          m_domino.n
-        | m_domino.e << 8
-        | m_domino.s << 16
-        | m_domino.w << 24);
+    m_page.m_domino.push_back(m_domino);
 
     if (!m_categories.empty())
         m_ctg_counts[m_categories.size()-1]++;

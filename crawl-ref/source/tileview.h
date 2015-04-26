@@ -39,7 +39,7 @@ void tile_clear_flavour();
 // Initialise types of walls and floors of the entire level using defaults.
 void tile_init_flavour();
 // Init the flavour of a single cell.
-void tile_init_flavour(const coord_def &gc);
+void tile_init_flavour(const coord_def &gc, const int domino = -1);
 // Draw a halo using 'tile' (which has 9 variations) around any features
 // that match target.
 void tile_floor_halo(dungeon_feature_type target, tileidx_t tile);
@@ -56,7 +56,7 @@ void tile_wizmap_terrain(const coord_def &gc);
 void tile_apply_animations(tileidx_t bg, tile_flavour *flv);
 void tile_apply_properties(const coord_def &gc, packed_cell &cell);
 void apply_variations(const tile_flavour &flv, tileidx_t *bg,
-                      const coord_def &gc);
+                      const coord_def &gc, const unsigned int idx);
 
 void tile_clear_map(const coord_def &gc);
 void tile_forget_map(const coord_def &gc);
