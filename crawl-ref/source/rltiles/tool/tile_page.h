@@ -27,7 +27,6 @@ public:
     vector<int> m_offsets;
     vector<unsigned int> m_probs;
     vector<unsigned int> m_base_tiles;
-    vector<unsigned int> m_domino;
 
 protected:
     int m_width;
