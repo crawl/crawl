@@ -839,9 +839,29 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     interrupt_activity(AI_HP_LOSS, &hpl);
 
     if (dam > 0 && death_type != KILLED_BY_POISON)
-    {
         you.check_awaken(500);
 
+    const bool non_death = death_type == KILLED_BY_QUITTING
+                        || death_type == KILLED_BY_WINNING
+                        || death_type == KILLED_BY_LEAVING;
+
+    // certain effects (e.g. drowned souls) use KILLED_BY_WATER for flavour
+    // reasons (morgue messages?), with regrettable consequences if we don't
+    // double-check.
+    const bool env_death = source == MID_NOBODY
+                           && (death_type == KILLED_BY_LAVA
+                               || death_type == KILLED_BY_WATER);
+
+    // death's door protects against everything but falling into water/lava,
+    // excessive rot, leaving the dungeon, or quitting.
+    if (you.duration[DUR_DEATHS_DOOR] && !env_death && !non_death
+        && you.hp_max > 0)
+    {
+        return;
+    }
+
+    if (dam > 0 && death_type != KILLED_BY_POISON)
+    {
         int damage_fraction_of_hp = dam * 100 / you.hp_max;
 
         // Check _is_damage_threatening separately for read and drink so they
@@ -867,25 +887,6 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 you.increase_duration(DUR_NO_POTIONS, 1 + random2(dam), 30);
             }
         }
-    }
-
-    const bool non_death = death_type == KILLED_BY_QUITTING
-                        || death_type == KILLED_BY_WINNING
-                        || death_type == KILLED_BY_LEAVING;
-
-    // certain effects (e.g. drowned souls) use KILLED_BY_WATER for flavour
-    // reasons (morgue messages?), with regrettable consequences if we don't
-    // double-check.
-    const bool env_death = source == MID_NOBODY
-                           && (death_type == KILLED_BY_LAVA
-                               || death_type == KILLED_BY_WATER);
-
-    // death's door protects against everything but falling into water/lava,
-    // excessive rot, leaving the dungeon, or quitting.
-    if (you.duration[DUR_DEATHS_DOOR] && !env_death && !non_death
-        && you.hp_max > 0)
-    {
-        return;
     }
 
     if (dam != INSTANT_DEATH)
