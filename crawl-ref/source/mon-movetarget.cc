@@ -21,7 +21,7 @@
 #include "traps.h"
 
 // If a monster can see but not directly reach the target, and then fails to
-// find a path to get there, mark all surrounding (in a radius of √8) monsters
+// find a path to get there, mark all surrounding (in a radius of 2) monsters
 // of the same (or greater) movement restrictions as also being unable to
 // find a path, so we won't need to calculate again.
 // Should there be a direct path to the target for a monster thus marked, it
@@ -39,7 +39,7 @@ static void _mark_neighbours_target_unreachable(monster* mon)
     const bool amph_lava     = (mons_habitat(mon) == HT_AMPHIBIOUS_LAVA);
     const habitat_type habit = mons_primary_habitat(mon);
 
-    for (radius_iterator ri(mon->pos(), 8, C_CIRCLE); ri; ++ri)
+    for (radius_iterator ri(mon->pos(), 2, C_SQUARE); ri; ++ri)
     {
         if (*ri == mon->pos())
             continue;
@@ -300,7 +300,7 @@ bool pacified_leave_level(monster* mon, vector<level_exit> e, int e_index)
     // player, make it leave the level.
     if (_is_level_exit(mon->pos())
         || (e_index != -1 && mon->pos() == e[e_index].target)
-        || distance2(mon->pos(), you.pos()) >= dist_range(LOS_RADIUS * 4))
+        || grid_distance(mon->pos(), you.pos()) >= LOS_RADIUS * 3)
     {
         make_mons_leave_level(mon);
         return true;
@@ -356,7 +356,7 @@ bool find_merfolk_avatar_water_target(monster* mon)
     ASSERT(mon->type == MONS_MERFOLK_AVATAR);
 
     // Moving away could break the entrancement, so don't do this.
-    if (distance2(mon->pos(), you.pos()) >= 6 * 6 + 1)
+    if (grid_distance(mon->pos(), you.pos()) >= 5)
     {
         mon->firing_pos.reset();
         return false;
@@ -608,7 +608,7 @@ static bool _choose_random_patrol_target_grid(monster* mon)
         return true;
 
     // If there's no chance we'll find the patrol point, quit right away.
-    if (distance2(mon->pos(), mon->patrol_point) > dist_range(2 * LOS_RADIUS))
+    if (grid_distance(mon->pos(), mon->patrol_point) > 2 * LOS_RADIUS)
         return false;
 
     // Can the monster see the patrol point from its current position?
@@ -622,13 +622,13 @@ static bool _choose_random_patrol_target_grid(monster* mon)
     }
 
     // While the patrol point is in easy reach, monsters of insect/plant
-    // intelligence will only use a range of 5 (distance from the patrol point).
+    // intelligence will only use a range of 4 (distance from the patrol point).
     // Otherwise, try to get back using the full LOS.
-    const int  rad      = (intel >= I_ANIMAL || !patrol_seen) ? LOS_RADIUS : 5;
+    const int  rad      = (intel >= I_ANIMAL || !patrol_seen) ? LOS_RADIUS : 4;
     const bool is_smart = (intel >= I_NORMAL);
 
     los_def patrol(mon->patrol_point, opacity_monmove(*mon),
-                   circle_def(rad, C_ROUND));
+                   circle_def(rad, C_SQUARE));
     patrol.update();
     los_def lm(mon->pos(), opacity_monmove(*mon));
     if (is_smart || !patrol_seen)
@@ -640,7 +640,7 @@ static bool _choose_random_patrol_target_grid(monster* mon)
     int count_grids = 0;
     // Don't bother for the current position. If everything fails,
     // we'll stay here anyway.
-    for (radius_iterator ri(mon->patrol_point, you.current_vision, C_ROUND, true);
+    for (radius_iterator ri(mon->patrol_point, you.current_vision, C_SQUARE, true);
          ri; ++ri)
     {
         if (!in_bounds(*ri) || !mon->can_pass_through_feat(grd(*ri)))
@@ -1021,7 +1021,7 @@ int mons_find_nearest_level_exit(const monster* mon, vector<level_exit> &e,
         if (e[i].unreachable)
             continue;
 
-        int dist = distance2(mon->pos(), e[i].target);
+        int dist = grid_distance(mon->pos(), e[i].target);
 
         if (old_dist == -1 || old_dist >= dist)
         {
@@ -1099,7 +1099,7 @@ bool can_go_straight(const monster* mon, const coord_def& p1,
     if (p1 == p2)
         return true;
 
-    if (distance2(p1, p2) > los_radius2)
+    if (grid_distance(p1, p2) > los_radius)
         return false;
 
     // XXX: Hack to improve results for now. See FIXME above.

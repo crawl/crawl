@@ -1193,7 +1193,7 @@ static bool _sack_of_spiders(item_def &sack)
             trap_def *trap = find_trap((*mi)->pos());
             // Don't destroy non-web traps or try to trap monsters
             // currently caught by something.
-            if (you.pos().range((*mi)->pos()) > rad
+            if (you.pos().distance_from((*mi)->pos()) > rad
                 || (!trap && grd((*mi)->pos()) != DNGN_FLOOR)
                 || (trap && trap->type != TRAP_WEB)
                 || (*mi)->friendly()
@@ -1202,7 +1202,7 @@ static bool _sack_of_spiders(item_def &sack)
                 continue;
             }
 
-            int chance = 100 - (100 * (you.pos().range((*mi)->pos()) - 1) / rad)
+            int chance = 100 - (100 * (you.pos().distance_from((*mi)->pos()) - 1) / rad)
                 - 2 * (27 - you.skill(SK_EVOCATIONS));
             if (x_chance_in_y(chance, 100))
             {
@@ -1555,7 +1555,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 {
     vector<actor *> act_list;
 
-    int radius = min(7, 5 + div_rand_round(pow, 60));
+    int radius = min(5, 4 + div_rand_round(pow, 60));
 
     for (actor_near_iterator ai(agent->pos(), LOS_SOLID); ai; ++ai)
     {
@@ -1745,10 +1745,10 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
 static void _fan_of_gales_elementals()
 {
-    int radius = min(7, 5 + you.skill_rdiv(SK_EVOCATIONS, 1, 6));
+    int radius = min(6, 4 + you.skill_rdiv(SK_EVOCATIONS, 1, 6));
 
     vector<coord_def> elementals;
-    for (radius_iterator ri(you.pos(), radius, C_ROUND, true); ri; ++ri)
+    for (radius_iterator ri(you.pos(), radius, C_SQUARE, true); ri; ++ri)
     {
         if (ri->distance_from(you.pos()) >= 3 && !monster_at(*ri)
             && !cell_is_solid(*ri)
@@ -2212,7 +2212,7 @@ bool evoke_item(int slot, bool check_range)
     case OBJ_WEAPONS:
         ASSERT(wielded);
 
-        if (weapon_reach(item) > 2)
+        if (weapon_reach(item) > REACH_NONE)
         {
             if (_reaching_weapon_attack(item))
             {

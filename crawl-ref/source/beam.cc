@@ -1008,7 +1008,7 @@ void bolt::destroy_wall_effect()
 
 int bolt::range_used(bool leg_only) const
 {
-    const int leg_length = pos().range(leg_source());
+    const int leg_length = pos().distance_from(leg_source());
     return leg_only ? leg_length : leg_length + extra_range_used;
 }
 
@@ -2244,8 +2244,8 @@ bool imb_can_splash(coord_def origin, coord_def center,
         return false;
 
     // Don't go far away from the caster (not enough momentum).
-    if (distance2(origin, center + (target - center)*2)
-        > sqr(you.current_vision) + 1)
+    if (grid_distance(origin, center + (target - center)*2)
+        > you.current_vision)
     {
         return false;
     }
@@ -6118,7 +6118,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
 
     // A bunch of tests for edge cases.
     if (delta.rdist() > centre.rdist()
-        || (delta.abs() > r*(r+1))
+        || delta.rdist() > r
         || count > 10*r
         || !map_bounds(loc)
         || is_sanctuary(loc))

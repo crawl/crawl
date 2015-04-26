@@ -484,7 +484,7 @@ static bool _is_target_in_range(const coord_def& where, int range,
     if (hitfunc)
         return hitfunc->valid_aim(where);
     // range == -1 means that range doesn't matter.
-    return range == -1 || distance2(you.pos(), where) <= range*range + 1;
+    return range == -1 || grid_distance(you.pos(), where) <= range;
 }
 
 targeting_behaviour direction_chooser::stock_behaviour;
@@ -1277,7 +1277,7 @@ bool direction_chooser::in_range(const coord_def& p) const
 {
     if (hitfunc)
         return hitfunc->valid_aim(p);
-    return range < 0 || distance2(p, you.pos()) <= range*range + 1;
+    return range < 0 || grid_distance(p, you.pos()) <= range;
 }
 
 // Cycle to either the next (dir == 1) or previous (dir == -1) object
@@ -2539,7 +2539,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
 #endif
 
     // Only check for explosive targeting at the edge of the range
-    if (you.pos().range(where) != range && !hitfunc->can_affect_walls())
+    if (you.pos().distance_from(where) != range && !hitfunc->can_affect_walls())
         return false;
 
     // Target outside LOS.

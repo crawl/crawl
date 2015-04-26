@@ -107,15 +107,15 @@ void clear_rays_on_exit()
         delete blockrays(*qi);
 }
 
-// Pre-squared LOS radius.
-int los_radius2 = LOS_RADIUS_SQ;
+// LOS radius.
+int los_radius = LOS_RADIUS;
 
 static void _handle_los_change();
 
 void set_los_radius(int r)
 {
     ASSERT(r <= LOS_RADIUS);
-    los_radius2 = r * r + 1;
+    los_radius = r;
     invalidate_los();
     _handle_los_change();
 }
@@ -159,7 +159,7 @@ struct los_ray : public ray_def
                 break;
             }
             c = copy.pos();
-            if (c.abs() > LOS_RADIUS_SQ)
+            if (c.rdist() > LOS_RADIUS)
                 break;
             cs.push_back(c);
             ASSERT((c - old).rdist() == 1);
@@ -544,10 +544,10 @@ static bool _find_ray_se(const coord_def& target, ray_def& ray,
     ASSERT(target.x >= 0);
     ASSERT(target.y >= 0);
     ASSERT(!target.origin());
-    if (target.abs() > range * range + 1)
+    if (target.rdist() > range)
         return false;
 
-    ASSERT(target.abs() <= LOS_RADIUS_SQ);
+    ASSERT(target.rdist() <= LOS_RADIUS);
 
     // Ensure the precalculations have been done.
     raycast();

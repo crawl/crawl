@@ -2398,7 +2398,7 @@ static void _update_mold()
     {
         if (mon_it->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
         {
-            for (radius_iterator rad_it(mon_it->pos(), 2, C_ROUND);
+            for (radius_iterator rad_it(mon_it->pos(), 2, C_SQUARE);
                  rad_it; ++rad_it)
             {
                 // Matche the blast of a radius 2 explosion.
@@ -3454,11 +3454,6 @@ static void _move_player(coord_def move)
             you.time_taken = max(you.time_taken,
                                  div_round_up(100, you.running.travel_speed));
         }
-
-#ifdef EUCLIDEAN
-        if (move.abs() == 2)
-            you.time_taken *= 1.4;
-#endif
 
         you.prev_move = move;
         move.reset();

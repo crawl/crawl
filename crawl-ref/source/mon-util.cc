@@ -4329,7 +4329,7 @@ bool mons_landlubbers_in_reach(const monster* mons)
     actor *act;
     for (radius_iterator ai(mons->pos(),
                             mons->reach_range(),
-                            C_CIRCLE,
+                            C_SQUARE,
                             true);
                          ai; ++ai)
         if ((act = actor_at(*ai)) && !mons_aligned(mons, act))
@@ -4340,7 +4340,7 @@ bool mons_landlubbers_in_reach(const monster* mons)
 
 int get_dist_to_nearest_monster()
 {
-    int minRange = LOS_RADIUS_SQ + 1;
+    int minRange = LOS_RADIUS + 1;
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
     {
         const monster* mon = monster_at(*ri);
@@ -4360,7 +4360,7 @@ int get_dist_to_nearest_monster()
         if (mon->wont_attack())
             continue;
 
-        int dist = distance2(you.pos(), *ri);
+        int dist = grid_distance(you.pos(), *ri);
         if (dist < minRange)
             minRange = dist;
     }

@@ -4638,9 +4638,8 @@ enum maybe_bool
 
 enum reach_type
 {
-    REACH_NONE   = 2,
-    REACH_KNIGHT = 5,
-    REACH_TWO    = 8,
+    REACH_NONE   = 1,
+    REACH_TWO    = 2,
 };
 
 enum daction_type

@@ -82,10 +82,10 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
 {
     if (act->alive() &&
         (you.entering_level
-         || act->halo_radius2() > -1 || act->silence_radius2() > -1
-         || act->liquefying_radius2() > -1 || act->umbra_radius2() > -1
+         || act->halo_radius() > -1 || act->silence_radius() > -1
+         || act->liquefying_radius() > -1 || act->umbra_radius() > -1
 #if TAG_MAJOR_VERSION == 34
-         || act->heat_radius2() > -1
+         || act->heat_radius() > -1
 #endif
          ))
     {
@@ -98,29 +98,29 @@ static void _actor_areas(actor *a)
 {
     int r;
 
-    if ((r = a->silence_radius2()) >= 0)
+    if ((r = a->silence_radius()) >= 0)
     {
         _agrid_centres.emplace_back(AREA_SILENCE, a->pos(), r);
 
-        for (radius_iterator ri(a->pos(), r, C_CIRCLE); ri; ++ri)
+        for (radius_iterator ri(a->pos(), r, C_SQUARE); ri; ++ri)
             _set_agrid_flag(*ri, APROP_SILENCE);
         no_areas = false;
     }
 
-    if ((r = a->halo_radius2()) >= 0)
+    if ((r = a->halo_radius()) >= 0)
     {
         _agrid_centres.emplace_back(AREA_HALO, a->pos(), r);
 
-        for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
+        for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
             _set_agrid_flag(*ri, APROP_HALO);
         no_areas = false;
     }
 
-    if ((r = a->liquefying_radius2()) >= 0)
+    if ((r = a->liquefying_radius()) >= 0)
     {
         _agrid_centres.emplace_back(AREA_LIQUID, a->pos(), r);
 
-        for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_SOLID); ri; ++ri)
+        for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_SOLID); ri; ++ri)
         {
             dungeon_feature_type f = grd(*ri);
 
@@ -132,21 +132,21 @@ static void _actor_areas(actor *a)
         no_areas = false;
     }
 
-    if ((r = a->umbra_radius2()) >= 0)
+    if ((r = a->umbra_radius()) >= 0)
     {
         _agrid_centres.emplace_back(AREA_UMBRA, a->pos(), r);
 
-        for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
+        for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
             _set_agrid_flag(*ri, APROP_UMBRA);
         no_areas = false;
     }
 
 #if TAG_MAJOR_VERSION == 34
-    if ((r = a->heat_radius2()) >= 0)
+    if ((r = a->heat_radius()) >= 0)
     {
         _agrid_centres.emplace_back(AREA_HOT, a->pos(), r);
 
-        for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_NO_TRANS); ri; ++ri)
+        for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
             _set_agrid_flag(*ri, APROP_HOT);
         no_areas = false;
     }
@@ -155,11 +155,11 @@ static void _actor_areas(actor *a)
     // XXX: make this a proper function
     if (a->type == MONS_SINGULARITY)
     {
-        r = a->get_experience_level();
+        r = isqrt(a->get_experience_level());
 
         _agrid_centres.push_back(area_centre(AREA_DISJUNCTION, a->pos(), r));
 
-        for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_NO_TRANS); ri; ++ri)
+        for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
             _set_agrid_flag(*ri, APROP_DISJUNCTION);
         no_areas = false;
     }
@@ -190,18 +190,18 @@ static void _update_agrid()
 
     if (player_has_orb() && !you.pos().origin())
     {
-        const int r = 5;
+        const int r = 2;
         _agrid_centres.emplace_back(AREA_ORB, you.pos(), r);
-        for (radius_iterator ri(you.pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
+        for (radius_iterator ri(you.pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
             _set_agrid_flag(*ri, APROP_ORB);
         no_areas = false;
     }
 
     if (you.duration[DUR_QUAD_DAMAGE])
     {
-        const int r = 5;
+        const int r = 2;
         _agrid_centres.emplace_back(AREA_QUAD, you.pos(), r);
-        for (radius_iterator ri(you.pos(), r, C_CIRCLE);
+        for (radius_iterator ri(you.pos(), r, C_SQUARE);
              ri; ++ri)
         {
             if (cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
@@ -212,9 +212,9 @@ static void _update_agrid()
 
     if (you.duration[DUR_DISJUNCTION])
     {
-        const int r = 27;
+        const int r = 4;
         _agrid_centres.emplace_back(AREA_DISJUNCTION, you.pos(), r);
-        for (radius_iterator ri(you.pos(), r, C_CIRCLE);
+        for (radius_iterator ri(you.pos(), r, C_SQUARE);
              ri; ++ri)
         {
             if (cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
@@ -294,7 +294,7 @@ coord_def find_centre_for(const coord_def& f, area_centre_type at)
         if (a.centre == f)
             return f;
 
-        int d = distance2(a.centre, f);
+        int d = grid_distance(a.centre, f);
         if (d <= a.radius && (d <= dist || dist == 0))
         {
             possible = a.centre;
@@ -321,7 +321,7 @@ bool remove_sanctuary(bool did_attack)
     if (!in_bounds(env.sanctuary_pos))
         return false;
 
-    const int radius = 5;
+    const int radius = 4;
     bool seen_change = false;
     for (rectangle_iterator ri(env.sanctuary_pos, radius, true); ri; ++ri)
         if (is_sanctuary(*ri))
@@ -354,7 +354,7 @@ bool remove_sanctuary(bool did_attack)
 // For the last (radius) counter turns the sanctuary will slowly shrink.
 void decrease_sanctuary_radius()
 {
-    const int radius = 5;
+    const int radius = 4;
 
     // For the last (radius-1) turns 33% chance of not decreasing.
     if (env.sanctuary_time < radius && one_chance_in(3))
@@ -372,10 +372,10 @@ void decrease_sanctuary_radius()
 
     for (rectangle_iterator ri(env.sanctuary_pos, size+1, true); ri; ++ri)
     {
-        int dist = distance2(*ri, env.sanctuary_pos);
+        int dist = grid_distance(*ri, env.sanctuary_pos);
 
         // If necessary overwrite sanctuary property.
-        if (dist > size*size)
+        if (dist > size)
             _remove_sanctuary_property(*ri);
     }
 
@@ -395,7 +395,7 @@ void create_sanctuary(const coord_def& center, int time)
 
     // radius could also be influenced by Inv
     // and would then have to be stored globally.
-    const int radius      = 5;
+    const int radius      = 4;
     int       blood_count = 0;
     int       trap_count  = 0;
     int       scare_count = 0;
@@ -403,10 +403,10 @@ void create_sanctuary(const coord_def& center, int time)
     monster* seen_mon    = nullptr;
 
     int shape = random2(4);
-    for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
+    for (radius_iterator ri(center, radius, C_SQUARE); ri; ++ri)
     {
         const coord_def pos = *ri;
-        const int dist = distance2(center, pos);
+        const int dist = grid_distance(center, pos);
 
         if (testbits(env.pgrid(pos), FPROP_BLOODY) && you.see_cell(pos))
             blood_count++;
@@ -429,10 +429,8 @@ void create_sanctuary(const coord_def& center, int time)
             in_yellow = (x == 0 || y == 0 || x == y || x == -y);
             break;
         case 1:                 // circles
-            in_yellow = (dist >= (radius-1)*(radius-1)
-                         && dist <= radius*radius
-                         || dist >= (radius/2-1)*(radius/2-1)
-                            && dist <= radius*radius/4);
+            in_yellow = (dist == radius
+                         || dist == radius/2);
             break;
         case 2:                 // latticed
             in_yellow = (x%2 == 0 || y%2 == 0);
@@ -509,27 +507,27 @@ void create_sanctuary(const coord_def& center, int time)
 /////////////
 // Silence
 
-// pre-squared radius, calculated from remaining duration
+// radius, calculated from remaining duration
 // dur starts at 10 (low power) and is capped at 100
-// maximal range: 6*6 + 1 = 37
+// maximal range: 5
 // last 6 turns: range 0, hence only the player silenced
 static int _silence_range(int dur)
 {
     if (dur <= 0)
         return -1;
     dur /= BASELINE_DELAY; // now roughly number of turns
-    return max(0, min(dur - 6, 37));
+    return isqrt(max(0, min(3*(dur - 5)/4, 25)));
 }
 
-int player::silence_radius2() const
+int player::silence_radius() const
 {
     return _silence_range(duration[DUR_SILENCE]);
 }
 
-int monster::silence_radius2() const
+int monster::silence_radius() const
 {
     if (type == MONS_SILENT_SPECTRE)
-        return 150;
+        return 10;
 
     if (!has_ench(ENCH_SILENCE))
         return -1;
@@ -567,7 +565,7 @@ bool actor::haloed() const
     return ::haloed(pos());
 }
 
-int player::halo_radius2() const
+int player::halo_radius() const
 {
     int size = -1;
 
@@ -575,22 +573,22 @@ int player::halo_radius2() const
         && !penance[GOD_SHINING_ONE])
     {
         // The cap is reached at piety 160 = ******.
-        size = min(LOS_RADIUS*LOS_RADIUS + 1, piety * piety / 393);
+        size = min((int)piety, piety_breakpoint(5)) * LOS_RADIUS / piety_breakpoint(5);
     }
 
     if (player_equip_unrand(UNRAND_BRILLIANCE))
-        size = max(size, 10);
+        size = max(size, 3);
 
     return size;
 }
 
-int monster::halo_radius2() const
+int monster::halo_radius() const
 {
     item_def* weap = mslot_item(MSLOT_WEAPON);
     int size = -1;
 
     if (weap && is_unrandom_artefact(*weap, UNRAND_BRILLIANCE))
-        size = 10;
+        size = 3;
 
     if (holiness() != MH_HOLY)
         return size;
@@ -600,19 +598,19 @@ int monster::halo_radius2() const
     switch (type)
     {
     case MONS_ANGEL:
-        return 26;
+        return 4;
     case MONS_CHERUB:
-        return 29;
+        return 4;
     case MONS_DAEVA:
-        return 32;
+        return 4;
     case MONS_OPHAN:
-        return 50;
+        return 6;
     case MONS_SERAPH:
-        return 65; // highest rank among sentient ones
+        return 7; // highest rank among sentient ones
     case MONS_HOLY_SWINE:
-        return 2;  // only notionally holy
+        return 1;  // only notionally holy
     case MONS_MENNAS:
-        return 5;  // ???  Low on grace or what?
+        return 2;  // ???  Low on grace or what?
     default:
         return -1;
     }
@@ -622,12 +620,12 @@ int monster::halo_radius2() const
 // Leda's Liquefaction
 //
 
-int player::liquefying_radius2() const
+int player::liquefying_radius() const
 {
     return _silence_range(duration[DUR_LIQUEFYING]);
 }
 
-int monster::liquefying_radius2() const
+int monster::liquefying_radius() const
 {
     if (!has_ench(ENCH_LIQUEFYING))
         return -1;
@@ -719,7 +717,7 @@ bool actor::umbraed() const
     return ::umbraed(pos());
 }
 
-int player::umbra_radius2() const
+int player::umbra_radius() const
 {
     int size = -1;
 
@@ -727,20 +725,20 @@ int player::umbra_radius2() const
         && !penance[GOD_DITHMENOS])
     {
         // The cap is reached at piety 160 = ******.
-        size = min(LOS_RADIUS*LOS_RADIUS + 1, piety * piety / 393);
+        size = min((int)piety, piety_breakpoint(5)) * LOS_RADIUS / piety_breakpoint(5);
     }
 
     if (player_equip_unrand(UNRAND_SHADOWS))
-        size = max(size, 10);
+        size = max(size, 3);
 
     return size;
 }
 
-int monster::umbra_radius2() const
+int monster::umbra_radius() const
 {
     item_def* ring = mslot_item(MSLOT_JEWELLERY);
     if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
-        return 10;
+        return 3;
 
     if (holiness() != MH_UNDEAD)
         return -1;
@@ -748,7 +746,7 @@ int monster::umbra_radius2() const
     switch (type)
     {
     case MONS_PROFANE_SERVITOR:
-        return 40; // Very unholy!
+        return 5; // Very unholy!
     default:
         return -1;
     }
@@ -759,7 +757,7 @@ int monster::umbra_radius2() const
 // Heat aura (lava orcs).
 
 // Player radius
-int player::heat_radius2() const
+int player::heat_radius() const
 {
     if (species != SP_LAVA_ORC)
         return -1;
@@ -767,11 +765,11 @@ int player::heat_radius2() const
     if (!temperature_effect(LORC_HEAT_AURA))
         return -1;
 
-    return 2; // Surrounds you to radius of 1.
+    return 1; // Surrounds you to radius of 1.
 }
 
 // Stub for monster radius
-int monster::heat_radius2() const
+int monster::heat_radius() const
 {
     return -1;
 }

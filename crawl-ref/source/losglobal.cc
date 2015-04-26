@@ -24,7 +24,7 @@ static losfield_t* _lookup_globallos(const coord_def& p, const coord_def& q)
     if (!map_bounds(p) || !map_bounds(q))
         return nullptr;
     coord_def diff = q - p;
-    if (diff.abs() > LOS_RADIUS_SQ)
+    if (diff.rdist() > LOS_RADIUS)
         return nullptr;
     // p < q iff p.x < q.x || p.x == q.x && p.y < q.y
     if (diff < coord_def(0, 0))
@@ -43,7 +43,7 @@ static void _save_los(los_def* los, los_type l)
     for (int y = y1; y <= y2; y++)
         for (int x = x1; x <= x2; x++)
         {
-            if (sqr(o.x - x) + sqr(o.y - y) > sqr(LOS_MAX_RANGE) + 1)
+            if (max(abs(o.x - x), abs(o.y - y)) > LOS_MAX_RANGE)
                 continue;
 
             coord_def ri(x, y);
@@ -67,7 +67,7 @@ void invalidate_los_around(const coord_def& p)
     int y2 = min(p.y + LOS_MAX_RANGE, GYM - 1);
     for (int y = y1; y <= y2; y++)
         for (int x = x1; x <= x2; x++)
-            if (sqr(p.x - x) + sqr(p.y - y) <= sqr(LOS_MAX_RANGE) + 1)
+            if (max(abs(p.x - x), abs(p.y - y)) <= LOS_MAX_RANGE)
                 memset(globallos[x][y], 0, sizeof(halflos_t));
 }
 
@@ -127,6 +127,8 @@ bool cell_see_cell(const coord_def& p, const coord_def& q, los_type l)
     if (!(*flags & (l << LOS_KNOWN)))
         _update_globallos_at(p, l);
 
+    //if (!(*flags & (l << LOS_KNOWN)))
+    //    die("cell_see_cell %d,%d %d,%d", p.x,p.y,q.x,q.y);
     ASSERT(*flags & (l << LOS_KNOWN));
 
     return *flags & l;

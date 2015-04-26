@@ -552,7 +552,7 @@ int ash_detect_portals(bool all)
     }
     else
     {
-        for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
+        for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
         {
             if (_check_portal(*ri))
                 portals_found++;
@@ -676,7 +676,7 @@ int gozag_gold_in_los(actor *who)
 
     int gold_count = 0;
 
-    for (radius_iterator ri(who->pos(), LOS_RADIUS, C_ROUND, LOS_DEFAULT);
+    for (radius_iterator ri(who->pos(), LOS_RADIUS, C_SQUARE, LOS_DEFAULT);
          ri; ++ri)
     {
         for (stack_iterator j(*ri); j; ++j)
@@ -719,7 +719,7 @@ void qazlal_storm_clouds()
     const int radius = you.piety >= piety_breakpoint(3) ? 2 : 1;
 
     vector<coord_def> candidates;
-    for (radius_iterator ri(you.pos(), radius, C_ROUND, LOS_SOLID, true);
+    for (radius_iterator ri(you.pos(), radius, C_SQUARE, LOS_SOLID, true);
          ri; ++ri)
     {
         int count = 0;

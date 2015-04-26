@@ -16,22 +16,6 @@ int coord_def::distance_from(const coord_def &other) const
     return grid_distance(*this, other);
 }
 
-int coord_def::range() const
-{
-    int d = x * x + y * y;
-    if (d <= 1)
-        return d;
-    return isqrt(d - 2) + 1;
-}
-
-int coord_def::range(const coord_def other) const
-{
-    int d = sqr(other.x - x) + sqr(other.y - y);
-    if (d <= 1)
-        return d;
-    return isqrt(d - 2) + 1;
-}
-
 int grid_distance(const coord_def& p1, const coord_def& p2)
 {
     return (p2 - p1).rdist();

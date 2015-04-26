@@ -1620,7 +1620,7 @@ static int _xom_throw_divine_lightning(bool debug = false)
 
     // Make sure there's at least one enemy within the lightning radius.
     bool found_hostile = false;
-    for (radius_iterator ri(you.pos(), 2, C_ROUND, LOS_SOLID, true); ri; ++ri)
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID, true); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {
@@ -2030,7 +2030,7 @@ static bool _vitrify_area(int radius)
         return false;
 
     bool something_happened = false;
-    for (radius_iterator ri(you.pos(), radius, C_POINTY); ri; ++ri)
+    for (radius_iterator ri(you.pos(), radius, C_SQUARE); ri; ++ri)
     {
         const dungeon_feature_type grid = grd(*ri);
         const dungeon_feature_type newgrid = _vitrified_feature(grid);
@@ -2883,7 +2883,7 @@ static int _xom_repel_stairs(bool debug = false)
 
     vector<coord_def> stairs_avail;
     bool real_stairs = false;
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE); ri; ++ri)
     {
         if (!cell_see_cell(you.pos(), *ri, LOS_SOLID_SEE))
             continue;

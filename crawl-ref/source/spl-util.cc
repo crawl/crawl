@@ -524,7 +524,7 @@ int apply_monsters_around_square(monster_func mf, const coord_def& where,
 {
     int rv = 0;
     set<const monster*> affected;
-    for (radius_iterator ri(where, radius, C_ROUND, true); ri; ++ri)
+    for (radius_iterator ri(where, radius, C_SQUARE, true); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
         if (mon && !affected.count(mon))
@@ -1397,7 +1397,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_CHAIN_LIGHTNING:
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
-        return minRange > LOS_RADIUS_SQ;
+        return minRange > LOS_RADIUS;
 
     // Special handling for cloud spells.
     case SPELL_FREEZING_CLOUD:
@@ -1408,7 +1408,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
         // Accept monsters that are in clouds for the hostiles-in-range check
         // (not for actual targetting).
         tgt.avoid_clouds = false;
-        for (radius_iterator ri(you.pos(), range, C_ROUND, LOS_NO_TRANS);
+        for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS);
              ri; ++ri)
         {
             if (!tgt.valid_aim(*ri))
@@ -1487,7 +1487,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
 #ifdef DEBUG_DIAGNOSTICS
         beam.quiet_debug = true;
 #endif
-        for (radius_iterator ri(you.pos(), range, C_ROUND, LOS_DEFAULT);
+        for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_DEFAULT);
              ri; ++ri)
         {
             tempbeam = beam;
@@ -1503,8 +1503,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
         return !found;
     }
 
-    const int rsq = range * range + 1;
-    if (rsq < minRange)
+    if (range < minRange)
         return true;
 
     return false;

@@ -2119,7 +2119,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         if ((!wielded || !reach) && !msg)
             return false;
 
-        if (reach && weapon_reach(item) > 2 && item_type_known(item))
+        if (reach && weapon_reach(item) > REACH_NONE && item_type_known(item))
         {
             if (!wielded)
             {

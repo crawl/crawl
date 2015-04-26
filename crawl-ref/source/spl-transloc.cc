@@ -80,7 +80,7 @@ void disjunction()
     for (int step = 0; step < steps; ++step)
     {
         vector<monster*> mvec;
-        for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+        for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE); ri; ++ri)
         {
             monster* mons = monster_at(*ri);
             if (!mons || !you.see_cell(*ri))
@@ -808,8 +808,8 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
         }
         while (--tries > 0
                && (_cell_vetoes_teleport(newpos)
-                   || need_distance_check && (newpos - centre).abs()
-                                              <= dist_range(34)
+                   || need_distance_check && (newpos - centre).rdist()
+                                              <= 30
                    || testbits(env.pgrid(newpos), FPROP_NO_RTELE_INTO)));
 
         // Running out of tries shouldn't happen; no message. Return false so
@@ -1137,7 +1137,7 @@ static void _quadrant_blink(coord_def dir, int pow)
         }
 
         // ... which is close enough, but also far enough from us.
-        if (distance2(base, target) > 10 || distance2(you.pos(), target) < 8)
+        if (grid_distance(base, target) > 3 || grid_distance(you.pos(), target) < 3)
             continue;
 
         if (!you.see_cell_no_trans(target))
@@ -1404,7 +1404,7 @@ void singularity_pull(const monster *singularity)
         if (is_sanctuary(ai->pos()))
             continue;
 
-        const int range = isqrt((singularity->pos() - ai->pos()).abs());
+        const int range = (singularity->pos() - ai->pos()).rdist();
         const int strength =
             min(4, (singularity->get_hit_dice()) / (range*range));
         if (strength <= 0)
@@ -1450,7 +1450,7 @@ bool fatal_attraction(actor *victim, actor *agent, int pow)
         if (*ai == victim || *ai == agent || ai->is_stationary())
             continue;
 
-        const int range = isqrt((victim->pos() - ai->pos()).abs());
+        const int range = (victim->pos() - ai->pos()).rdist();
         const int strength =
             min(4, (pow / 10) / (range*range));
         if (strength <= 0)

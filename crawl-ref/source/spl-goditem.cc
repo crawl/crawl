@@ -462,20 +462,20 @@ int detect_items(int pow)
     int items_found = 0;
     int map_radius;
     if (pow >= 0)
-        map_radius = 8 + random2(8) + pow;
+        map_radius = 7 + random2(7) + pow;
     else
     {
         if (you_worship(GOD_ASHENZARI))
         {
-            map_radius = min(you.piety / 20, LOS_RADIUS);
+            map_radius = min(you.piety / 20 - 1, LOS_RADIUS);
             if (map_radius <= 0)
                 return 0;
         }
         else // MUT_JELLY_GROWTH
-            map_radius = 6;
+            map_radius = 5;
     }
 
-    for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
     {
         // Don't expose new dug out areas:
         // Note: assumptions are being made here about how
@@ -565,13 +565,13 @@ int detect_creatures(int pow, bool telepathic)
         _fuzz_detect_creatures(pow, &fuzz_radius, &fuzz_chance);
 
     int creatures_found = 0;
-    const int map_radius = 10 + random2(8) + pow;
+    const int map_radius = 9 + random2(7) + pow;
 
     // Clear the map so detect creatures is more useful and the detection
     // fuzz is harder to analyse by averaging.
     clear_map(false);
 
-    for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {
