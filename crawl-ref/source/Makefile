@@ -507,12 +507,16 @@ endif
 
 ifneq ($(FORCE_CC),)
 GCC := $(FORCE_CC)
+HOSTCC := $(FORCE_CC)
+export HOSTCC
 else
 GCC := $(LMACH)$(GCC_VER_PREFIX)gcc$(GCC_VER_SUFFIX)
 endif
 
 ifneq ($(FORCE_CXX),)
 GXX := $(FORCE_CXX)
+HOSTCXX := $(FORCE_CXX)
+export HOSTCXX
 else
 GXX := $(LMACH)$(GCC_VER_PREFIX)g++$(GCC_VER_SUFFIX)
 endif
