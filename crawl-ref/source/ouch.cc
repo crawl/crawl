@@ -709,6 +709,16 @@ static void _maybe_fog(int dam)
     }
 }
 
+static void _deteriorate(int dam)
+{
+    if (x_chance_in_y(player_mutation_level(MUT_DETERIORATION), 4)
+        && dam > you.hp_max / 10)
+    {
+        mprf(MSGCH_WARN, "Your body deteriorates!");
+        lose_stat(STAT_RANDOM, 1);
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -958,6 +968,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max,
                            damage_desc.c_str()));
 
+            _deteriorate(dam);
             _yred_mirrors_injury(dam, source);
             _maybe_ru_retribution(dam, source);
             _maybe_spawn_monsters(dam, aux, death_type, source);

@@ -829,16 +829,6 @@ static void _handle_sickness(int /*time_delta*/)
     }
 }
 
-// Adjust the player's stats if s/he has the deterioration mutation.
-static void _deteriorate(int /*time_delta*/)
-{
-    if (player_mutation_level(MUT_DETERIORATION)
-        && x_chance_in_y(player_mutation_level(MUT_DETERIORATION) * 5 - 1, 200))
-    {
-        lose_stat(STAT_RANDOM, 1);
-    }
-}
-
 // Exercise armour *xor* stealth skill: {dlb}
 static void _wait_practice(int /*time_delta*/)
 {
@@ -975,7 +965,9 @@ static struct timed_effect timed_effects[] =
     { TIMER_HELL_EFFECTS,  _hell_effects,                 200,   600, false },
     { TIMER_SICKNESS,      _handle_sickness,              100,   300, false },
     { TIMER_CONTAM,        _handle_magic_contamination,   200,   600, false },
-    { TIMER_DETERIORATION, _deteriorate,                  100,   300, false },
+#if TAG_MAJOR_VERSION == 34
+    { TIMER_DETERIORATION, nullptr,                         0,     0, false },
+#endif
     { TIMER_GOD_EFFECTS,   handle_god_time,               100,   300, false },
 #if TAG_MAJOR_VERSION == 34
     { TIMER_SCREAM, nullptr,                                0,     0, false },
