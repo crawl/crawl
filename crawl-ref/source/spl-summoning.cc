@@ -2059,7 +2059,8 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
                                                BEH_FRIENDLY, MHITYOU, &you, "",
                                                god);
     dprf("result: %d", animate_result);
-    switch (animate_result) {
+    switch (animate_result)
+    {
         case -1:
             mpr("There is no skeleton here to animate!");
             break;

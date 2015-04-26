@@ -1162,11 +1162,13 @@ static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
     _calculate_lich_spell_weights(spells, weights, total_weight);
 
     mon_spell_slot next_spell;
-    do {
+    do
+    {
        next_spell = set[random2(set_len)];
-    } while (!_lich_spell_is_good(spells, next_spell.spell, weights,
-                                  total_weight, set == lich_secondary_spells,
-                                  force_conj));
+    }
+    while (!_lich_spell_is_good(spells, next_spell.spell, weights,
+                                total_weight, set == lich_secondary_spells,
+                                force_conj));
 
     next_spell.freq = next_spell.freq - 4 + random2(9);
     spells.push_back(next_spell);

@@ -102,9 +102,8 @@ void CornerDomino::intersect(const CornerDomino& o, set<Direction>& result) cons
     for (size_t i = FIRST_DIRECTION; i <= LAST_DIRECTION; ++i)
     {
         Direction d = static_cast<Direction>(i);
-        if (matches(o, d)) {
+        if (matches(o, d))
             allowed.insert(d);
-        }
     }
     domino::intersection(result, allowed);
 }
@@ -143,9 +142,8 @@ void EdgeDomino::intersect(const EdgeDomino& o, set<Direction>& result) const
     for (size_t i = FIRST_DIRECTION; i <= LAST_DIRECTION; ++i)
     {
         Direction d = static_cast<Direction>(i);
-        if (matches(o, d)) {
+        if (matches(o, d))
             allowed.insert(d);
-        }
     }
     domino::intersection(result, allowed);
 }
@@ -188,9 +186,8 @@ void OrientedDomino::intersect(const OrientedDomino& o, set<Direction>& result) 
     for (size_t i = FIRST_DIRECTION; i <= LAST_DIRECTION; ++i)
     {
         Direction d = static_cast<Direction>(i);
-        if (matches(o, d)) {
+        if (matches(o, d))
             allowed.insert(d);
-        }
     }
     domino::intersection(result, allowed);
 }

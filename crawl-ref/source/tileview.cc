@@ -392,9 +392,8 @@ tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
     ASSERT_RANGE(idx, 0, TILE_DNGN_MAX);
     map<tileidx_t, int> choices;
     int total = _find_variants(idx, domino, choices);
-    if (choices.size() == 1) {
+    if (choices.size() == 1)
         return choices.begin()->first;
-    }
     int rand  = value % total;
 
     for (const auto& elem : choices)
