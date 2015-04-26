@@ -816,6 +816,19 @@ crypt_domino_5
 crypt_domino_6
 %domino 7
 crypt_domino_7
+%weight 2
+%domino 0
+crypt_domino_0b
+%domino 1
+crypt_domino_1b
+%domino 7
+crypt_domino_7b
+%weight 1
+%domino 2
+crypt_domino_2b
+%domino 3
+crypt_domino_3b
+
 %domino 0
 
 iron0 FLOOR_IRON
