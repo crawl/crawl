@@ -3010,6 +3010,7 @@ void excommunication(god_type new_god, bool immediate)
     case GOD_CHEIBRIADOS:
         simple_god_message(" continues to slow your movements.", old_god);
         _set_penance(old_god, 25);
+        break;
 
     default:
         _set_penance(old_god, 25);
