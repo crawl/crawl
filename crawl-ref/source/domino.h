@@ -77,21 +77,21 @@ void intersection(std::set<T>& output, const std::set<T>& input)
  * #S#
  */
 typedef uint32_t colour;
-typedef struct
+struct CornerColours
 {
     colour nw;
     colour ne;
     colour sw;
     colour se;
-} CornerColours;
+};
 
-typedef struct
+struct EdgeColours
 {
     colour n;
     colour e;
     colour s;
     colour w;
-} EdgeColours;
+};
 
 enum polarity
 {
@@ -99,24 +99,24 @@ enum polarity
     POSITIVE = 1,
 };
 
-typedef struct
+struct OrientedColour
 {
     colour c;
     polarity o;
-} OrientedColour;
+};
 
 static OrientedColour operator-(const OrientedColour x)
 {
   return { x.c, x.o == NEGATIVE ? POSITIVE : NEGATIVE };
 }
 
-typedef struct
+struct OrientedColours
 {
     OrientedColour n;
     OrientedColour e;
     OrientedColour s;
     OrientedColour w;
-} OrientedColours;
+};
 
 
 enum Direction
@@ -146,11 +146,11 @@ static const Direction direction_arr[8] =
     NORTH_WEST,
 };
 
-typedef struct
+struct Point
 {
     int32_t x;
     int32_t y;
-} Point;
+};
 
 bool operator<(const Point& lhs, const Point& rhs);
 
