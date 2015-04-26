@@ -816,18 +816,24 @@ crypt_domino_5
 crypt_domino_6
 %domino 7
 crypt_domino_7
-%weight 2
+%weight 5
 %domino 0
 crypt_domino_0b
+crypt_domino_0c
 %domino 1
 crypt_domino_1b
-%domino 7
-crypt_domino_7b
-%weight 1
 %domino 2
 crypt_domino_2b
 %domino 3
 crypt_domino_3b
+%domino 4
+crypt_domino_4b
+%domino 5
+crypt_domino_5b
+%domino 6
+crypt_domino_6b
+%domino 7
+crypt_domino_7b
 
 %domino 0
 
