@@ -186,7 +186,11 @@ static brand_type _random_special_pan_lord_brand()
 
 static int _panlord_random_resist_level()
 {
-    return random_choose_weighted(1, -1, 3, 0, 3, 1, 3, 2, 0);
+    return random_choose_weighted(1, -1,
+                                  3,  0,
+                                  3,  1,
+                                  3,  2,
+                                  0);
 }
 
 void ghost_demon::init_pandemonium_lord()
