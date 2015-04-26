@@ -2809,6 +2809,12 @@ static void tag_read_you(reader &th)
                 you.innate_mutation[MUT_SLOW_METABOLISM] = 1;
         }
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_DETERIORATION)
+    {
+        if (you.mutation[MUT_DETERIORATION] > 2)
+            you.mutation[MUT_DETERIORATION] = 2;
+    }
 #endif
 
     count = unmarshallUByte(th);

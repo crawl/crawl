@@ -163,6 +163,7 @@ enum tag_minor_version
     TAG_MINOR_INT_REGEN,           // hp/mp regen are ints
     TAG_MINOR_NAGA_METABOLISM,     // nagas have slow metabolism
     TAG_MINOR_STAT_LOSS_XP,        // Stat loss recovers with XP
+    TAG_MINOR_DETERIORATION,       // 2-level deterioration mutation
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

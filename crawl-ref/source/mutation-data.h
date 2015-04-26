@@ -592,20 +592,20 @@ static const mutation_def mut_data[] =
    "berserk rage",
 },
 
-{ MUT_DETERIORATION,                 10,  3,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT | MUTFLAG_RU, false,
+{ MUT_DETERIORATION,                 10,  2,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT | MUTFLAG_RU, false,
   "deterioration",
 
-  {"Your body is slowly deteriorating.",
-   "Your body is deteriorating.",
-   "Your body is rapidly deteriorating."},
+  {"Your body sometimes deteriorates upon taking damage.",
+   "Your body often deteriorates upon taking damage.",
+   ""},
 
   {"You feel yourself wasting away.",
-   "You feel yourself wasting away.",
-   "You feel your body start to fall apart."},
+   "You feel your body start to fall apart.",
+   ""},
 
   {"You feel healthier.",
    "You feel a little healthier.",
-   "You feel a little healthier."},
+   ""},
 
    "deteriorating body",
 },
