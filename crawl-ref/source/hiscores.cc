@@ -922,7 +922,7 @@ static string _species_name(int race)
     case OLD_SP_LAVA_ORC: return "Lava Orc";
     }
 
-    return species_name(static_cast<species_type>(race)).c_str();
+    return species_name(static_cast<species_type>(race));
 }
 
 static const char* _species_abbrev(int race)
@@ -1900,10 +1900,10 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
 
     if (verbose)
     {
-        const char* srace = _species_name(race).c_str();
+        string srace = _species_name(race);
         desc += make_stringf("Began as a%s %s %s",
                  is_vowel(srace[0]) ? "n" : "",
-                 srace,
+                 srace.c_str(),
                  _job_name(job));
 
         ASSERT(birth_time);
