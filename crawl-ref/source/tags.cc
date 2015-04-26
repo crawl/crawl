@@ -2501,7 +2501,7 @@ static void tag_read_you(reader &th)
 
     if (th.getMinorVersion() < TAG_MINOR_STAT_LOSS_XP)
     {
-        for (int i = 0; i < NUM_STATS; ++i)
+        for (i = 0; i < NUM_STATS; ++i)
         {
             if (you.stat_loss[i] > 0)
             {
