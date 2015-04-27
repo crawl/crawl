@@ -139,7 +139,9 @@ enum card_type
     CARD_DEGEN,               // polymorph hostiles down hd, malmutate
     CARD_ELEMENTS,            // primal animals of the elements
     CARD_RANGERS,             // sharpshooting
+#if TAG_MAJOR_VERSION == 34
     CARD_PLACID_MAGIC,        // cancellation and antimagic
+#endif
 
     NUM_CARDS
 };
