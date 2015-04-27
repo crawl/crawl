@@ -102,6 +102,7 @@
     Edgar Carballo
     Cedor
     Rahul Chandra
+    Gregory Chereshnev
     Thom Chiovoloni
     Henry Cipolla
     Nicholas Connelly
@@ -183,7 +184,6 @@
     nagdon
     Naruni
     nicolae
-    noxdominus
     Erkki Nurmi
     Mattias Nyberg
     nyra
