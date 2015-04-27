@@ -526,14 +526,10 @@ static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/)
     case SK_THROWING:
         {
             // Choose from among all usable missile types.
-            // Only give needles if they have a blowgun in inventory.
             vector<pair<missile_type, int> > missile_weights;
 
-            missile_weights.emplace_back(MI_TOMAHAWK, 75);
-
-            // Include the possibility of needles if they have some stealth skill.
-            if (x_chance_in_y(you.skills[SK_STEALTH], 15))
-                missile_weights.emplace_back(MI_NEEDLE, 100);
+            missile_weights.emplace_back(MI_TOMAHAWK, 50);
+            missile_weights.emplace_back(MI_NEEDLE, 75);
 
             if (you.body_size() >= SIZE_MEDIUM)
                 missile_weights.emplace_back(MI_JAVELIN, 100);
