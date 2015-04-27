@@ -989,11 +989,15 @@ static string _level_name(level_id lev)
     string name;
     if (lev.branch == NUM_BRANCHES)
         name = "AllLevels";
-    else if (lev.depth == -1)
+    else if (lev.depth == -1 || brdepth[lev.branch] == 1)
         name = lev.describe(false, false);
+    else if (brdepth[lev.branch] < 10)
+        name = lev.describe(false, true);
     else
+    {
         name = make_stringf("%s:%02d", lev.describe(false, false).c_str(),
                             lev.depth);
+    }
     return name;
 }
 
