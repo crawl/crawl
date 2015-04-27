@@ -653,7 +653,7 @@ static void _powered_by_pain(int dam)
     const int level = player_mutation_level(MUT_POWERED_BY_PAIN);
 
     if (you.mutation[MUT_POWERED_BY_PAIN]
-        && (random2(dam) > 2 + 3 * level
+        && (random2(dam) > 4 + div_rand_round(you.experience_level, 4)
             || dam >= you.hp_max / 2))
     {
         switch (random2(4))
