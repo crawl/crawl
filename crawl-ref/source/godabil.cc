@@ -4242,6 +4242,26 @@ bool gozag_setup_potion_petition(bool quiet)
     return true;
 }
 
+// Return the Gozag Potion Petition price for a potion effect
+int _potion_effect_pricing(item_def potion)
+{
+    int price = item_value(potion, true);
+    auto pot = get_potion_effect(static_cast<potion_type>(potion.sub_type));
+    // Pot is useless for us
+    if (!pot->can_quaff())
+    {
+        price /= 10; // arbitrary
+    }
+    // Reduced price if we're just extending duration.
+    // Call it a 'repeat customer discount', to encourage
+    // gratuitous potion purchasing towards the end of fights.
+    if (pot->effect_active())
+    {
+        price /= 2; // arbitrary
+    }
+    return price;
+}
+
 bool gozag_potion_petition()
 {
     CrawlVector *pots[GOZAG_MAX_POTIONS];
@@ -4269,6 +4289,7 @@ bool gozag_potion_petition()
                 you.props[key].new_vector(SV_INT, SFLAG_CONST_TYPE);
                 pots[i] = &you.props[key].get_vector();
 
+                // Add a potion combination
                 ADD_POTIONS(*pots[i], _gozag_potion_list);
                 if (coinflip())
                     ADD_POTIONS(*pots[i], _gozag_potion_list);
@@ -4276,14 +4297,12 @@ bool gozag_potion_petition()
                 for (int j = 0; j < pots[i]->size(); j++)
                 {
                     dummy.sub_type = (*pots[i])[j].get_int();
-                    prices[i] += item_value(dummy, true);
-                    dprf("%d", item_value(dummy, true));
+                    prices[i] += _potion_effect_pricing(dummy);
                 }
-                dprf("pre: %d", prices[i]);
+                dprf("Potion base price: %d", prices[i]);
                 prices[i] *= multiplier;
-                dprf("mid: %d", prices[i]);
                 prices[i] /= 10;
-                dprf("post: %d", prices[i]);
+                dprf("Potion final price: %d", prices[i]);
                 key = make_stringf(GOZAG_PRICE_KEY, i);
                 you.props[key].get_int() = prices[i];
 
