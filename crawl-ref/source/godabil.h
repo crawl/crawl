@@ -33,6 +33,8 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define GOZAG_BRIBE_AMOUNT 3000
 #define GOZAG_MAX_BRIBABILITY 8
 #define GOZAG_MAX_POTIONS 3
+#define GOZAG_USELESS_EFFECT_DIVISOR 10
+#define GOZAG_EXTENDING_EFFECT_DIVISOR 2
 
 #define RU_SAC_XP_LEVELS 2
 

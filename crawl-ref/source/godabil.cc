@@ -4196,20 +4196,23 @@ static potion_type _gozag_potion_list[][4] =
     { POT_RESISTANCE, POT_INVISIBILITY, POT_AGILITY, NUM_POTIONS },
 };
 
+static void _gozag_add_potion(CrawlVector &vec, potion_type which)
+{
+    bool dup = false;
+    for (unsigned int i = 0; i < vec.size(); i++)
+        if (vec[i].get_int() == which)
+        {
+            dup = true;
+            break;
+        }
+    if (!dup)
+        vec.push_back(which);
+}
+
 static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
 {
     for (; *which != NUM_POTIONS; which++)
-    {
-        bool dup = false;
-        for (unsigned int i = 0; i < vec.size(); i++)
-            if (vec[i].get_int() == *which)
-            {
-                dup = true;
-                break;
-            }
-        if (!dup)
-            vec.push_back(*which);
-    }
+        _gozag_add_potion(vec, *which);
 }
 
 #define ADD_POTIONS(a,b) _gozag_add_potions(a, b[random2(ARRAYSZ(b))])
@@ -4242,67 +4245,79 @@ bool gozag_setup_potion_petition(bool quiet)
     return true;
 }
 
-// Return the Gozag Potion Petition price for a potion effect
-int _potion_effect_pricing(item_def potion)
+// What's the price of a particular potion effect?
+static int _gozag_price_effect(item_def potion)
 {
     int price = item_value(potion, true);
     auto pot = get_potion_effect(static_cast<potion_type>(potion.sub_type));
     // Pot is useless for us
     if (!pot->can_quaff())
     {
-        price /= 10; // arbitrary
+        price /= GOZAG_USELESS_EFFECT_DIVISOR;
     }
     // Reduced price if we're just extending duration.
     // Call it a 'repeat customer discount', to encourage
     // gratuitous potion purchasing towards the end of fights.
     if (pot->effect_active())
     {
-        price /= 2; // arbitrary
+        price /= GOZAG_EXTENDING_EFFECT_DIVISOR;
     }
     return price;
 }
 
+// What's the price of a potion?
+int _gozag_price_potion(CrawlVector *pot)
+{
+    item_def dummy;
+    dummy.base_type = OBJ_POTIONS;
+    dummy.quantity = 1;
+    int price = 0;
+    int multiplier = 0;
+
+    if (you.attribute[ATTR_GOZAG_FIRST_POTION])
+        multiplier = random_range(20,30);
+
+    for (int i = 0; i < pot->size(); i++)
+    {
+        dummy.sub_type = pot[0][i].get_int();
+        price += _gozag_price_effect(dummy);
+    }
+    dprf("Potion base price: %d", price);
+    price *= multiplier;
+    price /= 10;
+    dprf("Potion final price: %d", price);
+    return price;
+}
+
+// Since Gozag's potions are made up of multiple effects, this function (and
+// descendants) use "potion" to refer to one of the 3 offered aggregate potions
+// and "effect" to refer to a normal, single-effect potion.
 bool gozag_potion_petition()
 {
     CrawlVector *pots[GOZAG_MAX_POTIONS];
     int prices[GOZAG_MAX_POTIONS];
 
-    item_def dummy;
-    dummy.base_type = OBJ_POTIONS;
-    dummy.quantity = 1;
-
     if (!you.props.exists(make_stringf(GOZAG_POTIONS_KEY, 0)))
     {
+        // Create GOZAG_MAX_POTIONS (3) potions, and make sure at least one is
+        // affordable.
         bool affordable_potions = false;
         while (!affordable_potions)
         {
             for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
             {
-                prices[i] = 0;
-                int multiplier = random_range(20,30); // arbitrary
-
-                if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
-                    multiplier = 0;
-
                 string key = make_stringf(GOZAG_POTIONS_KEY, i);
                 you.props.erase(key);
                 you.props[key].new_vector(SV_INT, SFLAG_CONST_TYPE);
                 pots[i] = &you.props[key].get_vector();
 
-                // Add a potion combination
+                // Create the potion with one or two sets of effects.
                 ADD_POTIONS(*pots[i], _gozag_potion_list);
                 if (coinflip())
                     ADD_POTIONS(*pots[i], _gozag_potion_list);
 
-                for (int j = 0; j < pots[i]->size(); j++)
-                {
-                    dummy.sub_type = (*pots[i])[j].get_int();
-                    prices[i] += _potion_effect_pricing(dummy);
-                }
-                dprf("Potion base price: %d", prices[i]);
-                prices[i] *= multiplier;
-                prices[i] /= 10;
-                dprf("Potion final price: %d", prices[i]);
+                // Price the potion
+                prices[i] = _gozag_price_potion(pots[i]);
                 key = make_stringf(GOZAG_PRICE_KEY, i);
                 you.props[key].get_int() = prices[i];
 
