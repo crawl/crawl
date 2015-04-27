@@ -372,7 +372,7 @@ int raw_spell_fail(spell_type spell)
 
     chance2 += get_form()->spellcasting_penalty;
 
-    chance2 -= 7 * player_mutation_level(MUT_PLACID_MAGIC);
+    chance2 -= 7 * player_mutation_level(MUT_SUBDUED_MAGIC);
     chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * player_mutation_level(MUT_ANTI_WIZARDRY);
 
@@ -431,7 +431,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         if (!fail_rate_check)
         {
             power *= (10 + 5 * player_mutation_level(MUT_WILD_MAGIC));
-            power /= (10 + 5 * player_mutation_level(MUT_PLACID_MAGIC));
+            power /= (10 + 5 * player_mutation_level(MUT_SUBDUED_MAGIC));
         }
 
         // Augmentation boosts spell power at high HP.

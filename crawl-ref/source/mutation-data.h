@@ -1095,8 +1095,8 @@ static const mutation_def mut_data[] =
    "wild magic",
 },
 
-{ MUT_PLACID_MAGIC,                6,  3,  MUTFLAG_BAD, false,
-  "placid magic",
+{ MUT_SUBDUED_MAGIC,               6,  3,  MUTFLAG_BAD, false,
+  "subdued magic",
 
   {"Your spells are a little easier to cast, but a little less powerful.",
    "Your spells are easier to cast, but less powerful.",
@@ -1110,7 +1110,7 @@ static const mutation_def mut_data[] =
    "Your connection to magic feels less subdued.",
    "Your connection to magic feels less subdued."},
 
-   "placid magic",
+   "subdued magic",
 },
 
 #if TAG_MAJOR_VERSION == 34
