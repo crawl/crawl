@@ -146,7 +146,6 @@ deck_archetype deck_of_wonders =
     { CARD_DOWSING,           {5, 5, 5} },
     { CARD_MERCENARY,         {5, 5, 5} },
     { CARD_ALCHEMIST,         {5, 5, 5} },
-    { CARD_PLACID_MAGIC,      {5, 5, 5} },
 };
 
 #if TAG_MAJOR_VERSION == 34
@@ -365,7 +364,9 @@ const char* card_name(card_type card)
     case CARD_TOMB:            return "the Tomb";
     case CARD_BANSHEE:         return "the Banshee";
     case CARD_WILD_MAGIC:      return "Wild Magic";
+#if TAG_MAJOR_VERSION == 34
     case CARD_PLACID_MAGIC:    return "Placid Magic";
+#endif
     case CARD_CRUSADE:         return "the Crusade";
     case CARD_ELEMENTS:        return "the Elements";
     case CARD_SUMMON_DEMON:    return "the Pentagram";
@@ -2888,38 +2889,6 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
-static void _placid_magic_card(int power, deck_rarity_type rarity)
-{
-    const int power_level = _get_power_level(power, rarity);
-    const int drain = max(you.magic_points - random2(power_level * 3), 0);
-
-    mpr("You feel magic draining away.");
-
-    drain_mp(drain);
-    debuff_player();
-
-    for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
-    {
-        monster *mons = monster_at(*di);
-
-        if (!mons || mons->wont_attack())
-            continue;
-
-        debuff_monster(mons);
-        if (!mons->antimagic_susceptible())
-            continue;
-
-        // XXX: this should be refactored together with other effects that
-        // apply antimagic.
-        const int duration = random2(div_rand_round(power / 3,
-                                                    mons->get_hit_dice()))
-                             * BASELINE_DELAY;
-        mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0, &you, duration));
-        mprf("%s magic leaks into the air.",
-             apostrophise(mons->name(DESC_THE)).c_str());
-    }
-}
-
 static void _wild_magic_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
@@ -3064,7 +3033,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_STORM:            _storm_card(power, rarity); break;
     case CARD_ILLUSION:         _illusion_card(power, rarity); break;
     case CARD_DEGEN:            _degeneration_card(power, rarity); break;
-    case CARD_PLACID_MAGIC:     _placid_magic_card(power, rarity); break;
     case CARD_WILD_MAGIC:       _wild_magic_card(power, rarity); break;
     case CARD_WATER:            _water_card(power, rarity); break;
 
@@ -3112,6 +3080,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_METAMORPHOSIS:
     case CARD_SUMMON_ANIMAL:
     case CARD_SUMMON_SKELETON:
+    case CARD_PLACID_MAGIC:
         mpr("This type of card no longer exists!");
         break;
 #endif
