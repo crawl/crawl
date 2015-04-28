@@ -3289,19 +3289,14 @@ void melee_attack::mons_do_eyeball_confusion()
 
 void melee_attack::do_spines()
 {
-    // Monsters only get struck on their first attack per round
-    if (attacker->is_monster() && effective_attack_number > 0)
-        return;
-
     if (defender->is_player())
     {
         const int mut = (you.form == TRAN_PORCUPINE) ? 3
                         : player_mutation_level(MUT_SPINY);
 
-        if (mut && attacker->alive()
-            && x_chance_in_y(2, (13 - (mut * 2)) * 3))
+        if (mut && attacker->alive())
         {
-            int dmg = roll_dice(2 + div_rand_round(mut - 1, 2), 5);
+            int dmg = roll_dice(1 + mut, 5);
             int hurt = attacker->apply_ac(dmg);
 
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
