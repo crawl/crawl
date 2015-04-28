@@ -400,7 +400,7 @@ static void _give_experience(int player_exp, int monster_exp,
  *
  * Gold is random, but correlates weakly with monster mass.
  *
- * Also sets the gozag distraction sparkle timer on the newly created gold.
+ * Also sets the gold distraction timer on the player.
  *
  * @param corpse        The corpse item to be Midasified.
  */
@@ -475,7 +475,15 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
         return -1;
 
     if (!force && goldify)
+    {
         goldify_corpse(corpse);
+        // If gold would be destroyed, give it directly to the player instead.
+        if (feat_virtually_destroys_item(grd(mons->pos()), corpse))
+        {
+            get_gold(corpse, corpse.quantity, false);
+            return -1;
+        }
+    }
 
     int o = get_mitm_slot();
 
