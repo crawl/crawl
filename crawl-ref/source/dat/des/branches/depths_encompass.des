@@ -133,7 +133,7 @@ ITEM:    any scroll
 KITEM:   e = any / any good_item w:4
 KITEM:   8B = potion of experience ident:type q:1 / any good_item
 KITEM:   9 = |
-KITEM:   0 = potion of restore abilities ident:type
+KITEM:   0 = potion of brilliance ident:type
 KFEAT:   8e = >
 KFEAT:   W = w
 NSUBST:  h = 1:+ / *:x, H = 1:+ / *:x

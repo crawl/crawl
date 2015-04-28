@@ -485,6 +485,7 @@ enum attribute_type
     ATTR_BONE_ARMOUR,          // Current amount of boney armour (from the spell)
     ATTR_LAST_FLIGHT_STATUS,   // Whether spawm_flight should be restored after form change
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
+    ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.
     NUM_ATTRIBUTES
 };
 
@@ -3773,8 +3774,8 @@ enum potion_type
 #endif
     POT_EXPERIENCE,
     POT_MAGIC,
-    POT_RESTORE_ABILITIES,
 #if TAG_MAJOR_VERSION == 34
+    POT_RESTORE_ABILITIES,
     POT_STRONG_POISON,
 #endif
     POT_BERSERK_RAGE,
@@ -4984,7 +4985,7 @@ enum timed_effect_type
 {
     TIMER_CORPSES,
     TIMER_HELL_EFFECTS,
-    TIMER_STAT_RECOVERY,
+    TIMER_SICKNESS,
     TIMER_CONTAM,
     TIMER_DETERIORATION,
     TIMER_GOD_EFFECTS,

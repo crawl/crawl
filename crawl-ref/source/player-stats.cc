@@ -499,6 +499,14 @@ static string _stat_name(stat_type stat)
     }
 }
 
+int stat_loss_roll()
+{
+    const int loss = 30 + random2(30);
+    dprf("Stat loss points: %d", loss);
+
+    return loss;
+}
+
 bool lose_stat(stat_type which_stat, int stat_loss, bool force)
 {
     if (which_stat == STAT_RANDOM)
@@ -529,6 +537,8 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force)
     {
         you.stat_loss[which_stat] = min<int>(100,
                                         you.stat_loss[which_stat] + stat_loss);
+        if (!you.attribute[ATTR_STAT_LOSS_XP])
+            you.attribute[ATTR_STAT_LOSS_XP] = stat_loss_roll();
         _handle_stat_change(which_stat);
         return true;
     }
@@ -536,7 +546,7 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force)
         return false;
 }
 
-static stat_type _random_lost_stat()
+stat_type random_lost_stat()
 {
     stat_type choice = NUM_STATS;
     int found = 0;
@@ -570,7 +580,7 @@ bool restore_stat(stat_type which_stat, int stat_gain,
     }
 
     if (which_stat == STAT_RANDOM)
-        which_stat = _random_lost_stat();
+        which_stat = random_lost_stat();
 
     if (which_stat >= NUM_STATS || you.stat_loss[which_stat] == 0)
         return false;
@@ -586,6 +596,11 @@ bool restore_stat(stat_type which_stat, int stat_gain,
         stat_gain = you.stat_loss[which_stat];
 
     you.stat_loss[which_stat] -= stat_gain;
+
+    // If we're fully recovered, clear out stat loss recovery timer.
+    if (random_lost_stat() == NUM_STATS)
+        you.attribute[ATTR_STAT_LOSS_XP] = 0;
+
     _handle_stat_change(which_stat);
     return true;
 }

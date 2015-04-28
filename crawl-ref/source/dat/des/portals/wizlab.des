@@ -1188,8 +1188,7 @@ KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                        draining_gaze.40.natural;\
                        mass_confusion.40.natural;\
                        shadow_creatures.80.natural
-KITEM:      8 = staff of energy unrand:staff_of_wucad_mu, \
-                potion of restore abilities ident:type
+KITEM:      8 = staff of energy unrand:staff_of_wucad_mu
 COLOUR:     c = darkgrey
 COLOUR:     t = lightred / red w:3
 TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4

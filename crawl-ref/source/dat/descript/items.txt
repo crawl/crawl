@@ -941,11 +941,6 @@ potion of resistance
 A potion which grants you temporary resistance to a variety of harmful effects:
 fire, cold, electricity, poison, and acid.
 %%%%
-potion of restore abilities
-
-A potion which restores the abilities of one who drinks it. It may also be used
-to restore breath after using a breath weapon.
-%%%%
 potion of slowing
 
 A potion which slows your actions.
