@@ -2264,19 +2264,17 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
     else if (you.duration[DUR_GRASPING_ROOTS])
         prescaled_ev = prescaled_ev * 2 / 3;
 
-    // Merfolk get an evasion bonus in water.
+    // Merfolk get a 25% evasion bonus in water.
     if (you.fishtail)
     {
-        const int ev_bonus = min(9 * scale,
-                                 max(2 * scale, prescaled_ev / 4));
+        const int ev_bonus = max(2 * scale, prescaled_ev / 4);
         return prescaled_ev + ev_bonus;
     }
 
-    // Flying Tengu get an evasion bonus.
+    // Flying Tengu get a 20% evasion bonus.
     if (you.tengu_flight())
     {
-        const int ev_bonus = min(9 * scale,
-                                 max(1 * scale, prescaled_ev / 5));
+        const int ev_bonus = max(1 * scale, prescaled_ev / 5);
         return prescaled_ev + ev_bonus;
     }
 
