@@ -203,6 +203,9 @@ item_def* newgame_make_item(object_class_type base,
             item.sub_type = ARM_ROBE;
     }
 
+    // Make sure we didn't get a stack of shields or such nonsense.
+    ASSERT(item.quantity == 1 || is_stackable_item(item));
+
     // If that didn't help, nothing will.
     if (is_useless_item(item))
     {
