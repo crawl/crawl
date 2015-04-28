@@ -61,6 +61,7 @@
  #include "mon-util.h"
 #endif
 #include "place.h"
+#include "player-stats.h"
 #include "religion.h"
 #include "skills.h"
 #include "spl-wpnench.h"
@@ -2497,6 +2498,19 @@ static void tag_read_you(reader &th)
     }
     if (you.attribute[ATTR_SEARING_RAY] > 3)
         you.attribute[ATTR_SEARING_RAY] = 0;
+
+    if (th.getMinorVersion() < TAG_MINOR_STAT_LOSS_XP)
+    {
+        for (i = 0; i < NUM_STATS; ++i)
+        {
+            if (you.stat_loss[i] > 0)
+            {
+                you.attribute[ATTR_STAT_LOSS_XP] = stat_loss_roll();
+                break;
+            }
+        }
+    }
+
 #endif
 
 #if TAG_MAJOR_VERSION == 34
@@ -2794,6 +2808,12 @@ static void tag_read_you(reader &th)
             you.mutation[MUT_SLOW_METABOLISM] =
                 you.innate_mutation[MUT_SLOW_METABOLISM] = 1;
         }
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_DETERIORATION)
+    {
+        if (you.mutation[MUT_DETERIORATION] > 2)
+            you.mutation[MUT_DETERIORATION] = 2;
     }
 #endif
 
