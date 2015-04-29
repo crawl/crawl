@@ -168,6 +168,17 @@ bool monster_habitable_grid(monster_type mt,
     if (mt == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
         return false;
 
+    if (actual_grid == DNGN_MALIGN_GATEWAY)
+    {
+        if (mt == MONS_ELDRITCH_TENTACLE
+            || mt == MONS_ELDRITCH_TENTACLE_SEGMENT)
+        {
+            return true;
+        }
+        else
+            return false;
+    }
+
     if (_feat_compatible(feat_preferred, actual_grid)
         || _feat_compatible(feat_nonpreferred, actual_grid))
     {
