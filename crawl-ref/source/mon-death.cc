@@ -2575,7 +2575,7 @@ int monster_die(monster* mons, killer_type killer,
     {
         const int pbd_dur = player_mutation_level(MUT_POWERED_BY_DEATH) * 8
                             + roll_dice(2, 8);
-        if (pbd_dur > you.duration[DUR_POWERED_BY_DEATH])
+        if (pbd_dur * BASELINE_DELAY > you.duration[DUR_POWERED_BY_DEATH])
             you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
     }
 
