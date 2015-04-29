@@ -1677,7 +1677,7 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
 
     mon_holy_type holiness = mons.holiness();
 
-    if (holiness == MH_DEMONIC || mons_is_demonspawn(mons.type))
+    if (holiness == MH_DEMONIC)
         did_kill_conduct(DID_KILL_DEMON, mons);
     else if (holiness == MH_NATURAL)
     {
