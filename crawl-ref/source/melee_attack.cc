@@ -1901,7 +1901,7 @@ void melee_attack::rot_defender(int amount)
         if (defender->is_player())
         {
             special_damage_message =
-                make_stringf("You feel your flesh rotting away!");
+                make_stringf("Your flesh rots away!");
         }
         else if (defender->is_monster() && defender_visible)
         {
