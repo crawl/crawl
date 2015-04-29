@@ -5439,35 +5439,26 @@ static dungeon_feature_type _pick_an_altar()
         // No extra altars in Temple, none at all in Labyrinth.
         god = GOD_NO_GOD;
     }
-    else if (player_in_connected_branch() && !one_chance_in(5))
+    // Xom can turn up anywhere
+    else if (one_chance_in(20))
+        god = GOD_XOM;
+    else
     {
         switch (you.where_are_you)
         {
         case BRANCH_CRYPT:
-            god = (coinflip() ? GOD_KIKUBAAQUDGHA
-                              : GOD_YREDELEMNUL);
+            god = coinflip() ? GOD_KIKUBAAQUDGHA : GOD_YREDELEMNUL;
             break;
 
-        case BRANCH_ORC: // violent gods (50% chance of Beogh)
-            if (coinflip())
-                god = GOD_BEOGH;
+        case BRANCH_ORC: // There are a few heretics
+            if one_chance_in(5)
+                god = random_choose(GOD_TROG, GOD_MAHKLEB, GOD_VEHUMET);
             else
-                god = random_choose(GOD_VEHUMET, GOD_MAKHLEB, GOD_OKAWARU,
-                                    GOD_TROG,    GOD_XOM);
-            break;
-
-        case BRANCH_VAULTS: // lawful gods
-            god = random_choose_weighted(2, GOD_OKAWARU,
-                                         2, GOD_ZIN,
-                                         1, GOD_ELYVILON,
-                                         1, GOD_SIF_MUNA,
-                                         1, GOD_SHINING_ONE,
-                                         0);
+                god = GOD_BEOGH;
             break;
 
         case BRANCH_ELF: // magic gods
-            god = random_choose(GOD_VEHUMET, GOD_SIF_MUNA, GOD_XOM,
-                                GOD_MAKHLEB);
+            god = random_choose(GOD_VEHUMET, GOD_SIF_MUNA, GOD_KIKUBAAQUDGHA);
             break;
 
         case BRANCH_SLIME:
@@ -5478,24 +5469,16 @@ static dungeon_feature_type _pick_an_altar()
             god = GOD_KIKUBAAQUDGHA;
             break;
 
-        default:
+        default: // Any god (with exceptions).
             do
             {
                 god = random_god();
             }
-            while (god == GOD_NEMELEX_XOBEH
-                   || god == GOD_LUGONU
+            while (god == GOD_LUGONU
                    || god == GOD_BEOGH
                    || god == GOD_JIYVA);
             break;
         }
-    }
-    else
-    {
-        // Note: this case includes Pandemonium or the Abyss.
-        god = random_choose(GOD_ZIN,      GOD_SHINING_ONE, GOD_KIKUBAAQUDGHA,
-                            GOD_XOM,      GOD_OKAWARU,     GOD_MAKHLEB,
-                            GOD_SIF_MUNA, GOD_TROG,        GOD_ELYVILON);
     }
 
     if (is_unavailable_god(god))
