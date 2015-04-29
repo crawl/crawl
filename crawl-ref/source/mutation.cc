@@ -2377,28 +2377,6 @@ void check_monster_detect()
     }
 }
 
-int handle_pbd_corpses()
-{
-    int corpse_count = 0;
-
-    for (radius_iterator ri(you.pos(),
-         player_mutation_level(MUT_POWERED_BY_DEATH) * 3, C_SQUARE, LOS_DEFAULT);
-         ri; ++ri)
-    {
-        for (stack_iterator j(*ri); j; ++j)
-        {
-            if (j->is_type(OBJ_CORPSES, CORPSE_BODY))
-            {
-                ++corpse_count;
-                if (corpse_count == 7)
-                    break;
-            }
-        }
-    }
-
-    return corpse_count;
-}
-
 int augmentation_amount()
 {
     int amount = 0;
