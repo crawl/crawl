@@ -2537,40 +2537,52 @@ int monster_die(monster* mons, killer_type killer,
             corpse = corpse2;
     }
 
-    if ((killer == KILL_YOU
-         || killer == KILL_YOU_MISSILE
-         || killer == KILL_YOU_CONF
-         || pet_kill)
-             && corpse >= 0
-             && mitm[corpse].base_type != OBJ_GOLD
-             && player_mutation_level(MUT_POWERED_BY_DEATH))
+    // Player Powered by Death
+    if (player_mutation_level(MUT_POWERED_BY_DEATH)
+        && (killer == KILL_YOU
+            || killer == KILL_YOU_MISSILE
+            || killer == KILL_YOU_CONF
+            || pet_kill))
     {
-        const int pbd_dur = player_mutation_level(MUT_POWERED_BY_DEATH) * 8
-                            + roll_dice(2, 8);
+        // Set duration
+        const int pbd_level = player_mutation_level(MUT_POWERED_BY_DEATH);
+        const int pbd_dur = pbd_level * 8 + roll_dice(2, 8);
+        const int pbd_str = you.props["powered_by_death_strength"].get_int();
         if (pbd_dur * BASELINE_DELAY > you.duration[DUR_POWERED_BY_DEATH])
             you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
+
+        // Maybe increase strength. The chance decreases with number of
+        // existing stacks. Chance is:
+        // (0->1) 100%, (1->2) 90%, 80%, ...
+        // The increase amount scales with mutation level.
+        // This implies a maximum strength of 10/11/12, though you'd have to be
+        // lucky to cap out!
+        if (x_chance_in_y(10 - pbd_str, 10))
+        {
+            const int pbd_inc = random_range(1, pbd_level);
+            you.props["powered_by_death_strength"] = pbd_str + pbd_inc;
+            dprf("Powered by Death strength +%d=%d", pbd_inc,
+                 pbd_str + pbd_inc);
+        }
     }
 
-    if (corpse >= 0 && mitm[corpse].base_type != OBJ_GOLD)
+    // Monster Powered by Death.
+    // Find nearby putrid demonspawn.
+    for (monster_near_iterator mi(mons->pos()); mi; ++mi)
     {
-        // Powered by death.
-        // Find nearby putrid demonspawn.
-        for (monster_near_iterator mi(mons->pos()); mi; ++mi)
+        monster* mon = *mi;
+        if (mon->alive()
+            && mons_is_demonspawn(mon->type)
+            && draco_or_demonspawn_subspecies(mon)
+               == MONS_PUTRID_DEMONSPAWN)
         {
-            monster* mon = *mi;
-            if (mon->alive()
-                && mons_is_demonspawn(mon->type)
-                && draco_or_demonspawn_subspecies(mon)
-                   == MONS_PUTRID_DEMONSPAWN)
+            // Rather than regen over time, the expected 24 + 2d8 duration
+            // is given as an instant health bonus.
+            // These numbers may need to be adjusted.
+            if (mon->heal(random2avg(24, 2) + roll_dice(2, 8)))
             {
-                // Rather than regen over time, the expected 24 + 2d8 duration
-                // is given as an instant health bonus.
-                // These numbers may need to be adjusted.
-                if (mon->heal(random2avg(24, 2) + roll_dice(2, 8)))
-                {
-                    simple_monster_message(mon,
-                                           " regenerates before your eyes!");
-                }
+                simple_monster_message(mon,
+                                       " regenerates before your eyes!");
             }
         }
     }

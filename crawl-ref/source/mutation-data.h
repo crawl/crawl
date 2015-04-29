@@ -1240,9 +1240,9 @@ static const mutation_def mut_data[] =
 { MUT_POWERED_BY_DEATH, 0, 3, MUTFLAG_GOOD, false,
   "powered by death",
 
-  {"You can steal the life force of nearby defeated enemies.",
-   "You can steal the life force of defeated enemies.",
-   "You can steal the life force of all defeated enemies in sight."},
+  {"You regenerate a little health from kills.",
+   "You regenerate health from kills.",
+   "You regenerate a lot of health from kills."},
 
   {"A wave of death washes over you.",
    "The wave of death grows in power.",
