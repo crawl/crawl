@@ -3298,10 +3298,9 @@ void melee_attack::do_spines()
         const int mut = (you.form == TRAN_PORCUPINE) ? 3
                         : player_mutation_level(MUT_SPINY);
 
-        if (mut && attacker->alive()
-            && x_chance_in_y(2, (13 - (mut * 2)) * 3))
+        if (mut && attacker->alive() && coinflip())
         {
-            int dmg = roll_dice(2 + div_rand_round(mut - 1, 2), 5);
+            int dmg = roll_dice(1 + mut, 5);
             int hurt = attacker->apply_ac(dmg);
 
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
