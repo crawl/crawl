@@ -496,7 +496,7 @@ ENDMAP
 
 NAME: wheals_swamp_sinkhole
 TAGS: extra no_monster_gen decor
-DEPTH: Swamp, !Swamp:$
+DEPTH: Swamp:1-2
 WEIGHT: 5
 KFEAT: ^ = known shaft trap
 SUBST: u = Ww

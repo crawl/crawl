@@ -464,7 +464,7 @@ ENDMAP
 
 NAME:   hangedman_spider_trapstep
 TAGS:   no_monster_gen no_pool_fixup patrolling allow_dup
-DEPTH:  Spider:1-3, Zot, !Zot:$
+DEPTH:  Spider:1-2, Zot, !Zot:$
 KMONS:  0 = patrolling spider
 KMONS:  1 = tarantella
 : if you.in_branch("Zot") then
@@ -803,7 +803,7 @@ W....WW....W
 ENDMAP
 
 NAME:   nicolae_trapdoor_corridor
-DEPTH:  Spider:1-3
+DEPTH:  Spider:1-2
 MONS:   trapdoor spider
 SUBST:  z = ....***
 NSUBST: ! = 1:^ / *:.
