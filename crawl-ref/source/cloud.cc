@@ -1481,7 +1481,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
     case CLOUD_RAIN:
         // Fiery monsters dislike the rain.
         if (mons->is_fiery() && extra_careful)
-                return true;
+            return true;
 
         // We don't care about what's underneath the rain cloud if we can fly.
         if (mons->airborne())

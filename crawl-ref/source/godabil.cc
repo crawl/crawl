@@ -5679,11 +5679,11 @@ static int _get_stat_piety(stat_type input_stat, int multiplier)
 {
     int stat_val = 3; // If this is your highest stat.
     if (you.base_stats[STAT_INT] > you.base_stats[input_stat])
-            stat_val -= 1;
+        stat_val -= 1;
     if (you.base_stats[STAT_STR] > you.base_stats[input_stat])
-            stat_val -= 1;
+        stat_val -= 1;
     if (you.base_stats[STAT_DEX] > you.base_stats[input_stat])
-            stat_val -= 1;
+        stat_val -= 1;
     return stat_val * multiplier;
 }
 

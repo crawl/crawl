@@ -1173,7 +1173,7 @@ int destroy_tentacle(monster* mons)
     if (mons != head)
     {
         if (mons_near(head))
-                seen++;
+            seen++;
 
         monster_die(head, KILL_MISC, NON_MONSTER, true);
     }

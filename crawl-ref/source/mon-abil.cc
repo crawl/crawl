@@ -1022,13 +1022,13 @@ void treant_release_fauna(monster* mons)
     {
         if (base_t == MONS_WASP)
         {
-                mprf("Angry insects surge out from beneath %s foliage!",
-                        mons->name(DESC_ITS).c_str());
+            mprf("Angry insects surge out from beneath %s foliage!",
+                    mons->name(DESC_ITS).c_str());
         }
         else if (base_t == MONS_RAVEN)
         {
-                mprf("Agitated ravens fly out from beneath %s foliage!",
-                        mons->name(DESC_ITS).c_str());
+            mprf("Agitated ravens fly out from beneath %s foliage!",
+                    mons->name(DESC_ITS).c_str());
         }
     }
 }

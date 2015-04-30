@@ -871,7 +871,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_DAZED:
         if (!quiet && alive())
-                simple_monster_message(this, " is no longer dazed.");
+            simple_monster_message(this, " is no longer dazed.");
         break;
 
     case ENCH_INNER_FLAME:
@@ -889,7 +889,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_MUTE:
         if (!quiet && alive())
-                simple_monster_message(this, " is no longer mute.");
+            simple_monster_message(this, " is no longer mute.");
         break;
 
     case ENCH_BLIND:

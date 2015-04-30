@@ -1320,7 +1320,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         mon->foe       = src_idx;
         mon->target    = src_pos;
         if (src == &you)
-                setTarget = true;
+            setTarget = true;
         else if (mon->friendly() && !crawl_state.game_is_arena())
             mon->foe = MHITYOU;
 

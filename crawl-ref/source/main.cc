@@ -2302,7 +2302,7 @@ static void _prep_input()
     viewwindow();
     maybe_update_stashes();
     if (check_for_interesting_features() && you.running.is_explore())
-            stop_running();
+        stop_running();
 
     if (you.seen_portals)
     {

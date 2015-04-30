@@ -1170,7 +1170,7 @@ void SkillMenu::refresh_display()
 
     for (int ln = 0; ln < SK_ARR_LN; ++ln)
         for (int col = 0; col < SK_ARR_COL; ++col)
-                m_skills[ln][col].refresh(true);
+            m_skills[ln][col].refresh(true);
 
     if (is_set(SKMF_EXPERIENCE))
         m_skill_backup.restore_levels();

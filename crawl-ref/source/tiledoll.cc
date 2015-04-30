@@ -613,9 +613,9 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
              || p == TILEP_PART_HAND2 && you.slot_item(EQ_SHIELD))
             && dind < draw_info_count - 1)
         {
-                ofs_x = dinfo[draw_info_count - dind - 1].ofs_x;
-                ofs_y = dinfo[draw_info_count - dind - 1].ofs_y;
-                ++dind;
+            ofs_x = dinfo[draw_info_count - dind - 1].ofs_x;
+            ofs_y = dinfo[draw_info_count - dind - 1].ofs_y;
+            ++dind;
         }
         buf.add(doll.parts[p], x, y, i, submerged, ghost, ofs_x, ofs_y, ymax);
     }
