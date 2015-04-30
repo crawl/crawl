@@ -2298,17 +2298,11 @@ static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
     return 0;
 }
 
-void random_uselessness(int scroll_slot)
+void random_uselessness()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    int temp_rand = random2(8);
-
-    // If this isn't from a scroll, skip the first possibilities.
-    if (scroll_slot == -1)
-        temp_rand = 2 + random2(6);
-
-    switch (temp_rand)
+    switch (random2(8))
     {
     case 0:
     case 1:
@@ -2683,7 +2677,7 @@ void read_scroll(int item_slot)
     switch (which_scroll)
     {
     case SCR_RANDOM_USELESSNESS:
-        random_uselessness(item_slot);
+        random_uselessness();
         break;
 
     case SCR_BLINKING:

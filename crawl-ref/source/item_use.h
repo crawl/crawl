@@ -49,7 +49,7 @@ bool dont_use_invis();
 
 bool enchant_weapon(item_def &wpn, bool quiet);
 bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
-void random_uselessness(int scroll_slot = -1);
+void random_uselessness();
 
 void prompt_inscribe_item();
 
