@@ -167,12 +167,6 @@ book of conjurations
 A book containing an introduction to the destructive magical arts of
 Conjurations. It shudders with barely-contained power when it is opened.
 %%%%
-book of control
-
-A book of magic spells for controlling minds, bodies, and even space. Those who
-browse it sometimes find it hard to take their minds off the sigils and runes
-inside.
-%%%%
 book of death
 
 A ghoulishly illuminated manuscript containing dark spells of Necromancy,

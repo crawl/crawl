@@ -1744,10 +1744,6 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_shadow_creatures(spell, god, place, fail);
     }
 
-    // Self-enchantments. (Spells that can only affect the player.)
-    case SPELL_CONTROL_TELEPORT:
-        return cast_teleport_control(powc, fail);
-
     // Healing.
     case SPELL_CURE_POISON:
         return cast_cure_poison(powc, fail);
@@ -1892,6 +1888,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     // Removed spells.
     case SPELL_ABJURATION:
     case SPELL_CIGOTUVIS_DEGENERATION:
+    case SPELL_CONTROL_TELEPORT:
     case SPELL_DEMONIC_HORDE:
     case SPELL_ENSLAVEMENT:
     case SPELL_EVAPORATE:

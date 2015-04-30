@@ -156,7 +156,6 @@ int book_rarity(book_type which_book)
     case BOOK_SKY:
     case BOOK_EARTH:
     case BOOK_UNLIFE:
-    case BOOK_CONTROL:
     case BOOK_SPATIAL_TRANSLOCATIONS:
         return 10;
 
@@ -184,6 +183,7 @@ int book_rarity(book_type which_book)
         return 20;
 
 #if TAG_MAJOR_VERSION == 34
+    case BOOK_CONTROL:
     case BOOK_WIZARDRY:
     case BOOK_BUGGY_DESTRUCTION:
         return 100;
