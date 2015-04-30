@@ -998,6 +998,10 @@ bool god_punishes_spell(spell_type spell, god_type god)
     if (map_find(divine_peeves[god], DID_CHAOS) && is_chaotic_spell(spell))
         return true;
 
+    // not is_hasty_spell: see spl-cast.cc:_spellcasting_god_conduct
+    if (map_find(divine_peeves[god], DID_HASTY) && spell == SPELL_SWIFTNESS)
+        return true;
+
     if (map_find(divine_peeves[god], DID_CORPSE_VIOLATION)
         && is_corpse_violating_spell(spell))
     {
