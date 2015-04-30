@@ -66,10 +66,10 @@
        "scroll of brand weapon | manual of bows | buckler"
 
       elseif s == "C" then i = "amulet of clarity | book of callings | " ..
-       "book of cantrips | book of changes | book of control | " ..
-       "book of conjurations | centaur barding | chain mail | club | " ..
-       "crystal ball of energy | crystal plate armour | rod of clouds | " ..
-       "wand of cold | potion of cancellation | potion of cure mutation | " ..
+       "book of cantrips | book of changes | book of conjurations | " ..
+       "centaur barding | chain mail | club | crystal ball of energy | " ..
+       "crystal plate armour | rod of clouds | wand of cold | " ..
+       "potion of cancellation | potion of cure mutation | " ..
        "book of clouds | cloak | staff of cold | wand of confusion | " ..
        "staff of conjuration | deck of changes | manual of crossbows | " ..
        "manual of conjurations | manual of charms | potion of curing "

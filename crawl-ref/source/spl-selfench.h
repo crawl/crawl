@@ -20,7 +20,6 @@ spret_type cast_revivification(int pow, bool fail);
 
 spret_type cast_swiftness(int power, bool fail = false);
 
-spret_type cast_teleport_control(int power, bool fail);
 int cast_selective_amnesia(const string &pre_msg = "");
 spret_type cast_silence(int pow, bool fail = false);
 

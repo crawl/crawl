@@ -1130,22 +1130,15 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     switch (spell)
     {
-    case SPELL_CONTROL_TELEPORT:
-        if (player_has_orb())
-            return "the Orb interferes with controlled teleportation.";
-        // fallthrough to blink/cblink
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
         // XXX: this is a little redundant with you_no_tele_reason()
-        // but trying to sort out temp and ctele and so on is a mess
+        // but trying to sort out temp and so on is a mess
         if (you.species == SP_FORMICID)
             return pluralise(species_name(you.species)) + " cannot teleport.";
 
-        if (temp && you.no_tele(false, false, true)
-            && (!prevent || spell != SPELL_CONTROL_TELEPORT))
-        {
+        if (temp && you.no_tele(false, false, true))
             return lowercase_first(you.no_tele_reason(false, true));
-        }
         break;
 
     case SPELL_SWIFTNESS:

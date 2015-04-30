@@ -1000,7 +1000,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_ENVENOMATIONS:          return "Envenomations";
     case BOOK_ANNIHILATIONS:          return "Annihilations";
     case BOOK_UNLIFE:                 return "Unlife";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_CONTROL:                return "Control";
+#endif
     case BOOK_GEOMANCY:               return "Geomancy";
     case BOOK_EARTH:                  return "the Earth";
 #if TAG_MAJOR_VERSION == 34
@@ -2474,7 +2476,7 @@ void check_item_knowledge(bool unknown_items)
                 continue;
             }
 
-            if (i == OBJ_BOOKS && j == BOOK_WIZARDRY)
+            if (i == OBJ_BOOKS && (j == BOOK_WIZARDRY || j == BOOK_CONTROL))
                 continue;
 
             if (i == OBJ_JEWELLERY

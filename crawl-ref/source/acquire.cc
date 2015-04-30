@@ -986,7 +986,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
             }
 
 #if TAG_MAJOR_VERSION == 34
-            if (bk == BOOK_WIZARDRY)
+            if (bk == BOOK_WIZARDRY || bk == BOOK_CONTROL)
             {
                 weights[bk] = 0;
                 continue;
