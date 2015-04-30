@@ -987,7 +987,7 @@ TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
 CURSED:   1
 STR:      +3
-BOOL:     unholy, seeinv, fly, special
+BOOL:     unholy, seeinv, fly
 
 NAME:     lightning scales
 OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
