@@ -898,13 +898,13 @@ static void _spellcasting_god_conduct(spell_type spell)
         did_god_conduct(DID_CORPSE_VIOLATION, conduct_level);
 
     if (is_evil_spell(spell))
-    {
         did_god_conduct(DID_NECROMANCY, conduct_level);
 
-        if (spell == SPELL_NECROMUTATION && is_good_god(you.religion))
-            excommunication();
-    }
-    if (spell == SPELL_STATUE_FORM && you_worship(GOD_YREDELEMNUL))
+    // not is_hasty_spell since the other ones handle the conduct themselves.
+    if (spell == SPELL_SWIFTNESS)
+        did_god_conduct(DID_HASTY, conduct_level);
+
+    if (god_loathes_spell(spell, you.religion))
         excommunication();
 }
 

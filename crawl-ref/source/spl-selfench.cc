@@ -318,7 +318,6 @@ spret_type cast_swiftness(int power, bool fail)
     you.set_duration(DUR_SWIFTNESS, 12 + random2(power)/2, 30,
                      "You feel quick.");
     you.attribute[ATTR_SWIFTNESS] = you.duration[DUR_SWIFTNESS];
-    did_god_conduct(DID_HASTY, 8, true);
 
     return SPRET_SUCCESS;
 }
