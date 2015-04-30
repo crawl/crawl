@@ -837,7 +837,7 @@ static void _jiyva_died()
     }
     else
     {
-        god_speaks(GOD_JIYVA, "With infernal noise, the power ruling this "
+        god_speaks(GOD_JIYVA, "With an infernal noise, the power ruling this "
                    "place vanishes!");
     }
 }
