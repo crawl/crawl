@@ -1505,8 +1505,7 @@ LUAFN(dgn_with_map_anchors)
 
         map_anchor_points.clear();
 
-        int i;
-        for (i = 1; i < top; i += 2)
+        for (int i = 1; i < top; i += 2)
         {
             if (lua_isnumber(ls, i) && lua_isnumber(ls, i + 1))
             {

@@ -91,12 +91,11 @@ const char *get_job_name(int which_job)
 
 job_type get_job_by_name(const char *name)
 {
-    int i;
     job_type cl = JOB_UNKNOWN;
 
     string low_name = lowercase_string(name);
 
-    for (i = 0; i < NUM_JOBS; i++)
+    for (int i = 0; i < NUM_JOBS; i++)
     {
         string low_job = lowercase_string(Job_Name_List[i]);
 
