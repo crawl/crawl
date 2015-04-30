@@ -123,8 +123,7 @@ static bool _is_boring_item(int type, int sub_type)
         }
         break;
     case OBJ_JEWELLERY:
-        return sub_type == RING_TELEPORT_CONTROL
-               || sub_type == AMU_RESIST_MUTATION;
+        return sub_type == AMU_RESIST_MUTATION;
     default:
         break;
     }
@@ -2181,7 +2180,11 @@ static jewellery_type _get_raw_random_ring_type()
     {
         ring = (jewellery_type)(random_range(RING_FIRST_RING, NUM_RINGS - 1));
     }
-    while (ring == RING_TELEPORTATION && crawl_state.game_is_sprint());
+    while (ring == RING_TELEPORTATION && crawl_state.game_is_sprint()
+#if TAG_MAJOR_VERSION == 34
+           || ring == RING_TELEPORT_CONTROL
+#endif
+           );
     return ring;
 }
 
@@ -2191,7 +2194,6 @@ jewellery_type get_random_ring_type()
     // Adjusted distribution here. - bwr
     if ((j == RING_INVISIBILITY
            || j == AMU_REGENERATION
-           || j == RING_TELEPORT_CONTROL
            || j == RING_SLAYING)
         && !one_chance_in(3))
     {

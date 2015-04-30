@@ -621,15 +621,14 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             // works poorly with ranged weapons
         case ARTP_CAUSE_TELEPORTATION:
             return item_type != OBJ_WEAPONS
-                    && !crawl_state.game_is_sprint()
-                    && !extant_props[ARTP_PREVENT_TELEPORTATION];
+                   && !crawl_state.game_is_sprint()
+                   && !extant_props[ARTP_PREVENT_TELEPORTATION];
             // no tele in sprint, and too annoying on weapons (swappable)
             // and obv we shouldn't generate contradictory props
         case ARTP_PREVENT_TELEPORTATION:
-            return !item.is_type(OBJ_JEWELLERY, RING_TELEPORT_CONTROL)
-                    && !extant_props[ARTP_BLINK]
-                    && !extant_props[ARTP_CAUSE_TELEPORTATION];
-            // no contradictory props/item types
+            return !extant_props[ARTP_BLINK]
+                   && !extant_props[ARTP_CAUSE_TELEPORTATION];
+            // no contradictory props
         case ARTP_BLINK:
             return !extant_props[ARTP_PREVENT_TELEPORTATION];
             // no contradictory props

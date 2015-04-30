@@ -279,9 +279,8 @@ dgn.delayed_decay_extra(_G, 'K', 'dwarf skeleton', 'plate armour, '
  -- Halfling warper. 4-5 items.
 dgn.delayed_decay_extra(_G, 'L', 'halfling skeleton', 'tomahawk ego:dispersal / sling bullet, '
    .. 'randbook disc:translocation / any book, scroll of blinking / '
-   .. 'scroll of teleportation / ring of teleportation / '
-   .. 'ring of teleport control w:5 / nothing w:30, robe / leather armour, '
-   .. 'short sword good_item' )
+   .. 'scroll of teleportation / ring of teleportation / nothing w:35, '
+   .. 'robe / leather armour, short sword good_item' )
 
  -- Ogre, maybe an ogre mage of some kind. 4-5 items.
 dgn.delayed_decay_extra(_G, 'M', 'ogre skeleton', 'giant club good_item / '

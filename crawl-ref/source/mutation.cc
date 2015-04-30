@@ -1068,7 +1068,6 @@ bool physiology_mutation_conflict(mutation_type mutat)
         if (mutat == MUT_BERSERK
             || mutat == MUT_BLINK
             || mutat == MUT_TELEPORT
-            || mutat == MUT_TELEPORT_CONTROL
             || mutat == MUT_ACUTE_VISION)
         {
             return true;

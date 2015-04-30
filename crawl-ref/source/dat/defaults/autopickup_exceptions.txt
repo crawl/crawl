@@ -63,7 +63,6 @@ ae += [^n]identified.*spellbook
 :   or itsubtype == "ring of wizardry"
 :   or itsubtype == "ring of stealth"
 :   or itsubtype == "ring of teleportation"
-:   or itsubtype == "ring of teleport control"
 :   or itsubtype == "ring of protection from fire"
 :   or itsubtype == "ring of protection from cold"
 :   or itsubtype == "ring of invisibility"
@@ -94,4 +93,4 @@ ae += amulet of (resist .*|clarity|rage|guardian spirit|faith|stasis)
 # the Abyss. Still, they're more in line with lanterns of shadow, so you can
 # pick up the second one by hand.
 ae += ring of (see invisible|flight|poison resistance|teleportation)
-ae += ring of (invisibility|teleport control|sustain attributes)
+ae += ring of (invisibility|sustain attributes)

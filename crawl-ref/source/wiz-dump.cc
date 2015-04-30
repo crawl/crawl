@@ -67,8 +67,6 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return RING_ICE;
     if (s == "+/*Tele")
         return RING_TELEPORTATION;
-    if (s == "+cTele")
-        return RING_TELEPORT_CONTROL;
     if (s == "SustAt" || s == "SustAb")
         return RING_SUSTAIN_ATTRIBUTES;
     if (s == "Wiz")

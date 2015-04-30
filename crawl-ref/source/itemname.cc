@@ -748,7 +748,9 @@ const char* jewellery_effect_name(int jeweltype)
     case RING_PROTECTION_FROM_MAGIC: return "protection from magic";
     case RING_FIRE:                  return "fire";
     case RING_ICE:                   return "ice";
+#if TAG_MAJOR_VERSION == 34
     case RING_TELEPORT_CONTROL:      return "teleport control";
+#endif
     case AMU_RAGE:              return "rage";
     case AMU_CLARITY:           return "clarity";
     case AMU_WARDING:           return "warding";
@@ -3607,14 +3609,10 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_WIZARDRY:
             return you_worship(GOD_TROG);
 
-        case RING_TELEPORT_CONTROL:
-            return you.species == SP_FORMICID
-                   || player_mutation_level(MUT_NO_ARTIFICE);
-
         case RING_TELEPORTATION:
             return you.species == SP_FORMICID
                    || crawl_state.game_is_sprint()
-                   || player_mutation_level(MUT_NO_ARTIFICE) ;
+                   || player_mutation_level(MUT_NO_ARTIFICE);
 
         case RING_INVISIBILITY:
             return _invisibility_is_useless(temp)
