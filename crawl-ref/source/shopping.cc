@@ -1708,10 +1708,6 @@ unsigned int item_value(item_def item, bool ident)
             {
                 switch (item.sub_type)
                 {
-                case RING_TELEPORT_CONTROL:
-                    valued += 500;
-                    break;
-
                 case AMU_FAITH:
                 case AMU_RESIST_MUTATION:
                 case AMU_RAGE:

@@ -1355,7 +1355,7 @@ KMONS:   8 = obsidian statue
 # Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
 KITEM:   d = scroll of blinking / scroll of teleportation q:2 / \
              wand of teleportation w:5 / any scroll w:1
-KITEM:   e = ring of teleport control w:9 / ring of teleportation w:20 / any ring w:1
+KITEM:   e = ring of teleportation w:25 / any ring w:5
 KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
              plane papyrus w:5 / manual of translocations w:5 / \
              randbook disc:translocation numspells:5 / \
@@ -1528,10 +1528,10 @@ MARKER:     ! = lua:fog_machine { \
             }
 ITEM:       w:20 potion of flight / potion of magic / potion of haste / \
             potion of resistance / gold / potion of agility / potion of brilliance
-ITEM:       wand of lightning / staff of air / ring of flight /\
-            gold / scroll of silence / ring of teleport control / \
-            quick blade / ring of evasion / ring of see invisible / \
-            book of clouds / any book w:15 / any good_item / any w:20
+ITEM:       wand of lightning / staff of air / ring of flight / \
+            gold / scroll of silence / quick blade / ring of evasion / \
+            ring of see invisible / book of clouds / any book w:15 / \
+            any good_item / any w:20
 ITEM:       randbook disc:air
 KFEAT:      #4 = deep_water
 KPROP:      #4 = no_rtele_into
