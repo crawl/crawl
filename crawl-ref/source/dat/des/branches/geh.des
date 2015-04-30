@@ -9,7 +9,6 @@
 {{
 function geh_setup(e)
    e.place("Geh:7")
-   e.lflags("no_tele_control")
    e.kmask('O = no_item_gen')
    e.kitem('O = obsidian rune of Zot')
    e.lrockcol("brown")

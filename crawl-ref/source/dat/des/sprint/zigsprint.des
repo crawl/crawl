@@ -568,7 +568,6 @@ TAGS:   sprint no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmi
 DESC:   Sprint V: "Ziggurat Sprint"
 ORDER:  5
 ORIENT: encompass
-LFLAGS: no_tele_control
 : lfloorcol(util.random_from(
 :   {"red", "blue", "green", "magenta", "brown", "lightgrey", "darkgrey"} ))
 COLOUR:    x : lightred / lightblue / lightgreen / lightmagenta / yellow / darkgrey

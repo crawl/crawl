@@ -10,7 +10,6 @@
 function dis_setup(e)
    e.place("Dis:7")
    e.tags("dis", "no_rotate")
-   e.lflags("no_tele_control")
    e.kitem("$ = $ no_pickup")
 -- turn granite statues into iron statues
 -- you still have to colour the statues, if desired

@@ -177,11 +177,6 @@ bool fill_status_info(int status, status_info* inf)
                           (-3 * you.props["corrosion_amount"].get_int()));
         break;
 
-    case DUR_CONTROL_TELEPORT:
-        if (!allow_control_teleport(true))
-            inf->light_colour = DARKGREY;
-        break;
-
     case DUR_NO_POTIONS:
         if (you_foodless(true))
             inf->light_colour = DARKGREY;
@@ -404,14 +399,6 @@ bool fill_status_info(int status, status_info* inf)
         inf->light_text
             = make_stringf("Slay (%u)",
                            you.props[SONG_OF_SLAYING_KEY].get_int());
-        break;
-
-    case STATUS_NO_CTELE:
-        if (!allow_control_teleport(true))
-        {
-            inf->light_colour = RED;
-            inf->light_text = "-cTele";
-        }
         break;
 
     case STATUS_BEOGH:

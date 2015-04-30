@@ -488,7 +488,7 @@ public:
              bool attacker_effects = true);
     bool heal(int amount, bool max_too = false);
     void blame_damage(const actor *attacker, int amount);
-    void blink(bool allow_partial_control = true);
+    void blink();
     void teleport(bool right_now = false,
                   bool wizard_tele = false);
     bool shift(coord_def p = coord_def(0, 0));

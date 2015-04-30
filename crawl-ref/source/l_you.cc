@@ -677,7 +677,7 @@ LUAFN(you_teleport_to)
 
 LUAFN(you_random_teleport)
 {
-    you_teleport_now(false);
+    you_teleport_now();
     return 0;
 }
 

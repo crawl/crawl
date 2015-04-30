@@ -798,9 +798,6 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
     if (!wizard)
         _update_travel_cache(old_level, stair_pos);
 
-    if (!allow_control_teleport(true))
-        mprf(MSGCH_WARN, "You sense a powerful magical force warping space.");
-
     // Preventing obvious finding of stairs at your position.
     env.map_seen.set(you.pos());
 

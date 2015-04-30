@@ -175,7 +175,7 @@ static int dgn_tags_remove(lua_State *ls)
 }
 
 static const string level_flag_names[] =
-{"no_tele_control", "not_mappable", "no_magic_map", ""};
+{"unused", "unused", "not_mappable", ""};
 
 static int dgn_lflags(lua_State *ls)
 {

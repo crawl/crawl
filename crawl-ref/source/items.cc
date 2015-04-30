@@ -1721,12 +1721,6 @@ static void _get_rune(const item_def& it, bool quiet)
 
     if (it.plus == RUNE_ABYSSAL)
         mpr("You feel the abyssal rune guiding you out of this place.");
-
-    if (it.plus == RUNE_TOMB)
-        add_daction(DACT_TOMB_CTELE);
-
-    if (it.plus >= RUNE_DIS && it.plus <= RUNE_TARTARUS)
-        unset_level_flags(LFLAG_NO_TELE_CONTROL);
 }
 
 /**

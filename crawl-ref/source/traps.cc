@@ -1635,15 +1635,13 @@ bool is_valid_shaft_level(bool known)
     if (!is_connected_branch(place))
         return false;
 
-    // Don't generate shafts in branches where teleport control
-    // is prevented. Prevents player from going down levels without
-    // reaching stairs, and also keeps player from getting stuck
-    // on lower levels with the innability to use teleport control to
-    // get back up.
-    if (testbits(env.level_flags, LFLAG_NO_TELE_CONTROL))
-        return false;
-
     const Branch &branch = branches[place.branch];
+
+    if (env.turns_on_level == -1
+        && branch.branch_flags & BFLAG_NO_SHAFTS)
+    {
+        return false;
+    }
 
     // When generating levels, don't place an unknown shaft on the level
     // immediately above the bottom of a branch if that branch is

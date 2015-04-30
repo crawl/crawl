@@ -18,7 +18,6 @@ end
 
 -- Lua functions to simplify Elf:$
 function elf_setup(e)
-  e.lflags("no_tele_control")
   e.tags("no_rotate")
 end
 

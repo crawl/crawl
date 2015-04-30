@@ -1322,7 +1322,6 @@ enum level_flag_type
 {
     LFLAG_NONE = 0,
 
-    LFLAG_NO_TELE_CONTROL = (1 << 0), // Teleport control not allowed.
     LFLAG_NO_MAP          = (1 << 2), // Level can't be persistently mapped.
 };
 
@@ -1697,7 +1696,9 @@ enum duration_type
     DUR_CONTROLLED_FLIGHT,
 #endif
     DUR_TELEPORT,
+#if TAG_MAJOR_VERSION == 34
     DUR_CONTROL_TELEPORT,
+#endif
     DUR_BREATH_WEAPON,
     DUR_TRANSFORMATION,
     DUR_DEATH_CHANNEL,
@@ -4660,8 +4661,8 @@ enum daction_type
     DACT_REMOVE_JIYVA_ALTARS,
     DACT_PIKEL_SLAVES,
     DACT_ROT_CORPSES,
-    DACT_TOMB_CTELE,
 #if TAG_MAJOR_VERSION == 34
+    DACT_TOMB_CTELE,
     DACT_SLIME_NEW_ATTEMPT,
 #endif
     DACT_KIRKE_HOGS,

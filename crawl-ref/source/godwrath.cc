@@ -1091,7 +1091,7 @@ static void _lugonu_transloc_retribution()
         simple_god_message("'s wrath finds you!", god);
         mpr("Space warps around you!");
         if (!one_chance_in(3))
-            you_teleport_now(false);
+            you_teleport_now();
         else
             uncontrolled_blink();
     }

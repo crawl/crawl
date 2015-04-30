@@ -1318,7 +1318,6 @@ ENDMAP
 # though distorted by the use of the ninth room and each set rotated.
 NAME:    wizlab_golubria
 TAGS:    no_pool_fixup
-LFLAGS:  no_tele_control
 KMONS:   1 = spatial vortex w:7 / blink frog / insubstantial wisp w:3 / nothing w:5
 KMONS:   2 = deep elf summoner w:5 ; tomahawk ego:dispersal w:20 | tomahawk w:5 | nothing / \
              rakshasa w:5 ; tomahawk ego:dispersal w:20 | tomahawk w:5 | nothing / \

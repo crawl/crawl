@@ -710,13 +710,9 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_TELEPORT, delay))
     {
-        you_teleport_now(true);
+        you_teleport_now();
         untag_followers();
     }
-
-    _decrement_a_duration(DUR_CONTROL_TELEPORT, delay,
-                          "You feel uncertain.", coinflip(),
-                          "You start to feel a little uncertain.");
 
     if (_decrement_a_duration(DUR_DEATH_CHANNEL, delay,
                               "Your unholy channel expires.", coinflip(),
@@ -1338,11 +1334,11 @@ void player_reacts()
         const int teleportitis_level = player_teleport();
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
-            you_teleport_now(false, false, true);
+            you_teleport_now(false, true);
         else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80)
                  && (!map_masked(you.pos(), MMT_VAULT) || one_chance_in(3)))
         {
-            you_teleport_now(false); // to new area of the Abyss
+            you_teleport_now(); // to new area of the Abyss
 
             // It's effectively a new level, make a checkpoint save so eventual
             // crashes lose less of the player's progress (and fresh new bad
