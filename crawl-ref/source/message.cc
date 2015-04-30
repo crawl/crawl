@@ -586,6 +586,7 @@ public:
         if (_pre_more())
             return;
 
+        print_stats();
         show();
         int last_row = crawl_view.msgsz.y;
         if (first_col_more())
