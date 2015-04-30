@@ -4413,7 +4413,7 @@ bool monster::shift(coord_def p)
 
     return count > 0;
 }
-void monster::blink(bool)
+void monster::blink()
 {
     monster_blink(this);
 }

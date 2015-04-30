@@ -3273,7 +3273,6 @@ int get_expiration_threshold(duration_type dur)
     case DUR_ICY_ARMOUR:
     case DUR_CONDENSATION_SHIELD:
     case DUR_PHASE_SHIFT:
-    case DUR_CONTROL_TELEPORT:
     case DUR_DEATH_CHANNEL:
     case DUR_SHROUD_OF_GOLUBRIA:
     case DUR_INFUSION:
@@ -6641,9 +6640,9 @@ void player::expose_to_element(beam_type element, int _strength,
     ::expose_player_to_element(element, _strength, slow_cold_blood);
 }
 
-void player::blink(bool allow_partial_control)
+void player::blink()
 {
-    cast_blink(allow_partial_control);
+    cast_blink();
 }
 
 void player::teleport(bool now, bool wizard_tele)

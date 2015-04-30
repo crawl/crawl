@@ -184,10 +184,7 @@ bool monster_space_valid(const monster* mons, coord_def target,
     if (is_sanctuary(target) && forbid_sanctuary)
         return false;
 
-    // Don't go into no_ctele_into or n_rtele_into cells.
-    if (testbits(env.pgrid(target), FPROP_NO_CTELE_INTO))
-        return false;
-    if (testbits(env.pgrid(target), FPROP_NO_RTELE_INTO))
+    if (testbits(env.pgrid(target), FPROP_NO_TELE_INTO))
         return false;
 
     return monster_habitable_grid(mons, grd(target));

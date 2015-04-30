@@ -1834,10 +1834,10 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     // Escape spells.
     case SPELL_BLINK:
-        return cast_blink(god != GOD_XOM, fail);
+        return cast_blink(fail);
 
     case SPELL_CONTROLLED_BLINK:
-        return cast_controlled_blink(powc, fail);
+        return cast_controlled_blink(fail);
 
     case SPELL_CONJURE_FLAME:
         return conjure_flame(&you, powc, beam.target, fail);

@@ -628,7 +628,7 @@ public:
     bool polymorph(int pow);
     void backlight();
     void banish(actor* /*agent*/, const string &who = "");
-    void blink(bool allow_partial_control = true);
+    void blink();
     void teleport(bool right_now = false,
                   bool wizard_tele = false);
     void drain_stat(stat_type stat, int amount);

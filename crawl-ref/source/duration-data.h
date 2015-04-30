@@ -86,10 +86,6 @@ static const duration_def duration_data[] =
       BLUE, "Touch",
       "confusing touch", "",
       "" , D_DISPELLABLE | D_EXPIRES},
-    { DUR_CONTROL_TELEPORT,
-      MAGENTA, "cTele",
-      "controlling teleports", "control teleport",
-      "You can control teleportations.", D_DISPELLABLE | D_EXPIRES},
     { DUR_CORONA,
       YELLOW, "Corona",
       "", "corona",
@@ -427,5 +423,6 @@ static const duration_def duration_data[] =
     { DUR_BUILDING_RAGE, 0, "", "", "old building rage", "", D_NO_FLAGS},
     { DUR_NEGATIVE_VULN, 0, "", "", "old negative vuln", "", D_NO_FLAGS},
     { DUR_SURE_BLADE, 0, "", "", "old sure blade", "", D_NO_FLAGS},
+    { DUR_CONTROL_TELEPORT, 0, "", "", "old control teleport", "", D_NO_FLAGS},
 #endif
 };

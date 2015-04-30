@@ -8,9 +8,6 @@ function fixup_slime_vaults(data, triggerable, triggerer, marker, ev)
     return
   end
 
-  -- Restore teleport control.
-  dgn.change_level_flags("!no_tele_control")
-
   local to_feat
   if you.god() == "Jiyva" and you.piety_rank() >= 6 then
     to_feat = "floor"
@@ -680,7 +677,6 @@ KFEAT:   Z = altar_jiyva
 KITEM:   O = slimy rune of Zot
 KITEM:   * = star_item
 SHUFFLE: ([{
-LFLAGS:  no_tele_control
 
 {{
 -- Attach function to the royal jelly itself. This will follow it wherever

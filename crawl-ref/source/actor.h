@@ -205,7 +205,7 @@ public:
                       bool attacker_effects = true) = 0;
     virtual bool heal(int amount, bool max_too = false) = 0;
     virtual void banish(actor *agent, const string &who = "") = 0;
-    virtual void blink(bool allow_partial_control = true) = 0;
+    virtual void blink() = 0;
     virtual void teleport(bool right_now = false,
                           bool wizard_tele = false) = 0;
     virtual bool poison(actor *attacker, int amount = 1, bool force = false) = 0;

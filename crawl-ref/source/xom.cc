@@ -2125,7 +2125,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         do
         {
             count++;
-            you_teleport_now(false);
+            you_teleport_now();
             search_around();
             more();
             if (one_chance_in(10) || count >= 7 + random2(5))
@@ -3340,7 +3340,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             int count = 0;
             do
             {
-                you_teleport_now(false);
+                you_teleport_now();
                 search_around();
                 more();
                 if (count++ >= 7 + random2(5))
@@ -3487,7 +3487,7 @@ static void _handle_accidental_death(const int orig_hp,
     }
 
     if (is_feat_dangerous(feat) && !crawl_state.game_is_sprint())
-        you_teleport_now(false);
+        you_teleport_now();
 }
 
 int xom_acts(bool niceness, int sever, int tension, bool debug)

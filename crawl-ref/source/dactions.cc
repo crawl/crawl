@@ -318,10 +318,6 @@ static void _apply_daction(daction_type act)
             if (mitm[i].is_type(OBJ_CORPSES, CORPSE_BODY))
                 mitm[i].special = 1; // thoroughly rotten
         break;
-    case DACT_TOMB_CTELE:
-        if (player_in_branch(BRANCH_TOMB))
-            unset_level_flags(LFLAG_NO_TELE_CONTROL, you.depth != 3);
-        break;
     case DACT_GOLD_ON_TOP:
     {
         for (rectangle_iterator ri(0); ri; ++ri)
@@ -373,6 +369,7 @@ static void _apply_daction(daction_type act)
     case DACT_END_SPIRIT_HOWL:
     case DACT_HOLY_NEW_ATTEMPT:
     case DACT_ALLY_SACRIFICE_LOVE:
+    case DACT_TOMB_CTELE:
 #endif
     case NUM_DACTION_COUNTERS:
     case NUM_DACTIONS:

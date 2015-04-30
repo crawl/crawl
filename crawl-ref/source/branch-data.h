@@ -126,7 +126,7 @@ const Branch branches[NUM_BRANCHES] =
       'C', -3 },
 
     { BRANCH_TOMB, BRANCH_CRYPT, 3, 3, 3, 21,
-      BFLAG_ISLANDED | BFLAG_DANGEROUS_END, LFLAG_NO_TELE_CONTROL,
+      BFLAG_ISLANDED | BFLAG_DANGEROUS_END | BFLAG_NO_SHAFTS, 0,
       DNGN_ENTER_TOMB, DNGN_EXIT_TOMB,
       "Tomb", "the Tomb of the Ancients", "Tomb",
       nullptr,
@@ -191,7 +191,7 @@ const Branch branches[NUM_BRANCHES] =
 #endif
 
     { BRANCH_ABYSS, NUM_BRANCHES, -1, -1, 5, 24,
-      BFLAG_NO_XLEV_TRAVEL, LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP,
+      BFLAG_NO_XLEV_TRAVEL, LFLAG_NO_MAP,
       DNGN_ENTER_ABYSS, DNGN_EXIT_ABYSS,
       "Abyss", "the Abyss", "Abyss",
       nullptr,
@@ -216,7 +216,7 @@ const Branch branches[NUM_BRANCHES] =
       'Q', 0 },
 
     { BRANCH_LABYRINTH, NUM_BRANCHES, -1, -1, 1, 15,
-      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, LFLAG_NO_MAP,
       DNGN_ENTER_LABYRINTH, DNGN_EXIT_LABYRINTH,
       "Labyrinth", "a labyrinth", "Lab",
       // XXX: Ideally, we want to hint at the wall rule (rock > metal),

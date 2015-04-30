@@ -1236,7 +1236,6 @@ NAME:       volcano_caves
 WEIGHT:     20
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate
-LFLAGS:     no_tele_control
 {{
 local collapse_marker = TriggerableFunction:new (
   {

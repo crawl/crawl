@@ -822,7 +822,7 @@ void entered_malign_portal(actor* act)
              act->name(DESC_THE).c_str(), act->conj_verb("be").c_str());
     }
 
-    act->blink(false);
+    act->blink();
     act->hurt(nullptr, roll_dice(2, 4), BEAM_MISSILE, KILLED_BY_WILD_MAGIC,
               "", "entering a malign gateway");
 }

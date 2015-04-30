@@ -585,20 +585,12 @@ static void _dgn_map_colour_fixup()
 
 bool set_level_flags(uint32_t flags, bool silent)
 {
-    bool could_control = allow_control_teleport(true);
     bool could_map     = is_map_persistent();
 
     uint32_t old_flags = env.level_flags;
     env.level_flags |= flags;
 
-    bool can_control = allow_control_teleport(true);
     bool can_map     = is_map_persistent();
-
-    if (could_control && !can_control && !silent)
-    {
-        mprf(MSGCH_WARN, "You sense the appearance of a powerful magical force "
-                         "which warps space.");
-    }
 
     if (could_map && !can_map && !silent)
     {
@@ -611,22 +603,12 @@ bool set_level_flags(uint32_t flags, bool silent)
 
 bool unset_level_flags(uint32_t flags, bool silent)
 {
-    bool could_control = allow_control_teleport(true);
     bool could_map     = is_map_persistent();
 
     iflags_t old_flags = env.level_flags;
     env.level_flags &= ~flags;
 
-    bool can_control = allow_control_teleport(true);
     bool can_map     = is_map_persistent();
-
-    if (!could_control && can_control && !silent)
-    {
-        // Isn't really a "recovery", but I couldn't think of where
-        // else to send it.
-        mprf(MSGCH_RECOVERY, "You sense the disappearance of a powerful "
-                             "magical force which warped space.");
-    }
 
     if (!could_map && can_map && !silent)
     {
@@ -4004,7 +3986,7 @@ static void _fixup_after_vault()
     env.markers.activate_all();
 
     // Force teleport to place the player somewhere sane.
-    you_teleport_now(false);
+    you_teleport_now();
 
     setup_environment_effects();
 }
@@ -6080,7 +6062,7 @@ static coord_def _get_hatch_dest(coord_def base_pos, bool shaft)
             dest_pos = random_in_bounds();
         }
         while (grd(dest_pos) != DNGN_FLOOR
-               || env.pgrid(dest_pos) & FPROP_NO_RTELE_INTO);
+               || env.pgrid(dest_pos) & FPROP_NO_TELE_INTO);
         if (!shaft)
         {
             env.markers.add(new map_position_marker(base_pos, dest_pos));
@@ -7113,11 +7095,11 @@ static void _calc_density()
     env.density = open;
 }
 
-// Mark all solid squares as no_rtele so that digging doesn't influence
+// Mark all solid squares as no_tele so that digging doesn't influence
 // random teleportation.
 static void _mark_solid_squares()
 {
     for (rectangle_iterator ri(0); ri; ++ri)
         if (feat_is_solid(grd(*ri)))
-            env.pgrid(*ri) |= FPROP_NO_RTELE_INTO;
+            env.pgrid(*ri) |= FPROP_NO_TELE_INTO;
 }
