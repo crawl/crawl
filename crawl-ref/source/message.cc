@@ -335,7 +335,8 @@ class message_window
         const int diff = max(int(lines.size()) - height(), 0);
 
         int i;
-        for (i = lines.size() - 1; i >= diff && lines[i].width() == 0; --i);
+        for (i = lines.size() - 1; i >= diff && lines[i].width() == 0; --i)
+            ;
         if (i >= diff)
         {
             // If there was room, put the cursor at the end of that line.

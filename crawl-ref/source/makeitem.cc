@@ -366,15 +366,14 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
 
 static void _roll_weapon_type(item_def& item, int item_level)
 {
-    int i;
-    for (i = 0; i < 1000; ++i)
+    for (int i = 0; i < 1000; ++i)
     {
         item.sub_type = _determine_weapon_subtype(item_level);
         if (is_weapon_brand_ok(item.sub_type, item.special, true))
-            break;
+            return;
     }
-    if (i == 1000)
-        item.special = SPWPN_NORMAL; // fall back to no brand
+
+    item.special = SPWPN_NORMAL; // fall back to no brand
 }
 
 static void _generate_weapon_item(item_def& item, bool allow_uniques,
@@ -389,9 +388,8 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     // Forced randart.
     if (item_level == ISPEC_RANDART)
     {
-        int i;
         int ego = item.special;
-        for (i = 0; i < 100; ++i)
+        for (int i = 0; i < 100; ++i)
             if (_try_make_weapon_artefact(item, force_type, 0, true) && is_artefact(item))
             {
                 if (ego > SPWPN_NORMAL)
@@ -1149,8 +1147,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         item.sub_type = force_type;
     else
     {
-        int i;
-        for (i = 0; i < 1000; ++i)
+        for (int i = 0; i < 1000; ++i)
         {
             item.sub_type = _get_random_armour_type(item_level);
             if (is_armour_brand_ok(item.sub_type, item.special, true))
@@ -1161,15 +1158,12 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     // Forced randart.
     if (item_level == ISPEC_RANDART)
     {
-        int i;
-        for (i = 0; i < 100; ++i)
-        {
+        for (int i = 0; i < 100; ++i)
             if (_try_make_armour_artefact(item, force_type, 0, true)
                 && is_artefact(item))
             {
                 return;
             }
-        }
         // fall back to an ordinary item
         item_level = ISPEC_GOOD_ITEM;
     }

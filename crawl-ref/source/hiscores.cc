@@ -325,11 +325,11 @@ static void _add_hiscore_row(MenuScroller* scroller, scorefile_entry& se, int id
 static void _construct_hiscore_table(MenuScroller* scroller)
 {
     FILE *scores = _hs_open("r", _score_file_name());
-    int i;
 
     if (scores == nullptr)
         return;
 
+    int i;
     // read highscore file
     for (i = 0; i < SCORE_FILE_ENTRIES; i++)
     {

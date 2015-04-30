@@ -267,13 +267,12 @@ int biased_random2(int max, int n)
 // [0, max]
 int random2limit(int max, int limit)
 {
-    int i;
     int sum = 0;
 
     if (max < 1)
         return 0;
 
-    for (i = 0; i < max; i++)
+    for (int i = 0; i < max; i++)
         if (random2(limit) >= i)
             sum++;
 

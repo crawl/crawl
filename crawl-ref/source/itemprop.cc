@@ -668,18 +668,16 @@ void init_properties()
     COMPILE_CHECK(NUM_MISSILES == ARRAYSZ(Missile_prop));
     COMPILE_CHECK(NUM_FOODS    == ARRAYSZ(Food_prop));
 
-    int i;
-
-    for (i = 0; i < NUM_ARMOURS; i++)
+    for (int i = 0; i < NUM_ARMOURS; i++)
         Armour_index[ Armour_prop[i].id ] = i;
 
-    for (i = 0; i < NUM_WEAPONS; i++)
+    for (int i = 0; i < NUM_WEAPONS; i++)
         Weapon_index[ Weapon_prop[i].id ] = i;
 
-    for (i = 0; i < NUM_MISSILES; i++)
+    for (int i = 0; i < NUM_MISSILES; i++)
         Missile_index[ Missile_prop[i].id ] = i;
 
-    for (i = 0; i < NUM_FOODS; i++)
+    for (int i = 0; i < NUM_FOODS; i++)
         Food_index[ Food_prop[i].id ] = i;
 }
 

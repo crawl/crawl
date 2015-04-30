@@ -294,7 +294,6 @@ bool add_spell_to_memory(spell_type spell)
 bool del_spell_from_memory_by_slot(int slot)
 {
     ASSERT_RANGE(slot, 0, MAX_KNOWN_SPELLS);
-    int j;
 
     if (you.last_cast_spell == you.spells[slot])
         you.last_cast_spell = SPELL_NO_SPELL;
@@ -302,14 +301,11 @@ bool del_spell_from_memory_by_slot(int slot)
     spell_skills(you.spells[slot], you.stop_train);
 
     mprf("Your memory of %s unravels.", spell_title(you.spells[slot]));
-    you.spells[ slot ] = SPELL_NO_SPELL;
+    you.spells[slot] = SPELL_NO_SPELL;
 
-    for (j = 0; j < 52; j++)
-    {
+    for (int j = 0; j < 52; j++)
         if (you.spell_letter_table[j] == slot)
             you.spell_letter_table[j] = -1;
-
-    }
 
     you.spell_no--;
 
