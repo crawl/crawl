@@ -29,7 +29,7 @@ function fixup_slime_vaults(data, triggerable, triggerer, marker, ev)
     end
   else
     if seen then
-        crawl.mpr("Suddenly, all colour oozes out of the stone walls.",
+        crawl.mpr("Suddenly, the colour oozes out of the stone walls.",
                   "monster_enchant")
     else
         crawl.mpr("You feel a strange vibration for a moment.",
