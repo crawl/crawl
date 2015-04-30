@@ -78,7 +78,7 @@ enum mut_flag_type
     MUTFLAG_XOM     = 1 << 4, // xom being xom
     MUTFLAG_CORRUPT = 1 << 5, // wretched stars
 };
-const int MUTFLAG_LAST_EXPONENT = 6;
+const int MUTFLAG_LAST_EXPONENT = 5;
 DEF_BITFIELD(mut_flags_type, mut_flag_type);
 
 #include "mutation-data.h"
