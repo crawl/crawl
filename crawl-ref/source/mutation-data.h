@@ -245,7 +245,7 @@ static const mutation_def mut_data[] =
    "regeneration",
 },
 
-{ MUT_SLOW_HEALING, 3, 3, MUTFLAG_BAD | MUTFLAG_CORRUPT | MUTFLAG_RU, false,
+{ MUT_SLOW_HEALING, 3, 3, MUTFLAG_BAD | MUTFLAG_CORRUPT, false,
   "slow healing",
 
   {"You heal slowly when monsters are visible.",
@@ -299,7 +299,7 @@ static const mutation_def mut_data[] =
    "slow metabolism",
 },
 
-{ MUT_WEAK, 8, 2, MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_RU, false,
+{ MUT_WEAK, 8, 2, MUTFLAG_BAD | MUTFLAG_XOM, false,
   "weak",
   {"You are weak. (Str -2)",
    "You are very weak. (Str -4)", ""},
@@ -309,7 +309,7 @@ static const mutation_def mut_data[] =
   "weak muscles (Str -2)",
 },
 
-{ MUT_DOPEY, 8, 2, MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_RU, false,
+{ MUT_DOPEY, 8, 2, MUTFLAG_BAD | MUTFLAG_XOM, false,
   "dopey",
   {"You are dopey. (Int -2)",
    "You are very dopey. (Int -4)", ""},
@@ -319,7 +319,7 @@ static const mutation_def mut_data[] =
   "dopiness (-2 Int)",
 },
 
-{ MUT_CLUMSY, 8, 2, MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_RU, false,
+{ MUT_CLUMSY, 8, 2, MUTFLAG_BAD | MUTFLAG_XOM, false,
   "clumsy",
   {"You are clumsy. (Dex -2)",
    "You are very clumsy. (Dex -4)", ""},
@@ -430,7 +430,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_DEFORMED, 8, 1,
-  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT | MUTFLAG_QAZLAL | MUTFLAG_RU,
+  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT | MUTFLAG_QAZLAL,
   true,
   "deformed body",
 
@@ -551,7 +551,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_SCREAM, 6, 3, MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_RU, false,
+{ MUT_SCREAM, 6, 3, MUTFLAG_BAD | MUTFLAG_XOM, false,
   "screaming",
 
   {"You occasionally shout uncontrollably at your foes.",
@@ -670,7 +670,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_FRAIL, 10, 3,
-  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT | MUTFLAG_RU, false,
+  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT, false,
   "frail",
 
   {"You are frail (-10% HP).",
@@ -1065,7 +1065,7 @@ static const mutation_def mut_data[] =
    "increased magical capacity (+10% MP)",
 },
 
-{ MUT_LOW_MAGIC, 9, 3, MUTFLAG_BAD | MUTFLAG_CORRUPT | MUTFLAG_RU, false,
+{ MUT_LOW_MAGIC, 9, 3, MUTFLAG_BAD | MUTFLAG_CORRUPT, false,
   "low mp",
 
   {"Your magical capacity is low (-10% MP).",
@@ -1823,7 +1823,7 @@ static const mutation_def mut_data[] =
     "sustained abilities",
 },
 
-{ MUT_NO_DRINK, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_DRINK, 0, 1, MUTFLAG_BAD, false,
   "inability to drink while threatened",
 
   {"You cannot drink potions while threatened.", "", ""},
@@ -1833,7 +1833,7 @@ static const mutation_def mut_data[] =
   "an inability to drink potions while threatened",
 },
 
-{ MUT_NO_READ, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_READ, 0, 1, MUTFLAG_BAD, false,
   "inability to read while threatened",
 
   {"You cannot read scrolls while threatened.", "", ""},
@@ -1843,7 +1843,7 @@ static const mutation_def mut_data[] =
   "an inability to drink while threatened",
 },
 
-{ MUT_MISSING_HAND, 0, 1, MUTFLAG_RU, false,
+{ MUT_MISSING_HAND, 0, 1, MUTFLAG_BAD, false,
   "missing a hand",
 
   {"You are missing a hand.", "", ""},
@@ -1853,7 +1853,7 @@ static const mutation_def mut_data[] =
   "a missing hand",
 },
 
-{ MUT_NO_STEALTH, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_STEALTH, 0, 1, MUTFLAG_BAD, false,
   "no stealth",
 
   {"You cannot be stealthy.", "", ""},
@@ -1863,7 +1863,7 @@ static const mutation_def mut_data[] =
   "an inability to sneak",
 },
 
-{ MUT_NO_ARTIFICE, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_ARTIFICE, 0, 1, MUTFLAG_BAD, false,
   "inability to use devices",
 
   {"You cannot study or use magical devices.", "", ""},
@@ -1873,7 +1873,7 @@ static const mutation_def mut_data[] =
   "an inability to evoke magical devices",
 },
 
-{ MUT_NO_LOVE, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_LOVE, 0, 1, MUTFLAG_BAD, false,
   "hated by all",
 
   {"You are hated by all.", "", ""},
@@ -1883,7 +1883,7 @@ static const mutation_def mut_data[] =
   "inability to love",
 },
 
-{ MUT_COWARDICE, 0, 1, MUTFLAG_RU, false,
+{ MUT_COWARDICE, 0, 1, MUTFLAG_BAD, false,
   "cowardly",
 
   {"Your cowardice makes you less effective in combat with threatening monsters.", "", ""},
@@ -1893,7 +1893,7 @@ static const mutation_def mut_data[] =
   "cowardice",
 },
 
-{ MUT_NO_DODGING, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_DODGING, 0, 1, MUTFLAG_BAD, false,
   "inability to train dodging",
 
   {"You cannot train Dodging skill.", "", ""},
@@ -1903,7 +1903,7 @@ static const mutation_def mut_data[] =
   "inability to train Dodging",
 },
 
-{ MUT_NO_ARMOUR, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_ARMOUR, 0, 1, MUTFLAG_BAD, false,
   "inability to train armour",
 
   {"You cannot train Armour skill.", "", ""},
@@ -1913,7 +1913,7 @@ static const mutation_def mut_data[] =
   "inability to train Armour",
 },
 
-{ MUT_NO_AIR_MAGIC, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_AIR_MAGIC, 0, 1, MUTFLAG_BAD, false,
   "no air magic",
 
   {"You cannot study or cast Air magic.", "", ""},
@@ -1923,7 +1923,7 @@ static const mutation_def mut_data[] =
   "inability to use Air magic",
 },
 
-{ MUT_NO_CHARM_MAGIC, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_CHARM_MAGIC, 0, 1, MUTFLAG_BAD, false,
   "no charms magic",
 
   {"You cannot study or cast Charms magic.", "", ""},
@@ -1933,7 +1933,7 @@ static const mutation_def mut_data[] =
   "inability to use Charms magic",
 },
 
-{ MUT_NO_CONJURATION_MAGIC, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_CONJURATION_MAGIC, 0, 1, MUTFLAG_BAD, false,
   "no conjurations magic",
 
   {"You cannot study or cast Conjurations magic.", "", ""},
@@ -1943,7 +1943,7 @@ static const mutation_def mut_data[] =
   "inability to use Conjurations magic",
 },
 
-{ MUT_NO_EARTH_MAGIC, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_EARTH_MAGIC, 0, 1, MUTFLAG_BAD, false,
   "no earth magic",
 
   {"You cannot study or cast Earth magic.", "", ""},
@@ -1953,7 +1953,7 @@ static const mutation_def mut_data[] =
   "inability to use Earth magic",
 },
 
-{ MUT_NO_FIRE_MAGIC, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_FIRE_MAGIC, 0, 1, MUTFLAG_BAD, false,
   "no fire magic",
 
   {"You cannot study or cast Fire magic.", "", ""},
@@ -1963,7 +1963,7 @@ static const mutation_def mut_data[] =
   "inability to use Fire magic",
 },
 
-{ MUT_NO_HEXES_MAGIC, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_HEXES_MAGIC, 0, 1, MUTFLAG_BAD, false,
   "no hexes magic",
 
   {"You cannot study or cast Hexes magic.", "", ""},
@@ -1973,7 +1973,7 @@ static const mutation_def mut_data[] =
   "inability to use Hexes magic",
 },
 
-{ MUT_NO_ICE_MAGIC, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_ICE_MAGIC, 0, 1, MUTFLAG_BAD, false,
   "no ice magic",
 
   {"You cannot study or cast Ice magic.", "", ""},
@@ -1983,7 +1983,7 @@ static const mutation_def mut_data[] =
   "inability to use Ice magic",
 },
 
-{ MUT_NO_NECROMANCY_MAGIC, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_NECROMANCY_MAGIC, 0, 1, MUTFLAG_BAD, false,
   "no necromancy magic",
 
   {"You cannot study or cast Necromancy magic.", "", ""},
@@ -1993,7 +1993,7 @@ static const mutation_def mut_data[] =
   "inability to use Necromancy magic",
 },
 
-{ MUT_NO_POISON_MAGIC, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_POISON_MAGIC, 0, 1, MUTFLAG_BAD, false,
   "no poison magic",
 
   {"You cannot study or cast Poison magic.", "", ""},
@@ -2003,7 +2003,7 @@ static const mutation_def mut_data[] =
   "inability to use Poison magic",
 },
 
-{ MUT_NO_SUMMONING_MAGIC, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_SUMMONING_MAGIC, 0, 1, MUTFLAG_BAD, false,
   "no summoning magic",
 
   {"You cannot study or cast Summoning magic.", "", ""},
@@ -2013,7 +2013,7 @@ static const mutation_def mut_data[] =
   "inability to use Summoning magic",
 },
 
-{ MUT_NO_TRANSLOCATION_MAGIC, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_TRANSLOCATION_MAGIC, 0, 1, MUTFLAG_BAD, false,
   "no translocations magic",
 
   {"You cannot study or cast Translocations magic.", "", ""},
@@ -2023,7 +2023,7 @@ static const mutation_def mut_data[] =
   "inability to use Translocations magic",
 },
 
-{ MUT_NO_TRANSMUTATION_MAGIC, 0, 1, MUTFLAG_RU, false,
+{ MUT_NO_TRANSMUTATION_MAGIC, 0, 1, MUTFLAG_BAD, false,
   "no transmutations magic",
 
   {"You cannot study or cast Transmutations magic.", "", ""},
@@ -2033,7 +2033,7 @@ static const mutation_def mut_data[] =
   "inability to use Transmutations magic",
 },
 
-{ MUT_PHYSICAL_VULNERABILITY, 0, 3, MUTFLAG_RU, false,
+{ MUT_PHYSICAL_VULNERABILITY, 0, 3, MUTFLAG_BAD, false,
   "vulnerability to harm",
 
   {"You take slightly more damage. (-3 AC)",
@@ -2049,7 +2049,7 @@ static const mutation_def mut_data[] =
     "vulnerability to harm (AC -3)",
 },
 
-{ MUT_SLOW_REFLEXES, 0, 3, MUTFLAG_RU, false,
+{ MUT_SLOW_REFLEXES, 0, 3, MUTFLAG_BAD, false,
   "slow reflexes",
 
   {"You have somewhat slow reflexes. (-3 EV)",
@@ -2065,7 +2065,7 @@ static const mutation_def mut_data[] =
     "slowed reflexes (EV -3)",
 },
 
-{ MUT_MAGICAL_VULNERABILITY, 0, 3, MUTFLAG_RU, false,
+{ MUT_MAGICAL_VULNERABILITY, 0, 3, MUTFLAG_BAD, false,
   "magic vulnerability",
 
   {"You are slightly vulnerable to magic.",
@@ -2081,7 +2081,7 @@ static const mutation_def mut_data[] =
     "vulnerability to magic (MR-)",
 },
 
-{ MUT_ANTI_WIZARDRY, 0, 3, MUTFLAG_RU, false,
+{ MUT_ANTI_WIZARDRY, 0, 3, MUTFLAG_BAD, false,
   "disrupted magic",
 
   {"Your casting is slightly disrupted.",
@@ -2107,7 +2107,7 @@ static const mutation_def mut_data[] =
   "MP-powered wands",
 },
 
-{ MUT_UNSKILLED, 0, 3, MUTFLAG_RU, false,
+{ MUT_UNSKILLED, 0, 3, MUTFLAG_BAD, false,
   "unskilled",
 
   {"You are somewhat unskilled (-1 Apt).",
@@ -2123,7 +2123,7 @@ static const mutation_def mut_data[] =
   "a lack of skill",
 },
 
-{ MUT_INEXPERIENCED, 0, 3, MUTFLAG_RU, false,
+{ MUT_INEXPERIENCED, 0, 3, MUTFLAG_BAD, false,
     "inexperienced",
 
     {"You are somewhat inexperienced (-2 XL).",
@@ -2149,7 +2149,7 @@ static const mutation_def mut_data[] =
    "claws that catch",
 },
 
-{ MUT_MISSING_EYE, 0, 1, MUTFLAG_RU, false,
+{ MUT_MISSING_EYE, 0, 1, MUTFLAG_BAD, false,
   "missing an eye",
 
   {"You are missing an eye, making it more difficult to aim.", "", ""},
@@ -2159,7 +2159,7 @@ static const mutation_def mut_data[] =
    "a missing eye",
 },
 
-{ MUT_TEMPERATURE_SENSITIVITY, 0, 1, MUTFLAG_RU, false,
+{ MUT_TEMPERATURE_SENSITIVITY, 0, 1, MUTFLAG_BAD, false,
   "temperature sensitive",
 
   {"You are sensitive to extremes of temperature (rF-, rC-).", "", ""},

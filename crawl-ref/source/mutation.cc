@@ -77,7 +77,6 @@ enum mut_flag_type
     MUTFLAG_QAZLAL  = 1 << 3, // qazlal wrath
     MUTFLAG_XOM     = 1 << 4, // xom being xom
     MUTFLAG_CORRUPT = 1 << 5, // wretched stars
-    MUTFLAG_RU      = 1 << 6, // Ru sacrifice muts
 };
 const int MUTFLAG_LAST_EXPONENT = 6;
 DEF_BITFIELD(mut_flags_type, mut_flag_type);
