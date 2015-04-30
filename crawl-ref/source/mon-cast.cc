@@ -8022,7 +8022,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                 && *mi != mon && mon->see_cell_no_trans(mi->pos())
                 && !mi->has_ench(ENCH_INJURY_BOND))
             {
-                    return false; // We found at least one target; that's enough.
+                return false; // We found at least one target; that's enough.
             }
         }
         return true;

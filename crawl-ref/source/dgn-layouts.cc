@@ -153,8 +153,8 @@ void dgn_build_bigger_room_level()
 // A more chaotic version of city level.
 void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
 {
-        // TODO: Attach this information to the vault name string
-        //       instead of the build method string.
+    // TODO: Attach this information to the vault name string
+    //       instead of the build method string.
     env.level_build_method += make_stringf(" [%s]",
         force_wall == NUM_FEATURES ? "any" : dungeon_feature_name(force_wall));
 
@@ -427,8 +427,8 @@ static void _builder_extras(int level_number)
 static bool _octa_room(dgn_region& region, int oblique_max,
                        dungeon_feature_type type_floor)
 {
-        // TODO: Attach this information to the vault name string
-        //       instead of the build method string.
+    // TODO: Attach this information to the vault name string
+    //       instead of the build method string.
     env.level_build_method += make_stringf(" octa_room [oblique %d, %s]", oblique_max,
                                            dungeon_feature_name(type_floor));
 

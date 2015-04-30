@@ -1109,5 +1109,6 @@ void describe_god(god_type which_god, bool give_title)
 
     god_desc_type gdesc = GDESC_OVERVIEW;
     while ((gdesc = _describe_god_by_type(which_god, give_title, gdesc))
-            != NUM_GDESCS);
+            != NUM_GDESCS)
+    {}
 }

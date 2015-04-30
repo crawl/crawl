@@ -1034,13 +1034,13 @@ static int _armour_plus_threshold(equipment_type armour_type)
 {
     switch (armour_type)
     {
-            // body armour is very common; squelch most of it
+        // body armour is very common; squelch most of it
         case EQ_BODY_ARMOUR:
             return 3;
-            // shields are fairly common
+        // shields are fairly common
         case EQ_SHIELD:
             return 2;
-            // aux armour is relatively uncommon
+        // aux armour is relatively uncommon
         default:
             return 1;
     }
@@ -1063,7 +1063,7 @@ static armour_type _get_random_armour_type(int item_level)
     // Secondary armours.
     if (one_chance_in(5))
     {
-                       // Total weight is 30, each slot has a weight of 6
+        // Total weight is 30, each slot has a weight of 6
         armtype = random_choose_weighted(6, ARM_BOOTS,
                                          6, ARM_CLOAK,
                                          6, ARM_GLOVES,
