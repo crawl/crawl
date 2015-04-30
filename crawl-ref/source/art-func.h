@@ -29,6 +29,7 @@
 #include "ghost.h"         // For is_dragonkind ghost_demon datas
 #include "godconduct.h"    // did_god_conduct
 #include "mgen_data.h"     // For Sceptre of Asmodeus evoke
+#include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
 #include "player.h"
 #include "spl-cast.h"      // For evokes
@@ -609,7 +610,17 @@ static void _DEMON_AXE_melee_effects(item_def* item, actor* attacker,
                                      actor* defender, bool mondied, int dam)
 {
     if (one_chance_in(10))
-        cast_summon_demon(50+random2(100));
+    {
+        if (monster* mons = attacker->as_monster())
+        {
+            create_monster(
+                mgen_data(summon_any_demon(RANDOM_DEMON_COMMON),
+                          SAME_ATTITUDE(mons), mons, 6, SPELL_SUMMON_DEMON,
+                          mons->pos(), mons->foe));
+        }
+        else
+            cast_summon_demon(50+random2(100));
+    }
 
     if (attacker->is_player())
         did_god_conduct(DID_UNHOLY, 3);
