@@ -5451,8 +5451,8 @@ static dungeon_feature_type _pick_an_altar()
             break;
 
         case BRANCH_ORC: // There are a few heretics
-            if one_chance_in(5)
-                god = random_choose(GOD_TROG, GOD_MAHKLEB, GOD_VEHUMET);
+            if (one_chance_in(5))
+                god = random_choose(GOD_TROG, GOD_MAKHLEB, GOD_VEHUMET);
             else
                 god = GOD_BEOGH;
             break;
@@ -5474,9 +5474,7 @@ static dungeon_feature_type _pick_an_altar()
             {
                 god = random_god();
             }
-            while (god == GOD_LUGONU
-                   || god == GOD_BEOGH
-                   || god == GOD_JIYVA);
+            while (god == GOD_LUGONU || god == GOD_BEOGH || god == GOD_JIYVA);
             break;
         }
     }
