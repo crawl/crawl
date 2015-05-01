@@ -84,6 +84,7 @@ Items
 * Removed items:
   - The Cloak of Flash.
   - Potions of decay.
+  - Potions of restore abilities.
 
 Monsters
 --------
