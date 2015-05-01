@@ -1,8 +1,9 @@
-Stone Soup 0.17 (up to 0.17-a0-762-gdd96e34)
+Stone Soup 0.17 (up to 0.17-a0-888-g439e22d)
 --------------------------------------------
 
 Branches, Environment
 ---------------------
+* Snake, Shoals, Swamp and Spider are now all 4 levels long, down from 5.
 * Shadow Traps have been removed.
 * New WizLab: Lehudib's Moon Base, where the player can fight the legendary
   Moon Troll.
@@ -12,9 +13,13 @@ Character
 ---------
 * All races have had their evocations aptitudes reduced by one point.
 * MP scaling has been reworked & simplified; MP aptitudes have been adjusted.
+* Heavy armour no longer penalizes unarmed combat & throwing speeds.
 * Rot is now healed first, instead of last; effectively, rotting reduces the
   effectiveness of healing until cured. The Rot status is also gone, with rot
   taking place immediately.
+* Stat loss is no longer regenerated over time; instead, it's restored by XP.
+* The deterioration mutation is now only 2 levels, and has a chance of causing
+  stat loss whenever the player takes damage, rather than over time.
 * Being at 0 in a stat no longer causes direct damage to the player.
 * Undead stat gain: Mummies get one of Str, Int, or Dex every 5 levels, and
   Vampires get either Int or Dex every 5 levels.
@@ -30,6 +35,7 @@ Character
 * Teleportitis only triggers when it would land the player in LOS of
   enemies. It triggers slightly more frequently as a result, but no longer
   triggers in Labyrinths or the Abyss.
+* The 'spiny' mutation is now dramatically stronger.
 
 Gods
 ----
@@ -41,6 +47,11 @@ Gods
   - The cost of Potion Petition is higher initially, but no longer increases
     with use.
   - Corpseless monsters now drop gold.
+  - Gold that lands in deep water/lava teleports into the player's pockets.
+* Ru:
+  - New sacrifice: Sacrifice Eye, similar to the effect of amulets of
+    inaccuracy, but twice as strong (and stacking with the amulet).
+  - New sacrifice: Sacrifice Resistance, providing rC- rF-.
 * Beogh's smite damage now scales better with invocations.
 * Finesse no longer gives contamination.
 * Lugonu and Trog no longer accept corpse sacrifices.
@@ -69,6 +80,7 @@ Items
   prevents the use of abilities relying on breath.
 * Scrolls of Holy Word now apply the Daze status effect instead of stunning
   enemies.
+* The Placid Magic card is no more.
 * Removed items:
   - The Cloak of Flash.
   - Potions of decay.
@@ -96,6 +108,7 @@ Monsters
 * Death knights now have agony & haunt in addition to pain mirror.
 * Worms are less vulnerable to some forms of kiting, having more regen in
   exchange for less max hp.
+* Queen ants are now faster.
 * Liches and Ancient Liches can no longer can have Shadow Creatures in their
   spell set.
 * Removed monsters:
