@@ -708,6 +708,7 @@ static void _set_removed_types_as_identified()
     you.type_ids[OBJ_POTIONS][POT_PORRIDGE] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_POTIONS][POT_SLOWING] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_POTIONS][POT_DECAY] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_POTIONS][POT_RESTORE_ABILITIES] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_WEAPON_II] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_WEAPON_III] = ID_KNOWN_TYPE;
 #endif
