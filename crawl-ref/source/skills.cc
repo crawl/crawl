@@ -1235,6 +1235,17 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
     {
         switch (best_skill)
         {
+        case SK_SUMMONINGS:
+            // don't call good disciples hellbinders or demonologists
+            if (is_good_god(god))
+            {
+                if (skill_rank == 4)
+                    result = "Crusader";
+                else if (skill_rank == 5)
+                    result = "Metatron";
+            }
+            break;
+
         case SK_UNARMED_COMBAT:
             if (species == SP_FELID)
             {
