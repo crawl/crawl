@@ -53,6 +53,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/database.cc \
     $(CRAWL_PATH)/dbg-asrt.cc \
     $(CRAWL_PATH)/dbg-maps.cc \
+    $(CRAWL_PATH)/dbg-objstat.cc \
     $(CRAWL_PATH)/dbg-scan.cc \
     $(CRAWL_PATH)/dbg-util.cc \
     $(CRAWL_PATH)/decks.cc \
@@ -73,6 +74,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/dgnevent.cc \
     $(CRAWL_PATH)/directn.cc \
     $(CRAWL_PATH)/dlua.cc \
+    $(CRAWL_PATH)/domino.cc \
     $(CRAWL_PATH)/dungeon.cc \
     $(CRAWL_PATH)/end.cc \
     $(CRAWL_PATH)/english.cc \
@@ -109,6 +111,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/itemprop.cc \
     $(CRAWL_PATH)/items.cc \
     $(CRAWL_PATH)/jobs.cc \
+    $(CRAWL_PATH)/json.cc \
     $(CRAWL_PATH)/kills.cc \
     $(CRAWL_PATH)/l_colour.cc \
     $(CRAWL_PATH)/l_crawl.cc \
