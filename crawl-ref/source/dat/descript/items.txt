@@ -883,11 +883,6 @@ potion of curing
 A potion which heals some wounds, clears the mind and cures poison and disease.
 It can also slightly repair rotting.
 %%%%
-potion of decay
-
-A vile and putrid cursed liquid which causes your flesh to decay before your
-very eyes.
-%%%%
 potion of degeneration
 
 A noxious concoction which reduces strength, intelligence or dexterity.
