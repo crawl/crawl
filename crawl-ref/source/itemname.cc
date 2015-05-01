@@ -2535,6 +2535,7 @@ void check_item_knowledge(bool unknown_items)
                  || j == POT_STRONG_POISON
                  || j == POT_BLOOD_COAGULATED
                  || j == POT_PORRIDGE
+                 || j == POT_RESTORE_ABILITIES
                  || j == POT_DECAY))
             {
                 continue;
