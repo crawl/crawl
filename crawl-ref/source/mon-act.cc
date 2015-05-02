@@ -1432,15 +1432,20 @@ static bool _handle_wand(monster* mons, bolt &beem)
     if (wand.base_type != OBJ_WANDS)
         return false;
 
-    if (wand.charges == 0 && wand.used_count != ZAPCOUNT_EMPTY)
+    if (wand.charges <= 0)
     {
-        if (simple_monster_message(mons, " zaps a wand."))
-            canned_msg(MSG_NOTHING_HAPPENS);
-        else if (!silenced(you.pos()))
-            mprf(MSGCH_SOUND, "You hear a zap.");
-        wand.used_count = ZAPCOUNT_EMPTY;
-        mons->lose_energy(EUT_ITEM);
-        return true;
+        if (wand.used_count != ZAPCOUNT_EMPTY)
+        {
+            if (simple_monster_message(mons, " zaps a wand."))
+                canned_msg(MSG_NOTHING_HAPPENS);
+            else if (!silenced(you.pos()))
+                mprf(MSGCH_SOUND, "You hear a zap.");
+            wand.used_count = ZAPCOUNT_EMPTY;
+            mons->lose_energy(EUT_ITEM);
+            return true;
+        }
+        else
+            return false;
     }
 
     bool niceWand    = false;
