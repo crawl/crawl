@@ -178,7 +178,6 @@ void run_tests()
     _init_test_bindings();
 
     _run_test("makeitem", makeitem_tests);
-    _run_test("zotdef_wave", debug_waves);
     _run_test("mon-pick", debug_monpick);
     _run_test("mon-data", debug_mondata);
     _run_test("mon-spell", debug_monspells);
