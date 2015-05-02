@@ -184,12 +184,14 @@ void run_tests()
     _run_test("coordit", coordit_tests);
     _run_test("makename", make_name_tests);
 
-    // Get a list of Lua files in test. Order of execution of
-    // tests should be irrelevant.
+    // Get a list of Lua files in test.
     {
-        const vector<string> tests(
-            get_dir_files_recursive(crawl_state.script? script_dir : test_dir,
-                              ".lua"));
+        const string &dir = crawl_state.script ? script_dir : test_dir;
+        vector<string> tests = get_dir_files_recursive(dir, ".lua");
+
+        // Make the order consistent from one run to the next, for
+        // reproducibility.
+        sort(begin(tests), end(tests));
 
         for_each(tests.begin(), tests.end(), run_test);
 
