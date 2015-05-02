@@ -801,40 +801,21 @@ labyrinth3
 
 %weight 10
 %domino 0
-crypt_domino_0 FLOOR_CRYPT
+crypt_domino_1a FLOOR_CRYPT
 %domino 1
-crypt_domino_1
+crypt_domino_2a
 %domino 2
-crypt_domino_2
+crypt_domino_3a
 %domino 3
-crypt_domino_3
+crypt_domino_4a
 %domino 4
-crypt_domino_4
+crypt_domino_5a
 %domino 5
-crypt_domino_5
+crypt_domino_6a
 %domino 6
-crypt_domino_6
+crypt_domino_7a
 %domino 7
-crypt_domino_7
-%weight 5
-%domino 0
-crypt_domino_0b
-crypt_domino_0c
-%domino 1
-crypt_domino_1b
-%domino 2
-crypt_domino_2b
-%domino 3
-crypt_domino_3b
-%domino 4
-crypt_domino_4b
-%domino 5
-crypt_domino_5b
-%domino 6
-crypt_domino_6b
-%domino 7
-crypt_domino_7b
-
+crypt_domino_8a
 %domino 0
 
 iron0 FLOOR_IRON
