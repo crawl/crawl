@@ -4241,6 +4241,15 @@ void unmarshallItem(reader &th, item_def &item)
     {
         artefact_set_property(item, ARTP_CAUSE_TELEPORTATION, 1);
     }
+
+    // Monsters could zap wands below zero from 0.17-a0-739-g965e8eb
+    // to 0.17-a0-912-g3e33c8f. Also check for overcharged wands, in
+    // case someone was patient enough to let it wrap around.
+    if (item.base_type == OBJ_WANDS
+        && (item.charges < 0 || item.charges > wand_max_charges(item.sub_type)))
+    {
+        item.charges = 0;
+    }
 #endif
 
     if (is_unrandom_artefact(item))
