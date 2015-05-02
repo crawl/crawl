@@ -11,7 +11,6 @@ bool zotdef_create_altar();
 void zotdef_create_pond(const coord_def& center, int radius);
 void zotdef_bosses_check();
 
-void debug_waves();
 string zotdef_debug_wave_desc();
 
 #endif // ZOTDEF_H
