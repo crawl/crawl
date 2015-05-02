@@ -802,12 +802,18 @@ labyrinth3
 %weight 10
 %domino 0
 crypt_domino_1a FLOOR_CRYPT
+%weight 2
+crypt_domino_1b
+%weight 10
 %domino 1
 crypt_domino_2a
 %domino 2
 crypt_domino_3a
 %domino 3
 crypt_domino_4a
+%weight 2
+crypt_domino_4b
+%weight 10
 %domino 4
 crypt_domino_5a
 %domino 5
