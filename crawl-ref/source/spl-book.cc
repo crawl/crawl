@@ -233,9 +233,28 @@ void init_spell_rarities()
         if (is_rare_book(book))
             continue;
 
+#ifdef DEBUG
+        spell_type last = SPELL_NO_SPELL;
+#endif
         for (spell_type spell : spellbook_template(book))
         {
 #ifdef DEBUG
+            ASSERT(spell != SPELL_NO_SPELL);
+            if (last != SPELL_NO_SPELL
+                && spell_difficulty(last) > spell_difficulty(spell))
+            {
+                item_def item;
+                item.base_type = OBJ_BOOKS;
+                item.sub_type  = i;
+
+                end(1, false, "Spellbook '%s' has spells out of level order "
+                    "('%s' is before '%s')",
+                    item.name(DESC_PLAIN, false, true).c_str(),
+                    spell_title(last),
+                    spell_title(spell));
+            }
+            last = spell;
+
             unsigned int flags = get_spell_flags(spell);
 
             if (flags & (SPFLAG_MONSTER | SPFLAG_TESTING))
