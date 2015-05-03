@@ -304,6 +304,10 @@ TILES_ANY = YesPlease
 OBJECTS += $(TILES_OBJECTS) $(WEBTILES_OBJECTS)
 endif
 
+ifdef ANDROID
+TILES_ANY = YesPlease
+endif
+
 #
 # Check for an Apple-released compiler.
 #
