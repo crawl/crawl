@@ -263,8 +263,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 #if TAG_MAJOR_VERSION == 34
 {   // Book of Wizardry
-    SPELL_AGONY,
     SPELL_FORCE_LANCE,
+    SPELL_AGONY,
     SPELL_HASTE,
     SPELL_INVISIBILITY,
     SPELL_SPELLFORGED_SERVITOR,
@@ -341,10 +341,10 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Alchemy
     SPELL_SUBLIMATION_OF_BLOOD,
+    SPELL_IGNITE_POISON,
     SPELL_INTOXICATE,
     SPELL_CONDENSATION_SHIELD,
     SPELL_PETRIFY,
-    SPELL_IGNITE_POISON,
     SPELL_IRRADIATE,
 },
 
