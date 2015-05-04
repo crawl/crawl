@@ -55,6 +55,7 @@
 #include "output.h"
 #include "player-stats.h"
 #include "prompt.h"
+#include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-miscast.h"
@@ -2969,6 +2970,7 @@ void excommunication(god_type new_god, bool immediate)
             branch_bribe[it->id] = 0;
         add_daction(DACT_BRIBE_TIMEOUT);
         add_daction(DACT_REMOVE_GOZAG_SHOPS);
+        shopping_list.remove_dead_shops();
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];

@@ -2443,6 +2443,17 @@ void ShoppingList::item_type_identified(object_class_type base_type,
     // Only restore the excursion at the very end.
     level_excursion le;
 
+#if TAG_MAJOR_VERSION == 34
+    // Handle removed Gozag shops from old saves. Only do this once:
+    // future Gozag abandonment will call remove_dead_shops itself.
+    static bool removed_dead_shops = false;
+    if (!removed_dead_shops)
+    {
+        remove_dead_shops();
+        removed_dead_shops = true;
+    }
+#endif
+
     for (CrawlHashTable &thing : *list)
     {
         if (!thing_is_item(thing))
@@ -2464,6 +2475,30 @@ void ShoppingList::item_type_identified(object_class_type base_type,
         thing[SHOPPING_THING_COST_KEY] =
             _shop_get_item_value(item, shop->greed, false);
     }
+
+    // Prices could have changed.
+    refresh();
+}
+
+void ShoppingList::remove_dead_shops()
+{
+    // Only restore the excursion at the very end.
+    level_excursion le;
+
+    set<level_pos> shops_to_remove;
+
+    for (CrawlHashTable &thing : *list)
+    {
+        const level_pos place = thing_pos(thing);
+        le.go_to(place.id); // thereby running DACT_REMOVE_GOZAG_SHOPS
+        const shop_struct *shop = get_shop(place.pos);
+
+        if (!shop)
+            shops_to_remove.insert(place);
+    }
+
+    for (auto pos : shops_to_remove)
+        forget_pos(pos);
 
     // Prices could have changed.
     refresh();
