@@ -102,7 +102,7 @@ function crypt_loot_plus(e)
           "staff of death / staff of power / staff of wizardry / " ..
           "any magical staff w:5")
   e.subst("d = d:20 ef g:20")
-  e.subst("h = hij")
+  e.subst("h = h:5 ij")
 end
 }}
 
