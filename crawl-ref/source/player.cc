@@ -5474,8 +5474,8 @@ player_save_info& player_save_info::operator=(const player& rhs)
 
 bool player_save_info::operator<(const player_save_info& rhs) const
 {
-    return experience < rhs.experience
-           || (experience == rhs.experience && name < rhs.name);
+    return experience_level > rhs.experience_level
+           || (experience_level == rhs.experience_level && name < rhs.name);
 }
 
 string player_save_info::short_desc() const
