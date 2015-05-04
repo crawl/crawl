@@ -151,7 +151,6 @@ class item_def_printer:
                 }.get(ty, 'int')
         yield g('special', special_type)
 
-        yield f('colour')
         yield f('rnd')
         yield f('quantity')
         yield g('flags', 'item_status_flag_type')
