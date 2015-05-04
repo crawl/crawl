@@ -1398,7 +1398,7 @@ KMONS:  z = skeletal warrior
 KMONS:  N = necromancer
 KMONS:  H = hell knight
 KMONS:  M = zombie / skeleton / w:5 necrophage
-KMONS:  h = titan zombie / fire dragon zombie / golden dragon zombie / ghoul
+KMONS:  Q = titan zombie / fire dragon zombie / golden dragon zombie / ghoul
 KMONS:  0 = lost soul / nothing
 # red metal walls
 COLOUR: = = red
@@ -1434,9 +1434,9 @@ vwwwwwwwwwwwwwwv.........r//||//r.........vAAAAAAwwwwwwwwv
 vwwwwwwvvvv?vvvv......rr=rr*/O*rr=rr......v?v?v?v?vwwwwwwv
 vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
 vwwwwww?....H..v.....rrrrOr$$$$rOrrrr.....v.......?wwwwwwv
-vwwwwwwv....H..+........rrr$$$$rrr........+.h..H..vwwwwwwv
+vwwwwwwv....H..+........rrr$$$$rrr........+.Q..H..vwwwwwwv
 vwwwwww?....H..v......L...r$$$$r...L......v....H..?wwwwwwv
-vwwwwwwv.h.vvvvv...rrr....rr++rr....rrr...v....H..vwwwwwwv
+vwwwwwwv.Q.vvvvv...rrr....rr++rr....rrr...v....H..vwwwwwwv
 vwwwwww?...v...vv....rr.rrrU..Urrr.rr....vvv+v....?wwwwwwv
 vwwwwwwv...v.X..vv....rrr........rrr....vv...vvvvvvwwwwwwv
 vwwwwwwv...+.....vv....r.U..BC..U.r....vvvv.....+Mvwwwwwwv
