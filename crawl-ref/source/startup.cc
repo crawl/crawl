@@ -586,6 +586,9 @@ static const int NUM_MISC_LINES     = 5;
 static void _show_startup_menu(newgame_def* ng_choice,
                                const newgame_def& defaults)
 {
+    // Initialise before the loop so that ? doesn't forget the typed name.
+    string input_string = defaults.name;
+
 again:
 #if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
     wm->show_keyboard();
@@ -706,8 +709,6 @@ again:
     // Draw legal info etc
     opening_screen();
 
-    string input_string = defaults.name;
-
     // If the game filled in a complete name, the user will
     // usually want to enter a new name instead of adding
     // to the current one.
@@ -764,6 +765,19 @@ again:
         {
             *ng_choice = defaults;
             return;
+        }
+        else if (keyn == '?')
+        {
+            list_commands();
+
+            // If we had a save selected, reset type so that the save
+            // will continue to be selected when we restart the menu.
+            MenuItem *active = menu.get_active_item();
+            if (active && active->get_id() >= NUM_GAME_TYPE)
+                type = GAME_TYPE_UNSPECIFIED;
+
+            // restart because help messes up CRTRegion
+            goto again;
         }
 
         if (!menu.process_key(keyn))
