@@ -584,7 +584,7 @@ PLUS:    +14
 COLOUR:  ETC_MUTAGENIC
 TILE:    urand_plutonium
 TILE_EQ: plutonium_sword
-BOOL:    mutate
+BOOL:    mutate, chaotic
 STEALTH: -1
 
 NAME:     great mace "Undeadhunter"
@@ -1207,7 +1207,7 @@ TILE_EQ: etheric_cage
 INSCRIP: RegenMP
 PLUS:    +0
 MP:      +4
-BOOL:    mutate, elec
+BOOL:    mutate, elec, chaotic
 
 ENUM:    ETERNAL_TORMENT
 NAME:    crown of Eternal Torment
