@@ -670,7 +670,7 @@ static vector<player_save_info> _find_saved_characters()
 
     }
 
-    sort(chars.rbegin(), chars.rend());
+    sort(chars.begin(), chars.end());
 #endif // !DISABLE_SAVEGAME_LISTS
     return chars;
 }
