@@ -229,6 +229,12 @@ bool Stash::needs_stop() const
     return false;
 }
 
+bool Stash::is_boring_feature(dungeon_feature_type feature)
+{
+    // Count shops as boring features, because they are handled separately.
+    return !is_notable_terrain(feature) || feature == DNGN_ENTER_SHOP;
+}
+
 static bool _grid_has_perceived_item(const coord_def& pos)
 {
     return you.visible_igrd(pos) != NON_ITEM;
@@ -259,14 +265,15 @@ void Stash::update()
     feat = grd(p);
     trap = NUM_TRAPS;
 
+    if (is_boring_feature(feat))
+        feat = DNGN_FLOOR;
+
     if (feat_is_trap(feat))
     {
         trap = get_trap_type(p);
         if (trap == TRAP_WEB)
             feat = DNGN_FLOOR, trap = TRAP_UNASSIGNED;
     }
-    else if (!is_notable_terrain(feat))
-        feat = DNGN_FLOOR;
 
     if (feat == DNGN_FLOOR)
         feat_desc = "";
@@ -1582,7 +1589,7 @@ void StashTracker::update_visible_stashes()
 
         if ((!lev || !lev->update_stash(*ri))
             && (_grid_has_perceived_item(*ri)
-                || is_notable_terrain(feat)))
+                || !Stash::is_boring_feature(feat)))
         {
             if (!lev)
                 lev = &get_current_level();
