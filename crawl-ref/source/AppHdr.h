@@ -93,7 +93,7 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 //
 #if defined(TARGET_OS_MACOSX) || defined(TARGET_OS_LINUX) || \
     defined(TARGET_OS_FREEBSD) || defined(TARGET_OS_NETBSD) || \
-    defined(TARGET_OS_OPENBSD) || defined(TARGET_COMPILER_CYGWIN) || \
+    defined(TARGET_OS_OPENBSD) || defined(TARGET_OS_CYGWIN) || \
     defined(TARGET_OS_SOLARIS) || defined(TARGET_OS_UNKNOWN)
     #ifndef UNIX
     #define UNIX

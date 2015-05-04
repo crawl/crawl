@@ -4295,7 +4295,7 @@ static string _find_executable_path()
         return utf16_to_8(tempPath);
     else
         return "";
-#elif defined (TARGET_OS_LINUX)
+#elif defined (TARGET_OS_LINUX) || defined (TARGET_OS_CYGWIN)
     char tempPath[2048];
     const ssize_t rsize =
         readlink("/proc/self/exe", tempPath, sizeof(tempPath) - 1);
