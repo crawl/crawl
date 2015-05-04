@@ -2743,6 +2743,9 @@ ITEM: bolt ego:exploding q:5
 ITEM: potion of heal wounds
 ITEM: plate armour good_item
 ITEM: arbalest ego:flaming w:9 ident:type / arbalest unrand:hellfire w:1
+: if you.in_branch("Dis") then
+SUBST: defg = .
+: end
 SUBST: ( = ()
 TILE: c = wall_marble
 MAP
@@ -2794,6 +2797,9 @@ MONS:    lorocyproca
 : end
 ITEM:    arbalest, bolt, potion of curing, potion of heal wounds
 ITEM:    potion of invisibility
+: if you.in_branch("Geh") then
+SUBST: defgh = .
+: end
 KFEAT:   - = open_door
 SHUFFLE: })]>
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
