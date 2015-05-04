@@ -467,7 +467,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
-    tmp->set_id('?');
+    tmp->set_id(GAME_TYPE_INSTRUCTIONS);
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
@@ -841,7 +841,7 @@ again:
                 case GAME_TYPE_HIGH_SCORES:
                     break;
 
-                case '?':
+                case GAME_TYPE_INSTRUCTIONS:
                     break;
 
                 default:
@@ -892,7 +892,7 @@ again:
             ng_choice->type = GAME_TYPE_ARENA;
             return;
 
-        case '?':
+        case GAME_TYPE_INSTRUCTIONS:
             list_commands();
             // restart because help messes up CRTRegion
             goto again;
