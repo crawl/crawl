@@ -20,6 +20,7 @@ AUTOFIGHT_THROW = false
 AUTOFIGHT_THROW_NOMOVE = true
 AUTOFIGHT_FIRE_STOP = false
 AUTOFIGHT_WAIT = false
+AUTOFIGHT_PROMPT_RANGE = true
 AUTOMAGIC_ACTIVE = false
 
 local function delta_to_vi(dx, dy)
@@ -260,6 +261,10 @@ local function set_af_wait(key, value, mode)
     AUTOFIGHT_WAIT = string.lower(value) ~= "false"
 end
 
+local function set_af_prompt_range(key, value, mode)
+    AUTOFIGHT_PROMPT_RANGE = string.lower(value) ~= "false"
+end
+
 function set_automagic(key, value, mode)
   AUTOMAGIC_ACTIVE = string.lower(value) ~= "false"
 end
@@ -299,7 +304,7 @@ function attack(allow_movement)
   elseif info.attack_type == 1 then
     attack_reach(x,y)
   elseif allow_movement then
-    if crawl.weapon_check() then
+    if not AUTOFIGHT_PROMPT_RANGE or crawl.weapon_check() then
       move_towards(x,y)
     end
   elseif AUTOFIGHT_WAIT then
@@ -360,4 +365,5 @@ chk_lua_option.autofight_throw = set_af_throw
 chk_lua_option.autofight_throw_nomove = set_af_throw_nomove
 chk_lua_option.autofight_fire_stop = set_af_fire_stop
 chk_lua_option.autofight_wait = set_af_wait
+chk_lua_option.autofight_prompt_range = set_af_prompt_range
 chk_lua_option.automagic_enable = set_automagic
