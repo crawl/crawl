@@ -6248,8 +6248,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             shock_serpent_discharge_fineff::schedule(this, pos(), pow);
     }
 
-    // The royal jelly objects to taking damage and will SULK. :-)
-    if (type == MONS_ROYAL_JELLY)
+    // The (real) royal jelly objects to taking damage and will SULK. :-)
+    if (type == MONS_ROYAL_JELLY && !is_summoned())
         trj_spawn_fineff::schedule(oppressor, this, pos(), damage);
 
     // Damage sharing from the spectral weapon to its owner
