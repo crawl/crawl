@@ -2475,12 +2475,11 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_ALLIGATOR:
-        // Alligators with kids!
         if (one_chance_in(5))
         {
             natural_leader = true;
             band = BAND_ALLIGATOR;
-            band_size = 2 + random2(3);
+            band_size = 1 + random2(2);
         }
         break;
 
@@ -3274,7 +3273,7 @@ static monster_type _band_member(band_type band, int which,
         return MONS_DOWAN;
 
     case BAND_ALLIGATOR:
-        return MONS_BABY_ALLIGATOR;
+        return MONS_ALLIGATOR;
 
     case BAND_KHUFU:
         return coinflip() ? MONS_GREATER_MUMMY : MONS_MUMMY;

@@ -28,7 +28,7 @@ ORIENT: encompass
 SHUFFLE: 123
 SUBST:  ' = '......
 KFEAT:  ' = net trap / needle trap / bolt trap / spear trap / arrow trap
-MONS:   Menkaure, baby alligator, crocodile, kraken, flying skull
+MONS:   Menkaure, crocodile, kraken, flying skull
 MARKER: a = lua:fog_machine { \
              pow_min = 1, pow_max = 2, delay = 3, \
              size = 2, walk_dist = 8, spread_rate= -1, \
@@ -85,17 +85,17 @@ cmBBBBBBBBmWAAAAAAAAAAAAA..IIII''GGGGoDDDDDDDDoOOOOO'XPPPPPPPP
 cmBBBBBBBB+WAAAAAAAAAAAAA..IIII''GGGGoDDDDDDDDoOOOOO'XPPPPPPPP
 cmBBBBBBBBmWAAAAAAAAAAAAA....III''GGGooooooo+ooOOOOO'XPPPPPPPP
 cooooooommmWAAAAAAAAAAAAA1.....WWWWWWWWWWWWW...wwwXUUUUUUUUccc
-ccLLLLLccccWWAAAAAAAAAAAWW.....Wm+mmmmmmmm+ccc.w4wXUUUUUUUcc
+ccLLLLLccccWWAAAAAAAAAAAWW.....Wm+mmmmmmmm+ccc.w3wXUUUUUUUcc
 ccLLLLLLLLccWWWAAAAAAAWWWWWWW..WmCCCCCCCCmWWWccwwwXUUUUUUcc
-ccLLLLLLm+cc+cWAAAAAAAWWWWWWWW3WmCCCCCCCCmWWwwccccXXXXXWcc
+ccLLLLLLm+cc+cWAAAAAAAWWWWWWWW2WmCCCCCCCCmWWwwccccXXXXXWcc
 ccLLLLLmmKccbcWWAAAAAWWWlllaWWWWmCCCCCCCCmWWWWwccTTTTTXWc
 ccLLLLmmKKKccccWWWWWWWWWWllllWWWmCCCCCCCCmWWVwwwTTTTTTXWc
 ccLLLLmKKKKKc|c+++m+++cWlllllllWmCCCCCCCCmWWdWWwTTTTTTXWc
 ccLLLLmKKKKKcccEEEEEEEcclllcccllmCCCCCCCCmWVWWwVTTTTTTXWc
 ccLLLLmKKKKKccEEEEEEEEEccllc|cllmCCCCCCCCmWWwwwwXTTTTTXWc
 ccLLLL+KKKKK+EEEEEEEEEEE+llc+cllmCCCCCCCCmWwwwXXXXXXXXXWc
-ccLLLLcKKKKKccEEEEEEEEEcclllllllmmmmmmmmmmWwwwo555wwwwWWc
-ccLLLLcKKKKKcccEEEEEEEccmmmmmmmmmWWWWWWWWWwwwwo555wwwwWWc
+ccLLLLcKKKKKccEEEEEEEEEcclllllllmmmmmmmmmmWwwwo444wwwwWWc
+ccLLLLcKKKKKcccEEEEEEEccmmmmmmmmmWWWWWWWWWwwwwo444wwwwWWc
 ccLLLLcKKKKKcNcccc+ccccFFFFFFFmmmWccccccccwXXXXXXXXXwwWWc
 ccLLLLccKKKccNNNNmmmccFFFFFFFFFmmWcNNNNNNcXXSSSSSSSXXwWWc
 ccLLLLcccKccNNNNNNNN+FFFFFFFFFFF+WcNNNNNNcXSSSSSSSSSXXWWc

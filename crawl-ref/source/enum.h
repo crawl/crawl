@@ -2473,7 +2473,9 @@ enum monster_type                      // menv[].type
 #endif
     MONS_ELEPHANT_SLUG,
     MONS_GIANT_LEECH,
+#if TAG_MAJOR_VERSION == 34
     MONS_BABY_ALLIGATOR,
+#endif
     MONS_ALLIGATOR,
     MONS_CROCODILE,
     MONS_HYDRA,

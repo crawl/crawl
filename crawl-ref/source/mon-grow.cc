@@ -58,8 +58,6 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_DEEP_ELF_SUMMONER, MONS_DEEP_ELF_DEMONOLOGIST, 500),
     monster_level_up(MONS_DEEP_ELF_SUMMONER, MONS_DEEP_ELF_SORCERER),
 
-    monster_level_up(MONS_BABY_ALLIGATOR, MONS_ALLIGATOR),
-
     monster_level_up(MONS_GNOLL, MONS_GNOLL_SERGEANT),
 
     monster_level_up(MONS_MERFOLK, MONS_MERFOLK_IMPALER),
