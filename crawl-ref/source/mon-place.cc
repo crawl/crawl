@@ -2479,7 +2479,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         {
             natural_leader = true;
             band = BAND_ALLIGATOR;
-            band_size = 1 + random2(2);
+            band_size = 1;
         }
         break;
 
