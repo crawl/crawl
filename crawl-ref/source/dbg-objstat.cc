@@ -875,9 +875,9 @@ void objstat_iteration_stats()
     }
 }
 
-static void _write_stat_headers(const vector<string> &fields)
+static void _write_stat_headers(const vector<string> &fields, bool items = true)
 {
-    fprintf(stat_outf, "\tLevel");
+    fprintf(stat_outf, "%s\tLevel", items ? "Item" : "Monster");
     for (const string &field : fields)
         fprintf(stat_outf, "\t%s", field.c_str());
     fprintf(stat_outf, "\n");
@@ -1199,7 +1199,7 @@ static void _write_object_stats()
     ostringstream out_file;
     out_file << stat_out_prefix << "Monsters" << stat_out_ext;
     stat_outf = _open_stat_file(out_file.str());
-    _write_stat_headers(monster_fields);
+    _write_stat_headers(monster_fields, false);
     for (const auto &entry : valid_monsters)
         for (const auto &br : stat_branches)
             _write_branch_monster_stats(br.first, entry.first, entry.second);
