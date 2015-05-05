@@ -315,10 +315,11 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case DUR_POWERED_BY_DEATH:
-        if (handle_pbd_corpses() > 0)
+        if (you.props["powered_by_death_strength"].get_int() > 0)
         {
             inf->light_colour = LIGHTMAGENTA;
-            inf->light_text   = "Regen+";
+            inf->light_text   = make_stringf("Regen (%d)",
+                                you.props["powered_by_death_strength"].get_int());
         }
         break;
 
