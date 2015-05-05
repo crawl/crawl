@@ -2604,23 +2604,6 @@ static int _abjuration(int pow, monster *mon)
     return true;
 }
 
-spret_type cast_abjuration(int pow, const coord_def& where, bool fail)
-{
-    fail_check();
-
-    monster* mon = monster_at(where);
-
-    if (mon)
-    {
-        mpr("Send 'em back where they came from!");
-        _abjuration(pow, mon);
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return SPRET_SUCCESS;
-}
-
 spret_type cast_aura_of_abjuration(int pow, bool fail)
 {
     fail_check();

@@ -1,9 +1,4 @@
 %%%%
-Abjuration spell
-
-This spell attempts to send the targeted hostile summoned creature to the place
-whence it came, or at least shorten its stay in the caster's locality.
-%%%%
 Agony spell
 
 This spell cuts the resilience of a target creature in half, although it will
