@@ -44,7 +44,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SHADOW_CREATURES,
     SPELL_SUMMON_DEMON,
     SPELL_SUMMON_FOREST,
-    SPELL_MONSTROUS_MENAGERIE,
+    SPELL_SUMMON_MANA_VIPER,
 },
 
 {   // Book of Fire
@@ -112,7 +112,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_GRAVITAS,
     SPELL_PETRIFY,
     SPELL_ENGLACIATION,
-    SPELL_SUMMON_MANA_VIPER,
 },
 
 {   // Book of Changes
@@ -353,7 +352,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_CALL_CANINE_FAMILIAR,
     SPELL_SUMMON_ICE_BEAST,
     SPELL_SUMMON_MANA_VIPER,
-    SPELL_MONSTROUS_MENAGERIE,
     SPELL_SUMMON_HYDRA,
 },
 
@@ -366,6 +364,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Grand Grimoire
+    SPELL_MONSTROUS_MENAGERIE,
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_MALIGN_GATEWAY,
     SPELL_SUMMON_HORRIBLE_THINGS,
