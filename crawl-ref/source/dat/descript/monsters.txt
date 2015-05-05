@@ -688,11 +688,6 @@ A huge undead abomination, pieced together from the broken bones of many
 dragons by powerful necromantic magic. Fortunately, whatever organ produces a
 dragon's fearsome breath was lost in the process.
 %%%%
-boring beetle
-
-An umber beetle with large, powerful mandibles that enable it to bore through
-solid rock.
-%%%%
 boulder beetle
 
 A huge grey beetle with an almost impenetrable rocky carapace, capable of

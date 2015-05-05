@@ -4724,7 +4724,7 @@ static const pop_entry _invitation_spider[] =
 { // Spider enemies
   {  1,   1,   80, FLAT, MONS_SPIDER },
   {  1,   1,   60, FLAT, MONS_JUMPING_SPIDER },
-  {  1,   1,   40, FLAT, MONS_BORING_BEETLE },
+  {  1,   1,   20, FLAT, MONS_REDBACK },
   {  1,   1,   20, FLAT, MONS_ORB_SPIDER },
   { 0,0,0,FLAT,MONS_0 }
 };

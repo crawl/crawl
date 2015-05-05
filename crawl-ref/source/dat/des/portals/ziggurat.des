@@ -321,7 +321,7 @@ TAGS: ziggurat_pillar centered unrand no_exits
 MONS: ancient lich / shadow demon / curse skull / \
       ironbrand convoker / corrupter / deep elf demonologist
 MONS: eye of draining / eye of devastation / \
-      giant eyeball / ghost moth / black sun
+      giant eyeball / ghost moth / black sun / torpor snail
 MONS: plant
 : if you.depth() > 21 then
 SUBST: 3 = 12222
@@ -382,18 +382,6 @@ MAP
  x
 xxx
  x
-ENDMAP
-
-NAME: ziggurat_pillar_centre_k
-TAGS: ziggurat_pillar centered unrand no_exits
-MONS: boring beetle, boulder beetle, torpor snail, orb spider
-SUBST: 2 : 2:14 3:5 4:1
-MAP
-xxxxx
-xx2xx
-x212x
-xx2xx
-xxxxx
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_l

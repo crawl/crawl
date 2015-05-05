@@ -451,8 +451,7 @@ static void _set_mons_move_dir(const monster* mons,
          || _mons_can_cast_dig(mons, false))
         && mons->foe == MHITYOU)
     {
-        // Boring beetles always move in a straight line in your
-        // direction.
+        // Digging monsters always move in a straight line in your direction.
         *delta = you.pos() - mons->pos();
     }
     else
@@ -4282,7 +4281,7 @@ static bool _monster_move(monster* mons)
                     mons->lose_energy(EUT_MOVE, 5);
 
                 // Message depends on whether caused by acid (Dissolution)
-                // or direct digging (boring beetles, formicids).
+                // or direct digging (formicids).
                 mprf(MSGCH_SOUND, (mons->type == MONS_DISSOLUTION) ?
                      "You hear a sizzling sound." :
                      "You hear a grinding noise."

@@ -3806,29 +3806,6 @@ vvvvv."...xx*xv
 vvvvv0....vvvvv
 ENDMAP
 
-NAME:   evilmike_bad_box
-DEPTH:  D:13-, Depths
-TAGS:   no_wall_fixup
-MONS:   boring beetle
-NSUBST: 9 = 1:1 / 1:19 / *:9
-KMONS:  8 = 8
-KITEM:  8 = star_item / superb_item
-SUBST:  n : m.., o : m..
-MAP
-............
-............
-..nn.oo.nn..
-..nmmmmmmn..
-...m9999m...
-..om9889mo..
-..om9889mo..
-...m9999m...
-..nmmmmmmn..
-..nn.oo.nn..
-............
-............
-ENDMAP
-
 NAME:    evilmike_minifort
 TAGS:    misc_elf_vault
 DEPTH:   D:9-, Depths, !Depths:$, Elf

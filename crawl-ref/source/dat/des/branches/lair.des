@@ -258,31 +258,6 @@ MAP
 ENDMAP
 
 ##############################################################################
-# A boring Lair entry vault.
-#
-NAME: erik_lair_boring
-TAGS: lair_entry
-WEIGHT: 5
-MONS: generate_awake boring beetle, rat
-# Rats are boring.
-ORIENT: float
-SUBST: ? = c x $ '
-KFEAT: O = enter_lair
-NSUBST: 1 = 1:1 / * = 12.
-KPROP: '$ = no_rtele_into
-MAP
-xxxxxxxxx?xxxx
-xxxxxx?xxxx?xx
-?xx?xxxxxxx?xx
-xxxxxx111xxx.x
-?xxxxx1O1.x.?@
-xxx??x111x.x?x
-xxxxxxxx??xxxx
-x?xxxx?xxxxx?x
-xxxxxxxxx?xxxx
-ENDMAP
-
-##############################################################################
 # Grove Lair entry
 #
 NAME:   minmay_lair_entry_grove
@@ -2872,7 +2847,7 @@ KMONS:   0 = blink frog
 KMONS:   A = spiny frog
 KMONS:   B = black mamba
 # beetles/worms
-KMONS:   C = boring beetle
+KMONS:   C = goliath beetle
 KMONS:   D = torpor snail
 KMONS:   E = boulder beetle
 KMONS:   F = lindwurm

@@ -1614,30 +1614,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Sounds of Crawl: the Drone.
-NAME:    dpeg_arrival_sounds_drone
-TAGS:    arrival no_monster_gen no_trap_gen
-MONS:    generate_awake boring beetle / boring beetle
-ORIENT:  float
-NSUBST:  . = 1={ / *:.
-NSUBST:  ' = 1:> / 7:x / *:.
-SUBST:   " = .
-MAP
-  ....ccccc...
-  ....c'''c...
-......c'''c.....
-......c'''c.....
-..ccccc'''ccccc.
-..c''''"""''''c.
-..c''''"1"''''c.
-..c''''"""''''c.
-..ccccc'''ccccc.
-......c'''c.....
-......c'''c.....
-  ....c'''c...
-  ....ccccc...
-ENDMAP
-
 ###############################################################################
 # Sounds of Crawl: the *ZOT*
 NAME:    evilmike_arrival_sounds_zot
