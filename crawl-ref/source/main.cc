@@ -1596,6 +1596,10 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         return false;
     }
 
+    // bidirectional, but not actually a portal
+    if (ftype == DNGN_PASSAGE_OF_GOLUBRIA)
+        return true;
+
     // If it's not bidirectional, check that the player is headed
     // in the right direction.
     if (!feat_is_bidirectional_portal(ftype))
@@ -1750,6 +1754,16 @@ static void _take_stairs(bool down)
 
     if (shaft)
         start_delay(DELAY_DESCENDING_STAIRS, 0);
+    else if (get_trap_type(you.pos()) == TRAP_GOLUBRIA)
+    {
+        coord_def old_pos = you.pos();
+        bool trap_triggered = you.handle_trap();
+        // only returns false if no trap was found, which shouldn't happen
+        ASSERT(trap_triggered);
+        you.turn_is_over = (you.pos() != old_pos);
+        if (!you.turn_is_over)
+            mpr("This passage doesn't lead anywhere!");
+    }
     else
     {
         tag_followers(); // Only those beside us right now can follow.
