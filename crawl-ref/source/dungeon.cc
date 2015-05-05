@@ -6089,29 +6089,6 @@ static void _add_plant_clumps(int frequency /* = 10 */,
     }
 }
 
-struct nearest_point
-{
-    coord_def target;
-    coord_def nearest;
-    int       distance;
-
-    nearest_point(const coord_def &t) : target(t), nearest(), distance(-1)
-    {
-    }
-    void operator () (const coord_def &c)
-    {
-        if (grd(c) == DNGN_FLOOR)
-        {
-            const int ndist = (c - target).abs();
-            if (distance == -1 || ndist < distance)
-            {
-                distance = ndist;
-                nearest  = c;
-            }
-        }
-    }
-};
-
 static coord_def _get_hatch_dest(coord_def base_pos, bool shaft)
 {
     map_marker *marker = env.markers.find(base_pos, MAT_POSITION);

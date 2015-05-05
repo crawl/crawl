@@ -2504,9 +2504,9 @@ void forget_map(bool rot)
 
         if (rot)
         {
-            const int dist = distance2(you.pos(), p);
+            const int dist = grid_distance(you.pos(), p);
             int chance = pow(geometric_chance,
-                             max(1, (dist - radius) / 40)) * scalar;
+                             max(1, (dist * dist - radius) / 40)) * scalar;
             if (x_chance_in_y(chance, scalar))
                 continue;
         }
@@ -3608,7 +3608,7 @@ void display_char_status()
     else
         mpr("You are alive.");
 
-    const int halo_size = you.halo_radius2();
+    const int halo_size = you.halo_radius();
     if (halo_size >= 0)
     {
         if (halo_size > 37)
@@ -7304,7 +7304,7 @@ bool player::backlit(bool self_halo) const
         return true;
     }
 
-    return !umbraed() && haloed() && (self_halo || halo_radius2() == -1);
+    return !umbraed() && haloed() && (self_halo || halo_radius() == -1);
 }
 
 bool player::umbra() const

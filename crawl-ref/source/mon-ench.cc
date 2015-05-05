@@ -871,7 +871,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_DAZED:
         if (!quiet && alive())
-            simple_monster_message(this, " is no longer dazed.");
+                simple_monster_message(this, " is no longer dazed.");
         break;
 
     case ENCH_INNER_FLAME:
@@ -889,7 +889,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_MUTE:
         if (!quiet && alive())
-            simple_monster_message(this, " is no longer mute.");
+                simple_monster_message(this, " is no longer mute.");
         break;
 
     case ENCH_BLIND:
@@ -1423,7 +1423,7 @@ static void _merfolk_avatar_song(monster* mons)
 
     // Can only call up drowned souls if there's free deep water nearby
     vector<coord_def> deep_water;
-    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_SQUARE); ri; ++ri)
         if (grd(*ri) == DNGN_DEEP_WATER && !actor_at(*ri))
             deep_water.push_back(*ri);
 

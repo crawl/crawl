@@ -805,7 +805,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     // XXX: This is a little redundant with proximity checks in
     // place_monster.
     if (mg.proximity == PROX_AWAY_FROM_PLAYER
-        && distance2(you.pos(), mg_pos) <= LOS_RADIUS_SQ)
+        && grid_distance(you.pos(), mg_pos) <= LOS_RADIUS)
     {
         return false;
     }
@@ -983,7 +983,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             switch (mg.proximity)
             {
             case PROX_ANYWHERE:
-                if (distance2(you.pos(), mg.pos) < dist_range(2 + random2(3)))
+                if (grid_distance(you.pos(), mg.pos) < 2 + random2(3))
                     proxOK = false;
                 break;
 
@@ -991,8 +991,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             case PROX_AWAY_FROM_PLAYER:
                 // If this is supposed to measure los vs not los,
                 // then see_cell(mg.pos) should be used instead. (jpeg)
-                close_to_player = (distance2(you.pos(), mg.pos) <=
-                                   LOS_RADIUS_SQ);
+                close_to_player = (grid_distance(you.pos(), mg.pos) <=
+                                   LOS_RADIUS);
 
                 if (mg.proximity == PROX_CLOSE_TO_PLAYER && !close_to_player
                     || mg.proximity == PROX_AWAY_FROM_PLAYER && close_to_player)
@@ -4083,7 +4083,7 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
 
     int good_count = 0;
 
-    for (radius_iterator ri(where, radius, C_ROUND, !allow_centre);
+    for (radius_iterator ri(where, radius, C_SQUARE, !allow_centre);
          ri; ++ri)
     {
         bool success = false;

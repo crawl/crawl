@@ -44,7 +44,7 @@ static void _guess_invis_foe_pos(monster* mon)
 
     // NOTE: This depends on ignoring clouds, so that cells hidden by
     // opaque clouds are included as a possibility for the foe's location.
-    for (radius_iterator ri(mon->pos(), guess_radius, C_ROUND, LOS_SOLID); ri; ++ri)
+    for (radius_iterator ri(mon->pos(), guess_radius, C_SQUARE, LOS_SOLID); ri; ++ri)
     {
         if (foe->is_habitable(*ri))
             possibilities.push_back(*ri);
@@ -197,8 +197,8 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
         }
         // Hold position if we've reached our ideal range
         else if (mon->type == MONS_SPELLFORGED_SERVITOR
-                 && (mon->pos() - target->pos()).abs()
-                 <= dist_range(mon->props["ideal_range"].get_int())
+                 && (mon->pos() - target->pos()).rdist()
+                 <= mon->props["ideal_range"].get_int()
                  && !one_chance_in(8))
         {
             mon->firing_pos = mon->pos();
@@ -909,7 +909,7 @@ void handle_behaviour(monster* mon)
 
             bool stop_retreat = false;
             // We've approached our next destination, re-evaluate
-            if (distance2(mon->target, mon->pos()) <= 3)
+            if (grid_distance(mon->target, mon->pos()) <= 1)
             {
                 // Continue on to the rally point
                 if (mon->target != mon->patrol_point)
@@ -919,7 +919,7 @@ void handle_behaviour(monster* mon)
                     stop_retreat = true;
 
             }
-            else if (distance2(mon->pos(), you.pos()) > dist_range(LOS_RADIUS + 2))
+            else if (grid_distance(mon->pos(), you.pos()) > LOS_RADIUS + 2)
             {
                 // We're too far from the player. Idle around and wait for
                 // them to catch up.
@@ -943,7 +943,7 @@ void handle_behaviour(monster* mon)
                 // idling (to prevent it from repeatedly resetting idle
                 // time if its own wanderings bring it closer to the player)
                 if (mon->props.exists("idle_point")
-                    && distance2(mon->pos(), you.pos()) < dist_range(LOS_RADIUS))
+                    && grid_distance(mon->pos(), you.pos()) < LOS_RADIUS)
                 {
                     mon->props.erase("idle_point");
                     mon->props.erase("idle_deadline");
@@ -1320,7 +1320,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         mon->foe       = src_idx;
         mon->target    = src_pos;
         if (src == &you)
-            setTarget = true;
+                setTarget = true;
         else if (mon->friendly() && !crawl_state.game_is_arena())
             mon->foe = MHITYOU;
 

@@ -2436,8 +2436,8 @@ string melee_attack::mons_attack_desc()
         return "";
 
     string ret;
-    int dist = (attack_position - defender->pos()).abs();
-    if (dist > 2)
+    int dist = (attack_position - defender->pos()).rdist();
+    if (dist > 1)
     {
         ASSERT(can_reach());
         ret = " from afar";

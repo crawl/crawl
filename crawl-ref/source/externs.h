@@ -89,8 +89,6 @@ template <typename Z> static inline Z sgn(Z x)
     return x < 0 ? -1 : (x > 0 ? 1 : 0);
 }
 
-static inline int dist_range(int x) { return x*x + 1; }
-
 struct coord_def
 {
     int         x;
@@ -244,9 +242,6 @@ struct coord_def
     {
         return xi == x && yi == y;
     }
-
-    int range() const;
-    int range(const coord_def other) const;
 };
 
 extern const coord_def INVALID_COORD;

@@ -968,7 +968,7 @@ bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
 
 void zotdef_create_pond(const coord_def& center, int radius)
 {
-    for (radius_iterator ri(center, radius, C_ROUND, LOS_DEFAULT); ri; ++ri)
+    for (radius_iterator ri(center, radius, C_SQUARE, LOS_DEFAULT); ri; ++ri)
     {
         const coord_def p = *ri;
         if (p != you.pos() && coinflip())

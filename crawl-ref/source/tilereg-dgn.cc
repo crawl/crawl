@@ -675,9 +675,9 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
     // Handle weapons of reaching.
     if (!mon->wont_attack() && you.see_cell_no_trans(mon->pos()))
     {
-        const int dist = (you.pos() - mon->pos()).abs();
+        const int dist = (you.pos() - mon->pos()).rdist();
 
-        if (dist > 2 && weapon && weapon_reach(*weapon) >= dist)
+        if (dist > 1 && weapon && weapon_reach(*weapon) >= dist)
         {
             macro_buf_add_cmd(CMD_EVOKE_WIELDED);
             _add_targeting_commands(mon->pos());
@@ -1121,7 +1121,7 @@ static void _add_tip(string &tip, string text)
 bool tile_dungeon_tip(const coord_def &gc, string &tip)
 {
     const int attack_dist = you.weapon() ?
-        weapon_reach(*you.weapon()) : 2;
+        weapon_reach(*you.weapon()) : 1;
 
     vector<command_type> cmd;
     tip = "";
@@ -1144,7 +1144,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
         if (target && you.can_see(target))
         {
             has_monster = true;
-            if ((gc - you.pos()).abs() <= attack_dist)
+            if ((gc - you.pos()).rdist() <= attack_dist)
             {
                 if (!cell_is_solid(gc))
                 {

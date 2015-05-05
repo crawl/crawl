@@ -130,12 +130,7 @@ void seen_monsters_react(int stealth)
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if ((mi->asleep() || mons_is_wandering(*mi))
-            && check_awaken(*mi, stealth)
-#ifdef EUCLIDEAN
-               || you.prev_move.abs() == 2 && x_chance_in_y(2, 5)
-                  && check_awaken(*mi, stealth)
-#endif
-           )
+            && check_awaken(*mi, stealth))
         {
             behaviour_event(*mi, ME_ALERT, &you, you.pos(), false);
 
@@ -527,8 +522,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         map_radius = 5;
 
     // now gradually weaker with distance:
-    const int pfar     = dist_range(map_radius * 7 / 10);
-    const int very_far = dist_range(map_radius * 9 / 10);
+    const int pfar     = map_radius * 7 / 10;
+    const int very_far = map_radius * 9 / 10;
 
     bool did_map = false;
     int  num_altars        = 0;
@@ -537,14 +532,14 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     const FixedArray<uint8_t, GXM, GYM>& difficulty =
         _tile_difficulties(!deterministic);
 
-    for (radius_iterator ri(pos, map_radius, C_ROUND);
+    for (radius_iterator ri(pos, map_radius, C_SQUARE);
          ri; ++ri)
     {
         if (!wizard_map)
         {
             int threshold = proportion;
 
-            const int dist = distance2(you.pos(), *ri);
+            const int dist = grid_distance(you.pos(), *ri);
 
             if (dist > very_far)
                 threshold = threshold / 3;

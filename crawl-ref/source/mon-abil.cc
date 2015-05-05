@@ -1022,13 +1022,13 @@ void treant_release_fauna(monster* mons)
     {
         if (base_t == MONS_WASP)
         {
-            mprf("Angry insects surge out from beneath %s foliage!",
-                    mons->name(DESC_ITS).c_str());
+                mprf("Angry insects surge out from beneath %s foliage!",
+                        mons->name(DESC_ITS).c_str());
         }
         else if (base_t == MONS_RAVEN)
         {
-            mprf("Agitated ravens fly out from beneath %s foliage!",
-                    mons->name(DESC_ITS).c_str());
+                mprf("Agitated ravens fly out from beneath %s foliage!",
+                        mons->name(DESC_ITS).c_str());
         }
     }
 }
@@ -1119,7 +1119,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             break;
 
         if (mons->attitude == ATT_HOSTILE
-            && distance2(you.pos(), mons->pos()) <= 5)
+            && grid_distance(you.pos(), mons->pos()) <= 2)
         {
             mons->suicide();
             used = true;
@@ -1128,7 +1128,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
         {
-            if (mons_aligned(mons, *targ) || distance2(mons->pos(), targ->pos()) > 4)
+            if (mons_aligned(mons, *targ) || grid_distance(mons->pos(), targ->pos()) > 2)
                 continue;
 
             if (!cell_is_solid(targ->pos()))
@@ -1275,7 +1275,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
             {
                 if (mi->type == MONS_BRIAR_PATCH
-                    && distance2(mons->pos(), mi->pos()) > 17)
+                    && grid_distance(mons->pos(), mi->pos()) > 3)
                 {
                     briar_count++;
                 }

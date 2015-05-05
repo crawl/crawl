@@ -360,15 +360,15 @@ public:
     // Being heated by a heat aura?
     virtual bool heated() const;
 #endif
-    // Squared halo radius.
-    virtual int halo_radius2() const = 0;
-    // Squared silence radius.
-    virtual int silence_radius2() const = 0;
-    // Squared liquefying radius
-    virtual int liquefying_radius2() const = 0;
-    virtual int umbra_radius2() const = 0;
+    // Halo radius.
+    virtual int halo_radius() const = 0;
+    // Silence radius.
+    virtual int silence_radius() const = 0;
+    // Liquefying radius.
+    virtual int liquefying_radius() const = 0;
+    virtual int umbra_radius() const = 0;
 #if TAG_MAJOR_VERSION == 34
-    virtual int heat_radius2() const = 0;
+    virtual int heat_radius() const = 0;
 #endif
 
     virtual bool glows_naturally() const = 0;

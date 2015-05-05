@@ -1512,21 +1512,19 @@ KMONS: d = diamond obelisk
 KFEAT: _ = altar_qazlal
 : interest_check(_G)
 MAP
-     ccccc
-   ccc'''ccc
-  cc'''''''cc
- cc'''''''''cc
+ ccccccccccccc
  c'''''''''''c
-cc'''''''''''cc
-@nnnnnn'''''''c
-@...._nd''''''c
-@nnnnnn'''''''c
-cc'''''''''''cc
  c'''''''''''c
- cc'''''''''cc
-  cc'''''''cc
-   ccc'''ccc
-     ccccc
+ c'''''''''''c
+ c'''''''''''c
+@nnnnnn''''''c
+@...._nd'''''c
+@nnnnnn''''''c
+ c'''''''''''c
+ c'''''''''''c
+ c'''''''''''c
+ c'''''''''''c
+ ccccccccccccc
 ENDMAP
 
 NAME:    nicolae_qazlal_style_of_elements

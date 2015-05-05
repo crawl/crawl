@@ -984,7 +984,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
                 if (_player_caught_in_web())
                 {
-                    check_monsters_sense(SENSE_WEB_VIBRATION, 100, you.pos());
+                    check_monsters_sense(SENSE_WEB_VIBRATION, 9, you.pos());
                     if (player_in_a_dangerous_place())
                         xom_is_stimulated(50);
                 }
@@ -1018,7 +1018,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 m->props[NEWLY_TRAPPED_KEY] = true;
 
                 // Alert monsters.
-                check_monsters_sense(SENSE_WEB_VIBRATION, 100, triggerer.position);
+                check_monsters_sense(SENSE_WEB_VIBRATION, 9, triggerer.position);
             }
         }
         break;
@@ -1206,7 +1206,7 @@ int reveal_traps(const int range)
         if (!trap.active())
             continue;
 
-        if (distance2(you.pos(), trap.pos) < dist_range(range) && !trap.is_known())
+        if (grid_distance(you.pos(), trap.pos) < range && !trap.is_known())
         {
             traps_found++;
             trap.reveal();
@@ -1264,12 +1264,12 @@ void search_around()
     if (max_dist < 1)
         max_dist = 1;
 
-    for (radius_iterator ri(you.pos(), max_dist, C_ROUND, LOS_NO_TRANS); ri; ++ri)
+    for (radius_iterator ri(you.pos(), max_dist, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
         if (grd(*ri) != DNGN_UNDISCOVERED_TRAP)
             continue;
 
-        int dist = ri->range(you.pos());
+        int dist = ri->distance_from(you.pos());
 
         // Own square is not excluded; may be flying.
         // XXX: Currently, flying over a trap will always detect it.
@@ -2164,6 +2164,6 @@ bool ensnare(actor *fly)
     if (!fly->alive())
         return true;
 
-    check_monsters_sense(SENSE_WEB_VIBRATION, 100, fly->pos());
+    check_monsters_sense(SENSE_WEB_VIBRATION, 9, fly->pos());
     return true;
 }

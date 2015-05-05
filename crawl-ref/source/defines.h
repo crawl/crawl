@@ -130,9 +130,8 @@ const int LABYRINTH_BORDER = 4;
 #define Y_WIDTH                 (Y_BOUND_2 - Y_BOUND_1 + 1)
 
 // maximal LOS radius
-#define LOS_RADIUS 8
-// maximal LOS radius squared, for comparison with distance()
-#define LOS_RADIUS_SQ (LOS_RADIUS * LOS_RADIUS + 1)
+#define LOS_RADIUS 7
+
 // maximal horizontal or vertical LOS range:
 //   a quadrant needs to fit inside an 2D array with
 //     0 <= x, y <= LOS_MAX_RANGE
@@ -219,7 +218,7 @@ const int UNUSABLE_SKILL = -99;
 
 const int AGILITY_BONUS = 5;
 
-#define TORNADO_RADIUS 6
+#define TORNADO_RADIUS 5
 
 #define NUMBER_OF_RUNES_NEEDED    3
 

@@ -653,8 +653,8 @@ void dgn_shoals_generate_flora()
 
 void dgn_build_shoals_level()
 {
-    // TODO: Attach this information to the vault name string
-    //       instead of the build method string.
+        // TODO: Attach this information to the vault name string
+        //       instead of the build method string.
     env.level_build_method += make_stringf(" [depth %d]", you.depth);
 
     const int shoals_depth = you.depth - 1;
@@ -901,10 +901,10 @@ static int _shoals_tide_at(coord_def pos, int base_tide)
         return base_tide;
 
     pos -= tide_caller->pos();
-    if (pos.abs() > sqr(TIDE_CALL_RADIUS) + 1)
+    if (pos.rdist() > TIDE_CALL_RADIUS)
         return base_tide;
 
-    return base_tide + max(0, tide_called_peak - pos.range() * 3);
+    return base_tide + max(0, tide_called_peak - pos.rdist() * 3);
 }
 
 static vector<coord_def> _shoals_extra_tide_seeds()
