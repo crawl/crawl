@@ -2336,7 +2336,7 @@ static void _elements_card(int power, deck_rarity_type rarity)
     const monster_type element_list[][3] =
     {
        {MONS_RAIJU, MONS_WIND_DRAKE, MONS_SHOCK_SERPENT},
-       {MONS_BASILISK, MONS_BORING_BEETLE, MONS_BOULDER_BEETLE},
+       {MONS_BASILISK, MONS_BOULDER_BEETLE, MONS_IRON_GOLEM},
        {MONS_MOTTLED_DRAGON, MONS_MOLTEN_GARGOYLE, MONS_SALAMANDER_FIREBRAND},
        {MONS_ICE_BEAST, MONS_POLAR_BEAR, MONS_ICE_DRAGON}
     };

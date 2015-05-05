@@ -2594,7 +2594,9 @@ enum monster_type                      // menv[].type
     MONS_WASP,
     MONS_HORNET,
     MONS_GOLIATH_BEETLE,
+#if TAG_MAJOR_VERSION == 34
     MONS_BORING_BEETLE,
+#endif
     MONS_BOULDER_BEETLE,
 #if TAG_MAJOR_VERSION > 34
     MONS_DEATH_SCARAB,

@@ -2098,37 +2098,6 @@ MAP
 ENDMAP
 
 ##############################################################################
-# Boring beetle workplace (evilmike)
-#
-NAME:   evilmike_boring_beetle
-DEPTH:  Depths
-ORIENT: float
-NSUBST: m = 4:| / 4:* / 9:0 / 4:9 / 2:8 / 10:. / 150:x / *:m
-SUBST:  n = m
-MONS:   generate_awake boring beetle
-MAP
-vvvvvvvvvvvvvvvvvvv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vnmmmmmmmmmmmmmmmmv
-vnnmmmmmmmmmmmmmmmv
-@nnnmmmmmmmmmmmmm1v
-vnnmmmmmmmmmmmmmmmv
-vnmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vvvvvvvvvvvvvvvvvvv
-ENDMAP
-
-##############################################################################
 
 NAME:    hangedman_screamer
 ORIENT:  float

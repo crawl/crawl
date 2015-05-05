@@ -414,10 +414,10 @@ static void _insect_wave(int power)
                 MONS_GOLIATH_BEETLE, MONS_QUEEN_BEE, MONS_WOLF_SPIDER, MONS_BUTTERFLY,
                 MONS_BOULDER_BEETLE, MONS_REDBACK,
                 MONS_VAMPIRE_MOSQUITO, MONS_HORNET, MONS_SOLDIER_ANT, MONS_QUEEN_ANT,
-                MONS_GIANT_COCKROACH, MONS_BORING_BEETLE, MONS_TRAPDOOR_SPIDER,
+                MONS_GIANT_COCKROACH, MONS_TRAPDOOR_SPIDER,
                 MONS_SCORPION, END};
     monster_type boss[] = {MONS_GOLIATH_BEETLE, MONS_BOULDER_BEETLE,
-                MONS_QUEEN_ANT, MONS_BORING_BEETLE, MONS_QUEEN_BEE, END};
+                MONS_QUEEN_ANT, MONS_QUEEN_BEE, END};
     _zotdef_fill_from_list(insects, 0, power); // full
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("You hear an ominous buzzing.");

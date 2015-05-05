@@ -243,6 +243,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_UNBORN)
     AXED_MON(MONS_GIANT_MITE)
     AXED_MON(MONS_BABY_ALLIGATOR)
+    AXED_MON(MONS_BORING_BEETLE)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -2633,18 +2634,6 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
     20, 2, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_INSECT, HT_LAND, 6, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_INSECT
-},
-
-{
-    MONS_BORING_BEETLE, 'B', BROWN, "boring beetle",
-    M_NO_SKELETON | M_BURROWS,
-    MR_VUL_POISON,
-    10, MONS_GOLIATH_BEETLE, MONS_BORING_BEETLE, MH_NATURAL, 40,
-    { {AT_BITE, AF_PLAIN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
-    13, 4, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
-    I_INSECT, HT_LAND, 6, DEFAULT_ENERGY,
-    MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_INSECT
 },
 
 {

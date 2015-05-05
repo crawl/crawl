@@ -317,7 +317,7 @@ ENDMAP
 NAME:    guppyfry_shop_earth
 TAGS:    no_monster_gen
 DEPTH:   D:11-, Depths
-KMONS:   1 = gargoyle / basilisk / boring beetle / earth elemental / cyclops w:4
+KMONS:   1 = gargoyle / basilisk / earth elemental / cyclops w:3
 KMONS:   2 = stone giant / catoblepas / deep troll earth mage / boulder beetle / \
              iron dragon w:4
 ITEM:    stone
