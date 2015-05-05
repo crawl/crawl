@@ -117,7 +117,6 @@ sting STING
 venom_bolt VENOM_BOLT
 
 %sdir gui/spells/summoning
-abjuration ABJURATION
 mass_abjuration MASS_ABJURATION
 call_canine_familiar CALL_CANINE_FAMILIAR
 call_imp CALL_IMP

@@ -39,8 +39,8 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Summonings
-    SPELL_ABJURATION,
     SPELL_RECALL,
+    SPELL_AURA_OF_ABJURATION,
     SPELL_SHADOW_CREATURES,
     SPELL_SUMMON_DEMON,
     SPELL_SUMMON_FOREST,
@@ -366,7 +366,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Grand Grimoire
-    SPELL_AURA_OF_ABJURATION,
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_MALIGN_GATEWAY,
     SPELL_SUMMON_HORRIBLE_THINGS,

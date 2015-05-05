@@ -1726,9 +1726,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_CONTROL_UNDEAD:
         return mass_enchantment(ENCH_CHARM, powc, fail);
 
-    case SPELL_ABJURATION:
-        return cast_abjuration(powc, beam.target, fail);
-
     case SPELL_AURA_OF_ABJURATION:
         return cast_aura_of_abjuration(powc, fail);
 
@@ -1899,6 +1896,7 @@ static spret_type _do_cast(spell_type spell, int powc,
 
 #if TAG_MAJOR_VERSION == 34
     // Removed spells.
+    case SPELL_ABJURATION:
     case SPELL_CIGOTUVIS_DEGENERATION:
     case SPELL_DEMONIC_HORDE:
     case SPELL_ENSLAVEMENT:

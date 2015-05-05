@@ -390,10 +390,11 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+// Used indirectly, by monsters abjuring via other summon spells.
 {
     SPELL_ABJURATION, "Abjuration",
     SPTYP_SUMMONING,
-    SPFLAG_TARGET | SPFLAG_ESCAPE | SPFLAG_NEEDS_TRACER,
+    SPFLAG_TARGET | SPFLAG_ESCAPE | SPFLAG_NEEDS_TRACER | SPFLAG_MONSTER,
     3,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -405,7 +406,7 @@ static const struct spell_desc spelldata[] =
     SPELL_AURA_OF_ABJURATION, "Aura of Abjuration",
     SPTYP_SUMMONING,
     SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_ESCAPE,
-    6,
+    5,
     200,
     -1, -1,
     5, 0,
