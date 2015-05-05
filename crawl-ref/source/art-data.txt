@@ -473,6 +473,7 @@ TILE_EQ: eos
 BRAND:   SPWPN_ELECTROCUTION
 BOOL:    elec, seeinv, notelep
 
+# TAG_MAJOR_VERSION == 34
 # Was "spear of Voo-Doo". In the African origin, there is a distinction
 # between voodoo and bo, the latter dealing with curses, witchcraft and
 # spells designed to do harm. Priests (or rather sorcerers) of bo are
