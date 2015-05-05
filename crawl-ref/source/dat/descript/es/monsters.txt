@@ -418,12 +418,6 @@ azure jelly
 
 Una masa de citoplasma azulado y extremadamente frío, envuelta en escarcha.
 %%%%
-baby alligator
-
-Un joven caimán. Aunque aún no tiene poderosas mandíbulas, ni la fuerza
-suficiente para imprimir un ráfaga de velocidad, es más ligero que un adulto y
-sus dientes de leche son muy agudos.
-%%%%
 ball lightning
 
 Una enorme y veloz esfera resplandeciente de energía eléctrica. Explotará en

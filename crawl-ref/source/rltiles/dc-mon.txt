@@ -141,7 +141,6 @@ death_scarab MONS_DEATH_SCARAB
 %sdir mon/animals
 %rim 1
 crocodile MONS_CROCODILE
-alligator_baby MONS_BABY_ALLIGATOR
 alligator MONS_ALLIGATOR
 snapping_turtle MONS_SNAPPING_TURTLE
 snapping_turtle_shell MONS_SNAPPING_TURTLE_SHELL

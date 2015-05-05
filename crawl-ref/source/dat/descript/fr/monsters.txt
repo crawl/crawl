@@ -435,12 +435,6 @@ azure jelly
 Un blob extrêmement froid et d'un cytoplasme bleu clair, formant des morceaux
 de gel dans l'air autour de lui.
 %%%%
-baby alligator
-
-Un jeune alligator. Même s'il n'a pas encore les mâchoires écrasantes ni la
-force nécessaire pour s'élancer rapidement, il est plus souple qu'un adulte et
-ses dents de lait sont quand même très tranchantes.
-%%%%
 ball lightning
 
 Une énorme sphère rapide d'énergie électrique coruscante. Ça va exploser à la

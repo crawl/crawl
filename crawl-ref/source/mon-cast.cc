@@ -4735,7 +4735,7 @@ static const pop_entry _invitation_swamp[] =
   {  1,   1,   60, FLAT, MONS_SWAMP_DRAKE },
   {  1,   1,   40, FLAT, MONS_VAMPIRE_MOSQUITO },
   {  1,   1,   40, FLAT, MONS_INSUBSTANTIAL_WISP },
-  {  1,   1,   20, FLAT, MONS_BABY_ALLIGATOR },
+  {  1,   1,   10, FLAT, MONS_ALLIGATOR },
   { 0,0,0,FLAT,MONS_0 }
 };
 

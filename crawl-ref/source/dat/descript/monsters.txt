@@ -577,12 +577,6 @@ azure jelly
 An extremely cold blob of bright blue cytoplasm, forming bits of frost in the
 air around it.
 %%%%
-baby alligator
-
-A juvenile alligator. While it does not have crushing jaws, nor the strength to
-put on massive bursts of speed, it is more limber than the adult form, and its
-milk-tooth is still very sharp.
-%%%%
 ball lightning
 
 A huge, swift sphere of coruscating electrical energy. It will explode at the
