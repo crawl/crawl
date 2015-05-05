@@ -87,7 +87,7 @@ spret_type cast_delayed_fireball(bool fail)
 void setup_fire_storm(const actor *source, int pow, bolt &beam)
 {
     beam.name         = "great blast of fire";
-    beam.ex_size      = 2 + (random2(pow) > 75);
+    beam.ex_size      = 2 + (random2(1000) < pow);
     beam.flavour      = BEAM_LAVA;
     beam.real_flavour = beam.flavour;
     beam.glyph        = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -109,7 +109,7 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
 
 spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
 {
-    if (distance2(beam.target, beam.source) > dist_range(beam.range))
+    if (grid_distance(beam.target, beam.source) > beam.range)
     {
         mpr("That is beyond the maximum range.");
         return SPRET_ABORT;
@@ -1417,7 +1417,7 @@ void shillelagh(actor *wielder, coord_def where, int pow)
     for (adjacent_iterator ai(where, false); ai; ++ai)
         _shatter_monsters(*ai, pow * 3 / 2, wielder);
 
-    if ((you.pos() - wielder->pos()).abs() <= 2 && in_bounds(you.pos()))
+    if ((you.pos() - wielder->pos()).rdist() <= 1 && in_bounds(you.pos()))
         _shatter_player(pow, wielder, true);
 }
 
@@ -2450,10 +2450,10 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         if (!actor_at(entry.first))
             continue;
 
-        int arc = hitfunc.arc_length[entry.first.range(hitfunc.origin)];
+        int arc = hitfunc.arc_length[entry.first.distance_from(hitfunc.origin)];
         ASSERT(arc > 0);
         dprf("at distance %d, arc length is %d",
-             entry.first.range(hitfunc.origin), arc);
+             entry.first.distance_from(hitfunc.origin), arc);
         beam.source = beam.target = entry.first;
         beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
         beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
@@ -2587,7 +2587,6 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
 
     int num_targets = 0;
     vector<bolt> beams;
-    int range2 = dist_range(range);
 
     bolt base_beam;
 
@@ -2629,7 +2628,7 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
                 continue;
 
             //Don't try to aim at a target if it's out of range
-            if (delta.abs() > range2)
+            if (delta.rdist() > range)
                 continue;
 
             //Don't try to aim at targets in the opposite direction of main aim

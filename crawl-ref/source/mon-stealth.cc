@@ -63,11 +63,11 @@ int monster::stealth() const
 
     // Not an issue with invisibility, but glowing or haloes make you
     // unstealthy.
-    if (glows_naturally() || halo_radius2() != -1)
+    if (glows_naturally() || halo_radius() != -1)
         actual_stealth -= 3;
 
     // Having an umbra makes you more stealthy, on the other hand.
-    if (umbra_radius2() != -1)
+    if (umbra_radius() != -1)
         actual_stealth += 3;
 
     // Some specific overrides

@@ -413,12 +413,12 @@ public:
     bool asleep() const;
     bool backlit(bool self_halo = true) const;
     bool umbra() const;
-    int halo_radius2() const;
-    int silence_radius2() const;
-    int liquefying_radius2() const;
-    int umbra_radius2() const;
+    int halo_radius() const;
+    int silence_radius() const;
+    int liquefying_radius() const;
+    int umbra_radius() const;
 #if TAG_MAJOR_VERSION == 34
-    int heat_radius2() const;
+    int heat_radius() const;
 #endif
     bool glows_naturally() const;
     bool petrified() const;

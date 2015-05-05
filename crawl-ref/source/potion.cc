@@ -508,7 +508,7 @@ public:
                  "%s prevents you from becoming "
                  "completely invisible.",
                  you.duration[DUR_INVIS] ? "more " : "",
-                 you.haloed() && you.halo_radius2() == -1 ? "the" : "your",
+                 you.haloed() && you.halo_radius() == -1 ? "the" : "your",
                  comma_separated_line(afflictions.begin(), afflictions.end()).c_str());
         }
         else

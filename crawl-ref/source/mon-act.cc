@@ -267,14 +267,13 @@ static bool _do_mon_spell(monster* mons, bolt &beem)
     return false;
 }
 
-static void _swim_or_move_energy(monster* mon, bool diag = false)
+static void _swim_or_move_energy(monster* mon)
 {
     const dungeon_feature_type feat = grd(mon->pos());
 
     // FIXME: Replace check with mons_is_swimming()?
     mon->lose_energy(((feat_is_lava(feat) || feat_is_water(feat))
-                      && mon->ground_level()) ? EUT_SWIM : EUT_MOVE,
-                      diag ? 10 : 1, diag ? 14 : 1);
+                      && mon->ground_level()) ? EUT_SWIM : EUT_MOVE);
 }
 
 static bool _unfriendly_or_insane(const monster* mon)
@@ -977,7 +976,7 @@ static bool _handle_reaching(monster* mons)
         // The monster has to be attacking the correct position.
         && mons->target == foepos
         // With a reaching attack with a large enough range:
-        && delta.abs() <= range
+        && delta.rdist() <= range
         // And with no dungeon furniture in the way of the reaching
         // attack;
         && (feat_is_reachable_past(grd(first_middle))
@@ -2806,7 +2805,7 @@ static void _ancient_zyme_sicken(monster* mons)
         }
     }
 
-    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_SQUARE); ri; ++ri)
     {
         monster *m = monster_at(*ri);
         if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
@@ -3822,13 +3821,8 @@ bool monster_swaps_places(monster* mon, const coord_def& delta,
 
     if (takes_time)
     {
-#ifdef EUCLIDEAN
-        _swim_or_move_energy(mon, delta.abs() == 2);
-        _swim_or_move_energy(m2, delta.abs() == 2);
-#else
         _swim_or_move_energy(mon);
         _swim_or_move_energy(m2);
-#endif
     }
 
     mon->check_redraw(m2->pos(), false);
@@ -3947,11 +3941,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     mons->seen_context = SC_NONE;
 
     // This appears to be the real one, ie where the movement occurs:
-#ifdef EUCLIDEAN
-    _swim_or_move_energy(mons, delta.abs() == 2);
-#else
     _swim_or_move_energy(mons);
-#endif
 
     _escape_water_hold(mons);
 

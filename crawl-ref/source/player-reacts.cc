@@ -294,10 +294,10 @@ static void _maybe_melt_armour()
 static int _current_horror_level()
 {
     const coord_def& center = you.pos();
-    const int radius = 8;
+    const int radius = LOS_RADIUS;
     int horror_level = 0;
 
-    for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
+    for (radius_iterator ri(center, radius, C_SQUARE); ri; ++ri)
     {
         const monster* const mon = monster_at(*ri);
 

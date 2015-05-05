@@ -488,7 +488,7 @@ bool random_near_space(const actor* victim,
 
         if (valid_blink_destination(victim, target,
                                     forbid_sanctuary, forbid_unhabitable)
-            && (allow_adjacent || distance2(origin, target) > 2))
+            && (allow_adjacent || grid_distance(origin, target) > 1))
         {
             return true;
         }

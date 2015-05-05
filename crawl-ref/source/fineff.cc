@@ -392,7 +392,7 @@ void starcursed_merge_fineff::fire()
 
     // If there was nothing adjacent to merge with, at least try to move toward
     // another starcursed mass
-    for (distance_iterator di(mon->pos(), true, true, 8); di; ++di)
+    for (distance_iterator di(mon->pos(), true, true, LOS_RADIUS); di; ++di)
     {
         monster* ally = monster_at(*di);
         if (ally && ally->alive() && ally->type == MONS_STARCURSED_MASS

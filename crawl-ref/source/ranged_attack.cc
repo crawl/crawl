@@ -736,7 +736,7 @@ bool ranged_attack::apply_missile_brand()
                                          no_sanct))
                 {
                     const coord_def from = attacker->pos();
-                    if (distance2(pos2, from) > distance2(pos, from))
+                    if (grid_distance(pos2, from) > grid_distance(pos, from))
                         pos = pos2;
 
                     if (defender->is_player())

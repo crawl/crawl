@@ -28,7 +28,7 @@ bool player::see_cell(const coord_def &p) const
     if (!in_bounds(pos()))
         return false; // A non-arena player at (0,0) can't see anything.
     if (xray_vision)
-        return (pos() - p).abs() <= dist_range(current_vision);
+        return (pos() - p).rdist() <= current_vision;
     return actor::see_cell(p);
 }
 
