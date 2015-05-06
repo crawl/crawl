@@ -475,7 +475,7 @@ static void _index_book(item_def& book, spells_to_books &book_hash,
 static bool _get_mem_list(spell_list &mem_spells,
                           spells_to_books &book_hash,
                           unsigned int &num_unreadable,
-                          unsigned int &num_race,
+                          unsigned int &num_misc,
                           bool just_check = false,
                           spell_type current_spell = SPELL_NO_SPELL)
 {
@@ -561,7 +561,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     }
 
     unsigned int num_known      = 0;
-                 num_race       = 0;
+                 num_misc       = 0;
     unsigned int num_restricted = 0;
     unsigned int num_low_xl     = 0;
     unsigned int num_low_levels = 0;
@@ -579,7 +579,7 @@ static bool _get_mem_list(spell_list &mem_spells,
             if (cannot_use_schools(get_spell_disciplines(spell)))
                 num_restricted++;
             else
-                num_race++;
+                num_misc++;
         }
         else
         {
@@ -605,7 +605,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     if (just_check)
         return num_low_levels > 0 || num_low_xl > 0;
 
-    unsigned int total = num_known + num_race + num_low_xl + num_low_levels
+    unsigned int total = num_known + num_misc + num_low_xl + num_low_levels
             + num_restricted;
 
     if (num_known == total)
@@ -615,8 +615,8 @@ static bool _get_mem_list(spell_list &mem_spells,
         mpr("You cannot currently memorise any of the available "
              "spells because you cannot use those schools of magic.");
     }
-    else if (num_race == total || (num_known + num_race) == total
-            || num_race + num_known + num_restricted == total)
+    else if (num_misc == total || (num_known + num_misc) == total
+            || num_misc + num_known + num_restricted == total)
     {
         if (form)
         {
@@ -627,8 +627,7 @@ static bool _get_mem_list(spell_list &mem_spells,
         else
         {
             mprf(MSGCH_PROMPT, "You cannot memorise any of the available "
-                 "spells because you are %s.",
-                 article_a(species_name(you.species)).c_str());
+                 "spells.");
         }
     }
     else if (num_low_levels > 0 || num_low_xl > 0)
@@ -660,9 +659,9 @@ bool has_spells_to_memorise(bool silent, spell_type current_spell)
     spell_list      mem_spells;
     spells_to_books book_hash;
     unsigned int    num_unreadable;
-    unsigned int    num_race;
+    unsigned int    num_misc;
 
-    return _get_mem_list(mem_spells, book_hash, num_unreadable, num_race,
+    return _get_mem_list(mem_spells, book_hash, num_unreadable, num_misc,
                          silent, (spell_type) current_spell);
 }
 
@@ -706,9 +705,9 @@ vector<spell_type> get_mem_spell_list(vector<int> &books)
     spell_list      mem_spells;
     spells_to_books book_hash;
     unsigned int    num_unreadable;
-    unsigned int    num_race;
+    unsigned int    num_misc;
 
-    if (!_get_mem_list(mem_spells, book_hash, num_unreadable, num_race))
+    if (!_get_mem_list(mem_spells, book_hash, num_unreadable, num_misc))
         return spells;
 
     sort(mem_spells.begin(), mem_spells.end(), _sort_mem_spells);
@@ -725,7 +724,7 @@ vector<spell_type> get_mem_spell_list(vector<int> &books)
 static spell_type _choose_mem_spell(spell_list &spells,
                                     spells_to_books &book_hash,
                                     unsigned int num_unreadable,
-                                    unsigned int num_race)
+                                    unsigned int num_misc)
 {
     sort(spells.begin(), spells.end(), _sort_mem_spells);
 
@@ -774,7 +773,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
     spell_menu.action_cycle = Menu::CYCLE_TOGGLE;
     spell_menu.menu_action  = Menu::ACT_EXECUTE;
 
-    const bool shortmsg = num_unreadable > 0 && num_race > 0;
+    const bool shortmsg = num_unreadable > 0 && num_misc > 0;
     string more_str = make_stringf("<lightgreen>%d %slevel%s left"
                                    "<lightgreen>",
                                    player_spell_levels(),
@@ -791,14 +790,14 @@ static spell_type _choose_mem_spell(spell_list &spells,
                                  num_unreadable > 1 ? "s" : "");
     }
 
-    if (num_race > 0)
+    if (num_misc > 0)
     {
         more_str += make_stringf(", <lightred>%u%s%s unmemorisable"
                                  "</lightred>",
-                                 num_race,
+                                 num_misc,
                                  shortmsg ? "" : " spell",
                                  // shorter message if we have both annotations
-                                 !shortmsg && num_race > 1 ? "s" : "");
+                                 !shortmsg && num_misc > 1 ? "s" : "");
     }
 
 #ifndef USE_TILE_LOCAL
@@ -916,13 +915,13 @@ bool learn_spell()
     spell_list      mem_spells;
     spells_to_books book_hash;
 
-    unsigned int num_unreadable, num_race;
+    unsigned int num_unreadable, num_misc;
 
-    if (!_get_mem_list(mem_spells, book_hash, num_unreadable, num_race))
+    if (!_get_mem_list(mem_spells, book_hash, num_unreadable, num_misc))
         return false;
 
     spell_type specspell = _choose_mem_spell(mem_spells, book_hash,
-                                             num_unreadable, num_race);
+                                             num_unreadable, num_misc);
 
     if (specspell == SPELL_NO_SPELL)
     {
