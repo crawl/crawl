@@ -817,13 +817,13 @@ bool feat_destroys_item(dungeon_feature_type feat, const item_def &item,
     }
 }
 
-// For checking whether items would be inaccessible when they wouldn't technically be
-// destroyed - ignores Merfolk/Fedhas ability to access items in deep water.
-bool feat_virtually_destroys_item(dungeon_feature_type feat,
-                                  const item_def &item,  bool noisy)
+/** Does this feature make items that fall into it permanently inaccessible?
+ */
+bool feat_eliminates_items(dungeon_feature_type feat)
 {
-    const bool destroyed = feat_destroys_item(feat, item, noisy);
-    return destroyed || feat == DNGN_DEEP_WATER;
+    item_def item;
+    return feat_destroys_item(feat, item)
+           || feat == DNGN_DEEP_WATER && !species_likes_water(you.species);
 }
 
 static coord_def _dgn_find_nearest_square(

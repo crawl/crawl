@@ -1079,7 +1079,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     // Try to find safe terrain for the item.
     while (location_on_path < dist)
     {
-        if (!feat_virtually_destroys_item(grd(new_spot), item))
+        if (!feat_eliminates_items(grd(new_spot)))
             break;
         location_on_path++;
         new_spot = beam.path_taken[location_on_path];

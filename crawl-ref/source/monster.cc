@@ -6672,14 +6672,13 @@ item_def* monster::disarm()
     item_def *mons_wpn = mslot_item(MSLOT_WEAPON);
 
     // is it ok to move the weapon into your tile (w/o destroying it?)
-    const bool your_tile_ok = !feat_virtually_destroys_item(grd(you.pos()), *mons_wpn)
-                               || grd(you.pos()) == DNGN_DEEP_WATER
-                                  && species_likes_water(you.species);
-    // what about their tile?
+    const bool your_tile_ok = !feat_eliminates_items(grd(you.pos()));
+
+    // It's ok to drop the weapon into deep water if it comes out right away,
+    // but if the monster is on lava we just have to abort.
     const bool mon_tile_ok = !feat_destroys_item(grd(pos()), *mons_wpn)
                              && (your_tile_ok
-                                 || grd(pos()) != DNGN_DEEP_WATER
-                                 || species_likes_water(you.species));
+                                 || !feat_eliminates_items(grd(pos())));
 
     if (!mons_wpn
         || mons_wpn->cursed()
