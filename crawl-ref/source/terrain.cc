@@ -796,41 +796,43 @@ void slime_wall_damage(actor* act, int delay)
     }
 }
 
-bool feat_destroys_item(dungeon_feature_type feat, const item_def &item,
-                        bool noisy)
+void feat_splash_noise(dungeon_feature_type feat)
 {
     switch (feat)
     {
     case DNGN_SHALLOW_WATER:
     case DNGN_DEEP_WATER:
-        if (noisy)
-            mprf(MSGCH_SOUND, "You hear a splash.");
-        return false;
+        mprf(MSGCH_SOUND, "You hear a splash.");
+        return;
 
     case DNGN_LAVA:
-        if (noisy)
-            mprf(MSGCH_SOUND, "You hear a sizzling splash.");
-        return true;
+        mprf(MSGCH_SOUND, "You hear a sizzling splash.");
+        return;
 
     default:
-        return false;
+        return;
     }
+}
+
+/** Does this feature destroy any items that fall into it?
+ */
+bool feat_destroys_items(dungeon_feature_type feat)
+{
+    return feat == DNGN_LAVA;
 }
 
 /** Does this feature make items that fall into it permanently inaccessible?
  */
 bool feat_eliminates_items(dungeon_feature_type feat)
 {
-    item_def item;
-    return feat_destroys_item(feat, item)
+    return feat_destroys_items(feat)
            || feat == DNGN_DEEP_WATER && !species_likes_water(you.species);
 }
 
 static coord_def _dgn_find_nearest_square(
     const coord_def &pos,
-    void *thing,
-    bool (*acceptable)(const coord_def &, void *thing),
-    bool (*traversable)(const coord_def &) = nullptr)
+    function<bool (const coord_def &)> acceptable,
+    function<bool (const coord_def &)> traversable = nullptr)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
 
@@ -844,7 +846,7 @@ static coord_def _dgn_find_nearest_square(
         shuffle_array(points[iter]);
         for (const auto &p : points[iter])
         {
-            if (p != pos && acceptable(p, thing))
+            if (p != pos && acceptable(p))
                 return p;
 
             travel_point_distance[p.x][p.y] = 1;
@@ -872,11 +874,10 @@ static coord_def _dgn_find_nearest_square(
     return coord_def(0, 0); // Not found.
 }
 
-static bool _item_safe_square(const coord_def &pos, void *item)
+static bool _item_safe_square(const coord_def &pos)
 {
     const dungeon_feature_type feat = grd(pos);
-    return feat_is_traversable(feat)
-           && !feat_destroys_item(feat, *static_cast<item_def *>(item));
+    return feat_is_traversable(feat) && !feat_destroys_items(feat);
 }
 
 static bool _item_traversable_square(const coord_def &pos)
@@ -888,11 +889,11 @@ static bool _item_traversable_square(const coord_def &pos)
 static bool _dgn_shift_item(const coord_def &pos, item_def &item)
 {
     // First try to avoid pushing things through solid features...
-    coord_def np = _dgn_find_nearest_square(pos, &item, _item_safe_square,
+    coord_def np = _dgn_find_nearest_square(pos, _item_safe_square,
                                             _item_traversable_square);
     // ... but if we have to, so be it.
     if (!in_bounds(np) || np == pos)
-        np = _dgn_find_nearest_square(pos, &item, _item_safe_square);
+        np = _dgn_find_nearest_square(pos, _item_safe_square);
 
     if (in_bounds(np) && np != pos)
     {
@@ -903,10 +904,10 @@ static bool _dgn_shift_item(const coord_def &pos, item_def &item)
     return false;
 }
 
-static bool _is_feature_shift_target(const coord_def &pos, void*)
+static bool _is_feature_shift_target(const coord_def &pos)
 {
     return grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos)
-                && !actor_at(pos);
+           && !actor_at(pos);
 }
 
 // Moves everything at src to dst. This is not a swap operation: src will be
@@ -1037,7 +1038,7 @@ static bool _dgn_shift_feature(const coord_def &pos)
         return false;
 
     const coord_def dest =
-        _dgn_find_nearest_square(pos, nullptr, _is_feature_shift_target);
+        _dgn_find_nearest_square(pos, _is_feature_shift_target);
 
     dgn_move_entities_at(pos, dest, false, false, false);
     return true;
@@ -1053,7 +1054,7 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
         const int curr = item;
         item = mitm[item].link;
 
-        if (!feat_is_solid(feat) && !feat_destroys_item(feat, mitm[curr]))
+        if (!feat_is_solid(feat) && !feat_destroys_items(feat))
             continue;
 
         // Game-critical item.
@@ -1061,7 +1062,7 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
             _dgn_shift_item(pos, mitm[curr]);
         else
         {
-            feat_destroys_item(feat, mitm[curr], true);
+            feat_splash_noise(feat);
             item_was_destroyed(mitm[curr]);
             destroy_item(curr);
         }

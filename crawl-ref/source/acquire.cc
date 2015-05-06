@@ -1496,7 +1496,7 @@ int acquirement_create_item(object_class_type class_wanted,
 
     // If a god wants to give you something but the floor doesn't want it,
     // it counts as a failed acquirement - no piety, etc cost.
-    if (feat_destroys_item(grd(pos), mitm[thing_created])
+    if (feat_destroys_items(grd(pos))
         && agent > GOD_NO_GOD
         && agent < NUM_GODS)
     {
