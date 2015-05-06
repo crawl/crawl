@@ -11,6 +11,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <limits>
 
 #include "adjust.h"
 #include "areas.h"
@@ -1439,10 +1440,9 @@ bool items_stack(const item_def &item1, const item_def &item2)
 {
     // Both items must be stackable.
     if (!is_stackable_item(item1) || !is_stackable_item(item2)
-        || static_cast<int>(item1.quantity) + item2.quantity > 32767)
+        || static_cast<long long>(item1.quantity) + item2.quantity
+            > numeric_limits<decltype(item1.quantity)>::max())
     {
-        COMPILE_CHECK(sizeof(item1.quantity) == 2); // can be relaxed otherwise
-
         return false;
     }
 
