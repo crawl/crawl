@@ -1796,9 +1796,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SWIFTNESS:
         return cast_swiftness(powc, fail);
 
-    case SPELL_FLY:
-        return cast_fly(powc, fail);
-
     case SPELL_STONESKIN:
         return cast_stoneskin(powc, fail);
 
@@ -1914,6 +1911,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SUMMON_ELEMENTAL:
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_SURE_BLADE:
+    case SPELL_FLY:
         mpr("Sorry, this spell is gone!");
         return SPRET_ABORT;
 #endif

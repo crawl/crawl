@@ -1038,6 +1038,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_FLY, "Flight",
     SPTYP_CHARMS | SPTYP_AIR,
@@ -1049,7 +1050,6 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
-#if TAG_MAJOR_VERSION == 34
 {
     SPELL_INSULATION, "Insulation",
     SPTYP_CHARMS | SPTYP_AIR,

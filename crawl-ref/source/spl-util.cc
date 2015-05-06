@@ -1158,18 +1158,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
-    case SPELL_FLY:
-        if (!prevent && you.racial_permanent_flight())
-            return "you can already fly whenever you want.";
-        if (temp)
-        {
-            if (get_form()->forbids_flight())
-                return "your current form prevents flight.";
-            if (you.permanent_flight())
-                return "you can already fly indefinitely.";
-        }
-        break;
-
     case SPELL_INVISIBILITY:
         if (!prevent && temp && you.backlit())
             return "invisibility won't help you when you glow in the dark.";
