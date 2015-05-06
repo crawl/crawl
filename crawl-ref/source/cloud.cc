@@ -419,11 +419,52 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
     }
 }
 
-static void _dissipate_cloud(int cloudidx, int dissipate)
+/**
+ * How fast should a given cloud fade away this turn?
+ *
+ * @param cloud_idx     The cloud in question.
+ * @return              The rate at which the cloud's "decay" should decrease
+ *                      this turn.
+ */
+static int _cloud_dissipation_rate(const cloud_struct &cloud)
+{
+    int dissipate = you.time_taken;
+
+    // If a player-created cloud is out of LOS, it dissipates much faster.
+    if (cloud.source == MID_PLAYER && !you.see_cell_no_trans(cloud.pos))
+        dissipate *= 4;
+
+    switch (cloud.type)
+    {
+        // Fire clouds dissipate faster over water.
+        case CLOUD_FIRE:
+            if (grd(cloud.pos) == DNGN_DEEP_WATER)
+                return dissipate * 4;
+            break;
+        // rain and cold clouds dissipate faster over lava.
+        case CLOUD_COLD:
+        case CLOUD_RAIN:
+        case CLOUD_STORM:
+            if (grd(cloud.pos) == DNGN_LAVA)
+                return dissipate * 4;
+            break;
+        // Ink cloud shouldn't appear outside of water.
+        case CLOUD_INK:
+            if (!feat_is_watery(grd(cloud.pos)))
+                return dissipate * 40;
+            break;
+        default:
+            break;
+    }
+
+    return dissipate;
+}
+
+static void _dissipate_cloud(int cloudidx)
 {
     cloud_struct &cloud = env.cloud[cloudidx];
     // Apply calculated rate to the actual cloud.
-    cloud.decay -= dissipate;
+    cloud.decay -= _cloud_dissipation_rate(cloud);
 
     if (cloud.type == CLOUD_FOREST_FIRE)
         _spread_fire(cloud);
@@ -502,43 +543,23 @@ void manage_clouds()
         }
 #endif
 
-        int dissipate = you.time_taken;
-
-        // If a player-created cloud is out of LOS, it dissipates much faster.
-        if (cloud.source == MID_PLAYER && !you.see_cell_no_trans(cloud.pos))
-            dissipate *= 4;
-
-        // Fire clouds dissipate faster over water,
-        // rain and cold clouds dissipate faster over lava.
-        if (cloud.type == CLOUD_FIRE && grd(cloud.pos) == DNGN_DEEP_WATER)
-            dissipate *= 4;
-        else if (cloud.type == CLOUD_STORM)
+        // This was initially 40, but that was far too spammy.
+        if (cloud.type == CLOUD_STORM
+            && x_chance_in_y(you.time_taken, 400) && !actor_at(cloud.pos))
         {
-            // This was initially 40, but that was far too spammy.
-            if (x_chance_in_y(dissipate, 400) && !actor_at(cloud.pos))
-            {
-                bool you_see = you.see_cell(cloud.pos);
-                if (you_see && !you_worship(GOD_QAZLAL))
-                    mpr("Lightning arcs down from a storm cloud!");
-                noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT), cloud.pos,
-                      you_see || you_worship(GOD_QAZLAL) ? nullptr
-                      : "You hear a mighty clap of thunder!");
-            }
-            if (grd(cloud.pos) == DNGN_LAVA)
-                dissipate *= 4;
+            const bool you_see = you.see_cell(cloud.pos);
+            if (you_see && !you_worship(GOD_QAZLAL))
+                mpr("Lightning arcs down from a storm cloud!");
+            noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT), cloud.pos,
+                  you_see || you_worship(GOD_QAZLAL) ? nullptr
+                  : "You hear a mighty clap of thunder!");
         }
-        else if ((cloud.type == CLOUD_COLD || cloud.type == CLOUD_RAIN)
-                 && grd(cloud.pos) == DNGN_LAVA)
-            dissipate *= 4;
-        // Ink cloud doesn't appear outside of water.
-        else if (cloud.type == CLOUD_INK && !feat_is_watery(grd(cloud.pos)))
-            dissipate *= 40;
         else if (cloud.type == CLOUD_GHOSTLY_FLAME)
             _handle_ghostly_flame(cloud);
 
         _cloud_interacts_with_terrain(cloud);
 
-        _dissipate_cloud(i, dissipate);
+        _dissipate_cloud(i);
     }
 }
 
