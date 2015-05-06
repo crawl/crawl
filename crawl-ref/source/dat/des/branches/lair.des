@@ -164,7 +164,7 @@ ENDMAP
 # This could probably use some randomization.
 NAME:    david_lair_generic
 TAGS:    lair_entry
-MONS:    crocodile / sheep, goliath beetle
+MONS:    crocodile / sheep, nothing
 MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
 MONS:    elephant
 SHUFFLE: 12
@@ -2847,7 +2847,7 @@ KMONS:   0 = blink frog
 KMONS:   A = spiny frog
 KMONS:   B = black mamba
 # beetles/worms
-KMONS:   C = goliath beetle
+KMONS:   C = giant leech
 KMONS:   D = torpor snail
 KMONS:   E = boulder beetle
 KMONS:   F = lindwurm

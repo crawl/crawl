@@ -936,7 +936,7 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
         break;
     case MON_SHAPE_CENTIPEDE:
     case MON_SHAPE_INSECT:
-        if (mons_genus(subtype) == MONS_GOLIATH_BEETLE)
+        if (mons_genus(subtype) == MONS_BEETLE)
             z_tile = TILEP_MONS_ZOMBIE_BEETLE;
         else
             z_tile = TILEP_MONS_ZOMBIE_BUG;
@@ -1474,8 +1474,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_MENNAS;
 
     // beetles ('B')
-    case MONS_GOLIATH_BEETLE:
-        return TILEP_MONS_GOLIATH_BEETLE;
     case MONS_BOULDER_BEETLE:
         return TILEP_MONS_BOULDER_BEETLE;
     case MONS_DEATH_SCARAB:
@@ -3743,8 +3741,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_MOTH_OF_WRATH;
 
     // beetles ('B')
-    case MONS_GOLIATH_BEETLE:
-        return TILE_CORPSE_GOLIATH_BEETLE;
     case MONS_BOULDER_BEETLE:
         return TILE_CORPSE_BOULDER_BEETLE;
     case MONS_DEATH_SCARAB:

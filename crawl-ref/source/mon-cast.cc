@@ -3982,20 +3982,6 @@ static bool _mons_will_abjure(monster* mons, spell_type spell)
     return false;
 }
 
-static monster_type _pick_swarmer()
-{
-    static monster_type swarmers[] =
-    {
-        MONS_KILLER_BEE,     MONS_KILLER_BEE,    MONS_KILLER_BEE,
-        MONS_SCORPION,       MONS_WORM,          MONS_VAMPIRE_MOSQUITO,
-        MONS_GOLIATH_BEETLE, MONS_SPIDER,        MONS_BUTTERFLY,
-        MONS_WASP,    MONS_WORKER_ANT,    MONS_WORKER_ANT,
-        MONS_WORKER_ANT
-    };
-
-    return RANDOM_ELEMENT(swarmers);
-}
-
 static monster_type _pick_random_wraith()
 {
     static monster_type wraiths[] =
@@ -5637,7 +5623,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SUMMON_SWARM:
-        _do_high_level_summon(mons, spell_cast, _pick_swarmer,
+        _do_high_level_summon(mons, spell_cast, pick_swarmer,
                               random_range(3, 6), god, nullptr, nullptr);
         return;
 

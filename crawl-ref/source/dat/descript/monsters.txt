@@ -1224,11 +1224,6 @@ accursed with a terrible hunger. It desires nothing but to feed on the flesh of
 the living, and will fell its victims with its vicious claws or with one of the
 many diseases it is host to.
 %%%%
-goliath beetle
-
-A huge black beetle with great crunching mandibles and very hard chitinous
-armour.
-%%%%
 gelid demonspawn
 
 <demonspawn>
@@ -2993,11 +2988,11 @@ oklob sapling wizard
 
 <oklob plant annihilator>
 %%%%
-orb beetle
+orb golem
 
-A monstrously big beetle who apparently ate a mighty conjurer, or maybe an orb
-spider. Or perhaps it's a product of divine experiments, in which case it looks
-like Xom's handiwork...
+A metal golem crackling with magical energies. It must have been created by
+a truly devious wizard, or possibly someone who misheard what monsters could
+be found in the Realm of Zot.
 %%%%
 orb of electricity
 
