@@ -2065,6 +2065,9 @@ void handle_monster_move(monster* mons)
     if (!entry)
         return;
 
+    const bool disabled = crawl_state.disables[DIS_MON_ACT]
+                          && _unfriendly_or_insane(mons);
+
     int old_energy      = mons->speed_increment;
     int non_move_energy = min(entry->energy_usage.move,
                               entry->energy_usage.swim);
@@ -2077,12 +2080,13 @@ void handle_monster_move(monster* mons)
     if (!mons->has_action_energy())
         return;
 
-    move_solo_tentacle(mons);
+    if (!disabled)
+        move_solo_tentacle(mons);
 
     if (!mons->alive())
         return;
 
-    if (mons_is_tentacle_head(mons_base_type(mons)))
+    if (!disabled && mons_is_tentacle_head(mons_base_type(mons)))
         move_child_tentacles(mons);
 
     old_pos = mons->pos();
@@ -2242,7 +2246,7 @@ void handle_monster_move(monster* mons)
         }
     }
 
-    if (crawl_state.disables[DIS_MON_ACT] && _unfriendly_or_insane(mons))
+    if (disabled)
     {
         mons->speed_increment -= non_move_energy;
         return;
