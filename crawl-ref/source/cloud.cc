@@ -502,11 +502,14 @@ void manage_clouds()
         }
 #endif
 
-        int dissipate = you.time_taken;
-
-        // If a player-created cloud is out of LOS, it dissipates much faster.
+        // If a player-created cloud is out of LOS, it dissipates instantly.
         if (cloud.source == MID_PLAYER && !you.see_cell_no_trans(cloud.pos))
-            dissipate *= 4;
+        {
+            delete_cloud(i);
+            continue;
+        }
+
+        int dissipate = you.time_taken;
 
         // Fire clouds dissipate faster over water,
         // rain and cold clouds dissipate faster over lava.
