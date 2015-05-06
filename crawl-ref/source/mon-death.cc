@@ -479,7 +479,7 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
     {
         goldify_corpse(corpse);
         // If gold would be destroyed, give it directly to the player instead.
-        if (feat_virtually_destroys_item(grd(mons->pos()), corpse))
+        if (feat_eliminates_items(grd(mons->pos())))
         {
             get_gold(corpse, corpse.quantity, false);
             return -1;
