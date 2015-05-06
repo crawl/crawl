@@ -313,7 +313,8 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
     case DELAY_ARMOUR_OFF:
         if (delay.duration > 1 && !delay.parm3)
         {
-            if (!yesno(delay.type == DELAY_ARMOUR_ON ?
+            if (!crawl_state.disables[DIS_CONFIRMATIONS]
+                && !yesno(delay.type == DELAY_ARMOUR_ON ?
                        "Keep equipping yourself?" :
                        "Keep disrobing?", false, 0, false))
             {
@@ -331,7 +332,8 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         if (delay.duration <= 1 || delay.parm3)
             break;
 
-        if (!yesno("Keep reading the scroll?", false, 0, false))
+        if (!crawl_state.disables[DIS_CONFIRMATIONS]
+            && !yesno("Keep reading the scroll?", false, 0, false))
         {
             mpr("You stop reading the scroll.");
             _pop_delay();
@@ -785,7 +787,8 @@ static void _finish_delay(const delay_queue_item &delay)
         // amulet and was slowed before putting the amulet of stasis on as a
         // separate action on the next turn
         // XXX: duplicates a check in invent.cc:check_warning_inscriptions()
-        if (nasty_stasis(item, OPER_PUTON)
+        if (!crawl_state.disables[DIS_CONFIRMATIONS]
+            && nasty_stasis(item, OPER_PUTON)
             && item_ident(item, ISFLAG_KNOW_TYPE))
         {
             string prompt = "Really put on ";
