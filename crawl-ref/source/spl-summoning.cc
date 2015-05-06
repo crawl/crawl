@@ -201,6 +201,19 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
+monster_type pick_swarmer()
+{
+    return random_choose_weighted(3, MONS_KILLER_BEE,
+                                  3, MONS_WORKER_ANT,
+                                  2, MONS_SPIDER,
+                                  1, MONS_SCORPION,
+                                  1, MONS_WORM,
+                                  1, MONS_VAMPIRE_MOSQUITO,
+                                  1, MONS_WASP,
+                                  1, MONS_BUTTERFLY,
+                                  0);
+}
+
 // Creates a mixed swarm of typical swarming animals.
 // Number and duration depend on spell power.
 spret_type cast_summon_swarm(int pow, god_type god, bool fail)
@@ -222,16 +235,7 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
         int tries = 0;
         do
         {
-            mon = random_choose_weighted(1, MONS_BUTTERFLY,
-                                         1, MONS_WORM,
-                                         3, MONS_WORKER_ANT,
-                                         1, MONS_SCORPION,
-                                         1, MONS_SPIDER,
-                                         1, MONS_GOLIATH_BEETLE,
-                                         3, MONS_KILLER_BEE,
-                                         1, MONS_VAMPIRE_MOSQUITO,
-                                         1, MONS_WASP,
-                                         0);
+            mon = pick_swarmer();
         }
         while (player_will_anger_monster(mon) && ++tries < MAX_TRIES);
 
@@ -1886,7 +1890,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         *motions_r |= DEAD_ARE_HOPPING;
     }
     else if (mons_genus(zombie_type)    == MONS_WORKER_ANT
-             || mons_genus(zombie_type) == MONS_GOLIATH_BEETLE
+             || mons_genus(zombie_type) == MONS_BEETLE
              || mons_base_char(zombie_type) == 's') // many genera
     {
         *motions_r |= DEAD_ARE_CRAWLING;

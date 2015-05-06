@@ -1237,7 +1237,7 @@ TAGS:   no_rotate
 ORIENT: float
 DEPTH:  D:5-12
 SUBST:  1 = 1:70 2:60 3:25
-MONS:   goliath beetle w:20 / giant cockroach w:30 / butterfly w:20
+MONS:   giant cockroach w:30 / butterfly w:20
 MONS:   worker ant
 MONS:   killer bee / scorpion / soldier ant w:5
 MAP
@@ -3350,40 +3350,6 @@ c.c.c.c..c.c.c.c
 c.c.c.c..c.c.c.c
 c9c.9.c00c.9.c9c
 ccccccc..ccccccc
-ENDMAP
-
-##############################################################################
-# Sometimes You Just Gotta Run
-NAME:    erik_ogre
-DEPTH:   D:4-9
-ORIENT:  float
-SHUFFLE: 1X / 1X / 2l / 3Y
-SUBST:   X=x, Y:x.
-MONS:    ogre, goliath beetle, nothing
-ITEM:    potion of heal wounds / potion of haste / potion of berserk rage
-MAP
-        xx@xx
-        x...x
-        xX.Xx
-        xX1Xx
-        xX.Xx
-        xx.xx
-        xx.xx
-        xx.xx
-        x...x
-        x...x
-        x...x
-        x.d.x
-        x...x
-        x.d.x
-        x...x
-     xxxx...xxxx
-     x....[....x
-xxxxxx..x(.{x..xxxxxx
-x...x...x...x...x...x
-x....x..xx]xx..x....x
-xxxxxx...xxx...xxxxxx
-     xxxxx xxxxx
 ENDMAP
 
 ##############################################################################

@@ -951,11 +951,6 @@ vivants. Le peu qui l'ont vu et qui lui ont survécu disent qu'il ressemble a
 une énorme mite épineuse. Son cycle de vie étrange consiste à produire de
 l'ambroisie, très prisée chez les dieux et les magiciens.
 %%%%
-goliath beetle
-
-Un gros scarabée avec de grandes mandibules écrasantes et une carapace très
-solide.
-%%%%
 giant cockroach
 
 Un gros insecte brun qui produit des sifflements désagréables. Contrairement à

@@ -178,7 +178,7 @@ NAME: nicolae_spider_entry_non_spiders
 TAGS: spider_entry ruin_lair
 NSUBST: 1 = 21 / 1
 KFEAT: O = enter_spider_nest
-KMONS: 1 = scorpion / goliath beetle / worm / giant cockroach
+KMONS: 1 = scorpion / worker ant / worm / giant cockroach
 KMONS: 2 = demonic crawler / boulder beetle / wasp
 MAP
 ...........
@@ -521,7 +521,7 @@ DEPTH:   Spider, !Spider:$
 WEIGHT:  5
 KMONS:   1 = scorpion w:20 / spider w:13 / worker ant w:35 / \
              giant cockroach w:1 / worm w:1
-KMONS:   2 = soldier ant / goliath beetle / vampire mosquito w:5
+KMONS:   2 = soldier ant / redback / vampire mosquito w:5
 KMONS:   3aAdD = brain worm / boulder beetle w:5
 KMONS:   4bB = demonic crawler
 KMONS:   5eE = place:Spider:$ zombie
