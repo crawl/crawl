@@ -2089,21 +2089,8 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
             }
         }
     }
-    // Non-stackable item that's been fudge-stacked (monster throwing weapons).
-    // Explode the stack when dropped. We have to special case chunks, ew.
-    else if (item.quantity > 1
-             && (item.base_type != OBJ_FOOD
-                 || item.sub_type != FOOD_CHUNK))
-    {
-        while (item.quantity > 1)
-        {
-            // If we can't copy the items out, we lose the surplus.
-            if (copy_item_to_grid(item, p, 1, false, true))
-                --item.quantity;
-            else
-                item.quantity = 1;
-        }
-    }
+    else
+        ASSERT(item.quantity == 1);
 
     ASSERT(ob != NON_ITEM);
 
