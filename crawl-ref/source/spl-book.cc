@@ -612,7 +612,7 @@ static bool _get_mem_list(spell_list &mem_spells,
         mprf(MSGCH_PROMPT, "You already know all available spells.");
     else if (num_restricted == total || num_restricted + num_known == total)
     {
-        mpr("You cannot currently memorise any of the available "
+        mprf(MSGCH_PROMPT, "You cannot currently memorise any of the available "
              "spells because you cannot use those schools of magic.");
     }
     else if (num_misc == total || (num_known + num_misc) == total
