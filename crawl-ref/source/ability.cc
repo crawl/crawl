@@ -2387,18 +2387,27 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         you.go_berserk(true);
         break;
 
-    // Fly (tengu/drac) - permanent at high XL
     case ABIL_FLY:
         fail_check();
+        // high level Te or Dr/Gr wings
         if (you.racial_permanent_flight())
         {
             you.attribute[ATTR_PERM_FLIGHT] = 1;
             float_player();
-            if (you.species == SP_TENGU)
-                mpr("You feel very comfortable in the air.");
         }
+        // low level Te
         else
-            cast_fly(you.experience_level * 4);
+        {
+            power = you.experience_level * 4;
+            const int dur_change = 25 + random2(power) + random2(power);
+
+            you.increase_duration(DUR_FLIGHT, dur_change, 100);
+            you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
+
+            float_player();
+        }
+        if (you.species == SP_TENGU)
+            mpr("You feel very comfortable in the air.");
         break;
 
     // DEMONIC POWERS:
@@ -3618,7 +3627,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         // Black draconians and gargoyles get permaflight at XL 14, but they
         // don't get the tengu movement/evasion bonuses and they don't get
         // temporary flight before then.
-        // Other dracs can mutate big wings whenever for temporary flight.
+        // Other dracs can mutate big wings whenever as well.
         _add_talent(talents, ABIL_FLY, check_confused);
     }
 

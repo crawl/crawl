@@ -326,25 +326,6 @@ spret_type cast_swiftness(int power, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_fly(int power, bool fail)
-{
-    if (!flight_allowed())
-        return SPRET_ABORT;
-
-    fail_check();
-    const int dur_change = 25 + random2(power) + random2(power);
-    const bool was_flying = you.airborne();
-
-    you.increase_duration(DUR_FLIGHT, dur_change, 100);
-    you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
-
-    if (!was_flying)
-        float_player();
-    else
-        mpr("You feel more buoyant.");
-    return SPRET_SUCCESS;
-}
-
 spret_type cast_teleport_control(int power, bool fail)
 {
     fail_check();

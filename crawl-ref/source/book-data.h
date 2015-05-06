@@ -186,13 +186,12 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SHOCK,
     SPELL_SWIFTNESS,
     SPELL_REPEL_MISSILES,
-    SPELL_FLY,
     SPELL_DISCHARGE,
     SPELL_LIGHTNING_BOLT,
 },
 
 {   // Book of the Sky
-    SPELL_FLY,
+    SPELL_SUMMON_LIGHTNING_SPIRE,
     SPELL_AIRSTRIKE,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
@@ -313,7 +312,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of the Dragon
-    SPELL_FLY,
+    SPELL_FLAME_TONGUE,
     SPELL_CAUSE_FEAR,
     SPELL_BOLT_OF_FIRE,
     SPELL_DRAGON_FORM,
@@ -331,9 +330,9 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Dreams
     SPELL_HIBERNATION,
-    SPELL_FLY,
     SPELL_PHASE_SHIFT,
     SPELL_SHADOW_CREATURES,
+    SPELL_SILENCE,
     SPELL_MASS_CONFUSION,
     SPELL_DARKNESS,
 },
