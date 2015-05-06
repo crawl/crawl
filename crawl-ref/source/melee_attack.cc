@@ -967,6 +967,21 @@ bool melee_attack::check_unrand_effects()
     return false;
 }
 
+class AuxAttackType
+{
+public:
+    AuxAttackType(int _damage, string _name) :
+    damage(_damage), name(_name) { };
+public:
+    virtual int get_damage() const { return damage; };
+    virtual int get_brand() const { return SPWPN_NORMAL; };
+    virtual string get_name() const { return name; };
+    virtual string get_verb() const { return get_name(); };
+protected:
+    const int damage;
+    const string name;
+};
+
 class AuxConstrict: public AuxAttackType
 {
 public:
@@ -1134,7 +1149,6 @@ public:
     AuxTentacles()
     : AuxAttackType(12, "squeeze") { };
 };
-
 
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
 static const AuxKick        AUX_KICK = AuxKick();
