@@ -3982,17 +3982,6 @@ static bool _mons_will_abjure(monster* mons, spell_type spell)
     return false;
 }
 
-static monster_type _pick_random_wraith()
-{
-    static monster_type wraiths[] =
-    {
-        MONS_WRAITH, MONS_SHADOW_WRAITH, MONS_FREEZING_WRAITH,
-        MONS_PHANTASMAL_WARRIOR, MONS_PHANTOM, MONS_HUNGRY_GHOST
-    };
-
-    return RANDOM_ELEMENT(wraiths);
-}
-
 static void _haunt_fixup(monster* summon, coord_def pos)
 {
     actor* victim = actor_at(pos);
@@ -4085,8 +4074,8 @@ static void _mons_cast_haunt(monster* mons)
     ASSERT(mons->get_foe());
     const coord_def fpos = mons->get_foe()->pos();
 
-    _do_high_level_summon(mons, SPELL_HAUNT, _pick_random_wraith,
-                          random_range(2, 4), GOD_NO_GOD, &fpos, _haunt_fixup);
+    _do_high_level_summon(mons, SPELL_HAUNT, pick_random_wraith,
+                          random_range(2, 3), GOD_NO_GOD, &fpos, _haunt_fixup);
 }
 
 static void _mons_cast_summon_illusion(monster* mons, spell_type spell)

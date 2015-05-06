@@ -2431,6 +2431,17 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
     return true;
 }
 
+monster_type pick_random_wraith()
+{
+    return random_choose_weighted(1, MONS_PHANTOM,
+                                  1, MONS_HUNGRY_GHOST,
+                                  1, MONS_SHADOW_WRAITH,
+                                  5, MONS_WRAITH,
+                                  2, MONS_FREEZING_WRAITH,
+                                  2, MONS_PHANTASMAL_WARRIOR,
+                                  0);
+}
+
 spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 {
     monster* m = monster_at(where);
@@ -2462,14 +2473,7 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 
     while (to_summon--)
     {
-        const monster_type mon =
-            random_choose_weighted(1, MONS_PHANTOM,
-                                   1, MONS_HUNGRY_GHOST,
-                                   1, MONS_SHADOW_WRAITH,
-                                   5, MONS_WRAITH,
-                                   2, MONS_FREEZING_WRAITH,
-                                   2, MONS_PHANTASMAL_WARRIOR,
-                                   0);
+        const monster_type mon = pick_random_wraith();
 
         if (monster *mons = create_monster(
                 mgen_data(mon,
