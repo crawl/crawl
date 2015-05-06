@@ -734,14 +734,6 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
 
     int thing_created = items(true, base, subtype, power, 0, GOD_XOM);
 
-    if (feat_destroys_item(grd(you.pos()), mitm[thing_created],
-                           !silenced(you.pos())))
-    {
-        simple_god_message(" snickers.", GOD_XOM);
-        destroy_item(thing_created, true);
-        thing_created = NON_ITEM;
-    }
-
     if (thing_created == NON_ITEM)
     {
         god_speaks(GOD_XOM, "\"No, never mind.\"");
@@ -757,6 +749,9 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
 
     canned_msg(MSG_SOMETHING_APPEARS);
     move_item_to_grid(&thing_created, you.pos());
+
+    if (thing_created == NON_ITEM) // if it fell into lava
+        simple_god_message(" snickers.", GOD_XOM);
 
     stop_running();
 }

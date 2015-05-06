@@ -2042,7 +2042,10 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     item_def& item(mitm[ob]);
     bool move_below = item_is_stationary(item) && !item_is_stationary_net(item);
 
-    if (feat_destroys_item(grd(p), mitm[ob], !silenced(p) && !silent))
+    if (!silenced(p) && !silent)
+        feat_splash_noise(grd(p));
+
+    if (feat_destroys_items(grd(p)))
     {
         item_was_destroyed(item);
         destroy_item(ob);
@@ -2164,7 +2167,10 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
     if (quant_drop == 0)
         return false;
 
-    if (feat_destroys_item(grd(p), item, !silenced(p) && !silent))
+    if (!silenced(p) && !silent)
+        feat_splash_noise(grd(p));
+
+    if (feat_destroys_items(grd(p)))
     {
         if (item_is_spellbook(item))
             destroy_spellbook(item);
@@ -2360,8 +2366,6 @@ bool drop_item(int item_dropped, int quant_drop)
         you.time_taken = old_time;
     }
 
-    const dungeon_feature_type my_grid = grd(you.pos());
-
     if (!copy_item_to_grid(you.inv[item_dropped],
                             you.pos(), quant_drop, true, true))
     {
@@ -2372,14 +2376,10 @@ bool drop_item(int item_dropped, int quant_drop)
     mprf("You drop %s.",
          quant_name(you.inv[item_dropped], quant_drop, DESC_A).c_str());
 
-    bool quiet = silenced(you.pos());
-
     // If you drop an item in as a merfolk, it is below the water line and
     // makes no noise falling.
-    if (you.swimming())
-        quiet = true;
-
-    feat_destroys_item(my_grid, you.inv[item_dropped], !quiet);
+    if (silenced(you.pos()) || you.swimming())
+        feat_splash_noise(grd(you.pos()));
 
     if (you.inv[item_dropped].quantity != quant_drop)
     {

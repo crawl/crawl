@@ -6676,7 +6676,7 @@ item_def* monster::disarm()
 
     // It's ok to drop the weapon into deep water if it comes out right away,
     // but if the monster is on lava we just have to abort.
-    const bool mon_tile_ok = !feat_destroys_item(grd(pos()), *mons_wpn)
+    const bool mon_tile_ok = !feat_destroys_items(grd(pos()))
                              && (your_tile_ok
                                  || !feat_eliminates_items(grd(pos())));
 
