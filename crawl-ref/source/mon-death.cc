@@ -2294,16 +2294,17 @@ int monster_die(monster* mons, killer_type killer,
             {
                 if (fake_abjuration)
                 {
+                    // Sticks to Snakes
                     if (mons_genus(mons->type) == MONS_SNAKE)
-                    {
-                        // Sticks to Snake
-                        simple_monster_message(mons, " withers and dies!",
-                            MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-                    }
+                        simple_monster_message(mons, " withers and dies!");
+                    // Death Channel
                     else if (mons->type == MONS_SPECTRAL_THING)
-                    {
-                        // Death Channel
                         simple_monster_message(mons, " fades into mist!");
+                    // Animate Skeleton/Animate Dead
+                    else if (mons->type == MONS_ZOMBIE
+                             || mons->type == MONS_SKELETON)
+                    {
+                        simple_monster_message(mons, " crumbles into dust!");
                     }
                     else
                     {
