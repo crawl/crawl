@@ -403,6 +403,22 @@ LUAFN(you_mutation)
     return luaL_argerror(ls, 1, err.c_str());
 }
 
+LUAFN(you_temp_mutation)
+{
+    string mutname = luaL_checkstring(ls, 1);
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        const char *wizname = mutation_name(static_cast<mutation_type>(i));
+        if (!wizname)
+            continue;
+        if (!strcmp(mutname.c_str(), wizname))
+            PLUARET(integer, you.temp_mutation[i]);
+    }
+
+    string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
+    return luaL_argerror(ls, 1, err.c_str());
+}
+
 LUAFN(you_is_level_on_stack)
 {
     string levname = luaL_checkstring(ls, 1);
@@ -589,6 +605,7 @@ static const struct luaL_reg you_clib[] =
     { "see_cell_no_trans", you_see_cell_no_trans_rel },
 
     { "mutation",          you_mutation },
+    { "temp_mutation",     you_temp_mutation },
 
     { "num_runes",          you_num_runes },
     { "have_rune",          _you_have_rune },
