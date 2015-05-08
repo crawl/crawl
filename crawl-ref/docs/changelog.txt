@@ -1,4 +1,4 @@
-Stone Soup 0.17 (up to 0.17-a0-888-g439e22d)
+Stone Soup 0.17 (up to 0.17-a0-963-gaa5423c)
 --------------------------------------------
 
 Branches, Environment
@@ -36,6 +36,12 @@ Character
   enemies. It triggers slightly more frequently as a result, but no longer
   triggers in Labyrinths or the Abyss.
 * The 'spiny' mutation is now dramatically stronger.
+
+Geometry
+--------
+* All range-based mechanics now treat diagonals identically to orthogonal
+  directions. Line of sight, spell range, and other effects are now visually
+  'square'. Many of those, including line of sight, are now slightly shorter.
 
 Gods
 ----
@@ -112,9 +118,14 @@ Monsters
 * Queen ants are now faster.
 * Liches and Ancient Liches can no longer can have Shadow Creatures in their
   spell set.
+* Basic mummies no longer have death curses.
+* Alligators now come in pairs.
 * Removed monsters:
   - Unborn.
   - Giant mites.
+  - Baby alligators.
+  - Boring beetles.
+  - Goliath beetles.
 
 Spells
 ------
@@ -127,10 +138,17 @@ Spells
 * Gell's Gravitas is now level 3 and smite-targeted, but no longer confuses
   enemies.
 * Summon Guardian Golem is now level 3.
+* Aura of Abjuration is now level 5, and has been moved from the Grand Grimoire
+  to the book of Summonings.
+* Monstrous Menagerie has been moved from the books of Summonings and Beasts to
+  the Grand Grimoire.
+* Summon Mana Viper has been moved from the book of Hinderance to the book of
+  Summonings.
 * Freeze no longer has a stun effect.
 * Removed spells:
   - Sure Blade.
   - Enslavement.
+  - Abjuration.
 
 Interface
 ---------
