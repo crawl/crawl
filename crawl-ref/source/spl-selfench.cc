@@ -208,7 +208,9 @@ spret_type corpse_armour(int pow, bool fail)
     else
         mpr("Your shell of carrion and bone grows thicker.");
 
-    you.attribute[ATTR_BONE_ARMOUR] += harvested;
+    // value of ATTR_BONE_ARMOUR will be sqrt(9*harvested), rounded randomly
+    int squared = sqr(you.attribute[ATTR_BONE_ARMOUR]) + 9 * harvested;
+    you.attribute[ATTR_BONE_ARMOUR] = sqrt(squared) + random_real();
     you.redraw_armour_class = true;
 
     return SPRET_SUCCESS;
