@@ -177,7 +177,9 @@ void wizard_change_species_to(species_type sp)
     for (int i = 0; i < NUM_EQUIP; ++i)
         if (you.equip[i] != -1 && !can_wear_armour(you.inv[you.equip[i]], false, false))
         {
-            mprf("%s falls away.", you.inv[you.equip[i]].name(DESC_YOUR).c_str());
+            mprf("%s fall%s away.",
+                 you.inv[you.equip[i]].name(DESC_YOUR).c_str(),
+                 you.inv[you.equip[i]].quantity > 1 ? "" : "s");
             // Unwear items without the usual processing.
             you.equip[i] = -1;
             you.melded.set(i, false);
