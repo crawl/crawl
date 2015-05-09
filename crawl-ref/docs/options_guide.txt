@@ -2045,7 +2045,9 @@ dump_order += monlist,kills,action_counts
         locations and names of all the vaults that have been generated
         in the game. This will only be included in the final dump
         which happens when you die, quit or win (or in ordinary dumps
-        while in wizard mode).
+        while in wizard mode). The "vaults" section is enabled by default
+        in trunk builds of Crawl (not releases or pre-release betas),
+        appearing between "kills" and "action_counts".
 
 dump_book_spells = true
         By default all randart spellbooks in inventory will have all their
