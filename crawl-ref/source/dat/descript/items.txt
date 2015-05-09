@@ -1187,12 +1187,9 @@ contaminated with magical energy.
 %%%%
 scroll of brand weapon
 
-This scroll enchants an unbranded weapon so as to make it far more effective
-at inflicting harm on its wielder's enemies. The scroll can also be used on a
-weapon that is already permanently branded to randomly select a new brand.
-
-Unlike temporary branding spells, this scroll causes no ill effects if the
-reader uses it to change the brand of a weapon of distortion.
+This scroll imbues a weapon with a random brand, such as flame, freezing, or
+venom. Any existing brand will be replaced. Blowguns and artefacts cannot be
+branded in this way.
 %%%%
 scroll of curse armour
 
