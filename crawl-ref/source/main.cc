@@ -2698,6 +2698,73 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
     return num;
 }
 
+static bool _cancel_confused_move(bool stationary)
+{
+    dungeon_feature_type dangerous = DNGN_FLOOR;
+    monster *bad_mons = 0;
+    string bad_suff, bad_adj;
+    bool penance = false;
+    for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
+    {
+        if (!stationary
+            && is_feat_dangerous(grd(*ai))
+            && (dangerous == DNGN_FLOOR || grd(*ai) == DNGN_LAVA))
+        {
+            dangerous = grd(*ai);
+            break;
+        }
+        else
+        {
+            string suffix, adj;
+            monster *mons = monster_at(*ai);
+            if (mons
+                && (!fedhas_passthrough(mons) || stationary)
+                && bad_attack(mons, adj, suffix, penance))
+            {
+                bad_mons = mons;
+                bad_suff = suffix;
+                bad_adj = adj;
+                if (penance)
+                    break;
+            }
+        }
+    }
+
+    if (dangerous != DNGN_FLOOR || bad_mons)
+    {
+        string prompt = "";
+        prompt += "Are you sure you want to ";
+        prompt += !stationary ? "stumble around" : "swing wildly";
+        prompt += " while confused and next to ";
+
+        if (dangerous != DNGN_FLOOR)
+            prompt += (dangerous == DNGN_LAVA ? "lava" : "deep water");
+        else
+        {
+            string name = bad_mons->name(DESC_PLAIN);
+            if (name.find("the ") == 0)
+               name.erase(0, 4);
+            if (bad_adj.find("your") != 0)
+               bad_adj = "the " + bad_adj;
+            prompt += bad_adj + name + bad_suff;
+        }
+        prompt += "?";
+
+        if (penance)
+            prompt += " This could place you under penance!";
+
+        if (!crawl_state.disables[DIS_CONFIRMATIONS]
+            && !yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
 static void _swing_at_target(coord_def move)
 {
     if (you.attribute[ATTR_HELD])
@@ -2707,8 +2774,29 @@ static void _swing_at_target(coord_def move)
         return;
     }
 
-    if (you.confused() && !one_chance_in(3))
-        move = Compass[random2(8)];
+    if (you.confused())
+    {
+        if (!you.is_stationary())
+        {
+            mpr("You're too confused to attack without stumbling around!");
+            return;
+        }
+
+        if (_cancel_confused_move(false))
+            return;
+
+        if (!one_chance_in(3))
+        {
+            move.x = random2(3) - 1;
+            move.y = random2(3) - 1;
+            if (move.origin())
+            {
+                mpr("You nearly hit yourself!");
+                you.turn_is_over = true;
+                return;
+            }
+        }
+    }
 
     const coord_def target = you.pos() + move;
     monster* mon = monster_at(target);
@@ -3063,74 +3151,9 @@ static void _move_player(coord_def move)
         return;
     }
 
-    // When confused, sometimes make a random move
+    // When confused, sometimes make a random move.
     if (you.confused())
     {
-        dungeon_feature_type dangerous = DNGN_FLOOR;
-        monster *bad_mons = 0;
-        string bad_suff, bad_adj;
-        bool penance = false;
-        for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
-        {
-            if (is_feat_dangerous(grd(*ai))
-                && (dangerous == DNGN_FLOOR || grd(*ai) == DNGN_LAVA))
-            {
-                dangerous = grd(*ai);
-                break;
-            }
-            else
-            {
-                string suffix, adj;
-                monster *mons = monster_at(*ai);
-                if (mons
-                    && !fedhas_passthrough(mons)
-                    && bad_attack(mons, adj, suffix, penance))
-                {
-                    bad_mons = mons;
-                    bad_suff = suffix;
-                    bad_adj = adj;
-                    if (penance)
-                        break;
-                }
-            }
-        }
-
-        if (you.is_stationary())
-            dangerous = DNGN_FLOOR; // still warn about allies
-
-        if (dangerous != DNGN_FLOOR || bad_mons)
-        {
-            string prompt = "Are you sure you want to stumble around while "
-                            "confused and next to ";
-
-            if (dangerous != DNGN_FLOOR)
-                prompt += (dangerous == DNGN_LAVA ? "lava" : "deep water");
-            else
-            {
-                string name = bad_mons->name(DESC_PLAIN);
-                if (name.find("the ") == 0)
-                    name.erase(0, 4);
-                if (bad_adj.find("your") != 0)
-                    bad_adj = "the " + bad_adj;
-                prompt += bad_adj + name + bad_suff;
-            }
-            prompt += "?";
-
-            if (penance)
-                prompt += " This could place you under penance!";
-
-            monster* targ = monster_at(you.pos() + move);
-            if (targ && !targ->wont_attack() && you.can_see(targ))
-                prompt += " (Use ctrl+direction to attack without moving)";
-
-            if (!crawl_state.disables[DIS_CONFIRMATIONS]
-                && !yesno(prompt.c_str(), false, 'n'))
-            {
-                canned_msg(MSG_OK);
-                return;
-            }
-        }
-
         if (you.is_stationary())
         {
             // Don't choose a random location to try to attack into - allows
@@ -3140,6 +3163,9 @@ static void _move_player(coord_def move)
                 "moving)");
             return;
         }
+
+        if (_cancel_confused_move(true))
+            return;
 
         if (!one_chance_in(3))
         {
