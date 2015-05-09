@@ -7,6 +7,8 @@
 
 #include "spl-selfench.h"
 
+#include <cmath>
+
 #include "areas.h"
 #include "art-enum.h"
 #include "butcher.h" // butcher_corpse
