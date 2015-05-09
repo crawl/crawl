@@ -2280,6 +2280,15 @@ bool multiple_items_at(const coord_def& where)
     return found_count > 1;
 }
 
+/**
+ * Drop an item, possibly starting up a delay to do so.
+ *
+ * @param item_dropped the inventory index of the item to drop
+ * @param quant_drop the number of items to drop, -1 to drop the whole stack.
+ *
+ * @return True if we took time, either because we dropped the item
+ *         or because we took a preliminary step (removing a ring, etc.).
+ */
 bool drop_item(int item_dropped, int quant_drop)
 {
     if (quant_drop < 0 || quant_drop > you.inv[item_dropped].quantity)
@@ -2299,13 +2308,14 @@ bool drop_item(int item_dropped, int quant_drop)
      || item_dropped == you.equip[EQ_RING_AMULET])
     {
         if (!Options.easy_unequip)
-        {
             mpr("You will have to take that off first.");
-            return false;
-        }
-
-        if (remove_ring(item_dropped, true))
+        else if (remove_ring(item_dropped, true))
+        {
             start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
+            // We didn't actually succeed yet, but remove_ring took time,
+            // so return true anyway.
+            return true;
+        }
 
         return false;
     }
@@ -2329,12 +2339,13 @@ bool drop_item(int item_dropped, int quant_drop)
             {
                 // If we take off the item, cue up the item being dropped
                 if (takeoff_armour(item_dropped))
+                {
                     start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
+                    // We didn't actually succeed yet, but takeoff_armour
+                    // took a turn to start up, so return true anyway.
+                    return true;
+                }
             }
-
-            // Regardless, we want to return here because either we're
-            // aborting the drop, or the drop is delayed until after
-            // the armour is removed. -- bwr
             return false;
         }
     }

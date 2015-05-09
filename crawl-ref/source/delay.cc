@@ -738,8 +738,12 @@ void handle_delay()
             break;
 
         case DELAY_MULTIDROP:
-            drop_item(items_for_multidrop[0].slot,
-                      items_for_multidrop[0].quantity);
+            if (!drop_item(items_for_multidrop[0].slot,
+                           items_for_multidrop[0].quantity))
+            {
+                you.turn_is_over = false;
+                you.time_taken = 0;
+            }
             items_for_multidrop.erase(items_for_multidrop.begin());
             break;
 
@@ -976,7 +980,11 @@ static void _finish_delay(const delay_queue_item &delay)
         if (!you.inv[delay.parm1].defined())
             break;
 
-        drop_item(delay.parm1, delay.parm2);
+        if (!drop_item(delay.parm1, delay.parm2))
+        {
+            you.turn_is_over = false;
+            you.time_taken = 0;
+        }
         break;
 
     case DELAY_ASCENDING_STAIRS:
