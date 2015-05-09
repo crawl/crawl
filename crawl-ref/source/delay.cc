@@ -713,6 +713,7 @@ void handle_delay()
                  you.inv[delay.parm1].name(DESC_YOUR).c_str());
             break;
 
+        case DELAY_DROP_ITEM:
         case DELAY_JEWELLERY_ON:
             // This is a 1-turn delay where the time cost is handled
             // in _finish_delay().
@@ -737,12 +738,8 @@ void handle_delay()
             break;
 
         case DELAY_MULTIDROP:
-            if (!drop_item(items_for_multidrop[0].slot,
-                           items_for_multidrop[0].quantity))
-            {
-                you.turn_is_over = false;
-                you.time_taken = 0;
-            }
+            drop_item(items_for_multidrop[0].slot,
+                      items_for_multidrop[0].quantity);
             items_for_multidrop.erase(items_for_multidrop.begin());
             break;
 
