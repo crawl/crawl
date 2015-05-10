@@ -3208,7 +3208,7 @@ static void _move_player(coord_def move)
                                                         : "walk";
 
     monster* targ_monst = monster_at(targ);
-    if (fedhas_passthrough(targ_monst))
+    if (fedhas_passthrough(targ_monst) && !you.is_stationary())
     {
         // Moving on a plant takes 1.5 x normal move delay. We
         // will print a message about it but only when moving
