@@ -3302,12 +3302,6 @@ static void _move_player(coord_def move)
         }
         else if (!try_to_swap) // attack!
         {
-            // XXX: Moving into a normal wall does nothing and uses no
-            // turns or energy, but moving into a wall which contains
-            // an invisible monster attacks the monster, thus allowing
-            // the player to figure out which adjacent wall an invis
-            // monster is in "for free".
-
             // Don't allow the player to freely locate invisible monsters
             // with confirmation prompts.
             if (!you.can_see(targ_monst) && !check_moveto(targ, walkverb))
