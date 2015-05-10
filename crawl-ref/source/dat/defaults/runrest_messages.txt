@@ -23,6 +23,7 @@ ignore += (crumbles|melts) away\.
 ignore += our air elemental.*the air
 
 stop += You feel you are being watched
+stop += [Ss]omething.* misses you.
 
 # Traps
 #
