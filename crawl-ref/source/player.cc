@@ -3314,11 +3314,7 @@ int check_stealth()
             umbra_mul = you.piety + MAX_PIETY;
             umbra_div = MAX_PIETY;
         }
-
-        // Only apply ring of shadows umbra modifier if it would increase
-        // your stealth; if you're with a god, the god's umbra can overpower
-        // the ring's effect.
-        if (player_equip_unrand(UNRAND_SHADOWS) && umbra_mul < 300)
+        if (player_equip_unrand(UNRAND_SHADOWS))
             if (2 * umbra_mul < 3 * umbra_div)
             {
                 umbra_mul = 3;
