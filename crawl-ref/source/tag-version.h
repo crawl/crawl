@@ -165,6 +165,7 @@ enum tag_minor_version
     TAG_MINOR_BOOL_FLIGHT,         // flight is just a bool
     TAG_MINOR_STAT_LOSS_XP,        // Stat loss recovers with XP
     TAG_MINOR_DETERIORATION,       // 2-level deterioration mutation
+    TAG_MINOR_RU_DELAY_STACKING,   // Let Ru delay timers stack again
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

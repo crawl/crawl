@@ -19,6 +19,10 @@
 #define PURITY_SAC_KEY "current_purity_sacrifice"
 #define ARCANA_SAC_KEY "current_arcane_sacrifices"
 
+#define RU_SACRIFICE_PROGRESS_KEY "ru_progress_to_next_sacrifice"
+#define RU_SACRIFICE_DELAY_KEY "ru_sacrifice_delay"
+#define RU_SACRIFICE_PENALTY_KEY "ru_sacrifice_penalty"
+
 const char * const GOZAG_POTIONS_KEY = "gozag_potions%d";
 const char * const GOZAG_PRICE_KEY = "gozag_price%d";
 

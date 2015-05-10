@@ -2192,18 +2192,10 @@ int monster_die(monster* mons, killer_type killer,
             if (good_kill && you_worship(GOD_RU) && you.piety < 200
                     && one_chance_in(2))
             {
-                ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
-                ASSERT(you.props.exists(AVAILABLE_SAC_KEY));
-                int sacrifice_count =
-                    you.props[AVAILABLE_SAC_KEY].get_vector().size();
-                if (sacrifice_count == 0)
-                {
-                    int current_progress =
-                            you.props["ru_progress_to_next_sacrifice"]
-                                .get_int();
-                    you.props["ru_progress_to_next_sacrifice"] =
-                            current_progress + 1;
-                }
+                ASSERT(you.props.exists(RU_SACRIFICE_PROGRESS_KEY));
+                int current_progress =
+                        you.props[RU_SACRIFICE_PROGRESS_KEY].get_int();
+                you.props[RU_SACRIFICE_PROGRESS_KEY] = current_progress + 1;
             }
 
             // Randomly bless a follower.
