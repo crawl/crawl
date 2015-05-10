@@ -827,14 +827,10 @@ static like_map divine_likes[] =
                 piety = 0;
                 denom = 1;
 
-                ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
-                ASSERT(you.props.exists(AVAILABLE_SAC_KEY));
+                ASSERT(you.props.exists(RU_SACRIFICE_PROGRESS_KEY));
 
-                const int available_sacrifices =
-                    you.props[AVAILABLE_SAC_KEY].get_vector().size();
-
-                if (!available_sacrifices && one_chance_in(100))
-                    you.props["ru_progress_to_next_sacrifice"].get_int()++;
+                if (one_chance_in(100))
+                    you.props[RU_SACRIFICE_PROGRESS_KEY].get_int()++;
             }
         } },
     },

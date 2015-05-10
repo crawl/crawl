@@ -43,6 +43,7 @@
 #include "end.h"
 #include "errors.h"
 #include "ghost.h"
+#include "godabil.h" // just for the Ru sac penalty key
 #include "godcompanions.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -3234,6 +3235,11 @@ static void tag_read_you(reader &th)
         you.props[ORIGINAL_BRAND_KEY] = SPWPN_NORMAL;
 
 #endif
+    if (th.getMinorVersion() >= TAG_MINOR_RU_DELAY_STACKING &&
+        !you.props.exists(RU_SACRIFICE_PENALTY_KEY))
+    {
+       you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
+    }
 }
 
 static void tag_read_you_items(reader &th)

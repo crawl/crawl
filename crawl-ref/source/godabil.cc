@@ -6296,27 +6296,37 @@ bool ru_reject_sacrifices(bool skip_prompt)
 
 void ru_reset_sacrifice_timer(bool clear_timer)
 {
-    ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
-    ASSERT(you.props.exists("ru_sacrifice_delay"));
+    ASSERT(you.props.exists(RU_SACRIFICE_PROGRESS_KEY));
+    ASSERT(you.props.exists(RU_SACRIFICE_DELAY_KEY));
+    ASSERT(you.props.exists(RU_SACRIFICE_PENALTY_KEY));
 
     // raise the delay if there's an active sacrifice, and more so the more
     // often you pass on a sacrifice and the more piety you have.
-    int base_delay = 80;
-    int delay = you.props["ru_sacrifice_delay"].get_int();
+    const int base_delay = 80;
+    int delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
     int added_delay;
     if (clear_timer)
     {
         added_delay = 0;
         delay = base_delay;
+        you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
     }
     else
-        added_delay = (90 + max(100, static_cast<int>(you.piety)) - 100) / 3;
+    {
+        // if you rejected a sacrifice, add between 33 and 53 to the timer,
+        // based on piety. This extra delay stacks with any added delay for
+        // previous rejections.
+        added_delay = you.props[RU_SACRIFICE_PENALTY_KEY].get_int();
+        added_delay += (max(100, static_cast<int>(you.piety))) / 3;
+        you.props[RU_SACRIFICE_PENALTY_KEY] = added_delay;
+    }
 
     delay = div_rand_round((delay + added_delay) * (3 + you.faith()), 3);
     if (crawl_state.game_is_sprint())
         delay /= SPRINT_MULTIPLIER;
 
-    you.props["ru_sacrifice_delay"] = delay;
+    you.props[RU_SACRIFICE_DELAY_KEY] = delay;
+    you.props[RU_SACRIFICE_PROGRESS_KEY] = 0;
 }
 
 // Check to see if you're eligible to retaliate.

@@ -431,8 +431,8 @@ void wizard_set_piety()
     if (you_worship(GOD_RU))
     {
         mprf("Current progress to next sacrifice: %d  Progress needed: %d",
-            you.props["ru_progress_to_next_sacrifice"].get_int(),
-            you.props["ru_sacrifice_delay"].get_int());
+            you.props[RU_SACRIFICE_PROGRESS_KEY].get_int(),
+            you.props[RU_SACRIFICE_DELAY_KEY].get_int());
     }
 
     mprf(MSGCH_PROMPT, "Enter new piety value (current = %d, Enter for 0): ",
@@ -947,7 +947,6 @@ void wizard_get_god_gift()
     if (you_worship(GOD_RU))
     {
         ru_offer_new_sacrifices();
-        you.props["ru_progress_to_next_sacrifice"] = 0;
         return;
     }
 

@@ -3381,17 +3381,18 @@ void join_religion(god_type which_god, bool immediate)
         you.piety = 10; // one moderate sacrifice should get you to *.
         you.piety_hysteresis = 0;
         you.gift_timeout = 0;
-        _make_empty_vec(you.props["available_sacrifices"], SV_INT);
+        _make_empty_vec(you.props[AVAILABLE_SAC_KEY], SV_INT);
         _make_empty_vec(you.props[HEALTH_SAC_KEY], SV_INT);
         _make_empty_vec(you.props[ESSENCE_SAC_KEY], SV_INT);
         _make_empty_vec(you.props[PURITY_SAC_KEY], SV_INT);
         _make_empty_vec(you.props[ARCANA_SAC_KEY], SV_INT);
-        you.props["ru_progress_to_next_sacrifice"] = 0;
+        you.props[RU_SACRIFICE_PROGRESS_KEY] = 0;
         // offer the first sacrifice faster than normal;
         int delay = 50;
         if (crawl_state.game_is_sprint())
           delay /= SPRINT_MULTIPLIER;
-        you.props["ru_sacrifice_delay"] = delay;
+        you.props[RU_SACRIFICE_DELAY_KEY] = delay;
+        you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
     }
     else
     {
@@ -3563,7 +3564,7 @@ void join_religion(god_type which_god, bool immediate)
     {
         // monks get bonus piety for first god
         if (you_worship(GOD_RU))
-            you.props["ru_progress_to_next_sacrifice"] = 9999;
+            you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
         else
             gain_piety(35, 1, false);
     }
@@ -4044,6 +4045,7 @@ void handle_god_time(int /*time_delta*/)
     if (!you_worship(GOD_NO_GOD))
     {
         int delay;
+        int sacrifice_count;
         switch (you.religion)
         {
         case GOD_TROG:
@@ -4098,17 +4100,20 @@ void handle_god_time(int /*time_delta*/)
             break;
 
         case GOD_RU:
-            ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
-            ASSERT(you.props.exists("ru_sacrifice_delay"));
+            ASSERT(you.props.exists(RU_SACRIFICE_PROGRESS_KEY));
+            ASSERT(you.props.exists(RU_SACRIFICE_DELAY_KEY));
+            ASSERT(you.props.exists(AVAILABLE_SAC_KEY));
 
-            delay = you.props["ru_sacrifice_delay"].get_int();
-            if (you.props["ru_progress_to_next_sacrifice"].get_int() >= delay)
+            delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
+            sacrifice_count = you.props[AVAILABLE_SAC_KEY].get_vector().size();
+
+            // 6* is max piety for Ru
+            if (sacrifice_count == 0 && you.piety < piety_breakpoint(5)
+                && you.props[RU_SACRIFICE_PROGRESS_KEY].get_int() >= delay)
             {
-                if (you.piety < piety_breakpoint(5)) // 6* is max piety for Ru
-                    ru_offer_new_sacrifices();
-
-                you.props["ru_progress_to_next_sacrifice"] = 0;
+              ru_offer_new_sacrifices();
             }
+
             break;
             return;
 
