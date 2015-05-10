@@ -2764,37 +2764,28 @@ static void _storm_card(int power, deck_rarity_type rarity)
     const int power_level = _get_power_level(power, rarity);
 
     _friendly(MONS_AIR_ELEMENTAL, 3);
-    if (coinflip())
-    {
-        const int num_to_summ = random2(1 + power_level);
-        for (int i = 0; i < num_to_summ; ++i)
-            _friendly(MONS_AIR_ELEMENTAL, 3);
-        summon_twister(power_level);
-    }
-    else
-    {
-        wind_blast(&you, (power_level == 0) ? 100 : 200, coord_def(), true);
 
-        for (radius_iterator ri(you.pos(), 4, C_SQUARE, LOS_SOLID); ri; ++ri)
+    wind_blast(&you, (power_level == 0) ? 100 : 200, coord_def(), true);
+
+    for (radius_iterator ri(you.pos(), 4, C_SQUARE, LOS_SOLID); ri; ++ri)
+    {
+        monster *mons = monster_at(*ri);
+
+        if (adjacent(*ri, you.pos()))
+            continue;
+
+        if (mons && mons->wont_attack())
+            continue;
+
+        if ((feat_has_solid_floor(grd(*ri))
+             || grd(*ri) == DNGN_DEEP_WATER)
+            && env.cgrid(*ri) == EMPTY_CLOUD)
         {
-            monster *mons = monster_at(*ri);
-
-            if (adjacent(*ri, you.pos()))
-                continue;
-
-            if (mons && mons->wont_attack())
-                continue;
-
-
-            if ((feat_has_solid_floor(grd(*ri))
-                 || grd(*ri) == DNGN_DEEP_WATER)
-                && env.cgrid(*ri) == EMPTY_CLOUD)
-            {
-                place_cloud(CLOUD_STORM, *ri,
-                            5 + (power_level + 1) * random2(10), & you);
-            }
+            place_cloud(CLOUD_STORM, *ri,
+                        5 + (power_level + 1) * random2(10), & you);
         }
     }
+
 }
 
 static void _water_card(int power, deck_rarity_type rarity)
