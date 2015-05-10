@@ -535,6 +535,7 @@ bool feat_is_bidirectional_portal(dungeon_feature_type feat)
            && feat_stair_direction(feat) != CMD_NO_CMD
            && feat != DNGN_ENTER_ZOT
            && feat != DNGN_EXIT_ZOT
+           && feat != DNGN_ENTER_VAULTS
            && feat != DNGN_EXIT_VAULTS
            && feat != DNGN_EXIT_HELL
            && feat != DNGN_ENTER_HELL;
