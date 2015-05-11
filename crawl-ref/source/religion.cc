@@ -2289,7 +2289,7 @@ void dock_piety(int piety_loss, int penance)
     }
 }
 
-// Scales a piety number, applying modifiers (faith, forlorn).
+// Scales a piety number, applying modifiers (faith).
 int piety_scale(int piety)
 {
     return piety + (you.faith() * div_rand_round(piety, 3));
