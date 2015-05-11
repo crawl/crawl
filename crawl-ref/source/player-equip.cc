@@ -1049,16 +1049,10 @@ static void _remove_amulet_of_faith(item_def &item)
         }
     }
     else if (!you_worship(GOD_NO_GOD)
-        && !you_worship(GOD_XOM))
+             && !you_worship(GOD_XOM)
+             && !you_worship(GOD_GOZAG))
     {
         simple_god_message(" seems less interested in you.");
-
-        if (you_worship(GOD_GOZAG))
-        {
-            you.attribute[ATTR_GOZAG_SHOPS]   += 2;
-            simple_god_message("'s merchants increase their required prices.");
-            return;
-        }
 
         const int piety_loss = div_rand_round(you.piety, 3);
         // Piety penalty for removing the Amulet of Faith.
@@ -1139,14 +1133,14 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             simple_god_message(" says: An ascetic of your devotion"
                                " has no use for such trinkets.");
         }
+        else if (you_worship(GOD_GOZAG))
+            simple_god_message(" cares for nothing but gold!");
         else
         {
             mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
                             you_worship(GOD_NO_GOD) ? "strange " : "");
         }
 
-        if (you_worship(GOD_GOZAG))
-            simple_god_message(" discounts your offered prices.");
         break;
 
     case AMU_THE_GOURMAND:

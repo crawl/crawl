@@ -4209,16 +4209,12 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
 
 #define ADD_POTIONS(a,b) _gozag_add_potions(a, b[random2(ARRAYSZ(b))])
 
-static int _gozag_faith_adjusted_price(int price)
-{
-    return price - (you.faith() * price)/3;
-}
-
 int gozag_potion_price()
 {
     if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
         return 0;
-    return _gozag_faith_adjusted_price(GOZAG_POTION_PETITION_AMOUNT);
+
+    return GOZAG_POTION_PETITION_AMOUNT;
 }
 
 bool gozag_setup_potion_petition(bool quiet)
@@ -4299,7 +4295,6 @@ bool gozag_potion_petition()
     }
 
     int keyin = 0;
-    int faith_price = 0;
 
     while (true)
     {
@@ -4309,9 +4304,8 @@ bool gozag_potion_petition()
         clear_messages();
         for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
         {
-            faith_price = _gozag_faith_adjusted_price(prices[i]);
             string line = make_stringf("  [%c] - %d gold - ", i + 'a',
-                                       faith_price);
+                                       prices[i]);
             vector<string> pot_names;
             for (int j = 0; j < pots[i]->size(); j++)
                 pot_names.emplace_back(potion_type_name((*pots[i])[j].get_int()));
@@ -4323,8 +4317,7 @@ bool gozag_potion_petition()
         if (keyin < 0 || keyin > GOZAG_MAX_POTIONS - 1)
             continue;
 
-        faith_price = _gozag_faith_adjusted_price(prices[keyin]);
-        if (you.gold < faith_price)
+        if (you.gold < prices[keyin])
         {
             mpr("You don't have enough gold for that!");
             more();
@@ -4334,9 +4327,9 @@ bool gozag_potion_petition()
         break;
     }
 
-    ASSERT(you.gold >= faith_price);
-    you.del_gold(faith_price);
-    you.attribute[ATTR_GOZAG_GOLD_USED] += faith_price;
+    ASSERT(you.gold >= prices[keyin]);
+    you.del_gold(prices[keyin]);
+    you.attribute[ATTR_GOZAG_GOLD_USED] += prices[keyin];
 
     for (auto pot : *pots[keyin])
         potionlike_effect(static_cast<potion_type>(pot.get_int()), 40);
@@ -4383,7 +4376,7 @@ int gozag_price_for_shop(bool max)
                          + GOZAG_SHOP_MOD_MULTIPLIER
                            * you.attribute[ATTR_GOZAG_SHOPS])
                       / GOZAG_SHOP_BASE_MULTIPLIER;
-    return max ? _gozag_faith_adjusted_price(price) : price;
+    return price;
 }
 
 static vector<level_id> _get_gozag_shop_candidates()
@@ -4480,16 +4473,13 @@ static shop_type _gozag_shop_type(int index)
 
 /**
  * What is the price of calling the shop that gozag is offering at the given
- * index, including the effects of faith?
+ * index?
  */
 static int _gozag_shop_price(int index)
 {
     ASSERT(_gozag_valid_shop_index(index));
-    // the base cost
-    const int cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY,
-                                            index)].get_int();
-    // shop cost adjusted for faith (amulet, mutation)
-    return _gozag_faith_adjusted_price(cost);
+
+    return you.props[make_stringf(GOZAG_SHOP_COST_KEY, index)].get_int();
 }
 
 /**
