@@ -646,10 +646,10 @@ static void _god_greeting_message(bool game_start)
 static void _take_starting_note()
 {
     ostringstream notestr;
-    notestr << you.your_name << ", the "
+    notestr << you.your_name << " the "
             << species_name(you.species) << " "
             << get_job_name(you.char_class)
-            << ", began the quest for the Orb.";
+            << " began the quest for the Orb.";
     take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str().c_str()));
     mark_milestone("begin", "began the quest for the Orb.");
 

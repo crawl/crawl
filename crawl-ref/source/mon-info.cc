@@ -808,7 +808,7 @@ monster_info::monster_info(const monster* m, int milev)
             {
                 constricting_name.push_back(gerund
                                             + constrictee->name(
-                                                  article_for(constrictee),
+                                                  _article_for(constrictee),
                                                   true));
             }
         }
