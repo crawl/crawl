@@ -455,8 +455,9 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     client_id = 0;
 }
 
-static description_level_type _article_for(const actor* a) {
-    const monster* m = a->as_monster();
+static description_level_type _article_for(const actor* a)
+{
+    const monster * const m = a->as_monster();
 
     if (!m || !m->friendly())
         return DESC_A;
