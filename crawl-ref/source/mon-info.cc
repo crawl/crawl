@@ -455,6 +455,14 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     client_id = 0;
 }
 
+static description_level_type article_for(const actor* a) {
+    const monster* m = a->as_monster();
+
+    if (!m || !m->friendly())
+        return DESC_A;
+    return DESC_YOUR;
+}
+
 monster_info::monster_info(const monster* m, int milev)
 {
     mb.reset();
@@ -784,7 +792,7 @@ monster_info::monster_info(const monster* m, int milev)
         {
             constrictor_name = (m->held == HELD_MONSTER ? "held by "
                                                         : "constricted by ")
-                               + constrictor->name(DESC_A, true);
+                               + constrictor->name(article_for(constrictor), true);
         }
     }
 
@@ -798,7 +806,7 @@ monster_info::monster_info(const monster* m, int milev)
             if (const actor* const constrictee = actor_by_mid(entry.first))
             {
                 constricting_name.push_back(gerund
-                                            + constrictee->name(DESC_A, true));
+                                            + constrictee->name(article_for(constrictee), true));
             }
         }
     }
