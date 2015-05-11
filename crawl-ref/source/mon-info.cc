@@ -457,11 +457,9 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
 static description_level_type _article_for(const actor* a)
 {
+    // Player gets DESC_A, but that doesn't really matter.
     const monster * const m = a->as_monster();
-
-    if (!m || !m->friendly())
-        return DESC_A;
-    return DESC_YOUR;
+    return m && m->friendly() ? DESC_YOUR : DESC_A;
 }
 
 monster_info::monster_info(const monster* m, int milev)
