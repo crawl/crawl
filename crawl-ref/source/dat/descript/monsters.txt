@@ -205,9 +205,9 @@ A tough-looking gnoll, wearing the pelt of one of his former war dogs.
 %%%%
 Harold
 
-A middle-aged bounty hunter, anxious to retire from bounty-hunting after one
-final job. He hopes to settle down somewhere and live a quiet life with his
-family, using the money from his final bounty: you.
+A middle-aged bounty hunter, anxious to retire after one final job. He hopes to
+settle down somewhere and live a quiet life with his family, using the money
+from his final bounty: you.
 %%%%
 Ignacio
 
