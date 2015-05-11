@@ -1204,7 +1204,7 @@ static void _decrement_durations()
         // Roll to decrement (on average) 1 per-10 aut.
         const int decrement_rolls = div_rand_round(delay, 10);
         const int dec = binomial(decrement_rolls, 1, 4);
-        pbd_str -= dec;
+        pbd_str = max(pbd_str - dec, 0);
         you.props["powered_by_death_strength"] = pbd_str;
         if (dec > 0)
             dprf("Decrementing Powered by Death strength to %d", pbd_str);
