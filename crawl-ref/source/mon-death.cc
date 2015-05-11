@@ -2583,13 +2583,14 @@ int monster_die(monster* mons, killer_type killer,
         // Maybe increase strength. The chance decreases with number of
         // existing stacks. Chance is:
         // (0->1) 100%, (1->2) 90%, 80%, ...
-        // This implies a maximum strength of 10 (though you might get to 12
-        // with lucky rolls).
+        // The increase amount scales with mutation level.
+        // This implies a maximum strength of 10/11/12, though you'd have to be
+        // lucky to cap out!
         if (x_chance_in_y(10 - pbd_str, 10))
         {
-            const int pbd_inc = random2(pbd_level + 1)
+            const int pbd_inc = random_range(1, pbd_level);
             you.props["powered_by_death_strength"] = pbd_str + pbd_inc;
-            dprf("Incrementing Powered by Death strength to %d",
+            dprf("Powered by Death strength +%d=%d", pbd_inc,
                  pbd_str + pbd_inc);
         }
     }
