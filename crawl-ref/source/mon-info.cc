@@ -459,9 +459,9 @@ static description_level_type _article_for(const actor* a)
 {
     const monster * const m = a->as_monster();
 
-    if (!m || !m->friendly())
-        return DESC_A;
-    return DESC_YOUR;
+    if (m && m->friendly())
+        return DESC_YOUR;
+    return DESC_A;
 }
 
 monster_info::monster_info(const monster* m, int milev)
