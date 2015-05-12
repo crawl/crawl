@@ -714,7 +714,7 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
     { "+Rage", ARTP_VAL_BOOL, 15,   // ARTP_BERSERK,
         []() { return 1; }, nullptr, 0, 0 },
-    { "Noisy", ARTP_VAL_POS, 25,    // ARTP_NOISES,
+    { "*Noise", ARTP_VAL_POS, 25,    // ARTP_NOISES,
         nullptr, []() { return 2; }, 0, 0 },
     { "-Cast", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_SPELLCASTING,
         nullptr, []() { return 1; }, 0, 0 },
@@ -727,7 +727,7 @@ static const artefact_prop_data artp_data[] =
 #if TAG_MAJOR_VERSION == 34
     { "Hungry", ARTP_VAL_POS, 0, nullptr, nullptr, 0, 0 },// ARTP_METABOLISM,
 #endif
-    { "Contam", ARTP_VAL_POS, 20,   // ARTP_MUTAGENIC
+    { "*Contam", ARTP_VAL_POS, 20,   // ARTP_MUTAGENIC
         nullptr, []() { return 1; }, 0, 0 },
 #if TAG_MAJOR_VERSION == 34
     { "Acc", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_ACCURACY,
@@ -735,7 +735,7 @@ static const artefact_prop_data artp_data[] =
     { "Slay", ARTP_VAL_ANY, 30,     // ARTP_SLAYING,
       []() { return 2 + random2(2); },
       []() { return -(2 + random2(3) + random2(3)); }, 3, 2 },
-    { "Curse", ARTP_VAL_POS, 0, nullptr, nullptr, 0 }, // ARTP_CURSED,
+    { "*Curse", ARTP_VAL_POS, 0, nullptr, nullptr, 0 }, // ARTP_CURSED,
     { "Stlth", ARTP_VAL_ANY, 40,    // ARTP_STEALTH,
         _gen_good_res_artp, _gen_bad_res_artp, 0, 0 },
     { "MP", ARTP_VAL_ANY, 30,       // ARTP_MAGICAL_POWER,
