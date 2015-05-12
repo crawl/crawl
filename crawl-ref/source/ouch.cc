@@ -730,6 +730,15 @@ static void _maybe_entropy()
         you.corrode_equipment("Your entropic artefact", degree);
 }
 
+/**
+ * Maybe drain the player after taking damage if they're wearing LifeHungry.
+ **/
+static int _maybe_eat_life()
+{
+    int drain_sources = you.scan_artefacts(ARTP_LIFE_HUNGRY);
+    return binomial(drain_sources, 10) * 25;
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -987,6 +996,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_spawn_monsters(dam, aux, death_type, source);
             _maybe_fog(dam);
             _powered_by_pain(dam);
+            drain_amount += _maybe_eat_life();
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);
         }
