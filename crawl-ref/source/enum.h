@@ -3870,6 +3870,7 @@ enum artefact_prop_type
     ARTP_TWISTER,
     ARTP_ENTROPY,
     ARTP_LIFE_HUNGRY,
+    ARTP_CONFUSING,
     ARTP_NUM_PROPERTIES
 };
 

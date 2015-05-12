@@ -739,6 +739,20 @@ static int _maybe_eat_life()
     return binomial(drain_sources, 10) * 25;
 }
 
+/**
+ * Maybe confuse the player after taking damage if they're wearing Confusing.
+ **/
+static int _maybe_confuse()
+{
+    int confusion_sources = you.scan_artefacts(ARTP_CONFUSING);
+    if (x_chance_in_y(drain_sources, 100)) {
+        const bool conf = you.confused();
+
+        if (confuse_player(5 + random2(3), true))
+            mprf(MSGCH_WARN, "You are %sconfused.", conf ? "more " : "");
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -991,6 +1005,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
             _deteriorate(dam);
             _maybe_entropy();
+            _maybe_confuse();
             _yred_mirrors_injury(dam, source);
             _maybe_ru_retribution(dam, source);
             _maybe_spawn_monsters(dam, aux, death_type, source);
