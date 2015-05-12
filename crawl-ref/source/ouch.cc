@@ -1004,14 +1004,17 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                            damage_desc.c_str()));
 
             _deteriorate(dam);
-            _maybe_entropy();
-            _maybe_confuse();
             _yred_mirrors_injury(dam, source);
             _maybe_ru_retribution(dam, source);
             _maybe_spawn_monsters(dam, aux, death_type, source);
             _maybe_fog(dam);
             _powered_by_pain(dam);
-            drain_amount += _maybe_eat_life();
+            if (death_type != KILLED_BY_POISON)
+            {
+                _maybe_entropy();
+                _maybe_confuse();
+                drain_amount += _maybe_eat_life();
+            }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);
         }
