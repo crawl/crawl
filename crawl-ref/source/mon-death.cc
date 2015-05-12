@@ -3077,11 +3077,20 @@ void pikel_band_neutralise()
         }
     }
     const char* final_msg = nullptr;
-    if (visible_slaves == 1)
-        final_msg = "With Pikel's spell broken, the former slave thanks you for freedom.";
-    else if (visible_slaves > 1)
-        final_msg = "With Pikel's spell broken, the former slaves thank you for their freedom.";
-
+    if (player_mutation_level(MUT_NO_LOVE))
+    {
+        if (visible_slaves == 1)
+            final_msg = "Pikel's spell is broken, but the former slave can only feel hate for you!";
+        else if (visible_slaves > 1)
+            final_msg = "Pikel's spell is broken, but the former slaves can only feel hate for you!";
+    }
+    else
+    {
+        if (visible_slaves == 1)
+            final_msg = "With Pikel's spell broken, the former slave thanks you for freedom.";
+        else if (visible_slaves > 1)
+            final_msg = "With Pikel's spell broken, the former slaves thank you for their freedom.";
+    }
     delayed_action_fineff::schedule(DACT_PIKEL_SLAVES, final_msg);
 }
 
