@@ -265,6 +265,10 @@ static void _tweak_randart(item_def &item)
     vector<unsigned int> choice_to_prop;
     for (unsigned int i = 0, choice_num = 0; i < ARTP_NUM_PROPERTIES; ++i)
     {
+#if TAG_MAJOR_VERSION == 34
+        if (i == ARTP_METABOLISM || i == ARTP_ACCURACY || i == ARTP_TWISTER)
+            continue;
+#endif
         choice_to_prop.push_back(i);
         if (choice_num % 8 == 0 && choice_num != 0)
             *(prompt.rend()) = '\n'; // Replace the space
