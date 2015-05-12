@@ -633,6 +633,8 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_BLINK:
             return !extant_props[ARTP_PREVENT_TELEPORTATION];
             // no contradictory props
+        case ARTP_CONFUSING:
+            return !item.is_type(OBJ_JEWELLERY, AMU_CLARITY);
         default:
             return true;
     }
@@ -1772,7 +1774,12 @@ static void _make_faerie_armour(item_def &item)
         }
 
         if (one_chance_in(20))
+        {
+            // Replace Confusing if present.
+            if (artefact_property(doodad, ARTP_CONFUSING))
+                artefact_set_property(doodad, ARTP_CONFUSING, 0);
             artefact_set_property(doodad, ARTP_CLARITY, 1);
+        }
         if (one_chance_in(20))
             artefact_set_property(doodad, ARTP_MAGICAL_POWER, 1 + random2(10));
         if (one_chance_in(20))
