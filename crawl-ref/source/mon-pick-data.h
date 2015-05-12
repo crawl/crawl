@@ -40,8 +40,8 @@ static const pop_entry pop_d[] =
   {  6, 13,  285, SEMI, MONS_BLACK_BEAR },
   {  6, 16, 1000, FLAT, MONS_GIANT_FROG },
   {  6, 16,  825, SEMI, MONS_ORC_WARRIOR },
-  {  6, 16,  335, SEMI, MONS_GIANT_SPORE },
   {  6, 16,  335, SEMI, MONS_WIGHT },
+  {  6, 16,  335, SEMI, MONS_NO_MONSTER }, // Old giant spore weight.
   {  7, 14,  415, SEMI, MONS_BIG_KOBOLD },
   {  7, 14,  500, SEMI, MONS_KILLER_BEE },
   {  7, 15,   89, PEAK, MONS_STEAM_DRAGON },
@@ -889,7 +889,6 @@ static const pop_entry pop_abyss[] =
   {  1,  5,    8, FLAT, MONS_WIZARD },
   {  1,  5,    8, FLAT, MONS_SALAMANDER_STORMCALLER },
   {  1,  4,   17, FALL, MONS_WANDERING_MUSHROOM },
-  {  1,  4,    3, FALL, MONS_GIANT_SPORE },
   {  1,  5,   11, FLAT, MONS_ANGEL },
   {  1,  5,   14, FLAT, MONS_DAEVA },
   {  1,  5,    8, FLAT, MONS_OPHAN },
