@@ -1410,7 +1410,9 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_NO_UPGRADE",
         "ARTP_RCORR",
         "ARTP_RMUT",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_TWISTER",
+#endif
         "ARTP_ENTROPY",
         "ARTP_LIFE_HUNGRY",
         "ARTP_CONFUSING",
