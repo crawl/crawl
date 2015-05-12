@@ -233,7 +233,6 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_CONFUSING,             PROPN_PLAIN },
 
         // Evokable abilities come second
-        { ARTP_TWISTER,               PROPN_PLAIN },
         { ARTP_BLINK,                 PROPN_PLAIN },
         { ARTP_BERSERK,               PROPN_PLAIN },
         { ARTP_INVISIBLE,             PROPN_PLAIN },
@@ -486,7 +485,6 @@ static string _randart_descrip(const item_def &item)
         { ARTP_REGENERATION, "It increases your rate of regeneration.", false},
         { ARTP_RCORR, "It protects you from acid and corrosion.", false},
         { ARTP_RMUT, "It protects you from mutation.", false},
-        { ARTP_TWISTER, "It can be evoked to create a twister.", false},
         { ARTP_ENTROPY, "It may corrode your equipment when you take damage.", false},
         { ARTP_LIFE_HUNGRY, "It may drain you when you take damage.", false},
         { ARTP_CONFUSING, "It may confuse you when you take damage.", false},

@@ -757,8 +757,10 @@ static const artefact_prop_data artp_data[] =
     { "rCorr", ARTP_VAL_BOOL, 40,   // ARTP_RCORR,
         []() { return 1; }, nullptr, 0, 0 },
     { "rMut", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_RMUT,
+#if TAG_MAJOR_VERSION == 34
     { "+Twstr", ARTP_VAL_BOOL, 0,   // ARTP_TWISTER,
         []() { return 1; }, nullptr, 0, 0 },
+#endif
     { "Entropy", ARTP_VAL_BOOL, 25, // ARTP_ENTROPY,
         nullptr, []() { return 1; }, 0, 0 },
     { "LifeHungry", ARTP_VAL_BOOL, 25, // ARTP_LIFE_HUNGRY,

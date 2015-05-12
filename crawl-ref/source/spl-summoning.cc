@@ -3644,26 +3644,3 @@ int count_summons(const actor *summoner, spell_type spell)
     return count;
 }
 
-void summon_twister(int power_level)
-{
-    coord_def pos;
-    int tries = 0;
-
-    do
-    {
-        random_near_space(&you, you.pos(), pos, true);
-        tries++;
-    }
-    while (grid_distance(pos, you.pos()) < 2 && tries < 50);
-
-    if (tries > 50)
-        pos = you.pos();
-
-    if (create_monster(
-                mgen_data(MONS_TWISTER,
-                          BEH_HOSTILE, &you, 1 + random2(power_level + 1),
-                          0, pos, MHITYOU, MG_FORCE_PLACE)))
-    {
-        mpr("A tornado forms.");
-    }
-}

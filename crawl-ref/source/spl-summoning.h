@@ -130,6 +130,5 @@ void summoned_monster(const monster* mons, const actor* caster,
 bool summons_are_capped(spell_type spell);
 int summons_limit(spell_type spell);
 int count_summons(const actor *summoner, spell_type spell);
-void summon_twister(int power_level);
 
 #endif

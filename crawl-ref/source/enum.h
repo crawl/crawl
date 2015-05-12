@@ -202,8 +202,12 @@ enum ability_type
 #endif
     ABIL_EVOKE_FOG,
     ABIL_EVOKE_TELEPORT_CONTROL,
+#if TAG_MAJOR_VERSION == 34
     ABIL_EVOKE_TWISTER,
     ABIL_MAX_EVOKE = ABIL_EVOKE_TWISTER,
+#else
+    ABIL_MAX_EVOKE = ABIL_EVOKE_TELEPORT_CONTROL,
+#endif
 
     // Divine abilities
     // Zin
@@ -3867,7 +3871,9 @@ enum artefact_prop_type
     ARTP_NO_UPGRADE,
     ARTP_RCORR,
     ARTP_RMUT,
+#if TAG_MAJOR_VERSION == 34
     ARTP_TWISTER,
+#endif
     ARTP_ENTROPY,
     ARTP_LIFE_HUNGRY,
     ARTP_CONFUSING,
