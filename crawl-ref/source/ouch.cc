@@ -731,15 +731,6 @@ static void _maybe_entropy()
 }
 
 /**
- * Maybe drain the player after taking damage if they're wearing LifeHungry.
- **/
-static int _maybe_eat_life()
-{
-    int drain_sources = you.scan_artefacts(ARTP_LIFE_HUNGRY);
-    return binomial(drain_sources, 10) * 25;
-}
-
-/**
  * Maybe confuse the player after taking damage if they're wearing Confusing.
  **/
 static void _maybe_confuse()
@@ -1013,7 +1004,6 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             {
                 _maybe_entropy();
                 _maybe_confuse();
-                drain_amount += _maybe_eat_life();
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);

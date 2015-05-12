@@ -1709,6 +1709,9 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
                 penance = true;
             return true;
         }
+
+        if (is_artefact(item) && artefact_property(item, ARTP_LIFE_HUNGRY))
+            return true;
     }
 
     if (oper == OPER_PUTON || oper == OPER_WEAR || oper == OPER_TAKEOFF
@@ -1723,6 +1726,9 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             }
             return true;
         }
+
+        if (is_artefact(item) && artefact_property(item, ARTP_LIFE_HUNGRY))
+            return true;
     }
 
     return false;

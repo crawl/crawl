@@ -334,6 +334,9 @@ static void _unequip_artefact_effect(item_def &item,
         contaminate_player(7000, true);
     }
 
+    if (proprt[ARTP_LIFE_HUNGRY] && !meld)
+        drain_player(100, true, true);
+
     if (proprt[ARTP_EYESIGHT])
         _mark_unseen_monsters();
 
