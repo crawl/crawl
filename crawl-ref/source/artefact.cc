@@ -762,7 +762,7 @@ static const artefact_prop_data artp_data[] =
     { "Entropy", ARTP_VAL_BOOL, 25, // ARTP_ENTROPY,
         nullptr, []() { return 1; }, 0, 0 },
     { "LifeHungry", ARTP_VAL_BOOL, 25, // ARTP_LIFE_HUNGRY,
-        nullptr, []() { return 1; }, 0, 0 },
+        nullptr, nullptr, 0, 0 },
     { "Confusing", ARTP_VAL_BOOL, 25, // ARTP_CONFUSING,
         nullptr, []() { return 1; }, 0, 0 },
 };
