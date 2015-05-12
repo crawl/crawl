@@ -764,7 +764,7 @@ static const artefact_prop_data artp_data[] =
     { "*Corrode", ARTP_VAL_BOOL, 25, // ARTP_ENTROPY,
         nullptr, []() { return 1; }, 0, 0 },
     { "*Drain", ARTP_VAL_BOOL, 25, // ARTP_LIFE_HUNGRY,
-        nullptr, nullptr, 0, 0 },
+        nullptr, []() { return 1; }, 0, 0 },
     { "*Confuse", ARTP_VAL_BOOL, 25, // ARTP_CONFUSING,
         nullptr, []() { return 1; }, 0, 0 },
 };

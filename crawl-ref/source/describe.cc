@@ -486,7 +486,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_RCORR, "It protects you from acid and corrosion.", false},
         { ARTP_RMUT, "It protects you from mutation.", false},
         { ARTP_ENTROPY, "It may corrode your equipment when you take damage.", false},
-        { ARTP_LIFE_HUNGRY, "It may drain you when you take damage.", false},
+        { ARTP_LIFE_HUNGRY, "It causes draining when unequipped.", false},
         { ARTP_CONFUSING, "It may confuse you when you take damage.", false},
     };
 
