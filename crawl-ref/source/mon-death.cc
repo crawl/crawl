@@ -2575,7 +2575,7 @@ int monster_die(monster* mons, killer_type killer,
     {
         // Set duration
         const int pbd_level = player_mutation_level(MUT_POWERED_BY_DEATH);
-        const int pbd_dur = level * 8 + roll_dice(2, 8);
+        const int pbd_dur = pbd_level * 8 + roll_dice(2, 8);
         const int pbd_str = you.props["powered_by_death_strength"].get_int();
         if (pbd_dur * BASELINE_DELAY > you.duration[DUR_POWERED_BY_DEATH])
             you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
@@ -2587,7 +2587,7 @@ int monster_die(monster* mons, killer_type killer,
         // with lucky rolls).
         if (x_chance_in_y(10 - pbd_str, 10))
         {
-            const int pbd_inc = random2(level + 1)
+            const int pbd_inc = random2(pbd_level + 1)
             you.props["powered_by_death_strength"] = pbd_str + pbd_inc;
             dprf("Incrementing Powered by Death strength to %d",
                  pbd_str + pbd_inc);
