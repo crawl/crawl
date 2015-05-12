@@ -1183,7 +1183,7 @@ vector<string> desc_success_chance(const monster_info& mi, int pow)
         descs.push_back("magic immune");
     else
     {
-        descs.push_back(make_stringf("chance %d%%",
+        descs.push_back(make_stringf("chance to defeat MR: %d%%",
                                      hex_success_chance(mr, pow, 100)).c_str());
     }
     return descs;
