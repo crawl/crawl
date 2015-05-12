@@ -761,11 +761,11 @@ static const artefact_prop_data artp_data[] =
     { "+Twstr", ARTP_VAL_BOOL, 0,   // ARTP_TWISTER,
         []() { return 1; }, nullptr, 0, 0 },
 #endif
-    { "Entropy", ARTP_VAL_BOOL, 25, // ARTP_ENTROPY,
+    { "*Corrode", ARTP_VAL_BOOL, 25, // ARTP_ENTROPY,
         nullptr, []() { return 1; }, 0, 0 },
-    { "LifeHungry", ARTP_VAL_BOOL, 25, // ARTP_LIFE_HUNGRY,
+    { "*Drain", ARTP_VAL_BOOL, 25, // ARTP_LIFE_HUNGRY,
         nullptr, nullptr, 0, 0 },
-    { "Confusing", ARTP_VAL_BOOL, 25, // ARTP_CONFUSING,
+    { "*Confuse", ARTP_VAL_BOOL, 25, // ARTP_CONFUSING,
         nullptr, []() { return 1; }, 0, 0 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
