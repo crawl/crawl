@@ -228,6 +228,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_ANGRY,                 PROPN_PLAIN },
         { ARTP_CAUSE_TELEPORTATION,   PROPN_PLAIN },
         { ARTP_NOISES,                PROPN_PLAIN },
+        { ARTP_ENTROPY,               PROPN_PLAIN },
 
         // Evokable abilities come second
         { ARTP_TWISTER,               PROPN_PLAIN },
@@ -484,6 +485,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_RCORR, "It protects you from acid and corrosion.", false},
         { ARTP_RMUT, "It protects you from mutation.", false},
         { ARTP_TWISTER, "It can be evoked to create a twister.", false},
+        { ARTP_ENTROPY, "It may corrode your equipment when you take damage.", false},
     };
 
     // Give a short description of the base type, for base types with no

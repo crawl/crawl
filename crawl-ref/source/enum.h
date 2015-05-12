@@ -3868,6 +3868,7 @@ enum artefact_prop_type
     ARTP_RCORR,
     ARTP_RMUT,
     ARTP_TWISTER,
+    ARTP_ENTROPY,
     ARTP_NUM_PROPERTIES
 };
 
