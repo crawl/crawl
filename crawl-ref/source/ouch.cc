@@ -742,7 +742,7 @@ static int _maybe_eat_life()
 /**
  * Maybe confuse the player after taking damage if they're wearing Confusing.
  **/
-static int _maybe_confuse()
+static void _maybe_confuse()
 {
     int confusion_sources = you.scan_artefacts(ARTP_CONFUSING);
     if (x_chance_in_y(confusion_sources, 100)) {
