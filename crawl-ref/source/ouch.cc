@@ -719,6 +719,17 @@ static void _deteriorate(int dam)
     }
 }
 
+/**
+ * Maybe corrode the player after taking damage if they're wearing entropy.
+ **/
+static void _maybe_entropy()
+{
+    int corrosion_sources = you.scan_artefacts(ARTP_ENTROPY);
+    int degree = binomial(corrosion_sources, 10);
+    if (degree > 0)
+        you.corrode_equipment("Your entropic artefact", degree);
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -970,6 +981,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                            damage_desc.c_str()));
 
             _deteriorate(dam);
+            _maybe_entropy();
             _yred_mirrors_injury(dam, source);
             _maybe_ru_retribution(dam, source);
             _maybe_spawn_monsters(dam, aux, death_type, source);

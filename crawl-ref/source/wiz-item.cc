@@ -1411,6 +1411,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_RCORR",
         "ARTP_RMUT",
         "ARTP_TWISTER",
+        "ARTP_ENTROPY",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 

@@ -757,6 +757,8 @@ static const artefact_prop_data artp_data[] =
     { "rMut", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_RMUT,
     { "+Twstr", ARTP_VAL_BOOL, 0,   // ARTP_TWISTER,
         []() { return 1; }, nullptr, 0, 0 },
+    { "Entropy", ARTP_VAL_BOOL, 25, // ARTP_ENTROPY,
+        nullptr, []() { return 1; }, 0, 0 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000
