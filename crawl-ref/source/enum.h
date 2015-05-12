@@ -3869,6 +3869,7 @@ enum artefact_prop_type
     ARTP_RMUT,
     ARTP_TWISTER,
     ARTP_ENTROPY,
+    ARTP_LIFE_HUNGRY,
     ARTP_NUM_PROPERTIES
 };
 
