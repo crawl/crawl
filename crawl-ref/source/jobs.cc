@@ -5,28 +5,13 @@
 #include "libutil.h"
 #include "stringutil.h"
 
-static const char * Job_Abbrev_List[] =
-    { "Fi", "Wz",
-#if TAG_MAJOR_VERSION == 34
-      "Pr",
-#endif
-      "Gl", "Ne",
-      "As", "Be", "Hu",
-      "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Sk",
-      "VM",
-      "CK", "Tm",
-#if TAG_MAJOR_VERSION == 34
-      "He", "St",
-#endif
-      "Mo", "Wr", "Wn", "Ar", "AM",
-#if TAG_MAJOR_VERSION == 34
-      "DK",
-#endif
-      "AK",
-#if TAG_MAJOR_VERSION == 34
-      "Jr",
-#endif
-};
+#include "job-data.h"
+
+static const job_def& _job_def(job_type job)
+{
+    ASSERT_RANGE(job, 0, NUM_JOBS);
+    return job_data.at(job);
+}
 
 static const char * Job_Name_List[] =
     { "Fighter", "Wizard",
@@ -52,31 +37,20 @@ static const char * Job_Name_List[] =
 #endif
 };
 
-const char *get_job_abbrev(int which_job)
+const char *get_job_abbrev(job_type which_job)
 {
     if (which_job == JOB_UNKNOWN)
         return "Un";
-    COMPILE_CHECK(ARRAYSZ(Job_Abbrev_List) == NUM_JOBS);
-    ASSERT_RANGE(which_job, 0, NUM_JOBS);
-
-    return Job_Abbrev_List[which_job];
+    return _job_def(which_job).abbrev;
 }
 
 job_type get_job_by_abbrev(const char *abbrev)
 {
-    int i;
+    for (auto& entry : job_data)
+        if (lowercase_string(abbrev) == lowercase_string(entry.second.abbrev))
+            return entry.first;
 
-    for (i = 0; i < NUM_JOBS; i++)
-    {
-        // This assumes untranslated abbreviations.
-        if (toalower(abbrev[0]) == toalower(Job_Abbrev_List[i][0])
-            && toalower(abbrev[1]) == toalower(Job_Abbrev_List[i][1]))
-        {
-            break;
-        }
-    }
-
-    return (i < NUM_JOBS) ? static_cast<job_type>(i) : JOB_UNKNOWN;
+    return JOB_UNKNOWN;
 }
 
 const char *get_job_name(int which_job)

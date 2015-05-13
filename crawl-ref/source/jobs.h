@@ -1,7 +1,7 @@
 #ifndef JOBS_H
 #define JOBS_H
 
-const char *get_job_abbrev(int which_job);
+const char *get_job_abbrev(job_type which_job);
 job_type get_job_by_abbrev(const char *abbrev);
 const char *get_job_name(int which_job);
 job_type get_job_by_name(const char *name);
