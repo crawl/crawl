@@ -163,7 +163,6 @@
 #include "wiz-mon.h"
 #include "wiz-you.h"
 #include "xom.h"
-#include "zotdef.h"
 
 // ----------------------------------------------------------------------
 // Globals whose construction/destruction order needs to be managed
@@ -866,15 +865,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case 'z': wizard_cast_spec_spell(); break;
     // case 'Z': break;
-    case CONTROL('Z'):
-        if (crawl_state.game_is_zotdef())
-        {
-            you.zot_points = 1000000;
-            you.redraw_experience = true;
-        }
-        else
-            mpr("But you're not in Zot Defence!");
-        break;
+    // case CONTROL('Z'): break;
 
     case '!': wizard_memorise_spec_spell(); break;
     case '@': wizard_set_stats(); break;
@@ -2526,29 +2517,6 @@ void world_reacts()
         _update_mold();
     if (env.level_state & LSTATE_GOLUBRIA)
         _update_golubria_traps();
-
-    if (crawl_state.game_is_zotdef() && you.num_turns == 100)
-        zotdef_set_wave();
-
-    // Zotdef spawns only in the main dungeon
-    if (crawl_state.game_is_zotdef()
-        && player_in_branch(root_branch)
-        && you.num_turns > 100)
-    {
-        zotdef_bosses_check();
-        for (int i = 0; i < ZOTDEF_SPAWN_SIZE; i++)
-        {
-            // Reduce critter frequency for first wave
-            if (you.num_turns<ZOTDEF_CYCLE_LENGTH && one_chance_in(3))
-                continue;
-
-            if (you.num_turns % ZOTDEF_CYCLE_LENGTH > ZOTDEF_CYCLE_INTERVAL
-                && x_chance_in_y(you.num_turns % ZOTDEF_CYCLE_LENGTH, ZOTDEF_CYCLE_LENGTH*3))
-            {
-                zotdef_spawn(false);
-            }
-        }
-    }
     if (!crawl_state.game_is_arena())
         player_reacts_to_monsters();
 
@@ -2567,12 +2535,8 @@ void world_reacts()
 
     if (you.num_turns != -1)
     {
-        // Zotdef: Time only passes in the hall of zot
-        if ((!crawl_state.game_is_zotdef() || player_in_branch(root_branch))
-            && you.num_turns < INT_MAX)
-        {
+        if (you.num_turns < INT_MAX)
             you.num_turns++;
-        }
 
         if (env.turns_on_level < INT_MAX)
             env.turns_on_level++;
@@ -3364,32 +3328,6 @@ static void _move_player(coord_def move)
 
     if (!attacking && targ_pass && moving && !beholder && !fmonger)
     {
-        if (crawl_state.game_is_zotdef() && you.pos() == env.orb_pos)
-        {
-            // Are you standing on the Orb? If so, are the critters near?
-            bool danger = false;
-            for (int i = 0; i < MAX_MONSTERS; ++i)
-            {
-                monster& mon = menv[i];
-                if (you.can_see(&mon) && !mon.friendly() &&
-                    !mons_is_firewood(&mon) &&
-                    (grid_distance(you.pos(), mon.pos()) < 4))
-                {
-                    danger = true;
-                }
-            }
-
-            if (danger && !player_has_orb())
-            {
-                string prompt = "Are you sure you want to leave the Orb unguarded?";
-                if (!yesno(prompt.c_str(), false, 'n'))
-                {
-                    canned_msg(MSG_OK);
-                    return;
-                }
-            }
-        }
-
         if (!you.confused() && !check_moveto(targ, walkverb))
         {
             stop_running();

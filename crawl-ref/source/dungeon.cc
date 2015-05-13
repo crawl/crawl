@@ -1430,7 +1430,7 @@ static void _fixup_branch_stairs()
         // random.
         vector<coord_def> vault_stairs, normal_stairs;
         dungeon_feature_type exit = your_branch().exit_stairs;
-        if (player_in_branch(root_branch)) // ZotDef
+        if (player_in_branch(root_branch))
             exit = DNGN_EXIT_DUNGEON;
         for (rectangle_iterator ri(1); ri; ++ri)
         {
@@ -2413,9 +2413,7 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         // Any vault-placement activity must happen before this check.
         _dgn_verify_connectivity(nvaults);
 
-        // Place monsters.
-        if (!crawl_state.game_is_zotdef())
-            _builder_monsters();
+        _builder_monsters();
 
         // Place items.
         _builder_items();
@@ -2722,7 +2720,6 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
         vault = find_map_by_name(you.props["force_map"].get_string());
     else if (lid.branch == root_branch && lid.depth == 1
         && (crawl_state.game_is_sprint()
-            || crawl_state.game_is_zotdef()
             || crawl_state.game_is_tutorial()))
     {
         vault = find_map_by_name(crawl_state.map);

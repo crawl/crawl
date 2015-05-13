@@ -849,18 +849,6 @@ static void _place_player_on_stair(branch_type old_branch,
                                  static_cast<dungeon_feature_type>(stair_taken),
                                  find_first));
 
-    if (crawl_state.game_is_zotdef())
-    {
-        // For Zot Defence, look for a start point marker and hop
-        // there if available.
-        const coord_def pos(dgn_find_feature_marker(DNGN_STONE_STAIRS_UP_I));
-        if (in_bounds(pos))
-        {
-            you.moveto(pos);
-            return;
-        }
-    }
-
     you.moveto(dgn_find_nearby_stair(stair_type, dest_pos, find_first));
 }
 
@@ -1181,7 +1169,6 @@ static void _make_level(dungeon_feature_type stair_taken,
     const bool is_halloween = today_is_halloween();
 
     if (!crawl_state.game_is_tutorial()
-        && !crawl_state.game_is_zotdef()
         && !Options.seed
         && !player_in_branch(BRANCH_ABYSS)
         && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)

@@ -188,7 +188,6 @@ public:
 
   int  skill_cost_level;
   int  exp_available;
-  int  zot_points; // ZotDef currency
 
   FixedVector<int, NUM_GODS> exp_docked;
   FixedVector<int, NUM_GODS> exp_docked_total; // XP-based wrath
@@ -298,8 +297,6 @@ public:
   // The version the save was last played with.
   string prev_save_version;
 
-  // The type of a zotdef wave, if any.
-  string zotdef_wave_name;
   // The biggest assigned monster id so far.
   mid_t last_mid;
 
@@ -946,8 +943,6 @@ int player_res_poison(bool calc_unid = true, bool temp = true,
                       bool items = true);
 int player_res_magic(bool calc_unid = true, bool temp = true);
 
-bool player_control_teleport(bool temp = true);
-
 int player_shield_class();
 int player_displayed_shield_class();
 
@@ -1001,7 +996,6 @@ bool player_has_feet(bool temp = true);
 
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
-bool enough_zp(int minimum, bool suppress_msg);
 
 void calc_hp();
 void calc_mp();
