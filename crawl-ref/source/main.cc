@@ -2862,6 +2862,12 @@ static void _open_door(coord_def move)
         return;
     }
 
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return;
+    }
+
     dist door_move;
 
     // The player hasn't picked a direction yet.
@@ -2892,9 +2898,6 @@ static void _open_door(coord_def move)
     }
     else
         door_move.delta = move;
-
-    if (you.confused() && !one_chance_in(3))
-        door_move.delta = Compass[random2(8)];
 
     // We got a valid direction.
     const coord_def doorpos = you.pos() + door_move.delta;
@@ -2945,8 +2948,6 @@ static void _open_door(coord_def move)
         mpr("There isn't anything that you can open there!");
         break;
     }
-    if (you.confused())
-        you.turn_is_over = true;
 }
 
 static void _close_door()
@@ -2960,6 +2961,12 @@ static void _close_door()
     if (you.attribute[ATTR_HELD])
     {
         mprf("You can't close doors while %s.", held_status());
+        return;
+    }
+
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
         return;
     }
 
@@ -2987,9 +2994,6 @@ static void _close_door()
             return;
     }
 
-    if (you.confused() && !one_chance_in(3))
-        door_move.delta = Compass[random2(8)];
-
     if (door_move.delta.origin())
     {
         mpr("You can't close doors on yourself!");
@@ -3014,8 +3018,6 @@ static void _close_door()
         mpr("There isn't anything that you can close there!");
         break;
     }
-    if (you.confused())
-        you.turn_is_over = true;
 }
 
 // An attempt to tone down berserk a little bit. -- bwross
