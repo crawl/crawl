@@ -5090,6 +5090,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         for (int i = 0; i < mons->heads(); ++i)
         {
+            if (!mons->get_foe())
+                return;
             spell_type head_spell = serpent_of_hell_breaths[idx][i];
             setup_mons_cast(mons, pbolt, head_spell);
             mons_cast(mons, pbolt, head_spell, slot_flags, do_noise);
