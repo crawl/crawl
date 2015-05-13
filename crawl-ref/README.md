@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/crawl/crawl.svg?branch=master)](https://travis-ci.org/crawl/crawl)
 
+NOTE: The most up-to-date source code for Dungeon Crawl Stone Soup is now at https://github.com/crawl/crawl/
+
 Dungeon Crawl Stone Soup
 ========================
 
