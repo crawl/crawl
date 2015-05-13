@@ -851,7 +851,7 @@ static const char* _job_name(int job)
         return "Healer";
     }
 
-    return get_job_name(job);
+    return get_job_name(static_cast<job_type>(job));
 }
 
 static const char* _job_abbrev(int job)

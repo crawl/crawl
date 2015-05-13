@@ -1,125 +1,126 @@
 struct job_def
 {
     const char* abbrev; ///< Two-letter abbreviation
+    const char* name; ///< Long name
 };
 
 static const map<job_type, job_def> job_data =
 {
 
 { JOB_ABYSSAL_KNIGHT, {
-    "AK",
+    "AK", "Abyssal Knight",
 } },
 
 { JOB_AIR_ELEMENTALIST, {
-    "AE",
+    "AE", "Air Elementalist",
 } },
 
 { JOB_ARCANE_MARKSMAN, {
-    "AM",
+    "AM", "Arcane Marksman",
 } },
 
 { JOB_ARTIFICER, {
-    "Ar",
+    "Ar", "Artificer",
 } },
 
 { JOB_ASSASSIN, {
-    "As",
+    "As", "Assassin",
 } },
 
 { JOB_BERSERKER, {
-    "Be",
+    "Be", "Berserker",
 } },
 
 { JOB_CHAOS_KNIGHT, {
-    "CK",
+    "CK", "Chaos Knight",
 } },
 
 { JOB_CONJURER, {
-    "Cj",
+    "Cj", "Conjurer",
 } },
 
 { JOB_EARTH_ELEMENTALIST, {
-    "EE",
+    "EE", "Earth Elementalist",
 } },
 
 { JOB_ENCHANTER, {
-    "En",
+    "En", "Enchanter",
 } },
 
 { JOB_FIGHTER, {
-    "Fi",
+    "Fi", "Fighter",
 } },
 
 { JOB_FIRE_ELEMENTALIST, {
-    "FE",
+    "FE", "Fire Elementalist",
 } },
 
 { JOB_GLADIATOR, {
-    "Gl",
+    "Gl", "Gladiator",
 } },
 
 { JOB_HUNTER, {
-    "Hu",
+    "Hu", "Hunter",
 } },
 
 { JOB_ICE_ELEMENTALIST, {
-    "IE",
+    "IE", "Ice Elementalist",
 } },
 
 { JOB_MONK, {
-    "Mo",
+    "Mo", "Monk",
 } },
 
 { JOB_NECROMANCER, {
-    "Ne",
+    "Ne", "Necromancer",
 } },
 
 { JOB_SKALD, {
-    "Sk",
+    "Sk", "Skald",
 } },
 
 { JOB_SUMMONER, {
-    "Su",
+    "Su", "Summoner",
 } },
 
 { JOB_TRANSMUTER, {
-    "Tm",
+    "Tm", "Transmuter",
 } },
 
 { JOB_VENOM_MAGE, {
-    "VM",
+    "VM", "Venom Mage",
 } },
 
 { JOB_WANDERER, {
-    "Wn",
+    "Wn", "Wanderer",
 } },
 
 { JOB_WARPER, {
-    "Wr",
+    "Wr", "Warper",
 } },
 
 { JOB_WIZARD, {
-    "Wz",
+    "Wz", "Wizard",
 } },
 #if TAG_MAJOR_VERSION == 34
 { JOB_DEATH_KNIGHT, {
-    "DK",
+    "DK", "Death Knight",
 } },
 
 { JOB_HEALER, {
-    "He",
+    "He", "Healer",
 } },
 
 { JOB_JESTER, {
-    "Jr",
+    "Jr", "Jester",
 } },
 
 { JOB_PRIEST, {
-    "Pr",
+    "Pr", "Priest",
 } },
 
 { JOB_STALKER, {
-    "St",
+    "St", "Stalker",
 } },
 #endif
 };
