@@ -935,9 +935,9 @@ int artefact_value(const item_def &item)
     else if (prop[ ARTP_COLD ] < 0)
         ret -= 10;
 
-    if (prop[ ARTP_MAGIC ] > 0)
-        ret += 4 + 4 * prop[ ARTP_MAGIC ];
-    else if (prop[ ARTP_MAGIC ] < 0)
+    if (prop[ ARTP_MAGIC_RESISTANCE ] > 0)
+        ret += 4 + 4 * prop[ ARTP_MAGIC_RESISTANCE ];
+    else if (prop[ ARTP_MAGIC_RESISTANCE ] < 0)
         ret -= 6;
 
     if (prop[ ARTP_NEGATIVE_ENERGY ] > 0)
@@ -965,7 +965,7 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_RMUT ])
         ret += 8;
 
-    if (prop[ ARTP_EYESIGHT ])
+    if (prop[ ARTP_SEE_INVISIBLE ])
         ret += 6;
 
     // abilities:
@@ -987,7 +987,7 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_CAUSE_TELEPORTATION ])
         ret -= 3;
 
-    if (prop[ ARTP_NOISES ])
+    if (prop[ ARTP_NOISE ])
         ret -= 5;
 
     if (prop[ ARTP_PREVENT_TELEPORTATION ])
@@ -996,16 +996,16 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_PREVENT_SPELLCASTING ])
         ret -= 10;
 
-    if (prop[ ARTP_MUTAGENIC ])
+    if (prop[ ARTP_CONTAM ])
         ret -= 8;
 
-    if (prop[ ARTP_ENTROPY ])
+    if (prop[ ARTP_CORRODE ])
         ret -= 8;
 
-    if (prop[ ARTP_LIFE_HUNGRY ])
+    if (prop[ ARTP_DRAIN ])
         ret -= 8;
 
-    if (prop[ ARTP_CONFUSING ])
+    if (prop[ ARTP_CONFUSE ])
         ret -= 8;
 
     // extremely good

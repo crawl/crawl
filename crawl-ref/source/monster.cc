@@ -4255,7 +4255,7 @@ int monster::res_magic() const
         u = get_hit_dice() * -u * 4 / 3;
 
     // Resistance from artefact properties.
-    u += 40 * scan_artefacts(ARTP_MAGIC);
+    u += 40 * scan_artefacts(ARTP_MAGIC_RESISTANCE);
 
     // Ego equipment resistance.
     const int armour    = inv[MSLOT_ARMOUR];
@@ -5370,7 +5370,7 @@ bool monster::can_see_invisible() const
     {
         return true;
     }
-    else if (scan_artefacts(ARTP_EYESIGHT) > 0)
+    else if (scan_artefacts(ARTP_SEE_INVISIBLE) > 0)
         return true;
     else if (wearing(EQ_RINGS, RING_SEE_INVISIBLE))
         return true;

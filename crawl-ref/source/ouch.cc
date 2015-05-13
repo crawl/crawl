@@ -720,22 +720,22 @@ static void _deteriorate(int dam)
 }
 
 /**
- * Maybe corrode the player after taking damage if they're wearing entropy.
+ * Maybe corrode the player after taking damage if they're wearing *Corrode.
  **/
-static void _maybe_entropy()
+static void _maybe_corrode()
 {
-    int corrosion_sources = you.scan_artefacts(ARTP_ENTROPY);
+    int corrosion_sources = you.scan_artefacts(ARTP_CORRODE);
     int degree = binomial(corrosion_sources, 10);
     if (degree > 0)
         you.corrode_equipment("Your entropic artefact", degree);
 }
 
 /**
- * Maybe confuse the player after taking damage if they're wearing Confusing.
+ * Maybe confuse the player after taking damage if they're wearing *Confuse.
  **/
 static void _maybe_confuse()
 {
-    int confusion_sources = you.scan_artefacts(ARTP_CONFUSING);
+    int confusion_sources = you.scan_artefacts(ARTP_CONFUSE);
     if (x_chance_in_y(confusion_sources, 100)) {
         const bool conf = you.confused();
 
@@ -1002,7 +1002,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _powered_by_pain(dam);
             if (death_type != KILLED_BY_POISON)
             {
-                _maybe_entropy();
+                _maybe_corrode();
                 _maybe_confuse();
             }
             if (drain_amount > 0)

@@ -2435,7 +2435,7 @@ int get_armour_res_magic(const item_def &arm, bool check_artp)
         res += MR_PIP;
 
     if (check_artp && is_artefact(arm))
-        res += MR_PIP * artefact_property(arm, ARTP_MAGIC);
+        res += MR_PIP * artefact_property(arm, ARTP_MAGIC_RESISTANCE);
 
     return res;
 }
@@ -2449,7 +2449,7 @@ bool get_armour_see_invisible(const item_def &arm, bool check_artp)
         return true;
 
     if (check_artp && is_artefact(arm))
-        return artefact_property(arm, ARTP_EYESIGHT);
+        return artefact_property(arm, ARTP_SEE_INVISIBLE);
 
     return false;
 }
@@ -2567,7 +2567,7 @@ int get_jewellery_res_magic(const item_def &ring, bool check_artp)
         res += 40;
 
     if (check_artp && is_artefact(ring))
-        res += 40 * artefact_property(ring, ARTP_MAGIC);
+        res += 40 * artefact_property(ring, ARTP_MAGIC_RESISTANCE);
 
     return res;
 }
@@ -2580,7 +2580,7 @@ bool get_jewellery_see_invisible(const item_def &ring, bool check_artp)
         return true;
 
     if (check_artp && is_artefact(ring))
-        return artefact_property(ring, ARTP_EYESIGHT);
+        return artefact_property(ring, ARTP_SEE_INVISIBLE);
 
     return false;
 }
@@ -2778,7 +2778,7 @@ bool gives_resistance(const item_def &item)
     // Check for randart resistances.
     for (int rap = ARTP_FIRE; rap <= ARTP_BERSERK; rap++)
     {
-        if (rap == ARTP_MAGIC || rap >= ARTP_INVISIBLE)
+        if (rap == ARTP_MAGIC_RESISTANCE || rap >= ARTP_INVISIBLE)
             continue;
 
         if (artefact_property(item, static_cast<artefact_prop_type>(rap)))

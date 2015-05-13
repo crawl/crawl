@@ -4012,19 +4012,19 @@ void unmarshallItem(reader &th, item_def &item)
     // Negative MR was only supposed to exist for Folly, but paranoia.
     if (th.getMinorVersion() < TAG_MINOR_MR_ITEM_RESCALE
         && is_artefact(item)
-        && artefact_property(item, ARTP_MAGIC))
+        && artefact_property(item, ARTP_MAGIC_RESISTANCE))
     {
-        int prop_mr = artefact_property(item, ARTP_MAGIC);
+        int prop_mr = artefact_property(item, ARTP_MAGIC_RESISTANCE);
         if (prop_mr > 99)
-            artefact_set_property(item, ARTP_MAGIC, 3);
+            artefact_set_property(item, ARTP_MAGIC_RESISTANCE, 3);
         else if (prop_mr > 79)
-            artefact_set_property(item, ARTP_MAGIC, 2);
+            artefact_set_property(item, ARTP_MAGIC_RESISTANCE, 2);
         else if (prop_mr < -40)
-            artefact_set_property(item, ARTP_MAGIC, -2);
+            artefact_set_property(item, ARTP_MAGIC_RESISTANCE, -2);
         else if (prop_mr < 0)
-            artefact_set_property(item, ARTP_MAGIC, -1);
+            artefact_set_property(item, ARTP_MAGIC_RESISTANCE, -1);
         else
-            artefact_set_property(item, ARTP_MAGIC, 1);
+            artefact_set_property(item, ARTP_MAGIC_RESISTANCE, 1);
     }
 
     // Rescale stealth (range 10..79 and -10..-98) to discrete steps (+-50/100)
