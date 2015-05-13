@@ -467,7 +467,7 @@ static string _randart_descrip(const item_def &item)
                                  "enchantments.", false},
         { ARTP_HP, "It affects your health (%d).", false},
         { ARTP_MAGICAL_POWER, "It affects your magic capacity (%d).", false},
-        { ARTP_SEE_INVISIBLE, "It enhances your eyesight.", false},
+        { ARTP_SEE_INVISIBLE, "It lets you see invisible.", false},
         { ARTP_INVISIBLE, "It lets you turn invisible.", false},
         { ARTP_FLY, "It lets you fly.", false},
         { ARTP_BLINK, "It lets you blink.", false},
