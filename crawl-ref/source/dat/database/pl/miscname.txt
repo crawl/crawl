@@ -34,16 +34,6 @@ Losy świata zależą od Kuli Zot!  Idź i zdobądź ją!
 
 Podobno legendarna Kula Zot znajduje się w tych lochach — lecz nikt jeszcze jej nie zdobył.
 %%%%
-welcome_spam Zot Defence
-
-Hordy już idą, i chcą zabrać naszą Kulę!
-
-Stój dzielnie i broń Kuli!
-
-Tylko Ty stoisz jako obrońca Kuli Zot!
-
-Obroń Kulę Zot, nie zawiedź!
-%%%%
 hell_effect
 
 {{
