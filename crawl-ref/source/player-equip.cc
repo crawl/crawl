@@ -232,7 +232,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     if (proprt[ARTP_EVASION])
         you.redraw_evasion = true;
 
-    if (proprt[ARTP_EYESIGHT])
+    if (proprt[ARTP_SEE_INVISIBLE])
         autotoggle_autopickup(false);
 
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER] && msg)
@@ -249,11 +249,11 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     notify_stat_change(STAT_DEX, proprt[ARTP_DEXTERITY],
                        !(msg && unknown_proprt(ARTP_DEXTERITY)));
 
-    if (unknown_proprt(ARTP_MUTAGENIC) && msg)
+    if (unknown_proprt(ARTP_CONTAM) && msg)
         mpr("You feel a build-up of mutagenic energy.");
 
-    if (!unmeld && !item.cursed() && proprt[ARTP_CURSED] > 0
-         && one_chance_in(proprt[ARTP_CURSED]))
+    if (!unmeld && !item.cursed() && proprt[ARTP_CURSE] > 0
+         && one_chance_in(proprt[ARTP_CURSE]))
     {
         do_curse_item(item, !msg);
     }
@@ -328,16 +328,16 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
 
-    if (proprt[ARTP_MUTAGENIC] && !meld)
+    if (proprt[ARTP_CONTAM] && !meld)
     {
         mpr("Mutagenic energies flood into your body!");
         contaminate_player(7000, true);
     }
 
-    if (proprt[ARTP_LIFE_HUNGRY] && !meld)
+    if (proprt[ARTP_DRAIN] && !meld)
         drain_player(100, true, true);
 
-    if (proprt[ARTP_EYESIGHT])
+    if (proprt[ARTP_SEE_INVISIBLE])
         _mark_unseen_monsters();
 
     if (is_unrandom_artefact(item))
@@ -469,8 +469,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                                origin_desc(item).c_str()));
             }
             else
-                known_recurser = artefact_known_property(item,
-                                                             ARTP_CURSED);
+                known_recurser = artefact_known_property(item, ARTP_CURSE);
         }
 
         if (special != SPWPN_NORMAL)

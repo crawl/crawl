@@ -224,13 +224,13 @@ static vector<string> _randart_propnames(const item_def& item,
         // These come first, so they don't get chopped off!
         { ARTP_PREVENT_SPELLCASTING,  PROPN_PLAIN },
         { ARTP_PREVENT_TELEPORTATION, PROPN_PLAIN },
-        { ARTP_MUTAGENIC,             PROPN_PLAIN },
+        { ARTP_CONTAM,                PROPN_PLAIN },
         { ARTP_ANGRY,                 PROPN_PLAIN },
         { ARTP_CAUSE_TELEPORTATION,   PROPN_PLAIN },
-        { ARTP_NOISES,                PROPN_PLAIN },
-        { ARTP_ENTROPY,               PROPN_PLAIN },
-        { ARTP_LIFE_HUNGRY,           PROPN_PLAIN },
-        { ARTP_CONFUSING,             PROPN_PLAIN },
+        { ARTP_NOISE,                 PROPN_PLAIN },
+        { ARTP_CORRODE,               PROPN_PLAIN },
+        { ARTP_DRAIN,                 PROPN_PLAIN },
+        { ARTP_CONFUSE,               PROPN_PLAIN },
 
         // Evokable abilities come second
         { ARTP_BLINK,                 PROPN_PLAIN },
@@ -245,7 +245,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_FIRE,                  PROPN_SYMBOLIC },
         { ARTP_COLD,                  PROPN_SYMBOLIC },
         { ARTP_NEGATIVE_ENERGY,       PROPN_SYMBOLIC },
-        { ARTP_MAGIC,                 PROPN_SYMBOLIC },
+        { ARTP_MAGIC_RESISTANCE,      PROPN_SYMBOLIC },
         { ARTP_REGENERATION,          PROPN_SYMBOLIC },
         { ARTP_RMUT,                  PROPN_PLAIN },
         { ARTP_RCORR,                 PROPN_PLAIN },
@@ -261,9 +261,9 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_SLAYING,               PROPN_NUMERAL },
 
         // Qualitative attributes (and Stealth)
-        { ARTP_EYESIGHT,              PROPN_PLAIN },
+        { ARTP_SEE_INVISIBLE,         PROPN_PLAIN },
         { ARTP_STEALTH,               PROPN_SYMBOLIC },
-        { ARTP_CURSED,                PROPN_PLAIN },
+        { ARTP_CURSE,                 PROPN_PLAIN },
         { ARTP_CLARITY,               PROPN_PLAIN },
         { ARTP_RMSL,                  PROPN_PLAIN },
         { ARTP_SUSTAB,                PROPN_PLAIN },
@@ -348,7 +348,7 @@ static vector<string> _randart_propnames(const item_def& item,
                 break;
             }
             case PROPN_PLAIN: // e.g. rPois or SInv
-                if (ann.prop == ARTP_CURSED && val < 1)
+                if (ann.prop == ARTP_CURSE && val < 1)
                     continue;
 
                 work << artp_name(ann.prop);
@@ -463,31 +463,32 @@ static string _randart_descrip(const item_def &item)
         { ARTP_POISON, "poison", true},
         { ARTP_NEGATIVE_ENERGY, "negative energy", true},
         { ARTP_SUSTAB, "It sustains your strength, intelligence and dexterity.", false},
-        { ARTP_MAGIC, "It affects your resistance to hostile enchantments.", false},
+        { ARTP_MAGIC_RESISTANCE, "It affects your resistance to hostile "
+                                 "enchantments.", false},
         { ARTP_HP, "It affects your health (%d).", false},
         { ARTP_MAGICAL_POWER, "It affects your magic capacity (%d).", false},
-        { ARTP_EYESIGHT, "It enhances your eyesight.", false},
+        { ARTP_SEE_INVISIBLE, "It enhances your eyesight.", false},
         { ARTP_INVISIBLE, "It lets you turn invisible.", false},
         { ARTP_FLY, "It lets you fly.", false},
         { ARTP_BLINK, "It lets you blink.", false},
         { ARTP_BERSERK, "It lets you go berserk.", false},
-        { ARTP_NOISES, "It may make noises in combat.", false},
+        { ARTP_NOISE, "It may make noises in combat.", false},
         { ARTP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
         { ARTP_CAUSE_TELEPORTATION, "It may teleport you to nearby monsters.", false},
         { ARTP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
           false},
         { ARTP_ANGRY,  "It may make you go berserk in combat.", false},
-        { ARTP_CURSED, "It may re-curse itself when equipped.", false},
+        { ARTP_CURSE, "It may re-curse itself when equipped.", false},
         { ARTP_CLARITY, "It protects you against confusion.", false},
-        { ARTP_MUTAGENIC, "It causes magical contamination when unequipped.", false},
+        { ARTP_CONTAM, "It causes magical contamination when unequipped.", false},
         { ARTP_RMSL, "It protects you from missiles.", false},
         { ARTP_FOG, "It can be evoked to emit clouds of fog.", false},
         { ARTP_REGENERATION, "It increases your rate of regeneration.", false},
         { ARTP_RCORR, "It protects you from acid and corrosion.", false},
         { ARTP_RMUT, "It protects you from mutation.", false},
-        { ARTP_ENTROPY, "It may corrode your equipment when you take damage.", false},
-        { ARTP_LIFE_HUNGRY, "It causes draining when unequipped.", false},
-        { ARTP_CONFUSING, "It may confuse you when you take damage.", false},
+        { ARTP_CORRODE, "It may corrode your equipment when you take damage.", false},
+        { ARTP_DRAIN, "It causes draining when unequipped.", false},
+        { ARTP_CONFUSE, "It may confuse you when you take damage.", false},
     };
 
     // Give a short description of the base type, for base types with no
@@ -507,8 +508,8 @@ static string _randart_descrip(const item_def &item)
     {
         if (known_proprt(desc.property))
         {
-            // Only randarts with ARTP_CURSED > 0 may recurse themselves.
-            if (desc.property == ARTP_CURSED && proprt[desc.property] < 1)
+            // Only randarts with ARTP_CURSE > 0 may recurse themselves.
+            if (desc.property == ARTP_CURSE && proprt[desc.property] < 1)
                 continue;
 
             string sdesc = desc.desc;

@@ -1710,7 +1710,7 @@ int monster_info::res_magic() const
         mr = hd * (-mr) * 4 / 3;
 
     // Randarts
-    mr += 40 * randarts(ARTP_MAGIC);
+    mr += 40 * randarts(ARTP_MAGIC_RESISTANCE);
 
     // ego armour resistance
     if (inv[MSLOT_ARMOUR].get()

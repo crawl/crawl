@@ -1375,8 +1375,8 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_ELECTRICITY",
         "ARTP_POISON",
         "ARTP_NEGATIVE_ENERGY",
-        "ARTP_MAGIC",
-        "ARTP_EYESIGHT",
+        "ARTP_MAGIC_RESISTANCE",
+        "ARTP_SEE_INVISIBLE",
         "ARTP_INVISIBLE",
         "ARTP_FLY",
 #if TAG_MAJOR_VERSION > 34
@@ -1384,7 +1384,7 @@ static void _debug_rap_stats(FILE *ostat)
 #endif
         "ARTP_BLINK",
         "ARTP_BERSERK",
-        "ARTP_NOISES",
+        "ARTP_NOISE",
         "ARTP_PREVENT_SPELLCASTING",
         "ARTP_CAUSE_TELEPORTATION",
         "ARTP_PREVENT_TELEPORTATION",
@@ -1392,12 +1392,12 @@ static void _debug_rap_stats(FILE *ostat)
 #if TAG_MAJOR_VERSION == 34
         "ARTP_METABOLISM",
 #endif
-        "ARTP_MUTAGENIC",
+        "ARTP_CONTAM",
 #if TAG_MAJOR_VERSION == 34
         "ARTP_ACCURACY",
 #endif
         "ARTP_SLAYING",
-        "ARTP_CURSED",
+        "ARTP_CURSE",
         "ARTP_STEALTH",
         "ARTP_MAGICAL_POWER",
         "ARTP_BASE_DELAY",
@@ -1417,9 +1417,9 @@ static void _debug_rap_stats(FILE *ostat)
 #if TAG_MAJOR_VERSION == 34
         "ARTP_TWISTER",
 #endif
-        "ARTP_ENTROPY",
-        "ARTP_LIFE_HUNGRY",
-        "ARTP_CONFUSING",
+        "ARTP_CORRODE",
+        "ARTP_DRAIN",
+        "ARTP_CONFUSE",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 

@@ -894,7 +894,7 @@ bool melee_attack::attack()
     if (attacker->is_player()
         && weapon
         && is_artefact(*weapon)
-        && artefact_property(*weapon, ARTP_NOISES))
+        && artefact_property(*weapon, ARTP_NOISE))
     {
         noisy_equipment();
     }

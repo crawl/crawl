@@ -1703,21 +1703,21 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (is_artefact(item) && artefact_property(item, ARTP_MUTAGENIC))
+        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
         {
             if (_is_wielded(item) && you_worship(GOD_ZIN))
                 penance = true;
             return true;
         }
 
-        if (is_artefact(item) && artefact_property(item, ARTP_LIFE_HUNGRY))
+        if (is_artefact(item) && artefact_property(item, ARTP_DRAIN))
             return true;
     }
 
     if (oper == OPER_PUTON || oper == OPER_WEAR || oper == OPER_TAKEOFF
         || oper == OPER_REMOVE)
     {
-        if (is_artefact(item) && artefact_property(item, ARTP_MUTAGENIC))
+        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
         {
             if ((oper == OPER_TAKEOFF || oper == OPER_REMOVE)
                  && you_worship(GOD_ZIN))
@@ -1727,7 +1727,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (is_artefact(item) && artefact_property(item, ARTP_LIFE_HUNGRY))
+        if (is_artefact(item) && artefact_property(item, ARTP_DRAIN))
             return true;
     }
 
