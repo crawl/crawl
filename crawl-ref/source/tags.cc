@@ -1366,7 +1366,6 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.gold);
 
     marshallInt(th, you.exp_available);
-    marshallInt(th, you.zot_points);
 
     marshallInt(th, you.zigs_completed);
     marshallByte(th, you.zig_max);
@@ -1551,8 +1550,6 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.piety_hysteresis);
 
     you.m_quiver->save(th);
-
-    marshallString(th, you.zotdef_wave_name);
 
     CANARY;
 
@@ -2251,7 +2248,10 @@ static void tag_read_you(reader &th)
     you.total_experience = unmarshallInt(th);
     you.gold                      = unmarshallInt(th);
     you.exp_available             = unmarshallInt(th);
-    you.zot_points                = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_NO_ZOTDEF)
+        unmarshallInt(th);
+#endif
     you.zigs_completed            = unmarshallInt(th);
     you.zig_max                   = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 34
@@ -3079,9 +3079,9 @@ static void tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_FRIENDLY_PICKUP)
         unmarshallByte(th);
+    if (th.getMinorVersion() < TAG_MINOR_NO_ZOTDEF)
+        unmarshallString(th);
 #endif
-
-    you.zotdef_wave_name = unmarshallString(th);
 
     EAT_CANARY;
 

@@ -8,11 +8,11 @@ SDL_PATH := ../SDL2
 CRAWL_PATH := ../../..
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include \
-                    $(LOCAL_PATH)/../sqlite \
-                    $(LOCAL_PATH)/../lua/src \
-                    $(LOCAL_PATH)/../freetype/include \
-                    $(LOCAL_PATH)/$(CRAWL_PATH) \
-                    $(LOCAL_PATH)/$(CRAWL_PATH)/rltiles
+		    $(LOCAL_PATH)/../sqlite \
+		    $(LOCAL_PATH)/../lua/src \
+		    $(LOCAL_PATH)/../freetype/include \
+		    $(LOCAL_PATH)/$(CRAWL_PATH) \
+		    $(LOCAL_PATH)/$(CRAWL_PATH)/rltiles
 
 LOCAL_CFLAGS := $(shell cat $(LOCAL_PATH)/$(CRAWL_PATH)/.android-cflags)
 LOCAL_CXXFLAGS := $(shell cat $(LOCAL_PATH)/$(CRAWL_PATH)/.android-cxxflags)
@@ -274,7 +274,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/wiz-you.cc \
     $(CRAWL_PATH)/worley.cc \
     $(CRAWL_PATH)/xom.cc \
-    $(CRAWL_PATH)/zotdef.cc \
     $(CRAWL_PATH)/tilepick.cc \
     $(CRAWL_PATH)/tileview.cc \
     $(CRAWL_PATH)/tiledoll.cc \

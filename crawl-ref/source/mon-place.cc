@@ -549,8 +549,6 @@ static bool _find_mon_place_near_stairs(coord_def& pos,
     }
     const monster_type habitat_target = MONS_BAT;
     int distance = 3;
-    if (crawl_state.game_is_zotdef())
-        distance = 9999;
     pos = find_newmons_square_contiguous(habitat_target, pos, distance);
     return in_bounds(pos);
 }
@@ -1107,11 +1105,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
     // Now, forget about banding if the first placement failed, or there are
     // too many monsters already, or we successfully placed by stairs.
-    // Zotdef change - banding allowed on stairs for extra challenge!
-    // Frequency reduced, though, and only after 2K turns.
     if (mon->mindex() >= MAX_MONSTERS - 30
-        || (mg.proximity == PROX_NEAR_STAIRS && !crawl_state.game_is_zotdef())
-        || (crawl_state.game_is_zotdef() && you.num_turns < 2000))
+        || (mg.proximity == PROX_NEAR_STAIRS))
     {
         return mon;
     }
@@ -1949,12 +1944,7 @@ monster_type pick_local_zombifiable_monster(level_id place,
 {
     const bool really_in_d = place.branch == BRANCH_DUNGEON;
 
-    if (crawl_state.game_is_zotdef())
-    {
-        place = level_id(BRANCH_DUNGEON,
-                         you.num_turns / (2 * ZOTDEF_CYCLE_LENGTH) + 6);
-    }
-    else if (place.branch == BRANCH_ZIGGURAT)
+    if (place.branch == BRANCH_ZIGGURAT)
     {
         // Get Zigs something reasonable to work with, if there's no place
         // explicitly defined.
@@ -3730,9 +3720,6 @@ monster* mons_place(mgen_data mg)
     }
     else if (_is_random_monster(mg.cls))
         mg.flags |= MG_PERMIT_BANDS;
-
-    if (crawl_state.game_is_zotdef()) // check if emulation of old mg.power is there
-        ASSERT(mg.place.is_valid());
 
     if (mg.behaviour == BEH_COPY)
     {

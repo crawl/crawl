@@ -1369,7 +1369,6 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>^</w>      set piety to a value\n"
                        "<w>@</w>      set Str Int Dex\n"
                        "<w>#</w>      load character from a dump file\n"
-                       "<w>Ctrl-Z</w> gain lots of Zot Points\n"
                        "<w>&</w>      list all divine followers\n"
                        "<w>=</w>      show info about skill points\n"
                        "\n"

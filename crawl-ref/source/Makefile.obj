@@ -255,7 +255,6 @@ wiz-mon.o \
 wiz-you.o \
 worley.o \
 xom.o \
-zotdef.o \
 tilepick.o \
 tileview.o
 

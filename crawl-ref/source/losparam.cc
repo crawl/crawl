@@ -55,15 +55,7 @@ opacity_type opacity_no_trans::operator()(const coord_def& p) const
 
 static bool mons_block_immob(const monster* mons)
 {
-    if (mons == nullptr)
-        return false;
-
-    // In Zotdef, plants don't block movement as critters
-    // will attack them
-    if (crawl_state.game_is_zotdef())
-        return false;
-
-    return mons->is_stationary();
+    return mons && mons->is_stationary();
 }
 
 opacity_type opacity_immob::operator()(const coord_def& p) const

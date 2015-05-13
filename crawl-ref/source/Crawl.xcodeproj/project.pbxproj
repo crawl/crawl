@@ -26,7 +26,6 @@
 		1F909B02148B23E000084E83 /* tilereg-cmd.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AF7148B23E000084E83 /* tilereg-cmd.cc */; };
 		1F909B03148B23E000084E83 /* tilereg-skl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AFA148B23E000084E83 /* tilereg-skl.cc */; };
 		1F909B04148B23E000084E83 /* tutorial.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AFD148B23E000084E83 /* tutorial.cc */; };
-		1F909B05148B23E000084E83 /* zotdef.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AFF148B23E000084E83 /* zotdef.cc */; };
 		1F909B25148B242D00084E83 /* skill_menu.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B08148B242D00084E83 /* skill_menu.cc */; };
 		1F909B26148B242D00084E83 /* spl-clouds.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B0A148B242D00084E83 /* spl-clouds.cc */; };
 		1F909B27148B242D00084E83 /* spl-damage.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B0C148B242D00084E83 /* spl-damage.cc */; };
@@ -53,7 +52,6 @@
 		1F909B65148B262D00084E83 /* icons.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = 1F909B63148B262800084E83 /* icons.png */; };
 		1F909B72148B2CB400084E83 /* tiledef-icons.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B70148B2CB400084E83 /* tiledef-icons.cc */; };
 		1F909B81148B2D9100084E83 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F909B80148B2D9100084E83 /* libz.dylib */; };
-		1F909BB5148B428E00084E83 /* zotdef.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AFF148B23E000084E83 /* zotdef.cc */; };
 		1F909BBA148B42C700084E83 /* spl-clouds.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B0A148B242D00084E83 /* spl-clouds.cc */; };
 		1F909BBB148B42C700084E83 /* spl-damage.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B0C148B242D00084E83 /* spl-damage.cc */; };
 		1F909BBC148B42C700084E83 /* spl-goditem.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B0E148B242D00084E83 /* spl-goditem.cc */; };
@@ -951,8 +949,6 @@
 		1F909AFC148B23E000084E83 /* tileview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tileview.h; sourceTree = "<group>"; };
 		1F909AFD148B23E000084E83 /* tutorial.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tutorial.cc; sourceTree = "<group>"; };
 		1F909AFE148B23E000084E83 /* tutorial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tutorial.h; sourceTree = "<group>"; };
-		1F909AFF148B23E000084E83 /* zotdef.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = zotdef.cc; sourceTree = "<group>"; };
-		1F909B00148B23E000084E83 /* zotdef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zotdef.h; sourceTree = "<group>"; };
 		1F909B08148B242D00084E83 /* skill_menu.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = skill_menu.cc; sourceTree = "<group>"; };
 		1F909B09148B242D00084E83 /* skill_menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = skill_menu.h; sourceTree = "<group>"; };
 		1F909B0A148B242D00084E83 /* spl-clouds.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-clouds.cc"; sourceTree = "<group>"; };
@@ -2288,8 +2284,6 @@
 				E5D640BC10BD494500A99626 /* xom.cc */,
 				E5D640BD10BD494500A99626 /* xom.h */,
 				7B5165C511859D82005B23ED /* zap-data.h */,
-				1F909AFF148B23E000084E83 /* zotdef.cc */,
-				1F909B00148B23E000084E83 /* zotdef.h */,
 			);
 			name = Crawl;
 			sourceTree = "<group>";
@@ -3159,7 +3153,6 @@
 				7B09F62C1133D6AB004F149D /* wiz-mon.cc in Sources */,
 				7B09F62D1133D6AB004F149D /* wiz-you.cc in Sources */,
 				7B09F62E1133D6AB004F149D /* xom.cc in Sources */,
-				1F909BB5148B428E00084E83 /* zotdef.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3445,7 +3438,6 @@
 				E5D6416E10BD494500A99626 /* wiz-mon.cc in Sources */,
 				E5D6416F10BD494500A99626 /* wiz-you.cc in Sources */,
 				E5D6417010BD494500A99626 /* xom.cc in Sources */,
-				1F909B05148B23E000084E83 /* zotdef.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -49,12 +49,6 @@ void make_hungry(int hunger_amount, bool suppress_msg,
     if (crawl_state.disables[DIS_HUNGER])
         return;
 
-    if (crawl_state.game_is_zotdef() && you.undead_state() != US_SEMI_UNDEAD)
-    {
-        you.hunger = HUNGER_DEFAULT;
-        you.hunger_state = HS_SATIATED;
-        return;
-    }
 #if TAG_MAJOR_VERSION == 34
     // Lich/tree form djinn don't get exempted from food costs: infinite
     // healing from channeling would be just too good.

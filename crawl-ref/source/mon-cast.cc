@@ -961,12 +961,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.name     = "splash of acid";
         beam.damage   = dice_def(3, 7);
 
-        // Zotdef change: make acid splash dmg dependent on power
-        // Oklob saplings pwr=48, oklobs pwr=120, acid blobs pwr=216
-        //  =>             3d3        3d6            3d9
-        if (crawl_state.game_is_zotdef())
-            beam.damage   = dice_def(3, 2 + (power / 30));
-
         // Natural ability, so don't use spell_hd here
         beam.hit      = 20 + (3 * mons->get_hit_dice());
         beam.flavour  = BEAM_ACID;
@@ -3622,13 +3616,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                                                    SPFLAG_EMERGENCY,
                                                    flags);
 
-                if (crawl_state.game_is_zotdef()
-                    && mons->type == MONS_ICE_STATUE)
-                {
-                    // Don't spam ice beasts when wounded.
-                    spell_cast = SPELL_NO_SPELL;
-                }
-
                 // Pacified monsters leaving the level will only
                 // try and cast escape spells.
                 if (spell_cast != SPELL_NO_SPELL
@@ -5637,14 +5624,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SUMMON_ICE_BEAST:
-        // Zotdef: reduce ice beast frequency, and reduce duration to 3
-        if (!crawl_state.game_is_zotdef() || !one_chance_in(3))
-        {
-            int dur = crawl_state.game_is_zotdef() ? 3 : 5;
-            create_monster(
-                mgen_data(MONS_ICE_BEAST, SAME_ATTITUDE(mons), mons,
-                          dur, spell_cast, mons->pos(), mons->foe, 0, god));
-        }
+        create_monster(
+            mgen_data(MONS_ICE_BEAST, SAME_ATTITUDE(mons), mons,
+                      5, spell_cast, mons->pos(), mons->foe, 0, god));
         return;
 
     case SPELL_SUMMON_MUSHROOMS:   // Summon a ring of icky crawling fungi.

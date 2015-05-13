@@ -60,8 +60,6 @@ void shake_off_monsters(const actor* target);
 
 void set_nearest_monster_foe(monster* mon, bool near_player = false);
 
-// For Zotdef: the target position of MHITYOU monsters is
-// the orb.
-#define PLAYER_POS (crawl_state.game_is_zotdef() ? env.orb_pos : you.pos())
+#define PLAYER_POS (you.pos())
 
 #endif

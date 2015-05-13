@@ -993,8 +993,7 @@ void handle_time()
     // once every 50 elapsed time units.
 
     // Every 5 turns, spawn random monsters, not in Zotdef.
-    if (_div(base_time, 50) > _div(old_time, 50)
-        && !crawl_state.game_is_zotdef())
+    if (_div(base_time, 50) > _div(old_time, 50))
     {
         spawn_random_monsters();
         if (player_in_branch(BRANCH_ABYSS))
@@ -1450,10 +1449,6 @@ static void _energize_shadow_traps(int time_taken)
 void update_level(int elapsedTime)
 {
     ASSERT(!crawl_state.game_is_arena());
-
-    // In ZotDef, no time passes while off-level.
-    if (crawl_state.game_is_zotdef())
-        return;
 
     const int turns = elapsedTime / 10;
 
