@@ -3077,18 +3077,18 @@ void pikel_band_neutralise()
         }
     }
     string final_msg;
-    const char *substr = nullptr;
     if (visible_slaves > 0)
     {
         if (player_mutation_level(MUT_NO_LOVE))
         {
-            substr = visible_slaves > 1 ? "slaves" : "slave";
+            const char *substr = visible_slaves > 1 ? "slaves" : "slave";
             final_msg = make_stringf("Pikel's spell is broken, but the former "
                                      "%s can only feel hate for you!", substr);
         }
         else
         {
-            substr = visible_slaves > 1 ? "slaves thank you for their"
+            const char *substr = visible_slaves > 1
+                ? "slaves thank you for their"
                 : "slave thanks you for its";
             final_msg = make_stringf("With Pikel's spell broken, the former %s "
                                      "freedom", substr);
@@ -3134,11 +3134,15 @@ void hogs_to_humans()
             human++;
     }
 
-    string final_msg = make_stringf("No longer under Kirke's spell, the %s %s "
-                                    "%s!", any > 1 ? "hogs return to their"
-                                      : "hog returns to its",
-                                    any == human ? "human" : "original",
-                                    any > 1 ? "forms" : "form");
+    string final_msg;
+    if (any > 0)
+    {
+        final_msg = make_stringf("No longer under Kirke's spell, the %s %s %s!",
+                                 any > 1 ? "hogs return to their"
+                                         : "hog returns to its",
+                                 any == human ? "human" : "original",
+                                 any > 1 ? "forms" : "form");
+    }
     kirke_death_fineff::schedule(final_msg);
 }
 
