@@ -876,7 +876,7 @@ static const char* _job_abbrev(int job)
         return "He";
     }
 
-    return get_job_abbrev(job);
+    return get_job_abbrev(static_cast<job_type>(job));
 }
 
 static int _job_by_name(const string& name)
