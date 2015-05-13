@@ -232,9 +232,7 @@ bool trap_def::is_safe(actor* act) const
         return false;
 
     if (type == TRAP_GOLUBRIA || type == TRAP_SHAFT)
-    {
         return true;
-    }
 
 #ifdef CLUA_BINDINGS
     // Let players specify traps as safe via lua.

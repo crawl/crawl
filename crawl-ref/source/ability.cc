@@ -3091,9 +3091,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     {
         _add_talent(talents, ABIL_DIG, check_confused);
         if (!crawl_state.game_is_sprint() || brdepth[you.where_are_you] > 1)
-        {
             _add_talent(talents, ABIL_SHAFT_SELF, check_confused);
-        }
     }
 
     // Spit Poison, possibly upgraded to Breathe Poison.
