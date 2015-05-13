@@ -380,28 +380,30 @@ bool fire_warn_if_impossible(bool silent)
 
 static bool _autoswitch_to_ranged()
 {
-    if (you.equip[EQ_WEAPON] != 0 && you.equip[EQ_WEAPON] != 1)
+    int item_slot;
+    if (you.equip[EQ_WEAPON] == letter_to_index('a'))
+        item_slot = letter_to_index('b');
+    else if (you.equip[EQ_WEAPON] == letter_to_index('b'))
+        item_slot = letter_to_index('a');
+    else
         return false;
 
-    int item_slot = you.equip[EQ_WEAPON] ^ 1;
     const item_def& launcher = you.inv[item_slot];
     if (!is_range_weapon(launcher))
         return false;
+    if (none_of(you.inv.begin(), you.inv.end(), [&launcher](const item_def& it)
+                { return it.launched_by(launcher);}))
+    {
+        return false;
+    }
 
-    FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
-    for (;iter!=you.inv.end(); ++iter)
-        if (iter->launched_by(launcher))
-        {
-            if (!wield_weapon(true, item_slot))
-                return false;
+    if (!wield_weapon(true, item_slot))
+        return false;
 
-            you.turn_is_over = true;
-            //XXX Hacky. Should use a delay instead.
-            macro_buf_add(command_to_key(CMD_FIRE));
-            return true;
-        }
-
-    return false;
+    you.turn_is_over = true;
+    //XXX Hacky. Should use a delay instead.
+    macro_buf_add(command_to_key(CMD_FIRE));
+    return true;
 }
 
 int get_ammo_to_shoot(int item, dist &target, bool teleport)
