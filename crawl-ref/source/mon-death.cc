@@ -3076,20 +3076,23 @@ void pikel_band_neutralise()
             visible_slaves++;
         }
     }
-    const char* final_msg = nullptr;
-    if (player_mutation_level(MUT_NO_LOVE))
+    string final_msg;
+    const char *substr = nullptr;
+    if (visible_slaves > 0)
     {
-        if (visible_slaves == 1)
-            final_msg = "Pikel's spell is broken, but the former slave can only feel hate for you!";
-        else if (visible_slaves > 1)
-            final_msg = "Pikel's spell is broken, but the former slaves can only feel hate for you!";
-    }
-    else
-    {
-        if (visible_slaves == 1)
-            final_msg = "With Pikel's spell broken, the former slave thanks you for freedom.";
-        else if (visible_slaves > 1)
-            final_msg = "With Pikel's spell broken, the former slaves thank you for their freedom.";
+        if (player_mutation_level(MUT_NO_LOVE))
+        {
+            substr = visible_slaves > 1 ? "slaves" : "slave";
+            final_msg = make_stringf("Pikel's spell is broken, but the former "
+                                     "%s can only feel hate for you!", substr);
+        }
+        else
+        {
+            substr = visible_slaves > 1 ? "slaves thank you for their"
+                : "slave thanks you for its";
+            final_msg = make_stringf("With Pikel's spell broken, the former %s "
+                                     "freedom", substr);
+        }
     }
     delayed_action_fineff::schedule(DACT_PIKEL_SLAVES, final_msg);
 }
@@ -3131,28 +3134,11 @@ void hogs_to_humans()
             human++;
     }
 
-    const char* final_msg = nullptr;
-
-    if (any == 1)
-    {
-        if (any == human)
-            final_msg = "No longer under Kirke's spell, the hog turns into a human!";
-        else
-            final_msg = "No longer under Kirke's spell, the hog returns to its "
-                        "original form!";
-    }
-    else if (any > 1)
-    {
-        if (any == human)
-        {
-            final_msg = "No longer under Kirke's spell, the hogs revert to their "
-                        "human forms!";
-        }
-        else
-            final_msg = "No longer under Kirke's spell, the hogs revert to their "
-                        "original forms!";
-    }
-
+    string final_msg = make_stringf("No longer under Kirke's spell, the %s %s "
+                                    "%s!", any > 1 ? "hogs return to their"
+                                      : "hog returns to its",
+                                    any == human ? "human" : "original",
+                                    any > 1 ? "forms" : "form");
     kirke_death_fineff::schedule(final_msg);
 }
 
