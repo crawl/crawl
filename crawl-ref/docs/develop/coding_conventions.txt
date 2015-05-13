@@ -145,7 +145,6 @@ Warning: there are currently many globals which don't do this.
   int Some_Global_Variable;
 
 Internal functions are prefixed with underscores.
-Warning: This is a new convention, so much code doesn't follow it.
 
   static void _remove_from_inventory(item_def* item);
 
