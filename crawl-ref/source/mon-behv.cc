@@ -179,7 +179,7 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
             // (or wasn't even attempted) and we need to set our target
             // the traditional way.
 
-            mon->target = PLAYER_POS;
+            mon->target = you.pos();
         }
     }
     else
@@ -512,7 +512,7 @@ void handle_behaviour(monster* mon)
                 else
                 {
                     new_foe = MHITYOU;
-                    mon->target = PLAYER_POS;
+                    mon->target = you.pos();
                 }
                 break;
             }

@@ -60,6 +60,4 @@ void shake_off_monsters(const actor* target);
 
 void set_nearest_monster_foe(monster* mon, bool near_player = false);
 
-#define PLAYER_POS (you.pos())
-
 #endif

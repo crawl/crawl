@@ -399,7 +399,7 @@ spret_type cast_blink(bool allow_control, bool fail)
     if (you.no_tele(false, false, true))
         return fail ? SPRET_FAIL : SPRET_SUCCESS; // probably always SUCCESS
 
-    if (allow_control && player_control_teleport()
+    if (allow_control && you.duration[DUR_CONTROL_TELEPORT]
         && allow_control_teleport(true))
     {
         if (!you.confused())
@@ -414,7 +414,7 @@ spret_type cast_blink(bool allow_control, bool fail)
 
     fail_check();
     // print messages only after successfully casting
-    if (allow_control && player_control_teleport())
+    if (allow_control && you.duration[DUR_CONTROL_TELEPORT])
         allow_control_teleport();
     uncontrolled_blink();
     return SPRET_SUCCESS;
@@ -517,7 +517,7 @@ void you_teleport()
         int teleport_delay = 3 + random2(3);
 
         // Doesn't care whether the cTele will actually work or not.
-        if (player_control_teleport())
+        if (you.duration[DUR_CONTROL_TELEPORT])
         {
             mpr("You feel your translocation being delayed.");
             teleport_delay += 1 + random2(3);
@@ -592,7 +592,7 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
                              bool teleportitis)
 {
     bool is_controlled = (allow_control && !you.confused()
-                          && player_control_teleport()
+                          && you.duration[DUR_CONTROL_TELEPORT]
                           && allow_control_teleport()
                           && !you.berserk());
 

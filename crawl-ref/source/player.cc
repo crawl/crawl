@@ -1615,11 +1615,6 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
     return re;
 }
 
-bool player_control_teleport(bool temp)
-{
-    return temp && you.duration[DUR_CONTROL_TELEPORT];
-}
-
 /**
  * Is the player character immune to torment?
  *
