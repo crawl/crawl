@@ -243,18 +243,18 @@ public:
     bool mergeable(const final_effect &a) const;
     virtual void fire();
 
-    static void schedule(daction_type action, const char *final_msg)
+    static void schedule(daction_type action, const string &final_msg)
     {
         final_effect::schedule(new delayed_action_fineff(action, final_msg));
     }
 protected:
-    delayed_action_fineff(daction_type _action, const char* _final_msg)
+    delayed_action_fineff(daction_type _action, const string &_final_msg)
         : final_effect(0, 0, coord_def()),
           action(_action), final_msg(_final_msg)
     {
     }
     daction_type action;
-    const char *final_msg;
+    string final_msg;
 };
 
 class kirke_death_fineff : public delayed_action_fineff
@@ -262,12 +262,12 @@ class kirke_death_fineff : public delayed_action_fineff
 public:
     void fire();
 
-    static void schedule(const char *final_msg)
+    static void schedule(const string &final_msg)
     {
         final_effect::schedule(new kirke_death_fineff(final_msg));
     }
 protected:
-    kirke_death_fineff(const char *_final_msg)
+    kirke_death_fineff(const string & _final_msg)
         : delayed_action_fineff(DACT_KIRKE_HOGS, _final_msg)
     {
     }
