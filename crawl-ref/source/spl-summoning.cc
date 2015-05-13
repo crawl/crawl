@@ -3643,4 +3643,3 @@ int count_summons(const actor *summoner, spell_type spell)
 
     return count;
 }
-
