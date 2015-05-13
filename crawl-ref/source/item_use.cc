@@ -152,7 +152,6 @@ bool can_wield(const item_def *weapon, bool say_reason,
     else if (!ignore_temporary_disability
              && you.hunger_state < HS_FULL
              && get_weapon_brand(*weapon) == SPWPN_VAMPIRISM
-             && !crawl_state.game_is_zotdef()
              && you.undead_state() == US_ALIVE
              && !you_foodless()
              && (item_type_known(*weapon) || !only_known))

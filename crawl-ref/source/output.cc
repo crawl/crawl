@@ -545,7 +545,7 @@ void update_turn_count()
         return;
     }
 
-    const int yhack = crawl_state.game_is_zotdef()
+    const int yhack = 0
 #if TAG_MAJOR_VERSION == 34
                     + (you.species == SP_LAVA_ORC)
 #endif
@@ -1330,25 +1330,13 @@ void print_stats()
             textcolour(HUD_VALUE_COLOUR);
             CPRINTF("%2d%% ", get_exp_progress());
         }
-        if (crawl_state.game_is_zotdef())
-        {
-#if TAG_MAJOR_VERSION == 34
-            CGOTOXY(1, 9 + temp, GOTO_STAT);
-#else
-            CGOTOXY(1, 9, GOTO_STAT);
-#endif
-            textcolour(Options.status_caption_colour);
-            CPRINTF("ZP: ");
-            textcolour(HUD_VALUE_COLOUR);
-            CPRINTF("%d     ", you.zot_points);
-        }
         you.redraw_experience = false;
     }
 
 #if TAG_MAJOR_VERSION == 34
-    int yhack = crawl_state.game_is_zotdef() + temp;
+    int yhack = temp;
 #else
-    int yhack = crawl_state.game_is_zotdef();
+    int yhack = 0;
 #endif
 
     // Line 9 is Gold and Turns
@@ -1481,9 +1469,9 @@ void draw_border()
     CGOTOXY(19, dex_pos, GOTO_STAT); CPRINTF("Dex:");
 
 #if TAG_MAJOR_VERSION == 34
-    int yhack = crawl_state.game_is_zotdef() + temp;
+    int yhack = temp;
 #else
-    int yhack = crawl_state.game_is_zotdef();
+    int yhack = 0;
 #endif
     CGOTOXY(1, 9 + yhack, GOTO_STAT); CPRINTF("Gold:");
     CGOTOXY(19, 9 + yhack, GOTO_STAT);

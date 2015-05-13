@@ -179,7 +179,7 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
             // (or wasn't even attempted) and we need to set our target
             // the traditional way.
 
-            mon->target = PLAYER_POS;
+            mon->target = you.pos();
         }
     }
     else
@@ -260,27 +260,6 @@ void handle_behaviour(monster* mon)
     bool patrolling = mon->is_patrolling();
     static vector<level_exit> e;
     static int                e_index = -1;
-
-    // Zotdef rotting
-    if (crawl_state.game_is_zotdef())
-    {
-        if (!isFriendly && !isNeutral && env.orb_pos == mon->pos()
-            && mon->speed)
-        {
-            const int loss = div_rand_round(10, mon->speed);
-            if (loss)
-            {
-                mprf(MSGCH_DANGER, "Your flesh rots away as the Orb of Zot is desecrated.");
-
-                // If the rot would reduce us to <= 0 max HP, attribute the
-                // kill to the monster.
-                if (loss >= you.hp_max)
-                    ouch(loss, KILLED_BY_ROTTING, mon->mid);
-
-                rot_hp(loss);
-            }
-        }
-    }
 
     //mprf("AI debug: mon %d behv=%d foe=%d pos=%d %d target=%d %d",
     //     mon->mindex(), mon->behaviour, mon->foe, mon->pos().x,
@@ -376,19 +355,6 @@ void handle_behaviour(monster* mon)
             proxPlayer = true;
     }
 
-    // Zotdef: immobile allies forget targets that are out of sight
-    if (crawl_state.game_is_zotdef())
-    {
-        if (isFriendly && mon->is_stationary()
-            && (mon->foe != MHITNOT && mon->foe != MHITYOU)
-            && !mon->can_see(&menv[mon->foe]))
-        {
-            mon->foe = MHITYOU;
-            //mprf("%s resetting target (cantSee)",
-            //     mon->name(DESC_THE,true).c_str());
-        }
-    }
-
     // Set friendly target, if they don't already have one.
     // Berserking allies ignore your commands!
     if (isFriendly
@@ -399,29 +365,10 @@ void handle_behaviour(monster* mon)
         && mon->type != MONS_BALL_LIGHTNING
         && !mons_is_avatar(mon->type))
     {
-        if (!crawl_state.game_is_zotdef())
-        {
-            if (you.pet_target != MHITNOT)
-                mon->foe = you.pet_target;
-            else if (mons_class_is_stationary(mon->type))
-                set_nearest_monster_foe(mon);
-        }
-        else    // Zotdef only
-        {
-            // Attack pet target if nearby
-            if (you.pet_target != MHITNOT && proxPlayer)
-            {
-                //mprf("%s setting target (player target)",
-                //     mon->name(DESC_THE,true).c_str());
-                mon->foe = you.pet_target;
-            }
-            else
-            {
-                // Zotdef - this is all new, for out-of-sight friendlies to do
-                // something useful. If no current target, get the closest one.
-                set_nearest_monster_foe(mon);
-            }
-        }
+        if (you.pet_target != MHITNOT)
+            mon->foe = you.pet_target;
+        else if (mons_class_is_stationary(mon->type))
+            set_nearest_monster_foe(mon);
     }
 
     // Instead, berserkers attack nearest monsters.
@@ -455,8 +402,6 @@ void handle_behaviour(monster* mon)
         && (proxPlayer || one_chance_in(3)))
     {
         set_nearest_monster_foe(mon);
-        if (mon->foe == MHITNOT && crawl_state.game_is_zotdef())
-            mon->foe = MHITYOU;
     }
 
     // Friendly summons will come back to the player if they go out of sight.
@@ -486,14 +431,12 @@ void handle_behaviour(monster* mon)
 
     // Unfriendly monsters fighting other monsters will usually
     // target the player, if they're healthy.
-    // Zotdef: 2/3 chance of retargeting changed to 1/4
     if (!isFriendly && !isNeutral
         && !mons_is_avatar(mon->type)
         && mon->foe != MHITYOU && mon->foe != MHITNOT
         && proxPlayer && !mon->berserk_or_insane()
         && isHealthy
-        && (crawl_state.game_is_zotdef() ? one_chance_in(4)
-                                         : !one_chance_in(3)))
+        && !one_chance_in(3))
     {
         mon->foe = MHITYOU;
     }
@@ -528,13 +471,6 @@ void handle_behaviour(monster* mon)
         coord_def foepos = coord_def(0,0);
         if (afoe)
             foepos = afoe->pos();
-
-        if (crawl_state.game_is_zotdef() && mon->foe == MHITYOU
-            && !mon->wont_attack())
-        {
-            foepos = PLAYER_POS;
-            proxFoe = true;
-        }
 
         if (mon->pos() == mon->firing_pos)
             mon->firing_pos.reset();
@@ -576,7 +512,7 @@ void handle_behaviour(monster* mon)
                 else
                 {
                     new_foe = MHITYOU;
-                    mon->target = PLAYER_POS;
+                    mon->target = you.pos();
                 }
                 break;
             }
@@ -658,24 +594,17 @@ void handle_behaviour(monster* mon)
                     // but only for a few moves (smell and
                     // intuition only go so far).
 
-                    if (mon->pos() == mon->target
-                        && (!isFriendly || !crawl_state.game_is_zotdef()))
-                    {   // hostiles only in Zotdef
+                  if (mon->pos() == mon->target)
+                    {
                         if (mon->foe == MHITYOU)
                         {
-                            // infallible tracking in zotdef
-                            if (crawl_state.game_is_zotdef())
-                                mon->target = PLAYER_POS;
-                            else
+                            if (x_chance_in_y(50, you.stealth())
+                                || you.penance[GOD_ASHENZARI] && coinflip())
                             {
-                                if (x_chance_in_y(50, you.stealth())
-                                    || you.penance[GOD_ASHENZARI] && coinflip())
-                                {
-                                    mon->target = you.pos();
-                                }
-                                else
-                                    mon->foe_memory = 0;
+                                mon->target = you.pos();
                             }
+                            else
+                                mon->foe_memory = 0;
                         }
                         else
                         {
@@ -1009,24 +938,16 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
     // -- But why should they always attack monsters? -- 1KB
 
     monster* foe = monster_at(p);
-    if (foe && foe != mon
-        && (mon->has_ench(ENCH_INSANE)
-            || foe->friendly() != friendly
-            || neutral && !foe->neutral())
-        && (ignore_sight || mon->can_see(foe))
-        && !foe->is_projectile()
-        && summon_can_attack(mon, p)
-        && (friendly || !is_sanctuary(p))
-        && (crawl_state.game_is_zotdef() || !mons_is_firewood(foe)))
-            // Zotdef allies take out firewood
-    {
-        return true;
-    }
-
-    if (mon->has_ench(ENCH_INSANE) && p == you.pos())
-        return true;
-
-    return false;
+    return foe && foe != mon
+           && (mon->has_ench(ENCH_INSANE)
+               || foe->friendly() != friendly
+               || neutral && !foe->neutral())
+           && (ignore_sight || mon->can_see(foe))
+           && !foe->is_projectile()
+           && summon_can_attack(mon, p)
+           && (friendly || !is_sanctuary(p))
+           && !mons_is_firewood(foe)
+           || mon->has_ench(ENCH_INSANE) && p == you.pos();
 }
 
 // Choose random nearest monster as a foe.
@@ -1604,16 +1525,13 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
 // Friendly summons can't attack out of the player's LOS, it's too abusable.
 bool summon_can_attack(const monster* mons)
 {
-    if (crawl_state.game_is_arena() || crawl_state.game_is_zotdef())
-        return true;
-
-    return !mons->friendly() || !mons->is_summoned()
+    return crawl_state.game_is_arena() || !mons->friendly() || !mons->is_summoned()
            || you.see_cell_no_trans(mons->pos());
 }
 
 bool summon_can_attack(const monster* mons, const coord_def &p)
 {
-    if (crawl_state.game_is_arena() || crawl_state.game_is_zotdef())
+    if (crawl_state.game_is_arena())
         return true;
 
     // Spectral weapons only attack their target

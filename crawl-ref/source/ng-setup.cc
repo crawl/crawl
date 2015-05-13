@@ -123,7 +123,7 @@ static void _unfocus_stats()
     }
 }
 
-// Some consumables to make the starts of Sprint and Zotdef a little easier.
+// Some consumables to make the starts of Sprint a little easier.
 static void _give_bonus_items()
 {
     newgame_make_item(OBJ_POTIONS, POT_CURING);
@@ -371,7 +371,7 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_ABYSSAL_KNIGHT:
         you.religion = GOD_LUGONU;
-        if (!crawl_state.game_is_zotdef() && !crawl_state.game_is_sprint())
+        if (!crawl_state.game_is_sprint())
             you.char_direction = GDT_GAME_START;
         you.piety = 38;
 
@@ -618,11 +618,6 @@ static void _give_items_skills(const newgame_def& ng)
     if (you.species == SP_DEEP_DWARF)
         newgame_make_item(OBJ_WANDS, WAND_HEAL_WOUNDS, 1, 5);
 
-    // Zotdef: everyone gets bonus two potions of curing.
-
-    if (crawl_state.game_is_zotdef())
-        newgame_make_item(OBJ_POTIONS, POT_CURING, 2);
-
     if (weap_skill)
     {
         item_def *weap = you.weapon();
@@ -717,7 +712,6 @@ static void _give_basic_knowledge()
 static void _setup_normal_game();
 static void _setup_tutorial(const newgame_def& ng);
 static void _setup_sprint(const newgame_def& ng);
-static void _setup_zotdef(const newgame_def& ng);
 static void _setup_hints();
 static void _setup_generic(const newgame_def& ng);
 
@@ -737,9 +731,6 @@ void setup_game(const newgame_def& ng)
         break;
     case GAME_TYPE_SPRINT:
         _setup_sprint(ng);
-        break;
-    case GAME_TYPE_ZOTDEF:
-        _setup_zotdef(ng);
         break;
     case GAME_TYPE_HINTS:
         _setup_hints();
@@ -773,14 +764,6 @@ static void _setup_tutorial(const newgame_def& ng)
  * Special steps that sprint needs;
  */
 static void _setup_sprint(const newgame_def& ng)
-{
-    // nothing currently
-}
-
-/**
- * Special steps that zotdef needs;
- */
-static void _setup_zotdef(const newgame_def& ng)
 {
     // nothing currently
 }
@@ -824,7 +807,7 @@ static void _setup_generic(const newgame_def& ng)
 
     _give_starting_food();
 
-    if (crawl_state.game_is_sprint() || crawl_state.game_is_zotdef())
+    if (crawl_state.game_is_sprint())
         _give_bonus_items();
 
     // Give tutorial skills etc
@@ -863,14 +846,6 @@ static void _setup_generic(const newgame_def& ng)
     init_can_train();
     init_train();
     init_training();
-
-    if (crawl_state.game_is_zotdef())
-    {
-        you.zot_points = 80;
-
-        // There's little sense in training these skills in ZotDef
-        you.train[SK_STEALTH] = 0;
-    }
 
     // Apply autoinscribe rules to inventory.
     request_autoinscribe();

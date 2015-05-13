@@ -298,7 +298,6 @@
     <ClCompile Include="..\wiz-you.cc" />
     <ClCompile Include="..\worley.cc" />
     <ClCompile Include="..\xom.cc" />
-    <ClCompile Include="..\zotdef.cc" />
     <ClCompile Include="..\dgn-irregular-box.cc" />
     <ClCompile Include="..\json.cc" />
     <ClCompile Include="..\mon-chimera.cc" />
@@ -632,7 +631,6 @@
     <ClInclude Include="..\worley.h" />
     <ClInclude Include="..\xom.h" />
     <ClInclude Include="..\zap-data.h" />
-    <ClInclude Include="..\zotdef.h" />
     <ClInclude Include="..\dgn-irregular-box.h" />
     <ClInclude Include="..\mon-chimera.h" />
     <ClInclude Include="..\random-pick.h" />

@@ -2795,8 +2795,7 @@ void monster::set_hit_dice(int new_hit_dice)
     if (type == MONS_OKLOB_PLANT && !spells.empty()
         && spells[0].spell == SPELL_SPIT_ACID)
     {
-        spells[0].freq = 200 * hit_dice
-                         / (crawl_state.game_is_zotdef() ? 40 : 30);
+        spells[0].freq = 200 * hit_dice / 30;
     }
 }
 
@@ -4921,10 +4920,6 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     {
         return true;
     }
-
-    // In Zotdef critters will risk death to get to the Orb
-    if (crawl_state.game_is_zotdef() && mechanical)
-        return true;
 
     // can't avoid traps you don't know about
     if (!trap.is_known(this))
