@@ -196,7 +196,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
 // The description screen was way out of date with the actual costs.
 // This table puts all the information in one place... -- bwr
 //
-// The five numerical fields are: MP, HP, food, piety and ZP.
+// The four numerical fields are: MP, HP, food, and piety.
 // Note:  food_cost  = val + random2avg(val, 2)
 //        piety_cost = val + random2((val + 1) / 2 + 1);
 //        hp cost is in per-mil of maxhp (i.e. 20 = 2% of hp, rounded up)
@@ -2868,8 +2868,6 @@ static int _scale_piety_cost(ability_type abil, int original_cost)
            : original_cost;
 }
 
-// We pass in ability ZP cost as it may have changed during the exercise
-// of the ability (if the cost is scaled, for example)
 static void _pay_ability_costs(const ability_def& abil)
 {
     if (abil.flags & ABFLAG_INSTANT)

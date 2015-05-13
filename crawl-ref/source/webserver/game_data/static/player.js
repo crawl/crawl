@@ -332,14 +332,6 @@ function ($, comm, enums, map_knowledge, messages, options) {
         for (var i = 0; i < simple_stats.length; ++i)
             $("#stats_" + simple_stats[i]).text(player[simple_stats[i]]);
 
-        if (player.zp !== null)
-        {
-            $(".stats_zot_defense").show();
-            $("#stats_zp").text(player.zp);
-        }
-        else
-            $(".stats_zot_defense").hide();
-
         if (player.real_hp_max != player.hp_max)
             $("#stats_real_hp_max").text("(" + player.real_hp_max + ")");
         else
@@ -462,7 +454,6 @@ function ($, comm, enums, map_knowledge, messages, options) {
                 mp: 0, mp_max: 0,
                 ac: 0, ev: 0, sh: 0,
                 xl: 0, progress: 0,
-                zp: null,
                 time: 0, time_delta: 0,
                 gold: 0,
                 str: 0, int: 0, dex: 0,
