@@ -87,6 +87,14 @@ void job_stat_init(job_type job)
     }
 }
 
+bool job_recommends_species(job_type job, species_type species)
+{
+    return find(_job_def(job).recommended_species.begin(),
+                _job_def(job).recommended_species.end(),
+                species) != _job_def(job).recommended_species.end();
+}
+
+
 // Determines if a job is valid for a new game.
 bool is_starting_job(job_type job)
 {
