@@ -35,73 +35,6 @@ static void _init_player()
     dlua.callfn("dgn_clear_data", "");
 }
 
-// Randomly boost stats a number of times.
-static void _wanderer_assign_remaining_stats(int points_left)
-{
-    while (points_left > 0)
-    {
-        // Stats that are already high will be chosen half as often.
-        stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
-        if (you.base_stats[stat] > 17 && coinflip())
-            continue;
-
-        you.base_stats[stat]++;
-        points_left--;
-    }
-}
-
-static void _jobs_stat_init(job_type which_job)
-{
-    int s = 0;   // strength mod
-    int i = 0;   // intelligence mod
-    int d = 0;   // dexterity mod
-
-    // Note: Wanderers are correct, they've got a challenging background. - bwr
-    switch (which_job)
-    {
-    case JOB_FIGHTER:           s =  8; i =  0; d =  4; break;
-    case JOB_BERSERKER:         s =  9; i = -1; d =  4; break;
-    case JOB_GLADIATOR:         s =  7; i =  0; d =  5; break;
-
-    case JOB_SKALD:             s =  4; i =  4; d =  4; break;
-    case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; break;
-    case JOB_ABYSSAL_KNIGHT:    s =  4; i =  4; d =  4; break;
-
-    case JOB_ASSASSIN:          s =  3; i =  3; d =  6; break;
-
-    case JOB_HUNTER:            s =  4; i =  3; d =  5; break;
-    case JOB_WARPER:            s =  3; i =  5; d =  4; break;
-    case JOB_ARCANE_MARKSMAN:   s =  3; i =  5; d =  4; break;
-
-    case JOB_MONK:              s =  3; i =  2; d =  7; break;
-    case JOB_TRANSMUTER:        s =  2; i =  5; d =  5; break;
-
-    case JOB_WIZARD:            s = -1; i = 10; d =  3; break;
-    case JOB_CONJURER:          s =  0; i =  7; d =  5; break;
-    case JOB_ENCHANTER:         s =  0; i =  7; d =  5; break;
-    case JOB_FIRE_ELEMENTALIST: s =  0; i =  7; d =  5; break;
-    case JOB_ICE_ELEMENTALIST:  s =  0; i =  7; d =  5; break;
-    case JOB_AIR_ELEMENTALIST:  s =  0; i =  7; d =  5; break;
-    case JOB_EARTH_ELEMENTALIST:s =  0; i =  7; d =  5; break;
-    case JOB_SUMMONER:          s =  0; i =  7; d =  5; break;
-    case JOB_VENOM_MAGE:        s =  0; i =  7; d =  5; break;
-    case JOB_NECROMANCER:       s =  0; i =  7; d =  5; break;
-
-    case JOB_WANDERER:
-        // Wanderers get their stats randomly distributed.
-        _wanderer_assign_remaining_stats(12);           break;
-
-    case JOB_ARTIFICER:         s =  3; i =  4; d =  5; break;
-    default:                    s =  0; i =  0; d =  0; break;
-    }
-
-    you.base_stats[STAT_STR] += s;
-    you.base_stats[STAT_INT] += i;
-    you.base_stats[STAT_DEX] += d;
-
-    you.hp_max_adj_perm = 0;
-}
-
 // Make sure no stats are unacceptably low
 // (currently possible only for GhBe - 1KB)
 static void _unfocus_stats()
@@ -809,7 +742,7 @@ static void _setup_generic(const newgame_def& ng)
     // on species vision. Currently, all species see out to 8 squares.
     update_vision_range();
 
-    _jobs_stat_init(you.char_class);
+    job_stat_init(you.char_class);
 
     _unfocus_stats();
 
