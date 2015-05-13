@@ -2782,7 +2782,7 @@ static void _swing_at_target(coord_def move)
             return;
         }
 
-        if (_cancel_confused_move(false))
+        if (_cancel_confused_move(true))
             return;
 
         if (!one_chance_in(3))
@@ -3166,7 +3166,7 @@ static void _move_player(coord_def move)
             return;
         }
 
-        if (_cancel_confused_move(true))
+        if (_cancel_confused_move(false))
             return;
 
         if (!one_chance_in(3))
