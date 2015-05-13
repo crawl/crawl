@@ -3680,7 +3680,6 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case RING_TELEPORT_CONTROL:
             return you.species == SP_FORMICID
-                   || crawl_state.game_is_zotdef()
                    || player_mutation_level(MUT_NO_ARTIFICE);
 
         case RING_TELEPORTATION:

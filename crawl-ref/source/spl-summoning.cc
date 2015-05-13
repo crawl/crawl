@@ -1216,18 +1216,6 @@ spret_type cast_summon_greater_demon(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-static monster_type _zotdef_shadow()
-{
-    for (int tries = 0; tries < 100; tries++)
-    {
-        monster_type mc = env.mons_alloc[random2(MAX_MONS_ALLOC)];
-        if (!invalid_monster_type(mc) && !mons_is_unique(mc))
-            return mc;
-    }
-
-    return RANDOM_COMPATIBLE_MONSTER;
-}
-
 spret_type cast_shadow_creatures(int st, god_type god, level_id place,
                                  bool fail)
 {
@@ -1235,17 +1223,13 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
     const bool scroll = (st == MON_SUMM_SCROLL);
     mpr("Wisps of shadow whirl around you...");
 
-    monster_type critter = RANDOM_COMPATIBLE_MONSTER;
-    if (crawl_state.game_is_zotdef())
-        critter = _zotdef_shadow();
-
     int num = (scroll ? roll_dice(2, 2) : 1);
     int num_created = 0;
 
     for (int i = 0; i < num; ++i)
     {
         if (monster *mons = create_monster(
-            mgen_data(critter, BEH_FRIENDLY, &you,
+            mgen_data(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, &you,
                       // This duration is only used for band members.
                       (scroll ? 2 : 1),
                       st, you.pos(), MHITYOU,

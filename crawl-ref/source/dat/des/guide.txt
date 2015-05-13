@@ -16,5 +16,4 @@ builder   = layouts and other vaults placed specially during level-building
             (shops, uniques, etc.)
 sprint    = maps for the Dungeon Sprint minigame
 tutorial  = maps for the tutorial minigame
-zotdef    = maps for the Zot Defence minigame
 test      = vaults used for testing the game

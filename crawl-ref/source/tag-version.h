@@ -167,6 +167,7 @@ enum tag_minor_version
     TAG_MINOR_DETERIORATION,       // 2-level deterioration mutation
     TAG_MINOR_RU_DELAY_STACKING,   // Let Ru delay timers stack again
     TAG_MINOR_NO_TWISTER,          // Remove ARTP_TWISTER
+    TAG_MINOR_NO_ZOTDEF,           // remove zotdef, along with zot_points and zotdef_wave_name
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

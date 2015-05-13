@@ -128,18 +128,12 @@ void trap_def::prepare_ammo(int charges)
         ammo_qty = 30 + random2(20);
         break;
     case TRAP_TELEPORT:
-        if (crawl_state.game_is_zotdef())
-            ammo_qty = 2 + random2(2);
-        else
-            ammo_qty = 1;
+        ammo_qty = 1;
         break;
     default:
         ammo_qty = 0;
         break;
     }
-    // Zot def: traps have 10x as much ammo
-    if (crawl_state.game_is_zotdef() && type != TRAP_GOLUBRIA)
-        ammo_qty *= 10;
 }
 
 void trap_def::reveal()
@@ -203,13 +197,6 @@ bool trap_def::is_known(const actor* act) const
             if (player_knows && mons->wont_attack())
                 return true;
 
-            // This should ultimately be removed, but only after monsters
-            // learn to make use of the trap being limited in ZotDef if
-            // there is no other way. Golubria and Malign Gateway are a
-            // problem, too...
-            if (crawl_state.game_is_zotdef())
-                return false;
-
             return mons_is_native_in_branch(mons)
                    || intel >= I_HIGH && one_chance_in(3);
         }
@@ -244,8 +231,7 @@ bool trap_def::is_safe(actor* act) const
     if (!is_known(act))
         return false;
 
-    if (type == TRAP_GOLUBRIA || type == TRAP_SHAFT
-        || crawl_state.game_is_zotdef())
+    if (type == TRAP_GOLUBRIA || type == TRAP_SHAFT)
     {
         return true;
     }
@@ -641,13 +627,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     const bool you_trigger = triggerer.is_player();
     const bool in_sight = you.see_cell(pos);
 
-    // Zot def - player never sets off known traps
-    if (crawl_state.game_is_zotdef() && you_trigger && you_know)
-    {
-        mpr("You step safely past the trap.");
-        return;
-    }
-
     // If set, the trap will be removed at the end of the
     // triggering process.
     bool trap_destroyed = false, know_trap_destroyed = false;;
@@ -666,13 +645,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 simple_monster_message(m, " carefully avoids the shaft.");
             return;
         }
-    }
-
-    // Zot def - friendly monsters never set off known traps
-    if (crawl_state.game_is_zotdef() && m && m->friendly() && trig_knows)
-    {
-        simple_monster_message(m," carefully avoids a trap.");
-        return;
     }
 
     // Anything stepping onto a trap almost always reveals it.
@@ -735,9 +707,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         break;
 
     case TRAP_ALARM:
-        // In ZotDef, alarm traps don't go away after use.
-        if (!crawl_state.game_is_zotdef())
-            trap_destroyed = true;
+        trap_destroyed = true;
 
         if (silenced(pos))
         {
@@ -769,8 +739,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                             mons_intel(m) >= I_NORMAL ? m->mid : MID_NOBODY;
 
             noisy(40, pos, msg.c_str(), source, NF_MESSAGE_IF_UNSEEN);
-            if (crawl_state.game_is_zotdef())
-                more();
         }
 
         if (you_trigger)
@@ -841,14 +809,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 m->hurt(nullptr, damage_taken);
                 if (in_sight && m->alive())
                     print_wounds(m);
-
-                // zotdef: blade traps break eventually
-                if (crawl_state.game_is_zotdef() && one_chance_in(200))
-                {
-                    if (in_sight)
-                        mpr("The blade breaks!");
-                    disarm();
-                }
             }
         }
         break;
@@ -1778,8 +1738,7 @@ bool is_valid_shaft_level(bool known)
 {
     const level_id place = level_id::current();
     if (crawl_state.test
-        || crawl_state.game_is_sprint()
-        || crawl_state.game_is_zotdef())
+        || crawl_state.game_is_sprint())
     {
         return false;
     }

@@ -1057,8 +1057,6 @@ void scorefile_entry::set_base_xlog_fields() const
         /* XXX: hmmm, something better here? */
         score_version += "-sprint.1";
     }
-    else if (crawl_state.game_is_zotdef())
-        score_version += "-zotdef.1";
     fields->add_field("v", "%s", Version::Short);
     fields->add_field("vlong", "%s", Version::Long);
     fields->add_field("lv", "%s", score_version.c_str());
@@ -1580,7 +1578,7 @@ void scorefile_entry::init(time_t dt)
             pt += 250000; // the Orb
             pt += num_runes * 2000 + 4000;
             pt += ((uint64_t)250000) * 25000 * num_runes * num_runes
-                / (1+you.num_turns) / (crawl_state.game_is_zotdef() ? 10 : 1);
+                / (1+you.num_turns);
         }
         pt += num_runes * 10000;
         pt += num_runes * (num_runes + 2) * 1000;

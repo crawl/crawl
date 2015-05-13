@@ -345,9 +345,6 @@ static void _post_init(bool newc)
         // For a new game, wipe out monsters in LOS, and
         // for new hints mode games also the items.
         _zap_los_monsters(Hints.hints_events[HINT_SEEN_FIRST_OBJECT]);
-
-        if (crawl_state.game_is_zotdef())
-            fully_map_level();
     }
 
     // This just puts the view up for the first turn.
@@ -844,7 +841,6 @@ again:
                 case GAME_TYPE_NORMAL:
                 case GAME_TYPE_TUTORIAL:
                 case GAME_TYPE_SPRINT:
-                case GAME_TYPE_ZOTDEF:
                 case GAME_TYPE_HINTS:
                     // If a game type is chosen, the user expects
                     // to start a new game. Just blanking the name
@@ -883,7 +879,6 @@ again:
         case GAME_TYPE_NORMAL:
         case GAME_TYPE_TUTORIAL:
         case GAME_TYPE_SPRINT:
-        case GAME_TYPE_ZOTDEF:
         case GAME_TYPE_HINTS:
             trim_string(input_string);
             if (is_good_name(input_string, true, false))

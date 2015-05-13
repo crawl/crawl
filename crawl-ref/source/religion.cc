@@ -546,28 +546,10 @@ bool is_unknown_god(god_type god)
 
 bool is_unavailable_god(god_type god)
 {
-    if (god == GOD_JIYVA && jiyva_is_dead())
-        return true;
-
-    // Don't allow Fedhas in ZotDef, as his invocations are duplicated, and
-    // passives thoroughly overpowered. Protection for plants, speed-up of
-    // oklobs, etc...
-    // Basically, ZotDef is Fedhas.
-
-    // Don't allow exploration-piety gods, either -- nothing to explore.
-    // We could give some piety for every wave, but there's little point.
-    if (crawl_state.game_is_zotdef() && (god == GOD_FEDHAS
-                                         || god == GOD_ASHENZARI
-                                         || god == GOD_NEMELEX_XOBEH
-                                         || god == GOD_ELYVILON))
-    {
-        return true;
-    }
-
-    return false;
+    return god == GOD_JIYVA && jiyva_is_dead();
 }
 
-god_type random_god(bool available)
+god_type random_god()
 {
     god_type god;
 
@@ -575,7 +557,7 @@ god_type random_god(bool available)
     {
         god = static_cast<god_type>(random2(NUM_GODS - 1) + 1);
     }
-    while (available && is_unavailable_god(god));
+    while (is_unavailable_god(god));
 
     return god;
 }
