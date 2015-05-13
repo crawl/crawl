@@ -5031,8 +5031,8 @@ extern const spell_type serpent_of_hell_breaths[][3] =
     // Geh
     {
         SPELL_FIRE_BREATH,
-        SPELL_FIREBALL,
-        SPELL_HELLFIRE
+        SPELL_FLAMING_CLOUD,
+        SPELL_FIREBALL
     },
     // Coc
     {
