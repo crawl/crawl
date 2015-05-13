@@ -1004,7 +1004,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         return SPRET_ABORT;
     }
 
-    // Can't apport the Orb in zotdef or sprint
+    // Can't apport the Orb in sprint
     if (item_is_orb(item) && crawl_state.game_is_sprint())
     {
         mpr("You cannot apport the Orb!");
