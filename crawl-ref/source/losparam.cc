@@ -53,19 +53,10 @@ opacity_type opacity_no_trans::operator()(const coord_def& p) const
     return OPC_CLEAR;
 }
 
-static bool mons_block_immob(const monster* mons)
-{
-    return mons && mons->is_stationary();
-}
-
 opacity_type opacity_immob::operator()(const coord_def& p) const
 {
-    opacity_type base = opc_no_trans(p);
-
-    if (mons_block_immob(monster_at(p)))
-        return OPC_OPAQUE;
-    else
-        return base;
+    const monster* mons = monster_at(p);
+    return (mons && mons->is_stationary()) ? OPC_OPAQUE : opc_no_trans(p);
 }
 
 opacity_type opacity_solid::operator()(const coord_def& p) const
