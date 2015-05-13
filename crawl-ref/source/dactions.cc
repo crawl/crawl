@@ -227,8 +227,10 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
 
         case DACT_HOLY_PETS_GO_NEUTRAL:
         case DACT_PIKEL_SLAVES:
+        {
             // monster changes attitude
-            mon->attitude = ATT_GOOD_NEUTRAL;
+            bool hostile = player_mutation_level(MUT_NO_LOVE);
+            mon->attitude = hostile ? ATT_HOSTILE : ATT_GOOD_NEUTRAL;
             mons_att_changed(mon);
 
             if (act == DACT_PIKEL_SLAVES)
@@ -238,10 +240,10 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
                 mon->mname = "freed slave";
             }
             else if (local)
-                simple_monster_message(mon, " becomes indifferent.");
-            mon->behaviour = BEH_WANDER;
+                simple_monster_message(mon, hostile ? " turns on you!" : " becomes indifferent.");
+            mon->behaviour = hostile ? BEH_SEEK : BEH_WANDER;
             break;
-
+        }
         case DACT_KIRKE_HOGS:
             _daction_hog_to_human(mon, in_transit);
             break;
