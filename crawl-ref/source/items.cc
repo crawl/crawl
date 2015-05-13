@@ -2357,11 +2357,8 @@ bool drop_item(int item_dropped, int quant_drop)
     if (item_dropped == you.equip[EQ_WEAPON]
         && quant_drop >= you.inv[item_dropped].quantity)
     {
-        int old_time = you.time_taken;
-        if (!wield_weapon(true, SLOT_BARE_HANDS))
+        if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, true, true, false))
             return false;
-        // Dropping a wielded item isn't any faster.
-        you.time_taken = old_time;
     }
 
     if (!copy_item_to_grid(you.inv[item_dropped],
@@ -2392,7 +2389,6 @@ bool drop_item(int item_dropped, int quant_drop)
 
     dec_inv_item_quantity(item_dropped, quant_drop);
     you.turn_is_over = true;
-    you.time_taken = div_rand_round(you.time_taken * 8, 10);
 
     you.last_pickup.erase(item_dropped);
 
