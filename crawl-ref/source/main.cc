@@ -3285,10 +3285,10 @@ static void _move_player(coord_def move)
                 moving = false;
             }
         }
-        else if (targ_monst->temp_attitude() == ATT_NEUTRAL)
+        else if (targ_monst->temp_attitude() == ATT_NEUTRAL && !you.confused())
         {
             simple_monster_message(targ_monst, " refuses to make way for you. "
-                                             "(Use ctrl+direction to attack)");
+                                             "(Use ctrl+direction to attack.)");
             you.turn_is_over = false;
             return;
         }
@@ -3296,7 +3296,9 @@ static void _move_player(coord_def move)
         {
             // Don't allow the player to freely locate invisible monsters
             // with confirmation prompts.
-            if (!you.can_see(targ_monst) && !check_moveto(targ, walkverb))
+            if (!you.can_see(targ_monst)
+                && !you.confused()
+                && !check_moveto(targ, walkverb))
             {
                 stop_running();
                 you.turn_is_over = false;
