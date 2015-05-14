@@ -3,7 +3,10 @@
 #include "jobs.h"
 
 #include "enum.h"
+#include "errors.h"
 #include "libutil.h"
+#include "mapdef.h"
+#include "ng-setup.h"
 #include "player.h"
 #include "stringutil.h"
 
@@ -87,13 +90,60 @@ void job_stat_init(job_type job)
     }
 }
 
+void give_job_equipment(job_type job)
+{
+    item_list items;
+    for (const string& it : _job_def(job).equipment)
+        items.add_item(it);
+    for (size_t i = 0; i < items.size(); i++)
+    {
+        const item_spec spec = items.get_item(i);
+        int plus = 0;
+        if (spec.props.exists("charges"))
+            plus = spec.props["charges"];
+        if (spec.props.exists("plus"))
+            plus = spec.props["plus"];
+        newgame_make_item(spec.base_type, spec.sub_type, max(spec.qty, 1),
+                          plus, spec.ego);
+    }
+}
+
+void debug_jobdata()
+{
+    string fails;
+
+    for (int i = 0; i < NUM_JOBS; i++)
+        if (!job_data.count(static_cast<job_type>(i)))
+            fails += "job number " + to_string(i) + "is not present\n";
+
+    item_list dummy;
+    for (auto& entry : job_data)
+        for (const string& it : entry.second.equipment)
+        {
+            const string error = dummy.add_item(it, false);
+            if (error != "")
+                fails += error + "\n";
+        }
+
+    if (!fails.empty())
+    {
+        fprintf(stderr, "%s", fails.c_str());
+
+        FILE *f = fopen("job-data.out", "w");
+        if (!f)
+            sysfail("can't write test output");
+        fprintf(f, "%s", fails.c_str());
+        fclose(f);
+        fail("job-data errors (dumped to job-data.out)");
+    }
+}
+
 bool job_recommends_species(job_type job, species_type species)
 {
     return find(_job_def(job).recommended_species.begin(),
                 _job_def(job).recommended_species.end(),
                 species) != _job_def(job).recommended_species.end();
 }
-
 
 // Determines if a job is valid for a new game.
 bool is_starting_job(job_type job)
