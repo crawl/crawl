@@ -1729,21 +1729,6 @@ static void _get_rune(const item_def& it, bool quiet)
         unset_level_flags(LFLAG_NO_TELE_CONTROL);
 }
 
-void start_orb_run(game_chapter chapter, const char* message)
-{
-    if (you.chapter != CHAPTER_ANGERED_PANDEMONIUM)
-    {
-        mprf(MSGCH_WARN, "The lords of Pandemonium are not amused. Beware!");
-        if (you_worship(GOD_CHEIBRIADOS))
-          simple_god_message(" tells them not to hurry.");
-    }
-
-    mprf(MSGCH_ORB, "%s", message);
-    you.chapter = chapter;
-    xom_is_stimulated(200, XM_INTRIGUED);
-    invalidate_agrid(true);
-}
-
 /**
  * Place the Orb of Zot into the player's inventory.
  *
