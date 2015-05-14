@@ -222,10 +222,6 @@ static void _give_items_skills(const newgame_def& ng)
         // Equipment.
         newgame_make_item(OBJ_WEAPONS, ng.weapon);
 
-        newgame_make_item(OBJ_ARMOUR, ARM_SCALE_MAIL);
-        newgame_make_item(OBJ_ARMOUR, ARM_SHIELD);
-        newgame_make_item(OBJ_POTIONS, POT_MIGHT);
-
         // Skills.
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_SHIELDS]  = 3;
@@ -239,10 +235,6 @@ static void _give_items_skills(const newgame_def& ng)
         // Equipment.
         newgame_make_item(OBJ_WEAPONS, ng.weapon);
 
-        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
-        newgame_make_item(OBJ_ARMOUR, ARM_HELMET);
-        newgame_make_item(OBJ_MISSILES, MI_THROWING_NET, 3);
-
         // Skills.
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_THROWING] = 2;
@@ -251,8 +243,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_MONK:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-
         you.skills[SK_FIGHTING]       = 3;
         you.skills[SK_UNARMED_COMBAT] = 4;
         you.skills[SK_DODGING]        = 3;
@@ -265,9 +255,6 @@ static void _give_items_skills(const newgame_def& ng)
 
         // WEAPONS
         newgame_make_item(OBJ_WEAPONS, ng.weapon);
-
-        // ARMOUR
-        newgame_make_item(OBJ_ARMOUR, ARM_ANIMAL_SKIN);
 
         // SKILLS
         you.skills[SK_FIGHTING] = 3;
@@ -290,7 +277,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.gift_timeout = max(5, random2(40) + random2(40));
 
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, 0, SPWPN_CHAOS);
-        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR, 1, 2);
 
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_ARMOUR]   = 1;
@@ -309,7 +295,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.piety = 38;
 
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
-        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
 
         you.skills[SK_FIGHTING]    = 3;
         you.skills[SK_ARMOUR]      = 1;
@@ -325,8 +310,6 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_SKALD:
         newgame_make_item(OBJ_WEAPONS, ng.weapon);
-        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
-        newgame_make_item(OBJ_BOOKS, BOOK_BATTLE);
 
         you.skills[SK_FIGHTING]     = 2;
         you.skills[SK_ARMOUR]       = 1;
@@ -339,13 +322,6 @@ static void _give_items_skills(const newgame_def& ng)
     case JOB_WARPER:
         newgame_make_item(OBJ_WEAPONS, ng.weapon);
 
-        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
-        newgame_make_item(OBJ_BOOKS, BOOK_SPATIAL_TRANSLOCATIONS);
-
-        // One free escape.
-        newgame_make_item(OBJ_SCROLLS, SCR_BLINKING);
-        newgame_make_item(OBJ_MISSILES, MI_TOMAHAWK, 5, 0, SPMSL_DISPERSAL);
-
         you.skills[SK_FIGHTING]       = 2;
         you.skills[SK_ARMOUR]         = 1;
         you.skills[SK_DODGING]        = 2;
@@ -356,10 +332,7 @@ static void _give_items_skills(const newgame_def& ng)
     break;
 
     case JOB_ARCANE_MARKSMAN:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
         _give_ranged_weapon(ng.weapon, 0, 2);
-
-        newgame_make_item(OBJ_BOOKS, BOOK_DEBILITATION);
 
         you.skills[SK_FIGHTING]                   = 1;
         you.skills[SK_DODGING]                    = 2;
@@ -382,10 +355,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_CONJURER:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-
-        newgame_make_item(OBJ_BOOKS, BOOK_CONJURATIONS);
-
         you.skills[SK_CONJURATIONS] = 4;
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_DODGING]      = 2;
@@ -393,10 +362,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_ENCHANTER:
-        newgame_make_item(OBJ_WEAPONS, WPN_DAGGER, 1, +1);
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE, 1, +1);
-        newgame_make_item(OBJ_BOOKS, BOOK_MALEDICT);
-
         weap_skill = 1;
         you.skills[SK_HEXES]        = 3;
         you.skills[SK_SPELLCASTING] = 2;
@@ -405,9 +370,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_SUMMONER:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_CALLINGS);
-
         you.skills[SK_SUMMONINGS]   = 4;
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_DODGING]      = 2;
@@ -415,9 +377,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_NECROMANCER:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_NECROMANCY);
-
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_NECROMANCY]   = 4;
         you.skills[SK_DODGING]      = 2;
@@ -425,11 +384,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_TRANSMUTER:
-        // Some sticks for sticks to snakes.
-        newgame_make_item(OBJ_MISSILES, MI_ARROW, 12);
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_CHANGES);
-
         you.skills[SK_FIGHTING]       = 1;
         you.skills[SK_UNARMED_COMBAT] = 3;
         you.skills[SK_DODGING]        = 2;
@@ -438,9 +392,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_FIRE_ELEMENTALIST:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_FLAMES);
-
         you.skills[SK_CONJURATIONS] = 1;
         you.skills[SK_FIRE_MAGIC]   = 3;
         you.skills[SK_SPELLCASTING] = 2;
@@ -449,9 +400,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_ICE_ELEMENTALIST:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_FROST);
-
         you.skills[SK_CONJURATIONS] = 1;
         you.skills[SK_ICE_MAGIC]    = 3;
         you.skills[SK_SPELLCASTING] = 2;
@@ -460,9 +408,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_AIR_ELEMENTALIST:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_AIR);
-
         you.skills[SK_CONJURATIONS] = 1;
         you.skills[SK_AIR_MAGIC]    = 3;
         you.skills[SK_SPELLCASTING] = 2;
@@ -471,10 +416,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_EARTH_ELEMENTALIST:
-        newgame_make_item(OBJ_MISSILES, MI_STONE, 20);
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_GEOMANCY);
-
         you.skills[SK_TRANSMUTATIONS] = 1;
         you.skills[SK_EARTH_MAGIC]    = 3;
         you.skills[SK_SPELLCASTING]   = 2;
@@ -483,9 +424,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_VENOM_MAGE:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_YOUNG_POISONERS);
-
         you.skills[SK_POISON_MAGIC] = 4;
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_DODGING]      = 2;
@@ -493,15 +431,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_ASSASSIN:
-        newgame_make_item(OBJ_WEAPONS, WPN_DAGGER, 1, +2);
-        newgame_make_item(OBJ_WEAPONS, WPN_BLOWGUN);
-
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_ARMOUR, ARM_CLOAK);
-
-        newgame_make_item(OBJ_MISSILES, MI_NEEDLE, 8, 0, SPMSL_POISONED);
-        newgame_make_item(OBJ_MISSILES, MI_NEEDLE, 2, 0, SPMSL_CURARE);
-
         weap_skill = 2;
         you.skills[SK_FIGHTING]     = 2;
         you.skills[SK_DODGING]      = 1;
@@ -510,10 +439,7 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_HUNTER:
-        newgame_make_item(OBJ_WEAPONS, WPN_SHORT_SWORD);
         _give_ranged_weapon(ng.weapon, 1, 4);
-
-        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
 
         // Skills.
         you.skills[SK_FIGHTING] = 2;
@@ -526,16 +452,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_ARTIFICER:
-        // Equipment. Short sword, wands, and armour or robe.
-        newgame_make_item(OBJ_WEAPONS, WPN_SHORT_SWORD);
-
-        newgame_make_item(OBJ_WANDS, WAND_FLAME, 1, 15);
-        newgame_make_item(OBJ_WANDS, WAND_ENSLAVEMENT, 1, 15);
-        newgame_make_item(OBJ_WANDS, WAND_RANDOM_EFFECTS, 1, 15);
-
-        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
-
-        // Skills
         you.skills[SK_EVOCATIONS]  = 3;
         you.skills[SK_DODGING]     = 2;
         you.skills[SK_FIGHTING]    = 1;
@@ -546,6 +462,8 @@ static void _give_items_skills(const newgame_def& ng)
     default:
         break;
     }
+
+    give_job_equipment(you.char_class);
 
     // Deep Dwarves get a wand of heal wounds (5).
     if (you.species == SP_DEEP_DWARF)
