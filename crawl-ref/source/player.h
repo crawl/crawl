@@ -1078,6 +1078,7 @@ bool need_expiration_warning(coord_def p = you.pos());
 
 void count_action(caction_type type, int subtype = 0);
 bool player_has_orb();
+bool player_on_orb_run();
 
 #if TAG_MAJOR_VERSION == 34
 enum temperature_level
