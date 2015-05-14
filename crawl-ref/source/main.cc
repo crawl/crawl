@@ -1705,10 +1705,9 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
     }
 
     if (!down && player_in_branch(BRANCH_ZOT) && you.depth == 5
-              && you.chapter == CHAPTER_ANGERED_PANDEMONIUM)
+        && you.chapter == CHAPTER_ANGERED_PANDEMONIUM)
     {
-        if (!yesno("Really leave the Orb behind? Pandemonium will still be angry with you!",
-                   false, 'n'))
+        if (!yesno("Really leave the Orb behind?", false, 'n'))
         {
             canned_msg(MSG_OK);
             return false;
