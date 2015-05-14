@@ -2668,13 +2668,17 @@ static bool _cancel_confused_move(bool stationary)
     monster *bad_mons = 0;
     string bad_suff, bad_adj;
     bool penance = false;
+    bool flight = false;
     for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
     {
         if (!stationary
-            && is_feat_dangerous(grd(*ai))
+            && is_feat_dangerous(grd(*ai), true)
+            && need_expiration_warning(grd(*ai))
             && (dangerous == DNGN_FLOOR || grd(*ai) == DNGN_LAVA))
         {
             dangerous = grd(*ai);
+            if (need_expiration_warning(DUR_FLIGHT, grd(*ai)))
+                flight = true;
             break;
         }
         else
@@ -2702,7 +2706,11 @@ static bool _cancel_confused_move(bool stationary)
         prompt += " while confused and next to ";
 
         if (dangerous != DNGN_FLOOR)
+        {
             prompt += (dangerous == DNGN_LAVA ? "lava" : "deep water");
+            prompt += flight ? " while you are losing your buoyancy"
+                             : " while your transformation is expiring";
+        }
         else
         {
             string name = bad_mons->name(DESC_PLAIN);
@@ -3126,7 +3134,7 @@ static void _move_player(coord_def move)
             // abuse, since trying to move (not attack) takes no time, and
             // shouldn't. Just force confused trees to use ctrl.
             mpr("You cannot move. (Use ctrl+direction to attack without "
-                "moving)");
+                "moving.)");
             return;
         }
 
@@ -3139,7 +3147,12 @@ static void _move_player(coord_def move)
             move.y = random2(3) - 1;
             you.reset_prev_move();
             if (move.origin())
+            {
                 mpr("You're too confused to move!");
+                you.apply_berserk_penalty = true;
+                you.turn_is_over = true;
+                return;
+            }
         }
 
         const coord_def new_targ = you.pos() + move;
@@ -3330,6 +3343,15 @@ static void _move_player(coord_def move)
 
     if (!attacking && targ_pass && moving && !beholder && !fmonger)
     {
+        if (you.confused() && is_feat_dangerous(env.grid(targ)))
+        {
+            mprf("You nearly stumble into %s!",
+                 feature_description_at(targ, false, DESC_THE, false).c_str());
+            you.apply_berserk_penalty = true;
+            you.turn_is_over = true;
+            return;
+        }
+
         if (!you.confused() && !check_moveto(targ, walkverb))
         {
             stop_running();
