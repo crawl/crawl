@@ -1704,6 +1704,17 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
         return false;
     }
 
+    if (!down && player_in_branch(BRANCH_ZOT) && you.depth == 5
+              && you.chapter == CHAPTER_ANGERED_PANDEMONIUM)
+    {
+        if (!yesno("Really leave the Orb behind? Pandemonium will still be angry with you!",
+                   false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+      }
+
     // Escaping.
     if (!down && ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
     {

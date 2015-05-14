@@ -568,7 +568,7 @@ bool player_in_hell()
  */
 bool player_in_starting_abyss()
 {
-    return you.char_direction == GDT_GAME_START
+    return you.chapter == CHAPTER_POCKET_ABYSS
            && player_in_branch(BRANCH_ABYSS) && you.depth <= 1;
 }
 
@@ -5150,7 +5150,7 @@ void player::init()
     old_vehumet_gifts.clear();
     spell_no        = 0;
     vehumet_gifts.clear();
-    char_direction  = GDT_DESCENDING;
+    chapter  = CHAPTER_ORB_HUNTING;
     royal_jelly_dead = false;
     transform_uncancellable = false;
     fishtail = false;
@@ -7854,12 +7854,20 @@ int player_monster_detect_radius()
 }
 
 /**
+ * Return true if the player has angered Pandemonium by picking up or moving the Orb of Zot.
+ */
+bool player_on_orb_run()
+{
+    return you.chapter == CHAPTER_ESCAPING || you.chapter == CHAPTER_ANGERED_PANDEMONIUM;
+}
+
+/**
  * Return true if the player has the Orb of Zot.
  * @return  True if the player has the Orb, false otherwise.
  */
 bool player_has_orb()
 {
-    return you.char_direction == GDT_ASCENDING;
+    return you.chapter == CHAPTER_ESCAPING;
 }
 
 bool player::form_uses_xl() const

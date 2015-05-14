@@ -344,7 +344,7 @@ void spawn_random_monsters()
     if (crawl_state.game_is_arena()
         || (crawl_state.game_is_sprint()
             && player_in_connected_branch()
-            && you.char_direction == GDT_DESCENDING))
+            && you.chapter == CHAPTER_ORB_HUNTING))
     {
         return;
     }
@@ -364,7 +364,7 @@ void spawn_random_monsters()
     if (player_in_branch(BRANCH_VESTIBULE))
         rate = _vestibule_spawn_rate();
 
-    if (player_has_orb())
+    if (player_on_orb_run())
         rate = you_worship(GOD_CHEIBRIADOS) ? 16 : 8;
     else if (!player_in_starting_abyss())
         rate = _scale_spawn_parameter(rate, 6 * rate, 0);
@@ -391,7 +391,7 @@ void spawn_random_monsters()
     // spawns in Abyss to show some mercy to players that get banished there on
     // the orb run.
     if (player_in_connected_branch()
-        || (player_has_orb() && !player_in_branch(BRANCH_ABYSS)))
+        || (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS)))
     {
         dprf(DIAG_MONPLACE, "Placing monster, rate: %d, turns here: %d",
              rate, env.turns_on_level);
@@ -399,12 +399,12 @@ void spawn_random_monsters()
                                                  : PROX_AWAY_FROM_PLAYER);
 
         // The rules change once the player has picked up the Orb...
-        if (player_has_orb())
+        if (player_on_orb_run())
             prox = (one_chance_in(3) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE);
 
         mgen_data mg(WANDERING_MONSTER);
         mg.proximity = prox;
-        mg.foe = (player_has_orb()) ? MHITYOU : MHITNOT;
+        mg.foe = (player_on_orb_run()) ? MHITYOU : MHITNOT;
         mons_place(mg);
         viewwindow();
         return;
@@ -3709,7 +3709,7 @@ monster* mons_place(mgen_data mg)
 
     // This gives a slight challenge to the player as they ascend the
     // dungeon with the Orb.
-    if (_is_random_monster(mg.cls) && player_has_orb()
+    if (_is_random_monster(mg.cls) && player_on_orb_run()
         && !player_in_branch(BRANCH_ABYSS) && !mg.summoned())
     {
 #ifdef DEBUG_MON_CREATION

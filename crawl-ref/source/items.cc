@@ -1740,7 +1740,6 @@ static void _get_orb(const item_def &it, bool quiet)
     run_animation(ANIMATION_ORB, UA_PICKUP);
 
     mprf(MSGCH_ORB, "You pick up the Orb of Zot!");
-    you.char_direction = GDT_ASCENDING;
 
     env.orb_pos = you.pos(); // can be wrong in wizmode
     orb_pickup_noise(you.pos(), 30);
@@ -1751,15 +1750,7 @@ static void _get_orb(const item_def &it, bool quiet)
         you.increase_duration(DUR_TELEPORT, 5 + random2(5));
     }
 
-    mprf(MSGCH_WARN, "The lords of Pandemonium are not amused. Beware!");
-
-    if (you_worship(GOD_CHEIBRIADOS))
-        simple_god_message(" tells them not to hurry.");
-
-    mprf(MSGCH_ORB, "Now all you have to do is get back out of the dungeon!");
-
-    xom_is_stimulated(200, XM_INTRIGUED);
-    invalidate_agrid(true);
+    start_orb_run(CHAPTER_ESCAPING, "Now all you have to do is get back out of the dungeon!");
 }
 
 /**

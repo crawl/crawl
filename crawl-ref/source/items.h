@@ -154,6 +154,8 @@ bool maybe_identify_base_type(item_def &item);
 coord_def orb_position();
 int count_movable_items(int obj);
 
+void start_orb_run(game_chapter new_chapter, const char* message);
+
 // stack_iterator guarantees validity so long as you don't manually
 // mess with item_def.link: i.e., you can kill the item you're
 // examining but you can't kill the item linked to it.
