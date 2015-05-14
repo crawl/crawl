@@ -159,6 +159,9 @@ item_def* newgame_make_item(object_class_type base,
         _autopickup_ammo(MI_STONE);
     else if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_CHANGES)
         _autopickup_ammo(MI_ARROW);
+    // You probably want to pick up both.
+    if (item.is_type(OBJ_MISSILES, MI_SLING_BULLET))
+        _autopickup_ammo(MI_STONE);
 
     origin_set_startequip(item);
 
@@ -205,7 +208,6 @@ static void _give_ranged_weapon(weapon_type weapon, int plus, int skill)
         newgame_make_item(OBJ_WEAPONS, WPN_HUNTING_SLING, 1, plus);
         newgame_make_item(OBJ_MISSILES, MI_SLING_BULLET, 20);
         you.skills[SK_SLINGS] = skill;
-        _autopickup_ammo(MI_STONE);
         break;
     default:
         break;
@@ -219,9 +221,6 @@ static void _give_items_skills(const newgame_def& ng)
     switch (you.char_class)
     {
     case JOB_FIGHTER:
-        // Equipment.
-        newgame_make_item(OBJ_WEAPONS, ng.weapon);
-
         // Skills.
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_SHIELDS]  = 3;
@@ -232,9 +231,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_GLADIATOR:
-        // Equipment.
-        newgame_make_item(OBJ_WEAPONS, ng.weapon);
-
         // Skills.
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_THROWING] = 2;
@@ -252,9 +248,6 @@ static void _give_items_skills(const newgame_def& ng)
     case JOB_BERSERKER:
         you.religion = GOD_TROG;
         you.piety = 35;
-
-        // WEAPONS
-        newgame_make_item(OBJ_WEAPONS, ng.weapon);
 
         // SKILLS
         you.skills[SK_FIGHTING] = 3;
@@ -276,8 +269,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.piety = 100;
         you.gift_timeout = max(5, random2(40) + random2(40));
 
-        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, 0, SPWPN_CHAOS);
-
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_ARMOUR]   = 1;
         you.skills[SK_DODGING]  = 1;
@@ -294,8 +285,6 @@ static void _give_items_skills(const newgame_def& ng)
             you.char_direction = GDT_GAME_START;
         you.piety = 38;
 
-        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
-
         you.skills[SK_FIGHTING]    = 3;
         you.skills[SK_ARMOUR]      = 1;
         you.skills[SK_DODGING]     = 1;
@@ -309,8 +298,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_SKALD:
-        newgame_make_item(OBJ_WEAPONS, ng.weapon);
-
         you.skills[SK_FIGHTING]     = 2;
         you.skills[SK_ARMOUR]       = 1;
         you.skills[SK_DODGING]      = 1;
@@ -320,8 +307,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_WARPER:
-        newgame_make_item(OBJ_WEAPONS, ng.weapon);
-
         you.skills[SK_FIGHTING]       = 2;
         you.skills[SK_ARMOUR]         = 1;
         you.skills[SK_DODGING]        = 2;
@@ -332,8 +317,6 @@ static void _give_items_skills(const newgame_def& ng)
     break;
 
     case JOB_ARCANE_MARKSMAN:
-        _give_ranged_weapon(ng.weapon, 0, 2);
-
         you.skills[SK_FIGHTING]                   = 1;
         you.skills[SK_DODGING]                    = 2;
         you.skills[SK_SPELLCASTING]               = 1;
@@ -341,11 +324,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_WIZARD:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_ARMOUR, ARM_HAT);
-
-        newgame_make_item(OBJ_BOOKS, BOOK_MINOR_MAGIC);
-
         you.skills[SK_DODGING]        = 2;
         you.skills[SK_STEALTH]        = 2;
         you.skills[SK_SPELLCASTING]   = 3;
@@ -439,8 +417,6 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_HUNTER:
-        _give_ranged_weapon(ng.weapon, 1, 4);
-
         // Skills.
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_DODGING]  = 2;
@@ -462,6 +438,18 @@ static void _give_items_skills(const newgame_def& ng)
     default:
         break;
     }
+
+    if (you.char_class == JOB_ABYSSAL_KNIGHT)
+        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
+    else if (you.char_class == JOB_CHAOS_KNIGHT)
+        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, 0, SPWPN_CHAOS);
+    else if (job_gets_ranged_weapons(you.char_class))
+    {
+        _give_ranged_weapon(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0,
+                                       you.char_class == JOB_HUNTER ? 4 : 2);
+    }
+    else if (job_has_weapon_choice(you.char_class))
+        newgame_make_item(OBJ_WEAPONS, ng.weapon);
 
     give_job_equipment(you.char_class);
 
