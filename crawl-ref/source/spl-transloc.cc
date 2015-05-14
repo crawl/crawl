@@ -1004,13 +1004,6 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         return SPRET_ABORT;
     }
 
-    // Can't apport the Orb in sprint
-    if (item_is_orb(item) && crawl_state.game_is_sprint())
-    {
-        mpr("You cannot apport the Orb!");
-        return SPRET_ABORT;
-    }
-
     fail_check();
 
     // We need to modify the item *before* we move it, because
