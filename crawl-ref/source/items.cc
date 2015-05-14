@@ -1740,7 +1740,7 @@ static void _get_orb(const item_def &it, bool quiet)
     run_animation(ANIMATION_ORB, UA_PICKUP);
 
     mprf(MSGCH_ORB, "You pick up the Orb of Zot!");
-    you.char_direction = GDT_ASCENDING;
+    you.chapter = CHAPTER_ESCAPING;
 
     env.orb_pos = you.pos(); // can be wrong in wizmode
     orb_pickup_noise(you.pos(), 30);

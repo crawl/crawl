@@ -1295,11 +1295,13 @@ enum evoc_type
 #endif
 };
 
-enum game_direction_type
+enum game_chapter
 {
-    GDT_GAME_START = 0,
-    GDT_DESCENDING,
-    GDT_ASCENDING,
+    CHAPTER_POCKET_ABYSS = 0, // an AK who hasn't yet entered the dungeon
+    CHAPTER_ORB_HUNTING, // entered the dungeon but not found the orb yet
+    CHAPTER_ESCAPING, // ascending with the orb
+    CHAPTER_ANGERED_PANDEMONIUM, // moved the orb without picking it up
+    NUM_CHAPTERS,
 };
 
 enum game_type
