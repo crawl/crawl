@@ -591,7 +591,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         take_note(Note(NOTE_MESSAGE, 0, 0, "Took an exit into the Abyss."), true);
     }
     else if (stair_find == DNGN_EXIT_ABYSS
-             && you.char_direction != GDT_GAME_START)
+             && you.chapter != CHAPTER_POCKET_ABYSS)
     {
         mark_milestone("abyss.exit", "escaped from the Abyss!");
         you.attribute[ATTR_BANISHMENT_IMMUNITY] = you.elapsed_time + 100
@@ -669,7 +669,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         && old_level.branch != you.where_are_you)
     {
         mprf("Welcome %sto %s!",
-             you.char_direction == GDT_GAME_START ? "" : "back ",
+             you.chapter == CHAPTER_POCKET_ABYSS ? "" : "back ",
              branches[you.where_are_you].longname);
     }
 
@@ -929,7 +929,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         return level_id(BRANCH_VESTIBULE);
 
     case DNGN_EXIT_ABYSS:
-        if (you.char_direction == GDT_GAME_START)
+        if (you.chapter == CHAPTER_POCKET_ABYSS)
             return level_id(BRANCH_DUNGEON, 1);
 #if TAG_MAJOR_VERSION == 34
     case DNGN_EXIT_PORTAL_VAULT:

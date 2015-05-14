@@ -134,7 +134,7 @@ public:
   set<spell_type> old_vehumet_gifts, vehumet_gifts;
 
   uint8_t spell_no;
-  game_direction_type char_direction;
+  game_chapter chapter;
   bool royal_jelly_dead;
   bool transform_uncancellable;
   bool fishtail; // Merfolk fishtail transformation

@@ -1324,7 +1324,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.max_level);
     marshallByte(th, you.where_are_you);
     marshallByte(th, you.depth);
-    marshallByte(th, you.char_direction);
+    marshallByte(th, you.chapter);
     marshallByte(th, you.royal_jelly_dead);
     marshallByte(th, you.transform_uncancellable);
     marshallByte(th, you.berserk_penalty);
@@ -2125,8 +2125,8 @@ static void tag_read_you(reader &th)
     ASSERT(you.where_are_you < NUM_BRANCHES);
     you.depth             = unmarshallByte(th);
     ASSERT(you.depth > 0);
-    you.char_direction    = static_cast<game_direction_type>(unmarshallUByte(th));
-    ASSERT(you.char_direction <= GDT_ASCENDING);
+    you.chapter           = static_cast<game_chapter>(unmarshallUByte(th));
+    ASSERT(you.chapter < NUM_CHAPTERS);
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_ZOT_OPEN)

@@ -261,7 +261,7 @@ static void _post_init(bool newc)
     run_map_local_preludes();
 
     // Abyssal Knights start out in the Abyss.
-    if (newc && you.char_direction == GDT_GAME_START)
+    if (newc && you.chapter == CHAPTER_POCKET_ABYSS)
         you.where_are_you = BRANCH_ABYSS;
     else if (newc)
         you.where_are_you = root_branch;
@@ -278,7 +278,7 @@ static void _post_init(bool newc)
                newc               ? LOAD_START_GAME : LOAD_RESTART_GAME,
                old_level);
 
-    if (newc && you.char_direction == GDT_GAME_START)
+    if (newc && you.chapter == CHAPTER_POCKET_ABYSS)
         generate_abyss();
 
 #ifdef DEBUG_DIAGNOSTICS

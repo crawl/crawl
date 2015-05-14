@@ -1143,13 +1143,13 @@ static void _make_level(dungeon_feature_type stair_taken,
 
     env.turns_on_level = -1;
 
-    if (you.char_direction == GDT_GAME_START
+    if (you.chapter == CHAPTER_POCKET_ABYSS
         && player_in_branch(BRANCH_DUNGEON))
     {
         // If we're leaving the Abyss for the first time as a Chaos
         // Knight of Lugonu (who start out there), enable normal monster
         // generation.
-        you.char_direction = GDT_DESCENDING;
+        you.chapter = CHAPTER_ORB_HUNTING;
     }
 
     tile_init_default_flavour();
