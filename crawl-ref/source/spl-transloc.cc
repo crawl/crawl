@@ -1034,6 +1034,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
             orb_pickup_noise(where, 30,
                 "The Orb shrieks as your magic touches it!",
                 "The Orb lets out a furious burst of light as your magic touches it!");
+            start_orb_run(CHAPTER_ANGERED_PANDEMONIUM, "Now pick up the Orb and get out of here!");
         }
     }
 
