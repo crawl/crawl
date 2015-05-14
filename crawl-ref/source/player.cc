@@ -7854,11 +7854,13 @@ int player_monster_detect_radius()
 }
 
 /**
- * Return true if the player has angered Pandemonium by picking up or moving the Orb of Zot.
+ * Return true if the player has angered Pandemonium by picking up or moving
+ * the Orb of Zot.
  */
 bool player_on_orb_run()
 {
-    return you.chapter == CHAPTER_ESCAPING || you.chapter == CHAPTER_ANGERED_PANDEMONIUM;
+    return you.chapter == CHAPTER_ESCAPING
+           || you.chapter == CHAPTER_ANGERED_PANDEMONIUM;
 }
 
 /**
