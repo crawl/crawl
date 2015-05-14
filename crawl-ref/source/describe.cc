@@ -3329,7 +3329,7 @@ static string _monster_spells_description(const monster_info& mi)
 
     formatted_string description;
     describe_spellset(monster_spellset(mi), nullptr, description);
-    description.cprintf("Select a spell to read its description.\n");
+    description.cprintf("To read a description, press the key listed above.\n");
     return description.tostring();
 }
 
