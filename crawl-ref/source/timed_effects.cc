@@ -729,7 +729,7 @@ static void _handle_magic_contamination()
     // The Orb halves dissipation (well a bit more, I had to round it),
     // but won't cause glow on its own -- otherwise it'd spam the player
     // with messages about contamination oscillating near zero.
-    if (you.magic_contamination && orb_haloed(you.pos()))
+    if (you.magic_contamination && player_has_orb())
         added_contamination += 13;
 
     // Normal dissipation

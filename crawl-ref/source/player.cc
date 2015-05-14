@@ -3263,7 +3263,7 @@ int check_stealth()
     }
     // The shifting glow from the Orb, while too unstable to negate invis
     // or affect to-hit, affects stealth even more than regular glow.
-    if (orb_haloed(you.pos()))
+    if (player_has_orb())
         stealth /= 3;
 
     stealth = max(0, stealth);

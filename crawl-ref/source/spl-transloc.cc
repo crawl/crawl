@@ -465,7 +465,7 @@ spret_type cast_controlled_blink(int pow, bool fail, bool safe)
 bool allow_control_teleport(bool quiet)
 {
     // Attempt to order from most to least permanent.
-    if (orb_haloed(you.pos()))
+    if (player_has_orb())
     {
         if (!quiet)
             mprf(MSGCH_ORB, "The Orb prevents control of your teleportation!");
@@ -527,7 +527,7 @@ void you_teleport()
             mpr("You feel the power of the Abyss delaying your translocation.");
             teleport_delay += 5 + random2(10);
         }
-        else if (orb_haloed(you.pos()))
+        else if (player_has_orb())
         {
             mprf(MSGCH_ORB, "You feel the Orb delaying this translocation!");
             teleport_delay += 5 + random2(5);
