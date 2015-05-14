@@ -1701,7 +1701,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
 static vector<weapon_choice> _get_weapons(const newgame_def* ng)
 {
     vector<weapon_choice> weapons;
-    if (ng->job == JOB_HUNTER || ng->job == JOB_ARCANE_MARKSMAN)
+    if (job_gets_ranged_weapons(ng->job))
     {
         weapon_type startwep[4] = { WPN_THROWN, WPN_HUNTING_SLING,
                                     WPN_SHORTBOW, WPN_HAND_CROSSBOW };
@@ -1725,39 +1725,41 @@ static vector<weapon_choice> _get_weapons(const newgame_def* ng)
         {
             weapon_choice wp;
             wp.first = startwep[i];
+            const bool good = job_gets_good_weapons(ng->job);
 
             switch (wp.first)
             {
             case WPN_SHORT_SWORD:
-                // Gladiators and fighters get rapieres.
-                if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER)
+                if (good)
                     wp.first = WPN_RAPIER;
                 break;
             case WPN_MACE:
-                // Gladiators and fighters get flails.
-                if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER)
+                if (good)
                     wp.first = WPN_FLAIL;
                 break;
             case WPN_HAND_AXE:
-                // Gladiators and non-little fighters get war axes.
-                if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER
-                      && species_size(ng->species, PSIZE_BODY) > SIZE_LITTLE)
+                // Little fighters can't use war axes with a shield.
+                if (good
+                    && !(ng->job == JOB_FIGHTER
+                         && species_size(ng->species, PSIZE_BODY) > SIZE_LITTLE))
                 {
                     wp.first = WPN_WAR_AXE;
                 }
                 break;
             case WPN_SPEAR:
-                // Gladiators and non-small fighters get tridents.
-                if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER
-                      && species_size(ng->species, PSIZE_BODY) > SIZE_SMALL)
+                // Small fighters can't use tridents with a shield.
+                if (good
+                    && !(ng->job == JOB_FIGHTER
+                         && species_size(ng->species, PSIZE_BODY) > SIZE_SMALL))
                 {
                     wp.first = WPN_TRIDENT;
                 }
                 break;
             case WPN_FALCHION:
-                // Gladiators and non-little fighters get long swords.
-                if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER
-                      && species_size(ng->species, PSIZE_BODY) > SIZE_LITTLE)
+                // Little fighters can't use long swords with a shield.
+                if (good
+                    && !(ng->job == JOB_FIGHTER
+                         && species_size(ng->species, PSIZE_BODY) > SIZE_LITTLE))
                 {
                     wp.first = WPN_LONG_SWORD;
                 }
@@ -1825,21 +1827,8 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     if (ng->species == SP_FELID)
         return true;
 
-    switch (ng->job)
-    {
-    case JOB_FIGHTER:
-    case JOB_GLADIATOR:
-    case JOB_BERSERKER:
-    case JOB_CHAOS_KNIGHT:
-    case JOB_ABYSSAL_KNIGHT:
-    case JOB_SKALD:
-    case JOB_WARPER:
-    case JOB_HUNTER:
-    case JOB_ARCANE_MARKSMAN:
-        break;
-    default:
+    if (!job_has_weapon_choice(ng->job))
         return true;
-    }
 
     vector<weapon_choice> weapons = _get_weapons(ng);
 
