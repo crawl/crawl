@@ -344,7 +344,7 @@ void spawn_random_monsters()
     if (crawl_state.game_is_arena()
         || (crawl_state.game_is_sprint()
             && player_in_connected_branch()
-            && you.char_direction == GDT_DESCENDING))
+            && you.chapter == CHAPTER_ORB_HUNTING))
     {
         return;
     }
