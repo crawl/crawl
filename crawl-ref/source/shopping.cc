@@ -1784,12 +1784,12 @@ unsigned int item_value(item_def item, bool ident)
     case OBJ_MISCELLANY:
         switch (item.sub_type)
         {
-        case MISC_RUNE_OF_ZOT:  // upped from 1200 to encourage collecting
+        case MISC_RUNE_OF_ZOT:
             valued += 10000;
             break;
 
         case MISC_HORN_OF_GERYON:
-            valued += 5000;
+            valued += 600;
             break;
 
         case MISC_FAN_OF_GALES:
