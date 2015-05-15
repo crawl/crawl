@@ -2790,6 +2790,10 @@ bool gives_resistance(const item_def &item)
 
 bool is_item_jelly_edible(const item_def &item)
 {
+    // Don't eat items that the player has seen.
+    if (item.flags & ISFLAG_SEEN && !you_worship(GOD_JIYVA))
+        return false;
+
     // Don't eat artefacts.
     if (is_artefact(item))
         return false;
