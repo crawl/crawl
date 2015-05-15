@@ -1493,6 +1493,8 @@ static void tag_construct_you(writer &th)
         marshallByte(th, you.piety_max[i]);
 
     marshallByte(th, you.gift_timeout);
+    marshallUByte(th, you.saved_good_god_piety);
+    marshallByte(th, you.previous_good_god);
 
     for (int i = 0; i < NUM_GODS; i++)
         marshallInt(th, you.exp_docked[i]);
@@ -2902,6 +2904,11 @@ static void tag_read_you(reader &th)
     you.gift_timeout   = unmarshallByte(th);
 
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_SAVED_PIETY)
+    {
+        you.saved_good_god_piety = unmarshallUByte(th);
+        you.previous_good_god = static_cast<god_type>(unmarshallByte(th));
+    }
     if (th.getMinorVersion() < TAG_MINOR_BRANCH_ENTRY)
     {
         int depth = unmarshallByte(th);

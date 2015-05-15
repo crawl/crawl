@@ -2717,7 +2717,7 @@ static string _god_hates_your_god_reaction(god_type god, god_type your_god)
     return "";
 }
 
-void excommunication(god_type new_god, bool immediate)
+void excommunication(god_type new_god, bool immediate, bool voluntary)
 {
     const god_type old_god = you.religion;
     ASSERT(old_god != new_god);
@@ -2735,6 +2735,19 @@ void excommunication(god_type new_god, bool immediate)
     you.duration[DUR_RECITE] = 0;
     you.piety = 0;
     you.piety_hysteresis = 0;
+
+    // so that the player isn't punished for "switching" between good gods via aX
+    if (is_good_god(old_god))
+    {
+        you.saved_good_god_piety = old_piety;
+        you.previous_good_god = old_god;
+    }
+    else
+    {
+        you.saved_good_god_piety = 0;
+        you.previous_good_god = GOD_NO_GOD;
+    }
+
     if (old_god == GOD_ASHENZARI)
         ash_init_bondage(&you);
 
@@ -3347,7 +3360,7 @@ void join_religion(god_type which_god, bool immediate)
 
     // Leave your prior religion first.
     if (!you_worship(GOD_NO_GOD))
-        excommunication(which_god, immediate);
+        excommunication(which_god, immediate, true);
 
     // Welcome to the fold!
     you.religion = static_cast<god_type>(which_god);
@@ -3492,29 +3505,39 @@ void join_religion(god_type which_god, bool immediate)
     // interesting.
     you.penance[you.religion] = 0;
 
-    if (is_good_god(you.religion) && is_good_god(old_god))
+    if (is_good_god(you.religion))
     {
-        // Some feedback that piety moved over.
-        switch (you.religion)
+        uint8_t effective_old_piety = old_piety;
+        god_type effective_old_god = old_god;
+        if (you.previous_good_god != GOD_NO_GOD)
         {
-        case GOD_ELYVILON:
-            simple_god_message((" says: Farewell. Go and aid the meek with "
-                               + god_name(you.religion) + ".").c_str(), old_god);
-            break;
-        case GOD_SHINING_ONE:
-            simple_god_message((" says: Farewell. Go and vanquish evil with "
-                               + god_name(you.religion) + ".").c_str(), old_god);
-            break;
-        case GOD_ZIN:
-            simple_god_message((" says: Farewell. Go and enforce order with "
-                               + god_name(you.religion) + ".").c_str(), old_god);
-            break;
-        default:
-            mprf(MSGCH_ERROR, "Unknown good god.");
+            effective_old_god = you.previous_good_god;
+            effective_old_piety = you.saved_good_god_piety;
         }
-        // Give a piety bonus when switching between good gods.
-        if (old_piety > piety_breakpoint(0))
-            gain_piety(old_piety - piety_breakpoint(0), 2, false);
+        if (is_good_god(effective_old_god))
+        {
+            // Some feedback that piety moved over.
+            switch (you.religion)
+            {
+            case GOD_ELYVILON:
+                simple_god_message((" says: Farewell. Go and aid the meek with "
+                                   + god_name(you.religion) + ".").c_str(), effective_old_god);
+                break;
+            case GOD_SHINING_ONE:
+                simple_god_message((" says: Farewell. Go and vanquish evil with "
+                                   + god_name(you.religion) + ".").c_str(), effective_old_god);
+                break;
+            case GOD_ZIN:
+                simple_god_message((" says: Farewell. Go and enforce order with "
+                                   + god_name(you.religion) + ".").c_str(), effective_old_god);
+                break;
+            default:
+                mprf(MSGCH_ERROR, "Unknown good god.");
+            }
+            // Give a piety bonus when switching between good gods.
+            if (effective_old_piety > piety_breakpoint(0))
+                gain_piety(effective_old_piety - piety_breakpoint(0), 2, false);
+        }
     }
 
     // Warn if a good god is starting wrath now.
@@ -3623,6 +3646,10 @@ void join_religion(god_type which_god, bool immediate)
 #endif
         }
     }
+
+    // now that you have a god, you can't have any saved piety for your previous god
+    you.previous_good_god = GOD_NO_GOD;
+    you.saved_good_god_piety = 0;
 
     // Refresh wielded/quivered weapons in case we have a new conduct
     // on them.

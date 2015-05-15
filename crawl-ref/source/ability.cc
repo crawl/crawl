@@ -2824,7 +2824,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             && yesno("Are you sure you won't change your mind later?",
                      false, 'n'))
         {
-            excommunication();
+            excommunication(GOD_NO_GOD, false, true);
         }
         else
         {
