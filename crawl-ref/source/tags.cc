@@ -2553,6 +2553,7 @@ static void tag_read_you(reader &th)
 #endif
         you.temp_mutation[j]    = unmarshallUByte(th);
 #if TAG_MAJOR_VERSION == 34
+        }
         if (th.getMinorVersion() < TAG_MINOR_RU_SACRIFICES)
             you.sacrifices[j]   = 0;
         else
@@ -2560,7 +2561,6 @@ static void tag_read_you(reader &th)
 #endif
         you.sacrifices[j] = unmarshallUByte(th);
 #if TAG_MAJOR_VERSION == 34
-        }
         }
 #endif
 
