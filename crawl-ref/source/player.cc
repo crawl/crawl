@@ -1046,21 +1046,6 @@ bool player_equip_unrand(int unrand_index)
     return false;
 }
 
-// Given an adjacent monster, returns true if the player can hit it (the
-// monster should not be submerged, or be submerged in shallow water if
-// the player has a polearm).
-bool player_can_hit_monster(const monster* mon)
-{
-    if (!mon->submerged())
-        return true;
-
-    if (grd(mon->pos()) != DNGN_SHALLOW_WATER)
-        return false;
-
-    const item_def *weapon = you.weapon();
-    return weapon && item_attack_skill(*weapon) == SK_POLEARMS;
-}
-
 bool player_can_hear(const coord_def& p, int hear_distance)
 {
     return !silenced(p)
