@@ -2794,8 +2794,8 @@ bool is_item_jelly_edible(const item_def &item)
     if (item.flags & ISFLAG_SEEN && !you_worship(GOD_JIYVA))
         return false;
 
-    // Don't eat artefacts.
-    if (is_artefact(item))
+    // Don't eat artefacts or the horn of Geryon.
+    if (is_artefact(item) || item_is_horn_of_geryon(item))
         return false;
 
     // Don't eat mimics.
@@ -2811,11 +2811,8 @@ bool is_item_jelly_edible(const item_def &item)
     }
 
     // Don't eat special game items.
-    if (item_is_orb(item)
-        || item_is_rune(item))
-    {
+    if (item_is_orb(item) || item_is_rune(item))
         return false;
-    }
 
     return true;
 }
