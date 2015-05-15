@@ -16,6 +16,7 @@ struct job_def
     /// charges:, q:, and ego: tags supported.
     vector<string> equipment;
     weapon_choice wchoice; ///< how the weapon is chosen, if any
+    vector<pair<skill_type, int>> skills; ///< starting skills
 };
 
 static const map<job_type, job_def> job_data =
@@ -28,6 +29,8 @@ static const map<job_type, job_def> job_data =
       SP_DEMONSPAWN, },
     { "leather armour" },
     WCHOICE_PLAIN,
+    { { SK_FIGHTING, 3 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },
+      { SK_INVOCATIONS, 2 }, { SK_WEAPON, 2 }, },
 } },
 
 { JOB_AIR_ELEMENTALIST, {
@@ -37,6 +40,8 @@ static const map<job_type, job_def> job_data =
       SP_VINE_STALKER, },
     { "robe", "book of Air" },
     WCHOICE_NONE,
+    { { SK_CONJURATIONS, 1 }, { SK_AIR_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
+      { SK_DODGING, 2 }, { SK_STEALTH, 2 }, },
 } },
 
 { JOB_ARCANE_MARKSMAN, {
@@ -45,6 +50,8 @@ static const map<job_type, job_def> job_data =
     { SP_HIGH_ELF, SP_DEEP_ELF, SP_KOBOLD, SP_SPRIGGAN, SP_TROLL, SP_CENTAUR, },
     { "robe", "book of Debilitation" },
     WCHOICE_RANGED,
+    { { SK_FIGHTING, 1 }, { SK_DODGING, 2 }, { SK_SPELLCASTING, 1 },
+      { SK_HEXES, 3 }, { SK_WEAPON, 2 }, },
 } },
 
 { JOB_ARTIFICER, {
@@ -55,6 +62,8 @@ static const map<job_type, job_def> job_data =
     { "short sword", "leather armour", "wand of flame charges:15",
       "wand of enslavement charges:15", "wand of random effects charges:15" },
     WCHOICE_NONE,
+    { { SK_EVOCATIONS, 3 }, { SK_DODGING, 2 }, { SK_FIGHTING, 1 },
+      { SK_WEAPON, 1 }, { SK_STEALTH, 1 }, },
 } },
 
 { JOB_ASSASSIN, {
@@ -65,6 +74,8 @@ static const map<job_type, job_def> job_data =
     { "dagger plus:2", "blowgun", "robe", "cloak", "needle ego:poisoned q:8",
       "needle ego:curare q:2" },
     WCHOICE_NONE,
+    { { SK_FIGHTING, 2 }, { SK_DODGING, 1 }, { SK_STEALTH, 4 },
+      { SK_THROWING, 2 }, { SK_WEAPON, 2 }, },
 } },
 
 { JOB_BERSERKER, {
@@ -74,6 +85,7 @@ static const map<job_type, job_def> job_data =
       SP_DEMONSPAWN, },
     { "animal skin" },
     WCHOICE_PLAIN,
+    { { SK_FIGHTING, 3 }, { SK_DODGING, 2 }, { SK_WEAPON, 3 }, },
 } },
 
 { JOB_CHAOS_KNIGHT, {
@@ -83,6 +95,8 @@ static const map<job_type, job_def> job_data =
       SP_BASE_DRACONIAN, SP_DEMONSPAWN, },
     { "leather armour plus:2" },
     WCHOICE_PLAIN,
+    { { SK_FIGHTING, 3 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },
+      { SK_WEAPON, 3 } },
 } },
 
 { JOB_CONJURER, {
@@ -92,6 +106,8 @@ static const map<job_type, job_def> job_data =
       SP_DEMIGOD, },
     { "robe", "book of Conjurations" },
     WCHOICE_NONE,
+    { { SK_CONJURATIONS, 4 }, { SK_SPELLCASTING, 2 }, { SK_DODGING, 2 },
+      { SK_STEALTH, 2 }, },
 } },
 
 { JOB_EARTH_ELEMENTALIST, {
@@ -101,6 +117,8 @@ static const map<job_type, job_def> job_data =
       SP_GHOUL, SP_OCTOPODE, },
     { "stone q:20", "robe", "book of Geomancy" },
     WCHOICE_NONE,
+    { { SK_TRANSMUTATIONS, 1 }, { SK_EARTH_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
+      { SK_DODGING, 2 }, { SK_STEALTH, 2 }, }
 } },
 
 { JOB_ENCHANTER, {
@@ -109,6 +127,8 @@ static const map<job_type, job_def> job_data =
     { SP_DEEP_ELF, SP_FELID, SP_KOBOLD, SP_SPRIGGAN, SP_NAGA, SP_VAMPIRE, },
     { "dagger plus:1", "robe plus:1", "book of Maledictions" },
     WCHOICE_NONE,
+    { { SK_WEAPON, 1 }, { SK_HEXES, 3 }, { SK_SPELLCASTING, 2 },
+      { SK_DODGING, 2 }, { SK_STEALTH, 3 }, },
 } },
 
 { JOB_FIGHTER, {
@@ -118,6 +138,8 @@ static const map<job_type, job_def> job_data =
       SP_CENTAUR, },
     { "scale mail", "shield", "potion of might" },
     WCHOICE_GOOD,
+    { { SK_FIGHTING, 3 }, { SK_SHIELDS, 3 }, { SK_ARMOUR, 3 },
+      { SK_WEAPON, 2 } },
 } },
 
 { JOB_FIRE_ELEMENTALIST, {
@@ -127,6 +149,8 @@ static const map<job_type, job_def> job_data =
       SP_GARGOYLE, },
     { "robe", "book of Flames" },
     WCHOICE_NONE,
+    { { SK_CONJURATIONS, 1 }, { SK_FIRE_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
+      { SK_DODGING, 2 }, { SK_STEALTH, 2 }, },
 } },
 
 { JOB_GLADIATOR, {
@@ -136,6 +160,8 @@ static const map<job_type, job_def> job_data =
       SP_CENTAUR, },
     { "leather armour", "helmet", "throwing net q:3" },
     WCHOICE_GOOD,
+    { { SK_FIGHTING, 2 }, { SK_THROWING, 2 }, { SK_DODGING, 3 },
+      { SK_WEAPON, 3}, },
 } },
 
 { JOB_HUNTER, {
@@ -145,6 +171,8 @@ static const map<job_type, job_def> job_data =
       SP_CENTAUR, },
     { "short sword", "leather armour" },
     WCHOICE_RANGED,
+    { { SK_FIGHTING, 2 }, { SK_DODGING, 2 }, { SK_STEALTH, 1 },
+      { SK_WEAPON, 4 }, },
 } },
 
 { JOB_ICE_ELEMENTALIST, {
@@ -154,6 +182,8 @@ static const map<job_type, job_def> job_data =
       SP_DEMIGOD, SP_GARGOYLE, },
     { "robe", "book of Frost" },
     WCHOICE_NONE,
+    { { SK_CONJURATIONS, 1 }, { SK_ICE_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
+      { SK_DODGING, 2 }, { SK_STEALTH, 2 }, },
 } },
 
 { JOB_MONK, {
@@ -163,6 +193,8 @@ static const map<job_type, job_def> job_data =
       SP_VAMPIRE, },
     { "robe" },
     WCHOICE_NONE,
+    { { SK_FIGHTING, 3 }, { SK_UNARMED_COMBAT, 4 }, { SK_DODGING, 3 },
+      { SK_STEALTH, 2 }, },
 } },
 
 { JOB_NECROMANCER, {
@@ -172,6 +204,8 @@ static const map<job_type, job_def> job_data =
       SP_VAMPIRE, },
     { "robe", "book of Necromancy" },
     WCHOICE_NONE,
+    { { SK_SPELLCASTING, 2 }, { SK_NECROMANCY, 4 }, { SK_DODGING, 2 },
+      { SK_STEALTH, 2 }, },
 } },
 
 { JOB_SKALD, {
@@ -181,6 +215,8 @@ static const map<job_type, job_def> job_data =
       SP_VAMPIRE, },
     { "leather armour", "book of Battle" },
     WCHOICE_PLAIN,
+    { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },
+      { SK_SPELLCASTING, 2 }, { SK_CHARMS, 3 }, { SK_WEAPON, 2 }, },
 } },
 
 { JOB_SUMMONER, {
@@ -190,6 +226,8 @@ static const map<job_type, job_def> job_data =
       SP_VAMPIRE, },
     { "robe", "book of Callings" },
     WCHOICE_NONE,
+    { { SK_SUMMONINGS, 4 }, { SK_SPELLCASTING, 2 }, { SK_DODGING, 2 },
+      { SK_STEALTH, 2 }, },
 } },
 
 { JOB_TRANSMUTER, {
@@ -199,6 +237,8 @@ static const map<job_type, job_def> job_data =
       SP_TROLL, },
     { "arrow q:12", "robe", "book of Changes" },
     WCHOICE_NONE,
+    { { SK_FIGHTING, 1 }, { SK_UNARMED_COMBAT, 3 }, { SK_DODGING, 2 },
+      { SK_SPELLCASTING, 2 }, { SK_TRANSMUTATIONS, 2 }, },
 } },
 
 { JOB_VENOM_MAGE, {
@@ -208,6 +248,8 @@ static const map<job_type, job_def> job_data =
       SP_DEMONSPAWN, },
     { "robe", "Young Poisoner's Handbook" },
     WCHOICE_NONE,
+    { { SK_POISON_MAGIC, 4 }, { SK_SPELLCASTING, 2 }, { SK_DODGING, 2 },
+      { SK_STEALTH, 2 }, },
 } },
 
 { JOB_WANDERER, {
@@ -217,6 +259,7 @@ static const map<job_type, job_def> job_data =
       SP_HUMAN, SP_DEMONSPAWN, },
     { }, // Randomised
     WCHOICE_NONE,
+    { }, // Randomised
 } },
 
 { JOB_WARPER, {
@@ -227,6 +270,9 @@ static const map<job_type, job_def> job_data =
     { "leather armour", "book of Spatial Translocations", "scroll of blinking",
       "tomahawk ego:dispersal q:5" },
     WCHOICE_PLAIN,
+    { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 2 },
+      { SK_SPELLCASTING, 2 }, { SK_TRANSLOCATIONS, 3 }, { SK_THROWING, 1 },
+      { SK_WEAPON, 2 }, },
 } },
 
 { JOB_WIZARD, {
@@ -236,6 +282,8 @@ static const map<job_type, job_def> job_data =
       SP_HUMAN, SP_MUMMY, },
     { "robe", "hat", "book of Minor Magic" },
     WCHOICE_NONE,
+    { { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_SPELLCASTING, 3 },
+      { SK_TRANSLOCATIONS, 1 }, { SK_CONJURATIONS, 1 }, { SK_SUMMONINGS, 1 }, },
 } },
 #if TAG_MAJOR_VERSION == 34
 { JOB_DEATH_KNIGHT, {
@@ -244,6 +292,7 @@ static const map<job_type, job_def> job_data =
     { },
     { },
     WCHOICE_NONE,
+    { },
 } },
 
 { JOB_HEALER, {
@@ -252,6 +301,7 @@ static const map<job_type, job_def> job_data =
     { },
     { },
     WCHOICE_NONE,
+    { },
 } },
 
 { JOB_JESTER, {
@@ -260,6 +310,7 @@ static const map<job_type, job_def> job_data =
     { },
     { },
     WCHOICE_NONE,
+    { },
 } },
 
 { JOB_PRIEST, {
@@ -268,6 +319,7 @@ static const map<job_type, job_def> job_data =
     { },
     { },
     WCHOICE_NONE,
+    { },
 } },
 
 { JOB_STALKER, {
@@ -276,6 +328,7 @@ static const map<job_type, job_def> job_data =
     { },
     { },
     WCHOICE_NONE,
+    { },
 } },
 #endif
 };
