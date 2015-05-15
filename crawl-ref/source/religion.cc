@@ -2737,7 +2737,7 @@ void excommunication(bool voluntary, god_type new_god, bool immediate)
     you.piety_hysteresis = 0;
 
     // so that the player isn't punished for "switching" between good gods via aX
-    if (is_good_god(old_god))
+    if (is_good_god(old_god) && voluntary)
     {
         you.saved_good_god_piety = old_piety;
         you.previous_good_god = old_god;
