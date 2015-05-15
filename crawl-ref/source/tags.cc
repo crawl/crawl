@@ -2556,12 +2556,11 @@ static void tag_read_you(reader &th)
         if (th.getMinorVersion() < TAG_MINOR_RU_SACRIFICES)
             you.sacrifices[j]   = 0;
         else
-            you.sacrifices[j]   = unmarshallUByte(th);
-#else
-        you.sacrifices[j]   = 0;
+        {
 #endif
-
+        you.sacrifices[j] = unmarshallUByte(th);
 #if TAG_MAJOR_VERSION == 34
+        }
         }
 #endif
 
