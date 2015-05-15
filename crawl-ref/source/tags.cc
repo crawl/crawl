@@ -2902,13 +2902,18 @@ static void tag_read_you(reader &th)
 #endif
 
     you.gift_timeout   = unmarshallByte(th);
-
-#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_SAVED_PIETY)
     {
         you.saved_good_god_piety = unmarshallUByte(th);
         you.previous_good_god = static_cast<god_type>(unmarshallByte(th));
     }
+    else
+    {
+        you.saved_good_god_piety = 0;
+        you.previous_good_god = GOD_NO_GOD;
+    }
+
+#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_BRANCH_ENTRY)
     {
         int depth = unmarshallByte(th);
