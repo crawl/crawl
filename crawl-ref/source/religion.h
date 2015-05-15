@@ -43,7 +43,7 @@ bool xp_penance(god_type god);
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
 
-void excommunication(god_type new_god = GOD_NO_GOD, bool immediate = false, bool voluntary = false);
+void excommunication(bool voluntary = false, god_type new_god = GOD_NO_GOD, bool immediate = false);
 
 bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true);
 void dock_piety(int pietyloss, int penance);

@@ -2717,7 +2717,7 @@ static string _god_hates_your_god_reaction(god_type god, god_type your_god)
     return "";
 }
 
-void excommunication(god_type new_god, bool immediate, bool voluntary)
+void excommunication(bool voluntary, god_type new_god, bool immediate)
 {
     const god_type old_god = you.religion;
     ASSERT(old_god != new_god);
@@ -3360,7 +3360,7 @@ void join_religion(god_type which_god, bool immediate)
 
     // Leave your prior religion first.
     if (!you_worship(GOD_NO_GOD))
-        excommunication(which_god, immediate, true);
+        excommunication(true, which_god, immediate);
 
     // Welcome to the fold!
     you.religion = static_cast<god_type>(which_god);
