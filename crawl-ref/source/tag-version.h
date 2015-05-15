@@ -168,6 +168,7 @@ enum tag_minor_version
     TAG_MINOR_RU_DELAY_STACKING,   // Let Ru delay timers stack again
     TAG_MINOR_NO_TWISTER,          // Remove ARTP_TWISTER
     TAG_MINOR_NO_ZOTDEF,           // remove zotdef, along with zot_points and zotdef_wave_name
+    TAG_MINOR_SAVED_PIETY,         // allowed good-god piety to survive through an atheist period
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
