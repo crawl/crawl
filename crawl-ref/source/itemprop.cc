@@ -2807,10 +2807,8 @@ bool is_item_jelly_edible(const item_def &item)
     }
 
     // Don't eat special game items.
-    if (item.base_type == OBJ_ORBS
-        || (item.base_type == OBJ_MISCELLANY
-            && (item.sub_type == MISC_RUNE_OF_ZOT
-                || item.sub_type == MISC_HORN_OF_GERYON)))
+    if (item_is_orb(item)
+        || item_is_rune(item))
     {
         return false;
     }
