@@ -5196,6 +5196,8 @@ void player::init()
     piety            = 0;
     piety_hysteresis = 0;
     gift_timeout     = 0;
+    saved_good_god_piety = 0;
+    previous_good_god = GOD_NO_GOD;
     penance.init(0);
     worshipped.init(0);
     num_current_gifts.init(0);
