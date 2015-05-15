@@ -1941,20 +1941,14 @@ string get_item_description(const item_def &item, bool verbose,
             description << _describe_deck(item);
         if (is_xp_evoker(item))
         {
-            description << "\nOnce released, the spirits of this device will "
-                           "depart, leaving it ";
-
-            if (!item_is_horn_of_geryon(item))
-                description << "and all other devices of its kind ";
-
-            description << "inert. However, more spirits will be attracted as "
-                           "its bearer grows in power and wisdom.";
-
-            if (!evoker_is_charged(item))
-            {
-                mpr("The device is presently inert. Gaining experience will "
-                    "recharge it.");
-            }
+            description << "\n\nOnce activated, this device "
+                        << (!item_is_horn_of_geryon(item) ?
+                           "and all other devices of its kind " : "")
+                        << "will be rendered temporarily inert. However, "
+                        << (!item_is_horn_of_geryon(item) ? "they " : "it ")
+                        << "will recharge as you gain experience."
+                        << (!evoker_is_charged(item) ?
+                           " The device is presently inert." : "");
         }
         break;
 
