@@ -4,6 +4,7 @@
 
 #include "enum.h"
 #include "errors.h"
+#include "itemprop.h"
 #include "libutil.h"
 #include "mapdef.h"
 #include "ng-setup.h"
@@ -123,6 +124,28 @@ void give_job_equipment(job_type job)
     }
 }
 
+// Must be called after equipment is given for weapon skill to be given.
+void give_job_skills(job_type job)
+{
+    for (const pair<skill_type, int>& entry : _job_def(job).skills)
+    {
+        skill_type skill = entry.first;
+        int amount = entry.second;
+        if (skill == SK_WEAPON)
+        {
+            const item_def *weap = you.weapon();
+            skill = weap ? item_attack_skill(*weap) : SK_UNARMED_COMBAT;
+            //XXX: WTF?
+            if (you.species == SP_FELID && job == JOB_FIGHTER)
+                amount += 2;
+            // Don't give throwing hunters Short Blades skill.
+            if (job_gets_ranged_weapons(job) && !(weap && is_range_weapon(*weap)))
+                skill = SK_THROWING;
+        }
+        you.skills[skill] += amount;
+    }
+}
+
 void debug_jobdata()
 {
     string fails;
@@ -133,12 +156,21 @@ void debug_jobdata()
 
     item_list dummy;
     for (auto& entry : job_data)
+    {
         for (const string& it : entry.second.equipment)
         {
             const string error = dummy.add_item(it, false);
             if (error != "")
                 fails += error + "\n";
         }
+        for (const auto& skill_pair : entry.second.skills)
+            if (skill_pair.first == SK_WEAPON
+                && !job_has_weapon_choice(entry.first))
+            {
+                fails += string(entry.second.name)
+                      + " has weapon skill but no weapon choice\n";
+            }
+    }
 
     if (!fails.empty())
     {
