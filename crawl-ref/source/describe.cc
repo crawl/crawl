@@ -296,13 +296,20 @@ static vector<string> _randart_propnames(const item_def& item,
         if (!ego.empty())
         {
             // XXX: Ugly hack for adding a comma if needed.
+            bool extra_props = false;
             for (const property_annotators &ann : propanns)
-                if (known_proprt(ann.prop) && ann.prop != ARTP_BRAND
-                    && !no_comma)
+                if (known_proprt(ann.prop) && ann.prop != ARTP_BRAND)
                 {
-                    ego += ",";
+                    extra_props = true;
                     break;
                 }
+
+            if (!no_comma && extra_props
+                || is_unrandom_artefact(item)
+                   && entry && entry->inscrip != nullptr)
+            {
+                ego += ",";
+            }
 
             propnames.push_back(ego);
         }
