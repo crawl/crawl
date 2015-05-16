@@ -1,4 +1,4 @@
-Stone Soup 0.17 (up to 0.17-a0-963-gaa5423c)
+Stone Soup 0.17 (up to 0.17-a0-1056-g838d5c0)
 --------------------------------------------
 
 Branches, Environment
@@ -27,6 +27,10 @@ Character
   chunk type.
 * Headbutt aux attacks no longer apply a small stun and the hooves aux kicks no
   longer bypass AC.
+* Cleaving attacks now function even under confusion.
+* Control-attacking & manipulating doors are no longer permitted under
+  confusion.
+* Confusion will never cause you to stumble into deep water/lava.
 * Multi-turn actions, other than climbing/descending stairs, no longer reduce
   EV by 5 for their duration.
 * Poison-immune characters (e.g. gargoyles, mummies) no longer take poison
@@ -120,6 +124,7 @@ Monsters
   spell set.
 * Basic mummies no longer have death curses.
 * Alligators now come in pairs.
+* Joseph is no longer a deep dwarf, & now regenerates normally.
 * Removed monsters:
   - Unborn.
   - Giant mites.
@@ -146,9 +151,10 @@ Spells
   Summonings.
 * Freeze no longer has a stun effect.
 * Removed spells:
-  - Sure Blade.
-  - Enslavement.
   - Abjuration.
+  - Enslavement.
+  - Flight.
+  - Sure Blade.
 
 Interface
 ---------
