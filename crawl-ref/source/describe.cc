@@ -269,6 +269,10 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_SUSTAB,                PROPN_PLAIN },
     };
 
+    const unrandart_entry *entry;
+    if (is_unrandom_artefact(item))
+        entry = get_unrand_entry(item.special);
+
     // For randart jewellery, note the base jewellery type if it's not
     // covered by artefact_desc_properties()
     if (item.base_type == OBJ_JEWELLERY
@@ -278,9 +282,11 @@ static vector<string> _randart_propnames(const item_def& item,
         if (*type)
             propnames.push_back(type);
     }
-    else if (item_ident(item, ISFLAG_KNOW_TYPE)
-             || is_artefact(item)
-                && artefact_known_property(item, ARTP_BRAND))
+    else if ((item_ident(item, ISFLAG_KNOW_TYPE)
+              || is_artefact(item)
+                 && artefact_known_property(item, ARTP_BRAND))
+             && !(is_unrandom_artefact(item) && entry
+                  && entry->flags & UNRAND_FLAG_SKIP_EGO))
     {
         string ego;
         if (item.base_type == OBJ_WEAPONS)
@@ -302,12 +308,8 @@ static vector<string> _randart_propnames(const item_def& item,
         }
     }
 
-    if (is_unrandom_artefact(item))
-    {
-        const unrandart_entry *entry = get_unrand_entry(item.special);
-        if (entry && entry->inscrip != nullptr)
-            propnames.push_back(entry->inscrip);
-     }
+    if (is_unrandom_artefact(item) && entry && entry->inscrip != nullptr)
+        propnames.push_back(entry->inscrip);
 
     for (const property_annotators &ann : propanns)
     {
