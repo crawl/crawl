@@ -194,7 +194,7 @@ KMONS:   AB = dancing weapon ; great sword good_item | battleaxe good_item | \
 KMONS:   CD = war gargoyle
 KMONS:   E = lich
 KMONS:   F = executioner
-KMONS:   ! = rust devil / skeletal warrior / hell knight / place:Zot:1 skeleton w:15
+KMONS:   ! = rust devil / skeletal warrior / hell knight / skeleton w:15
 KMONS:   ? = patrolling iron imp
 : dgn.delayed_decay(_G, '%', 'human corpse / human skeleton, \
 :                             human corpse / human skeleton')
