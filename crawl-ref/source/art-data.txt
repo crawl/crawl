@@ -325,6 +325,7 @@ STEALTH: -1
 
 NAME:    scimitar of Flaming Death
 OBJ:     OBJ_WEAPONS/WPN_SCIMITAR
+INSCRIP: sticky flame,
 PLUS:    +6
 COLOUR:  ETC_FIRE
 TILE:    urand_flaming_death
@@ -362,6 +363,7 @@ LIFE:     1
 
 NAME:    dagger of Chilly Death
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
+INSCRIP: flash freeze,
 PLUS:    +9
 COLOUR:  ETC_ICE
 TILE:    urand_chilly_death
@@ -599,6 +601,7 @@ LIFE:     1
 
 NAME:    whip "Snakebite"
 OBJ:     OBJ_WEAPONS/WPN_WHIP
+INSCRIP: curare,
 PLUS:    +8
 COLOUR:  DARKGREY
 TILE:    urand_snakebite
@@ -631,6 +634,7 @@ BOOL:     nogen
 ENUM:     CAPTAIN
 NAME:     captain's cutlass
 OBJ:      OBJ_WEAPONS/WPN_CUTLASS
+INSCRIP:  disarm
 PLUS:     +5
 COLOUR:   DARKGREY
 TILE:     urand_cutlass
