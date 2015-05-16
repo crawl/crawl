@@ -60,7 +60,7 @@ tutorial1 autoexplore
 
 Exploring manually can get tedious after a while, so you might want to let that
 happen automatically. Try it by pressing <input>$cmd[CMD_EXPLORE]</input>
-<localtiles>, or by clicking on 'autoexplore', the first button in the comamnd
+<localtiles>, or by clicking on 'autoexplore', the first button in the command
 bar below the minimap.</localtiles>.
 %%%%
 tutorial1 exclusion
