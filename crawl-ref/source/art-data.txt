@@ -82,7 +82,7 @@
 # * fly:      Lets wearer evoke flight ability.
 # * mutate:   Causes high magical contamination when unequipped.
 # * nogen:    Never randomly generated.
-# * noises:   Weapon makes noises. Should  be given its own set of noises
+# * noises:   Weapon makes noises. Should be given its own set of noises
 #             by making an entry in dat/database/wpnnoise.txt, with the
 #             entry's key exactly the same as the weapon's name, but all
 #             lowercase.
@@ -94,6 +94,8 @@
 # * rmsl:     Passively repels missiles.
 # * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
+# * skip_ego: The item's ego is skipped in its inscription, to be replaced by
+#             an INSCRIP: entry.
 # * special:  Artefact is "special": can't be picked up by monsters,
 #             can't be affected by Tukima's Dance.
 # * sustab:   Provides sustain abilities.
@@ -333,7 +335,7 @@ TILE_EQ: flaming_death
 BRAND:   SPWPN_FLAMING
 FIRE:    2
 COLD:    -1
-BOOL:    poison
+BOOL:    poison, skip_ego
 MAGIC:   1
 
 NAME:    eveningstar "Brilliance"
@@ -372,7 +374,7 @@ BRAND:   SPWPN_FREEZING
 FIRE:    -1
 COLD:    2
 MAGIC:   1
-BOOL:    poison
+BOOL:    poison, skip_ego
 
 NAME:     dagger "Morg"
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
@@ -607,7 +609,7 @@ COLOUR:  DARKGREY
 TILE:    urand_snakebite
 TILE_EQ: snakebite
 BRAND:   SPWPN_VENOM
-BOOL:    poison
+BOOL:    poison, skip_ego
 
 # TAG_MAJOR_VERSION == 34
 NAME:     knife of Accuracy
@@ -1169,6 +1171,7 @@ TILE_EQ:  firestarter
 PLUS:     +7
 BRAND:    SPWPN_FLAMING
 FIRE:     2
+BOOL:     skip_ego
 
 NAME:     orange crystal plate armour
 OBJ:      OBJ_ARMOUR/ARM_CRYSTAL_PLATE_ARMOUR
