@@ -809,7 +809,7 @@ COLOUR:  LIGHTGREEN
 TILE:    urand_maxwell
 TILE_EQ: maxwell
 MAGIC:   1
-BOOL:    nospell, notelep, cursed, elec, rCorr
+BOOL:    nospell, notelep, elec, rCorr
 
 ENUM:    DRAGONMASK
 NAME:    mask of the Dragon
