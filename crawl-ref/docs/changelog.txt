@@ -124,7 +124,7 @@ Monsters
   spell set.
 * Basic mummies no longer have death curses.
 * Alligators now come in pairs.
-* Joseph is no longer a deep dwarf, & now regenerates normally.
+* Jorgrun is no longer a deep dwarf, and now regenerates normally.
 * Removed monsters:
   - Unborn.
   - Giant mites.
@@ -266,6 +266,7 @@ Monsters
   been tweaked.
 * Sense invisibility has been simplified; monsters that had it now have see
   invisible + blindness immunity instead.
+* Item-eating monsters such as jellies no longer eat items you have seen.
 * Magic immunity no longer confers confusion immunity to monsters.
 * Many monsters are no longer magic immune: notably, most plant enemies, eyes,
   mummies, and angels.
