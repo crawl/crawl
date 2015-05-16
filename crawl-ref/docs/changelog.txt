@@ -58,6 +58,7 @@ Gods
     with use.
   - Corpseless monsters now drop gold.
   - Gold that lands in deep water/lava teleports into the player's pockets.
+  - Amulets of faith no longer have any effect.
 * Ru:
   - New sacrifice: Sacrifice Eye, similar to the effect of amulets of
     inaccuracy, but twice as strong (and stacking with the amulet).
@@ -90,6 +91,7 @@ Items
   prevents the use of abilities relying on breath.
 * Scrolls of Holy Word now apply the Daze status effect instead of stunning
   enemies.
+* The Storm card no longer summons twisters.
 * The Placid Magic card is no more.
 * Removed items:
   - The Cloak of Flash.
@@ -149,6 +151,9 @@ Spells
   the Grand Grimoire.
 * Summon Mana Viper has been moved from the book of Hinderance to the book of
   Summonings.
+* Apporting the Orb of Zot now causes the orb run to begin.
+* Cigotuvi's Embrace is now stronger with small numbers of corpses, and
+  considerably weaker with huge numbers.
 * Freeze no longer has a stun effect.
 * Removed spells:
   - Abjuration.
