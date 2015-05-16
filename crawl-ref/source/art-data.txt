@@ -734,6 +734,7 @@ BOOL:     fly, nogen
 ENUM:     BOOTS_ASSASSIN
 NAME:     boots of the Assassin
 OBJ:      OBJ_ARMOUR/ARM_BOOTS
+INSCRIP:  DetectMon Stab+
 PLUS:     +2
 COLOUR:   BROWN
 TILE:     urand_assassin
