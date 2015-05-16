@@ -248,7 +248,7 @@ CURSED:  3
 BOOL:    evil
 
 NAME:    Sceptre of Torment
-OBJ:     OBJ_WEAPONS/WPN_MACE
+OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +7
 COLOUR:  ETC_GOLD
 TILE:    spwpn_sceptre_of_torment
