@@ -42,7 +42,7 @@ DEPTH:   D:2-7
 KFEAT:   _ = altar_xom
 MONS:    generate_awake sheep hd:1
 MONS:    generate_awake jelly
-KFEAT:   + = runed_door
+MARKER:  + = lua:props_marker({ door_restrict="veto" })
 {{
 dgn.persist.dk_xom_monty_hall_triggered = false
 

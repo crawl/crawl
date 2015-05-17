@@ -3077,13 +3077,14 @@ TAGS:   no_monster_gen no_item_gen no_trap_gen transparent
 DEPTH:  Depths, !Depths:$
 MONS:   ooze / jelly w:30 / death ooze / azure jelly
 MONS:   acid blob
-KPROP:  | = no_tele_into
+KPROP:  |' = no_tele_into
+MARKER: + = lua:props_marker({ door_restrict="veto" })
 MAP
   ...........
  ..nnnnnnnnn..
 ..nn1112111nn..
 .nn11nnnnn11nn.
-.=====|||nn11n.
+.+111+|||nn11n.
 .nn11nnnnn11nn.
 ..nn1112111nn..
  ..nnnnnnnnn..
