@@ -1417,9 +1417,12 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
     if (you.species == SP_PALE_DRACONIAN)
         res += 2;
 
-    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
-    if (body_armour)
-        res += armour_type_prop(body_armour->sub_type, ARMF_RES_STEAM) * 2;
+    if (items)
+    {
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        if (body_armour)
+            res += armour_type_prop(body_armour->sub_type, ARMF_RES_STEAM) * 2;
+    }
 
     res += (rf < 0) ? rf
                     : (rf + 1) / 2;
