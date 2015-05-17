@@ -501,8 +501,8 @@ This stick is loaded with more than just lead.
 %%%%
 dragonskin cloak
 
-This opalescent cloak gleams with all dragon colours. It protects its wearer
-from elemental attacks of all kinds, although somewhat unreliably.
+This opalescent cloak gleams with the colours of all kinds of dragons. It
+protects its wearer from most elemental attacks, although somewhat unreliably.
 %%%%
 ring of the Octopus King
 
