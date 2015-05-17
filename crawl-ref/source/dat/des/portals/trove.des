@@ -814,9 +814,6 @@ ENDMAP
 NAME:   trove_treasure_island
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup no_vmirror no_rotate no_pool_fixup
-# If we're going to negate the results, might as well
-# block the few who don't get free help.
-TAGS:   no_species_mu no_species_vp
 WEIGHT: 2
 COLOUR: x = blue
 KFEAT:  1 = deep_water
