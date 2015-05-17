@@ -1524,16 +1524,6 @@ bool player::res_corr(bool calc_unid, bool items) const
     if (you.duration[DUR_RESISTANCE])
         return true;
 
-    if (items)
-    {
-        // dragonskin cloak: 0.5 to draconic resistances
-        if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN)
-            && coinflip())
-        {
-            return true;
-        }
-    }
-
     if ((form_keeps_mutations() || form == TRAN_DRAGON)
         && species == SP_YELLOW_DRACONIAN)
     {
@@ -1954,7 +1944,6 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         pl += you.scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
 
         // dragonskin cloak: 0.5 to draconic resistances
-        // this one is dubious (no pearl draconians)
         if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
             pl++;
 
