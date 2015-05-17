@@ -1004,9 +1004,7 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     case CLOUD_POISON:
         return act->res_poison() > 0;
     case CLOUD_STEAM:
-        // Players get steam cloud immunity from any res steam, which is hardly
-        // fair, but this is what the old code did.
-        return player && act->res_steam() > 0;
+        return act->res_steam() > 0;
     case CLOUD_MIASMA:
         return act->res_rotting() > 0;
     case CLOUD_PETRIFY:
@@ -1042,8 +1040,6 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
         return act->res_fire();
-    case CLOUD_STEAM:
-        return act->res_steam();
     case CLOUD_HOLY_FLAMES:
         return act->res_holy_energy(cloud.agent());
     case CLOUD_COLD:
