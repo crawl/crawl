@@ -2946,8 +2946,7 @@ ENDMAP
 ###################################################################
 
 # My mission is to annoy. -LP
-NAME:   lemuel_jelly_drop_a
-TAGS:   uniq_jelly_drop
+NAME:   lemuel_jelly_drop
 DEPTH:  D:8-, Depths
 WEIGHT: 5
 MONS:   jelly generate_awake
