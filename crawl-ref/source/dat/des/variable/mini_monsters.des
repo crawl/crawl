@@ -3217,55 +3217,6 @@ MAP
  (bab bab bababtt
 ENDMAP
 
-NAME:    hangedman_jelly_panic
-TAGS:    no_monster_gen no_item_gen
-DEPTH:   D:4-, Depths
-KMONS:   1 = ooze
-KMONS:   23J = jelly
-KMONS:   4K = slime creature
-KMONS:   5L = acid blob w:5 / azure jelly / death ooze
-KFEAT:   JKL = altar_jiyva
-KITEM:   $ = $, $ w:5 / nothing
-: if you.absdepth() > 19 then
-SHUFFLE: CD, 2"6; / 3`5~
-SUBST:   35`~ : xx., '"~- = .
-SUBST:   1 = 5L, 26 = 2
-SUBST:   ABE : $, C : $$., D : m..
-: elseif you.absdepth() > 12 then
-SHUFFLE: AB, CD, 2" / 3`
-SUBST:   456-~; = x, '"`E = .
-SUBST:   1 = 4:7 K:3
-SUBST:   AD : $, B : m.., C : $m.
-: elseif you.absdepth() > 7  then
-SHUFFLE: AB, CD, 2"6; / 3`5~
-SUBST:   14'- = x, 35`~ : xx., ";ED = .
-SUBST:   2 : 2:8 J:2, 6 = 1
-SUBST:   AC : $, B : m..
-: else
-SHUFFLE: AB, 3` / 4- / 5~
-SUBST:   26"; = x, 35`~ : xx., '-CED = .
-SUBST:   1 = 2:9 J:1, 4 = 1
-SUBST:   A : $, B : m..
-: end
-MAP
-   xxxxxxxxx
-   xxxxxxxxx
-  xxx2x1x2xxx
-xxxcx"x'x"xcxxx
-xxxx.......xxxx
-xx3`.DECED.`3xx
-xxxx.EABAE.xxxx
-xx4-.CB$BC.-4xx
-xxxx.EABAE.xxxx
-xx5~.DECED.~5xx
-xxxx.......xxxx
-xxxcx;x=x;xcxxx
-  xxx6x.x6xxx
-   xxxx+xxxx
-   xxxx.xxxx
-    ...@...
-ENDMAP
-
 NAME:    lasty_cornered_adventurer
 TAGS:    no_monster_gen patrolling
 DEPTH:   D:4-6
