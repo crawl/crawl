@@ -319,9 +319,9 @@ static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
 
 static int _spread_cloud(const cloud_struct &cloud)
 {
-    const int spreadch = cloud.decay > 30? 80 :
-                         cloud.decay > 20? 50 :
-                                           30;
+    const int spreadch = cloud.decay > 30 ? 80 :
+                         cloud.decay > 20 ? 50 :
+                                            30;
     int extra_decay = 0;
     for (adjacent_iterator ai(cloud.pos); ai; ++ai)
     {
@@ -713,15 +713,6 @@ void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
                 excl_rad);
 }
 
-static int _steam_cloud_damage(int decay)
-{
-    decay = min(decay, 60);
-    decay = max(decay, 10);
-
-    // Damage in range 3 - 16.
-    return (decay * 13 + 20) / 50;
-}
-
 static bool _is_weak_cloud(int cl)
 {
     if (cl == EMPTY_CLOUD)
@@ -939,8 +930,7 @@ static int _cloud_base_damage(const actor *act,
     case CLOUD_MIASMA:
         return _cloud_damage_calc(12, 3, 0, maximum_damage);
     case CLOUD_STEAM:
-        return _cloud_damage_calc(_steam_cloud_damage(cloud.decay), 2, 0,
-                                  maximum_damage);
+        return _cloud_damage_calc(16, 2, 0, maximum_damage);
     case CLOUD_GHOSTLY_FLAME:
         return _cloud_damage_calc(15, 3, 4, maximum_damage);
     default:
