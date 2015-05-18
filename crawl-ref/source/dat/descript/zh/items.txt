@@ -492,7 +492,7 @@ ring of strength
 
 这个戒指能改变佩戴者的物理力量。至于是加强还是弱化，就要看它上面附着的魔法了。
 %%%%
-ring of sustain abilities
+ring of sustain attributes
 
 这个戒指保护其佩戴者的力量、敏捷和智力不受伤害。
 %%%%

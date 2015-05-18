@@ -179,8 +179,8 @@ although the shock will render the caster incapable of action for a while.
 Brain Feed spell
 
 This spell allows draining a portion of an enemy's intelligence. Such a loss is
-only temporary, and rings of sustain ability can prevent or greatly reduce this
-effect.
+only temporary, and rings of sustain attributes can prevent or greatly reduce
+this effect.
 %%%%
 Brothers in Arms spell
 

@@ -503,7 +503,7 @@ ring of strength
 Este anillo aumenta o disminuye la fuerza física de su portador, en un grado
 que depende de su poder.
 %%%%
-ring of sustain abilities
+ring of sustain attributes
 
 Este anillo protege a su portador ante la pérdida de su fuerza, destreza e
 inteligencia.

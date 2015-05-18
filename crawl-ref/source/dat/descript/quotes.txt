@@ -2356,7 +2356,7 @@ ring of strength
 
 <ring>
 %%%%
-ring of sustain abilities
+ring of sustain attributes
 
 <ring>
 %%%%

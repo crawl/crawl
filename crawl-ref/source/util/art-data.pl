@@ -65,7 +65,7 @@ my %field_type = (
     SPECIAL  => "bool",
     STEALTH  => "num",
     STR      => "num",
-    SUSTAB   => "bool",
+    SUSTAT   => "bool",
     TYPE     => "str",
     UNHOLY   => "bool",
     UNIDED   => "bool",
@@ -492,7 +492,7 @@ my @art_order = (
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "unused", "\n",
     "MUTATE", "unused", "SLAY", "CURSED", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
-    "RMSL", "FOG", "REGEN", "SUSTAB", "NO_UPGRADE", "RCORR", "\n",
+    "RMSL", "FOG", "REGEN", "SUSTAT", "NO_UPGRADE", "RCORR", "\n",
     "RMUT", "\n",
     "}",
 
