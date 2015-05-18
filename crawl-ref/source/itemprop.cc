@@ -2735,7 +2735,7 @@ bool gives_resistance(const item_def &item)
                 || item.sub_type == RING_SEE_INVISIBLE
                 || item.sub_type >= RING_LIFE_PROTECTION
                    && item.sub_type <= RING_TELEPORT_CONTROL
-                || item.sub_type == RING_SUSTAIN_ABILITIES)
+                || item.sub_type == RING_SUSTAIN_ATTRIBUTES)
             {
                 return true;
             }

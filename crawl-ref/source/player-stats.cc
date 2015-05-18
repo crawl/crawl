@@ -512,7 +512,7 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force)
     if (which_stat == STAT_RANDOM)
         which_stat = static_cast<stat_type>(random2(NUM_STATS));
 
-    // scale modifier by player_sust_abil() - right-shift
+    // scale modifier by player_sust_attr() - right-shift
     // permissible because stat_loss is unsigned: {dlb}
     if (!force)
     {
@@ -523,13 +523,13 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force)
             return false;
         }
 
-        int sust = player_sust_abil();
+        int sust = player_sust_attr();
         stat_loss >>= sust;
     }
 
     mprf(stat_loss > 0 ? MSGCH_WARN : MSGCH_PLAIN,
          "You feel %s%s%s.",
-         stat_loss > 0 && player_sust_abil(false) ? "somewhat " : "",
+         stat_loss > 0 && player_sust_attr(false) ? "somewhat " : "",
          stat_desc(which_stat, SD_LOSS),
          stat_loss > 0 ? "" : " for a moment");
 

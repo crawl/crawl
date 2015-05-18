@@ -614,7 +614,7 @@ ring of strength
 이 반지는 착용자의 힘에 영향을 준다. 반지의 품질에 따라 힘이 올라갈 수도,
 내려갈 수도 있다.
 %%%%
-ring of sustain abilities
+ring of sustain attributes
 
 이 반지는 힘, 민첩, 지능의 손실로부터 착용자를 보호한다.
 %%%%

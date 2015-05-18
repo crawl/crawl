@@ -221,7 +221,7 @@ ring of see invisible
 
 Tento prsten umožňuje svému nositeli vidět věci skryté pohledu kouzlem.
 %%%%
-ring of sustain abilities
+ring of sustain attributes
 
 Tento prsten chrání svého nositele před ztrátou jeho síly, obratnosti a
 inteligence.

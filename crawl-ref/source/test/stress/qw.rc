@@ -530,7 +530,7 @@ function ring_value(it, name, with_resists)
   if name:find("positive energy") then return 13 end
   if name:find("strength") then return 7 + plus end
   if name:find("dexterity") then return 7 + plus end
-  if name:find("sustain abilities") then return 2 end
+  if name:find("sustain attributes") then return 2 end
   return -1
 end
 
