@@ -47,6 +47,11 @@ bool PotionEffect::quaff(bool was_known) const
     return true;
 }
 
+bool PotionEffect::effect_active() const
+{
+    return false;
+}
+
 class PotionCuring : public PotionEffect
 {
 private:
@@ -268,6 +273,11 @@ public:
             did_god_conduct(DID_HASTY, 10, was_known);
         return true;
     }
+
+    bool effect_active() const
+    {
+        return you.duration[DUR_HASTE];
+    }
 };
 
 class PotionMight : public PotionEffect
@@ -293,6 +303,11 @@ public:
         if (!were_mighty)
             notify_stat_change(STAT_STR, 5, true);
         return true;
+    }
+
+    bool effect_active() const
+    {
+        return you.duration[DUR_MIGHT];
     }
 };
 
@@ -321,6 +336,11 @@ public:
 
         return true;
     }
+
+    bool effect_active() const
+    {
+        return you.duration[DUR_BRILLIANCE];
+    }
 };
 
 class PotionAgility : public PotionEffect
@@ -346,6 +366,11 @@ public:
         if (!were_agile)
             notify_stat_change(STAT_DEX, 5, true);
         return true;
+    }
+
+    bool effect_active() const
+    {
+        return you.duration[DUR_AGILITY];
     }
 };
 
@@ -383,6 +408,11 @@ public:
 
         effect(was_known);
         return true;
+    }
+
+    bool effect_active() const
+    {
+        return you.airborne();
     }
 };
 
@@ -474,6 +504,11 @@ public:
         effect();
         return true;
     }
+
+    bool effect_active() const
+    {
+        return you.duration[DUR_AMBROSIA];
+    }
 };
 
 class PotionInvisibility : public PotionEffect
@@ -543,6 +578,11 @@ public:
         effect(was_known);
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
         return true;
+    }
+
+    bool effect_active() const
+    {
+        return you.duration[DUR_INVIS];
     }
 };
 
@@ -837,6 +877,11 @@ public:
         you.increase_duration(DUR_RESISTANCE, random2(pow) + 35);
         return true;
     }
+
+    bool effect_active() const
+    {
+        return you.duration[DUR_RESISTANCE];
+    }
 };
 
 class PotionDegeneration : public PotionEffect
@@ -900,6 +945,11 @@ public:
         else
             mpr("You feel woody for a moment.");
         return true;
+    }
+
+    bool effect_active() const
+    {
+        return you.form == TRAN_TREE;
     }
 };
 

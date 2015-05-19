@@ -35,6 +35,10 @@ public:
     // Returns whether or not the potion was actually quaffed
     virtual bool quaff(bool was_known) const;
 
+    // Is the potion's effect currently active for the player?
+    // Only makes sense for some potions, always returns false for the rest.
+    virtual bool effect_active() const;
+
     const string potion_name;
     const potion_type kind;
 };
