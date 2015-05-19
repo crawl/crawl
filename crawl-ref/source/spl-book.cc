@@ -948,12 +948,13 @@ string desc_cannot_memorise_reason(spell_type spell)
  * Can the player learn the given spell?
  *
  * @param   specspell  The spell to be learned.
+ * @param   wizard     Whether to skip some checks for wizmode memorisation.
  * @return             false if the player can't learn the spell for any
  *                     reason, true otherwise.
 */
-static bool _learn_spell_checks(spell_type specspell)
+static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
 {
-    if (!can_learn_spell())
+    if (!wizard && !can_learn_spell())
         return false;
 
     if (already_learning_spell((int) specspell))
@@ -977,13 +978,13 @@ static bool _learn_spell_checks(spell_type specspell)
         return false;
     }
 
-    if (you.experience_level < spell_difficulty(specspell))
+    if (you.experience_level < spell_difficulty(specspell) && !wizard)
     {
         mpr("You're too inexperienced to learn that spell!");
         return false;
     }
 
-    if (player_spell_levels() < spell_levels_required(specspell))
+    if (player_spell_levels() < spell_levels_required(specspell) && !wizard)
     {
         mpr("You can't memorise that many levels of magic yet!");
         return false;
@@ -996,23 +997,28 @@ static bool _learn_spell_checks(spell_type specspell)
  * Attempt to make the player learn the given spell.
  *
  * @param   specspell  The spell to be learned.
+ * @param   wizard     Whether to memorise instantly and skip some checks for
+ *                     wizmode memorisation.
  * @return             true if the player learned the spell, false
  *                     otherwise.
 */
-bool learn_spell(spell_type specspell)
+bool learn_spell(spell_type specspell, bool wizard)
 {
-    if (!_learn_spell_checks(specspell))
+    if (!_learn_spell_checks(specspell, wizard))
         return false;
 
-    int severity = fail_severity(specspell);
-
-    if (raw_spell_fail(specspell) >= 100 && !vehumet_is_offering(specspell))
-        mprf(MSGCH_WARN, "This spell is impossible to cast!");
-    else if (severity > 0)
+    if (!wizard)
     {
-        mprf(MSGCH_WARN, "This spell is %s to cast%s",
-                         fail_severity_adjs[severity],
-                         severity > 1 ? "!" : ".");
+        int severity = fail_severity(specspell);
+
+        if (raw_spell_fail(specspell) >= 100 && !vehumet_is_offering(specspell))
+            mprf(MSGCH_WARN, "This spell is impossible to cast!");
+        else if (severity > 0)
+        {
+            mprf(MSGCH_WARN, "This spell is %s to cast%s",
+                             fail_severity_adjs[severity],
+                             severity > 1 ? "!" : ".");
+        }
     }
 
     const string prompt = make_stringf(
@@ -1029,10 +1035,15 @@ bool learn_spell(spell_type specspell)
         return false;
     }
 
-    start_delay(DELAY_MEMORISE, spell_difficulty(specspell), specspell);
-    you.turn_is_over = true;
+    if (wizard)
+        add_spell_to_memory(specspell);
+    else
+    {
+        start_delay(DELAY_MEMORISE, spell_difficulty(specspell), specspell);
+        you.turn_is_over = true;
 
-    did_god_conduct(DID_SPELL_CASTING, 2 + random2(5));
+        did_god_conduct(DID_SPELL_CASTING, 2 + random2(5));
+    }
 
     return true;
 }
