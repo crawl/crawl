@@ -1018,7 +1018,7 @@ talent get_talent(ability_type ability, bool check_confused)
 
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         invoc = true;
-        failure = 40 - you.intel() - you.skill(SK_INVOCATIONS, 1);
+        failure = 40 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 2);
         break;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
