@@ -13,7 +13,7 @@
 
 {{
 function bt_you_are_orcish()
-  return you.race() == "Hill Orc" or you.race() == "Lava Orc"
+  return you.race() == "Hill Orc"
 end
 
 function callback.beogh_warn_stepped(data, triggerable, triggerer, marker, ev)
