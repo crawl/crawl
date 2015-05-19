@@ -83,7 +83,7 @@ MAP
 ENDMAP
 
 NAME:     serial_park_square1
-TAGS:     allow_dup transparentextra decor serial_park
+TAGS:     allow_dup transparent extra decor serial_park
 ORIENT:   float
 KMONS:    1 = bush
 FTILE:    D = floor_vault
