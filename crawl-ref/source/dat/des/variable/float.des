@@ -1262,7 +1262,7 @@ NAME:   lemuel_troll_bridge
 DEPTH:  D:9-, Depths
 ORIENT: float
 TAGS:   no_pool_fixup patrolling
-KPROP:  1 = no_rtele_into
+KPROP:  1 = no_tele_into
 SUBST:  1 = 1:50 2 3:5
 MONS:   troll
 MONS:   deep troll
@@ -2918,7 +2918,7 @@ KITEM:    E| = |
 KFEAT:    f5Z67DER%$*| = W
 KFEAT:    S = w
 KFEAT:    u = t
-KPROP:    ~`ZR = no_rtele_into
+KPROP:    ~`ZR = no_tele_into
 SHUFFLE:  HI / JK
 NSUBST:   H = 1:4 / *:G, I = ', J = G, K = D, L = 2:6 / *:7
 SUBST:    B : cf, C : cf, ~" = ffffW, '` = W
@@ -3031,7 +3031,7 @@ MONS: reaper ; scythe ego:venom / w:8 green death \
 : end
 KMONS: A = lich
 KFEAT: A = stone_arch
-KPROP: '? = no_rtele_into
+KPROP: '? = no_tele_into
 NSUBST: - = 4:| / 4:* / 4:% / *:.
 MARKER:  ? = lua:fog_machine { cloud_type = "poison gas", pow_min = 2, \
         pow_max = 7, delay = 30, start_clouds = 1, size_min = 1, \
@@ -3642,7 +3642,7 @@ ORIENT: float
 SUBST:  x : xxxm
 NSUBST: 9 = 6:. / *:9
 NSUBST: 0 = 6:. / *:0
-KPROP:  .089*| = no_rtele_into
+KPROP:  .089*| = no_tele_into
 SUBST:  ' = .
 MAP
 '''''''''''''''''''''
@@ -4506,7 +4506,7 @@ ENDMAP
 NAME:   minmay_five_octagons
 DEPTH:  D:12-, !D:$, Depths, !Depths:$
 ORIENT: float
-KPROP:  8 = no_rtele_into
+KPROP:  8 = no_tele_into
 SUBST:  8 = .:130 8 |, 0 = 0 .:240
 MAP
 xxxxxxx@xxxxxxxxxxxxxxxx@xxxxxxx

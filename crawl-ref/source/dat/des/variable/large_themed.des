@@ -669,7 +669,7 @@ ORIENT: southeast
 DEPTH:  D:8-, Orc
 MONS:   orc / orc wizard w:3 / orc priest w:2 / orc warrior w:2
 SUBST:  X = xxxZ
-KPROP:  Z = no_rtele_into
+KPROP:  Z = no_tele_into
 SUBST:  Z = .$
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx
@@ -894,7 +894,7 @@ KFEAT:  ^ = permanent teleport trap
 KFEAT:  m = iron_grate
 KFEAT:  y = rock_wall
 KMASK:  y = no_wall_fixup
-KPROP:  -d|*$14567^ = no_rtele_into
+KPROP:  -d|*$14567^ = no_tele_into
 FTILE:  -mcyd|*$14567^! = FLOOR_PEBBLE_DARKGRAY
 FTILE:  .@+23 = FLOOR_HALL
 TILE:   c = DNGN_STONE_WALL_DARKGRAY
@@ -1333,7 +1333,7 @@ ENDMAP
 
 ###############################################################################
 NAME:    grunt_house_of_mirrors
-TAGS:    no_rtele_into
+TAGS:    no_tele_into
 DEPTH:   Depths, !Depths:$
 ORIENT:  north
 SHUFFLE: AB / BA / BB, CD / DC / DD, EF / FE / FF
@@ -1500,7 +1500,7 @@ MONS:   shadow demon / green death / blizzard demon / balrug / cacodemon / \
         hell beast / hellion / reaper / lorocyproca / tormentor
 NSUBST: . = 7:1 / 7:2
 FTILE:  .|#+G123- = floor_pebble_darkgray
-KPROP:  1Y = no_rtele_into
+KPROP:  1Y = no_tele_into
 KFEAT:  # = iron_grate
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1583,7 +1583,7 @@ NSUBST: . = 15:2 / *:.
 SUBST:  t = tp`
 NSUBST: ' = 5:C / 5:2
 : dgn.delayed_decay(_G, 'C', 'human corpse')
-KPROP:  ` = no_rtele_into
+KPROP:  ` = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxttttttttxxxxxxxxxxxx

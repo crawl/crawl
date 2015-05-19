@@ -321,7 +321,7 @@ TAGS:    temple_entry uniq_firewalk no_item_gen no_monster_gen
 ORIENT:  float
 WEIGHT:  3
 SHUFFLE: def
-KPROP:   'def = no_rtele_into
+KPROP:   'def = no_tele_into
 MARKER:  d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 3, delay = 20, start_clouds = 1, \
              size = 2, walk_dist = 1, spread_rate= 0 }
@@ -363,7 +363,7 @@ TAGS:    temple_entry uniq_firewalk no_item_gen no_monster_gen
 WEIGHT:  7
 ORIENT:  float
 SHUFFLE: def
-KPROP:   'def = no_rtele_into
+KPROP:   'def = no_tele_into
 MARKER:  d = lua:fog_machine { cloud_type = "flame", \
               pow_min = 2, pow_max = 3, delay = 39, start_clouds = 1, \
               size = 2, walk_dist = 2, spread_rate= 0 }
@@ -428,7 +428,7 @@ ENDMAP
 NAME:   minmay_temple_entry_poolview
 TAGS:   temple_entry no_pool_fixup
 ORIENT: float
-KPROP:  ? = no_rtele_into
+KPROP:  ? = no_tele_into
 SUBST:  ? : lw
 SUBST:  c : cx
 KFEAT:  O = enter_temple
@@ -1006,7 +1006,7 @@ KMONS:   1 = electric eel
 SUBST:   W = w
 :end
 KPROP: wW1 = no_submerge
-KPROP: wW1 = no_rtele_into
+KPROP: wW1 = no_tele_into
 #
 : local brnd = crawl.random2(10)
 : if brnd == 0 then
@@ -1067,7 +1067,7 @@ KMONS:   1 = electric eel
 SUBST:   W = w
 :end
 KPROP: wW1 = no_submerge
-KPROP: wW1 = no_rtele_into
+KPROP: wW1 = no_tele_into
 #
 : local brnd = crawl.random2(10)
 : if brnd == 0 then
@@ -1517,7 +1517,7 @@ PLACE: Temple
 WEIGHT: 5
 ORIENT: encompass
 SUBST: T = 't
-KPROP: 't = no_rtele_into
+KPROP: 't = no_tele_into
 SHUFFLE: roygbiv/vroygbi/ivroygb/bivroyg/gbivroy/ygbivro/oygbivr
 # Sadly, console doesn't have colors for orange and indigo,
 # so brown and cyan will have to do.

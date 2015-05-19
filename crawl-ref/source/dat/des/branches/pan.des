@@ -2133,7 +2133,7 @@ ENDMAP
 NAME: nicolae_pan_performance_anxiety
 TAGS: no_trap_gen
 WEIGHT: 1
-KPROP: tb = no_rtele_into
+KPROP: tb = no_tele_into
 NSUBST: t = 10:p / *:., b = 10:p / *:.
 KMONS: p = human / elf / orc / naga / centaur / draconian / \
    ogre / minotaur / troll / kobold / mummy / ghoul / spriggan / dwarf / \

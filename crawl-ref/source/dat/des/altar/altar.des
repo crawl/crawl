@@ -113,7 +113,7 @@ TAGS:   transparent no_monster_gen no_rotate decor
 : else
 TAGS:   transparent no_monster_gen no_pool_fixup no_rotate decor
 : end
-KPROP:  C = no_rtele_into
+KPROP:  C = no_tele_into
 : interest_check(_G)
 MAP
    .........
@@ -250,7 +250,7 @@ KFEAT:  n = iron_grate
 MONS:  patrolling Angel
 : end
 KFEAT: _ = altar_elyvilon / altar_zin / altar_the_shining_one
-KPROP: >"1_ = no_rtele_into
+KPROP: >"1_ = no_tele_into
 SUBST: " = .
 MAP
    .....
@@ -295,7 +295,7 @@ SUBST: L = l.
 SUBST: _ = _ P:1
 KFEAT: _ = altar_lugonu/altar_yredelemnul/altar_kikubaaqudgha/altar_makhleb
 KFEAT: P = enter_abyss
-KPROP: 1234_ = no_rtele_into
+KPROP: 1234_ = no_tele_into
 MAP
 ....LLLLL.....
 ..LlllllllL...

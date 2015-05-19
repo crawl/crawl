@@ -305,7 +305,7 @@ NAME:    minmay_arrival_jagged
 TAGS:    arrival no_monster_gen
 ORIENT:  float
 SUBST:   A = xx., B = x..
-KPROP:   A = no_rtele_into
+KPROP:   A = no_tele_into
 MAP
 xxxxxxxxxxxx
 x{AAAAAAAAAA
@@ -1590,7 +1590,7 @@ TAGS:    arrival no_monster_gen no_trap_gen
 MONS:    generate_awake jelly
 ITEM:    club
 ORIENT:  float
-KPROP:   1d> = no_rtele_into
+KPROP:   1d> = no_tele_into
 SHUFFLE: {[(
 SUBST:   [=., (=.
 SUBST:   v:vxx
@@ -1620,7 +1620,7 @@ NAME:    evilmike_arrival_sounds_zot
 TAGS:    arrival no_monster_gen
 ORIENT:  float
 WEIGHT:  1
-KPROP:   >'Z1 = no_rtele_into
+KPROP:   >'Z1 = no_tele_into
 KFEAT:   Z = zot trap
 SHUFFLE: vXc
 NSUBST:  { = 1:{ / *:.
@@ -2367,7 +2367,7 @@ SHUFFLE: TTV
 WEIGHT:  5
 KMASK:   T = no_monster_gen
 KPROP:   wZ = no_submerge
-KPROP:   wZ = no_rtele_into
+KPROP:   wZ = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
 x.....................x
@@ -2390,7 +2390,7 @@ KMONS:  Z = electric eel
 KFEAT:  Z = w
 KMASK:  Z = no_monster_gen
 KPROP:  wZ = no_submerge
-KPROP:  wZ = no_rtele_into
+KPROP:  wZ = no_tele_into
 WEIGHT: 5
 MAP
 xxxxxxxxxxxxxxx
@@ -2414,7 +2414,7 @@ TAGS:    arrival no_rotate no_monster_gen no_item_gen
 SUBST:   ':l...' , '=l. , l:lllWw , n:nv , v:vvvc
 KMONS:   1 = orc / goblin / kobold
 KFEAT:   1 = .
-KPROP:   1 = no_rtele_into
+KPROP:   1 = no_tele_into
 MAP
 .....................
 .....................
@@ -2509,7 +2509,7 @@ TAGS:   arrival no_monster_gen no_item_gen
 ORIENT: float
 MONS:   plant / bush w:3, fungus col:any, fungus col:yellow, fungus col:red
 MONS:   fungus col:white, fungus col:magenta, fungus col:darkgrey
-KPROP:  ' = no_rtele_into
+KPROP:  ' = no_tele_into
 SUBST:  ' = ...111t, 1:1112, 2=1111112, 2:234567
 FTILE:  .1234567t = floor_moss
 COLOUR: . = green
@@ -2562,7 +2562,7 @@ ENDMAP
 NAME:   minmay_arrival_glassed_features
 TAGS:   arrival no_monster_gen
 ORIENT: float
-KPROP:  'I = no_rtele_into
+KPROP:  'I = no_tele_into
 SUBST:  I : G T I:4 A:1
 KFEAT:  A = enter_abyss
 MAP
@@ -2650,7 +2650,7 @@ NAME:    saegor_arrival_fortress
 TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
 MONS:    place:D:1 zombie
-KPROP:   W = no_rtele_into
+KPROP:   W = no_tele_into
 NSUBST:  { = 1:{ / 1:> / *:.
 MAP
 wwwwwwwwwcccccwwwwwwwww
@@ -2688,7 +2688,7 @@ NSUBST:  p = 2:+ / *:c
 COLOUR:  + : brown
 SUBST:   # = .. 1:1
 MONS:    plant
-KPROP:   w = no_rtele_into
+KPROP:   w = no_tele_into
 NSUBST:  { = 1:{ / *:.
 MAP
    xxx @@@ xxx
@@ -2925,7 +2925,7 @@ ENDMAP
 NAME:    sevenhm_arrival_forest_fort_small_6
 TAGS:    arrival
 ORIENT:  float
-KPROP:   zC = no_rtele_into
+KPROP:   zC = no_tele_into
 SUBST:   z : l:40 G , C : C:40 lG
 KMASK:   l = no_monster_gen
 SUBST:   R : +R
@@ -2956,7 +2956,7 @@ KITEM:  % = nothing / q:1 river rat chunk / w:5 river rat skeleton
 MARKER: # = lua:fog_machine { cloud_type = "foul pestilence", pow_max = 10, \
                               delay = 5, size = 5, excl_rad = 0 }
 KFEAT:  %# = W
-KPROP:  W#% = no_rtele_into
+KPROP:  W#% = no_tele_into
 MAP
  xxxxxxxxxx
 xxWWWWWWWWxx

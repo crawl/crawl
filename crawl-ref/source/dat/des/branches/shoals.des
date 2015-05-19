@@ -548,7 +548,7 @@ DEPTH: Shoals
 TAGS: transparent no_pool_fixup water_ok no_trap_gen
 SUBST: b = .w, z = x.
 KPROP: w1. = no_tide
-KPROP: c = no_rtele_into
+KPROP: c = no_tele_into
 SUBST: c = xw
 KFEAT: 1 = w
 KMONS: 1 = kraken
@@ -609,7 +609,7 @@ NAME: nicolae_shoals_so_close
 DEPTH: Shoals, !Shoals:$
 TAGS: no_pool_fixup water_ok no_item_gen no_trap_gen no_monster_gen
 KPROP: YycfZ. = no_tide
-KPROP: ZYcf. = no_rtele_into
+KPROP: ZYcf. = no_tele_into
 KMONS: c = patrolling hungry ghost
 NSUBST: f = 1:g / 2:f / *:.
 KITEM: g = meat ration / bread ration / beef jerky

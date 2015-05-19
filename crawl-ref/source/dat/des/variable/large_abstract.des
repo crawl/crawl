@@ -767,7 +767,7 @@ ENDMAP
 NAME:   minmay_expanding_circles
 ORIENT: southeast
 DEPTH:  D:12-, !D:$, Depths
-KPROP:  .089 = no_rtele_into
+KPROP:  .089 = no_tele_into
 SUBST:  c : cv
 KMONS:  0 = 0
 KMONS:  8 = 8
@@ -1027,7 +1027,7 @@ MONS:   wizard w:400 / deep elf mage w:50 / orc wizard / deep elf conjurer / \
 ITEM:   any book / any jewellery / any wand / any misc w:3 / \
         any magical staff w:3 / any randart weapon w:3 / \
         any randart armour w:3 / any rod w:3
-KPROP:  d = no_rtele_into
+KPROP:  d = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.xx

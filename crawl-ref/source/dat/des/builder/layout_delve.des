@@ -517,7 +517,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
     -- Delve the paths
     local ngb_min = 2
     local ngb_max = 5
-    -- chance of connecting to an adjecent passage
+    -- chance of connecting to an adjacent passage
     local connchance = 0
     local total_count = crawl.random_range(200, 500)
     local top = 10
@@ -577,11 +577,11 @@ TAGS:   no_rotate no_vmirror no_hmirror
     --        delving the first path.
     --     2. Set the first delved path to floor.
     --     3. Set the rooms and the other delved paths to
-    --        no_r_tele_into floor ('_').  These areas might be
+    --        no_tele_into floor ('_').  These areas might be
     --        inescapable if water covers the path out.
     fill_disconnected{wanted = '@'}
     subst('@> = .')
     subst('< = _')
     kfeat('_ = .')
-    kprop('_ = no_rtele_into')
+    kprop('_ = no_tele_into')
 }}

@@ -639,7 +639,7 @@ TAGS:   no_monster_gen
 MONS:   ice dragon
 MONS:   w:9 white imp/w:1 nothing
 MONS:   white imp
-KPROP:  _` = no_rtele_into
+KPROP:  _` = no_tele_into
 SUBST:  ! = $:3 *:2
 SUBST:  ' = w:15 x:12 `:1
 SUBST:  ; = x:2 .:3
@@ -1979,7 +1979,7 @@ TAGS: transparent patrolling
 DEPTH: Lair
 MONS: plant / bush
 SUBST: t = t..
-KPROP: * = no_rtele_into
+KPROP: * = no_tele_into
 MAP
  tt@@@tt
 t.......t
@@ -2447,7 +2447,7 @@ KITEM:  U = superb_item
 KITEM:  Q = acquire any
 MARKER: S = lua:MonPropsMarker:new { anaconda_guard="anaconda_guard" }
 KFEAT:  o = granite_statue
-KPROP:  U = no_rtele_into
+KPROP:  U = no_tele_into
 {{
 function elephant_statue()
   return

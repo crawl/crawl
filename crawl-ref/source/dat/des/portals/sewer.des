@@ -791,7 +791,7 @@ KFEAT:  ' = deep_water
 COLOUR: ' = green
 KFEAT:  " = shallow_water
 COLOUR: " = lightgreen
-KPROP:  "' = no_rtele_into
+KPROP:  "' = no_tele_into
 : sewer_setup(_G)
 MAP
         ccccccccccccccccccccc

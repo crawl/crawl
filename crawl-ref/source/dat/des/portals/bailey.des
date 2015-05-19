@@ -239,7 +239,7 @@ WEIGHT: 3
 COLOUR: ; : red / lightred
 SUBST:  ; = .
 KMASK:  d = no_item_gen
-KPROP:  d = no_rtele_into
+KPROP:  d = no_tele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 KITEM:  d = unobtainable war axe / unobtainable battleaxe
@@ -294,7 +294,7 @@ NAME:   enter_bailey_8
 WEIGHT: 3
 COLOUR: n = red
 KMASK:  d = no_item_gen
-KPROP:  d = no_rtele_into
+KPROP:  d = no_tele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 KITEM:  d = unobtainable war axe / unobtainable battleaxe

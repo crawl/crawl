@@ -256,7 +256,7 @@ WEIGHT:  1
 MONS:    patrolling eye of devastation
 SHUFFLE: yzZ
 SUBST:   2 = 00xxY, y = ., zZX = x., Y = x', { = {}, 0 : 00'''
-KPROP:   02' = no_rtele_into
+KPROP:   02' = no_tele_into
 MAP
    ' ' '''Y.xx.@@@
   YY'Y'xxx'x.....@
@@ -284,7 +284,7 @@ SUBST:   ACEG = ', BDFH = x, 0 = 0 ':4, ab = 0XX
 SUBST:   X = x', Y = x., } = {} .:30, 0 : 00'''
 KMASK:   ' = !no_monster_gen
 KMASK:   '0x = opaque
-KPROP:   '0 = no_rtele_into
+KPROP:   '0 = no_tele_into
 MAP
   X'            'X
  X'X'X x  x  x XX'X
@@ -315,7 +315,7 @@ MONS: slime creature
 ORIENT: float
 SHUFFLE: abcd
 SUBST: ab : @, cd : .
-KPROP: f = no_rtele_into
+KPROP: f = no_tele_into
 SUBST: f = w.1
 KMASK: w = no_monster_gen
 KMASK: W = no_monster_gen
@@ -672,7 +672,7 @@ SUBST:   " : " .:3,  " = .c
 NSUBST:  P = O / *|
 KMASK:   |O* = no_monster_gen
 KPROP:   |O* = no_jiyva
-KPROP:   |O* = no_rtele_into
+KPROP:   |O* = no_tele_into
 KFEAT:   Z = altar_jiyva
 KITEM:   O = slimy rune of Zot
 KITEM:   * = star_item

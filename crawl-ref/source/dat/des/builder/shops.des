@@ -91,7 +91,7 @@ T.T
 ENDMAP
 
 NAME:   shop_statue
-TAGS:   allow_dup extra shop no_rtele_into
+TAGS:   allow_dup extra shop no_tele_into
 KFEAT:  O = any shop
 MAP
 @G..O..G@
@@ -138,7 +138,7 @@ b.b
 ENDMAP
 
 NAME: nicolae_shop_statue_plus
-TAGS: allow_dup extra shop no_rtele_into
+TAGS: allow_dup extra shop no_tele_into
 KFEAT: O = any shop
 MAP
    @
@@ -432,7 +432,7 @@ KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    sling bullet ego:silver w:2 | amulet of faith w:2 | potion of cure mutation | \
    ring of positive energy w:5 | any armour ego:positive_energy w:5
 KFEAT: _ = altar_the_shining_one / altar_zin / altar_elyvilon
-KPROP: 1 = no_rtele_into
+KPROP: 1 = no_tele_into
 MONS: angel
 MAP
 nnn

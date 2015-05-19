@@ -500,7 +500,7 @@ DEPTH: Swamp:1-2
 WEIGHT: 5
 KFEAT: ^ = known shaft trap
 SUBST: u = Ww
-KPROP: wW^ = no_rtele_into
+KPROP: wW^ = no_tele_into
 MAP
 ttttttttt
 twwwwwwwt
@@ -1189,7 +1189,7 @@ SHUFFLE: +d / +d / d+
 SUBST: w = w t:10
 SUBST: d = c
 SUBST: c = ccx
-KPROP: w = no_rtele_into
+KPROP: w = no_tele_into
 MAP
     wwww
   wwwwwwww
@@ -1218,7 +1218,7 @@ SUBST: w = w:10 t:10
 KFEAT: K = shallow_water
 KITEM: K = potion of poison / potion of degeneration / \
            potion of mutation
-KPROP: w = no_rtele_into
+KPROP: w = no_tele_into
 MARKER: K = lua:fog_machine { cloud_type="black smoke", \
                               pow_min = 10, pow_max = 30, delay = 50, \
                               size = 1, walk_dist = 2, spread_rate = 25 }
@@ -1251,7 +1251,7 @@ KITEM: O = great sword good_item w:20 / \
            double sword good_item w:2 / \
            triple sword good_item w:1
 KFEAT: K = deep_water
-KPROP: wK = no_rtele_into
+KPROP: wK = no_tele_into
 {{
   local cf = TriggerableFunction:new{
       func="callback.grunt_lady_of_the_lake_trigger",
@@ -1392,7 +1392,7 @@ ttT..TttTTTTT..Tt
 ENDMAP
 
 NAME: lightli_tree_ring
-KPROP: *w = no_rtele_into
+KPROP: *w = no_tele_into
 MAP
 tttttttttt
 tttttttttt
@@ -1434,7 +1434,7 @@ ENDMAP
 NAME: nicolae_swamp_hydra_murder_den
 TAGS: no_monster_gen
 : local heads = crawl.roll_dice(2, 3) + 7
-KPROP: ' = no_rtele_into
+KPROP: ' = no_tele_into
 SUBST: Z = T_
 NSUBST: ' = 1:h / 1:g / 2:c / 1:c' / 2:% / 2:%' / 5:p / 4:p' / *:'
 SUBST: ' = ....b
@@ -1503,7 +1503,7 @@ KMONS:   q = w:2 col:darkgrey plant name:withered name_adjective              \
               tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
               name_adjective tile:mons_withered_plant
 KFEAT:   67 = W
-KPROP:   ~ = no_rtele_into
+KPROP:   ~ = no_tele_into
 SUBST:   1 = 12, " = 6:15 W
 SHUFFLE: DE
 SUBST:   D = W, E = t, W = W:299 .:1, + = ++W, - = +, ~ = W
@@ -1568,7 +1568,7 @@ NAME:  cheibrodos_swamp_pet_leeches
 TAGS:  no_item_gen no_monster_gen
 DEPTH: Swamp, !Swamp:$
 MONS:  vampire ; potion of blood . long sword . robe, giant leech
-KPROP: e' = no_rtele_into
+KPROP: e' = no_tele_into
 KPROP: .21 = bloody / w:30 nothing
 KPROP: e = bloody
 : dgn.delayed_decay(_G, 'e', 'human corpse')
@@ -1928,7 +1928,7 @@ SHUFFLE: Od, 123,  lLO4 / wWP5
 SUBST:   1 = 111., 2 = 2., 3 = 333.
 SUBST:   l = l `:2, L~ = ., ' = .t, " = tc
 SUBST:   - = WW.
-KPROP:   ` = no_rtele_into
+KPROP:   ` = no_tele_into
 : if crawl.one_chance_in(11) then
 SUBST:   6 = .:999 6:1, OP = &
 : end

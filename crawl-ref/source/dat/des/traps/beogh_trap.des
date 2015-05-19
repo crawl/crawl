@@ -59,7 +59,7 @@ ORIENT: float
 # t gives you a warning not to come closer
 # ^ actually triggers the trap
 KFEAT:  Z = altar_beogh
-KPROP:  ^t.123*Z = no_rtele_into
+KPROP:  ^t.123*Z = no_tele_into
 {{
 local tm = TriggerableFunction:new{func="callback.beogh_trap_stepped",
                                    repeated=false}
