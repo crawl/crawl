@@ -2593,6 +2593,16 @@ void read(int slot)
         return;
     }
 
+    // need to handle this before we waste time (with e.g. blurryvis)
+    if (scroll.sub_type == SCR_BLINKING && item_type_known(scroll)
+        && player_has_orb()
+        && !yesno("Your blink will be uncontrolled - continue anyway?",
+                  false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
 
@@ -2682,8 +2692,16 @@ void read_scroll(int item_slot)
         const bool safely_cancellable
             = alreadyknown && !player_mutation_level(MUT_BLURRY_VISION);
 
-        cancel_scroll = (cast_controlled_blink(false, safely_cancellable)
+        if (player_has_orb())
+        {
+            mprf(MSGCH_ORB, "The Orb prevents control of your translocation!");
+            uncontrolled_blink();
+        }
+        else
+        {
+            cancel_scroll = (cast_controlled_blink(false, safely_cancellable)
                              == SPRET_ABORT) && alreadyknown;
+        }
 
         if (!cancel_scroll)
             mpr(pre_succ_msg); // ordering is iffy but w/e
