@@ -321,11 +321,6 @@ static bool _check_crystal_ball()
         return false;
     }
 #endif
-    if (you.intel() <= 1)
-    {
-        mpr("You lack the intelligence to focus on the shapes in the ball.");
-        return false;
-    }
 
     if (you.confused())
     {
