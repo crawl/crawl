@@ -149,8 +149,8 @@ This spell hurls a penetrating bolt of frost.
 %%%%
 Bolt of Draining spell
 
-This spell hurls a penetrating bolt of negative energy, which drains the life
-from any living creature it strikes.
+This spell hurls a penetrating bolt of negative energy, which drains any living
+creature it strikes.
 %%%%
 Bolt of Fire spell
 
