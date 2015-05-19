@@ -1424,11 +1424,10 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
             res += armour_type_prop(body_armour->sub_type, ARMF_RES_STEAM) * 2;
     }
 
-    res += (rf < 0) ? rf
-                    : (rf + 1) / 2;
+    res += rf * 2;
 
-    if (res > 3)
-        res = 3;
+    if (res > 2)
+        res = 2;
 
     return res;
 }
