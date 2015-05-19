@@ -279,7 +279,7 @@ void wizard_memorise_spec_spell()
         }
     }
 
-    if (!learn_spell(static_cast<spell_type>(spell)))
+    if (!learn_spell(static_cast<spell_type>(spell), true))
         crawl_state.cancel_cmd_repeat();
 }
 #endif
