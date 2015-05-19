@@ -324,14 +324,20 @@ static bool _check_crystal_ball()
 
     if (you.confused())
     {
-        mpr("You are unable to concentrate on the shapes in the ball.");
+        mpr("You are unable to concentrate on the shapes in the crystal ball.");
+        return false;
+    }
+
+    if (!enough_mp(1, false))
+    {
+        mpr("Your reserves of magic are too empty for the crystal ball to "
+            "function.");
         return false;
     }
 
     if (you.magic_points == you.max_magic_points)
     {
-        mpr("With no energy to recover, the crystal ball of energy is "
-            "presently useless to you.");
+        mpr("Your reserves of magic are already full.");
         return false;
     }
 
