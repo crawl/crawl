@@ -340,7 +340,7 @@ DEPTH:   Dis
 TAGS:    transparent extra decor layout_city
 SHUFFLE: ABCD/EFGH, IJK/LMN, OPQR/STUV
 SUBST:   ABHIRS = g, CDKP = ., EGJLNOQT = v, FMUV = l
-KPROP:   l = no_rtele_into
+KPROP:   l = no_tele_into
 KPROP:   l = no_cloud_gen
 NSUBST:  g = 5:g / *:v
 KFEAT:   g = iron_grate

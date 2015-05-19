@@ -1211,7 +1211,7 @@ ENDMAP
 NAME: nicolae_crypt_cryptocurrency
 DEPTH: Crypt
 TAGS: extra decor no_item_gen no_trap_gen no_monster_gen
-KPROP: $-c = no_rtele_into
+KPROP: $-c = no_tele_into
 KMASK: .@ = !opaque
 KITEM: $ = $ / $ good_item w:3
 KFEAT: m = iron_grate

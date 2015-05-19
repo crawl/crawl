@@ -153,7 +153,7 @@ syn keyword desOrientation overwritable
 syn keyword desOrientation vault no_item_gen no_monster_gen no_pool_fixup no_wall_fixup opaque no_trap_gen
 
 " KPROP
-syn keyword desOrientation bloody highlight mold no_cloud_gen no_rtele_into no_tele_into no_submerge no_tide no_jiyva
+syn keyword desOrientation bloody highlight mold no_cloud_gen no_tele_into no_submerge no_tide no_jiyva
 
 syn match desComment "^\s*#.*$&"
 

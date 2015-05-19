@@ -226,8 +226,8 @@ function wizlab_zonguldrok_killed_zombie(data, triggerable, triggerer,
         end
         local gxm, gym = dgn.max_bounds()
         for p in iter.rect_iterator(dgn.point(1, 1), dgn.point(gxm-1, gym-1)) do
-            if dgn.fprop_at(p.x, p.y, "no_rtele_into") then
-               dgn.fprop_changed(p.x, p.y, "no_rtele_into")
+            if dgn.fprop_at(p.x, p.y, "no_tele_into") then
+               dgn.fprop_changed(p.x, p.y, "no_tele_into")
             end
         end
     end
@@ -413,7 +413,7 @@ MARKER:     ? = lua:fog_machine { \
                  size_buildup_time = 25, cloud_type = "freezing vapour" \
              }
 COLOUR:     .' = red / blue
-KPROP:      '?! = no_rtele_into
+KPROP:      '?! = no_tele_into
 SUBST:      ' = .
 TILE:       n = dngn_transparent_stone_magenta
 COLOUR:     n = lightmagenta
@@ -1071,7 +1071,7 @@ NSUBST:     d = 2:e / 1:f / * = d:20 e:2
 ITEM:       any scroll / any potion, any book w:2
 ITEM:       double sword unrand:sword_of_zonguldrok
 KFEAT:      GW = G no_mimic
-KPROP:      12'def$ZL+ = no_rtele_into
+KPROP:      12'def$ZL+ = no_tele_into
 {{
 graves = 28 + crawl.random2(4) + crawl.random2(4)
 nsubst("G = " .. graves .. ":G / *:.")
@@ -1377,7 +1377,7 @@ KFEAT:   ^ = known permanent teleport trap
 KFEAT:   8_ = altar_lugonu
 KFEAT:   OPQRSTUVW&{( = teleporter
 KFEAT:   opqsrtuvw@}) = floor
-KPROP:   a"_~ = no_rtele_into
+KPROP:   a"_~ = no_tele_into
 MARKER:  ^ = lua:fog_machine { cloud_type = "translocational energy", pow_max = 25, \
              delay_min = 30, delay_max = 60, walk_dist = 1, size_min = 2, size_max = 3 }
 SHUFFLE: ozRrIUuLO / uLOozRrIU / rIUuLOozR, pZSsJVvMP / vMPpZSsJV / sJVvMPpZS
@@ -1533,7 +1533,7 @@ ITEM:       wand of lightning / staff of air / ring of flight / \
             any good_item / any w:20
 ITEM:       randbook disc:air
 KFEAT:      #4 = deep_water
-KPROP:      #4 = no_rtele_into
+KPROP:      #4 = no_tele_into
 NSUBST:     e = 2:f / * = de, # = 5:4 / 4 = 4## / *:#
 COLOUR:     +<b = white
 LFLOORCOL:  lightblue
@@ -1775,7 +1775,7 @@ ENDMAP
 # may indeed find powers beyond their comprehension.
 
 NAME:       wizlab_lehudib
-KPROP:      `56Nd = no_rtele_into
+KPROP:      `56Nd = no_tele_into
 ## The substitutions/shuffles below give 1/3 chance each of both paths
 ## open, E-path open, or F-path open, and gives 1/4 chance for the
 ## portal being in any of the 4 locations.

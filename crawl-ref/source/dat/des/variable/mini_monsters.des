@@ -565,7 +565,7 @@ DEPTH:  D:3-5
 KMONS:  S = w:3 adder / w:4 ball python / w:5 plant / nothing
 KFEAT:  SX = W
 KITEM:  X = gold
-KPROP:  W = no_rtele_into
+KPROP:  W = no_tele_into
 MAP
 .xxxxxx.@..
 .xxWStxx+xx
@@ -585,7 +585,7 @@ ENDMAP
 NAME:   minmay_lindwurm_lava
 TAGS:   no_monster_gen
 DEPTH:  D:8-, Lair:2-
-KPROP:  '*|1> = no_rtele_into
+KPROP:  '*|1> = no_tele_into
 KMONS:  1 = lindwurm
 KITEM:  1 = *
 SUBST:  L : ..Ll
@@ -703,7 +703,7 @@ NAME:  nrook_guardian_serpent_double
 TAGS:  no_monster_gen
 DEPTH: D:9-, Snake
 MONS:  patrolling guardian serpent
-KPROP: *| = no_rtele_into
+KPROP: *| = no_tele_into
 : if crawl.x_chance_in_y(you.absdepth() - 13, 4) then
 SUBST: ' = 1
 : else
@@ -1282,7 +1282,7 @@ ENDMAP
 NAME:    lexackson_kobold_supper
 DEPTH:   D:1-6
 TAGS:    no_monster_gen
-KPROP:   56' = no_rtele_into
+KPROP:   56' = no_tele_into
 MONS:    kobold, plant, bush
 : if you.absdepth() < 4 then
 MONS:    kobold ; dagger . stone
@@ -1552,7 +1552,7 @@ TAGS:   no_monster_gen
 DEPTH:  D:10-
 MONS:   hell hound, hell knight band, hell knight
 ITEM:   potion of flight ident:type q:3
-KPROP:  .123* = no_rtele_into
+KPROP:  .123* = no_tele_into
 MAP
 '''''''''''''''
 'ccccccccccccc'
@@ -2216,7 +2216,7 @@ ENDMAP
 NAME:   minmay_metal_thing
 DEPTH:  Depths
 MONS:   iron dragon, rust devil
-KPROP:  .1$| = no_rtele_into
+KPROP:  .1$| = no_tele_into
 NSUBST: ? = 1:+ / *:v
 MAP
 xxxlllllllllllllllllxxx
@@ -2771,7 +2771,7 @@ TAGS:    no_monster_gen patrolling
 DEPTH:   D:12-, Depths, !Depths:$
 MONS:    crystal guardian, orange crystal statue
 SUBST:   . = .:80 %$*|
-KPROP:   .012 = no_rtele_into
+KPROP:   .012 = no_tele_into
 : if you.absdepth() > 16 then
 SUBST:   0 = 1
 : end
@@ -3110,15 +3110,15 @@ DEPTH:  Depths, !Depths:$, Abyss
 MONS:   golden eye, eye of draining, giant eyeball
 MONS:   eye of devastation, great orb of eyes / shining eye w:5
 NSUBST: 5 = 2:5 / *:4 5:15
-KPROP:  13' = no_rtele_into
+KPROP:  13' = no_tele_into
 KFEAT:  m = iron_grate
 : if you.in_branch("Abyss") then
 SUBST:  c = c:4 v:1 b:1, = = +
 : end
 MAP
-     c++cccc
+     c==cccc
    ccc..c3'ccc
-  cc'c==c+m''cc
+  cc'c..c+m''cc
  cc'mm..c.mmm'cc
  c'mm...c...mm'c
 cc'm....c..5.m'cc
@@ -4120,7 +4120,7 @@ ENDMAP
 
 NAME:   lightli_corner_chamber
 DEPTH:  D:2-, Depths
-KPROP:  $*09 = no_rtele_into
+KPROP:  $*09 = no_tele_into
 MAP
 xxxxxxxxxxxx
 xxxxxxx....x
@@ -4163,7 +4163,7 @@ ENDMAP
 
 NAME: lightli_airlock
 DEPTH: D:11-, Snake, Shoals
-KPROP: W = no_rtele_into
+KPROP: W = no_tele_into
 MAP
  WccccWWWccccWW
  cc..ccWcc..ccWWWWW
@@ -4551,7 +4551,7 @@ TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:4-, Depths
 KFEAT:  ^ = known permanent teleport trap
 KFEAT:  _ = known alarm trap
-KPROP:  8^ = no_rtele_into
+KPROP:  8^ = no_tele_into
 : if you.absdepth() < 9 then
 SUBST: | = %
 SUBST: 8 = 0
@@ -5094,7 +5094,7 @@ FTILE:  xmwFt12|*+. = floor_limestone
 MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                               pow_max = 100, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = -1 }
-KPROP:  wF = no_rtele_into
+KPROP:  wF = no_tele_into
 SUBST:  F = w
 MAP
  xxxxxxxxxxx
@@ -5673,7 +5673,7 @@ COLOUR:  G = cyan
 TILE:    G = dngn_statue_iron
 : set_feature_name("granite_statue", "iron statue")
 : end
-KPROP:   lw = no_rtele_into
+KPROP:   lw = no_tele_into
 MAP
 xxxxxxxxxxxx
 xccccccccccx
@@ -5765,7 +5765,7 @@ TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:12-, Depths, Crypt
 WEIGHT: 3
 MONS:   reaper, reaper; scythe unrand:scythe_of_curses, mummy, guardian mummy
-KPROP:  12' = no_rtele_into
+KPROP:  12' = no_tele_into
 MAP
 ..............
 .cccccc+cccccc.
@@ -5793,7 +5793,7 @@ WEIGHT: 3
 MONS:   patrolling crystal guardian
 MONS:   orange crystal statue
 ITEM:   hat unrand:crown_of_dyrovepreva no_pickup
-KPROP:  12d' = no_rtele_into
+KPROP:  12d' = no_tele_into
 SUBST:  ' = .
 MAP
         .............

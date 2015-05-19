@@ -180,7 +180,7 @@ ORIENT: south
 MONS:   ball python w:3 / adder / water moccasin / nothing w:5
 MONS:   anaconda / nothing w:5
 SUBST:  w = wwW
-KPROP:  12 = no_rtele_into
+KPROP:  12 = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxx..@..xxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxxxxxxxx
 xx211xxxxxxxxxxxxxxwwwWWWWWwwwwxxxxxxxxxxxxxwwwWWWWwwxxxxxxxxxxx112xxx

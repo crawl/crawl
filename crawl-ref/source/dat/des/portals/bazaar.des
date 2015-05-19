@@ -199,7 +199,7 @@ ENDMAP
 
 # Bazaar entry with statue (Lemuel)
 NAME:   statue_bzr
-KPROP:  O = no_rtele_into
+KPROP:  O = no_tele_into
 SUBST:  G = G111
 MONS:   orange crystal statue / obsidian statue / ice statue
 : place_bazaar_portal(_G, true)

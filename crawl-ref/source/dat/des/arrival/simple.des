@@ -1962,7 +1962,7 @@ ENDMAP
 
 NAME: lightli_arrival_flooded_house
 ORIENT: float
-TAGS: arrival no_monster_gen no_rtele_into no_pool_fixup
+TAGS: arrival no_monster_gen no_tele_into no_pool_fixup
 SUBST: 1 = 1WWw.
 MONS: plant
 MAP

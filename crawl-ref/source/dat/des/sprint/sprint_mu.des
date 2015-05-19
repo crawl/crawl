@@ -1515,7 +1515,7 @@ MARKER: ~ = lua:props_marker({ \
         door_description_prefix="magically reinforced ", \
         veto_shatter="veto", veto_disintegrate="veto", veto_fragmentation="veto", door_restrict="veto" \
         })
-KPROP: X#kpq+^ag78yL45il%3x21*To$. = no_rtele_into
+KPROP: X#kpq+^ag78yL45il%3x21*To$. = no_tele_into
 MAP
 XXXXXXXXXXXXXXXXXXX
 X.+^^^AX..+...X...X

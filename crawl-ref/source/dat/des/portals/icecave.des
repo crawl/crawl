@@ -88,7 +88,7 @@ end
 function ice_cave_appearance(e)
   e.kfeat("< = exit_ice_cave")
   -- Don't trap amphibious players.
-  e.kprop("w = no_rtele_into")
+  e.kprop("w = no_tele_into")
 
   -- Alter short feature descriptions for all ice cave destination vaults.
   e.set_feature_name("rock_wall", "ice covered rock wall")

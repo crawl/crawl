@@ -184,7 +184,7 @@ ENDMAP
 
 NAME:   serial_ice_j
 TAGS:   luniq_serial_ice_big
-KPROP:  +-AwW = no_rtele_into
+KPROP:  +-AwW = no_tele_into
 SUBST:  w = wwW
 SUBST:  + = Ww.
 : init_ice(_G)

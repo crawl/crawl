@@ -68,7 +68,7 @@ KFEAT:  1 = .
 # (he refused to convert)
 MARKER: 1 = lua:portal_desc {slave_name="trog_wizard"}
 KMONS:  1 = wizard perm_ench:mute spells:. dbname:captured_wizard ; nothing
-KPROP:  1 = no_rtele_into
+KPROP:  1 = no_tele_into
 KFEAT:  # = iron_grate
 MAP
 ccccccccc

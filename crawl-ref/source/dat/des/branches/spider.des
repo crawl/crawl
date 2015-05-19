@@ -177,7 +177,7 @@ ENDMAP
 
 NAME: nicolae_spider_entry_orb_guardian
 TAGS: spider_entry no_monster_gen no_pool_fixup no_trap_gen
-KPROP: 'W = no_rtele_into
+KPROP: 'W = no_tele_into
 NSUBST: a = ..x / .
 SUBST: W = w', X = x., Q = xxx@, ' = ...x, . = .....^
 KFEAT: O = enter_spider_nest
@@ -502,7 +502,7 @@ KITEM:   6 = superb_item w:5 / any armour good_item ego:poison_resistance w:5
 KFEAT:   12345abcdefABCDEF% = web / shallow_water / . w:30
 KFEAT:   . = . w:39 / web w:1
 KMASK:   ' = !no_monster_gen
-KPROP:   ` = no_rtele_into
+KPROP:   ` = no_tele_into
 SHUFFLE: ab, AB, cd, CD, ef, EF, gh, GH
 SUBST:   ' = .:28 W:1 %:1, % = 00%%.
 SUBST:   cC = c:13 4:1 3:1, 1 = 1:17 2:2 5:1
@@ -795,7 +795,7 @@ NAME:   nicolae_orb_island
 DEPTH:  Spider:2-
 TAGS:   no_pool_fixup
 MONS:   generate_awake orb spider
-KPROP:  1'z = no_rtele_into
+KPROP:  1'z = no_tele_into
 KMASK:  w = no_monster_gen
 SUBST:  z = x
 MAP
@@ -871,7 +871,7 @@ TAGS:   no_monster_gen patrolling no_trap_gen
 MONS:   crimson imp w:50 / white imp w:25 / shadow imp w:15 / \
         iron imp w:10 / nothing w:50
 MONS:   demonic crawler
-KPROP:  d' = no_rtele_into
+KPROP:  d' = no_tele_into
 SUBST:  d = c
 NSUBST: c = 6:2 / *:.
 MAP

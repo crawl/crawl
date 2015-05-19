@@ -111,7 +111,7 @@ NAME:    abyss_entry_glasseish
 TAGS:    nolayout_encompass transparent
 WEIGHT:  5
 : abyss_entry(_G, 'O')
-KPROP:   T = no_rtele_into
+KPROP:   T = no_tele_into
 SUBST:   T : T l 1 2 A X
 MONS:    tentacled starspawn / starcursed mass / wretched star
 MONS:    plant col:random name:demonic name_adjective tile:mons_demonic_plant
@@ -1243,7 +1243,7 @@ KMONS:  O = hellephant
 MONS:   elephant, dire elephant, hellephant
 KITEM:  O = abyssal rune of Zot
 SUBST:  l = .....llllx, L : llllX
-KPROP:  ' = no_rtele_into
+KPROP:  ' = no_tele_into
 NSUBST: ' = 2 = 322 / 9 = 221. / *:., X = 1:l / *:x
 SUBST:  x : cccvvx, x = cccvvx
 MAP

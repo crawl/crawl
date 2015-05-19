@@ -285,7 +285,7 @@ ENDMAP
 NAME:    nicolae_geh_lava_in_the_way
 DEPTH:   Geh:2-, !Geh:$
 SHUFFLE: {[(, }])
-KPROP:   '; = no_rtele_into
+KPROP:   '; = no_tele_into
 NSUBST:  ' = 1:1 / *:., ; = 1:1 / *:.
 KMONS:   1 = hellion
 MAP

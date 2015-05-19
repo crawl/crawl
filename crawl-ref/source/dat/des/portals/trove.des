@@ -411,7 +411,7 @@ ENDMAP
 NAME: nicolae_trove_entry_isolated
 TAGS: no_pool_fixup transparent
 CHANCE: 5%
-KPROP: .O = no_rtele_into
+KPROP: .O = no_tele_into
 KFEAT: ' = .
 : trove.portal(_G)
 MAP

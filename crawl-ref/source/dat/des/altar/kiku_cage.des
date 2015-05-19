@@ -78,7 +78,7 @@ MARKER: h = lua:portal_desc {slave_name="zombie"}
 MARKER: h = lua:MonPropsMarker:new{dslave="dslave"}
 KFEAT:  h = .
 KMONS:  h = generate_awake Human never_corpse hp:12 ; nothing
-KPROP:  h = no_rtele_into
+KPROP:  h = no_tele_into
 TILE:   m = dngn_transparent_wall_darkgray
 MAP
 xxxxxxx

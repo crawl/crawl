@@ -929,7 +929,7 @@ x..x
 ENDMAP
 
 NAME:  vaults_dpeg_emergency_exit
-TAGS:  vaults_empty no_rtele_into
+TAGS:  vaults_empty no_tele_into
 DEPTH: Vaults:1-3
 KFEAT: ^ = known shaft trap
 MAP
@@ -967,7 +967,7 @@ ENDMAP
 
 NAME:  vaults_dpeg_encased_lava
 TAGS:  vaults_empty
-KPROP: l = no_rtele_into
+KPROP: l = no_tele_into
 MAP
 .......
 .nnnnn.

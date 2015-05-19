@@ -1201,7 +1201,7 @@ MONS:       toenail golem
 KFEAT:      K = .
 MARKER:     K = lua:fog_machine ( { cloud_type = "rain", walk_dist=3, pow_max=2, \
                                     delay=300, size=3 } )
-KPROP:      lVK = no_rtele_into
+KPROP:      lVK = no_tele_into
 MAP
       xxxx                  vvvvvvvvvvvvv
    xxxxllxxx xxx            v...........v
@@ -1255,7 +1255,7 @@ collapse_marker:add_triggerer(DgnTriggerer:new {
 })
 
 }}
-KPROP:      RXZ12< = no_rtele_into
+KPROP:      RXZ12< = no_tele_into
 SUBST:      X = .
 SUBST:      ZY = c.
 SUBST:      R = defg$
@@ -1307,7 +1307,7 @@ NSUBST:     M = 3:1 / 2:2 / 3 = $def / *:.
 NSUBST:     N = 2:1 / 1:2 / 1 = $def / *:.
 SUBST:      . = .:99 ':1
 KFEAT:      ' = known alarm trap
-KPROP:      ` = no_rtele_into
+KPROP:      ` = no_tele_into
 :           fiery_guardians(_G, true, true)
 :           volcano_setup(_G)
 :           place_chained_volcano(_G)
