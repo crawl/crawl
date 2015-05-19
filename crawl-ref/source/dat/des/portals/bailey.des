@@ -249,19 +249,19 @@ KITEM:  d = unobtainable glaive / unobtainable bardiche
 :   bailey_portal_polearm(_G)
 : end
 MAP
-.......nnn.......
-..nnn..ndn..nnn..
-..ndn..nnn..ndn..
-..nnn.......nnn..
+.......ooo.......
+..ooo..odo..ooo..
+..odo..ooo..odo..
+..ooo.......ooo..
 .................
-nnn....;;;....nnn
-ndn....;O;....ndn
-nnn....;;;....nnn
+ooo....;;;....ooo
+odo....;O;....odo
+ooo....;;;....ooo
 .................
-..nnn.......nnn..
-..ndn..nnn..ndn..
-..nnn..ndn..nnn..
-.......nnn.......
+..ooo.......ooo..
+..odo..ooo..odo..
+..ooo..odo..ooo..
+.......ooo.......
 ENDMAP
 
 # They were just having a party.
@@ -306,11 +306,11 @@ KITEM:  d = unobtainable glaive / unobtainable bardiche
 MAP
  xxxxxxxxxxxxxxxxxxx
  x.................@
- ccccccnnncccccnnncc
- c.....ndn.....ndnOc
- c.nnn.nnn.nnn.nnn.c
-@+.ndn.....ndn.....c
- ccnnncccccnnncccccc
+ ccccccooocccccooocc
+ c.....odo.....odoOc
+ c.ooo.ooo.ooo.ooo.c
+@+.odo.....odo.....c
+ ccooocccccooocccccc
  x.................@
  xxxxxxxxxxxxxxxxxxx
 ENDMAP
