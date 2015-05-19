@@ -319,19 +319,13 @@ static bool _flavour_triggers_damageless(attack_flavour flavour)
 
 void melee_attack::apply_black_mark_effects()
 {
-    // Slightly weaker and less reliable effects for players.
+    // Less reliable effects for players.
     if (attacker->is_player()
         && you.mutation[MUT_BLACK_MARK]
-        && one_chance_in(5))
+        && one_chance_in(5)
+        || attacker->is_monster()
+           && attacker->as_monster()->has_ench(ENCH_BLACK_MARK))
     {
-        if (you.hp < you.hp_max
-            && !you.duration[DUR_DEATHS_DOOR]
-            && !defender->as_monster()->is_summoned())
-        {
-            mpr("You feel better.");
-            attacker->heal(random2(damage_done));
-        }
-
         if (!defender->alive())
             return;
 
@@ -341,31 +335,7 @@ void melee_attack::apply_black_mark_effects()
                 antimagic_affects_defender(damage_done * 8);
                 break;
             case 1:
-                defender->weaken(attacker, 2);
-                break;
-            case 2:
-                defender->drain_exp(attacker);
-                break;
-        }
-    }
-    else if (attacker->is_monster()
-             && attacker->as_monster()->has_ench(ENCH_BLACK_MARK))
-    {
-        monster* mon = attacker->as_monster();
-
-        if (mon->heal(random2avg(damage_done, 2)))
-            simple_monster_message(mon, " is healed.");
-
-        if (!defender->alive())
-            return;
-
-        switch (random2(3))
-        {
-            case 0:
-                antimagic_affects_defender(damage_done * 8);
-                break;
-            case 1:
-                defender->slow_down(attacker, 5 + random2(7));
+                defender->weaken(attacker, 6);
                 break;
             case 2:
                 defender->drain_exp(attacker, false, 10);
