@@ -3097,9 +3097,6 @@ bool bolt::harmless_to_player() const
     case BEAM_HOLY:
         return you.res_holy_energy(&you);
 
-    case BEAM_STEAM:
-        return player_res_steam(false) >= 3;
-
     case BEAM_MIASMA:
         return you.res_rotting();
 
