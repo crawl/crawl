@@ -653,33 +653,56 @@ static void _powered_by_pain(int dam)
     const int level = player_mutation_level(MUT_POWERED_BY_PAIN);
 
     if (you.mutation[MUT_POWERED_BY_PAIN]
-        && (random2(dam) > 4 + div_rand_round(you.experience_level, 4)
-            || dam >= you.hp_max / 2))
+        && (one_chance_in(5)
+            || dam >= you.hp_max / (2 + level)))
     {
-        switch (random2(4))
+        mpr("You focus on the pain.");
+        bool success = false;
+        int tries = 0;
+        do
         {
-        case 0:
-        case 1:
-        {
-            if (you.magic_points < you.max_magic_points)
+            tries++;
+            switch (random2(4))
             {
-                mpr("You focus on the pain.");
-                int mp = roll_dice(3, 2 + 3 * level);
-                mpr("You feel your power returning.");
-                inc_mp(mp);
+            case 0:
+                if (you.magic_points < you.max_magic_points)
+                {
+                    const int mp = 2 + 3 * level;
+                    inc_mp(mp);
+                    mpr("You feel your magic returning.");
+                    success = true;
+                }
+                break;
+            case 1:
+                if (!you.duration[DUR_MIGHT])
+                {
+                    mprf(MSGCH_DURATION, "You feel a burst of might!");
+                    you.increase_duration(DUR_MIGHT, level * 4);
+                    notify_stat_change(STAT_STR, 5, true);
+                    success = true;
+                }
+                break;
+            case 2:
+                if (!you.duration[DUR_AGILITY])
+                {
+                    mprf(MSGCH_DURATION, "You feel a burst of agility!");
+                    you.increase_duration(DUR_AGILITY, level * 4);
+                    notify_stat_change(STAT_DEX, 5, true);
+                    success = true;
+                }
+                break;
+            case 3:
+                if (!you.duration[DUR_BRILLIANCE])
+                {
+                    mprf(MSGCH_DURATION, "You feel a burst of brilliance!");
+                    you.increase_duration(DUR_BRILLIANCE, level * 4);
+                    notify_stat_change(STAT_INT, 5, true);
+                    success = true;
+                }
                 break;
             }
-            break;
         }
-        case 2:
-            mpr("You focus on the pain.");
-            potionlike_effect(POT_MIGHT, level * 20);
-            break;
-        case 3:
-            mpr("You focus on the pain.");
-            potionlike_effect(POT_AGILITY, level * 20);
-            break;
-        }
+        while (!success && tries < 10);
     }
 }
 
