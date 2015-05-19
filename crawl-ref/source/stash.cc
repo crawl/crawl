@@ -322,7 +322,8 @@ void Stash::update()
         // under the item.
         if (items.empty())
         {
-            add_item(item);
+            if (!(item.flags & ISFLAG_UNOBTAINABLE))
+                add_item(item);
             // Note that we could be lying here, since we can have
             // a verified falsehood (if there's a mimic.)
             verified = !_grid_has_perceived_multiple_items(p);
