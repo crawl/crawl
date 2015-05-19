@@ -90,9 +90,9 @@ and tougher.
 %%%%
 Black Mark spell
 
-This spell empowers the caster and their nearby allies to steal the vital
-energies of their foes on a successful melee attack, variously draining magic,
-speed or skills.
+This spell empowers the caster and their nearby allies to debilitate their
+foes on a successful melee attack, allowing them to inflict draining, cause
+weakness, or deplete magical power.
 %%%%
 Blade Hands spell
 

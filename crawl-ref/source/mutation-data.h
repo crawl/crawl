@@ -1776,11 +1776,11 @@ static const mutation_def mut_data[] =
 { MUT_BLACK_MARK, 0, 1, MUTFLAG_GOOD, false,
   "black mark",
 
-  {"Your melee attacks sometimes drain vitality from your foes.", "", ""},
+  {"Your melee attacks may debilitate your foes.", "", ""},
   {"An ominous black mark forms on your body.", "", ""},
   {"", "", ""},
 
-  "a draining black mark",
+  "a black mark",
 },
 
 { MUT_COLD_BLOODED, 0, 1, MUTFLAG_BAD, true,
