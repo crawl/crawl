@@ -798,6 +798,9 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
     COMPILE_CHECK(ARRAYSZ(_subtype_finders) == NUM_OBJECT_CLASSES);
     ASSERT(class_wanted != OBJ_RANDOM);
 
+    if (class_wanted == OBJ_ARMOUR && you.species == SP_FELID)
+        return OBJ_RANDOM;
+
     int type_wanted = OBJ_RANDOM;
 
     int useless_count = 0;
