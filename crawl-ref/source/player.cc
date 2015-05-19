@@ -8178,7 +8178,7 @@ void player_open_door(coord_def doorpos)
         }
     }
 
-    int skill = you.dex() + you.skill_rdiv(SK_STEALTH);
+    const int skill = 8 + you.skill_rdiv(SK_STEALTH, 4, 3);
 
     string berserk_open = env.markers.property_at(doorpos, MAT_ANY,
                                                   "door_berserk_verb_open");
@@ -8340,7 +8340,7 @@ void player_close_door(coord_def doorpos)
         }
     }
 
-    const int skill = you.dex() + you.skill_rdiv(SK_STEALTH);
+    const int skill = 8 + you.skill_rdiv(SK_STEALTH, 4, 3);
 
     if (you.berserk())
     {
