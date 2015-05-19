@@ -749,7 +749,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (trig_knows && one_chance_in(3))
                 mpr("You avoid triggering a blade trap.");
             else if (random2limit(you.evasion(), 40)
-                     + (random2(you.dex()) / 3) + (trig_knows ? 3 : 0) > 8)
+                     + random2(6) + (trig_knows ? 3 : 0) > 8)
             {
                 mpr("A huge blade swings just past you!");
             }
@@ -822,7 +822,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 copy_item_to_grid(item, triggerer.pos());
 
                 if (random2limit(you.evasion(), 40)
-                    + (random2(you.dex()) / 3) + (trig_knows ? 3 : 0) > 12)
+                    + random2(4) + (trig_knows ? 3 : 0) > 12)
                 {
                     mpr("A net drops to the ground!");
                 }
@@ -835,7 +835,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                             xom_is_stimulated(50);
 
                         // Mark the item as trapping; after this it's
-                        // safe to update the view
+                        // safe to update the view.
                         _mark_net_trapping(you.pos());
                     }
                 }
