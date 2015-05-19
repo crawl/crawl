@@ -354,6 +354,18 @@ spret_type cast_controlled_blink(bool fail, bool safe)
         return SPRET_ABORT;
     }
 
+    if (player_has_orb())
+    {
+        if (!yesno("Your blink will be uncontrolled - continue anyway?",
+                   false, 'n'))
+        {
+            return SPRET_ABORT;
+        }
+
+        mprf(MSGCH_ORB, "The Orb prevents control of your translocation!");
+        return cast_blink(fail);
+    }
+
     return controlled_blink(fail, safe);
 }
 
