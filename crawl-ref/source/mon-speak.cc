@@ -695,7 +695,7 @@ bool mons_speaks(monster* mons)
     mon_body_shape shape = get_mon_shape(mons);
     mon_intel_type intel = mons_intel(mons);
     if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA
-        && intel < I_NORMAL)
+        && intel < I_HUMAN)
     {
         prefixes.insert(prefixes.begin(), "stupid");
     }
@@ -703,28 +703,24 @@ bool mons_speaks(monster* mons)
     {
         if (mons_base_char(mons->type) == 'w')
         {
-            if (intel > I_REPTILE)
+            if (intel > I_BRAINLESS)
                 prefixes.insert(prefixes.begin(), "smart");
-            else if (intel < I_INSECT)
-                prefixes.insert(prefixes.begin(), "stupid");
         }
         else
         {
-            if (intel > I_ANIMAL)
+            if (intel >= I_HUMAN)
                 prefixes.insert(prefixes.begin(), "smart");
-            else if (intel < I_ANIMAL)
+            else if (intel <= I_BRAINLESS)
                 prefixes.insert(prefixes.begin(), "stupid");
         }
     }
     else if (shape >= MON_SHAPE_INSECT && shape <= MON_SHAPE_SNAIL)
     {
-        if (intel > I_REPTILE)
+        if (intel > I_BRAINLESS)
             prefixes.insert(prefixes.begin(), "smart");
-        else if (intel < I_INSECT)
-            prefixes.insert(prefixes.begin(), "stupid");
     }
     else if (shape >= MON_SHAPE_PLANT && shape <= MON_SHAPE_BLOB
-             && intel > I_PLANT)
+             && intel > I_BRAINLESS)
     {
         prefixes.insert(prefixes.begin(), "smart");
     }

@@ -1046,17 +1046,12 @@ static int _mon_forgetfulness_time(mon_intel_type intelligence)
 {
     switch (intelligence)
     {
-        case I_HIGH:
-            return 1000;
-        case I_NORMAL:
-        default:
-            return 500;
+        case I_HUMAN:
+            return 600;
         case I_ANIMAL:
-        case I_REPTILE:
-        case I_INSECT:
-            return 250;
-        case I_PLANT:
-            return 125;
+            return 300;
+        case I_BRAINLESS:
+            return 150;
     }
 }
 

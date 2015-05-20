@@ -6810,7 +6810,7 @@ static void _speech_keys(vector<string>& key_list,
     {
         if (real_spell)
             key_list.push_back(spell_name + cast_str + " real");
-        if (mons_intel(mons) >= I_NORMAL)
+        if (mons_intel(mons) >= I_HUMAN)
             key_list.push_back(spell_name + cast_str + " gestures");
     }
 
@@ -7910,8 +7910,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
             return false;
 
         // Only intelligent monsters estimate.
-        int intel = mons_intel(mon);
-        if (intel < I_NORMAL)
+        if (mons_intel(mon) < I_HUMAN)
             return false;
 
         // We'll estimate the target's resistance to magic, by first getting
@@ -7922,11 +7921,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         {
             est_magic_resist = foe->res_magic();
 
-            // now randomise (normal intels less accurate than high):
-            if (intel == I_NORMAL)
-                est_magic_resist += random2(80) - 40;
-            else
-                est_magic_resist += random2(30) - 15;
+            // now randomise
+            est_magic_resist += random2(60) - 30; // +-30
         }
 
         const int power = ench_power_stepdown(_mons_spellpower(monspell, *mon));

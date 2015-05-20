@@ -1499,7 +1499,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
 
         // This position could become deep water, and they might drown.
         if (grd(cloud.pos) == DNGN_SHALLOW_WATER
-            && mons_intel(mons) > I_PLANT)
+            && mons_intel(mons) > I_BRAINLESS)
         {
             return true;
         }
@@ -1527,7 +1527,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
     }
 
     // Exceedingly dumb creatures will wander into harmful clouds.
-    if (mons_intel(mons) == I_PLANT && !extra_careful)
+    if (mons_intel(mons) == I_BRAINLESS && !extra_careful)
         return false;
 
     // If we get here, the cloud is potentially harmful.

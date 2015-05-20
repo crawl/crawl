@@ -3328,7 +3328,7 @@ static string _get_monster_desc(const monster_info& mi)
     if (mi.is(MB_UMBRAED))
         text += pronoun + " is wreathed by an umbra.\n";
 
-    if (mi.intel() <= I_INSECT)
+    if (mi.intel() <= I_BRAINLESS)
         text += pronoun + " is mindless.\n";
 
     if (mi.is(MB_CHAOTIC))

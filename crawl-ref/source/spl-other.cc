@@ -347,7 +347,7 @@ static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
 {
     monster* mons = monster_at(where);
     if (mons == nullptr
-        || mons_intel(mons) < I_NORMAL
+        || mons_intel(mons) < I_HUMAN
         || mons->holiness() != MH_NATURAL
         || mons->res_poison() > 0)
     {

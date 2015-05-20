@@ -77,7 +77,7 @@ void finish_butchering(item_def& corpse, bool bottling)
     ASSERT(corpse.base_type == OBJ_CORPSES);
     ASSERT(corpse.sub_type == CORPSE_BODY);
     const bool was_holy = mons_class_holiness(corpse.mon_type) == MH_HOLY;
-    const bool was_intelligent = corpse_intelligence(corpse) >= I_NORMAL;
+    const bool was_intelligent = corpse_intelligence(corpse) >= I_HUMAN;
     const bool was_same_genus = is_player_same_genus(corpse.mon_type);
 
     if (bottling)
