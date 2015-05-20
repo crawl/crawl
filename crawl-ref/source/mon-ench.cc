@@ -1675,13 +1675,11 @@ void monster::apply_enchantment(const mon_enchant &me)
     // Assumption: monster::res_fire has already been checked.
     case ENCH_STICKY_FLAME:
     {
-        if (feat_is_watery(grd(pos())) && (ground_level()
-              || mons_intel(this) >= I_NORMAL && airborne()))
+        if (feat_is_watery(grd(pos())) && ground_level())
         {
             if (mons_near(this) && visible_to(&you))
             {
-                mprf(ground_level() ? "The flames covering %s go out."
-                     : "%s dips into the water, and the flames go out.",
+                mprf("The flames covering %s go out.",
                      name(DESC_THE, false).c_str());
             }
             del_ench(ENCH_STICKY_FLAME);
