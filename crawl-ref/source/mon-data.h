@@ -491,11 +491,9 @@ static monsterentry mondata[] =
 },
 
 // draconians ('d')
-{   // Base draconian - for use like MONS_HUMANMONS_ELF although we
-    // now store the draconian subspecies in base_monster for those
-    // listed as species MONS_DRACONIAN.
+{   // Base draconian.
     MONS_DRACONIAN, 'd', BROWN, "draconian",
-    M_COLD_BLOOD | M_SPEAKS,
+    M_COLD_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
     10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, 10,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -721,10 +719,9 @@ static monsterentry mondata[] =
 },
 
 // elves ('e')
-//mv: have to exist because it's (and should be) a valid polymorph target.
 {
     MONS_ELF, 'e', LIGHTRED, "elf",
-    M_WARM_BLOOD | M_SPEAKS,
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
     10, MONS_ELF, MONS_ELF, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1027,9 +1024,9 @@ static monsterentry mondata[] =
     MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE, MON_SHAPE_HUMANOID
 },
 
-{ // Another dummy monster. Zombies and poly allowed.
+{ // Another dummy monster.
     MONS_DWARF, 'g', GREEN, "dwarf",
-    M_WARM_BLOOD | M_SPEAKS,
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
     10, MONS_DWARF, MONS_DWARF, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1041,7 +1038,7 @@ static monsterentry mondata[] =
 
 {
     MONS_DEEP_DWARF, 'g', LIGHTBLUE, "deep dwarf",
-    M_WARM_BLOOD | M_SPEAKS | M_NO_REGEN,
+    M_WARM_BLOOD | M_SPEAKS | M_NO_REGEN | M_NO_POLY_TO,
     MR_NO_FLAGS,
     10, MONS_DWARF, MONS_DEEP_DWARF, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
