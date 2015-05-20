@@ -133,7 +133,6 @@ spret_type stinking_cloud(int pow, bolt &beem, bool fail)
 
     // Fire tracer.
     beem.source            = you.pos();
-    beem.smart_monster     = true;
     beem.attitude          = ATT_FRIENDLY;
     beem.friend_info.count = 0;
     beem.is_tracer         = true;
