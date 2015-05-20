@@ -326,7 +326,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     monster_spells spl    = mons->spells;
     const bool need_save_spells
             =  old_mon_unique && !slimified
-               && mons_class_intel(targetc) >= I_NORMAL
+               && mons_class_intel(targetc) >= I_HUMAN
                && (!mons->has_spells() || mons->is_actual_spellcaster());
 
     mons->number       = 0;

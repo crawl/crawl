@@ -149,12 +149,9 @@ enum mon_summon_type
 
 enum mon_intel_type             // Must be in increasing intelligence order
 {
-    I_PLANT = 0,
-    I_INSECT,
-    I_REPTILE,
+    I_BRAINLESS = 0,
     I_ANIMAL,
-    I_NORMAL,
-    I_HIGH,
+    I_HUMAN,
 };
 
 enum habitat_type

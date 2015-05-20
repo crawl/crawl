@@ -430,11 +430,8 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
 
     if (msg_ch == MSGCH_SOUND)
     {
-        // Those monsters of normal or greater intelligence will realize that they
-        // were the source of the sound.
-        mid_t src = target->is_player() ? MID_PLAYER
-                    : mons_intel(target->as_monster()) >= I_NORMAL ? target->mid
-                    : MID_NOBODY;
+        // XXX: can this just be target->mid?
+        mid_t src = target->is_player() ? MID_PLAYER : target->mid;
         noisy(sound_loudness, target->pos(), src);
     }
 }

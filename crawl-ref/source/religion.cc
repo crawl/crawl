@@ -3899,7 +3899,7 @@ bool god_hates_eating(god_type god, monster_type mc)
         return true;
     if (is_good_god(you.religion) && mons_class_holiness(mc) == MH_HOLY)
         return true;
-    if (you_worship(GOD_ZIN) && mons_class_intel(mc) >= I_NORMAL)
+    if (you_worship(GOD_ZIN) && mons_class_intel(mc) >= I_HUMAN)
         return true;
     return false;
 }
@@ -4316,7 +4316,7 @@ int piety_breakpoint(int i)
 bool tso_unchivalric_attack_safe_monster(const monster* mon)
 {
     const mon_holy_type holiness = mon->holiness();
-    return mons_intel(mon) < I_NORMAL
+    return mons_intel(mon) < I_HUMAN
            || mons_is_object(mon->mons_species())
            || mon->undead_or_demonic()
            || mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)

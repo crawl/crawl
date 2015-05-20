@@ -403,7 +403,7 @@ static int _heretic_recite_weakness(const monster *mon)
 
     // Sleeping or paralyzed monsters will wake up or still perceive their
     // surroundings, respectively. So, you can still recite to them.
-    if (mons_intel(mon) >= I_NORMAL
+    if (mons_intel(mon) >= I_HUMAN
         && !(mon->has_ench(ENCH_DUMB) || mons_is_confused(mon)))
     {
         // In the eyes of Zin, everyone is a sinner until proven otherwise!
@@ -480,7 +480,7 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
     // Don't look at the monster's god; that's what RECITE_HERETIC is for.
     eligibility[RECITE_IMPURE] = mon->how_unclean(false);
     // Sanity check: if a monster is 'really' natural, don't consider it impure.
-    if (mons_intel(mon) < I_NORMAL
+    if (mons_intel(mon) < I_HUMAN // XXX: why are we checking int AND holiness?
         && (holiness == MH_NATURAL || holiness == MH_PLANT)
         && mon->type != MONS_UGLY_THING
         && mon->type != MONS_VERY_UGLY_THING
@@ -818,7 +818,8 @@ bool zin_recite_to_single_monster(const coord_def& where)
     case RECITE_UNHOLY:
         if (check < 5)
         {
-            if (mons_intel(mon) > I_INSECT && coinflip())
+            // XXX: why on earth are we checking intel here?
+            if (mons_intel(mon) > I_BRAINLESS && coinflip())
                 effect = ZIN_DAZE;
             else
                 effect = ZIN_CONFUSE;

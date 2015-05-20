@@ -84,7 +84,7 @@ static void _mon_check_foe_invalid(monster* mon)
 static bool _mon_tries_regain_los(monster* mon)
 {
     // Only intelligent monsters with ranged attack will try to regain LOS.
-    if (mons_intel(mon) < I_NORMAL || !mons_has_ranged_attack(mon))
+    if (mons_intel(mon) < I_HUMAN || !mons_has_ranged_attack(mon))
         return false;
 
     // Any special case should go here.
@@ -96,8 +96,7 @@ static bool _mon_tries_regain_los(monster* mon)
     }
 
     // Randomize it a bit to make it less predictable.
-    return mons_intel(mon) == I_NORMAL && !one_chance_in(10)
-           || mons_intel(mon) == I_HIGH && !one_chance_in(20);
+    return !one_chance_in(10);
 }
 
 // Monster tries to get into a firing position. Among the cells which have
@@ -254,7 +253,7 @@ void handle_behaviour(monster* mon)
 
     bool proxFoe;
     bool isHealthy  = (mon->hit_points > mon->max_hit_points / 2);
-    bool isSmart    = (mons_intel(mon) > I_ANIMAL);
+    bool isSmart    = (mons_intel(mon) >= I_HUMAN);
     bool isScared   = mon->has_ench(ENCH_FEAR);
     bool isPacified = mon->pacified();
     bool patrolling = mon->is_patrolling();
@@ -343,15 +342,12 @@ void handle_behaviour(monster* mon)
 
         // [dshaligram] Very smart monsters have a chance of clueing in to
         // invisible players in various ways.
-        if (intel == I_NORMAL && one_chance_in(13)
-                 || intel == I_HIGH && one_chance_in(6))
-        {
+        if (intel == I_HUMAN && one_chance_in(12))
             proxPlayer = true;
-        }
 
         // Ash penance makes monsters very likely to target you through
         // invisibility, depending on their intelligence.
-        if (player_under_penance(GOD_ASHENZARI) && x_chance_in_y(intel, 7))
+        if (player_under_penance(GOD_ASHENZARI) && x_chance_in_y(intel, 3))
             proxPlayer = true;
     }
 
@@ -385,7 +381,7 @@ void handle_behaviour(monster* mon)
         if (!isFriendly
             && !mon->has_ench(ENCH_INSANE)
             && proxPlayer
-            && mons_intel(mon) >= I_NORMAL)
+            && mons_intel(mon) >= I_HUMAN)
         {
             mon->foe = MHITYOU;
         }
@@ -649,18 +645,13 @@ void handle_behaviour(monster* mon)
             // Hack: smarter monsters will tend to pursue the player longer.
             switch (mons_intel(mon))
             {
-            case I_HIGH:
-                mon->foe_memory = random_range(700, 1300);
-                break;
-            case I_NORMAL:
-                mon->foe_memory = random_range(300, 700);
+            case I_HUMAN:
+                mon->foe_memory = random_range(450, 1000);
                 break;
             case I_ANIMAL:
-            case I_INSECT:
-            case I_REPTILE:
                 mon->foe_memory = random_range(250, 550);
                 break;
-            case I_PLANT:
+            case I_BRAINLESS:
                 mon->foe_memory = random_range(100, 300);
                 break;
             }
@@ -1031,7 +1022,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     int fleeThreshold = min(mon->max_hit_points / 4, 20);
 
-    bool isSmart          = (mons_intel(mon) > I_ANIMAL);
+    bool isSmart          = (mons_intel(mon) >= I_HUMAN);
     bool setTarget        = false;
     bool breakCharm       = false;
     bool was_unaware      = mon->asleep() || mon->foe == MHITNOT;
@@ -1111,7 +1102,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // If the monster can't reach its target and can't attack it
         // either, retreat.
         try_pathfind(mon);
-        if (mons_intel(mon) > I_REPTILE && !mons_can_attack(mon)
+        if (mons_intel(mon) > I_BRAINLESS && !mons_can_attack(mon)
             && target_is_unreachable(mon))
         {
             mon->behaviour = BEH_RETREAT;

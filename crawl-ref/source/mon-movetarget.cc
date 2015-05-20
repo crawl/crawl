@@ -28,12 +28,7 @@
 // will still be able to come nearer (and the mark will then be cleared).
 static void _mark_neighbours_target_unreachable(monster* mon)
 {
-    // Highly intelligent monsters are perfectly capable of pathfinding
-    // and don't need their neighbour's advice.
     const mon_intel_type intel = mons_intel(mon);
-    if (intel > I_NORMAL)
-        return;
-
     const bool flies         = mon->airborne();
     const bool amphibious    = (mons_habitat(mon) == HT_AMPHIBIOUS);
     const bool amph_lava     = (mons_habitat(mon) == HT_AMPHIBIOUS_LAVA);
@@ -569,14 +564,14 @@ static bool _handle_monster_travelling(monster* mon)
 
 static bool _choose_random_patrol_target_grid(monster* mon)
 {
-    const int intel = mons_intel(mon);
+    const mon_intel_type intel = mons_intel(mon);
 
     // Zombies will occasionally just stand around.
     // This does not mean that they don't move every second turn. Rather,
     // once they reach their chosen target, there's a 50% chance they'll
     // just remain there until next turn when this function is called
     // again.
-    if (intel == I_PLANT && coinflip())
+    if (intel == I_BRAINLESS && coinflip())
         return true;
 
     // If there's no chance we'll find the patrol point, quit right away.
@@ -586,18 +581,19 @@ static bool _choose_random_patrol_target_grid(monster* mon)
     // Can the monster see the patrol point from its current position?
     const bool patrol_seen = mon->see_cell(mon->patrol_point);
 
-    if (intel == I_PLANT && !patrol_seen)
+    if (intel == I_BRAINLESS && !patrol_seen)
     {
         // Really stupid monsters won't even try to get back into the
         // patrol zone.
         return false;
     }
 
-    // While the patrol point is in easy reach, monsters of insect/plant
+    // While the patrol point is in easy reach, monsters of brainless
     // intelligence will only use a range of 4 (distance from the patrol point).
     // Otherwise, try to get back using the full LOS.
-    const int  rad      = (intel >= I_ANIMAL || !patrol_seen) ? LOS_RADIUS : 4;
-    const bool is_smart = (intel >= I_NORMAL);
+    const int  rad      = (intel > I_BRAINLESS || !patrol_seen) ? LOS_RADIUS
+                                                                : 4;
+    const bool is_smart = (intel >= I_HUMAN);
 
     los_def patrol(mon->patrol_point, opacity_monmove(*mon),
                    circle_def(rad, C_SQUARE));
@@ -663,7 +659,7 @@ static bool _choose_random_patrol_target_grid(monster* mon)
         }
 
         bool set_target = false;
-        if (intel == I_PLANT && *ri == mon->patrol_point)
+        if (intel == I_BRAINLESS && *ri == mon->patrol_point)
         {
             // Slightly greater chance to simply head for the centre.
             count_grids += 3;
@@ -1048,7 +1044,7 @@ static bool _can_safely_go_through(const monster * mon, const coord_def p)
     // Stupid monsters don't pathfind around shallow water
     // except the clinging ones.
     if (mon->floundering_at(p)
-        && (mons_intel(mon) >= I_NORMAL || mon->can_cling_to_walls()))
+        && (mons_intel(mon) >= I_HUMAN || mon->can_cling_to_walls()))
     {
         return false;
     }

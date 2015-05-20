@@ -455,11 +455,7 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
         // * A monster's attitude shouldn't downgrade from friendly
         //   or good-neutral because you helped it. It'd suck to
         //   lose a permanent ally that way.
-        //
-        // * A monster has to be smart enough to realize that you
-        //   helped it.
-        if (mon->attitude == ATT_HOSTILE
-            && mons_intel(mon) >= I_NORMAL)
+        if (mon->attitude == ATT_HOSTILE)
         {
             mon->attitude = ATT_GOOD_NEUTRAL;
             mon->flags   |= MF_WAS_NEUTRAL;

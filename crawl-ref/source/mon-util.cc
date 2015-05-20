@@ -2865,7 +2865,7 @@ habitat_type mons_secondary_habitat(const monster* mon)
 
 bool intelligent_ally(const monster* mon)
 {
-    return mon->attitude == ATT_FRIENDLY && mons_intel(mon) >= I_NORMAL;
+    return mon->attitude == ATT_FRIENDLY && mons_intel(mon) >= I_HUMAN;
 }
 
 int mons_power(monster_type mc)
@@ -3596,7 +3596,7 @@ bool monster_shover(const monster* m)
         return false;
 
     // no mindless creatures pushing, aside from jellies, which just kind of ooze.
-    return mons_intel(m) > I_PLANT || mons_genus(m->type) == MONS_JELLY;
+    return mons_intel(m) > I_BRAINLESS || mons_genus(m->type) == MONS_JELLY;
 }
 
 /**
@@ -4730,7 +4730,7 @@ bool mons_is_recallable(actor* caller, monster* targ)
             return false;
     }
     // Monster recall requires same attitude and at least normal intelligence
-    else if (mons_intel(targ) < I_NORMAL
+    else if (mons_intel(targ) < I_HUMAN
              || (!caller && targ->friendly())
              || (caller && !mons_aligned(targ, caller->as_monster())))
     {
@@ -4790,8 +4790,7 @@ bool mons_is_beast(monster_type mc)
 {
     if (mons_class_holiness(mc) != MH_NATURAL
           && mc != MONS_APIS
-        || mons_class_intel(mc) < I_INSECT
-        || mons_class_intel(mc) > I_ANIMAL)
+        || mons_class_intel(mc) != I_ANIMAL)
     {
         return false;
     }

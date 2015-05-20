@@ -34,22 +34,14 @@ int mons_tracking_range(const monster* mon)
     int range = 0;
     switch (mons_intel(mon))
     {
-    case I_PLANT:
-        range = 2;
-        break;
-    case I_INSECT:
-    case I_REPTILE:
-        range = 4;
+    case I_BRAINLESS:
+        range = 3;
         break;
     case I_ANIMAL:
         range = 5;
         break;
-    case I_NORMAL:
+    case I_HUMAN:
         range = LOS_RADIUS;
-        break;
-    default:
-        // Highly intelligent monsters can find their way
-        // anywhere. (range == 0 means no restriction.)
         break;
     }
 

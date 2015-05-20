@@ -70,7 +70,7 @@ int is_pacifiable(const monster* mon)
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
-    if (mons_intel(mon) <= I_INSECT // no self-awareness
+    if (mons_intel(mon) <= I_BRAINLESS // no self-awareness
         || mons_is_tentacle_or_tentacle_segment(mon->type)) // body part
     {
         return -1;
@@ -112,7 +112,7 @@ static int _can_pacify_monster(const monster* mon, const int healed,
     if (healed < 1)
         return 0;
 
-    const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals
+    const int factor = (mons_intel(mon) < I_HUMAN)         ? 3 : // animals
                        (is_player_same_genus(mon->type))   ? 2   // same genus
                                                            : 1;  // other
 
@@ -149,7 +149,7 @@ static int _can_pacify_monster(const monster* mon, const int healed,
 
 static vector<string> _desc_mindless(const monster_info& mi)
 {
-    if (mi.intel() <= I_INSECT)
+    if (mi.intel() <= I_BRAINLESS)
         return { "mindless" };
     else
         return {};

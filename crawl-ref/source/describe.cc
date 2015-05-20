@@ -3888,15 +3888,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         stair_use = true;
     }
 
-    if (mi.intel() <= I_PLANT)
+    if (mi.intel() <= I_BRAINLESS)
     {
         inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
                  << " is mindless.\n";
-    }
-    else if (mi.intel() <= I_INSECT && you_worship(GOD_ELYVILON))
-    {
-        inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-                 << " is not intelligent enough to pacify.\n";
     }
 
 

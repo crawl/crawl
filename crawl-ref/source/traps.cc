@@ -185,20 +185,17 @@ bool trap_def::is_known(const actor* act) const
             // Slightly different rules for shafts:
             // * Lower intelligence requirement for native monsters.
             // * Allied zombies won't fall through shafts. (No herding!)
-            // * Highly intelligent monsters never fall through shafts.
-            return intel >= I_HIGH
-                   || intel > I_PLANT && mons_is_native_in_branch(mons)
+            return intel > I_BRAINLESS && mons_is_native_in_branch(mons)
                    || player_knows && mons->wont_attack();
         }
         else
         {
-            if (intel < I_NORMAL)
+            if (intel < I_HUMAN)
                 return false;
             if (player_knows && mons->wont_attack())
                 return true;
 
-            return mons_is_native_in_branch(mons)
-                   || intel >= I_HIGH && one_chance_in(3);
+            return mons_is_native_in_branch(mons);
         }
     }
     die("invalid actor type");
@@ -734,7 +731,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // XXX: this is very goofy and probably should be replaced with
             // const mid_t source = triggerer.mid;
             mid_t source = !m ? MID_PLAYER :
-                            mons_intel(m) >= I_NORMAL ? m->mid : MID_NOBODY;
+                            mons_intel(m) >= I_HUMAN ? m->mid : MID_NOBODY;
 
             noisy(40, pos, msg.c_str(), source, NF_MESSAGE_IF_UNSEEN);
         }

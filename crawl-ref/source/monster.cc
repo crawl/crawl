@@ -699,7 +699,7 @@ bool monster::can_speak()
         return true;
 
     // Silent or non-sentient monsters can't use the original speech.
-    if (mons_intel(this) < I_NORMAL
+    if (mons_intel(this) < I_HUMAN
         || mons_shouts(type) == S_SILENT)
     {
         return false;
@@ -4355,7 +4355,7 @@ bool monster::poison(actor *agent, int amount, bool force)
 int monster::skill(skill_type sk, int scale, bool real, bool drained) const
 {
     // Let spectral weapons have necromancy skill for pain brand.
-    if (mons_intel(this) < I_NORMAL && !mons_is_avatar(type))
+    if (mons_intel(this) < I_HUMAN && !mons_is_avatar(type))
         return 0;
 
     const int hd = scale * get_hit_dice();
@@ -4829,7 +4829,7 @@ static int _estimated_trap_damage(trap_type trap)
  */
 bool monster::is_trap_safe(const coord_def& where, bool just_check) const
 {
-    const int intel = mons_intel(this);
+    const mon_intel_type intel = mons_intel(this);
 
     const trap_def *ptrap = find_trap(where);
     if (!ptrap)
@@ -4861,7 +4861,7 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     }
 
     // Dumb monsters don't care at all.
-    if (intel == I_PLANT)
+    if (intel == I_BRAINLESS)
         return true;
 
     // Hostile monsters are not afraid of non-mechanical traps.
@@ -4915,7 +4915,7 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
 
     // Healthy monsters don't mind a little pain.
     if (mechanical && hit_points >= max_hit_points / 2
-        && (intel == I_ANIMAL
+        && (intel < I_HUMAN
             || hit_points > _estimated_trap_damage(trap.type)))
     {
         return true;
@@ -5291,7 +5291,7 @@ bool monster::can_go_frenzy() const
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
 
-    if (mons_intel(this) == I_PLANT)
+    if (mons_intel(this) == I_BRAINLESS)
         return false;
 
     if (paralysed() || petrified() || petrifying() || asleep())

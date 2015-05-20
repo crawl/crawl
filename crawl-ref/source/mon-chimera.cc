@@ -124,8 +124,7 @@ static bool is_bad_chimera_part(monster_type part)
            || mons_class_is_hybrid(part)
            || mons_class_is_zombified(part)
            || mons_species(part) != part
-           || mons_class_intel(part) > I_NORMAL
-           || mons_class_intel(part) < I_INSECT
+           || mons_class_intel(part) <= I_BRAINLESS
            || mons_is_unique(part);
 }
 
