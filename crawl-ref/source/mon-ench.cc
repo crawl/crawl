@@ -220,12 +220,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         // something has submerged.
         if (!quiet && mons_near(this))
         {
-            if (type == MONS_AIR_ELEMENTAL)
-            {
-                mprf("%s merges itself into the air.",
-                     name(DESC_THE, true).c_str());
-            }
-            else if (type == MONS_TRAPDOOR_SPIDER)
+            if (type == MONS_TRAPDOOR_SPIDER)
             {
                 mprf("%s hides itself under the floor.",
                      name(DESC_A, true).c_str());
@@ -807,12 +802,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     seen_context = SC_JUST_SEEN;
                 }
 
-                if (type == MONS_AIR_ELEMENTAL)
-                {
-                    mprf(channel, "%s forms itself from the air!",
-                                  name(DESC_THE, true).c_str());
-                }
-                else if (type == MONS_TRAPDOOR_SPIDER)
+                if (type == MONS_TRAPDOOR_SPIDER)
                 {
                     mprf(channel,
                          "%s leaps out from its hiding place under the floor!",
@@ -1616,18 +1606,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         // Don't unsubmerge into a harmful cloud
         if (!is_harmless_cloud(cloud_type_at(pos())))
             break;
-
-        // Air elementals are a special case, as their submerging in air
-        // isn't up to choice. - bwr
-        if (type == MONS_AIR_ELEMENTAL)
-        {
-            heal(1, one_chance_in(5));
-
-            if (one_chance_in(5))
-                del_ench(ENCH_SUBMERGED);
-
-            break;
-        }
 
         // Now we handle the others:
         const dungeon_feature_type grid = grd(pos());

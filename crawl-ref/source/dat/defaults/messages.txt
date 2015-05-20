@@ -75,7 +75,6 @@ msc += $boring:(prevent|prevents) you from hitting
 msc += $boring:nimbly evade
 msc += $boring:waved at by a branch
 msc += $boring:lunges up near
-msc += $boring:Your air elemental.*the air
 
 ## Messages so important to require a --more--
 
