@@ -1476,7 +1476,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_ROUSED))
         v.emplace_back("inspired to greatness");
     if (is(MB_CONFUSED))
-        v.emplace_back("bewildered and confused");
+        v.emplace_back("confused");
     if (is(MB_INVISIBLE))
         v.emplace_back("slightly transparent");
     if (is(MB_CHARMED))
