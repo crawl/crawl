@@ -2051,12 +2051,6 @@ static void _maybe_submerge(monster* mons)
         mons->speed_increment -= ENERGY_SUBMERGE(entry);
         return;
     }
-
-    if (mons->type == MONS_AIR_ELEMENTAL && one_chance_in(5))
-    {
-        // Takes no time.
-        mons->add_ench(ENCH_SUBMERGED);
-    }
 }
 
 void handle_monster_move(monster* mons)
@@ -2325,9 +2319,7 @@ void handle_monster_move(monster* mons)
         // Calculates mmov based on monster target.
         _handle_movement(mons);
 
-        if (mons_is_confused(mons)
-            || mons->type == MONS_AIR_ELEMENTAL
-               && mons->submerged())
+        if (mons_is_confused(mons))
         {
             _confused_move_dir(mons);
 

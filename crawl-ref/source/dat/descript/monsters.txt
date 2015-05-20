@@ -519,7 +519,7 @@ subterranean spaces.
 air elemental
 
 A spirit drawn from the elemental plane of air. It exists in this world as a
-swirling vortex of air, often dissipating and reforming.
+swirling vortex of air.
 %%%%
 alligator
 
