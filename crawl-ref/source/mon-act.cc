@@ -3508,10 +3508,6 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
             return false;
     }
 
-    // Fire elementals avoid water and cold.
-    if (mons->type == MONS_FIRE_ELEMENTAL && feat_is_watery(target_grid))
-        return false;
-
     // Try to avoid deliberately blocking the player's line of fire.
     if (mons->type == MONS_SPELLFORGED_SERVITOR)
     {

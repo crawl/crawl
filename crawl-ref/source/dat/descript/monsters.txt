@@ -1151,7 +1151,7 @@ A small but dangerous dragon, puffing clouds of smoke.
 fire elemental
 
 A spirit drawn from the elemental plane of fire, which exists in this world as
-a brilliant column of raging flames. It cannot cross water.
+a brilliant column of raging flames.
 %%%%
 fire giant
 
