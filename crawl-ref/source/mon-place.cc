@@ -163,11 +163,6 @@ bool monster_habitable_grid(monster_type mt,
         return _feat_compatible(wanted_grid, actual_grid);
     }
 
-    // Special check for fire elementals since their habitat is floor which
-    // is generally considered compatible with shallow water.
-    if (mt == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
-        return false;
-
     if (actual_grid == DNGN_MALIGN_GATEWAY)
     {
         if (mt == MONS_ELDRITCH_TENTACLE

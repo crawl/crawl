@@ -3207,27 +3207,6 @@ ccTB.+@
    ccccc
 ENDMAP
 
-NAME:    pf_overflow_fires_of_destruction
-DEPTH:   D:3-6
-TAGS:    temple_overflow_2 temple_overflow_makhleb temple_overflow_qazlal
-KFEAT:   C = altar_makhleb
-KFEAT:   D = altar_qazlal
-SHUFFLE: CD
-MONS:    fire elemental
-MAP
-ccccccc
-ccccccc
-cc.1.cc
-ccC.Dcc
-cc...cc
-cccn.cc
-cccWncc
-ccccWcc
-cccWccc
- .G.G.
- ..@..
-ENDMAP
-
 NAME: minmay_overflow_temple_star_quad
 TAGS: temple_overflow_generic_3
 MAP
