@@ -1478,7 +1478,7 @@ static int _userdef_find_free_slot(const item_def &i)
 {
 #ifdef CLUA_BINDINGS
     int slot = -1;
-    if (!clua.callfn("c_assign_invletter", "u>d", &i, &slot))
+    if (!clua.callfn("c_assign_invletter", "i>d", &i, &slot))
         return -1;
 
     return slot;
