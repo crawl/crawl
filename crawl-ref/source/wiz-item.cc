@@ -1410,7 +1410,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_FOG",
 #endif
         "ARTP_REGENERATION",
-        "ARTP_SUSTAB",
+        "ARTP_SUSTAT",
         "ARTP_NO_UPGRADE",
         "ARTP_RCORR",
         "ARTP_RMUT",

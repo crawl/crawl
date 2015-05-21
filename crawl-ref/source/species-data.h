@@ -115,7 +115,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     11, 12, 11, // 34
     set<stat_type>(), 28, // No natural stat gain (double chosen instead)
-    { { MUT_SUSTAIN_ABILITIES, 1, 1 }, {MUT_HIGH_MAGIC, 1, 1} },
+    { { MUT_SUSTAIN_ATTRIBUTES, 1, 1 }, {MUT_HIGH_MAGIC, 1, 1} },
     {},
     {},
     { JOB_TRANSMUTER, JOB_CONJURER, JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
