@@ -1742,7 +1742,7 @@ unsigned int item_value(item_def item, bool ident)
                     valued += 200;
                     break;
 
-                case RING_SUSTAIN_ABILITIES:
+                case RING_SUSTAIN_ATTRIBUTES:
                 case RING_STEALTH:
                 case RING_TELEPORTATION:
                 case RING_FLIGHT:

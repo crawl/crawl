@@ -1084,7 +1084,7 @@ ring of strength
 This ring increases or decreases the physical strength of its wearer, to a
 degree dependent on its power.
 %%%%
-ring of sustain abilities
+ring of sustain attributes
 
 This ring protects its wearer from the loss of their strength, dexterity and
 intelligence.

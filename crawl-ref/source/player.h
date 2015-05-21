@@ -962,7 +962,7 @@ int player_speed();
 
 int player_spell_levels();
 
-bool player_sust_abil(bool calc_unid = true);
+bool player_sust_attr(bool calc_unid = true);
 
 int player_teleport(bool calc_unid = true);
 

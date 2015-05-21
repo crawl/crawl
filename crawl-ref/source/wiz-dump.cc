@@ -69,8 +69,8 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return RING_TELEPORTATION;
     if (s == "+cTele")
         return RING_TELEPORT_CONTROL;
-    if (s == "SustAb")
-        return RING_SUSTAIN_ABILITIES;
+    if (s == "SustAt" || s == "SustAb")
+        return RING_SUSTAIN_ATTRIBUTES;
     if (s == "Wiz")
         return RING_WIZARDRY;
     if (s == "SInv")
@@ -484,7 +484,7 @@ bool chardump_parser::_check_equipment(const vector<string> &tokens)
         offset = 7;
     else if (tokens[0] == "rCorr")
         offset = 7;
-    else if (tokens[0] == "SustAb") // older dump files
+    else if (tokens[0] == "SustAt" || tokens[0] == "SustAb") // older dump files
         offset = 8;
     else if (tokens[0] == "rMut")
         offset = 7;

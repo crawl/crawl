@@ -2440,13 +2440,13 @@ int player_displayed_shield_class()
  *
  * @param calc_unid     Whether to include properties of worn but unidentified
  *                      items in the calculation. (Probably irrelevant.)
- * @return              Whether the player has SustAb.
+ * @return              Whether the player has SustAt.
  */
-bool player_sust_abil(bool calc_unid)
+bool player_sust_attr(bool calc_unid)
 {
-    return you.wearing(EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid)
-           || you.scan_artefacts(ARTP_SUSTAB)
-           || player_mutation_level(MUT_SUSTAIN_ABILITIES);
+    return you.wearing(EQ_RINGS, RING_SUSTAIN_ATTRIBUTES, calc_unid)
+           || you.scan_artefacts(ARTP_SUSTAT)
+           || player_mutation_level(MUT_SUSTAIN_ATTRIBUTES);
 }
 
 void forget_map(bool rot)
