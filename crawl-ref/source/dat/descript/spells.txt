@@ -34,9 +34,8 @@ level they were created on.
 Apportation spell
 
 This spell allows the caster to pull the top item or group of similar items
-from a distant pile to the floor near the caster. The mass of the target
-item(s) will make the task more difficult, with some items too massive to ever
-be moved by this spell.
+from a distant pile to the floor near the caster. With low power, items may
+not be moved all the way to the caster's position.
 
 Extremely powerful magical items, such as the Orb of Zot, may actively resist
 the pull of this spell.
@@ -178,9 +177,9 @@ although the shock will render the caster incapable of action for a while.
 %%%%
 Brain Feed spell
 
-This spell allows draining a portion of an enemy's intelligence. Such a loss is
-only temporary, and rings of sustain attributes can prevent or greatly reduce
-this effect.
+This spell attempts to drain a portion of an enemy's intelligence. Such a loss
+is only temporary, and can be prevented or reduced by having sustained
+attributes.
 %%%%
 Brothers in Arms spell
 
