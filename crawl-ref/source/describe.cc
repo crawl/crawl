@@ -269,7 +269,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_SUSTAB,                PROPN_PLAIN },
     };
 
-    const unrandart_entry *entry;
+    const unrandart_entry *entry = nullptr;
     if (is_unrandom_artefact(item))
         entry = get_unrand_entry(item.special);
 
