@@ -1197,7 +1197,7 @@ use them.
 %%%%
 Simulacrum spell
 
-This spell creates a icy replica from the corpse of the original being. This
+This spell creates an icy replica from the corpse of the original being. This
 magic is unstable, so eventually the replica will sublimate into a freezing
 cloud, if it isn't hacked or melted into a small puddle of water first. Note
 that simulacra are incapable of leaving the level they were created on.
