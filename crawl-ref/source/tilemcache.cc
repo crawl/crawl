@@ -797,6 +797,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_ORC_PRIEST:
     case TILEP_MONS_ORC_WARRIOR:
     case TILEP_MONS_ORC_KNIGHT:
+    case TILEP_MONS_ORC_WARLORD:
     case TILEP_MONS_KIRKE:
     case TILEP_MONS_SIREN:
     case TILEP_MONS_SIREN_WATER:
@@ -810,7 +811,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_SAINT_ROKA:
-    case TILEP_MONS_ORC_WARLORD:
     case TILEP_MONS_MINOTAUR:
     case TILEP_MONS_NORRIS:
         *ofs_x = 3;
