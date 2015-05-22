@@ -83,7 +83,7 @@ public:
     item_type(item_base_type ct, int st) : base_type(ct), sub_type(st)
     {
     }
-    item_type(item_def &item);
+    item_type(const item_def &item);
 
     item_base_type base_type;
     int sub_type;
@@ -201,7 +201,7 @@ static void _init_monsters()
     valid_monsters[NUM_MONSTERS] = num_mons;
 }
 
-static item_base_type _item_base_type(item_def &item)
+static item_base_type _item_base_type(const item_def &item)
 {
     item_base_type type;
     switch (item.base_type)
@@ -415,7 +415,7 @@ static bool _item_has_antiquity(item_base_type base_type)
     }
 }
 
-item_type::item_type(item_def &item)
+item_type::item_type(const item_def &item)
 {
     base_type = _item_base_type(item);
     if (base_type == ITEM_DECKS)
@@ -659,7 +659,7 @@ static bool _item_track_monster(item_base_type base_type)
     }
 }
 
-void objstat_record_item(item_def &item)
+void objstat_record_item(const item_def &item)
 {
     level_id cur_lev = level_id::current();
     item_type itype(item);

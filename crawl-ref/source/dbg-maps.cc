@@ -19,6 +19,7 @@
 #include "message.h"
 #include "ng-init.h"
 #include "player.h"
+#include "shopping.h"
 #include "state.h"
 #include "stringutil.h"
 #include "view.h"
@@ -111,18 +112,26 @@ static bool _do_build_level()
         {
             if (grd[x][y] == DNGN_RUNED_DOOR)
                 grd[x][y] = DNGN_CLOSED_DOOR;
-            // objstat tallying of monsters
+            // objstat tallying of monsters and shop items.
             if (crawl_state.obj_stat_gen)
             {
                 coord_def pos(x, y);
                 monster *mons = monster_at(pos);
                 if (mons)
                     objstat_record_monster(mons);
+
+                const shop_struct * const shop = get_shop(pos);
+                if (shop && shop->defined())
+                {
+                    for (const auto &item : shop->stock)
+                        if (item.defined())
+                            objstat_record_item(item);
+                }
             }
         }
 
 
-    // Record items for objstat
+    // Record floor items for objstat.
     if (crawl_state.obj_stat_gen)
         for (int i = 0; i < MAX_ITEMS; ++i)
             if (mitm[i].defined())
