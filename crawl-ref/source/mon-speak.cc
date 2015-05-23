@@ -691,6 +691,7 @@ bool mons_speaks(monster* mons)
     if (mons_intel(mons) < I_HUMAN)
         prefixes.insert(prefixes.begin(), "stupid");
 
+    const mon_body_shape shape = get_mon_shape(mons);
     if (msg.empty() || msg == "__NEXT")
     {
         msg = _get_speak_string(prefixes, get_mon_shape_str(shape), mons,
@@ -708,7 +709,6 @@ bool mons_speaks(monster* mons)
 
     // If we failed to get a message with a winged or tailed humanoid,
     // or a naga or centaur, try moving closer to plain humanoid.
-    const mon_body_shape shape = get_mon_shape(mons);
     if ((msg.empty() || msg == "__NEXT") && shape > MON_SHAPE_HUMANOID
         && shape <= MON_SHAPE_NAGA)
     {
