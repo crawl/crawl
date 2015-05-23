@@ -881,6 +881,16 @@ default confused arachnid
 
 VISUAL:@The_monster@ seems to be having trouble coordinating all eight of @possessive@ legs.
 %%%%
+centipede
+
+VISUAL:@The_monster@ waves @possessive@ antennae.
+%%%%
+default confused centipede
+
+VISUAL:@The_monster@ seems to be having trouble coordinating @possessive@ many legs.
+
+VISUAL:@The_monster@ wildly waves @possessive@ antennae.
+%%%%
 orb spider charge
 
 @The_monster@ spins a strand of pure energy.
