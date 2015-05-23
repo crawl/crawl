@@ -688,42 +688,9 @@ bool mons_speaks(monster* mons)
         return false;
     }
 
-    // Monster symbol didn't work, try monster shape. Since we're
-    // dealing with just the monster shape, change the prefix to
-    // include info on if the monster's intelligence is at odds with
-    // its shape.
-    mon_body_shape shape = get_mon_shape(mons);
-    mon_intel_type intel = mons_intel(mons);
-    if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA
-        && intel < I_HUMAN)
-    {
+    const mon_body_shape shape = get_mon_shape(mons);
+    if (mons_intel(mons) < I_HUMAN)
         prefixes.insert(prefixes.begin(), "stupid");
-    }
-    else if (shape >= MON_SHAPE_QUADRUPED && shape <= MON_SHAPE_FISH)
-    {
-        if (mons_base_char(mons->type) == 'w')
-        {
-            if (intel > I_BRAINLESS)
-                prefixes.insert(prefixes.begin(), "smart");
-        }
-        else
-        {
-            if (intel >= I_HUMAN)
-                prefixes.insert(prefixes.begin(), "smart");
-            else if (intel <= I_BRAINLESS)
-                prefixes.insert(prefixes.begin(), "stupid");
-        }
-    }
-    else if (shape >= MON_SHAPE_INSECT && shape <= MON_SHAPE_SNAIL)
-    {
-        if (intel > I_BRAINLESS)
-            prefixes.insert(prefixes.begin(), "smart");
-    }
-    else if (shape >= MON_SHAPE_PLANT && shape <= MON_SHAPE_BLOB
-             && intel > I_BRAINLESS)
-    {
-        prefixes.insert(prefixes.begin(), "smart");
-    }
 
     if (msg.empty() || msg == "__NEXT")
     {
