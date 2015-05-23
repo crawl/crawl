@@ -1052,6 +1052,8 @@ static int _mon_forgetfulness_time(mon_intel_type intelligence)
             return 300;
         case I_BRAINLESS:
             return 150;
+        default:
+            die("Invalid intelligence type!");
     }
 }
 
