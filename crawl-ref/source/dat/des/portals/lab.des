@@ -33,13 +33,13 @@ end
 function lab_intruders(e)
   e.tags("patrolling")
   e.mons("earth elemental / minotaur skeleton")
-  e.mons("trapdoor spider never_corpse")
+  e.mons("trapdoor spider")
   e.mons("shadow")
   e.mons("unseen horror")
   e.mons("hungry ghost")
   e.mons("wandering mushroom")
   e.mons("gargoyle")
-  e.kmons("8 = basilisk never_corpse")
+  e.kmons("8 = basilisk")
   e.kmons("9 = troll skeleton / centaur skeleton / \
                spriggan skeleton / ogre skeleton")
   e.shuffle("1'0d / 1'0d / 20'd / 20'd / '2'd / '2'd / \
