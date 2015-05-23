@@ -749,17 +749,17 @@ bool mons_speaks(monster* mons)
         // one and then the other to see if we get any results.
         if (shape == MON_SHAPE_HUMANOID_WINGED_TAILED)
         {
-            shape = MON_SHAPE_HUMANOID_TAILED;
-            msg = _get_speak_string(prefixes, get_mon_shape_str(shape),
+            msg = _get_speak_string(prefixes,
+                                    get_mon_shape_str(MON_SHAPE_HUMANOID_TAILED),
                                     mons, no_player, no_foe, no_foe_name,
                                     no_god, unseen);
 
             // Only be silent if both tailed and winged return __NONE.
             if (msg.empty() || msg == "__NONE" || msg == "__NEXT")
             {
-                shape = MON_SHAPE_HUMANOID_WINGED;
                 string msg2;
-                msg2 = _get_speak_string(prefixes, get_mon_shape_str(shape),
+                msg2 = _get_speak_string(prefixes,
+                                         get_mon_shape_str(MON_SHAPE_HUMANOID_WINGED),
                                          mons, no_player, no_foe,
                                          no_foe_name, no_god, unseen);
 
@@ -776,11 +776,12 @@ bool mons_speaks(monster* mons)
 
                 msg = msg2;
             }
-        } // if (shape == MON_SHAPE_HUMANOID_WINGED_TAILED)
+        }
+
         if (msg.empty() || msg == "__NONE" || msg == "__NEXT")
         {
-            shape = MON_SHAPE_HUMANOID;
-            msg = _get_speak_string(prefixes, get_mon_shape_str(shape),
+            msg = _get_speak_string(prefixes,
+                                    get_mon_shape_str(MON_SHAPE_HUMANOID),
                                     mons, no_player, no_foe, no_foe_name,
                                     no_god, unseen);
         }
