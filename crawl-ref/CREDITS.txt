@@ -215,6 +215,7 @@
     Brett Scarborough
     Roman Sêk
     ShadyAmish
+    Evan Shaw
     Robert Shimmin
     Sigurd
     Edgar Simo
