@@ -725,7 +725,7 @@ static void _deteriorate(int dam)
 static void _maybe_corrode()
 {
     int corrosion_sources = you.scan_artefacts(ARTP_CORRODE);
-    int degree = binomial(corrosion_sources, 10);
+    int degree = binomial(corrosion_sources, 3);
     if (degree > 0)
         you.corrode_equipment("Your entropic artefact", degree);
 }
