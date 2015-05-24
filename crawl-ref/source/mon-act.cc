@@ -2961,8 +2961,6 @@ void handle_monsters(bool with_noise)
 
         // Only move the monster if nothing else has played with its energy
         // during their turn.
-        // This can happen with, e.g., headbutt stuns, cold attacks on cold-
-        // -blooded monsters, etc.
         // If something's played with the energy, they get added back to
         // the queue just after this.
         if (oldspeed == mon->speed_increment)
