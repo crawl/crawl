@@ -60,7 +60,7 @@ Breathes a blast of noxious fumes at a targeted creature.
 %%%%
 Bat Form ability
 
-Turns you into a swift-moving vampire bat. In bat form, you cannot drink
+Transforms you into a swift-moving vampire bat. In bat form, you cannot drink
 potions or evoke wands, and are unable to cast spells or use doors.
 %%%%
 Spit Acid ability
@@ -308,12 +308,12 @@ appreciates the burning of spellbooks.
 %%%%
 Berserk ability
 
-Sends the user into a berserk rage. Going berserk greatly, if temporarily,
-increases health and damage output in melee. It will time out quickly outside
-of combat, but may be extended by multiple kills. While berserk, almost
-all actions other than movement and melee combat are prevented. Such a rage is
-followed by deep exhaustion, during which the user is slowed and cannot berserk
-again, and occasionally may even pass out.
+Sends the user into a berserk rage. Going berserk temporarily increases health,
+speed, and damage dealt in melee. It will time out quickly outside of combat,
+but may be extended by multiple kills. While berserk, almost all actions other
+than movement and melee combat are prevented. Such a rage is followed by deep
+exhaustion, during which the user is slowed and cannot berserk again, and
+occasionally may even pass out.
 %%%%
 Trog's Hand ability
 
