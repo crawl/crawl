@@ -1130,6 +1130,15 @@ string get_ability_desc(const ability_type ability)
     if (lookup.empty()) // Nothing found?
         lookup = "No description found.\n";
 
+    if (testbits(get_ability_def(ability).flags, ABFLAG_SACRIFICE))
+    {
+        lookup += "\nIf you make this sacrifice, your powers granted by Ru "
+                  "will become stronger in proportion to the value of the "
+                  "sacrifice, and you may gain new powers as well.\n\n"
+                  "Sacrifices cannot be taken back.\n";
+
+    }
+
     if (god_hates_ability(ability, you.religion))
     {
         lookup += uppercase_first(god_name(you.religion))
