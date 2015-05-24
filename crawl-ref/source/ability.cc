@@ -1136,7 +1136,6 @@ string get_ability_desc(const ability_type ability)
                   "will become stronger in proportion to the value of the "
                   "sacrifice, and you may gain new powers as well.\n\n"
                   "Sacrifices cannot be taken back.\n";
-
     }
 
     if (god_hates_ability(ability, you.religion))
