@@ -6750,9 +6750,6 @@ void player::corrode_equipment(const char* corrosion_source, int degree)
 /**
  * Attempts to apply corrosion to the player and deals acid damage.
  *
- * Each full equipment slot gives a chance of applying the corrosion debuff,
- * and each empty equipment slot increases the amount of acid damage taken.
- *
  * @param evildoer the cause of this acid splash.
  * @param acid_strength The strength of the acid.
  * @param allow_corrosion Whether to try and apply the corrosion debuff.
@@ -6761,42 +6758,10 @@ void player::corrode_equipment(const char* corrosion_source, int degree)
 void player::splash_with_acid(const actor* evildoer, int acid_strength,
                               bool allow_corrosion, const char* hurt_msg)
 {
-    int dam = 0;
-    bool do_corrosion = false;
-    const bool wearing_cloak = slot_item(EQ_CLOAK);
-
-    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; slot++)
-    {
-        const bool cloak_protects = wearing_cloak && coinflip()
-                                    && slot != EQ_SHIELD && slot != EQ_CLOAK;
-
-        if (!cloak_protects)
-        {
-            item_def *item = you.slot_item(static_cast<equipment_type>(slot));
-            if (!item && slot != EQ_SHIELD)
-                dam++;
-
-            if (item && allow_corrosion && x_chance_in_y(acid_strength + 1, 30))
-                do_corrosion = true;
-        }
-    }
-
-    if (do_corrosion)
+    if (binomial(3, acid_strength + 1, 30))
         corrode_equipment();
 
-    // Covers head, hands and feet.
-    if (player_equip_unrand(UNRAND_LEAR))
-        dam = !wearing_cloak;
-
-    // Without fur, clothed people have dam 0 (+2 later), Sp/Tr/Dr/Og ~1
-    // (randomized), Fe 5. Fur helps only against naked spots.
-    const int fur = player_mutation_level(MUT_SHAGGY_FUR);
-    dam -= fur * dam / 5;
-
-    // two extra virtual slots so players can't be immune
-    dam += 2;
-    dam = roll_dice(dam, acid_strength);
-
+    const int dam = roll_dice(4, acid_strength);
     const int post_res_dam = resist_adjust_damage(&you, BEAM_ACID, dam);
 
     if (post_res_dam > 0)
