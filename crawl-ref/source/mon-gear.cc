@@ -141,39 +141,36 @@ static void _give_wand(monster* mon, int level)
             || mons_class_flag(mon->type, M_NO_HT_WAND))
                 && (mon->type != MONS_IJYB || crawl_state.game_is_sprint());
 
-    // this is very ugly and I should rethink it
-    for (int i = 0; i < 100; ++i)
+    const int idx = items(false, OBJ_WANDS, OBJ_RANDOM, level);
+
+    if (idx == NON_ITEM)
+        return;
+
+    item_def& wand = mitm[idx];
+
+    if (no_high_tier && is_high_tier_wand(wand.sub_type))
     {
-        const int idx = items(false, OBJ_WANDS, OBJ_RANDOM, level);
-
-        if (idx == NON_ITEM)
-            return;
-
-        item_def& wand = mitm[idx];
-
-        if (no_high_tier && is_high_tier_wand(wand.sub_type))
-        {
-            dprf(DIAG_MONPLACE,
-                 "Destroying %s because %s doesn't want a high tier wand.",
-                 wand.name(DESC_A).c_str(),
-                 mon->name(DESC_THE).c_str());
-            destroy_item(idx, true);
-        }
-        else if (!mon->likes_wand(wand))
-        {
-            dprf(DIAG_MONPLACE,
-                 "Destroying %s because %s doesn't want a weak wand.",
-                 wand.name(DESC_A).c_str(),
-                 mon->name(DESC_THE).c_str());
-            destroy_item(idx, true);
-        }
-        else
-        {
-            wand.flags = 0;
-            _give_monster_item(mon, idx);
-            break;
-        }
+        dprf(DIAG_MONPLACE,
+             "Destroying %s because %s doesn't want a high tier wand.",
+             wand.name(DESC_A).c_str(),
+             mon->name(DESC_THE).c_str());
+        destroy_item(idx, true);
+        return;
     }
+
+    if (!mon->likes_wand(wand))
+    {
+        // XXX: deduplicate
+        dprf(DIAG_MONPLACE,
+             "Destroying %s because %s doesn't want a weak wand.",
+             wand.name(DESC_A).c_str(),
+             mon->name(DESC_THE).c_str());
+        destroy_item(idx, true);
+        return;
+    }
+
+    wand.flags = 0;
+    _give_monster_item(mon, idx);
 }
 
 static void _give_potion(monster* mon, int level)
