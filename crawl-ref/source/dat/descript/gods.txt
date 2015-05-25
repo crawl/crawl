@@ -191,10 +191,10 @@ Ashenzari powers
 Ashenzari exhorts followers to garb themselves with curses, and provides
 rewards for time spent using cursed armour, jewellery or weapons. Followers
 will soon be granted the ability to scry through walls. Ashenzari will
-passively grant followers increased skills depending on how cursed they are,
-and will reveal the invisible and grant clarity of mind. The truly devout will
-gain the ability to transfer a portion of their knowledge from one skill to
-another.
+passively grant followers increased skills depending on how cursed they are
+by equipment associated with those skills, and will reveal the invisible and
+grant clarity of mind. The truly devout will gain the ability to transfer a
+portion of their knowledge from one skill to another.
 %%%%
 Beogh powers
 
