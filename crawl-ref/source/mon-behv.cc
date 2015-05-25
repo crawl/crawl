@@ -205,6 +205,33 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
     }
 }
 
+/**
+ * Should the player be treated as if they were normally visible to a given
+ * monster, even though they're currently invisible?
+ *
+ * Random per-call; depends on proximity, monster intelligence, and Ash wrath.
+ *
+ * @param mon     The monster in question.
+ * @param         Whether the monster correctly guessed the player's presence.
+ */
+static bool _monster_guesses_invis_player(const monster &mon)
+{
+    // Sometimes, if a player is right next to a monster, they will 'see'.
+    if (grid_distance(you.pos(), mon.pos()) == 1 && one_chance_in(3))
+        return true;
+
+    // [dshaligram] Smart monsters have a chance of clueing in to
+    // invisible players in various ways.
+    if (mons_intel(&mon) == I_HUMAN && one_chance_in(12))
+        return true;
+
+    // Ash penance makes monsters very likely to target you through invis.
+    if (player_under_penance(GOD_ASHENZARI) && coinflip())
+        return true;
+
+    return false;
+}
+
 //---------------------------------------------------------------
 //
 // handle_behaviour
@@ -329,26 +356,7 @@ void handle_behaviour(monster* mon)
     // Change proxPlayer depending on invisibility and standing
     // in shallow water.
     if (proxPlayer && !you.visible_to(mon))
-    {
-        proxPlayer = false;
-
-        // Sometimes, if a player is right next to a monster, they will 'see'.
-        if (grid_distance(you.pos(), mon->pos()) == 1
-            && one_chance_in(3))
-        {
-            proxPlayer = true;
-        }
-
-        // [dshaligram] Very smart monsters have a chance of clueing in to
-        // invisible players in various ways.
-        if (mons_intel(mon) == I_HUMAN && one_chance_in(12))
-            proxPlayer = true;
-
-        // Ash penance makes monsters very likely to target you through
-        // invisibility.
-        if (player_under_penance(GOD_ASHENZARI) && coinflip())
-            proxPlayer = true;
-    }
+        proxPlayer = _monster_guesses_invis_player(*mon);
 
     // Set friendly target, if they don't already have one.
     // Berserking allies ignore your commands!
