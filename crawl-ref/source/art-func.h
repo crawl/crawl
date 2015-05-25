@@ -1378,6 +1378,21 @@ static void _KRYIAS_unequip(item_def *item, bool *show_msgs)
 
 ///////////////////////////////////////////////////
 
+static void _FROSTBITE_melee_effects(item_def* weapon, actor* attacker,
+                                    actor* defender, bool mondied, int dam)
+{
+    coord_def spot = defender->pos();
+    if (!mondied
+        && !cell_is_solid(spot)
+        && env.cgrid(spot) == EMPTY_CLOUD
+        && one_chance_in(5))
+    {
+         place_cloud(CLOUD_COLD, spot, random_range(3, 5), attacker, 0);
+    }
+}
+
+///////////////////////////////////////////////////
+
 // Vampiric effect triggers on every hit, see attack::apply_damage_brand()
 
 static void _LEECH_equip(item_def *item, bool *show_msgs, bool unmeld)

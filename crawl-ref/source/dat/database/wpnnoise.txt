@@ -10,6 +10,7 @@
 
 # Contents:
 # - Shield of the Gong
+# - Frostbite
 # - Noisy randarts
 # - The Singing Sword
 
@@ -37,6 +38,28 @@ BONNNG!
 
 # scraping hit
 SHROANNG!
+
+###############################################################################
+###############################################################################
+#
+# The FROZEN AXE "FROSTBITE" imitates loud noises from cold environments.
+#
+###############################################################################
+###############################################################################
+
+%%%%
+frozen axe "frostbite"
+
+You hear the [roaring|howling|raging|gusting] winds of a [blizzard|squall|snowstorm].
+
+w:5
+You hear ice [creaking|groaning|grinding|cracking].
+
+w:1
+You hear shards of ice [tinkling|chiming].
+
+w:1
+You hear the [rumble|boom|crash] of [a glacier calving|icebergs colliding].
 
 ###############################################################################
 ###############################################################################
