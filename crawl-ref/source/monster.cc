@@ -4547,13 +4547,9 @@ void monster::corrode_equipment(const char* corrosion_source, int degree)
 void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
                                bool /*allow_corrosion*/, const char* /*hurt_msg*/)
 {
-    item_def *has_shield = mslot_item(MSLOT_SHIELD);
-    item_def *has_armour = mslot_item(MSLOT_ARMOUR);
-
-    if (!one_chance_in(3) && (has_shield || has_armour))
+    if (!one_chance_in(3))
         corrode_equipment();
-    else if (!one_chance_in(3) && !(has_shield || has_armour)
-             && can_bleed() && !res_acid())
+    else if (!one_chance_in(3) && can_bleed() && !res_acid())
     {
         add_ench(mon_enchant(ENCH_BLEED, 3, evildoer, (5 + random2(5))*10));
 

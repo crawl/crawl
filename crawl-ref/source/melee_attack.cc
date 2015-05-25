@@ -2132,29 +2132,25 @@ void melee_attack::attacker_sustain_passive_damage()
 
     const int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, 5);
 
-    const item_def *weap = weapon ? weapon : attacker->slot_item(EQ_GLOVES);
-
     // Spectral weapons can't be corroded (but can take acid damage).
     const bool avatar = attacker->is_monster()
                         && mons_is_avatar(attacker->as_monster()->type);
 
-    if (weap && !avatar)
+    if (!avatar)
     {
         if (x_chance_in_y(acid_strength + 1, 30))
             attacker->corrode_equipment();
     }
+
+    if (attacker->is_player())
+        mpr(you.hands_act("burn", "!"));
     else
     {
-        if (attacker->is_player())
-            mpr(you.hands_act("burn", "!"));
-        else
-        {
-            simple_monster_message(attacker->as_monster(),
-                                   " is burned by acid!");
-        }
-        attacker->hurt(defender, roll_dice(1, acid_strength), BEAM_ACID,
-                       KILLED_BY_ACID, "", "", false);
+        simple_monster_message(attacker->as_monster(),
+                               " is burned by acid!");
     }
+    attacker->hurt(defender, roll_dice(1, acid_strength), BEAM_ACID,
+                   KILLED_BY_ACID, "", "", false);
 }
 
 int melee_attack::staff_damage(skill_type skill)
@@ -2908,8 +2904,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_CORRODE:
-        if (defender->slot_item(EQ_BODY_ARMOUR))
-            defender->corrode_equipment(atk_name(DESC_THE).c_str());
+        defender->corrode_equipment(atk_name(DESC_THE).c_str());
         break;
 
     case AF_DISTORT:
