@@ -1251,6 +1251,18 @@ TILE_EQ: kryias
 INSCRIP: DeviceHeal*2
 COLD:    1
 
+ENUM:    FROSTBITE
+NAME:    frozen axe "Frostbite"
+OBJ:     OBJ_WEAPONS/WPN_EXECUTIONERS_AXE
+INSCRIP: freezing cloud,
+PLUS:    +8
+COLOUR:  ETC_ICE
+TILE:    urand_frostbite
+TILE_EQ: frostbite
+BRAND:   SPWPN_FREEZING
+COLD:    1
+BOOL:    skip_ego, fly, noises
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
