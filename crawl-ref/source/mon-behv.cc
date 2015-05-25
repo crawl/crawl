@@ -332,7 +332,6 @@ void handle_behaviour(monster* mon)
     {
         proxPlayer = false;
 
-        const int intel = mons_intel(mon);
         // Sometimes, if a player is right next to a monster, they will 'see'.
         if (grid_distance(you.pos(), mon->pos()) == 1
             && one_chance_in(3))
@@ -342,12 +341,12 @@ void handle_behaviour(monster* mon)
 
         // [dshaligram] Very smart monsters have a chance of clueing in to
         // invisible players in various ways.
-        if (intel == I_HUMAN && one_chance_in(12))
+        if (mons_intel(mon) == I_HUMAN && one_chance_in(12))
             proxPlayer = true;
 
         // Ash penance makes monsters very likely to target you through
-        // invisibility, depending on their intelligence.
-        if (player_under_penance(GOD_ASHENZARI) && x_chance_in_y(intel, 3))
+        // invisibility.
+        if (player_under_penance(GOD_ASHENZARI) && coinflip())
             proxPlayer = true;
     }
 
