@@ -1,11 +1,11 @@
-define(["jquery", "./enums"], function ($, enums) {
+define(["jquery", "./enums", "./util"], function ($, enums, util) {
     "use strict";
 
     var k, player_on_level, monster_table, dirty_locs, bounds, bounds_changed;
 
     function init()
     {
-        k = {};
+        k = new Array(65536);
         monster_table = {};
         dirty_locs = [];
         bounds = null;
@@ -14,21 +14,25 @@ define(["jquery", "./enums"], function ($, enums) {
 
     $(document).bind("game_init", init);
 
-    function set(x, y, val)
-    {
-        k[[x,y]] = val;
-    }
-
     function get(x, y)
     {
-        if (k[[x,y]] === undefined)
-            k[[x,y]] = {x: x, y: y};
-        return k[[x,y]];
+        var key = util.make_key(x, y);
+
+        while (key >= k.length) {
+            k = k.concat(new Array(k.length));
+        }
+
+        var val = k[key];
+        if (val === undefined) {
+            val = {x: x, y: y};
+            k[key] = val;
+        }
+        return val;
     }
 
     function clear()
     {
-        k = {};
+        k = new Array(65536);
         monster_table = {};
         bounds = null;
     }
@@ -204,7 +208,6 @@ define(["jquery", "./enums"], function ($, enums) {
     };
 
     return {
-        set: set,
         get: get,
         merge: merge_diff,
         clear: clear,
