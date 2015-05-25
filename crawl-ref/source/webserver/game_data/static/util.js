@@ -77,8 +77,32 @@ function () {
         element.style.height = (h / ratio) + 'px';
     }
 
+    function make_key(x, y) {
+        // Zig-zag encode X and Y.
+        x = (x << 1) ^ (x >> 31);
+        y = (y << 1) ^ (y >> 31);
+
+        // Interleave the bits of X and Y.
+        x &= 0xFFFF;
+        x = (x | (x << 8)) & 0x00FF00FF;
+        x = (x | (x << 4)) & 0x0F0F0F0F;
+        x = (x | (x << 2)) & 0x33333333;
+        x = (x | (x << 1)) & 0x55555555;
+
+        y &= 0xFFFF;
+        y = (y | (y << 8)) & 0x00FF00FF;
+        y = (y | (y << 4)) & 0x0F0F0F0F;
+        y = (y | (y << 2)) & 0x33333333;
+        y = (y | (y << 1)) & 0x55555555;
+
+        var result = x | (y << 1);
+        return result;
+    }
+
+
     return {
         formatted_string_to_html: formatted_string_to_html,
-        init_canvas: init_canvas
+        init_canvas: init_canvas,
+        make_key: make_key
     };
 });
