@@ -1853,12 +1853,9 @@ int discharge_monsters(coord_def where, int pow, int, actor *agent)
     beam.draw_delay = 0;
 
     dprf("Static discharge on (%d,%d) pow: %d", where.x, where.y, pow);
-    if (victim->is_player()
-        || victim->res_elec() <= 0
-        || victim->type == MONS_SHOCK_SERPENT)
-    {
+    if (victim->is_player() || victim->res_elec() <= 0)
         beam.draw(where);
-    }
+
     if (victim->is_player())
     {
         mpr("You are struck by lightning.");
@@ -1870,11 +1867,7 @@ int discharge_monsters(coord_def where, int pow, int, actor *agent)
              agent->is_player() ? "you" : agent->name(DESC_A).c_str());
     }
     else if (victim->res_elec() > 0)
-    {
-        // Shock serpents conduct electricity just fine.
-        if (victim->type != MONS_SHOCK_SERPENT)
-            return 0;
-    }
+        return 0;
     else
     {
         monster* mons = victim->as_monster();
