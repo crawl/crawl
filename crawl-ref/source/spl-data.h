@@ -785,6 +785,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_FRENZY, "Frenzy",
     SPTYP_CHARMS,
@@ -795,6 +796,7 @@ static const struct spell_desc spelldata[] =
     3, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_DISPEL_UNDEAD, "Dispel Undead",
@@ -2776,6 +2778,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_HASTE_PLANTS, "Haste Plants",
     SPTYP_CHARMS,
@@ -2786,6 +2789,7 @@ static const struct spell_desc spelldata[] =
     5, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_WIND_BLAST, "Wind Blast",

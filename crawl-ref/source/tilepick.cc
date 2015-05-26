@@ -4920,7 +4920,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_GHOSTLY_FLAMES:           return TILEG_GHOSTLY_FLAMES;
     case SPELL_GRAND_AVATAR:             return TILEG_GRAND_AVATAR;
     case SPELL_HASTE_OTHER:              return TILEG_HASTE_OTHER;
-    case SPELL_HASTE_PLANTS:             return TILEG_HASTE_PLANTS;
     case SPELL_HELLFIRE_BURST:           return TILEG_HELLFIRE_BURST;
     case SPELL_HOLY_BREATH:              return TILEG_HOLY_BREATH;
     case SPELL_HOLY_FLAMES:              return TILEG_HOLY_FLAMES;
