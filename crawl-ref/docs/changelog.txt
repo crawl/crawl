@@ -82,7 +82,7 @@ Items
     immunity to Torment effects, and -20% max HP while worn.
 * Poisonous chunks and rot chunks have been merged into 'inedible' chunks,
   which are only edible by ghouls. Some monsters have had their meat cleaned.
-* Unrandrt changes:
+* Unrandart changes:
   - The Cloak of Starlight is now +2 and gives Stlth--.
   - The fencer's gloves now give a bonus to Short and Long Blades skills.
   - The Sceptre of Torment is now a staff.
