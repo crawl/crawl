@@ -1938,7 +1938,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                 (you.form == TRAN_DRAGON) ?
                     2 * you.experience_level : you.experience_level,
                 beam, true,
-                         "You spit a bolt of dispelling energy."))
+                         "You breathe a bolt of dispelling energy."))
             {
                 return SPRET_ABORT;
             }
