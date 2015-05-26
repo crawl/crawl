@@ -4523,18 +4523,9 @@ void monster::corrode_equipment(const char* corrosion_source, int degree)
 
     if (you.see_cell(pos()))
     {
-        if (type == MONS_DANCING_WEAPON)
-        {
-            mprf("%s corrodes %s!",
-                 corrosion_source,
-                 name(DESC_THE).c_str());
-        }
-        else
-        {
-            mprf("%s corrodes %s equipment!",
-                 corrosion_source,
-                 apostrophise(name(DESC_THE)).c_str());
-        }
+        mprf("%s corrodes %s!",
+             corrosion_source,
+             name(DESC_THE).c_str());
     }
 
     add_ench(mon_enchant(ENCH_CORROSION, 0));
