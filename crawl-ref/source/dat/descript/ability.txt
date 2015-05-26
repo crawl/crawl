@@ -5,7 +5,7 @@ If you get this description, it is a bug.
 %%%%
 Spit Poison ability
 
-Spits poison at a targeted monster.
+Spits poison at a targeted creature.
 %%%%
 Blink ability
 
@@ -41,7 +41,7 @@ Breathes a blast of poison gas at a targeted creature.
 Breathe Lightning ability
 
 Releases a great discharge of electricity, causing an uncontrollable lightning
-storm.
+storm. It partially bypasses armour.
 %%%%
 Breathe Sticky Flame ability
 
@@ -60,8 +60,8 @@ Breathes a blast of noxious fumes at a targeted creature.
 %%%%
 Bat Form ability
 
-Transforms you into a swift-moving vampire bat. In bat form, you cannot drink
-potions or evoke wands, and are unable to cast spells or use doors.
+Transforms you into a swift-moving vampire bat. The user becomes unable to
+drink potions or evoke wands, to open or close doors, or to cast spells.
 %%%%
 Spit Acid ability
 
@@ -124,9 +124,8 @@ Evoke Berserk Rage ability
 %%%%
 Evoke Invisibility ability
 
-Turns the user invisible for a limited amount of time. Turning invisible causes
-magical contamination and may eventually cause glowing, nullifying the
-invisibility.
+Turns the user invisible. Turning invisible causes magical contamination and
+may eventually cause glowing, nullifying the invisibility.
 %%%%
 Turn Visible ability
 
@@ -223,8 +222,8 @@ Kikubaaqudgha may shield you from the effect, depending on your piety.
 # Yredelemnul
 Animate Remains ability
 
-Reanimates a single corpse or skeleton as a follower. Note that zombies and
-skeletons cannot leave the level they were created on.
+Reanimates a single corpse or skeleton as a follower. Zombies and skeletons
+cannot leave the level they were created on.
 %%%%
 Recall Undead Slaves ability
 
@@ -238,8 +237,8 @@ damage is taken and reducing piety depending on the amount of damage dealt.
 %%%%
 Animate Dead ability
 
-Reanimates all corpses and skeletons in the vicinity as followers. Note that
-zombies and skeletons cannot leave the level they were created on.
+Reanimates all corpses and skeletons in the vicinity as followers. Zombies and
+skeletons cannot leave the level they were created on.
 %%%%
 Drain Life ability
 
