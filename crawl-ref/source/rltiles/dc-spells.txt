@@ -235,9 +235,6 @@ error GHOSTLY_FLAMES
 error GRAND_AVATAR
 %sdir gui/spells/monster
 haste_other HASTE_OTHER
-%sdir misc
-error HASTE_PLANTS
-%sdir gui/spells/monster
 hellfire_burst HELLFIRE_BURST
 %sdir misc
 error HOLY_BREATH
