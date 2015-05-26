@@ -5853,8 +5853,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _cast_ephemeral_infusion(mons);
         return;
 
-
-
     case SPELL_SUMMON_HOLIES: // Holy monsters.
         sumcount2 = 1 + random2(2)
                       + random2(mons->spell_hd(spell_cast) / 4 + 1);
@@ -5967,6 +5965,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
         return;
     }
+
     case SPELL_BLINK_OTHER:
     {
         // Allow the caster to comment on moving the foe.
@@ -5978,6 +5977,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
         break;
     }
+
     case SPELL_BLINK_OTHER_CLOSE:
     {
         // Allow the caster to comment on moving the foe.
@@ -5990,6 +5990,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
         break;
     }
+
     case SPELL_TOMB_OF_DOROKLOHE:
     {
         sumcount = 0;
@@ -6085,10 +6086,12 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
         return;
     }
+
     case SPELL_CHAIN_LIGHTNING:
     case SPELL_CHAIN_OF_CHAOS:
         cast_chain_spell(spell_cast, splpow, mons);
         return;
+
     case SPELL_SUMMON_EYEBALLS:
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 7 + 1);
 
@@ -6110,6 +6113,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                           spell_cast, mons->pos(), mons->foe, 0, god));
         }
         return;
+
     case SPELL_SUMMON_BUTTERFLIES:
         duration = min(2 + mons->spell_hd(spell_cast) / 5, 6);
         for (int i = 0; i < 10; ++i)
@@ -6120,6 +6124,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                           mons->foe, 0, god));
         }
         return;
+
     case SPELL_IOOD:
         if (mons->type == MONS_ORB_SPIDER && !mons->has_ench(ENCH_IOOD_CHARGED))
         {
@@ -6141,6 +6146,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
         cast_iood(mons, 6 * mons->spell_hd(spell_cast), &pbolt);
         return;
+
     case SPELL_AWAKEN_FOREST:
         duration = 50 + random2(mons->spell_hd(spell_cast) * 20);
 
@@ -6155,9 +6161,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_SUMMON_DRAGON:
         cast_summon_dragon(mons, splpow, god);
         return;
+
     case SPELL_SUMMON_HYDRA:
         cast_summon_hydra(mons, splpow, god);
         return;
+
     case SPELL_FIRE_SUMMON:
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 
@@ -6360,6 +6368,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
         return;
     }
+
     case SPELL_PORTAL_PROJECTILE:
     {
         // Swap weapons if necessary so that that happens before the spell
@@ -6431,6 +6440,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
         return;
     }
+
 #if TAG_MAJOR_VERSION == 34
     case SPELL_REARRANGE_PIECES:
     {
@@ -6527,7 +6537,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
-
     case SPELL_SUMMON_MANA_VIPER:
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 
@@ -6620,13 +6629,13 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                                      mons->foe, 0, god));
         }
         return;
+    }
 
     case SPELL_SCATTERSHOT:
     {
         ASSERT(foe);
         cast_scattershot(mons, splpow, foe->pos());
         return;
-    }
     }
 
     case SPELL_HUNTING_CRY:
