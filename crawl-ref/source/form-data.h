@@ -132,7 +132,7 @@ static const form_entry formdata[] =
     "",
     EQF_PHYSICAL | EQF_RINGS, MR_NO_FLAGS,
     DEFAULT_DURATION, -5, 5, SIZE_TINY, 10, 17,
-    0, 0, 0, false, 10, 12, -1,
+    0, 0, 0, false, 0, 12, -1,
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_ENABLE, FC_FORBID, FC_ENABLE, true, false,
     "squeak", -8, "foreclaw", "", "perch on", "flesh"
