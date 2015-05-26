@@ -40,8 +40,8 @@ the pull of this spell.
 %%%%
 Aura of Abjuration spell
 
-Continuously abjures hostile summoned creatures in the vicinity of the caster
-for a short while, rapidly sending each of them back where they came from.
+Continuously abjures hostile summoned creatures in the vicinity of the caster.
+This reduces their remaining time before being sent back where they came from.
 %%%%
 Avatar Song spell
 
@@ -101,7 +101,7 @@ Blinks allies in sight of the caster away from a nearby enemy.
 %%%%
 Blink Allies Encircling spell
 
-Translocates a number of allies in the caster's sight adjacent to a targeted
+Translocates a number of allies in the caster's sight to surround a targeted
 enemy.
 %%%%
 Blink Away spell
@@ -167,7 +167,8 @@ lessens their resilience to injury, to a degree dependent on (and inversely
 related to) spellpower.
 
 It is powerful enough to literally pull someone out of Death's Door, although
-the shock will briefly confuse and paralyse the caster.
+the shock will briefly confuse and paralyse the caster. It has no effect on the
+undead.
 %%%%
 Brain Feed spell
 
@@ -388,7 +389,8 @@ them dangerously close to death in the process. So close, in fact, that the
 body believes itself to be dead — healing effects will do nothing.
 
 The caster will receive one warning shortly before the spell expires. With high
-power, the caster will be left more resilient when the effect ends.
+power, the caster will be left more resilient when the effect ends. It has no
+effect on those who are already undead.
 %%%%
 Debugging Ray spell
 
@@ -565,13 +567,13 @@ Conjures up a large cloud of roaring flames.
 %%%%
 Flash Freeze spell
 
-Freezes the air around a target, causing significant harm and causing a thick
-sheet of ice to form, slowing the target's movement.
+Freezes the air around a target, causing significant harm and slowing the
+target's movement.
 %%%%
 Force Lance spell
 
-Fires a shaft of concussive force which may send its target hurtling backwards
-if the impact is not nullified by their defenses.
+Fires a shaft of concussive force. If the impact deals damage, it may knock the
+target back.
 %%%%
 Forceful Invitation spell
 
@@ -644,7 +646,7 @@ Haunt spell
 
 Calls wraiths and ghosts to haunt the caster's target. They will only attack
 the creature they are haunting, and will dissipate quickly once their target
-dies. Casting it will have a temporarily prevent your health from regenerating.
+dies. Casting it will temporarily prevent your health from regenerating.
 %%%%
 Heal Other spell
 
