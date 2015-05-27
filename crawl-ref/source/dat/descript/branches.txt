@@ -92,10 +92,9 @@ is present, the entrance is located between Lair:3 and Lair:6.
 Slime Pits
 
 The Slime Pits are the amorphous realm of acids, jellies and slimes. Even the
-walls drip with painful acid, growing ever more caustic as one travels deeper.
-Any trace of intelligent beings has long been dissolved. Still, there are
-rumours of great treasures deep down, hidden safely away in secret chambers
-without door or window.
+walls drip with painful acid. Any trace of intelligent beings has long been
+dissolved. Still, there are rumours of great treasures deep down, hidden safely
+away in secret chambers without door or window.
 
 The only noise here is the occasional drip of acid, and thus all sounds travel
 further.
