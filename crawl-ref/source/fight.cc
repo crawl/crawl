@@ -142,8 +142,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             attk.simu = true;
 
         // We're trying to hit a monster, break out of travel/explore now.
-        if (!travel_kill_monster(defender->type))
-            interrupt_activity(AI_HIT_MONSTER, defender->as_monster());
+        interrupt_activity(AI_HIT_MONSTER, defender->as_monster());
 
         // Check if the player is fighting with something unsuitable,
         // or someone unsuitable.

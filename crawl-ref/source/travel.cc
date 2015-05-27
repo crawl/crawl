@@ -303,12 +303,9 @@ static inline bool is_stash(const LevelStashes *ls, const coord_def& p)
 
 static bool _monster_blocks_travel(const monster_info *mons)
 {
-    // [ds] No need to check if the monster is a known mimic, since it
-    // won't even be a monster_info if it's an unknown mimic.
     return mons
            && mons_class_is_stationary(mons->type)
-           && !fedhas_passthrough(mons)
-           && !travel_kill_monster(mons->type);
+           && !fedhas_passthrough(mons);
 }
 
 /*
@@ -479,8 +476,7 @@ static bool _is_safe_move(const coord_def& c)
         if (you.can_see(mon)
             && mons_class_flag(mon->type, M_NO_EXP_GAIN)
             && mon->is_stationary()
-            && !fedhas_passthrough(mon)
-            && !travel_kill_monster(mon->type))
+            && !fedhas_passthrough(mon))
         {
             return false;
         }
@@ -2450,26 +2446,6 @@ static level_pos _prompt_travel_depth(const level_id &id)
 
         _travel_depth_munge(response, buf, target);
     }
-}
-
-bool travel_kill_monster(monster_type mons)
-{
-    if (mons != MONS_TOADSTOOL)
-        return false;
-
-    if (!wielded_weapon_check(you.weapon(), true))
-        return false;
-
-    // Don't auto-kill things with berserkitis or *rage.
-    if (player_mutation_level(MUT_BERSERK) || you.angry())
-    {
-        return you.stasis(false)
-               || you.clarity(false)
-               || you.undead_state() == US_UNDEAD
-               || you.undead_state() == US_HUNGRY_DEAD;
-    }
-
-    return true;
 }
 
 level_pos prompt_translevel_target(int prompt_flags, string& dest_name)
