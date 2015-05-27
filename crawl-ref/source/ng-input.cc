@@ -137,7 +137,7 @@ static string _random_name()
 }
 
 // Reads a valid name from the player, writing it to ng.name.
-void enter_player_name(newgame_def *ng)
+void enter_player_name(newgame_def& ng)
 {
     int prompt_start = wherey();
 
@@ -147,14 +147,14 @@ void enter_player_name(newgame_def *ng)
         _show_name_prompt(prompt_start);
 
         // If the player wants out, we bail out.
-        if (!_read_player_name(ng->name))
+        if (!_read_player_name(ng.name))
             end(0);
-        trim_string(ng->name);
+        trim_string(ng.name);
 
-        if (ng->name.empty())
-            ng->name = _random_name();
+        if (ng.name.empty())
+            ng.name = _random_name();
     }
-    while (!is_good_name(ng->name, false, true));
+    while (!is_good_name(ng.name, false, true));
 }
 
 bool validate_player_name(const string &name, bool verbose)

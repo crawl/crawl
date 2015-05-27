@@ -583,7 +583,7 @@ static const int NUM_MISC_LINES     = 5;
 /**
  * Saves game mode and player name to ng_choice.
  */
-static void _show_startup_menu(newgame_def* ng_choice,
+static void _show_startup_menu(newgame_def& ng_choice,
                                const newgame_def& defaults)
 {
     // Initialise before the loop so that ? doesn't forget the typed name.
@@ -763,7 +763,7 @@ again:
         }
         else if (keyn == '\t' && _game_defined(defaults))
         {
-            *ng_choice = defaults;
+            ng_choice = defaults;
             return;
         }
         else if (keyn == '?')
@@ -888,8 +888,8 @@ again:
             trim_string(input_string);
             if (is_good_name(input_string, true, false))
             {
-                ng_choice->type = static_cast<game_type>(id);
-                ng_choice->name = input_string;
+                ng_choice.type = static_cast<game_type>(id);
+                ng_choice.name = input_string;
                 return;
             }
             else
@@ -903,7 +903,7 @@ again:
             continue;
 
         case GAME_TYPE_ARENA:
-            ng_choice->type = GAME_TYPE_ARENA;
+            ng_choice.type = GAME_TYPE_ARENA;
             return;
 
         case GAME_TYPE_INSTRUCTIONS:
@@ -921,15 +921,15 @@ again:
             if (save_number < num_saves) // actual save
             {
                 // Save the savegame character name
-                ng_choice->name = chars.at(save_number).name;
-                ng_choice->type = chars.at(save_number).saved_game_type;
-                ng_choice->filename = chars.at(save_number).filename;
+                ng_choice.name = chars.at(save_number).name;
+                ng_choice.type = chars.at(save_number).saved_game_type;
+                ng_choice.filename = chars.at(save_number).filename;
             }
             else // "new game"
             {
-                ng_choice->name = "";
-                ng_choice->type = GAME_TYPE_NORMAL;
-                ng_choice->filename = ""; // ?
+                ng_choice.name = "";
+                ng_choice.type = GAME_TYPE_NORMAL;
+                ng_choice.filename = ""; // ?
             }
             return;
         }
@@ -937,10 +937,10 @@ again:
 }
 #endif
 
-static void _choose_arena_teams(newgame_def* choice,
+static void _choose_arena_teams(newgame_def& choice,
                                 const newgame_def& defaults)
 {
-    if (!choice->arena_teams.empty())
+    if (!choice.arena_teams.empty())
         return;
 
     clear_message_store();
@@ -961,9 +961,9 @@ static void _choose_arena_teams(newgame_def* choice,
     char buf[80];
     if (cancellable_get_line(buf, sizeof(buf)))
         game_ended();
-    choice->arena_teams = buf;
-    if (choice->arena_teams.empty())
-        choice->arena_teams = defaults.arena_teams;
+    choice.arena_teams = buf;
+    if (choice.arena_teams.empty())
+        choice.arena_teams = defaults.arena_teams;
 }
 
 bool startup_step()
@@ -1001,7 +1001,7 @@ bool startup_step()
         crawl_state.last_type = GAME_TYPE_UNSPECIFIED;
         choice.name = defaults.name;
         if (choice.type == GAME_TYPE_TUTORIAL)
-            choose_tutorial_character(&choice);
+            choose_tutorial_character(choice);
     }
     // We could also check whether game type has been set here,
     // but it's probably not necessary to choose non-default game
@@ -1009,7 +1009,7 @@ bool startup_step()
     else if (!is_good_name(choice.name, false, false)
         && choice.type != GAME_TYPE_ARENA)
     {
-        _show_startup_menu(&choice, defaults);
+        _show_startup_menu(choice, defaults);
         // [ds] Must set game type here, or we won't be able to load
         // Sprint saves.
         crawl_state.type = choice.type;
@@ -1020,7 +1020,7 @@ bool startup_step()
     //       choose_game and setup_game
     if (choice.type == GAME_TYPE_ARENA)
     {
-        _choose_arena_teams(&choice, defaults);
+        _choose_arena_teams(choice, defaults);
         write_newgame_options_file(choice);
         run_arena(choice.arena_teams);
         end(0, false);
@@ -1032,7 +1032,7 @@ bool startup_step()
         choice.filename = get_save_filename(choice.name);
     if (save_exists(choice.filename) && restore_game(choice.filename))
         save_player_name();
-    else if (choose_game(&ng, &choice, defaults)
+    else if (choose_game(ng, choice, defaults)
              && restore_game(ng.filename))
     {
         save_player_name();
