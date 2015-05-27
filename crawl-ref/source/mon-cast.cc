@@ -6389,7 +6389,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_LEGENDARY_DESTRUCTION:
     {
-        mons->hurt(mons, 10);
         if (pbolt.origin_spell == SPELL_IOOD)
         {
             cast_iood(mons, _mons_spellpower(SPELL_IOOD, *mons), &pbolt);
@@ -8063,7 +8062,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                   && foe->as_monster()->has_ench(ENCH_FROZEN);
 
     case SPELL_LEGENDARY_DESTRUCTION:
-        return !foe || mon->hit_points <= 10;
+        return !foe;
 
     case SPELL_BLACK_MARK:
         return mon->has_ench(ENCH_BLACK_MARK);
