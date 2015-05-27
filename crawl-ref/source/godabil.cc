@@ -479,15 +479,6 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
     // Anti-impure prayer: Hits things that Zin hates in general.
     // Don't look at the monster's god; that's what RECITE_HERETIC is for.
     eligibility[RECITE_IMPURE] = mon->how_unclean(false);
-    // Sanity check: if a monster is 'really' natural, don't consider it impure.
-    if (mons_intel(mon) < I_HUMAN // XXX: why are we checking int AND holiness?
-        && (holiness == MH_NATURAL || holiness == MH_PLANT)
-        && mon->type != MONS_UGLY_THING
-        && mon->type != MONS_VERY_UGLY_THING
-        && mon->type != MONS_DEATH_DRAKE)
-    {
-        eligibility[RECITE_IMPURE] = 0;
-    }
 
     // Anti-unholy prayer: Hits demons and incorporeal undead.
     if (holiness == MH_UNDEAD && mon->is_insubstantial()
