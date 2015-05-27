@@ -1054,6 +1054,51 @@ void job_group::attach(const newgame_def* ng, const newgame_def& defaults,
     }
 }
 
+static job_group jobs_order[] =
+{
+    {
+        "Warrior",
+        coord_def(0, 0), 15,
+        {JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_ASSASSIN,
+         JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
+    },
+    {
+        "Adventurer",
+        coord_def(0, 7), 15,
+        {JOB_ARTIFICER, JOB_WANDERER, JOB_UNKNOWN, JOB_UNKNOWN,
+         JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
+    },
+    {
+        "Zealot",
+        coord_def(15, 0), 20,
+        {JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT,
+         JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN,
+         JOB_UNKNOWN, JOB_UNKNOWN}
+    },
+    {
+        "Warrior-mage",
+        coord_def(35, 0), 21,
+        {JOB_SKALD, JOB_TRANSMUTER, JOB_WARPER, JOB_ARCANE_MARKSMAN,
+         JOB_ENCHANTER, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
+    },
+    {
+        "Mage",
+        coord_def(56, 0), 22,
+        {JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
+         JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
+         JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE}
+    }
+};
+
+bool is_starting_job(job_type job)
+{
+    for (const job_group& group : jobs_order)
+        for (const job_type job_ : group.jobs)
+            if (job == job_)
+                return true;
+    return false;
+}
+
 /**
  * Helper for _choose_job
  * constructs the menu used and highlights the previous job if there is one
@@ -1062,44 +1107,8 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
                                         const newgame_def& defaults,
                                         MenuFreeform* menu)
 {
-    job_group jobs_order[] =
-    {
-        {
-            "Warrior",
-            coord_def(0, 0), 15,
-            {JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_ASSASSIN,
-             JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
-        },
-        {
-            "Adventurer",
-            coord_def(0, 7), 15,
-            {JOB_ARTIFICER, JOB_WANDERER, JOB_UNKNOWN, JOB_UNKNOWN,
-             JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
-        },
-        {
-            "Zealot",
-            coord_def(15, 0), 20,
-            {JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT,
-             JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN,
-             JOB_UNKNOWN, JOB_UNKNOWN}
-        },
-        {
-            "Warrior-mage",
-            coord_def(35, 0), 21,
-            {JOB_SKALD, JOB_TRANSMUTER, JOB_WARPER, JOB_ARCANE_MARKSMAN,
-             JOB_ENCHANTER, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
-        },
-        {
-            "Mage",
-            coord_def(56, 0), 22,
-            {JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
-             JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
-             JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE}
-        }
-    };
-
     menu_letter letter = 'a';
-    for (job_group &group : jobs_order)
+    for (job_group& group : jobs_order)
         group.attach(ng, defaults, menu, letter);
 
     // Add all the special button entries

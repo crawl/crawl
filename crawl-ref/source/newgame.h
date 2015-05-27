@@ -10,8 +10,8 @@ class MenuFreeform;
 struct menu_letter;
 struct newgame_def;
 
-// Is the species valid for a new game?
-bool is_starting_species(species_type);
+bool is_starting_species(species_type species);
+bool is_starting_job(job_type job);
 
 void choose_tutorial_character(newgame_def* ng_choice);
 
