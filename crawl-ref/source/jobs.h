@@ -18,8 +18,4 @@ void give_job_skills(job_type job);
 void job_stat_init(job_type job);
 
 void debug_jobdata();
-
-// Is the job valid for a new game?
-bool is_starting_job(job_type job);
-
 #endif

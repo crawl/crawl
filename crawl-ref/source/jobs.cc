@@ -191,14 +191,3 @@ bool job_recommends_species(job_type job, species_type species)
                 _job_def(job).recommended_species.end(),
                 species) != _job_def(job).recommended_species.end();
 }
-
-// Determines if a job is valid for a new game.
-bool is_starting_job(job_type job)
-{
-    return job >= 0 && job < NUM_JOBS
-#if TAG_MAJOR_VERSION == 34
-        && job != JOB_STALKER && job != JOB_JESTER && job != JOB_PRIEST
-        && job != JOB_DEATH_KNIGHT && job != JOB_HEALER
-#endif
-        ;
-}
