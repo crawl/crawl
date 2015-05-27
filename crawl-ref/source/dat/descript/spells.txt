@@ -313,10 +313,9 @@ dissipating any nearby clouds affecting the caster or their allies.
 %%%%
 Controlled Blink spell
 
-Translocates the caster a short distance, with precise control. In areas that
-prevent teleport control, it will still be possible to choose a direction to
-blink towards. Be wary that controlled translocations will cause the subject to
-become contaminated with magical energy.
+Translocates the caster a short distance, with precise control. Be wary that
+controlled translocations will cause the subject to become contaminated with
+magical energy.
 %%%%
 Corona spell
 
