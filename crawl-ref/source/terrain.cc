@@ -764,10 +764,7 @@ void slime_wall_damage(actor* act, int delay)
     if (!walls)
         return;
 
-    const int depth = player_in_branch(BRANCH_SLIME) ? you.depth : 1;
-
-    // Up to 1d6 damage per wall per slot.
-    const int strength = div_rand_round(depth * walls * delay, BASELINE_DELAY);
+    const int strength = div_rand_round(3 * walls * delay, BASELINE_DELAY);
 
     if (act->is_player())
     {
