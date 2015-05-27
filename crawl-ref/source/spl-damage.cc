@@ -830,7 +830,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
 
     if (mons->observable() && mons->holiness() != MH_NATURAL)
     {
-        mpr("Draining that being is not a good idea.");
+        mpr("You can't drain life from that!");
         return SPRET_ABORT;
     }
 
@@ -859,14 +859,6 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
     if (!mons->alive())
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_SUCCESS;
-    }
-
-    // Monster might be invisible.
-    if (mons->holiness() == MH_UNDEAD || mons->holiness() == MH_DEMONIC)
-    {
-        mpr("Aaaarggghhhhh!");
-        dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");
         return SPRET_SUCCESS;
     }
 
