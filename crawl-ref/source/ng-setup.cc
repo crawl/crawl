@@ -256,6 +256,9 @@ static void _give_items_skills(const newgame_def& ng)
     case JOB_WANDERER:
         create_wanderer();
         break;
+
+    default:
+        break;
     }
 
     if (you.char_class == JOB_ABYSSAL_KNIGHT)

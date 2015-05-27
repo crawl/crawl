@@ -156,21 +156,12 @@ void debug_jobdata()
 
     item_list dummy;
     for (auto& entry : job_data)
-    {
         for (const string& it : entry.second.equipment)
         {
             const string error = dummy.add_item(it, false);
             if (error != "")
                 fails += error + "\n";
         }
-        for (const auto& skill_pair : entry.second.skills)
-            if (skill_pair.first == SK_WEAPON
-                && !job_has_weapon_choice(entry.first))
-            {
-                fails += string(entry.second.name)
-                      + " has weapon skill but no weapon choice\n";
-            }
-    }
 
     if (!fails.empty())
     {
