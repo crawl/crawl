@@ -921,10 +921,9 @@ auto_exclude += <monster name>, <monster name>, ...
 -----------------------------
 
 auto_switch = false
-        If you've got a melee weapon in slot a and a ranged weapon in
-        slot b (or the opposite), this option will allow you to
-        automatically switch to the appropriate weapon when firing or
-        attacking in melee.
+        This option will allow you to automatically switch to an appropriate
+        weapon when firing or attacking in melee, as long as the one you are
+        wielding and the one you switch to are both in slot 'a' or 'b'.
 
 travel_open_doors = true
         If this is set to false, autoexplore/travel will not open doors,

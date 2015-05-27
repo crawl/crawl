@@ -23,6 +23,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
+#include "item_use.h"
 #include "melee_attack.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -45,6 +46,35 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+
+/**
+ * Switch from a bad weapon to melee.
+ *
+ * This function assumes some weapon is being wielded.
+ * @return whether a swap did occur.
+ */
+static bool _autoswitch_to_melee()
+{
+    bool penance;
+    if (is_melee_weapon(*you.weapon())
+        && !needs_handle_warning(*you.weapon(), OPER_ATTACK, penance))
+    {
+        return false;
+    }
+
+    int item_slot;
+    if (you.equip[EQ_WEAPON] == letter_to_index('a'))
+        item_slot = letter_to_index('b');
+    else if (you.equip[EQ_WEAPON] == letter_to_index('b'))
+        item_slot = letter_to_index('a');
+    else
+        return false;
+
+    if (!is_melee_weapon(you.inv[item_slot]))
+        return false;
+
+    return wield_weapon(true, item_slot);
+}
 
 /**
  * Handle melee combat between attacker and defender.
@@ -97,6 +127,13 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         {
             you.turn_is_over = false;
             return false;
+        }
+
+        if (Options.auto_switch
+            && you.weapon()
+            && _autoswitch_to_melee())
+        {
+            return true; // Is this right? We did take time, but we didn't melee
         }
 
         melee_attack attk(&you, defender);
