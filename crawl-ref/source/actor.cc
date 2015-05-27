@@ -779,9 +779,7 @@ bool actor::torpor_slowed() const
         const monster *mons = *ri;
         if (mons && mons->type == MONS_TORPOR_SNAIL
             && !is_sanctuary(mons->pos())
-            && !mons_aligned(mons, this)
-            && !mons->has_ench(ENCH_CHARM) && mons->attitude == ATT_HOSTILE)
-            // friendly torpor snails are way too abusable otherwise :(
+            && !mons_aligned(mons, this))
         {
             return true;
         }
