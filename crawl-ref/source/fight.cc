@@ -493,11 +493,20 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
 bool wielded_weapon_check(item_def *weapon, bool no_message)
 {
     bool penance = false;
-    if (!weapon
-        || (!needs_handle_warning(*weapon, OPER_ATTACK, penance)
-             && is_melee_weapon(*weapon))
-        || you.received_weapon_warning
+    if (you.received_weapon_warning
+        || (weapon
+            && !needs_handle_warning(*weapon, OPER_ATTACK, penance)
+            && is_melee_weapon(*weapon))
         || you.confused())
+    {
+        return true;
+    }
+
+    // Don't pester the player if they're using UC or if they don't have any
+    // weapons yet.
+    if (!weapon
+        && (you.skill(SK_UNARMED_COMBAT) > 0
+            || !any_of(you.inv.begin(), you.inv.end(), is_weapon)))
     {
         return true;
     }
@@ -505,7 +514,11 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     if (no_message)
         return false;
 
-    string prompt  = "Really attack while wielding " + weapon->name(DESC_YOUR) + "?";
+    string prompt;
+    if (weapon)
+        prompt = "Really attack while wielding " + weapon->name(DESC_YOUR) + "?";
+    else
+        prompt = "Really attack barehanded?";
     if (penance)
         prompt += " This could place you under penance!";
 
