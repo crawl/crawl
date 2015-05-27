@@ -524,7 +524,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
                                    SPELL_BOLT_OF_FIRE,
                                    SPELL_LIGHTNING_BOLT,
                                    SPELL_QUICKSILVER_BOLT,
-                                   SPELL_CRYSTAL_BOLT,
                                    SPELL_CORROSIVE_BOLT);
     }
     else if (spell_cast == SPELL_LEGENDARY_DESTRUCTION)
