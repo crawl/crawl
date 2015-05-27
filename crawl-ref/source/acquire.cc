@@ -412,11 +412,11 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
     skill_type skill = SK_FIGHTING;
     int best_sk = 0;
 
-    for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
+    for (int i = SK_FIRST_WEAPON; i <= SK_LAST_WEAPON; i++)
         if (you.skills[i] > best_sk)
             best_sk = you.skills[i];
 
-    for (skill_type sk = SK_SHORT_BLADES; sk <= SK_CROSSBOWS; ++sk)
+    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; ++sk)
     {
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
