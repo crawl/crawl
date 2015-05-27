@@ -1032,7 +1032,7 @@ Quicksilver Bolt spell
 Random Bolt spell
 
 Fires, at random, a bolt of venom, negative energy, fire, cold, dispelling
-energy, electricity, acid, or a bouncing crystal bolt of fire or cold.
+energy, electricity, or acid.
 %%%%
 Recall spell
 
