@@ -631,15 +631,12 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     // Smarter monsters and those native to the level will simply
     // side-step known shafts. Unless they are already looking for
     // an exit, of course.
-    if (type == TRAP_SHAFT && m)
+    if (type == TRAP_SHAFT
+        && m
+        && (!m->will_trigger_shaft()
+            || trig_knows && !mons_is_fleeing(m) && !m->pacified()))
     {
-        if (!m->will_trigger_shaft()
-            || trig_knows && !mons_is_fleeing(m) && !m->pacified())
-        {
-            if (you_know)
-                simple_monster_message(m, " carefully avoids the shaft.");
             return;
-        }
     }
 
     // Anything stepping onto a trap almost always reveals it.
