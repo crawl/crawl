@@ -6758,7 +6758,7 @@ void player::corrode_equipment(const char* corrosion_source, int degree)
 void player::splash_with_acid(const actor* evildoer, int acid_strength,
                               bool allow_corrosion, const char* hurt_msg)
 {
-    if (binomial(3, acid_strength + 1, 30))
+    if (allow_corrosion && binomial(3, acid_strength + 1, 30))
         corrode_equipment();
 
     const int dam = roll_dice(4, acid_strength);
