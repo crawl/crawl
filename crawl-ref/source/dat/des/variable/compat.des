@@ -151,4 +151,12 @@ function wizlab_eringya_grow(data, triggerable, triggerer, marker, ev)
   -- do nothing
 end
 
+function callback.spiders_nest_cobweb_light(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
+function callback.spiders_nest_web_lair(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
 }}
