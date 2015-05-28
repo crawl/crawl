@@ -27,21 +27,6 @@ function callback.spider_trap_warn(data, triggerable, triggerer, marker, ev)
 end
 }}
 
-# Flavour text for Spiderweb map
-{{
-function callback.spiders_nest_cobweb_light(data, triggerable, triggerer, marker, ev)
-    crawl.mpr("Something lightly brushes against you...",1)
-    crawl.more()
-    crawl.mpr("You realise it was just a hanging strand of cobweb; you push it aside and calm your nerves." , "talk_visual")
-end
-}}
-
-{{
-function callback.spiders_nest_web_lair(data, triggerable, triggerer, marker, ev)
-    crawl.mpr("The chamber up ahead is thickly strewn with cobwebs." , "talk_visual")
-end
-}}
-
 ##############################################################################
 # Spider Nest entry vaults
 ##############################################################################
@@ -400,17 +385,6 @@ TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  float
 DEPTH:   Spider, !Spider:$
 WEIGHT:  5
-NSUBST:  y = 1:y / *:.
-{{
-local ym = TriggerableFunction:new{func="callback.spiders_nest_cobweb_light"}
-ym:add_triggerer(DgnTriggerer:new{type="player_move"})
-lua_marker('y', ym)
-local vm = TriggerableFunction:new{func="callback.spiders_nest_web_lair"}
-vm:add_triggerer(DgnTriggerer:new{type="player_move"})
-lua_marker('v', vm)
-}}
-SUBST:   y = .
-SUBST:   v = .
 # Water etc.
 SUBST:   w = z
 SUBST:   W = W w:15 x:4
@@ -449,7 +423,7 @@ MAP
 .xW.WWxxxwwxxxx....x........wxxxxXW.xx.
 .wwW..WWwxxxxxxxxx......xxxxxw4xxW.Wx..
 .xxWWW.7.WWWxxxxxxxxxxW.WWWWxwxxW7Wxx.
-..xxxxWWW.7.WWXxxxxxxxxW7.v.WWwWW.Wx..
+..xxxxWWW.7.WWXxxxxxxxxW7...WWwWW.Wx..
  ....xxxxWWW.WWWXXxxxWWWxxWW.....Wxx3
     ....xxxxW.7WWWWWWxxxx...WWWWWxx..
        ..3.xxxx...WWW.7..WWWWxxxwx..
