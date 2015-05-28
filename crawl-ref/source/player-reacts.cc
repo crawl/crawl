@@ -1063,7 +1063,7 @@ static void _decrement_durations()
                           "Your cleaving frenzy subsides.");
 
     if (_decrement_a_duration(DUR_CORROSION, delay,
-                          "You repair your equipment."))
+                          "You are no longer corroded."))
     {
         you.props["corrosion_amount"] = 0;
         you.redraw_armour_class = true;
