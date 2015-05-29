@@ -3,6 +3,7 @@
 #include "tileview.h"
 
 #include "areas.h"
+#include "asg.h"
 #include "branch.h"
 #include "cloud.h"
 #include "colour.h"

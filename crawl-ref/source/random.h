@@ -1,12 +1,11 @@
 #ifndef RANDOM_H
 #define RANDOM_H
 
-#include <algorithm>  // shuffle
+#include <algorithm>  // iter_swap
 #include <iterator>   // advance
 #include <map>
 #include <vector>
 
-#include "asg.h" // AsgKISS::generator
 #include "hash.h"
 
 void seed_rng();
@@ -96,16 +95,29 @@ struct dice_def
 
 dice_def calc_dice(int num_dice, int max_damage);
 
-template <typename T>
-void shuffle_array(T* arr, int n)
+// I must be a random-access iterator.
+template <typename I>
+void shuffle_array(I begin, I end)
 {
-    shuffle(arr, arr+n, AsgKISS::generator(0));
+    size_t n = end - begin;
+    while (n > 1)
+    {
+        const int i = random2(n);
+        n--;
+        iter_swap(begin + i, begin + n);
+    }
 }
 
 template <typename T>
 void shuffle_array(T &vec)
 {
-    shuffle(begin(vec), end(vec), AsgKISS::generator(0));
+    shuffle_array(begin(vec), end(vec));
+}
+
+template <typename T>
+void shuffle_array(T *arr, int n)
+{
+    shuffle_array(arr, arr + n);
 }
 
 /**
