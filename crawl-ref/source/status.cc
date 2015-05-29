@@ -315,13 +315,15 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case DUR_POWERED_BY_DEATH:
-        if (you.props["powered_by_death_strength"].get_int() > 0)
+    {
+        const int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
+        if (pbd_str > 0)
         {
             inf->light_colour = LIGHTMAGENTA;
-            inf->light_text   = make_stringf("Regen (%d)",
-                                you.props["powered_by_death_strength"].get_int());
+            inf->light_text   = make_stringf("Regen (%d)", pbd_str);
         }
         break;
+    }
 
     case STATUS_MISSILES:
         _describe_missiles(inf);

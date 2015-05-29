@@ -660,14 +660,24 @@ static void _decrement_durations()
         you.redraw_evasion = true;
     }
 
-    // Powered by Death strength is handled below, search for:
-    // you.props["powered_by_death_strength"]
+    // Handle Powered By Death strength and duration
+    int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
+    if (pbd_str > 1)
+    {
+        // Roll to decrement (on average) 1 per-10 aut.
+        const int decrement_rolls = div_rand_round(delay, 10);
+        const int dec = binomial(decrement_rolls, 1, 4);
+        pbd_str = max(pbd_str - dec, 0);
+        you.props[POWERED_BY_DEATH_KEY] = pbd_str;
+        if (dec > 0)
+            dprf("Decrementing Powered by Death strength to %d", pbd_str);
+    }
     if (_decrement_a_duration(DUR_POWERED_BY_DEATH, delay))
     {
-        if (you.props["powered_by_death_strength"].get_int() > 0)
+        if (pbd_str > 0)
         {
             mprf(MSGCH_DURATION, "You feel less regenerative.");
-            you.props["powered_by_death_strength"] = 0;
+            you.props[POWERED_BY_DEATH_KEY] = 0;
         }
     }
 
@@ -1195,20 +1205,6 @@ static void _decrement_durations()
 
     for (int i = 0; i < delay; ++i)
         you.maybe_degrade_bone_armour(1);
-
-    // Decay Powered by Death strength over time.
-    // PbD duration is handled above, search for DUR_POWERED_BY_DEATH.
-    int pbd_str = you.props["powered_by_death_strength"].get_int();
-    if (pbd_str > 1)
-    {
-        // Roll to decrement (on average) 1 per-10 aut.
-        const int decrement_rolls = div_rand_round(delay, 10);
-        const int dec = binomial(decrement_rolls, 1, 4);
-        pbd_str = max(pbd_str - dec, 0);
-        you.props["powered_by_death_strength"] = pbd_str;
-        if (dec > 0)
-            dprf("Decrementing Powered by Death strength to %d", pbd_str);
-    }
 
     if (!env.sunlight.empty())
         process_sunlights();
