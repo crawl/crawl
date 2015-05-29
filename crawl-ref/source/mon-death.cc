@@ -2075,24 +2075,23 @@ int monster_die(monster* mons, killer_type killer,
     bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = mons->holiness();
 
-
-    // Adjust song of slaying bonus
-    // Kills by the spectral weapon should be adjusted by this point to be
-    // kills by the player --- so kills by the spectral weapon are considered
-    // here as well
-    if (killer == KILL_YOU && you.duration[DUR_SONG_OF_SLAYING] && gives_xp
-        && !mons->has_ench(ENCH_ABJ) && !fake_abjuration && !created_friendly
+    // Adjust song of slaying bonus. Kills by relevant avatars are adjusted by
+    // now to KILL_YOU and are counted.
+    if (killer == KILL_YOU
+        && you.duration[DUR_SONG_OF_SLAYING]
+        && good_kill
         && !was_neutral)
     {
-        int sos_bonus = you.props["song_of_slaying_bonus"].get_int();
+        int sos_bonus = you.props[SONG_OF_SLAYING_KEY].get_int();
         mon_threat_level_type threat = mons_threat_level(mons, true);
-        // Only certain kinds of threats at different sos levels will increase the bonus
+        // Only certain kinds of threats at different sos levels will increase
+        // the bonus
         if (threat == MTHRT_TRIVIAL && sos_bonus < 3
             || threat == MTHRT_EASY && sos_bonus < 5
             || threat == MTHRT_TOUGH && sos_bonus < 7
             || threat == MTHRT_NASTY)
         {
-            you.props["song_of_slaying_bonus"] = sos_bonus + 1;
+            you.props[SONG_OF_SLAYING_KEY] = sos_bonus + 1;
         }
     }
 
