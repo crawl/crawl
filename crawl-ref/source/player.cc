@@ -1112,7 +1112,7 @@ static int _player_bonus_regen()
     // Powered By Death mutation, boosts regen by variable strength
     // if the duration of the effect is still active.
     if (you.duration[DUR_POWERED_BY_DEATH])
-        rr += you.props["powered_by_death_strength"].get_int() * 100;
+        rr += you.props[POWERED_BY_DEATH_KEY].get_int() * 100;
 
     return rr;
 }
