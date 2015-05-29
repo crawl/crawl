@@ -1160,8 +1160,7 @@ static bool _suppress_blood(tileidx_t bg_idx)
 }
 
 // Specifically for vault-overwritten doors. We have three "sets" of tiles that
-// can be dealt with. The tile sets should be 2, 3, 8 and 9 respectively. They
-// are:
+// can be dealt with. The tile sets should have size 2, 3, 8, or 9. They are:
 //  2. Closed, open.
 //  3. Runed, closed, open.
 //  8. Closed, open, gate left closed, gate middle closed, gate right closed,
