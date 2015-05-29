@@ -2537,6 +2537,22 @@ int monster_die(monster* mons, killer_type killer,
             corpse = corpse2;
     }
 
+    if (!mons_reset && !summoned && !fake_abjuration && !unsummoned
+        && !timeout && !was_banished)
+
+    // Monster Powered by Death. Nearby putrid demonspawn monsters get healed
+    for (monster_near_iterator mi(mons->pos()); mi; ++mi)
+    {
+        if ((*mi)->alive()
+            && mons_is_demonspawn((*mi)->type)
+            && draco_or_demonspawn_subspecies(*mi) == MONS_PUTRID_DEMONSPAWN)
+        {
+            // Heal 20hp on average.
+            if ((*mi)->heal(8 + random2avg(25, 2)))
+                simple_monster_message(*mi, " regenerates before your eyes!");
+        }
+    }
+
     // Player Powered by Death
     if (player_mutation_level(MUT_POWERED_BY_DEATH)
         && (killer == KILL_YOU
@@ -2566,26 +2582,6 @@ int monster_die(monster* mons, killer_type killer,
         }
     }
 
-    // Monster Powered by Death.
-    // Find nearby putrid demonspawn.
-    for (monster_near_iterator mi(mons->pos()); mi; ++mi)
-    {
-        monster* mon = *mi;
-        if (mon->alive()
-            && mons_is_demonspawn(mon->type)
-            && draco_or_demonspawn_subspecies(mon)
-               == MONS_PUTRID_DEMONSPAWN)
-        {
-            // Rather than regen over time, the expected 24 + 2d8 duration
-            // is given as an instant health bonus.
-            // These numbers may need to be adjusted.
-            if (mon->heal(random2avg(24, 2) + roll_dice(2, 8)))
-            {
-                simple_monster_message(mon,
-                                       " regenerates before your eyes!");
-            }
-        }
-    }
 
     unsigned int player_exp = 0, monster_exp = 0;
     if (!mons_reset && !fake_abjuration && !timeout && !unsummoned)
