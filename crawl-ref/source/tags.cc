@@ -51,9 +51,6 @@
 #include "jobs.h"
 #include "mapmark.h"
 #include "misc.h"
-#if TAG_MAJOR_VERSION == 34
- #include "mon-chimera.h"
-#endif
 #include "mon-death.h"
 #if TAG_MAJOR_VERSION == 34
  #include "mon-place.h"
@@ -5530,7 +5527,7 @@ void unmarshallMonster(reader &th, monster& m)
         ASSERT(m.mid < MID_FIRST_NON_MONSTER);
         parts &= MP_GHOST_DEMON;
     }
-    else if (mons_class_is_chimeric(m.type)
+    else if (m.type == MONS_CHIMERA
              && th.getMinorVersion() < TAG_MINOR_CHIMERA_GHOST_DEMON)
     {
         // Don't unmarshall the ghost demon if this is an invalid chimera
@@ -5640,26 +5637,6 @@ void unmarshallMonster(reader &th, monster& m)
     m.props.read(th);
 
 #if TAG_MAJOR_VERSION == 34
-    // Now we've got props, can construct a missing ghost demon for
-    // chimera that need upgrading
-    if (th.getMinorVersion() < TAG_MINOR_CHIMERA_GHOST_DEMON
-        && mons_is_ghost_demon(m.type)
-        && mons_class_is_chimeric(m.type))
-    {
-        // Construct a new chimera ghost demon from the old parts
-        ghost_demon ghost;
-        monster_type cparts[] =
-        {
-            get_chimera_part(&m, 1),
-            get_chimera_part(&m, 2),
-            get_chimera_part(&m, 3)
-        };
-        ghost.init_chimera(&m, cparts);
-        m.set_ghost(ghost);
-        m.ghost_demon_init();
-        parts |= MP_GHOST_DEMON;
-    }
-
     if (th.getMinorVersion() < TAG_MINOR_RANDLICHES
         && mons_is_ghost_demon(m.type)
         && (m.type == MONS_LICH || m.type == MONS_ANCIENT_LICH))

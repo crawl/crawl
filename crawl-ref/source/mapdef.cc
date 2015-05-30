@@ -4072,17 +4072,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                     mspec.monbase = static_cast<monster_type>(nspec.type);
                 }
             }
-            // Now check for chimera
-            const mons_spec cspec = mons_by_name("rat-rat-rat " + mon_str);
-            if (cspec.type != MONS_PROGRAM_BUG)
-            {
-                // Is this a modified monster?
-                if (cspec.monbase != MONS_PROGRAM_BUG
-                    && mons_class_is_chimeric(static_cast<monster_type>(cspec.type)))
-                {
-                    mspec.monbase = static_cast<monster_type>(cspec.type);
-                }
-            }
         }
         else if (mon_str != "0")
         {
@@ -4105,7 +4094,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             mspec.type    = nspec.type;
             mspec.monbase = nspec.monbase;
             mspec.number  = nspec.number;
-            mspec.chimera_mons = nspec.chimera_mons;
             if (nspec.colour > COLOUR_UNDEF && mspec.colour <= COLOUR_UNDEF)
                 mspec.colour = nspec.colour;
         }
@@ -4521,23 +4509,6 @@ mons_spec mons_list::mons_by_name(string name) const
         return get_slime_spec(name);
 
     mons_spec spec;
-    if (ends_with(name, " chimera"))
-    {
-        const string chimera_spec = name.substr(0, name.length() - 8);
-        vector<string> components = split_string("-", chimera_spec);
-        if (components.size() != 3)
-            return MONS_PROGRAM_BUG;
-
-        spec = MONS_CHIMERA;
-        for (const string &component : components)
-        {
-            monster_type monstype = get_monster_by_name(component);
-            if (monstype == MONS_PROGRAM_BUG)
-                return MONS_PROGRAM_BUG;
-            spec.chimera_mons.push_back(monstype);
-        }
-        return spec;
-    }
 
     if (name.find(" ugly thing") != string::npos)
     {

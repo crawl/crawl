@@ -2692,12 +2692,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         if (mon.props.exists(TILE_NUM_KEY))
             tile_num = mon.props[TILE_NUM_KEY].get_short();
 
-        int type = mon.type;
-
-        if (type == MONS_CHIMERA)
-            type = mon.base_type;
-
-        switch (type)
+        switch (mon.type)
         {
         case MONS_CENTAUR:
             return TILEP_MONS_CENTAUR + _bow_offset(mon);
@@ -2830,7 +2825,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_DUVESSA:
         case MONS_DOWAN:
         {
-            const tileidx_t t = tileidx_monster_base(type, in_water,
+            const tileidx_t t = tileidx_monster_base(mon.type, in_water,
                                                      mon.colour(true),
                                                      mon.number, tile_num);
             return (mon.props.exists(ELVEN_IS_ENERGIZED_KEY)) ? t + 1
@@ -2840,7 +2835,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_SENSED:
         {
             // Should be always out of LOS, though...
-            const tileidx_t t = tileidx_monster_base(type, in_water,
+            const tileidx_t t = tileidx_monster_base(mon.type, in_water,
                                                      mon.colour(true),
                                                      mon.number, tile_num);
             if (t == TILEP_MONS_PROGRAM_BUG)
@@ -2849,7 +2844,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         }
 
         default:
-            return tileidx_monster_base(type, in_water, mon.colour(true),
+            return tileidx_monster_base(mon.type, in_water, mon.colour(true),
                                         mon.number, tile_num);
         }
     }

@@ -39,7 +39,6 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-chimera.h"
 #include "mon-clone.h"
 #include "mon-pick.h"
 #include "mon-place.h"
@@ -1016,40 +1015,6 @@ string manual_skill_names(bool short_text)
         return skill_names(skills);
 }
 
-static const pop_entry pop_beasts[] =
-{ // Box of Beasts
-  {  1,  3,  10,  FALL, MONS_BUTTERFLY },
-  {  1,  5,  100, FALL, MONS_RAT   },
-  {  1,  5,  100, FALL, MONS_BAT   },
-  {  2,  8,  100, PEAK, MONS_JACKAL },
-  {  2, 10,  100, PEAK, MONS_ADDER },
-  {  4, 13,  100, PEAK, MONS_HOUND },
-  {  5, 15,  100, PEAK, MONS_WATER_MOCCASIN },
-  {  5, 15,  100, PEAK, MONS_SKY_BEAST },
-  {  8, 18,  100, PEAK, MONS_CROCODILE },
-  {  8, 18,  100, PEAK, MONS_HOG },
-  { 10, 20,  100, PEAK, MONS_ICE_BEAST },
-  { 10, 20,  100, PEAK, MONS_YAK },
-  { 10, 20,  100, PEAK, MONS_WYVERN },
-  { 10, 20,  100, PEAK, MONS_WOLF },
-  { 11, 22,  100, PEAK, MONS_ALLIGATOR },
-  { 11, 22,  200, PEAK, MONS_POLAR_BEAR },
-  { 11, 22,  100, PEAK, MONS_WARG },
-  { 13, 25,  100, PEAK, MONS_ELEPHANT },
-  { 13, 25,  100, PEAK, MONS_GRIFFON },
-  { 13, 25,  100, PEAK, MONS_BLACK_BEAR },
-  { 15, 27,   50, PEAK, MONS_CATOBLEPAS },
-  { 15, 27,  100, PEAK, MONS_DEATH_YAK },
-  { 16, 27,  100, PEAK, MONS_ANACONDA },
-  { 16, 27,   50, PEAK, MONS_RAVEN },
-  { 18, 29,   50, RISE, MONS_DIRE_ELEPHANT },
-  { 20, 29,   50, RISE, MONS_FIRE_DRAGON },
-  { 23, 32,   10, RISE, MONS_APIS },
-  { 23, 32,   10, RISE, MONS_HELLEPHANT },
-  { 23, 32,   10, RISE, MONS_GOLDEN_DRAGON },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
 static const pop_entry pop_spiders[] =
 { // Sack of Spiders
   {  0,  10,   5,  FALL, MONS_GIANT_COCKROACH },
@@ -1065,12 +1030,6 @@ static const pop_entry pop_spiders[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static bool _box_of_beasts_veto_mon(monster_type mon)
-{
-    // Don't summon any beast that would anger your god.
-    return player_will_anger_monster(mon);
-}
-
 static bool _box_of_beasts(item_def &box)
 {
     mpr("You open the lid...");
@@ -1083,70 +1042,16 @@ static bool _box_of_beasts(item_def &box)
         return false;
     }
 
-    bool success = false;
-    monster* mons = nullptr;
-
-    if (!one_chance_in(3))
-    {
-        // Invoke mon-pick with the custom list
-        const int pick_level = you.skill(SK_EVOCATIONS) + 5;
-        monster_type mon = pick_monster_from(pop_beasts, pick_level,
-                                             _box_of_beasts_veto_mon);
-
-        // Second monster might be only half as good
-        int pick_level_2 = random_range(max(1,div_rand_round(pick_level,2)),
-                                        pick_level);
-        monster_type mon2 = pick_monster_from(pop_beasts, pick_level_2,
-                                              _box_of_beasts_veto_mon);
-
-        // Third monster picked from anywhere up to max level
-        int pick_level_3 = random_range(1, pick_level);
-        monster_type mon3 = pick_monster_from(pop_beasts, pick_level_3,
-                                              _box_of_beasts_veto_mon);
-
-        if (mon && mon2 && mon3)
-        {
-            mgen_data mg = mgen_data(MONS_CHIMERA,
-                                     BEH_FRIENDLY, &you,
-                                     3 + random2(3), 0,
-                                     you.pos(),
-                                     MHITYOU, MG_AUTOFOE);
-            mg.define_chimera(mon, mon2, mon3);
-            mons = create_monster(mg);
-            if (mons)
-                success = true;
-        }
-        else
-        {
-            // we weren't able to come up with acceptable monsters
-            mpr("...but nothing happens.");
-            return false;
-        }
-
-    }
-
-    if (success)
-    {
-        mpr("...and something leaps out!");
-        xom_is_stimulated(10);
-        did_god_conduct(DID_CHAOS, random_range(5,10));
-        // Decrease charges
-        box.charges--;
-        box.used_count++;
-        // Let each part announce itself
-        for (int n = 0; n < NUM_CHIMERA_HEADS; ++n)
-        {
-            mons->ghost->acting_part = get_chimera_part(mons, n + 1);
-            handle_monster_shouts(mons, true);
-        }
-        mons->ghost->acting_part = MONS_0;
-    }
-    else
-        // Failed to create monster for some reason
-        mpr("...but nothing happens.");
-
-    return success;
+    mpr("...but nothing happens.");
+    return false;
 }
+
+static bool _sack_of_spiders_veto_mon(monster_type mon)
+{
+   // Don't summon any beast that would anger your god.
+    return player_will_anger_monster(mon);
+}
+
 
 static bool _sack_of_spiders(item_def &sack)
 {
@@ -1174,7 +1079,7 @@ static bool _sack_of_spiders(item_def &sack)
         // Invoke mon-pick with our custom list
         monster_type mon = pick_monster_from(pop_spiders,
                                              max(1, you.skill(SK_EVOCATIONS)),
-                                             _box_of_beasts_veto_mon);
+                                             _sack_of_spiders_veto_mon);
         mgen_data mg = mgen_data(mon,
                                  BEH_FRIENDLY, &you,
                                  3 + random2(4), 0,

@@ -44,7 +44,6 @@
 #include "message.h"
 #include "mon-book.h"
 #include "mon-cast.h" // mons_spell_range
-#include "mon-chimera.h"
 #include "mon-tentacle.h"
 #include "options.h"
 #include "output.h"
@@ -3008,73 +3007,6 @@ static string _describe_draconian(const monster_info& mi)
     return description;
 }
 
-static string _describe_chimera(const monster_info& mi)
-{
-    string description = "It has the head of ";
-
-    description += apply_description(DESC_A, get_monster_data(mi.base_type)->name);
-
-    monster_type part2 = get_chimera_part(&mi,2);
-    description += ", the head of ";
-    if (part2 == mi.base_type)
-    {
-        description += "another ";
-        description += apply_description(DESC_PLAIN,
-                                         get_monster_data(part2)->name);
-    }
-    else
-        description += apply_description(DESC_A, get_monster_data(part2)->name);
-
-    monster_type part3 = get_chimera_part(&mi,3);
-    description += ", and the head of ";
-    if (part3 == mi.base_type || part3 == part2)
-    {
-        if (part2 == mi.base_type)
-            description += "yet ";
-        description += "another ";
-        description += apply_description(DESC_PLAIN,
-                                         get_monster_data(part3)->name);
-    }
-    else
-        description += apply_description(DESC_A, get_monster_data(part3)->name);
-
-    description += ". It has the body of ";
-    description += apply_description(DESC_A,
-                                     get_monster_data(mi.base_type)->name);
-
-    const bool has_wings = mi.props.exists(CHIMERA_BATTY_KEY)
-                           || mi.props.exists(CHIMERA_WING_KEY);
-    if (mi.props.exists(CHIMERA_LEGS_KEY))
-    {
-        const monster_type leggy_part =
-            get_chimera_part(&mi, mi.props[CHIMERA_LEGS_KEY].get_int());
-        if (has_wings)
-            description += ",";
-        else
-            description += " and";
-        description += " the legs of ";
-        description += apply_description(DESC_A,
-                                         get_monster_data(leggy_part)->name);
-    }
-
-    if (has_wings)
-    {
-        monster_type wing_part = mi.props.exists(CHIMERA_BATTY_KEY) ?
-            get_chimera_part(&mi, mi.props[CHIMERA_BATTY_KEY].get_int())
-            : get_chimera_part(&mi, mi.props[CHIMERA_WING_KEY].get_int());
-
-        if (mons_class_flag(wing_part, M_FLIES))
-            description += " and it flies like ";
-        else
-            description += " and it moves like "; // Unseen horrors
-
-        description += apply_description(DESC_A,
-                                         get_monster_data(wing_part)->name);
-    }
-    description += ".";
-    return description;
-}
-
 static string _describe_demonspawn_role(monster_type type)
 {
     switch (type)
@@ -3782,10 +3714,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     case MONS_PANDEMONIUM_LORD:
         inf.body << _describe_demon(mi.mname, mi.airborne()) << "\n";
-        break;
-
-    case MONS_CHIMERA:
-        inf.body << "\n" << _describe_chimera(mi) << "\n";
         break;
 
     case MONS_PROGRAM_BUG:

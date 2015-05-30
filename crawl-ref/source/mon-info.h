@@ -268,7 +268,6 @@ struct monster_info : public monster_info_base
     string common_name(description_level_type desc = DESC_PLAIN) const;
     string proper_name(description_level_type desc = DESC_PLAIN) const;
     string full_name(description_level_type desc = DESC_PLAIN, bool use_comma = false) const;
-    string chimera_part_names() const;
 
     vector<string> attributes() const;
 

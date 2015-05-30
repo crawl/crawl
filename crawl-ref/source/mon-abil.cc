@@ -41,7 +41,6 @@
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-cast.h"
-#include "mon-chimera.h"
 #include "mon-death.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
@@ -1072,10 +1071,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     const monster_type mclass = (mons_genus(mons->type) == MONS_DRACONIAN)
                                   ? draco_or_demonspawn_subspecies(mons)
-                                  // Pick a random chimera component
-                                  : (mons->type == MONS_CHIMERA ?
-                                     get_chimera_part(mons, random2(3) + 1)
-                                     : mons->type);
+                                  : mons->type;
 
     // Slime creatures can split while out of sight.
     if ((!mons->near_foe() || mons->asleep() || mons->submerged())

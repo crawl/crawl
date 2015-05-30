@@ -241,6 +241,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_GIANT_MITE)
     AXED_MON(MONS_BABY_ALLIGATOR)
     AXED_MON(MONS_BORING_BEETLE)
+    AXED_MON(MONS_CHIMERA)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -3174,19 +3175,6 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     2, 10, MST_NO_SPELLS, CE_CLEAN, S_SCREECH,
     I_HUMAN, HT_LAND, 25, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID_WINGED
-},
-
-// Chimera - composed of three other animals
-{
-    MONS_CHIMERA, 'H', MAGENTA, "chimera",
-    M_NO_POLY_TO | M_HYBRID | M_GHOST_DEMON,
-    MR_NO_FLAGS,
-    11, MONS_CHIMERA, MONS_CHIMERA, MH_NATURAL, -3,
-    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
-    8, 5, MST_NO_SPELLS, CE_NOCORPSE, S_RANDOM,
-    I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED
 },
 
 {
