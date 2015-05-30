@@ -185,12 +185,12 @@ function setup_loot (e)
     e.item([[potion of berserk rage w:22 / potion of might w:5 /
              potion of brilliance w:5 / potion of agility w:5 /
              potion of experience w:1 / potion of resistance]])
-    e.item(make_fiery_weapon(e, {"rapier w:20", "demon whip w:2", "dire flail w:4", 
+    e.item(make_fiery_weapon(e, {"rapier w:20", "morningstar w:20", "demon whip w:2", "dire flail w:4",
                                  "great mace w:1", "scimitar w:20", "great sword",
                                  "demon blade w:1", "triple sword w:1", "broad axe w:20",
                                  "battleaxe", "executioner's axe w:1", "trident w:20",
                                  "glaive w:5", "halberd w:5", "demon trident w:1",
-                                 "bardiche w:1", "longbow w:5", "arbalest w:5", 
+                                 "bardiche w:1", "longbow w:5", "arbalest w:5",
                                  "greatsling w:5", "lajatang w:1"}))
     e.item("any")
 end
