@@ -153,7 +153,6 @@ void ghost_demon::reset()
     resists          = 0;
     colour           = COLOUR_UNDEF;
     flies            = false;
-    acting_part      = MONS_0;
 }
 
 /**

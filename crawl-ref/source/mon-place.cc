@@ -1309,35 +1309,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else
         define_monster(mon);
 
-    // Must do this early, as init_chimera calls define_monster again.
-    if (mons_class_is_chimeric(mon->type))
-    {
-        ghost_demon ghost;
-
-        // Requires 3 parts
-        if (mg.chimera_mons.size() != 3)
-        {
-            if (!ghost.init_chimera_for_place(mon, place, mg.cls, fpos))
-            {
-                env.mid_cache.erase(mon->mid);
-                mon->reset();
-                return 0;
-            }
-        }
-        else
-        {
-            monster_type parts[] =
-            {
-                mg.chimera_mons[0],
-                mg.chimera_mons[1],
-                mg.chimera_mons[2],
-            };
-            ghost.init_chimera(mon, parts);
-        }
-        mon->set_ghost(ghost);
-        mon->ghost_demon_init();
-    }
-
     // Is it a god gift?
     if (mg.god != GOD_NO_GOD)
     {

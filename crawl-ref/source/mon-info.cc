@@ -27,7 +27,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-book.h"
-#include "mon-chimera.h"
 #include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
 #include "mon-tentacle.h"
 #include "options.h"
@@ -247,11 +246,6 @@ static bool _is_public_key(string key)
      || key == TILE_NUM_KEY
 #endif
      || key == "tile_idx"
-     || key == CHIMERA_PT2_KEY
-     || key == CHIMERA_PT3_KEY
-     || key == CHIMERA_BATTY_KEY
-     || key == CHIMERA_WING_KEY
-     || key == CHIMERA_LEGS_KEY
      || key == "custom_spells"
      || key == ELVEN_IS_ENERGIZED_KEY)
     {
@@ -578,15 +572,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->flags & MF_NAME_SPECIES)
         mb.set(MB_NO_NAME_TAG);
 
-    // Chimera acting head needed for name
-    i_ghost.acting_part = MONS_0;
-    if (mons_class_is_chimeric(type))
-    {
-        ASSERT(m->ghost.get());
-        ghost_demon& ghost = *m->ghost;
-        i_ghost.acting_part = ghost.acting_part;
-    }
-    // As is ghostliness
+    // Ghostliness needed for name
     if (testbits(m->flags, MF_SPECTRALISED))
         mb.set(MB_SPECTRALISED);
 
@@ -865,7 +851,7 @@ string monster_info::_core_name() const
         break;
 
     case MONS_PILLAR_OF_SALT:
-    case MONS_BLOCK_OF_ICE:     case MONS_CHIMERA:
+    case MONS_BLOCK_OF_ICE:
     case MONS_SENSED:
         nametype = base_type;
         break;
@@ -979,8 +965,7 @@ string monster_info::common_name(description_level_type desc) const
     const string core = _core_name();
     const bool nocore = mons_class_is_zombified(type)
                         && mons_is_unique(base_type)
-                        && base_type == mons_species(base_type)
-                        || mons_class_is_chimeric(type);
+                        && base_type == mons_species(base_type);
 
     ostringstream ss;
 
@@ -1014,22 +999,6 @@ string monster_info::common_name(description_level_type desc) const
             ss << std::to_string(num_heads);
 
         ss << "-headed ";
-    }
-
-    if (mons_class_is_chimeric(type))
-    {
-        ss << "chimera";
-        monsterentry *me = nullptr;
-        if (i_ghost.acting_part != MONS_0
-            && (me = get_monster_data(i_ghost.acting_part)))
-        {
-            // Specify an acting head
-            ss << "'s " << me->name << " head";
-        }
-        else
-            // Suffix parts in brackets
-            // XXX: Should have a desc level that disables this
-            ss << " (" << core << chimera_part_names() << ")";
     }
 
     if (!nocore)
@@ -1211,20 +1180,6 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
                 return true;
             else if (m1.base_type > m2.base_type)
                 return false;
-        }
-
-        if (m1.type == MONS_CHIMERA)
-        {
-            for (int part = 1; part <= 3; part++)
-            {
-                const monster_type p1 = get_chimera_part(&m1, part);
-                const monster_type p2 = get_chimera_part(&m2, part);
-
-                if (p1 < p2)
-                    return true;
-                else if (p1 > p2)
-                    return false;
-            }
         }
 
         // Both monsters are hydras or hydra zombies, sort by number of heads.

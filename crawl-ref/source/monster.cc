@@ -42,7 +42,6 @@
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-cast.h"
-#include "mon-chimera.h"
 #include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -3797,8 +3796,7 @@ int monster::known_chaos(bool check_spells_god) const
         || type == MONS_WRETCHED_STAR
         || type == MONS_KILLER_KLOWN  // For their random attacks.
         || type == MONS_TIAMAT        // For her colour-changing.
-        || mons_is_demonspawn(type)   // Like player demonspawn
-        || mons_class_is_chimeric(type))
+        || mons_is_demonspawn(type))  // Like player demonspawn
     {
         chaotic++;
     }
@@ -6835,9 +6833,7 @@ bool monster::is_projectile() const
 
 bool monster::is_jumpy() const
 {
-    return type == MONS_JUMPING_SPIDER
-        || mons_class_is_chimeric(type)
-            && get_chimera_legs(this) == MONS_JUMPING_SPIDER;
+    return type == MONS_JUMPING_SPIDER;
 }
 
 int monster::aug_amount() const

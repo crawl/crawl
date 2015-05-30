@@ -112,9 +112,6 @@ struct mgen_data
     // be available (vault metadata is not preserved across game saves).
     unsigned        map_mask = 0;
 
-    // This simply stores chimera base monsters.
-    vector<monster_type> chimera_mons;
-
     // This can eventually be used to store relevant information.
     CrawlHashTable  props;
 
@@ -170,9 +167,6 @@ struct mgen_data
     bool use_position() const { return in_bounds(pos); };
 
     bool summoned() const { return abjuration_duration > 0; }
-
-    void define_chimera(monster_type part1, monster_type part2,
-                        monster_type part3);
 
     static mgen_data sleeper_at(monster_type what,
                                 const coord_def &where,

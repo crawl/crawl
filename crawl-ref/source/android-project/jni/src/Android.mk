@@ -165,7 +165,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/mon-act.cc \
     $(CRAWL_PATH)/mon-behv.cc \
     $(CRAWL_PATH)/mon-cast.cc \
-    $(CRAWL_PATH)/mon-chimera.cc \
     $(CRAWL_PATH)/mon-clone.cc \
     $(CRAWL_PATH)/mon-death.cc \
     $(CRAWL_PATH)/mon-ench.cc \

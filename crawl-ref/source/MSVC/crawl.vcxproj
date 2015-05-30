@@ -359,7 +359,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\lev-pand.cc" />
     <ClCompile Include="..\lookup_help.cc" />
     <ClCompile Include="..\melee_attack.cc" />
-    <ClCompile Include="..\mon-chimera.cc" />
     <ClCompile Include="..\mon-death.cc" />
     <ClCompile Include="..\mon-ench.cc" />
     <ClCompile Include="..\mon-stealth.cc" />
@@ -736,7 +735,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\matrix.h" />
     <ClInclude Include="..\melee_attack.h" />
     <ClInclude Include="..\mi-enum.h" />
-    <ClInclude Include="..\mon-chimera.h" />
     <ClInclude Include="..\mon-death.h" />
     <ClInclude Include="..\mon-ench.h" />
     <ClInclude Include="..\mon-flags.h" />

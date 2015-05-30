@@ -300,7 +300,6 @@
     <ClCompile Include="..\xom.cc" />
     <ClCompile Include="..\dgn-irregular-box.cc" />
     <ClCompile Include="..\json.cc" />
-    <ClCompile Include="..\mon-chimera.cc" />
     <ClCompile Include="..\spl-pick.cc" />
     <ClCompile Include="..\hash.cc" />
   </ItemGroup>
@@ -632,7 +631,6 @@
     <ClInclude Include="..\xom.h" />
     <ClInclude Include="..\zap-data.h" />
     <ClInclude Include="..\dgn-irregular-box.h" />
-    <ClInclude Include="..\mon-chimera.h" />
     <ClInclude Include="..\random-pick.h" />
     <ClInclude Include="..\spl-pick.h" />
     <ClInclude Include="..\mon-book.h" />

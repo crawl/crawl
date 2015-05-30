@@ -770,11 +770,6 @@ angelic beings who stand before the good gods, singing eternal hymns of praise
 to their Glory and Goodness. Indeed, these hymns have the power to rouse
 greatness in hearts pure and true.
 %%%%
-chimera
-
-A grotesque parody of nature, this fantastical creature consists of three
-individual beasts combined into one.
-%%%%
 corrupter
 
 <demonspawn>
