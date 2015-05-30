@@ -180,7 +180,7 @@ function setup_loot (e)
                                   "ring mail w:30", "scale mail w:20", "chain mail w:40",
                                   "plate armour w:10", "pair of gloves w:5",
                                   "helmet w:6", "pair of boots w:3", "hat w:4",
-                                  "shield w:1", "buckler w:3"}) ..
+                                  "shield w:1", "cloak w:4", "buckler w:3"}) ..
                                   " / fire dragon armour w:5")
     e.item([[potion of berserk rage w:22 / potion of might w:5 /
              potion of brilliance w:5 / potion of agility w:5 /
@@ -189,7 +189,7 @@ function setup_loot (e)
                                  "scimitar w:20", "demon blade w:2", "triple sword w:1",
                                  "broad axe w:20", "battleaxe", "executioner's axe w:1",
                                  "spear w:20", "trident w:20", "demon trident w:1",
-                                 "glaive w:1", "halberd", "lajatang",
+                                 "glaive", "halberd", "lajatang w:1",
                                  "longbow w:5", "arbalest w:5"}))
     e.item("any")
 end
