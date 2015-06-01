@@ -673,6 +673,8 @@ public:
 
     monster_type initial_shifter;
 
+    vector<int> beast_facets;
+
     CrawlHashTable props;
 
     mons_spec(monster_type t = RANDOM_MONSTER,

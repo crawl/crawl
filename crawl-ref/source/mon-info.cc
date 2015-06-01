@@ -851,9 +851,6 @@ monster_info::monster_info(const monster* m, int milev)
 }
 
 
-const char* const mutant_beast_tier_names[] = {
-    "buggy", "half-formed", "juvenile", "mature", "elder", "primal",
-};
 
 /**
  * Name the given mutant beast tier.
@@ -868,10 +865,6 @@ static string _mutant_beast_tier_name(short xl_tier)
         return "buggy";
     return mutant_beast_tier_names[xl_tier];
 }
-
-const char* const mutant_beast_facet_names[] = {
-    "buggy", "sting", "bat", "fire", "ghost", "shock", "ox",
-};
 
 /**
  * Name the given mutant beast facet.
