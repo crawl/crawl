@@ -33,6 +33,8 @@ public:
 
     monster_spells spells;
 
+    vector<beast_facet> beast_facets;
+
 public:
     ghost_demon();
     bool has_spells() const;

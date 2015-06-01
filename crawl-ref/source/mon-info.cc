@@ -713,6 +713,8 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (mons_is_ghost_demon(type))
         i_ghost.can_sinv = m->ghost->see_invis;
+    if (type == MONS_MUTANT_BEAST)
+        i_ghost.beast_facets = m->ghost->beast_facets;
 
     // book loading for player ghost and vault monsters
     spells.clear();

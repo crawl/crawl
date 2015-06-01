@@ -293,4 +293,16 @@ enum mon_body_shape
     MON_SHAPE_MISC,
 };
 
+/// types of mutant beast (MONS_MUTANT_BEAST)
+enum beast_facet
+{
+    BF_NONE,
+    BF_STING,
+    BF_BAT,
+    BF_FIRE,
+    BF_GHOST,
+    BF_SHOCK,
+    BF_OX,
+};
+
 #endif
