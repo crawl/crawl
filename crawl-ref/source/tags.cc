@@ -4685,6 +4685,8 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
         marshallShort(th, mi.i_ghost.damage);
         marshallShort(th, mi.i_ghost.ac);
     }
+    if (mons_is_ghost_demon(mi.type))
+        marshallBoolean(th, mi.i_ghost.can_sinv);
 
     mi.props.write(th);
 }
@@ -4922,6 +4924,11 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         mi.i_ghost.damage = unmarshallShort(th);
         mi.i_ghost.ac = unmarshallShort(th);
     }
+    if (mons_is_ghost_demon(mi.type))
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() >= TAG_MINOR_GHOST_SINV)
+#endif
+            mi.i_ghost.can_sinv = unmarshallBoolean(th);
 
     mi.props.clear();
     mi.props.read(th);
