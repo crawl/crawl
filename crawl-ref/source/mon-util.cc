@@ -2473,8 +2473,6 @@ void define_monster(monster* mons)
         mons->ghost_init(!mons->props.exists("fake"));
         mons->bind_melee_flags();
         mons->bind_spell_flags();
-        if (mons->ghost->species == SP_DEEP_DWARF)
-            mons->flags |= MF_NO_REGEN;
         break;
     }
 

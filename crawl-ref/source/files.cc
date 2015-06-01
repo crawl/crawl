@@ -1838,8 +1838,6 @@ bool load_ghost(bool creating_level, bool delete_file)
         mons->bind_melee_flags();
         if (mons->has_spells())
             mons->bind_spell_flags();
-        if (mons->ghost->species == SP_DEEP_DWARF)
-            mons->flags |= MF_NO_REGEN;
         mark_interesting_monst(mons,
                                attitude_creation_behavior(mons->attitude));
 
