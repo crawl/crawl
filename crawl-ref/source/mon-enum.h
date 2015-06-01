@@ -311,11 +311,15 @@ enum beast_tier
 {
     BT_NONE,
     BT_HALF_FORMED,
+    BT_FIRST = BT_HALF_FORMED,
     BT_JUVENILE,
     BT_MATURE,
     BT_ELDER,
     BT_PRIMAL,
     NUM_BEAST_TIERS,
 };
+
+/// HD of mutant beast tiers
+static const int beast_tiers[] = { 0, 3, 9, 15, 21, 27, };
 
 #endif
