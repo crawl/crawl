@@ -303,6 +303,19 @@ enum beast_facet
     BF_GHOST,
     BF_SHOCK,
     BF_OX,
+    NUM_BEAST_FACETS,
+};
+
+/// tiers of mutant beast (correspond to HD)
+enum beast_tier
+{
+    BT_NONE,
+    BT_HALF_FORMED,
+    BT_JUVENILE,
+    BT_MATURE,
+    BT_ELDER,
+    BT_PRIMAL,
+    NUM_BEAST_TIERS,
 };
 
 #endif
