@@ -141,7 +141,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SHADOW_CREATURES, 10, MON_SPELL_MAGICAL },
        { SPELL_MASS_CONFUSION, 10, MON_SPELL_MAGICAL },
        { SPELL_BLINK, 10, MON_SPELL_MAGICAL },
-       { SPELL_TELEPORT_SELF, 10, MON_SPELL_MAGICAL | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -229,7 +228,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 10, MON_SPELL_WIZARD  },
        { SPELL_LIGHTNING_BOLT, 10, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 10, MON_SPELL_WIZARD },
-       { SPELL_TELEPORT_SELF, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -240,7 +238,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_INVISIBILITY, 10, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 10, MON_SPELL_WIZARD },
        { SPELL_SLOW, 10, MON_SPELL_WIZARD },
-       { SPELL_TELEPORT_SELF, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -368,7 +365,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_CIGOTUVIS_EMBRACE, 28, MON_SPELL_DEMONIC },
        { SPELL_TELEPORT_OTHER, 28, MON_SPELL_DEMONIC },
-       { SPELL_TELEPORT_SELF, 28, MON_SPELL_DEMONIC | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -529,7 +525,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 10, MON_SPELL_WIZARD  },
        { SPELL_POISON_ARROW, 10, MON_SPELL_WIZARD },
        { SPELL_TELEPORT_OTHER, 10, MON_SPELL_WIZARD },
-       { SPELL_TELEPORT_SELF, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -1028,7 +1023,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_FAKE_MARA_SUMMON, 14, MON_SPELL_DEMONIC  },
        { SPELL_SUMMON_ILLUSION, 14, MON_SPELL_DEMONIC },
        { SPELL_PAIN, 14, MON_SPELL_DEMONIC },
-       { SPELL_TELEPORT_SELF, 14, MON_SPELL_DEMONIC | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -1582,7 +1576,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 10, MON_SPELL_WIZARD },
        { SPELL_LIGHTNING_BOLT, 10, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 10, MON_SPELL_WIZARD },
-       { SPELL_TELEPORT_SELF, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -1593,7 +1586,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_INVISIBILITY, 10, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 10, MON_SPELL_WIZARD },
        { SPELL_SLOW, 10, MON_SPELL_WIZARD },
-       { SPELL_TELEPORT_SELF, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
