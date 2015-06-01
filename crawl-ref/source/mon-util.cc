@@ -2530,6 +2530,7 @@ void define_monster(monster* mons)
     case MONS_DANCING_WEAPON:
     case MONS_SPECTRAL_WEAPON:
     case MONS_SPELLFORGED_SERVITOR:
+    case MONS_MUTANT_BEAST:
     {
         ghost_demon ghost;
         mons->set_ghost(ghost);
