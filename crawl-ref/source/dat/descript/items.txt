@@ -453,7 +453,7 @@ A deck of magical cards, mainly dealing with various forms of escape.
 %%%%
 deck of oddities
 
-A deck of magical cards, which have the strangest tendency to get mixed in with
+A deck of magical cards that have the strangest tendency to get mixed in with
 other decks.
 %%%%
 deck of punishment
