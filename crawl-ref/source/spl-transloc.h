@@ -17,7 +17,6 @@ spret_type controlled_blink(bool fail, bool safe_cancel = true);
 void wizard_blink();
 
 bool allow_control_teleport(bool quiet = false);
-spret_type cast_teleport_self(bool fail);
 void you_teleport();
 void you_teleport_now(bool allow_control,
                       bool wizard_tele = false,

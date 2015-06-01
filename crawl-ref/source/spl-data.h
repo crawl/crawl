@@ -24,7 +24,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_TELEPORT_SELF, "Teleport Self",
     SPTYP_TRANSLOCATION,
-    SPFLAG_ESCAPE | SPFLAG_EMERGENCY | SPFLAG_UTILITY,
+    SPFLAG_ESCAPE | SPFLAG_EMERGENCY | SPFLAG_UTILITY | SPFLAG_MONSTER,
     5,
     0,
     -1, -1,

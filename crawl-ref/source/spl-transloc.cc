@@ -492,13 +492,6 @@ bool allow_control_teleport(bool quiet)
     return true;
 }
 
-spret_type cast_teleport_self(bool fail)
-{
-    fail_check();
-    you_teleport();
-    return SPRET_SUCCESS;
-}
-
 void you_teleport()
 {
     // [Cha] here we block teleportation, which will save the player from
