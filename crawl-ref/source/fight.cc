@@ -676,6 +676,18 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
 }
 
 /**
+ * What skill is required to reach mindelay with a weapon? May be >27.
+ * @param weapon The weapon to be considered.
+ * @returns The level of the relevant skill you must reach.
+ */
+int weapon_min_delay_skill(const item_def &weapon)
+{
+    const int speed = property(weapon, PWPN_SPEED);
+    const int mindelay = weapon_min_delay(weapon);
+    return (speed - mindelay) * 2;
+}
+
+/**
  * How fast will this weapon get from your skill training?
  *
  * Does NOT take speed brand into account, since the brand shouldn't affect how
