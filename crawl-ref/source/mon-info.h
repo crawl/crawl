@@ -245,6 +245,7 @@ struct monster_info : public monster_info_base
         short ac;
         monster_type acting_part;
         bool can_sinv;
+        vector<beast_facet> beast_facets;
     } i_ghost;
 
     inline bool is(unsigned mbflag) const

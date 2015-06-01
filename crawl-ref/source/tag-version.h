@@ -170,6 +170,7 @@ enum tag_minor_version
     TAG_MINOR_NO_ZOTDEF,           // remove zotdef, along with zot_points and zotdef_wave_name
     TAG_MINOR_SAVED_PIETY,         // allowed good-god piety to survive through an atheist period
     TAG_MINOR_GHOST_SINV,          // marshall ghost_demon sinv
+    TAG_MINOR_MUTANT_BEASTS,       // add 'mutant beast' facets to ghost structs
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
