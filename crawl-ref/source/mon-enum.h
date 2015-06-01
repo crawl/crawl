@@ -298,6 +298,7 @@ enum beast_facet
 {
     BF_NONE,
     BF_STING,
+    BF_FIRST = BF_STING,
     BF_BAT,
     BF_FIRE,
     BF_GHOST,
@@ -321,5 +322,15 @@ enum beast_tier
 
 /// HD of mutant beast tiers
 static const int beast_tiers[] = { 0, 3, 9, 15, 21, 27, };
+
+/// names of beast facets
+const string mutant_beast_facet_names[] = {
+    "buggy", "sting", "bat", "fire", "ghost", "shock", "ox",
+};
+
+/// names of beast tiers
+const char* const mutant_beast_tier_names[] = {
+    "buggy", "half-formed", "juvenile", "mature", "elder", "primal",
+};
 
 #endif

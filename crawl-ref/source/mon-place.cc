@@ -1309,6 +1309,19 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else
         define_monster(mon);
 
+    if (mon->type == MONS_MUTANT_BEAST)
+    {
+        ghost_demon ghost;
+        ghost.xl = mg.hd ? mg.hd : beast_tiers[BT_MATURE];
+        ghost.beast_facets.clear();
+        for (auto facet: mg.beast_facets)
+            ghost.beast_facets.push_back((beast_facet)facet);
+        // TODO: randomize facets here if empty
+        mon->set_ghost(ghost);
+        //mon->ghost_demon_init();
+        mon->set_hit_dice(ghost.xl);
+    }
+
     // Is it a god gift?
     if (mg.god != GOD_NO_GOD)
     {

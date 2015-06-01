@@ -4094,8 +4094,11 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             mspec.type    = nspec.type;
             mspec.monbase = nspec.monbase;
             mspec.number  = nspec.number;
+            mspec.beast_facets = nspec.beast_facets;
             if (nspec.colour > COLOUR_UNDEF && mspec.colour <= COLOUR_UNDEF)
                 mspec.colour = nspec.colour;
+            if (nspec.hd != 0)
+                mspec.hd = nspec.hd;
         }
 
         if (!mspec.items.empty())
@@ -4463,6 +4466,36 @@ mons_spec mons_list::soh_monspec(string name) const
     }
 }
 
+/**
+ * What mutant beast facet corresponds to the given name?
+ *
+ * @param name      The name in question (e.g. 'bat')
+ * @return          The corresponding facet (e.g. BF_BAT), or BF_NONE.
+ */
+static int _beast_facet_by_name(const string &name)
+{
+    for (int bf = BF_FIRST; bf < NUM_BEAST_FACETS; ++bf)
+        if (mutant_beast_facet_names[bf] == lowercase_string(name))
+            return bf;
+    return BF_NONE;
+}
+
+/**
+ * What HD corresponds to the given mutant beast tier name?
+ *
+ * XXX: refactor this together with _beast_facet_by_name()?
+ *
+ * @param tier      The name in question (e.g. 'juvenile')
+ * @return          The corresponding tier XL (e.g. 9), or 0 if none is valid.
+ */
+static int _mutant_beast_xl(const string &tier)
+{
+    for (int bt = BT_FIRST; bt < NUM_BEAST_TIERS; ++bt)
+        if (mutant_beast_tier_names[bt] == lowercase_string(tier))
+            return beast_tiers[bt];
+    return 0;
+}
+
 mons_spec mons_list::mons_by_name(string name) const
 {
     name = replace_all_of(name, "_", " ");
@@ -4508,8 +4541,34 @@ mons_spec mons_list::mons_by_name(string name) const
     if (ends_with(name, " slime creature"))
         return get_slime_spec(name);
 
-    mons_spec spec;
 
+
+    // this is intended for debugging only
+    if (ends_with(name, " mbeast"))
+    {
+        mons_spec spec = MONS_MUTANT_BEAST;
+
+        const vector<string> segments = split_string(" ", name);
+        if (segments.size() > 3)
+            return MONS_PROGRAM_BUG; // too many words
+
+        const int hd = _mutant_beast_xl(segments[0]);
+        if (hd == 0 && segments.size() == 3)
+            return MONS_PROGRAM_BUG; // gave invalid tier spec
+
+        if (hd == 0 || segments.size() == 3)
+        {
+            const int seg = segments.size() == 3 ? 1 : 0;
+            const vector<string> facet_names
+                = split_string("-", segments[seg]);
+            for (const string &facet_name : facet_names)
+                spec.beast_facets.push_back(_beast_facet_by_name(facet_name));
+        }
+
+        return spec;
+    }
+
+    mons_spec spec;
     if (name.find(" ugly thing") != string::npos)
     {
         const string::size_type wordend = name.find(' ');
