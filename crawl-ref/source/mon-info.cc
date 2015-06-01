@@ -818,6 +818,43 @@ monster_info::monster_info(const monster* m, int milev)
     client_id = m->get_client_id();
 }
 
+const char* const mutant_beast_tier_names[] = {
+    "buggy", "half-formed", "juvenile", "mature", "elder", "primal",
+};
+
+/**
+ * Name the given mutant beast tier.
+ *
+ * @param xl_tier   The beast_tier in question.
+ * @return          The name of the tier; e.g. "juvenile".
+ */
+static string _mutant_beast_tier(short xl_tier)
+{
+    COMPILE_CHECK(ARRAYSZ(mutant_beast_tier_names) == NUM_BEAST_TIERS);
+    if (xl_tier < 0 || xl_tier >= NUM_BEAST_TIERS)
+        return "buggy";
+    return mutant_beast_tier_names[xl_tier];
+}
+
+const char* const mutant_beast_facet_names[] = {
+    "buggy", "sting", "bat", "fire", "ghost", "shock", "ox",
+};
+
+/**
+ * Name the given mutant beast facet.
+ *
+ * @param xl_tier   The beast_facet in question.
+ * @return          The name of the facet; e.g. "bat".
+ */
+static string _mutant_beast_facet(beast_facet facet)
+{
+    COMPILE_CHECK(ARRAYSZ(mutant_beast_facet_names) == NUM_BEAST_FACETS);
+    if (facet < 0 || facet >= NUM_BEAST_FACETS)
+        return "buggy";
+    return mutant_beast_facet_names[facet];
+}
+
+
 string monster_info::db_name() const
 {
     if (type == MONS_DANCING_WEAPON && inv[MSLOT_WEAPON].get())
@@ -1001,6 +1038,14 @@ string monster_info::common_name(description_level_type desc) const
             ss << std::to_string(num_heads);
 
         ss << "-headed ";
+    }
+
+    if (type == MONS_MUTANT_BEAST)
+    {
+        ss << _mutant_beast_tier(i_ghost.xl_rank) << " ";
+        for (auto facet : i_ghost.beast_facets)
+            ss << _mutant_beast_facet(facet); // no space between
+        ss << " ";
     }
 
     if (!nocore)
