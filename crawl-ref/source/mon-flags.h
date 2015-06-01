@@ -56,13 +56,14 @@ const uint64_t M_STATIONARY        = 1<<14;
 // monster can smell blood
 const uint64_t M_BLOOD_SCENT       = 1<<15;
 
-// susceptible to cold; drainable by vampires
+// susceptible to cold; drainable by vampires, splashes blood when hit
 const uint64_t M_COLD_BLOOD        = 1<<16;
 
-// drainable by vampires, no other effect currently
+// drainable by vampires, splashes blood when hit
 const uint64_t M_WARM_BLOOD        = 1<<17;
 
-                                   //1<<18;
+// uses the 'ghost demon' struct to track stats varying per individual monster
+const uint64_t M_GHOST_DEMON       = 1<<18;
 
 // monster digs through rock
 const uint64_t M_BURROWS           = 1<<19;
