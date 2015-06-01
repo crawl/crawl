@@ -76,7 +76,6 @@ enum band_type
     BAND_DEATH_KNIGHT,
     BAND_JIANGSHI,
     BAND_FAUNS,
-    BAND_PAN,
     BAND_TENGU,
     BAND_SOJOBO,
     BAND_SPRIGGANS,
