@@ -1000,25 +1000,25 @@ poison gas cloud
 A cloud of deadly poison. Any creature without resistance to poison will be
 both poisoned & directly harmed by time spent in it.
 %%%%
-smoke cloud
+_smoke_cloud_
 
 A cloud of coloured smoke. Harmless, except to the asthmatic.
 %%%%
 black smoke cloud
 
-<smoke cloud>
+<_smoke_cloud_>
 %%%%
 grey smoke cloud
 
-<smoke cloud>
+<_smoke_cloud_>
 %%%%
 blue smoke cloud
 
-<smoke cloud>
+<_smoke_cloud_>
 %%%%
 purple smoke cloud
 
-<smoke cloud>
+<_smoke_cloud_>
 %%%%
 translocational energy cloud
 

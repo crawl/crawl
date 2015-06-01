@@ -1323,14 +1323,6 @@ and when they did so, the flail crashed through brazen helmet, skull and all.”
     -James A. Wylie, _The History of Protestantism_, vol. I, book 3, ch. 15
      “Jon Huss and the Hussite Wars”. 1878.
 %%%%
-Flight spell
-
-“What surprised him the most, however, was the logic of his wings. They seemed
-so natural on that completely human organism that he couldn’t understand why
-other men didn’t have them too.”
-    -Gabriel Garcia Marquez, _A Very Old Man with Enormous Wings_. 1955.
-     trans. Gregory Rabassa. 1972
-%%%%
 flying skull
 
 “Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most
@@ -1894,15 +1886,7 @@ merfolk aquamancer
 
 <merfolk>
 %%%%
-merfolk impaler
-
-<merfolk>
-%%%%
-merfolk javelineer
-
-<merfolk>
-%%%%
-mermaid
+merfolk avatar
 
 “Then up it raise the mermaiden,
  Wi the comb an glass in her hand:
@@ -1910,6 +1894,14 @@ mermaid
  For you never will see dry land.’”
     -“Sir Patrick Spens”, Scottish folk song, version 58J in Francis James
      Child, _The English and Scottish Popular Ballads_. 1898.
+%%%%
+merfolk impaler
+
+<merfolk>
+%%%%
+merfolk javelineer
+
+<merfolk>
 %%%%
 microbat
 
@@ -2043,7 +2035,7 @@ ophan
  high and awesome, and all four rims were full of eyes all around.”
     -Ezekiel 1:15-18 (New International Version)
 %%%%
-the open sea
+The open sea
 
 “I mused upon the mystery of fish, their strange and mindless beauty, how—
 innocently evil—they prey upon each other, devouring the weaker and smaller
@@ -2282,7 +2274,11 @@ ring of fire
 %%%%
 ring of flight
 
-<ring>
+“What surprised him the most, however, was the logic of his wings. They seemed
+so natural on that completely human organism that he couldn’t understand why
+other men didn’t have them too.”
+    -Gabriel Garcia Marquez, _A Very Old Man with Enormous Wings_. 1955.
+     trans. Gregory Rabassa. 1972
 %%%%
 ring of loudness
 

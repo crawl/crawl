@@ -96,36 +96,6 @@ beef jerky
 
 A strip of preserved dead cow or bull.
 %%%%
-blessed double sword
-
-A magical weapon with two razor-sharp blades, enhanced by the Shining One's
-power.
-%%%%
-blessed triple sword
-
-A magical weapon with three great razor-sharp blades, enhanced by the Shining
-One's power.
-%%%%
-blessed falchion
-
-A long single-edged sword with a slightly curved blade. It has been enhanced by
-the Shining One's power.
-%%%%
-blessed great sword
-
-A sword with a very long, heavy blade and a long handle. It has been enhanced
-by the Shining One's power.
-%%%%
-blessed long sword
-
-A sword with a long, slashing blade. It has been enhanced by the Shining One's
-power.
-%%%%
-blessed scimitar
-
-A long sword with a wide, curved blade. It has been enhanced by the Shining
-One's power.
-%%%%
 blowgun
 
 A long, light tube, open at both ends, through which various types of needles
@@ -654,6 +624,10 @@ The scaly skin of a cold-breathing dragon. It can be fashioned into proper
 armour, but even in its raw form it provides great protection from the effects
 of cold while rendering its wearer susceptible to fire.
 %%%%
+inedible chunk of flesh
+
+<chunk of flesh>
+%%%%
 iron rod
 
 This rod allows its wielder to fire powerful blasts of metallic shrapnel.
@@ -831,10 +805,6 @@ plate armour
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
 and greaves. It provides excellent protection.
 %%%%
-poisonous chunk of flesh
-
-<chunk of flesh>
-%%%%
 potion of agility
 
 A magic potion which greatly increases the dexterity and evasiveness of one who
@@ -867,13 +837,6 @@ potion of cancellation
 
 A potion which ends most magical effects, good or bad, affecting you. It also
 reduces your level of magical contamination.
-%%%%
-# if TAG_MAJOR_VERSION == 34
-potion of coagulated blood
-
-A potion containing the essence of life. Vampires find it... vital. The blood
-within won't be palatable for much longer.
-# endif
 %%%%
 potion of cure mutation
 
@@ -929,26 +892,14 @@ potion of poison
 
 A nasty poisonous liquid.
 %%%%
-potion of porridge
-
-A filling potion of sludge, high in cereal fibre.
-%%%%
 potion of resistance
 
 A potion which grants you temporary resistance to a variety of harmful effects:
 fire, cold, electricity, poison, and acid.
 %%%%
-potion of slowing
-
-A potion which slows your actions.
-%%%%
 potion of haste
 
 An enchanted beverage which speeds the actions of anyone who drinks it.
-%%%%
-putrefying chunk of flesh
-
-<chunk of flesh>
 %%%%
 quad damage
 
@@ -1035,10 +986,6 @@ less stealthy.
 ring of magical power
 
 This ring increases its wearer's reserves of magical power.
-%%%%
-ring of obsoleteness
-
-Sadly, this item seems to have been removed!
 %%%%
 ring of poison resistance
 
@@ -1474,10 +1421,6 @@ free, if they live long enough.
 tomahawk
 
 An small, axe-like item designed for throwing.
-%%%%
-tome of obsoleteness
-
-Sadly, this item has been removed.
 %%%%
 trident
 

@@ -447,11 +447,6 @@ creature that resists the effect will still be irresistibly blinked a shorter
 distance, and any monster it affects at all has a chance of being confused by
 the warping of space.
 %%%%
-Draconian Breath spell
-
-[This spell should have been replaced by a colour-specific one. If you got it,
-this is a bug.]
-%%%%
 Dragon Form spell
 
 {{
