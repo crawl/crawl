@@ -150,8 +150,6 @@ object_class_type get_item_mimic_type();
 bool is_valid_mimic_item(const item_def &item);
 
 bool maybe_identify_base_type(item_def &item);
-// Returns the Orb's position on the ground, or origin()
-coord_def orb_position();
 int count_movable_items(int obj);
 
 // stack_iterator guarantees validity so long as you don't manually
