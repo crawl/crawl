@@ -1261,15 +1261,7 @@ shout_type mons_shouts(monster_type mc, bool demon_shout)
 
 bool mons_is_ghost_demon(monster_type mc)
 {
-    return mc == MONS_UGLY_THING
-            || mc == MONS_VERY_UGLY_THING
-            || mons_is_pghost(mc)
-            || mons_class_is_animated_weapon(mc)
-            || mc == MONS_PANDEMONIUM_LORD
-            || mons_class_is_chimeric(mc)
-            || mc == MONS_SPELLFORGED_SERVITOR
-            || mc == MONS_LICH
-            || mc == MONS_ANCIENT_LICH;
+    return mons_class_flag(mc, M_GHOST_DEMON);
 }
 
 bool mons_is_pghost(monster_type mc)
