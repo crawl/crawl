@@ -1840,9 +1840,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_BLINK:
         return cast_blink(god != GOD_XOM, fail);
 
-    case SPELL_TELEPORT_SELF:
-        return cast_teleport_self(fail);
-
     case SPELL_CONTROLLED_BLINK:
         return cast_controlled_blink(powc, fail);
 
