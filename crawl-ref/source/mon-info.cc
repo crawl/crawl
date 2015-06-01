@@ -320,6 +320,24 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
     return false;
 }
 
+/**
+ * What mutant beast tier does the given XL (base HD) correspond to?
+ *
+ * If the given value is between tiers, choose the higher possibility.
+ *
+ * @param xl    The XL (HD) of the mutant beast in question.
+ * @return      The corresponding mutant beast tier (e.g. BT_MATURE).
+ */
+static int _mutant_beast_tier(int xl)
+{
+
+    COMPILE_CHECK(ARRAYSZ(beast_tiers) == NUM_BEAST_TIERS);
+    for (int bt = BT_FIRST; bt < NUM_BEAST_TIERS; ++bt)
+        if (xl <= beast_tiers[bt])
+            return bt;
+    return BT_NONE; // buggy
+}
+
 static void _translate_tentacle_ref(monster_info& mi, const monster* m,
                                     const string &key)
 {
@@ -409,6 +427,12 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         i_ghost.xl_rank = 3;
         i_ghost.ac = 5;
         i_ghost.damage = 5;
+    }
+
+    if (type == MONS_MUTANT_BEAST)
+    {
+        i_ghost.xl_rank = BT_MATURE;
+        i_ghost.beast_facets = { BF_FIRE, BF_BAT };
     }
 
     // Don't put a bad base type on ?/mdraconian annihilator etc.
@@ -711,6 +735,14 @@ monster_info::monster_info(const monster* m, int milev)
             props[SPECIAL_WEAPON_KEY] = ghost_brand_name(ghost.brand);
     }
 
+    if (type == MONS_MUTANT_BEAST)
+    {
+        i_ghost.xl_rank = _mutant_beast_tier(m->get_experience_level());
+        ASSERT(m->ghost.get());
+        const ghost_demon& ghost = *m->ghost;
+        i_ghost.beast_facets = ghost.beast_facets;
+    }
+
     if (mons_is_ghost_demon(type))
         i_ghost.can_sinv = m->ghost->see_invis;
     if (type == MONS_MUTANT_BEAST)
@@ -818,6 +850,7 @@ monster_info::monster_info(const monster* m, int milev)
     client_id = m->get_client_id();
 }
 
+
 const char* const mutant_beast_tier_names[] = {
     "buggy", "half-formed", "juvenile", "mature", "elder", "primal",
 };
@@ -828,7 +861,7 @@ const char* const mutant_beast_tier_names[] = {
  * @param xl_tier   The beast_tier in question.
  * @return          The name of the tier; e.g. "juvenile".
  */
-static string _mutant_beast_tier(short xl_tier)
+static string _mutant_beast_tier_name(short xl_tier)
 {
     COMPILE_CHECK(ARRAYSZ(mutant_beast_tier_names) == NUM_BEAST_TIERS);
     if (xl_tier < 0 || xl_tier >= NUM_BEAST_TIERS)
@@ -1042,7 +1075,7 @@ string monster_info::common_name(description_level_type desc) const
 
     if (type == MONS_MUTANT_BEAST)
     {
-        ss << _mutant_beast_tier(i_ghost.xl_rank) << " ";
+        ss << _mutant_beast_tier_name(i_ghost.xl_rank) << " ";
         for (auto facet : i_ghost.beast_facets)
             ss << _mutant_beast_facet(facet); // no space between
         ss << " ";
