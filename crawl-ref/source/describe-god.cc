@@ -618,6 +618,8 @@ static string _comma_separate_gods(const vector<god_type> &gods)
  */
 static string _describe_god_wrath_causes(god_type which_god)
 {
+    if (which_god == GOD_RU)
+        return ""; // no wrath
     vector<god_type> evil_gods;
     vector<god_type> chaotic_gods;
     for (int i = 0; i < NUM_GODS; i++)
@@ -647,18 +649,6 @@ static string _describe_god_wrath_causes(god_type which_god)
                    " or chaotic gods will be scourged. (" +
                    _comma_separate_gods(evil_gods) + " are evil, and " +
                    _comma_separate_gods(chaotic_gods) + " are chaotic.)";
-        case GOD_RU:
-            return uppercase_first(god_name(which_god)) +
-                   " does not punish followers who leave "+god_name(which_god)+
-                   "'s service; however, their piety will be lost even upon"
-                   " rejoining, and their sacrifices remain forever.";
-        case GOD_XOM:
-            return "Unfaithful ex-followers will find themselves "
-                   "suffering through "+god_name(which_god)+"'s bad moods for "+
-                   "so long as "+god_name(which_god)+" can be bothered to " +
-                   "remember about them. Still, "+god_name(which_god)+
-                   "'s caprice remains; the unfaithful are rewarded just as "+
-                   "the faithful are punished.";
         default:
             return uppercase_first(god_name(which_god)) +
                    " does not appreciate abandonment, and will call down"

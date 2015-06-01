@@ -392,7 +392,7 @@ static const struct spell_desc spelldata[] =
 
 // Used indirectly, by monsters abjuring via other summon spells.
 {
-    SPELL_ABJURATION, "Abjuration",
+    SPELL_ABJURATION, "abjuration",
     SPTYP_SUMMONING,
     SPFLAG_ESCAPE | SPFLAG_NEEDS_TRACER | SPFLAG_MONSTER,
     3,
@@ -3304,7 +3304,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SERPENT_OF_HELL_BREATH, "Serpent of Hell Breath",
+    SPELL_SERPENT_OF_HELL_BREATH, "serpent of hell breath",
     SPTYP_CONJURATION,
     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
     5,

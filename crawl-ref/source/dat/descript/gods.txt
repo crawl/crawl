@@ -503,6 +503,11 @@ Qazlal's wrath is swift and unmistakable. Sinners are stripped of their
 resistances and assaulted by furious elementals, and Qazlal will create mighty
 thunderclaps to alert their foes.
 %%%%
+Ru wrath
+
+Ru does not punish followers who leave Ru's service; however, their piety will
+be lost even upon rejoining, and their sacrifices remain forever.
+%%%%
 Sif Muna wrath
 
 Those in Sif Muna's ill graces find the very forces of magic rebelling against
@@ -528,6 +533,12 @@ Vehumet wrath
 Those that anger Vehumet find destruction amply heaped upon them. Novices are
 struck by flame and frost; archmages by firestorms and hellfire. Their own
 conjurations, too, are wont to misfire at the worst possible moments.
+%%%%
+Xom wrath
+
+Unfaithful ex-followers will find themselves suffering through Xom's bad moods
+for so long as Xom can be bothered to remember about them. Still, Xom's caprice
+caprice remains; the unfaithful are rewarded just as the faithful are punished.
 %%%%
 Yredelemnul wrath
 
