@@ -4169,31 +4169,31 @@ string get_ghost_description(const monster_info &mi, bool concise)
 {
     ostringstream gstr;
 
-    const species_type gspecies = mi.u.ghost.species;
+    const species_type gspecies = mi.i_ghost.species;
 
     gstr << mi.mname << " the "
-         << skill_title_by_rank(mi.u.ghost.best_skill,
-                        mi.u.ghost.best_skill_rank,
+         << skill_title_by_rank(mi.i_ghost.best_skill,
+                        mi.i_ghost.best_skill_rank,
                         gspecies,
-                        species_has_low_str(gspecies), mi.u.ghost.religion)
-         << ", " << _xl_rank_name(mi.u.ghost.xl_rank) << " ";
+                        species_has_low_str(gspecies), mi.i_ghost.religion)
+         << ", " << _xl_rank_name(mi.i_ghost.xl_rank) << " ";
 
     if (concise)
     {
         gstr << get_species_abbrev(gspecies)
-             << get_job_abbrev(mi.u.ghost.job);
+             << get_job_abbrev(mi.i_ghost.job);
     }
     else
     {
         gstr << species_name(gspecies)
              << " "
-             << get_job_name(mi.u.ghost.job);
+             << get_job_name(mi.i_ghost.job);
     }
 
-    if (mi.u.ghost.religion != GOD_NO_GOD)
+    if (mi.i_ghost.religion != GOD_NO_GOD)
     {
         gstr << " of "
-             << god_name(mi.u.ghost.religion);
+             << god_name(mi.i_ghost.religion);
     }
 
     return gstr.str();

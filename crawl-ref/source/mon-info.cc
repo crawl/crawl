@@ -404,17 +404,17 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     fire_blocker = DNGN_UNSEEN;
 
-    u.ghost.acting_part = MONS_0;
+    i_ghost.acting_part = MONS_0;
     if (mons_is_pghost(type))
     {
-        u.ghost.species = SP_HUMAN;
-        u.ghost.job = JOB_WANDERER;
-        u.ghost.religion = GOD_NO_GOD;
-        u.ghost.best_skill = SK_FIGHTING;
-        u.ghost.best_skill_rank = 2;
-        u.ghost.xl_rank = 3;
-        u.ghost.ac = 5;
-        u.ghost.damage = 5;
+        i_ghost.species = SP_HUMAN;
+        i_ghost.job = JOB_WANDERER;
+        i_ghost.religion = GOD_NO_GOD;
+        i_ghost.best_skill = SK_FIGHTING;
+        i_ghost.best_skill_rank = 2;
+        i_ghost.xl_rank = 3;
+        i_ghost.ac = 5;
+        i_ghost.damage = 5;
     }
 
     // Don't put a bad base type on ?/mdraconian annihilator etc.
@@ -579,12 +579,12 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_NO_NAME_TAG);
 
     // Chimera acting head needed for name
-    u.ghost.acting_part = MONS_0;
+    i_ghost.acting_part = MONS_0;
     if (mons_class_is_chimeric(type))
     {
         ASSERT(m->ghost.get());
         ghost_demon& ghost = *m->ghost;
-        u.ghost.acting_part = ghost.acting_part;
+        i_ghost.acting_part = ghost.acting_part;
     }
     // As is ghostliness
     if (testbits(m->flags, MF_SPECTRALISED))
@@ -709,16 +709,16 @@ monster_info::monster_info(const monster* m, int milev)
     {
         ASSERT(m->ghost.get());
         ghost_demon& ghost = *m->ghost;
-        u.ghost.species = ghost.species;
-        if (species_is_draconian(u.ghost.species) && ghost.xl < 7)
-            u.ghost.species = SP_BASE_DRACONIAN;
-        u.ghost.job = ghost.job;
-        u.ghost.religion = ghost.religion;
-        u.ghost.best_skill = ghost.best_skill;
-        u.ghost.best_skill_rank = get_skill_rank(ghost.best_skill_level);
-        u.ghost.xl_rank = ghost_level_to_rank(ghost.xl);
-        u.ghost.ac = quantise(ghost.ac, 5);
-        u.ghost.damage = quantise(ghost.damage, 5);
+        i_ghost.species = ghost.species;
+        if (species_is_draconian(i_ghost.species) && ghost.xl < 7)
+            i_ghost.species = SP_BASE_DRACONIAN;
+        i_ghost.job = ghost.job;
+        i_ghost.religion = ghost.religion;
+        i_ghost.best_skill = ghost.best_skill;
+        i_ghost.best_skill_rank = get_skill_rank(ghost.best_skill_level);
+        i_ghost.xl_rank = ghost_level_to_rank(ghost.xl);
+        i_ghost.ac = quantise(ghost.ac, 5);
+        i_ghost.damage = quantise(ghost.damage, 5);
 
         // describe abnormal (branded) ghost weapons
         if (ghost.brand != SPWPN_NORMAL)
@@ -726,7 +726,7 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     if (mons_is_ghost_demon(type))
-        u.ghost.can_sinv = m->ghost->see_invis;
+        i_ghost.can_sinv = m->ghost->see_invis;
 
     // book loading for player ghost and vault monsters
     spells.clear();
@@ -1020,8 +1020,8 @@ string monster_info::common_name(description_level_type desc) const
     {
         ss << "chimera";
         monsterentry *me = nullptr;
-        if (u.ghost.acting_part != MONS_0
-            && (me = get_monster_data(u.ghost.acting_part)))
+        if (i_ghost.acting_part != MONS_0
+            && (me = get_monster_data(i_ghost.acting_part)))
         {
             // Specify an acting head
             ss << "'s " << me->name << " head";
@@ -1689,7 +1689,7 @@ bool monster_info::can_see_invisible() const
 {
     // This should match the logic in monster::can_see_invisible().
     if (mons_is_ghost_demon(type))
-        return u.ghost.can_sinv;
+        return i_ghost.can_sinv;
 
     return mons_class_flag(type, M_SEE_INVIS)
            || mons_is_demonspawn(type)
@@ -1702,7 +1702,7 @@ int monster_info::res_magic() const
     if (mr == MAG_IMMUNE)
         return MAG_IMMUNE;
 
-    const int hd = mons_is_pghost(type) ? ghost_rank_to_level(u.ghost.xl_rank)
+    const int hd = mons_is_pghost(type) ? ghost_rank_to_level(i_ghost.xl_rank)
                                         : mons_class_hit_dice(type);
 
     // Negative values get multiplied with monster hit dice.

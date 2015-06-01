@@ -4676,14 +4676,14 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     }
     if (mons_is_pghost(mi.type))
     {
-        marshallUnsigned(th, mi.u.ghost.species);
-        marshallUnsigned(th, mi.u.ghost.job);
-        marshallUnsigned(th, mi.u.ghost.religion);
-        marshallUnsigned(th, mi.u.ghost.best_skill);
-        marshallShort(th, mi.u.ghost.best_skill_rank);
-        marshallShort(th, mi.u.ghost.xl_rank);
-        marshallShort(th, mi.u.ghost.damage);
-        marshallShort(th, mi.u.ghost.ac);
+        marshallUnsigned(th, mi.i_ghost.species);
+        marshallUnsigned(th, mi.i_ghost.job);
+        marshallUnsigned(th, mi.i_ghost.religion);
+        marshallUnsigned(th, mi.i_ghost.best_skill);
+        marshallShort(th, mi.i_ghost.best_skill_rank);
+        marshallShort(th, mi.i_ghost.xl_rank);
+        marshallShort(th, mi.i_ghost.damage);
+        marshallShort(th, mi.i_ghost.ac);
     }
 
     mi.props.write(th);
@@ -4913,14 +4913,14 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
 
     if (mons_is_pghost(mi.type))
     {
-        unmarshallUnsigned(th, mi.u.ghost.species);
-        unmarshallUnsigned(th, mi.u.ghost.job);
-        unmarshallUnsigned(th, mi.u.ghost.religion);
-        unmarshallUnsigned(th, mi.u.ghost.best_skill);
-        mi.u.ghost.best_skill_rank = unmarshallShort(th);
-        mi.u.ghost.xl_rank = unmarshallShort(th);
-        mi.u.ghost.damage = unmarshallShort(th);
-        mi.u.ghost.ac = unmarshallShort(th);
+        unmarshallUnsigned(th, mi.i_ghost.species);
+        unmarshallUnsigned(th, mi.i_ghost.job);
+        unmarshallUnsigned(th, mi.i_ghost.religion);
+        unmarshallUnsigned(th, mi.i_ghost.best_skill);
+        mi.i_ghost.best_skill_rank = unmarshallShort(th);
+        mi.i_ghost.xl_rank = unmarshallShort(th);
+        mi.i_ghost.damage = unmarshallShort(th);
+        mi.i_ghost.ac = unmarshallShort(th);
     }
 
     mi.props.clear();
