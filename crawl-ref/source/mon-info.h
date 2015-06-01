@@ -208,7 +208,7 @@ struct monster_info : public monster_info_base
     monster_info(const monster_info& mi)
     : monster_info_base(mi)
     {
-        u = mi.u;
+        i_ghost = mi.i_ghost;
         for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
         {
             if (mi.inv[i].get())
@@ -232,22 +232,19 @@ struct monster_info : public monster_info_base
     /* only real equipment is visible, miscellany is for mimic items */
     unique_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];
 
-    union
+    struct
     {
-        struct
-        {
-            species_type species;
-            job_type job;
-            god_type religion;
-            skill_type best_skill;
-            short best_skill_rank;
-            short xl_rank;
-            short damage;
-            short ac;
-            monster_type acting_part;
-            bool can_sinv;
-        } ghost;
-    } u;
+        species_type species;
+        job_type job;
+        god_type religion;
+        skill_type best_skill;
+        short best_skill_rank;
+        short xl_rank;
+        short damage;
+        short ac;
+        monster_type acting_part;
+        bool can_sinv;
+    } i_ghost;
 
     inline bool is(unsigned mbflag) const
     {

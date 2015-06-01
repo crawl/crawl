@@ -1295,10 +1295,10 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
     ASSERT(mcache_ghost::valid(mon));
 
     const uint32_t seed = hash32(&mon.mname[0], mon.mname.size())
-                        ^ hash32(&mon.u.ghost, sizeof(mon.u.ghost));
+                        ^ hash32(&mon.i_ghost, sizeof(mon.i_ghost));
 
-    tilep_race_default(mon.u.ghost.species, 0, &m_doll);
-    tilep_job_default(mon.u.ghost.job, &m_doll);
+    tilep_race_default(mon.i_ghost.species, 0, &m_doll);
+    tilep_job_default(mon.i_ghost.job, &m_doll);
 
     for (int p = TILEP_PART_CLOAK; p < TILEP_PART_MAX; p++)
     {
@@ -1309,7 +1309,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
         }
     }
 
-    int ac = mon.u.ghost.ac;
+    int ac = mon.i_ghost.ac;
     ac *= (5 + hash_rand(11, seed, 1000));
     ac /= 10;
 
@@ -1328,8 +1328,8 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
     else
         m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_ROBE_BLUE;
 
-    int sk = mon.u.ghost.best_skill;
-    int dam = mon.u.ghost.damage;
+    int sk = mon.i_ghost.best_skill;
+    int dam = mon.i_ghost.damage;
     dam *= (5 + hash_rand(11, seed, 1001));
     dam /= 10;
 
