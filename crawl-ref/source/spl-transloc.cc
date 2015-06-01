@@ -522,14 +522,14 @@ void you_teleport()
             mpr("You feel your translocation being delayed.");
             teleport_delay += 1 + random2(3);
         }
-        if (player_in_branch(BRANCH_ABYSS) && !one_chance_in(5))
+        if (player_in_branch(BRANCH_ABYSS))
         {
-            mpr("You feel the power of the Abyss delaying your translocation.");
+            mpr("You feel the power of the Abyss delaying your translocation!");
             teleport_delay += 5 + random2(10);
         }
         else if (player_has_orb())
         {
-            mprf(MSGCH_ORB, "You feel the Orb delaying this translocation!");
+            mprf(MSGCH_ORB, "You feel the Orb delaying your translocation!");
             teleport_delay += 5 + random2(5);
         }
 
