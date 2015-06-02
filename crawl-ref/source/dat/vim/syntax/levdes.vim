@@ -8,7 +8,7 @@
 " How to use this:
 " * Put levdes.vim (this file) under ~/.vim/syntax (or similar directory for
 "   your system - usually C:\Program Files\Vim\vimfiles\syntax on Windows).
-" * In your .vimrc, add this line:
+" * In your .vimrc, or in a new file ~/.vim/ftdetect/levdes.vim, add this line:
 "     au BufRead,BufNewFile *.des set syntax=levdes
 " Thereafter, any .des files you edit in (g)vim will use syntax highlighting.
 
