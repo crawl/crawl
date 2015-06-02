@@ -1015,6 +1015,12 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_RMSL ])
         ret += 20;
 
+    if (prop[ ARTP_SK_SHORT_BLADES ])
+        ret +=3;
+
+    if (prop[ ARTP_SK_LONG_BLADES ])
+        ret +=3;
+
     return (ret > 0) ? ret : 0;
 }
 

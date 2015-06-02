@@ -259,6 +259,13 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_INTELLIGENCE,          PROPN_NUMERAL },
         { ARTP_DEXTERITY,             PROPN_NUMERAL },
         { ARTP_SLAYING,               PROPN_NUMERAL },
+        { ARTP_SK_SHORT_BLADES,       PROPN_NUMERAL },
+        { ARTP_SK_LONG_BLADES,        PROPN_NUMERAL },
+        { ARTP_SK_AXES,               PROPN_NUMERAL },
+        { ARTP_SK_MACES_FLAILS,       PROPN_NUMERAL },
+        { ARTP_SK_POLEARMS,           PROPN_NUMERAL },
+        { ARTP_SK_STAVES,             PROPN_NUMERAL },
+        { ARTP_SK_UNARMED_COMBAT,     PROPN_NUMERAL },
 
         // Qualitative attributes (and Stealth)
         { ARTP_SEE_INVISIBLE,         PROPN_PLAIN },
@@ -498,6 +505,13 @@ static string _randart_descrip(const item_def &item)
         { ARTP_CORRODE, "It may corrode your equipment when you take damage.", false},
         { ARTP_DRAIN, "It causes draining when unequipped.", false},
         { ARTP_CONFUSE, "It may confuse you when you take damage.", false},
+        { ARTP_SK_SHORT_BLADES, "It affects your skill with short blades (%d).", false},
+        { ARTP_SK_LONG_BLADES, "It affects your skill with long blades (%d).", false},
+        { ARTP_SK_AXES, "It affects your skill with axes (%d).", false},
+        { ARTP_SK_MACES_FLAILS, "It affects your skill with maces & flails (%d).", false},
+        { ARTP_SK_POLEARMS, "It affects your skill with polearms (%d).", false},
+        { ARTP_SK_STAVES, "It affects your skill with staves (%d).", false},
+        { ARTP_SK_UNARMED_COMBAT, "It affects your skill with unarmed combat (%d).", false},
     };
 
     // Give a short description of the base type, for base types with no

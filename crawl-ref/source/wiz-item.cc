@@ -1420,6 +1420,13 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_CORRODE",
         "ARTP_DRAIN",
         "ARTP_CONFUSE",
+        "ARTP_SK_SHORT_BLADES",
+        "ARTP_SK_LONG_BLADES",
+        "ARTP_SK_AXES",
+        "ARTP_SK_MACES_FLAILS",
+        "ARTP_SK_POLEARMS",
+        "ARTP_SK_STAVES",
+        "ARTP_SK_UNARMED_COMBAT",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 

@@ -578,6 +578,69 @@ static void _add_randart_weapon_brand(const item_def &item,
         item_props[ARTP_BRAND] = SPWPN_NORMAL;
 }
 
+// See if an ARTP_SK_* property can apply to an item. It can apply to:
+// a) weapons if they use that skill
+// b) anything else, if and only if it has no other ARTP_SK_* already applied,
+//    and one_chance_in(6)
+static bool _sk_artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
+                                    const artefact_properties_t &extant_props)
+{
+    const skill_type sk = item_attack_skill(item);
+    if (sk != SK_FIGHTING) // non-weapons use fighting
+    {
+        // a) weapons if they use that skill
+        switch (prop)
+        {
+            case ARTP_SK_SHORT_BLADES:
+            {
+                if (sk != SK_SHORT_BLADES)
+                    return false;
+                break;
+            }
+            case ARTP_SK_LONG_BLADES:
+                if (sk != SK_LONG_BLADES)
+                    return false;
+                break;
+            case ARTP_SK_AXES:
+                if (sk != SK_AXES)
+                    return false;
+                break;
+            case ARTP_SK_MACES_FLAILS:
+                if (sk != SK_MACES_FLAILS)
+                    return false;
+                break;
+            case ARTP_SK_POLEARMS:
+                if (sk != SK_POLEARMS)
+                    return false;
+                break;
+            case ARTP_SK_STAVES:
+                if (sk != SK_STAVES)
+                    return false;
+                break;
+            case ARTP_SK_UNARMED_COMBAT:
+                if (sk != SK_UNARMED_COMBAT)
+                    return false;
+                break;
+            default:
+                dprf("Unhandled property in _sk_artp_can_go_on_item");
+                return false;
+                break;
+        }
+    }
+    else
+    {
+        // b) anything else, if and only if it has no other ARTP_SK_* already applied,
+        for (int i=ARTP_SK_SHORT_BLADES; i<=ARTP_SK_LAST; i++)
+            if (extant_props[i] && prop != i)
+                return false;
+        //    and one_chance_in(6)
+        if (!one_chance_in(6))
+            return false;
+    }
+
+    return true;
+}
+
 /**
  * Can the given artefact property be placed on the given item?
  *
@@ -635,6 +698,14 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             // no contradictory props
         case ARTP_CONFUSE:
             return !item.is_type(OBJ_JEWELLERY, AMU_CLARITY);
+        case ARTP_SK_SHORT_BLADES:
+        case ARTP_SK_LONG_BLADES:
+        case ARTP_SK_AXES:
+        case ARTP_SK_MACES_FLAILS:
+        case ARTP_SK_POLEARMS:
+        case ARTP_SK_STAVES:
+        case ARTP_SK_UNARMED_COMBAT:
+            return _sk_artp_can_go_on_item(prop, item, extant_props);
         default:
             return true;
     }
@@ -676,6 +747,12 @@ static int _gen_good_hpmp_artp() { return 9; }
 
 /// Generate 'bad' values for ARTP_HP/ARTP_MAGICAL_POWER
 static int _gen_bad_hpmp_artp() { return -_gen_good_hpmp_artp(); }
+
+/// Generate 'good' values for skill artps (e.g. ARTP_SK_*)
+static int _gen_good_sk_artp() { return random_range(2,5); }
+
+/// Generate 'bad' values for skill artps (e.g. ARTP_SK_*)
+static int _gen_bad_sk_artp() { return -_gen_good_sk_artp(); }
 
 /// Generation info for artefact properties.
 static const artefact_prop_data artp_data[] =
@@ -767,6 +844,23 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 1; }, 0, 0 },
     { "*Confuse", ARTP_VAL_BOOL, 25, // ARTP_CONFUSE,
         nullptr, []() { return 1; }, 0, 0 },
+    // The chance for ARTP_SK_ items is only 1/6 this value for armour.
+    // The base chance is increased to increase the likelihood of the correct
+    // +skill generating on weapons only.
+    { "Sbl", ARTP_VAL_ANY, 40, // ARTP_SK_SHORT_BLADES,
+      _gen_good_sk_artp, _gen_bad_sk_artp, 3, 2 },
+    { "Lbl", ARTP_VAL_ANY, 40, // ARTP_SK_LONG_BLADES,
+      _gen_good_sk_artp, _gen_bad_sk_artp, 3, 2 },
+    { "Axes", ARTP_VAL_ANY, 40, // ARTP_SK_AXES,
+      _gen_good_sk_artp, _gen_bad_sk_artp, 3, 2 },
+    { "Maces", ARTP_VAL_ANY, 40, // ARTP_SK_MACES_FLAILS,
+      _gen_good_sk_artp, _gen_bad_sk_artp, 3, 2 },
+    { "Pole", ARTP_VAL_ANY, 40, // ARTP_SK_POLEARMS,
+      _gen_good_sk_artp, _gen_bad_sk_artp, 3, 2 },
+    { "Staves", ARTP_VAL_ANY, 40, // ARTP_SK_STAVES,
+      _gen_good_sk_artp, _gen_bad_sk_artp, 3, 2 },
+    { "Unarmed", ARTP_VAL_ANY, 40, // ARTP_SK_UNARMED_COMBAT,
+      _gen_good_sk_artp, _gen_bad_sk_artp, 3, 2 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000
