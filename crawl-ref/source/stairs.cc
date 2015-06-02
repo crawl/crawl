@@ -517,7 +517,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
 
     // Falling down is checked before the transition if going upstairs, since
     // it might prevent the transition itself.
-    if (going_up && _fall_down_stairs(stair_find, going_up))
+    if (going_up && _fall_down_stairs(stair_find, true))
         return;
 
     if (shaft)
@@ -679,7 +679,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         && force_stair != DNGN_ABYSSAL_STAIR
         && force_stair != DNGN_EXIT_ABYSS)
     {
-        _fall_down_stairs(stair_find, !going_up);
+        _fall_down_stairs(stair_find, false);
     }
 
     if (shaft)
