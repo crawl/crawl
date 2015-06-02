@@ -2877,8 +2877,8 @@ void level_change(bool skip_attribute_increase)
                     redraw_screen();
 
                     mprf(MSGCH_INTRINSIC_GAIN,
-                         "Your scales start taking on a %s colour.",
-                         scale_type(you.species));
+                         "Your scales start taking on %s colour.",
+                         article_a(scale_type(you.species)).c_str());
                 }
                 break;
 
