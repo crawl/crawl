@@ -3080,7 +3080,7 @@ void pikel_band_neutralise()
                 ? "slaves thank you for their"
                 : "slave thanks you for its";
             final_msg = make_stringf("With Pikel's spell broken, the former %s "
-                                     "freedom", substr);
+                                     "freedom.", substr);
         }
     }
     delayed_action_fineff::schedule(DACT_PIKEL_SLAVES, final_msg);
