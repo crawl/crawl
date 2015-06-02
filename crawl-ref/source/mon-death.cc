@@ -1452,10 +1452,12 @@ static string _killer_type_name(killer_type killer)
         return "dismissed";
     case KILL_BANISHED:
         return "banished";
-    case KILL_UNSUMMONED:
-        return "unsummoned";
     case KILL_TIMEOUT:
         return "timeout";
+#if TAG_MAJOR_VERSION == 34
+    case KILL_UNSUMMONED:
+        return "unsummoned";
+#endif
     case KILL_PACIFIED:
         return "pacified";
     case KILL_ENSLAVED:
@@ -1811,7 +1813,6 @@ int monster_die(monster* mons, killer_type killer,
     const bool summoned      = mons->is_summoned(&duration);
     const int monster_killed = mons->mindex();
     const bool hard_reset    = testbits(mons->flags, MF_HARD_RESET);
-    bool unsummoned          = killer == KILL_UNSUMMONED;
     bool timeout             = killer == KILL_TIMEOUT;
     const bool gives_xp      = (!summoned && !mons_class_flag(mons->type,
                                 M_NO_EXP_GAIN));
@@ -2347,7 +2348,6 @@ int monster_die(monster* mons, killer_type killer,
             break;
 
         case KILL_TIMEOUT:
-        case KILL_UNSUMMONED:
         case KILL_DISMISSED:
             break;
 
