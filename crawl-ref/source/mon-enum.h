@@ -334,4 +334,7 @@ const char* const mutant_beast_tier_names[] = {
     "buggy", "half-formed", "juvenile", "mature", "elder", "primal",
 };
 
+#define MUTANT_BEAST_TIER "mutant_beast_tier"
+#define MUTANT_BEAST_FACETS "mutant_beast_facets"
+
 #endif

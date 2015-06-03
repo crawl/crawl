@@ -1315,6 +1315,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         ghost.init_mutant_beast(mg.hd, mg.beast_facets);
         mon->set_ghost(ghost);
         mon->ghost_demon_init();
+        // set props for mon-info to use
+        mon->props[MUTANT_BEAST_TIER] = ghost.xl;
+        for (auto facet: ghost.beast_facets)
+            mon->props[MUTANT_BEAST_FACETS].get_vector().push_back(facet);
     }
 
     // Is it a god gift?

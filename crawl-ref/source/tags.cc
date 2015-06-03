@@ -4688,12 +4688,6 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     if (mons_is_ghost_demon(mi.type))
         marshallBoolean(th, mi.i_ghost.can_sinv);
 
-    if (mi.type == MONS_MUTANT_BEAST)
-    {
-        marshallShort(th, mi.i_ghost.xl_rank); // shameful field re-use
-        marshallBeastFacets(th, mi.i_ghost.beast_facets);
-    }
-
     mi.props.write(th);
 }
 
@@ -4935,11 +4929,6 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         if (th.getMinorVersion() >= TAG_MINOR_GHOST_SINV)
 #endif
             mi.i_ghost.can_sinv = unmarshallBoolean(th);
-    if (mi.type == MONS_MUTANT_BEAST)
-    {
-        mi.i_ghost.xl_rank = unmarshallShort(th);
-        unmarshallBeastFacets(th, mi.i_ghost.beast_facets);
-    }
 
     mi.props.clear();
     mi.props.read(th);
