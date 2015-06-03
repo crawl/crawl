@@ -303,7 +303,8 @@ enum beast_facet
     BF_FIRE,
     BF_GHOST,
     BF_SHOCK,
-    BF_OX,
+    BF_BEAR,
+    BF_LAST = BF_BEAR,
     NUM_BEAST_FACETS,
 };
 
@@ -325,7 +326,7 @@ static const int beast_tiers[] = { 0, 3, 9, 15, 21, 27, };
 
 /// names of beast facets
 const string mutant_beast_facet_names[] = {
-    "buggy", "sting", "bat", "fire", "ghost", "shock", "ox",
+    "buggy", "sting", "bat", "fire", "ghost", "shock", "bear",
 };
 
 /// names of beast tiers

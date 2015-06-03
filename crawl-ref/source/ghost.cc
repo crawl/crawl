@@ -1221,3 +1221,109 @@ void ghost_demon::init_lich(monster_type type)
     // ourselves, and we should never have any SPELL_NO_SPELL to strip out
     normalize_spell_freq(spells, xl);
 }
+
+/**
+ * Set up the ghost_demon (varying) fields for a mutant beast.
+ *
+ * @param HD        The beast's HD. If 0, default to beast_tiers[BT_MATURE].
+ * @param facets    The beast's facets (e.g. fire, bat).
+ *                  If empty, chooses two distinct facets at random.
+ */
+void ghost_demon::init_mutant_beast(int HD, const vector<int> &facets)
+{
+    const monsterentry* me = get_monster_data(MONS_MUTANT_BEAST);
+    ASSERT(me);
+
+    if (!HD)
+        HD = beast_tiers[BT_MATURE];
+
+    for (auto facet : facets)
+        beast_facets.push_back(static_cast<beast_facet>(facet));
+
+    if (beast_facets.empty())
+    {
+        beast_facets.push_back((beast_facet)random_range(BF_FIRST, BF_LAST));
+        vector<beast_facet> second_facets;
+        for (int f = BF_FIRST; f <= BF_LAST; ++f)
+            if (f != beast_facets[0])
+                second_facets.push_back((beast_facet)f);
+        beast_facets.push_back(second_facets[random2(second_facets.size())]);
+        ASSERT(beast_facets.size() == 2);
+        ASSERT(beast_facets[0] != beast_facets[1]);
+    }
+
+    colour = me->colour;
+    speed = me->speed;
+    ev = me->ev;
+    ac = HD / 2;
+    xl = HD;
+    max_hp = hit_points(xl, me->hpdice[1], me->hpdice[2]);
+    damage = ((HD + 2) / 5) * 10; // placeholder kludge; 10 dam/tier
+    att_type = me->attack[0].type;
+    att_flav = me->attack[0].flavour;
+
+    for (auto facet : beast_facets)
+    {
+        switch (facet)
+        {
+            case BF_STING:
+                att_type = AT_REACH_STING;
+                att_flav = AF_WEAKNESS_POISON;
+                resists |= MR_RES_POISON;
+                break;
+            case BF_BAT:
+                speed *= 2;
+                flies = true;
+                break; //
+            case BF_FIRE:
+                resists |= MR_RES_FIRE;
+                spells.push_back({SPELL_FIRE_BREATH, 60,
+                                  MON_SPELL_NATURAL | MON_SPELL_BREATH});
+                break;
+            case BF_GHOST:
+                see_invis = true;
+                resists |= MR_RES_NEG;
+                break;
+            case BF_SHOCK:
+                spells.push_back({SPELL_BLINKBOLT, 60, MON_SPELL_NATURAL});
+                resists |= MR_RES_ELEC;
+                break;
+            case BF_BEAR:
+                ac += 10;
+                spells.push_back({SPELL_BERSERKER_RAGE, 200,
+                                  MON_SPELL_NATURAL | MON_SPELL_EMERGENCY});
+                resists |= MR_RES_COLD;
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+/**
+ * Is the creature associated with this ghost_demon 'batty' - that is, does it
+ * lose track of the target after each attack and move around seemingly
+ * randomly?
+ *
+ * @return  Whether this creature is batty.
+ */
+bool ghost_demon::is_batty() const
+{
+    for (auto facet : beast_facets)
+        if (facet == BF_BAT)
+            return true;
+    return false;
+}
+
+/**
+ * Is the creature associated with this ghost_demon permanently invisible?
+ *
+ * @return  Whether this creature is normally invisible (when not backlit).
+ */
+bool ghost_demon::is_invis() const
+{
+    for (auto facet : beast_facets)
+        if (facet == BF_GHOST)
+            return true;
+    return false;
+}
