@@ -1108,7 +1108,7 @@ MONS: patrolling guardian mummy, patrolling sphinx
 KFEAT: - = needle trap / net trap / blade trap / bolt trap / spear trap / zot trap
 SUBST: . = -----.................332
 KITEM: $ = golden rune of zot
-KITEM: ? = scroll of acquirement q:1 ident:all q:5
+KITEM: ? = scroll of acquirement ident:all q:5
 COLOUR: X = lightgrey
 COLOUR: # = yellow
 KFEAT: # = closed_door
