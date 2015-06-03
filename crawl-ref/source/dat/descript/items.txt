@@ -1451,7 +1451,7 @@ may be turned into armour by magical means.
 troll leather armour
 
 Armour made from the stiff and knobbly skin of a common troll. It magically
-regenerates its wearer's flesh at a fairly slow rate (unless already a troll).
+regenerates its wearer's flesh at a fairly slow rate.
 %%%%
 wand of cold
 
