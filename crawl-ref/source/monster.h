@@ -190,6 +190,7 @@ public:
     void apply_enchantments();
     void apply_enchantment(const mon_enchant &me);
 
+    bool can_drink() const;
     bool can_drink_potion(potion_type ptype) const;
     bool should_drink_potion(potion_type ptype) const;
     item_type_id_state_type drink_potion_effect(potion_type pot_eff, bool card = false);

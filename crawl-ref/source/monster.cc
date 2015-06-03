@@ -2126,33 +2126,13 @@ bool monster::pickup_wand(item_def &item, int near, bool force)
 
 bool monster::pickup_scroll(item_def &item, int near)
 {
-    if (item.sub_type != SCR_TELEPORTATION
-        && item.sub_type != SCR_BLINKING
-        && item.sub_type != SCR_SUMMONING)
-    {
-        return false;
-    }
-
-    // Holy monsters and worshippers of good gods won't pick up evil or
-    // unholy scrolls.
-    if ((is_holy() || is_good_god(god))
-        && (is_evil_item(item) || is_unholy_item(item)))
-    {
-        return false;
-    }
-
     return pickup(item, MSLOT_SCROLL, near);
 }
 
 bool monster::pickup_potion(item_def &item, int near, bool force)
 {
-    // Only allow monsters to pick up potions if they can actually use
-    // them.
-    const potion_type ptype = static_cast<potion_type>(item.sub_type);
-
-    if (!force && !can_drink_potion(ptype))
+    if (!can_drink() && !force)
         return false;
-
     return pickup(item, MSLOT_POTION, near);
 }
 
@@ -5956,7 +5936,12 @@ void monster::gain_energy(energy_use_type et, int div, int mult)
     speed_increment += energy_gain;
 }
 
-bool monster::can_drink_potion(potion_type ptype) const
+/**
+ * Can this monster ever drink any potions at all?
+ *
+ * @return  Whether the monster can drink potions (not a statue, mummy, etc)
+ */
+bool monster::can_drink() const
 {
     if (mons_class_is_stationary(type))
         return false;
@@ -5971,6 +5956,14 @@ bool monster::can_drink_potion(potion_type ptype) const
     {
         return false;
     }
+
+    return true;
+}
+
+bool monster::can_drink_potion(potion_type ptype) const
+{
+    if (!can_drink())
+        return false;
 
     switch (ptype)
     {
