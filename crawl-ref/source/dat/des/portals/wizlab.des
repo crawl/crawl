@@ -750,7 +750,7 @@ KMONS:      | = ancient lich / greater mummy
 :           if lrnd == 0 then
 KITEM:      % = any scroll / any scroll q:2 w:3 / any scroll q:3 w:1
 :           kitem("* = " .. dgn.good_scrolls)
-KITEM:      | = scroll of acquirement ident:type / scroll of enchant weapon q:3 ident:type /\
+KITEM:      | = scroll of acquirement q:1 ident:type / scroll of enchant weapon q:3 ident:type /\
                 scroll of blinking q:2 ident:type, scroll of fog q:2 ident:type, \
                 scroll of holy word q:2 ident:type
 :           elseif lrnd == 1 then

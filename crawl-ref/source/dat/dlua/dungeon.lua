@@ -661,15 +661,15 @@ dgn.good_scrolls = [[
     w:10  scroll of magic mapping no_pickup no_mimic q:2 /
     w:30  scroll of amnesia no_pickup no_mimic /
     w:10  scroll of amnesia no_pickup no_mimic q:2 /
-    w:30  scroll of holy word no_pickup no_mimic /
+    w:30  scroll of holy word no_pickup no_mimic q:1 /
     w:10  scroll of holy word no_pickup no_mimic q:2 /
-    w:20  scroll of silence no_pickup no_mimic /
+    w:20  scroll of silence no_pickup no_mimic q:1 /
     w:5   scroll of silence no_pickup no_mimic q:2 /
-    w:10  scroll of acquirement no_pickup no_mimic /
+    w:10  scroll of acquirement no_pickup no_mimic q:1 /
     w:4   scroll of acquirement no_pickup no_mimic q:2 /
     w:1   scroll of acquirement no_pickup no_mimic q:3 /
-    w:10  scroll of brand weapon no_pickup no_mimic /
-    w:10  scroll of torment no_pickup no_mimic /
+    w:10  scroll of brand weapon no_pickup no_mimic q:1 /
+    w:10  scroll of torment no_pickup no_mimic q:1 /
     w:10  scroll of vulnerability no_pickup no_mimic
     ]]
 
