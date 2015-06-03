@@ -3782,6 +3782,7 @@ enum gender_type
 
 // Be sure to update artefact_prop_data[] in artefact.cc. Also,
 // _randart_propnames() in describe.cc, but order doesn't matter there.
+// Also, rap_names in wiz-item.cc.
 enum artefact_prop_type
 {
     ARTP_BRAND,
@@ -3840,6 +3841,14 @@ enum artefact_prop_type
     ARTP_CORRODE,
     ARTP_DRAIN,
     ARTP_CONFUSE,
+    ARTP_SK_SHORT_BLADES,
+    ARTP_SK_LONG_BLADES,
+    ARTP_SK_AXES,
+    ARTP_SK_MACES_FLAILS,
+    ARTP_SK_POLEARMS,
+    ARTP_SK_STAVES,
+    ARTP_SK_UNARMED_COMBAT,
+    ARTP_SK_LAST = ARTP_SK_UNARMED_COMBAT,
     ARTP_NUM_PROPERTIES
 };
 

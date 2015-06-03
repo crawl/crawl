@@ -5815,11 +5815,20 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
             level = ash_skill_boost(sk, scale);
         }
     }
-    if ((sk == SK_LONG_BLADES || sk == SK_SHORT_BLADES)
-        && player_equip_unrand(UNRAND_FENCERS))
-    {
-        level = min(level + 4 * scale, 27 * scale);
-    }
+    if (sk == SK_SHORT_BLADES)
+        level = min(level + you.scan_artefacts(ARTP_SK_SHORT_BLADES) * scale, 27 * scale);
+    if (sk == SK_LONG_BLADES)
+        level = min(level + you.scan_artefacts(ARTP_SK_LONG_BLADES) * scale, 27 * scale);
+    if (sk == SK_AXES)
+        level = min(level + you.scan_artefacts(ARTP_SK_AXES) * scale, 27 * scale);
+    if (sk == SK_MACES_FLAILS)
+        level = min(level + you.scan_artefacts(ARTP_SK_MACES_FLAILS) * scale, 27 * scale);
+    if (sk == SK_POLEARMS)
+        level = min(level + you.scan_artefacts(ARTP_SK_POLEARMS) * scale, 27 * scale);
+    if (sk == SK_STAVES)
+        level = min(level + you.scan_artefacts(ARTP_SK_STAVES) * scale, 27 * scale);
+    if (sk == SK_UNARMED_COMBAT)
+        level = min(level + you.scan_artefacts(ARTP_SK_UNARMED_COMBAT) * scale, 27 * scale);
     if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, 27 * scale);
     return level;

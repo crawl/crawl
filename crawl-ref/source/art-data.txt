@@ -855,7 +855,6 @@ BOOL:    elec, poison, rMut, rCorr
 
 ENUM:    FENCERS
 NAME:    fencer's gloves
-INSCRIP: LBl+4 SBl+4
 OBJ:     OBJ_ARMOUR/ARM_GLOVES
 PLUS:    +2
 COLOUR:  WHITE
@@ -863,6 +862,8 @@ TILE:    urand_fencer
 TILE_EQ: glove_white
 EV:      3
 DEX:     6
+SBL:     4
+LBL:     4
 
 NAME:     cloak of Starlight
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
