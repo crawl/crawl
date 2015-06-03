@@ -32,7 +32,7 @@ crumble to dust. Skeletons cannot leave the level they were created on.
 Apportation spell
 
 Pulls the top item or group of similar items from a distant pile to the floor
-near the caster. With low power, items may not be moved all the way to the
+near the caster. With low power, items might not be moved all the way to the
 caster's position.
 
 Extremely powerful magical items, such as the Orb of Zot, may actively resist
@@ -607,9 +607,8 @@ Ghostly Flames spell
 
 This spell allows the caster to send forth a conflagration of necromantic
 energy. The residual energy may then coalesce into spectral undead creatures.
-It has nothing in common with fire besides appearance, and can only be
-resisted by effects protecting against negative energy. Its damage partially
-bypasses armour. It not only does no damage to the undead, but even heals them.
+It has nothing in common with fire besides appearance, and cannot be resisted
+by anything but armour.
 %%%%
 Goblin Toss spell
 
