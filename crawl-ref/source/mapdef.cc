@@ -4567,8 +4567,10 @@ mons_spec mons_list::mons_by_name(string name) const
                 = split_string("-", segments[seg]);
             for (const string &facet_name : facet_names)
             {
-                spec.props[MUTANT_BEAST_FACETS].get_vector().push_back(
-                        _beast_facet_by_name(facet_name));
+                const int facet = _beast_facet_by_name(facet_name);
+                if (facet == BF_NONE)
+                    return MONS_PROGRAM_BUG; // invalid facet
+                spec.props[MUTANT_BEAST_FACETS].get_vector().push_back(facet);
             }
         }
 
