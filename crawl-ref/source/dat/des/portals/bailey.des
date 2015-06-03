@@ -468,7 +468,7 @@ MONS:   orc warrior / orc knight
 NSUBST: e = 1:e / *:d
 ITEM:   potion of curing / potion of heal wounds / potion of magic / nothing /\
         potion of might w:5 / potion of haste w:2 / potion of berserk rage w:3
-ITEM:   potion of experience w:30 / potion of cure mutation w:30 /\
+ITEM:   potion of experience q:1 w:30 / potion of cure mutation w:30 /\
         potion of beneficial mutation q:2 w:30
 : bailey_setup(_G)
 MAP
@@ -637,8 +637,8 @@ ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
         potion of magic w:5 / potion of haste w:5 / \
         scroll of teleportation / scroll of blinking / scroll of identify / \
         scroll of enchant weapon w:5 / scroll of enchant armour w:5
-ITEM:   potion of beneficial mutation w:30 / potion of cure mutation / \
-        potion of experience / scroll of acquirement
+ITEM:   potion of beneficial mutation q:1 w:30 / potion of cure mutation / \
+        potion of experience q:1 / scroll of acquirement
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
 MONS:   orc warlord
@@ -778,7 +778,7 @@ SUBST:  X = I G C
 KFEAT:  C = altar_beogh
 ITEM:   manual of armour / manual of fighting / manual of shields /\
         good_item bardiche / good_item executioner's axe
-ITEM:   potion of experience / scroll of acquirement /\
+ITEM:   potion of experience q:1 / scroll of acquirement /\
         scroll of enchant armour q:2 / scroll of enchant weapon q:3 /\
         legendary deck of wonders ident:type
 NSUBST: d = 1:e / *:d|
@@ -917,7 +917,7 @@ ENDMAP
 NAME:   bailey_polearm_5
 ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen
-ITEM:   potion of beneficial mutation / potion of experience
+ITEM:   potion of beneficial mutation q:1 / potion of experience q:1
 ITEM:   potion of curing / potion of heal wounds / potion of might w:5 /\
         potion of berserk rage w:3 / potion of haste w:2 /\
         potion of invisibility w:3 / potion of resistance w:2

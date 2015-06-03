@@ -184,7 +184,7 @@ function setup_loot (e)
                                   " / fire dragon armour w:5")
     e.item([[potion of berserk rage w:22 / potion of might w:5 /
              potion of brilliance w:5 / potion of agility w:5 /
-             potion of experience w:1 / potion of resistance]])
+             potion of experience q:1 w:1 / potion of resistance]])
     e.item(make_fiery_weapon(e, {"rapier w:20", "morningstar w:20", "eveningstar w:1",
                                   "demon whip w:1", "dire flail w:7", "great mace w:3",
                                   "scimitar w:20", "great sword", "demon blade w:1",
