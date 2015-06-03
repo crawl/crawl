@@ -523,7 +523,7 @@ TAGS:   sprint2_smallroom_final_cluster no_item_gen no_trap_gen no_monster_gen n
 MARKER: + = lua:restrict_door()
 NSUBST: * = 1:a / 1:b / *:|
 KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience q:1
-KITEM:  b = scroll of acquirement / potion of magic q:9 / potion of haste q:3
+KITEM:  b = scroll of acquirement q:1 / potion of magic q:9 / potion of haste q:3
 SUBVAULT: D : sprint2_smallroom
 SUBVAULT: E : sprint2_smallroom
 SUBVAULT: F : sprint2_smallroom
@@ -726,7 +726,7 @@ KFEAT:  f = any shop
 NSUBST: | = 1:a / 2:b / 1:d / 6:$ / *:|
 KITEM:  $ = gold q:81
 KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience q:1
-KITEM:  b = scroll of acquirement / potion of magic q:9 / potion of haste q:3
+KITEM:  b = scroll of acquirement q:1 / potion of magic q:9 / potion of haste q:3
 KITEM:  d = potion of flight q:3
 SUBVAULT: A : sprint2_smallroom
 SUBVAULT: B : sprint2_smallroom
@@ -759,7 +759,7 @@ NSUBST: b = 2:i / 1:b / *:|
 NSUBST: f = 1:a / 2:b / 1:h / 9:$ / *:|
 KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience q:1
 KITEM:  $ = gold q:81
-KITEM:  b = scroll of acquirement / potion of magic q:9 / potion of haste q:3
+KITEM:  b = scroll of acquirement q:1 / potion of magic q:9 / potion of haste q:3
 KITEM:  h = potion of flight q:3
 MONS:   Nessos, jelly, sixfirhy, Gastronok, orc sorcerer, dire elephant
 SUBST:  . = '.....

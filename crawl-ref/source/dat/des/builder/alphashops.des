@@ -55,7 +55,7 @@
       local i
       if s == "A" then i = "akashic record | arbalest | book of alchemy | " ..
        "book of air | manual of air magic | book of annihilations | arrow | " ..
-       "potion of agility | potion of ambrosia | scroll of acquirement | " ..
+       "potion of agility | potion of ambrosia | scroll of acquirement q:1 | " ..
        "scroll of amnesia | staff of air | manual of axes | manual of armour"
 
       elseif s == "B" then i = "bardiche | battleaxe | beef jerky | " ..

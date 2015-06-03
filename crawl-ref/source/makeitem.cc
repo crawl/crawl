@@ -1452,7 +1452,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
         do
         {
             // total weight:    784  if depth_mod < 4
-            //                  913  otherwise
+            //                  903  otherwise
             //                 -112  in sprint
             item.sub_type = random_choose_weighted(
                 200, SCR_IDENTIFY,
@@ -1473,12 +1473,12 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  32, SCR_IMMOLATION,
                  // Higher-level scrolls.
                  27, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
-                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_ACQUIREMENT),
                  17, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),
-                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
-                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
-                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_TORMENT),
-                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD),
+                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_ACQUIREMENT),
+                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
+                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
+                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_TORMENT),
+                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD),
                  0);
         }
         while (item.sub_type == NUM_SCROLLS
@@ -1487,22 +1487,10 @@ static void _generate_scroll_item(item_def& item, int force_type,
                && --tries > 0);
     }
 
-    // determine quantity
-    if (item.sub_type == SCR_BRAND_WEAPON
-        || item.sub_type == SCR_ACQUIREMENT
-        || item.sub_type == SCR_TORMENT
-        || item.sub_type == SCR_HOLY_WORD
-        || item.sub_type == SCR_SILENCE)
-    {
-        item.quantity = 1;
-    }
+    if (one_chance_in(24))
+        item.quantity = (coinflip() ? 2 : 3);
     else
-    {
-        if (one_chance_in(24))
-            item.quantity = (coinflip() ? 2 : 3);
-        else
-            item.quantity = 1;
-    }
+        item.quantity = 1;
 
     item.plus = 0;
 }
