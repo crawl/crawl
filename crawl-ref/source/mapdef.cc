@@ -4094,11 +4094,15 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             mspec.type    = nspec.type;
             mspec.monbase = nspec.monbase;
             mspec.number  = nspec.number;
-            mspec.beast_facets = nspec.beast_facets;
             if (nspec.colour > COLOUR_UNDEF && mspec.colour <= COLOUR_UNDEF)
                 mspec.colour = nspec.colour;
             if (nspec.hd != 0)
                 mspec.hd = nspec.hd;
+            if (nspec.props.exists(MUTANT_BEAST_FACETS))
+            {
+                mspec.props[MUTANT_BEAST_FACETS]
+                    = nspec.props[MUTANT_BEAST_FACETS];
+            }
         }
 
         if (!mspec.items.empty())
@@ -4562,7 +4566,10 @@ mons_spec mons_list::mons_by_name(string name) const
             const vector<string> facet_names
                 = split_string("-", segments[seg]);
             for (const string &facet_name : facet_names)
-                spec.beast_facets.push_back(_beast_facet_by_name(facet_name));
+            {
+                spec.props[MUTANT_BEAST_FACETS].get_vector().push_back(
+                        _beast_facet_by_name(facet_name));
+            }
         }
 
         return spec;

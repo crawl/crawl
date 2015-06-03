@@ -112,9 +112,6 @@ struct mgen_data
     // be available (vault metadata is not preserved across game saves).
     unsigned        map_mask = 0;
 
-    // Used for mutant beasts
-    vector<int> beast_facets;
-
     // This can eventually be used to store relevant information.
     CrawlHashTable  props;
 
