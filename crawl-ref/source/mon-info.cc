@@ -247,7 +247,9 @@ static bool _is_public_key(string key)
 #endif
      || key == "tile_idx"
      || key == "custom_spells"
-     || key == ELVEN_IS_ENERGIZED_KEY)
+     || key == ELVEN_IS_ENERGIZED_KEY
+     || key == MUTANT_BEAST_FACETS
+     || key == MUTANT_BEAST_TIER)
     {
         return true;
     }
@@ -330,7 +332,6 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
  */
 static int _mutant_beast_tier(int xl)
 {
-
     COMPILE_CHECK(ARRAYSZ(beast_tiers) == NUM_BEAST_TIERS);
     for (int bt = BT_FIRST; bt < NUM_BEAST_TIERS; ++bt)
         if (xl <= beast_tiers[bt])
@@ -427,12 +428,6 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         i_ghost.xl_rank = 3;
         i_ghost.ac = 5;
         i_ghost.damage = 5;
-    }
-
-    if (type == MONS_MUTANT_BEAST)
-    {
-        i_ghost.xl_rank = BT_MATURE;
-        i_ghost.beast_facets = { BF_FIRE, BF_BAT };
     }
 
     // Don't put a bad base type on ?/mdraconian annihilator etc.
@@ -735,18 +730,8 @@ monster_info::monster_info(const monster* m, int milev)
             props[SPECIAL_WEAPON_KEY] = ghost_brand_name(ghost.brand);
     }
 
-    if (type == MONS_MUTANT_BEAST)
-    {
-        i_ghost.xl_rank = _mutant_beast_tier(m->get_experience_level());
-        ASSERT(m->ghost.get());
-        const ghost_demon& ghost = *m->ghost;
-        i_ghost.beast_facets = ghost.beast_facets;
-    }
-
     if (mons_is_ghost_demon(type))
         i_ghost.can_sinv = m->ghost->see_invis;
-    if (type == MONS_MUTANT_BEAST)
-        i_ghost.beast_facets = m->ghost->beast_facets;
 
     // book loading for player ghost and vault monsters
     spells.clear();
@@ -872,7 +857,7 @@ static string _mutant_beast_tier_name(short xl_tier)
  * @param xl_tier   The beast_facet in question.
  * @return          The name of the facet; e.g. "bat".
  */
-static string _mutant_beast_facet(beast_facet facet)
+static string _mutant_beast_facet(int facet)
 {
     COMPILE_CHECK(ARRAYSZ(mutant_beast_facet_names) == NUM_BEAST_FACETS);
     if (facet < 0 || facet >= NUM_BEAST_FACETS)
@@ -1068,9 +1053,11 @@ string monster_info::common_name(description_level_type desc) const
 
     if (type == MONS_MUTANT_BEAST)
     {
-        ss << _mutant_beast_tier_name(i_ghost.xl_rank) << " ";
-        for (auto facet : i_ghost.beast_facets)
-            ss << _mutant_beast_facet(facet); // no space between
+        const int xl = props[MUTANT_BEAST_TIER].get_short();
+        const int tier = _mutant_beast_tier(xl);
+        ss << _mutant_beast_tier_name(tier) << " ";
+        for (auto facet : props[MUTANT_BEAST_FACETS].get_vector())
+            ss << _mutant_beast_facet(facet.get_int()); // no space between
         ss << " ";
     }
 
