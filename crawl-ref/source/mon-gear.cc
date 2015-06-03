@@ -92,17 +92,14 @@ static bool _should_give_unique_item(monster* mon)
     return mon->type != MONS_NATASHA || !mon->props.exists("felid_revives");
 }
 
-static void _give_scroll(monster* mon, int level)
+static void _give_book(monster* mon, int level)
 {
-    int thing_created = NON_ITEM;
-
     if (mon->type == MONS_ROXANNE)
     {
-        // Not a scroll, but this comes closest.
-        int which_book = (one_chance_in(3) ? BOOK_TRANSFIGURATIONS
-                                           : BOOK_EARTH);
+        const int which_book = (one_chance_in(3) ? BOOK_TRANSFIGURATIONS
+                                                 : BOOK_EARTH);
 
-        thing_created = items(false, OBJ_BOOKS, which_book, level);
+        const int thing_created = items(false, OBJ_BOOKS, which_book, level);
 
         if (thing_created != NON_ITEM && coinflip())
         {
@@ -113,15 +110,6 @@ static void _give_scroll(monster* mon, int level)
             return;
         }
     }
-    else if (mons_is_unique(mon->type) && one_chance_in(3)
-                && _should_give_unique_item(mon))
-        thing_created = items(false, OBJ_SCROLLS, OBJ_RANDOM, level);
-
-    if (thing_created == NON_ITEM)
-        return;
-
-    mitm[thing_created].flags = 0;
-    _give_monster_item(mon, thing_created, true);
 }
 
 static void _give_wand(monster* mon, int level)
@@ -188,7 +176,7 @@ static void _give_potion(monster* mon, int level)
         mitm[thing_created].flags = ISFLAG_KNOW_TYPE;
         _give_monster_item(mon, thing_created);
     }
-    else if (mons_is_unique(mon->type) && one_chance_in(3)
+    else if (mons_is_unique(mon->type) && one_chance_in(4)
                 && _should_give_unique_item(mon))
     {
         const int thing_created = items(false, OBJ_POTIONS, OBJ_RANDOM,
@@ -2495,7 +2483,7 @@ void give_item(monster *mons, int level_number, bool mons_summoned, bool spectra
     if (mons->type == MONS_MAURICE)
         _give_gold(mons, level_number);
 
-    _give_scroll(mons, level_number);
+    _give_book(mons, level_number);
     _give_wand(mons, level_number);
     _give_potion(mons, level_number);
     _give_weapon(mons, level_number, false, true, spectral_orcs, merc);
