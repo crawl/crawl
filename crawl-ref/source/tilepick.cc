@@ -1586,6 +1586,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_TENGU_REAVER;
     case MONS_ANUBIS_GUARD:
         return TILEP_MONS_ANUBIS_GUARD;
+    case MONS_MUTANT_BEAST:
+        return TILEP_MONS_MUTANT_BEAST;
 
     // ice beast ('I')
     case MONS_ICE_BEAST:

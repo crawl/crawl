@@ -278,6 +278,7 @@ sphinx CORPSE_SPHINX
 tengu CORPSE_TENGU
 anubis_guard CORPSE_ANUBIS_GUARD
 unique/arachne_staveless CORPSE_ARACHNE
+mutant_beast CORPSE_MUTANT_BEAST
 
 ## Kobolds ('K')
 %sdir mon/

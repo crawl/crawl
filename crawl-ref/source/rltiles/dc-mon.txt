@@ -672,9 +672,6 @@ ophan MONS_OPHAN
 %sdir mon
 hippogriff MONS_HIPPOGRIFF
 minotaur MONS_MINOTAUR
-%sdir mon/unique
-asterion MONS_ASTERION
-%sdir mon
 manticore MONS_MANTICORE
 griffon MONS_GRIFFON
 harpy MONS_HARPY
@@ -684,10 +681,12 @@ tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
 tengu_warrior MONS_TENGU_WARRIOR
 tengu_reaver MONS_TENGU_REAVER
+mutant_beast MONS_MUTANT_BEAST
 %sdir mon/unique
 sojobo MONS_SOJOBO
 arachne MONS_ARACHNE
 arachne_staveless MONS_ARACHNE_STAVELESS
+asterion MONS_ASTERION
 
 ## Various beasts ('I')
 %sdir mon/animals
