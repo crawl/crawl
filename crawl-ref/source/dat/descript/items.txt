@@ -332,8 +332,9 @@ its parchment pages sometimes twitch and shudder on their own.
 box of beasts
 
 A box filled with the bizarre leftovers of a depraved wizard's magical
-experimentations. Opening it might set loose a friendly chimera: a mythical
-hybrid composed from the parts of three separate beasts.
+experimentations. Opening it might set loose a friendly mutant beast: bizarre
+creatures, each with their own combination of traits. Increased skill with
+Evocations will allow stronger beasts to be released.
 %%%%
 bread ration
 

@@ -1718,6 +1718,11 @@ mummy priest
 An ancient servant of a long forgotten god, embalmed and cursed to walk in
 undeath for all eternity.
 %%%%
+mutant beast
+
+A bizarre creature, twisted and warped by overexposure to magical radiation.
+Each has a different set of traits.
+%%%%
 naga
 
 A hybrid that is human from the waist up; below is a scaly, muscular snakelike

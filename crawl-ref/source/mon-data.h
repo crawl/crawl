@@ -3179,7 +3179,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
 
 // Mutant beasts - variable traits (see ghost.cc)
 {
-    MONS_MUTANT_BEAST, 'H', MAGENTA, "beast",
+    MONS_MUTANT_BEAST, 'H', MAGENTA, "mutant beast",
     M_NO_POLY_TO | M_HYBRID | M_GHOST_DEMON,
     MR_NO_FLAGS,
     11, MONS_MUTANT_BEAST, MONS_MUTANT_BEAST, MH_NATURAL, -3,

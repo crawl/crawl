@@ -1014,8 +1014,9 @@ string monster_info::common_name(description_level_type desc) const
 {
     const string core = _core_name();
     const bool nocore = mons_class_is_zombified(type)
-                        && mons_is_unique(base_type)
-                        && base_type == mons_species(base_type);
+                          && mons_is_unique(base_type)
+                          && base_type == mons_species(base_type)
+                        || type == MONS_MUTANT_BEAST;
 
     ostringstream ss;
 
@@ -1058,7 +1059,7 @@ string monster_info::common_name(description_level_type desc) const
         ss << _mutant_beast_tier_name(tier) << " ";
         for (auto facet : props[MUTANT_BEAST_FACETS].get_vector())
             ss << _mutant_beast_facet(facet.get_int()); // no space between
-        ss << " ";
+        ss << " beast";
     }
 
     if (!nocore)
