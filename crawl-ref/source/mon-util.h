@@ -374,6 +374,7 @@ bool mons_landlubbers_in_reach(const monster* mons);
 bool mons_class_is_stationary(monster_type mc);
 bool mons_class_is_firewood(monster_type mc);
 bool mons_is_firewood(const monster* mon);
+bool mons_is_active_ballisto(const monster* mon);
 bool mons_has_body(const monster* mon);
 bool mons_has_flesh(const monster* mon);
 bool mons_is_abyssal_only(monster_type mc);

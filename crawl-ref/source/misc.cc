@@ -156,16 +156,16 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
 static bool _mons_is_always_safe(const monster *mon)
 {
     return mon->wont_attack()
-           || mon->type == MONS_BUTTERFLY
-           || mon->withdrawn()
-           || mon->type == MONS_BALLISTOMYCETE && !mon->ballisto_activity;
+        || mon->type == MONS_BUTTERFLY
+        || mon->withdrawn()
+        || !mons_is_active_ballisto(mon);
 }
 
 bool mons_is_safe(const monster* mon, const bool want_move,
                   const bool consider_user_options, bool check_dist)
 {
-    // Short-circuit plants, some vaults have tons of those.
-    // Except for inactive ballistos, players may still want these.
+    // Short-circuit plants, some vaults have tons of those. Except for both
+    // active and inactive ballistos, players may still want these.
     if (mons_is_firewood(mon) && mon->type != MONS_BALLISTOMYCETE)
         return true;
 

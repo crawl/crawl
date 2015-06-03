@@ -584,9 +584,26 @@ bool mons_class_is_stationary(monster_type mc)
     return mons_class_flag(mc, M_STATIONARY);
 }
 
-// Monsters that are worthless obstacles: not to
-// be attacked by default, but may be cut down to
-// get to target even if coaligned.
+/**
+ * Is this an active ballistomycete?
+ *
+ * @param mon             The monster
+ * @returns True if the monster is an active ballistomycete, false otherwise.
+ */
+bool mons_is_active_ballisto(const monster* mon)
+{
+    return mon->type == MONS_BALLISTOMYCETE && mon->ballisto_activity;
+}
+
+/**
+ * Is this monster class firewood?
+ *
+ * Firewood monsters are harmless stationary monsters than don't give xp. These
+ * are worthless obstacles: not to be attacked by default, but may be cut down
+ * to get to target even if coaligned.
+ * @param mc The monster type
+ * @returns True if the monster class is firewood, false otherwise.
+ */
 bool mons_class_is_firewood(monster_type mc)
 {
     return mons_class_is_stationary(mc)
@@ -594,6 +611,13 @@ bool mons_class_is_firewood(monster_type mc)
            && !mons_is_tentacle_or_tentacle_segment(mc);
 }
 
+/**
+ * Is this monster firewood?
+ *
+ * Firewood monsters are stationary monsters than don't give xp.
+ * @param mon             The monster
+ * @returns True if the monster is firewood, false otherwise.
+ */
 bool mons_is_firewood(const monster* mon)
 {
     return mons_class_is_firewood(mon->type);
@@ -4340,7 +4364,7 @@ int get_dist_to_nearest_monster()
 
         // Plants/fungi don't count.
         if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
-            && !(mon->type == MONS_BALLISTOMYCETE && mon->ballisto_activity))
+            && !mons_is_active_ballisto(mon))
         {
             continue;
         }

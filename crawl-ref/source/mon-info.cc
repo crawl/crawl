@@ -1890,8 +1890,7 @@ void get_monster_info(vector<monster_info>& mons)
     {
         if (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
             || mon->is_child_tentacle()
-            || mon->type == MONS_BALLISTOMYCETE
-                && mon->ballisto_activity > 0)
+            || !mons_is_active_ballisto(mon))
         {
             mons.emplace_back(mon);
         }
