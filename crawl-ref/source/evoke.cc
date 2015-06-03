@@ -1042,8 +1042,39 @@ static bool _box_of_beasts(item_def &box)
         return false;
     }
 
-    mpr("...but nothing happens.");
-    return false;
+    // two rolls to reduce std deviation - +-6 so can get < max even at 27 sk
+    const int hd_min = min(27,
+                           you.skill(SK_EVOCATIONS) + random2(7) - random2(7));
+    int tier = BT_FIRST;
+    for (; tier < NUM_BEAST_TIERS; ++tier)
+        if (hd_min <= beast_tiers[tier])
+            break;
+    ASSERT(tier < NUM_BEAST_TIERS);
+
+    mgen_data mg = mgen_data(MONS_MUTANT_BEAST,
+                             BEH_FRIENDLY, &you,
+                             3 + random2(3), 0,
+                             you.pos(),
+                             MHITYOU, MG_AUTOFOE);
+    mg.hd = beast_tiers[tier];
+    dprf("hd %d (min %d, tier %d)", mg.hd, hd_min, tier);
+    const monster* mons = create_monster(mg);
+
+    if (!mons)
+    {
+        // Failed to create monster for some reason
+        mpr("...but nothing happens.");
+        return false;
+    }
+
+    mprf("...and %s %s out!",
+         mons->name(DESC_A).c_str(), mons->airborne() ? "flies" : "leaps");
+    xom_is_stimulated(10); // dubious
+    did_god_conduct(DID_CHAOS, random_range(5,10));
+    // Decrease charges
+    box.charges--;
+    box.used_count++;
+    return true;
 }
 
 static bool _sack_of_spiders_veto_mon(monster_type mon)
