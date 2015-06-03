@@ -209,8 +209,7 @@ map_feature get_cell_map_feature(const map_cell& cell)
 
     // then firewood.
     if (cell.monster() != MONS_NO_MONSTER
-        && mons_class_flag(cell.monster(), M_NO_EXP_GAIN)
-        && mons_class_flag(cell.monster(), M_STATIONARY))
+        && mons_class_is_firewood(cell.monster()))
     {
         return MF_MONS_NO_EXP;
     }
