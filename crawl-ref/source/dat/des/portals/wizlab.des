@@ -885,9 +885,9 @@ KMONS:      0 = col:red iron golem name:flesh_golem name_replace \
             tile:mons_flesh_golem name_descriptor
 KMONS:      & = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
             name_replace hp:200 tile:mons_cigotuvis_monster
-ITEM:       potion of mutation w:60 / potion of beneficial mutation / \
+ITEM:       potion of mutation w:60 / potion of beneficial mutation q:1 / \
             potion of cure mutation
-ITEM:       potion of beneficial mutation, potion of cure mutation
+ITEM:       potion of beneficial mutation q:1, potion of cure mutation
 ITEM:       amulet of resist mutation good_item
 ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi spells:cigotuvi's_embrace
 ITEM:       book of transfigurations / randbook disc:transmutation
@@ -1205,7 +1205,7 @@ KFEAT:      ' = open_door
 KFEAT:      1234567 = .
 KMONS:      1234567 = nothing
 LROCKCOL:   darkgrey
-ITEM:       potion of experience, potion of beneficial mutation
+ITEM:       potion of experience q:1, potion of beneficial mutation q:1
 ITEM:       manual of fighting / manual of armour / manual of spellcasting / \
             manual of staves / manual of fighting / manual of dodging
 ITEM:       book of enchantments
@@ -1805,7 +1805,7 @@ KMONS:      y = orange crystal statue name:lunar_statue n_rpl n_des \
                        lehudib's_crystal_spear.40.natural;\
                        shadow_creatures.80.natural \
                 col:lightmagenta tile:mons_zot_statue
-ITEM:       potion of cure mutation / potion of beneficial mutation, acquire any
+ITEM:       potion of cure mutation / potion of beneficial mutation q:1, acquire any
 ITEM:       randbook owner:Lehudib disc:earth disc2:transmutation \
                      spells:lehudib's_crystal_spear\
             / randbook owner:Lehudib disc:earth disc2:translocation \

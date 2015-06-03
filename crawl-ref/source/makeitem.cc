@@ -1407,7 +1407,7 @@ static void _generate_potion_item(item_def& item, int force_type,
         do
         {
             // total weight is 1065
-            stype = random_choose_weighted(191, POT_CURING,
+            stype = random_choose_weighted(192, POT_CURING,
                                             95, POT_HEAL_WOUNDS,
                                             66, POT_POISON,
                                             66, POT_MIGHT,
@@ -1425,7 +1425,7 @@ static void _generate_potion_item(item_def& item, int force_type,
                                             34, POT_CANCELLATION,
                                             34, POT_AMBROSIA,
                                             23, POT_CURE_MUTATION,
-                                            12, POT_BENEFICIAL_MUTATION,
+                                            11, POT_BENEFICIAL_MUTATION,
                                              2, POT_EXPERIENCE,
                                              0);
         }
@@ -1436,17 +1436,6 @@ static void _generate_potion_item(item_def& item, int force_type,
                    && --tries > 0));
 
         item.sub_type = stype;
-    }
-
-    if (item.sub_type == POT_BENEFICIAL_MUTATION
-#if TAG_MAJOR_VERSION == 34
-        || item.sub_type == POT_GAIN_STRENGTH
-        || item.sub_type == POT_GAIN_DEXTERITY
-        || item.sub_type == POT_GAIN_INTELLIGENCE
-#endif
-        || item.sub_type == POT_EXPERIENCE)
-    {
-        item.quantity = 1;
     }
 }
 

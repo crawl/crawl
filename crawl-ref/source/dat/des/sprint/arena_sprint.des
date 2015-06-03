@@ -127,7 +127,7 @@ function arena_sprint_end_round(data)
             data.style_mult = data.style_mult + 1
             -- Reward for boss kills. Doesn't come identified...
             dgn.create_item(you_x, you_y, "acquire any")
-            dgn.create_item(you_x, you_y, "potion of experience ident:all")
+            dgn.create_item(you_x, you_y, "potion of experience q:1 ident:all")
         else
             crawl.mpr("<yellow>Victory!</yellow>", "warning")
         end
@@ -1092,7 +1092,7 @@ KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
             mundane bolt q:50 | mundane sling bullet q:50 |\
             mundane arrow q:50
 KFEAT:  H = distillery shop type:Bottled suffix:Wisdom count:5 use_all greed:6 ; \
-            potion of experience | potion of experience |\
+            potion of experience q:1 | potion of experience q:1 |\
             potion of experience q:2 | potion of experience q:3 |\
             potion of experience q:3
 KFEAT:  R = general shop type:Premium suffix:Goods use_all count:11 greed:20 ; \
