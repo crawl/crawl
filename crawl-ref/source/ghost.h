@@ -38,6 +38,8 @@ public:
 public:
     ghost_demon();
     bool has_spells() const;
+    bool is_batty() const;
+    bool is_invis() const;
     void reset();
     void init_pandemonium_lord();
     void init_player_ghost(bool actual_ghost = true);
@@ -50,7 +52,10 @@ public:
 
     void init_lich(monster_type type);
 
+    void init_mutant_beast(int HD, const vector<int> &beast_facets);
+
     void ugly_thing_to_very_ugly_thing();
+
 
 public:
     static vector<ghost_demon> find_ghosts();

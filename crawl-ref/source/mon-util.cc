@@ -3055,7 +3055,8 @@ bool mons_is_immotile(const monster* mons)
 
 bool mons_is_batty(const monster* m)
 {
-    return mons_class_flag(m->type, M_BATTY);
+    return mons_class_flag(m->type, M_BATTY)
+           || mons_is_ghost_demon(m->type) && m->ghost->is_batty();
 }
 
 bool mons_looks_stabbable(const monster* m)

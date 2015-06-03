@@ -3177,13 +3177,13 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID_WINGED
 },
 
-// Mutant beasts - variable traits
+// Mutant beasts - variable traits (see ghost.cc)
 {
     MONS_MUTANT_BEAST, 'H', MAGENTA, "beast",
     M_NO_POLY_TO | M_HYBRID | M_GHOST_DEMON,
     MR_NO_FLAGS,
     11, MONS_MUTANT_BEAST, MONS_MUTANT_BEAST, MH_NATURAL, -3,
-    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { {AT_HIT, AF_PLAIN, 27}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
     8, 5, MST_NO_SPELLS, CE_MUTAGEN, S_RANDOM,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
