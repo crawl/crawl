@@ -28,8 +28,8 @@ enum beast_facet
 enum beast_tier
 {
     BT_NONE,
-    BT_HALF_FORMED,
-    BT_FIRST = BT_HALF_FORMED,
+    BT_LARVAL,
+    BT_FIRST = BT_LARVAL,
     BT_JUVENILE,
     BT_MATURE,
     BT_ELDER,
@@ -39,15 +39,18 @@ enum beast_tier
 
 /// HD of mutant beast tiers
 const int beast_tiers[] = { 0, 3, 9, 15, 21, 27, };
+COMPILE_CHECK(ARRAYSZ(beast_tiers) == NUM_BEAST_TIERS);
 
 /// names of beast facets
 const string mutant_beast_facet_names[] = {
     "buggy", "sting", "bat", "fire", "ghost", "shock", "bear",
 };
+COMPILE_CHECK(ARRAYSZ(mutant_beast_facet_names) == NUM_BEAST_FACETS);
 
 /// names of beast tiers
 const char* const mutant_beast_tier_names[] = {
     "buggy", "larval", "juvenile", "mature", "elder", "primal",
 };
+COMPILE_CHECK(ARRAYSZ(mutant_beast_tier_names) == NUM_BEAST_TIERS);
 
 #endif

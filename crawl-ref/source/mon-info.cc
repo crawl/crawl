@@ -828,7 +828,6 @@ monster_info::monster_info(const monster* m, int milev)
  */
 static string _mutant_beast_tier_name(short xl_tier)
 {
-    COMPILE_CHECK(ARRAYSZ(mutant_beast_tier_names) == NUM_BEAST_TIERS);
     if (xl_tier < 0 || xl_tier >= NUM_BEAST_TIERS)
         return "buggy";
     return mutant_beast_tier_names[xl_tier];
@@ -842,7 +841,6 @@ static string _mutant_beast_tier_name(short xl_tier)
  */
 static string _mutant_beast_facet(int facet)
 {
-    COMPILE_CHECK(ARRAYSZ(mutant_beast_facet_names) == NUM_BEAST_FACETS);
     if (facet < 0 || facet >= NUM_BEAST_FACETS)
         return "buggy";
     return mutant_beast_facet_names[facet];
