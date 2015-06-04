@@ -2441,7 +2441,7 @@ static bool _want_target_monster(const monster *mon, int mode)
         return false;
 
     // Don't target zero xp monsters.
-    return !mons_class_flag(mon->type, M_NO_EXP_GAIN);
+    return !mons_class_gives_xp(mon->type);
 }
 
 #ifdef CLUA_BINDINGS

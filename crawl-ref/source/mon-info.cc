@@ -637,7 +637,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (nomsg_wounds)
         dam = MDAM_OKAY;
 
-    if (!mons_class_flag(m->type, M_NO_EXP_GAIN)) // Firewood, butterflies, etc.
+    if (mons_class_gives_xp(m->type)) // Firewood, butterflies, etc.
     {
         if (m->asleep())
         {

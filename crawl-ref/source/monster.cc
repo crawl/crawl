@@ -2820,8 +2820,7 @@ bool monster::fumbles_attack()
 
 bool monster::cannot_fight() const
 {
-    return mons_class_flag(type, M_NO_EXP_GAIN)
-           || mons_is_statue(type);
+    return !mons_class_gives_xp(type) || mons_is_statue(type);
 }
 
 void monster::attacking(actor * /* other */, bool /* ranged */)
@@ -2953,9 +2952,7 @@ void monster::banish(actor *agent, const string &)
         return;
     simple_monster_message(this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
-    if (agent && !has_ench(ENCH_ABJ) && !(flags & MF_NO_REWARD)
-        && !has_ench(ENCH_FAKE_ABJURATION)
-        && !mons_class_flag(type, M_NO_EXP_GAIN))
+    if (agent && mons_gives_xp(this, agent))
     {
         // Double the existing damage blame counts, so the unassigned xp for
         // remaining hp is effectively halved. No need to pass flags this way.
@@ -5041,11 +5038,11 @@ bool monster::is_patrolling() const
 bool monster::needs_abyss_transit() const
 {
     return (mons_is_unique(type)
-               || (flags & MF_BANISHED)
-               || get_experience_level() > 8 + random2(25)
-                  && mons_can_use_stairs(this))
-           && !has_ench(ENCH_ABJ)
-           && type != MONS_BATTLESPHERE; // can use stairs otherwise
+            || (flags & MF_BANISHED)
+            || get_experience_level() > 8 + random2(25)
+            && mons_can_use_stairs(this))
+        && !is_summoned()
+        && !mons_is_conjured(type);
 }
 
 void monster::set_transit(const level_id &dest)

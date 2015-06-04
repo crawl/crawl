@@ -223,7 +223,7 @@ static void _zap_los_monsters(bool items_also)
         // If we ever allow starting with a friendly monster,
         // we'll have to check here.
         monster* mon = monster_at(*ri);
-        if (mon == nullptr || mons_class_flag(mon->type, M_NO_EXP_GAIN))
+        if (mon == nullptr || mons_class_gives_xp(mon->type))
             continue;
 
         dprf("Dismissing %s",

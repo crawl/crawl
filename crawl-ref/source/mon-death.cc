@@ -85,7 +85,7 @@ monster_type fill_out_corpse(const monster* mons,
 
     int summon_type;
     if (mons && (mons->is_summoned(nullptr, &summon_type)
-                    || (mons->flags & (MF_BANISHED | MF_HARD_RESET))))
+                 || (mons->flags & (MF_BANISHED | MF_HARD_RESET))))
     {
         return MONS_NO_MONSTER;
     }
@@ -253,21 +253,13 @@ static int _calc_monster_experience(monster* victim, killer_type killer,
                                     int killer_index)
 {
     const int experience = exper_value(victim);
-    const bool no_xp = victim->has_ench(ENCH_ABJ) || !experience || victim->has_ench(ENCH_FAKE_ABJURATION);
-    const bool created_friendly = testbits(victim->flags, MF_NO_REWARD);
 
-    if (no_xp || !MON_KILL(killer) || invalid_monster_index(killer_index))
+    if (!experience || !MON_KILL(killer) || invalid_monster_index(killer_index))
         return 0;
 
     monster* mon = &menv[killer_index];
-    if (!mon->alive())
+    if (!mon->alive() || !mons_gives_xp(victim, mon))
         return 0;
-
-    if ((created_friendly && mon->friendly())
-        || mons_aligned(mon, victim))
-    {
-        return 0;
-    }
 
     return experience;
 }
@@ -316,15 +308,11 @@ static void _beogh_spread_experience(int exp)
 static int _calc_player_experience(const monster* mons)
 {
     int experience = exper_value(mons);
+    if (!experience)
+        return 0;
 
-    const bool created_friendly = testbits(mons->flags, MF_NO_REWARD);
-    const bool was_neutral = testbits(mons->flags, MF_WAS_NEUTRAL);
-    const bool no_xp = mons->has_ench(ENCH_ABJ) || !experience || mons->has_ench(ENCH_FAKE_ABJURATION);
     const bool already_got_half_xp = testbits(mons->flags, MF_GOT_HALF_XP);
     const int half_xp = (experience + 1) / 2;
-
-    if (created_friendly || was_neutral || no_xp)
-        return 0; // No xp if monster was created friendly or summoned.
 
     if (!mons->damage_total)
     {
@@ -370,7 +358,7 @@ static void _give_player_experience(int experience, killer_type killer,
     PlaceInfo  delta;
 
     delta.mon_kill_num[kc]++;
-    delta.mon_kill_exp       += exp_gain;
+    delta.mon_kill_exp += exp_gain;
 
     you.global_info += delta;
     you.global_info.assert_validity();
@@ -430,8 +418,7 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
 {
     // Under Gozag, monsters turn into gold on death.
     bool goldify = in_good_standing(GOD_GOZAG)
-                   && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
-                   && !mons_is_conjured(mons->type);
+        && !mons_class_gives_xp(mons->type) && !mons_is_conjured(mons->type);
 
     // The game can attempt to place a corpse for an out-of-bounds monster
     // if a shifter turns into a giant spore and explodes. In this
@@ -1387,7 +1374,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
 }
 
 static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
-                        bool summoned)
+                               bool summoned)
 {
     // Chaos spawn always leave behind a cloud of chaos.
     if (mons->type == MONS_CHAOS_SPAWN)
@@ -1813,21 +1800,17 @@ int monster_die(monster* mons, killer_type killer,
     const bool summoned      = mons->is_summoned(&duration);
     const int monster_killed = mons->mindex();
     const bool hard_reset    = testbits(mons->flags, MF_HARD_RESET);
-    bool timeout             = killer == KILL_TIMEOUT;
-    const bool gives_xp      = (!summoned && !mons_class_flag(mons->type,
-                                M_NO_EXP_GAIN));
-
-    bool drop_items    = !hard_reset;
-
-    const bool mons_reset(killer == KILL_RESET || killer == KILL_DISMISSED);
-
-    bool fake_abjuration = (mons->has_ench(ENCH_FAKE_ABJURATION));
-
+    const bool timeout       = killer == KILL_TIMEOUT;
+    const bool fake_abjure   = mons->has_ench(ENCH_FAKE_ABJURATION);
+    const bool gives_player_xp = mons_gives_xp(mons, &you);
+    bool drop_items          = !hard_reset;
     const bool submerged     = mons->submerged();
-
     bool in_transit          = false;
-    bool was_banished        = (killer == KILL_BANISHED);
-
+    const bool was_banished  = (killer == KILL_BANISHED);
+    const bool mons_reset    = (killer == KILL_RESET
+                                || killer == KILL_DISMISSED);
+    const bool leaves_corpse = !summoned && !fake_abjure && !timeout
+                               && !mons_reset;
     // Award experience for suicide if the suicide was caused by the
     // player.
     if (MON_KILL(killer) && monster_killed == killer_index)
@@ -1993,7 +1976,8 @@ int monster_die(monster* mons, killer_type killer,
                 killer = KILL_RESET;
         }
 
-        if (was_banished && !summoned_it && !hard_reset && mons->has_ench(ENCH_ABJ))
+        if (was_banished && !summoned_it && !hard_reset
+            && mons->has_ench(ENCH_ABJ))
         {
             if (is_unrandom_artefact(mitm[w_idx]))
                 set_unique_item_status(mitm[w_idx], UNIQ_LOST_IN_ABYSS);
@@ -2003,7 +1987,8 @@ int monster_die(monster* mons, killer_type killer,
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE)
     {
-        if (!silent && !mons_reset && !mons->has_ench(ENCH_SEVERED) && !was_banished)
+        if (!silent && !mons_reset && !mons->has_ench(ENCH_SEVERED)
+            && !was_banished)
         {
             if (you.can_see(mons))
             {
@@ -2069,18 +2054,14 @@ int monster_die(monster* mons, killer_type killer,
                                && mons_near(mons)
                                && mons->visible_to(&you);
     const bool exploded      = mons->flags & MF_EXPLODE_KILL;
-
-    const bool created_friendly = testbits(mons->flags, MF_NO_REWARD);
-    const bool was_neutral = testbits(mons->flags, MF_WAS_NEUTRAL);
     bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = mons->holiness();
 
     // Adjust song of slaying bonus. Kills by relevant avatars are adjusted by
     // now to KILL_YOU and are counted.
-    if (killer == KILL_YOU
-        && you.duration[DUR_SONG_OF_SLAYING]
-        && good_kill
-        && !was_neutral)
+    if (you.duration[DUR_SONG_OF_SLAYING]
+        && killer == KILL_YOU
+        && gives_player_xp)
     {
         int sos_bonus = you.props[SONG_OF_SLAYING_KEY].get_int();
         mon_threat_level_type threat = mons_threat_level(mons, true);
@@ -2094,8 +2075,6 @@ int monster_die(monster* mons, killer_type killer,
             you.props[SONG_OF_SLAYING_KEY] = sos_bonus + 1;
         }
     }
-
-    const bool good_kill   = gives_xp && !created_friendly;
 
     switch (killer)
     {
@@ -2122,20 +2101,26 @@ int monster_die(monster* mons, killer_type killer,
                                                          : "kill",
                          mons->name(DESC_THE).c_str());
                 }
-
-                if ((created_friendly || was_neutral) && gives_xp)
+                // If this monster would otherwise give xp but didn't because
+                // it grants no reward or was neutral, give a message.
+                if (!gives_player_xp
+                    && mons_class_gives_xp(mons->type)
+                    && !summoned
+                    && !fake_abjure)
+                {
                     mpr("That felt strangely unrewarding.");
+                }
             }
 
             // Killing triggers hints mode lesson.
-            if (gives_xp)
+            if (gives_player_xp)
                 _hints_inspect_kill();
 
-            _fire_kill_conducts(*mons, killer, killer_index, good_kill);
+            _fire_kill_conducts(*mons, killer, killer_index, gives_player_xp);
 
             // Divine health and mana restoration doesn't happen when
             // killing born-friendly monsters.
-            if (good_kill
+            if (gives_player_xp
                 && (you_worship(GOD_MAKHLEB)
                     || you_worship(GOD_VEHUMET)
                     || you_worship(GOD_SHINING_ONE)
@@ -2150,7 +2135,7 @@ int monster_die(monster* mons, killer_type killer,
                 {
                 case GOD_MAKHLEB:
                     hp_heal = mons->get_experience_level()
-                              + random2(mons->get_experience_level());
+                        + random2(mons->get_experience_level());
                     break;
                 case GOD_SHINING_ONE:
                     hp_heal = random2(1 + 2 * mons->get_experience_level());
@@ -2181,8 +2166,8 @@ int monster_die(monster* mons, killer_type killer,
                 }
             }
 
-            if (good_kill && you_worship(GOD_RU) && you.piety < 200
-                    && one_chance_in(2))
+            if (gives_player_xp && you_worship(GOD_RU) && you.piety < 200
+                && one_chance_in(2))
             {
                 ASSERT(you.props.exists(RU_SACRIFICE_PROGRESS_KEY));
                 int current_progress =
@@ -2191,15 +2176,14 @@ int monster_die(monster* mons, killer_type killer,
             }
 
             // Randomly bless a follower.
-            if (!created_friendly
-                && gives_xp
+            if (gives_player_xp
                 && !mons_is_object(mons->type)
                 && _god_will_bless_follower(mons))
             {
                 bless_follower();
             }
 
-            if (you.duration[DUR_DEATH_CHANNEL] && gives_xp)
+            if (you.duration[DUR_DEATH_CHANNEL] && gives_player_xp)
                 _make_spectral_thing(mons, !death_message);
             break;
         }
@@ -2210,9 +2194,9 @@ int monster_die(monster* mons, killer_type killer,
             if (death_message)
             {
                 const char* msg =
-                    exploded                     ? " is blown up!" :
-                    wounded_damaged(targ_holy)  ? " is destroyed!"
-                                                 : " dies!";
+                    exploded                   ? " is blown up!" :
+                    wounded_damaged(targ_holy) ? " is destroyed!"
+                                               : " dies!";
                 simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
             }
@@ -2220,7 +2204,7 @@ int monster_die(monster* mons, killer_type killer,
             if (crawl_state.game_is_arena())
                 break;
 
-            _fire_kill_conducts(*mons, killer, killer_index, good_kill);
+            _fire_kill_conducts(*mons, killer, killer_index, gives_player_xp);
 
             // No piety loss for friends killed by other monsters.
             // XXX: ^ this comment seems inverted...?
@@ -2240,7 +2224,8 @@ int monster_die(monster* mons, killer_type killer,
             // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being done_good kills. Only
             // affects creatures which were friendly when summoned.
-            if (created_friendly || !gives_xp || !pet_kill
+            if (!gives_player_xp
+                || !pet_kill
                 || !anon && invalid_monster_index(killer_index))
             {
                 break;
@@ -2250,7 +2235,6 @@ int monster_die(monster* mons, killer_type killer,
             if (!anon)
             {
                 killer_mon = &menv[killer_index];
-
                 // If the killer is already dead, treat it like an
                 // anonymous monster.
                 if (killer_mon->type == MONS_NO_MONSTER)
@@ -2276,7 +2260,7 @@ int monster_die(monster* mons, killer_type killer,
         case KILL_MISCAST:
             if (death_message)
             {
-                if (fake_abjuration)
+                if (fake_abjure)
                 {
                     // Sticks to Snakes
                     if (mons_genus(mons->type) == MONS_SNAKE)
@@ -2515,13 +2499,12 @@ int monster_die(monster* mons, killer_type killer,
 
     if (!wizard && !submerged && !was_banished)
     {
-        _monster_die_cloud(mons, !mons_reset && !fake_abjuration && !unsummoned
-                                 && !timeout, silent, summoned);
+        _monster_die_cloud(mons, !fake_abjure && !timeout && !mons_reset,
+                           silent, summoned);
     }
 
     int corpse = -1;
-    if (!mons_reset && !summoned && !fake_abjuration && !unsummoned
-        && !timeout && !was_banished && !spectralised)
+    if (leaves_corpse && !was_banished && !spectralised)
     {
         // Have to add case for disintegration effect here? {dlb}
         int corpse2 = -1;
@@ -2536,24 +2519,32 @@ int monster_die(monster* mons, killer_type killer,
             corpse = corpse2;
     }
 
-    if (!mons_reset && !summoned && !fake_abjuration && !unsummoned
-        && !timeout && !was_banished)
-
-    // Monster Powered by Death. Nearby putrid demonspawn monsters get healed
-    for (monster_near_iterator mi(mons->pos()); mi; ++mi)
+    const unsigned int player_xp = gives_player_xp
+        ? _calc_player_experience(mons) : 0;
+    const unsigned int monster_xp = _calc_monster_experience(mons, killer,
+                                                             killer_index);
+    // Monster Powered by Death. Nearby putrid demonspawn monsters
+    // get healed when any xp-granting kill occurs.
+    if (gives_player_xp || monster_xp)
     {
-        if ((*mi)->alive()
-            && mons_is_demonspawn((*mi)->type)
-            && draco_or_demonspawn_subspecies(*mi) == MONS_PUTRID_DEMONSPAWN)
+        for (monster_near_iterator mi(mons->pos()); mi; ++mi)
         {
-            // Heal 20hp on average.
-            if ((*mi)->heal(8 + random2avg(25, 2)))
-                simple_monster_message(*mi, " regenerates before your eyes!");
+            if ((*mi)->alive()
+                && mons_is_demonspawn((*mi)->type)
+                && draco_or_demonspawn_subspecies(*mi) == MONS_PUTRID_DEMONSPAWN)
+            {
+                // Heal 20hp on average.
+                if ((*mi)->heal(8 + random2avg(25, 2)))
+                {
+                    simple_monster_message(*mi, " regenerates before your"
+                                           " eyes!");
+                }
+            }
         }
     }
 
     // Player Powered by Death
-    if (player_mutation_level(MUT_POWERED_BY_DEATH)
+    if (gives_player_xp && player_mutation_level(MUT_POWERED_BY_DEATH)
         && (killer == KILL_YOU
             || killer == KILL_YOU_MISSILE
             || killer == KILL_YOU_CONF
@@ -2566,12 +2557,8 @@ int monster_die(monster* mons, killer_type killer,
         if (pbd_dur * BASELINE_DELAY > you.duration[DUR_POWERED_BY_DEATH])
             you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
 
-        // Maybe increase strength. The chance decreases with number of
-        // existing stacks. Chance is:
-        // (0->1) 100%, (1->2) 90%, 80%, ...
-        // The increase amount scales with mutation level.
-        // This implies a maximum strength of 10/11/12, though you'd have to be
-        // lucky to cap out!
+        // Maybe increase strength. The chance decreases with number
+        // of existing stacks.
         if (x_chance_in_y(10 - pbd_str, 10))
         {
             const int pbd_inc = random_range(1, pbd_level);
@@ -2581,26 +2568,14 @@ int monster_die(monster* mons, killer_type killer,
         }
     }
 
-
-    unsigned int player_exp = 0, monster_exp = 0;
-    if (!mons_reset && !fake_abjuration && !timeout && !unsummoned)
-    {
-        player_exp = _calc_player_experience(mons);
-        monster_exp = _calc_monster_experience(mons, killer, killer_index);
-    }
-
-    if (!mons_reset && !fake_abjuration && !crawl_state.game_is_arena()
-        && !unsummoned && !timeout && !in_transit)
-    {
+    if (!crawl_state.game_is_arena() && leaves_corpse && !in_transit)
         you.kills->record_kill(mons, killer, pet_kill);
-    }
 
     if (fake)
     {
         if (corpse != -1 && _reaping(mons))
             corpse = -1;
-
-        _give_experience(player_exp, monster_exp, killer, killer_index,
+        _give_experience(player_xp, monster_xp, killer, killer_index,
                          pet_kill, was_visible);
         crawl_state.dec_mon_acting(mons);
 
@@ -2631,10 +2606,7 @@ int monster_die(monster* mons, killer_type killer,
         mons->destroy_inventory();
     }
 
-    if (!silent && !wizard && !mons_reset && corpse != -1
-        && !fake_abjuration
-        && !timeout
-        && !unsummoned
+    if (!silent && !wizard && leaves_corpse && corpse != -1
         && mons->props.exists(ORIGINAL_TYPE_KEY))
     {
         const monster_type orig =
@@ -2697,12 +2669,8 @@ int monster_die(monster* mons, killer_type killer,
         update_screen();
     }
 
-    if (gives_xp)
-    {
-        _give_experience(player_exp, monster_exp, killer, killer_index,
-                         pet_kill, was_visible);
-    }
-
+    _give_experience(player_xp, monster_xp, killer, killer_index, pet_kill,
+                     was_visible);
     return corpse;
 }
 
