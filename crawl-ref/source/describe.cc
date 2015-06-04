@@ -797,18 +797,24 @@ void append_weapon_stats(string &description, const item_def &item)
     const int ammo_type = fires_ammo_type(item);
     const int ammo_dam = ammo_type == MI_NONE ? 0 :
                                                 ammo_type_damage(ammo_type);
+    const skill_type skill = item_attack_skill(item);
+    const float skill_level = (float) you.skill(skill, 10) / 10;
+
     description += "Base damage: ";
     _append_value(description, base_dam + ammo_dam, false);
     description += "  ";
-
     description += "Base attack delay: ";
-    _append_value(description, property(item, PWPN_SPEED) / 10.0f, false);
-    description += "  ";
+    _append_value(description, (float) property(item, PWPN_SPEED) / 10, false);
+    description += "\n";
+    description += "This weapon's minimum attack delay of ";
+    _append_value(description, (float) weapon_min_delay(item) / 10, false);
+    description += " is reached at skill level ";
+    _append_value(description, weapon_min_delay_skill(item), false);
+    description += ". (Your skill: ";
+    _append_value(description, skill_level, false);
+    description += ")";
 
-    description += "Minimum delay: ";
-    _append_value(description, weapon_min_delay(item) / 10.0f, false);
-
-    if (item_attack_skill(item) == SK_SLINGS)
+    if (skill == SK_SLINGS)
     {
         description += make_stringf("\nFiring bullets:    Base damage: %d",
                                     base_dam +
