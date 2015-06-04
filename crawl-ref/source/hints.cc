@@ -160,7 +160,7 @@ static void _print_hints_menu(hints_types type)
 }
 
 // Hints mode selection screen and choice.
-void pick_hints(newgame_def* choice)
+void pick_hints(newgame_def& choice)
 {
 again:
     clrscr();
@@ -196,11 +196,11 @@ again:
         if (keyn >= 'a' && keyn <= 'a' + HINT_TYPES_NUM - 1)
         {
             Hints.hints_type = keyn - 'a';
-            choice->species  = _get_hints_species(Hints.hints_type);
-            choice->job = _get_hints_job(Hints.hints_type);
+            choice.species  = _get_hints_species(Hints.hints_type);
+            choice.job = _get_hints_job(Hints.hints_type);
             // easiest choice for fighters
-            choice->weapon = choice->job == JOB_HUNTER ? WPN_SHORTBOW
-                                                       : WPN_HAND_AXE;
+            choice.weapon = choice.job == JOB_HUNTER ? WPN_SHORTBOW
+                                                     : WPN_HAND_AXE;
 
             return;
         }

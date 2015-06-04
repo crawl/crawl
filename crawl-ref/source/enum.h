@@ -3946,6 +3946,7 @@ enum skill_type
     SK_COLUMN_BREAK,                   // used for skill output
     SK_TITLE,                          // used for skill output
     SK_NONE,
+    SK_WEAPON,                         // used in character generation
 };
 
 enum skill_menu_state
