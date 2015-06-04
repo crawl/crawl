@@ -620,16 +620,6 @@ IDEF(hands)
     return 1;
 }
 
-IDEF(snakable)
-{
-    if (!item || !item->defined())
-        return 0;
-
-    lua_pushboolean(ls, item_is_snakable(*item));
-
-    return 1;
-}
-
 IDEF(god_gift)
 {
     if (!item || !item->defined())
@@ -1225,7 +1215,6 @@ static ItemAccessor item_attrs[] =
 {
     { "artefact",          l_item_artefact },
     { "branded",           l_item_branded },
-    { "snakable",          l_item_snakable },
     { "god_gift",          l_item_god_gift },
     { "fully_identified",  l_item_fully_identified },
     { "plus",              l_item_plus },

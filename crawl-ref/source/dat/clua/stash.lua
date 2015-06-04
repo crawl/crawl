@@ -13,7 +13,6 @@
 --               scroll, jewellery, potion, book, magical staff, orb, misc,
 --               <armourtype> armour
 -- { <ego> } - short item ego description: rC+, rPois, SInv, freeze etc.
--- {stick} for items suitable for "sticks to snakes"
 -- {god gift} for god gifts
 -- {fruit} for fruit
 --
@@ -37,10 +36,6 @@ function ch_stash_search_annotate_item(it)
     annot = annot .. "{artefact} {artifact} "
   elseif it.branded then
     annot = annot .. "{ego} {branded} "
-  end
-
-  if it.snakable then
-    annot = annot .. "{stick} "
   end
 
   if it.god_gift then
