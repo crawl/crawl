@@ -28,6 +28,7 @@
 #include "errors.h"
 #include "files.h"
 #include "itemname.h"
+#include "jobs.h"
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
@@ -182,6 +183,7 @@ void run_tests()
     _run_test("mon-spell", debug_monspells);
     _run_test("coordit", coordit_tests);
     _run_test("makename", make_name_tests);
+    _run_test("job-data", debug_jobdata);
 
     // Get a list of Lua files in test.
     {

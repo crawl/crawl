@@ -35,73 +35,6 @@ static void _init_player()
     dlua.callfn("dgn_clear_data", "");
 }
 
-// Randomly boost stats a number of times.
-static void _wanderer_assign_remaining_stats(int points_left)
-{
-    while (points_left > 0)
-    {
-        // Stats that are already high will be chosen half as often.
-        stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
-        if (you.base_stats[stat] > 17 && coinflip())
-            continue;
-
-        you.base_stats[stat]++;
-        points_left--;
-    }
-}
-
-static void _jobs_stat_init(job_type which_job)
-{
-    int s = 0;   // strength mod
-    int i = 0;   // intelligence mod
-    int d = 0;   // dexterity mod
-
-    // Note: Wanderers are correct, they've got a challenging background. - bwr
-    switch (which_job)
-    {
-    case JOB_FIGHTER:           s =  8; i =  0; d =  4; break;
-    case JOB_BERSERKER:         s =  9; i = -1; d =  4; break;
-    case JOB_GLADIATOR:         s =  7; i =  0; d =  5; break;
-
-    case JOB_SKALD:             s =  4; i =  4; d =  4; break;
-    case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; break;
-    case JOB_ABYSSAL_KNIGHT:    s =  4; i =  4; d =  4; break;
-
-    case JOB_ASSASSIN:          s =  3; i =  3; d =  6; break;
-
-    case JOB_HUNTER:            s =  4; i =  3; d =  5; break;
-    case JOB_WARPER:            s =  3; i =  5; d =  4; break;
-    case JOB_ARCANE_MARKSMAN:   s =  3; i =  5; d =  4; break;
-
-    case JOB_MONK:              s =  3; i =  2; d =  7; break;
-    case JOB_TRANSMUTER:        s =  2; i =  5; d =  5; break;
-
-    case JOB_WIZARD:            s = -1; i = 10; d =  3; break;
-    case JOB_CONJURER:          s =  0; i =  7; d =  5; break;
-    case JOB_ENCHANTER:         s =  0; i =  7; d =  5; break;
-    case JOB_FIRE_ELEMENTALIST: s =  0; i =  7; d =  5; break;
-    case JOB_ICE_ELEMENTALIST:  s =  0; i =  7; d =  5; break;
-    case JOB_AIR_ELEMENTALIST:  s =  0; i =  7; d =  5; break;
-    case JOB_EARTH_ELEMENTALIST:s =  0; i =  7; d =  5; break;
-    case JOB_SUMMONER:          s =  0; i =  7; d =  5; break;
-    case JOB_VENOM_MAGE:        s =  0; i =  7; d =  5; break;
-    case JOB_NECROMANCER:       s =  0; i =  7; d =  5; break;
-
-    case JOB_WANDERER:
-        // Wanderers get their stats randomly distributed.
-        _wanderer_assign_remaining_stats(12);           break;
-
-    case JOB_ARTIFICER:         s =  3; i =  4; d =  5; break;
-    default:                    s =  0; i =  0; d =  0; break;
-    }
-
-    you.base_stats[STAT_STR] += s;
-    you.base_stats[STAT_INT] += i;
-    you.base_stats[STAT_DEX] += d;
-
-    you.hp_max_adj_perm = 0;
-}
-
 // Make sure no stats are unacceptably low
 // (currently possible only for GhBe - 1KB)
 static void _unfocus_stats()
@@ -213,8 +146,9 @@ item_def* newgame_make_item(object_class_type base,
         return nullptr;
     }
 
-    if (item.base_type == OBJ_WEAPONS && can_wield(&item, false, false)
+    if ((item.base_type == OBJ_WEAPONS && can_wield(&item, false, false)
         || item.base_type == OBJ_ARMOUR && can_wear_armour(item, false, false))
+        && you.equip[get_item_slot(item)] == -1)
     {
         you.equip[get_item_slot(item)] = slot;
     }
@@ -226,6 +160,9 @@ item_def* newgame_make_item(object_class_type base,
         _autopickup_ammo(MI_STONE);
     else if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_CHANGES)
         _autopickup_ammo(MI_ARROW);
+    // You probably want to pick up both.
+    if (item.is_type(OBJ_MISSILES, MI_SLING_BULLET))
+        _autopickup_ammo(MI_STONE);
 
     origin_set_startequip(item);
 
@@ -242,7 +179,7 @@ item_def* newgame_make_item(object_class_type base,
     return &item;
 }
 
-static void _give_ranged_weapon(weapon_type weapon, int plus, int skill)
+static void _give_ranged_weapon(weapon_type weapon, int plus)
 {
     ASSERT(weapon != NUM_WEAPONS);
 
@@ -256,23 +193,18 @@ static void _give_ranged_weapon(weapon_type weapon, int plus, int skill)
         else
             newgame_make_item(OBJ_MISSILES, MI_JAVELIN, 5 + plus);
         newgame_make_item(OBJ_MISSILES, MI_THROWING_NET, 2);
-        you.skills[SK_THROWING] = skill;
         break;
     case WPN_SHORTBOW:
         newgame_make_item(OBJ_WEAPONS, WPN_SHORTBOW, 1, plus);
         newgame_make_item(OBJ_MISSILES, MI_ARROW, 20);
-        you.skills[SK_BOWS] = skill;
         break;
     case WPN_HAND_CROSSBOW:
         newgame_make_item(OBJ_WEAPONS, WPN_HAND_CROSSBOW, 1, plus);
         newgame_make_item(OBJ_MISSILES, MI_BOLT, 20);
-        you.skills[SK_CROSSBOWS] = skill;
         break;
     case WPN_HUNTING_SLING:
         newgame_make_item(OBJ_WEAPONS, WPN_HUNTING_SLING, 1, plus);
         newgame_make_item(OBJ_MISSILES, MI_SLING_BULLET, 20);
-        you.skills[SK_SLINGS] = skill;
-        _autopickup_ammo(MI_STONE);
         break;
     default:
         break;
@@ -281,68 +213,14 @@ static void _give_ranged_weapon(weapon_type weapon, int plus, int skill)
 
 static void _give_items_skills(const newgame_def& ng)
 {
-    int weap_skill = 0;
-
     switch (you.char_class)
     {
-    case JOB_FIGHTER:
-        // Equipment.
-        newgame_make_item(OBJ_WEAPONS, ng.weapon);
-
-        newgame_make_item(OBJ_ARMOUR, ARM_SCALE_MAIL);
-        newgame_make_item(OBJ_ARMOUR, ARM_SHIELD);
-        newgame_make_item(OBJ_POTIONS, POT_MIGHT);
-
-        // Skills.
-        you.skills[SK_FIGHTING] = 3;
-        you.skills[SK_SHIELDS]  = 3;
-        you.skills[SK_ARMOUR]   = 3;
-
-        weap_skill = (you.species == SP_FELID) ? 4 : 2;
-
-        break;
-
-    case JOB_GLADIATOR:
-        // Equipment.
-        newgame_make_item(OBJ_WEAPONS, ng.weapon);
-
-        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
-        newgame_make_item(OBJ_ARMOUR, ARM_HELMET);
-        newgame_make_item(OBJ_MISSILES, MI_THROWING_NET, 3);
-
-        // Skills.
-        you.skills[SK_FIGHTING] = 2;
-        you.skills[SK_THROWING] = 2;
-        you.skills[SK_DODGING]  = 3;
-        weap_skill = 3;
-        break;
-
-    case JOB_MONK:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-
-        you.skills[SK_FIGHTING]       = 3;
-        you.skills[SK_UNARMED_COMBAT] = 4;
-        you.skills[SK_DODGING]        = 3;
-        you.skills[SK_STEALTH]        = 2;
-        break;
-
     case JOB_BERSERKER:
         you.religion = GOD_TROG;
         you.piety = 35;
 
-        // WEAPONS
-        newgame_make_item(OBJ_WEAPONS, ng.weapon);
-
-        // ARMOUR
-        newgame_make_item(OBJ_ARMOUR, ARM_ANIMAL_SKIN);
-
-        // SKILLS
-        you.skills[SK_FIGHTING] = 3;
-        you.skills[SK_DODGING]  = 2;
-        weap_skill = 3;
-
         if (you_can_wear(EQ_BODY_ARMOUR))
-            you.skills[SK_ARMOUR] = 2;
+            you.skills[SK_ARMOUR] += 2;
         else
         {
             you.skills[SK_DODGING]++;
@@ -356,17 +234,10 @@ static void _give_items_skills(const newgame_def& ng)
         you.piety = 100;
         you.gift_timeout = max(5, random2(40) + random2(40));
 
-        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, 0, SPWPN_CHAOS);
-        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR, 1, 2);
-
-        you.skills[SK_FIGHTING] = 3;
-        you.skills[SK_ARMOUR]   = 1;
-        you.skills[SK_DODGING]  = 1;
         if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
             you.skills[SK_DODGING]++;
         else
             you.skills[SK_ARMOUR]++;
-        weap_skill = 3;
         break;
 
     case JOB_ABYSSAL_KNIGHT:
@@ -375,257 +246,36 @@ static void _give_items_skills(const newgame_def& ng)
             you.chapter = CHAPTER_POCKET_ABYSS;
         you.piety = 38;
 
-        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
-        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
-
-        you.skills[SK_FIGHTING]    = 3;
-        you.skills[SK_ARMOUR]      = 1;
-        you.skills[SK_DODGING]     = 1;
         if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
             you.skills[SK_DODGING]++;
         else
             you.skills[SK_ARMOUR]++;
 
-        you.skills[SK_INVOCATIONS] = 2;
-        weap_skill = 2;
-        break;
-
-    case JOB_SKALD:
-        newgame_make_item(OBJ_WEAPONS, ng.weapon);
-        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
-        newgame_make_item(OBJ_BOOKS, BOOK_BATTLE);
-
-        you.skills[SK_FIGHTING]     = 2;
-        you.skills[SK_ARMOUR]       = 1;
-        you.skills[SK_DODGING]      = 1;
-        you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_CHARMS]       = 3;
-        weap_skill = 2;
-        break;
-
-    case JOB_WARPER:
-        newgame_make_item(OBJ_WEAPONS, ng.weapon);
-
-        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
-        newgame_make_item(OBJ_BOOKS, BOOK_SPATIAL_TRANSLOCATIONS);
-
-        // One free escape.
-        newgame_make_item(OBJ_SCROLLS, SCR_BLINKING);
-        newgame_make_item(OBJ_MISSILES, MI_TOMAHAWK, 5, 0, SPMSL_DISPERSAL);
-
-        you.skills[SK_FIGHTING]       = 2;
-        you.skills[SK_ARMOUR]         = 1;
-        you.skills[SK_DODGING]        = 2;
-        you.skills[SK_SPELLCASTING]   = 2;
-        you.skills[SK_TRANSLOCATIONS] = 3;
-        you.skills[SK_THROWING]       = 1;
-        weap_skill = 2;
-    break;
-
-    case JOB_ARCANE_MARKSMAN:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        _give_ranged_weapon(ng.weapon, 0, 2);
-
-        newgame_make_item(OBJ_BOOKS, BOOK_DEBILITATION);
-
-        you.skills[SK_FIGHTING]                   = 1;
-        you.skills[SK_DODGING]                    = 2;
-        you.skills[SK_SPELLCASTING]               = 1;
-        you.skills[SK_HEXES]                      = 3;
-        break;
-
-    case JOB_WIZARD:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_ARMOUR, ARM_HAT);
-
-        newgame_make_item(OBJ_BOOKS, BOOK_MINOR_MAGIC);
-
-        you.skills[SK_DODGING]        = 2;
-        you.skills[SK_STEALTH]        = 2;
-        you.skills[SK_SPELLCASTING]   = 3;
-        you.skills[SK_TRANSLOCATIONS] = 1;
-        you.skills[SK_CONJURATIONS]   = 1;
-        you.skills[SK_SUMMONINGS]     = 1;
-        break;
-
-    case JOB_CONJURER:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-
-        newgame_make_item(OBJ_BOOKS, BOOK_CONJURATIONS);
-
-        you.skills[SK_CONJURATIONS] = 4;
-        you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_DODGING]      = 2;
-        you.skills[SK_STEALTH]      = 2;
-        break;
-
-    case JOB_ENCHANTER:
-        newgame_make_item(OBJ_WEAPONS, WPN_DAGGER, 1, +1);
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE, 1, +1);
-        newgame_make_item(OBJ_BOOKS, BOOK_MALEDICT);
-
-        weap_skill = 1;
-        you.skills[SK_HEXES]        = 3;
-        you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_DODGING]      = 2;
-        you.skills[SK_STEALTH]      = 3;
-        break;
-
-    case JOB_SUMMONER:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_CALLINGS);
-
-        you.skills[SK_SUMMONINGS]   = 4;
-        you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_DODGING]      = 2;
-        you.skills[SK_STEALTH]      = 2;
-        break;
-
-    case JOB_NECROMANCER:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_NECROMANCY);
-
-        you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_NECROMANCY]   = 4;
-        you.skills[SK_DODGING]      = 2;
-        you.skills[SK_STEALTH]      = 2;
-        break;
-
-    case JOB_TRANSMUTER:
-        // Some sticks for sticks to snakes.
-        newgame_make_item(OBJ_MISSILES, MI_ARROW, 12);
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_CHANGES);
-
-        you.skills[SK_FIGHTING]       = 1;
-        you.skills[SK_UNARMED_COMBAT] = 3;
-        you.skills[SK_DODGING]        = 2;
-        you.skills[SK_SPELLCASTING]   = 2;
-        you.skills[SK_TRANSMUTATIONS] = 2;
-        break;
-
-    case JOB_FIRE_ELEMENTALIST:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_FLAMES);
-
-        you.skills[SK_CONJURATIONS] = 1;
-        you.skills[SK_FIRE_MAGIC]   = 3;
-        you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_DODGING]      = 2;
-        you.skills[SK_STEALTH]      = 2;
-        break;
-
-    case JOB_ICE_ELEMENTALIST:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_FROST);
-
-        you.skills[SK_CONJURATIONS] = 1;
-        you.skills[SK_ICE_MAGIC]    = 3;
-        you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_DODGING]      = 2;
-        you.skills[SK_STEALTH]      = 2;
-        break;
-
-    case JOB_AIR_ELEMENTALIST:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_AIR);
-
-        you.skills[SK_CONJURATIONS] = 1;
-        you.skills[SK_AIR_MAGIC]    = 3;
-        you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_DODGING]      = 2;
-        you.skills[SK_STEALTH]      = 2;
-        break;
-
-    case JOB_EARTH_ELEMENTALIST:
-        newgame_make_item(OBJ_MISSILES, MI_STONE, 20);
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_GEOMANCY);
-
-        you.skills[SK_TRANSMUTATIONS] = 1;
-        you.skills[SK_EARTH_MAGIC]    = 3;
-        you.skills[SK_SPELLCASTING]   = 2;
-        you.skills[SK_DODGING]        = 2;
-        you.skills[SK_STEALTH]        = 2;
-        break;
-
-    case JOB_VENOM_MAGE:
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_BOOKS, BOOK_YOUNG_POISONERS);
-
-        you.skills[SK_POISON_MAGIC] = 4;
-        you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_DODGING]      = 2;
-        you.skills[SK_STEALTH]      = 2;
-        break;
-
-    case JOB_ASSASSIN:
-        newgame_make_item(OBJ_WEAPONS, WPN_DAGGER, 1, +2);
-        newgame_make_item(OBJ_WEAPONS, WPN_BLOWGUN);
-
-        newgame_make_item(OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(OBJ_ARMOUR, ARM_CLOAK);
-
-        newgame_make_item(OBJ_MISSILES, MI_NEEDLE, 8, 0, SPMSL_POISONED);
-        newgame_make_item(OBJ_MISSILES, MI_NEEDLE, 2, 0, SPMSL_CURARE);
-
-        weap_skill = 2;
-        you.skills[SK_FIGHTING]     = 2;
-        you.skills[SK_DODGING]      = 1;
-        you.skills[SK_STEALTH]      = 4;
-        you.skills[SK_THROWING]     = 2;
-        break;
-
-    case JOB_HUNTER:
-        newgame_make_item(OBJ_WEAPONS, WPN_SHORT_SWORD);
-        _give_ranged_weapon(ng.weapon, 1, 4);
-
-        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
-
-        // Skills.
-        you.skills[SK_FIGHTING] = 2;
-        you.skills[SK_DODGING]  = 2;
-        you.skills[SK_STEALTH]  = 1;
         break;
 
     case JOB_WANDERER:
         create_wanderer();
         break;
 
-    case JOB_ARTIFICER:
-        // Equipment. Short sword, wands, and armour or robe.
-        newgame_make_item(OBJ_WEAPONS, WPN_SHORT_SWORD);
-
-        newgame_make_item(OBJ_WANDS, WAND_FLAME, 1, 15);
-        newgame_make_item(OBJ_WANDS, WAND_ENSLAVEMENT, 1, 15);
-        newgame_make_item(OBJ_WANDS, WAND_RANDOM_EFFECTS, 1, 15);
-
-        newgame_make_item(OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
-
-        // Skills
-        you.skills[SK_EVOCATIONS]  = 3;
-        you.skills[SK_DODGING]     = 2;
-        you.skills[SK_FIGHTING]    = 1;
-        weap_skill                 = 1;
-        you.skills[SK_STEALTH]     = 1;
-        break;
-
     default:
         break;
     }
 
+    if (you.char_class == JOB_ABYSSAL_KNIGHT)
+        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
+    else if (you.char_class == JOB_CHAOS_KNIGHT)
+        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, 0, SPWPN_CHAOS);
+    else if (job_gets_ranged_weapons(you.char_class))
+        _give_ranged_weapon(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
+    else if (job_has_weapon_choice(you.char_class))
+        newgame_make_item(OBJ_WEAPONS, ng.weapon);
+
+    give_job_equipment(you.char_class);
+    give_job_skills(you.char_class);
+
     // Deep Dwarves get a wand of heal wounds (5).
     if (you.species == SP_DEEP_DWARF)
         newgame_make_item(OBJ_WANDS, WAND_HEAL_WOUNDS, 1, 5);
-
-    if (weap_skill)
-    {
-        item_def *weap = you.weapon();
-        if (!weap)
-            you.skills[SK_UNARMED_COMBAT] = weap_skill;
-        else
-            you.skills[item_attack_skill(*weap)] = weap_skill;
-    }
 
     if (you.species == SP_FELID)
     {
@@ -792,7 +442,7 @@ static void _setup_generic(const newgame_def& ng)
     // on species vision. Currently, all species see out to 8 squares.
     update_vision_range();
 
-    _jobs_stat_init(you.char_class);
+    job_stat_init(you.char_class);
 
     _unfocus_stats();
 

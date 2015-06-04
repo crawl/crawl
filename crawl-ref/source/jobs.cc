@@ -2,122 +2,183 @@
 
 #include "jobs.h"
 
+#include "enum.h"
+#include "errors.h"
+#include "itemprop.h"
 #include "libutil.h"
+#include "mapdef.h"
+#include "ng-setup.h"
+#include "player.h"
 #include "stringutil.h"
 
-static const char * Job_Abbrev_List[] =
-    { "Fi", "Wz",
-#if TAG_MAJOR_VERSION == 34
-      "Pr",
-#endif
-      "Gl", "Ne",
-      "As", "Be", "Hu",
-      "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Sk",
-      "VM",
-      "CK", "Tm",
-#if TAG_MAJOR_VERSION == 34
-      "He", "St",
-#endif
-      "Mo", "Wr", "Wn", "Ar", "AM",
-#if TAG_MAJOR_VERSION == 34
-      "DK",
-#endif
-      "AK",
-#if TAG_MAJOR_VERSION == 34
-      "Jr",
-#endif
-};
+#include "job-data.h"
 
-static const char * Job_Name_List[] =
-    { "Fighter", "Wizard",
-#if TAG_MAJOR_VERSION == 34
-      "Priest",
-#endif
-      "Gladiator", "Necromancer",
-      "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
-      "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
-      "Earth Elementalist", "Skald",
-      "Venom Mage",
-      "Chaos Knight", "Transmuter",
-#if TAG_MAJOR_VERSION == 34
-      "Healer", "Stalker",
-#endif
-      "Monk", "Warper", "Wanderer", "Artificer", "Arcane Marksman",
-#if TAG_MAJOR_VERSION == 34
-      "Death Knight",
-#endif
-      "Abyssal Knight",
-#if TAG_MAJOR_VERSION == 34
-      "Jester",
-#endif
-};
+static const job_def& _job_def(job_type job)
+{
+    ASSERT_RANGE(job, 0, NUM_JOBS);
+    return job_data.at(job);
+}
 
-const char *get_job_abbrev(int which_job)
+const char *get_job_abbrev(job_type which_job)
 {
     if (which_job == JOB_UNKNOWN)
         return "Un";
-    COMPILE_CHECK(ARRAYSZ(Job_Abbrev_List) == NUM_JOBS);
-    ASSERT_RANGE(which_job, 0, NUM_JOBS);
-
-    return Job_Abbrev_List[which_job];
+    return _job_def(which_job).abbrev;
 }
 
 job_type get_job_by_abbrev(const char *abbrev)
 {
-    int i;
+    for (auto& entry : job_data)
+        if (lowercase_string(abbrev) == lowercase_string(entry.second.abbrev))
+            return entry.first;
 
-    for (i = 0; i < NUM_JOBS; i++)
-    {
-        // This assumes untranslated abbreviations.
-        if (toalower(abbrev[0]) == toalower(Job_Abbrev_List[i][0])
-            && toalower(abbrev[1]) == toalower(Job_Abbrev_List[i][1]))
-        {
-            break;
-        }
-    }
-
-    return (i < NUM_JOBS) ? static_cast<job_type>(i) : JOB_UNKNOWN;
+    return JOB_UNKNOWN;
 }
 
-const char *get_job_name(int which_job)
+const char *get_job_name(job_type which_job)
 {
     if (which_job == JOB_UNKNOWN)
         return "Unemployed";
-    COMPILE_CHECK(ARRAYSZ(Job_Name_List) == NUM_JOBS);
-    ASSERT_RANGE(which_job, 0, NUM_JOBS);
 
-    return Job_Name_List[which_job];
+    return _job_def(which_job).name;
 }
 
 job_type get_job_by_name(const char *name)
 {
-    job_type cl = JOB_UNKNOWN;
+    job_type job = JOB_UNKNOWN;
 
-    string low_name = lowercase_string(name);
+    const string low_name = lowercase_string(name);
 
-    for (int i = 0; i < NUM_JOBS; i++)
+    for (auto& entry : job_data)
     {
-        string low_job = lowercase_string(Job_Name_List[i]);
+        string low_job = lowercase_string(entry.second.name);
 
-        size_t pos = low_job.find(low_name);
+        const size_t pos = low_job.find(low_name);
         if (pos != string::npos)
         {
-            cl = static_cast<job_type>(i);
+            job = entry.first;
             if (!pos)  // prefix takes preference
                 break;
         }
     }
 
-    return cl;
+    return job;
 }
 
-// Determines if a job is valid for a new game.
-bool is_starting_job(job_type job)
+// Must be called after species_stat_init for the wanderer formula to work.
+void job_stat_init(job_type job)
 {
-    return job >= 0 && job < NUM_JOBS
-#if TAG_MAJOR_VERSION == 34
-        && job != JOB_STALKER && job != JOB_JESTER && job != JOB_PRIEST
-        && job != JOB_DEATH_KNIGHT && job != JOB_HEALER
-#endif
-        ;
+    you.hp_max_adj_perm = 0;
+
+    you.base_stats[STAT_STR] += _job_def(job).s;
+    you.base_stats[STAT_INT] += _job_def(job).i;
+    you.base_stats[STAT_DEX] += _job_def(job).d;
+
+    if (job == JOB_WANDERER)
+    {
+        for (int i = 0; i < 12; i++)
+        {
+            const stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
+            // Stats that are already high will be chosen half as often.
+            if (you.base_stats[stat] > 17 && coinflip())
+            {
+                i--;
+                continue;
+            }
+
+            you.base_stats[stat]++;
+        }
+    }
+}
+
+bool job_has_weapon_choice(job_type job)
+{
+    return _job_def(job).wchoice != WCHOICE_NONE;
+}
+
+bool job_gets_good_weapons(job_type job)
+{
+    return _job_def(job).wchoice == WCHOICE_GOOD;
+}
+
+bool job_gets_ranged_weapons(job_type job)
+{
+    return _job_def(job).wchoice == WCHOICE_RANGED;
+}
+
+void give_job_equipment(job_type job)
+{
+    item_list items;
+    for (const string& it : _job_def(job).equipment)
+        items.add_item(it);
+    for (size_t i = 0; i < items.size(); i++)
+    {
+        const item_spec spec = items.get_item(i);
+        int plus = 0;
+        if (spec.props.exists("charges"))
+            plus = spec.props["charges"];
+        if (spec.props.exists("plus"))
+            plus = spec.props["plus"];
+        newgame_make_item(spec.base_type, spec.sub_type, max(spec.qty, 1),
+                          plus, spec.ego);
+    }
+}
+
+// Must be called after equipment is given for weapon skill to be given.
+void give_job_skills(job_type job)
+{
+    for (const pair<skill_type, int>& entry : _job_def(job).skills)
+    {
+        skill_type skill = entry.first;
+        int amount = entry.second;
+        if (skill == SK_WEAPON)
+        {
+            const item_def *weap = you.weapon();
+            skill = weap ? item_attack_skill(*weap) : SK_UNARMED_COMBAT;
+            //XXX: WTF?
+            if (you.species == SP_FELID && job == JOB_FIGHTER)
+                amount += 2;
+            // Don't give throwing hunters Short Blades skill.
+            if (job_gets_ranged_weapons(job) && !(weap && is_range_weapon(*weap)))
+                skill = SK_THROWING;
+        }
+        you.skills[skill] += amount;
+    }
+}
+
+void debug_jobdata()
+{
+    string fails;
+
+    for (int i = 0; i < NUM_JOBS; i++)
+        if (!job_data.count(static_cast<job_type>(i)))
+            fails += "job number " + to_string(i) + "is not present\n";
+
+    item_list dummy;
+    for (auto& entry : job_data)
+        for (const string& it : entry.second.equipment)
+        {
+            const string error = dummy.add_item(it, false);
+            if (error != "")
+                fails += error + "\n";
+        }
+
+    if (!fails.empty())
+    {
+        fprintf(stderr, "%s", fails.c_str());
+
+        FILE *f = fopen("job-data.out", "w");
+        if (!f)
+            sysfail("can't write test output");
+        fprintf(f, "%s", fails.c_str());
+        fclose(f);
+        fail("job-data errors (dumped to job-data.out)");
+    }
+}
+
+bool job_recommends_species(job_type job, species_type species)
+{
+    return find(_job_def(job).recommended_species.begin(),
+                _job_def(job).recommended_species.end(),
+                species) != _job_def(job).recommended_species.end();
 }
