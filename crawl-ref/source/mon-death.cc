@@ -195,9 +195,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
     const int max_chunks = max_corpse_chunks(corpse.mon_type);
     const int nchunks = stepdown_value(1 + random2(max_chunks), 4, 4, 12, 12);
-    if (corpse.base_type == OBJ_GOLD)
-        corpse.quantity = div_rand_round(corpse.quantity, nchunks);
-    else
+    if (corpse.base_type != OBJ_GOLD)
         blood_spray(where, corpse.mon_type, nchunks * 3); // spray some blood
 
     // Don't let the player evade food conducts by using OOD (!) or /disint
@@ -214,6 +212,8 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
         if (is_bad_food(corpse))
             corpse.flags |= ISFLAG_DROPPED;
     }
+
+    const int total_gold = corpse.quantity;
 
     // spray chunks everywhere!
     for (int ntries = 0, chunks_made = 0;
@@ -240,7 +240,10 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
         dprf("Success");
 
-        copy_item_to_grid(corpse, cp);
+        if (corpse.base_type == OBJ_GOLD)
+            corpse.quantity = div_rand_round(total_gold, nchunks);
+        if (corpse.quantity)
+            copy_item_to_grid(corpse, cp);
     }
 
     return true;
