@@ -1045,10 +1045,7 @@ static bool _box_of_beasts(item_def &box)
     // two rolls to reduce std deviation - +-6 so can get < max even at 27 sk
     const int hd_min = min(27,
                            you.skill(SK_EVOCATIONS) + random2(7) - random2(7));
-    int tier = BT_FIRST;
-    for (; tier < NUM_BEAST_TIERS; ++tier)
-        if (hd_min <= beast_tiers[tier])
-            break;
+    const int tier = mutant_beast_tier(hd_min);
     ASSERT(tier < NUM_BEAST_TIERS);
 
     mgen_data mg = mgen_data(MONS_MUTANT_BEAST,

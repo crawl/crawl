@@ -322,23 +322,6 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
     return false;
 }
 
-/**
- * What mutant beast tier does the given XL (base HD) correspond to?
- *
- * If the given value is between tiers, choose the higher possibility.
- *
- * @param xl    The XL (HD) of the mutant beast in question.
- * @return      The corresponding mutant beast tier (e.g. BT_MATURE).
- */
-static int _mutant_beast_tier(int xl)
-{
-    COMPILE_CHECK(ARRAYSZ(beast_tiers) == NUM_BEAST_TIERS);
-    for (int bt = BT_FIRST; bt < NUM_BEAST_TIERS; ++bt)
-        if (xl <= beast_tiers[bt])
-            return bt;
-    return BT_NONE; // buggy
-}
-
 static void _translate_tentacle_ref(monster_info& mi, const monster* m,
                                     const string &key)
 {
@@ -1055,7 +1038,7 @@ string monster_info::common_name(description_level_type desc) const
     if (type == MONS_MUTANT_BEAST)
     {
         const int xl = props[MUTANT_BEAST_TIER].get_short();
-        const int tier = _mutant_beast_tier(xl);
+        const int tier = mutant_beast_tier(xl);
         ss << _mutant_beast_tier_name(tier) << " ";
         for (auto facet : props[MUTANT_BEAST_FACETS].get_vector())
             ss << _mutant_beast_facet(facet.get_int()); // no space between

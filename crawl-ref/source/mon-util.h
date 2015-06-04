@@ -217,6 +217,8 @@ bool mons_is_draconian_job(monster_type mc);
 bool mons_is_demonspawn_job(monster_type mc);
 bool mons_is_job(monster_type mc);
 
+int mutant_beast_tier(int xl);
+
 int mons_avg_hp(monster_type mc);
 int exper_value(const monster* mon, bool real = true);
 
