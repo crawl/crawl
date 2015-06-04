@@ -1235,12 +1235,12 @@ static int _cloud_damage_output(const actor *actor,
                                 int base_damage,
                                 bool maximum_damage = false)
 {
-    const int resist_adjusted_damage =
-        resist_adjust_damage(actor, flavour, base_damage);
     if (maximum_damage)
-        return resist_adjusted_damage;
+        return resist_adjust_damage(actor, flavour, base_damage);
 
-    return max(0, resist_adjusted_damage - random2(actor->armour_class()));
+    int dam = actor->apply_ac(base_damage);
+    dam = resist_adjust_damage(actor, flavour, dam);
+    return max(0, dam);
 }
 
 /**
