@@ -761,7 +761,7 @@ static string _describe_demon(const string& name, bool flying)
     return description.str();
 }
 
-void append_weapon_stats(string &description, const item_def &item)
+static void _append_weapon_stats(string &description, const item_def &item)
 {
     const int base_dam = property(item, PWPN_DAMAGE);
     const int ammo_type = fires_ammo_type(item);
@@ -769,16 +769,19 @@ void append_weapon_stats(string &description, const item_def &item)
                                                 ammo_type_damage(ammo_type);
     const skill_type skill = item_attack_skill(item);
 
-    description += make_stringf("\n"
-    "Base accuracy: %+d  Base damage: %d  Base attack delay: %.1f\n"
-    "This weapon's minimum attack delay of %.1f is reached at skill level %d.\n"
-    " (Your skill: %.1f)",
+    const string your_skill = crawl_state.need_save ?
+      make_stringf("\n (Your skill: %.1f)", (float) you.skill(skill, 10) / 10)
+      : "";
+    description += make_stringf(
+    "\nBase accuracy: %+d  Base damage: %d  Base attack delay: %.1f"
+    "\nThis weapon's minimum attack delay of %.1f is reached at skill level %d."
+    "%s",
      property(item, PWPN_HIT),
      base_dam + ammo_dam,
      (float) property(item, PWPN_SPEED) / 10,
      (float) weapon_min_delay(item) / 10,
      weapon_min_delay_skill(item),
-     (float) you.skill(skill, 10) / 10);
+     your_skill.c_str());
 
     if (skill == SK_SLINGS)
     {
@@ -824,7 +827,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
     if (verbose)
     {
         description += "\n";
-        append_weapon_stats(description, item);
+        _append_weapon_stats(description, item);
     }
 
     const int spec_ench = (is_artefact(item) || verbose)
@@ -1063,7 +1066,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
 
         description += _handedness_string(item);
 
-        if (!you.could_wield(item, true))
+        if (!you.could_wield(item, true) && crawl_state.need_save)
             description += "\nIt is too large for you to wield.";
     }
 
@@ -1201,38 +1204,6 @@ static string _describe_ammo(const item_def &item)
         }
     }
 
-    append_missile_info(description, item);
-
-    return description;
-}
-
-void append_armour_stats(string &description, const item_def &item)
-{
-    description += "\nBase armour rating: " + to_string(property(item, PARM_AC))
-                   + "       ";
-
-    const int evp = property(item, PARM_EVASION);
-    description += "Encumbrance rating: " + to_string(-evp / 10);
-
-    // only display player-relevant info if the player exists
-    if (crawl_state.need_save && get_armour_slot(item) == EQ_BODY_ARMOUR)
-    {
-        description += make_stringf("\nWearing mundane armour of this type "
-                                    "will give the following: %d AC",
-                                    you.base_ac_from(item));
-    }
-}
-
-void append_shield_stats(string &description, const item_def &item)
-{
-    description += "\nBase shield rating: "
-                   + to_string(property(item, PARM_AC))
-                   + "       Skill to remove penalty: "
-                   + to_string(you.get_shield_skill_to_offset_penalty(item));
-}
-
-void append_missile_info(string &description, const item_def &item)
-{
     const int dam = property(item, PWPN_DAMAGE);
     if (dam)
         description += make_stringf("\nBase damage: %d\n", dam);
@@ -1241,6 +1212,8 @@ void append_missile_info(string &description, const item_def &item)
         description += "\nIt will always be destroyed on impact.";
     else if (!ammo_never_destroyed(item))
         description += "\nIt may be destroyed on impact.";
+
+    return description;
 }
 
 //---------------------------------------------------------------
@@ -1259,13 +1232,27 @@ static string _describe_armour(const item_def &item, bool verbose)
         && item.sub_type != ARM_BUCKLER
         && item.sub_type != ARM_LARGE_SHIELD)
     {
-        description += "\n";
-        append_armour_stats(description, item);
+        const int evp = property(item, PARM_EVASION);
+        description += "\n\nBase armour rating: "
+                     + to_string(property(item, PARM_AC))
+                     + "       Encumbrance rating: "
+                     + to_string(-evp / 10);
+
+        // only display player-relevant info if the player exists
+        if (crawl_state.need_save && get_armour_slot(item) == EQ_BODY_ARMOUR)
+        {
+            description += make_stringf("\nWearing mundane armour of this type "
+                                        "will give the following: %d AC",
+                                        you.base_ac_from(item));
+        }
     }
     else if (verbose)
     {
         description += "\n";
-        append_shield_stats(description, item);
+        description += "\nBase shield rating: "
+                    + to_string(property(item, PARM_AC))
+                    + "       Skill to remove penalty: "
+                    + to_string(you.get_shield_skill_to_offset_penalty(item));
     }
 
     const int ego = get_armour_ego_type(item);
@@ -1890,7 +1877,7 @@ string get_item_description(const item_def &item, bool verbose,
 
         {
             string stats = "\n";
-            append_weapon_stats(stats, item);
+            _append_weapon_stats(stats, item);
             description << stats;
         }
         description << "\n\nIt falls into the 'Maces & Flails' category.";
@@ -1899,7 +1886,7 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_STAVES:
         {
             string stats = "\n";
-            append_weapon_stats(stats, item);
+            _append_weapon_stats(stats, item);
             description << stats;
         }
         description << "\n\nIt falls into the 'Staves' category. ";

@@ -59,11 +59,6 @@ bool describe_item(item_def &item, bool allow_inscribe = false,
 void get_item_desc(const item_def &item, describe_info &inf);
 void inscribe_item(item_def &item, bool msgwin);
 
-void append_weapon_stats(string &description, const item_def &item);
-void append_armour_stats(string &description, const item_def &item);
-void append_shield_stats(string &description, const item_def &item);
-void append_missile_info(string &description, const item_def &item);
-
 int describe_monsters(const monster_info &mi, bool force_seen = false,
                       const string &footer = "");
 

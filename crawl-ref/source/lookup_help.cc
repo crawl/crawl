@@ -1054,20 +1054,14 @@ static int _describe_item(const string &key, const string &suffix,
     }
 
     string stats;
-    if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS))
-        append_weapon_stats(stats, item);
-    else if (get_item_by_name(&item, key.c_str(), OBJ_ARMOUR))
-        append_armour_stats(stats, item);
-    else if (get_item_by_name(&item, key.c_str(), OBJ_MISSILES))
-        append_missile_info(stats, item);
-    else if (get_item_by_name(&item, key.c_str(), OBJ_MISCELLANY))
+    if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS)
+        || get_item_by_name(&item, key.c_str(), OBJ_ARMOUR)
+        || get_item_by_name(&item, key.c_str(), OBJ_MISSILES)
+        || get_item_by_name(&item, key.c_str(), OBJ_MISCELLANY))
     {
-        if (is_deck(item))
-            stats += "\n" + deck_contents(item.sub_type);
+        // don't request description since _describe_key handles that
+        stats = get_item_description(item, true, false, true);
     }
-
-    if (!stats.empty())
-        stats += "\n";
 
     return _describe_key(key, suffix, footer, stats);
 }
