@@ -1024,7 +1024,7 @@ static int _describe_cloud(const string &key, const string &suffix,
  */
 static int _describe_spell_item(const item_def &item)
 {
-    const string desc = get_item_description(item, true, false, true);
+    const string desc = get_item_description(item, true);
     formatted_string fdesc;
     fdesc.cprintf("%s", desc.c_str());
 

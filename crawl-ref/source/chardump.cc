@@ -493,33 +493,26 @@ static void _sdump_lua(dump_params &par)
 }
 #endif
 
- //---------------------------------------------------------------
- //
- // munge_description
- //
- // word wrap to 80 characters.
- // XXX: should be replaced by some other linewrapping function
- //      now EOL munging is gone
- //---------------------------------------------------------------
-string munge_description(string inStr)
+string chardump_desc(const item_def& item)
 {
-    string outStr;
+    string desc = get_item_description(item, false, true);
+    string outs;
 
-    outStr.reserve(inStr.length() + 32);
+    outs.reserve(desc.length() + 32);
 
-    const int kIndent = 3;
+    const int indent = 3;
 
-    if (inStr.empty()) // always at least an empty line
+    if (desc.empty()) // always at least an empty line
         return "\n";
 
-    while (!inStr.empty())
+    while (!desc.empty())
     {
-        outStr += string(kIndent, ' ')
-                  + wordwrap_line(inStr, 79 - kIndent)
+        outs += string(indent, ' ')
+                  + wordwrap_line(desc, 79 - indent)
                   + "\n";
     }
 
-    return outStr;
+    return outs;
 }
 
 static void _sdump_messages(dump_params &par)
@@ -668,7 +661,6 @@ static void _sdump_inventory(dump_params &par)
     int i, j;
 
     string &text(par.text);
-    string text2;
 
     int inv_class2[NUM_OBJECT_CLASSES];
     int inv_count = 0;
@@ -741,8 +733,7 @@ static void _sdump_inventory(dump_params &par)
                     || Options.dump_book_spells
                        && you.inv[j].base_type == OBJ_BOOKS)
                 {
-                    text2 = get_item_description(you.inv[j], false, true);
-                    text += munge_description(text2);
+                    text += chardump_desc(you.inv[j]);
                 }
                 else
                     text += "\n";

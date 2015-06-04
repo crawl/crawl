@@ -1585,20 +1585,22 @@ bool is_dumpable_artefact(const item_def &item)
     return is_known_artefact(item) && item_ident(item, ISFLAG_KNOW_PROPERTIES);
 }
 
-//---------------------------------------------------------------
-//
-// get_item_description
-//
-//---------------------------------------------------------------
+/**
+ * Describe a specified item.
+ *
+ * @param item    The specified item.
+ * @param verbose Controls various switches for the length of the description.
+ * @param dump    This controls which style the name is shown in.
+ * @param lookup  If true, the name is not shown at all.
+ *   If either of those two are true, the DB description is not shown.
+ * @return a string with the name, db desc, and some other data.
+ */
 string get_item_description(const item_def &item, bool verbose,
-                            bool dump, bool noquote)
+                            bool dump, bool lookup)
 {
-    if (dump)
-        noquote = true;
-
     ostringstream description;
 
-    if (!dump)
+    if (!dump && !lookup)
     {
         string name = item.name(DESC_INVENTORY_EQUIP);
         if (!in_inventory(item))
@@ -1636,7 +1638,7 @@ string get_item_description(const item_def &item, bool verbose,
     {
         description << "\n\n";
 
-        bool need_base_desc = true;
+        bool need_base_desc = !lookup;
 
         if (dump)
         {
@@ -2003,24 +2005,6 @@ string get_item_description(const item_def &item, bool verbose,
             description << "\nMenu/colouring prefixes: " << menu_prefix;
     }
 
-    if (verbose && !noquote && (!item_type_known(item) || !is_random_artefact(item)))
-    {
-        const unsigned int lineWidth = get_number_of_cols();
-        const          int height    = get_number_of_lines();
-        string quote;
-        if (is_unrandom_artefact(item) && item_type_known(item))
-            quote = getQuoteString(get_artefact_name(item));
-        else
-            quote = getQuoteString(item.name(DESC_DBNAME, true, false, false));
-
-        if (count_desc_lines(description.str(), lineWidth)
-            + count_desc_lines(quote, lineWidth) < height)
-        {
-            if (!quote.empty())
-                description << "\n\n" << quote;
-        }
-    }
-
     return description.str();
 }
 
@@ -2170,17 +2154,26 @@ static void _show_item_description(const item_def &item)
     const unsigned int lineWidth = get_number_of_cols() - 1;
     const          int height    = get_number_of_lines();
 
-    string desc = get_item_description(item, true, false,
-                                       crawl_state.game_is_hints_tutorial());
+    string desc = get_item_description(item, true, false);
 
-    const int num_lines = count_desc_lines(desc, lineWidth) + 1;
+    string quote;
+    if (is_unrandom_artefact(item) && item_type_known(item))
+        quote = getQuoteString(get_artefact_name(item));
+    else
+        quote = getQuoteString(item.name(DESC_DBNAME, true, false, false));
 
-    // XXX: hack: Leave room for "Inscribe item?" and the blank line above
-    // it by removing item quote. This should really be taken care of
-    // by putting the quotes into a separate DB and treating them as
-    // a suffix that can be ignored by print_description().
-    if (height - num_lines <= 2)
-        desc = get_item_description(item, true, false, true);
+    if (!(crawl_state.game_is_hints_tutorial()
+          || item_type_known(item) && is_random_artefact(item)
+          // XXX: hack: Leave room for "Inscribe item?" and the blank line above
+          // it by not adding item quote. This should really be taken care of
+          // by putting the quotes onto a separate screen, as is done for spells
+          // and monsters.
+          || count_desc_lines(desc, lineWidth)
+             + count_desc_lines(quote, lineWidth) >= height - 2
+          || quote.empty()))
+    {
+        desc += "\n\n" + quote;
+    }
 
     print_description(desc);
     if (crawl_state.game_is_hints())
