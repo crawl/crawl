@@ -1700,6 +1700,7 @@ int monster_info::res_magic() const
         return MAG_IMMUNE;
 
     const int hd = mons_is_pghost(type) ? ghost_rank_to_level(i_ghost.xl_rank)
+            : type == MONS_MUTANT_BEAST ? props[MUTANT_BEAST_TIER].get_short()
                                         : mons_class_hit_dice(type);
 
     // Negative values get multiplied with monster hit dice.
