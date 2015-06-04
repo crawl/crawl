@@ -1354,7 +1354,6 @@ bool mons_is_pghost(monster_type mc)
  */
 int mutant_beast_tier(int xl)
 {
-    COMPILE_CHECK(ARRAYSZ(beast_tiers) == NUM_BEAST_TIERS);
     for (int bt = BT_FIRST; bt < NUM_BEAST_TIERS; ++bt)
         if (xl <= beast_tiers[bt])
             return bt;
