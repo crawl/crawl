@@ -620,10 +620,7 @@ bool Stash::matches_search(const string &prefix,
 
         if (is_dumpable_artefact(item))
         {
-            const string desc =
-                munge_description(get_item_description(item, false, true));
-
-            if (search.matches(desc))
+            if (search.matches(chardump_desc(item)))
             {
                 if (!res.count++)
                     res.match = s;
@@ -738,8 +735,7 @@ void Stash::write(FILE *f, int refx, int refy, string place, bool identify)
 
         if (is_dumpable_artefact(item))
         {
-            string desc =
-                munge_description(get_item_description(item, false, true));
+            string desc = chardump_desc(item);
 
             // Kill leading and trailing whitespace
             desc.erase(desc.find_last_not_of(" \n\t") + 1);
@@ -854,7 +850,7 @@ string ShopInfo::shop_item_desc(const shop_item &si) const
 
     if (is_dumpable_artefact(si.item))
     {
-        desc = munge_description(get_item_description(si.item, false, true));
+        desc = chardump_desc(si.item);
         trim_string(desc);
 
         // Walk backwards and prepend indenting spaces to \n characters

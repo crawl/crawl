@@ -49,7 +49,7 @@ struct describe_info
 bool is_dumpable_artefact(const item_def &item);
 
 string get_item_description(const item_def &item, bool verbose,
-                            bool dump = false, bool noquote = false);
+                            bool dump = false, bool lookup = false);
 
 void describe_feature_wide(const coord_def& pos, bool show_quote = false);
 void get_feature_desc(const coord_def &gc, describe_info &inf);
