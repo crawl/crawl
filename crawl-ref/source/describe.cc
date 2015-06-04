@@ -789,30 +789,22 @@ static string _describe_demon(const string& name, bool flying)
 
 void append_weapon_stats(string &description, const item_def &item)
 {
-    description += "\nBase accuracy: ";
-    _append_value(description, property(item, PWPN_HIT), true);
-    description += "  ";
-
     const int base_dam = property(item, PWPN_DAMAGE);
     const int ammo_type = fires_ammo_type(item);
     const int ammo_dam = ammo_type == MI_NONE ? 0 :
                                                 ammo_type_damage(ammo_type);
     const skill_type skill = item_attack_skill(item);
-    const float skill_level = (float) you.skill(skill, 10) / 10;
 
-    description += "Base damage: ";
-    _append_value(description, base_dam + ammo_dam, false);
-    description += "  ";
-    description += "Base attack delay: ";
-    _append_value(description, (float) property(item, PWPN_SPEED) / 10, false);
-    description += "\n";
-    description += "This weapon's minimum attack delay of ";
-    _append_value(description, (float) weapon_min_delay(item) / 10, false);
-    description += " is reached at skill level ";
-    _append_value(description, weapon_min_delay_skill(item), false);
-    description += ". (Your skill: ";
-    _append_value(description, skill_level, false);
-    description += ")";
+    description += make_stringf("\n"
+    "Base accuracy: %+d  Base damage: %d  Base attack delay: %.1f\n"
+    "This weapon's minimum attack delay of %.1f is reached at skill level %d.\n"
+    " (Your skill: %.1f)",
+     property(item, PWPN_HIT),
+     base_dam + ammo_dam,
+     (float) property(item, PWPN_SPEED) / 10,
+     (float) weapon_min_delay(item) / 10,
+     weapon_min_delay_skill(item),
+     (float) you.skill(skill, 10) / 10);
 
     if (skill == SK_SLINGS)
     {
