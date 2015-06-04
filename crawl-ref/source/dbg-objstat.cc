@@ -191,11 +191,8 @@ static void _init_monsters()
     for (int i = 0; i < NUM_MONSTERS; i++)
     {
         monster_type mc = static_cast<monster_type>(i);
-        if (!mons_class_flag(mc, M_NO_EXP_GAIN)
-            && !mons_class_flag(mc, M_CANT_SPAWN))
-        {
+        if (!mons_class_gives_xp(mc) && !mons_class_flag(mc, M_CANT_SPAWN))
             valid_monsters[mc] = num_mons++;
-        }
     }
     // For the all-monster summary
     valid_monsters[NUM_MONSTERS] = num_mons;

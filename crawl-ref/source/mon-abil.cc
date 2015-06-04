@@ -817,7 +817,7 @@ static bool _lost_soul_affectable(const monster &mons)
     if (mons.is_summoned())
         return false;
 
-    if (mons_class_flag(mons.type, M_NO_EXP_GAIN))
+    if (!mons_class_gives_xp(mons.type))
         return false;
 
     return true;

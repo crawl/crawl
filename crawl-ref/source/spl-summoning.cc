@@ -1233,7 +1233,7 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
             int tries = 0;
             while (player_will_anger_monster(mons) && ++tries <= 20)
             {
-                // Save the enchantments, particularly ENCH_SUMMONED etc.
+                // Save the enchantments, particularly ENCH_SUMMON etc.
                 mon_enchant_list ench = mons->enchantments;
                 FixedBitVector<NUM_ENCHANTMENTS> cache = mons->ench_cache;
                 define_monster(mons);

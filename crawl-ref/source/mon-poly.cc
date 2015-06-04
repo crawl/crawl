@@ -127,7 +127,8 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || mons_class_flag(new_mclass, M_CANT_SPAWN)  // no dummy monsters
         || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
-        || mons_class_flag(new_mclass, M_NO_EXP_GAIN) // not helpless
+        || !mons_class_gives_xp(new_mclass)           // no tentacle parts or
+                                                      // harmless things
         || new_mclass == MONS_PROGRAM_BUG
 
         // 'morph targets are _always_ "base" classes, not derived ones.
@@ -148,7 +149,6 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         // Other poly-unsuitable things.
         || mons_is_statue(new_mclass)
         || mons_is_projectile(new_mclass)
-        || mons_is_tentacle_or_tentacle_segment(new_mclass)
 
         // The spell on Prince Ribbit can't be broken so easily.
         || (new_mclass == MONS_HUMAN
@@ -678,11 +678,7 @@ void seen_monster(monster* mons)
 
     if (!(mons->flags & MF_TSO_SEEN))
     {
-        if (!mons->has_ench(ENCH_ABJ)
-            && !mons->has_ench(ENCH_FAKE_ABJURATION)
-            && !testbits(mons->flags, MF_NO_REWARD)
-            && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
-            && !crawl_state.game_is_arena())
+        if (mons_gives_xp(mons, &you) && !crawl_state.game_is_arena())
         {
             did_god_conduct(DID_SEE_MONSTER, mons->get_experience_level(),
                             true, mons);

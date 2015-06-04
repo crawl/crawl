@@ -149,8 +149,8 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
 
 bool monster::level_up_change()
 {
-    const monster_level_up *lup = _monster_level_up_target(type,
-                                                           get_experience_level());
+    const monster_level_up *lup =
+        _monster_level_up_target(type, get_experience_level());
     if (lup)
     {
         upgrade_type(lup->after, false, lup->adjust_hp);
@@ -159,7 +159,8 @@ bool monster::level_up_change()
     else if (mons_is_base_draconian(type))
     {
         base_monster = type;
-        monster_type upgrade = resolve_monster_type(RANDOM_NONBASE_DRACONIAN, type);
+        monster_type upgrade = resolve_monster_type(RANDOM_NONBASE_DRACONIAN,
+                                                    type);
         if (static_cast<int>(get_monster_data(upgrade)->hpdice[0]) == get_experience_level())
             upgrade_type(upgrade, false, true);
     }
@@ -219,7 +220,7 @@ bool monster::gain_exp(int exp, int max_levels_to_gain)
         return false;
 
     // Only monsters that you can gain XP from can level-up.
-    if (mons_class_flag(type, M_NO_EXP_GAIN) || is_summoned())
+    if (!mons_class_gives_xp(type) || is_summoned())
         return false;
 
     // Avoid wrap-around.

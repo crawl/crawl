@@ -585,6 +585,56 @@ bool mons_class_is_stationary(monster_type mc)
 }
 
 /**
+ * Can killing this class of monster ever reward xp?
+ *
+ * This answers whether any agent could recieve XP for killing a monster of
+ * this class. Monsters that fail this have M_NO_EXP_GAIN set.
+ * @param mc       The monster type
+ * @param indirect If true this will count monsters that are parts of a parent
+ *                 monster as xp rewarding even the parts themselves don't
+ *                 reward xp (e.g. tentacles).
+ * @returns True if killing a monster of this could reward xp, false otherwise.
+ */
+bool mons_class_gives_xp(monster_type mc, bool indirect)
+{
+    return !mons_class_flag(mc, M_NO_EXP_GAIN)
+        && (!indirect || mons_is_tentacle_or_tentacle_segment(mc));
+}
+
+/**
+ * Can killing this monster reward xp to the given actor?
+ *
+ * This answers whether the player or a monster could ever recieve XP for
+ * killing the monster, assuming an appropriate kill_type.
+ * @param mon      The monster.
+ * @param agent    The actor who would be responsible for the kill.
+ * @returns True if killing the monster will reward the agent with xp, false
+ * otherwise.
+ */
+bool mons_gives_xp(const monster* victim, const actor* agent)
+{
+    ASSERT(victim && agent);
+
+    // Either the player killed a monster that's no reward (created friendly or
+    // the royal jelly spawns), or a monster killed an aligned monster, or a
+    // friendly monster killed a no-reward monster.
+    bool killed_friend;
+    if (agent->is_player())
+        killed_friend = testbits(victim->flags, MF_NO_REWARD);
+    else
+    {
+        killed_friend = mons_aligned(victim, agent)
+            || testbits(victim->flags, MF_NO_REWARD)
+            && mons_aligned(&you, agent);
+    }
+    return !victim->is_summoned()                   // no summons
+        && !victim->has_ench(ENCH_FAKE_ABJURATION)  // no animated remains
+        && mons_class_gives_xp(victim->type)        // class must reward xp
+        && !testbits(victim->flags, MF_WAS_NEUTRAL) // no neutral monsters
+        && !killed_friend;
+}
+
+/**
  * Is this an active ballistomycete?
  *
  * @param mon             The monster
@@ -1918,7 +1968,7 @@ int exper_value(const monster* mon, bool real)
     const bool spellcaster = mon->has_spells();
 
     // Early out for no XP monsters.
-    if (mons_class_flag(mc, M_NO_EXP_GAIN))
+    if (!mons_class_gives_xp(mc))
         return 0;
 
     x_val = (16 + maxhp) * hd * hd / 10;

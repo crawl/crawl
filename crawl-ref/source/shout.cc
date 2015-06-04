@@ -342,7 +342,7 @@ bool check_awaken(monster* mons, int stealth)
     if (you.can_see(mons) // to avoid leaking information
         && !mons->wont_attack()
         && !mons->neutral() // include pacified monsters
-        && !mons_class_flag(mons->type, M_NO_EXP_GAIN))
+        && mons_class_gives_xp(mons->type))
     {
         practise(unnatural_stealthy ? EX_SNEAK_INVIS : EX_SNEAK);
     }
