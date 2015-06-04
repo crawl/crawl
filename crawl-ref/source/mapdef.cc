@@ -4557,11 +4557,11 @@ mons_spec mons_list::mons_by_name(string name) const
         if (segments.size() > 3)
             return MONS_PROGRAM_BUG; // too many words
 
-        const int hd = _mutant_beast_xl(segments[0]);
-        if (hd == 0 && segments.size() == 3)
+        spec.hd = _mutant_beast_xl(segments[0]);
+        if (spec.hd == 0 && segments.size() == 3)
             return MONS_PROGRAM_BUG; // gave invalid tier spec
 
-        if (hd == 0 || segments.size() == 3)
+        if (spec.hd == 0 || segments.size() == 3)
         {
             const int seg = segments.size() == 3 ? 1 : 0;
             const vector<string> facet_names
