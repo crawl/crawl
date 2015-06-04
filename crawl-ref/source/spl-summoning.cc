@@ -122,31 +122,32 @@ spret_type cast_summon_small_mammal(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-bool item_is_snakable(const item_def& item)
-{
-    return item.base_type == OBJ_MISSILES
-           && (item.sub_type == MI_ARROW || item.sub_type == MI_JAVELIN)
-           && item.special != SPMSL_SILVER
-           && item.special != SPMSL_STEEL;
-}
-
 spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 {
-    if (!you.weapon())
-    {
-        mpr(you.hands_act("feel", "slithery!"));
-        return SPRET_ABORT;
-    }
+    item_def* stick = nullptr;
 
-    const item_def& wpn = *you.weapon();
-    const string abort_msg = make_stringf("%s feel%s slithery for a moment!",
-                                          wpn.name(DESC_YOUR).c_str(),
-                                          wpn.quantity > 1 ? "" : "s");
+    for (item_def& i : you.inv)
+        if (i.is_type(OBJ_MISSILES, MI_ARROW)
+            && check_warning_inscriptions(i, OPER_DESTROY)
+            // Prefer unbranded ones.
+            && get_ammo_brand(i) == SPMSL_NORMAL)
+        {
+            stick = &i;
+            break;
+        }
 
-    // Don't enchant sticks marked with {!D}.
-    if (!check_warning_inscriptions(wpn, OPER_DESTROY))
+    if (!stick)
+        for (item_def& i : you.inv)
+            if (i.is_type(OBJ_MISSILES, MI_ARROW)
+                && check_warning_inscriptions(i, OPER_DESTROY))
+            {
+                stick = &i;
+                break;
+            }
+
+    if (!stick)
     {
-        mpr(abort_msg);
+        mpr("You don't have anything to turn into a snake.");
         return SPRET_ABORT;
     }
 
@@ -155,46 +156,38 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 
     int count = 0;
 
-    if (!item_is_snakable(wpn))
-    {
-        mpr(abort_msg);
-        return SPRET_ABORT;
-    }
-    else
-    {
-        fail_check();
-        if (wpn.quantity < how_many_max)
-            how_many_max = wpn.quantity;
+    fail_check();
+    if (stick->quantity < how_many_max)
+        how_many_max = stick->quantity;
 
-        for (int i = 0; i < how_many_max; i++)
+    for (int i = 0; i < how_many_max; i++)
+    {
+        monster_type mon;
+
+        if (one_chance_in(5 - min(4, div_rand_round(pow * 2, 25))))
         {
-            monster_type mon;
+            mon = x_chance_in_y(pow / 3, 100) ? MONS_WATER_MOCCASIN
+                                              : MONS_ADDER;
+        }
+        else
+            mon = MONS_BALL_PYTHON;
 
-            if (one_chance_in(5 - min(4, div_rand_round(pow * 2, 25))))
-            {
-                mon = x_chance_in_y(pow / 3, 100) ? MONS_WATER_MOCCASIN
-                                                  : MONS_ADDER;
-            }
-            else
-                mon = MONS_BALL_PYTHON;
-
-            if (monster *snake = create_monster(mgen_data(mon, BEH_FRIENDLY, &you,
+        if (monster *snake = create_monster(mgen_data(mon, BEH_FRIENDLY, &you,
                                       0, SPELL_STICKS_TO_SNAKES, you.pos(),
                                       MHITYOU, MG_AUTOFOE, god), false))
-            {
-                count++;
-                snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
-            }
+        {
+            count++;
+            snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
         }
     }
 
     if (!count)
     {
-        mpr(abort_msg);
+        mpr("You see a puff of smoke.");
         return SPRET_SUCCESS;
     }
 
-    dec_inv_item_quantity(you.equip[EQ_WEAPON], count);
+    dec_inv_item_quantity(letter_to_index(stick->slot), count);
     mpr((count > 1) ? "You create some snakes!" : "You create a snake!");
     return SPRET_SUCCESS;
 }

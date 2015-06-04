@@ -26,7 +26,6 @@ spret_type cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD,
                                    bool fail = false);
 spret_type cast_summon_small_mammal(int pow, god_type god, bool fail);
 
-bool item_is_snakable(const item_def& item);
 spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail);
 
 monster_type pick_swarmer();

@@ -2063,10 +2063,6 @@ bool item_is_wieldable(const item_def &item)
         return you.has_spell(SPELL_SANDBLAST);
     }
 
-    // Snakable missiles; weapons were already handled above.
-    if (item_is_snakable(item) && you.has_spell(SPELL_STICKS_TO_SNAKES))
-        return true;
-
     return false;
 }
 

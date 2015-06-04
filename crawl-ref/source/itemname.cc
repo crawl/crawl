@@ -3436,7 +3436,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if ((you.has_spell(SPELL_STICKS_TO_SNAKES)
              || !you.num_turns
                 && you.char_class == JOB_TRANSMUTER)
-            && item_is_snakable(item)
+            && item.sub_type == MI_ARROW
             || you.has_spell(SPELL_SANDBLAST)
                && (item.sub_type == MI_STONE
                 || item.sub_type == MI_LARGE_ROCK
