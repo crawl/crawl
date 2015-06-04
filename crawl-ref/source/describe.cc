@@ -760,6 +760,91 @@ static string _describe_demon(const string& name, bool flying)
     return description.str();
 }
 
+/**
+ * Describe a given mutant beast's tier.
+ *
+ * @param tier      The mutant_beast_tier of the beast in question.
+ * @return          A string describing the tier; e.g.
+ *              "It is a juvenile, out of the larval stage but still below its
+ *              mature strength."
+ */
+static string _describe_mutant_beast_tier(int tier)
+{
+    static const string tier_descs[] = {
+        "It is of an unusually buggy age.",
+        "It is larval, freshly emerged from its mother's pouch and weak.",
+        "It is a juvenile, out of the larval stage but below its mature "
+        "strength.",
+        "It is mature, stronger than a juvenile but weaker than its elders.",
+        "It is an elder, stronger than most mature beasts.",
+        "It is a primal beast, most powerful of its kind.",
+    };
+    COMPILE_CHECK(ARRAYSZ(tier_descs) == NUM_BEAST_TIERS);
+
+    ASSERT(tier >= 0);
+    ASSERT(tier < ARRAYSZ(tier_descs));
+    return tier_descs[tier];
+}
+
+
+/**
+ * Describe a given mutant beast's facets.
+ *
+ * @param facets    A vector of the mutant_beast_facets in question.
+ * @return          A string describing the facets; e.g.
+ *              "It flies and flits around unpredictably, and its breath
+ *               smoulders ominously."
+ */
+static string _describe_mutant_beast_facets(const CrawlVector &facets)
+{
+    static const string facet_descs[] = {
+        " seems unusually buggy.",
+        " sprouts a set of venomous tails",
+        " flits and flies around unpredictably",
+        "s breath smoulders ominously",
+        " is permanently invisible",
+        " flickers and crackles with electricity",
+        " is covered in thick scales, beneath which lurks a terrible rage",
+    };
+    COMPILE_CHECK(ARRAYSZ(facet_descs) == NUM_BEAST_FACETS);
+
+    if (facets.size() == 0)
+        return "";
+
+    const int first_facet = facets[0].get_int();
+    ASSERT(first_facet >= 0);
+    ASSERT(first_facet < NUM_BEAST_FACETS);
+    string out = "It" + facet_descs[first_facet];
+
+    for (int i = 1; i < facets.size(); ++i)
+    {
+        const int facet = facets[i].get_int();
+        ASSERT(facet >= 0);
+        ASSERT(facet < NUM_BEAST_FACETS);
+        out += ", and it" + facet_descs[facet];
+    }
+
+    return out + ".";
+}
+
+/**
+ * Describe a given mutant beast's special characteristics: its tier & facets.
+ *
+ * @param mi    The player-visible information about the monster in question.
+ * @return      A string describing the monster; e.g.
+ *              "It is a juvenile, out of the larval stage but still below its
+ *              mature strength. It flies and flits around unpredictably, and
+ *              its breath has a tendency to ignite when angered."
+ */
+static string _describe_mutant_beast(const monster_info &mi)
+{
+    const int xl = mi.props[MUTANT_BEAST_TIER].get_short();
+    const int tier = mutant_beast_tier(xl);
+    const CrawlVector facets = mi.props[MUTANT_BEAST_FACETS].get_vector();
+    return _describe_mutant_beast_tier(tier)
+           + " " + _describe_mutant_beast_facets(facets);
+}
+
 static void _append_weapon_stats(string &description, const item_def &item)
 {
     const int base_dam = property(item, PWPN_DAMAGE);
@@ -3714,6 +3799,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     case MONS_PANDEMONIUM_LORD:
         inf.body << _describe_demon(mi.mname, mi.airborne()) << "\n";
+        break;
+
+    case MONS_MUTANT_BEAST:
+        inf.body << _describe_mutant_beast(mi) << "\n";
         break;
 
     case MONS_PROGRAM_BUG:
