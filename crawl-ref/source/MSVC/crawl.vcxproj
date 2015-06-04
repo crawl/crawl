@@ -740,6 +740,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\mon-flags.h" />
     <ClInclude Include="..\mon-mst.h" />
     <ClInclude Include="..\mon-pick-data.h" />
+    <ClInclude Include="..\mutant-beast.h" />
     <ClInclude Include="..\mutation-data.h" />
     <ClInclude Include="..\newgame_def.h" />
     <ClInclude Include="..\ng-setup.h" />

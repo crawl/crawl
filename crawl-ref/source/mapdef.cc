@@ -35,6 +35,7 @@
 #include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-place.h"
+#include "mutant-beast.h"
 #include "place.h"
 #include "random-weight.h"
 #include "religion.h"

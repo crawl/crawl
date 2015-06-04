@@ -1345,6 +1345,23 @@ bool mons_is_pghost(monster_type mc)
 }
 
 /**
+ * What mutant beast tier does the given XL (base HD) correspond to?
+ *
+ * If the given value is between tiers, choose the higher possibility.
+ *
+ * @param xl    The XL (HD) of the mutant beast in question.
+ * @return      The corresponding mutant beast tier (e.g. BT_MATURE).
+ */
+int mutant_beast_tier(int xl)
+{
+    COMPILE_CHECK(ARRAYSZ(beast_tiers) == NUM_BEAST_TIERS);
+    for (int bt = BT_FIRST; bt < NUM_BEAST_TIERS; ++bt)
+        if (xl <= beast_tiers[bt])
+            return bt;
+    return BT_NONE; // buggy
+}
+
+/**
  * Is the provided monster_type a demonspawn job type? (Not just any
  * demonspawn, but specifically one with a job! Or the job itself, depending
  * how you think about it.)

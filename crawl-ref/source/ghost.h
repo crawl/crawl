@@ -9,6 +9,7 @@
 #include "enum.h"
 #include "itemprop-enum.h"
 #include "mon-enum.h"
+#include "mutant-beast.h"
 
 class ghost_demon
 {
