@@ -1326,7 +1326,8 @@ string monster_info::pluralised_name(bool fullname) const
     else if (mons_genus(type) == MONS_DEMONSPAWN)
         return pluralise_monster(mons_type_name(MONS_DEMONSPAWN, DESC_PLAIN));
     else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
-             || type == MONS_DANCING_WEAPON || !fullname)
+             || type == MONS_DANCING_WEAPON || type == MONS_MUTANT_BEAST
+             || !fullname)
     {
         return pluralise_monster(mons_type_name(type, DESC_PLAIN));
     }
