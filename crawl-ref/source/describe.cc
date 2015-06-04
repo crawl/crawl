@@ -65,32 +65,6 @@
 #endif
 #include "unicode.h"
 
-// ========================================================================
-//      Internal Functions
-// ========================================================================
-
-//---------------------------------------------------------------
-//
-// append_value
-//
-// Appends a value to the string. If plussed == 1, will add a + to
-// positive values.
-//
-//---------------------------------------------------------------
-static void _append_value(string & description, int valu, bool plussed)
-{
-    char value_str[80];
-    sprintf(value_str, plussed ? "%+d" : "%d", valu);
-    description += value_str;
-}
-
-static void _append_value(string & description, float fvalu, bool plussed)
-{
-    char value_str[80];
-    sprintf(value_str, plussed ? "%+.1f" : "%.1f", fvalu);
-    description += value_str;
-}
-
 int count_desc_lines(const string &_desc, const int width)
 {
     string desc = get_linebreak_string(_desc, width);
@@ -1099,9 +1073,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += "\nIt cannot be enchanted further.";
         else
         {
-            description += "\nIt can be maximally enchanted to +";
-            _append_value(description, MAX_WPN_ENCHANT, false);
-            description += ".";
+            description += "\nIt can be maximally enchanted to +"
+                           + to_string(MAX_WPN_ENCHANT) + ".";
         }
     }
 
@@ -1235,13 +1208,11 @@ static string _describe_ammo(const item_def &item)
 
 void append_armour_stats(string &description, const item_def &item)
 {
-    description += "\nBase armour rating: ";
-    _append_value(description, property(item, PARM_AC), false);
-    description += "       ";
+    description += "\nBase armour rating: " + to_string(property(item, PARM_AC))
+                   + "       ";
 
     const int evp = property(item, PARM_EVASION);
-    description += "Encumbrance rating: ";
-    _append_value(description, -evp / 10, false);
+    description += "Encumbrance rating: " + to_string(-evp / 10);
 
     // only display player-relevant info if the player exists
     if (crawl_state.need_save && get_armour_slot(item) == EQ_BODY_ARMOUR)
@@ -1254,13 +1225,10 @@ void append_armour_stats(string &description, const item_def &item)
 
 void append_shield_stats(string &description, const item_def &item)
 {
-    description += "\nBase shield rating: ";
-    _append_value(description, property(item, PARM_AC), false);
-    description += "       ";
-
-    description += "Skill to remove penalty: ";
-    _append_value(description, you.get_shield_skill_to_offset_penalty(item),
-            false);
+    description += "\nBase shield rating: "
+                   + to_string(property(item, PARM_AC))
+                   + "       Skill to remove penalty: "
+                   + to_string(you.get_shield_skill_to_offset_penalty(item));
 }
 
 void append_missile_info(string &description, const item_def &item)
@@ -1416,9 +1384,8 @@ static string _describe_armour(const item_def &item, bool verbose)
         }
         else if (item.plus < max_ench || !item_ident(item, ISFLAG_KNOW_PLUSES))
         {
-            description += "\nIt can be maximally enchanted to +";
-            _append_value(description, max_ench, false);
-            description += ".";
+            description += "\nIt can be maximally enchanted to +"
+                           + to_string(max_ench) + ".";
         }
         else
             description += "\nIt cannot be enchanted further.";
@@ -1447,40 +1414,34 @@ static string _describe_jewellery(const item_def &item, bool verbose)
             switch (item.sub_type)
             {
             case RING_PROTECTION:
-                description += "\nIt affects your AC (";
-                _append_value(description, item.plus, true);
-                description += ").";
+                description += make_stringf("\nIt affects your AC (%+d).",
+                                            item.plus);
                 break;
 
             case RING_EVASION:
-                description += "\nIt affects your evasion (";
-                _append_value(description, item.plus, true);
-                description += ").";
+                description += make_stringf("\nIt affects your evasion (%+d).",
+                                            item.plus);
                 break;
 
             case RING_STRENGTH:
-                description += "\nIt affects your strength (";
-                _append_value(description, item.plus, true);
-                description += ").";
+                description += make_stringf("\nIt affects your strength (%+d).",
+                                            item.plus);
                 break;
 
             case RING_INTELLIGENCE:
-                description += "\nIt affects your intelligence (";
-                _append_value(description, item.plus, true);
-                description += ").";
+                description += make_stringf("\nIt affects your intelligence (%+d).",
+                                            item.plus);
                 break;
 
             case RING_DEXTERITY:
-                description += "\nIt affects your dexterity (";
-                _append_value(description, item.plus, true);
-                description += ").";
+                description += make_stringf("\nIt affects your dexterity (%+d).",
+                                            item.plus);
                 break;
 
             case RING_SLAYING:
-                description += "\nIt affects your accuracy and damage "
-                               "with ranged weapons and melee attacks (";
-                _append_value(description, item.plus, true);
-                description += ").";
+                description += make_stringf("\nIt affects your accuracy and"
+                      " damage with ranged weapons and melee attacks (%+d).",
+                      item.plus);
                 break;
 
             default:
