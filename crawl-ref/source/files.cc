@@ -797,7 +797,7 @@ static int _get_dest_stair_type(branch_type old_branch,
         }
     }
 
-    if (feat_is_escape_hatch(stair_taken))
+    if (feat_is_escape_hatch(stair_taken) || stair_taken == DNGN_TRAP_SHAFT)
         return stair_taken;
 
     if (stair_taken == DNGN_ENTER_DIS
