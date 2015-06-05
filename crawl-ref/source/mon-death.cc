@@ -2673,7 +2673,14 @@ int monster_die(monster* mons, killer_type killer,
 
     const coord_def mwhere = mons->pos();
     if (drop_items)
+    {
+        // monster_drop_things may lead to a level excursion (via
+        // god_id_item -> ... -> ShoppingList::item_type_identified),
+        // which fails to save/restore the dead monster. Keep it alive
+        // since we still need it.
+        unwind_var<int> fakehp(mons->hit_points, 1);
         monster_drop_things(mons, YOU_KILL(killer) || pet_kill);
+    }
     else
     {
         // Destroy the items belonging to MF_HARD_RESET monsters so they
