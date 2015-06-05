@@ -951,7 +951,7 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     env.tile_fg(ep) = t;
 
     // Add name tags.
-    if (mons_class_flag(mon.type, M_NO_EXP_GAIN))
+    if (!mons_class_gives_xp(mon.type))
         return;
 
     const tag_pref pref = Options.tile_tag_pref;
@@ -1375,7 +1375,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     else if (mc.flags & MAP_HALOED)
     {
         monster_info* mon = mc.monsterinfo();
-        if (mon && !mons_class_flag(mon->type, M_NO_EXP_GAIN))
+        if (mon && mons_class_gives_xp(mon->type))
         {
             cell.halo = HALO_MONSTER;
             print_blood = false;

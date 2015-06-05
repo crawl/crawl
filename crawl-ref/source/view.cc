@@ -92,8 +92,7 @@ bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf)
         aid.context = SC_NEWLY_SEEN;
 
     if (!mons_is_safe(mons)
-        && (!mons_class_flag(mons->type, M_NO_EXP_GAIN)
-            || !mons_is_active_ballisto(mons)))
+        && (mons_class_gives_xp(mons->type) || !mons_is_active_ballisto(mons)))
     {
         return interrupt_activity(AI_SEE_MONSTER, aid, msgs_buf);
     }

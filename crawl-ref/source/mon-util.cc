@@ -4413,11 +4413,8 @@ int get_dist_to_nearest_monster()
             continue;
 
         // Plants/fungi don't count.
-        if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
-            && !mons_is_active_ballisto(mon))
-        {
+        if (!mons_class_gives_xp(mon->type) && !mons_is_active_ballisto(mon))
             continue;
-        }
 
         if (mon->wont_attack())
             continue;

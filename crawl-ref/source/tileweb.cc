@@ -1440,7 +1440,7 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
         // TODO: get this information to the client in another way
         json_open_object("typedata");
         json_write_int("avghp", mons_avg_hp(m->type));
-        if (mons_class_flag(m->type, M_NO_EXP_GAIN))
+        if (!mons_class_gives_xp(m->type))
             json_write_bool("no_exp", true);
         json_close_object();
     }
