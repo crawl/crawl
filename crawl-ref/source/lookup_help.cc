@@ -1223,8 +1223,8 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
                     "' to display.";
         }
 
-        return make_stringf("Too many matching %s (%" PRIuSIZET ") to display.",
-                            plur_type.c_str(), key_list.size());
+        return make_stringf("Too many matching %s (%d) to display.",
+                            plur_type.c_str(), (int) key_list.size());
     }
 
     // we're good!

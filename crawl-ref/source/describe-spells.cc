@@ -135,8 +135,8 @@ static void _monster_spellbooks(const monster_info &mi,
             output_book.label += _booktype_header(type, num_books, mi);
         if (num_books > 1)
         {
-            output_book.label += make_stringf("\n%s %" PRIuSIZET ":",
-                                              set_name.c_str(), i+1);
+            output_book.label += make_stringf("\n%s %d:",
+                                              set_name.c_str(), (int) i + 1);
         }
 
         for (auto spell : book_spells)
