@@ -401,8 +401,9 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case DUR_SONG_OF_SLAYING:
-        inf->light_text = make_stringf("Slay (%u)",
-                                       you.props["song_of_slaying_bonus"].get_int());
+        inf->light_text
+            = make_stringf("Slay (%u)",
+                           you.props[SONG_OF_SLAYING_KEY].get_int());
         break;
 
     case STATUS_NO_CTELE:
