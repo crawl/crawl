@@ -280,13 +280,18 @@ static int l_item_do_subtype(lua_State *ls)
     }
 
     const char *s = nullptr;
+    string saved;
 
     // Special-case OBJ_ARMOUR behavior to maintain compatibility with
     // existing scripts.
     if (item->base_type == OBJ_ARMOUR)
         s = item_slot_name(get_armour_slot(*item));
     else if (item_type_known(*item))
-        s = sub_type_string(*item).c_str();
+    {
+        // must keep around the string until we call lua_pushstring
+        saved = sub_type_string(*item);
+        s = saved.c_str();
+    }
 
     if (s)
         lua_pushstring(ls, s);
