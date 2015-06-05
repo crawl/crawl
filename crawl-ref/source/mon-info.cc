@@ -1890,7 +1890,7 @@ void get_monster_info(vector<monster_info>& mons)
     {
         if (mons_class_gives_xp(mon->type)
             || mon->is_child_tentacle()
-            || !mons_is_active_ballisto(mon))
+            || mons_is_active_ballisto(mon))
         {
             mons.emplace_back(mon);
         }
