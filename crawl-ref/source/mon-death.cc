@@ -2552,7 +2552,9 @@ int monster_die(monster* mons, killer_type killer,
     {
         // Set duration
         const int pbd_level = player_mutation_level(MUT_POWERED_BY_DEATH);
-        const int pbd_dur = pbd_level * 8 + roll_dice(2, 8);
+
+        // avg 10 turns at L1, 20 at L3
+        const int pbd_dur = pbd_level * 5 + roll_dice(2, 4);
         const int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
         if (pbd_dur * BASELINE_DELAY > you.duration[DUR_POWERED_BY_DEATH])
             you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
