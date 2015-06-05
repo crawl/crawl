@@ -1888,7 +1888,7 @@ void get_monster_info(vector<monster_info>& mons)
 
     for (monster *mon : visible)
     {
-        if (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
+        if (mons_class_gives_xp(mon->type)
             || mon->is_child_tentacle()
             || !mons_is_active_ballisto(mon))
         {
