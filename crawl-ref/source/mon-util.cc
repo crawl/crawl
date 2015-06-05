@@ -598,7 +598,7 @@ bool mons_class_is_stationary(monster_type mc)
 bool mons_class_gives_xp(monster_type mc, bool indirect)
 {
     return !mons_class_flag(mc, M_NO_EXP_GAIN)
-        && (!indirect || mons_is_tentacle_or_tentacle_segment(mc));
+        || (indirect && mons_is_tentacle_or_tentacle_segment(mc));
 }
 
 /**
