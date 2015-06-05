@@ -1749,7 +1749,7 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
                 // Little fighters can't use war axes with a shield.
                 if (good
                     && !(ng.job == JOB_FIGHTER
-                         && species_size(ng.species, PSIZE_BODY) > SIZE_LITTLE))
+                         && species_size(ng.species, PSIZE_TORSO) <= SIZE_LITTLE))
                 {
                     wp.first = WPN_WAR_AXE;
                 }
@@ -1758,7 +1758,7 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
                 // Small fighters can't use tridents with a shield.
                 if (good
                     && !(ng.job == JOB_FIGHTER
-                         && species_size(ng.species, PSIZE_BODY) > SIZE_SMALL))
+                         && species_size(ng.species, PSIZE_TORSO) <= SIZE_SMALL))
                 {
                     wp.first = WPN_TRIDENT;
                 }
@@ -1767,7 +1767,7 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
                 // Little fighters can't use long swords with a shield.
                 if (good
                     && !(ng.job == JOB_FIGHTER
-                         && species_size(ng.species, PSIZE_BODY) > SIZE_LITTLE))
+                         && species_size(ng.species, PSIZE_TORSO) <= SIZE_LITTLE))
                 {
                     wp.first = WPN_LONG_SWORD;
                 }
