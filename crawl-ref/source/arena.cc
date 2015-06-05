@@ -1048,7 +1048,7 @@ bool arena_veto_random_monster(monster_type type)
         return true;
     if (!arena::allow_immobile && mons_class_is_stationary(type))
         return true;
-    if (!arena::allow_zero_xp && mons_class_gives_xp(type))
+    if (!arena::allow_zero_xp && !mons_class_gives_xp(type))
         return true;
     if (!(mons_char(type) & !127) && arena::banned_glyphs[mons_char(type)])
         return true;
