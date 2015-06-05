@@ -509,6 +509,7 @@ struct item_def
 #pragma pack(push,2)
     union
     {
+        // These must all be the same size!
         short plus;                 ///< + to hit/dam (weapons, rods)
         monster_type mon_type:16;   ///< corpse/chunk monster type
         skill_type skill:16;        ///< the skill provided by a manual
@@ -521,11 +522,12 @@ struct item_def
     };
     union
     {
+        // These must all be the same size!
         short plus2;        ///< legacy/generic name for this union
         short used_count;   ///< the # of known times it was used (decks, wands)
                             // for wands, may hold negative ZAPCOUNT knowledge
                             // info (e.g. "recharged", "empty", "unknown")
-        bool net_placed;    ///< is this throwing net trapping something?
+        short net_placed;   ///< is this throwing net trapping something?
         short skill_points; ///< # of skill points a manual gives
         short charge_cap;   ///< max charges stored by a rod * ROD_CHARGE_MULT
         short stash_freshness; ///< where stash.cc stores corpse freshness
@@ -533,6 +535,7 @@ struct item_def
 #pragma pack(pop)
     union
     {
+        // These must all be the same size!
         int special;        ///< special stuff
         deck_rarity_type deck_rarity;    ///< plain, ornate, legendary
         int rod_plus;           ///< rate at which a rod recharges; +slay
