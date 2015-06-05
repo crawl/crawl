@@ -1706,6 +1706,33 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
     return false;
 }
 
+static weapon_type _starting_weapon_upgrade(weapon_type wp, job_type job,
+                                            species_type species)
+{
+    const bool fighter = job == JOB_FIGHTER;
+    const size_type size = species_size(species, PSIZE_TORSO);
+
+    // TODO: actually query itemprop for one-handedness.
+    switch (wp)
+    {
+    case WPN_SHORT_SWORD:
+        return WPN_RAPIER;
+    case WPN_MACE:
+        return WPN_FLAIL;
+    case WPN_HAND_AXE:
+        // Little fighters can't use war axes with a shield.
+        return fighter && size <= SIZE_LITTLE ? wp : WPN_WAR_AXE;
+    case WPN_SPEAR:
+        // Small fighters can't use tridents with a shield.
+        return fighter && size <= SIZE_SMALL  ? wp : WPN_TRIDENT;
+    case WPN_FALCHION:
+        // Little fighters can't use long swords with a shield.
+        return fighter && size <= SIZE_LITTLE ? wp : WPN_LONG_SWORD;
+    default:
+        return wp;
+    }
+}
+
 static vector<weapon_choice> _get_weapons(const newgame_def& ng)
 {
     vector<weapon_choice> weapons;
@@ -1733,47 +1760,10 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
         {
             weapon_choice wp;
             wp.first = startwep[i];
-            const bool good = job_gets_good_weapons(ng.job);
-
-            switch (wp.first)
+            if (job_gets_good_weapons(ng.job))
             {
-            case WPN_SHORT_SWORD:
-                if (good)
-                    wp.first = WPN_RAPIER;
-                break;
-            case WPN_MACE:
-                if (good)
-                    wp.first = WPN_FLAIL;
-                break;
-            case WPN_HAND_AXE:
-                // Little fighters can't use war axes with a shield.
-                if (good
-                    && !(ng.job == JOB_FIGHTER
-                         && species_size(ng.species, PSIZE_TORSO) <= SIZE_LITTLE))
-                {
-                    wp.first = WPN_WAR_AXE;
-                }
-                break;
-            case WPN_SPEAR:
-                // Small fighters can't use tridents with a shield.
-                if (good
-                    && !(ng.job == JOB_FIGHTER
-                         && species_size(ng.species, PSIZE_TORSO) <= SIZE_SMALL))
-                {
-                    wp.first = WPN_TRIDENT;
-                }
-                break;
-            case WPN_FALCHION:
-                // Little fighters can't use long swords with a shield.
-                if (good
-                    && !(ng.job == JOB_FIGHTER
-                         && species_size(ng.species, PSIZE_TORSO) <= SIZE_LITTLE))
-                {
-                    wp.first = WPN_LONG_SWORD;
-                }
-                break;
-            default:
-                break;
+                wp.first = _starting_weapon_upgrade(wp.first, ng.job,
+                                                    ng.species);
             }
 
             wp.second = weapon_restriction(wp.first, ng);
