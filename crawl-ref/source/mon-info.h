@@ -155,10 +155,11 @@ struct monster_info_base
     monster_type draco_type;
     union
     {
+        // These must all be the same size!
         unsigned number; ///< General purpose number variable
         int num_heads;   ///< # of hydra heads
         int slime_size;  ///< # of slimes in this one
-        bool is_active;  ///< Whether this ballisto is active or not
+        int is_active;   ///< Whether this ballisto is active or not
     };
     int _colour;
     mon_attitude_type attitude;

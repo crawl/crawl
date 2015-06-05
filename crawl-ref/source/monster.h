@@ -56,6 +56,7 @@ public:
     monster_type  base_monster;        // zombie base monster, draconian colour
     union
     {
+        // These must all be the same size!
         unsigned int number;   ///< General purpose number variable
         int blob_size;         ///< # of slimes/masses in this one
         int num_heads;         ///< Hydra-like head number
