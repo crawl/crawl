@@ -321,9 +321,6 @@ static int _calc_player_experience(const monster* mons)
         return 0;
     }
 
-    dprf("Damage ratio: %1.1f/%d (%d%%)",
-         0.5 * mons->damage_friendly, mons->damage_total,
-         50 * mons->damage_friendly / mons->damage_total);
     experience = (experience * mons->damage_friendly / mons->damage_total
                   + 1) / 2;
     ASSERT(mons->damage_friendly <= 2 * mons->damage_total);
