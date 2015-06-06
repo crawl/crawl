@@ -493,7 +493,7 @@ TAGS: grunt_profane_temple no_monster_gen
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
 KMONS: 4 = blue devil / simulacrum w:20 / freezing wraith
 KMONS: 5 = ice devil
-KMONS: 6 = blizzard demon / shard shrike
+KMONS: 6 = blizzard demon / ice dragon
 KMONS: 8 = ice statue
 KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
