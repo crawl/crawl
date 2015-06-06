@@ -4937,11 +4937,16 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         mi.i_ghost.damage = unmarshallShort(th);
         mi.i_ghost.ac = unmarshallShort(th);
     }
-    if (mons_is_ghost_demon(mi.type))
+    if ((mons_is_ghost_demon(mi.type)
 #if TAG_MAJOR_VERSION == 34
-        if (th.getMinorVersion() >= TAG_MINOR_GHOST_SINV)
+         || (mi.type == MONS_LICH || mi.type == MONS_ANCIENT_LICH)
+            && th.getMinorVersion() < TAG_MINOR_EXORCISE)
+        && th.getMinorVersion() >= TAG_MINOR_GHOST_SINV
 #endif
-            mi.i_ghost.can_sinv = unmarshallBoolean(th);
+        )
+    {
+        mi.i_ghost.can_sinv = unmarshallBoolean(th);
+    }
 
     mi.props.clear();
     mi.props.read(th);
@@ -5642,31 +5647,28 @@ void unmarshallMonster(reader &th, monster& m)
             ASSERT(m.base_monster != MONS_NO_MONSTER);
         }
     }
-    // Turn elephant slugs into ghosts because they are dummies now.
-    else if (m.type == MONS_ELEPHANT_SLUG)
-        m.type = MONS_GHOST;
+    else if (th.getMinorVersion() < TAG_MINOR_EXORCISE
+        && th.getMinorVersion() >= TAG_MINOR_RANDLICHES
+        && (m.type == MONS_LICH || m.type == MONS_ANCIENT_LICH))
+    {
+        m.spells = unmarshallGhost(th).spells;
+    }
     else
 #endif
     if (parts & MP_GHOST_DEMON)
         m.set_ghost(unmarshallGhost(th));
+
+#if TAG_MAJOR_VERSION == 34
+    // Turn elephant slugs into ghosts because they are dummies now.
+    if (m.type == MONS_ELEPHANT_SLUG)
+        m.type = MONS_GHOST;
+#endif
+
     if (parts & MP_CONSTRICTION)
         _unmarshall_constriction(th, &m);
 
     m.props.clear();
     m.props.read(th);
-
-#if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() < TAG_MINOR_RANDLICHES
-        && mons_is_ghost_demon(m.type)
-        && (m.type == MONS_LICH || m.type == MONS_ANCIENT_LICH))
-    {
-        ghost_demon ghost;
-        ghost.init_lich(m.type);
-        ghost.spells = m.spells; // ???
-        m.set_ghost(ghost);
-        parts |= MP_GHOST_DEMON;
-    }
-#endif
 
     if (m.props.exists("monster_tile_name"))
     {
