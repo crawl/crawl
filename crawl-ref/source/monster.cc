@@ -5338,9 +5338,7 @@ bool monster::can_see_invisible() const
 
 bool monster::invisible() const
 {
-    return (has_ench(ENCH_INVIS)
-            || mons_is_ghost_demon(type) && ghost->is_invis())
-            && !backlit();
+    return has_ench(ENCH_INVIS) && !backlit();
 }
 
 bool monster::visible_to(const actor *looker) const

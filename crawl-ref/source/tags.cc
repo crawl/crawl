@@ -320,8 +320,6 @@ static void unmarshallSpells(reader &, monster_spells &
                              , unsigned hd
 #endif
 );
-static void marshallBeastFacets(writer &, const vector<beast_facet> &);
-static void unmarshallBeastFacets(reader &, vector<beast_facet> &);
 
 static void marshallMonsterInfo (writer &, const monster_info &);
 static void unmarshallMonsterInfo (reader &, monster_info &mi);
@@ -6076,41 +6074,6 @@ static void unmarshallSpells(reader &th, monster_spells &spells
 #endif
 }
 
-/**
- * Marshall all of the given mutant beast facets into the given writer.
- *
- * @param th        The save writer to be used for marshalling.
- * @param facets    A vector of beast facets to be written.
- */
-static void marshallBeastFacets(writer &th, const vector<beast_facet> &facets)
-{
-    const uint8_t num_facets = facets.size();
-    marshallByte(th, num_facets);
-    for (auto facet : facets)
-        marshallUByte(th, facet);
-}
-
-/**
- * Unmarshall all of the mutant beast facets from the given reader.
- *
- * @param th            The save reader to be used for unmarshalling.
- * @param facets[out]   Used to store the unmarshalled beast facets.
- */
-static void unmarshallBeastFacets(reader &th, vector<beast_facet> &facets)
-{
-    uint8_t num_facets = 0;
-#if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() < TAG_MINOR_MUTANT_BEASTS)
-        ;
-    else
-#endif
-        num_facets = unmarshallByte(th);
-
-    facets.clear();
-    for (int i = 0; i < num_facets; ++i)
-        facets.push_back((beast_facet)(unmarshallByte(th)));
-}
-
 static void marshallGhost(writer &th, const ghost_demon &ghost)
 {
     marshallString(th, ghost.name.c_str());
@@ -6136,7 +6099,6 @@ static void marshallGhost(writer &th, const ghost_demon &ghost)
     marshallBoolean(th, ghost.flies);
 
     marshallSpells(th, ghost.spells);
-    marshallBeastFacets(th, ghost.beast_facets);
 }
 
 static ghost_demon unmarshallGhost(reader &th)
@@ -6194,8 +6156,6 @@ static ghost_demon unmarshallGhost(reader &th)
                      , ghost.xl
 #endif
                     );
-
-    unmarshallBeastFacets(th, ghost.beast_facets);
 
     return ghost;
 }
