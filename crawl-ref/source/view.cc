@@ -1476,7 +1476,10 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     if ((_show_terrain || Options.always_show_exclusions)
         && you.on_current_level
         && map_bounds(gc)
-        && (_show_terrain || gc != you.pos())
+        && (_show_terrain
+            || gc != you.pos()
+               && (env.map_knowledge(gc).monster() == MONS_NO_MONSTER
+                   || !you.see_cell(gc)))
         && travel_colour_override(gc))
     {
         if (is_exclude_root(gc))
