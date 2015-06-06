@@ -361,7 +361,7 @@ spret_type cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool f
         mprf("%s %s %s %s!", caster->name(DESC_THE).c_str(),
                              caster->conj_verb("summon").c_str(),
                              plural ? "some" : "a",
-                             plural ? pluralise(mons_type_name(type, DESC_PLAIN)).c_str()
+                             plural ? pluralise_monster(mons_type_name(type, DESC_PLAIN)).c_str()
                                     : mons_type_name(type, DESC_PLAIN).c_str());
     }
     else

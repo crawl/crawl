@@ -1875,7 +1875,7 @@ static void _print_battlecry_announcement(const monster& chief,
         mprf(channel, messages[type][AFFECT_MANY],
              chief.friendly() ? "Your" : "The",
              generic ? messages[type][GENERIC_ALLIES]
-             : pluralise(who).c_str());
+             : pluralise_monster(who).c_str());
     }
 }
 

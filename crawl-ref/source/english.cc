@@ -155,6 +155,21 @@ string pluralise(const string &name, const char * const qualifiers[],
     return name + "s";
 }
 
+// For monster names ending with these suffixes, we pluralise directly without
+// attempting to use the "of" rule. For instance:
+//
+//      moth of wrath           => moths of wrath but
+//      moth of wrath zombie    => moth of wrath zombies.
+static const char * const _monster_suffixes[] =
+{
+    "zombie", "skeleton", "simulacrum", nullptr
+};
+
+string pluralise_monster(const string &name)
+{
+    return pluralise(name, standard_plural_qualifiers, _monster_suffixes);
+}
+
 string apostrophise(const string &name)
 {
     if (name.empty())

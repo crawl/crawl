@@ -892,8 +892,9 @@ string counted_monster_list::describe(description_level_type desc,
         else
             ++i;
 
-        out += cm.second > 1 ? pluralise(cm.first->name(desc, false, true))
-                             : cm.first->name(desc);
+        out += cm.second > 1
+               ? pluralise_monster(cm.first->name(desc, false, true))
+               : cm.first->name(desc);
     }
     return out;
 }
