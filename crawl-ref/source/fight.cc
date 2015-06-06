@@ -539,10 +539,10 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     }
 
     // Don't pester the player if they're using UC or if they don't have any
-    // weapons yet.
+    // melee weapons yet.
     if (!weapon
         && (you.skill(SK_UNARMED_COMBAT) > 0
-            || !any_of(you.inv.begin(), you.inv.end(), is_weapon)))
+            || !any_of(you.inv.begin(), you.inv.end(), is_melee_weapon)))
     {
         return true;
     }
