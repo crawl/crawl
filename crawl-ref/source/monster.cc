@@ -4295,6 +4295,7 @@ bool monster::airborne() const
            // check both so spectral humans and zombified dragons both fly
            || mons_class_flag(mons_base_type(this), M_FLIES)
            || mons_class_flag(type, M_FLIES)
+           || has_facet(BF_BAT)
            || scan_artefacts(ARTP_FLY) > 0
            || mslot_item(MSLOT_ARMOUR)
               && mslot_item(MSLOT_ARMOUR)->base_type == OBJ_ARMOUR
@@ -6922,4 +6923,21 @@ void monster::remove_avatars()
         end_grand_avatar(avatar, false);
     else
         del_ench(ENCH_GRAND_AVATAR);
+}
+
+/**
+ * Does this monster have the given mutant beast facet?
+ *
+ * @param facet     The beast_facet in question; e.g. BF_BAT.
+ * @return          Whether the given facet is one this monster has.
+ */
+bool monster::has_facet(int facet) const
+{
+    if (!props.exists(MUTANT_BEAST_FACETS))
+        return false;
+
+    for (auto facet_val : props[MUTANT_BEAST_FACETS].get_vector())
+        if (facet_val.get_int() == facet)
+            return true;
+    return false;
 }

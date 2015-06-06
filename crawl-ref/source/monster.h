@@ -11,6 +11,7 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define MAX_DAMAGE_COUNTER 10000
 #define ZOMBIE_BASE_AC_KEY "zombie_base_ac"
 #define ZOMBIE_BASE_EV_KEY "zombie_base_ev"
+#define MON_SPEED_KEY "speed"
 
 #define FAKE_BLINK_KEY "fake_blink"
 
@@ -562,6 +563,8 @@ public:
 
     bool clear_far_engulf();
     bool search_slots(function<bool (const mon_spell_slot &)> func) const;
+
+    bool has_facet(int facet) const;
 
 private:
     int hit_dice;

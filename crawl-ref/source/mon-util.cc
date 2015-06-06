@@ -2373,18 +2373,18 @@ void define_monster(monster* mons)
     {
     case MONS_ABOMINATION_SMALL:
         hd = 4 + random2(4);
-        mons->props["speed"] = 7 + random2avg(9, 2);
+        mons->props[MON_SPEED_KEY] = 7 + random2avg(9, 2);
         init_abomination(mons, hd);
         break;
 
     case MONS_ABOMINATION_LARGE:
         hd = 8 + random2(4);
-        mons->props["speed"] = 6 + random2avg(7, 2);
+        mons->props[MON_SPEED_KEY] = 6 + random2avg(7, 2);
         init_abomination(mons, hd);
         break;
 
     case MONS_HELL_BEAST:
-        mons->props["speed"] = 10 + random2(8);
+        mons->props[MON_SPEED_KEY] = 10 + random2(8);
         break;
 
     case MONS_SLIME_CREATURE:
@@ -2546,7 +2546,6 @@ void define_monster(monster* mons)
     case MONS_DANCING_WEAPON:
     case MONS_SPECTRAL_WEAPON:
     case MONS_SPELLFORGED_SERVITOR:
-    case MONS_MUTANT_BEAST:
     {
         ghost_demon ghost;
         mons->set_ghost(ghost);
@@ -2831,8 +2830,8 @@ int mons_base_speed(const monster* mon)
     if (mon->ghost.get())
         return mon->ghost->speed;
 
-    if (mon->props.exists("speed"))
-        return mon->props["speed"];
+    if (mon->props.exists(MON_SPEED_KEY))
+        return mon->props[MON_SPEED_KEY];
 
     if (mon->type == MONS_SPECTRAL_THING)
         return mons_class_base_speed(mons_zombie_base(mon));
@@ -3071,7 +3070,7 @@ bool mons_is_immotile(const monster* mons)
 
 bool mons_is_batty(const monster* m)
 {
-    return mons_class_flag(m->type, M_BATTY);
+    return mons_class_flag(m->type, M_BATTY) || m->has_facet(BF_BAT);
 }
 
 bool mons_looks_stabbable(const monster* m)
@@ -5109,5 +5108,16 @@ void init_mutant_beast(monster &mons, short HD, vector<int> beast_facets)
     }
 
     for (auto facet : beast_facets)
+    {
         mons.props[MUTANT_BEAST_FACETS].get_vector().push_back(facet);
+
+        switch (facet)
+        {
+            case BF_BAT:
+                mons.props[MON_SPEED_KEY] = mons.speed * 2;
+                break;
+            default:
+                break;
+        }
+    }
 }
