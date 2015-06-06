@@ -246,7 +246,7 @@ static bool _is_public_key(string key)
      || key == TILE_NUM_KEY
 #endif
      || key == "tile_idx"
-     || key == "custom_spells"
+     || key == CUSTOM_SPELLS_KEY
      || key == ELVEN_IS_ENERGIZED_KEY
      || key == MUTANT_BEAST_FACETS
      || key == MUTANT_BEAST_TIER)
@@ -718,7 +718,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     // book loading for player ghost and vault monsters
     spells.clear();
-    if (m->props.exists("custom_spells") || mons_is_pghost(type))
+    if (m->props.exists(CUSTOM_SPELLS_KEY) || mons_is_pghost(type))
         spells = m->spells;
     if (m->is_priest())
         props["priest"] = true;
@@ -1840,7 +1840,7 @@ bool monster_info::ground_level() const
 bool monster_info::has_spells() const
 {
     // Some monsters have a special book but may not have any spells anyways.
-    if (props.exists("custom_spells"))
+    if (props.exists(CUSTOM_SPELLS_KEY))
         return spells.size() > 0 && spells[0].spell != SPELL_NO_SPELL;
 
     // Almost all draconians have breath spells.

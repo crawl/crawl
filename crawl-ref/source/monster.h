@@ -12,6 +12,7 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define ZOMBIE_BASE_AC_KEY "zombie_base_ac"
 #define ZOMBIE_BASE_EV_KEY "zombie_base_ev"
 #define MON_SPEED_KEY "speed"
+#define CUSTOM_SPELLS_KEY "custom_spells"
 
 #define FAKE_BLINK_KEY "fake_blink"
 

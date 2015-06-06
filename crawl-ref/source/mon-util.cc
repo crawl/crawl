@@ -2219,7 +2219,7 @@ vector<mon_spellbook_type> get_spellbooks(const monster_info &mon)
 {
     // special case for vault monsters: if they have a custom book,
     // treat it as MST_GHOST
-    if (mon.props.exists("custom_spells"))
+    if (mon.props.exists(CUSTOM_SPELLS_KEY))
         return { MST_GHOST };
     else
         return _mons_spellbook_list(mon.type);
@@ -5144,6 +5144,16 @@ void init_mutant_beast(monster &mons, short HD, vector<int> beast_facets)
         {
             case BF_BAT:
                 mons.props[MON_SPEED_KEY] = mons.speed * 2;
+                break;
+            case BF_FIRE:
+                mons.spells.push_back({SPELL_FIRE_BREATH, 60,
+                                       MON_SPELL_NATURAL | MON_SPELL_BREATH});
+                mons.props[CUSTOM_SPELLS_KEY] = true;
+                break;
+            case BF_SHOCK:
+                mons.spells.push_back({SPELL_BLINKBOLT, 60,
+                                       MON_SPELL_NATURAL});
+                mons.props[CUSTOM_SPELLS_KEY] = true;
                 break;
             default:
                 break;
