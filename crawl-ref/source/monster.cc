@@ -3396,6 +3396,10 @@ int monster::base_armour_class() const
         return base_ac + get_monster_data(base_monster)->AC;
     }
 
+    // mutant beasts get extra AC for being musk oxen.
+    if (has_facet(BF_OX))
+        return base_ac + 5;
+
     return base_ac;
 }
 
