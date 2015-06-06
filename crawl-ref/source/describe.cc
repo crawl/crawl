@@ -800,11 +800,11 @@ static string _describe_mutant_beast_facets(const CrawlVector &facets)
     static const string facet_descs[] = {
         " seems unusually buggy.",
         " sprouts a set of venomous tails",
-        " flits and flies around unpredictably",
+        " flies swiftly and unpredictably",
         "s breath smoulders ominously",
-        " is permanently invisible",
+        " is covered with eyes and tentacles",
         " flickers and crackles with electricity",
-        " is covered in thick scales, beneath which lurks a terrible rage",
+        " is covered in dense fur and muscle",
     };
     COMPILE_CHECK(ARRAYSZ(facet_descs) == NUM_BEAST_FACETS);
 
@@ -841,8 +841,8 @@ static string _describe_mutant_beast(const monster_info &mi)
     const int xl = mi.props[MUTANT_BEAST_TIER].get_short();
     const int tier = mutant_beast_tier(xl);
     const CrawlVector facets = mi.props[MUTANT_BEAST_FACETS].get_vector();
-    return _describe_mutant_beast_tier(tier)
-           + " " + _describe_mutant_beast_facets(facets);
+    return _describe_mutant_beast_facets(facets)
+           + " " + _describe_mutant_beast_tier(tier);
 }
 
 static void _append_weapon_stats(string &description, const item_def &item)
