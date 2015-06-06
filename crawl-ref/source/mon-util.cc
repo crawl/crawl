@@ -1293,14 +1293,15 @@ static bool _shout_fits_monster(monster_type mc, int shout)
 
     // For Pandemonium lords, almost everything is fair game. It's only
     // used for the shouting verb ("say", "bellow", "roar", etc.) anyway.
-    if (mc != MONS_HELL_BEAST)
+    if (mc != MONS_HELL_BEAST && mc != MONS_MUTANT_BEAST)
         return true;
 
     switch (shout)
     {
-    // Two-headed ogres or bees never fit.
+    // Bees, cherubs and two-headed ogres never fit.
     case S_SHOUT2:
     case S_BUZZ:
+    case S_CHERUB:
     // The beast cannot speak.
     case S_DEMON_TAUNT:
         return false;
