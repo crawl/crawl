@@ -2491,7 +2491,7 @@ void init_servitor(monster* servitor, actor* caster)
     ASSERT(servitor->ghost.get());
     servitor->ghost->init_spellforged_servitor(caster);
     servitor->ghost_demon_init();
-    servitor->props["custom_spells"].get_bool() = true;
+    servitor->props[CUSTOM_SPELLS_KEY].get_bool() = true;
 
     if (you.can_see(caster))
     {

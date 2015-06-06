@@ -3243,7 +3243,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         // Nothing with 6.
 
         // Indicate that he has an updated spellbook.
-        mons->props["custom_spells"] = true;
+        mons->props[CUSTOM_SPELLS_KEY] = true;
     }
 
     // Finally give them new energy

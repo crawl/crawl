@@ -4883,7 +4883,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     if (mspec.explicit_spells)
     {
         mons->spells = mspec.spells[random2(mspec.spells.size())];
-        mons->props["custom_spells"] = true;
+        mons->props[CUSTOM_SPELLS_KEY] = true;
     }
 
     if (!mspec.items.empty())
