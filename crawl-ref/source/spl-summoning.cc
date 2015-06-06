@@ -375,16 +375,9 @@ spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
     fail_check();
     // Power determines number of heads. Minimum 4 heads, maximum 12.
     // Rare to get more than 8.
-    int heads;
-
-    // Small chance to create a huge hydra (if spell power is high enough)
-    if (one_chance_in(6))
-        heads = min((random2(pow) / 6), 12);
-    else
-        heads = min((random2(pow) / 6), 8);
-
-    if (heads < 4)
-        heads = 4;
+    int heads = max(min(random2(pow) / 6,
+                        one_chance_in(6) ? 12 : 8),
+                    4);
 
     // Duration is always very short - just 1.
     if (monster *hydra = create_monster(
