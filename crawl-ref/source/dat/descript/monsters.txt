@@ -1366,6 +1366,7 @@ torn many a luckless traveler to shreds.
 hell beast
 
 An abominable crossbreed of beast and man that makes horrible barking noises.
+Each varies in speed, from "fast" to "faster".
 %%%%
 hell hog
 
@@ -1596,8 +1597,9 @@ are too big to embrace a small creature like you.
 %%%%
 large abomination
 
-A large and hideous conglomeration of mangled body parts, demonically possessed
-and altered in ways that challenge sanity.
+A hideous conglomeration of mangled body parts, possessed and altered in ways
+that challenge sanity. Each varies in speed and durability by the nature of
+whatever unfortunates were used to make it.
 %%%%
 lava snake
 
@@ -2226,7 +2228,8 @@ with other nearby globs...
 %%%%
 small abomination
 
-A hideous mass of body parts, part animated dead flesh, part demon.
+A hideous mass of body parts. Each varies in speed and durability by the nature
+of whatever unfortunates were used to make it.
 %%%%
 smoke demon
 

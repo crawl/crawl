@@ -597,7 +597,7 @@ monster_info::monster_info(const monster* m, int milev)
     base_ev = m->base_evasion();
     mresists = get_mons_resists(m);
     mitemuse = mons_itemuse(m);
-    mbase_speed = mons_base_speed(m);
+    mbase_speed = mons_base_speed(m, true);
     menergy = mons_energy(m);
 
     if (m->airborne())
