@@ -286,7 +286,7 @@ void debug_list_monsters()
             if (count > 1)
             {
                 snprintf(buf, sizeof(buf), "%d %s", count,
-                         pluralise(prev_name).c_str());
+                         pluralise_monster(prev_name).c_str());
             }
             else
                 snprintf(buf, sizeof(buf), "%s", prev_name.c_str());
@@ -316,7 +316,10 @@ void debug_list_monsters()
 
     char buf[80];
     if (count > 1)
-        snprintf(buf, sizeof(buf), "%d %s", count, pluralise(prev_name).c_str());
+    {
+        snprintf(buf, sizeof(buf), "%d %s", count,
+                 pluralise_monster(prev_name).c_str());
+    }
     else
         snprintf(buf, sizeof(buf), "%s", prev_name.c_str());
     mons.emplace_back(buf);

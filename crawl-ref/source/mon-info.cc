@@ -1325,16 +1325,16 @@ string monster_info::pluralised_name(bool fullname) const
     if (mons_is_unique(type) && type != MONS_MARA)
         return common_name();
     else if (mons_genus(type) == MONS_DRACONIAN)
-        return pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
+        return pluralise_monster(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
     else if (mons_genus(type) == MONS_DEMONSPAWN)
-        return pluralise(mons_type_name(MONS_DEMONSPAWN, DESC_PLAIN));
+        return pluralise_monster(mons_type_name(MONS_DEMONSPAWN, DESC_PLAIN));
     else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
              || type == MONS_DANCING_WEAPON || !fullname)
     {
-        return pluralise(mons_type_name(type, DESC_PLAIN));
+        return pluralise_monster(mons_type_name(type, DESC_PLAIN));
     }
     else
-        return pluralise(common_name());
+        return pluralise_monster(common_name());
 }
 
 enum _monster_list_colour_type

@@ -188,7 +188,7 @@ static string _desc_mons_type_map(map<monster_type, int> types)
         if (entry.second > 1)
         {
             name = make_stringf("%d %s", entry.second,
-                                pluralise(name).c_str());
+                                pluralise_monster(name).c_str());
         }
 
         message += name;
