@@ -5334,6 +5334,8 @@ bool monster::can_see_invisible() const
         return true;
     else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_SEE_INVISIBLE))
         return true;
+    else if (has_facet(BF_WEIRD))
+        return true;
     return false;
 }
 

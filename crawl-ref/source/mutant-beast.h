@@ -17,7 +17,7 @@ enum beast_facet
     BF_FIRST = BF_STING,
     BF_BAT,
     BF_FIRE,
-    BF_GHOST,
+    BF_WEIRD,
     BF_SHOCK,
     BF_BEAR,
     BF_LAST = BF_BEAR,
@@ -43,7 +43,7 @@ COMPILE_CHECK(ARRAYSZ(beast_tiers) == NUM_BEAST_TIERS);
 
 /// names of beast facets
 const string mutant_beast_facet_names[] = {
-    "buggy", "sting", "bat", "fire", "ghost", "shock", "bear",
+    "buggy", "sting", "bat", "fire", "weird", "shock", "bear",
 };
 COMPILE_CHECK(ARRAYSZ(mutant_beast_facet_names) == NUM_BEAST_FACETS);
 
