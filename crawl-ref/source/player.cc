@@ -5743,7 +5743,7 @@ int player::adjusted_shield_penalty(int scale) const
 float player::get_shield_skill_to_offset_penalty(const item_def &item)
 {
     int evp = property(item, PARM_EVASION);
-    return -1 * evp * player_shield_racial_factor() / 10;
+    return -1 * evp * player_shield_racial_factor() / 10.0;
 }
 
 int player::armour_tohit_penalty(bool random_factor, int scale) const
