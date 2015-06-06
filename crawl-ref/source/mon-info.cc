@@ -1683,11 +1683,26 @@ int monster_info::randarts(artefact_prop_type ra_prop) const
     return ret;
 }
 
+/**
+ * Can the monster described by this monster_info see invisible creatures?
+ *
+ * This should match the logic in monster::can_see_invisible().
+ *
+ * XXX: This is an abomination and should be destroyed, probably by adding a
+ * sees_invisible field that's initialized by monster::can_see_invisible();
+ * just need to avoid leaking info from e.g. jewellery.
+ *
+ * @return
+ */
 bool monster_info::can_see_invisible() const
 {
-    // This should match the logic in monster::can_see_invisible().
     if (mons_is_ghost_demon(type))
         return i_ghost.can_sinv;
+
+    if (props.exists(MUTANT_BEAST_FACETS))
+        for (auto facet : props[MUTANT_BEAST_FACETS].get_vector())
+            if (facet.get_int() == BF_WEIRD)
+                return true;
 
     return mons_class_flag(type, M_SEE_INVIS)
            || mons_is_demonspawn(type)
