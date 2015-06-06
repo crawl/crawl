@@ -6030,10 +6030,11 @@ bool monster::should_drink_potion(potion_type ptype) const
     return false;
 }
 
-// Return the ID status gained.
-item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff,
-                                                     bool card)
+// Return true if the potion should be identified.
+bool monster::drink_potion_effect(potion_type pot_eff, bool card)
 {
+    bool was_visible = you.can_see(this);
+
     if (!card)
         simple_monster_message(this, " drinks a potion.");
 
@@ -6049,8 +6050,6 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff,
             ENCH_POISON, ENCH_SICK, ENCH_CONFUSION
         };
 
-        // We can differentiate curing and heal wounds (and blood,
-        // for vampires) by seeing if any status ailments are cured.
         for (enchant_type cured : cured_enchants)
             del_ench(cured);
     }
@@ -6097,10 +6096,10 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff,
         break;
 
     default:
-        break;
+        return false;
     }
 
-    return ID_KNOWN_TYPE;
+    return !card;
 }
 
 bool monster::can_evoke_jewellery(jewellery_type jtype) const
@@ -6150,8 +6149,8 @@ bool monster::should_evoke_jewellery(jewellery_type jtype) const
     return false;
 }
 
-// Return the ID status gained.
-item_type_id_state_type monster::evoke_jewellery_effect(jewellery_type jtype)
+// Return true if the jewellery should be identified.
+bool monster::evoke_jewellery_effect(jewellery_type jtype)
 {
     // XXX: this is mostly to prevent a funny message order:
     // "$foo evokes its amulet. $foo wields a great mace. $foo goes berserk!"
@@ -6162,30 +6161,25 @@ item_type_id_state_type monster::evoke_jewellery_effect(jewellery_type jtype)
          pronoun(PRONOUN_POSSESSIVE).c_str(),
          jewellery_is_amulet(jtype) ? "amulet" : "ring");
 
-    item_type_id_state_type ident = ID_MON_TRIED_TYPE;
-
     switch (jtype)
     {
     case AMU_RAGE:
-        if (enchant_actor_with_flavour(this, this, BEAM_BERSERK))
-            ident = ID_KNOWN_TYPE;
+        enchant_actor_with_flavour(this, this, BEAM_BERSERK);
         break;
 
     case RING_INVISIBILITY:
-        if (enchant_actor_with_flavour(this, this, BEAM_INVISIBILITY))
-            ident = ID_KNOWN_TYPE;
+        enchant_actor_with_flavour(this, this, BEAM_INVISIBILITY);
         break;
 
     case RING_TELEPORTATION:
         teleport(false);
-        ident = ID_KNOWN_TYPE;
         break;
 
     default:
-        break;
+        return false;
     }
 
-    return ident;
+    return true;
 }
 
 void monster::react_to_damage(const actor *oppressor, int damage,
@@ -6757,7 +6751,7 @@ void monster::id_if_worn(mon_inv_type mslot, object_class_type base_type,
     item_def *item = mslot_item(mslot);
 
     if (item && item->is_type(base_type, sub_type))
-        set_ident_type(*item, ID_KNOWN_TYPE);
+        set_ident_type(*item, true);
 }
 
 bool monster::check_clarity(bool silent) const

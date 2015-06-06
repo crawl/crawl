@@ -563,7 +563,7 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
                                              : get_random_ring_type();
 
         // If we haven't seen this yet, we're done.
-        if (get_ident_type(OBJ_JEWELLERY, result) == ID_UNKNOWN_TYPE)
+        if (!get_ident_type(OBJ_JEWELLERY, result))
             break;
     }
 
@@ -597,7 +597,7 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     result = random2(NUM_STAVES);
 #endif
 
-#define TRY_GIVE(x) { if (you.type_ids[OBJ_STAVES][x] != ID_KNOWN_TYPE) \
+#define TRY_GIVE(x) { if (!you.type_ids[OBJ_STAVES][x]) \
                       {result = x; found_enhancer = true;} }
     switch (best_spell_skill)
     {
@@ -763,7 +763,7 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
 
     // Unknown wands get a huge weight bonus.
     for (auto &weight : weights)
-        if (get_ident_type(OBJ_WANDS, weight.first) == ID_UNKNOWN_TYPE)
+        if (!get_ident_type(OBJ_WANDS, weight.first))
             weight.second *= 2;
 
     const wand_type* wand = random_choose_weighted(weights);

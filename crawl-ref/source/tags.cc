@@ -1637,11 +1637,8 @@ static void tag_construct_you_items(writer &th)
         if (!item_type_has_ids((object_class_type)i))
             continue;
         for (int j = 0; j < MAX_SUBTYPES; ++j)
-            marshallUByte(th, you.type_ids[i][j]);
+            marshallBoolean(th, you.type_ids[i][j]);
     }
-
-    // Additional identification info
-    you.type_id_props.write(th);
 
     CANARY;
 
@@ -3342,26 +3339,36 @@ static void tag_read_you_items(reader &th)
         for (int j = 0; j < count2; ++j)
         {
 #if TAG_MAJOR_VERSION == 34
-            uint8_t x;
+            if (th.getMinorVersion() < TAG_MINOR_ID_STATES)
+            {
+                uint8_t x;
 
-            if (th.getMinorVersion() < TAG_MINOR_BOOK_ID && i == OBJ_BOOKS)
-                x = ID_UNKNOWN_TYPE;
+                if (th.getMinorVersion() < TAG_MINOR_BOOK_ID && i == OBJ_BOOKS)
+                    x = ID_UNKNOWN_TYPE;
+                else
+                    x = unmarshallUByte(th);
+
+                ASSERT(x < NUM_ID_STATE_TYPES);
+                if (x > ID_UNKNOWN_TYPE)
+                    you.type_ids[i][j] = true;
+                else
+                    you.type_ids[i][j] = false;
+            }
             else
-                x = unmarshallUByte(th);
-
-            ASSERT(x < NUM_ID_STATE_TYPES);
-            you.type_ids[i][j] = static_cast<item_type_id_state_type>(x);
-#else
-            you.type_ids[i][j] = static_cast<item_type_id_state_type>(
-                                     unmarshallUByte(th));
 #endif
+            you.type_ids[i][j] = unmarshallBoolean(th);
         }
         for (int j = count2; j < MAX_SUBTYPES; ++j)
-            you.type_ids[i][j] = ID_UNKNOWN_TYPE;
+            you.type_ids[i][j] = false;
     }
 
-    // Additional identification info
-    you.type_id_props.read(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_ID_STATES)
+    {
+        CrawlHashTable old_type_id_props;
+        old_type_id_props.read(th);
+    }
+#endif
 
     EAT_CANARY;
 

@@ -940,7 +940,7 @@ void set_ident_flags(item_def &item, iflags_t flags)
     if (fully_identified(item))
     {
         if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID)
-            && get_ident_type(item) != ID_KNOWN_TYPE
+            && !get_ident_type(item)
             && is_interesting_item(item))
         {
             // Make a note of it.
@@ -2952,12 +2952,12 @@ void seen_item(const item_def &item)
 
     if (item_type_has_ids(item.base_type) && !is_artefact(item)
         && item_ident(item, ISFLAG_KNOW_TYPE)
-        && you.type_ids[item.base_type][item.sub_type] != ID_KNOWN_TYPE)
+        && !you.type_ids[item.base_type][item.sub_type])
     {
         // Can't cull shop items here -- when called from view, we shouldn't
         // access the UI. Old ziggurat prompts are a very minor case of what
         // could go wrong.
-        set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
+        set_ident_type(item.base_type, item.sub_type, true);
     }
 }
 

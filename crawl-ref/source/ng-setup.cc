@@ -347,16 +347,16 @@ static void _give_basic_knowledge()
             mark_had_book(i);
 
     // Recognisable by appearance.
-    you.type_ids[OBJ_POTIONS][POT_BLOOD] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_POTIONS][POT_BLOOD] = true;
 #if TAG_MAJOR_VERSION == 34
-    you.type_ids[OBJ_POTIONS][POT_BLOOD_COAGULATED] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_POTIONS][POT_PORRIDGE] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_POTIONS][POT_BLOOD_COAGULATED] = true;
+    you.type_ids[OBJ_POTIONS][POT_PORRIDGE] = true;
 #endif
 
     // Won't appear unidentified anywhere.
-    you.type_ids[OBJ_SCROLLS][SCR_CURSE_WEAPON] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_SCROLLS][SCR_CURSE_JEWELLERY] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_SCROLLS][SCR_CURSE_ARMOUR] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_SCROLLS][SCR_CURSE_WEAPON] = true;
+    you.type_ids[OBJ_SCROLLS][SCR_CURSE_JEWELLERY] = true;
+    you.type_ids[OBJ_SCROLLS][SCR_CURSE_ARMOUR] = true;
 }
 
 static void _setup_normal_game();

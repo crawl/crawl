@@ -3311,7 +3311,7 @@ static void _god_welcome_handle_gear()
             if (you.inv[i].defined())
                 you.inv[i].flags |= ISFLAG_KNOW_CURSE;
 
-        set_ident_type(OBJ_SCROLLS, SCR_REMOVE_CURSE, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_SCROLLS, SCR_REMOVE_CURSE, true);
         auto_id_inventory();
         ash_detect_portals(true);
     }

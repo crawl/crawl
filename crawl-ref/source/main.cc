@@ -695,21 +695,21 @@ static void _startup_hints_mode()
 static void _set_removed_types_as_identified()
 {
 #if TAG_MAJOR_VERSION == 34
-    you.type_ids[OBJ_JEWELLERY][AMU_CONTROLLED_FLIGHT] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_JEWELLERY][AMU_CONSERVATION] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_STAVES][STAFF_ENCHANTMENT] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_STAVES][STAFF_CHANNELING] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_POTIONS][POT_GAIN_STRENGTH] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_POTIONS][POT_GAIN_DEXTERITY] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_POTIONS][POT_GAIN_INTELLIGENCE] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_POTIONS][POT_WATER] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_POTIONS][POT_STRONG_POISON] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_POTIONS][POT_PORRIDGE] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_POTIONS][POT_SLOWING] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_POTIONS][POT_DECAY] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_POTIONS][POT_RESTORE_ABILITIES] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_WEAPON_II] = ID_KNOWN_TYPE;
-    you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_WEAPON_III] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_JEWELLERY][AMU_CONTROLLED_FLIGHT] = true;
+    you.type_ids[OBJ_JEWELLERY][AMU_CONSERVATION] = true;
+    you.type_ids[OBJ_STAVES][STAFF_ENCHANTMENT] = true;
+    you.type_ids[OBJ_STAVES][STAFF_CHANNELING] = true;
+    you.type_ids[OBJ_POTIONS][POT_GAIN_STRENGTH] = true;
+    you.type_ids[OBJ_POTIONS][POT_GAIN_DEXTERITY] = true;
+    you.type_ids[OBJ_POTIONS][POT_GAIN_INTELLIGENCE] = true;
+    you.type_ids[OBJ_POTIONS][POT_WATER] = true;
+    you.type_ids[OBJ_POTIONS][POT_STRONG_POISON] = true;
+    you.type_ids[OBJ_POTIONS][POT_PORRIDGE] = true;
+    you.type_ids[OBJ_POTIONS][POT_SLOWING] = true;
+    you.type_ids[OBJ_POTIONS][POT_DECAY] = true;
+    you.type_ids[OBJ_POTIONS][POT_RESTORE_ABILITIES] = true;
+    you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_WEAPON_II] = true;
+    you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_WEAPON_III] = true;
 #endif
 }
 

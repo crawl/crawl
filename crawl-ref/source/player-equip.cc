@@ -274,7 +274,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
 
     if (!fully_identified(item))
     {
-        set_ident_type(item, ID_KNOWN_TYPE);
+        set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 #undef unknown_proprt
@@ -423,7 +423,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     case OBJ_STAVES:
     {
         set_ident_flags(item, ISFLAG_IDENT_MASK);
-        set_ident_type(OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_STAVES, item.sub_type, true);
 
         if (item.sub_type == STAFF_POWER)
         {
@@ -1208,7 +1208,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     }
     else
     {
-        new_ident = set_ident_type(item, ID_KNOWN_TYPE);
+        new_ident = set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 

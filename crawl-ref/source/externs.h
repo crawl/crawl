@@ -822,6 +822,6 @@ struct cglyph_t
     }
 };
 
-typedef FixedArray<item_type_id_state_type, NUM_OBJECT_CLASSES, MAX_SUBTYPES> id_arr;
+typedef FixedArray<bool, NUM_OBJECT_CLASSES, MAX_SUBTYPES> id_arr;
 
 #endif // EXTERNS_H
