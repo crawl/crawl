@@ -327,6 +327,30 @@ static resists_t _apply_holiness_resists(resists_t resists, mon_holy_type mh)
     return resists;
 }
 
+/**
+ * What special resistances does the given mutant beast facet provide?
+ *
+ * @param facet     The beast_facet in question, e.g. BF_FIRE.
+ * @return          A bitfield of resists corresponding to the given facet;
+ *                  e.g. MR_RES_FIRE for BF_FIRE.
+ */
+static resists_t _beast_facet_resists(beast_facet facet)
+{
+    switch (facet)
+    {
+        case BF_STING:
+            return MR_RES_POISON;
+        case BF_FIRE:
+            return MR_RES_FIRE;
+        case BF_SHOCK:
+            return MR_RES_ELEC;
+        case BF_OX:
+            return MR_RES_COLD;
+        default:
+            return 0;
+    }
+}
+
 resists_t get_mons_class_resists(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
@@ -361,6 +385,10 @@ resists_t get_mons_resists(const monster* mon)
         if (subspecies != mon->type)
             resists |= get_mons_class_resists(subspecies);
     }
+
+    if (mon->props.exists(MUTANT_BEAST_FACETS))
+        for (auto facet : mon->props[MUTANT_BEAST_FACETS].get_vector())
+            resists |= _beast_facet_resists((beast_facet)facet.get_int());
 
     // This is set from here in case they're undead due to the
     // MF_FAKE_UNDEAD flag. See the comment in get_mons_class_resists.
