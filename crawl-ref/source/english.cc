@@ -28,7 +28,7 @@ bool is_vowel(const ucs_t chr)
 // Pluralises a monster or item name. This'll need to be updated for
 // correctness whenever new monsters/items are added.
 string pluralise(const string &name, const char * const qualifiers[],
-                 const char *no_qualifier[])
+                 const char * const no_qualifier[])
 {
     string::size_type pos;
 

@@ -99,7 +99,7 @@ string uppercase_first(string s)
     return s;
 }
 
-int ends_with(const string &s, const char *suffixes[])
+int ends_with(const string &s, const char * const suffixes[])
 {
     if (!suffixes)
         return 0;
