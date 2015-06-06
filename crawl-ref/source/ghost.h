@@ -47,8 +47,6 @@ public:
 
     void init_spellforged_servitor(actor* caster);
 
-    void init_lich(monster_type type);
-
     void ugly_thing_to_very_ugly_thing();
 
 
