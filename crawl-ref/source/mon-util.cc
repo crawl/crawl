@@ -1742,6 +1742,65 @@ static mon_attack_def _downscale_zombie_attack(const monster* mons,
     return attk;
 }
 
+/**
+ * What attack does the given mutant beast facet provide?
+ *
+ * @param facet     The facet in question; e.g. BF_STING.
+ * @param tier      The tier of the mutant beast; e.g.
+ * @return          The attack corresponding to the given facet; e.g. BT_LARVAL
+ *                  { AT_REACH_STING, AF_VENOM, 10 }. Scales with HD.
+ *                  For facets that don't provide an attack, is { }.
+ */
+static mon_attack_def _mutant_beast_facet_attack(int facet, int tier)
+{
+    const int dam = tier * 8;
+    switch (facet)
+    {
+        case BF_STING:
+            return { AT_REACH_STING, AF_WEAKNESS_POISON, dam };
+        case BF_OX:
+            return { AT_TRAMPLE, AF_TRAMPLE, dam };
+        case BF_WEIRD:
+            return { AT_CONSTRICT, AF_CRUSH, dam };
+        default:
+            return { };
+    }
+}
+
+/**
+ * Get the attack type, attack flavour and damage for the given attack of a
+ * mutant beast.
+ *
+ * @param mon           The monster in question.
+ * @param attk_number   Which attack number to get.
+ * @return              A mon_attack_def for the specified attack.
+ */
+static mon_attack_def _mutant_beast_attack(const monster &mon, int attk_number)
+{
+    const int tier = mutant_beast_tier(mon.get_experience_level());
+    if (attk_number == 0)
+        return { AT_HIT, AF_PLAIN, tier * 12 };
+
+    if (!mon.props.exists(MUTANT_BEAST_FACETS))
+        return { };
+
+    int cur_attk = 1;
+    for (auto facet : mon.props[MUTANT_BEAST_FACETS].get_vector())
+    {
+        const mon_attack_def atk = _mutant_beast_facet_attack(facet.get_int(),
+                                                              tier);
+        if (atk.type == AT_NONE)
+            continue;
+
+        if (cur_attk == attk_number)
+            return atk;
+
+        ++cur_attk;
+    }
+
+    return { };
+}
+
 /** Get the attack type, attack flavour and damage for a monster attack.
  *
  * @param mon The monster to look at.
@@ -1776,6 +1835,8 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
 
         return mon_attack_def::attk(0, AT_NONE);
     }
+    else if (mc == MONS_MUTANT_BEAST)
+        return _mutant_beast_attack(*mon, attk_number);
     else if (mons_is_demonspawn(mc) && attk_number != 0)
         mc = draco_or_demonspawn_subspecies(mon);
 
@@ -5110,7 +5171,7 @@ bool mons_can_display_wounds(const monster* mon)
  * vary between individual beasts).
  *
  * @param mons      The beast to be initialized.
- * @param HD        The beast's HD. If 0, default to beast_tiers[BT_MATURE].
+ * @param HD        The beast's HD. If 0, default to mon-data's version.
  * @param facets    The beast's facets (e.g. fire, bat).
  *                  If empty, chooses two distinct facets at random.
  */
