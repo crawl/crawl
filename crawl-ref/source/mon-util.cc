@@ -2464,10 +2464,6 @@ void define_monster(monster* mons)
         init_abomination(mons, hd);
         break;
 
-    case MONS_HELL_BEAST:
-        mons->props[MON_SPEED_KEY] = 10 + random2(8);
-        break;
-
     case MONS_SLIME_CREATURE:
         // Slime creatures start off as only single un-merged blobs.
         mons->blob_size = 1;

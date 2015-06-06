@@ -1366,7 +1366,6 @@ torn many a luckless traveler to shreds.
 hell beast
 
 An abominable crossbreed of beast and man that makes horrible barking noises.
-Each varies in speed, from "fast" to "faster".
 %%%%
 hell hog
 
