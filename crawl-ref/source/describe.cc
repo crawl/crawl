@@ -1248,11 +1248,12 @@ static string _describe_armour(const item_def &item, bool verbose)
     }
     else if (verbose)
     {
+        const float skill = you.get_shield_skill_to_offset_penalty(item);
         description += "\n";
         description += "\nBase shield rating: "
                     + to_string(property(item, PARM_AC))
                     + "       Skill to remove penalty: "
-                    + to_string(you.get_shield_skill_to_offset_penalty(item));
+                    + make_stringf("%.1f", skill);
     }
 
     const int ego = get_armour_ego_type(item);
