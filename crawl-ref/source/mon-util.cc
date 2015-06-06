@@ -3071,8 +3071,7 @@ bool mons_is_immotile(const monster* mons)
 
 bool mons_is_batty(const monster* m)
 {
-    return mons_class_flag(m->type, M_BATTY)
-           || mons_is_ghost_demon(m->type) && m->ghost->is_batty();
+    return mons_class_flag(m->type, M_BATTY);
 }
 
 bool mons_looks_stabbable(const monster* m)
@@ -5075,4 +5074,40 @@ bool mons_can_display_wounds(const monster* mon)
     get_tentacle_head(mon);
 
     return mons_class_can_display_wounds(mon->type);
+}
+
+
+/**
+ * Set up fields for mutant beasts that vary by tier & facets (that is, that
+ * vary between individual beasts).
+ *
+ * @param mons      The beast to be initialized.
+ * @param HD        The beast's HD. If 0, default to beast_tiers[BT_MATURE].
+ * @param facets    The beast's facets (e.g. fire, bat).
+ *                  If empty, chooses two distinct facets at random.
+ */
+void init_mutant_beast(monster &mons, short HD, vector<int> beast_facets)
+{
+    if (!HD)
+        HD = mons.get_experience_level();
+
+    // MUTANT_BEAST_TIER is to make it visible for mon-info
+    mons.props[MUTANT_BEAST_TIER] = HD;
+
+    if (beast_facets.empty())
+    {
+        beast_facets.push_back(random_range(BF_FIRST, BF_LAST));
+
+        vector<int> second_facets;
+        for (int f = BF_FIRST; f <= BF_LAST; ++f)
+            if (f != beast_facets[0])
+                second_facets.push_back(f);
+        beast_facets.push_back(second_facets[random2(second_facets.size())]);
+
+        ASSERT(beast_facets.size() == 2);
+        ASSERT(beast_facets[0] != beast_facets[1]);
+    }
+
+    for (auto facet : beast_facets)
+        mons.props[MUTANT_BEAST_FACETS].get_vector().push_back(facet);
 }

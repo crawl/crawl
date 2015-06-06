@@ -38,7 +38,7 @@ enum beast_tier
 };
 
 /// HD of mutant beast tiers
-const int beast_tiers[] = { 0, 3, 9, 15, 21, 27, };
+const short beast_tiers[] = { 0, 3, 9, 15, 21, 27, };
 COMPILE_CHECK(ARRAYSZ(beast_tiers) == NUM_BEAST_TIERS);
 
 /// names of beast facets
