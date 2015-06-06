@@ -25,7 +25,7 @@ string uppercase_first(string);
  * Returns 1 + the index of the first suffix that matches the given string,
  * 0 if no suffixes match.
  */
-int ends_with(const string &s, const char *suffixes[]);
+int ends_with(const string &s, const char * const suffixes[]);
 
 string wordwrap_line(string &s, int cols, bool tags = false,
                      bool indent = false);
