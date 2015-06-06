@@ -888,7 +888,7 @@ static bool _purchase(shop_struct& shop, int index, int cost, bool id)
     {
         // Identify the item and its type.
         // This also takes the ID note if necessary.
-        set_ident_type(item, ID_KNOWN_TYPE);
+        set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
@@ -2103,7 +2103,7 @@ bool shop_item_unknown(const item_def &item)
 {
     return item_type_has_ids(item.base_type)
            && item_type_known(item)
-           && get_ident_type(item) != ID_KNOWN_TYPE
+           && !get_ident_type(item)
            && !is_artefact(item);
 }
 

@@ -2131,7 +2131,7 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
         if (alreadyknown)
             mpr(pre_msg);
 
-        set_ident_type(item, ID_KNOWN_TYPE);
+        set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
         if (is_deck(item) && !top_card_is_known(item))
@@ -2723,7 +2723,7 @@ void read_scroll(int item_slot)
         mpr("This is a scroll of acquirement!");
         more();
         // Identify it early in case the player checks the '\' screen.
-        set_ident_type(scroll, ID_KNOWN_TYPE);
+        set_ident_type(scroll, true);
         run_uncancel(UNC_ACQUIREMENT, AQ_SCROLL);
         break;
 
@@ -2842,7 +2842,7 @@ void read_scroll(int item_slot)
             mpr("It is a scroll of identify.");
             more();
             // Do this here so it doesn't turn up in the ID menu.
-            set_ident_type(scroll, ID_KNOWN_TYPE);
+            set_ident_type(scroll, true);
         }
         cancel_scroll = !_identify(alreadyknown, pre_succ_msg);
         break;
@@ -2914,7 +2914,7 @@ void read_scroll(int item_slot)
     if (cancel_scroll)
         you.turn_is_over = false;
 
-    set_ident_type(scroll, ID_KNOWN_TYPE);
+    set_ident_type(scroll, true);
     set_ident_flags(scroll, ISFLAG_KNOW_TYPE); // for notes
 
     string scroll_name = scroll.name(DESC_QUALNAME).c_str();

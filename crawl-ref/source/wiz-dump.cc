@@ -281,7 +281,7 @@ static item_def _item_from_string(string s)
     else
         end--;
 
-    set_ident_type(ret, ID_KNOWN_TYPE);
+    set_ident_type(ret, true);
     set_ident_flags(ret, ISFLAG_IDENT_MASK);
 
     string base_name = s.substr(0, end);

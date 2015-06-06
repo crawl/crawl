@@ -665,11 +665,10 @@ void wizard_identify_pack()
 
 static void _forget_item(item_def &item)
 {
-    set_ident_type(item, ID_UNKNOWN_TYPE);
+    set_ident_type(item, false);
     unset_ident_flags(item, ISFLAG_IDENT_MASK);
-    item.flags &= ~(ISFLAG_SEEN | ISFLAG_TRIED | ISFLAG_HANDLED
-                    |ISFLAG_THROWN | ISFLAG_DROPPED
-                    | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+    item.flags &= ~(ISFLAG_SEEN | ISFLAG_HANDLED | ISFLAG_THROWN
+                    | ISFLAG_DROPPED | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
 }
 
 void wizard_unidentify_pack()
@@ -1525,7 +1524,7 @@ void wizard_identify_all_items()
         if (!item_type_has_ids(i))
             continue;
         for (int j = 0; j < get_max_subtype(i); j++)
-            set_ident_type(i, j, ID_KNOWN_TYPE);
+            set_ident_type(i, j, true);
     }
 }
 
@@ -1544,7 +1543,7 @@ void wizard_unidentify_all_items()
         if (!item_type_has_ids(i))
             continue;
         for (int j = 0; j < get_max_subtype(i); j++)
-            set_ident_type(i, j, ID_UNKNOWN_TYPE);
+            set_ident_type(i, j, false);
     }
 }
 

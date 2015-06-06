@@ -786,15 +786,9 @@ static bool _handle_potion(monster* mons, bolt & beem)
         if (ptype == POT_BERSERK_RAGE)
             mons->wield_melee_weapon();
 
-        // Drink the potion.
-        const item_type_id_state_type id = mons->drink_potion_effect(ptype);
-
-        // Give ID if necessary.
-        if (was_visible && id != ID_UNKNOWN_TYPE)
-        {
-            set_ident_type(OBJ_POTIONS, ptype, id);
-            identify_healing_pots();
-        }
+        // Drink the potion, and identify it.
+        if (mons->drink_potion_effect(ptype) && was_visible)
+            set_ident_type(OBJ_POTIONS, ptype, true);
 
         // Remove the oldest blood timer.
         if (is_blood_potion(potion))
@@ -840,12 +834,9 @@ static bool _handle_evoke_equipment(monster* mons, bolt & beem)
     {
         const bool was_visible = you.can_see(mons);
 
-        // Drink the potion.
-        const item_type_id_state_type id = mons->evoke_jewellery_effect(jtype);
-
-        // Give ID if necessary.
-        if (was_visible && id != ID_UNKNOWN_TYPE)
-            set_ident_type(OBJ_JEWELLERY, jtype, id);
+        // Evoke the item, and identify it.
+        if (mons->evoke_jewellery_effect(jtype) && was_visible)
+            set_ident_type(OBJ_JEWELLERY, jtype, true);
 
         mons->lose_energy(EUT_ITEM);
         rc = true;
@@ -1019,9 +1010,8 @@ static bool _handle_scroll(monster* mons)
     if (mitm[mons->inv[MSLOT_SCROLL]].base_type != OBJ_SCROLLS)
         return false;
 
-    bool                    read        = false;
-    item_type_id_state_type ident       = ID_UNKNOWN_TYPE;
-    bool                    was_visible = you.can_see(mons);
+    bool read        = false;
+    bool was_visible = you.can_see(mons);
 
     // Notice how few cases are actually accounted for here {dlb}:
     const int scroll_type = mitm[mons->inv[MSLOT_SCROLL]].sub_type;
@@ -1034,7 +1024,6 @@ static bool _handle_scroll(monster* mons)
             {
                 simple_monster_message(mons, " reads a scroll.");
                 read = true;
-                ident = ID_KNOWN_TYPE;
                 monster_teleport(mons, false);
             }
         }
@@ -1047,12 +1036,9 @@ static bool _handle_scroll(monster* mons)
             simple_monster_message(mons, " reads a scroll.");
             read = true;
             if (mons->caught())
-            {
-                ident = ID_KNOWN_TYPE;
                 monster_blink(mons);
-            }
-            else if (blink_away(mons))
-                ident = ID_KNOWN_TYPE;
+            else
+                blink_away(mons);
         }
         break;
 
@@ -1070,7 +1056,6 @@ static bool _handle_scroll(monster* mons)
                               3, MON_SUMM_SCROLL, mons->pos(), mons->foe,
                               0, GOD_NO_GOD));
             }
-            ident = ID_KNOWN_TYPE;
         }
         break;
     }
@@ -1080,8 +1065,8 @@ static bool _handle_scroll(monster* mons)
         if (dec_mitm_item_quantity(mons->inv[MSLOT_SCROLL], 1))
             mons->inv[MSLOT_SCROLL] = NON_ITEM;
 
-        if (ident != ID_UNKNOWN_TYPE && was_visible)
-            set_ident_type(OBJ_SCROLLS, scroll_type, ident);
+        if (was_visible)
+            set_ident_type(OBJ_SCROLLS, scroll_type, true);
 
         mons->lose_energy(EUT_ITEM);
     }
@@ -1191,7 +1176,7 @@ static void _mons_fire_wand(monster* mons, item_def &wand, bolt &beem,
     {
         const int wand_type = wand.sub_type;
 
-        set_ident_type(OBJ_WANDS, wand_type, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_WANDS, wand_type, true);
         if (!mons->props["wand_known"].get_bool())
         {
             mprf("It is %s.", wand.name(DESC_A).c_str());

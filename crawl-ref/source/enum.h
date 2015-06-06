@@ -2137,7 +2137,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_CURSED            = 0x00000100,  // cursed
     ISFLAG_HANDLED           = 0x00000200,  // player has handled this item
                              //0x00000400,  // was: ISFLAG_SEEN_CURSED
-    ISFLAG_TRIED             = 0x00000800,  // tried but not (usually) ided
+                             //0x00000800,  // was: ISFLAG_TRIED
 
     ISFLAG_RANDART           = 0x00001000,  // special value is seed
     ISFLAG_UNRANDART         = 0x00002000,  // is an unrandart
@@ -2175,6 +2175,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 #endif
 };
 
+#if TAG_MAJOR_VERSION == 34
 enum item_type_id_state_type
 {
     ID_UNKNOWN_TYPE = 0,
@@ -2184,6 +2185,7 @@ enum item_type_id_state_type
     ID_KNOWN_TYPE,
     NUM_ID_STATE_TYPES
 };
+#endif
 
 enum job_type
 {
@@ -4910,7 +4912,7 @@ enum tile_flags ENUM_INT64
 enum tile_inventory_flags
 {
     TILEI_FLAG_SELECT  = 0x0100,
-    TILEI_FLAG_TRIED   = 0x0200,
+                       //0x0200, // was: TILEI_FLAG_TRIED
     TILEI_FLAG_EQUIP   = 0x0400,
     TILEI_FLAG_FLOOR   = 0x0800,
     TILEI_FLAG_CURSE   = 0x1000,

@@ -1870,7 +1870,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
 
     god_id_item(item);
     if (item.base_type == OBJ_WANDS)
-        set_ident_type(item, ID_KNOWN_TYPE);
+        set_ident_type(item, true);
     maybe_identify_base_type(item);
     if (item.base_type == OBJ_BOOKS)
         maybe_id_book(item, true);
@@ -4687,8 +4687,6 @@ item_info get_item_info(const item_def& item)
         if (item.props.exists(ARTEFACT_NAME_KEY))
             ii.props[ARTEFACT_NAME_KEY] = item.props[ARTEFACT_NAME_KEY];
     }
-    else if (item_type_tried(item))
-        ii.flags |= ISFLAG_TRIED;
 
     static const char* copy_props[] =
     {
@@ -4846,7 +4844,7 @@ static void _identify_last_item(item_def &item)
         item.props["needs_autopickup"] = true;
     }
 
-    set_ident_type(item, ID_KNOWN_TYPE);
+    set_ident_type(item, true);
 
     if (item.props.exists("needs_autopickup") && is_useless_item(item))
         item.props.erase("needs_autopickup");
@@ -4875,7 +4873,7 @@ bool maybe_identify_base_type(item_def &item)
 {
     if (is_artefact(item))
         return false;
-    if (get_ident_type(item) == ID_KNOWN_TYPE)
+    if (get_ident_type(item))
         return false;
 
     const int item_count = _items_in_category(item);

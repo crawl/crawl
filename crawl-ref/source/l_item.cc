@@ -343,13 +343,6 @@ IDEF(cursed)
     return 1;
 }
 
-IDEF(tried)
-{
-    bool tried = item && item_type_tried(*item);
-    lua_pushboolean(ls, tried);
-    return 1;
-}
-
 IDEF(worn)
 {
     int worn = get_equip_slot(item);
@@ -1228,7 +1221,6 @@ static ItemAccessor item_attrs[] =
     { "subtype",           l_item_subtype },
     { "ego",               l_item_ego },
     { "cursed",            l_item_cursed },
-    { "tried",             l_item_tried },
     { "worn",              l_item_worn },
     { "name",              l_item_name },
     { "name_coloured",     l_item_name_coloured },

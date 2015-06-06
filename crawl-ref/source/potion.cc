@@ -1216,9 +1216,8 @@ bool quaff_potion(item_def &potion)
     if (!was_known)
     {
         set_ident_flags(potion, ISFLAG_IDENT_MASK);
-        set_ident_type(potion, ID_KNOWN_TYPE);
+        set_ident_type(potion, true);
         mprf("It was a %s.", potion.name(DESC_QUALNAME).c_str());
-        identify_healing_pots();
     }
 
     const potion_type ptyp = static_cast<potion_type>(potion.sub_type);

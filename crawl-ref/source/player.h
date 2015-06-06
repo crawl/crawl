@@ -293,9 +293,6 @@ public:
 
   // The player's knowledge about item types.
   id_arr type_ids;
-  // Additional information, about tried unidentified items.
-  // (e.g. name of item, for scrolls of RC, ID, EA)
-  CrawlHashTable type_id_props;
 
   // The version the save was last played with.
   string prev_save_version;

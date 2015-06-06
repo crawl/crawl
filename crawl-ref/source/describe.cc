@@ -1691,7 +1691,7 @@ string get_item_description(const item_def &item, bool verbose,
                     << " link: " << item.link
                     << " slot: " << item.slot
                     << " ident_type: "
-                    << static_cast<int>(get_ident_type(item))
+                    << get_ident_type(item)
                     << "\nannotate: "
                     << stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
     }

@@ -434,7 +434,7 @@ bool god_id_item(item_def& item, bool silent)
     if (ided & ~old_ided)
     {
         if (ided & ISFLAG_KNOW_TYPE)
-            set_ident_type(item, ID_KNOWN_TYPE);
+            set_ident_type(item, true);
         set_ident_flags(item, ided);
 
         if (item.props.exists("needs_autopickup") && is_useless_item(item))
@@ -482,7 +482,7 @@ void ash_id_monster_equipment(monster* mon)
         {
             if (i == MSLOT_WAND)
             {
-                set_ident_type(OBJ_WANDS, item.sub_type, ID_KNOWN_TYPE);
+                set_ident_type(OBJ_WANDS, item.sub_type, true);
                 mon->props["wand_known"] = true;
             }
             else

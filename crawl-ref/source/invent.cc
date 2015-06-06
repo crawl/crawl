@@ -2207,7 +2207,7 @@ void identify_inventory()
     {
         if (you.inv[i].defined())
         {
-            set_ident_type(you.inv[i], ID_KNOWN_TYPE);
+            set_ident_type(you.inv[i], true);
             set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
         }
     }

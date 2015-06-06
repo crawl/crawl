@@ -747,7 +747,7 @@ void zap_wand(int slot)
     // Identify if unknown.
     if (!alreadyknown)
     {
-        set_ident_type(wand, ID_KNOWN_TYPE);
+        set_ident_type(wand, true);
         mprf_nocap("%s", wand.name(DESC_INVENTORY_EQUIP).c_str());
     }
 
