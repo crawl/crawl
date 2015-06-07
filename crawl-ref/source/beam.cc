@@ -1603,7 +1603,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         else if (rhe < -1)
             hurted = hurted * 3 / 2;
 
-        if (doFlavouredEffects)
+        if (doFlavouredEffects && !mons_is_firewood(mons))
         {
             simple_monster_message(mons,
                                    hurted == 0 ? " appears unharmed."
