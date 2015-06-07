@@ -815,8 +815,8 @@ static string _describe_mutant_beast_facets(const CrawlVector &facets)
                           const int facet = sv.get_int();
                           ASSERT_RANGE(facet, 0, NUM_BEAST_FACETS);
                           return facet_descs[facet];
-                      },
-           ", and it", ", it") + ".";
+                      }, ", and it", ", it")
+           + ".";
 
 }
 
