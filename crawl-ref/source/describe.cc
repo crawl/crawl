@@ -781,10 +781,8 @@ static string _describe_mutant_beast_tier(int tier)
     };
     COMPILE_CHECK(ARRAYSZ(tier_descs) == NUM_BEAST_TIERS);
 
-    ASSERT(tier >= 0);
-    const unsigned int utier = tier;
-    ASSERT(utier < ARRAYSZ(tier_descs));
-    return tier_descs[utier];
+    ASSERT_RANGE(tier, 0, NUM_BEAST_TIERS);
+    return tier_descs[tier];
 }
 
 
@@ -813,15 +811,13 @@ static string _describe_mutant_beast_facets(const CrawlVector &facets)
         return "";
 
     const int first_facet = facets[0].get_int();
-    ASSERT(first_facet >= 0);
-    ASSERT(first_facet < NUM_BEAST_FACETS);
+    ASSERT_RANGE(first_facet, 0, NUM_BEAST_FACETS);
     string out = "It" + facet_descs[first_facet];
 
     for (int i = 1; i < facets.size(); ++i)
     {
         const int facet = facets[i].get_int();
-        ASSERT(facet >= 0);
-        ASSERT(facet < NUM_BEAST_FACETS);
+        ASSERT_RANGE(facet, 0, NUM_BEAST_FACETS);
         out += ", and it" + facet_descs[facet];
     }
 
