@@ -782,8 +782,9 @@ static string _describe_mutant_beast_tier(int tier)
     COMPILE_CHECK(ARRAYSZ(tier_descs) == NUM_BEAST_TIERS);
 
     ASSERT(tier >= 0);
-    ASSERT(tier < ARRAYSZ(tier_descs));
-    return tier_descs[tier];
+    const unsigned int utier = tier;
+    ASSERT(utier < ARRAYSZ(tier_descs));
+    return tier_descs[utier];
 }
 
 
