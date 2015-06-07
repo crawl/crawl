@@ -403,29 +403,18 @@ static monster_type _choose_dragon_type(int pow, god_type god, bool player)
     const int chance = random2(pow);
 
     if (chance >= 80 || one_chance_in(6))
-        mon = (coinflip()) ? MONS_GOLDEN_DRAGON : MONS_QUICKSILVER_DRAGON;
+        mon = random_choose(MONS_GOLDEN_DRAGON, MONS_QUICKSILVER_DRAGON);
     else if (chance >= 40 || one_chance_in(6))
-        switch (random2(3))
-        {
-        case 0:
-            mon = MONS_IRON_DRAGON;
-            break;
-        case 1:
-            mon = MONS_SHADOW_DRAGON;
-            break;
-        default:
-            mon = MONS_STORM_DRAGON;
-            break;
-        }
+        mon = random_choose(MONS_IRON_DRAGON, MONS_SHADOW_DRAGON, MONS_STORM_DRAGON);
     else
-        mon = (coinflip()) ? MONS_FIRE_DRAGON : MONS_ICE_DRAGON;
+        mon = random_choose(MONS_FIRE_DRAGON, MONS_ICE_DRAGON);
 
     // For good gods, switch away from shadow dragons (and, for TSO,
     // golden dragons, since they poison) to storm/iron dragons.
     if (player && player_will_anger_monster(mon)
         || (god == GOD_SHINING_ONE && mon == MONS_GOLDEN_DRAGON))
     {
-        mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
+        mon = random_choose(MONS_STORM_DRAGON, MONS_IRON_DRAGON);
     }
 
     return mon;
