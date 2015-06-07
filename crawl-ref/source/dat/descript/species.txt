@@ -74,8 +74,7 @@ quite fragile, but they learn to fly swiftly later on.
 %%%%
 Kobold
 
-Kobolds are small, mischievous and a little fragile, but multi-talented. They
-can and will eat any meat.
+Kobolds are small, mischievous and a little fragile, but multi-talented.
 %%%%
 Merfolk
 
