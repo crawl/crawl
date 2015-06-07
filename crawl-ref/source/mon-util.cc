@@ -1753,7 +1753,7 @@ static mon_attack_def _downscale_zombie_attack(const monster* mons,
  */
 static mon_attack_def _mutant_beast_facet_attack(int facet, int tier)
 {
-    const int dam = tier * 8;
+    const int dam = tier * 5;
     switch (facet)
     {
         case BF_STING:
@@ -1779,7 +1779,7 @@ static mon_attack_def _mutant_beast_attack(const monster &mon, int attk_number)
 {
     const int tier = mutant_beast_tier(mon.get_experience_level());
     if (attk_number == 0)
-        return { AT_HIT, AF_PLAIN, tier * 12 };
+        return { AT_HIT, AF_PLAIN, tier * 7 + 5 };
 
     if (!mon.props.exists(MUTANT_BEAST_FACETS))
         return { };
