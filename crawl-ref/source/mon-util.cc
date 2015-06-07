@@ -650,6 +650,7 @@ bool mons_gives_xp(const monster* victim, const actor* agent)
             && mons_aligned(&you, agent);
     }
     return !victim->is_summoned()                   // no summons
+        && !victim->has_ench(ENCH_ABJ)              // not-really-summons
         && !victim->has_ench(ENCH_FAKE_ABJURATION)  // no animated remains
         && mons_class_gives_xp(victim->type)        // class must reward xp
         && !testbits(victim->flags, MF_WAS_NEUTRAL) // no neutral monsters
