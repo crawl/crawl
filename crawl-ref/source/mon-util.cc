@@ -336,19 +336,15 @@ static resists_t _apply_holiness_resists(resists_t resists, mon_holy_type mh)
  */
 static resists_t _beast_facet_resists(beast_facet facet)
 {
-    switch (facet)
-    {
-        case BF_STING:
-            return MR_RES_POISON;
-        case BF_FIRE:
-            return MR_RES_FIRE;
-        case BF_SHOCK:
-            return MR_RES_ELEC;
-        case BF_OX:
-            return MR_RES_COLD;
-        default:
-            return 0;
-    }
+    static const map<beast_facet, resists_t> resists = {
+        { BF_STING, MR_RES_POISON },
+        { BF_FIRE,  MR_RES_FIRE },
+        { BF_SHOCK, MR_RES_ELEC },
+        { BF_OX,    MR_RES_COLD },
+    };
+
+    const resists_t* res_ptr = map_find(resists, facet);
+    return res_ptr ? *res_ptr : 0;
 }
 
 resists_t get_mons_class_resists(monster_type mc)
