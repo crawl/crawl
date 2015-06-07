@@ -1,10 +1,12 @@
-Stone Soup 0.17 (up to 0.17-a0-1139-g49cbdf8)
+Stone Soup 0.17 (up to 0.17-a0-1308-gaca585e)
 --------------------------------------------
 
 Branches, Environment
 ---------------------
 * Snake, Shoals, Swamp and Spider are now all 4 levels long, down from 5.
 * Shadow Traps have been removed.
+* Slime wall damage no longer varies by depth.
+* AC now applies before resists for cloud damage.
 * New WizLab: Lehudib's Moon Base, where the player can fight the legendary
   Moon Troll.
 * Tukima's Studio and Eringya's Formal Garden WizLabs have been removed.
@@ -41,6 +43,7 @@ Character
   enemies. It triggers slightly more frequently as a result, but no longer
   triggers in Labyrinths or the Abyss.
 * The 'spiny' mutation is now dramatically stronger.
+* Powered by Death is now triggered by kills, instead of corpses.
 * Black Mark no longer gives vampirism; its other effects are now stronger.
 
 Geometry
@@ -86,6 +89,8 @@ Items
   - The Cloak of Starlight is now +2 and gives Stlth--.
   - The fencer's gloves now give a bonus to Short and Long Blades skills.
   - The Sceptre of Torment is now a staff.
+* The box of beasts now produces a new type of variable creature, 'mutant
+  beasts', instead of chimeras.
 * Warding now applies to ranged attacks.
 * Troll leather armour now provides regeneration to trolls.
 * Staves of summoning no longer have a chance of abjuring on hit.
@@ -113,6 +118,8 @@ Monsters
 * XP and placement for many uniques has been adjusted; in general, uniques have
   been removed from depths at which they're no longer threatening, and their XP
   has increased considerably.
+* Jellies no longer eat items the player has seen.
+* Monsters will now pick up all scrolls & potions, not just ones they use.
 * Poison now has a 1/3 chance of affecting rPois+ monsters (up from 0/3).
 * All nonliving monsters now have rPois+++.
 * rElec++ has been removed; monsters that previously had it now either have
@@ -130,13 +137,15 @@ Monsters
 * Fire elementals no longer fly (though they can still cross lava). They can
   now enter shallow water.
 * Queen ants are now faster.
-* Liches and Ancient Liches can no longer can have Shadow Creatures in their
-  spell set.
+* Liches and Ancient Liches can no longer cast Shadow Creatures.
+* Many monsters have lost the 'teleport self' spell: (ancient) liches, wizards,
+  giant orange brains, hellwings, smoke demons, ogre magi, Mara, and Boris.
 * Various 'high-intelligence' monsters no longer have immunity to drowning
   while confused.
 * Basic mummies no longer have death curses.
 * Alligators now come in pairs.
 * Jorgrun is no longer a deep dwarf, and now regenerates normally.
+* Deep dwarf ghosts now regenerate normally.
 * Removed monsters:
   - Unborn.
   - Giant mites.
@@ -161,6 +170,7 @@ Spells
   the Grand Grimoire.
 * Summon Mana Viper has been moved from the book of Hinderance to the book of
   Summonings.
+* Sticks to Snakes no longer requires wielding arrows.
 * Apporting the Orb of Zot now causes the orb run to begin.
 * Cigotuvi's Embrace is now stronger with small numbers of corpses, and
   considerably weaker with huge numbers.
@@ -175,6 +185,8 @@ Interface
 ---------
 * The level map viewer (X) now allows you to examine monsters, items & features
   (with 'v'), just as the normal examine mode does.
+* The inventory descriptions for weapons & shields now shows the skill required
+  to reach minimum attack delay / remove attack delay penalty, respectively.
 
 
 Stone Soup 0.16 (20150311)
