@@ -798,7 +798,7 @@ static string _describe_mutant_beast_facets(const CrawlVector &facets)
 {
     static const string facet_descs[] = {
         " seems unusually buggy.",
-        " sprouts a set of venomous tails",
+        " sports a set of venomous tails",
         " flies swiftly and unpredictably",
         "s breath smoulders ominously",
         " is covered with eyes and tentacles",
