@@ -810,18 +810,14 @@ static string _describe_mutant_beast_facets(const CrawlVector &facets)
     if (facets.size() == 0)
         return "";
 
-    const int first_facet = facets[0].get_int();
-    ASSERT_RANGE(first_facet, 0, NUM_BEAST_FACETS);
-    string out = "It" + facet_descs[first_facet];
+    return "It" + comma_separated_fn(begin(facets), end(facets),
+                      [] (const CrawlStoreValue &sv) {
+                          const int facet = sv.get_int();
+                          ASSERT_RANGE(facet, 0, NUM_BEAST_FACETS);
+                          return facet_descs[facet];
+                      },
+           ", and it", ", it") + ".";
 
-    for (int i = 1; i < facets.size(); ++i)
-    {
-        const int facet = facets[i].get_int();
-        ASSERT_RANGE(facet, 0, NUM_BEAST_FACETS);
-        out += ", and it" + facet_descs[facet];
-    }
-
-    return out + ".";
 }
 
 /**
