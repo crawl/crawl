@@ -343,8 +343,7 @@ static resists_t _beast_facet_resists(beast_facet facet)
         { BF_OX,    MR_RES_COLD },
     };
 
-    const resists_t* res_ptr = map_find(resists, facet);
-    return res_ptr ? *res_ptr : 0;
+    return lookup(resists, facet, 0);
 }
 
 resists_t get_mons_class_resists(monster_type mc)
