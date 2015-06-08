@@ -899,6 +899,7 @@ void game_options::reset_options()
     explore_greedy         = true;
 
     explore_wall_bias      = 0;
+    explore_auto_rest      = false;
     explore_improved       = false;
     travel_key_stop        = true;
     auto_sacrifice         = AS_NO;
@@ -3512,6 +3513,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             explore_wall_bias = 0;
     }
     else BOOL_OPTION(explore_improved);
+    else BOOL_OPTION(explore_auto_rest);
     else BOOL_OPTION(travel_key_stop);
     else if (key == "auto_sacrifice")
     {

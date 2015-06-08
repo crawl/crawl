@@ -5427,6 +5427,12 @@ bool player::is_banished() const
     return banished;
 }
 
+bool player::is_completely_rested() const
+{
+    return should_stop_resting(hp, hp_max)
+           && should_stop_resting(magic_points, max_magic_points);
+}
+
 bool player::in_water() const
 {
     return ground_level() && !beogh_water_walk()
