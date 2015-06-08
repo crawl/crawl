@@ -939,10 +939,9 @@ command_type travel()
 
     if (you.running.is_explore())
     {
-        if (Options.explore_auto_rest && !you.is_completely_rested())
-        {
+        if (Options.explore_auto_rest && !you.is_sufficiently_rested())
             return CMD_WAIT;
-        }
+
         // Exploring.
         if (grd(you.pos()) == DNGN_ENTER_SHOP
             && you.running == RMODE_EXPLORE_GREEDY)

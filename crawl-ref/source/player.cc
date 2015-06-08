@@ -3881,9 +3881,14 @@ bool enough_mp(int minimum, bool suppress_msg, bool abort_macros)
     return true;
 }
 
+static int _rest_trigger_level(int max)
+{
+    return (max * Options.rest_wait_percent) / 100;
+}
+
 static bool should_stop_resting(int cur, int max)
 {
-    return cur == max || cur == (max * Options.rest_wait_percent) / 100;
+    return cur == max || cur == _rest_trigger_level(max);
 }
 
 void inc_mp(int mp_gain, bool silent)
@@ -5427,10 +5432,12 @@ bool player::is_banished() const
     return banished;
 }
 
-bool player::is_completely_rested() const
+bool player::is_sufficiently_rested() const
 {
-    return should_stop_resting(hp, hp_max)
-           && should_stop_resting(magic_points, max_magic_points);
+    // Can't use should_stop_resting directly because that is edge-triggered
+    // and this should be level-triggered.
+    return hp >= _rest_trigger_level(hp_max)
+           && magic_points >= _rest_trigger_level(max_magic_points);
 }
 
 bool player::in_water() const
