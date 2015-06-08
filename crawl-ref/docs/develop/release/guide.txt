@@ -1,0 +1,171 @@
+Steps to a Successful Release
+-----------------------------
+The following is a step-by-step guide for how to proceed through the releasing
+process. For minor releases (0.X.y), steps 0 and 1 have already been done, so
+for those the list begins with step 3.
+
+0. Delay branching until all features are there and announce on CRD.
+
+   It makes little sense to cherry-pick actual features, or even a major amount
+   of bug fixes. If there are features not meant for the release, please put
+   them on a new branch. In git, branching and merging is cheap.
+
+   To give all devs a chance to speak up about outstanding pre-release issues,
+   send an email to CRD giving a time-frame for the branch creation, ideally
+   1-2 weeks before the branch is created.
+
+
+1. Branch master into the new version
+
+   git branch stone_soup-0.X
+   git push origin stone_soup-0.X
+
+
+2. Tag the branch point
+
+   git tag -s 0.X-b1
+   git push origin 0.X-b1
+   Also, after the next diverging commit, tag the trunk as 0.${X+1}-a0; you
+   need to make sure the commits pointed to by 0.X-b1 and 0.${X+1}-a0 are
+   different.
+
+   Tag message formatting:
+   0.16-a0: You open the 0.16 season. It cackles and vanishes in a puff of smoke!
+       -- should include the phrase "open the 0.x season"
+   0.15-b1: You feel a great weight lift as you enter the 0.15 branch.
+       -- should include the phrases "0.x" and "branch"
+   0.15.0: 0.15 "Storm Over Zot"
+       -- should be the version number followed by the tagline in quotes.
+
+
+3. Wait and fix some bugs
+
+   Wait at least 2-3 weeks for bug reports, and fix all severe old ones. When
+   fixing bugs concentrate on the important ones (crashes and game-breakers),
+   but you might also want to handle the trivial ones for extra polishing. Do
+   not EVER add any last minute features unless they can't possibly introduce
+   new bugs.
+
+   Reread the entire documentation to make sure it's up to date. Also update
+   the change log!
+
+   To check for candidates for cherry-picking:
+   (on master) git cherry -v origin/stone_soup.0.X
+   To actually take them:
+   (on stone_soup.0.X) git cherry-pick -x 0123456789abc
+
+
+4. Sanity testing
+
+   Build the binaries (preferably on all platforms) to see if the code compiles
+   correctly, then run some basic sanity tests including at least the
+   following:
+       * start a new game (both pre-chosen and random)
+       * saving/loading
+         * if there were changes that can affect saves, load a save from a
+          previous minor version
+       * being killed
+       * level creation for all branches/portal vaults (using &~, &L)
+       * accessing all help screens (including the ? submenus)
+
+
+5. Sync the documentation
+
+   Update the release date in the changelog. In major releases (not point
+   ones!), use "make rest" to fetch the the manual from the wiki
+   (https://crawl.develz.org/wiki/doku.php?id=dcss:manual:rest). Remember that
+   after the release the wiki refers to the next major version, so any further
+   changes need to be done in the git tree directly. Commit.
+
+6. Tag the release
+
+   In the branch you're about to tag:
+   git tag -s 0.X.y
+
+   Don't push the tag yet so you can make final amendments.
+
+
+7. Package the source tarball, produce final builds and Debian packages
+
+   "make package-source" will create three source tar/zipballs.
+
+   For binary builds, you need to ensure at least the dat/ subdir contains no
+   foreign files (such as editor backup files, uncommitted stuff, random junk,
+   etc). Thus, "git clean -dfx". This is a potentially destructive operation so
+   if you have files lying around, you may want to do this from a separate
+   clone instead.
+
+   You can use enable optimizations in the builds, but these can make
+   cross-compilation difficult. Adding the make option LTO=y will enable
+   long-term optimization, but this can fail under cross-compilation.
+
+   The Makefile targets are "package-windows" and "package-windows-zips" for
+   the installer and stand-alone zips respectively. Unless you're on msys, you
+   need to specify CROSSHOST as well:
+
+   make LTO=y CROSSHOST=i686-w64-mingw32 package-windows
+
+   It's ideal to test the windows packages (both Tiles and console) under wine
+   at the very least, assuming you've cross-compiled, and testing under a
+   recent version of windows is preferable. Follow the sanity test steps in
+   step 4.
+
+   For building the Debian packages and installing them into the CDO
+   repository, see the debian.txt guide in this directory.
+
+
+8. Push the tag
+
+   Until the moment you push it to the official repository, you can delete it
+   and re-tag:
+
+   git push --tags
+
+   The tags are some sort of frozen state of the source for all releases, so
+   this is the last step you take before the actual release. All further
+   changes make it into the next minor version.
+
+
+9. Upload the files to CDO
+
+   Use the crawl login on CDO to upload the binaries to ~/website/release/ over
+   scp or sftp. The links on the download page currently at
+   ~/website/download.htm must then be updated.
+
+   Presently there's a repository that manages the web files for non-wordpress
+   pages on CDO like the splash and download pages. This repo is cloned to
+   ~/dcss-website, and the origin repo on github is maintained by chequers, who
+   can grant push access to new users. It's best to update the files in the
+   dcss-website/site in the repo, make a commit for the change, and then copy
+   the download.htm file to the live ~/website directory. Note that the repo
+   currently uses .html file extensions, so change .html files in the repo, but
+   copy them to the file with the .htm extension in ~/website.
+
+   Ideally you'll also push the commit to chequers' origin repo. In the future
+   we'll probably move the website repo to the github crawl group and better
+   integrate it to the CDO website directory to avoid manual copying.
+
+   Building and installing the Debian packages is covered in the debian.txt
+   guide in this directory.
+
+10. Update Sourceforge
+
+    We currently use Sourceforge only for the CRD mailing list. Until CRD is
+    moved somewhere else, we want to keep the Sourceforge release binaries
+    updated so that no (possibly broken or malware-infested) release packages
+    get automatically created there. To upload to Sourceforge, you need
+    permissions for file releases and then to upload through the web
+    interface. It's pretty flaky and tends to break, often failing with
+    specific browsers. Mark it as the default download (.tar.xz source for
+    most, .exe installer for Windows).
+
+
+11. Announce the release
+
+    Post a release announcement to the CDO blog and send an email over
+    crawl-ref-discuss. If you want you can also write a news item on
+    Sourceforge.
+
+
+12. Lean back and enjoy the excitement
+    ...until the first bug reports roll in. ;)
