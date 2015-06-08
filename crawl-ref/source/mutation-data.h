@@ -372,7 +372,7 @@ static const mutation_def mut_data[] =
 
   {"You feel less resistant to hostile enchantments.",
    "You feel less resistant to hostile enchantments.",
-   "You feel vulnerable to magic hostile enchantments."},
+   "You feel vulnerable to hostile enchantments."},
 
    "magic resistance",
 },
