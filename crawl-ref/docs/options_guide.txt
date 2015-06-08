@@ -47,7 +47,8 @@ The contents of this text are:
                 tc_excluded, tc_exclude_circle,
                 runrest_ignore_message, runrest_stop_message,
                 runrest_safe_poison, runrest_ignore_monster,
-                rest_wait_both, auto_exclude, explore_auto_rest
+                rest_wait_both, rest_wait_percent, explore_auto_rest,
+                auto_exclude
 3-g     Command Enhancements.
                 auto_switch, travel_open_doors, easy_unequip, equip_unequip,
                 jewellery_prompt, easy_confirm, allow_self_target,
@@ -909,6 +910,10 @@ rest_wait_percent = 100
         it will stop resting when this percent of maximum HP or MP is refilled.
         Resting after this point will still rest up to 100%.
 
+explore_auto_rest = false
+        If true, auto-explore waits until your HP and MP are both at
+        rest_wait_percent before moving.
+
 auto_exclude += <monster name>, <monster name>, ...
         (List option)
         Whenever you encounter a sleeping or stationary monster during
@@ -916,10 +921,6 @@ auto_exclude += <monster name>, <monster name>, ...
         automatically set centered on this monster, meaning autoexplore won't
         ever bring you into its line of sight. If the monster dies or wakes up
         while you are in sight, this exclusion is automatically removed again.
-
-explore_auto_rest = false
-        Wait until your HP and MP are at the rest wait percentage before
-        exploring.
 
 3-g     Command Enhancements.
 -----------------------------
