@@ -457,6 +457,7 @@ public:
     int visible_igrd(const coord_def&) const;
     bool can_cling_to_walls() const;
     bool is_banished() const;
+    bool is_completely_rested() const;
     bool is_web_immune() const;
     bool cannot_speak() const;
     bool invisible() const;
