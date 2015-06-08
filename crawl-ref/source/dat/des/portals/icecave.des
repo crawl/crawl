@@ -640,8 +640,8 @@ MONS:    freezing wraith
 : mocking_simulacrum(_G)
 : mons(mocking_ice)
 : mons("necromancer / necromancer ; robe " .. coldres ..
-:   " / necromancer ; robe " .. coldres .. " . wand of fire " ..
-:   " / necromancer ; robe " .. coldres .. " . wand of flame")
+:   " / necromancer ; robe " .. coldres .. " . wand of cold " ..
+:   " / necromancer ; robe " .. coldres .. " . wand of draining")
 : savage_simulacrum(_G)
 : mons(savage_ice)
 MONS:    ice statue
