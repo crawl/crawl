@@ -1110,14 +1110,9 @@ void discover_shifter(monster* shifter)
 bool mons_is_demon(monster_type mc)
 {
     // Not every demonic monster is a demon (hell hog, hell hound, etc.)
-    if (mons_class_holiness(mc) == MH_DEMONIC
-        && (mons_demon_tier(mc) != 0 && mc != MONS_ANTAEUS
-            || mons_species(mc) == MONS_RAKSHASA))
-    {
-        return true;
-    }
-
-    return false;
+    return mons_class_holiness(mc) == MH_DEMONIC
+             && (mons_demon_tier(mc) != 0 && mc != MONS_ANTAEUS
+                 || mons_species(mc) == MONS_RAKSHASA);
 }
 
 int mons_demon_tier(monster_type mc)
