@@ -5,11 +5,12 @@ This is the Webtiles server and client.
 1. Prerequisites
 ----------------
 To run the server, you need Python (at least version 2.6) and the
-Tornado library [1] for Python in at least version 2.0. Python versions
-earlier than 2.7 also require the ordereddict library [2]. Webtiles
-also currently only runs on Linux (it may run on other Unices, but that
-has not been tested). If you install Tornado by hand, make sure Python
-can find it (you may need to set PYTHONPATH before running the server).
+Tornado library [1] for Python (between versions 2.3 and 3.x; in
+particular, Tornado 4.x is known not to work). Python versions earlier
+than 2.7 also require the ordereddict library [2]. Webtiles also
+currently only runs on Linux (it may run on other Unices, but that has
+not been tested). If you install Tornado by hand, make sure Python can
+find it (you may need to set PYTHONPATH before running the server).
 
 You'll need to compile Crawl passing WEBTILES=y to make to get a
 suitable binary. For publicly accessible servers, you should also use
