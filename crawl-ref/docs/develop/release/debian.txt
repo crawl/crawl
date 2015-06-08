@@ -1,0 +1,198 @@
+Preparing the DCSS Debian Package
+---------------------------------
+
+This guide covers making the packages from a debian system like Debian or
+Ubuntu and installing these into the CDO repo. We currently produce packages
+for both i386 and amd64 architectures, and the guide has steps for building
+these using cowbuilder and pbuilder, based on the debian directory in
+crawl-ref/source/debian of the repo.
+
+The Debian maintainer's guide is a good resource for working with debian
+packages:
+
+https://www.debian.org/doc/manuals/maint-guide/index.en.html
+
+And the
+
+0. Prerequisites
+
+   Install the cowbuilder and pbuilder packages:
+
+   sudo apt-get install cowbuilder
+
+   See the following websites if you have trouble with cowbuilder or pbuilder
+   during any of these steps:
+
+   https://wiki.debian.org/cowbuilder
+   https://wiki.debian.org/PbuilderTricks
+
+   Set up your DEBFULLNAME and DEBEMAIL shell variables using the name and
+   email you use in the git mailmap. This can be done in the shell or in your
+   pbuilderrc file (see below). To set them in the shell:
+
+   export DEBFULLNAME="yourname"
+   export DEBEMAIL="your@email"
+
+1. Make a copy of the of the source packages and extract
+
+   The source packages should be make using the package-source target. Run the
+   following from source if you haven't yet:
+   make package-source
+
+   This will make several files in the toplevel repo dir, but you specifically
+   need the stone_soup-VER-tar.xz file. Copy this to a location where you'd
+   like to build the packages. Then exactract the source directory and rename
+   the original file. Using version 0.17 as an example and with ~/crawl-deb as
+   my "base" build directory:
+
+   cp stone_soup-0.17.0.tar.xz ~/crawl-deb
+   cd ~/crawl-deb
+   tar Jxf stone_soup-0.17.0.tar.xz
+   mv stone_soup-0.17.0 crawl-0.17.0
+   mv stone_soup-0.17.0.tar.xz crawl-0.17.0.orig.tar.xz
+
+   The source directory and original source files must be renamed according
+
+2. Copy and update the debian directory in the source directory
+
+   We need the crawl-ref/source/debian directory to be at the top level to
+   build the package. Using 0.17.0 as an example:
+   cd crawl-0.17.0
+   cp -r source/debian .
+
+3. Update the debian changelog
+
+   An entry has the following format:
+
+   crawl (2:VER-1) UNRELEASED; urgency=low
+
+     * Major bugfix release
+
+    -- devname <devemail>  TIMESTAMP
+
+   You can set your shell EDITOR variable and use dch to update this:
+
+   dch -v 2:0.17.0-1
+
+   but dch is confused by our (probably incorrect) changelog format and also
+   overwrites the latest entry with the new one, so you might want to make the
+   entry manually. For 0.17.0, the first line should look like:
+
+   crawl (2:0.17.0) UNRELEASED; urgency=low
+
+   After the changelog file is updated, copy it to
+   crawl-ref/source/debian/changelog in your repo, make a commit for the new
+   changelog, and push to the github repo so that the debian directory remains
+   updated.
+
+
+4. Set up your pbuilderrc
+
+   We use the cowbuilder program to create the copy-on-write chroot
+   directories, and use pbuilder to build the packages in the chroot. A
+   pbuilderrc file is needed to tell pbuilder to use the cowbuilder system and
+   to set downstream shell variables. To use the example pbuilderrc file in
+   this directory, copy it to ~/.pbuilderrc or (as root) to /etc/pbuilderrc
+   after making any modifications.
+
+   You can edit this file to set DEBFULLNAME and DEBEMAIL to your name and
+   email if you didn't do that in your shell already. In the example
+   pbuilderrc, all pbuilder-related data go in /var/cache/pbuilder. To change
+   this, you'll need to modify at least BASEPATH, BUILDPLACE, BUILDRESULT, and
+   APTCACHE.
+
+
+5. Create a .cow chroot directory for each architecture.
+
+   You'll need a cowbuilder chroot directory for each architecture you want to
+   build. If you're using the example pbuilderrc, we use the scheme
+   `DIST-ARCH.cow'. For example, when building based on debian stable, we'll
+   use:
+
+       /var/cache/pbuilder/stable-amd64.cow
+       /var/cache/pbuilder/stable-i386.cow
+
+   To create these, run the following:
+
+   cowbuilder --create --architecture amd64 \
+              --basepath /var/cache/pbuilder/stable-amd64.cow
+   cowbuilder --create --architecture i386 \
+              --basepath /var/cache/pbuilder/stable-i386.cow
+
+6. Build the packages
+
+   Asuming your pbuilderrc is based on the example one in this directory, you
+   need to set some of the shell variables ARCH, DIST, and OS to set up
+   downstream variables to build the packages for the architectures (e.g. i386
+   or amd64) you want and against the distribution you want (e.g. stable or
+   testing for Debian), and possibly based on the OS you want (debian or
+   ubuntu) if you want to e.g. build against debian on an ubunutu host system.
+
+   Run pdebuild from the `crawl-VER' source directory you made above. The
+   simplest build situation is making packages for the same architecture and
+   against the same distribution as your host system. Using our 0.17.0 example
+   building against debian stable on a debian stable system for amd64, simply:
+
+   pdebuild
+
+   To build the i386 package:
+
+   ARCH=i386 pdebuild
+
+   If you're on ubuntu, building against debian stable, you might need:
+
+   OS=ubuntu DIST=stable pdebuild
+   OS=ubuntu DIST=stable ARCH=i386 pdebuild
+
+   Once the package building is finished, the results well be in
+   /var/cache/pbuilder/result, if you're using the example pbuilderrc.
+
+
+6. Test install the packages
+
+   Test the built packages in /var/cache/pbuilder/result by installing them;
+   you'll need to install the crawl_VER_ARCH.deb, crawl-tiles_VER_ARCH.deb, and
+   crawl-common_VER.deb packages. For example:
+
+   dpkg -i /var/cache/pbuilder/results/crawl_0.17.0-1_amd64.deb  \
+           /var/cache/pbuilder/results/crawl-tiles_0.17.0-1_amd64.deb \
+           /var/cache/pbuilder/results/crawl-common_0.17.0-1_amd64.deb \
+           /var/cache/pbuilder/results/crawl-tiles-data_0.17.0-1_amd64.deb
+
+   Run the console version with `crawl' and the tiles version with
+   `crawl-tiles' to see if they work.
+
+7. Upload files to CDO, install into the repo, and test
+
+   You'll need to upload the deb files above in addition to the
+   `crawl_VER-1.dsc' file to the crawl account on CDO. The staging directory
+   ~/upload/deb-files can be used for this, but you'll need to clear out the
+   previous release files.
+
+   We install each release into a component named after the major version of
+   the release. If you're logged into CDO, go to the repository root directory
+   `deb' and the .deb files and the .dsc file (using 0.17 as the version and
+   ~/upload/deb-files as a staging directory):
+
+   cd ~/deb
+   for i in ../upload/deb-files/*.deb
+       do reprepro -C 0.17 includedeb crawl "$i"; done
+   for i in ../upload/deb-files/*.dsc
+       do reprepro -C 0.17 includedsc crawl "$i"; done
+
+   Make sure to use the right major version number in those -C arguments.
+
+   Now follow the apt instructions on the download page to add the DCSS repo
+   and signing key, and then update and install crawl and crawl-tiles on your
+   system to make sure the repository works. When adding the repostiory, use
+   the correct crawl version if the download page still references the previous
+   version.
+
+8. Update the download page
+
+   The major version in the example command to add the repository URL should be
+   updated. See release.txt for details on keeping the CDO website in sync with
+   the website repository.
+
+At this point, the repository should be working and the packages ready for
+users to install with apt.
