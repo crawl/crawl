@@ -384,10 +384,10 @@ static const weapon_def Weapon_prop[] =
     { WPN_GREAT_MACE,        "great mace",         17, -4, 17,  9,
         SK_MACES_FLAILS, SIZE_MEDIUM,  SIZE_BIG,    MI_NONE,
         DAMV_CRUSHING, 3, 10, M_AND_F_BRANDS },
-    { WPN_GIANT_CLUB,        "giant club",         20, -6, 17, 10,
+    { WPN_GIANT_CLUB,        "giant club",         20, -6, 16, 10,
         SK_MACES_FLAILS, SIZE_LARGE, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CRUSHING, 1, 10, {} },
-    { WPN_GIANT_SPIKED_CLUB, "giant spiked club",  22, -7, 18, 10,
+    { WPN_GIANT_SPIKED_CLUB, "giant spiked club",  22, -7, 19, 10,
         SK_MACES_FLAILS, SIZE_LARGE, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CRUSHING | DAM_PIERCE, 1, 10, {} },
 
