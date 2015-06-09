@@ -6037,8 +6037,6 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff,
     if (!card)
         simple_monster_message(this, " drinks a potion.");
 
-    item_type_id_state_type ident = ID_MON_TRIED_TYPE;
-
     switch (pot_eff)
     {
     case POT_CURING:
@@ -6054,8 +6052,7 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff,
         // We can differentiate curing and heal wounds (and blood,
         // for vampires) by seeing if any status ailments are cured.
         for (enchant_type cured : cured_enchants)
-            if (del_ench(cured))
-                ident = ID_KNOWN_TYPE;
+            del_ench(cured);
     }
     break;
 
@@ -6076,40 +6073,34 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff,
         break;
 
     case POT_BERSERK_RAGE:
-        if (enchant_actor_with_flavour(this, this, BEAM_BERSERK))
-            ident = ID_KNOWN_TYPE;
+        enchant_actor_with_flavour(this, this, BEAM_BERSERK);
         break;
 
     case POT_HASTE:
-        if (enchant_actor_with_flavour(this, this, BEAM_HASTE))
-            ident = ID_KNOWN_TYPE;
+        enchant_actor_with_flavour(this, this, BEAM_HASTE);
         break;
 
     case POT_MIGHT:
-        if (enchant_actor_with_flavour(this, this, BEAM_MIGHT))
-            ident = ID_KNOWN_TYPE;
+        enchant_actor_with_flavour(this, this, BEAM_MIGHT);
         break;
 
     case POT_INVISIBILITY:
-        if (enchant_actor_with_flavour(this, this, BEAM_INVISIBILITY))
-            ident = ID_KNOWN_TYPE;
+        enchant_actor_with_flavour(this, this, BEAM_INVISIBILITY);
         break;
 
     case POT_AGILITY:
-        if (enchant_actor_with_flavour(this, this, BEAM_AGILITY))
-            ident = ID_KNOWN_TYPE;
+        enchant_actor_with_flavour(this, this, BEAM_AGILITY);
         break;
 
     case POT_RESISTANCE:
-        if (enchant_actor_with_flavour(this, this, BEAM_RESISTANCE))
-            ident = ID_KNOWN_TYPE;
+        enchant_actor_with_flavour(this, this, BEAM_RESISTANCE);
         break;
 
     default:
         break;
     }
 
-    return ident;
+    return ID_KNOWN_TYPE;
 }
 
 bool monster::can_evoke_jewellery(jewellery_type jtype) const
