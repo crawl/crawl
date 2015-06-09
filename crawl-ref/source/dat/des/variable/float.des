@@ -6286,10 +6286,10 @@ NAME: cheibrodos_birdhouse
 DEPTH: Depths, !Depths:$
 TAGS: no_item_gen no_monster_gen no_pool_fixup
 ORIENT: float
-MONS: raven, tengu warrior, tengu conjurer, tengu reaver
+MONS: tengu warrior, tengu conjurer, tengu reaver
 KFEAT: m = iron_grate
-SUBST: " = .....1112W
-NSUBST: ' = 2:4 / 4=23 / *:.
+SUBST: " = ........1W
+NSUBST: ' = 2:3 / 4=12 / *:.
 NSUBST: ? = 3:* / *:%
 MAP
            .........

@@ -341,15 +341,15 @@ DEPTH:  D:10-14
 : food_weight(_G, 10)
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
-MONS:   tengu warrior / tengu conjurer, raven, plant
-NSUBST: 3 : 3:3 / *:.
+MONS:   tengu warrior / tengu conjurer, plant
+NSUBST: 2 : 3:2 / *:.
 ITEM:   bread ration no_mimic / fruit q:7
 MAP
  xx+xx
-xx3.3xx
-x33333x
-x33133x
-xd2t2dx
+xx2.2xx
+x22222x
+x22122x
+xd.t.dx
 xxdddxx
  xxxxx
 ENDMAP

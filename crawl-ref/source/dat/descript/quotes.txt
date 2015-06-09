@@ -2240,12 +2240,6 @@ rapier
     -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
      trans. James Grainger, 1822.
 %%%%
-raven
-
-“The Hatter opened his eyes very wide on hearing this; but all he said was ‘Why
-is a raven like a writing-desk?’”
-    -Lewis Carroll, Alice’s Adventures in Wonderland
-%%%%
 ring
 
 “A ring of gold and a milk-white dove

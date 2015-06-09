@@ -791,27 +791,6 @@ xxx1...1xxx
   xx@xxx
 ENDMAP
 
-# A raven's nest, containing some jewellery.
-# Could be used as a subvault in some forest vault.
-NAME:     roderic_ravens_nest
-TAGS:     extra
-DEPTH:    D:8-12, Lair:3-, Swamp
-KMONS:    1 = raven
-KITEM:    % = any jewellery
-KITEM:    1 = any jewellery / nothing
-: if you.in_branch("D") then
-SHUFFLE:  t / x
-: end
-: if you.in_branch("Swamp") then
-TAGS:   extra
-: end
-: kmons("% = nothing w:10 / raven w:" .. you.absdepth())
-MAP
-tttt
-t%1t
-ttt.@
-ENDMAP
-
 NAME:   nicolae_underground_beach
 DEPTH:  D:2-
 TAGS:   no_trap_gen no_pool_fixup
@@ -850,9 +829,9 @@ ENDMAP
 NAME:    hangedman_aviary
 TAGS:    no_rotate no_hmirror
 DEPTH:   D:13-, Depths
-MONS:    raven, tengu warrior, harpy, tengu reaver
+MONS:    tengu warrior, harpy, tengu reaver
 : if you.absdepth() < 18 then
-SUBST:   4 = 3
+SUBST:   3 = 2
 : else
 SHUFFLE: wW / ll
 SUBST:   " = *|
@@ -860,11 +839,11 @@ SUBST:   " = *|
 KMASK:   wWl = no_monster_gen
 MAP
 cccccccWW.@@.WWccccccc
-c43..2ccW.xx.Wcc2..34c
+c32..1ccW.xx.Wcc1..23c
 cc.ww.%c......c%.ww.cc
- c*.ww1cc....cc1ww.*c
- cc*.w1........1w.*cc
-  cc"2.cc.xx.cc.2"cc
+ c*.ww.cc....cc.ww.*c
+ cc*.w..........w.*cc
+  cc"1.cc.xx.cc.1"cc
    cccccW.@@.Wccccc
 ENDMAP
 
@@ -1557,14 +1536,14 @@ NAME:    kb_tengu_band
 DEPTH:   D:12-, Shoals, Swamp
 WEIGHT:  5
 TAGS:    no_pool_fixup
-MONS:    raven, tengu warrior, tengu conjurer
+MONS:    tengu warrior, tengu conjurer
 MAP
  .........
-..wwwww.1..
-.wwttwww.1.
-.wtt3*tww..
-.wwwt*2....
-..wwwwww1..
+..wwwww....
+.wwttwww...
+.wtt2*tww..
+.wwwt*1....
+..wwwwww...
  .........
 ENDMAP
 

@@ -532,7 +532,7 @@ MAP
 ENDMAP
 
 NAME:    hangedman_abyss_batty_box
-MONS:    bat / fire bat / vampire bat, butterfly, raven
+MONS:    bat / fire bat / vampire bat, butterfly, wyvern
 MONS:    spatial vortex, wind drake, harpy, unseen horror
 KMONS:   8 = wind drake w:9 / harpy w:1
 KITEM:   8 = acquire any / any good_item / stone q:1 w:5
