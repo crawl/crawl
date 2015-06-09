@@ -407,10 +407,6 @@ void gozag_set_bribe(monster* traitor)
     const int bribability = gozag_type_bribable(traitor->type);
     if (bribability > 0)
     {
-        const branch_type br = gozag_bribable_branch(traitor->type);
-        if (!player_in_branch(br))
-            return;
-
         const monster* leader =
             traitor->props.exists("band_leader")
             ? monster_by_mid(traitor->props["band_leader"].get_int())
@@ -423,31 +419,31 @@ void gozag_set_bribe(monster* traitor)
             if (leader->has_ench(ENCH_FRIENDLY_BRIBED)
                 || leader->props.exists(FRIENDLY_BRIBE_KEY))
             {
-                gozag_deduct_bribe(br, 2*cost);
+                gozag_deduct_bribe(you.where_are_you, 2*cost);
                 traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
             }
             else if (leader->has_ench(ENCH_NEUTRAL_BRIBED)
                      || leader->props.exists(NEUTRAL_BRIBE_KEY))
             {
-                gozag_deduct_bribe(br, cost);
+                gozag_deduct_bribe(you.where_are_you, cost);
                 // Don't continue if we exhausted our funds.
-                if (branch_bribe[br] > 0)
+                if (branch_bribe[you.where_are_you] > 0)
                     traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
             }
         }
         else if (x_chance_in_y(bribability, GOZAG_MAX_BRIBABILITY))
         {
             // Sometimes get permanent followers at twice the cost.
-            if (branch_bribe[br] > 2*cost && one_chance_in(3))
+            if (branch_bribe[you.where_are_you] > 2*cost && one_chance_in(3))
             {
-                gozag_deduct_bribe(br, 2*cost);
+                gozag_deduct_bribe(you.where_are_you, 2*cost);
                 traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
             }
             else
             {
-                gozag_deduct_bribe(br, cost);
+                gozag_deduct_bribe(you.where_are_you, cost);
                 // Don't continue if we exhausted our funds.
-                if (branch_bribe[br] > 0)
+                if (branch_bribe[you.where_are_you] > 0)
                     traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
             }
         }
@@ -495,18 +491,9 @@ void gozag_break_bribe(monster* victim)
         return;
     }
 
-    const branch_type br = gozag_bribable_branch(victim->type);
-    ASSERT(br != NUM_BRANCHES);
-
-    // Deduct a perma-bribe increment.
-    gozag_deduct_bribe(gozag_bribable_branch(victim->type),
-                       max(1, exper_value(victim) / 10));
-
     // Un-bribe the victim.
-    victim->props[GOZAG_BRIBE_BROKEN_KEY].get_bool() = true;
     victim->del_ench(ENCH_NEUTRAL_BRIBED);
     victim->del_ench(ENCH_FRIENDLY_BRIBED);
-    victim->props.erase(GOZAG_BRIBE_BROKEN_KEY);
     victim->props.erase(NEUTRAL_BRIBE_KEY);
     victim->props.erase(FRIENDLY_BRIBE_KEY);
 
