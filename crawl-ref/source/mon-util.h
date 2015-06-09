@@ -291,7 +291,8 @@ bool mons_is_zombified(const monster* mons);
 bool mons_class_can_be_zombified(monster_type mc);
 bool mons_can_be_zombified(const monster* mon);
 bool mons_class_can_use_stairs(monster_type mc);
-bool mons_can_use_stairs(const monster* mon);
+bool mons_can_use_stairs(const monster* mon,
+                         dungeon_feature_type stair = DNGN_UNSEEN);
 bool mons_enslaved_body_and_soul(const monster* mon);
 bool mons_enslaved_soul(const monster* mon);
 bool name_zombie(monster* mon, monster_type mc, const string &mon_name);

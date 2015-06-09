@@ -131,7 +131,6 @@ bool mons_matches_daction(const monster* mon, daction_type act)
 
     case DACT_BRIBE_TIMEOUT:
         return mon->has_ench(ENCH_NEUTRAL_BRIBED)
-               || mon->has_ench(ENCH_FRIENDLY_BRIBED)
                || mon->props.exists(NEUTRAL_BRIBE_KEY)
                || mon->props.exists(FRIENDLY_BRIBE_KEY);
 
@@ -249,8 +248,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             break;
 
         case DACT_BRIBE_TIMEOUT:
-            if (mon->del_ench(ENCH_NEUTRAL_BRIBED)
-                || mon->del_ench(ENCH_FRIENDLY_BRIBED))
+            if (mon->del_ench(ENCH_NEUTRAL_BRIBED))
             {
                 mon->attitude = ATT_NEUTRAL;
                 mon->flags   |= MF_WAS_NEUTRAL;

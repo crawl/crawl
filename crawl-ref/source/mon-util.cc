@@ -1621,7 +1621,7 @@ bool mons_class_can_use_stairs(monster_type mc)
            && mc != MONS_ROYAL_JELLY;
 }
 
-bool mons_can_use_stairs(const monster* mon)
+bool mons_can_use_stairs(const monster* mon, dungeon_feature_type stair)
 {
     if (!mons_class_can_use_stairs(mon->type))
         return false;
@@ -1629,6 +1629,12 @@ bool mons_can_use_stairs(const monster* mon)
     // Summons can't use stairs.
     if (mon->has_ench(ENCH_ABJ) || mon->has_ench(ENCH_FAKE_ABJURATION))
         return false;
+
+    if (mon->has_ench(ENCH_FRIENDLY_BRIBED)
+        && (feat_is_branch_entrance(stair) || feat_is_branch_exit(stair)))
+    {
+        return false;
+    }
 
     // Everything else is fine
     return true;

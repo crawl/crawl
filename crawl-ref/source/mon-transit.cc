@@ -395,7 +395,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     // Monsters that can't use stairs can still be marked as followers
     // (though they'll be ignored for transit), so any adjacent real
     // follower can follow through. (jpeg)
-    if (!mons_can_use_stairs(fol))
+    if (!mons_can_use_stairs(fol, grd(you.pos())))
     {
         if (_is_religious_follower(fol))
         {
