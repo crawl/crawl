@@ -312,9 +312,10 @@ static bool _altar_pray_or_convert()
         {
             altar_god = _altar_identify_ecumenical_altar();
             mprf(MSGCH_GOD, "%s accepts your prayer!", god_name(altar_god).c_str());
-            join_religion(altar_god);
+            if (!you_worship(altar_god))
+                join_religion(altar_god);
 
-            gain_piety(20, 1, false);
+            gain_piety(20, 1, false); // You get this piety even if you didn't change religion
             if (you_worship(GOD_RU))
                 you.props["ru_progress_to_next_sacrifice"] = 9999;
 
