@@ -911,16 +911,18 @@ KPROP: Nu = bloody
 SUBST: N = n, u = uU
 : local yourcorpse = ""
 : local yourskel = ""
-: if you.race() == "Vampire" or you.race() == "Mummy" or
-:    you.race() == "Ghoul" or you.race() == "Gargoyle" then
+: -- The corpseless. Before the game starts, you.monster() is "program bug".
+: if (not crawl.game_started()) or you.race() == "Vampire"
+:     or you.race() == "Mummy" or you.race() == "Ghoul"
+:     or you.race() == "Gargoyle" then
 :   yourcorpse = "human corpse"
 :   yourskel = "human skeleton"
-: elseif you.race() == "Formicid" then
-:   yourcorpse = you.genus() .. " name:" .. you.name() .. " corpse"
-:   yourskel = you.genus() .. " name:" .. you.name() .. " corpse"
+: elseif you.race() == "Formicid" or you.race() == "Octopode" then
+:   yourcorpse = you.monster() .. " name:" .. you.name() .. " corpse"
+:   yourskel = you.monster() .. " name:" .. you.name() .. " corpse"
 : else
-:   yourcorpse = you.genus() .. " name:" .. you.name() .. " corpse"
-:   yourskel = you.genus() .. " name:" .. you.name() .. " skeleton"
+:   yourcorpse = you.monster() .. " name:" .. you.name() .. " corpse"
+:   yourskel = you.monster() .. " name:" .. you.name() .. " skeleton"
 : end
 : dgn.delayed_decay(_G, 'u', yourcorpse )
 : dgn.delayed_decay(_G, 'U', yourskel )
