@@ -93,10 +93,6 @@ static tileidx_t _tileidx_trap(trap_type type)
         return TILE_DNGN_TRAP_TELEPORT;
     case TRAP_TELEPORT_PERMANENT:
         return TILE_DNGN_TRAP_TELEPORT_PERMANENT;
-    case TRAP_SHADOW:
-        return TILE_DNGN_TRAP_SHADOW;
-    case TRAP_SHADOW_DORMANT:
-        return TILE_DNGN_TRAP_SHADOW_DORMANT;
     case TRAP_ALARM:
         return TILE_DNGN_TRAP_ALARM;
     case TRAP_BLADE:
@@ -223,10 +219,6 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_TRAP_SHAFT;
     case DNGN_TRAP_WEB:
         return TILE_DNGN_TRAP_WEB;
-    case DNGN_TRAP_SHADOW:
-        return TILE_DNGN_TRAP_SHADOW;
-    case DNGN_TRAP_SHADOW_DORMANT:
-        return TILE_DNGN_TRAP_SHADOW_DORMANT;
     case DNGN_TELEPORTER:
         return TILE_DNGN_TRAP_GOLUBRIA;
     case DNGN_ENTER_SHOP:

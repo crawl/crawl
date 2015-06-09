@@ -1409,33 +1409,6 @@ void monster::timeout_enchantments(int levels)
     }
 }
 
-/**
- * Check to see if there are any dormant shadow traps that should become
- * active; if so, activate them.
- *
- * @param   The amount of time that's passed since we last checked these traps.
- */
-static void _energize_shadow_traps(int time_taken)
-{
-    for (int i = 0; i < MAX_TRAPS; i++)
-    {
-        if (env.trap[i].type == TRAP_SHADOW_DORMANT)
-        {
-            env.trap[i].ammo_qty -= div_rand_round(time_taken, 10);
-            if (env.trap[i].ammo_qty <= 0)
-            {
-                env.trap[i].ammo_qty = 0;
-                env.trap[i].type = TRAP_SHADOW;
-                const coord_def &pos = env.trap[i].pos;
-                grd(pos) = env.trap[i].category();
-                if (env.map_knowledge(pos).feat() == DNGN_TRAP_SHADOW_DORMANT)
-                    env.map_knowledge(pos).set_feature(grd(pos), 0, TRAP_SHADOW);
-                dprf("activating shadow trap");
-            }
-        }
-    }
-}
-
 //---------------------------------------------------------------
 //
 // update_level
@@ -1459,7 +1432,6 @@ void update_level(int elapsedTime)
     shoals_apply_tides(turns, true, turns < 5);
     timeout_tombs(turns);
     recharge_rods(turns, true);
-    _energize_shadow_traps(elapsedTime);
 
     if (env.sanctuary_time)
     {
@@ -1887,7 +1859,6 @@ void run_environment_effects()
     timeout_malign_gateways(you.time_taken);
     timeout_terrain_changes(you.time_taken);
     run_cloud_spreaders(you.time_taken);
-    _energize_shadow_traps(you.time_taken);
 }
 
 // Converts a movement speed to a duration. i.e., answers the
