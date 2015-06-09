@@ -315,7 +315,6 @@ const char * const GOZAG_ANNOUNCE_SHOP_KEY = "gozag_announce_shop";
 
 const char * const NEUTRAL_BRIBE_KEY         = "gozag_bribed";
 const char * const FRIENDLY_BRIBE_KEY        = "gozag_permabribed";
-const char * const GOZAG_BRIBE_BROKEN_KEY    = "gozag_bribe_broken";
 
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10

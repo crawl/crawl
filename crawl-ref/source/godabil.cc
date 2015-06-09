@@ -4866,31 +4866,22 @@ bribability mons_bribability[] =
 
 // An x-in-8 chance of a monster of the given type being bribed.
 // Tougher monsters have a stronger chance of being bribed.
-int gozag_type_bribable(monster_type type, bool force)
+int gozag_type_bribable(monster_type type)
 {
-    if (!you_worship(GOD_GOZAG) && !force)
+    if (!you_worship(GOD_GOZAG))
         return 0;
 
     for (const bribability &brib : mons_bribability)
     {
         if (brib.type == type)
         {
-            return force || branch_bribe[brib.branch]
+            return branch_bribe[brib.branch] && player_in_branch(brib.branch)
                    ? brib.susceptibility
                    : 0;
         }
     }
 
     return 0;
-}
-
-branch_type gozag_bribable_branch(monster_type type)
-{
-    for (const bribability &brib : mons_bribability)
-        if (brib.type == type)
-            return brib.branch;
-
-    return NUM_BRANCHES;
 }
 
 bool gozag_branch_bribable(branch_type branch)
