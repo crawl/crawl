@@ -1583,6 +1583,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_GOZAG,
     DNGN_ALTAR_QAZLAL,
     DNGN_ALTAR_RU,
+    DNGN_ALTAR_ECUMENICAL,
 #endif
 
     DNGN_FOUNTAIN_BLUE,
@@ -1646,6 +1647,7 @@ enum dungeon_feature_type
 
     DNGN_TRAP_SHADOW,
     DNGN_TRAP_SHADOW_DORMANT,
+    DNGN_ALTAR_ECUMENICAL,
 #endif
 
     NUM_FEATURES
@@ -2095,6 +2097,7 @@ enum god_type
 
     GOD_RANDOM = 100,
     GOD_NAMELESS,                      // for monsters with non-player gods
+    GOD_ECUMENICAL,                    // Temporary
     GOD_VIABLE,
 };
 

@@ -15,6 +15,7 @@
 #include "godabil.h"
 #include "goditem.h"
 #include "godpassive.h"
+#include "hiscores.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -269,13 +270,33 @@ static bool _altar_prayer()
 }
 
 /**
+ * Determine the god this game's ecumenical altar is for.
+ * Replaces the ecumenical altar with the God's real altar.
+ * Assumes you can worship at least one god (ie are not a
+ * demigod), and that you're standing on the altar.
+ *
+ * @return The god this altar is for.
+ */
+static god_type _altar_identify_ecumenical_altar()
+{
+    god_type god;
+    do
+    {
+        god = god_type(random2(NUM_GODS));
+    }
+    while (!player_can_join_god(god));
+    dungeon_terrain_changed(you.pos(), altar_for_god(god), false);
+    return god;
+}
+
+/**
  * Pray at, or convert to, an altar at the current position.
  *
  * @return Whether anything happened that took time.
  */
 static bool _altar_pray_or_convert()
 {
-    const god_type altar_god = feat_altar_god(grd(you.pos()));
+    god_type altar_god = feat_altar_god(grd(you.pos()));
     if (altar_god == GOD_NO_GOD)
         return false;
 
@@ -283,6 +304,25 @@ static bool _altar_pray_or_convert()
     {
         mpr("A being of your status worships no god.");
         return false;
+    }
+
+    if (altar_god == GOD_ECUMENICAL)
+    {
+        if (yesno("This altar will convert you to a god. You cannot discern which. Do you pray?", false, 'n' ))
+        {
+            altar_god = _altar_identify_ecumenical_altar();
+            mprf(MSGCH_GOD, "%s accepts your prayer!", god_name(altar_god).c_str());
+            join_religion(altar_god);
+
+            gain_piety(20, 1, false);
+            if (you_worship(GOD_RU))
+                you.props["ru_progress_to_next_sacrifice"] = 9999;
+
+            mark_milestone("god.worship", "prayed at an ecumenical altar.");
+            return true;
+        }
+        else
+            return false;
     }
 
     if (you_worship(GOD_NO_GOD) || altar_god != you.religion)
