@@ -186,6 +186,17 @@ LUARET1(you_piety_rank, number, piety_rank(you.piety) - 1)
 LUARET1(you_constricted, boolean, you.is_constricted())
 LUARET1(you_constricting, boolean, you.is_constricting())
 
+static int l_you_monster(lua_State *ls)
+{
+    const monster_type mons = player_species_to_mons_species(you.species);
+
+    string name = mons_type_name(mons, DESC_PLAIN);
+    lowercase(name);
+
+    lua_pushstring(ls, name.c_str());
+    return 1;
+}
+
 static int l_you_genus(lua_State *ls)
 {
     bool plural = lua_toboolean(ls, 1);
@@ -508,6 +519,7 @@ static const struct luaL_reg you_clib[] =
     { "race"        , you_race },
     { "class"       , you_class },
     { "genus"       , l_you_genus },
+    { "monster"     , l_you_monster },
     { "wizard"      , you_wizard },
     { "god"         , you_god },
     { "gold"        , you_gold },
