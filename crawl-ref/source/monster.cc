@@ -4809,23 +4809,14 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     if (trap.type == TRAP_SHAFT)
         return true;
 
-    // Harmless to everyone.
-    if (trap.type == TRAP_SHADOW_DORMANT)
+#if TAG_MAJOR_VERSION == 34
+    if (trap.type == TRAP_SHADOW_DORMANT || trap.type == TRAP_SHADOW)
         return true;
+#endif
 
-    // Irrelevant for summoned or hostile creatures
-    if (trap.type == TRAP_SHADOW
-        && (!friendly() || !can_trigger_shadow_trap(*this)))
-    {
-        return true;
-    }
-
-    // No friendly monsters will ever enter a shadow or Zot trap you know.
-    if (player_knows_trap && friendly()
-        && (trap.type == TRAP_ZOT || trap.type == TRAP_SHADOW))
-    {
+    // No friendly monsters will ever enter a Zot trap you know.
+    if (player_knows_trap && friendly() && trap.type == TRAP_ZOT)
         return false;
-    }
 
     // Dumb monsters don't care at all.
     if (intel == I_BRAINLESS)
@@ -5770,8 +5761,10 @@ bool monster::do_shaft()
         case DNGN_TRAP_MECHANICAL:
         case DNGN_TRAP_TELEPORT:
         case DNGN_TRAP_ALARM:
+#if TAG_MAJOR_VERSION == 34
         case DNGN_TRAP_SHADOW:
         case DNGN_TRAP_SHADOW_DORMANT:
+#endif
         case DNGN_TRAP_ZOT:
         case DNGN_TRAP_SHAFT:
         case DNGN_TRAP_WEB:

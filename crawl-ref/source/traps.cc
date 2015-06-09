@@ -211,8 +211,10 @@ bool trap_def::is_safe(actor* act) const
     if (category() == DNGN_TRAP_WEB) // && act->is_web_immune()
         return true;
 
-    if (type == TRAP_SHADOW_DORMANT)
+#if TAG_MAJOR_VERSION == 34
+    if (type == TRAP_SHADOW_DORMANT || type == TRAP_SHADOW)
         return true;
+#endif
 
     if (!act->is_player())
         return false;
@@ -486,110 +488,6 @@ static bool _find_other_passage_side(coord_def& to)
         return false;
     to = clear_passages[random2(choices)];
     return true;
-}
-
-/**
- * Spawn a single shadow creature or band from the current level. The creatures
- * are always hostile to the player.
- *
- * @param triggerer     The creature that set off the trap.
- * @return              Whether any monsters were successfully created.
- */
-bool trap_def::weave_shadow(const actor& triggerer)
-{
-    // forbid early packs
-    const bool bands_ok = env.absdepth0 > 3;
-    mgen_data mg = mgen_data::hostile_at(RANDOM_MOBILE_MONSTER,
-                                         "a shadow trap", // blame
-                                         you.see_cell(pos), // alerted?
-                                         5, // abj duration
-                                         MON_SUMM_SHADOW,
-                                         pos,
-                                         bands_ok ? 0 : MG_FORBID_BANDS);
-
-    monster *leader = create_monster(mg);
-    if (!leader)
-        return false;
-
-    const string triggerer_name = triggerer.is_player() ?
-                                        "the player character" :
-                                        triggerer.name(DESC_A, true);
-    const string blame = "triggered by " + triggerer_name;
-    mons_add_blame(leader, blame);
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        monster *follower = *mi;
-        if (!follower || !follower->alive())
-            continue;
-
-        if (mid_t(follower->props["band_leader"].get_int()) == leader->mid)
-        {
-            ASSERT(follower->mid != leader->mid);
-            mons_add_blame(follower, blame);
-        }
-    }
-
-    return true;
-}
-
-/**
- * Is the given monster non-summoned, & therefore capable of triggering a
- * shadow trap that it stepped on?
- */
-bool can_trigger_shadow_trap(const monster &mons)
-{
-    // this is very silly and there is probably a better way
-    return !mons.has_ench(ENCH_ABJ)
-        && !mons.has_ench(ENCH_FAKE_ABJURATION)
-        && !mons.is_perm_summoned();
-}
-
-/**
- * Trigger a shadow creature trap.
- *
- * Temporarily summons some number of shadow creatures/bands from the current
- * level. 3-5 creatures/bands, increasing with depth.
- *
- * @param triggerer     The creature that set off the trap.
- */
-void trap_def::trigger_shadow_trap(const actor& triggerer)
-{
-    if (triggerer.is_monster()
-        && !can_trigger_shadow_trap(*triggerer.as_monster()))
-    {
-        return; // no summonsplosions
-    }
-
-    if (mons_is_tentacle_or_tentacle_segment(triggerer.type))
-        return; // no krakensplosions
-
-    if (!you.see_cell(pos))
-        return;
-
-    const int to_summon = 3 + div_rand_round(env.absdepth0, 16);
-    dprf ("summoning %d dudes from %d", to_summon, env.absdepth0);
-
-    bool summoned_any = false;
-    for (int i = 0; i < to_summon; ++i)
-    {
-        const bool successfully_summoned = weave_shadow(triggerer);
-        summoned_any = summoned_any || successfully_summoned;
-    }
-
-    mprf("Shadows whirl around %s...", triggerer.name(DESC_THE).c_str());
-    if (!summoned_any)
-        mpr("...but the shadows disperse without effect.");
-
-    // now we go dormant for a bit
-    type = TRAP_SHADOW_DORMANT;
-    grd(pos) = category();
-    env.map_knowledge(pos).set_feature(grd(pos), 0, type);
-    // store the time until the trap will become active again
-    // I apologize sincerely for this flagrant field misuse
-    // TODO: don't do this
-    ammo_qty = 2 + random2(3); // 2-4 turns
-    dprf("trap deactivating until %d turns pass", ammo_qty);
 }
 
 // Returns a direction string from you.pos to the
@@ -1081,11 +979,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         dungeon_events.fire_position_event(DET_PRESSURE_PLATE, pos);
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case TRAP_SHADOW:
-        trigger_shadow_trap(triggerer);
-        break;
-
     case TRAP_SHADOW_DORMANT:
+#endif
     default:
         break;
     }

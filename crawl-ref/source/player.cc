@@ -7468,8 +7468,10 @@ bool player::do_shaft()
         // what's the point of this list?
         case DNGN_TRAP_MECHANICAL:
         case DNGN_TRAP_TELEPORT:
+#if TAG_MAJOR_VERSION == 34
         case DNGN_TRAP_SHADOW:
         case DNGN_TRAP_SHADOW_DORMANT:
+#endif
         case DNGN_TRAP_ALARM:
         case DNGN_TRAP_ZOT:
         case DNGN_TRAP_SHAFT:
