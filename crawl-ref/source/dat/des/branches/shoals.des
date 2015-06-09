@@ -689,7 +689,7 @@ DEPTH: Shoals
 TAGS: patrolling no_monster_gen
 SUBST: w = f:4 w W
 KMONS: f = bat w:5 / griffon / harpy / hippogriff / \
-       kraken w:1 / raven w:5 / sea snake / sky beast w:1 / \
+       kraken w:1 / sea snake / sky beast w:1 / \
        snapping turtle / steam dragon w:1 / alligator w:5 / \
        alligator snapping turtle / anaconda w:1 / \
        water moccasin w:5 / electric eel w:1

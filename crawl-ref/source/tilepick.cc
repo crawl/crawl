@@ -1082,8 +1082,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return _mon_mod(TILEP_MONS_BUTTERFLY, tile_num_prop);
     case MONS_FIRE_BAT:
         return TILEP_MONS_FIRE_BAT;
-    case MONS_RAVEN:
-        return TILEP_MONS_RAVEN;
     case MONS_BENNU:
         return TILEP_MONS_BENNU;
     case MONS_CAUSTIC_SHRIKE:
@@ -3455,8 +3453,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_BAT;
     case MONS_BUTTERFLY:
         return TILE_CORPSE_BUTTERFLY;
-    case MONS_RAVEN:
-        return TILE_CORPSE_RAVEN;
     case MONS_CAUSTIC_SHRIKE:
         return TILE_CORPSE_CAUSTIC_SHRIKE;
     case MONS_SHARD_SHRIKE:

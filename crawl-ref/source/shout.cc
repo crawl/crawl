@@ -98,6 +98,9 @@ void handle_monster_shouts(monster* mons, bool force)
     case S_TRUMPET:
         default_msg_key = "__TRUMPET";
         break;
+#if TAG_MAJOR_VERSION == 34
+    case S_CAW:
+#endif
     case S_SCREECH:
         default_msg_key = "__SCREECH";
         break;
@@ -121,9 +124,6 @@ void handle_monster_shouts(monster* mons, bool force)
         break;
     case S_DEMON_TAUNT:
         default_msg_key = "__DEMON_TAUNT";
-        break;
-    case S_CAW:
-        default_msg_key = "__CAW";
         break;
     case S_CHERUB:
         default_msg_key = "__CHERUB";

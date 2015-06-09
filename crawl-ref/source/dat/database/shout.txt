@@ -138,14 +138,6 @@ __DEMON_TAUNT
 
 @The_monster@ @says@, "@demon_taunt@"
 %%%%
-__CAW seen
-
-SOUND:@The_monster@ caws.
-%%%%
-__CAW unseen
-
-SOUND:You hear a loud caw.
-%%%%
 __CHERUB seen
 
 SOUND:@The_monster@'s eagle head screeches!

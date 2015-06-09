@@ -2006,12 +2006,6 @@ An profoundly unnatural hound, crackling with electricity. Remarkably, it can
 transform into living lightning and bolt forth, harmlessly passing pack mates
 while painfully piercing prey.
 %%%%
-raven
-
-An opportunistic scavenger bird that is quite proactive in the production of
-carrion. It has a particularly unhealthy fascination with eyeballs and things
-resembling eyeballs, such as pickled onions, walnuts and olives.
-%%%%
 reaper
 
 A skeletal form wielding a giant scythe.

@@ -822,7 +822,7 @@ TAGS:   no_rotate no_monster_gen no_item_gen
 DEPTH:  Depths, !Depths:$
 MONS:   flayed ghost w:5 / phantasmal warrior w:5 / phantom / shadow / shadow wraith
 MONS:   ghost moth, Jory, vampire knight
-MONS:   raven
+MONS:   vampire mosquito
 NSUBST: A = 3:v / *:+, B = 3:v / *:+
 NSUBST: C = 2:v / *:+, D = 2:v / *:+
 # Colouring

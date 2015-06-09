@@ -237,7 +237,9 @@ enum shout_type
     S_GROWL,                // for bears
     S_HISS,                 // for snakes and lizards
     S_DEMON_TAUNT,          // for pandemonium lords
+#if TAG_MAJOR_VERSION == 34
     S_CAW,                  // for ravens
+#endif
     S_CHERUB,               // for cherubs
     S_RUMBLE,               // for ushabti
     NUM_SHOUTS,

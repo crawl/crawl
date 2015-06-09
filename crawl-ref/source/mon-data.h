@@ -242,6 +242,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_BABY_ALLIGATOR)
     AXED_MON(MONS_BORING_BEETLE)
     AXED_MON(MONS_CHIMERA)
+    AXED_MON(MONS_RAVEN)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -363,18 +364,6 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_RAVEN, 'b', BLUE, "raven",
-    M_SEE_INVIS | M_UNBLINDABLE | M_WARM_BLOOD | M_FLIES,
-    MR_NO_FLAGS,
-    9, MONS_RAVEN, MONS_RAVEN, MH_NATURAL, 20,
-    { {AT_PECK, AF_PLAIN, 14}, {AT_CLAW, AF_PLAIN, 11}, AT_NO_ATK, AT_NO_ATK },
-    { 6, 4, 3, 0 },
-    1, 10, MST_NO_SPELLS, CE_CLEAN, S_CAW,
-    I_ANIMAL, HT_LAND, 20, DEFAULT_ENERGY,
-    MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_BAT // ...
-},
-
-{
     MONS_BENNU, 'b', YELLOW, "bennu",
     M_SEE_INVIS | M_WARM_BLOOD | M_FAST_REGEN | M_GLOWS |
         M_NO_POLY_TO | M_SPEAKS | M_FLIES,
@@ -408,7 +397,7 @@ static monsterentry mondata[] =
     12, MONS_SHARD_SHRIKE, MONS_SHARD_SHRIKE, MH_NATURAL, 80,
     { {AT_CLAW, AF_COLD, 21}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 21, 3, 4, 0 },
-    2, 18, MST_SHARD_SHRIKE, CE_CLEAN, S_CAW,
+    2, 18, MST_SHARD_SHRIKE, CE_CLEAN, S_SCREECH,
     I_ANIMAL, HT_LAND, 30, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_BAT
 },

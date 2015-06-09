@@ -2643,9 +2643,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
 
     case MONS_TENGU_CONJURER:
     case MONS_TENGU_WARRIOR:
-        natural_leader = true;
-        band = BAND_TENGU;
-        band_size = 2 + random2(3);
+        if (coinflip())
+        {
+            natural_leader = true;
+            band = BAND_TENGU;
+            band_size = 1;
+        }
         break;
 
     case MONS_SOJOBO:
@@ -2725,13 +2728,6 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
     {
         band = BAND_RAIJU;
         band_size = random_range(2, 3);
-        break;
-    }
-
-    case MONS_RAVEN:
-    {
-        band = BAND_RAVENS;
-        band_size = random_range(1, 2);
         break;
     }
 
@@ -3321,9 +3317,7 @@ static monster_type _band_member(band_type band, int which,
             return MONS_FAUN;
 
     case BAND_TENGU:
-        if (which == 1 && coinflip())
-            return coinflip() ? MONS_TENGU_WARRIOR : MONS_TENGU_CONJURER;
-        return MONS_RAVEN;
+        return coinflip() ? MONS_TENGU_WARRIOR : MONS_TENGU_CONJURER;
 
     case BAND_SOJOBO:
         return MONS_TENGU_REAVER;
@@ -3366,9 +3360,6 @@ static monster_type _band_member(band_type band, int which,
 
     case BAND_RAIJU:
         return MONS_RAIJU;
-
-    case BAND_RAVENS:
-        return MONS_RAVEN;
 
     case BAND_SALAMANDERS:
         return MONS_SALAMANDER;

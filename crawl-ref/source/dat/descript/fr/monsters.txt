@@ -1644,12 +1644,6 @@ rat
 
 Un rongeur sale qui a grandi dans l'environnement vaste et agressif du donjon.
 %%%%
-raven
-
-Un oiseau charognard opportuniste qui est un peu proactif dans la production de
-charognes. Il a un attrait particulièrement malsain pour les globes oculaires
-et tout ce qui y ressemble, comme les oignons marinés, les noix et les olives.
-%%%%
 ravenous feature mimic
 
 Un prédateur tentaculaire et mortellement venimeux avec le pouvoir de se
