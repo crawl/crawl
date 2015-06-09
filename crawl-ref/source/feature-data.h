@@ -495,6 +495,7 @@ ALTAR(DNGN_ALTAR_DITHMENOS, "shadowy altar of Dithmenos", "altar_dithmenos", ETC
 ALTAR(DNGN_ALTAR_GOZAG, "opulent altar of Gozag", "altar_gozag", ETC_GOLD), // for the Gold God!
 ALTAR(DNGN_ALTAR_QAZLAL, "stormy altar of Qazlal", "altar_qazlal", ETC_ELEMENTAL),
 ALTAR(DNGN_ALTAR_RU, "sacrificial altar of Ru", "altar_ru", BROWN),
+ALTAR(DNGN_ALTAR_ECUMENICAL, "faded altar to an unknown god", "altar_ecumenical", ETC_DARK),
 
 #define FOUNTAIN(enum, name, vaultname, colour)\
 {\

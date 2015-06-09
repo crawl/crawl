@@ -435,6 +435,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_QAZLAL;
     case DNGN_ALTAR_RU:
         return TILE_DNGN_ALTAR_RU;
+    case DNGN_ALTAR_ECUMENICAL:
+        return TILE_DNGN_UNKNOWN_ALTAR;
     case DNGN_FOUNTAIN_BLUE:
         return TILE_DNGN_BLUE_FOUNTAIN;
     case DNGN_FOUNTAIN_SPARKLING:
