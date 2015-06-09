@@ -1196,7 +1196,7 @@ int player_hunger_rate(bool temp)
 {
     int hunger = 3;
 
-    if (temp && you.form == TRAN_BAT)
+    if (temp && you.form == TRAN_BAT && you.species == SP_VAMPIRE)
         return 1;
 
     if (you.species == SP_TROLL)

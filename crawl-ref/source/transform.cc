@@ -1658,7 +1658,7 @@ static bool _player_alive_enough_for(transformation_type which_trans)
         return false; // vampires can never lichform
 
     if (which_trans == TRAN_BAT)
-        return true; // ...but they can always batform.
+        return you.hunger_state <= HS_SATIATED; // can batform on low blood
 
     // other forms can only be entered when full or above.
     return you.hunger_state > HS_SATIATED;
