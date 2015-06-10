@@ -85,6 +85,12 @@ A dry fountain
 
 A dried-up fountain that has seen better days.
 %%%%
+A faded altar to an unknown god
+
+An ancient altar, stripped of all identifying characteristics by the passage of
+aeons. Surely the altar's deity would greatly appreciate one who converts at so
+ancient a site of worship.
+%%%%
 A fountain of clear blue water
 
 A decorative fountain, flowing with clear water.
