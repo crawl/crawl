@@ -21,6 +21,7 @@
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
+#include "macro.h" // command_to_string
 #include "message.h"
 #include "misc.h"
 #include "notes.h"
@@ -862,19 +863,27 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
 
         case SPARM_FLYING:
             // If you weren't flying when you took off the boots, don't restart.
-            if (you.attribute[ATTR_LAST_FLIGHT_STATUS] == 0)
-                break;
+            if (you.attribute[ATTR_LAST_FLIGHT_STATUS])
+            {
+                if (you.airborne())
+                {
+                    you.attribute[ATTR_PERM_FLIGHT] = 1;
+                    mpr("You feel rather light.");
+                }
+                else
+                {
+                    you.attribute[ATTR_PERM_FLIGHT] = 1;
+                    float_player();
+                }
+            }
+            if (!unmeld)
+            {
+                mprf("(use the <w>%s</w>bility menu to %s flying)",
+                     command_to_string(CMD_USE_ABILITY).c_str(),
+                     you.attribute[ATTR_LAST_FLIGHT_STATUS]
+                         ? "stop or start" : "start or stop");
+            }
 
-            if (you.airborne())
-            {
-                you.attribute[ATTR_PERM_FLIGHT] = 1;
-                mpr("You feel rather light.");
-            }
-            else
-            {
-                you.attribute[ATTR_PERM_FLIGHT] = 1;
-                float_player();
-            }
             break;
 
         case SPARM_MAGIC_RESISTANCE:
