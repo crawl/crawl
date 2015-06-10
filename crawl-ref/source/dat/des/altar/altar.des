@@ -398,7 +398,7 @@ ENDMAP
 
 NAME:   ecumenical_altar_1
 DEPTH:  D:2-3
-TAGS:  uniq_ecumenical_altar
+TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
 KFEAT:  _ = altar_ecumenical
 CHANCE: 50 : 50%
 MAP
@@ -411,7 +411,7 @@ ENDMAP
 
 NAME: ecumenical_altar_2
 DEPTH: D:2-3
-TAGS:  uniq_ecumenical_altar
+TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
 KFEAT:  _ = altar_ecumenical
 CHANCE: 50 : 50%
 MAP
