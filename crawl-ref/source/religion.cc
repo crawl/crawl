@@ -3276,15 +3276,16 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_GOZAG && you.gold < gozag_service_fee())
         return false;
 
-    if (player_mutation_level(MUT_NO_LOVE) && (which_god == GOD_BEOGH
-                                           ||  which_god == GOD_JIYVA
-                                           ||  which_god == GOD_ELYVILON))
+    if (player_mutation_level(MUT_NO_LOVE)
+        && (which_god == GOD_BEOGH
+            ||  which_god == GOD_JIYVA
+            ||  which_god == GOD_ELYVILON))
     {
         return false;
     }
 
     if (player_mutation_level(MUT_NO_ARTIFICE)
-            && which_god == GOD_NEMELEX_XOBEH)
+        && which_god == GOD_NEMELEX_XOBEH)
     {
       return false;
     }
