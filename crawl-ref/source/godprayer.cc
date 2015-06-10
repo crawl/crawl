@@ -343,7 +343,10 @@ static bool _altar_pray_or_convert()
             return true;
         }
         else
+        {
+            canned_msg(MSG_OK);
             return false;
+        }
     }
 
     if (you_worship(GOD_NO_GOD) || altar_god != you.religion)
