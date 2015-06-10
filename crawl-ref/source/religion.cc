@@ -2047,6 +2047,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_QAZLAL:        return "Qazlal";
     case GOD_RU:            return "Ru";
     case GOD_JIYVA: // This is handled at the beginning of the function
+    case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
     }
     return "";
@@ -3351,6 +3352,8 @@ static void _make_empty_vec(CrawlStoreValue &v, store_val_type vectype)
 void join_religion(god_type which_god, bool immediate)
 {
     ASSERT(which_god != GOD_NO_GOD);
+    ASSERT(which_god != GOD_ECUMENICAL);
+    ASSERT(you.species != SP_DEMIGOD);
 
     redraw_screen();
 

@@ -1036,6 +1036,11 @@ void wizard_transform()
 
 void wizard_join_religion()
 {
+    if (you.species == SP_DEMIGOD)
+    {
+        mpr("Not even in wizmode may Demigods worship a god!");
+        return;
+    }
     god_type god = choose_god();
     if (god == NUM_GODS)
         mpr("That god doesn't seem to exist!");
