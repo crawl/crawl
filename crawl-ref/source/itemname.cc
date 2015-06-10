@@ -2489,7 +2489,7 @@ void check_item_knowledge(bool unknown_items)
                 continue;
 #endif
 
-            if (unknown_items || you.type_ids[i][j])
+            if (you.type_ids[i][j] != unknown_items) // logical xor
             {
                 item_def* ptmp = new item_def;
                 if (ptmp != 0)
