@@ -314,11 +314,9 @@ static bool _pray_ecumenical_altar()
         {
             you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
         }
-        else
-        {
-            // You get this piety even if you didn't change religion.
-            gain_piety(20, 1, false);
-        }
+
+        // You get this piety even if you didn't change religion.
+        gain_piety(20, 1, false);
 
         mark_milestone("god.ecumenical", "prayed at an ecumenical altar.");
         return true;
