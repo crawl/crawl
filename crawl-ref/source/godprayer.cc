@@ -32,6 +32,7 @@
 #include "stepdown.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "unwind.h"
 #include "view.h"
 
 static bool _offer_items();
@@ -279,6 +280,8 @@ static bool _altar_prayer()
  */
 static god_type _altar_identify_ecumenical_altar()
 {
+    if (player_can_join_god(GOD_GOZAG))
+        return GOD_GOZAG;
     god_type god;
     do
     {
@@ -311,10 +314,16 @@ static bool _altar_pray_or_convert()
         if (yesno("This altar will convert you to a god. You cannot discern which. Do you pray?", false, 'n' ))
         {
             const bool was_atheist = you_worship(GOD_NO_GOD);
-            altar_god = _altar_identify_ecumenical_altar();
-            mprf(MSGCH_GOD, "%s accepts your prayer!", god_name(altar_god).c_str());
-            if (!you_worship(altar_god))
-                join_religion(altar_god);
+            {
+                // Don't check for or charge a Gozag service fee.
+                unwind_var<int> fakepoor(you.attribute[ATTR_GOLD_GENERATED], 0);
+
+                altar_god = _altar_identify_ecumenical_altar();
+                mprf(MSGCH_GOD, "%s accepts your prayer!",
+                                god_name(altar_god).c_str());
+                if (!you_worship(altar_god))
+                    join_religion(altar_god);
+            }
 
             // First-god monks already get an immediate sacrifice when they
             // join Ru. Give them the piety bonus if they just got the
