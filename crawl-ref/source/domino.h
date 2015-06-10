@@ -51,6 +51,9 @@
 
 namespace domino {
 
+// Number of attempts the stochastic solver should attempt.
+constexpr int kTrials = 10;
+
 // Helper function to set handle intersections.
 template <class T>
 void intersection(std::set<T>& output, const std::set<T>& input)
@@ -447,7 +450,7 @@ class DominoSet
             // attempt to stochastically solve it.
             if (has_conflicts)
             {
-                int trials = 10000;
+                int trials = kTrials;
                 bool did_shuffle = false;
                 uint32_t last_conflicts = -1;
                 int sz = 1;
