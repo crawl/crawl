@@ -329,9 +329,6 @@ random_var player::attack_delay(const item_def *weap,
                                    rv::roll_dice(1, base_shield_penalty)),
                            DELAY_SCALE);
     }
-    // Give unarmed shield-users a slight penalty always.
-    if (!weap && shield())
-        shield_penalty += rv::random2(2);
 
     if (!do_shield)
         shield_penalty = constant(0);
