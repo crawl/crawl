@@ -62,13 +62,13 @@ ae += [^n]identified.*spellbook
 :   or itsubtype == "ring of sustain attributes"
 :   or itsubtype == "ring of wizardry"
 :   or itsubtype == "ring of stealth"
-:   or itsubtype == "ring of regeneration"
 :   or itsubtype == "ring of teleportation"
 :   or itsubtype == "ring of teleport control"
 :   or itsubtype == "ring of protection from fire"
 :   or itsubtype == "ring of protection from cold"
 :   or itsubtype == "ring of invisibility"
 :   or itsubtype == "ring of see invisible"
+:   or itsubtype == "ring of magical power"
 :   or itsubtype == "ring of ice"
 :   or itsubtype == "ring of fire") then
 :    for inv in iter.invent_iterator:new(items.inventory()) do
