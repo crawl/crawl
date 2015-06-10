@@ -290,6 +290,39 @@ static god_type _altar_identify_ecumenical_altar()
     return god;
 }
 
+static bool _pray_ecumenical_altar()
+{
+    if (yesno("This altar will convert you to a god. You cannot discern "
+              "which. Do you pray?", false, 'n'))
+    {
+        {
+            // Don't check for or charge a Gozag service fee.
+            unwind_var<int> fakepoor(you.attribute[ATTR_GOLD_GENERATED], 0);
+
+            god_type altar_god = _altar_identify_ecumenical_altar();
+            mprf(MSGCH_GOD, "%s accepts your prayer!",
+                            god_name(altar_god).c_str());
+            if (!you_worship(altar_god))
+                join_religion(altar_god);
+            else
+                return true;
+        }
+
+        if (you_worship(GOD_RU))
+            you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
+        else
+            gain_piety(20, 1, false);
+
+        mark_milestone("god.ecumenical", "prayed at an ecumenical altar.");
+        return true;
+    }
+    else
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+}
+
 /**
  * Pray at, or convert to, an altar at the current position.
  *
@@ -308,37 +341,7 @@ static bool _altar_pray_or_convert()
     }
 
     if (altar_god == GOD_ECUMENICAL)
-    {
-        if (yesno("This altar will convert you to a god. You cannot discern "
-                  "which. Do you pray?", false, 'n'))
-        {
-            {
-                // Don't check for or charge a Gozag service fee.
-                unwind_var<int> fakepoor(you.attribute[ATTR_GOLD_GENERATED], 0);
-
-                altar_god = _altar_identify_ecumenical_altar();
-                mprf(MSGCH_GOD, "%s accepts your prayer!",
-                                god_name(altar_god).c_str());
-                if (!you_worship(altar_god))
-                    join_religion(altar_god);
-                else
-                    return true;
-            }
-
-            if (you_worship(GOD_RU))
-                you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
-            else
-                gain_piety(20, 1, false);
-
-            mark_milestone("god.ecumenical", "prayed at an ecumenical altar.");
-            return true;
-        }
-        else
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
+        return _pray_ecumenical_altar();
 
     if (you_worship(GOD_NO_GOD) || altar_god != you.religion)
     {
