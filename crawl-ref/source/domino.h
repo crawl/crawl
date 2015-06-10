@@ -159,6 +159,8 @@ bool operator<(const Point& lhs, const Point& rhs);
 
 bool operator==(const Point& lhs, const Point& rhs);
 
+Point operator+(const Point& lhs, const Point& rhs);
+
 static inline bool asDirection(const Point& pt, Direction& dir)
 {
     dir = NO_DIR;
@@ -590,24 +592,24 @@ class DominoSet
             int neighbors = 0;
             uint32_t id = tiling.find(pt)->second;
             T domino = dominoes_.find(id)->second;
-            for (int x = -1; x <= 1; ++x)
-            {
-                for (int y = -1; y <= 1; ++y)
-                {
-                    if (x == 0 && y == 0)
-                        continue;
+            const Point offsets[] = {
+                { -1,  0 },
+                {  1,  0 },
+                {  0, -1 },
+                {  0,  1 },
+            };
 
-                    Point nb = {pt.x + x, pt.y + y};
-                    Point offset = {x, y};
-                    if (tiling.find(nb) != tiling.end())
-                    {
-                        ++neighbors;
-                        T other = dominoes_.find(tiling.find(nb)->second)->second;
-                        Direction dir;
-                        asDirection(offset, dir);
-                        if (!domino.matches(other, dir))
-                            ++conflicts;
-                    }
+            for (size_t i = 0; i < 4; ++i)
+            {
+                Point nb = pt + offsets[i];
+                if (tiling.find(nb) != tiling.end())
+                {
+                    ++neighbors;
+                    T other = dominoes_.find(tiling.find(nb)->second)->second;
+                    Direction dir;
+                    asDirection(offsets[i], dir);
+                    if (!domino.matches(other, dir))
+                        ++conflicts;
                 }
             }
             return conflicts;

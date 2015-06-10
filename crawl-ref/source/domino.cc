@@ -44,6 +44,11 @@ bool operator==(const Point& lhs, const Point& rhs)
     return lhs.x == rhs.x && lhs.y == rhs.y;
 }
 
+Point operator+(const Point& lhs, const Point& rhs)
+{
+    return { lhs.x + rhs.x, lhs.y + rhs.y };
+}
+
 Adjacency::Adjacency()
 {
     for (size_t i = FIRST_DIRECTION; i <= LAST_DIRECTION; ++i)
