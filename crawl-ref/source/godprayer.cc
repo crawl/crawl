@@ -316,8 +316,6 @@ static bool _altar_pray_or_convert()
                 join_religion(altar_god);
 
             gain_piety(20, 1, false); // You get this piety even if you didn't change religion
-            if (you_worship(GOD_RU))
-                you.props["ru_progress_to_next_sacrifice"] = 9999;
 
             mark_milestone("god.worship", "prayed at an ecumenical altar.");
             return true;
