@@ -2024,7 +2024,6 @@ string god_name(god_type which_god, bool long_name)
     case GOD_NO_GOD:        return "No God";
     case GOD_RANDOM:        return "random";
     case GOD_NAMELESS:      return "nameless";
-    case GOD_VIABLE:        return "viable";
     case GOD_ZIN:           return "Zin";
     case GOD_SHINING_ONE:   return "the Shining One";
     case GOD_KIKUBAAQUDGHA: return "Kikubaaqudgha";
