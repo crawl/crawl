@@ -330,7 +330,7 @@ static bool _altar_pray_or_convert()
                 gain_piety(20, 1, false);
             }
 
-            mark_milestone("god.worship", "prayed at an ecumenical altar.");
+            mark_milestone("god.ecumenical", "prayed at an ecumenical altar.");
             return true;
         }
         else
