@@ -6033,8 +6033,6 @@ bool monster::should_drink_potion(potion_type ptype) const
 // Return true if the potion should be identified.
 bool monster::drink_potion_effect(potion_type pot_eff, bool card)
 {
-    bool was_visible = you.can_see(this);
-
     if (!card)
         simple_monster_message(this, " drinks a potion.");
 
