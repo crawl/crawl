@@ -6650,7 +6650,7 @@ void player::teleport(bool now, bool wizard_tele)
     ASSERT(!crawl_state.game_is_arena());
 
     if (now)
-        you_teleport_now(true, wizard_tele);
+        you_teleport_now(wizard_tele);
     else
         you_teleport();
 }
