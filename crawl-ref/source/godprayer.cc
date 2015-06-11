@@ -311,7 +311,6 @@ static bool _altar_pray_or_convert()
     {
         if (yesno("This altar will convert you to a god. You cannot discern which. Do you pray?", false, 'n' ))
         {
-            const bool was_atheist = you_worship(GOD_NO_GOD);
             {
                 // Don't check for or charge a Gozag service fee.
                 unwind_var<int> fakepoor(you.attribute[ATTR_GOLD_GENERATED], 0);
@@ -323,14 +322,8 @@ static bool _altar_pray_or_convert()
                     join_religion(altar_god);
             }
 
-            // First-god monks already get an immediate sacrifice when they
-            // join Ru. Give them the piety bonus if they just got the
-            // immediate sacrifice.
-            if (you_worship(GOD_RU) && !(you.char_class == JOB_MONK
-                                         && had_gods() <= 1 && was_atheist))
-            {
+            if (you_worship(GOD_RU))
                 you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
-            }
             else
             {
                 // You get this piety even if you didn't change religion.
