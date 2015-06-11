@@ -73,7 +73,7 @@ Beastly Appendage spell
 
 Temporarily replaces one or a pair of the caster's appendages with an animal
 counterpart, giving them an extra attack. It is not powerful enough to meld
-armour.
+armour or enhance appendages that are already nonhuman.
 %%%%
 Berserker Rage spell
 
