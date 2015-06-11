@@ -280,8 +280,6 @@ static bool _altar_prayer()
  */
 static god_type _altar_identify_ecumenical_altar()
 {
-    if (player_can_join_god(GOD_GOZAG))
-        return GOD_GOZAG;
     god_type god;
     do
     {
