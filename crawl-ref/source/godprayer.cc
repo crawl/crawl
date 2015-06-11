@@ -309,7 +309,8 @@ static bool _altar_pray_or_convert()
 
     if (altar_god == GOD_ECUMENICAL)
     {
-        if (yesno("This altar will convert you to a god. You cannot discern which. Do you pray?", false, 'n' ))
+        if (yesno("This altar will convert you to a god. You cannot discern "
+                  "which. Do you pray?", false, 'n'))
         {
             {
                 // Don't check for or charge a Gozag service fee.
