@@ -3260,9 +3260,6 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_FEDHAS && you.holiness() == MH_UNDEAD)
         return false;
 
-    if (which_god == GOD_SIF_MUNA && !you.spell_no)
-        return false;
-
 #if TAG_MAJOR_VERSION == 34
     // Dithmenos hates fiery species.
     if (which_god == GOD_DITHMENOS
@@ -3690,12 +3687,7 @@ void god_pitch(god_type which_god)
     if (!player_can_join_god(which_god))
     {
         you.turn_is_over = false;
-        if (which_god == GOD_SIF_MUNA)
-        {
-            simple_god_message(" does not accept worship from the ignorant!",
-                               which_god);
-        }
-        else if (which_god == GOD_GOZAG)
+        if (which_god == GOD_GOZAG)
         {
             simple_god_message(" does not accept service from beggars like you!",
                                which_god);
