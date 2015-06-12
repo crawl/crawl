@@ -2656,7 +2656,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_GHOSTLY_FLAMES, "Ghostly Flames",
+    SPELL_SPECTRAL_CLOUD, "Spectral Cloud",
     SPTYP_CONJURATION | SPTYP_NECROMANCY,
     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_CLOUD,
     5,

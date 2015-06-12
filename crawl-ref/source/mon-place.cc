@@ -1684,7 +1684,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         if (mg.cls == MONS_DANCING_WEAPON)
             blame_prefix = "animated by ";
 
-        if (mg.summon_type == SPELL_GHOSTLY_FLAMES)
+        if (mg.summon_type == SPELL_SPECTRAL_CLOUD)
             blame_prefix = "called from beyond by ";
     }
     else if (mons_class_is_zombified(mg.cls))

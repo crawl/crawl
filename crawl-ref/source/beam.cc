@@ -2465,8 +2465,8 @@ cloud_type bolt::get_cloud_type() const
     if (origin_spell == SPELL_FREEZING_CLOUD)
         return CLOUD_COLD;
 
-    if (origin_spell == SPELL_GHOSTLY_FLAMES)
-        return CLOUD_GHOSTLY_FLAME;
+    if (origin_spell == SPELL_SPECTRAL_CLOUD)
+        return CLOUD_SPECTRAL;
 
     return CLOUD_NONE;
 }
@@ -2479,7 +2479,7 @@ int bolt::get_cloud_pow() const
         return random_range(10, 15);
     }
 
-    if (origin_spell == SPELL_GHOSTLY_FLAMES)
+    if (origin_spell == SPELL_SPECTRAL_CLOUD)
         return random_range(12, 20);
 
     return 0;
@@ -2846,8 +2846,8 @@ void bolt::affect_place_clouds()
     if (origin_spell == SPELL_PETRIFYING_CLOUD)
         place_cloud(CLOUD_PETRIFY, p, random2(4) + 4, agent());
 
-    if (origin_spell == SPELL_GHOSTLY_FLAMES)
-        place_cloud(CLOUD_GHOSTLY_FLAME, p, random2(6) + 5, agent());
+    if (origin_spell == SPELL_SPECTRAL_CLOUD)
+        place_cloud(CLOUD_SPECTRAL, p, random2(6) + 5, agent());
 
     if (origin_spell == SPELL_DEATH_RATTLE)
         place_cloud(CLOUD_NEGATIVE_ENERGY, p, random2(4) + 4, agent());

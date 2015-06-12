@@ -166,8 +166,8 @@ static const cloud_data clouds[] = {
     { "sparse dust",  nullptr,                  // terse, verbose name
       ETC_EARTH,                                // colour
     },
-    // CLOUD_GHOSTLY_FLAME,
-    { "ghostly flame", nullptr,                 // terse, verbose name
+    // CLOUD_SPECTRAL,
+    { "spectral mist", nullptr,                 // terse, verbose name
       ETC_ELECTRICITY,                          // colour
       BEAM_NONE,                                // beam_effect
       0, 25,                                    // base, expected random damage
@@ -479,7 +479,7 @@ static void _dissipate_cloud(int cloudidx)
         delete_cloud(cloudidx);
 }
 
-static void _handle_ghostly_flame(const cloud_struct& cloud)
+static void _handle_spectral_cloud(const cloud_struct& cloud)
 {
     if (actor_at(cloud.pos) || !actor_by_mid(cloud.source))
         return;
@@ -521,7 +521,7 @@ static void _handle_ghostly_flame(const cloud_struct& cloud)
                                 BEH_HOSTILE :
                                 BEH_FRIENDLY),
                              actor_by_mid(cloud.source), 1,
-                             SPELL_GHOSTLY_FLAMES, cloud.pos,
+                             SPELL_SPECTRAL_CLOUD, cloud.pos,
                              (agent ? agent->foe : MHITYOU), MG_FORCE_PLACE,
                              GOD_NO_GOD, basetype));
 }
@@ -554,8 +554,8 @@ void manage_clouds()
                   you_see || you_worship(GOD_QAZLAL) ? nullptr
                   : "You hear a mighty clap of thunder!");
         }
-        else if (cloud.type == CLOUD_GHOSTLY_FLAME)
-            _handle_ghostly_flame(cloud);
+        else if (cloud.type == CLOUD_SPECTRAL)
+            _handle_spectral_cloud(cloud);
 
         _cloud_interacts_with_terrain(cloud);
 
@@ -931,7 +931,7 @@ static int _cloud_base_damage(const actor *act,
         return _cloud_damage_calc(12, 3, 0, maximum_damage);
     case CLOUD_STEAM:
         return _cloud_damage_calc(16, 2, 0, maximum_damage);
-    case CLOUD_GHOSTLY_FLAME:
+    case CLOUD_SPECTRAL:
         return _cloud_damage_calc(15, 3, 4, maximum_damage);
     default:
         return 0;
@@ -999,7 +999,7 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return act->res_rotting() > 0;
     case CLOUD_PETRIFY:
         return act->res_petrify();
-    case CLOUD_GHOSTLY_FLAME:
+    case CLOUD_SPECTRAL:
         return act->holiness() == MH_UNDEAD
                // Don't let these guys kill themselves.
                || act->type == MONS_GHOST_CRAB;
@@ -1267,7 +1267,7 @@ static int _actor_cloud_damage(const actor *act,
     case CLOUD_HOLY_FLAMES:
     case CLOUD_COLD:
     case CLOUD_STEAM:
-    case CLOUD_GHOSTLY_FLAME:
+    case CLOUD_SPECTRAL:
     case CLOUD_ACID:
     case CLOUD_NEGATIVE_ENERGY:
         final_damage =

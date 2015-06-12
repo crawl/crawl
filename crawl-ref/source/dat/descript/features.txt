@@ -1105,12 +1105,11 @@ sparse dust cloud
 
 Atmospheric, but harmless.
 %%%%
-ghostly flame cloud
+spectral cloud
 
-The memory of flames past. Neither resistance to fire nor negative energy
-protect against these clouds; only armour will suffice. Luckily, standing in
-them causes very little harm. The spectres that emerge from the flames, on the
-other hand, are considerably more dangerous...
+A cloud of spectral mist. It causes minor damage to all creatures other than
+the undead. Dangerous but short-lived spectral undead creatures will coalesce
+from the mist over time.
 %%%%
 acidic fog cloud
 

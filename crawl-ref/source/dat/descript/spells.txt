@@ -594,13 +594,6 @@ fire besides appearance, and can only be resisted by effects protecting against
 negative energy. Its damage partially bypasses armour. It not only does no
 damage to the undead, but even heals them.
 %%%%
-Ghostly Flames spell
-
-This spell allows the caster to send forth a conflagration of necromantic
-energy. The residual energy may then coalesce into spectral undead creatures.
-It has nothing in common with fire besides appearance, and cannot be resisted
-by anything but armour.
-%%%%
 Goblin Toss spell
 
 Throws a nearby friendly goblin in a long, beautiful arc, bopping the target on
@@ -1174,6 +1167,12 @@ while already singing will start a new song, not extend an existing one.
 Spawn Tentacles spell
 
 Extends large tentacles to attack nearby enemies.
+%%%%
+Spectral Cloud spell
+
+Creates a cloud of spectral mist, dealing minor damage to all creatures other
+than the undead. Dangerous but short-lived spectral undead creatures will
+coalesce from the mist over time.
 %%%%
 Spectral Weapon spell
 

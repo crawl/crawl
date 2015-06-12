@@ -4480,8 +4480,8 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
                 ch = TILE_CLOUD_FOREST_FIRE;
                 break;
 
-            case CLOUD_GHOSTLY_FLAME:
-                ch = TILE_CLOUD_GHOSTLY_FLAME_0 + dur;
+            case CLOUD_SPECTRAL:
+                ch = TILE_CLOUD_SPECTRAL_0 + dur;
                 break;
 
             case CLOUD_ACID:
@@ -4903,7 +4903,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_FLASH_FREEZE:             return TILEG_FLASH_FREEZE;
     case SPELL_FORCEFUL_INVITATION:      return TILEG_FORCEFUL_INVITATION;
     case SPELL_GHOSTLY_FIREBALL:         return TILEG_GHOSTLY_FIREBALL;
-    case SPELL_GHOSTLY_FLAMES:           return TILEG_GHOSTLY_FLAMES;
+    case SPELL_SPECTRAL_CLOUD:           return TILEG_SPECTRAL_CLOUD;
     case SPELL_GRAND_AVATAR:             return TILEG_GRAND_AVATAR;
     case SPELL_HASTE_OTHER:              return TILEG_HASTE_OTHER;
     case SPELL_HELLFIRE_BURST:           return TILEG_HELLFIRE_BURST;
