@@ -6549,17 +6549,15 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
     monster* mons = monster_at(where);
     ASSERT(mons);
 
-    int dmg = 10;
-    //damage scales with XL and piety
-    int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 584);
-    int effect = random2(4);
     int duration = 0;
     string message = "";
     enchant_type enchantment = ENCH_NONE;
 
+    int effect = random2(4);
     if (mons_is_firewood(mons))
         effect = 99; // > 2 is just damage -- no slowed toadstools
 
+    int num_dice;
     switch (effect)
     {
         case 0:
@@ -6569,27 +6567,32 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
                           + " magic into the devouring truth!";
                 enchantment = ENCH_ANTIMAGIC;
                 duration = 500 + random2(200);
-                dmg += roll_dice(4, die_size);
+                num_dice = 4;
                 break;
             } // if not antimagicable, fall through to paralysis.
         case 1:
             message = " is paralysed by terrible understanding!";
             enchantment = ENCH_PARALYSIS;
             duration = 80 + random2(60);
-            dmg += roll_dice(4, die_size);
+            num_dice = 4;
             break;
 
         case 2:
             message = " slows down under the weight of truth!";
             enchantment = ENCH_SLOW;
             duration = 300 + random2(100);
-            dmg += roll_dice(6, die_size);
+            num_dice = 6;
             break;
 
         default:
-            dmg += roll_dice(8, die_size);
+            num_dice = 8;
             break;
     }
+
+    //damage scales with XL and piety
+    int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 584);
+    int dmg = 10 + roll_dice(num_dice, die_size);
+
     mons->hurt(agent, dmg, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
 
     if (mons->alive() && enchantment != ENCH_NONE)
