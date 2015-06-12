@@ -4046,7 +4046,6 @@ int bolt::apply_AC(const actor *victim, int hurted)
     case BEAM_HELLFIRE:
         ac_rule = AC_NONE; break;
     case BEAM_ELECTRICITY:
-    case BEAM_GHOSTLY_FLAME:
         ac_rule = AC_HALF; break;
     case BEAM_FRAG:
         ac_rule = AC_TRIPLE; break;

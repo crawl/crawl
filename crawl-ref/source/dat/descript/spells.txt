@@ -589,10 +589,9 @@ toward the victim – typically colliding with it, or with each other.
 %%%%
 Ghostly Fireball spell
 
-Hurls an exploding ball of necromantic energy. It has nothing in common with
-fire besides appearance, and can only be resisted by effects protecting against
-negative energy. Its damage partially bypasses armour. It not only does no
-damage to the undead, but even heals them.
+Hurls an exploding ball of necromantic energy, which will heal any undead
+creatures it affects. Any other creatures may only partially resist its effects
+through protection from negative energy.
 %%%%
 Goblin Toss spell
 
