@@ -1369,7 +1369,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_REVENANT,
       {
        { SPELL_GHOSTLY_FIREBALL, 17, MON_SPELL_WIZARD },
-       { SPELL_GHOSTLY_FLAMES, 17, MON_SPELL_WIZARD },
+       { SPELL_SPECTRAL_CLOUD, 17, MON_SPELL_WIZARD },
        { SPELL_DISPEL_UNDEAD, 17, MON_SPELL_WIZARD },
        { SPELL_BLINK_AWAY, 17, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
@@ -1850,7 +1850,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_GHOST_CRAB,
       {
-       { SPELL_GHOSTLY_FLAMES, 62, MON_SPELL_NATURAL },
+       { SPELL_SPECTRAL_CLOUD, 62, MON_SPELL_NATURAL },
       }
     },
 

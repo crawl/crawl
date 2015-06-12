@@ -582,13 +582,13 @@ Bolt of Draining anubis guard cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
-Ghostly Flames revenant cast
+Ghostly Fireball revenant cast
 
 @The_monster@ lashes out with ghostly flames.
 %%%%
-Ghostly Fireball revenant cast
+Spectral Cloud revenant cast
 
-@ghostly flames revenant cast@
+@The_monster@ conjures spectral mists around @target@.
 %%%%
 Dispel Undead revenant cast
 
