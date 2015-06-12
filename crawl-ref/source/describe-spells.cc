@@ -344,11 +344,15 @@ vector<spell_type> map_chars_to_spells(const spellset &spells,
  * @param spell_letters     The letters to use for each spell.
  * @param source_item       The physical item holding the spells. May be null.
  * @param description[out]  An output string to append to.
+ * @param mon_owner         If this spellset is being examined from a monster's
+ *                          description, 'mon_owner' is that monster. Else,
+ *                          it's null.
  */
 static void _describe_book(const spellbook_contents &book,
                            map<spell_type, char> &spell_letters,
                            const item_def* const source_item,
-                           formatted_string &description)
+                           formatted_string &description,
+                           const monster_info *mon_owner)
 {
     description.textcolour(LIGHTGREY);
 
@@ -363,6 +367,10 @@ static void _describe_book(const spellbook_contents &book,
     const bool doublecolumn = _list_spells_doublecolumn(source_item);
 
     bool first_line_element = true;
+    // FIXME: this HD is wrong in some cases
+    // (draining, malmutation, levelling up)
+    const int hd = (mon_owner == NULL ? 0 :
+                                        mons_class_hit_dice(mon_owner->type));
     for (auto spell : book.spells)
     {
         description.cprintf(" ");
@@ -374,9 +382,18 @@ static void _describe_book(const spellbook_contents &book,
         const char spell_letter = spell_letter_index ?
                                   index_to_letter(*spell_letter_index) :
                                   ' ';
-        description.cprintf("%c - %s",
+        if (hd > 0 && crawl_state.need_save
+            && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
+        {
+            description.cprintf("%c - (%d%%) %s",
+                            spell_letter,
+                            hex_chance(spell, hd),
+                            chop_string(spell_title(spell), 22).c_str());
+        } else {
+            description.cprintf("%c - %s",
                             spell_letter,
                             chop_string(spell_title(spell), 29).c_str());
+        }
 
         // only display type & level for book/rod spells
         if (doublecolumn)
@@ -410,10 +427,14 @@ static void _describe_book(const spellbook_contents &book,
  * @param spells            The set of spells to be listed.
  * @param source_item       The physical item holding the spells. May be null.
  * @param description[out]  An output string to append to.
+ * @param mon_owner         If this spellset is being examined from a monster's
+ *                          description, 'mon_owner' is that monster. Else,
+ *                          it's null.
  */
 void describe_spellset(const spellset &spells,
                        const item_def* const source_item,
-                       formatted_string &description)
+                       formatted_string &description,
+                       const monster_info *mon_owner)
 {
     // make a map of characters to spells...
     const vector<spell_type> flat_spells = map_chars_to_spells(spells,
@@ -425,7 +446,7 @@ void describe_spellset(const spellset &spells,
         spell_letters[flat_spells[c]] = (char) c;
 
     for (auto book : spells)
-        _describe_book(book, spell_letters, source_item, description);
+        _describe_book(book, spell_letters, source_item, description, mon_owner);
 }
 
 /**
@@ -462,7 +483,7 @@ void list_spellset(const spellset &spells, const monster_info *mon_owner,
         && player_can_memorise_from_spellbook(*source_item);
 
     formatted_string &description = initial_desc;
-    describe_spellset(spells, source_item, description);
+    describe_spellset(spells, source_item, description, mon_owner);
 
     description.textcolour(LIGHTGREY);
 

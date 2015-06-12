@@ -2792,7 +2792,7 @@ string get_skill_description(skill_type skill, bool need_title)
  * What are the odds of the given spell, cast by a monster with the given
  * spell_hd, affecting the player?
  */
-static int _hex_chance(const spell_type spell, const int hd)
+int hex_chance(const spell_type spell, const int hd)
 {
     const int pow = mons_power_for_hd(spell, hd, false) / ENCH_POW_FACTOR;
     const int chance = hex_success_chance(you.res_magic(), pow, 100);
@@ -2932,7 +2932,7 @@ static int _get_spell_description(const spell_type spell,
         if (crawl_state.need_save && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
         {
             description += make_stringf("Chance to beat your MR: %d%%\n",
-                                        _hex_chance(spell, hd));
+                                        hex_chance(spell, hd));
         }
 
     }
@@ -3285,7 +3285,7 @@ static string _monster_spells_description(const monster_info& mi)
         return "";
 
     formatted_string description;
-    describe_spellset(monster_spellset(mi), nullptr, description);
+    describe_spellset(monster_spellset(mi), nullptr, description, &mi);
     description.cprintf("To read a description, press the key listed above.\n");
     return description.tostring();
 }
