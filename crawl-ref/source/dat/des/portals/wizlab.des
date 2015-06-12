@@ -29,7 +29,7 @@
 #--------------------------------------------------------------------
 #Lehudib   |earth-themed monsters,  |Moon Troll Leather Armour
 #          |"space" themed abyss    |random loot and         |20000+
-#          |monsters, eyes          |randbook of             |
+#          |monsters                |randbook of             |
 #          |                        |earth/transmutations,   |
 #          |                        |earth/translocations, or|
 #          |                        |earth/conjurations
@@ -1794,17 +1794,19 @@ NSUBST:     " = 3:K / *:.
 KMONS:      MNO = col:random name:demonic name_adjective plant \
                 tile:mons_demonic_plant
 MONS:       eye of devastation / stone giant / w:15 tentacled starspawn
-MONS:       great orb of eyes / golden eye band, giant orange brain
+MONS:       w:20 giant orange brain / w:12 great orb of eyes / w:5 neqoxec \
+            / w:3 golden eye band
 MONS:       starcursed mass / brown very ugly thing band
-MONS:       neqoxec, cacodemon
-MONS:       quicksilver dragon / war gargoyle / crystal guardian\
+MONS:       cacodemon
+MONS:       quicksilver dragon / war gargoyle / crystal guardian \
             / wretched star
 KMONS:      y = orange crystal statue name:lunar_statue n_rpl n_des \
                 spells:brain_feed.40.natural;draining_gaze.40.natural;\
                        lehudib's_crystal_spear.40.natural;\
                        shadow_creatures.80.natural \
                 col:lightmagenta tile:mons_zot_statue
-ITEM:       potion of cure mutation / potion of beneficial mutation q:1, acquire any
+ITEM:       potion of cure mutation / potion of beneficial mutation
+ITEM:       acquire any
 ITEM:       randbook owner:Lehudib disc:earth disc2:transmutation \
                      spells:lehudib's_crystal_spear\
             / randbook owner:Lehudib disc:earth disc2:translocation \
@@ -1831,10 +1833,10 @@ else
     kmons("z = patrolling moon troll ; troll leather armour " ..
           "unrand:moon_troll_leather_armour")
 end
-set_random_mon_list ("rust devil w:20 / eye of devastation / neqoxec " ..
-                     "/ stone giant / golden eye / great orb of eyes " ..
-                     "/ tentacled starspawn  / starcursed mass w:5 " ..
-                     "/ cacodemon w:5 ")
+set_random_mon_list ("rust devil w:20 / eye of devastation / stone giant " ..
+                     "/ tentacled starspawn / great orb of eyes " ..
+                     "/ neqoxec w:5 / golden eye w:5 / very ugly thing w:5 " ..
+                     "/ starcursed mass w:5 / cacodemon w:5")
 -- Uses the same teleporter lua as from golubria
 local teleporter_glyph = "PQ"
 local teleport_spot_glyph = "J&"
@@ -1858,7 +1860,7 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccbbbccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccc*bSb*cccccccccccccccccccccccccccc
 cccccccccccccccccccccccccc.......ccccccccccccccccccccccccccc
-cccccccccccccccccccccccccc...7...ccccccccccccccccccccccccccc
+cccccccccccccccccccccccccc...5...ccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccc...ccccccccccc..cccccccccccccccc
 cccccccc.A.cccccccccccci............ccccc.....cccccccccccccc
 ccccccc.....cccccccci....v...v..iv.....cc......ccccccccccccc
@@ -1868,31 +1870,31 @@ cccccc.......cccccccc.iccccccccccccc......KKK.....cccccccccc
 ccccccc......cccccccccccccccccccccccccc...KK..KK...ccccccccc
 cccccccc.<....cccccccccccccccccccccccc......2KKK....cccccccc
 cccccccccccc...ccccccccccccc...ccccccc..KK..KKK......ccccccc
-ccccccccccccc...ccccccF................KKK..KK4.KKK..ccccccc
+ccccccccccccc...ccccccF................KKK..KK3.KKK..ccccccc
 cccccccccccccc...ccc.kF......K.........KKK.q...KKKK...cccccc
-ccccccccccccccc.......Fc..K.....K..c...KK......KKKq...cccccc
+ccccccccccccccc.......Fc..K..2..K..c...KK......KKKq...cccccc
 cccccccccccccccc.......cc....v....cc.......KKK.......ccccccc
 cccvvbbbvvcccccc.......kc..vvvvv..c.......KKKK.....ccccccccc
 ccvv*bRb*vvccccc...KK...cc..vvv2.cc...KK..KKKq...ccccccccccc
-ccv.......vcccc....KKK...c....3..c...KKK.......ccccccccccccc
-ccv...7...vcccck....KKK..cc.....cc..KKKq.....ccccccccccccccc
+ccv.......vcccc....KKK...c....2..c...KKK.......ccccccccccccc
+ccv...5...vcccck....KKK..cc.....cc..KKKq.....ccccccccccccccc
 ccv.......vcccEEE....KK..kcccccccq..KK.......ccccccccccccccc
 ccv.v...v.vccc..cck......ccc|Q|ccc.......cc..ccccccccc.jcccc
 ccv..hvh..vcc....ccc....cc%%|||%%cc....ccc....ccccccc...Mccc
 ccv..vvv..vccc.....ccckcc.%bbbbb%.ccqccc.....cc.jc......cccc
 ccvh..v..hvccc.v...cJccc..bb...bb..cccOc...v.cM..cj.vv..cccc
 ccvv.....vvccc....ccu.bb...........bb.fcc....cc..cc.v*.ccccc
-cccv.....vccc..v..c...b.............b...c..v..+.........bbcc
-cccv.vhv.vccc..v..c...b......z......b...c..v..+.......7.Tbcc
-cccv.....vccc..v..cp..b.............b..oc..v..+.........bbcc
+cccv.....vccc..v..c...b.............b...c..v.2+.........bbcc
+cccv.vhv.vccc..v..c...b......z......b...c..v..+.......5.Tbcc
+cccv.....vccc2.v..cp..b.............b..oc..v..+.........bbcc
 ccvv.....vvccc....cc..bb...........bb..cc....cc..cc.v*.ccccc
-ccv..hvh..vccc.v..3c...b...........b...c3..v.cM..cj.vv..cccc
+ccv..hvh..vccc.v..2c...b...........b...c2..v.cM..cj.vv..cccc
 ccv..vvv..vccc.....c...bb.........bb...c.....cc.jc......cccc
 ccv...v...vcc2...cccc...bb.......bb...cccc...2ccccccc...Mccc
-ccv.v...v.vccc..cc..c....bbb...bbb....c.4cc..ccNNNNNcc.jcccc
+ccv.v...v.vccc..cc..c....bbb...bbb....c.3cc..ccNNNNNcc.jcccc
 ccv.......vccc......cc...............cc...c++cN``d``Nc++cccc
-ccvv.....vvcccc......cc.............cc3...c..mN``6``Nm..cccc
-ccccc....cccccc.......ccc.........ccc.....c..mN5```5Nm..cccc
+ccvv.....vvcccc......cc.............cc2...c..mN``4``Nm..cccc
+ccccc....cccccc.......ccc.........ccc.....c..mN2```2Nm..cccc
 cccccc...ccccccc..v.....cccc...cccc....s..c..ccNNNNNcc..cccc
 ccccccc...ccccccc..........ccccc......KK..c...cmmmmmc...cccc
 cccccccc...cccccc..vv.v...................cc...........ccccc
@@ -1906,9 +1908,9 @@ cccc..2.......rv....cccc...........ccccs...II.".....".II..'c
 ccccc..vv.v.vv.....ccccc...........ccccc...I.."....."..I..'c
 cccccc.vv...vv.vv.rccccg...cc.cc...gcccc...IKKKKKyKKKKKI..'c
 cccccc..r......vv.ccccc...cc...cc...ccccc..IKKKKK+KKKKKI..'c
-ccccccc..v.4......cccc....c.....c....cccc..IKKKKKeKKKKKI..'c
+ccccccc..v.3......cccc....c.....c....cccc..IKKKKKeKKKKKI..'c
 cccccccc...v.vv..ccccc...............ccccc..IKKKKKKKKKI..''c
-ccccccccc....vv..ccccM.g.....7.....g.Mccc''.....KKK.....''cc
+ccccccccc....vv..ccccM.g.....5.....g.Mccc''.....KKK.....''cc
 ccccccccccc.....cccccc....c*...*c....ccccc''...........''ccc
 ccccccccccccc.rcccccccccccccbPbcccccccccccc'''''''''''''cccc
 ccccccccccccccccccccccccccccbbbccccccccccccccccccccccccccccc
