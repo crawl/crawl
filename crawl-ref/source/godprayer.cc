@@ -290,6 +290,15 @@ static god_type _altar_identify_ecumenical_altar()
     return god;
 }
 
+/**
+ * Set up new religion from praying at an ecumenical altar.
+ * For most gods, you start with +20 piety.
+ * Exceptions:
+ * - Ru: you get an immediate sacrifice instead, only monks get the
+ *       bonus piety.
+ * - Gozag: the service fee is waived instead, only monks get a second
+ *          free potion petition.
+ */
 static bool _pray_ecumenical_altar()
 {
     if (yesno("This altar will convert you to a god. You cannot discern "
@@ -315,7 +324,7 @@ static bool _pray_ecumenical_altar()
 
         if (you_worship(GOD_RU))
             you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
-        else
+        else if (!you_worship(GOD_RU) || (you_worship(GOD_RU) && eligible_monk))
             gain_piety(20, 1, false);
 
         mark_milestone("god.ecumenical", "prayed at an ecumenical altar.");
