@@ -307,19 +307,21 @@ static bool _pray_ecumenical_altar()
         const bool eligible_monk = you.char_class == JOB_MONK
                                    && had_gods() <= 1
                                    && you_worship(GOD_NO_GOD);
+        god_type altar_god = _altar_identify_ecumenical_altar();
+        mprf(MSGCH_GOD, "%s accepts your prayer!",
+                        god_name(altar_god).c_str());
+        if (altar_god == GOD_GOZAG && eligible_monk)
+            you.attribute[ATTR_GOZAG_FREE_POTIONS]++;
+
         {
             // Don't check for or charge a Gozag service fee.
             unwind_var<int> fakepoor(you.attribute[ATTR_GOLD_GENERATED], 0);
-
-            god_type altar_god = _altar_identify_ecumenical_altar();
-            mprf(MSGCH_GOD, "%s accepts your prayer!",
-                            god_name(altar_god).c_str());
-            if (eligible_monk && altar_god == GOD_GOZAG)
-                you.attribute[ATTR_GOZAG_FREE_POTIONS]++;
             if (!you_worship(altar_god))
                 join_religion(altar_god);
-            else
-                return true;
+            else if (altar_god == GOD_GOZAG)
+                simple_god_message("offers you another free set of potion effects!");
+
+            return true;
         }
 
         if (you_worship(GOD_RU))
