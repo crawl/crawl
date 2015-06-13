@@ -438,7 +438,8 @@ static int _cloud_dissipation_rate(const cloud_struct &cloud)
     {
         // Fire clouds dissipate faster over water.
         case CLOUD_FIRE:
-            if (grd(cloud.pos) == DNGN_DEEP_WATER)
+        case CLOUD_FOREST_FIRE:
+            if (feat_is_watery(grd(cloud.pos)))
                 return dissipate * 4;
             break;
         // rain and cold clouds dissipate faster over lava.
