@@ -5,8 +5,9 @@ Rest and heal
 %%%%
 CMD_REST verbose
 
-Spend up to 100 turns for regenerating health and/or recharging magic. Resting
-is interrupted as soon as a hostile monster comes into view.
+Rests while your health and magic regenerate. Resting is interrupted as soon
+as a hostile monster comes into view. If health and magic are both already
+full, resting will wait for 100 turns.
 %%%%
 CMD_EXPLORE
 
@@ -14,9 +15,9 @@ Autoexplore the current level
 %%%%
 CMD_EXPLORE verbose
 
-Sends your character on autopilot towards unexplored areas of the current level,
-and collects items on the way. Travel stops as soon as a hostile monster comes
-into view, or when you encounter new items or features.
+Automatically explores the current level, collecting items on the way.
+Exploration stops as soon as a hostile monster comes into view, or when you
+encounter new items or features.
 %%%%
 CMD_INTERLEVEL_TRAVEL
 
@@ -24,22 +25,22 @@ Travel to distant levels
 %%%%
 CMD_INTERLEVEL_TRAVEL verbose
 
-Autotravel to distant levels. Travel is interrupted by monsters coming into
-view.
+Automatically travels to a chosen level or branch. Travel is interrupted by
+monsters coming into view.
 %%%%
 CMD_USE_ABILITY
 
-Use divine or innate abilities
+Use divine, innate or evokable abilities
 %%%%
 CMD_PRAY
 
-Pray to your god
+Pray at an altar
 %%%%
 CMD_PRAY verbose
 
-If your god likes sacrifices, this will offer a corpse or other item. Also, if
-you're standing on an altar this allows you to join the corresponding god. A
-few gods grant unique gifts when praying at an altar with high piety.
+While standing at an altar, allows you to join the corresponding god. Some gods
+will also accept sacrifices of specific items when praying over them, or grant
+unique gifts when praying at an altar with high piety.
 %%%%
 CMD_SEARCH_STASHES
 
@@ -47,7 +48,8 @@ Search for items/features
 %%%%
 CMD_SEARCH_STASHES verbose
 
-Search for items or features seen elsewhere, then travel there.
+Searches for items or features seen elsewhere, and allows you to travel to
+their location.
 %%%%
 CMD_REPLAY_MESSAGES
 
@@ -55,20 +57,21 @@ Reread recent messages
 %%%%
 CMD_RESISTS_SCREEN
 
-Display character's overview
+Display character overview
 %%%%
 CMD_RESISTS_SCREEN verbose
 
-Displays information about known resistances, abilities, equipment stats, etc.
+Displays an overview of your current resistances, abilities, equipment and
+attributes.
 %%%%
 CMD_DISPLAY_OVERMAP
 
-Display dungeon overmap
+Display dungeon overview
 %%%%
 CMD_DISPLAY_OVERMAP verbose
 
-Displays location of branch entries, shops and other features you've
-encountered so far.
+Displays an overview of dungeon branch locations, discovered altars, shops and
+level annotations.
 %%%%
 CMD_DISPLAY_RELIGION
 
@@ -89,11 +92,12 @@ Manage skills
 %%%%
 CMD_DISPLAY_CHARACTER_STATUS
 
-Display character's status
+Display character status
 %%%%
 CMD_DISPLAY_CHARACTER_STATUS verbose
 
-Displays active enchantments and a few other things.
+Displays details on your current movement speed, attack speed, stealth, magic
+resistance, and any currently active enchantments or status effects.
 %%%%
 CMD_DISPLAY_KNOWN_OBJECTS
 
@@ -114,7 +118,8 @@ Modify the player tile
 %%%%
 CMD_EDIT_PLAYER_TILE verbose
 
-Modify equipment and species tile displayed in the player doll.
+Allows you to modify the equipment and species tile displayed in the player
+doll.
 %%%%
 CMD_DISPLAY_COMMANDS
 
@@ -122,7 +127,7 @@ Game help
 %%%%
 CMD_DISPLAY_COMMANDS verbose
 
-List of commands, options, etc.
+Displays a list of commands.
 %%%%
 CMD_CHARACTER_DUMP
 
@@ -130,9 +135,9 @@ Dump character's progress
 %%%%
 CMD_CHARACTER_DUMP verbose
 
-Dump a huge amount of information about your character into a file
-‘playername.txt’ in the morgue directory, to peruse at your leisure. This
-includes main stats, equipment, spells, skills, notes, etc.
+Dumps detailed information about your character into a file ‘playername.txt’ in
+the morgue directory, to peruse at your leisure. This includes main stats,
+equipment, spells, skills, notes, etc.
 %%%%
 CMD_AUTOFIGHT
 
@@ -140,8 +145,8 @@ Hit the closest monster
 %%%%
 CMD_AUTOFIGHT verbose
 
-Move towards the closest hostile monster and attack it with your wielded
-weapon.
+Moves towards the closest hostile monster, or attacks an adjacent monster with
+your current weapon.
 %%%%
 CMD_AUTOFIGHT_NOMOVE
 
@@ -149,7 +154,7 @@ Hit an adjacent monster
 %%%%
 CMD_AUTOFIGHT_NOMOVE verbose
 
-Attack a monster next to you with your wielded weapon.
+Attacks an adjacent monster with your current weapon.
 %%%%
 CMD_WAIT
 
@@ -157,7 +162,7 @@ Wait a single turn
 %%%%
 CMD_WAIT verbose
 
-Spend a single turn waiting and resting.
+Spends a single turn waiting and resting.
 %%%%
 CMD_SAFE_WAIT
 
@@ -165,7 +170,7 @@ Wait a single turn if safe
 %%%%
 CMD_SAFE_WAIT verbose
 
-Spend a single turn waiting and resting, but only if there are no hostile
+Spends a single turn waiting and resting, but only if there are no hostile
 monsters in view.
 %%%%
 CMD_DISPLAY_INVENTORY
@@ -174,7 +179,7 @@ Display the contents of your inventory
 %%%%
 CMD_DISPLAY_INVENTORY verbose
 
-Display the contents of your inventory.
+Displays the contents of your inventory.
 %%%%
 CMD_CAST_SPELL
 
@@ -182,7 +187,7 @@ Cast a spell
 %%%%
 CMD_CAST_SPELL verbose
 
-Cast a spell.
+Casts a spell.
 %%%%
 CMD_BUTCHER
 
@@ -190,7 +195,7 @@ Butcher corpse
 %%%%
 CMD_BUTCHER verbose
 
-Butcher a corpse into chunks.
+Butchers a corpse into chunks.
 %%%%
 CMD_MEMORISE_SPELL
 
@@ -198,7 +203,7 @@ Memorise spell
 %%%%
 CMD_MEMORISE_SPELL verbose
 
-Commit a spell to memory, read from a book you are holding or standing on.
+Memorises a chosen spell from a book you are carrying or standing on.
 %%%%
 CMD_LOOKUP_HELP
 
@@ -206,7 +211,7 @@ Lookup help
 %%%%
 CMD_LOOKUP_HELP verbose
 
-Look up information about monsters, spells, and more.
+Looks up descriptions of monsters, spells, abilities, items and more.
 %%%%
 CMD_DROP
 
@@ -214,7 +219,7 @@ Drop items
 %%%%
 CMD_DROP verbose
 
-Drop one or more items that you are currently holding.
+Drops one or more items that you are currently holding.
 %%%%
 CMD_DISPLAY_MAP
 
@@ -222,7 +227,7 @@ Enter map mode
 %%%%
 CMD_DISPLAY_MAP verbose
 
-Navigate around the previously explored map.
+Displays a map of the current level.
 %%%%
 CMD_MAP_GOTO_TARGET
 
@@ -230,7 +235,7 @@ Travel to cursor
 %%%%
 CMD_MAP_GOTO_TARGET verbose
 
-Start travelling to the cursor's current location.
+Starts travelling to the cursor's current location.
 %%%%
 CMD_MAP_EXPLORE
 
@@ -238,7 +243,7 @@ Find next autoexplore target
 %%%%
 CMD_MAP_EXPLORE verbose
 
-Move the map cursor to the next location that autoexplore will travel to.
+Moves the cursor to the next location that autoexplore will travel to.
 %%%%
 CMD_MAP_ADD_WAYPOINT
 
@@ -246,15 +251,15 @@ Add waypoint
 %%%%
 CMD_MAP_ADD_WAYPOINT verbose
 
-Set waypoint to the current position.
+Sets a waypoint at your current position.
 %%%%
 CMD_MAP_EXCLUDE_AREA
 
-Travel exclusion
+Create exclusion
 %%%%
 CMD_MAP_EXCLUDE_AREA verbose
 
-Create a travel exclusion, change its radius, or remove it.
+Creates a travel exclusion, changes its radius, or removes it.
 %%%%
 CMD_MAP_CLEAR_EXCLUDES
 
@@ -262,7 +267,7 @@ Clear travel exclusions
 %%%%
 CMD_MAP_CLEAR_EXCLUDES verbose
 
-Erase all travel exclusions on the level.
+Erases all travel exclusions on the level.
 %%%%
 CMD_MAP_NEXT_LEVEL
 
@@ -270,7 +275,7 @@ Down one level
 %%%%
 CMD_MAP_NEXT_LEVEL verbose
 
-Examine the next deeper level.
+Displays the next deeper level.
 %%%%
 CMD_MAP_PREV_LEVEL
 
@@ -278,7 +283,7 @@ Up one level
 %%%%
 CMD_MAP_PREV_LEVEL verbose
 
-Examine the next higher level.
+Displays the next higher level.
 %%%%
 CMD_MAP_GOTO_LEVEL
 
@@ -286,7 +291,7 @@ Go to level
 %%%%
 CMD_MAP_GOTO_LEVEL verbose
 
-Go to another level by branch and depth.
+Displays another chosen level by branch and depth.
 %%%%
 CMD_MAP_FIND_UPSTAIR
 
@@ -294,7 +299,7 @@ Find stairs up
 %%%%
 CMD_MAP_FIND_UPSTAIR verbose
 
-Cycle through stairs up.
+Cycles through stairs up.
 %%%%
 CMD_MAP_FIND_DOWNSTAIR
 
@@ -302,7 +307,7 @@ Find stairs down
 %%%%
 CMD_MAP_FIND_DOWNSTAIR verbose
 
-Cycle through stairs down.
+Cycles through stairs down.
 %%%%
 CMD_MAP_FIND_YOU
 
@@ -310,7 +315,7 @@ Find me
 %%%%
 CMD_MAP_FIND_YOU verbose
 
-Move the map cursor back to your current position.
+Moves the map cursor back to your current position.
 %%%%
 CMD_MAP_FIND_PORTAL
 
@@ -318,7 +323,7 @@ Find shops and portals
 %%%%
 CMD_MAP_FIND_PORTAL verbose
 
-Cycle through shops and portals on the current level.
+Cycles through shops and portals on the current level.
 %%%%
 CMD_MAP_FIND_TRAP
 
@@ -326,7 +331,7 @@ Find traps
 %%%%
 CMD_MAP_FIND_TRAP verbose
 
-Cycle through traps on the current level.
+Cycles through traps on the current level.
 %%%%
 CMD_MAP_FIND_ALTAR
 
@@ -334,7 +339,7 @@ Find altars
 %%%%
 CMD_MAP_FIND_ALTAR verbose
 
-Cycle through altars on the current level.
+Cycles through altars on the current level.
 %%%%
 CMD_MAP_FIND_EXCLUDED
 
@@ -342,7 +347,7 @@ Find travel exclusion
 %%%%
 CMD_MAP_FIND_EXCLUDED verbose
 
-Cycle through travel exclusions on the current level.
+Cycles through travel exclusions on the current level.
 %%%%
 CMD_MAP_FIND_WAYPOINT
 
@@ -350,7 +355,7 @@ Find waypoint
 %%%%
 CMD_MAP_FIND_WAYPOINT verbose
 
-Cycle through all waypoints on the current level.
+Cycles through all waypoints on the current level.
 %%%%
 CMD_MAP_FIND_STASH
 
@@ -358,7 +363,7 @@ Find stash
 %%%%
 CMD_MAP_FIND_STASH verbose
 
-Cycle through all stashes on the current level.
+Cycles through all stashes on the current level.
 %%%%
 CMD_ZOOM_IN
 
@@ -366,7 +371,7 @@ Zoom in
 %%%%
 CMD_ZOOM_IN verbose
 
-Zoom in on dungeon area
+Zooms in on dungeon area.
 %%%%
 CMD_ZOOM_OUT
 
@@ -374,7 +379,7 @@ Zoom out
 %%%%
 CMD_ZOOM_OUT verbose
 
-Zoom out on dungeon area
+Zooms out on dungeon area.
 %%%%
 CMD_SHOW_KEYBOARD
 
