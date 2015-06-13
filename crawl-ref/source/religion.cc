@@ -2969,6 +2969,7 @@ void excommunication(bool voluntary, god_type new_god, bool immediate)
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
+        you.attribute[ATTR_GOZAG_FREE_POTIONS] = 0;
         _set_penance(old_god, 50);
         break;
 
@@ -3389,6 +3390,10 @@ void join_religion(god_type which_god, bool immediate)
         you.props[RU_SACRIFICE_DELAY_KEY] = delay;
         you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
     }
+    else if (you_worship(GOD_GOZAG))
+    {
+        you.attribute[ATTR_GOZAG_FREE_POTIONS]++;
+    }
     else
     {
         you.piety = 15; // to prevent near instant excommunication
@@ -3619,12 +3624,15 @@ void join_religion(god_type which_god, bool immediate)
         else
             simple_god_message(" waives the service fee.");
 
+        const int free_potions = you.attribute[ATTR_GOZAG_FREE_POTIONS];
         for (size_t i = 0; i < abilities.size(); ++i)
         {
-            if (abilities[i] == ABIL_GOZAG_POTION_PETITION
-                && !you.attribute[ATTR_GOZAG_FIRST_POTION])
+            if (abilities[i] == ABIL_GOZAG_POTION_PETITION && free_potions)
             {
-                simple_god_message(" offers you a free set of potion effects!");
+                simple_god_message(
+                    make_stringf(" offers you %d free set%s of potion effects!",
+                                 free_potions,
+                                 free_potions > 1 ? "s" : "").c_str());
                 needs_redraw = true;
                 continue;
             }
