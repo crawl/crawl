@@ -283,34 +283,50 @@ static god_type _altar_identify_ecumenical_altar()
     god_type god;
     do
     {
-        god = god_type(random2(NUM_GODS));
+        god = random_god();
     }
     while (!player_can_join_god(god));
     dungeon_terrain_changed(you.pos(), altar_for_god(god), false);
     return god;
 }
 
+/**
+ * Set up new religion from praying at an ecumenical altar.
+ * For most gods, you start with +20 piety.
+ * Exceptions:
+ * - Ru: you get an immediate sacrifice instead, only monks get the
+ *       bonus piety.
+ * - Gozag: the service fee is waived instead, only monks get a second
+ *          free potion petition.
+ */
 static bool _pray_ecumenical_altar()
 {
     if (yesno("This altar will convert you to a god. You cannot discern "
               "which. Do you pray?", false, 'n'))
     {
+        const bool eligible_monk = you.char_class == JOB_MONK
+                                   && had_gods() <= 1
+                                   && you_worship(GOD_NO_GOD);
+        god_type altar_god = _altar_identify_ecumenical_altar();
+        mprf(MSGCH_GOD, "%s accepts your prayer!",
+                        god_name(altar_god).c_str());
+        if (altar_god == GOD_GOZAG && eligible_monk)
+            you.attribute[ATTR_GOZAG_FREE_POTIONS]++;
+
         {
             // Don't check for or charge a Gozag service fee.
             unwind_var<int> fakepoor(you.attribute[ATTR_GOLD_GENERATED], 0);
-
-            god_type altar_god = _altar_identify_ecumenical_altar();
-            mprf(MSGCH_GOD, "%s accepts your prayer!",
-                            god_name(altar_god).c_str());
             if (!you_worship(altar_god))
                 join_religion(altar_god);
-            else
-                return true;
+            else if (altar_god == GOD_GOZAG)
+                simple_god_message("offers you another free set of potion effects!");
+
+            return true;
         }
 
         if (you_worship(GOD_RU))
             you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
-        else
+        else if (!you_worship(GOD_RU) || (you_worship(GOD_RU) && eligible_monk))
             gain_piety(20, 1, false);
 
         mark_milestone("god.ecumenical", "prayed at an ecumenical altar.");
