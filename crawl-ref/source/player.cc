@@ -5432,10 +5432,11 @@ bool player::is_banished() const
 
 bool player::is_sufficiently_rested() const
 {
-    // Can't use should_stop_resting directly because that is edge-triggered
-    // and this should be level-triggered.
-    return hp >= _rest_trigger_level(hp_max)
-           && magic_points >= _rest_trigger_level(max_magic_points);
+    // Only return false if resting will actually help.
+    return (hp >= _rest_trigger_level(hp_max)
+            || player_mutation_level(MUT_SLOW_HEALING) == 3)
+        && (magic_points >= _rest_trigger_level(max_magic_points)
+            || you.spirit_shield() && you.species == SP_DEEP_DWARF);
 }
 
 bool player::in_water() const
