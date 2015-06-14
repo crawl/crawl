@@ -4,6 +4,7 @@
 
 #include "itemprop.h"
 #include "ng-setup.h"
+#include "random-weight.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
@@ -369,28 +370,28 @@ static void _good_potion_or_scroll()
     }
 }
 
-// Players can get some other consumables as a "decent item".
+/**
+ * Make a 'decent' consumable for a wanderer to start with.
+ *
+ * Shouldn't ever create a completely useless item for the player's species.
+ */
 static void _decent_potion_or_scroll()
 {
-    int base_rand = 3;
-    // No lignification for non-vampire undead
-    if (you.is_lifeless_undead(false))
-        base_rand--;
+    // vector of weighted {object_class_type, subtype} pairs
+    // xxx: could we use is_useless_item here? (not without dummy items...?)
+    const vector<pair<pair<object_class_type, int>, int>> options = {
+        { { OBJ_SCROLLS, SCR_TELEPORTATION },
+            you.species == SP_FORMICID ? 0 : 1 },
+        { { OBJ_POTIONS, POT_CURING },
+            you.undead_state(false) == US_UNDEAD ? 0 : 1 },
+        { { OBJ_POTIONS, POT_LIGNIFY },
+            you.is_lifeless_undead(false) ? 0 : 1 },
+    };
 
-    switch (random2(base_rand))
-    {
-    case 0:
-        newgame_make_item(OBJ_SCROLLS, SCR_TELEPORTATION);
-        break;
-
-    case 1:
-        newgame_make_item(OBJ_POTIONS, POT_CURING);
-        break;
-
-    case 2:
-        newgame_make_item(OBJ_POTIONS, POT_LIGNIFY);
-        break;
-    }
+    const pair<object_class_type, int> *option
+        = random_choose_weighted(options);
+    ASSERT(option);
+    newgame_make_item(option->first, option->second);
 }
 
 // Create a random wand in the inventory.
