@@ -12,7 +12,6 @@ packages:
 
 https://www.debian.org/doc/manuals/maint-guide/index.en.html
 
-And the
 
 0. Prerequisites
 
@@ -33,38 +32,47 @@ And the
    export DEBFULLNAME="yourname"
    export DEBEMAIL="your@email"
 
+
 1. Make a copy of the of the source packages and extract
 
-   The source packages should be make using the package-source target. Run the
-   following from source if you haven't yet:
+   The source packages should be made using the package-source target. Run the
+   following from the source directory if you haven't yet:
+
    make package-source
 
    This will make several files in the toplevel repo dir, but you specifically
    need the stone_soup-VER-tar.xz file. Copy this to a location where you'd
-   like to build the packages. Then exactract the source directory and rename
+   like to prepare the packages, then exactract the source directory and rename
    the original file. Using version 0.17 as an example and with ~/crawl-deb as
-   my "base" build directory:
+   my staging directory:
 
+   mkdir -p ~/crawl-deb
    cp stone_soup-0.17.0.tar.xz ~/crawl-deb
    cd ~/crawl-deb
    tar Jxf stone_soup-0.17.0.tar.xz
    mv stone_soup-0.17.0 crawl-0.17.0
    mv stone_soup-0.17.0.tar.xz crawl-0.17.0.orig.tar.xz
 
-   The source directory and original source files must be renamed according
+   The name formats of crawl-VER and crawl-VER.orig.EXT for the source
+   directory and archive are specifically looked for by pbuilder, so these
+   renaming steps are required.
+
 
 2. Copy and update the debian directory in the source directory
 
    We need the crawl-ref/source/debian directory to be at the top level to
-   build the package. Using 0.17.0 as an example:
+   build the package. Using 0.17.0 as an example, and assuming we're already in
+   our staging directory with the unpacked source:
+
    cd crawl-0.17.0
    cp -r source/debian .
 
+
 3. Update the debian changelog
 
-   An entry has the following format:
+   The debian changelog gives An entry has the following format:
 
-   crawl (2:VER-1) UNRELEASED; urgency=low
+   crawl (2:VER-1) unstable; urgency=low
 
      * Major bugfix release
 
@@ -78,12 +86,14 @@ And the
    overwrites the latest entry with the new one, so you might want to make the
    entry manually. For 0.17.0, the first line should look like:
 
-   crawl (2:0.17.0) UNRELEASED; urgency=low
+   crawl (2:0.17.0) unstable; urgency=low
 
-   After the changelog file is updated, copy it to
-   crawl-ref/source/debian/changelog in your repo, make a commit for the new
-   changelog, and push to the github repo so that the debian directory remains
-   updated.
+   Note: After the changelog file is updated, you should copy updated version
+   to crawl-ref/source/debian/changelog in your local git repo, make a commit
+   for the updated changelog, and push this to the github repo so that the
+   debian directory remains updated. If you're doing a point release of an
+   already released version, you'll want to update the changelog in both the
+   release branch and in trunk.
 
 
 4. Set up your pbuilderrc
@@ -118,6 +128,13 @@ And the
               --basepath /var/cache/pbuilder/stable-amd64.cow
    cowbuilder --create --architecture i386 \
               --basepath /var/cache/pbuilder/stable-i386.cow
+
+   This chroot directory needs to be created only once for each OS/ARCH/DIST
+   combination on which you what to build the package. It doesn't need to be
+   recreated if you're only building a different DCSS version, but if you're
+   using a different value for any of OS, ARCH, or DIST, you'll need to create
+   a corresponding .cow chroot.
+
 
 6. Build the packages
 
@@ -162,6 +179,7 @@ And the
    Run the console version with `crawl' and the tiles version with
    `crawl-tiles' to see if they work.
 
+
 7. Upload files to CDO, install into the repo, and test
 
    You'll need to upload the deb files above in addition to the
@@ -171,8 +189,8 @@ And the
 
    We install each release into a component named after the major version of
    the release. If you're logged into CDO, go to the repository root directory
-   `deb' and the .deb files and the .dsc file (using 0.17 as the version and
-   ~/upload/deb-files as a staging directory):
+   `deb' and install the .deb files and the .dsc file using reprepro. An
+   example using 0.17 and ~/upload/deb-files as a staging directory):
 
    cd ~/deb
    for i in ../upload/deb-files/*.deb
@@ -188,11 +206,13 @@ And the
    the correct crawl version if the download page still references the previous
    version.
 
+
 8. Update the download page
 
    The major version in the example command to add the repository URL should be
    updated. See release.txt for details on keeping the CDO website in sync with
    the website repository.
+
 
 At this point, the repository should be working and the packages ready for
 users to install with apt.
