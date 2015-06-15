@@ -112,6 +112,9 @@ vector<spell_type> spellbook_template(book_type book)
 // Rarity 100 is reserved for unused books.
 int book_rarity(book_type which_book)
 {
+    if (item_type_removed(OBJ_BOOKS, which_book))
+        return 100;
+
     switch (which_book)
     {
     case BOOK_MINOR_MAGIC:
@@ -181,13 +184,6 @@ int book_rarity(book_type which_book)
     case BOOK_AKASHIC_RECORD:
     case BOOK_MANUAL:
         return 20;
-
-#if TAG_MAJOR_VERSION == 34
-    case BOOK_CONTROL:
-    case BOOK_WIZARDRY:
-    case BOOK_BUGGY_DESTRUCTION:
-        return 100;
-#endif
 
     default:
         return 1;

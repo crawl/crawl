@@ -6,6 +6,8 @@
 #ifndef ITEMPROP_H
 #define ITEMPROP_H
 
+#include <set>
+
 #include "itemprop-enum.h"
 
 struct bolt;
@@ -39,6 +41,11 @@ enum armour_flag
     ARMF_VUL_FIRE           = ard(ARMF_RES_FIRE, -1),
     ARMF_VUL_COLD           = ard(ARMF_RES_COLD, -1),
 };
+
+/// Removed items that have item knowledge.
+extern const set<pair<object_class_type, int> > removed_items;
+/// Check for membership in removed_items.
+bool item_type_removed(object_class_type base, int subtype);
 
 // cursed:
 bool item_known_cursed(const item_def &item) PURE;

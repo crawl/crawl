@@ -696,28 +696,9 @@ static void _startup_hints_mode()
 // required so that maybe_identify_base_type works correctly
 static void _set_removed_types_as_identified()
 {
-    static const vector<pair<object_class_type, int> > removed =
-    {
-#if TAG_MAJOR_VERSION == 34
-        { OBJ_JEWELLERY, AMU_CONTROLLED_FLIGHT },
-        { OBJ_JEWELLERY, AMU_CONSERVATION },
-        { OBJ_STAVES,    STAFF_ENCHANTMENT },
-        { OBJ_STAVES,    STAFF_CHANNELING },
-        { OBJ_POTIONS,   POT_GAIN_STRENGTH },
-        { OBJ_POTIONS,   POT_GAIN_DEXTERITY },
-        { OBJ_POTIONS,   POT_GAIN_INTELLIGENCE },
-        { OBJ_POTIONS,   POT_WATER },
-        { OBJ_POTIONS,   POT_STRONG_POISON },
-        { OBJ_POTIONS,   POT_PORRIDGE },
-        { OBJ_POTIONS,   POT_SLOWING },
-        { OBJ_POTIONS,   POT_DECAY },
-        { OBJ_POTIONS,   POT_RESTORE_ABILITIES },
-        { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
-        { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
-#endif
-    };
-    for (auto entry : removed)
-        you.type_ids(entry) = true;
+    for (auto entry : removed_items)
+        if (item_type_has_ids(entry.first))
+            you.type_ids(entry) = true;
 }
 
 #ifdef WIZARD

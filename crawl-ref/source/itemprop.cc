@@ -681,6 +681,40 @@ void init_properties()
         Food_index[ Food_prop[i].id ] = i;
 }
 
+const set<pair<object_class_type, int> > removed_items =
+{
+#if TAG_MAJOR_VERSION == 34
+    { OBJ_JEWELLERY, AMU_CONTROLLED_FLIGHT },
+    { OBJ_JEWELLERY, AMU_CONSERVATION },
+    { OBJ_JEWELLERY, RING_REGENERATION },
+    { OBJ_JEWELLERY, RING_TELEPORT_CONTROL },
+    { OBJ_STAVES,    STAFF_ENCHANTMENT },
+    { OBJ_STAVES,    STAFF_CHANNELING },
+    { OBJ_POTIONS,   POT_GAIN_STRENGTH },
+    { OBJ_POTIONS,   POT_GAIN_DEXTERITY },
+    { OBJ_POTIONS,   POT_GAIN_INTELLIGENCE },
+    { OBJ_POTIONS,   POT_WATER },
+    { OBJ_POTIONS,   POT_STRONG_POISON },
+    { OBJ_POTIONS,   POT_BLOOD_COAGULATED },
+    { OBJ_POTIONS,   POT_PORRIDGE },
+    { OBJ_POTIONS,   POT_SLOWING },
+    { OBJ_POTIONS,   POT_DECAY },
+    { OBJ_POTIONS,   POT_RESTORE_ABILITIES },
+    { OBJ_BOOKS,     BOOK_WIZARDRY },
+    { OBJ_BOOKS,     BOOK_CONTROL },
+    { OBJ_BOOKS,     BOOK_BUGGY_DESTRUCTION },
+    { OBJ_RODS,      ROD_VENOM },
+    { OBJ_RODS,      ROD_WARDING },
+    { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
+    { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
+#endif
+};
+
+bool item_type_removed(object_class_type base, int subtype)
+{
+    return map_find(removed_items, { base, subtype }) != nullptr;
+}
+
 // Some convenient functions to hide the bit operations and create
 // an interface layer between the code and the data in case this
 // gets changed again. - bwr

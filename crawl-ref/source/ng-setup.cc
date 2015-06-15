@@ -348,15 +348,13 @@ static void _give_basic_knowledge()
 
     // Recognisable by appearance.
     you.type_ids[OBJ_POTIONS][POT_BLOOD] = true;
-#if TAG_MAJOR_VERSION == 34
-    you.type_ids[OBJ_POTIONS][POT_BLOOD_COAGULATED] = true;
-    you.type_ids[OBJ_POTIONS][POT_PORRIDGE] = true;
-#endif
 
     // Won't appear unidentified anywhere.
     you.type_ids[OBJ_SCROLLS][SCR_CURSE_WEAPON] = true;
     you.type_ids[OBJ_SCROLLS][SCR_CURSE_JEWELLERY] = true;
     you.type_ids[OBJ_SCROLLS][SCR_CURSE_ARMOUR] = true;
+
+    // Removed item types are handled in _set_removed_types_as_identified.
 }
 
 static void _setup_normal_game();
