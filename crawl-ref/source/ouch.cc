@@ -429,9 +429,9 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
     if (crawl_state.disables[DIS_AFFLICTIONS])
         return false;
 
-    const int protection = player_prot_life();
+    const int protection = ignore_protection ? 0 : player_prot_life();
 
-    if (protection == 3 && !ignore_protection)
+    if (protection == 3)
     {
         if (announce_full)
             canned_msg(MSG_YOU_RESIST);
@@ -439,7 +439,7 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
         return false;
     }
 
-    if (protection > 0 && !ignore_protection)
+    if (protection > 0)
     {
         canned_msg(MSG_YOU_PARTIALLY_RESIST);
         power /= (protection * 2);
