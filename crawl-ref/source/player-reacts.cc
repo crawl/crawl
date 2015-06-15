@@ -975,22 +975,22 @@ static void _decrement_durations()
         }
     }
 
-    if (you.species == SP_GHOUL)
+    if (you.species == SP_GHOUL and you.hunger_state < HS_SATIATED)
     {
         int resilience = 400;
 
         if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
             resilience = resilience * 3 / 2;
 
-        // Faster rotting when hungry.
-        if (you.hunger_state < HS_SATIATED)
-            resilience >>= HS_SATIATED - you.hunger_state;
+        const int hunger = HS_SATIATED - you.hunger_state;
+
+        resilience >>= hunger;
 
         if (one_chance_in(resilience))
         {
             dprf("rot rate: 1/%d", resilience);
             mprf(MSGCH_WARN, "You feel your flesh rotting away.");
-            rot_hp(1);
+            rot_hp(random2(hunger * 2) + 1);
         }
     }
 
