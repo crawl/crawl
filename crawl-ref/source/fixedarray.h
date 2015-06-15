@@ -60,14 +60,28 @@ public:
         return mData[index];
     }
 
-    template<class Indexer> TYPE& operator () (const Indexer &i)
+    template<class Indexer>
+    TYPE& operator () (const Indexer &i)
     {
         return mData[i.x][i.y];
     }
 
-    template<class Indexer> const TYPE& operator () (const Indexer &i) const
+    template<class First, class Second>
+    TYPE& operator () (const pair<First,Second> &p)
+    {
+        return mData[p.first][p.second];
+    }
+
+    template<class Indexer>
+    const TYPE& operator () (const Indexer &i) const
     {
         return mData[i.x][i.y];
+    }
+
+    template<class First, class Second>
+    const TYPE& operator () (const pair<First,Second> &p) const
+    {
+        return mData[p.first][p.second];
     }
 
     void init(const TYPE& def)
