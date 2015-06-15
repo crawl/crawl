@@ -4881,8 +4881,7 @@ bool maybe_identify_base_type(item_def &item)
 
     for (int i = item_base; i < item_count + item_base; i++)
     {
-        const bool identified = you.type_ids[item.base_type][i]
-                                == ID_KNOWN_TYPE;
+        const bool identified = you.type_ids[item.base_type][i];
         ident_count += identified ? 1 : 0;
     }
 
