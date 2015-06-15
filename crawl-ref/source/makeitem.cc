@@ -1592,16 +1592,11 @@ static void _generate_staff_item(item_def& item, bool allow_uniques, int force_t
 
     if (force_type == OBJ_RANDOM)
     {
-#if TAG_MAJOR_VERSION == 34
         do
         {
             item.sub_type = random2(NUM_STAVES);
         }
-        while (item.sub_type == STAFF_ENCHANTMENT
-               || item.sub_type == STAFF_CHANNELING);
-#else
-        item.sub_type = random2(NUM_STAVES);
-#endif
+        while (item_type_removed(OBJ_STAVES, item.sub_type));
 
         // staves of energy are 25% less common, wizardry/power
         // are more common
@@ -1618,17 +1613,13 @@ static void _generate_staff_item(item_def& item, bool allow_uniques, int force_t
 static void _generate_rod_item(item_def& item, int force_type, int item_level)
 {
     if (force_type == OBJ_RANDOM)
-#if TAG_MAJOR_VERSION == 34
     {
         do
         {
             item.sub_type = random2(NUM_RODS);
         }
-        while (item.sub_type == ROD_WARDING || item.sub_type == ROD_VENOM);
+        while (item_type_removed(OBJ_RODS, item.sub_type));
     }
-#else
-        item.sub_type = random2(NUM_RODS);
-#endif
     else
         item.sub_type = force_type;
 
@@ -2157,20 +2148,15 @@ static bool _armour_is_visibly_special(const item_def &item)
 
 jewellery_type get_random_amulet_type()
 {
-#if TAG_MAJOR_VERSION == 34
     int res;
     do
     {
         res = random_range(AMU_FIRST_AMULET, NUM_JEWELLERY - 1);
     }
-    // Do not generate cFly or Cons
-    while (res == AMU_CONTROLLED_FLIGHT || res == AMU_CONSERVATION);
+    // Do not generate removed item types.
+    while (item_type_removed(OBJ_JEWELLERY, res));
 
     return jewellery_type(res);
-#else
-    return static_cast<jewellery_type>(random_range(AMU_FIRST_AMULET,
-                                                    NUM_JEWELLERY - 1));
-#endif
 }
 
 static jewellery_type _get_raw_random_ring_type()
@@ -2181,10 +2167,7 @@ static jewellery_type _get_raw_random_ring_type()
         ring = (jewellery_type)(random_range(RING_FIRST_RING, NUM_RINGS - 1));
     }
     while (ring == RING_TELEPORTATION && crawl_state.game_is_sprint()
-#if TAG_MAJOR_VERSION == 34
-           || ring == RING_TELEPORT_CONTROL
-#endif
-           );
+           || item_type_removed(OBJ_JEWELLERY, ring));
     return ring;
 }
 

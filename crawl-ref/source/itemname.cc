@@ -2445,53 +2445,17 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_BOOKS && j > MAX_FIXED_BOOK)
                 continue;
 
+            if (item_type_removed(i, j))
+                continue;
+
             // Curse scrolls are only created by Ashenzari.
             if (i == OBJ_SCROLLS &&
                 (j == SCR_CURSE_WEAPON
                  || j == SCR_CURSE_ARMOUR
-                 || j == SCR_CURSE_JEWELLERY
-#if TAG_MAJOR_VERSION == 34
-                 || j == SCR_ENCHANT_WEAPON_II
-                 || j == SCR_ENCHANT_WEAPON_III
-#endif
-                ))
+                 || j == SCR_CURSE_JEWELLERY))
             {
                 continue;
             }
-
-#if TAG_MAJOR_VERSION == 34
-            // Items removed since the last save compat break.
-            if (i == OBJ_POTIONS
-                && (j == POT_WATER
-                 || j == POT_GAIN_STRENGTH
-                 || j == POT_GAIN_DEXTERITY
-                 || j == POT_GAIN_INTELLIGENCE
-                 || j == POT_SLOWING
-                 || j == POT_STRONG_POISON
-                 || j == POT_BLOOD_COAGULATED
-                 || j == POT_PORRIDGE
-                 || j == POT_RESTORE_ABILITIES
-                 || j == POT_DECAY))
-            {
-                continue;
-            }
-
-            if (i == OBJ_BOOKS && (j == BOOK_WIZARDRY || j == BOOK_CONTROL))
-                continue;
-
-            if (i == OBJ_JEWELLERY
-                && (j == AMU_CONTROLLED_FLIGHT || j == AMU_CONSERVATION
-                    || j == RING_REGENERATION))
-            {
-                continue;
-            }
-
-            if (i == OBJ_STAVES && j == STAFF_ENCHANTMENT)
-                continue;
-
-            if (i == OBJ_STAVES && j == STAFF_CHANNELING)
-                continue;
-#endif
 
             if (you.type_ids[i][j] != unknown_items) // logical xor
             {

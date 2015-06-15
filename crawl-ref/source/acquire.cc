@@ -587,15 +587,11 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     skill_type best_spell_skill = best_skill(SK_SPELLCASTING, SK_EVOCATIONS);
     bool found_enhancer = false;
     int result = 0;
-#if TAG_MAJOR_VERSION == 34
     do
     {
         result = random2(NUM_STAVES);
     }
-    while (result == STAFF_ENCHANTMENT || result == STAFF_CHANNELING);
-#else
-    result = random2(NUM_STAVES);
-#endif
+    while (item_type_removed(OBJ_STAVES, result));
 
 #define TRY_GIVE(x) { if (!you.type_ids[OBJ_STAVES][x]) \
                       {result = x; found_enhancer = true;} }
@@ -640,10 +636,7 @@ static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
     }
     while (player_mutation_level(MUT_NO_LOVE)
               && (result == ROD_SWARM || result == ROD_SHADOWS)
-#if TAG_MAJOR_VERSION == 34
-           || result == ROD_WARDING || result == ROD_VENOM
-#endif
-          );
+           || item_type_removed(OBJ_RODS, result));
     return result;
 }
 
@@ -985,13 +978,11 @@ static bool _do_book_acquirement(item_def &book, int agent)
                 continue;
             }
 
-#if TAG_MAJOR_VERSION == 34
-            if (bk == BOOK_WIZARDRY || bk == BOOK_CONTROL)
+            if (item_type_removed(OBJ_BOOKS, bk))
             {
                 weights[bk] = 0;
                 continue;
             }
-#endif
 
             weights[bk]    = _book_weight(static_cast<book_type>(bk));
             total_weights += weights[bk];
