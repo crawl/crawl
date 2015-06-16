@@ -4882,6 +4882,8 @@ static branch_summon_pair _planerend_summons[] =
   { BRANCH_ZOT,    _planerend_zot }
 };
 
+
+
 static void _branch_summon_helper(monster* mons, spell_type spell_cast,
                                   branch_summon_pair *summon_list,
                                   const size_t list_size, int count)
@@ -5042,6 +5044,29 @@ extern const spell_type serpent_of_hell_breaths[][3] =
         SPELL_CORROSIVE_BOLT
     }
 };
+
+/**
+ * Get the enchant_type for a given chanted spell.
+ * This probably could be further generalized and maybe move into a map.
+ * I'll return to this later.
+ *
+ * @param chant The spell_type to convert to an enchant_type.
+ */
+static enchant_type get_enchant_type_from_chant(spell_type chant)
+{
+    switch (chant)
+    {
+        default:
+            return ENCH_NONE;
+        case SPELL_WORD_OF_RECALL:
+            return ENCH_WORD_OF_RECALL;
+        case SPELL_CHANT_FIRE_STORM:
+            return ENCH_CHANT_FIRE_STORM;
+        case SPELL_CHANT_WORD_OF_ENTROPY:
+            return ENCH_CHANT_WORD_OF_ENTROPY;
+    }
+}
+
 
 /**
  *  Make this monster cast a spell
@@ -6223,32 +6248,13 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     case SPELL_WORD_OF_RECALL:
-    {
-        mon_enchant recall_timer =
-            mon_enchant(ENCH_WORD_OF_RECALL, 1, mons, 30);
-        mons->add_ench(recall_timer);
-        mons->speed_increment -= 30;
-
-        return;
-    }
-
     case SPELL_CHANT_FIRE_STORM:
-    {
-        mon_enchant cast_timer =
-            mon_enchant(ENCH_CHANT_FIRE_STORM, 1, mons, 35);
-        mons->add_ench(cast_timer);
-        mons->speed_increment -= 35;
-
-        return;
-    }
-
     case SPELL_CHANT_WORD_OF_ENTROPY:
     {
-        mon_enchant cast_timer =
-            mon_enchant(ENCH_CHANT_WORD_OF_ENTROPY, 1, mons, 30);
-        mons->add_ench(cast_timer);
+        mon_enchant chant_timer =
+            mon_enchant(get_enchant_type_from_chant(spell_cast), 1, mons, 30);
+        mons->add_ench(chant_timer);
         mons->speed_increment -= 30;
-
         return;
     }
 
