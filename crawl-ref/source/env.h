@@ -100,7 +100,7 @@ struct crawl_environment
     // Number of turns the player has spent on this level.
     int turns_on_level;
 
-    // Flags for things like preventing teleport control; see
+    // Flags for things like preventing persistent mapping; see
     // level_flag_type in enum.h
     uint32_t level_flags;
 

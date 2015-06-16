@@ -115,15 +115,6 @@ Evoke Fog ability
 
 Gebe eine dicke Nebelwolke frei um die Sicht zu verschlechtern.
 %%%%
-Evoke Teleport Control ability
-
-Gewinnen Sie die Fähigkeit, Ihre folgende Versetzung zu kontrollieren –
-entweder indem Sie ein ungefähres Ziel für ein Teleportieren auswählen, oder
-indem Sie eine Richtung für ein Blinzeln auswählen. Seien Sie vorsichtig, dass
-kontrollierte Versetzungen das Thema veranlassen werden, verseucht mit der
-magischen Energie zu werden, und das kontrolliert teleportiert, wird länger
-nehmen, um auszulösen, als nicht kontrollierte.
-%%%%
 End Transformation ability
 
 Beende deine Verwandlung mit einer kurzen Verzögerung.

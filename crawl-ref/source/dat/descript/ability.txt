@@ -143,14 +143,6 @@ Evoke Fog ability
 
 Releases a thick cloud of fog to obscure vision.
 %%%%
-Evoke Teleport Control ability
-
-Allows the user to control their next translocation – either by selecting an
-approximate target for a teleport, or by selecting a direction for a blink. Be
-wary that controlled translocations will cause the subject to become
-contaminated with magical energy, and that controlled teleports will take
-longer to trigger than uncontrolled ones.
-%%%%
 End Transformation ability
 
 Reverts you to your normal form, with a short delay.
