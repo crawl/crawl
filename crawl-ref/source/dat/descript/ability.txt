@@ -162,9 +162,9 @@ than Zin being punished much more strongly.
 %%%%
 Vitalisation ability
 
-Provides divine stamina and sustenance from Zin. Divine stamina protects you
-from poison, confusion, petrification, rotting and sickness, and temporarily
-increases and sustains your Strength, Intelligence and Dexterity.
+Temporarily provides protection from poison, confusion, petrification, rotting
+and sickness, and increases and sustains your Strength, Intelligence and
+Dexterity.
 %%%%
 Imprison ability
 
