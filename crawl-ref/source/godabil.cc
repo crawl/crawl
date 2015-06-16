@@ -1604,7 +1604,7 @@ void jiyva_paralyse_jellies()
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
-        const int dur = 16 + random2(9);
+        const int dur = 20 + random2(11);
         if (mon != nullptr && mons_is_slime(mon) && !mon->is_shapeshifter())
         {
             mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0,

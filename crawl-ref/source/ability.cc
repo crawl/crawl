@@ -361,7 +361,7 @@ static const ability_def Ability_List[] =
 
     // Jiyva
     { ABIL_JIYVA_CALL_JELLY, "Request Jelly", 2, 0, 20, 1, ABFLAG_NONE},
-    { ABIL_JIYVA_JELLY_PARALYSE, "Jelly Paralyse", 0, 0, 0, 0, ABFLAG_PIETY},
+    { ABIL_JIYVA_JELLY_PARALYSE, "Jelly Paralyse", 3, 0, 0, 0, ABFLAG_PIETY},
     { ABIL_JIYVA_SLIMIFY, "Slimify", 4, 0, 100, 8, ABFLAG_NONE},
     { ABIL_JIYVA_CURE_BAD_MUTATION, "Cure Bad Mutation",
       8, 0, 200, 15, ABFLAG_NONE},
