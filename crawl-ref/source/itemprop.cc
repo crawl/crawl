@@ -712,7 +712,7 @@ const set<pair<object_class_type, int> > removed_items =
 
 bool item_type_removed(object_class_type base, int subtype)
 {
-    return map_find(removed_items, { base, subtype }) != nullptr;
+    return removed_items.count({ base, subtype }) != 0;
 }
 
 // Some convenient functions to hide the bit operations and create
