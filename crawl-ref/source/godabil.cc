@@ -1106,10 +1106,6 @@ bool zin_vitalisation()
 {
     simple_god_message(" grants you divine stamina.");
 
-    // Feed the player slightly.
-    if (you.hunger_state < HS_FULL)
-        lessen_hunger(250, false);
-
     // Add divine stamina.
     const int stamina_amt = max(1, you.skill_rdiv(SK_INVOCATIONS, 1, 3));
     you.attribute[ATTR_DIVINE_STAMINA] = stamina_amt;
