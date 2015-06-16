@@ -148,15 +148,6 @@ Evoke Fog ability
 
 Relâches un large et épais brouillard qui diminue le champ de vision.
 %%%%
-Evoke Teleport Control ability
-
-Gain de la capacité de contrôler la prochaine translocation – soit en
-sélectionnant une cible approximative pour une téléportation, soit en
-sélectionnant une direction pour un saut éclair. Faites attention au fait que
-les translocations contrôlées peuvent vous contaminer avec de l'énergie
-magique, et que les téléportations contrôlées vous prendront plus de temps à
-incanter que les non-contrôlées.
-%%%%
 End Transformation ability
 
 Revenir progressivement  à votre forme normale.

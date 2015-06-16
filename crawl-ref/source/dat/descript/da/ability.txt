@@ -147,14 +147,6 @@ Evoke Fog ability
 
 Udsender en tyk sky af tåge, som slører udsynet.
 %%%%
-Evoke Teleport Control ability
-
-Få evnen til at kontrollere din næste translokation – enten ved at vælge et
-passende mål for en teleportation eller en retning for et blink. Vær opmærksom
-på, at kontrollerede translokationer vil besmitte brugeren med magisk energi,
-og at kontrollerede teleportationer er længere om at blive aktiveret end de
-ukontrollerede.
-%%%%
 End Transformation ability
 
 Vend tilbage til din normale form med en kort forsinkelse.
