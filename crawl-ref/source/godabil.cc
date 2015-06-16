@@ -6551,7 +6551,7 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
 
     int dmg = 10;
     //damage scales with XL and piety
-    int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 648);
+    int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 584);
     int effect = random2(4);
     int duration = 0;
     string message = "";
@@ -6569,25 +6569,25 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
                           + " magic into the devouring truth!";
                 enchantment = ENCH_ANTIMAGIC;
                 duration = 500 + random2(200);
-                dmg += roll_dice(die_size, 4);
+                dmg += roll_dice(4, die_size);
                 break;
             } // if not antimagicable, fall through to paralysis.
         case 1:
             message = " is paralysed by terrible understanding!";
             enchantment = ENCH_PARALYSIS;
             duration = 80 + random2(60);
-            dmg += roll_dice(die_size, 4);
+            dmg += roll_dice(4, die_size);
             break;
 
         case 2:
             message = " slows down under the weight of truth!";
             enchantment = ENCH_SLOW;
             duration = 300 + random2(100);
-            dmg += roll_dice(die_size, 6);
+            dmg += roll_dice(6, die_size);
             break;
 
         default:
-            dmg += roll_dice(die_size, 8);
+            dmg += roll_dice(8, die_size);
             break;
     }
     mons->hurt(agent, dmg, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
