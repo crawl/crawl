@@ -1486,7 +1486,7 @@ static const mutation_def mut_data[] =
 
   {"Iridescent scales grow over part of your body.",
    "Iridescent scales spread over more of your body.",
-   "Iridescent scales cover you completely."},
+   "Iridescent scales cover your body completely."},
 
   {"Your iridescent scales disappear.",
    "Your iridescent scales recede somewhat.",
@@ -1540,7 +1540,7 @@ static const mutation_def mut_data[] =
 
   {"Rough black scales grow over part of your body.",
    "Rough black scales spread over more of your body.",
-   "Rough black scales cover you completely."},
+   "Rough black scales cover your body completely."},
 
   {"Your rough black scales disappear.",
    "Your rough black scales recede somewhat.",
@@ -1558,7 +1558,7 @@ static const mutation_def mut_data[] =
 
   {"Rugged brown scales grow over part of your body.",
    "Rugged brown scales spread over more of your body.",
-   "Rugged brown scales cover you completely."},
+   "Rugged brown scales cover your body completely."},
 
   {"Your rugged brown scales disappear.",
    "Your rugged brown scales recede somewhat.",
@@ -1630,7 +1630,7 @@ static const mutation_def mut_data[] =
 
   {"Yellow scales grow over part of your body.",
    "Yellow scales spread over more of your body.",
-   "Yellow scales cover you completely."},
+   "Yellow scales cover your body completely."},
 
   {"Your yellow scales disappear.",
    "Your yellow scales recede somewhat.",
