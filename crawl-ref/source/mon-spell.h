@@ -1257,11 +1257,10 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_FRANCES,
       {
-       { SPELL_THROW_ICICLE, 11, MON_SPELL_WIZARD },
-       { SPELL_SUMMON_DEMON, 11, MON_SPELL_WIZARD },
-       { SPELL_HASTE, 21, MON_SPELL_WIZARD },
-       { SPELL_IRON_SHOT, 11, MON_SPELL_WIZARD },
-       { SPELL_SUMMON_DEMON, 11, MON_SPELL_WIZARD },
+       { SPELL_THROW_ICICLE, 12, MON_SPELL_WIZARD },
+       { SPELL_SUMMON_DEMON, 20, MON_SPELL_WIZARD },
+       { SPELL_HASTE, 20, MON_SPELL_WIZARD },
+       { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
       }
     },
 
