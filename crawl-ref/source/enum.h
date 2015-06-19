@@ -447,7 +447,7 @@ enum attribute_type
     ATTR_DIVINE_AC,            // Divine AC bonus (Qazlal).
 #endif
     ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
-    ATTR_BONE_ARMOUR,          // Current amount of boney armour (from the spell)
+    ATTR_BONE_ARMOUR,          // Current amount of bony armour (from the spell)
     ATTR_LAST_FLIGHT_STATUS,   // Whether spawm_flight should be restored after form change
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
     ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.
