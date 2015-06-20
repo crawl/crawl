@@ -367,10 +367,7 @@ static void _describe_book(const spellbook_contents &book,
     const bool doublecolumn = _list_spells_doublecolumn(source_item);
 
     bool first_line_element = true;
-    // FIXME: this HD is wrong in some cases
-    // (draining, malmutation, levelling up)
-    const int hd = (mon_owner == NULL ? 0 :
-                                        mons_class_hit_dice(mon_owner->type));
+    const int hd = mon_owner == NULL ? 0 : mon_owner->hd;
     for (auto spell : book.spells)
     {
         description.cprintf(" ");

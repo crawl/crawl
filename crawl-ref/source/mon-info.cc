@@ -370,6 +370,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     mintel = mons_class_intel(type);
 
+    hd = mons_class_hit_dice(type);
     ac = get_mons_class_ac(type);
     ev = base_ev = get_mons_class_ev(type);
     mresists = get_mons_class_resists(type);
@@ -409,6 +410,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         i_ghost.best_skill = SK_FIGHTING;
         i_ghost.best_skill_rank = 2;
         i_ghost.xl_rank = 3;
+        hd = ghost_rank_to_level(i_ghost.xl_rank);
         i_ghost.ac = 5;
         i_ghost.damage = 5;
     }
@@ -592,6 +594,7 @@ monster_info::monster_info(const monster* m, int milev)
     holi = m->holiness();
 
     mintel = mons_intel(m);
+    hd = m->get_hit_dice();
     ac = m->armour_class(false);
     ev = m->evasion(EV_IGNORE_UNIDED);
     base_ev = m->base_evasion();
@@ -1714,10 +1717,6 @@ int monster_info::res_magic() const
     int mr = (get_monster_data(type))->resist_magic;
     if (mr == MAG_IMMUNE)
         return MAG_IMMUNE;
-
-    const int hd = mons_is_pghost(type) ? ghost_rank_to_level(i_ghost.xl_rank)
-            : type == MONS_MUTANT_BEAST ? props[MUTANT_BEAST_TIER].get_short()
-                                        : mons_class_hit_dice(type);
 
     // Negative values get multiplied with monster hit dice.
     if (mr < 0)

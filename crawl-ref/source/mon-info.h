@@ -171,6 +171,7 @@ struct monster_info_base
     string quote;
     mon_holy_type holi;
     mon_intel_type mintel;
+    int hd;
     int ac;
     int ev;
     int base_ev;
