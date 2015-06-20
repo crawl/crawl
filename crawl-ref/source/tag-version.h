@@ -171,6 +171,7 @@ enum tag_minor_version
     TAG_MINOR_SAVED_PIETY,         // allowed good-god piety to survive through an atheist period
     TAG_MINOR_GHOST_SINV,          // marshall ghost_demon sinv
     TAG_MINOR_ID_STATES,           // turn item_type_id_state_type into a bool
+    TAG_MINOR_MON_HD_INFO,         // store player-known monster HD info
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

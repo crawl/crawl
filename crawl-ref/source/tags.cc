@@ -4652,6 +4652,7 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallString(th, mi.quote);
     marshallUnsigned(th, mi.holi);
     marshallUnsigned(th, mi.mintel);
+    marshallUnsigned(th, mi.hd);
     marshallUnsigned(th, mi.ac);
     marshallUnsigned(th, mi.ev);
     marshallUnsigned(th, mi.base_ev);
@@ -4744,6 +4745,15 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.quote = unmarshallString(th);
 
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_MON_HD_INFO)
+    {
+#endif
+        unmarshallUnsigned(th, mi.hd);
+#if TAG_MAJOR_VERSION == 34
+    }
+    else
+        mi.hd = mons_class_hit_dice(mi.type);
+
     if (th.getMinorVersion() >= TAG_MINOR_DISPLAY_MON_AC_EV)
     {
 #endif
