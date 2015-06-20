@@ -747,6 +747,9 @@ void set_random_target(monster* mon)
         if (!summon_can_attack(mon, newtarget))
             continue;
 
+        if (!mon->is_location_safe(newtarget))
+            continue;
+
         mon->target = newtarget;
         break;
     }
@@ -804,6 +807,9 @@ static bool _band_wander_target(monster * mon)
         if (!in_bounds(*r_it))
             continue;
 
+        if (!band_leader->is_location_safe(*r_it))
+            continue;
+
         int dist = grid_distance(*r_it, band_leader->pos());
         if (dist < HERD_COMFORT_RANGE)
             positions.push_back(*r_it);
@@ -844,6 +850,9 @@ static bool _herd_wander_target(monster * mon)
     for (radius_iterator r_it(mon->pos(), LOS_NO_TRANS, true); r_it; ++r_it)
     {
         if (!in_bounds(*r_it))
+            continue;
+
+        if (!mon->is_location_safe(*r_it))
             continue;
 
         int count = 0;

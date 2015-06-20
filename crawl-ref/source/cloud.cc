@@ -1516,8 +1516,10 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         const int hp_threshold = clouds[cloud.type].expected_base_damage +
                                  random2avg(rand_dam, trials);
 
+        // intelligent monsters want a larger margin of safety
+        int safety_mult = (mons_intel(mons) > I_ANIMAL) ? 2 : 1;
         // dare we risk the damage?
-        const bool hp_ok = mons->hit_points >= hp_threshold;
+        const bool hp_ok = mons->hit_points > safety_mult * hp_threshold;
         // dare we risk the status effects?
         const bool sfx_ok = cloud.type != CLOUD_MEPHITIC
                             || x_chance_in_y(mons->get_hit_dice() - 1, 5);
