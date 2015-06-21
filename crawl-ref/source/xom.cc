@@ -976,7 +976,7 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
     ASSERT(!is_unrandom_artefact(item));
 
     bool seen = false;
-    if (mon && you.can_see(mon) && item.base_type == OBJ_WEAPONS)
+    if (mon && you.can_see(*mon) && item.base_type == OBJ_WEAPONS)
     {
         seen = true;
 
@@ -1229,7 +1229,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
             god_speaks(GOD_XOM, helpful ? _get_xom_speech("good monster polymorph").c_str()
                                         : _get_xom_speech("bad monster polymorph").c_str());
 
-            bool see_old = you.can_see(mon);
+            bool see_old = you.can_see(*mon);
             string old_name = mon->full_name(DESC_PLAIN);
 
             if (one_chance_in(8)
@@ -1245,7 +1245,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
             monster_polymorph(mon, RANDOM_MONSTER,
                               powerup ? PPT_MORE : PPT_LESS);
 
-            bool see_new = you.can_see(mon);
+            bool see_new = you.can_see(*mon);
 
             if (see_old || see_new)
             {

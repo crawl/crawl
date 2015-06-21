@@ -1063,6 +1063,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
                                             const cloud_struct &cloud,
                                             int final_damage)
 {
+    ASSERT(act); // XXX: change to actor &act
     const bool player = act->is_player();
     monster *mons = !player? act->as_monster() : nullptr;
     switch (cloud.type)
@@ -1071,7 +1072,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_STORM:
         if (act->is_fiery() && final_damage > 0)
         {
-            if (you.can_see(act))
+            if (you.can_see(*act))
             {
                 mprf("%s %s in the rain.",
                      act->name(DESC_THE).c_str(),
@@ -1320,7 +1321,7 @@ static int _actor_cloud_damage(const actor *act,
 
         if (act->is_player())
             mpr("You are struck by lightning!");
-        else if (you.can_see(act))
+        else if (you.can_see(*act))
         {
             simple_monster_message(act->as_monster(),
                                    " is struck by lightning.");
@@ -1710,10 +1711,11 @@ string cloud_struct::cloud_name(const string &defname,
 void cloud_struct::announce_actor_engulfed(const actor *act,
                                            bool beneficial) const
 {
+    ASSERT(act); // XXX: change to const actor &act
     if (_cloud_is_cosmetic(type))
         return;
 
-    if (!you.can_see(act))
+    if (!you.can_see(*act))
         return;
 
     // Normal clouds. (Unmodified rain clouds have a different message.)

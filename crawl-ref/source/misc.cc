@@ -497,10 +497,11 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool& would_cause_penance, coord_def attack_pos,
                 bool check_landing_only)
 {
+    ASSERT(mon); // XXX: change to const monster &mon
     ASSERT(!crawl_state.game_is_arena());
     bool bad_landing = false;
 
-    if (!you.can_see(mon))
+    if (!you.can_see(*mon))
         return false;
 
     if (attack_pos == coord_def(0, 0))
@@ -584,6 +585,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         bool *prompted, coord_def attack_pos,
                         bool check_landing_only)
 {
+    ASSERT(mon); // XXX: change to const monster &mon
     bool penance = false;
 
     if (prompted)
@@ -592,7 +594,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     if (crawl_state.disables[DIS_CONFIRMATIONS])
         return false;
 
-    if (you.confused() || !you.can_see(mon))
+    if (you.confused() || !you.can_see(*mon))
         return false;
 
     string adj, suffix;
@@ -663,7 +665,7 @@ bool stop_attack_prompt(targetter &hitfunc, const char* verb,
         if (hitfunc.is_affected(*di) <= AFF_NO)
             continue;
         const monster* mon = monster_at(*di);
-        if (!mon || !you.can_see(mon))
+        if (!mon || !you.can_see(*mon))
             continue;
         if (affects && !affects(mon))
             continue;
@@ -816,7 +818,8 @@ int apply_chunked_AC(int dam, int ac)
 
 void entered_malign_portal(actor* act)
 {
-    if (you.can_see(act))
+    ASSERT(act); // XXX: change to actor &act
+    if (you.can_see(*act))
     {
         mprf("%s %s twisted violently and ejected from the portal!",
              act->name(DESC_THE).c_str(), act->conj_verb("be").c_str());

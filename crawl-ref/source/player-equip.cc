@@ -1377,7 +1377,7 @@ static void _mark_unseen_monsters()
 
     for (monster_iterator mi; mi; mi++)
     {
-        if (testbits((*mi)->flags, MF_WAS_IN_VIEW) && !you.can_see(*mi))
+        if (testbits((*mi)->flags, MF_WAS_IN_VIEW) && !you.can_see(**mi))
         {
             (*mi)->went_unseen_this_turn = true;
             (*mi)->unseen_pos = (*mi)->pos();

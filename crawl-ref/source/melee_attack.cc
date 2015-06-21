@@ -218,7 +218,8 @@ bool melee_attack::handle_phase_attempted()
         return false;
     }
 
-    if (attk_flavour == AF_SHADOWSTAB && defender && !defender->can_see(attacker))
+    if (attk_flavour == AF_SHADOWSTAB
+        && defender && !defender->can_see(*attacker))
     {
         if (you.see_cell(attack_position))
         {
@@ -290,7 +291,7 @@ bool melee_attack::handle_phase_dodged()
                    you.species == SP_MINOTAUR :
                    mons_species(mons_base_type(defender->as_monster()))
                       == MONS_MINOTAUR)
-            && defender->can_see(attacker)
+            && defender->can_see(*attacker)
             // Retaliation only works on the first attack in a round.
             // FIXME: player's attack is -1, even for auxes
             && effective_attack_number <= 0)
@@ -1399,7 +1400,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         mprf("You %s %s%s.",
              aux_verb.c_str(),
              defender->name(DESC_THE).c_str(),
-             you.can_see(defender) ? ", but do no damage" : "");
+             you.can_see(*defender) ? ", but do no damage" : "");
     }
 
     if (defender->as_monster()->hit_points < 1)
@@ -2412,7 +2413,7 @@ string melee_attack::mons_attack_verb()
 
 string melee_attack::mons_attack_desc()
 {
-    if (!you.can_see(attacker))
+    if (!you.can_see(*attacker))
         return "";
 
     string ret;
@@ -2688,7 +2689,7 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_MUTATE:
         if (one_chance_in(4))
         {
-            defender->malmutate(you.can_see(attacker) ?
+            defender->malmutate(you.can_see(*attacker) ?
                 apostrophise(attacker->name(DESC_PLAIN)) + " mutagenic touch" :
                 "mutagenic touch");
         }
@@ -2965,7 +2966,7 @@ void melee_attack::mons_apply_attack_flavour()
         {
             const bool spell_user = defender->antimagic_susceptible();
 
-            if (you.can_see(attacker) || you.can_see(defender))
+            if (you.can_see(*attacker) || you.can_see(*defender))
             {
                 mprf("%s drains %s %s.",
                      attacker->name(DESC_THE).c_str(),
@@ -3312,7 +3313,7 @@ void melee_attack::do_spines()
 
             if (hurt <= 0)
                 return;
-            if (you.can_see(defender) || attacker->is_player())
+            if (you.can_see(*defender) || attacker->is_player())
             {
                 mprf("%s %s struck by %s %s.", attacker->name(DESC_THE).c_str(),
                      attacker->conj_verb("are").c_str(),
@@ -3509,13 +3510,14 @@ int melee_attack::cleave_damage_mod(int dam)
 
 void melee_attack::chaos_affect_actor(actor *victim)
 {
+    ASSERT(victim); // XXX: change to actor &victim
     melee_attack attk(victim, victim);
     attk.weapon = nullptr;
     attk.fake_chaos_attack = true;
     attk.chaos_affects_defender();
     attk.do_miscast();
     if (!attk.special_damage_message.empty()
-        && you.can_see(victim))
+        && you.can_see(*victim))
     {
         mpr(attk.special_damage_message);
     }
@@ -3685,7 +3687,7 @@ int melee_attack::apply_damage_modifiers(int damage, int damage_max)
     // If the defender is asleep, the attacker gets a stab.
     if (defender && (defender->asleep()
                      || (attk_flavour == AF_SHADOWSTAB
-                         &&!defender->can_see(attacker))))
+                         &&!defender->can_see(*attacker))))
     {
         damage = damage * 5 / 2;
         dprf(DIAG_COMBAT, "Stab damage vs %s: %d",

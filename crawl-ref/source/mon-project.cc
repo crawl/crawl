@@ -143,7 +143,7 @@ static int _burst_iood_target(double iood_angle, int preferred_foe)
         const monster* m = *mi;
         ASSERT(m);
 
-        if (!you.can_see(m) || mons_is_projectile(m))
+        if (!you.can_see(*m) || mons_is_projectile(m))
             continue;
 
         // is this position at a valid angle?
@@ -199,9 +199,9 @@ static int _burst_iood_target(double iood_angle, int preferred_foe)
 void cast_iood_burst(int pow, coord_def target)
 {
     const monster* mons = monster_at(target);
-    const int preferred_foe = mons && you.can_see(mons) ?
-                                                            mons->mindex() :
-                                                            MHITNOT;
+    const int preferred_foe = mons && you.can_see(*mons) ?
+                              mons->mindex() :
+                              MHITNOT;
 
     const int n_orbs = random_range(3, 7);
     dprf("Bursting %d orbs.", n_orbs);

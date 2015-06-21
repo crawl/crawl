@@ -2505,7 +2505,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             return;
         }
 
-        const bool vis = you.can_see(m);
+        const bool vis = you.can_see(*m);
 
 #ifdef USE_TILE
         if (vis)
@@ -2544,7 +2544,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     {
         const monster* m = monster_at(gc);
 
-        if (!m || !you.can_see(m))
+        if (!m || !you.can_see(*m))
             DELAY_EVENT;
 
         text << m->name(DESC_THE, true) << " didn't vanish, but merely "

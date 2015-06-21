@@ -1894,7 +1894,7 @@ static bool _battle_cry(const monster& chief, bool check_only = false)
     // Only let loose a battlecry if you have a valid target.
     if (!foe
         || foe->is_player() && chief.friendly()
-        || !chief.can_see(foe))
+        || !chief.can_see(*foe))
     {
         return false;
     }
@@ -1961,7 +1961,7 @@ static bool _battle_cry(const monster& chief, bool check_only = false)
             mi->add_ench(mon_enchant(battlecry, level, &chief, dur));
 
         affected++;
-        if (you.can_see(*mi))
+        if (you.can_see(**mi))
             seen_affected.push_back(*mi);
 
         if (mi->asleep())
@@ -2301,6 +2301,8 @@ static bool _seal_doors_and_stairs(const monster* warden,
 
 static bool _make_monster_angry(const monster* mon, monster* targ, bool actual)
 {
+    ASSERT(mon); // XXX: change to const monster &mon
+    ASSERT(targ); // XXX: change to monster &targ
     if (mon->friendly() != targ->friendly())
         return false;
 
@@ -2331,7 +2333,7 @@ static bool _make_monster_angry(const monster* mon, monster* targ, bool actual)
     if (!actual)
         return true;
 
-    if (you.can_see(mon))
+    if (you.can_see(*mon))
     {
         if (mon->type == MONS_QUEEN_BEE && targ->type == MONS_KILLER_BEE)
         {
@@ -2496,6 +2498,7 @@ static bool _ms_quick_get_away(const monster* mon, spell_type monspell)
 // proportional to how many HD of allies are current nearby)
 static bool _should_recall(monster* caller)
 {
+    ASSERT(caller); // XXX: change to monster &caller
     // It's a long recitation - if we're winded, we can't use it.
     if (caller->has_ench(ENCH_BREATH_WEAPON))
         return false;
@@ -2503,7 +2506,7 @@ static bool _should_recall(monster* caller)
     int num = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mons_is_recallable(caller, *mi) && !caller->can_see(*mi))
+        if (mons_is_recallable(caller, *mi) && !caller->can_see(**mi))
             ++num;
     }
 
@@ -2513,7 +2516,8 @@ static bool _should_recall(monster* caller)
         int ally_hd = 0;
         for (monster_iterator mi; mi; ++mi)
         {
-            if (*mi != caller && caller->can_see(*mi) && mons_aligned(caller, *mi)
+            if (*mi != caller && caller->can_see(**mi)
+                && mons_aligned(caller, *mi)
                 && !mons_is_firewood(*mi))
             {
                 ally_hd += mi->get_experience_level();
@@ -2548,8 +2552,8 @@ bool mons_word_of_recall(monster* mons, int recall_target)
             continue;
 
         // Don't recall things that are already close to us
-        if ((mons && mons->can_see(*mi))
-            || (!mons && you.can_see(*mi)))
+        if ((mons && mons->can_see(**mi))
+            || (!mons && you.can_see(**mi)))
         {
             continue;
         }
@@ -2693,7 +2697,7 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
             mon->props["vines_awakened"].get_int()++;
             mon->add_ench(mon_enchant(ENCH_AWAKEN_VINES, 1, nullptr, 200));
             --num_vines;
-            if (you.can_see(vine))
+            if (you.can_see(*vine))
                 seen = true;
         }
 
@@ -2898,7 +2902,7 @@ static bool _wall_of_brambles(monster* mons)
         if (briar)
         {
             briar->add_ench(mon_enchant(ENCH_SHORT_LIVED, 1, nullptr, 80 + random2(100)));
-            if (you.can_see(briar))
+            if (you.can_see(*briar))
                 seen = true;
         }
     }
@@ -2983,7 +2987,7 @@ static bool _trace_los(monster* agent, bool (*vulnerable)(actor*))
     tracer.foe_ratio = 0;
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
-        if (agent == *ai || !agent->can_see(*ai) || !vulnerable(*ai))
+        if (agent == *ai || !agent->can_see(**ai) || !vulnerable(*ai))
             continue;
 
         if (mons_aligned(agent, *ai))
@@ -3136,7 +3140,7 @@ bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos)
     tracer.target = pos;
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
-        if (hitfunc.is_affected(ai->pos()) == AFF_NO || !agent->can_see(*ai))
+        if (hitfunc.is_affected(ai->pos()) == AFF_NO || !agent->can_see(**ai))
             continue;
 
         if (mons_aligned(agent, *ai))
@@ -3200,7 +3204,7 @@ static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe)
         // usually not very constructive where monsters are concerned.
         if (!cell_see_cell(mon->pos(), *di, LOS_SOLID)
             || cell_is_solid(*di)
-            || (actor_at(*di) && mon->can_see(actor_at(*di))))
+            || (actor_at(*di) && mon->can_see(*actor_at(*di))))
         {
             continue;
         }
@@ -3289,7 +3293,7 @@ static coord_def _mons_prism_pos(monster* mon, actor* foe)
         // Our target needs to be in LOS, and we can't have a creature there.
         if (!cell_see_cell(mon->pos(), *di, LOS_NO_TRANS)
             || cell_is_solid(*di)
-            || (actor_at(*di) && mon->can_see(actor_at(*di))))
+            || (actor_at(*di) && mon->can_see(*actor_at(*di))))
         {
             continue;
         }
@@ -3352,6 +3356,7 @@ bool scattershot_tracer(monster *caster, int pow, coord_def aim)
  */
 static coord_def _mons_singularity_pos(const monster* mon)
 {
+    ASSERT(mon); // XXX: change to const monster &mon
     const int pow = _mons_spellpower(SPELL_SINGULARITY, *mon);
     const int rad = singularity_range(pow);
     int max_strength = 0, max_count = 0;
@@ -3367,7 +3372,7 @@ static coord_def _mons_singularity_pos(const monster* mon)
         {
             actor* victim = actor_at(*ri);
             if (!victim
-                || !mon->can_see(victim)
+                || !mon->can_see(*victim)
                 || mons_aligned(mon, victim))
             {
                 continue;
@@ -3751,7 +3756,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                         spellOK = false;
                     }
                 }
-                else if (!mons->can_see(foe))
+                else if (!mons->can_see(*foe))
                     spellOK = false;
                 else if (mons->type == MONS_DAEVA
                          && mons->god == GOD_SHINING_ONE)
@@ -4132,7 +4137,7 @@ static bool _mons_vampiric_drain(monster *mons)
 
     dprf("vamp draining: %d damage, %d healing", hp_cost, hp_cost/2);
 
-    if (you.can_see(mons))
+    if (you.can_see(*mons))
     {
         simple_monster_message(mons,
                                " is infused with unholy energy.",
@@ -4190,7 +4195,7 @@ static bool _mons_cast_freeze(monster* mons)
         damage = mons_adjust_flavoured(target->as_monster(), beam, base_damage);
     }
 
-    if (you.can_see(target))
+    if (you.can_see(*target))
     {
         mprf("%s %s frozen.", target->name(DESC_THE).c_str(),
                               target->conj_verb("are").c_str());
@@ -4243,10 +4248,11 @@ void setup_breath_timeout(monster* mons)
 **/
 static int _mons_mesmerise(monster* mons, bool actual)
 {
+    ASSERT(mons); // XXX: change to monster &mons
     bool already_mesmerised = you.beheld_by(mons);
 
     if (!you.visible_to(mons)             // Don't mesmerise while invisible.
-        || (!you.can_see(mons)            // Or if we are, and you're aren't
+        || (!you.can_see(*mons)           // Or if we are, and you're aren't
             && !already_mesmerised)       // already mesmerised by us.
         || !player_can_hear(mons->pos())  // Or if you're silenced, or we are.
         || you.berserk()                  // Or if you're berserk.
@@ -4307,7 +4313,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 {
     if (actual)
     {
-        if (you.can_see(mons))
+        if (you.can_see(*mons))
             simple_monster_message(mons, " radiates an aura of fear!");
         else if (you.see_cell(mons->pos()))
             mpr("An aura of fear fills the air!");
@@ -4317,7 +4323,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
     const int pow = _ench_power(SPELL_CAUSE_FEAR, *mons);
 
-    if (mons->can_see(&you) && !mons->wont_attack() && !you.afraid_of(mons))
+    if (mons->can_see(you) && !mons->wont_attack() && !you.afraid_of(mons))
     {
         if (you.holiness() != MH_NATURAL)
         {
@@ -4380,7 +4386,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
         {
             retval = 1;
 
-            if (you.can_see(*mi))
+            if (you.can_see(**mi))
                 simple_monster_message(*mi, " looks frightened!");
 
             behaviour_event(*mi, ME_SCARE, mons);
@@ -4402,7 +4408,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 
     const int pow = _ench_power(SPELL_MASS_CONFUSION, *mons);
 
-    if (mons->can_see(&you) && !mons->wont_attack())
+    if (mons->can_see(you) && !mons->wont_attack())
     {
         retval = 0;
 
@@ -4460,7 +4466,7 @@ static int _mons_control_undead(monster* mons, bool actual)
 
     const int pow = _ench_power(SPELL_CONTROL_UNDEAD, *mons);
 
-    if (mons->can_see(&you) && !mons->wont_attack()
+    if (mons->can_see(you) && !mons->wont_attack()
         && you.holiness() == MH_UNDEAD)
     {
         retval = 0;
@@ -4512,7 +4518,7 @@ static int _mons_control_undead(monster* mons, bool actual)
         if (actual)
         {
             retval = 1;
-            if (you.can_see(*mi))
+            if (you.can_see(**mi))
             {
                 mprf("%s submits to %s will!",
                      mi->name(DESC_YOUR).c_str(),
@@ -4972,7 +4978,7 @@ static void _cast_flay(monster* source, actor *defender)
         }
     }
 
-    if (you.can_see(defender))
+    if (you.can_see(*defender))
     {
         if (was_flayed)
         {
@@ -5187,7 +5193,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_WATERSTRIKE:
     {
-        if (you.can_see(foe))
+        if (you.can_see(*foe))
         {
             if (foe->airborne())
                 mprf("The water rises up and strikes %s!", foe->name(DESC_THE).c_str());
@@ -5255,7 +5261,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             pbolt.source = pbolt.target = mons->pos();
             pbolt.affect_actor(mons);
         }
-        else if (you.can_see(foe))
+        else if (you.can_see(*foe))
             canned_msg(MSG_NOTHING_HAPPENS);
         return;
 
@@ -5305,7 +5311,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         const int res_margin = foe->check_res_magic(splpow / ENCH_POW_FACTOR);
         if (res_margin > 0)
         {
-            if (you.can_see(foe))
+            if (you.can_see(*foe))
             {
                 mprf("%s%s",
                      foe->name(DESC_THE).c_str(),
@@ -5379,7 +5385,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_STONESKIN:
     {
-        if (you.can_see(mons))
+        if (you.can_see(*mons))
         {
             mprf("%s skin hardens.",
                  apostrophise(mons->name(DESC_THE)).c_str());
@@ -5529,7 +5535,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
             cast_phantom_mirror(mons, mons, 50, SPELL_FAKE_MARA_SUMMON);
 
-        if (you.can_see(mons))
+        if (you.can_see(*mons))
         {
             mprf("%s shimmers and seems to become %s!", mons->name(DESC_THE).c_str(),
                                                         sumcount2 == 1 ? "two"
@@ -5570,7 +5576,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_CIGOTUVIS_EMBRACE:
         harvest_corpses(*mons);
-        if (crawl_state.game_is_arena() || you.can_see(mons))
+        if (crawl_state.game_is_arena() || you.can_see(*mons))
         {
             mprf("The bodies of the dead form a shell around %s.",
                  mons->name(DESC_THE).c_str());
@@ -5761,7 +5767,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         if (in_bounds(pbolt.target))
             cast_fragmentation(splpow, mons, pbolt.target, false);
-        else if (you.can_see(mons))
+        else if (you.can_see(*mons))
             canned_msg(MSG_NOTHING_HAPPENS);
 
         return;
@@ -5772,7 +5778,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_LEDAS_LIQUEFACTION:
-        if (!mons->has_ench(ENCH_LIQUEFYING) && you.can_see(mons))
+        if (!mons->has_ench(ENCH_LIQUEFYING) && you.can_see(*mons))
         {
             mprf("%s liquefies the ground around %s!", mons->name(DESC_THE).c_str(),
                  mons->pronoun(PRONOUN_REFLEXIVE).c_str());
@@ -5848,7 +5854,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_TORNADO:
     {
         int dur = 60;
-        if (you.can_see(mons))
+        if (you.can_see(*mons))
         {
             bool flying = mons->airborne();
             mprf("A great vortex of raging winds appears %s%s%s!",
@@ -6234,7 +6240,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_OZOCUBUS_ARMOUR:
     {
-        if (you.can_see(mons))
+        if (you.can_see(*mons))
         {
             mprf("A film of ice covers %s body!",
                  apostrophise(mons->name(DESC_THE)).c_str());
@@ -6293,7 +6299,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_ENGLACIATION:
-        if (you.can_see(mons))
+        if (you.can_see(*mons))
             simple_monster_message(mons, " radiates an aura of cold.");
         else if (mons->see_cell_no_trans(you.pos()))
             mpr("A wave of cold passes over you.");
@@ -6305,7 +6311,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_CONTROL_WINDS:
-        if (you.can_see(mons))
+        if (you.can_see(*mons))
             mprf("The winds start to flow at %s will.", mons->name(DESC_ITS).c_str());
         mons->add_ench(mon_enchant(ENCH_CONTROL_WINDS, 1, mons, 200 + random2(150)));
         return;
@@ -6323,7 +6329,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_WIND_BLAST:
     {
-        if (foe && mons->can_see(foe))
+        if (foe && mons->can_see(*foe))
         {
             simple_monster_message(mons, " summons a great blast of wind!");
             wind_blast(mons, splpow, foe->pos());
@@ -6351,7 +6357,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             scaled_delay(100);
         else
         {
-            if (!you.can_see(mons))
+            if (!you.can_see(*mons))
                 mpr("You hear crackling.");
             else if (coinflip())
             {
@@ -6466,8 +6472,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             else
             {
                 if (!did_message
-                    && (you.can_see(victim1)
-                        || you.can_see(victim2)))
+                    && (you.can_see(*victim1)
+                        || you.can_see(*victim2)))
                 {
                     mpr("Some monsters swap places.");
                     did_message = true;
@@ -6485,7 +6491,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SHROUD_OF_GOLUBRIA:
-        if (you.can_see(mons))
+        if (you.can_see(*mons))
         {
             mprf("Space distorts along a thin shroud covering %s %s.",
                  apostrophise(mons->name(DESC_THE)).c_str(),
@@ -6586,7 +6592,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                       mons, 4, spell_cast, mons->pos(), mons->foe, 0, god));
         if (servitor)
             init_servitor(servitor, mons);
-        else if (you.can_see(mons))
+        else if (you.can_see(*mons))
             canned_msg(MSG_NOTHING_HAPPENS);
         return;
     }
@@ -6646,7 +6652,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_CONDENSATION_SHIELD:
     {
-        if (you.can_see(mons))
+        if (you.can_see(*mons))
         {
             mprf("A crackling disc of dense vapour forms near %s!",
                  mons->name(DESC_THE).c_str());
@@ -6669,7 +6675,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                 canned_msg(MSG_NOTHING_HAPPENS);
             }
         }
-        else if (you.can_see(mons))
+        else if (you.can_see(*mons))
             canned_msg(MSG_NOTHING_HAPPENS);
 
         return;
@@ -6683,7 +6689,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         if (in_bounds(pbolt.target))
            cast_fulminating_prism(mons, splpow, pbolt.target, false);
-        else if (you.can_see(mons))
+        else if (you.can_see(*mons))
             canned_msg(MSG_NOTHING_HAPPENS);
 
         return;
@@ -6699,7 +6705,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         if (in_bounds(pbolt.target))
            cast_singularity(mons, splpow, pbolt.target, false);
-        else if (you.can_see(mons))
+        else if (you.can_see(*mons))
             canned_msg(MSG_NOTHING_HAPPENS);
 
         return;
@@ -6913,7 +6919,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
     {
         if (const monster* mtarg = monster_at(pbolt.target))
         {
-            if (you.can_see(mtarg))
+            if (you.can_see(*mtarg))
                 target = mtarg->name(DESC_THE);
         }
     }
@@ -6930,7 +6936,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
             for (adjacent_iterator ai(pbolt.target); ai; ++ai)
             {
                 const actor* act = actor_at(*ai);
-                if (act && act != mons && you.can_see(act))
+                if (act && act != mons && you.can_see(*act))
                 {
                     targ_prep = "next to";
 
@@ -6987,7 +6993,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
                     mons_targ_aligned = true;
                 }
             }
-            else if (visible_path && m && you.can_see(m))
+            else if (visible_path && m && you.can_see(*m))
             {
                 bool is_aligned  = mons_aligned(m, mons);
                 string name = m->name(DESC_THE);
@@ -7013,7 +7019,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
                 for (adjacent_iterator ai(pbolt.target); ai; ++ai)
                 {
                     const actor* act = monster_at(*ai);
-                    if (act && act != mons && you.can_see(act))
+                    if (act && act != mons && you.can_see(*act))
                     {
                         targ_prep = "past";
                         if (act->is_player()
@@ -7042,7 +7048,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
     if (target == "nothing"
         && (tracer.foe_info.count + tracer.friend_info.count) == 0
         && foe != nullptr
-        && you.can_see(foe)
+        && you.can_see(*foe)
         && !mons->confused()
         && visible_path)
     {
@@ -7076,7 +7082,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
         // Draining breath is silent.
         force_silent = true;
 
-    const bool unseen    = !you.can_see(mons);
+    const bool unseen    = !you.can_see(*mons);
     const bool silent    = silenced(mons->pos()) || force_silent;
 
     if (unseen && silent)
@@ -7262,8 +7268,8 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
     const int dam = foe.apply_ac(random2(tosser.get_hit_dice() * 2));
 
     const coord_def old_pos = goblin.pos();
-    const bool thrower_seen = you.can_see(&tosser);
-    const bool goblin_was_seen = you.can_see(&goblin);
+    const bool thrower_seen = you.can_see(tosser);
+    const bool goblin_was_seen = you.can_see(goblin);
     const bool goblin_will_be_seen = goblin.visible_to(&you)
                                      && you.see_cell(chosen_dest);
     const bool goblin_seen = goblin_was_seen || goblin_will_be_seen;
@@ -7275,7 +7281,7 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
     {
         const string goblin_name = goblin.name(DESC_THE, true);
         const string thrower_name = tosser.name(DESC_THE);
-        const string destination = you.can_see(&foe) ?
+        const string destination = you.can_see(foe) ?
                                    make_stringf("at %s",
                                                 foe.name(DESC_THE).c_str()) :
                                    "out of sight";
@@ -7508,8 +7514,8 @@ static void _tentacle_toss_to(const monster &thrower, actor &victim,
 {
     ASSERT(in_bounds(chosen_dest));
 
-    const bool thrower_seen = you.can_see(&thrower);
-    const bool victim_was_seen = you.can_see(&victim);
+    const bool thrower_seen = you.can_see(thrower);
+    const bool victim_was_seen = you.can_see(victim);
     const string thrower_name = thrower.name(DESC_THE);
 
     const int dam = victim.apply_ac(random2(pow));
@@ -7536,7 +7542,7 @@ static void _tentacle_toss_to(const monster &thrower, actor &victim,
             mprf("%s throws %s%s!",
                  (thrower_seen ? thrower_name.c_str() : "Something"),
                  (victim_was_seen ? victim_name.c_str() : "something"),
-                 (you.can_see(vmon) ? "" : "out of view"));
+                 (you.can_see(*vmon) ? "" : "out of view"));
         }
     }
     victim.hurt(&thrower, dam, BEAM_MISSILE, KILLED_BY_BEING_THROWN, "", "",
@@ -7654,7 +7660,7 @@ static bool _should_siren_sing(monster* mons, bool avatar)
         return false;
 
     // If the mer is trying to mesmerise you anew, only sing half as often.
-    if (!you.beheld_by(mons) && mons->foe == MHITYOU && you.can_see(mons)
+    if (!you.beheld_by(mons) && mons->foe == MHITYOU && you.can_see(*mons)
         && coinflip())
     {
         return false;
@@ -7681,7 +7687,7 @@ static void _siren_sing(monster* mons, bool avatar)
     if (avatar && !mons->has_ench(ENCH_MERFOLK_AVATAR_SONG))
         mons->add_ench(mon_enchant(ENCH_MERFOLK_AVATAR_SONG, 0, mons, 70));
 
-    if (you.can_see(mons))
+    if (you.can_see(*mons))
     {
         const char * const song_adj = already_mesmerised ? "its luring"
                                                          : "a haunting";
@@ -7918,7 +7924,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     // Mara shouldn't cast player ghost if he can't see the player
     case SPELL_SUMMON_ILLUSION:
-        return !foe || !mon->can_see(foe) || !actor_is_illusion_cloneable(foe);
+        return !foe || !mon->can_see(*foe) || !actor_is_illusion_cloneable(foe);
 
     case SPELL_AWAKEN_FOREST:
         return mon->has_ench(ENCH_AWAKEN_FOREST)
@@ -7931,7 +7937,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return mon->holiness() == MH_UNDEAD
                || mon->has_ench(ENCH_DEATHS_DOOR)
                || mon->has_ench(ENCH_FATIGUE)
-               || !foe || !mon->can_see(foe);
+               || !foe || !mon->can_see(*foe);
 
     case SPELL_OZOCUBUS_ARMOUR:
         return mon->is_insubstantial() || mon->has_ench(ENCH_OZOCUBUS_ARMOUR);
@@ -7966,7 +7972,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return !foe || foe->holiness() == MH_UNDEAD;
 
     case SPELL_BLINK_ALLIES_ENCIRCLE:
-        if (!foe || !mon->can_see(foe))
+        if (!foe || !mon->can_see(*foe))
             return true;
 
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
@@ -8079,7 +8085,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return !foe;
 
     case SPELL_BLINK_ALLIES_AWAY:
-        if (!foe || !mon->can_see(foe))
+        if (!foe || !mon->can_see(*foe))
             return true;
 
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
@@ -8256,7 +8262,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_PARALYSIS_GAZE:
     case SPELL_CONFUSION_GAZE:
     case SPELL_DRAINING_GAZE:
-        return !foe || !mon->can_see(foe);
+        return !foe || !mon->can_see(*foe);
 
     case SPELL_CONDENSATION_SHIELD:
         return mon->shield()
@@ -8287,7 +8293,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
         for (actor_near_iterator ai(foe); ai; ++ai)
             if (*ai != mon && *ai != foe && !ai->is_stationary()
-                && mon->can_see(*ai))
+                && mon->can_see(**ai))
             {
                 return false;
             }

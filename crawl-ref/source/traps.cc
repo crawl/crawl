@@ -364,7 +364,7 @@ bool monster_caught_in_net(monster* mon, actor* agent)
 
     if (mon->is_insubstantial())
     {
-        if (you.can_see(mon))
+        if (you.can_see(*mon))
         {
             mprf("The net passes right through %s!",
                  mon->name(DESC_THE).c_str());
@@ -1485,7 +1485,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     }
     else if (!force_hit && one_chance_in(5))
     {
-        if (was_known && you.see_cell(pos) && you.can_see(&act))
+        if (was_known && you.see_cell(pos) && you.can_see(act))
         {
             mprf("%s avoids triggering %s.", act.name(DESC_THE).c_str(),
                  name(DESC_A).c_str());
@@ -1525,7 +1525,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         string owner;
         if (act.is_player())
             owner = "your";
-        else if (you.can_see(&act))
+        else if (you.can_see(act))
             owner = apostrophise(act.name(DESC_THE));
         else // "its" sounds abysmal; animals don't use shields
             owner = "someone's";
@@ -1965,6 +1965,7 @@ bool maybe_destroy_web(actor *oaf)
 
 bool ensnare(actor *fly)
 {
+    ASSERT(fly); // XXX: change to actor &fly
     if (fly->is_web_immune())
         return false;
 
@@ -1978,7 +1979,7 @@ bool ensnare(actor *fly)
 
     if (fly->body_size() >= SIZE_GIANT)
     {
-        if (you.can_see(fly))
+        if (you.can_see(*fly))
             mprf("A web harmlessly splats on %s.", fly->name(DESC_THE).c_str());
         return false;
     }

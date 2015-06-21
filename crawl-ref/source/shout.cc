@@ -163,7 +163,7 @@ void handle_monster_shouts(monster* mons, bool force)
     // false for submerged monsters, but submerged monsters will be forced
     // to surface before they shout, thus removing that source of
     // non-visibility.
-    if (you.can_see(mons))
+    if (you.can_see(*mons))
         suffix = " seen";
     else
         suffix = " unseen";
@@ -234,7 +234,7 @@ void handle_monster_shouts(monster* mons, bool force)
                 return;
             }
 
-            if (you.can_see(mons))
+            if (you.can_see(*mons))
             {
                 if (!monster_habitable_grid(mons, DNGN_FLOOR))
                     mons->seen_context = SC_FISH_SURFACES_SHOUT;
@@ -246,10 +246,10 @@ void handle_monster_shouts(monster* mons, bool force)
             }
         }
 
-        if (channel != MSGCH_TALK_VISUAL || you.can_see(mons))
+        if (channel != MSGCH_TALK_VISUAL || you.can_see(*mons))
         {
             // Otherwise it can move away with no feedback.
-            if (you.can_see(mons))
+            if (you.can_see(*mons))
             {
                 if (!(mons->flags & MF_WAS_IN_VIEW))
                     handle_seen_interrupt(mons);
@@ -264,7 +264,7 @@ void handle_monster_shouts(monster* mons, bool force)
     const int  noise_level = get_shout_noise_level(s_type);
     const bool heard       = noisy(noise_level, mons->pos(), mons->mid);
 
-    if (crawl_state.game_is_hints() && (heard || you.can_see(mons)))
+    if (crawl_state.game_is_hints() && (heard || you.can_see(*mons)))
         learned_something_new(HINT_MONSTER_SHOUT, mons->pos());
 }
 
@@ -330,7 +330,7 @@ bool check_awaken(monster* mons, int stealth)
         return true; // Oops, the monster wakes up!
 
     // You didn't wake the monster!
-    if (you.can_see(mons) // to avoid leaking information
+    if (you.can_see(*mons) // to avoid leaking information
         && !mons->wont_attack()
         && !mons->neutral() // include pacified monsters
         && mons_class_gives_xp(mons->type))
@@ -567,7 +567,7 @@ void yell(const actor* mon)
         if (!(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU))
         {
             const monster* target = &menv[you.prev_targ];
-            if (target->alive() && you.can_see(target))
+            if (target->alive() && you.can_see(*target))
             {
                 previous = "   p - Attack previous target.";
                 targ_prev = true;
@@ -677,7 +677,7 @@ void yell(const actor* mon)
             if (!cancel)
             {
                 const monster* m = monster_at(targ.target);
-                cancel = (m == nullptr || !you.can_see(m));
+                cancel = (m == nullptr || !you.can_see(*m));
                 if (!cancel)
                     mons_targd = m->mindex();
             }

@@ -292,7 +292,7 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
         if (grd(*ai) == DNGN_DEEP_WATER)
         {
             const monster *mon = monster_at(*ai);
-            if (mon && you.can_see(mon))
+            if (mon && you.can_see(*mon))
             {
                 // Could originate from the kraken.
                 if (mon->type == MONS_KRAKEN)

@@ -95,6 +95,8 @@ static bool _autoswitch_to_melee()
  */
 bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 {
+    ASSERT(attacker); // XXX: change to actor &attacker
+    ASSERT(defender); // XXX: change to actor &defender
     const int orig_hp = defender->stat_hp();
     if (defender->is_player())
     {
@@ -146,7 +148,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
         // Check if the player is fighting with something unsuitable,
         // or someone unsuitable.
-        if (you.can_see(defender)
+        if (you.can_see(*defender)
             && !wielded_weapon_check(attk.weapon))
         {
             you.turn_is_over = false;
@@ -285,10 +287,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
             if (found)
             {
-                const bool could_see = you.can_see(mons);
+                const bool could_see = you.can_see(*mons);
                 if (mons->move_to_pos(hopspot))
                 {
-                    if (could_see || you.can_see(mons))
+                    if (could_see || you.can_see(*mons))
                     {
                         mprf("%s hops backward while attacking.",
                              mons->name(DESC_THE, true).c_str());
@@ -331,13 +333,14 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 stab_type find_stab_type(const actor *attacker,
                          const actor *defender)
 {
+    ASSERT(defender); // XXX: change to const actor &defender
     const monster* def = defender->as_monster();
     stab_type unchivalric = STAB_NO_STAB;
 
     // No stabbing monsters that cannot fight (e.g.  plants) or monsters
     // the attacker can't see (either due to invisibility or being behind
     // opaque clouds).
-    if (defender->cannot_fight() || (attacker && !attacker->can_see(defender)))
+    if (defender->cannot_fight() || (attacker && !attacker->can_see(*defender)))
         return unchivalric;
 
     // Distracted (but not batty); this only applies to players.

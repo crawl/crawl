@@ -195,6 +195,7 @@ static void _stats_from_blob_count(monster* slime, float max_per_blob,
 // Now it returns index of new slime (-1 if it fails).
 static monster* _do_split(monster* thing, const coord_def & target)
 {
+    ASSERT(thing); // XXX: change to monster &thing
     ASSERT(thing->alive());
 
     // Create a new slime.
@@ -209,7 +210,7 @@ static monster* _do_split(monster* thing, const coord_def & target)
 
     // Don't explicitly announce the child slime coming into view if you
     // saw the split that created it
-    if (you.can_see(thing))
+    if (you.can_see(*thing))
         new_slime_data.extra_flags |= MF_WAS_IN_VIEW;
 
     monster *new_slime = create_monster(new_slime_data);
@@ -217,7 +218,7 @@ static monster* _do_split(monster* thing, const coord_def & target)
     if (!new_slime)
         return 0;
 
-    if (you.can_see(thing))
+    if (you.can_see(*thing))
         mprf("%s splits.", thing->name(DESC_A).c_str());
 
     // Inflict the new slime with any enchantments on the parent.
@@ -372,10 +373,10 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     behaviour_event(merge_to, ME_EVAL);
 
     // Messaging.
-    if (you.can_see(merge_to))
+    if (you.can_see(*merge_to))
     {
         const bool changed = new_type != old_type;
-        if (you.can_see(crawlie))
+        if (you.can_see(*crawlie))
         {
             if (crawlie->type == old_type)
             {
@@ -402,7 +403,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
         else
             mprf("%s twists grotesquely.", merge_to->name(DESC_A).c_str());
     }
-    else if (you.can_see(crawlie))
+    else if (you.can_see(*crawlie))
         mprf("%s suddenly disappears!", crawlie->name(DESC_A).c_str());
 
     // Now kill the other monster.
@@ -443,9 +444,9 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
     behaviour_event(merge_to, ME_EVAL);
 
     // Messaging.
-    if (you.can_see(merge_to))
+    if (you.can_see(*merge_to))
     {
-        if (you.can_see(initial_slime))
+        if (you.can_see(*initial_slime))
         {
             mprf("Two slime creatures merge to form %s.",
                  merge_to->name(DESC_A).c_str());
@@ -458,7 +459,7 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
 
         flash_view_delay(UA_MONSTER, LIGHTGREEN, 150);
     }
-    else if (you.can_see(initial_slime))
+    else if (you.can_see(*initial_slime))
         mpr("A slime creature suddenly disappears!");
 
     // Have to 'kill' the slime doing the merging.
@@ -604,7 +605,7 @@ static monster *_slime_split(monster* thing, bool force_split)
     const coord_def origin  = thing->pos();
 
     const actor* foe        = thing->get_foe();
-    const bool has_foe      = (foe != nullptr && thing->can_see(foe));
+    const bool has_foe      = (foe != nullptr && thing->can_see(*foe));
     const coord_def foe_pos = (has_foe ? foe->position : coord_def(0,0));
     const int old_dist      = (has_foe ? grid_distance(origin, foe_pos) : 0);
 
@@ -824,7 +825,7 @@ static bool _lost_soul_affectable(const monster &mons)
 
 static bool _lost_soul_teleport(monster* mons)
 {
-    bool seen = you.can_see(mons);
+    bool seen = you.can_see(*mons);
 
     typedef pair<monster*, int> mon_quality;
     vector<mon_quality> candidates;
@@ -951,7 +952,7 @@ bool lost_soul_revive(monster* mons, killer_type killer)
         }
 
         // check if you can see the monster *after* it maybe moved
-        if (you.can_see(mons))
+        if (you.can_see(*mons))
         {
             if (!was_alive)
             {
@@ -1009,7 +1010,7 @@ void treant_release_fauna(monster* mons)
         }
     }
 
-    if (created && you.can_see(mons))
+    if (created && you.can_see(*mons))
     {
         mprf("Angry insects surge out from beneath %s foliage!",
              mons->name(DESC_ITS).c_str());
@@ -1231,7 +1232,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             && !one_chance_in(3))
         {
             actor *foe = mons->get_foe();
-            if (foe && mons->can_see(foe))
+            if (foe && mons->can_see(*foe))
             {
                 beem.target = foe->pos();
                 setup_mons_cast(mons, beem, SPELL_THORN_VOLLEY);
@@ -1307,7 +1308,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             // Duration does not decay while there are hostiles around
             mons->add_ench(mon_enchant(ENCH_GRASPING_ROOTS_SOURCE, 1, mons,
                                        random_range(3, 7) * BASELINE_DELAY));
-            if (you.can_see(mons))
+            if (you.can_see(*mons))
             {
                 mprf(MSGCH_MONSTER_SPELL, "%s reaches out with a gnarled limb.",
                      mons->name(DESC_THE).c_str());

@@ -142,7 +142,7 @@ static void _CEREBOV_melee_effects(item_def* weapon, actor* attacker,
             && !defender->as_monster()->res_hellfire()
             && !defender->as_monster()->has_ench(ENCH_FIRE_VULN))
         {
-            if (you.can_see(attacker))
+            if (you.can_see(*attacker))
             {
                 mprf("The Sword of Cerebov burns away %s fire resistance.",
                      defender->name(DESC_ITS).c_str());
@@ -631,7 +631,7 @@ static monster* _find_nearest_possible_beholder()
     for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
     {
         monster *mon = monster_at(*di);
-        if (mon && you.can_see(mon)
+        if (mon && you.can_see(*mon)
             && you.possible_beholder(mon)
             && !mons_class_flag(mon->type, M_NO_EXP_GAIN))
         {
@@ -1047,7 +1047,7 @@ static void _ARC_BLADE_melee_effects(item_def* weapon, actor* attacker,
             scaled_delay(100);
         else
         {
-            if (you.can_see(attacker))
+            if (you.can_see(*attacker))
                 mpr("The arc blade crackles.");
             else
                 mpr("You hear the crackle of electricity.");
@@ -1108,7 +1108,7 @@ static void _ORDER_melee_effects(item_def* item, actor* attacker,
         int silver_dam = silver_damages_victim(defender, dam, msg);
         if (silver_dam)
         {
-            if (you.can_see(defender))
+            if (you.can_see(*defender))
                 mpr(msg);
             defender->hurt(attacker, silver_dam);
         }

@@ -1293,6 +1293,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         && monster_by_mid(death_source))
     {
         const monster* mons = monster_by_mid(death_source);
+        ASSERT(mons);
 
         // Previously the weapon was only used for dancing weapons,
         // but now we pass it in as a string through the scorefile
@@ -1323,7 +1324,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
 
         death_source_name = mons->name(desc, death);
 
-        if (death || you.can_see(mons))
+        if (death || you.can_see(*mons))
             death_source_name = mons->full_name(desc, true);
 
         if (mons_is_player_shadow(mons))

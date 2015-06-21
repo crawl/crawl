@@ -3310,7 +3310,7 @@ static void _move_player(coord_def move)
         {
             // Don't allow the player to freely locate invisible monsters
             // with confirmation prompts.
-            if (!you.can_see(targ_monst)
+            if (!you.can_see(*targ_monst)
                 && !you.confused()
                 && !check_moveto(targ, walkverb))
             {

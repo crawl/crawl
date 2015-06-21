@@ -605,6 +605,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
 static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
 {
+    ASSERT(act); // XXX: change to actor &act
     const item_def* launcher = act->weapon();
 
     if (launcher == nullptr || launcher->base_type != OBJ_WEAPONS)
@@ -656,7 +657,7 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
                  launcher->name(DESC_PLAIN).c_str());
         return;
     }
-    if (act->is_player() || you.can_see(act))
+    if (act->is_player() || you.can_see(*act))
         msg = nullptr;
 
     noisy(level, act->pos(), msg, act->mid);
@@ -1107,10 +1108,10 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
         // Only print a message if you can see the target or the thrower.
         // Otherwise we get "The weapon returns whence it came from!" regardless.
-        if (you.see_cell(beam.target) || you.can_see(mons))
+        if (you.see_cell(beam.target) || you.can_see(*mons))
         {
             msg::stream << "The weapon returns "
-                        << (you.can_see(mons)?
+                        << (you.can_see(*mons)?
                               ("to " + mons->name(DESC_THE))
                             : "from whence it came")
                         << "!" << endl;

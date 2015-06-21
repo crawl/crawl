@@ -461,7 +461,7 @@ public:
     bool can_see_invisible() const;
     bool can_see_invisible(bool unid, bool items = true) const;
     bool visible_to(const actor *looker) const;
-    bool can_see(const actor* a) const;
+    bool can_see(const actor& a) const;
     undead_state_type undead_state(bool temp = true) const;
     bool nightvision() const;
     reach_type reach_range() const;

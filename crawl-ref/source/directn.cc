@@ -314,7 +314,7 @@ actor* direction_chooser::targeted_actor() const
 monster* direction_chooser::targeted_monster() const
 {
     monster* m = monster_at(target());
-    if (m && you.can_see(m))
+    if (m && you.can_see(*m))
         return m;
     else
         return nullptr;
@@ -327,7 +327,8 @@ static monster* _get_current_target()
         return nullptr;
 
     monster* mon = &menv[you.prev_targ];
-    if (mon->alive() && you.can_see(mon))
+    ASSERT(mon);
+    if (mon->alive() && you.can_see(*mon))
         return mon;
     else
         return nullptr;
@@ -1327,7 +1328,7 @@ void direction_chooser::update_previous_target() const
 
     // Maybe we should except just_looking here?
     const monster* m = monster_at(target());
-    if (m && you.can_see(m))
+    if (m && you.can_see(*m))
         you.prev_targ = m->mindex();
     else if (looking_at_you())
         you.prev_targ = MHITYOU;
@@ -1496,7 +1497,7 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
     if (!mon)
         return;
 
-    const bool visible = you.can_see(mon);
+    const bool visible = you.can_see(*mon);
     const bool exposed = _mon_exposed(mon);
     if (!visible && !exposed)
         return;
@@ -2157,7 +2158,7 @@ string get_terse_square_desc(const coord_def &gc)
         else
             desc = unseen_desc;
     }
-    else if (monster_at(gc) && you.can_see(monster_at(gc)))
+    else if (monster_at(gc) && you.can_see(*monster_at(gc)))
             desc = monster_at(gc)->full_name(DESC_PLAIN, true);
     else if (you.visible_igrd(gc) != NON_ITEM)
     {

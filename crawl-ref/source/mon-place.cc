@@ -1079,7 +1079,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
              mon->visible_to(&you) ? mon->name(DESC_A).c_str() : "Something",
              stair_type == DCHAR_ARCH ? "gateway" : "stairwell");
     }
-    else if (mg.proximity == PROX_NEAR_STAIRS && you.can_see(mon))
+    else if (mg.proximity == PROX_NEAR_STAIRS && you.can_see(*mon))
     {
         switch (stair_type)
         {
@@ -1089,7 +1089,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         default: ;
         }
     }
-    else if (player_in_branch(BRANCH_ABYSS) && you.can_see(mon)
+    else if (player_in_branch(BRANCH_ABYSS) && you.can_see(*mon)
              && !crawl_state.generating_level
              && !mg.summoner
              && !crawl_state.is_god_acting()
@@ -1793,7 +1793,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     if (crawl_state.game_is_arena())
         arena_placed_monster(mon);
-    else if (!crawl_state.generating_level && !dont_place && you.can_see(mon))
+    else if (!crawl_state.generating_level && !dont_place && you.can_see(*mon))
     {
         if (mg.flags & MG_DONT_COME)
             mon->seen_context = SC_JUST_SEEN;
@@ -3924,6 +3924,8 @@ conduct_type player_will_anger_monster(monster* mon)
 
 bool player_angers_monster(monster* mon)
 {
+    ASSERT(mon); // XXX: change to monster &mon
+
     // Get the drawbacks, not the benefits... (to prevent e.g. demon-scumming).
     conduct_type why = player_will_anger_monster(mon);
     if (why && mon->wont_attack())
@@ -3932,7 +3934,7 @@ bool player_angers_monster(monster* mon)
         mon->del_ench(ENCH_CHARM);
         behaviour_event(mon, ME_ALERT, &you);
 
-        if (you.can_see(mon))
+        if (you.can_see(*mon))
         {
             const string mname = mon->name(DESC_THE).c_str();
 

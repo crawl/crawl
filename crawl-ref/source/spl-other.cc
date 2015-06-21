@@ -184,7 +184,7 @@ void recall_orders(monster *mons)
 
     // Don't pursue distant enemies
     const actor *foe = mons->get_foe();
-    if (foe && !you.can_see(foe))
+    if (foe && !you.can_see(*foe))
         mons->foe = MHITYOU;
 }
 

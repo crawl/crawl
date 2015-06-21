@@ -304,7 +304,7 @@ static int _current_horror_level()
         if (mon == nullptr
             || mons_aligned(mon, &you)
             || mons_is_firewood(mon)
-            || !you.can_see(mon))
+            || !you.can_see(*mon))
         {
             continue;
         }

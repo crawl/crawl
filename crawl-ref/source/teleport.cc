@@ -254,7 +254,8 @@ void mons_relocated(monster* mons)
 
 void monster_teleport(monster* mons, bool instan, bool silent)
 {
-    bool was_seen = !silent && you.can_see(mons) && !mons_is_lurking(mons);
+    ASSERT(mons); // XXX: change to monster &mons
+    bool was_seen = !silent && you.can_see(*mons) && !mons_is_lurking(mons);
 
     if (!instan)
     {
@@ -380,7 +381,10 @@ void blink_other_close(actor* victim, const coord_def &target)
 // Blink a monster away from the caster.
 bool blink_away(monster* mon, actor* caster, bool from_seen, bool self_cast)
 {
-    if (from_seen && !mon->can_see(caster))
+    ASSERT(mon); // XXX: change to monster &mon
+    ASSERT(caster); // XXX: change to actor &caster
+
+    if (from_seen && !mon->can_see(*caster))
         return false;
     bool jumpy = self_cast && mon->is_jumpy();
     coord_def dest = random_space_weighted(mon, caster, false, false, true);
@@ -403,8 +407,10 @@ bool blink_away(monster* mon, bool self_cast)
 // Blink the monster within range but at distance to its foe.
 void blink_range(monster* mon)
 {
+    ASSERT(mon); // XXX: change to monster &mon
+
     actor* foe = mon->get_foe();
-    if (!foe || !mon->can_see(foe))
+    if (!foe || !mon->can_see(*foe))
         return;
     coord_def dest = random_space_weighted(mon, foe, false, true);
     if (dest.origin())
@@ -419,8 +425,10 @@ void blink_range(monster* mon)
 // Blink the monster close to its foe.
 void blink_close(monster* mon)
 {
+    ASSERT(mon); // XXX: change to monster &mon
+
     actor* foe = mon->get_foe();
-    if (!foe || !mon->can_see(foe))
+    if (!foe || !mon->can_see(*foe))
         return;
     coord_def dest = random_space_weighted(mon, foe, true, true, true);
     if (dest.origin())

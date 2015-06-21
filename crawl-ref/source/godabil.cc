@@ -566,7 +566,7 @@ int zin_check_recite_to_monsters(bool quiet)
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         const monster *mon = monster_at(*ri);
-        if (!mon || !you.can_see(mon))
+        if (!mon || !you.can_see(*mon))
             continue;
 
         recite_counts retval;
@@ -1685,13 +1685,14 @@ bool yred_animate_remains_or_dead()
 
 void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 {
+    ASSERT(mon); // XXX: change to monster &mon
     ASSERT(mons_enslaved_body_and_soul(mon));
 
     add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
     remove_enslaved_soul_companion();
 
-    const string whose = you.can_see(mon) ? apostrophise(mon->name(DESC_THE))
-                                          : mon->pronoun(PRONOUN_POSSESSIVE);
+    const string whose = you.can_see(*mon) ? apostrophise(mon->name(DESC_THE))
+                                           : mon->pronoun(PRONOUN_POSSESSIVE);
 
     // Remove the monster's soul-enslaving enchantment, as it's no
     // longer needed.
@@ -2750,7 +2751,7 @@ bool prioritise_adjacent(const coord_def &target, vector<coord_def>& candidates)
         monster* hostile = monster_at(*los_it);
 
         if (hostile && hostile->attitude == ATT_HOSTILE
-            && you.can_see(hostile))
+            && you.can_see(*hostile))
         {
             mons_positions.push_back(hostile->pos());
         }
@@ -6442,7 +6443,7 @@ bool ru_power_leap()
         }
 
         monster* mons = monster_at(beam.target);
-        if (mons && you.can_see(mons))
+        if (mons && you.can_see(*mons))
         {
             clear_messages();
             mpr("You can't leap on top of the monster!");

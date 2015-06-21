@@ -495,7 +495,7 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
     {
         if (force && !silent)
         {
-            if (you.can_see(mons))
+            if (you.can_see(*mons))
                 simple_monster_message(mons, " turns back into a corpse!");
             else
             {
@@ -609,6 +609,7 @@ int exp_rate(int killer)
 // your allies.
 static bool _ely_protect_ally(monster* mons, killer_type killer)
 {
+    ASSERT(mons); // XXX: change to monster &mons
     if (!you_worship(GOD_ELYVILON))
         return false;
 
@@ -618,7 +619,7 @@ static bool _ely_protect_ally(monster* mons, killer_type killer)
     if (!mons->is_holy()
             && mons->holiness() != MH_NATURAL
         || !mons->friendly()
-        || !you.can_see(mons) // for simplicity
+        || !you.can_see(*mons) // for simplicity
         || !one_chance_in(20))
     {
         return false;
@@ -917,7 +918,7 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
 
     if (target->is_player())
         mprf(MSGCH_MONSTER_SPELL, "You feel extremely nervous for a moment...");
-    else if (you.can_see(target))
+    else if (you.can_see(*target))
     {
         mprf(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
              target->name(DESC_THE).c_str());
@@ -1309,7 +1310,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     }
 
     bool saw = false;
-    if (you.can_see(mons))
+    if (you.can_see(*mons))
     {
         saw = true;
         viewwindow();
@@ -1511,7 +1512,7 @@ static void _druid_final_boon(const monster* mons)
     if (!beasts.size())
         return;
 
-    if (you.can_see(mons))
+    if (you.can_see(*mons))
     {
         mprf(MSGCH_MONSTER_SPELL, "With its final breath, %s offers up its power "
                                   "to the beasts of the wild!",
@@ -1527,7 +1528,7 @@ static void _druid_final_boon(const monster* mons)
     for (int i = 0; i < num; ++i)
     {
         if (beasts[i]->heal(roll_dice(3, mons->get_hit_dice()))
-            && you.can_see(beasts[i]))
+            && you.can_see(*beasts[i]))
         {
             mprf("%s %s healed.", beasts[i]->name(DESC_THE).c_str(),
                                   beasts[i]->conj_verb("are").c_str());
@@ -1544,6 +1545,9 @@ static void _druid_final_boon(const monster* mons)
 
 static bool _mons_reaped(actor *killer, monster* victim)
 {
+    ASSERT(killer); // XXX: change to actor &killer
+    ASSERT(victim); // XXX: change to monster &victim
+
     beh_type beh;
     unsigned short hitting;
 
@@ -1570,9 +1574,9 @@ static bool _mons_reaped(actor *killer, monster* victim)
         return false;
     }
 
-    if (you.can_see(victim))
+    if (you.can_see(*victim))
         mprf("%s turns into a zombie!", victim->name(DESC_THE).c_str());
-    else if (you.can_see(zombie))
+    else if (you.can_see(*zombie))
         mprf("%s appears out of thin air!", zombie->name(DESC_THE).c_str());
 
     player_angers_monster(zombie);
@@ -1722,7 +1726,7 @@ int monster_die(monster* mons, killer_type killer,
     if (invalid_monster(mons))
         return -1;
 
-    const bool was_visible = you.can_see(mons);
+    const bool was_visible = you.can_see(*mons);
 
     // If a monster was banished to the Abyss and then killed there,
     // then its death wasn't a banishment.
@@ -1987,7 +1991,7 @@ int monster_die(monster* mons, killer_type killer,
         if (!silent && !mons_reset && !mons->has_ench(ENCH_SEVERED)
             && !was_banished)
         {
-            if (you.can_see(mons))
+            if (you.can_see(*mons))
             {
                 mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, silenced(mons->pos()) ?
                     "The tentacle is hauled back through the portal!" :
@@ -2689,7 +2693,7 @@ void unawaken_vines(const monster* mons, bool quiet)
             && mi->props.exists("vine_awakener")
             && monster_by_mid(mi->props["vine_awakener"].get_int()) == mons)
         {
-            if (you.can_see(*mi))
+            if (you.can_see(**mi))
                 ++vines_seen;
             monster_die(*mi, KILL_RESET, NON_MONSTER);
         }
@@ -2704,6 +2708,7 @@ void unawaken_vines(const monster* mons, bool quiet)
 
 void heal_flayed_effect(actor* act, bool quiet, bool blood_only)
 {
+    ASSERT(act); // XXX: change to actor &act
     if (!blood_only)
     {
         if (act->is_player())
@@ -2711,7 +2716,7 @@ void heal_flayed_effect(actor* act, bool quiet, bool blood_only)
         else
             act->as_monster()->del_ench(ENCH_FLAYED, true, false);
 
-        if (you.can_see(act) && !quiet)
+        if (you.can_see(*act) && !quiet)
         {
             mprf("The terrible wounds on %s body vanish.",
                  act->name(DESC_ITS).c_str());
@@ -3099,7 +3104,7 @@ void hogs_to_humans()
         if (mi->is_shapeshifter())
             continue;
 
-        const bool could_see = you.can_see(*mi);
+        const bool could_see = you.can_see(**mi);
 
         if (could_see) any++;
 

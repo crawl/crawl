@@ -314,7 +314,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
         // TODO -- and friends
 
-        if (you.can_see(this) && friendly())
+        if (you.can_see(*this) && friendly())
             learned_something_new(HINT_MONSTER_FRIENDLY, pos());
         break;
     }
@@ -378,7 +378,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
     if (mons_is_lurking(mon))
     {
         const actor* foe = mon->get_foe();
-        if (foe != nullptr && mon->can_see(foe)
+        if (foe != nullptr && mon->can_see(*foe)
             && !adjacent(mon->pos(), foe->pos()))
         {
             return false;
@@ -543,7 +543,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_STONESKIN:
-        if (!quiet && you.can_see(this))
+        if (!quiet && you.can_see(*this))
         {
             mprf("%s skin looks tender.",
                  apostrophise(name(DESC_THE)).c_str());
@@ -551,7 +551,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_OZOCUBUS_ARMOUR:
-        if (!quiet && you.can_see(this))
+        if (!quiet && you.can_see(*this))
         {
             mprf("%s icy armour evaporates.",
                  apostrophise(name(DESC_THE)).c_str());
@@ -673,7 +673,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         }
 
-        if (you.can_see(this))
+        if (you.can_see(*this))
         {
             // and fire activity interrupts
             interrupt_activity(AI_SEE_MONSTER,
@@ -780,7 +780,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             }
         }
 
-        if (you.can_see(this))
+        if (you.can_see(*this))
         {
             if (!mons_is_safe(this) && delay_is_run(current_delay_action()))
             {
@@ -949,12 +949,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_CONTROL_WINDS:
-        if (!quiet && you.can_see(this))
+        if (!quiet && you.can_see(*this))
             mprf("The winds cease moving at %s will.", name(DESC_ITS).c_str());
         break;
 
     case ENCH_TOXIC_RADIANCE:
-        if (!quiet && you.can_see(this))
+        if (!quiet && you.can_see(*this))
             mprf("%s toxic aura wanes.", name(DESC_ITS).c_str());
         break;
 
@@ -983,7 +983,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_ICEMAIL:
-        if (!quiet && you.can_see(this))
+        if (!quiet && you.can_see(*this))
         {
             mprf("%s icy envelope dissipates!",
                  apostrophise(name(DESC_THE)).c_str());
@@ -1057,7 +1057,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_CONDENSATION_SHIELD:
-        if (!quiet && you.can_see(this))
+        if (!quiet && you.can_see(*this))
         {
             mprf("%s icy shield evaporates.",
                  apostrophise(name(DESC_THE)).c_str());
@@ -1259,7 +1259,7 @@ static bool _apply_grasping_roots(monster* mons)
                 continue;
             }
 
-            if (you.can_see(*ai))
+            if (you.can_see(**ai))
             {
                 mprf("Roots rise up from beneath %s and drag %s %sto the ground.",
                      ai->name(DESC_THE).c_str(),
@@ -1710,7 +1710,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         // If you are no longer dying, you must be dead.
         if (decay_enchantment(en))
         {
-            if (you.can_see(this))
+            if (you.can_see(*this))
             {
                 if (type == MONS_PILLAR_OF_SALT)
                     mprf("%s crumbles away.", name(DESC_THE, false).c_str());
@@ -1851,7 +1851,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
             if (!silenced(you.pos()))
             {
-                if (you.can_see(this))
+                if (you.can_see(*this))
                     simple_monster_message(this, " suddenly becomes enraged!");
                 else
                     mpr("You hear a distant and violent thrashing sound.");
@@ -1916,7 +1916,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(en))
         {
             add_ench(ENCH_TORNADO_COOLDOWN);
-            if (you.can_see(this))
+            if (you.can_see(*this))
             {
                 mprf("The winds around %s start to calm down.",
                      name(DESC_THE).c_str());
@@ -1971,7 +1971,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             speed_increment += me.duration;
             del_ench(en, true, false);
-            if (you.can_see(this))
+            if (you.can_see(*this))
             {
                 mprf("%s chant is interrupted.",
                      name(DESC_ITS).c_str());
@@ -1997,7 +1997,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                      && !(is_sanctuary(pos())
                         || is_sanctuary(mons_foe->pos())))
                 {
-                    if (can_see(mons_foe))
+                    if (can_see(*mons_foe))
                     {
                         if (en == ENCH_CHANT_FIRE_STORM)
                             finish_chanting_fire_storm(this, foe_pos);
@@ -2091,7 +2091,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(en))
         {
             remove_tornado_clouds(mid);
-            if (you.can_see(this))
+            if (you.can_see(*this))
                 mprf("The winds around %s calm down.", name(DESC_THE).c_str());
         }
         break;
@@ -2111,7 +2111,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             || confused() || asleep() || has_ench(ENCH_FEAR))
         {
             del_ench(ENCH_MERFOLK_AVATAR_SONG, true, false);
-            if (you.can_see(this))
+            if (you.can_see(*this))
             {
                 mprf("%s song is interrupted.",
                      name(DESC_ITS).c_str());

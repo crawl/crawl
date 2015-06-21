@@ -955,7 +955,7 @@ bool targetter_shadow_step::valid_landing(coord_def a, bool check_invis)
         act = actor_at(ray.pos());
         if (ray.pos() == a)
         {
-            if (act && (!check_invis || agent->can_see(act)))
+            if (act && (!check_invis || agent->can_see(*act)))
             {
                 blocked_landing_reason = BLOCKED_OCCUPIED;
                 return false;
