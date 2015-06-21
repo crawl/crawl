@@ -4939,7 +4939,8 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     }
     if ((mons_is_ghost_demon(mi.type)
 #if TAG_MAJOR_VERSION == 34
-         || (mi.type == MONS_LICH || mi.type == MONS_ANCIENT_LICH)
+         || (mi.type == MONS_LICH || mi.type == MONS_ANCIENT_LICH
+             || mi.type == MONS_SPELLFORGED_SERVITOR)
             && th.getMinorVersion() < TAG_MINOR_EXORCISE)
         && th.getMinorVersion() >= TAG_MINOR_GHOST_SINV
 #endif
@@ -5649,7 +5650,8 @@ void unmarshallMonster(reader &th, monster& m)
     }
     else if (th.getMinorVersion() < TAG_MINOR_EXORCISE
         && th.getMinorVersion() >= TAG_MINOR_RANDLICHES
-        && (m.type == MONS_LICH || m.type == MONS_ANCIENT_LICH))
+        && (m.type == MONS_LICH || m.type == MONS_ANCIENT_LICH
+            || m.type == MONS_SPELLFORGED_SERVITOR))
     {
         m.spells = unmarshallGhost(th).spells;
     }

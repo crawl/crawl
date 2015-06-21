@@ -2448,8 +2448,8 @@ static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
     if (force_conj && !_lich_has_spell_of_school(spells, SPTYP_CONJURATION))
     {
         return spell_typematch(spell, SPTYP_CONJURATION)
-        && spell != SPELL_BATTLESPHERE
-        && spell != SPELL_SPELLFORGED_SERVITOR;
+               && spell != SPELL_BATTLESPHERE
+               && spell != SPELL_SPELLFORGED_SERVITOR;
     }
 
     if (!use_weights)
@@ -2815,7 +2815,6 @@ void define_monster(monster* mons)
     // before placement without crashing (proper setup is done later here)
     case MONS_DANCING_WEAPON:
     case MONS_SPECTRAL_WEAPON:
-    case MONS_SPELLFORGED_SERVITOR:
     {
         ghost_demon ghost;
         mons->set_ghost(ghost);
