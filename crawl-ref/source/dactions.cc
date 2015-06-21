@@ -390,9 +390,10 @@ unsigned int query_daction_counter(daction_type c)
 
 static void _daction_hog_to_human(monster *mon, bool in_transit)
 {
+    ASSERT(mon); // XXX: change to monster &mon
     // Hogs to humans
     monster orig;
-    const bool could_see = you.can_see(mon);
+    const bool could_see = you.can_see(*mon);
 
     // Was it a converted monster or original band member?
     if (mon->props.exists(ORIG_MONSTER_KEY))
@@ -441,7 +442,7 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
     mon->hit_points   = max(1, (int) (mon->max_hit_points * hp));
     mon->flags        = mon->flags | preserve_flags;
 
-    const bool can_see = you.can_see(mon);
+    const bool can_see = you.can_see(*mon);
 
     // A monster changing factions while in the arena messes up
     // arena book-keeping.

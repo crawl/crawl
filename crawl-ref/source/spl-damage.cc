@@ -405,7 +405,7 @@ static void _pre_refrigerate(actor* agent, bool player,
         // Filter out affected monsters that we don't know for sure are there
         vector<monster*> seen_monsters;
         for (monster *mon : affected_monsters)
-            if (you.can_see(mon))
+            if (you.can_see(*mon))
                 seen_monsters.push_back(mon);
 
         if (!seen_monsters.empty())
@@ -423,7 +423,7 @@ static void _pre_refrigerate(actor* agent, bool player,
                 // Exclamation mark to suggest that a lot of creatures were
                 // affected.
                 mprf("The monsters around %s are frozen!",
-                    agent && agent->is_monster() && you.can_see(agent)
+                    agent && agent->is_monster() && you.can_see(*agent)
                     ? agent->as_monster()->name(DESC_THE).c_str()
                     : "you");
             }
@@ -541,6 +541,7 @@ static int _drain_player(actor* agent, int pow, int avg,
 static int _drain_monster(actor* agent, monster* target, int pow, int avg,
                           bool actual, bool added_effects)
 {
+    ASSERT(target); // XXX: change to monster &target
     if (actual)
     {
         if (agent && agent->is_player())
@@ -554,7 +555,7 @@ static int _drain_monster(actor* agent, monster* target, int pow, int avg,
 
         target->hurt(agent, avg);
 
-        if (target->alive() && you.can_see(target))
+        if (target->alive() && you.can_see(*target))
             print_wounds(target);
     }
 
@@ -668,7 +669,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
     {
         if (!agent)
             mpr(global_msg);
-        else if (you.can_see(agent))
+        else if (you.can_see(*agent))
             simple_monster_message(mons, mons_vis_msg);
         else if (you.see_cell(agent->pos()))
             mpr(mons_invis_msg);
@@ -1385,7 +1386,7 @@ void shillelagh(actor *wielder, coord_def where, int pow)
     {
         monster *mon = monster_at(*ai);
         if (!mon || !mon->alive() || mon->submerged()
-            || mon->is_insubstantial() || !you.can_see(mon)
+            || mon->is_insubstantial() || !you.can_see(*mon)
             || mon == wielder)
         {
             continue;
@@ -1448,7 +1449,7 @@ static int _irradiate_cell(coord_def where, int pow, int aux, actor *agent)
     if (!mons)
         return 0; // XXX: handle damaging the player for mons casts...?
 
-    if (you.can_see(mons))
+    if (you.can_see(*mons))
     {
         mprf("%s is blasted with magical radiation!",
              mons->name(DESC_THE).c_str());
@@ -1695,7 +1696,7 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
         mpr("The poison in your system burns!");
 
     ouch(damage, KILLED_BY_BEAM, agent->mid,
-         "by burning poison", you.can_see(agent),
+         "by burning poison", you.can_see(*agent),
          agent->as_monster()->name(DESC_A, true).c_str());
 
     mprf(MSGCH_RECOVERY, "You are no longer poisoned.");
@@ -2011,7 +2012,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             return true;
         }
     }
-    else if (mon && (caster->is_monster() || (you.can_see(mon))))
+    else if (mon && (caster->is_monster() || (you.can_see(*mon))))
     {
         switch (mon->type)
         {
@@ -2608,7 +2609,7 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
             if (mons_aligned(caster, monster_at(*di)))
                 continue;
 
-            if (!caster->can_see(monster_at(*di)))
+            if (!caster->can_see(*monster_at(*di)))
                 continue;
 
             //Don't try to aim at a target if it's out of range
@@ -2966,7 +2967,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 
     scaled_delay(100);
 
-    if (you.can_see(caster) || caster->is_player())
+    if (you.can_see(*caster) || caster->is_player())
     {
         mprf("%s %s a mighty blast of ice!",
              caster->name(DESC_THE).c_str(),
@@ -3105,7 +3106,7 @@ spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
             continue;
 
         monster* mons = monster_by_mid(it.first);
-        if (!mons || !mons->alive() || !you.can_see(mons))
+        if (!mons || !mons->alive() || !you.can_see(*mons))
             continue;
 
         print_wounds(mons);

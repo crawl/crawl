@@ -1579,7 +1579,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
             if (act->is_monster())
             {
                 act->as_monster()->speed_increment -= random2(6) + 4;
-                if (you.can_see(act))
+                if (you.can_see(*act))
                     affected_monsters.add(act->as_monster());
             }
             else
@@ -1939,7 +1939,7 @@ static spret_type _phantom_mirror()
         return SPRET_ABORT;
     }
     victim = monster_at(beam.target);
-    if (!victim || !you.can_see(victim))
+    if (!victim || !you.can_see(*victim))
     {
         if (beam.target == you.pos())
             mpr("You can't use the mirror on yourself.");

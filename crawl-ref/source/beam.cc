@@ -2376,7 +2376,7 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     {
         if (mons_aligned(agent, *ai) && ai->holiness() != MH_NONLIVING)
         {
-            if (ai->heal(max(1, damage * 2 / 3)) && you.can_see(*ai))
+            if (ai->heal(max(1, damage * 2 / 3)) && you.can_see(**ai))
             {
                 mprf("%s %s healed.", ai->name(DESC_THE).c_str(),
                                       ai->conj_verb("are").c_str());
@@ -4320,7 +4320,7 @@ void bolt::enchantment_affect_monster(monster* mon)
             if (is_sanctuary(mon->pos()) || is_sanctuary(you.pos()))
                 remove_sanctuary(true);
 
-            set_attack_conducts(conducts, mon, you.can_see(mon));
+            set_attack_conducts(conducts, mon, you.can_see(*mon));
 
             if (in_good_standing(GOD_BEOGH, 2)
                 && mons_genus(mon->type) == MONS_ORC
@@ -4593,7 +4593,7 @@ void bolt::knockback_actor(actor *act, int dam)
     if (newpos == oldpos)
         return;
 
-    if (you.can_see(act))
+    if (you.can_see(*act))
     {
         if (origin_spell == SPELL_CHILLING_BREATH)
         {
@@ -4644,7 +4644,7 @@ void bolt::hit_shield(actor* blocker) const
         {
             if (!mon->lose_ench_levels(mon->get_ench(ENCH_CONDENSATION_SHIELD),
                                        10 * BASELINE_DELAY, true)
-                && you.can_see(mon))
+                && you.can_see(*mon))
             {
                 mprf("The heat melts %s icy shield.",
                      apostrophise(mon->name(DESC_THE)).c_str());
@@ -4834,7 +4834,7 @@ void bolt::affect_monster(monster* mon)
                 remove_sanctuary(true);
 
             // It's not the player's fault if the monster couldn't be seen
-            set_attack_conducts(conducts, mon, you.can_see(mon));
+            set_attack_conducts(conducts, mon, you.can_see(*mon));
         }
     }
 
@@ -5459,7 +5459,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_CONFUSION:
         if (mon->check_clarity(false))
         {
-            if (you.can_see(mon) && !mons_is_lurking(mon))
+            if (you.can_see(*mon) && !mons_is_lurking(mon))
                 obvious_effect = true;
             return MON_AFFECTED;
         }
@@ -5504,7 +5504,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             enchant_type bad  = (agent()->wont_attack()) ? ENCH_HEXED
                                                          : ENCH_CHARM;
 
-            const bool could_see = you.can_see(mon);
+            const bool could_see = you.can_see(*mon);
             if (mon->has_ench(bad))
             {
                 obvious_effect = mon->del_ench(bad);
@@ -5513,7 +5513,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             if (simple_monster_message(mon, " is enslaved!"))
                 obvious_effect = true;
             mon->add_ench(mon_enchant(good, 0, agent()));
-            if (!obvious_effect && could_see && !you.can_see(mon))
+            if (!obvious_effect && could_see && !you.can_see(*mon))
                 obvious_effect = true;
             return MON_AFFECTED;
         }
@@ -5537,7 +5537,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (simple_monster_message(mon, " is charmed."))
             obvious_effect = true;
         mon->add_ench(ENCH_CHARM);
-        if (you.can_see(mon))
+        if (you.can_see(*mon))
             obvious_effect = true;
         return MON_AFFECTED;
 
@@ -5598,7 +5598,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             && mon->add_ench(mon_enchant(ENCH_LOWERED_MR, 0, agent(),
                                          random_range(20, 30) * BASELINE_DELAY)))
         {
-            if (you.can_see(mon))
+            if (you.can_see(*mon))
             {
                 mprf("%s magical defenses are stripped away.",
                      mon->name(DESC_ITS).c_str());
@@ -5630,7 +5630,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             mon_enchant ench = mon->get_ench(ENCH_POISON);
             poison_monster(mon, agent(), ench.degree, true, false);
-            if (you.can_see(mon))
+            if (you.can_see(*mon))
             {
                 mprf("The poison in %s body grows stronger.",
                      mon->name(DESC_ITS).c_str());
@@ -5667,7 +5667,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_SAP_MAGIC:
         if (!SAP_MAGIC_CHANCE())
         {
-            if (you.can_see(mon))
+            if (you.can_see(*mon))
                 canned_msg(MSG_NOTHING_HAPPENS);
             break;
         }
@@ -5697,7 +5697,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
                                   agent(), // doesn't matter
                                   dur));
-        if (you.can_see(mon))
+        if (you.can_see(*mon))
         {
             mprf("%s magic leaks into the air.",
                  apostrophise(mon->name(DESC_THE)).c_str());
@@ -5728,9 +5728,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_ATTRACT:
     {
-        const bool could_see = you.can_see(mon);
+        const bool could_see = you.can_see(*mon);
         if (fatal_attraction(mon, agent(), ench_power)
-            && (could_see || you.can_see(mon)))
+            && (could_see || you.can_see(*mon)))
         {
             obvious_effect = true;
         }

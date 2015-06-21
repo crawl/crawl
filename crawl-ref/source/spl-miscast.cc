@@ -134,7 +134,7 @@ void MiscastEffect::init()
     source_known = target_known = false;
 
     if (target->is_monster())
-        target_known = you.can_see(target);
+        target_known = you.can_see(*target);
     else
         target_known = true;
 
@@ -153,7 +153,7 @@ void MiscastEffect::init()
         else
             kt = KILL_MON_MISSILE;
 
-        source_known = you.can_see(act_source);
+        source_known = you.can_see(*act_source);
 
         if (target_known && special_source == MUMMY_MISCAST)
             source_known = true;
@@ -374,7 +374,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
     }
     else
     {
-        if (you.can_see(target))
+        if (you.can_see(*target))
             msg = mon_msg_seen;
         else
         {
@@ -482,7 +482,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
         else
             method = KILLED_BY_SOMETHING;
 
-        bool see_source = act_source && you.can_see(act_source);
+        bool see_source = act_source && you.can_see(*act_source);
         ouch(dam, method, act_source ? act_source->mid : MID_NOBODY,
              cause.c_str(), see_source,
              act_source ? act_source->name(DESC_A, true).c_str() : nullptr);

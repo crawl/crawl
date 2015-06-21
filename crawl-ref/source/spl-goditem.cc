@@ -777,7 +777,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                     || !get_push_space(*ai, newpos, act, true, &veto_spots))
                 {
                     success = false;
-                    if (you.can_see(act))
+                    if (you.can_see(*act))
                         none_vis = false;
                     break;
                 }

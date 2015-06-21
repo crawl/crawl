@@ -1098,7 +1098,7 @@ bool monster::unequip(item_def &item, int slot, int near, bool force)
     if (!force && item.cursed())
         return false;
 
-    if (!force && you.can_see(this))
+    if (!force && you.can_see(*this))
         set_ident_flags(item, ISFLAG_KNOW_CURSE);
 
     switch (item.base_type)
@@ -2256,7 +2256,7 @@ void monster::swap_weapons(int near)
         // Item was cursed.
         // A centaur may randomly decide to not shoot you, but bashing
         // people with a ranged weapon is a dead giveaway.
-        if (weap->cursed() && you.can_see(this) && is_range_weapon(*weap))
+        if (weap->cursed() && you.can_see(*this) && is_range_weapon(*weap))
             set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
         return;
     }
@@ -2453,7 +2453,7 @@ string monster::full_name(description_level_type desc, bool use_comma) const
 
 string monster::pronoun(pronoun_type pro, bool force_visible) const
 {
-    return mons_pronoun(type, pro, force_visible || you.can_see(this));
+    return mons_pronoun(type, pro, force_visible || you.can_see(*this));
 }
 
 string monster::conj_verb(const string &verb) const
@@ -2799,7 +2799,7 @@ bool monster::fumbles_attack()
 {
     if (floundering() && one_chance_in(4))
     {
-        if (you.can_see(this))
+        if (you.can_see(*this))
         {
             mprf("%s %s", name(DESC_THE).c_str(), liquefied(pos())
                  ? "becomes momentarily stuck in the liquid earth."
@@ -2929,7 +2929,7 @@ void monster::expose_to_element(beam_type flavour, int strength,
             const int amount = strength ? strength : 10;
             if (!lose_ench_levels(get_ench(ENCH_OZOCUBUS_ARMOUR),
                                   amount * BASELINE_DELAY, true)
-                && you.can_see(this))
+                && you.can_see(*this))
             {
                 mprf("The heat melts %s icy armour.",
                      apostrophise(name(DESC_THE)).c_str());
@@ -4438,7 +4438,7 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
     if (res_negative_energy() >= 3)
         return false;
 
-    if (!quiet && you.can_see(this))
+    if (!quiet && you.can_see(*this))
         mprf("%s is drained!", name(DESC_THE).c_str());
 
     // If quiet, don't clean up the monster in order to credit properly.
@@ -4465,7 +4465,7 @@ bool monster::rot(actor *agent, int amount, bool quiet)
     if (res_rotting() || amount <= 0)
         return false;
 
-    if (!quiet && you.can_see(this))
+    if (!quiet && you.can_see(*this))
         mprf("%s looks less resilient!", name(DESC_THE).c_str());
 
     // If quiet, don't clean up the monster in order to credit
@@ -4524,7 +4524,7 @@ void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
     {
         add_ench(mon_enchant(ENCH_BLEED, 3, evildoer, (5 + random2(5))*10));
 
-        if (you.can_see(this))
+        if (you.can_see(*this))
         {
             mprf("%s writhes in agony as %s flesh is eaten away!",
                  name(DESC_THE).c_str(),
@@ -5042,7 +5042,7 @@ bool monster::needs_abyss_transit() const
 void monster::set_transit(const level_id &dest)
 {
     add_monster_to_transit(dest, *this);
-    if (you.can_see(this))
+    if (you.can_see(*this))
         remove_unique_annotation(this);
 }
 
@@ -5156,7 +5156,7 @@ bool monster::sicken(int amount)
     if (res_rotting() || (amount /= 2) < 1)
         return false;
 
-    if (!has_ench(ENCH_SICK) && you.can_see(this))
+    if (!has_ench(ENCH_SICK) && you.can_see(*this))
     {
         // Yes, could be confused with poisoning.
         mprf("%s looks sick.", name(DESC_THE).c_str());
@@ -5169,7 +5169,7 @@ bool monster::sicken(int amount)
 
 bool monster::bleed(const actor* agent, int amount, int degree)
 {
-    if (!has_ench(ENCH_BLEED) && you.can_see(this))
+    if (!has_ench(ENCH_BLEED) && you.can_see(*this))
     {
         mprf("%s begins to bleed from %s wounds!", name(DESC_THE).c_str(),
              pronoun(PRONOUN_POSSESSIVE).c_str());
@@ -5611,7 +5611,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
             simple_monster_message(this, " flops around on dry land!");
         else if (!monster_habitable_grid(this, grd(oldpos)))
         {
-            if (you.can_see(this))
+            if (you.can_see(*this))
             {
                 mprf("%s dives back into the %s!", name(DESC_THE).c_str(),
                                                    feat_type_name(grd(pos())));
@@ -6224,7 +6224,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             {
                 if (owner->is_player())
                     mpr("Your spectral weapon shares its damage with you!");
-                else if (owner->alive() && you.can_see(owner))
+                else if (owner->alive() && you.can_see(*owner))
                 {
                     string buf = " shares ";
                     buf += owner->pronoun(PRONOUN_POSSESSIVE);
@@ -6637,7 +6637,7 @@ item_def* monster::disarm()
         || mons_wpn->cursed()
         || mons_class_is_animated_weapon(type)
         || !adjacent(you.pos(), pos())
-        || !you.can_see(this)
+        || !you.can_see(*this)
         || !mon_tile_ok
         || mons_wpn->flags & ISFLAG_SUMMONED)
     {
@@ -6757,7 +6757,7 @@ bool monster::check_clarity(bool silent) const
     if (!clarity())
         return false;
 
-    if (!silent && you.can_see(this) && !mons_is_lurking(this))
+    if (!silent && you.can_see(*this) && !mons_is_lurking(this))
     {
         simple_monster_message(this, " seems unimpeded by the mental distress.");
         id_if_worn(MSLOT_JEWELLERY, OBJ_JEWELLERY, AMU_CLARITY);
@@ -6786,7 +6786,7 @@ bool monster::check_stasis(bool silent, bool calc_unid) const
     if (!stasis())
         return false;
 
-    if (!silent && you.can_see(this) && !mons_is_lurking(this))
+    if (!silent && you.can_see(*this) && !mons_is_lurking(this))
     {
         simple_monster_message(this, " looks uneasy for a moment.");
         id_if_worn(MSLOT_JEWELLERY, OBJ_JEWELLERY, AMU_STASIS);

@@ -644,7 +644,10 @@ struct complicated_sight_check
 
 static bool _basic_sight_check(monster* mons, actor * test)
 {
-    return mons->can_see(test);
+    ASSERT(mons); // XXX: change to monster &mons
+    ASSERT(test); // XXX: change to actor &test
+    // honestly this whole thing should be a closure
+    return mons->can_see(*test);
 }
 
 template<typename T>
@@ -904,7 +907,7 @@ void move_solo_tentacle(monster* tentacle)
 
     if (pull_constrictee)
     {
-        if (you.can_see(tentacle))
+        if (you.can_see(*tentacle))
         {
             mprf("The vine drags %s backwards!",
                     constrictee->name(DESC_THE).c_str());
@@ -1093,7 +1096,7 @@ void move_child_tentacles(monster* mons)
 
         if (pull_constrictee)
         {
-            if (you.can_see(tentacle))
+            if (you.can_see(*tentacle))
             {
                 mprf("The tentacle pulls %s backwards!",
                      constrictee->name(DESC_THE).c_str());
@@ -1261,7 +1264,7 @@ void mons_create_tentacles(monster* head)
                         head->mid, head->colour,
                         PROX_CLOSE_TO_PLAYER)))
         {
-            if (you.can_see(tentacle))
+            if (you.can_see(*tentacle))
                 visible_count++;
 
             tentacle->props["inwards"].get_int() = head->mid;

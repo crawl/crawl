@@ -395,6 +395,7 @@ void maybe_mons_speaks(monster* mons)
 // Returns true if something is said.
 bool mons_speaks(monster* mons)
 {
+    ASSERT(mons); // XXX: change to monster &mons
     ASSERT(!invalid_monster_type(mons->type));
 
     // Natasha's death lines aren't physical speech.
@@ -411,7 +412,7 @@ bool mons_speaks(monster* mons)
         || (mons->is_summoned(&duration) && duration <= 0)
         || crawl_state.prev_cmd == CMD_LOOK_AROUND; // Wizard testing
 
-    const bool unseen   = !you.can_see(mons);
+    const bool unseen   = !you.can_see(*mons);
     const bool confused = mons->confused();
 
     if (!force_speak)
@@ -822,11 +823,11 @@ bool mons_speaks_msg(monster* mons, const string &msg,
 
         if (line == "__MORE" && !silence)
             more();
-        else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(mons))
+        else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(*mons))
             noticed = old_noticed;
         else
         {
-            if (you.can_see(mons))
+            if (you.can_see(*mons))
                 handle_seen_interrupt(mons);
             mprf(msg_type, "%s", line.c_str());
         }

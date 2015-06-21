@@ -4416,7 +4416,7 @@ int get_tension(god_type god)
     {
         const monster* mon = monster_at(*ri);
 
-        if (mon && mon->alive() && you.can_see(mon))
+        if (mon && mon->alive() && you.can_see(*mon))
         {
             int exper = get_monster_tension(mon, god);
 

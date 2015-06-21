@@ -844,7 +844,7 @@ bool mons_allows_beogh_now(const monster* mon)
                && !silenced(mon->pos()) && !mon->has_ench(ENCH_MUTE)
                && !mons_is_confused(mon) && mons_is_seeking(mon)
                && mon->foe == MHITYOU && !mons_is_immotile(mon)
-               && you.visible_to(mon) && you.can_see(mon);
+               && you.visible_to(mon) && you.can_see(*mon);
 }
 
 // Returns true for monsters that obviously (to the player) feel
@@ -3625,7 +3625,7 @@ bool mons_has_known_ranged_attack(const monster* mon)
 bool mons_can_attack(const monster* mon)
 {
     const actor* foe = mon->get_foe();
-    if (!foe || !mon->can_see(foe))
+    if (!foe || !mon->can_see(*foe))
         return false;
 
     if (mons_has_ranged_attack(mon) && mon->see_cell_no_trans(foe->pos()))
@@ -4162,7 +4162,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
     description_level_type nocap = DESC_THE, cap = DESC_THE;
 
-    if (mons->is_named() && you.can_see(mons))
+    if (mons->is_named() && you.can_see(*mons))
     {
         const string name = mons->name(DESC_THE);
 
@@ -4174,7 +4174,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     else if (mons->attitude == ATT_FRIENDLY
              && !mons_is_unique(mons->type)
              && !crawl_state.game_is_arena()
-             && you.can_see(mons))
+             && you.can_see(*mons))
     {
         nocap = DESC_PLAIN;
         cap   = DESC_PLAIN;

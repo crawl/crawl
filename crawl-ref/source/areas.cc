@@ -464,7 +464,7 @@ void create_sanctuary(const coord_def& center, int time)
                 mons_start_fleeing_from_sanctuary(mon);
 
                 // Check to see that monster is actually fleeing.
-                if (mons_is_fleeing(mon) && you.can_see(mon))
+                if (mons_is_fleeing(mon) && you.can_see(*mon))
                 {
                     scare_count++;
                     seen_mon = mon;

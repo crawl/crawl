@@ -1396,7 +1396,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
 
     ASSERT(at.apt == AIP_MONSTER);
     monster* mon = at.mons_data;
-    if (!you.can_see(mon))
+    ASSERT(mon);
+    if (!you.can_see(*mon))
         return false;
 
     // Disable message for summons.

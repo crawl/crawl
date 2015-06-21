@@ -2126,7 +2126,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         monster* mons = monster_at(beam.target);
 
-        if (mons == nullptr || !you.can_see(mons))
+        if (mons == nullptr || !you.can_see(*mons))
         {
             mpr("There is no monster there to imprison!");
             return SPRET_ABORT;
@@ -2246,7 +2246,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
 
         monster* mons = monster_at(beam.target);
-        if (mons == nullptr || !you.can_see(mons)
+        if (mons == nullptr || !you.can_see(*mons)
             || !ench_flavour_affects_monster(BEAM_ENSLAVE_SOUL, mons))
         {
             mpr("You see nothing there you can enslave the soul of!");

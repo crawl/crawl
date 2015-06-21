@@ -786,7 +786,7 @@ void slime_wall_damage(actor* act, int delay)
 
         const int dam = resist_adjust_damage(mon, BEAM_ACID,
                                              roll_dice(2, strength));
-        if (dam > 0 && you.can_see(mon))
+        if (dam > 0 && you.can_see(*mon))
         {
             mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",
                   mon->name(DESC_THE).c_str());
@@ -1181,7 +1181,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
         orig_actor = "you";
     else if (const monster* m = monster_at(orig_pos))
     {
-        if (you.can_see(m))
+        if (you.can_see(*m))
             orig_actor = m->name(DESC_THE);
     }
 
@@ -1189,7 +1189,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
         dest_actor = "you";
     else if (const monster* m = monster_at(dest_pos))
     {
-        if (you.can_see(m))
+        if (you.can_see(*m))
             dest_actor = m->name(DESC_THE);
     }
 

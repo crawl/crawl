@@ -123,7 +123,7 @@ bool try_pathfind(monster* mon)
     // pathfinding.
     if (need_pathfind
         && !mon->friendly()
-        && mon->can_see(foe)
+        && mon->can_see(*foe)
         && mons_has_los_ability(mon->type))
     {
         need_pathfind = false;

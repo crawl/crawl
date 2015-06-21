@@ -460,7 +460,7 @@ void handle_behaviour(monster* mon)
     while (changed)
     {
         actor* afoe = mon->get_foe();
-        proxFoe = afoe && mon->can_see(afoe);
+        proxFoe = afoe && mon->can_see(*afoe);
 
         if (mon->foe == MHITYOU)
         {
@@ -940,7 +940,7 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
            && (mon->has_ench(ENCH_INSANE)
                || foe->friendly() != friendly
                || neutral && !foe->neutral())
-           && (ignore_sight || mon->can_see(foe))
+           && (ignore_sight || mon->can_see(*foe))
            && !foe->is_projectile()
            && summon_can_attack(mon, p)
            && (friendly || !is_sanctuary(p))
@@ -1120,7 +1120,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             if (src == mon)
                 break;
 
-            if (you.can_see(mon))
+            if (you.can_see(*mon))
             {
                 mprf("%s attack snaps %s out of %s fear.",
                         src ? src->name(DESC_ITS).c_str() : "the",
@@ -1491,7 +1491,7 @@ void make_mons_leave_level(monster* mon)
 {
     if (mon->pacified())
     {
-        if (you.can_see(mon))
+        if (you.can_see(*mon))
             _mons_indicate_level_exit(mon);
 
         // Pacified monsters leaving the level take their stuff with

@@ -610,7 +610,7 @@ static void _place_displaced_monsters()
         if (mon->alive() && !mon->find_home_near_place(mon->pos()))
         {
             maybe_bloodify_square(mon->pos());
-            if (you.can_see(mon))
+            if (you.can_see(*mon))
             {
                 simple_monster_message(mon, " is pulled into the abyss.",
                         MSGCH_BANISHMENT);

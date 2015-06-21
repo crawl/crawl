@@ -193,7 +193,8 @@ static bool _jiyva_slime_target(monster_type targetc)
 
 void change_monster_type(monster* mons, monster_type targetc)
 {
-    bool could_see     = you.can_see(mons);
+    ASSERT(mons); // XXX: change to monster &mons
+    bool could_see     = you.can_see(*mons);
     bool slimified = _jiyva_slime_target(targetc);
 
     // Quietly remove the old monster's invisibility before transforming
@@ -405,7 +406,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mark_interesting_monst(mons);
 
     // If new monster is visible to player, then we've seen it.
-    if (you.can_see(mons))
+    if (you.can_see(*mons))
     {
         seen_monster(mons);
         // If the player saw both the beginning and end results of a
@@ -485,7 +486,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                                                         target_power, relax)));
     }
 
-    bool could_see = you.can_see(mons);
+    bool could_see = you.can_see(*mons);
     bool need_note = (could_see && MONST_INTERESTING(mons));
     string old_name_a = mons->full_name(DESC_A);
     string old_name_the = mons->full_name(DESC_THE);
@@ -515,7 +516,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     change_monster_type(mons, targetc);
 
-    bool can_see = you.can_see(mons);
+    bool can_see = you.can_see(*mons);
 
     // Messaging
     bool player_messaged = true;

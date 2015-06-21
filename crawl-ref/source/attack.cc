@@ -635,7 +635,7 @@ void attack::chaos_affects_defender()
         {
             if (defender->is_player())
                 mpr("You give off a flash of multicoloured light!");
-            else if (you.can_see(defender))
+            else if (you.can_see(*defender))
             {
                 simple_monster_message(mon, " gives off a flash of"
                                             " multicoloured light!");
@@ -728,7 +728,7 @@ void attack::chaos_affects_defender()
         ASSERT(poly_up_chance > 0);
         ASSERT(defender->is_monster());
 
-        obvious_effect = you.can_see(defender);
+        obvious_effect = you.can_see(*defender);
         monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
         break;
 
@@ -739,7 +739,7 @@ void attack::chaos_affects_defender()
         ASSERT(!is_shifter);
         ASSERT(defender->is_monster());
 
-        obvious_effect = you.can_see(defender);
+        obvious_effect = you.can_see(*defender);
         mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
                                        : ENCH_SHAPESHIFTER);
         // Immediately polymorph monster, just to make the effect obvious.
@@ -778,7 +778,7 @@ void attack::chaos_affects_defender()
         ASSERT(can_rage);
         ASSERT(rage_chance > 0);
         defender->go_berserk(false);
-        obvious_effect = you.can_see(defender);
+        obvious_effect = you.can_see(*defender);
         break;
 
     // For these, obvious_effect is computed during beam.fire() below.
@@ -816,7 +816,7 @@ void attack::chaos_affects_defender()
         // to chaos_affect_actor.
         beam.effect_wanton = !fake_chaos_attack;
 
-        if (using_weapon() && you.can_see(attacker))
+        if (using_weapon() && you.can_see(*attacker))
         {
             beam.name = wep_name(DESC_YOUR);
             beam.item = weapon;
@@ -841,14 +841,14 @@ void attack::chaos_affects_defender()
 
         beam.ench_power = beam.damage.num;
 
-        const bool you_could_see = you.can_see(defender);
+        const bool you_could_see = you.can_see(*defender);
         beam.fire();
 
         if (you_could_see)
             obvious_effect = beam.obvious_effect;
     }
 
-    if (!you.can_see(attacker))
+    if (!you.can_see(*attacker))
         obvious_effect = false;
 }
 
@@ -1004,7 +1004,7 @@ void attack::do_miscast()
     else
     {
         if (chaos_brand && miscast_target == attacker
-            && you.can_see(attacker))
+            && you.can_see(*attacker))
         {
             hand_str = wep_name(DESC_PLAIN, ignore_mask);
         }

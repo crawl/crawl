@@ -113,7 +113,7 @@ void flush_comes_into_view()
     monster* mon = crawl_state.which_mon_acting();
 
     if (!mon || !mon->alive() || (mon->flags & MF_WAS_IN_VIEW)
-        || !you.can_see(mon))
+        || !you.can_see(*mon))
     {
         return;
     }
@@ -817,7 +817,8 @@ void view_update_at(const coord_def &pos)
 void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay)
 {
-    if ((Options.use_animations & UA_PLAYER) && you.can_see(mon))
+    ASSERT(mon); // XXX: change to const monster &mon
+    if ((Options.use_animations & UA_PLAYER) && you.can_see(*mon))
     {
         colour_t old_flash_colour = you.flash_colour;
         coord_def c(mon->pos());

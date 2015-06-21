@@ -571,7 +571,7 @@ void maybe_remove_autoexclusion(const coord_def &p)
             return;
 
         const monster* m = monster_at(p);
-        if (!m || !you.can_see(m)
+        if (!m || !you.can_see(*m)
             || m->attitude != ATT_HOSTILE
                 && m->type != MONS_HYPERACTIVE_BALLISTOMYCETE
             || strcmp(mons_type_name(m->type, DESC_PLAIN).c_str(),

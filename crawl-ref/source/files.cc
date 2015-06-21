@@ -890,7 +890,7 @@ static bool _grab_follower_at(const coord_def &pos)
 
     dprf("%s is following to %s.", fol->name(DESC_THE, true).c_str(),
          dest.describe().c_str());
-    bool could_see = you.can_see(fol);
+    bool could_see = you.can_see(*fol);
     fol->set_transit(dest);
     fol->destroy_inventory();
     monster_cleanup(fol);

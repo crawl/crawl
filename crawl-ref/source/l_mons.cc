@@ -454,7 +454,7 @@ MDEFN(del_ench, do_del_ench)
 MDEF(you_can_see)
 {
     ASSERT_DLUA;
-    PLUARET(boolean, you.can_see(mons));
+    PLUARET(boolean, you.can_see(*mons));
 }
 
 static int l_mons_do_speak(lua_State *ls)

@@ -63,7 +63,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
     actor* victim = actor_at(where);
     if (victim)
     {
-        if (agent->can_see(victim))
+        if (agent->can_see(*victim))
         {
             if (agent->is_player())
                 mpr("You can't place the cloud on a creature.");
@@ -307,7 +307,7 @@ void corpse_rot(actor* caster)
 {
     // If there is no caster (god wrath), centre the effect on the player.
     const coord_def center = caster ? caster->pos() : you.pos();
-    bool saw_rot = caster && (caster->is_player() || you.can_see(caster));
+    bool saw_rot = caster && (caster->is_player() || you.can_see(*caster));
 
     for (radius_iterator ri(center, 5, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {

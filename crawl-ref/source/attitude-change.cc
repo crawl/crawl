@@ -241,7 +241,7 @@ bool beogh_followers_abandon_you()
                 // For now CREATED_FRIENDLY stays.
                 mons_att_changed(mons);
 
-                if (you.can_see(mons))
+                if (you.can_see(*mons))
                     num_reconvert++; // Only visible ones.
 
                 reconvert = true;
@@ -293,9 +293,10 @@ static void _print_converted_orc_speech(const string key,
 void beogh_convert_orc(monster* orc, bool emergency,
                        bool converted_by_follower)
 {
+    ASSERT(orc); // XXX: change to monster &orc
     ASSERT(mons_genus(orc->type) == MONS_ORC);
 
-    if (you.can_see(orc)) // show reaction
+    if (you.can_see(*orc)) // show reaction
     {
         if (emergency || !orc->alive())
         {
@@ -365,11 +366,12 @@ static void _fedhas_neutralise_plant(monster* plant)
 
 static void _jiyva_convert_slime(monster* slime)
 {
+    ASSERT(slime); // XXX: change to monster &slime
     ASSERT(mons_is_slime(slime));
 
     behaviour_event(slime, ME_ALERT);
 
-    if (you.can_see(slime))
+    if (you.can_see(*slime))
     {
         if (mons_genus(slime->type) == MONS_GIANT_EYEBALL)
         {
@@ -484,6 +486,8 @@ void gozag_check_bribe(monster* traitor)
 
 void gozag_break_bribe(monster* victim)
 {
+    ASSERT(victim); // XXX: change to monster &victim
+
     if (!victim->has_ench(ENCH_NEUTRAL_BRIBED)
         && !victim->has_ench(ENCH_FRIENDLY_BRIBED)
         && !victim->props.exists(NEUTRAL_BRIBE_KEY)
@@ -500,6 +504,6 @@ void gozag_break_bribe(monster* victim)
 
     // Make other nearby bribed monsters un-bribed, too.
     for (monster_iterator mi; mi; ++mi)
-        if (mi->can_see(victim))
+        if (mi->can_see(*victim))
             gozag_break_bribe(*mi);
 }

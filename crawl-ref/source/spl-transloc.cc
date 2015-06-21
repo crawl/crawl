@@ -967,7 +967,7 @@ spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
     actor* victim = actor_at(where);
     if (victim)
     {
-        if (you.can_see(victim))
+        if (you.can_see(*victim))
         {
             if (agent->is_player())
                 mpr("You can't place the singularity on a creature.");
@@ -978,7 +978,7 @@ spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
 
         if (agent->is_player())
             canned_msg(MSG_GHOSTLY_OUTLINE);
-        else if (you.can_see(victim))
+        else if (you.can_see(*victim))
         {
             mprf("%s %s for a moment.",
                  victim->name(DESC_THE).c_str(),
@@ -1014,7 +1014,7 @@ spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
 
     if (singularity)
     {
-        if (you.can_see(singularity))
+        if (you.can_see(*singularity))
         {
             const bool friendly = singularity->wont_attack();
             mprf("Space collapses on itself with a %s crunch%s",
@@ -1034,11 +1034,13 @@ spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
 void attract_actor(const actor* agent, actor* victim, const coord_def pos,
                    int pow, int strength)
 {
+    ASSERT(victim); // XXX: change to actor &victim
+
     ray_def ray;
     if (!find_ray(victim->pos(), pos, ray, opc_solid))
     {
         // This probably shouldn't ever happen, but just in case:
-        if (you.can_see(victim))
+        if (you.can_see(*victim))
         {
             mprf("%s violently %s moving!",
                  victim->name(DESC_THE).c_str(),
@@ -1105,7 +1107,7 @@ void singularity_pull(const monster *singularity)
         if (ai->is_monster())
             behaviour_event(ai->as_monster(), ME_ANNOY, singularity);
 
-        if (you.can_see(*ai))
+        if (you.can_see(**ai))
         {
             // Note that we don't care if you see the singularity if
             // you can see its impact on the monster; "Something

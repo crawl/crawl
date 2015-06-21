@@ -335,7 +335,7 @@ spret_type cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool f
     {
         if (monster* beast = create_monster(mdata))
         {
-            if (you.can_see(beast))
+            if (you.can_see(*beast))
                 seen = true;
 
             // Link the harpies together as one entity as far as the summon
@@ -950,7 +950,7 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
     monster* mons = monster_at(where);
     if (mons)
     {
-        if (you.can_see(mons))
+        if (you.can_see(*mons))
         {
             mpr("That space is already occupied.");
             return SPRET_ABORT;
@@ -2191,7 +2191,7 @@ bool monster_simulacrum(monster *mon, bool actual)
                     was_successful = true;
                     player_angers_monster(sim);
                     sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
-                    if (you.can_see(sim))
+                    if (you.can_see(*sim))
                         num_seen++;
                 }
             }
@@ -2477,12 +2477,13 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 
 void init_servitor(monster* servitor, actor* caster)
 {
+    ASSERT(caster); // XXX: change to actor &caster
     ASSERT(servitor->ghost.get());
     servitor->ghost->init_spellforged_servitor(caster);
     servitor->ghost_demon_init();
     servitor->props[CUSTOM_SPELLS_KEY].get_bool() = true;
 
-    if (you.can_see(caster))
+    if (you.can_see(*caster))
     {
         mprf("%s %s a servant imbued with %s destructive magic!",
              caster->name(DESC_THE).c_str(),
@@ -2606,7 +2607,7 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
     if (agent->is_player() && (battlesphere = find_battlesphere(&you)))
     {
         bool recalled = false;
-        if (!you.can_see(battlesphere))
+        if (!you.can_see(*battlesphere))
         {
             coord_def empty;
             if (find_habitable_spot_near(agent->pos(), MONS_BATTLESPHERE, 3, false, empty)
@@ -2654,12 +2655,12 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
                 mpr("You conjure a globe of magical energy.");
             else
             {
-                if (you.can_see(agent) && you.can_see(battlesphere))
+                if (you.can_see(*agent) && you.can_see(*battlesphere))
                 {
                     simple_monster_message(agent->as_monster(),
                                            " conjures a globe of magical energy!");
                 }
-                else if (you.can_see(battlesphere))
+                else if (you.can_see(*battlesphere))
                     simple_monster_message(battlesphere, " appears!");
                 battlesphere->props["band_leader"].get_int() = agent->mid;
             }
@@ -2667,7 +2668,7 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
             battlesphere->foe = agent->mindex();
             battlesphere->target = agent->pos();
         }
-        else if (agent->is_player() || you.can_see(agent))
+        else if (agent->is_player() || you.can_see(*agent))
             canned_msg(MSG_NOTHING_HAPPENS);
     }
 
@@ -2688,7 +2689,7 @@ void end_battlesphere(monster* mons, bool killed)
     {
         if (agent && agent->is_player())
         {
-            if (you.can_see(mons))
+            if (you.can_see(*mons))
             {
                 if (mons->battlecharge == 0)
                 {
@@ -2701,7 +2702,7 @@ void end_battlesphere(monster* mons, bool killed)
             else
                 mpr("You feel your bond with your battlesphere wane.");
         }
-        else if (you.can_see(mons))
+        else if (you.can_see(*mons))
             simple_monster_message(mons, " dissipates.");
 
         if (!cell_is_solid(mons->pos()))
@@ -3018,9 +3019,9 @@ bool fire_battlesphere(monster* mons)
 
     // If our last target is dead, or the player wandered off, resume
     // following the player
-    if ((mons->foe == MHITNOT || !mons->can_see(agent)
+    if ((mons->foe == MHITNOT || !mons->can_see(*agent)
          || (!invalid_monster_index(mons->foe)
-             && !agent->can_see(&menv[mons->foe])))
+             && !agent->can_see(menv[mons->foe])))
         && !mons->props.exists("tracking"))
     {
         mons->foe = agent->mindex();
@@ -3050,7 +3051,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
     actor* victim = monster_at(where);
     if (victim)
     {
-        if (caster->can_see(victim))
+        if (caster->can_see(*victim))
         {
             if (caster->is_player())
                 mpr("You can't place the prism on a creature.");
@@ -3061,9 +3062,9 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
 
         // FIXME: maybe should do _paranoid_option_disable() here?
         if (caster->is_player()
-            || (you.can_see(caster) && you.see_cell(where)))
+            || (you.can_see(*caster) && you.see_cell(where)))
         {
-            if (you.can_see(victim))
+            if (you.can_see(*victim))
             {
                 mprf("%s %s.", victim->name(DESC_THE).c_str(),
                                victim->conj_verb("twitch").c_str());
@@ -3089,16 +3090,16 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
 
     if (prism)
     {
-        if (you.can_see(caster))
+        if (you.can_see(*caster))
         {
             mprf("%s %s a prism of explosive energy!",
                  caster->name(DESC_THE).c_str(),
                  caster->conj_verb("conjure").c_str());
         }
-        else if (you.can_see(prism))
+        else if (you.can_see(*prism))
             mprf("A prism of explosive energy appears from nowhere!");
     }
-    else if (you.can_see(caster))
+    else if (you.can_see(*caster))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
@@ -3181,14 +3182,14 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
         mpr("You draw out your weapon's spirit!");
     else
     {
-        if (you.can_see(agent) && you.can_see(mons))
+        if (you.can_see(*agent) && you.can_see(*mons))
         {
             string buf = " draws out ";
             buf += agent->pronoun(PRONOUN_POSSESSIVE);
             buf += " weapon's spirit!";
             simple_monster_message(agent->as_monster(), buf.c_str());
         }
-        else if (you.can_see(mons))
+        else if (you.can_see(*mons))
             simple_monster_message(mons, " appears!");
 
         mons->props["band_leader"].get_int() = agent->mid;
@@ -3215,7 +3216,7 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
 
     if (!quiet)
     {
-        if (you.can_see(mons))
+        if (you.can_see(*mons))
         {
             simple_monster_message(mons, " fades away.",
                                    MSGCH_MONSTER_DAMAGE, MDAM_DEAD);

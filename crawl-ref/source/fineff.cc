@@ -396,7 +396,7 @@ void starcursed_merge_fineff::fire()
     {
         monster* ally = monster_at(*di);
         if (ally && ally->alive() && ally->type == MONS_STARCURSED_MASS
-            && mon->can_see(ally))
+            && mon->can_see(*ally))
         {
             bool moved = false;
 
@@ -473,7 +473,7 @@ void shock_serpent_discharge_fineff::fire()
         }
     }
 
-    if (serpent && you.can_see(serpent))
+    if (serpent && you.can_see(*serpent))
     {
         mprf("%s electric aura discharges%s!", serpent->name(DESC_ITS).c_str(),
              power < 4 ? "" : " violently");
@@ -527,7 +527,7 @@ void rakshasa_clone_fineff::fire()
     cast_phantom_mirror(rakshasa, rakshasa, 50, SPELL_NO_SPELL);
     rakshasa->lose_energy(EUT_SPELL);
 
-    if (you.can_see(rakshasa))
+    if (you.can_see(*rakshasa))
     {
         mprf(MSGCH_MONSTER_SPELL,
              "The injured %s weaves a defensive illusion!",

@@ -473,7 +473,7 @@ static bool _is_safe_move(const coord_def& c)
     {
         // Stop before wasting energy on plants and fungi,
         // unless worshipping Fedhas.
-        if (you.can_see(mon)
+        if (you.can_see(*mon)
             && mons_class_is_firewood(mon->type)
             && !fedhas_passthrough(mon))
         {
