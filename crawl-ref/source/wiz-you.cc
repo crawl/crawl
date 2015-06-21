@@ -961,6 +961,14 @@ void wizard_toggle_xray_vision()
     viewwindow(true);
 }
 
+void wizard_freeze_time()
+{
+    bool& frozen = you.props["wizard_freeze_time"].get_bool();
+    frozen = !frozen;
+    mpr(frozen ? "You bring the flow of time to a stop."
+               : "You allow the flow of time to resume.");
+}
+
 void wizard_god_wrath()
 {
     const god_type god = choose_god(you.religion);
