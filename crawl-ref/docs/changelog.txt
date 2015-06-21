@@ -1,12 +1,16 @@
-Stone Soup 0.17 (up to 0.17-a0-1308-gaca585e)
+Stone Soup 0.17 (up to 0.17-a0-1408-g1e89f00)
 --------------------------------------------
 
 Branches, Environment
 ---------------------
 * Snake, Shoals, Swamp and Spider are now all 4 levels long, down from 5.
+* Levels no longer have -cTele.
 * Shadow Traps have been removed.
 * Slime wall damage no longer varies by depth.
 * AC now applies before resists for cloud damage.
+* Ghostly flame clouds have been renamed to spectral mist clouds.
+* New altar type: 'ecumenical altars', which allow the player to worship a
+  random god.
 * New WizLab: Lehudib's Moon Base, where the player can fight the legendary
   Moon Troll.
 * Tukima's Studio and Eringya's Formal Garden WizLabs have been removed.
@@ -29,6 +33,7 @@ Character
   chunk type.
 * Headbutt aux attacks no longer apply a small stun and the hooves aux kicks no
   longer bypass AC.
+* Unarmed attacks no longer have a speed penalty when attacking with a shield.
 * Cleaving attacks now function even under confusion.
 * Control-attacking & manipulating doors are no longer permitted under
   confusion.
@@ -61,6 +66,8 @@ Gods
     the gold piles themselves.
   - The cost of Potion Petition is more variable and higher initially, but no
     longer increases with use.
+  - Friendly bribed allies are now permanently allied, but restricted to the
+    branch from which they came.
   - Corpseless monsters now drop gold.
   - Gold that lands in deep water/lava teleports into the player's pockets.
   - Amulets of faith no longer have any effect.
@@ -69,12 +76,15 @@ Gods
     inaccuracy, but twice as strong (and stacking with the amulet).
   - New sacrifice: Sacrifice Resistance, providing rC- rF-.
 * Beogh's smite damage now scales better with invocations.
-* Finesse no longer gives contamination.
+* Okawaru's Finesse no longer gives contamination.
 * Lugonu and Trog no longer accept corpse sacrifices.
 * The Shining One no longer blesses allies' weapons and armour; their angel
   summoning ability is now slightly cheaper.
 * Cheibriados' slouch damage is now based on monster movement speed.
 * Ashenzari now gives the Scrying ability at 2* piety.
+* Zin's Vitalization no longer provides nutrition, and now has a small MP cost.
+* Jiyva's Slime Prayer now lasts longer and has a small MP cost.
+* Sif no longer requires worshippers to know spells.
 
 Items
 -----
@@ -91,6 +101,8 @@ Items
   - The Sceptre of Torment is now a staff.
 * The box of beasts now produces a new type of variable creature, 'mutant
   beasts', instead of chimeras.
+* The Orb of Zot now turns all controlled blinks into uncontrolled blinks while
+  carried.
 * Warding now applies to ranged attacks.
 * Troll leather armour now provides regeneration to trolls.
 * Staves of summoning no longer have a chance of abjuring on hit.
@@ -107,6 +119,8 @@ Items
   - The Cloak of Flash.
   - Potions of decay.
   - Potions of restore abilities.
+  - Rings of teleport control.
+  - The Book of Control.
 
 Monsters
 --------
@@ -146,8 +160,10 @@ Monsters
 * Alligators now come in pairs.
 * Jorgrun is no longer a deep dwarf, and now regenerates normally.
 * Deep dwarf ghosts now regenerate normally.
+* Hell beasts no longer have randomized speeds.
 * Removed monsters:
   - Unborn.
+  - Ravens.
   - Giant mites.
   - Baby alligators.
   - Boring beetles.
@@ -177,6 +193,7 @@ Spells
 * Freeze no longer has a stun effect.
 * Removed spells:
   - Abjuration.
+  - Control Teleport.
   - Enslavement.
   - Flight.
   - Sure Blade.
