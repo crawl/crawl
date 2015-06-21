@@ -928,7 +928,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
 int tile_click_cell(const coord_def &gc, unsigned char mod)
 {
     monster* mon = monster_at(gc);
-    if (mon && you.can_see(mon))
+    if (mon && you.can_see(*mon))
     {
         if (_handle_distant_monster(mon, mod))
             return CK_MOUSE_CMD;
@@ -1141,7 +1141,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
     else // non-player squares
     {
         const actor* target = actor_at(gc);
-        if (target && you.can_see(target))
+        if (target && you.can_see(*target))
         {
             has_monster = true;
             if ((gc - you.pos()).rdist() <= attack_dist)
