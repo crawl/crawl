@@ -1309,7 +1309,7 @@ static void _ETHERIC_CAGE_world_reacts(item_def *item)
         inc_mp(binomial(div_rand_round(delay, BASELINE_DELAY), 1, 2));
     // It's more interesting to get a lump of contamination then to just add a
     // small amount every turn, plus there's a small chance of rapid buildup.
-    if (one_chance_in(80))
+    if (one_chance_in(100))
     {
         // On average the player recovers 25 contam per turn, this should keep
         // them in the gray a fair amount of time; be nicer if they're already
