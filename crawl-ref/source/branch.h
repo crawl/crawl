@@ -12,6 +12,7 @@ enum branch_flag_type
 {
     BFLAG_NONE = 0,
 
+    BFLAG_NO_MAP          = (1 << 0), // Can't be magic mapped or remembered.
     BFLAG_ISLANDED        = (1 << 1), // May have isolated zones with no stairs.
     BFLAG_NO_XLEV_TRAVEL  = (1 << 2), // Can't cross-level travel to or from it.
     BFLAG_NO_ITEMS        = (1 << 3), // Branch gets no random items.
@@ -32,7 +33,7 @@ struct Branch
     int absdepth;               // base item generation/etc depth
 
     uint32_t branch_flags;
-    uint32_t default_level_flags;
+
     dungeon_feature_type entry_stairs;
     dungeon_feature_type exit_stairs;
     const char* shortname;      // "Slime Pits"

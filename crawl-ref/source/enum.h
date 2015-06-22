@@ -1318,13 +1318,6 @@ enum game_type
     NUM_GAME_TYPE
 };
 
-enum level_flag_type
-{
-    LFLAG_NONE = 0,
-
-    LFLAG_NO_MAP          = (1 << 2), // Level can't be persistently mapped.
-};
-
 // Volatile state and cache.
 enum level_state_type
 {

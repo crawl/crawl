@@ -1102,10 +1102,9 @@ struct subvault_place
 //   they will not change.
 //
 // * Fields that do not determine placement and may change between
-//   different uses of the map (such as "mons", "items",
-//   "level_flags", etc.). Such fields must be reset to their default
-//   values in map_def::reinit(), which is called before the map is
-//   used.
+//   different uses of the map (such as "mons", "items", etc.). Such fields
+//   must be reset to their default values in map_def::reinit(), which is
+//   called before the map is used.
 //
 // If you do not do this, maps will not work correctly, and will break
 // in obscure, hard-to-find ways. The level-compiler will not (cannot)
@@ -1142,8 +1141,6 @@ public:
     static int monster_array_glyph_to_slot(int gly);
 
     vector<mons_spec> random_mons;
-
-    map_flags       level_flags, branch_flags;
 
     dlua_chunk      prelude, mapchunk, main, validate, veto, epilogue;
 

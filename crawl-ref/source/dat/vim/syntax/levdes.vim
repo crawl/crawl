@@ -63,7 +63,7 @@ syn match desGod contained /sif_muna\|trog\|vehumet\|xom\|yredelemnul\|zin/
 syn match desGod contained /the_shining_one/
 
 syn keyword desDeclarator ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: WEIGHT:
-syn keyword desDeclarator ITEM: KFEAT: KMONS: KITEM: KMASK: KPROP: MARKER: WELCOME: LFLAGS: BFLAGS:
+syn keyword desDeclarator ITEM: KFEAT: KMONS: KITEM: KMASK: KPROP: MARKER: WELCOME:
 syn keyword desDeclarator LFLOORTILE: LROCKTILE: FTILE: RTILE: TILE: SUBVAULT: FHEIGHT: DESC: ORDER:
 
 " keywords
@@ -105,9 +105,6 @@ syn keyword desOrientation unrand place_unique special_room tutorial
 syn keyword desOrientation water_ok overwrite_floor_cell replace_portal
 " V vault building (mostly dlua/v_layouts and v_rooms)
 syn keyword desOrientation vaults_room vaults_empty vaults_hard no_windows preserve_wall
-
-" LFLAGS (in l_dgn.cc)
-syn keyword desOrientation not_mappable
 
 " ITEM | KITEM (in mapdef.cc, without `random`)
 syn keyword desOrientation randbook any good_item star_item superb_item gold nothing

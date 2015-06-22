@@ -3799,7 +3799,6 @@ static void _compile_time_asserts()
     COMPILE_CHECK(NUM_SPECIAL_ARMOURS <= SP_UNKNOWN_BRAND);
     COMPILE_CHECK(sizeof(float) == sizeof(int32_t));
     COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t));
-    COMPILE_CHECK(sizeof(level_flag_type) <= sizeof(int32_t));
     // Travel cache, traversable_terrain.
     COMPILE_CHECK(NUM_FEATURES <= 256);
     COMPILE_CHECK(NUM_GODS <= NUM_GODS);
