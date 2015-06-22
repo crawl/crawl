@@ -239,7 +239,7 @@ static void _zap_los_monsters(bool items_also)
 
 static void _post_init(bool newc)
 {
-    ASSERT(strwidth(you.your_name) <= kNameLen);
+    ASSERT(strwidth(you.your_name) <= MAX_NAME_LENGTH);
 
     clua.load_persist();
 
@@ -790,7 +790,7 @@ again:
                     full_name = false;
                     input_string = "";
                 }
-                if (strwidth(input_string) < kNameLen)
+                if (strwidth(input_string) < MAX_NAME_LENGTH)
                 {
                     input_string += stringize_glyph(keyn);
                     changed_name = true;

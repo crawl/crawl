@@ -89,7 +89,7 @@ bool is_good_name(const string& name, bool blankOK, bool verbose)
 static bool _read_player_name(string &name)
 {
     const int name_x = wherex(), name_y = wherey();
-    char buf[kNameLen + 1]; // FIXME: make line_reader handle widths
+    char buf[MAX_NAME_LENGTH + 1]; // FIXME: make line_reader handle widths
     // XXX: Prompt displays garbage otherwise, but don't really know why.
     //      Other places don't do this. --rob
     buf[0] = '\0';
@@ -172,7 +172,7 @@ bool validate_player_name(const string &name, bool verbose)
     }
 #endif
 
-    if (strwidth(name) > kNameLen)
+    if (strwidth(name) > MAX_NAME_LENGTH)
     {
         if (verbose)
             cprintf("\nThat name is too long.\n");
