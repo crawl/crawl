@@ -710,6 +710,10 @@ int weapon_min_delay(const item_def &weapon)
     if (sk == SK_SHORT_BLADES && min_delay > 5)
         min_delay = 5;
 
+    // M&F have min delay 5 (for Clubs & Hammers)
+    if (sk == SK_MACES_FLAILS && min_delay < 5)
+        min_delay = 5;
+
     // All weapons have min delay 7 or better
     if (min_delay > 7)
         min_delay = 7;
