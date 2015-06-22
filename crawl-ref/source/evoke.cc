@@ -1017,16 +1017,16 @@ string manual_skill_names(bool short_text)
 
 static const pop_entry pop_spiders[] =
 { // Sack of Spiders
-  {  0,  10,   5,  FALL, MONS_GIANT_COCKROACH },
-  {  0,  10,   5,  FALL, MONS_SCORPION },
-  {  0,  15,   50, FALL, MONS_SPIDER },
-  {  5,  20,  100, PEAK, MONS_TRAPDOOR_SPIDER },
-  {  8,  27,  100, PEAK, MONS_REDBACK },
+  {  0,   7,   10, FALL, MONS_GIANT_COCKROACH },
+  {  0,  10,   10, FALL, MONS_SCORPION },
+  {  0,  15,  100, FALL, MONS_SPIDER },
+  {  7,  18,   80, PEAK, MONS_TRAPDOOR_SPIDER },
+  {  9,  25,   90, PEAK, MONS_REDBACK },
+  { 10,  27,   10, SEMI, MONS_ORB_SPIDER },
   { 12,  27,  100, PEAK, MONS_JUMPING_SPIDER },
-  { 15,  27,  100, PEAK, MONS_ORB_SPIDER },
-  { 18,  27,  100, PEAK, MONS_TARANTELLA },
-  { 20,  27,  100, PEAK, MONS_WOLF_SPIDER },
-  { 25,  27,    5, RISE, MONS_GHOST_MOTH },
+  { 13,  27,  110, PEAK, MONS_TARANTELLA },
+  { 15,  27,  120, PEAK, MONS_WOLF_SPIDER },
+  { 21,  27,    6, RISE, MONS_GHOST_MOTH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1100,8 +1100,8 @@ static bool _sack_of_spiders(item_def &sack)
     }
 
     bool success = false;
-    int count = 1 + random2(3)
-        + random2(div_rand_round(you.skill(SK_EVOCATIONS, 10), 40));
+    int count = 1 + random2(2)
+        + random2(div_rand_round(you.skill(SK_EVOCATIONS, 10), 30));
     for (int n = 0; n < count; n++)
     {
         // Invoke mon-pick with our custom list
