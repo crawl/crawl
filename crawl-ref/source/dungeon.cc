@@ -583,44 +583,6 @@ static void _dgn_map_colour_fixup()
     dgn_colour_grid.reset(nullptr);
 }
 
-bool set_level_flags(uint32_t flags, bool silent)
-{
-    bool could_map     = is_map_persistent();
-
-    uint32_t old_flags = env.level_flags;
-    env.level_flags |= flags;
-
-    bool can_map     = is_map_persistent();
-
-    if (could_map && !can_map && !silent)
-    {
-        mprf(MSGCH_WARN, "A powerful force appears that prevents you from "
-                         "remembering where you've been.");
-    }
-
-    return old_flags != env.level_flags;
-}
-
-bool unset_level_flags(uint32_t flags, bool silent)
-{
-    bool could_map     = is_map_persistent();
-
-    iflags_t old_flags = env.level_flags;
-    env.level_flags &= ~flags;
-
-    bool can_map     = is_map_persistent();
-
-    if (!could_map && can_map && !silent)
-    {
-        // Isn't really a "recovery", but I couldn't think of where
-        // else to send it.
-        mprf(MSGCH_RECOVERY, "You sense the disappearance of the force that "
-                             "prevented you from remembering where you've been.");
-    }
-
-    return old_flags != env.level_flags;
-}
-
 void dgn_set_grid_colour_at(const coord_def &c, int colour)
 {
     if (colour != BLACK)
@@ -1040,9 +1002,6 @@ dgn_register_place(const vault_placement &place, bool register_vault)
         }
     }
 
-    set_level_flags(place.map.level_flags.flags_set, true);
-    unset_level_flags(place.map.level_flags.flags_unset, true);
-
     if (place.map.floor_colour != BLACK)
         env.floor_colour = place.map.floor_colour;
 
@@ -1229,9 +1188,6 @@ void dgn_reset_level(bool enable_random_maps)
 
     // Lose all listeners.
     dungeon_events.clear();
-
-    // Set default level flags.
-    env.level_flags = branches[you.where_are_you].default_level_flags;
 
     // Set default random monster generation rate (smaller is more often,
     // except that 0 == no random monsters).

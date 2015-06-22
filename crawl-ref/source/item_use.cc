@@ -2749,7 +2749,7 @@ void read_scroll(int item_slot)
         break;
 
     case SCR_MAGIC_MAPPING:
-        if (alreadyknown && testbits(env.level_flags, LFLAG_NO_MAP))
+        if (alreadyknown && !is_map_persistent())
         {
             cancel_scroll = true;
             mpr("It would have no effect in this place.");

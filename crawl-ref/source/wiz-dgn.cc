@@ -346,15 +346,12 @@ void wizard_reveal_traps()
 
 void wizard_map_level()
 {
-    if (testbits(env.level_flags, LFLAG_NO_MAP))
+    if (!is_map_persistent())
     {
         if (!yesno("Force level to be mappable?", true, 'n'))
-        {
             canned_msg(MSG_OK);
-            return;
-        }
-
-        unset_level_flags(LFLAG_NO_MAP);
+        else
+            env.properties[FORCE_MAPPABLE_KEY] = true;
     }
 
     magic_mapping(1000, 100, true, true);

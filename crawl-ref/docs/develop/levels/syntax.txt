@@ -451,18 +451,6 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              dungeon builder. A disconnected region inside a transparent vault
              will cause a veto of the level (but see the "opaque" KMASK below).
 
-LFLAGS:   Persistent, changeable per-level flags which affect game behaviour;
-          should only be used for vaults with ORIENT encompass or with PLACE.
-          Causes a level's flags to be set when the level is first created.
-          These flags can later be altered using Lua markers; for examples,
-          look at the slime pit vault in slime.des, and the vaults in hell.des.
-
-          Valid flags are:
-          * no_tele_control - prevents the player from using teleport control
-          * not_mappable    - prevents the player from remembering where
-                              they've been (like in the Abyss)
-          * no_magic_map    - which prevents magic mapping from working.
-
 LFLOORCOL: blue
           LFLOORCOL: allows you to set the floor colour for the level the
           vault appears in. Should only be used for bazaars and other

@@ -2237,8 +2237,6 @@ void map_def::reinit()
     order = INT_MAX;
     items.clear();
     random_mons.clear();
-    level_flags.clear();
-    branch_flags.clear();
 
     rock_colour = floor_colour = BLACK;
     rock_tile = floor_tile = "";

@@ -252,8 +252,6 @@ WELCOME:            { CBEGIN(ARGUMENT); return WELCOME; }
 CHANCE:             return CHANCE;
 WEIGHT:             return WEIGHT;
 TAGS:               { CBEGIN(KEYWORDS); return TAGS; }
-LFLAGS:             { CBEGIN(ARGUMENT); return LFLAGS; }
-BFLAGS:             { CBEGIN(ARGUMENT); return BFLAGS; }
 SUBST:              { CBEGIN(ITEM_LIST); return SUBST; }
 NSUBST:             { CBEGIN(ITEM_LIST); return NSUBST; }
 COLOUR:             { CBEGIN(ITEM_LIST); return COLOUR; }

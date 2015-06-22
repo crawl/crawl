@@ -3694,8 +3694,6 @@ static void tag_construct_level(writer &th)
     marshallByte(th, env.floor_colour);
     marshallByte(th, env.rock_colour);
 
-    marshallInt(th, env.level_flags);
-
     marshallInt(th, you.on_current_level ? you.elapsed_time : env.elapsed_time);
     marshallCoord(th, you.pos());
 
@@ -5056,7 +5054,10 @@ static void tag_read_level(reader &th)
     env.floor_colour = unmarshallUByte(th);
     env.rock_colour  = unmarshallUByte(th);
 
-    env.level_flags  = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_NO_LEVEL_FLAGS)
+        unmarshallInt(th);
+#endif
 
     env.elapsed_time = unmarshallInt(th);
     env.old_player_pos = unmarshallCoord(th);

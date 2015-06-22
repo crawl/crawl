@@ -174,52 +174,6 @@ static int dgn_tags_remove(lua_State *ls)
     PLUARET(string, map->tags.c_str());
 }
 
-static const string level_flag_names[] =
-{"unused", "unused", "not_mappable", ""};
-
-static int dgn_lflags(lua_State *ls)
-{
-    MAP(ls, 1, map);
-
-    try
-    {
-        map->level_flags = map_flags::parse(level_flag_names,
-                                            luaL_checkstring(ls, 2));
-    }
-    catch (const string &error)
-    {
-        luaL_argerror(ls, 2, error.c_str());
-    }
-
-    return 0;
-}
-
-static int dgn_change_level_flags(lua_State *ls)
-{
-    map_flags flags;
-
-    try
-    {
-        flags = map_flags::parse(level_flag_names,
-                                 luaL_checkstring(ls, 1));
-    }
-    catch (const string &error)
-    {
-        luaL_argerror(ls, 2, error.c_str());
-        lua_pushboolean(ls, false);
-        return 1;
-    }
-
-    bool silent = lua_toboolean(ls, 2);
-
-    bool changed1 = set_level_flags(flags.flags_set, silent);
-    bool changed2 = unset_level_flags(flags.flags_unset, silent);
-
-    lua_pushboolean(ls, changed1 || changed2);
-
-    return 1;
-}
-
 static void _chance_magnitude_check(lua_State *ls, int which_par, int chance)
 {
     if (chance < 0 || chance > CHANCE_ROLL)
@@ -1845,7 +1799,6 @@ const struct luaL_reg dgn_dlib[] =
 { "tags",  dgn_tags },
 { "has_tag", dgn_has_tag },
 { "tags_remove", dgn_tags_remove },
-{ "lflags", dgn_lflags },
 { "chance", dgn_chance },
 { "depth_chance", dgn_depth_chance },
 { "weight", dgn_weight },
@@ -1890,7 +1843,6 @@ const struct luaL_reg dgn_dlib[] =
 { "remove_listener", dgn_remove_listener },
 { "remove_marker", dgn_remove_marker },
 { "num_matching_markers", dgn_num_matching_markers },
-{ "change_level_flags", dgn_change_level_flags },
 { "get_floor_colour", dgn_get_floor_colour },
 { "get_rock_colour",  dgn_get_rock_colour },
 { "change_floor_colour", dgn_change_floor_colour },

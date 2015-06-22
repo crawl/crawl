@@ -4,14 +4,14 @@ const Branch branches[NUM_BRANCHES] =
 {
     // Branch struct:
     //  branch id, parent branch, mindepth, maxdepth, depth, absdepth,
-    //  branch flags, level flags
+    //  branch flags
     //  entry stairs, exit stairs, short name, long name, abbrev name
     //  entry message
     //  floor colour, rock colour
     //  travel shortcut, ambient noise level
 
     { BRANCH_DUNGEON, NUM_BRANCHES, 0, 0, 15, 0,
-      0, 0,
+      BFLAG_NONE,
       NUM_FEATURES, DNGN_EXIT_DUNGEON,
       "Dungeon", "the Dungeon", "D",
       nullptr,
@@ -19,7 +19,7 @@ const Branch branches[NUM_BRANCHES] =
       'D', 0 },
 
     { BRANCH_TEMPLE, BRANCH_DUNGEON, 4, 7, 1, 5,
-      BFLAG_NO_ITEMS, 0,
+      BFLAG_NO_ITEMS,
       DNGN_ENTER_TEMPLE, DNGN_EXIT_TEMPLE,
       "Temple", "the Ecumenical Temple", "Temple",
       nullptr,
@@ -27,7 +27,7 @@ const Branch branches[NUM_BRANCHES] =
       'T', 0 },
 
     { BRANCH_ORC, BRANCH_DUNGEON, 9, 12, 4, 8,
-      BFLAG_SPOTTY, 0,
+      BFLAG_SPOTTY,
       DNGN_ENTER_ORC, DNGN_EXIT_ORC,
       "Orcish Mines", "the Orcish Mines", "Orc",
       nullptr,
@@ -35,7 +35,7 @@ const Branch branches[NUM_BRANCHES] =
       'O', 4 },
 
     { BRANCH_ELF, BRANCH_ORC, 3, 4, 3, 15,
-      BFLAG_DANGEROUS_END, 0,
+      BFLAG_DANGEROUS_END,
       DNGN_ENTER_ELF, DNGN_EXIT_ELF,
       "Elven Halls", "the Elven Halls", "Elf",
       nullptr,
@@ -44,7 +44,7 @@ const Branch branches[NUM_BRANCHES] =
 
 #if TAG_MAJOR_VERSION == 34
     { BRANCH_DWARF, BRANCH_ELF, -1, -1, 0, 17,
-      0, 0,
+      BFLAG_NONE,
       DNGN_ENTER_DWARF, DNGN_EXIT_DWARF,
       "Dwarven Hall", "the Dwarven Hall", "Dwarf",
       nullptr,
@@ -53,7 +53,7 @@ const Branch branches[NUM_BRANCHES] =
 #endif
 
     { BRANCH_LAIR, BRANCH_DUNGEON, 8, 11, 8, 10,
-      0, 0,
+      BFLAG_NONE,
       DNGN_ENTER_LAIR, DNGN_EXIT_LAIR,
       "Lair", "the Lair of Beasts", "Lair",
       nullptr,
@@ -61,7 +61,7 @@ const Branch branches[NUM_BRANCHES] =
       'L', 4 },
 
     { BRANCH_SWAMP, BRANCH_LAIR, 3, 6, 4, 15,
-      BFLAG_DANGEROUS_END | BFLAG_SPOTTY, 0,
+      BFLAG_DANGEROUS_END | BFLAG_SPOTTY,
       DNGN_ENTER_SWAMP, DNGN_EXIT_SWAMP,
       "Swamp", "the Swamp", "Swamp",
       nullptr,
@@ -69,7 +69,7 @@ const Branch branches[NUM_BRANCHES] =
       'S', 0 },
 
     { BRANCH_SHOALS, BRANCH_LAIR, 3, 6, 4, 15,
-      BFLAG_DANGEROUS_END, 0,
+      BFLAG_DANGEROUS_END,
       DNGN_ENTER_SHOALS, DNGN_EXIT_SHOALS,
       "Shoals", "the Shoals", "Shoals",
       nullptr,
@@ -77,7 +77,7 @@ const Branch branches[NUM_BRANCHES] =
       'A', 3 },
 
     { BRANCH_SNAKE, BRANCH_LAIR, 3, 6, 4, 15,
-      BFLAG_DANGEROUS_END, 0,
+      BFLAG_DANGEROUS_END,
       DNGN_ENTER_SNAKE, DNGN_EXIT_SNAKE,
       "Snake Pit", "the Snake Pit", "Snake",
       nullptr,
@@ -85,7 +85,7 @@ const Branch branches[NUM_BRANCHES] =
       'P', 0 },
 
     { BRANCH_SPIDER, BRANCH_LAIR, 3, 6, 4, 15,
-      BFLAG_DANGEROUS_END, 0,
+      BFLAG_DANGEROUS_END,
       DNGN_ENTER_SPIDER, DNGN_EXIT_SPIDER,
       "Spider Nest", "the Spider Nest", "Spider",
       nullptr,
@@ -93,7 +93,7 @@ const Branch branches[NUM_BRANCHES] =
       'N', 0 },
 
     { BRANCH_SLIME, BRANCH_LAIR, 6, 8, 6, 17,
-      BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END | BFLAG_SPOTTY, 0,
+      BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END | BFLAG_SPOTTY,
       DNGN_ENTER_SLIME, DNGN_EXIT_SLIME,
       "Slime Pits", "the Pits of Slime", "Slime",
       nullptr,
@@ -101,7 +101,7 @@ const Branch branches[NUM_BRANCHES] =
       'M', -5 },
 
     { BRANCH_VAULTS, BRANCH_DUNGEON, 13, 14, 5, 19,
-      BFLAG_DANGEROUS_END, 0,
+      BFLAG_DANGEROUS_END,
       DNGN_ENTER_VAULTS, DNGN_EXIT_VAULTS,
       "Vaults", "the Vaults", "Vaults",
       nullptr,
@@ -109,7 +109,7 @@ const Branch branches[NUM_BRANCHES] =
       'V', 0 },
 #if TAG_MAJOR_VERSION == 34
     { BRANCH_BLADE, BRANCH_VAULTS, 3, 4, 1, 21,
-      BFLAG_NO_ITEMS, 0,
+      BFLAG_NO_ITEMS,
       DNGN_ENTER_BLADE, DNGN_EXIT_BLADE,
       "Hall of Blades", "the Hall of Blades", "Blade",
       nullptr,
@@ -118,7 +118,7 @@ const Branch branches[NUM_BRANCHES] =
 #endif
 
     { BRANCH_CRYPT, BRANCH_VAULTS, 2, 3, 3, 19,
-      BFLAG_DANGEROUS_END, 0,
+      BFLAG_DANGEROUS_END,
       DNGN_ENTER_CRYPT, DNGN_EXIT_CRYPT,
       "Crypt", "the Crypt", "Crypt",
       nullptr,
@@ -126,7 +126,7 @@ const Branch branches[NUM_BRANCHES] =
       'C', -3 },
 
     { BRANCH_TOMB, BRANCH_CRYPT, 3, 3, 3, 21,
-      BFLAG_ISLANDED | BFLAG_DANGEROUS_END | BFLAG_NO_SHAFTS, 0,
+      BFLAG_ISLANDED | BFLAG_DANGEROUS_END | BFLAG_NO_SHAFTS,
       DNGN_ENTER_TOMB, DNGN_EXIT_TOMB,
       "Tomb", "the Tomb of the Ancients", "Tomb",
       nullptr,
@@ -134,7 +134,7 @@ const Branch branches[NUM_BRANCHES] =
       'W', -10 },
 
     { BRANCH_VESTIBULE, NUM_BRANCHES, 27, 27, 1, 27,
-      BFLAG_NO_ITEMS, 0,
+      BFLAG_NO_ITEMS,
       DNGN_ENTER_HELL, DNGN_EXIT_HELL,
       "Hell", "the Vestibule of Hell", "Hell",
       "Welcome to Hell!\nPlease enjoy your stay.",
@@ -142,7 +142,7 @@ const Branch branches[NUM_BRANCHES] =
       'H', 0 },
 
     { BRANCH_DIS, BRANCH_VESTIBULE, 1, 1, 7, 28,
-      BFLAG_ISLANDED | BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END, 0,
+      BFLAG_ISLANDED | BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END,
       DNGN_ENTER_DIS, DNGN_ENTER_HELL,
       "Dis", "the Iron City of Dis", "Dis",
       nullptr,
@@ -150,7 +150,7 @@ const Branch branches[NUM_BRANCHES] =
       'I', 0 },
 
     { BRANCH_GEHENNA, BRANCH_VESTIBULE, 1, 1, 7, 28,
-      BFLAG_ISLANDED | BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END, 0,
+      BFLAG_ISLANDED | BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END,
       DNGN_ENTER_GEHENNA, DNGN_ENTER_HELL,
       "Gehenna", "Gehenna", "Geh",
       nullptr,
@@ -158,7 +158,7 @@ const Branch branches[NUM_BRANCHES] =
       'G', 0 },
 
     { BRANCH_COCYTUS, BRANCH_VESTIBULE, 1, 1, 7, 28,
-      BFLAG_ISLANDED | BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END, 0,
+      BFLAG_ISLANDED | BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END,
       DNGN_ENTER_COCYTUS, DNGN_ENTER_HELL,
       "Cocytus", "Cocytus", "Coc",
       nullptr,
@@ -166,7 +166,7 @@ const Branch branches[NUM_BRANCHES] =
       'X', 0 },
 
     { BRANCH_TARTARUS, BRANCH_VESTIBULE, 1, 1, 7, 28,
-      BFLAG_ISLANDED | BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END, 0,
+      BFLAG_ISLANDED | BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END,
       DNGN_ENTER_TARTARUS, DNGN_ENTER_HELL,
       "Tartarus", "Tartarus", "Tar",
       nullptr,
@@ -174,7 +174,7 @@ const Branch branches[NUM_BRANCHES] =
       'Y', 0 },
 
     { BRANCH_ZOT, BRANCH_DEPTHS, 5, 5, 5, 27,
-      BFLAG_DANGEROUS_END, 0,
+      BFLAG_DANGEROUS_END,
       DNGN_ENTER_ZOT, DNGN_EXIT_ZOT,
       "Zot", "the Realm of Zot", "Zot",
       nullptr,
@@ -182,7 +182,7 @@ const Branch branches[NUM_BRANCHES] =
       'Z', 0 },
 #if TAG_MAJOR_VERSION == 34
     { BRANCH_FOREST, BRANCH_VAULTS, 2, 3, 5, 19,
-      BFLAG_SPOTTY, 0,
+      BFLAG_SPOTTY,
       DNGN_ENTER_FOREST, DNGN_EXIT_FOREST,
       "Forest", "the Enchanted Forest", "Forest",
       nullptr,
@@ -191,7 +191,7 @@ const Branch branches[NUM_BRANCHES] =
 #endif
 
     { BRANCH_ABYSS, NUM_BRANCHES, -1, -1, 5, 24,
-      BFLAG_NO_XLEV_TRAVEL, LFLAG_NO_MAP,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_MAP,
       DNGN_ENTER_ABYSS, DNGN_EXIT_ABYSS,
       "Abyss", "the Abyss", "Abyss",
       nullptr,
@@ -199,7 +199,7 @@ const Branch branches[NUM_BRANCHES] =
       'J', 0 },
 
     { BRANCH_PANDEMONIUM, NUM_BRANCHES, -1, -1, 1, 24,
-      BFLAG_NO_XLEV_TRAVEL, 0,
+      BFLAG_NO_XLEV_TRAVEL,
       DNGN_ENTER_PANDEMONIUM, DNGN_EXIT_PANDEMONIUM,
       "Pandemonium", "Pandemonium", "Pan",
       "You enter the halls of Pandemonium!\n"
@@ -208,7 +208,7 @@ const Branch branches[NUM_BRANCHES] =
       'R', 0 },
 
     { BRANCH_ZIGGURAT, BRANCH_DEPTHS, 1, 5, 27, 27,
-      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
       DNGN_ENTER_ZIGGURAT, DNGN_EXIT_ZIGGURAT,
       "Ziggurat", "a ziggurat", "Zig",
       "You land on top of a ziggurat so tall you cannot make out the ground.",
@@ -216,7 +216,7 @@ const Branch branches[NUM_BRANCHES] =
       'Q', 0 },
 
     { BRANCH_LABYRINTH, NUM_BRANCHES, -1, -1, 1, 15,
-      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, LFLAG_NO_MAP,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS | BFLAG_NO_MAP,
       DNGN_ENTER_LABYRINTH, DNGN_EXIT_LABYRINTH,
       "Labyrinth", "a labyrinth", "Lab",
       // XXX: Ideally, we want to hint at the wall rule (rock > metal),
@@ -228,7 +228,7 @@ const Branch branches[NUM_BRANCHES] =
       '0', 0 },
 
     { BRANCH_BAZAAR, NUM_BRANCHES, -1, -1, 1, 18,
-          BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
       DNGN_ENTER_BAZAAR, DNGN_EXIT_BAZAAR,
       "Bazaar", "a bazaar", "Bazaar",
       "You enter an inter-dimensional bazaar!",
@@ -236,7 +236,7 @@ const Branch branches[NUM_BRANCHES] =
       '1', 0 },
 
     { BRANCH_TROVE, NUM_BRANCHES, -1, -1, 1, 18,
-      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
       DNGN_ENTER_TROVE, DNGN_EXIT_TROVE,
       "Trove", "a treasure trove", "Trove",
       "You enter a treasure trove!",
@@ -244,7 +244,7 @@ const Branch branches[NUM_BRANCHES] =
       '2', 0 },
 
     { BRANCH_SEWER, NUM_BRANCHES, -1, -1, 1, 4,
-      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
       DNGN_ENTER_SEWER, DNGN_EXIT_SEWER,
       "Sewer", "a sewer", "Sewer",
       "You enter a sewer!",
@@ -252,7 +252,7 @@ const Branch branches[NUM_BRANCHES] =
       '3', 0 },
 
     { BRANCH_OSSUARY, NUM_BRANCHES, -1, -1, 1, 6,
-      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
       DNGN_ENTER_OSSUARY, DNGN_EXIT_OSSUARY,
       "Ossuary", "an ossuary", "Ossuary",
       "You enter an ossuary!",
@@ -260,7 +260,7 @@ const Branch branches[NUM_BRANCHES] =
       '4', 0 },
 
     { BRANCH_BAILEY, NUM_BRANCHES, -1, -1, 1, 11,
-      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
       DNGN_ENTER_BAILEY, DNGN_EXIT_BAILEY,
       "Bailey", "a bailey", "Bailey",
       "You enter a bailey!",
@@ -268,7 +268,7 @@ const Branch branches[NUM_BRANCHES] =
       '5', 0 },
 
     { BRANCH_ICE_CAVE, NUM_BRANCHES, -1, -1, 1, 15,
-          BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
       DNGN_ENTER_ICE_CAVE, DNGN_EXIT_ICE_CAVE,
       "Ice Cave", "an ice cave", "IceCv",
       "You enter an ice cave!",
@@ -276,7 +276,7 @@ const Branch branches[NUM_BRANCHES] =
       '6', 0 },
 
     { BRANCH_VOLCANO, NUM_BRANCHES, -1, -1, 1, 14,
-      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
       DNGN_ENTER_VOLCANO, DNGN_EXIT_VOLCANO,
       "Volcano", "a volcano", "Volcano",
       "You enter a volcano!",
@@ -284,7 +284,7 @@ const Branch branches[NUM_BRANCHES] =
       '7', 0 },
 
     { BRANCH_WIZLAB, NUM_BRANCHES, -1, -1, 1, 24,
-      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
       DNGN_ENTER_WIZLAB, DNGN_EXIT_WIZLAB,
       "Wizlab", "a wizard's laboratory", "WizLab",
       "You enter a wizard's laboratory!",
@@ -292,7 +292,7 @@ const Branch branches[NUM_BRANCHES] =
       '8', 0 },
 
     { BRANCH_DEPTHS, BRANCH_DUNGEON, 15, 15, 5, 22,
-      0, 0,
+      BFLAG_NONE,
       DNGN_ENTER_DEPTHS, DNGN_EXIT_DEPTHS,
       "Depths", "the Depths", "Depths",
       nullptr,

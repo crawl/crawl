@@ -507,7 +507,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     if (!in_bounds(pos))
         pos = you.pos();
 
-    if (!force && testbits(env.level_flags, LFLAG_NO_MAP))
+    if (!force && !is_map_persistent())
     {
         if (!suppress_msg)
             canned_msg(MSG_DISORIENTED);

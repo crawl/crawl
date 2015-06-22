@@ -554,7 +554,8 @@ bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
 
 bool is_map_persistent()
 {
-    return !testbits(env.level_flags, LFLAG_NO_MAP);
+    return !(your_branch().branch_flags & BFLAG_NO_MAP)
+           || env.properties.exists(FORCE_MAPPABLE_KEY);
 }
 
 bool player_in_hell()
