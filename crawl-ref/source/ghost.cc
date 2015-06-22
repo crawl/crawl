@@ -898,7 +898,7 @@ bool debug_check_ghosts()
             return false;
         // Many combining characters can come per every letter, but if there's
         // that much, it's probably a maliciously forged ghost of some kind.
-        if (ghost.name.length() > kNameLen * 10 || ghost.name.empty())
+        if (ghost.name.length() > MAX_NAME_LENGTH * 10 || ghost.name.empty())
             return false;
         if (ghost.name != trimmed_string(ghost.name))
             return false;

@@ -709,10 +709,11 @@ string get_savedir_filename(const string &name)
     return _get_savefile_directory() + get_save_filename(name);
 }
 
+#define MAX_FILENAME_LENGTH 250
 string get_save_filename(const string &name)
 {
-    return chop_string(strip_filename_unsafe_chars(name), kFileNameLen, false)
-           + SAVE_SUFFIX;
+    return chop_string(strip_filename_unsafe_chars(name), MAX_FILENAME_LENGTH,
+                       false) + SAVE_SUFFIX;
 }
 
 string get_prefs_filename()

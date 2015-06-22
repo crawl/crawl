@@ -52,7 +52,7 @@
 namespace domino {
 
 // Number of attempts the stochastic solver should attempt.
-constexpr int kTrials = 10;
+constexpr int num_trials = 10;
 
 // Helper function to set handle intersections.
 template <class T>
@@ -452,7 +452,7 @@ class DominoSet
             // attempt to stochastically solve it.
             if (has_conflicts)
             {
-                int trials = kTrials;
+                int trials = 0;
                 bool did_shuffle = false;
                 uint32_t last_conflicts = -1;
                 int sz = 1;
@@ -496,7 +496,7 @@ class DominoSet
                     }
                     stuck.clear();
                     last_conflicts = conflict_count;
-                } while (has_conflicts && trials--);
+                } while (has_conflicts && ++trials < num_trials);
             }
             for (int32_t j = 0; j < y; ++j)
             {

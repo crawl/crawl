@@ -57,11 +57,7 @@ protected:
     tileidx_t m_tile;
 };
 
-#define kNameLen        30
-const int kFileNameLen = 250;
-
-// Used only to bound the init file name length
-const int kPathLen = 256;
+#define MAX_NAME_LENGTH 30
 
 // This value is used to mark that the current berserk is free from
 // penalty (used for Xom's special berserk).
