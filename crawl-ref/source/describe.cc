@@ -3814,7 +3814,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (in_good_standing(GOD_ZIN, 0))
     {
-        const int check = mons_class_hit_dice(mi.type) - zin_recite_power();
+        const int check = mi.hd - zin_recite_power();
         if (check >= 0)
         {
             inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
@@ -3833,7 +3833,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         if (you.wizard)
         {
             inf.body << " (Recite power:" << zin_recite_power()
-                     << ", Hit dice:" << mons_class_hit_dice(mi.type) << ")";
+                     << ", Hit dice:" << mi.hd << ")";
         }
         inf.body << "\n";
     }
