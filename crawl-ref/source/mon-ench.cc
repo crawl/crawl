@@ -332,21 +332,6 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         calc_speed();
         break;
 
-    case ENCH_EPHEMERAL_INFUSION:
-    {
-        if (!props.exists("eph_amount"))
-        {
-            int amount = min((ench.degree / 2) + random2avg(ench.degree, 2),
-                             max_hit_points - hit_points);
-            if (amount > 0 && heal(amount) && !quiet)
-                simple_monster_message(this, " seems to gain new vigour!");
-            else
-                amount = 0;
-            props["eph_amount"].get_byte() = amount;
-        }
-        break;
-    }
-
     case ENCH_INVIS:
         if (testbits(flags, MF_WAS_IN_VIEW))
         {
@@ -1001,22 +986,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         calc_speed();
         break;
 
-    case ENCH_EPHEMERAL_INFUSION:
-    {
-        int dam = 0;
-        if (props.exists("eph_amount"))
-        {
-            dam = props["eph_amount"].get_byte();
-            props.erase("eph_amount");
-        }
-        dam = min(dam, hit_points - 1);
-        if (dam > 0)
-            hurt(nullptr, dam);
-        if (!quiet)
-            simple_monster_message(this, " looks less vigorous.");
-        break;
-    }
-
     case ENCH_BLACK_MARK:
         if (!quiet)
         {
@@ -1541,7 +1510,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_DIMENSION_ANCHOR:
     case ENCH_AGILE:
     case ENCH_FROZEN:
-    case ENCH_EPHEMERAL_INFUSION:
     case ENCH_SAP_MAGIC:
     case ENCH_CORROSION:
     case ENCH_GOLD_LUST:
@@ -2295,7 +2263,11 @@ static const char *enchant_names[] =
     "building_charge",
 #endif
     "poison_vuln", "icemail", "agile",
-    "frozen", "ephemeral_infusion", "black_mark", "grand_avatar",
+    "frozen",
+#if TAG_MAJOR_VERSION == 34
+    "ephemeral_infusion",
+#endif
+    "black_mark", "grand_avatar",
     "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
     "corrosion", "gold_lust", "drained", "repel missiles",
     "deflect missiles",
@@ -2564,9 +2536,6 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_TORNADO_COOLDOWN:
         cturn = random_range(25, 35) * 10 / _mod_speed(10, mons->speed);
-        break;
-    case ENCH_EPHEMERAL_INFUSION:
-        cturn = 150 / _mod_speed(25, mons->speed);
         break;
     case ENCH_FROZEN:
         cturn = 3 * BASELINE_DELAY;

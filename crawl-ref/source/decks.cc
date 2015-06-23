@@ -1852,7 +1852,6 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
 static void _elixir_card(int power, deck_rarity_type rarity)
 {
     int power_level = _get_power_level(power, rarity);
-    const int dur = random2avg(10 * (power_level + 1), 2) * BASELINE_DELAY;
 
     you.duration[DUR_ELIXIR_HEALTH] = 0;
     you.duration[DUR_ELIXIR_MAGIC] = 0;
@@ -1883,8 +1882,9 @@ static void _elixir_card(int power, deck_rarity_type rarity)
 
         if (mon && mon->wont_attack())
         {
-            mon->add_ench(mon_enchant(ENCH_EPHEMERAL_INFUSION, 50 * (power_level + 1),
-                                      &you, dur));
+            const int hp = mon->max_hit_points / max(4 - power_level, 1);
+            if (mon->heal(hp + random2avg(hp, 2)))
+               simple_monster_message(mon, " is healed.");
         }
     }
 }

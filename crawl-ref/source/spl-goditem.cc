@@ -414,7 +414,6 @@ void debuff_monster(monster* mon)
         ENCH_CONTROL_WINDS,
         ENCH_TOXIC_RADIANCE,
         ENCH_AGILE,
-        ENCH_EPHEMERAL_INFUSION,
         ENCH_BLACK_MARK,
         ENCH_SHROUD,
         ENCH_SAP_MAGIC,
