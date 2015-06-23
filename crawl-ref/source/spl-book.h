@@ -20,9 +20,7 @@ bool is_player_spell(spell_type which_spell);
 
 void mark_had_book(const item_def &book);
 void mark_had_book(book_type booktype);
-void inscribe_book_highlevel(item_def &book);
 
-bool maybe_id_book(item_def &book, bool silent = false);
 void read_book(item_def &item);
 
 bool player_can_memorise(const item_def &book);
@@ -32,7 +30,6 @@ bool learn_spell(spell_type spell, bool wizard = false);
 bool forget_spell_from_book(spell_type spell, const item_def* book);
 
 string desc_cannot_memorise_reason(spell_type spell);
-bool player_can_memorise_from_spellbook(const item_def &book);
 
 spell_type spell_in_rod(rod_type rod);
 vector<spell_type> spellbook_template(book_type book);

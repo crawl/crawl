@@ -1867,7 +1867,10 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
         set_ident_type(item, true);
     maybe_identify_base_type(item);
     if (item.base_type == OBJ_BOOKS)
-        maybe_id_book(item, true);
+    {
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        mark_had_book(item);
+    }
 
     note_inscribe_item(item);
 

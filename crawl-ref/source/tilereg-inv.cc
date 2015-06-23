@@ -503,12 +503,8 @@ bool InventoryRegion::update_tip_text(string& tip)
                 if (item_type_known(item) && item_is_spellbook(item)
                     && can_learn_spell(true))
                 {
-                    if (player_can_memorise_from_spellbook(item)
-                        || has_spells_to_memorise(true))
-                    {
-                        tmp += "Memorise (%)";
-                        cmd.push_back(CMD_MEMORISE_SPELL);
-                    }
+                    tmp += "Memorise (%)";
+                    cmd.push_back(CMD_MEMORISE_SPELL);
                     if (wielded)
                         _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                     break;
