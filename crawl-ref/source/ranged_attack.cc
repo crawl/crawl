@@ -135,7 +135,8 @@ bool ranged_attack::attack()
 
     if (env.sanctuary_time > 0 && attack_occurred
         && (is_sanctuary(attacker->pos()) || is_sanctuary(defender->pos()))
-        && (attacker->is_player() || attacker->as_monster()->friendly()))
+        && (attacker->is_player() || attacker->as_monster()->friendly()
+                                     && !attacker->confused()))
     {
         remove_sanctuary(true);
     }
