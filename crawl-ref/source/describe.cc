@@ -1797,15 +1797,6 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_BOOKS:
-        if (!player_can_memorise_from_spellbook(item))
-        {
-            description << "\nThis book is beyond your current level of "
-                           "understanding.";
-
-            if (!item_type_known(item))
-                break;
-        }
-
         if (!verbose
             && (Options.dump_book_spells || is_random_artefact(item)))
         {
@@ -2210,14 +2201,6 @@ void get_item_desc(const item_def &item, describe_info &inf)
     inf.body << get_item_description(item, verbose, false, true);
 }
 
-// Returns true if spells can be shown to player.
-static bool _can_show_spells(const item_def &item)
-{
-    return item.has_spells()
-           && (item.base_type != OBJ_BOOKS || item_type_known(item)
-               || player_can_memorise_from_spellbook(item));
-}
-
 static void _show_item_description(const item_def &item)
 {
     const unsigned int lineWidth = get_number_of_cols() - 1;
@@ -2248,26 +2231,11 @@ static void _show_item_description(const item_def &item)
     if (crawl_state.game_is_hints())
         hints_describe_item(item);
 
-    if (_can_show_spells(item))
+    if (item.has_spells())
     {
         formatted_string fdesc;
         fdesc.cprintf("%s", desc.c_str());
         list_spellset(item_spellset(item), nullptr, &item, fdesc);
-    }
-}
-
-static bool _can_memorise(item_def &item)
-{
-    return item.base_type == OBJ_BOOKS && in_inventory(item)
-           && player_can_memorise_from_spellbook(item);
-}
-
-static void _update_inscription(item_def &item)
-{
-    if (item.base_type == OBJ_BOOKS && in_inventory(item)
-        && !_can_memorise(item))
-    {
-        inscribe_book_highlevel(item);
     }
 }
 
@@ -2560,7 +2528,7 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
 #endif
 
     // we might destroy the item, so save this first.
-    const bool item_had_spells = _can_show_spells(item);
+    const bool item_had_spells = item.has_spells();
     _show_item_description(item);
 
     // spellbooks & rods have their own UIs, so we don't currently support the
@@ -2572,8 +2540,6 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
         // spell & didn't destroy the item for amnesia.
         return !already_learning_spell() && item.is_valid();
     }
-
-    _update_inscription(item);
 
     if (allow_inscribe && crawl_state.game_is_tutorial())
         allow_inscribe = false;
@@ -2841,12 +2807,6 @@ static string _player_spell_desc(spell_type spell, const item_def* item)
                        + " supports the use of this spell.\n";
     }
 
-    if (item && !player_can_memorise_from_spellbook(*item))
-    {
-        description += "The spell is scrawled in ancient runes that are "
-                       "beyond your current level of understanding.\n";
-    }
-
     if (!you_can_memorise(spell))
     {
         description += "\nYou cannot memorise this spell because "
@@ -2955,8 +2915,7 @@ static int _get_spell_description(const spell_type spell,
                 description +="Sif Muna frowns upon the destroying of books.\n";
             return BOOK_FORGET;
         }
-        else if (player_can_memorise_from_spellbook(*item)
-                 && you_can_memorise(spell))
+        else if (you_can_memorise(spell))
         {
             description += "\n(M)emorise this spell.\n";
             return BOOK_MEM;

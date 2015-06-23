@@ -255,8 +255,7 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
     // this is kind of ugly.
     if (!you_can_memorise(spell)
         || you.experience_level < spell_difficulty(spell)
-        || player_spell_levels() < spell_levels_required(spell)
-        || !player_can_memorise_from_spellbook(*source_item))
+        || player_spell_levels() < spell_levels_required(spell))
     {
         return COL_USELESS;
     }
@@ -474,10 +473,9 @@ string describe_item_spells(const item_def &item)
 void list_spellset(const spellset &spells, const monster_info *mon_owner,
                    const item_def *source_item, formatted_string &initial_desc)
 {
-    const bool can_memorize =
-        source_item && source_item->base_type == OBJ_BOOKS
-        && in_inventory(*source_item)
-        && player_can_memorise_from_spellbook(*source_item);
+    const bool can_memorize = source_item
+                              && source_item->base_type == OBJ_BOOKS
+                              && in_inventory(*source_item);
 
     formatted_string &description = initial_desc;
     describe_spellset(spells, source_item, description, mon_owner);

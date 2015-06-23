@@ -13,7 +13,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iomanip>
-#include <map>
+#include <set>
 
 #include "artefact.h"
 #include "colour.h"
@@ -192,24 +192,10 @@ int book_rarity(book_type which_book)
 
 static uint8_t _lowest_rarity[NUM_SPELLS];
 
-/**
- * Rare books require 6 spellcasting and 10 in a specific skill to
- * memorise from, or worshipping a specific god (usually one who gifts that
- * spellbook).
- */
-
-struct rare_book_specs
+static const set<book_type> rare_books =
 {
-    skill_type skill;
-    god_type   god;
-};
-
-static const map<book_type, rare_book_specs> rare_books =
-{
-    { BOOK_ANNIHILATIONS,  { SK_CONJURATIONS,   GOD_NO_GOD } },
-    { BOOK_GRAND_GRIMOIRE, { SK_SUMMONINGS,     GOD_NO_GOD } },
-    { BOOK_NECRONOMICON,   { SK_NECROMANCY,     GOD_KIKUBAAQUDGHA } },
-    { BOOK_AKASHIC_RECORD,  { SK_TRANSLOCATIONS, GOD_NO_GOD } },
+    BOOK_ANNIHILATIONS, BOOK_GRAND_GRIMOIRE, BOOK_NECRONOMICON,
+    BOOK_AKASHIC_RECORD,
 };
 
 bool is_rare_book(book_type type)
@@ -292,28 +278,6 @@ int spell_rarity(spell_type which_spell)
     return rarity;
 }
 
-// Returns false if the player cannot memorise from the book,
-// and true otherwise. -- bwr
-bool player_can_memorise_from_spellbook(const item_def &book)
-{
-    if (book.base_type != OBJ_BOOKS)
-        return true;
-
-    if (book.props.exists(SPELL_LIST_KEY))
-        return true;
-
-    auto it = rare_books.find(static_cast<book_type>(book.sub_type));
-
-    if (it != rare_books.end()
-        && (you.skill(SK_SPELLCASTING) < 6 || you.skill(it->second.skill) < 10)
-        && (it->second.god == GOD_NO_GOD || !you_worship(it->second.god)))
-    {
-        return false;
-    }
-
-    return true;
-}
-
 void mark_had_book(const item_def &book)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
@@ -338,67 +302,11 @@ void mark_had_book(book_type booktype)
     you.had_book.set(booktype);
 }
 
-void inscribe_book_highlevel(item_def &book)
-{
-    if (!item_type_known(book)
-        && book.inscription.find("highlevel") == string::npos)
-    {
-        add_inscription(book, "highlevel");
-    }
-}
-
-/**
- * Identify a held book/rod, if appropriate.
- * @return whether we can see its spells
- */
-bool maybe_id_book(item_def &book, bool silent)
-{
-    if (book.base_type != OBJ_BOOKS && book.base_type != OBJ_RODS)
-        return false;
-
-#if TAG_MAJOR_VERSION == 34
-    if (book.is_type(OBJ_BOOKS, BOOK_BUGGY_DESTRUCTION))
-    {
-        ASSERT(fully_identified(book));
-        return false;
-    }
-#endif
-
-    if (book.is_type(OBJ_BOOKS, BOOK_MANUAL))
-    {
-        set_ident_flags(book, ISFLAG_IDENT_MASK);
-        return false;
-    }
-
-    if (book.base_type == OBJ_BOOKS && !item_type_known(book)
-        && !player_can_memorise_from_spellbook(book))
-    {
-        if (!silent)
-        {
-            mpr("This book is beyond your current level of understanding.");
-            more();
-        }
-
-        inscribe_book_highlevel(book);
-        return false;
-    }
-
-    set_ident_flags(book, ISFLAG_IDENT_MASK);
-
-    if (book.base_type == OBJ_BOOKS)
-        mark_had_book(book);
-
-    return true;
-}
-
 void read_book(item_def &book)
 {
-    if (maybe_id_book(book))
-    {
-        clrscr();
-        describe_item(book);
-        redraw_screen();
-    }
+    clrscr();
+    describe_item(book);
+    redraw_screen();
 }
 
 /**
@@ -437,15 +345,8 @@ typedef vector<spell_type>   spell_list;
 typedef map<spell_type, int> spells_to_books;
 
 static void _index_book(item_def& book, spells_to_books &book_hash,
-                        unsigned int &num_unreadable, bool &book_errors)
+                        bool &book_errors)
 {
-    if (!player_can_memorise_from_spellbook(book))
-    {
-        inscribe_book_highlevel(book);
-        num_unreadable++;
-        return;
-    }
-
     mark_had_book(book);
     set_ident_flags(book, ISFLAG_KNOW_TYPE);
     set_ident_flags(book, ISFLAG_IDENT_MASK);
@@ -470,7 +371,6 @@ static void _index_book(item_def& book, spells_to_books &book_hash,
 
 static bool _get_mem_list(spell_list &mem_spells,
                           spells_to_books &book_hash,
-                          unsigned int &num_unreadable,
                           unsigned int &num_misc,
                           bool just_check = false,
                           spell_type current_spell = SPELL_NO_SPELL)
@@ -479,7 +379,6 @@ static bool _get_mem_list(spell_list &mem_spells,
     unsigned int  num_on_ground  = 0;
     unsigned int  num_books      = 0;
     unsigned int  num_unknown    = 0;
-                  num_unreadable = 0;
 
     // Collect the list of all spells in all available spellbooks.
     for (int i = 0; i < ENDOFPACK; i++)
@@ -490,7 +389,7 @@ static bool _get_mem_list(spell_list &mem_spells,
             continue;
 
         num_books++;
-        _index_book(book, book_hash, num_unreadable, book_errors);
+        _index_book(book, book_hash, book_errors);
     }
 
     // We also check the ground
@@ -511,7 +410,7 @@ static bool _get_mem_list(spell_list &mem_spells,
 
         num_books++;
         num_on_ground++;
-        _index_book(book, book_hash, num_unreadable, book_errors);
+        _index_book(book, book_hash, book_errors);
     }
 
     // Handle Vehumet gifts
@@ -536,16 +435,6 @@ static bool _get_mem_list(spell_list &mem_spells,
                 mprf(MSGCH_PROMPT, "You must pick up this book before reading it.");
             else
                 mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks.");
-        }
-        return false;
-    }
-    else if (num_unreadable == num_books)
-    {
-        if (!just_check)
-        {
-            mprf(MSGCH_PROMPT, "All of the spellbooks%s are beyond your "
-                 "current level of comprehension.",
-                 num_on_ground == 0 ? " you're carrying" : "");
         }
         return false;
     }
@@ -638,13 +527,6 @@ static bool _get_mem_list(spell_list &mem_spells,
                            "reason; please file a bug report.");
     }
 
-    if (num_unreadable)
-    {
-        mprf(MSGCH_PROMPT, "Additionally, %u of your spellbooks are beyond "
-             "your current level of understanding, and thus none of the "
-             "spells in them are available to you.", num_unreadable);
-    }
-
     return false;
 }
 
@@ -654,11 +536,10 @@ bool has_spells_to_memorise(bool silent, spell_type current_spell)
 {
     spell_list      mem_spells;
     spells_to_books book_hash;
-    unsigned int    num_unreadable;
     unsigned int    num_misc;
 
-    return _get_mem_list(mem_spells, book_hash, num_unreadable, num_misc,
-                         silent, (spell_type) current_spell);
+    return _get_mem_list(mem_spells, book_hash, num_misc, silent,
+                         (spell_type) current_spell);
 }
 
 static bool _sort_mem_spells(spell_type a, spell_type b)
@@ -700,10 +581,9 @@ vector<spell_type> get_mem_spell_list(vector<int> &books)
 
     spell_list      mem_spells;
     spells_to_books book_hash;
-    unsigned int    num_unreadable;
     unsigned int    num_misc;
 
-    if (!_get_mem_list(mem_spells, book_hash, num_unreadable, num_misc))
+    if (!_get_mem_list(mem_spells, book_hash, num_misc))
         return spells;
 
     sort(mem_spells.begin(), mem_spells.end(), _sort_mem_spells);
@@ -719,7 +599,6 @@ vector<spell_type> get_mem_spell_list(vector<int> &books)
 
 static spell_type _choose_mem_spell(spell_list &spells,
                                     spells_to_books &book_hash,
-                                    unsigned int num_unreadable,
                                     unsigned int num_misc)
 {
     sort(spells.begin(), spells.end(), _sort_mem_spells);
@@ -769,31 +648,18 @@ static spell_type _choose_mem_spell(spell_list &spells,
     spell_menu.action_cycle = Menu::CYCLE_TOGGLE;
     spell_menu.menu_action  = Menu::ACT_EXECUTE;
 
-    const bool shortmsg = num_unreadable > 0 && num_misc > 0;
-    string more_str = make_stringf("<lightgreen>%d %slevel%s left"
+    string more_str = make_stringf("<lightgreen>%d spell level%s left"
                                    "<lightgreen>",
                                    player_spell_levels(),
-                                   shortmsg ? "" : "spell ",
                                    (player_spell_levels() > 1
                                     || player_spell_levels() == 0) ? "s" : "");
 
-    if (num_unreadable > 0)
-    {
-        more_str += make_stringf(", <lightmagenta>%u %sbook%s</lightmagenta>",
-                                 num_unreadable,
-                                 shortmsg ? "difficult "
-                                          : "overly difficult spell",
-                                 num_unreadable > 1 ? "s" : "");
-    }
-
     if (num_misc > 0)
     {
-        more_str += make_stringf(", <lightred>%u%s%s unmemorisable"
+        more_str += make_stringf(", <lightred>%u spell%s unmemorisable"
                                  "</lightred>",
                                  num_misc,
-                                 shortmsg ? "" : " spell",
-                                 // shorter message if we have both annotations
-                                 !shortmsg && num_misc > 1 ? "s" : "");
+                                 num_misc > 1 ? "s" : "");
     }
 
 #ifndef USE_TILE_LOCAL
@@ -911,13 +777,12 @@ bool learn_spell()
     spell_list      mem_spells;
     spells_to_books book_hash;
 
-    unsigned int num_unreadable, num_misc;
+    unsigned int num_misc;
 
-    if (!_get_mem_list(mem_spells, book_hash, num_unreadable, num_misc))
+    if (!_get_mem_list(mem_spells, book_hash, num_misc))
         return false;
 
-    spell_type specspell = _choose_mem_spell(mem_spells, book_hash,
-                                             num_unreadable, num_misc);
+    spell_type specspell = _choose_mem_spell(mem_spells, book_hash, num_misc);
 
     if (specspell == SPELL_NO_SPELL)
     {
@@ -1137,7 +1002,7 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
     if (god == GOD_SIF_MUNA)
     {
         for (auto i : rare_books)
-            for (spell_type spell : spellbook_template(i.first))
+            for (spell_type spell : spellbook_template(i))
             {
                 if (spell_rarity(spell) != -1)
                     continue;
