@@ -884,7 +884,7 @@ bool melee_attack::attack()
 
     // Remove sanctuary if - through some attack - it was violated.
     if (env.sanctuary_time > 0 && attack_occurred && !cancel_attack
-        && attacker != defender && !attacker->confused()
+        && attacker != defender
         && (is_sanctuary(attack_position) || is_sanctuary(defender->pos()))
         && (attacker->is_player() || attacker->as_monster()->friendly()))
     {
