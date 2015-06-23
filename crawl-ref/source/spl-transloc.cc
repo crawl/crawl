@@ -1120,6 +1120,9 @@ void singularity_pull(const monster *singularity)
         ai->hurt(singularity, roll_dice(strength, 12), BEAM_MMISSILE,
                  KILLED_BY_BEAM, "", GRAVITY);
 
+        if (agent->is_player() && is_sanctuary(you.pos()))
+            remove_sanctuary(true);
+
         if (ai->alive() && !ai->is_stationary())
         {
             attract_actor(singularity, *ai, singularity->pos(),
