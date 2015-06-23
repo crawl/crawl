@@ -7,8 +7,11 @@
 
 #include "ranged_attack.h"
 
+#include "areas.h"
 #include "coord.h"
 #include "english.h"
+#include "env.h"
+#include "fprop.h"
 #include "godconduct.h"
 #include "itemprop.h"
 #include "message.h"
@@ -136,7 +139,12 @@ bool ranged_attack::attack()
             handle_phase_dodged();
     }
 
-    // TODO: sanctuary
+    if (env.sanctuary_time > 0 && attack_occurred
+        && (is_sanctuary(attacker->pos()) || is_sanctuary(defender->pos()))
+        && (attacker->is_player() || attacker->as_monster()->friendly()))
+    {
+        remove_sanctuary(true);
+    }
 
     if (should_alert_defender)
         alert_defender();
