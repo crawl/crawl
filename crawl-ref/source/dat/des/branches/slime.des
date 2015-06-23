@@ -684,7 +684,7 @@ SHUFFLE: ([{
 -- when it dies through means other than being banished.
 local function monster_die(monster, killer_type, killer_index, silent, wizard)
     if killer_type == "banished" then
-      crawl.mpr("You feel a great sense of loss, and a brush of the abyss.")
+      crawl.mpr("You feel a great sense of loss, and a brush of the Abyss.")
     else
       dgn.persist.fix_slime_vaults = true
     end
