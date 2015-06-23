@@ -111,6 +111,7 @@ private:
     bool mons_do_poison();
     void mons_do_napalm();
     void mons_do_eyeball_confusion();
+    void mons_do_tendril_disarm();
     void apply_black_mark_effects();
 private:
     // Player-attack specific stuff

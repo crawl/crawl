@@ -697,25 +697,7 @@ bool melee_attack::handle_phase_end()
     if (defender->is_player() && defender->alive() && attacker != defender)
     {
         mons_do_eyeball_confusion();
-
-        monster* mon = attacker->as_monster();
-        // some rounding errors here, but not significant
-        const int adj_mon_hd = mon->is_fighter() ? mon->get_hit_dice() * 3/2
-                                                 : mon->get_hit_dice();
-
-        if (player_mutation_level(MUT_TENDRILS)
-            && one_chance_in(5)
-            && (random2(you.dex()) > adj_mon_hd
-                || random2(you.strength()) > adj_mon_hd))
-        {
-            item_def* mons_wpn = mon->disarm();
-            if (mons_wpn)
-            {
-                mprf("Your tendrils lash around %s %s and pull it to the ground!",
-                     apostrophise(mon->name(DESC_THE)).c_str(),
-                     mons_wpn->name(DESC_PLAIN).c_str());
-            }
-        }
+        mons_do_tendril_disarm();
     }
 
     return attack::handle_phase_end();
@@ -3264,6 +3246,28 @@ void melee_attack::mons_do_eyeball_confusion()
                 mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you,
                                           30 + random2(100)));
             }
+        }
+    }
+}
+
+void melee_attack::mons_do_tendril_disarm()
+{
+    monster* mon = attacker->as_monster();
+    // some rounding errors here, but not significant
+    const int adj_mon_hd = mon->is_fighter() ? mon->get_hit_dice() * 3 / 2
+                                             : mon->get_hit_dice();
+
+    if (player_mutation_level(MUT_TENDRILS)
+        && one_chance_in(5)
+        && (random2(you.dex()) > adj_mon_hd
+            || random2(you.strength()) > adj_mon_hd))
+    {
+        item_def* mons_wpn = mon->disarm();
+        if (mons_wpn)
+        {
+            mprf("Your tendrils lash around %s %s and pull it to the ground!",
+                 apostrophise(mon->name(DESC_THE)).c_str(),
+                 mons_wpn->name(DESC_PLAIN).c_str());
         }
     }
 }
