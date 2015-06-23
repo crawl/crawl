@@ -1992,7 +1992,12 @@ int discharge_monsters(coord_def where, int pow, int, actor *agent)
             mprf("%s is struck by lightning.",
                  mons->name(DESC_THE).c_str());
             if (agent->is_player())
+            {
                 _player_hurt_monster(*mons, damage);
+
+                if (is_sanctuary(you.pos()) || is_sanctuary(mons->pos()))
+                    remove_sanctuary(true);
+            }
             else
                 mons->hurt(agent->as_monster(), damage);
         }

@@ -5,11 +5,13 @@
 #include <cfloat>
 #include <cmath>
 
+#include "areas.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
 #include "fineff.h"
+#include "fprop.h"
 #include "godconduct.h"
 #include "libutil.h"
 #include "message.h"
@@ -356,6 +358,13 @@ void tornado_damage(actor *caster, int dur)
                         dprf("damage done: %d", dmg);
                         victim->hurt(caster, dmg, BEAM_AIR, KILLED_BY_BEAM,
                                      "", "tornado");
+
+                        if (caster->is_player()
+                            && (is_sanctuary(you.pos())
+                                || is_sanctuary(victim->pos())))
+                        {
+                            remove_sanctuary(true);
+                        }
                     }
                 }
 
