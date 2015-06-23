@@ -503,11 +503,6 @@ Ensorcelled Hibernation spell
 Lowers its target's metabolic rate, inducing hibernation. After awakening, the
 target will be unable to be put to sleep again for some time.
 %%%%
-Ephemeral Infusion spell
-
-Temporarily heals the caster and nearby allies. Its expiry may leave the
-recipients on the brink of death but never outright kills them.
-%%%%
 Excruciating Wounds spell
 
 Temporarily infuses the weapon held by the caster with the essence of pain

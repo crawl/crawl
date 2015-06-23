@@ -173,10 +173,6 @@ Legendary Destruction cast
 
 @Major Destruction cast@
 %%%%
-Ephemeral Infusion cast
-
-@The_monster@ gestures around itself.
-%%%%
 Phantom Mirror cast
 
 @The_monster@ weaves an illusion.

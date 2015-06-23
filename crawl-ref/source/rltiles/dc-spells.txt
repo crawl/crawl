@@ -219,7 +219,6 @@ earth_elementals EARTH_ELEMENTALS
 %sdir misc
 error ENERGY_BOLT
 error ENSNARE
-error EPHEMERAL_INFUSION
 %sdir gui/spells/monster
 fake_mara_summon FAKE_MARA_SUMMON
 fake_rakshasa_summon FAKE_RAKSHASA_SUMMON

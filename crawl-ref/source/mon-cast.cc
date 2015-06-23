@@ -1522,7 +1522,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_TORNADO:
     case SPELL_DISCHARGE:
     case SPELL_IGNITE_POISON:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_EPHEMERAL_INFUSION:
+#endif
     case SPELL_FORCEFUL_INVITATION:
     case SPELL_PLANEREND:
     case SPELL_CHAIN_OF_CHAOS:
@@ -2438,7 +2440,6 @@ static bool _ms_low_hitpoint_cast(monster* mon, mon_spell_slot slot)
     case SPELL_BERSERKER_RAGE:
     case SPELL_MIGHT:
     case SPELL_WIND_BLAST:
-    case SPELL_EPHEMERAL_INFUSION:
         return true;
     case SPELL_VAMPIRIC_DRAINING:
         return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
@@ -3034,52 +3035,6 @@ static bool _mutation_vulnerable(actor* victim)
 static bool _dummy_vulnerable(actor* victim)
 {
     return true;
-}
-
-static bool _should_ephemeral_infusion(monster* agent)
-{
-    for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
-    {
-        if (agent == *ai || !ai->visible_to(agent)
-            || ai->is_player() || !mons_aligned(*ai, agent))
-        {
-            continue;
-        }
-        monster* mon = ai->as_monster();
-        if (!mon->has_ench(ENCH_EPHEMERAL_INFUSION)
-            && mon->hit_points * 3 <= mon->max_hit_points * 2
-            && !mons_is_firewood(mon))
-        {
-            return true;
-        }
-    }
-    return agent->hit_points * 3 <= agent->max_hit_points;
-}
-
-static void _cast_ephemeral_infusion(monster* agent)
-{
-    for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
-    {
-        if (!ai->visible_to(agent)
-            || ai->is_player()
-            || !mons_aligned(*ai, agent))
-        {
-            continue;
-        }
-        monster* mon = ai->as_monster();
-        if (!mon->has_ench(ENCH_EPHEMERAL_INFUSION)
-            && mon->hit_points < mon->max_hit_points
-            && !mons_is_firewood(mon))
-        {
-            const int dur =
-                random2avg(agent->spell_hd(SPELL_EPHEMERAL_INFUSION), 2)
-                * BASELINE_DELAY;
-            mon->add_ench(
-                mon_enchant(ENCH_EPHEMERAL_INFUSION,
-                            4 * agent->spell_hd(SPELL_EPHEMERAL_INFUSION),
-                            agent, dur));
-        }
-    }
 }
 
 static void _cast_black_mark(monster* agent)
@@ -5878,10 +5833,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
-    case SPELL_EPHEMERAL_INFUSION:
-        _cast_ephemeral_infusion(mons);
-        return;
-
     case SPELL_SUMMON_HOLIES: // Holy monsters.
         sumcount2 = 1 + random2(2)
                       + random2(mons->spell_hd(spell_cast) / 4 + 1);
@@ -8178,9 +8129,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SHATTER:
         return !mons_shatter(mon, false);
 
-    case SPELL_EPHEMERAL_INFUSION:
-        return !_should_ephemeral_infusion(mon);
-
     case SPELL_SYMBOL_OF_TORMENT:
         return !_trace_los(mon, _torment_vulnerable)
                || you.visible_to(mon)
@@ -8323,6 +8271,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_MISLEAD:
     case SPELL_SUMMON_SCORPIONS:
     case SPELL_SUMMON_ELEMENTAL:
+    case SPELL_EPHEMERAL_INFUSION:
 #endif
     case SPELL_NO_SPELL:
         return true;

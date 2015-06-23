@@ -2980,6 +2980,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_EPHEMERAL_INFUSION, "Ephemeral Infusion",
     SPTYP_CHARMS | SPTYP_NECROMANCY,
@@ -2990,6 +2991,7 @@ static const struct spell_desc spelldata[] =
     5, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_FORCEFUL_INVITATION, "Forceful Invitation",
