@@ -1063,9 +1063,6 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
         return new targetter_fragment(&you, pow, range);
     case SPELL_FULMINANT_PRISM:
         return new targetter_smite(&you, range, 0, 2);
-    case SPELL_SINGULARITY:
-        return new targetter_smite(&you, range, singularity_range(pow, 2),
-                                                singularity_range(pow));
     case SPELL_DAZZLING_SPRAY:
         return new targetter_spray(&you, range, ZAP_DAZZLING_SPRAY);
     case SPELL_EXPLOSIVE_BOLT:
@@ -1869,9 +1866,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_FULMINANT_PRISM:
         return cast_fulminating_prism(&you, powc, beam.target, fail);
 
-    case SPELL_SINGULARITY:
-        return cast_singularity(&you, powc, beam.target, fail);
-
     case SPELL_SEARING_RAY:
         return cast_searing_ray(powc, beam, fail);
 
@@ -1900,6 +1894,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_LETHAL_INFUSION:
     case SPELL_POISON_WEAPON:
     case SPELL_SEE_INVISIBLE:
+    case SPELL_SINGULARITY:
     case SPELL_SONG_OF_SHIELDING:
     case SPELL_SUMMON_SCORPIONS:
     case SPELL_SUMMON_ELEMENTAL:
