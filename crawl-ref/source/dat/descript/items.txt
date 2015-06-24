@@ -1220,7 +1220,7 @@ scroll of enchant armour
 This scroll places an enchantment on a piece of armour. Body armour and
 bardings can be enchanted up to the same value as their base AC. Bucklers,
 shields and large shields can be enchanted up to +3, +5 or +8 respectively, and
-other armour can be enchanted up to +2. The enchantment removes any curse on the
+other armour can be enchanted up to +2. The scroll also removes any curse on the
 item. Magical artefacts cannot be enchanted at all, though a curse may be
 removed in this fashion.
 
@@ -1229,8 +1229,9 @@ It can also be used to enchant the hides of certain exotic creatures.
 scroll of enchant weapon
 
 This scroll places an enchantment on a weapon chosen by the reader, increasing
-both accuracy and damage. Weapons can be enchanted up to +9. Magical artefacts
-cannot be enchanted at all.
+both accuracy and damage. Weapons can be enchanted up to +9. The scroll also
+removes any curse on the item. Magical artefacts cannot be enchanted at all,
+though a curse may be removed in this fashion.
 %%%%
 scroll of fear
 
