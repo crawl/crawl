@@ -1655,6 +1655,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SINGULARITY, "Singularity",
     SPTYP_TRANSLOCATION,
@@ -1665,6 +1666,7 @@ static const struct spell_desc spelldata[] =
     20, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_PARALYSE, "Paralyse",

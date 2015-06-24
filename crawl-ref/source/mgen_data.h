@@ -149,8 +149,7 @@ struct mgen_data
                || summon_type == SPELL_DEATH_CHANNEL
                || summon_type == SPELL_SIMULACRUM
                || summon_type == SPELL_AWAKEN_VINES
-               || summon_type == SPELL_FULMINANT_PRISM
-               || summon_type == SPELL_SINGULARITY);
+               || summon_type == SPELL_FULMINANT_PRISM);
     }
 
     bool permit_bands() const

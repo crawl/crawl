@@ -2176,11 +2176,6 @@ simulacrum
 
 An ice replica of a monster, animated by the powers of necromancy.
 %%%%
-singularity
-
-A gravitational singularity, which pulls in enemies of its creator and
-violently warps them in the process.
-%%%%
 siren
 
 A beguiling merfolk whose voice can mesmerize listeners.
