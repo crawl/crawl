@@ -1177,7 +1177,7 @@ void arena_split_monster(monster* split_from, monster* split_to)
 }
 
 void arena_monster_died(monster* mons, killer_type killer,
-                        int killer_index, bool silent, int corpse)
+                        int killer_index, bool silent, const item_def* corpse)
 {
     if (mons_is_tentacle_or_tentacle_segment(mons->type))
         ; // part of a monster, or a spell
@@ -1256,8 +1256,8 @@ void arena_monster_died(monster* mons, killer_type killer,
         }
     }
 
-    if (corpse != -1 && corpse != NON_ITEM)
-        arena::item_drop_times[corpse] = arena::turns;
+    if (corpse)
+        arena::item_drop_times[corpse->index()] = arena::turns;
 
     // Won't be dropping any items.
     if (mons->flags & MF_HARD_RESET)

@@ -69,64 +69,43 @@
 #include "viewchar.h"
 #include "view.h"
 
-// Initialises a corpse item using the given monster and monster type.
-// The monster pointer is optional; you may pass in nullptr to bypass
-// per-monster checks.
-//
-// force_corpse forces creation of the corpse item even if the monster
-// would not otherwise merit a corpse.
-monster_type fill_out_corpse(const monster* mons,
-                             monster_type mtype,
-                             item_def& corpse,
-                             bool force_corpse)
+/**
+ * Initialise a corpse item.
+ *
+ * @param mons The monster to use as a template.
+ * @param corpse[out] The item that's filled in; no properties it already has
+ *                    are checked.
+ * @returns whether a corpse could be created.
+ */
+static bool _fill_out_corpse(const monster& mons, item_def& corpse)
 {
-    ASSERT(!invalid_monster_type(mtype));
     corpse.clear();
 
-    int summon_type;
-    if (mons && (mons->is_summoned(nullptr, &summon_type)
-                 || (mons->flags & (MF_BANISHED | MF_HARD_RESET))))
-    {
-        return MONS_NO_MONSTER;
-    }
-
+    monster_type mtype = mons.type;
     monster_type corpse_class = mons_species(mtype);
 
-    if (mons)
+    ASSERT(!invalid_monster_type(mtype));
+    ASSERT(!invalid_monster_type(corpse_class));
+
+    if (mons_genus(mtype) == MONS_DRACONIAN
+        || mons_genus(mtype) == MONS_DEMONSPAWN)
     {
-        // If this was a corpse that was temporarily animated then turn the
-        // monster back into a corpse.
-        if (mons_class_is_zombified(mons->type)
-            && (summon_type == SPELL_ANIMATE_DEAD
-                || summon_type == SPELL_ANIMATE_SKELETON
-                || summon_type == MON_SUMM_ANIMATE))
-        {
-            corpse_class = mons_zombie_base(mons);
-        }
-
-        if (mons
-            && (mons_genus(mtype) == MONS_DRACONIAN
-                || mons_genus(mtype) == MONS_DEMONSPAWN))
-        {
-            if (mons->type == MONS_TIAMAT)
-                corpse_class = MONS_DRACONIAN;
-            else
-                corpse_class = draco_or_demonspawn_subspecies(mons);
-        }
-
-        if (mons->props.exists(ORIGINAL_TYPE_KEY))
-        {
-            // Shapeshifters too.
-            mtype = (monster_type) mons->props[ORIGINAL_TYPE_KEY].get_int();
-            corpse_class = mons_species(mtype);
-        }
+        if (mons.type == MONS_TIAMAT)
+            corpse_class = MONS_DRACONIAN;
+        else
+            corpse_class = draco_or_demonspawn_subspecies(&mons);
     }
 
-    // Doesn't leave a corpse.
-    if (!mons_class_can_leave_corpse(corpse_class) && !force_corpse)
-        return MONS_NO_MONSTER;
+    if (mons.props.exists(ORIGINAL_TYPE_KEY))
+    {
+        // Shapeshifters too.
+        mtype = (monster_type) mons.props[ORIGINAL_TYPE_KEY].get_int();
+        corpse_class = mons_species(mtype);
+    }
 
-    corpse.flags          = 0;
+    if (!mons_class_can_leave_corpse(corpse_class))
+        return false;
+
     corpse.base_type      = OBJ_CORPSES;
     corpse.mon_type       = corpse_class;
     corpse.sub_type       = CORPSE_BODY;
@@ -135,26 +114,23 @@ monster_type fill_out_corpse(const monster* mons,
     corpse.rnd            = 1 + random2(255);
     corpse.orig_monnum    = mtype;
 
-    if (mons)
-    {
-        corpse.props[MONSTER_HIT_DICE] = short(mons->get_experience_level());
-        corpse.props[MONSTER_NUMBER]   = short(mons->number);
-        if (mons->props.exists("old_heads"))
-            corpse.props[MONSTER_NUMBER] = short(mons->props["old_heads"].get_int());
-        // XXX: Appears to be a safe conversion?
-        corpse.props[MONSTER_MID]      = int(mons->mid);
-    }
+    corpse.props[MONSTER_HIT_DICE] = short(mons.get_experience_level());
+    corpse.props[MONSTER_NUMBER]   = short(mons.number);
+    if (mons.props.exists("old_heads"))
+        corpse.props[MONSTER_NUMBER] = short(mons.props["old_heads"].get_int());
+    // XXX: Appears to be a safe conversion?
+    corpse.props[MONSTER_MID]      = int(mons.mid);
 
     monster_info minfo(corpse_class);
     int col = int(minfo.colour());
-    if (col == COLOUR_UNDEF && mons)
+    if (col == COLOUR_UNDEF)
     {
         // XXX hack to avoid crashing in wiz mode.
-        if (mons_is_ghost_demon(mons->type) && !mons->ghost.get())
+        if (mons_is_ghost_demon(mons.type) && !mons.ghost.get())
             col = LIGHTRED;
         else
         {
-            minfo = monster_info(mons);
+            minfo = monster_info(&mons);
             col = int(minfo.colour());
         }
     }
@@ -162,10 +138,10 @@ monster_type fill_out_corpse(const monster* mons,
         col = int(random_colour());
     corpse.props[FORCED_ITEM_COLOUR_KEY] = col;
 
-    if (mons && !mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
+    if (!mons.mname.empty() && !(mons.flags & MF_NAME_NOCORPSE))
     {
-        corpse.props[CORPSE_NAME_KEY] = mons->mname;
-        corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = mons->flags;
+        corpse.props[CORPSE_NAME_KEY] = mons.mname;
+        corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = mons.flags;
     }
     else if (mons_is_unique(mtype))
     {
@@ -173,10 +149,10 @@ monster_type fill_out_corpse(const monster* mons,
         corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = 0;
     }
 
-    return corpse_class;
+    return true;
 }
 
-bool explode_corpse(item_def& corpse, const coord_def& where)
+static bool _explode_corpse(item_def& corpse, const coord_def& where)
 {
     // Don't want chunks to show up behind the player.
     los_def ld(where, opc_no_actor);
@@ -380,25 +356,27 @@ static void _give_experience(int player_exp, int monster_exp,
 }
 
 /**
- * Turn a given corpse into gold. Praise Gozag!
+ * Makes an item into gold. Praise Gozag!
  *
  * Gold is random, but correlates weakly with monster mass.
  *
  * Also sets the gold distraction timer on the player.
  *
- * @param corpse        The corpse item to be Midasified.
+ * @param corpse[out] The item to be Midasified.
  */
-void goldify_corpse(item_def &corpse)
+static void _gold_pile(item_def &corpse, monster_type corpse_class)
 {
+    corpse.clear();
+
     int base_gold = 7;
     // monsters with more chunks than SIZE_MEDIUM give more than base gold
-    const int extra_chunks = (max_corpse_chunks(corpse.mon_type)
+    const int extra_chunks = (max_corpse_chunks(corpse_class)
                               - max_corpse_chunks(MONS_HUMAN)) * 2;
     if (extra_chunks > 0)
         base_gold += extra_chunks;
 
-    corpse.clear();
     corpse.base_type = OBJ_GOLD;
+    corpse.mon_type = corpse_class; // for _explode_corpse
     corpse.quantity = base_gold / 2 + random2avg(base_gold, 2);
     item_colour(corpse);
 
@@ -410,105 +388,96 @@ void goldify_corpse(item_def &corpse)
     you.props["gozag_gold_aura_amount"].get_int()++;
 }
 
-// Returns the item slot of a generated corpse, or -1 if no corpse.
-int place_monster_corpse(const monster* mons, bool silent, bool force)
+/**
+ * Create this monster's corpse in mitm at its position.
+ *
+ * @param mons the monster to corpsify
+ * @param silent whether to suppress all messages
+ * @param force whether to always make a corpse (no goldification and no 50%
+ *              chance not to -- being summoned etc. still matters)
+ * @returns a pointer to an item; it may be null, if the monster can't leave a
+ *          corpse or if the 50% chance is rolled; it may be gold, if the player
+ *          worships Gozag, or it may be the corpse.
+ */
+item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
 {
+    if (mons.is_summoned()
+        || mons.flags & (MF_BANISHED | MF_HARD_RESET))
+    {
+        return nullptr;
+    }
+
     // Under Gozag, monsters turn into gold on death.
     bool goldify = in_good_standing(GOD_GOZAG)
-        && mons_class_gives_xp(mons->type) && !mons_is_conjured(mons->type);
+        && mons_class_gives_xp(mons.type) && !mons_is_conjured(mons.type);
+
+    const bool no_coinflip =
+        mons.props.exists("always_corpse")
+        || force
+        || goldify
+        || mons_class_flag(mons.type, M_ALWAYS_CORPSE)
+        || mons_is_demonspawn(mons.type)
+           && mons_class_flag(draco_or_demonspawn_subspecies(&mons),
+                              M_ALWAYS_CORPSE);
+
+    // 50/50 chance of getting a corpse, usually.
+    if (!no_coinflip && coinflip())
+        return nullptr;
 
     // The game can attempt to place a corpse for an out-of-bounds monster
     // if a shifter turns into a giant spore and explodes. In this
     // case we place no corpse since the explosion means anything left
     // over would be scattered, tiny chunks of shifter.
-    if (!in_bounds(mons->pos()))
-        return -1;
+    if (!in_bounds(mons.pos()) && !force)
+        return nullptr;
 
     // Don't attempt to place corpses within walls, either.
-    if (feat_is_wall(grd(mons->pos())))
-        return -1;
+    if (feat_is_solid(grd(mons.pos())))
+        return nullptr;
 
     // If we were told not to leave a corpse, don't.
-    if (mons->props.exists(NEVER_CORPSE_KEY))
-        return -1;
-
-    item_def corpse;
-    // Corpseless monsters still drop gold for Gozag.
-    const monster_type corpse_class = fill_out_corpse(mons, mons->type,
-                                                      corpse, goldify);
-
-    if (corpse_class == MONS_NO_MONSTER)
-        return -1;
-
-    // Don't place a corpse? If a zombified monster is somehow capable
-    // of leaving a corpse, then always place it.
-    if (mons_class_is_zombified(mons->type) && !goldify)
-        force = true;
-
-    const bool vault_forced =
-        mons->props.exists("always_corpse")
-        || mons_class_flag(mons->type, M_ALWAYS_CORPSE)
-        || mons_is_demonspawn(mons->type)
-           && mons_class_flag(draco_or_demonspawn_subspecies(mons),
-                              M_ALWAYS_CORPSE);
-
-    // 50/50 chance of getting a corpse, unless it's forced by the caller or
-    // the monster's flags.
-    // Gozag always gets a "corpse".
-    if (!force && !vault_forced && !goldify && coinflip())
-        return -1;
-
-    if (!force && goldify)
-    {
-        goldify_corpse(corpse);
-        // If gold would be destroyed, give it directly to the player instead.
-        if (feat_eliminates_items(grd(mons->pos())))
-        {
-            get_gold(corpse, corpse.quantity, false);
-            return -1;
-        }
-    }
+    if (mons.props.exists(NEVER_CORPSE_KEY))
+        return nullptr;
 
     int o = get_mitm_slot();
 
     if (o == NON_ITEM)
+        return nullptr;
+
+    item_def& corpse(mitm[o]);
+    if (goldify)
     {
-        item_was_destroyed(corpse);
-        return -1;
+        _gold_pile(corpse, mons_species(mons.type));
+        // If gold would be destroyed, give it directly to the player instead.
+        if (feat_eliminates_items(grd(mons.pos())))
+        {
+            get_gold(corpse, corpse.quantity, false);
+            return nullptr;
+        }
     }
+    else if (!_fill_out_corpse(mons, corpse))
+        return nullptr;
 
-    mitm[o] = corpse;
+    origin_set_monster(corpse, &mons);
 
-    origin_set_monster(mitm[o], mons);
-
-    if ((mons->flags & MF_EXPLODE_KILL) && explode_corpse(corpse, mons->pos()))
+    if ((mons.flags & MF_EXPLODE_KILL) && _explode_corpse(corpse, mons.pos()))
     {
         // We already have a spray of chunks.
-        item_was_destroyed(mitm[o]);
+        item_was_destroyed(corpse);
         destroy_item(o);
-        return -1;
+        return nullptr;
     }
 
-    move_item_to_grid(&o, mons->pos(), !mons->swimming());
+    if (in_bounds(mons.pos()))
+        move_item_to_grid(&o, mons.pos(), !mons.swimming());
 
-    if (you.see_cell(mons->pos()))
-    {
-        if (force && !silent)
-        {
-            if (you.can_see(*mons))
-                simple_monster_message(mons, " turns back into a corpse!");
-            else
-            {
-                mprf("%s appears out of nowhere!",
-                     mitm[o].name(DESC_A).c_str());
-            }
-        }
+    if (o == NON_ITEM)
+        return nullptr;
 
-        if (o != NON_ITEM && !silent)
-            hints_dissection_reminder();
-    }
+    if (you.see_cell(mons.pos()) && !silent)
+        hints_dissection_reminder();
 
-    return o == NON_ITEM ? -1 : o;
+    return &mitm[o];
 }
 
 static void _hints_inspect_kill()
@@ -1701,8 +1670,8 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
         did_kill_conduct(DID_KILL_FIERY, mons);
 }
 
-int monster_die(monster* mons, const actor *killer, bool silent,
-                bool wizard, bool fake)
+item_def* monster_die(monster* mons, const actor *killer, bool silent,
+                      bool wizard, bool fake)
 {
     killer_type ktype = KILL_YOU;
     int kindex = NON_MONSTER;
@@ -1719,12 +1688,23 @@ int monster_die(monster* mons, const actor *killer, bool silent,
     return monster_die(mons, ktype, kindex, silent, wizard, fake);
 }
 
-// Returns the slot of a possibly generated corpse or -1.
-int monster_die(monster* mons, killer_type killer,
-                int killer_index, bool silent, bool wizard, bool fake)
+/**
+ * Kill off a monster.
+ *
+ * @param mons The monster to be killed
+ * @param killer The method in which it was killed (XXX: these aren't properly
+ *               documented/coded)
+ * @param killer_index The mindex of the killer (TODO: always use an actor*)
+ * @param silent whether to print any messages about the death
+ * @param wizard various switches
+ * @param fake ???
+ * @returns a pointer to the created corpse, possibly null
+ */
+item_def* monster_die(monster* mons, killer_type killer,
+                      int killer_index, bool silent, bool wizard, bool fake)
 {
     if (invalid_monster(mons))
-        return -1;
+        return nullptr;
 
     const bool was_visible = you.can_see(*mons);
 
@@ -1742,8 +1722,8 @@ int monster_die(monster* mons, killer_type killer,
 
         // revived by a lost soul?
         if (!spectralised && testbits(mons->flags, MF_SPECTRALISED))
-            return place_monster_corpse(mons, silent);
-        return -1;
+            return place_monster_corpse(*mons, silent);
+        return nullptr;
     }
 
     // If the monster was calling the tide, let go now.
@@ -2489,20 +2469,20 @@ int monster_die(monster* mons, killer_type killer,
                            silent, summoned);
     }
 
-    int corpse = -1;
+    item_def* corpse = nullptr;
     if (leaves_corpse && !was_banished && !spectralised)
     {
         // Have to add case for disintegration effect here? {dlb}
-        int corpse2 = -1;
+        item_def* daddy_corpse = nullptr;
 
         if (mons->type == MONS_SPRIGGAN_RIDER)
         {
-            corpse2 = mounted_kill(mons, MONS_WASP, killer, killer_index);
+            daddy_corpse = mounted_kill(mons, MONS_WASP, killer, killer_index);
             mons->type = MONS_SPRIGGAN;
         }
-        corpse = place_monster_corpse(mons, silent);
-        if (corpse == -1)
-            corpse = corpse2;
+        corpse = place_monster_corpse(*mons, silent);
+        if (!corpse)
+            corpse = daddy_corpse;
     }
 
     const unsigned int player_xp = gives_player_xp
@@ -2561,8 +2541,8 @@ int monster_die(monster* mons, killer_type killer,
 
     if (fake)
     {
-        if (corpse != -1 && _reaping(mons))
-            corpse = -1;
+        if (corpse && _reaping(mons))
+            corpse = nullptr;
         _give_experience(player_xp, monster_xp, killer, killer_index,
                          pet_kill, was_visible);
         crawl_state.dec_mon_acting(mons);
@@ -2601,7 +2581,7 @@ int monster_die(monster* mons, killer_type killer,
         mons->destroy_inventory();
     }
 
-    if (!silent && !wizard && leaves_corpse && corpse != -1
+    if (!silent && !wizard && leaves_corpse && corpse
         && mons->props.exists(ORIGINAL_TYPE_KEY))
     {
         const monster_type orig =
@@ -2651,8 +2631,8 @@ int monster_die(monster* mons, killer_type killer,
     if (mons_near(mons) && mons->has_ench(ENCH_INVIS))
         autotoggle_autopickup(false);
 
-    if (corpse != -1 && _reaping(mons))
-        corpse = -1;
+    if (corpse && _reaping(mons))
+        corpse = nullptr;
 
     crawl_state.dec_mon_acting(mons);
     monster_cleanup(mons);
@@ -2772,8 +2752,8 @@ void monster_cleanup(monster* mons)
         you.pet_target = MHITNOT;
 }
 
-int mounted_kill(monster* daddy, monster_type mc, killer_type killer,
-                int killer_index)
+item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
+                       int killer_index)
 {
     monster mon;
     mon.type = mc;

@@ -749,32 +749,20 @@ static void _place_player_corpse(bool explode)
     if (!in_bounds(you.pos()))
         return;
 
-    item_def corpse;
-    if (fill_out_corpse(0, player_mons(false), corpse) == MONS_NO_MONSTER)
-        return;
-
-    if (in_good_standing(GOD_GOZAG))
-        goldify_corpse(corpse);
-
-    if (explode && explode_corpse(corpse, you.pos()))
-        return;
+    monster dummy;
+    dummy.type = player_mons(false);
+    define_monster(&dummy);
+    dummy.position = you.pos();
+    dummy.props["always_corpse"] = true;
+    dummy.mname = you.your_name;
+    dummy.set_hit_dice(you.experience_level);
+    if (explode)
+        dummy.flags &= MF_EXPLODE_KILL;
 
     if (you.form != TRAN_NONE)
         mpr("Your shape twists and changes as you die.");
 
-    int o = get_mitm_slot();
-    if (o == NON_ITEM)
-    {
-        item_was_destroyed(corpse);
-        return;
-    }
-
-    corpse.props[MONSTER_HIT_DICE].get_short() = you.experience_level;
-    corpse.props[CORPSE_NAME_KEY] = you.your_name;
-    corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = 0;
-    mitm[o] = corpse;
-
-    move_item_to_grid(&o, you.pos(), !you.in_water());
+    place_monster_corpse(dummy, false);
 }
 
 #if defined(WIZARD) || defined(DEBUG)

@@ -4302,8 +4302,9 @@ static object_class_type _acquirement_object_class()
 static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
 {
     mons_spec mspec(ispec.corpse_monster_spec());
-    int corpse_index = -1;
-    for (int tries = 0; ; tries++)
+    item_def* corpse = nullptr;
+
+    for (int tries = 0; !corpse; tries++)
     {
         if (tries > 200)
             return NON_ITEM;
@@ -4311,42 +4312,36 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
         if (!mon)
             continue;
         mon->position = where;
-        if (mons_class_can_leave_corpse(mon->type))
-            corpse_index = place_monster_corpse(mon, true, true);
+        corpse = place_monster_corpse(*mon, true, true);
         // Dismiss the monster we used to place the corpse.
         mon->flags |= MF_HARD_RESET;
         monster_die(mon, KILL_DISMISSED, NON_MONSTER, false, true);
-
-        if (corpse_index != -1 && corpse_index != NON_ITEM)
-            break;
     }
-
-    item_def &corpse(mitm[corpse_index]);
 
     if (ispec.props.exists(CORPSE_NEVER_DECAYS))
     {
-        corpse.props[CORPSE_NEVER_DECAYS].get_bool() =
+        corpse->props[CORPSE_NEVER_DECAYS].get_bool() =
             ispec.props[CORPSE_NEVER_DECAYS].get_bool();
     }
 
     if (ispec.base_type == OBJ_CORPSES && ispec.sub_type == CORPSE_SKELETON)
-        turn_corpse_into_skeleton(corpse);
+        turn_corpse_into_skeleton(*corpse);
     else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
-        turn_corpse_into_chunks(corpse, false, false);
+        turn_corpse_into_chunks(*corpse, false, false);
 
     if (ispec.props.exists(MONSTER_HIT_DICE))
     {
-        corpse.props[MONSTER_HIT_DICE].get_short() =
+        corpse->props[MONSTER_HIT_DICE].get_short() =
             ispec.props[MONSTER_HIT_DICE].get_short();
     }
 
     if (ispec.qty && ispec.base_type == OBJ_FOOD)
     {
-        corpse.quantity = ispec.qty;
-        init_perishable_stack(corpse);
+        corpse->quantity = ispec.qty;
+        init_perishable_stack(*corpse);
     }
 
-    return corpse_index;
+    return corpse->index();
 }
 
 static bool _apply_item_props(item_def &item, const item_spec &spec,
@@ -5565,8 +5560,6 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
 /**
  * Attempt to make a corpse to be placed in a gozag ghoul corpse shop.
  *
- * TODO: unify this with kiku's code in kiku_receive_corpses()
- *
  * @return  The mitm index of the corpse.
  *          If we couldn't make one, returns NON_ITEM instead.
  */
@@ -5580,25 +5573,15 @@ static int _make_delicious_corpse()
     monster dummy;
     dummy.type = mon_type;
     define_monster(&dummy);
-    const int index_of_corpse_created = get_mitm_slot();
 
-    if (index_of_corpse_created == NON_ITEM)
+    item_def* corpse = place_monster_corpse(dummy, true, true);
+    if (!corpse)
         return NON_ITEM;
-
-    int valid_corpse = fill_out_corpse(&dummy,
-                                       dummy.type,
-                                       mitm[index_of_corpse_created],
-                                       false);
-    if (valid_corpse == -1)
-    {
-        mitm[index_of_corpse_created].clear();
-        return NON_ITEM;
-    }
 
     // no hides allowed, I guess?
     if (mons_class_leaves_hide(mon_type))
-        mitm[index_of_corpse_created].props[MANGLED_CORPSE_KEY] = true;
-    return index_of_corpse_created;
+        corpse->props[MANGLED_CORPSE_KEY] = true;
+    return corpse->index();
 }
 
 /**

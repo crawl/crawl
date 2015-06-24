@@ -4411,9 +4411,9 @@ static void _glaciate_freeze(monster* mon, killer_type englaciator,
     simple_monster_message(mon, " is frozen into a solid block of ice!");
 
     // If the monster leaves a corpse when it dies, destroy the corpse.
-    int corpse = monster_die(mon, englaciator, kindex);
-    if (corpse != -1)
-        destroy_item(corpse);
+    item_def* corpse = monster_die(mon, englaciator, kindex);
+    if (corpse)
+        destroy_item(corpse->index());
 
     if (monster *pillar = create_monster(
                         mgen_data(MONS_BLOCK_OF_ICE,
