@@ -1069,9 +1069,9 @@ static void _zin_saltify(monster* mon)
     simple_monster_message(mon, " is turned into a pillar of salt by the wrath of Zin!");
 
     // If the monster leaves a corpse when it dies, destroy the corpse.
-    int corpse = monster_die(mon, KILL_YOU, NON_MONSTER);
-    if (corpse != -1)
-        destroy_item(corpse);
+    item_def* corpse = monster_die(mon, KILL_YOU, NON_MONSTER);
+    if (corpse)
+        destroy_item(corpse->index());
 
     if (monster *pillar = create_monster(
                         mgen_data(MONS_PILLAR_OF_SALT,
@@ -1806,35 +1806,21 @@ bool kiku_receive_corpses(int pow)
         monster dummy;
         dummy.type = mon_type;
         define_monster(&dummy);
-        int index_of_corpse_created = get_mitm_slot();
+        dummy.position = *ri;
 
-        if (index_of_corpse_created == NON_ITEM)
-            break;
-
-        int valid_corpse = fill_out_corpse(&dummy,
-                                           dummy.type,
-                                           mitm[index_of_corpse_created],
-                                           false);
-        if (valid_corpse == -1)
-        {
-            mitm[index_of_corpse_created].clear();
+        item_def* corpse = place_monster_corpse(dummy, true, true);
+        if (!corpse)
             continue;
-        }
 
         // no scumming for hides
         if (mons_class_leaves_hide(mon_type))
-            mitm[index_of_corpse_created].props[MANGLED_CORPSE_KEY] = true;
-
-        ASSERT(valid_corpse >= 0);
+            corpse->props[MANGLED_CORPSE_KEY] = true;
 
         // Higher piety means fresher corpses.
         int rottedness = 200 -
             (!one_chance_in(10) ? random2(200 - you.piety)
                                 : random2(100 + random2(75)));
-        mitm[index_of_corpse_created].special = rottedness;
-
-        // Place the corpse.
-        move_item_to_grid(&index_of_corpse_created, *ri);
+        corpse->special = rottedness;
     }
 
     if (corpses_created)
@@ -2354,8 +2340,8 @@ int fedhas_fungal_bloom()
 
                 const coord_def pos = target->pos();
                 const int colour = target->colour;
-                const int corpse = monster_die(target, KILL_MISC, NON_MONSTER,
-                                               true);
+                const item_def* corpse = monster_die(target, KILL_MISC,
+                                                     NON_MONSTER, true);
 
                 // If a corpse didn't drop, create a toadstool.
                 // If one did drop, we will create toadstools from it as usual
@@ -2363,7 +2349,7 @@ int fedhas_fungal_bloom()
                 // Give neither piety nor toadstools for summoned creatures.
                 // Assumes that summoned creatures do not drop corpses (hence
                 // will not give piety in the next loop).
-                if (corpse < 0 && piety)
+                if (!corpse && piety)
                 {
                     if (create_monster(
                                 mgen_data(MONS_TOADSTOOL,
@@ -2388,7 +2374,7 @@ int fedhas_fungal_bloom()
                 }
 
                 // Verify that summoned creatures do not drop a corpse.
-                ASSERT(corpse < 0 || piety);
+                ASSERT(!corpse || piety);
 
                 break;
             }

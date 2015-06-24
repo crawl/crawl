@@ -98,9 +98,7 @@ void wizard_create_spec_object()
 {
     char           specs[80];
     ucs_t          keyin;
-    monster_type   mon;
     object_class_type class_wanted;
-    int            thing_created;
 
     do
     {
@@ -127,19 +125,20 @@ void wizard_create_spec_object()
     msgwin_reply(string(1, (char) keyin));
 
     // Allocate an item to play with.
-    thing_created = get_mitm_slot();
+    int thing_created = get_mitm_slot();
     if (thing_created == NON_ITEM)
     {
         mpr("Could not allocate item.");
         return;
     }
+    item_def& item(mitm[thing_created]);
 
     // turn item into appropriate kind:
     if (class_wanted == OBJ_ORBS)
     {
-        mitm[thing_created].base_type = OBJ_ORBS;
-        mitm[thing_created].sub_type  = ORB_ZOT;
-        mitm[thing_created].quantity  = 1;
+        item.base_type = OBJ_ORBS;
+        item.sub_type  = ORB_ZOT;
+        item.quantity  = 1;
     }
     else if (class_wanted == OBJ_GOLD)
     {
@@ -150,13 +149,15 @@ void wizard_create_spec_object()
             return;
         }
 
-        mitm[thing_created].base_type = OBJ_GOLD;
-        mitm[thing_created].sub_type  = 0;
-        mitm[thing_created].quantity  = amount;
+        item.base_type = OBJ_GOLD;
+        item.sub_type  = 0;
+        item.quantity  = amount;
     }
+    // in this case, place_monster_corpse will allocate an item for us, and we
+    // don't use item/thing_created.
     else if (class_wanted == OBJ_CORPSES)
     {
-        mon = debug_prompt_for_monster();
+        monster_type mon = debug_prompt_for_monster();
 
         if (mon == MONS_NO_MONSTER || mon == MONS_PROGRAM_BUG)
         {
@@ -166,12 +167,8 @@ void wizard_create_spec_object()
 
         if (!mons_class_can_leave_corpse(mon))
         {
-            if (!yesno("That monster doesn't leave corpses; make one "
-                       "anyway?", true, 'y'))
-            {
-                canned_msg(MSG_OK);
-                return;
-            }
+            mpr("That monster doesn't leave corpses.");
+            return;
         }
 
         if (mons_is_draconian_job(mon))
@@ -182,15 +179,14 @@ void wizard_create_spec_object()
 
         monster dummy;
         dummy.type = mon;
+        dummy.position = you.pos();
 
         if (mons_genus(mon) == MONS_HYDRA)
             dummy.num_heads = prompt_for_int("How many heads? ", false);
 
-        if (fill_out_corpse(&dummy, dummy.type,
-                            mitm[thing_created], true) == MONS_NO_MONSTER)
+        if (!place_monster_corpse(dummy, false, true))
         {
             mpr("Failed to create corpse.");
-            mitm[thing_created].clear();
             return;
         }
     }
@@ -218,7 +214,7 @@ void wizard_create_spec_object()
             return;
         }
 
-        if (!get_item_by_name(&mitm[thing_created], specs, class_wanted, true))
+        if (!get_item_by_name(&item, specs, class_wanted, true))
         {
             mpr("No such item.");
 
@@ -228,7 +224,7 @@ void wizard_create_spec_object()
         }
     }
 
-    item_colour(mitm[thing_created]);
+    item_colour(item);
 
     move_item_to_grid(&thing_created, you.pos());
 
