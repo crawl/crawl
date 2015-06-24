@@ -2527,6 +2527,10 @@ static void _recover_stat()
 
         recovered_stats[stat]++;
 
+        // Very heavily drained stats recover faster.
+        if (you.stat(stat, false) < 0)
+            recovered_stats[stat] += random2(-you.stat(stat, false) / 2);
+
         bool still_drained = false;
         for (int i = 0; i < NUM_STATS; ++i)
             if (you.stat_loss[i] - recovered_stats[i] > 0)
