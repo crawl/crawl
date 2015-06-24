@@ -343,13 +343,15 @@ string god_title(god_type which_god, species_type which_species, int piety)
     else
         title = divine_title[which_god][_piety_level(piety)];
 
-    //XXX: unify with stuff in skills.cc
-    title = replace_all(title, "@Genus@", species_name(which_species, SPNAME_GENUS));
-    title = replace_all(title, "@Adj@", species_name(which_species, SPNAME_ADJ));
-    title = replace_all(title, "@Walking@", (species_walking_verb(which_species) + "ing"));
-    title = replace_all(title, "@Walker@", (species_walking_verb(which_species) + "er"));
+    const map<string, string> replacements =
+    {
+        { "Adj", species_name(which_species, SPNAME_ADJ) },
+        { "Genus", species_name(which_species, SPNAME_GENUS) },
+        { "Walking", species_walking_verb(which_species) + "ing" },
+        { "Walker", species_walking_verb(which_species) + "er" },
+    };
 
-    return title;
+    return replace_keys(title, replacements);
 }
 
 static string _describe_ash_skill_boost()

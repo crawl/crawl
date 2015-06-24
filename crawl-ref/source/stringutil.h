@@ -41,6 +41,8 @@ string replace_all(string s, const string &tofind, const string &replacement);
 
 string replace_all_of(string s, const string &tofind, const string &replacement);
 
+string replace_keys(const string &text, const map<string, string>& replacements);
+
 string maybe_capitalise_substring(string s);
 string maybe_pick_random_substring(string s);
 
