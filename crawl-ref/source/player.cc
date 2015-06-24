@@ -6018,7 +6018,7 @@ int player::armour_class(bool /*calc_unid*/) const
         AC += 300;
 
     if (duration[DUR_CORROSION])
-        AC -= 500 * you.props["corrosion_amount"].get_int();
+        AC -= 400 * you.props["corrosion_amount"].get_int();
 
     AC += _bone_armour_bonus();
 

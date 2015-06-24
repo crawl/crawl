@@ -174,7 +174,7 @@ bool fill_status_info(int status, status_info* inf)
 
     case DUR_CORROSION:
         inf->light_text = make_stringf("Corr (%d)",
-                          (-3 * you.props["corrosion_amount"].get_int()));
+                          (-4 * you.props["corrosion_amount"].get_int()));
         break;
 
     case DUR_NO_POTIONS:
