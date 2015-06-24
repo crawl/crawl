@@ -1540,7 +1540,7 @@ bool beogh_gift_item()
         return false;
 
     int item_slot = prompt_invent_item("Give which item?",
-                                       MT_INVLIST, OSEL_ANY, true);
+                                       MT_INVLIST, OSEL_BEOGH_GIFT, true);
 
     if (item_slot == PROMPT_ABORT || item_slot == PROMPT_NOTHING)
     {
@@ -1557,13 +1557,12 @@ bool beogh_gift_item()
     const bool range_weapon = weapon && is_range_weapon(gift);
     const item_def* mons_weapon = mons->weapon();
 
-    if (!(weapon && mons->could_wield(gift)
-          || body_armour && check_armour_size(gift, mons->body_size())
-          || shield
-             && (!mons_weapon
-                 || mons->hands_reqd(*mons_weapon) != HANDS_TWO)))
+    if (weapon && !mons->could_wield(gift)
+        || body_armour && !check_armour_size(gift, mons->body_size())
+        || shield && mons_weapon && mons->hands_reqd(*mons_weapon) == HANDS_TWO
+        || !is_item_selected(gift, OSEL_BEOGH_GIFT))
     {
-        mprf("%s can't use that.", mons->name(DESC_THE, false).c_str());
+        mprf("You can't give that to %s.", mons->name(DESC_THE, false).c_str());
 
         return false;
     }

@@ -486,6 +486,8 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any weapons that can be branded.";
     case OSEL_ENCHANTABLE_WEAPON:
         return "You aren't carrying any weapons that can be enchanted.";
+    case OSEL_BEOGH_GIFT:
+        return "You aren't carrying anything you can give to a follower.";
     }
 
     return "You aren't carrying any such object.";
@@ -1179,6 +1181,13 @@ bool is_item_selected(const item_def &i, int selector)
 
     case OSEL_BLESSABLE_WEAPON:
         return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);
+
+    case OSEL_BEOGH_GIFT:
+        return (i.base_type == OBJ_WEAPONS
+                || is_shield(i)
+                || i.base_type == OBJ_ARMOUR
+                   && get_armour_slot(i) == EQ_BODY_ARMOUR)
+                && !is_item_selected(i, OSEL_CURSED_WORN);
 
     default:
         return false;
