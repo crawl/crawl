@@ -1220,8 +1220,9 @@ scroll of enchant armour
 This scroll places an enchantment on a piece of armour. Body armour and
 bardings can be enchanted up to the same value as their base AC. Bucklers,
 shields and large shields can be enchanted up to +3, +5 or +8 respectively, and
-other armour can be enchanted up to +2. Magical artefacts cannot be enchanted
-at all.
+other armour can be enchanted up to +2. The enchantment removes any curse on the
+item. Magical artefacts cannot be enchanted at all, though a curse may be
+removed in this fashion.
 
 It can also be used to enchant the hides of certain exotic creatures.
 %%%%
