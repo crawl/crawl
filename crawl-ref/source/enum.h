@@ -3169,7 +3169,6 @@ enum monster_type                      // menv[].type
     MONS_ORB_OF_DESTRUCTION,    // a projectile, not a real mon
 #if TAG_MAJOR_VERSION > 34
     MONS_FULMINANT_PRISM,
-    MONS_SINGULARITY,
     MONS_BATTLESPHERE,
 #endif
     MONS_PILLAR_OF_SALT,
@@ -4429,7 +4428,9 @@ enum spell_type
     SPELL_CLEANSING_FLAME,
     SPELL_GOBLIN_TOSS,
     SPELL_CIGOTUVIS_EMBRACE,
+#if TAG_MAJOR_VERSION == 34
     SPELL_SINGULARITY,
+#endif
     SPELL_GRAVITAS,
     SPELL_CHANT_FIRE_STORM,
     SPELL_CHANT_WORD_OF_ENTROPY,

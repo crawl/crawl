@@ -1074,8 +1074,8 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_SCATTERSHOT:
         return new targetter_shotgun(&you, shotgun_beam_count(pow), range);
     case SPELL_GRAVITAS:
-        return new targetter_smite(&you, range, singularity_range(pow, 2),
-                                                singularity_range(pow));
+        return new targetter_smite(&you, range, gravitas_range(pow, 2),
+                                                gravitas_range(pow));
     case SPELL_MAGIC_DART:
     case SPELL_FORCE_LANCE:
     case SPELL_SHOCK:
