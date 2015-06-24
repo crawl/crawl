@@ -376,20 +376,22 @@ string zin_recite_text(const int seed, const int prayertype, int step)
 
     string recite = book_of_zin[chapter][step-1];
 
-    //XXX: deduplicate this with database code
-    recite = replace_all(recite, "@sinners@", sinner_text[sinner_seed]);
+    const map<string, string> replacements =
+    {
+        { "sinners", sinner_text[sinner_seed] },
 
-    recite = replace_all(recite, "@sin_adj@",  sin_text[sin_seed][0]);
-    recite = replace_all(recite, "@sin_noun@", sin_text[sin_seed][1]);
+        { "sin_adj",  sin_text[sin_seed][0] },
+        { "sin_noun", sin_text[sin_seed][1] },
 
-    recite = replace_all(recite, "@virtuous@", virtue_text[virtue_seed][0]);
-    recite = replace_all(recite, "@virtue@",   virtue_text[virtue_seed][1]);
+        { "virtuous", virtue_text[virtue_seed][0] },
+        { "virtue",   virtue_text[virtue_seed][1] },
 
-    recite = replace_all(recite, "@smite@", smite_text[smite_seed][0]);
-    recite = replace_all(recite, "@smitten@", smite_text[smite_seed][1]);
-    recite = replace_all(recite, "@Smitten@", uppercase_first(smite_text[smite_seed][1]));
+        { "smite",   smite_text[smite_seed][0] },
+        { "smitten", smite_text[smite_seed][1] },
+        { "Smitten", uppercase_first(smite_text[smite_seed][1]) },
+    };
 
-    return recite;
+    return replace_keys(recite, replacements);
 }
 
 /** How vulnerable to RECITE_HERETIC is this monster?

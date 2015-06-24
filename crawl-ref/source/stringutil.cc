@@ -8,7 +8,9 @@
 #include "stringutil.h"
 
 #include <cwctype>
+#include <sstream>
 
+#include "libutil.h"
 #include "random.h"
 #include "unicode.h"
 
@@ -316,6 +318,44 @@ string maybe_capitalise_substring(string s)
         s.replace(start, length, uppercase(substring));
     }
     return s;
+}
+
+/**
+ * Make @-replacements on the given text.
+ *
+ * @param text         the string to be processed
+ * @param replacements contains information on what replacements are to be made.
+ * @returns a string with substitutions based on the arguments. For example, if
+ *          given "baz@foo@" and { "foo", "bar" } then this returns "bazbar".
+ *          If a string not in replacements is found between @ signs, then the
+ *          original, unedited string is returned.
+ */
+string replace_keys(const string &text, const map<string, string>& replacements)
+{
+    string::size_type at = 0, last = 0;
+    ostringstream res;
+    while ((at = text.find('@', last)) != string::npos)
+    {
+        res << text.substr(last, at - last);
+        const string::size_type end = text.find('@', at + 1);
+        if (end == string::npos)
+            break;
+
+        const string key = text.substr(at + 1, end - at - 1);
+        const string* value = map_find(replacements, key);
+
+        if (!value)
+            return text;
+
+        res << *value;
+
+        last = end + 1;
+    }
+    if (!last)
+        return text;
+
+    res << text.substr(last);
+    return res.str();
 }
 
 // For each set of [phrase|term|word] contained in the string, replace the set with a random subphrase.
