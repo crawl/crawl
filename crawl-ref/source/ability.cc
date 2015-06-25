@@ -1605,8 +1605,6 @@ bool activate_talent(const talent& tal)
         case ABIL_MUMMY_RESTORATION:
         case ABIL_TRAN_BAT:
         case ABIL_ASHENZARI_END_TRANSFER:
-        case ABIL_ZIN_VITALISATION:
-        case ABIL_GOZAG_POTION_PETITION:
             hungerCheck = false;
             break;
         default:
