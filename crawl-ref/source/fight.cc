@@ -704,9 +704,14 @@ int weapon_min_delay(const item_def &weapon)
 {
     const int base = property(weapon, PWPN_SPEED);
     int min_delay = base/2;
+    const skill_type sk = item_attack_skill(weapon);
 
     // Short blades can get up to at least unarmed speed.
-    if (item_attack_skill(weapon) == SK_SHORT_BLADES && min_delay > 5)
+    if (sk == SK_SHORT_BLADES && min_delay > 5)
+        min_delay = 5;
+
+    // M&F have min delay 5 (for Clubs & Hammers)
+    if (sk == SK_MACES_FLAILS && min_delay < 5)
         min_delay = 5;
 
     // All weapons have min delay 7 or better
@@ -714,7 +719,7 @@ int weapon_min_delay(const item_def &weapon)
         min_delay = 7;
 
     // ...except crossbows...
-    if (item_attack_skill(weapon) == SK_CROSSBOWS && min_delay < 10)
+    if (sk == SK_CROSSBOWS && min_delay < 10)
         min_delay = 10;
 
     // ... and unless it would take more than skill 27 to get there.

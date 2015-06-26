@@ -310,7 +310,7 @@ static int Weapon_index[NUM_WEAPONS];
 static const weapon_def Weapon_prop[] =
 {
     // Maces & Flails
-    { WPN_CLUB,              "club",                5,  3, 13,  7,
+    { WPN_CLUB,              "club",                5,  3, 9,  7,
         SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 10, 0, {} },
     { WPN_ROD,               "rod",                 5,  3, 13,  7,
@@ -331,7 +331,7 @@ static const weapon_def Weapon_prop[] =
             { SPWPN_DISTORTION,     2 },
             { SPWPN_ANTIMAGIC,      1 },
         }},
-    { WPN_HAMMER,            "hammer",              7,  3, 13,  7,
+    { WPN_HAMMER,            "hammer",              7,  3, 10,  7,
         SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 0, 0, M_AND_F_BRANDS },
     { WPN_MACE,              "mace",                8,  3, 14,  8,
