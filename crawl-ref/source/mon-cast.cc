@@ -1526,8 +1526,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_PLANEREND:
     case SPELL_CHAIN_OF_CHAOS:
     case SPELL_BLACK_MARK:
-    case SPELL_GRAND_AVATAR:
 #if TAG_MAJOR_VERSION == 34
+    case SPELL_GRAND_AVATAR:
     case SPELL_REARRANGE_PIECES:
 #endif
     case SPELL_BLINK_ALLIES_AWAY:
@@ -3720,7 +3720,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         blink_close(mons);
     else
     {
-        const int orig_hp = (foe) ? foe->stat_hp() : 0;
         const bool battlesphere = mons->props.exists("battlesphere");
         if (!(get_spell_flags(spell_cast) & SPFLAG_UTILITY))
             make_mons_stop_fleeing(mons);
@@ -3730,8 +3729,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         mons_cast(mons, beem, spell_cast, flags);
         if (battlesphere)
             trigger_battlesphere(mons, beem);
-        if (mons->has_ench(ENCH_GRAND_AVATAR))
-            trigger_grand_avatar(mons, foe, spell_cast, orig_hp);
         if (flags & MON_SPELL_WIZARD && mons->has_ench(ENCH_SAP_MAGIC))
         {
             mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
@@ -6316,34 +6313,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _cast_black_mark(mons);
         return;
 
-    case SPELL_GRAND_AVATAR:
-    {
-        duration = min(2 + mons->spell_hd(spell_cast) / 10, 6);
-
-        monster* avatar =
-            create_monster(
-                mgen_data(MONS_GRAND_AVATAR, SAME_ATTITUDE(mons), mons,
-                          duration, spell_cast, mons->pos(), mons->foe, 0, god,
-                          MONS_NO_MONSTER, 0, COLOUR_INHERIT, PROX_ANYWHERE,
-                          level_id::current(), mons->spell_hd(spell_cast)));
-        if (avatar)
-        {
-            simple_monster_message(mons, " calls forth a grand avatar!");
-            mons->add_ench(mon_enchant(ENCH_GRAND_AVATAR, 1, avatar));
-            for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
-            {
-                if (*mi != mons && mons_aligned(mons, *mi)
-                    && !mi->has_ench(ENCH_CHARM)
-                    && !mi->has_ench(ENCH_HEXED)
-                    && !mons_is_avatar((*mi)->type))
-                {
-                    mi->add_ench(mon_enchant(ENCH_GRAND_AVATAR, 1, avatar));
-                }
-            }
-        }
-        return;
-    }
-
 #if TAG_MAJOR_VERSION == 34
     case SPELL_REARRANGE_PIECES:
     {
@@ -7962,9 +7931,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_BLACK_MARK:
         return mon->has_ench(ENCH_BLACK_MARK);
 
-    case SPELL_GRAND_AVATAR:
-        return mon->has_ench(ENCH_GRAND_AVATAR);
-
     // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
         return !foe;
@@ -8194,6 +8160,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SUMMON_ELEMENTAL:
     case SPELL_EPHEMERAL_INFUSION:
     case SPELL_SINGULARITY:
+    case SPELL_GRAND_AVATAR:
 #endif
     case SPELL_NO_SPELL:
         return true;

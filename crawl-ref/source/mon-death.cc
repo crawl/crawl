@@ -2016,15 +2016,6 @@ int monster_die(monster* mons, killer_type killer,
         end_spectral_weapon(mons, true, killer == KILL_RESET);
         silent = true;
     }
-    else if (mons->type == MONS_GRAND_AVATAR)
-    {
-        if (!silent)
-        {
-            simple_monster_message(mons, " fades into the ether.",
-                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-        }
-        silent = true;
-    }
     else if (mons->type == MONS_DROWNED_SOUL)
     {
         // Suppress death message if 'killed' by touching something

@@ -376,9 +376,6 @@ azrael MONS_AZRAEL
 %sdir mon/demons
 efreet MONS_EFREET
 %sdir mon/nonliving
-%rim 0
-grand_avatar MONS_GRAND_AVATAR
-%rim 1
 
 ## Abominations ('X')
 %sdir mon/demons

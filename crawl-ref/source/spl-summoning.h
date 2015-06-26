@@ -18,9 +18,6 @@
 #define SW_TARGET_MID "sw_target_mid"
 #define SW_READIED "sw_readied"
 #define SW_TRACKING "sw_tracking"
-#define GA_TARGET_MID "ga_target_mid"
-#define GA_MELEE "ga_melee"
-#define GA_SPELL "ga_spell"
 
 spret_type cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD,
                                    bool fail = false);
@@ -117,12 +114,6 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet = false);
 bool trigger_spectral_weapon(actor* agent, const actor* target);
 bool confirm_attack_spectral_weapon(monster* mons, const actor *defender);
 void reset_spectral_weapon(monster* mons);
-
-void grand_avatar_reset(monster* mons);
-bool grand_avatar_check_melee(monster* mons, actor* target);
-void end_grand_avatar(monster* mons, bool killed);
-void trigger_grand_avatar(monster* mons, const actor* victim, spell_type spell,
-                          const int old_hp);
 
 void summoned_monster(const monster* mons, const actor* caster,
                       spell_type spell);

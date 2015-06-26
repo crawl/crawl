@@ -600,11 +600,6 @@ effect take damage, with higher damage being dealt to those close to the
 caster. Those hit by the blast are encased in ice, slowing their movement, and
 those killed by the blast may be frozen into solid blocks of ice.
 %%%%
-Grand Avatar spell
-
-Calls forth an avatar of battle and bloodshed, mirroring sufficiently damaging
-attacks and spells of the invoker and their nearby allies.
-%%%%
 Haste Other spell
 
 Speeds the actions of a nearby ally.

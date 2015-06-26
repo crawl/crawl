@@ -2095,11 +2095,6 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         break;
 
-    case ENCH_GRAND_AVATAR:
-        if (!me.agent() || !me.agent()->alive())
-            del_ench(ENCH_GRAND_AVATAR, true, false);
-        break;
-
     default:
         break;
     }
@@ -2267,7 +2262,10 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "ephemeral_infusion",
 #endif
-    "black_mark", "grand_avatar",
+    "black_mark",
+#if TAG_MAJOR_VERSION == 34
+    "grand_avatar",
+#endif
     "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
     "corrosion", "gold_lust", "drained", "repel missiles",
     "deflect missiles",

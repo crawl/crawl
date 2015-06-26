@@ -1011,7 +1011,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     }
 
     actor* victim = actor_at(beam.target);
-    const int old_hp = (victim) ? victim->stat_hp() : 0;
 
     // Dropping item copy, since the launched item might be different.
     item_def item = mitm[msl];
@@ -1126,14 +1125,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
     if (beam.special_explosion != nullptr)
         delete beam.special_explosion;
-
-    if (mons->has_ench(ENCH_GRAND_AVATAR))
-    {
-        // We want this to be a ranged attack, like the spell mirroring,
-        // so any spell that fires a battlesphere will do here.
-        // XXX: make triggering of this less hacky
-        trigger_grand_avatar(mons, victim, SPELL_MAGIC_DART, old_hp);
-    }
 
     return true;
 }

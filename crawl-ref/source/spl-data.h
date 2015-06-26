@@ -3050,6 +3050,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_GRAND_AVATAR, "Grand Avatar",
     SPTYP_CONJURATION | SPTYP_CHARMS | SPTYP_HEXES,
@@ -3060,6 +3061,7 @@ static const struct spell_desc spelldata[] =
     4, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_SAP_MAGIC, "Sap Magic",

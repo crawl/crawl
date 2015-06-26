@@ -6873,19 +6873,6 @@ void monster::align_avatars(bool force_friendly)
         avatar->attitude = new_att;
         reset_battlesphere(avatar);
     }
-
-    actor* gavatar = get_ench(ENCH_GRAND_AVATAR).agent();
-    if (!gavatar)
-        return;
-    avatar = gavatar->as_monster();
-    monster *owner = monster_by_mid(avatar->summoner);
-    if (avatar->summoner == mid)
-    {
-        avatar->attitude = new_att;
-        grand_avatar_reset(avatar);
-    }
-    else if (!owner || !mons_aligned(this, owner))
-        del_ench(ENCH_GRAND_AVATAR);
 }
 
 void monster::remove_avatars()
@@ -6897,15 +6884,6 @@ void monster::remove_avatars()
     avatar = find_battlesphere(this);
     if (avatar)
         end_battlesphere(avatar, false);
-
-    actor* gavatar = get_ench(ENCH_GRAND_AVATAR).agent();
-    if (!gavatar)
-        return;
-    avatar = gavatar->as_monster();
-    if (avatar->summoner == mid)
-        end_grand_avatar(avatar, false);
-    else
-        del_ench(ENCH_GRAND_AVATAR);
 }
 
 /**
