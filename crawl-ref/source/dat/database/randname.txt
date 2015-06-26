@@ -153,49 +153,45 @@ of @god_name@'s @divine_esteem@
 w:1
 of @god_name@
 %%%%
-weapon_
-
-@weapon@
-%%%%
 weapon_electrocution
 
-"Storm"
+@_elec_weapon_name_@
 
 @weapon@
 %%%%
 weapon_venom
 
-"Sting"
+@_venom_weapon_name_@
 
 @weapon@
 %%%%
 weapon_buggy-vorpal
 
-"Elite"
+@_vorpal_weapon_name_@
 
 @weapon@
 %%%%
 weapon_freezing
 
-"Avalanche"
+@_freezing_weapon_name_@
 
 @weapon@
 %%%%
 weapon_flaming
 
-"Inferno"
+@_flaming_weapon_name_@
 
 @weapon@
 %%%%
 weapon_pain
 
-"Punisher"
+@_pain_weapon_name_@
 
 @weapon@
 %%%%
 weapon_draining
 
-"Entropy"
+@_draining_weapon_name_@
 
 @weapon@
 %%%%
