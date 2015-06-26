@@ -613,7 +613,7 @@ Haunt spell
 
 Calls wraiths and ghosts to haunt the caster's target. They will only attack
 the creature they are haunting, and will dissipate quickly once their target
-dies. Casting it will temporarily prevent your health from regenerating.
+dies.
 %%%%
 Heal Other spell
 
