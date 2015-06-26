@@ -791,8 +791,7 @@ Tears a gash in reality, creating a self-sustained but temporary portal to an
 unknown, tainted otherworld. It requires open space to succeed. After a short
 time, a powerful clawed tentacle will reach through the portal, remaining bound
 to the caster's will for a duration depending on spellpower. With the portal's
-expiry, the tentacle will be severed and turn on the caster. The opening of the
-portal may drain a portion of the caster's intellect.
+expiry, the tentacle will be severed and turn on the caster.
 %%%%
 Malign Offering spell
 
