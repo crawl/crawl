@@ -258,14 +258,6 @@ void handle_behaviour(monster* mon)
         }
     }
 
-    // Grand avatar targeting is handled through its triggerers
-    // and _grand_avatar_act in mon-act.cc.
-    if (mon->type == MONS_GRAND_AVATAR)
-    {
-        mon->behaviour = BEH_SEEK;
-        return;
-    }
-
     bool changed = true;
     bool isFriendly = mon->friendly();
     bool isNeutral  = mon->neutral();

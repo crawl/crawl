@@ -1679,8 +1679,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_RAKSHASA;
     case MONS_EFREET:
         return TILEP_MONS_EFREET;
-    case MONS_GRAND_AVATAR:
-        return TILEP_MONS_GRAND_AVATAR;
 
     // snakes ('S')
     case MONS_BALL_PYTHON:
@@ -4900,7 +4898,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_FORCEFUL_INVITATION:      return TILEG_FORCEFUL_INVITATION;
     case SPELL_GHOSTLY_FIREBALL:         return TILEG_GHOSTLY_FIREBALL;
     case SPELL_SPECTRAL_CLOUD:           return TILEG_SPECTRAL_CLOUD;
-    case SPELL_GRAND_AVATAR:             return TILEG_GRAND_AVATAR;
     case SPELL_HASTE_OTHER:              return TILEG_HASTE_OTHER;
     case SPELL_HELLFIRE_BURST:           return TILEG_HELLFIRE_BURST;
     case SPELL_HOLY_BREATH:              return TILEG_HOLY_BREATH;

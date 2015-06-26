@@ -1683,7 +1683,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_DEMONSPAWN_WARMONGER,
       {
        { SPELL_SAP_MAGIC, 16, MON_SPELL_PRIEST },
-       { SPELL_GRAND_AVATAR, 32, MON_SPELL_PRIEST },
+       { SPELL_HASTE_OTHER, 32, MON_SPELL_PRIEST },
       }
     },
 

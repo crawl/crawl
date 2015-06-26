@@ -1896,107 +1896,6 @@ static void _pre_monster_move(monster* mons)
     mons->check_speed();
 }
 
-static void _grand_avatar_act(monster* mons)
-{
-    if (mons->props.exists(GA_TARGET_MID))
-    {
-        actor* target = actor_by_mid(mons->props[GA_TARGET_MID].get_int());
-        if (!target)
-        {
-            grand_avatar_reset(mons);
-            return;
-        }
-        mons->foe = target->mindex();
-        if (mons->props.exists(GA_SPELL))
-        {
-            if (!mons->firing_pos.origin())
-            {
-                if (mons->pos() != mons->firing_pos)
-                {
-                    mons->target = mons->firing_pos;
-                    return;
-                }
-                mons->firing_pos.reset();
-            }
-            bolt beam;
-            beam.name        = "barrage of energy";
-            beam.source_name = "grand avatar";
-            beam.source      = mons->pos();
-            beam.target      = target->pos();
-            beam.range       = LOS_RADIUS;
-            beam.damage      = dice_def(2, 10);
-            beam.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
-            beam.colour      = LIGHTGREEN;
-            beam.flavour     = BEAM_MMISSILE;
-            beam.hit         = AUTOMATIC_HIT;
-            beam.pierce      = false;
-            beam.foe_ratio   = 0;
-            fire_tracer(mons, beam);
-            if (mons_should_fire(beam))
-            {
-                simple_monster_message(mons, " fires!");
-                beam.fire();
-                mons->lose_energy(EUT_SPECIAL);
-                grand_avatar_reset(mons);
-            }
-            else
-            {
-                mons->target = target->pos();
-                for (distance_iterator di(mons->pos(), true, true, 2); di; ++di)
-                {
-                    if (*di == beam.target
-                        || actor_at(*di)
-                        || cell_is_solid(*di))
-                    {
-                        continue;
-                    }
-                    beam.source = *di;
-                    beam.friend_info.reset();
-                    beam.foe_info.reset();
-                    fire_tracer(mons, beam);
-                    if (mons_should_fire(beam))
-                    {
-                        mons->firing_pos = *di;
-                        mons->target = mons->firing_pos;
-                        break;
-                    }
-                }
-            }
-        }
-        else if (mons->props.exists(GA_MELEE))
-            mons->target = target->pos();
-    }
-    else
-    {
-        grand_avatar_reset(mons);
-        if (!mons->alive())
-            return;
-    }
-
-    // Avatar may have dissipated after firing.
-    if (!mons->alive())
-        return;
-
-    bolt tracer;
-    tracer.source    = mons->pos();
-    tracer.target    = mons->target;
-    tracer.range     = LOS_RADIUS;
-    tracer.hit       = AUTOMATIC_HIT;
-    tracer.flavour   = BEAM_MMISSILE;
-    tracer.is_tracer = true;
-    fire_tracer(mons, tracer);
-
-    if (tracer.path_taken.back() != mons->target)
-    {
-        coord_def near;
-        if (find_habitable_spot_near(mons->target, mons->type, 2, false, near)
-            && mons->blink_to(near))
-        {
-            mons->lose_energy(EUT_SPECIAL);
-        }
-    }
-}
-
 static void _maybe_submerge(monster* mons)
 {
     if (mons->asleep() || mons->submerged())
@@ -2108,9 +2007,6 @@ void handle_monster_move(monster* mons)
         }
         return;
     }
-
-    if (mons->type == MONS_GRAND_AVATAR)
-        _grand_avatar_act(mons);
 
     mons->shield_blocks = 0;
 
@@ -4283,8 +4179,7 @@ static bool _monster_move(monster* mons)
 
     // Battlespheres need to preserve their tracking targets after each move
     if (mons_is_wandering(mons)
-        && mons->type != MONS_BATTLESPHERE
-        && mons->type != MONS_GRAND_AVATAR)
+        && mons->type != MONS_BATTLESPHERE)
     {
         // trigger a re-evaluation of our wander target on our next move -cao
         mons->target = mons->pos();

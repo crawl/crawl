@@ -1949,7 +1949,9 @@ enum enchant_type
     ENCH_EPHEMERAL_INFUSION,
 #endif
     ENCH_BLACK_MARK,
+#if TAG_MAJOR_VERSION == 34
     ENCH_GRAND_AVATAR,
+#endif
     ENCH_SAP_MAGIC,
     ENCH_SHROUD,
     ENCH_PHANTOM_MIRROR,
@@ -2522,7 +2524,6 @@ enum monster_type                      // menv[].type
     MONS_DANCING_WEAPON,
 #if TAG_MAJOR_VERSION > 34
     MONS_SPECTRAL_WEAPON,
-    MONS_GRAND_AVATAR,
 #endif
     MONS_HARPY,
 #if TAG_MAJOR_VERSION == 34
@@ -4371,7 +4372,9 @@ enum spell_type
     SPELL_CHAIN_OF_CHAOS,
     SPELL_CHAOTIC_MIRROR,
     SPELL_BLACK_MARK,
+#if TAG_MAJOR_VERSION == 34
     SPELL_GRAND_AVATAR,
+#endif
     SPELL_SAP_MAGIC,
     SPELL_CORRUPT_BODY,
 #if TAG_MAJOR_VERSION == 34
