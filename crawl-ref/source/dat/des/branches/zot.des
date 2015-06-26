@@ -2292,42 +2292,6 @@ Be..x...Ck..x.Et......
    Ci...qD
 ENDMAP
 
-NAME:    hangedman_moon_palace_of_the_dragon_emperor
-TAGS:    extra decor no_pool_fixup
-DEPTH:   Zot, !Zot:$
-ORIENT:  float
-MONS:    plant col:random name:demonic name_adjective tile:mons_demonic_plant
-ITEM:    stone q:1 no_pickup, large rock q:1 no_pickup, mundane cloak no_pickup
-ITEM:    scroll of random uselessness q:1 ident:type no_pickup
-ITEM:    needle ego:poisoned q:1 no_pickup, mundane dagger no_pickup
-ITEM:    potion of poison q:1 ident:type no_pickup
-KFEAT:   A = stone_arch
-SHUFFLE: {}, tT'"
-SUBST:   t = T, " = '
-SUBST:   l : l+mv, G : Gc1, T : TUAdefg, ' : hijk'
-: dgn.delayed_decay(_G, 'j', 'draconian skeleton')
-KPROP:   ' = bloody
-KMASK:   defghij = no_item_gen
-TILE:    c : dngn_stone_wall_red / wall_icy_stone / wall_cobalt_stone
-COLOUR:  G = cyan
-TILE:    G = dngn_statue_iron
-: set_feature_name("granite_statue", "iron statue")
-MAP
-                            bbbbbbbbbbbbb
-                  bbbbbbbbbbbbb...l...bbb
-          bbbbbbbbbbb..l..bbbb.........bb
-    bbbbbbbb..l..bbb.......bb...........b
-bbbbbb.l.bb.......b.........b...........b
-btl'b.t.'.b..t.'..b...t.'...b....t.'....b
-b.{....C......C...0....C..........}.....b
-bTG"b.T.".b..T."..b...T."...b....T."....b
-bbbbbb.G.bb.......b.........b...........b
-    bbbbbbbb..G..bbb.......bb...........b
-          bbbbbbbbbbb..G..bbbb.........bb
-                  bbbbbbbbbbbbb...G...bbb
-                            bbbbbbbbbbbbb
-ENDMAP
-
 # Inspired by a distant submission from nicolae-,
 # a revelation: nothing in Zot makes any sense!
 NAME:    hangedman_orp_of_zott
