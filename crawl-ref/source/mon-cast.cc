@@ -5796,8 +5796,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         // Monster spell of uselessness, just prints a message.
         // This spell exists so that some monsters with really strong
         // spells (ie orc priest) can be toned down a bit. -- bwr
-        //
-        // XXX: Needs expansion, and perhaps different priest/mage flavours.
 
         // Don't give any message if the monster isn't nearby.
         // (Otherwise you could get them from halfway across the level.)
@@ -5845,43 +5843,20 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                 {
                     slugform = replace_all(slugform, "@The_monster@",
                                            foe->name(DESC_THE));
-                    mprf(MSGCH_MONSTER_ENCHANT, "%s", slugform.c_str());
+                    mprf(channel, "%s", slugform.c_str());
                 }
             }
         }
         else
         {
-            // Messages about the monster influencing itself.
-            const char* buff_msgs[] =
+            const char* msgs[] =
             {
-                " glows brightly for a moment.",
-                " looks braver.",
-                " becomes somewhat translucent.",
-                "'s eyes start to glow.",
+                " casts a cantrip, but nothing happens.",
+                " miscasts a cantrip.",
+                " looks braver for a moment.",
             };
 
-            // Messages about the monster influencing you.
-            const char* other_msgs[] =
-            {
-                "You feel troubled.",
-                "You feel a wave of unholy energy pass over you.",
-            };
-
-            if (buff_only || crawl_state.game_is_arena() || x_chance_in_y(2,3))
-            {
-                simple_monster_message(mons, RANDOM_ELEMENT(buff_msgs),
-                                       channel);
-            }
-            else if (friendly)
-            {
-                simple_monster_message(mons, " shimmers for a moment.",
-                                       channel);
-            }
-            else // "Enchant" the player.
-            {
-                mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
-                mpr(RANDOM_ELEMENT(other_msgs));
-            }
+            simple_monster_message(mons, RANDOM_ELEMENT(msgs), channel);
         }
         return;
     }
