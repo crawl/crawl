@@ -5221,7 +5221,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_DRAINING_GAZE:
         enchant_actor_with_flavour(foe, mons, BEAM_DRAIN_MAGIC,
-                                   foe->get_experience_level() * 12);
+                                   mons->get_experience_level() * 12);
         return;
 
     case SPELL_PARALYSIS_GAZE:
