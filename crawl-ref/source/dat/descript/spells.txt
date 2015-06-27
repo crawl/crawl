@@ -896,8 +896,7 @@ Ozocubu's Armour spell
 Envelops the caster's body in a protective layer of ice. The caster will not
 suffer cold from this layer, yet can be affected by other sources of cold
 normally. The spell will not function for casters already wearing heavy armour
-(any body armour with an encumbrance rating of 5 or more). The effects of this
-spell are boosted if the caster is in Ice Form.
+(any body armour with an encumbrance rating of 5 or more).
 %%%%
 Ozocubu's Refrigeration spell
 
@@ -1241,8 +1240,7 @@ Fires a sharp spine of rock.
 Stoneskin spell
 
 Hardens the caster's skin. It has no effect on the undead or those under the
-effects of most types of transformation. The effects of this spell are boosted
-if the caster is in Statue Form.
+effects of most types of transformation.
 %%%%
 Strip Resistance spell
 

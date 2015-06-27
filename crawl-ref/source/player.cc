@@ -5848,50 +5848,6 @@ int player_icemail_armour_class()
     return you.duration[DUR_ICEMAIL_DEPLETED] ? 0 : ICEMAIL_MAX;
 }
 
-bool player_stoneskin()
-{
-#if TAG_MAJOR_VERSION == 34
-    // Lava orcs ignore DUR_STONESKIN
-    if (you.species == SP_LAVA_ORC)
-    {
-        // Most transformations conflict with stone skin.
-        if (form_changed_physiology() && you.form != TRAN_STATUE)
-            return false;
-
-        return temperature_effect(LORC_STONESKIN);
-    }
-    else
-#endif
-    return you.duration[DUR_STONESKIN];
-}
-
-static int _stoneskin_bonus()
-{
-    if (!player_stoneskin())
-        return 0;
-
-    int boost = 200;
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC)
-        boost += 20 * you.experience_level;
-    else
-#endif
-    boost += you.props[STONESKIN_KEY].get_int() * 5;
-
-    if (you.form == TRAN_STATUE)
-    {
-        boost += 100;
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_LAVA_ORC)
-            boost += 25 * you.experience_level;
-        else
-#endif
-        boost += you.props[STONESKIN_KEY].get_int() * 6;
-    }
-
-    return boost;
-}
-
 /**
  * How many points of AC/SH does the player get from their current bone armour?
  *
@@ -6003,13 +5959,10 @@ int player::armour_class(bool /*calc_unid*/) const
     AC += scan_artefacts(ARTP_AC) * 100;
 
     if (duration[DUR_ICY_ARMOUR])
-    {
         AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
-        if (form == TRAN_ICE_BEAST)
-            AC += 100 + you.props[ICY_ARMOUR_KEY].get_int() * 6; // max +7
-    }
 
-    AC += _stoneskin_bonus();
+    if (duration[DUR_STONESKIN])
+        AC += 200 + you.props[STONESKIN_KEY].get_int() * 5;
 
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();

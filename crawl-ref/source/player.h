@@ -908,8 +908,6 @@ int calc_hunger(int food_cost);
 
 int player_icemail_armour_class();
 
-bool player_stoneskin();
-
 int player_wizardry(spell_type spell);
 
 int player_prot_life(bool calc_unid = true, bool temp = true,
