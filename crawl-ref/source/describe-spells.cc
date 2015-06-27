@@ -385,7 +385,9 @@ static void _describe_book(const spellbook_contents &book,
                             spell_letter,
                             hex_chance(spell, hd),
                             chop_string(spell_title(spell), 22).c_str());
-        } else {
+        }
+        else
+        {
             description.cprintf("%c - %s",
                             spell_letter,
                             chop_string(spell_title(spell), 29).c_str());
