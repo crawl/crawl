@@ -1010,8 +1010,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         mons->speed_increment -= div_rand_round(energy * delay, 10);
     }
 
-    actor* victim = actor_at(beam.target);
-
     // Dropping item copy, since the launched item might be different.
     item_def item = mitm[msl];
     item.quantity = 1;
