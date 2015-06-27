@@ -1823,15 +1823,21 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     if (form_changed_physiology(which_trans))
         merfolk_stop_swimming();
 
-    // Most transformations conflict with stone skin.
-    if (form_changed_physiology(which_trans) && which_trans != TRAN_STATUE)
-        you.duration[DUR_STONESKIN] = 0;
-
     if (which_trans == TRAN_HYDRA)
         set_hydra_form_heads(div_rand_round(pow, 10));
 
     // Give the transformation message.
     mpr(get_form(which_trans)->transform_message(previous_trans));
+
+    // Most transformations conflict with stone skin.
+    if (form_changed_physiology(which_trans)
+        && which_trans != TRAN_STATUE
+        && you.duration[DUR_STONESKIN])
+    {
+        mprf("Your stony body turns to %s.",
+             get_form(which_trans)->flesh_equivalent.c_str());
+        you.duration[DUR_STONESKIN] = 0;
+    }
 
     // Update your status.
     you.form = which_trans;
@@ -1863,22 +1869,11 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     switch (which_trans)
     {
     case TRAN_STATUE:
-        if (you.duration[DUR_STONESKIN])
-            mpr("Your new body merges with your stone armour.");
-#if TAG_MAJOR_VERSION == 34
-        else if (you.species == SP_LAVA_ORC)
-            mpr("Your new body is particularly stony.");
-#endif
         if (you.duration[DUR_ICY_ARMOUR])
         {
             mprf(MSGCH_DURATION, "Your new body cracks your icy armour.");
             you.duration[DUR_ICY_ARMOUR] = 0;
         }
-        break;
-
-    case TRAN_ICE_BEAST:
-        if (you.duration[DUR_ICY_ARMOUR])
-            mpr("Your new body merges with your icy armour.");
         break;
 
     case TRAN_SPIDER:
@@ -2043,52 +2038,31 @@ void untransform(bool skip_move)
     set<equipment_type> melded = _init_equipment_removal(old_form);
 
     you.form = TRAN_NONE;
-    you.duration[DUR_TRANSFORMATION]   = 0;
+    you.duration[DUR_TRANSFORMATION] = 0;
     update_player_symbol();
 
-    switch (old_form)
+    if (old_form == TRAN_APPENDAGE)
     {
-    case TRAN_STATUE:
-        // Note: if the core goes down, the combined effect soon disappears,
-        // but the reverse isn't true. -- bwr
-        if (you.duration[DUR_STONESKIN])
-            you.duration[DUR_STONESKIN] = 1;
-        break;
+        int app = you.attribute[ATTR_APPENDAGE];
+        ASSERT(beastly_slot(app) != EQ_NONE);
+        const int levels = you.mutation[app];
+        // Preserve extra mutation levels acquired after transforming.
+        const int beast_levels = _beastly_appendage_level(app);
+        const int extra = max(0, levels - you.innate_mutation[app]
+                                        - beast_levels);
+        you.mutation[app] = you.innate_mutation[app] + extra;
+        you.attribute[ATTR_APPENDAGE] = 0;
 
-    case TRAN_ICE_BEAST:
-        // Note: if the core goes down, the combined effect soon disappears,
-        // but the reverse isn't true. -- bwr
-        if (you.duration[DUR_ICY_ARMOUR])
-            you.duration[DUR_ICY_ARMOUR] = 1;
-        break;
-
-    case TRAN_APPENDAGE:
+        // The mutation might have been removed already by a conflicting
+        // demonspawn innate mutation; no message then.
+        if (levels)
         {
-            int app = you.attribute[ATTR_APPENDAGE];
-            ASSERT(beastly_slot(app) != EQ_NONE);
-            const int levels = you.mutation[app];
-            // Preserve extra mutation levels acquired after transforming.
-            const int beast_levels = _beastly_appendage_level(app);
-            const int extra = max(0, levels - you.innate_mutation[app]
-                                            - beast_levels);
-            you.mutation[app] = you.innate_mutation[app] + extra;
-            you.attribute[ATTR_APPENDAGE] = 0;
-
-            // The mutation might have been removed already by a conflicting
-            // demonspawn innate mutation; no message then.
-            if (levels)
-            {
-                const char * const verb = you.mutation[app] ? "shrink"
-                                                            : "disappear";
-                mprf(MSGCH_DURATION, "Your %s %s%s.",
-                     mutation_name(static_cast<mutation_type>(app)), verb,
-                     app == MUT_TENTACLE_SPIKE ? "s" : "");
-            }
+            const char * const verb = you.mutation[app] ? "shrink"
+                                                        : "disappear";
+            mprf(MSGCH_DURATION, "Your %s %s%s.",
+                 mutation_name(static_cast<mutation_type>(app)), verb,
+                 app == MUT_TENTACLE_SPIKE ? "s" : "");
         }
-        break;
-
-    default:
-        break;
     }
 
     const string message = get_form(old_form)->get_untransform_message();

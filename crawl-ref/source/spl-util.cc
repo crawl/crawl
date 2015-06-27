@@ -994,33 +994,6 @@ int spell_effect_noise(spell_type spell)
     return _seekspell(spell)->effect_noise;
 }
 
-static bool _spell_is_empowered(spell_type spell)
-{
-    switch (spell)
-    {
-    case SPELL_STONESKIN:
-        if (you.duration[DUR_TRANSFORMATION] > 0
-            && you.form == TRAN_STATUE
-            && !player_stoneskin())
-        {
-            return true;
-        }
-        break;
-    case SPELL_OZOCUBUS_ARMOUR:
-        if (you.duration[DUR_TRANSFORMATION] > 0
-            && you.form == TRAN_ICE_BEAST
-            && you.duration[DUR_ICY_ARMOUR] < 1)
-        {
-            return true;
-        }
-        break;
-    default:
-        break;
-    }
-
-    return false;
-}
-
 /**
  * Does the given spell map to a player transformation?
  *
@@ -1339,9 +1312,6 @@ int spell_highlight_by_utility(spell_type spell, int default_colour,
     {
         return COL_FORBIDDEN;
     }
-
-    if (_spell_is_empowered(spell) && !rod_spell)
-        default_colour = COL_EMPOWERED;
 
     if (spell_is_useless(spell, transient))
         default_colour = COL_USELESS;
