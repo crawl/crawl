@@ -1041,12 +1041,11 @@ static monster_type _xom_random_demon(int sever)
     return demon;
 }
 
-static bool _player_is_dead(bool soon = true)
+static bool _player_is_dead()
 {
     return you.hp <= 0
         || is_feat_dangerous(grd(you.pos()))
-        || you.did_escape_death()
-        || soon && (you.strength() <= 0 || you.dex() <= 0 || you.intel() <= 0);
+        || you.did_escape_death();
 }
 
 static void _note_potion_effect(potion_type pot)
@@ -3504,11 +3503,10 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
     }
 #endif
 
-    if (_player_is_dead(false))
+    if (_player_is_dead())
     {
         // This should only happen if the player used wizard mode to
-        // escape from death via stat loss, or if the player used wizard
-        // mode to escape death from deep water or lava.
+        // escape death from deep water or lava.
         ASSERT(you.wizard);
         ASSERT(!you.did_escape_death());
         if (is_feat_dangerous(grd(you.pos())))
