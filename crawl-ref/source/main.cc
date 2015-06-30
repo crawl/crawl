@@ -381,6 +381,11 @@ static void _launch_game_loop()
         {
             game_ended = true;
             _reset_game();
+
+            // Don't re-enter the Sprint menu with restart_after_save, as
+            // that would reload the just-saved game immediately.
+            if (ge.was_saved)
+                crawl_state.last_type = GAME_TYPE_UNSPECIFIED;
         }
         catch (ext_fail_exception &fe)
         {
