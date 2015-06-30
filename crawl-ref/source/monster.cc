@@ -5500,7 +5500,8 @@ static bool _mons_is_icy(int mc)
 {
     return mc == MONS_ICE_BEAST
            || mc == MONS_SIMULACRUM
-           || mc == MONS_ICE_STATUE;
+           || mc == MONS_ICE_STATUE
+           || mc == MONS_BLOCK_OF_ICE;
 }
 
 bool monster::is_icy() const
