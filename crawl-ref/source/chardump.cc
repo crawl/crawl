@@ -1292,7 +1292,7 @@ void dump_map(FILE *fp, bool debug, bool dist)
             {
 #ifdef COLOURED_DUMPS
                 size_t nv = 0;
-                for (const vault_placement *vault : env.level_vaults)
+                for (auto &vault : env.level_vaults)
                     if (vault->map.in_map(coord_def(x, y) - vault->pos))
                         nv++;
 

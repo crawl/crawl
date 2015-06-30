@@ -1537,8 +1537,7 @@ LUAFN(_dgn_place_map)
         if (dgn_place_map(map, check_collision, no_exits, where)
             && !env.level_vaults.empty())
         {
-            lua_pushlightuserdata(ls,
-                                  env.level_vaults[env.level_vaults.size() - 1]);
+            lua_pushlightuserdata(ls, env.level_vaults.back().get());
         }
         else
             lua_pushnil(ls);
@@ -1580,9 +1579,15 @@ static int _dgn_push_vault_placement(lua_State *ls, const vault_placement *vp)
     return dlua_push_object_type(ls, VAULT_PLACEMENT_METATABLE, *vp);
 }
 
+static int _dgn_push_vault_placement_uptr(lua_State *ls,
+                                          const unique_ptr<vault_placement> &vp)
+{
+    return _dgn_push_vault_placement(ls, vp.get());
+}
+
 LUAFN(_dgn_maps_used_here)
 {
-    return clua_gentable(ls, env.level_vaults, _dgn_push_vault_placement);
+    return clua_gentable(ls, env.level_vaults, _dgn_push_vault_placement_uptr);
 }
 
 LUAFN(_dgn_vault_at)

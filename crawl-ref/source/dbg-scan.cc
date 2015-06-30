@@ -271,7 +271,7 @@ static vector<string> _in_vaults(const coord_def &pos)
 {
     vector<string> out;
 
-    for (const vault_placement *vault : env.level_vaults)
+    for (auto &vault : env.level_vaults)
         if (_inside_vault(*vault, pos))
             out.push_back(vault->map.name);
 
@@ -290,7 +290,7 @@ static string _vault_desc(const coord_def pos)
 
     string out;
 
-    for (const vault_placement *vault : env.level_vaults)
+    for (auto &vault : env.level_vaults)
     {
         if (_inside_vault(*vault, pos))
         {

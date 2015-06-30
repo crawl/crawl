@@ -521,7 +521,7 @@ void dgn_build_labyrinth_level()
     }
     else
     {
-        const vault_placement &rplace = **(env.level_vaults.end() - 1);
+        const vault_placement &rplace = *env.level_vaults.back();
         if (rplace.map.has_tag("generate_loot"))
         {
             for (vault_place_iterator vi(rplace); vi; ++vi)
