@@ -2142,7 +2142,7 @@ shard shrike
 
 An incredibly fast-moving bird, known for impaling its prey on shards of ice
 before tearing them to pieces. They have acclimated to the desolate wastes of
-Cocytus, and its accursed chill now envelopes them.
+Cocytus, and its accursed chill now envelops them.
 %%%%
 sheep
 
