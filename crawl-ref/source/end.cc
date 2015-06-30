@@ -47,7 +47,6 @@ static void _clear_globals_on_exit()
 {
     clear_rays_on_exit();
     clear_zap_info_on_exit();
-    clear_colours_on_exit();
     destroy_abyss();
 }
 

@@ -99,7 +99,6 @@ VColour str_to_tile_colour(string colour);
 
 void init_element_colours();
 void add_element_colour(element_colour_calc *colour);
-void clear_colours_on_exit();
 colour_t random_colour(bool ui_rand = false);
 colour_t random_uncommon_colour();
 bool is_low_colour(colour_t colour) IMMUTABLE;
