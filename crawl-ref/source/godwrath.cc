@@ -348,7 +348,7 @@ static void _ely_dull_inventory_weapons()
     int num_dulled = 0;
     int quiver_link;
 
-    you.m_quiver->get_desired_item(nullptr, &quiver_link);
+    you.m_quiver.get_desired_item(nullptr, &quiver_link);
 
     for (int i = 0; i < ENDOFPACK; ++i)
     {

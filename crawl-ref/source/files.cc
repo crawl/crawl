@@ -135,7 +135,7 @@ static player_save_info _read_character_info(package *save)
     }
     catch (ext_fail_exception &E) {}
 
-    you.copy_from(backup);
+    you = backup;
 
     return fromfile;
 }
@@ -1572,7 +1572,7 @@ static void _save_game_base()
 #endif
 
     /* kills */
-    SAVEFILE("kil", "kills", you.kills->save);
+    SAVEFILE("kil", "kills", you.kills.save);
 
     /* travel cache */
     SAVEFILE("tc", "travel_cache", travel_cache.save);
@@ -1942,7 +1942,7 @@ static bool _restore_game(const string& filename)
     if (you.save->has_chunk(CHUNK("kil", "kills")))
     {
         reader inf(you.save, CHUNK("kil", "kills"),minorVersion);
-        you.kills->load(inf);
+        you.kills.load(inf);
     }
 
     if (you.save->has_chunk(CHUNK("tc", "travel_cache")))

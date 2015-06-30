@@ -48,13 +48,13 @@ static bool _fire_validate_item(int selected, string& err);
 
 bool item_is_quivered(const item_def &item)
 {
-    return in_inventory(item) && item.link == you.m_quiver->get_fire_item();
+    return in_inventory(item) && item.link == you.m_quiver.get_fire_item();
 }
 
 int get_next_fire_item(int current, int direction)
 {
     vector<int> fire_order;
-    you.m_quiver->get_fire_order(fire_order, true);
+    you.m_quiver.get_fire_order(fire_order, true);
 
     if (fire_order.empty())
         return -1;
@@ -81,7 +81,7 @@ public:
           selected_from_inventory(false),
           need_redraw(false)
     {
-        m_slot = you.m_quiver->get_fire_item(&m_noitem_reason);
+        m_slot = you.m_quiver.get_fire_item(&m_noitem_reason);
         set_prompt();
     }
 
@@ -287,7 +287,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         return false;
     }
 
-    you.m_quiver->on_item_fired(*beh.active_item(), beh.chosen_ammo);
+    you.m_quiver.on_item_fired(*beh.active_item(), beh.chosen_ammo);
     you.redraw_quiver = true;
     slot = beh.m_slot;
 
@@ -414,7 +414,7 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
         return -1;
     }
 
-    if (Options.auto_switch && you.m_quiver->get_fire_item() == -1
+    if (Options.auto_switch && you.m_quiver.get_fire_item() == -1
        && _autoswitch_to_ranged())
     {
         return -1;

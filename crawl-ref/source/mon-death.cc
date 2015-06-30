@@ -2557,7 +2557,7 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     if (!crawl_state.game_is_arena() && leaves_corpse && !in_transit)
-        you.kills->record_kill(mons, killer, pet_kill);
+        you.kills.record_kill(mons, killer, pet_kill);
 
     if (fake)
     {

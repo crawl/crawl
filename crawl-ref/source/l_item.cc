@@ -1154,7 +1154,7 @@ static int l_item_equipped_at(lua_State *ls)
 
 static int l_item_fired_item(lua_State *ls)
 {
-    int q = you.m_quiver->get_fire_item();
+    int q = you.m_quiver.get_fire_item();
 
     if (q < 0 || q >= ENDOFPACK)
         return 0;

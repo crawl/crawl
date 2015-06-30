@@ -8,11 +8,13 @@
 #define PLAYER_H
 
 #include <list>
+#include <memory>
 #include <vector>
 
 #include "actor.h"
 #include "beam.h"
 #include "bitary.h"
+#include "kills.h"
 #include "place-info.h"
 #include "quiver.h"
 #include "religion-enum.h"
@@ -198,16 +200,7 @@ public:
   FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
   FixedBitVector<NUM_MONSTERS> unique_creatures;
 
-  // NOTE: The kills member is a pointer to a KillMaster object,
-  // rather than the object itself, so that we can get away with
-  // just a forward declare of the KillMaster class, rather than
-  // having to #include kills.h and thus make every single .cc file
-  // dependent on kills.h. Having a pointer means that we have
-  // to do our own implementations of copying the player object,
-  // since the default implementations will lead to the kills member
-  // pointing to freed memory, or worse yet lead to the same piece of
-  // memory being freed twice.
-  KillMaster* kills;
+  KillMaster kills;
 
   branch_type where_are_you;
   int depth;
@@ -276,7 +269,7 @@ public:
   map<level_id, vector<string> > vault_list;
 
   PlaceInfo global_info;
-  player_quiver* m_quiver;
+  player_quiver m_quiver;
 
   // monsters mesmerising player; should be protected, but needs to be saved
   // and restored.
@@ -419,12 +412,8 @@ protected:
 
 public:
     player();
-    player(const player &other);
-    ~player();
+    virtual ~player();
 
-    void copy_from(const player &other);
-
-    void init();
     void init_skills();
 
     // Set player position without updating view geometry.

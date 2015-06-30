@@ -347,7 +347,7 @@ static void _reset_game()
     clear_message_store();
     macro_clear_buffers();
     transit_lists_clear();
-    you.init();
+    you = player();
     StashTrack = StashTracker();
     travel_cache = TravelCache();
     clear_level_target();
@@ -1919,7 +1919,7 @@ static void _do_cycle_quiver(int dir)
         return;
     }
 
-    const int cur = you.m_quiver->get_fire_item();
+    const int cur = you.m_quiver.get_fire_item();
     const int next = get_next_fire_item(cur, dir);
 #ifdef DEBUG_QUIVER
     mprf(MSGCH_DIAGNOSTICS, "next slot: %d, item: %s", next,
@@ -1928,7 +1928,7 @@ static void _do_cycle_quiver(int dir)
     if (next != -1)
     {
         // Kind of a hacky way to get quiver to change.
-        you.m_quiver->on_item_fired(you.inv[next], true);
+        you.m_quiver.on_item_fired(you.inv[next], true);
 
         if (next == cur)
             mpr("No other missiles available. Use F to throw any item.");

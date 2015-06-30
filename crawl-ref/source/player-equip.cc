@@ -630,7 +630,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 {
     you.wield_change = true;
-    you.m_quiver->on_weapon_changed();
+    you.m_quiver.on_weapon_changed();
 
     // Call this first, so that the unrandart func can set showMsgs to
     // false if it does its own message handling.

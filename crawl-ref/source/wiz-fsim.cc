@@ -78,7 +78,7 @@ static string _equipped_weapon_name()
 {
     const int weapon = you.equip[EQ_WEAPON];
     const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
-    const int missile = you.m_quiver->get_fire_item();
+    const int missile = you.m_quiver.get_fire_item();
 
     if (iweap)
     {
@@ -335,7 +335,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
 
     const int weapon = you.equip[EQ_WEAPON];
     const item_def *iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
-    const int missile = you.m_quiver->get_fire_item();
+    const int missile = you.m_quiver.get_fire_item();
 
     // now make sure the player is ready
     you.exp_available = 0;
