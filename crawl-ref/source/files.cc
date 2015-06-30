@@ -1678,7 +1678,7 @@ void save_game(bool leave_game, const char *farewellmsg)
     if (Options.restart_after_game && Options.restart_after_save
         && !crawl_state.seen_hups)
     {
-        throw game_ended_condition();
+        throw game_ended_condition(true);
     }
 
     end(0, false, farewellmsg? "%s" : "See you soon, %s!",
