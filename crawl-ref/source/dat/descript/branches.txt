@@ -109,9 +109,9 @@ great treasures. The blood spattered liberally around the entrance suggests
 that there is a certain amount of violence, too.
 
 The Vaults are five levels deep and contain the silver rune, as well as the
-entrances to two more branches. They can only be entered while carrying at
-least one rune of Zot. The entrance can be found on either level 13 or 14 of
-the main dungeon.
+entrance to the Crypt. They can only be entered while carrying at least one
+rune of Zot. The entrance can be found on either level 13 or 14 of the main
+dungeon.
 %%%%
 Crypt
 
