@@ -31,7 +31,7 @@
 
 static void _init_player()
 {
-    you.init();
+    you = player();
     dlua.callfn("dgn_clear_data", "");
 }
 

@@ -3469,7 +3469,7 @@ static const char* _attack_delay_desc(int attack_delay)
 static void _display_attack_delay()
 {
     const item_def* ammo = nullptr;
-    you.m_quiver->get_desired_item(&ammo, nullptr);
+    you.m_quiver.get_desired_item(&ammo, nullptr);
     const bool uses_ammo = ammo && you.weapon()
                            && ammo->launched_by(*you.weapon());
     const int delay = you.attack_delay(you.weapon(), uses_ammo ? ammo : nullptr,
@@ -5033,40 +5033,6 @@ int count_worn_ego(int which_ego)
 }
 
 player::player()
-    : kills(0), m_quiver(0)
-{
-    init();
-}
-
-player::player(const player &other)
-    : kills(0), m_quiver(0)
-{
-    init();
-    copy_from(other);
-}
-
-// Not called operator= because it is implemented in terms of the
-// default operator=
-void player::copy_from(const player &other)
-{
-    if (this == &other)
-        return;
-
-    KillMaster *saved_kills = kills;
-    player_quiver* saved_quiver = m_quiver;
-
-    // Rather than trying (and failing) to include explicit assignments
-    // for every member at this point, we use the default operator=.
-    *this = other;
-
-    kills  = saved_kills;
-    *kills = *(other.kills);
-    m_quiver = saved_quiver;
-    *m_quiver = *(other.m_quiver);
-}
-
-// player struct initialization
-void player::init()
 {
     chr_god_name.clear();
     chr_species_name.clear();
@@ -5180,9 +5146,7 @@ void player::init()
     unique_creatures.reset();
     force_autopickup.init(0);
 
-    if (kills)
-        delete kills;
-    kills = new KillMaster();
+    kills = KillMaster();
 
     where_are_you    = BRANCH_DUNGEON;
     depth            = 1;
@@ -5240,9 +5204,7 @@ void player::init()
     global_info = PlaceInfo();
     global_info.assert_validity();
 
-    if (m_quiver)
-        delete m_quiver;
-    m_quiver = new player_quiver;
+    m_quiver = player_quiver();
 
     props.clear();
 
@@ -5320,7 +5282,7 @@ void player::init()
     seen_invis          = false;
     frame_no            = 0;
 
-    save                = 0;
+    save                = nullptr;
     prev_save_version.clear();
 
     clear_constricted();
@@ -5400,13 +5362,11 @@ string player_save_info::short_desc() const
 
 player::~player()
 {
-    delete kills;
-    delete m_quiver;
     if (CrawlIsCrashing && save)
     {
         save->abort();
         delete save;
-        save = 0;
+        save = nullptr;
     }
     ASSERT(!save); // the save file should be closed or deleted
 }

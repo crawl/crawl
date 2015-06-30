@@ -1628,7 +1628,7 @@ void scorefile_entry::init(time_t dt)
         }
     }
 
-    kills            = you.kills->total_kills();
+    kills            = you.kills.total_kills();
 
     final_hp         = you.hp;
     final_max_hp     = you.hp_max;

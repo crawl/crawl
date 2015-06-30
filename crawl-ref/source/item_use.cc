@@ -356,7 +356,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         you.time_taken /= 2;
 
     you.wield_change  = true;
-    you.m_quiver->on_weapon_changed();
+    you.m_quiver.on_weapon_changed();
     you.turn_is_over  = true;
 
     return true;

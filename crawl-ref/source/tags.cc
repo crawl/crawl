@@ -1548,7 +1548,7 @@ static void tag_construct_you(writer &th)
 
     marshallByte(th, you.piety_hysteresis);
 
-    you.m_quiver->save(th);
+    you.m_quiver.save(th);
 
     CANARY;
 
@@ -3083,7 +3083,7 @@ static void tag_read_you(reader &th)
 
     you.piety_hysteresis = unmarshallByte(th);
 
-    you.m_quiver->load(th);
+    you.m_quiver.load(th);
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_FRIENDLY_PICKUP)

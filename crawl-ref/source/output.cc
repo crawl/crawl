@@ -902,7 +902,7 @@ static void _print_stats_qv(int y)
     int col;
     string text;
 
-    int q = you.m_quiver->get_fire_item();
+    int q = you.m_quiver.get_fire_item();
     ASSERT_RANGE(q, -1, ENDOFPACK);
     char hud_letter = '-';
     if (q != -1 && !fire_warn_if_impossible(true))
@@ -1365,7 +1365,7 @@ void print_stats()
         // that's set in fewer places?
         // Also, it's a little bogus to change simulation state in
         // render code. We should find a better place for this.
-        you.m_quiver->on_weapon_changed();
+        you.m_quiver.on_weapon_changed();
         _print_stats_wp(9 + yhack);
     }
     you.wield_change  = false;

@@ -70,12 +70,10 @@ typedef FixedBitArray<GXM, GYM> map_bitmask;
 struct item_def;
 struct coord_def;
 class level_id;
-class player_quiver;
 class map_marker;
 class actor;
 class player;
 class monster;
-class KillMaster;
 class ghost_demon;
 
 typedef pair<coord_def, int> coord_weight;

@@ -158,7 +158,7 @@ void quiver_item(int slot)
     if (weapon && item.launched_by(*weapon))
         t = _get_weapon_ammo_type(weapon);
 
-    you.m_quiver->set_quiver(you.inv[slot], t);
+    you.m_quiver.set_quiver(you.inv[slot], t);
     mprf("Quivering %s for %s.", you.inv[slot].name(DESC_INVENTORY).c_str(),
          t == AMMO_THROW    ? "throwing" :
          t == AMMO_BLOWGUN  ? "blowguns" :
@@ -186,7 +186,7 @@ void choose_item_for_quiver()
     if (slot == PROMPT_GOT_SPECIAL)  // '-' or empty quiver
     {
         ammo_t t = _get_weapon_ammo_type(you.weapon());
-        you.m_quiver->empty_quiver(t);
+        you.m_quiver.empty_quiver(t);
 
         mprf("Reset %s quiver to default.",
              t == AMMO_THROW    ? "throwing" :
@@ -477,31 +477,25 @@ void player_quiver::load(reader& inf)
 
 preserve_quiver_slots::preserve_quiver_slots()
 {
-    if (!you.m_quiver)
-        return;
-
     COMPILE_CHECK(ARRAYSZ(m_last_used_of_type) ==
-                  ARRAYSZ(you.m_quiver->m_last_used_of_type));
+                  ARRAYSZ(you.m_quiver.m_last_used_of_type));
 
     for (unsigned int i = 0; i < ARRAYSZ(m_last_used_of_type); i++)
     {
         m_last_used_of_type[i] =
-            _get_pack_slot(you.m_quiver->m_last_used_of_type[i]);
+            _get_pack_slot(you.m_quiver.m_last_used_of_type[i]);
     }
 }
 
 preserve_quiver_slots::~preserve_quiver_slots()
 {
-    if (!you.m_quiver)
-        return;
-
     for (unsigned int i = 0; i < ARRAYSZ(m_last_used_of_type); i++)
     {
         const int slot = m_last_used_of_type[i];
         if (slot != -1)
         {
-            you.m_quiver->m_last_used_of_type[i] = you.inv[slot];
-            you.m_quiver->m_last_used_of_type[i].quantity = 1;
+            you.m_quiver.m_last_used_of_type[i] = you.inv[slot];
+            you.m_quiver.m_last_used_of_type[i].quantity = 1;
         }
     }
     you.redraw_quiver = true;
