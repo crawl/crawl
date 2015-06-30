@@ -3459,6 +3459,29 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     return true;
 }
 
+// May mons attack targ if it's in its way, despite
+// possibly aligned attitudes?
+// The aim of this is to have monsters cut down plants
+// to get to the player if necessary.
+static bool _may_cutdown(monster* mons, monster* targ)
+{
+    // Save friendly plants from allies.
+    // [ds] I'm deliberately making the alignment checks symmetric here.
+    // The previous check involved good-neutrals never attacking friendlies
+    // and friendlies never attacking anything other than hostiles.
+    if ((mons->friendly() || mons->good_neutral())
+         && (targ->friendly() || targ->good_neutral()))
+    {
+        return false;
+    }
+    // Outside of that case, can always cut mundane plants
+    // (but don't try to attack briars unless their damage will be insignificant)
+    return mons_is_firewood(targ)
+        && (targ->type != MONS_BRIAR_PATCH
+            || mons->type == MONS_THORN_HUNTER
+            || mons->armour_class() * mons->hit_points >= 400);
+}
+
 // Uses, and updates the global variable mmov.
 static void _find_good_alternate_move(monster* mons,
                                       const move_array& good_move)
@@ -3490,7 +3513,16 @@ static void _find_good_alternate_move(monster* mons,
             if (good_move[mon_compass[newdir].x+1][mon_compass[newdir].y+1])
                 dist[i] = distance2(mons->pos()+mon_compass[newdir], target);
             else
-                dist[i] = mons_is_retreating(mons) ? (-FAR_AWAY) : FAR_AWAY;
+            {
+                // If we can cut firewood there, it's still not a good move,
+                // but update mmov so we can fall back to it.
+                monster* targ = monster_at(mons->pos() + mon_compass[newdir]);
+                const bool retreating = mons_is_retreating(mons);
+
+                dist[i] = (targ && _may_cutdown(mons, targ) && !retreating)
+                          ? current_distance
+                          : retreating ? -FAR_AWAY : FAR_AWAY;
+            }
         }
 
         const int dir0 = ((dir + 8 + sdir) % 8);
@@ -3792,29 +3824,6 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     _handle_manticore_barbs(mons);
 
     return true;
-}
-
-// May mons attack targ if it's in its way, despite
-// possibly aligned attitudes?
-// The aim of this is to have monsters cut down plants
-// to get to the player if necessary.
-static bool _may_cutdown(monster* mons, monster* targ)
-{
-    // Save friendly plants from allies.
-    // [ds] I'm deliberately making the alignment checks symmetric here.
-    // The previous check involved good-neutrals never attacking friendlies
-    // and friendlies never attacking anything other than hostiles.
-    if ((mons->friendly() || mons->good_neutral())
-         && (targ->friendly() || targ->good_neutral()))
-    {
-        return false;
-    }
-    // Outside of that case, can always cut mundane plants
-    // (but don't try to attack briars unless their damage will be insignificant)
-    return mons_is_firewood(targ)
-        && (targ->type != MONS_BRIAR_PATCH
-            || mons->type == MONS_THORN_HUNTER
-            || mons->armour_class() * mons->hit_points >= 400);
 }
 
 static bool _monster_move(monster* mons)
