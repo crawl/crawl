@@ -3519,7 +3519,7 @@ static void _find_good_alternate_move(monster* mons,
                 monster* targ = monster_at(mons->pos() + mon_compass[newdir]);
                 const bool retreating = mons_is_retreating(mons);
 
-                dist[i] = (targ && _may_cutdown(mons, targ) && !retreating)
+                dist[i] = (targ && _may_cutdown(mons, targ))
                           ? current_distance
                           : retreating ? -FAR_AWAY : FAR_AWAY;
             }
