@@ -258,14 +258,14 @@ bool write_png(const char *filename, tile_colour *pixels,
     }
 
     png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
-                                                  NULL, NULL, NULL);
+                                                  nullptr, nullptr, nullptr);
     if (!png_ptr)
         return false;
 
     png_infop info_ptr = png_create_info_struct(png_ptr);
     if (!info_ptr)
     {
-        png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
+        png_destroy_write_struct(&png_ptr, (png_infopp)nullptr);
         return false;
     }
 
@@ -287,7 +287,7 @@ bool write_png(const char *filename, tile_colour *pixels,
     png_set_rows(png_ptr, info_ptr, row_pointers);
 
     int png_transforms = PNG_TRANSFORM_IDENTITY;
-    png_write_png(png_ptr, info_ptr, png_transforms, NULL);
+    png_write_png(png_ptr, info_ptr, png_transforms, nullptr);
     png_write_end(png_ptr, info_ptr);
     png_destroy_write_struct(&png_ptr, &info_ptr);
 

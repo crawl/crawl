@@ -1798,7 +1798,7 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
  *
  * @param[in] item the item to be checked. Note that any references to this
  *                 item will be invalidated by the swap_inv_slots call!
- * @returns the new location of the item if it was moved, NULL otherwise.
+ * @returns the new location of the item if it was moved, null otherwise.
  */
 item_def *auto_assign_item_slot(item_def& item)
 {

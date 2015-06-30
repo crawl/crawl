@@ -76,7 +76,7 @@ while (<INFILE>)
 
 # End of array sentinel
 print OUTFILE "\n";
-print OUTFILE "{CMD_NO_CMD, NULL}\n";
+print OUTFILE "{CMD_NO_CMD, nullptr}\n";
 
 close (INFILE);
 close (OUTFILE);

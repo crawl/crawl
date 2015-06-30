@@ -192,7 +192,7 @@ sub finish_art
         }
         else
         {
-            $val = "NULL";
+            $val = "nullptr";
         }
         $artefact->{"${func_name}_func"} = $val;
     }
@@ -219,7 +219,7 @@ sub finish_art
             }
             elsif ($type eq "func")
             {
-                $artefact->{$field} = "NULL";
+                $artefact->{$field} = "nullptr";
             }
             elsif ($type eq "unused")
             {
@@ -552,7 +552,7 @@ sub art_to_str
             my $temp = $artefact->{$part};
             $temp =~ s/"/\\"/g;
             $str .= (($part eq "TYPE" || $part eq "INSCRIP") && $temp eq "")
-                ? "NULL" : "\"$temp\"";
+                ? "nullptr" : "\"$temp\"";
         }
         else
         {
