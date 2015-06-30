@@ -48,7 +48,6 @@ static void _clear_globals_on_exit()
     clear_rays_on_exit();
     clear_zap_info_on_exit();
     clear_colours_on_exit();
-    dgn_clear_vault_placements(env.level_vaults);
     destroy_abyss();
 }
 

@@ -81,7 +81,7 @@ void debug_dump_levgen()
     if (!env.level_vaults.empty())
     {
         mpr("Level vaults:");
-        for (const vault_placement* vault : env.level_vaults)
+        for (auto &vault : env.level_vaults)
         {
             string vault_name = vault->map.name.c_str();
             if (vault->map.subvault_places.size())

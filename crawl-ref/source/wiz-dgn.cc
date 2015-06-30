@@ -506,7 +506,7 @@ static void _free_all_vaults()
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
         env.level_map_ids(*ri) = INVALID_MAP_INDEX;
 
-    for (auto vp : env.level_vaults)
+    for (auto &vp : env.level_vaults)
         vp->seen = false;
 
     dgn_erase_unused_vault_placements();

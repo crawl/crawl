@@ -1962,10 +1962,10 @@ static void unmarshall_level_vault_placements(reader &th)
 {
     const int nvaults = unmarshallShort(th);
     ASSERT(nvaults >= 0);
-    dgn_clear_vault_placements(env.level_vaults);
+    dgn_clear_vault_placements();
     for (int i = 0; i < nvaults; ++i)
     {
-        env.level_vaults.push_back(
+        env.level_vaults.emplace_back(
             new vault_placement(unmarshall_vault_placement(th)));
     }
 }

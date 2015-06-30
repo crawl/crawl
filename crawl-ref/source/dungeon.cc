@@ -458,9 +458,9 @@ static void _dgn_postprocess_level()
     _mark_solid_squares();
 }
 
-void dgn_clear_vault_placements(vault_placement_refv &vps)
+void dgn_clear_vault_placements()
 {
-    deleteAll(vps);
+    env.level_vaults.clear();
 }
 
 // Removes vaults that are not referenced in the map index mask from
@@ -482,21 +482,22 @@ void dgn_erase_unused_vault_placements()
     {
         if (!referenced_vault_indexes.count(i))
         {
-            vault_placement *vp = env.level_vaults[i];
-            // Unreferenced vault, blow it away
-            dprf(DIAG_DNGN, "Removing references to unused map #%d)"
-                            " '%s' (%d,%d) (%d,%d)",
-                 i, vp->map.name.c_str(), vp->pos.x, vp->pos.y,
-                 vp->size.x, vp->size.y);
-
-            if (!vp->seen)
             {
-                dprf(DIAG_DNGN, "Unregistering unseen vault: %s",
-                     vp->map.name.c_str());
-                _dgn_unregister_vault(vp->map);
+                auto &vp = env.level_vaults[i];
+                // Unreferenced vault, blow it away
+                dprf(DIAG_DNGN, "Removing references to unused map #%d)"
+                        " '%s' (%d,%d) (%d,%d)",
+                        i, vp->map.name.c_str(), vp->pos.x, vp->pos.y,
+                        vp->size.x, vp->size.y);
+
+                if (!vp->seen)
+                {
+                    dprf(DIAG_DNGN, "Unregistering unseen vault: %s",
+                            vp->map.name.c_str());
+                    _dgn_unregister_vault(vp->map);
+                }
             }
 
-            delete vp;
             env.level_vaults.erase(env.level_vaults.begin() + i);
 
             // Fix new indexes for all higher indexed vaults that are
@@ -526,19 +527,19 @@ void dgn_erase_unused_vault_placements()
 #ifdef DEBUG_ABYSS
     dprf(DIAG_DNGN, "Extant vaults on level: %d",
          (int) env.level_vaults.size());
-    for (int i = 0, size = env.level_vaults.size(); i < size; ++i)
+    int i = 0;
+    for (auto &vp : env.level_vaults)
     {
-        const vault_placement &vp(*env.level_vaults[i]);
         dprf(DIAG_DNGN, "%d) %s (%d,%d) size (%d,%d)",
-             i, vp.map.name.c_str(), vp.pos.x, vp.pos.y,
-             vp.size.x, vp.size.y);
+             i++, vp->map.name.c_str(), vp->pos.x, vp->pos.y,
+             vp->size.x, vp->size.y);
     }
 #endif
 }
 
 void level_clear_vault_memory()
 {
-    dgn_clear_vault_placements(env.level_vaults);
+    dgn_clear_vault_placements();
     Temp_Vaults.clear();
     env.level_map_mask.init(0);
     env.level_map_ids.init(INVALID_MAP_INDEX);
@@ -1033,7 +1034,7 @@ dgn_register_place(const vault_placement &place, bool register_vault)
     }
 
     vault_placement *new_vault_place = new vault_placement(place);
-    env.level_vaults.push_back(new_vault_place);
+    env.level_vaults.emplace_back(new_vault_place);
     if (register_vault)
         _remember_vault_placement(place, place.map.has_tag("extra"));
     return new_vault_place;
@@ -4067,7 +4068,7 @@ vault_placement *dgn_vault_at(coord_def p)
 {
     const int map_index = env.level_map_ids(p);
     return map_index == INVALID_MAP_INDEX ? nullptr
-                                          : env.level_vaults[map_index];
+                                          : env.level_vaults[map_index].get();
 }
 
 void dgn_seen_vault_at(coord_def p)
@@ -6714,7 +6715,7 @@ static bool _fixup_interlevel_connectivity()
 void run_map_epilogues()
 {
     // Iterate over level vaults and run each map's epilogue.
-    for (vault_placement *vault : env.level_vaults)
+    for (auto &vault : env.level_vaults)
         vault->map.run_lua_epilogue();
 }
 

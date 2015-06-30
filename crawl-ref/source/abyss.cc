@@ -204,7 +204,7 @@ static bool _abyss_place_map(const map_def *mdef)
     {
         if (dgn_safe_place_map(mdef, true, false, INVALID_COORD))
         {
-            _abyss_fixup_vault(env.level_vaults.back());
+            _abyss_fixup_vault(env.level_vaults.back().get());
             return true;
         }
     }

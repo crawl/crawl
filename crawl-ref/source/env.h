@@ -2,6 +2,7 @@
 #define ENV_H
 
 #include <set>
+#include <memory> // unique_ptr
 
 #include "map_knowledge.h"
 #include "monster.h"
@@ -13,7 +14,7 @@ typedef uint32_t terrain_property_t;
 typedef set<string> string_set;
 
 struct vault_placement;
-typedef vector<vault_placement*> vault_placement_refv;
+typedef vector<unique_ptr<vault_placement>> vault_placement_refv;
 
 typedef FixedArray< map_cell, GXM, GYM > MapKnowledge;
 
