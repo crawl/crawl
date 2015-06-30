@@ -1,21 +1,19 @@
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
-/* A Bison parser, made by GNU Bison 2.4.1.  */
+/* Bison interface for Yacc-like parsers in C
 
-/* Skeleton interface for Bison's Yacc-like parsers in C
-   
-      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
-   
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
@@ -28,67 +26,75 @@
    special exception, which will cause the skeleton and the resulting
    Bison output files to be licensed under the GNU General Public
    License without this special exception.
-   
+
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+#ifndef YY_YY_LEVCOMP_TAB_H_INCLUDED
+# define YY_YY_LEVCOMP_TAB_H_INCLUDED
+/* Debug traces.  */
+#ifndef YYDEBUG
+# define YYDEBUG 0
+#endif
+#if YYDEBUG
+extern int yydebug;
+#endif
 
-/* Tokens.  */
+/* Token type.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum yytokentype {
-     DEFAULT_DEPTH = 258,
-     SHUFFLE = 259,
-     CLEAR = 260,
-     SUBST = 261,
-     TAGS = 262,
-     KFEAT = 263,
-     KITEM = 264,
-     KMONS = 265,
-     KMASK = 266,
-     KPROP = 267,
-     NAME = 268,
-     DEPTH = 269,
-     ORIENT = 270,
-     PLACE = 271,
-     CHANCE = 272,
-     WEIGHT = 273,
-     MONS = 274,
-     ITEM = 275,
-     MARKER = 276,
-     COLOUR = 277,
-     PRELUDE = 278,
-     MAIN = 279,
-     VALIDATE = 280,
-     VETO = 281,
-     EPILOGUE = 282,
-     NSUBST = 283,
-     WELCOME = 284,
-     LFLOORCOL = 285,
-     LROCKCOL = 286,
-     LFLOORTILE = 287,
-     LROCKTILE = 288,
-     FTILE = 289,
-     RTILE = 290,
-     TILE = 291,
-     SUBVAULT = 292,
-     FHEIGHT = 293,
-     DESC = 294,
-     ORDER = 295,
-     COMMA = 296,
-     COLON = 297,
-     PERC = 298,
-     DASH = 299,
-     CHARACTER = 300,
-     NUMBER = 301,
-     STRING = 302,
-     MAP_LINE = 303,
-     MONSTER_NAME = 304,
-     ITEM_INFO = 305,
-     LUA_LINE = 306
-   };
+  enum yytokentype
+  {
+    DEFAULT_DEPTH = 258,
+    SHUFFLE = 259,
+    CLEAR = 260,
+    SUBST = 261,
+    TAGS = 262,
+    KFEAT = 263,
+    KITEM = 264,
+    KMONS = 265,
+    KMASK = 266,
+    KPROP = 267,
+    NAME = 268,
+    DEPTH = 269,
+    ORIENT = 270,
+    PLACE = 271,
+    CHANCE = 272,
+    WEIGHT = 273,
+    MONS = 274,
+    ITEM = 275,
+    MARKER = 276,
+    COLOUR = 277,
+    PRELUDE = 278,
+    MAIN = 279,
+    VALIDATE = 280,
+    VETO = 281,
+    EPILOGUE = 282,
+    NSUBST = 283,
+    WELCOME = 284,
+    LFLOORCOL = 285,
+    LROCKCOL = 286,
+    LFLOORTILE = 287,
+    LROCKTILE = 288,
+    FTILE = 289,
+    RTILE = 290,
+    TILE = 291,
+    SUBVAULT = 292,
+    FHEIGHT = 293,
+    DESC = 294,
+    ORDER = 295,
+    COMMA = 296,
+    COLON = 297,
+    PERC = 298,
+    DASH = 299,
+    CHARACTER = 300,
+    NUMBER = 301,
+    STRING = 302,
+    MAP_LINE = 303,
+    MONSTER_NAME = 304,
+    ITEM_INFO = 305,
+    LUA_LINE = 306
+  };
 #endif
 /* Tokens.  */
 #define DEFAULT_DEPTH 258
@@ -141,31 +147,27 @@
 #define ITEM_INFO 305
 #define LUA_LINE 306
 
-
-
-
+/* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE
+typedef union YYSTYPE YYSTYPE;
+union YYSTYPE
 {
-
-/* Line 1676 of yacc.c  */
-#line 34 "levcomp.ypp"
+#line 34 "levcomp.ypp" /* yacc.c:1909  */
 
     int i;
     double f;
     const char *text;
     map_chance_pair chance;
 
-
-
-/* Line 1676 of yacc.c  */
-#line 163 "levcomp.tab.h"
-} YYSTYPE;
+#line 163 "levcomp.tab.h" /* yacc.c:1909  */
+};
 # define YYSTYPE_IS_TRIVIAL 1
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
+
 extern YYSTYPE yylval;
 
+int yyparse (void);
 
+#endif /* !YY_YY_LEVCOMP_TAB_H_INCLUDED  */
