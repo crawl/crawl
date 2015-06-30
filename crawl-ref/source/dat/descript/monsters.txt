@@ -243,7 +243,7 @@ Jory
 
 Once a simple village peasant, Jory found himself transformed in undeath into a
 powerful creature. Through the countless centuries unlived since then, he has
-honed his skills in combat and magic, amassed great wealth and many
+honed his skills in combat and magic, and amassed great wealth and many
 possessions.
 %%%%
 Joseph
@@ -374,7 +374,7 @@ out of reality.
 Norris
 
 A relaxed peace-in-death cultist with a healthy tan and a soothing voice. He
-doesn't really care if it is you or him who dies — “both” would probably be the
+doesn't really care if it is you or he who dies — “both” would probably be the
 best option.
 %%%%
 Pikel
@@ -750,7 +750,7 @@ famous for their skills in archery.
 %%%%
 centaur warrior
 
-A muscular centaur, a veteran of numerous battles, armed with well-made weapons
+A muscular centaur, veteran of numerous battles, armed with well-made weapons
 and able to use them skillfully.
 %%%%
 chaos champion
@@ -900,11 +900,11 @@ A battle-hardened deep elf fighter.
 deep elf mage
 
 A deep elf learned in the ways of murderous magic. Deep elf mages are capable
-of a wide array of harmful spells.
+of casting a wide array of harmful spells.
 %%%%
 deep elf master archer
 
-A deep elf archer that has devoted a lifetime to the mastery of archery,
+A deep elf archer who has devoted a lifetime to the mastery of archery,
 dismissing magic as a frivolous distraction.
 %%%%
 deep elf priest
@@ -2147,7 +2147,7 @@ Cocytus, and its accursed chill now envelops them.
 sheep
 
 A dim-witted, fluffy ovine, better known for its woolly hide than its
-ferociousness. Dungeon sheep are nevertheless far more murderous than their
+ferocity. Dungeon sheep are nevertheless far more murderous than their
 surface brethren. It looks quite flammable.
 %%%%
 shining eye
