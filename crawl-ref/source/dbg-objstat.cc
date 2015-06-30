@@ -1116,7 +1116,7 @@ static void _write_branch_monster_stats(branch_type br, monster_type mons_type,
 
 static FILE * _open_stat_file(string stat_file)
 {
-    FILE *stat_fh = NULL;
+    FILE *stat_fh = nullptr;
     stat_fh = fopen(stat_file.c_str(), "w");
     if (!stat_fh)
     {

@@ -10,7 +10,8 @@ class tile
 {
 public:
     tile();
-    tile(const tile &img, const char *enumnam = NULL, const char *parts = NULL);
+    tile(const tile &img, const char *enumnam = nullptr,
+         const char *parts = nullptr);
     virtual ~tile();
 
     bool load(const string &new_filename);

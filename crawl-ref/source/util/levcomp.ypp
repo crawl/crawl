@@ -96,7 +96,7 @@ level           : name map_specs
                     {
                         lc_global_prelude.set_file(lc_desfile);
                         lc_run_global_prelude = false;
-                        if (lc_global_prelude.load_call(dlua, NULL))
+                        if (lc_global_prelude.load_call(dlua, nullptr))
                             yyerror( lc_global_prelude.orig_error().c_str() );
                     }
 

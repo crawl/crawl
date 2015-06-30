@@ -270,7 +270,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
     vector<char *> m_args;
     m_args.push_back(arg);
 
-    while (char *extra = strtok(NULL, delim))
+    while (char *extra = strtok(nullptr, delim))
     {
         eat_whitespace(extra);
         if (!*extra)
@@ -420,10 +420,10 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                             list_file, line, arg, back->filename().c_str());
                     return false;
                 }
-                add_image(img, m_args.size() > 1 ? m_args[1] : NULL);
+                add_image(img, m_args.size() > 1 ? m_args[1] : nullptr);
             }
             else
-                add_image(m_compose, m_args.size() > 1 ? m_args[1] : NULL);
+                add_image(m_compose, m_args.size() > 1 ? m_args[1] : nullptr);
 
             m_compose.unload();
             m_composing = false;
@@ -700,7 +700,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 recolour(img);
                 m_weight = m_page.m_probs[idx + i] - old_w;
                 old_w    = m_page.m_probs[idx + i];
-                add_image(img, (i == 0 && m_args[2]) ? m_args[2] : NULL);
+                add_image(img, (i == 0 && m_args[2]) ? m_args[2] : nullptr);
             }
 
             if (m_args.size() > 2)
@@ -787,7 +787,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             img.add_rim(tile_colour::black);
 
         // Push tile onto tile page.
-        add_image(img, m_args.size() > 1 ? m_args[1] : NULL);
+        add_image(img, m_args.size() > 1 ? m_args[1] : nullptr);
 
         for (unsigned int i = 2; i < m_args.size(); ++i)
         {
@@ -938,7 +938,7 @@ bool tile_list_processor::write_data(bool image, bool code)
     if (!code)
         return true;
 
-    int *part_min = NULL;
+    int *part_min = nullptr;
 
     // Write "tiledef-%name.h"
     {

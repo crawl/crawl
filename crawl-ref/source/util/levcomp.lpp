@@ -37,7 +37,7 @@ static void clean()
 {
     if (yylval.text && alloced)
         add_to_queue(yylval.text);
-    yylval.text = NULL;
+    yylval.text = nullptr;
     alloced = false;
 }
 
@@ -47,7 +47,7 @@ static void clean()
 static void post_proc_text(char *text, bool trim_right,
                            int strip_trailing, int strip_leading)
 {
-    char *s = NULL;
+    char *s = nullptr;
     if (trim_right)
     {
         s = text + strlen(text) - 1;
@@ -74,7 +74,7 @@ static void post_proc_text(char *text, bool trim_right,
 
 static char *copy_text(bool trim_right, int strip_trailing, int strip_leading)
 {
-    char *newstring = NULL;
+    char *newstring = nullptr;
     if ((yylval.text = newstring = strdup(yytext)))
     {
         alloced = true;
@@ -286,7 +286,7 @@ SUBVAULT:           { CBEGIN(ARGUMENT); return SUBVAULT; }
 
 [+-]?[.][0-9]+|[+-]?[0-9]+[.]?[0-9]* {
                         clean();
-                        yylval.f = strtod(yytext, NULL);
+                        yylval.f = strtod(yytext, nullptr);
                         return NUMBER;
                     }
 
