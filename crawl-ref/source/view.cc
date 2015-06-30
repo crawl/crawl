@@ -900,18 +900,19 @@ static void _debug_pane_bounds()
 #endif
 }
 
-enum update_flags
+enum update_flag
 {
     UF_AFFECT_EXCLUDES = (1 << 0),
     UF_ADDED_EXCLUDE   = (1 << 1),
 };
+DEF_BITFIELD(update_flags, update_flag);
 
 // Do various updates when the player sees a cell. Returns whether
 // exclusion LOS might have been affected.
-static int player_view_update_at(const coord_def &gc)
+static update_flags player_view_update_at(const coord_def &gc)
 {
     maybe_remove_autoexclusion(gc);
-    int ret = 0;
+    update_flags ret;
 
     // Set excludes in a radius of 1 around harmful clouds genereated
     // by neither monsters nor the player.
@@ -988,7 +989,7 @@ static void player_view_update()
 
     for (radius_iterator ri(you.pos(), you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
-        int flags = player_view_update_at(*ri);
+        update_flags flags = player_view_update_at(*ri);
         if (flags & UF_AFFECT_EXCLUDES)
             update_excludes.push_back(*ri);
         if (flags & UF_ADDED_EXCLUDE)
