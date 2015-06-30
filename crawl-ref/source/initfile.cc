@@ -2039,9 +2039,9 @@ void game_options::do_kill_map(const string &from, const string &to)
         kill_map[ifrom] = ito;
 }
 
-int game_options::read_use_animations(const string &field) const
+use_animations_type game_options::read_use_animations(const string &field) const
 {
-    int animations = 0;
+    use_animations_type animations;
     vector<string> types = split_string(",", field);
     for (const auto &type : types)
     {
@@ -2729,7 +2729,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (plain)
             use_animations = UA_ALWAYS_ON;
 
-        const int new_animations = read_use_animations(field);
+        const auto new_animations = read_use_animations(field);
         if (minus_equal)
             use_animations &= ~new_animations;
         else

@@ -98,7 +98,8 @@ struct bolt
                                         // itself.
     bool   was_missile = false;   // For determining if this was SPMSL_FLAME /
                                   // FROST etc so that we can change mulch rate
-    bool   animate = Options.use_animations & UA_BEAM; // Do we draw animations?
+    // Do we draw animations?
+    bool   animate = bool(Options.use_animations & UA_BEAM);
     ac_type ac_rule = AC_NORMAL;   // How defender's AC affects damage.
 #ifdef DEBUG_DIAGNOSTICS
     bool   quiet_debug = false;    // Disable any debug spam.
