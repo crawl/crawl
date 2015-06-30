@@ -43,6 +43,7 @@ enum areaprop_flag
     APROP_HOT           = (1 << 11),
 #endif
 };
+DEF_BITFIELD(areaprops, areaprop_flag);
 
 struct area_centre
 {
@@ -53,7 +54,7 @@ struct area_centre
     explicit area_centre (area_centre_type t, coord_def c, int r) : type(t), centre(c), radius(r) { }
 };
 
-typedef FixedArray<uint32_t, GXM, GYM> propgrid_t;
+typedef FixedArray<areaprops, GXM, GYM> propgrid_t;
 
 static vector<area_centre> _agrid_centres;
 
@@ -68,7 +69,7 @@ static void _set_agrid_flag(const coord_def& p, areaprop_flag f)
 
 static bool _check_agrid_flag(const coord_def& p, areaprop_flag f)
 {
-    return _agrid(p) & f;
+    return bool(_agrid(p) & f);
 }
 
 void invalidate_agrid(bool recheck_new)
@@ -167,7 +168,7 @@ static void _update_agrid()
         return;
     }
 
-    _agrid.init(0);
+    _agrid.init(areaprops());
     _agrid_centres.clear();
 
     no_areas = true;
@@ -225,7 +226,7 @@ static void _update_agrid()
 
 static area_centre_type _get_first_area(const coord_def& f)
 {
-    uint32_t a = _agrid(f);
+    areaprops a = _agrid(f);
     if (a & APROP_SANCTUARY_1)
         return AREA_SANCTUARY;
     if (a & APROP_SANCTUARY_2)
@@ -257,7 +258,7 @@ coord_def find_centre_for(const coord_def& f, area_centre_type at)
     if (!_agrid_valid)
         _update_agrid();
 
-    if (_agrid(f) == 0)
+    if (!_agrid(f))
         return coord_def(-1, -1);
 
     if (_agrid_centres.empty())
