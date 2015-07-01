@@ -1420,6 +1420,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
     static const int ITEMS_START_Y = 5;
     TextItem* tmp = nullptr;
     string text;
+    const char *thrown_name = nullptr;
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
 
@@ -1450,12 +1451,14 @@ static void _construct_weapon_menu(const newgame_def* ng,
             text += species_has_claws(ng->species) ? "claws" : "unarmed";
             break;
         case WPN_THROWN:
+            ASSERT(!thrown_name);
             if (species_can_throw_large_rocks(ng->species))
-                text += "large rocks";
+                thrown_name = "large rocks";
             else if (species_size(ng->species, PSIZE_TORSO) <= SIZE_SMALL)
-                text += "tomahawks";
+                thrown_name = "tomahawks";
             else
-                text += "javelins";
+                thrown_name = "javelins";
+            text += thrown_name;
             break;
         default:
             text += weapon_base_name(weapons[i].first);
@@ -1559,9 +1562,11 @@ static void _construct_weapon_menu(const newgame_def* ng,
         text.clear();
         text = "Tab - ";
 
+        ASSERT(defweapon != WPN_THROWN || thrown_name);
         text += defweapon == WPN_RANDOM  ? "Random" :
                 defweapon == WPN_VIABLE  ? "Viable" :
-                defweapon == WPN_UNARMED ? "unarmed"  :
+                defweapon == WPN_UNARMED ? "unarmed" :
+                defweapon == WPN_THROWN  ? thrown_name :
                 weapon_base_name(defweapon);
 
         // Adjust the end marker to aling the - because
