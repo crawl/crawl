@@ -827,6 +827,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case 'v': wizard_value_artefact(); break;
     case 'V': wizard_toggle_xray_vision(); break;
+    case 'E': wizard_freeze_time(); break;
     // case CONTROL('V'): break;
 
     case 'w': wizard_god_mollify(); break;
@@ -1522,6 +1523,9 @@ static void _input()
 
     if (need_to_autoinscribe())
         autoinscribe();
+
+    if (you.props["wizard_freeze_time"].get_bool())
+        you.turn_is_over = false;
 
     if (you.turn_is_over)
     {
