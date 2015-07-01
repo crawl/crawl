@@ -8,6 +8,8 @@
 
 #include "enum.h"
 
+#define FREEZE_TIME_KEY "freeze_time"
+
 void wizard_cast_spec_spell();
 void wizard_memorise_spec_spell();
 void wizard_heal(bool super_heal);

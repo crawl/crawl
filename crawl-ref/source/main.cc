@@ -1524,7 +1524,7 @@ static void _input()
     if (need_to_autoinscribe())
         autoinscribe();
 
-    if (you.props["wizard_freeze_time"].get_bool())
+    if (you.props.exists(FREEZE_TIME_KEY))
         you.turn_is_over = false;
 
     if (you.turn_is_over)
