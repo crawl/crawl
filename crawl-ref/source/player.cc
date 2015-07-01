@@ -1139,6 +1139,9 @@ static int _slow_heal_rate()
 
 int player_regen()
 {
+    // Note: if some condition can set rr = 0, can't be rested off, and
+    // would allow travel, please update is_sufficiently_rested.
+
     int rr = you.hp_max / 3;
 
     if (rr > 20)
@@ -5399,7 +5402,8 @@ bool player::is_sufficiently_rested() const
 {
     // Only return false if resting will actually help.
     return (hp >= _rest_trigger_level(hp_max)
-            || player_mutation_level(MUT_SLOW_HEALING) == 3)
+            || player_mutation_level(MUT_SLOW_HEALING) == 3
+            || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING)
         && (magic_points >= _rest_trigger_level(max_magic_points)
             || you.spirit_shield() && you.species == SP_DEEP_DWARF);
 }
