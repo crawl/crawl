@@ -1416,6 +1416,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>w</w>      god mollification\n"
                        "<w>p</w>      polymorph into a form\n"
                        "<w>V</w>      toggle xray vision\n"
+                       "<w>E</w>      (un)freeze time\n"
                        "\n"
                        "<yellow>Monster related commands</yellow>\n"
                        "<w>D</w>      detect all monsters\n"
