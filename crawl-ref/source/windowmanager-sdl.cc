@@ -61,6 +61,18 @@ void WindowManager::shutdown()
 #endif
 }
 
+static unsigned char _kmod_to_mod(int modifier)
+{
+    unsigned char mod = 0;
+    if (modifier & KMOD_SHIFT)
+        mod |= MOD_SHIFT;
+    if (modifier & KMOD_CTRL)
+        mod |= MOD_CTRL;
+    if (modifier & KMOD_LALT)
+        mod |= MOD_ALT;
+    return mod;
+}
+
 static unsigned char _get_modifiers(SDL_Keysym &keysym)
 {
     switch (keysym.sym)
@@ -78,7 +90,7 @@ static unsigned char _get_modifiers(SDL_Keysym &keysym)
         return MOD_ALT;
         break;
     default:
-        return keysym.mod;
+        return _kmod_to_mod(keysym.mod);
     }
 }
 
@@ -128,13 +140,7 @@ static int _translate_keysym(SDL_Keysym &keysym)
     const int shift_offset = CK_SHIFT_UP - CK_UP;
     const int ctrl_offset  = CK_CTRL_UP - CK_UP;
 
-    int mod = 0;
-    if (keysym.mod & KMOD_SHIFT)
-        mod |= MOD_SHIFT;
-    if (keysym.mod & KMOD_CTRL)
-        mod |= MOD_CTRL;
-    if (keysym.mod & KMOD_LALT)
-        mod |= MOD_ALT;
+    const int mod = _get_modifiers(keysym);
 
 #ifdef TARGET_OS_WINDOWS
     // AltGr looks like right alt + left ctrl on Windows. Let the input
