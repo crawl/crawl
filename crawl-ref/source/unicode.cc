@@ -428,7 +428,7 @@ string FileLineInput::get_line()
         return out;
     }
 
-    die("memory got trampled");
+    die("FileLineInput had a bad bom_type (%d)", bom);
 }
 
 UTF8FileLineInput::UTF8FileLineInput(const char *name)
