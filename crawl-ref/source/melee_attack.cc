@@ -589,6 +589,17 @@ static void _hydra_devour(monster &victim)
          filling ? "hungrily " : "",
          victim.name(DESC_THE).c_str());
 
+    // give a clearer message for eating invisible things
+    if (!you.can_see(victim))
+    {
+        mprf("It tastes like %s.",
+             mons_type_name(mons_genus(victim.type), DESC_PLAIN).c_str());
+        // this could be the actual creature name, but it feels more
+        // 'flavourful' this way??
+        // feel free to just use the actual creature name if this has buggy
+        // edge cases or such
+    }
+
     // nutrition (maybe)
     if (filling)
     {
