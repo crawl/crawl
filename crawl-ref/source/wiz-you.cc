@@ -963,10 +963,18 @@ void wizard_toggle_xray_vision()
 
 void wizard_freeze_time()
 {
-    bool& frozen = you.props["wizard_freeze_time"].get_bool();
-    frozen = !frozen;
-    mpr(frozen ? "You bring the flow of time to a stop."
-               : "You allow the flow of time to resume.");
+    auto& props = you.props;
+    // this property is never false: either true or unset
+    if (props.exists(FREEZE_TIME_KEY))
+    {
+        props.erase(FREEZE_TIME_KEY);
+        mpr("You allow the flow of time to resume.");
+    }
+    else
+    {
+        props[FREEZE_TIME_KEY] = true;
+        mpr("You bring the flow of time to a stop.");
+    }
 }
 
 void wizard_god_wrath()
