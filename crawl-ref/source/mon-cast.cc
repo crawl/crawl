@@ -7058,7 +7058,9 @@ static coord_def _choose_throwing_target(const monster &thrower,
 
 static bool _will_throw_ally(const monster& thrower, const monster& throwee)
 {
-    return thrower.type == MONS_ROBIN && throwee.mons_species() == MONS_GOBLIN;
+    return thrower.type == MONS_ROBIN && throwee.mons_species() == MONS_GOBLIN
+           || thrower.type == MONS_POLYPHEMUS
+              && mons_genus(throwee.type) == MONS_YAK;
 }
 
 static monster* _find_ally_to_throw(const monster &mons)

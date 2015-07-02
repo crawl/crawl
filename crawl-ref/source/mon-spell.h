@@ -1926,6 +1926,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_POLYPHEMUS,
+      {
+        { SPELL_THROW_ALLY, 50, MON_SPELL_NATURAL }
+      }
+    },
+
     {  MST_SAINT_ROKA,
       {
        { SPELL_BATTLECRY, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT
