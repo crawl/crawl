@@ -87,7 +87,7 @@ static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe);
 static coord_def _mons_prism_pos(monster* mon, actor* foe);
 static bool _mons_consider_tentacle_throwing(const monster &mons);
 static bool _tentacle_toss(const monster &thrower, actor &victim, int pow);
-static bool _mons_consider_goblin_tossing(const monster &mons);
+static void _maybe_throw_ally(const monster &mons);
 static int _throw_site_score(const monster &thrower, const actor &victim,
                              const coord_def &site);
 static void _siren_sing(monster* mons, bool avatar);
@@ -1541,7 +1541,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BERSERK_OTHER:
     case SPELL_SPELLFORGED_SERVITOR:
     case SPELL_TENTACLE_THROW:
-    case SPELL_GOBLIN_TOSS:
+    case SPELL_THROW_ALLY:
     case SPELL_CORRUPTING_PULSE:
     case SPELL_SIREN_SONG:
     case SPELL_AVATAR_SONG:
@@ -6468,8 +6468,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _mons_consider_tentacle_throwing(*mons);
         return;
 
-    case SPELL_GOBLIN_TOSS:
-        _mons_consider_goblin_tossing(*mons);
+    case SPELL_THROW_ALLY:
+        _maybe_throw_ally(*mons);
         return;
 
     case SPELL_SIREN_SONG:
@@ -7002,158 +7002,150 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
     }
 }
 
-/**
- * Find the best goblin for the given monster to toss.
- *
- * XXX: deduplicate this with tentacle toss code
- *
- * @param mons      The monster thinking about goblin-tossing.
- * @return          The mid_t of the best victim for the monster to throw.
- *                  Could be player, another monster, or 0 (none).
- */
-static actor* _find_goblin_to_toss(const monster &mons)
-{
-    dprf("considering goblin tossing");
-    const actor *foe = mons.get_foe();
-    if (!foe)
-        return nullptr;
-
-    actor *tossee = nullptr;
-    int furthest_dist = -1;
-
-    for (adjacent_iterator ai(mons.pos(), true); ai; ++ai)
-    {
-        actor* goblin = actor_at(*ai);
-
-        // Only throw real, living goblins.
-        // (But Ijyb and zombie goblins are OK, since that's funny.)
-        if (!goblin || !goblin->alive()
-            || goblin->mons_species() != MONS_GOBLIN)
-        {
-            continue;
-        }
-
-        // Don't try to throw anything constricted.
-        if (goblin->is_constricted())
-            continue;
-
-        // otherwise throw whoever's furthest from our target.
-        const int dist = grid_distance(goblin->pos(), foe->pos());
-        if (dist > furthest_dist)
-        {
-            tossee = goblin;
-            furthest_dist = dist;
-        }
-    }
-
-    dprf("found a goblin to toss");
-    return tossee;
-}
-
-const int MIN_GOBLIN_THROW_DIST = 2;
+static const int MIN_THROW_DIST = 2;
 
 /**
- * Find a place adjacent to the given target monster to for the given monster
- * to throw a goblin.
+ * Choose a landing site for a monster that is throwing someone.
  *
- * XXX: deduplicate this with tentacle toss code
- *
- * @param tosser      The monster doing the throwing.
- * @param goblin      The monster being tossed.
- * @param foe_pos     The location of the foe to toss the goblin near.
- * @return          A location for the throw; (0,0) if none was found.
+ * @param thrower      The monster performing the toss.
+ * @param victim       The actor being thrown.
+ * @param rater        A function that takes thrower, victim, and an arbitrary
+ *                     coord_def and determines how good the throw is; a higher
+ *                     number is better.
+ * @return             The coord_def of one of the best (as determined by rater)
+ *                     possible landing sites for a toss.
+ *                     If no valid site is found, returns the origin (0,0).
  */
-static coord_def _find_goblin_toss_target(const monster &tosser,
-                                          const monster &goblin,
-                                          const coord_def &foe_pos)
+static coord_def _choose_throwing_target(const monster &thrower,
+                            const actor &victim,
+                            function<int (const monster&, const actor&,
+                                          coord_def)> rater)
 {
-    int furthest_dist = -1;
+    int best_site_score = -1;
     vector<coord_def> best_sites;
 
-    for (adjacent_iterator ai(foe_pos, true); ai; ++ai)
+    for (distance_iterator di(thrower.pos(), true, true, LOS_RADIUS); di; ++di)
     {
         ray_def ray;
         // Unusable landing sites.
-        if (goblin.pos().distance_from(*ai) < MIN_GOBLIN_THROW_DIST
-            || actor_at(*ai)
-            || !tosser.see_cell(*ai)
-            || !goblin.is_habitable(*ai)
-            || !find_ray(tosser.pos(), *ai, ray, opc_solid_see))
+        if (victim.pos().distance_from(*di) < MIN_THROW_DIST
+            || actor_at(*di)
+            || !thrower.see_cell(*di)
+            || !victim.see_cell(*di)
+            || !victim.is_habitable(*di)
+            || !find_ray(victim.pos(), *di, ray, opc_solid_see))
         {
             continue;
         }
 
-        const int dist = grid_distance(tosser.pos(), *ai);
-        if (dist > furthest_dist)
+        const int site_score = rater(thrower, victim, *di);
+        if (site_score > best_site_score)
         {
+            best_site_score = site_score;
             best_sites.clear();
-            furthest_dist = dist;
         }
-        if (dist >= furthest_dist)
-            best_sites.push_back(*ai);
+        if (site_score == best_site_score)
+            best_sites.push_back(*di);
     }
 
     // No valid landing site found.
     if (!best_sites.size())
         return coord_def(0,0);
 
-    dprf("found a place to toss a goblin");
     const coord_def best_site = best_sites[random2(best_sites.size())];
     return best_site;
 }
 
+static bool _will_throw_ally(const monster& thrower, const monster& throwee)
+{
+    return thrower.type == MONS_ROBIN && throwee.mons_species() == MONS_GOBLIN;
+}
+
+static monster* _find_ally_to_throw(const monster &mons)
+{
+    const actor *foe = mons.get_foe();
+    if (!foe)
+        return nullptr;
+
+    int furthest_dist = -1;
+
+    monster* best = nullptr;
+    for (fair_adjacent_iterator ai(mons.pos(), true); ai; ++ai)
+    {
+        monster* throwee = monster_at(*ai);
+
+        if (!throwee || !throwee->alive()
+            || !_will_throw_ally(mons, *throwee))
+        {
+            continue;
+        }
+
+        // Don't try to throw anything constricted.
+        if (throwee->is_constricted())
+            continue;
+
+        // otherwise throw whoever's furthest from our target.
+        const int dist = grid_distance(throwee->pos(), foe->pos());
+        if (dist > furthest_dist)
+        {
+            best = throwee;
+            furthest_dist = dist;
+        }
+    }
+
+    dprf("found a monster to toss");
+    return best;
+}
+
 /**
- * Toss a goblin at the given target, landing them in the given square after
+ * Toss an ally at the monster's foe, landing them in the given square after
  * maybe dealing a pittance of damage.
  *
- * XXX: deduplicate this with tentacle toss code
+ * XXX: some duplication with tentacle toss code
  *
- * @param tosser        The monster doing the throwing.
- * @param goblin        The monster being tossed.
- * @param victim        The player or monster getting bopped.
- * @param chosen_dest   The location of the square the goblin should land on.
+ * @param thrower       The monster doing the throwing.
+ * @param throwee       The monster being tossed.
+ * @param chosen_dest   The location of the square throwee should land on.
  */
-static void _goblin_toss_to(const monster &tosser, monster &goblin,
-                            actor &foe, const coord_def &chosen_dest)
+static void _throw_ally_to(const monster &thrower, monster &throwee,
+                           const coord_def chosen_dest)
 {
-    ASSERT(in_bounds(chosen_dest));
-    ASSERT(!goblin.is_constricted());
+    ASSERT_IN_BOUNDS(chosen_dest);
+    ASSERT(!throwee.is_constricted());
 
-    const int dam = foe.apply_ac(random2(tosser.get_hit_dice() * 2));
+    actor* foe = thrower.get_foe();
+    ASSERT(foe);
 
-    const coord_def old_pos = goblin.pos();
-    const bool thrower_seen = you.can_see(tosser);
-    const bool goblin_was_seen = you.can_see(goblin);
-    const bool goblin_will_be_seen = goblin.visible_to(&you)
-                                     && you.see_cell(chosen_dest);
-    const bool goblin_seen = goblin_was_seen || goblin_will_be_seen;
+    const coord_def old_pos = throwee.pos();
+    const bool thrower_seen = you.can_see(thrower);
+    const bool throwee_was_seen = you.can_see(throwee);
+    const bool throwee_will_be_seen = throwee.visible_to(&you)
+                                      && you.see_cell(chosen_dest);
+    const bool throwee_seen = throwee_was_seen || throwee_will_be_seen;
 
-    if (!(goblin.flags & MF_WAS_IN_VIEW))
-        goblin.seen_context = SC_THROWN_IN;
+    if (!(throwee.flags & MF_WAS_IN_VIEW))
+        throwee.seen_context = SC_THROWN_IN;
 
-    if (thrower_seen || goblin_seen)
+    if (thrower_seen || throwee_seen)
     {
-        const string goblin_name = goblin.name(DESC_THE, true);
-        const string thrower_name = tosser.name(DESC_THE);
-        const string destination = you.can_see(foe) ?
+        const string destination = you.can_see(*foe) ?
                                    make_stringf("at %s",
-                                                foe.name(DESC_THE).c_str()) :
+                                                foe->name(DESC_THE).c_str()) :
                                    "out of sight";
 
         mprf("%s throws %s %s!",
-             (thrower_seen ? thrower_name.c_str() : "Something"),
-             (goblin_seen ? goblin_name.c_str() : "something"),
+             (thrower_seen ? thrower.name(DESC_THE).c_str() : "Something"),
+             (throwee_seen ? throwee.name(DESC_THE, true).c_str() : "something"),
              destination.c_str());
 
         bolt beam;
         beam.range   = INFINITE_DISTANCE;
         beam.hit     = AUTOMATIC_HIT;
         beam.flavour = BEAM_VISUAL;
-        beam.source  = tosser.pos();
+        beam.source  = thrower.pos();
         beam.target  = chosen_dest;
-        beam.name    = goblin.name(DESC_THE);
-        beam.glyph   = mons_char(goblin.type);
-        const monster_info mi(&goblin);
+        beam.glyph   = mons_char(throwee.type);
+        const monster_info mi(&throwee);
         beam.colour  = mi.colour();
 
         beam.draw_delay = 30; // Make beam animation somewhat slower than normal.
@@ -7161,52 +7153,44 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
         beam.fire();
     }
 
-    goblin.move_to_pos(chosen_dest);
-    goblin.apply_location_effects(old_pos);
-    goblin.check_redraw(old_pos);
+    throwee.move_to_pos(chosen_dest);
+    throwee.apply_location_effects(old_pos);
+    throwee.check_redraw(old_pos);
 
     const string killed_by = make_stringf("Hit by %s thrown by %s",
-                                          goblin.name(DESC_A, true).c_str(),
-                                          tosser.name(DESC_PLAIN, true).c_str());
-    foe.hurt(&tosser, dam, BEAM_NONE, KILLED_BY_BEAM, "", killed_by, true);
+                                          throwee.name(DESC_A, true).c_str(),
+                                          thrower.name(DESC_PLAIN, true).c_str());
+    const int dam = foe->apply_ac(random2(thrower.get_hit_dice() * 2));
+    foe->hurt(&thrower, dam, BEAM_NONE, KILLED_BY_BEAM, "", killed_by, true);
 
     // wake sleepy goblins
-    behaviour_event(&goblin, ME_DISTURB, &tosser, goblin.pos());
+    behaviour_event(&throwee, ME_DISTURB, &thrower, throwee.pos());
 }
 
-/**
- * Make the given monster try to throw a nearby goblin, if possible.
- *
- * XXX: deduplicate this with tentacle toss code
- *
- * @param mons       The monster doing the throwing.
- * @return           Whether a throw attempt was made.
- */
-static bool _mons_consider_goblin_tossing(const monster &mons)
+static int _throw_ally_site_score(const monster& thrower, const actor& throwee,
+                                  coord_def pos)
 {
-    actor *foe = mons.get_foe();
-    if (!foe)
-        return false;
-
-    actor* tossee = _find_goblin_to_toss(mons);
-    if (!tossee)
-        return false;
-
-    monster* goblin = tossee->as_monster();
-    ASSERT(goblin);
-
-    // XXX: check for a miss here? (roll vs ev......?)
-
-    const coord_def toss_target = _find_goblin_toss_target(mons, *goblin,
-                                                           foe->pos());
-    if (toss_target.origin())
-        return false;
-
-    _goblin_toss_to(mons, *goblin, *foe, toss_target);
-    return true;
+    const actor *foe = thrower.get_foe();
+    if (!foe || !adjacent(foe->pos(), pos))
+        return -2;
+    return grid_distance(thrower.pos(), pos);
 }
 
+static void _maybe_throw_ally(const monster &mons)
+{
+    monster* throwee = _find_ally_to_throw(mons);
+    if (!throwee)
+        return;
 
+    const coord_def toss_target =
+        _choose_throwing_target(mons, *static_cast<actor*>(throwee),
+                                _throw_ally_site_score);
+
+    if (toss_target.origin())
+        return;
+
+    _throw_ally_to(mons, *throwee, toss_target);
+}
 
 /**
  * Find the best creature for the given monster to toss with its tentacles.
@@ -7265,56 +7249,6 @@ static bool _mons_consider_tentacle_throwing(const monster &mons)
     return _tentacle_toss(mons, *victim, mons.get_hit_dice() * 4);
 }
 
-static const int MIN_TENTACLE_THROW_DIST = 2;
-
-/**
- * Choose a landing site for a tentacle toss. (Not necessarily the destination
- * of the toss, but the place that the monster is aiming for when throwing.)
- *
- * @param thrower       The monster performing the toss.
- * @param victim        The actor being thrown.
- * @return              The coord_def of one of the best (most dangerous)
- *                      possible landing sites for a toss.
- *                      If no valid site is found, returns the origin (0,0).
- */
-static coord_def _choose_tentacle_toss_target(const monster &thrower,
-                                              const actor &victim)
-{
-    int best_site_score = -1;
-    vector<coord_def> best_sites;
-
-    for (distance_iterator di(thrower.pos(), true, true, LOS_RADIUS); di; ++di)
-    {
-        ray_def ray;
-        // Unusable landing sites.
-        if (victim.pos().distance_from(*di) < MIN_TENTACLE_THROW_DIST
-            || actor_at(*di)
-            || !thrower.see_cell(*di)
-            || !victim.see_cell(*di)
-            || !victim.is_habitable(*di)
-            || !find_ray(victim.pos(), *di, ray, opc_solid_see))
-        {
-            continue;
-        }
-
-        const int site_score = _throw_site_score(thrower, victim, *di);
-        if (site_score > best_site_score)
-        {
-            best_site_score = site_score;
-            best_sites.clear();
-        }
-        if (site_score == best_site_score)
-            best_sites.push_back(*di);
-    }
-
-    // No valid landing site found.
-    if (!best_sites.size())
-        return coord_def(0,0);
-
-    const coord_def best_site = best_sites[random2(best_sites.size())];
-    return best_site;
-}
-
 /**
  * Find the actual landing place for a tentacle toss.
  *
@@ -7334,7 +7268,7 @@ static coord_def _choose_tentacle_toss_dest(const monster &thrower,
     find_ray(victim.pos(), target_site, ray, opc_solid_see);
     while (ray.advance())
     {
-        if (victim.pos().distance_from(ray.pos()) >= MIN_TENTACLE_THROW_DIST
+        if (victim.pos().distance_from(ray.pos()) >= MIN_THROW_DIST
             && !actor_at(ray.pos())
             && victim.is_habitable(ray.pos())
             && thrower.see_cell(ray.pos())
@@ -7416,8 +7350,8 @@ static void _tentacle_toss_to(const monster &thrower, actor &victim,
  */
 static bool _tentacle_toss(const monster &thrower, actor &victim, int pow)
 {
-    const coord_def throw_target = _choose_tentacle_toss_target(thrower,
-                                                                victim);
+    const coord_def throw_target = _choose_throwing_target(thrower, victim,
+                                                           _throw_site_score);
     if (throw_target.origin())
         return false;
 
@@ -8017,8 +7951,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_TENTACLE_THROW:
         return _get_tentacle_throw_victim(*mon) == MID_NOBODY;
 
-    case SPELL_GOBLIN_TOSS:
-        return !_find_goblin_to_toss(*mon);
+    case SPELL_THROW_ALLY:
+        return !_find_ally_to_throw(*mon);
 
     case SPELL_CREATE_TENTACLES:
         return !mons_available_tentacles(mon);

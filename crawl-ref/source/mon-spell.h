@@ -1922,7 +1922,7 @@ static const mon_spellbook mspell_list[] =
       {
         { SPELL_BATTLECRY, 50, MON_SPELL_NATURAL | MON_SPELL_INSTANT
                                 | MON_SPELL_NO_SILENT },
-        { SPELL_GOBLIN_TOSS, 80, MON_SPELL_NATURAL }
+        { SPELL_THROW_ALLY, 80, MON_SPELL_NATURAL }
       }
     },
 
