@@ -452,6 +452,7 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
         if (feat_eliminates_items(grd(mons.pos())))
         {
             get_gold(corpse, corpse.quantity, false);
+            destroy_item(corpse, true);
             return nullptr;
         }
     }
