@@ -588,10 +588,10 @@ Hurls an exploding ball of necromantic energy, which will heal any undead
 creatures it affects. Any other creatures may only partially resist its effects
 through protection from negative energy.
 %%%%
-Goblin Toss spell
+Throw Ally spell
 
-Throws a nearby friendly goblin in a long, beautiful arc, bopping the target on
-the head and landing the goblin nearby.
+Throws a nearby ally at the monster's foe, doing minimal damage and landing the
+thrown monster nearby.
 %%%%
 Glaciate spell
 

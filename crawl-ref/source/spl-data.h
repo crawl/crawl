@@ -3553,7 +3553,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_GOBLIN_TOSS, "Goblin Toss",
+    SPELL_THROW_ALLY, "Throw Ally",
     SPTYP_TRANSLOCATION,
     SPFLAG_MONSTER | SPFLAG_NOT_SELF,
     2,
