@@ -58,6 +58,7 @@
 #include "spl-wpnench.h"
 #include "stash.h"
 #include "state.h"
+#include "stringutil.h" // to_string on Cygwin
 #include "terrain.h"
 #ifdef USE_TILE_LOCAL
  #include "tilereg-crt.h"

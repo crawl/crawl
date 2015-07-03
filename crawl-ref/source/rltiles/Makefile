@@ -10,7 +10,7 @@ endif
 # Also, cross-compilation with no system libraries for host rather than target
 # is not supported.  If host=target, contribs are enough.
 
-CFLAGS := -O2 -std=c++11 -g -Wall -Wextra -Wno-parentheses -Wno-unused-parameter
+CFLAGS := -O2 $(STDFLAG) -g -Wall -Wextra -Wno-parentheses -Wno-unused-parameter
 
 ifdef ANDROID
   CXXFLAGS :=
