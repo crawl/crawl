@@ -409,7 +409,8 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
 
     // Under Gozag, monsters turn into gold on death.
     bool goldify = in_good_standing(GOD_GOZAG)
-        && mons_class_gives_xp(mons.type) && !mons_is_conjured(mons.type);
+        && mons_class_gives_xp(mons.type) && !mons_is_conjured(mons.type)
+        && !force;
 
     const bool no_coinflip =
         mons.props.exists("always_corpse")
