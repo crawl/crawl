@@ -167,4 +167,48 @@ vector<string> split_string(const string &sep, string s, bool trim = true,
 string make_time_string(time_t abs_time, bool terse = false);
 string make_file_time(time_t when);
 
+// Work around missing std::to_string. This will break when newlib adds
+// support for long double, which will enable std::to_string in libstdc++.
+//
+// See http://permalink.gmane.org/gmane.os.cygwin/150485 for more info.
+#ifdef TARGET_COMPILER_CYGWIN
+// Injecting into std:: because we sometimes use std::to_string to
+// disambiguate.
+namespace std
+{
+    static inline string to_string(int value)
+    {
+        return make_stringf("%d", value);
+    }
+    static inline string to_string(long value)
+    {
+        return make_stringf("%ld", value);
+    }
+    static inline string to_string(long long value)
+    {
+        return make_stringf("%lld", value);
+    }
+    static inline string to_string(unsigned value)
+    {
+        return make_stringf("%u", value);
+    }
+    static inline string to_string(unsigned long value)
+    {
+        return make_stringf("%lu", value);
+    }
+    static inline string to_string(unsigned long long value)
+    {
+        return make_stringf("%llu", value);
+    }
+    static inline string to_string(float value)
+    {
+        return make_stringf("%f", value);
+    }
+    static inline string to_string(double value)
+    {
+        return make_stringf("%f", value);
+    }
+}
+#endif
+
 #endif
