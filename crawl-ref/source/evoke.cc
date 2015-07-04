@@ -1085,7 +1085,7 @@ static bool _sack_of_spiders(item_def &sack)
 {
     mpr("You reach into the bag...");
 
-    if (!sack.plus)
+    if (!sack.charges)
     {
         mpr("...but the bag is empty, and unravels at your touch.");
         ASSERT(in_inventory(sack));
