@@ -468,8 +468,8 @@ random_pick_entry<cloud_type> cloud_cone_clouds[] =
   { 0,  100, 100, PEAK, CLOUD_COLD },
   { 0,  100, 100, PEAK, CLOUD_POISON },
   { 30, 100, 125, RISE, CLOUD_NEGATIVE_ENERGY },
-  { 40, 100, 135, RISE, CLOUD_ACID },
-  { 50, 100, 175, RISE, CLOUD_STORM },
+  { 40, 100, 135, RISE, CLOUD_STORM },
+  { 50, 100, 175, RISE, CLOUD_ACID },
   { 0,0,0,FLAT,CLOUD_NONE }
 };
 
