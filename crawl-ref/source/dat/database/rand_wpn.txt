@@ -518,7 +518,7 @@ Toadstool
 
 Puffball
 
-Slime-mold
+Slime-mould
 %%%%
 # undead and evil beings
 _evil_stuff_
