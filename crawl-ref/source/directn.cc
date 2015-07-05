@@ -1146,15 +1146,6 @@ coord_def direction_chooser::find_default_target() const
     {
         success = find_default_monster_target(result);
     }
-    // Evolution can also auto-target mold squares (but shouldn't if
-    // there are any monsters to evolve), so try _find_square_wrapper
-    // again
-    if (mode == TARG_EVOLVABLE_PLANTS && !success)
-    {
-        success = _find_square_wrapper(result, 1, _find_fprop_unoccupied,
-                                       needs_path, FPROP_MOLD, range, hitfunc,
-                                       true);
-    }
 
     if (!success)
         result = you.pos();

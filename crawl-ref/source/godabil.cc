@@ -3224,37 +3224,6 @@ bool mons_is_evolvable(const monster* mon)
     return _possible_evolution(monster_info(mon), temp);
 }
 
-static bool _place_ballisto(const coord_def& pos)
-{
-    if (monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE,
-                                                      BEH_FRIENDLY,
-                                                      &you,
-                                                      0,
-                                                      0,
-                                                      pos,
-                                                      MHITNOT,
-                                                      MG_FORCE_PLACE,
-                                                      GOD_FEDHAS)))
-    {
-        plant->flags |= MF_NO_REWARD;
-        plant->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-        mons_make_god_gift(plant, GOD_FEDHAS);
-
-        remove_mold(pos);
-        mpr("The mold grows into a ballistomycete.");
-        mpr("Your piety has decreased.");
-        lose_piety(1);
-        return true;
-    }
-
-    // Monster placement failing should be quite unusual, but it could happen.
-    // Not entirely sure what to say about it, but a more informative message
-    // might be good. -cao
-    canned_msg(MSG_NOTHING_HAPPENS);
-    return false;
-}
-
 #define FEDHAS_EVOLVE_TARGET_KEY "fedhas_evolve_target"
 
 bool fedhas_check_evolve_flora(bool quiet)
@@ -3267,9 +3236,7 @@ bool fedhas_check_evolve_flora(bool quiet)
     for (radius_iterator rad(you.pos(), LOS_NO_TRANS, true); rad; ++rad)
     {
         const monster* temp = monster_at(*rad);
-        if (is_moldy(*rad) && mons_class_can_pass(MONS_BALLISTOMYCETE,
-                                                  env.grid(*rad))
-            || temp && mons_is_evolvable(temp))
+        if (temp && mons_is_evolvable(temp))
         {
             in_range = true;
             break;
@@ -3312,18 +3279,11 @@ bool fedhas_check_evolve_flora(bool quiet)
 
     if (!plant)
     {
-        if (!is_moldy(spelld.target)
-            || !mons_class_can_pass(MONS_BALLISTOMYCETE,
-                                    env.grid(spelld.target)))
-        {
-            if (feat_is_tree(env.grid(spelld.target)))
-                mpr("The tree has already reached the pinnacle of evolution.");
-            else
-                mpr("You must target a plant or fungus.");
-            return false;
-        }
-        you.props[FEDHAS_EVOLVE_TARGET_KEY].get_coord() = spelld.target;
-        return true;
+        if (feat_is_tree(env.grid(spelld.target)))
+            mpr("The tree has already reached the pinnacle of evolution.");
+        else
+            mpr("You must target a plant or fungus.");
+        return false;
     }
 
     if (!_possible_evolution(monster_info(plant), upgrade))
@@ -3371,19 +3331,14 @@ void fedhas_evolve_flora()
 
     monster* const plant = monster_at(target);
 
-    if (!plant)
-    {
-        ASSERT(is_moldy(target));
-        _place_ballisto(target);
-        return;
-    }
-
+    ASSERT(plant);
     ASSERT(_possible_evolution(monster_info(plant), upgrade));
 
     switch (plant->type)
     {
     case MONS_PLANT:
     case MONS_BUSH:
+    case MONS_BURNING_BUSH:
     {
         string evolve_desc = " can now spit acid";
         int skill = you.skill(SK_INVOCATIONS);
