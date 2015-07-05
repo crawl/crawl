@@ -102,8 +102,6 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
 static bool _find_feature(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
-static bool _find_fprop_unoccupied(const coord_def& where, int mode, bool need_path,
-                           int range, targetter *hitfunc);
 static bool _find_shadow_step_mons(const coord_def& where, int mode,
                                    bool need_path, int range,
                                    targetter *hitfunc);
@@ -2379,27 +2377,6 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
     return true;
 }
 #endif
-
-static bool _find_fprop_unoccupied(const coord_def & where, int mode,
-                                   bool need_path, int range, targetter *hitfunc)
-{
-    // Don't target out of range.
-    if (!_is_target_in_range(where, range, hitfunc))
-        return false;
-
-    monster* mon = monster_at(where);
-    if (mon || !you.see_cell(where))
-        return false;
-
-    // Monster in LOS but only via glass walls, so no direct path.
-    if (need_path && !you.see_cell_no_trans(where))
-        return false;
-
-    if (need_path && _blocked_ray(where))
-        return false;
-
-    return env.pgrid(where) & mode;
-}
 
 static bool _want_target_monster(const monster *mon, int mode)
 {
