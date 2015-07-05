@@ -207,7 +207,8 @@ Cheibriados powers
 
 Followers of Cheibriados move more slowly as they gain favour, and are rewarded
 for killing creatures who are faster than they are. Moving too quickly or using
-magically hastened weapons is frowned upon. Cheibriados rewards the faithful
+magically hastened weapons is frowned upon. As they move slower, worshippers of
+Cheibriados are granted increased attributes. Cheibriados rewards the faithful
 with a slowed metabolism, the power to slow other creatures, the power to
 distort the flow of time, the power to harm those who move more quickly than
 they do, and finally the ability to step out of the flow of time entirely.
