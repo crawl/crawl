@@ -1021,12 +1021,12 @@ static const pop_entry pop_spiders[] =
   {  0,  10,   10, FALL, MONS_SCORPION },
   {  0,  15,  100, FALL, MONS_SPIDER },
   {  7,  18,   80, PEAK, MONS_TRAPDOOR_SPIDER },
-  {  9,  25,   90, PEAK, MONS_REDBACK },
+  {  9,  27,   90, PEAK, MONS_REDBACK },
   { 10,  27,   10, SEMI, MONS_ORB_SPIDER },
-  { 12,  27,  100, PEAK, MONS_JUMPING_SPIDER },
-  { 13,  27,  110, PEAK, MONS_TARANTELLA },
-  { 15,  27,  120, PEAK, MONS_WOLF_SPIDER },
-  { 21,  27,    6, RISE, MONS_GHOST_MOTH },
+  { 12,  29,  100, PEAK, MONS_JUMPING_SPIDER },
+  { 13,  29,  110, PEAK, MONS_TARANTELLA },
+  { 15,  29,  120, PEAK, MONS_WOLF_SPIDER },
+  { 21,  27,   18, RISE, MONS_GHOST_MOTH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
