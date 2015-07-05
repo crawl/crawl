@@ -1808,13 +1808,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     if (just_check)
         return true;
 
-    // Switching between forms takes a bit longer.
-    if (!involuntary && previous_trans != TRAN_NONE
-        && previous_trans != which_trans)
-    {
-        you.time_taken = div_rand_round(you.time_taken * 3, 2);
-    }
-
     // All checks done, transformation will take place now.
     you.redraw_quiver       = true;
     you.redraw_evasion      = true;
