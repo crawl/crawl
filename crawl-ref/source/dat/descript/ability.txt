@@ -145,7 +145,7 @@ Releases a thick cloud of fog to obscure vision.
 %%%%
 End Transformation ability
 
-Reverts you to your normal form, with a short delay.
+Reverts you to your normal form.
 %%%%
 # Zin
 Recite ability

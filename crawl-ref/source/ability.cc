@@ -2081,7 +2081,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_END_TRANSFORMATION:
         fail_check();
-        you.time_taken = div_rand_round(you.time_taken * 3, 2);
         untransform();
         break;
 
