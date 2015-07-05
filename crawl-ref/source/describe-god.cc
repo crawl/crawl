@@ -959,6 +959,9 @@ static void _describe_god_powers(god_type which_god, int numcols)
         if (!player_under_penance())
         {
             have_any = true;
+            cprintf("%s supports your attributes (+%d).\n",
+                    uppercase_first(god_name(which_god)).c_str(),
+                    chei_stat_boost(you.piety));
             _print_final_god_abil_desc(which_god,
                                        "You can bend time to slow others.",
                                        ABIL_CHEIBRIADOS_TIME_BEND);
