@@ -751,7 +751,7 @@ TAGS:    no_item_gen no_monster_gen
 # loot: 8 items of which 6 should be good.
 # Most of the loot helps right here, if need be.
 ITEM:    potion of curing / potion of heal wounds / potion of haste / \
-         potion of confusion w:5 / potion of mutation w:5 / \
+         potion of ambrosia w:5 / potion of mutation w:5 / \
          scroll of identify / scroll of teleportation w:5 / \
          scroll of blinking w:5 / scroll of holy word / \
          scroll of random uselessness
