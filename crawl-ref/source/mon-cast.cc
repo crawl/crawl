@@ -3297,10 +3297,14 @@ bool scattershot_tracer(monster *caster, int pow, coord_def aim)
  *
  *  @param[in]  spells     the monster spell list to search
  *  @param[in]  flag       what SPFLAG_ the spell should match
- *  @param[out] slot_flags the flags of the slot the spell was found in
+ *  @param[out] slot_flags the flags of the slot the spell was found in.
+ *
+ *  @return The spell chosen, or SPELL_NO_SPELL if no matching spell was
+ *          found. In the latter case, slot_flags is not assigned to.
  */
 static spell_type _pick_spell_from_list(const monster_spells &spells,
-                                        int flag, unsigned short &slot_flags)
+                                        int flag,
+                                        mon_spell_slot_flags &slot_flags)
 {
     spell_type spell_cast = SPELL_NO_SPELL;
     int weight = 0;
@@ -3349,7 +3353,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         return false;
     }
 
-    unsigned short flags = MON_SPELL_NO_FLAGS;
+    mon_spell_slot_flags flags = MON_SPELL_NO_FLAGS;
     spell_type spell_cast = SPELL_NO_SPELL;
 
     monster_spells hspell_pass(mons->spells);
@@ -4982,7 +4986,7 @@ static enchant_type get_enchant_type_from_chant(spell_type chant)
  *  @param do_noise   Whether to make noise (including casting messages).
  */
 void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
-               unsigned short slot_flags, bool do_noise)
+               mon_spell_slot_flags slot_flags, bool do_noise)
 {
     if (spell_cast == SPELL_SERPENT_OF_HELL_BREATH)
     {
@@ -5041,7 +5045,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             pbolt.range = 0;
             pbolt.glyph = 0;
-            mons_cast_noise(mons, pbolt, SPELL_ABJURATION, 0);
+            mons_cast_noise(mons, pbolt, SPELL_ABJURATION, MON_SPELL_NO_FLAGS);
         }
         _monster_abjuration(mons, true);
         return;
@@ -6556,7 +6560,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 }
 
 static int _noise_level(const monster* mons, spell_type spell,
-                        bool silent, unsigned short slot_flags)
+                        bool silent, mon_spell_slot_flags slot_flags)
 {
     const unsigned int flags = get_spell_flags(spell);
 
@@ -6579,15 +6583,17 @@ static int _noise_level(const monster* mons, spell_type spell,
 
 static void _speech_keys(vector<string>& key_list,
                          const monster* mons, const bolt& pbolt,
-                         spell_type spell, const unsigned short slot_flags,
+                         spell_type spell, mon_spell_slot_flags slot_flags,
                          bool targeted)
 {
     const string cast_str = " cast";
 
-    const bool wizard = slot_flags & MON_SPELL_WIZARD;
-    const bool priest = slot_flags & MON_SPELL_PRIEST;
-    const bool innate = slot_flags & MON_SPELL_INNATE_MASK;
-    const bool demon  = slot_flags & MON_SPELL_DEMONIC;
+    // Can't use copy-initialization 'wizard = slot_flags & ...' here,
+    // because the bitfield-to-bool conversion is not implicit.
+    const bool wizard {slot_flags & MON_SPELL_WIZARD};
+    const bool priest {slot_flags & MON_SPELL_PRIEST};
+    const bool innate {slot_flags & MON_SPELL_INNATE_MASK};
+    const bool demon  {slot_flags & MON_SPELL_DEMONIC};
 
     const mon_body_shape shape = get_mon_shape(mons);
     const string    spell_name = spell_title(spell);
@@ -6899,7 +6905,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
 }
 
 void mons_cast_noise(monster* mons, const bolt &pbolt,
-                     spell_type spell_cast, unsigned short slot_flags)
+                     spell_type spell_cast, mon_spell_slot_flags slot_flags)
 {
     bool force_silent = false;
     noise_flag_type noise_flags = NF_NONE;

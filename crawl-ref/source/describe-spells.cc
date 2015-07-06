@@ -51,14 +51,14 @@ spellset item_spellset(const item_def &item)
  * @return                  A descriptor of the spell type; e.g. "natural",
  *                          "angelic", "demonic", etc.
  */
-static string _ability_type_descriptor(mon_spell_slot_flags type,
+static string _ability_type_descriptor(mon_spell_slot_flag type,
                                        mon_holy_type caster_holiness)
 {
     // special case (:
     if (type == MON_SPELL_DEMONIC && caster_holiness == MH_HOLY)
         return "angelic";
 
-    static map<mon_spell_slot_flags, string> descriptors =
+    static const map<mon_spell_slot_flag, string> descriptors =
     {
         { MON_SPELL_NATURAL, "special" },
         { MON_SPELL_MAGICAL, "magical" },
@@ -80,7 +80,7 @@ static string _ability_type_descriptor(mon_spell_slot_flags type,
  *                          "She has mastered one of the following spellbooks:\n"
  *                          "It possesses the following special abilities:\n"
  */
-static string _booktype_header(mon_spell_slot_flags type, size_t num_books,
+static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
                                const monster_info &mi)
 {
     const string pronoun = uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
@@ -114,7 +114,7 @@ static string _booktype_header(mon_spell_slot_flags type, size_t num_books,
  * @param[out] all_books    An output vector of "spellbooks".
  */
 static void _monster_spellbooks(const monster_info &mi,
-                                mon_spell_slot_flags type,
+                                mon_spell_slot_flag type,
                                 spellset &all_books)
 {
     const unique_books books = get_unique_spells(mi, type);
@@ -183,7 +183,7 @@ spellset monster_spellset(const monster_info &mi)
     if (!mi.has_spells())
         return {};
 
-    static const mon_spell_slot_flags book_flags[] =
+    static const mon_spell_slot_flag book_flags[] =
     {
         MON_SPELL_NATURAL,
         MON_SPELL_MAGICAL,
