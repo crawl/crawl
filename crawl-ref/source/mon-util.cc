@@ -4770,12 +4770,11 @@ void debug_monspells()
                                       spslot.freq, max_freq);
             }
 
-            mon_spell_slot_flags category = MON_SPELL_NO_FLAGS;
+            mon_spell_slot_flag category = MON_SPELL_NO_FLAGS;
             for (int flag_exp = 0; flag_exp <= MON_SPELL_LAST_EXPONENT;
                  ++flag_exp)
             {
-                const mon_spell_slot_flags flag
-                    = (mon_spell_slot_flags)(1 << flag_exp);
+                const auto flag = mon_spell_slot_flags::exponent(flag_exp);
 
                 if (!(spslot.flags & flag))
                     continue;
@@ -4795,7 +4794,7 @@ void debug_monspells()
                 }
 
                 COMPILE_CHECK(MON_SPELL_NO_SILENT > MON_SPELL_LAST_CATEGORY);
-                static const int NO_SILENT_CATEGORIES =
+                static auto NO_SILENT_CATEGORIES =
                     MON_SPELL_SILENCE_MASK & ~MON_SPELL_NO_SILENT;
                 if (flag == MON_SPELL_NO_SILENT
                     && (category & NO_SILENT_CATEGORIES))

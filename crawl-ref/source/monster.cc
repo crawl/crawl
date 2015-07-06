@@ -2993,9 +2993,9 @@ bool monster::has_spell(spell_type spell) const
     return search_spells([=] (spell_type sp) { return sp == spell; } );
 }
 
-unsigned short monster::spell_slot_flags(spell_type spell) const
+mon_spell_slot_flags monster::spell_slot_flags(spell_type spell) const
 {
-    unsigned short slot_flags = MON_SPELL_NO_FLAGS;
+    mon_spell_slot_flags slot_flags;
     for (const mon_spell_slot &slot : spells)
         if (slot.spell == spell)
             slot_flags |= slot.flags;
@@ -4292,7 +4292,7 @@ bool monster::no_tele(bool calc_unid, bool permit_id, bool blinking) const
 bool monster::antimagic_susceptible() const
 {
     return search_slots([] (const mon_spell_slot& slot)
-                        { return slot.flags & MON_SPELL_ANTIMAGIC_MASK; });
+                        { return bool(slot.flags & MON_SPELL_ANTIMAGIC_MASK); });
 }
 
 bool monster::airborne() const
@@ -5103,7 +5103,7 @@ bool monster::has_multitargeting() const
 bool monster::is_priest() const
 {
     return search_slots([] (const mon_spell_slot& slot)
-                        { return slot.flags & MON_SPELL_PRIEST; } );
+                        { return bool(slot.flags & MON_SPELL_PRIEST); });
 }
 
 bool monster::is_fighter() const
@@ -5119,7 +5119,7 @@ bool monster::is_archer() const
 bool monster::is_actual_spellcaster() const
 {
     return search_slots([] (const mon_spell_slot& slot)
-                        { return slot.flags & MON_SPELL_WIZARD; } );
+                        { return bool(slot.flags & MON_SPELL_WIZARD); } );
 }
 
 bool monster::is_shapeshifter() const

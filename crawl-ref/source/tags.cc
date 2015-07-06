@@ -6029,7 +6029,7 @@ static void marshallSpells(writer &th, const monster_spells &spells)
     {
         marshallShort(th, spells[j].spell);
         marshallByte(th, spells[j].freq);
-        marshallShort(th, spells[j].flags);
+        marshallShort(th, spells[j].flags.flags);
     }
 }
 
@@ -6073,7 +6073,7 @@ static void unmarshallSpells(reader &th, monster_spells &spells
         {
 #endif
         spells[j].freq = unmarshallByte(th);
-        spells[j].flags = unmarshallShort(th);
+        spells[j].flags.flags = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
         }
         else
