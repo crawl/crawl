@@ -2058,8 +2058,6 @@ salamander firebrand
 The rarest of the salamander castes, possessed of fearsome agility and
 unparallelled martial prowess. Their mastery of fire is woven into every strike
 of their weapons, filling the air around their opponent with sweltering flames.
-So hot does their blood run that even outside their native terrain, few can
-escape their pursuit.
 %%%%
 salamander stormcaller
 
