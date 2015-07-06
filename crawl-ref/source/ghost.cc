@@ -948,7 +948,7 @@ int ghost_rank_to_level(const int rank)
     }
 }
 
-static spell_type servitor_spells[] =
+static spell_type _servitor_spells[] =
 {
     // primary spells
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
@@ -983,18 +983,14 @@ static spell_type servitor_spells[] =
     SPELL_STING,
     SPELL_SANDBLAST,
     SPELL_MAGIC_DART,
-    // end search
-    SPELL_NO_SPELL,
 };
 
 void ghost_demon::init_spellforged_servitor(actor* caster)
 {
-    mon_spell_slot slot;
-    slot.flags = MON_SPELL_WIZARD;
-    monster* mon = caster->is_monster() ? caster->as_monster() : nullptr;
+    monster* mon = caster->as_monster();
 
-    int pow = mon ? 6 * mon->spell_hd(SPELL_SPELLFORGED_SERVITOR)
-                  : calc_spell_power(SPELL_SPELLFORGED_SERVITOR, true);
+    const int pow = mon ? 6 * mon->spell_hd(SPELL_SPELLFORGED_SERVITOR)
+                        : calc_spell_power(SPELL_SPELLFORGED_SERVITOR, true);
 
     colour = LIGHTMAGENTA; // cf. mon-data.h
     speed = 10;
@@ -1005,22 +1001,15 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
     damage = 0;
     att_type = AT_NONE;
 
-    int i = 0;
-    spell_type spell = SPELL_NO_SPELL;
-    while ((spell = servitor_spells[i++]) != SPELL_NO_SPELL)
-    {
-        if (mon && mon->has_spell(spell)
-            || !mon && you.has_spell(spell) && raw_spell_fail(spell) < 50)
-        {
-            slot.spell = spell;
-            spells.push_back(slot);
-        }
-    }
+    for (const spell_type spell : _servitor_spells)
+        if (caster->has_spell(spell) && (mon || raw_spell_fail(spell) < 50))
+            spells.push_back({ spell, 0, MON_SPELL_WIZARD });
 
+    // Fix up frequencies now that we know the number of spells.
     const size_t count = spells.size();
     const int base_freq = mon ? 67 : 200;
-    for (auto& spellslot : spells)
-        spellslot.freq = base_freq / count;
+    for (auto& slot : spells)
+        slot.freq = base_freq / count;
 }
 
 const mon_spell_slot lich_primary_summoner_spells[] =
