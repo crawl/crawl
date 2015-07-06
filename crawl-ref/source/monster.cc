@@ -277,6 +277,7 @@ bool monster::extra_balanced_at(const coord_def p) const
             && draco_or_demonspawn_subspecies(this) == MONS_GREY_DRACONIAN)
                 || grid == DNGN_SHALLOW_WATER
                    && (mons_genus(type) == MONS_NAGA // tails, not feet
+                       || mons_genus(type) == MONS_SALAMANDER
                        || body_size(PSIZE_BODY) >= SIZE_LARGE);
 }
 
@@ -1785,8 +1786,11 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
     switch (item.sub_type)
     {
     case ARM_NAGA_BARDING:
-        if (mons_genus(type) == MONS_NAGA)
+        if (mons_genus(type) == MONS_NAGA
+            || mons_genus(type) == MONS_SALAMANDER)
+        {
             eq = EQ_BODY_ARMOUR;
+        }
         break;
     case ARM_CENTAUR_BARDING:
         if (mons_species(type) == MONS_CENTAUR
