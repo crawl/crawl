@@ -179,7 +179,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice an eye",
   "sacrificed an eye",
 
-  35,
+  20,
   SK_NONE,
   nullptr,
   nullptr,

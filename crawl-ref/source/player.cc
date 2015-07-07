@@ -8429,6 +8429,6 @@ int player::inaccuracy() const
     if (wearing(EQ_AMULET, AMU_INACCURACY))
         degree++;
     if (player_mutation_level(MUT_MISSING_EYE))
-        degree += 2;
+        degree++;
     return degree;
 }
