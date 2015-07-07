@@ -165,13 +165,12 @@ static const pop_entry pop_orc[] =
   {  2,  4,    8, RISE, MONS_CYCLOPS },
   {  3,  4,    4, RISE, MONS_ETTIN },
   {  3,  4,    4, RISE, MONS_STONE_GIANT },
-  {  1,  4,   25, FALL, MONS_FUNGUS },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry pop_elf[] =
 { // Elven Halls (OOD cap: 7)
-  {  1,  7, 1000, FLAT, MONS_FUNGUS },
+  {  1,  7, 1000, FLAT, MONS_NO_MONSTER }, // was fungus
   {  1,  5,   50, FLAT, MONS_ORC_HIGH_PRIEST },
   {  1,  6,   50, FLAT, MONS_ORC_SORCERER },
   {  1,  7, 1000, FLAT, MONS_DEEP_ELF_FIGHTER },
@@ -276,8 +275,7 @@ static const pop_entry pop_lair[] =
 
 static const pop_entry pop_swamp[] =
 { // Swamp
-  {  1,  BRANCH_END, 1000, FLAT, MONS_FUNGUS },
-  {  1,  BRANCH_END, 1000, FLAT, MONS_PLANT },
+  {  1,  BRANCH_END, 2000, FLAT, MONS_NO_MONSTER }, // was plant + fungus
   { -6,  4,  480, RISE, MONS_SLIME_CREATURE },
   { -2,  6,  245, SEMI, MONS_SHADOW },
   {  0,  5,  480, SEMI, MONS_SPRIGGAN_RIDER },
