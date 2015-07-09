@@ -687,8 +687,11 @@ bool cast_a_spell(bool check_range, spell_type spell)
                     }
                 }
 
-                if (you.last_cast_spell == SPELL_NO_SPELL)
+                if (you.last_cast_spell == SPELL_NO_SPELL
+                    || !Options.enable_recast_spell)
+                {
                     mprf(MSGCH_PROMPT, "Cast which spell? (? or * to list) ");
+                }
                 else
                 {
                     mprf(MSGCH_PROMPT, "Casting: <w>%s</w>",
@@ -726,8 +729,11 @@ bool cast_a_spell(bool check_range, spell_type spell)
             crawl_state.zero_turns_taken();
             return false;
         }
-        else if (keyin == '.' || keyin == CK_ENTER)
+        else if (Options.enable_recast_spell
+                 && (keyin == '.' || keyin == CK_ENTER))
+        {
             spell = you.last_cast_spell;
+        }
         else if (!isaalpha(keyin))
         {
             mpr("You don't know that spell.");
