@@ -57,7 +57,8 @@ The contents of this text are:
                 autofight_throw, autofight_throw_nomove, autofight_fire_stop,
                 autofight_caught, autofight_wait, autofight_prompt_range,
                 automagic_enable, automagic_slot, automagic_fight,
-                automagic_stop, fail_severity_to_confirm, easy_door
+                automagic_stop, fail_severity_to_confirm, easy_door,
+                enable_recast_spell
 3-h     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -1228,6 +1229,10 @@ easy_door = true
         When (O)pening or (C)losing doors, do not prompt for a direction
         if there is only one adjacent door. This option does not affect
         opening doors by walking into them.
+
+enable_recast_spell = true
+        If enabled, allows recasting the previously cast spell by pressing
+        Enter or '.' at the spellcasting prompt.
 
 3-h     Messages and Display Enhancements.
 ------------------------------------------

@@ -798,6 +798,7 @@ void game_options::reset_options()
     equip_unequip          = false;
     jewellery_prompt       = false;
     easy_door              = true;
+    enable_recast_spell    = true;
     confirm_butcher        = CONFIRM_AUTO;
     easy_eat_chunks        = false;
     auto_eat_chunks        = false;
@@ -2674,6 +2675,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION_NAMED("easy_armour", easy_unequip);
     else BOOL_OPTION_NAMED("easy_armor", easy_unequip);
     else BOOL_OPTION(easy_door);
+    else BOOL_OPTION(enable_recast_spell);
     else if (key == "confirm_butcher")
     {
         if (field == "always")
