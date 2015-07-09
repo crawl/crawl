@@ -3551,6 +3551,17 @@ void display_char_status()
     _display_tohit();
     _display_attack_delay();
 
+    // Display base attributes, if necessary.
+    if (innate_stat(STAT_STR) != you.strength()
+        || innate_stat(STAT_INT) != you.intel()
+        || innate_stat(STAT_DEX) != you.dex())
+    {
+        mprf("Your base attributes are Str %d, Int %d, Dex %d.",
+             innate_stat(STAT_STR),
+             innate_stat(STAT_INT),
+             innate_stat(STAT_DEX));
+    }
+
     // magic resistance
     _display_char_status(you.res_magic(),
                          "You are %s to hostile enchantments",
