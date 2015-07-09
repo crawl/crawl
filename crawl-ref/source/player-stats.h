@@ -37,4 +37,5 @@ bool restore_stat(stat_type which_stat, int stat_gain,
 
 void update_stat_zero();
 
+int innate_stat(stat_type s);
 #endif
