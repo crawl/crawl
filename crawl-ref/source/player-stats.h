@@ -32,4 +32,5 @@ duration_type stat_zero_duration(stat_type stat);
 bool have_stat_zero();
 void update_stat_zero(int time);
 
+int innate_stat(stat_type s);
 #endif

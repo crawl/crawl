@@ -83,7 +83,7 @@ int player::max_dex() const
 }
 
 // Base stat including innate mutations (which base_stats does not)
-static int _base_stat(stat_type s)
+int innate_stat(stat_type s)
 {
     return you.max_stat(s, true);
 }
@@ -119,14 +119,14 @@ bool attribute_increase()
 #else
     mprf(MSGCH_INTRINSIC_GAIN, "Your experience leads to an increase in your attributes!");
     learned_something_new(HINT_CHOOSE_STAT);
-    if (_base_stat(STAT_STR) != you.strength()
-        || _base_stat(STAT_INT) != you.intel()
-        || _base_stat(STAT_DEX) != you.dex())
+    if (innate_stat(STAT_STR) != you.strength()
+        || innate_stat(STAT_INT) != you.intel()
+        || innate_stat(STAT_DEX) != you.dex())
     {
         mprf(MSGCH_PROMPT, "Your base attributes are Str %d, Int %d, Dex %d.",
-             _base_stat(STAT_STR),
-             _base_stat(STAT_INT),
-             _base_stat(STAT_DEX));
+             innate_stat(STAT_STR),
+             innate_stat(STAT_INT),
+             innate_stat(STAT_DEX));
     }
     mprf(MSGCH_PROMPT, "Increase (S)trength, (I)ntelligence, or (D)exterity? ");
 #endif
