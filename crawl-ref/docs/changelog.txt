@@ -118,7 +118,7 @@ Items
 * The Placid Magic card is no more.
 * The Sack of Spiders makes more appropriate types of spiders at lower and
   higher levels of Evocations and fewer orb spiders overall.
-* The Rod of Clouds makes more acid clouds more often storm clouds less often.
+* The Rod of Clouds makes acid clouds more often and storm clouds less often.
 * Removed items:
   - The Cloak of Flash.
   - Potions of decay.
@@ -169,7 +169,7 @@ Monsters
   move speed and fast swimming speed.
 * Polyphemus can throw his yaks at the player.
 * Blocks of ice are now susceptible to LRD and Shatter.
-* Demonspawn warmongers now have haste other instead of Grand Avatar.
+* Demonspawn warmongers now have Haste Other instead of Grand Avatar.
 * Demonspawn bloodsaints no longer have ephemeral infusion nor damage
   themselves when casting Legendary Destruction.
 * Removed monsters:
@@ -204,8 +204,8 @@ Spells
 * Freeze no longer has a stun effect.
 * Death's Door sets player exhaustion when canceled with Borgnjor's
   Revivification.
-* Ozocubu's armour and Stoneskin no longer give additional bonuses to ice form
-  and statue form, respectively.
+* Ozocubu's Armour and Stoneskin no longer give additional bonuses to Ice Form
+  and Statue Form, respectively.
 * Casting Malign Gateway no longer drains player Int.
 * Casting Haunt no longer cause sickness.
 * High level spellbooks no longer restrict learning from them based on skill
