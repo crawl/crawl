@@ -1,4 +1,4 @@
-Stone Soup 0.17 (up to 0.17-a0-1408-g1e89f00)
+Stone Soup 0.17 (up to 0.17-a0-1508-ge7f3dc3)
 --------------------------------------------
 
 Branches, Environment
@@ -38,7 +38,8 @@ Character
 * Control-attacking & manipulating doors are no longer permitted under
   confusion.
 * Confusion will never cause you to stumble into deep water/lava.
-* Corrosion can affect characters not using weapons or armour.
+* Corrosion can affect characters not using weapons or armour, and applies -4
+  to both armour and slaying (instead of -5/-3).
 * Multi-turn actions, other than climbing/descending stairs, no longer reduce
   EV by 5 for their duration.
 * Poison-immune characters (e.g. gargoyles, mummies) no longer take poison
@@ -73,7 +74,7 @@ Gods
   - Amulets of faith no longer have any effect.
 * Ru:
   - New sacrifice: Sacrifice Eye, similar to the effect of amulets of
-    inaccuracy, but twice as strong (and stacking with the amulet).
+    inaccuracy (and stacking with the amulet).
   - New sacrifice: Sacrifice Resistance, providing rC- rF-.
 * Beogh's smite damage now scales better with invocations.
 * Okawaru's Finesse no longer gives contamination.
@@ -115,6 +116,9 @@ Items
 * "Sustain abilities" has been renamed to "sustain attributes".
 * The Storm card no longer summons twisters.
 * The Placid Magic card is no more.
+* The Sack of Spiders makes more appropriate types of spiders at lower and
+  higher levels of Evocations and fewer orb spiders overall.
+* The Rod of Clouds makes more acid clouds more often storm clouds less often.
 * Removed items:
   - The Cloak of Flash.
   - Potions of decay.
@@ -161,6 +165,13 @@ Monsters
 * Jorgrun is no longer a deep dwarf, and now regenerates normally.
 * Deep dwarf ghosts now regenerate normally.
 * Hell beasts no longer have randomized speeds.
+* Salamander mystics, firebrands, and stormcallers now all have normal land
+  move speed and fast swimming speed.
+* Polyphemus can throw his yaks at the player.
+* Blocks of ice are now susceptible to LRD and Shatter.
+* Demonspawn warmongers now have haste other instead of Grand Avatar.
+* Demonspawn bloodsaints no longer have ephemeral infusion nor damage
+  themselves when casting Legendary Destruction.
 * Removed monsters:
   - Unborn.
   - Ravens.
@@ -191,12 +202,21 @@ Spells
 * Cigotuvi's Embrace is now stronger with small numbers of corpses, and
   considerably weaker with huge numbers.
 * Freeze no longer has a stun effect.
+* Death's Door sets player exhaustion when canceled with Borgnjor's
+  Revivification.
+* Ozocubu's armour and Stoneskin no longer give additional bonuses to ice form
+  and statue form, respectively.
+* Casting Malign Gateway no longer drains player Int.
+* Casting Haunt no longer cause sickness.
+* High level spellbooks no longer restrict learning from them based on skill
+  levels.
 * Removed spells:
   - Abjuration.
   - Control Teleport.
   - Enslavement.
   - Flight.
   - Sure Blade.
+  - Singularity.
 
 Interface
 ---------
@@ -204,6 +224,10 @@ Interface
   (with 'v'), just as the normal examine mode does.
 * The inventory descriptions for weapons & shields now shows the skill required
   to reach minimum attack delay / remove attack delay penalty, respectively.
+
+Technical
+---------
+* Support compilation under Cygwin
 
 
 Stone Soup 0.16 (20150311)
