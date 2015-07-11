@@ -2292,8 +2292,7 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
     // Monster types that you can't gain experience from don't count as
     // monsters.
     if (mode != TARG_EVOLVABLE_PLANTS
-        && !mons_class_gives_xp(mon->type, true)
-        && !mons_is_active_ballisto(mon))
+        && !mons_class_is_threatening(mon->type))
     {
         return false;
     }
@@ -2410,7 +2409,7 @@ static bool _want_target_monster(const monster *mon, int mode)
         return false;
 
     // Don't target zero xp monsters.
-    return mons_class_gives_xp(mon->type);
+    return mons_class_is_threatening(mon->type);
 }
 
 #ifdef CLUA_BINDINGS

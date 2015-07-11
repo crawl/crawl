@@ -129,6 +129,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
         || !mons_class_gives_xp(new_mclass)           // no tentacle parts or
                                                       // harmless things
+        || !mons_class_is_threatening(new_mclass)
         || new_mclass == MONS_PROGRAM_BUG
 
         // 'morph targets are _always_ "base" classes, not derived ones.
