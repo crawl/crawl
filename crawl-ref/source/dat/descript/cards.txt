@@ -187,8 +187,8 @@ Focus card
 
 The card depicts a gnarled claw adjusting a slanted set of scales.
 
-Drawing this card further boosts the user's strongest attribute at the cost of
-their worst.
+Drawing this card permanently increases the user's highest attribute at the
+cost of their lowest.
 %%%%
 the Helix card
 
@@ -209,8 +209,7 @@ the Mercenary card
 
 The card depicts bloodied hands accepting a bag of gold.
 
-Drawing this card summons a mercenary to fight by the user's side... for a
-price.
+Drawing this card summons a mercenary to fight by the user's side, for a fee.
 %%%%
 Wild Magic card
 
