@@ -20,6 +20,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "message.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
@@ -143,9 +144,9 @@ void jiyva_slurp_message(int js)
         if (js & JS_FOOD)
             mpr("You feel a little less hungry.");
         if (js & JS_MP)
-            mpr("You feel your power returning.");
+            canned_msg(MSG_GAIN_MAGIC);
         if (js & JS_HP)
-            mpr("You feel a little better.");
+            canned_msg(MSG_GAIN_HEALTH);
     }
 }
 

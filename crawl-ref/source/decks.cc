@@ -2646,7 +2646,7 @@ static void _alchemist_card(int power, deck_rarity_type rarity)
         you.del_gold(hp * 2);
         inc_hp(hp);
         gold_used += hp * 2;
-        mpr("You feel better.");
+        canned_msg(MSG_GAIN_HEALTH);
         dprf("Gained %d health, %d gold remaining.", hp, gold_max - gold_used);
     }
     // Maybe spend some more gold to regain magic.
@@ -2657,7 +2657,7 @@ static void _alchemist_card(int power, deck_rarity_type rarity)
         you.del_gold(mp * 5);
         inc_mp(mp);
         gold_used += mp * 5;
-        mpr("You feel your power returning.");
+        canned_msg(MSG_GAIN_MAGIC);
         dprf("Gained %d magic, %d gold remaining.", mp, gold_max - gold_used);
     }
 
@@ -2892,7 +2892,7 @@ static void _wild_magic_card(int power, deck_rarity_type rarity)
         if (mp && you.magic_points < you.max_magic_points)
         {
             inc_mp(mp);
-            mpr("You feel your power returning.");
+            canned_msg(MSG_GAIN_MAGIC);
         }
     }
     else

@@ -1701,6 +1701,12 @@ void canned_msg(canned_message_type which_message)
         case MSG_GHOSTLY_OUTLINE:
             mpr("You see a ghostly outline there, and the spell fizzles.");
             break;
+        case MSG_GAIN_HEALTH:
+            mpr("You feel better.");
+            break;
+        case MSG_GAIN_MAGIC:
+            mpr("You feel your power returning.");
+            break;
     }
 }
 

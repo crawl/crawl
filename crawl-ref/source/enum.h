@@ -763,6 +763,8 @@ enum canned_message_type
     MSG_CANNOT_MOVE,
     MSG_YOU_DIE,
     MSG_GHOSTLY_OUTLINE,
+    MSG_GAIN_HEALTH,
+    MSG_GAIN_MAGIC,
 };
 
 enum char_set_type
