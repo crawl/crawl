@@ -2888,8 +2888,12 @@ static void _wild_magic_card(int power, deck_rarity_type rarity)
         for (int i = 0; i < num_affected; ++i)
             mp += random2(5);
 
-        inc_mp(mp);
         mpr("You feel a surge of magic.");
+        if (mp && you.magic_points < you.max_magic_points)
+        {
+            inc_mp(mp);
+            mpr("You feel your power returning.");
+        }
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
