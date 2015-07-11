@@ -332,10 +332,10 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "step out of the time flow"
     },
     // Ashenzari
-    { "",
-      "scry through walls",
+    { "scry through walls",
       "The more cursed you are, the more Ashenzari supports your skills.",
-      "Ashenzari reveals the unseen and keeps your mind clear.",
+      "Ashenzari reveals the unseen.",
+      "Ashenzari keeps your mind clear.",
       "Ashenzari helps you to reconsider your skills."
     },
     // Dithmenos
@@ -477,10 +477,10 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "step out of the time flow"
     },
     // Ashenzari
-    { "",
-      "scry through walls",
+    { "scry through walls",
       "Ashenzari no longer supports your skills.",
-      "Ashenzari no longer reveals the unseen or keeps your mind clear.",
+      "Ashenzari no longer reveals the unseen.",
+      "Ashenzari no longer keeps your mind clear.",
       "Ashenzari no longer helps you to reconsider your skills."
     },
     // Dithmenos
