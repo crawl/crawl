@@ -2142,8 +2142,7 @@ static void _ruin_level(Iterator iter,
 
 static bool _mimic_at_level()
 {
-    return (!player_in_branch(BRANCH_DUNGEON) || you.depth > 1)
-           && !player_in_branch(BRANCH_TEMPLE)
+    return !player_in_branch(BRANCH_TEMPLE)
            && !player_in_branch(BRANCH_VESTIBULE)
            && !player_in_branch(BRANCH_SLIME)
            && !player_in_branch(BRANCH_TOMB)
@@ -2167,69 +2166,8 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
         if (!feat_is_mimicable(feat))
             continue;
 
-        // Reduce the number of stairs and door mimics since those features
-        // are very common.
-        if ((feat_is_stone_stair(feat) || feat_is_escape_hatch(feat)
-             || feat_is_door(feat)) && !one_chance_in(4))
+        if (one_chance_in(FEATURE_MIMIC_CHANCE))
         {
-            continue;
-        }
-
-        // Don't mimic the stairs the player is going to be placed on.
-        if (feat == dest_stairs_type)
-            continue;
-
-        // Don't mimic vetoed doors.
-        if (door_vetoed(pos))
-            continue;
-
-        // Don't mimic staircases in vaults to avoid trapping the player or
-        // breaking vault layouts.
-        if (map_masked(pos, MMT_VAULT)
-            && (feat_is_escape_hatch(feat) || feat_is_stone_stair(feat)))
-        {
-            continue;
-        }
-
-        // If this is the real branch entry, don't mimic it.
-        if (feat_is_branch_entrance(feat)
-            && level_id::current() == brentry[get_branch_at(pos)])
-        {
-            continue;
-        }
-
-        if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat))
-        {
-            // Don't mimic stairs that are about to get removed.
-            if (feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS
-                && at_branch_bottom())
-            {
-                continue;
-            }
-
-            if (feat_stair_direction(feat) == CMD_GO_UPSTAIRS
-                && you.depth <= 1)
-            {
-                continue;
-            }
-        }
-
-        // If it is a branch entry, it's been put there for mimicing.
-        if (feat_is_branch_entrance(feat) || one_chance_in(FEATURE_MIMIC_CHANCE))
-        {
-            // For normal stairs, there is a chance to create another mimics
-            // elsewhere instead of turning this one. That way, when the 3
-            // stairs are grouped and there is another isolated one, any of
-            // the 4 staircase can be the mimic.
-            if (feat_is_stone_stair(feat) && one_chance_in(4))
-            {
-                const coord_def new_pos = _place_specific_feature(feat);
-                dprf(DIAG_DNGN, "Placed %s mimic at (%d,%d).",
-                     feat_type_name(feat), new_pos.x, new_pos.y);
-                env.level_map_mask(new_pos) |= MMT_MIMIC;
-                continue;
-            }
-
             dprf(DIAG_DNGN, "Placed %s mimic at (%d,%d).",
                  feat_type_name(feat), ri->x, ri->y);
             env.level_map_mask(*ri) |= MMT_MIMIC;
@@ -2240,32 +2178,6 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
             const string tag = "uniq_" + lowercase_string(dst);
             if (you.uniq_map_tags.count(tag))
                 you.uniq_map_tags.erase(tag);
-        }
-    }
-}
-
-static void _place_item_mimics()
-{
-    // No mimics on D:1
-    if (!env.absdepth0)
-        return;
-
-    for (int i = 0; i < MAX_ITEMS; i++)
-    {
-        item_def& item(mitm[i]);
-        if (!item.defined() || !in_bounds(item.pos)
-            || item.flags & ISFLAG_NO_MIMIC
-            || !is_valid_mimic_item(item)
-            || mimic_at(item.pos))
-        {
-            continue;
-        }
-
-        if (one_chance_in(ITEM_MIMIC_CHANCE))
-        {
-            item.flags |= ISFLAG_MIMIC;
-            dprf(DIAG_DNGN, "Placed a %s mimic at (%d,%d).",
-                 item.name(DESC_BASENAME).c_str(), item.pos.x, item.pos.y);
         }
     }
 }
@@ -2376,8 +2288,6 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         _place_gozag_shop(dest_stairs_type);
 
     link_items();
-    if (_mimic_at_level())
-        _place_item_mimics();
 
     if (!player_in_branch(BRANCH_COCYTUS)
         && !player_in_branch(BRANCH_SWAMP)
@@ -3458,7 +3368,7 @@ static bool _place_vault_by_tag(const string &tag)
 static void _place_branch_entrances(bool use_vaults)
 {
     // Find what branch entrances are already placed, and what branch
-    // entrances (or mimics thereof) could be placed here.
+    // entrances could be placed here.
     bool branch_entrance_placed[NUM_BRANCHES];
     bool could_be_placed = false;
     for (branch_iterator it; it; ++it)
@@ -3504,15 +3414,9 @@ static void _place_branch_entrances(bool use_vaults)
             continue;
         }
 
-        const bool mimic = !branch_is_unfinished(it->id)
-                           && !is_hell_subbranch(it->id)
-                           && you.depth >= it->mindepth
-                           && you.depth <= it->maxdepth
-                           && one_chance_in(FEATURE_MIMIC_CHANCE);
-
         if (it->entry_stairs != NUM_FEATURES
             && player_in_branch(parent_branch(it->id))
-            && (level_id::current() == brentry[it->id] || mimic))
+            && level_id::current() == brentry[it->id])
         {
             // Placing a stair.
             dprf(DIAG_DNGN, "Placing stair to %s", it->shortname);
@@ -4434,8 +4338,6 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
             if (chance > 0 && one_chance_in(chance))
                 item.flags |= ISFLAG_MIMIC;
         }
-        if (props.exists("no_mimic"))
-            item.flags |= ISFLAG_NO_MIMIC;
     }
 
     return true;

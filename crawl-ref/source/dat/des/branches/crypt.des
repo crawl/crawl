@@ -416,7 +416,7 @@ SUBST:  HI = G
                                 veto_shatter="veto"})
   set_feature_name("granite_statue", "sarcophagus")
 }}
-KFEAT:  G = granite_statue no_mimic
+KFEAT:  G = granite_statue
 SUBST:  J = V
 SUBST:  C = c
 MAP

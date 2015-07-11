@@ -596,21 +596,10 @@ bool feat_is_mimicable(dungeon_feature_type feat, bool strict)
         return true;
     }
 
-    // Don't risk trapping the player inside a portal vault.
-    if (feat_is_portal_exit(feat))
-        return false;
-
-    // There's only one branch exit.
-    if (feat_is_branch_exit(feat))
-        return false;
-
     if (feat == DNGN_ENTER_ZIGGURAT)
         return false;
 
-    if (feat_is_portal(feat) || feat_is_gate(feat))
-        return true;
-
-    if (feat_is_stone_stair(feat) || feat_is_branch_entrance(feat))
+    if (feat_is_portal_entrance(feat))
         return true;
 
     if (feat == DNGN_ENTER_SHOP)

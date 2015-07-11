@@ -568,8 +568,6 @@ ITEM:     (list of items, separated by comma)
             just tells that to acquirement and (TODO) troves.
           * "mimic:N" gives the item one chance in N of being turned into a
             mimic. The ":N" can also be omitted for a guaranteed mimic.
-          * "no_mimic" prevents the item from being randomly turned into a
-            mimic by the dungeon builder.
           * "no_pickup" prevents monsters from picking up the item, for vaults
             intending to have an impressive display of loot (although in most
             cases monsters should be allowed to pick up and use loot against
@@ -1242,12 +1240,17 @@ KFEAT:    G = C / needle trap / antique armour shop / altar_zin
 
           KFEAT: A = known needle trap
 
-          You can also place feature mimic using the same syntax as item
-          mimics (or prevent random placement of feature mimics). For
-          example this altar has one chance in 10 of being turned into an
-          altar mimic:
+          You can also place feature mimics using the same syntax as item
+          mimics. For example this altar has a 1 in 10 chance of being
+          turned into a mimic:
 
           KFEAT: C = C mimic:10
+
+          Some features (specifically shops and portal vault entries) may
+          be randomly turned into mimics by the dungeon builder. You can
+          prevent this with "no_mimic":
+
+          KFEAT: S = any shop no_mimic
 
           The placeholder used by KFEAT can be shared by KITEM and KMONS;
           see below. If the placeholder is shared, all defined Kxxxx

@@ -362,11 +362,7 @@ static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
                                       items_level);
             move_item_to_grid(&thing_created, place);
             if (thing_created != NON_ITEM)
-            {
                 items_placed++;
-                if (one_chance_in(ITEM_MIMIC_CHANCE))
-                    mitm[thing_created].flags |= ISFLAG_MIMIC;
-            }
         }
     }
 

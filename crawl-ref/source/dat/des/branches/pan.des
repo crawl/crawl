@@ -181,11 +181,7 @@ function pan_entry_feature(e, glyph)
     e.depth_chance("Depths:3", 10000)
     e.depth_chance("D:24", 10000)
     e.chance(2500)
-    if you.where() == 'Depths:3' or you.where() == 'D:24' then
-        e.kfeat(glyph .. " = enter_pandemonium no_mimic")
-    else
-        e.kfeat(glyph .. " = enter_pandemonium")
-    end
+    e.kfeat(glyph .. " = enter_pandemonium")
 end
 
 function pan_entry_vault_contents(e, glyph)
