@@ -1719,7 +1719,7 @@ bool attack::apply_damage_brand(const char *what)
         // We only get here if we've done base damage, so no
         // worries on that score.
         if (attacker->is_player())
-            mpr("You feel better.");
+            canned_msg(MSG_GAIN_HEALTH);
         else if (attacker_visible)
         {
             if (defender->is_player())

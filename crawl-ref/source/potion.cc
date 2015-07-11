@@ -91,7 +91,10 @@ public:
           inc_hp(amount);
         }
 
-        mprf("You feel %s.", ddoor ? "queasy" : "better");
+        if (ddoor)
+            mpr("You feel queasy.");
+        else
+            canned_msg(MSG_GAIN_HEALTH);
 
         // need to redraw from yellow to green even if no hp was gained
         if (you.duration[DUR_POISONING])

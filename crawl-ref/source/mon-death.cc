@@ -2123,13 +2123,13 @@ item_def* monster_die(monster* mons, killer_type killer,
                 if (hp_heal && you.hp < you.hp_max
                     && !you.duration[DUR_DEATHS_DOOR])
                 {
-                    mpr("You feel a little better.");
+                    canned_msg(MSG_GAIN_HEALTH);
                     inc_hp(hp_heal);
                 }
 
                 if (mp_heal && you.magic_points < you.max_magic_points)
                 {
-                    mpr("You feel your power returning.");
+                    canned_msg(MSG_GAIN_MAGIC);
                     inc_mp(mp_heal);
                 }
             }
