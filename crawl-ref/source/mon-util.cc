@@ -625,6 +625,11 @@ bool mons_class_gives_xp(monster_type mc, bool indirect)
         || (indirect && mons_is_tentacle_or_tentacle_segment(mc));
 }
 
+bool mons_class_is_threatening(monster_type mo)
+{
+    return !mons_class_flag(mo, M_NO_THREAT);
+}
+
 /**
  * Can killing this monster reward xp to the given actor?
  *
@@ -682,7 +687,7 @@ bool mons_is_active_ballisto(const monster* mon)
 bool mons_class_is_firewood(monster_type mc)
 {
     return mons_class_is_stationary(mc)
-           && mons_class_flag(mc, M_NO_EXP_GAIN)
+           && mons_class_flag(mc, M_NO_THREAT)
            && !mons_is_tentacle_or_tentacle_segment(mc);
 }
 
@@ -4637,7 +4642,7 @@ int get_dist_to_nearest_monster()
             continue;
 
         // Plants/fungi don't count.
-        if (!mons_class_gives_xp(mon->type) && !mons_is_active_ballisto(mon))
+        if (!mons_class_is_threatening(mon->type))
             continue;
 
         if (mon->wont_attack())
