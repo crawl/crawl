@@ -166,6 +166,9 @@ enum monclass_flag_type : uint64_t
 
     /// monster is a proxy for a charm/conjuration spell (ball lightning, etc.)
     M_CONJURED          = BIT(54),
+
+    /// monster will never harm the player
+    M_NO_THREAT         = BIT(55),
 };
 DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 

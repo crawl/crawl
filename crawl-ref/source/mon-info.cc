@@ -570,7 +570,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (nomsg_wounds)
         dam = MDAM_OKAY;
 
-    if (mons_class_gives_xp(m->type)) // Firewood, butterflies, etc.
+    if (mons_class_is_threatening(m->type)) // Firewood, butterflies, etc.
     {
         if (m->asleep())
         {
@@ -1863,9 +1863,7 @@ void get_monster_info(vector<monster_info>& mons)
 
     for (monster *mon : visible)
     {
-        if (mons_class_gives_xp(mon->type)
-            || mon->is_child_tentacle()
-            || mons_is_active_ballisto(mon))
+        if (mons_class_is_threatening(mon->type))
         {
             mons.emplace_back(mon);
         }
