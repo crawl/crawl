@@ -5247,8 +5247,6 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         result.props["mimic"] = mimic;
     if (strip_tag(s, "mimic"))
         result.props["mimic"] = 1;
-    if (strip_tag(s, "no_mimic"))
-        result.props["no_mimic"] = true;
 
     if (strip_tag(s, "no_pickup"))
         result.props["no_pickup"] = true;

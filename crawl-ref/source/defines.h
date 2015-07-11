@@ -192,13 +192,9 @@ const int UNUSABLE_SKILL = -99;
 
 //#define DEBUG_MIMIC
 #ifdef DEBUG_MIMIC
-// Missing stairs are replaced in fixup_branch_stairs, but replacing
-// too many breaks interlevel connectivity, so we don't use a chance of 1.
-  #define FEATURE_MIMIC_CHANCE 2
-  #define ITEM_MIMIC_CHANCE    1
+  #define FEATURE_MIMIC_CHANCE 1
 #else
   #define FEATURE_MIMIC_CHANCE 100
-  #define ITEM_MIMIC_CHANCE    1000
 #endif
 
 const int AGILITY_BONUS = 5;

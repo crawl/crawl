@@ -2159,7 +2159,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_UNOBTAINABLE      = 0x00080000,  // vault on display
 
     ISFLAG_MIMIC             = 0x00100000,  // mimic
-    ISFLAG_NO_MIMIC          = 0x00200000,  // Can't be turned into a mimic
+                             //0x00200000,  // was ISFLAG_NO_MIMIC
 
     ISFLAG_NO_PICKUP         = 0x00400000,  // Monsters won't pick this up
 

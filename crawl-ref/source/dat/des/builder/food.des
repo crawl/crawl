@@ -24,7 +24,7 @@ NAME:   first_bread
 DEPTH:  D:2-5
 CHANCE: 2500, 3333 (D:3), 5000 (D:4), 10000 (D:5)
 TAGS:   uniq_first_food extra transparent
-ITEM:   bread ration no_mimic
+ITEM:   bread ration
 MAP
 d
 ENDMAP
@@ -54,7 +54,7 @@ ENDMAP
 NAME:   blue_anna_fruit_fields
 TAGS:   fruiting_plant allow_dup unrand
 KMONS:  P = plant
-ITEM:   fruit q:4 no_mimic
+ITEM:   fruit q:4
 NSUBST: . = 1:d / *:., " = 2:d / *:.
 FTILE:  .dP = floor_grey_dirt / floor_grass w:20 / floor_dirt w:15
 COLOUR: .dP = lightgrey / green w:20 / brown w:15
@@ -75,7 +75,7 @@ DEPTH:  D:7-14
 : food_weight(_G, 7)
 WEIGHT: 25
 TAGS:   uniq_second_food extra chance_second_food
-ITEM:   bread ration q:2 no_mimic
+ITEM:   bread ration q:2
 : if crawl.one_chance_in(8) then
 :   dgn.delayed_decay(_G, 'e', 'spriggan name:baked n_adj n_spe n_des corpse')
 : else
@@ -98,7 +98,7 @@ DEPTH:  D:8-14
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food
 MONS:   queen bee, killer bee
-ITEM:   royal jelly no_mimic
+ITEM:   royal jelly
 COLOUR: a = yellow
 TILE:   a = wall_wax
 SUBST:  a = x
@@ -150,7 +150,7 @@ TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_pool_fixup \
         patrolling
 KMONS:  A = merfolk ; spear
 KFEAT:  g = shallow_water
-ITEM:   meat ration q:2 no_mimic, bread ration q:3 no_mimic, throwing net
+ITEM:   meat ration q:2, bread ration q:3, throwing net
 :       dgn.delayed_decay(_G, 'g', 'electric eel corpse')
 MAP
 xxxxxx
@@ -168,8 +168,8 @@ WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   spider / brain worm w:5 / worm w:5 / worker ant
 MONS:   wasp w:7 / soldier ant w:13
-ITEM:   beef jerky q:3 no_mimic / fruit q:3 no_mimic
-ITEM:   royal jelly q:3 no_mimic, royal jelly q:6 no_mimic
+ITEM:   beef jerky q:3 / fruit q:3
+ITEM:   royal jelly q:3, royal jelly q:6
 MAP
 .xxxxxxx
 @xx.x.xcccc
@@ -190,7 +190,7 @@ KMONS:  B = ooze
 : if you.absdepth() > 10 then
 KMONS:  C = slime creature
 : end
-KITEM:  C = royal jelly q:10 no_mimic
+KITEM:  C = royal jelly q:10
 KFEAT:  C = altar_jiyva w:1 / . w:20
 KMASK:  W = no_monster_gen
 MARKER: + = lua:props_marker({ door_restrict="veto" })
@@ -217,10 +217,10 @@ KMONS:    C = yak
 KMONS:    D = big kobold
 KMONS:    E = big kobold ; nothing
 KMONS:    F = plant
-KITEM:    C = slice of pizza q:3 no_mimic
+KITEM:    C = slice of pizza q:3
 KITEM:    E = falchion ego:flaming ident:type / \
               hand axe ego:flaming ident:type
-KITEM:    H = meat ration q:2 no_mimic
+KITEM:    H = meat ration q:2
 KITEM:    I = halberd
 KFEAT:    EF = shallow_water
 MAP
@@ -245,7 +245,7 @@ TAGS:   uniq_second_food extra chance_second_food no_monster_gen
 NSUBST: T = 1:. / 1:t
 KMONS:  1 = wandering mushroom
 KMONS:  2 = oklob sapling
-KITEM:  12A_ = fruit q:2 no_mimic
+KITEM:  12A_ = fruit q:2
 KFEAT:  _ = altar_fedhas
 MAP
  tttttttttt
@@ -270,11 +270,11 @@ MONS:   spriggan skeleton / centaur skeleton
 MONS:   troll skeleton / hungry ghost
 MONS:   shadow imp
 KMONS:  A = trapdoor spider w:6 / unseen horror / nothing w:4
-ITEM:  fruit q:1 no_mimic
-ITEM:  fruit no_mimic q:1
-ITEM:  royal jelly q:2 no_mimic, bread ration q:3 no_mimic
+ITEM:  fruit q:1
+ITEM:  royal jelly q:2
+ITEM:  bread ration q:3
 SUBST:  D : DDDDE
-NSUBST: D = 1:A / 2:d / 2:f / 1:h, E = 1:d / 1:e / 2:f / 2:h
+NSUBST: D = 1:A / 2:d / 2:e / 1:h, E = 2:d / 2:e / 2:h
 : if crawl.coinflip() then
 :     dgn.delayed_decay(_G, 'h', 'spriggan skeleton')
 : else
@@ -291,7 +291,7 @@ ccxx1xh=DDc
 c.x.x..mDDc
 @.d.x2.mDDc
 c.x.x..cc+c
-ccxx1x.c3gc
+ccxx1x.c3fc
  cccccccccc
 ENDMAP
 
@@ -312,8 +312,8 @@ KMONS:   F = human
 KMONS:   G = necrophage
 KMONS:   H = crimson imp
 KITEM:   1 = stone q:1 no_pickup / large rock q:1 w:5
-KITEM:   Ya = bread ration no_mimic / meat ration no_mimic
-KITEM:   b = royal jelly no_mimic / fruit q:1 no_mimic
+KITEM:   Ya = bread ration / meat ration
+KITEM:   b = royal jelly / fruit q:1
 KFEAT:   1Yab = shallow_water
 KMASK:   1Yac = no_monster_gen
 MARKER:  Y = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
@@ -343,7 +343,7 @@ WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   tengu warrior / tengu conjurer, plant
 NSUBST: 2 : 3:2 / *:.
-ITEM:   bread ration no_mimic / fruit q:7
+ITEM:   bread ration / fruit q:7
 MAP
  xx+xx
 xx2.2xx
@@ -375,7 +375,7 @@ TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
   dgn.delayed_decay(_G, 'g', 'orc skeleton / human skeleton / elf skeleton'
                              .. ' / dwarf skeleton')
 }}
-ITEM:   bread ration q:3 no_mimic, beef jerky q:3 no_mimic, throwing net
+ITEM:   bread ration q:3, beef jerky q:3, throwing net
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0 }
@@ -406,7 +406,7 @@ MONS:   deep elf fighter ; rapier | falchion / \
         human ; short sword | rapier / \
         orc warrior ; dagger / \
         spriggan ; dagger
-ITEM:   slice of pizza q:8 no_mimic, bread ration q:2 no_mimic
+ITEM:   slice of pizza q:8, bread ration q:2
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0 }
@@ -438,8 +438,8 @@ MONS:   human ; animal skin . hand axe
     mons("sheep w:" .. sheep_weight .. " / hog w:1 / yak w:1")
   end
 }}
-ITEM:   slice of pizza q:7 no_mimic, bread ration q:2 no_mimic
-ITEM:   beef jerky q:2 no_mimic
+ITEM:   slice of pizza q:7, bread ration q:2
+ITEM:   beef jerky q:2
 KFEAT:  K = iron_grate
 KFEAT:  - = open_door
 MAP

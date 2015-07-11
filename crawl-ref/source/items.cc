@@ -4772,16 +4772,6 @@ object_class_type get_item_mimic_type()
         return choices[keyin];
 }
 
-bool is_valid_mimic_item(const item_def &item)
-{
-    // Nothing important.
-    if (item_is_orb(item) || item_is_horn_of_geryon(item) || item_is_rune(item))
-        return false;
-
-    return find(begin(_mimic_item_classes), end(_mimic_item_classes),
-                item.base_type) != end(_mimic_item_classes);
-}
-
 /**
  * How many types of identifiable item exist in the same category as the
  * given item? (E.g., wands, scrolls, rings, etc.)
