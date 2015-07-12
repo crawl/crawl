@@ -869,7 +869,6 @@ MONS:   adder, oklob plant, water moccasin
 KMONS:  7 = spider
 KMONS:  8 = worker ant
 KMONS:  9 = hound / jackal
-KMONS:  ' = wandering mushroom
 KMONS:  & = bush
 KFEAT:  78 = W
 KFEAT:  ' = known shaft trap
@@ -925,7 +924,6 @@ MONS:   adder, oklob plant, water moccasin
 KMONS:  7 = spider
 KMONS:  8 = worker ant
 KMONS:  9 = hound / jackal band
-KMONS:  ' = wandering mushroom
 KMONS:  & = bush
 KFEAT:  78 = W
 KFEAT:  ' = known shaft trap

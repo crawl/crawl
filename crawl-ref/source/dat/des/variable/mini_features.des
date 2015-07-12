@@ -150,8 +150,8 @@ ENDMAP
 NAME:  fungi_pond_lemuel
 DEPTH: D:8-, Lair
 TAGS:  allow_dup extra
-MONS:  fungus, wandering mushroom
-SUBST: 1 = . 1 2:4
+MONS:  fungus
+SUBST: 1 = 1.
 SUBST: ? : w..
 SUBST: ! : ww.
 MAP

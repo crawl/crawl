@@ -239,7 +239,7 @@ MONS:   plant, oklob plant / w:50 plant
 : elseif you.absdepth() >= 10 then
 MONS:   plant, oklob plant / w:150 plant
 : else
-MONS:   fungus, wandering mushroom / w:50 fungus
+MONS:   fungus, plant
 :end
 SUBST:  ? = 2.
 KFEAT:  O = enter_lair

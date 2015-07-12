@@ -243,18 +243,17 @@ DEPTH:  D:8-14
 WEIGHT: 10
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen
 NSUBST: T = 1:. / 1:t
-KMONS:  1 = wandering mushroom
-KMONS:  2 = oklob sapling
-KITEM:  12A_ = fruit q:2
+KMONS:  1 = oklob sapling
+KITEM:  1A_ = fruit q:3
 KFEAT:  _ = altar_fedhas
 MAP
  tttttttttt
 tttt.ttttttt
-@tt1t.tttttt
+@tt.t.tttttt
 t.tt.t.Tt2tt
-t.t.ttT.1.tt
-t.t.ttt1_Att
-t.t1tt2.Attt
+t.t.ttT.A.tt
+t.t.tttA_Att
+t.t.tt2.Attt
 tt.ttttttttt
  tttttttttt
 ENDMAP

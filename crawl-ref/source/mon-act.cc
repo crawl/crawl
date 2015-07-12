@@ -3323,7 +3323,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         return false;
     }
 
-    // Wandering mushrooms usually don't move while you are looking.
+    // These monsters usually don't move while you are looking.
     if (mons->type == MONS_WANDERING_MUSHROOM
         || mons->type == MONS_DEATHCAP
         || (mons->type == MONS_LURKING_HORROR

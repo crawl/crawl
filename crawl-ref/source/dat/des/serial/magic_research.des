@@ -181,11 +181,11 @@ ENDMAP
 
 NAME:    hangedman_research_metamorphosis
 MONS:    wolf spider, ice beast, vampire bat, hog
-MONS:    wandering mushroom, insubstantial wisp, porcupine
+MONS:    insubstantial wisp, porcupine
 KMONS:   D = fire dragon
-COLOUR:  .01234567D = lightmagenta
-FTILE:   .n+01234567D = floor_nerves
-SHUFFLE: 1234, 567
+COLOUR:  .0123456D = lightmagenta
+FTILE:   .n+0123456D = floor_nerves
+SHUFFLE: 1234, 56
 : init_research(_G, 'transmutation')
 MAP
 @'''@'''@
@@ -195,7 +195,7 @@ c1n...n2c
 d3nn.nn4d
 a.0.5.0.a
 b.nnnnn.b
-c.67D76.c
+c.6.D.6.c
 dcbadacbd
 ENDMAP
 

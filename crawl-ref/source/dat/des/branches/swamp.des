@@ -1811,10 +1811,9 @@ ORIENT: float
 TAGS: transparent no_monster_gen no_item_gen
 NSUBST: M = 1:M / 1:H / 2:hmm / 2:A / 1:f / *:., \
         O = 1:O / 1:o / 1:Hh / 1:h^ / 1:b
-SUBST: T = t., A = A.., Z = ttW, _ = t_, v = t--
+SUBST: T = t., Z = ttW, _ = t_, v = t--
 KMONS: S = patrolling giant spore w:6 / nothing
 KMONS: Mm = shambling mangrove
-KMONS: A = wandering mushroom
 KMONS: F = fungus
 KMONS: Oo = oklob plant / oklob sapling w:2
 KMONS: Hh = thorn hunter
@@ -1832,26 +1831,26 @@ MAP
      _______tT,Tt_______
     __tttttttT,Tttttttt__
     _ttO--tttT,Tttt--Ott_
-    _t----vAttFttAv----t_
+    _t----v.ttFtt.v----t_
     _t--v.....t.....v--t_
     _t--.M..ZZZZZ..M.--t_
     _tv...ZZ..S..ZZ...vt_
-   tttA..Z.........Z..Attt
+   ttt...Z.........Z...ttt
 @ TTTtt.Z.S..WWW..S.Z.ttTTT @
  ,,,,,t.Z..WW...WW..Z.t,,,,,
   TTTtFZ...W..M..W...ZFtTTT
   _ttt.Z..W.MtttM.W..Z.ttt_
- __tA..ZS.W..ttt..W.SZ..At__
+ __t...ZS.W..ttt..W.SZ...t__
  _ttv..Z..W..ttt..W..Z..vtt_
 __t--..Z...W.M.M.W...Z..--t__
 _tt--.M.Z..WW...WW..Z.M.--tt_
 _tO-v...Z.S..WWW..S.Z...v-Ot_
 _tt---...Z.........Z...---tt_
-__ttt-vA..ZZ..S..ZZ..Av-ttt__
+__ttt-v...ZZ..S..ZZ...v-ttt__
  ___tttttF..ZZZZZ..Fttttt___
    __ttT,t....M....t,Ttt__
      tT,Ttt.......ttT,Tt
-     T,TtttAv...vAtttT,T
+     T,Tttt.v...v.tttT,T
      ,Tt__tt--v--tt__tT,
     @    __t-----t__    @
           _tttOttt_
