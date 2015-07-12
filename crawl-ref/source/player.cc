@@ -2784,8 +2784,6 @@ void level_change(bool skip_attribute_increase)
         {
             // Don't want to see the dead creature at the prompt.
             redraw_screen();
-            // There may be more levels left to gain.
-            you.redraw_experience = true;
 
             if (new_exp == 27)
                 mprf(MSGCH_INTRINSIC_GAIN, "You have reached level 27, the final one!");
@@ -2800,9 +2798,14 @@ void level_change(bool skip_attribute_increase)
 
             const bool manual_stat_level = new_exp % 3 == 0;  // 3,6,9,12...
 
+            // Must do this before actually changing experience_level,
+            // so we will re-prompt on load if a hup is received.
             if (manual_stat_level && !skip_attribute_increase)
                 if (!attribute_increase())
                     return; // abort level gain, the xp is still there
+
+            // Set this after printing, since a more() might clear it.
+            you.redraw_experience = true;
 
             crawl_state.stat_gain_prompt = false;
             you.experience_level = new_exp;
