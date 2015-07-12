@@ -251,7 +251,6 @@ static const pop_entry pop_lair[] =
   {  4,  8,   14, SEMI, MONS_BRAIN_WORM },
   {  4, 10,   52, SEMI, MONS_POLAR_BEAR },
   {  4, 10,   25, PEAK, MONS_LINDWURM },
-  {  5,  9,   17, SEMI, MONS_WANDERING_MUSHROOM },
   {  5, 12,   66, RISE, MONS_FIRE_CRAB },
   {  1,  6, 4500, FLAT, MONS_NO_MONSTER }, // Roughly old D:1 chaff weight
   { 0,0,0,FLAT,MONS_0 }
@@ -886,7 +885,6 @@ static const pop_entry pop_abyss[] =
   {  1,  5,    8, FLAT, MONS_NECROMANCER },
   {  1,  5,    8, FLAT, MONS_WIZARD },
   {  1,  5,    8, FLAT, MONS_SALAMANDER_STORMCALLER },
-  {  1,  4,   17, FALL, MONS_WANDERING_MUSHROOM },
   {  1,  5,   11, FLAT, MONS_ANGEL },
   {  1,  5,   14, FLAT, MONS_DAEVA },
   {  1,  5,    8, FLAT, MONS_OPHAN },
