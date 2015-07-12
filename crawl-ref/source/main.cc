@@ -1100,7 +1100,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_SHOW_TERRAIN:
     case CMD_LIST_ARMOUR:
     case CMD_LIST_JEWELLERY:
-    case CMD_LIST_EQUIPMENT:
     case CMD_LIST_GOLD:
     case CMD_CHARACTER_DUMP:
     case CMD_DISPLAY_COMMANDS:
@@ -2147,7 +2146,6 @@ void process_command(command_type cmd)
     case CMD_FULL_VIEW:                full_describe_view();           break;
     case CMD_INSCRIBE_ITEM:            prompt_inscribe_item();         break;
     case CMD_LIST_ARMOUR:              list_armour();                  break;
-    case CMD_LIST_EQUIPMENT:           get_invent(OSEL_EQUIP);         break;
     case CMD_LIST_GOLD:                _do_list_gold();                break;
     case CMD_LIST_JEWELLERY:           list_jewellery();               break;
     case CMD_MAKE_NOTE:                make_user_note();               break;

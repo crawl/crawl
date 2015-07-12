@@ -1134,18 +1134,6 @@ bool is_item_selected(const item_def &i, int selector)
     case OSEL_DRAW_DECK:
         return is_deck(i);
 
-    case OSEL_EQUIP:
-    {
-        if (item_is_quivered(i))
-            return true;
-
-        for (int eq = 0; eq < NUM_EQUIP; eq++)
-            if (you.equip[eq] == i.link)
-                return true;
-
-        return false;
-    }
-
     case OSEL_CURSED_WORN:
         return i.cursed() && item_is_equipped(i)
                && (&i != you.weapon() || is_weapon(i));
