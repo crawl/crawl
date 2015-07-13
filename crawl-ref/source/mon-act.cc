@@ -1138,6 +1138,7 @@ static bolt& _generate_item_beem(bolt &beem, bolt& from, monster* mons)
     beem.thrower      = from.thrower;
     beem.pierce       = from.pierce ;
     beem.is_explosion = from.is_explosion;
+    beem.evoked       = true;
     return beem;
 }
 
