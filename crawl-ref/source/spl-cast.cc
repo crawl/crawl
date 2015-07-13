@@ -1202,6 +1202,7 @@ vector<string> desc_success_chance(const monster_info& mi, int pow)
  * @param spell         The type of spell being cast.
  * @param powc          Spellpower.
  * @param allow_fail    Whether spell-fail chance applies.
+ * @param evoked        Whether the spell comes from a rod.
  * @return SPRET_SUCCESS if spell is successfully cast for purposes of
  * exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player cancelled
  * the casting.
@@ -1216,6 +1217,7 @@ spret_type your_spells(spell_type spell, int powc,
     dist spd;
     bolt beam;
     beam.origin_spell = spell;
+    beam.evoked = evoked;
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch.
