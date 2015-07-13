@@ -648,6 +648,7 @@ void zap_wand(int slot)
 
     beam.source   = you.pos();
     beam.attitude = ATT_FRIENDLY;
+    beam.evoked   = true;
     beam.set_target(zap_wand);
 
     const bool aimed_at_self = (beam.target == you.pos());
