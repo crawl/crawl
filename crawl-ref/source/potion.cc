@@ -79,13 +79,14 @@ public:
         return true;
     }
 
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool is_device = true) const
     {
         const bool ddoor = you.duration[DUR_DEATHS_DOOR];
-        if (you.can_device_heal() && !ddoor)
+        if ((you.can_device_heal() || !is_device) && !ddoor)
         {
-          int amount = (5 + random2(7))
-            * (3 - you.mutation[MUT_NO_DEVICE_HEAL])  / 3;
+          int amount = 5 + random2(7);
+          if (is_device)
+            amount = amount * (3 - you.mutation[MUT_NO_DEVICE_HEAL]) / 3;
           // Pay for rot right off the top.
           amount = unrot_hp(amount);
           inc_hp(amount);
@@ -147,7 +148,7 @@ public:
         return true;
     }
 
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool is_device = true) const
     {
         if (you.duration[DUR_DEATHS_DOOR])
         {
@@ -155,14 +156,15 @@ public:
             return false;
         }
 
-        if (!you.can_device_heal())
+        if (!you.can_device_heal() && is_device)
         {
             mpr("That seemed strangely inert.");
             return false;
         }
 
-        int amount = (10 + random2avg(28, 3))
-            * (3 - you.mutation[MUT_NO_DEVICE_HEAL] ) / 3;
+        int amount = 10 + random2avg(28, 3);
+        if (is_device)
+            amount = amount * (3 - you.mutation[MUT_NO_DEVICE_HEAL] ) / 3;
 
         // Pay for rot right off the top.
         amount = unrot_hp(amount);
@@ -216,7 +218,7 @@ public:
         static PotionBlood inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40) const
+    bool effect(bool=true, int pow = 40, bool=true) const
     {
         if (you.species == SP_VAMPIRE)
         {
@@ -254,7 +256,7 @@ public:
         return !you.stasis(false);
     }
 
-    bool effect(bool=true, int pow = 40) const
+    bool effect(bool=true, int pow = 40, bool=true) const
     {
         return haste_player(40 + random2(pow));
     }
@@ -284,7 +286,7 @@ public:
         static PotionMight inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40) const
+    bool effect(bool=true, int pow = 40, bool=true) const
     {
         const bool were_mighty = you.duration[DUR_MIGHT] > 0;
 
@@ -310,7 +312,7 @@ public:
         static PotionBrilliance inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40) const
+    bool effect(bool=true, int pow = 40, bool=true) const
     {
         const bool were_brilliant = you.duration[DUR_BRILLIANCE] > 0;
 
@@ -337,7 +339,7 @@ public:
         static PotionAgility inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40) const
+    bool effect(bool=true, int pow = 40, bool=true) const
     {
         const bool were_agile = you.duration[DUR_AGILITY] > 0;
 
@@ -369,7 +371,7 @@ public:
         return flight_allowed();
     }
 
-    bool effect(bool=true, int pow = 40) const
+    bool effect(bool=true, int pow = 40, bool=true) const
     {
         you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
         fly_player(pow);
@@ -400,7 +402,7 @@ public:
         static PotionPoison inst; return inst;
     }
 
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool=true) const
     {
         mprf(MSGCH_WARN, "That liquid tasted very nasty...");
         return poison_player(10 + random2avg(15, 2), "", "a potion of poison");
@@ -427,7 +429,7 @@ public:
         static PotionCancellation inst; return inst;
     }
 
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool=true) const
     {
         debuff_player();
         mpr("You feel magically purged.");
@@ -451,7 +453,7 @@ public:
         return !you.clarity() && !you.duration[DUR_DIVINE_STAMINA];
     }
 
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool=true) const
     {
         const int ambrosia_turns = 3 + random2(8);
         if (confuse_player(ambrosia_turns))
@@ -490,7 +492,7 @@ public:
         static PotionInvisibility inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40) const
+    bool effect(bool=true, int pow = 40, bool=true) const
     {
         if (you.backlit())
         {
@@ -560,7 +562,7 @@ public:
         static PotionExperience inst; return inst;
     }
 
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool=true) const
     {
         if (you.experience_level < you.get_max_xl())
         {
@@ -599,7 +601,7 @@ public:
         return you.magic_points != you.max_magic_points;
     }
 
-    bool effect(bool=true, int pow = 40) const
+    bool effect(bool=true, int pow = 40, bool=true) const
     {
 #if TAG_MAJOR_VERSION == 34
         // Allow repairing rot, disallow going through Death's Door.
@@ -644,7 +646,7 @@ public:
         return you.can_go_berserk(true, true, false);
     }
 
-    bool effect(bool was_known = true, int pow = 40) const
+    bool effect(bool was_known = true, int pow = 40, bool=true) const
     {
         if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED)
         {
@@ -705,7 +707,7 @@ public:
         return you.can_safely_mutate() && how_mutated(false, false, false) > 0;
     }
 
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool=true) const
     {
         mpr("It has a very clean taste.");
         bool mutated = false;
@@ -752,7 +754,7 @@ public:
         return you.can_safely_mutate();
     }
 
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool=true) const
     {
         mpr("You feel extremely strange.");
         bool mutated = false;
@@ -792,7 +794,7 @@ public:
         return you.can_safely_mutate();
     }
 
-    bool effect(bool = true, int = 40) const
+    bool effect(bool = true, int = 40, bool=true) const
     {
         const bool mutated = mutate(RANDOM_GOOD_MUTATION,
                                     "potion of beneficial mutation",
@@ -834,7 +836,7 @@ public:
         static PotionResistance inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40) const
+    bool effect(bool=true, int pow = 40, bool=true) const
     {
         mprf(MSGCH_DURATION, "You feel protected.");
         you.increase_duration(DUR_RESISTANCE, random2(pow) + 35);
@@ -853,7 +855,7 @@ public:
         static PotionDegeneration inst; return inst;
     }
 
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool=true) const
     {
         return lose_stat(STAT_RANDOM, 1 + random2avg(4, 2));
     }
@@ -884,7 +886,7 @@ public:
         return transform(0, TRAN_TREE, false, true);
     }
 
-    bool effect(bool was_known = true, int=40) const
+    bool effect(bool was_known = true, int=40, bool=true) const
     {
         return transform(30, TRAN_TREE, !was_known);
     }
@@ -919,7 +921,7 @@ public:
         static PotionDecay inst; return inst;
     }
 
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool=true) const
     {
         return you.rot(&you, 3 + random2(3));;
     }
@@ -943,7 +945,7 @@ public:
         static PotionBloodCoagulated inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40) const
+    bool effect(bool=true, int pow = 40, bool=true) const
     {
         if (you.species == SP_VAMPIRE)
         {
@@ -975,7 +977,7 @@ public:
         static PotionGainStrength inst; return inst;
     }
 
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool=true) const
     {
         return mutate(MUT_STRONG, "potion of gain strength",
                       true, false, false, true);
@@ -999,7 +1001,7 @@ public:
     {
         static PotionGainDexterity inst; return inst;
     }
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool=true) const
     {
         return mutate(MUT_AGILE, "potion of gain dexterity",
                       true, false, false, true);
@@ -1022,7 +1024,7 @@ public:
     {
         static PotionGainIntelligence inst; return inst;
     }
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool=true) const
     {
         return mutate(MUT_STRONG, "potion of gain intelligence",
                       true, false, false, true);
@@ -1045,7 +1047,7 @@ public:
     {
         static PotionPorridge inst; return inst;
     }
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool=true) const
     {
         if (you.species == SP_VAMPIRE
             || player_mutation_level(MUT_CARNIVOROUS) == 3)
@@ -1071,7 +1073,7 @@ public:
     {
         static PotionWater inst; return inst;
     }
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool=true) const
     {
         if (you.species == SP_VAMPIRE)
             mpr("Blech - this tastes like water.");
@@ -1097,7 +1099,7 @@ public:
         return you.stasis(false);
     }
 
-    bool effect(bool=true, int pow = 40) const
+    bool effect(bool=true, int pow = 40, bool=true) const
     {
         return slow_player(10 + random2(pow));
     }
@@ -1114,7 +1116,7 @@ public:
         static PotionRestoreAbilities inst; return inst;
     }
 
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool=true) const
     {
         bool nothing_happens = true;
         if (you.duration[DUR_BREATH_WEAPON])
@@ -1143,7 +1145,7 @@ public:
     {
         static PotionStale inst; return inst;
     }
-    bool effect(bool=true, int=40) const
+    bool effect(bool=true, int=40, bool=true) const
     {
         mpr("That potion was far past its expiry date.");
         return true;
@@ -1233,10 +1235,12 @@ bool quaff_potion(item_def &potion)
  * @param effect        The type of potion in question.
  * @param pow           The power of the effect. (Only relevant for some pots.)
  * @param was_known     Whether the player should be held responsible.
+ * @param is_device     Whether to apply the effects of MUT_NO_DEVICE_HEAL.
  */
-void potionlike_effect(potion_type effect, int pow, bool was_known)
+void potionlike_effect(potion_type effect, int pow, bool was_known,
+                       bool is_device)
 {
-    get_potion_effect(effect)->effect(was_known, pow);
+    get_potion_effect(effect)->effect(was_known, pow, is_device);
 }
 
 int _xom_factor(bool was_known)

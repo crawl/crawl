@@ -26,9 +26,11 @@ public:
      *
      * @param was_known     Whether the player should be held responsible.
      * @param pow           The 'power' of the effect. Mostly disused.
+     * @param is_device     Whether to apply the effects of MUT_NO_DEVICE_HEAL.
      * @return              Whether or not the potion had an effect.
      */
-    virtual bool effect(bool was_known = true, int pow = 40) const = 0;
+    virtual bool effect(bool was_known = true, int pow = 40,
+                        bool is_device = true) const = 0;
 
     // Quaff also handles god-conduct and potion-specific
     // uncancellability
@@ -42,6 +44,7 @@ public:
 const PotionEffect* get_potion_effect(potion_type pot);
 
 bool quaff_potion(item_def &potion);
-void potionlike_effect(potion_type effect, int pow, bool was_known = true);
+void potionlike_effect(potion_type effect, int pow, bool was_known = true,
+                       bool is_device = false);
 
 #endif
