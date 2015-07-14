@@ -408,9 +408,14 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
     }
 
     // Under Gozag, monsters turn into gold on death.
+    // Temporary Tukima's Dance weapons stay as weapons (no free gold),
+    // permanent dancing weapons turn to gold like other monsters.
     bool goldify = in_good_standing(GOD_GOZAG)
-        && mons_class_gives_xp(mons.type) && !mons_is_conjured(mons.type)
-        && !force;
+                   && mons_class_gives_xp(mons.type)
+                   && !mons_is_conjured(mons.type)
+                   && !force
+                   && !(mons.type == MONS_DANCING_WEAPON
+                        && mons.has_ench(ENCH_ABJ));
 
     const bool no_coinflip =
         mons.props.exists("always_corpse")
@@ -1943,7 +1948,10 @@ item_def* monster_die(monster* mons, killer_type killer,
 
         if (!silent && !hard_reset && !was_banished)
         {
-            if (!summoned_it)
+            // Under Gozag, permanent dancing weapons get turned to gold.
+            if (!summoned_it
+                && (!in_good_standing(GOD_GOZAG)
+                    || mons->has_ench(ENCH_ABJ)))
             {
                 simple_monster_message(mons, " falls from the air.",
                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
