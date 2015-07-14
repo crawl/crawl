@@ -567,13 +567,12 @@ of funding a shop increases with the number of shops funded.{{
 Bribe Branch ability
 
 Gives 3000 gold to Gozag to spread throughout the inhabitants of the current
-branch, only possible if the branch has intelligent native monsters. Those
-native to a bribed branch will occasionally become uninterested in fighting you
-(with tougher inhabitants having an increasing chance of being bribed), and
-more rarely will join your ranks, though they will not leave their home branch.
-Enemies accepting a bribe will lower the remaining bribe fund; upon its
-exhaustion, bribed enemies will become indifferent if they have not become your
-allies.
+branch, only possible if the branch has intelligent inhabitants. Those monsters
+may then become uninterested in fighting you (with tougher inhabitants having
+an increasing chance of being bribed), and more rarely will join your ranks,
+though they will not leave their home branch. Enemies accepting a bribe will
+lower the remaining bribe fund; upon its exhaustion, bribed enemies will become
+indifferent if they have not become your allies.
 %%%%
 # Qazlal
 Upheaval ability
