@@ -524,10 +524,12 @@ bool fill_status_info(int status, status_info* inf)
         vector<const char *> places;
         for (int i = 0; i < NUM_BRANCHES; i++)
         {
-            if (branch_bribe[i] > 0)
+            branch_type br = gozag_fixup_branch(static_cast<branch_type>(i));
+
+            if (branch_bribe[br] > 0)
             {
                 if (player_in_branch(static_cast<branch_type>(i)))
-                    bribe = branch_bribe[i];
+                    bribe = branch_bribe[br];
 
                 places.push_back(branches[static_cast<branch_type>(i)]
                                  .longname);
