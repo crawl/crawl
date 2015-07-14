@@ -135,6 +135,7 @@ bool gozag_potion_petition();
 int gozag_price_for_shop(bool max = false);
 bool gozag_setup_call_merchant(bool quiet = false);
 bool gozag_call_merchant();
+branch_type gozag_fixup_branch(branch_type branch);
 int gozag_type_bribable(monster_type type);
 bool gozag_branch_bribable(branch_type branch);
 void gozag_deduct_bribe(branch_type br, int amount);

@@ -4696,18 +4696,26 @@ bool gozag_call_merchant()
     return true;
 }
 
+branch_type gozag_fixup_branch(branch_type branch)
+{
+    if (is_hell_subbranch(branch))
+        return BRANCH_VESTIBULE;
+
+    return branch;
+}
+
 static const map<branch_type, int> branch_bribability_factor =
 {
-    { BRANCH_ORC,      2 },
-    { BRANCH_ELF,      3 },
-    { BRANCH_SNAKE,    3 },
-    { BRANCH_SHOALS,   3 },
-    { BRANCH_VAULTS,   4 },
-    { BRANCH_ZOT,      4 },
-    { BRANCH_DIS,      4 },
-    { BRANCH_GEHENNA,  4 },
-    { BRANCH_COCYTUS,  4 },
-    { BRANCH_TARTARUS, 4 },
+    { BRANCH_ORC,         2 },
+    { BRANCH_ELF,         3 },
+    { BRANCH_SNAKE,       3 },
+    { BRANCH_SHOALS,      3 },
+    { BRANCH_CRYPT,       3 },
+    { BRANCH_TOMB,        3 },
+    { BRANCH_VAULTS,      4 },
+    { BRANCH_ZOT,         4 },
+    { BRANCH_VESTIBULE,   4 },
+    { BRANCH_PANDEMONIUM, 4 },
 };
 
 // An x-in-8 chance of a monster of the given type being bribed.
@@ -4720,7 +4728,8 @@ int gozag_type_bribable(monster_type type)
     if (mons_class_intel(type) < I_HUMAN)
         return 0;
 
-    const int *factor = map_find(branch_bribability_factor, you.where_are_you);
+    const int *factor = map_find(branch_bribability_factor,
+                                 gozag_fixup_branch(you.where_are_you));
     if (!factor)
         return 0;
 
@@ -4733,7 +4742,7 @@ int gozag_type_bribable(monster_type type)
 
 bool gozag_branch_bribable(branch_type branch)
 {
-    return map_find(branch_bribability_factor, branch);
+    return map_find(branch_bribability_factor, gozag_fixup_branch(branch));
 }
 
 void gozag_deduct_bribe(branch_type br, int amount)
@@ -4798,7 +4807,7 @@ bool gozag_bribe_branch()
     const int bribe_amount = GOZAG_BRIBE_AMOUNT;
     ASSERT(you.gold >= bribe_amount);
     bool prompted = false;
-    branch_type branch = you.where_are_you;
+    branch_type branch = gozag_fixup_branch(you.where_are_you);
     if (feat_is_branch_entrance(grd(you.pos())))
     {
         for (branch_iterator it; it; ++it)
@@ -4826,6 +4835,7 @@ bool gozag_bribe_branch()
 
     string prompt =
         make_stringf("Do you want to bribe the denizens of %s?",
+                     branch == BRANCH_VESTIBULE ? "the Hells" :
                      branches[branch].longname);
 
     if (prompted || yesno(prompt.c_str(), true, 'n'))
@@ -4834,6 +4844,7 @@ bool gozag_bribe_branch()
         you.attribute[ATTR_GOZAG_GOLD_USED] += bribe_amount;
         branch_bribe[branch] += bribe_amount;
         string msg = make_stringf(" spreads your bribe to %s!",
+                                  branch == BRANCH_VESTIBULE ? "the Hells" :
                                   branches[branch].longname);
         simple_god_message(msg.c_str());
         add_daction(DACT_SET_BRIBES);

@@ -445,6 +445,10 @@ static void _list_bribable_branches(vector<branch_type> &targets)
         if (!gozag_branch_bribable(br))
             continue;
 
+        // Only list the Hells once.
+        if (is_hell_subbranch(br))
+            continue;
+
         // If you don't know the branch exists, don't list it;
         // this mainly plugs info leaks about Lair branch structure.
         if (!stair_level.count(br) && is_random_subbranch(br))
