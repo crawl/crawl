@@ -4728,6 +4728,14 @@ int gozag_type_bribable(monster_type type)
     if (mons_class_intel(type) < I_HUMAN)
         return 0;
 
+    // Unique rune guardians can't be bribed, sorry!
+    if (mons_is_unique(type)
+        && (mons_genus(type) == MONS_HELL_LORD
+            || mons_genus(type) == MONS_PANDEMONIUM_LORD))
+    {
+        return 0;
+    }
+
     const int *factor = map_find(branch_bribability_factor,
                                  gozag_fixup_branch(you.where_are_you));
     if (!factor)
