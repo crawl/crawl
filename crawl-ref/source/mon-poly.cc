@@ -344,7 +344,6 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     mons->mname = name;
     mons->props["no_annotate"] = slimified && old_mon_unique;
-    mons->god   = god;
     mons->props.erase("dbname");
 
     mons->flags = flags;
@@ -365,6 +364,9 @@ void change_monster_type(monster* mons, monster_type targetc)
     {
         mons->spells = spl;
     }
+
+    // Make sure we have a god if we've been polymorphed into a priest.
+    mons->god = mons->is_priest() ? GOD_NAMELESS : god;
 
     mons->add_ench(abj);
     mons->add_ench(fabj);
