@@ -431,17 +431,6 @@ static string _describe_ash_skill_boost()
 // from dgn-overview.cc
 extern map<branch_type, set<level_id> > stair_level;
 
-// XXX: apply padding programmatically?
-static const char* const bribe_susceptibility_adjectives[] =
-{
-    "none       ",
-    "very low   ",
-    "low        ",
-    "moderate   ",
-    "high       ",
-    "very high  "
-};
-
 /**
  * Populate a provided vector with a list of bribable branches which are known
  * to the player.
@@ -484,44 +473,7 @@ static string _describe_branch_bribability()
     {
         string line = " ";
         line += branches[br].shortname;
-        line += string(width + 2 - strwidth(line), ' ');
-        // XXX: move this elsewhere?
-        switch (br)
-        {
-            case BRANCH_ORC:
-                line += "(orcs)              ";
-                break;
-            case BRANCH_ELF:
-                line += "(elves)             ";
-                break;
-            case BRANCH_SNAKE:
-                line += "(nagas/salamanders) ";
-                break;
-            case BRANCH_SHOALS:
-                line += "(merfolk)           ";
-                break;
-            case BRANCH_VAULTS:
-                line += "(humans)            ";
-                break;
-            case BRANCH_ZOT:
-                line += "(draconians)        ";
-                break;
-            case BRANCH_COCYTUS:
-            case BRANCH_DIS:
-            case BRANCH_GEHENNA:
-            case BRANCH_TARTARUS:
-                line += "(demons)            ";
-                break;
-            default:
-                line += "(buggy)             ";
-                break;
-        }
-
-        line += "Susceptibility: ";
-        const int suscept = gozag_branch_bribe_susceptibility(br);
-        ASSERT(suscept >= 0
-               && suscept < (int)ARRAYSZ(bribe_susceptibility_adjectives));
-        line += bribe_susceptibility_adjectives[suscept];
+        line += string(width + 3 - strwidth(line), ' ');
 
         if (!branch_bribe[br])
             line += "not bribed";

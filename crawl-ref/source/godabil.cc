@@ -4696,111 +4696,18 @@ bool gozag_call_merchant()
     return true;
 }
 
-struct bribability
+static const map<branch_type, int> branch_bribability_factor =
 {
-    monster_type type;
-    branch_type  branch;
-    int          susceptibility;
-};
-
-bribability mons_bribability[] =
-{
-    // Orcs
-    { MONS_ORC,             BRANCH_ORC, 1 },
-    { MONS_ORC_PRIEST,      BRANCH_ORC, 2 },
-    { MONS_ORC_WIZARD,      BRANCH_ORC, 2 },
-    { MONS_ORC_WARRIOR,     BRANCH_ORC, 3 },
-    { MONS_ORC_KNIGHT,      BRANCH_ORC, 4 },
-    { MONS_ORC_SORCERER,    BRANCH_ORC, 4 },
-    { MONS_ORC_HIGH_PRIEST, BRANCH_ORC, 4 },
-    { MONS_ORC_WARLORD,     BRANCH_ORC, 5 },
-
-    // Elves
-    { MONS_DEEP_ELF_FIGHTER,       BRANCH_ELF, 1 },
-    { MONS_DEEP_ELF_MAGE,          BRANCH_ELF, 1 },
-    { MONS_DEEP_ELF_SUMMONER,      BRANCH_ELF, 2 },
-    { MONS_DEEP_ELF_CONJURER,      BRANCH_ELF, 2 },
-    { MONS_DEEP_ELF_PRIEST,        BRANCH_ELF, 2 },
-    { MONS_DEEP_ELF_KNIGHT,        BRANCH_ELF, 3 },
-    { MONS_DEEP_ELF_HIGH_PRIEST,   BRANCH_ELF, 4 },
-    { MONS_DEEP_ELF_DEMONOLOGIST,  BRANCH_ELF, 4 },
-    { MONS_DEEP_ELF_ANNIHILATOR,   BRANCH_ELF, 4 },
-    { MONS_DEEP_ELF_SORCERER,      BRANCH_ELF, 4 },
-    { MONS_DEEP_ELF_DEATH_MAGE,    BRANCH_ELF, 4 },
-    { MONS_DEEP_ELF_BLADEMASTER,   BRANCH_ELF, 4 },
-    { MONS_DEEP_ELF_MASTER_ARCHER, BRANCH_ELF, 4 },
-
-    // Nagas and salamanders
-    { MONS_NAGA,                 BRANCH_SNAKE, 1 },
-    { MONS_SALAMANDER,           BRANCH_SNAKE, 1 },
-    { MONS_NAGA_MAGE,            BRANCH_SNAKE, 2 },
-    { MONS_NAGA_SHARPSHOOTER,    BRANCH_SNAKE, 2 },
-    { MONS_NAGA_RITUALIST,       BRANCH_SNAKE, 2 },
-    { MONS_SALAMANDER_MYSTIC,    BRANCH_SNAKE, 2 },
-    { MONS_NAGA_WARRIOR,         BRANCH_SNAKE, 3 },
-    { MONS_GREATER_NAGA,         BRANCH_SNAKE, 4 },
-    { MONS_SALAMANDER_FIREBRAND, BRANCH_SNAKE, 4 },
-
-    { MONS_MERFOLK,            BRANCH_SHOALS, 1 },
-    { MONS_SIREN,              BRANCH_SHOALS, 1 },
-    { MONS_MERFOLK_AVATAR,     BRANCH_SHOALS, 2 },
-    { MONS_MERFOLK_IMPALER,    BRANCH_SHOALS, 3 },
-    { MONS_MERFOLK_JAVELINEER, BRANCH_SHOALS, 3 },
-    { MONS_MERFOLK_AQUAMANCER, BRANCH_SHOALS, 4 },
-
-    // Humans
-    { MONS_HUMAN,               BRANCH_VAULTS, 1 },
-    { MONS_WIZARD,              BRANCH_VAULTS, 2 },
-    { MONS_NECROMANCER,         BRANCH_VAULTS, 2 },
-    { MONS_HELL_KNIGHT,         BRANCH_VAULTS, 3 },
-    { MONS_VAULT_GUARD,         BRANCH_VAULTS, 3 },
-    { MONS_VAULT_SENTINEL,      BRANCH_VAULTS, 3 },
-    { MONS_IRONBRAND_CONVOKER,  BRANCH_VAULTS, 3 },
-    { MONS_IRONHEART_PRESERVER, BRANCH_VAULTS, 3 },
-    { MONS_VAULT_WARDEN,        BRANCH_VAULTS, 4 },
-
-    // Draconians
-    { MONS_DRACONIAN,             BRANCH_ZOT, 1 },
-    { MONS_BLACK_DRACONIAN,       BRANCH_ZOT, 2 },
-    { MONS_MOTTLED_DRACONIAN,     BRANCH_ZOT, 2 },
-    { MONS_YELLOW_DRACONIAN,      BRANCH_ZOT, 2 },
-    { MONS_GREEN_DRACONIAN,       BRANCH_ZOT, 2 },
-    { MONS_PURPLE_DRACONIAN,      BRANCH_ZOT, 2 },
-    { MONS_RED_DRACONIAN,         BRANCH_ZOT, 2 },
-    { MONS_WHITE_DRACONIAN,       BRANCH_ZOT, 2 },
-    { MONS_GREY_DRACONIAN,        BRANCH_ZOT, 2 },
-    { MONS_PALE_DRACONIAN,        BRANCH_ZOT, 2 },
-    { MONS_DRACONIAN_CALLER,      BRANCH_ZOT, 3 },
-    { MONS_DRACONIAN_MONK,        BRANCH_ZOT, 3 },
-    { MONS_DRACONIAN_ZEALOT,      BRANCH_ZOT, 3 },
-    { MONS_DRACONIAN_SHIFTER,     BRANCH_ZOT, 3 },
-    { MONS_DRACONIAN_ANNIHILATOR, BRANCH_ZOT, 3 },
-    { MONS_DRACONIAN_KNIGHT,      BRANCH_ZOT, 3 },
-    { MONS_DRACONIAN_SCORCHER,    BRANCH_ZOT, 3 },
-
-    // Demons
-    { MONS_IRON_IMP,        BRANCH_DIS, 1 },
-    { MONS_RUST_DEVIL,      BRANCH_DIS, 2 },
-    { MONS_HELL_SENTINEL,   BRANCH_DIS, 5 },
-    { MONS_CRIMSON_IMP,     BRANCH_GEHENNA, 1 },
-    { MONS_RED_DEVIL,       BRANCH_GEHENNA, 2 },
-    { MONS_ORANGE_DEMON,    BRANCH_GEHENNA, 2 },
-    { MONS_SMOKE_DEMON,     BRANCH_GEHENNA, 3 },
-    { MONS_SUN_DEMON,       BRANCH_GEHENNA, 3 },
-    { MONS_HELLION,         BRANCH_GEHENNA, 4 },
-    { MONS_BALRUG,          BRANCH_GEHENNA, 4 },
-    { MONS_BRIMSTONE_FIEND, BRANCH_GEHENNA, 5 },
-    { MONS_WHITE_IMP,       BRANCH_COCYTUS, 1 },
-    { MONS_BLUE_DEVIL,      BRANCH_COCYTUS, 2 },
-    { MONS_ICE_DEVIL,       BRANCH_COCYTUS, 3 },
-    { MONS_BLIZZARD_DEMON,  BRANCH_COCYTUS, 4 },
-    { MONS_ICE_FIEND,       BRANCH_COCYTUS, 5 },
-    { MONS_SHADOW_IMP,      BRANCH_TARTARUS, 1 },
-    { MONS_HELLWING,        BRANCH_TARTARUS, 2 },
-    { MONS_SOUL_EATER,      BRANCH_TARTARUS, 3 },
-    { MONS_REAPER,          BRANCH_TARTARUS, 4 },
-    { MONS_SHADOW_DEMON,    BRANCH_TARTARUS, 4 },
-    { MONS_SHADOW_FIEND,    BRANCH_TARTARUS, 5 },
+    { BRANCH_ORC,      2 },
+    { BRANCH_ELF,      3 },
+    { BRANCH_SNAKE,    3 },
+    { BRANCH_SHOALS,   3 },
+    { BRANCH_VAULTS,   4 },
+    { BRANCH_ZOT,      4 },
+    { BRANCH_DIS,      4 },
+    { BRANCH_GEHENNA,  4 },
+    { BRANCH_COCYTUS,  4 },
+    { BRANCH_TARTARUS, 4 },
 };
 
 // An x-in-8 chance of a monster of the given type being bribed.
@@ -4810,41 +4717,23 @@ int gozag_type_bribable(monster_type type)
     if (!you_worship(GOD_GOZAG))
         return 0;
 
-    for (const bribability &brib : mons_bribability)
-    {
-        if (brib.type == type)
-        {
-            return branch_bribe[brib.branch] && player_in_branch(brib.branch)
-                   ? brib.susceptibility
-                   : 0;
-        }
-    }
+    if (mons_class_intel(type) < I_HUMAN)
+        return 0;
 
-    return 0;
+    const int *factor = map_find(branch_bribability_factor, you.where_are_you);
+    if (!factor)
+        return 0;
+
+    const int chance = max(mons_class_hit_dice(type) / *factor, 1);
+    dprf("%s, bribe chance: %d", mons_type_name(type, DESC_PLAIN).c_str(),
+                                 chance);
+
+    return chance;
 }
 
 bool gozag_branch_bribable(branch_type branch)
 {
-    for (const bribability &brib : mons_bribability)
-        if (brib.branch == branch)
-            return true;
-
-    return false;
-}
-
-int gozag_branch_bribe_susceptibility(branch_type branch)
-{
-    int susceptibility = 0;
-    for (const bribability &brib : mons_bribability)
-    {
-        if (brib.branch == branch
-            && susceptibility < brib.susceptibility)
-        {
-            susceptibility = brib.susceptibility;
-        }
-    }
-
-    return susceptibility;
+    return map_find(branch_bribability_factor, branch);
 }
 
 void gozag_deduct_bribe(branch_type br, int amount)
