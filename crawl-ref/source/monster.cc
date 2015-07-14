@@ -5091,13 +5091,7 @@ int monster::heads() const
 
 bool monster::has_multitargeting() const
 {
-    if (mons_wields_two_weapons(this))
-        return true;
-
-    // Hacky little list for now. evk
-    return (has_hydra_multi_attack() && !mons_is_zombified(this))
-           || type == MONS_TENTACLED_MONSTROSITY
-           || type == MONS_ELECTRIC_GOLEM;
+    return has_hydra_multi_attack() && !mons_is_zombified(this);
 }
 
 bool monster::is_priest() const
