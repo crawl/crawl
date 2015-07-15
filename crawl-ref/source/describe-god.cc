@@ -228,6 +228,29 @@ static string _religion_help(god_type god)
             }
             break;
 
+        case GOD_DITHMENOS:
+        {
+            const int umbra_size = you.umbra_radius();
+            if (umbra_size >= 0)
+            {
+                if (!result.empty())
+                    result += " ";
+
+                result += "You radiate ";
+
+                if (umbra_size > 5)
+                    result += "a large ";
+                else if (umbra_size > 3)
+                    result += "an ";
+                else
+                    result += "a small ";
+
+                result += "aura of darkness, enhancing your stealth "
+                          "and reducing the accuracy of your foes.";
+            }
+            break;
+        }
+
         default:
             break;
     }
