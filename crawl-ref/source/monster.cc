@@ -6671,12 +6671,11 @@ bool monster::is_web_immune() const
             || mons_genus(type) == MONS_JELLY;
 }
 
-// Undead monsters have nightvision, as do all followers of Yredelemnul
-// and Dithmenos.
+// Followers of Yredelemnul and Dithmenos don't have their accuracy
+// reduced by umbra.
 bool monster::nightvision() const
 {
-    return holiness() == MH_UNDEAD
-           || god == GOD_YREDELEMNUL
+    return god == GOD_YREDELEMNUL
            || god == GOD_DITHMENOS;
 }
 

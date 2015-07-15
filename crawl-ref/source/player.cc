@@ -6547,9 +6547,8 @@ undead_state_type player::undead_state(bool temp) const
 
 bool player::nightvision() const
 {
-    return undead_state()
-           || (religion == GOD_DITHMENOS && piety >= piety_breakpoint(0))
-           || (religion == GOD_YREDELEMNUL && piety >= piety_breakpoint(2));
+    return religion == GOD_DITHMENOS && piety >= piety_breakpoint(0)
+           || religion == GOD_YREDELEMNUL && piety >= piety_breakpoint(2);
 }
 
 reach_type player::reach_range() const
