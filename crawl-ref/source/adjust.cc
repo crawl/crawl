@@ -59,7 +59,8 @@ static void _adjust_item()
                                  -1,
                                  false,
                                  false);
-    if (to_slot == PROMPT_ABORT)
+    if (to_slot == PROMPT_ABORT
+        || from_slot == to_slot)
     {
         canned_msg(MSG_OK);
         return;
@@ -121,6 +122,12 @@ static void _adjust_spell()
     const int input_2 = keyin;
     const int index_2 = letter_to_index(keyin);
 
+    if (index_1 == index_2)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
     // swap references in the letter table:
     const int tmp = you.spell_letter_table[index_2];
     you.spell_letter_table[index_2] = you.spell_letter_table[index_1];
@@ -174,7 +181,7 @@ static void _adjust_ability()
     const int index2 = letter_to_index(keyin);
     if (index1 == index2)
     {
-        mpr("That would be singularly pointless.");
+        canned_msg(MSG_OK);
         return;
     }
 
