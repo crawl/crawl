@@ -3870,7 +3870,11 @@ bool can_spawn_mushrooms(coord_def where)
         return true;
     }
 
-    return is_harmless_cloud(cloud.type);
+    monster dummy;
+    dummy.type = MONS_TOADSTOOL;
+    define_monster(&dummy);
+
+    return actor_cloud_immune(&dummy, cloud);
 }
 
 conduct_type player_will_anger_monster(monster_type type)
