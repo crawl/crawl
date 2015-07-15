@@ -1331,12 +1331,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // Berserkers belong to Trog.
         if (mg.cls == MONS_SPRIGGAN_BERSERKER)
             mon->god = GOD_TROG;
-        // Profane servitors and death knights belong to Yredelemnul.
-        else if (mg.cls == MONS_PROFANE_SERVITOR
-                 || mg.cls == MONS_DEATH_KNIGHT)
-        {
+        // Death knights belong to Yredelemnul.
+        else if (mg.cls == MONS_DEATH_KNIGHT)
             mon->god = GOD_YREDELEMNUL;
-        }
         // Wiglaf belongs to Okawaru.
         else if (mg.cls == MONS_WIGLAF)
             mon->god = GOD_OKAWARU;
@@ -1389,6 +1386,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
     else if (mg.cls == MONS_APIS)
         mon->god = GOD_ELYVILON;
+    else if (mg.cls == MONS_PROFANE_SERVITOR)
+        mon->god = GOD_YREDELEMNUL;
     // Angels (other than Mennas) and daevas belong to TSO, but 1 out of
     // 7 in the Abyss are adopted by Xom.
     else if (mons_class_holiness(mg.cls) == MH_HOLY)
