@@ -2014,10 +2014,11 @@ void untransform(bool skip_move)
 {
     const bool was_flying = you.airborne();
 
-    you.redraw_quiver       = true;
-    you.redraw_evasion      = true;
-    you.redraw_armour_class = true;
-    you.wield_change        = true;
+    you.redraw_quiver           = true;
+    you.redraw_evasion          = true;
+    you.redraw_armour_class     = true;
+    you.wield_change            = true;
+    you.received_weapon_warning = false;
     if (you.props.exists(TRANSFORM_POW_KEY))
         you.props.erase(TRANSFORM_POW_KEY);
     if (you.props.exists(HYDRA_FORM_HEADS_KEY))
