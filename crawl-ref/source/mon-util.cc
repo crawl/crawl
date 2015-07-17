@@ -4359,6 +4359,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
         "says",         // actually S_SILENT
         "shouts",
         "barks",
+		"howls",
         "shouts",
         "roars",
         "screams",

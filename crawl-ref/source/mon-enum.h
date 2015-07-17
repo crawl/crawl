@@ -224,6 +224,7 @@ enum shout_type
     S_SILENT,               // silent
     S_SHOUT,                // shout
     S_BARK,                 // bark
+	S_HOWL,					// howl
     S_SHOUT2,               // shout twice (e.g. two-headed ogres)
     S_ROAR,                 // roar
     S_SCREAM,               // scream
