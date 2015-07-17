@@ -1585,7 +1585,7 @@ void dump_skills(string &text)
 int skill_transfer_amount(skill_type sk)
 {
     ASSERT(!is_invalid_skill(sk));
-     if (you.skill_points[sk] < 1000)
+    if (you.skill_points[sk] < 1000)
         return you.skill_points[sk];
     else
         return max<int>(1000, you.skill_points[sk] / 2);
