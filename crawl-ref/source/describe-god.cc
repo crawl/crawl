@@ -696,7 +696,7 @@ static string _get_god_misc_info(god_type which_god)
 
             if (which_god == GOD_ASHENZARI
                 && which_god == you.religion
-                && piety_rank() > 3)
+                && piety_rank() > 2)
             {
                 return piety_only + "\n\n" + _describe_ash_skill_boost();
             }
