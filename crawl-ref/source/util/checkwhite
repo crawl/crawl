@@ -10,8 +10,9 @@ my $top_level = $opt_a;
 my $modified_only = $opt_m || $opt_M;
 my $modified_cached = $opt_m && !$opt_M;
 my $dry_run = $opt_n;
-my $tabstop = $opt_t if ($opt_t);
 my $any_bad = 0;
+# Imported from Text::Tabs, so use our, not my.
+our $tabstop = $opt_t if ($opt_t);
 
 my @files = @ARGV;
 unless (@files)
