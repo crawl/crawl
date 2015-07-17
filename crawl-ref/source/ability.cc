@@ -2688,7 +2688,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_ASHENZARI_END_TRANSFER:
         fail_check();
-        ashenzari_end_transfer();
+        if (!ashenzari_end_transfer())
+        {
+            canned_msg(MSG_OK);
+            return SPRET_ABORT;
+        }
         break;
 
     case ABIL_DITHMENOS_SHADOW_STEP:
