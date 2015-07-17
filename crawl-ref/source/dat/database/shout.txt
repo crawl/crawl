@@ -34,6 +34,14 @@ __BARK seen
 
 SOUND:@The_monster@ barks!
 %%%%
+__HOWL unseen
+
+SOUND:You hear a howl!
+%%%%
+__HOWL seen
+
+SOUND:@The_monster@ howls!
+%%%%
 __TWO_SHOUTS unseen
 
 SOUND:You hear two shouts!
