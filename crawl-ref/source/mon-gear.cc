@@ -342,7 +342,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
     case MONS_GNOLL:
     case MONS_OGRE_MAGE:
-    case MONS_NAGA_WARRIOR:
+    case MONS_NAGA_MAGE:
     case MONS_GREATER_NAGA:
         if (!one_chance_in(5))
         {
@@ -539,7 +539,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         // deliberate fall-through
 
     case MONS_NAGA:
-    case MONS_NAGA_MAGE:
+    case MONS_NAGA_WARRIOR:
     case MONS_ORC_WARRIOR:
     case MONS_ORC_HIGH_PRIEST:
     case MONS_BLORK_THE_ORC:
