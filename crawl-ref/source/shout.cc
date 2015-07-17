@@ -83,6 +83,9 @@ void handle_monster_shouts(monster* mons, bool force)
     case S_BARK:
         default_msg_key = "__BARK";
         break;
+    case S_HOWL:
+        default_msg_key = "__HOWL";
+        break;
     case S_SHOUT2:
         default_msg_key = "__TWO_SHOUTS";
         break;
