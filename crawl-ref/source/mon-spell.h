@@ -157,7 +157,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_DISINTEGRATE, 12, MON_SPELL_MAGICAL },
        { SPELL_DRAIN_MAGIC, 12, MON_SPELL_MAGICAL },
        { SPELL_CONFUSE, 12, MON_SPELL_MAGICAL },
-       { SPELL_TELEPORT_OTHER, 12, MON_SPELL_MAGICAL | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -262,7 +261,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_THROW_FLAME, 10, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 10, MON_SPELL_WIZARD  },
        { SPELL_FIREBALL, 10, MON_SPELL_WIZARD },
-       { SPELL_TELEPORT_OTHER, 20, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
