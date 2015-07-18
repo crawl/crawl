@@ -209,9 +209,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_NECROMANCER_II,
       {
-       { SPELL_BOLT_OF_FIRE, 10, MON_SPELL_WIZARD },
-       { SPELL_AGONY, 10, MON_SPELL_WIZARD },
-       { SPELL_INNER_FLAME, 10, MON_SPELL_WIZARD },
+       { SPELL_BOLT_OF_FIRE, 15, MON_SPELL_WIZARD },
+       { SPELL_AGONY, 15, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },

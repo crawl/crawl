@@ -151,8 +151,10 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
     case BEAM_RESISTANCE:
         return !monster.has_ench(ENCH_RESISTANCE);
 
+#if TAG_MAJOR_VERSION == 34
     case BEAM_INNER_FLAME: // wow...
         return !monster.has_ench(ENCH_INNER_FLAME);
+#endif
 
     default:
         return false;
@@ -1345,10 +1347,12 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_INNER_FLAME:
         beam.flavour  = BEAM_INNER_FLAME;
         beam.pierce   = true;
         break;
+#endif
 
     case SPELL_GRAVITAS:
         beam.flavour  = BEAM_ATTRACT;
@@ -3578,12 +3582,14 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 continue;
             }
 
+#if TAG_MAJOR_VERSION == 34
             if (spell_cast == SPELL_INNER_FLAME
                 && !_set_nearby_target(mons, beem))
             {
                 spell_cast = SPELL_NO_SPELL;
                 continue;
             }
+#endif
 
             // Alligators shouldn't spam swiftness.
             // (not in _ms_waste_of_time since it is not deterministic)
@@ -3740,18 +3746,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                                              .agent(),
                                        BASELINE_DELAY
                                        * spell_difficulty(spell_cast)));
-        }
-        // If we inner flamed something, target that if it's hostile.
-        if (spell_cast == SPELL_INNER_FLAME)
-        {
-            monster* victim = monster_at(beem.target);
-            if (victim && victim->has_ench(ENCH_INNER_FLAME)
-                && !mons_aligned(mons, victim)
-                && !victim->has_ench(mons->wont_attack() ? ENCH_CHARM
-                                                         : ENCH_HEXED))
-            {
-                mons->foe = victim->mindex();
-            }
         }
         // Wellsprings "cast" from their own hp.
         if (spell_cast == SPELL_PRIMAL_WAVE
