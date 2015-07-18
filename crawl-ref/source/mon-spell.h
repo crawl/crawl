@@ -360,7 +360,6 @@ static const mon_spellbook mspell_list[] =
     {  MST_HELLWING,
       {
        { SPELL_CIGOTUVIS_EMBRACE, 28, MON_SPELL_DEMONIC },
-       { SPELL_TELEPORT_OTHER, 28, MON_SPELL_DEMONIC },
       }
     },
 
