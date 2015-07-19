@@ -83,8 +83,7 @@ struct mgen_data
     int             hp;
 
     // These flags will be appended to the monster's flags after placement.
-    // These flags are MF_XXX, rather than MG_XXX flags.
-    uint64_t        extra_flags;
+    monster_flags_t extra_flags;
 
     string          mname;
 
@@ -130,7 +129,7 @@ struct mgen_data
               proximity_type prox = PROX_ANYWHERE,
               level_id _place = level_id::current(),
               int mhd = 0, int mhp = 0,
-              uint64_t extflags = 0,
+              monster_flags_t extflags = MF_NO_FLAGS,
               string monname = "",
               string nas = "",
               monster_type is = RANDOM_MONSTER)
@@ -171,7 +170,8 @@ struct mgen_data
                                 const coord_def &where,
                                 unsigned genflags = 0)
     {
-        return mgen_data(what, BEH_SLEEP, 0, 0, 0, where, MHITNOT, genflags);
+        return mgen_data(what, BEH_SLEEP, 0, 0, MF_NO_FLAGS, where,
+                         MHITNOT, genflags);
     }
 
     static mgen_data hostile_at(monster_type mt,
@@ -188,8 +188,8 @@ struct mgen_data
         return mgen_data(mt, BEH_HOSTILE, 0, abj, st, p,
                          alert ? MHITYOU : MHITNOT,
                          genflags, ngod, base, 0, COLOUR_INHERIT,
-                         PROX_ANYWHERE, level_id::current(), 0, 0, 0, "", nsummoner,
-                         RANDOM_MONSTER);
+                         PROX_ANYWHERE, level_id::current(), 0, 0, MF_NO_FLAGS,
+                         "", nsummoner, RANDOM_MONSTER);
     }
 };
 

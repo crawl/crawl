@@ -4560,7 +4560,7 @@ void marshallMonster(writer &th, const monster& m)
     for (coord_def pos : m.travel_path)
         marshallCoord(th, pos);
 
-    marshallUnsigned(th, m.flags);
+    marshallUnsigned(th, m.flags.flags);
     marshallInt(th, m.experience);
 
     marshallShort(th, m.enchantments.size());
@@ -5391,8 +5391,8 @@ void unmarshallMonster(reader &th, monster& m)
     for (int i = 0; i < len; ++i)
         m.travel_path.push_back(unmarshallCoord(th));
 
-    m.flags      = unmarshallUnsigned(th);
-    m.experience = unmarshallInt(th);
+    m.flags.flags = unmarshallUnsigned(th);
+    m.experience  = unmarshallInt(th);
 
     m.enchantments.clear();
     const int nenchs = unmarshallShort(th);

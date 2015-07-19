@@ -1234,7 +1234,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
     dprf("mon #%d: range %d; "
          "pos (%d,%d); targ %d(%d,%d); flags %" PRIx64,
          mon->mindex(), mon_turns, mon->pos().x, mon->pos().y,
-         mon->foe, mon->target.x, mon->target.y, mon->flags);
+         mon->foe, mon->target.x, mon->target.y, mon->flags.flags);
 
     if (mon_turns <= 0)
         return;

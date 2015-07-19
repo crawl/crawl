@@ -2575,7 +2575,7 @@ void define_monster(monster* mons)
         mons->base_monster = monbase;
     }
 
-    mons->flags      = 0;
+    mons->flags      = MF_NO_FLAGS;
     mons->experience = 0;
     mons->colour     = col;
 
@@ -3151,7 +3151,7 @@ bool mons_is_fleeing_sanctuary(const monster* m)
 
 bool mons_just_slept(const monster* m)
 {
-    return m->flags & MF_JUST_SLEPT;
+    return bool(m->flags & MF_JUST_SLEPT);
 }
 
 // Moving body parts, turning oklob flowers and so on counts as motile here.
@@ -3194,7 +3194,7 @@ void mons_start_fleeing_from_sanctuary(monster* mons)
 
 void mons_stop_fleeing_from_sanctuary(monster* mons)
 {
-    const bool had_flag = (mons->flags & MF_FLEEING_FROM_SANCTUARY);
+    const bool had_flag {mons->flags & MF_FLEEING_FROM_SANCTUARY};
     mons->flags &= (~MF_FLEEING_FROM_SANCTUARY);
     if (had_flag)
         behaviour_event(mons, ME_EVAL, &you);

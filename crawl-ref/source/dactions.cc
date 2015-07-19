@@ -418,7 +418,7 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
     const float hp
         = (float) mon->hit_points / (float) mon->max_hit_points;
     // Preserve some flags.
-    const uint64_t preserve_flags =
+    const monster_flags_t preserve_flags =
         mon->flags & ~(MF_JUST_SUMMONED | MF_WAS_IN_VIEW);
     // Preserve enchantments.
     mon_enchant_list enchantments = mon->enchantments;

@@ -4005,7 +4005,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             // adjectives need NAME_DESCRIPTOR to get proper grammar,
             // and definite names do nothing with the description unless
             // NAME_DESCRIPTOR is also set.
-            const uint64_t name_flags = mspec.extra_monster_flags & MF_NAME_MASK;
+            const auto name_flags = mspec.extra_monster_flags & MF_NAME_MASK;
             const bool need_name_desc =
                 name_flags == MF_NAME_SUFFIX
                    || name_flags == MF_NAME_ADJECTIVE
