@@ -151,11 +151,6 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
     case BEAM_RESISTANCE:
         return !monster.has_ench(ENCH_RESISTANCE);
 
-#if TAG_MAJOR_VERSION == 34
-    case BEAM_INNER_FLAME: // wow...
-        return !monster.has_ench(ENCH_INNER_FLAME);
-#endif
-
     default:
         return false;
     }
@@ -260,56 +255,6 @@ static bool _set_hex_target(monster* caster, bolt& pbolt)
             {
                 continue;
             }
-
-            min_distance = targ_distance;
-            selected_target = *targ;
-        }
-    }
-
-    if (selected_target)
-    {
-        pbolt.target = selected_target->pos();
-        return true;
-    }
-
-    // Didn't find a target.
-    return false;
-}
-
-// Find a target near our foe to hex.
-static bool _set_nearby_target(monster* caster, bolt& pbolt)
-{
-    monster* selected_target = nullptr;
-    int min_distance = INT_MAX;
-
-    if (!caster->get_foe())
-        return false;
-
-    const actor *foe = caster->get_foe();
-
-    for (monster_near_iterator targ(caster, LOS_NO_TRANS); targ; ++targ)
-    {
-        if (*targ == caster || *targ == foe)
-            continue;
-
-        const int targ_distance = grid_distance(targ->pos(), foe->pos());
-
-        bool got_target = false;
-
-        if (!mons_is_firewood(*targ)
-            && _flavour_benefits_monster(pbolt.flavour, **targ))
-        {
-            got_target = true;
-        }
-
-        if (got_target && targ_distance < min_distance
-            && targ_distance < pbolt.range)
-        {
-            // Make sure we won't hit an invalid target with this aim.
-            pbolt.target = targ->pos();
-            fire_tracer(caster, pbolt);
-            if (pbolt.path_taken.back() != pbolt.target)
-                continue;
 
             min_distance = targ_distance;
             selected_target = *targ;
@@ -1347,13 +1292,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_INNER_FLAME:
-        beam.flavour  = BEAM_INNER_FLAME;
-        beam.pierce   = true;
-        break;
-#endif
-
     case SPELL_GRAVITAS:
         beam.flavour  = BEAM_ATTRACT;
         beam.pierce   = true;
@@ -1429,10 +1367,14 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_ILLUSION:
     case SPELL_SUMMON_DEMON:
     case SPELL_MONSTROUS_MENAGERIE:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_ANIMATE_DEAD:
+#endif
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_CIGOTUVIS_EMBRACE:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_SIMULACRUM:
+#endif
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_MINOR_DEMON:
 #if TAG_MAJOR_VERSION == 34
@@ -3582,15 +3524,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 continue;
             }
 
-#if TAG_MAJOR_VERSION == 34
-            if (spell_cast == SPELL_INNER_FLAME
-                && !_set_nearby_target(mons, beem))
-            {
-                spell_cast = SPELL_NO_SPELL;
-                continue;
-            }
-#endif
-
             // Alligators shouldn't spam swiftness.
             // (not in _ms_waste_of_time since it is not deterministic)
             if (spell_cast == SPELL_SWIFTNESS
@@ -5455,11 +5388,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         cast_monstrous_menagerie(mons, splpow, mons->god);
         return;
 
-    case SPELL_ANIMATE_DEAD:
-        animate_dead(mons, 5 + random2(5), SAME_ATTITUDE(mons),
-                     mons->foe, mons, "", god);
-        return;
-
     case SPELL_TWISTED_RESURRECTION:
         // Double efficiency compared to maxed out player spell: one
         // elf corpse gives 4.5 HD.
@@ -5475,10 +5403,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                  mons->name(DESC_THE).c_str());
         }
         mons->add_ench(ENCH_BONE_ARMOUR);
-        return;
-
-    case SPELL_SIMULACRUM:
-        monster_simulacrum(mons, true);
         return;
 
     case SPELL_CALL_IMP:
@@ -7890,23 +7814,15 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_FLAY:
         return !foe || foe->holiness() != MH_NATURAL;
 
-    case SPELL_ANIMATE_DEAD:
     case SPELL_TWISTED_RESURRECTION:
-    case SPELL_SIMULACRUM:
         if (friendly && !_animate_dead_okay(monspell))
             return true;
 
         if (mon->is_summoned())
             return true;
 
-        return monspell == SPELL_ANIMATE_DEAD
-               && !animate_dead(mon, 100, SAME_ATTITUDE(mon),
-                                mon->foe, mon, "", mon->god, false)
-               || monspell == SPELL_TWISTED_RESURRECTION
-                  && !twisted_resurrection(mon, 500, SAME_ATTITUDE(mon),
-                                           mon->foe, mon->god, false)
-               || monspell == SPELL_SIMULACRUM
-                  && !monster_simulacrum(mon, false);
+        return !twisted_resurrection(mon, 500, SAME_ATTITUDE(mon), mon->foe,
+                                     mon->god, false);
 
     case SPELL_CIGOTUVIS_EMBRACE:
         if (friendly && !_animate_dead_okay(monspell))
@@ -8072,6 +7988,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_EPHEMERAL_INFUSION:
     case SPELL_SINGULARITY:
     case SPELL_GRAND_AVATAR:
+    case SPELL_INNER_FLAME:
+    case SPELL_ANIMATE_DEAD:
+    case SPELL_SIMULACRUM:
 #endif
     case SPELL_NO_SPELL:
         return true;
