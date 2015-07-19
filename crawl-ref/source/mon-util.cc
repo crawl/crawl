@@ -408,10 +408,11 @@ monster* monster_at(const coord_def &pos)
     return &menv[mindex];
 }
 
-bool mons_class_flag(monster_type mc, uint64_t bf)
+/// Are any of the bits set?
+bool mons_class_flag(monster_type mc, monclass_flags_t bits)
 {
-    const monsterentry *me = get_monster_data(mc);
-    return me ? (me->bitfields & bf) != 0 : false;
+    const monsterentry * const me = get_monster_data(mc);
+    return me && (me->bitfields & bits);
 }
 
 int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
