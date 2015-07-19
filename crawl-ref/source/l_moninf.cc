@@ -64,6 +64,14 @@ static int moninf_get_colour(lua_State *ls)
     return 1;
 }
 
+static int moninf_get_pos(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    lua_pushnumber(ls, mi->pos.x - you.pos().x);
+    lua_pushnumber(ls, mi->pos.y - you.pos().y);
+    return 2;
+}
+
 #define MIRES1(field, resist) \
     static int moninf_get_##field(lua_State *ls) \
     { \
@@ -342,6 +350,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(res_corr),
     MIREG(x_pos),
     MIREG(y_pos),
+    MIREG(pos),
 
     { nullptr, nullptr }
 };
