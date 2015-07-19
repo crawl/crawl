@@ -24,6 +24,7 @@
 #include "makeitem.h"
 #include "matrix.h"
 #include "mon-ench.h"
+#include "mon-flags.h"
 #include "tags.h"
 #include "travel_defs.h"
 
