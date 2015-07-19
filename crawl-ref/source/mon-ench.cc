@@ -512,7 +512,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (alive())
                 simple_monster_message(this, " becomes audible again.");
             else
-                mprf("As %s dies, the sound returns.", name(DESC_THE).c_str());
+                mprf("As %s %s, the sound returns.",
+                     name(DESC_THE).c_str(),
+                     wounded_damaged(holiness()) ? "is destroyed" : "dies");
         }
         break;
 
