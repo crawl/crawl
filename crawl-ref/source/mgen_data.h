@@ -3,6 +3,7 @@
 
 #include "coord.h"
 #include "mgen_enum.h"
+#include "mon-flags.h"
 
 // Hash key for passing a weapon to be given to
 // a dancing weapon.
