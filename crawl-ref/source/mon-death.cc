@@ -141,7 +141,7 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
     if (!mons.mname.empty() && !(mons.flags & MF_NAME_NOCORPSE))
     {
         corpse.props[CORPSE_NAME_KEY] = mons.mname;
-        corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = mons.flags;
+        corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = mons.flags.flags;
     }
     else if (mons_is_unique(mtype))
     {
@@ -2029,7 +2029,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     const bool death_message = !silent && !did_death_message
                                && mons_near(mons)
                                && mons->visible_to(&you);
-    const bool exploded      = mons->flags & MF_EXPLODE_KILL;
+    const bool exploded {mons->flags & MF_EXPLODE_KILL};
     bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = mons->holiness();
 

@@ -1590,7 +1590,7 @@ static bool _dithmenos_retribution()
                         MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE,
                         level_id(BRANCH_DUNGEON,
                                  min(27, you.experience_level + 5)),
-                        0, 0, 0, "", _god_wrath_name(god))))
+                        0, 0, MF_NO_FLAGS, "", _god_wrath_name(god))))
             {
                 count++;
             }

@@ -668,7 +668,7 @@ public:
 
     bool explicit_spells;
     vector<monster_spells> spells;
-    uint64_t extra_monster_flags;
+    monster_flags_t extra_monster_flags;
     vector<mon_enchant> ench;
 
     monster_type initial_shifter;
@@ -684,7 +684,7 @@ public:
           colour(COLOUR_INHERIT), god(GOD_NO_GOD), god_gift(false), hd(0),
           hp(0), abjuration_duration(0), summon_type(0), items(), monname(""),
           non_actor_summoner(""), explicit_spells(false), spells(),
-          extra_monster_flags(0), initial_shifter(RANDOM_MONSTER), props()
+          extra_monster_flags(), initial_shifter(RANDOM_MONSTER), props()
     {
     }
 };

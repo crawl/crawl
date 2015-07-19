@@ -52,7 +52,7 @@ public:
     int8_t ench_countdown;
     mon_enchant_list enchantments;
     FixedBitVector<NUM_ENCHANTMENTS> ench_cache;
-    uint64_t flags;                    // bitfield of boolean flags
+    monster_flags_t flags;             // bitfield of boolean flags
 
     unsigned int experience;
     monster_type  base_monster;        // zombie base monster, draconian colour

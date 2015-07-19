@@ -172,6 +172,7 @@ enum monclass_flag_type : uint64_t
 /// Properties of specific monsters.
 enum monster_flag_type : uint64_t
 {
+    MF_NO_FLAGS           = 0,
     /// no benefit from killing
     MF_NO_REWARD          = BIT(0),
     /// monster skips next available action
@@ -270,4 +271,5 @@ enum monster_flag_type : uint64_t
     /// possibly got piety with TSO
     MF_TSO_SEEN           = BIT(38),
 };
+DEF_BITFIELD(monster_flags_t, monster_flag_type);
 #endif

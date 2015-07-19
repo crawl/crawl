@@ -548,7 +548,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     mname = m->mname;
 
-    const uint64_t name_flags = m->flags & MF_NAME_MASK;
+    const auto name_flags = m->flags & MF_NAME_MASK;
 
     if (name_flags == MF_NAME_SUFFIX)
         mb.set(MB_NAME_SUFFIX);

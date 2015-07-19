@@ -70,7 +70,7 @@ monster::monster()
       speed(0), speed_increment(0), target(), firing_pos(),
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
-      enchantments(), flags(0), experience(0), base_monster(MONS_NO_MONSTER),
+      enchantments(), flags(), experience(0), base_monster(MONS_NO_MONSTER),
       number(0), colour(COLOUR_INHERIT), foe_memory(0), god(GOD_NO_GOD),
       ghost(), seen_context(SC_NONE), client_id(0), hit_dice(0)
 
@@ -117,7 +117,7 @@ void monster::reset()
     spells.clear();
 
     mid             = 0;
-    flags           = 0;
+    flags           = MF_NO_FLAGS;
     experience      = 0;
     type            = MONS_NO_MONSTER;
     base_monster    = MONS_NO_MONSTER;
@@ -4705,7 +4705,7 @@ void monster::ghost_init(bool need_pos)
     god             = ghost->religion;
     attitude        = ATT_HOSTILE;
     behaviour       = BEH_WANDER;
-    flags           = 0;
+    flags           = MF_NO_FLAGS;
     foe             = MHITNOT;
     foe_memory      = 0;
     number          = MONS_NO_MONSTER;
@@ -5102,12 +5102,12 @@ bool monster::is_priest() const
 
 bool monster::is_fighter() const
 {
-    return flags & MF_FIGHTER;
+    return bool(flags & MF_FIGHTER);
 }
 
 bool monster::is_archer() const
 {
-    return flags & MF_ARCHER;
+    return bool(flags & MF_ARCHER);
 }
 
 bool monster::is_actual_spellcaster() const
@@ -6268,7 +6268,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         {
             bool fly_died = coinflip();
             int old_hp                = hit_points;
-            uint64_t old_flags        = flags;
+            auto old_flags            = flags;
             mon_enchant_list old_ench = enchantments;
             FixedBitVector<NUM_ENCHANTMENTS> old_ench_cache = ench_cache;
             int8_t old_ench_countdown = ench_countdown;

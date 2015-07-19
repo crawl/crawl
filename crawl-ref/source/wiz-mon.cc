@@ -480,7 +480,7 @@ void debug_stethoscope(int mon)
          mons.base_monster != MONS_NO_MONSTER ? " base=" : "",
          mons.base_monster != MONS_NO_MONSTER ?
          get_monster_data(mons.base_monster)->name : "",
-         mons.mid, mons.number, mons.stealth(), mons.flags);
+         mons.mid, mons.number, mons.stealth(), mons.flags.flags);
 
     if (mons.damage_total)
     {
