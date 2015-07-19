@@ -54,6 +54,8 @@ MIRET1(number, base_type, base_type)
 MIRET1(number, number, number)
 MIRET1(boolean, has_known_ranged_attack, is(MB_RANGED_ATTACK))
 MIRET1(string, speed_description, speed_description().c_str())
+MIRET1(number, get_x, pos.x - you.pos().x)
+MIRET1(number, get_y, pos.y - you.pos().y)
 
 static int moninf_get_colour(lua_State *ls)
 {
@@ -338,6 +340,8 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(res_draining),
     MIREG(res_shock),
     MIREG(res_corr),
+    MIREG(get_x),
+    MIREG(get_y),
 
     { nullptr, nullptr }
 };
