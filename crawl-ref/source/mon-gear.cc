@@ -1388,7 +1388,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_WARMONGER:
         level = ISPEC_GOOD_ITEM;
         item.base_type = OBJ_WEAPONS;
-        if (!melee_only)
+        if (!melee_only && one_chance_in(3))
         {
             item.sub_type = random_choose_weighted(10, WPN_LONGBOW,
                                                    9, WPN_ARBALEST,
