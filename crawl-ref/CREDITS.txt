@@ -110,6 +110,7 @@
     Vitor 'Baconkid' Costa
     Aaron Curtis
     Simon Curtis
+    Paul Dejean
     Denzi
     Lothar Dierkes
     drachereborn
