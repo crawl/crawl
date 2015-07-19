@@ -227,7 +227,7 @@ enum monster_flag_type : uint64_t
 
     // These are based on the flags in monster class, but can be set for
     // monsters that are not normally fighters (in vaults).
-    
+
     /// Monster is skilled fighter.
     MF_FIGHTER            = BIT(20),
     /// Monster wields two weapons.
