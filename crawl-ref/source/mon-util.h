@@ -114,7 +114,7 @@ struct monsterentry
     colour_t colour;
     const char *name;
 
-    uint64_t bitfields;
+    monclass_flags_t bitfields;
     resists_t resists;
 
     // [Obsolete] Experience used to be calculated like this:
@@ -232,7 +232,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
 
 corpse_effect_type mons_corpse_effect(monster_type mc);
 
-bool mons_class_flag(monster_type mc, uint64_t bf);
+bool mons_class_flag(monster_type mc, monclass_flags_t bits);
 
 mon_holy_type mons_class_holiness(monster_type mc);
 
