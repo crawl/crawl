@@ -3153,7 +3153,6 @@ static monster_type _band_member(band_type band, int which,
     case BAND_NAGA_RITUALIST:
         return random_choose_weighted(15, MONS_BLACK_MAMBA,
                                        7, MONS_MANA_VIPER,
-                                       5, MONS_WATER_MOCCASIN,
                                        4, MONS_ANACONDA,
                                        0);
 
