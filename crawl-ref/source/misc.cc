@@ -806,17 +806,6 @@ void handle_real_time(time_t t)
     you.last_keypress_time = t;
 }
 
-string part_stack_string(const int num, const int total)
-{
-    if (num == total)
-        return "Your";
-
-    string ret  = uppercase_first(number_in_words(num))
-                + " of your";
-
-    return ret;
-}
-
 unsigned int breakpoint_rank(int val, const int breakpoints[],
                              unsigned int num_breakpoints)
 {
