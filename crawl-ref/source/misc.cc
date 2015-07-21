@@ -800,20 +800,6 @@ int apply_chunked_AC(int dam, int ac)
     return hurt;
 }
 
-void entered_malign_portal(actor* act)
-{
-    ASSERT(act); // XXX: change to actor &act
-    if (you.can_see(*act))
-    {
-        mprf("%s %s twisted violently and ejected from the portal!",
-             act->name(DESC_THE).c_str(), act->conj_verb("be").c_str());
-    }
-
-    act->blink();
-    act->hurt(nullptr, roll_dice(2, 4), BEAM_MISSILE, KILLED_BY_WILD_MAGIC,
-              "", "entering a malign gateway");
-}
-
 void handle_real_time(time_t t)
 {
     you.real_time += min<time_t>(t - you.last_keypress_time, IDLE_TIME_CLAMP);

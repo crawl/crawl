@@ -3110,6 +3110,20 @@ static void _swap_places(monster* mons, const coord_def &loc)
     return;
 }
 
+static void _entered_malign_portal(actor* act)
+{
+    ASSERT(act); // XXX: change to actor &act
+    if (you.can_see(*act))
+    {
+        mprf("%s %s twisted violently and ejected from the portal!",
+             act->name(DESC_THE).c_str(), act->conj_verb("be").c_str());
+    }
+
+    act->blink();
+    act->hurt(nullptr, roll_dice(2, 4), BEAM_MISSILE, KILLED_BY_WILD_MAGIC,
+              "", "entering a malign gateway");
+}
+
 // Called when the player moves by walking/running. Also calls attack
 // function etc when necessary.
 static void _move_player(coord_def move)
@@ -3490,7 +3504,7 @@ static void _move_player(coord_def move)
         move.reset();
         you.turn_is_over = true;
 
-        entered_malign_portal(&you);
+        _entered_malign_portal(&you);
         return;
     }
     else if (!targ_pass && !attacking)
