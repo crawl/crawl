@@ -65,8 +65,6 @@ bool stop_attack_prompt(targetter &hitfunc, const char* verb,
 
 void swap_with_monster(monster *mon_to_swap);
 
-void auto_id_inventory();
-
 int apply_chunked_AC(int dam, int ac);
 
 void entered_malign_portal(actor* act);
