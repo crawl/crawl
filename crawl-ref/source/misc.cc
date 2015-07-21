@@ -778,16 +778,6 @@ void swap_with_monster(monster* mon_to_swap)
     }
 }
 
-void auto_id_inventory()
-{
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def& item = you.inv[i];
-        if (item.defined())
-            god_id_item(item, false);
-    }
-}
-
 // Reduce damage by AC.
 // In most cases, we want AC to mostly stop weak attacks completely but affect
 // strong ones less, but the regular formula is too hard to apply well to cases

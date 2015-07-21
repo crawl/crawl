@@ -776,6 +776,16 @@ bool curse_an_item(bool ignore_holy_wrath)
     return true;
 }
 
+void auto_id_inventory()
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def& item = you.inv[i];
+        if (item.defined())
+            god_id_item(item, false);
+    }
+}
+
 void do_curse_item(item_def &item, bool quiet)
 {
     // Already cursed?
