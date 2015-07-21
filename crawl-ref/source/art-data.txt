@@ -1218,6 +1218,7 @@ PLUS:    +0
 MP:      +4
 BOOL:    mutate, elec, chaotic
 
+# TAG_MAJOR_VERSION == 34
 ENUM:    ETERNAL_TORMENT
 NAME:    crown of Eternal Torment
 OBJ:     OBJ_ARMOUR/ARM_HAT
@@ -1228,7 +1229,7 @@ TILE_EQ: eternal_torment
 INSCRIP: rTorment HP--
 LIFE:    3
 CURSED:  1
-BOOL:    evil, seeinv
+BOOL:    evil, seeinv, nogen
 
 # This entry must always be last.
 ENUM:   DUMMY2
