@@ -27,7 +27,7 @@ void run_uncancels()
     // Run uncancels iteratively rather than recursively.
     if (running)
         return;
-    unwind_var<bool> run(running, true);
+    unwind_bool run(running, true);
 
     while (!you.uncancel.empty() && !crawl_state.seen_hups)
     {

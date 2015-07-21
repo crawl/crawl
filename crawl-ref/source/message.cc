@@ -1815,7 +1815,7 @@ void save_messages(writer& outf)
 
 void load_messages(reader& inf)
 {
-    unwind_var<bool> save_more(crawl_state.show_more_prompt, false);
+    unwind_bool save_more(crawl_state.show_more_prompt, false);
 
     int num = unmarshallInt(inf);
     for (int i = 0; i < num; ++i)
