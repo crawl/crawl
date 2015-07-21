@@ -1616,7 +1616,10 @@ bool player_res_torment(bool random)
     return get_form()->res_neg() == 3
            || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
            || you.petrified()
-           || player_equip_unrand(UNRAND_ETERNAL_TORMENT);
+#if TAG_MAJOR_VERSION == 34
+           || player_equip_unrand(UNRAND_ETERNAL_TORMENT)
+#endif
+           ;
 }
 
 // Kiku protects you from torment to a degree.
@@ -4117,8 +4120,10 @@ int get_real_hp(bool trans, bool rotted)
     if (trans) // Some transformations give you extra hp.
         hitp = hitp * form_hp_mod() / 10;
 
+#if TAG_MAJOR_VERSION == 34
     if (trans && player_equip_unrand(UNRAND_ETERNAL_TORMENT))
         hitp = hitp * 4 / 5;
+#endif
 
     return max(1, hitp);
 }
