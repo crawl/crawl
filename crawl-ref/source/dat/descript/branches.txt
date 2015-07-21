@@ -7,14 +7,11 @@ kinds of species who fled the overworld and shunned the light. No matter what
 its origin, this deep cavern is filled with riches unheard of as well as with
 ample dangers to any intruder. Few have escaped alive, and even fewer have kept
 some sliver of sanity sufficient to tell the tale.
-
-The dungeon is 15 levels deep, but, honestly, this is only the beginning.
 %%%%
 Temple
 
 The Ecumenical Temple is a place of peace and refuge from the insanity of the
-dungeon. It usually contains altars to most of the known gods. It is located
-between the levels 4 and 7 of the main dungeon.
+dungeon. It usually contains altars to most of the known gods.
 %%%%
 Orcish Mines
 
@@ -24,11 +21,7 @@ to help relieve the orcs of the latter. Prospective customers should be warned:
 the haphazard manner in which orcs dig their mineshafts has resulted in a
 complex and treacherous tangle of chambers, in which it is easy to be trapped.
 
-They are filled with the noise of industry, and thus all sounds travel less
-far.
-
-The Orcish Mines are four levels deep and contain the entrance to the Elven
-Halls.
+The Orcish Mines contain the entrance to the Elven Halls.
 %%%%
 Elven Halls
 
@@ -36,8 +29,6 @@ This is the realm of the deep elves, a race that turned their backs on the sun
 long ago. Their halls are filled with riches, but a deadly welcome awaits any
 would-be robbers. In their long seclusion, the deep elves have perfected dark
 sorceries of a power the orcs can only dream of!
-
-The Elven Halls are three levels deep.
 %%%%
 Lair
 
@@ -45,18 +36,15 @@ Most adventurers find the Lair of Beasts to be an exciting change of climate.
 And indeed, there is something to be said about getting gored, mauled and eaten
 rather than sliced, burnt or stabbed.
 
-It is filled with the noise of nature, and thus all sounds travel less far.
-
-The Lair is eight levels deep and contains the stairs to three more branches.
+The Lair contains the stairs to three more branches.
 %%%%
 Swamp
 
 A swampy wasteland, the Swamp is filled with ooze, muck, flies and large
 slavering carnivorous monsters.
 
-The Swamp is four levels deep and contains the decaying rune. A dungeon
-features only one of the Swamp and Shoals branches. If the Swamp is present,
-the entrance is located between Lair:3 and Lair:6.
+The Swamp contains the decaying rune. A dungeon features only one of the Swamp
+and Shoals branches.
 %%%%
 Shoals
 
@@ -64,30 +52,24 @@ The exotic underground beaches of the Shoals make up a few small islands in a
 seemingly endless sea. The merfolk have made it their home, alongside many
 dreaded sea creatures.
 
-It is filled with the noise of the sea breaking on sand, and thus all sounds
-travel less far.
-
-The Shoals are four levels deep and contain the barnacled rune. A dungeon
-features only one of the Shoals and Swamp branches. If the Shoals are present,
-the entrance is located between Lair:3 and Lair:6.
+The Shoals contain the barnacled rune. A dungeon features only one of the
+Shoals and Swamp branches.
 %%%%
 Snake Pit
 
 The corridors of the Snake Pit are home to all varieties of serpent, and are
 inhabited by a society of powerful nagas and salamanders.
 
-The Snake Pit is four levels deep and contains the serpentine rune. A dungeon
-features only one of the Snake Pit and Spider Nest branches. If the Snake Pit
-is present, the entrance is located between Lair:3 and Lair:6.
+The Snake Pit contains the serpentine rune. A dungeon features only one of the
+Snake Pit and Spider Nest branches.
 %%%%
 Spider Nest
 
 The crumbling, web-choked caverns of the Spider Nest are packed with poisonous
 arthropods and assorted creepy-crawlies.
 
-The Spider Nest is four levels deep and contains the gossamer rune. A dungeon
-features only one of the Spider Nest and Snake Pit branches. If the Spider Nest
-is present, the entrance is located between Lair:3 and Lair:6.
+The Spider Nest is contains the gossamer rune. A dungeon features only one of
+the Spider Nest and Snake Pit branches.
 %%%%
 Slime Pits
 
@@ -96,11 +78,7 @@ walls drip with painful acid. Any trace of intelligent beings has long been
 dissolved. Still, there are rumours of great treasures deep down, hidden safely
 away in secret chambers without door or window.
 
-The only noise here is the occasional drip of acid, and thus all sounds travel
-further.
-
-The Slime Pits are six levels deep and contain the slimy rune. The entry is
-between Lair:6 and Lair:8.
+The Slime Pits contain the slimy rune.
 %%%%
 Vaults
 
@@ -108,10 +86,8 @@ Possibly constructed by some powerful madman, the Vaults are said to be home to
 great treasures. The blood spattered liberally around the entrance suggests
 that there is a certain amount of violence, too.
 
-The Vaults are five levels deep and contain the silver rune, as well as the
-entrance to the Crypt. They can only be entered while carrying at least one
-rune of Zot. The entrance can be found on either level 13 or 14 of the main
-dungeon.
+The Vaults contain the silver rune, as well as the entrance to the Crypt. They
+can only be entered while carrying at least one rune of Zot.
 %%%%
 Crypt
 
@@ -119,11 +95,7 @@ The Crypt is a huge repository for the ancient dead. The air is chill and
 fetid, the walls cold and damp. Bones are strewn liberally everywhere, and
 every noise echoes worryingly, violating the overbearing silence of the grave.
 
-It is suffused with the silence of the grave, and thus all sounds travel
-further.
-
-The Crypt is three levels deep, and contains the entrance to the Tomb. Its entry
-is either on Vaults:2 or Vaults:3.
+The Crypt contains the entrance to the Tomb.
 %%%%
 Tomb
 
@@ -131,11 +103,7 @@ The Tomb of the Ancients is a place of damnation, of horrors animated by the
 vilest necromancy. The list of those who have returned from this place of pure
 death is exceedingly short.
 
-It is suffused with the silence of the grave, and thus all sounds travel much
-further.
-
-The Tomb is three levels deep and contains the golden rune. Its entry is on
-Crypt:3.
+The Tomb contains the golden rune.
 %%%%
 Hell
 
@@ -148,30 +116,26 @@ Dis
 
 Who will stand the test of iron?
 
-Dis is seven levels deep and contains the iron rune. It can be accessed via the
-Vestibule of Hell.
+Dis contains the iron rune.
 %%%%
 Gehenna
 
 Gehenna is a realm of flames, lava and hellfire.
 
-Gehenna is seven levels deep and contains the obsidian rune. It can be accessed
-via the Vestibule of Hell.
+Gehenna contains the obsidian rune.
 %%%%
 Cocytus
 
 Cocytus is a grim and frost-bitten wasteland.
 
-Cocytus is seven levels deep and contains the icy rune. It can be accessed via
-the Vestibule of Hell.
+Cocytus contains the icy rune.
 %%%%
 Tartarus
 
 Tartarus is a decaying netherworld. Over time, the undead, demons and devils of
 this place drain the life from any who dare to enter.
 
-Tartarus is seven levels deep and contains the bone rune. It can be accessed
-via the Vestibule of Hell.
+Tartarus contains the bone rune.
 %%%%
 Zot
 
@@ -181,8 +145,7 @@ trespassers. Only the most demented adventurers would dare gather the required
 keys, break the seal and penetrate deeper — all in the vain hope for a fabled
 artefact no one has ever laid eyes on before.
 
-The Realm of Zot is five levels deep and can only be entered when carrying at
-least three runes.
+The Realm of Zot can only be entered when carrying at least three runes.
 %%%%
 Abyss
 
@@ -217,19 +180,18 @@ No fewer than five runes can be found in Pandemonium:
 %%%%
 Ziggurat
 
-A ziggurat is a strange tower constructed of twenty seven levels of
-incrementally larger combat arenas, each containing greater wealth and even
-greater danger than the last. Beware, for a ziggurat is not a place for the
-faint of heart: even the bravest and most skilled adventurers have met their
-ends in one. While a portal to safety will be present on every level, once
-left, a ziggurat cannot be re-entered.
+A ziggurat is a strange tower constructed of incrementally larger combat
+arenas, each containing greater wealth and even greater danger than the last.
+Beware, for a ziggurat is not a place for the faint of heart: even the bravest
+and most skilled adventurers have met their ends in one. While a portal to
+safety will be present on every level, once left, a ziggurat cannot be
+re-entered.
 
 One ziggurat is guaranteed in the Depths, and further ones can be found
-in Pandemonium. These towers and their contents will react violently to
-those that can conquer them, and scale up according to how many ziggurats
-an adventurer has completed.
+in Pandemonium. Each time a ziggurat is conquered by exiting it from the final
+floor, subsequent ziggurats will become increasingly dangerous and lucrative.
 
-It can only be entered when carrying at least two runes of Zot.
+Ziggurats can only be entered when carrying at least two runes of Zot.
 %%%%
 Labyrinth
 
