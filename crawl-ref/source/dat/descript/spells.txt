@@ -164,7 +164,7 @@ Borgnjor's Revivification spell
 
 Instantly heals any and all wounds suffered by the caster, but also permanently
 lessens their resilience to injury, to a degree dependent on (and inversely
-related to) spellpower.
+related to) power.
 
 It is powerful enough to literally pull someone out of Death's Door, although
 the shock will briefly confuse and paralyse the caster. It has no effect on the
@@ -245,9 +245,9 @@ Cigotuvi's Embrace spell
 
 Violently mutilates all nearby corpses, wrapping them around the caster to
 serve as both armour and shield. As it takes hits, the carrion will gradually
-fall away, faster and faster as more is piled on, though increased spellpower
-will tighten its grasp on the caster's body. It has no effect on casters in
-Statue Form, or with Stoneskin or Ozocubu's Armour active.
+fall away, faster and faster as more is piled on, though increased power will
+tighten its grasp on the caster's body. It has no effect on casters in Statue
+Form, or with Stoneskin or Ozocubu's Armour active.
 %%%%
 Cleansing Flame spell
 
@@ -268,10 +268,10 @@ Exhales a focused blast of icy-cold air. It may knock back airborne targets.
 Condensation Shield spell
 
 Causes a disc of dense vapour to condense out of the air surrounding the
-caster. It blocks attacks like a normal shield, but its stopping power depends
-solely on spellpower, and not on the Shields skill. The disc is controlled by
-the caster's mind, and thus will not conflict with the wielding of a
-two-handed weapon.
+caster. It blocks attacks like a normal shield, but its effectiveness depends
+solely on power, and not on the Shields skill. The disc is controlled by the
+caster's mind, and thus will not conflict with the wielding of a two-handed
+weapon.
 %%%%
 Confuse spell
 
@@ -718,8 +718,8 @@ Iskenderun's Battlesphere spell
 Conjures a small globe of magical energy linked to the caster's own magical
 reserves. While the battlesphere cannot take independent action, it will fire
 volleys of energy at the caster's enemies in sync with its creator's own
-destructive conjurations. With increasing spellpower, the battlesphere lasts
-longer and deals more damage per volley.
+destructive conjurations. With increasing power, the battlesphere lasts longer
+and deals more damage per volley.
 %%%%
 Iskenderun's Mystic Blast spell
 
@@ -790,7 +790,7 @@ Malign Gateway spell
 Tears a gash in reality, creating a self-sustained but temporary portal to an
 unknown, tainted otherworld. It requires open space to succeed. After a short
 time, a powerful clawed tentacle will reach through the portal, remaining bound
-to the caster's will for a duration depending on spellpower. With the portal's
+to the caster's will for a duration depending on power. With the portal's
 expiry, the tentacle will be severed and turn on the caster.
 %%%%
 Malign Offering spell
@@ -1213,7 +1213,7 @@ Throws a ball of hot steam towards a targeted creature.
 Sticks to Snakes spell
 
 Transforms a number of arrows in inventory into short-lived snakes, creating
-more dangerous snakes with higher spellpower.
+more dangerous snakes with higher power.
 %%%%
 Sticky Flame Range spell
 
@@ -1512,7 +1512,7 @@ It can affect targets standing in or flying above water.
 Weave Shadows spell
 
 Weaves a creature from shadows and threads of Abyssal matter. More powerful
-creatures are summoned with higher spellpower.
+creatures are summoned with higher power.
 %%%%
 Wind Blast spell
 
