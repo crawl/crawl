@@ -1086,6 +1086,111 @@ static int _describe_god(const string &key, const string &/*suffix*/,
     return 0; // no exact matches for gods, so output doesn't matter
 }
 
+static string _branch_depth(branch_type br)
+{
+    const int depth = branches[br].numlevels;
+
+    // The Abyss's depth rules are explained in the description.
+    if (depth == 1 || br == BRANCH_ABYSS)
+        return "";
+
+    string desc = "\n\nThis branch is ";
+    desc += to_string(depth);
+    desc += " levels deep.";
+
+    return desc;
+}
+
+static string _branch_location(branch_type br)
+{
+    const branch_type parent = branches[br].parent_branch;
+    const int min = branches[br].mindepth;
+    const int max = branches[br].maxdepth;
+
+    // Ziggurat locations are explained in the description.
+    if (parent == NUM_BRANCHES || br == BRANCH_ZIGGURAT)
+        return "";
+
+    string desc = "\n\nThe entrance to this branch can be found ";
+    if (min == max)
+    {
+        if (branches[parent].numlevels == 1)
+            desc += "in ";
+        else
+        {
+            desc += "on level ";
+            desc += to_string(min);
+            desc += " of ";
+        }
+        desc += branches[parent].longname;
+    }
+    else
+    {
+        desc += "between levels ";
+        desc += to_string(min);
+        desc += " and ";
+        desc += to_string(max);
+        desc += " of ";
+        desc += branches[parent].longname;
+    }
+    desc += ".";
+
+    return desc;
+}
+
+static string _branch_noise(branch_type br)
+{
+    const int noise = branches[br].ambient_noise;
+    if (noise == 0)
+        return "";
+
+    string desc = "\n\nThis branch is ";
+    if (noise > 0)
+    {
+        desc += "filled with ";
+        if (noise > 5)
+            desc += "deafening ";
+        desc +=  "noise, and thus all sounds travel ";
+        if (noise > 5)
+            desc += "much ";
+        desc += "less far.";
+    }
+    else
+    {
+        if (noise < -5)
+            desc += "unnaturally silent";
+        else
+            desc += "very quiet";
+        desc +=  ", and thus all sounds travel ";
+        if (noise < -5)
+            desc += "much ";
+        desc += "further.";
+    }
+
+    return desc;
+}
+
+/**
+ * Describe the branch with the given name.
+ *
+ * @param key       The name of the branch in question.
+ * @param suffix    A suffix to trim from the key when making the title.
+ * @param footer    A footer to append to the end of descriptions.
+ * @return          The keypress the user made to exit.
+ */
+static int _describe_branch(const string &key, const string &suffix,
+                            string footer)
+{
+    const string branch_name = key.substr(0, key.size() - suffix.size());
+    const branch_type branch = branch_by_name(branch_name);
+    ASSERT(branch != NUM_BRANCHES);
+
+    const string noise    = _branch_noise(branch);
+    const string depth    = _branch_depth(branch);
+    const string location = _branch_location(branch);
+
+    return _describe_key(key, suffix, footer, noise + depth + location);
+}
 
 /// All types of ?/ queries the player can enter.
 static const vector<LookupType> lookup_types = {
@@ -1123,7 +1228,7 @@ static const vector<LookupType> lookup_types = {
                LTYPF_SUPPORT_TILES),
     LookupType('B', "branch", nullptr, nullptr,
                nullptr, _get_branch_keys, _simple_menu_gen,
-               _describe_generic,
+               _describe_branch,
                LTYPF_DISABLE_SORT),
     LookupType('L', "cloud", nullptr, nullptr,
                nullptr, _get_cloud_keys, _cloud_menu_gen,

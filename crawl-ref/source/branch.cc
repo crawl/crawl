@@ -147,6 +147,15 @@ branch_type str_to_branch(const string &branch, branch_type err)
     return err;
 }
 
+branch_type branch_by_name(const string &branch)
+{
+    for (branch_iterator it; it; ++it)
+        if (it->shortname && it->shortname == branch)
+            return it->id;
+
+    return NUM_BRANCHES;
+}
+
 int current_level_ambient_noise()
 {
     return branches[you.where_are_you].ambient_noise;
