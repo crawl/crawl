@@ -55,12 +55,6 @@
 #include "view.h"
 #include "xom.h"
 
-// Update the trackers after the player changed level.
-void trackers_init_new_level(bool transit)
-{
-    travel_init_new_level();
-}
-
 string weird_glowing_colour()
 {
     return getMiscString("glowing_colour_name");
