@@ -14,8 +14,6 @@
 
 extern const struct coord_def Compass[9];
 
-void trackers_init_new_level(bool transit);
-
 string weird_glowing_colour();
 
 string weird_writing();

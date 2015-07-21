@@ -52,7 +52,7 @@
 #include "macro.h"
 #include "mapmark.h"
 #include "message.h"
-#include "misc.h"
+#include "misc.h" // today_is_halloween()
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -1243,6 +1243,11 @@ static void _place_player(dungeon_feature_type stair_taken,
     }
 }
 
+// Update the trackers after the player changed level.
+void trackers_init_new_level(bool transit)
+{
+    travel_init_new_level();
+}
 
 /**
  * Load the current level.
