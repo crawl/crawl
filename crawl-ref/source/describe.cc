@@ -3124,6 +3124,12 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "rotting";
     case MR_RES_NEG:
         return "negative energy";
+    case MR_RES_STICKY_FLAME:
+        return "sticky flame";
+    case MR_RES_WIND:
+        return "wind";
+    case MR_VUL_WATER:
+        return "water";
     default:
         return "buggy resistance";
     }
@@ -3399,7 +3405,8 @@ static string _monster_stat_description(const monster_info& mi)
     {
         MR_RES_ELEC,    MR_RES_POISON, MR_RES_FIRE,
         MR_RES_STEAM,   MR_RES_COLD,   MR_RES_ACID,
-        MR_RES_ROTTING, MR_RES_NEG,
+        MR_RES_ROTTING, MR_RES_NEG,    MR_RES_WIND,
+        MR_RES_STICKY_FLAME, MR_VUL_WATER,
     };
 
     vector<string> extreme_resists;
@@ -3416,6 +3423,11 @@ static string _monster_stat_description(const monster_info& mi)
             const char* attackname = _get_resist_name(rflags);
             level = max(level, -1);
             level = min(level,  3);
+
+            // Vulnerabilities with no corresponding resistance.
+            if (rflags == MR_VUL_WATER)
+                level = -level;
+
             switch (level)
             {
                 case -1:
