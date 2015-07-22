@@ -437,24 +437,6 @@ MAP
 .............
 ENDMAP
 
-NAME:  rats_and_rats_again
-DEPTH: D:8-14
-MONS:  shadow imp
-MONS:  rat w:40 / river rat w:20 / hell rat w:1 / nothing
-MAP
-...........
-.xxx+++xxx.
-.x2222222x.
-.x2222222x.
-.x2222222x.
-.x2222222x.
-.x2221222x.
-.x2222222x.
-.x2222222x.
-.xxxxxxxxx.
-...........
-ENDMAP
-
 NAME:  minmay_rats_cheesy_pizza
 DEPTH: D:2-3
 MONS:  rat
