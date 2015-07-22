@@ -59,22 +59,16 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
         mpr("Your attempt to draw power from your own body fails.");
     else
     {
-        int food = 0;
         // Take at most 90% of currhp.
         const int minhp = max(div_rand_round(you.hp, 10), 1);
 
-        while (you.magic_points < you.max_magic_points && you.hp > minhp
-               && (you.undead_state() != US_SEMI_UNDEAD
-                   || you.hunger - food >= HUNGER_SATIATED))
+        while (you.magic_points < you.max_magic_points && you.hp > minhp)
         {
             fail_check();
             success = true;
 
             inc_mp(1);
             dec_hp(1, false);
-
-            if (you.undead_state() == US_SEMI_UNDEAD)
-                food += 15;
 
             for (int i = 0; i < (you.hp > minhp ? 3 : 0); ++i)
                 if (x_chance_in_y(6, pow))
@@ -87,8 +81,6 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
             mpr("You draw magical energy from your own body!");
         else
             mpr("Your attempt to draw power from your own body fails.");
-
-        make_hungry(food, false);
     }
 
     return success ? SPRET_SUCCESS : SPRET_ABORT;
