@@ -598,6 +598,7 @@ almost as effectively.
 
 Perhaps you could wear it on your head?
 %%%%
+# TAG_MAJOR_VERSION == 34
 crown of Eternal Torment
 
 A gold crown set with jet-black gems. It permanently afflicts its wearer with

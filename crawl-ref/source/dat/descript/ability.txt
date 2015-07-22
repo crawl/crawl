@@ -660,8 +660,8 @@ remain friendly.
 Sacrifice Courage ability
 
 Sacrifices courage, causing you to become terrified of dangerous monsters. Such
-monsters fill you with horror, which reduces your spellpower and your ability
-to hit and damage monsters in combat.
+monsters fill you with horror, which reduces the power of your spells and your
+ability to hit and damage monsters in combat.
 %%%%
 Sacrifice Arcana ability
 
