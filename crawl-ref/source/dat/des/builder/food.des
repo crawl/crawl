@@ -267,30 +267,19 @@ TAGS:   uniq_second_food extra chance_second_food
 TAGS:   no_monster_gen no_item_gen patrolling
 MONS:   spriggan skeleton / centaur skeleton
 MONS:   troll skeleton / hungry ghost
-MONS:   shadow imp
 KMONS:  A = trapdoor spider w:6 / unseen horror / nothing w:4
 ITEM:  fruit q:1
 ITEM:  royal jelly q:2
 ITEM:  bread ration q:3
 SUBST:  D : DDDDE
-NSUBST: D = 1:A / 2:d / 2:e / 1:h, E = 2:d / 2:e / 2:h
-: if crawl.coinflip() then
-:     dgn.delayed_decay(_G, 'h', 'spriggan skeleton')
-: else
-:     dgn.delayed_decay(_G, 'h', 'ogre skeleton')
-: end
-: if crawl.coinflip() then
-:     dgn.delayed_decay(_G, 'A', 'spriggan skeleton')
-: else
-:     dgn.delayed_decay(_G, 'A', 'ogre skeleton')
-: end
+NSUBST: D = 1:A / 2:d / 2:e / 1:1, E = 2:d / 2:e / 2:1
 MAP
  cccccccccc
-ccxx1xh=DDc
+ccxx1x1+DDc
 c.x.x..mDDc
 @.d.x2.mDDc
 c.x.x..cc+c
-ccxx1x.c3fc
+ccxx1x.c1fc
  cccccccccc
 ENDMAP
 
