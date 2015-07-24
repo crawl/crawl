@@ -1050,6 +1050,9 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     crawl_state.cancel_cmd_all();
 
+    if (non_death)
+        you.delay_queue.clear(); // don't lose ev for taking the exit...
+
     // Construct scorefile entry.
     scorefile_entry se(dam, source, death_type, aux, false,
                        death_source_name);
