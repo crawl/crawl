@@ -2434,7 +2434,7 @@ static const struct spell_desc spelldata[] =
     SPELL_DARKNESS, "Darkness",
     SPTYP_HEXES,
     SPFLAG_NONE,
-    7,
+    6,
     200,
     -1, -1,
     3, 0,

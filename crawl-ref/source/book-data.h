@@ -321,8 +321,8 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_PASSWALL,
     SPELL_GOLUBRIAS_PASSAGE,
     SPELL_LRD,
-    SPELL_INVISIBILITY,
     SPELL_DARKNESS,
+    SPELL_INVISIBILITY,
 },
 
 {   // Book of Dreams
@@ -330,8 +330,8 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_PHASE_SHIFT,
     SPELL_SHADOW_CREATURES,
     SPELL_SILENCE,
-    SPELL_MASS_CONFUSION,
     SPELL_DARKNESS,
+    SPELL_MASS_CONFUSION,
 },
 
 {   // Book of Alchemy
