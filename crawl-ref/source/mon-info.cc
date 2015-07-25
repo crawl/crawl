@@ -120,8 +120,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_FEAR_INSPIRING;
     case ENCH_WITHDRAWN:
         return MB_WITHDRAWN;
-    case ENCH_BLEED:
-        return MB_BLEEDING;
     case ENCH_DAZED:
         return MB_DAZED;
     case ENCH_MUTE:
@@ -1307,8 +1305,6 @@ static string _verbose_info0(const monster_info& mi)
         return "wandering";
     if (mi.is(MB_BURNING))
         return "burning";
-    if (mi.is(MB_BLEEDING))
-        return "bleeding";
     if (mi.is(MB_INVISIBLE))
         return "invisible";
 
@@ -1507,8 +1503,6 @@ vector<string> monster_info::attributes() const
         v.emplace_back("radiating silence");
     if (is(MB_PARALYSED))
         v.emplace_back("paralysed");
-    if (is(MB_BLEEDING))
-        v.emplace_back("bleeding");
     if (is(MB_REPEL_MSL))
         v.emplace_back("repelling missiles");
     if (is(MB_DEFLECT_MSL))

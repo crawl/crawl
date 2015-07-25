@@ -1327,19 +1327,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     aux_damage = inflict_damage(aux_damage, BEAM_MISSILE);
     damage_done = aux_damage;
 
-    switch (atk)
-    {
-        case UNAT_PUNCH:
-            apply_bleeding = true;
-            break;
-
-        case UNAT_CONSTRICT:
-            attacker->start_constricting(*defender);
-            break;
-
-        default:
-            break;
-    }
+    if (atk == UNAT_CONSTRICT)
+        attacker->start_constricting(*defender);
 
     if (damage_done > 0 || atk == UNAT_CONSTRICT)
     {

@@ -4516,25 +4516,13 @@ void monster::corrode_equipment(const char* corrosion_source, int degree)
 }
 
 /**
- * Attempts to either apply corrosion to a monster or make it bleed from acid
- * damage.
+ * Attempts to apply corrosion to a monster.
  */
 void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
                                bool /*allow_corrosion*/, const char* /*hurt_msg*/)
 {
     if (!one_chance_in(3))
         corrode_equipment();
-    else if (!one_chance_in(3) && can_bleed() && !res_acid())
-    {
-        add_ench(mon_enchant(ENCH_BLEED, 3, evildoer, (5 + random2(5))*10));
-
-        if (you.can_see(*this))
-        {
-            mprf("%s writhes in agony as %s flesh is eaten away!",
-                 name(DESC_THE).c_str(),
-                 pronoun(PRONOUN_POSSESSIVE).c_str());
-        }
-    }
 }
 
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
@@ -5162,19 +5150,6 @@ bool monster::sicken(int amount)
     }
 
     add_ench(mon_enchant(ENCH_SICK, 0, 0, amount * BASELINE_DELAY));
-
-    return true;
-}
-
-bool monster::bleed(const actor* agent, int amount, int degree)
-{
-    if (!has_ench(ENCH_BLEED) && you.can_see(*this))
-    {
-        mprf("%s begins to bleed from %s wounds!", name(DESC_THE).c_str(),
-             pronoun(PRONOUN_POSSESSIVE).c_str());
-    }
-
-    add_ench(mon_enchant(ENCH_BLEED, degree, agent, amount * BASELINE_DELAY));
 
     return true;
 }

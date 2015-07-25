@@ -608,7 +608,6 @@ enum zin_eff
     ZIN_DAZE,
     ZIN_CONFUSE,
     ZIN_PARALYSE,
-    ZIN_BLEED,
     ZIN_SMITE,
     ZIN_BLIND,
     ZIN_SILVER_CORONA,
@@ -720,7 +719,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
             if (check < 5)
             {
                 if (coinflip())
-                    effect = ZIN_BLEED;
+                    effect = ZIN_CONFUSE;
                 else
                     effect = ZIN_SMITE;
             }
@@ -756,8 +755,8 @@ bool zin_recite_to_single_monster(const coord_def& where)
         if (check < 5)
         {
             // nastier -- fallthrough if immune
-            if (coinflip() && mon->can_bleed())
-                effect = ZIN_BLEED;
+            if (coinflip() && mon->res_rotting() <= 1)
+                effect = ZIN_ROT;
             else
                 effect = ZIN_SMITE;
         }
@@ -785,15 +784,15 @@ bool zin_recite_to_single_monster(const coord_def& where)
         // immune, of course.
         if (check < 5)
         {
-            if (coinflip() && mon->can_bleed())
-                effect = ZIN_BLEED;
+            if (coinflip() && mon->res_rotting() <= 1)
+                effect = ZIN_ROT;
             else
                 effect = ZIN_SMITE;
         }
         else if (check < 10)
         {
-            if (coinflip() && mon->res_rotting() <= 1)
-                effect = ZIN_ROT;
+            if (coinflip())
+                effect = ZIN_SMITE;
             else
                 effect = ZIN_SILVER_CORONA;
         }
@@ -876,42 +875,6 @@ bool zin_recite_to_single_monster(const coord_def& where)
             simple_monster_message(mon,
                 minor ? " is awed by your recitation."
                       : " is aghast at the heresy of your recitation.");
-            affected = true;
-        }
-        break;
-
-    case ZIN_BLEED:
-        if (mon->can_bleed()
-            && mon->add_ench(mon_enchant(ENCH_BLEED, degree, &you,
-                             (degree + random2(spellpower)) * BASELINE_DELAY)))
-        {
-            mon->add_ench(mon_enchant(ENCH_SICK, degree, &you,
-                          (degree + random2(spellpower)) * BASELINE_DELAY));
-            switch (prayertype)
-            {
-            case RECITE_HERETIC:
-                if (minor)
-                    simple_monster_message(mon, "'s eyes and ears begin to bleed.");
-                else
-                {
-                    mprf("%s bleeds profusely from %s eyes and ears.",
-                         mon->name(DESC_THE).c_str(),
-                         mon->pronoun(PRONOUN_POSSESSIVE).c_str());
-                }
-                break;
-            case RECITE_CHAOTIC:
-                simple_monster_message(mon,
-                    minor ? "'s chaotic flesh is covered in bleeding sores."
-                          : "'s chaotic flesh erupts into weeping sores!");
-                break;
-            case RECITE_IMPURE:
-                simple_monster_message(mon,
-                    minor ? "'s impure flesh is covered in bleeding sores."
-                          : "'s impure flesh erupts into weeping sores!");
-                break;
-            default:
-                die("bad recite bleed");
-            }
             affected = true;
         }
         break;
@@ -1020,15 +983,27 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case ZIN_ROT:
-        ASSERT(prayertype == RECITE_IMPURE);
         if (mon->res_rotting() <= 1
             && mon->rot(&you, 1 + roll_dice(2, degree), true))
         {
             mon->add_ench(mon_enchant(ENCH_SICK, degree, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY));
-            simple_monster_message(mon,
-                minor ? "'s impure flesh rots away."
-                      : "'s impure flesh sloughs off!");
+            switch (prayertype)
+            {
+            case RECITE_CHAOTIC:
+                simple_monster_message(mon,
+                    minor ? "'s chaotic flesh is covered in bleeding sores."
+                          : "'s chaotic flesh erupts into weeping sores!");
+                break;
+            case RECITE_IMPURE:
+                simple_monster_message(mon,
+                    minor ? "'s impure flesh rots away."
+                          : "'s impure flesh sloughs off!");
+                break;
+
+            default:
+                die("bad recite rot");
+            }
             affected = true;
         }
         break;
