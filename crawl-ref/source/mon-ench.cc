@@ -825,11 +825,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             forest_message(pos(), "The forest calms down.");
         break;
 
-    case ENCH_BLEED:
-        if (!quiet)
-            simple_monster_message(this, " is no longer bleeding.");
-        break;
-
     case ENCH_WITHDRAWN:
         if (!quiet)
             simple_monster_message(this, " emerges from its shell.");
@@ -1894,26 +1889,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
-    case ENCH_BLEED:
-    {
-        // 3, 6, 9% of current hp
-        int dam = div_rand_round(random2((1 + hit_points)*(me.degree * 3)),100);
-
-        // location, montype, damage (1 hp = 5% chance), spatter, smell_alert
-        bleed_onto_floor(pos(), type, 20, false, true);
-
-        if (dam < hit_points)
-        {
-            hurt(me.agent(), dam);
-
-            dprf("hit_points: %d ; bleed damage: %d ; degree: %d",
-                 hit_points, dam, me.degree);
-        }
-
-        decay_enchantment(en, true);
-        break;
-    }
-
     // This is like Corona, but if silver harms them, it has sticky
     // flame levels of damage.
     case ENCH_SILVER_CORONA:
@@ -2232,7 +2207,10 @@ static const char *enchant_names[] =
     "slouch",
 #endif
     "swift", "tide",
-    "insane", "silenced", "awaken_forest", "exploding", "bleeding",
+    "insane", "silenced", "awaken_forest", "exploding",
+#if TAG_MAJOR_VERSION == 34
+    "bleeding",
+#endif
     "tethered", "severed", "antimagic",
 #if TAG_MAJOR_VERSION == 34
     "fading_away", "preparing_resurrect",

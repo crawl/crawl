@@ -49,8 +49,7 @@ attack::attack(actor *attk, actor *defn, actor *blame)
       perceived_attack(false), obvious_effect(false), to_hit(0),
       damage_done(0), special_damage(0), aux_damage(0), min_delay(0),
       final_attack_delay(0), special_damage_flavour(BEAM_NONE),
-      stab_attempt(false), stab_bonus(0), apply_bleeding(false),
-      ev_margin(0), weapon(nullptr),
+      stab_attempt(false), stab_bonus(0), ev_margin(0), weapon(nullptr),
       damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT),
       shield(nullptr), art_props(0), unrand_entry(nullptr),
       attacker_to_hit_penalty(0), attack_verb("bug"), verb_degree(),
@@ -103,21 +102,6 @@ bool attack::handle_phase_damaged()
     {
         if (damage_done)
             player_exercise_combat_skills();
-
-        if (defender->alive())
-        {
-            // Actually apply the bleeding effect, this can come from an
-            // aux claw or a main hand claw attack and up to now has not
-            // actually happened.
-            const int degree = you.has_usable_claws();
-            if (apply_bleeding && defender->can_bleed()
-                && degree > 0 && damage_done > 0)
-            {
-                defender->as_monster()->bleed(attacker,
-                                              3 + roll_dice(degree, 3),
-                                              degree);
-            }
-        }
     }
     else
     {
@@ -1343,12 +1327,9 @@ int attack::calc_base_unarmed_damage()
 
     int damage = get_form()->get_base_unarmed_damage();
 
+    // Claw damage only applies for bare hands.
     if (you.has_usable_claws())
-    {
-        // Claw damage only applies for bare hands.
         damage += you.has_claws(false) * 2;
-        apply_bleeding = true;
-    }
 
     if (you.form_uses_xl())
         damage += you.experience_level;

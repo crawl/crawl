@@ -47,7 +47,9 @@ enum monster_info_flags
     MB_SHAPESHIFTER,
     MB_CHAOTIC,
     MB_SUBMERGED,
+#if TAG_MAJOR_VERSION == 34
     MB_BLEEDING,
+#endif
     MB_DEFLECT_MSL,
 #if TAG_MAJOR_VERSION == 34
     MB_PREP_RESURRECT,

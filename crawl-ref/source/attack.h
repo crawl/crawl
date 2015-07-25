@@ -43,8 +43,6 @@ public:
     bool    stab_attempt;
     int     stab_bonus;
 
-    bool    apply_bleeding;
-
     // Fetched/Calculated from the attacker, stored to save execution time
     int             ev_margin;
 
