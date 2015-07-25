@@ -919,6 +919,7 @@ static void _prompt_species(newgame_def& ng, newgame_def& ng_choice,
                 end(0);
                 return;
             CASE_ESCAPE
+            case CK_MOUSE_CMD:
 #ifdef USE_TILE_WEB
                 tiles.send_exit_reason("cancel");
 #endif
@@ -1324,6 +1325,7 @@ static void _prompt_job(newgame_def& ng, newgame_def& ng_choice,
                 end(0);
                 return;
             CASE_ESCAPE
+            case CK_MOUSE_CMD:
 #ifdef USE_TILE_WEB
                 tiles.send_exit_reason("cancel");
 #endif
@@ -1653,6 +1655,7 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
                 break;
             case ' ':
             CASE_ESCAPE
+            case CK_MOUSE_CMD:
                 return false;
             default:
                 // if we get this far, we did not get a significant selection

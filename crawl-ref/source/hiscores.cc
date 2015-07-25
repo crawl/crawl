@@ -440,7 +440,8 @@ void show_hiscore_table()
     freeform->set_visible(true);
 
     NoSelectTextItem* tmp = new NoSelectTextItem();
-    string text = "[  Up/Down or PgUp/PgDn to scroll.         Esc to exit.  ]";
+    string text = "[  Up/Down or PgUp/PgDn to scroll.         Esc or R-click "
+        "exits.  ]";
     tmp->set_text(text);
     tmp->set_bounds(coord_def(1, max_line - 1), coord_def(max_col - 1, max_line));
     tmp->set_fg_colour(CYAN);
@@ -474,7 +475,7 @@ void show_hiscore_table()
         if (keyn == CK_REDRAW)
             continue;
 
-        if (key_is_escape(keyn))
+        if (key_is_escape(keyn) || keyn == CK_MOUSE_CMD)
         {
             // Go back to the menu and return the smart cursor to its previous state
             enable_smart_cursor(smart_cursor_enabled);
