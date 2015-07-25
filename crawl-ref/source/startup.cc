@@ -753,7 +753,7 @@ again:
         if (keyn == CK_REDRAW)
             goto again;
 
-        if (key_is_escape(keyn))
+        if (key_is_escape(keyn) || keyn == CK_MOUSE_CMD)
         {
             // End the game
             end(0);
