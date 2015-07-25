@@ -810,8 +810,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     case RECITE_UNHOLY:
         if (check < 5)
         {
-            // XXX: why on earth are we checking intel here?
-            if (mons_intel(mon) > I_BRAINLESS && coinflip())
+            if (coinflip())
                 effect = ZIN_DAZE;
             else
                 effect = ZIN_CONFUSE;
