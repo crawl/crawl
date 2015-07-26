@@ -25,7 +25,7 @@ int CRTRegion::handle_mouse(MouseEvent &event)
     {
         if (event.event == MouseEvent::PRESS)
         {
-            if(event.button == MouseEvent::LEFT)
+            if (event.button == MouseEvent::LEFT)
                 ret_val = CK_MOUSE_CLICK;
             else if (event.button == MouseEvent::RIGHT)
                 ret_val = CK_MOUSE_CMD;
