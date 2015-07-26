@@ -159,4 +159,35 @@ function callback.spiders_nest_web_lair(data, triggerable, triggerer, marker, ev
   -- do nothing
 end
 
+-- let this vault still function if it already exists
+function callback.beogh_warn_stepped(data, triggerable, triggerer, marker, ev)
+  local x, y = marker:pos()
+
+  if you.god() == "Beogh" or (you.race() == "Hill Orc" and you.god() == "No God") then
+     crawl.god_speaks("Beogh" , "Your presence is welcomed at the altar of Beogh.")
+     dgn.grid(x, y, "floor")
+  elseif you.race() == "Hill Orc" then
+     crawl.god_speaks("Beogh" , "The orc god booms: Stay away, heretic!")
+  else
+     crawl.god_speaks("Beogh" , "The orc god booms: Stay away, mortal!")
+  end
+end
+
+function callback.beogh_trap_stepped(data, triggerable, triggerer, marker, ev)
+  local x, y = marker:pos()
+-- This enacts the changes. First it checks to see if the player is a Beogh
+-- worshipper or a godless orc (a potential worshipper). If the player is one of
+-- these things nothing happens. Otherwise the trap is sprung.
+  if monster_step == true then
+    return
+  elseif you.god() == "Beogh" or (you.race() == "Hill Orc" and you.god() == "No God") then
+    dgn.grid(x, y, "floor")
+  else
+    crawl.god_speaks("Beogh", "Beogh's servants are called upon to defend the altar!")
+    for slave in iter.slave_iterator("bridge", 1) do
+      dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+    end
+    dgn.grid(x, y, "floor")
+  end
+end
 }}
