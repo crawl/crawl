@@ -149,6 +149,7 @@
     Mitsuhiro Itakura
     Jeekaroose
     Mikko Juola
+    Kurt Kartaltepe
     Dominic 'dk' Kexel
     Jarmo Kielosto
     Brandon Kime
