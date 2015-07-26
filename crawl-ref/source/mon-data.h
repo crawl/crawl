@@ -3172,7 +3172,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
 // Mutant beasts - variable traits
 {
     MONS_MUTANT_BEAST, 'H', MAGENTA, "mutant beast",
-    M_NO_POLY_TO | M_HYBRID,
+    M_NO_POLY_TO | M_HYBRID | M_NO_GEN_DERIVED,
     MR_NO_FLAGS,
     11, MONS_MUTANT_BEAST, MONS_MUTANT_BEAST, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 27}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
