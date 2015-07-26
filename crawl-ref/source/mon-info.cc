@@ -449,6 +449,13 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     }
 
     props.clear();
+    // At least enough to keep from crashing. TODO: allow specifying these?
+    if (type == MONS_MUTANT_BEAST)
+    {
+        props[MUTANT_BEAST_TIER].get_short() = BT_FIRST;
+        for (int i = BF_FIRST; i < NUM_BEAST_FACETS; ++i)
+            props[MUTANT_BEAST_FACETS].get_vector().push_back(i);
+    }
 
     client_id = 0;
 }
