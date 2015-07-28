@@ -57,7 +57,7 @@ LUAFN(l_feature_is_solid)
 LUAFN(l_find_deepest_explored)
 {
     const string &branch = luaL_checkstring(ls, 1);
-    const level_id lid(str_to_branch(branch), 1);
+    const level_id lid(branch_by_abbrevname(branch), 1);
     if (lid.branch == NUM_BRANCHES)
         luaL_error(ls, "Bad branch name: '%s'", branch.c_str());
     if (!is_known_branch_id(lid.branch))

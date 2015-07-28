@@ -986,7 +986,7 @@ void scorefile_entry::init_with_fields()
     killerpath        = fields->str_field("kpath");
     last_banisher     = fields->str_field("banisher");
 
-    branch     = str_to_branch(fields->str_field("br"), BRANCH_DUNGEON);
+    branch     = branch_by_abbrevname(fields->str_field("br"), BRANCH_DUNGEON);
     dlvl       = fields->int_field("lvl");
     absdepth   = fields->int_field("absdepth");
 

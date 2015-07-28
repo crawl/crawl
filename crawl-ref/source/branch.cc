@@ -138,7 +138,7 @@ bool is_connected_branch(level_id place)
     return is_connected_branch(place.branch);
 }
 
-branch_type str_to_branch(const string &branch, branch_type err)
+branch_type branch_by_abbrevname(const string &branch, branch_type err)
 {
     for (branch_iterator it; it; ++it)
         if (it->abbrevname && it->abbrevname == branch)
@@ -147,7 +147,7 @@ branch_type str_to_branch(const string &branch, branch_type err)
     return err;
 }
 
-branch_type branch_by_name(const string &branch)
+branch_type branch_by_shortname(const string &branch)
 {
     for (branch_iterator it; it; ++it)
         if (it->shortname && it->shortname == branch)

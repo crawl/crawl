@@ -1229,7 +1229,7 @@ static int _describe_branch(const string &key, const string &suffix,
                             string footer)
 {
     const string branch_name = key.substr(0, key.size() - suffix.size());
-    const branch_type branch = branch_by_name(branch_name);
+    const branch_type branch = branch_by_shortname(branch_name);
     ASSERT(branch != NUM_BRANCHES);
 
     const string noise    = _branch_noise(branch);

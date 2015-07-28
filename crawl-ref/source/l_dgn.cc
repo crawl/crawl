@@ -950,7 +950,7 @@ static int lua_dgn_set_branch_epilogue(lua_State *ls)
     if (!branch_name)
         return 0;
 
-    branch_type br = str_to_branch(branch_name);
+    branch_type br = branch_by_abbrevname(branch_name);
     if (br == NUM_BRANCHES)
     {
         luaL_error(ls, make_stringf("unknown branch: '%s'.", branch_name).c_str());

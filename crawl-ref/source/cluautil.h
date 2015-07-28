@@ -166,7 +166,7 @@ dungeon_feature_type f = check_lua_feature(ls, pos)
 
 #define LEVEL(br, pos)                                              \
     const char *branch_name = luaL_checkstring(ls, pos);            \
-    branch_type br = str_to_branch(branch_name);                    \
+    branch_type br = branch_by_abbrevname(branch_name);             \
     if (br == NUM_BRANCHES)                                         \
         luaL_error(ls, "Expected branch name");
 
