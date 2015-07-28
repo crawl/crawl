@@ -158,7 +158,7 @@ No fewer than five runes can be found in Pandemonium:
 %%%%
 Ziggurat
 
-A ziggurat is a strange tower constructed of 27 incrementally larger combat
+A ziggurat is a strange tower constructed of incrementally larger combat
 arenas, each containing greater wealth and even greater danger than the last.
 Beware, for a ziggurat is not a place for the faint of heart: even the bravest
 and most skilled adventurers have met their ends in one. While a portal to
