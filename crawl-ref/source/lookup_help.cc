@@ -1170,7 +1170,6 @@ static string _branch_location(branch_type br)
             desc += to_string(min);
             desc += " of ";
         }
-        desc += branches[parent].longname;
     }
     else
     {
@@ -1179,8 +1178,8 @@ static string _branch_location(branch_type br)
         desc += " and ";
         desc += to_string(max);
         desc += " of ";
-        desc += branches[parent].longname;
     }
+    desc += branches[parent].longname;
     desc += ".";
 
     return desc;
