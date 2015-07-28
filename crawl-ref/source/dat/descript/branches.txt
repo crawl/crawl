@@ -43,8 +43,7 @@ Swamp
 A swampy wasteland, the Swamp is filled with ooze, muck, flies and large
 slavering carnivorous monsters.
 
-The Swamp contains the decaying rune. A dungeon features only one of the Swamp
-and Shoals branches.
+A dungeon features only one of the Swamp and Shoals branches.
 %%%%
 Shoals
 
@@ -52,24 +51,21 @@ The exotic underground beaches of the Shoals make up a few small islands in a
 seemingly endless sea. The merfolk have made it their home, alongside many
 dreaded sea creatures.
 
-The Shoals contain the barnacled rune. A dungeon features only one of the
-Shoals and Swamp branches.
+A dungeon features only one of the Shoals and Swamp branches.
 %%%%
 Snake Pit
 
 The corridors of the Snake Pit are home to all varieties of serpent, and are
 inhabited by a society of powerful nagas and salamanders.
 
-The Snake Pit contains the serpentine rune. A dungeon features only one of the
-Snake Pit and Spider Nest branches.
+A dungeon features only one of the Snake Pit and Spider Nest branches.
 %%%%
 Spider Nest
 
 The crumbling, web-choked caverns of the Spider Nest are packed with poisonous
 arthropods and assorted creepy-crawlies.
 
-The Spider Nest is contains the gossamer rune. A dungeon features only one of
-the Spider Nest and Snake Pit branches.
+A dungeon features only one of the Spider Nest and Snake Pit branches.
 %%%%
 Slime Pits
 
@@ -77,8 +73,6 @@ The Slime Pits are the amorphous realm of acids, jellies and slimes. Even the
 walls drip with painful acid. Any trace of intelligent beings has long been
 dissolved. Still, there are rumours of great treasures deep down, hidden safely
 away in secret chambers without door or window.
-
-The Slime Pits contain the slimy rune.
 %%%%
 Vaults
 
@@ -86,8 +80,8 @@ Possibly constructed by some powerful madman, the Vaults are said to be home to
 great treasures. The blood spattered liberally around the entrance suggests
 that there is a certain amount of violence, too.
 
-The Vaults contain the silver rune, as well as the entrance to the Crypt. They
-can only be entered while carrying at least one rune of Zot.
+The Vaults contains the entrance to the Crypt. They can only be entered while
+carrying at least one rune of Zot.
 %%%%
 Crypt
 
@@ -102,8 +96,6 @@ Tomb
 The Tomb of the Ancients is a place of damnation, of horrors animated by the
 vilest necromancy. The list of those who have returned from this place of pure
 death is exceedingly short.
-
-The Tomb contains the golden rune.
 %%%%
 Hell
 
@@ -115,27 +107,19 @@ Portals to the Vestibule of Hell are found abundantly in the Depths.
 Dis
 
 Who will stand the test of iron?
-
-Dis contains the iron rune.
 %%%%
 Gehenna
 
 Gehenna is a realm of flames, lava and hellfire.
-
-Gehenna contains the obsidian rune.
 %%%%
 Cocytus
 
 Cocytus is a grim and frost-bitten wasteland.
-
-Cocytus contains the icy rune.
 %%%%
 Tartarus
 
 Tartarus is a decaying netherworld. Over time, the undead, demons and devils of
 this place drain the life from any who dare to enter.
-
-Tartarus contains the bone rune.
 %%%%
 Zot
 
@@ -180,7 +164,7 @@ No fewer than five runes can be found in Pandemonium:
 %%%%
 Ziggurat
 
-A ziggurat is a strange tower constructed of incrementally larger combat
+A ziggurat is a strange tower constructed of 27 incrementally larger combat
 arenas, each containing greater wealth and even greater danger than the last.
 Beware, for a ziggurat is not a place for the faint of heart: even the bravest
 and most skilled adventurers have met their ends in one. While a portal to
