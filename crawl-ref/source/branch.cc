@@ -138,13 +138,22 @@ bool is_connected_branch(level_id place)
     return is_connected_branch(place.branch);
 }
 
-branch_type str_to_branch(const string &branch, branch_type err)
+branch_type branch_by_abbrevname(const string &branch, branch_type err)
 {
     for (branch_iterator it; it; ++it)
         if (it->abbrevname && it->abbrevname == branch)
             return it->id;
 
     return err;
+}
+
+branch_type branch_by_shortname(const string &branch)
+{
+    for (branch_iterator it; it; ++it)
+        if (it->shortname && it->shortname == branch)
+            return it->id;
+
+    return NUM_BRANCHES;
 }
 
 int current_level_ambient_noise()
@@ -176,4 +185,15 @@ branch_type parent_branch(branch_type branch)
         return brentry[branch].branch;
     // If it's not in the game, use the default parent.
     return branches[branch].parent_branch;
+}
+
+int runes_for_branch(branch_type branch)
+{
+    switch (branch)
+    {
+    case BRANCH_VAULTS:   return VAULTS_ENTRY_RUNES;
+    case BRANCH_ZIGGURAT: return ZIG_ENTRY_RUNES;
+    case BRANCH_ZOT:      return ZOT_ENTRY_RUNES;
+    default:              return 0;
+    }
 }

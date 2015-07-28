@@ -77,7 +77,8 @@ bool is_connected_branch(branch_type branch);
 bool is_connected_branch(level_id place);
 level_id current_level_parent();
 
-branch_type str_to_branch(const string &branch, branch_type err = NUM_BRANCHES);
+branch_type branch_by_abbrevname(const string &branch, branch_type err = NUM_BRANCHES);
+branch_type branch_by_shortname(const string &branch);
 
 int current_level_ambient_noise();
 
@@ -85,4 +86,5 @@ branch_type get_branch_at(const coord_def& pos);
 bool branch_is_unfinished(branch_type branch);
 
 branch_type parent_branch(branch_type branch);
+int runes_for_branch(branch_type branch);
 #endif

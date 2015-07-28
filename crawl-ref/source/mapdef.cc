@@ -280,7 +280,7 @@ void level_range::set(const string &br, int s, int d) throw (string)
 {
     if (br == "any" || br == "Any")
         branch = NUM_BRANCHES;
-    else if ((branch = str_to_branch(br)) == NUM_BRANCHES)
+    else if ((branch = branch_by_abbrevname(br)) == NUM_BRANCHES)
         throw make_stringf("Unknown branch: '%s'", br.c_str());
 
     shallowest = s;
@@ -4454,7 +4454,7 @@ mons_spec mons_list::soh_monspec(string name) const
     name = name.substr(16);
     string abbrev =
         uppercase_first(lowercase(name)).substr(0, 3);
-    switch (str_to_branch(abbrev))
+    switch (branch_by_abbrevname(abbrev))
     {
         case BRANCH_GEHENNA:
             return MONS_SERPENT_OF_HELL;
