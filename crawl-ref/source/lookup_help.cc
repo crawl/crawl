@@ -1086,12 +1086,60 @@ static int _describe_god(const string &key, const string &/*suffix*/,
     return 0; // no exact matches for gods, so output doesn't matter
 }
 
+static branch_type _rune_to_branch(int rune)
+{
+    switch (rune)
+    {
+    case RUNE_SWAMP:       return BRANCH_SWAMP;
+    case RUNE_SNAKE:       return BRANCH_SNAKE;
+    case RUNE_SHOALS:      return BRANCH_SHOALS;
+    case RUNE_SPIDER:      return BRANCH_SPIDER;
+    case RUNE_SLIME:       return BRANCH_SLIME;
+    case RUNE_VAULTS:      return BRANCH_VAULTS;
+    case RUNE_TOMB:        return BRANCH_TOMB;
+    case RUNE_DIS:         return BRANCH_DIS;
+    case RUNE_GEHENNA:     return BRANCH_GEHENNA;
+    case RUNE_COCYTUS:     return BRANCH_COCYTUS;
+    case RUNE_TARTARUS:    return BRANCH_TARTARUS;
+    case RUNE_ABYSSAL:     return BRANCH_ABYSS;
+    case RUNE_DEMONIC:     return BRANCH_PANDEMONIUM;
+    case RUNE_MNOLEG:      return BRANCH_PANDEMONIUM;
+    case RUNE_LOM_LOBON:   return BRANCH_PANDEMONIUM;
+    case RUNE_CEREBOV:     return BRANCH_PANDEMONIUM;
+    case RUNE_GLOORX_VLOQ: return BRANCH_PANDEMONIUM;
+    default:               return NUM_BRANCHES;
+    }
+}
+
+static string _branch_runes(branch_type br)
+{
+    string desc;
+    vector<string> rune_names;
+
+    for (int i = 0; i < NUM_RUNE_TYPES; ++i)
+        if (_rune_to_branch(i) == br)
+            rune_names.push_back(rune_type_name(i));
+
+    // Abyss and Pan runes are explained in their descriptions.
+    if (!rune_names.empty() && br != BRANCH_ABYSS && br != BRANCH_PANDEMONIUM)
+    {
+        desc += "\n\nThis branch contains the ";
+        desc += comma_separated_line(rune_names.begin(), rune_names.end());
+        desc += " rune";
+        if (rune_names.size() > 1)
+            desc += "s";
+        desc += " of Zot.";
+    }
+
+    return desc;
+}
+
 static string _branch_depth(branch_type br)
 {
     const int depth = branches[br].numlevels;
 
-    // The Abyss's depth rules are explained in the description.
-    if (depth == 1 || br == BRANCH_ABYSS)
+    // Abyss and Zig depths are explained in their descriptions.
+    if (depth == 1 || br == BRANCH_ABYSS || br == BRANCH_ZIGGURAT)
         return "";
 
     string desc = "\n\nThis branch is ";
@@ -1188,8 +1236,9 @@ static int _describe_branch(const string &key, const string &suffix,
     const string noise    = _branch_noise(branch);
     const string depth    = _branch_depth(branch);
     const string location = _branch_location(branch);
+    const string runes    = _branch_runes(branch);
 
-    return _describe_key(key, suffix, footer, noise + depth + location);
+    return _describe_key(key, suffix, footer, noise + depth + location + runes);
 }
 
 /// All types of ?/ queries the player can enter.
