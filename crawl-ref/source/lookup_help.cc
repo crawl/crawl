@@ -1124,7 +1124,7 @@ static string _branch_runes(branch_type br)
     if (!rune_names.empty() && br != BRANCH_ABYSS && br != BRANCH_PANDEMONIUM)
     {
         desc += "\n\nThis branch contains the ";
-        desc += comma_separated_line(rune_names.begin(), rune_names.end());
+        desc += comma_separated_line(begin(rune_names), end(rune_names));
         desc += " rune";
         if (rune_names.size() > 1)
             desc += "s";
@@ -1185,6 +1185,30 @@ static string _branch_location(branch_type br)
     return desc;
 }
 
+static string _branch_subbranches(branch_type br)
+{
+    string desc;
+    vector<string> subbranch_names;
+
+    for (branch_iterator it; it; ++it)
+        if (it->parent_branch == br && !branch_is_unfinished(it->id))
+            subbranch_names.push_back(it->longname);
+
+    // Lair's random branches are explained in the description.
+    if (!subbranch_names.empty() && br != BRANCH_LAIR)
+    {
+        desc += "\n\nThis branch contains the entrance";
+        if (subbranch_names.size() > 1)
+            desc += "s";
+        desc += " to ";
+        desc += comma_separated_line(begin(subbranch_names),
+                                     end(subbranch_names));
+        desc += ".";
+    }
+
+    return desc;
+}
+
 static string _branch_noise(branch_type br)
 {
     const int noise = branches[br].ambient_noise;
@@ -1232,12 +1256,14 @@ static int _describe_branch(const string &key, const string &suffix,
     const branch_type branch = branch_by_shortname(branch_name);
     ASSERT(branch != NUM_BRANCHES);
 
-    const string noise    = _branch_noise(branch);
-    const string depth    = _branch_depth(branch);
-    const string location = _branch_location(branch);
-    const string runes    = _branch_runes(branch);
+    const string noise       = _branch_noise(branch);
+    const string depth       = _branch_depth(branch);
+    const string location    = _branch_location(branch);
+    const string runes       = _branch_runes(branch);
+    const string subbranches = _branch_subbranches(branch);
 
-    return _describe_key(key, suffix, footer, noise + depth + location + runes);
+    return _describe_key(key, suffix, footer, noise + depth + location +
+                         subbranches + runes);
 }
 
 /// All types of ?/ queries the player can enter.
