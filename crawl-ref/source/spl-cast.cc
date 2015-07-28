@@ -1177,22 +1177,25 @@ static int _triangular_number(int n)
  * @param mr The magic resistance of the target.
  * @param powc The enchantment power.
  * @param scale The denominator of the result.
+ * @param round_up Should the resulting chance be rounded up (true) or
+ *        down (false, the default)?
  *
- * @return The chance, out of scale (rounded down), that the enchantment
- * affects the target.
+ * @return The chance, out of scale, that the enchantment affects the target.
  */
-int hex_success_chance(const int mr, int powc, int scale)
+int hex_success_chance(const int mr, int powc, int scale, bool round_up)
 {
-    powc = ench_power_stepdown(powc);
-    const int target = mr + 100 - powc;
+    const int pow = ench_power_stepdown(powc);
+    const int target = mr + 100 - pow;
+    const int denom = 101 * 100;
+    const int adjust = round_up ? denom - 1 : 0;
 
     if (target <= 0)
         return scale;
     if (target > 200)
         return 0;
     if (target <= 100)
-        return scale * (101 * 100 - _triangular_number(target)) / (101 * 100);
-    return scale * _triangular_number(201 - target) / (101 * 100);
+        return (scale * (denom - _triangular_number(target)) + adjust) / denom;
+    return (scale * _triangular_number(201 - target) + adjust) / denom;
 }
 
 // Include success chance in targeter for spells checking monster MR.
