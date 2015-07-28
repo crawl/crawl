@@ -78,8 +78,6 @@ Vaults
 Possibly constructed by some powerful madman, the Vaults are said to be home to
 great treasures. The blood spattered liberally around the entrance suggests
 that there is a certain amount of violence, too.
-
-The Vaults can only be entered while carrying at least one rune of Zot.
 %%%%
 Crypt
 
@@ -123,8 +121,6 @@ madness, frenzy and lunacy, that it has been locked securely against random
 trespassers. Only the most demented adventurers would dare gather the required
 keys, break the seal and penetrate deeper — all in the vain hope for a fabled
 artefact no one has ever laid eyes on before.
-
-The Realm of Zot can only be entered when carrying at least three runes.
 %%%%
 Abyss
 
@@ -172,8 +168,6 @@ re-entered.
 One ziggurat is guaranteed in the Depths, and further ones can be found
 in Pandemonium. Each time a ziggurat is conquered by exiting it from the final
 floor, subsequent ziggurats will become increasingly dangerous and lucrative.
-
-Ziggurats can only be entered when carrying at least two runes of Zot.
 %%%%
 Labyrinth
 

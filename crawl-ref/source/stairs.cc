@@ -354,24 +354,20 @@ static bool _fall_down_stairs(const dungeon_feature_type ftype, bool going_up)
 
 static bool _require_runes(dungeon_feature_type ftype)
 {
-    if (ftype != DNGN_ENTER_VAULTS
-        && ftype != DNGN_ENTER_ZOT
-        && ftype != DNGN_ENTER_ZIGGURAT)
+    int min_runes = 0;
+
+    for (branch_iterator it; it; ++it)
     {
-        return false;
+        if (ftype == it->entry_stairs)
+        {
+            if (!is_existing_level(level_id(it->id, 1)))
+                min_runes = runes_for_branch(it->id);
+            break;
+        }
     }
 
-    if ((ftype == DNGN_ENTER_VAULTS
-         && is_existing_level(level_id(BRANCH_VAULTS, 1)))
-        || (ftype == DNGN_ENTER_ZOT
-            && is_existing_level(level_id(BRANCH_ZOT, 1))))
-    {
+    if (min_runes == 0)
         return false;
-    }
-
-    #define ZIG_RUNES 2
-    const int min_runes = ((ftype == DNGN_ENTER_ZOT) ? NUMBER_OF_RUNES_NEEDED :
-                           (ftype == DNGN_ENTER_VAULTS) ? 1 : ZIG_RUNES);
 
     if (runes_in_pack() < min_runes)
     {
