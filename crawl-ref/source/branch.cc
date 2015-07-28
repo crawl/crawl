@@ -186,3 +186,14 @@ branch_type parent_branch(branch_type branch)
     // If it's not in the game, use the default parent.
     return branches[branch].parent_branch;
 }
+
+int runes_for_branch(branch_type branch)
+{
+    switch (branch)
+    {
+    case BRANCH_VAULTS:   return VAULTS_ENTRY_RUNES;
+    case BRANCH_ZIGGURAT: return ZIG_ENTRY_RUNES;
+    case BRANCH_ZOT:      return ZOT_ENTRY_RUNES;
+    default:              return 0;
+    }
+}

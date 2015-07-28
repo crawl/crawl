@@ -1086,6 +1086,22 @@ static int _describe_god(const string &key, const string &/*suffix*/,
     return 0; // no exact matches for gods, so output doesn't matter
 }
 
+static string _branch_entry_runes(branch_type br)
+{
+    string desc;
+    const int num_runes = runes_for_branch(br);
+
+    if (num_runes > 0)
+    {
+        desc = make_stringf("\n\nThis %s can only be entered while carrying "
+                            "at least %d rune%s of Zot.",
+                            br == BRANCH_ZIGGURAT ? "portal" : "branch",
+                            num_runes, num_runes > 1 ? "s" : "");
+    }
+
+    return desc;
+}
+
 static branch_type _rune_to_branch(int rune)
 {
     switch (rune)
@@ -1256,14 +1272,14 @@ static int _describe_branch(const string &key, const string &suffix,
     const branch_type branch = branch_by_shortname(branch_name);
     ASSERT(branch != NUM_BRANCHES);
 
-    const string noise       = _branch_noise(branch);
-    const string depth       = _branch_depth(branch);
-    const string location    = _branch_location(branch);
-    const string runes       = _branch_runes(branch);
-    const string subbranches = _branch_subbranches(branch);
+    const string info  = _branch_noise(branch)
+                         + _branch_location(branch)
+                         + _branch_entry_runes(branch)
+                         + _branch_depth(branch)
+                         + _branch_subbranches(branch)
+                         + _branch_runes(branch);
 
-    return _describe_key(key, suffix, footer, noise + depth + location +
-                         subbranches + runes);
+    return _describe_key(key, suffix, footer, info);
 }
 
 /// All types of ?/ queries the player can enter.
