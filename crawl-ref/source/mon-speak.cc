@@ -77,7 +77,7 @@ static string __try_exact_string(const vector<string> &prefixes,
                 continue;
             religion = true;
         }
-        else if (str_to_branch(prefixes[i]) != NUM_BRANCHES)
+        else if (branch_by_abbrevname(prefixes[i]) != NUM_BRANCHES)
         {
             if (ignore_branch)
                 continue;

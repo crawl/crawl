@@ -13,7 +13,7 @@
 
 #define BRANCH(br, pos)                                                 \
 const char *branch_name = luaL_checkstring(ls, pos);                \
-branch_type req_branch_type = str_to_branch(branch_name);           \
+branch_type req_branch_type = branch_by_abbrevname(branch_name);    \
 if (req_branch_type == NUM_BRANCHES)                                \
 luaL_error(ls, "Expected branch name");                         \
 const Branch &br = branches[req_branch_type]
@@ -37,7 +37,7 @@ LUAFN(dgn_br_depth)
     if (lua_gettop(ls) == 1)
     {
         const char *branch_name = luaL_checkstring(ls, 1);
-        brn = str_to_branch(branch_name);
+        brn = branch_by_abbrevname(branch_name);
         if (brn == NUM_BRANCHES)
             luaL_argerror(ls, 1, "No such branch");
     }
@@ -50,7 +50,7 @@ LUAFN(dgn_br_exists)
     if (lua_gettop(ls) == 1)
     {
         const char *branch_name = luaL_checkstring(ls, 1);
-        brn = str_to_branch(branch_name);
+        brn = branch_by_abbrevname(branch_name);
         if (brn == NUM_BRANCHES)
             luaL_argerror(ls, 1, "No such branch");
     }
@@ -75,7 +75,7 @@ LUAFN(dgn_br_entrance)
     if (nargs == 1)
     {
         const char *branch_name = luaL_checkstring(ls, 1);
-        brn = str_to_branch(branch_name);
+        brn = branch_by_abbrevname(branch_name);
         if (brn == NUM_BRANCHES)
             luaL_argerror(ls, 1, "No such branch");
     }
