@@ -20,8 +20,6 @@ piles of freshly mined gold. Enterprising merchants have set up trading posts
 to help relieve the orcs of the latter. Prospective customers should be warned:
 the haphazard manner in which orcs dig their mineshafts has resulted in a
 complex and treacherous tangle of chambers, in which it is easy to be trapped.
-
-The Orcish Mines contain the entrance to the Elven Halls.
 %%%%
 Elven Halls
 
@@ -36,7 +34,8 @@ Most adventurers find the Lair of Beasts to be an exciting change of climate.
 And indeed, there is something to be said about getting gored, mauled and eaten
 rather than sliced, burnt or stabbed.
 
-The Lair contains the stairs to three more branches.
+The Lair contains the entrances to one of the Swamp or the Shoals, one of the
+Snake Pit or the Spider Nest, and to the Pits of Slime.
 %%%%
 Swamp
 
@@ -80,16 +79,13 @@ Possibly constructed by some powerful madman, the Vaults are said to be home to
 great treasures. The blood spattered liberally around the entrance suggests
 that there is a certain amount of violence, too.
 
-The Vaults contains the entrance to the Crypt. They can only be entered while
-carrying at least one rune of Zot.
+The Vaults can only be entered while carrying at least one rune of Zot.
 %%%%
 Crypt
 
 The Crypt is a huge repository for the ancient dead. The air is chill and
 fetid, the walls cold and damp. Bones are strewn liberally everywhere, and
 every noise echoes worryingly, violating the overbearing silence of the grave.
-
-The Crypt contains the entrance to the Tomb.
 %%%%
 Tomb
 
@@ -99,8 +95,7 @@ death is exceedingly short.
 %%%%
 Hell
 
-The hallway to the four hells is guarded by Geryon. The Vestibule of Hell
-contains portals to Dis, Gehenna, Cocytus and Tartarus.
+The hallway to the four hells is guarded by Geryon.
 
 Portals to the Vestibule of Hell are found abundantly in the Depths.
 %%%%
@@ -140,11 +135,12 @@ in sending would-be champions like you to these proving grounds of madness.
 Reportedly, there is some structure to the chaos, as Lugonu seems to concoct
 schemes around this place and its denizens.
 
+Portals to the Abyss are found abundantly in the Depths.
+
 The Abyss consists of five infinite levels. The abyssal rune can be found from
-the third level onwards, and is more common at greater depths. The Abyss can be
-purposefully reached through portals in the Depths. Portals back to the dungeon
-are scattered throughout the Abyss, and are found more commonly at greater
-depths or while carrying the abyssal rune.
+the third level onwards, and is more common at greater depths. Portals back to
+the dungeon are scattered throughout the Abyss, and are found more commonly at
+greater depths or while carrying the abyssal rune.
 %%%%
 Pandemonium
 
@@ -152,8 +148,10 @@ Pandemonium is an infinite realm of pain and suffering. While there are many
 treasures to be found within, they are guarded by cruel demons and even
 crueller demon lords.
 
-Pandemonium is endless. Portals leading there are found in the Depths. Note
-that getting back might be more difficult.
+Portals to Pandemonium are found abundantly in the Depths.
+
+Pandemonium is endless. Each area of Pandemonium has a small chance of
+containing a portal back to the dungeon, either directly or via the Abyss.
 
 No fewer than five runes can be found in Pandemonium:
  • a fiery rune in the well-heated realm of Cerebov
@@ -253,7 +251,4 @@ Depths
 
 The Depths are the deepest part of the dungeon proper, subject to the
 corrupting influence of the Realm of Zot without being considered a part of it.
-
-The Depths are five levels deep and can be entered from the lowest floor of the
-Dungeon.
 %%%%
