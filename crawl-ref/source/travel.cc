@@ -3165,7 +3165,7 @@ level_id level_id::parse_level_id(const string &s) throw (string)
     string brname  = (cpos != string::npos? s.substr(0, cpos)  : s);
     string brlev   = (cpos != string::npos? s.substr(cpos + 1) : "");
 
-    branch_type br = str_to_branch(brname);
+    branch_type br = branch_by_abbrevname(brname);
 
     if (br == NUM_BRANCHES)
     {
