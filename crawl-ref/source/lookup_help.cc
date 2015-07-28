@@ -1139,12 +1139,10 @@ static string _branch_runes(branch_type br)
     // Abyss and Pan runes are explained in their descriptions.
     if (!rune_names.empty() && br != BRANCH_ABYSS && br != BRANCH_PANDEMONIUM)
     {
-        desc += "\n\nThis branch contains the ";
-        desc += comma_separated_line(begin(rune_names), end(rune_names));
-        desc += " rune";
-        if (rune_names.size() > 1)
-            desc += "s";
-        desc += " of Zot.";
+        desc = make_stringf("\n\nThis branch contains the %s rune%s of Zot.",
+                            comma_separated_line(begin(rune_names),
+                                                 end(rune_names)).c_str(),
+                            rune_names.size() > 1 ? "s" : "");
     }
 
     return desc;
@@ -1152,51 +1150,44 @@ static string _branch_runes(branch_type br)
 
 static string _branch_depth(branch_type br)
 {
+    string desc;
     const int depth = branches[br].numlevels;
 
-    // Abyss and Zig depths are explained in their descriptions.
-    if (depth == 1 || br == BRANCH_ABYSS || br == BRANCH_ZIGGURAT)
-        return "";
-
-    string desc = "\n\nThis branch is ";
-    desc += to_string(depth);
-    desc += " levels deep.";
+    // Abyss depth is explained in the description.
+    if (depth > 1 && br != BRANCH_ABYSS)
+    {
+        desc = make_stringf("\n\nThis %s is %d levels deep.",
+                            br == BRANCH_ZIGGURAT ? "portal"
+                                                  : "branch",
+                            depth);
+    }
 
     return desc;
 }
 
 static string _branch_location(branch_type br)
 {
+    string desc;
     const branch_type parent = branches[br].parent_branch;
     const int min = branches[br].mindepth;
     const int max = branches[br].maxdepth;
 
     // Ziggurat locations are explained in the description.
-    if (parent == NUM_BRANCHES || br == BRANCH_ZIGGURAT)
-        return "";
-
-    string desc = "\n\nThe entrance to this branch can be found ";
-    if (min == max)
+    if (parent != NUM_BRANCHES && br != BRANCH_ZIGGURAT)
     {
-        if (branches[parent].numlevels == 1)
-            desc += "in ";
-        else
+        desc = "\n\nThe entrance to this branch can be found ";
+        if (min == max)
         {
-            desc += "on level ";
-            desc += to_string(min);
-            desc += " of ";
+            if (branches[parent].numlevels == 1)
+                desc += "in ";
+            else
+                desc += make_stringf("on level %d of ", min);
         }
+        else
+            desc += make_stringf("between levels %d and %d of ", min, max);
+        desc += branches[parent].longname;
+        desc += ".";
     }
-    else
-    {
-        desc += "between levels ";
-        desc += to_string(min);
-        desc += " and ";
-        desc += to_string(max);
-        desc += " of ";
-    }
-    desc += branches[parent].longname;
-    desc += ".";
 
     return desc;
 }
@@ -1213,13 +1204,10 @@ static string _branch_subbranches(branch_type br)
     // Lair's random branches are explained in the description.
     if (!subbranch_names.empty() && br != BRANCH_LAIR)
     {
-        desc += "\n\nThis branch contains the entrance";
-        if (subbranch_names.size() > 1)
-            desc += "s";
-        desc += " to ";
-        desc += comma_separated_line(begin(subbranch_names),
-                                     end(subbranch_names));
-        desc += ".";
+        desc += make_stringf("\n\nThis branch contains the entrance%s to %s.",
+                             subbranch_names.size() > 1 ? "s" : "",
+                             comma_separated_line(begin(subbranch_names),
+                                                  end(subbranch_names)).c_str());
     }
 
     return desc;
@@ -1227,31 +1215,25 @@ static string _branch_subbranches(branch_type br)
 
 static string _branch_noise(branch_type br)
 {
+    string desc;
     const int noise = branches[br].ambient_noise;
-    if (noise == 0)
-        return "";
-
-    string desc = "\n\nThis branch is ";
-    if (noise > 0)
+    if (noise != 0)
     {
-        desc += "filled with ";
-        if (noise > 5)
-            desc += "deafening ";
-        desc +=  "noise, and thus all sounds travel ";
-        if (noise > 5)
-            desc += "much ";
-        desc += "less far.";
-    }
-    else
-    {
-        if (noise < -5)
-            desc += "unnaturally silent";
+        desc = "\n\nThis branch is ";
+        if (noise > 0)
+        {
+            desc += make_stringf("filled with %snoise, and thus all sounds "
+                                 "travel %sless far.",
+                                 noise > 5 ? "deafening " : "",
+                                 noise > 5 ? "much " : "");
+        }
         else
-            desc += "very quiet";
-        desc +=  ", and thus all sounds travel ";
-        if (noise < -5)
-            desc += "much ";
-        desc += "further.";
+        {
+            desc += make_stringf("%s, and thus all sounds travel %sfurther.",
+                                 noise < -5 ? "unnaturally silent"
+                                            : "very quiet",
+                                 noise < -5 ? "much " : "");
+        }
     }
 
     return desc;
