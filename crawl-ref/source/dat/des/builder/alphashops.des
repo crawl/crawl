@@ -100,7 +100,7 @@
        "glaive | gold dragon armour | grand grimoire | great mace | " ..
        "greatsling | great sword | pair of gloves"
 
-      elseif s == "H" then i = "book of hinderance | halberd | hammer | " ..
+      elseif s == "H" then i = "book of hinderance | halberd | " ..
        "hand axe | hand crossbow | hunting sling | wand of hasting | " ..
        "potion of heal wounds | potion of haste | scroll of holy word | " ..
        "wand of heal wounds | manual of hexes | hat | helmet"

@@ -1380,8 +1380,6 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_HALBERD;
         else if (dam > 10)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_TRIDENT2;
-        else if (dam > 10)
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_HAMMER;
         else
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_SPEAR;
         break;

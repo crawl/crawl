@@ -1062,7 +1062,6 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case WPN_BLOWGUN:
-        case WPN_HAMMER:
         case WPN_WHIP:
             valued += 25;
             break;
