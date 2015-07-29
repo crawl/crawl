@@ -38,9 +38,6 @@ morningstar3
 eveningstar1 WPN_EVENINGSTAR
 eveningstar2
 eveningstar3
-hammer1 WPN_HAMMER
-hammer2
-hammer3
 bullwhip WPN_WHIP
 bullwhip2
 bullwhip3

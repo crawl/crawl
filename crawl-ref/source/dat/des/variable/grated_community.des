@@ -45,7 +45,6 @@ COLOUR: =E7 = green
 SUBST:  E = e
 SUBST:  e = e.
 : kitem("$ = q:" .. crawl.random_range(50, 500) .. " gold")
-KITEM:  % = hammer
 KITEM:  * = animal skin, q:2 beef jerky, any good_item
 KITEM:  ' = ident:type wand of disintegration, ident:type scroll of teleportation
 MARKER: + = lua:restrict_door()
@@ -102,7 +101,7 @@ cZ...=7=7=.efe.=7=7=.efe.=7=7=.ife.=7=7=.....==n.......eee.......ee.i...e.cc==Zc
 cZ........R.e.......S.e.......V.e.......X......~.................e........cc==Zc
 cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=.....~........ccccccccccccccccc+cc==Zc
 cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...==n........+.......c.k.......cc==Zc
-cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...=9c....e...c.b.%c.dc..k......cc==Zc
+cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...=9c....e...c.b..c.dc..k......cc==Zc
 cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...=cc...eee..cc..cc.Dc.kj.C.j..cc==Zc
 cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...=cc........cW..#c..c....k....cc==Zc
 cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...=ccccccccccccccccc$c$cccccccccc==Zc
@@ -278,7 +277,7 @@ SUBST:   _ = _8
 SUBST:   2 = 2.
 SUBST:   3 = 3.
 NSUBST:  . = 5:% / *:.
-KITEM:   % = w:12 animal skin / hammer / hand axe /\
+KITEM:   % = w:12 animal skin / club / hand axe /\
              beef jerky / slice of pizza / nothing
 KFEAT:   8 = orcish_idol / w:5 floor
 KFEAT:   _ = altar_beogh / w:15 floor

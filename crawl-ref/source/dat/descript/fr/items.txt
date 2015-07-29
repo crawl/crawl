@@ -521,10 +521,6 @@ great mace
 
 Une énorme et très encombrante masse de guerre.
 %%%%
-hammer
-
-Un grand marteau avec une tête pointue.
-%%%%
 hand axe
 
 Une petite hache.
