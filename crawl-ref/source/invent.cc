@@ -1255,16 +1255,16 @@ static unsigned char _invent_select(const char *title = nullptr,
     return menu.getkey();
 }
 
-unsigned char get_invent(int invent_type, bool redraw)
+void display_inventory()
 {
-    unsigned char select;
     int flags = MF_SINGLESELECT;
     if (you.dead || crawl_state.updating_scores)
         flags |= MF_EASY_EXIT;
 
     while (true)
     {
-        select = _invent_select(nullptr, MT_INVLIST, invent_type, -1, flags);
+        unsigned char select =
+            _invent_select(nullptr, MT_INVLIST, OSEL_ANY, -1, flags);
 
         if (isaalpha(select))
         {
@@ -1279,10 +1279,8 @@ unsigned char get_invent(int invent_type, bool redraw)
             break;
     }
 
-    if (redraw && !crawl_state.doing_prev_cmd_again)
+    if (!crawl_state.doing_prev_cmd_again)
         redraw_screen();
-
-    return select;
 }
 
 // Reads in digits for a count and apprends then to val, the

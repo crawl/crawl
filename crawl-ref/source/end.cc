@@ -333,7 +333,7 @@ NORETURN void end_game(scorefile_entry &se)
         more();
 
     if (!crawl_state.disables[DIS_CONFIRMATIONS])
-        get_invent(OSEL_ANY);
+        display_inventory();
     textcolour(LIGHTGREY);
 
     clua.save_persist();
