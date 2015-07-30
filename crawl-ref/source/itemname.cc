@@ -170,7 +170,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
     if (terse && descrip != DESC_DBNAME)
         descrip = DESC_PLAIN;
 
-    monster_flags_t corpse_flags; // XXX: should be an enum_bitfield
+    monster_flags_t corpse_flags;
 
     if ((base_type == OBJ_CORPSES && is_named_corpse(*this)
          && !(((corpse_flags.flags = props[CORPSE_NAME_TYPE_KEY].get_int64())
