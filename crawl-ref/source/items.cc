@@ -4729,47 +4729,11 @@ int runes_in_pack()
     return static_cast<int>(you.runes.count());
 }
 
-static const object_class_type _mimic_item_classes[] =
-{
-    OBJ_GOLD,
-    OBJ_WEAPONS,
-    OBJ_ARMOUR,
-    OBJ_SCROLLS,
-    OBJ_POTIONS,
-    OBJ_BOOKS,
-    OBJ_STAVES,
-    OBJ_RODS,
-    OBJ_FOOD,
-    OBJ_MISCELLANY,
-    OBJ_JEWELLERY,
-};
-
 object_class_type get_random_item_mimic_type()
 {
-    return _mimic_item_classes[random2(ARRAYSZ(_mimic_item_classes))];
-}
-
-object_class_type get_item_mimic_type()
-{
-    clear_messages();
-    map<char, object_class_type> choices;
-    char letter = 'a';
-    for (object_class_type cls : _mimic_item_classes)
-    {
-        mprf("[%c] %s ", letter, item_class_name(cls, true));
-        choices[letter++] = cls;
-    }
-    mprf("[%c] random", letter);
-    choices[letter] = OBJ_RANDOM;
-    mprf(MSGCH_PROMPT, "\nWhat kind of item mimic? ");
-    const int keyin = toalower(get_ch());
-
-    if (!choices.count(keyin))
-        return OBJ_UNASSIGNED;
-    else if (choices[keyin] == OBJ_RANDOM)
-        return get_random_item_mimic_type();
-    else
-        return choices[keyin];
+   return random_choose(OBJ_GOLD, OBJ_WEAPONS, OBJ_ARMOUR, OBJ_SCROLLS,
+                        OBJ_POTIONS, OBJ_BOOKS, OBJ_STAVES, OBJ_RODS,
+                        OBJ_FOOD, OBJ_MISCELLANY, OBJ_JEWELLERY);
 }
 
 /**

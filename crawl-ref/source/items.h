@@ -146,7 +146,6 @@ bool get_item_by_name(item_def *item, const char* specs,
 
 void move_items(const coord_def r, const coord_def p);
 object_class_type get_random_item_mimic_type();
-object_class_type get_item_mimic_type();
 
 bool maybe_identify_base_type(item_def &item);
 int count_movable_items(int obj);
