@@ -12,9 +12,6 @@
 #define MIN_COLS  79
 #define MIN_LINES 24
 
-// remove me when TAG_MAJOR_VERSION > 34
-#define NUM_MONSTER_SPELL_SLOTS  6
-
 #define ESCAPE '\x1b'           // most ansi-friendly way I can think of defining this.
 
 // there's got to be a better way...

@@ -485,8 +485,6 @@ monster *choose_random_monster_on_level(
 
 void update_monster_symbol(monster_type mtype, cglyph_t md);
 
-void fixup_spells(monster_spells &spells, int hd,
-                  mon_spell_slot_flag flags = MON_SPELL_WIZARD);
 void normalize_spell_freq(monster_spells &spells, int hd);
 
 enum mon_dam_level_type

@@ -2552,8 +2552,6 @@ static void _load_lich_spells(monster &lich)
     _add_lich_spell(lich.spells, lich_buff_spells,
                     ARRAYSZ(lich_buff_spells), false);
 
-    // not fixup_spells, because we want to handle marking emergency spells
-    // ourselves, and we should never have any SPELL_NO_SPELL to strip out
     normalize_spell_freq(lich.spells, lich.get_experience_level());
 }
 
@@ -5205,42 +5203,6 @@ void update_monster_symbol(monster_type mtype, cglyph_t md)
         monster_symbols[mtype].glyph = get_glyph_override(md.ch);
     if (md.col)
         monster_symbols[mtype].colour = md.col;
-}
-
-void fixup_spells(monster_spells &spells, int hd,
-                  mon_spell_slot_flag flags)
-{
-    unsigned count = 0;
-    for (size_t i = 0; i < spells.size(); i++)
-    {
-        if (spells[i].spell == SPELL_NO_SPELL)
-            continue;
-
-        count++;
-
-        spells[i].flags |= flags;
-
-        if (i == NUM_MONSTER_SPELL_SLOTS - 1)
-            spells[i].flags |= MON_SPELL_EMERGENCY;
-    }
-
-    if (!count)
-    {
-        spells.clear();
-        return;
-    }
-
-    erase_if(spells, [](const mon_spell_slot &t) {
-        return t.spell == SPELL_NO_SPELL;
-    });
-
-    if (!spells.size())
-        return;
-
-    for (auto& slot : spells)
-        slot.freq = (hd + 50) / spells.size();
-
-    normalize_spell_freq(spells, hd);
 }
 
 void normalize_spell_freq(monster_spells &spells, int hd)
