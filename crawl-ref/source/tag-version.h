@@ -173,6 +173,7 @@ enum tag_minor_version
     TAG_MINOR_ID_STATES,           // turn item_type_id_state_type into a bool
     TAG_MINOR_MON_HD_INFO,         // store player-known monster HD info
     TAG_MINOR_NO_LEVEL_FLAGS,      // remove a field of env
+    TAG_MINOR_EXORCISE,            // liches, a. liches, & spellforged servitors are no longer ghost_demons
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
