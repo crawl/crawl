@@ -982,6 +982,8 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case ZIN_ROT:
+        // FIXME: no message (other than "You kill X!") is produced if the
+        // rotting kills the monster.
         if (mon->res_rotting() <= 1
             && mon->rot(&you, 1 + roll_dice(2, degree), true))
         {
