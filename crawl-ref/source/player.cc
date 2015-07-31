@@ -6629,7 +6629,7 @@ void player::drain_stat(stat_type s, int amount)
     lose_stat(s, amount);
 }
 
-bool player::rot(actor *who, int amount, bool quiet)
+bool player::rot(actor *who, int amount, bool quiet, bool /*no_cleanup*/)
 {
     ASSERT(!crawl_state.game_is_arena());
 

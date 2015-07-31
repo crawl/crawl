@@ -1841,6 +1841,11 @@ void MiscastEffect::_necromancy(int severity)
                 if (you.can_smell())
                     all_msg = "You begin to rot!";
 
+                // Must produce the message before rotting, because that
+                // might kill a target monster, and do_msg does not like
+                // dead monsters. FIXME: We should avoid_lethal here!
+                if (!did_msg)
+                    do_msg();
                 target->rot(act_source, 1, true);
             }
             else if (you.species == SP_MUMMY)

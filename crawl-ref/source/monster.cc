@@ -4464,7 +4464,7 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
     return true;
 }
 
-bool monster::rot(actor *agent, int amount, bool quiet)
+bool monster::rot(actor *agent, int amount, bool quiet, bool no_cleanup)
 {
     if (res_rotting() || amount <= 0)
         return false;
@@ -4472,14 +4472,17 @@ bool monster::rot(actor *agent, int amount, bool quiet)
     if (!quiet && you.can_see(*this))
         mprf("%s looks less resilient!", name(DESC_THE).c_str());
 
-    // If quiet, don't clean up the monster in order to credit
-    // properly.
-    hurt(agent, amount, BEAM_MISSILE, KILLED_BY_BEAM, "", "", !quiet);
+    // If requested, don't clean up the monster in order to credit properly.
+    hurt(agent, amount, BEAM_MISSILE, KILLED_BY_BEAM, "", "", !no_cleanup);
 
     if (alive())
     {
         max_hit_points -= amount * 2;
         hit_points = min(max_hit_points, hit_points);
+
+        // Clean up the monster if that killed it (unless we shouldn't).
+        if (!no_cleanup && max_hit_points <= 0)
+            hurt(agent, 0, BEAM_MISSILE, KILLED_BY_BEAM);
     }
 
     return true;

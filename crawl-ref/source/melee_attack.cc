@@ -1863,9 +1863,11 @@ bool melee_attack::player_monattk_hit_effects()
 
 void melee_attack::rot_defender(int amount)
 {
-    if (defender->rot(attacker, amount, true))
+    // Keep the defender alive so that we credit kills properly.
+    if (defender->rot(attacker, amount, true, true))
     {
-        // XXX: why is this message separate here?
+        // Duplicating the messages here because we want them to
+        // appear as a special_damage_message, not immediately.
         if (defender->is_player())
         {
             special_damage_message =
