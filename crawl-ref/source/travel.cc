@@ -4547,7 +4547,15 @@ static int _adjacent_cmd(const coord_def &gc, bool force)
 
         int cmd = cmd_array[i];
         if (force)
-            cmd += CMD_ATTACK_LEFT - CMD_MOVE_LEFT;
+        {
+            if (grd(gc) == DNGN_OPEN_DOOR
+                && !env.map_knowledge(gc).monsterinfo())
+            {
+                cmd += CMD_CLOSE_DOOR_LEFT - CMD_MOVE_LEFT;
+            }
+            else
+                cmd += CMD_ATTACK_LEFT - CMD_MOVE_LEFT;
+        }
 
         return cmd;
     }
