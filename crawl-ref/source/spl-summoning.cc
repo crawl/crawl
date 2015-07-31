@@ -2521,10 +2521,10 @@ static void _init_servitor_monster(monster &mon, const actor& caster)
 
     for (const spell_type spell : servitor_spells)
     {
-        if (caster.has_spell(spell) 
+        if (caster.has_spell(spell)
             && (caster_mon || raw_spell_fail(spell) < 50))
         {
-            mon.spells.push_back({ spell, 0, MON_SPELL_WIZARD });
+            mon.spells.emplace_back(spell, 0, MON_SPELL_WIZARD);
         }
     }
 

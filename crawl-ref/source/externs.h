@@ -748,6 +748,10 @@ DEF_BITFIELD(mon_spell_slot_flags, mon_spell_slot_flag);
 
 struct mon_spell_slot
 {
+    mon_spell_slot(spell_type spell_ = SPELL_NO_SPELL, uint8_t freq_ = 0,
+                   mon_spell_slot_flags flags_ = MON_SPELL_NO_FLAGS)
+        : spell(spell_), freq(freq_), flags(flags_)
+    { }
     spell_type spell;
     uint8_t freq;
     mon_spell_slot_flags flags;
