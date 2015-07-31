@@ -5034,7 +5034,8 @@ void update_monster_symbol(monster_type mtype, cglyph_t md)
         monster_symbols[mtype].colour = md.col;
 }
 
-void fixup_spells(monster_spells &spells, int hd)
+void fixup_spells(monster_spells &spells, int hd,
+                  mon_spell_slot_flag flags)
 {
     unsigned count = 0;
     for (size_t i = 0; i < spells.size(); i++)
@@ -5044,7 +5045,7 @@ void fixup_spells(monster_spells &spells, int hd)
 
         count++;
 
-        spells[i].flags |= MON_SPELL_WIZARD;
+        spells[i].flags |= flags;
 
         if (i == NUM_MONSTER_SPELL_SLOTS - 1)
             spells[i].flags |= MON_SPELL_EMERGENCY;
