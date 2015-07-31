@@ -371,7 +371,7 @@ dispute resolution.
 %%%%
 corpse
 
-A corpse. You can butcher it to produce edible meat chunks.
+A corpse. You can butcher it to produce chunks of meat.
 %%%%
 crystal ball of energy
 
