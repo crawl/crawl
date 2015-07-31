@@ -212,7 +212,7 @@ static void _swing_at_target(coord_def move);
 
 static int  _check_adjacent(dungeon_feature_type feat, coord_def& delta);
 static void _open_door(coord_def move = {0,0});
-static void _close_door();
+static void _close_door(coord_def move);
 
 static void _start_running(int dir, int mode);
 
@@ -1993,6 +1993,16 @@ void process_command(command_type cmd)
     case CMD_SAFE_MOVE_DOWN_RIGHT: _safe_move_player({ 1,  1}); break;
     case CMD_SAFE_MOVE_RIGHT:      _safe_move_player({ 1,  0}); break;
 
+    case CMD_CLOSE_DOOR_DOWN_LEFT:  _close_door({-1,  1}); break;
+    case CMD_CLOSE_DOOR_DOWN:       _close_door({ 0,  1}); break;
+    case CMD_CLOSE_DOOR_UP_RIGHT:   _close_door({ 1, -1}); break;
+    case CMD_CLOSE_DOOR_UP:         _close_door({ 0, -1}); break;
+    case CMD_CLOSE_DOOR_UP_LEFT:    _close_door({-1, -1}); break;
+    case CMD_CLOSE_DOOR_LEFT:       _close_door({-1,  0}); break;
+    case CMD_CLOSE_DOOR_DOWN_RIGHT: _close_door({ 1,  1}); break;
+    case CMD_CLOSE_DOOR_RIGHT:      _close_door({ 1,  0}); break;
+    case CMD_CLOSE_DOOR:            _close_door({ 0,  0}); break;
+
     case CMD_RUN_DOWN_LEFT: _start_running(RDIR_DOWN_LEFT, RMODE_START); break;
     case CMD_RUN_DOWN:      _start_running(RDIR_DOWN, RMODE_START);      break;
     case CMD_RUN_UP_RIGHT:  _start_running(RDIR_UP_RIGHT, RMODE_START);  break;
@@ -2019,8 +2029,7 @@ void process_command(command_type cmd)
         _take_stairs(cmd == CMD_GO_DOWNSTAIRS);
         break;
 
-    case CMD_OPEN_DOOR:       _open_door(); break;
-    case CMD_CLOSE_DOOR:      _close_door(); break;
+    case CMD_OPEN_DOOR:      _open_door(); break;
 
     // Repeat commands.
     case CMD_REPEAT_CMD:     _do_cmd_repeat();  break;
@@ -2929,7 +2938,7 @@ static void _open_door(coord_def move)
     }
 }
 
-static void _close_door()
+static void _close_door(coord_def move)
 {
     if (!player_can_open_doors())
     {
@@ -2950,34 +2959,38 @@ static void _close_door()
     }
 
     dist door_move;
-    coord_def move = coord_def(0, 0);
 
-    // If there's only one door to close, don't ask.
-    int num = _check_adjacent(DNGN_OPEN_DOOR, move);
-    if (num == 0)
+    if (move.origin())
     {
-        mpr("There's nothing to close nearby.");
-        return;
-    }
-    // move got set in _check_adjacent
-    else if (num == 1 && Options.easy_door)
-        door_move.delta = move;
-    else
-    {
-        mprf(MSGCH_PROMPT, "Which direction?");
-        direction_chooser_args args;
-        args.restricts = DIR_DIR;
-        direction(door_move, args);
-
-        if (!door_move.isValid)
+        // If there's only one door to close, don't ask.
+        int num = _check_adjacent(DNGN_OPEN_DOOR, move);
+        if (num == 0)
+        {
+            mpr("There's nothing to close nearby.");
             return;
-    }
+        }
+        // move got set in _check_adjacent
+        else if (num == 1 && Options.easy_door)
+            door_move.delta = move;
+        else
+        {
+            mprf(MSGCH_PROMPT, "Which direction?");
+            direction_chooser_args args;
+            args.restricts = DIR_DIR;
+            direction(door_move, args);
 
-    if (door_move.delta.origin())
-    {
-        mpr("You can't close doors on yourself!");
-        return;
+            if (!door_move.isValid)
+                return;
+        }
+
+        if (door_move.delta.origin())
+        {
+            mpr("You can't close doors on yourself!");
+            return;
+        }
     }
+    else
+        door_move.delta = move;
 
     const coord_def doorpos = you.pos() + door_move.delta;
     const dungeon_feature_type feat = (in_bounds(doorpos) ? grd(doorpos)
