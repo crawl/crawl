@@ -560,8 +560,30 @@ void debug_stethoscope(int mon)
             spl << spell_title(hspell_pass[k].spell);
 
         spl << "." << (int)hspell_pass[k].freq;
+        for (i = 0; i <= MON_SPELL_LAST_EXPONENT; ++i)
+        {
+            const mon_spell_slot_flag flag = (mon_spell_slot_flag)(2 << i);
+            if (!(hspell_pass[k].flags & flag))
+                continue;
 
-        spl << " (" << static_cast<int>(hspell_pass[k].spell) << ")";
+            // this is arguably redundant with mons_list::parse_mons_spells
+            // specificially the bit that turns names into flags
+            static const map<mon_spell_slot_flag, string> flagnames = {
+                { MON_SPELL_EMERGENCY,  "E" },
+                { MON_SPELL_NATURAL,    "N" },
+                { MON_SPELL_MAGICAL,    "M" },
+                { MON_SPELL_DEMONIC,    "D" },
+                { MON_SPELL_WIZARD,     "W" },
+                { MON_SPELL_PRIEST,     "P" },
+                { MON_SPELL_BREATH,     "br" },
+                { MON_SPELL_NO_SILENT,  "ns" },
+                { MON_SPELL_INSTANT,    "in" },
+                { MON_SPELL_NOISY,      "noi" },
+            };
+            spl << "." << lookup(flagnames, flag, "bug");
+        }
+
+        spl << " (#" << static_cast<int>(hspell_pass[k].spell) << ")";
     }
     if (found_spell)
         mprf(MSGCH_DIAGNOSTICS, "spells: %s", spl.str().c_str());
