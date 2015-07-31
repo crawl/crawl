@@ -5360,13 +5360,13 @@ void init_mutant_beast(monster &mons, short HD, vector<int> beast_facets)
                 mons.props[MON_SPEED_KEY] = mons.speed * 2;
                 break;
             case BF_FIRE:
-                mons.spells.push_back({SPELL_FIRE_BREATH, 60,
-                                       MON_SPELL_NATURAL | MON_SPELL_BREATH});
+                mons.spells.emplace_back(SPELL_FIRE_BREATH, 60,
+                                         MON_SPELL_NATURAL | MON_SPELL_BREATH);
                 mons.props[CUSTOM_SPELLS_KEY] = true;
                 break;
             case BF_SHOCK:
-                mons.spells.push_back({SPELL_BLINKBOLT, 60,
-                                       MON_SPELL_NATURAL});
+                mons.spells.emplace_back(SPELL_BLINKBOLT, 60,
+                                         MON_SPELL_NATURAL);
                 mons.props[CUSTOM_SPELLS_KEY] = true;
                 break;
             default:

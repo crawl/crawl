@@ -174,11 +174,11 @@ static brand_type _random_special_pan_lord_brand()
 }
 
 #define ADD_SPELL(which_spell) \
-    { \
-        slot.spell = which_spell; \
-        if (slot.spell != SPELL_NO_SPELL) \
-            spells.push_back(slot); \
-    }
+    do { \
+        const auto spell = (which_spell); \
+        if (spell != SPELL_NO_SPELL) \
+            spells.emplace_back(spell, 0, MON_SPELL_DEMONIC); \
+    } while (0)
 
 static int _panlord_random_resist_level()
 {
@@ -191,10 +191,6 @@ static int _panlord_random_resist_level()
 
 void ghost_demon::init_pandemonium_lord()
 {
-    mon_spell_slot slot;
-    slot.freq = 12;
-    slot.flags = MON_SPELL_DEMONIC;
-
     do
     {
         name = make_name(random_int());
@@ -717,9 +713,6 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon,
 void ghost_demon::add_spells(bool actual_ghost)
 {
     spells.clear();
-    mon_spell_slot slot;
-    slot.freq = 12;
-    slot.flags = MON_SPELL_WIZARD;
 
     for (int i = 0; i < you.spell_no; i++)
     {
@@ -730,23 +723,21 @@ void ghost_demon::add_spells(bool actual_ghost)
             && is_valid_mon_spell(spell)
             && x_chance_in_y(chance*chance, 50*50))
         {
-            slot.spell = spell;
-            spells.push_back(slot);
+            spells.emplace_back(spell, 0, MON_SPELL_WIZARD);
         }
     }
 
     normalize_spell_freq(spells, xl);
 
+    // After normalizing the frequencies!
     if (species_is_draconian(species)
         && species != SP_BASE_DRACONIAN
         && species != SP_GREY_DRACONIAN
         // Don't give pillusions extra breath
         && actual_ghost)
     {
-        slot.spell = SPELL_BOLT_OF_DRAINING;
-        slot.freq  = 33; // Not too common
-        slot.flags = MON_SPELL_NATURAL | MON_SPELL_BREATH;
-        spells.push_back(slot);
+        spells.emplace_back(SPELL_BOLT_OF_DRAINING, 33, // Not too common
+                            MON_SPELL_NATURAL | MON_SPELL_BREATH);
     }
 }
 
@@ -945,4 +936,3 @@ int ghost_rank_to_level(const int rank)
         die("Bad ghost rank %d", rank);
     }
 }
-
