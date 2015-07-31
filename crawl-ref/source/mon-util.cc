@@ -2374,6 +2374,190 @@ mon_spell_slot drac_breath(monster_type drac_type)
     return slot;
 }
 
+const mon_spell_slot lich_primary_summoner_spells[] =
+{
+    { SPELL_SUMMON_GREATER_DEMON, 18, MON_SPELL_WIZARD },
+};
+
+const mon_spell_slot lich_primary_conjurer_spells[] =
+{
+    { SPELL_IOOD, 18, MON_SPELL_WIZARD },
+    { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 18, MON_SPELL_WIZARD },
+    { SPELL_CORROSIVE_BOLT, 18, MON_SPELL_WIZARD },
+};
+
+const mon_spell_slot lich_secondary_spells[] =
+{
+    { SPELL_MALIGN_GATEWAY, 12, MON_SPELL_WIZARD },
+    { SPELL_SPELLFORGED_SERVITOR, 12, MON_SPELL_WIZARD },
+    { SPELL_SIMULACRUM, 12, MON_SPELL_WIZARD },
+    { SPELL_POISON_ARROW, 12, MON_SPELL_WIZARD },
+    { SPELL_HAUNT, 12, MON_SPELL_WIZARD },
+    { SPELL_SUMMON_HORRIBLE_THINGS, 12, MON_SPELL_WIZARD },
+    { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
+    { SPELL_BATTLESPHERE, 12, MON_SPELL_WIZARD },
+    { SPELL_BOLT_OF_DRAINING, 12, MON_SPELL_WIZARD },
+    { SPELL_AGONY, 12, MON_SPELL_WIZARD },
+    { SPELL_BOLT_OF_FIRE, 12, MON_SPELL_WIZARD },
+    { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
+    { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
+    { SPELL_THROW_ICICLE, 12, MON_SPELL_WIZARD },
+    { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
+    { SPELL_LRD, 12, MON_SPELL_WIZARD },
+    { SPELL_PETRIFY, 12, MON_SPELL_WIZARD },
+    { SPELL_LIGHTNING_BOLT, 12, MON_SPELL_WIZARD },
+    { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
+    { SPELL_CONFUSE, 12, MON_SPELL_WIZARD },
+    { SPELL_SLOW, 12, MON_SPELL_WIZARD },
+    { SPELL_SLEEP, 12, MON_SPELL_WIZARD },
+};
+
+const mon_spell_slot lich_buff_spells[] =
+{
+    { SPELL_HASTE, 12, MON_SPELL_WIZARD },
+    { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
+    { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+};
+
+static bool _lich_spell_is_used(const monster_spells &spells, spell_type spell)
+{
+    for (auto slot : spells)
+        if (slot.spell == spell)
+            return true;
+
+    return false;
+}
+
+static bool _lich_has_spell_of_school(const monster_spells &spells,
+                                      spschool_flag_type discipline)
+{
+    for (auto slot : spells)
+        if (spell_typematch(slot.spell, discipline))
+            return true;
+
+    return false;
+}
+
+static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
+                                int *weights, int total_weight,
+                                bool use_weights, bool force_conj)
+{
+    if (_lich_spell_is_used(spells, spell))
+        return false;
+
+    if (force_conj && !_lich_has_spell_of_school(spells, SPTYP_CONJURATION))
+    {
+        return spell_typematch(spell, SPTYP_CONJURATION)
+               && spell != SPELL_BATTLESPHERE
+               && spell != SPELL_SPELLFORGED_SERVITOR;
+    }
+
+    if (!use_weights)
+        return true;
+
+    spschools_type disciplines = get_spell_disciplines(spell);
+    int num_disciplines = count_bits(disciplines);
+
+    for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
+    {
+        const auto bit = spschools_type::exponent(exponent);
+        if (disciplines & bit)
+            if (x_chance_in_y(weights[exponent], total_weight * num_disciplines))
+                return true;
+    }
+
+    return false;
+}
+
+static void _calculate_lich_spell_weights(const monster_spells &spells,
+                                          int *weights, int &total_weight)
+{
+    for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
+        // there are no primary hexes, and hexes are interesting to have on
+        // liches, so give them a slightly higher chance
+        weights[exponent] = (1 << exponent) == SPTYP_HEXES
+        ? SPTYP_LAST_EXPONENT / 4
+        : 1;
+
+    for (auto slot : spells)
+        for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
+        {
+            const auto discipline = spschools_type::exponent(exponent);
+            if (spell_typematch(slot.spell, discipline))
+            {
+                // or else we just get entirely bolts
+                int increment = discipline == SPTYP_CONJURATION
+                ? SPTYP_LAST_EXPONENT / 4
+                : SPTYP_LAST_EXPONENT;
+                weights[exponent] = min(
+                                        weights[exponent] + increment,
+                                        (int)SPTYP_LAST_EXPONENT * 2
+                                        );
+            }
+        }
+
+    total_weight = 0;
+    for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
+        total_weight += weights[i];
+
+}
+
+static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
+                            size_t set_len, bool force_conj)
+{
+    int weights[SPTYP_LAST_EXPONENT + 1];
+    int total_weight;
+    _calculate_lich_spell_weights(spells, weights, total_weight);
+
+    mon_spell_slot next_spell;
+    do
+    {
+        next_spell = set[random2(set_len)];
+    }
+    while (!_lich_spell_is_good(spells, next_spell.spell, weights,
+                                total_weight, set == lich_secondary_spells,
+                                force_conj));
+
+    next_spell.freq = next_spell.freq - 4 + random2(9);
+    spells.push_back(next_spell);
+}
+
+static void _load_lich_spells(monster &lich)
+{
+    const size_t num_spells = 5 + random2(3);
+
+    if (coinflip())
+    {
+        _add_lich_spell(lich.spells, lich_primary_summoner_spells,
+                        ARRAYSZ(lich_primary_summoner_spells), false);
+    }
+    else
+        _add_lich_spell(lich.spells, lich_primary_conjurer_spells,
+                        ARRAYSZ(lich_primary_conjurer_spells), false);
+
+    if (lich.type == MONS_ANCIENT_LICH && coinflip())
+    {
+        _add_lich_spell(lich.spells, lich_primary_conjurer_spells,
+                        ARRAYSZ(lich_primary_conjurer_spells), false);
+    }
+
+    bool force_conj = true;
+    while (lich.spells.size() < num_spells - 1)
+    {
+        _add_lich_spell(lich.spells, lich_secondary_spells,
+                        ARRAYSZ(lich_secondary_spells), force_conj);
+        force_conj = false;
+    }
+
+    _add_lich_spell(lich.spells, lich_buff_spells,
+                    ARRAYSZ(lich_buff_spells), false);
+
+    // not fixup_spells, because we want to handle marking emergency spells
+    // ourselves, and we should never have any SPELL_NO_SPELL to strip out
+    normalize_spell_freq(lich.spells, lich.get_experience_level());
+}
+
+
 void mons_load_spells(monster* mon)
 {
     vector<mon_spellbook_type> books = _mons_spellbook_list(mon->type);
@@ -2389,6 +2573,8 @@ void mons_load_spells(monster* mon)
         if (breath.spell != SPELL_NO_SPELL)
             mon->spells.push_back(breath);
     }
+    else if (mon->type == MONS_LICH || mon->type == MONS_ANCIENT_LICH)
+        _load_lich_spells(*mon);
 
     if (book == MST_NO_SPELLS)
         return;
@@ -2629,22 +2815,9 @@ void define_monster(monster* mons)
     // before placement without crashing (proper setup is done later here)
     case MONS_DANCING_WEAPON:
     case MONS_SPECTRAL_WEAPON:
-    case MONS_SPELLFORGED_SERVITOR:
     {
         ghost_demon ghost;
         mons->set_ghost(ghost);
-        break;
-    }
-
-    case MONS_LICH:
-    case MONS_ANCIENT_LICH:
-    {
-        ghost_demon ghost;
-        ghost.init_lich(mcls);
-        mons->set_ghost(ghost);
-        mons->ghost_demon_init();
-        mons->bind_melee_flags();
-        mons->bind_spell_flags();
         break;
     }
 
@@ -5034,7 +5207,8 @@ void update_monster_symbol(monster_type mtype, cglyph_t md)
         monster_symbols[mtype].colour = md.col;
 }
 
-void fixup_spells(monster_spells &spells, int hd)
+void fixup_spells(monster_spells &spells, int hd,
+                  mon_spell_slot_flag flags)
 {
     unsigned count = 0;
     for (size_t i = 0; i < spells.size(); i++)
@@ -5044,7 +5218,7 @@ void fixup_spells(monster_spells &spells, int hd)
 
         count++;
 
-        spells[i].flags |= MON_SPELL_WIZARD;
+        spells[i].flags |= flags;
 
         if (i == NUM_MONSTER_SPELL_SLOTS - 1)
             spells[i].flags |= MON_SPELL_EMERGENCY;

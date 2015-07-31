@@ -45,10 +45,6 @@ public:
     void init_dancing_weapon(const item_def& weapon, int power);
     void init_spectral_weapon(const item_def& weapon, int power, int wpn_skill);
 
-    void init_spellforged_servitor(actor* caster);
-
-    void init_lich(monster_type type);
-
     void ugly_thing_to_very_ugly_thing();
 
 
