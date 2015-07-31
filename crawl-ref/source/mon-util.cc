@@ -5207,13 +5207,24 @@ void update_monster_symbol(monster_type mtype, cglyph_t md)
 
 void normalize_spell_freq(monster_spells &spells, int hd)
 {
-    unsigned int total_freq = (hd + 50);
+    const unsigned int total_freq = (hd + 50);
+
+    // Not using std::accumulate because slot.freq is only a uint8_t.
     unsigned int total_given_freq = 0;
-    for (size_t i = 0; i < spells.size(); ++i)
-        total_given_freq += spells[i].freq;
-    ASSERT(total_given_freq > 0);
-    for (size_t i = 0; i < spells.size(); ++i)
-        spells[i].freq = total_freq * spells[i].freq / total_given_freq;
+    for (const auto &slot : spells)
+        total_given_freq += slot.freq;
+
+    if (total_given_freq > 0)
+    {
+        for (auto &slot : spells)
+            slot.freq = total_freq * slot.freq / total_given_freq;
+    }
+    else
+    {
+        const size_t numspells = spells.size();
+        for (auto &slot : spells)
+            slot.freq = total_freq / numspells;
+    }
 }
 
 mon_dam_level_type mons_get_damage_level(const monster* mons)
