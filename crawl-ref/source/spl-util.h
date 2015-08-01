@@ -25,10 +25,10 @@ enum spschool_flag_type
   SPTYP_POISON         = 1<<10,
   SPTYP_EARTH          = 1<<11,
   SPTYP_AIR            = 1<<12,
-  SPTYP_LAST_EXPONENT  = 12,
-  SPTYP_LAST_SCHOOL    = 1<<SPTYP_LAST_EXPONENT,
-  SPTYP_RANDOM         = 1<<(SPTYP_LAST_EXPONENT + 1),
+  SPTYP_LAST_SCHOOL    = SPTYP_AIR,
+  SPTYP_RANDOM         = SPTYP_LAST_SCHOOL << 1,
 };
+const int SPTYP_LAST_EXPONENT = 12;
 DEF_BITFIELD(spschools_type, spschool_flag_type);
 
 struct bolt;
