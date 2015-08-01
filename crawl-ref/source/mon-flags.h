@@ -132,8 +132,7 @@ enum monclass_flag_type : uint64_t
 
     M_HERD              = BIT(41),
 
-    /// can flee at low hp
-    M_FLEES             = BIT(42),
+                       // BIT(42),
 
     /// can sense vibrations in web traps
     M_WEB_SENSE         = BIT(43),

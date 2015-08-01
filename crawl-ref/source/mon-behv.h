@@ -17,7 +17,6 @@ enum mon_event_type
     ME_WHACK,                           // physical attack
     ME_SCARE,                           // frighten monster
     ME_CORNERED,                        // cannot flee
-    ME_HURT,                            // lost some HP (by any mean)
 };
 
 struct level_exit
