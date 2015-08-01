@@ -97,6 +97,11 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 {
     ASSERT(attacker); // XXX: change to actor &attacker
     ASSERT(defender); // XXX: change to actor &defender
+
+    // A dead defender would result in us returning true without actually
+    // taking an action.
+    ASSERT(defender->alive());
+
     if (defender->is_player())
     {
         ASSERT(!crawl_state.game_is_arena());
