@@ -226,8 +226,11 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 ##############################################################
 # layout_falls_marsh
 #
-# A mash-up of layout_waterfall and layout_pools for Swamp,
-# with dripping splatters in a more enclosed layout.
+# Use polar inverse on a noise function to create corridors that
+# tail off in size, with dripping splatters in an enclosed layout.
+# Then add pools like layout_cave_pools (but also including "pools"
+# of trees and stone).
+#
 # TODO: Somebody with greater noise manipulation prowress than I
 # should widen the occasional thin corridor at the end of each drip.
 #
