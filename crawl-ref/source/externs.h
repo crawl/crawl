@@ -748,10 +748,18 @@ DEF_BITFIELD(mon_spell_slot_flags, mon_spell_slot_flag);
 
 struct mon_spell_slot
 {
-    mon_spell_slot(spell_type spell_ = SPELL_NO_SPELL, uint8_t freq_ = 0,
-                   mon_spell_slot_flags flags_ = MON_SPELL_NO_FLAGS)
+    // Allow implicit conversion (and thus copy-initialization) from a
+    // three-element initializer list, but not from a smaller list or
+    // from a plain spell_type.
+    mon_spell_slot(spell_type spell_, uint8_t freq_,
+                   mon_spell_slot_flags flags_)
         : spell(spell_), freq(freq_), flags(flags_)
     { }
+    explicit mon_spell_slot(spell_type spell_ = SPELL_NO_SPELL,
+                            uint8_t freq_ = 0)
+        : mon_spell_slot(spell_, freq_, MON_SPELL_NO_FLAGS)
+    { }
+
     spell_type spell;
     uint8_t freq;
     mon_spell_slot_flags flags;
