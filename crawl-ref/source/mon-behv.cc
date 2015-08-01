@@ -1019,8 +1019,6 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     const beh_type old_behaviour = mon->behaviour;
 
-    int fleeThreshold = min(mon->max_hit_points / 4, 20);
-
     bool isSmart          = (mons_intel(mon) >= I_HUMAN);
     bool setTarget        = false;
     bool breakCharm       = false;
@@ -1277,26 +1275,6 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         }
         else
             mon->behaviour = BEH_SEEK;
-        break;
-
-    case ME_HURT:
-        // Monsters with the M_FLEES flag can flee at low HP.
-        // Cannot flee if cornered.
-        // Monster can flee if HP is less than 1/4 maxhp or less than 20 hp
-        // (whichever is lower). Chance starts quite low, and is near 100% at 1.
-        // Monsters with less than 8 maxhp are unable to flee.
-        // These numbers could still use some adjusting.
-        //
-        // Assuming fleeThreshold is 20:
-        //   at 19 hp: 5% chance of fleeing
-        //   at 10 hp: 50% chance of fleeing
-        //   (chance increases by 5% for every hp lost.)
-        if (mons_class_flag(mon->type, M_FLEES)
-            && !mon->berserk_or_insane()
-            && x_chance_in_y(fleeThreshold - mon->hit_points, fleeThreshold))
-        {
-            mon->behaviour = BEH_FLEE;
-        }
         break;
 
     case ME_EVAL:
