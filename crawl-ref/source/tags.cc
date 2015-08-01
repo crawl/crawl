@@ -4658,7 +4658,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         switch (mi.base_speed())
         {
         case 10:
-            mi.type = MONS_GHOST; // wellspring
+            mi.type = MONS_ELEMENTAL_WELLSPRING;
             break;
         case 12:
             mi.type = MONS_POLYMOTH;
