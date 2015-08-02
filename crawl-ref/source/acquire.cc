@@ -834,9 +834,8 @@ static int _spell_weight(spell_type spell)
     int weight = 0;
     spschools_type disciplines = get_spell_disciplines(spell);
     int count = 0;
-    for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+    for (const auto disc : spschools_type::range(SPTYP_LAST_EXPONENT))
     {
-        const auto disc = spschools_type::exponent(i);
         if (disciplines & disc)
         {
             int skill = you.skills[spell_type2skill(disc)];

@@ -187,9 +187,8 @@ void init_mut_index()
         ASSERT_RANGE(mut, 0, NUM_MUTATIONS);
         ASSERT(mut_index[mut] == -1);
         mut_index[mut] = i;
-        for (int mt = 0; mt <= MUTFLAG_LAST_EXPONENT; mt++)
+        for (const auto flag : mut_flags_type::range(MUTFLAG_LAST_EXPONENT))
         {
-            const auto flag = mut_flags_type::exponent(mt);
             if (_mut_has_use(mut_data[i], flag))
                 total_weight[flag] += _mut_weight(mut_data[i], flag);
         }

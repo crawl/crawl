@@ -199,9 +199,8 @@ static void _exercise_spell(spell_type spell, bool success)
     // stay in the queue for a shorter time.
     bool conj = false;
     vector<skill_type> disc;
-    for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
+    for (const auto bit : spschools_type::range(SPTYP_LAST_EXPONENT))
     {
-        const auto bit = spschools_type::exponent(ndx);
         if (!spell_typematch(spell, bit))
             continue;
 

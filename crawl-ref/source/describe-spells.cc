@@ -282,9 +282,8 @@ static string _spell_schools(spell_type spell)
 {
     string schools;
 
-    for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+    for (const auto school_flag : spschools_type::range(SPTYP_LAST_EXPONENT))
     {
-        const auto school_flag = spschools_type::exponent(i);
         if (!spell_typematch(spell, school_flag))
             continue;
 

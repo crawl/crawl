@@ -398,17 +398,14 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         power = 5 + you.skill(SK_EVOCATIONS, 3);
     else
     {
-        spschools_type disciplines = get_spell_disciplines(spell);
+        const spschools_type disciplines = get_spell_disciplines(spell);
 
         int skillcount = count_bits(disciplines);
         if (skillcount)
         {
-            for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
-            {
-                const auto bit = spschools_type::exponent(ndx);
+            for (const auto bit : spschools_type::range(SPTYP_LAST_EXPONENT))
                 if (disciplines & bit)
                     power += you.skill(spell_type2skill(bit), 200);
-            }
             power /= skillcount;
         }
 
@@ -2197,9 +2194,8 @@ string spell_schools_string(spell_type spell)
     string desc;
 
     bool already = false;
-    for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
+    for (const auto bit : spschools_type::range(SPTYP_LAST_EXPONENT))
     {
-        const auto bit = spschools_type::exponent(i);
         if (spell_typematch(spell, bit))
         {
             if (already)
@@ -2214,11 +2210,8 @@ string spell_schools_string(spell_type spell)
 
 void spell_skills(spell_type spell, set<skill_type> &skills)
 {
-    spschools_type disciplines = get_spell_disciplines(spell);
-    for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
-    {
-        const auto bit = spschools_type::exponent(i);
+    const spschools_type disciplines = get_spell_disciplines(spell);
+    for (const auto bit : spschools_type::range(SPTYP_LAST_EXPONENT))
         if (disciplines & bit)
             skills.insert(spell_type2skill(bit));
-    }
 }

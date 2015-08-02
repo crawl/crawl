@@ -840,9 +840,8 @@ static void _sdump_spells(dump_params &par)
 
                 bool already = false;
 
-                for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+                for (const auto bit : spschools_type::range(SPTYP_LAST_EXPONENT))
                 {
-                    const auto bit = spschools_type::exponent(i);
                     if (spell_typematch(spell, bit))
                     {
                         spell_line += spell_type_shortname(bit, already);
