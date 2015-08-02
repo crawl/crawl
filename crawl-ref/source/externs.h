@@ -742,9 +742,12 @@ enum mon_spell_slot_flag
     MON_SPELL_INSTANT   = 1 << 8, // allows another action on the same turn
     MON_SPELL_NOISY     = 1 << 9, // makes noise despite being innate
 
+    MON_SPELL_LAST_FLAG = MON_SPELL_NOISY,
 };
 const int MON_SPELL_LAST_EXPONENT = 9;
 DEF_BITFIELD(mon_spell_slot_flags, mon_spell_slot_flag);
+COMPILE_CHECK(mon_spell_slot_flags::exponent(MON_SPELL_LAST_EXPONENT)
+              == MON_SPELL_LAST_FLAG);
 
 struct mon_spell_slot
 {
