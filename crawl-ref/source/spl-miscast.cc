@@ -257,7 +257,7 @@ void MiscastEffect::do_miscast()
         sp_type = school;
         if (sp_type == SPTYP_RANDOM)
         {
-            int exp = (random2(SPTYP_LAST_EXPONENT));
+            int exp = (random2(SPTYP_LAST_EXPONENT + 1));
             sp_type = (spschool_flag_type) (1 << exp);
         }
     }
