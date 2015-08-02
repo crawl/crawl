@@ -28,7 +28,7 @@ enum spschool_flag_type
   SPTYP_LAST_SCHOOL    = SPTYP_AIR,
   SPTYP_RANDOM         = SPTYP_LAST_SCHOOL << 1,
 };
-DEF_BITFIELD_EXP(spschools_type, spschool_flag_type, 12);
+DEF_BITFIELD(spschools_type, spschool_flag_type, 12);
 const int SPTYP_LAST_EXPONENT = spschools_type::last_exponent;
 COMPILE_CHECK(spschools_type::exponent(SPTYP_LAST_EXPONENT)
               == SPTYP_LAST_SCHOOL);

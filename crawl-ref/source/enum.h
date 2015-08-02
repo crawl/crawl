@@ -127,7 +127,7 @@ public:
     };
 };
 
-#define DEF_BITFIELD_OPERATORS(fieldT, flagT) \
+#define DEF_BITFIELD_OPERATORS(fieldT, flagT, ...) \
     inline fieldT operator|(flagT a, flagT b)  { return fieldT(a) |= b; } \
     inline fieldT operator|(flagT a, fieldT b) { return fieldT(a) |= b; } \
     inline fieldT operator&(flagT a, flagT b)  { return fieldT(a) &= b; } \
@@ -161,18 +161,10 @@ public:
  *                 bitfield's nested range class will not have a default
  *                 constructor.
  */
-#define DEF_BITFIELD_EXP(fieldT, flagT, lastExp) \
-    typedef enum_bitfield<flagT, lastExp> fieldT; \
-    DEF_BITFIELD_OPERATORS(fieldT, flagT)
-
-/**
- * Define fieldT as a bitfield of the enum flagT, without a specified
- * last exponent. Equivalent to DEF_BITFIELD_EXP(fieldT, flagT, -1)
- */
-#define DEF_BITFIELD(fieldT, flagT) \
-    typedef enum_bitfield<flagT> fieldT; \
-    DEF_BITFIELD_OPERATORS(fieldT, flagT)
-
+#define DEF_BITFIELD(fieldT, ...) \
+    typedef enum_bitfield<__VA_ARGS__> fieldT; \
+    DEF_BITFIELD_OPERATORS(fieldT, __VA_ARGS__, )
+// The comma suppresses "ISO C99 requires rest arguments to be used"
 
 enum lang_t
 {
