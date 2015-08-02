@@ -4943,11 +4943,9 @@ void debug_monspells()
             }
 
             mon_spell_slot_flag category = MON_SPELL_NO_FLAGS;
-            for (int flag_exp = 0; flag_exp <= MON_SPELL_LAST_EXPONENT;
-                 ++flag_exp)
+            for (const auto flag
+                    : mon_spell_slot_flags::range(MON_SPELL_LAST_EXPONENT))
             {
-                const auto flag = mon_spell_slot_flags::exponent(flag_exp);
-
                 if (!(spslot.flags & flag))
                     continue;
 

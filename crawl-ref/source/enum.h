@@ -6,6 +6,7 @@
 #ifndef ENUM_H
 #define ENUM_H
 
+#include <iterator>
 #include <type_traits> // underlying_type<>
 
 #include "tag-version.h"
@@ -70,6 +71,41 @@ public:
     {
         return enum_bitfield<E>(~flags);
     }
+
+    struct range
+    {
+        class iterator : public std::iterator<forward_iterator_tag, const E>
+        {
+        private:
+            int exp_;
+        public:
+            constexpr iterator() : exp_(0) { }
+            constexpr iterator(int exp) : exp_(exp) { }
+            constexpr E operator*() const { return exponent(exp_); }
+            constexpr bool operator==(const iterator &other) const
+            {
+                return exp_ == other.exp_;
+            }
+            constexpr bool operator!=(const iterator &other) const
+            {
+                return !(*this == other);
+            }
+            iterator &operator++() { ++exp_; return *this; }
+            iterator operator++(int)
+            {
+                iterator copy = *this;
+                ++(*this);
+                return copy;
+            }
+        };
+
+        const int final;
+
+        range() = delete;
+        constexpr range(int last_exponent) : final(last_exponent) {}
+        constexpr iterator begin() const { return iterator(); }
+        constexpr iterator end() const { return final + 1; }
+    };
 };
 
 template <class E, class ... Es>

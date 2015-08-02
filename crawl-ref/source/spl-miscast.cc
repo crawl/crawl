@@ -244,22 +244,18 @@ void MiscastEffect::do_miscast()
 
     if (spell != SPELL_NO_SPELL)
     {
-        vector<int> school_list;
-        for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
-            if (spell_typematch(spell, spschools_type::exponent(i)))
-                school_list.push_back(i);
+        vector<spschool_flag_type> school_list;
+        for (const auto bit : spschools_type::range(SPTYP_LAST_EXPONENT))
+            if (spell_typematch(spell, bit))
+                school_list.push_back(bit);
 
-        unsigned int _school = school_list[random2(school_list.size())];
-        sp_type = spschools_type::exponent(_school);
+        sp_type = school_list[random2(school_list.size())];
     }
     else
     {
         sp_type = school;
         if (sp_type == SPTYP_RANDOM)
-        {
-            int exp = (random2(SPTYP_LAST_EXPONENT + 1));
-            sp_type = (spschool_flag_type) (1 << exp);
-        }
+            sp_type = spschools_type::exponent(random2(SPTYP_LAST_EXPONENT + 1));
     }
 
     if (level != -1)
