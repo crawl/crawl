@@ -803,8 +803,13 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
     {
         bg = tileidx_feature(gc);
 
-        if (is_unknown_stair(gc) && (env.map_knowledge(gc).feat() != DNGN_ENTER_ZOT))
+        if (is_unknown_stair(gc)
+            && env.map_knowledge(gc).feat() != DNGN_ENTER_ZOT
+            && !(player_in_hell()
+                 && env.map_knowledge(gc).feat() == DNGN_ENTER_HELL))
+        {
             bg |= TILE_FLAG_NEW_STAIR;
+        }
     }
 
     return bg;
