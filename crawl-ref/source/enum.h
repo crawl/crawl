@@ -7,15 +7,29 @@
 #define ENUM_H
 
 #include <iterator>
-#include <type_traits> // underlying_type<>
+#include <type_traits> // underlying_type<>, enable_if<>
 
 #include "tag-version.h"
 
-template<class E>
-class enum_bitfield
+// Provide a last_exponent static member variable only if the LastExponent
+// template parameter is nonnegative.
+template<int LastExponent, bool Provided = LastExponent >= 0>
+struct _enum_bitfield_exponent_base { };
+
+template<int LastExponent>
+struct _enum_bitfield_exponent_base<LastExponent, true>
+{
+    static constexpr int last_exponent = LastExponent;
+};
+
+// If LastExponent is nonnegative, is the last exponent that will
+// be iterated over by range()
+template<class E, int LastExponent = -1>
+class enum_bitfield : public _enum_bitfield_exponent_base<LastExponent>
 {
 public:
     typedef typename underlying_type<E>::type underlying_type;
+    typedef enum_bitfield<E, LastExponent> field_type;
     underlying_type flags;
 private:
     explicit constexpr enum_bitfield(underlying_type rawflags)
@@ -36,40 +50,40 @@ public:
 
     explicit constexpr operator underlying_type () const { return flags; }
     explicit constexpr operator bool () const { return flags; }
-    constexpr bool operator==(enum_bitfield<E> other) const
+    constexpr bool operator==(field_type other) const
     {
         return flags == other.flags;
     }
-    constexpr bool operator!=(enum_bitfield<E> other) const
+    constexpr bool operator!=(field_type other) const
     {
         return !(*this == other);
     }
 
-    enum_bitfield<E> &operator|=(enum_bitfield<E> other)
+    field_type &operator|=(field_type other)
     {
         flags |= other.flags;
         return *this;
     }
 
-    enum_bitfield<E> &operator&=(enum_bitfield<E> other)
+    field_type &operator&=(field_type other)
     {
         flags &= other.flags;
         return *this;
     }
 
-    constexpr enum_bitfield<E> operator|(enum_bitfield<E> other) const
+    constexpr field_type operator|(field_type other) const
     {
-        return enum_bitfield<E>(flags | other.flags);
+        return field_type(flags | other.flags);
     }
 
-    constexpr enum_bitfield<E> operator&(enum_bitfield<E> other) const
+    constexpr field_type operator&(field_type other) const
     {
-        return enum_bitfield<E>(flags & other.flags);
+        return field_type(flags & other.flags);
     }
 
-    constexpr enum_bitfield<E> operator~() const
+    constexpr field_type operator~() const
     {
-        return enum_bitfield<E>(~flags);
+        return field_type(~flags);
     }
 
     struct range
@@ -101,18 +115,27 @@ public:
 
         const int final;
 
-        range() = delete;
-        constexpr range(int last_exponent) : final(last_exponent) {}
+        constexpr range(int last_exp) : final(last_exp) {}
+
+        // Only create the default constructor if we got a nonnegative
+        // LastExponent template parameter.
+        template<typename enable_if<LastExponent >= 0, int>::type = 0>
+        constexpr range() : final(LastExponent) {}
+
         constexpr iterator begin() const { return iterator(); }
         constexpr iterator end() const { return final + 1; }
     };
 };
 
-template <class E, class ... Es>
-enum_bitfield<E> bitfield(E e1, Es... args)
-{
-    return bitfield<E>(e1, args...);
-}
+#define DEF_BITFIELD_OPERATORS(fieldT, flagT) \
+    inline fieldT operator|(flagT a, flagT b)  { return fieldT(a) |= b; } \
+    inline fieldT operator|(flagT a, fieldT b) { return fieldT(a) |= b; } \
+    inline fieldT operator&(flagT a, flagT b)  { return fieldT(a) &= b; } \
+    inline fieldT operator&(flagT a, fieldT b) { return fieldT(a) &= b; } \
+    inline fieldT operator~(flagT a) { return ~fieldT(a); } \
+    COMPILE_CHECK(is_enum<flagT>::value)
+// The last line above is really just to eat a semicolon; template
+// substitution of enum_bitfield would have already failed.
 
 /**
  * Define fieldT as a bitfield of the enum flagT, and make bitwise
@@ -128,20 +151,28 @@ enum_bitfield<E> bitfield(E e1, Es... args)
  * or as an operand of a logical operator, counts as explicit conversion
  * to bool.
  *
- * @param fieldT An identifier naming the bitfield type to define.
- * @param flagT  An identifier naming the enum type to use as a flag.
- *               Could theoretically be a more complex type expression, but
- *               I wouldn't try anything trickier than scope resolution.
+ * @param fieldT   An identifier naming the bitfield type to define.
+ * @param flagT    An identifier naming the enum type to use as a flag.
+ *                 Could theoretically be a more complex type expression, but
+ *                 I wouldn't try anything trickier than scope resolution.
+ * @param lastExp  The last exponent over which fieldT::range() should
+ *                 iterate. If unspecified or negative, the bitfield will not
+ *                 have the last_exponent static member variable, and the
+ *                 bitfield's nested range class will not have a default
+ *                 constructor.
  */
-#define DEF_BITFIELD(fieldT, flagT) typedef enum_bitfield<flagT> fieldT;  \
-    inline fieldT operator|(flagT a, flagT b)  { return fieldT(a) |= b; } \
-    inline fieldT operator|(flagT a, fieldT b) { return fieldT(a) |= b; } \
-    inline fieldT operator&(flagT a, flagT b)  { return fieldT(a) &= b; } \
-    inline fieldT operator&(flagT a, fieldT b) { return fieldT(a) &= b; } \
-    inline fieldT operator~(flagT a) { return ~fieldT(a); } \
-    COMPILE_CHECK(is_enum<flagT>::value)
-// The last line above is really just to eat a semicolon; template
-// substitution of enum_bitfield would have already failed.
+#define DEF_BITFIELD_EXP(fieldT, flagT, lastExp) \
+    typedef enum_bitfield<flagT, lastExp> fieldT; \
+    DEF_BITFIELD_OPERATORS(fieldT, flagT)
+
+/**
+ * Define fieldT as a bitfield of the enum flagT, without a specified
+ * last exponent. Equivalent to DEF_BITFIELD_EXP(fieldT, flagT, -1)
+ */
+#define DEF_BITFIELD(fieldT, flagT) \
+    typedef enum_bitfield<flagT> fieldT; \
+    DEF_BITFIELD_OPERATORS(fieldT, flagT)
+
 
 enum lang_t
 {

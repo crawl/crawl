@@ -971,7 +971,7 @@ static bool _compare_spells(spell_type a, spell_type b)
         const char* b_type = nullptr;
 
         // Find lowest/earliest school for each spell.
-        for (const auto mask : spschools_type::range(SPTYP_LAST_EXPONENT))
+        for (const auto mask : spschools_type::range())
         {
             if (a_type == nullptr && (schools_a & mask))
                 a_type = spelltype_long_name(mask);
@@ -1334,7 +1334,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
     vector<spschool_flag_type> ok_discs;
     vector<skill_type> skills;
     vector<int> spellcount;
-    for (const auto disc : spschools_type::range(SPTYP_LAST_EXPONENT))
+    for (const auto disc : spschools_type::range())
     {
         if (disc & SPTYP_DIVINATION)
             continue;
@@ -1455,7 +1455,7 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
 
             int total_skill = 0;
             int num_skills  = 0;
-            for (const auto disc : spschools_type::range(SPTYP_LAST_EXPONENT))
+            for (const auto disc : spschools_type::range())
             {
                 if (disciplines & disc)
                 {

@@ -840,7 +840,7 @@ static void _sdump_spells(dump_params &par)
 
                 bool already = false;
 
-                for (const auto bit : spschools_type::range(SPTYP_LAST_EXPONENT))
+                for (const auto bit : spschools_type::range())
                 {
                     if (spell_typematch(spell, bit))
                     {

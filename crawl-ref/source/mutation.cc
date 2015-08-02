@@ -78,9 +78,12 @@ enum mut_flag_type
     MUTFLAG_QAZLAL  = 1 << 3, // qazlal wrath
     MUTFLAG_XOM     = 1 << 4, // xom being xom
     MUTFLAG_CORRUPT = 1 << 5, // wretched stars
+
+    MUTFLAG_LAST    = MUTFLAG_CORRUPT
 };
-const int MUTFLAG_LAST_EXPONENT = 5;
-DEF_BITFIELD(mut_flags_type, mut_flag_type);
+DEF_BITFIELD_EXP(mut_flags_type, mut_flag_type, 5);
+COMPILE_CHECK(mut_flags_type::exponent(mut_flags_type::last_exponent)
+              == MUTFLAG_LAST);
 
 #include "mutation-data.h"
 
@@ -187,7 +190,7 @@ void init_mut_index()
         ASSERT_RANGE(mut, 0, NUM_MUTATIONS);
         ASSERT(mut_index[mut] == -1);
         mut_index[mut] = i;
-        for (const auto flag : mut_flags_type::range(MUTFLAG_LAST_EXPONENT))
+        for (const auto flag : mut_flags_type::range())
         {
             if (_mut_has_use(mut_data[i], flag))
                 total_weight[flag] += _mut_weight(mut_data[i], flag);

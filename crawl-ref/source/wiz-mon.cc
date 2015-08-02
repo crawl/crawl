@@ -560,8 +560,7 @@ void debug_stethoscope(int mon)
             spl << spell_title(hspell_pass[k].spell);
 
         spl << "." << (int)hspell_pass[k].freq;
-        for (const auto flag
-                : mon_spell_slot_flags::range(MON_SPELL_LAST_EXPONENT))
+        for (const auto flag : mon_spell_slot_flags::range())
         {
             if (!(hspell_pass[k].flags & flag))
                 continue;
