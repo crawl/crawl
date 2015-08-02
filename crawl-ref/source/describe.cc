@@ -2199,7 +2199,7 @@ void get_item_desc(const item_def &item, describe_info &inf)
     // Don't use verbose descriptions if the item contains spells,
     // so we can actually output these spells if space is scarce.
     const bool verbose = !item.has_spells();
-    inf.body << get_item_description(item, verbose, false, true);
+    inf.body << get_item_description(item, verbose);
 }
 
 static void _show_item_description(const item_def &item)
