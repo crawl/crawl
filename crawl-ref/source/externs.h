@@ -751,12 +751,12 @@ struct mon_spell_slot
     // Allow implicit conversion (and thus copy-initialization) from a
     // three-element initializer list, but not from a smaller list or
     // from a plain spell_type.
-    mon_spell_slot(spell_type spell_, uint8_t freq_,
-                   mon_spell_slot_flags flags_)
+    constexpr mon_spell_slot(spell_type spell_, uint8_t freq_,
+                             mon_spell_slot_flags flags_)
         : spell(spell_), freq(freq_), flags(flags_)
     { }
-    explicit mon_spell_slot(spell_type spell_ = SPELL_NO_SPELL,
-                            uint8_t freq_ = 0)
+    explicit constexpr mon_spell_slot(spell_type spell_ = SPELL_NO_SPELL,
+                                      uint8_t freq_ = 0)
         : mon_spell_slot(spell_, freq_, MON_SPELL_NO_FLAGS)
     { }
 
