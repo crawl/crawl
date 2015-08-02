@@ -16,26 +16,30 @@ class enum_bitfield
 public:
     typedef typename underlying_type<E>::type underlying_type;
     underlying_type flags;
-
+private:
+    explicit constexpr enum_bitfield(underlying_type rawflags)
+        : flags(rawflags)
+    {}
+public:
     /// Get the flag corresponding to the given bit position (0 = LSB).
-    static E exponent(int pos)
+    static constexpr E exponent(int pos)
     {
-        const underlying_type one = 1; // possibly bigger than int!
-        return static_cast<E>(one << pos);
+        return static_cast<E>(underlying_type(1) << pos);
     }
 
-    enum_bitfield() : flags(0) {}
-    enum_bitfield(E flag) : flags(flag) {}
+    constexpr enum_bitfield() : flags(0) {}
+    constexpr enum_bitfield(E flag) : flags(flag) {}
     template<class ... Es>
-    enum_bitfield(E flag, Es... rest) : enum_bitfield(rest...) { flags |= flag; }
+    constexpr enum_bitfield(E flag, E flag2, Es... rest)
+        : flags(enum_bitfield(rest...).flags | flag) {}
 
-    explicit operator underlying_type () const { return flags; }
-    explicit operator bool () const { return flags; }
-    bool operator==(enum_bitfield<E> other) const
+    explicit constexpr operator underlying_type () const { return flags; }
+    explicit constexpr operator bool () const { return flags; }
+    constexpr bool operator==(enum_bitfield<E> other) const
     {
         return flags == other.flags;
     }
-    bool operator!=(enum_bitfield<E> other) const
+    constexpr bool operator!=(enum_bitfield<E> other) const
     {
         return !(*this == other);
     }
@@ -52,31 +56,19 @@ public:
         return *this;
     }
 
-    enum_bitfield<E> operator|(enum_bitfield<E> other) const
+    constexpr enum_bitfield<E> operator|(enum_bitfield<E> other) const
     {
-        return enum_bitfield<E>(*this) |= other;
+        return enum_bitfield<E>(flags | other.flags);
     }
 
-    enum_bitfield<E> operator|(E other) const
+    constexpr enum_bitfield<E> operator&(enum_bitfield<E> other) const
     {
-        return enum_bitfield<E>(*this) |= other;
+        return enum_bitfield<E>(flags & other.flags);
     }
 
-    enum_bitfield<E> operator&(enum_bitfield<E> other) const
+    constexpr enum_bitfield<E> operator~() const
     {
-        return enum_bitfield<E>(*this) &= other;
-    }
-
-    enum_bitfield<E> operator&(E other) const
-    {
-        return enum_bitfield<E>(*this) &= other;
-    }
-
-    enum_bitfield<E> operator~() const
-    {
-        enum_bitfield<E> me(*this);
-        me.flags = ~me.flags;
-        return me;
+        return enum_bitfield<E>(~flags);
     }
 };
 
