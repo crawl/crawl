@@ -30,6 +30,8 @@ enum spschool_flag_type
 };
 const int SPTYP_LAST_EXPONENT = 12;
 DEF_BITFIELD(spschools_type, spschool_flag_type);
+COMPILE_CHECK(spschools_type::exponent(SPTYP_LAST_EXPONENT)
+              == SPTYP_LAST_SCHOOL);
 
 struct bolt;
 class dist;
