@@ -81,7 +81,7 @@ enum mut_flag_type
 
     MUTFLAG_LAST    = MUTFLAG_CORRUPT
 };
-DEF_BITFIELD_EXP(mut_flags_type, mut_flag_type, 5);
+DEF_BITFIELD(mut_flags_type, mut_flag_type, 5);
 COMPILE_CHECK(mut_flags_type::exponent(mut_flags_type::last_exponent)
               == MUTFLAG_LAST);
 
