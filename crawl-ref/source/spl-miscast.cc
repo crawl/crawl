@@ -245,7 +245,7 @@ void MiscastEffect::do_miscast()
     if (spell != SPELL_NO_SPELL)
     {
         vector<spschool_flag_type> school_list;
-        for (const auto bit : spschools_type::range(SPTYP_LAST_EXPONENT))
+        for (const auto bit : spschools_type::range())
             if (spell_typematch(spell, bit))
                 school_list.push_back(bit);
 

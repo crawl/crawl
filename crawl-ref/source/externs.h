@@ -744,8 +744,8 @@ enum mon_spell_slot_flag
 
     MON_SPELL_LAST_FLAG = MON_SPELL_NOISY,
 };
-const int MON_SPELL_LAST_EXPONENT = 9;
-DEF_BITFIELD(mon_spell_slot_flags, mon_spell_slot_flag);
+DEF_BITFIELD_EXP(mon_spell_slot_flags, mon_spell_slot_flag, 9);
+const int MON_SPELL_LAST_EXPONENT = mon_spell_slot_flags::last_exponent;
 COMPILE_CHECK(mon_spell_slot_flags::exponent(MON_SPELL_LAST_EXPONENT)
               == MON_SPELL_LAST_FLAG);
 

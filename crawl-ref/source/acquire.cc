@@ -834,7 +834,7 @@ static int _spell_weight(spell_type spell)
     int weight = 0;
     spschools_type disciplines = get_spell_disciplines(spell);
     int count = 0;
-    for (const auto disc : spschools_type::range(SPTYP_LAST_EXPONENT))
+    for (const auto disc : spschools_type::range())
     {
         if (disciplines & disc)
         {
