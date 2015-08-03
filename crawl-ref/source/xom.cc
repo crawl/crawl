@@ -693,7 +693,6 @@ static void _try_brand_switch(const int item_index)
 
     item_def &item(mitm[item_index]);
 
-    // Only apply it to melee weapons for the player.
     if (item.base_type != OBJ_WEAPONS || is_range_weapon(item))
         return;
 
@@ -704,28 +703,13 @@ static void _try_brand_switch(const int item_index)
     if (one_chance_in(5))
         return;
 
-    int brand;
-    if (item.base_type == OBJ_WEAPONS)
-    {
-        // Only switch already branded items.
-        if (get_weapon_brand(item) == SPWPN_NORMAL)
-            return;
-
-        brand = (int) SPWPN_CHAOS;
-    }
-    else
-    {
-        // Only switch already branded items.
-        if (get_ammo_brand(item) == SPMSL_NORMAL)
-            return;
-
-        brand = (int) SPMSL_CHAOS;
-    }
+    if (get_weapon_brand(item) == SPWPN_NORMAL)
+        return;
 
     if (is_random_artefact(item))
-        artefact_set_property(item, ARTP_BRAND, brand);
+        artefact_set_property(item, ARTP_BRAND, SPWPN_CHAOS);
     else
-        item.special = brand;
+        item.special = SPWPN_CHAOS;
 }
 
 static void _xom_make_item(object_class_type base, int subtype, int power)
