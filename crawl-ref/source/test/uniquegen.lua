@@ -8,7 +8,7 @@ local function test_place_random_monster()
   dgn.dismiss_monsters()
   dgn.grid(place.x, place.y, "floor")
   -- Try several times, because MONS_NO_MONSTER may be on the random list.
-  for attempt = 1, 10 do
+  for attempt = 1, 100 do
     m = dgn.create_monster(place.x, place.y, "random")
     if m then
       break
