@@ -1263,6 +1263,16 @@ BRAND:   SPWPN_FREEZING
 COLD:    1
 BOOL:    skip_ego, fly, noises
 
+ENUM:     TALOS
+NAME:     armour of Talos
+OBJ:      OBJ_ARMOUR/ARM_PLATE_ARMOUR
+PLUS:     +12
+TILE:     urand_talos
+TILE_EQ:  talos
+COLOUR:   ETC_FIRE
+BRAND:    SPARM_PONDEROUSNESS
+FIRE:     1
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
