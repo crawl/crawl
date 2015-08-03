@@ -268,7 +268,7 @@ bool check_moveto_exclusion(const coord_def& p, const string &move_verb,
     string prompt;
 
     if (is_excluded(p)
-        && !is_stair_exclusion(p)
+//        && !is_stair_exclusion(p)
         && !is_excluded(you.pos())
         && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
