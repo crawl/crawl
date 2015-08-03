@@ -307,9 +307,9 @@ void corpse_rot(actor* caster)
 {
     // If there is no caster (god wrath), centre the effect on the player.
     const coord_def center = caster ? caster->pos() : you.pos();
-    bool saw_rot = caster && (caster->is_player() || you.can_see(*caster));
+    bool saw_rot = false;
 
-    for (radius_iterator ri(center, 5, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    for (radius_iterator ri(center, LOS_NO_TRANS); ri; ++ri)
     {
         if (!is_sanctuary(*ri) && env.cgrid(*ri) == EMPTY_CLOUD)
             for (stack_iterator si(*ri); si; ++si)
@@ -336,8 +336,8 @@ void corpse_rot(actor* caster)
 
     if (saw_rot)
         mprf("You %s decay.", you.can_smell() ? "smell" : "sense");
-
-    // Should make zombies decay into skeletons?
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 }
 
 void holy_flames(monster* caster, actor* defender)
