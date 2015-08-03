@@ -668,7 +668,8 @@ enum beam_type                  // bolt::flavour
     BEAM_UNRAVELLING,
     BEAM_SHARED_PAIN,
     BEAM_IRRESISTIBLE_CONFUSION,
-    BEAM_LAST_ENCHANTMENT = BEAM_IRRESISTIBLE_CONFUSION,
+    BEAM_INFESTATION,
+    BEAM_LAST_ENCHANTMENT = BEAM_INFESTATION,
 
     BEAM_MEPHITIC,
     BEAM_INK,
@@ -2135,6 +2136,7 @@ enum enchant_type
     ENCH_PAIN_BOND, // affected by above
     ENCH_IDEALISED,
     ENCH_BOUND_SOUL,
+    ENCH_INFESTATION,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -4701,6 +4703,7 @@ enum spell_type
     SPELL_SERPENT_OF_HELL_TAR_BREATH,
     SPELL_SERPENT_OF_HELL_DIS_BREATH,
     SPELL_BIND_SOULS,
+    SPELL_INFESTATION,
     NUM_SPELLS
 };
 

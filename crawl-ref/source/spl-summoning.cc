@@ -3283,6 +3283,38 @@ bool confirm_attack_spectral_weapon(monster* mons, const actor *defender)
     return false;
 }
 
+static void _setup_infestation(bolt &beam, int pow)
+{
+    beam.name         = "infestation";
+    beam.aux_source   = "infestation";
+    beam.flavour      = BEAM_INFESTATION;
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.colour       = GREEN;
+    beam.source_id    = MID_PLAYER;
+    beam.thrower      = KILL_YOU;
+    beam.is_explosion = true;
+    beam.ex_size      = 2;
+    beam.ench_power   = pow;
+    beam.origin_spell = SPELL_INFESTATION;
+}
+
+spret_type cast_infestation(int pow, bolt &beam, bool fail)
+{
+    if (cell_is_solid(beam.target))
+    {
+        canned_msg(MSG_SOMETHING_IN_WAY);
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    _setup_infestation(beam, pow);
+    mpr("You call forth a plague of scarabs!");
+    beam.explode();
+
+    return SPRET_SUCCESS;
+}
+
 struct summon_cap
 {
     int type_cap;

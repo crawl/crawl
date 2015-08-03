@@ -1122,12 +1122,14 @@ static unique_ptr<targetter> _spell_targetter(spell_type spell, int pow,
     switch (spell)
     {
     case SPELL_FIREBALL:
-        return make_unique<targetter_beam>(&you, range, ZAP_FIREBALL, pow, 1, 1);
+        return make_unique<targetter_beam>(&you, range, ZAP_FIREBALL, pow,
+                                           1, 1);
     case SPELL_HURL_DAMNATION:
-        return make_unique<targetter_beam>(&you, range, ZAP_DAMNATION, pow, 1, 1);
+        return make_unique<targetter_beam>(&you, range, ZAP_DAMNATION, pow,
+                                           1, 1);
     case SPELL_MEPHITIC_CLOUD:
-        return make_unique<targetter_beam>(&you, range, ZAP_BREATHE_MEPHITIC, pow,
-                                           pow >= 100 ? 1 : 0, 1);
+        return make_unique<targetter_beam>(&you, range, ZAP_BREATHE_MEPHITIC,
+                                           pow, pow >= 100 ? 1 : 0, 1);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return make_unique<targetter_imb>(&you, pow, range);
     case SPELL_FIRE_STORM:
@@ -1152,16 +1154,25 @@ static unique_ptr<targetter> _spell_targetter(spell_type spell, int pow,
     case SPELL_GLACIATE:
         return make_unique<targetter_cone>(&you, range);
     case SPELL_CLOUD_CONE:
-        return make_unique<targetter_shotgun>(&you, CLOUD_CONE_BEAM_COUNT, range);
+        return make_unique<targetter_shotgun>(&you, CLOUD_CONE_BEAM_COUNT,
+                                              range);
     case SPELL_SCATTERSHOT:
-        return make_unique<targetter_shotgun>(&you, shotgun_beam_count(pow), range);
+        return make_unique<targetter_shotgun>(&you, shotgun_beam_count(pow),
+                                              range);
     case SPELL_GRAVITAS:
-        return make_unique<targetter_smite>(&you, range, gravitas_range(pow, 2),
+        return make_unique<targetter_smite>(&you, range,
+                                            gravitas_range(pow, 2),
                                             gravitas_range(pow));
     case SPELL_VIOLENT_UNRAVELLING:
         return make_unique<targetter_unravelling>(&you, range, pow);
     case SPELL_RANDOM_BOLT:
-        return make_unique<targetter_beam>(&you, range, ZAP_CRYSTAL_BOLT, pow, 0, 0);
+        return make_unique<targetter_beam>(&you, range, ZAP_CRYSTAL_BOLT, pow,
+                                           0, 0);
+    case SPELL_INFESTATION:
+        return make_unique<targetter_smite>(&you, range, 2, 2, false,
+                                            [](const coord_def& p) -> bool {
+                                                return you.pos() != p; });
+
     default:
         break;
     }
@@ -1784,6 +1795,9 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_BATTLESPHERE:
         return cast_battlesphere(&you, powc, god, fail);
+
+    case SPELL_INFESTATION:
+        return cast_infestation(powc, beam, fail);
 
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:
