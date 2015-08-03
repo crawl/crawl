@@ -111,6 +111,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_PAIN_BOND,       MB_PAIN_BOND },
     { ENCH_IDEALISED,       MB_IDEALISED },
     { ENCH_BOUND_SOUL,      MB_BOUND_SOUL },
+    { ENCH_INFESTATION,     MB_INFESTATION },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -1528,6 +1529,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("idealised");
     if (is(MB_BOUND_SOUL))
         v.emplace_back("bound soul");
+    if (is(MB_INFESTATION))
+        v.emplace_back("infested");
     return v;
 }
 

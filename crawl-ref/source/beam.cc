@@ -197,6 +197,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
     case BEAM_HEALING:
         elem = ETC_HEAL;
         break;
+    case BEAM_INFESTATION:
     case BEAM_PAIN:
         elem = ETC_UNHOLY;
         break;
@@ -3518,6 +3519,10 @@ void bolt::affect_player_enchantment(bool resistible)
         return;
     }
 
+    // Never affects the player.
+    if (flavour == BEAM_INFESTATION)
+        return;
+
     // You didn't resist it.
     if (animate)
         _ench_animation(effect_known ? real_flavour : BEAM_MAGIC);
@@ -5224,6 +5229,7 @@ bool bolt::has_saving_throw() const
     case BEAM_SAP_MAGIC:
     case BEAM_UNRAVELLING:
     case BEAM_UNRAVELLED_MAGIC:
+    case BEAM_INFESTATION:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores MR 1/3 of the time
@@ -5297,6 +5303,10 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
 
     case BEAM_INNER_FLAME:
         rc = !(mon->is_summoned() || mon->has_ench(ENCH_INNER_FLAME));
+        break;
+
+    case BEAM_INFESTATION:
+        rc = mons_gives_xp(mon, &you) && !mon->has_ench(ENCH_INFESTATION);
         break;
 
     default:
@@ -5849,6 +5859,15 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         _unravelling_explode(*this);
         return MON_AFFECTED;
 
+    case BEAM_INFESTATION:
+    {
+        const int dur = (5 + random2avg(ench_power / 2, 2)) * BASELINE_DELAY;
+        mon->add_ench(mon_enchant(ENCH_INFESTATION, 0, &you, dur));
+        if (simple_monster_message(mon, " is infested!"))
+            obvious_effect = true;
+        return MON_AFFECTED;
+    }
+
     default:
         break;
     }
@@ -6094,6 +6113,10 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     {
         loudness = explosion_noise(r);
 
+        // Not an "explosion", but still a bit noisy at the target location.
+        if (origin_spell == SPELL_INFESTATION)
+            loudness = spell_effect_noise(SPELL_INFESTATION);
+
         // Lee's Rapid Deconstruction can target the tiles on the map
         // boundary.
         const coord_def noise_position = clamp_in_bounds(pos());
@@ -6327,8 +6350,7 @@ bool bolt::nasty_to(const monster* mon) const
     if (flavour == BEAM_TELEPORT)
         return !mon->wont_attack();
 
-    // enslave soul
-    if (flavour == BEAM_ENSLAVE_SOUL)
+    if (flavour == BEAM_ENSLAVE_SOUL || flavour == BEAM_INFESTATION)
         return ench_flavour_affects_monster(flavour, mon);
 
     // sleep
@@ -6618,6 +6640,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_UNRAVELLED_MAGIC:      return "unravelled magic";
     case BEAM_SHARED_PAIN:           return "shared pain";
     case BEAM_IRRESISTIBLE_CONFUSION:return "confusion";
+    case BEAM_INFESTATION:           return "infestation";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

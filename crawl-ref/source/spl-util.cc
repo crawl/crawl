@@ -1388,6 +1388,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_CONTROL_UNDEAD:
     case SPELL_DEATH_CHANNEL:
     case SPELL_SIMULACRUM:
+    case SPELL_INFESTATION:
         if (player_mutation_level(MUT_NO_LOVE))
             return "you cannot coerce anything to obey you.";
         break;

@@ -1335,6 +1335,26 @@ static bool _explode_monster(monster* mons, killer_type killer,
     return true;
 }
 
+static void _infestation_create_scarab(monster* mons)
+{
+    if (monster *scarab = create_monster(mgen_data(MONS_DEATH_SCARAB,
+                                                   BEH_FRIENDLY, &you, 0,
+                                                   SPELL_INFESTATION,
+                                                   mons->pos(), MHITYOU,
+                                                   MG_AUTOFOE),
+                                         false))
+    {
+        scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+
+        if (you.see_cell(mons->pos()) || you.can_see(*scarab))
+        {
+            mprf("%s bursts from %s!", scarab->name(DESC_A, true).c_str(),
+                                       mons->name(DESC_THE).c_str());
+        }
+        mons->flags |= MF_EXPLODE_KILL;
+    }
+}
+
 static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
                                bool summoned)
 {
@@ -2070,7 +2090,6 @@ item_def* monster_die(monster* mons, killer_type killer,
     {
         _druid_final_boon(mons);
     }
-
     else if (mons->type == MONS_ELEMENTAL_WELLSPRING
              && mons->mindex() == killer_index)
     {
@@ -2325,9 +2344,10 @@ item_def* monster_die(monster* mons, killer_type killer,
                     // Death Channel
                     else if (mons->type == MONS_SPECTRAL_THING)
                         simple_monster_message(mons, " fades into mist!");
-                    // Animate Skeleton/Animate Dead
+                    // Animate Skeleton/Animate Dead/Infestation
                     else if (mons->type == MONS_ZOMBIE
-                             || mons->type == MONS_SKELETON)
+                             || mons->type == MONS_SKELETON
+                             || mons->type == MONS_DEATH_SCARAB)
                     {
                         simple_monster_message(mons, " crumbles into dust!");
                     }
@@ -2542,10 +2562,13 @@ item_def* monster_die(monster* mons, killer_type killer,
             _mummy_curse(mons, killer, killer_index);
     }
 
+    if (mons->has_ench(ENCH_INFESTATION) && !was_banished && !mons_reset)
+        _infestation_create_scarab(mons);
+
     if (mons->mons_species() == MONS_BALLISTOMYCETE)
     {
         _activate_ballistomycetes(mons, mons->pos(),
-                                 YOU_KILL(killer) || pet_kill);
+                                  YOU_KILL(killer) || pet_kill);
     }
 
     if (!wizard && !submerged && !was_banished)
