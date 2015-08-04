@@ -94,49 +94,67 @@ function trove.get_trove_item(e, value, base_item)
 
   local d = crawl.roll_dice
 
-  local armour_weight = 1
-  local weapon_weight = 1
-  local potion_weight = 1
-
-  if you.race() == "Felid" then
-    armour_weight = 0
-    weapon_weight = 0
-  end
-
-  if you.race() == "Mummy" then
-    potion_weight = 0
-  end
-
   -- base is item.base_type, type is item.sub_type, quant is an additional parameter (quantity, charges, etc)
-  -- currently 20% armour, 15% weapon, 50% consumable, 15% miscellaneous (which are not actually taken from the player)
+  -- currently 20% armour, 15% weapon, 50% consumable, 15% miscellaneous
   local prices = {
-       {base="armour", type="gold dragon armour", quant=1+d(3), weight=armour_weight},
-       {base="armour", type="storm dragon armour", quant=1+d(3), weight=armour_weight},
-       {base="armour", type="fire dragon armour", quant=2+d(3), weight=armour_weight},
-       {base="armour", type="ice dragon armour", quant=2+d(3), weight=armour_weight},
+       {base="scroll", type="acquirement", quant=2},
+       {base="scroll", type="identify", quant=15+d(5)+d(5)},
+       {base="miscellaneous", type="rune of Zot", quant=3, name="slimy rune of Zot"},
+       {base="miscellaneous", type="rune of Zot", quant=11, name="abyssal rune of Zot"},
+       {base="miscellaneous", type="horn of Geryon"} }
 
-       {base="weapon", type="demon whip", quant=3+d(3), weight=weapon_weight},
-       {base="weapon", type="demon trident", quant=3+d(3), weight=weapon_weight},
-       {base="weapon", type="demon blade", quant=3+d(3), weight=weapon_weight},
+  local wpn_arm = {
+       {base="armour", type="gold dragon armour", quant=1+d(3)},
+       {base="armour", type="storm dragon armour", quant=1+d(3)},
+       {base="armour", type="fire dragon armour", quant=2+d(3)},
+       {base="armour", type="ice dragon armour", quant=2+d(3)},
+       {base="weapon", type="demon whip", quant=3+d(3)},
+       {base="weapon", type="demon trident", quant=3+d(3)},
+       {base="weapon", type="demon blade", quant=3+d(3)} }
 
-       {base="wand", type="heal wounds", quant=7+d(2), weight=1},
-       {base="potion", type="curing", quant=12+d(4)+d(4), weight=potion_weight},
-       {base="potion", type="heal wounds", quant=8+d(3)+d(3), weight=potion_weight},
+  if you.race() ~= "Felid" then
+    for _, toll in ipairs(wpn_arm) do
+      table.insert(prices, toll)
+    end
+  end
 
-       {base="wand", type="hasting", quant=7+d(2), weight=1},
-       {base="potion", type="haste", quant=3+d(3)+d(2), weight=potion_weight},
-       {base="scroll", type="blinking", quant=3+d(3), weight=1},
-       {base="scroll", type="teleportation", quant=10+d(3)+d(4), weight=1},
+  local pots = {
+       {base="potion", type="cure mutation", quant=2} }
 
-       {base="potion", type="cure mutation", quant=2, weight=potion_weight},
-       {base="scroll", type="acquirement", quant=2, weight=1},
-       {base="scroll", type="identify", quant=15+d(5)+d(5), weight=1},
+  local heal_pots = {
+       {base="potion", type="curing", quant=12+d(4)+d(4)},
+       {base="potion", type="heal wounds", quant=8+d(3)+d(3)} }
 
-       {base="miscellaneous", type="rune of Zot", quant=3, name="slimy rune of Zot", weight=1},
-       {base="miscellaneous", type="rune of Zot", quant=11, name="abyssal rune of Zot", weight=1},
-       {base="miscellaneous", type="horn of Geryon", weight=1} }
+  if you.race() ~= "Mummy" then
+    if you.race() ~= "Vine Stalker" then
+      for _, toll in ipairs(heal_pots) do
+        table.insert(pots, toll)
+      end
+    end
+    if you.race() ~= "Formicid" then
+      table.insert(pots, {base="potion", type="haste", quant=3+d(3)+d(2)})
+    end
+    for _, toll in ipairs(pots) do
+      table.insert(prices, toll)
+    end
+  end
 
-  local chosen = util.random_weighted_from('weight', prices)
+  if you.race() ~= "Vine Stalker" then
+    table.insert(prices, {base="wand", type="heal wounds", quant=7+d(2)})
+  end
+
+  local stasis_tolls = {
+       {base="wand", type="hasting", quant=7+d(2)},
+       {base="scroll", type="blinking", quant=3+d(3)},
+       {base="scroll", type="teleportation", quant=10+d(3)+d(4)} }
+
+  if you.race() ~= "Formicid" then
+    for _, toll in ipairs(stasis_tolls) do
+      table.insert(prices, toll)
+    end
+  end
+
+  local chosen = util.random_from(prices)
   item.base_type = chosen.base
   item.sub_type = chosen.type
   if chosen.base == "armour" or chosen.base == "wand" then
