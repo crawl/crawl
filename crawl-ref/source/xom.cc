@@ -3274,21 +3274,6 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done    = _xom_miscast(2, nasty, debug);
             badness = 2;
         }
-        else if (tension > 0 && x_chance_in_y(13, sever))
-        {
-            if (cloud_type_at(you.pos()) != CLOUD_NONE)
-                return XOM_DID_NOTHING;
-            if (debug)
-                return XOM_BAD_CHAOS_CLOUD;
-            // Place a one-tile cloud with minor spreading.
-            check_place_cloud(CLOUD_CHAOS, you.pos(), 3 + random2(12)*3,
-                              nullptr, random_range(5,15));
-            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "chaos cloud"),
-                      true);
-            god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
-            done = XOM_BAD_CHAOS_CLOUD;
-            badness = 2;
-        }
         else if (x_chance_in_y(14, sever))
         {
             done    = _xom_chaos_upgrade_nearby_monster(debug);
@@ -3378,6 +3363,21 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
         {
             done    = _xom_draining_torment_effect(sever, debug);
             badness = (random2(tension) > 5 ? 3 : 2);
+        }
+        else if (tension > 0 && x_chance_in_y(22, sever))
+        {
+            if (cloud_type_at(you.pos()) != CLOUD_NONE)
+                return XOM_DID_NOTHING;
+            if (debug)
+                return XOM_BAD_CHAOS_CLOUD;
+            // Place a one-tile cloud with minor spreading.
+            check_place_cloud(CLOUD_CHAOS, you.pos(), 3 + random2(12)*3,
+                              nullptr, random_range(5,15));
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "chaos cloud"),
+                      true);
+            god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
+            done = XOM_BAD_CHAOS_CLOUD;
+            badness = 2;
         }
         else if (one_chance_in(sever) && !player_in_branch(BRANCH_ABYSS))
         {
