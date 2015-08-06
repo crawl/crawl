@@ -625,11 +625,6 @@ bool mons_class_gives_xp(monster_type mc, bool indirect)
         || (indirect && mons_is_tentacle_or_tentacle_segment(mc));
 }
 
-bool mons_class_is_threatening(monster_type mo)
-{
-    return !mons_class_flag(mo, M_NO_THREAT);
-}
-
 /**
  * Can killing this monster reward xp to the given actor?
  *
@@ -662,6 +657,16 @@ bool mons_gives_xp(const monster* victim, const actor* agent)
         && mons_class_gives_xp(victim->type)        // class must reward xp
         && !testbits(victim->flags, MF_WAS_NEUTRAL) // no neutral monsters
         && !killed_friend;
+}
+
+bool mons_class_is_threatening(monster_type mo)
+{
+    return !mons_class_flag(mo, M_NO_THREAT);
+}
+
+bool mons_is_threatening(const monster *mons)
+{
+    return mons_class_is_threatening(mons->type) || mons_is_active_ballisto(mons);
 }
 
 /**
