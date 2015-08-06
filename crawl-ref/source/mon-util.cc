@@ -4647,7 +4647,7 @@ int get_dist_to_nearest_monster()
             continue;
 
         // Plants/fungi don't count.
-        if (!mons_class_is_threatening(mon->type))
+        if (!mons_is_threatening(mon))
             continue;
 
         if (mon->wont_attack())
