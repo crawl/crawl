@@ -828,7 +828,7 @@ static bool _advise_use_wand()
 
 void hints_monster_seen(const monster& mon)
 {
-    if (!mons_class_is_threatening(mon.type))
+    if (!mons_is_threatening(&mon))
     {
         if (Hints.hints_events[HINT_SEEN_ZERO_EXP_MON])
         {
@@ -2499,7 +2499,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         // "Shouts" from zero experience monsters are boring, ignore
         // them.
-        if (!mons_class_is_threatening(m->type))
+        if (!mons_is_threatening(m))
         {
             Hints.hints_events[HINT_MONSTER_SHOUT] = true;
             return;

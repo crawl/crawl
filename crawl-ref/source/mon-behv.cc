@@ -1086,7 +1086,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // dies, and you'll get a warning prompt and penance once
         // *per hit*. This may not be the best way to address the
         // issue, though. -cao
-        if (!mons_class_is_threatening(mon->type)
+        if (!mons_is_threatening(mon)
             && mon->attitude != ATT_FRIENDLY
             && mon->attitude != ATT_GOOD_NEUTRAL)
         {
