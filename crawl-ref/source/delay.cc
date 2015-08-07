@@ -624,7 +624,7 @@ void handle_delay()
         }
         else if (corpse.is_type(OBJ_CORPSES, CORPSE_SKELETON))
         {
-            mprf("The corpse has rotted away into a skeleton before"
+            mprf("The corpse has rotted away into a skeleton before "
                  "you could finish drinking it!");
             _xom_check_corpse_waste();
             stop_delay();
