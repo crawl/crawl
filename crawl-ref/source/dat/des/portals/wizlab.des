@@ -104,7 +104,7 @@ function wizlab_portal (e)
 end
 
 -- Destinations:
-function wizlab_setup (e, wizlab_desc)
+function wizlab_setup (e)
     e.orient("encompass")
     e.tags("no_item_gen no_monster_gen")
     e.kfeat("< = exit_wizlab")
@@ -1043,7 +1043,7 @@ lua_marker("A", box_marker)
 :           set_feature_name("rock_wall", "strange rock wall")
 :           set_feature_name("stone_wall", "highly decorated stone wall")
 :           set_feature_name("floor", "rough-hewn floor")
-:           wizlab_setup(_G, "Doroklohe's Tomb")
+:           wizlab_setup(_G)
 epilogue{{
             wizlab_milestone(_G, "Doroklohe's Tomb")
 }}
@@ -1183,7 +1183,7 @@ COLOUR:     W = green
 :           door_verb_open="You part the %s%s.",
 :           door_verb_close="You squeeze the %s%s shut."
 :           })
-:           wizlab_setup(_G, "Cigotuvi's Fleshworks")
+:           wizlab_setup(_G)
 :           set_random_mon_list("large abomination / ugly thing / very ugly thing")
 epilogue{{
             wizlab_milestone(_G, "Cigotuvi's Fleshworks")
@@ -1265,7 +1265,7 @@ LROCKCOL:   lightmagenta
 LFLOORTILE: floor_rough_magenta
 LFLOORCOL:  magenta
 :           set_random_mon_list("purple draconian / deep elf mage")
-:           wizlab_setup(_G, "Iskenderun's Mystic Tower")
+:           wizlab_setup(_G)
 epilogue{{
             wizlab_milestone(_G, "Iskenderun's Mystic Tower")
 }}
@@ -1311,7 +1311,7 @@ ENDMAP
 # Zonguldrok's Shrine
 NAME:       wizlab_zonguldrok
 TAGS:       no_rotate
-:           wizlab_setup(_G, "Zonguldrok's Shrine")
+:           wizlab_setup(_G)
 SUBST:      ? = txxx
 SUBST:      ! = t..
 NSUBST:     Z = Z / '
@@ -1513,7 +1513,7 @@ MARKER:     c = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="
                                   veto_shatter="veto" }
 MARKER:     t = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
                                   veto_shatter="veto", veto_fire="veto" }
-:           wizlab_setup(_G, "Wucad Mu's Monastery")
+:           wizlab_setup(_G)
 :           set_border_fill_type("tree")
 :           set_random_mon_list([[shadow w:6 / flayed ghost w:2 / hungry ghost w:2 / ]]
 :                            .. [[monstrous demonspawn / deep troll / ]]
@@ -1693,7 +1693,7 @@ set_random_mon_list([[rakshasa w:15 / deep elf summoner w:15 / wizard w:15 / spa
 set_border_fill_type('permarock_wall')
 set_feature_name("permarock_wall", "The dimension's edge")
 set_feature_name("green_crystal_wall", "wall of crystal")
-wizlab_setup(_G, "The Roulette of Golubria")
+wizlab_setup(_G)
 }}
 
 epilogue{{
@@ -1798,7 +1798,7 @@ TILE:       b = dngn_crystal_white
 COLOUR:     wWv#4 = silver
 :           set_border_fill_type('open_sea')
 :           set_random_mon_list("insubstantial wisp / air elemental / wind drake")
-:           wizlab_setup(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
+:           wizlab_setup(_G)
 :           set_feature_name("floor", "damp floor")
 :           set_feature_name("green_crystal_wall", "wall of white crystal")
 
@@ -1948,7 +1948,7 @@ SHUFFLE:    A<, 4d, 7f, 4d / 5e, 7f / 8g
 SUBST:      7 = 4, 8 = 5, df = 6, eg = 3
 :           set_random_mon_list([[lesser demon w:50 / red devil / blue devil / ]]
 :                            .. [[orange demon / ynoxinul / kobold demonologist / ]])
-:           wizlab_setup(_G, "The Hall of " .. wizname .. " the Hellbinder")
+:           wizlab_setup(_G)
 :           set_feature_name("stone_wall", "black wall")
 :           set_feature_name("rock_wall", "carved rock wall")
 epilogue{{
