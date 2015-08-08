@@ -112,6 +112,7 @@ end
 function wizlab_milestone (e, wizlab_desc)
     crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".", "parent")
     crawl.take_note("Entered " .. wizlab_desc)
+    crawl.mpr("Welcome to " .. wizlab_desc .. "!")
 end
 
 function wizlab_doroklohe_convert_boxes(data, triggerable, triggerer,
