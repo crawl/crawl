@@ -341,7 +341,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_TELEPORT, 3, 3, MUTFLAG_BAD, false,
+{ MUT_TELEPORT, 0, 3, MUTFLAG_BAD, false,
   "teleportitis",
 
   {"You are occasionally teleported to nearby monsters.",
