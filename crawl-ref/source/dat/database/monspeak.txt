@@ -5183,7 +5183,7 @@ _Natasha_death_common_
 _Natasha_death_rare_
 Suddenly @the_monster@'s spirit rises from @possessive@ lifeless body.
 
-Moaning pathetically, @the_monster@'s spirit plunges in to the ground.
+Moaning pathetically, @the_monster@'s spirit plunges into the ground.
 
 You hear a faint echoing roar filled with hate and sorrow!
 %%%%
