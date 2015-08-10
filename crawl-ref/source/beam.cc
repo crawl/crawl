@@ -4746,17 +4746,22 @@ void bolt::affect_monster(monster* mon)
 
     hit_count[mon->mid]++;
 
-    if (fedhas_shoot_through(*this, mon) && !is_tracer)
+    if (shoot_through_monster(*this, mon) && !is_tracer)
     {
         // FIXME: Could use a better message, something about
         // dodging that doesn't sound excessively weird would be
         // nice.
         if (you.see_cell(mon->pos()))
         {
-            simple_god_message(
-                make_stringf(" protects %s plant from harm.",
-                    attitude == ATT_FRIENDLY ? "your" : "a").c_str(),
-                GOD_FEDHAS);
+            if (testbits(mon->flags, MF_DEMONIC_GUARDIAN))
+                mpr("Your demonic guardian avoids your attack.");
+            else
+            {
+                simple_god_message(
+                    make_stringf(" protects %s plant from harm.",
+                        attitude == ATT_FRIENDLY ? "your" : "a").c_str(),
+                    GOD_FEDHAS);
+            }
         }
     }
 
@@ -5087,7 +5092,7 @@ bool bolt::ignores_monster(const monster* mon) const
         return true;
     }
 
-    if (fedhas_shoot_through(*this, mon))
+    if (shoot_through_monster(*this, mon))
         return true;
 
     // Fire storm creates these, so we'll avoid affecting them.
@@ -6568,4 +6573,39 @@ void clear_zap_info_on_exit()
 int ench_power_stepdown(int pow)
 {
     return stepdown_value(pow, 30, 40, 100, 120);
+}
+
+// Can a particular beam go through a particular monster?
+// Fedhas worshipers can shoot through non-hostile plants,
+// and players can shoot through their demonic guardians.
+bool shoot_through_monster(const bolt& beam, const monster* victim)
+{
+    actor *originator = beam.agent();
+    if (!victim || !originator)
+        return false;
+
+    bool origin_worships_fedhas;
+    mon_attitude_type origin_attitude;
+    if (originator->is_player())
+    {
+        origin_worships_fedhas = you_worship(GOD_FEDHAS);
+        origin_attitude = ATT_FRIENDLY;
+    }
+    else
+    {
+        monster* temp = originator->as_monster();
+        if (!temp)
+            return false;
+        origin_worships_fedhas = temp->god == GOD_FEDHAS;
+        origin_attitude = temp->attitude;
+    }
+
+    return (origin_worships_fedhas
+            && fedhas_protects(victim))
+           || (originator->is_player()
+               && testbits(victim->flags, MF_DEMONIC_GUARDIAN))
+           && !beam.is_enchantment()
+           && beam.name != "lightning arc"
+           && (mons_atts_aligned(victim->attitude, origin_attitude)
+               || victim->neutral());
 }

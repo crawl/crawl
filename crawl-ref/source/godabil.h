@@ -91,7 +91,6 @@ bool kiku_gift_necronomicon();
 bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monster* target);
 bool fedhas_passthrough(const monster_info* target);
-bool fedhas_shoot_through(const bolt& beam, const monster* victim);
 struct mgen_data;
 int place_ring(vector<coord_def>& ring_points,
                const coord_def& origin,
