@@ -3580,7 +3580,7 @@ void display_char_status()
 
     // character evaluates their ability to sneak around:
     _display_char_status(check_stealth(),
-                         "You feel %s",
+                         "You are %s",
                          stealth_desc(check_stealth()).c_str());
 }
 
