@@ -1,3 +1,29 @@
+Stone Soup 0.16.2 (20150811)
+--------------------------------------------
+* Give FeEE players stones at game start.
+* Display base attributes in the '@' display.
+* No longer revoke Zin's sanctuary when a confused ally attacks you, and allow
+  confused allies in your sanctuary to get away with attacking hostiles.
+* Ranged and confused player attacks as well as the Tornado, Static Discharge,
+  and Singularity spells now all break sanctuary.
+* Fix a bug where players who lose the big wings mutation while flying with no
+  other source of flight would continue to fly. They now stop flying and get an
+  emergency flight evocation if wearing a ring of flight.
+* Fix a bug where a player with the confused status could cancel accidental
+  attacks when wielding a weapon inscribed with "!a".
+* Fix a bug where monsters with phase shift got 8 more EV than intended.
+* Fix a bug where players could take a shaft and land in inescapable areas.
+* Have Dithmenos' spell-shadowing attack use the same targeting as the player
+  attack that triggered it to avoid it doing things like hitting allies.
+* Fix a mouse bug in the Tiles version where Ctrl and Alt modifiers would be
+  set when clicking despite those keys not being pressed.
+* Fix the Tiles version failing to run on OS X.
+* In the Objstat debug mode for counting items and monsters, the output format
+  has been streamlined to generate one file per table with data from all levels
+  in each table.
+* Fix a bug in Objstat where items in shops weren't counted.
+* Other minor bugfixes, and cleanups to in-game descriptions and help text.
+
 Stone Soup 0.16.1 (20150322)
 --------------------------------------------
 * Major bugfix release. Because of the first two bugfixes listed below, it's
