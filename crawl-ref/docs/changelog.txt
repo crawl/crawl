@@ -1,4 +1,4 @@
-Stone Soup 0.17 (up to 0.17-a0-1508-ge7f3dc3)
+Stone Soup 0.17 (up to 0.17-a0-1649-g91c94ae)
 --------------------------------------------
 
 Branches, Environment
@@ -51,6 +51,7 @@ Character
 * The 'spiny' mutation is now dramatically stronger.
 * Powered by Death is now triggered by kills, instead of corpses.
 * Black Mark no longer gives vampirism; its other effects are now stronger.
+* Clawed attacks no longer have bleeding-over-time damage effects.
 
 Geometry
 --------
@@ -72,6 +73,9 @@ Gods
   - Corpseless monsters now drop gold.
   - Gold that lands in deep water/lava teleports into the player's pockets.
   - Amulets of faith no longer have any effect.
+  - Bribes now work on any intelligent monster in the branch, with bribe
+    susceptibility based on HD and a scaling factor by branch. Unique Hell or
+    Pan lords can't be bribed.
 * Ru:
   - New sacrifice: Sacrifice Eye, similar to the effect of amulets of
     inaccuracy (and stacking with the amulet).
@@ -82,7 +86,8 @@ Gods
 * The Shining One no longer blesses allies' weapons and armour; their angel
   summoning ability is now slightly cheaper.
 * Cheibriados' slouch damage is now based on monster movement speed.
-* Ashenzari now gives the Scrying ability at 2* piety.
+* Ashenzari now gives the Scrying ability at 1* piety, boosts skills at 2*, and
+  grants SInv at 3*.
 * Zin's Vitalization no longer provides nutrition, and now has a small MP cost.
 * Jiyva's Slime Prayer now lasts longer and has a small MP cost.
 * Sif no longer requires worshippers to know spells.
@@ -92,8 +97,6 @@ Items
 * New items:
   - Maxwell's Etheric Cage, a helmet giving rElec, +4 MP and a large boost to
     MP regen, at the cost of causing intermittent light contamination.
-  - The Crown of Eternal Torment, a hat that gives rN+++, sInv, complete
-    immunity to Torment effects, and -20% max HP while worn.
 * Poisonous chunks and rot chunks have been merged into 'inedible' chunks,
   which are only edible by ghouls. Some monsters have had their meat cleaned.
 * Unrandart changes:
@@ -169,9 +172,15 @@ Monsters
   move speed and fast swimming speed.
 * Polyphemus can throw his yaks at the player.
 * Blocks of ice are now susceptible to LRD and Shatter.
-* Demonspawn warmongers now have Haste Other instead of Grand Avatar.
+* Demonspawn warmongers now have Haste Other instead of Grand Avatar, and can
+  spawn with a shield.
 * Demonspawn bloodsaints no longer have ephemeral infusion nor damage
   themselves when casting Legendary Destruction.
+* Monsters can no longer have the Inner Flame spell.
+* Hellwings no longer have the Teleport Other spell.
+* Monsters can no longer have Animate Dead nor Simulacrum spells.
+* Monsters that worship Dith or Yred (including allies of the player) are
+  immune to the umbra accuracy reduction.
 * Removed monsters:
   - Unborn.
   - Ravens.
@@ -179,6 +188,8 @@ Monsters
   - Baby alligators.
   - Boring beetles.
   - Goliath beetles.
+  - Wandering mushrooms only generate through Fedhas or the monster Summon
+    Mushrooms spell.
 
 Spells
 ------
@@ -210,6 +221,8 @@ Spells
 * Casting Haunt no longer cause sickness.
 * High level spellbooks no longer restrict learning from them based on skill
   levels.
+* Corpse Rot now affects all corpses in LOS.
+* Darkness is now level 6.
 * Removed spells:
   - Abjuration.
   - Control Teleport.
