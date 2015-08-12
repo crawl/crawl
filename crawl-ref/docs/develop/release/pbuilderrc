@@ -4,9 +4,8 @@
 ## set e.g. ARCH=i386 to make the i386 packges on an amd64 system
 : ${ARCH:="$(dpkg --print-architecture)"}
 ##
-. /etc/lsb_release
+. /etc/lsb-release
 if [ -z "$DIST" ]; then
-   . /etc/lsb_release
    DIST="$DISTRIB_CODENAME"
 fi
 NAME="$DIST"
@@ -19,7 +18,6 @@ BASEPATH=/var/cache/pbuilder/$NAME.cow/
 #EXTRAPACKAGES=""
 BUILDPLACE=/var/cache/pbuilder/build/
 if [ -z "$OS" ]; then
-   . /etc/lsb_release
    OS="${DISTRIB_ID,,}"
 fi
 ## set OS=debian to e.g. build for debian from an ubuntu system.

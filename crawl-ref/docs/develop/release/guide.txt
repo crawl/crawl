@@ -80,7 +80,7 @@ for those the list begins with step 3.
 6. Tag the release
 
    In the branch you're about to tag:
-   git tag -s 0.X.y
+   git tag -a 0.X.y
 
    Don't push the tag yet so you can make final amendments.
 
