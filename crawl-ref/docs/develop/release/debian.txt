@@ -13,7 +13,7 @@ packages:
 https://www.debian.org/doc/manuals/maint-guide/index.en.html
 
 
-0. Prerequisites
+0.1. Software Prerequisites
 
    Install the cowbuilder and pbuilder packages:
 
@@ -31,6 +31,46 @@ https://www.debian.org/doc/manuals/maint-guide/index.en.html
 
    export DEBFULLNAME="yourname"
    export DEBEMAIL="your@email"
+
+
+0.2 Release Prerequisites
+
+   Before building the packages, you should have the release version tagged
+   with all commits included, including final changelog.txt entry for the
+   version. Additionally this tag should include a commit updating
+   crawl-ref/source/debian/changelog text file.
+
+   To make this commit, you need to add an entry to this file in the following
+   format:
+
+   crawl (2:VER-1) unstable; urgency=low
+
+     * Major bugfix release
+
+    -- devname <devemail>  TIMESTAMP
+
+   You can copy the previous entry, update the version, and use output from the
+   `date' command to update the timestamp. The format must match the previous
+   entries. A command like the following will give you a valid timestamp:
+
+   date +'%a, %d %b %Y %z'
+
+   Before you make the commit with the changelog entry, it's a good idea to
+   make a version tag for testing purposes and try the steps 1 through 6 below
+   to make sure that the changelog entry you made is right and that the package
+   will build with pbuilder. You can make a test tag (using version 0.17.0 as
+   an example) with a command like:
+
+   git tag -a 0.17.0
+
+   Any error in the format will happen early in the test package build, so you
+   don't have to wait for it to finish. If the entry seems fine, you can make
+   the commit updating the debian changelog and tag the final release. You can
+   delete your testing tag with:
+
+   git tag -d 0.17.0
+
+   See guide.txt in this directory for details on making the release.
 
 
 1. Make a copy of the of the source packages and extract
@@ -68,35 +108,7 @@ https://www.debian.org/doc/manuals/maint-guide/index.en.html
    cp -r source/debian .
 
 
-3. Update the debian changelog
-
-   The debian changelog gives An entry has the following format:
-
-   crawl (2:VER-1) unstable; urgency=low
-
-     * Major bugfix release
-
-    -- devname <devemail>  TIMESTAMP
-
-   You can set your shell EDITOR variable and use dch to update this:
-
-   dch -v 2:0.17.0-1
-
-   but dch is confused by our (probably incorrect) changelog format and also
-   overwrites the latest entry with the new one, so you might want to make the
-   entry manually. For 0.17.0, the first line should look like:
-
-   crawl (2:0.17.0) unstable; urgency=low
-
-   Note: After the changelog file is updated, you should copy updated version
-   to crawl-ref/source/debian/changelog in your local git repo, make a commit
-   for the updated changelog, and push this to the github repo so that the
-   debian directory remains updated. If you're doing a point release of an
-   already released version, you'll want to update the changelog in both the
-   release branch and in trunk.
-
-
-4. Set up your pbuilderrc
+3. Set up your pbuilderrc
 
    We use the cowbuilder program to create the copy-on-write chroot
    directories, and use pbuilder to build the packages in the chroot. A
@@ -112,7 +124,7 @@ https://www.debian.org/doc/manuals/maint-guide/index.en.html
    APTCACHE.
 
 
-5. Create a .cow chroot directory for each architecture.
+4. Create a .cow chroot directory for each architecture.
 
    You'll need a cowbuilder chroot directory for each architecture you want to
    build. If you're using the example pbuilderrc, we use the scheme
@@ -136,7 +148,7 @@ https://www.debian.org/doc/manuals/maint-guide/index.en.html
    a corresponding .cow chroot.
 
 
-6. Build the packages
+5. Build the packages
 
    Asuming your pbuilderrc is based on the example one in this directory, you
    need to set some of the shell variables ARCH, DIST, and OS to set up
