@@ -1337,7 +1337,7 @@ ghost moth
  You can't feel my stare.
  I zoom into you
  You don't know I'm there.”
-    -Judas Priest, “Electric Eye”
+    -Judas Priest, “Electric Eye”. 1982.
 %%%%
 ghost-faced bat
 
@@ -1713,7 +1713,7 @@ jelly
  Right through the door
  And all around the wall,
  A splotch, a blotch...”
-    -Burt Bacharach, “Beware of the Blob”
+    -Burt Bacharach and Mack David, “Beware of the Blob”. 1958.
 %%%%
 kobold
 
@@ -1778,7 +1778,7 @@ lasher statue
  The body offered up to cruelty
  To the lash which whips on the skin
  Which slashes the flesh, lacerates the back”
-    -Samael, “Flagellation”
+    -Samael, “Flagellation”. 1994.
 %%%%
 leather armour
 
@@ -2173,7 +2173,7 @@ profane servitor
 
  Touch the snow... Caress the lifeless sculptures
  Die!!!”
-    -Dissection, “Where Dead Angels Lie”
+    -Dissection, “Where Dead Angels Lie”. 1996.
 %%%%
 program bug
 
@@ -2264,7 +2264,7 @@ ring of fire
 
 “Love is a burning thing
  And it makes a fiery ring”
-    -June Carter, Merle Kilgore, “Ring of Fire”. 1963.
+    -June Carter and Merle Kilgore, “Ring of Fire”. 1963.
 %%%%
 ring of flight
 
@@ -2661,7 +2661,7 @@ skeletal archer
  Pagan warriors moved quickly forward
  Bows are ready to shoot out their searing
  Darts...”
-    -Mastiphal, “For a Glory of All Evil spirits”
+    -Mastiphal, “For a Glory of All Evil Spirits”. 1995.
 %%%%
 skeletal bat
 
