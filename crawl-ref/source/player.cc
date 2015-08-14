@@ -3025,8 +3025,13 @@ void adjust_level(int diff, bool just_xp)
     if (you.experience_level + diff < 1)
         you.experience = 0;
     else if (you.experience_level + diff >= max_exp_level)
-        you.experience = max(you.experience,
-                exp_needed(max_exp_level));
+    {
+        const unsigned needed = exp_needed(max_exp_level);
+        // Level gain when already at max should never reduce player XP;
+        // but level loss (diff < 0) should.
+        if (diff < 0 || you.experience < needed)
+            you.experience = needed;
+    }
     else
     {
         while (diff < 0 && you.experience >=
