@@ -2735,6 +2735,11 @@ static void tag_read_you(reader &th)
     if (you.species == SP_FELID && you.innate_mutation[MUT_PAWS] < 1)
         you.mutation[MUT_PAWS] = you.innate_mutation[MUT_PAWS] = 1;
 
+    // Fixup for Sacrifice XP from XL 27 (#9895). No minor tag, but this
+    // should still be removed on a major bump.
+    const int xl_remaining = you.get_max_xl() - you.experience_level;
+    if (xl_remaining < 0)
+        adjust_level(xl_remaining);
 #endif
 
     count = unmarshallUByte(th);
