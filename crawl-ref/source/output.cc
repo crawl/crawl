@@ -1518,14 +1518,14 @@ void redraw_screen()
 
     print_stats();
 
-    bool note_status = notes_are_active();
-    activate_notes(false);
-    print_stats_level();
+    {
+        no_notes nx;
+        print_stats_level();
 #ifdef DGL_SIMPLE_MESSAGING
-    update_message_status();
+        update_message_status();
 #endif
-    update_turn_count();
-    activate_notes(note_status);
+        update_turn_count();
+    }
 
     viewwindow();
 

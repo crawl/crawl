@@ -2521,10 +2521,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         if (you.magic_points)
             dec_mp(random2avg(you.magic_points, 2));
 
-        bool note_status = notes_are_active();
-        activate_notes(false);  // This banishment shouldn't be noted.
+        no_notes nx; // This banishment shouldn't be noted.
         banished();
-        activate_notes(note_status);
         break;
     }
 

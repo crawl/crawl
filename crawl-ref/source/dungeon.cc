@@ -5604,8 +5604,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
  */
 void place_spec_shop(const coord_def& where, shop_spec &spec)
 {
-    const bool note_status = notes_are_active();
-    activate_notes(false);
+    no_notes nx;
 
     const int shop_index = _get_free_shop_index();
     if (shop_index == MAX_SHOPS)
@@ -5639,8 +5638,6 @@ void place_spec_shop(const coord_def& where, shop_spec &spec)
     shop.stock.clear();
     for (int j = 0; j < num_items; j++)
         _stock_shop_item(j, shop.type, stocked, spec, shop);
-
-    activate_notes(note_status);
 }
 
 object_class_type item_in_shop(shop_type shop_type)
