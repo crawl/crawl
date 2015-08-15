@@ -707,8 +707,7 @@ void Stash::write(FILE *f, int refx, int refy, string place, bool identify)
     if (!enabled || (items.empty() && verified))
         return;
 
-    bool note_status = notes_are_active();
-    activate_notes(false);
+    no_notes nx;
 
     fprintf(f, "(%d, %d%s%s)\n", x - refx, y - refy,
             place.empty() ? "" : ", ", OUTS(place));
@@ -755,8 +754,6 @@ void Stash::write(FILE *f, int refx, int refy, string place, bool identify)
 
     if (items.size() <= 1 && !verified)
         fprintf(f, "  (unseen)\n");
-
-    activate_notes(note_status);
 }
 
 void Stash::save(writer& outf) const
@@ -991,8 +988,7 @@ bool ShopInfo::matches_search(const string &prefix,
     if (items.empty() && visited)
         return false;
 
-    bool note_status = notes_are_active();
-    activate_notes(false);
+    no_notes nx;
 
     bool match = false;
 
@@ -1040,7 +1036,6 @@ bool ShopInfo::matches_search(const string &prefix,
         res.pos.pos.y = y;
     }
 
-    activate_notes(note_status);
     return match || res.matches;
 }
 
@@ -1054,8 +1049,7 @@ vector<item_def> ShopInfo::inventory() const
 
 void ShopInfo::write(FILE *f, bool identify) const
 {
-    bool note_status = notes_are_active();
-    activate_notes(false);
+    no_notes nx;
     fprintf(f, "[Shop] %s\n", OUTS(name));
     if (!items.empty())
     {
@@ -1074,8 +1068,6 @@ void ShopInfo::write(FILE *f, bool identify) const
         fprintf(f, "  (Shop is empty)\n");
     else
         fprintf(f, "  (Shop contents are unknown)\n");
-
-    activate_notes(note_status);
 }
 
 void ShopInfo::save(writer& outf) const
