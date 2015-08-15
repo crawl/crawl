@@ -2114,6 +2114,13 @@ bool item_type_has_ids(object_class_type base_type)
         || base_type == OBJ_STAVES || base_type == OBJ_BOOKS;
 }
 
+static constexpr bool _item_type_has_curses(object_class_type base_type)
+{
+    return base_type == OBJ_WEAPONS || base_type == OBJ_ARMOUR
+        || base_type == OBJ_JEWELLERY || base_type == OBJ_STAVES
+        || base_type == OBJ_RODS;
+}
+
 bool item_type_known(const item_def& item)
 {
     if (item_ident(item, ISFLAG_KNOW_TYPE))
@@ -3724,6 +3731,14 @@ string item_prefix(const item_def &item, bool temp)
     }
     else
         prefixes.push_back("unidentified");
+
+    // Sometimes this is abbreviated out of the item name, or suppressed
+    // by the show_uncursed option.
+    if (_item_type_has_curses(item.base_type)
+        && item_ident(item, ISFLAG_KNOW_CURSE) && !item.cursed())
+    {
+        prefixes.push_back("uncursed");
+    }
 
     if (god_hates_item(item))
     {
