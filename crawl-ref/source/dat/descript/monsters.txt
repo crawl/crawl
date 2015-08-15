@@ -832,8 +832,6 @@ death cob
 
 A dreadful undead cob of maize. Look, this one was probably a mistake. We're
 sorry.
-
-Its attacks will increase your hunger. Mmmm.
 %%%%
 death drake
 
