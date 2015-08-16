@@ -22,6 +22,9 @@
 #include "options.h"
 #include "prompt.h"
 #include "religion.h"
+#if TAG_MAJOR_VERSION == 34
+# include "shopping.h" // REMOVED_DEAD_SHOPS_KEY
+#endif
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
@@ -427,6 +430,12 @@ static void _setup_hints()
 static void _setup_generic(const newgame_def& ng)
 {
     _init_player();
+
+#if TAG_MAJOR_VERSION == 34
+    // Avoid the remove_dead_shops() Gozag fixup in new games: see
+    // ShoppingList::item_type_identified().
+    you.props[REMOVED_DEAD_SHOPS_KEY] = true;
+#endif
 
     you.your_name  = ng.name;
     you.species    = ng.species;

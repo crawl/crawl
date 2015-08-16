@@ -2451,11 +2451,10 @@ void ShoppingList::item_type_identified(object_class_type base_type,
 #if TAG_MAJOR_VERSION == 34
     // Handle removed Gozag shops from old saves. Only do this once:
     // future Gozag abandonment will call remove_dead_shops itself.
-    static bool removed_dead_shops = false;
-    if (!removed_dead_shops)
+    if (!you.props.exists(REMOVED_DEAD_SHOPS_KEY))
     {
         remove_dead_shops();
-        removed_dead_shops = true;
+        you.props[REMOVED_DEAD_SHOPS_KEY] = true;
     }
 #endif
 
