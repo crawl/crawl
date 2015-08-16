@@ -342,6 +342,8 @@ int main(int argc, char *argv[])
 static void _reset_game()
 {
     clrscr();
+    // Unset by death, but not by saving with restart_after_save.
+    crawl_state.need_save = false;
     crawl_state.type = GAME_TYPE_UNSPECIFIED;
     crawl_state.updating_scores = false;
     clear_message_store();
