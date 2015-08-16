@@ -438,6 +438,8 @@ string no_selectables_message(int item_selector)
     case OSEL_WIELD:
     case OBJ_WEAPONS:
         return "You aren't carrying any weapons.";
+    case OSEL_BLESSABLE_WEAPON:
+        return "You aren't carrying any weapons that can be blessed.";
     case OBJ_ARMOUR:
     {
         if (_has_melded_armour())
