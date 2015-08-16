@@ -1465,8 +1465,8 @@ Animates the weapon of a targeted foe, ripping it from their hands and causing
 it to attack them relentlessly. Once the target dies, the weapon will fall to
 the ground shortly thereafter.
 
-Certain powerful named artefacts cannot be affected, and any abilities that
-require evocation skill to trigger will not be active.
+Ranged weapons and certain powerful named artefacts cannot be affected, and
+any abilities that require evocation skill to trigger will not be active.
 %%%%
 Twisted Resurrection spell
 
