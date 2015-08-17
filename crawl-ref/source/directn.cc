@@ -2935,8 +2935,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
 
 string feature_description(dungeon_feature_type grid, trap_type trap,
                            const string & cover_desc,
-                           description_level_type dtype,
-                           bool add_stop, bool base_desc)
+                           description_level_type dtype, bool add_stop)
 {
     string desc = _base_feature_desc(grid, trap);
     desc += cover_desc;
@@ -2973,8 +2972,7 @@ static bool _interesting_feature(dungeon_feature_type feat)
 #endif
 
 string feature_description_at(const coord_def& where, bool covering,
-                              description_level_type dtype, bool add_stop,
-                              bool base_desc)
+                              description_level_type dtype, bool add_stop)
 {
     dungeon_feature_type grid = env.map_knowledge(where).feat();
     trap_type trap = env.map_knowledge(where).trap();
@@ -3061,9 +3059,8 @@ string feature_description_at(const coord_def& where, bool covering,
     switch (grid)
     {
     case DNGN_TRAP_MECHANICAL:
-        return feature_description(grid, trap,
-                                   covering_description, dtype,
-                                   add_stop, base_desc);
+        return feature_description(grid, trap, covering_description, dtype,
+                                   add_stop);
     case DNGN_ABANDONED_SHOP:
         return thing_do_grammar(dtype, add_stop, false, "an abandoned shop");
 

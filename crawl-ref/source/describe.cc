@@ -2084,14 +2084,6 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
         inf.title += ".";
     }
 
-    // If we couldn't find a description in the database then see if
-    // the feature's base name is different.
-    if (long_desc.empty())
-    {
-        db_name   = feature_description_at(pos, false, DESC_A, false, true);
-        long_desc = getLongDescription(db_name);
-    }
-
     const string marker_desc =
         env.markers.property_at(pos, MAT_ANY, "feature_description_long");
 
