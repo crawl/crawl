@@ -1948,8 +1948,8 @@ static bool _works_at_tier(const facet_def& facet, int tier)
     return facet.tier == tier;
 }
 
-#define MUTS_IN_SLOT ARRAYSZ(((facet_def*)0)->muts)
-static bool _slot_is_unique(const mutation_type (&mut)[MUTS_IN_SLOT],
+typedef decltype(declval<facet_def>().muts) mut_array_t;
+static bool _slot_is_unique(const mut_array_t &mut,
                             set<const facet_def *> facets_used)
 {
     set<equipment_type> eq;
