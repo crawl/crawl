@@ -19,6 +19,8 @@
 #include "misc.h"
 #include "mutation.h"
 #include "player-stats.h"
+#include "prompt.h"
+#include "religion.h"
 #include "skill_menu.h"
 #include "spl-goditem.h"
 #include "stringutil.h"
@@ -770,6 +772,17 @@ public:
         if (was_known && _disallow_mut())
             return false;
 
+        string msg = "Really drink that potion of mutation";
+        msg += you.rmut_from_item() ? " while resistant to new mutations?"
+                                    : "?";
+
+        if (was_known && (you_worship(GOD_ZIN) || you.rmut_from_item())
+            && !yesno(msg.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+
         effect(was_known);
 
         // Zin conduct is violated even if you get lucky and don't mutate
@@ -816,6 +829,16 @@ public:
     {
         if (was_known && _disallow_mut())
             return false;
+
+        // Beneficial mutations go through mutation resistance, so don't prompt
+        // the player if they're wearing a source of rMut.
+        if (was_known && you_worship(GOD_ZIN)
+            && !yesno("Really drink that potion of beneficial mutation?",
+                      false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
 
         effect(was_known);
 
