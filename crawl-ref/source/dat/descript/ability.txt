@@ -199,6 +199,12 @@ Summon Divine Warrior ability
 Summons a powerful warrior against evil, either an angel or a daeva. It may be
 blessed by the Shining One to stay longer in this world.
 %%%%
+Brand Weapon With Holy Wrath ability
+
+Permanently blesses a weapon of your choice with the holy wrath of the Shining
+One. Demon weapons will be converted into a more powerful sacred weapon. This
+blessing may only be used once, and it can't be used on artefact weapons.
+%%%%
 # Kikubaaqudgha
 Receive Corpses ability
 
@@ -210,6 +216,19 @@ Torment ability
 Sacrifices a cadaver to make all living creatures in sight experience all
 the pain that being suffered in its life. This damage is never directly lethal.
 Kikubaaqudgha may shield you from the effect, depending on your piety.
+%%%%
+Brand Weapon With Pain ability
+
+Permanently bloodies a weapon of your choice with the essence of pain
+itself. This blessing can't be used on artefact weapons. You must choose
+between this gift or that of a Necronomicon, and either gift may only be
+received once.
+%%%%
+Receive Necronomicon ability
+
+Kikubaaqudgha will share the most powerful and sinister secrets of Necromancy
+with you by granting this spellbook. You must choose between this gift or that
+of the pain brand for your weapon, and either gift may only be received once.
 %%%%
 # Yredelemnul
 Animate Remains ability
@@ -390,6 +409,12 @@ Enter the Abyss ability
 
 Transports you to Lugonu's realm instantly. The effort of even using the
 ability will leave your health and magic depleted.
+%%%%
+Brand Weapon With Distortion ability
+
+Permanently corrupt a weapon of your choice with a localized field of
+distortion. This blessing may only be used once, and it can't be used on
+artefact weapons.
 %%%%
 # Nemelex Xobeh
 Triple Draw ability
