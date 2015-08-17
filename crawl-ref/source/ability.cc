@@ -269,6 +269,7 @@ static const ability_def Ability_List[] =
     { ABIL_ZIN_SANCTUARY, "Sanctuary", 7, 0, 150, 15, ABFLAG_NONE},
     { ABIL_ZIN_CURE_ALL_MUTATIONS, "Cure All Mutations",
       0, 0, 0, 0, ABFLAG_NONE},
+    { ABIL_ZIN_DONATE_GOLD, "Donate Gold", 0, 0, 0, 0, ABFLAG_NONE},
 
     // The Shining One
     { ABIL_TSO_DIVINE_SHIELD, "Divine Shield", 3, 0, 50, 2, ABFLAG_NONE},
@@ -276,11 +277,15 @@ static const ability_def Ability_List[] =
       5, 0, 100, 2, ABFLAG_NONE},
     { ABIL_TSO_SUMMON_DIVINE_WARRIOR, "Summon Divine Warrior",
       8, 0, 150, 5, ABFLAG_NONE},
+    { ABIL_TSO_BLESS_WEAPON, "Brand Weapon With Holy Wrath", 0, 0, 0, 0, ABFLAG_NONE},
 
     // Kikubaaqudgha
     { ABIL_KIKU_RECEIVE_CORPSES, "Receive Corpses",
       3, 0, 50, 2, ABFLAG_NONE},
     { ABIL_KIKU_TORMENT, "Torment", 4, 0, 0, 8, ABFLAG_NONE},
+    { ABIL_KIKU_GIFT_NECRONOMICON, "Receive Necronomicon", 0, 0, 0, 0,
+      ABFLAG_NONE},
+    { ABIL_KIKU_BLESS_WEAPON, "Brand Weapon With Pain", 0, 0, 0, 0, ABFLAG_NONE},
 
     // Yredelemnul
     { ABIL_YRED_INJURY_MIRROR, "Injury Mirror", 0, 0, 0, 0, ABFLAG_PIETY},
@@ -345,6 +350,8 @@ static const ability_def Ability_List[] =
       7, scaling_cost::fixed(5), 500, generic_cost::range(10, 14), ABFLAG_NONE},
     { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss",
       9, 0, 500, generic_cost::fixed(35), ABFLAG_PAIN},
+    { ABIL_LUGONU_BLESS_WEAPON, "Brand Weapon With Distortion", 0, 0, 0, 0,
+      ABFLAG_PAIN},
 
     // Nemelex
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw", 2, 0, 100, 2, ABFLAG_NONE},
@@ -905,6 +912,11 @@ talent get_talent(ability_type ability, bool check_confused)
         // begin invocations {dlb}
     // Abilities with no fail rate.
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
+    case ABIL_ZIN_DONATE_GOLD:
+    case ABIL_KIKU_BLESS_WEAPON:
+    case ABIL_KIKU_GIFT_NECRONOMICON:
+    case ABIL_TSO_BLESS_WEAPON:
+    case ABIL_LUGONU_BLESS_WEAPON:
     case ABIL_ELYVILON_LIFESAVING:
     case ABIL_TROG_BURN_SPELLBOOKS:
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
@@ -1357,6 +1369,32 @@ static bool _check_ability_possible(const ability_def& abil,
             if (!quiet)
                 mpr("There's already a sanctuary in place on this level.");
             return false;
+        }
+        return true;
+
+    case ABIL_ZIN_DONATE_GOLD:
+        if (!you.gold)
+        {
+            if (!quiet)
+                mpr("You have nothing to donate!");
+            return false;
+        }
+        return true;
+
+    case ABIL_TSO_BLESS_WEAPON:
+    case ABIL_KIKU_BLESS_WEAPON:
+    case ABIL_KIKU_GIFT_NECRONOMICON:
+    case ABIL_LUGONU_BLESS_WEAPON:
+        if (grd(you.pos()) != DNGN_FLOOR)
+        {
+            if (!quiet)
+            {
+                mprf("You need to be standing on an open floor tile to receive "
+                     "a %s here.",
+                     abil.ability == ABIL_KIKU_GIFT_NECRONOMICON
+                     ? "Necronomicon" : "blessing");
+                return false;
+            }
         }
         return true;
 
@@ -2164,6 +2202,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         zin_remove_all_mutations();
         break;
 
+    case ABIL_ZIN_DONATE_GOLD:
+        fail_check();
+        zin_donate_gold();
+        break;
+
     case ABIL_TSO_DIVINE_SHIELD:
         fail_check();
         tso_divine_shield();
@@ -2178,6 +2221,17 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
         fail_check();
         summon_holy_warrior(you.skill(SK_INVOCATIONS, 4), false);
+        break;
+
+    case ABIL_TSO_BLESS_WEAPON:
+        fail_check();
+        if (can_do_capstone_ability(GOD_SHINING_ONE))
+        {
+            simple_god_message(" will bless one of your weapons.");
+            more();
+            if (!bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW))
+                return SPRET_ABORT;
+        }
         break;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
@@ -2195,6 +2249,43 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         simple_god_message(" torments the living!");
         torment(&you, TORMENT_KIKUBAAQUDGHA, you.pos());
         break;
+
+    case ABIL_KIKU_BLESS_WEAPON:
+        fail_check();
+        if (can_do_capstone_ability(GOD_KIKUBAAQUDGHA))
+        {
+            simple_god_message(" will bloody your weapon with pain.");
+            more();
+            if (!bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED))
+                return SPRET_ABORT;
+        }
+        break;
+
+    case ABIL_KIKU_GIFT_NECRONOMICON:
+    {
+        fail_check();
+        if (!yesno("Do you wish to receive the Necronomicon?", true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return SPRET_ABORT;
+        }
+        dungeon_terrain_changed(you.pos(), altar_for_god(GOD_KIKUBAAQUDGHA),
+                                true, false, true);
+        mprf(MSGCH_GOD, "%s appears before you!",
+             feature_description_at(you.pos(), false, DESC_A, false).c_str());
+        int thing_created = items(true, OBJ_BOOKS, BOOK_NECRONOMICON, 1, 0,
+                                  you.religion);
+        if (thing_created == NON_ITEM
+            || !move_item_to_grid(&thing_created, you.pos()))
+        {
+            return SPRET_FAIL;
+        }
+        simple_god_message(" grants you a gift!");
+        more();
+        you.one_time_ability_used.set(you.religion);
+        take_note(Note(NOTE_GOD_GIFT, you.religion));
+        break;
+    }
 
     case ABIL_YRED_INJURY_MIRROR:
         fail_check();
@@ -2525,6 +2616,18 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         banished();
         break;
     }
+
+    case ABIL_LUGONU_BLESS_WEAPON:
+        fail_check();
+        if (can_do_capstone_ability(GOD_LUGONU))
+        {
+            simple_god_message(" will brand one of your weapons with the "
+                               "corruption of the Abyss.");
+            more();
+            if (!bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA))
+                return SPRET_ABORT;
+        }
+        break;
 
     case ABIL_NEMELEX_TRIPLE_DRAW:
         fail_check();
@@ -3297,6 +3400,8 @@ static int _is_god_ability(ability_type abil)
         return GOD_CHEIBRIADOS;
     if (abil == ABIL_TROG_BURN_SPELLBOOKS)
         return GOD_TROG;
+    if (abil == ABIL_ZIN_DONATE_GOLD)
+        return GOD_ZIN;
 
     for (int i = 0; i < NUM_GODS; ++i)
         for (int j = 0; j < MAX_GOD_ABILITIES; ++j)
@@ -3378,32 +3483,41 @@ static int _find_ability_slot(const ability_def &abil)
     if (you_worship(GOD_ELYVILON))
         first_slot = letter_to_index('h');
 
-    if (abil.ability == ABIL_ZIN_CURE_ALL_MUTATIONS)
-        first_slot = letter_to_index('W');
-    if (abil.ability == ABIL_CONVERT_TO_BEOGH)
-        first_slot = letter_to_index('Y');
-    if (abil.ability == ABIL_RU_SACRIFICE_PURITY
-      || abil.ability == ABIL_RU_SACRIFICE_WORDS
-      || abil.ability == ABIL_RU_SACRIFICE_DRINK
-      || abil.ability == ABIL_RU_SACRIFICE_ESSENCE
-      || abil.ability == ABIL_RU_SACRIFICE_HEALTH
-      || abil.ability == ABIL_RU_SACRIFICE_STEALTH
-      || abil.ability == ABIL_RU_SACRIFICE_ARTIFICE
-      || abil.ability == ABIL_RU_SACRIFICE_LOVE
-      || abil.ability == ABIL_RU_SACRIFICE_COURAGE
-      || abil.ability == ABIL_RU_SACRIFICE_ARCANA
-      || abil.ability == ABIL_RU_SACRIFICE_NIMBLENESS
-      || abil.ability == ABIL_RU_SACRIFICE_DURABILITY
-      || abil.ability == ABIL_RU_SACRIFICE_HAND
-      || abil.ability == ABIL_RU_SACRIFICE_EXPERIENCE
-      || abil.ability == ABIL_RU_SACRIFICE_SKILL
-      || abil.ability == ABIL_RU_SACRIFICE_EYE
-      || abil.ability == ABIL_RU_SACRIFICE_RESISTANCE
-      || abil.ability == ABIL_RU_REJECT_SACRIFICES)
+    switch (abil.ability)
     {
+    case ABIL_ZIN_CURE_ALL_MUTATIONS:
+    case ABIL_TSO_BLESS_WEAPON:
+    case ABIL_KIKU_BLESS_WEAPON:
+    case ABIL_KIKU_GIFT_NECRONOMICON:
+    case ABIL_LUGONU_BLESS_WEAPON:
+        first_slot = letter_to_index('W');
+        break;
+    case ABIL_CONVERT_TO_BEOGH:
+        first_slot = letter_to_index('Y');
+        break;
+    case ABIL_RU_SACRIFICE_PURITY:
+    case ABIL_RU_SACRIFICE_WORDS:
+    case ABIL_RU_SACRIFICE_DRINK:
+    case ABIL_RU_SACRIFICE_ESSENCE:
+    case ABIL_RU_SACRIFICE_HEALTH:
+    case ABIL_RU_SACRIFICE_STEALTH:
+    case ABIL_RU_SACRIFICE_ARTIFICE:
+    case ABIL_RU_SACRIFICE_LOVE:
+    case ABIL_RU_SACRIFICE_COURAGE:
+    case ABIL_RU_SACRIFICE_ARCANA:
+    case ABIL_RU_SACRIFICE_NIMBLENESS:
+    case ABIL_RU_SACRIFICE_DURABILITY:
+    case ABIL_RU_SACRIFICE_HAND:
+    case ABIL_RU_SACRIFICE_EXPERIENCE:
+    case ABIL_RU_SACRIFICE_SKILL:
+    case ABIL_RU_SACRIFICE_EYE:
+    case ABIL_RU_SACRIFICE_RESISTANCE:
+    case ABIL_RU_REJECT_SACRIFICES:
         first_slot = letter_to_index('G');
+        break;
+    default:
+        break;
     }
-
 
     for (int slot = first_slot; slot < 52; ++slot)
     {
@@ -3457,6 +3571,8 @@ vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
     }
     else if (you.transfer_skill_points > 0)
         abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);
+    if (you_worship(GOD_ZIN) && (include_unusable || !silenced(you.pos())))
+        abilities.push_back(ABIL_ZIN_DONATE_GOLD);
 
     // Remaining abilities are unusable if under penance, or if silenced.
     if (!include_unusable && (player_under_penance() || silenced(you.pos())))
@@ -3492,6 +3608,16 @@ vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
 
     if (can_do_capstone_ability(GOD_ZIN))
         abilities.push_back(ABIL_ZIN_CURE_ALL_MUTATIONS);
+    if (can_do_capstone_ability(GOD_SHINING_ONE) && you.species != SP_FELID)
+        abilities.push_back(ABIL_TSO_BLESS_WEAPON);
+    if (can_do_capstone_ability(GOD_KIKUBAAQUDGHA))
+    {
+        if (you.species != SP_FELID)
+            abilities.push_back(ABIL_KIKU_BLESS_WEAPON);
+        abilities.push_back(ABIL_KIKU_GIFT_NECRONOMICON);
+    }
+    if (can_do_capstone_ability(GOD_LUGONU) && you.species != SP_FELID)
+        abilities.push_back(ABIL_LUGONU_BLESS_WEAPON);
 
     return abilities;
 }

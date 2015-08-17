@@ -659,8 +659,6 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_ZIN:
     {
         string like = "you donate money";
-        if (verbose)
-            like += " (by <w>p</w>raying at an altar)";
         likes.push_back(like);
         break;
     }
@@ -2462,24 +2460,39 @@ static void _gain_piety_point()
             switch (you.religion)
             {
                 case GOD_ZIN:
-                    simple_god_message(" will now cure all your mutations... once.");
+                    simple_god_message(" will now cure all your mutations... "
+                                       "once.");
                     break;
                 case GOD_SHINING_ONE:
                     if (you.species == SP_FELID)
                         break;
-                    simple_god_message(" will now bless your weapon at an altar... once.");
+                    simple_god_message(" will now bless your weapon with holy "
+                                       "wrath... once.");
                     break;
                 case GOD_KIKUBAAQUDGHA:
-                    simple_god_message(" will now enhance your necromancy at an altar... once.");
+                    if (you.species == SP_FELID)
+                    {
+                        simple_god_message(" will now grant you a "
+                                           "Necronomicon.");
+                    }
+                    else
+                    {
+                        simple_god_message(" will now grant you a Necronomicon "
+                                           "or bloody your weapon with pain... "
+                                           "once.");
+                    }
                     break;
                 case GOD_LUGONU:
                     if (you.species == SP_FELID)
                         break;
-                    simple_god_message(" will now corrupt your weapon at an altar... once.");
+                    simple_god_message(" will now corrupt your weapon with "
+                                       "distortion... once.");
                     break;
                 case GOD_JIYVA:
-                    simple_god_message(" will now unseal the treasures of the Slime Pits.");
-                    dlua.callfn("dgn_set_persistent_var", "sb", "fix_slime_vaults", true);
+                    simple_god_message(" will now unseal the treasures of the "
+                                       "Slime Pits.");
+                    dlua.callfn("dgn_set_persistent_var", "sb",
+                                "fix_slime_vaults", true);
                     // If we're on Slime:6, pretend we just entered the level
                     // in order to bring down the vault walls.
                     if (level_id::current() == level_id(BRANCH_SLIME, 6))

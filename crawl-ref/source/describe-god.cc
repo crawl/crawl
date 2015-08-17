@@ -165,7 +165,8 @@ static string _religion_help(god_type god)
         case GOD_ZIN:
             if (can_do_capstone_ability(god))
                 result += "You can have all your mutations cured.\n";
-            result += "You can pray at an altar to donate money.";
+            result += "You can donate money to increase your standing with "
+                "Zin.";
             break;
 
         case GOD_SHINING_ONE:
@@ -177,41 +178,38 @@ static string _religion_help(god_type god)
                     result += " ";
 
                 result += "You radiate a ";
-
                 if (halo_size > 5)
                     result += "large ";
                 else if (halo_size > 3)
                     result += "";
                 else
                     result += "small ";
-
                 result += "righteous aura, and all beings within it are "
                           "easier to hit.";
             }
-            if (can_do_capstone_ability(god))
+            if (can_do_capstone_ability(god) && you.species != SP_FELID)
             {
                 if (!result.empty())
                     result += " ";
-
-                result += "You can pray at an altar to have your weapon "
-                          "blessed, especially a demon weapon.";
+                result += "You can have your weapon blessed, especially a "
+                    "demon weapon.";
             }
             break;
         }
 
         case GOD_LUGONU:
-            if (can_do_capstone_ability(god))
-            {
-                result += "You can pray at an altar to have your weapon "
-                          "corrupted.";
-            }
+            if (can_do_capstone_ability(god) && you.species != SP_FELID)
+                result += "You can have your weapon corrupted.";
             break;
 
         case GOD_KIKUBAAQUDGHA:
             if (can_do_capstone_ability(god))
             {
-                result += "You can pray at an altar to have your necromancy "
-                          "enhanced.";
+                if (you.species == SP_FELID)
+                    result += "You can receive a Necronomicon.";
+                else
+                    result += "You can either bloody your weapon or receive a "
+                        "Necronomicon.";
             }
             break;
 
