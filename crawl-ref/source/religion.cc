@@ -3531,23 +3531,26 @@ void join_religion(god_type which_god, bool immediate)
         }
         if (is_good_god(effective_old_god))
         {
-            // Some feedback that piety moved over.
-            switch (you.religion)
+            if (you.religion != effective_old_god)
             {
-            case GOD_ELYVILON:
-                simple_god_message((" says: Farewell. Go and aid the meek with "
-                                   + god_name(you.religion) + ".").c_str(), effective_old_god);
-                break;
-            case GOD_SHINING_ONE:
-                simple_god_message((" says: Farewell. Go and vanquish evil with "
-                                   + god_name(you.religion) + ".").c_str(), effective_old_god);
-                break;
-            case GOD_ZIN:
-                simple_god_message((" says: Farewell. Go and enforce order with "
-                                   + god_name(you.religion) + ".").c_str(), effective_old_god);
-                break;
-            default:
-                mprf(MSGCH_ERROR, "Unknown good god.");
+                // Some feedback that piety moved over.
+                switch (you.religion)
+                {
+                case GOD_ELYVILON:
+                    simple_god_message((" says: Farewell. Go and aid the meek with "
+                                       + god_name(you.religion) + ".").c_str(), effective_old_god);
+                    break;
+                case GOD_SHINING_ONE:
+                    simple_god_message((" says: Farewell. Go and vanquish evil with "
+                                       + god_name(you.religion) + ".").c_str(), effective_old_god);
+                    break;
+                case GOD_ZIN:
+                    simple_god_message((" says: Farewell. Go and enforce order with "
+                                       + god_name(you.religion) + ".").c_str(), effective_old_god);
+                    break;
+                default:
+                    mprf(MSGCH_ERROR, "Unknown good god.");
+                }
             }
             // Give a piety bonus when switching between good gods.
             if (effective_old_piety > piety_breakpoint(0))
