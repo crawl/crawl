@@ -440,7 +440,7 @@ bool feat_is_lava(dungeon_feature_type feat)
     return feat == DNGN_LAVA || feat == DNGN_LAVA_SEA;
 }
 
-static int _god_altars[][2] =
+static const pair<god_type, dungeon_feature_type> _god_altars[] =
 {
     { GOD_ZIN, DNGN_ALTAR_ZIN },
     { GOD_SHINING_ONE, DNGN_ALTAR_SHINING_ONE },
@@ -476,9 +476,9 @@ COMPILE_CHECK(ARRAYSZ(_god_altars) == NUM_GODS );
  */
 god_type feat_altar_god(dungeon_feature_type feat)
 {
-    for (const int (&altar)[2] : _god_altars)
-        if ((dungeon_feature_type) altar[1] == feat)
-            return (god_type) altar[0];
+    for (const auto &altar : _god_altars)
+        if (altar.second == feat)
+            return altar.first;
 
     return GOD_NO_GOD;
 }
@@ -490,9 +490,9 @@ god_type feat_altar_god(dungeon_feature_type feat)
  */
 dungeon_feature_type altar_for_god(god_type god)
 {
-    for (const int (&altar)[2] : _god_altars)
-        if ((god_type) altar[0] == god)
-            return (dungeon_feature_type) altar[1];
+    for (const auto &altar : _god_altars)
+        if (altar.first == god)
+            return altar.second;
 
     return DNGN_FLOOR;
 }

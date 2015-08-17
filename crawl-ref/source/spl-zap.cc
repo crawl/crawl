@@ -5,7 +5,7 @@
 #include "beam.h"
 #include "stepdown.h"
 
-static int _spl_zaps[][2] =
+static pair<spell_type, zap_type> _spl_zaps[] =
 {
     { SPELL_MAGIC_DART, ZAP_MAGIC_DART },
     { SPELL_FORCE_LANCE, ZAP_FORCE_LANCE },
@@ -78,18 +78,18 @@ zap_type spell_to_zap(spell_type spell)
     if (spell == SPELL_DAZZLING_SPRAY)
         return NUM_ZAPS;
 
-    for (const int (&spzap)[2] : _spl_zaps)
-        if (spzap[0] == spell)
-            return (zap_type) spzap[1];
+    for (const auto &spzap : _spl_zaps)
+        if (spzap.first == spell)
+            return spzap.second;
 
     return NUM_ZAPS;
 }
 
 spell_type zap_to_spell(zap_type zap)
 {
-    for (const int (&spzap)[2] : _spl_zaps)
-        if (spzap[1] == zap)
-            return (spell_type) spzap[0];
+    for (const auto &spzap : _spl_zaps)
+        if (spzap.second == zap)
+            return spzap.first;
 
     return SPELL_NO_SPELL;
 }
