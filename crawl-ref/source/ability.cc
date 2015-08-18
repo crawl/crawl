@@ -1393,8 +1393,8 @@ static bool _check_ability_possible(const ability_def& abil,
                      "a %s here.",
                      abil.ability == ABIL_KIKU_GIFT_NECRONOMICON
                      ? "Necronomicon" : "blessing");
-                return false;
             }
+            return false;
         }
         return true;
 
@@ -2225,13 +2225,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_TSO_BLESS_WEAPON:
         fail_check();
-        if (can_do_capstone_ability(GOD_SHINING_ONE))
-        {
-            simple_god_message(" will bless one of your weapons.");
-            more();
-            if (!bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW))
-                return SPRET_ABORT;
-        }
+        simple_god_message(" will bless one of your weapons.");
+        more();
+        if (!bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW))
+            return SPRET_ABORT;
         break;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
@@ -2252,13 +2249,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_KIKU_BLESS_WEAPON:
         fail_check();
-        if (can_do_capstone_ability(GOD_KIKUBAAQUDGHA))
-        {
-            simple_god_message(" will bloody your weapon with pain.");
-            more();
-            if (!bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED))
-                return SPRET_ABORT;
-        }
+        simple_god_message(" will bloody your weapon with pain.");
+        more();
+        if (!bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED))
+            return SPRET_ABORT;
         break;
 
     case ABIL_KIKU_GIFT_NECRONOMICON:
@@ -2619,14 +2613,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_LUGONU_BLESS_WEAPON:
         fail_check();
-        if (can_do_capstone_ability(GOD_LUGONU))
-        {
-            simple_god_message(" will brand one of your weapons with the "
-                               "corruption of the Abyss.");
-            more();
-            if (!bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA))
-                return SPRET_ABORT;
-        }
+        simple_god_message(" will brand one of your weapons with the "
+                           "corruption of the Abyss.");
+        more();
+        if (!bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA))
+            return SPRET_ABORT;
         break;
 
     case ABIL_NEMELEX_TRIPLE_DRAW:

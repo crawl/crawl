@@ -100,11 +100,21 @@ bool can_do_capstone_ability(god_type god)
    return in_good_standing(god, 5) && !you.one_time_ability_used[god];
 }
 
+/**
+ * Perform a capstone god ability that blesses a weapon with the god's
+ * brand.
+
+ * This requires that the player be on ordinary dungeon floor since an altar to
+ * the good is created for thematic purposes.
+ * @param god    The god performing the blessing.
+ * @param brand  The brand being granted.
+ * @param colour The colour to flash when the weapon is branded.
+ * @returns True if the weapon was successfully branded, false otherwise.
+*/
 bool bless_weapon(god_type god, brand_type brand, colour_t colour)
 {
-    // We create an altar to the god on the player's square, so we
-    // require ordinary dungeon floor, for simplicity.
     ASSERT(grd(you.pos()) == DNGN_FLOOR);
+    ASSERT(can_do_capstone_ability(god));
 
     int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
                                        OSEL_BLESSABLE_WEAPON, true, true,
