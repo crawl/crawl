@@ -1066,8 +1066,8 @@ public:
     {
         writer_fn(outf, default_thing);
         marshallShort(outf, depth_range_Xs.size());
-        for (int i = 0, size = depth_range_Xs.size(); i < size; ++i)
-            depth_range_Xs[i].write(outf, writer_fn);
+        for (const auto &range : depth_range_Xs)
+            range.write(outf, writer_fn);
     }
 };
 
