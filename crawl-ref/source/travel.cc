@@ -2204,7 +2204,7 @@ static int _prompt_travel_branch(int prompt_flags)
                     string msg;
 
                     if (!brentry[br[i]].is_valid()
-                        && is_random_subbranch((branch_type)i)
+                        && is_random_subbranch(br[i])
                         && you.wizard) // don't leak mimics
                     {
                         msg += "Branch not generated this game. ";
