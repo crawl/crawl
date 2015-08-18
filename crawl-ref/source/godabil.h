@@ -85,6 +85,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile = false);
 
 bool kiku_receive_corpses(int pow);
 bool kiku_take_corpse();
+bool kiku_gift_necronomicon();
 
 bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monster* target);
