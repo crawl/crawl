@@ -189,11 +189,11 @@ static void _change_walls_from_centre(const dgn_region &region,
             const int distance =
                 rectangular? (c - centre).rdist() : (c - centre).abs();
 
-            for (int i = 0, size = ldist.size(); i < size; ++i)
+            for (const dist_feat &df : ldist)
             {
-                if (distance <= ldist[i].dist)
+                if (distance <= df.dist)
                 {
-                    grd(c) = ldist[i].feat;
+                    grd(c) = df.feat;
                     break;
                 }
             }

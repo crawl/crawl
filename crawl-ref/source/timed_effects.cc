@@ -1564,10 +1564,8 @@ static void _drop_tomb(const coord_def& pos, bool premature, bool zin)
         // Zin's Imprison.
         else if (zin && revert_terrain_change(*ai, TERRAIN_CHANGE_IMPRISON))
         {
-            vector<map_marker*> markers = env.markers.get_markers_at(*ai);
-            for (int i = 0, size = markers.size(); i < size; ++i)
+            for (map_marker *mark : env.markers.get_markers_at(*ai))
             {
-                map_marker *mark = markers[i];
                 if (mark->property("feature_description")
                     == "a gleaming silver wall")
                 {
@@ -1613,10 +1611,8 @@ static vector<map_malign_gateway_marker*> _get_malign_gateways()
 {
     vector<map_malign_gateway_marker*> mm_markers;
 
-    vector<map_marker*> markers = env.markers.get_all(MAT_MALIGN);
-    for (int i = 0, size = markers.size(); i < size; ++i)
+    for (map_marker *mark : env.markers.get_all(MAT_MALIGN))
     {
-        map_marker *mark = markers[i];
         if (mark->get_type() != MAT_MALIGN)
             continue;
 
@@ -1638,12 +1634,8 @@ void timeout_malign_gateways(int duration)
     // Passing 0 should allow us to just touch the gateway and see
     // if it should decay. This, in theory, should resolve the one
     // turn delay between it timing out and being recastable. -due
-    vector<map_malign_gateway_marker*> markers = _get_malign_gateways();
-
-    for (int i = 0, size = markers.size(); i < size; ++i)
+    for (map_malign_gateway_marker *mmark : _get_malign_gateways())
     {
-        map_malign_gateway_marker *mmark = markers[i];
-
         if (duration)
             mmark->duration -= duration;
 
@@ -1701,11 +1693,8 @@ void timeout_tombs(int duration)
     if (!duration)
         return;
 
-    vector<map_marker*> markers = env.markers.get_all(MAT_TOMB);
-
-    for (int i = 0, size = markers.size(); i < size; ++i)
+    for (map_marker *mark : env.markers.get_all(MAT_TOMB))
     {
-        map_marker *mark = markers[i];
         if (mark->get_type() != MAT_TOMB)
             continue;
 
@@ -1743,12 +1732,10 @@ void timeout_terrain_changes(int duration, bool force)
 
     int num_seen[NUM_TERRAIN_CHANGE_TYPES] = {0};
 
-    vector<map_marker*> markers = env.markers.get_all(MAT_TERRAIN_CHANGE);
-
-    for (int i = 0, size = markers.size(); i < size; ++i)
+    for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
     {
         map_terrain_change_marker *marker =
-                dynamic_cast<map_terrain_change_marker*>(markers[i]);
+                dynamic_cast<map_terrain_change_marker*>(mark);
 
         if (marker->duration != INFINITE_DURATION)
             marker->duration -= duration;

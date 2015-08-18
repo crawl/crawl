@@ -635,8 +635,8 @@ int macro_buf_get()
     if (expanded_keys_left > 0)
         expanded_keys_left--;
 
-    for (int i = 0, size_i = recorders.size(); i < size_i; i++)
-        recorders[i]->add_key(key);
+    for (key_recorder *recorder : recorders)
+        recorder->add_key(key);
 
     return key;
 }

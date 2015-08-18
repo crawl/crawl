@@ -791,10 +791,8 @@ bool mons_speaks_msg(monster* mons, const string &msg,
     if (mons->has_ench(ENCH_MUTE))
         silence = true;
 
-    for (int i = 0, size = lines.size(); i < size; ++i)
+    for (string line : lines)
     {
-        string line = lines[i];
-
         // This function is a little bit of a problem for the message
         // channels since some of the messages it generates are "fake"
         // warning to scare the player. In order to accommodate this

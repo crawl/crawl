@@ -1954,8 +1954,8 @@ static vault_placement unmarshall_vault_placement(reader &th)
 static void marshall_level_vault_placements(writer &th)
 {
     marshallShort(th, env.level_vaults.size());
-    for (int i = 0, size = env.level_vaults.size(); i < size; ++i)
-        marshall_vault_placement(th, *env.level_vaults[i]);
+    for (unique_ptr<vault_placement> &vp : env.level_vaults)
+        marshall_vault_placement(th, *vp);
 }
 
 static void unmarshall_level_vault_placements(reader &th)
@@ -6227,8 +6227,8 @@ static void tag_construct_ghost(writer &th)
     // How many ghosts?
     marshallShort(th, ghosts.size());
 
-    for (int i = 0, size = ghosts.size(); i < size; ++i)
-        marshallGhost(th, ghosts[i]);
+    for (const ghost_demon &ghost : ghosts)
+        marshallGhost(th, ghost);
 }
 
 static void tag_read_ghost(reader &th)

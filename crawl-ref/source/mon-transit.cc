@@ -449,9 +449,8 @@ void tag_followers()
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     while (!places[place_set].empty())
     {
-        for (int i = 0, size = places[place_set].size(); i < size; ++i)
+        for (const coord_def p : places[place_set])
         {
-            const coord_def &p = places[place_set][i];
             for (adjacent_iterator ai(p); ai; ++ai)
             {
                 if ((*ai - you.pos()).rdist() > radius

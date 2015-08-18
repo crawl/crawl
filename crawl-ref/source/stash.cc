@@ -201,8 +201,8 @@ bool Stash::unverified() const
 
 bool Stash::pickup_eligible() const
 {
-    for (int i = 0, size = items.size(); i < size; ++i)
-        if (item_needs_autopickup(items[i]))
+    for (const item_def &item : items)
+        if (item_needs_autopickup(item))
             return true;
 
     return false;
@@ -210,8 +210,8 @@ bool Stash::pickup_eligible() const
 
 bool Stash::sacrificeable() const
 {
-    for (int i = 0, size = items.size(); i < size; ++i)
-        if (items[i].is_greedy_sacrificeable())
+    for (const item_def &item : items)
+        if (item.is_greedy_sacrificeable())
             return true;
 
     return false;
@@ -219,12 +219,9 @@ bool Stash::sacrificeable() const
 
 bool Stash::needs_stop() const
 {
-    for (int i = 0, size = items.size(); i < size; ++i)
-        if (!items[i].is_greedy_sacrificeable()
-            && !item_needs_autopickup(items[i]))
-        {
+    for (const item_def &item : items)
+        if (!item.is_greedy_sacrificeable() && !item_needs_autopickup(item))
             return true;
-        }
 
     return false;
 }
@@ -909,11 +906,11 @@ void ShopInfo::fill_out_menu(StashMenu &menu, const level_pos &place) const
     menu.clear();
 
     menu_letter hotkey;
-    for (int i = 0, count = items.size(); i < count; ++i)
+    for (const shop_item &item : items)
     {
-        bool on_list = shopping_list.is_on_list(items[i].item, &place);
-        ShopItemEntry *me = new ShopItemEntry(items[i],
-                                              shop_item_name(items[i]),
+        bool on_list = shopping_list.is_on_list(item.item, &place);
+        ShopItemEntry *me = new ShopItemEntry(item,
+                                              shop_item_name(item),
                                               hotkey++, on_list);
         menu.add_entry(me);
     }

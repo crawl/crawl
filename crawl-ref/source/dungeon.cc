@@ -613,10 +613,8 @@ static void _dgn_register_vault(const string name, const string spaced_tags)
     if (spaced_tags.find(" luniq ") != string::npos)
         env.level_uniq_maps.insert(name);
 
-    vector<string> tags = split_string(" ", spaced_tags);
-    for (int t = 0, ntags = tags.size(); t < ntags; ++t)
+    for (const string &tag : split_string(" ", spaced_tags))
     {
-        const string &tag = tags[t];
         if (tag.find("uniq_") == 0)
             you.uniq_map_tags.insert(tag);
         else if (tag.find("luniq_") == 0)
@@ -629,10 +627,8 @@ static void _dgn_unregister_vault(const map_def &map)
     you.uniq_map_names.erase(map.name);
     env.level_uniq_maps.erase(map.name);
 
-    vector<string> tags = split_string(" ", map.tags);
-    for (int t = 0, ntags = tags.size(); t < ntags; ++t)
+    for (const string &tag : split_string(" ", map.tags))
     {
-        const string &tag = tags[t];
         if (tag.find("uniq_") == 0)
             you.uniq_map_tags.erase(tag);
         else if (tag.find("luniq_") == 0)
@@ -2938,10 +2934,9 @@ static void _place_chance_vaults()
     // uniq_ tag, only the first such map will be placed. Shuffle the
     // order of chosen maps so we don't have a first-map bias.
     shuffle_array(maps);
-    for (int i = 0, size = maps.size(); i < size; ++i)
+    for (const map_def *map : maps)
     {
         bool check_fallback = true;
-        const map_def *map = maps[i];
         if (!map->map_already_used())
         {
             dprf(DIAG_DNGN, "Placing CHANCE vault: %s (%s)",
@@ -5938,18 +5933,10 @@ coord_def dgn_random_point_from(const coord_def &c, int radius, int margin)
 
 coord_def dgn_find_feature_marker(dungeon_feature_type feat)
 {
-    vector<map_marker*> markers = env.markers.get_all();
-    for (int i = 0, size = markers.size(); i < size; ++i)
-    {
-        map_marker *mark = markers[i];
-        if (mark->get_type() == MAT_FEATURE
-            && dynamic_cast<map_feature_marker*>(mark)->feat == feat)
-        {
+    for (map_marker *mark : env.markers.get_all(MAT_FEATURE))
+        if (dynamic_cast<map_feature_marker*>(mark)->feat == feat)
             return mark->pos;
-        }
-    }
-    coord_def unfound;
-    return unfound;
+    return coord_def();
 }
 
 static coord_def _dgn_find_labyrinth_entry_point()

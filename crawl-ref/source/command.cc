@@ -726,13 +726,12 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
 
 static void _show_specific_help(const string &help)
 {
-    vector<string> lines = split_string("\n", help, false, true);
     vector<formatted_string> formatted_lines;
-    for (int i = 0, size = lines.size(); i < size; ++i)
+    for (const string &line : split_string("\n", help, false, true))
     {
         formatted_lines.push_back(
             formatted_string::parse_string(
-                lines[i], true, _cmdhelp_textfilter));
+                line, true, _cmdhelp_textfilter));
     }
     _show_keyhelp_menu(formatted_lines, false, Options.easy_exit_menu);
 }

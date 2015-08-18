@@ -7,6 +7,7 @@
 
 #include "describe.h"
 
+#include <algorithm>
 #include <cstdio>
 #include <iomanip>
 #include <numeric>
@@ -68,17 +69,7 @@
 int count_desc_lines(const string &_desc, const int width)
 {
     string desc = get_linebreak_string(_desc, width);
-
-    int count = 0;
-    for (int i = 0, size = desc.size(); i < size; ++i)
-    {
-        const char ch = desc[i];
-
-        if (ch == '\n')
-            count++;
-    }
-
-    return count;
+    return count(begin(desc), end(desc), '\n');
 }
 
 static void _adjust_item(item_def &item);

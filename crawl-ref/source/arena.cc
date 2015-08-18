@@ -290,10 +290,9 @@ namespace arena
         fact.clear();
         fact.desc = spec;
 
-        vector<string> monsters = split_string(",", spec);
-        for (int i = 0, size = monsters.size(); i < size; ++i)
+        for (const string &monster : split_string(",", spec))
         {
-            const string err = fact.members.add_mons(monsters[i], false);
+            const string err = fact.members.add_mons(monster, false);
             if (!err.empty())
                 throw err;
         }

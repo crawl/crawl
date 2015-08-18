@@ -157,14 +157,12 @@ vector<string> get_dir_files_recursive(const string &dirname, const string &ext,
 {
     vector<string> files;
 
-    const vector<string> thisdirfiles = get_dir_files(dirname);
     const int next_recur_depth =
         recursion_depth == -1? -1 : recursion_depth - 1;
     const bool recur = recursion_depth == -1 || recursion_depth > 0;
 
-    for (int i = 0, size = thisdirfiles.size(); i < size; ++i)
+    for (const string &filename : get_dir_files(dirname))
     {
-        const string filename(thisdirfiles[i]);
         if (dir_exists(catpath(dirname, filename)))
         {
             if (include_directories
@@ -175,14 +173,14 @@ vector<string> get_dir_files_recursive(const string &dirname, const string &ext,
 
             if (recur)
             {
-                const vector<string> subdirfiles =
-                    get_dir_files_recursive(catpath(dirname, filename),
-                                            ext,
-                                            next_recur_depth);
                 // Each filename in a subdirectory has to be prefixed
                 // with the subdirectory name.
-                for (int j = 0, ssize = subdirfiles.size(); j < ssize; ++j)
-                    files.push_back(catpath(filename, subdirfiles[j]));
+                for (const string &subdirfile
+                        : get_dir_files_recursive(catpath(dirname, filename),
+                                                  ext, next_recur_depth))
+                {
+                    files.push_back(catpath(filename, subdirfile));
+                }
             }
         }
         else
@@ -984,9 +982,8 @@ static void _grab_followers()
         int place_set = 0;
         while (!places[place_set].empty())
         {
-            for (int i = 0, size = places[place_set].size(); i < size; ++i)
+            for (const coord_def p : places[place_set])
             {
-                const coord_def &p = places[place_set][i];
                 for (adjacent_iterator ai(p); ai; ++ai)
                 {
                     if (travel_point_distance[ai->x][ai->y])

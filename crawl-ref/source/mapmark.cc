@@ -1004,16 +1004,14 @@ void map_markers::activate_all(bool verbose)
 
 void map_markers::activate_markers_at(coord_def p)
 {
-    const vector<map_marker *> activatees = get_markers_at(p);
-    for (int i = 0, size = activatees.size(); i < size; ++i)
-        activatees[i]->activate();
+    for (map_marker *activatee : get_markers_at(p))
+        activatee->activate();
 
-    const vector<map_marker *> active_markers = get_markers_at(p);
-    for (int i = 0, size = active_markers.size(); i < size; ++i)
+    for (map_marker *active : get_markers_at(p))
     {
-        const string prop = active_markers[i]->property("post_activate_remove");
+        const string prop = active->property("post_activate_remove");
         if (!prop.empty())
-            remove(active_markers[i]);
+            remove(active);
     }
 }
 
@@ -1275,13 +1273,12 @@ void remove_markers_and_listeners_at(coord_def p)
     // non-positional events, (such as bazaar portals listening for
     // turncount changes) and detach them manually from the dungeon
     // event dispatcher.
-    const vector<map_marker *> markers = env.markers.get_markers_at(p);
-    for (int i = 0, size = markers.size(); i < size; ++i)
+    for (map_marker *marker : env.markers.get_markers_at(p))
     {
-        if (markers[i]->get_type() == MAT_LUA_MARKER)
+        if (marker->get_type() == MAT_LUA_MARKER)
         {
             dungeon_events.remove_listener(
-                dynamic_cast<map_lua_marker*>(markers[i]));
+                dynamic_cast<map_lua_marker*>(marker));
         }
     }
 

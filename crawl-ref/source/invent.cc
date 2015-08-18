@@ -731,10 +731,8 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
       };
 
     list.clear();
-    vector<string> cmps = split_string(",", set);
-    for (int i = 0, size = cmps.size(); i < size; ++i)
+    for (string s : split_string(",", set))
     {
-        string s = cmps[i];
         if (s.empty())
             continue;
 
@@ -795,8 +793,8 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                                 menu_letter ckey, bool sort)
 {
     FixedVector< int, NUM_OBJECT_CLASSES > inv_class(0);
-    for (int i = 0, count = mitems.size(); i < count; ++i)
-        inv_class[ mitems[i]->base_type ]++;
+    for (const item_def * const mitem : mitems)
+        inv_class[mitem->base_type]++;
 
     vector<InvEntry*> items_in_class;
     const menu_sort_condition *cond = nullptr;
@@ -836,13 +834,13 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         items_in_class.clear();
 
         InvEntry *forced_first = nullptr;
-        for (int j = 0, count = mitems.size(); j < count; ++j)
+        for (const item_def * const mitem : mitems)
         {
-            if (mitems[j]->base_type != i)
+            if (mitem->base_type != i)
                 continue;
 
-            InvEntry * const ie = new InvEntry(*mitems[j]);
-            if (mitems[j]->sub_type == get_max_subtype(mitems[j]->base_type))
+            InvEntry * const ie = new InvEntry(*mitem);
+            if (mitem->sub_type == get_max_subtype(mitem->base_type))
                 forced_first = ie;
             else
                 items_in_class.push_back(ie);
@@ -887,10 +885,10 @@ void InvMenu::do_preselect(InvEntry *ie)
     if (!pre_select || pre_select->empty())
         return;
 
-    for (int i = 0, size = pre_select->size(); i < size; ++i)
-        if (ie->item && ie->item == (*pre_select)[i].item)
+    for (const SelItem &presel : *pre_select)
+        if (ie->item && ie->item == presel.item)
         {
-            ie->selected_qty = (*pre_select)[i].quantity;
+            ie->selected_qty = presel.quantity;
             break;
         }
 }
@@ -898,9 +896,9 @@ void InvMenu::do_preselect(InvEntry *ie)
 vector<SelItem> InvMenu::get_selitems() const
 {
     vector<SelItem> selected_items;
-    for (int i = 0, count = sel.size(); i < count; ++i)
+    for (MenuEntry *me : sel)
     {
-        InvEntry *inv = dynamic_cast<InvEntry*>(sel[i]);
+        InvEntry *inv = dynamic_cast<InvEntry*>(me);
         selected_items.emplace_back(inv->hotkeys[0], inv->selected_qty,
                                     inv->item);
     }
