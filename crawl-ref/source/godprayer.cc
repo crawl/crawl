@@ -134,15 +134,13 @@ static bool _pray_ecumenical_altar()
 }
 
 /**
- * Convert to a god using the altar at the current position.
+ * Attempt to convert to the given god.
  *
  * @return True if the conversion happened, false otherwise.
  */
-static bool _altar_convert()
+static bool _try_god_conversion(god_type god, bool beogh_priest)
 {
-    god_type altar_god = feat_altar_god(grd(you.pos()));
-    if (altar_god == GOD_NO_GOD)
-        return false;
+    ASSERT(god != GOD_NO_GOD);
 
     if (you.species == SP_DEMIGOD)
     {
@@ -150,16 +148,18 @@ static bool _altar_convert()
         return false;
     }
 
-    if (altar_god == GOD_ECUMENICAL)
+    if (god == GOD_ECUMENICAL)
         return _pray_ecumenical_altar();
 
-    if (you_worship(GOD_NO_GOD) || altar_god != you.religion)
+    if (you_worship(GOD_NO_GOD) || god != you.religion)
     {
         // consider conversion
         you.turn_is_over = true;
         // But if we don't convert then god_pitch
         // makes it not take a turn after all.
-        god_pitch(feat_altar_god(grd(you.pos())));
+        god_pitch(god);
+        if (you.turn_is_over && you_worship(GOD_BEOGH) && beogh_priest)
+            spare_beogh_convert();
         return you.turn_is_over;
     }
     return false;
@@ -182,39 +182,28 @@ static void _zen_meditation()
  */
 void pray(bool allow_conversion)
 {
+    const god_type altar_god = feat_altar_god(grd(you.pos()));
+    const bool beogh_priest = env.level_state & LSTATE_BEOGH
+        && can_convert_to_beogh();
+    const god_type target_god = beogh_priest ? GOD_BEOGH : altar_god;
+
     // only successful prayer takes time
     you.turn_is_over = false;
-
-    // try to pray to an altar (if any is present)
-    if (allow_conversion && _altar_convert())
+    // Try to pray to an altar or beogh (if either is possible)
+    if (allow_conversion
+        && target_god != GOD_NO_GOD
+        && you.religion != target_god)
     {
-        you.turn_is_over = true;
-        return;
-    }
-
-    // convert to beogh via priest.
-    if (allow_conversion && you_worship(GOD_NO_GOD)
-        && (env.level_state & LSTATE_BEOGH) && can_convert_to_beogh())
-    {
-        // TODO: deduplicate this with the code in _altar_pray_or_convert.
-        you.turn_is_over = true;
-        // But if we don't convert then god_pitch
-        // makes it not take a turn after all.
-        god_pitch(GOD_BEOGH);
-        if (you_worship(GOD_BEOGH))
-        {
-            spare_beogh_convert();
+        if (_try_god_conversion(target_god, beogh_priest))
             return;
-        }
     }
 
     ASSERT(!you.turn_is_over);
-
     // didn't convert to anyone.
     if (you_worship(GOD_NO_GOD))
     {
         // wasn't considering following a god; just meditating.
-        if (feat_altar_god(grd(you.pos())) == GOD_NO_GOD)
+        if (altar_god == GOD_NO_GOD)
             _zen_meditation();
         return;
     }
