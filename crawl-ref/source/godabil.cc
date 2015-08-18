@@ -2039,6 +2039,39 @@ bool kiku_take_corpse()
     return false;
 }
 
+bool kiku_gift_necronomicon()
+{
+    ASSERT(grd(you.pos()) == DNGN_FLOOR);
+    ASSERT(can_do_capstone_ability(you.religion));
+
+    if (!yesno("Do you wish to receive a Necronomicon?", true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+    int thing_created = items(true, OBJ_BOOKS, BOOK_NECRONOMICON, 1, 0,
+                              you.religion);
+    if (thing_created == NON_ITEM
+        || !move_item_to_grid(&thing_created, you.pos()))
+    {
+        return false;
+    }
+    dungeon_terrain_changed(you.pos(), altar_for_god(GOD_KIKUBAAQUDGHA),
+                            true, false, true);
+    mprf(MSGCH_GOD, "%s appears before you!",
+         feature_description_at(you.pos(), false, DESC_A, false).c_str());
+    simple_god_message(" grants you a gift!");
+    flash_view(UA_PLAYER, RED);
+#ifndef USE_TILE_LOCAL
+    // Allow extra time for the flash to linger.
+    scaled_delay(1000);
+#endif
+    more();
+    you.one_time_ability_used.set(you.religion);
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+    return true;
+}
+
 bool fedhas_passthrough_class(const monster_type mc)
 {
     return you_worship(GOD_FEDHAS)

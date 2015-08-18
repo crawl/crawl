@@ -2258,26 +2258,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_KIKU_GIFT_NECRONOMICON:
     {
         fail_check();
-        if (!yesno("Do you wish to receive the Necronomicon?", true, 'n'))
-        {
-            canned_msg(MSG_OK);
+        if (!kiku_gift_necronomicon())
             return SPRET_ABORT;
-        }
-        dungeon_terrain_changed(you.pos(), altar_for_god(GOD_KIKUBAAQUDGHA),
-                                true, false, true);
-        mprf(MSGCH_GOD, "%s appears before you!",
-             feature_description_at(you.pos(), false, DESC_A, false).c_str());
-        int thing_created = items(true, OBJ_BOOKS, BOOK_NECRONOMICON, 1, 0,
-                                  you.religion);
-        if (thing_created == NON_ITEM
-            || !move_item_to_grid(&thing_created, you.pos()))
-        {
-            return SPRET_FAIL;
-        }
-        simple_god_message(" grants you a gift!");
-        more();
-        you.one_time_ability_used.set(you.religion);
-        take_note(Note(NOTE_GOD_GIFT, you.religion));
         break;
     }
 
