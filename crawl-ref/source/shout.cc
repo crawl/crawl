@@ -1000,8 +1000,8 @@ void noise_grid::propagate_noise()
     vector<coord_def> noise_perimeter[2];
     int circ_index = 0;
 
-    for (int i = 0, size = noises.size(); i < size; ++i)
-        noise_perimeter[circ_index].push_back(noises[i].noise_source);
+    for (const noise_t &noise : noises)
+        noise_perimeter[circ_index].push_back(noise.noise_source);
 
     int travel_distance = 0;
     while (!noise_perimeter[circ_index].empty())
@@ -1009,9 +1009,8 @@ void noise_grid::propagate_noise()
         const vector<coord_def> &perimeter(noise_perimeter[circ_index]);
         vector<coord_def> &next_perimeter(noise_perimeter[!circ_index]);
         ++travel_distance;
-        for (int i = 0, size = perimeter.size(); i < size; ++i)
+        for (const coord_def p : perimeter)
         {
-            const coord_def p(perimeter[i]);
             const noise_cell &cell(cells(p));
 
             if (!cell.silent())

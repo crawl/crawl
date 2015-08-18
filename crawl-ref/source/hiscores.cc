@@ -1200,9 +1200,8 @@ void scorefile_entry::set_score_fields() const
 string scorefile_entry::make_oneline(const string &ml) const
 {
     vector<string> lines = split_string("\n", ml);
-    for (int i = 0, size = lines.size(); i < size; ++i)
+    for (string &s : lines)
     {
-        string &s = lines[i];
         if (s.find("...") == 0)
         {
             s = s.substr(3);
@@ -2783,10 +2782,8 @@ static vector<string> _xlog_split_fields(const string &s)
 
 void xlog_fields::init(const string &line)
 {
-    vector<string> rawfields = _xlog_split_fields(line);
-    for (int i = 0, size = rawfields.size(); i < size; ++i)
+    for (const string &field : _xlog_split_fields(line))
     {
-        const string field = rawfields[i];
         string::size_type st = field.find('=');
         if (st == string::npos)
             continue;
@@ -2823,20 +2820,15 @@ int xlog_fields::int_field(const string &s) const
 void xlog_fields::map_fields() const
 {
     fieldmap.clear();
-    for (int i = 0, size = fields.size(); i < size; ++i)
-    {
-        const pair<string, string> &f = fields[i];
+    for (const pair<string, string> &f : fields)
         fieldmap[f.first] = f.second;
-    }
 }
 
 string xlog_fields::xlog_line() const
 {
     string line;
-    for (int i = 0, size = fields.size(); i < size; ++i)
+    for (const pair<string, string> &f : fields)
     {
-        const pair<string, string> &f = fields[i];
-
         // Don't write empty fields.
         if (f.second.empty())
             continue;

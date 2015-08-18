@@ -146,13 +146,10 @@ static bool _do_build_level()
     // should be fine for objstat purposes.
     if (_is_disconnected_level() && !crawl_state.obj_stat_gen)
     {
-        string vaults;
-        for (int j = 0, size = env.level_vaults.size(); j < size; ++j)
-        {
-            if (j && !vaults.empty())
-                vaults += ", ";
-            vaults += env.level_vaults[j]->map.name;
-        }
+        string vaults = comma_separated_fn(
+                begin(env.level_vaults), end(env.level_vaults),
+                [](unique_ptr<vault_placement> &lp) { return lp->map.name; },
+                ", ", ", ");
 
         if (!vaults.empty())
             vaults = " (" + vaults + ")";
@@ -206,9 +203,8 @@ static void _dungeon_places()
 
 static bool _build_dungeon()
 {
-    for (int i = 0, size = generated_levels.size(); i < size; ++i)
+    for (const level_id lid : generated_levels)
     {
-        const level_id &lid = generated_levels[i];
         you.where_are_you = lid.branch;
         you.depth = lid.depth;
 

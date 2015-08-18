@@ -21,6 +21,7 @@
 #include "monster.h"
 #include "options.h"
 #include "place.h"
+#include "stringutil.h"
 #include "tags.h"
 #include "travel.h"
 #include "unwind.h"
@@ -221,18 +222,11 @@ void KillMaster::add_kill_info(string &killtext,
 
         killtext += "\n";
 
-        for (int i = 0, sz = kills.size(); i < sz; ++i)
-        {
-            killtext += "  " + kills[i].desc;
-            killtext += "\n";
-        }
-        {
-            char numbuf[100];
-            snprintf(numbuf, sizeof numbuf,
-                    "%d creature%s vanquished." "\n", count,
-                    count > 1? "s" : "");
-            killtext += numbuf;
-        }
+        for (const kill_exp &kill : kills)
+            killtext += "  " + kill.desc + "\n";
+
+        killtext += make_stringf("%d creature%s vanquished.\n",
+                                 count, count == 1 ? "" : "s");
     }
 #ifdef CLUA_BINDINGS
     lua_pop(clua, 1);

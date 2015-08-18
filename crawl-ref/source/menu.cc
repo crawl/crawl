@@ -235,9 +235,7 @@ Menu::~Menu()
 
 void Menu::clear()
 {
-    for (int i = 0, count = items.size(); i < count; ++i)
-        delete items[i];
-    items.clear();
+    deleteAll(items);
     last_selected = -1;
 }
 
@@ -793,9 +791,9 @@ void Menu::get_selected(vector<MenuEntry*> *selected) const
 {
     selected->clear();
 
-    for (int i = 0, count = items.size(); i < count; ++i)
-        if (items[i]->selected())
-            selected->push_back(items[i]);
+    for (MenuEntry *item : items)
+        if (item->selected())
+            selected->push_back(item);
 }
 
 void Menu::deselect_all(bool update_view)
@@ -1166,8 +1164,8 @@ bool Menu::is_selectable(int item) const
         return true;
 
     string text = items[item]->get_filter_text();
-    for (int i = 0, count = select_filter.size(); i < count; ++i)
-        if (select_filter[i].matches(text))
+    for (const text_pattern &pat : select_filter)
+        if (pat.matches(text))
             return true;
 
     return false;

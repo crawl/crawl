@@ -209,12 +209,9 @@ void run_tests()
     if (crawl_state.test_list)
         end(0);
     cio_cleanup();
-    for (int i = 0, size = failures.size(); i < size; ++i)
-    {
-        const file_error &fe(failures[i]);
-        fprintf(stderr, "%s error: %s\n",
-                activity, fe.second.c_str());
-    }
+    for (const file_error &fe : failures)
+        fprintf(stderr, "%s error: %s\n", activity, fe.second.c_str());
+
     const int code = failures.empty() ? 0 : 1;
     end(code, false, "%d %ss, %d succeeded, %d failed",
         ntests, activity, nsuccess, (int)failures.size());

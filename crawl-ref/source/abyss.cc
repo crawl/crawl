@@ -353,9 +353,8 @@ static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
             ++items_placed;
     }
 
-    for (int i = 0, size = chosen_item_places.size(); i < size; ++i)
+    for (const coord_def place : chosen_item_places)
     {
-        const coord_def place(chosen_item_places[i]);
         if (_abyss_square_accepts_items(abyss_genlevel_mask, place))
         {
             int thing_created = items(true, OBJ_RANDOM, OBJ_RANDOM,
@@ -1738,11 +1737,8 @@ static void _apply_corruption_effect(map_marker *marker, int duration)
 
 void run_corruption_effects(int duration)
 {
-    vector<map_marker*> markers = env.markers.get_all(MAT_CORRUPTION_NEXUS);
-
-    for (int i = 0, size = markers.size(); i < size; ++i)
+    for (map_marker *mark : env.markers.get_all(MAT_CORRUPTION_NEXUS))
     {
-        map_marker *mark = markers[i];
         if (mark->get_type() != MAT_CORRUPTION_NEXUS)
             continue;
 
@@ -1902,21 +1898,15 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
 static void _corrupt_level_features(const corrupt_env &cenv)
 {
     vector<coord_def> corrupt_seeds;
-    vector<map_marker*> corrupt_markers =
-        env.markers.get_all(MAT_CORRUPTION_NEXUS);
 
-    for (int i = 0, size = corrupt_markers.size(); i < size; ++i)
-        corrupt_seeds.push_back(corrupt_markers[i]->pos);
+    for (const map_marker *mark : env.markers.get_all(MAT_CORRUPTION_NEXUS))
+        corrupt_seeds.push_back(mark->pos);
 
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         int idistance = GXM + GYM;
-        for (int i = 0, size = corrupt_seeds.size(); i < size; ++i)
-        {
-            const int idist = (*ri - corrupt_seeds[i]).rdist();
-            if (idist < idistance)
-                idistance = idist;
-        }
+        for (const coord_def seed : corrupt_seeds)
+            idistance = min(idistance, (*ri - seed).rdist());
 
         const int ground_zero_radius = 2;
 

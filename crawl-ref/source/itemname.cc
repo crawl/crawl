@@ -2259,9 +2259,9 @@ public:
                                MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
                                menu_letter ckey = 'a')
     {
-        for (int i = 0, count = mitems.size(); i < count; ++i)
+        for (const item_def *item : mitems)
         {
-            InvEntry *ie = new InvEntry(*mitems[i]);
+            InvEntry *ie = new InvEntry(*item);
             if (tag == "pickup")
                 ie->tag = "pickup";
             // If there's no hotkey, provide one.

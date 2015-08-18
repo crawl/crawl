@@ -921,12 +921,9 @@ string vault_chance_tag(const map_def &map)
 {
     if (map.has_tag_prefix("chance_"))
     {
-        const vector<string> tags = map.get_tags();
-        for (int i = 0, size = tags.size(); i < size; ++i)
-        {
-            if (tags[i].find("chance_") == 0)
-                return tags[i];
-        }
+        for (const string &tag : map.get_tags())
+            if (tag.find("chance_") == 0)
+                return tag;
     }
     return "";
 }
@@ -1511,9 +1508,8 @@ void add_parsed_map(const map_def &md)
 
 void run_map_global_preludes()
 {
-    for (int i = 0, size = global_preludes.size(); i < size; ++i)
+    for (dlua_chunk &chunk : global_preludes)
     {
-        dlua_chunk &chunk = global_preludes[i];
         if (!chunk.empty())
         {
             if (chunk.load_call(dlua, nullptr))
@@ -1524,15 +1520,15 @@ void run_map_global_preludes()
 
 void run_map_local_preludes()
 {
-    for (int i = 0, size = vdefs.size(); i < size; ++i)
+    for (map_def &vdef : vdefs)
     {
-        if (!vdefs[i].prelude.empty())
+        if (!vdef.prelude.empty())
         {
-            string err = vdefs[i].run_lua(true);
+            string err = vdef.run_lua(true);
             if (!err.empty())
             {
                 mprf(MSGCH_ERROR, "Lua error (map %s): %s",
-                     vdefs[i].name.c_str(), err.c_str());
+                     vdef.name.c_str(), err.c_str());
             }
         }
     }

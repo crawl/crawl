@@ -649,8 +649,8 @@ static int dgn_gly_points(lua_State *ls)
     MAP(ls, 1, map);
     vector<coord_def> cs = map->find_glyph(*luaL_checkstring(ls, 2));
 
-    for (int i = 0, size = cs.size(); i < size; ++i)
-        dlua_push_coordinates(ls, cs[i]);
+    for (coord_def c : cs)
+        dlua_push_coordinates(ls, c);
     return cs.size() * 2;
 }
 

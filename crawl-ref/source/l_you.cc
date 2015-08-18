@@ -330,12 +330,11 @@ static int l_you_abil_table(lua_State *ls)
     char buf[2];
     buf[1] = 0;
 
-    vector<talent> talents = your_talents(false);
-    for (int i = 0, size = talents.size(); i < size; ++i)
+    for (const talent &tal : your_talents(false))
     {
-        buf[0] = talents[i].hotkey;
+        buf[0] = tal.hotkey;
         lua_pushstring(ls, buf);
-        lua_pushstring(ls, ability_name(talents[i].which));
+        lua_pushstring(ls, ability_name(tal.which));
         lua_rawset(ls, -3);
     }
     return 1;

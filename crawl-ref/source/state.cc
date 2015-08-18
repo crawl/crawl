@@ -79,8 +79,8 @@ void game_state::show_startup_errors()
     error_menu.set_title(
         new MenuEntry("Warning: Crawl encountered errors during startup:",
                       MEL_TITLE));
-    for (int i = 0, size = startup_errors.size(); i < size; ++i)
-        error_menu.add_entry(new MenuEntry(startup_errors[i]));
+    for (const string &err : startup_errors)
+        error_menu.add_entry(new MenuEntry(err));
     error_menu.show();
 }
 

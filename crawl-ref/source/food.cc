@@ -548,14 +548,11 @@ int eat_from_floor(bool skip_chunks)
     if (found_valid)
     {
 #ifdef TOUCH_UI
-        vector<SelItem> selected =
-            select_items(food_items,
-                         "Eat",
-                         false, MT_SELONE, _floor_eat_menu_title);
         redraw_screen();
-        for (int i = 0, count = selected.size(); i < count; ++i)
+        for (SelItem &sel : select_items(food_items, "Eat", false, MT_SELONE,
+                                         _floor_eat_menu_title))
         {
-            item_def *item = const_cast<item_def *>(selected[i].item);
+            item_def *item = const_cast<item_def *>(sel.item);
             if (!check_warning_inscriptions(*item, OPER_EAT))
                 break;
 

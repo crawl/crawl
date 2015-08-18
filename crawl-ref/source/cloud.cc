@@ -1877,11 +1877,10 @@ void run_cloud_spreaders(int dur)
     if (!dur)
         return;
 
-    vector<map_marker*> markers = env.markers.get_all(MAT_CLOUD_SPREADER);
-
-    for (int i = 0, size = markers.size(); i < size; ++i)
+    for (map_marker *marker : env.markers.get_all(MAT_CLOUD_SPREADER))
     {
-        map_cloud_spreader_marker *mark = dynamic_cast<map_cloud_spreader_marker*>(markers[i]);
+        map_cloud_spreader_marker * const mark
+            = dynamic_cast<map_cloud_spreader_marker*>(marker);
 
         mark->speed_increment += dur;
         int rad = min(mark->speed_increment / mark->speed, mark->max_rad - 1) + 1;

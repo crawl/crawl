@@ -169,9 +169,9 @@ bool dump_char(const string &fname, bool quiet, bool full_id,
 
     dump_params par(text, "", full_id, se);
 
-    for (int i = 0, size = Options.dump_order.size(); i < size; ++i)
+    for (const string &section : Options.dump_order)
     {
-        par.section = Options.dump_order[i];
+        par.section = section;
         dump_section(par);
     }
 

@@ -875,7 +875,7 @@ void pickup_menu(int item_link)
     redraw_screen();
 
     string pickup_warning;
-    for (int i = 0, count = selected.size(); i < count; ++i)
+    for (const SelItem &sel : selected)
     {
         // Moving the item might destroy it, in which case we can't
         // rely on the link.
@@ -883,12 +883,12 @@ void pickup_menu(int item_link)
         for (int j = item_link; j != NON_ITEM; j = next)
         {
             next = mitm[j].link;
-            if (&mitm[j] == selected[i].item)
+            if (&mitm[j] == sel.item)
             {
                 if (j == item_link)
                     item_link = next;
 
-                int num_to_take = selected[i].quantity;
+                int num_to_take = sel.quantity;
                 const bool take_all = (num_to_take == mitm[j].quantity);
                 iflags_t oldflags = mitm[j].flags;
                 clear_item_pickup_flags(mitm[j]);
@@ -2437,9 +2437,9 @@ static string _drop_selitem_text(const vector<MenuEntry*> *s)
     if (s->empty())
         return "";
 
-    for (int i = 0, size = s->size(); i < size; ++i)
+    for (MenuEntry *entry : *s)
     {
-        const item_def *item = static_cast<item_def *>((*s)[i]->data);
+        const item_def *item = static_cast<item_def *>(entry->data);
         const int eq = get_equip_slot(item);
         if (eq > EQ_WEAPON && eq < NUM_EQUIP)
         {

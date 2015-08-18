@@ -558,10 +558,10 @@ string map_lines::add_lua_marker(const string &key, const lua_datum &function)
 
 void map_lines::apply_markers(const coord_def &c)
 {
-    for (int i = 0, vsize = markers.size(); i < vsize; ++i)
+    for (map_marker *marker : markers)
     {
-        markers[i]->pos += c;
-        env.markers.add(markers[i]);
+        marker->pos += c;
+        env.markers.add(marker);
     }
     // *not* clear_markers() since we've offloaded marker ownership to
     // the crawl env.
@@ -695,9 +695,9 @@ string map_lines::check_block_shuffle(const string &s)
     const vector<string> segs = split_string("/", s);
     const unsigned seglen = segs[0].length();
 
-    for (int i = 1, vsize = segs.size(); i < vsize; ++i)
+    for (const string &seg : segs)
     {
-        if (seglen != segs[i].length())
+        if (seglen != seg.length())
             return "block shuffle segment length mismatch";
     }
 
@@ -730,11 +730,8 @@ string map_lines::check_clear(string &s)
 string map_lines::parse_glyph_replacements(string s, glyph_replacements_t &gly)
 {
     s = replace_all_of(s, "\t", " ");
-    vector<string> segs = split_string(" ", s);
-
-    for (int i = 0, vsize = segs.size(); i < vsize; ++i)
+    for (const string &is : split_string(" ", s))
     {
-        const string &is = segs[i];
         if (is.length() > 2 && is[1] == ':')
         {
             const int glych = is[0];
@@ -757,10 +754,8 @@ string map_lines::parse_glyph_replacements(string s, glyph_replacements_t &gly)
 template<class T>
 static string _parse_weighted_str(const string &spec, T &list)
 {
-    vector<string> speclist = split_string("/", spec);
-    for (int i = 0, vsize = speclist.size(); i < vsize; ++i)
+    for (string val : split_string("/", spec))
     {
-        string val = speclist[i];
         lowercase(val);
 
         int weight = find_weight(val);
@@ -1157,8 +1152,8 @@ void map_lines::subst(string &s, subst_spec &spec)
 void map_lines::subst(subst_spec &spec)
 {
     ASSERT(!spec.key.empty());
-    for (int y = 0, ysize = lines.size(); y < ysize; ++y)
-        subst(lines[y], spec);
+    for (string &line : lines)
+        subst(line, spec);
 }
 
 void map_lines::bind_overlay()
@@ -1508,44 +1503,35 @@ void map_lines::resolve_shuffle(const string &shufflage)
     if (toshuffle.empty() || shuffled.empty())
         return;
 
-    for (int i = 0, vsize = lines.size(); i < vsize; ++i)
+    for (string &s : lines)
     {
-        string &s = lines[i];
-
-        for (int j = 0, len = s.length(); j < len; ++j)
+        for (char &c : s)
         {
-            const char c = s[j];
             string::size_type pos = toshuffle.find(c);
             if (pos != string::npos)
-                s[j] = shuffled[pos];
+                c = shuffled[pos];
         }
     }
 }
 
 void map_lines::clear(const string &clearchars)
 {
-    for (int i = 0, vsize = lines.size(); i < vsize; ++i)
+    for (string &s : lines)
     {
-        string &s = lines[i];
-
-        for (int j = 0, len = s.length(); j < len; ++j)
+        for (char &c : s)
         {
-            const char c = s[j];
             string::size_type pos = clearchars.find(c);
             if (pos != string::npos)
-                s[j] = ' ';
+                c = ' ';
         }
     }
 }
 
 void map_lines::normalise(char fillch)
 {
-    for (int i = 0, vsize = lines.size(); i < vsize; ++i)
-    {
-        string &s = lines[i];
+    for (string &s : lines)
         if (static_cast<int>(s.length()) < map_width)
             s += string(map_width - s.length(), fillch);
-    }
 }
 
 // Should never be attempted if the map has a defined orientation, or if one
@@ -1595,8 +1581,8 @@ void map_lines::translate_marker(
     void (map_lines::*xform)(map_marker *, int),
     int par)
 {
-    for (int i = 0, vsize = markers.size(); i < vsize; ++i)
-        (this->*xform)(markers[i], par);
+    for (map_marker *marker : markers)
+        (this->*xform)(marker, par);
 }
 
 void map_lines::vmirror_marker(map_marker *marker, int)
@@ -1659,16 +1645,9 @@ void map_lines::vmirror()
 void map_lines::hmirror()
 {
     const int midpoint = map_width / 2;
-    for (int i = 0, vsize = lines.size(); i < vsize; ++i)
-    {
-        string &s = lines[i];
+    for (string &s : lines)
         for (int j = 0; j < midpoint; ++j)
-        {
-            int c = s[j];
-            s[j] = s[map_width - 1 - j];
-            s[map_width - 1 - j] = c;
-        }
-    }
+            swap(s[j], s[map_width - 1 - j]);
 
     if (overlay.get())
     {
@@ -2011,9 +1990,9 @@ string tile_spec::get_tile()
 
     string chosen = "";
     int cweight = 0;
-    for (int i = 0, size = tiles.size(); i < size; ++i)
-        if (x_chance_in_y(tiles[i].second, cweight += tiles[i].second))
-            chosen = tiles[i].first;
+    for (const map_weighted_tile &tile : tiles)
+        if (x_chance_in_y(tile.second, cweight += tile.second))
+            chosen = tile.first;
 
     if (fix)
     {
@@ -2129,8 +2108,8 @@ void map_chance::read(reader &inf)
 void depth_ranges::write(writer& outf) const
 {
     marshallShort(outf, depths.size());
-    for (int i = 0, sz = depths.size(); i < sz; ++i)
-        depths[i].write(outf);
+    for (const level_range &depth : depths)
+        depth.write(outf);
 }
 
 void depth_ranges::read(reader &inf)
@@ -2148,18 +2127,16 @@ void depth_ranges::read(reader &inf)
 depth_ranges depth_ranges::parse_depth_ranges(const string &depth_range_string)
 {
     depth_ranges ranges;
-    const vector<string> frags = split_string(",", depth_range_string);
-    for (int j = 0, size = frags.size(); j < size; ++j)
-        ranges.depths.push_back(level_range::parse(frags[j]));
+    for (const string &frag : split_string(",", depth_range_string))
+        ranges.depths.push_back(level_range::parse(frag));
     return ranges;
 }
 
 bool depth_ranges::is_usable_in(const level_id &lid) const
 {
     bool any_matched = false;
-    for (int i = 0, sz = depths.size(); i < sz; ++i)
+    for (const level_range &lr : depths)
     {
-        const level_range &lr = depths[i];
         if (lr.matches(lid))
         {
             if (lr.deny)
@@ -2746,11 +2723,10 @@ string map_def::validate_map_placeable()
 
     // Ok, the map wants to be placed by tag. In this case it should have
     // at least one tag that's not a map flag.
-    const vector<string> tag_pieces = split_string(" ", tags);
     bool has_selectable_tag = false;
-    for (int i = 0, tsize = tag_pieces.size(); i < tsize; ++i)
+    for (const string &piece : split_string(" ", tags))
     {
-        if (_map_tag_is_selectable(tag_pieces[i]))
+        if (_map_tag_is_selectable(piece))
         {
             has_selectable_tag = true;
             break;
@@ -3356,13 +3332,9 @@ static void _register_subvault(const string name, const string spaced_tags)
         env.new_used_subvault_names.insert(name);
     }
 
-    vector<string> tags = split_string(" ", spaced_tags);
-    for (int t = 0, ntags = tags.size(); t < ntags; t++)
-    {
-        const string &tag = tags[t];
+    for (const string &tag : split_string(" ", spaced_tags))
         if (tag.find("uniq_") == 0 || tag.find("luniq_") == 0)
             env.new_used_subvault_tags.insert(tag);
-    }
 }
 
 static void _reset_subvault_stack(const int reg_stack)
@@ -3734,10 +3706,10 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
 
     vector<string> specs = split_string("/", spec);
 
-    for (int i = 0, ssize = specs.size(); i < ssize; ++i)
+    for (const string &monspec : specs)
     {
+        string s(monspec);
         mons_spec mspec;
-        string s = specs[i];
 
         vector<string> spells(strip_multiple_tag_prefix(s, "spells:"));
         if (!spells.empty())
@@ -3781,9 +3753,9 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 return slot;
             }
 
-            for (int j = 0, isize = segs.size(); j < isize; ++j)
+            for (const string &seg : segs)
             {
-                error = mspec.items.add_item(segs[j], false);
+                error = mspec.items.add_item(seg, false);
                 if (!error.empty())
                     return slot;
             }
@@ -3920,7 +3892,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 if (mspec.colour == COLOUR_UNDEF)
                 {
                     error = make_stringf("bad monster colour \"%s\" in \"%s\"",
-                                         colour.c_str(), specs[i].c_str());
+                                         colour.c_str(), monspec.c_str());
                     return slot;
                 }
             }
@@ -5653,9 +5625,9 @@ int subst_spec::value()
 
     int cumulative = 0;
     int chosen = 0;
-    for (int i = 0, size = repl.size(); i < size; ++i)
-        if (x_chance_in_y(repl[i].second, cumulative += repl[i].second))
-            chosen = repl[i].first;
+    for (glyph_weighted_replacement_t rep : repl)
+        if (x_chance_in_y(rep.second, cumulative += rep.second))
+            chosen = rep.first;
 
     if (fix)
         frozen_value = chosen;
@@ -5681,9 +5653,9 @@ int colour_spec::get_colour()
 
     int chosen = BLACK;
     int cweight = 0;
-    for (int i = 0, size = colours.size(); i < size; ++i)
-        if (x_chance_in_y(colours[i].second, cweight += colours[i].second))
-            chosen = colours[i].first;
+    for (map_weighted_colour col : colours)
+        if (x_chance_in_y(col.second, cweight += col.second))
+            chosen = col.first;
     if (fix)
         fixed_colour = chosen;
     return chosen;
@@ -5699,9 +5671,9 @@ feature_property_type fprop_spec::get_property()
 
     feature_property_type chosen = FPROP_NONE;
     int cweight = 0;
-    for (int i = 0, size = fprops.size(); i < size; ++i)
-        if (x_chance_in_y(fprops[i].second, cweight += fprops[i].second))
-            chosen = fprops[i].first;
+    for (map_weighted_fprop fprop : fprops)
+        if (x_chance_in_y(fprop.second, cweight += fprop.second))
+            chosen = fprop.first;
     if (fix)
         fixed_prop = chosen;
     return chosen;
@@ -5717,9 +5689,9 @@ int fheight_spec::get_height()
 
     int chosen = INVALID_HEIGHT;
     int cweight = 0;
-    for (int i = 0, size = fheights.size(); i < size; ++i)
-        if (x_chance_in_y(fheights[i].second, cweight += fheights[i].second))
-            chosen = fheights[i].first;
+    for (map_weighted_fheight fh : fheights)
+        if (x_chance_in_y(fh.second, cweight += fh.second))
+            chosen = fh.first;
     if (fix)
         fixed_height = chosen;
     return chosen;
@@ -5735,9 +5707,9 @@ string string_spec::get_property()
 
     string chosen = "";
     int cweight = 0;
-    for (int i = 0, size = strlist.size(); i < size; ++i)
-        if (x_chance_in_y(strlist[i].second, cweight += strlist[i].second))
-            chosen = strlist[i].first;
+    for (const map_weighted_string &str : strlist)
+        if (x_chance_in_y(str.second, cweight += str.second))
+            chosen = str.first;
     if (fix)
         fixed_str = chosen;
     return chosen;
@@ -5754,7 +5726,7 @@ string map_marker_spec::apply_transform(map_lines &map)
     if (positions.empty())
         return "";
 
-    for (int i = 0, size = positions.size(); i < size; ++i)
+    for (coord_def p : positions)
     {
         try
         {
@@ -5764,7 +5736,7 @@ string map_marker_spec::apply_transform(map_lines &map)
                 return make_stringf("Unable to parse marker from %s",
                                     marker.c_str());
             }
-            mark->pos = positions[i];
+            mark->pos = p;
             map.add_marker(mark);
         }
         catch (const string &err)
@@ -5819,10 +5791,9 @@ map_flags map_flags::parse(const string flag_list[],
     for (int i = 0; !flag_list[i].empty(); i++)
         flag_vals[flag_list[i]] = 1 << i;
 
-    for (int i = 0, size = segs.size(); i < size; i++)
+    for (string flag: segs)
     {
-        string flag   = segs[i];
-        bool   negate = false;
+        bool negate = false;
 
         if (flag[0] == '!')
         {
@@ -5873,11 +5844,8 @@ void keyed_mapspec::copy_feat(const keyed_mapspec &spec)
 void keyed_mapspec::parse_features(const string &s)
 {
     feat.feats.clear();
-    vector<string> specs = split_string("/", s);
-    for (int i = 0, size = specs.size(); i < size; ++i)
+    for (const string &spec : split_string("/", s))
     {
-        const string &spec = specs[i];
-
         feature_spec_list feats = parse_feature(spec);
         if (!err.empty())
             return;
@@ -5969,9 +5937,9 @@ feature_spec keyed_mapspec::parse_shop(string s, int weight, int mimic,
     {
         string item_list = parts[1];
         vector<string> str_items = split_string("|", item_list);
-        for (int i = 0, sz = str_items.size(); i < sz; ++i)
+        for (const string &si : str_items)
         {
-            err = items.add_item(str_items[i]);
+            err = items.add_item(si);
             if (!err.empty())
                 break;
         }
@@ -6023,10 +5991,9 @@ string keyed_mapspec::set_mons(const string &s, bool fix)
     err.clear();
     mons.clear();
 
-    vector<string> segments = split_string(",", s);
-    for (int i = 0, size = segments.size(); i < size; ++i)
+    for (const string &segment : split_string(",", s))
     {
-        const string error = mons.add_mons(segments[i], fix);
+        const string error = mons.add_mons(segment, fix);
         if (!error.empty())
             return error;
     }
@@ -6039,11 +6006,9 @@ string keyed_mapspec::set_item(const string &s, bool fix)
     err.clear();
     item.clear();
 
-    vector<string> segs = split_string(",", s);
-
-    for (int i = 0, size = segs.size(); i < size; ++i)
+    for (const string &seg : split_string(",", s))
     {
-        err = item.add_item(segs[i], fix);
+        err = item.add_item(seg, fix);
         if (!err.empty())
             return err;
     }
@@ -6184,12 +6149,9 @@ feature_spec feature_slot::get_feat(int def_glyph)
         chosen_feat.glyph = def_glyph;
     }
 
-    for (int i = 0, size = feats.size(); i < size; ++i)
-    {
-        const feature_spec &feat = feats[i];
+    for (const feature_spec &feat : feats)
         if (x_chance_in_y(feat.genweight, tweight += feat.genweight))
             chosen_feat = feat;
-    }
 
     if (fix_slot)
     {

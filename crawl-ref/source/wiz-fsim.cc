@@ -464,9 +464,8 @@ static string _init_scale(skill_map &scale, bool &xl_mode)
 {
     string ret;
 
-    for (int i = 0, size = Options.fsim_scale.size(); i < size; ++i)
+    for (string sk_str : Options.fsim_scale)
     {
-        string sk_str = lowercase_string(Options.fsim_scale[i]);
         if (sk_str == "xl")
         {
             xl_mode = true;
@@ -682,10 +681,10 @@ void wizard_fight_sim(bool double_scale)
     if (Options.fsim_kit.empty())
         fsim_proc(o, mon, defense);
     else
-        for (int i = 0, size = Options.fsim_kit.size(); i < size; ++i)
+        for (const string &kit : Options.fsim_kit)
         {
             string error;
-            if (_fsim_kit_equip(Options.fsim_kit[i], error))
+            if (_fsim_kit_equip(kit, error))
             {
                 _write_weapon(o);
                 fsim_proc(o, mon, defense);
@@ -693,7 +692,7 @@ void wizard_fight_sim(bool double_scale)
             }
             else
             {
-                mprf("Aborting sim on %s", Options.fsim_kit[i].c_str());
+                mprf("Aborting sim on %s", kit.c_str());
                 if (error != "")
                     mpr(error);
                 break;
