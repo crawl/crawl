@@ -1309,28 +1309,38 @@ void zin_remove_divine_stamina()
 
 bool zin_remove_all_mutations()
 {
-    if (!how_mutated())
+    ASSERT(how_mutated());
+    ASSERT(can_do_capstone_ability(you.religion));
+    ASSERT(grd(you.pos()) == DNGN_FLOOR);
+
+    if (!yesno("Do you wish to cure all of your mutations?", true, 'n'))
     {
-        mpr("You have no mutations to be cured!");
+        canned_msg(MSG_OK);
         return false;
     }
+    zin_recite_interrupt();
+    dungeon_terrain_changed(you.pos(), altar_for_god(GOD_ZIN),
+                            true, false, true);
+    mprf(MSGCH_GOD, "%s appears before you!",
+         feature_description_at(you.pos(), false, DESC_A, false).c_str());
+    flash_view(UA_PLAYER, WHITE);
+#ifndef USE_TILE_LOCAL
+    // Allow extra time for the flash to linger.
+    scaled_delay(1000);
+#endif
 
     you.one_time_ability_used.set(GOD_ZIN);
     take_note(Note(NOTE_GOD_GIFT, you.religion));
-
     simple_god_message(" draws all chaos from your body!");
     delete_all_mutations("Zin's power");
-
     return true;
 }
 
-bool zin_sanctuary()
+void zin_sanctuary()
 {
-    // Casting is disallowed while previous sanctuary in effect.
-    // (Checked in ability.cc.)
-    if (env.sanctuary_time)
-        return false;
+    ASSERT(!env.sanctuary_time);
 
+    zin_recite_interrupt();
     // Yes, shamelessly stolen from NetHack...
     if (!silenced(you.pos())) // How did you manage that?
         mprf(MSGCH_SOUND, "You hear a choir sing!");
@@ -1338,9 +1348,7 @@ bool zin_sanctuary()
         mpr("You are suddenly bathed in radiance!");
 
     flash_view(UA_PLAYER, WHITE);
-
     holy_word(100, HOLY_WORD_ZIN, you.pos(), true, &you);
-
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
@@ -1348,10 +1356,7 @@ bool zin_sanctuary()
 
     // Pets stop attacking and converge on you.
     you.pet_target = MHITYOU;
-
     create_sanctuary(you.pos(), 7 + you.skill_rdiv(SK_INVOCATIONS) / 2);
-
-    return true;
 }
 
 // shield bonus = attribute for duration turns, then decreasing by 1

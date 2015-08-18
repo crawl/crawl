@@ -1361,7 +1361,22 @@ static bool _check_ability_possible(const ability_def& abil,
     }
 
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
-        return how_mutated();
+        if (!how_mutated())
+        {
+            if (!quiet)
+                mpr("You have no mutations to be cured!");
+            return false;
+        }
+        if (grd(you.pos()) != DNGN_FLOOR)
+        {
+            if (!quiet)
+            {
+                mprf("You need to be standing on an open floor tile to receive "
+                     "Zin's cure here.");
+            }
+            return false;
+        }
+        return true;
 
     case ABIL_ZIN_SANCTUARY:
         if (env.sanctuary_time)
@@ -2191,15 +2206,13 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_ZIN_SANCTUARY:
         fail_check();
-        zin_recite_interrupt();
-        if (!zin_sanctuary())
-            return SPRET_ABORT;
+        zin_sanctuary();
         break;
 
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
         fail_check();
-        zin_recite_interrupt();
-        zin_remove_all_mutations();
+        if (!zin_remove_all_mutations())
+            return SPRET_ABORT;
         break;
 
     case ABIL_ZIN_DONATE_GOLD:
