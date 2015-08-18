@@ -1948,7 +1948,7 @@ static bool _works_at_tier(const facet_def& facet, int tier)
     return facet.tier == tier;
 }
 
-typedef decltype(declval<facet_def>().muts) mut_array_t;
+typedef decltype(facet_def().muts) mut_array_t;
 static bool _slot_is_unique(const mut_array_t &mut,
                             set<const facet_def *> facets_used)
 {
