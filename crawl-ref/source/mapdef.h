@@ -442,7 +442,6 @@ public:
                                 const Matrix<bool> &mask, const map_def &vault);
 private:
     void init_from(const map_lines &map);
-    template <typename V> void clear_vector(V &vect);
     void vmirror_markers();
     void hmirror_markers();
     void rotate_markers(bool clock);

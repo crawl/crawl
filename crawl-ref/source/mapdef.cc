@@ -525,17 +525,9 @@ void map_lines::init_from(const map_lines &map)
     solid_checked    = map.solid_checked;
 }
 
-template <typename V>
-void map_lines::clear_vector(V &vect)
-{
-    for (int i = 0, vsize = vect.size(); i < vsize; ++i)
-        delete vect[i];
-    vect.clear();
-}
-
 void map_lines::clear_markers()
 {
-    clear_vector(markers);
+    deleteAll(markers);
 }
 
 void map_lines::add_marker(map_marker *marker)
