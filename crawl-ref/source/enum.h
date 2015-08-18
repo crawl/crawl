@@ -128,11 +128,11 @@ public:
 };
 
 #define DEF_BITFIELD_OPERATORS(fieldT, flagT, ...) \
-    inline fieldT operator|(flagT a, flagT b)  { return fieldT(a) |= b; } \
-    inline fieldT operator|(flagT a, fieldT b) { return fieldT(a) |= b; } \
-    inline fieldT operator&(flagT a, flagT b)  { return fieldT(a) &= b; } \
-    inline fieldT operator&(flagT a, fieldT b) { return fieldT(a) &= b; } \
-    inline fieldT operator~(flagT a) { return ~fieldT(a); } \
+    inline constexpr fieldT operator|(flagT a, flagT b)  { return fieldT(a) | b; } \
+    inline constexpr fieldT operator|(flagT a, fieldT b) { return fieldT(a) | b; } \
+    inline constexpr fieldT operator&(flagT a, flagT b)  { return fieldT(a) & b; } \
+    inline constexpr fieldT operator&(flagT a, fieldT b) { return fieldT(a) & b; } \
+    inline constexpr fieldT operator~(flagT a) { return ~fieldT(a); } \
     COMPILE_CHECK(is_enum<flagT>::value)
 // The last line above is really just to eat a semicolon; template
 // substitution of enum_bitfield would have already failed.
