@@ -202,7 +202,7 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
 
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
-    delay(1000);
+    scaled_delay(1000);
 #endif
     return true;
 }
