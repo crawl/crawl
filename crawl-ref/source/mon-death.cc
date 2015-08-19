@@ -2701,10 +2701,8 @@ void heal_flayed_effect(actor* act, bool quiet, bool blood_only)
         act->props.erase("flay_damage");
     }
 
-    CrawlVector &blood = act->props["flay_blood"].get_vector();
-
-    for (int i = 0; i < blood.size(); ++i)
-        env.pgrid(blood[i].get_coord()) &= ~FPROP_BLOODY;
+    for (const CrawlStoreValue& store : act->props["flay_blood"].get_vector())
+        env.pgrid(store.get_coord()) &= ~FPROP_BLOODY;
     act->props.erase("flay_blood");
 }
 

@@ -108,10 +108,8 @@ static bool _is_test_selected(const string &testname)
 
     if (crawl_state.tests_selected.empty() && !starts_with(testname, "big/"))
         return true;
-    for (int i = 0, size = crawl_state.tests_selected.size();
-         i < size; ++i)
+    for (const string& phrase : crawl_state.tests_selected)
     {
-        const string &phrase(crawl_state.tests_selected[i]);
         if (testname == phrase || testname == phrase + ".lua")
             return true;
     }

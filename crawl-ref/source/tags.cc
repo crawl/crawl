@@ -1582,15 +1582,15 @@ static void tag_construct_you(writer &th)
     marshallUByte(th, you.octopus_king_rings);
 
     marshallUnsigned(th, you.uncancel.size());
-    for (int i = 0; i < (int)you.uncancel.size(); i++)
+    for (const pair<uncancellable_type, int>& unc : you.uncancel)
     {
-        marshallUByte(th, you.uncancel[i].first);
-        marshallInt(th, you.uncancel[i].second);
+        marshallUByte(th, unc.first);
+        marshallInt(th, unc.second);
     }
 
     marshallUnsigned(th, you.recall_list.size());
-    for (int i = 0; i < (int)you.recall_list.size(); i++)
-        _marshall_as_int<mid_t>(th, you.recall_list[i]);
+    for (mid_t recallee : you.recall_list)
+        _marshall_as_int<mid_t>(th, recallee);
 
     marshallUByte(th, NUM_SEEDS);
     for (int i = 0; i < NUM_SEEDS; i++)

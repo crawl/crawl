@@ -569,11 +569,8 @@ static void _dump_ver_stuff(FILE* file)
 static void _dump_command_line(FILE *file)
 {
     fprintf(file, "Command line:");
-    for (int i = 0, size = crawl_state.command_line_arguments.size();
-         i < size; ++i)
-    {
-        fprintf(file, " %s", crawl_state.command_line_arguments[i].c_str());
-    }
+    for (const string& str : crawl_state.command_line_arguments)
+        fprintf(file, " %s", str.c_str());
     if (crawl_state.command_line_arguments.empty())
         fprintf(file, " (unknown)");
     fprintf(file, "\n\n");
