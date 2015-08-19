@@ -1540,11 +1540,11 @@ static void tag_construct_you(writer &th)
     // List of currently beholding monsters (usually empty).
     marshallShort(th, you.beholders.size());
     for (mid_t beh : you.beholders)
-         _marshall_as_int<mid_t>(th, beh);
+         _marshall_as_int(th, beh);
 
     marshallShort(th, you.fearmongers.size());
     for (mid_t monger : you.fearmongers)
-        _marshall_as_int<mid_t>(th, monger);
+        _marshall_as_int(th, monger);
 
     marshallByte(th, you.piety_hysteresis);
 
@@ -1590,7 +1590,7 @@ static void tag_construct_you(writer &th)
 
     marshallUnsigned(th, you.recall_list.size());
     for (mid_t recallee : you.recall_list)
-        _marshall_as_int<mid_t>(th, recallee);
+        _marshall_as_int(th, recallee);
 
     marshallUByte(th, NUM_SEEDS);
     for (int i = 0; i < NUM_SEEDS; i++)
