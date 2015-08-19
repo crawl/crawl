@@ -2706,10 +2706,10 @@ static bool _is_option_autopickup(const item_def &item)
         return false;
 #endif
 
-    //Check for initial settings
-    for (int i = 0; i < (int)Options.force_autopickup.size(); ++i)
-        if (Options.force_autopickup[i].first.matches(iname))
-            return Options.force_autopickup[i].second;
+    // Check for initial settings
+    for (const pair<text_pattern, bool>& option : Options.force_autopickup)
+        if (option.first.matches(iname))
+            return option.second;
 
     return Options.autopickups[item.base_type];
 }

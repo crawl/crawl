@@ -2289,10 +2289,8 @@ string map_def::name_at(const coord_def &c) const
 {
     vector<string> names;
     names.push_back(name);
-    for (int i = 0, nsubvaults = subvault_places.size();
-         i < nsubvaults; ++i)
+    for (const subvault_place& subvault : subvault_places)
     {
-        const subvault_place &subvault = subvault_places[i];
         if (c.x >= subvault.tl.x && c.x <= subvault.br.x &&
             c.y >= subvault.tl.y && c.y <= subvault.br.y &&
             subvault.subvault->in_map(c - subvault.tl))
@@ -3112,10 +3110,8 @@ void map_def::hmirror()
     default: break;
     }
 
-    for (int i = 0, nsubvaults = subvault_places.size();
-         i < nsubvaults; ++i)
+    for (subvault_place &sv : subvault_places)
     {
-        subvault_place &sv = subvault_places[i];
 
         coord_def old_tl = sv.tl;
         coord_def old_br = sv.br;
@@ -3146,11 +3142,8 @@ void map_def::vmirror()
     default: break;
     }
 
-    for (int i = 0, nsubvaults = subvault_places.size();
-         i < nsubvaults; ++i)
+    for (subvault_place& sv : subvault_places)
     {
-        subvault_place &sv = subvault_places[i];
-
         coord_def old_tl = sv.tl;
         coord_def old_br = sv.br;
         sv.tl.y = map.height() - 1 - old_br.y;
@@ -3195,11 +3188,8 @@ void map_def::rotate(bool clock)
                 break;
             }
 
-        for (int i = 0, nsubvaults = subvault_places.size();
-             i < nsubvaults; ++i)
+        for (subvault_place& sv : subvault_places)
         {
-            subvault_place &sv = subvault_places[i];
-
             coord_def p1, p2;
             if (clock) //Clockwise
             {

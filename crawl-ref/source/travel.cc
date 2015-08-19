@@ -3363,15 +3363,9 @@ void LevelInfo::create_placeholder_stair(const coord_def &stair,
                                          const level_pos &dest)
 {
     // If there are any existing placeholders with the same 'dest', zap them.
-    for (int i = 0, size = stairs.size(); i < size; ++i)
-    {
-        if (stairs[i].type == stair_info::PLACEHOLDER
-            && stairs[i].destination == dest)
-        {
-            stairs.erase(stairs.begin() + i);
-            break;
-        }
-    }
+    erase_if(stairs, [&dest](const stair_info& old_stair)
+                     { return old_stair.type == stair_info::PLACEHOLDER
+                              && old_stair.destination == dest; });
 
     stair_info placeholder;
     placeholder.position    = stair;
@@ -3390,9 +3384,8 @@ void LevelInfo::sync_all_branch_stairs()
 {
     set<int> synced;
 
-    for (int i = 0, size = stairs.size(); i < size; ++i)
+    for (const stair_info& si : stairs)
     {
-        const stair_info &si = stairs[i];
         if (si.destination.id.branch != id.branch && si.destination.is_valid()
             && !synced.count(si.grid))
         {

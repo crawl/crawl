@@ -1991,8 +1991,8 @@ string get_item_description(const item_def &item, bool verbose,
                 description << "\nQuantity: " << stack.quantity
                             << "        Timer size: " << (int) timer.size();
                 description << "\nTimers:\n";
-                for (int i = 0; i < timer.size(); ++i)
-                    description << (timer[i].get_int()) << "  ";
+                for (const CrawlStoreValue& store : timer)
+                    description << store.get_int() << "  ";
             }
         }
 #endif

@@ -1589,8 +1589,8 @@ static void _report_random_vaults(
     weighted_map_names wms = _find_random_vaults(place, wantmini);
     sort(wms.begin(), wms.end(), _weighted_map_more_likely);
     int weightsum = 0;
-    for (int i = 0, size = wms.size(); i < size; ++i)
-        weightsum += wms[i].second;
+    for (const auto& weighted_name : wms)
+        weightsum += weighted_name.second;
 
     string line;
     for (int i = 0, size = wms.size(); i < size; ++i)

@@ -4407,9 +4407,9 @@ bool gozag_potion_petition()
                 if (coinflip())
                     ADD_POTIONS(*pots[i], _gozag_potion_list);
 
-                for (int j = 0; j < pots[i]->size(); j++)
+                for (const CrawlStoreValue& store : *pots[i])
                 {
-                    dummy.sub_type = (*pots[i])[j].get_int();
+                    dummy.sub_type = store.get_int();
                     prices[i] += item_value(dummy, true);
                     dprf("%d", item_value(dummy, true));
                 }
@@ -4450,8 +4450,8 @@ bool gozag_potion_petition()
             string line = make_stringf("  [%c] - %d gold - ", i + 'a',
                                        prices[i]);
             vector<string> pot_names;
-            for (int j = 0; j < pots[i]->size(); j++)
-                pot_names.emplace_back(potion_type_name((*pots[i])[j].get_int()));
+            for (const CrawlStoreValue& store : *pots[i])
+                pot_names.emplace_back(potion_type_name(store.get_int()));
             line += comma_separated_line(pot_names.begin(), pot_names.end());
             mpr_nojoin(MSGCH_PLAIN, line.c_str());
         }
