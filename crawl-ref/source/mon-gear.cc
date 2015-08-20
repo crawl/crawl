@@ -101,14 +101,14 @@ static void _give_book(monster* mon, int level)
 
         const int thing_created = items(false, OBJ_BOOKS, which_book, level);
 
-        if (thing_created != NON_ITEM && coinflip())
-        {
-            // Give Roxanne a random book containing Statue Form instead.
-            item_def &item(mitm[thing_created]);
-            make_book_Roxanne_special(&item);
-            _give_monster_item(mon, thing_created, true);
+        if (thing_created == NON_ITEM)
             return;
-        }
+
+        // Maybe give Roxanne a random book containing Statue Form instead.
+        if (coinflip())
+            make_book_Roxanne_special(&mitm[thing_created]);
+
+        _give_monster_item(mon, thing_created, true);
     }
 }
 
