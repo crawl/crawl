@@ -1961,7 +1961,7 @@ KMONS:   5 = necromancer
 KMONS:   6 = simulacrum / spectral thing / zombie w:5 / skeleton w:5 / \
              hell knight w:5
 KMONS:   7 = death knight
-KMONS:   8 = death cob / skeletal warrior
+KMONS:   8 = vampire knight w:5 / skeletal warrior
 KMONS:   9 = ancient champion
 KMONS:   0 = skeletal warrior
 
