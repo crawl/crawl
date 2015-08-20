@@ -2209,11 +2209,8 @@ NAME: nicolae_zot_crop_circle
 DEPTH: Zot, !Zot:1
 TAGS: no_monster_gen transparent
 SHUFFLE: {[(
-NSUBST: p = D / p
-NSUBST: p = 2:2 / 1
-SUBST: D = 21
-KMONS: 1 = plant
-KMONS: 2 = death cob
+NSUBST: p = 2:2 / 1:12 / 1
+MONS: plant, death cob
 MAP
    ..@..
   .......
