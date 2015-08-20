@@ -1761,7 +1761,7 @@ DEPTH:   Zot, !Zot:$
 ORIENT:  centre
 # Humanoids, guardian beasts, the strongest; first V, then Zot.
 MONS:    ettin / stone giant w:5 / fire giant / frost giant
-MONS:    base draconian w:18 / death cob w:1 / guardian mummy w:1
+MONS:    base draconian w:18 / guardian mummy w:1
 MONS:    glowing shapeshifter w:20 / sphinx w:15 / quicksilver dragon w:20 / \
          iron dragon w:20 / shadow dragon / golden dragon
 MONS:    fire dragon / ice dragon / storm dragon w:8 / moth of wrath w:12 / \
@@ -1769,7 +1769,7 @@ MONS:    fire dragon / ice dragon / storm dragon w:8 / moth of wrath w:12 / \
 MONS:    titan / lich / deep elf annihilator w:3 / deep elf high priest w:4 / \
          deep elf sorcerer w:3 / giant orange brain w:3 / war gargoyle w:3
 MONS:    nonbase draconian w:20 / killer klown / orb of fire w:5 / \
-         curse toe w:5 / ancient lich / electric golem
+         curse toe w:5 / ancient lich / electric golem / death cob
 SHUFFLE: ABCDEF, GH / GH / GH / HG
 NSUBST:  1 = 3:1 / 3:2 / 1:112 / 1:122, 0 = 3:1 / 3:2 / 1:112 / 1:122
 NSUBST:  3 = 3:3 / 3:4 / 1:334 / 1:344, 6 = 3:5 / 3:6 / 1:556 / 1:566
@@ -2209,7 +2209,9 @@ NAME: nicolae_zot_crop_circle
 DEPTH: Zot, !Zot:1
 TAGS: no_monster_gen transparent
 SHUFFLE: {[(
-NSUBST: p = 8:1 / *:2
+NSUBST: p = D / p
+NSUBST: p = 2:2 / 1
+SUBST: D = 21
 KMONS: 1 = plant
 KMONS: 2 = death cob
 MAP
