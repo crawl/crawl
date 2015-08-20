@@ -2134,6 +2134,7 @@ static int _prompt_travel_branch(int prompt_flags)
                 line += make_stringf("(%c) %-14s ",
                                      branches[br].travel_shortcut,
                                      branches[br].shortname);
+                ++linec;
             }
             if (!line.empty())
                 mpr(line);
