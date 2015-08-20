@@ -2034,12 +2034,6 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
         return true;
     }
 
-    if (you.see_cell(p))
-    {
-        god_id_item(item);
-        maybe_identify_base_type(item);
-    }
-
     // If it's a stackable type or stationary item that's not a net...
     int movable_ind = -1;
     if (move_below || is_stackable_item(item))
@@ -2060,6 +2054,13 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
                 destroy_item(ob);
                 ob = si->index();
                 _gozag_move_gold_to_top(p);
+                if (you.see_cell(p))
+                {
+                    // XXX: Is it actually necessary to identify when the
+                    // new item merged with a stack?
+                    god_id_item(*si);
+                    maybe_identify_base_type(*si);
+                }
                 return true;
             }
             if (move_below
@@ -2099,6 +2100,12 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
 
     if (item.base_type != OBJ_GOLD)
         _gozag_move_gold_to_top(p);
+
+    if (you.see_cell(p))
+    {
+        god_id_item(item);
+        maybe_identify_base_type(item);
+    }
 
     return true;
 }
