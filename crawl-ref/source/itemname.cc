@@ -3572,7 +3572,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case AMU_REGENERATION:
             return (player_mutation_level(MUT_SLOW_HEALING) == 3)
                    || temp && you.species == SP_VAMPIRE
-                      && you.hunger_state == HS_STARVING;
+                      && you.hunger_state <= HS_STARVING;
 
         case RING_SEE_INVISIBLE:
             return you.can_see_invisible(false, false);

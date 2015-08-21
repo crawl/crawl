@@ -2186,6 +2186,7 @@ enum holy_word_source_type
 
 enum hunger_state_t                    // you.hunger_state
 {
+    HS_FAINTING,
     HS_STARVING,
     HS_NEAR_STARVING,
     HS_VERY_HUNGRY,

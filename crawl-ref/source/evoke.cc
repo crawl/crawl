@@ -1991,7 +1991,7 @@ static bool _rod_spell(item_def& irod, bool check_range)
     if (you.undead_state() == US_UNDEAD)
         food = 0;
 
-    if (food && (you.hunger_state == HS_STARVING || you.hunger <= food)
+    if (food && (you.hunger_state <= HS_STARVING || you.hunger <= food)
         && !you.undead_state())
     {
         canned_msg(MSG_NO_ENERGY);
@@ -2174,7 +2174,7 @@ bool evoke_item(int slot, bool check_range)
         }
 
         if (you.undead_state() == US_ALIVE && !you_foodless()
-            && you.hunger_state == HS_STARVING)
+            && you.hunger_state <= HS_STARVING)
         {
             canned_msg(MSG_TOO_HUNGRY);
             return false;

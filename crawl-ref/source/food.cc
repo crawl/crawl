@@ -89,8 +89,11 @@ void make_hungry(int hunger_amount, bool suppress_msg,
 
 // Must match the order of hunger_state_t enums
 static constexpr int hunger_threshold[HS_ENGORGED + 1] =
-{ HUNGER_STARVING, HUNGER_NEAR_STARVING, HUNGER_VERY_HUNGRY, HUNGER_HUNGRY,
-    HUNGER_SATIATED, HUNGER_FULL, HUNGER_VERY_FULL, HUNGER_ENGORGED };
+{
+    HUNGER_FAINTING, HUNGER_STARVING, HUNGER_NEAR_STARVING, HUNGER_VERY_HUNGRY,
+    HUNGER_HUNGRY, HUNGER_SATIATED, HUNGER_FULL, HUNGER_VERY_FULL,
+    HUNGER_ENGORGED
+};
 
 /**
  * Attempt to reduce the player's hunger.
@@ -276,7 +279,7 @@ bool food_change(bool initial)
     you.hunger = min(you_max_hunger(), you.hunger);
 
     // Get new hunger state.
-    hunger_state_t newstate = HS_STARVING;
+    hunger_state_t newstate = HS_FAINTING;
     while (newstate < HS_ENGORGED && you.hunger > hunger_threshold[newstate])
         newstate = (hunger_state_t)(newstate + 1);
 
@@ -332,6 +335,11 @@ bool food_change(bool initial)
             string msg = "You ";
             switch (you.hunger_state)
             {
+            case HS_FAINTING:
+                msg += "are fainting from starvation!";
+                mprf(MSGCH_FOOD, less_hungry, "%s", msg.c_str());
+                break;
+
             case HS_STARVING:
                 if (you.species == SP_VAMPIRE)
                     msg += "feel devoid of blood!";
