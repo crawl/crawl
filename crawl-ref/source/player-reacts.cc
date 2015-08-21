@@ -412,7 +412,6 @@ void player_reacts_to_monsters()
                          (2 * BASELINE_DELAY), true);
     }
 
-    handle_starvation();
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
@@ -1358,6 +1357,12 @@ void player_reacts()
     // Icy shield and armour melt over lava.
     if (grd(you.pos()) == DNGN_LAVA)
         expose_player_to_element(BEAM_LAVA);
+
+    // Handle starvation before subtracting hunger for this turn (including
+    // hunger from the berserk duration) and before monsters react, so you
+    // always get a turn (though it may be a delay or macro!) between getting
+    // the Fainting light and actually fainting.
+    handle_starvation();
 
     _decrement_durations();
 
