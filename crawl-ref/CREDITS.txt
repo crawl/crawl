@@ -89,7 +89,6 @@
     Peter 'xFleury' Blain
     Bloax
     Terje Bø
-    Bodrick
     Erik Inge Bolsø
     bones
     Peter Borgmann
@@ -169,7 +168,7 @@
     Lamil Lerran
     Jordan Lewis
     Sami Liedes
-    Dom Light
+    Dom 'Bodrick' Light
     Rob Lund
     Michael Lynn
     Peter McLarnan
