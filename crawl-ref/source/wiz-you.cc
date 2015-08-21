@@ -320,8 +320,10 @@ void wizard_heal(bool super_heal)
 
 void wizard_set_hunger_state()
 {
-    string hunger_prompt =
-        "Set hunger state to s(T)arving, (N)ear starving, (H)ungry";
+    string hunger_prompt = "Set hunger state to ";
+    if (you.species != SP_VAMPIRE && you.species != SP_GHOUL)
+        hunger_prompt += "f(A)inting, ";
+    hunger_prompt += "s(T)arving, (N)ear starving, (H)ungry";
     if (you.species == SP_GHOUL)
         hunger_prompt += " or (S)atiated";
     else
@@ -335,7 +337,8 @@ void wizard_set_hunger_state()
     // Values taken from food.cc.
     switch (c)
     {
-    case 't': you.hunger = HUNGER_STARVING / 2;   break;
+    case 'a': you.hunger = HUNGER_FAINTING / 2; break;
+    case 't': you.hunger = (HUNGER_STARVING + HUNGER_FAINTING) / 2; break;
     case 'n': you.hunger = 1100;  break;
     case 'h': you.hunger = 2300;  break;
     case 's': you.hunger = 4900;  break;

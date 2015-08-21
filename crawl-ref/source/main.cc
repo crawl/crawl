@@ -1858,7 +1858,7 @@ static void _toggle_travel_speed()
 
 static void _do_rest()
 {
-    if (you.hunger_state == HS_STARVING && !you_min_hunger())
+    if (you.hunger_state <= HS_STARVING && !you_min_hunger())
     {
         mpr("You're too hungry to rest.");
         return;
@@ -1869,7 +1869,7 @@ static void _do_rest()
         if ((you.hp == you.hp_max
                 || player_mutation_level(MUT_SLOW_HEALING) == 3
                 || (you.species == SP_VAMPIRE
-                    && you.hunger_state == HS_STARVING))
+                    && you.hunger_state <= HS_STARVING))
             && you.magic_points == you.max_magic_points)
         {
             mpr("You start waiting.");
@@ -3272,7 +3272,7 @@ static void _move_player(coord_def move)
 
     if (you.digging)
     {
-        if (you.hunger_state == HS_STARVING && you.undead_state() == US_ALIVE)
+        if (you.hunger_state <= HS_STARVING && you.undead_state() == US_ALIVE)
         {
             you.digging = false;
             canned_msg(MSG_TOO_HUNGRY);

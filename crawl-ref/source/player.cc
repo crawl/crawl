@@ -1158,7 +1158,7 @@ int player_regen()
     // The better-fed you are, the faster you heal.
     if (you.species == SP_VAMPIRE)
     {
-        if (you.hunger_state == HS_STARVING)
+        if (you.hunger_state <= HS_STARVING)
             rr = 0;   // No regeneration for starving vampires.
         else if (you.hunger_state == HS_ENGORGED)
             rr += 20; // More bonus regeneration for engorged vampires.
@@ -1231,6 +1231,7 @@ int player_hunger_rate(bool temp)
     {
         switch (you.hunger_state)
         {
+        case HS_FAINTING:
         case HS_STARVING:
         case HS_NEAR_STARVING:
             hunger -= 3;
@@ -1614,7 +1615,7 @@ bool player_res_torment(bool random)
     }
 
     return get_form()->res_neg() == 3
-           || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
+           || you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING
            || you.petrified()
 #if TAG_MAJOR_VERSION == 34
            || player_equip_unrand(UNRAND_ETERNAL_TORMENT)
@@ -1640,7 +1641,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         case US_UNDEAD: // mummies & lichform
             return 3;
         case US_SEMI_UNDEAD: // vampire
-            if (you.hunger_state == HS_STARVING) // XXX: && temp?
+            if (you.hunger_state <= HS_STARVING) // XXX: && temp?
                 return 3;
             break;
     }
@@ -1891,6 +1892,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
     {
         switch (you.hunger_state)
         {
+        case HS_FAINTING:
         case HS_STARVING:
         case HS_NEAR_STARVING:
             pl = 3;
@@ -3087,6 +3089,7 @@ static int _stealth_mod()
     {
         switch (you.hunger_state)
         {
+        case HS_FAINTING:
         case HS_STARVING:
             species_stealth_mod += 3;
             break;
@@ -3362,6 +3365,7 @@ static void _display_vampire_status()
 
     switch (you.hunger_state)
     {
+        case HS_FAINTING:
         case HS_STARVING:
             attrib.push_back("are immune to poison");
             attrib.push_back("significantly resist cold");
@@ -4825,7 +4829,7 @@ void dec_disease_player(int delay)
         // Extra regeneration means faster recovery from disease.
         // But not if not actually regenerating!
         if (player_mutation_level(MUT_SLOW_HEALING) < 3
-            && !(you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING))
+            && !(you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING))
         {
             rr += _player_bonus_regen();
         }
@@ -5427,7 +5431,7 @@ bool player::is_sufficiently_rested() const
     // Only return false if resting will actually help.
     return (hp >= _rest_trigger_level(hp_max)
             || player_mutation_level(MUT_SLOW_HEALING) == 3
-            || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING)
+            || you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
         && (magic_points >= _rest_trigger_level(max_magic_points)
             || you.spirit_shield() && you.species == SP_DEEP_DWARF);
 }

@@ -1214,8 +1214,10 @@ static void _sdump_mutations(dump_params &par)
 //      Public Functions
 // ========================================================================
 
+// Must match the order of hunger_state_t enums
 static const char* hunger_names[] =
 {
+    "fainting",
     "starving",
     "near starving",
     "very hungry",
@@ -1225,9 +1227,12 @@ static const char* hunger_names[] =
     "very full",
     "completely stuffed",
 };
+COMPILE_CHECK(ARRAYSZ(hunger_names) == HS_ENGORGED + 1);
 
+// Must match the order of hunger_state_t enums
 static const char* thirst_names[] =
 {
+    "bloodless",
     "bloodless",
     "near bloodless",
     "very thirsty",
@@ -1237,12 +1242,10 @@ static const char* thirst_names[] =
     "very full",
     "almost alive",
 };
+COMPILE_CHECK(ARRAYSZ(thirst_names) == HS_ENGORGED + 1);
 
 const char *hunger_level()
 {
-    COMPILE_CHECK(ARRAYSZ(hunger_names) == HS_ENGORGED + 1);
-    COMPILE_CHECK(ARRAYSZ(thirst_names) == HS_ENGORGED + 1);
-
     ASSERT(you.hunger_state <= HS_ENGORGED);
 
     if (you.species == SP_VAMPIRE)

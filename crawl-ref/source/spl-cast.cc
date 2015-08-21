@@ -608,7 +608,7 @@ static bool _can_cast()
     }
 
     if (!you.undead_state() && !you_foodless()
-        && you.hunger_state == HS_STARVING)
+        && you.hunger_state <= HS_STARVING)
     {
         canned_msg(MSG_NO_ENERGY);
         more();

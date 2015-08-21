@@ -655,6 +655,11 @@ static void _describe_hunger(status_info* inf)
         inf->light_text   = (vamp ? "Bloodless" : "Starving");
         inf->short_text   = (vamp ? "bloodless" : "starving");
         break;
+    case HS_FAINTING:
+        inf->light_colour = RED;
+        inf->light_text   = (vamp ? "Bloodless" : "Fainting");
+        inf->short_text   = (vamp ? "bloodless" : "fainting");
+        break;
     case HS_SATIATED: // no status light
     default:
         break;
@@ -699,7 +704,7 @@ static void _describe_regen(status_info* inf)
     const bool regen = (you.duration[DUR_REGENERATION] > 0
                         || you.duration[DUR_TROGS_HAND] > 0);
     const bool no_heal =
-            (you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING)
+            (you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
             || (player_mutation_level(MUT_SLOW_HEALING) == 3);
     // Does vampire hunger level affect regeneration rate significantly?
     const bool vampmod = !no_heal && !regen && you.species == SP_VAMPIRE

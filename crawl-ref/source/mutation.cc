@@ -374,7 +374,7 @@ string describe_mutations(bool center_title)
 
     if (you.species == SP_VAMPIRE)
     {
-        if (you.hunger_state == HS_STARVING)
+        if (you.hunger_state <= HS_STARVING)
             result += "<green>You do not heal naturally.</green>\n";
         else if (you.hunger_state == HS_ENGORGED)
             result += "<green>Your natural rate of healing is extremely fast.</green>\n";
@@ -553,6 +553,7 @@ static void _display_vampire_attributes()
         current = 5;
         break;
     case HS_STARVING:
+    case HS_FAINTING:
         current = 6;
     }
 

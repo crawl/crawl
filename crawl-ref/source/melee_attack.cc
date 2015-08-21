@@ -1166,7 +1166,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     // bloodless
     if (atk == UNAT_BITE
         && _vamp_wants_blood_from_monster(defender->as_monster())
-        && (you.hunger_state == HS_STARVING
+        && (you.hunger_state <= HS_STARVING
             || you.hunger_state < HS_SATIATED && coinflip()
             || you.hunger_state >= HS_SATIATED && one_chance_in(4)))
     {
@@ -1472,7 +1472,7 @@ int melee_attack::player_apply_misc_modifiers(int damage)
     if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
         damage += 1 + random2(10);
 
-    if (you.species != SP_VAMPIRE && you.hunger_state == HS_STARVING)
+    if (you.species != SP_VAMPIRE && you.hunger_state <= HS_STARVING)
         damage -= random2(5);
 
     return damage;
@@ -3615,13 +3615,13 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
 
         if (vampiric)
         {
-            if (you.hunger_state == HS_STARVING)
+            if (you.hunger_state <= HS_STARVING)
                 your_to_hit += 2;
             else if (you.hunger_state < HS_SATIATED)
                 your_to_hit += 1;
         }
     }
-    else if (you.species != SP_VAMPIRE && you.hunger_state == HS_STARVING)
+    else if (you.species != SP_VAMPIRE && you.hunger_state <= HS_STARVING)
         your_to_hit -= 3;
 
     your_to_hit += slaying_bonus();
