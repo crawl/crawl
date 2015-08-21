@@ -1476,6 +1476,10 @@ int you_min_hunger()
 
 void handle_starvation()
 {
+    // Don't faint or die while eating.
+    if (current_delay_action() == DELAY_EAT)
+        return;
+
     if (!you_foodless() && !you.duration[DUR_DEATHS_DOOR]
         && you.hunger <= HUNGER_FAINTING)
     {
