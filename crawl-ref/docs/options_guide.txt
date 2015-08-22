@@ -54,6 +54,7 @@ The contents of this text are:
                 jewellery_prompt, easy_confirm, allow_self_target,
                 confirm_butcher, easy_eat_chunks, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop,
+                autofight_hunger_stop, autofight_hunger_stop_undead,
                 autofight_throw, autofight_throw_nomove, autofight_fire_stop,
                 autofight_caught, autofight_wait, autofight_prompt_range,
                 automagic_enable, automagic_slot, automagic_fight,
@@ -1162,6 +1163,39 @@ autofight_stop = 30
         percentage of your max HP. For example, to remove this stop
         you would want:
             autofight_stop = 0
+
+autofight_hunger_stop = 0
+        Autofight will not act if your nutrition level is at or lower than
+        this value:
+
+          -1: Fainting
+           0: Starving (default)
+           1: Near Starving
+           2: Very Hungry
+           3: Satiated (no status light)
+           4: Full
+           5: Very Full
+           6: Engorged (never autofight)
+
+        By default, this option has no effect on undead players, but see
+        autofight_hunger_stop_undead below.
+
+        To disable this stop, set it to -2 or to any non-numeric value,
+        for example:
+            autofight_hunger_stop = never
+        or even:
+            autofight_hunger_stop =
+
+autofight_hunger_stop_undead = false
+        If true, autofight_hunger_stop applies to Vampires and Ghouls. It
+        never applies to Mummies or players in Lich form. To enable hunger
+        stops for Ghouls but not for Vampires, use conditional Lua:
+
+          : if you.race() == "Ghoul" then
+          autofight_hunger_stop_undead = true
+          : else
+          autofight_hunger_stop_undead = false
+          : end
 
 autofight_throw = false
         If your quiver contains a throwable item, autofight will throw it
