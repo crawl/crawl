@@ -95,7 +95,7 @@ Mammal from the start.
 %%%%
 Transmuter
 
-Transmuters start with the book of of Changes. They can learn spells to shift
+Transmuters start with the book of Changes. They can learn spells to shift
 their form, as well as to turn sticks into snakes.
 %%%%
 Venom Mage
