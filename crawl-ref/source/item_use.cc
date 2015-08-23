@@ -1822,7 +1822,7 @@ void drink(int slot)
 
 // XXX: Only checks brands that can be rebranded to,
 // there's probably a nicer way of doing this.
-static bool _god_hates_brand(const int brand)
+bool god_hates_brand(const int brand)
 {
     if (is_good_god(you.religion)
         && (brand == SPWPN_DRAINING
@@ -1857,7 +1857,7 @@ static void _rebrand_weapon(item_def& wpn)
     const string itname = wpn.name(DESC_YOUR);
 
     // now try and find an appropriate brand
-    while (old_brand == new_brand || _god_hates_brand(new_brand))
+    while (old_brand == new_brand || god_hates_brand(new_brand))
     {
         if (is_range_weapon(wpn))
         {

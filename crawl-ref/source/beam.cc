@@ -32,6 +32,7 @@
 #include "fight.h"
 #include "godabil.h"
 #include "godconduct.h"
+#include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -308,6 +309,27 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
     // Set to non-tracing for actual firing.
     pbolt.is_tracer = false;
     return true;
+}
+
+// Returns true if the player wants / needs to abort based on god displeasure
+// with targeting this target with this spell. Returns false otherwise.
+static bool _stop_because_god_hates_target_prompt(monster* mon, spell_type spell)
+{
+    // This is just a hasty stub for the one case I'm aware of right now.
+    if (spell == SPELL_TUKIMAS_DANCE)
+    {
+        item_def* wpn = mon->weapon();
+        brand_type brand = !is_range_weapon(*wpn) ?
+            static_cast<brand_type>(get_weapon_brand(*wpn))
+                                    : SPWPN_NORMAL;
+        if (god_hates_brand(brand)
+            && !yesno("Animating this weapon would put you into penance. "
+            " Really cast this spell?", false, 'n'))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 template<typename T>
@@ -4207,7 +4229,8 @@ void bolt::handle_stop_attack_prompt(monster* mon)
             const bool autohit_first = (hit == AUTOMATIC_HIT);
             bool prompted = false;
 
-            if (stop_attack_prompt(mon, true, target, autohit_first, &prompted))
+            if (stop_attack_prompt(mon, true, target, autohit_first, &prompted)
+                || _stop_because_god_hates_target_prompt(mon, origin_spell))
             {
                 beam_cancelled = true;
                 finish_beam();
