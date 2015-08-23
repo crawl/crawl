@@ -136,10 +136,10 @@ https://www.debian.org/doc/manuals/maint-guide/index.en.html
 
    To create these, run the following:
 
-   cowbuilder --create --architecture amd64 \
-              --basepath /var/cache/pbuilder/stable-amd64.cow
-   cowbuilder --create --architecture i386 \
-              --basepath /var/cache/pbuilder/stable-i386.cow
+   sudo cowbuilder --create --architecture amd64 \
+     --basepath /var/cache/pbuilder/stable-amd64.cow
+   sudo cowbuilder --create --architecture i386 \
+     --basepath /var/cache/pbuilder/stable-i386.cow
 
    This chroot directory needs to be created only once for each OS/ARCH/DIST
    combination on which you what to build the package. It doesn't need to be
@@ -162,16 +162,16 @@ https://www.debian.org/doc/manuals/maint-guide/index.en.html
    against the same distribution as your host system. Using our 0.17.0 example
    building against debian stable on a debian stable system for amd64, simply:
 
-   pdebuild
+   sudo pdebuild
 
    To build the i386 package:
 
-   ARCH=i386 pdebuild
+   sudo ARCH=i386 pdebuild
 
    If you're on ubuntu, building against debian stable, you might need:
 
-   OS=ubuntu DIST=stable pdebuild
-   OS=ubuntu DIST=stable ARCH=i386 pdebuild
+   sudo OS=debian DIST=stable pdebuild
+   sudo OS=debian DIST=stable ARCH=i386 pdebuild
 
    Once the package building is finished, the results well be in
    /var/cache/pbuilder/result, if you're using the example pbuilderrc.
@@ -212,11 +212,16 @@ https://www.debian.org/doc/manuals/maint-guide/index.en.html
 
    Make sure to use the right major version number in those -C arguments.
 
-   Now follow the apt instructions on the download page to add the DCSS repo
-   and signing key, and then update and install crawl and crawl-tiles on your
-   system to make sure the repository works. When adding the repostiory, use
-   the correct crawl version if the download page still references the previous
-   version.
+   Note: If you messed something up and need to upload a new build of packages
+   for a version already installed in the repo, you can remove the installed
+   debs with a command like the following (run from ~/deb):
+
+   reprepro -C 0.17 remove crawl crawl crawl-common crawl-tiles crawl-tiles-data
+
+   To test that the repository is working, follow the apt instructions on the
+   download page to add the DCSS repo and signing key, being sure to use the
+   correct crawl major version in sources.list. Then update your apt-cache, and
+   install the crawl and crawl-tiles packages on your system.
 
 
 8. Update the download page
