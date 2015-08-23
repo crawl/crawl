@@ -1721,8 +1721,6 @@ void drink(int slot)
         return;
     }
 
-    zin_recite_interrupt();
-
     // The "> 1" part is to reduce the amount of times that Xom is
     // stimulated when you are a low-level 1 trying your first unknown
     // potions on monsters.
@@ -1732,6 +1730,8 @@ void drink(int slot)
 
     if (player_under_penance(GOD_GOZAG) && one_chance_in(3))
     {
+        zin_recite_interrupt();
+
         simple_god_message(" petitions for your drink to fail.", GOD_GOZAG);
 
         you.turn_is_over = true;
@@ -1741,6 +1741,8 @@ void drink(int slot)
 
     if (!quaff_potion(potion))
         return;
+
+    zin_recite_interrupt();
 
     if (!alreadyknown && dangerous)
     {
