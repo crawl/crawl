@@ -2480,7 +2480,7 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
 },
 
 {
-    MONS_ANCIENT_CHAMPION, 'z', LIGHTMAGENTA, "ancient champion",
+    MONS_ANCIENT_CHAMPION, 'z', LIGHTCYAN, "ancient champion",
     M_FIGHTER,
     MR_RES_COLD,
     24, MONS_ANCIENT_CHAMPION, MONS_ANCIENT_CHAMPION, MH_UNDEAD, 120,
@@ -2504,7 +2504,7 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
 },
 
 {
-    MONS_CURSE_SKULL, 'z', LIGHTCYAN, "curse skull",
+    MONS_CURSE_SKULL, 'z', LIGHTMAGENTA, "curse skull",
     M_SEE_INVIS | M_SPEAKS | M_FLIES,
     mrd(MR_RES_FIRE | MR_RES_COLD, 2) | MR_RES_ELEC,
     20, MONS_CURSE_SKULL, MONS_CURSE_SKULL, MH_UNDEAD, MAG_IMMUNE,
@@ -2516,7 +2516,7 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
 },
 
 {
-    MONS_CURSE_TOE, 'z', YELLOW, "curse toe",
+    MONS_CURSE_TOE, 'z', LIGHTGREEN, "curse toe",
     M_SEE_INVIS | M_SPEAKS | M_FLIES,
     MR_RES_ELEC | mrd(MR_RES_FIRE, 3) | MR_RES_COLD,
     60, MONS_LICH, MONS_CURSE_TOE, MH_UNDEAD, MAG_IMMUNE,
@@ -5697,7 +5697,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 // other symbols
 {
-    MONS_DEATH_COB, '%', YELLOW, "death cob",
+    MONS_DEATH_COB, 'z', YELLOW, "death cob",
     M_SPEAKS,
     MR_RES_COLD,
     10, MONS_DEATH_COB, MONS_DEATH_COB, MH_UNDEAD, 40,
