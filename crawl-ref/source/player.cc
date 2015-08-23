@@ -4905,6 +4905,29 @@ void dec_ambrosia_player(int delay)
         mpr("You feel less invigorated.");
 }
 
+bool invis_allowed(bool quiet)
+{
+    if (!you.backlit())
+        return true;
+
+    if (you.haloed() || you.glows_naturally())
+    {
+        if (!quiet)
+            mpr("You can't turn invisible.");
+        return false;
+    }
+    else if (!quiet
+             && get_contamination_level() > 1
+             && !yesno("Invisibility will do you no good right now; "
+                       "use anyway?", false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    return true;
+}
+
 bool flight_allowed(bool quiet)
 {
     if (get_form()->forbids_flight())

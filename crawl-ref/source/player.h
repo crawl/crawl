@@ -1043,6 +1043,7 @@ bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
 void dec_elixir_player(int delay);
 void dec_ambrosia_player(int delay);
+bool invis_allowed(bool quiet = false);
 bool flight_allowed(bool quiet = false);
 void fly_player(int pow, bool already_flying = false);
 void float_player();

@@ -209,6 +209,30 @@ static string _blood_flavour_message()
     return "Yuck - this tastes like blood.";
 }
 
+static bool _prompt_quaff_blood_potion(bool was_known)
+{
+    if (was_known
+        && is_good_god(you.religion)
+        && !yesno("Really drink that potion of blood?", false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    return true;
+}
+
+static bool _check_not_engorged()
+{
+    if (you.hunger_state == HS_ENGORGED)
+    {
+        mpr("You are much too full right now.");
+        return false;
+    }
+
+    return true;
+}
+
 class PotionBlood : public PotionEffect
 {
 private:
@@ -235,6 +259,12 @@ public:
 
     bool quaff(bool was_known) const
     {
+        if (was_known && !_check_not_engorged())
+            return false;
+
+        if (!_prompt_quaff_blood_potion(was_known))
+            return false;
+
         effect(was_known, 1040);
         did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3), was_known);
         return true;
@@ -535,17 +565,13 @@ public:
 
     bool can_quaff() const
     {
-        // TODO: merge with item_use.cc:dont_use_invis()
-        return get_contamination_level() <= 1;
+        return invis_allowed(true);
     }
 
     bool quaff(bool was_known) const
     {
-        if (was_known && !can_quaff())
-        {
-            mpr("You cannot turn invisible while glowing.");
+        if (was_known && !invis_allowed())
             return false;
-        }
 
         effect(was_known);
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
@@ -645,6 +671,7 @@ public:
 
     bool can_quaff() const
     {
+        // Has side effects (might print a message).
         return you.can_go_berserk(true, true, false);
     }
 
@@ -663,11 +690,8 @@ public:
 
     bool quaff(bool was_known) const
     {
-        if (was_known && !can_quaff())
-        {
-            mpr("You cannot go berserk now.");
+        if (was_known && (!can_quaff() || !berserk_check_wielded_weapon()))
             return false;
-        }
 
         if (effect(was_known))
             xom_is_stimulated(50);
@@ -983,6 +1007,12 @@ public:
 
     bool quaff(bool was_known) const
     {
+        if (was_known && !_check_not_engorged())
+            return false;
+
+        if (!_prompt_quaff_blood_potion(was_known))
+            return false;
+
         effect(840);
         did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3), was_known);
         return true;
@@ -1083,6 +1113,14 @@ public:
             lessen_hunger(6000, true);
         }
         return true;
+    }
+
+    bool quaff(bool was_known) const
+    {
+        if (was_known && !_check_not_engorged())
+            return false;
+
+        return effect();
     }
 };
 
