@@ -1250,6 +1250,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         // defensive wall of brambles (use the number of brambles in the area
         // as some indication if we've already done this, and shouldn't repeat)
         else if (mons->props["foe_approaching"].get_bool() == true
+                 && !mons_is_confused(mons)
                  && coinflip())
         {
             int briar_count = 0;
