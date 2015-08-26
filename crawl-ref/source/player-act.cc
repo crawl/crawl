@@ -820,94 +820,49 @@ bool player::can_go_berserk() const
     return can_go_berserk(false);
 }
 
-bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
+bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
+                            string *reason) const
 {
+    COMPILE_CHECK(HUNGER_STARVING - 100 + BERSERK_NUTRITION < HUNGER_VERY_HUNGRY);
     const bool verbose = (intentional || potion) && !quiet;
+    string msg;
+    bool success = false;
 
     if (berserk())
-    {
-        if (verbose)
-            mpr("You're already berserk!");
-        // or else you won't notice -- no message here.
-        return false;
-    }
-
-    if (duration[DUR_EXHAUSTED])
-    {
-        if (verbose)
-            mpr("You're too exhausted to go berserk.");
-        // or else they won't notice -- no message here
-        return false;
-    }
-
-    if (duration[DUR_DEATHS_DOOR])
-    {
-        if (verbose)
-            mpr("Your body is effectively dead; that's not a shape for a blood rage.");
-        return false;
-    }
-
-    if (beheld() && !player_equip_unrand(UNRAND_DEMON_AXE))
-    {
-        if (verbose)
-            mpr("You are too mesmerised to rage.");
-        // or else they won't notice -- no message here
-        return false;
-    }
-
-    if (afraid())
-    {
-        if (verbose)
-            mpr("You are too terrified to rage.");
-
-        return false;
-    }
-
+        msg = "You're already berserk!";
+    else if (duration[DUR_EXHAUSTED])
+         msg = "You're too exhausted to go berserk.";
+    else if (duration[DUR_DEATHS_DOOR])
+        msg = "Your body is effectively dead and in no shape for a blood rage.";
+    else if (beheld() && !player_equip_unrand(UNRAND_DEMON_AXE))
+        msg = "You are too mesmerised to rage.";
+    else if (afraid())
+        msg = "You are too terrified to rage.";
 #if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-    {
-        if (verbose)
-            mpr("Only creatures of flesh and blood can berserk.");
-
-        return false;
-    }
-
+    else if (you.species == SP_DJINNI)
+        msg = "Only creatures of flesh and blood can berserk.";
 #endif
-    if (is_lifeless_undead())
+    else if (is_lifeless_undead())
+        msg = "You cannot raise a blood rage in your lifeless body.";
+    // Stasis for identified amulets; unided amulets will trigger when the
+    // player attempts to activate berserk.
+    else if (stasis(false))
+        msg = "You cannot go berserk while under stasis.";
+    else if (!intentional && !potion && clarity())
+        msg = "You're too calm and focused to rage.";
+    else if (hunger <= HUNGER_VERY_HUNGRY)
+        msg = "You're too hungry to go berserk.";
+    else
+        success = true;
+
+    if (!success)
     {
         if (verbose)
-            mpr("You cannot raise a blood rage in your lifeless body.");
-
-        return false;
+            mpr(msg);
+        if (reason)
+            *reason = msg;
     }
-
-    // Stasis, but only for identified amulets; unided amulets will
-    // trigger when the player attempts to activate berserk,
-    // auto-iding at that point, but also killing the berserk and
-    // wasting a turn.
-    if (stasis(false))
-    {
-        if (verbose)
-            mpr("You cannot go berserk while under stasis.");
-        return false;
-    }
-
-    if (!intentional && !potion && clarity())
-    {
-        if (verbose)
-            mpr("You're too calm and focused to rage.");
-        return false;
-    }
-
-    COMPILE_CHECK(HUNGER_STARVING - 100 + BERSERK_NUTRITION < HUNGER_VERY_HUNGRY);
-    if (hunger <= HUNGER_VERY_HUNGRY)
-    {
-        if (verbose)
-            mpr("You're too hungry to go berserk.");
-        return false;
-    }
-
-    return true;
+    return success;
 }
 
 bool player::berserk() const

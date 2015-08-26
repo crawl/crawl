@@ -283,7 +283,8 @@ bool feat_dangerous_for_form(transformation_type which_trans,
 bool check_form_stat_safety(transformation_type new_form);
 
 bool transform(int pow, transformation_type which_trans,
-               bool involuntary = false, bool just_check = false);
+               bool involuntary = false, bool just_check = false,
+               string *fail_reason = nullptr);
 
 // skip_move: don't make player re-enter current cell
 void untransform(bool skip_move = false);

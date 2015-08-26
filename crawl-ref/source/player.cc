@@ -826,10 +826,9 @@ bool berserk_check_wielded_weapon()
 {
     const item_def * const wpn = you.weapon();
     bool penance = false;
-    if (wpn && wpn->defined() && (!is_melee_weapon(*wpn)
-                                   || needs_handle_warning(*wpn,
-                                                           OPER_ATTACK,
-                                                           penance)))
+    if (wpn && wpn->defined()
+        && (!is_melee_weapon(*wpn)
+            || needs_handle_warning(*wpn, OPER_ATTACK, penance)))
     {
         string prompt = "Do you really want to go berserk while wielding "
                         + wpn->name(DESC_YOUR) + "?";
@@ -4905,56 +4904,72 @@ void dec_ambrosia_player(int delay)
         mpr("You feel less invigorated.");
 }
 
-bool invis_allowed(bool quiet)
+bool prompt_contam_invis()
 {
-    if (!you.backlit())
-        return true;
-
-    if (you.haloed() || you.glows_naturally())
-    {
-        if (!quiet)
-            mpr("You can't turn invisible.");
-        return false;
-    }
-    else if (!quiet
-             && get_contamination_level() > 1
-             && !yesno("Invisibility will do you no good right now; "
-                       "use anyway?", false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-
     return true;
 }
 
-bool flight_allowed(bool quiet)
+bool invis_allowed(bool quiet, string *fail_reason)
 {
+    string msg;
+    bool success = true;
+
+    if (you.haloed() && you.halo_radius() != -1)
+    {
+        msg = "Your halo prevents invisibility.";
+        success = false;
+    }
+    else if (you.backlit(false))
+    {
+        msg = "Invisibility will do you no good right now";
+        if (!quiet && !yesno((msg + "; use anyway?").c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            success = false;
+        }
+        msg += ".";
+    }
+
+    if (!success)
+    {
+        if (fail_reason)
+            *fail_reason = msg;
+        if (!quiet)
+            mpr(msg);
+    }
+    return success;
+}
+
+bool flight_allowed(bool quiet, string *fail_reason)
+{
+    string msg;
+    bool success = true;
+
     if (get_form()->forbids_flight())
     {
-        if (!quiet)
-        {
-            mpr(you.form == TRAN_TREE ? "Your roots keep you in place."
-                                      : "You can't fly in this form.");
-        }
-        return false;
+        msg = you.form == TRAN_TREE ? "Your roots keep you in place."
+            : "You can't fly in this form.";
+        success = false;
     }
-
-    if (you.liquefied_ground())
+    else if (you.liquefied_ground())
     {
-        if (!quiet)
-            mpr("You can't fly while stuck in liquid ground.");
-        return false;
+        msg = "You can't fly while stuck in liquid ground.";
+        success = false;
     }
-
-    if (you.duration[DUR_GRASPING_ROOTS])
+    else if (you.duration[DUR_GRASPING_ROOTS])
     {
-        if (!quiet)
-            mpr("The grasping roots prevent you from becoming airborne.");
-        return false;
+        msg = "The grasping roots prevent you from becoming airborne.";
+        success = false;
     }
 
-    return true;
+    if (!success)
+    {
+        if (fail_reason)
+            *fail_reason = msg;
+        if (!quiet)
+            mpr(msg);
+    }
+    return success;
 }
 
 void float_player()
@@ -7130,15 +7145,19 @@ bool player::visible_to(const actor *looker) const
             && (!invisible() || mon->can_see_invisible()));
 }
 
+/**
+ * Is the player backlit?
+ *
+ * @param self_halo If true, ignore the player's self-halo.
+ * @returns True if the player is backlit.
+*/
 bool player::backlit(bool self_halo) const
 {
-    if (get_contamination_level() > 1 || duration[DUR_CORONA]
-        || duration[DUR_LIQUID_FLAMES] || duration[DUR_QUAD_DAMAGE])
-    {
-        return true;
-    }
-
-    return !umbraed() && haloed() && (self_halo || halo_radius() == -1);
+    return get_contamination_level() > 1
+        || duration[DUR_CORONA]
+        || duration[DUR_LIQUID_FLAMES]
+        || duration[DUR_QUAD_DAMAGE]
+        || !umbraed() && haloed() && (self_halo || halo_radius() == -1);
 }
 
 bool player::umbra() const
@@ -7146,27 +7165,20 @@ bool player::umbra() const
     return !backlit() && umbraed() && !haloed();
 }
 
-bool player::glows_naturally() const
-{
-    return false;
-}
-
 // This is the imperative version.
 void player::backlight()
 {
     if (!duration[DUR_INVIS] && form != TRAN_SHADOW)
     {
-        if (duration[DUR_CORONA] || glows_naturally())
+        if (duration[DUR_CORONA])
             mpr("You glow brighter.");
         else
             mpr("You are outlined in light.");
-
         increase_duration(DUR_CORONA, random_range(15, 35), 250);
     }
     else
     {
         mpr("You feel strangely conspicuous.");
-
         increase_duration(DUR_CORONA, random_range(3, 5), 250);
     }
 }

@@ -1731,11 +1731,8 @@ void drink(int slot)
     if (player_under_penance(GOD_GOZAG) && one_chance_in(3))
     {
         zin_recite_interrupt();
-
         simple_god_message(" petitions for your drink to fail.", GOD_GOZAG);
-
         you.turn_is_over = true;
-
         return;
     }
 
@@ -1743,26 +1740,22 @@ void drink(int slot)
         return;
 
     zin_recite_interrupt();
-
     if (!alreadyknown && dangerous)
     {
         // Xom loves it when you drink an unknown potion and there is
         // a dangerous monster nearby...
         xom_is_stimulated(200);
     }
-
     if (is_blood_potion(potion))
     {
         // Always drink oldest potion.
         remove_oldest_perishable_item(potion);
     }
-
     dec_inv_item_quantity(slot, 1);
     count_action(CACT_USE, OBJ_POTIONS);
     auto_assign_item_slot(potion);
     you.turn_is_over = true;
-
-    // This got deferred from the it_use2 switch to prevent SIGHUP abuse.
+    // This got deferred from PotionExperience::effect to prevent SIGHUP abuse.
     if (pot_type == POT_EXPERIENCE)
         level_change();
 }
@@ -1948,7 +1941,6 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
                                                 : "Enchant which weapon?",
                                        MT_INVLIST, selector,
                                        true, true, false);
-
         // The scroll is used up if we didn't know what it was originally.
         if (item_slot == PROMPT_NOTHING)
             return nullptr;
@@ -1967,19 +1959,16 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
         }
 
         item_def* wpn = &you.inv[item_slot];
-
         if (!is_item_selected(*wpn, selector))
         {
             mpr("Choose a valid weapon, or Esc to abort.");
             more();
-
             continue;
         }
 
         // Now we're definitely using up the scroll.
         if (alreadyknown)
             mpr(pre_msg);
-
         return wpn;
     }
 }
@@ -1987,8 +1976,8 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
 // Returns true if the scroll is used up.
 static bool _handle_brand_weapon(bool alreadyknown, const string &pre_msg)
 {
-    item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg, SCR_BRAND_WEAPON);
-
+    item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg,
+                                             SCR_BRAND_WEAPON);
     if (!weapon)
         return !alreadyknown;
 
@@ -2068,7 +2057,6 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
         }
 
         item_def& item(you.inv[item_slot]);
-
         if (fully_identified(item)
             && (!is_deck(item) || top_card_is_known(item)))
         {
