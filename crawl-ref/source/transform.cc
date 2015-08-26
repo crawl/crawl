@@ -1524,8 +1524,12 @@ static mutation_type _beastly_appendage()
 }
 
 static bool _transformation_is_safe(transformation_type which_trans,
-                                    dungeon_feature_type feat, bool quiet)
+                                    dungeon_feature_type feat, bool quiet,
+                                    string *fail_reason = nullptr)
 {
+    string msg;
+    bool is_safe = true;
+
     if (which_trans == TRAN_TREE)
     {
         const cloud_type cloud = cloud_type_at(you.pos());
@@ -1535,29 +1539,28 @@ static bool _transformation_is_safe(transformation_type which_trans,
             && cloud != CLOUD_POISON
             && is_damaging_cloud(cloud, false))
         {
-            if (!quiet)
-            {
-                mprf("You can't transform into a tree while standing in a cloud of %s.",
-                     cloud_type_name(cloud).c_str());
-            }
-            return false;
+            msg = make_stringf("You can't transform into a tree while standing "
+                               "in a cloud of %s.",
+                               cloud_type_name(cloud).c_str());
+            is_safe = false;
         }
     }
 #if TAG_MAJOR_VERSION == 34
-
-    if (which_trans == TRAN_ICE_BEAST && you.species == SP_DJINNI)
-        return false; // melting is fatal...
+    else if (which_trans == TRAN_ICE_BEAST && you.species == SP_DJINNI)
+        is_safe = false; // melting is fatal...
 #endif
-
-    if (!feat_dangerous_for_form(which_trans, feat))
-        return true;
-
-    if (!quiet)
+    else if (feat_dangerous_for_form(which_trans, feat))
     {
-        mprf("You would %s in your new form.",
-             feat == DNGN_DEEP_WATER ? "drown" : "burn");
+        msg = make_stringf("You would %s in your new form.",
+                           feat == DNGN_DEEP_WATER ? "drown" : "burn");
+        is_safe = false;
     }
-    return false;
+
+    if (fail_reason)
+        *fail_reason = msg;
+    if (!is_safe && !quiet)
+        mpr(msg);
+    return is_safe;
 }
 
 /**
@@ -1690,10 +1693,12 @@ static bool _player_alive_enough_for(transformation_type which_trans)
  *                          to intervene. (That may be the only case.)
  */
 bool transform(int pow, transformation_type which_trans, bool involuntary,
-               bool just_check)
+               bool just_check, string *fail_reason)
 {
     const transformation_type previous_trans = you.form;
     const bool was_flying = you.airborne();
+    bool success = true;
+    string msg;
 
     // Zin's protection.
     if (!just_check && you_worship(GOD_ZIN)
@@ -1708,14 +1713,22 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
     if (you.transform_uncancellable)
     {
-        if (!involuntary)
-            mpr("You are stuck in your current form!");
-        return false;
+        msg = "You are stuck in your current form!";
+        success = false;
+    }
+    else if (!_transformation_is_safe(which_trans, env.grid(you.pos()),
+                                      involuntary, fail_reason))
+    {
+        success =  false;
     }
 
-    if (!_transformation_is_safe(which_trans, env.grid(you.pos()),
-        involuntary))
+    if (!success)
     {
+        // Message is not printed if we're updating fail_reason.
+        if (fail_reason)
+            *fail_reason = msg;
+        else if (!involuntary)
+            mpr(msg);
         return false;
     }
 
@@ -1757,25 +1770,20 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     // the undead cannot enter most forms.
     if (!_player_alive_enough_for(which_trans))
     {
-        if (!involuntary)
-            mpr("Your unliving flesh cannot be transformed in this way.");
-        return false;
+        msg = "Your unliving flesh cannot be transformed in this way.";
+        success = false;
     }
-
-    if (which_trans == TRAN_LICH && you.duration[DUR_DEATHS_DOOR])
+    else if (which_trans == TRAN_LICH && you.duration[DUR_DEATHS_DOOR])
     {
-        if (!involuntary)
-            mpr("You cannot become a lich while in Death's Door.");
-        return false;
+        msg = "You cannot become a lich while in Death's Door.";
+        success = false;
     }
-
 #if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
-        && (which_trans == TRAN_ICE_BEAST || which_trans == TRAN_STATUE))
+    else if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
+             && (which_trans == TRAN_ICE_BEAST || which_trans == TRAN_STATUE))
     {
-        if (!involuntary)
-            mpr("Your temperature is too high to benefit from that spell.");
-        return false;
+        msg =  "Your temperature is too high to benefit from that spell.";
+        success = false;
     }
 #endif
 
@@ -1789,9 +1797,8 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         const mutation_type app = _beastly_appendage();
         if (app == NUM_MUTATIONS)
         {
-            if (!involuntary)
-                mpr("You have no appropriate body parts free.");
-            return false; // XXX: VERY dubious, since an untransform occurred
+            msg = "You have no appropriate body parts free.";
+            success = false; // XXX: VERY dubious, since an untransform occurred
         }
 
         if (!just_check)
@@ -1801,8 +1808,15 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         }
     }
 
-    if (!involuntary && just_check && !check_form_stat_safety(which_trans))
+    if (!success)
+    {
+        // Message is not printed if we're updating fail_reason.
+        if (fail_reason)
+            *fail_reason = msg;
+        else if (!involuntary)
+            mpr(msg);
         return false;
+    }
 
     // If we're just pretending return now.
     if (just_check)
