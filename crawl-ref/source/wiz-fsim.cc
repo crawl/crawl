@@ -255,7 +255,7 @@ static monster* _init_fsim()
         {
             mon = clone_mons(monster_at(moves.target), true);
             if (mon)
-                mon->flags |= MF_HARD_RESET;
+                mon->flags |= MF_HARD_RESET | MF_NO_REWARD;
         }
     }
 
@@ -281,7 +281,7 @@ static monster* _init_fsim()
         mgen_data temp = mgen_data::hostile_at(mtype, "fightsim", false, 0, 0,
                                                you.pos(), MG_DONT_COME);
 
-        temp.extra_flags |= MF_HARD_RESET;
+        temp.extra_flags |= MF_HARD_RESET | MF_NO_REWARD;
         mon = create_monster(temp);
         if (!mon)
         {
