@@ -1718,7 +1718,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         success = false;
     }
     else if (!_transformation_is_safe(which_trans, env.grid(you.pos()),
-                                      involuntary, fail_reason))
+                                      involuntary || fail_reason, &msg))
     {
         success =  false;
     }
