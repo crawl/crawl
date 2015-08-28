@@ -1545,8 +1545,9 @@ static bool _transformation_is_safe(transformation_type which_trans,
             is_safe = false;
         }
     }
+
 #if TAG_MAJOR_VERSION == 34
-    else if (which_trans == TRAN_ICE_BEAST && you.species == SP_DJINNI)
+    if (which_trans == TRAN_ICE_BEAST && you.species == SP_DJINNI)
         is_safe = false; // melting is fatal...
 #endif
     else if (feat_dangerous_for_form(which_trans, feat))
