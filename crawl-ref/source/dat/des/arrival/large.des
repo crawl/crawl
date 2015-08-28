@@ -15,7 +15,7 @@ WEIGHT:  2
 SHUFFLE: {[(
 SUBST:   [( = .
 SUBST:   c : cx
-TILE:    c = wall_stone_brick
+TILE:    c = wall_stone_smooth
 FTILE:   . = floor_cobble_blood
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -106,7 +106,7 @@ ITEM:    stone, nothing, nothing
 ORIENT:  float
 SHUFFLE: ]def
 SUBST:   c : cx
-TILE:    c = wall_stone_brick
+TILE:    c = wall_stone_smooth
 TILE:    x = wall_pebble_lightgray
 KFEAT:   ' = floor
 FTILE:   '+]def{T = floor_cobble_blood

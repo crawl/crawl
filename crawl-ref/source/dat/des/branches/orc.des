@@ -942,7 +942,7 @@ NAME:   nicolae_orc_accident_1
 DEPTH:  Orc
 ORIENT: southeast
 TAGS:   uniq_orcaccident
-RTILE:  X = wall_stone_brick
+RTILE:  X = wall_stone_smooth
 COLOUR: X = lightgrey
 KITEM:  W = gold q:1 / gold q:2 / gold q:3 / nothing w:100
 KFEAT:  W = shallow_water
@@ -975,7 +975,7 @@ NAME:   nicolae_orc_accident_2
 DEPTH:  Orc
 ORIENT: southeast
 TAGS:   uniq_orcaccident
-RTILE:  X = wall_stone_brick
+RTILE:  X = wall_stone_smooth
 COLOUR: X = lightgrey
 MONS:   patrolling orc warrior / patrolling orc knight w:2
 MONS:   patrolling orc priest
@@ -1015,7 +1015,7 @@ NAME:   nicolae_orc_accident_3
 DEPTH:  Orc
 ORIENT: southwest
 TAGS:   uniq_orcaccident
-RTILE:  X = wall_stone_brick
+RTILE:  X = wall_stone_smooth
 COLOUR: X = lightgrey
 KPROP:  e2q = no_tele_into
 SUBST:  e = xx...
