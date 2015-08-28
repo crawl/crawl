@@ -693,6 +693,7 @@ public:
      */
     int get_base_unarmed_damage() const
     {
+        // You also get another 6 damage from claws.
         return 12 + div_rand_round(you.strength() * 2, 3);
     }
 
