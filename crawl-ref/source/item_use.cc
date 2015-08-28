@@ -1616,27 +1616,6 @@ bool remove_ring(int slot, bool announce)
     return true;
 }
 
-bool dont_use_invis()
-{
-    if (!you.backlit())
-        return false;
-
-    if (you.haloed() || you.glows_naturally())
-    {
-        mpr("You can't turn invisible.");
-        return true;
-    }
-    else if (get_contamination_level() > 1
-             && !yesno("Invisibility will do you no good right now; "
-                       "use anyway?", false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return true;
-    }
-
-    return false;
-}
-
 void prompt_inscribe_item()
 {
     if (inv_count() < 1)
@@ -1734,49 +1713,13 @@ void drink(int slot)
         return;
     }
 
-    // TODO: merge the following checks into potion.cc's can_quaff functions
     const bool alreadyknown = item_type_known(potion);
-
-    if (alreadyknown && you.hunger_state == HS_ENGORGED
-        && (is_blood_potion(potion)
-#if TAG_MAJOR_VERSION == 34
-            || potion.sub_type == POT_PORRIDGE
-#endif
-            )
-        )
-    {
-        mpr("You are much too full right now.");
-        return;
-    }
-
-    if (alreadyknown && potion.sub_type == POT_INVISIBILITY
-        && dont_use_invis())
-    {
-        return;
-    }
-
-    if (alreadyknown && potion.sub_type == POT_BERSERK_RAGE
-        && (!berserk_check_wielded_weapon()
-            || !you.can_go_berserk(true, true)))
-    {
-        return;
-    }
-
-    if (alreadyknown && is_blood_potion(potion)
-        && is_good_god(you.religion)
-        && !yesno("Really drink that potion of blood?", false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
 
     if (alreadyknown && is_bad_item(potion, true))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return;
     }
-
-    zin_recite_interrupt();
 
     // The "> 1" part is to reduce the amount of times that Xom is
     // stimulated when you are a low-level 1 trying your first unknown
@@ -1787,6 +1730,8 @@ void drink(int slot)
 
     if (player_under_penance(GOD_GOZAG) && one_chance_in(3))
     {
+        zin_recite_interrupt();
+
         simple_god_message(" petitions for your drink to fail.", GOD_GOZAG);
 
         you.turn_is_over = true;
@@ -1796,6 +1741,8 @@ void drink(int slot)
 
     if (!quaff_potion(potion))
         return;
+
+    zin_recite_interrupt();
 
     if (!alreadyknown && dangerous)
     {
