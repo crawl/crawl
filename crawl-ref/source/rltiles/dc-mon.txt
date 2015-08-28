@@ -582,6 +582,7 @@ profane_servitor MONS_PROFANE_SERVITOR
 mennas MONS_MENNAS
 
 ## Giants ('C')
+%rim 0
 polyphemus MONS_POLYPHEMUS
 chuck MONS_CHUCK
 iron_giant MONS_IRON_GIANT
@@ -593,6 +594,7 @@ fire_giant MONS_FIRE_GIANT
 frost_giant MONS_FROST_GIANT
 stone_giant MONS_STONE_GIANT
 titan MONS_TITAN
+%rim 1
 
 ## Drakes (also 'l')
 %sdir mon/dragons
