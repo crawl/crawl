@@ -1280,7 +1280,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     else if (player_in_branch(BRANCH_BAILEY))
     {
         if (orig == TILE_DNGN_STONE_WALL)
-            orig = TILE_WALL_STONE_BRICK;
+            orig = TILE_WALL_STONE_SMOOTH;
     }
     else if (player_in_branch(BRANCH_OSSUARY))
     {

@@ -17,7 +17,7 @@ COLOUR: t = lightgreen
 FTILE:  `1t = floor_grass
 FTILE:  ' = floor_dirt
 FTILE:  -{V = floor_vault
-TILE:   c = wall_stone_brick
+TILE:   c = wall_stone_smooth
 MONS: bush
 SUBST: `'-: .
 MAP

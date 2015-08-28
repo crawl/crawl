@@ -80,7 +80,7 @@ SUBVAULT: U : grated_community_mu_home5
 SUBVAULT: V : grated_community_mu_home6
 SUBVAULT: X : grated_community_mu_home
 SUBST:    QRSTUVX : .
-TILE:     c = wall_stone_brick
+TILE:     c = wall_stone_smooth
 TILE:     Z = wall_vines
 TILE:     - = wall_brick_darkgray
 SUBST:    - = c
