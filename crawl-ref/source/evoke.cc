@@ -624,7 +624,7 @@ void zap_wand(int slot)
         {
             return;
         }
-        else if (wand.sub_type == WAND_INVISIBILITY && dont_use_invis())
+        else if (wand.sub_type == WAND_INVISIBILITY && !invis_allowed())
             return;
     }
 

@@ -1616,27 +1616,6 @@ bool remove_ring(int slot, bool announce)
     return true;
 }
 
-bool dont_use_invis()
-{
-    if (!you.backlit())
-        return false;
-
-    if (you.haloed() || you.glows_naturally())
-    {
-        mpr("You can't turn invisible.");
-        return true;
-    }
-    else if (get_contamination_level() > 1
-             && !yesno("Invisibility will do you no good right now; "
-                       "use anyway?", false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return true;
-    }
-
-    return false;
-}
-
 void prompt_inscribe_item()
 {
     if (inv_count() < 1)
@@ -1734,49 +1713,13 @@ void drink(int slot)
         return;
     }
 
-    // TODO: merge the following checks into potion.cc's can_quaff functions
     const bool alreadyknown = item_type_known(potion);
-
-    if (alreadyknown && you.hunger_state == HS_ENGORGED
-        && (is_blood_potion(potion)
-#if TAG_MAJOR_VERSION == 34
-            || potion.sub_type == POT_PORRIDGE
-#endif
-            )
-        )
-    {
-        mpr("You are much too full right now.");
-        return;
-    }
-
-    if (alreadyknown && potion.sub_type == POT_INVISIBILITY
-        && dont_use_invis())
-    {
-        return;
-    }
-
-    if (alreadyknown && potion.sub_type == POT_BERSERK_RAGE
-        && (!berserk_check_wielded_weapon()
-            || !you.can_go_berserk(true, true)))
-    {
-        return;
-    }
-
-    if (alreadyknown && is_blood_potion(potion)
-        && is_good_god(you.religion)
-        && !yesno("Really drink that potion of blood?", false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
 
     if (alreadyknown && is_bad_item(potion, true))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return;
     }
-
-    zin_recite_interrupt();
 
     // The "> 1" part is to reduce the amount of times that Xom is
     // stimulated when you are a low-level 1 trying your first unknown
@@ -1787,35 +1730,32 @@ void drink(int slot)
 
     if (player_under_penance(GOD_GOZAG) && one_chance_in(3))
     {
+        zin_recite_interrupt();
         simple_god_message(" petitions for your drink to fail.", GOD_GOZAG);
-
         you.turn_is_over = true;
-
         return;
     }
 
     if (!quaff_potion(potion))
         return;
 
+    zin_recite_interrupt();
     if (!alreadyknown && dangerous)
     {
         // Xom loves it when you drink an unknown potion and there is
         // a dangerous monster nearby...
         xom_is_stimulated(200);
     }
-
     if (is_blood_potion(potion))
     {
         // Always drink oldest potion.
         remove_oldest_perishable_item(potion);
     }
-
     dec_inv_item_quantity(slot, 1);
     count_action(CACT_USE, OBJ_POTIONS);
     auto_assign_item_slot(potion);
     you.turn_is_over = true;
-
-    // This got deferred from the it_use2 switch to prevent SIGHUP abuse.
+    // This got deferred from PotionExperience::effect to prevent SIGHUP abuse.
     if (pot_type == POT_EXPERIENCE)
         level_change();
 }
@@ -2001,7 +1941,6 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
                                                 : "Enchant which weapon?",
                                        MT_INVLIST, selector,
                                        true, true, false);
-
         // The scroll is used up if we didn't know what it was originally.
         if (item_slot == PROMPT_NOTHING)
             return nullptr;
@@ -2020,19 +1959,16 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
         }
 
         item_def* wpn = &you.inv[item_slot];
-
         if (!is_item_selected(*wpn, selector))
         {
             mpr("Choose a valid weapon, or Esc to abort.");
             more();
-
             continue;
         }
 
         // Now we're definitely using up the scroll.
         if (alreadyknown)
             mpr(pre_msg);
-
         return wpn;
     }
 }
@@ -2040,8 +1976,8 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
 // Returns true if the scroll is used up.
 static bool _handle_brand_weapon(bool alreadyknown, const string &pre_msg)
 {
-    item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg, SCR_BRAND_WEAPON);
-
+    item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg,
+                                             SCR_BRAND_WEAPON);
     if (!weapon)
         return !alreadyknown;
 
@@ -2121,7 +2057,6 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
         }
 
         item_def& item(you.inv[item_slot]);
-
         if (fully_identified(item)
             && (!is_deck(item) || top_card_is_known(item)))
         {

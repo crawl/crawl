@@ -605,7 +605,7 @@ public:
     void attacking(actor *other, bool ranged = false);
     bool can_go_berserk() const;
     bool can_go_berserk(bool intentional, bool potion = false,
-                        bool quiet = false) const;
+                        bool quiet = false, string *reason = nullptr) const;
     bool go_berserk(bool intentional, bool potion = false);
     bool berserk() const;
     bool can_mutate() const;
@@ -715,7 +715,6 @@ public:
 #if TAG_MAJOR_VERSION == 34
     int heat_radius() const;
 #endif
-    bool glows_naturally() const;
     bool petrifying() const;
     bool petrified() const;
     bool liquefied_ground() const;
@@ -1043,7 +1042,9 @@ bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
 void dec_elixir_player(int delay);
 void dec_ambrosia_player(int delay);
-bool flight_allowed(bool quiet = false);
+bool prompt_contam_invis();
+bool invis_allowed(bool quiet = false, string *fail_reason = nullptr);
+bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);
 void fly_player(int pow, bool already_flying = false);
 void float_player();
 bool land_player(bool quiet = false);
