@@ -372,7 +372,7 @@ public:
     virtual int heat_radius() const = 0;
 #endif
 
-    virtual bool glows_naturally() const = 0;
+    virtual bool glows_naturally() const { return false; };
 
     virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;
