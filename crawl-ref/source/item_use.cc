@@ -2541,9 +2541,17 @@ void read(int slot)
         return;
     }
 
+    if (player_mutation_level(MUT_BLURRY_VISION)
+        && !i_feel_safe(false, false, true)
+        && !yesno("Really read with blurry vision while enemies are nearby?",
+                  false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
-
     zin_recite_interrupt();
 
     if (you.duration[DUR_BRAINLESS] && !one_chance_in(5))
@@ -2557,15 +2565,6 @@ void read(int slot)
     // scroll effect kicks in.
     if (player_mutation_level(MUT_BLURRY_VISION))
     {
-        if (!i_feel_safe(false, false, true)
-            && !yesno("Really read with blurry vision while enemies are nearby?",
-                      false, 'n'))
-        {
-            you.turn_is_over = false;
-            canned_msg(MSG_OK);
-            return;
-        }
-
         // takes 0.5, 1, 2 extra turns
         const int turns = max(1, player_mutation_level(MUT_BLURRY_VISION) - 1);
         start_delay(DELAY_BLURRY_SCROLL, turns, item_slot);
@@ -2575,7 +2574,6 @@ void read(int slot)
     else
         read_scroll(item_slot);
 }
-
 
 /**
  * Read the provided scroll.
