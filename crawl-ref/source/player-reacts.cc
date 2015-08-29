@@ -294,17 +294,17 @@ static void _maybe_melt_armour()
 static int _current_horror_level()
 {
     const coord_def& center = you.pos();
-    const int radius = 8;
+    const int radius = LOS_RADIUS;
     int horror_level = 0;
 
-    for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
+    for (radius_iterator ri(center, radius, C_SQUARE); ri; ++ri)
     {
         const monster* const mon = monster_at(*ri);
 
         if (mon == nullptr
             || mons_aligned(mon, &you)
             || mons_is_firewood(mon)
-            || !you.can_see(mon))
+            || !you.can_see(*mon))
         {
             continue;
         }
@@ -412,7 +412,6 @@ void player_reacts_to_monsters()
                          (2 * BASELINE_DELAY), true);
     }
 
-    handle_starvation();
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
@@ -660,10 +659,27 @@ static void _decrement_durations()
         you.redraw_evasion = true;
     }
 
+    // Handle Powered By Death strength and duration
+    int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
+    if (pbd_str > 1)
+    {
+        // Roll to decrement (on average) 1 per-10 aut.
+        const int decrement_rolls = div_rand_round(delay, 10);
+        const int dec = binomial(decrement_rolls, 1, 4);
+
+        // We don't want to accidentally terminate the effect after slow actions
+        pbd_str = max(pbd_str - dec, 1);
+        you.props[POWERED_BY_DEATH_KEY] = pbd_str;
+        if (dec > 0)
+            dprf("Decrementing Powered by Death strength to %d", pbd_str);
+    }
     if (_decrement_a_duration(DUR_POWERED_BY_DEATH, delay))
     {
-        if (handle_pbd_corpses() > 0)
+        if (pbd_str > 0)
+        {
             mprf(MSGCH_DURATION, "You feel less regenerative.");
+            you.props[POWERED_BY_DEATH_KEY] = 0;
+        }
     }
 
     _decrement_a_duration(DUR_TELEPATHY, delay, "You feel less empathic.");
@@ -693,13 +709,9 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_TELEPORT, delay))
     {
-        you_teleport_now(true);
+        you_teleport_now();
         untag_followers();
     }
-
-    _decrement_a_duration(DUR_CONTROL_TELEPORT, delay,
-                          "You feel uncertain.", coinflip(),
-                          "You start to feel a little uncertain.");
 
     if (_decrement_a_duration(DUR_DEATH_CHANNEL, delay,
                               "Your unholy channel expires.", coinflip(),
@@ -1063,7 +1075,7 @@ static void _decrement_durations()
                           "Your cleaving frenzy subsides.");
 
     if (_decrement_a_duration(DUR_CORROSION, delay,
-                          "You repair your equipment."))
+                          "You are no longer corroded."))
     {
         you.props["corrosion_amount"] = 0;
         you.redraw_armour_class = true;
@@ -1184,10 +1196,7 @@ static void _decrement_durations()
     }
 
     if (_decrement_a_duration(DUR_GOZAG_GOLD_AURA, delay))
-    {
         you.props["gozag_gold_aura_amount"] = 0;
-        redraw_screen();
-    }
 
     dec_elixir_player(delay);
 
@@ -1324,11 +1333,11 @@ void player_reacts()
         const int teleportitis_level = player_teleport();
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
-            you_teleport_now(false, false, true);
+            you_teleport_now(false, true);
         else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80)
                  && (!map_masked(you.pos(), MMT_VAULT) || one_chance_in(3)))
         {
-            you_teleport_now(false); // to new area of the Abyss
+            you_teleport_now(); // to new area of the Abyss
 
             // It's effectively a new level, make a checkpoint save so eventual
             // crashes lose less of the player's progress (and fresh new bad
@@ -1349,6 +1358,12 @@ void player_reacts()
     if (grd(you.pos()) == DNGN_LAVA)
         expose_player_to_element(BEAM_LAVA);
 
+    // Handle starvation before subtracting hunger for this turn (including
+    // hunger from the berserk duration) and before monsters react, so you
+    // always get a turn (though it may be a delay or macro!) between getting
+    // the Fainting light and actually fainting.
+    handle_starvation();
+
     _decrement_durations();
 
     // Translocations and possibly other duration decrements can
@@ -1362,21 +1377,16 @@ void player_reacts()
     // increment constriction durations
     you.accum_has_constricted();
 
-    int capped_time = you.time_taken;
-    if (you.walking && capped_time > BASELINE_DELAY)
-        capped_time = BASELINE_DELAY;
-
-    int food_use = player_hunger_rate();
-    food_use = div_rand_round(food_use * capped_time, BASELINE_DELAY);
-
+    const int food_use = div_rand_round(player_hunger_rate() * you.time_taken,
+                                        BASELINE_DELAY);
     if (food_use > 0 && you.hunger > 0)
         make_hungry(food_use, true);
 
-    _regenerate_hp_and_mp(capped_time);
+    _regenerate_hp_and_mp(you.time_taken);
 
-    dec_disease_player(capped_time);
+    dec_disease_player(you.time_taken);
     if (you.duration[DUR_POISONING])
-        handle_player_poison(capped_time);
+        handle_player_poison(you.time_taken);
 
     recharge_rods(you.time_taken, false);
 

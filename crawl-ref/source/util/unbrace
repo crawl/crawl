@@ -2,12 +2,14 @@
 use Getopt::Std;
 use strict;
 
-our ($opt_m, $opt_a, $opt_A, $opt_n);
-getopts('naAm');
-my $dry_run = $opt_n;
-my $add_braces = !$opt_A;
-my $modified_only = $opt_m;
+our ($opt_a, $opt_A, $opt_m, $opt_M, $opt_n);
+getopts('aAmMn');
 my $top_level = $opt_a;
+my $add_braces = !$opt_A;
+my $modified_only = $opt_m || $opt_M;
+my $modified_cached = $opt_m && !$opt_M;
+my $dry_run = $opt_n;
+
 my $any_bad = 0;
 
 my @files = @ARGV;
@@ -17,7 +19,8 @@ unless (@files)
     my $git_cmd = "git ls-files";
     if ($modified_only)
     {
-        $git_cmd = "git diff-index -M --name-only --cached --relative HEAD";
+        my $cached = $modified_cached ? "--cached" : "";
+        $git_cmd = "git diff-index -M --name-only $cached --relative HEAD";
     }
 
     if ($top_level)

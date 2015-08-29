@@ -92,23 +92,17 @@ w:1
 %%%%
 _high_priest_common_
 
-SPELL:@The_monster@ prays.
+@The_monster@ prays.
 
-SPELL:@The_monster@ mumbles some strange prayers.
+@The_monster@ mumbles some strange prayers.
 
-SPELL:@The_monster@ intones a terrible prayer.
-
-SPELL:@The_monster@ invokes a dire malice against @foe@. @player_only@
+@The_monster@ intones a terrible prayer.
 
 @The_monster@ starts to sing a prayer.
 %%%%
 _high_priest_medium_
 
-VISUAL:@The_monster@ looks excited.
-
 VISUAL:@The_monster@ performs a strange gesture.
-
-VISUAL:@The_monster@ gazes, communing with @possessive@ divine master.
 
 @The_monster@ shouts @at_foe@, "You are a heretic and must be destroyed!"
 
@@ -135,9 +129,7 @@ _high_priest_rare_
 
 @The_monster@ says @to_foe@, "Taste sacred energy, fool."
 
-@The_monster@ says @to_foe@, "Feel the grace of @my_God@ course like acid through your form, @foe@."
-
-@The_monster@ says @to_foe@, "Your suffering will please @my_God@ as it cleanses you of grand heresy."
+@The_monster@ says @to_foe@, "Your suffering will cleanse you of your heresy."
 ## END _high_priest_ ##
 %%%%
 _mercenary_guard_
@@ -206,30 +198,29 @@ w:1
 %%%%
 _wizard_common_spell_
 
-SPELL:@The_monster@ wildly gestures.
+@The_monster@ wildly gestures.
 
-SPELL:@The_monster@ mumbles some strange words.
+@The_monster@ mumbles some strange words.
 
-SPELL:@The_monster@ casts a spell.
-
-SPELL:@The_monster@ howls an incantation.
+@The_monster@ howls an incantation.
 %%%%
 _fake_spell_effect_
 
-ENCHANT:@The_monster@ shimmers violently.
+VISUAL:@The_monster@ shimmers violently.
 
-ENCHANT:@The_monster@ glows brightly for a moment.
+VISUAL:@The_monster@ glows brightly for a moment.
 
-ENCHANT:@The_monster@'s fingertips start to glow.
+VISUAL:@The_monster@'s fingertips start to glow.
+
+VISUAL:You feel disoriented. @player_only@
+
+VISUAL:You feel troubled. @player_only@
 %%%%
 _wizard_medium_
 
-SPELL:@The_monster@ casts a spell.
-ENCHANT:@The_monster@ becomes larger for a moment.
+VISUAL:@The_monster@ becomes larger for a moment.
 
-VISUAL SPELL:@The_monster@'s eyes start to glow.
-
-VISUAL SPELL:@The_monster@ tries to enchant @foe@ with @possessive@ gaze.
+VISUAL:@The_monster@'s eyes start to glow.
 
 @The_monster@ shouts @at_foe@, "You can't withstand my power!"
 
@@ -237,15 +228,11 @@ VISUAL SPELL:@The_monster@ tries to enchant @foe@ with @possessive@ gaze.
 %%%%
 _wizard_rare_
 
-VISUAL SPELL:@The_monster@ throws some strange powder towards @foe@.
+@The_monster@ says @to_foe@, "Argatax netranoch dertex."
 
-SPELL:@The_monster@ laughs, and in @possessive@ laughter burns the force of the arcane.
+@The_monster@ says @to_foe@, "Dogrw nutew berg."
 
-SPELL:@The_monster@ says @to_foe@, "Argatax netranoch dertex."
-
-SPELL:@The_monster@ says @to_foe@, "Dogrw nutew berg."
-
-SPELL:@The_monster@ shouts @at_foe@, "Entram moth deg ulag!"
+@The_monster@ shouts @at_foe@, "Entram moth deg ulag!"
 ## END _wizard_ ##
 %%%%
 _friendly_imp_
@@ -700,7 +687,7 @@ VISUAL:@The_monster@ tries to hide somewhere.
 %%%%
 _friendly_fleeing_rare_
 
-@The_monster@ @_shouts_@, "WAIT FOR ME, @CAPS@ @player_name@ @NOCAPS@! Could you help me?"
+@The_monster@ @_shouts_@, "Wait for me, @player_name@! Could you help me?"
 
 @The_monster@ cries, "Don't forget your friends!"
 
@@ -757,15 +744,15 @@ _fleeing_humanoid_rare_
 
 @The_monster@ @_begs_@ @to_foe@, "Please! I have a lot of children!"
 
-VISUAL:@The_monster@ looks really [rattled|scared stiff|petrified].
+VISUAL:@The_monster@ looks [rattled|scared stiff|petrified].
 
 @The_monster@ weeps quietly.
 
-@The_monster@ looks desperately for an escape route.
+VISUAL:@The_monster@ looks desperately for an escape route.
 
 @The_monster@ hums to @reflexive@ desperately, trying to keep calm.
 
-@The_monster@ attempts to regain @possessive@ composure.
+VISUAL:@The_monster@ attempts to regain @possessive@ composure.
 
 @The_monster@ @_mutters_@, "Of all the rotten luck!"
 
@@ -1026,7 +1013,7 @@ __NONE
 %%%%
 silenced player ghost
 
-VISUAL SPELL:@The_monster@ stares at @foe@.
+VISUAL:@The_monster@ stares at @foe@.
 
 w:5
 VISUAL:@The_monster@ points at @foe@ threateningly.
@@ -1181,7 +1168,7 @@ Spellcasting player ghost
 
 @The_monster@ says, "I practised a lot since I died."
 
-VISUAL SPELL:@The_monster@'s fingertips begin to glow.
+VISUAL:@The_monster@'s fingertips begin to glow.
 
 VISUAL:@The_monster@ frowns in concentration.
 
@@ -1195,13 +1182,11 @@ VISUAL:@The_monster@ takes aim.
 
 @The_monster@ [adeptly chants|mispronounces] a nearly unspeakable incantation.
 
-VISUAL ENCHANT:@The_monster@ is bathed in the radiant lights of Iskenderun.
+VISUAL:@The_monster@ is bathed in the radiant lights of Iskenderun.
 
-VISUAL SPELL:Energy condenses in front of @the_monster@, but quickly dissipates.
+VISUAL:Energy condenses in front of @the_monster@, but quickly dissipates.
 %%%%
 Hexes player ghost
-
-VISUAL WARN:You feel a strange force tugging at your mind. @player_only@
 
 @The_monster@ says @to_foe@, "You will soon be helpless to avoid my power."
 
@@ -1215,7 +1200,7 @@ Summonings player ghost
 
 @The_monster@ says, "It's dangerous to adventure alone."
 
-VISUAL SPELL:@The_monster@ pulls a quokka out of @possessive@ cap.
+VISUAL:@The_monster@ pulls a quokka out of @possessive@ cap.
 
 @The_monster@ points @at_foe@ and yells, "Attack!"
 
@@ -1235,11 +1220,9 @@ Necromancy player ghost
 %%%%
 Translocations player ghost
 
-VISUAL SPELL:@The_monster@ flickers in and out of reality.
+VISUAL:@The_monster@ flickers in and out of reality.
 
-VISUAL ENCHANT:@The_monster@ is wreathed in a cloud of translocational energy.
-
-VISUAL SPELL:@The_monster@ struggles to pull you closer. @player_only@
+VISUAL:@The_monster@ is wreathed in a cloud of translocational energy.
 
 VISUAL:@The_monster@ blinks @at_foe@.
 %%%%
@@ -1259,7 +1242,7 @@ Fire Magic player ghost
 %%%%
 Ice Magic player ghost
 
-VISUAL WARN:A chill runs down your spine. @player_only@
+VISUAL:A chill runs down your spine. @player_only@
 
 @The_monster@ says @to_foe@, "I hope the next monster to meet you likes frozen food!"
 
@@ -1279,8 +1262,7 @@ Earth Magic player ghost
 
 @The_monster@ says, "All of the earth is under my command."
 
-VISUAL:@The_monster@ gestures.
-VISUAL SPELL:For a moment, the earth shakes beneath you.
+VISUAL:The earth trembles for a moment.
 %%%%
 Poison Magic player ghost
 
@@ -1306,7 +1288,7 @@ Invocations player ghost
 
 @The_monster@ mutters, "So much for the promised afterlife."
 
-VISUAL SPELL:@The_monster@ prays.
+VISUAL:@The_monster@ prays.
 %%%%
 Evocations player ghost
 
@@ -1499,8 +1481,6 @@ Yredelemnul player ghost
 %%%%
 Zin player ghost
 
-@The_monster@ says @to_foe@, "Once you're dead, I will avenge you with righteous fury!"
-
 @The_monster@ says @to_foe@, "I died poor and in vain, but not as a freak."
 
 @The_monster@ says @to_foe@, "For all the tithing, I expected a more glorious afterlife than this."
@@ -1547,7 +1527,7 @@ w:2
 %%%%
 _player_ghost_common_
 
-VISUAL SPELL:@The_monster@ stares at @foe@.
+VISUAL:@The_monster@ stares at @foe@.
 
 @The_monster@ lets out a mournful wail.
 
@@ -1738,7 +1718,7 @@ VISUAL:@The_monster@ slowly taps his weapon in his hand.
 
 @The_monster@ says, "Soon your soul will belong to Makhleb." @player_only@
 
-@The_monster@ says, "Makhleb has given me the powers of destruction."
+@The_monster@ says, "Makhleb has given me powers of destruction."
 
 @The_monster@ says, "Your corpse will decorate my castle walls." @player_only@
 
@@ -1763,9 +1743,10 @@ _Asterion_rare_
 
 @The_monster@ unleashes a bloodcurdling roar.
 
-WARN:@The_monster@ chants and is briefly shrouded in fire.
+@The_monster@ chants and is briefly shrouded in fire.
 
-WARN:@The_monster@'s eyes glow. You hear demonic laughter.
+@The_monster@'s eyes glow.
+You hear demonic laughter.
 
 @The_monster@ says, "{{
     if you.skill("Spellcasting") >= 5 then
@@ -1913,27 +1894,10 @@ w:2
 %%%%
 _Boris_common_
 
-VISUAL SPELL:@The_monster@ stares at you.
-@_visual_fake_spell_effect_@
+VISUAL:@The_monster@ stares @at_foe@.
 
-SPELL:@The_monster@ casts a spell.
-@_warn_fake_spell_effect_@
-
-VISUAL SPELL:@The_monster@ gestures.
-@_warn_fake_spell_effect_@
-%%%%
-_visual_fake_spell_effect_
-
-VISUAL WARN:You feel disoriented.
-
-VISUAL WARN:You feel troubled.
-%%%%
-_warn_fake_spell_effect_
-
-WARN:Suddenly you are surrounded with a pale green light. @player_only@
-
-WARN:You have a terrible headache.
-
+@_wizard_common_spell_@
+@_fake_spell_effect_@
 %%%%
 _Boris_medium_
 
@@ -3911,7 +3875,7 @@ _Eustachio_rare_
 
 VISUAL:@The_monster@ twirls @possessive@ moustache.
 
-SPELL:@The_monster@ calls on the powers of shadow!
+@The_monster@ calls on the powers of shadow!
 
 @The_monster@ brags, "I can call spirits from the vasty deep."
 ## END Eustachio ##
@@ -3930,9 +3894,9 @@ VISUAL:@The_monster@ sneers @at_foe@.
 
 VISUAL:@The_monster@ runs a finger over @possessive@ scar.
 
-ENCHANT:@The_monster@ speaks in an indecipherable language.
+@The_monster@ speaks in an indecipherable language.
 
-ENCHANT:@The_monster@ mutters a nigh-unspeakable word.
+@The_monster@ mutters a nigh-unspeakable word.
 
 @The_monster@ says, "Show me proof of your conquests, and I will call you a great adventurer." @player_only@
 
@@ -3950,7 +3914,7 @@ _Frances_rare_
 
 VISUAL:@The_monster@ takes a defensive stance.
 
-ENCHANT:@The_monster@ growls a series of guttural syllables.
+@The_monster@ growls a series of guttural syllables.
 
 @The_monster@ says, "There is a strange beauty in the demonic, don't you think?"
 
@@ -4561,9 +4525,9 @@ VISUAL:@The_monster@ looks very angry.
 
 @The_monster@ shouts @at_foe@, "You're disturbing me! I'll have to kill you!"
 
-VISUAL SPELL:@The_monster@ gestures wildly.
+VISUAL:@The_monster@ gestures wildly.
 
-SPELL:@The_monster@ mumbles something strange.
+@The_monster@ mumbles something strange.
 %%%%
 _Jessica_rare_
 
@@ -4839,11 +4803,11 @@ VISUAL:@The_monster@'s face changes twice.
 # And original
 @The_monster@ growls.
 
-VISUAL SPELL:@The_monster@ gestures.
+VISUAL:@The_monster@ gestures.
 
-VISUAL SPELL:@The_monster@ points ostentatiously.
+VISUAL:@The_monster@ points ostentatiously.
 
-VISUAL SPELL:@The_monster@ weaves an illusion.
+VISUAL:@The_monster@ weaves an illusion.
 %%%%
 _Mara_rare_
 
@@ -4882,36 +4846,24 @@ green
 %%%%
 _Margery_spell_results_
 
-ENCHANT:@The_monster@ is surrounded with an aura of power.
+VISUAL:@The_monster@ is surrounded with an aura of power.
 
-ENCHANT:@The_monster@ becomes transparent for a moment.
+VISUAL:@The_monster@ becomes transparent for a moment.
 
-ENCHANT:@The_monster@'s hands start to glow.
-%%%%
-_Margery_visual_spell_results_
-
-VISUAL ENCHANT:@The_monster@ is surrounded with an aura of power.
-
-VISUAL ENCHANT:@The_monster@ becomes transparent for a moment.
-
-VISUAL ENCHANT:@The_monster@'s hands start to glow.
+VISUAL:@The_monster@'s hands start to glow.
 %%%%
 _Margery_common_
 
-VISUAL SPELL:@The_monster@ gestures.
-@_Margery_visual_spell_results_@
-
-SPELL:@The_monster@ casts a spell.
+VISUAL:@The_monster@ gestures.
 @_Margery_spell_results_@
 
-VISUAL SPELL:@The_monster@'s eyes start to glow with a @_spell_colour_@ light.
+VISUAL:@The_monster@'s eyes start to glow with a @_spell_colour_@ light.
 
-VISUAL SPELL:@The_monster@ gestures.
-VISUAL WARN:You feel [cursed|doomed].
+VISUAL:@The_monster@ gestures.
+VISUAL:You feel [cursed|doomed].
 
 w:5
-VISUAL SPELL:@The_monster@ throws some purple powder towards you.
-VISUAL WARN:You feel [cursed|doomed].
+VISUAL:@The_monster@ throws some purple powder towards you.
 
 @The_monster@ says @to_foe@, "Die!"
 
@@ -4923,8 +4875,7 @@ VISUAL WARN:You feel [cursed|doomed].
 %%%%
 _Margery_rare_
 
-SPELL:@The_monster@ screams @at_foe@, "Ergichanteg reztahaw!"
-WARN:You feel really bad.
+@The_monster@ screams @at_foe@, "Ergichanteg reztahaw!"
 
 VISUAL:@The_monster@ looks very self-confident.
 
@@ -4986,10 +4937,6 @@ confused Maud
 @The_monster@ thinks out loud, "Enter... Enterror?"
 
 @The_monster@ wonders, "Who am I anyway?"
-
-VISUAL:@The_monster@'s expression loosens as @possessive@ mind turns inward.
-
-VISUAL:@The_monster@ slowly smiles as @possessive@ mind releases itself from mundane concerns.
 ## END Maud ##
 %%%%
 ############ MAURICE ### A thief.
@@ -5077,18 +5024,15 @@ VISUAL:@The_monster@'s bandages flutter.
 
 VISUAL:@The_monster@ breathes soot at you.
 
-VISUAL SPELL:@The_monster@ blazes with dark energy!
+VISUAL:@The_monster@ blazes with dark energy!
 
-VISUAL SPELL:@The_monster@ @_Menkaure_verb_@ a few words.
+@The_monster@ @_Menkaure_verb_@ a few words.
 
-VISUAL SPELL:@The_monster@ @_Menkaure_verb_@ dryly.
-VISUAL ENCHANT:@The_monster@ glows.
+VISUAL:@The_monster@ @_Menkaure_verb_@ drily.
 
 @The_monster@ @_Menkaure_verb_@, "It doesn't hurt if you pull your brain out of your nose yourself."
 
 VISUAL:@The_monster@ grins.
-
-VISUAL:@The_monster@ strides towards you, then pauses, indecisive.
 %%%%
 _Menkaure_rare_
 
@@ -5202,14 +5146,8 @@ w:5
 %%%%
 _Natasha_common_
 
-VISUAL SPELL:@The_monster@ stares at you.
-@_visual_fake_spell_effect_@
-
-SPELL:@The_monster@ casts a spell.
-@_warn_fake_spell_effect_@
-
-VISUAL SPELL:@The_monster@ gestures.
-@_warn_fake_spell_effect_@
+@_wizard_common_spell_@
+@_fake_spell_effect_@
 %%%%
 _Natasha_rare_
 
@@ -5245,10 +5183,9 @@ _Natasha_death_common_
 _Natasha_death_rare_
 Suddenly @the_monster@'s spirit rises from @possessive@ lifeless body.
 
-Moaning pathetically, @the_monster@'s spirit plunges in to the ground.
+Moaning pathetically, @the_monster@'s spirit plunges into the ground.
 
 You hear a faint echoing roar filled with hate and sorrow!
-
 %%%%
 Natasha permanently killed
 
@@ -5430,7 +5367,7 @@ w:5
 %%%%
 _Norris_common_
 
-SPELL:@The_monster@ mumbles some mantras.
+@The_monster@ mumbles some mantras.
 
 VISUAL:@The_monster@ is surrounded with an aura of peace.
 
@@ -5568,11 +5505,6 @@ w:5
 @_Polyphemus_rare_@
 %%%%
 _Polyphemus_common_
-
-# Speech by freakingretard:
-# In the original text, it seems his speech was quite eloquent.
-# In the movie, I hear he speaks stupidly, as an unintelligent brute
-# would. This speech is a compromise, as it reflects neither. :)
 
 VISUAL:@The_monster@ glares at @foe@ with @possessive@ lone eye.
 
@@ -5946,14 +5878,12 @@ VISUAL:@The_monster@ looks at you with fury.
 
 @The_monster@ giggles. "Time to reap what you sow."
 
-SPELL:@The_monster@ casts a spell.
-ENCHANT:@The_monster@'s eyes start glowing with a red light.
+VISUAL:@The_monster@'s eyes start glowing with a red light.
 
-SPELL:@The_monster@ breathes a few words.
-ENCHANT:@The_monster@'s hands start flickering wildly.
+@The_monster@ breathes a few words.
+VISUAL:@The_monster@'s hands start flickering wildly.
 
-SPELL:@The_monster@ casts a spell.
-ENCHANT:@The_monster@ is suddenly surrounded by pale @_spell_colour_@ light.
+VISUAL:@The_monster@ is suddenly surrounded by pale @_spell_colour_@ light.
 %%%%
 _Sigmund_rare_
 
@@ -5962,9 +5892,6 @@ _Sigmund_rare_
 @The_monster@ screams @at_foe@, "You will never... NEVER!!!"
 
 @The_monster@ screams @at_foe@, "I am the angel of ZOT!!!"
-
-w:3
-VISUAL:@The_monster@ rams the haft of @possessive@ scythe on the @surface@.
 
 @The_monster@ screams @at_foe@, "Only death can liberate you!"
 
@@ -6273,11 +6200,7 @@ Xtahua
 %%%%
 _Xtahua_common_
 
-w:5
 @The_monster@ roars horribly.
-
-@The_monster@ roars horribly.
-You are afraid.
 
 VISUAL:@The_monster@ glares at @foe@.
 
@@ -6631,8 +6554,8 @@ Elyvilon
 _holy_being_
 
 w:2
-SPELL:@The_monster@ intones a prayer.
-SPELL:A sense of peace washes over you.
+@The_monster@ intones a prayer.
+VISUAL:A sense of peace washes over you.
 
 w:1
 @The_monster@ says @to_foe@, "Thou must remain pure in the battle against evil."

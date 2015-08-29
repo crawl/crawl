@@ -24,6 +24,7 @@
 #include "makeitem.h"
 #include "matrix.h"
 #include "mon-ench.h"
+#include "mon-flags.h"
 #include "tags.h"
 #include "travel_defs.h"
 
@@ -442,7 +443,6 @@ public:
                                 const Matrix<bool> &mask, const map_def &vault);
 private:
     void init_from(const map_lines &map);
-    template <typename V> void clear_vector(V &vect);
     void vmirror_markers();
     void hmirror_markers();
     void rotate_markers(bool clock);
@@ -669,12 +669,10 @@ public:
 
     bool explicit_spells;
     vector<monster_spells> spells;
-    uint64_t extra_monster_flags;
+    monster_flags_t extra_monster_flags;
     vector<mon_enchant> ench;
 
     monster_type initial_shifter;
-
-    vector<monster_type> chimera_mons;
 
     CrawlHashTable props;
 
@@ -687,7 +685,7 @@ public:
           colour(COLOUR_INHERIT), god(GOD_NO_GOD), god_gift(false), hd(0),
           hp(0), abjuration_duration(0), summon_type(0), items(), monname(""),
           non_actor_summoner(""), explicit_spells(false), spells(),
-          extra_monster_flags(0), initial_shifter(RANDOM_MONSTER), props()
+          extra_monster_flags(), initial_shifter(RANDOM_MONSTER), props()
     {
     }
 };
@@ -1069,8 +1067,8 @@ public:
     {
         writer_fn(outf, default_thing);
         marshallShort(outf, depth_range_Xs.size());
-        for (int i = 0, size = depth_range_Xs.size(); i < size; ++i)
-            depth_range_Xs[i].write(outf, writer_fn);
+        for (const auto &range : depth_range_Xs)
+            range.write(outf, writer_fn);
     }
 };
 
@@ -1105,10 +1103,9 @@ struct subvault_place
 //   they will not change.
 //
 // * Fields that do not determine placement and may change between
-//   different uses of the map (such as "mons", "items",
-//   "level_flags", etc.). Such fields must be reset to their default
-//   values in map_def::reinit(), which is called before the map is
-//   used.
+//   different uses of the map (such as "mons", "items", etc.). Such fields
+//   must be reset to their default values in map_def::reinit(), which is
+//   called before the map is used.
 //
 // If you do not do this, maps will not work correctly, and will break
 // in obscure, hard-to-find ways. The level-compiler will not (cannot)
@@ -1120,7 +1117,7 @@ public:
     string          name;
     // Description for the map that can be shown to players.
     string          description;
-    // Order among related maps; used only for tutorial/sprint/zotdef.
+    // Order among related maps; used only for tutorial/sprint.
     int             order;
     string          tags;
     depth_ranges    place;
@@ -1145,8 +1142,6 @@ public:
     static int monster_array_glyph_to_slot(int gly);
 
     vector<mons_spec> random_mons;
-
-    map_flags       level_flags, branch_flags;
 
     dlua_chunk      prelude, mapchunk, main, validate, veto, epilogue;
 

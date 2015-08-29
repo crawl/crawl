@@ -23,7 +23,6 @@ queen_ant CORPSE_QUEEN_ANT
 butterfly CORPSE_BUTTERFLY
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 bat CORPSE_BAT
-raven CORPSE_RAVEN
 caustic_shrike CORPSE_CAUSTIC_SHRIKE
 shard_shrike CORPSE_SHARD_SHRIKE
 
@@ -76,7 +75,6 @@ demonic_crawler CORPSE_DEMONIC_CRAWLER
 %sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 crocodile CORPSE_CROCODILE
-alligator_baby CORPSE_BABY_ALLIGATOR
 alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
@@ -114,8 +112,6 @@ kraken_head CORPSE_KRAKEN /*'x'*/
 
 ## Beetles ('B')
 %sdir mon/animals
-goliath_beetle CORPSE_GOLIATH_BEETLE
-boring_beetle CORPSE_BORING_BEETLE
 boulder_beetle CORPSE_BOULDER_BEETLE
 %sdir mon/undead
 death_scarab CORPSE_DEATH_SCARAB
@@ -151,6 +147,9 @@ apis CORPSE_APIS
 
 ### Non-animals
 %sdir mon
+
+## Formicids ('a;)
+formicid CORPSE_FORMICID
 
 ## Centaurs ('c')
 centaur CORPSE_CENTAUR
@@ -199,6 +198,7 @@ orc CORPSE_ORC
 
 ## Human shaped ('p')
 human CORPSE_HUMAN
+entropy_weaver CORPSE_ENTROPY_WEAVER
 halfling CORPSE_HALFLING
 killer_klown_blue CORPSE_KILLER_KLOWN
 killer_klown_green
@@ -277,6 +277,7 @@ sphinx CORPSE_SPHINX
 tengu CORPSE_TENGU
 anubis_guard CORPSE_ANUBIS_GUARD
 unique/arachne_staveless CORPSE_ARACHNE
+mutant_beast CORPSE_MUTANT_BEAST
 
 ## Kobolds ('K')
 %sdir mon/

@@ -368,7 +368,7 @@ WWW..x..x..WWW
 ENDMAP
 
 NAME:    st_cyclops
-DEPTH:   Shoals:1-4
+DEPTH:   Shoals, !Shoals:$
 MONS:    cyclops, stone giant / frost giant
 KMONS:   P = plant
 KMONS:   f = fungus
@@ -390,7 +390,7 @@ pyxxpppyx.1.
 ENDMAP
 
 NAME:    st_shoals_ruin
-DEPTH:   Shoals:1-4
+DEPTH:   Shoals, !Shoals:$
 TAGS:    no_pool_fixup
 MONS:    cyclops, frost giant, stone giant
 KMONS:   P = plant
@@ -419,7 +419,7 @@ ppxxp..p.fppxxpp
 ENDMAP
 
 NAME:    st_sunken_huts
-DEPTH:   Shoals:1-4
+DEPTH:   Shoals, !Shoals:$
 KMONS:   1 = merfolk javelineer
 KMONS:   2 = merfolk impaler
 KMONS:   3 = merfolk aquamancer
@@ -448,7 +448,7 @@ Wwwww4wwwZwwZw5XwwxwwwwwwwW
 ENDMAP
 
 NAME:    st_sunken_temple
-DEPTH:   Shoals:1-4
+DEPTH:   Shoals, !Shoals:$
 TAGS:    no_pool_fixup
 KMONS:   1 = merfolk javelineer
 KMONS:   2 = merfolk impaler
@@ -548,7 +548,7 @@ DEPTH: Shoals
 TAGS: transparent no_pool_fixup water_ok no_trap_gen
 SUBST: b = .w, z = x.
 KPROP: w1. = no_tide
-KPROP: c = no_rtele_into
+KPROP: c = no_tele_into
 SUBST: c = xw
 KFEAT: 1 = w
 KMONS: 1 = kraken
@@ -606,10 +606,10 @@ xxxcxxxxxcxxxxW@Wxxxxcxxx
 ENDMAP
 
 NAME: nicolae_shoals_so_close
-DEPTH: Shoals:1-4
+DEPTH: Shoals, !Shoals:$
 TAGS: no_pool_fixup water_ok no_item_gen no_trap_gen no_monster_gen
 KPROP: YycfZ. = no_tide
-KPROP: ZYcf. = no_rtele_into
+KPROP: ZYcf. = no_tele_into
 KMONS: c = patrolling hungry ghost
 NSUBST: f = 1:g / 2:f / *:.
 KITEM: g = meat ration / bread ration / beef jerky
@@ -635,7 +635,7 @@ wwyyZY..Yyyffyyw
 ENDMAP
 
 NAME: nicolae_shoals_c_island
-DEPTH: Shoals:1-4
+DEPTH: Shoals, !Shoals:$
 TAGS: water_ok no_pool_fixup
 KPROP: .wW}xtC = no_tide
 SHUFFLE: }])
@@ -689,7 +689,7 @@ DEPTH: Shoals
 TAGS: patrolling no_monster_gen
 SUBST: w = f:4 w W
 KMONS: f = bat w:5 / griffon / harpy / hippogriff / \
-       kraken w:1 / raven w:5 / sea snake / sky beast w:1 / \
+       kraken w:1 / sea snake / sky beast w:1 / \
        snapping turtle / steam dragon w:1 / alligator w:5 / \
        alligator snapping turtle / anaconda w:1 / \
        water moccasin w:5 / electric eel w:1
@@ -766,7 +766,7 @@ xxxxxwwwwwwwxxxxxxxxx
 ENDMAP
 
 NAME: nicolae_shoals_flooded_hall
-DEPTH: Shoals:1-4
+DEPTH: Shoals, !Shoals:$
 SHUFFLE: }}]]))>
 KPROP: .123wqx = no_tide
 SUBST: . = ....W, w = wWW..., q = w, x = xxxc
@@ -792,7 +792,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_shoals_water_elemental_grotto
-DEPTH: Shoals:1-4
+DEPTH: Shoals, !Shoals:$
 TAGS: no_pool_fixup no_monster_gen no_trap_gen no_item_gen water_ok
 KPROP: .xrR-Ww = no_tide
 NSUBST: - = 1:] / *:-
@@ -935,7 +935,7 @@ ENDMAP
 
 NAME: wheals_shoals_ruined_temple
 TAGS: water_ok
-DEPTH: Shoals:1-4
+DEPTH: Shoals, !Shoals:$
 KPROP: c.GWuw1 = no_tide
 KMONS: 1 = kraken
 KFEAT: 1 = w

@@ -348,7 +348,7 @@ static void _ely_dull_inventory_weapons()
     int num_dulled = 0;
     int quiver_link;
 
-    you.m_quiver->get_desired_item(nullptr, &quiver_link);
+    you.m_quiver.get_desired_item(nullptr, &quiver_link);
 
     for (int i = 0; i < ENDOFPACK; ++i)
     {
@@ -1091,7 +1091,7 @@ static void _lugonu_transloc_retribution()
         simple_god_message("'s wrath finds you!", god);
         mpr("Space warps around you!");
         if (!one_chance_in(3))
-            you_teleport_now(false);
+            you_teleport_now();
         else
             uncontrolled_blink();
     }
@@ -1338,7 +1338,7 @@ static void _jiyva_tmut()
     const transformation_type form = random_choose(TRAN_BAT, TRAN_STATUE,
                                                    TRAN_SPIDER);
 
-    if (transform(random2(you.penance[god]) * 2, form, true) == SPRET_SUCCESS)
+    if (transform(random2(you.penance[god]) * 2, form, true))
         you.transform_uncancellable = true;
 }
 
@@ -1590,7 +1590,7 @@ static bool _dithmenos_retribution()
                         MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE,
                         level_id(BRANCH_DUNGEON,
                                  min(27, you.experience_level + 5)),
-                        0, 0, 0, "", _god_wrath_name(god))))
+                        0, 0, MF_NO_FLAGS, "", _god_wrath_name(god))))
             {
                 count++;
             }

@@ -7,7 +7,15 @@ local count = 100
 local function test_place_random_monster()
   dgn.dismiss_monsters()
   dgn.grid(place.x, place.y, "floor")
-  m = dgn.create_monster(place.x, place.y, "random")
+  -- Try several times, because MONS_NO_MONSTER may be on the random list.
+  for attempt = 1, 100 do
+    m = dgn.create_monster(place.x, place.y, "random")
+    if m then
+      break
+    end
+  end
+  assert(m,
+         "could not place random monster")
   assert(not m.unique,
          "random monster is unique " .. m.name)
 end
@@ -39,7 +47,7 @@ local function run_random_unique_tests()
     test_random_unique("Dis", depth, 3)
   end
 
-  for depth = 1, 5 do
+  for depth = 1, 4 do
     test_random_unique("Swamp", depth, 5)
   end
 end

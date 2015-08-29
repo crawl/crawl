@@ -489,7 +489,7 @@ ITEM:    scroll of random uselessness w:20 / scroll of immolation / \
          scroll of identify / scroll of remove curse / \
          potion of mutation w:5 / potion of ambrosia w:5 / \
          potion of degeneration / potion of lignification / \
-         potion of restore abilities / potion of curing w:15
+         potion of flight / potion of curing w:15
 # and sometimes mostly useless ones
 ITEM:    scroll of noise / scroll of random uselessness w:20 / \
          scroll of immolation / potion of mutation w:5 / \
@@ -751,7 +751,7 @@ TAGS:    no_item_gen no_monster_gen
 # loot: 8 items of which 6 should be good.
 # Most of the loot helps right here, if need be.
 ITEM:    potion of curing / potion of heal wounds / potion of haste / \
-         potion of confusion w:5 / potion of mutation w:5 / \
+         potion of ambrosia w:5 / potion of mutation w:5 / \
          scroll of identify / scroll of teleportation w:5 / \
          scroll of blinking w:5 / scroll of holy word / \
          scroll of random uselessness
@@ -806,7 +806,6 @@ ITEM:    any scroll / any potion / nothing
 KITEM:   x = any scroll / any potion
 KMONS:   x = wraith
 : ossuary_setup_features(_G)
-: crawl.mpr("You feel the presence of a powerful and evil guardian...", "warning")
 MAP
 ccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccc
@@ -1034,11 +1033,6 @@ SUBST:   z = c:20 n:4
 SUBST:   y = c:20 n:1
 SUBST:   $ = 1:10 2:1
 NSUBST:  4 = 2:4 / *:2
-KFEAT:   L = closed_door
-MARKER:  L = lua:message_at_spot ( \
-                 "Something ancient and evil stirs ahead...", \
-                 "warning" \
-             )
 : ossuary_setup_features(_G)
 MAP
   ccccccccc
@@ -1060,7 +1054,7 @@ cc.......cc
  cc......cccccccccccccccccccccccccccc.ccc..yzy..ccc.c
 cc........cc$c$c$c$c$cc.....cccccVccc...............c
 c..........c+c+c+c+c+cc.GdG.cccccoccc.cxy..eee..yxx.c
-c..c.......+..........+..d....L.....+.c3z..eee..z3x.c
+c..c.......+..........+..d....+.....+.c3z..eee..z3x.c
 cc.cc......c+c+c+c+c+cc.GdG.cccccoccc.cxy..eee..yxx.c
 cc.c......cc$c$c$c$c$cc.....cccccXccc...............c
 cc.cc....cccccccccccccccccccccccccccc.ccc..yzy..ccc.c

@@ -131,7 +131,6 @@ bool mons_matches_daction(const monster* mon, daction_type act)
 
     case DACT_BRIBE_TIMEOUT:
         return mon->has_ench(ENCH_NEUTRAL_BRIBED)
-               || mon->has_ench(ENCH_FRIENDLY_BRIBED)
                || mon->props.exists(NEUTRAL_BRIBE_KEY)
                || mon->props.exists(FRIENDLY_BRIBE_KEY);
 
@@ -227,8 +226,10 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
 
         case DACT_HOLY_PETS_GO_NEUTRAL:
         case DACT_PIKEL_SLAVES:
+        {
             // monster changes attitude
-            mon->attitude = ATT_GOOD_NEUTRAL;
+            bool hostile = player_mutation_level(MUT_NO_LOVE);
+            mon->attitude = hostile ? ATT_HOSTILE : ATT_GOOD_NEUTRAL;
             mons_att_changed(mon);
 
             if (act == DACT_PIKEL_SLAVES)
@@ -238,17 +239,16 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
                 mon->mname = "freed slave";
             }
             else if (local)
-                simple_monster_message(mon, " becomes indifferent.");
-            mon->behaviour = BEH_WANDER;
+                simple_monster_message(mon, hostile ? " turns on you!" : " becomes indifferent.");
+            mon->behaviour = hostile ? BEH_SEEK : BEH_WANDER;
             break;
-
+        }
         case DACT_KIRKE_HOGS:
             _daction_hog_to_human(mon, in_transit);
             break;
 
         case DACT_BRIBE_TIMEOUT:
-            if (mon->del_ench(ENCH_NEUTRAL_BRIBED)
-                || mon->del_ench(ENCH_FRIENDLY_BRIBED))
+            if (mon->del_ench(ENCH_NEUTRAL_BRIBED))
             {
                 mon->attitude = ATT_NEUTRAL;
                 mon->flags   |= MF_WAS_NEUTRAL;
@@ -318,10 +318,6 @@ static void _apply_daction(daction_type act)
             if (mitm[i].is_type(OBJ_CORPSES, CORPSE_BODY))
                 mitm[i].special = 1; // thoroughly rotten
         break;
-    case DACT_TOMB_CTELE:
-        if (player_in_branch(BRANCH_TOMB))
-            unset_level_flags(LFLAG_NO_TELE_CONTROL, you.depth != 3);
-        break;
     case DACT_GOLD_ON_TOP:
     {
         for (rectangle_iterator ri(0); ri; ++ri)
@@ -373,6 +369,7 @@ static void _apply_daction(daction_type act)
     case DACT_END_SPIRIT_HOWL:
     case DACT_HOLY_NEW_ATTEMPT:
     case DACT_ALLY_SACRIFICE_LOVE:
+    case DACT_TOMB_CTELE:
 #endif
     case NUM_DACTION_COUNTERS:
     case NUM_DACTIONS:
@@ -393,9 +390,10 @@ unsigned int query_daction_counter(daction_type c)
 
 static void _daction_hog_to_human(monster *mon, bool in_transit)
 {
+    ASSERT(mon); // XXX: change to monster &mon
     // Hogs to humans
     monster orig;
-    const bool could_see = you.can_see(mon);
+    const bool could_see = you.can_see(*mon);
 
     // Was it a converted monster or original band member?
     if (mon->props.exists(ORIG_MONSTER_KEY))
@@ -420,7 +418,7 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
     const float hp
         = (float) mon->hit_points / (float) mon->max_hit_points;
     // Preserve some flags.
-    const uint64_t preserve_flags =
+    const monster_flags_t preserve_flags =
         mon->flags & ~(MF_JUST_SUMMONED | MF_WAS_IN_VIEW);
     // Preserve enchantments.
     mon_enchant_list enchantments = mon->enchantments;
@@ -444,7 +442,7 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
     mon->hit_points   = max(1, (int) (mon->max_hit_points * hp));
     mon->flags        = mon->flags | preserve_flags;
 
-    const bool can_see = you.can_see(mon);
+    const bool can_see = you.can_see(*mon);
 
     // A monster changing factions while in the arena messes up
     // arena book-keeping.
@@ -453,11 +451,7 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
         // * A monster's attitude shouldn't downgrade from friendly
         //   or good-neutral because you helped it. It'd suck to
         //   lose a permanent ally that way.
-        //
-        // * A monster has to be smart enough to realize that you
-        //   helped it.
-        if (mon->attitude == ATT_HOSTILE
-            && mons_intel(mon) >= I_NORMAL)
+        if (mon->attitude == ATT_HOSTILE)
         {
             mon->attitude = ATT_GOOD_NEUTRAL;
             mon->flags   |= MF_WAS_NEUTRAL;

@@ -286,7 +286,7 @@ void debug_list_monsters()
             if (count > 1)
             {
                 snprintf(buf, sizeof(buf), "%d %s", count,
-                         pluralise(prev_name).c_str());
+                         pluralise_monster(prev_name).c_str());
             }
             else
                 snprintf(buf, sizeof(buf), "%s", prev_name.c_str());
@@ -316,7 +316,10 @@ void debug_list_monsters()
 
     char buf[80];
     if (count > 1)
-        snprintf(buf, sizeof(buf), "%d %s", count, pluralise(prev_name).c_str());
+    {
+        snprintf(buf, sizeof(buf), "%d %s", count,
+                 pluralise_monster(prev_name).c_str());
+    }
     else
         snprintf(buf, sizeof(buf), "%s", prev_name.c_str());
     mons.emplace_back(buf);
@@ -477,7 +480,7 @@ void debug_stethoscope(int mon)
          mons.base_monster != MONS_NO_MONSTER ? " base=" : "",
          mons.base_monster != MONS_NO_MONSTER ?
          get_monster_data(mons.base_monster)->name : "",
-         mons.mid, mons.number, mons.stealth(), mons.flags);
+         mons.mid, mons.number, mons.stealth(), mons.flags.flags);
 
     if (mons.damage_total)
     {
@@ -557,8 +560,29 @@ void debug_stethoscope(int mon)
             spl << spell_title(hspell_pass[k].spell);
 
         spl << "." << (int)hspell_pass[k].freq;
+        for (const auto flag : mon_spell_slot_flags::range())
+        {
+            if (!(hspell_pass[k].flags & flag))
+                continue;
 
-        spl << " (" << static_cast<int>(hspell_pass[k].spell) << ")";
+            // this is arguably redundant with mons_list::parse_mons_spells
+            // specificially the bit that turns names into flags
+            static const map<mon_spell_slot_flag, string> flagnames = {
+                { MON_SPELL_EMERGENCY,  "E" },
+                { MON_SPELL_NATURAL,    "N" },
+                { MON_SPELL_MAGICAL,    "M" },
+                { MON_SPELL_DEMONIC,    "D" },
+                { MON_SPELL_WIZARD,     "W" },
+                { MON_SPELL_PRIEST,     "P" },
+                { MON_SPELL_BREATH,     "br" },
+                { MON_SPELL_NO_SILENT,  "ns" },
+                { MON_SPELL_INSTANT,    "in" },
+                { MON_SPELL_NOISY,      "noi" },
+            };
+            spl << "." << lookup(flagnames, flag, "bug");
+        }
+
+        spl << " (#" << static_cast<int>(hspell_pass[k].spell) << ")";
     }
     if (found_spell)
         mprf(MSGCH_DIAGNOSTICS, "spells: %s", spl.str().c_str());

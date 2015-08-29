@@ -5,7 +5,6 @@
 #include <cmath>
 
 #include "artefact.h"
-#include "bloodspatter.h"
 #include "butcher.h"
 #include "coordit.h"
 #include "database.h"
@@ -15,6 +14,7 @@
 #include "godabil.h"
 #include "goditem.h"
 #include "godpassive.h"
+#include "hiscores.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -26,15 +26,14 @@
 #include "religion.h"
 #include "shopping.h"
 #include "spl-goditem.h"
-#include "spl-wpnench.h"
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "unwind.h"
 #include "view.h"
 
 static bool _offer_items();
-static bool _zin_donate_gold();
 
 static bool _confirm_pray_sacrifice(god_type god)
 {
@@ -81,203 +80,67 @@ string god_prayer_reaction()
     return result;
 }
 
-static bool _bless_weapon(god_type god, brand_type brand, colour_t colour)
+/**
+ * Determine the god this game's ecumenical altar is for.
+ * Replaces the ecumenical altar with the God's real altar.
+ * Assumes you can worship at least one god (ie are not a
+ * demigod), and that you're standing on the altar.
+ *
+ * @return The god this altar is for.
+ */
+static god_type _altar_identify_ecumenical_altar()
 {
-    int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
-                                       OSEL_BLESSABLE_WEAPON, true, true, false);
+    god_type god;
+    do
+    {
+        god = random_god();
+    }
+    while (!player_can_join_god(god));
+    dungeon_terrain_changed(you.pos(), altar_for_god(god), false);
+    return god;
+}
 
-    if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
-        return false;
+static bool _pray_ecumenical_altar()
+{
+    if (yesno("This altar will convert you to a god. You cannot discern "
+              "which. Do you pray?", false, 'n'))
+    {
+        {
+            // Don't check for or charge a Gozag service fee.
+            unwind_var<int> fakepoor(you.attribute[ATTR_GOLD_GENERATED], 0);
 
-    item_def& wpn(you.inv[item_slot]);
+            god_type altar_god = _altar_identify_ecumenical_altar();
+            mprf(MSGCH_GOD, "%s accepts your prayer!",
+                            god_name(altar_god).c_str());
+            if (!you_worship(altar_god))
+                join_religion(altar_god);
+            else
+                return true;
+        }
 
-    // Only TSO allows blessing ranged weapons.
-    if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH, true))
-        return false;
+        if (you_worship(GOD_RU))
+            you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
+        else
+            gain_piety(20, 1, false);
 
-    string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
-                       + " ";
-    if (brand == SPWPN_PAIN)
-        prompt += "bloodied with pain";
-    else if (brand == SPWPN_DISTORTION)
-        prompt += "corrupted";
+        mark_milestone("god.ecumenical", "prayed at an ecumenical altar.");
+        return true;
+    }
     else
-        prompt += "blessed";
-    prompt += "?";
-
-    if (!yesno(prompt.c_str(), true, 'n'))
     {
         canned_msg(MSG_OK);
         return false;
     }
-
-    if (you.duration[DUR_WEAPON_BRAND]) // just in case
-    {
-        ASSERT(you.weapon());
-        end_weapon_brand(*you.weapon());
-    }
-
-    string old_name = wpn.name(DESC_A);
-    set_equip_desc(wpn, ISFLAG_GLOWING);
-    set_item_ego_type(wpn, OBJ_WEAPONS, brand);
-
-    const bool is_cursed = wpn.cursed();
-
-    enchant_weapon(wpn, true);
-    enchant_weapon(wpn, true);
-
-    if (is_cursed)
-        do_uncurse_item(wpn, false);
-
-    if (god == GOD_SHINING_ONE)
-    {
-        convert2good(wpn);
-
-        if (is_blessed_convertible(wpn))
-            origin_acquired(wpn, GOD_SHINING_ONE);
-    }
-    else if (is_evil_god(god))
-        convert2bad(wpn);
-
-    you.wield_change = true;
-    you.one_time_ability_used.set(god);
-    calc_mp(); // in case the old brand was antimagic,
-    you.redraw_armour_class = true; // protection,
-    you.redraw_evasion = true;      // or evasion
-    string desc  = old_name + " "
-                 + (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
-                    god == GOD_LUGONU        ? "corrupted by Lugonu" :
-                    god == GOD_KIKUBAAQUDGHA ? "bloodied by Kikubaaqudgha"
-                                             : "touched by the gods");
-
-    take_note(Note(NOTE_ID_ITEM, 0, 0,
-              wpn.name(DESC_A).c_str(), desc.c_str()));
-    wpn.flags |= ISFLAG_NOTED_ID;
-    wpn.props[FORCED_ITEM_COLOUR_KEY] = colour;
-
-    mprf(MSGCH_GOD, "Your %s shines brightly!", wpn.name(DESC_QUALNAME).c_str());
-
-    flash_view(UA_PLAYER, colour);
-
-    simple_god_message(" booms: Use this gift wisely!");
-
-    if (god == GOD_SHINING_ONE)
-    {
-        holy_word(100, HOLY_WORD_TSO, you.pos(), true);
-
-        // Un-bloodify surrounding squares.
-        for (radius_iterator ri(you.pos(), 3, C_ROUND, LOS_SOLID); ri; ++ri)
-            if (is_bloodcovered(*ri))
-                env.pgrid(*ri) &= ~FPROP_BLOODY;
-    }
-
-    if (god == GOD_KIKUBAAQUDGHA)
-    {
-        you.gift_timeout = 1; // no protection during pain branding weapon
-
-        torment(&you, TORMENT_KIKUBAAQUDGHA, you.pos());
-
-        you.gift_timeout = 0; // protection after pain branding weapon
-
-        // Bloodify surrounding squares (75% chance).
-        for (radius_iterator ri(you.pos(), 2, C_ROUND, LOS_SOLID); ri; ++ri)
-            if (!one_chance_in(4))
-                maybe_bloodify_square(*ri);
-    }
-
-#ifndef USE_TILE_LOCAL
-    // Allow extra time for the flash to linger.
-    delay(1000);
-#endif
-
-    return true;
-}
-
-/** Would a god currently allow using a one-time six-star ability?
- * Does not check whether the god actually grants such an ability.
- */
-bool can_do_capstone_ability(god_type god)
-{
-   return in_good_standing(god, 5) && !you.one_time_ability_used[god];
-}
-
-static bool _altar_prayer()
-{
-    // Different message from when first joining a religion.
-    mpr("You prostrate yourself in front of the altar and pray.");
-
-    god_acting gdact;
-
-    // donate gold to gain piety distributed over time
-    if (you_worship(GOD_ZIN))
-        return _zin_donate_gold();
-
-    // TSO blesses weapons with holy wrath, and demon weapons specially.
-    else if (can_do_capstone_ability(GOD_SHINING_ONE))
-    {
-        simple_god_message(" will bless one of your weapons.");
-        more();
-        return _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW);
-    }
-
-    // Lugonu blesses weapons with distortion.
-    else if (can_do_capstone_ability(GOD_LUGONU))
-    {
-        simple_god_message(" will brand one of your weapons with the corruption of the Abyss.");
-        more();
-        return _bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA);
-    }
-
-    // Kikubaaqudgha blesses weapons with pain, or gives you a Necronomicon.
-    else if (can_do_capstone_ability(GOD_KIKUBAAQUDGHA))
-    {
-        if (you.species != SP_FELID)
-        {
-            simple_god_message(
-                " will bloody your weapon with pain or grant you the Necronomicon.");
-
-            more();
-
-            if (_bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED))
-                return true;
-
-            // If not, ask if the player wants a Necronomicon.
-            if (!yesno("Do you wish to receive the Necronomicon?", true, 'n'))
-            {
-                canned_msg(MSG_OK);
-                return false;
-            }
-        }
-
-        int thing_created = items(true, OBJ_BOOKS, BOOK_NECRONOMICON, 1, 0,
-                                  you.religion);
-
-        if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
-            return false;
-
-        simple_god_message(" grants you a gift!");
-        more();
-
-        you.one_time_ability_used.set(you.religion);
-        take_note(Note(NOTE_GOD_GIFT, you.religion));
-
-        return true;
-    }
-
-    // None of above are true, nothing happens.
-    return false;
 }
 
 /**
- * Pray at, or convert to, an altar at the current position.
+ * Attempt to convert to the given god.
  *
- * @return Whether anything happened that took time.
+ * @return True if the conversion happened, false otherwise.
  */
-static bool _altar_pray_or_convert()
+static bool _try_god_conversion(god_type god, bool beogh_priest)
 {
-    const god_type altar_god = feat_altar_god(grd(you.pos()));
-    if (altar_god == GOD_NO_GOD)
-        return false;
+    ASSERT(god != GOD_NO_GOD);
 
     if (you.species == SP_DEMIGOD)
     {
@@ -285,18 +148,21 @@ static bool _altar_pray_or_convert()
         return false;
     }
 
-    if (you_worship(GOD_NO_GOD) || altar_god != you.religion)
+    if (god == GOD_ECUMENICAL)
+        return _pray_ecumenical_altar();
+
+    if (you_worship(GOD_NO_GOD) || god != you.religion)
     {
         // consider conversion
         you.turn_is_over = true;
         // But if we don't convert then god_pitch
         // makes it not take a turn after all.
-        god_pitch(feat_altar_god(grd(you.pos())));
+        god_pitch(god);
+        if (you.turn_is_over && you_worship(GOD_BEOGH) && beogh_priest)
+            spare_beogh_convert();
         return you.turn_is_over;
     }
-
-    // pray to your own god's altar
-    return _altar_prayer();
+    return false;
 }
 
 /**
@@ -314,41 +180,30 @@ static void _zen_meditation()
  * Pray. (To your god, or the god of the altar you're at, or to Beogh, if
  * you're an orc being preached at.)
  */
-void pray(bool allow_altar_prayer)
+void pray(bool allow_conversion)
 {
+    const god_type altar_god = feat_altar_god(grd(you.pos()));
+    const bool beogh_priest = env.level_state & LSTATE_BEOGH
+        && can_convert_to_beogh();
+    const god_type target_god = beogh_priest ? GOD_BEOGH : altar_god;
+
     // only successful prayer takes time
     you.turn_is_over = false;
-
-    // try to pray to an altar (if any is present)
-    if (allow_altar_prayer && _altar_pray_or_convert())
+    // Try to pray to an altar or beogh (if either is possible)
+    if (allow_conversion
+        && target_god != GOD_NO_GOD
+        && you.religion != target_god)
     {
-        you.turn_is_over = true;
-        return;
-    }
-
-    // convert to beogh via priest.
-    if (allow_altar_prayer && you_worship(GOD_NO_GOD)
-        && (env.level_state & LSTATE_BEOGH) && can_convert_to_beogh())
-    {
-        // TODO: deduplicate this with the code in _altar_pray_or_convert.
-        you.turn_is_over = true;
-        // But if we don't convert then god_pitch
-        // makes it not take a turn after all.
-        god_pitch(GOD_BEOGH);
-        if (you_worship(GOD_BEOGH))
-        {
-            spare_beogh_convert();
+        if (_try_god_conversion(target_god, beogh_priest))
             return;
-        }
     }
 
     ASSERT(!you.turn_is_over);
-
     // didn't convert to anyone.
     if (you_worship(GOD_NO_GOD))
     {
         // wasn't considering following a god; just meditating.
-        if (feat_altar_god(grd(you.pos())) == GOD_NO_GOD)
+        if (altar_god == GOD_NO_GOD)
             _zen_meditation();
         return;
     }
@@ -430,79 +285,6 @@ int zin_tithe(const item_def& item, int quant, bool quiet, bool converting)
     }
     you.attribute[ATTR_TITHE_BASE] = due;
     return taken;
-}
-
-static int _gold_to_donation(int gold)
-{
-    return static_cast<int>((gold * log((float)gold)) / MAX_PIETY);
-}
-
-static bool _zin_donate_gold()
-{
-    if (you.gold == 0)
-    {
-        mpr("You don't have anything to sacrifice.");
-        return false;
-    }
-
-    if (!yesno("Do you wish to donate half of your money?", true, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-
-    const int donation_cost = (you.gold / 2) + 1;
-    const int donation = _gold_to_donation(donation_cost);
-
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE) || defined(DEBUG_PIETY)
-    mprf(MSGCH_DIAGNOSTICS, "A donation of $%d amounts to an "
-         "increase of piety by %d.", donation_cost, donation);
-#endif
-    // Take a note of the donation.
-    take_note(Note(NOTE_DONATE_MONEY, donation_cost));
-
-    you.attribute[ATTR_DONATIONS] += donation_cost;
-
-    you.del_gold(donation_cost);
-
-    if (donation < 1)
-    {
-        simple_god_message(" finds your generosity lacking.");
-        return false;
-    }
-
-    you.duration[DUR_PIETY_POOL] += donation;
-    if (you.duration[DUR_PIETY_POOL] > 30000)
-        you.duration[DUR_PIETY_POOL] = 30000;
-
-    const int estimated_piety =
-        min(MAX_PENANCE + MAX_PIETY, you.piety + you.duration[DUR_PIETY_POOL]);
-
-    if (player_under_penance())
-    {
-        if (estimated_piety >= you.penance[GOD_ZIN])
-            mpr("You feel that you will soon be absolved of all your sins.");
-        else
-            mpr("You feel that your burden of sins will soon be lighter.");
-    }
-    else
-    {
-        string result = "You feel that " + god_name(GOD_ZIN) + " will soon be ";
-        result +=
-            (estimated_piety >= piety_breakpoint(5)) ? "exalted by your worship" :
-            (estimated_piety >= piety_breakpoint(4)) ? "extremely pleased with you" :
-            (estimated_piety >= piety_breakpoint(3)) ? "greatly pleased with you" :
-            (estimated_piety >= piety_breakpoint(2)) ? "most pleased with you" :
-            (estimated_piety >= piety_breakpoint(1)) ? "pleased with you" :
-            (estimated_piety >= piety_breakpoint(0)) ? "aware of your devotion"
-                                                     : "noncommittal";
-        result += (donation >= 30 && you.piety < piety_breakpoint(5)) ? "!" : ".";
-
-        mpr(result);
-    }
-
-    zin_recite_interrupt();
-    return true;
 }
 
 /**

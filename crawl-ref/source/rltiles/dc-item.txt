@@ -721,7 +721,7 @@ i-invisibility RING_INVISIBILITY
 i-loudness RING_LOUDNESS
 i-teleport RING_TELEPORTATION
 i-evasion RING_EVASION
-i-s-abil RING_SUSTAIN_ABILITIES
+i-s-attr RING_SUSTAIN_ATTRIBUTES
 i-stealth RING_STEALTH
 i-dex RING_DEXTERITY
 i-int RING_INTELLIGENCE
@@ -732,6 +732,7 @@ i-life-protection RING_LIFE_PROTECTION
 i-r-magic RING_PROTECTION_FROM_MAGIC
 i-fire RING_FIRE
 i-ice RING_ICE
+# remove teleport control when TAG_MAJOR_VERSION > 34 and mark ice as last
 i-c-teleport RING_TELEPORT_CONTROL RING_ID_LAST
 %rim 1
 
@@ -838,9 +839,9 @@ i-decay POT_REMOVEME5
 i-confusion POT_REMOVE_ME
 i-experience POT_EXPERIENCE
 i-magic POT_MAGIC
-i-restore-abilities POT_RESTORE_ABILITIES
-# please remove when TAG_MAJOR_VERSION is bumped
-i-strong-poison POT_STRONG_POISON
+# remove these 2 when TAG_MAJOR_VERSION is bumped
+i-restore-abilities POT_REMOVEME6
+i-strong-poison POT_REMOVEME7
 i-berserk-rage POT_BERSERK_RAGE
 i-cure-mutation POT_CURE_MUTATION
 i-mutation POT_MUTATION

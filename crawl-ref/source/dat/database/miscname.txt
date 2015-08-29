@@ -319,14 +319,6 @@ As you descend in search of the Orb, ghosts and spectres flock about you. This p
 
 You hear a witch cackle, and suddenly arrive in the dungeon. If you don't find the Orb of Zot, you'll turn into a toad!
 %%%%
-welcome_spam Zot Defence
-
-They are going to get your Orb!
-
-Stand and defend the Orb!
-
-The safety of the most sacred Orb of Zot relies on you.
-%%%%
 hell_effect_quiet
 
 {{

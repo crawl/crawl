@@ -60,7 +60,7 @@ static void _maybe_identify_pack_item()
     for (int i = 0; i < ENDOFPACK; i++)
     {
         item_def& item = you.inv[i];
-        if (item.defined() && get_ident_type(item) != ID_KNOWN_TYPE)
+        if (item.defined() && !get_ident_type(item))
             maybe_identify_base_type(item);
     }
 }
@@ -92,29 +92,11 @@ static const char* _interesting_origin(const item_def &item)
 }
 
 /**
- * What inscription should be used to describe the way in which this item has
- * been seen to be tried?
- */
-static string _tried_inscription(const item_def &item)
-{
-    const item_type_id_state_type id_type = get_ident_type(item);
-
-    if (id_type == ID_MON_TRIED_TYPE)
-        return "tried by monster";
-    if (id_type != ID_TRIED_ITEM_TYPE)
-        return "tried";     // can this happen anymore?
-    return "tried on item"; // or this
-}
-
-/**
  * What inscription should be appended to the given item's name?
  */
-static string _item_inscription(const item_def &item, bool ident, bool equipped)
+static string _item_inscription(const item_def &item)
 {
     vector<string> insparts;
-
-    if (!ident && !equipped && item_type_tried(item))
-        insparts.push_back(_tried_inscription(item));
 
     if (const char *orig = _interesting_origin(item))
     {
@@ -188,10 +170,10 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
     if (terse && descrip != DESC_DBNAME)
         descrip = DESC_PLAIN;
 
-    monster_flag_type corpse_flags;
+    monster_flags_t corpse_flags;
 
     if ((base_type == OBJ_CORPSES && is_named_corpse(*this)
-         && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int64())
+         && !(((corpse_flags.flags = props[CORPSE_NAME_TYPE_KEY].get_int64())
                & MF_NAME_SPECIES)
               && !(corpse_flags & MF_NAME_DEFINITE))
          && !(corpse_flags & MF_NAME_SUFFIX)
@@ -255,7 +237,6 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
 
     buff << auxname;
 
-    bool equipped = false;
     if (descrip == DESC_INVENTORY_EQUIP)
     {
         equipment_type eq = item_equip_slot(*this);
@@ -320,14 +301,11 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             }
         }
         else if (item_is_quivered(*this))
-        {
-            equipped = true;
             buff << " (quivered)";
-        }
     }
 
     if (descrip != DESC_BASENAME && descrip != DESC_DBNAME && with_inscription)
-        buff << _item_inscription(*this, ident, equipped);
+        buff << _item_inscription(*this);
 
     // These didn't have "cursed " prepended; add them here so that
     // it comes after the inscription.
@@ -685,7 +663,9 @@ const char* potion_type_name(int potiontype)
 #endif
     case POT_EXPERIENCE:        return "experience";
     case POT_MAGIC:             return "magic";
+#if TAG_MAJOR_VERSION == 34
     case POT_RESTORE_ABILITIES: return "restore abilities";
+#endif
     case POT_BERSERK_RAGE:      return "berserk rage";
     case POT_CURE_MUTATION:     return "cure mutation";
     case POT_MUTATION:          return "mutation";
@@ -757,7 +737,7 @@ const char* jewellery_effect_name(int jeweltype)
     case RING_LOUDNESS:              return "loudness";
     case RING_TELEPORTATION:         return "teleportation";
     case RING_EVASION:               return "evasion";
-    case RING_SUSTAIN_ABILITIES:     return "sustain abilities";
+    case RING_SUSTAIN_ATTRIBUTES:    return "sustain attributes";
     case RING_STEALTH:               return "stealth";
     case RING_DEXTERITY:             return "dexterity";
     case RING_INTELLIGENCE:          return "intelligence";
@@ -768,7 +748,9 @@ const char* jewellery_effect_name(int jeweltype)
     case RING_PROTECTION_FROM_MAGIC: return "protection from magic";
     case RING_FIRE:                  return "fire";
     case RING_ICE:                   return "ice";
+#if TAG_MAJOR_VERSION == 34
     case RING_TELEPORT_CONTROL:      return "teleport control";
+#endif
     case AMU_RAGE:              return "rage";
     case AMU_CLARITY:           return "clarity";
     case AMU_WARDING:           return "warding";
@@ -1018,7 +1000,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_ENVENOMATIONS:          return "Envenomations";
     case BOOK_ANNIHILATIONS:          return "Annihilations";
     case BOOK_UNLIFE:                 return "Unlife";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_CONTROL:                return "Control";
+#endif
     case BOOK_GEOMANCY:               return "Geomancy";
     case BOOK_EARTH:                  return "the Earth";
 #if TAG_MAJOR_VERSION == 34
@@ -1523,7 +1507,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
             const bool has_inscript = desc != DESC_BASENAME
                                    && desc != DESC_DBNAME
                                    && inscr;
-            const string inscription = _item_inscription(weap, ident, true);
+            const string inscription = _item_inscription(weap);
 
             const int total_length = long_name.size()
                                      + (has_inscript ? inscription.size() : 0);
@@ -2130,6 +2114,13 @@ bool item_type_has_ids(object_class_type base_type)
         || base_type == OBJ_STAVES || base_type == OBJ_BOOKS;
 }
 
+static constexpr bool _item_type_has_curses(object_class_type base_type)
+{
+    return base_type == OBJ_WEAPONS || base_type == OBJ_ARMOUR
+        || base_type == OBJ_JEWELLERY || base_type == OBJ_STAVES
+        || base_type == OBJ_RODS;
+}
+
 bool item_type_known(const item_def& item)
 {
     if (item_ident(item, ISFLAG_KNOW_TYPE))
@@ -2156,7 +2147,7 @@ bool item_type_known(const item_def& item)
 
     if (!item_type_has_ids(item.base_type))
         return false;
-    return you.type_ids[item.base_type][item.sub_type] == ID_KNOWN_TYPE;
+    return you.type_ids[item.base_type][item.sub_type];
 }
 
 bool item_type_unknown(const item_def& item)
@@ -2174,46 +2165,25 @@ bool item_type_known(const object_class_type base_type, const int sub_type)
 {
     if (!item_type_has_ids(base_type))
         return false;
-    return you.type_ids[base_type][sub_type] == ID_KNOWN_TYPE;
+    return you.type_ids[base_type][sub_type];
 }
 
-bool item_type_tried(const item_def &item)
-{
-    if (!is_artefact(item) && item_type_known(item))
-        return false;
-
-    if (fully_identified(item))
-        return false;
-
-    if (item.flags & ISFLAG_TRIED)
-        return true;
-
-    // artefacts are distinct from their base types
-    if (is_artefact(item))
-        return false;
-
-    if (!item_type_has_ids(item.base_type))
-        return false;
-    return you.type_ids[item.base_type][item.sub_type] != ID_UNKNOWN_TYPE;
-}
-
-bool set_ident_type(item_def &item, item_type_id_state_type setting,
-                    bool force)
+bool set_ident_type(item_def &item, bool identify, bool force)
 {
     if (is_artefact(item) || crawl_state.game_is_arena())
         return false;
 
-    if (!set_ident_type(item.base_type, item.sub_type, setting, force))
+    if (!set_ident_type(item.base_type, item.sub_type, identify, force))
         return false;
 
     if (in_inventory(item))
     {
         shopping_list.cull_identical_items(item);
-        if (setting == ID_KNOWN_TYPE)
+        if (identify)
             item_skills(item, you.start_train);
     }
 
-    if (setting == ID_KNOWN_TYPE && notes_are_active()
+    if (identify && notes_are_active()
         && is_interesting_item(item)
         && !(item.flags & (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET)))
     {
@@ -2229,36 +2199,27 @@ bool set_ident_type(item_def &item, item_type_id_state_type setting,
     return true;
 }
 
-bool set_ident_type(object_class_type basetype, int subtype,
-                     item_type_id_state_type setting, bool force)
+bool set_ident_type(object_class_type basetype, int subtype, bool identify,
+                    bool force)
 {
     preserve_quiver_slots p;
-    // Don't allow overwriting of known type with tried unless forced.
-    if (!force
-        && (setting == ID_MON_TRIED_TYPE || setting == ID_TRIED_TYPE)
-        && setting <= get_ident_type(basetype, subtype))
-    {
-        return false;
-    }
 
     if (!item_type_has_ids(basetype))
         return false;
 
-    if (you.type_ids[basetype][subtype] == setting)
+    if (you.type_ids[basetype][subtype] == identify)
         return false;
 
-    you.type_ids[basetype][subtype] = setting;
+    you.type_ids[basetype][subtype] = identify;
     request_autoinscribe();
 
     // Our item knowledge changed in a way that could possibly affect shop
-    // prices. ID_UNKNOWN_TYPE is wizmode only.
-    if (setting == ID_KNOWN_TYPE || setting == ID_UNKNOWN_TYPE)
-        shopping_list.item_type_identified(basetype, subtype);
+    // prices.
+    shopping_list.item_type_identified(basetype, subtype);
 
     // We identified something, maybe we identified other things by process of
-    // elimination. This is a no-op if we call it when setting ==
-    // ID_UNKNOWN_TYPE.
-    if (setting == ID_KNOWN_TYPE)
+    // elimination.
+    if (identify)
         _maybe_identify_pack_item();
 
     return true;
@@ -2274,35 +2235,18 @@ void pack_item_identify_message(int base_type, int sub_type)
     }
 }
 
-void identify_healing_pots()
-{
-    int ident_count = (you.type_ids[OBJ_POTIONS][POT_CURING] == ID_KNOWN_TYPE)
-                    + (you.type_ids[OBJ_POTIONS][POT_HEAL_WOUNDS] == ID_KNOWN_TYPE);
-    int tried_count = (you.type_ids[OBJ_POTIONS][POT_CURING] == ID_MON_TRIED_TYPE)
-                    + (you.type_ids[OBJ_POTIONS][POT_HEAL_WOUNDS] == ID_MON_TRIED_TYPE);
-
-    if (ident_count == 1 && tried_count == 1)
-    {
-        mpr("You have identified the last healing potion.");
-        if (set_ident_type(OBJ_POTIONS, POT_CURING, ID_KNOWN_TYPE))
-            pack_item_identify_message(OBJ_POTIONS, POT_CURING);
-        if (set_ident_type(OBJ_POTIONS, POT_HEAL_WOUNDS, ID_KNOWN_TYPE))
-            pack_item_identify_message(OBJ_POTIONS, POT_HEAL_WOUNDS);
-    }
-}
-
-item_type_id_state_type get_ident_type(const item_def &item)
+bool get_ident_type(const item_def &item)
 {
     if (is_artefact(item))
-        return ID_UNKNOWN_TYPE;
+        return false;
 
     return get_ident_type(item.base_type, item.sub_type);
 }
 
-item_type_id_state_type get_ident_type(object_class_type basetype, int subtype)
+bool get_ident_type(object_class_type basetype, int subtype)
 {
     if (!item_type_has_ids(basetype))
-        return ID_UNKNOWN_TYPE;
+        return false;
     ASSERT(subtype < MAX_SUBTYPES);
     return you.type_ids[basetype][subtype];
 }
@@ -2315,9 +2259,9 @@ public:
                                MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
                                menu_letter ckey = 'a')
     {
-        for (int i = 0, count = mitems.size(); i < count; ++i)
+        for (const item_def *item : mitems)
         {
-            InvEntry *ie = new InvEntry(*mitems[i]);
+            InvEntry *ie = new InvEntry(*item);
             if (tag == "pickup")
                 ie->tag = "pickup";
             // If there's no hotkey, provide one.
@@ -2508,55 +2452,19 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_BOOKS && j > MAX_FIXED_BOOK)
                 continue;
 
+            if (item_type_removed(i, j))
+                continue;
+
             // Curse scrolls are only created by Ashenzari.
             if (i == OBJ_SCROLLS &&
                 (j == SCR_CURSE_WEAPON
                  || j == SCR_CURSE_ARMOUR
-                 || j == SCR_CURSE_JEWELLERY
-#if TAG_MAJOR_VERSION == 34
-                 || j == SCR_ENCHANT_WEAPON_II
-                 || j == SCR_ENCHANT_WEAPON_III
-#endif
-                ))
+                 || j == SCR_CURSE_JEWELLERY))
             {
                 continue;
             }
 
-#if TAG_MAJOR_VERSION == 34
-            // Items removed since the last save compat break.
-            if (i == OBJ_POTIONS
-                && (j == POT_WATER
-                 || j == POT_GAIN_STRENGTH
-                 || j == POT_GAIN_DEXTERITY
-                 || j == POT_GAIN_INTELLIGENCE
-                 || j == POT_SLOWING
-                 || j == POT_STRONG_POISON
-                 || j == POT_BLOOD_COAGULATED
-                 || j == POT_PORRIDGE
-                 || j == POT_DECAY))
-            {
-                continue;
-            }
-
-            if (i == OBJ_BOOKS && j == BOOK_WIZARDRY)
-                continue;
-
-            if (i == OBJ_JEWELLERY
-                && (j == AMU_CONTROLLED_FLIGHT || j == AMU_CONSERVATION
-                    || j == RING_REGENERATION))
-            {
-                continue;
-            }
-
-            if (i == OBJ_STAVES && j == STAFF_ENCHANTMENT)
-                continue;
-
-            if (i == OBJ_STAVES && j == STAFF_CHANNELING)
-                continue;
-#endif
-
-            if (unknown_items ? you.type_ids[i][j] != ID_KNOWN_TYPE
-                              : you.type_ids[i][j] == ID_KNOWN_TYPE)
+            if (you.type_ids[i][j] != unknown_items) // logical xor
             {
                 item_def* ptmp = new item_def;
                 if (ptmp != 0)
@@ -2584,7 +2492,6 @@ void check_item_knowledge(bool unknown_items)
 
     if (unknown_items)
         all_items_known = false;
-
     else
     {
         // items yet to be known
@@ -3433,11 +3340,13 @@ bool is_useless_item(const item_def &item, bool temp)
         if ((you.has_spell(SPELL_STICKS_TO_SNAKES)
              || !you.num_turns
                 && you.char_class == JOB_TRANSMUTER)
-            && item_is_snakable(item)
-            || you.has_spell(SPELL_SANDBLAST)
-               && (item.sub_type == MI_STONE
-                || item.sub_type == MI_LARGE_ROCK
-                   && you.could_wield(item, true, true)))
+            && item.sub_type == MI_ARROW
+            || (you.has_spell(SPELL_SANDBLAST)
+                || !you.num_turns
+                   && you.char_class == JOB_EARTH_ELEMENTALIST)
+                && (item.sub_type == MI_STONE
+                    || item.sub_type == MI_LARGE_ROCK
+                       && you.could_wield(item, true, true)))
         {
             return false;
         }
@@ -3663,7 +3572,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case AMU_REGENERATION:
             return (player_mutation_level(MUT_SLOW_HEALING) == 3)
                    || temp && you.species == SP_VAMPIRE
-                      && you.hunger_state == HS_STARVING;
+                      && you.hunger_state <= HS_STARVING;
 
         case RING_SEE_INVISIBLE:
             return you.can_see_invisible(false, false);
@@ -3675,15 +3584,10 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_WIZARDRY:
             return you_worship(GOD_TROG);
 
-        case RING_TELEPORT_CONTROL:
-            return you.species == SP_FORMICID
-                   || crawl_state.game_is_zotdef()
-                   || player_mutation_level(MUT_NO_ARTIFICE);
-
         case RING_TELEPORTATION:
             return you.species == SP_FORMICID
                    || crawl_state.game_is_sprint()
-                   || player_mutation_level(MUT_NO_ARTIFICE) ;
+                   || player_mutation_level(MUT_NO_ARTIFICE);
 
         case RING_INVISIBILITY:
             return _invisibility_is_useless(temp)
@@ -3696,8 +3600,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_STEALTH:
             return player_mutation_level(MUT_NO_STEALTH);
 
-        case RING_SUSTAIN_ABILITIES:
-            return player_mutation_level(MUT_SUSTAIN_ABILITIES);
+        case RING_SUSTAIN_ATTRIBUTES:
+            return player_mutation_level(MUT_SUSTAIN_ATTRIBUTES);
 
         default:
             return false;
@@ -3821,14 +3725,22 @@ string item_prefix(const item_def &item, bool temp)
     if (fully_identified(item))
         prefixes.push_back("identified");
     else if (item_ident(item, ISFLAG_KNOW_TYPE)
-             || get_ident_type(item) == ID_KNOWN_TYPE)
+             || get_ident_type(item))
     {
         prefixes.push_back("known");
     }
     else
         prefixes.push_back("unidentified");
 
-    if (good_god_hates_item_handling(item) || god_hates_item_handling(item))
+    // Sometimes this is abbreviated out of the item name, or suppressed
+    // by the show_uncursed option.
+    if (_item_type_has_curses(item.base_type)
+        && item_ident(item, ISFLAG_KNOW_CURSE) && !item.cursed())
+    {
+        prefixes.push_back("uncursed");
+    }
+
+    if (god_hates_item(item))
     {
         prefixes.push_back("evil_item");
         prefixes.push_back("forbidden");

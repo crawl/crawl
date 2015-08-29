@@ -20,6 +20,7 @@ module "crawl"
 #include "dlua.h"
 #include "end.h"
 #include "english.h"
+#include "fight.h"
 #include "hints.h"
 #include "initfile.h"
 #include "itemname.h"
@@ -680,6 +681,7 @@ LUARET1(crawl_x_chance_in_y, boolean, x_chance_in_y(luaL_checkint(ls, 1),
 LUARET1(crawl_div_rand_round, number, div_rand_round(luaL_checkint(ls, 1),
                                                      luaL_checkint(ls, 2)))
 LUARET1(crawl_random_real, number, random_real())
+LUARET1(crawl_weapon_check, boolean, wielded_weapon_check(you.weapon()))
 
 // Get the full worley noise datum for a given point
 static int crawl_worley(lua_State *ls)
@@ -1098,6 +1100,7 @@ static const struct luaL_reg crawl_clib[] =
     { "call_dlua",          crawl_call_dlua },
 #endif
     { "version",            crawl_version },
+    { "weapon_check",       crawl_weapon_check},
     { nullptr, nullptr },
 };
 

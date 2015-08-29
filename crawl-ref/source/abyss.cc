@@ -82,13 +82,12 @@ static coord_def _place_feature_near(const coord_def &centre,
                                      int tries, bool not_seen = false)
 {
     coord_def cp = INVALID_COORD;
-    const int radius2 = radius * radius + 1;
     for (int i = 0; i < tries; ++i)
     {
         cp = centre + coord_def(random_range(-radius, radius),
                                 random_range(-radius, radius));
 
-        if (cp == centre || (cp - centre).abs() > radius2 || !in_bounds(cp))
+        if (cp == centre || !in_bounds(cp))
             continue;
 
         if (not_seen && cell_see_cell_nocache(cp, centre))
@@ -124,7 +123,7 @@ static void _write_abyssal_features()
 
     dprf(DIAG_ABYSS, "Writing a mock-up of old level.");
     const int count = abyssal_features.size();
-    ASSERT(count == 213);
+    ASSERT(count == sqr(2 * LOS_RADIUS + 1));
     const int scalar = 0xFF;
     int index = 0;
     for (int x = -LOS_RADIUS; x <= LOS_RADIUS; x++)
@@ -132,15 +131,13 @@ static void _write_abyssal_features()
         for (int y = -LOS_RADIUS; y <= LOS_RADIUS; y++)
         {
             coord_def p(x, y);
-            const int dist = p.abs();
-            if (dist > LOS_RADIUS * LOS_RADIUS + 1)
-                continue;
+            const int dist = p.rdist();
             p += ABYSS_CENTRE;
 
-            int chance = pow(0.98, dist) * scalar;
+            int chance = pow(0.98, dist * dist) * scalar;
             if (!map_masked(p, MMT_VAULT))
             {
-                if (dist < 4 || x_chance_in_y(chance, scalar))
+                if (dist < 2 || x_chance_in_y(chance, scalar))
                 {
                     if (abyssal_features[index] != DNGN_UNSEEN)
                     {
@@ -207,7 +204,7 @@ static bool _abyss_place_map(const map_def *mdef)
     {
         if (dgn_safe_place_map(mdef, true, false, INVALID_COORD))
         {
-            _abyss_fixup_vault(env.level_vaults.back());
+            _abyss_fixup_vault(env.level_vaults.back().get());
             return true;
         }
     }
@@ -356,20 +353,15 @@ static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
             ++items_placed;
     }
 
-    for (int i = 0, size = chosen_item_places.size(); i < size; ++i)
+    for (const coord_def place : chosen_item_places)
     {
-        const coord_def place(chosen_item_places[i]);
         if (_abyss_square_accepts_items(abyss_genlevel_mask, place))
         {
             int thing_created = items(true, OBJ_RANDOM, OBJ_RANDOM,
                                       items_level);
             move_item_to_grid(&thing_created, place);
             if (thing_created != NON_ITEM)
-            {
                 items_placed++;
-                if (one_chance_in(ITEM_MIMIC_CHANCE))
-                    mitm[thing_created].flags |= ISFLAG_MIMIC;
-            }
         }
     }
 
@@ -431,8 +423,6 @@ void push_features_to_abyss()
         for (int y = -LOS_RADIUS; y <= LOS_RADIUS; y++)
         {
             coord_def p(x, y);
-            if (p.abs() > LOS_RADIUS * LOS_RADIUS + 1)
-                continue;
 
             p += you.pos();
 
@@ -615,9 +605,9 @@ static void _place_displaced_monsters()
         if (mon->alive() && !mon->find_home_near_place(mon->pos()))
         {
             maybe_bloodify_square(mon->pos());
-            if (you.can_see(mon))
+            if (you.can_see(*mon))
             {
-                simple_monster_message(mon, " is pulled into the abyss.",
+                simple_monster_message(mon, " is pulled into the Abyss.",
                         MSGCH_BANISHMENT);
             }
             _abyss_lose_monster(*mon);
@@ -1707,14 +1697,13 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         const int offsetY = random2avg(4, 3) + random2(3);
         const coord_def p(pos.x + (coinflip()? offsetX : -offsetX),
                           pos.y + (coinflip()? offsetY : -offsetY));
-        if (!in_bounds(p) || actor_at(p)
-            || !feat_compatible(DNGN_FLOOR, grd(p)))
-        {
+        if (!in_bounds(p) || actor_at(p))
             continue;
-        }
 
         monster_type mons = pick_monster(level_id(BRANCH_ABYSS), _incorruptible);
         ASSERT(mons);
+        if (!monster_habitable_grid(mons, grd(p)))
+            continue;
         mgen_data mg(mons, beh, 0, 5, 0, p);
         mg.non_actor_summoner = "Lugonu's corruption";
         mg.place = BRANCH_ABYSS;
@@ -1748,11 +1737,8 @@ static void _apply_corruption_effect(map_marker *marker, int duration)
 
 void run_corruption_effects(int duration)
 {
-    vector<map_marker*> markers = env.markers.get_all(MAT_CORRUPTION_NEXUS);
-
-    for (int i = 0, size = markers.size(); i < size; ++i)
+    for (map_marker *mark : env.markers.get_all(MAT_CORRUPTION_NEXUS))
     {
-        map_marker *mark = markers[i];
         if (mark->get_type() != MAT_CORRUPTION_NEXUS)
             continue;
 
@@ -1912,30 +1898,24 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
 static void _corrupt_level_features(const corrupt_env &cenv)
 {
     vector<coord_def> corrupt_seeds;
-    vector<map_marker*> corrupt_markers =
-        env.markers.get_all(MAT_CORRUPTION_NEXUS);
 
-    for (int i = 0, size = corrupt_markers.size(); i < size; ++i)
-        corrupt_seeds.push_back(corrupt_markers[i]->pos);
+    for (const map_marker *mark : env.markers.get_all(MAT_CORRUPTION_NEXUS))
+        corrupt_seeds.push_back(mark->pos);
 
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
-        int idistance2 = GXM * GXM + GYM * GYM;
-        for (int i = 0, size = corrupt_seeds.size(); i < size; ++i)
-        {
-            const int idist2 = (*ri - corrupt_seeds[i]).abs();
-            if (idist2 < idistance2)
-                idistance2 = idist2;
-        }
+        int idistance = GXM + GYM;
+        for (const coord_def seed : corrupt_seeds)
+            idistance = min(idistance, (*ri - seed).rdist());
 
-        const int ground_zero_radius2 = 7;
+        const int ground_zero_radius = 2;
 
-        // Corruption odds are 100% within about 2 squares, decaying to 30%
-        // at LOS range (radius 8). Even if the corruption roll is made,
+        // Corruption odds are 100% within 2 squares, decaying to 30%
+        // at LOS range (radius 7). Even if the corruption roll is made,
         // the feature still gets a chance to resist if it's a wall.
         const int corrupt_perc_chance =
-            idistance2 <= ground_zero_radius2 ? 100 :
-            max(1, 100 - (idistance2 - ground_zero_radius2) * 70 / 57);
+            (idistance <= ground_zero_radius) ? 100 :
+            max(1, 100 - (sqr(idistance) - sqr(ground_zero_radius)) * 70 / 45);
 
         if (random2(100) < corrupt_perc_chance && _is_grid_corruptible(*ri))
             _corrupt_square(cenv, *ri);

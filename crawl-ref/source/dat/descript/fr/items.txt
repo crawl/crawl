@@ -193,12 +193,6 @@ book of conjurations
 Un livre contenant une introduction aux arts magiques destructeurs de la
 Conjuration. Il frissonne d'une puissance à peine contenue quand il est ouvert.
 %%%%
-book of control
-
-Un livre de sorts pour contrôler les esprits, les corps, et même l'espace. Ceux
-qui le parcourent peuvent parfois trouver difficile de détacher leur esprit des
-runes et symboles qu'il contient.
-%%%%
 book of death
 
 Un manuscrit a la pâleur cadavérique contenant de sombres sorts de nécromancie,
@@ -825,7 +819,7 @@ ring of strength
 Cet anneau augmente ou diminue la force physique de son porteur, en fonction de
 son degré d'enchantement.
 %%%%
-ring of sustain abilities
+ring of sustain attributes
 
 Cet anneau protège son porteur des pertes de force, dextérité, ou intelligence.
 %%%%

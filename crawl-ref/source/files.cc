@@ -53,7 +53,7 @@
 #include "mapdef.h" // MON_NO_STAIR_KEY
 #include "mapmark.h"
 #include "message.h"
-#include "misc.h"
+#include "misc.h" // today_is_halloween()
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -136,7 +136,7 @@ static player_save_info _read_character_info(package *save)
     }
     catch (ext_fail_exception &E) {}
 
-    you.copy_from(backup);
+    you = backup;
 
     return fromfile;
 }
@@ -158,14 +158,12 @@ vector<string> get_dir_files_recursive(const string &dirname, const string &ext,
 {
     vector<string> files;
 
-    const vector<string> thisdirfiles = get_dir_files(dirname);
     const int next_recur_depth =
         recursion_depth == -1? -1 : recursion_depth - 1;
     const bool recur = recursion_depth == -1 || recursion_depth > 0;
 
-    for (int i = 0, size = thisdirfiles.size(); i < size; ++i)
+    for (const string &filename : get_dir_files(dirname))
     {
-        const string filename(thisdirfiles[i]);
         if (dir_exists(catpath(dirname, filename)))
         {
             if (include_directories
@@ -176,14 +174,14 @@ vector<string> get_dir_files_recursive(const string &dirname, const string &ext,
 
             if (recur)
             {
-                const vector<string> subdirfiles =
-                    get_dir_files_recursive(catpath(dirname, filename),
-                                            ext,
-                                            next_recur_depth);
                 // Each filename in a subdirectory has to be prefixed
                 // with the subdirectory name.
-                for (int j = 0, ssize = subdirfiles.size(); j < ssize; ++j)
-                    files.push_back(catpath(filename, subdirfiles[j]));
+                for (const string &subdirfile
+                        : get_dir_files_recursive(catpath(dirname, filename),
+                                                  ext, next_recur_depth))
+                {
+                    files.push_back(catpath(filename, subdirfile));
+                }
             }
         }
         else
@@ -671,7 +669,7 @@ static vector<player_save_info> _find_saved_characters()
 
     }
 
-    sort(chars.rbegin(), chars.rend());
+    sort(chars.begin(), chars.end());
 #endif // !DISABLE_SAVEGAME_LISTS
     return chars;
 }
@@ -710,10 +708,11 @@ string get_savedir_filename(const string &name)
     return _get_savefile_directory() + get_save_filename(name);
 }
 
+#define MAX_FILENAME_LENGTH 250
 string get_save_filename(const string &name)
 {
-    return chop_string(strip_filename_unsafe_chars(name), kFileNameLen, false)
-           + SAVE_SUFFIX;
+    return chop_string(strip_filename_unsafe_chars(name), MAX_FILENAME_LENGTH,
+                       false) + SAVE_SUFFIX;
 }
 
 string get_prefs_filename()
@@ -798,7 +797,7 @@ static int _get_dest_stair_type(branch_type old_branch,
         }
     }
 
-    if (feat_is_escape_hatch(stair_taken))
+    if (feat_is_escape_hatch(stair_taken) || stair_taken == DNGN_TRAP_SHAFT)
         return stair_taken;
 
     if (stair_taken == DNGN_ENTER_DIS
@@ -850,18 +849,6 @@ static void _place_player_on_stair(branch_type old_branch,
                                  static_cast<dungeon_feature_type>(stair_taken),
                                  find_first));
 
-    if (crawl_state.game_is_zotdef())
-    {
-        // For Zot Defence, look for a start point marker and hop
-        // there if available.
-        const coord_def pos(dgn_find_feature_marker(DNGN_STONE_STAIRS_UP_I));
-        if (in_bounds(pos))
-        {
-            you.moveto(pos);
-            return;
-        }
-    }
-
     you.moveto(dgn_find_nearby_stair(stair_type, dest_pos, find_first));
 }
 
@@ -903,7 +890,7 @@ static bool _grab_follower_at(const coord_def &pos)
 
     dprf("%s is following to %s.", fol->name(DESC_THE, true).c_str(),
          dest.describe().c_str());
-    bool could_see = you.can_see(fol);
+    bool could_see = you.can_see(*fol);
     fol->set_transit(dest);
     fol->destroy_inventory();
     monster_cleanup(fol);
@@ -999,9 +986,8 @@ static void _grab_followers()
         int place_set = 0;
         while (!places[place_set].empty())
         {
-            for (int i = 0, size = places[place_set].size(); i < size; ++i)
+            for (const coord_def p : places[place_set])
             {
-                const coord_def &p = places[place_set][i];
                 for (adjacent_iterator ai(p); ai; ++ai)
                 {
                     if (travel_point_distance[ai->x][ai->y])
@@ -1159,13 +1145,13 @@ static void _make_level(dungeon_feature_type stair_taken,
 
     env.turns_on_level = -1;
 
-    if (you.char_direction == GDT_GAME_START
+    if (you.chapter == CHAPTER_POCKET_ABYSS
         && player_in_branch(BRANCH_DUNGEON))
     {
         // If we're leaving the Abyss for the first time as a Chaos
         // Knight of Lugonu (who start out there), enable normal monster
         // generation.
-        you.char_direction = GDT_DESCENDING;
+        you.chapter = CHAPTER_ORB_HUNTING;
     }
 
     tile_init_default_flavour();
@@ -1185,7 +1171,6 @@ static void _make_level(dungeon_feature_type stair_taken,
     const bool is_halloween = today_is_halloween();
 
     if (!crawl_state.game_is_tutorial()
-        && !crawl_state.game_is_zotdef()
         && !Options.seed
         && !player_in_branch(BRANCH_ABYSS)
         && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
@@ -1259,6 +1244,11 @@ static void _place_player(dungeon_feature_type stair_taken,
     }
 }
 
+// Update the trackers after the player changed level.
+void trackers_init_new_level(bool transit)
+{
+    travel_init_new_level();
+}
 
 /**
  * Load the current level.
@@ -1588,7 +1578,7 @@ static void _save_game_base()
 #endif
 
     /* kills */
-    SAVEFILE("kil", "kills", you.kills->save);
+    SAVEFILE("kil", "kills", you.kills.save);
 
     /* travel cache */
     SAVEFILE("tc", "travel_cache", travel_cache.save);
@@ -1682,7 +1672,7 @@ void save_game(bool leave_game, const char *farewellmsg)
     if (Options.restart_after_game && Options.restart_after_save
         && !crawl_state.seen_hups)
     {
-        throw game_ended_condition();
+        throw game_ended_condition(true);
     }
 
     end(0, false, farewellmsg? "%s" : "See you soon, %s!",
@@ -1855,8 +1845,6 @@ bool load_ghost(bool creating_level, bool delete_file)
         mons->bind_melee_flags();
         if (mons->has_spells())
             mons->bind_spell_flags();
-        if (mons->ghost->species == SP_DEEP_DWARF)
-            mons->flags |= MF_NO_REGEN;
         mark_interesting_monst(mons,
                                attitude_creation_behavior(mons->attitude));
 
@@ -1960,7 +1948,7 @@ static bool _restore_game(const string& filename)
     if (you.save->has_chunk(CHUNK("kil", "kills")))
     {
         reader inf(you.save, CHUNK("kil", "kills"),minorVersion);
-        you.kills->load(inf);
+        you.kills.load(inf);
     }
 
     if (you.save->has_chunk(CHUNK("tc", "travel_cache")))

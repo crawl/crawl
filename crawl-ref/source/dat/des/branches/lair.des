@@ -164,7 +164,7 @@ ENDMAP
 # This could probably use some randomization.
 NAME:    david_lair_generic
 TAGS:    lair_entry
-MONS:    crocodile / sheep, goliath beetle
+MONS:    crocodile / sheep, nothing
 MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
 MONS:    elephant
 SHUFFLE: 12
@@ -239,7 +239,7 @@ MONS:   plant, oklob plant / w:50 plant
 : elseif you.absdepth() >= 10 then
 MONS:   plant, oklob plant / w:150 plant
 : else
-MONS:   fungus, wandering mushroom / w:50 fungus
+MONS:   fungus, plant
 :end
 SUBST:  ? = 2.
 KFEAT:  O = enter_lair
@@ -255,31 +255,6 @@ MAP
 ....x...x....
 ..x.......x..
 ...xxxxxxx...
-ENDMAP
-
-##############################################################################
-# A boring Lair entry vault.
-#
-NAME: erik_lair_boring
-TAGS: lair_entry
-WEIGHT: 5
-MONS: generate_awake boring beetle, rat
-# Rats are boring.
-ORIENT: float
-SUBST: ? = c x $ '
-KFEAT: O = enter_lair
-NSUBST: 1 = 1:1 / * = 12.
-KPROP: '$ = no_rtele_into
-MAP
-xxxxxxxxx?xxxx
-xxxxxx?xxxx?xx
-?xx?xxxxxxx?xx
-xxxxxx111xxx.x
-?xxxxx1O1.x.?@
-xxx??x111x.x?x
-xxxxxxxx??xxxx
-x?xxxx?xxxxx?x
-xxxxxxxxx?xxxx
 ENDMAP
 
 ##############################################################################
@@ -664,7 +639,7 @@ TAGS:   no_monster_gen
 MONS:   ice dragon
 MONS:   w:9 white imp/w:1 nothing
 MONS:   white imp
-KPROP:  _` = no_rtele_into
+KPROP:  _` = no_tele_into
 SUBST:  ! = $:3 *:2
 SUBST:  ' = w:15 x:12 `:1
 SUBST:  ; = x:2 .:3
@@ -2004,7 +1979,7 @@ TAGS: transparent patrolling
 DEPTH: Lair
 MONS: plant / bush
 SUBST: t = t..
-KPROP: * = no_rtele_into
+KPROP: * = no_tele_into
 MAP
  tt@@@tt
 t.......t
@@ -2472,7 +2447,7 @@ KITEM:  U = superb_item
 KITEM:  Q = acquire any
 MARKER: S = lua:MonPropsMarker:new { anaconda_guard="anaconda_guard" }
 KFEAT:  o = granite_statue
-KPROP:  U = no_rtele_into
+KPROP:  U = no_tele_into
 {{
 function elephant_statue()
   return
@@ -2872,7 +2847,7 @@ KMONS:   0 = blink frog
 KMONS:   A = spiny frog
 KMONS:   B = black mamba
 # beetles/worms
-KMONS:   C = boring beetle
+KMONS:   C = giant leech
 KMONS:   D = torpor snail
 KMONS:   E = boulder beetle
 KMONS:   F = lindwurm

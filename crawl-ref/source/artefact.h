@@ -30,6 +30,7 @@ enum unrand_flag_type
     UNRAND_FLAG_NOGEN            = 0x80,
     UNRAND_FLAG_RANDAPP          =0x100,
     UNRAND_FLAG_UNIDED           =0x200,
+    UNRAND_FLAG_SKIP_EGO         =0x400,
     // Please make sure it fits in unrandart_entry.flags (currently 16 bits).
 };
 

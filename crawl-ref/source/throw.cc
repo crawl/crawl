@@ -48,13 +48,13 @@ static bool _fire_validate_item(int selected, string& err);
 
 bool item_is_quivered(const item_def &item)
 {
-    return in_inventory(item) && item.link == you.m_quiver->get_fire_item();
+    return in_inventory(item) && item.link == you.m_quiver.get_fire_item();
 }
 
 int get_next_fire_item(int current, int direction)
 {
     vector<int> fire_order;
-    you.m_quiver->get_fire_order(fire_order, true);
+    you.m_quiver.get_fire_order(fire_order, true);
 
     if (fire_order.empty())
         return -1;
@@ -81,7 +81,7 @@ public:
           selected_from_inventory(false),
           need_redraw(false)
     {
-        m_slot = you.m_quiver->get_fire_item(&m_noitem_reason);
+        m_slot = you.m_quiver.get_fire_item(&m_noitem_reason);
         set_prompt();
     }
 
@@ -287,7 +287,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         return false;
     }
 
-    you.m_quiver->on_item_fired(*beh.active_item(), beh.chosen_ammo);
+    you.m_quiver.on_item_fired(*beh.active_item(), beh.chosen_ammo);
     you.redraw_quiver = true;
     slot = beh.m_slot;
 
@@ -380,28 +380,30 @@ bool fire_warn_if_impossible(bool silent)
 
 static bool _autoswitch_to_ranged()
 {
-    if (you.equip[EQ_WEAPON] != 0 && you.equip[EQ_WEAPON] != 1)
+    int item_slot;
+    if (you.equip[EQ_WEAPON] == letter_to_index('a'))
+        item_slot = letter_to_index('b');
+    else if (you.equip[EQ_WEAPON] == letter_to_index('b'))
+        item_slot = letter_to_index('a');
+    else
         return false;
 
-    int item_slot = you.equip[EQ_WEAPON] ^ 1;
     const item_def& launcher = you.inv[item_slot];
     if (!is_range_weapon(launcher))
         return false;
+    if (none_of(you.inv.begin(), you.inv.end(), [&launcher](const item_def& it)
+                { return it.launched_by(launcher);}))
+    {
+        return false;
+    }
 
-    FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
-    for (;iter!=you.inv.end(); ++iter)
-        if (iter->launched_by(launcher))
-        {
-            if (!wield_weapon(true, item_slot))
-                return false;
+    if (!wield_weapon(true, item_slot))
+        return false;
 
-            you.turn_is_over = true;
-            //XXX Hacky. Should use a delay instead.
-            macro_buf_add(command_to_key(CMD_FIRE));
-            return true;
-        }
-
-    return false;
+    you.turn_is_over = true;
+    //XXX Hacky. Should use a delay instead.
+    macro_buf_add(command_to_key(CMD_FIRE));
+    return true;
 }
 
 int get_ammo_to_shoot(int item, dist &target, bool teleport)
@@ -412,7 +414,7 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
         return -1;
     }
 
-    if (Options.auto_switch && you.m_quiver->get_fire_item() == -1
+    if (Options.auto_switch && you.m_quiver.get_fire_item() == -1
        && _autoswitch_to_ranged())
     {
         return -1;
@@ -521,7 +523,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     if (agent->is_player())
     {
         beam.attitude      = ATT_FRIENDLY;
-        beam.smart_monster = true;
         beam.thrower       = KILL_YOU_MISSILE;
     }
     else
@@ -529,7 +530,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         const monster* mon = agent->as_monster();
 
         beam.attitude      = mons_attitude(mon);
-        beam.smart_monster = (mons_intel(mon) >= I_NORMAL);
         beam.thrower       = KILL_MON_MISSILE;
     }
 
@@ -605,6 +605,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
 static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
 {
+    ASSERT(act); // XXX: change to actor &act
     const item_def* launcher = act->weapon();
 
     if (launcher == nullptr || launcher->base_type != OBJ_WEAPONS)
@@ -656,7 +657,7 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
                  launcher->name(DESC_PLAIN).c_str());
         return;
     }
-    if (act->is_player() || you.can_see(act))
+    if (act->is_player() || you.can_see(*act))
         msg = nullptr;
 
     noisy(level, act->pos(), msg, act->mid);
@@ -1009,9 +1010,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         mons->speed_increment -= div_rand_round(energy * delay, 10);
     }
 
-    actor* victim = actor_at(beam.target);
-    const int old_hp = (victim) ? victim->stat_hp() : 0;
-
     // Dropping item copy, since the launched item might be different.
     item_def item = mitm[msl];
     item.quantity = 1;
@@ -1107,10 +1105,10 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
         // Only print a message if you can see the target or the thrower.
         // Otherwise we get "The weapon returns whence it came from!" regardless.
-        if (you.see_cell(beam.target) || you.can_see(mons))
+        if (you.see_cell(beam.target) || you.can_see(*mons))
         {
             msg::stream << "The weapon returns "
-                        << (you.can_see(mons)?
+                        << (you.can_see(*mons)?
                               ("to " + mons->name(DESC_THE))
                             : "from whence it came")
                         << "!" << endl;
@@ -1125,14 +1123,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
     if (beam.special_explosion != nullptr)
         delete beam.special_explosion;
-
-    if (mons->has_ench(ENCH_GRAND_AVATAR))
-    {
-        // We want this to be a ranged attack, like the spell mirroring,
-        // so any spell that fires a battlesphere will do here.
-        // XXX: make triggering of this less hacky
-        trigger_grand_avatar(mons, victim, SPELL_MAGIC_DART, old_hp);
-    }
 
     return true;
 }

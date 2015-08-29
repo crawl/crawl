@@ -10,6 +10,10 @@
 #include "areas.h"
 #include "shout.h"
 #include "view.h"
+#include "religion.h"
+#include "message.h"
+#include "xom.h"
+
 
 /**
  * Make a "noise" caused by the orb.
@@ -68,4 +72,19 @@ void orb_pickup_noise(const coord_def& where, int loudness, const char* msg, con
         else
             mprf(MSGCH_ORB, "The Orb lets out a furious burst of light!");
     }
+}
+
+void start_orb_run(game_chapter chapter, const char* message)
+{
+    if (you.chapter != CHAPTER_ANGERED_PANDEMONIUM)
+    {
+        mprf(MSGCH_WARN, "The lords of Pandemonium are not amused. Beware!");
+        if (you_worship(GOD_CHEIBRIADOS))
+          simple_god_message(" tells them not to hurry.");
+    }
+
+    mprf(MSGCH_ORB, "%s", message);
+    you.chapter = chapter;
+    xom_is_stimulated(200, XM_INTRIGUED);
+    invalidate_agrid(true);
 }

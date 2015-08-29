@@ -21,6 +21,7 @@
 #include "monster.h"
 #include "options.h"
 #include "place.h"
+#include "stringutil.h"
 #include "tags.h"
 #include "travel.h"
 #include "unwind.h"
@@ -43,19 +44,6 @@ static const char *kill_category_names[] =
     "collateral kills",
     "others",
 };
-
-KillMaster::KillMaster()
-{
-}
-
-KillMaster::KillMaster(const KillMaster &other)
-{
-    *this = other;
-}
-
-KillMaster::~KillMaster()
-{
-}
 
 const char *KillMaster::category_name(kill_category kc) const
 {
@@ -234,18 +222,11 @@ void KillMaster::add_kill_info(string &killtext,
 
         killtext += "\n";
 
-        for (int i = 0, sz = kills.size(); i < sz; ++i)
-        {
-            killtext += "  " + kills[i].desc;
-            killtext += "\n";
-        }
-        {
-            char numbuf[100];
-            snprintf(numbuf, sizeof numbuf,
-                    "%d creature%s vanquished." "\n", count,
-                    count > 1? "s" : "");
-            killtext += numbuf;
-        }
+        for (const kill_exp &kill : kills)
+            killtext += "  " + kill.desc + "\n";
+
+        killtext += make_stringf("%d creature%s vanquished.\n",
+                                 count, count == 1 ? "" : "s");
     }
 #ifdef CLUA_BINDINGS
     lua_pop(clua, 1);
@@ -422,20 +403,6 @@ kill_def::kill_def(const monster* mon) : kills(0), exp(0)
     add_kill(mon, level_id::current());
 }
 
-// For monster names ending with these suffixes, we pluralise directly without
-// attempting to use the "of" rule. For instance:
-//
-//      moth of wrath           => moths of wrath but
-//      moth of wrath zombie    => moth of wrath zombies.
-//
-// This is not necessary right now, since there are currently no monsters that
-// require this special treatment (no monster with 'of' in its name is eligible
-// for zombies or skeletons).
-static const char *modifier_suffixes[] =
-{
-    "zombie", "skeleton", "simulacrum", nullptr,
-};
-
 // For a non-unique monster, prefixes a suitable article if we have only one
 // kill, else prefixes a kill count and pluralises the monster name.
 static string n_names(const string &name, int n)
@@ -444,8 +411,7 @@ static string n_names(const string &name, int n)
     {
         char buf[20];
         snprintf(buf, sizeof buf, "%d ", n);
-        return buf + pluralise(name, standard_plural_qualifiers,
-                               modifier_suffixes);
+        return buf + pluralise_monster(name);
     }
     else
         return article_a(name, false);

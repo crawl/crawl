@@ -289,7 +289,7 @@ KFEAT:    E = altar_zin / altar_elyvilon w:30
 MONS:     jackal / w:3 nothing, kobold / w:5 nothing, big kobold
 SHUFFLE:  de
 ITEM:     potion of curing / potion of heal wounds
-ITEM:     potion of flight / potion of restore abilities
+ITEM:     potion of flight
 MONS:     rat w:15 / river rat w:7 / nothing w:3
 MAP
         ccc
@@ -791,7 +791,7 @@ KFEAT:  ' = deep_water
 COLOUR: ' = green
 KFEAT:  " = shallow_water
 COLOUR: " = lightgreen
-KPROP:  "' = no_rtele_into
+KPROP:  "' = no_tele_into
 : sewer_setup(_G)
 MAP
         ccccccccccccccccccccc
@@ -1355,10 +1355,9 @@ SUBST:   W = WWWw.
 COLOUR:  - = lightgreen
 SUBST:   - = wwwW-
 ITEM:    potion of curing / potion of heal wounds / \
-         potion of restore abilities / potion of might w:2 / \
-         potion of brilliance w:2 / potion of agility w:2 / \
-         potion of flight w:4 / any scroll w:7 / any armour w:2 / \
-         any weapon w:2
+         potion of might w:2 / potion of brilliance w:2 / \
+         potion of agility w:2 / potion of flight w:14 / \
+         any scroll w:7 / any armour w:2 / any weapon w:2
 NSUBST:  d = 1:*
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

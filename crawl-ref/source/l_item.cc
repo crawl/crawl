@@ -280,13 +280,18 @@ static int l_item_do_subtype(lua_State *ls)
     }
 
     const char *s = nullptr;
+    string saved;
 
     // Special-case OBJ_ARMOUR behavior to maintain compatibility with
     // existing scripts.
     if (item->base_type == OBJ_ARMOUR)
         s = item_slot_name(get_armour_slot(*item));
     else if (item_type_known(*item))
-        s = sub_type_string(*item).c_str();
+    {
+        // must keep around the string until we call lua_pushstring
+        saved = sub_type_string(*item);
+        s = saved.c_str();
+    }
 
     if (s)
         lua_pushstring(ls, s);
@@ -335,13 +340,6 @@ IDEF(cursed)
     bool cursed = item && item_ident(*item, ISFLAG_KNOW_CURSE)
                        && item->cursed();
     lua_pushboolean(ls, cursed);
-    return 1;
-}
-
-IDEF(tried)
-{
-    bool tried = item && item_type_tried(*item);
-    lua_pushboolean(ls, tried);
     return 1;
 }
 
@@ -616,16 +614,6 @@ IDEF(hands)
 
     int hands = you.hands_reqd(*item) == HANDS_TWO ? 2 : 1;
     lua_pushnumber(ls, hands);
-
-    return 1;
-}
-
-IDEF(snakable)
-{
-    if (!item || !item->defined())
-        return 0;
-
-    lua_pushboolean(ls, item_is_snakable(*item));
 
     return 1;
 }
@@ -1166,7 +1154,7 @@ static int l_item_equipped_at(lua_State *ls)
 
 static int l_item_fired_item(lua_State *ls)
 {
-    int q = you.m_quiver->get_fire_item();
+    int q = you.m_quiver.get_fire_item();
 
     if (q < 0 || q >= ENDOFPACK)
         return 0;
@@ -1225,7 +1213,6 @@ static ItemAccessor item_attrs[] =
 {
     { "artefact",          l_item_artefact },
     { "branded",           l_item_branded },
-    { "snakable",          l_item_snakable },
     { "god_gift",          l_item_god_gift },
     { "fully_identified",  l_item_fully_identified },
     { "plus",              l_item_plus },
@@ -1234,7 +1221,6 @@ static ItemAccessor item_attrs[] =
     { "subtype",           l_item_subtype },
     { "ego",               l_item_ego },
     { "cursed",            l_item_cursed },
-    { "tried",             l_item_tried },
     { "worn",              l_item_worn },
     { "name",              l_item_name },
     { "name_coloured",     l_item_name_coloured },

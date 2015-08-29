@@ -127,7 +127,7 @@ function arena_sprint_end_round(data)
             data.style_mult = data.style_mult + 1
             -- Reward for boss kills. Doesn't come identified...
             dgn.create_item(you_x, you_y, "acquire any")
-            dgn.create_item(you_x, you_y, "potion of experience ident:all")
+            dgn.create_item(you_x, you_y, "potion of experience q:1 ident:all")
         else
             crawl.mpr("<yellow>Victory!</yellow>", "warning")
         end
@@ -230,7 +230,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "zombie / skeleton / wight w:5 / necrophage / phantom w:5",
                 "worker ant / soldier ant w:2 / queen ant w:1 / killer bee w:2",
                 "ooze / w:5 jelly",
-                "giant cockroach w:20 / spider / w:5 goliath beetle / worm /\
+                "giant cockroach w:20 / spider / worm /\
                     w:5 brain worm",
                 "giant spore hd:3"
             }
@@ -250,7 +250,7 @@ function arena_sprint_get_monster_set(round, boss)
                     w:1 harpy / w:5 cyclops / w:1 snapping turtle",
                 "w:5 bog body / w:5 giant leech / insubstantial wisp / w:5 swamp drake /\
                     giant frog / w:2 spiny frog / w:2 hydra / w:2 vampire mosquito",
-                "w:30 spider / goliath beetle / w:2 boulder beetle / w:2 jumping spider /\
+                "w:30 spider / w:2 boulder beetle / w:2 jumping spider /\
                     scorpion / w:2 tarantella / w:1 wolf spider",
                 "w:15 adder / ball python / water moccasin / naga / w:2 black mamba /\
                     w:1 naga mage / w:1 naga warrior",
@@ -585,7 +585,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "daeva / w:15 angel",
                 "greater mummy / mummy priest / guardian mummy",
                 "air elemental name:greater n_adj perm_ench:tornado col:lightcyan / air elemental w:20",
-                "goliath beetle hd:20 col:magenta name:orb_beetle n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
+                "iron golem hd:20 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
                 "brimstone fiend / ice fiend / shadow fiend / executioner / hell sentinel",
                 "titan / spriggan air mage / blizzard demon / w:20 sky beast",
                 "sphinx / place:Tomb:$",
@@ -655,7 +655,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "daeva",
                 "greater mummy / mummy priest",
                 "air elemental name:greater n_adj perm_ench:tornado col:lightcyan",
-                "goliath beetle hd:20 col:magenta name:orb_beetle n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
+                "iron golem hd:20 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
                 "brimstone fiend / ice fiend / shadow fiend w:5 / hell sentinel",
                 "titan / spriggan air mage / blizzard demon",
                 "sphinx",
@@ -1049,8 +1049,7 @@ KFEAT:  FS = distillery shop use_all count:17 greed:7 ; \
              potion of agility q:6 | potion of might q:6 | potion of brilliance q:6 |\
              potion of cure mutation | potion of cure mutation q:2 | potion of cure mutation q:3 |\
              potion of resistance q:6 | potion of resistance q:6 | potion of magic q:6 |\
-             potion of magic q:6 | potion of berserk rage q:5 | potion of berserk rage q:5 |\
-             potion of restore abilities q:10 | potion of restore abilities q:10
+             potion of magic q:6 | potion of berserk rage q:5 | potion of berserk rage q:5
 KFEAT:  O = distillery shop type:Do-It-Yourself suffix:Clinic count:17 use_all greed:7 ; \
             potion of heal wounds q:3 | potion of heal wounds q:3 | potion of heal wounds q:3 |\
             potion of heal wounds q:3 | potion of heal wounds q:3 | potion of heal wounds q:3 |\
@@ -1093,7 +1092,7 @@ KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
             mundane bolt q:50 | mundane sling bullet q:50 |\
             mundane arrow q:50
 KFEAT:  H = distillery shop type:Bottled suffix:Wisdom count:5 use_all greed:6 ; \
-            potion of experience | potion of experience |\
+            potion of experience q:1 | potion of experience q:1 |\
             potion of experience q:2 | potion of experience q:3 |\
             potion of experience q:3
 KFEAT:  R = general shop type:Premium suffix:Goods use_all count:11 greed:20 ; \

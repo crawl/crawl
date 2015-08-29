@@ -47,8 +47,6 @@ static void _clear_globals_on_exit()
 {
     clear_rays_on_exit();
     clear_zap_info_on_exit();
-    clear_colours_on_exit();
-    dgn_clear_vault_placements(env.level_vaults);
     destroy_abyss();
 }
 
@@ -335,7 +333,7 @@ NORETURN void end_game(scorefile_entry &se)
         more();
 
     if (!crawl_state.disables[DIS_CONFIRMATIONS])
-        get_invent(OSEL_ANY);
+        display_inventory();
     textcolour(LIGHTGREY);
 
     clua.save_persist();

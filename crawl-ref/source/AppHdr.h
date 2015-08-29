@@ -93,7 +93,7 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 //
 #if defined(TARGET_OS_MACOSX) || defined(TARGET_OS_LINUX) || \
     defined(TARGET_OS_FREEBSD) || defined(TARGET_OS_NETBSD) || \
-    defined(TARGET_OS_OPENBSD) || defined(TARGET_COMPILER_CYGWIN) || \
+    defined(TARGET_OS_OPENBSD) || defined(TARGET_OS_CYGWIN) || \
     defined(TARGET_OS_SOLARIS) || defined(TARGET_OS_UNKNOWN)
     #ifndef UNIX
     #define UNIX
@@ -353,6 +353,7 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     #define DEBUG_TESTS
     #define DEBUG_MONSPEAK
     #define DEBUG_BLOOD_POTIONS
+    #define DEBUG_STATISTICS
 #endif
 
 // =========================================================================
@@ -452,15 +453,6 @@ static inline void UNUSED(const volatile T &)
                    __attribute__((format (CRAWL_PRINTF_FORMAT, x+1, x+2))
 #else
 # define PRINTF(x, dfmt) const char *format dfmt, ...
-#endif
-
-// Most libcs support %zu, but msvcrt does not. Assumes that a request
-// to use MinGW's stdio implementation worked and gave us at least C99.
-#if defined(TARGET_COMPILER_VC) || defined(TARGET_COMPILER_MINGW) \
-                                   && !defined(__USE_MINGW_ANSI_STDIO)
-#define PRIuSIZET "Iu"
-#else
-#define PRIuSIZET "zu"
 #endif
 
 // And now headers we want precompiled

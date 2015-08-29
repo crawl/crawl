@@ -298,7 +298,7 @@ for whatever reason:
 * Add a short in-game description for the branch to dat/descript/branches.txt
 * Add code for the branch in branch-data.h, like so:
     { BRANCH_MYPORTAL, NUM_BRANCHES, -1, -1, 1, 14,
-    BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+    BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
     DNGN_ENTER_MYPORTAL, DNGN_EXIT_MYPORTAL,
     "NewPortal", "an awesome portal place", "NewPortal",
     nullptr,
@@ -829,8 +829,7 @@ original_map, glyphs_connected, orig_glyphs_connected, orig_gly_point,
 orig_gly_points, load_des_file, feature_number, feature_name,
 dgn_event_type, register_listener, remove_listener, remove_marker,
 num_matching_markers, feature_desc, feature_desc_at, item_from_index,
-mons_from_index, change_level_flags, change_branch_flags,
-set_random_mon_list
+mons_from_index, set_random_mon_list
 
 
 Additionally, the dgn module provides a global "mapgrd" variable that

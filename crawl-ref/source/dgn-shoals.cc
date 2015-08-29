@@ -249,8 +249,8 @@ static void _shoals_deepen_water()
     pages[current_page] = _shoals_water_depth_change_points();
     FixedArray<bool, GXM, GYM> seen_points(false);
 
-    for (int i = 0, size = pages[current_page].size(); i < size; ++i)
-        seen_points(pages[current_page][i]) = true;
+    for (const coord_def &pos : pages[current_page])
+        seen_points(pos) = true;
 
     int distance = 0;
     while (!pages[current_page].empty())
@@ -258,9 +258,8 @@ static void _shoals_deepen_water()
         const int next_page = !current_page;
         vector<coord_def> &cpage(pages[current_page]);
         vector<coord_def> &npage(pages[next_page]);
-        for (int i = 0, size = cpage.size(); i < size; ++i)
+        for (const coord_def c : cpage)
         {
-            coord_def c(cpage[i]);
             if (distance)
                 _shoals_deepen_water_at(c, distance);
 
@@ -383,9 +382,8 @@ static coord_def _shoals_region_center(
     const coord_def cgravity(static_cast<int>(cx), static_cast<int>(cy));
     coord_def closest_to_center;
     int closest_distance = 0;
-    for (int i = 0, size = visit.size(); i < size; ++i)
+    for (const coord_def p : visit)
     {
-        const coord_def p(visit[i]);
         const int dist2 = (p - cgravity).abs();
         if (closest_to_center.origin() || closest_distance > dist2)
         {
@@ -901,10 +899,10 @@ static int _shoals_tide_at(coord_def pos, int base_tide)
         return base_tide;
 
     pos -= tide_caller->pos();
-    if (pos.abs() > sqr(TIDE_CALL_RADIUS) + 1)
+    if (pos.rdist() > TIDE_CALL_RADIUS)
         return base_tide;
 
-    return base_tide + max(0, tide_called_peak - pos.range() * 3);
+    return base_tide + max(0, tide_called_peak - pos.rdist() * 3);
 }
 
 static vector<coord_def> _shoals_extra_tide_seeds()
@@ -936,9 +934,8 @@ static void _shoals_apply_tide(int tide, bool incremental_tide)
         vector<coord_def> &cpage(pages[current_page]);
         vector<coord_def> &npage(pages[next_page]);
 
-        for (int i = 0, size = cpage.size(); i < size; ++i)
+        for (const coord_def c : cpage)
         {
-            coord_def c(cpage[i]);
             const dungeon_feature_type herefeat(grd(c));
             const bool was_wet = (_shoals_tide_passable_feat(herefeat)
                                   && !is_temp_terrain(c));

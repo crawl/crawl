@@ -8,10 +8,6 @@
 function callback.spider_nest_trap(data, triggerable, triggerer, marker, ev)
   local x, y = marker:pos()
   local youpos = dgn.point(you.pos())
-  if youpos ~= marker:pos() then
-    -- pretend the monster avoided it
-    return
-  end
   local spiders = 0
   for p in iter.rect_iterator(dgn.point(x-1, y-1), dgn.point(x+1, y+1)) do
     if (dgn.mons_at(p.x, p.y) == nil and p ~= youpos and dgn.is_passable(p.x, p.y)) then
@@ -28,21 +24,6 @@ end
 function callback.spider_trap_warn(data, triggerable, triggerer, marker, ev)
     crawl.mpr("You notice webbing strewn about the room and hear a chittering noise in the background." , 1)
     crawl.more()
-end
-}}
-
-# Flavour text for Spiderweb map
-{{
-function callback.spiders_nest_cobweb_light(data, triggerable, triggerer, marker, ev)
-    crawl.mpr("Something lightly brushes against you...",1)
-    crawl.more()
-    crawl.mpr("You realise it was just a hanging strand of cobweb; you push it aside and calm your nerves." , "talk_visual")
-end
-}}
-
-{{
-function callback.spiders_nest_web_lair(data, triggerable, triggerer, marker, ev)
-    crawl.mpr("The chamber up ahead is thickly strewn with cobwebs." , "talk_visual")
 end
 }}
 
@@ -178,7 +159,7 @@ NAME: nicolae_spider_entry_non_spiders
 TAGS: spider_entry ruin_lair
 NSUBST: 1 = 21 / 1
 KFEAT: O = enter_spider_nest
-KMONS: 1 = scorpion / goliath beetle / worm / giant cockroach
+KMONS: 1 = scorpion / worker ant / worm / giant cockroach
 KMONS: 2 = demonic crawler / boulder beetle / wasp
 MAP
 ...........
@@ -196,7 +177,7 @@ ENDMAP
 
 NAME: nicolae_spider_entry_orb_guardian
 TAGS: spider_entry no_monster_gen no_pool_fixup no_trap_gen
-KPROP: 'W = no_rtele_into
+KPROP: 'W = no_tele_into
 NSUBST: a = ..x / .
 SUBST: W = w', X = x., Q = xxx@, ' = ...x, . = .....^
 KFEAT: O = enter_spider_nest
@@ -224,7 +205,7 @@ ENDMAP
 
 NAME:    spiders_nest_a
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
-DEPTH:   Spider:1-4
+DEPTH:   Spider, !Spider:$
 WEIGHT:  5
 ORIENT:  southeast
 MONS:    scorpion
@@ -270,7 +251,7 @@ ENDMAP
 NAME:   spiders_nest_scorpion_pit
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: southeast
-DEPTH:  Spider:1-4
+DEPTH:  Spider, !Spider:$
 KMONS:  1 = spider
 KMONS:  2 = scorpion / wolf spider w:3
 KMONS:  3 = trapdoor spider generate_awake / nothing
@@ -402,19 +383,8 @@ ENDMAP
 NAME:    mumra_spider_spiderweb
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  float
-DEPTH:   Spider:1-4
+DEPTH:   Spider, !Spider:$
 WEIGHT:  5
-NSUBST:  y = 1:y / *:.
-{{
-local ym = TriggerableFunction:new{func="callback.spiders_nest_cobweb_light"}
-ym:add_triggerer(DgnTriggerer:new{type="player_move"})
-lua_marker('y', ym)
-local vm = TriggerableFunction:new{func="callback.spiders_nest_web_lair"}
-vm:add_triggerer(DgnTriggerer:new{type="player_move"})
-lua_marker('v', vm)
-}}
-SUBST:   y = .
-SUBST:   v = .
 # Water etc.
 SUBST:   w = z
 SUBST:   W = W w:15 x:4
@@ -453,7 +423,7 @@ MAP
 .xW.WWxxxwwxxxx....x........wxxxxXW.xx.
 .wwW..WWwxxxxxxxxx......xxxxxw4xxW.Wx..
 .xxWWW.7.WWWxxxxxxxxxxW.WWWWxwxxW7Wxx.
-..xxxxWWW.7.WWXxxxxxxxxW7.v.WWwWW.Wx..
+..xxxxWWW.7.WWXxxxxxxxxW7...WWwWW.Wx..
  ....xxxxWWW.WWWXXxxxWWWxxWW.....Wxx3
     ....xxxxW.7WWWWWWxxxx...WWWWWxx..
        ..3.xxxx...WWW.7..WWWWxxxwx..
@@ -464,7 +434,7 @@ ENDMAP
 
 NAME:   hangedman_spider_trapstep
 TAGS:   no_monster_gen no_pool_fixup patrolling allow_dup
-DEPTH:  Spider:1-3, Zot, !Zot:$
+DEPTH:  Spider:1-2, Zot, !Zot:$
 KMONS:  0 = patrolling spider
 KMONS:  1 = tarantella
 : if you.in_branch("Zot") then
@@ -517,11 +487,11 @@ ENDMAP
 NAME:    hangedman_creepy_crawlies
 TAGS:    no_monster_gen patrolling
 ORIENT:  float
-DEPTH:   Spider:1-4
+DEPTH:   Spider, !Spider:$
 WEIGHT:  5
 KMONS:   1 = scorpion w:20 / spider w:13 / worker ant w:35 / \
              giant cockroach w:1 / worm w:1
-KMONS:   2 = soldier ant / goliath beetle / vampire mosquito w:5
+KMONS:   2 = soldier ant / redback / vampire mosquito w:5
 KMONS:   3aAdD = brain worm / boulder beetle w:5
 KMONS:   4bB = demonic crawler
 KMONS:   5eE = place:Spider:$ zombie
@@ -532,7 +502,7 @@ KITEM:   6 = superb_item w:5 / any armour good_item ego:poison_resistance w:5
 KFEAT:   12345abcdefABCDEF% = web / shallow_water / . w:30
 KFEAT:   . = . w:39 / web w:1
 KMASK:   ' = !no_monster_gen
-KPROP:   ` = no_rtele_into
+KPROP:   ` = no_tele_into
 SHUFFLE: ab, AB, cd, CD, ef, EF, gh, GH
 SUBST:   ' = .:28 W:1 %:1, % = 00%%.
 SUBST:   cC = c:13 4:1 3:1, 1 = 1:17 2:2 5:1
@@ -630,7 +600,7 @@ ENDMAP
 
 # A few mining accidents
 NAME:   nicolae_spider_mines_1
-DEPTH:  Spider:1-4
+DEPTH:  Spider, !Spider:$
 ORIENT: southwest
 TAGS:   uniq_spidermines
 SUBST:  B = z..
@@ -670,7 +640,7 @@ xxXXXXXXXXXXXXx
 ENDMAP
 
 NAME:   nicolae_spider_mines_2
-DEPTH:  Spider:1-4
+DEPTH:  Spider, !Spider:$
 ORIENT: southeast
 TAGS:   uniq_spidermines
 SUBST:  B = z..
@@ -709,7 +679,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_spider_mines_3
-DEPTH:  Spider:1-4
+DEPTH:  Spider, !Spider:$
 ORIENT: southwest
 TAGS:   uniq_spidermines
 NSUBST: F = 1:Q / *:z
@@ -803,7 +773,7 @@ W....WW....W
 ENDMAP
 
 NAME:   nicolae_trapdoor_corridor
-DEPTH:  Spider:1-3
+DEPTH:  Spider:1-2
 MONS:   trapdoor spider
 SUBST:  z = ....***
 NSUBST: ! = 1:^ / *:.
@@ -825,7 +795,7 @@ NAME:   nicolae_orb_island
 DEPTH:  Spider:2-
 TAGS:   no_pool_fixup
 MONS:   generate_awake orb spider
-KPROP:  1'z = no_rtele_into
+KPROP:  1'z = no_tele_into
 KMASK:  w = no_monster_gen
 SUBST:  z = x
 MAP
@@ -901,7 +871,7 @@ TAGS:   no_monster_gen patrolling no_trap_gen
 MONS:   crimson imp w:50 / white imp w:25 / shadow imp w:15 / \
         iron imp w:10 / nothing w:50
 MONS:   demonic crawler
-KPROP:  d' = no_rtele_into
+KPROP:  d' = no_tele_into
 SUBST:  d = c
 NSUBST: c = 6:2 / *:.
 MAP
@@ -968,7 +938,7 @@ MAP
 ENDMAP
 
 NAME:    lemuel_spider_zombies
-DEPTH:   Spider:1-4
+DEPTH:   Spider, !Spider:$
 ORIENT:  float
 TAGS:    no_monster_gen
 MONS:    spider zombie / wolf spider zombie / tarantella zombie
@@ -1011,7 +981,7 @@ ENDMAP
 
 NAME:   nicolae_orb_stairs_large
 TAGS:   no_pool_fixup no_monster_gen
-DEPTH:  Spider:2-4
+DEPTH:  Spider:2-3
 ORIENT: float
 WEIGHT: 3
 MONS:   orb spider / spider
@@ -1042,7 +1012,7 @@ xxss...wwwww...ssxx
 ENDMAP
 
 NAME:   nicolae_spider_corner
-DEPTH:  Spider:1-4
+DEPTH:  Spider, !Spider:$
 ORIENT: southwest
 MONS:   orb spider
 SHUFFLE: ABC, DEF, GH, IJ, abcdefghi

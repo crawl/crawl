@@ -1,4 +1,3 @@
-
 /**
  * @file
  * @brief Functions with decks of cards.
@@ -146,7 +145,6 @@ deck_archetype deck_of_wonders =
     { CARD_DOWSING,           {5, 5, 5} },
     { CARD_MERCENARY,         {5, 5, 5} },
     { CARD_ALCHEMIST,         {5, 5, 5} },
-    { CARD_PLACID_MAGIC,      {5, 5, 5} },
 };
 
 #if TAG_MAJOR_VERSION == 34
@@ -243,23 +241,6 @@ static void _check_odd_card(uint8_t flags)
 {
     if ((flags & CFLAG_ODDITY) && !(flags & CFLAG_SEEN))
         mpr("This card doesn't seem to belong here.");
-}
-
-static bool _card_forbidden(card_type card)
-{
-    if (crawl_state.game_is_zotdef())
-    {
-        switch (card)
-        {
-        case CARD_TOMB:
-        case CARD_WARPWRIGHT:
-        case CARD_STAIRS:
-            return true;
-        default:
-            break;
-        }
-    }
-    return false;
 }
 
 int cards_in_deck(const item_def &deck)
@@ -365,7 +346,9 @@ const char* card_name(card_type card)
     case CARD_TOMB:            return "the Tomb";
     case CARD_BANSHEE:         return "the Banshee";
     case CARD_WILD_MAGIC:      return "Wild Magic";
+#if TAG_MAJOR_VERSION == 34
     case CARD_PLACID_MAGIC:    return "Placid Magic";
+#endif
     case CARD_CRUSADE:         return "the Crusade";
     case CARD_ELEMENTS:        return "the Elements";
     case CARD_SUMMON_DEMON:    return "the Pentagram";
@@ -472,8 +455,6 @@ static card_type _choose_from_archetype(const deck_archetype* pdeck,
     card_type result = NUM_CARDS;
     for (const card_with_weights cww : *pdeck)
     {
-        if (_card_forbidden(cww.card))
-            continue;
         totalweight += cww.weight[rarity - DECK_RARITY_COMMON];
         if (x_chance_in_y(cww.weight[rarity - DECK_RARITY_COMMON], totalweight))
             result = cww.card;
@@ -1871,7 +1852,6 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
 static void _elixir_card(int power, deck_rarity_type rarity)
 {
     int power_level = _get_power_level(power, rarity);
-    const int dur = random2avg(10 * (power_level + 1), 2) * BASELINE_DELAY;
 
     you.duration[DUR_ELIXIR_HEALTH] = 0;
     you.duration[DUR_ELIXIR_MAGIC] = 0;
@@ -1902,8 +1882,9 @@ static void _elixir_card(int power, deck_rarity_type rarity)
 
         if (mon && mon->wont_attack())
         {
-            mon->add_ench(mon_enchant(ENCH_EPHEMERAL_INFUSION, 50 * (power_level + 1),
-                                      &you, dur));
+            const int hp = mon->max_hit_points / max(4 - power_level, 1);
+            if (mon->heal(hp + random2avg(hp, 2)))
+               simple_monster_message(mon, " is healed.");
         }
     }
 }
@@ -2335,7 +2316,7 @@ static void _elements_card(int power, deck_rarity_type rarity)
     const monster_type element_list[][3] =
     {
        {MONS_RAIJU, MONS_WIND_DRAKE, MONS_SHOCK_SERPENT},
-       {MONS_BASILISK, MONS_BORING_BEETLE, MONS_BOULDER_BEETLE},
+       {MONS_BASILISK, MONS_BOULDER_BEETLE, MONS_IRON_GOLEM},
        {MONS_MOTTLED_DRAGON, MONS_MOLTEN_GARGOYLE, MONS_SALAMANDER_FIREBRAND},
        {MONS_ICE_BEAST, MONS_POLAR_BEAR, MONS_ICE_DRAGON}
     };
@@ -2441,7 +2422,7 @@ static void _summon_flying(int power, deck_rarity_type rarity)
 
     const monster_type flytypes[] =
     {
-        MONS_INSUBSTANTIAL_WISP, MONS_KILLER_BEE, MONS_RAVEN,
+        MONS_INSUBSTANTIAL_WISP, MONS_WYVERN, MONS_KILLER_BEE,
         MONS_VAMPIRE_MOSQUITO, MONS_WASP, MONS_HORNET
     };
     const int num_flytypes = ARRAYSZ(flytypes);
@@ -2665,7 +2646,7 @@ static void _alchemist_card(int power, deck_rarity_type rarity)
         you.del_gold(hp * 2);
         inc_hp(hp);
         gold_used += hp * 2;
-        mpr("You feel better.");
+        canned_msg(MSG_GAIN_HEALTH);
         dprf("Gained %d health, %d gold remaining.", hp, gold_max - gold_used);
     }
     // Maybe spend some more gold to regain magic.
@@ -2676,7 +2657,7 @@ static void _alchemist_card(int power, deck_rarity_type rarity)
         you.del_gold(mp * 5);
         inc_mp(mp);
         gold_used += mp * 5;
-        mpr("You feel your power returning.");
+        canned_msg(MSG_GAIN_MAGIC);
         dprf("Gained %d magic, %d gold remaining.", mp, gold_max - gold_used);
     }
 
@@ -2713,11 +2694,8 @@ static void _cloud_card(int power, deck_rarity_type rarity)
             default: cloudy = CLOUD_DEBUGGING;
         }
 
-        if (!mons || (mons && (mons->wont_attack()
-            || mons_is_firewood(mons))))
-        {
+        if (!mons || (mons && (mons->wont_attack() || mons_is_firewood(mons))))
             continue;
-        }
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
         {
@@ -2763,37 +2741,28 @@ static void _storm_card(int power, deck_rarity_type rarity)
     const int power_level = _get_power_level(power, rarity);
 
     _friendly(MONS_AIR_ELEMENTAL, 3);
-    if (coinflip())
-    {
-        const int num_to_summ = random2(1 + power_level);
-        for (int i = 0; i < num_to_summ; ++i)
-            _friendly(MONS_AIR_ELEMENTAL, 3);
-        summon_twister(power_level);
-    }
-    else
-    {
-        wind_blast(&you, (power_level == 0) ? 100 : 200, coord_def(), true);
 
-        for (radius_iterator ri(you.pos(), 5, C_ROUND, LOS_SOLID); ri; ++ri)
+    wind_blast(&you, (power_level == 0) ? 100 : 200, coord_def(), true);
+
+    for (radius_iterator ri(you.pos(), 4, C_SQUARE, LOS_SOLID); ri; ++ri)
+    {
+        monster *mons = monster_at(*ri);
+
+        if (adjacent(*ri, you.pos()))
+            continue;
+
+        if (mons && mons->wont_attack())
+            continue;
+
+        if ((feat_has_solid_floor(grd(*ri))
+             || grd(*ri) == DNGN_DEEP_WATER)
+            && env.cgrid(*ri) == EMPTY_CLOUD)
         {
-            monster *mons = monster_at(*ri);
-
-            if (adjacent(*ri, you.pos()))
-                continue;
-
-            if (mons && mons->wont_attack())
-                continue;
-
-
-            if ((feat_has_solid_floor(grd(*ri))
-                 || grd(*ri) == DNGN_DEEP_WATER)
-                && env.cgrid(*ri) == EMPTY_CLOUD)
-            {
-                place_cloud(CLOUD_STORM, *ri,
-                            5 + (power_level + 1) * random2(10), & you);
-            }
+            place_cloud(CLOUD_STORM, *ri,
+                        5 + (power_level + 1) * random2(10), & you);
         }
     }
+
 }
 
 static void _water_card(int power, deck_rarity_type rarity)
@@ -2801,7 +2770,7 @@ static void _water_card(int power, deck_rarity_type rarity)
     const int power_level = _get_power_level(power, rarity);
     create_feat_splash(you.pos(), 2 + random2(power_level), 10);
     create_feat_splash(you.pos(), 2, 10);
-    for (radius_iterator ri(you.pos(), power_level + 3, C_CIRCLE, LOS_NO_TRANS); ri; ++ri)
+    for (radius_iterator ri(you.pos(), power_level + 1, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
         if (grd(*ri) == DNGN_FLOOR)
         {
@@ -2888,38 +2857,6 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
-static void _placid_magic_card(int power, deck_rarity_type rarity)
-{
-    const int power_level = _get_power_level(power, rarity);
-    const int drain = max(you.magic_points - random2(power_level * 3), 0);
-
-    mpr("You feel magic draining away.");
-
-    drain_mp(drain);
-    debuff_player();
-
-    for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
-    {
-        monster *mons = monster_at(*di);
-
-        if (!mons || mons->wont_attack())
-            continue;
-
-        debuff_monster(mons);
-        if (!mons->antimagic_susceptible())
-            continue;
-
-        // XXX: this should be refactored together with other effects that
-        // apply antimagic.
-        const int duration = random2(div_rand_round(power / 3,
-                                                    mons->get_hit_dice()))
-                             * BASELINE_DELAY;
-        mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0, &you, duration));
-        mprf("%s magic leaks into the air.",
-             apostrophise(mons->name(DESC_THE)).c_str());
-    }
-}
-
 static void _wild_magic_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
@@ -2951,8 +2888,12 @@ static void _wild_magic_card(int power, deck_rarity_type rarity)
         for (int i = 0; i < num_affected; ++i)
             mp += random2(5);
 
-        inc_mp(mp);
         mpr("You feel a surge of magic.");
+        if (mp && you.magic_points < you.max_magic_points)
+        {
+            inc_mp(mp);
+            canned_msg(MSG_GAIN_MAGIC);
+        }
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -2994,8 +2935,6 @@ static int _card_power(deck_rarity_type rarity, bool punishment)
 void card_effect(card_type which_card, deck_rarity_type rarity,
                  uint8_t flags, bool tell_card)
 {
-    ASSERT(!_card_forbidden(which_card));
-
     const char *participle = (flags & CFLAG_DEALT) ? "dealt" : "drawn";
     const int power = _card_power(rarity, flags & CFLAG_PUNISHMENT);
 
@@ -3064,7 +3003,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_STORM:            _storm_card(power, rarity); break;
     case CARD_ILLUSION:         _illusion_card(power, rarity); break;
     case CARD_DEGEN:            _degeneration_card(power, rarity); break;
-    case CARD_PLACID_MAGIC:     _placid_magic_card(power, rarity); break;
     case CARD_WILD_MAGIC:       _wild_magic_card(power, rarity); break;
     case CARD_WATER:            _water_card(power, rarity); break;
 
@@ -3091,15 +3029,11 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
     case CARD_SWINE:
-    {
-        const int piggified = transform(5 + power/10 + random2(power/10),
-                                        TRAN_PIG, true);
-        if (piggified == SPRET_SUCCESS)
+        if (transform(5 + power/10 + random2(power/10), TRAN_PIG, true))
             you.transform_uncancellable = true;
         else
             mpr("You feel a momentary urge to oink.");
         break;
-    }
 
 #if TAG_MAJOR_VERSION == 34
     case CARD_SHUFFLE:
@@ -3116,6 +3050,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_METAMORPHOSIS:
     case CARD_SUMMON_ANIMAL:
     case CARD_SUMMON_SKELETON:
+    case CARD_PLACID_MAGIC:
         mpr("This type of card no longer exists!");
         break;
 #endif

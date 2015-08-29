@@ -28,7 +28,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-book.h"
-#include "mon-chimera.h"
 #include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
 #include "mon-tentacle.h"
 #include "options.h"
@@ -122,8 +121,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_FEAR_INSPIRING;
     case ENCH_WITHDRAWN:
         return MB_WITHDRAWN;
-    case ENCH_BLEED:
-        return MB_BLEEDING;
     case ENCH_DAZED:
         return MB_DAZED;
     case ENCH_MUTE:
@@ -248,18 +245,14 @@ static bool _is_public_key(string key)
      || key == TILE_NUM_KEY
 #endif
      || key == "tile_idx"
-     || key == CHIMERA_PT2_KEY
-     || key == CHIMERA_PT3_KEY
-     || key == CHIMERA_BATTY_KEY
-     || key == CHIMERA_WING_KEY
-     || key == CHIMERA_LEGS_KEY
-     || key == "custom_spells"
-     || key == MON_NO_STAIR_KEY
-     || key == ELVEN_IS_ENERGIZED_KEY)
+     || key == CUSTOM_SPELLS_KEY
+     || key == ELVEN_IS_ENERGIZED_KEY
+     || key == MUTANT_BEAST_FACETS
+     || key == MUTANT_BEAST_TIER
+     || key == MON_NO_STAIR_KEY)
     {
         return true;
     }
-
     return false;
 }
 
@@ -298,7 +291,7 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
         if (grd(*ai) == DNGN_DEEP_WATER)
         {
             const monster *mon = monster_at(*ai);
-            if (mon && you.can_see(mon))
+            if (mon && you.can_see(*mon))
             {
                 // Could originate from the kraken.
                 if (mon->type == MONS_KRAKEN)
@@ -376,6 +369,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     mintel = mons_class_intel(type);
 
+    hd = mons_class_hit_dice(type);
     ac = get_mons_class_ac(type);
     ev = base_ev = get_mons_class_ev(type);
     mresists = get_mons_class_resists(type);
@@ -385,7 +379,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     mbase_speed = mons_class_base_speed(type);
     menergy = mons_class_energy(type);
 
-    fly = max(mons_class_flies(type), mons_class_flies(base_type));
+    if (mons_class_flag(type, M_FLIES) || mons_class_flag(base_type, M_FLIES))
+        mb.set(MB_AIRBORNE);
 
     if (mons_class_wields_two_weapons(type)
         || mons_class_wields_two_weapons(base_type))
@@ -405,17 +400,18 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     fire_blocker = DNGN_UNSEEN;
 
-    u.ghost.acting_part = MONS_0;
+    i_ghost.acting_part = MONS_0;
     if (mons_is_pghost(type))
     {
-        u.ghost.species = SP_HUMAN;
-        u.ghost.job = JOB_WANDERER;
-        u.ghost.religion = GOD_NO_GOD;
-        u.ghost.best_skill = SK_FIGHTING;
-        u.ghost.best_skill_rank = 2;
-        u.ghost.xl_rank = 3;
-        u.ghost.ac = 5;
-        u.ghost.damage = 5;
+        i_ghost.species = SP_HUMAN;
+        i_ghost.job = JOB_WANDERER;
+        i_ghost.religion = GOD_NO_GOD;
+        i_ghost.best_skill = SK_FIGHTING;
+        i_ghost.best_skill_rank = 2;
+        i_ghost.xl_rank = 3;
+        hd = ghost_rank_to_level(i_ghost.xl_rank);
+        i_ghost.ac = 5;
+        i_ghost.damage = 5;
     }
 
     // Don't put a bad base type on ?/mdraconian annihilator etc.
@@ -452,8 +448,22 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     }
 
     props.clear();
+    // At least enough to keep from crashing. TODO: allow specifying these?
+    if (type == MONS_MUTANT_BEAST)
+    {
+        props[MUTANT_BEAST_TIER].get_short() = BT_FIRST;
+        for (int i = BF_FIRST; i < NUM_BEAST_FACETS; ++i)
+            props[MUTANT_BEAST_FACETS].get_vector().push_back(i);
+    }
 
     client_id = 0;
+}
+
+static description_level_type _article_for(const actor* a)
+{
+    // Player gets DESC_A, but that doesn't really matter.
+    const monster * const m = a->as_monster();
+    return m && m->friendly() ? DESC_YOUR : DESC_A;
 }
 
 monster_info::monster_info(const monster* m, int milev)
@@ -544,7 +554,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     mname = m->mname;
 
-    const uint64_t name_flags = m->flags & MF_NAME_MASK;
+    const auto name_flags = m->flags & MF_NAME_MASK;
 
     if (name_flags == MF_NAME_SUFFIX)
         mb.set(MB_NAME_SUFFIX);
@@ -572,15 +582,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->flags & MF_NAME_SPECIES)
         mb.set(MB_NO_NAME_TAG);
 
-    // Chimera acting head needed for name
-    u.ghost.acting_part = MONS_0;
-    if (mons_class_is_chimeric(type))
-    {
-        ASSERT(m->ghost.get());
-        ghost_demon& ghost = *m->ghost;
-        u.ghost.acting_part = ghost.acting_part;
-    }
-    // As is ghostliness
+    // Ghostliness needed for name
     if (testbits(m->flags, MF_SPECTRALISED))
         mb.set(MB_SPECTRALISED);
 
@@ -598,15 +600,17 @@ monster_info::monster_info(const monster* m, int milev)
     holi = m->holiness();
 
     mintel = mons_intel(m);
+    hd = m->get_hit_dice();
     ac = m->armour_class(false);
     ev = m->evasion(EV_IGNORE_UNIDED);
     base_ev = m->base_evasion();
     mresists = get_mons_resists(m);
     mitemuse = mons_itemuse(m);
-    mbase_speed = mons_base_speed(m);
+    mbase_speed = mons_base_speed(m, true);
     menergy = mons_energy(m);
-    fly = mons_flies(m);
 
+    if (m->airborne())
+        mb.set(MB_AIRBORNE);
     if (mons_wields_two_weapons(m))
         mb.set(MB_TWO_WEAPONS);
     if (!mons_can_regenerate(m))
@@ -630,7 +634,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (nomsg_wounds)
         dam = MDAM_OKAY;
 
-    if (!mons_class_flag(m->type, M_NO_EXP_GAIN)) // Firewood, butterflies, etc.
+    if (mons_class_gives_xp(m->type)) // Firewood, butterflies, etc.
     {
         if (m->asleep())
         {
@@ -702,16 +706,16 @@ monster_info::monster_info(const monster* m, int milev)
     {
         ASSERT(m->ghost.get());
         ghost_demon& ghost = *m->ghost;
-        u.ghost.species = ghost.species;
-        if (species_is_draconian(u.ghost.species) && ghost.xl < 7)
-            u.ghost.species = SP_BASE_DRACONIAN;
-        u.ghost.job = ghost.job;
-        u.ghost.religion = ghost.religion;
-        u.ghost.best_skill = ghost.best_skill;
-        u.ghost.best_skill_rank = get_skill_rank(ghost.best_skill_level);
-        u.ghost.xl_rank = ghost_level_to_rank(ghost.xl);
-        u.ghost.ac = quantise(ghost.ac, 5);
-        u.ghost.damage = quantise(ghost.damage, 5);
+        i_ghost.species = ghost.species;
+        if (species_is_draconian(i_ghost.species) && ghost.xl < 7)
+            i_ghost.species = SP_BASE_DRACONIAN;
+        i_ghost.job = ghost.job;
+        i_ghost.religion = ghost.religion;
+        i_ghost.best_skill = ghost.best_skill;
+        i_ghost.best_skill_rank = get_skill_rank(ghost.best_skill_level);
+        i_ghost.xl_rank = ghost_level_to_rank(ghost.xl);
+        i_ghost.ac = quantise(ghost.ac, 5);
+        i_ghost.damage = quantise(ghost.damage, 5);
 
         // describe abnormal (branded) ghost weapons
         if (ghost.brand != SPWPN_NORMAL)
@@ -719,11 +723,11 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     if (mons_is_ghost_demon(type))
-        u.ghost.can_sinv = m->ghost->see_invis;
+        i_ghost.can_sinv = m->ghost->see_invis;
 
     // book loading for player ghost and vault monsters
     spells.clear();
-    if (m->props.exists("custom_spells") || mons_is_pghost(type))
+    if (m->props.exists(CUSTOM_SPELLS_KEY) || mons_is_pghost(type))
         spells = m->spells;
     if (m->is_priest())
         props["priest"] = true;
@@ -779,12 +783,13 @@ monster_info::monster_info(const monster* m, int milev)
     // name of what this monster is constricted by, if any
     if (m->is_constricted())
     {
-        actor * const constrictor = actor_by_mid(m->constricted_by);
+        const actor * const constrictor = actor_by_mid(m->constricted_by);
         if (constrictor)
         {
             constrictor_name = (m->held == HELD_MONSTER ? "held by "
                                                         : "constricted by ")
-                               + constrictor->name(DESC_A, true);
+                               + constrictor->name(_article_for(constrictor),
+                                                   true);
         }
     }
 
@@ -798,7 +803,9 @@ monster_info::monster_info(const monster* m, int milev)
             if (const actor* const constrictee = actor_by_mid(entry.first))
             {
                 constricting_name.push_back(gerund
-                                            + constrictee->name(DESC_A, true));
+                                            + constrictee->name(
+                                                  _article_for(constrictee),
+                                                  true));
             }
         }
     }
@@ -819,6 +826,35 @@ monster_info::monster_info(const monster* m, int milev)
 
     client_id = m->get_client_id();
 }
+
+
+
+/**
+ * Name the given mutant beast tier.
+ *
+ * @param xl_tier   The beast_tier in question.
+ * @return          The name of the tier; e.g. "juvenile".
+ */
+static string _mutant_beast_tier_name(short xl_tier)
+{
+    if (xl_tier < 0 || xl_tier >= NUM_BEAST_TIERS)
+        return "buggy";
+    return mutant_beast_tier_names[xl_tier];
+}
+
+/**
+ * Name the given mutant beast facet.
+ *
+ * @param xl_tier   The beast_facet in question.
+ * @return          The name of the facet; e.g. "bat".
+ */
+static string _mutant_beast_facet(int facet)
+{
+    if (facet < 0 || facet >= NUM_BEAST_FACETS)
+        return "buggy";
+    return mutant_beast_facet_names[facet];
+}
+
 
 string monster_info::db_name() const
 {
@@ -855,7 +891,7 @@ string monster_info::_core_name() const
         break;
 
     case MONS_PILLAR_OF_SALT:
-    case MONS_BLOCK_OF_ICE:     case MONS_CHIMERA:
+    case MONS_BLOCK_OF_ICE:
     case MONS_SENSED:
         nametype = base_type;
         break;
@@ -968,9 +1004,9 @@ string monster_info::common_name(description_level_type desc) const
 {
     const string core = _core_name();
     const bool nocore = mons_class_is_zombified(type)
-                        && mons_is_unique(base_type)
-                        && base_type == mons_species(base_type)
-                        || mons_class_is_chimeric(type);
+                          && mons_is_unique(base_type)
+                          && base_type == mons_species(base_type)
+                        || type == MONS_MUTANT_BEAST;
 
     ostringstream ss;
 
@@ -1006,20 +1042,14 @@ string monster_info::common_name(description_level_type desc) const
         ss << "-headed ";
     }
 
-    if (mons_class_is_chimeric(type))
+    if (type == MONS_MUTANT_BEAST)
     {
-        ss << "chimera";
-        monsterentry *me = nullptr;
-        if (u.ghost.acting_part != MONS_0
-            && (me = get_monster_data(u.ghost.acting_part)))
-        {
-            // Specify an acting head
-            ss << "'s " << me->name << " head";
-        }
-        else
-            // Suffix parts in brackets
-            // XXX: Should have a desc level that disables this
-            ss << " (" << core << chimera_part_names() << ")";
+        const int xl = props[MUTANT_BEAST_TIER].get_short();
+        const int tier = mutant_beast_tier(xl);
+        ss << _mutant_beast_tier_name(tier) << " ";
+        for (auto facet : props[MUTANT_BEAST_FACETS].get_vector())
+            ss << _mutant_beast_facet(facet.get_int()); // no space between
+        ss << " beast";
     }
 
     if (!nocore)
@@ -1203,20 +1233,6 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
                 return false;
         }
 
-        if (m1.type == MONS_CHIMERA)
-        {
-            for (int part = 1; part <= 3; part++)
-            {
-                const monster_type p1 = get_chimera_part(&m1, part);
-                const monster_type p2 = get_chimera_part(&m2, part);
-
-                if (p1 < p2)
-                    return true;
-                else if (p1 > p2)
-                    return false;
-            }
-        }
-
         // Both monsters are hydras or hydra zombies, sort by number of heads.
         if (mons_genus(m1.type) == MONS_HYDRA || mons_genus(m1.base_type) == MONS_HYDRA)
         {
@@ -1290,8 +1306,6 @@ static string _verbose_info0(const monster_info& mi)
         return "wandering";
     if (mi.is(MB_BURNING))
         return "burning";
-    if (mi.is(MB_BLEEDING))
-        return "bleeding";
     if (mi.is(MB_INVISIBLE))
         return "invisible";
 
@@ -1315,16 +1329,17 @@ string monster_info::pluralised_name(bool fullname) const
     if (mons_is_unique(type) && type != MONS_MARA)
         return common_name();
     else if (mons_genus(type) == MONS_DRACONIAN)
-        return pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
+        return pluralise_monster(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
     else if (mons_genus(type) == MONS_DEMONSPAWN)
-        return pluralise(mons_type_name(MONS_DEMONSPAWN, DESC_PLAIN));
+        return pluralise_monster(mons_type_name(MONS_DEMONSPAWN, DESC_PLAIN));
     else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
-             || type == MONS_DANCING_WEAPON || !fullname)
+             || type == MONS_DANCING_WEAPON || type == MONS_MUTANT_BEAST
+             || !fullname)
     {
-        return pluralise(mons_type_name(type, DESC_PLAIN));
+        return pluralise_monster(mons_type_name(type, DESC_PLAIN));
     }
     else
-        return pluralise(common_name());
+        return pluralise_monster(common_name());
 }
 
 enum _monster_list_colour_type
@@ -1466,7 +1481,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_ROUSED))
         v.emplace_back("inspired to greatness");
     if (is(MB_CONFUSED))
-        v.emplace_back("bewildered and confused");
+        v.emplace_back("confused");
     if (is(MB_INVISIBLE))
         v.emplace_back("slightly transparent");
     if (is(MB_CHARMED))
@@ -1489,8 +1504,6 @@ vector<string> monster_info::attributes() const
         v.emplace_back("radiating silence");
     if (is(MB_PARALYSED))
         v.emplace_back("paralysed");
-    if (is(MB_BLEEDING))
-        v.emplace_back("bleeding");
     if (is(MB_REPEL_MSL))
         v.emplace_back("repelling missiles");
     if (is(MB_DEFLECT_MSL))
@@ -1675,11 +1688,26 @@ int monster_info::randarts(artefact_prop_type ra_prop) const
     return ret;
 }
 
+/**
+ * Can the monster described by this monster_info see invisible creatures?
+ *
+ * This should match the logic in monster::can_see_invisible().
+ *
+ * XXX: This is an abomination and should be destroyed, probably by adding a
+ * sees_invisible field that's initialized by monster::can_see_invisible();
+ * just need to avoid leaking info from e.g. jewellery.
+ *
+ * @return
+ */
 bool monster_info::can_see_invisible() const
 {
-    // This should match the logic in monster::can_see_invisible().
     if (mons_is_ghost_demon(type))
-        return u.ghost.can_sinv;
+        return i_ghost.can_sinv;
+
+    if (props.exists(MUTANT_BEAST_FACETS))
+        for (auto facet : props[MUTANT_BEAST_FACETS].get_vector())
+            if (facet.get_int() == BF_WEIRD)
+                return true;
 
     return mons_class_flag(type, M_SEE_INVIS)
            || mons_is_demonspawn(type)
@@ -1692,15 +1720,12 @@ int monster_info::res_magic() const
     if (mr == MAG_IMMUNE)
         return MAG_IMMUNE;
 
-    const int hd = mons_is_pghost(type) ? ghost_rank_to_level(u.ghost.xl_rank)
-                                        : mons_class_hit_dice(type);
-
     // Negative values get multiplied with monster hit dice.
     if (mr < 0)
         mr = hd * (-mr) * 4 / 3;
 
     // Randarts
-    mr += 40 * randarts(ARTP_MAGIC);
+    mr += 40 * randarts(ARTP_MAGIC_RESISTANCE);
 
     // ego armour resistance
     if (inv[MSLOT_ARMOUR].get()
@@ -1803,7 +1828,7 @@ bool monster_info::cannot_move() const
 
 bool monster_info::airborne() const
 {
-    return fly == FL_LEVITATE || (fly == FL_WINGED && !cannot_move());
+    return is(MB_AIRBORNE);
 }
 
 bool monster_info::ground_level() const
@@ -1816,7 +1841,7 @@ bool monster_info::ground_level() const
 bool monster_info::has_spells() const
 {
     // Some monsters have a special book but may not have any spells anyways.
-    if (props.exists("custom_spells"))
+    if (props.exists(CUSTOM_SPELLS_KEY))
         return spells.size() > 0 && spells[0].spell != SPELL_NO_SPELL;
 
     // Almost all draconians have breath spells.
@@ -1878,10 +1903,9 @@ void get_monster_info(vector<monster_info>& mons)
 
     for (monster *mon : visible)
     {
-        if (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
+        if (mons_class_gives_xp(mon->type)
             || mon->is_child_tentacle()
-            || mon->type == MONS_BALLISTOMYCETE
-                && mon->ballisto_activity > 0)
+            || mons_is_active_ballisto(mon))
         {
             mons.emplace_back(mon);
         }

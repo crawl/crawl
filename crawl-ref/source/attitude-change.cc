@@ -241,7 +241,7 @@ bool beogh_followers_abandon_you()
                 // For now CREATED_FRIENDLY stays.
                 mons_att_changed(mons);
 
-                if (you.can_see(mons))
+                if (you.can_see(*mons))
                     num_reconvert++; // Only visible ones.
 
                 reconvert = true;
@@ -293,9 +293,10 @@ static void _print_converted_orc_speech(const string key,
 void beogh_convert_orc(monster* orc, bool emergency,
                        bool converted_by_follower)
 {
+    ASSERT(orc); // XXX: change to monster &orc
     ASSERT(mons_genus(orc->type) == MONS_ORC);
 
-    if (you.can_see(orc)) // show reaction
+    if (you.can_see(*orc)) // show reaction
     {
         if (emergency || !orc->alive())
         {
@@ -365,11 +366,12 @@ static void _fedhas_neutralise_plant(monster* plant)
 
 static void _jiyva_convert_slime(monster* slime)
 {
+    ASSERT(slime); // XXX: change to monster &slime
     ASSERT(mons_is_slime(slime));
 
     behaviour_event(slime, ME_ALERT);
 
-    if (you.can_see(slime))
+    if (you.can_see(*slime))
     {
         if (mons_genus(slime->type) == MONS_GIANT_EYEBALL)
         {
@@ -403,14 +405,12 @@ static void _jiyva_convert_slime(monster* slime)
 
 void gozag_set_bribe(monster* traitor)
 {
+    branch_type branch = gozag_fixup_branch(you.where_are_you);
+
     // Try to bribe the monster.
     const int bribability = gozag_type_bribable(traitor->type);
     if (bribability > 0)
     {
-        const branch_type br = gozag_bribable_branch(traitor->type);
-        if (!player_in_branch(br))
-            return;
-
         const monster* leader =
             traitor->props.exists("band_leader")
             ? monster_by_mid(traitor->props["band_leader"].get_int())
@@ -423,31 +423,31 @@ void gozag_set_bribe(monster* traitor)
             if (leader->has_ench(ENCH_FRIENDLY_BRIBED)
                 || leader->props.exists(FRIENDLY_BRIBE_KEY))
             {
-                gozag_deduct_bribe(br, 2*cost);
+                gozag_deduct_bribe(branch, 2*cost);
                 traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
             }
             else if (leader->has_ench(ENCH_NEUTRAL_BRIBED)
                      || leader->props.exists(NEUTRAL_BRIBE_KEY))
             {
-                gozag_deduct_bribe(br, cost);
+                gozag_deduct_bribe(branch, cost);
                 // Don't continue if we exhausted our funds.
-                if (branch_bribe[br] > 0)
+                if (branch_bribe[branch] > 0)
                     traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
             }
         }
         else if (x_chance_in_y(bribability, GOZAG_MAX_BRIBABILITY))
         {
             // Sometimes get permanent followers at twice the cost.
-            if (branch_bribe[br] > 2*cost && one_chance_in(3))
+            if (branch_bribe[branch] > 2*cost && one_chance_in(3))
             {
-                gozag_deduct_bribe(br, 2*cost);
+                gozag_deduct_bribe(branch, 2*cost);
                 traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
             }
             else
             {
-                gozag_deduct_bribe(br, cost);
+                gozag_deduct_bribe(branch, cost);
                 // Don't continue if we exhausted our funds.
-                if (branch_bribe[br] > 0)
+                if (branch_bribe[branch] > 0)
                     traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
             }
         }
@@ -460,7 +460,8 @@ void gozag_check_bribe(monster* traitor)
     if (traitor->props.exists(FRIENDLY_BRIBE_KEY))
     {
         traitor->props.erase(FRIENDLY_BRIBE_KEY);
-        traitor->add_ench(ENCH_FRIENDLY_BRIBED);
+        traitor->add_ench(mon_enchant(ENCH_FRIENDLY_BRIBED, 0, 0,
+                                      INFINITE_DURATION));
         msg = getSpeakString(traitor->name(DESC_DBNAME, true)
                              + " Gozag permabribe");
         if (msg.empty())
@@ -487,6 +488,8 @@ void gozag_check_bribe(monster* traitor)
 
 void gozag_break_bribe(monster* victim)
 {
+    ASSERT(victim); // XXX: change to monster &victim
+
     if (!victim->has_ench(ENCH_NEUTRAL_BRIBED)
         && !victim->has_ench(ENCH_FRIENDLY_BRIBED)
         && !victim->props.exists(NEUTRAL_BRIBE_KEY)
@@ -495,23 +498,14 @@ void gozag_break_bribe(monster* victim)
         return;
     }
 
-    const branch_type br = gozag_bribable_branch(victim->type);
-    ASSERT(br != NUM_BRANCHES);
-
-    // Deduct a perma-bribe increment.
-    gozag_deduct_bribe(gozag_bribable_branch(victim->type),
-                       max(1, exper_value(victim) / 10));
-
     // Un-bribe the victim.
-    victim->props[GOZAG_BRIBE_BROKEN_KEY].get_bool() = true;
     victim->del_ench(ENCH_NEUTRAL_BRIBED);
     victim->del_ench(ENCH_FRIENDLY_BRIBED);
-    victim->props.erase(GOZAG_BRIBE_BROKEN_KEY);
     victim->props.erase(NEUTRAL_BRIBE_KEY);
     victim->props.erase(FRIENDLY_BRIBE_KEY);
 
     // Make other nearby bribed monsters un-bribed, too.
     for (monster_iterator mi; mi; ++mi)
-        if (mi->can_see(victim))
+        if (mi->can_see(*victim))
             gozag_break_bribe(*mi);
 }

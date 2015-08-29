@@ -47,7 +47,9 @@ enum monster_info_flags
     MB_SHAPESHIFTER,
     MB_CHAOTIC,
     MB_SUBMERGED,
+#if TAG_MAJOR_VERSION == 34
     MB_BLEEDING,
+#endif
     MB_DEFLECT_MSL,
 #if TAG_MAJOR_VERSION == 34
     MB_PREP_RESURRECT,
@@ -141,6 +143,7 @@ enum monster_info_flags
     MB_BONE_ARMOUR,
     MB_CHANT_FIRE_STORM,
     MB_CHANT_WORD_OF_ENTROPY,
+    MB_AIRBORNE,
     NUM_MB_FLAGS
 };
 
@@ -154,10 +157,11 @@ struct monster_info_base
     monster_type draco_type;
     union
     {
+        // These must all be the same size!
         unsigned number; ///< General purpose number variable
         int num_heads;   ///< # of hydra heads
         int slime_size;  ///< # of slimes in this one
-        bool is_active;  ///< Whether this ballisto is active or not
+        int is_active;   ///< Whether this ballisto is active or not
     };
     int _colour;
     mon_attitude_type attitude;
@@ -169,6 +173,7 @@ struct monster_info_base
     string quote;
     mon_holy_type holi;
     mon_intel_type mintel;
+    int hd;
     int ac;
     int ev;
     int base_ev;
@@ -176,7 +181,6 @@ struct monster_info_base
     mon_itemuse_type mitemuse;
     int mbase_speed;
     mon_energy_usage menergy;
-    flight_type fly;
     CrawlHashTable props;
     string constrictor_name;
     vector<string> constricting_name;
@@ -208,7 +212,7 @@ struct monster_info : public monster_info_base
     monster_info(const monster_info& mi)
     : monster_info_base(mi)
     {
-        u = mi.u;
+        i_ghost = mi.i_ghost;
         for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
         {
             if (mi.inv[i].get())
@@ -232,22 +236,19 @@ struct monster_info : public monster_info_base
     /* only real equipment is visible, miscellany is for mimic items */
     unique_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];
 
-    union
+    struct
     {
-        struct
-        {
-            species_type species;
-            job_type job;
-            god_type religion;
-            skill_type best_skill;
-            short best_skill_rank;
-            short xl_rank;
-            short damage;
-            short ac;
-            monster_type acting_part;
-            bool can_sinv;
-        } ghost;
-    } u;
+        species_type species;
+        job_type job;
+        god_type religion;
+        skill_type best_skill;
+        short best_skill_rank;
+        short xl_rank;
+        short damage;
+        short ac;
+        monster_type acting_part;
+        bool can_sinv;
+    } i_ghost;
 
     inline bool is(unsigned mbflag) const
     {
@@ -270,7 +271,6 @@ struct monster_info : public monster_info_base
     string common_name(description_level_type desc = DESC_PLAIN) const;
     string proper_name(description_level_type desc = DESC_PLAIN) const;
     string full_name(description_level_type desc = DESC_PLAIN, bool use_comma = false) const;
-    string chimera_part_names() const;
 
     vector<string> attributes() const;
 

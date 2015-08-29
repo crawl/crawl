@@ -187,14 +187,15 @@ static inline bool testbits(uint64_t flags, uint64_t test)
     return (flags & test) == test;
 }
 
-template<class E>
-static inline bool testbits(enum_bitfield<E> flags, enum_bitfield<E> test)
+template<class E, int Exp>
+static inline bool testbits(enum_bitfield<E, Exp> flags,
+                            enum_bitfield<E, Exp> test)
 {
     return (flags & test) == test;
 }
 
-template<class E>
-static inline bool testbits(enum_bitfield<E> flags, E test)
+template<class E, int Exp>
+static inline bool testbits(enum_bitfield<E, Exp> flags, E test)
 {
     return (flags & test) == test;
 }

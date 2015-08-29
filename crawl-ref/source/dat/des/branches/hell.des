@@ -9,11 +9,7 @@ function hell_entry_feature(e, glyph)
     e.tags("extra luniq_enter_hell chance_enter_hell")
     e.depth_chance("Depths", 10000)
     e.depth_chance("D:21-", 10000)
-    if you.where() == 'Depths:2' or you.where() == 'D:21' then
-        e.kfeat(glyph .. " = enter_hell no_mimic")
-    else
-        e.kfeat(glyph .. " = enter_hell")
-    end
+    e.kfeat(glyph .. " = enter_hell")
 end
 
 function hell_entry_tier(e, tier)
@@ -185,7 +181,7 @@ ENDMAP
 NAME:   grunt_hell_entry_demonic_statue
 WEIGHT: 6
 ORIENT: float
-TAGS:   no_monster_gen no_rtele_into
+TAGS:   no_monster_gen no_tele_into
 MONS:   blue devil / orange demon / red devil / w:5 rust devil / \
         w:35 nothing
 MONS:   ice devil / sun demon / soul eater / w:30 nothing
@@ -357,7 +353,7 @@ TILE:   c = dngn_stone_wall_red
 COLOUR: c = red
 FTILE:  .O = floor_infernal_blank
 KMASK:  l = no_monster_gen
-KPROP:  l = no_rtele_into
+KPROP:  l = no_tele_into
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "low")
 MAP

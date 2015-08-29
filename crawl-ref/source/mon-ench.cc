@@ -220,12 +220,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         // something has submerged.
         if (!quiet && mons_near(this))
         {
-            if (type == MONS_AIR_ELEMENTAL)
-            {
-                mprf("%s merges itself into the air.",
-                     name(DESC_THE, true).c_str());
-            }
-            else if (type == MONS_TRAPDOOR_SPIDER)
+            if (type == MONS_TRAPDOOR_SPIDER)
             {
                 mprf("%s hides itself under the floor.",
                      name(DESC_A, true).c_str());
@@ -319,7 +314,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
         // TODO -- and friends
 
-        if (you.can_see(this) && friendly())
+        if (you.can_see(*this) && friendly())
             learned_something_new(HINT_MONSTER_FRIENDLY, pos());
         break;
     }
@@ -336,21 +331,6 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_FROZEN:
         calc_speed();
         break;
-
-    case ENCH_EPHEMERAL_INFUSION:
-    {
-        if (!props.exists("eph_amount"))
-        {
-            int amount = min((ench.degree / 2) + random2avg(ench.degree, 2),
-                             max_hit_points - hit_points);
-            if (amount > 0 && heal(amount) && !quiet)
-                simple_monster_message(this, " seems to gain new vigour!");
-            else
-                amount = 0;
-            props["eph_amount"].get_byte() = amount;
-        }
-        break;
-    }
 
     case ENCH_INVIS:
         if (testbits(flags, MF_WAS_IN_VIEW))
@@ -383,7 +363,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
     if (mons_is_lurking(mon))
     {
         const actor* foe = mon->get_foe();
-        if (foe != nullptr && mon->can_see(foe)
+        if (foe != nullptr && mon->can_see(*foe)
             && !adjacent(mon->pos(), foe->pos()))
         {
             return false;
@@ -532,7 +512,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (alive())
                 simple_monster_message(this, " becomes audible again.");
             else
-                mprf("As %s dies, the sound returns.", name(DESC_THE).c_str());
+                mprf("As %s %s, the sound returns.",
+                     name(DESC_THE).c_str(),
+                     wounded_damaged(holiness()) ? "is destroyed" : "dies");
         }
         break;
 
@@ -548,7 +530,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_STONESKIN:
-        if (!quiet && you.can_see(this))
+        if (!quiet && you.can_see(*this))
         {
             mprf("%s skin looks tender.",
                  apostrophise(name(DESC_THE)).c_str());
@@ -556,7 +538,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_OZOCUBUS_ARMOUR:
-        if (!quiet && you.can_see(this))
+        if (!quiet && you.can_see(*this))
         {
             mprf("%s icy armour evaporates.",
                  apostrophise(name(DESC_THE)).c_str());
@@ -678,7 +660,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         }
 
-        if (you.can_see(this))
+        if (you.can_see(*this))
         {
             // and fire activity interrupts
             interrupt_activity(AI_SEE_MONSTER,
@@ -785,7 +767,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             }
         }
 
-        if (you.can_see(this))
+        if (you.can_see(*this))
         {
             if (!mons_is_safe(this) && delay_is_run(current_delay_action()))
             {
@@ -807,12 +789,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     seen_context = SC_JUST_SEEN;
                 }
 
-                if (type == MONS_AIR_ELEMENTAL)
-                {
-                    mprf(channel, "%s forms itself from the air!",
-                                  name(DESC_THE, true).c_str());
-                }
-                else if (type == MONS_TRAPDOOR_SPIDER)
+                if (type == MONS_TRAPDOOR_SPIDER)
                 {
                     mprf(channel,
                          "%s leaps out from its hiding place under the floor!",
@@ -827,8 +804,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     mprf("%s surfaces.", name(DESC_A, true).c_str());
             }
         }
-        else if (mons_near(this)
-                 && feat_compatible(grd(pos()), DNGN_DEEP_WATER))
+        else if (mons_near(this) && feat_is_watery(grd(pos())))
         {
             mpr("Something invisible bursts forth from the water.");
             interrupt_activity(AI_FORCE_INTERRUPT);
@@ -847,11 +823,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         env.forest_awoken_until = 0;
         if (!quiet)
             forest_message(pos(), "The forest calms down.");
-        break;
-
-    case ENCH_BLEED:
-        if (!quiet)
-            simple_monster_message(this, " is no longer bleeding.");
         break;
 
     case ENCH_WITHDRAWN:
@@ -960,12 +931,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_CONTROL_WINDS:
-        if (!quiet && you.can_see(this))
+        if (!quiet && you.can_see(*this))
             mprf("The winds cease moving at %s will.", name(DESC_ITS).c_str());
         break;
 
     case ENCH_TOXIC_RADIANCE:
-        if (!quiet && you.can_see(this))
+        if (!quiet && you.can_see(*this))
             mprf("%s toxic aura wanes.", name(DESC_ITS).c_str());
         break;
 
@@ -994,7 +965,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_ICEMAIL:
-        if (!quiet && you.can_see(this))
+        if (!quiet && you.can_see(*this))
         {
             mprf("%s icy envelope dissipates!",
                  apostrophise(name(DESC_THE)).c_str());
@@ -1011,22 +982,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer encased in ice.");
         calc_speed();
         break;
-
-    case ENCH_EPHEMERAL_INFUSION:
-    {
-        int dam = 0;
-        if (props.exists("eph_amount"))
-        {
-            dam = props["eph_amount"].get_byte();
-            props.erase("eph_amount");
-        }
-        dam = min(dam, hit_points - 1);
-        if (dam > 0)
-            hurt(nullptr, dam);
-        if (!quiet)
-            simple_monster_message(this, " looks less vigorous.");
-        break;
-    }
 
     case ENCH_BLACK_MARK:
         if (!quiet)
@@ -1068,7 +1023,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_CONDENSATION_SHIELD:
-        if (!quiet && you.can_see(this))
+        if (!quiet && you.can_see(*this))
         {
             mprf("%s icy shield evaporates.",
                  apostrophise(name(DESC_THE)).c_str());
@@ -1258,7 +1213,7 @@ static bool _apply_grasping_roots(monster* mons)
             continue;
 
         // Some messages are suppressed for monsters, to reduce message spam.
-        if (ai->flight_mode())
+        if (ai->airborne())
         {
             if (x_chance_in_y(3, 5))
                 continue;
@@ -1270,7 +1225,7 @@ static bool _apply_grasping_roots(monster* mons)
                 continue;
             }
 
-            if (you.can_see(*ai))
+            if (you.can_see(**ai))
             {
                 mprf("Roots rise up from beneath %s and drag %s %sto the ground.",
                      ai->name(DESC_THE).c_str(),
@@ -1424,7 +1379,7 @@ static void _merfolk_avatar_song(monster* mons)
 
     // Can only call up drowned souls if there's free deep water nearby
     vector<coord_def> deep_water;
-    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_SQUARE); ri; ++ri)
         if (grd(*ri) == DNGN_DEEP_WATER && !actor_at(*ri))
             deep_water.push_back(*ri);
 
@@ -1552,7 +1507,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_DIMENSION_ANCHOR:
     case ENCH_AGILE:
     case ENCH_FROZEN:
-    case ENCH_EPHEMERAL_INFUSION:
     case ENCH_SAP_MAGIC:
     case ENCH_CORROSION:
     case ENCH_GOLD_LUST:
@@ -1618,18 +1572,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (!is_harmless_cloud(cloud_type_at(pos())))
             break;
 
-        // Air elementals are a special case, as their submerging in air
-        // isn't up to choice. - bwr
-        if (type == MONS_AIR_ELEMENTAL)
-        {
-            heal(1, one_chance_in(5));
-
-            if (one_chance_in(5))
-                del_ench(ENCH_SUBMERGED);
-
-            break;
-        }
-
         // Now we handle the others:
         const dungeon_feature_type grid = grd(pos());
 
@@ -1663,7 +1605,8 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (dam > 0)
         {
-            dprf("%s takes poison damage: %d", name(DESC_THE).c_str(), dam);
+            dprf("%s takes poison damage: %d (degree %d)",
+                 name(DESC_THE).c_str(), dam, me.degree);
 
             hurt(me.agent(), dam, BEAM_POISON);
         }
@@ -1675,13 +1618,11 @@ void monster::apply_enchantment(const mon_enchant &me)
     // Assumption: monster::res_fire has already been checked.
     case ENCH_STICKY_FLAME:
     {
-        if (feat_is_watery(grd(pos())) && (ground_level()
-              || mons_intel(this) >= I_NORMAL && flight_mode()))
+        if (feat_is_watery(grd(pos())) && ground_level())
         {
             if (mons_near(this) && visible_to(&you))
             {
-                mprf(ground_level() ? "The flames covering %s go out."
-                     : "%s dips into the water, and the flames go out.",
+                mprf("The flames covering %s go out.",
                      name(DESC_THE, false).c_str());
             }
             del_ench(ENCH_STICKY_FLAME);
@@ -1734,7 +1675,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         // If you are no longer dying, you must be dead.
         if (decay_enchantment(en))
         {
-            if (you.can_see(this))
+            if (you.can_see(*this))
             {
                 if (type == MONS_PILLAR_OF_SALT)
                     mprf("%s crumbles away.", name(DESC_THE, false).c_str());
@@ -1875,7 +1816,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
             if (!silenced(you.pos()))
             {
-                if (you.can_see(this))
+                if (you.can_see(*this))
                     simple_monster_message(this, " suddenly becomes enraged!");
                 else
                     mpr("You hear a distant and violent thrashing sound.");
@@ -1940,33 +1881,13 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(en))
         {
             add_ench(ENCH_TORNADO_COOLDOWN);
-            if (you.can_see(this))
+            if (you.can_see(*this))
             {
                 mprf("The winds around %s start to calm down.",
                      name(DESC_THE).c_str());
             }
         }
         break;
-
-    case ENCH_BLEED:
-    {
-        // 3, 6, 9% of current hp
-        int dam = div_rand_round(random2((1 + hit_points)*(me.degree * 3)),100);
-
-        // location, montype, damage (1 hp = 5% chance), spatter, smell_alert
-        bleed_onto_floor(pos(), type, 20, false, true);
-
-        if (dam < hit_points)
-        {
-            hurt(me.agent(), dam);
-
-            dprf("hit_points: %d ; bleed damage: %d ; degree: %d",
-                 hit_points, dam, me.degree);
-        }
-
-        decay_enchantment(en, true);
-        break;
-    }
 
     // This is like Corona, but if silver harms them, it has sticky
     // flame levels of damage.
@@ -1995,7 +1916,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             speed_increment += me.duration;
             del_ench(en, true, false);
-            if (you.can_see(this))
+            if (you.can_see(*this))
             {
                 mprf("%s chant is interrupted.",
                      name(DESC_ITS).c_str());
@@ -2021,7 +1942,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                      && !(is_sanctuary(pos())
                         || is_sanctuary(mons_foe->pos())))
                 {
-                    if (can_see(mons_foe))
+                    if (can_see(*mons_foe))
                     {
                         if (en == ENCH_CHANT_FIRE_STORM)
                             finish_chanting_fire_storm(this, foe_pos);
@@ -2115,7 +2036,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(en))
         {
             remove_tornado_clouds(mid);
-            if (you.can_see(this))
+            if (you.can_see(*this))
                 mprf("The winds around %s calm down.", name(DESC_THE).c_str());
         }
         break;
@@ -2135,7 +2056,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             || confused() || asleep() || has_ench(ENCH_FEAR))
         {
             del_ench(ENCH_MERFOLK_AVATAR_SONG, true, false);
-            if (you.can_see(this))
+            if (you.can_see(*this))
             {
                 mprf("%s song is interrupted.",
                      name(DESC_ITS).c_str());
@@ -2149,11 +2070,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (!see_cell_no_trans(you.pos()))
             decay_enchantment(en);
 
-        break;
-
-    case ENCH_GRAND_AVATAR:
-        if (!me.agent() || !me.agent()->alive())
-            del_ench(ENCH_GRAND_AVATAR, true, false);
         break;
 
     default:
@@ -2291,7 +2207,10 @@ static const char *enchant_names[] =
     "slouch",
 #endif
     "swift", "tide",
-    "insane", "silenced", "awaken_forest", "exploding", "bleeding",
+    "insane", "silenced", "awaken_forest", "exploding",
+#if TAG_MAJOR_VERSION == 34
+    "bleeding",
+#endif
     "tethered", "severed", "antimagic",
 #if TAG_MAJOR_VERSION == 34
     "fading_away", "preparing_resurrect",
@@ -2319,7 +2238,14 @@ static const char *enchant_names[] =
     "building_charge",
 #endif
     "poison_vuln", "icemail", "agile",
-    "frozen", "ephemeral_infusion", "black_mark", "grand_avatar",
+    "frozen",
+#if TAG_MAJOR_VERSION == 34
+    "ephemeral_infusion",
+#endif
+    "black_mark",
+#if TAG_MAJOR_VERSION == 34
+    "grand_avatar",
+#endif
     "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
     "corrosion", "gold_lust", "drained", "repel missiles",
     "deflect missiles",
@@ -2588,9 +2514,6 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_TORNADO_COOLDOWN:
         cturn = random_range(25, 35) * 10 / _mod_speed(10, mons->speed);
-        break;
-    case ENCH_EPHEMERAL_INFUSION:
-        cturn = 150 / _mod_speed(25, mons->speed);
         break;
     case ENCH_FROZEN:
         cturn = 3 * BASELINE_DELAY;

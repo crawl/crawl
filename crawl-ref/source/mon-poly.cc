@@ -127,7 +127,8 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || mons_class_flag(new_mclass, M_CANT_SPAWN)  // no dummy monsters
         || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
-        || mons_class_flag(new_mclass, M_NO_EXP_GAIN) // not helpless
+        || !mons_class_gives_xp(new_mclass)           // no tentacle parts or
+                                                      // harmless things
         || new_mclass == MONS_PROGRAM_BUG
 
         // 'morph targets are _always_ "base" classes, not derived ones.
@@ -148,7 +149,6 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         // Other poly-unsuitable things.
         || mons_is_statue(new_mclass)
         || mons_is_projectile(new_mclass)
-        || mons_is_tentacle_or_tentacle_segment(new_mclass)
 
         // The spell on Prince Ribbit can't be broken so easily.
         || (new_mclass == MONS_HUMAN
@@ -193,7 +193,8 @@ static bool _jiyva_slime_target(monster_type targetc)
 
 void change_monster_type(monster* mons, monster_type targetc)
 {
-    bool could_see     = you.can_see(mons);
+    ASSERT(mons); // XXX: change to monster &mons
+    bool could_see     = you.can_see(*mons);
     bool slimified = _jiyva_slime_target(targetc);
 
     // Quietly remove the old monster's invisibility before transforming
@@ -230,7 +231,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     fire_monster_death_event(mons, KILL_MISC, NON_MONSTER, true);
 
     // the actual polymorphing:
-    uint64_t flags =
+    auto flags =
         mons->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_SHIFTER
                            | MF_MELEE_MASK);
@@ -326,7 +327,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     monster_spells spl    = mons->spells;
     const bool need_save_spells
             =  old_mon_unique && !slimified
-               && mons_class_intel(targetc) >= I_NORMAL
+               && mons_class_intel(targetc) >= I_HUMAN
                && (!mons->has_spells() || mons->is_actual_spellcaster());
 
     mons->number       = 0;
@@ -343,7 +344,6 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     mons->mname = name;
     mons->props["no_annotate"] = slimified && old_mon_unique;
-    mons->god   = god;
     mons->props.erase("dbname");
 
     mons->flags = flags;
@@ -364,6 +364,9 @@ void change_monster_type(monster* mons, monster_type targetc)
     {
         mons->spells = spl;
     }
+
+    // Make sure we have a god if we've been polymorphed into a priest.
+    mons->god = mons->is_priest() ? GOD_NAMELESS : god;
 
     mons->add_ench(abj);
     mons->add_ench(fabj);
@@ -405,7 +408,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mark_interesting_monst(mons);
 
     // If new monster is visible to player, then we've seen it.
-    if (you.can_see(mons))
+    if (you.can_see(*mons))
     {
         seen_monster(mons);
         // If the player saw both the beginning and end results of a
@@ -485,7 +488,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                                                         target_power, relax)));
     }
 
-    bool could_see = you.can_see(mons);
+    bool could_see = you.can_see(*mons);
     bool need_note = (could_see && MONST_INTERESTING(mons));
     string old_name_a = mons->full_name(DESC_A);
     string old_name_the = mons->full_name(DESC_THE);
@@ -515,7 +518,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     change_monster_type(mons, targetc);
 
-    bool can_see = you.can_see(mons);
+    bool can_see = you.can_see(*mons);
 
     // Messaging
     bool player_messaged = true;
@@ -678,11 +681,7 @@ void seen_monster(monster* mons)
 
     if (!(mons->flags & MF_TSO_SEEN))
     {
-        if (!mons->has_ench(ENCH_ABJ)
-            && !mons->has_ench(ENCH_FAKE_ABJURATION)
-            && !testbits(mons->flags, MF_NO_REWARD)
-            && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
-            && !crawl_state.game_is_arena())
+        if (mons_gives_xp(mons, &you) && !crawl_state.game_is_arena())
         {
             did_god_conduct(DID_SEE_MONSTER, mons->get_experience_level(),
                             true, mons);

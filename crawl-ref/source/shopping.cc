@@ -888,7 +888,7 @@ static bool _purchase(shop_struct& shop, int index, int cost, bool id)
     {
         // Identify the item and its type.
         // This also takes the ID note if necessary.
-        set_ident_type(item, ID_KNOWN_TYPE);
+        set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
@@ -935,9 +935,9 @@ int artefact_value(const item_def &item)
     else if (prop[ ARTP_COLD ] < 0)
         ret -= 10;
 
-    if (prop[ ARTP_MAGIC ] > 0)
-        ret += 4 + 4 * prop[ ARTP_MAGIC ];
-    else if (prop[ ARTP_MAGIC ] < 0)
+    if (prop[ ARTP_MAGIC_RESISTANCE ] > 0)
+        ret += 4 + 4 * prop[ ARTP_MAGIC_RESISTANCE ];
+    else if (prop[ ARTP_MAGIC_RESISTANCE ] < 0)
         ret -= 6;
 
     if (prop[ ARTP_NEGATIVE_ENERGY ] > 0)
@@ -965,7 +965,7 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_RMUT ])
         ret += 8;
 
-    if (prop[ ARTP_EYESIGHT ])
+    if (prop[ ARTP_SEE_INVISIBLE ])
         ret += 6;
 
     // abilities:
@@ -987,7 +987,7 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_CAUSE_TELEPORTATION ])
         ret -= 3;
 
-    if (prop[ ARTP_NOISES ])
+    if (prop[ ARTP_NOISE ])
         ret -= 5;
 
     if (prop[ ARTP_PREVENT_TELEPORTATION ])
@@ -996,7 +996,16 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_PREVENT_SPELLCASTING ])
         ret -= 10;
 
-    if (prop[ ARTP_MUTAGENIC ])
+    if (prop[ ARTP_CONTAM ])
+        ret -= 8;
+
+    if (prop[ ARTP_CORRODE ])
+        ret -= 8;
+
+    if (prop[ ARTP_DRAIN ])
+        ret -= 8;
+
+    if (prop[ ARTP_CONFUSE ])
         ret -= 8;
 
     // extremely good
@@ -1520,7 +1529,9 @@ unsigned int item_value(item_def item, bool ident)
 
             case POT_BERSERK_RAGE:
             case POT_HEAL_WOUNDS:
+#if TAG_MAJOR_VERSION == 34
             case POT_RESTORE_ABILITIES:
+#endif
                 valued += 50;
                 break;
 
@@ -1697,10 +1708,6 @@ unsigned int item_value(item_def item, bool ident)
             {
                 switch (item.sub_type)
                 {
-                case RING_TELEPORT_CONTROL:
-                    valued += 500;
-                    break;
-
                 case AMU_FAITH:
                 case AMU_RESIST_MUTATION:
                 case AMU_RAGE:
@@ -1731,7 +1738,7 @@ unsigned int item_value(item_def item, bool ident)
                     valued += 200;
                     break;
 
-                case RING_SUSTAIN_ABILITIES:
+                case RING_SUSTAIN_ATTRIBUTES:
                 case RING_STEALTH:
                 case RING_TELEPORTATION:
                 case RING_FLIGHT:
@@ -1773,12 +1780,12 @@ unsigned int item_value(item_def item, bool ident)
     case OBJ_MISCELLANY:
         switch (item.sub_type)
         {
-        case MISC_RUNE_OF_ZOT:  // upped from 1200 to encourage collecting
+        case MISC_RUNE_OF_ZOT:
             valued += 10000;
             break;
 
         case MISC_HORN_OF_GERYON:
-            valued += 5000;
+            valued += 600;
             break;
 
         case MISC_FAN_OF_GALES:
@@ -2092,7 +2099,7 @@ bool shop_item_unknown(const item_def &item)
 {
     return item_type_has_ids(item.base_type)
            && item_type_known(item)
-           && get_ident_type(item) != ID_KNOWN_TYPE
+           && !get_ident_type(item)
            && !is_artefact(item);
 }
 
@@ -2441,6 +2448,16 @@ void ShoppingList::item_type_identified(object_class_type base_type,
     // Only restore the excursion at the very end.
     level_excursion le;
 
+#if TAG_MAJOR_VERSION == 34
+    // Handle removed Gozag shops from old saves. Only do this once:
+    // future Gozag abandonment will call remove_dead_shops itself.
+    if (!you.props.exists(REMOVED_DEAD_SHOPS_KEY))
+    {
+        remove_dead_shops();
+        you.props[REMOVED_DEAD_SHOPS_KEY] = true;
+    }
+#endif
+
     for (CrawlHashTable &thing : *list)
     {
         if (!thing_is_item(thing))
@@ -2462,6 +2479,30 @@ void ShoppingList::item_type_identified(object_class_type base_type,
         thing[SHOPPING_THING_COST_KEY] =
             _shop_get_item_value(item, shop->greed, false);
     }
+
+    // Prices could have changed.
+    refresh();
+}
+
+void ShoppingList::remove_dead_shops()
+{
+    // Only restore the excursion at the very end.
+    level_excursion le;
+
+    set<level_pos> shops_to_remove;
+
+    for (CrawlHashTable &thing : *list)
+    {
+        const level_pos place = thing_pos(thing);
+        le.go_to(place.id); // thereby running DACT_REMOVE_GOZAG_SHOPS
+        const shop_struct *shop = get_shop(place.pos);
+
+        if (!shop)
+            shops_to_remove.insert(place);
+    }
+
+    for (auto pos : shops_to_remove)
+        forget_pos(pos);
 
     // Prices could have changed.
     refresh();

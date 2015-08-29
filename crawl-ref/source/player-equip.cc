@@ -21,6 +21,7 @@
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
+#include "macro.h" // command_to_string
 #include "message.h"
 #include "misc.h"
 #include "notes.h"
@@ -232,7 +233,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     if (proprt[ARTP_EVASION])
         you.redraw_evasion = true;
 
-    if (proprt[ARTP_EYESIGHT])
+    if (proprt[ARTP_SEE_INVISIBLE])
         autotoggle_autopickup(false);
 
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER] && msg)
@@ -249,11 +250,11 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     notify_stat_change(STAT_DEX, proprt[ARTP_DEXTERITY],
                        !(msg && unknown_proprt(ARTP_DEXTERITY)));
 
-    if (unknown_proprt(ARTP_MUTAGENIC) && msg)
+    if (unknown_proprt(ARTP_CONTAM) && msg)
         mpr("You feel a build-up of mutagenic energy.");
 
-    if (!unmeld && !item.cursed() && proprt[ARTP_CURSED] > 0
-         && one_chance_in(proprt[ARTP_CURSED]))
+    if (!unmeld && !item.cursed() && proprt[ARTP_CURSE] > 0
+         && one_chance_in(proprt[ARTP_CURSE]))
     {
         do_curse_item(item, !msg);
     }
@@ -274,7 +275,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
 
     if (!fully_identified(item))
     {
-        set_ident_type(item, ID_KNOWN_TYPE);
+        set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 #undef unknown_proprt
@@ -328,13 +329,16 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
 
-    if (proprt[ARTP_MUTAGENIC] && !meld)
+    if (proprt[ARTP_CONTAM] && !meld)
     {
         mpr("Mutagenic energies flood into your body!");
         contaminate_player(7000, true);
     }
 
-    if (proprt[ARTP_EYESIGHT])
+    if (proprt[ARTP_DRAIN] && !meld)
+        drain_player(100, true, true);
+
+    if (proprt[ARTP_SEE_INVISIBLE])
         _mark_unseen_monsters();
 
     if (is_unrandom_artefact(item))
@@ -420,7 +424,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     case OBJ_STAVES:
     {
         set_ident_flags(item, ISFLAG_IDENT_MASK);
-        set_ident_type(OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_STAVES, item.sub_type, true);
 
         if (item.sub_type == STAFF_POWER)
         {
@@ -466,8 +470,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                                origin_desc(item).c_str()));
             }
             else
-                known_recurser = artefact_known_property(item,
-                                                             ARTP_CURSED);
+                known_recurser = artefact_known_property(item, ARTP_CURSE);
         }
 
         if (special != SPWPN_NORMAL)
@@ -627,7 +630,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 {
     you.wield_change = true;
-    you.m_quiver->on_weapon_changed();
+    you.m_quiver.on_weapon_changed();
 
     // Call this first, so that the unrandart func can set showMsgs to
     // false if it does its own message handling.
@@ -826,19 +829,27 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
 
         case SPARM_FLYING:
             // If you weren't flying when you took off the boots, don't restart.
-            if (you.attribute[ATTR_LAST_FLIGHT_STATUS] == 0)
-                break;
+            if (you.attribute[ATTR_LAST_FLIGHT_STATUS])
+            {
+                if (you.airborne())
+                {
+                    you.attribute[ATTR_PERM_FLIGHT] = 1;
+                    mpr("You feel rather light.");
+                }
+                else
+                {
+                    you.attribute[ATTR_PERM_FLIGHT] = 1;
+                    float_player();
+                }
+            }
+            if (!unmeld)
+            {
+                mprf("(use the <w>%s</w>bility menu to %s flying)",
+                     command_to_string(CMD_USE_ABILITY).c_str(),
+                     you.attribute[ATTR_LAST_FLIGHT_STATUS]
+                         ? "stop or start" : "start or stop");
+            }
 
-            if (you.airborne())
-            {
-                you.attribute[ATTR_PERM_FLIGHT] = 1;
-                mpr("You feel rather light.");
-            }
-            else
-            {
-                you.attribute[ATTR_PERM_FLIGHT] = 1;
-                float_player();
-            }
             break;
 
         case SPARM_MAGIC_RESISTANCE:
@@ -906,6 +917,32 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
     you.redraw_evasion = true;
 }
 
+/**
+ * The player lost a source of permafly. End their flight if there was
+ * no other source, evoking a ring of flight "for free" if possible.
+ */
+void lose_permafly_source()
+{
+    const bool had_perm_flight = you.attribute[ATTR_PERM_FLIGHT];
+
+    if (had_perm_flight
+        && !you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)
+        && !you.racial_permanent_flight())
+    {
+        you.attribute[ATTR_PERM_FLIGHT] = 0;
+        if (you.evokable_flight())
+            fly_player(you.skill(SK_EVOCATIONS, 2) + 30, true);
+    }
+
+    // since a permflight item can keep tempflight evocations going
+    // we should check tempflight here too
+    if (you.cancellable_flight() && !you.evokable_flight())
+        you.duration[DUR_FLIGHT] = 0;
+
+    if (had_perm_flight)
+        land_player(); // land_player() has a check for airborne()
+}
+
 static void _unequip_armour_effect(item_def& item, bool meld,
                                    equipment_type slot)
 {
@@ -970,23 +1007,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         you.attribute[ATTR_LAST_FLIGHT_STATUS] =
             you.attribute[ATTR_PERM_FLIGHT];
 
-        if (you.attribute[ATTR_PERM_FLIGHT]
-            && !you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)
-            && !you.racial_permanent_flight())
-        {
-            you.attribute[ATTR_PERM_FLIGHT] = 0;
-            if (you.evokable_flight())
-                fly_player(you.skill(SK_EVOCATIONS, 2) + 30, true);
-        }
-
-        // since a permflight item can keep tempflight evocations going
-        // we should check tempflight here too
-        if (you.cancellable_flight() && !you.evokable_flight())
-            you.duration[DUR_FLIGHT] = 0;
-
-        if (you.attribute[ATTR_LAST_FLIGHT_STATUS] == 1)
-            land_player(); // land_player() has a check for airborne()
-
+        lose_permafly_source();
         break;
 
     case SPARM_MAGIC_RESISTANCE:
@@ -1042,23 +1063,17 @@ static void _remove_amulet_of_faith(item_def &item)
         // next sacrifice is going to be delaaaayed.
         if (you.piety < piety_breakpoint(5))
         {
-            int current_delay = you.props["ru_sacrifice_delay"].get_int();
+            int current_delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
             ru_reject_sacrifices(true);
-            you.props["ru_sacrifice_delay"] =
-                max(you.props["ru_sacrifice_delay"].get_int(), current_delay)*2;
+            you.props[RU_SACRIFICE_DELAY_KEY] =
+                max(you.props[RU_SACRIFICE_DELAY_KEY].get_int(), current_delay)*2;
         }
     }
     else if (!you_worship(GOD_NO_GOD)
-        && !you_worship(GOD_XOM))
+             && !you_worship(GOD_XOM)
+             && !you_worship(GOD_GOZAG))
     {
         simple_god_message(" seems less interested in you.");
-
-        if (you_worship(GOD_GOZAG))
-        {
-            you.attribute[ATTR_GOZAG_SHOPS]   += 2;
-            simple_god_message("'s merchants increase their required prices.");
-            return;
-        }
 
         const int piety_loss = div_rand_round(you.piety, 3);
         // Piety penalty for removing the Amulet of Faith.
@@ -1139,14 +1154,14 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             simple_god_message(" says: An ascetic of your devotion"
                                " has no use for such trinkets.");
         }
+        else if (you_worship(GOD_GOZAG))
+            simple_god_message(" cares for nothing but gold!");
         else
         {
             mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
                             you_worship(GOD_NO_GOD) ? "strange " : "");
         }
 
-        if (you_worship(GOD_GOZAG))
-            simple_god_message(" discounts your offered prices.");
         break;
 
     case AMU_THE_GOURMAND:
@@ -1212,7 +1227,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     }
     else
     {
-        new_ident = set_ident_type(item, ID_KNOWN_TYPE);
+        new_ident = set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
@@ -1266,11 +1281,10 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case RING_PROTECTION_FROM_FIRE:
     case RING_PROTECTION_FROM_MAGIC:
     case RING_SLAYING:
-    case RING_SUSTAIN_ABILITIES:
+    case RING_SUSTAIN_ATTRIBUTES:
     case RING_STEALTH:
     case RING_TELEPORTATION:
     case RING_WIZARDRY:
-    case RING_TELEPORT_CONTROL:
     case AMU_REGENERATION:
         break;
 
@@ -1373,7 +1387,7 @@ static void _mark_unseen_monsters()
 
     for (monster_iterator mi; mi; mi++)
     {
-        if (testbits((*mi)->flags, MF_WAS_IN_VIEW) && !you.can_see(*mi))
+        if (testbits((*mi)->flags, MF_WAS_IN_VIEW) && !you.can_see(**mi))
         {
             (*mi)->went_unseen_this_turn = true;
             (*mi)->unseen_pos = (*mi)->pos();

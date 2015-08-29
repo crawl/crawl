@@ -16,7 +16,7 @@ open IN, "util/cpp_version itemname.cc|" or die "Can't read itemname.cc\n";
 close IN;
 
 # Remove this from the input so the main jewellery pattern doesn't match.
-s/^static [^\n]*_jewellery_effect_prefix\([^\n]*\)\n(.*?)^}//ms;
+s/^static [^\n]*_jewellery_effect_prefix\([^\n]*\).(.*?)^}//ms;
 my $prefixes = $1;
 $jewellery_prefixes{$1} = $2
     while $prefixes =~ /((?:RING|AMU)_[A-Z_]+): *return "([^"]+)";/g;
@@ -42,28 +42,37 @@ open IN, "util/cpp_version itemprop.cc|" or die "Can't read itemprop.cc\n";
 { undef local $/; $_ = <IN>; }
 close IN;
 
-$items{$_} = 1 for /^ *\{ *ARM_[A-Z_]+, *"([^"]+)"/mg;
+s/" "//g;
+$items{$_} = 1 for /\{ *ARM_[A-Z_]+, *"([^"]+)"/mg;
 $items{$_} = 1 for /^ *\{ *WPN_[A-Z_]+, *"([^"]+)"/mg;
 $items{$_} = 1 for /^ *\{ *MI_[A-Z_]+, *"([^"]+)"/mg;
-#"
-# food is redundant -- fixme!
+
+open IN, "util/cpp_version decks.cc|" or die "Can't read decks.cc\n";
+{ undef local $/; $_ = <IN>; }
+close IN;
+my $data = $_;
+$data =~ s/.*all_decks =(.*?)};.*/$1/s or die "can't find all_decks\n";
+$items{"deck of $_"} = 1 for $data =~ /"([^"]+)"/mg;
 
 $items{$_} = 1 for (split /\n/, <<END);
 chunk of flesh
+mutagenic chunk of flesh
+inedible chunk of flesh
 corpse
 eggplant
 gold piece
-Grand Grimoire
-lightning rod
 manual
-Necronomicon
 orb of Zot
 pair of boots
 pair of gloves
-rod of destruction
 rune of Zot
-tome of Destruction
 Young Poisoner's Handbook
+Grand Grimoire
+Necronomicon
+Fen Folio
+Akashic Record
+lightning rod
+iron rod
 END
 
 $items{"decaying skeleton"} = 1 if $db;
@@ -72,6 +81,7 @@ delete $items{$_} for (split /\n/, <<END);
 boots
 gloves
 rod of lightning
+rod of iron
 END
 
 for (sort keys %items)

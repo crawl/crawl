@@ -87,24 +87,31 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                    bool force_pos = false,
                                    bool dont_place = false);
 
-// Returns whether actual_feat is compatible with feat_wanted for monster
-// movement and generation.
-bool feat_compatible(dungeon_feature_type feat_wanted,
-                     dungeon_feature_type actual_feat)
+/**
+ * Is this feature "close enough" to the one we want for monster generation?
+ *
+ * @param wanted_feat the preferred feature
+ * @param actual_feat the feature to be compared to it
+ * @returns Whether wanted_feat is considered to be similar enough to
+ *          actual_feat that being able to survive in the former means you can
+ *          survive in the latter.
+ */
+static bool _feat_compatible(dungeon_feature_type wanted_feat,
+                             dungeon_feature_type actual_feat)
 {
-    if (feat_wanted == DNGN_FLOOR)
-        return feat_has_solid_floor(actual_feat);
-
-    return feat_wanted == actual_feat
-           || (feat_wanted == DNGN_DEEP_WATER
-               && (actual_feat == DNGN_SHALLOW_WATER
-                   || actual_feat == DNGN_FOUNTAIN_BLUE));
+    return wanted_feat == actual_feat
+           || wanted_feat == DNGN_DEEP_WATER && feat_is_watery(actual_feat)
+           || wanted_feat == DNGN_FLOOR && feat_has_solid_floor(actual_feat);
 }
 
-// Can this monster survive on actual_grid?
-//
-// If you have an actual monster, use this instead of the overloaded function
-// that uses only the monster class to make decisions.
+/**
+ * Can this monster survive on actual_grid?
+ *
+ * @param mon         the monster to be checked.
+ * @param actual_grid the feature type that mon might not be able to survive.
+ * @returns whether the monster can survive being in/over the feature,
+ *          regardless of whether it may be dangerous or harmful.
+ */
 bool monster_habitable_grid(const monster* mon,
                             dungeon_feature_type actual_grid)
 {
@@ -113,35 +120,27 @@ bool monster_habitable_grid(const monster* mon,
     const monster_type mt = fixup_zombie_type(mon->type,
                                               mons_base_type(mon));
 
-    return monster_habitable_grid(mt,
-                                  actual_grid,
-                                  DNGN_UNSEEN,
-                                  mons_flies(mon),
-                                  mon->cannot_move() || mon->caught());
+    return monster_habitable_grid(mt, actual_grid, DNGN_UNSEEN, mon->airborne());
 }
 
-bool mons_airborne(monster_type mcls, int flies, bool paralysed)
-{
-    if (flies == -1)
-        flies = mons_class_flies(mcls);
-
-    return paralysed ? flies == FL_LEVITATE : flies != FL_NONE;
-}
-
-// Can monsters of class monster_class live happily on actual_grid?
-// Use flies == true to pretend the monster can fly.
-//
-// [dshaligram] We're trying to harmonise the checks from various places into
-// one check, so we no longer care if a water elemental springs into existence
-// on dry land, because they're supposed to be able to move onto dry land
-// anyway.
+/**
+ * Can monsters of this class survive on actual_grid?
+ *
+ * @param mt the monster class to check against
+ * @param actual_grid the terrain feature being checked
+ * @param wanted_grid if == DNGN_UNSEEN, or if the monster can't survive on it,
+ *                    ignored. Otherwise, return false even if actual_grid is
+ *                    survivable, if actual_grid isn't similar to wanted_grid.
+ * @param flies if true, treat the monster as flying even if the monster class
+ *              can't usually fly.
+ */
 bool monster_habitable_grid(monster_type mt,
                             dungeon_feature_type actual_grid,
-                            dungeon_feature_type wanted_grid_feature,
-                            int flies, bool paralysed)
+                            dungeon_feature_type wanted_grid,
+                            bool flies)
 {
-    // No monster may be placed on open sea.
-    if (actual_grid == DNGN_OPEN_SEA || actual_grid == DNGN_LAVA_SEA)
+    // No monster may be placed in walls etc.
+    if (!mons_class_can_pass(mt, actual_grid))
         return false;
 
     // Monsters can't use teleporters, and standing there would look just wrong.
@@ -153,23 +152,16 @@ bool monster_habitable_grid(monster_type mt,
     const dungeon_feature_type feat_nonpreferred =
         habitat2grid(mons_class_secondary_habitat(mt));
 
-    const bool monster_is_airborne = mons_airborne(mt, flies, paralysed);
+    const bool monster_is_airborne = mons_class_flag(mt, M_FLIES) || flies;
 
     // If the caller insists on a specific feature type, try to honour
     // the request. This allows the builder to place amphibious
     // creatures only on land, or flying creatures only on lava, etc.
-    if (wanted_grid_feature != DNGN_UNSEEN
-        && (feat_compatible(feat_preferred, wanted_grid_feature)
-            || feat_compatible(feat_nonpreferred, wanted_grid_feature)
-            || (monster_is_airborne && !feat_is_solid(wanted_grid_feature))))
+    if (wanted_grid != DNGN_UNSEEN
+        && monster_habitable_grid(mt, wanted_grid, DNGN_UNSEEN, flies))
     {
-        return feat_compatible(wanted_grid_feature, actual_grid);
+        return _feat_compatible(wanted_grid, actual_grid);
     }
-
-    // Special check for fire elementals since their habitat is floor which
-    // is generally considered compatible with shallow water.
-    if (mt == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
-        return false;
 
     if (actual_grid == DNGN_MALIGN_GATEWAY)
     {
@@ -182,14 +174,13 @@ bool monster_habitable_grid(monster_type mt,
             return false;
     }
 
-    if (feat_compatible(feat_preferred, actual_grid)
-        || (feat_nonpreferred != feat_preferred
-            && feat_compatible(feat_nonpreferred, actual_grid)))
+    if (_feat_compatible(feat_preferred, actual_grid)
+        || _feat_compatible(feat_nonpreferred, actual_grid))
     {
         return true;
     }
 
-    // [dshaligram] Flying creatures are all DNGN_FLOOR, so we
+    // [dshaligram] Flying creatures are all HT_LAND, so we
     // only have to check for the additional valid grids of deep
     // water and lava.
     if (monster_is_airborne
@@ -348,7 +339,7 @@ void spawn_random_monsters()
     if (crawl_state.game_is_arena()
         || (crawl_state.game_is_sprint()
             && player_in_connected_branch()
-            && you.char_direction == GDT_DESCENDING))
+            && you.chapter == CHAPTER_ORB_HUNTING))
     {
         return;
     }
@@ -368,7 +359,7 @@ void spawn_random_monsters()
     if (player_in_branch(BRANCH_VESTIBULE))
         rate = _vestibule_spawn_rate();
 
-    if (player_has_orb())
+    if (player_on_orb_run())
         rate = you_worship(GOD_CHEIBRIADOS) ? 16 : 8;
     else if (!player_in_starting_abyss())
         rate = _scale_spawn_parameter(rate, 6 * rate, 0);
@@ -395,7 +386,7 @@ void spawn_random_monsters()
     // spawns in Abyss to show some mercy to players that get banished there on
     // the orb run.
     if (player_in_connected_branch()
-        || (player_has_orb() && !player_in_branch(BRANCH_ABYSS)))
+        || (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS)))
     {
         dprf(DIAG_MONPLACE, "Placing monster, rate: %d, turns here: %d",
              rate, env.turns_on_level);
@@ -403,12 +394,12 @@ void spawn_random_monsters()
                                                  : PROX_AWAY_FROM_PLAYER);
 
         // The rules change once the player has picked up the Orb...
-        if (player_has_orb())
+        if (player_on_orb_run())
             prox = (one_chance_in(3) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE);
 
         mgen_data mg(WANDERING_MONSTER);
         mg.proximity = prox;
-        mg.foe = (player_has_orb()) ? MHITYOU : MHITNOT;
+        mg.foe = (player_on_orb_run()) ? MHITYOU : MHITNOT;
         mons_place(mg);
         viewwindow();
         return;
@@ -496,16 +487,10 @@ bool can_place_on_trap(monster_type mon_type, trap_type trap)
     if (mons_is_tentacle_segment(mon_type))
         return true;
 
-    if (trap == TRAP_TELEPORT || trap == TRAP_TELEPORT_PERMANENT)
-        return false;
-
-    if (trap == TRAP_SHAFT)
+    if (trap == TRAP_TELEPORT || trap == TRAP_TELEPORT_PERMANENT
+        || trap == TRAP_SHAFT)
     {
-        if (_is_random_monster(mon_type))
-            return false;
-
-        return mons_class_flies(mon_type)
-               || get_monster_data(mon_type)->size == SIZE_TINY;
+        return false;
     }
 
     return true;
@@ -559,8 +544,6 @@ static bool _find_mon_place_near_stairs(coord_def& pos,
     }
     const monster_type habitat_target = MONS_BAT;
     int distance = 3;
-    if (crawl_state.game_is_zotdef())
-        distance = 9999;
     pos = find_newmons_square_contiguous(habitat_target, pos, distance);
     return in_bounds(pos);
 }
@@ -802,8 +785,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     }
 
     const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
-    if (!monster_habitable_grid(montype, grd(mg_pos), mg.preferred_grid_feature,
-                                mons_class_flies(montype), false)
+    if (!monster_habitable_grid(montype, grd(mg_pos), mg.preferred_grid_feature)
         || (mg.behaviour != BEH_FRIENDLY
             && is_sanctuary(mg_pos)
             && !mons_is_tentacle_segment(montype)))
@@ -816,7 +798,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     // XXX: This is a little redundant with proximity checks in
     // place_monster.
     if (mg.proximity == PROX_AWAY_FROM_PLAYER
-        && distance2(you.pos(), mg_pos) <= LOS_RADIUS_SQ)
+        && grid_distance(you.pos(), mg_pos) <= LOS_RADIUS)
     {
         return false;
     }
@@ -994,7 +976,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             switch (mg.proximity)
             {
             case PROX_ANYWHERE:
-                if (distance2(you.pos(), mg.pos) < dist_range(2 + random2(3)))
+                if (grid_distance(you.pos(), mg.pos) < 2 + random2(3))
                     proxOK = false;
                 break;
 
@@ -1002,8 +984,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             case PROX_AWAY_FROM_PLAYER:
                 // If this is supposed to measure los vs not los,
                 // then see_cell(mg.pos) should be used instead. (jpeg)
-                close_to_player = (distance2(you.pos(), mg.pos) <=
-                                   LOS_RADIUS_SQ);
+                close_to_player = (grid_distance(you.pos(), mg.pos) <=
+                                   LOS_RADIUS);
 
                 if (mg.proximity == PROX_CLOSE_TO_PLAYER && !close_to_player
                     || mg.proximity == PROX_AWAY_FROM_PLAYER && close_to_player)
@@ -1097,7 +1079,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
              mon->visible_to(&you) ? mon->name(DESC_A).c_str() : "Something",
              stair_type == DCHAR_ARCH ? "gateway" : "stairwell");
     }
-    else if (mg.proximity == PROX_NEAR_STAIRS && you.can_see(mon))
+    else if (mg.proximity == PROX_NEAR_STAIRS && you.can_see(*mon))
     {
         switch (stair_type)
         {
@@ -1107,7 +1089,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         default: ;
         }
     }
-    else if (player_in_branch(BRANCH_ABYSS) && you.can_see(mon)
+    else if (player_in_branch(BRANCH_ABYSS) && you.can_see(*mon)
              && !crawl_state.generating_level
              && !mg.summoner
              && !crawl_state.is_god_acting()
@@ -1118,11 +1100,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
     // Now, forget about banding if the first placement failed, or there are
     // too many monsters already, or we successfully placed by stairs.
-    // Zotdef change - banding allowed on stairs for extra challenge!
-    // Frequency reduced, though, and only after 2K turns.
     if (mon->mindex() >= MAX_MONSTERS - 30
-        || (mg.proximity == PROX_NEAR_STAIRS && !crawl_state.game_is_zotdef())
-        || (crawl_state.game_is_zotdef() && you.num_turns < 2000))
+        || (mg.proximity == PROX_NEAR_STAIRS))
     {
         return mon;
     }
@@ -1330,33 +1309,14 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else
         define_monster(mon);
 
-    // Must do this early, as init_chimera calls define_monster again.
-    if (mons_class_is_chimeric(mon->type))
+    if (mon->type == MONS_MUTANT_BEAST)
     {
-        ghost_demon ghost;
+        vector<int> gen_facets;
+        if (mg.props.exists(MUTANT_BEAST_FACETS))
+            for (auto facet : mg.props[MUTANT_BEAST_FACETS].get_vector())
+                gen_facets.push_back(facet.get_int());
 
-        // Requires 3 parts
-        if (mg.chimera_mons.size() != 3)
-        {
-            if (!ghost.init_chimera_for_place(mon, place, mg.cls, fpos))
-            {
-                env.mid_cache.erase(mon->mid);
-                mon->reset();
-                return 0;
-            }
-        }
-        else
-        {
-            monster_type parts[] =
-            {
-                mg.chimera_mons[0],
-                mg.chimera_mons[1],
-                mg.chimera_mons[2],
-            };
-            ghost.init_chimera(mon, parts);
-        }
-        mon->set_ghost(ghost);
-        mon->ghost_demon_init();
+        init_mutant_beast(*mon, mg.hd, gen_facets);
     }
 
     // Is it a god gift?
@@ -1371,12 +1331,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // Berserkers belong to Trog.
         if (mg.cls == MONS_SPRIGGAN_BERSERKER)
             mon->god = GOD_TROG;
-        // Profane servitors and death knights belong to Yredelemnul.
-        else if (mg.cls == MONS_PROFANE_SERVITOR
-                 || mg.cls == MONS_DEATH_KNIGHT)
-        {
+        // Death knights belong to Yredelemnul.
+        else if (mg.cls == MONS_DEATH_KNIGHT)
             mon->god = GOD_YREDELEMNUL;
-        }
         // Wiglaf belongs to Okawaru.
         else if (mg.cls == MONS_WIGLAF)
             mon->god = GOD_OKAWARU;
@@ -1429,6 +1386,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
     else if (mg.cls == MONS_APIS)
         mon->god = GOD_ELYVILON;
+    else if (mg.cls == MONS_PROFANE_SERVITOR)
+        mon->god = GOD_YREDELEMNUL;
     // Angels (other than Mennas) and daevas belong to TSO, but 1 out of
     // 7 in the Abyss are adopted by Xom.
     else if (mons_class_holiness(mg.cls) == MH_HOLY)
@@ -1677,10 +1636,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         // Instead of looking for dancing weapons, look for Tukima's dance.
         // Dancing weapons can be created with shadow creatures. {due}
-        bool mark_items = mg.summon_type != SPELL_TUKIMAS_DANCE;
-
         mon->mark_summoned(mg.abjuration_duration,
-                           mark_items,
+                           mg.summon_type != SPELL_TUKIMAS_DANCE,
                            mg.summon_type);
 
         if (mg.summon_type > 0 && mg.summoner && !(mg.flags & MG_DONT_CAP))
@@ -1726,7 +1683,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         if (mg.cls == MONS_DANCING_WEAPON)
             blame_prefix = "animated by ";
 
-        if (mg.summon_type == SPELL_GHOSTLY_FLAMES)
+        if (mg.summon_type == SPELL_SPECTRAL_CLOUD)
             blame_prefix = "called from beyond by ";
     }
     else if (mons_class_is_zombified(mg.cls))
@@ -1835,7 +1792,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     if (crawl_state.game_is_arena())
         arena_placed_monster(mon);
-    else if (!crawl_state.generating_level && !dont_place && you.can_see(mon))
+    else if (!crawl_state.generating_level && !dont_place && you.can_see(*mon))
     {
         if (mg.flags & MG_DONT_COME)
             mon->seen_context = SC_JUST_SEEN;
@@ -1960,12 +1917,7 @@ monster_type pick_local_zombifiable_monster(level_id place,
 {
     const bool really_in_d = place.branch == BRANCH_DUNGEON;
 
-    if (crawl_state.game_is_zotdef())
-    {
-        place = level_id(BRANCH_DUNGEON,
-                         you.num_turns / (2 * ZOTDEF_CYCLE_LENGTH) + 6);
-    }
-    else if (place.branch == BRANCH_ZIGGURAT)
+    if (place.branch == BRANCH_ZIGGURAT)
     {
         // Get Zigs something reasonable to work with, if there's no place
         // explicitly defined.
@@ -2486,12 +2438,11 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_ALLIGATOR:
-        // Alligators with kids!
         if (one_chance_in(5))
         {
             natural_leader = true;
             band = BAND_ALLIGATOR;
-            band_size = 2 + random2(3);
+            band_size = 1;
         }
         break;
 
@@ -2691,9 +2642,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
 
     case MONS_TENGU_CONJURER:
     case MONS_TENGU_WARRIOR:
-        natural_leader = true;
-        band = BAND_TENGU;
-        band_size = 2 + random2(3);
+        if (coinflip())
+        {
+            natural_leader = true;
+            band = BAND_TENGU;
+            band_size = 1;
+        }
         break;
 
     case MONS_SOJOBO:
@@ -2773,13 +2727,6 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
     {
         band = BAND_RAIJU;
         band_size = random_range(2, 3);
-        break;
-    }
-
-    case MONS_RAVEN:
-    {
-        band = BAND_RAVENS;
-        band_size = random_range(1, 2);
         break;
     }
 
@@ -3206,7 +3153,6 @@ static monster_type _band_member(band_type band, int which,
     case BAND_NAGA_RITUALIST:
         return random_choose_weighted(15, MONS_BLACK_MAMBA,
                                        7, MONS_MANA_VIPER,
-                                       5, MONS_WATER_MOCCASIN,
                                        4, MONS_ANACONDA,
                                        0);
 
@@ -3285,7 +3231,7 @@ static monster_type _band_member(band_type band, int which,
         return MONS_DOWAN;
 
     case BAND_ALLIGATOR:
-        return MONS_BABY_ALLIGATOR;
+        return MONS_ALLIGATOR;
 
     case BAND_KHUFU:
         return coinflip() ? MONS_GREATER_MUMMY : MONS_MUMMY;
@@ -3369,9 +3315,7 @@ static monster_type _band_member(band_type band, int which,
             return MONS_FAUN;
 
     case BAND_TENGU:
-        if (which == 1 && coinflip())
-            return coinflip() ? MONS_TENGU_WARRIOR : MONS_TENGU_CONJURER;
-        return MONS_RAVEN;
+        return coinflip() ? MONS_TENGU_WARRIOR : MONS_TENGU_CONJURER;
 
     case BAND_SOJOBO:
         return MONS_TENGU_REAVER;
@@ -3414,9 +3358,6 @@ static monster_type _band_member(band_type band, int which,
 
     case BAND_RAIJU:
         return MONS_RAIJU;
-
-    case BAND_RAVENS:
-        return MONS_RAVEN;
 
     case BAND_SALAMANDERS:
         return MONS_SALAMANDER;
@@ -3731,7 +3672,7 @@ monster* mons_place(mgen_data mg)
 
     // This gives a slight challenge to the player as they ascend the
     // dungeon with the Orb.
-    if (_is_random_monster(mg.cls) && player_has_orb()
+    if (_is_random_monster(mg.cls) && player_on_orb_run()
         && !player_in_branch(BRANCH_ABYSS) && !mg.summoned())
     {
 #ifdef DEBUG_MON_CREATION
@@ -3742,9 +3683,6 @@ monster* mons_place(mgen_data mg)
     }
     else if (_is_random_monster(mg.cls))
         mg.flags |= MG_PERMIT_BANDS;
-
-    if (crawl_state.game_is_zotdef()) // check if emulation of old mg.power is there
-        ASSERT(mg.place.is_valid());
 
     if (mg.behaviour == BEH_COPY)
     {
@@ -3853,7 +3791,7 @@ public:
         {
             return false;
         }
-        if (!feat_compatible(feat_wanted, grd(dc)))
+        if (!_feat_compatible(feat_wanted, grd(dc)))
         {
             if (passable.count(grd(dc)))
                 good_square(dc);
@@ -3930,7 +3868,11 @@ bool can_spawn_mushrooms(coord_def where)
         return true;
     }
 
-    return is_harmless_cloud(cloud.type);
+    monster dummy;
+    dummy.type = MONS_TOADSTOOL;
+    define_monster(&dummy);
+
+    return actor_cloud_immune(&dummy, cloud);
 }
 
 conduct_type player_will_anger_monster(monster_type type)
@@ -3984,6 +3926,8 @@ conduct_type player_will_anger_monster(monster* mon)
 
 bool player_angers_monster(monster* mon)
 {
+    ASSERT(mon); // XXX: change to monster &mon
+
     // Get the drawbacks, not the benefits... (to prevent e.g. demon-scumming).
     conduct_type why = player_will_anger_monster(mon);
     if (why && mon->wont_attack())
@@ -3992,7 +3936,7 @@ bool player_angers_monster(monster* mon)
         mon->del_ench(ENCH_CHARM);
         behaviour_event(mon, ME_ALERT, &you);
 
-        if (you.can_see(mon))
+        if (you.can_see(*mon))
         {
             const string mname = mon->name(DESC_THE).c_str();
 
@@ -4095,7 +4039,7 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
 
     int good_count = 0;
 
-    for (radius_iterator ri(where, radius, C_ROUND, !allow_centre);
+    for (radius_iterator ri(where, radius, C_SQUARE, !allow_centre);
          ri; ++ri)
     {
         bool success = false;

@@ -607,9 +607,9 @@ static string _bless_with_healing(monster* follower)
 static void _display_god_blessing(monster* follower, god_type god,
                                   string blessing)
 {
-    ASSERT(follower);
+    ASSERT(follower); // XXX: change to monster &follower
 
-    string whom = you.can_see(follower) ? follower->name(DESC_THE)
+    string whom = you.can_see(*follower) ? follower->name(DESC_THE)
     : "a follower";
 
     simple_god_message(make_stringf(" blesses %s with %s.",

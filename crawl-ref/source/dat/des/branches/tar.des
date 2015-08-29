@@ -10,7 +10,6 @@
 function tar_setup(e)
    e.place("Tar:7")
    e.tags("no_rotate")
-   e.lflags("no_tele_control")
    e.kmask('O = no_item_gen')
    e.kitem('O = bone rune of Zot')
 end
@@ -158,8 +157,7 @@ MONS: Shadow Fiend, shadow demon / reaper, soul eater, necrophage, shadow imp
 SUBST: d = c
 SUBST: e = 2
 COLOUR: c = lightmagenta
-KPROP: "H-}]) = no_rtele_into
-KPROP: "H-}]) = no_ctele_into
+KPROP: "H-}]) = no_tele_into
 MARKER: H = lua:fog_machine { \
                 pow_min = 10, pow_max = 10, delay = 10, \
                 size = 3, walk_dist = 1, cloud_type = "purple smoke" }
@@ -987,7 +985,7 @@ ORIENT: encompass
   subst('_ = x..')
   -- The remove_isolated_glyphs doesn't seem to consistently get rid of
   -- pockets in the border, so...
-  kprop('X-_ = no_rtele_into')
+  kprop('X-_ = no_tele_into')
   remove_isolated_glyphs { find = '.', replace = 'x', percent = 100 }
   tar_setup(_G)
   hook("post_place", function()

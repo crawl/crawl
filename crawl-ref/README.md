@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/crawl/crawl.svg?branch=master)](https://travis-ci.org/crawl/crawl)
 
+NOTE: The most up-to-date source code for Dungeon Crawl Stone Soup is now at https://github.com/crawl/crawl/
+
 Dungeon Crawl Stone Soup
 ========================
 
@@ -34,18 +36,17 @@ If you'd like to dive in immediately, your best bets are to
 You can play Crawl online, both competing with other players and
 watching them. Check the homepage at
 http://crawl.develz.org/wordpress/howto for details, including
-information about additional servers. You just need a ssh or telnet
-console; on Windows, the PuTTY program works very well. Read
-docs/ssh_guide.txt for a step by step guide on how to set this up.
+information about additional servers. Servers serve either the ASCII based
+console version, or the graphical Tiles version that works inside the
+browser, or both. See the above link for details. For the console version,
+you need a ssh or telnet console; on Windows, the PuTTY program works very
+well. Read docs/ssh_guide.txt for a step by step guide on how to set this up.
 
 #### Tiles:
 
 Crawl features an alternative to the classical ASCII display; Tile-based
 Crawl is often a lot more accessible to new players. Tiles are available for
 Linux, Windows and OS X.
-Tile-based Crawl can also be played online on https://tiles.crawl.develz.org,
-although it does not support all features of local Tiles yet.
-
 
 2. File system
 --------------
@@ -99,9 +100,10 @@ The settings/ folder contains, among others, the following files:
 -----------------------------
 
 #### http://crawl.develz.org/
-At the official webpage, you can find both trackers to add bug reports,
-feature requests, or upload patches, as well as sources and binaries. This is
-the best way to report bugs or mention new ideas.
+At the official webpage, you can find the Mantis tracker to add bug reports
+or upload patches, a wiki to add interface, gameplay and feature suggestions,
+as well as sources and binaries. The Mantis tracker is the best way to report
+bugs.
 
 #### rec.games.roguelike.misc
 This is a Usenet newsgroup dealing with roguelikes, including Crawl. It is
@@ -146,25 +148,27 @@ of ways to do so:
 
 #### Playtesting.
 At any time, there will be bugs -- playing and reporting these is a great help.
-There is a beta server at http://crawl.develz.org. Besides pointing out bugs,
-new ideas on how to improve interface or gameplay are welcome. You can mention
-them again at the homepage, http://crawl.develz.org/mantis/.
+Many of the online servers host the regularly updated development version. Bugs
+should be reported to http://crawl.develz.org/mantis/. Besides pointing out bugs,
+new ideas on how to improve interface or gameplay are welcome. These can be added
+to the development wiki at https://crawl.develz.org/wiki/.
 
 #### Vault making.
 Crawl uses many hand-drawn (but often randomised) maps. Making them is fun and
-easy. It's best to start with simple entry vaults (look at dat/entry.des for a
-first impression). Later, you may read docs/develop/levels/introduction.txt.
-If you're ambitious, new maps for branch ends are possible, as well.
-If you've made some maps, you can test them on your system (no compiling
-needed) and then just mail them to the mailing list.
+easy. It's best to start with simple entry vaults (look at
+dat/des/arrival/simple.des for a first impression). Later, you may read
+docs/develop/levels/introduction.txt.
+If you're ambitious, new maps for branch ends are possible, as well. If you've
+made some maps, you can test them on your system (no compiling needed) and
+then add them to http://crawl.develz.org/mantis/.
 
 #### Speech.
 Monster talking provides a lot of flavour. Just like vaults, speech depends
 upon a large set of entries. Since most of the speech has been outsourced, you
 can add new prose. The syntax is effective, but slightly strange, so you may
 want to read docs/monster_speech.txt.
-Again, changing or adding speech is possible on your local game. If you
-have added something, send the files to the list.
+Again, changing or adding speech is possible on your local game. If you have
+added something, send your additions to http://crawl.develz.org/mantis/.
 
 #### Monster descriptions.
 You can look up the current monster descriptions in-game with '?/' or just read
@@ -179,7 +183,7 @@ branches.
 Since version 0.4, tiles are integrated within Crawl. Having variants of
 often-used glyphs is always good. If you want to give this a shot, please
 contact us via the mailing list. In case you drew some tiles of your own,
-tell us via the list.
+you can add them to http://crawl.develz.org/mantis/.
 
 #### Patches.
 If you like to, you can download the source code and apply patches. Both

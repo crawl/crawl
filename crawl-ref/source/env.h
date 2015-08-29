@@ -2,6 +2,7 @@
 #define ENV_H
 
 #include <set>
+#include <memory> // unique_ptr
 
 #include "map_knowledge.h"
 #include "monster.h"
@@ -13,7 +14,7 @@ typedef uint32_t terrain_property_t;
 typedef set<string> string_set;
 
 struct vault_placement;
-typedef vector<vault_placement*> vault_placement_refv;
+typedef vector<unique_ptr<vault_placement>> vault_placement_refv;
 
 typedef FixedArray< map_cell, GXM, GYM > MapKnowledge;
 
@@ -99,10 +100,6 @@ struct crawl_environment
 
     // Number of turns the player has spent on this level.
     int turns_on_level;
-
-    // Flags for things like preventing teleport control; see
-    // level_flag_type in enum.h
-    uint32_t level_flags;
 
     // Index into the delayed actions array.
     unsigned int dactions_done;

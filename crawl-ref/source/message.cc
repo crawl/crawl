@@ -335,7 +335,8 @@ class message_window
         const int diff = max(int(lines.size()) - height(), 0);
 
         int i;
-        for (i = lines.size() - 1; i >= diff && lines[i].width() == 0; --i);
+        for (i = lines.size() - 1; i >= diff && lines[i].width() == 0; --i)
+            ;
         if (i >= diff)
         {
             // If there was room, put the cursor at the end of that line.
@@ -586,6 +587,7 @@ public:
         if (_pre_more())
             return;
 
+        print_stats();
         show();
         int last_row = crawl_view.msgsz.y;
         if (first_col_more())
@@ -1699,6 +1701,12 @@ void canned_msg(canned_message_type which_message)
         case MSG_GHOSTLY_OUTLINE:
             mpr("You see a ghostly outline there, and the spell fizzles.");
             break;
+        case MSG_GAIN_HEALTH:
+            mpr("You feel better.");
+            break;
+        case MSG_GAIN_MAGIC:
+            mpr("You feel your power returning.");
+            break;
     }
 }
 
@@ -1807,7 +1815,7 @@ void save_messages(writer& outf)
 
 void load_messages(reader& inf)
 {
-    unwind_var<bool> save_more(crawl_state.show_more_prompt, false);
+    unwind_bool save_more(crawl_state.show_more_prompt, false);
 
     int num = unmarshallInt(inf);
     for (int i = 0; i < num; ++i)

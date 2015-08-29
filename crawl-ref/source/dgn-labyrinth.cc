@@ -189,11 +189,11 @@ static void _change_walls_from_centre(const dgn_region &region,
             const int distance =
                 rectangular? (c - centre).rdist() : (c - centre).abs();
 
-            for (int i = 0, size = ldist.size(); i < size; ++i)
+            for (const dist_feat &df : ldist)
             {
-                if (distance <= ldist[i].dist)
+                if (distance <= df.dist)
                 {
-                    grd(c) = ldist[i].feat;
+                    grd(c) = df.feat;
                     break;
                 }
             }
@@ -256,7 +256,7 @@ static void _place_extra_lab_minivaults()
 static bool _has_vault_in_radius(const coord_def &pos, int radius,
                                  unsigned mask)
 {
-    for (radius_iterator rad(pos, radius, C_ROUND); rad; ++rad)
+    for (radius_iterator rad(pos, radius, C_SQUARE); rad; ++rad)
     {
         if (!in_bounds(*rad))
             continue;
@@ -268,13 +268,13 @@ static bool _has_vault_in_radius(const coord_def &pos, int radius,
 }
 
 // Find an entry point that's:
-// * At least 28 squares away from the exit.
-// * At least 6 squares away from the nearest vault.
+// * At least 24 squares away from the exit.
+// * At least 5 squares away from the nearest vault.
 // * Floor (well, obviously).
 static coord_def _labyrinth_find_entry_point(const dgn_region &reg,
                                              const coord_def &end)
 {
-    const int min_distance = 28 * 28;
+    const int min_distance = 24;
     // Try many times.
     for (int i = 0; i < 2000; ++i)
     {
@@ -282,10 +282,10 @@ static coord_def _labyrinth_find_entry_point(const dgn_region &reg,
         if (grd(place) != DNGN_FLOOR)
             continue;
 
-        if ((place - end).abs() < min_distance)
+        if ((place - end).rdist() < min_distance)
             continue;
 
-        if (_has_vault_in_radius(place, 6, MMT_VAULT))
+        if (_has_vault_in_radius(place, 5, MMT_VAULT))
             continue;
 
         return place;
@@ -484,7 +484,7 @@ static void _labyrinth_add_glass_walls(const dgn_region &region)
         if (!_find_random_nonmetal_wall(region, pos))
             break;
 
-        if (_has_vault_in_radius(pos, 6, MMT_VAULT))
+        if (_has_vault_in_radius(pos, 5, MMT_VAULT))
             continue;
 
         grd(pos) = static_cast<dungeon_feature_type>(grd(pos) + clear_plus);
@@ -521,7 +521,7 @@ void dgn_build_labyrinth_level()
     }
     else
     {
-        const vault_placement &rplace = **(env.level_vaults.end() - 1);
+        const vault_placement &rplace = *env.level_vaults.back();
         if (rplace.map.has_tag("generate_loot"))
         {
             for (vault_place_iterator vi(rplace); vi; ++vi)

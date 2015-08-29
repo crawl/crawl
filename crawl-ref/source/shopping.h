@@ -59,6 +59,7 @@ public:
 
     void item_type_identified(object_class_type base_type, int sub_type);
     unsigned int cull_identical_items(const item_def& item, int cost = -1);
+    void remove_dead_shops();
 
     void gold_changed(int old_amount, int new_amount);
 
@@ -106,5 +107,9 @@ private:
 };
 
 extern ShoppingList shopping_list;
+
+#if TAG_MAJOR_VERSION == 34
+#define REMOVED_DEAD_SHOPS_KEY "removed_dead_shops"
+#endif
 
 #endif

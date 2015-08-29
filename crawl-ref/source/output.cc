@@ -494,7 +494,7 @@ static bool _boosted_mp()
 static bool _boosted_ac()
 {
     return you.duration[DUR_ICY_ARMOUR]
-           || player_stoneskin()
+           || you.duration[DUR_STONESKIN]
            || player_icemail_armour_class()
            || you.duration[DUR_QAZLAL_AC]
            || you.attribute[ATTR_BONE_ARMOUR] > 0;
@@ -545,7 +545,7 @@ void update_turn_count()
         return;
     }
 
-    const int yhack = crawl_state.game_is_zotdef()
+    const int yhack = 0
 #if TAG_MAJOR_VERSION == 34
                     + (you.species == SP_LAVA_ORC)
 #endif
@@ -876,9 +876,9 @@ static void _print_stats_wp(int y)
         if (you.duration[DUR_CORROSION])
         {
             if (wpn.base_type == OBJ_RODS)
-                wpn.special -= 3 * you.props["corrosion_amount"].get_int();
+                wpn.special -= 4 * you.props["corrosion_amount"].get_int();
             else
-                wpn.plus -= 3 * you.props["corrosion_amount"].get_int();
+                wpn.plus -= 4 * you.props["corrosion_amount"].get_int();
         }
         text = wpn.name(DESC_PLAIN, true, false, true);
     }
@@ -902,7 +902,7 @@ static void _print_stats_qv(int y)
     int col;
     string text;
 
-    int q = you.m_quiver->get_fire_item();
+    int q = you.m_quiver.get_fire_item();
     ASSERT_RANGE(q, -1, ENDOFPACK);
     char hud_letter = '-';
     if (q != -1 && !fire_warn_if_impossible(true))
@@ -1330,25 +1330,13 @@ void print_stats()
             textcolour(HUD_VALUE_COLOUR);
             CPRINTF("%2d%% ", get_exp_progress());
         }
-        if (crawl_state.game_is_zotdef())
-        {
-#if TAG_MAJOR_VERSION == 34
-            CGOTOXY(1, 9 + temp, GOTO_STAT);
-#else
-            CGOTOXY(1, 9, GOTO_STAT);
-#endif
-            textcolour(Options.status_caption_colour);
-            CPRINTF("ZP: ");
-            textcolour(HUD_VALUE_COLOUR);
-            CPRINTF("%d     ", you.zot_points);
-        }
         you.redraw_experience = false;
     }
 
 #if TAG_MAJOR_VERSION == 34
-    int yhack = crawl_state.game_is_zotdef() + temp;
+    int yhack = temp;
 #else
-    int yhack = crawl_state.game_is_zotdef();
+    int yhack = 0;
 #endif
 
     // Line 9 is Gold and Turns
@@ -1377,7 +1365,7 @@ void print_stats()
         // that's set in fewer places?
         // Also, it's a little bogus to change simulation state in
         // render code. We should find a better place for this.
-        you.m_quiver->on_weapon_changed();
+        you.m_quiver.on_weapon_changed();
         _print_stats_wp(9 + yhack);
     }
     you.wield_change  = false;
@@ -1385,7 +1373,7 @@ void print_stats()
     if (you.species == SP_FELID)
     {
         // There are no circumstances under which Felids could quiver something.
-        // Reduce line counter for status display.y
+        // Reduce line counter for status display.
         yhack -= 1;
     }
     else if (you.redraw_quiver || you.wield_change)
@@ -1481,9 +1469,9 @@ void draw_border()
     CGOTOXY(19, dex_pos, GOTO_STAT); CPRINTF("Dex:");
 
 #if TAG_MAJOR_VERSION == 34
-    int yhack = crawl_state.game_is_zotdef() + temp;
+    int yhack = temp;
 #else
-    int yhack = crawl_state.game_is_zotdef();
+    int yhack = 0;
 #endif
     CGOTOXY(1, 9 + yhack, GOTO_STAT); CPRINTF("Gold:");
     CGOTOXY(19, 9 + yhack, GOTO_STAT);
@@ -1530,14 +1518,14 @@ void redraw_screen()
 
     print_stats();
 
-    bool note_status = notes_are_active();
-    activate_notes(false);
-    print_stats_level();
+    {
+        no_notes nx;
+        print_stats_level();
 #ifdef DGL_SIMPLE_MESSAGING
-    update_message_status();
+        update_message_status();
 #endif
-    update_turn_count();
-    activate_notes(note_status);
+        update_turn_count();
+    }
 
     viewwindow();
 
@@ -2427,8 +2415,8 @@ static vector<formatted_string> _get_overview_resistances(
     out += show_angry ? _resist_composer("Rnd*Rage", cwidth, 1, 1, false) + "\n"
                       : _resist_composer("Clarity", cwidth, rclar) + "\n";
 
-    const int rsust = player_sust_abil(calc_unid);
-    out += _resist_composer("SustAb", cwidth, rsust) + "\n";
+    const int rsust = player_sust_attr(calc_unid);
+    out += _resist_composer("SustAt", cwidth, rsust) + "\n";
 
     const int gourmand = you.gourmand(calc_unid);
     out += _resist_composer("Gourm", cwidth, gourmand, 1) + "\n";

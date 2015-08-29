@@ -156,30 +156,28 @@ extern int yydebug;
     EPILOGUE = 282,
     NSUBST = 283,
     WELCOME = 284,
-    LFLAGS = 285,
-    BFLAGS = 286,
-    LFLOORCOL = 287,
-    LROCKCOL = 288,
-    LFLOORTILE = 289,
-    LROCKTILE = 290,
-    FTILE = 291,
-    RTILE = 292,
-    TILE = 293,
-    SUBVAULT = 294,
-    FHEIGHT = 295,
-    DESC = 296,
-    ORDER = 297,
-    COMMA = 298,
-    COLON = 299,
-    PERC = 300,
-    DASH = 301,
-    CHARACTER = 302,
-    NUMBER = 303,
-    STRING = 304,
-    MAP_LINE = 305,
-    MONSTER_NAME = 306,
-    ITEM_INFO = 307,
-    LUA_LINE = 308
+    LFLOORCOL = 285,
+    LROCKCOL = 286,
+    LFLOORTILE = 287,
+    LROCKTILE = 288,
+    FTILE = 289,
+    RTILE = 290,
+    TILE = 291,
+    SUBVAULT = 292,
+    FHEIGHT = 293,
+    DESC = 294,
+    ORDER = 295,
+    COMMA = 296,
+    COLON = 297,
+    PERC = 298,
+    DASH = 299,
+    CHARACTER = 300,
+    NUMBER = 301,
+    STRING = 302,
+    MAP_LINE = 303,
+    MONSTER_NAME = 304,
+    ITEM_INFO = 305,
+    LUA_LINE = 306
   };
 #endif
 /* Tokens.  */
@@ -210,30 +208,28 @@ extern int yydebug;
 #define EPILOGUE 282
 #define NSUBST 283
 #define WELCOME 284
-#define LFLAGS 285
-#define BFLAGS 286
-#define LFLOORCOL 287
-#define LROCKCOL 288
-#define LFLOORTILE 289
-#define LROCKTILE 290
-#define FTILE 291
-#define RTILE 292
-#define TILE 293
-#define SUBVAULT 294
-#define FHEIGHT 295
-#define DESC 296
-#define ORDER 297
-#define COMMA 298
-#define COLON 299
-#define PERC 300
-#define DASH 301
-#define CHARACTER 302
-#define NUMBER 303
-#define STRING 304
-#define MAP_LINE 305
-#define MONSTER_NAME 306
-#define ITEM_INFO 307
-#define LUA_LINE 308
+#define LFLOORCOL 285
+#define LROCKCOL 286
+#define LFLOORTILE 287
+#define LROCKTILE 288
+#define FTILE 289
+#define RTILE 290
+#define TILE 291
+#define SUBVAULT 292
+#define FHEIGHT 293
+#define DESC 294
+#define ORDER 295
+#define COMMA 296
+#define COLON 297
+#define PERC 298
+#define DASH 299
+#define CHARACTER 300
+#define NUMBER 301
+#define STRING 302
+#define MAP_LINE 303
+#define MONSTER_NAME 304
+#define ITEM_INFO 305
+#define LUA_LINE 306
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -247,7 +243,7 @@ union YYSTYPE
     const char *text;
     map_chance_pair chance;
 
-#line 251 "levcomp.tab.cc" /* yacc.c:355  */
+#line 247 "levcomp.tab.cc" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -262,7 +258,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 266 "levcomp.tab.cc" /* yacc.c:358  */
+#line 262 "levcomp.tab.cc" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -504,21 +500,21 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  3
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   121
+#define YYLAST   117
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  54
+#define YYNTOKENS  52
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  96
+#define YYNNTS  94
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  178
+#define YYNRULES  174
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  214
+#define YYNSTATES  208
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   308
+#define YYMAXUTOK   306
 
 #define YYTRANSLATE(YYX)                                                \
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -557,7 +553,7 @@ static const yytype_uint8 yytranslate[] =
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
-      45,    46,    47,    48,    49,    50,    51,    52,    53
+      45,    46,    47,    48,    49,    50,    51
 };
 
 #if YYDEBUG
@@ -569,19 +565,19 @@ static const yytype_uint16 yyrline[] =
      147,   148,   149,   150,   151,   152,   153,   154,   155,   156,
      157,   158,   159,   160,   161,   162,   163,   164,   165,   166,
      167,   168,   169,   170,   171,   172,   173,   174,   175,   176,
-     177,   178,   179,   180,   181,   182,   185,   187,   188,   191,
-     196,   198,   199,   202,   207,   209,   210,   213,   218,   220,
-     221,   224,   229,   231,   232,   235,   240,   242,   243,   246,
-     251,   252,   260,   261,   269,   270,   278,   279,   287,   288,
-     296,   299,   300,   303,   311,   320,   323,   324,   327,   336,
-     345,   354,   387,   390,   391,   399,   400,   408,   409,   418,
-     419,   428,   430,   431,   434,   443,   446,   447,   450,   459,
-     462,   463,   466,   475,   478,   479,   482,   492,   493,   496,
-     505,   508,   509,   512,   521,   524,   525,   528,   537,   538,
-     541,   542,   545,   553,   554,   557,   558,   561,   570,   579,
-     588,   596,   597,   606,   607,   610,   611,   613,   617,   622,
-     627,   634,   642,   651,   653,   654,   656,   663,   671,   672,
-     681,   690,   693,   694,   697,   706,   709,   710,   713
+     177,   178,   179,   180,   183,   185,   186,   189,   194,   196,
+     197,   200,   205,   207,   208,   211,   216,   218,   219,   222,
+     227,   229,   230,   233,   238,   240,   241,   244,   249,   250,
+     258,   259,   267,   268,   276,   277,   285,   286,   294,   297,
+     298,   301,   309,   318,   321,   322,   325,   334,   367,   370,
+     371,   379,   380,   388,   389,   398,   399,   408,   410,   411,
+     414,   423,   426,   427,   430,   439,   442,   443,   446,   455,
+     458,   459,   462,   472,   473,   476,   485,   488,   489,   492,
+     501,   504,   505,   508,   517,   518,   521,   522,   525,   533,
+     534,   537,   538,   541,   550,   559,   568,   576,   577,   586,
+     587,   590,   591,   593,   597,   602,   607,   614,   622,   631,
+     633,   634,   636,   643,   651,   652,   661,   670,   673,   674,
+     677,   686,   689,   690,   693
 };
 #endif
 
@@ -594,20 +590,20 @@ static const char *const yytname[] =
   "SUBST", "TAGS", "KFEAT", "KITEM", "KMONS", "KMASK", "KPROP", "NAME",
   "DEPTH", "ORIENT", "PLACE", "CHANCE", "WEIGHT", "MONS", "ITEM", "MARKER",
   "COLOUR", "PRELUDE", "MAIN", "VALIDATE", "VETO", "EPILOGUE", "NSUBST",
-  "WELCOME", "LFLAGS", "BFLAGS", "LFLOORCOL", "LROCKCOL", "LFLOORTILE",
-  "LROCKTILE", "FTILE", "RTILE", "TILE", "SUBVAULT", "FHEIGHT", "DESC",
-  "ORDER", "COMMA", "COLON", "PERC", "DASH", "CHARACTER", "NUMBER",
-  "STRING", "MAP_LINE", "MONSTER_NAME", "ITEM_INFO", "LUA_LINE", "$accept",
-  "file", "definitions", "definition", "error_seq", "def", "defdepth",
-  "level", "map_specs", "map_spec", "name", "metaline", "global_lua",
+  "WELCOME", "LFLOORCOL", "LROCKCOL", "LFLOORTILE", "LROCKTILE", "FTILE",
+  "RTILE", "TILE", "SUBVAULT", "FHEIGHT", "DESC", "ORDER", "COMMA",
+  "COLON", "PERC", "DASH", "CHARACTER", "NUMBER", "STRING", "MAP_LINE",
+  "MONSTER_NAME", "ITEM_INFO", "LUA_LINE", "$accept", "file",
+  "definitions", "definition", "error_seq", "def", "defdepth", "level",
+  "map_specs", "map_spec", "name", "metaline", "global_lua",
   "global_lua_lines", "global_lua_line", "main_lua", "main_lua_lines",
   "main_lua_line", "validate_lua", "validate_lua_lines",
   "validate_lua_line", "veto_lua", "veto_lua_lines", "veto_lua_line",
   "prelude_lua", "prelude_lua_lines", "prelude_lua_line", "epilogue_lua",
   "epilogue_lua_lines", "epilogue_lua_line", "kfeat", "kmons", "kitem",
   "kmask", "kprop", "shuffle", "shuffle_specifiers", "shuffle_spec",
-  "clear", "tags", "tagstrings", "tagstring", "lflags", "bflags", "marker",
-  "colour", "lfloorcol", "lrockcol", "lfloortile", "lrocktile", "fheight",
+  "clear", "tags", "tagstrings", "tagstring", "marker", "colour",
+  "lfloorcol", "lrockcol", "lfloortile", "lrocktile", "fheight",
   "fheight_specifiers", "fheight_specifier", "ftile", "ftile_specifiers",
   "ftile_specifier", "rtile", "rtile_specifiers", "rtile_specifier",
   "tile", "tile_specifiers", "tile_specifier", "colour_specifiers",
@@ -631,14 +627,14 @@ static const yytype_uint16 yytoknum[] =
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
      285,   286,   287,   288,   289,   290,   291,   292,   293,   294,
      295,   296,   297,   298,   299,   300,   301,   302,   303,   304,
-     305,   306,   307,   308
+     305,   306
 };
 # endif
 
-#define YYPACT_NINF -132
+#define YYPACT_NINF -128
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-132)))
+  (!!((Yystate) == (-128)))
 
 #define YYTABLE_NINF -1
 
@@ -647,30 +643,29 @@ static const yytype_uint16 yytoknum[] =
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
      STATE-NUM.  */
-static const yytype_int16 yypact[] =
+static const yytype_int8 yypact[] =
 {
-    -132,     9,    36,  -132,    -9,    -5,  -132,  -132,  -132,  -132,
-    -132,  -132,  -132,  -132,  -132,    -8,    -4,  -132,  -132,    -2,
-      -1,     0,  -132,     2,     4,     5,     6,     7,     8,    10,
-      12,    14,    15,    13,    16,    17,    18,  -132,  -132,  -132,
-    -132,  -132,    19,    20,    23,    24,    25,    26,    27,    28,
-      29,    30,    31,    35,    33,    37,    32,  -132,  -132,  -132,
-    -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,
-    -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,
-    -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,
-    -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,
-      38,  -132,  -132,  -132,    22,  -132,  -132,  -132,  -132,    44,
-      40,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,    -3,
-      47,  -132,    42,  -132,    43,    50,  -132,  -132,  -132,    51,
-    -132,    52,  -132,  -132,  -132,    53,  -132,    -6,    45,    46,
-      48,    49,  -132,    54,  -132,  -132,  -132,  -132,  -132,  -132,
-    -132,  -132,  -132,    57,  -132,  -132,    60,  -132,  -132,    61,
-    -132,  -132,    62,  -132,  -132,    63,  -132,  -132,  -132,  -132,
-      -2,     0,  -132,  -132,    59,  -132,    14,  -132,  -132,    15,
-      13,    16,    18,  -132,  -132,  -132,  -132,  -132,  -132,  -132,
-    -132,  -132,  -132,    19,    29,    30,    31,    35,    33,  -132,
-    -132,    34,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,
-    -132,  -132,  -132,  -132
+    -128,     9,    34,  -128,    -9,    -5,  -128,  -128,  -128,  -128,
+    -128,  -128,  -128,  -128,  -128,    -8,    -4,  -128,  -128,    -2,
+      -1,     0,  -128,     2,     4,     5,     6,     7,     8,    10,
+      12,    14,    15,    13,    16,    17,    18,  -128,  -128,  -128,
+    -128,  -128,    19,    20,    23,    24,    25,    26,    27,    28,
+      29,    33,    31,    35,    30,  -128,  -128,  -128,  -128,  -128,
+    -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,
+    -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,
+    -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,
+    -128,  -128,  -128,  -128,  -128,  -128,    36,  -128,  -128,  -128,
+      22,  -128,  -128,  -128,  -128,    42,    38,  -128,  -128,  -128,
+    -128,  -128,  -128,  -128,  -128,    -3,    45,  -128,    40,  -128,
+      41,    48,  -128,  -128,  -128,    49,  -128,    50,  -128,  -128,
+    -128,    51,  -128,    -6,    43,    44,    46,    47,  -128,    52,
+    -128,  -128,  -128,  -128,  -128,  -128,  -128,    55,  -128,  -128,
+      58,  -128,  -128,    59,  -128,  -128,    60,  -128,  -128,    61,
+    -128,  -128,  -128,  -128,    -2,     0,  -128,  -128,    57,  -128,
+      14,  -128,  -128,    15,    13,    16,    18,  -128,  -128,  -128,
+    -128,  -128,  -128,  -128,  -128,  -128,  -128,    19,    27,    28,
+      29,    33,    31,  -128,  -128,    32,  -128,  -128,  -128,  -128,
+    -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -678,58 +673,57 @@ static const yytype_int16 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       3,     0,     2,     1,     0,     0,    57,     4,     5,     8,
-       6,    12,     9,    10,    16,    56,    11,    59,    58,     0,
-       0,     0,    96,    80,    84,    82,    86,    88,   151,   168,
-       0,   154,     0,   143,   138,     0,     0,    73,    61,    65,
-      69,    77,     0,     0,     0,     0,   103,   105,   107,   109,
-       0,     0,     0,     0,     0,     0,     0,     7,   174,    55,
-      13,    14,    50,    52,    53,    51,    54,    43,    45,    44,
-      46,    47,    38,    39,    40,    41,    42,    27,    30,    31,
-      32,    33,    34,    48,    35,    36,    37,    29,    28,    26,
-      25,    17,    18,    19,    20,    21,    22,    23,    24,    15,
-     171,   173,    49,    93,    90,    91,    94,   137,   134,   135,
-      95,    81,    85,    83,    87,    89,   152,   169,   148,   158,
-     153,   160,   162,   156,   167,   163,   165,   147,   144,   146,
-     142,   139,   141,   101,   129,   102,   127,    72,    60,    64,
-      68,    76,   133,   130,   131,   170,    99,   100,   104,   106,
-     108,   110,   118,   115,   116,   122,   119,   120,   126,   123,
-     124,   178,   175,   176,   114,   111,   112,   149,   150,   172,
-       0,     0,    98,    97,     0,   157,     0,   161,   166,     0,
-       0,     0,     0,    75,    74,    63,    62,    67,    66,    71,
-      70,    79,    78,     0,     0,     0,     0,     0,     0,    92,
-     136,   158,   159,   155,   164,   145,   140,   128,   132,   117,
-     121,   125,   177,   113
+       3,     0,     2,     1,     0,     0,    55,     4,     5,     8,
+       6,    12,     9,    10,    16,    54,    11,    57,    56,     0,
+       0,     0,    94,    78,    82,    80,    84,    86,   147,   164,
+       0,   150,     0,   139,   134,     0,     0,    71,    59,    63,
+      67,    75,     0,     0,    99,   101,   103,   105,     0,     0,
+       0,     0,     0,     0,     0,     7,   170,    53,    13,    14,
+      48,    50,    51,    49,    52,    41,    43,    42,    44,    45,
+      38,    39,    40,    27,    30,    31,    32,    33,    34,    46,
+      35,    36,    37,    29,    28,    26,    25,    17,    18,    19,
+      20,    21,    22,    23,    24,    15,   167,   169,    47,    91,
+      88,    89,    92,   133,   130,   131,    93,    79,    83,    81,
+      85,    87,   148,   165,   144,   154,   149,   156,   158,   152,
+     163,   159,   161,   143,   140,   142,   138,   135,   137,    97,
+     125,    98,   123,    70,    58,    62,    66,    74,   129,   126,
+     127,   166,   100,   102,   104,   106,   114,   111,   112,   118,
+     115,   116,   122,   119,   120,   174,   171,   172,   110,   107,
+     108,   145,   146,   168,     0,     0,    96,    95,     0,   153,
+       0,   157,   162,     0,     0,     0,     0,    73,    72,    61,
+      60,    65,    64,    69,    68,    77,    76,     0,     0,     0,
+       0,     0,     0,    90,   132,   154,   155,   151,   160,   141,
+     136,   124,   128,   113,   117,   121,   173,   109
 };
 
   /* YYPGOTO[NTERM-NUM].  */
-static const yytype_int16 yypgoto[] =
+static const yytype_int8 yypgoto[] =
 {
-    -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,
-    -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,
-    -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,
-    -132,  -132,  -132,  -132,  -132,  -132,  -132,  -112,  -132,  -132,
-    -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,  -132,
-    -132,  -132,  -131,  -132,  -132,  -116,  -132,  -132,   -87,  -132,
-    -132,   -86,  -132,   -73,  -132,  -132,   -82,  -132,   -59,  -132,
-    -132,  -132,   -68,  -132,   -66,  -132,  -132,  -132,  -132,  -132,
-    -132,  -132,   -58,  -132,   -61,  -132,  -132,   -62,  -132,  -132,
-    -132,  -132,    21,  -132,  -132,   -79
+    -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,
+    -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,
+    -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,
+    -128,  -128,  -128,  -128,  -128,  -128,  -128,  -108,  -128,  -128,
+    -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,  -128,
+    -127,  -128,  -128,  -114,  -128,  -128,   -85,  -128,  -128,   -84,
+    -128,   -71,  -128,  -128,   -80,  -128,   -57,  -128,  -128,  -128,
+     -66,  -128,   -64,  -128,  -128,  -128,  -128,  -128,  -128,  -128,
+     -56,  -128,   -59,  -128,  -128,   -60,  -128,  -128,  -128,  -128,
+      21,  -128,  -128,   -77
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int16 yydefgoto[] =
 {
-      -1,     1,     2,     7,    59,     8,     9,    10,    16,    60,
-      11,    61,    12,    15,    18,    62,   138,   186,    63,   139,
-     188,    64,   140,   190,    65,   137,   184,    66,   141,   192,
-      67,    68,    69,    70,    71,    72,   104,   105,    73,    74,
-     110,   173,    75,    76,    77,    78,    79,    80,    81,    82,
-      83,   165,   166,    84,   153,   154,    85,   156,   157,    86,
-     159,   160,   135,   136,    87,   143,   144,    88,   108,   109,
-      89,   131,   132,    90,   128,   129,    91,    92,    93,    94,
-      95,   120,   121,   122,   123,    96,   125,   126,    97,    98,
-      99,   100,   101,   102,   162,   163
+      -1,     1,     2,     7,    57,     8,     9,    10,    16,    58,
+      11,    59,    12,    15,    18,    60,   134,   180,    61,   135,
+     182,    62,   136,   184,    63,   133,   178,    64,   137,   186,
+      65,    66,    67,    68,    69,    70,   100,   101,    71,    72,
+     106,   167,    73,    74,    75,    76,    77,    78,    79,   159,
+     160,    80,   147,   148,    81,   150,   151,    82,   153,   154,
+     131,   132,    83,   139,   140,    84,   104,   105,    85,   127,
+     128,    86,   124,   125,    87,    88,    89,    90,    91,   116,
+     117,   118,   119,    92,   121,   122,    93,    94,    95,    96,
+      97,    98,   156,   157
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -740,16 +734,15 @@ static const yytype_uint8 yytable[] =
       19,    20,    21,    22,    23,    24,    25,    26,    27,     3,
       28,    29,    30,    31,    32,    33,    34,    35,    36,    37,
       38,    39,    40,    41,    42,    43,    44,    45,    46,    47,
-      48,    49,    50,    51,    52,    53,    54,    55,    56,     4,
-      13,   174,   175,    57,    14,    17,    58,   183,   106,     5,
-     103,   111,   107,   112,   113,   114,   115,   116,   199,   117,
-       6,   118,   119,   124,   127,   170,   133,   213,   130,   145,
-     134,   142,   146,   147,   148,   149,   150,   151,   209,   175,
-     168,   152,   155,   158,   161,   164,   167,   171,    58,   172,
-     176,   177,   178,   179,   180,   181,   182,   193,   185,   187,
-     194,   189,   191,   195,   196,   197,   198,   201,   210,   207,
-     211,   208,   200,   206,   205,   203,   202,   204,   212,     0,
-       0,   169
+      48,    49,    50,    51,    52,    53,    54,     4,    13,   168,
+     169,    55,    14,    17,    56,   177,   102,     5,    99,   107,
+     103,   108,   109,   110,   111,   112,   193,   113,     6,   114,
+     115,   120,   123,   164,   129,   207,   126,   141,   130,   138,
+     142,   143,   144,   145,   203,   169,   162,   146,   149,   152,
+     155,   158,   161,   165,    56,   166,   170,   171,   172,   173,
+     174,   175,   176,   187,   179,   181,   188,   183,   185,   189,
+     190,   191,   192,   195,   204,   201,   205,   202,   194,   200,
+     199,   197,   196,   198,   206,     0,     0,   163
 };
 
 static const yytype_int16 yycheck[] =
@@ -757,67 +750,65 @@ static const yytype_int16 yycheck[] =
        4,     5,     6,     7,     8,     9,    10,    11,    12,     0,
       14,    15,    16,    17,    18,    19,    20,    21,    22,    23,
       24,    25,    26,    27,    28,    29,    30,    31,    32,    33,
-      34,    35,    36,    37,    38,    39,    40,    41,    42,     3,
-      49,    44,    45,    47,    49,    53,    50,    53,    49,    13,
-      52,    49,    52,    49,    49,    49,    49,    49,   170,    49,
-      24,    49,    48,    48,    51,    43,    49,   198,    52,    49,
-      52,    52,    49,    49,    49,    49,    49,    49,   194,    45,
-      48,    52,    52,    52,    49,    52,    49,    43,    50,    49,
-      43,    49,    49,    43,    43,    43,    43,    43,    53,    53,
-      43,    53,    53,    43,    43,    43,    43,    48,   195,   182,
-     196,   193,   171,   181,   180,   176,   174,   179,   197,    -1,
-      -1,   100
+      34,    35,    36,    37,    38,    39,    40,     3,    47,    42,
+      43,    45,    47,    51,    48,    51,    47,    13,    50,    47,
+      50,    47,    47,    47,    47,    47,   164,    47,    24,    47,
+      46,    46,    49,    41,    47,   192,    50,    47,    50,    50,
+      47,    47,    47,    47,   188,    43,    46,    50,    50,    50,
+      47,    50,    47,    41,    48,    47,    41,    47,    47,    41,
+      41,    41,    41,    41,    51,    51,    41,    51,    51,    41,
+      41,    41,    41,    46,   189,   176,   190,   187,   165,   175,
+     174,   170,   168,   173,   191,    -1,    -1,    96
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    55,    56,     0,     3,    13,    24,    57,    59,    60,
-      61,    64,    66,    49,    49,    67,    62,    53,    68,     4,
+       0,    53,    54,     0,     3,    13,    24,    55,    57,    58,
+      59,    62,    64,    47,    47,    65,    60,    51,    66,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    14,    15,
       16,    17,    18,    19,    20,    21,    22,    23,    24,    25,
       26,    27,    28,    29,    30,    31,    32,    33,    34,    35,
-      36,    37,    38,    39,    40,    41,    42,    47,    50,    58,
-      63,    65,    69,    72,    75,    78,    81,    84,    85,    86,
-      87,    88,    89,    92,    93,    96,    97,    98,    99,   100,
-     101,   102,   103,   104,   107,   110,   113,   118,   121,   124,
-     127,   130,   131,   132,   133,   134,   139,   142,   143,   144,
-     145,   146,   147,    52,    90,    91,    49,    52,   122,   123,
-      94,    49,    49,    49,    49,    49,    49,    49,    49,    48,
-     135,   136,   137,   138,    48,   140,   141,    51,   128,   129,
-      52,   125,   126,    49,    52,   116,   117,    79,    70,    73,
-      76,    82,    52,   119,   120,    49,    49,    49,    49,    49,
-      49,    49,    52,   108,   109,    52,   111,   112,    52,   114,
-     115,    49,   148,   149,    52,   105,   106,    49,    48,   146,
-      43,    43,    49,    95,    44,    45,    43,    49,    49,    43,
-      43,    43,    43,    53,    80,    53,    71,    53,    74,    53,
-      77,    53,    83,    43,    43,    43,    43,    43,    43,    91,
-     122,    48,   136,   138,   141,   128,   126,   117,   120,   109,
-     112,   115,   149,   106
+      36,    37,    38,    39,    40,    45,    48,    56,    61,    63,
+      67,    70,    73,    76,    79,    82,    83,    84,    85,    86,
+      87,    90,    91,    94,    95,    96,    97,    98,    99,   100,
+     103,   106,   109,   114,   117,   120,   123,   126,   127,   128,
+     129,   130,   135,   138,   139,   140,   141,   142,   143,    50,
+      88,    89,    47,    50,   118,   119,    92,    47,    47,    47,
+      47,    47,    47,    47,    47,    46,   131,   132,   133,   134,
+      46,   136,   137,    49,   124,   125,    50,   121,   122,    47,
+      50,   112,   113,    77,    68,    71,    74,    80,    50,   115,
+     116,    47,    47,    47,    47,    47,    50,   104,   105,    50,
+     107,   108,    50,   110,   111,    47,   144,   145,    50,   101,
+     102,    47,    46,   142,    41,    41,    47,    93,    42,    43,
+      41,    47,    47,    41,    41,    41,    41,    51,    78,    51,
+      69,    51,    72,    51,    75,    51,    81,    41,    41,    41,
+      41,    41,    41,    89,   118,    46,   132,   134,   137,   124,
+     122,   113,   116,   105,   108,   111,   145,   102
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    54,    55,    56,    56,    57,    57,    58,    59,    59,
-      60,    61,    62,    62,    63,    63,    64,    65,    65,    65,
-      65,    65,    65,    65,    65,    65,    65,    65,    65,    65,
-      65,    65,    65,    65,    65,    65,    65,    65,    65,    65,
-      65,    65,    65,    65,    65,    65,    65,    65,    65,    65,
-      65,    65,    65,    65,    65,    65,    66,    67,    67,    68,
-      69,    70,    70,    71,    72,    73,    73,    74,    75,    76,
-      76,    77,    78,    79,    79,    80,    81,    82,    82,    83,
-      84,    84,    85,    85,    86,    86,    87,    87,    88,    88,
-      89,    90,    90,    91,    92,    93,    94,    94,    95,    96,
-      97,    98,    99,   100,   100,   101,   101,   102,   102,   103,
-     103,   104,   105,   105,   106,   107,   108,   108,   109,   110,
-     111,   111,   112,   113,   114,   114,   115,   116,   116,   117,
-     118,   119,   119,   120,   121,   122,   122,   123,   124,   124,
-     125,   125,   126,   127,   127,   128,   128,   129,   130,   131,
-     132,   133,   133,   134,   134,   135,   135,   136,   136,   137,
-     137,   138,   138,   139,   140,   140,   141,   141,   142,   142,
-     143,   144,   145,   145,   146,   147,   148,   148,   149
+       0,    52,    53,    54,    54,    55,    55,    56,    57,    57,
+      58,    59,    60,    60,    61,    61,    62,    63,    63,    63,
+      63,    63,    63,    63,    63,    63,    63,    63,    63,    63,
+      63,    63,    63,    63,    63,    63,    63,    63,    63,    63,
+      63,    63,    63,    63,    63,    63,    63,    63,    63,    63,
+      63,    63,    63,    63,    64,    65,    65,    66,    67,    68,
+      68,    69,    70,    71,    71,    72,    73,    74,    74,    75,
+      76,    77,    77,    78,    79,    80,    80,    81,    82,    82,
+      83,    83,    84,    84,    85,    85,    86,    86,    87,    88,
+      88,    89,    90,    91,    92,    92,    93,    94,    95,    96,
+      96,    97,    97,    98,    98,    99,    99,   100,   101,   101,
+     102,   103,   104,   104,   105,   106,   107,   107,   108,   109,
+     110,   110,   111,   112,   112,   113,   114,   115,   115,   116,
+     117,   118,   118,   119,   120,   120,   121,   121,   122,   123,
+     123,   124,   124,   125,   126,   127,   128,   129,   129,   130,
+     130,   131,   131,   132,   132,   133,   133,   134,   134,   135,
+     136,   136,   137,   137,   138,   138,   139,   140,   141,   141,
+     142,   143,   144,   144,   145
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -828,19 +819,19 @@ static const yytype_uint8 yyr2[] =
        1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
        1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
        1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     1,     1,     1,     2,     0,     2,     1,
-       2,     0,     2,     1,     2,     0,     2,     1,     2,     0,
+       1,     1,     1,     1,     2,     0,     2,     1,     2,     0,
        2,     1,     2,     0,     2,     1,     2,     0,     2,     1,
-       1,     2,     1,     2,     1,     2,     1,     2,     1,     2,
-       2,     1,     3,     1,     2,     2,     0,     2,     1,     2,
-       2,     2,     2,     1,     2,     1,     2,     1,     2,     1,
-       2,     2,     1,     3,     1,     2,     1,     3,     1,     2,
-       1,     3,     1,     2,     1,     3,     1,     1,     3,     1,
-       2,     1,     3,     1,     2,     1,     3,     1,     1,     2,
-       3,     1,     1,     1,     2,     3,     1,     1,     2,     2,
-       2,     1,     2,     2,     1,     3,     1,     2,     1,     3,
-       1,     2,     1,     2,     3,     1,     2,     1,     1,     2,
-       2,     1,     2,     1,     1,     2,     1,     3,     1
+       2,     0,     2,     1,     2,     0,     2,     1,     1,     2,
+       1,     2,     1,     2,     1,     2,     1,     2,     2,     1,
+       3,     1,     2,     2,     0,     2,     1,     2,     2,     1,
+       2,     1,     2,     1,     2,     1,     2,     2,     1,     3,
+       1,     2,     1,     3,     1,     2,     1,     3,     1,     2,
+       1,     3,     1,     1,     3,     1,     2,     1,     3,     1,
+       2,     1,     3,     1,     1,     2,     3,     1,     1,     1,
+       2,     3,     1,     1,     2,     2,     2,     1,     2,     2,
+       1,     3,     1,     2,     1,     3,     1,     2,     1,     2,
+       3,     1,     2,     1,     1,     2,     2,     1,     2,     1,
+       1,     2,     1,     3,     1
 };
 
 
@@ -1519,31 +1510,31 @@ yyreduce:
         case 2:
 #line 60 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1523 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1514 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 3:
 #line 63 "levcomp.ypp" /* yacc.c:1646  */
     {}
-#line 1529 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1520 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 4:
 #line 64 "levcomp.ypp" /* yacc.c:1646  */
     {}
-#line 1535 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1526 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 5:
 #line 67 "levcomp.ypp" /* yacc.c:1646  */
     {}
-#line 1541 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1532 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 6:
 #line 68 "levcomp.ypp" /* yacc.c:1646  */
     {}
-#line 1547 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1538 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 7:
@@ -1551,19 +1542,19 @@ yyreduce:
     {
                     yyerror("Unexpected character sequence.");
                 }
-#line 1555 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1546 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 8:
 #line 77 "levcomp.ypp" /* yacc.c:1646  */
     {}
-#line 1561 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1552 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 9:
 #line 78 "levcomp.ypp" /* yacc.c:1646  */
     {}
-#line 1567 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1558 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 10:
@@ -1575,7 +1566,7 @@ yyreduce:
                         yyerror(make_stringf("Bad default-depth: %s (%s)",
                                 (yyvsp[0].text), err.c_str()).c_str());
                 }
-#line 1579 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1570 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 11:
@@ -1587,7 +1578,7 @@ yyreduce:
                     {
                         lc_global_prelude.set_file(lc_desfile);
                         lc_run_global_prelude = false;
-                        if (lc_global_prelude.load_call(dlua, NULL))
+                        if (lc_global_prelude.load_call(dlua, nullptr))
                             yyerror( lc_global_prelude.orig_error().c_str() );
                     }
 
@@ -1598,31 +1589,31 @@ yyreduce:
                         yyerror(err.c_str());
                     add_parsed_map(lc_map);
                 }
-#line 1602 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1593 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 12:
 #line 112 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1608 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1599 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 13:
 #line 113 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1614 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1605 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 14:
 #line 116 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1620 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1611 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 15:
 #line 117 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1626 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1617 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 16:
@@ -1648,325 +1639,303 @@ yyreduce:
                         map_file_place(lc_desfile, yylineno);
                     lc_loaded_maps[(yyvsp[0].text)] = lc_map.place_loaded_from;
                 }
-#line 1652 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1643 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 53:
+#line 180 "levcomp.ypp" /* yacc.c:1646  */
+    {}
+#line 1649 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 54:
+#line 183 "levcomp.ypp" /* yacc.c:1646  */
+    { }
+#line 1655 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 182 "levcomp.ypp" /* yacc.c:1646  */
-    {}
-#line 1658 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 185 "levcomp.ypp" /* yacc.c:1646  */
+    { }
+#line 1661 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 185 "levcomp.ypp" /* yacc.c:1646  */
+#line 186 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1664 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1667 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 187 "levcomp.ypp" /* yacc.c:1646  */
-    { }
-#line 1670 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 58:
-#line 188 "levcomp.ypp" /* yacc.c:1646  */
-    { }
-#line 1676 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 59:
-#line 192 "levcomp.ypp" /* yacc.c:1646  */
+#line 190 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_global_prelude.add(yylineno, (yyvsp[0].text));
                 }
-#line 1684 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1675 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 58:
+#line 194 "levcomp.ypp" /* yacc.c:1646  */
+    { }
+#line 1681 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 59:
+#line 196 "levcomp.ypp" /* yacc.c:1646  */
+    { }
+#line 1687 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 196 "levcomp.ypp" /* yacc.c:1646  */
+#line 197 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1690 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1693 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 198 "levcomp.ypp" /* yacc.c:1646  */
-    { }
-#line 1696 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 62:
-#line 199 "levcomp.ypp" /* yacc.c:1646  */
-    { }
-#line 1702 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 63:
-#line 203 "levcomp.ypp" /* yacc.c:1646  */
+#line 201 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(yylineno, (yyvsp[0].text));
                 }
-#line 1710 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1701 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 62:
+#line 205 "levcomp.ypp" /* yacc.c:1646  */
+    { }
+#line 1707 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 63:
+#line 207 "levcomp.ypp" /* yacc.c:1646  */
+    { }
+#line 1713 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 207 "levcomp.ypp" /* yacc.c:1646  */
+#line 208 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1716 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1719 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 209 "levcomp.ypp" /* yacc.c:1646  */
-    { }
-#line 1722 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 66:
-#line 210 "levcomp.ypp" /* yacc.c:1646  */
-    { }
-#line 1728 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 67:
-#line 214 "levcomp.ypp" /* yacc.c:1646  */
+#line 212 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.validate.add(yylineno, (yyvsp[0].text));
                 }
-#line 1736 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1727 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 66:
+#line 216 "levcomp.ypp" /* yacc.c:1646  */
+    { }
+#line 1733 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 67:
+#line 218 "levcomp.ypp" /* yacc.c:1646  */
+    { }
+#line 1739 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 218 "levcomp.ypp" /* yacc.c:1646  */
+#line 219 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1742 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1745 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 220 "levcomp.ypp" /* yacc.c:1646  */
-    { }
-#line 1748 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 70:
-#line 221 "levcomp.ypp" /* yacc.c:1646  */
-    { }
-#line 1754 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 71:
-#line 225 "levcomp.ypp" /* yacc.c:1646  */
+#line 223 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.veto.add(yylineno, (yyvsp[0].text));
                 }
-#line 1762 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1753 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 70:
+#line 227 "levcomp.ypp" /* yacc.c:1646  */
+    { }
+#line 1759 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 71:
+#line 229 "levcomp.ypp" /* yacc.c:1646  */
+    { }
+#line 1765 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 229 "levcomp.ypp" /* yacc.c:1646  */
+#line 230 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1768 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1771 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 231 "levcomp.ypp" /* yacc.c:1646  */
-    { }
-#line 1774 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 74:
-#line 232 "levcomp.ypp" /* yacc.c:1646  */
-    { }
-#line 1780 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 75:
-#line 236 "levcomp.ypp" /* yacc.c:1646  */
+#line 234 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.prelude.add(yylineno, (yyvsp[0].text));
                 }
-#line 1788 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1779 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 74:
+#line 238 "levcomp.ypp" /* yacc.c:1646  */
+    { }
+#line 1785 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 75:
+#line 240 "levcomp.ypp" /* yacc.c:1646  */
+    { }
+#line 1791 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 240 "levcomp.ypp" /* yacc.c:1646  */
+#line 241 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1794 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1797 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 242 "levcomp.ypp" /* yacc.c:1646  */
-    { }
-#line 1800 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 78:
-#line 243 "levcomp.ypp" /* yacc.c:1646  */
-    { }
-#line 1806 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 79:
-#line 247 "levcomp.ypp" /* yacc.c:1646  */
+#line 245 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.epilogue.add(yylineno, (yyvsp[0].text));
                 }
-#line 1814 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1805 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 80:
-#line 251 "levcomp.ypp" /* yacc.c:1646  */
+  case 78:
+#line 249 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1820 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1811 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 81:
-#line 253 "levcomp.ypp" /* yacc.c:1646  */
+  case 79:
+#line 251 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("kfeat(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 1831 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1822 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 82:
-#line 260 "levcomp.ypp" /* yacc.c:1646  */
+  case 80:
+#line 258 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1837 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1828 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 83:
-#line 262 "levcomp.ypp" /* yacc.c:1646  */
+  case 81:
+#line 260 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("kmons(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 1848 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1839 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 84:
-#line 269 "levcomp.ypp" /* yacc.c:1646  */
+  case 82:
+#line 267 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1854 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1845 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 85:
-#line 271 "levcomp.ypp" /* yacc.c:1646  */
+  case 83:
+#line 269 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("kitem(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 1865 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1856 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 86:
-#line 278 "levcomp.ypp" /* yacc.c:1646  */
+  case 84:
+#line 276 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1871 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1862 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 87:
-#line 280 "levcomp.ypp" /* yacc.c:1646  */
+  case 85:
+#line 278 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("kmask(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 1882 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1873 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 88:
-#line 287 "levcomp.ypp" /* yacc.c:1646  */
+  case 86:
+#line 285 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 1888 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1879 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 89:
-#line 289 "levcomp.ypp" /* yacc.c:1646  */
+  case 87:
+#line 287 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("kprop(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 1899 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1890 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 90:
-#line 296 "levcomp.ypp" /* yacc.c:1646  */
+  case 88:
+#line 294 "levcomp.ypp" /* yacc.c:1646  */
     {}
-#line 1905 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1896 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 93:
-#line 304 "levcomp.ypp" /* yacc.c:1646  */
+  case 91:
+#line 302 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("shuffle(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 1916 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1907 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 94:
-#line 312 "levcomp.ypp" /* yacc.c:1646  */
+  case 92:
+#line 310 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("clear(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 1927 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1918 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 95:
-#line 320 "levcomp.ypp" /* yacc.c:1646  */
+  case 93:
+#line 318 "levcomp.ypp" /* yacc.c:1646  */
     {}
-#line 1933 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1924 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 98:
-#line 328 "levcomp.ypp" /* yacc.c:1646  */
+  case 96:
+#line 326 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("tags(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 1944 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1935 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 99:
-#line 337 "levcomp.ypp" /* yacc.c:1646  */
-    {
-                    lc_map.main.add(
-                        yylineno,
-                        make_stringf("lflags(\"%s\")",
-                                     quote_lua_string((yyvsp[0].text)).c_str()));
-                }
-#line 1955 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 100:
-#line 346 "levcomp.ypp" /* yacc.c:1646  */
-    {
-                    lc_map.main.add(
-                        yylineno,
-                        make_stringf("bflags(\"%s\")",
-                                     quote_lua_string((yyvsp[0].text)).c_str()));
-                }
-#line 1966 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 101:
-#line 355 "levcomp.ypp" /* yacc.c:1646  */
+  case 97:
+#line 335 "levcomp.ypp" /* yacc.c:1646  */
     {
                     string key, arg;
                     int sep(0);
@@ -1997,339 +1966,339 @@ yyreduce:
                                       quote_lua_string((yyvsp[0].text)).c_str()));
                     }
                 }
-#line 2001 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1970 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 102:
-#line 387 "levcomp.ypp" /* yacc.c:1646  */
+  case 98:
+#line 367 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 2007 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1976 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 103:
-#line 390 "levcomp.ypp" /* yacc.c:1646  */
+  case 99:
+#line 370 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 2013 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1982 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 104:
-#line 392 "levcomp.ypp" /* yacc.c:1646  */
+  case 100:
+#line 372 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("lfloorcol(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2024 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1993 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 105:
-#line 399 "levcomp.ypp" /* yacc.c:1646  */
+  case 101:
+#line 379 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 2030 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 1999 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 106:
-#line 401 "levcomp.ypp" /* yacc.c:1646  */
+  case 102:
+#line 381 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("lrockcol(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2041 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2010 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 107:
-#line 408 "levcomp.ypp" /* yacc.c:1646  */
+  case 103:
+#line 388 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 2047 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2016 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 108:
-#line 410 "levcomp.ypp" /* yacc.c:1646  */
+  case 104:
+#line 390 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("lfloortile(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2058 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2027 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 109:
-#line 418 "levcomp.ypp" /* yacc.c:1646  */
+  case 105:
+#line 398 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 2064 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2033 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 110:
-#line 420 "levcomp.ypp" /* yacc.c:1646  */
+  case 106:
+#line 400 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("lrocktile(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2075 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2044 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 114:
-#line 435 "levcomp.ypp" /* yacc.c:1646  */
+  case 110:
+#line 415 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("fheight(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2086 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2055 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 118:
-#line 451 "levcomp.ypp" /* yacc.c:1646  */
+  case 114:
+#line 431 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("ftile(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2097 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2066 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 122:
-#line 467 "levcomp.ypp" /* yacc.c:1646  */
+  case 118:
+#line 447 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("rtile(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2108 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2077 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 126:
-#line 483 "levcomp.ypp" /* yacc.c:1646  */
+  case 122:
+#line 463 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("tile(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2119 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2088 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 127:
-#line 492 "levcomp.ypp" /* yacc.c:1646  */
+  case 123:
+#line 472 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 2125 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2094 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 128:
-#line 493 "levcomp.ypp" /* yacc.c:1646  */
+  case 124:
+#line 473 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 2131 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2100 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 129:
-#line 497 "levcomp.ypp" /* yacc.c:1646  */
+  case 125:
+#line 477 "levcomp.ypp" /* yacc.c:1646  */
     {
                       lc_map.main.add(
                           yylineno,
                           make_stringf("colour(\"%s\")",
                               quote_lua_string((yyvsp[0].text)).c_str()));
                   }
-#line 2142 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2111 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 130:
-#line 505 "levcomp.ypp" /* yacc.c:1646  */
+  case 126:
+#line 485 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 2148 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2117 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 131:
-#line 508 "levcomp.ypp" /* yacc.c:1646  */
+  case 127:
+#line 488 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 2154 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2123 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 132:
-#line 509 "levcomp.ypp" /* yacc.c:1646  */
+  case 128:
+#line 489 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 2160 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2129 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 133:
-#line 513 "levcomp.ypp" /* yacc.c:1646  */
+  case 129:
+#line 493 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("nsubst(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2171 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2140 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 134:
-#line 521 "levcomp.ypp" /* yacc.c:1646  */
+  case 130:
+#line 501 "levcomp.ypp" /* yacc.c:1646  */
     { }
-#line 2177 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2146 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 137:
-#line 529 "levcomp.ypp" /* yacc.c:1646  */
+  case 133:
+#line 509 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("subst(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2188 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2157 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 134:
+#line 517 "levcomp.ypp" /* yacc.c:1646  */
+    {}
+#line 2163 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 135:
+#line 518 "levcomp.ypp" /* yacc.c:1646  */
+    {}
+#line 2169 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 138:
-#line 537 "levcomp.ypp" /* yacc.c:1646  */
-    {}
-#line 2194 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 139:
-#line 538 "levcomp.ypp" /* yacc.c:1646  */
-    {}
-#line 2200 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 142:
-#line 546 "levcomp.ypp" /* yacc.c:1646  */
+#line 526 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("item(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2211 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2180 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 139:
+#line 533 "levcomp.ypp" /* yacc.c:1646  */
+    {}
+#line 2186 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 140:
+#line 534 "levcomp.ypp" /* yacc.c:1646  */
+    {}
+#line 2192 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 143:
-#line 553 "levcomp.ypp" /* yacc.c:1646  */
-    {}
-#line 2217 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 144:
-#line 554 "levcomp.ypp" /* yacc.c:1646  */
-    {}
-#line 2223 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 147:
-#line 562 "levcomp.ypp" /* yacc.c:1646  */
+#line 542 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("mons(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2234 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2203 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 148:
-#line 571 "levcomp.ypp" /* yacc.c:1646  */
+  case 144:
+#line 551 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("place(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2245 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2214 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 149:
-#line 580 "levcomp.ypp" /* yacc.c:1646  */
+  case 145:
+#line 560 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("desc(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2256 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2225 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 150:
-#line 589 "levcomp.ypp" /* yacc.c:1646  */
+  case 146:
+#line 569 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("order(%d)", int((yyvsp[0].f))));
                 }
-#line 2266 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2235 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 151:
-#line 596 "levcomp.ypp" /* yacc.c:1646  */
+  case 147:
+#line 576 "levcomp.ypp" /* yacc.c:1646  */
     {}
-#line 2272 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2241 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 152:
-#line 598 "levcomp.ypp" /* yacc.c:1646  */
+  case 148:
+#line 578 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("depth(\"%s\")",
                             quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2283 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2252 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 149:
+#line 586 "levcomp.ypp" /* yacc.c:1646  */
+    { }
+#line 2258 "levcomp.tab.cc" /* yacc.c:1646  */
+    break;
+
+  case 150:
+#line 587 "levcomp.ypp" /* yacc.c:1646  */
+    { }
+#line 2264 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
   case 153:
-#line 606 "levcomp.ypp" /* yacc.c:1646  */
-    { }
-#line 2289 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 154:
-#line 607 "levcomp.ypp" /* yacc.c:1646  */
-    { }
-#line 2295 "levcomp.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 157:
-#line 614 "levcomp.ypp" /* yacc.c:1646  */
+#line 594 "levcomp.ypp" /* yacc.c:1646  */
     {
                     (yyval.i) = (yyvsp[-1].f) * 100;
                 }
-#line 2303 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2272 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 158:
-#line 618 "levcomp.ypp" /* yacc.c:1646  */
+  case 154:
+#line 598 "levcomp.ypp" /* yacc.c:1646  */
     {
                     (yyval.i) = (yyvsp[0].f);
                 }
-#line 2311 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2280 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 159:
-#line 623 "levcomp.ypp" /* yacc.c:1646  */
+  case 155:
+#line 603 "levcomp.ypp" /* yacc.c:1646  */
     {
                     (yyval.chance).priority = (yyvsp[-2].f);
                     (yyval.chance).chance   = (yyvsp[0].i);
                 }
-#line 2320 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2289 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 160:
-#line 628 "levcomp.ypp" /* yacc.c:1646  */
+  case 156:
+#line 608 "levcomp.ypp" /* yacc.c:1646  */
     {
                     (yyval.chance).priority = DEFAULT_CHANCE_PRIORITY;
                     (yyval.chance).chance   = (yyvsp[0].i);
                 }
-#line 2329 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2298 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 161:
-#line 635 "levcomp.ypp" /* yacc.c:1646  */
+  case 157:
+#line 615 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
@@ -2337,93 +2306,93 @@ yyreduce:
                                      quote_lua_string((yyvsp[0].text)).c_str(),
                                      (yyvsp[-1].chance).priority, (yyvsp[-1].chance).chance));
                 }
-#line 2341 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2310 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 162:
-#line 643 "levcomp.ypp" /* yacc.c:1646  */
+  case 158:
+#line 623 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("chance(%d, %d)",
                                      (yyvsp[0].chance).priority, (yyvsp[0].chance).chance));
                 }
-#line 2352 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2321 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 166:
-#line 657 "levcomp.ypp" /* yacc.c:1646  */
+  case 162:
+#line 637 "levcomp.ypp" /* yacc.c:1646  */
     {
                      lc_map.main.add(
                          yylineno,
                          make_stringf("depth_weight(\"%s\", %d)",
                                       quote_lua_string((yyvsp[0].text)).c_str(), (int)(yyvsp[-1].f)));
                  }
-#line 2363 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2332 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 167:
-#line 664 "levcomp.ypp" /* yacc.c:1646  */
+  case 163:
+#line 644 "levcomp.ypp" /* yacc.c:1646  */
     {
                      lc_map.main.add(
                          yylineno,
                          make_stringf("weight(%d)", (int)(yyvsp[0].f)));
                  }
-#line 2373 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2342 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 168:
-#line 671 "levcomp.ypp" /* yacc.c:1646  */
+  case 164:
+#line 651 "levcomp.ypp" /* yacc.c:1646  */
     {}
-#line 2379 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2348 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 169:
-#line 673 "levcomp.ypp" /* yacc.c:1646  */
+  case 165:
+#line 653 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("orient(\"%s\")",
                                      quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2390 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2359 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 170:
-#line 682 "levcomp.ypp" /* yacc.c:1646  */
+  case 166:
+#line 662 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.main.add(
                         yylineno,
                         make_stringf("welcome(\"%s\")",
                                      quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2401 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2370 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 174:
-#line 698 "levcomp.ypp" /* yacc.c:1646  */
+  case 170:
+#line 678 "levcomp.ypp" /* yacc.c:1646  */
     {
                     lc_map.mapchunk.add(
                         yylineno,
                         make_stringf("map(\"%s\")",
                                      quote_lua_string((yyvsp[0].text)).c_str()));
                 }
-#line 2412 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2381 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 178:
-#line 714 "levcomp.ypp" /* yacc.c:1646  */
+  case 174:
+#line 694 "levcomp.ypp" /* yacc.c:1646  */
     {
                        lc_map.main.add(
                            yylineno,
                            make_stringf("subvault(\"%s\")",
                                quote_lua_string((yyvsp[0].text)).c_str()));
                    }
-#line 2423 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2392 "levcomp.tab.cc" /* yacc.c:1646  */
     break;
 
 
-#line 2427 "levcomp.tab.cc" /* yacc.c:1646  */
+#line 2396 "levcomp.tab.cc" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2651,5 +2620,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 722 "levcomp.ypp" /* yacc.c:1906  */
+#line 702 "levcomp.ypp" /* yacc.c:1906  */
 

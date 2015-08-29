@@ -1,0 +1,154 @@
+# pbuilder defaults; edit /etc/pbuilderrc to override these and see
+# pbuilderrc.5 for documentation
+
+## set e.g. ARCH=i386 to make the i386 packges on an amd64 system
+: ${ARCH:="$(dpkg --print-architecture)"}
+##
+. /etc/lsb-release
+if [ -z "$DIST" ]; then
+   DIST="$DISTRIB_CODENAME"
+fi
+NAME="$DIST"
+if [ -n "${ARCH}" ]; then
+    NAME="$NAME-$ARCH"
+    DEBOOTSTRAPOPTS=("--arch" "$ARCH" "${DEBOOTSTRAPOPTS[@]}")
+fi
+#BASETGZ=/var/cache/pbuilder/base.tgz
+BASEPATH=/var/cache/pbuilder/$NAME.cow/
+#EXTRAPACKAGES=""
+BUILDPLACE=/var/cache/pbuilder/build/
+if [ -z "$OS" ]; then
+   OS="${DISTRIB_ID,,}"
+fi
+## set OS=debian to e.g. build for debian from an ubuntu system.
+if [ "${OS,,}" = "debian" ]; then
+    MIRRORSITE=http://ftp.us.debian.org/debian
+elif [ "${OS,,}" = "ubuntu" ]; then
+    MIRRORSITE=http://archive.ubuntu.com/ubuntu
+else
+    echo "Unknown Debian OS, modify pbuilderrc to set MIRRORSITE"
+    exit 1
+fi
+
+## Disable use of local mirror
+#OTHERMIRROR="deb http://www.home.com/updates/ ./"
+#export http_proxy=http://your-proxy:8080/
+USEPROC=yes
+USEDEVPTS=yes
+USERUNSHM=yes
+USEDEVFS=no
+## All built packages are moved here
+BUILDRESULT=/var/cache/pbuilder/result/
+
+# specifying the distribution forces the distribution on "pbuilder update"
+DISTRIBUTION=$DIST
+# specifying the components of the distribution, for instance to enable all
+# components on Debian use "main contrib non-free" and on Ubuntu "main
+# restricted universe multiverse"
+COMPONENTS="main"
+#specify the cache for APT 
+APTCACHE="/var/cache/pbuilder/aptcache/"
+APTCACHEHARDLINK="yes"
+REMOVEPACKAGES=""
+#HOOKDIR="/usr/lib/pbuilder/hooks"
+HOOKDIR=""
+# NB: this var is private to pbuilder; ccache uses "CCACHE_DIR" instead
+# CCACHEDIR="/var/cache/pbuilder/ccache"
+# Disable ccache since we make packages infrequently
+CCACHEDIR=""
+
+# make debconf not interact with user
+export DEBIAN_FRONTEND="noninteractive"
+
+if [ -z "$DEBFULLNAME" ]; then
+   # Replace will quoted dev name you use for commits
+   DEBFULLNAME=
+fi
+if [ -z "$DEBEMAIL" ]; then
+   # Replace will quoted dev email address
+   DEBEMAIL=
+fi
+if [ -z "$DEBFULLNAME" ] || [ -z "$DEBEMAIL" ]; then
+    echo "Both DEBFULLNAME and DEBEMAIL must be set"
+    exit 1
+fi
+#for pbuilder debuild
+BUILDSOURCEROOTCMD="fakeroot"
+PBUILDERROOTCMD="sudo -E"
+# use cowbuilder for pdebuild
+PDEBUILD_PBUILDER="cowbuilder"
+
+# additional build results to copy out of the package build area
+#ADDITIONAL_BUILDRESULTS=(xunit.xml .coverage)
+
+# command to satisfy build-dependencies; the default is an internal shell
+# implementation which is relatively slow; there are two alternate
+# implementations, the "experimental" implementation,
+# "pbuilder-satisfydepends-experimental", which might be useful to pull
+# packages from experimental or from repositories with a low APT Pin Priority,
+# and the "aptitude" implementation, which will resolve build-dependencies and
+# build-conflicts with aptitude which helps dealing with complex cases but does
+# not support unsigned APT repositories
+PBUILDERSATISFYDEPENDSCMD="/usr/lib/pbuilder/pbuilder-satisfydepends"
+
+# Arguments for $PBUILDERSATISFYDEPENDSCMD.
+# PBUILDERSATISFYDEPENDSOPT=()
+
+# You can optionally make pbuilder accept untrusted repositories by setting
+# this option to yes, but this may allow remote attackers to compromise the
+# system. Better set a valid key for the signed (local) repository with
+# $APTKEYRINGS (see below).
+ALLOWUNTRUSTED=no
+
+# Option to pass to apt-get always.
+export APTGETOPT=()
+# Option to pass to aptitude always.
+export APTITUDEOPT=()
+
+#Command-line option passed on to dpkg-buildpackage.
+#DEBBUILDOPTS="-IXXX -iXXX"
+DEBBUILDOPTS=""
+
+#APT configuration files directory
+APTCONFDIR=""
+
+# the username and ID used by pbuilder, inside chroot. Needs fakeroot, really
+BUILDUSERID=1234
+BUILDUSERNAME=pbuilder
+
+# BINDMOUNTS is a space separated list of things to mount
+# inside the chroot.
+BINDMOUNTS=""
+
+# Set the debootstrap variant to 'buildd' type.
+DEBOOTSTRAPOPTS=(
+    '--variant=buildd'
+    )
+# or unset it to make it not a buildd type.
+# unset DEBOOTSTRAPOPTS
+
+# Keyrings to use for package verification with apt, not used for debootstrap
+# (use DEBOOTSTRAPOPTS). By default the debian-archive-keyring package inside
+# the chroot is used.
+APTKEYRINGS=()
+
+# Set the PATH I am going to use inside pbuilder: default is "/usr/sbin:/usr/bin:/sbin:/bin"
+export PATH="/usr/sbin:/usr/bin:/sbin:/bin"
+
+# SHELL variable is used inside pbuilder by commands like 'su'; and they need sane values
+export SHELL=/bin/bash
+
+# The name of debootstrap command, you might want "cdebootstrap".
+DEBOOTSTRAP="debootstrap"
+
+# default file extension for pkgname-logfile
+PKGNAME_LOGFILE_EXTENTION="_$(dpkg --print-architecture).build"
+
+# default PKGNAME_LOGFILE
+PKGNAME_LOGFILE=""
+
+# default AUTOCLEANAPTCACHE
+AUTOCLEANAPTCACHE=""
+
+#default COMPRESSPROG
+COMPRESSPROG="gzip"

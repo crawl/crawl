@@ -13,7 +13,6 @@ stonesoup STARTUP_STONESOUP
 tutorial STARTUP_TUTORIAL
 hints_mode STARTUP_HINTS
 dungeon_sprint STARTUP_SPRINT
-zot_defence STARTUP_ZOTDEF
 instructions STARTUP_INSTRUCTIONS
 arena STARTUP_ARENA
 high_scores STARTUP_HIGH_SCORES
@@ -26,7 +25,6 @@ high_scores STARTUP_HIGH_SCORES
 
 %include dc-abilities.txt
 %include dc-invocations.txt
-%include dc-zotdef.txt
 
 misc/todo TODO
 misc/error ERROR

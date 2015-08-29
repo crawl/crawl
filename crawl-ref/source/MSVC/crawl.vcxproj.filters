@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\ability.cc" />
@@ -35,6 +35,7 @@
     <ClCompile Include="..\database.cc" />
     <ClCompile Include="..\dbg-asrt.cc" />
     <ClCompile Include="..\dbg-maps.cc" />
+    <ClCompile Include="..\dbg-objstat.cc" />
     <ClCompile Include="..\dbg-scan.cc" />
     <ClCompile Include="..\dbg-util.cc" />
     <ClCompile Include="..\decks.cc" />
@@ -297,10 +298,8 @@
     <ClCompile Include="..\wiz-you.cc" />
     <ClCompile Include="..\worley.cc" />
     <ClCompile Include="..\xom.cc" />
-    <ClCompile Include="..\zotdef.cc" />
     <ClCompile Include="..\dgn-irregular-box.cc" />
     <ClCompile Include="..\json.cc" />
-    <ClCompile Include="..\mon-chimera.cc" />
     <ClCompile Include="..\spl-pick.cc" />
     <ClCompile Include="..\hash.cc" />
   </ItemGroup>
@@ -347,6 +346,7 @@
     <ClInclude Include="..\database.h" />
     <ClInclude Include="..\dbg-crsh.h" />
     <ClInclude Include="..\dbg-maps.h" />
+    <ClInclude Include="..\dbg-objstat.h" />
     <ClInclude Include="..\dbg-scan.h" />
     <ClInclude Include="..\dbg-util.h" />
     <ClInclude Include="..\debug.h" />
@@ -417,6 +417,7 @@
     <ClInclude Include="..\items.h" />
     <ClInclude Include="..\jobs.h" />
     <ClInclude Include="..\json.h" />
+    <ClInclude Include="..\json-wrapper.h" />
     <ClInclude Include="..\kills.h" />
     <ClInclude Include="..\lang-fake.h" />
     <ClInclude Include="..\libconsole.h" />
@@ -435,6 +436,7 @@
     <ClInclude Include="..\mon-flags.h" />
     <ClInclude Include="..\mon-mst.h" />
     <ClInclude Include="..\mon-pick-data.h" />
+    <ClInclude Include="..\mutant-beast.h" />
     <ClInclude Include="..\mutation-data.h" />
     <ClInclude Include="..\newgame_def.h" />
     <ClInclude Include="..\ng-setup.h" />
@@ -629,9 +631,7 @@
     <ClInclude Include="..\worley.h" />
     <ClInclude Include="..\xom.h" />
     <ClInclude Include="..\zap-data.h" />
-    <ClInclude Include="..\zotdef.h" />
     <ClInclude Include="..\dgn-irregular-box.h" />
-    <ClInclude Include="..\mon-chimera.h" />
     <ClInclude Include="..\random-pick.h" />
     <ClInclude Include="..\spl-pick.h" />
     <ClInclude Include="..\mon-book.h" />

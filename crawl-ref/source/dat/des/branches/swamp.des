@@ -114,7 +114,7 @@ NAME:   minmay_swamp_entry_reptiles
 TAGS:   swamp_entry
 WEIGHT: 5
 MONS:   swamp drake / komodo dragon / hydra / swamp dragon
-MONS:   baby alligator / crocodile / iguana / giant newt
+MONS:   crocodile / iguana / giant newt
 KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
@@ -496,11 +496,11 @@ ENDMAP
 
 NAME: wheals_swamp_sinkhole
 TAGS: extra no_monster_gen decor
-DEPTH: Swamp, !Swamp:$
+DEPTH: Swamp:1-2
 WEIGHT: 5
 KFEAT: ^ = known shaft trap
 SUBST: u = Ww
-KPROP: wW^ = no_rtele_into
+KPROP: wW^ = no_tele_into
 MAP
 ttttttttt
 twwwwwwwt
@@ -1189,7 +1189,7 @@ SHUFFLE: +d / +d / d+
 SUBST: w = w t:10
 SUBST: d = c
 SUBST: c = ccx
-KPROP: w = no_rtele_into
+KPROP: w = no_tele_into
 MAP
     wwww
   wwwwwwww
@@ -1217,8 +1217,8 @@ NSUBST: : = 5:W / *:.
 SUBST: w = w:10 t:10
 KFEAT: K = shallow_water
 KITEM: K = potion of poison / potion of degeneration / \
-           potion of decay / potion of mutation
-KPROP: w = no_rtele_into
+           potion of mutation
+KPROP: w = no_tele_into
 MARKER: K = lua:fog_machine { cloud_type="black smoke", \
                               pow_min = 10, pow_max = 30, delay = 50, \
                               size = 1, walk_dist = 2, spread_rate = 25 }
@@ -1251,7 +1251,7 @@ KITEM: O = great sword good_item w:20 / \
            double sword good_item w:2 / \
            triple sword good_item w:1
 KFEAT: K = deep_water
-KPROP: wK = no_rtele_into
+KPROP: wK = no_tele_into
 {{
   local cf = TriggerableFunction:new{
       func="callback.grunt_lady_of_the_lake_trigger",
@@ -1333,13 +1333,12 @@ ENDMAP
 NAME: nicolae_swamp_alligator_family
 TAGS: layout_swamp
 NSUBST: T = 2:W / *:t
-KMONS: 1 = alligator
-KMONS: 2 = baby alligator
-KFEAT: 12@ = W
+KMONS: 1 = alligator / nothing w:5
+KFEAT: 1@ = W
 MAP
    tttt
   tt11tt
- tt2222tt
+ tt1WW1tt
 tTWWWWWWTt
 tWTTWWTTWt
  WWWTTWWW
@@ -1393,7 +1392,7 @@ ttT..TttTTTTT..Tt
 ENDMAP
 
 NAME: lightli_tree_ring
-KPROP: *w = no_rtele_into
+KPROP: *w = no_tele_into
 MAP
 tttttttttt
 tttttttttt
@@ -1435,7 +1434,7 @@ ENDMAP
 NAME: nicolae_swamp_hydra_murder_den
 TAGS: no_monster_gen
 : local heads = crawl.roll_dice(2, 3) + 7
-KPROP: ' = no_rtele_into
+KPROP: ' = no_tele_into
 SUBST: Z = T_
 NSUBST: ' = 1:h / 1:g / 2:c / 1:c' / 2:% / 2:%' / 5:p / 4:p' / *:'
 SUBST: ' = ....b
@@ -1504,7 +1503,7 @@ KMONS:   q = w:2 col:darkgrey plant name:withered name_adjective              \
               tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
               name_adjective tile:mons_withered_plant
 KFEAT:   67 = W
-KPROP:   ~ = no_rtele_into
+KPROP:   ~ = no_tele_into
 SUBST:   1 = 12, " = 6:15 W
 SHUFFLE: DE
 SUBST:   D = W, E = t, W = W:299 .:1, + = ++W, - = +, ~ = W
@@ -1569,7 +1568,7 @@ NAME:  cheibrodos_swamp_pet_leeches
 TAGS:  no_item_gen no_monster_gen
 DEPTH: Swamp, !Swamp:$
 MONS:  vampire ; potion of blood . long sword . robe, giant leech
-KPROP: e' = no_rtele_into
+KPROP: e' = no_tele_into
 KPROP: .21 = bloody / w:30 nothing
 KPROP: e = bloody
 : dgn.delayed_decay(_G, 'e', 'human corpse')
@@ -1812,10 +1811,8 @@ ORIENT: float
 TAGS: transparent no_monster_gen no_item_gen
 NSUBST: M = 1:M / 1:H / 2:hmm / 2:A / 1:f / *:., \
         O = 1:O / 1:o / 1:Hh / 1:h^ / 1:b
-SUBST: T = t., A = A.., Z = ttW, _ = t_, v = t--
-KMONS: S = patrolling giant spore w:6 / nothing
+SUBST: T = t., Z = ttW, _ = t_, v = t--
 KMONS: Mm = shambling mangrove
-KMONS: A = wandering mushroom
 KMONS: F = fungus
 KMONS: Oo = oklob plant / oklob sapling w:2
 KMONS: Hh = thorn hunter
@@ -1833,26 +1830,26 @@ MAP
      _______tT,Tt_______
     __tttttttT,Tttttttt__
     _ttO--tttT,Tttt--Ott_
-    _t----vAttFttAv----t_
+    _t----v.ttFtt.v----t_
     _t--v.....t.....v--t_
     _t--.M..ZZZZZ..M.--t_
-    _tv...ZZ..S..ZZ...vt_
-   tttA..Z.........Z..Attt
-@ TTTtt.Z.S..WWW..S.Z.ttTTT @
+    _tv...ZZ.....ZZ...vt_
+   ttt...Z.........Z...ttt
+@ TTTtt.Z....WWW....Z.ttTTT @
  ,,,,,t.Z..WW...WW..Z.t,,,,,
   TTTtFZ...W..M..W...ZFtTTT
   _ttt.Z..W.MtttM.W..Z.ttt_
- __tA..ZS.W..ttt..W.SZ..At__
+ __t...Z..W..ttt..W..Z...t__
  _ttv..Z..W..ttt..W..Z..vtt_
 __t--..Z...W.M.M.W...Z..--t__
 _tt--.M.Z..WW...WW..Z.M.--tt_
-_tO-v...Z.S..WWW..S.Z...v-Ot_
+_tO-v...Z....WWW....Z...v-Ot_
 _tt---...Z.........Z...---tt_
-__ttt-vA..ZZ..S..ZZ..Av-ttt__
+__ttt-v...ZZ.....ZZ...v-ttt__
  ___tttttF..ZZZZZ..Fttttt___
    __ttT,t....M....t,Ttt__
      tT,Ttt.......ttT,Tt
-     T,TtttAv...vAtttT,T
+     T,Tttt.v...v.tttT,T
      ,Tt__tt--v--tt__tT,
     @    __t-----t__    @
           _tttOttt_
@@ -1929,7 +1926,7 @@ SHUFFLE: Od, 123,  lLO4 / wWP5
 SUBST:   1 = 111., 2 = 2., 3 = 333.
 SUBST:   l = l `:2, L~ = ., ' = .t, " = tc
 SUBST:   - = WW.
-KPROP:   ` = no_rtele_into
+KPROP:   ` = no_tele_into
 : if crawl.one_chance_in(11) then
 SUBST:   6 = .:999 6:1, OP = &
 : end

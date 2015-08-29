@@ -7,9 +7,6 @@
 #include "fight.h"
 #include "random-var.h"
 
-// Forward declaration of the struct
-struct mon_attack_def;
-
 enum unarmed_attack_type
 {
     UNAT_NO_ATTACK,                    //    0
@@ -24,21 +21,6 @@ enum unarmed_attack_type
     UNAT_TENTACLES,
     UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
     UNAT_LAST_ATTACK = UNAT_TENTACLES
-};
-
-class AuxAttackType
-{
-public:
-    AuxAttackType(int _damage, string _name) :
-    damage(_damage), name(_name) { };
-public:
-    virtual int get_damage() const { return damage; };
-    virtual int get_brand() const { return SPWPN_NORMAL; };
-    virtual string get_name() const { return name; };
-    virtual string get_verb() const { return get_name(); };
-protected:
-    const int damage;
-    const string name;
 };
 
 class melee_attack : public attack
@@ -129,6 +111,7 @@ private:
     bool mons_do_poison();
     void mons_do_napalm();
     void mons_do_eyeball_confusion();
+    void mons_do_tendril_disarm();
     void apply_black_mark_effects();
 private:
     // Player-attack specific stuff

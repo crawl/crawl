@@ -10,7 +10,7 @@
 #include "branch.h"
 #include "chardump.h"
 #include "crash.h"
-#include "dbg-scan.h"
+#include "dbg-objstat.h"
 #include "dungeon.h"
 #include "env.h"
 #include "initfile.h"
@@ -19,11 +19,12 @@
 #include "message.h"
 #include "ng-init.h"
 #include "player.h"
+#include "shopping.h"
 #include "state.h"
 #include "stringutil.h"
 #include "view.h"
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
 // Map statistics generation.
 
 static map<string, int> try_count;
@@ -111,18 +112,26 @@ static bool _do_build_level()
         {
             if (grd[x][y] == DNGN_RUNED_DOOR)
                 grd[x][y] = DNGN_CLOSED_DOOR;
-            // objstat tallying of monsters
+            // objstat tallying of monsters and shop items.
             if (crawl_state.obj_stat_gen)
             {
                 coord_def pos(x, y);
                 monster *mons = monster_at(pos);
                 if (mons)
                     objstat_record_monster(mons);
+
+                const shop_struct * const shop = get_shop(pos);
+                if (shop && shop->defined())
+                {
+                    for (const auto &item : shop->stock)
+                        if (item.defined())
+                            objstat_record_item(item);
+                }
             }
         }
 
 
-    // Record items for objstat
+    // Record floor items for objstat.
     if (crawl_state.obj_stat_gen)
         for (int i = 0; i < MAX_ITEMS; ++i)
             if (mitm[i].defined())
@@ -137,13 +146,10 @@ static bool _do_build_level()
     // should be fine for objstat purposes.
     if (_is_disconnected_level() && !crawl_state.obj_stat_gen)
     {
-        string vaults;
-        for (int j = 0, size = env.level_vaults.size(); j < size; ++j)
-        {
-            if (j && !vaults.empty())
-                vaults += ", ";
-            vaults += env.level_vaults[j]->map.name;
-        }
+        string vaults = comma_separated_fn(
+                begin(env.level_vaults), end(env.level_vaults),
+                [](unique_ptr<vault_placement> &lp) { return lp->map.name; },
+                ", ", ", ");
 
         if (!vaults.empty())
             vaults = " (" + vaults + ")";
@@ -197,9 +203,8 @@ static void _dungeon_places()
 
 static bool _build_dungeon()
 {
-    for (int i = 0, size = generated_levels.size(); i < size; ++i)
+    for (const level_id lid : generated_levels)
     {
-        const level_id &lid = generated_levels[i];
         you.where_are_you = lid.branch;
         you.depth = lid.depth;
 
@@ -497,4 +502,4 @@ void mapstat_generate_stats()
     printf("Map stats complete.\n");
 }
 
-#endif // DEBUG_DIAGNOSTICS
+#endif // DEBUG_STATISTICS

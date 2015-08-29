@@ -384,10 +384,10 @@ static const weapon_def Weapon_prop[] =
     { WPN_GREAT_MACE,        "great mace",         17, -4, 17,  9,
         SK_MACES_FLAILS, SIZE_MEDIUM,  SIZE_BIG,    MI_NONE,
         DAMV_CRUSHING, 3, 10, M_AND_F_BRANDS },
-    { WPN_GIANT_CLUB,        "giant club",         20, -6, 17, 10,
+    { WPN_GIANT_CLUB,        "giant club",         20, -6, 16, 10,
         SK_MACES_FLAILS, SIZE_LARGE, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CRUSHING, 1, 10, {} },
-    { WPN_GIANT_SPIKED_CLUB, "giant spiked club",  22, -7, 18, 10,
+    { WPN_GIANT_SPIKED_CLUB, "giant spiked club",  22, -7, 19, 10,
         SK_MACES_FLAILS, SIZE_LARGE, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CRUSHING | DAM_PIERCE, 1, 10, {} },
 
@@ -668,19 +668,51 @@ void init_properties()
     COMPILE_CHECK(NUM_MISSILES == ARRAYSZ(Missile_prop));
     COMPILE_CHECK(NUM_FOODS    == ARRAYSZ(Food_prop));
 
-    int i;
-
-    for (i = 0; i < NUM_ARMOURS; i++)
+    for (int i = 0; i < NUM_ARMOURS; i++)
         Armour_index[ Armour_prop[i].id ] = i;
 
-    for (i = 0; i < NUM_WEAPONS; i++)
+    for (int i = 0; i < NUM_WEAPONS; i++)
         Weapon_index[ Weapon_prop[i].id ] = i;
 
-    for (i = 0; i < NUM_MISSILES; i++)
+    for (int i = 0; i < NUM_MISSILES; i++)
         Missile_index[ Missile_prop[i].id ] = i;
 
-    for (i = 0; i < NUM_FOODS; i++)
+    for (int i = 0; i < NUM_FOODS; i++)
         Food_index[ Food_prop[i].id ] = i;
+}
+
+const set<pair<object_class_type, int> > removed_items =
+{
+#if TAG_MAJOR_VERSION == 34
+    { OBJ_JEWELLERY, AMU_CONTROLLED_FLIGHT },
+    { OBJ_JEWELLERY, AMU_CONSERVATION },
+    { OBJ_JEWELLERY, RING_REGENERATION },
+    { OBJ_JEWELLERY, RING_TELEPORT_CONTROL },
+    { OBJ_STAVES,    STAFF_ENCHANTMENT },
+    { OBJ_STAVES,    STAFF_CHANNELING },
+    { OBJ_POTIONS,   POT_GAIN_STRENGTH },
+    { OBJ_POTIONS,   POT_GAIN_DEXTERITY },
+    { OBJ_POTIONS,   POT_GAIN_INTELLIGENCE },
+    { OBJ_POTIONS,   POT_WATER },
+    { OBJ_POTIONS,   POT_STRONG_POISON },
+    { OBJ_POTIONS,   POT_BLOOD_COAGULATED },
+    { OBJ_POTIONS,   POT_PORRIDGE },
+    { OBJ_POTIONS,   POT_SLOWING },
+    { OBJ_POTIONS,   POT_DECAY },
+    { OBJ_POTIONS,   POT_RESTORE_ABILITIES },
+    { OBJ_BOOKS,     BOOK_WIZARDRY },
+    { OBJ_BOOKS,     BOOK_CONTROL },
+    { OBJ_BOOKS,     BOOK_BUGGY_DESTRUCTION },
+    { OBJ_RODS,      ROD_VENOM },
+    { OBJ_RODS,      ROD_WARDING },
+    { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
+    { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
+#endif
+};
+
+bool item_type_removed(object_class_type base, int subtype)
+{
+    return removed_items.count({ base, subtype }) != 0;
 }
 
 // Some convenient functions to hide the bit operations and create
@@ -744,6 +776,16 @@ bool curse_an_item(bool ignore_holy_wrath)
     return true;
 }
 
+void auto_id_inventory()
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def& item = you.inv[i];
+        if (item.defined())
+            god_id_item(item, false);
+    }
+}
+
 void do_curse_item(item_def &item, bool quiet)
 {
     // Already cursed?
@@ -799,15 +841,7 @@ void do_curse_item(item_def &item, bool quiet)
         {
             amusement *= 2;
 
-            // Cursed cloaks prevent you from removing body armour,
-            // gloves from switching rings.
-            if (item.base_type == OBJ_ARMOUR
-                && (get_armour_slot(item) == EQ_CLOAK
-                    || get_armour_slot(item) == EQ_GLOVES))
-            {
-                amusement *= 2;
-            }
-            else if (you.equip[EQ_WEAPON] == item.link)
+            if (you.equip[EQ_WEAPON] == item.link)
             {
                 // Redraw the weapon.
                 you.wield_change = true;
@@ -950,7 +984,7 @@ void set_ident_flags(item_def &item, iflags_t flags)
     if (fully_identified(item))
     {
         if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID)
-            && get_ident_type(item) != ID_KNOWN_TYPE
+            && !get_ident_type(item)
             && is_interesting_item(item))
         {
             // Make a note of it.
@@ -1955,7 +1989,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
 
     // Jewellery with evokable abilities, wands and similar unwielded
     // evokers allow training.
-    if (item_is_evokable(item, false, false, false, false, true)
+    if (item_is_evokable(item, false, false, true, false, true)
         || item.base_type == OBJ_JEWELLERY && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
@@ -2437,7 +2471,7 @@ int get_armour_res_magic(const item_def &arm, bool check_artp)
         res += MR_PIP;
 
     if (check_artp && is_artefact(arm))
-        res += MR_PIP * artefact_property(arm, ARTP_MAGIC);
+        res += MR_PIP * artefact_property(arm, ARTP_MAGIC_RESISTANCE);
 
     return res;
 }
@@ -2451,7 +2485,7 @@ bool get_armour_see_invisible(const item_def &arm, bool check_artp)
         return true;
 
     if (check_artp && is_artefact(arm))
-        return artefact_property(arm, ARTP_EYESIGHT);
+        return artefact_property(arm, ARTP_SEE_INVISIBLE);
 
     return false;
 }
@@ -2569,7 +2603,7 @@ int get_jewellery_res_magic(const item_def &ring, bool check_artp)
         res += 40;
 
     if (check_artp && is_artefact(ring))
-        res += 40 * artefact_property(ring, ARTP_MAGIC);
+        res += 40 * artefact_property(ring, ARTP_MAGIC_RESISTANCE);
 
     return res;
 }
@@ -2582,7 +2616,7 @@ bool get_jewellery_see_invisible(const item_def &ring, bool check_artp)
         return true;
 
     if (check_artp && is_artefact(ring))
-        return artefact_property(ring, ARTP_EYESIGHT);
+        return artefact_property(ring, ARTP_SEE_INVISIBLE);
 
     return false;
 }
@@ -2682,7 +2716,6 @@ bool gives_ability(const item_def &item)
         if (item.sub_type == RING_TELEPORTATION
             || item.sub_type == RING_FLIGHT
             || item.sub_type == RING_INVISIBILITY
-            || item.sub_type == RING_TELEPORT_CONTROL
             || item.sub_type == AMU_RAGE)
         {
             return true;
@@ -2732,12 +2765,15 @@ bool gives_resistance(const item_def &item)
     case OBJ_JEWELLERY:
         if (!jewellery_is_amulet(item))
         {
-            if (item.sub_type >= RING_PROTECTION_FROM_FIRE
-                   && item.sub_type <= RING_PROTECTION_FROM_COLD
+            if (item.sub_type == RING_PROTECTION_FROM_FIRE
+                || item.sub_type == RING_POISON_RESISTANCE
+                || item.sub_type == RING_PROTECTION_FROM_COLD
                 || item.sub_type == RING_SEE_INVISIBLE
-                || item.sub_type >= RING_LIFE_PROTECTION
-                   && item.sub_type <= RING_TELEPORT_CONTROL
-                || item.sub_type == RING_SUSTAIN_ABILITIES)
+                || item.sub_type == RING_SUSTAIN_ATTRIBUTES
+                || item.sub_type == RING_LIFE_PROTECTION
+                || item.sub_type == RING_PROTECTION_FROM_MAGIC
+                || item.sub_type == RING_FIRE
+                || item.sub_type == RING_ICE)
             {
                 return true;
             }
@@ -2780,7 +2816,7 @@ bool gives_resistance(const item_def &item)
     // Check for randart resistances.
     for (int rap = ARTP_FIRE; rap <= ARTP_BERSERK; rap++)
     {
-        if (rap == ARTP_MAGIC || rap >= ARTP_INVISIBLE)
+        if (rap == ARTP_MAGIC_RESISTANCE || rap >= ARTP_INVISIBLE)
             continue;
 
         if (artefact_property(item, static_cast<artefact_prop_type>(rap)))
@@ -2792,8 +2828,12 @@ bool gives_resistance(const item_def &item)
 
 bool is_item_jelly_edible(const item_def &item)
 {
-    // Don't eat artefacts.
-    if (is_artefact(item))
+    // Don't eat items that the player has seen.
+    if (item.flags & ISFLAG_SEEN && !you_worship(GOD_JIYVA))
+        return false;
+
+    // Don't eat artefacts or the horn of Geryon.
+    if (is_artefact(item) || item_is_horn_of_geryon(item))
         return false;
 
     // Don't eat mimics.
@@ -2809,13 +2849,8 @@ bool is_item_jelly_edible(const item_def &item)
     }
 
     // Don't eat special game items.
-    if (item.base_type == OBJ_ORBS
-        || (item.base_type == OBJ_MISCELLANY
-            && (item.sub_type == MISC_RUNE_OF_ZOT
-                || item.sub_type == MISC_HORN_OF_GERYON)))
-    {
+    if (item_is_orb(item) || item_is_rune(item))
         return false;
-    }
 
     return true;
 }
@@ -2963,12 +2998,12 @@ void seen_item(const item_def &item)
 
     if (item_type_has_ids(item.base_type) && !is_artefact(item)
         && item_ident(item, ISFLAG_KNOW_TYPE)
-        && you.type_ids[item.base_type][item.sub_type] != ID_KNOWN_TYPE)
+        && !you.type_ids[item.base_type][item.sub_type])
     {
         // Can't cull shop items here -- when called from view, we shouldn't
         // access the UI. Old ziggurat prompts are a very minor case of what
         // could go wrong.
-        set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
+        set_ident_type(item.base_type, item.sub_type, true);
     }
 }
 

@@ -34,6 +34,14 @@ __BARK seen
 
 SOUND:@The_monster@ barks!
 %%%%
+__HOWL unseen
+
+SOUND:You hear a howl!
+%%%%
+__HOWL seen
+
+SOUND:@The_monster@ howls!
+%%%%
 __TWO_SHOUTS unseen
 
 SOUND:You hear two shouts!
@@ -137,14 +145,6 @@ SOUND:@The_monster@ hisses angrily.
 __DEMON_TAUNT
 
 @The_monster@ @says@, "@demon_taunt@"
-%%%%
-__CAW seen
-
-SOUND:@The_monster@ caws.
-%%%%
-__CAW unseen
-
-SOUND:You hear a loud caw.
 %%%%
 __CHERUB seen
 

@@ -180,7 +180,7 @@ ORIENT: south
 MONS:   ball python w:3 / adder / water moccasin / nothing w:5
 MONS:   anaconda / nothing w:5
 SUBST:  w = wwW
-KPROP:  12 = no_rtele_into
+KPROP:  12 = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxx..@..xxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxxxxxxxx
 xx211xxxxxxxxxxxxxxwwwWWWWWwwwwxxxxxxxxxxxxxwwwWWWWwwxxxxxxxxxxx112xxx
@@ -280,7 +280,7 @@ ENDMAP
 NAME:   nicolae_sea_snake_s
 MONS:   naga mage, naga
 ORIENT: float
-DEPTH:  Snake:2-4
+DEPTH:  Snake:2-3
 TAGS:   no_monster_gen
 SHUFFLE: {[(
 SHUFFLE: (<
@@ -321,7 +321,7 @@ xxsssssxxxxxx
 ENDMAP
 
 NAME:   nicolae_cobra_stairs
-DEPTH:  Snake:3-4
+DEPTH:  Snake:2-3
 ORIENT: float
 TAGS:   no_pool_fixup patrolling
 SHUFFLE: }])
@@ -368,7 +368,7 @@ ENDMAP
 # The disgraced guardian serpent Aizul has been
 # demoted to watching the stairs.
 NAME:   nicolae_aizul_guard
-DEPTH:  Snake:2-4
+DEPTH:  Snake:2-3
 TAGS:   no_rotate no_hmirror no_vmirror
 ORIENT: float
 SHUFFLE: ]})>
@@ -417,7 +417,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_coiled_stairwell_down
-DEPTH:  Snake:1-4
+DEPTH:  Snake, !Snake:$
 TAGS:   uniq_coiled_stairwell
 SUBST:  } = }])>
 MAP
@@ -608,7 +608,7 @@ ENDMAP
 
 NAME:    hangedman_snake_sidewinding
 TAGS:    allow_dup
-DEPTH:   Snake:1-4, Zot:1-4
+DEPTH:   Snake, !Snake:$, Zot, !Zot:$
 : if you.in_branch("Zot") then
 KMONS:  A = base draconian / green draconian w:4
 KMONS:  B = swamp dragon w:5 / fire dragon / ice dragon / storm dragon w:5

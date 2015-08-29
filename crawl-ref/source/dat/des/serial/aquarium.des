@@ -313,7 +313,7 @@ CHANCE:  1%
 
 NAME:    aquarium_subvault_wall
 TAGS:    aquarium_subvault_wall
-KPROP:   . = no_rtele_into
+KPROP:   . = no_tele_into
 : init_aquarium(_G)
 MAP
  xDD

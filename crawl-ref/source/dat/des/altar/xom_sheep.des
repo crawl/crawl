@@ -71,7 +71,7 @@ else
   tags('extra')
 end
 }}
-KPROP: H'_ = no_rtele_into
+KPROP: H'_ = no_tele_into
 SUBST: ' = .
 MAP
 @.......@

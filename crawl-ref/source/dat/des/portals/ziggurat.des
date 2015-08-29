@@ -72,7 +72,7 @@ MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
-KPROP:   1Om = no_rtele_into
+KPROP:   1Om = no_tele_into
 SHUFFLE: 123x
 SUBST:   1=1___, 2=2_, x=_
 KMASK:   O123_ = opaque
@@ -97,7 +97,7 @@ MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
-KPROP:   1On; = no_rtele_into
+KPROP:   1On; = no_tele_into
 SHUFFLE: 123x
 SUBST:   1=1___, 2=2_, x=_
 SUBST:   ;=_
@@ -138,7 +138,7 @@ NAME:   enter_ziggurat_f
 TAGS:   zig_entry no_trap_gen transparent
 KFEAT:  O = enter_ziggurat no_mimic
 MONS:   angel / nothing w:20
-KPROP:  1Om; = no_rtele_into
+KPROP:  1Om; = no_tele_into
 KFEAT:  ; = floor
 KMASK:  1O; = opaque
 MAP
@@ -321,7 +321,7 @@ TAGS: ziggurat_pillar centered unrand no_exits
 MONS: ancient lich / shadow demon / curse skull / \
       ironbrand convoker / corrupter / deep elf demonologist
 MONS: eye of draining / eye of devastation / \
-      giant eyeball / ghost moth / black sun
+      giant eyeball / ghost moth / black sun / torpor snail
 MONS: plant
 : if you.depth() > 21 then
 SUBST: 3 = 12222
@@ -337,7 +337,7 @@ ENDMAP
 
 NAME: ziggurat_pillar_centre_monster
 TAGS: ziggurat_pillar centered no_dump unrand no_exits
-MONS: curse skull / ice statue / orange crystal statue / obsidian statue
+MONS: ice statue / orange crystal statue / obsidian statue
 MAP
 1
 ENDMAP
@@ -382,18 +382,6 @@ MAP
  x
 xxx
  x
-ENDMAP
-
-NAME: ziggurat_pillar_centre_k
-TAGS: ziggurat_pillar centered unrand no_exits
-MONS: boring beetle, boulder beetle, torpor snail, orb spider
-SUBST: 2 : 2:14 3:5 4:1
-MAP
-xxxxx
-xx2xx
-x212x
-xx2xx
-xxxxx
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_l

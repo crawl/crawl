@@ -99,9 +99,8 @@ Nemelex Xobeh
 Nemelex is a strange and unpredictable trickster god, whose powers are invoked
 through magical packs of cards painted in the ichor of demons. Followers are
 expected to explore the world, and will receive decks of cards in return.
-Followers are encouraged to trust in the cards and use them as
-much as possible. However, the Trickster can ensure that fortune favours the
-bold.
+Followers are encouraged to trust in the cards and use them as much as
+possible. However, the Trickster can ensure that fortune favours the bold.
 %%%%
 Okawaru
 
@@ -125,9 +124,10 @@ Ru
 Of all the gods, only Ru opposed creation. Not as folly, but as distraction.
 Initiates of Ru can open channels to the powers underlying the visible world by
 renouncing the fetters that bind them here. These sacrifices are not made to
-Ru, but rather given up freely and permanently. Initiates can redirect would-be
-attackers and retaliate against their enemies, replenish their health and
-magic, perform a mighty leap, and unleash a massive wave of power against foes.
+Ru, but rather given up freely and permanently. Having made such sacrifices,
+initiates will become able to draw upon this immense power to aid themselves,
+eventually gaining the ability to unleash its destructive might against their
+foes.
 %%%%
 Sif Muna
 
@@ -173,9 +173,9 @@ Yredelemnul
 Yredelemnul the Dark is a god worshipped by those who seek powers over death
 and the undead. Followers, who must oppose all things holy, can raise legions
 of servile undead, and gain a number of other useful (if unpleasant) powers.
-Yredelemnul appreciates killing, but has no interest in sacrifices, preferring
-corpses to be put to use. Destroying artificial beings is also appreciated, as
-they are neither truly alive nor subject to death or undeath.
+Yredelemnul appreciates killing living and holy creatures. Destroying
+artificial beings is also appreciated, as they are neither truly alive nor
+subject to death or undeath.
 %%%%
 Zin
 
@@ -191,10 +191,10 @@ Ashenzari powers
 Ashenzari exhorts followers to garb themselves with curses, and provides
 rewards for time spent using cursed armour, jewellery or weapons. Followers
 will soon be granted the ability to scry through walls. Ashenzari will
-passively grant followers increased skills depending on how cursed they are,
-and will reveal the invisible and grant clarity of mind. The truly devout will
-gain the ability to transfer a portion of their knowledge from one skill to
-another.
+passively grant followers increased skills depending on how cursed they are
+by equipment associated with those skills, and will reveal the invisible and
+grant clarity of mind. The truly devout will gain the ability to transfer a
+portion of their knowledge from one skill to another.
 %%%%
 Beogh powers
 
@@ -207,10 +207,11 @@ Cheibriados powers
 
 Followers of Cheibriados move more slowly as they gain favour, and are rewarded
 for killing creatures who are faster than they are. Moving too quickly or using
-magically hastened weapons is frowned upon. Cheibriados rewards the faithful
+magically hastened weapons is frowned upon. As they move slower, worshippers of
+Cheibriados are granted increased attributes. Cheibriados rewards the faithful
 with a slowed metabolism, the power to slow other creatures, the power to
 distort the flow of time, the power to harm those who move more quickly than
-they do, and, finally, the ability to step out of the flow of time entirely.
+they do, and finally the ability to step out of the flow of time entirely.
 %%%%
 Dithmenos powers
 
@@ -243,7 +244,7 @@ rainstorms.
 Gozag powers
 
 For Gozag, both flesh and food are inferior to wealth, and therefore all
-corpses are turned into gold piles. Other monsters may then be briefly
+monsters are turned to gold upon death. Other monsters may then be briefly
 distracted by imaginings of great wealth. Stalwarts can order immediate help
 in the form of potions, with prices being dictated by the Greedy. Particularly
 well-off adherents may attract shopkeepers into the dungeon, and even bribe
@@ -383,12 +384,11 @@ servants.
 Zin powers
 
 Zin grants followers the ability to preach to the unenlightened masses, and
-powers to vitalise their bodies and gain divine stamina, protecting them from
-various afflictions as well as giving sustenance to the hungry. Later,
-followers gain the ability to imprison their foes temporarily. Followers can
-eventually find temporary safety in a divine refuge. As piety grows, followers
-will be protected from mutation, and Zin may even occasionally directly
-intervene to save a follower's life.
+powers to vitalise their bodies, protecting them from various afflictions.
+Later, followers gain the ability to imprison their foes temporarily. Followers
+can eventually find temporary safety in a divine refuge. As piety grows,
+followers will be protected from mutation, and Zin may even occasionally
+directly intervene to save a follower's life.
 %%%%
 Ashenzari wrath
 
@@ -407,11 +407,11 @@ true sinners, Beogh has a heavy hand indeed!
 %%%%
 Cheibriados wrath
 
-Offenders against Cheibriados are given one last chance to take it easy. They
-may find themselves slowed and exhausted, or stepping from time at unexpected
-moments. In dangerous moments, Chei provides them with refreshing naps. And in
-very dangerous situations... in the full depth of time, almost anything can
-happen. (But for those who offend Cheibriados, probably not anything good!)
+Offenders against Cheibriados will find their movements remain slow while
+the attention of Cheibriados remains upon them. They may also find themselves
+slowed and exhausted, forced to step from time at unexpected moments, or even
+put to sleep. In very dangerous situations, Cheibriados may unleash wild and
+unpredictable magical effects from the depths of time.
 %%%%
 Dithmenos wrath
 
@@ -503,6 +503,11 @@ Qazlal's wrath is swift and unmistakable. Sinners are stripped of their
 resistances and assaulted by furious elementals, and Qazlal will create mighty
 thunderclaps to alert their foes.
 %%%%
+Ru wrath
+
+Ru does not punish followers who leave Ru's service; however, their piety will
+be lost even upon rejoining, and their sacrifices remain forever.
+%%%%
 Sif Muna wrath
 
 Those in Sif Muna's ill graces find the very forces of magic rebelling against
@@ -528,6 +533,12 @@ Vehumet wrath
 Those that anger Vehumet find destruction amply heaped upon them. Novices are
 struck by flame and frost; archmages by firestorms and hellfire. Their own
 conjurations, too, are wont to misfire at the worst possible moments.
+%%%%
+Xom wrath
+
+Unfaithful ex-followers will find themselves suffering through Xom's bad moods
+for so long as Xom can be bothered to remember about them. Still, Xom's caprice
+remains; the unfaithful are rewarded just as the faithful are punished.
 %%%%
 Yredelemnul wrath
 

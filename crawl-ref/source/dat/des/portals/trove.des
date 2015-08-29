@@ -411,7 +411,7 @@ ENDMAP
 NAME: nicolae_trove_entry_isolated
 TAGS: no_pool_fixup transparent
 CHANCE: 5%
-KPROP: .O = no_rtele_into
+KPROP: .O = no_tele_into
 KFEAT: ' = .
 : trove.portal(_G)
 MAP
@@ -806,7 +806,7 @@ x.'edd+...............<x.x
 x.xdedx.mmmmmmmmmm.xx"xx"x
 x.'ddex.m..1mm1..m."dedddx
 x'xxxxx.mmmmmmmmmm.xededfx
-xA.h..............."fffedx
+xA.g..............."fffedx
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -814,9 +814,6 @@ ENDMAP
 NAME:   trove_treasure_island
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup no_vmirror no_rotate no_pool_fixup
-# If we're going to negate the results, might as well
-# block the few who don't get free help.
-TAGS:   no_species_mu no_species_vp
 WEIGHT: 2
 COLOUR: x = blue
 KFEAT:  1 = deep_water
@@ -872,7 +869,7 @@ WEIGHT:  5
 ORIENT:  encompass
 ITEM:    potion of curing / potion of heal wounds / \
          potion of curing q:2 / potion of heal wounds q:2
-ITEM:    potion of experience / potion of beneficial mutation w:30
+ITEM:    potion of experience q:1 / potion of beneficial mutation q:1 w:30
 ITEM:    potion of might / potion of resistance / \
          potion of magic / potion of haste / \
          potion of might q:2 / potion of resistance q:2 / \

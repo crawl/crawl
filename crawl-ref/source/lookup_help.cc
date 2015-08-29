@@ -1024,7 +1024,7 @@ static int _describe_cloud(const string &key, const string &suffix,
  */
 static int _describe_spell_item(const item_def &item)
 {
-    const string desc = get_item_description(item, true, false, true);
+    const string desc = get_item_description(item, true);
     formatted_string fdesc;
     fdesc.cprintf("%s", desc.c_str());
 
@@ -1054,20 +1054,14 @@ static int _describe_item(const string &key, const string &suffix,
     }
 
     string stats;
-    if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS))
-        append_weapon_stats(stats, item);
-    else if (get_item_by_name(&item, key.c_str(), OBJ_ARMOUR))
-        append_armour_stats(stats, item);
-    else if (get_item_by_name(&item, key.c_str(), OBJ_MISSILES))
-        append_missile_info(stats, item);
-    else if (get_item_by_name(&item, key.c_str(), OBJ_MISCELLANY))
+    if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS)
+        || get_item_by_name(&item, key.c_str(), OBJ_ARMOUR)
+        || get_item_by_name(&item, key.c_str(), OBJ_MISSILES)
+        || get_item_by_name(&item, key.c_str(), OBJ_MISCELLANY))
     {
-        if (is_deck(item))
-            stats += "\n" + deck_contents(item.sub_type);
+        // don't request description since _describe_key handles that
+        stats = get_item_description(item, true, false, true);
     }
-
-    if (!stats.empty())
-        stats += "\n";
 
     return _describe_key(key, suffix, footer, stats);
 }
@@ -1092,6 +1086,183 @@ static int _describe_god(const string &key, const string &/*suffix*/,
     return 0; // no exact matches for gods, so output doesn't matter
 }
 
+static string _branch_entry_runes(branch_type br)
+{
+    string desc;
+    const int num_runes = runes_for_branch(br);
+
+    if (num_runes > 0)
+    {
+        desc = make_stringf("\n\nThis %s can only be entered while carrying "
+                            "at least %d rune%s of Zot.",
+                            br == BRANCH_ZIGGURAT ? "portal" : "branch",
+                            num_runes, num_runes > 1 ? "s" : "");
+    }
+
+    return desc;
+}
+
+static branch_type _rune_to_branch(int rune)
+{
+    switch (rune)
+    {
+    case RUNE_SWAMP:       return BRANCH_SWAMP;
+    case RUNE_SNAKE:       return BRANCH_SNAKE;
+    case RUNE_SHOALS:      return BRANCH_SHOALS;
+    case RUNE_SPIDER:      return BRANCH_SPIDER;
+    case RUNE_SLIME:       return BRANCH_SLIME;
+    case RUNE_VAULTS:      return BRANCH_VAULTS;
+    case RUNE_TOMB:        return BRANCH_TOMB;
+    case RUNE_DIS:         return BRANCH_DIS;
+    case RUNE_GEHENNA:     return BRANCH_GEHENNA;
+    case RUNE_COCYTUS:     return BRANCH_COCYTUS;
+    case RUNE_TARTARUS:    return BRANCH_TARTARUS;
+    case RUNE_ABYSSAL:     return BRANCH_ABYSS;
+    case RUNE_DEMONIC:     return BRANCH_PANDEMONIUM;
+    case RUNE_MNOLEG:      return BRANCH_PANDEMONIUM;
+    case RUNE_LOM_LOBON:   return BRANCH_PANDEMONIUM;
+    case RUNE_CEREBOV:     return BRANCH_PANDEMONIUM;
+    case RUNE_GLOORX_VLOQ: return BRANCH_PANDEMONIUM;
+    default:               return NUM_BRANCHES;
+    }
+}
+
+static string _branch_runes(branch_type br)
+{
+    string desc;
+    vector<string> rune_names;
+
+    for (int i = 0; i < NUM_RUNE_TYPES; ++i)
+        if (_rune_to_branch(i) == br)
+            rune_names.push_back(rune_type_name(i));
+
+    // Abyss and Pan runes are explained in their descriptions.
+    if (!rune_names.empty() && br != BRANCH_ABYSS && br != BRANCH_PANDEMONIUM)
+    {
+        desc = make_stringf("\n\nThis branch contains the %s rune%s of Zot.",
+                            comma_separated_line(begin(rune_names),
+                                                 end(rune_names)).c_str(),
+                            rune_names.size() > 1 ? "s" : "");
+    }
+
+    return desc;
+}
+
+static string _branch_depth(branch_type br)
+{
+    string desc;
+    const int depth = branches[br].numlevels;
+
+    // Abyss depth is explained in the description.
+    if (depth > 1 && br != BRANCH_ABYSS)
+    {
+        desc = make_stringf("\n\nThis %s is %d levels deep.",
+                            br == BRANCH_ZIGGURAT ? "portal"
+                                                  : "branch",
+                            depth);
+    }
+
+    return desc;
+}
+
+static string _branch_location(branch_type br)
+{
+    string desc;
+    const branch_type parent = branches[br].parent_branch;
+    const int min = branches[br].mindepth;
+    const int max = branches[br].maxdepth;
+
+    // Ziggurat locations are explained in the description.
+    if (parent != NUM_BRANCHES && br != BRANCH_ZIGGURAT)
+    {
+        desc = "\n\nThe entrance to this branch can be found ";
+        if (min == max)
+        {
+            if (branches[parent].numlevels == 1)
+                desc += "in ";
+            else
+                desc += make_stringf("on level %d of ", min);
+        }
+        else
+            desc += make_stringf("between levels %d and %d of ", min, max);
+        desc += branches[parent].longname;
+        desc += ".";
+    }
+
+    return desc;
+}
+
+static string _branch_subbranches(branch_type br)
+{
+    string desc;
+    vector<string> subbranch_names;
+
+    for (branch_iterator it; it; ++it)
+        if (it->parent_branch == br && !branch_is_unfinished(it->id))
+            subbranch_names.push_back(it->longname);
+
+    // Lair's random branches are explained in the description.
+    if (!subbranch_names.empty() && br != BRANCH_LAIR)
+    {
+        desc += make_stringf("\n\nThis branch contains the entrance%s to %s.",
+                             subbranch_names.size() > 1 ? "s" : "",
+                             comma_separated_line(begin(subbranch_names),
+                                                  end(subbranch_names)).c_str());
+    }
+
+    return desc;
+}
+
+static string _branch_noise(branch_type br)
+{
+    string desc;
+    const int noise = branches[br].ambient_noise;
+    if (noise != 0)
+    {
+        desc = "\n\nThis branch is ";
+        if (noise > 0)
+        {
+            desc += make_stringf("filled with %snoise, and thus all sounds "
+                                 "travel %sless far.",
+                                 noise > 5 ? "deafening " : "",
+                                 noise > 5 ? "much " : "");
+        }
+        else
+        {
+            desc += make_stringf("%s, and thus all sounds travel %sfurther.",
+                                 noise < -5 ? "unnaturally silent"
+                                            : "very quiet",
+                                 noise < -5 ? "much " : "");
+        }
+    }
+
+    return desc;
+}
+
+/**
+ * Describe the branch with the given name.
+ *
+ * @param key       The name of the branch in question.
+ * @param suffix    A suffix to trim from the key when making the title.
+ * @param footer    A footer to append to the end of descriptions.
+ * @return          The keypress the user made to exit.
+ */
+static int _describe_branch(const string &key, const string &suffix,
+                            string footer)
+{
+    const string branch_name = key.substr(0, key.size() - suffix.size());
+    const branch_type branch = branch_by_shortname(branch_name);
+    ASSERT(branch != NUM_BRANCHES);
+
+    const string info  = _branch_noise(branch)
+                         + _branch_location(branch)
+                         + _branch_entry_runes(branch)
+                         + _branch_depth(branch)
+                         + _branch_subbranches(branch)
+                         + _branch_runes(branch);
+
+    return _describe_key(key, suffix, footer, info);
+}
 
 /// All types of ?/ queries the player can enter.
 static const vector<LookupType> lookup_types = {
@@ -1129,7 +1300,7 @@ static const vector<LookupType> lookup_types = {
                LTYPF_SUPPORT_TILES),
     LookupType('B', "branch", nullptr, nullptr,
                nullptr, _get_branch_keys, _simple_menu_gen,
-               _describe_generic,
+               _describe_branch,
                LTYPF_DISABLE_SORT),
     LookupType('L', "cloud", nullptr, nullptr,
                nullptr, _get_cloud_keys, _cloud_menu_gen,
@@ -1229,8 +1400,8 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
                     "' to display.";
         }
 
-        return make_stringf("Too many matching %s (%" PRIuSIZET ") to display.",
-                            plur_type.c_str(), key_list.size());
+        return make_stringf("Too many matching %s (%d) to display.",
+                            plur_type.c_str(), (int) key_list.size());
     }
 
     // we're good!

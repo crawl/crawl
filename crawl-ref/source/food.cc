@@ -49,12 +49,6 @@ void make_hungry(int hunger_amount, bool suppress_msg,
     if (crawl_state.disables[DIS_HUNGER])
         return;
 
-    if (crawl_state.game_is_zotdef() && you.undead_state() != US_SEMI_UNDEAD)
-    {
-        you.hunger = HUNGER_DEFAULT;
-        you.hunger_state = HS_SATIATED;
-        return;
-    }
 #if TAG_MAJOR_VERSION == 34
     // Lich/tree form djinn don't get exempted from food costs: infinite
     // healing from channeling would be just too good.
@@ -95,8 +89,11 @@ void make_hungry(int hunger_amount, bool suppress_msg,
 
 // Must match the order of hunger_state_t enums
 static constexpr int hunger_threshold[HS_ENGORGED + 1] =
-{ HUNGER_STARVING, HUNGER_NEAR_STARVING, HUNGER_VERY_HUNGRY, HUNGER_HUNGRY,
-    HUNGER_SATIATED, HUNGER_FULL, HUNGER_VERY_FULL, HUNGER_ENGORGED };
+{
+    HUNGER_FAINTING, HUNGER_STARVING, HUNGER_NEAR_STARVING, HUNGER_VERY_HUNGRY,
+    HUNGER_HUNGRY, HUNGER_SATIATED, HUNGER_FULL, HUNGER_VERY_FULL,
+    HUNGER_ENGORGED
+};
 
 /**
  * Attempt to reduce the player's hunger.
@@ -282,7 +279,7 @@ bool food_change(bool initial)
     you.hunger = min(you_max_hunger(), you.hunger);
 
     // Get new hunger state.
-    hunger_state_t newstate = HS_STARVING;
+    hunger_state_t newstate = HS_FAINTING;
     while (newstate < HS_ENGORGED && you.hunger > hunger_threshold[newstate])
         newstate = (hunger_state_t)(newstate + 1);
 
@@ -338,6 +335,11 @@ bool food_change(bool initial)
             string msg = "You ";
             switch (you.hunger_state)
             {
+            case HS_FAINTING:
+                msg += "are fainting from starvation!";
+                mprf(MSGCH_FOOD, less_hungry, "%s", msg.c_str());
+                break;
+
             case HS_STARVING:
                 if (you.species == SP_VAMPIRE)
                     msg += "feel devoid of blood!";
@@ -554,14 +556,11 @@ int eat_from_floor(bool skip_chunks)
     if (found_valid)
     {
 #ifdef TOUCH_UI
-        vector<SelItem> selected =
-            select_items(food_items,
-                         "Eat",
-                         false, MT_SELONE, _floor_eat_menu_title);
         redraw_screen();
-        for (int i = 0, count = selected.size(); i < count; ++i)
+        for (SelItem &sel : select_items(food_items, "Eat", false, MT_SELONE,
+                                         _floor_eat_menu_title))
         {
-            item_def *item = const_cast<item_def *>(selected[i].item);
+            item_def *item = const_cast<item_def *>(sel.item);
             if (!check_warning_inscriptions(*item, OPER_EAT))
                 break;
 
@@ -1294,7 +1293,7 @@ bool is_forbidden_food(const item_def &food)
 
     // Specific handling for intelligent monsters like Gastronok and Xtahua
     // of a normally unintelligent class.
-    if (you_worship(GOD_ZIN) && corpse_intelligence(food) >= I_NORMAL)
+    if (you_worship(GOD_ZIN) && corpse_intelligence(food) >= I_HUMAN)
         return true;
 
     return god_hates_eating(you.religion, food.mon_type);
@@ -1477,6 +1476,10 @@ int you_min_hunger()
 
 void handle_starvation()
 {
+    // Don't faint or die while eating.
+    if (current_delay_action() == DELAY_EAT)
+        return;
+
     if (!you_foodless() && !you.duration[DUR_DEATHS_DOOR]
         && you.hunger <= HUNGER_FAINTING)
     {

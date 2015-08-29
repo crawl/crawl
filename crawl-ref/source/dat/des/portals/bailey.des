@@ -239,7 +239,7 @@ WEIGHT: 3
 COLOUR: ; : red / lightred
 SUBST:  ; = .
 KMASK:  d = no_item_gen
-KPROP:  d = no_rtele_into
+KPROP:  d = no_tele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 KITEM:  d = unobtainable war axe / unobtainable battleaxe
@@ -249,19 +249,19 @@ KITEM:  d = unobtainable glaive / unobtainable bardiche
 :   bailey_portal_polearm(_G)
 : end
 MAP
-.......nnn.......
-..nnn..ndn..nnn..
-..ndn..nnn..ndn..
-..nnn.......nnn..
+.......ooo.......
+..ooo..odo..ooo..
+..odo..ooo..odo..
+..ooo.......ooo..
 .................
-nnn....;;;....nnn
-ndn....;O;....ndn
-nnn....;;;....nnn
+ooo....;;;....ooo
+odo....;O;....odo
+ooo....;;;....ooo
 .................
-..nnn.......nnn..
-..ndn..nnn..ndn..
-..nnn..ndn..nnn..
-.......nnn.......
+..ooo.......ooo..
+..odo..ooo..odo..
+..ooo..odo..ooo..
+.......ooo.......
 ENDMAP
 
 # They were just having a party.
@@ -294,7 +294,7 @@ NAME:   enter_bailey_8
 WEIGHT: 3
 COLOUR: n = red
 KMASK:  d = no_item_gen
-KPROP:  d = no_rtele_into
+KPROP:  d = no_tele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 KITEM:  d = unobtainable war axe / unobtainable battleaxe
@@ -306,11 +306,11 @@ KITEM:  d = unobtainable glaive / unobtainable bardiche
 MAP
  xxxxxxxxxxxxxxxxxxx
  x.................@
- ccccccnnncccccnnncc
- c.....ndn.....ndnOc
- c.nnn.nnn.nnn.nnn.c
-@+.ndn.....ndn.....c
- ccnnncccccnnncccccc
+ ccccccooocccccooocc
+ c.....odo.....odoOc
+ c.ooo.ooo.ooo.ooo.c
+@+.odo.....odo.....c
+ ccooocccccooocccccc
  x.................@
  xxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -468,7 +468,7 @@ MONS:   orc warrior / orc knight
 NSUBST: e = 1:e / *:d
 ITEM:   potion of curing / potion of heal wounds / potion of magic / nothing /\
         potion of might w:5 / potion of haste w:2 / potion of berserk rage w:3
-ITEM:   potion of experience w:30 / potion of cure mutation w:30 /\
+ITEM:   potion of experience q:1 w:30 / potion of cure mutation w:30 /\
         potion of beneficial mutation q:2 w:30
 : bailey_setup(_G)
 MAP
@@ -637,8 +637,8 @@ ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
         potion of magic w:5 / potion of haste w:5 / \
         scroll of teleportation / scroll of blinking / scroll of identify / \
         scroll of enchant weapon w:5 / scroll of enchant armour w:5
-ITEM:   potion of beneficial mutation w:30 / potion of cure mutation / \
-        potion of experience / scroll of acquirement
+ITEM:   potion of beneficial mutation q:1 w:30 / potion of cure mutation / \
+        potion of experience q:1 / scroll of acquirement q:1
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
 MONS:   orc warlord
@@ -778,7 +778,7 @@ SUBST:  X = I G C
 KFEAT:  C = altar_beogh
 ITEM:   manual of armour / manual of fighting / manual of shields /\
         good_item bardiche / good_item executioner's axe
-ITEM:   potion of experience / scroll of acquirement /\
+ITEM:   potion of experience q:1 / scroll of acquirement q:1 /\
         scroll of enchant armour q:2 / scroll of enchant weapon q:3 /\
         legendary deck of wonders ident:type
 NSUBST: d = 1:e / *:d|
@@ -838,7 +838,7 @@ SHUFFLE: DF/EG
 SUBST:   D : d, E = 1.., F : 3, G : .
 NSUBST:  d = 3:d / *:$
 ITEM:    scroll of enchant armour q:2 / scroll of enchant weapon q:3 /\
-         scroll of acquirement w:5 / scroll of silence q:3 /\
+         scroll of acquirement q:1 w:5 / scroll of silence q:3 /\
          scroll of fog q:3 / scroll of vulnerability q:3 /\
          scroll of recharging q:3 / scroll of immolation q:3 /\
          any good_item book w:30 /\
@@ -917,11 +917,11 @@ ENDMAP
 NAME:   bailey_polearm_5
 ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen
-ITEM:   potion of beneficial mutation / potion of experience
+ITEM:   potion of beneficial mutation q:1 / potion of experience q:1
 ITEM:   potion of curing / potion of heal wounds / potion of might w:5 /\
         potion of berserk rage w:3 / potion of haste w:2 /\
         potion of invisibility w:3 / potion of resistance w:2
-ITEM:   scroll of brand weapon w:5 / scroll of acquirement w:5 /\
+ITEM:   scroll of brand weapon w:5 / scroll of acquirement q:1 w:5 /\
         scroll of enchant weapon q:2
 ITEM:   scroll of enchant weapon / scroll of enchant armour /\
         scroll of summoning

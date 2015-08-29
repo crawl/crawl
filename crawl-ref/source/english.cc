@@ -28,7 +28,7 @@ bool is_vowel(const ucs_t chr)
 // Pluralises a monster or item name. This'll need to be updated for
 // correctness whenever new monsters/items are added.
 string pluralise(const string &name, const char * const qualifiers[],
-                 const char *no_qualifier[])
+                 const char * const no_qualifier[])
 {
     string::size_type pos;
 
@@ -153,6 +153,21 @@ string pluralise(const string &name, const char * const qualifiers[],
     }
 
     return name + "s";
+}
+
+// For monster names ending with these suffixes, we pluralise directly without
+// attempting to use the "of" rule. For instance:
+//
+//      moth of wrath           => moths of wrath but
+//      moth of wrath zombie    => moth of wrath zombies.
+static const char * const _monster_suffixes[] =
+{
+    "zombie", "skeleton", "simulacrum", nullptr
+};
+
+string pluralise_monster(const string &name)
+{
+    return pluralise(name, standard_plural_qualifiers, _monster_suffixes);
 }
 
 string apostrophise(const string &name)

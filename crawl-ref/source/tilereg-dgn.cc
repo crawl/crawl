@@ -644,7 +644,7 @@ static bool _have_appropriate_spell(const actor* target)
 static bool _can_fire_item()
 {
     return you.species != SP_FELID
-           && you.m_quiver->get_fire_item() != -1;
+           && you.m_quiver.get_fire_item() != -1;
 }
 
 static bool _handle_distant_monster(monster* mon, unsigned char mod)
@@ -675,9 +675,9 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
     // Handle weapons of reaching.
     if (!mon->wont_attack() && you.see_cell_no_trans(mon->pos()))
     {
-        const int dist = (you.pos() - mon->pos()).abs();
+        const int dist = (you.pos() - mon->pos()).rdist();
 
-        if (dist > 2 && weapon && weapon_reach(*weapon) >= dist)
+        if (dist > 1 && weapon && weapon_reach(*weapon) >= dist)
         {
             macro_buf_add_cmd(CMD_EVOKE_WIELDED);
             _add_targeting_commands(mon->pos());
@@ -928,7 +928,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
 int tile_click_cell(const coord_def &gc, unsigned char mod)
 {
     monster* mon = monster_at(gc);
-    if (mon && you.can_see(mon))
+    if (mon && you.can_see(*mon))
     {
         if (_handle_distant_monster(mon, mod))
             return CK_MOUSE_CMD;
@@ -1121,7 +1121,7 @@ static void _add_tip(string &tip, string text)
 bool tile_dungeon_tip(const coord_def &gc, string &tip)
 {
     const int attack_dist = you.weapon() ?
-        weapon_reach(*you.weapon()) : 2;
+        weapon_reach(*you.weapon()) : 1;
 
     vector<command_type> cmd;
     tip = "";
@@ -1141,10 +1141,10 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
     else // non-player squares
     {
         const actor* target = actor_at(gc);
-        if (target && you.can_see(target))
+        if (target && you.can_see(*target))
         {
             has_monster = true;
-            if ((gc - you.pos()).abs() <= attack_dist)
+            if ((gc - you.pos()).rdist() <= attack_dist)
             {
                 if (!cell_is_solid(gc))
                 {
@@ -1161,7 +1161,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
 
             if (you.species != SP_FELID
                 && you.see_cell_no_trans(target->pos())
-                && you.m_quiver->get_fire_item() != -1)
+                && you.m_quiver.get_fire_item() != -1)
             {
                 _add_tip(tip, "[Shift + L-Click] Fire (%)");
                 cmd.push_back(CMD_FIRE);

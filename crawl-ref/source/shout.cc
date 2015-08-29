@@ -27,7 +27,6 @@
 #include "macro.h"
 #include "message.h"
 #include "mon-behv.h"
-#include "mon-chimera.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "prompt.h"
@@ -59,14 +58,6 @@ void handle_monster_shouts(monster* mons, bool force)
     // choose a random verb and loudness for them.
     shout_type  s_type = mons_shouts(mons->type, false);
 
-    // Chimera can take a random shout type from any of their
-    // three components
-    if (mons->type == MONS_CHIMERA)
-    {
-        monster_type acting = mons->ghost->acting_part != MONS_0
-            ? mons->ghost->acting_part : random_chimera_part(mons);
-        s_type = mons_shouts(acting, false);
-    }
     // Silent monsters can give noiseless "visual shouts" if the
     // player can see them, in which case silence isn't checked for.
     // Muted monsters can't shout at all.
@@ -92,6 +83,9 @@ void handle_monster_shouts(monster* mons, bool force)
     case S_BARK:
         default_msg_key = "__BARK";
         break;
+    case S_HOWL:
+        default_msg_key = "__HOWL";
+        break;
     case S_SHOUT2:
         default_msg_key = "__TWO_SHOUTS";
         break;
@@ -107,6 +101,9 @@ void handle_monster_shouts(monster* mons, bool force)
     case S_TRUMPET:
         default_msg_key = "__TRUMPET";
         break;
+#if TAG_MAJOR_VERSION == 34
+    case S_CAW:
+#endif
     case S_SCREECH:
         default_msg_key = "__SCREECH";
         break;
@@ -130,9 +127,6 @@ void handle_monster_shouts(monster* mons, bool force)
         break;
     case S_DEMON_TAUNT:
         default_msg_key = "__DEMON_TAUNT";
-        break;
-    case S_CAW:
-        default_msg_key = "__CAW";
         break;
     case S_CHERUB:
         default_msg_key = "__CHERUB";
@@ -172,7 +166,7 @@ void handle_monster_shouts(monster* mons, bool force)
     // false for submerged monsters, but submerged monsters will be forced
     // to surface before they shout, thus removing that source of
     // non-visibility.
-    if (you.can_see(mons))
+    if (you.can_see(*mons))
         suffix = " seen";
     else
         suffix = " unseen";
@@ -243,7 +237,7 @@ void handle_monster_shouts(monster* mons, bool force)
                 return;
             }
 
-            if (you.can_see(mons))
+            if (you.can_see(*mons))
             {
                 if (!monster_habitable_grid(mons, DNGN_FLOOR))
                     mons->seen_context = SC_FISH_SURFACES_SHOUT;
@@ -255,10 +249,10 @@ void handle_monster_shouts(monster* mons, bool force)
             }
         }
 
-        if (channel != MSGCH_TALK_VISUAL || you.can_see(mons))
+        if (channel != MSGCH_TALK_VISUAL || you.can_see(*mons))
         {
             // Otherwise it can move away with no feedback.
-            if (you.can_see(mons))
+            if (you.can_see(*mons))
             {
                 if (!(mons->flags & MF_WAS_IN_VIEW))
                     handle_seen_interrupt(mons);
@@ -273,7 +267,7 @@ void handle_monster_shouts(monster* mons, bool force)
     const int  noise_level = get_shout_noise_level(s_type);
     const bool heard       = noisy(noise_level, mons->pos(), mons->mid);
 
-    if (crawl_state.game_is_hints() && (heard || you.can_see(mons)))
+    if (crawl_state.game_is_hints() && (heard || you.can_see(*mons)))
         learned_something_new(HINT_MONSTER_SHOUT, mons->pos());
 }
 
@@ -339,10 +333,10 @@ bool check_awaken(monster* mons, int stealth)
         return true; // Oops, the monster wakes up!
 
     // You didn't wake the monster!
-    if (you.can_see(mons) // to avoid leaking information
+    if (you.can_see(*mons) // to avoid leaking information
         && !mons->wont_attack()
         && !mons->neutral() // include pacified monsters
-        && !mons_class_flag(mons->type, M_NO_EXP_GAIN))
+        && mons_class_gives_xp(mons->type))
     {
         practise(unnatural_stealthy ? EX_SNEAK_INVIS : EX_SNEAK);
     }
@@ -576,7 +570,7 @@ void yell(const actor* mon)
         if (!(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU))
         {
             const monster* target = &menv[you.prev_targ];
-            if (target->alive() && you.can_see(target))
+            if (target->alive() && you.can_see(*target))
             {
                 previous = "   p - Attack previous target.";
                 targ_prev = true;
@@ -686,7 +680,7 @@ void yell(const actor* mon)
             if (!cancel)
             {
                 const monster* m = monster_at(targ.target);
-                cancel = (m == nullptr || !you.can_see(m));
+                cancel = (m == nullptr || !you.can_see(*m));
                 if (!cancel)
                     mons_targd = m->mindex();
             }
@@ -806,8 +800,8 @@ bool noisy(int original_loudness, const coord_def& where,
     // that soft noises can be drowned out by loud noises. For both
     // these reasons, use the simple old noise system to check if the
     // player heard the noise:
-    const int dist = loudness * loudness + 1;
-    const int player_distance = distance2(you.pos(), where);
+    const int dist = loudness;
+    const int player_distance = grid_distance(you.pos(), where);
 
     // Message the player.
     if (player_distance <= dist && player_can_hear(where))
@@ -835,7 +829,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
 {
     for (monster_iterator mi; mi; ++mi)
     {
-        if (distance2(mi->pos(), where) > range)
+        if (grid_distance(mi->pos(), where) > range)
             continue;
 
         switch (sense)
@@ -869,11 +863,9 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
             behaviour_event(*mi, ME_ALERT, 0, where);
 
         case SENSE_WEB_VIBRATION:
-            if (!mons_class_flag(mi->type, M_WEB_SENSE)
-                && !mons_class_flag(get_chimera_legs(*mi), M_WEB_SENSE))
-            {
+            if (!mons_class_flag(mi->type, M_WEB_SENSE))
                 break;
-            }
+
             if (!one_chance_in(4))
             {
                 if (coinflip())
@@ -898,7 +890,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
 
 void blood_smell(int strength, const coord_def& where)
 {
-    const int range = strength * strength;
+    const int range = strength;
     dprf("blood stain at (%d, %d), range of smell = %d",
          where.x, where.y, range);
 
@@ -1008,8 +1000,8 @@ void noise_grid::propagate_noise()
     vector<coord_def> noise_perimeter[2];
     int circ_index = 0;
 
-    for (int i = 0, size = noises.size(); i < size; ++i)
-        noise_perimeter[circ_index].push_back(noises[i].noise_source);
+    for (const noise_t &noise : noises)
+        noise_perimeter[circ_index].push_back(noise.noise_source);
 
     int travel_distance = 0;
     while (!noise_perimeter[circ_index].empty())
@@ -1017,9 +1009,8 @@ void noise_grid::propagate_noise()
         const vector<coord_def> &perimeter(noise_perimeter[circ_index]);
         vector<coord_def> &next_perimeter(noise_perimeter[!circ_index]);
         ++travel_distance;
-        for (int i = 0, size = perimeter.size(); i < size; ++i)
+        for (const coord_def p : perimeter)
         {
-            const coord_def p(perimeter[i]);
             const noise_cell &cell(cells(p));
 
             if (!cell.silent())
@@ -1088,10 +1079,6 @@ bool noise_grid::propagate_noise_to_neighbour(int base_attenuation,
     {
         return false;
     }
-
-    // Diagonals cost more.
-    if ((next_pos - current_pos).abs() == 2)
-        base_attenuation = base_attenuation * 141 / 100;
 
     const int noise_turn_angle = cell.turn_angle(next_pos - current_pos);
     const int turn_attenuation =

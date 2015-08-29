@@ -312,6 +312,20 @@ Awaken Forest spell
  — Thor: Bravery knows no limits!
     -Rich Burlew, Order of the Stick, #874
 %%%%
+Azrael
+
+“And Allah said,
+ ‘As thou the deed hast done, so now the office shall be thine, O Azrael,
+  to gather up for me the souls of men and women when their time has come;
+  the souls of saints and sinners, of beggars and of princes,
+  of the old or young, whate’er befall; and even though friends weep,
+  and hearts of loved ones ache with sorrow and with anguish,
+  when bereft of those they love.’
+ So Azrael became the messenger of Death.”
+
+    -J. E. Hanauer, _Folk-lore of the Holy Land, Moslem, Christian and Jewish_.
+1907.
+%%%%
 black sun
 
 “The sky is sad and beautiful, like a vast altar.
@@ -861,10 +875,6 @@ Harald Sigurdarson six feet of English earth forever.”
     -Jorge Luis Borges, _Mutations_. 1960.
      trans. Mildred Boyle
 %%%%
-baby alligator
-
-<alligator>
-%%%%
 bardiche
 
 “The republic always maintains seven or eight thousand regular troops on the
@@ -1327,14 +1337,6 @@ and when they did so, the flail crashed through brazen helmet, skull and all.”
     -James A. Wylie, _The History of Protestantism_, vol. I, book 3, ch. 15
      “Jon Huss and the Hussite Wars”. 1878.
 %%%%
-Flight spell
-
-“What surprised him the most, however, was the logic of his wings. They seemed
-so natural on that completely human organism that he couldn’t understand why
-other men didn’t have them too.”
-    -Gabriel Garcia Marquez, _A Very Old Man with Enormous Wings_. 1955.
-     trans. Gregory Rabassa. 1972
-%%%%
 flying skull
 
 “Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most
@@ -1349,7 +1351,7 @@ ghost moth
  You can't feel my stare.
  I zoom into you
  You don't know I'm there.”
-    -Judas Priest, “Electric Eye”
+    -Judas Priest, “Electric Eye”. 1982.
 %%%%
 ghost-faced bat
 
@@ -1725,7 +1727,7 @@ jelly
  Right through the door
  And all around the wall,
  A splotch, a blotch...”
-    -Burt Bacharach, “Beware of the Blob”
+    -Burt Bacharach and Mack David, “Beware of the Blob”. 1958.
 %%%%
 kobold
 
@@ -1790,7 +1792,7 @@ lasher statue
  The body offered up to cruelty
  To the lash which whips on the skin
  Which slashes the flesh, lacerates the back”
-    -Samael, “Flagellation”
+    -Samael, “Flagellation”. 1994.
 %%%%
 leather armour
 
@@ -1898,15 +1900,7 @@ merfolk aquamancer
 
 <merfolk>
 %%%%
-merfolk impaler
-
-<merfolk>
-%%%%
-merfolk javelineer
-
-<merfolk>
-%%%%
-mermaid
+merfolk avatar
 
 “Then up it raise the mermaiden,
  Wi the comb an glass in her hand:
@@ -1914,6 +1908,14 @@ mermaid
  For you never will see dry land.’”
     -“Sir Patrick Spens”, Scottish folk song, version 58J in Francis James
      Child, _The English and Scottish Popular Ballads_. 1898.
+%%%%
+merfolk impaler
+
+<merfolk>
+%%%%
+merfolk javelineer
+
+<merfolk>
 %%%%
 microbat
 
@@ -2047,7 +2049,7 @@ ophan
  high and awesome, and all four rims were full of eyes all around.”
     -Ezekiel 1:15-18 (New International Version)
 %%%%
-the open sea
+The open sea
 
 “I mused upon the mystery of fish, their strange and mindless beauty, how—
 innocently evil—they prey upon each other, devouring the weaker and smaller
@@ -2185,7 +2187,7 @@ profane servitor
 
  Touch the snow... Caress the lifeless sculptures
  Die!!!”
-    -Dissection, “Where Dead Angels Lie”
+    -Dissection, “Where Dead Angels Lie”. 1996.
 %%%%
 program bug
 
@@ -2252,11 +2254,16 @@ rapier
     -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
      trans. James Grainger, 1822.
 %%%%
-raven
+reaper
 
-“The Hatter opened his eyes very wide on hearing this; but all he said was ‘Why
-is a raven like a writing-desk?’”
-    -Lewis Carroll, Alice’s Adventures in Wonderland
+“All our times have come.
+ Here but now they're gone.
+ Seasons don't fear the reaper,
+ Nor do the wind, the sun or the rain.
+ We can be like they are.
+ Come on baby, don't fear the reaper.”
+
+    -Buck Dharma, Blue Öyster Cult, “(Don't Fear) The Reaper”. 1976.
 %%%%
 ring
 
@@ -2282,11 +2289,15 @@ ring of fire
 
 “Love is a burning thing
  And it makes a fiery ring”
-    -June Carter, Merle Kilgore, “Ring of Fire”. 1963.
+    -June Carter and Merle Kilgore, “Ring of Fire”. 1963.
 %%%%
 ring of flight
 
-<ring>
+“What surprised him the most, however, was the logic of his wings. They seemed
+so natural on that completely human organism that he couldn’t understand why
+other men didn’t have them too.”
+    -Gabriel Garcia Marquez, _A Very Old Man with Enormous Wings_. 1955.
+     trans. Gregory Rabassa. 1972
 %%%%
 ring of loudness
 
@@ -2360,15 +2371,11 @@ ring of strength
 
 <ring>
 %%%%
-ring of sustain abilities
+ring of sustain attributes
 
 <ring>
 %%%%
 ring of stealth
-
-<ring>
-%%%%
-ring of teleport control
 
 <ring>
 %%%%
@@ -2679,7 +2686,7 @@ skeletal archer
  Pagan warriors moved quickly forward
  Bows are ready to shoot out their searing
  Darts...”
-    -Mastiphal, “For a Glory of All Evil spirits”
+    -Mastiphal, “For a Glory of All Evil Spirits”. 1995.
 %%%%
 skeletal bat
 
@@ -3139,9 +3146,9 @@ hill-side, stones which have been piled up or the like. To fall as water at a
 cascade. To fill up a hollow by putting earth into it. To lay gravel or
 materials on a road. A landslip.
 
-U r u r u g a n, apparently a plaural from of 'Urug'. To go with a number of
+U r u r u g a n, apparently a plural form of 'Urug'. To go with a number of
 men to any work. To make war, to attack with an army. To set upon in numbers,
-as it were to timble upon in masses.
+as it were to tumble upon in masses.
 
    -Jonathan Rigg, A dictionary of the Sunda language of Java. 1862.
 %%%%

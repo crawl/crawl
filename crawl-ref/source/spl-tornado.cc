@@ -5,11 +5,13 @@
 #include <cfloat>
 #include <cmath>
 
+#include "areas.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
 #include "fineff.h"
+#include "fprop.h"
 #include "godconduct.h"
 #include "libutil.h"
 #include "message.h"
@@ -66,7 +68,7 @@ int WindSystem::visit(coord_def c, int d, coord_def parent)
 
     for (adjacent_iterator ai(c); ai; ++ai)
     {
-        if ((*ai - org).abs() > dist_range(TORNADO_RADIUS) || _airtight(*ai))
+        if ((*ai - org).rdist() > TORNADO_RADIUS || _airtight(*ai))
             continue;
         if (depth(*ai - org) == -1)
         {
@@ -114,7 +116,7 @@ static void _set_tornado_durations(int powc)
 spret_type cast_tornado(int powc, bool fail)
 {
     bool friendlies = false;
-    for (radius_iterator ri(you.pos(), TORNADO_RADIUS, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(you.pos(), TORNADO_RADIUS, C_SQUARE); ri; ++ri)
     {
         const monster_info* m = env.map_knowledge(*ri).monsterinfo();
         if (!m)
@@ -166,6 +168,24 @@ static bool _mons_is_unmovable(const monster *mons)
     return false;
 }
 
+static double _get_ang(int x, int y)
+{
+    if (abs(x) > abs(y))
+    {
+       if (x > 0)
+           return double(y)/double(x);
+       else
+           return 4 + double(y)/double(x);
+    }
+    else
+    {
+       if (y > 0)
+           return 2 - double(x)/double(y);
+       else
+           return -2 - double(x)/double(y);
+    }
+}
+
 static coord_def _rotate(coord_def org, coord_def from,
                          vector<coord_def> &avail, int rdur)
 {
@@ -175,18 +195,16 @@ static coord_def _rotate(coord_def org, coord_def from,
     coord_def best = from;
     double hiscore = DBL_MAX;
 
-    double dist0 = sqrt((from - org).abs());
-    double ang0 = atan2(from.x - org.x, from.y - org.y) + rdur * 0.01;
-    if (ang0 > PI)
-        ang0 -= 2 * PI;
+    double dist0 = (from - org).rdist();
+    double ang0 = _get_ang(from.x - org.x, from.y - org.y) - rdur * 0.01 * 4 / 3;
     for (coord_def pos : avail)
     {
-        double dist = sqrt((pos - org).abs());
+        double dist = (pos - org).rdist();
         double distdiff = fabs(dist - dist0);
-        double ang = atan2(pos.x - org.x, pos.y - org.y);
-        double angdiff = min(fabs(ang - ang0), fabs(ang - ang0 + 2 * PI));
+        double ang = _get_ang(pos.x - org.x, pos.y - org.y);
+        double angdiff = min(fabs(ang - ang0), fabs(ang - ang0 - 8));
 
-        double score = distdiff + angdiff * 2;
+        double score = distdiff + angdiff * 3 / 2;
         if (score < hiscore)
             best = pos, hiscore = score;
     }
@@ -222,7 +240,7 @@ static int _age_needed(int r)
         return 0;
     if (r > TORNADO_RADIUS)
         return INT_MAX;
-    return sqr(r) * 5 / 4;
+    return sqr(r) * 7 / 5;
 }
 
 void tornado_damage(actor *caster, int dur)
@@ -356,6 +374,13 @@ void tornado_damage(actor *caster, int dur)
                         dprf("damage done: %d", dmg);
                         victim->hurt(caster, dmg, BEAM_AIR, KILLED_BY_BEAM,
                                      "", "tornado");
+
+                        if (caster->is_player()
+                            && (is_sanctuary(you.pos())
+                                || is_sanctuary(victim->pos())))
+                        {
+                            remove_sanctuary(true);
+                        }
                     }
                 }
 
@@ -404,7 +429,7 @@ void tornado_damage(actor *caster, int dur)
     // Calculate destinations.
     for (auto &entry : move_dest)
     {
-        const int r = entry.second.range(org);
+        const int r = entry.second.distance_from(org);
         coord_def dest = _rotate(org, entry.second, move_avail, rdurs[r]);
         // Only one monster per destination.
         erase_if(move_avail, [&dest](const coord_def& p) { return p == dest; });
@@ -463,13 +488,9 @@ void tornado_move(const coord_def &p)
         return;
 
     int age = _tornado_age(&you);
-    int dist2 = (you.pos() - p).abs();
-    if (dist2 <= 2)
+    int dist = (you.pos() - p).rdist();
+    if (dist <= 1)
         return;
-
-    int dist = 0;
-    while (dist * dist + 1 < dist2)
-        dist++;
 
     if (!you.duration[DUR_TORNADO])
     {

@@ -30,7 +30,7 @@ bool dump_char(const string &fname, bool quiet = false, bool full_id = false,
 void dump_map(const char* fname, bool debug = false, bool dist = false);
 void dump_map(FILE *fp, bool debug = false, bool dist = false);
 void display_notes();
-string munge_description(string inStr);
+string chardump_desc(const item_def& item);
 const char *hunger_level();
 
 #ifdef DGL_WHEREIS

@@ -16,7 +16,7 @@ sub extract($$$;$)
     my $data = <$in>;
     close $in;
 
-    $data =~ s/.*\Q$start\E(.*?)\n\Q$end\E\n.*/$1/s
+    $data =~ s/.*\Q$start\E(.*?)\Q$end\E.*/$1/s
         or die "Can't find \"$start\" in $fn\n";
     $data =~ s|//.*$||mg;
     my $consume = $per_line ? '.*' : '';
@@ -37,7 +37,7 @@ sub articled($)
     return /^[aeiou]/i ? "An $_" : "A $_";
 }
 
-for (extract "directn.cc", "_base_feature_desc(dungeon_feature_type", "}")
+for (extract "directn.cc", "static string _base_feature_desc", "}")
 {
     $features{articled($_)} = 1;
 }
@@ -54,6 +54,12 @@ for (extract "describe.cc", "trap_names[] =", "};")
 
     $features{articled($_)} = 1;
 }
+
+for (extract "cloud.cc", "clouds[] =", "};", "per-line")
+{
+    $features{$_ . " cloud" } = 1 unless $_ eq "?";
+}
+
 
 for (grep /\.des|\.des\.disabled|\.lua$/, `git ls-files`)
 {

@@ -10,7 +10,6 @@
 function dis_setup(e)
    e.place("Dis:7")
    e.tags("dis", "no_rotate")
-   e.lflags("no_tele_control")
    e.kitem("$ = $ no_pickup")
 -- turn granite statues into iron statues
 -- you still have to colour the statues, if desired
@@ -194,7 +193,7 @@ KMONS:   AB = dancing weapon ; great sword good_item | battleaxe good_item | \
 KMONS:   CD = war gargoyle
 KMONS:   E = lich
 KMONS:   F = executioner
-KMONS:   ! = rust devil / skeletal warrior / hell knight / place:Zot:1 skeleton w:15
+KMONS:   ! = rust devil / skeletal warrior / hell knight / skeleton w:15
 KMONS:   ? = patrolling iron imp
 : dgn.delayed_decay(_G, '%', 'human corpse / human skeleton, \
 :                             human corpse / human skeleton')
@@ -341,7 +340,7 @@ DEPTH:   Dis
 TAGS:    transparent extra decor layout_city
 SHUFFLE: ABCD/EFGH, IJK/LMN, OPQR/STUV
 SUBST:   ABHIRS = g, CDKP = ., EGJLNOQT = v, FMUV = l
-KPROP:   l = no_rtele_into
+KPROP:   l = no_tele_into
 KPROP:   l = no_cloud_gen
 NSUBST:  g = 5:g / *:v
 KFEAT:   g = iron_grate

@@ -1314,18 +1314,15 @@ void TilesFramework::layout_statcol()
         m_statcol_bottom = m_region_tab->sy - m_tab_margin;
 
 #if TAG_MAJOR_VERSION == 34
-        // Lava orc temperature bar and zot points.
+        // Lava orc temperature bar
         if (you.species == SP_LAVA_ORC)
             ++crawl_view.hudsz.y;
 #endif
-        if (crawl_state.game_is_zotdef())
-            ++crawl_view.hudsz.y;
         m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
         m_statcol_top += m_region_stat->dy;
 
-        for (int i = 0, size = Options.tile_layout_priority.size(); i < size; ++i)
+        for (const string &str : Options.tile_layout_priority)
         {
-            string str = Options.tile_layout_priority[i];
             if (str == "inventory")
                 resize_inventory();
             else if (str == "minimap" || str == "map")

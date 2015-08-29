@@ -149,12 +149,9 @@ enum mon_summon_type
 
 enum mon_intel_type             // Must be in increasing intelligence order
 {
-    I_PLANT = 0,
-    I_INSECT,
-    I_REPTILE,
+    I_BRAINLESS = 0,
     I_ANIMAL,
-    I_NORMAL,
-    I_HIGH,
+    I_HUMAN,
 };
 
 enum habitat_type
@@ -227,6 +224,7 @@ enum shout_type
     S_SILENT,               // silent
     S_SHOUT,                // shout
     S_BARK,                 // bark
+    S_HOWL,                 // howl
     S_SHOUT2,               // shout twice (e.g. two-headed ogres)
     S_ROAR,                 // roar
     S_SCREAM,               // scream
@@ -240,7 +238,9 @@ enum shout_type
     S_GROWL,                // for bears
     S_HISS,                 // for snakes and lizards
     S_DEMON_TAUNT,          // for pandemonium lords
+#if TAG_MAJOR_VERSION == 34
     S_CAW,                  // for ravens
+#endif
     S_CHERUB,               // for cherubs
     S_RUMBLE,               // for ushabti
     NUM_SHOUTS,

@@ -726,13 +726,12 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
 
 static void _show_specific_help(const string &help)
 {
-    vector<string> lines = split_string("\n", help, false, true);
     vector<formatted_string> formatted_lines;
-    for (int i = 0, size = lines.size(); i < size; ++i)
+    for (const string &line : split_string("\n", help, false, true))
     {
         formatted_lines.push_back(
             formatted_string::parse_string(
-                lines[i], true, _cmdhelp_textfilter));
+                line, true, _cmdhelp_textfilter));
     }
     _show_keyhelp_menu(formatted_lines, false, Options.easy_exit_menu);
 }
@@ -1086,7 +1085,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
             true, true, _cmdhelp_textfilter);
 
     _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "show Inventory list", 2);
-    _add_command(cols, 1, CMD_LIST_EQUIPMENT, "show inventory of equipped items", 2);
     _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
     _add_command(cols, 1, CMD_FIRE, "Fire next appropriate item", 2);
     _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);
@@ -1369,7 +1367,6 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>^</w>      set piety to a value\n"
                        "<w>@</w>      set Str Int Dex\n"
                        "<w>#</w>      load character from a dump file\n"
-                       "<w>Ctrl-Z</w> gain lots of Zot Points\n"
                        "<w>&</w>      list all divine followers\n"
                        "<w>=</w>      show info about skill points\n"
                        "\n"
@@ -1417,6 +1414,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>w</w>      god mollification\n"
                        "<w>p</w>      polymorph into a form\n"
                        "<w>V</w>      toggle xray vision\n"
+                       "<w>E</w>      (un)freeze time\n"
                        "\n"
                        "<yellow>Monster related commands</yellow>\n"
                        "<w>D</w>      detect all monsters\n"

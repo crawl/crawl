@@ -8,8 +8,6 @@
 
 #include "random-pick.h"
 
-#define DEPTH_NOWHERE 999
-
 #define pop_entry random_pick_entry<monster_type>
 
 typedef bool (*mon_pick_vetoer)(monster_type);

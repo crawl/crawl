@@ -181,11 +181,7 @@ function pan_entry_feature(e, glyph)
     e.depth_chance("Depths:3", 10000)
     e.depth_chance("D:24", 10000)
     e.chance(2500)
-    if you.where() == 'Depths:3' or you.where() == 'D:24' then
-        e.kfeat(glyph .. " = enter_pandemonium no_mimic")
-    else
-        e.kfeat(glyph .. " = enter_pandemonium")
-    end
+    e.kfeat(glyph .. " = enter_pandemonium")
 end
 
 function pan_entry_vault_contents(e, glyph)
@@ -2133,7 +2129,7 @@ ENDMAP
 NAME: nicolae_pan_performance_anxiety
 TAGS: no_trap_gen
 WEIGHT: 1
-KPROP: tb = no_rtele_into
+KPROP: tb = no_tele_into
 NSUBST: t = 10:p / *:., b = 10:p / *:.
 KMONS: p = human / elf / orc / naga / centaur / draconian / \
    ogre / minotaur / troll / kobold / mummy / ghoul / spriggan / dwarf / \
@@ -3482,7 +3478,7 @@ ITEM:   w:5 any / potion of curing
 ITEM:   any / potion of heal wounds
 ITEM:   acquire any
 ITEM:   potion of cure mutation
-ITEM:   potion of restore abilities
+ITEM:   potion of might / potion of brilliance / potion of agility
 ITEM:   any
 NSUBST: i = 2=ghh / 3=ghhiii / *:i
 MONS:   angel

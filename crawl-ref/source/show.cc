@@ -470,7 +470,7 @@ static void _update_monster(monster* mons)
 
     // ripple effect?
     if (grd(gp) == DNGN_SHALLOW_WATER
-        && !mons_flies(mons)
+        && mons->airborne()
         && env.cgrid(gp) == EMPTY_CLOUD
         || is_opaque_cloud(env.cgrid(gp))
         && !mons->submerged()
@@ -485,9 +485,9 @@ static void _update_monster(monster* mons)
     if (mons->submerged())
         return;
 
-    int range2 = dist_range(player_monster_detect_radius());
+    int range = player_monster_detect_radius();
     if (mons->constricted_by == MID_PLAYER
-        || (range2 > 1 && (you.pos() - mons->pos()).abs() <= range2))
+        || (range > 0 && (you.pos() - mons->pos()).rdist() <= range))
     {
         _mark_invisible_at(gp);
         mons->unseen_pos = gp;

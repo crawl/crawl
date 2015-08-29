@@ -175,9 +175,12 @@ void wizard_change_species_to(species_type sp)
     // FIXME: this checks only for valid slots, not for suitability of the
     // item in question. This is enough to make assertions happy, though.
     for (int i = 0; i < NUM_EQUIP; ++i)
-        if (you.equip[i] != -1 && !can_wear_armour(you.inv[you.equip[i]], false, false))
+        if (you_can_wear(static_cast<equipment_type>(i)) == MB_FALSE
+            && you.equip[i] != -1)
         {
-            mprf("%s falls away.", you.inv[you.equip[i]].name(DESC_YOUR).c_str());
+            mprf("%s fall%s away.",
+                 you.inv[you.equip[i]].name(DESC_YOUR).c_str(),
+                 you.inv[you.equip[i]].quantity > 1 ? "" : "s");
             // Unwear items without the usual processing.
             you.equip[i] = -1;
             you.melded.set(i, false);
@@ -277,7 +280,7 @@ void wizard_memorise_spec_spell()
         }
     }
 
-    if (!learn_spell(static_cast<spell_type>(spell)))
+    if (!learn_spell(static_cast<spell_type>(spell), true))
         crawl_state.cancel_cmd_repeat();
 }
 #endif
@@ -317,8 +320,10 @@ void wizard_heal(bool super_heal)
 
 void wizard_set_hunger_state()
 {
-    string hunger_prompt =
-        "Set hunger state to s(T)arving, (N)ear starving, (H)ungry";
+    string hunger_prompt = "Set hunger state to ";
+    if (you.species != SP_VAMPIRE && you.species != SP_GHOUL)
+        hunger_prompt += "f(A)inting, ";
+    hunger_prompt += "s(T)arving, (N)ear starving, (H)ungry";
     if (you.species == SP_GHOUL)
         hunger_prompt += " or (S)atiated";
     else
@@ -332,7 +337,8 @@ void wizard_set_hunger_state()
     // Values taken from food.cc.
     switch (c)
     {
-    case 't': you.hunger = HUNGER_STARVING / 2;   break;
+    case 'a': you.hunger = HUNGER_FAINTING / 2; break;
+    case 't': you.hunger = (HUNGER_STARVING + HUNGER_FAINTING) / 2; break;
     case 'n': you.hunger = 1100;  break;
     case 'h': you.hunger = 2300;  break;
     case 's': you.hunger = 4900;  break;
@@ -429,8 +435,8 @@ void wizard_set_piety()
     if (you_worship(GOD_RU))
     {
         mprf("Current progress to next sacrifice: %d  Progress needed: %d",
-            you.props["ru_progress_to_next_sacrifice"].get_int(),
-            you.props["ru_sacrifice_delay"].get_int());
+            you.props[RU_SACRIFICE_PROGRESS_KEY].get_int(),
+            you.props[RU_SACRIFICE_DELAY_KEY].get_int());
     }
 
     mprf(MSGCH_PROMPT, "Enter new piety value (current = %d, Enter for 0): ",
@@ -945,7 +951,6 @@ void wizard_get_god_gift()
     if (you_worship(GOD_RU))
     {
         ru_offer_new_sacrifices();
-        you.props["ru_progress_to_next_sacrifice"] = 0;
         return;
     }
 
@@ -957,6 +962,22 @@ void wizard_toggle_xray_vision()
 {
     you.xray_vision = !you.xray_vision;
     viewwindow(true);
+}
+
+void wizard_freeze_time()
+{
+    auto& props = you.props;
+    // this property is never false: either true or unset
+    if (props.exists(FREEZE_TIME_KEY))
+    {
+        props.erase(FREEZE_TIME_KEY);
+        mpr("You allow the flow of time to resume.");
+    }
+    else
+    {
+        props[FREEZE_TIME_KEY] = true;
+        mpr("You bring the flow of time to a stop.");
+    }
 }
 
 void wizard_god_wrath()
@@ -1028,12 +1049,17 @@ void wizard_transform()
     }
 
     you.transform_uncancellable = false;
-    if (transform(200, form) != SPRET_SUCCESS && you.form != form)
+    if (!transform(200, form) && you.form != form)
         mpr("Transformation failed.");
 }
 
 void wizard_join_religion()
 {
+    if (you.species == SP_DEMIGOD)
+    {
+        mpr("Not even in wizmode may Demigods worship a god!");
+        return;
+    }
     god_type god = choose_god();
     if (god == NUM_GODS)
         mpr("That god doesn't seem to exist!");

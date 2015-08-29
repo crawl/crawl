@@ -102,6 +102,8 @@ include Makefile.obj
 # CFOTHERS(_L) - Anything else
 #
 
+# Which C++ standard to support
+STDFLAG = -std=c++11
 
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
 CFWARN := 
@@ -144,6 +146,7 @@ export RM
 export CC
 export CXX
 export CFLAGS
+export STDFLAG
 export MAKEFLAGS
 export CONFIGURE_FLAGS
 export uname_S
@@ -237,6 +240,8 @@ ifneq (,$(findstring CYGWIN,$(uname_S)))
 	GAME = crawl.exe
 	NO_RDYNAMIC = YesPlease
 	BUILD_PCRE = YesPlease
+	# newlib doesn't provide Posix functions with c++11
+	STDFLAG = -std=gnu++11
 endif
 
 ifdef BUILD_ALL
@@ -302,6 +307,10 @@ endif
 ifdef WEBTILES
 TILES_ANY = YesPlease
 OBJECTS += $(TILES_OBJECTS) $(WEBTILES_OBJECTS)
+endif
+
+ifdef ANDROID
+TILES_ANY = YesPlease
 endif
 
 #
@@ -507,12 +516,16 @@ endif
 
 ifneq ($(FORCE_CC),)
 GCC := $(FORCE_CC)
+HOSTCC := $(FORCE_CC)
+export HOSTCC
 else
 GCC := $(LMACH)$(GCC_VER_PREFIX)gcc$(GCC_VER_SUFFIX)
 endif
 
 ifneq ($(FORCE_CXX),)
 GXX := $(FORCE_CXX)
+HOSTCXX := $(FORCE_CXX)
+export HOSTCXX
 else
 GXX := $(LMACH)$(GCC_VER_PREFIX)g++$(GCC_VER_SUFFIX)
 endif
@@ -762,10 +775,6 @@ CFOTHERS_L = $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL2_CFLAGS)
 
 ifndef NO_LUA_BINDINGS
 CFOTHERS_L += -DCLUA_BINDINGS
-endif
-
-ifdef EUCLIDEAN
-DEFINES_L += -DEUCLIDEAN
 endif
 
 ifdef USE_DGAMELAUNCH
@@ -1267,7 +1276,7 @@ ifdef NEED_REBUILD
 endif
 
 .android-cflags: .cflags
-	@echo -std=c++11 $(CFLAGS_L) | sed 's@"@\\"@g' >.android-cxxflags
+	@echo $(STDFLAG) $(CFLAGS_L) | sed 's@"@\\"@g' >.android-cxxflags
 	@echo $(CFLAGS_L) | sed 's@"@\\"@g' >.android-cflags
 
 .PHONY: .force-cflags
@@ -1535,7 +1544,7 @@ ifdef PCH
 %.gch: % .cflags $(CONTRIB_LIBS)
 # This needs -MD, not -MMD, lest we be haunted by the ghosts of stale
 # system headers.
-	$(QUIET_PCH)$(CXX) -std=c++11 $(ALL_CFLAGS) -MD -c $< -o $@
+	$(QUIET_PCH)$(CXX) $(STDFLAG) $(ALL_CFLAGS) -MD -c $< -o $@
 
 CC_DEP := AppHdr.h.gch
 endif
@@ -1560,9 +1569,9 @@ $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 
 %.o: %.cc %.d .cflags $(CC_DEP) | $(GENERATED_HEADERS) $(TILEDEFHDRS)
 ifdef NO_INLINE_DEPGEN
-	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM -std=c++11 $(ALL_CFLAGS) -MT $*.o $< > $*.d
+	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(STDFLAG) $(ALL_CFLAGS) -MT $*.o $< > $*.d
 endif
-	$(QUIET_CXX)$(CXX) -std=c++11 $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
+	$(QUIET_CXX)$(CXX) $(STDFLAG) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 ifndef NO_INLINE_DEPGEN
 	@if [ -f $(@:%.o=%.d) ]; then touch -r $@ $(@:%.o=%.d); fi
 endif
@@ -1571,7 +1580,7 @@ icon.o: util/crawl.rc util/crawl.ico .cflags
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
 
 config.h: util/configure .cflags
-	${QUIET_GEN}util/configure "$(CXX)" -std=c++11 $(ALL_CFLAGS)
+	${QUIET_GEN}util/configure "$(CXX)" $(STDFLAG) $(ALL_CFLAGS)
 
 #
 # Contribs

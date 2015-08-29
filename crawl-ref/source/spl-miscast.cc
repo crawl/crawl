@@ -134,7 +134,7 @@ void MiscastEffect::init()
     source_known = target_known = false;
 
     if (target->is_monster())
-        target_known = you.can_see(target);
+        target_known = you.can_see(*target);
     else
         target_known = true;
 
@@ -153,7 +153,7 @@ void MiscastEffect::init()
         else
             kt = KILL_MON_MISSILE;
 
-        source_known = you.can_see(act_source);
+        source_known = you.can_see(*act_source);
 
         if (target_known && special_source == MUMMY_MISCAST)
             source_known = true;
@@ -244,22 +244,18 @@ void MiscastEffect::do_miscast()
 
     if (spell != SPELL_NO_SPELL)
     {
-        vector<int> school_list;
-        for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
-            if (spell_typematch(spell, spschools_type::exponent(i)))
-                school_list.push_back(i);
+        vector<spschool_flag_type> school_list;
+        for (const auto bit : spschools_type::range())
+            if (spell_typematch(spell, bit))
+                school_list.push_back(bit);
 
-        unsigned int _school = school_list[random2(school_list.size())];
-        sp_type = spschools_type::exponent(_school);
+        sp_type = school_list[random2(school_list.size())];
     }
     else
     {
         sp_type = school;
         if (sp_type == SPTYP_RANDOM)
-        {
-            int exp = (random2(SPTYP_LAST_EXPONENT));
-            sp_type = (spschool_flag_type) (1 << exp);
-        }
+            sp_type = spschools_type::exponent(random2(SPTYP_LAST_EXPONENT + 1));
     }
 
     if (level != -1)
@@ -374,7 +370,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
     }
     else
     {
-        if (you.can_see(target))
+        if (you.can_see(*target))
             msg = mon_msg_seen;
         else
         {
@@ -430,11 +426,8 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
 
     if (msg_ch == MSGCH_SOUND)
     {
-        // Those monsters of normal or greater intelligence will realize that they
-        // were the source of the sound.
-        mid_t src = target->is_player() ? MID_PLAYER
-                    : mons_intel(target->as_monster()) >= I_NORMAL ? target->mid
-                    : MID_NOBODY;
+        // XXX: can this just be target->mid?
+        mid_t src = target->is_player() ? MID_PLAYER : target->mid;
         noisy(sound_loudness, target->pos(), src);
     }
 }
@@ -485,7 +478,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
         else
             method = KILLED_BY_SOMETHING;
 
-        bool see_source = act_source && you.can_see(act_source);
+        bool see_source = act_source && you.can_see(*act_source);
         ouch(dam, method, act_source ? act_source->mid : MID_NOBODY,
              cause.c_str(), see_source,
              act_source ? act_source->name(DESC_A, true).c_str() : nullptr);
@@ -1254,7 +1247,7 @@ void MiscastEffect::_translocation(int severity)
             mon_msg_seen   = "Space bends around @the_monster@!";
             mon_msg_unseen = "A piece of empty space twists and distorts.";
             if (_ouch(4 + random2avg(7, 2)) && target->alive() && !target->no_tele())
-                target->blink(false);
+                target->blink();
             break;
         case 5:
             if (_create_monster(MONS_SPATIAL_VORTEX, 3))
@@ -1292,7 +1285,7 @@ void MiscastEffect::_translocation(int severity)
                     if (one_chance_in(3))
                         target->teleport(true);
                     else
-                        target->blink(false);
+                        target->blink();
                 }
                 if (target->alive())
                     target->confuse(act_source, 5 + random2(3));
@@ -1841,9 +1834,14 @@ void MiscastEffect::_necromancy(int severity)
         case 2:
             if (!target->res_rotting())
             {
-                if (you.can_smell())
-                    all_msg = "You begin to rot!";
+                you_msg      = "You begin to rot!";
+                mon_msg_seen = "@The_monster@ begins to rot!";
 
+                // Must produce the message before rotting, because that
+                // might kill a target monster, and do_msg does not like
+                // dead monsters. FIXME: We should avoid_lethal here!
+                if (!did_msg)
+                    do_msg();
                 target->rot(act_source, 1, true);
             }
             else if (you.species == SP_MUMMY)
@@ -3215,7 +3213,7 @@ void MiscastEffect::_zot()
                         if (one_chance_in(3))
                             target->teleport(true);
                         else
-                            target->blink(false);
+                            target->blink();
                     }
                 }
             }

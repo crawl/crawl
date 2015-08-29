@@ -39,7 +39,6 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-chimera.h"
 #include "mon-clone.h"
 #include "mon-pick.h"
 #include "mon-place.h"
@@ -103,6 +102,12 @@ void expire_lantern_shadows()
 
 static bool _reaching_weapon_attack(const item_def& wpn)
 {
+    if (you.confused())
+    {
+        mpr("You're too confused to attack without stumbling around!");
+        return false;
+    }
+
     if (you.caught())
     {
         mprf("You cannot attack while %s.", held_status());
@@ -136,9 +141,6 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         return false;
     }
 
-    if (you.confused())
-        beam.confusion_fuzz(2);
-
     const coord_def delta = beam.target - you.pos();
     const int x_distance  = abs(delta.x);
     const int y_distance  = abs(delta.y);
@@ -157,7 +159,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     if (x_distance > 2 || y_distance > 2)
     {
         mpr("Your weapon cannot reach that far!");
-        return false; // Shouldn't happen with confused swings
+        return false;
     }
 
     // Calculate attack delay now in case we have to apply it.
@@ -166,20 +168,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     if (!feat_is_reachable_past(grd(first_middle))
         && !feat_is_reachable_past(grd(second_middle)))
     {
-        // Might also be a granite statue/orcish idol which you
-        // can reach _past_.
-        if (you.confused())
-        {
-            mpr("You swing wildly and hit a wall.");
-            you.time_taken = attack_delay;
-            make_hungry(3, true);
-            return true;
-        }
-        else
-        {
-            mpr("There's a wall in the way.");
-            return false;
-        }
+        mpr("There's a wall in the way.");
+        return false;
     }
 
     // Failing to hit someone due to a friend blocking is infuriating,
@@ -237,14 +227,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     {
         // Must return true, otherwise you get a free discovery
         // of invisible monsters.
-
-        if (you.confused())
-        {
-            mprf("You swing wildly%s", beam.isMe() ?
-                                       " and almost hit yourself!" : ".");
-        }
-        else
-            mpr("You attack empty space.");
+        mpr("You attack empty space.");
         you.time_taken = attack_delay;
         make_hungry(3, true);
         return true;
@@ -321,22 +304,23 @@ static bool _check_crystal_ball()
         return false;
     }
 #endif
-    if (you.intel() <= 1)
-    {
-        mpr("You lack the intelligence to focus on the shapes in the ball.");
-        return false;
-    }
 
     if (you.confused())
     {
-        mpr("You are unable to concentrate on the shapes in the ball.");
+        mpr("You are unable to concentrate on the shapes in the crystal ball.");
+        return false;
+    }
+
+    if (!enough_mp(1, false))
+    {
+        mpr("Your reserves of magic are too empty for the crystal ball to "
+            "function.");
         return false;
     }
 
     if (you.magic_points == you.max_magic_points)
     {
-        mpr("With no energy to recover, the crystal ball of energy is "
-            "presently useless to you.");
+        mpr("Your reserves of magic are already full.");
         return false;
     }
 
@@ -640,7 +624,7 @@ void zap_wand(int slot)
         {
             return;
         }
-        else if (wand.sub_type == WAND_INVISIBILITY && dont_use_invis())
+        else if (wand.sub_type == WAND_INVISIBILITY && !invis_allowed())
             return;
     }
 
@@ -664,6 +648,7 @@ void zap_wand(int slot)
 
     beam.source   = you.pos();
     beam.attitude = ATT_FRIENDLY;
+    beam.evoked   = true;
     beam.set_target(zap_wand);
 
     const bool aimed_at_self = (beam.target == you.pos());
@@ -747,7 +732,7 @@ void zap_wand(int slot)
     // Identify if unknown.
     if (!alreadyknown)
     {
-        set_ident_type(wand, ID_KNOWN_TYPE);
+        set_ident_type(wand, true);
         mprf_nocap("%s", wand.name(DESC_INVENTORY_EQUIP).c_str());
     }
 
@@ -1015,60 +1000,20 @@ string manual_skill_names(bool short_text)
         return skill_names(skills);
 }
 
-static const pop_entry pop_beasts[] =
-{ // Box of Beasts
-  {  1,  3,  10,  FALL, MONS_BUTTERFLY },
-  {  1,  5,  100, FALL, MONS_RAT   },
-  {  1,  5,  100, FALL, MONS_BAT   },
-  {  2,  8,  100, PEAK, MONS_JACKAL },
-  {  2, 10,  100, PEAK, MONS_ADDER },
-  {  4, 13,  100, PEAK, MONS_HOUND },
-  {  5, 15,  100, PEAK, MONS_WATER_MOCCASIN },
-  {  5, 15,  100, PEAK, MONS_SKY_BEAST },
-  {  8, 18,  100, PEAK, MONS_CROCODILE },
-  {  8, 18,  100, PEAK, MONS_HOG },
-  { 10, 20,  100, PEAK, MONS_ICE_BEAST },
-  { 10, 20,  100, PEAK, MONS_YAK },
-  { 10, 20,  100, PEAK, MONS_WYVERN },
-  { 10, 20,  100, PEAK, MONS_WOLF },
-  { 11, 22,  100, PEAK, MONS_ALLIGATOR },
-  { 11, 22,  200, PEAK, MONS_POLAR_BEAR },
-  { 11, 22,  100, PEAK, MONS_WARG },
-  { 13, 25,  100, PEAK, MONS_ELEPHANT },
-  { 13, 25,  100, PEAK, MONS_GRIFFON },
-  { 13, 25,  100, PEAK, MONS_BLACK_BEAR },
-  { 15, 27,   50, PEAK, MONS_CATOBLEPAS },
-  { 15, 27,  100, PEAK, MONS_DEATH_YAK },
-  { 16, 27,  100, PEAK, MONS_ANACONDA },
-  { 16, 27,   50, PEAK, MONS_RAVEN },
-  { 18, 29,   50, RISE, MONS_DIRE_ELEPHANT },
-  { 20, 29,   50, RISE, MONS_FIRE_DRAGON },
-  { 23, 32,   10, RISE, MONS_APIS },
-  { 23, 32,   10, RISE, MONS_HELLEPHANT },
-  { 23, 32,   10, RISE, MONS_GOLDEN_DRAGON },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
 static const pop_entry pop_spiders[] =
 { // Sack of Spiders
-  {  0,  10,   5,  FALL, MONS_GIANT_COCKROACH },
-  {  0,  10,   5,  FALL, MONS_SCORPION },
-  {  0,  15,   50, FALL, MONS_SPIDER },
-  {  5,  20,  100, PEAK, MONS_TRAPDOOR_SPIDER },
-  {  8,  27,  100, PEAK, MONS_REDBACK },
-  { 12,  27,  100, PEAK, MONS_JUMPING_SPIDER },
-  { 15,  27,  100, PEAK, MONS_ORB_SPIDER },
-  { 18,  27,  100, PEAK, MONS_TARANTELLA },
-  { 20,  27,  100, PEAK, MONS_WOLF_SPIDER },
-  { 25,  27,    5, RISE, MONS_GHOST_MOTH },
+  {  0,   7,   10, FALL, MONS_GIANT_COCKROACH },
+  {  0,  10,   10, FALL, MONS_SCORPION },
+  {  0,  15,  100, FALL, MONS_SPIDER },
+  {  7,  18,   80, PEAK, MONS_TRAPDOOR_SPIDER },
+  {  9,  27,   90, PEAK, MONS_REDBACK },
+  { 10,  27,   10, SEMI, MONS_ORB_SPIDER },
+  { 12,  29,  100, PEAK, MONS_JUMPING_SPIDER },
+  { 13,  29,  110, PEAK, MONS_TARANTELLA },
+  { 15,  29,  120, PEAK, MONS_WOLF_SPIDER },
+  { 21,  27,   18, RISE, MONS_GHOST_MOTH },
   { 0,0,0,FLAT,MONS_0 }
 };
-
-static bool _box_of_beasts_veto_mon(monster_type mon)
-{
-    // Don't summon any beast that would anger your god.
-    return player_will_anger_monster(mon);
-}
 
 static bool _box_of_beasts(item_def &box)
 {
@@ -1082,76 +1027,50 @@ static bool _box_of_beasts(item_def &box)
         return false;
     }
 
-    bool success = false;
-    monster* mons = nullptr;
+    // two rolls to reduce std deviation - +-6 so can get < max even at 27 sk
+    const int hd_min = min(27,
+                           you.skill(SK_EVOCATIONS) + random2(7) - random2(7));
+    const int tier = mutant_beast_tier(hd_min);
+    ASSERT(tier < NUM_BEAST_TIERS);
 
-    if (!one_chance_in(3))
+    mgen_data mg = mgen_data(MONS_MUTANT_BEAST,
+                             BEH_FRIENDLY, &you,
+                             3 + random2(3), 0,
+                             you.pos(),
+                             MHITYOU, MG_AUTOFOE);
+    mg.hd = beast_tiers[tier];
+    dprf("hd %d (min %d, tier %d)", mg.hd, hd_min, tier);
+    const monster* mons = create_monster(mg);
+
+    if (!mons)
     {
-        // Invoke mon-pick with the custom list
-        const int pick_level = you.skill(SK_EVOCATIONS) + 5;
-        monster_type mon = pick_monster_from(pop_beasts, pick_level,
-                                             _box_of_beasts_veto_mon);
-
-        // Second monster might be only half as good
-        int pick_level_2 = random_range(max(1,div_rand_round(pick_level,2)),
-                                        pick_level);
-        monster_type mon2 = pick_monster_from(pop_beasts, pick_level_2,
-                                              _box_of_beasts_veto_mon);
-
-        // Third monster picked from anywhere up to max level
-        int pick_level_3 = random_range(1, pick_level);
-        monster_type mon3 = pick_monster_from(pop_beasts, pick_level_3,
-                                              _box_of_beasts_veto_mon);
-
-        if (mon && mon2 && mon3)
-        {
-            mgen_data mg = mgen_data(MONS_CHIMERA,
-                                     BEH_FRIENDLY, &you,
-                                     3 + random2(3), 0,
-                                     you.pos(),
-                                     MHITYOU, MG_AUTOFOE);
-            mg.define_chimera(mon, mon2, mon3);
-            mons = create_monster(mg);
-            if (mons)
-                success = true;
-        }
-        else
-        {
-            // we weren't able to come up with acceptable monsters
-            mpr("...but nothing happens.");
-            return false;
-        }
-
-    }
-
-    if (success)
-    {
-        mpr("...and something leaps out!");
-        xom_is_stimulated(10);
-        did_god_conduct(DID_CHAOS, random_range(5,10));
-        // Decrease charges
-        box.charges--;
-        box.used_count++;
-        // Let each part announce itself
-        for (int n = 0; n < NUM_CHIMERA_HEADS; ++n)
-        {
-            mons->ghost->acting_part = get_chimera_part(mons, n + 1);
-            handle_monster_shouts(mons, true);
-        }
-        mons->ghost->acting_part = MONS_0;
-    }
-    else
         // Failed to create monster for some reason
         mpr("...but nothing happens.");
+        return false;
+    }
 
-    return success;
+    mprf("...and %s %s out!",
+         mons->name(DESC_A).c_str(), mons->airborne() ? "flies" : "leaps");
+    xom_is_stimulated(10); // dubious
+    did_god_conduct(DID_CHAOS, random_range(5,10));
+    // Decrease charges
+    box.charges--;
+    box.used_count++;
+    return true;
 }
+
+static bool _sack_of_spiders_veto_mon(monster_type mon)
+{
+   // Don't summon any beast that would anger your god.
+    return player_will_anger_monster(mon);
+}
+
 
 static bool _sack_of_spiders(item_def &sack)
 {
     mpr("You reach into the bag...");
 
-    if (!sack.plus)
+    if (!sack.charges)
     {
         mpr("...but the bag is empty, and unravels at your touch.");
         ASSERT(in_inventory(sack));
@@ -1166,14 +1085,14 @@ static bool _sack_of_spiders(item_def &sack)
     }
 
     bool success = false;
-    int count = 1 + random2(3)
-        + random2(div_rand_round(you.skill(SK_EVOCATIONS, 10), 40));
+    int count = 1 + random2(2)
+        + random2(div_rand_round(you.skill(SK_EVOCATIONS, 10), 30));
     for (int n = 0; n < count; n++)
     {
         // Invoke mon-pick with our custom list
         monster_type mon = pick_monster_from(pop_spiders,
                                              max(1, you.skill(SK_EVOCATIONS)),
-                                             _box_of_beasts_veto_mon);
+                                             _sack_of_spiders_veto_mon);
         mgen_data mg = mgen_data(mon,
                                  BEH_FRIENDLY, &you,
                                  3 + random2(4), 0,
@@ -1193,7 +1112,7 @@ static bool _sack_of_spiders(item_def &sack)
             trap_def *trap = find_trap((*mi)->pos());
             // Don't destroy non-web traps or try to trap monsters
             // currently caught by something.
-            if (you.pos().range((*mi)->pos()) > rad
+            if (you.pos().distance_from((*mi)->pos()) > rad
                 || (!trap && grd((*mi)->pos()) != DNGN_FLOOR)
                 || (trap && trap->type != TRAP_WEB)
                 || (*mi)->friendly()
@@ -1202,7 +1121,7 @@ static bool _sack_of_spiders(item_def &sack)
                 continue;
             }
 
-            int chance = 100 - (100 * (you.pos().range((*mi)->pos()) - 1) / rad)
+            int chance = 100 - (100 * (you.pos().distance_from((*mi)->pos()) - 1) / rad)
                 - 2 * (27 - you.skill(SK_EVOCATIONS));
             if (x_chance_in_y(chance, 100))
             {
@@ -1555,7 +1474,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 {
     vector<actor *> act_list;
 
-    int radius = min(7, 5 + div_rand_round(pow, 60));
+    int radius = min(5, 4 + div_rand_round(pow, 60));
 
     for (actor_near_iterator ai(agent->pos(), LOS_SOLID); ai; ++ai)
     {
@@ -1645,7 +1564,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
             if (act->is_monster())
             {
                 act->as_monster()->speed_increment -= random2(6) + 4;
-                if (you.can_see(act))
+                if (you.can_see(*act))
                     affected_monsters.add(act->as_monster());
             }
             else
@@ -1745,10 +1664,10 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
 static void _fan_of_gales_elementals()
 {
-    int radius = min(7, 5 + you.skill_rdiv(SK_EVOCATIONS, 1, 6));
+    int radius = min(6, 4 + you.skill_rdiv(SK_EVOCATIONS, 1, 6));
 
     vector<coord_def> elementals;
-    for (radius_iterator ri(you.pos(), radius, C_ROUND, true); ri; ++ri)
+    for (radius_iterator ri(you.pos(), radius, C_SQUARE, true); ri; ++ri)
     {
         if (ri->distance_from(you.pos()) >= 3 && !monster_at(*ri)
             && !cell_is_solid(*ri)
@@ -2005,7 +1924,7 @@ static spret_type _phantom_mirror()
         return SPRET_ABORT;
     }
     victim = monster_at(beam.target);
-    if (!victim || !you.can_see(victim))
+    if (!victim || !you.can_see(*victim))
     {
         if (beam.target == you.pos())
             mpr("You can't use the mirror on yourself.");
@@ -2072,7 +1991,7 @@ static bool _rod_spell(item_def& irod, bool check_range)
     if (you.undead_state() == US_UNDEAD)
         food = 0;
 
-    if (food && (you.hunger_state == HS_STARVING || you.hunger <= food)
+    if (food && (you.hunger_state <= HS_STARVING || you.hunger <= food)
         && !you.undead_state())
     {
         canned_msg(MSG_NO_ENERGY);
@@ -2118,9 +2037,7 @@ static bool _rod_spell(item_def& irod, bool check_range)
     }
 
     // All checks passed, we can cast the spell.
-    if (you.confused())
-        random_uselessness();
-    else if (your_spells(spell, power, false, true) == SPRET_ABORT)
+    if (your_spells(spell, power, false, true) == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
         return false;
@@ -2212,7 +2129,7 @@ bool evoke_item(int slot, bool check_range)
     case OBJ_WEAPONS:
         ASSERT(wielded);
 
-        if (weapon_reach(item) > 2)
+        if (weapon_reach(item) > REACH_NONE)
         {
             if (_reaching_weapon_attack(item))
             {
@@ -2257,7 +2174,7 @@ bool evoke_item(int slot, bool check_range)
         }
 
         if (you.undead_state() == US_ALIVE && !you_foodless()
-            && you.hunger_state == HS_STARVING)
+            && you.hunger_state <= HS_STARVING)
         {
             canned_msg(MSG_TOO_HUNGRY);
             return false;

@@ -294,7 +294,6 @@ bool add_spell_to_memory(spell_type spell)
 bool del_spell_from_memory_by_slot(int slot)
 {
     ASSERT_RANGE(slot, 0, MAX_KNOWN_SPELLS);
-    int j;
 
     if (you.last_cast_spell == you.spells[slot])
         you.last_cast_spell = SPELL_NO_SPELL;
@@ -302,14 +301,11 @@ bool del_spell_from_memory_by_slot(int slot)
     spell_skills(you.spells[slot], you.stop_train);
 
     mprf("Your memory of %s unravels.", spell_title(you.spells[slot]));
-    you.spells[ slot ] = SPELL_NO_SPELL;
+    you.spells[slot] = SPELL_NO_SPELL;
 
-    for (j = 0; j < 52; j++)
-    {
+    for (int j = 0; j < 52; j++)
         if (you.spell_letter_table[j] == slot)
             you.spell_letter_table[j] = -1;
-
-    }
 
     you.spell_no--;
 
@@ -524,7 +520,7 @@ int apply_monsters_around_square(monster_func mf, const coord_def& where,
 {
     int rv = 0;
     set<const monster*> affected;
-    for (radius_iterator ri(where, radius, C_ROUND, true); ri; ++ri)
+    for (radius_iterator ri(where, radius, C_SQUARE, true); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
         if (mon && !affected.count(mon))
@@ -998,33 +994,6 @@ int spell_effect_noise(spell_type spell)
     return _seekspell(spell)->effect_noise;
 }
 
-static bool _spell_is_empowered(spell_type spell)
-{
-    switch (spell)
-    {
-    case SPELL_STONESKIN:
-        if (you.duration[DUR_TRANSFORMATION] > 0
-            && you.form == TRAN_STATUE
-            && !player_stoneskin())
-        {
-            return true;
-        }
-        break;
-    case SPELL_OZOCUBUS_ARMOUR:
-        if (you.duration[DUR_TRANSFORMATION] > 0
-            && you.form == TRAN_ICE_BEAST
-            && you.duration[DUR_ICY_ARMOUR] < 1)
-        {
-            return true;
-        }
-        break;
-    default:
-        break;
-    }
-
-    return false;
-}
-
 /**
  * Does the given spell map to a player transformation?
  *
@@ -1134,22 +1103,15 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     switch (spell)
     {
-    case SPELL_CONTROL_TELEPORT:
-        if (player_has_orb())
-            return "the Orb interferes with controlled teleportation.";
-        // fallthrough to blink/cblink
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
         // XXX: this is a little redundant with you_no_tele_reason()
-        // but trying to sort out temp and ctele and so on is a mess
+        // but trying to sort out temp and so on is a mess
         if (you.species == SP_FORMICID)
             return pluralise(species_name(you.species)) + " cannot teleport.";
 
-        if (temp && you.no_tele(false, false, true)
-            && (!prevent || spell != SPELL_CONTROL_TELEPORT))
-        {
+        if (temp && you.no_tele(false, false, true))
             return lowercase_first(you.no_tele_reason(false, true));
-        }
         break;
 
     case SPELL_SWIFTNESS:
@@ -1159,18 +1121,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
                 return "you're already traveling as fast as you can.";
             if (you.is_stationary())
                 return "you can't move.";
-        }
-        break;
-
-    case SPELL_FLY:
-        if (!prevent && you.racial_permanent_flight())
-            return "you can already fly whenever you want.";
-        if (temp)
-        {
-            if (get_form()->forbids_flight())
-                return "your current form prevents flight.";
-            if (you.permanent_flight())
-                return "you can already fly indefinitely.";
         }
         break;
 
@@ -1363,9 +1313,6 @@ int spell_highlight_by_utility(spell_type spell, int default_colour,
         return COL_FORBIDDEN;
     }
 
-    if (_spell_is_empowered(spell) && !rod_spell)
-        default_colour = COL_EMPOWERED;
-
     if (spell_is_useless(spell, transient))
         default_colour = COL_USELESS;
 
@@ -1386,7 +1333,6 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_LRD:
     case SPELL_FULMINANT_PRISM:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
-    case SPELL_SINGULARITY:
 
     // Shock and Lightning Bolt are no longer here, as the code below can
     // account for possible bounces.
@@ -1397,7 +1343,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_CHAIN_LIGHTNING:
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
-        return minRange > LOS_RADIUS_SQ;
+        return minRange > LOS_RADIUS;
 
     // Special handling for cloud spells.
     case SPELL_FREEZING_CLOUD:
@@ -1408,7 +1354,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
         // Accept monsters that are in clouds for the hostiles-in-range check
         // (not for actual targetting).
         tgt.avoid_clouds = false;
-        for (radius_iterator ri(you.pos(), range, C_ROUND, LOS_NO_TRANS);
+        for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS);
              ri; ++ri)
         {
             if (!tgt.valid_aim(*ri))
@@ -1422,9 +1368,8 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
                 // Checks here are from get_dist_to_nearest_monster().
                 const monster* mons = monster_at(entry.first);
                 if (mons && !mons->wont_attack()
-                    && (!mons_class_flag(mons->type, M_NO_EXP_GAIN)
-                        || mons->type == MONS_BALLISTOMYCETE
-                            && mons->ballisto_activity))
+                    && (mons_class_gives_xp(mons->type)
+                        || mons_is_active_ballisto(mons)))
                 {
                     return false;
                 }
@@ -1487,7 +1432,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
 #ifdef DEBUG_DIAGNOSTICS
         beam.quiet_debug = true;
 #endif
-        for (radius_iterator ri(you.pos(), range, C_ROUND, LOS_DEFAULT);
+        for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_DEFAULT);
              ri; ++ri)
         {
             tempbeam = beam;
@@ -1503,8 +1448,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
         return !found;
     }
 
-    const int rsq = range * range + 1;
-    if (rsq < minRange)
+    if (range < minRange)
         return true;
 
     return false;

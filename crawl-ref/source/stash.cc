@@ -152,7 +152,7 @@ static void _fully_identify_item(item_def *item)
 
     set_ident_flags(*item, ISFLAG_IDENT_MASK);
     if (item->base_type != OBJ_WEAPONS)
-        set_ident_type(*item, ID_KNOWN_TYPE);
+        set_ident_type(*item, true);
 }
 
 // ----------------------------------------------------------------------
@@ -201,8 +201,8 @@ bool Stash::unverified() const
 
 bool Stash::pickup_eligible() const
 {
-    for (int i = 0, size = items.size(); i < size; ++i)
-        if (item_needs_autopickup(items[i]))
+    for (const item_def &item : items)
+        if (item_needs_autopickup(item))
             return true;
 
     return false;
@@ -210,8 +210,8 @@ bool Stash::pickup_eligible() const
 
 bool Stash::sacrificeable() const
 {
-    for (int i = 0, size = items.size(); i < size; ++i)
-        if (items[i].is_greedy_sacrificeable())
+    for (const item_def &item : items)
+        if (item.is_greedy_sacrificeable())
             return true;
 
     return false;
@@ -219,14 +219,17 @@ bool Stash::sacrificeable() const
 
 bool Stash::needs_stop() const
 {
-    for (int i = 0, size = items.size(); i < size; ++i)
-        if (!items[i].is_greedy_sacrificeable()
-            && !item_needs_autopickup(items[i]))
-        {
+    for (const item_def &item : items)
+        if (!item.is_greedy_sacrificeable() && !item_needs_autopickup(item))
             return true;
-        }
 
     return false;
+}
+
+bool Stash::is_boring_feature(dungeon_feature_type feature)
+{
+    // Count shops as boring features, because they are handled separately.
+    return !is_notable_terrain(feature) || feature == DNGN_ENTER_SHOP;
 }
 
 static bool _grid_has_perceived_item(const coord_def& pos)
@@ -259,14 +262,15 @@ void Stash::update()
     feat = grd(p);
     trap = NUM_TRAPS;
 
+    if (is_boring_feature(feat))
+        feat = DNGN_FLOOR;
+
     if (feat_is_trap(feat))
     {
         trap = get_trap_type(p);
         if (trap == TRAP_WEB)
             feat = DNGN_FLOOR, trap = TRAP_UNASSIGNED;
     }
-    else if (!is_notable_terrain(feat))
-        feat = DNGN_FLOOR;
 
     if (feat == DNGN_FLOOR)
         feat_desc = "";
@@ -315,7 +319,8 @@ void Stash::update()
         // under the item.
         if (items.empty())
         {
-            add_item(item);
+            if (!(item.flags & ISFLAG_UNOBTAINABLE))
+                add_item(item);
             // Note that we could be lying here, since we can have
             // a verified falsehood (if there's a mimic.)
             verified = !_grid_has_perceived_multiple_items(p);
@@ -612,10 +617,7 @@ bool Stash::matches_search(const string &prefix,
 
         if (is_dumpable_artefact(item))
         {
-            const string desc =
-                munge_description(get_item_description(item, false, true));
-
-            if (search.matches(desc))
+            if (search.matches(chardump_desc(item)))
             {
                 if (!res.count++)
                     res.match = s;
@@ -702,8 +704,7 @@ void Stash::write(FILE *f, int refx, int refy, string place, bool identify)
     if (!enabled || (items.empty() && verified))
         return;
 
-    bool note_status = notes_are_active();
-    activate_notes(false);
+    no_notes nx;
 
     fprintf(f, "(%d, %d%s%s)\n", x - refx, y - refy,
             place.empty() ? "" : ", ", OUTS(place));
@@ -730,8 +731,7 @@ void Stash::write(FILE *f, int refx, int refy, string place, bool identify)
 
         if (is_dumpable_artefact(item))
         {
-            string desc =
-                munge_description(get_item_description(item, false, true));
+            string desc = chardump_desc(item);
 
             // Kill leading and trailing whitespace
             desc.erase(desc.find_last_not_of(" \n\t") + 1);
@@ -751,8 +751,6 @@ void Stash::write(FILE *f, int refx, int refy, string place, bool identify)
 
     if (items.size() <= 1 && !verified)
         fprintf(f, "  (unseen)\n");
-
-    activate_notes(note_status);
 }
 
 void Stash::save(writer& outf) const
@@ -846,7 +844,7 @@ string ShopInfo::shop_item_desc(const shop_item &si) const
 
     if (is_dumpable_artefact(si.item))
     {
-        desc = munge_description(get_item_description(si.item, false, true));
+        desc = chardump_desc(si.item);
         trim_string(desc);
 
         // Walk backwards and prepend indenting spaces to \n characters
@@ -908,11 +906,11 @@ void ShopInfo::fill_out_menu(StashMenu &menu, const level_pos &place) const
     menu.clear();
 
     menu_letter hotkey;
-    for (int i = 0, count = items.size(); i < count; ++i)
+    for (const shop_item &item : items)
     {
-        bool on_list = shopping_list.is_on_list(items[i].item, &place);
-        ShopItemEntry *me = new ShopItemEntry(items[i],
-                                              shop_item_name(items[i]),
+        bool on_list = shopping_list.is_on_list(item.item, &place);
+        ShopItemEntry *me = new ShopItemEntry(item,
+                                              shop_item_name(item),
                                               hotkey++, on_list);
         menu.add_entry(me);
     }
@@ -987,8 +985,7 @@ bool ShopInfo::matches_search(const string &prefix,
     if (items.empty() && visited)
         return false;
 
-    bool note_status = notes_are_active();
-    activate_notes(false);
+    no_notes nx;
 
     bool match = false;
 
@@ -1036,7 +1033,6 @@ bool ShopInfo::matches_search(const string &prefix,
         res.pos.pos.y = y;
     }
 
-    activate_notes(note_status);
     return match || res.matches;
 }
 
@@ -1050,8 +1046,7 @@ vector<item_def> ShopInfo::inventory() const
 
 void ShopInfo::write(FILE *f, bool identify) const
 {
-    bool note_status = notes_are_active();
-    activate_notes(false);
+    no_notes nx;
     fprintf(f, "[Shop] %s\n", OUTS(name));
     if (!items.empty())
     {
@@ -1070,8 +1065,6 @@ void ShopInfo::write(FILE *f, bool identify) const
         fprintf(f, "  (Shop is empty)\n");
     else
         fprintf(f, "  (Shop contents are unknown)\n");
-
-    activate_notes(note_status);
 }
 
 void ShopInfo::save(writer& outf) const
@@ -1582,7 +1575,7 @@ void StashTracker::update_visible_stashes()
 
         if ((!lev || !lev->update_stash(*ri))
             && (_grid_has_perceived_item(*ri)
-                || is_notable_terrain(feat)))
+                || !Stash::is_boring_feature(feat)))
         {
             if (!lev)
                 lev = &get_current_level();

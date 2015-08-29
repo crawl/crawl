@@ -7,6 +7,7 @@
 #define GODABIL_H
 
 #include "enum.h"
+#include "itemprop-enum.h" // brand_type
 #include "spl-cast.h"
 
 #define BEOGH_WPN_GIFT_KEY "given beogh weapon"
@@ -18,6 +19,10 @@
 #define ESSENCE_SAC_KEY "current_essence_sacrifice"
 #define PURITY_SAC_KEY "current_purity_sacrifice"
 #define ARCANA_SAC_KEY "current_arcane_sacrifices"
+
+#define RU_SACRIFICE_PROGRESS_KEY "ru_progress_to_next_sacrifice"
+#define RU_SACRIFICE_DELAY_KEY "ru_sacrifice_delay"
+#define RU_SACRIFICE_PENALTY_KEY "ru_sacrifice_penalty"
 
 const char * const GOZAG_POTIONS_KEY = "gozag_potions%d";
 const char * const GOZAG_PRICE_KEY = "gozag_price%d";
@@ -39,6 +44,9 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 struct bolt;
 class stack_iterator;
 
+bool can_do_capstone_ability(god_type god);
+bool bless_weapon(god_type god, brand_type brand, colour_t colour);
+bool zin_donate_gold();
 string zin_recite_text(const int seed, const int prayertype, int step);
 bool zin_check_able_to_recite(bool quiet = false);
 int zin_check_recite_to_monsters(bool quiet = false);
@@ -48,7 +56,7 @@ int zin_recite_power();
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
 bool zin_remove_all_mutations();
-bool zin_sanctuary();
+void zin_sanctuary();
 
 void tso_divine_shield();
 void tso_remove_divine_shield();
@@ -77,6 +85,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile = false);
 
 bool kiku_receive_corpses(int pow);
 bool kiku_take_corpse();
+bool kiku_gift_necronomicon();
 
 bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monster* target);
@@ -131,10 +140,9 @@ bool gozag_potion_petition();
 int gozag_price_for_shop(bool max = false);
 bool gozag_setup_call_merchant(bool quiet = false);
 bool gozag_call_merchant();
-int gozag_type_bribable(monster_type type, bool force = false);
-branch_type gozag_bribable_branch(monster_type type);
+branch_type gozag_fixup_branch(branch_type branch);
+int gozag_type_bribable(monster_type type);
 bool gozag_branch_bribable(branch_type branch);
-int gozag_branch_bribe_susceptibility(branch_type branch);
 void gozag_deduct_bribe(branch_type br, int amount);
 bool gozag_check_bribe_branch(bool quiet = false);
 bool gozag_bribe_branch();

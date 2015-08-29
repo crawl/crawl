@@ -14,8 +14,6 @@
 
 extern const struct coord_def Compass[9];
 
-void trackers_init_new_level(bool transit);
-
 string weird_glowing_colour();
 
 string weird_writing();
@@ -67,14 +65,9 @@ bool stop_attack_prompt(targetter &hitfunc, const char* verb,
 
 void swap_with_monster(monster *mon_to_swap);
 
-void auto_id_inventory();
-
 int apply_chunked_AC(int dam, int ac);
 
-void entered_malign_portal(actor* act);
-
 void handle_real_time(time_t t = time(0));
-string part_stack_string(const int num, const int total);
 unsigned int breakpoint_rank(int val, const int breakpoints[],
                              unsigned int num_breakpoints);
 

@@ -172,7 +172,7 @@ TAGS:    uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 TAGS:    transparent decor
 DEPTH:   D:2-
 WEIGHT:  1
-KPROP:   1 = no_rtele_into
+KPROP:   1 = no_tele_into
 KFEAT:   _ = altar_cheibriados
 MONS:    torpor snail
 SUBST:   1 : 1:50 2:30 3:10 4:10
@@ -190,14 +190,11 @@ MAP
 .......
 ENDMAP
 
-# Golems are slow and they protect an altar to the slow god. (Lemuel)
-# Goliath beetles are also slow and more reasonable for an overflow altar.
-# --elliptic
-NAME:  beetle_altar_1
+NAME:  slow_altar_1
 DEPTH: D:5-9
 TAGS:  patrolling no_monster_gen no_item_gen transparent
-TAGS:  uniq_beetle_altar temple_overflow_1 temple_overflow_cheibriados
-KMONS: _ = goliath beetle
+TAGS:  uniq_slow_altar temple_overflow_1 temple_overflow_cheibriados
+KMONS: _ = worm / mummy / iron imp
 KFEAT: _ = altar_cheibriados
 SUBST: x : xxxcccmnvb
 MAP
@@ -214,11 +211,11 @@ xxx.....xxx
 xxx..@..xxx
 ENDMAP
 
-NAME:    beetle_altar_2
+NAME:    slow_altar_2
 DEPTH:   D:5-9
 TAGS:    patrolling no_monster_gen no_item_gen
-TAGS:    uniq_beetle_altar temple_overflow_1 temple_overflow_cheibriados
-KMONS:   _ = goliath beetle
+TAGS:    uniq_slow_altar temple_overflow_1 temple_overflow_cheibriados
+KMONS:   _ = worm / mummy / iron imp
 KFEAT:   _ = altar_cheibriados
 SUBST:   x : xxxcccvb
 MAP
@@ -256,12 +253,12 @@ c.....c
 ccc+ccc
 ENDMAP
 
-NAME:   chei_beetle_safe_becter
-TAGS:   overflow_altar_cheibriados transparent no_monster_gen
+NAME:   chei_slow_surprise
+TAGS:   uniq_slow_altar overflow_altar_cheibriados transparent no_monster_gen
 TAGS:   transparent
 DEPTH:  D:4-9
 WEIGHT: 5
-KMONS:  a = goliath beetle
+KMONS:  a = worm / mummy / iron imp
 NSUBST: ' = 1:a / *:.
 KFEAT:  _ = altar_cheibriados
 MAP
@@ -277,13 +274,13 @@ MAP
 .........
 ENDMAP
 
-NAME:   cheibrodos_beetle_habitat
+NAME:   cheibrodos_worm_habitat
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 transparent
-TAGS:   temple_overflow_cheibriados uniq_altar_cheibriados
+TAGS:   uniq_slow_altar temple_overflow_cheibriados uniq_altar_cheibriados
 DEPTH:  D:5-9
 WEIGHT: 5
 KFEAT:  _ = altar_cheibriados
-MONS:   goliath beetle
+MONS:   worm
 MAP
 .............
 .xxxxx.xxxxx.
@@ -614,7 +611,7 @@ TAGS:    no_item_gen no_monster_gen
 TAGS:    temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas
 DEPTH:   Lair, D:2-
 KFEAT:   _ = altar_fedhas
-KPROP:   xzd3P = no_rtele_into
+KPROP:   xzd3P = no_tele_into
 MONS:    plant, fungus, oklob plant, bush, toadstool col:random
 KITEM:   d = fruit q:3 / fruit q:2 / fruit q:1 / nothing
 KFEAT:   d = floor
@@ -661,7 +658,7 @@ TAGS:  temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas no_monster_gen
 TAGS:  transparent
 DEPTH: D:2-9
 MONS:  plant / bush w:5
-KPROP: 1_ = no_rtele_into
+KPROP: 1_ = no_tele_into
 SUBST: 1 = 111t...
 KFEAT: _ = altar_fedhas
 MAP
@@ -746,7 +743,7 @@ MARKER:  ! = lua:message_at_spot("Fedhas urges you to decompose the vile \
 : end
 NSUBST: 3 = 3:3 / 3 = 3 4:25 / 3 = 4 .:25 / *:.
 SUBST:  ! = .
-KPROP:  .3 = no_rtele_into
+KPROP:  .3 = no_tele_into
 MAP
  xxxxxxxxx
 xx33...33xx
@@ -1159,7 +1156,7 @@ TAGS:   temple_overflow_1 temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
 TAGS:   generate_awake patrolling no_rotate
 TAGS:   layout_rooms layout_city layout_open
-KPROP:  abcdefghBR' = no_rtele_into
+KPROP:  abcdefghBR' = no_tele_into
 KFEAT:  _ = altar_nemelex_xobeh
 SUBST:  b:aa. , a:n. , d:c. , c:nn. , f:ee. , e:nn. , h:g. , g:n.
 SUBST:  G:GTUVblw> , C=c
@@ -1464,7 +1461,7 @@ MARKER:  O = lua:fog_machine { cloud_type = "rain", \
                                delay_max = 75, size = 1, walk_dist = 0, \
                                spread_rate = 0 }
 SHUFFLE: LMNO
-KPROP:   LMNO- = no_rtele_into
+KPROP:   LMNO- = no_tele_into
 KFEAT:   - = .
 : interest_check(_G)
 MAP
@@ -1482,7 +1479,7 @@ DEPTH:  D:2-, !D:$
 TAGS:   no_monster_gen no_item_gen no_trap_gen temple_overflow_1
 TAGS:   temple_overflow_qazlal uniq_altar_qazlal
 KFEAT:  _ = altar_qazlal
-KPROP:  c = no_rtele_into
+KPROP:  c = no_tele_into
 SUBST:  c = cccl^.
 SUBST:  - = ..l^
 KFEAT:  ^ = known shaft trap
@@ -1507,26 +1504,24 @@ NAME:  nicolae_qazlal_eye_of_the_storm
 TAGS:  temple_overflow_qazlal temple_overflow_1 uniq_altar_qazlal
 TAGS:  no_trap_gen no_item_gen no_monster_gen
 DEPTH: D:2-
-KPROP: 'd = no_rtele_into
+KPROP: 'd = no_tele_into
 KMONS: d = diamond obelisk
 KFEAT: _ = altar_qazlal
 : interest_check(_G)
 MAP
-     ccccc
-   ccc'''ccc
-  cc'''''''cc
- cc'''''''''cc
+ ccccccccccccc
  c'''''''''''c
-cc'''''''''''cc
-@nnnnnn'''''''c
-@...._nd''''''c
-@nnnnnn'''''''c
-cc'''''''''''cc
  c'''''''''''c
- cc'''''''''cc
-  cc'''''''cc
-   ccc'''ccc
-     ccccc
+ c'''''''''''c
+ c'''''''''''c
+@nnnnnn''''''c
+@...._nd'''''c
+@nnnnnn''''''c
+ c'''''''''''c
+ c'''''''''''c
+ c'''''''''''c
+ c'''''''''''c
+ ccccccccccccc
 ENDMAP
 
 NAME:    nicolae_qazlal_style_of_elements
@@ -1534,7 +1529,7 @@ TAGS:    temple_overflow_qazlal temple_overflow_1 uniq_altar_qazlal
 TAGS:    no_trap_gen no_item_gen no_monster_gen
 DEPTH:   D:2-
 SHUFFLE: faew
-KPROP:   faew = no_rtele_into
+KPROP:   faew = no_tele_into
 KMONS:   f = fire elemental
 KMONS:   a = air elemental
 KMONS:   e = earth elemental
@@ -1788,7 +1783,7 @@ NAME:   led_sif_book
 DEPTH:  D:3-12, Orc
 TAGS:   no_item_gen no_pool_fixup no_monster_gen
 TAGS:   temple_overflow_1 temple_overflow_sif_muna uniq_altar_sif_muna
-KPROP:  1d = no_rtele_into
+KPROP:  1d = no_tele_into
 KFEAT:  _ = altar_sif_muna
 KFEAT:  d = escape_hatch_down
 KITEM:  d = randbook owner:Sif_Muna numspells:1 slevels:1
@@ -1869,7 +1864,7 @@ TAGS:   no_item_gen no_monster_gen patrolling
 TAGS:   temple_overflow_1 temple_overflow_trog uniq_altar_trog
 DEPTH:  D:2-9
 KFEAT:  _ = altar_trog
-KPROP:  1 = no_rtele_into
+KPROP:  1 = no_tele_into
 MONS:   moth of wrath, rat / worm w:5
 ITEM:   any weapon
 NSUBST: M = 4:d / *:.
@@ -2317,7 +2312,7 @@ NAME:   zin_angel
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_zin decor
 DEPTH:  D:2-
 KFEAT:  _ = altar_zin
-KPROP:  1 = no_rtele_into
+KPROP:  1 = no_tele_into
 COLOUR: G = lightgray
 COLOUR: c = white
 TILE:   c = wall_church
@@ -2343,7 +2338,7 @@ TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_zin
 DEPTH:  D:2-9, Orc, !Orc:$
 KFEAT:  _ = altar_zin
 KFEAT:  m = iron_grate
-KPROP:  $ = no_rtele_into
+KPROP:  $ = no_tele_into
 COLOUR: c = white
 TILE:   c = wall_church
 FTILE:  _.m+$ = floor_limestone
@@ -2368,8 +2363,7 @@ DEPTH:  D:2-9, Orc, !Orc:$
 KFEAT:  _ = altar_zin
 KFEAT:  v = general shop name:Zin type:Purification suffix:Station count:1 \
         greed:30 ; \
-        potion of curing | potion of restore abilities w:1 | \
-        potion of cure mutation w:1
+        potion of curing | potion of cure mutation w:1
 COLOUR: c = white
 COLOUR: ' = white
 TILE:   c = wall_church
@@ -2394,7 +2388,7 @@ DEPTH:  D:2-9
 ITEM:   any scroll
 KFEAT:  _ = altar_zin
 KFEAT:  m = iron_grate
-KPROP:  ? = no_rtele_into
+KPROP:  ? = no_tele_into
 COLOUR: c = white
 TILE:   c = wall_church
 FTILE:  _.m+d = floor_limestone
@@ -2736,7 +2730,7 @@ KFEAT:  C = stone_wall
 KFEAT:  KL = floor
 KFEAT:  - = closed_door
 KFEAT:  N = clear_stone_wall
-KPROP:  12 = no_rtele_into
+KPROP:  12 = no_tele_into
 KMASK:  12 = opaque
 COLOUR: c = white
 COLOUR: C = magenta
@@ -2778,7 +2772,7 @@ ENDMAP
 NAME:  grunt_temple_overflow_order_and_chaos_1
 DEPTH: D:2-9
 TAGS:  temple_overflow_2 temple_overflow_xom temple_overflow_zin transparent
-KPROP: _1 = no_rtele_into
+KPROP: _1 = no_tele_into
 KMASK: _1 = opaque
 KMASK: _1 = no_trap_gen
 KFEAT: A = altar_xom
@@ -2810,7 +2804,7 @@ MONS:   executioner / balrug / green death / cacodemon / blizzard demon
 MONS:   angel god:zin dbname:zin_angel
 SUBST:  ; = -_
 KPROP:  - = bloody / nothing
-KPROP:  12 = no_rtele_into
+KPROP:  12 = no_tele_into
 KMASK:  12 = opaque
 SUBST:  - = _L
 KFEAT:  L_ = floor
@@ -2900,7 +2894,7 @@ ENDMAP
 NAME:  lightli_temple_of_fire
 TAGS:  temple_overflow_1 temple_overflow_trog temple_overflow_makhleb
 DEPTH: D:2-9
-KPROP: Y = no_rtele_into
+KPROP: Y = no_tele_into
 KMASK: Y = no_monster_gen
 {{
   local params = dgn.map_parameters()
@@ -2990,7 +2984,7 @@ MONS:   fungus / plant / bush
 SUBST:  2 = 1.
 KFEAT:  _ = altar_fedhas
 KFEAT:  O = altar_qazlal
-KPROP:  12Ll = no_rtele_into
+KPROP:  12Ll = no_tele_into
 SUBST:  L = ll^.
 SUBST:  l = cll.
 KFEAT:  ^ = known shaft trap
@@ -3211,27 +3205,6 @@ ccTB.+@
 ccTB.+@
  cccpcc
    ccccc
-ENDMAP
-
-NAME:    pf_overflow_fires_of_destruction
-DEPTH:   D:3-6
-TAGS:    temple_overflow_2 temple_overflow_makhleb temple_overflow_qazlal
-KFEAT:   C = altar_makhleb
-KFEAT:   D = altar_qazlal
-SHUFFLE: CD
-MONS:    fire elemental
-MAP
-ccccccc
-ccccccc
-cc.1.cc
-ccC.Dcc
-cc...cc
-cccn.cc
-cccWncc
-ccccWcc
-cccWccc
- .G.G.
- ..@..
 ENDMAP
 
 NAME: minmay_overflow_temple_star_quad

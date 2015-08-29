@@ -438,6 +438,8 @@ string no_selectables_message(int item_selector)
     case OSEL_WIELD:
     case OBJ_WEAPONS:
         return "You aren't carrying any weapons.";
+    case OSEL_BLESSABLE_WEAPON:
+        return "You aren't carrying any weapons that can be blessed.";
     case OBJ_ARMOUR:
     {
         if (_has_melded_armour())
@@ -486,6 +488,8 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any weapons that can be branded.";
     case OSEL_ENCHANTABLE_WEAPON:
         return "You aren't carrying any weapons that can be enchanted.";
+    case OSEL_BEOGH_GIFT:
+        return "You aren't carrying anything you can give to a follower.";
     }
 
     return "You aren't carrying any such object.";
@@ -727,10 +731,8 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
       };
 
     list.clear();
-    vector<string> cmps = split_string(",", set);
-    for (int i = 0, size = cmps.size(); i < size; ++i)
+    for (string s : split_string(",", set))
     {
-        string s = cmps[i];
         if (s.empty())
             continue;
 
@@ -791,8 +793,8 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                                 menu_letter ckey, bool sort)
 {
     FixedVector< int, NUM_OBJECT_CLASSES > inv_class(0);
-    for (int i = 0, count = mitems.size(); i < count; ++i)
-        inv_class[ mitems[i]->base_type ]++;
+    for (const item_def * const mitem : mitems)
+        inv_class[mitem->base_type]++;
 
     vector<InvEntry*> items_in_class;
     const menu_sort_condition *cond = nullptr;
@@ -832,13 +834,13 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         items_in_class.clear();
 
         InvEntry *forced_first = nullptr;
-        for (int j = 0, count = mitems.size(); j < count; ++j)
+        for (const item_def * const mitem : mitems)
         {
-            if (mitems[j]->base_type != i)
+            if (mitem->base_type != i)
                 continue;
 
-            InvEntry * const ie = new InvEntry(*mitems[j]);
-            if (mitems[j]->sub_type == get_max_subtype(mitems[j]->base_type))
+            InvEntry * const ie = new InvEntry(*mitem);
+            if (mitem->sub_type == get_max_subtype(mitem->base_type))
                 forced_first = ie;
             else
                 items_in_class.push_back(ie);
@@ -883,10 +885,10 @@ void InvMenu::do_preselect(InvEntry *ie)
     if (!pre_select || pre_select->empty())
         return;
 
-    for (int i = 0, size = pre_select->size(); i < size; ++i)
-        if (ie->item && ie->item == (*pre_select)[i].item)
+    for (const SelItem &presel : *pre_select)
+        if (ie->item && ie->item == presel.item)
         {
-            ie->selected_qty = (*pre_select)[i].quantity;
+            ie->selected_qty = presel.quantity;
             break;
         }
 }
@@ -894,9 +896,9 @@ void InvMenu::do_preselect(InvEntry *ie)
 vector<SelItem> InvMenu::get_selitems() const
 {
     vector<SelItem> selected_items;
-    for (int i = 0, count = sel.size(); i < count; ++i)
+    for (MenuEntry *me : sel)
     {
-        InvEntry *inv = dynamic_cast<InvEntry*>(sel[i]);
+        InvEntry *inv = dynamic_cast<InvEntry*>(me);
         selected_items.emplace_back(inv->hotkeys[0], inv->selected_qty,
                                     inv->item);
     }
@@ -1132,18 +1134,6 @@ bool is_item_selected(const item_def &i, int selector)
     case OSEL_DRAW_DECK:
         return is_deck(i);
 
-    case OSEL_EQUIP:
-    {
-        if (item_is_quivered(i))
-            return true;
-
-        for (int eq = 0; eq < NUM_EQUIP; eq++)
-            if (you.equip[eq] == i.link)
-                return true;
-
-        return false;
-    }
-
     case OSEL_CURSED_WORN:
         return i.cursed() && item_is_equipped(i)
                && (&i != you.weapon() || is_weapon(i));
@@ -1179,6 +1169,13 @@ bool is_item_selected(const item_def &i, int selector)
 
     case OSEL_BLESSABLE_WEAPON:
         return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);
+
+    case OSEL_BEOGH_GIFT:
+        return (i.base_type == OBJ_WEAPONS
+                || is_shield(i)
+                || i.base_type == OBJ_ARMOUR
+                   && get_armour_slot(i) == EQ_BODY_ARMOUR)
+                && !is_item_selected(i, OSEL_CURSED_WORN);
 
     default:
         return false;
@@ -1258,16 +1255,16 @@ static unsigned char _invent_select(const char *title = nullptr,
     return menu.getkey();
 }
 
-unsigned char get_invent(int invent_type, bool redraw)
+void display_inventory()
 {
-    unsigned char select;
     int flags = MF_SINGLESELECT;
     if (you.dead || crawl_state.updating_scores)
         flags |= MF_EASY_EXIT;
 
     while (true)
     {
-        select = _invent_select(nullptr, MT_INVLIST, invent_type, -1, flags);
+        unsigned char select =
+            _invent_select(nullptr, MT_INVLIST, OSEL_ANY, -1, flags);
 
         if (isaalpha(select))
         {
@@ -1282,10 +1279,8 @@ unsigned char get_invent(int invent_type, bool redraw)
             break;
     }
 
-    if (redraw && !crawl_state.doing_prev_cmd_again)
+    if (!crawl_state.doing_prev_cmd_again)
         redraw_screen();
-
-    return select;
 }
 
 // Reads in digits for a count and apprends then to val, the
@@ -1668,6 +1663,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (oper == OPER_REMOVE
         && item.is_type(OBJ_JEWELLERY, AMU_FAITH)
         && !(you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
+        && !you_worship(GOD_GOZAG)
         && !you_worship(GOD_NO_GOD)
         && !you_worship(GOD_XOM))
     {
@@ -1694,7 +1690,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         }
 
         if (get_weapon_brand(item) == SPWPN_VAMPIRISM
-            && you.undead_state() == US_ALIVE && !crawl_state.game_is_zotdef()
+            && you.undead_state() == US_ALIVE
             && !you_foodless()
             // Don't prompt if you aren't wielding it and you can't.
             && (you.hunger_state >= HS_FULL || _is_wielded(item)))
@@ -1702,18 +1698,21 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (is_artefact(item) && artefact_property(item, ARTP_MUTAGENIC))
+        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
         {
             if (_is_wielded(item) && you_worship(GOD_ZIN))
                 penance = true;
             return true;
         }
+
+        if (is_artefact(item) && artefact_property(item, ARTP_DRAIN))
+            return true;
     }
 
     if (oper == OPER_PUTON || oper == OPER_WEAR || oper == OPER_TAKEOFF
         || oper == OPER_REMOVE)
     {
-        if (is_artefact(item) && artefact_property(item, ARTP_MUTAGENIC))
+        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
         {
             if ((oper == OPER_TAKEOFF || oper == OPER_REMOVE)
                  && you_worship(GOD_ZIN))
@@ -1722,6 +1721,9 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             }
             return true;
         }
+
+        if (is_artefact(item) && artefact_property(item, ARTP_DRAIN))
+            return true;
     }
 
     return false;
@@ -2056,10 +2058,6 @@ bool item_is_wieldable(const item_def &item)
         return you.has_spell(SPELL_SANDBLAST);
     }
 
-    // Snakable missiles; weapons were already handled above.
-    if (item_is_snakable(item) && you.has_spell(SPELL_STICKS_TO_SNAKES))
-        return true;
-
     return false;
 }
 
@@ -2119,7 +2117,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         if ((!wielded || !reach) && !msg)
             return false;
 
-        if (reach && weapon_reach(item) > 2 && item_type_known(item))
+        if (reach && weapon_reach(item) > REACH_NONE && item_type_known(item))
         {
             if (!wielded)
             {
@@ -2204,7 +2202,7 @@ void identify_inventory()
     {
         if (you.inv[i].defined())
         {
-            set_ident_type(you.inv[i], ID_KNOWN_TYPE);
+            set_ident_type(you.inv[i], true);
             set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
         }
     }

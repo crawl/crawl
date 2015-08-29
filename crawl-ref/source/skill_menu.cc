@@ -32,8 +32,7 @@ SkillMenu skm;
 bool SkillTextTileItem::handle_mouse(const MouseEvent& me)
 {
     if (me.event == MouseEvent::PRESS
-        && (me.button == MouseEvent::LEFT && me.mod & MOD_SHIFT
-            || me.button == MouseEvent::RIGHT))
+        && (me.button == MouseEvent::LEFT && me.mod & MOD_SHIFT))
     {
         skill_type sk = skill_type(get_id());
         if (is_invalid_skill(sk))
@@ -1170,7 +1169,7 @@ void SkillMenu::refresh_display()
 
     for (int ln = 0; ln < SK_ARR_LN; ++ln)
         for (int col = 0; col < SK_ARR_COL; ++col)
-                m_skills[ln][col].refresh(true);
+            m_skills[ln][col].refresh(true);
 
     if (is_set(SKMF_EXPERIENCE))
         m_skill_backup.restore_levels();

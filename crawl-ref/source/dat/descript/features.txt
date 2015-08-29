@@ -1,11 +1,12 @@
 %%%%
 A Zot trap
 
-This trap inflicts dangerously unpredictable magical effects on those unlucky
-enough to step on it. You may find yourself thrown into the Abyss, contaminated
-with enormous amounts of wild magic, have mighty fiends summoned against you,
-or the like — it is something to avoid at all costs. The monsters of the
-dungeon may even trigger it themselves to invoke its effects against you.
+A trap which inflicts dangerously unpredictable magical effects on those
+unlucky enough to step on it. You may find yourself thrown into the Abyss,
+contaminated with enormous amounts of wild magic, have mighty fiends summoned
+against you, or the like — it is something to avoid at all costs. The monsters
+of the dungeon may even trigger it themselves to invoke its effects against
+you.
 %%%%
 A basalt altar of Yredelemnul
 
@@ -15,9 +16,6 @@ A blade trap
 
 A massive scythe-like blade hidden in a slit, with a counterweight that acts as
 a pendulum.
-
-Its complicated detection system will trigger the trap even when someone flies
-over it.
 %%%%
 A bloodstained altar of Trog
 
@@ -32,15 +30,11 @@ A bolt trap
 
 A well-concealed hole containing a crossbow-like contraption with a
 self-loading mechanism.
-
-Its complicated detection system will trigger the trap even when someone flies
-over it.
 %%%%
 # column_ruins
 A broken pillar
 
-The makers of this pillar were overrun long ago. No one alive remembers why
-they built it.
+A ruined and crumbled stone pillar.
 %%%%
 A burning altar of Makhleb
 
@@ -55,7 +49,7 @@ A wooden door.
 # Sewer, Trove, Volcano.
 A collapsed entrance
 
-This passage was apparently shoddily made, and cannot be used anymore.
+A collapsed passage which cannot be used anymore.
 %%%%
 A corrupted altar of Lugonu
 
@@ -64,7 +58,7 @@ it was irrevocably corrupted.
 %%%%
 A crawl-hole back to the Lair
 
-This passage leads back to less cramped spaces with fewer cobwebs.
+A passage leading back to the Lair of Beasts.
 %%%%
 A deep blue altar of Sif Muna
 
@@ -73,17 +67,23 @@ long forgotten scripts, devoted to Sif Muna the Loreminder.
 %%%%
 A detected altar
 
-An altar of some kind. You can't tell what deity it is consecrated to without
+An altar of some kind. You cannot tell what deity it is consecrated to without
 approaching it.
 %%%%
 # mmap/antennae/etc
 A detected shop or portal
 
-A gateway of some kind. You can't tell where it leads without approaching it.
+A gateway of some kind. You cannot tell where it leads without approaching it.
 %%%%
 A dry fountain
 
 A dried-up fountain that has seen better days.
+%%%%
+A faded altar to an unknown god
+
+An ancient altar, stripped of all identifying characteristics by the passage of
+aeons. Praying at it will convert you to an unknown god, and the altar's deity
+will greatly appreciate conversion at so ancient a site of worship.
 %%%%
 A fountain of clear blue water
 
@@ -99,71 +99,71 @@ A decorative fountain, flowing with brightly sparkling water.
 %%%%
 A gate leading back out of this place
 
-This gate lets you return whence you came.
+A gate that will let you return whence you came.
 %%%%
 A gate leading out of Pandemonium
 
-This gate leads back to the dungeon.
+A gate leading back to the dungeon.
 %%%%
 A gate leading to another region of Pandemonium
 
-This gate leads to yet another region of Pandemonium. There'll always be more.
+A gate leading to yet another region of Pandemonium. There'll always be more.
 %%%%
 A one-way gate leading to the halls of Pandemonium
 
-This gate leads to the endless halls of Pandemonium.
+A gate leading to the endless halls of Pandemonium.
 %%%%
 A staircase to the Depths
 
-These stairs lead to the Depths.
+A staircase leading to the Depths.
 %%%%
 A gate to the Realm of Zot
 
-This gate leads to the Realm of Zot.
+A gate leading to the Realm of Zot.
 %%%%
 A gateway back into the Dungeon
 
-This gate allows a feat popularly thought to be impossible: escaping Hell
+A gate which allows a feat popularly thought to be impossible: escaping Hell
 alive.
 %%%%
 A gateway leading out of the Abyss
 
-A gateway out of this accursed place, shimmering and shifting in the
-impermanent landscape.
+A gateway out of the Abyss, shimmering and shifting in the impermanent
+landscape.
 %%%%
 A gateway leading deeper into the Abyss
 
-A strangely calm gateway amid the roiling landscape. It leads further into the
-depths of the Abyss.
+A strangely calm gateway amid the roiling landscape of the Abyss. It leads
+further into the depths of the Abyss.
 %%%%
 A gateway to a ziggurat
 
-This portal leads to a ziggurat.
+A portal leading to a ziggurat.
 %%%%
 A gateway to the ashen valley of Gehenna
 
-This gateway leads to Gehenna.
+A gateway leading to Gehenna.
 %%%%
 A gateway to Hell
 
-This gateway leads to the Vestibule of Hell. Few would go there voluntarily.
+A gateway leading to the Vestibule of Hell. Few would go there voluntarily.
 %%%%
 A gateway to the Iron City of Dis
 
-This gateway leads to the Iron City of Dis.
+A gateway leading to the Iron City of Dis.
 %%%%
 A gateway to the decaying netherworld of Tartarus
 
-This gateway leads to Tartarus.
+A gateway leading to Tartarus.
 %%%%
 A gateway to the freezing wastes of Cocytus
 
-This gateway leads to Cocytus.
+A gateway leading to Cocytus.
 %%%%
 A gleaming silver wall
 
-This wall, made of pure silver, was formed by the power of Zin to imprison a
-monster within its confines. It is quickly crumbling, and will not last long.
+A wall made of pure silver, formed by the power of Zin to temporarily imprison
+a monster within its confines.
 %%%%
 A glowing golden altar of the Shining One
 
@@ -177,23 +177,19 @@ are expected to be, and glowing gently.
 %%%%
 A granite statue
 
-Despite the hardness of the stone, this statue's features have long withered
-away.
+A stone statue whose features have long since withered away.
 %%%%
 A hole to the Spider Nest
 
-This passage leads to the Spider Nest.
+A passage leading to the Spider Nest.
 %%%%
 A labyrinth entrance
 
-This portal leads to a labyrinth.
+A portal leading to a labyrinth.
 %%%%
 A mechanical trap
 
 A mechanical contraption designed to harm trespassers.
-
-Its complicated detection system will trigger the trap even when someone flies
-over it.
 %%%%
 A metal wall
 
@@ -203,26 +199,20 @@ even magical bolts of lightning.
 A needle trap
 
 A mechanical contraption that shoots poisoned needles.
-
-Its complicated detection system will trigger the trap even when someone flies
-over it.
 %%%%
 A net trap
 
 A large concealed net hanging from the dungeon's ceiling, rigged to fall onto
 anyone who steps beneath it.
-
-Its complicated detection system will trigger the trap even when someone flies
-over it.
 %%%%
 A one-way gate to the infinite horrors of the Abyss
 
-This gateway leads to the Abyss.
+A gateway leading to the Abyss.
 %%%%
 A passage of Golubria
 
-This unstable gateway allows instantaneous travel to another nearby passage of
-Golubria, and will close behind anything passing through it.
+An unstable gateway that allows instantaneous travel to another nearby passage
+of Golubria, and will close behind anything passing through it.
 %%%%
 A portal to somewhere
 
@@ -232,8 +222,7 @@ consuming and swallowing everything in sight.
 %%%%
 A pressure plate
 
-A trigger of some sort. You can't tell what kind of trap it is attached to.
-
+A trigger of some sort. You cannot tell what kind of trap it is attached to.
 Its complicated detection system will trigger the trap even when someone flies
 over it.
 %%%%
@@ -244,11 +233,11 @@ powers to those who would follow Vehumet.
 %%%%
 A rock wall
 
-This wall consists of simple rock.
+A wall consisting of simple rock.
 %%%%
 A rock-blocked tunnel
 
-This tunnel is no longer passable.
+A tunnel which is no longer passable.
 %%%%
 A rocky tunnel leading out of this place
 
@@ -290,40 +279,21 @@ A shaft
 
 A deep hole. Who knows where you might end up if you were to fall through it?
 %%%%
-A shadow trap
-
-This magical trap creates replicas of creatures native to its location, weaving
-them from shadows and threads of Abyssal matter. Its magics are sensitive
-enough that any non-summoned creature entering it will set it off, as long as
-you are in sight.
-
-It takes some time to recover after being set off.
-%%%%
-A dormant shadow trap
-
-This magical trap creates replicas of creatures native to its location, weaving
-them from shadows and threads of Abyssal matter. Its magics are sensitive
-enough that any non-summoned creature entering it will set it off, as long as
-you are in sight.
-
-This one is inactive and can be entered safely, but will reactivate shortly!
-%%%%
 A shadowy altar of Dithmenos
 
-This altar to Dithmenos the Shadowed seems to absorb light from its
+An altar to Dithmenos the Shadowed. It seems to absorb light from its
 surroundings.
 %%%%
 A shattered altar of Ashenzari
 
-This crystal altar shattered to pieces when Ashenzari was cursed. But still,
-there is power here: a dark aura holds the shards in mid-explosion, suspended
-in time and space much like the god they herald.
+A crystal altar which shattered to pieces when Ashenzari was cursed. There is
+still a great power remaining within it: a dark aura holds the shards in
+mid-explosion, suspended in time and space much like the god they herald.
 %%%%
 A shimmering altar of Xom
 
-This altar constantly shimmers in all visible colours and probably some
-invisible ones, too, matching the whims of Xom the Unpredictable, to whom it is
-dedicated.
+An altar constantly shimmering in all visible colours, and probably some
+invisible ones, matching the whims of Xom the Unpredictable.
 %%%%
 A shop
 
@@ -335,103 +305,99 @@ goods.
 %%%%
 A slime covered rock wall
 
-This rock wall is thickly coated with bright green slime. Ewwwwww. It is acidic
-to the touch, seeming to grow more caustic the deeper you travel.
+A rock wall coated with bright green slime. It is acidic to the touch.
 %%%%
 A snail-covered altar of Cheibriados
 
-This altar somehow seems more stationary than the others.
+A timeless altar to Cheibriados the Contemplative.
 %%%%
 A sparkling altar of Nemelex Xobeh
 
-This altar sparkles with a lightshow brighter than any gambling den's to
+An altar sparkling with a lightshow brighter than any gambling den's, to
 attract followers for Nemelex Xobeh.
 %%%%
 A spear trap
 
-This trap shoots long sharp poles that can skewer tresspassers.
-
-Its complicated detection system will trigger the trap even when someone flies
-over it.
+A mechanical contraption that shoots long sharp poles to skewer tresspassers.
 %%%%
 A staircase back to the Dungeon
 
-These stairs lead back up to the familiarity of the dungeon.
+A staircase leading back up to the familiarity of the dungeon.
 %%%%
 A staircase back to the Lair
 
-These stairs lead back up to the Lair of Beasts.
+A staircase leading back up to the Lair of Beasts.
 %%%%
 A staircase back to the Mines
 
-These wide stairs lead back to the Orcish Mines.
+A staircase leading back to the Orcish Mines.
 %%%%
 A staircase back to the Vaults
 
-These stairs lead back to the mighty Vaults.
+A staircase leading back to the Vaults.
 %%%%
 A staircase leading out of the dungeon
 
 This staircase leads back out of the dungeon.
 
-Climbing these stairs will end your quest, whether you carry the Orb with you
-or not.
+A staircase leading out of the dungeon. Climbing these stairs will end your
+quest, whether you carry the Orb with you or not.
 %%%%
 A staircase back to the Crypt
 
-These stairs lead back to the Crypt.
+A staircase leading back to the Crypt.
 %%%%
 A staircase to the Crypt
 
-These stairs lead to the Crypt.
+A staircase leading to the Crypt.
 %%%%
 A staircase to the Ecumenical Temple
 
-These stairs lead to the Ecumenical Temple.
+A staircase leading to the Ecumenical Temple.
 %%%%
 A staircase to the Elven Halls
 
-These stairs lead to the Elven Halls.
+A staircase leading to the Elven Halls.
 %%%%
 A staircase to the Lair
 
-These stairs lead to the Lair of Beasts.
+A staircase leading to the Lair of Beasts.
 %%%%
 A staircase to the Orcish Mines
 
-These stairs lead to the Orcish Mines.
+A staircase leading to the Orcish Mines.
 %%%%
 A staircase to the Shoals
 
-These stairs lead to the Shoals.
+A staircase leading to the Shoals.
 %%%%
 A staircase to the Slime Pits
 
-These stairs lead to the Slime Pits.
+A staircase leading to the Slime Pits.
 %%%%
 A staircase to the Snake Pit
 
-These stairs lead to the Snake Pit.
+A staircase leading to the Snake Pit.
 %%%%
 A staircase to the Swamp
 
-These stairs lead to the Swamp.
+A staircase leading to the Swamp.
 %%%%
 A staircase to the Tomb
 
-These stairs lead to the Tomb of the Ancients.
+A staircase leading to the Tomb of the Ancients.
 %%%%
 A gate to the Vaults
 
-This gateway leads to the Vaults.
+A gateway leading to the Vaults.
 %%%%
 A stone staircase leading down
 
-These stairs lead further down.
+A staircase leading further down.
 %%%%
 A stone staircase leading up
 
-These stairs lead back up.
+A staircase leading back up.
 %%%%
 A stone wall
 
@@ -440,29 +406,27 @@ walls.
 %%%%
 A stormy altar of Qazlal
 
-Fierce winds, electrical discharges, puffs of fire and magma, and the
-occasional tremor surround this altar to Qazlal Stormbringer.
+An altar dedicated to Qazlal Stormbringer, surrounded by fierce winds,
+electrical discharges, puffs of fire and magma, and the occasional tremor.
 %%%%
 A short-range portal
 
-Stepping on this portal will send you to another room nearby.
+A portal that will send you to a nearby location.
 %%%%
 A teleport trap
 
-This magical trap can displace anyone hapless enough to step on it — or even
-fly above it — to a random place on the same dungeon level. Traps of this kind
-found in the dungeon are worn with age, and will dissipate on use; fresher,
-newly-made traps may survive several passages.
+A magical trap which will displace anyone passing over it to a random place on
+the same dungeon level. It is worn with age, and will dissipate on use.
 %%%%
 A permanent teleport trap
 
-This magical trap can displace anyone hapless enough to step on it — or even
-fly above it — to a random place on the same dungeon level.
+A magical trap which will displace anyone passing over it to a random place on
+the same dungeon level.
 %%%%
 A translucent rock wall
 
-The mineral this rock consists of is as translucent as good quality glass.
-Whether it is natural or magical, you can't tell.
+A rock wall made from a mineral as translucent as good quality glass. Whether
+it is natural or magical, you cannot tell.
 %%%%
 A translucent stone wall
 
@@ -471,18 +435,15 @@ walls. It has been imbued with arcane magics which render it translucent.
 %%%%
 A translucent unnaturally hard rock wall
 
-This wall is imbued with magic that not only makes it indestructible but also
-makes it translucent like glass.
+A wall imbued with magic that not only makes it indestructible but also makes
+it translucent like glass.
 %%%%
 A tree
 
-While the dungeon is filled with dim magic light, in most places it is not
-bright enough to sustain any larger plants. It is uneven, though, and there are
-spots where, with the grace of Fedhas, trees as big as those on the surface can
-grow underground.
-
-While too large to be felled with an axe, it is susceptible to bolts of
-lightning and to sufficiently intense sources of fire.
+A large tree. While in most places the dim light of the dungeon is not bright
+enough to sustain large plants, there are spots where, with the grace of
+Fedhas, trees as big as those on the surface can grow underground. It is
+susceptible to bolts of lightning and to sufficiently intense sources of fire.
 %%%%
 A viscous altar of Jiyva
 
@@ -491,13 +452,13 @@ you don't really want to know.
 %%%%
 A crystal wall
 
-This wall is made from polished crystal and imbued with arcane magics. They
-prevent its easy destruction, and make it reflect heat and cold.
+A wall made from polished crystal and imbued with arcane magics. They prevent
+its easy destruction, and make it reflect heat and cold.
 %%%%
 A wall of the weird stuff which makes up Pandemonium
 
-This wall is made from the weird stuff which makes up Pandemonium, but seems to
-be like rock in most other aspects.
+A wall made from the weird stuff which makes up Pandemonium. It seems to be
+like rock in most other aspects.
 %%%%
 A white marble altar of Elyvilon
 
@@ -506,35 +467,31 @@ sculpture of the Chalice of Purification.
 %%%%
 A web
 
-The spider who left this web must have been huge, as it seems to be made for
-trapping {{ return you.genus(true) }} rather than flies.
+A spider's web. The spider who left it must have been huge, as it seems to be
+made for trapping {{ return you.genus(true) }} rather than flies.
 %%%%
 An abandoned shop
 
-This shop has been abandoned.
+A shop that has been abandoned.
 %%%%
 An alarm trap
 
-While this trap does no damage by itself, its loud sound may bring someone to
-do damage to you. In addition to the noise it creates, it will apply an
-enchantment making monsters all over the level aware of your location.
+A trap that creates a loud noise to attract nearby monsters. In addition to the
+noise it creates, it will apply an enchantment making monsters all over the
+level aware of your location.
 %%%%
 An ancient bone altar of Kikubaaqudgha
 
-Ancient bones were piled here to form an altar to the terrible Demon-God
-Kikubaaqudgha.
+An altar created from piles of ancient bones, dedicated to the terrible
+Demon-God Kikubaaqudgha.
 %%%%
 An arrow trap
 
 A mechanical trap that will fire an arrow when triggered.
-
-Its complicated detection system will trigger the trap even when someone flies
-over it.
 %%%%
 An empty arch of ancient stone
 
-A stone archway that seems to have stood here forever and doesn't seem to lead
-anywhere in particular.
+A stone archway that seems to lead to nowhere in particular.
 %%%%
 An escape hatch in the ceiling
 
@@ -548,7 +505,7 @@ perils of the next.
 %%%%
 An exit through the horrors of the Abyss
 
-This gateway leads back to the dungeon via the madness of the Abyss.
+A gateway leading back to the dungeon via the madness of the Abyss.
 %%%%
 # shown if the player is an orc
 An idol of Beogh
@@ -556,13 +513,13 @@ An idol of Beogh
 {{
   if you.god() == "Beogh"
     then
-      return "This crude but majestic statue represents Beogh in his glory. "
+      return "A crude but majestic statue representing Beogh in his glory. "
           .. "May foul non-orcs all be smitten!";
     else
-      return "This crude statue depicts Beogh, the god of primitive orcs "
+      return "A crude statue depicting Beogh, the god of the primitive orcs "
           .. "living here. Their religion calls for the murder of all "
-          .. "non-believers. It would be a pleasure to destroy this idol, but "
-          .. "beware, Beogh is known to be vengeful.";
+          .. "non-believers. Beogh is known to be vengeful to those who dare
+          .. "damage such idols.";
   end
 }}
 %%%%
@@ -573,8 +530,8 @@ surprisingly sharp.
 %%%%
 An iron grate
 
-This iron grate looks rusted, as if it could be disrupted with a spell or a
-wand quite easily. It is too strong to be breakable by hand, however.
+A rusted iron grate, brittle enough to be disrupted with a spell or a wand
+quite easily. It is too strong to be breakable by hand, however.
 %%%%
 An open door
 
@@ -582,8 +539,8 @@ A wooden door.
 %%%%
 An opulent altar of Gozag
 
-This glittering golden and bejewelled altar to Gozag Ym Sagoz the Greedy
-gleams brightly, even in the dim dungeon light.
+A glittering golden and bejewelled altar to Gozag Ym Sagoz the Greedy, gleaming
+brightly even in the dim dungeon light.
 %%%%
 An orcish idol
 
@@ -591,7 +548,7 @@ An idol of the orc god Beogh. Destroying it is likely to incur Beogh's wrath.
 %%%%
 An unnaturally hard rock wall
 
-You cannot affect this wall by any means.
+A wall imbued with magic that makes it indestructible.
 %%%%
 The endless lava
 
@@ -604,9 +561,8 @@ The floor.
 %%%%
 Some deep water
 
-This water is as deep as it is dangerous. Many confused adventurers have met
-their death in the depths, and an unexpected end of flight has drowned even
-more careless interlopers.
+A pool of deep water. The unexpected end of flight whilst above deep water has
+been the death of many careless adventurers.
 %%%%
 Some lava
 
@@ -614,12 +570,12 @@ An intensely hot pool of molten rock, emitting clouds of sulphurous smoke.
 %%%%
 Some shallow water
 
-This cloudy, waist-deep water makes movement and combat cumbersome for
+A pool of cloudy, waist-deep water. It makes movement and combat cumbersome for
 landlubbers — this is sometimes dangerous, but never directly fatal.
 %%%%
 The open sea
 
-Nothing but endless wind and waves, and not a lighthouse in sight. You'd be
+An expanse of endless wind and waves, with not a lighthouse in sight. You'd be
 lost beyond all hope in short order — better not risk it.
 %%%%
 ########################
@@ -679,59 +635,58 @@ A huge sealed gate
 # wizlabs
 A portal leading out of this place
 
-This shimmering magical gate leads back to the place you came from. You will be
+A shimmering magical gate leading back to the place you came from. You will be
 unable to return here once you pass through it.
 %%%%
 # wizlab: Wucad Mu
 An autumnal tree
 
-These trees, large as they are, appear to be permanently locked in an autumnal
-moment: leaves, coloured red and gold, fall from branches and float gracefully
-to the floor. Before they even reach the ground, however, a shadow passes, and
-when the shimmer is gone, the leaves are once more on the branch, ready to fall
-again.
+A large tree that appears to be permanently locked in an autumnal moment.
+Leaves, coloured red and gold, fall from its branches and float gracefully to
+the floor, but before they even reach the ground they shimmer and reappear on
+the branches, ready to fall again.
 %%%%
 A crumbled stone wall
 
-These walls appear locked in time — ready to collapse from disrepair, but
-utterly unable to.
+A stone wall on the brink of collapsing from disrepair but somehow remaining
+standing, seemingly frozen in time.
 %%%%
 A strange statue
 
-The features of this statue are strange and alien. Is it because the statue is
-worn and tarnished that it has become so unrecognisable? Or is it that the
-subject was something demonic and evil?
+A statue with strange and alien features. Is it because the statue is worn and
+tarnished that it has become so unrecognisable? Or is it that the subject was
+something demonic and evil?
 %%%%
 # wizlab: Doroklohe
 A strange rock wall
 
-This wall is decorated with images you might see in a tomb.
+A wall decorated with images you might see in a tomb.
 %%%%
 A highly decorated stone wall
 
-This wall is covered with disturbing, horrifying images.
+A wall covered with disturbing, horrifying images.
 %%%%
 The rough-hewn floor
 
-This floor is rough and uneven in places.
+The floor. It is rough and uneven in places.
 %%%%
 # wizlab: Cigotuvi
 Viscous fluid
 
-This sticky fluid seems to be secreted by the nearby walls. It looks
+A sticky fluid which seems to be secreted by the nearby walls. It looks
 disgusting.
 %%%%
 A sinewy wall
 
-This wall looks strangely organic, but incredibly tough and durable.
+A wall that looks strangely organic, but incredibly tough and durable.
 %%%%
 A thin membrane
 
-This strange membrane is thin enough to see through.
+A strange membrane, thin enough to see through.
 %%%%
 The pulsating floor
 
-This slick floor seems to pulse to an unknown beat.
+The floor. It seems to pulse to an unknown beat.
 %%%%
 # wizlab: Zonguldrok
 Zonguldrok's gravestone
@@ -745,8 +700,8 @@ A nameless grave.
 # wizlab: Golubria
 The dimension's edge
 
-On the edge of this tiny, isolated plane, space itself dissolves into oblivion.
-Entering or affecting this black void is impossible.
+The edge of this tiny, isolated plane, where space itself dissolves into
+oblivion. Entering or affecting this black void is impossible.
 %%%%
 A wall of crystal
 
@@ -755,32 +710,32 @@ A wall of crystal
 # wizlab: Cloud Mage
 The damp floor
 
-Perhaps it is the humidity, or the constant flow of clouds, but the floor here
-remains forever damp.
+The floor. It remains forever damp, perhaps due to the humidity or the constant
+flow of clouds.
 %%%%
 A wall of white crystal
 
-This wall is made from low-grade crystal with an opalescent gleam.
+A wall made from low-grade crystal with an opalescent gleam.
 %%%%
 # wizlab: Hellbinder
 A black wall
 
-This wall is perhaps made from stone, or solid charcoal, or a substance found
-only in the deepest hells.
+A wall made perhaps from stone, or solid charcoal, or a substance found only in
+the deepest hells.
 %%%%
 A carved rock wall
 
-This wall is decorated with images of death and destruction.
+A wall decorated with images of death and destruction.
 %%%%
 # evilmike_haunted_forest (Crypt:5)
 A dead tree
 
-This tree is as dead as everything else here.
+A tree, as dead as everything else here.
 %%%%
 # Dis:7
 An iron statue
 
-This statue has no mouth. Creepy!
+A statue with no mouth. Creepy!
 %%%%
 # Geh:7
 Ashen ground
@@ -789,7 +744,7 @@ Ashen ground. It is warm and almost comfortable.
 %%%%
 A tempered metal wall
 
-This metal wall emits heat.
+A metal wall, emitting heat.
 %%%%
 # Coc:7
 An ice-covered rock wall
@@ -811,12 +766,12 @@ A solid gold statue of a saint.
 %%%%
 A silver wall
 
-This wall is made of pure silver.
+A wall made of pure silver.
 %%%%
 # Slime:$
 A rune carved stone wall
 
-This strangely slime-free stone wall is carved all over with countless mystical
+A strangely slime-free stone wall, carved all over with countless mystical
 runes. One often repeated set of runes seems to refer to 'the royal jelly.'
 %%%%
 # Tomb:1
@@ -827,15 +782,15 @@ An ancient sarcophagus. It appears to be empty.
 # Vaults:$
 A heavily etched metal wall
 
-This metal wall is etched with murals depicting, in great and gruesome detail,
+A metal wall etched with murals depicting, in great and gruesome detail,
 exactly what will be done to anyone caught stealing from the Vaults. It makes
 you feel queasy.
 %%%%
 A heavily etched crystal wall
 
-This crystal wall is etched with murals depicting, in great and gruesome
-detail, exactly what will be done to anyone caught stealing from the Vaults. It
-makes you feel queasy.
+A crystal wall etched with murals depicting, in great and gruesome detail,
+exactly what will be done to anyone caught stealing from the Vaults. It makes
+you feel queasy.
 %%%%
 # moated_graveyard_entry (D:1)
 An adventurer's gravestone
@@ -845,25 +800,25 @@ The grave of an adventurer who came close to victory.
 # Ice Cave
 An ice choked empty arch of ancient stone
 
-This portal is inoperative, and nearly completely encased in a mass of ice.
+An inoperative portal, nearly completely encased in a mass of ice.
 %%%%
 An ice covered gate leading back out of this place
 
-This portal leads back to the place you came from. Its magic is holding the ice
+A portal leading back to the place you came from. Its magic is holding the ice
 at bay, preventing it from blocking the gate. You will be unable to return here
 once you pass through it.
 %%%%
 An ice covered rock wall
 
-This rock wall is covered by a thick layer of frost and ice.
+A rock wall covered by a thick layer of frost and ice.
 %%%%
 Some ice crusted deep water
 
-This deep water is crusted with broken blocks of ice.
+A pool of deep water, crusted with broken blocks of ice.
 %%%%
 Some ice crusted shallow water
 
-This shallow water is crusted with broken blocks of ice.
+A pool of shallow water, crusted with broken blocks of ice.
 %%%%
 # sewer_minmay_treatment (Sewer)
 A large window
@@ -878,65 +833,64 @@ A pockmarked, ultra-hard glass window.
 # due_jungle_book (Lair:8)
 An elephant-shaped statue
 
-This worn granite statue depicts an elephant standing guard.
+A worn granite statue depicting an elephant standing guard.
 %%%%
 # pan_disco_hall (Pan)
 A weirdly glowing ball
 
-This floating ball radiates with shimmering light.
+A floating ball radiating with shimmering light.
 %%%%
 # ragdoll_tomb_raider
 A sealed sarcophagus
 
-This ancient sarcophagus is sealed shut.
+An ancient sarcophagus. It is sealed shut.
 %%%%
 ###########################
 ### Portal vault entrances
 ###########################
 A flagged portal
 
-This portal leads to a bailey. It seems as if you had better enter the portal
-before the standard is lowered to the ground.
+A portal leading to a bailey, gradually fading away as the standard is lowered
+to the ground.
 %%%%
 # timed bazaar
 A flickering gateway to a bazaar
 
-This portal leads to a bazaar, where itinerant merchants gather to sell their
+A portal leading to a bazaar, where itinerant merchants gather to sell their
 wares. They never stay in one place for very long.
 %%%%
 # permanent bazaar
 A gateway to a bazaar
 
-This portal leads to a bazaar, where itinerant merchants gather to sell their
+A portal leading to a bazaar, where itinerant merchants gather to sell their
 wares. They will wait for you, but once you get a chance to browse their
 inventory, the merchants will depart in search of other customers.
 %%%%
 A frozen archway
 
-This portal leads to an ice cave. The archway is gradually melting away.
+A portal leading to an ice cave. The archway is gradually melting away.
 %%%%
 A sand-covered staircase
 
-This staircase leads to an ossuary. Sand surrounds the staircase and is
-continuously pouring onto it. Before long, the staircase will be gone.
+A staircase leading to an ossuary. Sand is continuously pouring onto it,
+gradually blocking the entrance.
 %%%%
 A glowing drain
 
-This passage leads to a sewer. It seems to be rusting and clogging up fairly
-rapidly.
+A passage leading to a sewer. It is gradually rusting away.
 %%%%
 A portal to a secret trove of treasure
 
-This portal leads to a treasure trove.
+A portal leading to a treasure trove.
 %%%%
 A dark tunnel
 
-This portal leads to the heart of a volcano. Rocks are falling from the roof
-and sides of the tunnel, filling the entry.
+A portal leading to the heart of a volcano. Rocks are falling from the roof and
+sides of the tunnel, filling the entry.
 %%%%
 A magical portal
 
-This portal leads to a wizard's laboratory. It seems to be fading away.
+A portal leading to a wizard's laboratory. It seems to be fading away.
 %%%%
 ###########
 ### Sprint
@@ -953,14 +907,14 @@ Either that, or it's a blue wall.
 # arena_sprint
 A spawn point
 
-One of the entrances that the opposition may come in through.
+An entrance that the opposition may appear from.
 %%%%
 ############
 ### Tutorial
 ############
 An exit from the tutorial
 
-This is a way out of the dungeon, letting you finish this lesson.
+A way out of the dungeon, letting you finish this lesson.
 %%%%
 ############
 ### Clouds
@@ -969,56 +923,54 @@ This is a way out of the dungeon, letting you finish this lesson.
 flame cloud
 
 A cloud of raging fire. Any creature not entirely immune to fire will be hurt
-by time spent in the flames, though armour can mitigate the damage.
+by time spent in the flames.
 
-Ranged cold attacks are blocked by the cloud, but will destroy it in the
-process.
+Ranged cold attacks passing through the cloud are substantially reduced in
+range, dissipating the cloud in the process.
 
-If placed over water, the heat will generate steam nearby. If the water is deep
-enough, the cold of the waves will lead to the cloud dissipating much more
-quickly.
+If placed near water, the heat will generate steam nearby. If placed directly
+over water, the cloud will dissipate much more quickly.
 %%%%
 noxious fumes cloud
 
 A cloud of vile, choking fumes. Any breathing creature spending time in it will
-be at risk of becoming dazed & confused by the gasses, unless equipped with
-some source of poison resistance. Tougher, more experienced creatures are less
-likely to be affected.
+be at risk of becoming confused by the gasses, unless resistant to poison.
+Tougher, more experienced creatures are less likely to be affected.
 %%%%
 freezing vapour cloud
 
 A cloud of freezing air. Any creature not entirely immune to cold will be hurt
-by time spent inside, though armour can mitigate the damage.
+by time spent inside.
 
-Ranged fire and lava attacks are blocked by the cloud, but will destroy it in
-the process.
+Ranged cold attacks passing through the cloud are substantially reduced in
+range, dissipating the cloud in the process.
 
-If placed over lava, the heat will dissipate the cloud much more quickly.
+If placed over lava, the cloud will dissipate much more quickly.
 %%%%
 poison gas cloud
 
 A cloud of deadly poison. Any creature without resistance to poison will be
-both poisoned & directly harmed by time spent in it.
+both poisoned and directly harmed by time spent in it.
 %%%%
-smoke cloud
+_smoke_cloud_
 
 A cloud of coloured smoke. Harmless, except to the asthmatic.
 %%%%
 black smoke cloud
 
-<smoke cloud>
+<_smoke_cloud_>
 %%%%
 grey smoke cloud
 
-<smoke cloud>
+<_smoke_cloud_>
 %%%%
 blue smoke cloud
 
-<smoke cloud>
+<_smoke_cloud_>
 %%%%
 purple smoke cloud
 
-<smoke cloud>
+<_smoke_cloud_>
 %%%%
 translocational energy cloud
 
@@ -1031,24 +983,20 @@ sneeze. Perhaps metaphysically gross, but otherwise harmless.
 spreading flames cloud
 
 A raging forest fire. Any creature not entirely immune to fire will be hurt by
-time spent in the flames, though armour can mitigate the damage.
-
-These flames are especially fierce, and will intermittently flare up and fill
-its surroundings with lesser fires. Any trees unfortunate enough to be nearby
+time spent in the flames. The flames will intermittently flare up and fill
+their surroundings with lesser fires. Any trees unfortunate enough to be nearby
 will often find themselves transformed into more kindling for the fire.
 
-Ranged cold attacks are blocked by the cloud, but will destroy it in the
-process.
+Ranged cold attacks passing through the cloud are substantially reduced in
+range, dissipating the cloud in the process.
 
-If placed over water, the heat will generate steam nearby. If the water is deep
-enough, the cold of the waves will lead to the cloud dissipating much more
-quickly.
+If placed near water, the heat will generate steam nearby. If placed directly
+over water, the cloud will dissipate much more quickly.
 %%%%
 steam cloud
 
-A cloud of scalding steam. Creatures caught within will be somewhat injured,
-though a modicum of armour or fire resistance is generally enough to reduce the
-damage to tolerable levels.
+A cloud of scalding steam. Creatures caught within will be mildly injured,
+and fire resistance will further reduce the damage.
 %%%%
 ink cloud
 
@@ -1057,87 +1005,79 @@ A cloud of ink, completely filling the water.
 calcifying dust cloud
 
 A petrifying cloud. Creatures caught in the cloud for any length of time will
-find themselves turning to stone, though an experienced adventurer can often
-resist the effects.
+find themselves turning to stone, though more experienced creatures may be able
+to resist the effects.
 %%%%
 blessed fire cloud
 
-A cloud of divine fire, imbued with the power & wrath of the good gods. Those
-in their service recieve some protection; otherwise, the only defense is stout
-armour and the wisdom to not enter the clouds in the first place. Those
-following evil gods are especially well advised to avoid these clouds, and the
-undead and demonic are even moreso.
+A cloud of divine fire, imbued with holy power. Those in the service of one of
+the good gods will be unaffected by it. All others will take substantial
+damage, with fire resistance offering no protection. Those following evil gods
+will take increased damage, and the undead and demonic even more.
 %%%%
 foul pestilence cloud
 
 # XXX: clarify vine stalkers, gargoyles
 A cloud of dark miasma. Any living being not subject to Zin's divine protection
-will find themselves terribly poisoned, ignoring any resistance they may have
-to lesser toxins. The unfortunate may find their movements slowing & their
-flesh rotting away, if they dally. Even the dumbest denizens of the Dungeon
-will avoid miasma if they can, and adventurers are well advised to do the same.
+will find themselves poisoned, and may also find their movements slowing and
+their flesh rotting away.
 %%%%
 thin mist cloud
 
-Atmospheric, but harmless.
+A cloud of thin mist. Atmospheric, but harmless.
 %%%%
 seething chaos cloud
 
-Reality itself become unhinged. A variety of exciting effects apply to those
-dallying within the clouds, ranging from invisibility to berserk rage to
-complete paralysis. The wise adventurer will stay to experience as few of these
-as possible.
+A cloud of seething chaos. A wide variety of unpredictable effects apply to
+those within the clouds, ranging from invisibility to berserk rage to complete
+paralysis.
 %%%%
 rain cloud
 
-An extremely localized rainstorm. Sometime produces pools of shallow water, or
-temporarily deepens existing pools. Beings made entirely out of fire are
-inexplicably averse to spending much time in these.
+An extremely localized rainstorm. It may produce pools of shallow water, or
+temporarily deepen existing pools. Beings made entirely out of fire are averse
+to spending much time in the rain.
 
-If placed over lava, the heat will dissipate the cloud much more quickly.
+If placed over lava, the cloud will dissipate much more quickly.
 %%%%
 mutagenic fog cloud
 
-Pure, unstructured magic, condensed into a scintilliating mist; essentially,
-toxic magical waste. Creatures venturing within will find soon themselves
-glowing in the dark, and generally acquire a variety of exciting mutations
-shortly afterward. Not the fun kind, either!
+A cloud of pure, unstructured magic, condensed into a scintilliating mist;
+essentially toxic magical waste. Creatures venturing within will find
+themselves increasingly contaminated with magical radiation, sufficient amounts
+of which will inflict negative mutations when dissipating.
 %%%%
 magical condensation cloud
 
-The wake of some highly concentrated magical energy. Harmless. (But whatever
-spawned it probably isn't!)
+The wake of some highly concentrated magical energy, itself entirely harmless.
 %%%%
 raging winds cloud
 
-The winds of a raging tornado. Stout armour will mitigate the worst of the
-damage, but tarrying in here is still a good way to meet a quick death.
+The winds of a raging tornado. It will deal severe damage to anyone within it.
 %%%%
 sparse dust cloud
 
-Atmospheric, but harmless.
+A cloud of sparse dust. Atmospheric, but harmless.
 %%%%
-ghostly flame cloud
+spectral mist cloud
 
-The memory of flames past. Neither resistance to fire nor negative energy
-protect against these clouds; only armour will suffice. Luckily, standing in
-them causes very little harm. The spectres that emerge from the flames, on the
-other hand, are considerably more dangerous...
+A cloud of spectral mist. It causes minor damage to all creatures other than
+the undead. Dangerous but short-lived spectral undead creatures will coalesce
+from the mist over time.
 %%%%
 acidic fog cloud
 
-A cloud of flesh-searing, metal-dissolving acid. Resistance to corrosion will
-mitigate the damage, as will armour, but the latter will quickly be eaten away
-by the acid. Very few creatures can survive in this for long.
+A cloud of flesh-searing acid, which will deal damage and apply corrosion to
+those within it. Resistance to corrosion will provide immunity to its effects.
 %%%%
 thunder cloud
 
-A lightning-spitting storm. The lightning only comes intermittently, but when
-it does, it hurts!
+A dark storm cloud. It will intermittently strike those within with lightning,
+dealing severe damage to those without resistance to electricity.
 %%%%
 negative energy cloud
 
-A cloud of necromantic magics. Living creatures trapped within will find
-themselves drained of their life energies, though armour and protection from
-negative energies mitigate the effects.
+A cloud of necromantic energy. Living creatures trapped within will find
+themselves drained of their life energies, though protection from negative
+energy will mitigate the effects.
 %%%%

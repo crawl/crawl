@@ -43,7 +43,7 @@ static NORETURN void yyerror(const char *e)
 
 %token <i>      DEFAULT_DEPTH SHUFFLE CLEAR SUBST TAGS KFEAT KITEM KMONS KMASK KPROP
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE WEIGHT MONS ITEM MARKER COLOUR
-%token <i>      PRELUDE MAIN VALIDATE VETO EPILOGUE NSUBST WELCOME LFLAGS BFLAGS
+%token <i>      PRELUDE MAIN VALIDATE VETO EPILOGUE NSUBST WELCOME
 %token <i>      LFLOORCOL LROCKCOL LFLOORTILE LROCKTILE FTILE RTILE TILE
 %token <i>      SUBVAULT FHEIGHT DESC ORDER
 
@@ -96,7 +96,7 @@ level           : name map_specs
                     {
                         lc_global_prelude.set_file(lc_desfile);
                         lc_run_global_prelude = false;
-                        if (lc_global_prelude.load_call(dlua, NULL))
+                        if (lc_global_prelude.load_call(dlua, nullptr))
                             yyerror( lc_global_prelude.orig_error().c_str() );
                     }
 
@@ -165,8 +165,6 @@ metaline        : place
                 | shuffle
                 | clear
                 | tags
-                | lflags
-                | bflags
                 | kfeat
                 | kitem
                 | kmons
@@ -330,24 +328,6 @@ tagstring       : STRING
                         yylineno,
                         make_stringf("tags(\"%s\")",
                             quote_lua_string($1).c_str()));
-                }
-                ;
-
-lflags          : LFLAGS STRING
-                {
-                    lc_map.main.add(
-                        yylineno,
-                        make_stringf("lflags(\"%s\")",
-                                     quote_lua_string($2).c_str()));
-                }
-                ;
-
-bflags          : BFLAGS STRING
-                {
-                    lc_map.main.add(
-                        yylineno,
-                        make_stringf("bflags(\"%s\")",
-                                     quote_lua_string($2).c_str()));
                 }
                 ;
 

@@ -25,11 +25,13 @@ enum spschool_flag_type
   SPTYP_POISON         = 1<<10,
   SPTYP_EARTH          = 1<<11,
   SPTYP_AIR            = 1<<12,
-  SPTYP_LAST_EXPONENT  = 12,
-  SPTYP_LAST_SCHOOL    = 1<<SPTYP_LAST_EXPONENT,
-  SPTYP_RANDOM         = 1<<(SPTYP_LAST_EXPONENT + 1),
+  SPTYP_LAST_SCHOOL    = SPTYP_AIR,
+  SPTYP_RANDOM         = SPTYP_LAST_SCHOOL << 1,
 };
-DEF_BITFIELD(spschools_type, spschool_flag_type);
+DEF_BITFIELD(spschools_type, spschool_flag_type, 12);
+const int SPTYP_LAST_EXPONENT = spschools_type::last_exponent;
+COMPILE_CHECK(spschools_type::exponent(SPTYP_LAST_EXPONENT)
+              == SPTYP_LAST_SCHOOL);
 
 struct bolt;
 class dist;
@@ -42,9 +44,6 @@ enum spell_highlight_colours
     COL_USELESS      = DARKGRAY,    // ability would have no useful effect
     COL_INAPPLICABLE = COL_USELESS, // ability cannot be meanifully applied (eg, no targets)
     COL_FORBIDDEN    = LIGHTRED,    // The player's god hates this ability
-
-    COL_EMPOWERED    = LIGHTGREEN,  // The ability is made stronger by the player's status
-    COL_FAVORED      = GREEN,       // the player's god likes this ability
 };
 
 bool is_valid_spell(spell_type spell);
@@ -84,8 +83,8 @@ spschools_type get_spell_disciplines(spell_type which_spell);
 bool disciplines_conflict(spschools_type disc1, spschools_type disc2);
 int count_bits(uint64_t bits);
 
-template <class E>
-int count_bits(enum_bitfield<E> bits)
+template <class E, int Exp>
+int count_bits(enum_bitfield<E, Exp> bits)
 {
     return count_bits(bits.flags);
 }

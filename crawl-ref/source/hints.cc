@@ -160,7 +160,7 @@ static void _print_hints_menu(hints_types type)
 }
 
 // Hints mode selection screen and choice.
-void pick_hints(newgame_def* choice)
+void pick_hints(newgame_def& choice)
 {
 again:
     clrscr();
@@ -196,11 +196,11 @@ again:
         if (keyn >= 'a' && keyn <= 'a' + HINT_TYPES_NUM - 1)
         {
             Hints.hints_type = keyn - 'a';
-            choice->species  = _get_hints_species(Hints.hints_type);
-            choice->job = _get_hints_job(Hints.hints_type);
+            choice.species  = _get_hints_species(Hints.hints_type);
+            choice.job = _get_hints_job(Hints.hints_type);
             // easiest choice for fighters
-            choice->weapon = choice->job == JOB_HUNTER ? WPN_SHORTBOW
-                                                       : WPN_HAND_AXE;
+            choice.weapon = choice.job == JOB_HUNTER ? WPN_SHORTBOW
+                                                     : WPN_HAND_AXE;
 
             return;
         }
@@ -828,7 +828,7 @@ static bool _advise_use_wand()
 
 void hints_monster_seen(const monster& mon)
 {
-    if (mons_class_flag(mon.type, M_NO_EXP_GAIN))
+    if (!mons_class_gives_xp(mon.type))
     {
         if (Hints.hints_events[HINT_SEEN_ZERO_EXP_MON])
         {
@@ -2499,13 +2499,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         // "Shouts" from zero experience monsters are boring, ignore
         // them.
-        if (mons_class_flag(m->type, M_NO_EXP_GAIN))
+        if (!mons_class_gives_xp(m->type))
         {
             Hints.hints_events[HINT_MONSTER_SHOUT] = true;
             return;
         }
 
-        const bool vis = you.can_see(m);
+        const bool vis = you.can_see(*m);
 
 #ifdef USE_TILE
         if (vis)
@@ -2544,7 +2544,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     {
         const monster* m = monster_at(gc);
 
-        if (!m || !you.can_see(m))
+        if (!m || !you.can_see(*m))
             DELAY_EVENT;
 
         text << m->name(DESC_THE, true) << " didn't vanish, but merely "
@@ -3701,7 +3701,6 @@ static void _hints_describe_feature(int x, int y)
          break;
 
     case DNGN_TRAP_TELEPORT:
-    case DNGN_TRAP_SHADOW:
     case DNGN_TRAP_ALARM:
     case DNGN_TRAP_ZOT:
     case DNGN_TRAP_MECHANICAL:
@@ -3998,7 +3997,7 @@ static bool _water_is_disturbed(int x, int y)
     if (!mon || grd(c) != DNGN_SHALLOW_WATER || !you.see_cell(c))
         return false;
 
-    return !mon->visible_to(&you) && !mons_flies(mon);
+    return !mon->visible_to(&you) && !mon->airborne();
 }
 
 bool hints_monster_interesting(const monster* mons)

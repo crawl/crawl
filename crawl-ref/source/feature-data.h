@@ -223,8 +223,10 @@ static feature_def feat_defs[] =
 
 TRAP(DNGN_TRAP_MECHANICAL, "mechanical trap", "trap_mechanical", LIGHTCYAN),
 TRAP(DNGN_TRAP_TELEPORT, "teleport trap", "trap_teleport", LIGHTBLUE),
+#if TAG_MAJOR_VERSION == 34
 TRAP(DNGN_TRAP_SHADOW, "shadow trap", "trap_shadow", BLUE),
 TRAP(DNGN_TRAP_SHADOW_DORMANT, "dormant shadow trap", "trap_shadow_dormant", BLUE),
+#endif
 TRAP(DNGN_TRAP_ALARM, "alarm trap", "trap_alarm", LIGHTRED),
 TRAP(DNGN_TRAP_ZOT, "Zot trap", "trap_zot", LIGHTMAGENTA),
 TRAP(DNGN_PASSAGE_OF_GOLUBRIA, "passage of Golubria", "passage of golubria", GREEN),
@@ -496,6 +498,7 @@ ALTAR(DNGN_ALTAR_DITHMENOS, "shadowy altar of Dithmenos", "altar_dithmenos", ETC
 ALTAR(DNGN_ALTAR_GOZAG, "opulent altar of Gozag", "altar_gozag", ETC_GOLD), // for the Gold God!
 ALTAR(DNGN_ALTAR_QAZLAL, "stormy altar of Qazlal", "altar_qazlal", ETC_ELEMENTAL),
 ALTAR(DNGN_ALTAR_RU, "sacrificial altar of Ru", "altar_ru", BROWN),
+ALTAR(DNGN_ALTAR_ECUMENICAL, "faded altar to an unknown god", "altar_ecumenical", ETC_DARK),
 
 #define FOUNTAIN(enum, name, vaultname, colour)\
 {\

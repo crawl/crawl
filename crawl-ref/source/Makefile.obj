@@ -34,6 +34,7 @@ dactions.o \
 database.o \
 dbg-asrt.o \
 dbg-maps.o \
+dbg-objstat.o \
 dbg-scan.o \
 dbg-util.o \
 decks.o \
@@ -54,6 +55,7 @@ dgn-swamp.o \
 dgnevent.o \
 directn.o \
 dlua.o \
+domino.o \
 dungeon.o \
 end.o \
 english.o \
@@ -90,6 +92,7 @@ itemname.o \
 itemprop.o \
 items.o \
 jobs.o \
+json.o \
 kills.o \
 l_colour.o \
 l_crawl.o \
@@ -143,7 +146,6 @@ mon-abil.o \
 mon-act.o \
 mon-behv.o \
 mon-cast.o \
-mon-chimera.o \
 mon-clone.o \
 mon-death.o \
 mon-ench.o \
@@ -252,7 +254,6 @@ wiz-mon.o \
 wiz-you.o \
 worley.o \
 xom.o \
-zotdef.o \
 tilepick.o \
 tileview.o
 
@@ -296,8 +297,7 @@ fontwrapper-ft.o
 
 WEBTILES_OBJECTS = \
 tileweb.o \
-tileweb-text.o \
-json.o
+tileweb-text.o
 
 YACC_OBJECTS = \
 util/levcomp.tab.o \

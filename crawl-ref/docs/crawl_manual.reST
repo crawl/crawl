@@ -76,9 +76,6 @@ Hints mode for Dungeon Crawl
 Dungeon Sprint
   Start one of several single-map challenge mode games of Crawl.
 
-Zot Defence
-  Start one of several "tower defence"-style games of Crawl.
-
 Instructions
   View the instructional help text you are currently reading.
 
@@ -882,15 +879,8 @@ and thus use the Maces &amp; Flails skill instead of Staves when used as cudgels
 
 Most books contain magical spells which your character may be able to learn. You
 can read a book with the 'r' command, which lets you access a description of
-each spell, or memorise spells from it with the 'M' command.
-
-In addition to picking up new spells, your character may also wish to get rid of
-old ones. The most convenient way to do so is by reading a scroll of amnesia,
-which will let you pick a scroll to forget. However, should you happen to have a
-shortage of such scrolls, you can also forget a spell by tearing out the
-relevant pages of a book. Unfortunately, this violent procedure will inevitably
-consume the whole book. You can undertake this by 'r'eading a book, then
-selecting a spell you already have learnt, and 'F'orget it.
+each spell, memorise spells from it with the 'M' command, or forget a spell with
+the 'F' command, destroying the book in the process.
 
 Some powerful spellbooks require a certain amount of magical skill to read their
 contents.
@@ -959,6 +949,14 @@ Spells are stored in books, which you will occasionally find in the dungeon. You
 can read books with 'r' to check what spells they contain; doing so will allow
 you to read the individual spells' descriptions. In order to memorise a certain
 spell, use the 'M' command.
+
+In addition to picking up new spells, your character may also wish to get rid of
+old ones. The most convenient way to do so is by reading a scroll of amnesia,
+which will let you pick a spell to forget. However, should you happen to have a
+shortage of such scrolls, you can also forget a spell by 'r'eading a book
+containing that spell, selecting the spell and 'f'orgetting it by tearing out the
+pages. Unfortunately, this violent procedure will inevitably consume the whole
+book.
 
 Each spell has a level. A spell's level denotes the amount of skill required to
 use it and indicates how powerful it may be. You can only memorise a certain
@@ -2838,6 +2836,10 @@ Starving
   You should really eat something; death is not far away. While starving, your
   combat abilities are impaired and you are unable to cast spells or use many
   evoked or divine abilities.
+
+Fainting
+  You are beyond starving, and are likely to lose consciousness and die at any
+  moment.
 
 Pois
   You are poisoned and continually lose hit points. While poisoned, your current

@@ -325,11 +325,11 @@ static void _add_hiscore_row(MenuScroller* scroller, scorefile_entry& se, int id
 static void _construct_hiscore_table(MenuScroller* scroller)
 {
     FILE *scores = _hs_open("r", _score_file_name());
-    int i;
 
     if (scores == nullptr)
         return;
 
+    int i;
     // read highscore file
     for (i = 0; i < SCORE_FILE_ENTRIES; i++)
     {
@@ -440,7 +440,8 @@ void show_hiscore_table()
     freeform->set_visible(true);
 
     NoSelectTextItem* tmp = new NoSelectTextItem();
-    string text = "[  Up/Down or PgUp/PgDn to scroll.         Esc to exit.  ]";
+    string text = "[  Up/Down or PgUp/PgDn to scroll.         Esc or R-click "
+        "exits.  ]";
     tmp->set_text(text);
     tmp->set_bounds(coord_def(1, max_line - 1), coord_def(max_col - 1, max_line));
     tmp->set_fg_colour(CYAN);
@@ -474,7 +475,7 @@ void show_hiscore_table()
         if (keyn == CK_REDRAW)
             continue;
 
-        if (key_is_escape(keyn))
+        if (key_is_escape(keyn) || keyn == CK_MOUSE_CMD)
         {
             // Go back to the menu and return the smart cursor to its previous state
             enable_smart_cursor(smart_cursor_enabled);
@@ -851,7 +852,7 @@ static const char* _job_name(int job)
         return "Healer";
     }
 
-    return get_job_name(job);
+    return get_job_name(static_cast<job_type>(job));
 }
 
 static const char* _job_abbrev(int job)
@@ -876,7 +877,7 @@ static const char* _job_abbrev(int job)
         return "He";
     }
 
-    return get_job_abbrev(job);
+    return get_job_abbrev(static_cast<job_type>(job));
 }
 
 static int _job_by_name(const string& name)
@@ -922,7 +923,7 @@ static string _species_name(int race)
     case OLD_SP_LAVA_ORC: return "Lava Orc";
     }
 
-    return species_name(static_cast<species_type>(race)).c_str();
+    return species_name(static_cast<species_type>(race));
 }
 
 static const char* _species_abbrev(int race)
@@ -986,7 +987,7 @@ void scorefile_entry::init_with_fields()
     killerpath        = fields->str_field("kpath");
     last_banisher     = fields->str_field("banisher");
 
-    branch     = str_to_branch(fields->str_field("br"), BRANCH_DUNGEON);
+    branch     = branch_by_abbrevname(fields->str_field("br"), BRANCH_DUNGEON);
     dlvl       = fields->int_field("lvl");
     absdepth   = fields->int_field("absdepth");
 
@@ -1057,8 +1058,6 @@ void scorefile_entry::set_base_xlog_fields() const
         /* XXX: hmmm, something better here? */
         score_version += "-sprint.1";
     }
-    else if (crawl_state.game_is_zotdef())
-        score_version += "-zotdef.1";
     fields->add_field("v", "%s", Version::Short);
     fields->add_field("vlong", "%s", Version::Long);
     fields->add_field("lv", "%s", score_version.c_str());
@@ -1201,9 +1200,8 @@ void scorefile_entry::set_score_fields() const
 string scorefile_entry::make_oneline(const string &ml) const
 {
     vector<string> lines = split_string("\n", ml);
-    for (int i = 0, size = lines.size(); i < size; ++i)
+    for (string &s : lines)
     {
-        string &s = lines[i];
         if (s.find("...") == 0)
         {
             s = s.substr(3);
@@ -1295,6 +1293,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         && monster_by_mid(death_source))
     {
         const monster* mons = monster_by_mid(death_source);
+        ASSERT(mons);
 
         // Previously the weapon was only used for dancing weapons,
         // but now we pass it in as a string through the scorefile
@@ -1325,7 +1324,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
 
         death_source_name = mons->name(desc, death);
 
-        if (death || you.can_see(mons))
+        if (death || you.can_see(*mons))
             death_source_name = mons->full_name(desc, true);
 
         if (mons_is_player_shadow(mons))
@@ -1580,7 +1579,7 @@ void scorefile_entry::init(time_t dt)
             pt += 250000; // the Orb
             pt += num_runes * 2000 + 4000;
             pt += ((uint64_t)250000) * 25000 * num_runes * num_runes
-                / (1+you.num_turns) / (crawl_state.game_is_zotdef() ? 10 : 1);
+                / (1+you.num_turns);
         }
         pt += num_runes * 10000;
         pt += num_runes * (num_runes + 2) * 1000;
@@ -1629,7 +1628,7 @@ void scorefile_entry::init(time_t dt)
         }
     }
 
-    kills            = you.kills->total_kills();
+    kills            = you.kills.total_kills();
 
     final_hp         = you.hp;
     final_max_hp     = you.hp_max;
@@ -1900,10 +1899,10 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
 
     if (verbose)
     {
-        const char* srace = _species_name(race).c_str();
+        string srace = _species_name(race);
         desc += make_stringf("Began as a%s %s %s",
                  is_vowel(srace[0]) ? "n" : "",
-                 srace,
+                 srace.c_str(),
                  _job_name(job));
 
         ASSERT(birth_time);
@@ -2783,10 +2782,8 @@ static vector<string> _xlog_split_fields(const string &s)
 
 void xlog_fields::init(const string &line)
 {
-    vector<string> rawfields = _xlog_split_fields(line);
-    for (int i = 0, size = rawfields.size(); i < size; ++i)
+    for (const string &field : _xlog_split_fields(line))
     {
-        const string field = rawfields[i];
         string::size_type st = field.find('=');
         if (st == string::npos)
             continue;
@@ -2823,20 +2820,15 @@ int xlog_fields::int_field(const string &s) const
 void xlog_fields::map_fields() const
 {
     fieldmap.clear();
-    for (int i = 0, size = fields.size(); i < size; ++i)
-    {
-        const pair<string, string> &f = fields[i];
+    for (const pair<string, string> &f : fields)
         fieldmap[f.first] = f.second;
-    }
 }
 
 string xlog_fields::xlog_line() const
 {
     string line;
-    for (int i = 0, size = fields.size(); i < size; ++i)
+    for (const pair<string, string> &f : fields)
     {
-        const pair<string, string> &f = fields[i];
-
         // Don't write empty fields.
         if (f.second.empty())
             continue;

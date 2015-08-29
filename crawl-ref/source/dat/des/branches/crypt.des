@@ -102,7 +102,7 @@ function crypt_loot_plus(e)
           "staff of death / staff of power / staff of wizardry / " ..
           "any magical staff w:5")
   e.subst("d = d:20 ef g:20")
-  e.subst("h = hij")
+  e.subst("h = h:5 ij")
 end
 }}
 
@@ -416,7 +416,7 @@ SUBST:  HI = G
                                 veto_shatter="veto"})
   set_feature_name("granite_statue", "sarcophagus")
 }}
-KFEAT:  G = granite_statue no_mimic
+KFEAT:  G = granite_statue
 SUBST:  J = V
 SUBST:  C = c
 MAP
@@ -1211,7 +1211,7 @@ ENDMAP
 NAME: nicolae_crypt_cryptocurrency
 DEPTH: Crypt
 TAGS: extra decor no_item_gen no_trap_gen no_monster_gen
-KPROP: $-c = no_rtele_into
+KPROP: $-c = no_tele_into
 KMASK: .@ = !opaque
 KITEM: $ = $ / $ good_item w:3
 KFEAT: m = iron_grate
@@ -1398,7 +1398,7 @@ KMONS:  z = skeletal warrior
 KMONS:  N = necromancer
 KMONS:  H = hell knight
 KMONS:  M = zombie / skeleton / w:5 necrophage
-KMONS:  h = titan zombie / fire dragon zombie / golden dragon zombie / ghoul
+KMONS:  Q = titan zombie / fire dragon zombie / golden dragon zombie / ghoul
 KMONS:  0 = lost soul / nothing
 # red metal walls
 COLOUR: = = red
@@ -1434,9 +1434,9 @@ vwwwwwwwwwwwwwwv.........r//||//r.........vAAAAAAwwwwwwwwv
 vwwwwwwvvvv?vvvv......rr=rr*/O*rr=rr......v?v?v?v?vwwwwwwv
 vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
 vwwwwww?....H..v.....rrrrOr$$$$rOrrrr.....v.......?wwwwwwv
-vwwwwwwv....H..+........rrr$$$$rrr........+.h..H..vwwwwwwv
+vwwwwwwv....H..+........rrr$$$$rrr........+.Q..H..vwwwwwwv
 vwwwwww?....H..v......L...r$$$$r...L......v....H..?wwwwwwv
-vwwwwwwv.h.vvvvv...rrr....rr++rr....rrr...v....H..vwwwwwwv
+vwwwwwwv.Q.vvvvv...rrr....rr++rr....rrr...v....H..vwwwwwwv
 vwwwwww?...v...vv....rr.rrrU..Urrr.rr....vvv+v....?wwwwwwv
 vwwwwwwv...v.X..vv....rrr........rrr....vv...vvvvvvwwwwwwv
 vwwwwwwv...+.....vv....r.U..BC..U.r....vvvv.....+Mvwwwwwwv
@@ -1719,7 +1719,7 @@ MONS:   w:3 patrolling lich / w:1 patrolling revenant
 MONS:   patrolling zombie / nothing
 MONS:   spider / jumping spider / wolf spider / redback / w:25 nothing
 MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 nothing
-MONS:   raven skeleton / w:30 nothing
+MONS:   wyvern skeleton / w:30 nothing
 MONS:   w:2 ushabti / w:3 guardian mummy / w:2 mummy
 MONS:   w:5 patrolling mummy priest / w:1 patrolling greater mummy
 KMONS:  z = patrolling curse skull
@@ -1961,7 +1961,7 @@ KMONS:   5 = necromancer
 KMONS:   6 = simulacrum / spectral thing / zombie w:5 / skeleton w:5 / \
              hell knight w:5
 KMONS:   7 = death knight
-KMONS:   8 = death cob / skeletal warrior
+KMONS:   8 = vampire knight w:5 / skeletal warrior
 KMONS:   9 = ancient champion
 KMONS:   0 = skeletal warrior
 

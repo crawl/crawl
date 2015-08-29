@@ -33,19 +33,18 @@ end
 function lab_intruders(e)
   e.tags("patrolling")
   e.mons("earth elemental / minotaur skeleton")
-  e.mons("trapdoor spider never_corpse")
+  e.mons("trapdoor spider")
   e.mons("shadow")
   e.mons("unseen horror")
   e.mons("hungry ghost")
-  e.mons("wandering mushroom")
   e.mons("gargoyle")
-  e.kmons("8 = basilisk never_corpse")
-  e.kmons("9 = troll skeleton / centaur skeleton / \
+  e.kmons("7 = basilisk")
+  e.kmons("8 = troll skeleton / centaur skeleton / \
                spriggan skeleton / ogre skeleton")
   e.shuffle("1'0d / 1'0d / 20'd / 20'd / '2'd / '2'd / \
              '2'd / 000d / 000d / 000d / 000d / ''''")
   e.subst("2 : 2:60 3:30 4")
-  e.subst("0 : 5:15 6:15 789")
+  e.subst("0 : 5:30 678")
   e.item("any weapon w:14 no_pickup / any armour w:14 no_pickup / \
           any missile w:3 no_pickup / any wand no_pickup / \
           any scroll no_pickup / any jewellery no_pickup / gold no_pickup w:19")
@@ -279,9 +278,8 @@ dgn.delayed_decay_extra(_G, 'K', 'dwarf skeleton', 'plate armour, '
  -- Halfling warper. 4-5 items.
 dgn.delayed_decay_extra(_G, 'L', 'halfling skeleton', 'tomahawk ego:dispersal / sling bullet, '
    .. 'randbook disc:translocation / any book, scroll of blinking / '
-   .. 'scroll of teleportation / ring of teleportation / '
-   .. 'ring of teleport control w:5 / nothing w:30, robe / leather armour, '
-   .. 'short sword good_item' )
+   .. 'scroll of teleportation / ring of teleportation / nothing w:35, '
+   .. 'robe / leather armour, short sword good_item' )
 
  -- Ogre, maybe an ogre mage of some kind. 4-5 items.
 dgn.delayed_decay_extra(_G, 'M', 'ogre skeleton', 'giant club good_item / '

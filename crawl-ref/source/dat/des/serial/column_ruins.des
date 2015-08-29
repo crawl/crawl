@@ -76,9 +76,9 @@ function init_column_ruins_portal(e)
   end
   e.ftile('P = floor_rough_brown')
   e.tile('? = dngn_crumbled_column')
-  e.kprop('- = no_rtele_into')
-  e.kprop('? = no_rtele_into')
-  e.kprop('O = no_rtele_into')
+  e.kprop('- = no_tele_into')
+  e.kprop('? = no_tele_into')
+  e.kprop('O = no_tele_into')
   e.subst('- = .')
 end
 }}
@@ -137,7 +137,7 @@ ENDMAP
 NAME:    column_ruins_pillar_2
 TAGS:    serial_column_ruins_pillar allow_dup overwritable
 WEIGHT:  8
-KPROP:   . = no_rtele_into
+KPROP:   . = no_tele_into
 : init_column_ruins(_G)
 MAP
 G.G
@@ -146,7 +146,7 @@ ENDMAP
 NAME:    column_ruins_pillar_3
 TAGS:    serial_column_ruins_pillar allow_dup overwritable
 WEIGHT:  6
-KPROP:   . = no_rtele_into
+KPROP:   . = no_tele_into
 : init_column_ruins(_G)
 MAP
 G.G.G
@@ -155,7 +155,7 @@ ENDMAP
 NAME:    column_ruins_pillar_4
 TAGS:    serial_column_ruins_pillar allow_dup overwritable
 WEIGHT:  4
-KPROP:   . = no_rtele_into
+KPROP:   . = no_tele_into
 : init_column_ruins(_G)
 MAP
 G.G.G.G
@@ -164,7 +164,7 @@ ENDMAP
 NAME:    column_ruins_pillar_5
 TAGS:    serial_column_ruins_pillar allow_dup overwritable
 WEIGHT:  2
-KPROP:   . = no_rtele_into
+KPROP:   . = no_tele_into
 : init_column_ruins(_G)
 MAP
 G.G.G.G.G
@@ -173,7 +173,7 @@ ENDMAP
 NAME:    column_ruins_pillar_6
 TAGS:    serial_column_ruins_pillar allow_dup overwritable
 WEIGHT:  5
-KPROP:   . = no_rtele_into
+KPROP:   . = no_tele_into
 : init_column_ruins(_G)
 MAP
 G.G
@@ -184,7 +184,7 @@ ENDMAP
 NAME:    column_ruins_pillar_7
 TAGS:    serial_column_ruins_pillar allow_dup overwritable
 WEIGHT:  3
-KPROP:   . = no_rtele_into
+KPROP:   . = no_tele_into
 : init_column_ruins(_G)
 MAP
 G.G.G
@@ -195,7 +195,7 @@ ENDMAP
 NAME:    column_ruins_pillar_8
 TAGS:    serial_column_ruins_pillar allow_dup overwritable
 WEIGHT:  1
-KPROP:   . = no_rtele_into
+KPROP:   . = no_tele_into
 : init_column_ruins(_G)
 MAP
 G.G.G.G
@@ -206,7 +206,7 @@ ENDMAP
 NAME:    column_ruins_pillar_9
 TAGS:    serial_column_ruins_pillar allow_dup overwritable
 WEIGHT:  3
-KPROP:   . = no_rtele_into
+KPROP:   . = no_tele_into
 : init_column_ruins(_G)
 MAP
 G.G
@@ -217,7 +217,7 @@ ENDMAP
 NAME:    column_ruins_pillar_10
 TAGS:    serial_column_ruins_pillar allow_dup overwritable
 WEIGHT:  1
-KPROP:   . = no_rtele_into
+KPROP:   . = no_tele_into
 : init_column_ruins(_G)
 MAP
 G.G.G
@@ -228,7 +228,7 @@ ENDMAP
 NAME:    column_ruins_pillar_11
 TAGS:    serial_column_ruins_pillar allow_dup overwritable
 WEIGHT:  1
-KPROP:   . = no_rtele_into
+KPROP:   . = no_tele_into
 : init_column_ruins(_G)
 MAP
   G
@@ -243,7 +243,7 @@ TAGS:    serial_column_ruins_pillar allow_dup overwritable
 WEIGHT:  1
 SUBST:   T : TGG___
 SUBST:   T = TTUVVV
-KPROP:   .TUV = no_rtele_into
+KPROP:   .TUV = no_tele_into
 : init_column_ruins(_G)
 MAP
 G.G.G

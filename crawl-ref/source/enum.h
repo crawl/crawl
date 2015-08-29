@@ -6,81 +6,136 @@
 #ifndef ENUM_H
 #define ENUM_H
 
-#include <type_traits> // underlying_type<>
+#include <iterator>
+#include <type_traits> // underlying_type<>, enable_if<>
 
 #include "tag-version.h"
 
-template<class E>
-class enum_bitfield
+// Provide a last_exponent static member variable only if the LastExponent
+// template parameter is nonnegative.
+template<int LastExponent, bool Provided = LastExponent >= 0>
+struct _enum_bitfield_exponent_base { };
+
+template<int LastExponent>
+struct _enum_bitfield_exponent_base<LastExponent, true>
+{
+    static constexpr int last_exponent = LastExponent;
+};
+
+// If LastExponent is nonnegative, is the last exponent that will
+// be iterated over by range()
+template<class E, int LastExponent = -1>
+class enum_bitfield : public _enum_bitfield_exponent_base<LastExponent>
 {
 public:
     typedef typename underlying_type<E>::type underlying_type;
+    typedef enum_bitfield<E, LastExponent> field_type;
     underlying_type flags;
-
+private:
+    explicit constexpr enum_bitfield(underlying_type rawflags)
+        : flags(rawflags)
+    {}
+public:
     /// Get the flag corresponding to the given bit position (0 = LSB).
-    static E exponent(int pos) { return static_cast<E>(1 << pos); }
+    static constexpr E exponent(int pos)
+    {
+        return static_cast<E>(underlying_type(1) << pos);
+    }
 
-    enum_bitfield() : flags(0) {}
-    enum_bitfield(E flag) : flags(flag) {}
+    constexpr enum_bitfield() : flags(0) {}
+    constexpr enum_bitfield(E flag) : flags(flag) {}
     template<class ... Es>
-    enum_bitfield(E flag, Es... rest) : enum_bitfield(rest...) { flags |= flag; }
+    constexpr enum_bitfield(E flag, E flag2, Es... rest)
+        : flags(enum_bitfield(rest...).flags | flag) {}
 
-    explicit operator underlying_type () const { return flags; }
-    explicit operator bool () const { return flags; }
-    bool operator==(enum_bitfield<E> other) const
+    explicit constexpr operator underlying_type () const { return flags; }
+    explicit constexpr operator bool () const { return flags; }
+    constexpr bool operator==(field_type other) const
     {
         return flags == other.flags;
     }
-    bool operator!=(enum_bitfield<E> other) const
+    constexpr bool operator!=(field_type other) const
     {
         return !(*this == other);
     }
 
-    enum_bitfield<E> &operator|=(enum_bitfield<E> other)
+    field_type &operator|=(field_type other)
     {
         flags |= other.flags;
         return *this;
     }
 
-    enum_bitfield<E> &operator&=(enum_bitfield<E> other)
+    field_type &operator&=(field_type other)
     {
         flags &= other.flags;
         return *this;
     }
 
-    enum_bitfield<E> operator|(enum_bitfield<E> other) const
+    constexpr field_type operator|(field_type other) const
     {
-        return enum_bitfield<E>(*this) |= other;
+        return field_type(flags | other.flags);
     }
 
-    enum_bitfield<E> operator|(E other) const
+    constexpr field_type operator&(field_type other) const
     {
-        return enum_bitfield<E>(*this) |= other;
+        return field_type(flags & other.flags);
     }
 
-    enum_bitfield<E> operator&(enum_bitfield<E> other) const
+    constexpr field_type operator~() const
     {
-        return enum_bitfield<E>(*this) &= other;
+        return field_type(~flags);
     }
 
-    enum_bitfield<E> operator&(E other) const
+    struct range
     {
-        return enum_bitfield<E>(*this) &= other;
-    }
+        class iterator : public std::iterator<forward_iterator_tag, const E>
+        {
+        private:
+            int exp_;
+        public:
+            constexpr iterator() : exp_(0) { }
+            constexpr iterator(int exp) : exp_(exp) { }
+            constexpr E operator*() const { return exponent(exp_); }
+            constexpr bool operator==(const iterator &other) const
+            {
+                return exp_ == other.exp_;
+            }
+            constexpr bool operator!=(const iterator &other) const
+            {
+                return !(*this == other);
+            }
+            iterator &operator++() { ++exp_; return *this; }
+            iterator operator++(int)
+            {
+                iterator copy = *this;
+                ++(*this);
+                return copy;
+            }
+        };
 
-    enum_bitfield<E> operator~() const
-    {
-        enum_bitfield<E> me(*this);
-        me.flags = ~me.flags;
-        return me;
-    }
+        const int final;
+
+        constexpr range(int last_exp) : final(last_exp) {}
+
+        // Only create the default constructor if we got a nonnegative
+        // LastExponent template parameter.
+        template<typename enable_if<LastExponent >= 0, int>::type = 0>
+        constexpr range() : final(LastExponent) {}
+
+        constexpr iterator begin() const { return iterator(); }
+        constexpr iterator end() const { return final + 1; }
+    };
 };
 
-template <class E, class ... Es>
-enum_bitfield<E> bitfield(E e1, Es... args)
-{
-    return bitfield<E>(e1, args...);
-}
+#define DEF_BITFIELD_OPERATORS(fieldT, flagT, ...) \
+    inline constexpr fieldT operator|(flagT a, flagT b)  { return fieldT(a) | b; } \
+    inline constexpr fieldT operator|(flagT a, fieldT b) { return fieldT(a) | b; } \
+    inline constexpr fieldT operator&(flagT a, flagT b)  { return fieldT(a) & b; } \
+    inline constexpr fieldT operator&(flagT a, fieldT b) { return fieldT(a) & b; } \
+    inline constexpr fieldT operator~(flagT a) { return ~fieldT(a); } \
+    COMPILE_CHECK(is_enum<flagT>::value)
+// The last line above is really just to eat a semicolon; template
+// substitution of enum_bitfield would have already failed.
 
 /**
  * Define fieldT as a bitfield of the enum flagT, and make bitwise
@@ -96,20 +151,20 @@ enum_bitfield<E> bitfield(E e1, Es... args)
  * or as an operand of a logical operator, counts as explicit conversion
  * to bool.
  *
- * @param fieldT An identifier naming the bitfield type to define.
- * @param flagT  An identifier naming the enum type to use as a flag.
- *               Could theoretically be a more complex type expression, but
- *               I wouldn't try anything trickier than scope resolution.
+ * @param fieldT   An identifier naming the bitfield type to define.
+ * @param flagT    An identifier naming the enum type to use as a flag.
+ *                 Could theoretically be a more complex type expression, but
+ *                 I wouldn't try anything trickier than scope resolution.
+ * @param lastExp  The last exponent over which fieldT::range() should
+ *                 iterate. If unspecified or negative, the bitfield will not
+ *                 have the last_exponent static member variable, and the
+ *                 bitfield's nested range class will not have a default
+ *                 constructor.
  */
-#define DEF_BITFIELD(fieldT, flagT) typedef enum_bitfield<flagT> fieldT;  \
-    inline fieldT operator|(flagT a, flagT b)  { return fieldT(a) |= b; } \
-    inline fieldT operator|(flagT a, fieldT b) { return fieldT(a) |= b; } \
-    inline fieldT operator&(flagT a, flagT b)  { return fieldT(a) &= b; } \
-    inline fieldT operator&(flagT a, fieldT b) { return fieldT(a) &= b; } \
-    inline fieldT operator~(flagT a) { return ~fieldT(a); } \
-    COMPILE_CHECK(is_enum<flagT>::value)
-// The last line above is really just to eat a semicolon; template
-// substitution of enum_bitfield would have already failed.
+#define DEF_BITFIELD(fieldT, ...) \
+    typedef enum_bitfield<__VA_ARGS__> fieldT; \
+    DEF_BITFIELD_OPERATORS(fieldT, __VA_ARGS__, )
+// The comma suppresses "ISO C99 requires rest arguments to be used"
 
 enum lang_t
 {
@@ -201,9 +256,13 @@ enum ability_type
     ABIL_EVOKE_STOP_LEVITATING,
 #endif
     ABIL_EVOKE_FOG,
+#if TAG_MAJOR_VERSION == 34
     ABIL_EVOKE_TELEPORT_CONTROL,
     ABIL_EVOKE_TWISTER,
     ABIL_MAX_EVOKE = ABIL_EVOKE_TWISTER,
+#else
+    ABIL_MAX_EVOKE = ABIL_EVOKE_FOG,
+#endif
 
     // Divine abilities
     // Zin
@@ -213,13 +272,17 @@ enum ability_type
     ABIL_ZIN_IMPRISON,
     ABIL_ZIN_SANCTUARY,
     ABIL_ZIN_CURE_ALL_MUTATIONS,
+    ABIL_ZIN_DONATE_GOLD,
     // TSO
     ABIL_TSO_DIVINE_SHIELD = 1010,
     ABIL_TSO_CLEANSING_FLAME,
     ABIL_TSO_SUMMON_DIVINE_WARRIOR,
+    ABIL_TSO_BLESS_WEAPON,
     // Kiku
     ABIL_KIKU_RECEIVE_CORPSES = 1020,
     ABIL_KIKU_TORMENT,
+    ABIL_KIKU_BLESS_WEAPON,
+    ABIL_KIKU_GIFT_NECRONOMICON,
     // Yredelemnul
     ABIL_YRED_INJURY_MIRROR = 1030,
     ABIL_YRED_ANIMATE_REMAINS,
@@ -262,6 +325,7 @@ enum ability_type
     ABIL_LUGONU_BANISH,
     ABIL_LUGONU_CORRUPT,
     ABIL_LUGONU_ABYSS_ENTER,
+    ABIL_LUGONU_BLESS_WEAPON,
     // Nemelex
 #if TAG_MAJOR_VERSION == 34
     ABIL_NEMELEX_DRAW_ONE = 1110,
@@ -326,7 +390,9 @@ enum ability_type
     ABIL_RU_SACRIFICE_HAND,
     ABIL_RU_SACRIFICE_EXPERIENCE,
     ABIL_RU_SACRIFICE_SKILL,
-        ABIL_FINAL_SACRIFICE = ABIL_RU_SACRIFICE_SKILL,
+    ABIL_RU_SACRIFICE_EYE,
+    ABIL_RU_SACRIFICE_RESISTANCE,
+        ABIL_FINAL_SACRIFICE = ABIL_RU_SACRIFICE_RESISTANCE,
     ABIL_RU_REJECT_SACRIFICES,
 
     // For both Yred and Beogh
@@ -335,45 +401,6 @@ enum ability_type
     // General divine (pseudo) abilities.
     ABIL_RENOUNCE_RELIGION,
     ABIL_CONVERT_TO_BEOGH,
-
-    // Zot Defence abilities
-    ABIL_MAKE_FUNGUS = 2000,
-    ABIL_MIN_ZOTDEF = ABIL_MAKE_FUNGUS,
-    ABIL_MAKE_PLANT,
-    ABIL_MAKE_OKLOB_SAPLING,
-#if TAG_MAJOR_VERSION == 34
-    ABIL_MAKE_DART_TRAP,
-#endif
-    ABIL_MAKE_ICE_STATUE,
-    ABIL_MAKE_OCS,
-    ABIL_MAKE_OBSIDIAN_STATUE,
-    ABIL_MAKE_CURSE_SKULL,
-    ABIL_MAKE_TELEPORT,
-    ABIL_MAKE_ARROW_TRAP,
-    ABIL_MAKE_BOLT_TRAP,
-    ABIL_MAKE_SPEAR_TRAP,
-    ABIL_MAKE_NEEDLE_TRAP,
-    ABIL_MAKE_NET_TRAP,
-#if TAG_MAJOR_VERSION == 34
-        ABIL_UNUSED_Z1,
-#endif
-    ABIL_MAKE_ALARM_TRAP,
-    ABIL_MAKE_BLADE_TRAP,
-    ABIL_MAKE_OKLOB_CIRCLE,
-    ABIL_MAKE_ACQUIRE_GOLD,
-    ABIL_MAKE_ACQUIREMENT,
-    ABIL_MAKE_WATER,
-    ABIL_MAKE_LIGHTNING_SPIRE,
-    ABIL_MAKE_BAZAAR,
-    ABIL_MAKE_ALTAR,
-    ABIL_MAKE_GRENADES,
-#if TAG_MAJOR_VERSION == 34
-    ABIL_MAKE_SAGE,
-#endif
-    ABIL_MAKE_OKLOB_PLANT,
-    ABIL_MAKE_BURNING_BUSH,
-    ABIL_REMOVE_CURSE,
-    ABIL_MAX_ZOTDEF = ABIL_REMOVE_CURSE,
     NUM_ABILITIES
 };
 
@@ -480,9 +507,10 @@ enum attribute_type
     ATTR_DIVINE_AC,            // Divine AC bonus (Qazlal).
 #endif
     ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
-    ATTR_BONE_ARMOUR,          // Current amount of boney armour (from the spell)
+    ATTR_BONE_ARMOUR,          // Current amount of bony armour (from the spell)
     ATTR_LAST_FLIGHT_STATUS,   // Whether spawm_flight should be restored after form change
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
+    ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.
     NUM_ATTRIBUTES
 };
 
@@ -638,8 +666,8 @@ enum book_type
     BOOK_WARP,
     BOOK_ENVENOMATIONS,
     BOOK_UNLIFE,
-    BOOK_CONTROL,
 #if TAG_MAJOR_VERSION == 34
+    BOOK_CONTROL,
     BOOK_BATTLE, // was BOOK_MUTATIONS
 #endif
     BOOK_GEOMANCY,
@@ -792,6 +820,8 @@ enum canned_message_type
     MSG_CANNOT_MOVE,
     MSG_YOU_DIE,
     MSG_GHOSTLY_OUTLINE,
+    MSG_GAIN_HEALTH,
+    MSG_GAIN_MAGIC,
 };
 
 enum char_set_type
@@ -837,7 +867,7 @@ enum cloud_type
     CLOUD_MAGIC_TRAIL,
     CLOUD_TORNADO,
     CLOUD_DUST_TRAIL,
-    CLOUD_GHOSTLY_FLAME,
+    CLOUD_SPECTRAL,
     CLOUD_ACID,
     CLOUD_STORM,
     CLOUD_NEGATIVE_ENERGY,
@@ -890,6 +920,14 @@ enum command_type
     CMD_ATTACK_UP_RIGHT,
     CMD_ATTACK_DOWN_RIGHT,
     CMD_OPEN_DOOR,
+    CMD_CLOSE_DOOR_LEFT,
+    CMD_CLOSE_DOOR_DOWN,
+    CMD_CLOSE_DOOR_UP,
+    CMD_CLOSE_DOOR_RIGHT,
+    CMD_CLOSE_DOOR_UP_LEFT,
+    CMD_CLOSE_DOOR_DOWN_LEFT,
+    CMD_CLOSE_DOOR_UP_RIGHT,
+    CMD_CLOSE_DOOR_DOWN_RIGHT,
     CMD_CLOSE_DOOR,
     CMD_REST,
     CMD_GO_UPSTAIRS,
@@ -920,10 +958,8 @@ enum command_type
     CMD_REMOVE_JEWELLERY,
     CMD_CYCLE_QUIVER_FORWARD,
     CMD_CYCLE_QUIVER_BACKWARD,
-    CMD_LIST_WEAPONS,
     CMD_LIST_ARMOUR,
     CMD_LIST_JEWELLERY,
-    CMD_LIST_EQUIPMENT,
     CMD_LIST_GOLD,
     CMD_ZAP_WAND,
     CMD_CAST_SPELL,
@@ -1328,11 +1364,13 @@ enum evoc_type
 #endif
 };
 
-enum game_direction_type
+enum game_chapter
 {
-    GDT_GAME_START = 0,
-    GDT_DESCENDING,
-    GDT_ASCENDING,
+    CHAPTER_POCKET_ABYSS = 0, // an AK who hasn't yet entered the dungeon
+    CHAPTER_ORB_HUNTING, // entered the dungeon but not found the orb yet
+    CHAPTER_ESCAPING, // ascending with the orb
+    CHAPTER_ANGERED_PANDEMONIUM, // moved the orb without picking it up
+    NUM_CHAPTERS,
 };
 
 enum game_type
@@ -1347,14 +1385,6 @@ enum game_type
     GAME_TYPE_INSTRUCTIONS,
     GAME_TYPE_HIGH_SCORES,
     NUM_GAME_TYPE
-};
-
-enum level_flag_type
-{
-    LFLAG_NONE = 0,
-
-    LFLAG_NO_TELE_CONTROL = (1 << 0), // Teleport control not allowed.
-    LFLAG_NO_MAP          = (1 << 2), // Level can't be persistently mapped.
 };
 
 // Volatile state and cache.
@@ -1500,8 +1530,6 @@ enum dungeon_feature_type
     DNGN_TRAP_ALARM,
     DNGN_TRAP_ZOT,
     DNGN_PASSAGE_OF_GOLUBRIA,
-    DNGN_TRAP_SHADOW,
-    DNGN_TRAP_SHADOW_DORMANT,
 #endif
     DNGN_UNDISCOVERED_TRAP,
 
@@ -1616,6 +1644,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_GOZAG,
     DNGN_ALTAR_QAZLAL,
     DNGN_ALTAR_RU,
+    DNGN_ALTAR_ECUMENICAL,
 #endif
 
     DNGN_FOUNTAIN_BLUE,
@@ -1685,6 +1714,7 @@ enum dungeon_feature_type
 
     DNGN_TRAP_SHADOW,
     DNGN_TRAP_SHADOW_DORMANT,
+    DNGN_ALTAR_ECUMENICAL,
     DNGN_ENTER_OUBLIETTE,
     DNGN_EXIT_OUBLIETTE,
 #endif
@@ -1735,7 +1765,9 @@ enum duration_type
     DUR_CONTROLLED_FLIGHT,
 #endif
     DUR_TELEPORT,
+#if TAG_MAJOR_VERSION == 34
     DUR_CONTROL_TELEPORT,
+#endif
     DUR_BREATH_WEAPON,
     DUR_TRANSFORMATION,
     DUR_DEATH_CHANNEL,
@@ -1920,7 +1952,9 @@ enum enchant_type
     ENCH_SILENCE,
     ENCH_AWAKEN_FOREST,
     ENCH_EXPLODING,
+#if TAG_MAJOR_VERSION == 34
     ENCH_BLEED,
+#endif
     ENCH_PORTAL_TIMER,
     ENCH_SEVERED,
     ENCH_ANTIMAGIC,
@@ -1989,9 +2023,13 @@ enum enchant_type
     ENCH_ICEMAIL,
     ENCH_AGILE,
     ENCH_FROZEN,
+#if TAG_MAJOR_VERSION == 34
     ENCH_EPHEMERAL_INFUSION,
+#endif
     ENCH_BLACK_MARK,
+#if TAG_MAJOR_VERSION == 34
     ENCH_GRAND_AVATAR,
+#endif
     ENCH_SAP_MAGIC,
     ENCH_SHROUD,
     ENCH_PHANTOM_MIRROR,
@@ -2135,7 +2173,7 @@ enum god_type
 
     GOD_RANDOM = 100,
     GOD_NAMELESS,                      // for monsters with non-player gods
-    GOD_VIABLE,
+    GOD_ECUMENICAL,                    // Temporary
 };
 
 enum held_type
@@ -2156,6 +2194,7 @@ enum holy_word_source_type
 
 enum hunger_state_t                    // you.hunger_state
 {
+    HS_FAINTING,
     HS_STARVING,
     HS_NEAR_STARVING,
     HS_VERY_HUNGRY,
@@ -2177,7 +2216,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_CURSED            = 0x00000100,  // cursed
     ISFLAG_HANDLED           = 0x00000200,  // player has handled this item
                              //0x00000400,  // was: ISFLAG_SEEN_CURSED
-    ISFLAG_TRIED             = 0x00000800,  // tried but not (usually) ided
+                             //0x00000800,  // was: ISFLAG_TRIED
 
     ISFLAG_RANDART           = 0x00001000,  // special value is seed
     ISFLAG_UNRANDART         = 0x00002000,  // is an unrandart
@@ -2195,7 +2234,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_UNOBTAINABLE      = 0x00080000,  // vault on display
 
     ISFLAG_MIMIC             = 0x00100000,  // mimic
-    ISFLAG_NO_MIMIC          = 0x00200000,  // Can't be turned into a mimic
+                             //0x00200000,  // was ISFLAG_NO_MIMIC
 
     ISFLAG_NO_PICKUP         = 0x00400000,  // Monsters won't pick this up
 
@@ -2215,6 +2254,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 #endif
 };
 
+#if TAG_MAJOR_VERSION == 34
 enum item_type_id_state_type
 {
     ID_UNKNOWN_TYPE = 0,
@@ -2224,6 +2264,7 @@ enum item_type_id_state_type
     ID_KNOWN_TYPE,
     NUM_ID_STATE_TYPES
 };
+#endif
 
 enum job_type
 {
@@ -2309,18 +2350,13 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_RESET,                        // excised from existence
     KILL_DISMISSED,                    // like KILL_RESET, but drops inventory
     KILL_BANISHED,                     // monsters what got banished
+#if TAG_MAJOR_VERSION == 34
     KILL_UNSUMMONED,                   // summoned monsters whose timers ran out
+#endif
     KILL_TIMEOUT,                      // non-summoned monsters whose times ran out
     KILL_PACIFIED,                     // only used by milestones and notes
     KILL_ENSLAVED,                     // only used by milestones and notes
     KILL_SLIMIFIED,                    // only used by milestones and notes
-};
-
-enum flight_type
-{
-    FL_NONE = 0,
-    FL_WINGED,                         // wings, etc... paralysis == fall
-    FL_LEVITATE,                       // doesn't require physical effort
 };
 
 // Can't change this order without breaking saves.
@@ -2485,7 +2521,9 @@ enum monster_type                      // menv[].type
 #endif
     MONS_ELEPHANT_SLUG,
     MONS_GIANT_LEECH,
+#if TAG_MAJOR_VERSION == 34
     MONS_BABY_ALLIGATOR,
+#endif
     MONS_ALLIGATOR,
     MONS_CROCODILE,
     MONS_HYDRA,
@@ -2500,7 +2538,7 @@ enum monster_type                      // menv[].type
     MONS_HIPPOGRIFF,
     MONS_GRIFFON,
 #if TAG_MAJOR_VERSION > 34
-    MONS_CHIMERA,
+    MONS_MUTANT_BEAST,
 #endif
     MONS_GIANT_FROG,
     MONS_SPINY_FROG,
@@ -2565,10 +2603,11 @@ enum monster_type                      // menv[].type
     MONS_DANCING_WEAPON,
 #if TAG_MAJOR_VERSION > 34
     MONS_SPECTRAL_WEAPON,
-    MONS_GRAND_AVATAR,
 #endif
     MONS_HARPY,
+#if TAG_MAJOR_VERSION == 34
     MONS_RAVEN,
+#endif
 #if TAG_MAJOR_VERSION > 34
     MONS_BENNU,
     MONS_CAUSTIC_SHRIKE,
@@ -2603,8 +2642,10 @@ enum monster_type                      // menv[].type
 #endif
     MONS_WASP,
     MONS_HORNET,
-    MONS_GOLIATH_BEETLE,
+    MONS_BEETLE,
+#if TAG_MAJOR_VERSION == 34
     MONS_BORING_BEETLE,
+#endif
     MONS_BOULDER_BEETLE,
 #if TAG_MAJOR_VERSION > 34
     MONS_DEATH_SCARAB,
@@ -3208,7 +3249,6 @@ enum monster_type                      // menv[].type
     MONS_ORB_OF_DESTRUCTION,    // a projectile, not a real mon
 #if TAG_MAJOR_VERSION > 34
     MONS_FULMINANT_PRISM,
-    MONS_SINGULARITY,
     MONS_BATTLESPHERE,
 #endif
     MONS_PILLAR_OF_SALT,
@@ -3380,6 +3420,7 @@ enum monster_type                      // menv[].type
     MONS_SALAMANDER_STORMCALLER,
     MONS_ENTROPY_WEAVER,
     MONS_MOON_TROLL,
+    MONS_MUTANT_BEAST,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -3632,12 +3673,12 @@ enum mutation_type
     MUT_FREEZING_CLOUD_IMMUNITY,
     MUT_FLAME_CLOUD_IMMUNITY,
 #else
-    MUT_SUSTAIN_ABILITIES,
+    MUT_SUSTAIN_ATTRIBUTES,
 #endif
 #if TAG_MAJOR_VERSION == 34
     MUT_FORLORN,
 #endif
-    MUT_PLACID_MAGIC,
+    MUT_SUBDUED_MAGIC,
     MUT_NO_DRINK,
     MUT_NO_READ,
     MUT_MISSING_HAND,
@@ -3665,7 +3706,7 @@ enum mutation_type
     MUT_ANTI_WIZARDRY,
 
 #if TAG_MAJOR_VERSION == 34
-    MUT_SUSTAIN_ABILITIES,
+    MUT_SUSTAIN_ATTRIBUTES,
 #endif
     MUT_MP_WANDS,
     MUT_UNSKILLED,
@@ -3675,6 +3716,8 @@ enum mutation_type
     MUT_MUMMY_RESTORATION,
     MUT_CONSTRICTING_TAIL,
     MUT_TENGU_FLIGHT,
+    MUT_MISSING_EYE,
+    MUT_TEMPERATURE_SENSITIVITY,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -3784,8 +3827,8 @@ enum potion_type
 #endif
     POT_EXPERIENCE,
     POT_MAGIC,
-    POT_RESTORE_ABILITIES,
 #if TAG_MAJOR_VERSION == 34
+    POT_RESTORE_ABILITIES,
     POT_STRONG_POISON,
 #endif
     POT_BERSERK_RAGE,
@@ -3834,8 +3877,8 @@ enum artefact_prop_type
     ARTP_ELECTRICITY,
     ARTP_POISON,
     ARTP_NEGATIVE_ENERGY,
-    ARTP_MAGIC,
-    ARTP_EYESIGHT,
+    ARTP_MAGIC_RESISTANCE,
+    ARTP_SEE_INVISIBLE,
     ARTP_INVISIBLE,
     ARTP_FLY,
 #if TAG_MAJOR_VERSION > 34
@@ -3843,7 +3886,7 @@ enum artefact_prop_type
 #endif
     ARTP_BLINK,
     ARTP_BERSERK,
-    ARTP_NOISES,
+    ARTP_NOISE,
     ARTP_PREVENT_SPELLCASTING,
     ARTP_CAUSE_TELEPORTATION,
     ARTP_PREVENT_TELEPORTATION,
@@ -3851,12 +3894,12 @@ enum artefact_prop_type
 #if TAG_MAJOR_VERSION == 34
     ARTP_METABOLISM,
 #endif
-    ARTP_MUTAGENIC,
+    ARTP_CONTAM,
 #if TAG_MAJOR_VERSION == 34
     ARTP_ACCURACY,
 #endif
     ARTP_SLAYING,
-    ARTP_CURSED,
+    ARTP_CURSE,
     ARTP_STEALTH,
     ARTP_MAGICAL_POWER,
     ARTP_BASE_DELAY,
@@ -3869,11 +3912,16 @@ enum artefact_prop_type
     ARTP_FOG,
 #endif
     ARTP_REGENERATION,
-    ARTP_SUSTAB,
+    ARTP_SUSTAT,
     ARTP_NO_UPGRADE,
     ARTP_RCORR,
     ARTP_RMUT,
+#if TAG_MAJOR_VERSION == 34
     ARTP_TWISTER,
+#endif
+    ARTP_CORRODE,
+    ARTP_DRAIN,
+    ARTP_CONFUSE,
     ARTP_NUM_PROPERTIES
 };
 
@@ -3933,6 +3981,7 @@ enum skill_type
     SK_FIGHTING,
     SK_FIRST_SKILL = SK_FIGHTING,
     SK_SHORT_BLADES,
+    SK_FIRST_WEAPON = SK_SHORT_BLADES,
     SK_LONG_BLADES,
     SK_AXES,
     SK_MACES_FLAILS,
@@ -3941,6 +3990,7 @@ enum skill_type
     SK_SLINGS,
     SK_BOWS,
     SK_CROSSBOWS,
+    SK_LAST_WEAPON = SK_CROSSBOWS,
     SK_THROWING,
     SK_ARMOUR,
     SK_DODGING,
@@ -3978,6 +4028,7 @@ enum skill_type
     SK_COLUMN_BREAK,                   // used for skill output
     SK_TITLE,                          // used for skill output
     SK_NONE,
+    SK_WEAPON,                         // used in character generation
 };
 
 enum skill_menu_state
@@ -4160,13 +4211,13 @@ enum spell_type
     SPELL_STONE_ARROW,
     SPELL_SHOCK,
     SPELL_SWIFTNESS,
-    SPELL_FLY,
 #if TAG_MAJOR_VERSION == 34
+    SPELL_FLY,
     SPELL_INSULATION,
 #endif
     SPELL_CURE_POISON,
-    SPELL_CONTROL_TELEPORT,
 #if TAG_MAJOR_VERSION == 34
+    SPELL_CONTROL_TELEPORT,
     SPELL_POISON_WEAPON,
 #endif
     SPELL_DEBUGGING_RAY,
@@ -4343,8 +4394,8 @@ enum spell_type
     SPELL_SUMMON_MINOR_DEMON,
     SPELL_DISJUNCTION,
     SPELL_CHAOS_BREATH,
-    SPELL_FRENZY,
 #if TAG_MAJOR_VERSION == 34
+    SPELL_FRENZY,
     SPELL_SUMMON_TWISTER,
 #endif
     SPELL_BATTLESPHERE,
@@ -4356,7 +4407,7 @@ enum spell_type
     SPELL_SENTINEL_MARK,
     SPELL_WORD_OF_RECALL,
     SPELL_INJURY_BOND,
-    SPELL_GHOSTLY_FLAMES,
+    SPELL_SPECTRAL_CLOUD,
     SPELL_GHOSTLY_FIREBALL,
     SPELL_CALL_LOST_SOUL,
     SPELL_DIMENSION_ANCHOR,
@@ -4366,7 +4417,9 @@ enum spell_type
     SPELL_THORN_VOLLEY,
     SPELL_WALL_OF_BRAMBLES,
     SPELL_WATERSTRIKE,
+#if TAG_MAJOR_VERSION == 34
     SPELL_HASTE_PLANTS,
+#endif
     SPELL_WIND_BLAST,
     SPELL_STRIP_RESISTANCE,
     SPELL_INFUSION,
@@ -4390,13 +4443,17 @@ enum spell_type
     SPELL_EXPLOSIVE_BOLT,
     SPELL_FLASH_FREEZE,
     SPELL_LEGENDARY_DESTRUCTION,
+#if TAG_MAJOR_VERSION == 34
     SPELL_EPHEMERAL_INFUSION,
+#endif
     SPELL_FORCEFUL_INVITATION,
     SPELL_PLANEREND,
     SPELL_CHAIN_OF_CHAOS,
     SPELL_CHAOTIC_MIRROR,
     SPELL_BLACK_MARK,
+#if TAG_MAJOR_VERSION == 34
     SPELL_GRAND_AVATAR,
+#endif
     SPELL_SAP_MAGIC,
     SPELL_CORRUPT_BODY,
 #if TAG_MAJOR_VERSION == 34
@@ -4451,9 +4508,11 @@ enum spell_type
     SPELL_CHILLING_BREATH,
     SPELL_SCATTERSHOT,
     SPELL_CLEANSING_FLAME,
-    SPELL_GOBLIN_TOSS,
+    SPELL_THROW_ALLY,
     SPELL_CIGOTUVIS_EMBRACE,
+#if TAG_MAJOR_VERSION == 34
     SPELL_SINGULARITY,
+#endif
     SPELL_GRAVITAS,
     SPELL_CHANT_FIRE_STORM,
     SPELL_CHANT_WORD_OF_ENTROPY,
@@ -4523,9 +4582,9 @@ enum trap_type
 #if TAG_MAJOR_VERSION == 34
     TRAP_GAS,
     TRAP_TELEPORT,
-#endif
     TRAP_SHADOW,
     TRAP_SHADOW_DORMANT,
+#endif
     NUM_TRAPS,
     TRAP_MAX_REGULAR = TRAP_SHAFT,
     TRAP_UNASSIGNED = 100,
@@ -4649,9 +4708,8 @@ enum maybe_bool
 
 enum reach_type
 {
-    REACH_NONE   = 2,
-    REACH_KNIGHT = 5,
-    REACH_TWO    = 8,
+    REACH_NONE   = 1,
+    REACH_TWO    = 2,
 };
 
 enum daction_type
@@ -4683,8 +4741,8 @@ enum daction_type
     DACT_REMOVE_JIYVA_ALTARS,
     DACT_PIKEL_SLAVES,
     DACT_ROT_CORPSES,
-    DACT_TOMB_CTELE,
 #if TAG_MAJOR_VERSION == 34
+    DACT_TOMB_CTELE,
     DACT_SLIME_NEW_ATTEMPT,
 #endif
     DACT_KIRKE_HOGS,
@@ -4937,7 +4995,7 @@ enum tile_flags ENUM_INT64
 enum tile_inventory_flags
 {
     TILEI_FLAG_SELECT  = 0x0100,
-    TILEI_FLAG_TRIED   = 0x0200,
+                       //0x0200, // was: TILEI_FLAG_TRIED
     TILEI_FLAG_EQUIP   = 0x0400,
     TILEI_FLAG_FLOOR   = 0x0800,
     TILEI_FLAG_CURSE   = 0x1000,
@@ -4995,7 +5053,7 @@ enum timed_effect_type
 {
     TIMER_CORPSES,
     TIMER_HELL_EFFECTS,
-    TIMER_STAT_RECOVERY,
+    TIMER_SICKNESS,
     TIMER_CONTAM,
     TIMER_DETERIORATION,
     TIMER_GOD_EFFECTS,

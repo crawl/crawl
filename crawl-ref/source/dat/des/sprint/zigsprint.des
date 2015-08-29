@@ -91,7 +91,7 @@ e.kitem("1 = superb_item ident:all w:590 / royal jelly q:3 w:2 /\
             potion of heal wounds ident:all q:2 w:2 / scroll of recharging ident:all w:1 /\
             scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
             potion of might ident:all w:2 / potion of agility w:2 ident:all /\
-            potion of haste q:2 ident:all w:2 / scroll of acquirement w:1 ident:all /\
+            potion of haste q:2 ident:all w:2 / scroll of acquirement q:1 w:1 ident:all /\
             scroll of enchant weapon ident:all q:4 w:2 /\
             scroll of enchant armour ident:all q:4 w:2 /\
             scroll of brand weapon ident:all")
@@ -568,7 +568,6 @@ TAGS:   sprint no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmi
 DESC:   Sprint V: "Ziggurat Sprint"
 ORDER:  5
 ORIENT: encompass
-LFLAGS: no_tele_control
 : lfloorcol(util.random_from(
 :   {"red", "blue", "green", "magenta", "brown", "lightgrey", "darkgrey"} ))
 COLOUR:    x : lightred / lightblue / lightgreen / lightmagenta / yellow / darkgrey
@@ -760,7 +759,6 @@ KITEM:    K = potion of curing q:9 ident:all, \
               potion of experience q:1 ident:all, \
               potion of resistance q:4 ident:all, \
               potion of haste q:5 ident:all, \
-              potion of restore abilities q:2 ident:all, \
               potion of invisibility q:2 ident:all, \
               potion of brilliance q:2 ident:all
 KITEM:    L = scroll of blinking q:3 ident:all, \

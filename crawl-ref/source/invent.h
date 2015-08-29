@@ -19,10 +19,10 @@ enum object_selector
     OSEL_ANY                     =  -1,
     OSEL_WIELD                   =  -2,
     OSEL_UNIDENT                 =  -3,
-    OSEL_EQUIP                   =  -4,
+//  OSEL_EQUIP                   =  -4,
     OSEL_RECHARGE                =  -5,
     OSEL_ENCH_ARM                =  -6,
-//  OSEL_VAMP_EAT                =  -7,
+    OSEL_BEOGH_GIFT              =  -7,
     OSEL_DRAW_DECK               =  -8,
     OSEL_THROWABLE               =  -9,
     OSEL_EVOKABLE                = -10,
@@ -216,7 +216,7 @@ vector<SelItem> prompt_invent_items(
                         Menu::selitem_tfn fn = nullptr,
                         const vector<SelItem> *pre_select = nullptr);
 
-unsigned char get_invent(int invent_type, bool redraw = true);
+void display_inventory();
 
 bool in_inventory(const item_def &i);
 void identify_inventory();

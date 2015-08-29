@@ -25,7 +25,7 @@ string uppercase_first(string);
  * Returns 1 + the index of the first suffix that matches the given string,
  * 0 if no suffixes match.
  */
-int ends_with(const string &s, const char *suffixes[]);
+int ends_with(const string &s, const char * const suffixes[]);
 
 string wordwrap_line(string &s, int cols, bool tags = false,
                      bool indent = false);
@@ -40,6 +40,8 @@ bool strip_suffix(string &s, const string &suffix);
 string replace_all(string s, const string &tofind, const string &replacement);
 
 string replace_all_of(string s, const string &tofind, const string &replacement);
+
+string replace_keys(const string &text, const map<string, string>& replacements);
 
 string maybe_capitalise_substring(string s);
 string maybe_pick_random_substring(string s);
@@ -164,5 +166,49 @@ vector<string> split_string(const string &sep, string s, bool trim = true,
 
 string make_time_string(time_t abs_time, bool terse = false);
 string make_file_time(time_t when);
+
+// Work around missing std::to_string. This will break when newlib adds
+// support for long double, which will enable std::to_string in libstdc++.
+//
+// See http://permalink.gmane.org/gmane.os.cygwin/150485 for more info.
+#ifdef TARGET_COMPILER_CYGWIN
+// Injecting into std:: because we sometimes use std::to_string to
+// disambiguate.
+namespace std
+{
+    static inline string to_string(int value)
+    {
+        return make_stringf("%d", value);
+    }
+    static inline string to_string(long value)
+    {
+        return make_stringf("%ld", value);
+    }
+    static inline string to_string(long long value)
+    {
+        return make_stringf("%lld", value);
+    }
+    static inline string to_string(unsigned value)
+    {
+        return make_stringf("%u", value);
+    }
+    static inline string to_string(unsigned long value)
+    {
+        return make_stringf("%lu", value);
+    }
+    static inline string to_string(unsigned long long value)
+    {
+        return make_stringf("%llu", value);
+    }
+    static inline string to_string(float value)
+    {
+        return make_stringf("%f", value);
+    }
+    static inline string to_string(double value)
+    {
+        return make_stringf("%f", value);
+    }
+}
+#endif
 
 #endif

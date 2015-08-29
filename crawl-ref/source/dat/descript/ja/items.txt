@@ -527,7 +527,7 @@ ring of strength
 この指輪は装着者の腕力を増加させるか、あるいは減退させる。
 効果がどちらであるかは指輪の数値に依存している。
 %%%%
-ring of sustain abilities
+ring of sustain attributes
 
 この指輪は装着者を腕力、知力、器用さの損失から保護する。
 %%%%

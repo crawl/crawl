@@ -28,7 +28,7 @@ void arena_placed_monster(monster* mons);
 void arena_split_monster(monster* split_from, monster* split_to);
 
 void arena_monster_died(monster* mons, killer_type killer,
-                        int killer_index, bool silent, int corpse);
+                        int killer_index, bool silent, const item_def* corpse);
 
 int arena_cull_items();
 #endif

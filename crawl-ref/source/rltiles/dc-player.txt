@@ -1116,6 +1116,7 @@ helm_plume FHELM_PLUME
 mummy FHELM_MUMMY
 isildur FHELM_ISILDUR LAST_NORM
 art_dragonhelm ART_DRAGONHELM
+etheric_cage ETHERIC_CAGE
 
 healer FHELM_HEALER
 hood_gray HOOD_GRAY

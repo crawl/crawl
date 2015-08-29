@@ -77,7 +77,7 @@ static string __try_exact_string(const vector<string> &prefixes,
                 continue;
             religion = true;
         }
-        else if (str_to_branch(prefixes[i]) != NUM_BRANCHES)
+        else if (branch_by_abbrevname(prefixes[i]) != NUM_BRANCHES)
         {
             if (ignore_branch)
                 continue;
@@ -395,6 +395,7 @@ void maybe_mons_speaks(monster* mons)
 // Returns true if something is said.
 bool mons_speaks(monster* mons)
 {
+    ASSERT(mons); // XXX: change to monster &mons
     ASSERT(!invalid_monster_type(mons->type));
 
     // Natasha's death lines aren't physical speech.
@@ -411,7 +412,7 @@ bool mons_speaks(monster* mons)
         || (mons->is_summoned(&duration) && duration <= 0)
         || crawl_state.prev_cmd == CMD_LOOK_AROUND; // Wizard testing
 
-    const bool unseen   = !you.can_see(mons);
+    const bool unseen   = !you.can_see(*mons);
     const bool confused = mons->confused();
 
     if (!force_speak)
@@ -688,47 +689,10 @@ bool mons_speaks(monster* mons)
         return false;
     }
 
-    // Monster symbol didn't work, try monster shape. Since we're
-    // dealing with just the monster shape, change the prefix to
-    // include info on if the monster's intelligence is at odds with
-    // its shape.
-    mon_body_shape shape = get_mon_shape(mons);
-    mon_intel_type intel = mons_intel(mons);
-    if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA
-        && intel < I_NORMAL)
-    {
+    if (mons_intel(mons) < I_HUMAN)
         prefixes.insert(prefixes.begin(), "stupid");
-    }
-    else if (shape >= MON_SHAPE_QUADRUPED && shape <= MON_SHAPE_FISH)
-    {
-        if (mons_base_char(mons->type) == 'w')
-        {
-            if (intel > I_REPTILE)
-                prefixes.insert(prefixes.begin(), "smart");
-            else if (intel < I_INSECT)
-                prefixes.insert(prefixes.begin(), "stupid");
-        }
-        else
-        {
-            if (intel > I_ANIMAL)
-                prefixes.insert(prefixes.begin(), "smart");
-            else if (intel < I_ANIMAL)
-                prefixes.insert(prefixes.begin(), "stupid");
-        }
-    }
-    else if (shape >= MON_SHAPE_INSECT && shape <= MON_SHAPE_SNAIL)
-    {
-        if (intel > I_REPTILE)
-            prefixes.insert(prefixes.begin(), "smart");
-        else if (intel < I_INSECT)
-            prefixes.insert(prefixes.begin(), "stupid");
-    }
-    else if (shape >= MON_SHAPE_PLANT && shape <= MON_SHAPE_BLOB
-             && intel > I_PLANT)
-    {
-        prefixes.insert(prefixes.begin(), "smart");
-    }
 
+    const mon_body_shape shape = get_mon_shape(mons);
     if (msg.empty() || msg == "__NEXT")
     {
         msg = _get_speak_string(prefixes, get_mon_shape_str(shape), mons,
@@ -753,17 +717,17 @@ bool mons_speaks(monster* mons)
         // one and then the other to see if we get any results.
         if (shape == MON_SHAPE_HUMANOID_WINGED_TAILED)
         {
-            shape = MON_SHAPE_HUMANOID_TAILED;
-            msg = _get_speak_string(prefixes, get_mon_shape_str(shape),
+            msg = _get_speak_string(prefixes,
+                                    get_mon_shape_str(MON_SHAPE_HUMANOID_TAILED),
                                     mons, no_player, no_foe, no_foe_name,
                                     no_god, unseen);
 
             // Only be silent if both tailed and winged return __NONE.
             if (msg.empty() || msg == "__NONE" || msg == "__NEXT")
             {
-                shape = MON_SHAPE_HUMANOID_WINGED;
                 string msg2;
-                msg2 = _get_speak_string(prefixes, get_mon_shape_str(shape),
+                msg2 = _get_speak_string(prefixes,
+                                         get_mon_shape_str(MON_SHAPE_HUMANOID_WINGED),
                                          mons, no_player, no_foe,
                                          no_foe_name, no_god, unseen);
 
@@ -780,11 +744,12 @@ bool mons_speaks(monster* mons)
 
                 msg = msg2;
             }
-        } // if (shape == MON_SHAPE_HUMANOID_WINGED_TAILED)
+        }
+
         if (msg.empty() || msg == "__NONE" || msg == "__NEXT")
         {
-            shape = MON_SHAPE_HUMANOID;
-            msg = _get_speak_string(prefixes, get_mon_shape_str(shape),
+            msg = _get_speak_string(prefixes,
+                                    get_mon_shape_str(MON_SHAPE_HUMANOID),
                                     mons, no_player, no_foe, no_foe_name,
                                     no_god, unseen);
         }
@@ -826,10 +791,8 @@ bool mons_speaks_msg(monster* mons, const string &msg,
     if (mons->has_ench(ENCH_MUTE))
         silence = true;
 
-    for (int i = 0, size = lines.size(); i < size; ++i)
+    for (string line : lines)
     {
-        string line = lines[i];
-
         // This function is a little bit of a problem for the message
         // channels since some of the messages it generates are "fake"
         // warning to scare the player. In order to accommodate this
@@ -858,11 +821,11 @@ bool mons_speaks_msg(monster* mons, const string &msg,
 
         if (line == "__MORE" && !silence)
             more();
-        else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(mons))
+        else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(*mons))
             noticed = old_noticed;
         else
         {
-            if (you.can_see(mons))
+            if (you.can_see(*mons))
                 handle_seen_interrupt(mons);
             mprf(msg_type, "%s", line.c_str());
         }

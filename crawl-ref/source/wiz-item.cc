@@ -49,10 +49,8 @@ static void _make_all_books()
 {
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
     {
-#if TAG_MAJOR_VERSION == 34
-        if (i == BOOK_WIZARDRY)
+        if (item_type_removed(OBJ_BOOKS, i))
             continue;
-#endif
         int thing = items(false, OBJ_BOOKS, i, 0, 0, AQ_WIZMODE);
         if (thing == NON_ITEM)
             continue;
@@ -100,9 +98,7 @@ void wizard_create_spec_object()
 {
     char           specs[80];
     ucs_t          keyin;
-    monster_type   mon;
     object_class_type class_wanted;
-    int            thing_created;
 
     do
     {
@@ -129,19 +125,20 @@ void wizard_create_spec_object()
     msgwin_reply(string(1, (char) keyin));
 
     // Allocate an item to play with.
-    thing_created = get_mitm_slot();
+    int thing_created = get_mitm_slot();
     if (thing_created == NON_ITEM)
     {
         mpr("Could not allocate item.");
         return;
     }
+    item_def& item(mitm[thing_created]);
 
     // turn item into appropriate kind:
     if (class_wanted == OBJ_ORBS)
     {
-        mitm[thing_created].base_type = OBJ_ORBS;
-        mitm[thing_created].sub_type  = ORB_ZOT;
-        mitm[thing_created].quantity  = 1;
+        item.base_type = OBJ_ORBS;
+        item.sub_type  = ORB_ZOT;
+        item.quantity  = 1;
     }
     else if (class_wanted == OBJ_GOLD)
     {
@@ -152,13 +149,15 @@ void wizard_create_spec_object()
             return;
         }
 
-        mitm[thing_created].base_type = OBJ_GOLD;
-        mitm[thing_created].sub_type  = 0;
-        mitm[thing_created].quantity  = amount;
+        item.base_type = OBJ_GOLD;
+        item.sub_type  = 0;
+        item.quantity  = amount;
     }
+    // in this case, place_monster_corpse will allocate an item for us, and we
+    // don't use item/thing_created.
     else if (class_wanted == OBJ_CORPSES)
     {
-        mon = debug_prompt_for_monster();
+        monster_type mon = debug_prompt_for_monster();
 
         if (mon == MONS_NO_MONSTER || mon == MONS_PROGRAM_BUG)
         {
@@ -168,12 +167,8 @@ void wizard_create_spec_object()
 
         if (!mons_class_can_leave_corpse(mon))
         {
-            if (!yesno("That monster doesn't leave corpses; make one "
-                       "anyway?", true, 'y'))
-            {
-                canned_msg(MSG_OK);
-                return;
-            }
+            mpr("That monster doesn't leave corpses.");
+            return;
         }
 
         if (mons_is_draconian_job(mon))
@@ -184,15 +179,14 @@ void wizard_create_spec_object()
 
         monster dummy;
         dummy.type = mon;
+        dummy.position = you.pos();
 
         if (mons_genus(mon) == MONS_HYDRA)
             dummy.num_heads = prompt_for_int("How many heads? ", false);
 
-        if (fill_out_corpse(&dummy, dummy.type,
-                            mitm[thing_created], true) == MONS_NO_MONSTER)
+        if (!place_monster_corpse(dummy, false, true))
         {
             mpr("Failed to create corpse.");
-            mitm[thing_created].clear();
             return;
         }
     }
@@ -220,7 +214,7 @@ void wizard_create_spec_object()
             return;
         }
 
-        if (!get_item_by_name(&mitm[thing_created], specs, class_wanted, true))
+        if (!get_item_by_name(&item, specs, class_wanted, true))
         {
             mpr("No such item.");
 
@@ -230,7 +224,7 @@ void wizard_create_spec_object()
         }
     }
 
-    item_colour(mitm[thing_created]);
+    item_colour(item);
 
     move_item_to_grid(&thing_created, you.pos());
 
@@ -265,6 +259,10 @@ static void _tweak_randart(item_def &item)
     vector<unsigned int> choice_to_prop;
     for (unsigned int i = 0, choice_num = 0; i < ARTP_NUM_PROPERTIES; ++i)
     {
+#if TAG_MAJOR_VERSION == 34
+        if (i == ARTP_METABOLISM || i == ARTP_ACCURACY || i == ARTP_TWISTER)
+            continue;
+#endif
         choice_to_prop.push_back(i);
         if (choice_num % 8 == 0 && choice_num != 0)
             *(prompt.rend()) = '\n'; // Replace the space
@@ -661,11 +659,10 @@ void wizard_identify_pack()
 
 static void _forget_item(item_def &item)
 {
-    set_ident_type(item, ID_UNKNOWN_TYPE);
+    set_ident_type(item, false);
     unset_ident_flags(item, ISFLAG_IDENT_MASK);
-    item.flags &= ~(ISFLAG_SEEN | ISFLAG_TRIED | ISFLAG_HANDLED
-                    |ISFLAG_THROWN | ISFLAG_DROPPED
-                    | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+    item.flags &= ~(ISFLAG_SEEN | ISFLAG_HANDLED | ISFLAG_THROWN
+                    | ISFLAG_DROPPED | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
 }
 
 void wizard_unidentify_pack()
@@ -1371,8 +1368,8 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_ELECTRICITY",
         "ARTP_POISON",
         "ARTP_NEGATIVE_ENERGY",
-        "ARTP_MAGIC",
-        "ARTP_EYESIGHT",
+        "ARTP_MAGIC_RESISTANCE",
+        "ARTP_SEE_INVISIBLE",
         "ARTP_INVISIBLE",
         "ARTP_FLY",
 #if TAG_MAJOR_VERSION > 34
@@ -1380,7 +1377,7 @@ static void _debug_rap_stats(FILE *ostat)
 #endif
         "ARTP_BLINK",
         "ARTP_BERSERK",
-        "ARTP_NOISES",
+        "ARTP_NOISE",
         "ARTP_PREVENT_SPELLCASTING",
         "ARTP_CAUSE_TELEPORTATION",
         "ARTP_PREVENT_TELEPORTATION",
@@ -1388,12 +1385,12 @@ static void _debug_rap_stats(FILE *ostat)
 #if TAG_MAJOR_VERSION == 34
         "ARTP_METABOLISM",
 #endif
-        "ARTP_MUTAGENIC",
+        "ARTP_CONTAM",
 #if TAG_MAJOR_VERSION == 34
         "ARTP_ACCURACY",
 #endif
         "ARTP_SLAYING",
-        "ARTP_CURSED",
+        "ARTP_CURSE",
         "ARTP_STEALTH",
         "ARTP_MAGICAL_POWER",
         "ARTP_BASE_DELAY",
@@ -1406,11 +1403,16 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_FOG",
 #endif
         "ARTP_REGENERATION",
-        "ARTP_SUSTAB",
+        "ARTP_SUSTAT",
         "ARTP_NO_UPGRADE",
         "ARTP_RCORR",
         "ARTP_RMUT",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_TWISTER",
+#endif
+        "ARTP_CORRODE",
+        "ARTP_DRAIN",
+        "ARTP_CONFUSE",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 
@@ -1516,7 +1518,7 @@ void wizard_identify_all_items()
         if (!item_type_has_ids(i))
             continue;
         for (int j = 0; j < get_max_subtype(i); j++)
-            set_ident_type(i, j, ID_KNOWN_TYPE);
+            set_ident_type(i, j, true);
     }
 }
 
@@ -1535,7 +1537,7 @@ void wizard_unidentify_all_items()
         if (!item_type_has_ids(i))
             continue;
         for (int j = 0; j < get_max_subtype(i); j++)
-            set_ident_type(i, j, ID_UNKNOWN_TYPE);
+            set_ident_type(i, j, false);
     }
 }
 

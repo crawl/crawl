@@ -33,8 +33,7 @@
 #include "travel.h"
 #include "version.h"
 #include "view.h"
-#include "zotdef.h"
-
+#
 #if defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW)
 #define NOCOMM            /* Comm driver APIs and definitions */
 #define NOLOGERROR        /* LogError() and related definitions */
@@ -570,11 +569,8 @@ static void _dump_ver_stuff(FILE* file)
 static void _dump_command_line(FILE *file)
 {
     fprintf(file, "Command line:");
-    for (int i = 0, size = crawl_state.command_line_arguments.size();
-         i < size; ++i)
-    {
-        fprintf(file, " %s", crawl_state.command_line_arguments[i].c_str());
-    }
+    for (const string& str : crawl_state.command_line_arguments)
+        fprintf(file, " %s", str.c_str());
     if (crawl_state.command_line_arguments.empty())
         fprintf(file, " (unknown)");
     fprintf(file, "\n\n");
@@ -704,9 +700,6 @@ void do_crash_dump()
     // another crash, so do that next.
     crawl_state.dump();
     _dump_player(file);
-
-    if (crawl_state.game_is_zotdef())
-        fprintf(file, "ZotDef wave data: %s\n", zotdef_debug_wave_desc().c_str());
 
     // Next item and monster scans. Any messages will be sent straight to
     // the file because of set_msg_dump_file()

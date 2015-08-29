@@ -55,12 +55,6 @@
 #include "view.h"
 #include "xom.h"
 
-// Update the trackers after the player changed level.
-void trackers_init_new_level(bool transit)
-{
-    travel_init_new_level();
-}
-
 string weird_glowing_colour()
 {
     return getMiscString("glowing_colour_name");
@@ -156,16 +150,16 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
 static bool _mons_is_always_safe(const monster *mon)
 {
     return mon->wont_attack()
-           || mon->type == MONS_BUTTERFLY
-           || mon->withdrawn()
-           || mon->type == MONS_BALLISTOMYCETE && !mon->ballisto_activity;
+        || mon->type == MONS_BUTTERFLY
+        || mon->withdrawn()
+        || (mon->type == MONS_BALLISTOMYCETE && !mons_is_active_ballisto(mon));
 }
 
 bool mons_is_safe(const monster* mon, const bool want_move,
                   const bool consider_user_options, bool check_dist)
 {
-    // Short-circuit plants, some vaults have tons of those.
-    // Except for inactive ballistos, players may still want these.
+    // Short-circuit plants, some vaults have tons of those. Except for both
+    // active and inactive ballistos, players may still want these.
     if (mons_is_firewood(mon) && mon->type != MONS_BALLISTOMYCETE)
         return true;
 
@@ -229,7 +223,7 @@ vector<monster* > get_nearby_monsters(bool want_move,
     vector<monster* > mons;
 
     // Sweep every visible square within range.
-    for (radius_iterator ri(you.pos(), range, C_ROUND, LOS_DEFAULT); ri; ++ri)
+    for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_DEFAULT); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {
@@ -251,8 +245,8 @@ vector<monster* > get_nearby_monsters(bool want_move,
 
 static bool _exposed_monsters_nearby(bool want_move)
 {
-    const int radius = want_move ? 8 : 2;
-    for (radius_iterator ri(you.pos(), radius, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
+    const int radius = want_move ? LOS_RADIUS : 2;
+    for (radius_iterator ri(you.pos(), radius, C_SQUARE, LOS_DEFAULT); ri; ++ri)
         if (env.map_knowledge(*ri).flags & MAP_INVISIBLE_MONSTER)
             return true;
     return false;
@@ -394,18 +388,6 @@ void bring_to_safety()
     if (player_in_branch(BRANCH_ABYSS))
         return abyss_teleport();
 
-    if (crawl_state.game_is_zotdef() && !orb_position().origin())
-    {
-        // In ZotDef, it's not the safety of your sorry butt that matters.
-        for (distance_iterator di(env.orb_pos, true, false); di; ++di)
-            if (!monster_at(*di)
-                && !(env.pgrid(*di) & FPROP_NO_TELE_INTO))
-            {
-                you.moveto(*di);
-                return;
-            }
-    }
-
     coord_def best_pos, pos;
     double min_threat = DBL_MAX;
     int tries = 0;
@@ -422,7 +404,7 @@ void bring_to_safety()
             || monster_at(pos)
             || env.pgrid(pos) & FPROP_NO_TELE_INTO
             || crawl_state.game_is_sprint()
-               && distance2(pos, you.pos()) > dist_range(10))
+               && grid_distance(pos, you.pos()) > 8)
         {
             tries++;
             continue;
@@ -509,10 +491,11 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool& would_cause_penance, coord_def attack_pos,
                 bool check_landing_only)
 {
+    ASSERT(mon); // XXX: change to const monster &mon
     ASSERT(!crawl_state.game_is_arena());
     bool bad_landing = false;
 
-    if (!you.can_see(mon))
+    if (!you.can_see(*mon))
         return false;
 
     if (attack_pos == coord_def(0, 0))
@@ -596,6 +579,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         bool *prompted, coord_def attack_pos,
                         bool check_landing_only)
 {
+    ASSERT(mon); // XXX: change to const monster &mon
     bool penance = false;
 
     if (prompted)
@@ -604,7 +588,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     if (crawl_state.disables[DIS_CONFIRMATIONS])
         return false;
 
-    if (you.confused() || !you.can_see(mon))
+    if (you.confused() || !you.can_see(*mon))
         return false;
 
     string adj, suffix;
@@ -675,7 +659,7 @@ bool stop_attack_prompt(targetter &hitfunc, const char* verb,
         if (hitfunc.is_affected(*di) <= AFF_NO)
             continue;
         const monster* mon = monster_at(*di);
-        if (!mon || !you.can_see(mon))
+        if (!mon || !you.can_see(*mon))
             continue;
         if (affects && !affects(mon))
             continue;
@@ -794,16 +778,6 @@ void swap_with_monster(monster* mon_to_swap)
     }
 }
 
-void auto_id_inventory()
-{
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def& item = you.inv[i];
-        if (item.defined())
-            god_id_item(item, false);
-    }
-}
-
 // Reduce damage by AC.
 // In most cases, we want AC to mostly stop weak attacks completely but affect
 // strong ones less, but the regular formula is too hard to apply well to cases
@@ -826,34 +800,10 @@ int apply_chunked_AC(int dam, int ac)
     return hurt;
 }
 
-void entered_malign_portal(actor* act)
-{
-    if (you.can_see(act))
-    {
-        mprf("%s %s twisted violently and ejected from the portal!",
-             act->name(DESC_THE).c_str(), act->conj_verb("be").c_str());
-    }
-
-    act->blink(false);
-    act->hurt(nullptr, roll_dice(2, 4), BEAM_MISSILE, KILLED_BY_WILD_MAGIC,
-              "", "entering a malign gateway");
-}
-
 void handle_real_time(time_t t)
 {
     you.real_time += min<time_t>(t - you.last_keypress_time, IDLE_TIME_CLAMP);
     you.last_keypress_time = t;
-}
-
-string part_stack_string(const int num, const int total)
-{
-    if (num == total)
-        return "Your";
-
-    string ret  = uppercase_first(number_in_words(num))
-                + " of your";
-
-    return ret;
 }
 
 unsigned int breakpoint_rank(int val, const int breakpoints[],
@@ -904,8 +854,9 @@ string counted_monster_list::describe(description_level_type desc,
         else
             ++i;
 
-        out += cm.second > 1 ? pluralise(cm.first->name(desc, false, true))
-                             : cm.first->name(desc);
+        out += cm.second > 1
+               ? pluralise_monster(cm.first->name(desc, false, true))
+               : cm.first->name(desc);
     }
     return out;
 }

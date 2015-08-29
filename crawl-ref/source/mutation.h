@@ -62,11 +62,10 @@ void roll_demonspawn_mutations();
 bool perma_mutate(mutation_type which_mut, int how_much, const string &reason);
 bool temp_mutate(mutation_type which_mut, const string &reason);
 int temp_mutation_roll();
-int how_mutated(bool innate = false, bool levels = false);
+int how_mutated(bool innate = false, bool levels = false, bool temp = true);
 
 void check_demonic_guardian();
 void check_monster_detect();
-int handle_pbd_corpses();
 equipment_type beastly_slot(int mut);
 bool physiology_mutation_conflict(mutation_type mutat);
 int augmentation_amount();

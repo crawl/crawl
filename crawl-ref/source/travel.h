@@ -104,8 +104,6 @@ bool branch_entered(branch_type branch);
 bool can_travel_to(const level_id &lid);
 bool can_travel_interlevel();
 
-bool travel_kill_monster(monster_type mons);
-
 enum translevel_prompt_flags
 {
     TPF_NO_FLAGS          = 0,

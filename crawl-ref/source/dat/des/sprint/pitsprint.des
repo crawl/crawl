@@ -22,7 +22,7 @@ function base_monster_setup(e)
            brain worm / warg / wolf / porcupine / black bear /\
            river rat / flying skull / iron imp /\
            white imp / ufetubus / fire bat")
-  e.kmons("B = goliath beetle / steam dragon / crocodile / hippogriff /\
+  e.kmons("B = steam dragon / crocodile / hippogriff /\
            killer bee band / wasp / eye of draining / manticore /\
            wyvern / troll / two-headed ogre / yak band /\
            hill giant / komodo dragon / wraith / soldier ant / unseen horror /\
@@ -31,13 +31,12 @@ function base_monster_setup(e)
            griffon / gargoyle / molten gargoyle /\
            kobold demonologist band / deep troll /\
            deep elf fighter band / boulder beetle / hornet /\
-           orc high priest band w:5 / boring beetle /\
+           orc high priest band w:5 / orc sorcerer band w:5 / orc knight band /\
            flayed ghost / freezing wraith / shadow wraith / shadow /\
-           orc sorcerer band w:5 / orc knight band /\
            redback / phantasmal warrior / spiny frog / hell rat /\
            black mamba / fire drake / hydra w:5 / polar bear / lindwurm /\
            elephant / death yak / wolf band / sheep band /\
-           raven / swamp drake / bog body / giant leech / swamp dragon w:3 /\
+           swamp drake / bog body / giant leech / swamp dragon w:3 /\
            merfolk band w:5 / siren w:3 / sea snake / snapping turtle /\
            tarantella / jumping spider / demonic crawler /\
            small abomination / guardian mummy / spriggan /\
@@ -172,7 +171,7 @@ function general_item_setup(e)
           scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
           potion of might ident:all w:2 / potion of agility w:2 ident:all /\
           potion of haste q:2 ident:all w:2 /\
-          scroll of acquirement w:1 ident:all /\
+          scroll of acquirement q:1 w:1 ident:all /\
           scroll of enchant weapon ident:all q:4 w:2 /\
           scroll of enchant armour ident:all q:4 w:2 /\
           scroll of brand weapon ident:all")
@@ -183,7 +182,6 @@ function general_item_setup(e)
           potion of curing ident:all w:20 /\
           potion of might ident:all / potion of agility ident:all /\
           potion of haste ident:all /\
-          potion of restore abilities ident:all w:5 /\
           potion of resistance ident:all w:5 / potion of brilliance ident:all /\
           potion of berserk rage ident:all /\
           potion of cure mutation ident:all")

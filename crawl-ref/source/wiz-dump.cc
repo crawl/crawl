@@ -67,10 +67,8 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return RING_ICE;
     if (s == "+/*Tele")
         return RING_TELEPORTATION;
-    if (s == "+cTele")
-        return RING_TELEPORT_CONTROL;
-    if (s == "SustAb")
-        return RING_SUSTAIN_ABILITIES;
+    if (s == "SustAt" || s == "SustAb")
+        return RING_SUSTAIN_ATTRIBUTES;
     if (s == "Wiz")
         return RING_WIZARDRY;
     if (s == "SInv")
@@ -281,7 +279,7 @@ static item_def _item_from_string(string s)
     else
         end--;
 
-    set_ident_type(ret, ID_KNOWN_TYPE);
+    set_ident_type(ret, true);
     set_ident_flags(ret, ISFLAG_IDENT_MASK);
 
     string base_name = s.substr(0, end);
@@ -484,7 +482,7 @@ bool chardump_parser::_check_equipment(const vector<string> &tokens)
         offset = 7;
     else if (tokens[0] == "rCorr")
         offset = 7;
-    else if (tokens[0] == "SustAb") // older dump files
+    else if (tokens[0] == "SustAt" || tokens[0] == "SustAb") // older dump files
         offset = 8;
     else if (tokens[0] == "rMut")
         offset = 7;

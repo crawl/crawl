@@ -7,6 +7,7 @@
 
 #include "prompt.h"
 
+#include "clua.h"
 #include "delay.h"
 #include "libutil.h"
 #include "macro.h"
@@ -53,6 +54,13 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
     bool message = (region == GOTO_MSG);
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
         interrupt_activity(AI_FORCE_INTERRUPT);
+
+    // Allow players to answer prompts via clua.
+    maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str);
+    if (res == MB_TRUE)
+        return true;
+    if (res == MB_FALSE)
+        return false;
 
     string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 

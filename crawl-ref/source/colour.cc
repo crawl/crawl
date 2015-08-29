@@ -3,6 +3,7 @@
 #include "colour.h"
 
 #include <cmath>
+#include <memory>
 #include <utility>
 
 #include "areas.h"
@@ -13,7 +14,8 @@
 #include "stringutil.h"
 #include "libutil.h" // map_find
 
-static element_colour_calc* element_colours[NUM_COLOURS] = {};
+static FixedVector<unique_ptr<element_colour_calc>, NUM_COLOURS> element_colours;
+// Values point into element_colours.
 static map<string, element_colour_calc*> element_colours_str;
 
 typedef vector< pair<int, int> > random_colour_map;
@@ -384,15 +386,15 @@ void add_element_colour(element_colour_calc *colour)
     COMPILE_CHECK(NUM_COLOURS <= 128);
     if (colour->type >= ETC_FIRST_LUA)
     {
-        ASSERT(element_colours[colour->type] == element_colours_str[colour->name]);
-        delete element_colours[colour->type];
+        ASSERT(element_colours[colour->type].get()
+               == element_colours_str[colour->name]);
     }
     else
     {
         ASSERT(!element_colours[colour->type]);
         ASSERT(!element_colours_str.count(colour->name));
     }
-    element_colours[colour->type] = colour;
+    element_colours[colour->type].reset(colour);
     element_colours_str[colour->name] = colour;
 }
 
@@ -662,17 +664,6 @@ void init_element_colours()
     add_element_colour(new element_colour_calc(
                             ETC_DISCO, "disco", _etc_random
                        ));
-}
-
-void clear_colours_on_exit()
-{
-    for (int i = 0; i < NUM_COLOURS; i++)
-    {
-        delete element_colours[i];
-        element_colours[i] = 0;
-    }
-
-    element_colours_str.clear();
 }
 
 int element_colour(int element, bool no_random, const coord_def& loc)

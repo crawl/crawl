@@ -82,7 +82,7 @@
 # * fly:      Lets wearer evoke flight ability.
 # * mutate:   Causes high magical contamination when unequipped.
 # * nogen:    Never randomly generated.
-# * noises:   Weapon makes noises. Should  be given its own set of noises
+# * noises:   Weapon makes noises. Should be given its own set of noises
 #             by making an entry in dat/database/wpnnoise.txt, with the
 #             entry's key exactly the same as the weapon's name, but all
 #             lowercase.
@@ -94,9 +94,11 @@
 # * rmsl:     Passively repels missiles.
 # * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
+# * skip_ego: The item's ego is skipped in its inscription, to be replaced by
+#             an INSCRIP: entry.
 # * special:  Artefact is "special": can't be picked up by monsters,
 #             can't be affected by Tukima's Dance.
-# * sustab:   Provides sustain abilities.
+# * sustat:   Provides sustain attributes.
 # * tilerim:  Adds a black outline to the tile, see above section.
 # * unided:   Properties start unidentified.
 
@@ -248,7 +250,7 @@ CURSED:  3
 BOOL:    evil
 
 NAME:    Sceptre of Torment
-OBJ:     OBJ_WEAPONS/WPN_MACE
+OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +7
 COLOUR:  ETC_GOLD
 TILE:    spwpn_sceptre_of_torment
@@ -325,6 +327,7 @@ STEALTH: -1
 
 NAME:    scimitar of Flaming Death
 OBJ:     OBJ_WEAPONS/WPN_SCIMITAR
+INSCRIP: sticky flame,
 PLUS:    +6
 COLOUR:  ETC_FIRE
 TILE:    urand_flaming_death
@@ -332,7 +335,7 @@ TILE_EQ: flaming_death
 BRAND:   SPWPN_FLAMING
 FIRE:    2
 COLD:    -1
-BOOL:    poison
+BOOL:    poison, skip_ego
 MAGIC:   1
 
 NAME:    eveningstar "Brilliance"
@@ -362,6 +365,7 @@ LIFE:     1
 
 NAME:    dagger of Chilly Death
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
+INSCRIP: flash freeze,
 PLUS:    +9
 COLOUR:  ETC_ICE
 TILE:    urand_chilly_death
@@ -370,7 +374,7 @@ BRAND:   SPWPN_FREEZING
 FIRE:    -1
 COLD:    2
 MAGIC:   1
-BOOL:    poison
+BOOL:    poison, skip_ego
 
 NAME:     dagger "Morg"
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
@@ -473,6 +477,7 @@ TILE_EQ: eos
 BRAND:   SPWPN_ELECTROCUTION
 BOOL:    elec, seeinv, notelep
 
+# TAG_MAJOR_VERSION == 34
 # Was "spear of Voo-Doo". In the African origin, there is a distinction
 # between voodoo and bo, the latter dealing with curses, witchcraft and
 # spells designed to do harm. Priests (or rather sorcerers) of bo are
@@ -584,7 +589,7 @@ PLUS:    +14
 COLOUR:  ETC_MUTAGENIC
 TILE:    urand_plutonium
 TILE_EQ: plutonium_sword
-BOOL:    mutate
+BOOL:    mutate, chaotic
 STEALTH: -1
 
 NAME:     great mace "Undeadhunter"
@@ -598,12 +603,13 @@ LIFE:     1
 
 NAME:    whip "Snakebite"
 OBJ:     OBJ_WEAPONS/WPN_WHIP
+INSCRIP: curare,
 PLUS:    +8
 COLOUR:  DARKGREY
 TILE:    urand_snakebite
 TILE_EQ: snakebite
 BRAND:   SPWPN_VENOM
-BOOL:    poison
+BOOL:    poison, skip_ego
 
 # TAG_MAJOR_VERSION == 34
 NAME:     knife of Accuracy
@@ -630,6 +636,7 @@ BOOL:     nogen
 ENUM:     CAPTAIN
 NAME:     captain's cutlass
 OBJ:      OBJ_WEAPONS/WPN_CUTLASS
+INSCRIP:  disarm
 PLUS:     +5
 COLOUR:   DARKGREY
 TILE:     urand_cutlass
@@ -733,6 +740,7 @@ BOOL:     fly, nogen
 ENUM:     BOOTS_ASSASSIN
 NAME:     boots of the Assassin
 OBJ:      OBJ_ARMOUR/ARM_BOOTS
+INSCRIP:  DetectMon Stab+
 PLUS:     +2
 COLOUR:   BROWN
 TILE:     urand_assassin
@@ -803,7 +811,7 @@ COLOUR:  LIGHTGREEN
 TILE:    urand_maxwell
 TILE_EQ: maxwell
 MAGIC:   1
-BOOL:    nospell, notelep, cursed, elec, rCorr
+BOOL:    nospell, notelep, elec, rCorr
 
 ENUM:    DRAGONMASK
 NAME:    mask of the Dragon
@@ -987,7 +995,7 @@ TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
 CURSED:   1
 STR:      +3
-BOOL:     unholy, seeinv, fly, special
+BOOL:     unholy, seeinv, fly
 
 NAME:     lightning scales
 OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
@@ -1163,6 +1171,7 @@ TILE_EQ:  firestarter
 PLUS:     +7
 BRAND:    SPWPN_FLAMING
 FIRE:     2
+BOOL:     skip_ego
 
 NAME:     orange crystal plate armour
 OBJ:      OBJ_ARMOUR/ARM_CRYSTAL_PLATE_ARMOUR
@@ -1172,7 +1181,7 @@ TILE_EQ:  orange_crystal
 PLUS:     8
 INT:      3
 BRAND:    SPARM_ARCHMAGI
-BOOL:     clarity, sustab
+BOOL:     clarity, sustat
 
 ENUM:    MAJIN
 NAME:    Majin-Bo
@@ -1202,10 +1211,14 @@ ENUM:    ETHERIC_CAGE
 NAME:    Maxwell's etheric cage
 OBJ:     OBJ_ARMOUR/ARM_HELMET
 COLOUR:  ETC_ELECTRICITY
+TILE:    urand_etheric_cage
+TILE_EQ: etheric_cage
+INSCRIP: RegenMP
 PLUS:    +0
 MP:      +4
-BOOL:    mutate, elec
+BOOL:    mutate, elec, chaotic
 
+# TAG_MAJOR_VERSION == 34
 ENUM:    ETERNAL_TORMENT
 NAME:    crown of Eternal Torment
 OBJ:     OBJ_ARMOUR/ARM_HAT
@@ -1216,7 +1229,7 @@ TILE_EQ: eternal_torment
 INSCRIP: rTorment HP--
 LIFE:    3
 CURSED:  1
-BOOL:    evil, seeinv
+BOOL:    evil, seeinv, nogen
 
 # This entry must always be last.
 ENUM:   DUMMY2

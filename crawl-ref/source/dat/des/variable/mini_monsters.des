@@ -437,24 +437,6 @@ MAP
 .............
 ENDMAP
 
-NAME:  rats_and_rats_again
-DEPTH: D:8-14
-MONS:  shadow imp
-MONS:  rat w:40 / river rat w:20 / hell rat w:1 / nothing
-MAP
-...........
-.xxx+++xxx.
-.x2222222x.
-.x2222222x.
-.x2222222x.
-.x2222222x.
-.x2221222x.
-.x2222222x.
-.x2222222x.
-.xxxxxxxxx.
-...........
-ENDMAP
-
 NAME:  minmay_rats_cheesy_pizza
 DEPTH: D:2-3
 MONS:  rat
@@ -565,7 +547,7 @@ DEPTH:  D:3-5
 KMONS:  S = w:3 adder / w:4 ball python / w:5 plant / nothing
 KFEAT:  SX = W
 KITEM:  X = gold
-KPROP:  W = no_rtele_into
+KPROP:  W = no_tele_into
 MAP
 .xxxxxx.@..
 .xxWStxx+xx
@@ -585,7 +567,7 @@ ENDMAP
 NAME:   minmay_lindwurm_lava
 TAGS:   no_monster_gen
 DEPTH:  D:8-, Lair:2-
-KPROP:  '*|1> = no_rtele_into
+KPROP:  '*|1> = no_tele_into
 KMONS:  1 = lindwurm
 KITEM:  1 = *
 SUBST:  L : ..Ll
@@ -703,7 +685,7 @@ NAME:  nrook_guardian_serpent_double
 TAGS:  no_monster_gen
 DEPTH: D:9-, Snake
 MONS:  patrolling guardian serpent
-KPROP: *| = no_rtele_into
+KPROP: *| = no_tele_into
 : if crawl.x_chance_in_y(you.absdepth() - 13, 4) then
 SUBST: ' = 1
 : else
@@ -791,27 +773,6 @@ xxx1...1xxx
   xx@xxx
 ENDMAP
 
-# A raven's nest, containing some jewellery.
-# Could be used as a subvault in some forest vault.
-NAME:     roderic_ravens_nest
-TAGS:     extra
-DEPTH:    D:8-12, Lair:3-, Swamp
-KMONS:    1 = raven
-KITEM:    % = any jewellery
-KITEM:    1 = any jewellery / nothing
-: if you.in_branch("D") then
-SHUFFLE:  t / x
-: end
-: if you.in_branch("Swamp") then
-TAGS:   extra
-: end
-: kmons("% = nothing w:10 / raven w:" .. you.absdepth())
-MAP
-tttt
-t%1t
-ttt.@
-ENDMAP
-
 NAME:   nicolae_underground_beach
 DEPTH:  D:2-
 TAGS:   no_trap_gen no_pool_fixup
@@ -850,9 +811,9 @@ ENDMAP
 NAME:    hangedman_aviary
 TAGS:    no_rotate no_hmirror
 DEPTH:   D:13-, Depths
-MONS:    raven, tengu warrior, harpy, tengu reaver
+MONS:    tengu warrior, harpy, tengu reaver
 : if you.absdepth() < 18 then
-SUBST:   4 = 3
+SUBST:   3 = 2
 : else
 SHUFFLE: wW / ll
 SUBST:   " = *|
@@ -860,11 +821,11 @@ SUBST:   " = *|
 KMASK:   wWl = no_monster_gen
 MAP
 cccccccWW.@@.WWccccccc
-c43..2ccW.xx.Wcc2..34c
+c32..1ccW.xx.Wcc1..23c
 cc.ww.%c......c%.ww.cc
- c*.ww1cc....cc1ww.*c
- cc*.w1........1w.*cc
-  cc"2.cc.xx.cc.2"cc
+ c*.ww.cc....cc.ww.*c
+ cc*.w..........w.*cc
+  cc"1.cc.xx.cc.1"cc
    cccccW.@@.Wccccc
 ENDMAP
 
@@ -890,7 +851,6 @@ MONS:   adder, oklob plant, water moccasin
 KMONS:  7 = spider
 KMONS:  8 = worker ant
 KMONS:  9 = hound / jackal
-KMONS:  ' = wandering mushroom
 KMONS:  & = bush
 KFEAT:  78 = W
 KFEAT:  ' = known shaft trap
@@ -946,7 +906,6 @@ MONS:   adder, oklob plant, water moccasin
 KMONS:  7 = spider
 KMONS:  8 = worker ant
 KMONS:  9 = hound / jackal band
-KMONS:  ' = wandering mushroom
 KMONS:  & = bush
 KFEAT:  78 = W
 KFEAT:  ' = known shaft trap
@@ -995,8 +954,8 @@ KMONS:   8 = ball python / adder w:8
 KMONS:   A = river rat
 KMONS:   B = vampire bat / fire bat w:8
 KMONS:   C = iguana / basilisk w:8
-KMONS:   D = worm
-KMONS:   E = goliath beetle
+KMONS:   D = brain worm
+KMONS:   E = jelly
 KMONS:   F = worker ant
 KMONS:   G = hound / wolf w:3
 KMONS:   H = water moccasin
@@ -1303,7 +1262,7 @@ ENDMAP
 NAME:    lexackson_kobold_supper
 DEPTH:   D:1-6
 TAGS:    no_monster_gen
-KPROP:   56' = no_rtele_into
+KPROP:   56' = no_tele_into
 MONS:    kobold, plant, bush
 : if you.absdepth() < 4 then
 MONS:    kobold ; dagger . stone
@@ -1557,14 +1516,14 @@ NAME:    kb_tengu_band
 DEPTH:   D:12-, Shoals, Swamp
 WEIGHT:  5
 TAGS:    no_pool_fixup
-MONS:    raven, tengu warrior, tengu conjurer
+MONS:    tengu warrior, tengu conjurer
 MAP
  .........
-..wwwww.1..
-.wwttwww.1.
-.wtt3*tww..
-.wwwt*2....
-..wwwwww1..
+..wwwww....
+.wwttwww...
+.wtt2*tww..
+.wwwt*1....
+..wwwwww...
  .........
 ENDMAP
 
@@ -1573,7 +1532,7 @@ TAGS:   no_monster_gen
 DEPTH:  D:10-
 MONS:   hell hound, hell knight band, hell knight
 ITEM:   potion of flight ident:type q:3
-KPROP:  .123* = no_rtele_into
+KPROP:  .123* = no_tele_into
 MAP
 '''''''''''''''
 'ccccccccccccc'
@@ -1802,7 +1761,7 @@ MONS:  hill giant ; rod of the swarm ident:type
 MONS:  ettin ; rod of the swarm ident:type . great mace
 : end
 MONS:  killer bee w:3 / wolf spider w:1 / scorpion w:1 / worm w:1
-MONS:  worker ant w:3 / vampire mosquito w:1 / goliath beetle w:1 / wasp w:1
+MONS:  worker ant w:3 / vampire mosquito w:1 / wasp w:1
 ITEM: royal jelly
 MAP
 xxxxxx
@@ -2237,7 +2196,7 @@ ENDMAP
 NAME:   minmay_metal_thing
 DEPTH:  Depths
 MONS:   iron dragon, rust devil
-KPROP:  .1$| = no_rtele_into
+KPROP:  .1$| = no_tele_into
 NSUBST: ? = 1:+ / *:v
 MAP
 xxxlllllllllllllllllxxx
@@ -2326,7 +2285,7 @@ NAME:  einodemon_crawler_minivault
 TAGS:  patrolling
 DEPTH: D:13-, Elf, Spider
 MONS:  demonic crawler
-MONS:  goliath beetle / boulder beetle w:8 / demonic crawler w:2 / \
+MONS:  vampire mosquito / boulder beetle w:8 / demonic crawler w:2 / \
        nothing
 MAP
 ..........
@@ -2792,7 +2751,7 @@ TAGS:    no_monster_gen patrolling
 DEPTH:   D:12-, Depths, !Depths:$
 MONS:    crystal guardian, orange crystal statue
 SUBST:   . = .:80 %$*|
-KPROP:   .012 = no_rtele_into
+KPROP:   .012 = no_tele_into
 : if you.absdepth() > 16 then
 SUBST:   0 = 1
 : end
@@ -2946,8 +2905,7 @@ ENDMAP
 ###################################################################
 
 # My mission is to annoy. -LP
-NAME:   lemuel_jelly_drop_a
-TAGS:   uniq_jelly_drop
+NAME:   lemuel_jelly_drop
 DEPTH:  D:8-, Depths
 WEIGHT: 5
 MONS:   jelly generate_awake
@@ -3077,13 +3035,14 @@ TAGS:   no_monster_gen no_item_gen no_trap_gen transparent
 DEPTH:  Depths, !Depths:$
 MONS:   ooze / jelly w:30 / death ooze / azure jelly
 MONS:   acid blob
-KPROP:  | = no_tele_into
+KPROP:  |' = no_tele_into
+MARKER: + = lua:props_marker({ door_restrict="veto" })
 MAP
   ...........
  ..nnnnnnnnn..
 ..nn1112111nn..
 .nn11nnnnn11nn.
-.=====|||nn11n.
+.+111+|||nn11n.
 .nn11nnnnn11nn.
 ..nn1112111nn..
  ..nnnnnnnnn..
@@ -3131,15 +3090,15 @@ DEPTH:  Depths, !Depths:$, Abyss
 MONS:   golden eye, eye of draining, giant eyeball
 MONS:   eye of devastation, great orb of eyes / shining eye w:5
 NSUBST: 5 = 2:5 / *:4 5:15
-KPROP:  13' = no_rtele_into
+KPROP:  13' = no_tele_into
 KFEAT:  m = iron_grate
 : if you.in_branch("Abyss") then
 SUBST:  c = c:4 v:1 b:1, = = +
 : end
 MAP
-     c++cccc
+     c==cccc
    ccc..c3'ccc
-  cc'c==c+m''cc
+  cc'c..c+m''cc
  cc'mm..c.mmm'cc
  c'mm...c...mm'c
 cc'm....c..5.m'cc
@@ -3215,55 +3174,6 @@ MAP
 @nEEwEwEEn1.4.2ntW
 .baEabaEaba...abt4
  (bab bab bababtt
-ENDMAP
-
-NAME:    hangedman_jelly_panic
-TAGS:    no_monster_gen no_item_gen
-DEPTH:   D:4-, Depths
-KMONS:   1 = ooze
-KMONS:   23J = jelly
-KMONS:   4K = slime creature
-KMONS:   5L = acid blob w:5 / azure jelly / death ooze
-KFEAT:   JKL = altar_jiyva
-KITEM:   $ = $, $ w:5 / nothing
-: if you.absdepth() > 19 then
-SHUFFLE: CD, 2"6; / 3`5~
-SUBST:   35`~ : xx., '"~- = .
-SUBST:   1 = 5L, 26 = 2
-SUBST:   ABE : $, C : $$., D : m..
-: elseif you.absdepth() > 12 then
-SHUFFLE: AB, CD, 2" / 3`
-SUBST:   456-~; = x, '"`E = .
-SUBST:   1 = 4:7 K:3
-SUBST:   AD : $, B : m.., C : $m.
-: elseif you.absdepth() > 7  then
-SHUFFLE: AB, CD, 2"6; / 3`5~
-SUBST:   14'- = x, 35`~ : xx., ";ED = .
-SUBST:   2 : 2:8 J:2, 6 = 1
-SUBST:   AC : $, B : m..
-: else
-SHUFFLE: AB, 3` / 4- / 5~
-SUBST:   26"; = x, 35`~ : xx., '-CED = .
-SUBST:   1 = 2:9 J:1, 4 = 1
-SUBST:   A : $, B : m..
-: end
-MAP
-   xxxxxxxxx
-   xxxxxxxxx
-  xxx2x1x2xxx
-xxxcx"x'x"xcxxx
-xxxx.......xxxx
-xx3`.DECED.`3xx
-xxxx.EABAE.xxxx
-xx4-.CB$BC.-4xx
-xxxx.EABAE.xxxx
-xx5~.DECED.~5xx
-xxxx.......xxxx
-xxxcx;x=x;xcxxx
-  xxx6x.x6xxx
-   xxxx+xxxx
-   xxxx.xxxx
-    ...@...
 ENDMAP
 
 NAME:    lasty_cornered_adventurer
@@ -3806,29 +3716,6 @@ vvvvv."...xx*xv
 vvvvv0....vvvvv
 ENDMAP
 
-NAME:   evilmike_bad_box
-DEPTH:  D:13-, Depths
-TAGS:   no_wall_fixup
-MONS:   boring beetle
-NSUBST: 9 = 1:1 / 1:19 / *:9
-KMONS:  8 = 8
-KITEM:  8 = star_item / superb_item
-SUBST:  n : m.., o : m..
-MAP
-............
-............
-..nn.oo.nn..
-..nmmmmmmn..
-...m9999m...
-..om9889mo..
-..om9889mo..
-...m9999m...
-..nmmmmmmn..
-..nn.oo.nn..
-............
-............
-ENDMAP
-
 NAME:    evilmike_minifort
 TAGS:    misc_elf_vault
 DEPTH:   D:9-, Depths, !Depths:$, Elf
@@ -4213,7 +4100,7 @@ ENDMAP
 
 NAME:   lightli_corner_chamber
 DEPTH:  D:2-, Depths
-KPROP:  $*09 = no_rtele_into
+KPROP:  $*09 = no_tele_into
 MAP
 xxxxxxxxxxxx
 xxxxxxx....x
@@ -4256,7 +4143,7 @@ ENDMAP
 
 NAME: lightli_airlock
 DEPTH: D:11-, Snake, Shoals
-KPROP: W = no_rtele_into
+KPROP: W = no_tele_into
 MAP
  WccccWWWccccWW
  cc..ccWcc..ccWWWWW
@@ -4644,7 +4531,7 @@ TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:4-, Depths
 KFEAT:  ^ = known permanent teleport trap
 KFEAT:  _ = known alarm trap
-KPROP:  8^ = no_rtele_into
+KPROP:  8^ = no_tele_into
 : if you.absdepth() < 9 then
 SUBST: | = %
 SUBST: 8 = 0
@@ -5187,7 +5074,7 @@ FTILE:  xmwFt12|*+. = floor_limestone
 MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                               pow_max = 100, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = -1 }
-KPROP:  wF = no_rtele_into
+KPROP:  wF = no_tele_into
 SUBST:  F = w
 MAP
  xxxxxxxxxxx
@@ -5766,7 +5653,7 @@ COLOUR:  G = cyan
 TILE:    G = dngn_statue_iron
 : set_feature_name("granite_statue", "iron statue")
 : end
-KPROP:   lw = no_rtele_into
+KPROP:   lw = no_tele_into
 MAP
 xxxxxxxxxxxx
 xccccccccccx
@@ -5858,7 +5745,7 @@ TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:12-, Depths, Crypt
 WEIGHT: 3
 MONS:   reaper, reaper; scythe unrand:scythe_of_curses, mummy, guardian mummy
-KPROP:  12' = no_rtele_into
+KPROP:  12' = no_tele_into
 MAP
 ..............
 .cccccc+cccccc.
@@ -5886,7 +5773,7 @@ WEIGHT: 3
 MONS:   patrolling crystal guardian
 MONS:   orange crystal statue
 ITEM:   hat unrand:crown_of_dyrovepreva no_pickup
-KPROP:  12d' = no_rtele_into
+KPROP:  12d' = no_tele_into
 SUBST:  ' = .
 MAP
         .............

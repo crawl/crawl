@@ -1,0 +1,16 @@
+There are a few editor-specific configuration files in the crawl repo, which you
+may choose to enable. Currently the provided files are:
+
+Vim:
+source/dat/vim/syntax/levdes.vim, which includes a header at the top of the file
+telling you how to install it. This will be useful if you are editing the .des
+files used to define vaults or levels, but is not necessary otherwise.
+
+You can also set the appropriate indentation options for crawl source files
+by adding the following to your .vimrc or as a new file in ~/.vim/ftdetect/ :
+  autocmd! BufNewFile,BufRead */crawl-ref/* setlocal sw=4 et
+
+Emacs:
+source/dat/emacs/dir-locals.el contains a couple of settings for editing C++
+source files in the crawl-approved style, and can be activated by copying (or,
+preferably, symlinking) it to source/.dir-locals.el

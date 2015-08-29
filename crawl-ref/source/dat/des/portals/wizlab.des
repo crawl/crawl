@@ -29,7 +29,7 @@
 #--------------------------------------------------------------------
 #Lehudib   |earth-themed monsters,  |Moon Troll Leather Armour
 #          |"space" themed abyss    |random loot and         |20000+
-#          |monsters, eyes          |randbook of             |
+#          |monsters                |randbook of             |
 #          |                        |earth/transmutations,   |
 #          |                        |earth/translocations, or|
 #          |                        |earth/conjurations
@@ -103,7 +103,7 @@ function wizlab_portal (e)
 end
 
 -- Destinations:
-function wizlab_setup (e, wizlab_desc)
+function wizlab_setup (e)
     e.orient("encompass")
     e.tags("no_item_gen no_monster_gen")
     e.kfeat("< = exit_wizlab")
@@ -112,6 +112,7 @@ end
 function wizlab_milestone (e, wizlab_desc)
     crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".", "parent")
     crawl.take_note("Entered " .. wizlab_desc)
+    crawl.mpr("Welcome to " .. wizlab_desc .. "!")
 end
 
 function wizlab_doroklohe_convert_boxes(data, triggerable, triggerer,
@@ -226,8 +227,8 @@ function wizlab_zonguldrok_killed_zombie(data, triggerable, triggerer,
         end
         local gxm, gym = dgn.max_bounds()
         for p in iter.rect_iterator(dgn.point(1, 1), dgn.point(gxm-1, gym-1)) do
-            if dgn.fprop_at(p.x, p.y, "no_rtele_into") then
-               dgn.fprop_changed(p.x, p.y, "no_rtele_into")
+            if dgn.fprop_at(p.x, p.y, "no_tele_into") then
+               dgn.fprop_changed(p.x, p.y, "no_tele_into")
             end
         end
     end
@@ -413,7 +414,7 @@ MARKER:     ? = lua:fog_machine { \
                  size_buildup_time = 25, cloud_type = "freezing vapour" \
              }
 COLOUR:     .' = red / blue
-KPROP:      '?! = no_rtele_into
+KPROP:      '?! = no_tele_into
 SUBST:      ' = .
 TILE:       n = dngn_transparent_stone_magenta
 COLOUR:     n = lightmagenta
@@ -750,7 +751,7 @@ KMONS:      | = ancient lich / greater mummy
 :           if lrnd == 0 then
 KITEM:      % = any scroll / any scroll q:2 w:3 / any scroll q:3 w:1
 :           kitem("* = " .. dgn.good_scrolls)
-KITEM:      | = scroll of acquirement ident:type / scroll of enchant weapon q:3 ident:type /\
+KITEM:      | = scroll of acquirement q:1 ident:type / scroll of enchant weapon q:3 ident:type /\
                 scroll of blinking q:2 ident:type, scroll of fog q:2 ident:type, \
                 scroll of holy word q:2 ident:type
 :           elseif lrnd == 1 then
@@ -790,7 +791,7 @@ lua_marker("A", box_marker)
 :           set_feature_name("rock_wall", "strange rock wall")
 :           set_feature_name("stone_wall", "highly decorated stone wall")
 :           set_feature_name("floor", "rough-hewn floor")
-:           wizlab_setup(_G, "Doroklohe's Tomb")
+:           wizlab_setup(_G)
 epilogue{{
             wizlab_milestone(_G, "Doroklohe's Tomb")
 }}
@@ -885,9 +886,9 @@ KMONS:      0 = col:red iron golem name:flesh_golem name_replace \
             tile:mons_flesh_golem name_descriptor
 KMONS:      & = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
             name_replace hp:200 tile:mons_cigotuvis_monster
-ITEM:       potion of mutation w:60 / potion of beneficial mutation / \
+ITEM:       potion of mutation w:60 / potion of beneficial mutation q:1 / \
             potion of cure mutation
-ITEM:       potion of beneficial mutation, potion of cure mutation
+ITEM:       potion of beneficial mutation q:1, potion of cure mutation
 ITEM:       amulet of resist mutation good_item
 ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi spells:cigotuvi's_embrace
 ITEM:       book of transfigurations / randbook disc:transmutation
@@ -930,7 +931,7 @@ COLOUR:     W = green
 :           door_verb_open="You part the %s%s.",
 :           door_verb_close="You squeeze the %s%s shut."
 :           })
-:           wizlab_setup(_G, "Cigotuvi's Fleshworks")
+:           wizlab_setup(_G)
 :           set_random_mon_list("large abomination / ugly thing / very ugly thing")
 epilogue{{
             wizlab_milestone(_G, "Cigotuvi's Fleshworks")
@@ -1012,7 +1013,7 @@ LROCKCOL:   lightmagenta
 LFLOORTILE: floor_rough_magenta
 LFLOORCOL:  magenta
 :           set_random_mon_list("purple draconian / deep elf mage")
-:           wizlab_setup(_G, "Iskenderun's Mystic Tower")
+:           wizlab_setup(_G)
 epilogue{{
             wizlab_milestone(_G, "Iskenderun's Mystic Tower")
 }}
@@ -1058,7 +1059,7 @@ ENDMAP
 # Zonguldrok's Shrine
 NAME:       wizlab_zonguldrok
 TAGS:       no_rotate
-:           wizlab_setup(_G, "Zonguldrok's Shrine")
+:           wizlab_setup(_G)
 SUBST:      ? = txxx
 SUBST:      ! = t..
 NSUBST:     Z = Z / '
@@ -1070,8 +1071,8 @@ LROCKCOL:   darkgrey
 NSUBST:     d = 2:e / 1:f / * = d:20 e:2
 ITEM:       any scroll / any potion, any book w:2
 ITEM:       double sword unrand:sword_of_zonguldrok
-KFEAT:      GW = G no_mimic
-KPROP:      12'def$ZL+ = no_rtele_into
+KFEAT:      GW = G
+KPROP:      12'def$ZL+ = no_tele_into
 {{
 graves = 28 + crawl.random2(4) + crawl.random2(4)
 nsubst("G = " .. graves .. ":G / *:.")
@@ -1188,8 +1189,7 @@ KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                        draining_gaze.40.natural;\
                        mass_confusion.40.natural;\
                        shadow_creatures.80.natural
-KITEM:      8 = staff of energy unrand:staff_of_wucad_mu, \
-                potion of restore abilities ident:type
+KITEM:      8 = staff of energy unrand:staff_of_wucad_mu
 COLOUR:     c = darkgrey
 COLOUR:     t = lightred / red w:3
 TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
@@ -1206,7 +1206,7 @@ KFEAT:      ' = open_door
 KFEAT:      1234567 = .
 KMONS:      1234567 = nothing
 LROCKCOL:   darkgrey
-ITEM:       potion of experience, potion of beneficial mutation
+ITEM:       potion of experience q:1, potion of beneficial mutation q:1
 ITEM:       manual of fighting / manual of armour / manual of spellcasting / \
             manual of staves / manual of fighting / manual of dodging
 ITEM:       book of enchantments
@@ -1260,7 +1260,7 @@ MARKER:     c = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="
                                   veto_shatter="veto" }
 MARKER:     t = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
                                   veto_shatter="veto", veto_fire="veto" }
-:           wizlab_setup(_G, "Wucad Mu's Monastery")
+:           wizlab_setup(_G)
 :           set_border_fill_type("tree")
 :           set_random_mon_list([[shadow w:6 / flayed ghost w:2 / hungry ghost w:2 / ]]
 :                            .. [[monstrous demonspawn / deep troll / ]]
@@ -1319,7 +1319,6 @@ ENDMAP
 # though distorted by the use of the ninth room and each set rotated.
 NAME:    wizlab_golubria
 TAGS:    no_pool_fixup
-LFLAGS:  no_tele_control
 KMONS:   1 = spatial vortex w:7 / blink frog / insubstantial wisp w:3 / nothing w:5
 KMONS:   2 = deep elf summoner w:5 ; tomahawk ego:dispersal w:20 | tomahawk w:5 | nothing / \
              rakshasa w:5 ; tomahawk ego:dispersal w:20 | tomahawk w:5 | nothing / \
@@ -1356,7 +1355,7 @@ KMONS:   8 = obsidian statue
 # Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
 KITEM:   d = scroll of blinking / scroll of teleportation q:2 / \
              wand of teleportation w:5 / any scroll w:1
-KITEM:   e = ring of teleport control w:9 / ring of teleportation w:20 / any ring w:1
+KITEM:   e = ring of teleportation w:25 / any ring w:5
 KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
              plane papyrus w:5 / manual of translocations w:5 / \
              randbook disc:translocation numspells:5 / \
@@ -1379,7 +1378,7 @@ KFEAT:   ^ = known permanent teleport trap
 KFEAT:   8_ = altar_lugonu
 KFEAT:   OPQRSTUVW&{( = teleporter
 KFEAT:   opqsrtuvw@}) = floor
-KPROP:   a"_~ = no_rtele_into
+KPROP:   a"_~ = no_tele_into
 MARKER:  ^ = lua:fog_machine { cloud_type = "translocational energy", pow_max = 25, \
              delay_min = 30, delay_max = 60, walk_dist = 1, size_min = 2, size_max = 3 }
 SHUFFLE: ozRrIUuLO / uLOozRrIU / rIUuLOozR, pZSsJVvMP / vMPpZSsJV / sJVvMPpZS
@@ -1440,7 +1439,7 @@ set_random_mon_list([[rakshasa w:15 / deep elf summoner w:15 / wizard w:15 / spa
 set_border_fill_type('permarock_wall')
 set_feature_name("permarock_wall", "The dimension's edge")
 set_feature_name("crystal_wall", "wall of crystal")
-wizlab_setup(_G, "The Roulette of Golubria")
+wizlab_setup(_G)
 }}
 
 epilogue{{
@@ -1529,13 +1528,13 @@ MARKER:     ! = lua:fog_machine { \
             }
 ITEM:       w:20 potion of flight / potion of magic / potion of haste / \
             potion of resistance / gold / potion of agility / potion of brilliance
-ITEM:       wand of lightning / staff of air / ring of flight /\
-            gold / scroll of silence / ring of teleport control / \
-            quick blade / ring of evasion / ring of see invisible / \
-            book of clouds / any book w:15 / any good_item / any w:20
+ITEM:       wand of lightning / staff of air / ring of flight / \
+            gold / scroll of silence / quick blade / ring of evasion / \
+            ring of see invisible / book of clouds / any book w:15 / \
+            any good_item / any w:20
 ITEM:       randbook disc:air
 KFEAT:      #4 = deep_water
-KPROP:      #4 = no_rtele_into
+KPROP:      #4 = no_tele_into
 NSUBST:     e = 2:f / * = de, # = 5:4 / 4 = 4## / *:#
 COLOUR:     +<b = white
 LFLOORCOL:  lightblue
@@ -1545,7 +1544,7 @@ TILE:       b = dngn_crystal_white
 COLOUR:     wWv#4 = silver
 :           set_border_fill_type('open_sea')
 :           set_random_mon_list("insubstantial wisp / air elemental / wind drake")
-:           wizlab_setup(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
+:           wizlab_setup(_G)
 :           set_feature_name("floor", "damp floor")
 :           set_feature_name("crystal_wall", "wall of white crystal")
 
@@ -1695,7 +1694,7 @@ SHUFFLE:    A<, 4d, 7f, 4d / 5e, 7f / 8g
 SUBST:      7 = 4, 8 = 5, df = 6, eg = 3
 :           set_random_mon_list([[lesser demon w:50 / red devil / blue devil / ]]
 :                            .. [[orange demon / ynoxinul / kobold demonologist / ]])
-:           wizlab_setup(_G, "The Hall of " .. wizname .. " the Hellbinder")
+:           wizlab_setup(_G)
 :           set_feature_name("stone_wall", "black wall")
 :           set_feature_name("rock_wall", "carved rock wall")
 epilogue{{
@@ -1777,7 +1776,7 @@ ENDMAP
 # may indeed find powers beyond their comprehension.
 
 NAME:       wizlab_lehudib
-KPROP:      `56Nd = no_rtele_into
+KPROP:      ` = no_tele_into
 ## The substitutions/shuffles below give 1/3 chance each of both paths
 ## open, E-path open, or F-path open, and gives 1/4 chance for the
 ## portal being in any of the 4 locations.
@@ -1789,24 +1788,38 @@ SHUFFLE:    PT / TP, UV / VU / VU / VU, YW / WY / WY / WY
 SUBST:      EF = ., H = c, L = n, RSTVY = G, UW = P, Z = .
 ## Remaining level randomization
 SHUFFLE:    Jup / Ofo
-SUBST:      o = 1, ' = llc, I = .KKKKK, N = .NN, `up = .
-NSUBST:     g = 2:1 / *:., h = 2:1 / *:., i = 2:1 / *:., j = 2:1 / *:.
-NSUBST:     k = 2:1 / *:., q = 3:1 / *:., r = 3:1 / *:., s = 1:1 / *:.
-NSUBST:     " = 3:K / *:.
+SUBST:      o = 1, ' = llc, I = .KKKKK, up = .
+NSUBST:     g = 2:1 / ., h = 2:1 / ., i = 2:1 / ., j = 2:1 / .
+NSUBST:     k = 2:1 / ., q = 3:1 / ., r = 3:1 / ., s = 1:1 / .
+NSUBST:     " = 3:K / ., ` = 8:N / d / 4 / 233 / .
 KMONS:      MNO = col:random name:demonic name_adjective plant \
                 tile:mons_demonic_plant
 MONS:       eye of devastation / stone giant / w:15 tentacled starspawn
-MONS:       great orb of eyes / golden eye band, giant orange brain
+MONS:       w:20 giant orange brain / w:12 great orb of eyes / w:5 neqoxec \
+            / w:3 golden eye band
 MONS:       starcursed mass / brown very ugly thing band
-MONS:       neqoxec, cacodemon
-MONS:       quicksilver dragon / war gargoyle / crystal guardian\
+MONS:       cacodemon
+MONS:       quicksilver dragon / war gargoyle / crystal guardian \
             / wretched star
-KMONS:      y = orange crystal statue name:lunar_statue n_rpl n_des \
-                spells:brain_feed.40.natural;draining_gaze.40.natural;\
-                       lehudib's_crystal_spear.40.natural;\
-                       shadow_creatures.80.natural \
-                col:lightmagenta tile:mons_zot_statue
-ITEM:       potion of cure mutation / potion of beneficial mutation, acquire any
+MONS:       orange crystal statue name:lunar_statue n_rpl n_des \
+              spells:brain_feed.40.natural;draining_gaze.40.natural;\
+                     lehudib's_crystal_spear.40.natural;\
+                     shadow_creatures.80.natural \
+              col:lightmagenta tile:mons_zot_statue
+{{
+if you.unrands("moon troll leather armour") then
+    mons("patrolling moon troll ; troll leather armour randart")
+else
+    mons("patrolling moon troll ; troll leather armour " ..
+         "unrand:moon_troll_leather_armour")
+end
+set_random_mon_list ("rust devil w:20 / eye of devastation / stone giant " ..
+                     "/ tentacled starspawn / great orb of eyes " ..
+                     "/ neqoxec w:5 / golden eye w:5 / very ugly thing w:5 " ..
+                     "/ starcursed mass w:5 / cacodemon w:5")
+}}
+ITEM:       potion of cure mutation / potion of beneficial mutation
+ITEM:       acquire any
 ITEM:       randbook owner:Lehudib disc:earth disc2:transmutation \
                      spells:lehudib's_crystal_spear\
             / randbook owner:Lehudib disc:earth disc2:translocation \
@@ -1827,16 +1840,6 @@ COLOUR:     K = disjunction
 COLOUR:     cn = blue
 COLOUR:     m = magenta
 {{
-if you.unrands("moon troll leather armour") then
-    kmons("z = patrolling moon troll ; troll leather armour randart")
-else
-    kmons("z = patrolling moon troll ; troll leather armour " ..
-          "unrand:moon_troll_leather_armour")
-end
-set_random_mon_list ("rust devil w:20 / eye of devastation / neqoxec " ..
-                     "/ stone giant / golden eye / great orb of eyes " ..
-                     "/ tentacled starspawn  / starcursed mass w:5 " ..
-                     "/ cacodemon w:5 ")
 -- Uses the same teleporter lua as from golubria
 local teleporter_glyph = "PQ"
 local teleport_spot_glyph = "J&"
@@ -1850,7 +1853,7 @@ for i = 1, #teleporter_glyph do
     lua_marker(teleporter_glyph:sub(i,i), tele_marker[i])
     lua_marker(teleport_spot_glyph:sub(i,i), portal_desc { teleport_spot=i})
 end
-wizlab_setup(_G, "Lehudib's Moon Base")
+wizlab_setup(_G)
 }}
 epilogue {{
             wizlab_milestone(_G, "Lehudib's Moon Base")
@@ -1860,7 +1863,7 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccbbbccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccc*bSb*cccccccccccccccccccccccccccc
 cccccccccccccccccccccccccc.......ccccccccccccccccccccccccccc
-cccccccccccccccccccccccccc...7...ccccccccccccccccccccccccccc
+cccccccccccccccccccccccccc...5...ccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccc...ccccccccccc..cccccccccccccccc
 cccccccc.A.cccccccccccci............ccccc.....cccccccccccccc
 ccccccc.....cccccccci....v...v..iv.....cc......ccccccccccccc
@@ -1870,32 +1873,32 @@ cccccc.......cccccccc.iccccccccccccc......KKK.....cccccccccc
 ccccccc......cccccccccccccccccccccccccc...KK..KK...ccccccccc
 cccccccc.<....cccccccccccccccccccccccc......2KKK....cccccccc
 cccccccccccc...ccccccccccccc...ccccccc..KK..KKK......ccccccc
-ccccccccccccc...ccccccF................KKK..KK4.KKK..ccccccc
+ccccccccccccc...ccccccF................KKK..KK3.KKK..ccccccc
 cccccccccccccc...ccc.kF......K.........KKK.q...KKKK...cccccc
-ccccccccccccccc.......Fc..K.....K..c...KK......KKKq...cccccc
+ccccccccccccccc.......Fc..K..2..K..c...KK......KKKq...cccccc
 cccccccccccccccc.......cc....v....cc.......KKK.......ccccccc
 cccvvbbbvvcccccc.......kc..vvvvv..c.......KKKK.....ccccccccc
 ccvv*bRb*vvccccc...KK...cc..vvv2.cc...KK..KKKq...ccccccccccc
-ccv.......vcccc....KKK...c....3..c...KKK.......ccccccccccccc
-ccv...7...vcccck....KKK..cc.....cc..KKKq.....ccccccccccccccc
+ccv.......vcccc....KKK...c....2..c...KKK.......ccccccccccccc
+ccv...5...vcccck....KKK..cc.....cc..KKKq.....ccccccccccccccc
 ccv.......vcccEEE....KK..kcccccccq..KK.......ccccccccccccccc
 ccv.v...v.vccc..cck......ccc|Q|ccc.......cc..ccccccccc.jcccc
 ccv..hvh..vcc....ccc....cc%%|||%%cc....ccc....ccccccc...Mccc
 ccv..vvv..vccc.....ccckcc.%bbbbb%.ccqccc.....cc.jc......cccc
 ccvh..v..hvccc.v...cJccc..bb...bb..cccOc...v.cM..cj.vv..cccc
 ccvv.....vvccc....ccu.bb...........bb.fcc....cc..cc.v*.ccccc
-cccv.....vccc..v..c...b.............b...c..v..+.........bbcc
-cccv.vhv.vccc..v..c...b......z......b...c..v..+.......7.Tbcc
-cccv.....vccc..v..cp..b.............b..oc..v..+.........bbcc
+cccv.....vccc..v..c...b.............b...c..v.2+.........bbcc
+cccv.vhv.vccc..v..c...b......7......b...c..v..+.......5.Tbcc
+cccv.....vccc2.v..cp..b.............b..oc..v..+.........bbcc
 ccvv.....vvccc....cc..bb...........bb..cc....cc..cc.v*.ccccc
-ccv..hvh..vccc.v..3c...b...........b...c3..v.cM..cj.vv..cccc
+ccv..hvh..vccc.v..2c...b...........b...c2..v.cM..cj.vv..cccc
 ccv..vvv..vccc.....c...bb.........bb...c.....cc.jc......cccc
 ccv...v...vcc2...cccc...bb.......bb...cccc...2ccccccc...Mccc
-ccv.v...v.vccc..cc..c....bbb...bbb....c.4cc..ccNNNNNcc.jcccc
-ccv.......vccc......cc...............cc...c++cN``d``Nc++cccc
-ccvv.....vvcccc......cc.............cc3...c..mN``6``Nm..cccc
-ccccc....cccccc.......ccc.........ccc.....c..mN5```5Nm..cccc
-cccccc...ccccccc..v.....cccc...cccc....s..c..ccNNNNNcc..cccc
+ccv.v...v.vccc..cc..c....bbb...bbb....c.3cc..cc`````cc.jcccc
+ccv.......vccc......cc...............cc...c++c```````c++cccc
+ccvv.....vvcccc......cc.............cc2...c..m```````m..cccc
+ccccc....cccccc.......ccc.........ccc.....c..m```````m..cccc
+cccccc...ccccccc..v.....cccc...cccc....s..c..cc`````cc..cccc
 ccccccc...ccccccc..........ccccc......KK..c...cmmmmmc...cccc
 cccccccc...cccccc..vv.v...................cc...........ccccc
 ccccccccc...ccccc..vvr.................K...ccM.......Mcccccc
@@ -1906,61 +1909,13 @@ cc.....ccccc..v.vv..rccccccc...ccccccc...................'cc
 ccc..v..cccc........cccccg.G...G.gccccc....sI.."".""..I..''c
 cccc..2.......rv....cccc...........ccccs...II.".....".II..'c
 ccccc..vv.v.vv.....ccccc...........ccccc...I.."....."..I..'c
-cccccc.vv...vv.vv.rccccg...cc.cc...gcccc...IKKKKKyKKKKKI..'c
+cccccc.vv...vv.vv.rccccg...cc.cc...gcccc...IKKKKK6KKKKKI..'c
 cccccc..r......vv.ccccc...cc...cc...ccccc..IKKKKK+KKKKKI..'c
-ccccccc..v.4......cccc....c.....c....cccc..IKKKKKeKKKKKI..'c
+ccccccc..v.3......cccc....c.....c....cccc..IKKKKKeKKKKKI..'c
 cccccccc...v.vv..ccccc...............ccccc..IKKKKKKKKKI..''c
-ccccccccc....vv..ccccM.g.....7.....g.Mccc''.....KKK.....''cc
+ccccccccc....vv..ccccM.g.....5.....g.Mccc''.....KKK.....''cc
 ccccccccccc.....cccccc....c*...*c....ccccc''...........''ccc
 ccccccccccccc.rcccccccccccccbPbcccccccccccc'''''''''''''cccc
 ccccccccccccccccccccccccccccbbbccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
-
-###############################################################################
-# Incomplete and TODO work area.
-#
-# See git history for previous versions of Ozocubu, Alistair, Borgnjor,
-# Eringya, Tukima.
-#
-# March 2013 note: there isn't the greatest of interest in making
-# the majority of these potential portals, as nice as that would be,
-# and the portal is effectively "finished".
-#
-# PLANNING AREA:
-#
-# From spells:
-#
-# Alistair's Brewery: mutated wizards, mephitic cloud generators,
-#    cupboards full of potions, confused monsters.
-# Lee's Rapid Deconstructor: golems and "monk" or otherwise unarmed creatures,
-#    exploding features and exploding corpses. It's a timed vault, so you have
-#    to get to the loot quickly and avoid the hordes of monsters.
-# Lehudib's Crystal Spire:  crystal walls and crystal golems, crystal monsters,
-#    spear throwers (statues with crystal spear), possibly the unrand as the
-#    loot.
-# Maxwell's Forge: Maxwell employs a bunch of angels to churn out weapons;
-#    stashes of hammers, flame clouds, other "smithy" styled themes, with black
-#    smoke.
-# Olgreb's Toxic Laboratory: poisonous clouds, a toxic radiance effect,
-#    poisonous monsters, possibly even a "poison" effect that bypasses rPois,
-#    potions of poison and potions dropped converting into potions of poison.
-# Ozocubu's Refrigerator: simulacra, refrigeration effect, a solid stone room
-#    inside of an "ice cave", freezing clouds.
-#
-# From unrands:
-#
-# Cekugob's Oubliette: a randomised maze (though not a labyrinth) with skeletal
-#    guards, and with occasionally hidden. Cekugob's amulet as the loot,
-#    possibly.
-# Botono's Bayou: A bay-like area with small huts, wizards that cast negative
-#    related spells, shadow dragons, rebranded swamp worms, wraiths, spectrals.
-# Ukta's Hut: phantoms, other "ghosts", ogre mages and ogres, druidic style,
-#    wooden walls set in a forest (more "earthy" than Eringya's Garden)
-# The Alchemist's Tower: gold turned into things, things turned into gold.
-#
-# Other mages that could use representation, not yet expounded upon:
-# Borgnjor, Leda, Doom Knight, Octopus King, The Captain, Zhor.
-# There might be enough material to split the set into two portals
-# based on an artefact smith or owner and named mage, eventually...
-#

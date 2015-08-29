@@ -84,7 +84,7 @@
 // mostly flavour.
 static const spell_type _xom_nontension_spells[] =
 {
-    SPELL_SUMMON_BUTTERFLIES, SPELL_FLY, SPELL_BEASTLY_APPENDAGE,
+    SPELL_SUMMON_BUTTERFLIES, SPELL_BEASTLY_APPENDAGE,
     SPELL_SPIDER_FORM, SPELL_STATUE_FORM, SPELL_ICE_FORM, SPELL_DRAGON_FORM,
     SPELL_NECROMUTATION
 };
@@ -693,7 +693,6 @@ static void _try_brand_switch(const int item_index)
 
     item_def &item(mitm[item_index]);
 
-    // Only apply it to melee weapons for the player.
     if (item.base_type != OBJ_WEAPONS || is_range_weapon(item))
         return;
 
@@ -704,28 +703,13 @@ static void _try_brand_switch(const int item_index)
     if (one_chance_in(5))
         return;
 
-    int brand;
-    if (item.base_type == OBJ_WEAPONS)
-    {
-        // Only switch already branded items.
-        if (get_weapon_brand(item) == SPWPN_NORMAL)
-            return;
-
-        brand = (int) SPWPN_CHAOS;
-    }
-    else
-    {
-        // Only switch already branded items.
-        if (get_ammo_brand(item) == SPMSL_NORMAL)
-            return;
-
-        brand = (int) SPMSL_CHAOS;
-    }
+    if (get_weapon_brand(item) == SPWPN_NORMAL)
+        return;
 
     if (is_random_artefact(item))
-        artefact_set_property(item, ARTP_BRAND, brand);
+        artefact_set_property(item, ARTP_BRAND, SPWPN_CHAOS);
     else
-        item.special = brand;
+        item.special = SPWPN_CHAOS;
 }
 
 static void _xom_make_item(object_class_type base, int subtype, int power)
@@ -733,14 +717,6 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
     god_acting gdact(GOD_XOM);
 
     int thing_created = items(true, base, subtype, power, 0, GOD_XOM);
-
-    if (feat_destroys_item(grd(you.pos()), mitm[thing_created],
-                           !silenced(you.pos())))
-    {
-        simple_god_message(" snickers.", GOD_XOM);
-        destroy_item(thing_created, true);
-        thing_created = NON_ITEM;
-    }
 
     if (thing_created == NON_ITEM)
     {
@@ -757,6 +733,9 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
 
     canned_msg(MSG_SOMETHING_APPEARS);
     move_item_to_grid(&thing_created, you.pos());
+
+    if (thing_created == NON_ITEM) // if it fell into lava
+        simple_god_message(" snickers.", GOD_XOM);
 
     stop_running();
 }
@@ -981,7 +960,7 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
     ASSERT(!is_unrandom_artefact(item));
 
     bool seen = false;
-    if (mon && you.can_see(mon) && item.base_type == OBJ_WEAPONS)
+    if (mon && you.can_see(*mon) && item.base_type == OBJ_WEAPONS)
     {
         seen = true;
 
@@ -1046,12 +1025,11 @@ static monster_type _xom_random_demon(int sever)
     return demon;
 }
 
-static bool _player_is_dead(bool soon = true)
+static bool _player_is_dead()
 {
     return you.hp <= 0
         || is_feat_dangerous(grd(you.pos()))
-        || you.did_escape_death()
-        || soon && (you.strength() <= 0 || you.dex() <= 0 || you.intel() <= 0);
+        || you.did_escape_death();
 }
 
 static void _note_potion_effect(potion_type pot)
@@ -1234,7 +1212,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
             god_speaks(GOD_XOM, helpful ? _get_xom_speech("good monster polymorph").c_str()
                                         : _get_xom_speech("bad monster polymorph").c_str());
 
-            bool see_old = you.can_see(mon);
+            bool see_old = you.can_see(*mon);
             string old_name = mon->full_name(DESC_PLAIN);
 
             if (one_chance_in(8)
@@ -1250,7 +1228,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
             monster_polymorph(mon, RANDOM_MONSTER,
                               powerup ? PPT_MORE : PPT_LESS);
 
-            bool see_new = you.can_see(mon);
+            bool see_new = you.can_see(*mon);
 
             if (see_old || see_new)
             {
@@ -1393,9 +1371,7 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
 static int _xom_random_stickable(const int HD)
 {
     unsigned int c;
-    // XXX: Unify this with the list in spl-summoning:_snakable_weapon().
-    // It has everything but demon tridents and bardiches, and puts the
-    // giant club types at the end as special cases.
+
     static const int arr[] =
     {
         WPN_CLUB,    WPN_SPEAR,      WPN_TRIDENT,      WPN_HALBERD,
@@ -1620,7 +1596,7 @@ static int _xom_throw_divine_lightning(bool debug = false)
 
     // Make sure there's at least one enemy within the lightning radius.
     bool found_hostile = false;
-    for (radius_iterator ri(you.pos(), 2, C_ROUND, LOS_SOLID, true); ri; ++ri)
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID, true); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {
@@ -2030,7 +2006,7 @@ static bool _vitrify_area(int radius)
         return false;
 
     bool something_happened = false;
-    for (radius_iterator ri(you.pos(), radius, C_POINTY); ri; ++ri)
+    for (radius_iterator ri(you.pos(), radius, C_SQUARE); ri; ++ri)
     {
         const dungeon_feature_type grid = grd(*ri);
         const dungeon_feature_type newgrid = _vitrified_feature(grid);
@@ -2132,7 +2108,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         do
         {
             count++;
-            you_teleport_now(false);
+            you_teleport_now();
             search_around();
             more();
             if (one_chance_in(10) || count >= 7 + random2(5))
@@ -2883,7 +2859,7 @@ static int _xom_repel_stairs(bool debug = false)
 
     vector<coord_def> stairs_avail;
     bool real_stairs = false;
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE); ri; ++ri)
     {
         if (!cell_see_cell(you.pos(), *ri, LOS_SOLID_SEE))
             continue;
@@ -3298,21 +3274,6 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done    = _xom_miscast(2, nasty, debug);
             badness = 2;
         }
-        else if (tension > 0 && x_chance_in_y(13, sever))
-        {
-            if (cloud_type_at(you.pos()) != CLOUD_NONE)
-                return XOM_DID_NOTHING;
-            if (debug)
-                return XOM_BAD_CHAOS_CLOUD;
-            // Place a one-tile cloud with minor spreading.
-            check_place_cloud(CLOUD_CHAOS, you.pos(), 3 + random2(12)*3,
-                              nullptr, random_range(5,15));
-            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "chaos cloud"),
-                      true);
-            god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
-            done = XOM_BAD_CHAOS_CLOUD;
-            badness = 2;
-        }
         else if (x_chance_in_y(14, sever))
         {
             done    = _xom_chaos_upgrade_nearby_monster(debug);
@@ -3347,7 +3308,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             int count = 0;
             do
             {
-                you_teleport_now(false);
+                you_teleport_now();
                 search_around();
                 more();
                 if (count++ >= 7 + random2(5))
@@ -3402,6 +3363,21 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
         {
             done    = _xom_draining_torment_effect(sever, debug);
             badness = (random2(tension) > 5 ? 3 : 2);
+        }
+        else if (tension > 0 && x_chance_in_y(22, sever))
+        {
+            if (cloud_type_at(you.pos()) != CLOUD_NONE)
+                return XOM_DID_NOTHING;
+            if (debug)
+                return XOM_BAD_CHAOS_CLOUD;
+            // Place a one-tile cloud with minor spreading.
+            check_place_cloud(CLOUD_CHAOS, you.pos(), 3 + random2(12)*3,
+                              nullptr, random_range(5,15));
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "chaos cloud"),
+                      true);
+            god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
+            done = XOM_BAD_CHAOS_CLOUD;
+            badness = 2;
         }
         else if (one_chance_in(sever) && !player_in_branch(BRANCH_ABYSS))
         {
@@ -3494,7 +3470,7 @@ static void _handle_accidental_death(const int orig_hp,
     }
 
     if (is_feat_dangerous(feat) && !crawl_state.game_is_sprint())
-        you_teleport_now(false);
+        you_teleport_now();
 }
 
 int xom_acts(bool niceness, int sever, int tension, bool debug)
@@ -3511,11 +3487,10 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
     }
 #endif
 
-    if (_player_is_dead(false))
+    if (_player_is_dead())
     {
         // This should only happen if the player used wizard mode to
-        // escape from death via stat loss, or if the player used wizard
-        // mode to escape death from deep water or lava.
+        // escape death from deep water or lava.
         ASSERT(you.wizard);
         ASSERT(!you.did_escape_death());
         if (is_feat_dangerous(grd(you.pos())))

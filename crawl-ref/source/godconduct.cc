@@ -827,14 +827,10 @@ static like_map divine_likes[] =
                 piety = 0;
                 denom = 1;
 
-                ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
-                ASSERT(you.props.exists(AVAILABLE_SAC_KEY));
+                ASSERT(you.props.exists(RU_SACRIFICE_PROGRESS_KEY));
 
-                const int available_sacrifices =
-                    you.props[AVAILABLE_SAC_KEY].get_vector().size();
-
-                if (!available_sacrifices && one_chance_in(100))
-                    you.props["ru_progress_to_next_sacrifice"].get_int()++;
+                if (one_chance_in(100))
+                    you.props[RU_SACRIFICE_PROGRESS_KEY].get_int()++;
             }
         } },
     },
@@ -996,6 +992,10 @@ bool god_punishes_spell(spell_type spell, god_type god)
         return true;
 
     if (map_find(divine_peeves[god], DID_CHAOS) && is_chaotic_spell(spell))
+        return true;
+
+    // not is_hasty_spell: see spl-cast.cc:_spellcasting_god_conduct
+    if (map_find(divine_peeves[god], DID_HASTY) && spell == SPELL_SWIFTNESS)
         return true;
 
     if (map_find(divine_peeves[god], DID_CORPSE_VIOLATION)

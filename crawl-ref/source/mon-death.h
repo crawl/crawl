@@ -28,25 +28,19 @@
 
 struct bolt;
 
-int monster_die(monster* mons, const actor *killer, bool silent = false,
-                bool wizard = false, bool fake = false);
+item_def* monster_die(monster* mons, const actor *killer, bool silent = false,
+                      bool wizard = false, bool fake = false);
 
-int monster_die(monster* mons, killer_type killer,
-                int killer_index, bool silent = false, bool wizard = false,
-                bool fake = false);
+item_def* monster_die(monster* mons, killer_type killer,
+                      int killer_index, bool silent = false,
+                      bool wizard = false, bool fake = false);
 
-int mounted_kill(monster* daddy, monster_type mc, killer_type killer,
-                int killer_index);
+item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
+                       int killer_index);
 
-monster_type fill_out_corpse(const monster* mons,
-                             monster_type mtype,
-                             item_def& corpse,
-                             bool force_corpse = false);
+item_def* place_monster_corpse(const monster& mons, bool silent,
+                                                    bool force = false);
 
-void goldify_corpse(item_def &corpse);
-bool explode_corpse(item_def& corpse, const coord_def& where);
-
-int place_monster_corpse(const monster* mons, bool silent, bool force = false);
 void monster_cleanup(monster* mons);
 void setup_spore_explosion(bolt & beam, const monster& origin);
 void record_monster_defeat(monster* mons, killer_type killer);

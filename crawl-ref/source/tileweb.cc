@@ -21,6 +21,7 @@
 #include "files.h"
 #include "itemname.h"
 #include "json.h"
+#include "json-wrapper.h"
 #include "lang-fake.h"
 #include "libutil.h"
 #include "map_knowledge.h"
@@ -58,34 +59,6 @@ static unsigned int get_milliseconds()
 
     return ((unsigned int) tv.tv_sec) * 1000 + tv.tv_usec / 1000;
 }
-
-// Helper for json.h
-struct JsonWrapper
-{
-    JsonWrapper(JsonNode* n) : node(n)
-    { }
-
-    ~JsonWrapper()
-    {
-        if (node)
-            json_delete(node);
-    }
-
-    JsonNode* operator->()
-    {
-        return node;
-    }
-
-    void check(JsonTag tag)
-    {
-        if (!node || node->tag != tag)
-            throw malformed;
-    }
-
-    JsonNode* node;
-
-    static class MalformedException { } malformed;
-};
 
 TilesFramework tiles;
 
@@ -753,8 +726,6 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.exp_progress, (int8_t) get_exp_progress(), "progress");
     _update_int(force_full, c.gold, you.gold, "gold");
 
-    if (crawl_state.game_is_zotdef())
-        _update_int(force_full, c.zot_points, you.zot_points, "zp");
     if (you.running == 0) // Don't update during running/resting
     {
         _update_int(force_full, c.elapsed_time, you.elapsed_time, "time");
@@ -826,7 +797,7 @@ void TilesFramework::_send_player(bool force_full)
     json_close_object(true);
 
     _update_int(force_full, c.quiver_item,
-                (int8_t) you.m_quiver->get_fire_item(), "quiver_item");
+                (int8_t) you.m_quiver.get_fire_item(), "quiver_item");
 
     _update_string(force_full, c.unarmed_attack,
                    you.unarmed_attack_name(), "unarmed_attack");
@@ -1469,7 +1440,7 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
         // TODO: get this information to the client in another way
         json_open_object("typedata");
         json_write_int("avghp", mons_avg_hp(m->type));
-        if (mons_class_flag(m->type, M_NO_EXP_GAIN))
+        if (!mons_class_gives_xp(m->type))
             json_write_bool("no_exp", true);
         json_close_object();
     }

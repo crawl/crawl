@@ -92,8 +92,7 @@ bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf)
         aid.context = SC_NEWLY_SEEN;
 
     if (!mons_is_safe(mons)
-        && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
-           || mons->type == MONS_BALLISTOMYCETE && mons->ballisto_activity)
+        && (mons_class_gives_xp(mons->type) || mons_is_active_ballisto(mons)))
     {
         return interrupt_activity(AI_SEE_MONSTER, aid, msgs_buf);
     }
@@ -114,7 +113,7 @@ void flush_comes_into_view()
     monster* mon = crawl_state.which_mon_acting();
 
     if (!mon || !mon->alive() || (mon->flags & MF_WAS_IN_VIEW)
-        || !you.can_see(mon))
+        || !you.can_see(*mon))
     {
         return;
     }
@@ -130,12 +129,7 @@ void seen_monsters_react(int stealth)
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if ((mi->asleep() || mons_is_wandering(*mi))
-            && check_awaken(*mi, stealth)
-#ifdef EUCLIDEAN
-               || you.prev_move.abs() == 2 && x_chance_in_y(2, 5)
-                  && check_awaken(*mi, stealth)
-#endif
-           )
+            && check_awaken(*mi, stealth))
         {
             behaviour_event(*mi, ME_ALERT, &you, you.pos(), false);
 
@@ -194,7 +188,7 @@ static string _desc_mons_type_map(map<monster_type, int> types)
         if (entry.second > 1)
         {
             name = make_stringf("%d %s", entry.second,
-                                pluralise(name).c_str());
+                                pluralise_monster(name).c_str());
         }
 
         message += name;
@@ -513,7 +507,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     if (!in_bounds(pos))
         pos = you.pos();
 
-    if (!force && testbits(env.level_flags, LFLAG_NO_MAP))
+    if (!force && !is_map_persistent())
     {
         if (!suppress_msg)
             canned_msg(MSG_DISORIENTED);
@@ -527,8 +521,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         map_radius = 5;
 
     // now gradually weaker with distance:
-    const int pfar     = dist_range(map_radius * 7 / 10);
-    const int very_far = dist_range(map_radius * 9 / 10);
+    const int pfar     = map_radius * 7 / 10;
+    const int very_far = map_radius * 9 / 10;
 
     bool did_map = false;
     int  num_altars        = 0;
@@ -537,14 +531,14 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     const FixedArray<uint8_t, GXM, GYM>& difficulty =
         _tile_difficulties(!deterministic);
 
-    for (radius_iterator ri(pos, map_radius, C_ROUND);
+    for (radius_iterator ri(pos, map_radius, C_SQUARE);
          ri; ++ri)
     {
         if (!wizard_map)
         {
             int threshold = proportion;
 
-            const int dist = distance2(you.pos(), *ri);
+            const int dist = grid_distance(you.pos(), *ri);
 
             if (dist > very_far)
                 threshold = threshold / 3;
@@ -823,7 +817,8 @@ void view_update_at(const coord_def &pos)
 void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay)
 {
-    if ((Options.use_animations & UA_PLAYER) && you.can_see(mon))
+    ASSERT(mon); // XXX: change to const monster &mon
+    if ((Options.use_animations & UA_PLAYER) && you.can_see(*mon))
     {
         colour_t old_flash_colour = you.flash_colour;
         coord_def c(mon->pos());
@@ -905,18 +900,19 @@ static void _debug_pane_bounds()
 #endif
 }
 
-enum update_flags
+enum update_flag
 {
     UF_AFFECT_EXCLUDES = (1 << 0),
     UF_ADDED_EXCLUDE   = (1 << 1),
 };
+DEF_BITFIELD(update_flags, update_flag);
 
 // Do various updates when the player sees a cell. Returns whether
 // exclusion LOS might have been affected.
-static int player_view_update_at(const coord_def &gc)
+static update_flags player_view_update_at(const coord_def &gc)
 {
     maybe_remove_autoexclusion(gc);
-    int ret = 0;
+    update_flags ret;
 
     // Set excludes in a radius of 1 around harmful clouds genereated
     // by neither monsters nor the player.
@@ -993,7 +989,7 @@ static void player_view_update()
 
     for (radius_iterator ri(you.pos(), you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
-        int flags = player_view_update_at(*ri);
+        update_flags flags = player_view_update_at(*ri);
         if (flags & UF_AFFECT_EXCLUDES)
             update_excludes.push_back(*ri);
         if (flags & UF_ADDED_EXCLUDE)
@@ -1476,7 +1472,10 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     if ((_show_terrain || Options.always_show_exclusions)
         && you.on_current_level
         && map_bounds(gc)
-        && (_show_terrain || gc != you.pos())
+        && (_show_terrain
+            || gc != you.pos()
+               && (env.map_knowledge(gc).monster() == MONS_NO_MONSTER
+                   || !you.see_cell(gc)))
         && travel_colour_override(gc))
     {
         if (is_exclude_root(gc))

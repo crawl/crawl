@@ -205,9 +205,9 @@ A tough-looking gnoll, wearing the pelt of one of his former war dogs.
 %%%%
 Harold
 
-A middle-aged bounty hunter, anxious to retire from bounty-hunting after one
-final job. He hopes to settle down somewhere and live a quiet life with his
-family, using the money from his final bounty: you.
+A middle-aged bounty hunter, anxious to retire after one final job. He hopes to
+settle down somewhere and live a quiet life with his family, using the money
+from his final bounty: you.
 %%%%
 Ignacio
 
@@ -236,14 +236,14 @@ secluded place where she could study the darker arts without being disturbed.
 %%%%
 Jorgrun
 
-A deep dwarven magician, particularly well-attuned to the dungeon around him.
-He wields powerful earth magic in combat.
+A dwarven magician, particularly well-attuned to the dungeon around him. He
+wields powerful earth magic in combat.
 %%%%
 Jory
 
 Once a simple village peasant, Jory found himself transformed in undeath into a
 powerful creature. Through the countless centuries unlived since then, he has
-honed his skills in combat and magic, amassed great wealth and many
+honed his skills in combat and magic, and amassed great wealth and many
 possessions.
 %%%%
 Joseph
@@ -374,7 +374,7 @@ out of reality.
 Norris
 
 A relaxed peace-in-death cultist with a healthy tan and a soothing voice. He
-doesn't really care if it is you or him who dies — “both” would probably be the
+doesn't really care if it is you or he who dies — “both” would probably be the
 best option.
 %%%%
 Pikel
@@ -387,7 +387,9 @@ cower with every crack of his whip.
 Polyphemus
 
 A cyclops shepherd, he is very protective of his charges, whom he watches with
-an undying fervor through his single massive eye.
+an undying fervor through his single massive eye. Nevertheless, he won't
+hesitate to use them as projectiles in a pinch; after all, the best defence is
+a good offence.
 %%%%
 Prince Ribbit
 
@@ -519,7 +521,7 @@ subterranean spaces.
 air elemental
 
 A spirit drawn from the elemental plane of air. It exists in this world as a
-swirling vortex of air, often dissipating and reforming.
+swirling vortex of air.
 %%%%
 alligator
 
@@ -577,12 +579,6 @@ azure jelly
 An extremely cold blob of bright blue cytoplasm, forming bits of frost in the
 air around it.
 %%%%
-baby alligator
-
-A juvenile alligator. While it does not have crushing jaws, nor the strength to
-put on massive bursts of speed, it is more limber than the adult form, and its
-milk-tooth is still very sharp.
-%%%%
 ball lightning
 
 A huge, swift sphere of coruscating electrical energy. It will explode at the
@@ -629,7 +625,7 @@ bennu
 Sacred, self-created sunbirds, representative of rebirth. They have ascended
 past the cycles of life and death, and readily call upon aspects of both.
 Famously, they may rise forth from death in a burst of flame, though common
-portrayals leaves out how unholy these flames are.
+portrayals leave out how unholy these flames are.
 %%%%
 big kobold
 
@@ -694,11 +690,6 @@ A huge undead abomination, pieced together from the broken bones of many
 dragons by powerful necromantic magic. Fortunately, whatever organ produces a
 dragon's fearsome breath was lost in the process.
 %%%%
-boring beetle
-
-An umber beetle with large, powerful mandibles that enable it to bore through
-solid rock.
-%%%%
 boulder beetle
 
 A huge grey beetle with an almost impenetrable rocky carapace, capable of
@@ -761,7 +752,7 @@ famous for their skills in archery.
 %%%%
 centaur warrior
 
-A muscular centaur, a veteran of numerous battles, armed with well-made weapons
+A muscular centaur, veteran of numerous battles, armed with well-made weapons
 and able to use them skillfully.
 %%%%
 chaos champion
@@ -780,11 +771,6 @@ a man, one of an ox, one of a lion, one of an eagle. It is one of the three
 angelic beings who stand before the good gods, singing eternal hymns of praise
 to their Glory and Goodness. Indeed, these hymns have the power to rouse
 greatness in hearts pure and true.
-%%%%
-chimera
-
-A grotesque parody of nature, this fantastical creature consists of three
-individual beasts combined into one.
 %%%%
 corrupter
 
@@ -916,11 +902,11 @@ A battle-hardened deep elf fighter.
 deep elf mage
 
 A deep elf learned in the ways of murderous magic. Deep elf mages are capable
-of a wide array of harmful spells.
+of casting a wide array of harmful spells.
 %%%%
 deep elf master archer
 
-A deep elf archer that has devoted a lifetime to the mastery of archery,
+A deep elf archer who has devoted a lifetime to the mastery of archery,
 dismissing magic as a frivolous distraction.
 %%%%
 deep elf priest
@@ -1152,7 +1138,7 @@ their almost supernatural ability to expel massive quantities of flames.
 fire dragon
 
 A great reptilian beast with powerful claws on its limbs, covered in thick
-green scales and with two huge bat-like wings. Little trails of smoke spill
+red scales and with two huge bat-like wings. Little trails of smoke spill
 from its toothy maw.
 %%%%
 fire drake
@@ -1162,7 +1148,7 @@ A small but dangerous dragon, puffing clouds of smoke.
 fire elemental
 
 A spirit drawn from the elemental plane of fire, which exists in this world as
-a brilliant column of raging flames. It cannot cross water.
+a brilliant column of raging flames.
 %%%%
 fire giant
 
@@ -1234,11 +1220,6 @@ A truly horrible undead creature, a ghoul is a decayed cadaver, reanimated and
 accursed with a terrible hunger. It desires nothing but to feed on the flesh of
 the living, and will fell its victims with its vicious claws or with one of the
 many diseases it is host to.
-%%%%
-goliath beetle
-
-A huge black beetle with great crunching mandibles and very hard chitinous
-armour.
 %%%%
 gelid demonspawn
 
@@ -1318,11 +1299,6 @@ golden eye
 
 A tiny and shimmering floating eye, swift as the wind and glistening like gold.
 It has a peculiarly hypnotic look.
-%%%%
-grand avatar
-
-An avatar of battle and bloodshed, capable of mimicking sufficiently damaging
-physical attacks and conjurations from its creator and their allies.
 %%%%
 great orb of eyes
 
@@ -1617,8 +1593,9 @@ are too big to embrace a small creature like you.
 %%%%
 large abomination
 
-A large and hideous conglomeration of mangled body parts, demonically possessed
-and altered in ways that challenge sanity.
+A hideous conglomeration of mangled body parts, possessed and altered in ways
+that challenge sanity. Each varies in speed and durability by the nature of
+whatever unfortunates were used to make it.
 %%%%
 lava snake
 
@@ -1738,6 +1715,11 @@ mummy priest
 
 An ancient servant of a long forgotten god, embalmed and cursed to walk in
 undeath for all eternity.
+%%%%
+mutant beast
+
+A bizarre creature, twisted and warped by overexposure to magical radiation.
+Each has a different set of traits.
 %%%%
 naga
 
@@ -2021,12 +2003,6 @@ An profoundly unnatural hound, crackling with electricity. Remarkably, it can
 transform into living lightning and bolt forth, harmlessly passing pack mates
 while painfully piercing prey.
 %%%%
-raven
-
-An opportunistic scavenger bird that is quite proactive in the production of
-carrion. It has a particularly unhealthy fascination with eyeballs and things
-resembling eyeballs, such as pickled onions, walnuts and olives.
-%%%%
 reaper
 
 A skeletal form wielding a giant scythe.
@@ -2082,8 +2058,6 @@ salamander firebrand
 The rarest of the salamander castes, possessed of fearsome agility and
 unparallelled martial prowess. Their mastery of fire is woven into every strike
 of their weapons, filling the air around their opponent with sweltering flames.
-So hot does their blood run that even outside their native terrain, few can
-escape their pursuit.
 %%%%
 salamander stormcaller
 
@@ -2168,12 +2142,12 @@ shard shrike
 
 An incredibly fast-moving bird, known for impaling its prey on shards of ice
 before tearing them to pieces. They have acclimated to the desolate wastes of
-Cocytus, and its accursed chill now envelopes them.
+Cocytus, and its accursed chill now envelops them.
 %%%%
 sheep
 
 A dim-witted, fluffy ovine, better known for its woolly hide than its
-ferociousness. Dungeon sheep are nevertheless far more murderous than their
+ferocity. Dungeon sheep are nevertheless far more murderous than their
 surface brethren. It looks quite flammable.
 %%%%
 shining eye
@@ -2196,11 +2170,6 @@ involved with casting spells or reading scrolls.
 simulacrum
 
 An ice replica of a monster, animated by the powers of necromancy.
-%%%%
-singularity
-
-A gravitational singularity, which pulls in enemies of its creator and
-violently warps them in the process.
 %%%%
 siren
 
@@ -2242,7 +2211,8 @@ with other nearby globs...
 %%%%
 small abomination
 
-A hideous mass of body parts, part animated dead flesh, part demon.
+A hideous mass of body parts. Each varies in speed and durability by the nature
+of whatever unfortunates were used to make it.
 %%%%
 smoke demon
 
@@ -3004,11 +2974,11 @@ oklob sapling wizard
 
 <oklob plant annihilator>
 %%%%
-orb beetle
+orb golem
 
-A monstrously big beetle who apparently ate a mighty conjurer, or maybe an orb
-spider. Or perhaps it's a product of divine experiments, in which case it looks
-like Xom's handiwork...
+A metal golem crackling with magical energies. It must have been created by
+a truly devious wizard, or possibly someone who misheard what monsters could
+be found in the Realm of Zot.
 %%%%
 orb of electricity
 

@@ -114,7 +114,7 @@ struct monsterentry
     colour_t colour;
     const char *name;
 
-    uint64_t bitfields;
+    monclass_flags_t bitfields;
     resists_t resists;
 
     // [Obsolete] Experience used to be calculated like this:
@@ -148,7 +148,6 @@ struct monsterentry
     shout_type         shouts;
     mon_intel_type     intel;
     habitat_type     habitat;
-    flight_type      fly;
     int8_t           speed;        // How quickly speed_increment increases
     mon_energy_usage energy_usage; // And how quickly it decreases
     mon_itemuse_type gmon_use;
@@ -198,9 +197,6 @@ string mons_type_name(monster_type type, description_level_type desc);
 
 bool give_monster_proper_name(monster* mon, bool orcs_only = true);
 
-flight_type mons_class_flies(monster_type mc);
-flight_type mons_flies(const monster* mon, bool temp = true);
-
 bool mons_flattens_trees(const monster* mon);
 bool mons_class_res_wind(monster_type mc);
 
@@ -221,6 +217,8 @@ bool mons_is_draconian_job(monster_type mc);
 bool mons_is_demonspawn_job(monster_type mc);
 bool mons_is_job(monster_type mc);
 
+int mutant_beast_tier(int xl);
+
 int mons_avg_hp(monster_type mc);
 int exper_value(const monster* mon, bool real = true);
 
@@ -234,7 +232,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
 
 corpse_effect_type mons_corpse_effect(monster_type mc);
 
-bool mons_class_flag(monster_type mc, uint64_t bf);
+bool mons_class_flag(monster_type mc, monclass_flags_t bits);
 
 mon_holy_type mons_class_holiness(monster_type mc);
 
@@ -276,7 +274,7 @@ int mons_class_base_speed(monster_type mc);
 mon_energy_usage mons_class_energy(monster_type mc);
 mon_energy_usage mons_energy(const monster* mon);
 int mons_class_zombie_base_speed(monster_type zombie_base_mc);
-int mons_base_speed(const monster* mon);
+int mons_base_speed(const monster* mon, bool known = false);
 
 bool mons_class_can_regenerate(monster_type mc);
 bool mons_can_regenerate(const monster* mon);
@@ -285,7 +283,6 @@ int mons_zombie_size(monster_type mc);
 monster_type mons_zombie_base(const monster* mon);
 bool mons_class_is_zombified(monster_type mc);
 bool mons_class_is_hybrid(monster_type mc);
-bool mons_class_is_chimeric(monster_type mc);
 bool mons_class_is_animated_weapon(monster_type type);
 monster_type mons_base_type(const monster* mon);
 bool mons_class_can_leave_corpse(monster_type mc);
@@ -294,7 +291,8 @@ bool mons_is_zombified(const monster* mons);
 bool mons_class_can_be_zombified(monster_type mc);
 bool mons_can_be_zombified(const monster* mon);
 bool mons_class_can_use_stairs(monster_type mc);
-bool mons_can_use_stairs(const monster* mon);
+bool mons_can_use_stairs(const monster* mon,
+                         dungeon_feature_type stair = DNGN_UNSEEN);
 bool mons_enslaved_body_and_soul(const monster* mon);
 bool mons_enslaved_soul(const monster* mon);
 bool name_zombie(monster* mon, monster_type mc, const string &mon_name);
@@ -378,6 +376,7 @@ bool mons_landlubbers_in_reach(const monster* mons);
 bool mons_class_is_stationary(monster_type mc);
 bool mons_class_is_firewood(monster_type mc);
 bool mons_is_firewood(const monster* mon);
+bool mons_is_active_ballisto(const monster* mon);
 bool mons_has_body(const monster* mon);
 bool mons_has_flesh(const monster* mon);
 bool mons_is_abyssal_only(monster_type mc);
@@ -486,7 +485,6 @@ monster *choose_random_monster_on_level(
 
 void update_monster_symbol(monster_type mtype, cglyph_t md);
 
-void fixup_spells(monster_spells &spells, int hd);
 void normalize_spell_freq(monster_spells &spells, int hd);
 
 enum mon_dam_level_type
@@ -508,4 +506,8 @@ mon_dam_level_type mons_get_damage_level(const monster* mons);
 string get_damage_level_string(mon_holy_type holi, mon_dam_level_type mdam);
 bool mons_class_can_display_wounds(monster_type mc);
 bool mons_can_display_wounds(const monster* mon);
+bool mons_class_gives_xp(monster_type mc, bool indirect = false);
+bool mons_gives_xp(const monster* mon, const actor* agent);
+
+void init_mutant_beast(monster &mon, short HD, vector<int> beast_facets);
 #endif

@@ -946,7 +946,7 @@ RTILE:  X = wall_stone_brick
 COLOUR: X = lightgrey
 KITEM:  W = gold q:1 / gold q:2 / gold q:3 / nothing w:100
 KFEAT:  W = shallow_water
-KPROP:  e = no_rtele_into
+KPROP:  e = no_tele_into
 MONS:   patrolling orc warrior / patrolling orc knight w:2
 SUBST:  e = xx...
 MARKER: P = lua:fog_machine { cloud_type = "flame", \
@@ -979,7 +979,7 @@ RTILE:  X = wall_stone_brick
 COLOUR: X = lightgrey
 MONS:   patrolling orc warrior / patrolling orc knight w:2
 MONS:   patrolling orc priest
-KPROP:  e = no_rtele_into
+KPROP:  e = no_tele_into
 SUBST:  e = xx...
 SHUFFLE: AB
 SUBST:  A = @
@@ -1017,7 +1017,7 @@ ORIENT: southwest
 TAGS:   uniq_orcaccident
 RTILE:  X = wall_stone_brick
 COLOUR: X = lightgrey
-KPROP:  e2q = no_rtele_into
+KPROP:  e2q = no_tele_into
 SUBST:  e = xx...
 SUBST:  g = xm
 KFEAT:  m = iron_grate
@@ -1143,7 +1143,7 @@ ENDMAP
 NAME: nicolae_orc_bridge_out
 TAGS: extra decor no_pool_fixup
 DEPTH: Orc
-KPROP: L = no_rtele_into
+KPROP: L = no_tele_into
 SUBST: L = lll., X = xx., Z = llx, l : lw
 MAP
        xxxx
@@ -1957,7 +1957,7 @@ KFEAT:  B = altar_beogh
 KMONS:  C = Saint Roka band w:3 / orc warlord band, orc warlord band
 KMONS:  D = orc warrior band
 : if you.where() == dgn.level_name(dgn.br_entrance("Elf")) then
-KFEAT:  E = enter_elven_halls no_mimic
+KFEAT:  E = enter_elven_halls
 : else
 KFEAT:  E = abandoned_shop w:5 / fountain_blue / floor w:30
 : end

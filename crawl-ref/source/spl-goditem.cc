@@ -70,7 +70,7 @@ int is_pacifiable(const monster* mon)
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
-    if (mons_intel(mon) <= I_INSECT // no self-awareness
+    if (mons_intel(mon) <= I_BRAINLESS // no self-awareness
         || mons_is_tentacle_or_tentacle_segment(mon->type)) // body part
     {
         return -1;
@@ -112,7 +112,7 @@ static int _can_pacify_monster(const monster* mon, const int healed,
     if (healed < 1)
         return 0;
 
-    const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals
+    const int factor = (mons_intel(mon) < I_HUMAN)         ? 3 : // animals
                        (is_player_same_genus(mon->type))   ? 2   // same genus
                                                            : 1;  // other
 
@@ -149,7 +149,7 @@ static int _can_pacify_monster(const monster* mon, const int healed,
 
 static vector<string> _desc_mindless(const monster_info& mi)
 {
-    if (mi.intel() <= I_INSECT)
+    if (mi.intel() <= I_BRAINLESS)
         return { "mindless" };
     else
         return {};
@@ -346,7 +346,9 @@ void debuff_player()
         int& dur = you.duration[i];
         if (duration_dispellable((duration_type) i) && dur > 0)
         {
-            if ((i == DUR_FLIGHT || i == DUR_TRANSFORMATION) && dur > 11)
+            if (i == DUR_TRANSFORMATION && you.form == TRAN_SHADOW)
+                continue;
+            else if ((i == DUR_FLIGHT || i == DUR_TRANSFORMATION) && dur > 11)
             {
                 dur = 11;
                 need_msg = true;
@@ -412,7 +414,6 @@ void debuff_monster(monster* mon)
         ENCH_CONTROL_WINDS,
         ENCH_TOXIC_RADIANCE,
         ENCH_AGILE,
-        ENCH_EPHEMERAL_INFUSION,
         ENCH_BLACK_MARK,
         ENCH_SHROUD,
         ENCH_SAP_MAGIC,
@@ -460,20 +461,20 @@ int detect_items(int pow)
     int items_found = 0;
     int map_radius;
     if (pow >= 0)
-        map_radius = 8 + random2(8) + pow;
+        map_radius = 7 + random2(7) + pow;
     else
     {
         if (you_worship(GOD_ASHENZARI))
         {
-            map_radius = min(you.piety / 20, LOS_RADIUS);
+            map_radius = min(you.piety / 20 - 1, LOS_RADIUS);
             if (map_radius <= 0)
                 return 0;
         }
         else // MUT_JELLY_GROWTH
-            map_radius = 6;
+            map_radius = 5;
     }
 
-    for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
     {
         // Don't expose new dug out areas:
         // Note: assumptions are being made here about how
@@ -563,13 +564,13 @@ int detect_creatures(int pow, bool telepathic)
         _fuzz_detect_creatures(pow, &fuzz_radius, &fuzz_chance);
 
     int creatures_found = 0;
-    const int map_radius = 10 + random2(8) + pow;
+    const int map_radius = 9 + random2(7) + pow;
 
     // Clear the map so detect creatures is more useful and the detection
     // fuzz is harder to analyse by averaging.
     clear_map(false);
 
-    for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {
@@ -775,7 +776,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                     || !get_push_space(*ai, newpos, act, true, &veto_spots))
                 {
                     success = false;
-                    if (you.can_see(act))
+                    if (you.can_see(*act))
                         none_vis = false;
                     break;
                 }
@@ -911,12 +912,6 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
 bool entomb(int pow)
 {
-    // Zotdef - turned off
-    if (crawl_state.game_is_zotdef())
-    {
-        mpr("The dungeon rumbles ominously, and rocks fall from the ceiling!");
-        return false;
-    }
     if (_do_imprison(pow, you.pos(), false))
     {
         const int tomb_duration = BASELINE_DELAY * pow;

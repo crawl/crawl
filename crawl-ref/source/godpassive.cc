@@ -20,6 +20,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "message.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
@@ -143,9 +144,9 @@ void jiyva_slurp_message(int js)
         if (js & JS_FOOD)
             mpr("You feel a little less hungry.");
         if (js & JS_MP)
-            mpr("You feel your power returning.");
+            canned_msg(MSG_GAIN_MAGIC);
         if (js & JS_HP)
-            mpr("You feel a little better.");
+            canned_msg(MSG_GAIN_HEALTH);
     }
 }
 
@@ -434,7 +435,7 @@ bool god_id_item(item_def& item, bool silent)
     if (ided & ~old_ided)
     {
         if (ided & ISFLAG_KNOW_TYPE)
-            set_ident_type(item, ID_KNOWN_TYPE);
+            set_ident_type(item, true);
         set_ident_flags(item, ided);
 
         if (item.props.exists("needs_autopickup") && is_useless_item(item))
@@ -482,7 +483,7 @@ void ash_id_monster_equipment(monster* mon)
         {
             if (i == MSLOT_WAND)
             {
-                set_ident_type(OBJ_WANDS, item.sub_type, ID_KNOWN_TYPE);
+                set_ident_type(OBJ_WANDS, item.sub_type, true);
                 mon->props["wand_known"] = true;
             }
             else
@@ -552,7 +553,7 @@ int ash_detect_portals(bool all)
     }
     else
     {
-        for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
+        for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
         {
             if (_check_portal(*ri))
                 portals_found++;
@@ -676,7 +677,7 @@ int gozag_gold_in_los(actor *who)
 
     int gold_count = 0;
 
-    for (radius_iterator ri(who->pos(), LOS_RADIUS, C_ROUND, LOS_DEFAULT);
+    for (radius_iterator ri(who->pos(), LOS_RADIUS, C_SQUARE, LOS_DEFAULT);
          ri; ++ri)
     {
         for (stack_iterator j(*ri); j; ++j)
@@ -719,7 +720,7 @@ void qazlal_storm_clouds()
     const int radius = you.piety >= piety_breakpoint(3) ? 2 : 1;
 
     vector<coord_def> candidates;
-    for (radius_iterator ri(you.pos(), radius, C_ROUND, LOS_SOLID, true);
+    for (radius_iterator ri(you.pos(), radius, C_SQUARE, LOS_SOLID, true);
          ri; ++ri)
     {
         int count = 0;

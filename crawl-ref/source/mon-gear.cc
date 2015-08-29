@@ -92,36 +92,24 @@ static bool _should_give_unique_item(monster* mon)
     return mon->type != MONS_NATASHA || !mon->props.exists("felid_revives");
 }
 
-static void _give_scroll(monster* mon, int level)
+static void _give_book(monster* mon, int level)
 {
-    int thing_created = NON_ITEM;
-
     if (mon->type == MONS_ROXANNE)
     {
-        // Not a scroll, but this comes closest.
-        int which_book = (one_chance_in(3) ? BOOK_TRANSFIGURATIONS
-                                           : BOOK_EARTH);
+        const int which_book = (one_chance_in(3) ? BOOK_TRANSFIGURATIONS
+                                                 : BOOK_EARTH);
 
-        thing_created = items(false, OBJ_BOOKS, which_book, level);
+        const int thing_created = items(false, OBJ_BOOKS, which_book, level);
 
-        if (thing_created != NON_ITEM && coinflip())
-        {
-            // Give Roxanne a random book containing Statue Form instead.
-            item_def &item(mitm[thing_created]);
-            make_book_Roxanne_special(&item);
-            _give_monster_item(mon, thing_created, true);
+        if (thing_created == NON_ITEM)
             return;
-        }
+
+        // Maybe give Roxanne a random book containing Statue Form instead.
+        if (coinflip())
+            make_book_Roxanne_special(&mitm[thing_created]);
+
+        _give_monster_item(mon, thing_created, true);
     }
-    else if (mons_is_unique(mon->type) && one_chance_in(3)
-                && _should_give_unique_item(mon))
-        thing_created = items(false, OBJ_SCROLLS, OBJ_RANDOM, level);
-
-    if (thing_created == NON_ITEM)
-        return;
-
-    mitm[thing_created].flags = 0;
-    _give_monster_item(mon, thing_created, true);
 }
 
 static void _give_wand(monster* mon, int level)
@@ -141,39 +129,36 @@ static void _give_wand(monster* mon, int level)
             || mons_class_flag(mon->type, M_NO_HT_WAND))
                 && (mon->type != MONS_IJYB || crawl_state.game_is_sprint());
 
-    // this is very ugly and I should rethink it
-    for (int i = 0; i < 100; ++i)
+    const int idx = items(false, OBJ_WANDS, OBJ_RANDOM, level);
+
+    if (idx == NON_ITEM)
+        return;
+
+    item_def& wand = mitm[idx];
+
+    if (no_high_tier && is_high_tier_wand(wand.sub_type))
     {
-        const int idx = items(false, OBJ_WANDS, OBJ_RANDOM, level);
-
-        if (idx == NON_ITEM)
-            return;
-
-        item_def& wand = mitm[idx];
-
-        if (no_high_tier && is_high_tier_wand(wand.sub_type))
-        {
-            dprf(DIAG_MONPLACE,
-                 "Destroying %s because %s doesn't want a high tier wand.",
-                 wand.name(DESC_A).c_str(),
-                 mon->name(DESC_THE).c_str());
-            destroy_item(idx, true);
-        }
-        else if (!mon->likes_wand(wand))
-        {
-            dprf(DIAG_MONPLACE,
-                 "Destroying %s because %s doesn't want a weak wand.",
-                 wand.name(DESC_A).c_str(),
-                 mon->name(DESC_THE).c_str());
-            destroy_item(idx, true);
-        }
-        else
-        {
-            wand.flags = 0;
-            _give_monster_item(mon, idx);
-            break;
-        }
+        dprf(DIAG_MONPLACE,
+             "Destroying %s because %s doesn't want a high tier wand.",
+             wand.name(DESC_A).c_str(),
+             mon->name(DESC_THE).c_str());
+        destroy_item(idx, true);
+        return;
     }
+
+    if (!mon->likes_wand(wand))
+    {
+        // XXX: deduplicate
+        dprf(DIAG_MONPLACE,
+             "Destroying %s because %s doesn't want a weak wand.",
+             wand.name(DESC_A).c_str(),
+             mon->name(DESC_THE).c_str());
+        destroy_item(idx, true);
+        return;
+    }
+
+    wand.flags = 0;
+    _give_monster_item(mon, idx);
 }
 
 static void _give_potion(monster* mon, int level)
@@ -191,7 +176,7 @@ static void _give_potion(monster* mon, int level)
         mitm[thing_created].flags = ISFLAG_KNOW_TYPE;
         _give_monster_item(mon, thing_created);
     }
-    else if (mons_is_unique(mon->type) && one_chance_in(3)
+    else if (mons_is_unique(mon->type) && one_chance_in(4)
                 && _should_give_unique_item(mon))
     {
         const int thing_created = items(false, OBJ_POTIONS, OBJ_RANDOM,
@@ -357,7 +342,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
     case MONS_GNOLL:
     case MONS_OGRE_MAGE:
-    case MONS_NAGA_WARRIOR:
+    case MONS_NAGA_MAGE:
     case MONS_GREATER_NAGA:
         if (!one_chance_in(5))
         {
@@ -554,7 +539,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         // deliberate fall-through
 
     case MONS_NAGA:
-    case MONS_NAGA_MAGE:
+    case MONS_NAGA_WARRIOR:
     case MONS_ORC_WARRIOR:
     case MONS_ORC_HIGH_PRIEST:
     case MONS_BLORK_THE_ORC:
@@ -649,15 +634,11 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         if (one_chance_in(25))
         {
             item.base_type = OBJ_RODS;
-#if TAG_MAJOR_VERSION == 34
             do
             {
-                item.sub_type  = static_cast<rod_type>(random2(NUM_RODS));
+                item.sub_type = static_cast<rod_type>(random2(NUM_RODS));
             }
-            while (item.sub_type == ROD_WARDING || item.sub_type == ROD_VENOM);
-#else
-            item.sub_type = static_cast<rod_type>(random2(NUM_RODS));
-#endif
+            while (item_type_removed(OBJ_RODS, item.sub_type));
             break;
         }
         // deliberate fall-through
@@ -1407,7 +1388,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_WARMONGER:
         level = ISPEC_GOOD_ITEM;
         item.base_type = OBJ_WEAPONS;
-        if (!melee_only)
+        if (!melee_only && one_chance_in(3))
         {
             item.sub_type = random_choose_weighted(10, WPN_LONGBOW,
                                                    9, WPN_ARBALEST,
@@ -2498,7 +2479,7 @@ void give_item(monster *mons, int level_number, bool mons_summoned, bool spectra
     if (mons->type == MONS_MAURICE)
         _give_gold(mons, level_number);
 
-    _give_scroll(mons, level_number);
+    _give_book(mons, level_number);
     _give_wand(mons, level_number);
     _give_potion(mons, level_number);
     _give_weapon(mons, level_number, false, true, spectral_orcs, merc);

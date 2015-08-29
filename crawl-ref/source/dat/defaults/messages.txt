@@ -8,7 +8,7 @@ msc := message_colour
 #
 msc += $danger:drains you
 msc += $danger:feel drained
-msc += $danger:strangely unstable
+msc += $danger:strangely .*stable
 msc += $danger:curare-tipped.*hits you
 msc += $danger:Space warps.* around you
 msc += $danger:Space bends around you
@@ -28,7 +28,7 @@ msc += $danger:you convulse
 msc += $danger:You feel a build-up of mutagenic energy
 msc += $danger:place you under penance
 msc += $danger:acid corrodes
-msc += $danger:rots? away
+msc += $danger:rotting away
 
 # Less urgent, but still significant messages
 #
@@ -76,7 +76,6 @@ msc += $boring:(prevent|prevents) you from hitting
 msc += $boring:nimbly evade
 msc += $boring:waved at by a branch
 msc += $boring:lunges up near
-msc += $boring:Your air elemental.*the air
 
 ## Messages so important to require a --more--
 

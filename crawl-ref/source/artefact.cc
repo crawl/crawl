@@ -130,7 +130,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                  || brand == SPWPN_REAPING
                  || brand == SPWPN_CHAOS
                  || is_demonic(item)
-                 || artefact_property(item, ARTP_CURSED) != 0))
+                 || artefact_property(item, ARTP_CURSE) != 0))
     {
         return false;
     }
@@ -148,7 +148,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     case GOD_ZIN:
         // Lawful god: no mutagenics.
-        if (artefact_property(item, ARTP_MUTAGENIC))
+        if (artefact_property(item, ARTP_CONTAM))
             return false;
         break;
 
@@ -293,7 +293,7 @@ string replace_name_parts(const string &name_in, const item_def& item)
         {
             do
             {
-                which_god = random_god(false); // Fedhas in ZotDef only
+                which_god = random_god();
             }
             while (!_god_fits_artefact(which_god, item, true));
         }
@@ -405,7 +405,7 @@ static void _populate_armour_intrinsic_artps(const armour_type arm,
     proprt[ARTP_NEGATIVE_ENERGY] += armour_type_prop(arm, ARMF_RES_NEG);
     proprt[ARTP_POISON] += armour_type_prop(arm, ARMF_RES_POISON);
     proprt[ARTP_ELECTRICITY] += armour_type_prop(arm, ARMF_RES_ELEC);
-    proprt[ARTP_MAGIC] += armour_type_prop(arm, ARMF_RES_MAGIC);
+    proprt[ARTP_MAGIC_RESISTANCE] += armour_type_prop(arm, ARMF_RES_MAGIC);
     proprt[ARTP_STEALTH] += armour_type_prop(arm, ARMF_STEALTH);
     proprt[ARTP_REGENERATION] += armour_type_prop(arm, ARMF_REGENERATION);
 }
@@ -427,7 +427,7 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { RING_INVISIBILITY, { { ARTP_INVISIBLE, 1 } } },
     { RING_MAGICAL_POWER, { { ARTP_MAGICAL_POWER, 9 } } },
     { RING_FLIGHT, { { ARTP_FLY, 1 } } },
-    { RING_SEE_INVISIBLE, { { ARTP_EYESIGHT, 1 } } },
+    { RING_SEE_INVISIBLE, { { ARTP_SEE_INVISIBLE, 1 } } },
     { RING_STEALTH, { { ARTP_STEALTH, 1 } } },
     { RING_LOUDNESS, { { ARTP_STEALTH, -1 } } },
 
@@ -435,7 +435,7 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { RING_PROTECTION_FROM_COLD, { { ARTP_COLD, 1 } } },
     { RING_POISON_RESISTANCE, { { ARTP_POISON, 1 } } },
     { RING_LIFE_PROTECTION, { { ARTP_NEGATIVE_ENERGY, 1 } } },
-    { RING_PROTECTION_FROM_MAGIC, { { ARTP_MAGIC, 1 } } },
+    { RING_PROTECTION_FROM_MAGIC, { { ARTP_MAGIC_RESISTANCE, 1 } } },
 
     { RING_FIRE, { { ARTP_FIRE, 1 }, { ARTP_COLD, -1 } } },
     { RING_ICE, { { ARTP_COLD, 1 }, { ARTP_FIRE, -1 } } },
@@ -607,7 +607,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_SLAYING:
             return item_class != OBJ_WEAPONS; // they already have slaying!
         case ARTP_POISON:
-        case ARTP_EYESIGHT:
+        case ARTP_SEE_INVISIBLE:
             return !item.is_type(OBJ_ARMOUR, ARM_NAGA_BARDING);
             // naga already have rPois & sInv!
         case ARTP_RCORR:
@@ -616,23 +616,24 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             return item_class == OBJ_ARMOUR; // limit availability to armour
         case ARTP_BERSERK:
         case ARTP_ANGRY:
-        case ARTP_NOISES:
+        case ARTP_NOISE:
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
             // works poorly with ranged weapons
         case ARTP_CAUSE_TELEPORTATION:
             return item_type != OBJ_WEAPONS
-                    && !crawl_state.game_is_sprint()
-                    && !extant_props[ARTP_PREVENT_TELEPORTATION];
+                   && !crawl_state.game_is_sprint()
+                   && !extant_props[ARTP_PREVENT_TELEPORTATION];
             // no tele in sprint, and too annoying on weapons (swappable)
             // and obv we shouldn't generate contradictory props
         case ARTP_PREVENT_TELEPORTATION:
-            return !item.is_type(OBJ_JEWELLERY, RING_TELEPORT_CONTROL)
-                    && !extant_props[ARTP_BLINK]
-                    && !extant_props[ARTP_CAUSE_TELEPORTATION];
-            // no contradictory props/item types
+            return !extant_props[ARTP_BLINK]
+                   && !extant_props[ARTP_CAUSE_TELEPORTATION];
+            // no contradictory props
         case ARTP_BLINK:
             return !extant_props[ARTP_PREVENT_TELEPORTATION];
             // no contradictory props
+        case ARTP_CONFUSE:
+            return !item.is_type(OBJ_JEWELLERY, AMU_CLARITY);
         default:
             return true;
     }
@@ -697,9 +698,9 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
     { "rN", ARTP_VAL_ANY, 55,       // ARTP_NEGATIVE_ENERGY,
         _gen_good_res_artp, nullptr, 2, 4 },
-    { "MR", ARTP_VAL_ANY, 50,       // ARTP_MAGIC,
+    { "MR", ARTP_VAL_ANY, 50,       // ARTP_MAGIC_RESISTANCE,
         _gen_good_res_artp, _gen_bad_res_artp, 2, 4 },
-    { "SInv", ARTP_VAL_BOOL, 30,    // ARTP_EYESIGHT,
+    { "SInv", ARTP_VAL_BOOL, 30,    // ARTP_SEE_INVISIBLE,
         []() { return 1; }, nullptr, 0, 0 },
     { "+Inv", ARTP_VAL_BOOL, 15,    // ARTP_INVISIBLE,
         []() { return 1; }, nullptr, 0, 0 },
@@ -712,7 +713,7 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
     { "+Rage", ARTP_VAL_BOOL, 15,   // ARTP_BERSERK,
         []() { return 1; }, nullptr, 0, 0 },
-    { "Noisy", ARTP_VAL_POS, 25,    // ARTP_NOISES,
+    { "*Noise", ARTP_VAL_POS, 25,    // ARTP_NOISE,
         nullptr, []() { return 2; }, 0, 0 },
     { "-Cast", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_SPELLCASTING,
         nullptr, []() { return 1; }, 0, 0 },
@@ -725,7 +726,7 @@ static const artefact_prop_data artp_data[] =
 #if TAG_MAJOR_VERSION == 34
     { "Hungry", ARTP_VAL_POS, 0, nullptr, nullptr, 0, 0 },// ARTP_METABOLISM,
 #endif
-    { "Contam", ARTP_VAL_POS, 20,   // ARTP_MUTAGENIC
+    { "*Contam", ARTP_VAL_POS, 20,   // ARTP_CONTAM
         nullptr, []() { return 1; }, 0, 0 },
 #if TAG_MAJOR_VERSION == 34
     { "Acc", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_ACCURACY,
@@ -733,7 +734,7 @@ static const artefact_prop_data artp_data[] =
     { "Slay", ARTP_VAL_ANY, 30,     // ARTP_SLAYING,
       []() { return 2 + random2(2); },
       []() { return -(2 + random2(3) + random2(3)); }, 3, 2 },
-    { "Curse", ARTP_VAL_POS, 0, nullptr, nullptr, 0 }, // ARTP_CURSED,
+    { "*Curse", ARTP_VAL_POS, 0, nullptr, nullptr, 0 }, // ARTP_CURSE,
     { "Stlth", ARTP_VAL_ANY, 40,    // ARTP_STEALTH,
         _gen_good_res_artp, _gen_bad_res_artp, 0, 0 },
     { "MP", ARTP_VAL_ANY, 30,       // ARTP_MAGICAL_POWER,
@@ -750,13 +751,21 @@ static const artefact_prop_data artp_data[] =
 #endif
     { "Regen", ARTP_VAL_BOOL, 35,   // ARTP_REGENERATION,
         []() { return 1; }, nullptr, 0, 0 },
-    { "SustAb", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_SUSTAB,
+    { "SustAt", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_SUSTAT,
     { "nupgr", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 },// ARTP_NO_UPGRADE,
     { "rCorr", ARTP_VAL_BOOL, 40,   // ARTP_RCORR,
         []() { return 1; }, nullptr, 0, 0 },
     { "rMut", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_RMUT,
+#if TAG_MAJOR_VERSION == 34
     { "+Twstr", ARTP_VAL_BOOL, 0,   // ARTP_TWISTER,
         []() { return 1; }, nullptr, 0, 0 },
+#endif
+    { "*Corrode", ARTP_VAL_BOOL, 25, // ARTP_CORRODE,
+        nullptr, []() { return 1; }, 0, 0 },
+    { "*Drain", ARTP_VAL_BOOL, 25, // ARTP_DRAIN,
+        nullptr, []() { return 1; }, 0, 0 },
+    { "*Confuse", ARTP_VAL_BOOL, 25, // ARTP_CONFUSE,
+        nullptr, []() { return 1; }, 0, 0 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000
@@ -1015,7 +1024,7 @@ static bool _init_artefact_properties(item_def &item)
 
     for (int i = 0; i < ART_PROPERTIES; i++)
     {
-        if (i == ARTP_CURSED && prop[i] < 0)
+        if (i == ARTP_CURSE && prop[i] < 0)
         {
             do_curse_item(item);
             continue;
@@ -1125,7 +1134,7 @@ static int _artefact_num_props(const artefact_properties_t &proprt)
 
     // Count all properties, but exclude self-cursing.
     for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
-        if (i != ARTP_CURSED && proprt[i] != 0)
+        if (i != ARTP_CURSE && proprt[i] != 0)
             num++;
 
     return num;
@@ -1487,7 +1496,7 @@ static bool _randart_is_redundant(const item_def &item,
         break;
 
     case RING_SEE_INVISIBLE:
-        provides = ARTP_EYESIGHT;
+        provides = ARTP_SEE_INVISIBLE;
         break;
 
     case RING_INVISIBILITY:
@@ -1527,7 +1536,7 @@ static bool _randart_is_redundant(const item_def &item,
         break;
 
     case RING_PROTECTION_FROM_MAGIC:
-        provides = ARTP_MAGIC;
+        provides = ARTP_MAGIC_RESISTANCE;
         break;
 
     case AMU_RAGE:
@@ -1562,7 +1571,7 @@ static bool _randart_is_conflicting(const item_def &item,
     if (item.base_type == OBJ_WEAPONS
         && get_weapon_brand(item) == SPWPN_HOLY_WRATH
         && (is_demonic(item)
-            || proprt[ARTP_CURSED] != 0))
+            || proprt[ARTP_CURSE] != 0))
     {
         return true;
     }
@@ -1603,7 +1612,7 @@ static bool _randart_is_conflicting(const item_def &item,
         break;
 
     case AMU_RESIST_MUTATION:
-        conflicts = ARTP_MUTAGENIC;
+        conflicts = ARTP_CONTAM;
         break;
 
     case AMU_RAGE:
@@ -1757,16 +1766,17 @@ static void _make_faerie_armour(item_def &item)
             continue;
         }
 
-        // -CAST makes no sense on someone called "the Enchantress",
-        // +TELE is not implemented for monsters yet.
-        if (artefact_property(doodad, ARTP_PREVENT_SPELLCASTING)
-            || artefact_property(doodad, ARTP_CAUSE_TELEPORTATION))
-        {
+        // -Cast makes no sense on someone called "the Enchantress".
+        if (artefact_property(doodad, ARTP_PREVENT_SPELLCASTING))
             continue;
-        }
 
         if (one_chance_in(20))
+        {
+            // Replace Confusing if present.
+            if (artefact_property(doodad, ARTP_CONFUSE))
+                artefact_set_property(doodad, ARTP_CONFUSE, 0);
             artefact_set_property(doodad, ARTP_CLARITY, 1);
+        }
         if (one_chance_in(20))
             artefact_set_property(doodad, ARTP_MAGICAL_POWER, 1 + random2(10));
         if (one_chance_in(20))
@@ -1789,7 +1799,7 @@ static void _make_faerie_armour(item_def &item)
 static jewellery_type octoring_types[8] =
 {
     RING_SEE_INVISIBLE, RING_PROTECTION_FROM_FIRE, RING_PROTECTION_FROM_COLD,
-    RING_SUSTAIN_ABILITIES, RING_STEALTH, RING_WIZARDRY, RING_MAGICAL_POWER,
+    RING_SUSTAIN_ATTRIBUTES, RING_STEALTH, RING_WIZARDRY, RING_MAGICAL_POWER,
     RING_LIFE_PROTECTION
 };
 
@@ -1827,7 +1837,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     _artefact_setup_prop_vectors(item);
     _init_artefact_properties(item);
 
-    if (unrand->prpty[ARTP_CURSED] != 0)
+    if (unrand->prpty[ARTP_CURSE] != 0)
         do_curse_item(item);
 
     // get artefact appearance

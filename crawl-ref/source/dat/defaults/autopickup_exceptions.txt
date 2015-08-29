@@ -41,7 +41,8 @@ ae += [^n]identified.*spellbook
 :  or string.find(itname, "fan of gales")
 :  or string.find(itname, "stone of tremors")
 :  or string.find(itname, "disc of storms")
-:  or string.find(itname, "lantern of shadows") then
+:  or string.find(itname, "lantern of shadows")
+:  or string.find(itname, "crystal ball of energy") then
 :    for inv in iter.invent_iterator:new(items.inventory()) do
 :      if itname == inv.name() then
 :        return false
@@ -59,16 +60,15 @@ ae += [^n]identified.*spellbook
 :  and (itsubtype == "ring of positive energy"
 :   or itsubtype == "ring of flight"
 :   or itsubtype == "ring of poison resistance"
-:   or itsubtype == "ring of sustain abilities"
+:   or itsubtype == "ring of sustain attributes"
 :   or itsubtype == "ring of wizardry"
 :   or itsubtype == "ring of stealth"
-:   or itsubtype == "ring of regeneration"
 :   or itsubtype == "ring of teleportation"
-:   or itsubtype == "ring of teleport control"
 :   or itsubtype == "ring of protection from fire"
 :   or itsubtype == "ring of protection from cold"
 :   or itsubtype == "ring of invisibility"
 :   or itsubtype == "ring of see invisible"
+:   or itsubtype == "ring of magical power"
 :   or itsubtype == "ring of ice"
 :   or itsubtype == "ring of fire") then
 :    for inv in iter.invent_iterator:new(items.inventory()) do
@@ -94,4 +94,4 @@ ae += amulet of (resist .*|clarity|rage|guardian spirit|faith|stasis)
 # the Abyss. Still, they're more in line with lanterns of shadow, so you can
 # pick up the second one by hand.
 ae += ring of (see invisible|flight|poison resistance|teleportation)
-ae += ring of (invisibility|teleport control|sustain abilities)
+ae += ring of (invisibility|sustain attributes)

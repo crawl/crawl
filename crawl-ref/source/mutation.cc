@@ -35,6 +35,7 @@
 #include "mon-place.h"
 #include "notes.h"
 #include "output.h"
+#include "player-equip.h" // lose_permafly_source
 #include "player-stats.h"
 #include "religion.h"
 #include "skills.h"
@@ -77,10 +78,12 @@ enum mut_flag_type
     MUTFLAG_QAZLAL  = 1 << 3, // qazlal wrath
     MUTFLAG_XOM     = 1 << 4, // xom being xom
     MUTFLAG_CORRUPT = 1 << 5, // wretched stars
-    MUTFLAG_RU      = 1 << 6, // Ru sacrifice muts
+
+    MUTFLAG_LAST    = MUTFLAG_CORRUPT
 };
-const int MUTFLAG_LAST_EXPONENT = 6;
-DEF_BITFIELD(mut_flags_type, mut_flag_type);
+DEF_BITFIELD(mut_flags_type, mut_flag_type, 5);
+COMPILE_CHECK(mut_flags_type::exponent(mut_flags_type::last_exponent)
+              == MUTFLAG_LAST);
 
 #include "mutation-data.h"
 
@@ -106,7 +109,7 @@ static const int conflict[][3] =
     { MUT_SLOW_HEALING,        MUT_NO_DEVICE_HEAL,         1},
     { MUT_ROBUST,              MUT_FRAIL,                  1},
     { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,              1},
-    { MUT_WILD_MAGIC,          MUT_PLACID_MAGIC,           1},
+    { MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC,          1},
     { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,            1},
     { MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM,        1},
     { MUT_REGENERATION,        MUT_SLOW_HEALING,           1},
@@ -187,9 +190,8 @@ void init_mut_index()
         ASSERT_RANGE(mut, 0, NUM_MUTATIONS);
         ASSERT(mut_index[mut] == -1);
         mut_index[mut] = i;
-        for (int mt = 0; mt <= MUTFLAG_LAST_EXPONENT; mt++)
+        for (const auto flag : mut_flags_type::range())
         {
-            const auto flag = mut_flags_type::exponent(mt);
             if (_mut_has_use(mut_data[i], flag))
                 total_weight[flag] += _mut_weight(mut_data[i], flag);
         }
@@ -286,6 +288,9 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (you.form == TRAN_BLADE_HANDS && mut == MUT_PAWS)
         return MUTACT_INACTIVE;
 
+    if (you_worship(GOD_DITHMENOS) && mut == MUT_IGNITE_BLOOD)
+        return MUTACT_INACTIVE;
+
     return MUTACT_FULL;
 }
 
@@ -369,7 +374,7 @@ string describe_mutations(bool center_title)
 
     if (you.species == SP_VAMPIRE)
     {
-        if (you.hunger_state == HS_STARVING)
+        if (you.hunger_state <= HS_STARVING)
             result += "<green>You do not heal naturally.</green>\n";
         else if (you.hunger_state == HS_ENGORGED)
             result += "<green>Your natural rate of healing is extremely fast.</green>\n";
@@ -548,6 +553,7 @@ static void _display_vampire_attributes()
         current = 5;
         break;
     case HS_STARVING:
+    case HS_FAINTING:
         current = 6;
     }
 
@@ -1066,7 +1072,6 @@ bool physiology_mutation_conflict(mutation_type mutat)
         if (mutat == MUT_BERSERK
             || mutat == MUT_BLINK
             || mutat == MUT_TELEPORT
-            || mutat == MUT_TELEPORT_CONTROL
             || mutat == MUT_ACUTE_VISION)
         {
             return true;
@@ -1551,6 +1556,10 @@ static bool _delete_single_mutation_level(mutation_type mutat,
         update_vision_range();
         break;
 
+    case MUT_BIG_WINGS:
+        lose_permafly_source();
+        break;
+
     default:
         break;
     }
@@ -1940,8 +1949,8 @@ static bool _works_at_tier(const facet_def& facet, int tier)
     return facet.tier == tier;
 }
 
-#define MUTS_IN_SLOT ARRAYSZ(((facet_def*)0)->muts)
-static bool _slot_is_unique(const mutation_type (&mut)[MUTS_IN_SLOT],
+typedef decltype(facet_def().muts) mut_array_t;
+static bool _slot_is_unique(const mut_array_t &mut,
                             set<const facet_def *> facets_used)
 {
     set<equipment_type> eq;
@@ -2181,12 +2190,13 @@ int temp_mutation_roll()
 /**
  * How mutated is the player?
  *
- * @param innate Whether to count innate mutations.
- * @param levels Whether to add up mutation levels.
+ * @param innate Whether to count innate mutations (default false).
+ * @param levels Whether to add up mutation levels (default false).
+ * @param temp Whether to count temporary mutations (default true).
  * @return Either the number of matching mutations, or the sum of their
  *         levels, depending on \c levels
  */
-int how_mutated(bool innate, bool levels)
+int how_mutated(bool innate, bool levels, bool temp)
 {
     int j = 0;
 
@@ -2196,6 +2206,17 @@ int how_mutated(bool innate, bool levels)
         {
             if (!innate && you.innate_mutation[i] >= you.mutation[i])
                 continue;
+
+            if (!temp && you.temp_mutation[i] >= you.mutation[i])
+                continue;
+
+            // Innate mutation upgraded by a temporary mutation.
+            if (!temp && !innate
+                && you.temp_mutation[i] + you.innate_mutation[i]
+                   >= you.mutation[i])
+            {
+                continue;
+            }
 
             if (levels)
             {
@@ -2314,7 +2335,7 @@ void check_monster_detect()
     int radius = player_monster_detect_radius();
     if (radius <= 0)
         return;
-    for (radius_iterator ri(you.pos(), radius, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(you.pos(), radius, C_SQUARE); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
         map_cell& cell = env.map_knowledge(*ri);
@@ -2352,7 +2373,7 @@ void check_monster_detect()
                     continue;
                 }
 
-                for (radius_iterator ri2(mon->pos(), 2, C_ROUND); ri2; ++ri2)
+                for (radius_iterator ri2(mon->pos(), 2, C_SQUARE); ri2; ++ri2)
                     if (you.see_cell(*ri2))
                     {
                         mon->flags |= MF_SENSED;
@@ -2361,28 +2382,6 @@ void check_monster_detect()
             }
         }
     }
-}
-
-int handle_pbd_corpses()
-{
-    int corpse_count = 0;
-
-    for (radius_iterator ri(you.pos(),
-         player_mutation_level(MUT_POWERED_BY_DEATH) * 3, C_ROUND, LOS_DEFAULT);
-         ri; ++ri)
-    {
-        for (stack_iterator j(*ri); j; ++j)
-        {
-            if (j->is_type(OBJ_CORPSES, CORPSE_BODY))
-            {
-                ++corpse_count;
-                if (corpse_count == 7)
-                    break;
-            }
-        }
-    }
-
-    return corpse_count;
 }
 
 int augmentation_amount()

@@ -98,7 +98,10 @@ struct bolt
                                         // itself.
     bool   was_missile = false;   // For determining if this was SPMSL_FLAME /
                                   // FROST etc so that we can change mulch rate
-    bool   animate = Options.use_animations & UA_BEAM; // Do we draw animations?
+    bool   evoked = false;        // Was this beam evoked from a wand?
+
+    // Do we draw animations?
+    bool   animate = bool(Options.use_animations & UA_BEAM);
     ac_type ac_rule = AC_NORMAL;   // How defender's AC affects damage.
 #ifdef DEBUG_DIAGNOSTICS
     bool   quiet_debug = false;    // Disable any debug spam.
@@ -121,7 +124,6 @@ struct bolt
     bool noise_generated = false; // a noise has already been generated at this pos
     bool passed_target = false;   // Beam progressed beyond target.
     bool in_explosion_phase = false; // explosion phase (as opposed to beam phase)
-    bool smart_monster = false;  // tracer firer can guess at resists
     mon_attitude_type attitude = ATT_HOSTILE; // attitude of whoever fired tracer
     int foe_ratio = 0;   // 100* foe ratio (see mons_should_fire())
     map<mid_t, int> hit_count;   // how many times targets were affected

@@ -161,6 +161,19 @@ enum tag_minor_version
     TAG_MINOR_ROTTING,             // Remove rot-over-time
     TAG_MINOR_STAT_ZERO_DURATION,  // Stat zero uses a duration
     TAG_MINOR_INT_REGEN,           // hp/mp regen are ints
+    TAG_MINOR_NAGA_METABOLISM,     // nagas have slow metabolism
+    TAG_MINOR_BOOL_FLIGHT,         // flight is just a bool
+    TAG_MINOR_STAT_LOSS_XP,        // Stat loss recovers with XP
+    TAG_MINOR_DETERIORATION,       // 2-level deterioration mutation
+    TAG_MINOR_RU_DELAY_STACKING,   // Let Ru delay timers stack again
+    TAG_MINOR_NO_TWISTER,          // Remove ARTP_TWISTER
+    TAG_MINOR_NO_ZOTDEF,           // remove zotdef, along with zot_points and zotdef_wave_name
+    TAG_MINOR_SAVED_PIETY,         // allowed good-god piety to survive through an atheist period
+    TAG_MINOR_GHOST_SINV,          // marshall ghost_demon sinv
+    TAG_MINOR_ID_STATES,           // turn item_type_id_state_type into a bool
+    TAG_MINOR_MON_HD_INFO,         // store player-known monster HD info
+    TAG_MINOR_NO_LEVEL_FLAGS,      // remove a field of env
+    TAG_MINOR_EXORCISE,            // liches, a. liches, & spellforged servitors are no longer ghost_demons
     TAG_MINOR_OUBLIETTE,           // Add the Oubliette portal
 #endif
     NUM_TAG_MINORS,

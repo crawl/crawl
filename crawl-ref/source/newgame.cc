@@ -31,9 +31,9 @@
 #include "tilereg-crt.h"
 #endif
 
-static void _choose_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
+static void _choose_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                                  const newgame_def& defaults);
-static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
+static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
                           const newgame_def& defaults);
 
 ////////////////////////////////////////////////////////////////////////
@@ -115,22 +115,22 @@ static string _char_description(const newgame_def& ng)
         return species_name(ng.species) + " " + get_job_name(ng.job);
 }
 
-static string _welcome(const newgame_def* ng)
+static string _welcome(const newgame_def& ng)
 {
     string text;
-    if (ng->species != SP_UNKNOWN)
-        text = species_name(ng->species);
-    if (ng->job != JOB_UNKNOWN)
+    if (ng.species != SP_UNKNOWN)
+        text = species_name(ng.species);
+    if (ng.job != JOB_UNKNOWN)
     {
         if (!text.empty())
             text += " ";
-        text += get_job_name(ng->job);
+        text += get_job_name(ng.job);
     }
-    if (!ng->name.empty())
+    if (!ng.name.empty())
     {
         if (!text.empty())
             text = " the " + text;
-        text = ng->name + text;
+        text = ng.name + text;
     }
     else if (!text.empty())
         text = "unnamed " + text;
@@ -140,18 +140,18 @@ static string _welcome(const newgame_def* ng)
     return text;
 }
 
-static void _print_character_info(const newgame_def* ng)
+static void _print_character_info(const newgame_def& ng)
 {
     clrscr();
     textcolour(BROWN);
     cprintf("%s\n", _welcome(ng).c_str());
 }
 
-void choose_tutorial_character(newgame_def* ng_choice)
+void choose_tutorial_character(newgame_def& ng_choice)
 {
-    ng_choice->species = SP_HIGH_ELF;
-    ng_choice->job = JOB_FIGHTER;
-    ng_choice->weapon = WPN_FLAIL;
+    ng_choice.species = SP_HIGH_ELF;
+    ng_choice.job = JOB_FIGHTER;
+    ng_choice.weapon = WPN_FLAIL;
 }
 
 // March 2008: change order of species and jobs on character selection
@@ -191,16 +191,16 @@ bool is_starting_species(species_type species)
                 species) != species_order + ARRAYSZ(species_order);
 }
 
-static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
+static void _resolve_species(newgame_def& ng, const newgame_def& ng_choice)
 {
     // Don't overwrite existing species.
-    if (ng->species != SP_UNKNOWN)
+    if (ng.species != SP_UNKNOWN)
         return;
 
-    switch (ng_choice->species)
+    switch (ng_choice.species)
     {
     case SP_UNKNOWN:
-        ng->species = SP_UNKNOWN;
+        ng.species = SP_UNKNOWN;
         return;
 
     case SP_VIABLE:
@@ -208,10 +208,10 @@ static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
         int good_choices = 0;
         for (const species_type sp : species_order)
         {
-            if (is_good_combination(sp, ng->job, false, true)
+            if (is_good_combination(sp, ng.job, false, true)
                 && one_chance_in(++good_choices))
             {
-                ng->species = sp;
+                ng.species = sp;
             }
         }
         if (good_choices)
@@ -220,18 +220,18 @@ static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
         // intentional fall-through
     case SP_RANDOM:
         // any valid species will do
-        if (ng->job == JOB_UNKNOWN)
-            ng->species = RANDOM_ELEMENT(species_order);
+        if (ng.job == JOB_UNKNOWN)
+            ng.species = RANDOM_ELEMENT(species_order);
         else
         {
             // Pick a random legal character.
             int good_choices = 0;
             for (const species_type sp : species_order)
             {
-                if (is_good_combination(sp, ng->job, false, false)
+                if (is_good_combination(sp, ng.job, false, false)
                     && one_chance_in(++good_choices))
                 {
-                    ng->species = sp;
+                    ng.species = sp;
                 }
             }
             if (!good_choices)
@@ -240,20 +240,20 @@ static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
         return;
 
     default:
-        ng->species = ng_choice->species;
+        ng.species = ng_choice.species;
         return;
     }
 }
 
-static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
+static void _resolve_job(newgame_def& ng, const newgame_def& ng_choice)
 {
-    if (ng->job != JOB_UNKNOWN)
+    if (ng.job != JOB_UNKNOWN)
         return;
 
-    switch (ng_choice->job)
+    switch (ng_choice.job)
     {
     case JOB_UNKNOWN:
-        ng->job = JOB_UNKNOWN;
+        ng.job = JOB_UNKNOWN;
         return;
 
     case JOB_VIABLE:
@@ -262,10 +262,10 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
         for (int i = 0; i < NUM_JOBS; i++)
         {
             job_type job = job_type(i);
-            if (is_good_combination(ng->species, job, true, true)
+            if (is_good_combination(ng.species, job, true, true)
                 && one_chance_in(++good_choices))
             {
-                ng->job = job;
+                ng.job = job;
             }
         }
         if (good_choices)
@@ -273,14 +273,14 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
     }
         // intentional fall-through
     case JOB_RANDOM:
-        if (ng->species == SP_UNKNOWN)
+        if (ng.species == SP_UNKNOWN)
         {
             // any valid job will do
             do
             {
-                ng->job = job_type(random2(NUM_JOBS));
+                ng.job = job_type(random2(NUM_JOBS));
             }
-            while (!is_starting_job(ng->job));
+            while (!is_starting_job(ng.job));
         }
         else
         {
@@ -289,11 +289,11 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
             for (int i = 0; i < NUM_JOBS; i++)
             {
                 job_type job = job_type(i);
-                if (is_good_combination(ng->species, job, true, false)
+                if (is_good_combination(ng.species, job, true, false)
                     && one_chance_in(++good_choices))
                 {
                     ASSERT(is_starting_job(job));
-                    ng->job = job;
+                    ng.job = job;
                 }
             }
             if (!good_choices)
@@ -302,21 +302,21 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
         return;
 
     default:
-        ng->job = ng_choice->job;
+        ng.job = ng_choice.job;
         return;
     }
 }
 
-static void _resolve_species_job(newgame_def* ng, const newgame_def* ng_choice)
+static void _resolve_species_job(newgame_def& ng, const newgame_def& ng_choice)
 {
     // Since recommendations are no longer bidirectional, pick one of
     // species or job to start. If one but not the other was specified
     // as "viable", always choose that one last; otherwise use a random
     // order.
-    const bool spfirst  = ng_choice->species != SP_VIABLE
-                          && ng_choice->job == JOB_VIABLE;
-    const bool jobfirst = ng_choice->species == SP_VIABLE
-                          && ng_choice->job != JOB_VIABLE;
+    const bool spfirst  = ng_choice.species != SP_VIABLE
+                          && ng_choice.job == JOB_VIABLE;
+    const bool jobfirst = ng_choice.species == SP_VIABLE
+                          && ng_choice.job != JOB_VIABLE;
     if (spfirst || !jobfirst && coinflip())
     {
         _resolve_species(ng, ng_choice);
@@ -329,17 +329,17 @@ static void _resolve_species_job(newgame_def* ng, const newgame_def* ng_choice)
     }
 }
 
-static string _highlight_pattern(const newgame_def* ng)
+static string _highlight_pattern(const newgame_def& ng)
 {
-    if (ng->species != SP_UNKNOWN)
-        return species_name(ng->species) + "  ";
+    if (ng.species != SP_UNKNOWN)
+        return species_name(ng.species) + "  ";
 
-    if (ng->job == JOB_UNKNOWN)
+    if (ng.job == JOB_UNKNOWN)
         return "";
 
     string ret;
     for (const species_type species : species_order)
-        if (is_good_combination(species, ng->job, false, true))
+        if (is_good_combination(species, ng.job, false, true))
             ret += species_name(species) + "  |";
 
     if (ret != "")
@@ -347,31 +347,31 @@ static string _highlight_pattern(const newgame_def* ng)
     return ret;
 }
 
-static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
+static void _prompt_species(newgame_def& ng, newgame_def& ng_choice,
                             const newgame_def& defaults);
-static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
+static void _prompt_job(newgame_def& ng, newgame_def& ng_choice,
                         const newgame_def& defaults);
 
-static void _choose_species_job(newgame_def* ng, newgame_def* ng_choice,
+static void _choose_species_job(newgame_def& ng, newgame_def& ng_choice,
                                 const newgame_def& defaults)
 {
     _resolve_species_job(ng, ng_choice);
 
-    while (ng_choice->species == SP_UNKNOWN || ng_choice->job == JOB_UNKNOWN)
+    while (ng_choice.species == SP_UNKNOWN || ng_choice.job == JOB_UNKNOWN)
     {
         // Slightly non-obvious behaviour here is due to the fact that
         // both _prompt_species and _prompt_job can ask for an entirely
         // random character to be rolled. They will reset relevant fields
-        // in *ng for this purpose.
-        if (ng_choice->species == SP_UNKNOWN)
+        // in ng for this purpose.
+        if (ng_choice.species == SP_UNKNOWN)
             _prompt_species(ng, ng_choice, defaults);
         _resolve_species_job(ng, ng_choice);
-        if (ng_choice->job == JOB_UNKNOWN)
+        if (ng_choice.job == JOB_UNKNOWN)
             _prompt_job(ng, ng_choice, defaults);
         _resolve_species_job(ng, ng_choice);
     }
 
-    if (!job_allowed(ng->species, ng->job))
+    if (!job_allowed(ng.species, ng.job))
     {
         // Either an invalid combination was passed in through options,
         // or we messed up.
@@ -382,15 +382,15 @@ static void _choose_species_job(newgame_def* ng, newgame_def* ng_choice,
 
 // For completely random combinations (!, #, or Options.game.fully_random)
 // reroll characters until the player accepts one of them or quits.
-static bool _reroll_random(newgame_def* ng)
+static bool _reroll_random(newgame_def& ng)
 {
     clrscr();
 
-    string specs = chop_string(species_name(ng->species), 79, false);
+    string specs = chop_string(species_name(ng.species), 79, false);
 
     cprintf("You are a%s %s %s.\n",
             (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
-            get_job_name(ng->job));
+            get_job_name(ng.job));
 
     cprintf("\nDo you want to play this combination? (ynq) [y]");
     char c = getchm();
@@ -404,19 +404,19 @@ static bool _reroll_random(newgame_def* ng)
     return toalower(c) == 'n';
 }
 
-static void _choose_char(newgame_def* ng, newgame_def* choice,
+static void _choose_char(newgame_def& ng, newgame_def& choice,
                          newgame_def defaults)
 {
-    const newgame_def ng_reset = *ng;
+    const newgame_def ng_reset = ng;
 
-    if (ng->type == GAME_TYPE_TUTORIAL)
+    if (ng.type == GAME_TYPE_TUTORIAL)
         choose_tutorial_character(choice);
-    else if (ng->type == GAME_TYPE_HINTS)
+    else if (ng.type == GAME_TYPE_HINTS)
         pick_hints(choice);
 
 #if defined(DGAMELAUNCH) && defined(TOURNEY)
     // Apologies to non-public servers.
-    if (ng->type == GAME_TYPE_NORMAL)
+    if (ng.type == GAME_TYPE_NORMAL)
     {
         if (!yesno("Trunk games don't count for the tournament, you want "
                    TOURNEY ". Play trunk anyway? (Y/N)", false, 'n'))
@@ -431,13 +431,13 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
 
     while (true)
     {
-        if (choice->allowed_combos.size())
+        if (choice.allowed_combos.size())
         {
-            choice->species = SP_UNKNOWN;
-            choice->job = JOB_UNKNOWN;
-            choice->weapon = WPN_UNKNOWN;
+            choice.species = SP_UNKNOWN;
+            choice.job = JOB_UNKNOWN;
+            choice.weapon = WPN_UNKNOWN;
             string combo =
-                choice->allowed_combos[random2(choice->allowed_combos.size())];
+                choice.allowed_combos[random2(choice.allowed_combos.size())];
 
             vector<string> parts = split_string(".", combo);
             if (parts.size() > 0)
@@ -446,10 +446,10 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
 
                 if (character.length() == 4)
                 {
-                    choice->species =
+                    choice.species =
                         get_species_by_abbrev(
                             character.substr(0, 2).c_str());
-                    choice->job =
+                    choice.job =
                         get_job_by_abbrev(
                             character.substr(2, 2).c_str());
                 }
@@ -464,7 +464,7 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
                             && character.substr(0, species_name(sp).length())
                                == species_name(sp))
                         {
-                            choice->species = sp;
+                            choice.species = sp;
                             break;
                         }
                     }
@@ -472,43 +472,43 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
                     {
                         string temp =
                             character.substr(species_name(sp).length());
-                        choice->job = str_to_job(trim_string(temp));
+                        choice.job = str_to_job(trim_string(temp));
                     }
                 }
 
                 if (parts.size() > 1)
                 {
                     string weapon = trim_string(parts[1]);
-                    choice->weapon = str_to_weapon(weapon);
+                    choice.weapon = str_to_weapon(weapon);
                 }
             }
         }
         else
         {
-            if (choice->allowed_species.size())
+            if (choice.allowed_species.size())
             {
-                choice->species =
-                    choice->allowed_species[
-                        random2(choice->allowed_species.size())];
+                choice.species =
+                    choice.allowed_species[
+                        random2(choice.allowed_species.size())];
             }
-            if (choice->allowed_jobs.size())
+            if (choice.allowed_jobs.size())
             {
-                choice->job =
-                    choice->allowed_jobs[random2(choice->allowed_jobs.size())];
+                choice.job =
+                    choice.allowed_jobs[random2(choice.allowed_jobs.size())];
             }
-            if (choice->allowed_weapons.size())
+            if (choice.allowed_weapons.size())
             {
-                choice->weapon =
-                    choice->allowed_weapons[
-                        random2(choice->allowed_weapons.size())];
+                choice.weapon =
+                    choice.allowed_weapons[
+                        random2(choice.allowed_weapons.size())];
             }
         }
 
         _choose_species_job(ng, choice, defaults);
 
-        if (choice->fully_random && _reroll_random(ng))
+        if (choice.fully_random && _reroll_random(ng))
         {
-            *ng = ng_reset;
+            ng = ng_reset;
             continue;
         }
 
@@ -519,16 +519,16 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
         }
 
         // Else choose again, name and type stays same.
-        defaults = *choice;
-        *ng = ng_reset;
-        *choice = ng_reset;
+        defaults = choice;
+        ng = ng_reset;
+        choice = ng_reset;
     }
 }
 
 // Read a choice of game into ng.
-// Returns false if a game (with name ng->name) should
+// Returns false if a game (with name ng.name) should
 // be restored instead of starting a new character.
-bool choose_game(newgame_def* ng, newgame_def* choice,
+bool choose_game(newgame_def& ng, newgame_def& choice,
                  const newgame_def& defaults)
 {
     clrscr();
@@ -543,40 +543,39 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
 
     textcolour(LIGHTGREY);
 
-    ng->name = choice->name;
-    ng->type = choice->type;
-    ng->map  = choice->map;
+    ng.name = choice.name;
+    ng.type = choice.type;
+    ng.map  = choice.map;
 
-    if (ng->type == GAME_TYPE_SPRINT
-     || ng->type == GAME_TYPE_ZOTDEF
-     || ng->type == GAME_TYPE_TUTORIAL)
+    if (ng.type == GAME_TYPE_SPRINT
+        || ng.type == GAME_TYPE_TUTORIAL)
     {
         _choose_gamemode_map(ng, choice, defaults);
     }
 
     _choose_char(ng, choice, defaults);
 
-    // Set these again, since _mark_fully_random may reset *ng.
-    ng->name = choice->name;
-    ng->type = choice->type;
+    // Set these again, since _mark_fully_random may reset ng.
+    ng.name = choice.name;
+    ng.type = choice.type;
 
 #ifndef DGAMELAUNCH
     // New: pick name _after_ character choices.
-    if (choice->name.empty())
+    if (choice.name.empty())
     {
         clrscr();
 
-        string specs = chop_string(species_name(ng->species), 79, false);
+        string specs = chop_string(species_name(ng.species), 79, false);
 
         cprintf("You are a%s %s %s.\n",
                 (is_vowel(specs[0])) ? "n" : "", specs.c_str(),
-                get_job_name(ng->job));
+                get_job_name(ng.job));
 
         enter_player_name(choice);
-        ng->name = choice->name;
-        ng->filename = get_save_filename(choice->name);
+        ng.name = choice.name;
+        ng.filename = get_save_filename(choice.name);
 
-        if (save_exists(ng->filename))
+        if (save_exists(ng.filename))
         {
             cprintf("\nDo you really want to overwrite your old game? ");
             char c = getchm();
@@ -586,48 +585,48 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
     }
 #endif
 
-    if (ng->name.empty())
+    if (ng.name.empty())
         end(1, false, "No player name specified.");
 
-    ASSERT(is_good_name(ng->name, false, false)
-           && job_allowed(ng->species, ng->job)
-           && ng->type != NUM_GAME_TYPE);
+    ASSERT(is_good_name(ng.name, false, false)
+           && job_allowed(ng.species, ng.job)
+           && ng.type != NUM_GAME_TYPE);
 
-    write_newgame_options_file(*choice);
+    write_newgame_options_file(choice);
 
     return false;
 }
 
 // Set ng_choice to defaults without overwriting name and game type.
-static void _set_default_choice(newgame_def* ng, newgame_def* ng_choice,
+static void _set_default_choice(newgame_def& ng, newgame_def& ng_choice,
                                 const newgame_def& defaults)
 {
-    // Reset *ng so _resolve_species_job will work properly.
-    ng->clear_character();
+    // Reset ng so _resolve_species_job will work properly.
+    ng.clear_character();
 
-    const string name = ng_choice->name;
-    const game_type type   = ng_choice->type;
-    *ng_choice = defaults;
-    ng_choice->name = name;
-    ng_choice->type = type;
+    const string name = ng_choice.name;
+    const game_type type   = ng_choice.type;
+    ng_choice = defaults;
+    ng_choice.name = name;
+    ng_choice.type = type;
 }
 
-static void _mark_fully_random(newgame_def* ng, newgame_def* ng_choice,
+static void _mark_fully_random(newgame_def& ng, newgame_def& ng_choice,
                                bool viable)
 {
-    // Reset *ng so _resolve_species_job will work properly.
-    ng->clear_character();
+    // Reset ng so _resolve_species_job will work properly.
+    ng.clear_character();
 
-    ng_choice->fully_random = true;
+    ng_choice.fully_random = true;
     if (viable)
     {
-        ng_choice->species = SP_VIABLE;
-        ng_choice->job = JOB_VIABLE;
+        ng_choice.species = SP_VIABLE;
+        ng_choice.job = JOB_VIABLE;
     }
     else
     {
-        ng_choice->species = SP_RANDOM;
-        ng_choice->job = JOB_RANDOM;
+        ng_choice.species = SP_RANDOM;
+        ng_choice.job = JOB_RANDOM;
     }
 }
 
@@ -642,7 +641,7 @@ static const int CHAR_DESC_HEIGHT = 3;
 static const int SPECIAL_KEYS_START_Y = CHAR_DESC_START_Y
                                         + CHAR_DESC_HEIGHT + 1;
 
-static void _construct_species_menu(const newgame_def* ng,
+static void _construct_species_menu(const newgame_def& ng,
                                     const newgame_def& defaults,
                                     MenuFreeform* menu)
 {
@@ -658,8 +657,8 @@ static void _construct_species_menu(const newgame_def* ng,
 
     for (const species_type species : species_order)
     {
-        if (ng->job != JOB_UNKNOWN
-            && species_allowed(ng->job, species) == CC_BANNED)
+        if (ng.job != JOB_UNKNOWN
+            && species_allowed(ng.job, species) == CC_BANNED)
         {
             continue;
         }
@@ -667,12 +666,12 @@ static void _construct_species_menu(const newgame_def* ng,
         tmp = new TextItem();
         text.clear();
 
-        if (ng->job == JOB_UNKNOWN)
+        if (ng.job == JOB_UNKNOWN)
         {
             tmp->set_fg_colour(LIGHTGRAY);
             tmp->set_highlight_colour(BLUE);
         }
-        else if (species_allowed(ng->job, species) == CC_RESTRICTED)
+        else if (species_allowed(ng.job, species) == CC_RESTRICTED)
         {
             tmp->set_fg_colour(DARKGRAY);
             tmp->set_highlight_colour(BLUE);
@@ -715,7 +714,7 @@ static void _construct_species_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('+');
     // If the player has a job chosen, use VIABLE, otherwise use RANDOM
-    if (ng->job != JOB_UNKNOWN)
+    if (ng.job != JOB_UNKNOWN)
         tmp->set_id(M_VIABLE);
     else
         tmp->set_id(M_RANDOM);
@@ -803,7 +802,7 @@ static void _construct_species_menu(const newgame_def* ng,
 
     // Adjust the end marker to align the - because Space text is longer by 4
     tmp = new TextItem();
-    if (ng->job != JOB_UNKNOWN)
+    if (ng.job != JOB_UNKNOWN)
     {
         tmp->set_text("Space - Change background");
         tmp->set_description_text("Lets you change your background choice.");
@@ -851,7 +850,7 @@ static void _construct_species_menu(const newgame_def* ng,
 // Prompt the player for a choice of species.
 // ng should be const, but we need to reset it for _resolve_species_job
 // to work correctly in view of fully random characters.
-static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
+static void _prompt_species(newgame_def& ng, newgame_def& ng_choice,
                             const newgame_def& defaults)
 {
     PrecisionMenu menu;
@@ -920,12 +919,13 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
                 end(0);
                 return;
             CASE_ESCAPE
+            case CK_MOUSE_CMD:
 #ifdef USE_TILE_WEB
                 tiles.send_exit_reason("cancel");
 #endif
                 game_ended();
             case CK_BKSP:
-                ng_choice->species = SP_UNKNOWN;
+                ng_choice.species = SP_UNKNOWN;
                 return;
             default:
                 // if we get this far, we did not get a significant selection
@@ -964,8 +964,8 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
                     continue;
                 }
             case M_ABORT:
-                ng->species = ng_choice->species = SP_UNKNOWN;
-                ng->job     = ng_choice->job     = JOB_UNKNOWN;
+                ng.species = ng_choice.species = SP_UNKNOWN;
+                ng.job     = ng_choice.job     = JOB_UNKNOWN;
                 return;
             case M_HELP:
                  // access to the help files
@@ -975,18 +975,18 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
                 list_commands('%', false, _highlight_pattern(ng));
                 return _prompt_species(ng, ng_choice, defaults);
             case M_VIABLE:
-                ng_choice->species = SP_VIABLE;
+                ng_choice.species = SP_VIABLE;
                 return;
             case M_RANDOM:
-                ng_choice->species = SP_RANDOM;
+                ng_choice.species = SP_RANDOM;
                 return;
             default:
                 // we have a species selection
                 species_type species = static_cast<species_type> (selection_key);
-                if (ng->job == JOB_UNKNOWN
-                    || species_allowed(ng->job, species) != CC_BANNED)
+                if (ng.job == JOB_UNKNOWN
+                    || species_allowed(ng.job, species) != CC_BANNED)
                 {
-                    ng_choice->species = species;
+                    ng_choice.species = species;
                     return;
                 }
                 else
@@ -996,7 +996,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
     }
 }
 
-void job_group::attach(const newgame_def* ng, const newgame_def& defaults,
+void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
                        MenuFreeform* menu, menu_letter &letter)
 {
     TextItem* tmp = new NoSelectTextItem();
@@ -1014,19 +1014,19 @@ void job_group::attach(const newgame_def* ng, const newgame_def& defaults,
         if (job == JOB_UNKNOWN)
             break;
 
-        if (ng->species != SP_UNKNOWN
-            && job_allowed(ng->species, job) == CC_BANNED)
+        if (ng.species != SP_UNKNOWN
+            && job_allowed(ng.species, job) == CC_BANNED)
         {
             continue;
         }
 
         tmp = new TextItem();
-        if (ng->species == SP_UNKNOWN)
+        if (ng.species == SP_UNKNOWN)
         {
             tmp->set_fg_colour(LIGHTGRAY);
             tmp->set_highlight_colour(BLUE);
         }
-        else if (job_allowed(ng->species, job) == CC_RESTRICTED)
+        else if (job_allowed(ng.species, job) == CC_RESTRICTED)
         {
             tmp->set_fg_colour(DARKGRAY);
             tmp->set_highlight_colour(BLUE);
@@ -1054,52 +1054,57 @@ void job_group::attach(const newgame_def* ng, const newgame_def& defaults,
     }
 }
 
+static job_group jobs_order[] =
+{
+    {
+        "Warrior",
+        coord_def(0, 0), 15,
+        { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_ASSASSIN }
+    },
+    {
+        "Adventurer",
+        coord_def(0, 7), 15,
+        { JOB_ARTIFICER, JOB_WANDERER }
+    },
+    {
+        "Zealot",
+        coord_def(15, 0), 20,
+        { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT }
+    },
+    {
+        "Warrior-mage",
+        coord_def(35, 0), 21,
+        { JOB_SKALD, JOB_TRANSMUTER, JOB_WARPER, JOB_ARCANE_MARKSMAN,
+          JOB_ENCHANTER }
+    },
+    {
+        "Mage",
+        coord_def(56, 0), 22,
+        { JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
+          JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
+          JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE }
+    }
+};
+
+bool is_starting_job(job_type job)
+{
+    for (const job_group& group : jobs_order)
+        for (const job_type job_ : group.jobs)
+            if (job == job_)
+                return true;
+    return false;
+}
+
 /**
  * Helper for _choose_job
  * constructs the menu used and highlights the previous job if there is one
  */
-static void _construct_backgrounds_menu(const newgame_def* ng,
+static void _construct_backgrounds_menu(const newgame_def& ng,
                                         const newgame_def& defaults,
                                         MenuFreeform* menu)
 {
-    job_group jobs_order[] =
-    {
-        {
-            "Warrior",
-            coord_def(0, 0), 15,
-            {JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_ASSASSIN,
-             JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
-        },
-        {
-            "Adventurer",
-            coord_def(0, 7), 15,
-            {JOB_ARTIFICER, JOB_WANDERER, JOB_UNKNOWN, JOB_UNKNOWN,
-             JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
-        },
-        {
-            "Zealot",
-            coord_def(15, 0), 20,
-            {JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT,
-             JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN,
-             JOB_UNKNOWN, JOB_UNKNOWN}
-        },
-        {
-            "Warrior-mage",
-            coord_def(35, 0), 21,
-            {JOB_SKALD, JOB_TRANSMUTER, JOB_WARPER, JOB_ARCANE_MARKSMAN,
-             JOB_ENCHANTER, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
-        },
-        {
-            "Mage",
-            coord_def(56, 0), 22,
-            {JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
-             JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
-             JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE}
-        }
-    };
-
     menu_letter letter = 'a';
-    for (job_group &group : jobs_order)
+    for (job_group& group : jobs_order)
         group.attach(ng, defaults, menu, letter);
 
     // Add all the special button entries
@@ -1112,7 +1117,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('+');
     // If the player has species chosen, use VIABLE, otherwise use RANDOM
-    if (ng->species != SP_UNKNOWN)
+    if (ng.species != SP_UNKNOWN)
         tmp->set_id(M_VIABLE);
     else
         tmp->set_id(M_RANDOM);
@@ -1200,7 +1205,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
 
     // Adjust the end marker to align the - because Space text is longer by 4
     tmp = new TextItem();
-    if (ng->species != SP_UNKNOWN)
+    if (ng.species != SP_UNKNOWN)
     {
         tmp->set_text("Space - Change species");
         tmp->set_description_text("Lets you change your species choice.");
@@ -1251,7 +1256,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
  * ng should be const, but we need to reset it for _resolve_species_job
  * to work correctly in view of fully random characters.
  */
-static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
+static void _prompt_job(newgame_def& ng, newgame_def& ng_choice,
                         const newgame_def& defaults)
 {
     PrecisionMenu menu;
@@ -1320,12 +1325,13 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
                 end(0);
                 return;
             CASE_ESCAPE
+            case CK_MOUSE_CMD:
 #ifdef USE_TILE_WEB
                 tiles.send_exit_reason("cancel");
 #endif
                 game_ended();
             case CK_BKSP:
-                ng_choice->job = JOB_UNKNOWN;
+                ng_choice.job = JOB_UNKNOWN;
                 return;
             default:
                 // if we get this far, we did not get a significant selection
@@ -1364,8 +1370,8 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
                     continue;
                 }
             case M_ABORT:
-                ng->species = ng_choice->species = SP_UNKNOWN;
-                ng->job     = ng_choice->job     = JOB_UNKNOWN;
+                ng.species = ng_choice.species = SP_UNKNOWN;
+                ng.job     = ng_choice.job     = JOB_UNKNOWN;
                 return;
             case M_HELP:
                  // access to the help files
@@ -1375,18 +1381,18 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
                 list_commands('%', false, _highlight_pattern(ng));
                 return _prompt_job(ng, ng_choice, defaults);
             case M_VIABLE:
-                ng_choice->job = JOB_VIABLE;
+                ng_choice.job = JOB_VIABLE;
                 return;
             case M_RANDOM:
-                ng_choice->job = JOB_RANDOM;
+                ng_choice.job = JOB_RANDOM;
                 return;
             default:
                 // we have a job selection
                 job_type job = static_cast<job_type> (selection_key);
-                if (ng->species == SP_UNKNOWN
-                    || job_allowed(ng->species, job) != CC_BANNED)
+                if (ng.species == SP_UNKNOWN
+                    || job_allowed(ng.species, job) != CC_BANNED)
                 {
-                    ng_choice->job = job;
+                    ng_choice.job = job;
                     return;
                 }
                 else
@@ -1412,7 +1418,7 @@ static weapon_type _fixup_weapon(weapon_type wp,
     return WPN_UNKNOWN;
 }
 
-static void _construct_weapon_menu(const newgame_def* ng,
+static void _construct_weapon_menu(const newgame_def& ng,
                                    const weapon_type& defweapon,
                                    const vector<weapon_choice>& weapons,
                                    MenuFreeform* menu)
@@ -1420,6 +1426,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
     static const int ITEMS_START_Y = 5;
     TextItem* tmp = nullptr;
     string text;
+    const char *thrown_name = nullptr;
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
 
@@ -1447,15 +1454,18 @@ static void _construct_weapon_menu(const newgame_def* ng,
         switch (weapons[i].first)
         {
         case WPN_UNARMED:
-            text += species_has_claws(ng->species) ? "claws" : "unarmed";
+            text += species_has_claws(ng.species) ? "claws" : "unarmed";
             break;
         case WPN_THROWN:
-            if (species_can_throw_large_rocks(ng->species))
-                text += "large rocks";
-            else if (species_size(ng->species, PSIZE_TORSO) <= SIZE_SMALL)
-                text += "tomahawks";
+            // We don't support choosing among multiple thrown weapons.
+            ASSERT(!thrown_name);
+            if (species_can_throw_large_rocks(ng.species))
+                thrown_name = "large rocks";
+            else if (species_size(ng.species, PSIZE_TORSO) <= SIZE_SMALL)
+                thrown_name = "tomahawks";
             else
-                text += "javelins";
+                thrown_name = "javelins";
+            text += thrown_name;
             break;
         default:
             text += weapon_base_name(weapons[i].first);
@@ -1559,9 +1569,11 @@ static void _construct_weapon_menu(const newgame_def* ng,
         text.clear();
         text = "Tab - ";
 
+        ASSERT(defweapon != WPN_THROWN || thrown_name);
         text += defweapon == WPN_RANDOM  ? "Random" :
                 defweapon == WPN_VIABLE  ? "Viable" :
-                defweapon == WPN_UNARMED ? "unarmed"  :
+                defweapon == WPN_UNARMED ? "unarmed" :
+                defweapon == WPN_THROWN  ? thrown_name :
                 weapon_base_name(defweapon);
 
         // Adjust the end marker to aling the - because
@@ -1586,7 +1598,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
 /**
  * Returns false if user escapes
  */
-static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
+static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
                            const newgame_def& defaults,
                            const vector<weapon_choice>& weapons)
 {
@@ -1643,6 +1655,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
                 break;
             case ' ':
             CASE_ESCAPE
+            case CK_MOUSE_CMD:
                 return false;
             default:
                 // if we get this far, we did not get a significant selection
@@ -1676,21 +1689,21 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
         case M_DEFAULT_CHOICE:
             if (defweapon != WPN_UNKNOWN)
             {
-                ng_choice->weapon = defweapon;
+                ng_choice.weapon = defweapon;
                 return true;
             }
             // No default weapon defined.
             // This case should never happen in those cases but just in case
             continue;
         case M_VIABLE:
-            ng_choice->weapon = WPN_VIABLE;
+            ng_choice.weapon = WPN_VIABLE;
             return true;
         case M_RANDOM:
-            ng_choice->weapon = WPN_RANDOM;
+            ng_choice.weapon = WPN_RANDOM;
             return true;
         default:
             // We got an item selection
-            ng_choice->weapon = static_cast<weapon_type> (selection_ID);
+            ng_choice.weapon = static_cast<weapon_type> (selection_ID);
             return true;
         }
     }
@@ -1698,10 +1711,37 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
     return false;
 }
 
-static vector<weapon_choice> _get_weapons(const newgame_def* ng)
+static weapon_type _starting_weapon_upgrade(weapon_type wp, job_type job,
+                                            species_type species)
+{
+    const bool fighter = job == JOB_FIGHTER;
+    const size_type size = species_size(species, PSIZE_TORSO);
+
+    // TODO: actually query itemprop for one-handedness.
+    switch (wp)
+    {
+    case WPN_SHORT_SWORD:
+        return WPN_RAPIER;
+    case WPN_MACE:
+        return WPN_FLAIL;
+    case WPN_HAND_AXE:
+        // Little fighters can't use war axes with a shield.
+        return fighter && size <= SIZE_LITTLE ? wp : WPN_WAR_AXE;
+    case WPN_SPEAR:
+        // Small fighters can't use tridents with a shield.
+        return fighter && size <= SIZE_SMALL  ? wp : WPN_TRIDENT;
+    case WPN_FALCHION:
+        // Little fighters can't use long swords with a shield.
+        return fighter && size <= SIZE_LITTLE ? wp : WPN_LONG_SWORD;
+    default:
+        return wp;
+    }
+}
+
+static vector<weapon_choice> _get_weapons(const newgame_def& ng)
 {
     vector<weapon_choice> weapons;
-    if (ng->job == JOB_HUNTER || ng->job == JOB_ARCANE_MARKSMAN)
+    if (job_gets_ranged_weapons(ng.job))
     {
         weapon_type startwep[4] = { WPN_THROWN, WPN_HUNTING_SLING,
                                     WPN_SHORTBOW, WPN_HAND_CROSSBOW };
@@ -1711,7 +1751,7 @@ static vector<weapon_choice> _get_weapons(const newgame_def* ng)
             weapon_choice wp;
             wp.first = startwep[i];
 
-            wp.second = weapon_restriction(wp.first, *ng);
+            wp.second = weapon_restriction(wp.first, ng);
             if (wp.second != CC_BANNED)
                 weapons.push_back(wp);
         }
@@ -1725,48 +1765,13 @@ static vector<weapon_choice> _get_weapons(const newgame_def* ng)
         {
             weapon_choice wp;
             wp.first = startwep[i];
-
-            switch (wp.first)
+            if (job_gets_good_weapons(ng.job))
             {
-            case WPN_SHORT_SWORD:
-                // Gladiators and fighters get rapieres.
-                if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER)
-                    wp.first = WPN_RAPIER;
-                break;
-            case WPN_MACE:
-                // Gladiators and fighters get flails.
-                if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER)
-                    wp.first = WPN_FLAIL;
-                break;
-            case WPN_HAND_AXE:
-                // Gladiators and non-little fighters get war axes.
-                if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER
-                      && species_size(ng->species, PSIZE_BODY) > SIZE_LITTLE)
-                {
-                    wp.first = WPN_WAR_AXE;
-                }
-                break;
-            case WPN_SPEAR:
-                // Gladiators and non-small fighters get tridents.
-                if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER
-                      && species_size(ng->species, PSIZE_BODY) > SIZE_SMALL)
-                {
-                    wp.first = WPN_TRIDENT;
-                }
-                break;
-            case WPN_FALCHION:
-                // Gladiators and non-little fighters get long swords.
-                if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER
-                      && species_size(ng->species, PSIZE_BODY) > SIZE_LITTLE)
-                {
-                    wp.first = WPN_LONG_SWORD;
-                }
-                break;
-            default:
-                break;
+                wp.first = _starting_weapon_upgrade(wp.first, ng.job,
+                                                    ng.species);
             }
 
-            wp.second = weapon_restriction(wp.first, *ng);
+            wp.second = weapon_restriction(wp.first, ng);
             if (wp.second != CC_BANNED)
                 weapons.push_back(wp);
         }
@@ -1774,16 +1779,16 @@ static vector<weapon_choice> _get_weapons(const newgame_def* ng)
     return weapons;
 }
 
-static void _resolve_weapon(newgame_def* ng, newgame_def* ng_choice,
+static void _resolve_weapon(newgame_def& ng, newgame_def& ng_choice,
                             const vector<weapon_choice>& weapons)
 {
-    int weapon = ng_choice->weapon;
+    int weapon = ng_choice.weapon;
 
-    if (ng_choice->allowed_weapons.size())
+    if (ng_choice.allowed_weapons.size())
     {
         weapon =
-            ng_choice->allowed_weapons[
-                random2(ng_choice->allowed_weapons.size())];
+            ng_choice.allowed_weapons[
+                random2(ng_choice.allowed_weapons.size())];
     }
 
     switch (weapon)
@@ -1796,7 +1801,7 @@ static void _resolve_weapon(newgame_def* ng, newgame_def* ng_choice,
             if (choice.second == CC_UNRESTRICTED
                 && one_chance_in(++good_choices))
             {
-                ng->weapon = choice.first;
+                ng.weapon = choice.first;
             }
         }
         if (good_choices)
@@ -1804,54 +1809,41 @@ static void _resolve_weapon(newgame_def* ng, newgame_def* ng_choice,
     }
         // intentional fall-through
     case WPN_RANDOM:
-        ng->weapon = weapons[random2(weapons.size())].first;
+        ng.weapon = weapons[random2(weapons.size())].first;
         return;
 
     default:
         // _fixup_weapon will return WPN_UNKNOWN, allowing the player
         // to select the weapon, if the weapon option is incompatible.
-        ng->weapon = _fixup_weapon(ng_choice->weapon, weapons);
+        ng.weapon = _fixup_weapon(ng_choice.weapon, weapons);
         return;
     }
 }
 
 // Returns false if aborted, else an actual weapon choice
-// is written to ng->weapon for the jobs that call
+// is written to ng.weapon for the jobs that call
 // _update_weapon() later.
-static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
+static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
                            const newgame_def& defaults)
 {
     // No weapon use at all. The actual item will be removed later.
-    if (ng->species == SP_FELID)
+    if (ng.species == SP_FELID)
         return true;
 
-    switch (ng->job)
-    {
-    case JOB_FIGHTER:
-    case JOB_GLADIATOR:
-    case JOB_BERSERKER:
-    case JOB_CHAOS_KNIGHT:
-    case JOB_ABYSSAL_KNIGHT:
-    case JOB_SKALD:
-    case JOB_WARPER:
-    case JOB_HUNTER:
-    case JOB_ARCANE_MARKSMAN:
-        break;
-    default:
+    if (!job_has_weapon_choice(ng.job))
         return true;
-    }
 
     vector<weapon_choice> weapons = _get_weapons(ng);
 
     ASSERT(!weapons.empty());
     if (weapons.size() == 1)
     {
-        ng->weapon = ng_choice->weapon = weapons[0].first;
+        ng.weapon = ng_choice.weapon = weapons[0].first;
         return true;
     }
 
     _resolve_weapon(ng, ng_choice, weapons);
-    if (ng->weapon == WPN_UNKNOWN)
+    if (ng.weapon == WPN_UNKNOWN)
     {
         if (!_prompt_weapon(ng, ng_choice, defaults, weapons))
             return false;
@@ -2025,7 +2017,7 @@ static bool _cmp_map_by_order(const map_def* m1, const map_def* m2)
            || m1->order == m2->order && m1->desc_or_name() < m2->desc_or_name();
 }
 
-static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
+static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                                  const newgame_def& defaults,
                                  mapref_vector maps)
 {
@@ -2059,7 +2051,7 @@ static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
 
     textcolour(CYAN);
     cprintf("\nYou have a choice of %s:\n\n",
-            ng_choice->type == GAME_TYPE_TUTORIAL ? "lessons"
+            ng_choice.type == GAME_TYPE_TUTORIAL ? "lessons"
                                                   : "maps");
 
     while (true)
@@ -2125,49 +2117,49 @@ static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
             return;
         case M_RANDOM:
             // FIXME setting this to "random" is broken
-            ng_choice->map.clear();
+            ng_choice.map.clear();
             return;
         default:
             // We got an item selection
-            ng_choice->map = maps.at(selection_ID)->name;
+            ng_choice.map = maps.at(selection_ID)->name;
             return;
         }
     }
 }
 
-static void _resolve_gamemode_map(newgame_def* ng, const newgame_def* ng_choice,
+static void _resolve_gamemode_map(newgame_def& ng, const newgame_def& ng_choice,
                                   const mapref_vector& maps)
 {
-    if (ng_choice->map == "random" || ng_choice->map.empty())
-        ng->map = maps[random2(maps.size())]->name;
+    if (ng_choice.map == "random" || ng_choice.map.empty())
+        ng.map = maps[random2(maps.size())]->name;
     else
-        ng->map = ng_choice->map;
+        ng.map = ng_choice.map;
 }
 
-static void _choose_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
+static void _choose_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                                  const newgame_def& defaults)
 {
     // Sprint, otherwise Tutorial.
-    const bool is_sprint = (ng_choice->type == GAME_TYPE_SPRINT);
+    const bool is_sprint = (ng_choice.type == GAME_TYPE_SPRINT);
 
-    const string type_name = gametype_to_str(ng_choice->type);
+    const string type_name = gametype_to_str(ng_choice.type);
 
     const mapref_vector maps = find_maps_for_tag(type_name);
 
     if (maps.empty())
         end(1, true, "No %s maps found.", type_name.c_str());
 
-    if (ng_choice->map.empty())
+    if (ng_choice.map.empty())
     {
         if (is_sprint
-            && ng_choice->type == !crawl_state.sprint_map.empty())
+            && ng_choice.type == !crawl_state.sprint_map.empty())
         {
-            ng_choice->map = crawl_state.sprint_map;
+            ng_choice.map = crawl_state.sprint_map;
         }
         else if (maps.size() > 1)
             _prompt_gamemode_map(ng, ng_choice, defaults, maps);
         else
-            ng_choice->map = maps[0]->name;
+            ng_choice.map = maps[0]->name;
     }
 
     _resolve_gamemode_map(ng, ng_choice, maps);

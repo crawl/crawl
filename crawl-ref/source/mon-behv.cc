@@ -44,7 +44,7 @@ static void _guess_invis_foe_pos(monster* mon)
 
     // NOTE: This depends on ignoring clouds, so that cells hidden by
     // opaque clouds are included as a possibility for the foe's location.
-    for (radius_iterator ri(mon->pos(), guess_radius, C_ROUND, LOS_SOLID); ri; ++ri)
+    for (radius_iterator ri(mon->pos(), guess_radius, C_SQUARE, LOS_SOLID); ri; ++ri)
     {
         if (foe->is_habitable(*ri))
             possibilities.push_back(*ri);
@@ -84,7 +84,7 @@ static void _mon_check_foe_invalid(monster* mon)
 static bool _mon_tries_regain_los(monster* mon)
 {
     // Only intelligent monsters with ranged attack will try to regain LOS.
-    if (mons_intel(mon) < I_NORMAL || !mons_has_ranged_attack(mon))
+    if (mons_intel(mon) < I_HUMAN || !mons_has_ranged_attack(mon))
         return false;
 
     // Any special case should go here.
@@ -96,8 +96,7 @@ static bool _mon_tries_regain_los(monster* mon)
     }
 
     // Randomize it a bit to make it less predictable.
-    return mons_intel(mon) == I_NORMAL && !one_chance_in(10)
-           || mons_intel(mon) == I_HIGH && !one_chance_in(20);
+    return !one_chance_in(10);
 }
 
 // Monster tries to get into a firing position. Among the cells which have
@@ -179,7 +178,7 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
             // (or wasn't even attempted) and we need to set our target
             // the traditional way.
 
-            mon->target = PLAYER_POS;
+            mon->target = you.pos();
         }
     }
     else
@@ -197,13 +196,40 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
         }
         // Hold position if we've reached our ideal range
         else if (mon->type == MONS_SPELLFORGED_SERVITOR
-                 && (mon->pos() - target->pos()).abs()
-                 <= dist_range(mon->props["ideal_range"].get_int())
+                 && (mon->pos() - target->pos()).rdist()
+                 <= mon->props["ideal_range"].get_int()
                  && !one_chance_in(8))
         {
             mon->firing_pos = mon->pos();
         }
     }
+}
+
+/**
+ * Should the player be treated as if they were normally visible to a given
+ * monster, even though they're currently invisible?
+ *
+ * Random per-call; depends on proximity, monster intelligence, and Ash wrath.
+ *
+ * @param mon     The monster in question.
+ * @param         Whether the monster correctly guessed the player's presence.
+ */
+static bool _monster_guesses_invis_player(const monster &mon)
+{
+    // Sometimes, if a player is right next to a monster, they will 'see'.
+    if (grid_distance(you.pos(), mon.pos()) == 1 && one_chance_in(3))
+        return true;
+
+    // [dshaligram] Smart monsters have a chance of clueing in to
+    // invisible players in various ways.
+    if (mons_intel(&mon) == I_HUMAN && one_chance_in(12))
+        return true;
+
+    // Ash penance makes monsters very likely to target you through invis.
+    if (player_under_penance(GOD_ASHENZARI) && coinflip())
+        return true;
+
+    return false;
 }
 
 //---------------------------------------------------------------
@@ -232,14 +258,6 @@ void handle_behaviour(monster* mon)
         }
     }
 
-    // Grand avatar targeting is handled through its triggerers
-    // and _grand_avatar_act in mon-act.cc.
-    if (mon->type == MONS_GRAND_AVATAR)
-    {
-        mon->behaviour = BEH_SEEK;
-        return;
-    }
-
     bool changed = true;
     bool isFriendly = mon->friendly();
     bool isNeutral  = mon->neutral();
@@ -254,33 +272,12 @@ void handle_behaviour(monster* mon)
 
     bool proxFoe;
     bool isHealthy  = (mon->hit_points > mon->max_hit_points / 2);
-    bool isSmart    = (mons_intel(mon) > I_ANIMAL);
+    bool isSmart    = (mons_intel(mon) >= I_HUMAN);
     bool isScared   = mon->has_ench(ENCH_FEAR);
     bool isPacified = mon->pacified();
     bool patrolling = mon->is_patrolling();
     static vector<level_exit> e;
     static int                e_index = -1;
-
-    // Zotdef rotting
-    if (crawl_state.game_is_zotdef())
-    {
-        if (!isFriendly && !isNeutral && env.orb_pos == mon->pos()
-            && mon->speed)
-        {
-            const int loss = div_rand_round(10, mon->speed);
-            if (loss)
-            {
-                mprf(MSGCH_DANGER, "Your flesh rots away as the Orb of Zot is desecrated.");
-
-                // If the rot would reduce us to <= 0 max HP, attribute the
-                // kill to the monster.
-                if (loss >= you.hp_max)
-                    ouch(loss, KILLED_BY_ROTTING, mon->mid);
-
-                rot_hp(loss);
-            }
-        }
-    }
 
     //mprf("AI debug: mon %d behv=%d foe=%d pos=%d %d target=%d %d",
     //     mon->mindex(), mon->behaviour, mon->foe, mon->pos().x,
@@ -351,43 +348,7 @@ void handle_behaviour(monster* mon)
     // Change proxPlayer depending on invisibility and standing
     // in shallow water.
     if (proxPlayer && !you.visible_to(mon))
-    {
-        proxPlayer = false;
-
-        const int intel = mons_intel(mon);
-        // Sometimes, if a player is right next to a monster, they will 'see'.
-        if (grid_distance(you.pos(), mon->pos()) == 1
-            && one_chance_in(3))
-        {
-            proxPlayer = true;
-        }
-
-        // [dshaligram] Very smart monsters have a chance of clueing in to
-        // invisible players in various ways.
-        if (intel == I_NORMAL && one_chance_in(13)
-                 || intel == I_HIGH && one_chance_in(6))
-        {
-            proxPlayer = true;
-        }
-
-        // Ash penance makes monsters very likely to target you through
-        // invisibility, depending on their intelligence.
-        if (player_under_penance(GOD_ASHENZARI) && x_chance_in_y(intel, 7))
-            proxPlayer = true;
-    }
-
-    // Zotdef: immobile allies forget targets that are out of sight
-    if (crawl_state.game_is_zotdef())
-    {
-        if (isFriendly && mon->is_stationary()
-            && (mon->foe != MHITNOT && mon->foe != MHITYOU)
-            && !mon->can_see(&menv[mon->foe]))
-        {
-            mon->foe = MHITYOU;
-            //mprf("%s resetting target (cantSee)",
-            //     mon->name(DESC_THE,true).c_str());
-        }
-    }
+        proxPlayer = _monster_guesses_invis_player(*mon);
 
     // Set friendly target, if they don't already have one.
     // Berserking allies ignore your commands!
@@ -399,29 +360,10 @@ void handle_behaviour(monster* mon)
         && mon->type != MONS_BALL_LIGHTNING
         && !mons_is_avatar(mon->type))
     {
-        if (!crawl_state.game_is_zotdef())
-        {
-            if (you.pet_target != MHITNOT)
-                mon->foe = you.pet_target;
-            else if (mons_class_is_stationary(mon->type))
-                set_nearest_monster_foe(mon);
-        }
-        else    // Zotdef only
-        {
-            // Attack pet target if nearby
-            if (you.pet_target != MHITNOT && proxPlayer)
-            {
-                //mprf("%s setting target (player target)",
-                //     mon->name(DESC_THE,true).c_str());
-                mon->foe = you.pet_target;
-            }
-            else
-            {
-                // Zotdef - this is all new, for out-of-sight friendlies to do
-                // something useful. If no current target, get the closest one.
-                set_nearest_monster_foe(mon);
-            }
-        }
+        if (you.pet_target != MHITNOT)
+            mon->foe = you.pet_target;
+        else if (mons_class_is_stationary(mon->type))
+            set_nearest_monster_foe(mon);
     }
 
     // Instead, berserkers attack nearest monsters.
@@ -438,7 +380,7 @@ void handle_behaviour(monster* mon)
         if (!isFriendly
             && !mon->has_ench(ENCH_INSANE)
             && proxPlayer
-            && mons_intel(mon) >= I_NORMAL)
+            && mons_intel(mon) >= I_HUMAN)
         {
             mon->foe = MHITYOU;
         }
@@ -455,8 +397,6 @@ void handle_behaviour(monster* mon)
         && (proxPlayer || one_chance_in(3)))
     {
         set_nearest_monster_foe(mon);
-        if (mon->foe == MHITNOT && crawl_state.game_is_zotdef())
-            mon->foe = MHITYOU;
     }
 
     // Friendly summons will come back to the player if they go out of sight.
@@ -486,14 +426,12 @@ void handle_behaviour(monster* mon)
 
     // Unfriendly monsters fighting other monsters will usually
     // target the player, if they're healthy.
-    // Zotdef: 2/3 chance of retargeting changed to 1/4
     if (!isFriendly && !isNeutral
         && !mons_is_avatar(mon->type)
         && mon->foe != MHITYOU && mon->foe != MHITNOT
         && proxPlayer && !mon->berserk_or_insane()
         && isHealthy
-        && (crawl_state.game_is_zotdef() ? one_chance_in(4)
-                                         : !one_chance_in(3)))
+        && !one_chance_in(3))
     {
         mon->foe = MHITYOU;
     }
@@ -514,7 +452,7 @@ void handle_behaviour(monster* mon)
     while (changed)
     {
         actor* afoe = mon->get_foe();
-        proxFoe = afoe && mon->can_see(afoe);
+        proxFoe = afoe && mon->can_see(*afoe);
 
         if (mon->foe == MHITYOU)
         {
@@ -528,13 +466,6 @@ void handle_behaviour(monster* mon)
         coord_def foepos = coord_def(0,0);
         if (afoe)
             foepos = afoe->pos();
-
-        if (crawl_state.game_is_zotdef() && mon->foe == MHITYOU
-            && !mon->wont_attack())
-        {
-            foepos = PLAYER_POS;
-            proxFoe = true;
-        }
 
         if (mon->pos() == mon->firing_pos)
             mon->firing_pos.reset();
@@ -576,7 +507,7 @@ void handle_behaviour(monster* mon)
                 else
                 {
                     new_foe = MHITYOU;
-                    mon->target = PLAYER_POS;
+                    mon->target = you.pos();
                 }
                 break;
             }
@@ -658,24 +589,17 @@ void handle_behaviour(monster* mon)
                     // but only for a few moves (smell and
                     // intuition only go so far).
 
-                    if (mon->pos() == mon->target
-                        && (!isFriendly || !crawl_state.game_is_zotdef()))
-                    {   // hostiles only in Zotdef
+                  if (mon->pos() == mon->target)
+                    {
                         if (mon->foe == MHITYOU)
                         {
-                            // infallible tracking in zotdef
-                            if (crawl_state.game_is_zotdef())
-                                mon->target = PLAYER_POS;
-                            else
+                            if (x_chance_in_y(50, you.stealth())
+                                || you.penance[GOD_ASHENZARI] && coinflip())
                             {
-                                if (x_chance_in_y(50, you.stealth())
-                                    || you.penance[GOD_ASHENZARI] && coinflip())
-                                {
-                                    mon->target = you.pos();
-                                }
-                                else
-                                    mon->foe_memory = 0;
+                                mon->target = you.pos();
                             }
+                            else
+                                mon->foe_memory = 0;
                         }
                         else
                         {
@@ -720,18 +644,13 @@ void handle_behaviour(monster* mon)
             // Hack: smarter monsters will tend to pursue the player longer.
             switch (mons_intel(mon))
             {
-            case I_HIGH:
-                mon->foe_memory = random_range(700, 1300);
-                break;
-            case I_NORMAL:
-                mon->foe_memory = random_range(300, 700);
+            case I_HUMAN:
+                mon->foe_memory = random_range(450, 1000);
                 break;
             case I_ANIMAL:
-            case I_INSECT:
-            case I_REPTILE:
                 mon->foe_memory = random_range(250, 550);
                 break;
-            case I_PLANT:
+            case I_BRAINLESS:
                 mon->foe_memory = random_range(100, 300);
                 break;
             }
@@ -909,7 +828,7 @@ void handle_behaviour(monster* mon)
 
             bool stop_retreat = false;
             // We've approached our next destination, re-evaluate
-            if (distance2(mon->target, mon->pos()) <= 3)
+            if (grid_distance(mon->target, mon->pos()) <= 1)
             {
                 // Continue on to the rally point
                 if (mon->target != mon->patrol_point)
@@ -919,7 +838,7 @@ void handle_behaviour(monster* mon)
                     stop_retreat = true;
 
             }
-            else if (distance2(mon->pos(), you.pos()) > dist_range(LOS_RADIUS + 2))
+            else if (grid_distance(mon->pos(), you.pos()) > LOS_RADIUS + 2)
             {
                 // We're too far from the player. Idle around and wait for
                 // them to catch up.
@@ -943,7 +862,7 @@ void handle_behaviour(monster* mon)
                 // idling (to prevent it from repeatedly resetting idle
                 // time if its own wanderings bring it closer to the player)
                 if (mon->props.exists("idle_point")
-                    && distance2(mon->pos(), you.pos()) < dist_range(LOS_RADIUS))
+                    && grid_distance(mon->pos(), you.pos()) < LOS_RADIUS)
                 {
                     mon->props.erase("idle_point");
                     mon->props.erase("idle_deadline");
@@ -1009,24 +928,16 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
     // -- But why should they always attack monsters? -- 1KB
 
     monster* foe = monster_at(p);
-    if (foe && foe != mon
-        && (mon->has_ench(ENCH_INSANE)
-            || foe->friendly() != friendly
-            || neutral && !foe->neutral())
-        && (ignore_sight || mon->can_see(foe))
-        && !foe->is_projectile()
-        && summon_can_attack(mon, p)
-        && (friendly || !is_sanctuary(p))
-        && (crawl_state.game_is_zotdef() || !mons_is_firewood(foe)))
-            // Zotdef allies take out firewood
-    {
-        return true;
-    }
-
-    if (mon->has_ench(ENCH_INSANE) && p == you.pos())
-        return true;
-
-    return false;
+    return foe && foe != mon
+           && (mon->has_ench(ENCH_INSANE)
+               || foe->friendly() != friendly
+               || neutral && !foe->neutral())
+           && (ignore_sight || mon->can_see(*foe))
+           && !foe->is_projectile()
+           && summon_can_attack(mon, p)
+           && (friendly || !is_sanctuary(p))
+           && !mons_is_firewood(foe)
+           || mon->has_ench(ENCH_INSANE) && p == you.pos();
 }
 
 // Choose random nearest monster as a foe.
@@ -1108,9 +1019,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     const beh_type old_behaviour = mon->behaviour;
 
-    int fleeThreshold = min(mon->max_hit_points / 4, 20);
-
-    bool isSmart          = (mons_intel(mon) > I_ANIMAL);
+    bool isSmart          = (mons_intel(mon) >= I_HUMAN);
     bool setTarget        = false;
     bool breakCharm       = false;
     bool was_unaware      = mon->asleep() || mon->foe == MHITNOT;
@@ -1175,7 +1084,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // dies, and you'll get a warning prompt and penance once
         // *per hit*. This may not be the best way to address the
         // issue, though. -cao
-        if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
+        if (!mons_class_gives_xp(mon->type)
             && mon->attitude != ATT_FRIENDLY
             && mon->attitude != ATT_GOOD_NEUTRAL)
         {
@@ -1190,7 +1099,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // If the monster can't reach its target and can't attack it
         // either, retreat.
         try_pathfind(mon);
-        if (mons_intel(mon) > I_REPTILE && !mons_can_attack(mon)
+        if (mons_intel(mon) > I_BRAINLESS && !mons_can_attack(mon)
             && target_is_unreachable(mon))
         {
             mon->behaviour = BEH_RETREAT;
@@ -1201,7 +1110,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             if (src == mon)
                 break;
 
-            if (you.can_see(mon))
+            if (you.can_see(*mon))
             {
                 mprf("%s attack snaps %s out of %s fear.",
                         src ? src->name(DESC_ITS).c_str() : "the",
@@ -1366,26 +1275,6 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         }
         else
             mon->behaviour = BEH_SEEK;
-        break;
-
-    case ME_HURT:
-        // Monsters with the M_FLEES flag can flee at low HP.
-        // Cannot flee if cornered.
-        // Monster can flee if HP is less than 1/4 maxhp or less than 20 hp
-        // (whichever is lower). Chance starts quite low, and is near 100% at 1.
-        // Monsters with less than 8 maxhp are unable to flee.
-        // These numbers could still use some adjusting.
-        //
-        // Assuming fleeThreshold is 20:
-        //   at 19 hp: 5% chance of fleeing
-        //   at 10 hp: 50% chance of fleeing
-        //   (chance increases by 5% for every hp lost.)
-        if (mons_class_flag(mon->type, M_FLEES)
-            && !mon->berserk_or_insane()
-            && x_chance_in_y(fleeThreshold - mon->hit_points, fleeThreshold))
-        {
-            mon->behaviour = BEH_FLEE;
-        }
         break;
 
     case ME_EVAL:
@@ -1563,7 +1452,7 @@ static void _mons_indicate_level_exit(const monster* mon)
     {
         simple_monster_message(mon,
             make_stringf(" %s the shaft.",
-                mons_flies(mon) ? "goes down"
+                mon->airborne() ? "goes down"
                                 : "jumps into").c_str());
     }
 }
@@ -1572,7 +1461,7 @@ void make_mons_leave_level(monster* mon)
 {
     if (mon->pacified())
     {
-        if (you.can_see(mon))
+        if (you.can_see(*mon))
             _mons_indicate_level_exit(mon);
 
         // Pacified monsters leaving the level take their stuff with
@@ -1604,16 +1493,13 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
 // Friendly summons can't attack out of the player's LOS, it's too abusable.
 bool summon_can_attack(const monster* mons)
 {
-    if (crawl_state.game_is_arena() || crawl_state.game_is_zotdef())
-        return true;
-
-    return !mons->friendly() || !mons->is_summoned()
+    return crawl_state.game_is_arena() || !mons->friendly() || !mons->is_summoned()
            || you.see_cell_no_trans(mons->pos());
 }
 
 bool summon_can_attack(const monster* mons, const coord_def &p)
 {
-    if (crawl_state.game_is_arena() || crawl_state.game_is_zotdef())
+    if (crawl_state.game_is_arena())
         return true;
 
     // Spectral weapons only attack their target

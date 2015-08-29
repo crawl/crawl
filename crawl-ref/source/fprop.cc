@@ -59,10 +59,6 @@ feature_property_type str_to_fprop(const string &str)
         return FPROP_MOLD;
     if (str == "no_cloud_gen")
         return FPROP_NO_CLOUD_GEN;
-    if (str == "no_rtele_into")
-        return FPROP_NO_RTELE_INTO;
-    if (str == "no_ctele_into")
-        return FPROP_NO_CTELE_INTO;
     if (str == "no_tele_into")
         return FPROP_NO_TELE_INTO;
     if (str == "no_tide")

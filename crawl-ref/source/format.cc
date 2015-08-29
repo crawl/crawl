@@ -99,12 +99,12 @@ void formatted_string::parse_string_to_multiple(const string &s,
         }
     }
 
-    for (int i = 0, size = lines.size(); i < size; ++i)
+    for (const string &line : lines)
     {
         out.emplace_back();
         formatted_string& fs = out.back();
         fs.textcolour(colour_stack.back());
-        parse_string1(lines[i], fs, colour_stack, nullptr);
+        parse_string1(line, fs, colour_stack, nullptr);
         if (colour_stack.back() != colour_stack.front())
             fs.textcolour(colour_stack.front());
     }

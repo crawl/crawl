@@ -16,6 +16,7 @@
 
 #include "artefact.h"
 #include "art-enum.h"
+#include "food.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -85,11 +86,6 @@ bool is_holy_item(const item_def& item)
     }
 
     return retval;
-}
-
-bool is_potentially_unholy_item(const item_def& item)
-{
-    return false;
 }
 
 bool is_unholy_item(const item_def& item)
@@ -528,7 +524,7 @@ static bool _your_god_hates_spell(spell_type spell)
     return god_hates_spell(spell, you.religion);
 }
 
-conduct_type good_god_hates_item_handling(const item_def &item)
+static conduct_type good_god_hates_item_handling(const item_def &item)
 {
     if (!is_good_god(you.religion)
         || (!is_unholy_item(item) && !is_evil_item(item)))
@@ -552,9 +548,20 @@ conduct_type good_god_hates_item_handling(const item_def &item)
 
 conduct_type god_hates_item_handling(const item_def &item)
 {
+    if (good_god_hates_item_handling(item) != DID_NOTHING)
+        return good_god_hates_item_handling(item);
+
     switch (you.religion)
     {
     case GOD_ZIN:
+        // Handled here rather than is_forbidden_food() because you can
+        // butcher or otherwise desecrate the corpses all you want, just as
+        // long as you don't eat the chunks. This check must come before the
+        // item_type_known() check because the latter returns false for food
+        // (and other item types without identification).
+        if (item.is_type(OBJ_FOOD, FOOD_CHUNK) && is_mutagenic(item))
+            return DID_DELIBERATE_MUTATING;
+
         if (!item_type_known(item))
             return DID_NOTHING;
 
@@ -615,12 +622,6 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
     }
 
-    if (item_type_known(item) && is_potentially_unholy_item(item)
-        && is_good_god(you.religion))
-    {
-        return DID_UNHOLY;
-    }
-
     if (item_type_known(item) && is_potentially_evil_item(item)
         && is_good_god(you.religion))
     {
@@ -637,8 +638,7 @@ conduct_type god_hates_item_handling(const item_def &item)
 
 bool god_hates_item(const item_def &item)
 {
-    return (good_god_hates_item_handling(item) != DID_NOTHING)
-            || (god_hates_item_handling(item) != DID_NOTHING);
+    return god_hates_item_handling(item) != DID_NOTHING;
 }
 
 bool god_dislikes_spell_type(spell_type spell, god_type god)

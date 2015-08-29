@@ -99,18 +99,23 @@
     Joe Buzzelli
     Policarpo Caballero
     Can of Worms
+    Edgar Carballo
     Cedor
     Rahul Chandra
+    Gregory Chereshnev
     Thom Chiovoloni
     Henry Cipolla
     Nicholas Connelly
+    Tom Conrad
     Vitor 'Baconkid' Costa
     Aaron Curtis
     Simon Curtis
+    Paul Dejean
     Denzi
     Lothar Dierkes
     drachereborn
     Mike Drinen
+    DrKe
     Kieron Dunbar
     John 'Elwin' Edwards
     elliott
@@ -144,6 +149,7 @@
     Mitsuhiro Itakura
     Jeekaroose
     Mikko Juola
+    Kurt Kartaltepe
     Dominic 'dk' Kexel
     Jarmo Kielosto
     Brandon Kime
@@ -162,7 +168,7 @@
     Lamil Lerran
     Jordan Lewis
     Sami Liedes
-    Dom Light
+    Dom 'Bodrick' Light
     Rob Lund
     Michael Lynn
     Peter McLarnan
@@ -194,6 +200,7 @@
     Pedro
     Arlen Phillips
     Lemuel Pitkin
+    Iago Porto
     pubby
     Derek Ray
     Terence Reeves
@@ -211,6 +218,7 @@
     Brett Scarborough
     Roman Sêk
     ShadyAmish
+    Evan Shaw
     Robert Shimmin
     Sigurd
     Edgar Simo
@@ -243,6 +251,7 @@
     Evan Williams
     Jeremey Wilson
     Yelve Yakut
+    Rob Young
     Zannick
     Zooko
 

@@ -503,7 +503,7 @@ TAGS:   arrival no_monster_gen no_item_gen
 ORIENT: float
 MONS:   plant / bush w:3, fungus col:any, fungus col:yellow, fungus col:red
 MONS:   fungus col:white, fungus col:magenta, fungus col:darkgrey
-KPROP:  ' = no_rtele_into
+KPROP:  ' = no_tele_into
 SUBST:  ' = ...111t, 1:1112, 2=1111112, 2:234567
 FTILE:  .1234567t = floor_moss
 COLOUR: . = green
@@ -914,7 +914,7 @@ SUBST:  1 = 1:2 t:2 .:1
 MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                               pow_max = 100, delay = 1, size = 1, \
                               excl_rad = -1 }
-KPROP:  F1 = no_rtele_into
+KPROP:  F1 = no_tele_into
 MAP
          xxxxxxx
          x..{..x

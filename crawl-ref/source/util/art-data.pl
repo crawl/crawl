@@ -60,11 +60,12 @@ my %field_type = (
     RMUT     => "bool",
     RND_TELE => "bool",
     SEEINV   => "bool",
+    SKIP_EGO => "bool",
     SLAY     => "num",
     SPECIAL  => "bool",
     STEALTH  => "num",
     STR      => "num",
-    SUSTAB   => "bool",
+    SUSTAT   => "bool",
     TYPE     => "str",
     UNHOLY   => "bool",
     UNIDED   => "bool",
@@ -191,7 +192,7 @@ sub finish_art
         }
         else
         {
-            $val = "NULL";
+            $val = "nullptr";
         }
         $artefact->{"${func_name}_func"} = $val;
     }
@@ -218,7 +219,7 @@ sub finish_art
             }
             elsif ($type eq "func")
             {
-                $artefact->{$field} = "NULL";
+                $artefact->{$field} = "nullptr";
             }
             elsif ($type eq "unused")
             {
@@ -238,7 +239,7 @@ sub finish_art
     my $flags = "";
     my $flag;
     foreach $flag ("SPECIAL", "HOLY", "UNHOLY", "EVIL", "CHAOTIC",
-                   "CORPSE_VIOLATING", "NOGEN", "RANDAPP", "UNIDED")
+                   "CORPSE_VIOLATING", "NOGEN", "RANDAPP", "UNIDED", "SKIP_EGO")
     {
         if ($artefact->{$flag})
         {
@@ -491,7 +492,7 @@ my @art_order = (
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "unused", "\n",
     "MUTATE", "unused", "SLAY", "CURSED", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
-    "RMSL", "FOG", "REGEN", "SUSTAB", "NO_UPGRADE", "RCORR", "\n",
+    "RMSL", "FOG", "REGEN", "SUSTAT", "NO_UPGRADE", "RCORR", "\n",
     "RMUT", "\n",
     "}",
 
@@ -551,7 +552,7 @@ sub art_to_str
             my $temp = $artefact->{$part};
             $temp =~ s/"/\\"/g;
             $str .= (($part eq "TYPE" || $part eq "INSCRIP") && $temp eq "")
-                ? "NULL" : "\"$temp\"";
+                ? "nullptr" : "\"$temp\"";
         }
         else
         {

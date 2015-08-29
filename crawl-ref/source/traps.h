@@ -47,5 +47,4 @@ int count_traps(trap_type ttyp);
 void place_webs(int num);
 bool maybe_destroy_web(actor *oaf);
 bool ensnare(actor *fly);
-bool can_trigger_shadow_trap(const monster &mons);
 #endif

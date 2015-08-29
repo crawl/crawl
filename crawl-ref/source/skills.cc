@@ -181,7 +181,7 @@ void reassess_starting_skills()
             && (is_useless_skill(SK_ARMOUR)
                 || you_can_wear(EQ_BODY_ARMOUR) != MB_TRUE))
         {
-            // No one who can't wear mundane heavy armour shouldn't start with
+            // No one who can't wear mundane heavy armour should start with
             // the Armour skill -- D:1 dragon armour is too unlikely.
             you.skill_points[sk] += skill_exp_needed(you.skills[SK_ARMOUR],
                 SK_ARMOUR, SP_HUMAN) + 1;
@@ -1153,49 +1153,6 @@ static string _stk_weight(species_type species)
         return "Middle";
 }
 
-static map<string, function<string (species_type)>> replacements =
-{
-    { "Adj", [](species_type sp)
-                 { return species_name(sp, SPNAME_ADJ); } },
-    { "Genus", [](species_type sp)
-                 { return species_name(sp, SPNAME_GENUS); } },
-    { "genus", [](species_type sp)
-                 { return lowercase_string(species_name(sp, SPNAME_GENUS)); } },
-    { "Genus_Short", [](species_type sp)
-                 { return sp == SP_DEMIGOD ? "God" :
-                          species_name(sp, SPNAME_GENUS); } },
-    { "Walker", [](species_type sp)
-                 { return species_walking_verb(sp) + "er"; } },
-    { "Weight", _stk_weight },
-};
-
-static string _replace_skill_keys(const string &text, species_type species)
-{
-    string::size_type at = 0, last = 0;
-    ostringstream res;
-    while ((at = text.find('@', last)) != string::npos)
-    {
-        res << text.substr(last, at - last);
-        const string::size_type end = text.find('@', at + 1);
-        if (end == string::npos)
-            break;
-
-        const string key = text.substr(at + 1, end - at - 1);
-        const string value = replacements[key](species);
-
-        ASSERT(!value.empty());
-
-        res << value;
-
-        last = end + 1;
-    }
-    if (!last)
-        return text;
-
-    res << text.substr(last);
-    return res.str();
-}
-
 unsigned get_skill_rank(unsigned skill_lev)
 {
     // Translate skill level into skill ranking {dlb}:
@@ -1235,6 +1192,17 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
     {
         switch (best_skill)
         {
+        case SK_SUMMONINGS:
+            // don't call good disciples hellbinders or demonologists
+            if (is_good_god(god))
+            {
+                if (skill_rank == 4)
+                    result = "Worldbinder";
+                else if (skill_rank == 5)
+                    result = "Planerender";
+            }
+            break;
+
         case SK_UNARMED_COMBAT:
             if (species == SP_FELID)
             {
@@ -1298,10 +1266,18 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             result = skill_titles[best_skill][skill_rank];
     }
 
-    result = _replace_skill_keys(result, species);
+    const map<string, string> replacements =
+    {
+        { "Adj", species_name(species, SPNAME_ADJ) },
+        { "Genus", species_name(species, SPNAME_GENUS) },
+        { "genus", lowercase_string(species_name(species, SPNAME_GENUS)) },
+        { "Genus_Short", species == SP_DEMIGOD ? "God" :
+                           species_name(species, SPNAME_GENUS) },
+        { "Walker", species_walking_verb(species) + "er" },
+        { "Weight", _stk_weight(species) },
+    };
 
-    return result.empty() ? string("Invalid Title")
-                          : result;
+    return replace_keys(result, replacements);
 }
 
 /** What is the player's current title.
@@ -1610,7 +1586,7 @@ int skill_transfer_amount(skill_type sk)
 {
     ASSERT(!is_invalid_skill(sk));
     if (you.skill_points[sk] < 1000)
-        return you.skill_points[sk] - skill_exp_needed(1, sk);
+        return you.skill_points[sk];
     else
         return max<int>(1000, you.skill_points[sk] / 2);
 }

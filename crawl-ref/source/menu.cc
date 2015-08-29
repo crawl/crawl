@@ -235,9 +235,7 @@ Menu::~Menu()
 
 void Menu::clear()
 {
-    for (int i = 0, count = items.size(); i < count; ++i)
-        delete items[i];
-    items.clear();
+    deleteAll(items);
     last_selected = -1;
 }
 
@@ -793,9 +791,9 @@ void Menu::get_selected(vector<MenuEntry*> *selected) const
 {
     selected->clear();
 
-    for (int i = 0, count = items.size(); i < count; ++i)
-        if (items[i]->selected())
-            selected->push_back(items[i]);
+    for (MenuEntry *item : items)
+        if (item->selected())
+            selected->push_back(item);
 }
 
 void Menu::deselect_all(bool update_view)
@@ -1001,8 +999,7 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         tileset.emplace_back(idx, TEX_PLAYER);
     }
 
-    // A fake monster might not have its ghost member set up properly,
-    // and mons_flies() looks at ghost.
+    // A fake monster might not have its ghost member set up properly.
     if (!fake && m->ground_level())
     {
         if (ch == TILE_DNGN_LAVA)
@@ -1167,8 +1164,8 @@ bool Menu::is_selectable(int item) const
         return true;
 
     string text = items[item]->get_filter_text();
-    for (int i = 0, count = select_filter.size(); i < count; ++i)
-        if (select_filter[i].matches(text))
+    for (const text_pattern &pat : select_filter)
+        if (pat.matches(text))
             return true;
 
     return false;
@@ -2341,8 +2338,10 @@ int PrecisionMenu::handle_mouse(const MouseEvent &me)
             // something got clicked that needs to signal the menu to end
             return CK_MOUSE_CLICK;
         case MenuObject::INPUT_END_MENU_ABORT:
+            // XXX: For right-click we use CK_MOUSE_CMD to cancel out of the
+            // menu, but these mouse-button->key mappings are not very sane.
             clear_selections();
-            return CK_MOUSE_CLICK;
+            return CK_MOUSE_CMD;
         case MenuObject::INPUT_FOCUS_LOST:
             // The object lost its focus and is no longer the active one
             if (obj == m_active_object)
@@ -3379,19 +3378,25 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
         }
         return INPUT_NO_ACTION;
     }
-    if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
+    InputReturnValue ret = INPUT_NO_ACTION;
+    if (me.event == MouseEvent::PRESS)
     {
-        if (find_item != nullptr)
+        if (me.button == MouseEvent::LEFT)
         {
-            select_item(find_item);
-            if (find_item->selected())
-                return MenuObject::INPUT_SELECTED;
-            else
-                return MenuObject::INPUT_DESELECTED;
+            if (find_item != nullptr)
+            {
+                select_item(find_item);
+                if (find_item->selected())
+                    ret = INPUT_SELECTED;
+                else
+                    ret = INPUT_DESELECTED;
+            }
         }
+        else if (me.button == MouseEvent::RIGHT)
+            ret = INPUT_END_MENU_ABORT;
     }
     // all the other Mouse Events are uninteresting and are ignored
-    return INPUT_NO_ACTION;
+    return ret;
 }
 #endif
 
@@ -3856,11 +3861,10 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
         {
             select_item(find_item);
             if (find_item->selected())
-                return MenuObject::INPUT_SELECTED;
+                return INPUT_SELECTED;
             else
-                return MenuObject::INPUT_DESELECTED;
+                return INPUT_DESELECTED;
         }
-#ifdef USE_TILE_LOCAL
         else
         {
             // handle clicking on the scrollbar (top half of region => scroll up)
@@ -3869,14 +3873,9 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
             else
                 return process_input(CK_UP);
         }
-#endif
     }
-    if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
-    {
-        // TODO
-        // pass mouse press event to objects, in case we pressed
-        // down on top of an item with such action
-    }
+    else if (me.event == MouseEvent::PRESS && me.button == MouseEvent::RIGHT)
+        return INPUT_END_MENU_ABORT;
     // all the other Mouse Events are uninteresting and are ignored
     return INPUT_NO_ACTION;
 }
@@ -4171,10 +4170,12 @@ MenuObject::InputReturnValue MenuDescriptor::process_input(int key)
 #ifdef USE_TILE_LOCAL
 MenuObject::InputReturnValue MenuDescriptor::handle_mouse(const MouseEvent &me)
 {
+    if (me.event == MouseEvent::PRESS && me.button == MouseEvent::RIGHT)
+        return INPUT_END_MENU_ABORT;
     // we have nothing interesting to do on mouse events because render()
-    // always checks if the active has changed
-    // override for things like tooltips
-    return MenuObject::INPUT_NO_ACTION;
+    // always checks if the active has changed override for things like
+    // tooltips
+    return INPUT_NO_ACTION;
 }
 #endif
 

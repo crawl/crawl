@@ -1237,7 +1237,7 @@ TAGS:   no_rotate
 ORIENT: float
 DEPTH:  D:5-12
 SUBST:  1 = 1:70 2:60 3:25
-MONS:   goliath beetle w:20 / giant cockroach w:30 / butterfly w:20
+MONS:   giant cockroach w:30 / butterfly w:20
 MONS:   worker ant
 MONS:   killer bee / scorpion / soldier ant w:5
 MAP
@@ -1262,7 +1262,7 @@ NAME:   lemuel_troll_bridge
 DEPTH:  D:9-, Depths
 ORIENT: float
 TAGS:   no_pool_fixup patrolling
-KPROP:  1 = no_rtele_into
+KPROP:  1 = no_tele_into
 SUBST:  1 = 1:50 2 3:5
 MONS:   troll
 MONS:   deep troll
@@ -1942,9 +1942,7 @@ DEPTH:   D:5-, Depths
 TAGS:    no_item_gen no_monster_gen uniq_spiral layout_rooms layout_city
 MONS:    nothing
 ITEM:    nothing, nothing
-SHUFFLE: Bb/Mm/Mm/Mm
-COLOUR:  B = blue
-SUBST:   M=. , m=n, B=. , b=c
+SUBST:   M=. , m=n, B=.
 SUBST:   * : *$
 MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 5, delay = 120, start_clouds = 1, \
@@ -2095,37 +2093,6 @@ MAP
 ............1..1............
 ............................
 .............@@.............
-ENDMAP
-
-##############################################################################
-# Boring beetle workplace (evilmike)
-#
-NAME:   evilmike_boring_beetle
-DEPTH:  Depths
-ORIENT: float
-NSUBST: m = 4:| / 4:* / 9:0 / 4:9 / 2:8 / 10:. / 150:x / *:m
-SUBST:  n = m
-MONS:   generate_awake boring beetle
-MAP
-vvvvvvvvvvvvvvvvvvv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vnmmmmmmmmmmmmmmmmv
-vnnmmmmmmmmmmmmmmmv
-@nnnmmmmmmmmmmmmm1v
-vnnmmmmmmmmmmmmmmmv
-vnmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vmmmmmmmmmmmmmmmmmv
-vvvvvvvvvvvvvvvvvvv
 ENDMAP
 
 ##############################################################################
@@ -2743,6 +2710,9 @@ ITEM: bolt ego:exploding q:5
 ITEM: potion of heal wounds
 ITEM: plate armour good_item
 ITEM: arbalest ego:flaming w:9 ident:type / arbalest unrand:hellfire w:1
+: if you.in_branch("Dis") then
+SUBST: defg = .
+: end
 SUBST: ( = ()
 TILE: c = wall_marble
 MAP
@@ -2794,6 +2764,9 @@ MONS:    lorocyproca
 : end
 ITEM:    arbalest, bolt, potion of curing, potion of heal wounds
 ITEM:    potion of invisibility
+: if you.in_branch("Geh") then
+SUBST: defgh = .
+: end
 KFEAT:   - = open_door
 SHUFFLE: })]>
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
@@ -2945,7 +2918,7 @@ KITEM:    E| = |
 KFEAT:    f5Z67DER%$*| = W
 KFEAT:    S = w
 KFEAT:    u = t
-KPROP:    ~`ZR = no_rtele_into
+KPROP:    ~`ZR = no_tele_into
 SHUFFLE:  HI / JK
 NSUBST:   H = 1:4 / *:G, I = ', J = G, K = D, L = 2:6 / *:7
 SUBST:    B : cf, C : cf, ~" = ffffW, '` = W
@@ -3058,7 +3031,7 @@ MONS: reaper ; scythe ego:venom / w:8 green death \
 : end
 KMONS: A = lich
 KFEAT: A = stone_arch
-KPROP: '? = no_rtele_into
+KPROP: '? = no_tele_into
 NSUBST: - = 4:| / 4:* / 4:% / *:.
 MARKER:  ? = lua:fog_machine { cloud_type = "poison gas", pow_min = 2, \
         pow_max = 7, delay = 30, start_clouds = 1, size_min = 1, \
@@ -3378,40 +3351,6 @@ ccccccc..ccccccc
 ENDMAP
 
 ##############################################################################
-# Sometimes You Just Gotta Run
-NAME:    erik_ogre
-DEPTH:   D:4-9
-ORIENT:  float
-SHUFFLE: 1X / 1X / 2l / 3Y
-SUBST:   X=x, Y:x.
-MONS:    ogre, goliath beetle, nothing
-ITEM:    potion of heal wounds / potion of haste / potion of berserk rage
-MAP
-        xx@xx
-        x...x
-        xX.Xx
-        xX1Xx
-        xX.Xx
-        xx.xx
-        xx.xx
-        xx.xx
-        x...x
-        x...x
-        x...x
-        x.d.x
-        x...x
-        x.d.x
-        x...x
-     xxxx...xxxx
-     x....[....x
-xxxxxx..x(.{x..xxxxxx
-x...x...x...x...x...x
-x....x..xx]xx..x....x
-xxxxxx...xxx...xxxxxx
-     xxxxx xxxxx
-ENDMAP
-
-##############################################################################
 # An old-fashioned vault, by Lemuel
 NAME:  lemuel_traditional_vault
 DEPTH: D:12-, Depths
@@ -3703,7 +3642,7 @@ ORIENT: float
 SUBST:  x : xxxm
 NSUBST: 9 = 6:. / *:9
 NSUBST: 0 = 6:. / *:0
-KPROP:  .089*| = no_rtele_into
+KPROP:  .089*| = no_tele_into
 SUBST:  ' = .
 MAP
 '''''''''''''''''''''
@@ -4567,7 +4506,7 @@ ENDMAP
 NAME:   minmay_five_octagons
 DEPTH:  D:12-, !D:$, Depths, !Depths:$
 ORIENT: float
-KPROP:  8 = no_rtele_into
+KPROP:  8 = no_tele_into
 SUBST:  8 = .:130 8 |, 0 = 0 .:240
 MAP
 xxxxxxx@xxxxxxxxxxxxxxxx@xxxxxxx
@@ -6347,10 +6286,10 @@ NAME: cheibrodos_birdhouse
 DEPTH: Depths, !Depths:$
 TAGS: no_item_gen no_monster_gen no_pool_fixup
 ORIENT: float
-MONS: raven, tengu warrior, tengu conjurer, tengu reaver
+MONS: tengu warrior, tengu conjurer, tengu reaver
 KFEAT: m = iron_grate
-SUBST: " = .....1112W
-NSUBST: ' = 2:4 / 4=23 / *:.
+SUBST: " = ........1W
+NSUBST: ' = 2:3 / 4=12 / *:.
 NSUBST: ? = 3:* / *:%
 MAP
            .........

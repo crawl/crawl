@@ -178,7 +178,7 @@ public:
     virtual bool see_cell_no_trans(const coord_def &c) const;
 
     // Can the actor actually see the target?
-    virtual bool can_see(const actor *target) const;
+    virtual bool can_see(const actor &target) const;
 
     // Visibility as required by messaging. In usual play:
     //   Does the player know what's happening to the actor?
@@ -195,7 +195,8 @@ public:
     virtual bool malmutate(const string &reason) = 0;
     virtual bool polymorph(int pow) = 0;
     virtual bool drain_exp(actor *agent, bool quiet = false, int pow = 15) = 0;
-    virtual bool rot(actor *agent, int amount, bool quiet = false) = 0;
+    virtual bool rot(actor *agent, int amount, bool quiet = false,
+                     bool no_cleanup = false) = 0;
     virtual int  hurt(const actor *attacker, int amount,
                       beam_type flavour = BEAM_MISSILE,
                       kill_method_type kill_type = KILLED_BY_MONSTER,
@@ -205,7 +206,7 @@ public:
                       bool attacker_effects = true) = 0;
     virtual bool heal(int amount, bool max_too = false) = 0;
     virtual void banish(actor *agent, const string &who = "") = 0;
-    virtual void blink(bool allow_partial_control = true) = 0;
+    virtual void blink() = 0;
     virtual void teleport(bool right_now = false,
                           bool wizard_tele = false) = 0;
     virtual bool poison(actor *attacker, int amount = 1, bool force = false) = 0;
@@ -303,7 +304,7 @@ public:
     virtual int check_res_magic(int power);
     virtual bool no_tele(bool calc_unid = true, bool permit_id = true,
                          bool blink = false) const = 0;
-    virtual bool inaccuracy() const;
+    virtual int inaccuracy() const;
     virtual bool antimagic_susceptible() const = 0;
 
     virtual bool gourmand(bool calc_unid = true, bool items = true) const;
@@ -328,7 +329,6 @@ public:
     virtual int evokable_flight(bool calc_unid = true) const;
     virtual int spirit_shield(bool calc_unid = true, bool items = true) const;
 
-    virtual flight_type flight_mode() const = 0;
     virtual bool is_wall_clinging() const;
     virtual bool is_banished() const = 0;
     virtual bool can_cling_to_walls() const = 0;
@@ -336,7 +336,7 @@ public:
     virtual bool check_clinging(bool stepped, bool door = false);
     virtual void clear_clinging();
     virtual bool is_web_immune() const = 0;
-    virtual bool airborne() const;
+    virtual bool airborne() const = 0;
     virtual bool ground_level() const;
     virtual bool stand_on_solid_ground() const;
 
@@ -361,18 +361,18 @@ public:
     // Being heated by a heat aura?
     virtual bool heated() const;
 #endif
-    // Squared halo radius.
-    virtual int halo_radius2() const = 0;
-    // Squared silence radius.
-    virtual int silence_radius2() const = 0;
-    // Squared liquefying radius
-    virtual int liquefying_radius2() const = 0;
-    virtual int umbra_radius2() const = 0;
+    // Halo radius.
+    virtual int halo_radius() const = 0;
+    // Silence radius.
+    virtual int silence_radius() const = 0;
+    // Liquefying radius.
+    virtual int liquefying_radius() const = 0;
+    virtual int umbra_radius() const = 0;
 #if TAG_MAJOR_VERSION == 34
-    virtual int heat_radius2() const = 0;
+    virtual int heat_radius() const = 0;
 #endif
 
-    virtual bool glows_naturally() const = 0;
+    virtual bool glows_naturally() const { return false; };
 
     virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;

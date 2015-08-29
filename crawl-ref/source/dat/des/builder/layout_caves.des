@@ -224,59 +224,18 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 }}
 
 ##############################################################
-# layout_waterfall
-#
-# Use polar inverse on a noise function to create corridors that tail off in size.
-# Conceptually this is really quite similar to layout_cathedral_of_symmetry and even
-# produces the same kind of symmetries. It could be an alternate algorithm there but
-# ... it just looks more cave-like.
-#
-# Removed by request from dpeg.  Ugly in console, and the idea
-# is used better in layout_falls_marsh.
-#
-NAME:   layout_waterfall
-DEPTH:  Tar
-WEIGHT: 0
-ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
-{{
-
-  -- TODO: For now this looks pretty good; but tweaking the reps and also the worley
-  -- scale and the params to polar_inverse can produce a lot of other good layouts,
-  -- there's just a big danger of ending up with either a big open misshapen area or
-  -- a too-small area because one or more reps disconnects. Need to spend some time
-  -- testing and tuning the params for more variation, and make the crazier ones
-  -- appear in Tar only. This layout looks quite slimey to me as well; but for that
-  -- I'd need to ensure there is always a path through without touching walls. Maybe
-  -- a separate slime path connector would be good and allow some other layout types
-  -- there too.
-
-  if is_validating() then return end
-
-  local gxm,gym = dgn.max_bounds()
-  local limit,border,margin = 0.2,3,0
-  local reps = crawl.random_range(1,2)
-
-  local fcaves = procedural.worley_diff { scale = .1/reps }
-  fcaves = procedural.transform.polar_inverse(fcaves,gym/2,gxm/reps,gym/2)
-  fcaves = procedural.add(fcaves,procedural.mul(limit,procedural.border{padding=border,margin=margin}))
-
-  procedural.render_map(_G,fcaves,function(value) return value < limit and '.' or 'x' end)
-  zonify.map_fill_zones(_G, 1)
-
-  theme.D.caves(_G)
-}}
-
-##############################################################
 # layout_falls_marsh
 #
-# A mash-up of layout_waterfall and layout_pools for Swamp,
-# with dripping splatters in a more enclosed layout.
+# Use polar inverse on a noise function to create corridors that
+# tail off in size, with dripping splatters in an enclosed layout.
+# Then add pools like layout_cave_pools (but also including "pools"
+# of trees and stone).
+#
 # TODO: Somebody with greater noise manipulation prowress than I
 # should widen the occasional thin corridor at the end of each drip.
 #
 NAME:   layout_falls_marsh
-DEPTH:  Swamp:1-4
+DEPTH:  Swamp, !Swamp:$
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_pool_fixup layout_type_swamp
@@ -400,8 +359,8 @@ ENDMAP
 # distinguishing feature for Snake. ~infiniplex
 #
 NAME:   layout_cave_town
-DEPTH:  Snake:3-5
-WEIGHT: 5 (Snake:3), 15 (Snake:4), 50 (Snake:5)
+DEPTH:  Snake:2-
+WEIGHT: 5 (Snake:2), 15 (Snake:3), 50 (Snake:4)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_pool_fixup layout_type_city
 TAGS:   no_rotate no_hmirror no_vmirror

@@ -333,8 +333,6 @@ string gametype_to_str(game_type type)
         return "arena";
     case GAME_TYPE_SPRINT:
         return "sprint";
-    case GAME_TYPE_ZOTDEF:
-        return "zotdef";
     default:
         return "none";
     }
@@ -490,13 +488,12 @@ void game_options::str_to_enemy_hp_colour(const string &colours, bool prepend)
     vector<string> colour_list = split_string(" ", colours, true, true);
     if (prepend)
         reverse(colour_list.begin(), colour_list.end());
-    for (int i = 0, csize = colour_list.size(); i < csize; i++)
+    for (const string &colstr : colour_list)
     {
-        const int col = str_to_colour(colour_list[i]);
+        const int col = str_to_colour(colstr);
         if (col < 0)
         {
-            Options.report_error("Bad enemy_hp_colour: %s\n",
-                                 colour_list[i].c_str());
+            Options.report_error("Bad enemy_hp_colour: %s\n", colstr.c_str());
             return;
         }
         else if (prepend)
@@ -530,15 +527,8 @@ void game_options::new_dump_fields(const string &text, bool add, bool prepend)
         _merge_lists(dump_order, fields, prepend);
     else
     {
-        for (int f = 0, size = fields.size(); f < size; ++f)
-            for (int i = 0, dsize = dump_order.size(); i < dsize; ++i)
-            {
-                if (dump_order[i] == fields[f])
-                {
-                    dump_order.erase(dump_order.begin() + i);
-                    break;
-                }
-            }
+        for (const string &field : fields)
+            erase_val(dump_order, field);
     }
 }
 
@@ -626,8 +616,8 @@ void game_options::set_activity_interrupt(const string &activity_name,
     if (remove_interrupts)
     {
         FixedBitVector<NUM_AINTERRUPTS> refints;
-        for (int i = 0, size = interrupts.size(); i < size; ++i)
-            set_activity_interrupt(refints, interrupts[i]);
+        for (const string &interrupt : interrupts)
+            set_activity_interrupt(refints, interrupt);
 
         for (int i = 0; i < NUM_AINTERRUPTS; ++i)
             if (refints[i])
@@ -638,8 +628,8 @@ void game_options::set_activity_interrupt(const string &activity_name,
         if (!append_interrupts)
             eints.reset();
 
-        for (int i = 0, size = interrupts.size(); i < size; ++i)
-            set_activity_interrupt(eints, interrupts[i]);
+        for (const string &interrupt : interrupts)
+            set_activity_interrupt(eints, interrupt);
     }
 
     eints.set(AI_FORCE_INTERRUPT);
@@ -800,6 +790,7 @@ void game_options::reset_options()
     equip_unequip          = false;
     jewellery_prompt       = false;
     easy_door              = true;
+    enable_recast_spell    = true;
     confirm_butcher        = CONFIRM_AUTO;
     easy_eat_chunks        = false;
     auto_eat_chunks        = false;
@@ -901,6 +892,7 @@ void game_options::reset_options()
     explore_greedy         = true;
 
     explore_wall_bias      = 0;
+    explore_auto_rest      = false;
     explore_improved       = false;
     travel_key_stop        = true;
     auto_sacrifice         = AS_NO;
@@ -1095,7 +1087,10 @@ void game_options::reset_options()
     dump_order.clear();
     new_dump_fields("header,hiscore,stats,misc,inventory,"
                     "skills,spells,overview,mutations,messages,"
-                    "screenshot,monlist,kills,notes,action_counts");
+                    "screenshot,monlist,kills,notes");
+    if (Version::ReleaseType == VER_ALPHA)
+        new_dump_fields("vaults");
+    new_dump_fields("action_counts");
 
     use_animations = (UA_BEAM | UA_RANGE | UA_HP | UA_MONSTER_IN_SIGHT
                       | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY
@@ -1225,16 +1220,15 @@ void game_options::set_fire_order(const string &s, bool append, bool prepend)
     vector<string> slots = split_string(",", s);
     if (prepend)
         reverse(slots.begin(), slots.end());
-    for (int i = 0, size = slots.size(); i < size; ++i)
-        add_fire_order_slot(slots[i], prepend);
+    for (const string &slot : slots)
+        add_fire_order_slot(slot, prepend);
 }
 
 void game_options::add_fire_order_slot(const string &s, bool prepend)
 {
     unsigned flags = 0;
-    vector<string> alts = split_string("/", s);
-    for (int i = 0, size = alts.size(); i < size; ++i)
-        flags |= _str_to_fire_types(alts[i]);
+    for (const string &alt : split_string("/", s))
+        flags |= _str_to_fire_types(alt);
 
     if (flags)
     {
@@ -1280,9 +1274,8 @@ cglyph_t game_options::parse_mon_glyph(const string &s) const
     cglyph_t md;
     md.col = 0;
     vector<string> phrases = split_string(" ", s);
-    for (int i = 0, size = phrases.size(); i < size; ++i)
+    for (const string &p : phrases)
     {
-        const string &p = phrases[i];
         const int col = str_to_colour(p, -1, false);
         if (col != -1)
             md.col = col;
@@ -1424,9 +1417,8 @@ void game_options::add_feature_override(const string &text, bool prepend)
     if (feats.empty())
         return;
 
-    for (int i = 0, size = feats.size(); i < size; ++i)
+    for (const dungeon_feature_type feat : feats)
     {
-        dungeon_feature_type feat = feats[i];
         if (feat >= NUM_FEATURES)
             continue; // TODO: handle other object types.
 
@@ -2037,9 +2029,9 @@ void game_options::do_kill_map(const string &from, const string &to)
         kill_map[ifrom] = ito;
 }
 
-int game_options::read_use_animations(const string &field) const
+use_animations_type game_options::read_use_animations(const string &field) const
 {
-    int animations = 0;
+    use_animations_type animations;
     vector<string> types = split_string(",", field);
     for (const auto &type : types)
     {
@@ -2068,9 +2060,9 @@ int game_options::read_explore_stop_conditions(const string &field) const
 {
     int conditions = 0;
     vector<string> stops = split_string(",", field);
-    for (int i = 0, count = stops.size(); i < count; ++i)
+    for (const string &stop : stops)
     {
-        const string c = replace_all_of(stops[i], " ", "_");
+        const string c = replace_all_of(stop, " ", "_");
         if (c == "item" || c == "items")
             conditions |= ES_ITEM;
         else if (c == "greedy_pickup")
@@ -2198,8 +2190,8 @@ void game_options::add_message_colour_mappings(const string &field,
     vector<string> fragments = split_string(",", field);
     if (prepend)
         reverse(fragments.begin(), fragments.end());
-    for (int i = 0, count = fragments.size(); i < count; ++i)
-        add_message_colour_mapping(fragments[i], prepend, subtract);
+    for (const string &fragment : fragments)
+        add_message_colour_mapping(fragment, prepend, subtract);
 }
 
 message_filter game_options::parse_message_filter(const string &filter)
@@ -2672,6 +2664,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION_NAMED("easy_armour", easy_unequip);
     else BOOL_OPTION_NAMED("easy_armor", easy_unequip);
     else BOOL_OPTION(easy_door);
+    else BOOL_OPTION(enable_recast_spell);
     else if (key == "confirm_butcher")
     {
         if (field == "always")
@@ -2727,7 +2720,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (plain)
             use_animations = UA_ALWAYS_ON;
 
-        const int new_animations = read_use_animations(field);
+        const auto new_animations = read_use_animations(field);
         if (minus_equal)
             use_animations &= ~new_animations;
         else
@@ -2743,10 +2736,9 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "display_char"
              || key.find("cset") == 0) // compatibility with old rcfiles
     {
-        vector<string> overs = split_string(",", field);
-        for (int i = 0, size = overs.size(); i < size; ++i)
+        for (const string &over : split_string(",", field))
         {
-            vector<string> mapping = split_string(":", overs[i]);
+            vector<string> mapping = split_string(":", over);
             if (mapping.size() != 2)
                 continue;
 
@@ -2818,9 +2810,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         game.type = Options.game.type;
 #else
         game.type = _str_to_gametype(field);
-        // Zot Defence is disabled.
-        if (game.type == GAME_TYPE_ZOTDEF)
-            game.type = NUM_GAME_TYPE;
 #endif
     }
     else if (key == "combo")
@@ -3044,10 +3033,8 @@ void game_options::read_option_line(const string &str, bool runscript)
             erase_if(force_autopickup, _is_autopickup_ban);
 
         vector<pair<text_pattern, bool> > new_entries;
-        vector<string> args = split_string(",", field);
-        for (int i = 0, size = args.size(); i < size; ++i)
+        for (const string &s : split_string(",", field))
         {
-            const string &s = args[i];
             if (s.empty())
                 continue;
 
@@ -3066,10 +3053,8 @@ void game_options::read_option_line(const string &str, bool runscript)
             force_autopickup.clear();
 
         vector<pair<text_pattern, bool> > new_entries;
-        vector<string> args = split_string(",", field);
-        for (int i = 0, size = args.size(); i < size; ++i)
+        for (const string &s : split_string(",", field))
         {
-            const string &s = args[i];
             if (s.empty())
                 continue;
 
@@ -3367,13 +3352,9 @@ void game_options::read_option_line(const string &str, bool runscript)
 #endif // WIZARD
     else if (key == "sort_menus")
     {
-        vector<string> frags = split_string(";", field);
-        for (int i = 0, size = frags.size(); i < size; ++i)
-        {
-            if (frags[i].empty())
-                continue;
-            set_menu_sort(frags[i]);
-        }
+        for (const string &frag : split_string(";", field))
+            if (!frag.empty())
+                set_menu_sort(frag);
     }
     else if (key == "travel_delay")
     {
@@ -3421,22 +3402,21 @@ void game_options::read_option_line(const string &str, bool runscript)
             filters.clear();
 
         vector<message_filter> new_entries;
-        vector<string> fragments = split_string(",", field);
-        for (int i = 0, count = fragments.size(); i < count; ++i)
+        for (const string &fragment : split_string(",", field))
         {
-            if (fragments[i].empty())
+            if (fragment.empty())
                 continue;
 
-            message_filter mf(fragments[i]);
+            message_filter mf(fragment);
 
-            string::size_type pos = fragments[i].find(":");
+            string::size_type pos = fragment.find(":");
             if (pos && pos != string::npos)
             {
-                string prefix = fragments[i].substr(0, pos);
+                string prefix = fragment.substr(0, pos);
                 int channel = str_to_channel(prefix);
                 if (channel != -1 || prefix == "any")
                 {
-                    string s = fragments[i].substr(pos + 1);
+                    string s = fragment.substr(pos + 1);
                     mf = message_filter(channel, trim_string(s));
                 }
             }
@@ -3452,9 +3432,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "travel_avoid_terrain")
     {
         // TODO: allow resetting (need reset_forbidden_terrain())
-        vector<string> seg = split_string(",", field);
-        for (int i = 0, count = seg.size(); i < count; ++i)
-            prevent_travel_to(seg[i]);
+        for (const string &seg : split_string(",", field))
+            prevent_travel_to(seg);
     }
     else if (key == "tc_reachable")
         tc_reachable = str_to_colour(field, tc_reachable);
@@ -3514,6 +3493,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             explore_wall_bias = 0;
     }
     else BOOL_OPTION(explore_improved);
+    else BOOL_OPTION(explore_auto_rest);
     else BOOL_OPTION(travel_key_stop);
     else if (key == "auto_sacrifice")
     {
@@ -3532,10 +3512,8 @@ void game_options::read_option_line(const string &str, bool runscript)
             sound_mappings.clear();
 
         vector<sound_mapping> new_entries;
-        vector<string> seg = split_string(",", field);
-        for (int i = 0, count = seg.size(); i < count; ++i)
+        for (const string &sub : split_string(",", field))
         {
-            const string &sub = seg[i];
             string::size_type cpos = sub.find(":", 0);
             if (cpos != string::npos)
             {
@@ -3560,12 +3538,11 @@ void game_options::read_option_line(const string &str, bool runscript)
             menu_colour_mappings.clear();
 
         vector<colour_mapping> new_entries;
-        vector<string> seg = split_string(",", field);
-        for (int i = 0, count = seg.size(); i < count; ++i)
+        for (const string &seg : split_string(",", field))
         {
             // Format is "tag:colour:pattern" or "colour:pattern" (default tag).
             // FIXME: arrange so that you can use ':' inside a pattern
-            vector<string> subseg = split_string(":", seg[i], false);
+            vector<string> subseg = split_string(":", seg, false);
             string tagname, patname, colname;
             if (subseg.size() < 2)
                 continue;
@@ -3628,10 +3605,8 @@ void game_options::read_option_line(const string &str, bool runscript)
             kill_map[KC_OTHER] = KC_OTHER;
         }
 
-        vector<string> seg = split_string(",", field);
-        for (int i = 0, count = seg.size(); i < count; ++i)
+        for (const string &s : split_string(",", field))
         {
-            const string &s = seg[i];
             string::size_type cpos = s.find(":", 0);
             if (cpos != string::npos)
             {
@@ -3654,10 +3629,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (plain)
             dump_item_origins = IODS_PRICE;
 
-        vector<string> choices = split_string(",", field);
-        for (int i = 0, count = choices.size(); i < count; ++i)
+        for (const string &ch : split_string(",", field))
         {
-            const string &ch = choices[i];
             if (ch == "artefacts" || ch == "artifacts"
                 || ch == "artefact" || ch == "artifact")
             {
@@ -4082,10 +4055,9 @@ string game_options::resolve_include(string parent_file, string included_file,
 
     if (rcdirs)
     {
-        const vector<string> &dirs(*rcdirs);
-        for (int i = 0, size = dirs.size(); i < size; ++i)
+        for (const string &dir : *rcdirs)
         {
-            const string candidate(catpath(dirs[i], included_file));
+            const string candidate(catpath(dir, included_file));
             if (file_exists(candidate))
                 return candidate;
         }
@@ -4255,7 +4227,7 @@ enum commandline_option_type
     CLO_NO_GDB, CLO_NOGDB,
     CLO_THROTTLE,
     CLO_NO_THROTTLE,
-    CLO_LIST_COMBOS, // List species, jobs, and legal combos, in that order.
+    CLO_PLAYABLE_JSON, // JSON metadata for species, jobs, combos.
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
     CLO_AWAIT_CONNECTION,
@@ -4273,7 +4245,8 @@ static const char *cmd_ops[] =
     "builddb", "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "tutorial", "wizard", "explore", "no-save",
-    "gdb", "no-gdb", "nogdb", "throttle", "no-throttle", "list-combos",
+    "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
+    "playable-json",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
@@ -4294,7 +4267,7 @@ static string _find_executable_path()
         return utf16_to_8(tempPath);
     else
         return "";
-#elif defined (TARGET_OS_LINUX)
+#elif defined (TARGET_OS_LINUX) || defined (TARGET_OS_CYGWIN)
     char tempPath[2048];
     const ssize_t rsize =
         readlink("/proc/self/exe", tempPath, sizeof(tempPath) - 1);
@@ -4827,7 +4800,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_MAPSTAT:
         case CLO_OBJSTAT:
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
             if (o == CLO_MAPSTAT)
                 crawl_state.map_stat_gen = true;
             else
@@ -4848,11 +4821,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
             break;
 #else
             fprintf(stderr, "mapstat and objstat are available only in "
-                    "DEBUG_DIAGNOSTICS builds.\n");
+                    "DEBUG_STATISTICS builds.\n");
             end(1);
 #endif
         case CLO_ITERATIONS:
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
             if (!next_is_param || !isadigit(*next_arg))
             {
                 fprintf(stderr, "Integer argument required for -%s\n", arg);
@@ -4869,7 +4842,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             }
 #else
             fprintf(stderr, "mapstat and objstat are available only in "
-                    "DEBUG_DIAGNOSTICS builds.\n");
+                    "DEBUG_STATISTICS builds.\n");
             end(1);
 #endif
             break;
@@ -4892,17 +4865,9 @@ bool parse_args(int argc, char **argv, bool rc_only)
             crawl_state.dump_maps = true;
             break;
 
-        case CLO_LIST_COMBOS:
-        {
-            auto join = [](const vector<string> &vs) {
-                return comma_separated_line(vs.begin(), vs.end(), ",", ",");
-            };
-            fprintf(stdout, "%s\n%s\n%s\n",
-                    join(playable_species_names()).c_str(),
-                    join(playable_job_names()).c_str(),
-                    join(playable_combo_names()).c_str());
+        case CLO_PLAYABLE_JSON:
+            fprintf(stdout, "%s", playable_metadata_json().c_str());
             end(0);
-        }
 
         case CLO_TEST:
             crawl_state.test = true;

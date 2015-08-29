@@ -24,7 +24,6 @@ skill_type abil_skill(ability_type abil)
     case ABIL_EVOKE_TURN_INVISIBLE:
     case ABIL_EVOKE_FLIGHT:
     case ABIL_EVOKE_FOG:
-    case ABIL_EVOKE_TELEPORT_CONTROL:
         return SK_EVOCATIONS;
 
     case ABIL_NEMELEX_TRIPLE_DRAW:
@@ -98,7 +97,6 @@ static int _abil_degree(ability_type abil)
     case ABIL_EVOKE_TURN_INVISIBLE:
     case ABIL_EVOKE_FLIGHT:
     case ABIL_EVOKE_FOG:
-    case ABIL_EVOKE_TELEPORT_CONTROL:
         return 1;
 
     case ABIL_NEMELEX_TRIPLE_DRAW:
@@ -201,9 +199,8 @@ static void _exercise_spell(spell_type spell, bool success)
     // stay in the queue for a shorter time.
     bool conj = false;
     vector<skill_type> disc;
-    for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
+    for (const auto bit : spschools_type::range())
     {
-        const auto bit = spschools_type::exponent(ndx);
         if (!spell_typematch(spell, bit))
             continue;
 

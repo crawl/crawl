@@ -165,53 +165,51 @@ static string _religion_help(god_type god)
         case GOD_ZIN:
             if (can_do_capstone_ability(god))
                 result += "You can have all your mutations cured.\n";
-            result += "You can pray at an altar to donate money.";
+            result += "You can donate money to increase your standing with "
+                "Zin.";
             break;
 
         case GOD_SHINING_ONE:
         {
-            const int halo_size = you.halo_radius2();
+            const int halo_size = you.halo_radius();
             if (halo_size >= 0)
             {
                 if (!result.empty())
                     result += " ";
 
                 result += "You radiate a ";
-
-                if (halo_size > 37)
+                if (halo_size > 5)
                     result += "large ";
-                else if (halo_size > 10)
+                else if (halo_size > 3)
                     result += "";
                 else
                     result += "small ";
-
                 result += "righteous aura, and all beings within it are "
                           "easier to hit.";
             }
-            if (can_do_capstone_ability(god))
+            if (can_do_capstone_ability(god) && you.species != SP_FELID)
             {
                 if (!result.empty())
                     result += " ";
-
-                result += "You can pray at an altar to have your weapon "
-                          "blessed, especially a demon weapon.";
+                result += "You can have your weapon blessed, especially a "
+                    "demon weapon.";
             }
             break;
         }
 
         case GOD_LUGONU:
-            if (can_do_capstone_ability(god))
-            {
-                result += "You can pray at an altar to have your weapon "
-                          "corrupted.";
-            }
+            if (can_do_capstone_ability(god) && you.species != SP_FELID)
+                result += "You can have your weapon corrupted.";
             break;
 
         case GOD_KIKUBAAQUDGHA:
             if (can_do_capstone_ability(god))
             {
-                result += "You can pray at an altar to have your necromancy "
-                          "enhanced.";
+                if (you.species == SP_FELID)
+                    result += "You can receive a Necronomicon.";
+                else
+                    result += "You can either bloody your weapon or receive a "
+                        "Necronomicon.";
             }
             break;
 
@@ -227,6 +225,29 @@ static string _religion_help(god_type god)
                           "fungi requires piety.";
             }
             break;
+
+        case GOD_DITHMENOS:
+        {
+            const int umbra_size = you.umbra_radius();
+            if (umbra_size >= 0)
+            {
+                if (!result.empty())
+                    result += " ";
+
+                result += "You radiate ";
+
+                if (umbra_size > 5)
+                    result += "a large ";
+                else if (umbra_size > 3)
+                    result += "an ";
+                else
+                    result += "a small ";
+
+                result += "aura of darkness, enhancing your stealth "
+                          "and reducing the accuracy of your foes.";
+            }
+            break;
+        }
 
         default:
             break;
@@ -343,13 +364,15 @@ string god_title(god_type which_god, species_type which_species, int piety)
     else
         title = divine_title[which_god][_piety_level(piety)];
 
-    //XXX: unify with stuff in skills.cc
-    title = replace_all(title, "@Genus@", species_name(which_species, SPNAME_GENUS));
-    title = replace_all(title, "@Adj@", species_name(which_species, SPNAME_ADJ));
-    title = replace_all(title, "@Walking@", (species_walking_verb(which_species) + "ing"));
-    title = replace_all(title, "@Walker@", (species_walking_verb(which_species) + "er"));
+    const map<string, string> replacements =
+    {
+        { "Adj", species_name(which_species, SPNAME_ADJ) },
+        { "Genus", species_name(which_species, SPNAME_GENUS) },
+        { "Walking", species_walking_verb(which_species) + "ing" },
+        { "Walker", species_walking_verb(which_species) + "er" },
+    };
 
-    return title;
+    return replace_keys(title, replacements);
 }
 
 static string _describe_ash_skill_boost()
@@ -365,9 +388,11 @@ static string _describe_ash_skill_boost()
     static const char* bonus_level[3] = { "Low", "Medium", "High" };
     ostringstream desc;
     desc.setf(ios::left);
+    desc << "<white>";
     desc << setw(18) << "Bound part";
     desc << setw(30) << "Boosted skills";
     desc << "Bonus\n";
+    desc << "</white>";
 
     for (int i = ET_WEAPON; i < NUM_ET; i++)
     {
@@ -427,17 +452,6 @@ static string _describe_ash_skill_boost()
 // from dgn-overview.cc
 extern map<branch_type, set<level_id> > stair_level;
 
-// XXX: apply padding programmatically?
-static const char* const bribe_susceptibility_adjectives[] =
-{
-    "none       ",
-    "very low   ",
-    "low        ",
-    "moderate   ",
-    "high       ",
-    "very high  "
-};
-
 /**
  * Populate a provided vector with a list of bribable branches which are known
  * to the player.
@@ -450,6 +464,10 @@ static void _list_bribable_branches(vector<branch_type> &targets)
     {
         const branch_type br = it->id;
         if (!gozag_branch_bribable(br))
+            continue;
+
+        // Only list the Hells once.
+        if (is_hell_subbranch(br))
             continue;
 
         // If you don't know the branch exists, don't list it;
@@ -480,44 +498,7 @@ static string _describe_branch_bribability()
     {
         string line = " ";
         line += branches[br].shortname;
-        line += string(width + 2 - strwidth(line), ' ');
-        // XXX: move this elsewhere?
-        switch (br)
-        {
-            case BRANCH_ORC:
-                line += "(orcs)              ";
-                break;
-            case BRANCH_ELF:
-                line += "(elves)             ";
-                break;
-            case BRANCH_SNAKE:
-                line += "(nagas/salamanders) ";
-                break;
-            case BRANCH_SHOALS:
-                line += "(merfolk)           ";
-                break;
-            case BRANCH_VAULTS:
-                line += "(humans)            ";
-                break;
-            case BRANCH_ZOT:
-                line += "(draconians)        ";
-                break;
-            case BRANCH_COCYTUS:
-            case BRANCH_DIS:
-            case BRANCH_GEHENNA:
-            case BRANCH_TARTARUS:
-                line += "(demons)            ";
-                break;
-            default:
-                line += "(buggy)             ";
-                break;
-        }
-
-        line += "Susceptibility: ";
-        const int suscept = gozag_branch_bribe_susceptibility(br);
-        ASSERT(suscept >= 0
-               && suscept < (int)ARRAYSZ(bribe_susceptibility_adjectives));
-        line += bribe_susceptibility_adjectives[suscept];
+        line += string(width + 3 - strwidth(line), ' ');
 
         if (!branch_bribe[br])
             line += "not bribed";
@@ -618,6 +599,8 @@ static string _comma_separate_gods(const vector<god_type> &gods)
  */
 static string _describe_god_wrath_causes(god_type which_god)
 {
+    if (which_god == GOD_RU)
+        return ""; // no wrath
     vector<god_type> evil_gods;
     vector<god_type> chaotic_gods;
     for (int i = 0; i < NUM_GODS; i++)
@@ -647,18 +630,6 @@ static string _describe_god_wrath_causes(god_type which_god)
                    " or chaotic gods will be scourged. (" +
                    _comma_separate_gods(evil_gods) + " are evil, and " +
                    _comma_separate_gods(chaotic_gods) + " are chaotic.)";
-        case GOD_RU:
-            return uppercase_first(god_name(which_god)) +
-                   " does not punish followers who leave "+god_name(which_god)+
-                   "'s service; however, their piety will be lost even upon"
-                   " rejoining, and their sacrifices remain forever.";
-        case GOD_XOM:
-            return "Unfaithful ex-followers will find themselves "
-                   "suffering through "+god_name(which_god)+"'s bad moods for "+
-                   "so long as "+god_name(which_god)+" can be bothered to " +
-                   "remember about them. Still, "+god_name(which_god)+
-                   "'s caprice remains; the unfaithful are rewarded just as "+
-                   "the faithful are punished.";
         default:
             return uppercase_first(god_name(which_god)) +
                    " does not appreciate abandonment, and will call down"
@@ -723,7 +694,7 @@ static string _get_god_misc_info(god_type which_god)
 
             if (which_god == GOD_ASHENZARI
                 && which_god == you.religion
-                && piety_rank() > 3)
+                && piety_rank() > 2)
             {
                 return piety_only + "\n\n" + _describe_ash_skill_boost();
             }
@@ -949,6 +920,9 @@ static void _describe_god_powers(god_type which_god, int numcols)
         if (!player_under_penance())
         {
             have_any = true;
+            cprintf("%s supports your attributes (+%d).\n",
+                    uppercase_first(god_name(which_god)).c_str(),
+                    chei_stat_boost(you.piety));
             _print_final_god_abil_desc(which_god,
                                        "You can bend time to slow others.",
                                        ABIL_CHEIBRIADOS_TIME_BEND);
@@ -1109,5 +1083,6 @@ void describe_god(god_type which_god, bool give_title)
 
     god_desc_type gdesc = GDESC_OVERVIEW;
     while ((gdesc = _describe_god_by_type(which_god, give_title, gdesc))
-            != NUM_GDESCS);
+            != NUM_GDESCS)
+    {}
 }

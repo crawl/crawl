@@ -51,14 +51,14 @@ spellset item_spellset(const item_def &item)
  * @return                  A descriptor of the spell type; e.g. "natural",
  *                          "angelic", "demonic", etc.
  */
-static string _ability_type_descriptor(mon_spell_slot_flags type,
+static string _ability_type_descriptor(mon_spell_slot_flag type,
                                        mon_holy_type caster_holiness)
 {
     // special case (:
     if (type == MON_SPELL_DEMONIC && caster_holiness == MH_HOLY)
         return "angelic";
 
-    static map<mon_spell_slot_flags, string> descriptors =
+    static const map<mon_spell_slot_flag, string> descriptors =
     {
         { MON_SPELL_NATURAL, "special" },
         { MON_SPELL_MAGICAL, "magical" },
@@ -80,7 +80,7 @@ static string _ability_type_descriptor(mon_spell_slot_flags type,
  *                          "She has mastered one of the following spellbooks:\n"
  *                          "It possesses the following special abilities:\n"
  */
-static string _booktype_header(mon_spell_slot_flags type, size_t num_books,
+static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
                                const monster_info &mi)
 {
     const string pronoun = uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
@@ -114,7 +114,7 @@ static string _booktype_header(mon_spell_slot_flags type, size_t num_books,
  * @param[out] all_books    An output vector of "spellbooks".
  */
 static void _monster_spellbooks(const monster_info &mi,
-                                mon_spell_slot_flags type,
+                                mon_spell_slot_flag type,
                                 spellset &all_books)
 {
     const unique_books books = get_unique_spells(mi, type);
@@ -135,8 +135,8 @@ static void _monster_spellbooks(const monster_info &mi,
             output_book.label += _booktype_header(type, num_books, mi);
         if (num_books > 1)
         {
-            output_book.label += make_stringf("\n%s %" PRIuSIZET ":",
-                                              set_name.c_str(), i+1);
+            output_book.label += make_stringf("\n%s %d:",
+                                              set_name.c_str(), (int) i + 1);
         }
 
         for (auto spell : book_spells)
@@ -183,7 +183,7 @@ spellset monster_spellset(const monster_info &mi)
     if (!mi.has_spells())
         return {};
 
-    static const mon_spell_slot_flags book_flags[] =
+    static const mon_spell_slot_flag book_flags[] =
     {
         MON_SPELL_NATURAL,
         MON_SPELL_MAGICAL,
@@ -255,8 +255,7 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
     // this is kind of ugly.
     if (!you_can_memorise(spell)
         || you.experience_level < spell_difficulty(spell)
-        || player_spell_levels() < spell_levels_required(spell)
-        || !player_can_memorise_from_spellbook(*source_item))
+        || player_spell_levels() < spell_levels_required(spell))
     {
         return COL_USELESS;
     }
@@ -283,9 +282,8 @@ static string _spell_schools(spell_type spell)
 {
     string schools;
 
-    for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+    for (const auto school_flag : spschools_type::range())
     {
-        const auto school_flag = spschools_type::exponent(i);
         if (!spell_typematch(spell, school_flag))
             continue;
 
@@ -344,11 +342,15 @@ vector<spell_type> map_chars_to_spells(const spellset &spells,
  * @param spell_letters     The letters to use for each spell.
  * @param source_item       The physical item holding the spells. May be null.
  * @param description[out]  An output string to append to.
+ * @param mon_owner         If this spellset is being examined from a monster's
+ *                          description, 'mon_owner' is that monster. Else,
+ *                          it's null.
  */
 static void _describe_book(const spellbook_contents &book,
                            map<spell_type, char> &spell_letters,
                            const item_def* const source_item,
-                           formatted_string &description)
+                           formatted_string &description,
+                           const monster_info *mon_owner)
 {
     description.textcolour(LIGHTGREY);
 
@@ -363,6 +365,7 @@ static void _describe_book(const spellbook_contents &book,
     const bool doublecolumn = _list_spells_doublecolumn(source_item);
 
     bool first_line_element = true;
+    const int hd = mon_owner ? mon_owner->hd : 0;
     for (auto spell : book.spells)
     {
         description.cprintf(" ");
@@ -374,9 +377,20 @@ static void _describe_book(const spellbook_contents &book,
         const char spell_letter = spell_letter_index ?
                                   index_to_letter(*spell_letter_index) :
                                   ' ';
-        description.cprintf("%c - %s",
+        if (hd > 0 && crawl_state.need_save
+            && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
+        {
+            description.cprintf("%c - (%d%%) %s",
+                            spell_letter,
+                            hex_chance(spell, hd),
+                            chop_string(spell_title(spell), 22).c_str());
+        }
+        else
+        {
+            description.cprintf("%c - %s",
                             spell_letter,
                             chop_string(spell_title(spell), 29).c_str());
+        }
 
         // only display type & level for book/rod spells
         if (doublecolumn)
@@ -410,10 +424,14 @@ static void _describe_book(const spellbook_contents &book,
  * @param spells            The set of spells to be listed.
  * @param source_item       The physical item holding the spells. May be null.
  * @param description[out]  An output string to append to.
+ * @param mon_owner         If this spellset is being examined from a monster's
+ *                          description, 'mon_owner' is that monster. Else,
+ *                          it's null.
  */
 void describe_spellset(const spellset &spells,
                        const item_def* const source_item,
-                       formatted_string &description)
+                       formatted_string &description,
+                       const monster_info *mon_owner)
 {
     // make a map of characters to spells...
     const vector<spell_type> flat_spells = map_chars_to_spells(spells,
@@ -425,7 +443,7 @@ void describe_spellset(const spellset &spells,
         spell_letters[flat_spells[c]] = (char) c;
 
     for (auto book : spells)
-        _describe_book(book, spell_letters, source_item, description);
+        _describe_book(book, spell_letters, source_item, description, mon_owner);
 }
 
 /**
@@ -456,13 +474,12 @@ string describe_item_spells(const item_def &item)
 void list_spellset(const spellset &spells, const monster_info *mon_owner,
                    const item_def *source_item, formatted_string &initial_desc)
 {
-    const bool can_memorize =
-        source_item && source_item->base_type == OBJ_BOOKS
-        && in_inventory(*source_item)
-        && player_can_memorise_from_spellbook(*source_item);
+    const bool can_memorize = source_item
+                              && source_item->base_type == OBJ_BOOKS
+                              && in_inventory(*source_item);
 
     formatted_string &description = initial_desc;
-    describe_spellset(spells, source_item, description);
+    describe_spellset(spells, source_item, description, mon_owner);
 
     description.textcolour(LIGHTGREY);
 

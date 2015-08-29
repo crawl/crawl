@@ -445,7 +445,7 @@ string Form::player_prayer_action() const
     // Otherwise, if you're flying, use the generic flying action.
     // XXX: if we ever get a default-permaflying species again that wants to
     // have a separate verb, we'll want to check for that right here.
-    if (you.flight_mode())
+    if (you.airborne())
         return "hover solemnly before";
     // Otherwise, if you have a verb, use that...
     if (prayer_action != "")
@@ -1524,8 +1524,12 @@ static mutation_type _beastly_appendage()
 }
 
 static bool _transformation_is_safe(transformation_type which_trans,
-                                    dungeon_feature_type feat, bool quiet)
+                                    dungeon_feature_type feat, bool quiet,
+                                    string *fail_reason = nullptr)
 {
+    string msg;
+    bool is_safe = true;
+
     if (which_trans == TRAN_TREE)
     {
         const cloud_type cloud = cloud_type_at(you.pos());
@@ -1535,29 +1539,29 @@ static bool _transformation_is_safe(transformation_type which_trans,
             && cloud != CLOUD_POISON
             && is_damaging_cloud(cloud, false))
         {
-            if (!quiet)
-            {
-                mprf("You can't transform into a tree while standing in a cloud of %s.",
-                     cloud_type_name(cloud).c_str());
-            }
-            return false;
+            msg = make_stringf("You can't transform into a tree while standing "
+                               "in a cloud of %s.",
+                               cloud_type_name(cloud).c_str());
+            is_safe = false;
         }
     }
+
 #if TAG_MAJOR_VERSION == 34
-
     if (which_trans == TRAN_ICE_BEAST && you.species == SP_DJINNI)
-        return false; // melting is fatal...
+        is_safe = false; // melting is fatal...
 #endif
-
-    if (!feat_dangerous_for_form(which_trans, feat))
-        return true;
-
-    if (!quiet)
+    else if (feat_dangerous_for_form(which_trans, feat))
     {
-        mprf("You would %s in your new form.",
-             feat == DNGN_DEEP_WATER ? "drown" : "burn");
+        msg = make_stringf("You would %s in your new form.",
+                           feat == DNGN_DEEP_WATER ? "drown" : "burn");
+        is_safe = false;
     }
-    return false;
+
+    if (fail_reason)
+        *fail_reason = msg;
+    if (!is_safe && !quiet)
+        mpr(msg);
+    return is_safe;
 }
 
 /**
@@ -1658,7 +1662,7 @@ static bool _player_alive_enough_for(transformation_type which_trans)
         return false; // vampires can never lichform
 
     if (which_trans == TRAN_BAT)
-        return true; // ...but they can always batform.
+        return you.hunger_state <= HS_SATIATED; // can batform on low blood
 
     // other forms can only be entered when full or above.
     return you.hunger_state > HS_SATIATED;
@@ -1679,33 +1683,30 @@ static bool _player_alive_enough_for(transformation_type which_trans)
  * @param just_check        A dry run; just check to see whether the player
  *                          *can* enter the given form, but don't actually
  *                          transform them.
- * @return                  A spret_type corresponding to the results of the
- *                          transformation.
- *                          If the player was transformed, or if their form's
- *                          duration was refreshed, SPRET_SUCCESS.
- *                          If the transformation failed at no cost in
- *                          time or resources, SPRET_ABORT.
- *                          If the transformation was prevented but still costs
- *                          time and resources, SPRET_FAIL.
- *                          Never returns SPRET_NONE.
- *                          If just_check is set, returns SPRET_SUCCESS if
- *                          the player could enter the form and SPRET_ABORT
- *                          otherwise.
- *                          XXX: it might be possible to simplify this to a
- *                          bool...
+ * @return                  If the player was transformed, or if they were
+ *                          already in the given form, returns true.
+ *                          Otherwise, false.
+ *                          If just_check is set, returns true if the player
+ *                          could enter the form (or is in it already) and
+ *                          false otherwise.
+ *                          N.b. that transform() can fail even when a
+ *                          just_check run returns true; e.g. when Zin decides
+ *                          to intervene. (That may be the only case.)
  */
-int transform(int pow, transformation_type which_trans, bool involuntary,
-               bool just_check)
+bool transform(int pow, transformation_type which_trans, bool involuntary,
+               bool just_check, string *fail_reason)
 {
     const transformation_type previous_trans = you.form;
-    const flight_type was_flying = you.flight_mode();
+    const bool was_flying = you.airborne();
+    bool success = true;
+    string msg;
 
     // Zin's protection.
     if (!just_check && you_worship(GOD_ZIN)
         && x_chance_in_y(you.piety, MAX_PIETY) && which_trans != TRAN_NONE)
     {
         simple_god_message(" protects your body from unnatural transformation!");
-        return SPRET_ABORT;
+        return false;
     }
 
     if (!involuntary && crawl_state.is_god_acting())
@@ -1713,20 +1714,31 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
 
     if (you.transform_uncancellable)
     {
-        if (!involuntary)
-            mpr("You are stuck in your current form!");
-        return SPRET_ABORT;
+        msg = "You are stuck in your current form!";
+        success = false;
+    }
+    else if (!_transformation_is_safe(which_trans, env.grid(you.pos()),
+                                      involuntary || fail_reason, &msg))
+    {
+        success =  false;
     }
 
-    if (!_transformation_is_safe(which_trans, env.grid(you.pos()),
-        involuntary))
+    if (!success)
     {
-        return SPRET_ABORT;
+        // Message is not printed if we're updating fail_reason.
+        if (fail_reason)
+            *fail_reason = msg;
+        else if (!involuntary)
+            mpr(msg);
+        return false;
     }
 
     // This must occur before the untransform() and the undead_state() check.
-    if (previous_trans == which_trans && !just_check)
+    if (previous_trans == which_trans)
     {
+        if (just_check)
+            return true;
+
         // update power
         if (which_trans != TRAN_NONE)
         {
@@ -1749,53 +1761,35 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
             mpr("You extend your transformation's duration.");
             you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
 
-            return SPRET_SUCCESS;
         }
-        else
-        {
-            if (!involuntary && which_trans != TRAN_NONE)
-                mpr("You fail to extend your transformation any further.");
-            return SPRET_FAIL;
-        }
+        else if (!involuntary && which_trans != TRAN_NONE)
+            mpr("You fail to extend your transformation any further.");
+
+        return true;
     }
 
     // the undead cannot enter most forms.
     if (!_player_alive_enough_for(which_trans))
     {
-        if (!involuntary)
-            mpr("Your unliving flesh cannot be transformed in this way.");
-        return SPRET_ABORT;
+        msg = "Your unliving flesh cannot be transformed in this way.";
+        success = false;
     }
-
-    if (which_trans == TRAN_LICH && you.duration[DUR_DEATHS_DOOR])
+    else if (which_trans == TRAN_LICH && you.duration[DUR_DEATHS_DOOR])
     {
-        if (!involuntary)
-            mpr("You cannot become a lich while in Death's Door.");
-        return SPRET_ABORT;
+        msg = "You cannot become a lich while in Death's Door.";
+        success = false;
     }
-
-    // The actual transformation may still fail later.
-    // Ideally, untransforming should cost a turn but nothing
-    // else (as does the "End Transformation" ability). As it is, you
-    // pay with mana and hunger if you already untransformed.
-    if (!just_check && previous_trans != TRAN_NONE)
-        untransform(true);
-
 #if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
-        && (which_trans == TRAN_ICE_BEAST || which_trans == TRAN_STATUE))
+    else if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
+             && (which_trans == TRAN_ICE_BEAST || which_trans == TRAN_STATUE))
     {
-        if (!involuntary)
-            mpr("Your temperature is too high to benefit from that spell.");
-
-        if (!just_check && you.turn_is_over)
-        {
-            move_player_to_grid(you.pos(), false);
-            return SPRET_FAIL; // pay the necessary costs
-        }
-        return SPRET_ABORT;
+        msg =  "Your temperature is too high to benefit from that spell.";
+        success = false;
     }
 #endif
+
+    if (!just_check && previous_trans != TRAN_NONE)
+        untransform(true);
 
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
@@ -1804,9 +1798,8 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
         const mutation_type app = _beastly_appendage();
         if (app == NUM_MUTATIONS)
         {
-            if (!involuntary)
-                mpr("You have no appropriate body parts free.");
-            return SPRET_ABORT;
+            msg = "You have no appropriate body parts free.";
+            success = false; // XXX: VERY dubious, since an untransform occurred
         }
 
         if (!just_check)
@@ -1816,19 +1809,19 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
         }
     }
 
-    if (!involuntary && just_check && !check_form_stat_safety(which_trans))
-        return SPRET_ABORT;
+    if (!success)
+    {
+        // Message is not printed if we're updating fail_reason.
+        if (fail_reason)
+            *fail_reason = msg;
+        else if (!involuntary)
+            mpr(msg);
+        return false;
+    }
 
     // If we're just pretending return now.
     if (just_check)
-        return SPRET_SUCCESS;
-
-    // Switching between forms takes a bit longer.
-    if (!involuntary && previous_trans != TRAN_NONE
-        && previous_trans != which_trans)
-    {
-        you.time_taken = div_rand_round(you.time_taken * 3, 2);
-    }
+        return true;
 
     // All checks done, transformation will take place now.
     you.redraw_quiver       = true;
@@ -1838,15 +1831,21 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
     if (form_changed_physiology(which_trans))
         merfolk_stop_swimming();
 
-    // Most transformations conflict with stone skin.
-    if (form_changed_physiology(which_trans) && which_trans != TRAN_STATUE)
-        you.duration[DUR_STONESKIN] = 0;
-
     if (which_trans == TRAN_HYDRA)
         set_hydra_form_heads(div_rand_round(pow, 10));
 
     // Give the transformation message.
     mpr(get_form(which_trans)->transform_message(previous_trans));
+
+    // Most transformations conflict with stone skin.
+    if (form_changed_physiology(which_trans)
+        && which_trans != TRAN_STATUE
+        && you.duration[DUR_STONESKIN])
+    {
+        mprf("Your stony body turns to %s.",
+             get_form(which_trans)->flesh_equivalent.c_str());
+        you.duration[DUR_STONESKIN] = 0;
+    }
 
     // Update your status.
     you.form = which_trans;
@@ -1878,22 +1877,11 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
     switch (which_trans)
     {
     case TRAN_STATUE:
-        if (you.duration[DUR_STONESKIN])
-            mpr("Your new body merges with your stone armour.");
-#if TAG_MAJOR_VERSION == 34
-        else if (you.species == SP_LAVA_ORC)
-            mpr("Your new body is particularly stony.");
-#endif
         if (you.duration[DUR_ICY_ARMOUR])
         {
             mprf(MSGCH_DURATION, "Your new body cracks your icy armour.");
             you.duration[DUR_ICY_ARMOUR] = 0;
         }
-        break;
-
-    case TRAN_ICE_BEAST:
-        if (you.duration[DUR_ICY_ARMOUR])
-            mpr("Your new body merges with your icy armour.");
         break;
 
     case TRAN_SPIDER:
@@ -2012,7 +2000,7 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
        you.transform_uncancellable = true;
 
     // Re-check terrain now that be may no longer be swimming or flying.
-    if (was_flying && !you.flight_mode()
+    if (was_flying && !you.airborne()
                    || feat_is_water(grd(you.pos()))
                       && (which_trans == TRAN_BLADE_HANDS
                           || which_trans == TRAN_APPENDAGE)
@@ -2028,7 +2016,7 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
                           transform_name(which_trans)).c_str());
     }
 
-    return SPRET_SUCCESS;
+    return true;
 }
 
 /**
@@ -2039,12 +2027,13 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
  */
 void untransform(bool skip_move)
 {
-    const flight_type old_flight = you.flight_mode();
+    const bool was_flying = you.airborne();
 
-    you.redraw_quiver       = true;
-    you.redraw_evasion      = true;
-    you.redraw_armour_class = true;
-    you.wield_change        = true;
+    you.redraw_quiver           = true;
+    you.redraw_evasion          = true;
+    you.redraw_armour_class     = true;
+    you.wield_change            = true;
+    you.received_weapon_warning = false;
     if (you.props.exists(TRANSFORM_POW_KEY))
         you.props.erase(TRANSFORM_POW_KEY);
     if (you.props.exists(HYDRA_FORM_HEADS_KEY))
@@ -2058,52 +2047,31 @@ void untransform(bool skip_move)
     set<equipment_type> melded = _init_equipment_removal(old_form);
 
     you.form = TRAN_NONE;
-    you.duration[DUR_TRANSFORMATION]   = 0;
+    you.duration[DUR_TRANSFORMATION] = 0;
     update_player_symbol();
 
-    switch (old_form)
+    if (old_form == TRAN_APPENDAGE)
     {
-    case TRAN_STATUE:
-        // Note: if the core goes down, the combined effect soon disappears,
-        // but the reverse isn't true. -- bwr
-        if (you.duration[DUR_STONESKIN])
-            you.duration[DUR_STONESKIN] = 1;
-        break;
+        int app = you.attribute[ATTR_APPENDAGE];
+        ASSERT(beastly_slot(app) != EQ_NONE);
+        const int levels = you.mutation[app];
+        // Preserve extra mutation levels acquired after transforming.
+        const int beast_levels = _beastly_appendage_level(app);
+        const int extra = max(0, levels - you.innate_mutation[app]
+                                        - beast_levels);
+        you.mutation[app] = you.innate_mutation[app] + extra;
+        you.attribute[ATTR_APPENDAGE] = 0;
 
-    case TRAN_ICE_BEAST:
-        // Note: if the core goes down, the combined effect soon disappears,
-        // but the reverse isn't true. -- bwr
-        if (you.duration[DUR_ICY_ARMOUR])
-            you.duration[DUR_ICY_ARMOUR] = 1;
-        break;
-
-    case TRAN_APPENDAGE:
+        // The mutation might have been removed already by a conflicting
+        // demonspawn innate mutation; no message then.
+        if (levels)
         {
-            int app = you.attribute[ATTR_APPENDAGE];
-            ASSERT(beastly_slot(app) != EQ_NONE);
-            const int levels = you.mutation[app];
-            // Preserve extra mutation levels acquired after transforming.
-            const int beast_levels = _beastly_appendage_level(app);
-            const int extra = max(0, levels - you.innate_mutation[app]
-                                            - beast_levels);
-            you.mutation[app] = you.innate_mutation[app] + extra;
-            you.attribute[ATTR_APPENDAGE] = 0;
-
-            // The mutation might have been removed already by a conflicting
-            // demonspawn innate mutation; no message then.
-            if (levels)
-            {
-                const char * const verb = you.mutation[app] ? "shrink"
-                                                            : "disappear";
-                mprf(MSGCH_DURATION, "Your %s %s%s.",
-                     mutation_name(static_cast<mutation_type>(app)), verb,
-                     app == MUT_TENTACLE_SPIKE ? "s" : "");
-            }
+            const char * const verb = you.mutation[app] ? "shrink"
+                                                        : "disappear";
+            mprf(MSGCH_DURATION, "Your %s %s%s.",
+                 mutation_name(static_cast<mutation_type>(app)), verb,
+                 app == MUT_TENTACLE_SPIKE ? "s" : "");
         }
-        break;
-
-    default:
-        break;
     }
 
     const string message = get_form(old_form)->get_untransform_message();
@@ -2122,7 +2090,7 @@ void untransform(bool skip_move)
     _unmeld_equipment(melded);
 
     // Re-check terrain now that be may no longer be swimming or flying.
-    if (!skip_move && (old_flight && !you.flight_mode()
+    if (!skip_move && (was_flying && !you.airborne()
                        || (feat_is_water(grd(you.pos()))
                            && (old_form == TRAN_ICE_BEAST
                                || you.species == SP_MERFOLK))))

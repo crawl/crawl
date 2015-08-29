@@ -389,13 +389,13 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     }
 
     // Unfriendly monsters must be directly adjacent to follow.
-    if (!fol->friendly() && (pos - you.pos()).abs() > 2)
+    if (!fol->friendly() && (pos - you.pos()).rdist() > 1)
         return false;
 
     // Monsters that can't use stairs can still be marked as followers
     // (though they'll be ignored for transit), so any adjacent real
     // follower can follow through. (jpeg)
-    if (!mons_can_use_stairs(fol))
+    if (!mons_can_use_stairs(fol, grd(you.pos())))
     {
         if (_is_religious_follower(fol))
         {
@@ -423,23 +423,23 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     return true;
 }
 
-static int follower_tag_radius2()
+static int follower_tag_radius()
 {
-    // If only friendlies are adjacent, we set a max radius of 6, otherwise
+    // If only friendlies are adjacent, we set a max radius of 5, otherwise
     // only adjacent friendlies may follow.
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
         if (const monster* mon = monster_at(*ai))
             if (!mon->friendly())
-                return 2;
+                return 1;
     }
 
-    return 6 * 6;
+    return 5;
 }
 
 void tag_followers()
 {
-    const int radius2 = follower_tag_radius2();
+    const int radius = follower_tag_radius();
     int n_followers = 18;
 
     vector<coord_def> places[2];
@@ -449,12 +449,11 @@ void tag_followers()
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     while (!places[place_set].empty())
     {
-        for (int i = 0, size = places[place_set].size(); i < size; ++i)
+        for (const coord_def p : places[place_set])
         {
-            const coord_def &p = places[place_set][i];
             for (adjacent_iterator ai(p); ai; ++ai)
             {
-                if ((*ai - you.pos()).abs() > radius2
+                if ((*ai - you.pos()).rdist() > radius
                     || travel_point_distance[ai->x][ai->y])
                 {
                     continue;

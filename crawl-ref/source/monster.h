@@ -11,6 +11,8 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define MAX_DAMAGE_COUNTER 10000
 #define ZOMBIE_BASE_AC_KEY "zombie_base_ac"
 #define ZOMBIE_BASE_EV_KEY "zombie_base_ev"
+#define MON_SPEED_KEY "speed"
+#define CUSTOM_SPELLS_KEY "custom_spells"
 
 #define FAKE_BLINK_KEY "fake_blink"
 
@@ -50,12 +52,13 @@ public:
     int8_t ench_countdown;
     mon_enchant_list enchantments;
     FixedBitVector<NUM_ENCHANTMENTS> ench_cache;
-    uint64_t flags;                    // bitfield of boolean flags
+    monster_flags_t flags;             // bitfield of boolean flags
 
     unsigned int experience;
     monster_type  base_monster;        // zombie base monster, draconian colour
     union
     {
+        // These must all be the same size!
         unsigned int number;   ///< General purpose number variable
         int blob_size;         ///< # of slimes/masses in this one
         int num_heads;         ///< Hydra-like head number
@@ -70,7 +73,6 @@ public:
         mid_t tentacle_connect;///< mid of monster this tentacle is
                                //   connected to: for segments, this is the
                                //   tentacle; for tentacles, the head.
-        int countdown;         ///< Actions till singularity dies.
     };
     int           colour;
     mid_t         summoner;
@@ -190,13 +192,14 @@ public:
     void apply_enchantments();
     void apply_enchantment(const mon_enchant &me);
 
+    bool can_drink() const;
     bool can_drink_potion(potion_type ptype) const;
     bool should_drink_potion(potion_type ptype) const;
-    item_type_id_state_type drink_potion_effect(potion_type pot_eff, bool card = false);
+    bool drink_potion_effect(potion_type pot_eff, bool card = false);
 
     bool can_evoke_jewellery(jewellery_type jtype) const;
     bool should_evoke_jewellery(jewellery_type jtype) const;
-    item_type_id_state_type evoke_jewellery_effect(jewellery_type jtype);
+    bool evoke_jewellery_effect(jewellery_type jtype);
 
     void timeout_enchantments(int levels);
 
@@ -389,7 +392,7 @@ public:
 
     bool stasis(bool calc_unid = true, bool items = true) const;
 
-    flight_type flight_mode() const;
+    bool airborne() const;
     bool can_cling_to_walls() const;
     bool is_banished() const;
     bool is_web_immune() const;
@@ -413,12 +416,12 @@ public:
     bool asleep() const;
     bool backlit(bool self_halo = true) const;
     bool umbra() const;
-    int halo_radius2() const;
-    int silence_radius2() const;
-    int liquefying_radius2() const;
-    int umbra_radius2() const;
+    int halo_radius() const;
+    int silence_radius() const;
+    int liquefying_radius() const;
+    int umbra_radius() const;
 #if TAG_MAJOR_VERSION == 34
-    int heat_radius2() const;
+    int heat_radius() const;
 #endif
     bool glows_naturally() const;
     bool petrified() const;
@@ -438,7 +441,7 @@ public:
     bool rolling() const { return has_ench(ENCH_ROLLING); } ;
     bool has_spells() const;
     bool has_spell(spell_type spell) const;
-    unsigned short spell_slot_flags(spell_type spell) const;
+    mon_spell_slot_flags spell_slot_flags(spell_type spell) const;
     bool has_unholy_spell() const;
     bool has_evil_spell() const;
     bool has_unclean_spell() const;
@@ -462,14 +465,13 @@ public:
 
     bool poison(actor *agent, int amount = 1, bool force = false);
     bool sicken(int strength);
-    bool bleed(const actor *agent, int amount, int degree);
     void paralyse(actor *, int str, string source = "");
     void petrify(actor *, bool force = false);
     bool fully_petrify(actor *foe, bool quiet = false);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
     bool drain_exp(actor *, bool quiet = false, int pow = 3);
-    bool rot(actor *, int amount, bool quiet = false);
+    bool rot(actor *, int amount, bool quiet = false, bool no_cleanup = false);
     void splash_with_acid(const actor* evildoer, int /*acid_strength*/ = -1,
                           bool /*allow_corrosion*/ = true,
                           const char* /*hurt_msg*/ = nullptr);
@@ -484,7 +486,7 @@ public:
              bool attacker_effects = true);
     bool heal(int amount, bool max_too = false);
     void blame_damage(const actor *attacker, int amount);
-    void blink(bool allow_partial_control = true);
+    void blink();
     void teleport(bool right_now = false,
                   bool wizard_tele = false);
     bool shift(coord_def p = coord_def(0, 0));
@@ -560,6 +562,8 @@ public:
 
     bool clear_far_engulf();
     bool search_slots(function<bool (const mon_spell_slot &)> func) const;
+
+    bool has_facet(int facet) const;
 
 private:
     int hit_dice;

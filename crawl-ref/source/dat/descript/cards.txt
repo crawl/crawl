@@ -75,7 +75,7 @@ the Elixir card
 The card depicts a smug smile formed out of nine chalices.
 
 This card rapidly restores the user's health or magic, or both at high power
-levels. It will also grant their allies temporary vitality.
+levels. It will also heal their allies.
 %%%%
 the Cloud card
 
@@ -111,7 +111,7 @@ the Storm card
 
 The card depicts a ship at sea sinking in a thunderstorm.
 
-Drawing it unleashes a storm -- lightning, wind, and the occasional tornado.
+Drawing it unleashes a storm of wind and thunder clouds.
 %%%%
 Water card
 
@@ -187,8 +187,8 @@ Focus card
 
 The card depicts a gnarled claw adjusting a slanted set of scales.
 
-Drawing this card further boosts the user's strongest attribute at the cost of
-their worst.
+Drawing this card permanently increases the user's highest attribute at the
+cost of their lowest.
 %%%%
 the Helix card
 
@@ -209,15 +209,7 @@ the Mercenary card
 
 The card depicts bloodied hands accepting a bag of gold.
 
-Drawing this card summons a mercenary to fight by the user's side... for a
-price.
-%%%%
-Placid Magic card
-
-The card depicts a crumpled wizard's hat, abandoned and stomped into the dirt.
-
-Drawing this card suppresses nearby magic. Your magic is drained, enchantments
-vanish, and foes are rendered temporarily inept at sorcery.
+Drawing this card summons a mercenary to fight by the user's side, for a fee.
 %%%%
 Wild Magic card
 

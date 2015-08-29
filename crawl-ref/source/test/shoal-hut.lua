@@ -2,7 +2,7 @@
 -- connected to the exterior b) the stairs are not completely surrounded by
 -- deep water.
 
-local iterations = 50
+local iterations = 25
 
 local isdoor = dgn.feature_set_fn("closed_door", "open_door", "runed_door")
 local floor = dgn.fnum("floor")

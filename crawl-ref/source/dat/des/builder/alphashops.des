@@ -55,21 +55,21 @@
       local i
       if s == "A" then i = "akashic record | arbalest | book of alchemy | " ..
        "book of air | manual of air magic | book of annihilations | arrow | " ..
-       "potion of agility | potion of ambrosia | scroll of acquirement | " ..
+       "potion of agility | potion of ambrosia | scroll of acquirement q:1 | " ..
        "scroll of amnesia | staff of air | manual of axes | manual of armour"
 
       elseif s == "B" then i = "bardiche | battleaxe | beef jerky | " ..
        "bolt | book of battle | book of beasts | book of burglary | " ..
        "box of beasts | bread ration | broad axe | pair of boots | " ..
-       "potion of beneficial mutation | potion of berserk rage | blowgun | " ..
+       "potion of beneficial mutation q:1 | potion of berserk rage | blowgun | " ..
        "potion of blood | potion of brilliance | scroll of blinking | " ..
        "scroll of brand weapon | manual of bows | buckler"
 
       elseif s == "C" then i = "amulet of clarity | book of callings | " ..
-       "book of cantrips | book of changes | book of control | " ..
-       "book of conjurations | centaur barding | chain mail | club | " ..
-       "crystal ball of energy | crystal plate armour | rod of clouds | " ..
-       "wand of cold | potion of cancellation | potion of cure mutation | " ..
+       "book of cantrips | book of changes | book of conjurations | " ..
+       "centaur barding | chain mail | club | crystal ball of energy | " ..
+       "crystal plate armour | rod of clouds | wand of cold | " ..
+       "potion of cancellation | potion of cure mutation | " ..
        "book of clouds | cloak | staff of cold | wand of confusion | " ..
        "staff of conjuration | deck of changes | manual of crossbows | " ..
        "manual of conjurations | manual of charms | potion of curing "
@@ -77,14 +77,14 @@
       elseif s == "D" then i = "book of death | book of debilitation | " ..
        "book of dreams | book of the dragon | dagger | deck of defence | " ..
        "deck of destruction | demon blade | demon trident | demon whip | " ..
-       "dire flail | disc of storms | double sword | potion of decay | " ..
+       "dire flail | disc of storms | double sword | " ..
        "potion of degeneration | ring of dexterity | rod of destruction | " ..
        "staff of death | wand of digging | wand of disintegration | " ..
        "wand of draining | manual of dodging"
 
       elseif s == "E" then i = "book of enchantments | executioner's axe | " ..
        "staff of earth | deck of escape | eveningstar | ring of evasion | " ..
-       "potion of experience | scroll of enchant armour | staff of energy | " ..
+       "potion of experience q:1 | scroll of enchant armour | staff of energy | " ..
        "wand of enslavement | book of envenomations | book of the earth | " ..
        "scroll of enchant weapon | manual of earth magic | manual of evocations"
 
@@ -147,13 +147,13 @@
        "rapier | amulet of resist corrosion | amulet of resist mutation | " ..
        "royal jelly | potion of resistance | scroll of recharging | robe | " ..
        "ring mail | scroll of random uselessness | scroll of remove curse | " ..
-       "wand of random effects | potion of restore abilities"
+       "wand of random effects"
 
       elseif s == "S" then i = "scimitar | amulet of stasis | short sword | " ..
        "sling bullet | scale mail | book of summonings | book of the sky | " ..
        "deck of summoning | potion of slowing | ring of see invisible | " ..
        "ring of slaying | spear | ring of stealth | ring of strength | " ..
-       "rod of shadows | rod of the swarm | ring of sustain abilities | " ..
+       "rod of shadows | rod of the swarm | ring of sustain attributes | " ..
        "sack of spiders | scroll of summoning | scythe | " ..
        "book of spatial translocations | scroll of silence | shield | " ..
        "shortbow | stone of tremors | wand of slowing | manual of staves | " ..
@@ -163,9 +163,9 @@
        "manual of summonings | manual of stealth | stone "
 
       elseif s == "T" then i = "book of the tempests | scroll of torment | " ..
-       "book of transfigurations | ring of teleport control | " ..
-       "ring of teleportation | scroll of teleportation | triple sword | " ..
-       "triple crossbow | troll leather armour | manual of throwing | " ..
+       "book of transfigurations | ring of teleportation | " ..
+       "scroll of teleportation | triple sword | triple crossbow | " ..
+       "troll leather armour | manual of throwing | " ..
        "wand of teleportation | manual of translocations | " ..
        "manual of transmutations | tomahawk | trident | throwing net "
 

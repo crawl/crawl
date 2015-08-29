@@ -12,9 +12,6 @@
 #define MIN_COLS  79
 #define MIN_LINES 24
 
-// remove me when TAG_MAJOR_VERSION > 34
-#define NUM_MONSTER_SPELL_SLOTS  6
-
 #define ESCAPE '\x1b'           // most ansi-friendly way I can think of defining this.
 
 // there's got to be a better way...
@@ -30,21 +27,6 @@
 #endif
 
 typedef uint32_t ucs_t;
-
-// length of a single zot defence cycle
-#define ZOTDEF_CYCLE_LENGTH 100
-
-// Waiting time before monsters arrive
-#define ZOTDEF_CYCLE_INTERVAL 50
-
-// peak size of a random spawn
-#define ZOTDEF_SPAWN_SIZE 1
-
-// Extra power to assign to a boss monster
-#define ZOTDEF_BOSS_EXTRA_POWER 5
-
-// number of waves to pass between bosses generated with a rune
-#define ZOTDEF_RUNE_FREQ 7
 
 // max size of inventory array {dlb}:
 #define ENDOFPACK 52
@@ -68,7 +50,7 @@ enum extra_monster_index_type
 // number of monster attack specs
 #define MAX_NUM_ATTACKS 4
 
-// size of Pan monster sets. Also used for wave data in ZotDef.
+// size of Pan monster sets
 #define PAN_MONS_ALLOC 10
 #define MAX_MONS_ALLOC 20
 
@@ -130,9 +112,8 @@ const int LABYRINTH_BORDER = 4;
 #define Y_WIDTH                 (Y_BOUND_2 - Y_BOUND_1 + 1)
 
 // maximal LOS radius
-#define LOS_RADIUS 8
-// maximal LOS radius squared, for comparison with distance()
-#define LOS_RADIUS_SQ (LOS_RADIUS * LOS_RADIUS + 1)
+#define LOS_RADIUS 7
+
 // maximal horizontal or vertical LOS range:
 //   a quadrant needs to fit inside an 2D array with
 //     0 <= x, y <= LOS_MAX_RANGE
@@ -208,20 +189,18 @@ const int UNUSABLE_SKILL = -99;
 
 //#define DEBUG_MIMIC
 #ifdef DEBUG_MIMIC
-// Missing stairs are replaced in fixup_branch_stairs, but replacing
-// too many breaks interlevel connectivity, so we don't use a chance of 1.
-  #define FEATURE_MIMIC_CHANCE 2
-  #define ITEM_MIMIC_CHANCE    1
+  #define FEATURE_MIMIC_CHANCE 1
 #else
   #define FEATURE_MIMIC_CHANCE 100
-  #define ITEM_MIMIC_CHANCE    1000
 #endif
 
 const int AGILITY_BONUS = 5;
 
-#define TORNADO_RADIUS 6
+#define TORNADO_RADIUS 5
 
-#define NUMBER_OF_RUNES_NEEDED    3
+#define VAULTS_ENTRY_RUNES 1
+#define ZOT_ENTRY_RUNES 3
+#define ZIG_ENTRY_RUNES 2
 
 // Size of unique_items in player class
 #define MAX_UNRANDARTS 150
@@ -233,8 +212,6 @@ const int AGILITY_BONUS = 5;
 #define berserk_div(x) div_rand_round((x) * 2, 3)
 
 #define MAX_MONSTER_HP 10000
-
-#define GRAND_AVATAR_DAMAGE 15
 
 // some shortcuts:
 #define menv   env.mons
@@ -331,7 +308,6 @@ const char * const GOZAG_ANNOUNCE_SHOP_KEY = "gozag_announce_shop";
 
 const char * const NEUTRAL_BRIBE_KEY         = "gozag_bribed";
 const char * const FRIENDLY_BRIBE_KEY        = "gozag_permabribed";
-const char * const GOZAG_BRIBE_BROKEN_KEY    = "gozag_bribe_broken";
 
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10

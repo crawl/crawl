@@ -34,22 +34,14 @@ int mons_tracking_range(const monster* mon)
     int range = 0;
     switch (mons_intel(mon))
     {
-    case I_PLANT:
-        range = 2;
-        break;
-    case I_INSECT:
-    case I_REPTILE:
-        range = 4;
+    case I_BRAINLESS:
+        range = 3;
         break;
     case I_ANIMAL:
         range = 5;
         break;
-    case I_NORMAL:
+    case I_HUMAN:
         range = LOS_RADIUS;
-        break;
-    default:
-        // Highly intelligent monsters can find their way
-        // anywhere. (range == 0 means no restriction.)
         break;
     }
 
@@ -108,7 +100,6 @@ bool monster_pathfind::init_pathfind(const monster* mon, coord_def dest,
     allow_diagonals   = diag;
     traverse_unmapped = pass_unmapped;
     traverse_in_sight = (!crawl_state.game_is_arena()
-                         && !crawl_state.game_is_zotdef()
                          && mon->friendly() &&  mon->is_summoned()
                          && you.see_cell_no_trans(mon->pos()));
 
@@ -455,23 +446,10 @@ bool monster_pathfind::mons_traversable(const coord_def& p)
 
 int monster_pathfind::travel_cost(coord_def npos)
 {
-#ifdef EUCLIDEAN
-    int cost = 1;
-    if (mons)
-        cost = mons_travel_cost(npos);
-
-    if ((pos - npos).abs() == 2)
-        cost *= 14;
-    else
-        cost *= 10;
-
-    return cost;
-#else
     if (mons)
         return mons_travel_cost(npos);
 
     return 1;
-#endif
 }
 
 // Assumes that grids that really cannot be entered don't even get here.
@@ -484,10 +462,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     if (feat_is_closed_door(grd(npos)))
         return 2;
 
-    const monster_type mt = mons_base_type(mons);
-    const bool ground_level = !mons_airborne(mt, -1, false)
-                              && !(mons->can_cling_to_walls()
-                                   && cell_is_clingable(npos));
+    const bool ground_level = !(mons->airborne() || mons->can_cling_to(npos));
 
     // Travelling through water, entering or leaving water is more expensive
     // for non-amphibious monsters, so they'll avoid it where possible.

@@ -8,11 +8,13 @@
 #define PLAYER_H
 
 #include <list>
+#include <memory>
 #include <vector>
 
 #include "actor.h"
 #include "beam.h"
 #include "bitary.h"
+#include "kills.h"
 #include "place-info.h"
 #include "quiver.h"
 #include "religion-enum.h"
@@ -27,7 +29,9 @@
 #define TRANSFORM_POW_KEY "transform_pow"
 #define BARBS_MOVE_KEY "moved_with_barbs_status"
 #define HORROR_PENALTY_KEY "horror_penalty"
-
+#define POWERED_BY_DEATH_KEY "powered_by_death_strength"
+#define SONG_OF_SLAYING_KEY "song_of_slaying_bonus"
+#define FORCE_MAPPABLE_KEY "force_mappable"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -134,7 +138,7 @@ public:
   set<spell_type> old_vehumet_gifts, vehumet_gifts;
 
   uint8_t spell_no;
-  game_direction_type char_direction;
+  game_chapter chapter;
   bool royal_jelly_dead;
   bool transform_uncancellable;
   bool fishtail; // Merfolk fishtail transformation
@@ -188,7 +192,6 @@ public:
 
   int  skill_cost_level;
   int  exp_available;
-  int  zot_points; // ZotDef currency
 
   FixedVector<int, NUM_GODS> exp_docked;
   FixedVector<int, NUM_GODS> exp_docked_total; // XP-based wrath
@@ -197,16 +200,7 @@ public:
   FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
   FixedBitVector<NUM_MONSTERS> unique_creatures;
 
-  // NOTE: The kills member is a pointer to a KillMaster object,
-  // rather than the object itself, so that we can get away with
-  // just a forward declare of the KillMaster class, rather than
-  // having to #include kills.h and thus make every single .cc file
-  // dependent on kills.h. Having a pointer means that we have
-  // to do our own implementations of copying the player object,
-  // since the default implementations will lead to the kills member
-  // pointing to freed memory, or worse yet lead to the same piece of
-  // memory being freed twice.
-  KillMaster* kills;
+  KillMaster kills;
 
   branch_type where_are_you;
   int depth;
@@ -218,6 +212,8 @@ public:
   uint8_t piety;
   uint8_t piety_hysteresis;       // amount of stored-up docking
   uint8_t gift_timeout;
+  uint8_t saved_good_god_piety;   // for if you "switch" between E/Z/1 by abandoning one first
+  god_type previous_good_god;
   FixedVector<uint8_t, NUM_GODS>  penance;
   FixedVector<uint8_t, NUM_GODS>  worshipped;
   FixedVector<short,   NUM_GODS>  num_current_gifts;
@@ -273,7 +269,7 @@ public:
   map<level_id, vector<string> > vault_list;
 
   PlaceInfo global_info;
-  player_quiver* m_quiver;
+  player_quiver m_quiver;
 
   // monsters mesmerising player; should be protected, but needs to be saved
   // and restored.
@@ -291,15 +287,10 @@ public:
 
   // The player's knowledge about item types.
   id_arr type_ids;
-  // Additional information, about tried unidentified items.
-  // (e.g. name of item, for scrolls of RC, ID, EA)
-  CrawlHashTable type_id_props;
 
   // The version the save was last played with.
   string prev_save_version;
 
-  // The type of a zotdef wave, if any.
-  string zotdef_wave_name;
   // The biggest assigned monster id so far.
   mid_t last_mid;
 
@@ -401,10 +392,6 @@ public:
   // When other levels are loaded (e.g. viewing), is the player on this level?
   bool on_current_level;
 
-  // Did you spent this turn walking (/flying)?
-  // 0 = no, 1 = cardinal move, 2 = diagonal move
-  int walking;
-
   // View code clears and needs new data in places where we can't announce the
   // portal right away; delay the announcements then.
   int seen_portals;
@@ -425,12 +412,8 @@ protected:
 
 public:
     player();
-    player(const player &other);
-    ~player();
+    virtual ~player();
 
-    void copy_from(const player &other);
-
-    void init();
     void init_skills();
 
     // Set player position without updating view geometry.
@@ -461,13 +444,14 @@ public:
     int visible_igrd(const coord_def&) const;
     bool can_cling_to_walls() const;
     bool is_banished() const;
+    bool is_sufficiently_rested() const; // Up to rest_wait_percent HP and MP.
     bool is_web_immune() const;
     bool cannot_speak() const;
     bool invisible() const;
     bool can_see_invisible() const;
     bool can_see_invisible(bool unid, bool items = true) const;
     bool visible_to(const actor *looker) const;
-    bool can_see(const actor* a) const;
+    bool can_see(const actor& a) const;
     undead_state_type undead_state(bool temp = true) const;
     bool nightvision() const;
     reach_type reach_range() const;
@@ -524,6 +508,8 @@ public:
 
     int base_ac_from(const item_def &armour, int scale = 1) const;
     void maybe_degrade_bone_armour(int mult);
+
+    int inaccuracy() const;
 
     // actor
     int mindex() const;
@@ -619,7 +605,7 @@ public:
     void attacking(actor *other, bool ranged = false);
     bool can_go_berserk() const;
     bool can_go_berserk(bool intentional, bool potion = false,
-                        bool quiet = false) const;
+                        bool quiet = false, string *reason = nullptr) const;
     bool go_berserk(bool intentional, bool potion = false);
     bool berserk() const;
     bool can_mutate() const;
@@ -632,7 +618,7 @@ public:
     bool polymorph(int pow);
     void backlight();
     void banish(actor* /*agent*/, const string &who = "");
-    void blink(bool allow_partial_control = true);
+    void blink();
     void teleport(bool right_now = false,
                   bool wizard_tele = false);
     void drain_stat(stat_type stat, int amount);
@@ -652,7 +638,7 @@ public:
     void weaken(actor *attacker, int pow);
     bool heal(int amount, bool max_too = false);
     bool drain_exp(actor *, bool quiet = false, int pow = 3);
-    bool rot(actor *, int amount, bool quiet = false);
+    bool rot(actor *, int amount, bool quiet = false, bool no_cleanup = false);
     void splash_with_acid(const actor* evildoer, int acid_strength,
                           bool allow_corrosion = true,
                           const char* hurt_msg = nullptr);
@@ -710,7 +696,7 @@ public:
     bool clarity(bool calc_unid = true, bool items = true) const;
     bool stasis(bool calc_unid = true, bool items = true) const;
 
-    flight_type flight_mode() const;
+    bool airborne() const;
     bool cancellable_flight() const;
     bool permanent_flight() const;
     bool racial_permanent_flight() const;
@@ -722,14 +708,13 @@ public:
     bool caught() const;
     bool backlit(bool self_halo = true) const;
     bool umbra() const;
-    int halo_radius2() const;
-    int silence_radius2() const;
-    int liquefying_radius2() const;
-    int umbra_radius2() const;
+    int halo_radius() const;
+    int silence_radius() const;
+    int liquefying_radius() const;
+    int umbra_radius() const;
 #if TAG_MAJOR_VERSION == 34
-    int heat_radius2() const;
+    int heat_radius() const;
 #endif
-    bool glows_naturally() const;
     bool petrifying() const;
     bool petrified() const;
     bool liquefied_ground() const;
@@ -891,7 +876,6 @@ static inline bool player_in_branch(int branch)
 
 bool berserk_check_wielded_weapon();
 bool player_equip_unrand(int unrand_index);
-bool player_can_hit_monster(const monster* mon);
 bool player_can_hear(const coord_def& p, int hear_distance = 999);
 
 bool player_is_shapechanged();
@@ -911,8 +895,6 @@ int player_hunger_rate(bool temp = true);
 int calc_hunger(int food_cost);
 
 int player_icemail_armour_class();
-
-bool player_stoneskin();
 
 int player_wizardry(spell_type spell);
 
@@ -948,8 +930,6 @@ int player_res_poison(bool calc_unid = true, bool temp = true,
                       bool items = true);
 int player_res_magic(bool calc_unid = true, bool temp = true);
 
-bool player_control_teleport(bool temp = true);
-
 int player_shield_class();
 int player_displayed_shield_class();
 
@@ -968,7 +948,7 @@ int player_speed();
 
 int player_spell_levels();
 
-bool player_sust_abil(bool calc_unid = true);
+bool player_sust_attr(bool calc_unid = true);
 
 int player_teleport(bool calc_unid = true);
 
@@ -1003,7 +983,6 @@ bool player_has_feet(bool temp = true);
 
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
-bool enough_zp(int minimum, bool suppress_msg);
 
 void calc_hp();
 void calc_mp();
@@ -1063,7 +1042,9 @@ bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
 void dec_elixir_player(int delay);
 void dec_ambrosia_player(int delay);
-bool flight_allowed(bool quiet = false);
+bool prompt_contam_invis();
+bool invis_allowed(bool quiet = false, string *fail_reason = nullptr);
+bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);
 void fly_player(int pow, bool already_flying = false);
 void float_player();
 bool land_player(bool quiet = false);
@@ -1086,6 +1067,7 @@ bool need_expiration_warning(coord_def p = you.pos());
 
 void count_action(caction_type type, int subtype = 0);
 bool player_has_orb();
+bool player_on_orb_run();
 
 #if TAG_MAJOR_VERSION == 34
 enum temperature_level

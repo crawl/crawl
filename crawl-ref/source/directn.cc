@@ -102,8 +102,6 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
 static bool _find_feature(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
-static bool _find_fprop_unoccupied(const coord_def& where, int mode, bool need_path,
-                           int range, targetter *hitfunc);
 static bool _find_shadow_step_mons(const coord_def& where, int mode,
                                    bool need_path, int range,
                                    targetter *hitfunc);
@@ -314,7 +312,7 @@ actor* direction_chooser::targeted_actor() const
 monster* direction_chooser::targeted_monster() const
 {
     monster* m = monster_at(target());
-    if (m && you.can_see(m))
+    if (m && you.can_see(*m))
         return m;
     else
         return nullptr;
@@ -327,7 +325,8 @@ static monster* _get_current_target()
         return nullptr;
 
     monster* mon = &menv[you.prev_targ];
-    if (mon->alive() && you.can_see(mon))
+    ASSERT(mon);
+    if (mon->alive() && you.can_see(*mon))
         return mon;
     else
         return nullptr;
@@ -461,7 +460,7 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
 static bool _mon_exposed_in_water(const monster* mon)
 {
     return grd(mon->pos()) == DNGN_SHALLOW_WATER
-           && !mons_flies(mon);
+           && !mon->airborne();
 }
 
 static bool _mon_exposed_in_cloud(const monster* mon)
@@ -484,7 +483,7 @@ static bool _is_target_in_range(const coord_def& where, int range,
     if (hitfunc)
         return hitfunc->valid_aim(where);
     // range == -1 means that range doesn't matter.
-    return range == -1 || distance2(you.pos(), where) <= range*range + 1;
+    return range == -1 || grid_distance(you.pos(), where) <= range;
 }
 
 targeting_behaviour direction_chooser::stock_behaviour;
@@ -1145,15 +1144,6 @@ coord_def direction_chooser::find_default_target() const
     {
         success = find_default_monster_target(result);
     }
-    // Evolution can also auto-target mold squares (but shouldn't if
-    // there are any monsters to evolve), so try _find_square_wrapper
-    // again
-    if (mode == TARG_EVOLVABLE_PLANTS && !success)
-    {
-        success = _find_square_wrapper(result, 1, _find_fprop_unoccupied,
-                                       needs_path, FPROP_MOLD, range, hitfunc,
-                                       true);
-    }
 
     if (!success)
         result = you.pos();
@@ -1277,7 +1267,7 @@ bool direction_chooser::in_range(const coord_def& p) const
 {
     if (hitfunc)
         return hitfunc->valid_aim(p);
-    return range < 0 || distance2(p, you.pos()) <= range*range + 1;
+    return range < 0 || grid_distance(p, you.pos()) <= range;
 }
 
 // Cycle to either the next (dir == 1) or previous (dir == -1) object
@@ -1327,7 +1317,7 @@ void direction_chooser::update_previous_target() const
 
     // Maybe we should except just_looking here?
     const monster* m = monster_at(target());
-    if (m && you.can_see(m))
+    if (m && you.can_see(*m))
         you.prev_targ = m->mindex();
     else if (looking_at_you())
         you.prev_targ = MHITYOU;
@@ -1496,7 +1486,7 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
     if (!mon)
         return;
 
-    const bool visible = you.can_see(mon);
+    const bool visible = you.can_see(*mon);
     const bool exposed = _mon_exposed(mon);
     if (!visible && !exposed)
         return;
@@ -2157,7 +2147,7 @@ string get_terse_square_desc(const coord_def &gc)
         else
             desc = unseen_desc;
     }
-    else if (monster_at(gc) && you.can_see(monster_at(gc)))
+    else if (monster_at(gc) && you.can_see(*monster_at(gc)))
             desc = monster_at(gc)->full_name(DESC_PLAIN, true);
     else if (you.visible_igrd(gc) != NON_ITEM)
     {
@@ -2302,9 +2292,8 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
     // Monster types that you can't gain experience from don't count as
     // monsters.
     if (mode != TARG_EVOLVABLE_PLANTS
-        && mons_class_flag(mon->type, M_NO_EXP_GAIN)
-        && !(mon->type == MONS_BALLISTOMYCETE && mon->ballisto_activity)
-        && !mons_is_tentacle(mon->type))
+        && !mons_class_gives_xp(mon->type, true)
+        && !mons_is_active_ballisto(mon))
     {
         return false;
     }
@@ -2389,27 +2378,6 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
 }
 #endif
 
-static bool _find_fprop_unoccupied(const coord_def & where, int mode,
-                                   bool need_path, int range, targetter *hitfunc)
-{
-    // Don't target out of range.
-    if (!_is_target_in_range(where, range, hitfunc))
-        return false;
-
-    monster* mon = monster_at(where);
-    if (mon || !you.see_cell(where))
-        return false;
-
-    // Monster in LOS but only via glass walls, so no direct path.
-    if (need_path && !you.see_cell_no_trans(where))
-        return false;
-
-    if (need_path && _blocked_ray(where))
-        return false;
-
-    return env.pgrid(where) & mode;
-}
-
 static bool _want_target_monster(const monster *mon, int mode)
 {
     // Now compare target modes.
@@ -2442,7 +2410,7 @@ static bool _want_target_monster(const monster *mon, int mode)
         return false;
 
     // Don't target zero xp monsters.
-    return !mons_class_flag(mon->type, M_NO_EXP_GAIN);
+    return mons_class_gives_xp(mon->type);
 }
 
 #ifdef CLUA_BINDINGS
@@ -2539,7 +2507,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
 #endif
 
     // Only check for explosive targeting at the edge of the range
-    if (you.pos().range(where) != range && !hitfunc->can_affect_walls())
+    if (you.pos().distance_from(where) != range && !hitfunc->can_affect_walls())
         return false;
 
     // Target outside LOS.
@@ -2967,8 +2935,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
 
 string feature_description(dungeon_feature_type grid, trap_type trap,
                            const string & cover_desc,
-                           description_level_type dtype,
-                           bool add_stop, bool base_desc)
+                           description_level_type dtype, bool add_stop)
 {
     string desc = _base_feature_desc(grid, trap);
     desc += cover_desc;
@@ -3005,8 +2972,7 @@ static bool _interesting_feature(dungeon_feature_type feat)
 #endif
 
 string feature_description_at(const coord_def& where, bool covering,
-                              description_level_type dtype, bool add_stop,
-                              bool base_desc)
+                              description_level_type dtype, bool add_stop)
 {
     dungeon_feature_type grid = env.map_knowledge(where).feat();
     trap_type trap = env.map_knowledge(where).trap();
@@ -3021,9 +2987,9 @@ string feature_description_at(const coord_def& where, bool covering,
         if (is_bloodcovered(where))
             covering_description = ", spattered with blood";
         else if (glowing_mold(where))
-            covering_description = ", covered with glowing mold";
+            covering_description = ", covered with glowing mould";
         else if (is_moldy(where))
-            covering_description = ", covered with mold";
+            covering_description = ", covered with mould";
     }
 
     // FIXME: remove desc markers completely; only Zin walls are left.
@@ -3093,9 +3059,8 @@ string feature_description_at(const coord_def& where, bool covering,
     switch (grid)
     {
     case DNGN_TRAP_MECHANICAL:
-        return feature_description(grid, trap,
-                                   covering_description, dtype,
-                                   add_stop, base_desc);
+        return feature_description(grid, trap, covering_description, dtype,
+                                   add_stop);
     case DNGN_ABANDONED_SHOP:
         return thing_do_grammar(dtype, add_stop, false, "an abandoned shop");
 
@@ -3328,7 +3293,7 @@ static string _get_monster_desc(const monster_info& mi)
     if (mi.is(MB_UMBRAED))
         text += pronoun + " is wreathed by an umbra.\n";
 
-    if (mi.intel() <= I_INSECT)
+    if (mi.intel() <= I_BRAINLESS)
         text += pronoun + " is mindless.\n";
 
     if (mi.is(MB_CHAOTIC))

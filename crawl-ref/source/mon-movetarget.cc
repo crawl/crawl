@@ -21,25 +21,20 @@
 #include "traps.h"
 
 // If a monster can see but not directly reach the target, and then fails to
-// find a path to get there, mark all surrounding (in a radius of √8) monsters
+// find a path to get there, mark all surrounding (in a radius of 2) monsters
 // of the same (or greater) movement restrictions as also being unable to
 // find a path, so we won't need to calculate again.
 // Should there be a direct path to the target for a monster thus marked, it
 // will still be able to come nearer (and the mark will then be cleared).
 static void _mark_neighbours_target_unreachable(monster* mon)
 {
-    // Highly intelligent monsters are perfectly capable of pathfinding
-    // and don't need their neighbour's advice.
     const mon_intel_type intel = mons_intel(mon);
-    if (intel > I_NORMAL)
-        return;
-
-    const bool flies         = mons_flies(mon);
+    const bool flies         = mon->airborne();
     const bool amphibious    = (mons_habitat(mon) == HT_AMPHIBIOUS);
     const bool amph_lava     = (mons_habitat(mon) == HT_AMPHIBIOUS_LAVA);
     const habitat_type habit = mons_primary_habitat(mon);
 
-    for (radius_iterator ri(mon->pos(), 8, C_CIRCLE); ri; ++ri)
+    for (radius_iterator ri(mon->pos(), 2, C_SQUARE); ri; ++ri)
     {
         if (*ri == mon->pos())
             continue;
@@ -68,7 +63,7 @@ static void _mark_neighbours_target_unreachable(monster* mon)
 
         // A flying monster has an advantage over a non-flying one.
         // Same for a swimming one.
-        if (!flies && mons_flies(m)
+        if (!flies && m->airborne()
             || !amphibious && mons_habitat(m) == HT_AMPHIBIOUS
             || !amph_lava  && mons_habitat(m) == HT_AMPHIBIOUS_LAVA)
         {
@@ -87,33 +82,6 @@ static void _set_no_path_found(monster* mon)
 #ifdef DEBUG_PATHFIND
     mpr("No path found!");
 #endif
-    if (crawl_state.game_is_zotdef() && player_in_branch(root_branch)
-        && !testbits(env.pgrid(mon->pos()), FPROP_NO_RTELE_INTO))
-    {
-        if (you.wizard)
-        {
-            // You might have used a wizard power to teleport into a wall or
-            // a loot chamber.
-            mprf(MSGCH_ERROR, "Monster %s failed to pathfind to (%d,%d) (%s)",
-                mon->name(DESC_PLAIN, true).c_str(),
-                env.orb_pos.x, env.orb_pos.y,
-                orb_position().origin() ? "you" : "the Orb");
-        }
-        else
-        {
-            // None of the maps allows the goal to ever become unreachable,
-            // and when that happens, let's crash rather than a give an
-            // effortless win with all the opposition doing nothing.
-
-            // This is only appropriate in the zotdef map itself, though,
-            // which is why we check for BRANCH_DUNGEON above.
-            // (This kind of thing is totally normal in, say, a Bazaar.)
-            die("ZotDef: monster %s failed to pathfind to (%d,%d) (%s)",
-                mon->name(DESC_PLAIN, true).c_str(),
-                env.orb_pos.x, env.orb_pos.y,
-                orb_position().origin() ? "you" : "the Orb");
-        }
-    }
 
     mon->travel_target = MTRAV_UNREACHABLE;
     // Pass information on to nearby monsters.
@@ -155,7 +123,7 @@ bool try_pathfind(monster* mon)
     // pathfinding.
     if (need_pathfind
         && !mon->friendly()
-        && mon->can_see(foe)
+        && mon->can_see(*foe)
         && mons_has_los_ability(mon->type))
     {
         need_pathfind = false;
@@ -164,7 +132,7 @@ bool try_pathfind(monster* mon)
     // Also don't use pathfinding if the monster can shoot
     // across the blocking terrain, and is smart enough to
     // realise that.
-    if ((!crawl_state.game_is_zotdef()) && need_pathfind
+    if (need_pathfind
         && !mon->friendly()
         && mons_has_ranged_attack(mon)
         && cell_see_cell(mon->pos(), targpos, LOS_SOLID_SEE))
@@ -235,8 +203,7 @@ bool try_pathfind(monster* mon)
 #ifdef DEBUG_PATHFIND
     mprf("Need to calculate a path... (dist = %d)", dist);
 #endif
-    // All monsters can find the Orb in Zotdef
-    const int range = (crawl_state.game_is_zotdef() || mon->friendly() ? 1000 : mons_tracking_range(mon));
+    const int range = mon->friendly() ? 1000 : mons_tracking_range(mon);
 
     if (range > 0 && dist > range)
     {
@@ -300,7 +267,7 @@ bool pacified_leave_level(monster* mon, vector<level_exit> e, int e_index)
     // player, make it leave the level.
     if (_is_level_exit(mon->pos())
         || (e_index != -1 && mon->pos() == e[e_index].target)
-        || distance2(mon->pos(), you.pos()) >= dist_range(LOS_RADIUS * 4))
+        || grid_distance(mon->pos(), you.pos()) >= LOS_RADIUS * 3)
     {
         make_mons_leave_level(mon);
         return true;
@@ -356,7 +323,7 @@ bool find_merfolk_avatar_water_target(monster* mon)
     ASSERT(mon->type == MONS_MERFOLK_AVATAR);
 
     // Moving away could break the entrancement, so don't do this.
-    if (distance2(mon->pos(), you.pos()) >= 6 * 6 + 1)
+    if (grid_distance(mon->pos(), you.pos()) >= 5)
     {
         mon->firing_pos.reset();
         return false;
@@ -597,38 +564,39 @@ static bool _handle_monster_travelling(monster* mon)
 
 static bool _choose_random_patrol_target_grid(monster* mon)
 {
-    const int intel = mons_intel(mon);
+    const mon_intel_type intel = mons_intel(mon);
 
     // Zombies will occasionally just stand around.
     // This does not mean that they don't move every second turn. Rather,
     // once they reach their chosen target, there's a 50% chance they'll
     // just remain there until next turn when this function is called
     // again.
-    if (intel == I_PLANT && coinflip())
+    if (intel == I_BRAINLESS && coinflip())
         return true;
 
     // If there's no chance we'll find the patrol point, quit right away.
-    if (distance2(mon->pos(), mon->patrol_point) > dist_range(2 * LOS_RADIUS))
+    if (grid_distance(mon->pos(), mon->patrol_point) > 2 * LOS_RADIUS)
         return false;
 
     // Can the monster see the patrol point from its current position?
     const bool patrol_seen = mon->see_cell(mon->patrol_point);
 
-    if (intel == I_PLANT && !patrol_seen)
+    if (intel == I_BRAINLESS && !patrol_seen)
     {
         // Really stupid monsters won't even try to get back into the
         // patrol zone.
         return false;
     }
 
-    // While the patrol point is in easy reach, monsters of insect/plant
-    // intelligence will only use a range of 5 (distance from the patrol point).
+    // While the patrol point is in easy reach, monsters of brainless
+    // intelligence will only use a range of 4 (distance from the patrol point).
     // Otherwise, try to get back using the full LOS.
-    const int  rad      = (intel >= I_ANIMAL || !patrol_seen) ? LOS_RADIUS : 5;
-    const bool is_smart = (intel >= I_NORMAL);
+    const int  rad      = (intel > I_BRAINLESS || !patrol_seen) ? LOS_RADIUS
+                                                                : 4;
+    const bool is_smart = (intel >= I_HUMAN);
 
     los_def patrol(mon->patrol_point, opacity_monmove(*mon),
-                   circle_def(rad, C_ROUND));
+                   circle_def(rad, C_SQUARE));
     patrol.update();
     los_def lm(mon->pos(), opacity_monmove(*mon));
     if (is_smart || !patrol_seen)
@@ -640,7 +608,7 @@ static bool _choose_random_patrol_target_grid(monster* mon)
     int count_grids = 0;
     // Don't bother for the current position. If everything fails,
     // we'll stay here anyway.
-    for (radius_iterator ri(mon->patrol_point, you.current_vision, C_ROUND, true);
+    for (radius_iterator ri(mon->patrol_point, you.current_vision, C_SQUARE, true);
          ri; ++ri)
     {
         if (!in_bounds(*ri) || !mon->can_pass_through_feat(grd(*ri)))
@@ -691,7 +659,7 @@ static bool _choose_random_patrol_target_grid(monster* mon)
         }
 
         bool set_target = false;
-        if (intel == I_PLANT && *ri == mon->patrol_point)
+        if (intel == I_BRAINLESS && *ri == mon->patrol_point)
         {
             // Slightly greater chance to simply head for the centre.
             count_grids += 3;
@@ -1021,7 +989,7 @@ int mons_find_nearest_level_exit(const monster* mon, vector<level_exit> &e,
         if (e[i].unreachable)
             continue;
 
-        int dist = distance2(mon->pos(), e[i].target);
+        int dist = grid_distance(mon->pos(), e[i].target);
 
         if (old_dist == -1 || old_dist >= dist)
         {
@@ -1076,7 +1044,7 @@ static bool _can_safely_go_through(const monster * mon, const coord_def p)
     // Stupid monsters don't pathfind around shallow water
     // except the clinging ones.
     if (mon->floundering_at(p)
-        && (mons_intel(mon) >= I_NORMAL || mon->can_cling_to_walls()))
+        && (mons_intel(mon) >= I_HUMAN || mon->can_cling_to_walls()))
     {
         return false;
     }
@@ -1099,7 +1067,7 @@ bool can_go_straight(const monster* mon, const coord_def& p1,
     if (p1 == p2)
         return true;
 
-    if (distance2(p1, p2) > los_radius2)
+    if (grid_distance(p1, p2) > los_radius)
         return false;
 
     // XXX: Hack to improve results for now. See FIXME above.

@@ -73,12 +73,6 @@ function ziggurat_build_level(e)
   local generate_awake = you.depth() > 4 + crawl.random2(21)
   zig().monster_hook = generate_awake and global_function("ziggurat_awaken_all")
 
-  -- Deeper levels may block controlled teleports.
-  -- Does never happen at depths 1-6; does always happen at depths 25-27.
-  if you.depth() > 6 + crawl.random2(19) then
-    dgn.change_level_flags("no_tele_control")
-  end
-
   if builder then
     return ziggurat_builder_map[builder](e)
   end
@@ -444,16 +438,15 @@ local function ziggurat_create_loot_at(c)
   end
 
   -- dgn.good_scrolls is a list of items with total weight 1000
-  local good_loot = dgn.item_spec("* no_pickup no_mimic w:6960 /" ..
-                                  "potion of restore abilities no_pickup no_mimic w:40 /" ..
+  local good_loot = dgn.item_spec("* no_pickup w:7000 /" ..
                                   dgn.good_scrolls)
-  local super_loot = dgn.item_spec("| no_pickup no_mimic w:7000 /" ..
-                                   "potion of experience no_pickup no_mimic w:190 /" ..
-                                   "potion of cure mutation no_pickup no_mimic w:190 /" ..
-                                   "potion of beneficial mutation no_pickup no_mimic w:40 /" ..
-                                   "royal jelly q:3 no_pickup no_mimic w:80 /" ..
-                                   "wand of heal wounds no_pickup no_mimic / " ..
-                                   "wand of hasting no_pickup no_mimic / " ..
+  local super_loot = dgn.item_spec("| no_pickup w:7000 /" ..
+                                   "potion of experience no_pickup w:190 q:1 /" ..
+                                   "potion of cure mutation no_pickup w:190 /" ..
+                                   "potion of beneficial mutation no_pickup w:40 q:1 /" ..
+                                   "royal jelly q:3 no_pickup w:80 /" ..
+                                   "wand of heal wounds no_pickup / " ..
+                                   "wand of hasting no_pickup / " ..
                                    dgn.good_scrolls)
 
   local loot_spots = find_free_space(nloot * 4)

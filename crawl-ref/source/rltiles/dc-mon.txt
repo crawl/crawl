@@ -61,7 +61,6 @@ butterfly9
 butterfly10
 %rim 0
 fire_bat MONS_FIRE_BAT
-raven MONS_RAVEN
 bennu MONS_BENNU
 caustic_shrike MONS_CAUSTIC_SHRIKE
 shard_shrike MONS_SHARD_SHRIKE
@@ -141,7 +140,6 @@ death_scarab MONS_DEATH_SCARAB
 %sdir mon/animals
 %rim 1
 crocodile MONS_CROCODILE
-alligator_baby MONS_BABY_ALLIGATOR
 alligator MONS_ALLIGATOR
 snapping_turtle MONS_SNAPPING_TURTLE
 snapping_turtle_shell MONS_SNAPPING_TURTLE_SHELL
@@ -182,8 +180,6 @@ electric_eel MONS_ELECTRIC_EEL
 
 ## Beetles ('B')
 %sdir mon/animals
-goliath_beetle MONS_GOLIATH_BEETLE
-boring_beetle MONS_BORING_BEETLE
 boulder_beetle MONS_BOULDER_BEETLE
 boulder_beetle_rolling0 MONS_BOULDER_BEETLE_ROLLING
 boulder_beetle_rolling1
@@ -267,10 +263,6 @@ fulminant_prism1 MONS_FULMINANT_PRISM
 fulminant_prism2
 fulminant_prism3
 fulminant_prism4
-singularity1 MONS_SINGULARITY /*'*'*/
-singularity2
-singularity3
-singularity4
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 %sdir mon/undead
@@ -384,9 +376,6 @@ azrael MONS_AZRAEL
 %sdir mon/demons
 efreet MONS_EFREET
 %sdir mon/nonliving
-%rim 0
-grand_avatar MONS_GRAND_AVATAR
-%rim 1
 
 ## Abominations ('X')
 %sdir mon/demons
@@ -593,6 +582,7 @@ profane_servitor MONS_PROFANE_SERVITOR
 mennas MONS_MENNAS
 
 ## Giants ('C')
+%rim 0
 polyphemus MONS_POLYPHEMUS
 chuck MONS_CHUCK
 iron_giant MONS_IRON_GIANT
@@ -604,6 +594,7 @@ fire_giant MONS_FIRE_GIANT
 frost_giant MONS_FROST_GIANT
 stone_giant MONS_STONE_GIANT
 titan MONS_TITAN
+%rim 1
 
 ## Drakes (also 'l')
 %sdir mon/dragons
@@ -675,9 +666,6 @@ ophan MONS_OPHAN
 %sdir mon
 hippogriff MONS_HIPPOGRIFF
 minotaur MONS_MINOTAUR
-%sdir mon/unique
-asterion MONS_ASTERION
-%sdir mon
 manticore MONS_MANTICORE
 griffon MONS_GRIFFON
 harpy MONS_HARPY
@@ -687,10 +675,12 @@ tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
 tengu_warrior MONS_TENGU_WARRIOR
 tengu_reaver MONS_TENGU_REAVER
+mutant_beast MONS_MUTANT_BEAST
 %sdir mon/unique
 sojobo MONS_SOJOBO
 arachne MONS_ARACHNE
 arachne_staveless MONS_ARACHNE_STAVELESS
+asterion MONS_ASTERION
 
 ## Various beasts ('I')
 %sdir mon/animals

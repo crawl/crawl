@@ -151,7 +151,7 @@ enum hints_event_type
 struct newgame_def;
 void init_hints();
 void tutorial_init_hints();
-void pick_hints(newgame_def* choice);
+void pick_hints(newgame_def& choice);
 void hints_load_game();
 
 void hints_starting_screen();

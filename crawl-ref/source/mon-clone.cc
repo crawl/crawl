@@ -124,7 +124,7 @@ static void _mons_summon_monster_illusion(monster* caster,
 
         if (cloning_visible)
         {
-            if (!you.can_see(caster))
+            if (!you.can_see(*caster))
             {
                 mprf("%s seems to step out of %s!",
                      foe->name(DESC_THE).c_str(),
@@ -337,7 +337,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
         obvious = &_obvious;
     *obvious = false;
 
-    if (you.can_see(orig) && you.can_see(mons))
+    if (you.can_see(*orig) && you.can_see(*mons))
     {
         if (!quiet)
             simple_monster_message(orig, " is duplicated!");
@@ -345,7 +345,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     }
 
     mark_interesting_monst(mons, mons->behaviour);
-    if (you.can_see(mons))
+    if (you.can_see(*mons))
     {
         handle_seen_interrupt(mons);
         viewwindow();

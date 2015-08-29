@@ -236,8 +236,6 @@ alarm DNGN_TRAP_ALARM
 shaft DNGN_TRAP_SHAFT
 teleport DNGN_TRAP_TELEPORT
 teleport_permanent DNGN_TRAP_TELEPORT_PERMANENT
-shadow DNGN_TRAP_SHADOW
-shadow_dormant DNGN_TRAP_SHADOW_DORMANT
 zot DNGN_TRAP_ZOT
 passage_of_golubria DNGN_TRAP_GOLUBRIA
 pressure_plate DNGN_TRAP_PLATE

@@ -16,6 +16,8 @@ bool takeoff_armour(int index);
 
 void drink(int slot = -1);
 
+bool god_hates_brand(const int brand);
+
 bool safe_to_remove(const item_def &item, bool quiet = false);
 
 bool puton_ring(int slot = -1, bool allow_prompt = true);
@@ -45,11 +47,9 @@ bool wield_weapon(bool auto_wield, int slot = -1,
 
 bool item_is_worn(int inv_slot);
 
-bool dont_use_invis();
-
 bool enchant_weapon(item_def &wpn, bool quiet);
 bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
-void random_uselessness(int scroll_slot = -1);
+void random_uselessness();
 
 void prompt_inscribe_item();
 

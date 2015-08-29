@@ -54,12 +54,22 @@ MIRET1(number, base_type, base_type)
 MIRET1(number, number, number)
 MIRET1(boolean, has_known_ranged_attack, is(MB_RANGED_ATTACK))
 MIRET1(string, speed_description, speed_description().c_str())
+MIRET1(number, x_pos, pos.x - you.pos().x)
+MIRET1(number, y_pos, pos.y - you.pos().y)
 
 static int moninf_get_colour(lua_State *ls)
 {
     MONINF(ls, 1, mi);
     lua_pushnumber(ls, mi->colour());
     return 1;
+}
+
+static int moninf_get_pos(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    lua_pushnumber(ls, mi->pos.x - you.pos().x);
+    lua_pushnumber(ls, mi->pos.y - you.pos().y);
+    return 2;
 }
 
 #define MIRES1(field, resist) \
@@ -338,6 +348,9 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(res_draining),
     MIREG(res_shock),
     MIREG(res_corr),
+    MIREG(x_pos),
+    MIREG(y_pos),
+    MIREG(pos),
 
     { nullptr, nullptr }
 };

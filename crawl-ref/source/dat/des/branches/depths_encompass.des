@@ -133,7 +133,7 @@ ITEM:    any scroll
 KITEM:   e = any / any good_item w:4
 KITEM:   8B = potion of experience ident:type q:1 / any good_item
 KITEM:   9 = |
-KITEM:   0 = potion of restore abilities ident:type
+KITEM:   0 = potion of brilliance ident:type
 KFEAT:   8e = >
 KFEAT:   W = w
 NSUBST:  h = 1:+ / *:x, H = 1:+ / *:x
@@ -493,7 +493,7 @@ TAGS: grunt_profane_temple no_monster_gen
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
 KMONS: 4 = blue devil / simulacrum w:20 / freezing wraith
 KMONS: 5 = ice devil
-KMONS: 6 = blizzard demon / shard shrike
+KMONS: 6 = blizzard demon / ice dragon
 KMONS: 8 = ice statue
 KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
@@ -620,7 +620,7 @@ TILE: c = wall_zot_magenta
 COLOUR: JO.1+ = magenta
 FTILE: JO.1+ = floor_hall
 KFEAT: O = enter_zot
-KMONS: 1 = place:Zot:1
+KMONS: 1 = nonbase draconian / base draconian
 MARKER: J = lua:fog_machine { cloud_type = "magical condensation", \
                               pow_min = 3, pow_max = 5, \
                               delay_min = 5, delay_max = 15, \

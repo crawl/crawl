@@ -186,15 +186,6 @@ Conjure Flame spell
 
 Ce sort crée une colonne de flammes ronflantes.
 %%%%
-Control Teleport spell
-
-Ce sort permet au sorcier de contrôler sa prochaine translocation – soit en
-choisissant une destination approximative pour une téléportation, soit en
-choisissant une direction pour un clignotement. Soyez conscient que la
-téléportation contrôlée entrainera une contamination du sorcier par énergie
-magique, et que les téléportations contrôlées mettent plus de temps à se
-déclencher que les non-contrôlées.
-%%%%
 Control Undead spell
 
 Ce sort tente d'asservir tous les morts-vivants à portée du sorcier.

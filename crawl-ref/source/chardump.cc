@@ -169,9 +169,9 @@ bool dump_char(const string &fname, bool quiet, bool full_id,
 
     dump_params par(text, "", full_id, se);
 
-    for (int i = 0, size = Options.dump_order.size(); i < size; ++i)
+    for (const string &section : Options.dump_order)
     {
-        par.section = Options.dump_order[i];
+        par.section = section;
         dump_section(par);
     }
 
@@ -493,33 +493,26 @@ static void _sdump_lua(dump_params &par)
 }
 #endif
 
- //---------------------------------------------------------------
- //
- // munge_description
- //
- // word wrap to 80 characters.
- // XXX: should be replaced by some other linewrapping function
- //      now EOL munging is gone
- //---------------------------------------------------------------
-string munge_description(string inStr)
+string chardump_desc(const item_def& item)
 {
-    string outStr;
+    string desc = get_item_description(item, false, true);
+    string outs;
 
-    outStr.reserve(inStr.length() + 32);
+    outs.reserve(desc.length() + 32);
 
-    const int kIndent = 3;
+    const int indent = 3;
 
-    if (inStr.empty()) // always at least an empty line
+    if (desc.empty()) // always at least an empty line
         return "\n";
 
-    while (!inStr.empty())
+    while (!desc.empty())
     {
-        outStr += string(kIndent, ' ')
-                  + wordwrap_line(inStr, 79 - kIndent)
+        outs += string(indent, ' ')
+                  + wordwrap_line(desc, 79 - indent)
                   + "\n";
     }
 
-    return outStr;
+    return outs;
 }
 
 static void _sdump_messages(dump_params &par)
@@ -668,7 +661,6 @@ static void _sdump_inventory(dump_params &par)
     int i, j;
 
     string &text(par.text);
-    string text2;
 
     int inv_class2[NUM_OBJECT_CLASSES];
     int inv_count = 0;
@@ -741,8 +733,7 @@ static void _sdump_inventory(dump_params &par)
                     || Options.dump_book_spells
                        && you.inv[j].base_type == OBJ_BOOKS)
                 {
-                    text2 = get_item_description(you.inv[j], false, true);
-                    text += munge_description(text2);
+                    text += chardump_desc(you.inv[j]);
                 }
                 else
                     text += "\n";
@@ -849,9 +840,8 @@ static void _sdump_spells(dump_params &par)
 
                 bool already = false;
 
-                for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+                for (const auto bit : spschools_type::range())
                 {
-                    const auto bit = spschools_type::exponent(i);
                     if (spell_typematch(spell, bit))
                     {
                         spell_line += spell_type_shortname(bit, already);
@@ -883,7 +873,7 @@ static void _sdump_spells(dump_params &par)
 
 static void _sdump_kills(dump_params &par)
 {
-    par.text += you.kills->kill_info();
+    par.text += you.kills.kill_info();
 }
 
 static string _sdump_kills_place_info(PlaceInfo place_info, string name = "")
@@ -1224,8 +1214,10 @@ static void _sdump_mutations(dump_params &par)
 //      Public Functions
 // ========================================================================
 
+// Must match the order of hunger_state_t enums
 static const char* hunger_names[] =
 {
+    "fainting",
     "starving",
     "near starving",
     "very hungry",
@@ -1235,9 +1227,12 @@ static const char* hunger_names[] =
     "very full",
     "completely stuffed",
 };
+COMPILE_CHECK(ARRAYSZ(hunger_names) == HS_ENGORGED + 1);
 
+// Must match the order of hunger_state_t enums
 static const char* thirst_names[] =
 {
+    "bloodless",
     "bloodless",
     "near bloodless",
     "very thirsty",
@@ -1247,12 +1242,10 @@ static const char* thirst_names[] =
     "very full",
     "almost alive",
 };
+COMPILE_CHECK(ARRAYSZ(thirst_names) == HS_ENGORGED + 1);
 
 const char *hunger_level()
 {
-    COMPILE_CHECK(ARRAYSZ(hunger_names) == HS_ENGORGED + 1);
-    COMPILE_CHECK(ARRAYSZ(thirst_names) == HS_ENGORGED + 1);
-
     ASSERT(you.hunger_state <= HS_ENGORGED);
 
     if (you.species == SP_VAMPIRE)
@@ -1301,7 +1294,7 @@ void dump_map(FILE *fp, bool debug, bool dist)
             {
 #ifdef COLOURED_DUMPS
                 size_t nv = 0;
-                for (const vault_placement *vault : env.level_vaults)
+                for (auto &vault : env.level_vaults)
                     if (vault->map.in_map(coord_def(x, y) - vault->pos))
                         nv++;
 

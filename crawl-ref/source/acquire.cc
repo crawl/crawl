@@ -412,11 +412,11 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
     skill_type skill = SK_FIGHTING;
     int best_sk = 0;
 
-    for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
+    for (int i = SK_FIRST_WEAPON; i <= SK_LAST_WEAPON; i++)
         if (you.skills[i] > best_sk)
             best_sk = you.skills[i];
 
-    for (skill_type sk = SK_SHORT_BLADES; sk <= SK_CROSSBOWS; ++sk)
+    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; ++sk)
     {
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
@@ -526,14 +526,10 @@ static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/)
     case SK_THROWING:
         {
             // Choose from among all usable missile types.
-            // Only give needles if they have a blowgun in inventory.
             vector<pair<missile_type, int> > missile_weights;
 
-            missile_weights.emplace_back(MI_TOMAHAWK, 75);
-
-            // Include the possibility of needles if they have some stealth skill.
-            if (x_chance_in_y(you.skills[SK_STEALTH], 15))
-                missile_weights.emplace_back(MI_NEEDLE, 100);
+            missile_weights.emplace_back(MI_TOMAHAWK, 50);
+            missile_weights.emplace_back(MI_NEEDLE, 75);
 
             if (you.body_size() >= SIZE_MEDIUM)
                 missile_weights.emplace_back(MI_JAVELIN, 100);
@@ -567,7 +563,7 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
                                              : get_random_ring_type();
 
         // If we haven't seen this yet, we're done.
-        if (get_ident_type(OBJ_JEWELLERY, result) == ID_UNKNOWN_TYPE)
+        if (!get_ident_type(OBJ_JEWELLERY, result))
             break;
     }
 
@@ -591,17 +587,13 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     skill_type best_spell_skill = best_skill(SK_SPELLCASTING, SK_EVOCATIONS);
     bool found_enhancer = false;
     int result = 0;
-#if TAG_MAJOR_VERSION == 34
     do
     {
         result = random2(NUM_STAVES);
     }
-    while (result == STAFF_ENCHANTMENT || result == STAFF_CHANNELING);
-#else
-    result = random2(NUM_STAVES);
-#endif
+    while (item_type_removed(OBJ_STAVES, result));
 
-#define TRY_GIVE(x) { if (you.type_ids[OBJ_STAVES][x] != ID_KNOWN_TYPE) \
+#define TRY_GIVE(x) { if (!you.type_ids[OBJ_STAVES][x]) \
                       {result = x; found_enhancer = true;} }
     switch (best_spell_skill)
     {
@@ -644,10 +636,7 @@ static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
     }
     while (player_mutation_level(MUT_NO_LOVE)
               && (result == ROD_SWARM || result == ROD_SHADOWS)
-#if TAG_MAJOR_VERSION == 34
-           || result == ROD_WARDING || result == ROD_VENOM
-#endif
-          );
+           || item_type_removed(OBJ_RODS, result));
     return result;
 }
 
@@ -767,7 +756,7 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
 
     // Unknown wands get a huge weight bonus.
     for (auto &weight : weights)
-        if (get_ident_type(OBJ_WANDS, weight.first) == ID_UNKNOWN_TYPE)
+        if (!get_ident_type(OBJ_WANDS, weight.first))
             weight.second *= 2;
 
     const wand_type* wand = random_choose_weighted(weights);
@@ -801,6 +790,9 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
 {
     COMPILE_CHECK(ARRAYSZ(_subtype_finders) == NUM_OBJECT_CLASSES);
     ASSERT(class_wanted != OBJ_RANDOM);
+
+    if (class_wanted == OBJ_ARMOUR && you.species == SP_FELID)
+        return OBJ_RANDOM;
 
     int type_wanted = OBJ_RANDOM;
 
@@ -842,9 +834,8 @@ static int _spell_weight(spell_type spell)
     int weight = 0;
     spschools_type disciplines = get_spell_disciplines(spell);
     int count = 0;
-    for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+    for (const auto disc : spschools_type::range())
     {
-        const auto disc = spschools_type::exponent(i);
         if (disciplines & disc)
         {
             int skill = you.skills[spell_type2skill(disc)];
@@ -986,13 +977,11 @@ static bool _do_book_acquirement(item_def &book, int agent)
                 continue;
             }
 
-#if TAG_MAJOR_VERSION == 34
-            if (bk == BOOK_WIZARDRY)
+            if (item_type_removed(OBJ_BOOKS, bk))
             {
                 weights[bk] = 0;
                 continue;
             }
-#endif
 
             weights[bk]    = _book_weight(static_cast<book_type>(bk));
             total_weights += weights[bk];
@@ -1500,7 +1489,7 @@ int acquirement_create_item(object_class_type class_wanted,
 
     // If a god wants to give you something but the floor doesn't want it,
     // it counts as a failed acquirement - no piety, etc cost.
-    if (feat_destroys_item(grd(pos), mitm[thing_created])
+    if (feat_destroys_items(grd(pos))
         && agent > GOD_NO_GOD
         && agent < NUM_GODS)
     {

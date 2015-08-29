@@ -486,7 +486,7 @@ end
 -- 3. Funny-shaped rooms can still produce VETO-causing bubbles even with all this checking, this can typically happen when two funny-shaped rooms connect
 --    via two separate walls, creating an enclosed spot in between. Thankfully this doesn't happen very often (yet). There are two ways to avoid this: a) Relax
 --    the VETO restriction, this shouldn't actually be a problem because Crawl automatically generates trapdoors anyway! Crawl could instead / additionally fill the area with
---    no_rtele_into (but on its own this doesn't solve the problem that an off-level hatch/shaft could land the player there, and possibly end them up in an a multi-level
+--    no_tele_into (but on its own this doesn't solve the problem that an off-level hatch/shaft could land the player there, and possibly end them up in an a multi-level
 --    hatch loop!)  b) Actually detect and handle such enclosed areas during layout generation. This sounds hard to do in a performance-friendly way but it only needs
 --    a check when we're attaching to an open_eligible, need to check each tile that's still open for connectivity to the room we just placed (or some sort of flood fill).
 -- 4. General performance - it's definitely ok in V but some of the experimental layouts I've tried have more problems. A big factor is needing to eliminate more eligible

@@ -109,7 +109,6 @@ string quant_name(const item_def &item, int quant,
 bool item_type_known(const item_def &item);
 bool item_type_unknown(const item_def &item);
 bool item_type_known(const object_class_type base_type, const int sub_type);
-bool item_type_tried(const item_def &item);
 
 bool is_interesting_item(const item_def& item);
 bool is_emergency_item(const item_def& item);
@@ -127,15 +126,12 @@ const char* armour_ego_name(const item_def& item, bool terse);
 const char* missile_brand_name(const item_def& item, mbn_type t);
 
 bool item_type_has_ids(object_class_type base_type);
-item_type_id_state_type get_ident_type(const item_def &item);
-item_type_id_state_type get_ident_type(object_class_type basetype,
-                                       int subtype);
-bool set_ident_type(item_def &item, item_type_id_state_type setting,
-                     bool force = false);
-bool set_ident_type(object_class_type basetype, int subtype,
-                     item_type_id_state_type setting, bool force = false);
+bool get_ident_type(const item_def &item);
+bool get_ident_type(object_class_type basetype, int subtype);
+bool set_ident_type(item_def &item, bool identify, bool force = false);
+bool set_ident_type(object_class_type basetype, int subtype, bool identify,
+                    bool force = false);
 void pack_item_identify_message(int base_type, int sub_type);
-void identify_healing_pots();
 
 string item_prefix(const item_def &item, bool temp = true);
 string get_menu_colour_prefix_tags(const item_def &item,

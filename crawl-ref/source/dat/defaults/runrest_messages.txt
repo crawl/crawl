@@ -22,6 +22,9 @@ ignore += Lightning arcs down from a storm cloud
 ignore += (crumbles|melts) away\.
 ignore += our air elemental.*the air
 
+stop += You feel you are being watched
+stop += [Ss]omething.* misses you.
+
 # Traps
 #
 ignore += You found a web!

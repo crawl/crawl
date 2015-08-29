@@ -313,7 +313,8 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
     case DELAY_ARMOUR_OFF:
         if (delay.duration > 1 && !delay.parm3)
         {
-            if (!yesno(delay.type == DELAY_ARMOUR_ON ?
+            if (!crawl_state.disables[DIS_CONFIRMATIONS]
+                && !yesno(delay.type == DELAY_ARMOUR_ON ?
                        "Keep equipping yourself?" :
                        "Keep disrobing?", false, 0, false))
             {
@@ -331,7 +332,8 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         if (delay.duration <= 1 || delay.parm3)
             break;
 
-        if (!yesno("Keep reading the scroll?", false, 0, false))
+        if (!crawl_state.disables[DIS_CONFIRMATIONS]
+            && !yesno("Keep reading the scroll?", false, 0, false))
         {
             mpr("You stop reading the scroll.");
             _pop_delay();
@@ -622,7 +624,7 @@ void handle_delay()
         }
         else if (corpse.is_type(OBJ_CORPSES, CORPSE_SKELETON))
         {
-            mprf("The corpse has rotted away into a skeleton before"
+            mprf("The corpse has rotted away into a skeleton before "
                  "you could finish drinking it!");
             _xom_check_corpse_waste();
             stop_delay();
@@ -672,6 +674,7 @@ void handle_delay()
         {
             // Ran out of things to drop.
             _pop_delay();
+            you.turn_is_over = false;
             you.time_taken = 0;
             return;
         }
@@ -710,6 +713,7 @@ void handle_delay()
                  you.inv[delay.parm1].name(DESC_YOUR).c_str());
             break;
 
+        case DELAY_DROP_ITEM:
         case DELAY_JEWELLERY_ON:
             // This is a 1-turn delay where the time cost is handled
             // in _finish_delay().
@@ -737,6 +741,7 @@ void handle_delay()
             if (!drop_item(items_for_multidrop[0].slot,
                            items_for_multidrop[0].quantity))
             {
+                you.turn_is_over = false;
                 you.time_taken = 0;
             }
             items_for_multidrop.erase(items_for_multidrop.begin());
@@ -785,7 +790,8 @@ static void _finish_delay(const delay_queue_item &delay)
         // amulet and was slowed before putting the amulet of stasis on as a
         // separate action on the next turn
         // XXX: duplicates a check in invent.cc:check_warning_inscriptions()
-        if (nasty_stasis(item, OPER_PUTON)
+        if (!crawl_state.disables[DIS_CONFIRMATIONS]
+            && nasty_stasis(item, OPER_PUTON)
             && item_ident(item, ISFLAG_KNOW_TYPE))
         {
             string prompt = "Really put on ";
@@ -974,7 +980,11 @@ static void _finish_delay(const delay_queue_item &delay)
         if (!you.inv[delay.parm1].defined())
             break;
 
-        drop_item(delay.parm1, delay.parm2);
+        if (!drop_item(delay.parm1, delay.parm2))
+        {
+            you.turn_is_over = false;
+            you.time_taken = 0;
+        }
         break;
 
     case DELAY_ASCENDING_STAIRS:
@@ -1386,7 +1396,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
 
     ASSERT(at.apt == AIP_MONSTER);
     monster* mon = at.mons_data;
-    if (!you.can_see(mon))
+    ASSERT(mon);
+    if (!you.can_see(*mon))
         return false;
 
     // Disable message for summons.
@@ -1434,9 +1445,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         else if (at.context == SC_SURFACES_BRIEFLY)
             text += "surfaces briefly.";
         else if (at.context == SC_SURFACES)
-            if (mon->type == MONS_AIR_ELEMENTAL)
-                text += " forms itself from the air.";
-            else if (mon->type == MONS_TRAPDOOR_SPIDER)
+            if (mon->type == MONS_TRAPDOOR_SPIDER)
                 text += " leaps out from its hiding place under the floor!";
             else
                 text += " surfaces.";

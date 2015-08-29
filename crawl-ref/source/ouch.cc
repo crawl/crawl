@@ -297,7 +297,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         // Airstrike.
         if (you.res_wind())
             hurted = 0;
-        else if (you.flight_mode())
+        else if (you.airborne())
             hurted += hurted / 2;
         break;
     }
@@ -429,9 +429,9 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
     if (crawl_state.disables[DIS_AFFLICTIONS])
         return false;
 
-    const int protection = player_prot_life();
+    const int protection = ignore_protection ? 0 : player_prot_life();
 
-    if (protection == 3 && !ignore_protection)
+    if (protection == 3)
     {
         if (announce_full)
             canned_msg(MSG_YOU_RESIST);
@@ -439,7 +439,7 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
         return false;
     }
 
-    if (protection > 0 && !ignore_protection)
+    if (protection > 0)
     {
         canned_msg(MSG_YOU_PARTIALLY_RESIST);
         power /= (protection * 2);
@@ -653,7 +653,7 @@ static void _powered_by_pain(int dam)
     const int level = player_mutation_level(MUT_POWERED_BY_PAIN);
 
     if (you.mutation[MUT_POWERED_BY_PAIN]
-        && (random2(dam) > 2 + 3 * level
+        && (random2(dam) > 4 + div_rand_round(you.experience_level, 4)
             || dam >= you.hp_max / 2))
     {
         switch (random2(4))
@@ -665,7 +665,7 @@ static void _powered_by_pain(int dam)
             {
                 mpr("You focus on the pain.");
                 int mp = roll_dice(3, 2 + 3 * level);
-                mpr("You feel your power returning.");
+                canned_msg(MSG_GAIN_MAGIC);
                 inc_mp(mp);
                 break;
             }
@@ -709,37 +709,60 @@ static void _maybe_fog(int dam)
     }
 }
 
+static void _deteriorate(int dam)
+{
+    if (x_chance_in_y(player_mutation_level(MUT_DETERIORATION), 4)
+        && dam > you.hp_max / 10)
+    {
+        mprf(MSGCH_WARN, "Your body deteriorates!");
+        lose_stat(STAT_RANDOM, 1);
+    }
+}
+
+/**
+ * Maybe corrode the player after taking damage if they're wearing *Corrode.
+ **/
+static void _maybe_corrode()
+{
+    int corrosion_sources = you.scan_artefacts(ARTP_CORRODE);
+    int degree = binomial(corrosion_sources, 3);
+    if (degree > 0)
+        you.corrode_equipment("Your corrosive artefact", degree);
+}
+
+/**
+ * Maybe confuse the player after taking damage if they're wearing *Confuse.
+ **/
+static void _maybe_confuse()
+{
+    int confusion_sources = you.scan_artefacts(ARTP_CONFUSE);
+    if (x_chance_in_y(confusion_sources, 100)) {
+        const bool conf = you.confused();
+
+        if (confuse_player(5 + random2(3), true))
+            mprf(MSGCH_WARN, "You are %sconfused.", conf ? "more " : "");
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
         return;
 
-    item_def corpse;
-    if (fill_out_corpse(0, player_mons(false), corpse) == MONS_NO_MONSTER)
-        return;
-
-    if (in_good_standing(GOD_GOZAG))
-        goldify_corpse(corpse);
-
-    if (explode && explode_corpse(corpse, you.pos()))
-        return;
+    monster dummy;
+    dummy.type = player_mons(false);
+    define_monster(&dummy);
+    dummy.position = you.pos();
+    dummy.props["always_corpse"] = true;
+    dummy.mname = you.your_name;
+    dummy.set_hit_dice(you.experience_level);
+    if (explode)
+        dummy.flags &= MF_EXPLODE_KILL;
 
     if (you.form != TRAN_NONE)
         mpr("Your shape twists and changes as you die.");
 
-    int o = get_mitm_slot();
-    if (o == NON_ITEM)
-    {
-        item_was_destroyed(corpse);
-        return;
-    }
-
-    corpse.props[MONSTER_HIT_DICE].get_short() = you.experience_level;
-    corpse.props[CORPSE_NAME_KEY] = you.your_name;
-    corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = 0;
-    mitm[o] = corpse;
-
-    move_item_to_grid(&o, you.pos(), !you.in_water());
+    place_monster_corpse(dummy, false);
 }
 
 #if defined(WIZARD) || defined(DEBUG)
@@ -839,9 +862,29 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     interrupt_activity(AI_HP_LOSS, &hpl);
 
     if (dam > 0 && death_type != KILLED_BY_POISON)
-    {
         you.check_awaken(500);
 
+    const bool non_death = death_type == KILLED_BY_QUITTING
+                        || death_type == KILLED_BY_WINNING
+                        || death_type == KILLED_BY_LEAVING;
+
+    // certain effects (e.g. drowned souls) use KILLED_BY_WATER for flavour
+    // reasons (morgue messages?), with regrettable consequences if we don't
+    // double-check.
+    const bool env_death = source == MID_NOBODY
+                           && (death_type == KILLED_BY_LAVA
+                               || death_type == KILLED_BY_WATER);
+
+    // death's door protects against everything but falling into water/lava,
+    // excessive rot, leaving the dungeon, or quitting.
+    if (you.duration[DUR_DEATHS_DOOR] && !env_death && !non_death
+        && you.hp_max > 0)
+    {
+        return;
+    }
+
+    if (dam > 0 && death_type != KILLED_BY_POISON)
+    {
         int damage_fraction_of_hp = dam * 100 / you.hp_max;
 
         // Check _is_damage_threatening separately for read and drink so they
@@ -867,25 +910,6 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 you.increase_duration(DUR_NO_POTIONS, 1 + random2(dam), 30);
             }
         }
-    }
-
-    const bool non_death = death_type == KILLED_BY_QUITTING
-                        || death_type == KILLED_BY_WINNING
-                        || death_type == KILLED_BY_LEAVING;
-
-    // certain effects (e.g. drowned souls) use KILLED_BY_WATER for flavour
-    // reasons (morgue messages?), with regrettable consequences if we don't
-    // double-check.
-    const bool env_death = source == MID_NOBODY
-                           && (death_type == KILLED_BY_LAVA
-                               || death_type == KILLED_BY_WATER);
-
-    // death's door protects against everything but falling into water/lava,
-    // excessive rot, leaving the dungeon, or quitting.
-    if (you.duration[DUR_DEATHS_DOOR] && !env_death && !non_death
-        && you.hp_max > 0)
-    {
-        return;
     }
 
     if (dam != INSTANT_DEATH)
@@ -958,11 +982,17 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max,
                            damage_desc.c_str()));
 
+            _deteriorate(dam);
             _yred_mirrors_injury(dam, source);
             _maybe_ru_retribution(dam, source);
             _maybe_spawn_monsters(dam, aux, death_type, source);
             _maybe_fog(dam);
             _powered_by_pain(dam);
+            if (death_type != KILLED_BY_POISON)
+            {
+                _maybe_corrode();
+                _maybe_confuse();
+            }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);
         }
@@ -1019,6 +1049,9 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 #endif
 
     crawl_state.cancel_cmd_all();
+
+    if (non_death)
+        you.delay_queue.clear(); // don't lose ev for taking the exit...
 
     // Construct scorefile entry.
     scorefile_entry se(dam, source, death_type, aux, false,

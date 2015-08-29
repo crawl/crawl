@@ -28,7 +28,7 @@ ORIENT: encompass
 SHUFFLE: 123
 SUBST:  ' = '......
 KFEAT:  ' = net trap / needle trap / bolt trap / spear trap / arrow trap
-MONS:   Menkaure, baby alligator, crocodile, kraken, flying skull
+MONS:   Menkaure, crocodile, kraken, flying skull
 MARKER: a = lua:fog_machine { \
              pow_min = 1, pow_max = 2, delay = 3, \
              size = 2, walk_dist = 8, spread_rate= -1, \
@@ -85,17 +85,17 @@ cmBBBBBBBBmWAAAAAAAAAAAAA..IIII''GGGGoDDDDDDDDoOOOOO'XPPPPPPPP
 cmBBBBBBBB+WAAAAAAAAAAAAA..IIII''GGGGoDDDDDDDDoOOOOO'XPPPPPPPP
 cmBBBBBBBBmWAAAAAAAAAAAAA....III''GGGooooooo+ooOOOOO'XPPPPPPPP
 cooooooommmWAAAAAAAAAAAAA1.....WWWWWWWWWWWWW...wwwXUUUUUUUUccc
-ccLLLLLccccWWAAAAAAAAAAAWW.....Wm+mmmmmmmm+ccc.w4wXUUUUUUUcc
+ccLLLLLccccWWAAAAAAAAAAAWW.....Wm+mmmmmmmm+ccc.w3wXUUUUUUUcc
 ccLLLLLLLLccWWWAAAAAAAWWWWWWW..WmCCCCCCCCmWWWccwwwXUUUUUUcc
-ccLLLLLLm+cc+cWAAAAAAAWWWWWWWW3WmCCCCCCCCmWWwwccccXXXXXWcc
+ccLLLLLLm+cc+cWAAAAAAAWWWWWWWW2WmCCCCCCCCmWWwwccccXXXXXWcc
 ccLLLLLmmKccbcWWAAAAAWWWlllaWWWWmCCCCCCCCmWWWWwccTTTTTXWc
 ccLLLLmmKKKccccWWWWWWWWWWllllWWWmCCCCCCCCmWWVwwwTTTTTTXWc
 ccLLLLmKKKKKc|c+++m+++cWlllllllWmCCCCCCCCmWWdWWwTTTTTTXWc
 ccLLLLmKKKKKcccEEEEEEEcclllcccllmCCCCCCCCmWVWWwVTTTTTTXWc
 ccLLLLmKKKKKccEEEEEEEEEccllc|cllmCCCCCCCCmWWwwwwXTTTTTXWc
 ccLLLL+KKKKK+EEEEEEEEEEE+llc+cllmCCCCCCCCmWwwwXXXXXXXXXWc
-ccLLLLcKKKKKccEEEEEEEEEcclllllllmmmmmmmmmmWwwwo555wwwwWWc
-ccLLLLcKKKKKcccEEEEEEEccmmmmmmmmmWWWWWWWWWwwwwo555wwwwWWc
+ccLLLLcKKKKKccEEEEEEEEEcclllllllmmmmmmmmmmWwwwo444wwwwWWc
+ccLLLLcKKKKKcccEEEEEEEccmmmmmmmmmWWWWWWWWWwwwwo444wwwwWWc
 ccLLLLcKKKKKcNcccc+ccccFFFFFFFmmmWccccccccwXXXXXXXXXwwWWc
 ccLLLLccKKKccNNNNmmmccFFFFFFFFFmmWcNNNNNNcXXSSSSSSSXXwWWc
 ccLLLLcccKccNNNNNNNN+FFFFFFFFFFF+WcNNNNNNcXSSSSSSSSSXXWWc
@@ -522,8 +522,8 @@ NAME:   sprint2_smallroom_final_cluster_1
 TAGS:   sprint2_smallroom_final_cluster no_item_gen no_trap_gen no_monster_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 MARKER: + = lua:restrict_door()
 NSUBST: * = 1:a / 1:b / *:|
-KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience
-KITEM:  b = scroll of acquirement / potion of magic q:9 / potion of haste q:3
+KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience q:1
+KITEM:  b = scroll of acquirement q:1 / potion of magic q:9 / potion of haste q:3
 SUBVAULT: D : sprint2_smallroom
 SUBVAULT: E : sprint2_smallroom
 SUBVAULT: F : sprint2_smallroom
@@ -725,8 +725,8 @@ KFEAT:  , = book shop
 KFEAT:  f = any shop
 NSUBST: | = 1:a / 2:b / 1:d / 6:$ / *:|
 KITEM:  $ = gold q:81
-KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience
-KITEM:  b = scroll of acquirement / potion of magic q:9 / potion of haste q:3
+KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience q:1
+KITEM:  b = scroll of acquirement q:1 / potion of magic q:9 / potion of haste q:3
 KITEM:  d = potion of flight q:3
 SUBVAULT: A : sprint2_smallroom
 SUBVAULT: B : sprint2_smallroom
@@ -757,9 +757,9 @@ NSUBST: g = 4:g / *:|
 KMONS:  g = orc priest
 NSUBST: b = 2:i / 1:b / *:|
 NSUBST: f = 1:a / 2:b / 1:h / 9:$ / *:|
-KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience
+KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience q:1
 KITEM:  $ = gold q:81
-KITEM:  b = scroll of acquirement / potion of magic q:9 / potion of haste q:3
+KITEM:  b = scroll of acquirement q:1 / potion of magic q:9 / potion of haste q:3
 KITEM:  h = potion of flight q:3
 MONS:   Nessos, jelly, sixfirhy, Gastronok, orc sorcerer, dire elephant
 SUBST:  . = '.....
@@ -863,7 +863,7 @@ TAGS:   sprint2_light_combat_area no_item_gen no_trap_gen no_pool_fixup no_rotat
 MARKER: + = lua:restrict_door()
 NSUBST: 1 = 1:1 / *:e
 NSUBST: f = 1:f / 1:3 / *:4
-KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience
+KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience q:1
 KFEAT:  e = any shop
 KITEM:  f = potion of flight q:3
 SHUFFLE: 12

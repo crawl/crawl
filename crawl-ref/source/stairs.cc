@@ -176,19 +176,19 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
         else
         {
             mprf("You %s downwards.",
-                 you.flight_mode() ? "fly" : "slide");
+                 you.airborne() ? "fly" : "slide");
         }
     }
     else if (feat_is_gate(stair))
     {
         mprf("You %s %s through the gate.",
-             you.flight_mode() ? "fly" : "go",
+             you.airborne() ? "fly" : "go",
              going_up ? "up" : "down");
     }
     else
     {
         mprf("You %s %swards.",
-             you.flight_mode() ? "fly" : "climb",
+             you.airborne() ? "fly" : "climb",
              going_up ? "up" : "down");
     }
 }
@@ -354,24 +354,20 @@ static bool _fall_down_stairs(const dungeon_feature_type ftype, bool going_up)
 
 static bool _require_runes(dungeon_feature_type ftype)
 {
-    if (ftype != DNGN_ENTER_VAULTS
-        && ftype != DNGN_ENTER_ZOT
-        && ftype != DNGN_ENTER_ZIGGURAT)
+    int min_runes = 0;
+
+    for (branch_iterator it; it; ++it)
     {
-        return false;
+        if (ftype == it->entry_stairs)
+        {
+            if (!is_existing_level(level_id(it->id, 1)))
+                min_runes = runes_for_branch(it->id);
+            break;
+        }
     }
 
-    if ((ftype == DNGN_ENTER_VAULTS
-         && is_existing_level(level_id(BRANCH_VAULTS, 1)))
-        || (ftype == DNGN_ENTER_ZOT
-            && is_existing_level(level_id(BRANCH_ZOT, 1))))
-    {
+    if (min_runes == 0)
         return false;
-    }
-
-    #define ZIG_RUNES 2
-    const int min_runes = ((ftype == DNGN_ENTER_ZOT) ? NUMBER_OF_RUNES_NEEDED :
-                           (ftype == DNGN_ENTER_VAULTS) ? 1 : ZIG_RUNES);
 
     if (runes_in_pack() < min_runes)
     {
@@ -517,7 +513,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
 
     // Falling down is checked before the transition if going upstairs, since
     // it might prevent the transition itself.
-    if (going_up && _fall_down_stairs(stair_find, going_up))
+    if (going_up && _fall_down_stairs(stair_find, true))
         return;
 
     if (shaft)
@@ -546,8 +542,8 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         if (force_stair && shaft_depth > 1)
             howfar = make_stringf(" for %d floors", shaft_depth);
 
-        mprf("You %s a shaft%s!", you.flight_mode() ? "are sucked into"
-                                                    : "fall through",
+        mprf("You %s a shaft%s!", you.airborne() ? "are sucked into"
+                                                 : "fall through",
                                   howfar.c_str());
 
         // Shafts are one-time-use.
@@ -591,7 +587,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         take_note(Note(NOTE_MESSAGE, 0, 0, "Took an exit into the Abyss."), true);
     }
     else if (stair_find == DNGN_EXIT_ABYSS
-             && you.char_direction != GDT_GAME_START)
+             && you.chapter != CHAPTER_POCKET_ABYSS)
     {
         mark_milestone("abyss.exit", "escaped from the Abyss!");
         you.attribute[ATTR_BANISHMENT_IMMUNITY] = you.elapsed_time + 100
@@ -669,7 +665,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         && old_level.branch != you.where_are_you)
     {
         mprf("Welcome %sto %s!",
-             you.char_direction == GDT_GAME_START ? "" : "back ",
+             you.chapter == CHAPTER_POCKET_ABYSS ? "" : "back ",
              branches[you.where_are_you].longname);
     }
 
@@ -679,7 +675,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         && force_stair != DNGN_ABYSSAL_STAIR
         && force_stair != DNGN_EXIT_ABYSS)
     {
-        _fall_down_stairs(stair_find, !going_up);
+        _fall_down_stairs(stair_find, false);
     }
 
     if (shaft)
@@ -798,9 +794,6 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
     if (!wizard)
         _update_travel_cache(old_level, stair_pos);
 
-    if (!allow_control_teleport(true))
-        mprf(MSGCH_WARN, "You sense a powerful magical force warping space.");
-
     // Preventing obvious finding of stairs at your position.
     env.map_seen.set(you.pos());
 
@@ -813,14 +806,6 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         maybe_update_stashes();
 
     request_autopickup();
-#if TAG_MAJOR_VERSION == 34
-
-    // Zotdef: returning from portals (e.g. bazaar) paralyses the player in
-    // place for 5 moves. Nasty, but punishes players for using portals as
-    // quick-healing stopovers.
-    if (!going_up && crawl_state.game_is_zotdef())
-        start_delay(DELAY_UNINTERRUPTIBLE, 5);
-#endif
 }
 
 void up_stairs(dungeon_feature_type force_stair, bool wizard)
@@ -937,7 +922,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         return level_id(BRANCH_VESTIBULE);
 
     case DNGN_EXIT_ABYSS:
-        if (you.char_direction == GDT_GAME_START)
+        if (you.chapter == CHAPTER_POCKET_ABYSS)
             return level_id(BRANCH_DUNGEON, 1);
 #if TAG_MAJOR_VERSION == 34
     case DNGN_EXIT_PORTAL_VAULT:
@@ -1011,8 +996,10 @@ static void _update_level_state()
         if (grd(*ri) == DNGN_SLIMY_WALL)
             env.level_state |= LSTATE_SLIMY_WALL;
 
-    env.orb_pos = orb_position();
-    if (player_has_orb())
+    env.orb_pos = coord_def();
+    if (item_def* orb = find_floor_item(OBJ_ORBS, ORB_ZOT))
+        env.orb_pos = orb->pos;
+    else if (player_has_orb())
     {
         env.orb_pos = you.pos();
         invalidate_agrid(true);

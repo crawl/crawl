@@ -23,6 +23,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
+#include "item_use.h"
 #include "melee_attack.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -47,6 +48,35 @@
 #include "travel.h"
 
 /**
+ * Switch from a bad weapon to melee.
+ *
+ * This function assumes some weapon is being wielded.
+ * @return whether a swap did occur.
+ */
+static bool _autoswitch_to_melee()
+{
+    bool penance;
+    if (is_melee_weapon(*you.weapon())
+        && !needs_handle_warning(*you.weapon(), OPER_ATTACK, penance))
+    {
+        return false;
+    }
+
+    int item_slot;
+    if (you.equip[EQ_WEAPON] == letter_to_index('a'))
+        item_slot = letter_to_index('b');
+    else if (you.equip[EQ_WEAPON] == letter_to_index('b'))
+        item_slot = letter_to_index('a');
+    else
+        return false;
+
+    if (!is_melee_weapon(you.inv[item_slot]))
+        return false;
+
+    return wield_weapon(true, item_slot);
+}
+
+/**
  * Handle melee combat between attacker and defender.
  *
  * Works using the new fight rewrite. For a monster attacking, this method
@@ -65,7 +95,13 @@
  */
 bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 {
-    const int orig_hp = defender->stat_hp();
+    ASSERT(attacker); // XXX: change to actor &attacker
+    ASSERT(defender); // XXX: change to actor &defender
+
+    // A dead defender would result in us returning true without actually
+    // taking an action.
+    ASSERT(defender->alive());
+
     if (defender->is_player())
     {
         ASSERT(!crawl_state.game_is_arena());
@@ -99,18 +135,24 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             return false;
         }
 
+        if (Options.auto_switch
+            && you.weapon()
+            && _autoswitch_to_melee())
+        {
+            return true; // Is this right? We did take time, but we didn't melee
+        }
+
         melee_attack attk(&you, defender);
 
         if (simu)
             attk.simu = true;
 
         // We're trying to hit a monster, break out of travel/explore now.
-        if (!travel_kill_monster(defender->type))
-            interrupt_activity(AI_HIT_MONSTER, defender->as_monster());
+        interrupt_activity(AI_HIT_MONSTER, defender->as_monster());
 
         // Check if the player is fighting with something unsuitable,
         // or someone unsuitable.
-        if (you.can_see(defender)
+        if (you.can_see(*defender)
             && !wielded_weapon_check(attk.weapon))
         {
             you.turn_is_over = false;
@@ -148,11 +190,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     {
         // Pretend an attack happened,
         // so the weapon doesn't advance unecessarily.
-        return true;
-    }
-    else if (attacker->type == MONS_GRAND_AVATAR
-             && !grand_avatar_check_melee(attacker->as_monster(), defender))
-    {
         return true;
     }
 
@@ -249,10 +286,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
             if (found)
             {
-                const bool could_see = you.can_see(mons);
+                const bool could_see = you.can_see(*mons);
                 if (mons->move_to_pos(hopspot))
                 {
-                    if (could_see || you.can_see(mons))
+                    if (could_see || you.can_see(*mons))
                     {
                         mprf("%s hops backward while attacking.",
                              mons->name(DESC_THE, true).c_str());
@@ -281,13 +318,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     // A spectral weapon attacks whenever the player does
     if (!simu && attacker->props.exists("spectral_weapon"))
         trigger_spectral_weapon(attacker, defender);
-    else if (!simu
-             && attacker->is_monster()
-             && attacker->as_monster()->has_ench(ENCH_GRAND_AVATAR))
-    {
-        trigger_grand_avatar(attacker->as_monster(), defender, SPELL_NO_SPELL,
-                             orig_hp);
-    }
 
     return true;
 }
@@ -295,13 +325,14 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 stab_type find_stab_type(const actor *attacker,
                          const actor *defender)
 {
+    ASSERT(defender); // XXX: change to const actor &defender
     const monster* def = defender->as_monster();
     stab_type unchivalric = STAB_NO_STAB;
 
     // No stabbing monsters that cannot fight (e.g.  plants) or monsters
     // the attacker can't see (either due to invisibility or being behind
     // opaque clouds).
-    if (defender->cannot_fight() || (attacker && !attacker->can_see(defender)))
+    if (defender->cannot_fight() || (attacker && !attacker->can_see(*defender)))
         return unchivalric;
 
     // Distracted (but not batty); this only applies to players.
@@ -493,11 +524,20 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
 bool wielded_weapon_check(item_def *weapon, bool no_message)
 {
     bool penance = false;
-    if (!weapon
-        || (!needs_handle_warning(*weapon, OPER_ATTACK, penance)
-             && is_melee_weapon(*weapon))
-        || you.received_weapon_warning
+    if (you.received_weapon_warning
+        || (weapon
+            && !needs_handle_warning(*weapon, OPER_ATTACK, penance)
+            && is_melee_weapon(*weapon))
         || you.confused())
+    {
+        return true;
+    }
+
+    // Don't pester the player if they're using UC or if they don't have any
+    // melee weapons yet.
+    if (!weapon
+        && (you.skill(SK_UNARMED_COMBAT) > 0
+            || !any_of(you.inv.begin(), you.inv.end(), is_melee_weapon)))
     {
         return true;
     }
@@ -505,11 +545,18 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     if (no_message)
         return false;
 
-    string prompt  = "Really attack while wielding " + weapon->name(DESC_YOUR) + "?";
+    string prompt;
+    if (weapon)
+        prompt = "Really attack while wielding " + weapon->name(DESC_YOUR) + "?";
+    else
+        prompt = "Really attack barehanded?";
     if (penance)
         prompt += " This could place you under penance!";
 
     const bool result = yesno(prompt.c_str(), true, 'n');
+
+    if (!result)
+        canned_msg(MSG_OK);
 
     learned_something_new(HINT_WIELD_WEAPON); // for hints mode Rangers
 
@@ -568,11 +615,10 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
 
     const item_def* weap = attacker.weapon(which_attack);
 
-    if (!attacker.confused()
-        && (weap && item_attack_skill(*weap) == SK_AXES
+    if (weap && item_attack_skill(*weap) == SK_AXES
             || attacker.is_player()
                && (you.form == TRAN_HYDRA && you.heads() > 1
-                   || you.duration[DUR_CLEAVE])))
+                   || you.duration[DUR_CLEAVE]))
     {
         const coord_def atk = attacker.pos();
         coord_def atk_vector = def - atk;
@@ -624,6 +670,28 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
     }
 }
 
+/**
+ * What skill is required to reach mindelay with a weapon? May be >27.
+ * @param weapon The weapon to be considered.
+ * @returns The level of the relevant skill you must reach.
+ */
+int weapon_min_delay_skill(const item_def &weapon)
+{
+    const int speed = property(weapon, PWPN_SPEED);
+    const int mindelay = weapon_min_delay(weapon);
+    return (speed - mindelay) * 2;
+}
+
+/**
+ * How fast will this weapon get from your skill training?
+ *
+ * Does NOT take speed brand into account, since the brand shouldn't affect how
+ * long you will continue to gain benefits from training the weapon skill, just
+ * how big those benefits are.
+ * @param weapon the weapon to be considered.
+ * @returns How many aut the fastest possible attack with a weapon of this kind
+ *          would take.
+ */
 int weapon_min_delay(const item_def &weapon)
 {
     const int base = property(weapon, PWPN_SPEED);

@@ -75,7 +75,6 @@ static spell_type search_order_conj[] =
 static spell_type search_order_selfench[] =
 {
     SPELL_SUMMON_DRAGON,
-    SPELL_SINGULARITY,
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_HAUNT,
@@ -90,11 +89,9 @@ static spell_type search_order_selfench[] =
     SPELL_SUMMON_DEMON,
     SPELL_SUMMON_VERMIN,
     SPELL_SUMMON_SWARM,
-    SPELL_SIMULACRUM,
     SPELL_BATTLESPHERE,
     SPELL_FULMINANT_PRISM,
     SPELL_SUMMON_ICE_BEAST,
-    SPELL_ANIMATE_DEAD,
     SPELL_SWIFTNESS,
     SPELL_BLINK,
     SPELL_SUMMON_BUTTERFLIES,
@@ -152,8 +149,7 @@ void ghost_demon::reset()
     att_flav         = AF_PLAIN;
     resists          = 0;
     colour           = COLOUR_UNDEF;
-    fly              = FL_NONE;
-    acting_part      = MONS_0;
+    flies            = false;
 }
 
 /**
@@ -178,18 +174,23 @@ static brand_type _random_special_pan_lord_brand()
 }
 
 #define ADD_SPELL(which_spell) \
-    { \
-        slot.spell = which_spell; \
-        if (slot.spell != SPELL_NO_SPELL) \
-            spells.push_back(slot); \
-    }
+    do { \
+        const auto spell = (which_spell); \
+        if (spell != SPELL_NO_SPELL) \
+            spells.emplace_back(spell, 0, MON_SPELL_DEMONIC); \
+    } while (0)
+
+static int _panlord_random_resist_level()
+{
+    return random_choose_weighted(1, -1,
+                                  3,  0,
+                                  3,  1,
+                                  3,  2,
+                                  0);
+}
 
 void ghost_demon::init_pandemonium_lord()
 {
-    mon_spell_slot slot;
-    slot.freq = 12;
-    slot.flags = MON_SPELL_DEMONIC;
-
     do
     {
         name = make_name(random_int());
@@ -205,17 +206,8 @@ void ghost_demon::init_pandemonium_lord()
     see_invis = true;
 
     resists = 0;
-
-    if (!one_chance_in(3))
-        resists |= MR_RES_FIRE * random_range(1, 2);
-    else if (one_chance_in(10))
-        resists |= MR_VUL_FIRE;
-
-    if (!one_chance_in(3))
-        resists |= MR_RES_COLD * random_range(1, 2);
-    else
-        resists |= MR_VUL_COLD;
-
+    resists |= mrd(MR_RES_FIRE, _panlord_random_resist_level());
+    resists |= mrd(MR_RES_COLD, _panlord_random_resist_level());
     // Demons, like ghosts, automatically get poison res. and life prot.
 
     // resist electricity:
@@ -226,9 +218,7 @@ void ghost_demon::init_pandemonium_lord()
     damage = 20 + roll_dice(2, 20);
 
     // Does demon fly?
-    fly = (one_chance_in(3) ? FL_NONE :
-           one_chance_in(5) ? FL_LEVITATE
-                            : FL_WINGED);
+    flies = x_chance_in_y(2, 3);
 
     // hit dice:
     xl = 10 + roll_dice(2, 10);
@@ -314,7 +304,7 @@ void ghost_demon::init_pandemonium_lord()
         if (one_chance_in(15))
             ADD_SPELL(SPELL_DIG);
 
-        fixup_spells(spells, xl);
+        normalize_spell_freq(spells, xl);
     }
 
     colour = one_chance_in(10) ? ETC_RANDOM : random_monster_colour();
@@ -442,7 +432,7 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
     best_skill_level = you.skills[best_skill];
     xl = you.experience_level;
 
-    fly = FL_LEVITATE;
+    flies = true;
 
     add_spells(actual_ghost);
 }
@@ -631,7 +621,7 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
         power = 100;
 
     colour = weapon.get_colour();
-    fly = FL_LEVITATE;
+    flies = true;
 
     // We want Tukima to reward characters who invest heavily in
     // Hexes skill. Therefore, weapons benefit from very high skill.
@@ -675,7 +665,7 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon,
         wpn_skill = 270;
 
     colour = weapon.get_colour();
-    fly = FL_LEVITATE;
+    flies = true;
 
     // Hit dice (to hit) scales with weapon skill alone.
     // Damage scales with weapon skill, but how well depends on spell power.
@@ -723,9 +713,6 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon,
 void ghost_demon::add_spells(bool actual_ghost)
 {
     spells.clear();
-    mon_spell_slot slot;
-    slot.freq = 12;
-    slot.flags = MON_SPELL_WIZARD;
 
     for (int i = 0; i < you.spell_no; i++)
     {
@@ -736,23 +723,21 @@ void ghost_demon::add_spells(bool actual_ghost)
             && is_valid_mon_spell(spell)
             && x_chance_in_y(chance*chance, 50*50))
         {
-            slot.spell = spell;
-            spells.push_back(slot);
+            spells.emplace_back(spell, 0, MON_SPELL_WIZARD);
         }
     }
 
-    fixup_spells(spells, xl);
+    normalize_spell_freq(spells, xl);
 
+    // After normalizing the frequencies!
     if (species_is_draconian(species)
         && species != SP_BASE_DRACONIAN
         && species != SP_GREY_DRACONIAN
         // Don't give pillusions extra breath
         && actual_ghost)
     {
-        slot.spell = SPELL_BOLT_OF_DRAINING;
-        slot.freq  = 33; // Not too common
-        slot.flags = MON_SPELL_NATURAL | MON_SPELL_BREATH;
-        spells.push_back(slot);
+        spells.emplace_back(SPELL_BOLT_OF_DRAINING, 33, // Not too common
+                            MON_SPELL_NATURAL | MON_SPELL_BREATH);
     }
 }
 
@@ -901,7 +886,7 @@ bool debug_check_ghosts()
             return false;
         // Many combining characters can come per every letter, but if there's
         // that much, it's probably a maliciously forged ghost of some kind.
-        if (ghost.name.length() > kNameLen * 10 || ghost.name.empty())
+        if (ghost.name.length() > MAX_NAME_LENGTH * 10 || ghost.name.empty())
             return false;
         if (ghost.name != trimmed_string(ghost.name))
             return false;
@@ -950,275 +935,4 @@ int ghost_rank_to_level(const int rank)
     default:
         die("Bad ghost rank %d", rank);
     }
-}
-
-static spell_type servitor_spells[] =
-{
-    // primary spells
-    SPELL_LEHUDIBS_CRYSTAL_SPEAR,
-    SPELL_IOOD,
-    SPELL_IRON_SHOT,
-    SPELL_BOLT_OF_FIRE,
-    SPELL_BOLT_OF_COLD,
-    SPELL_POISON_ARROW,
-    SPELL_LIGHTNING_BOLT,
-    SPELL_BOLT_OF_MAGMA,
-    SPELL_BOLT_OF_DRAINING,
-    SPELL_VENOM_BOLT,
-    SPELL_THROW_ICICLE,
-    SPELL_STONE_ARROW,
-    SPELL_ISKENDERUNS_MYSTIC_BLAST,
-    // secondary spells
-    SPELL_CONJURE_BALL_LIGHTNING,
-    SPELL_FIREBALL,
-    SPELL_AIRSTRIKE,
-    SPELL_LRD,
-    SPELL_FREEZING_CLOUD,
-    SPELL_POISONOUS_CLOUD,
-    SPELL_FORCE_LANCE,
-    SPELL_DAZZLING_SPRAY,
-    SPELL_MEPHITIC_CLOUD,
-    // fallback spells
-    SPELL_STICKY_FLAME,
-    SPELL_THROW_FLAME,
-    SPELL_THROW_FROST,
-    SPELL_FREEZE,
-    SPELL_FLAME_TONGUE,
-    SPELL_STING,
-    SPELL_SANDBLAST,
-    SPELL_MAGIC_DART,
-    // end search
-    SPELL_NO_SPELL,
-};
-
-void ghost_demon::init_spellforged_servitor(actor* caster)
-{
-    mon_spell_slot slot;
-    slot.flags = MON_SPELL_WIZARD;
-    monster* mon = caster->is_monster() ? caster->as_monster() : nullptr;
-
-    int pow = mon ? 6 * mon->spell_hd(SPELL_SPELLFORGED_SERVITOR)
-                  : calc_spell_power(SPELL_SPELLFORGED_SERVITOR, true);
-
-    colour = LIGHTMAGENTA; // cf. mon-data.h
-    speed = 10;
-    ev = 10;
-    ac = 10;
-    xl = 9 + div_rand_round(pow, 14);
-    max_hp = 60 + roll_dice(7, 5); // 67-95
-    damage = 0;
-    att_type = AT_NONE;
-
-    int i = 0;
-    spell_type spell = SPELL_NO_SPELL;
-    while ((spell = servitor_spells[i++]) != SPELL_NO_SPELL)
-    {
-        if (mon && mon->has_spell(spell)
-            || !mon && you.has_spell(spell) && raw_spell_fail(spell) < 50)
-        {
-            slot.spell = spell;
-            spells.push_back(slot);
-        }
-    }
-
-    const size_t count = spells.size();
-    const int base_freq = mon ? 67 : 200;
-    for (auto& spellslot : spells)
-        spellslot.freq = base_freq / count;
-}
-
-const mon_spell_slot lich_primary_summoner_spells[] =
-{
-    { SPELL_SUMMON_GREATER_DEMON, 18, MON_SPELL_WIZARD },
-};
-
-const mon_spell_slot lich_primary_conjurer_spells[] =
-{
-    { SPELL_IOOD, 18, MON_SPELL_WIZARD },
-    { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 18, MON_SPELL_WIZARD },
-    { SPELL_CORROSIVE_BOLT, 18, MON_SPELL_WIZARD },
-};
-
-const mon_spell_slot lich_secondary_spells[] =
-{
-    { SPELL_MALIGN_GATEWAY, 12, MON_SPELL_WIZARD },
-    { SPELL_SPELLFORGED_SERVITOR, 12, MON_SPELL_WIZARD },
-    { SPELL_SIMULACRUM, 12, MON_SPELL_WIZARD },
-    { SPELL_POISON_ARROW, 12, MON_SPELL_WIZARD },
-    { SPELL_HAUNT, 12, MON_SPELL_WIZARD },
-    { SPELL_SUMMON_HORRIBLE_THINGS, 12, MON_SPELL_WIZARD },
-    { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
-    { SPELL_BATTLESPHERE, 12, MON_SPELL_WIZARD },
-    { SPELL_BOLT_OF_DRAINING, 12, MON_SPELL_WIZARD },
-    { SPELL_AGONY, 12, MON_SPELL_WIZARD },
-    { SPELL_BOLT_OF_FIRE, 12, MON_SPELL_WIZARD },
-    { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
-    { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
-    { SPELL_THROW_ICICLE, 12, MON_SPELL_WIZARD },
-    { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
-    { SPELL_LRD, 12, MON_SPELL_WIZARD },
-    { SPELL_PETRIFY, 12, MON_SPELL_WIZARD },
-    { SPELL_LIGHTNING_BOLT, 12, MON_SPELL_WIZARD },
-    { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
-    { SPELL_CONFUSE, 12, MON_SPELL_WIZARD },
-    { SPELL_SLOW, 12, MON_SPELL_WIZARD },
-    { SPELL_SLEEP, 12, MON_SPELL_WIZARD },
-};
-
-const mon_spell_slot lich_buff_spells[] =
-{
-    { SPELL_HASTE, 12, MON_SPELL_WIZARD },
-    { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
-    { SPELL_TELEPORT_SELF, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
-    { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
-};
-
-static bool _lich_spell_is_used(const monster_spells &spells, spell_type spell)
-{
-    for (auto slot : spells)
-        if (slot.spell == spell)
-            return true;
-
-    return false;
-}
-
-static bool _lich_has_spell_of_school(const monster_spells &spells,
-                                      spschool_flag_type discipline)
-{
-    for (auto slot : spells)
-        if (spell_typematch(slot.spell, discipline))
-            return true;
-
-    return false;
-}
-
-static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
-                                int *weights, int total_weight,
-                                bool use_weights, bool force_conj)
-{
-    if (_lich_spell_is_used(spells, spell))
-        return false;
-
-    if (force_conj && !_lich_has_spell_of_school(spells, SPTYP_CONJURATION))
-    {
-        return spell_typematch(spell, SPTYP_CONJURATION)
-            && spell != SPELL_BATTLESPHERE
-            && spell != SPELL_SPELLFORGED_SERVITOR;
-    }
-
-    if (!use_weights)
-        return true;
-
-    spschools_type disciplines = get_spell_disciplines(spell);
-    int num_disciplines = count_bits(disciplines);
-
-    for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
-    {
-        const auto bit = spschools_type::exponent(exponent);
-        if (disciplines & bit)
-            if (x_chance_in_y(weights[exponent], total_weight * num_disciplines))
-                return true;
-    }
-
-    return false;
-}
-
-static void _calculate_lich_spell_weights(const monster_spells &spells,
-                                          int *weights, int &total_weight)
-{
-    for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
-        // there are no primary hexes, and hexes are interesting to have on
-        // liches, so give them a slightly higher chance
-        weights[exponent] = (1 << exponent) == SPTYP_HEXES
-            ? SPTYP_LAST_EXPONENT / 4
-            : 1;
-
-    for (auto slot : spells)
-        for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
-        {
-            const auto discipline = spschools_type::exponent(exponent);
-            if (spell_typematch(slot.spell, discipline))
-            {
-                // or else we just get entirely bolts
-                int increment = discipline == SPTYP_CONJURATION
-                    ? SPTYP_LAST_EXPONENT / 4
-                    : SPTYP_LAST_EXPONENT;
-                weights[exponent] = min(
-                     weights[exponent] + increment,
-                     (int)SPTYP_LAST_EXPONENT * 2
-                );
-            }
-        }
-
-    total_weight = 0;
-    for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
-        total_weight += weights[i];
-
-}
-
-static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
-                            size_t set_len, bool force_conj)
-{
-    int weights[SPTYP_LAST_EXPONENT + 1];
-    int total_weight;
-    _calculate_lich_spell_weights(spells, weights, total_weight);
-
-    mon_spell_slot next_spell;
-    do {
-       next_spell = set[random2(set_len)];
-    } while (!_lich_spell_is_good(spells, next_spell.spell, weights,
-                                  total_weight, set == lich_secondary_spells,
-                                  force_conj));
-
-    next_spell.freq = next_spell.freq - 4 + random2(9);
-    spells.push_back(next_spell);
-}
-
-void ghost_demon::init_lich(monster_type type)
-{
-    monsterentry* me = get_monster_data(type);
-    ASSERT(me);
-
-    colour = me->colour;
-    speed = me->speed;
-    ev = me->ev;
-    ac = me->AC;
-    xl = me->hpdice[0];
-    max_hp = hit_points(xl, me->hpdice[1], me->hpdice[2]);
-    damage = me->attack[0].damage;
-    att_type = me->attack[0].type;
-    att_flav = me->attack[0].flavour;
-    see_invis = true;
-
-    size_t count = 5 + random2(3);
-
-    if (coinflip())
-    {
-        _add_lich_spell(spells, lich_primary_summoner_spells,
-                        ARRAYSZ(lich_primary_summoner_spells), false);
-    }
-    else
-        _add_lich_spell(spells, lich_primary_conjurer_spells,
-                        ARRAYSZ(lich_primary_conjurer_spells), false);
-
-    if (type == MONS_ANCIENT_LICH && coinflip())
-    {
-        _add_lich_spell(spells, lich_primary_conjurer_spells,
-                        ARRAYSZ(lich_primary_conjurer_spells), false);
-    }
-
-    bool force_conj = true;
-    while (spells.size() < count - 1)
-    {
-        _add_lich_spell(spells, lich_secondary_spells,
-                        ARRAYSZ(lich_secondary_spells), force_conj);
-        force_conj = false;
-    }
-
-    _add_lich_spell(spells, lich_buff_spells,
-                    ARRAYSZ(lich_buff_spells), false);
-
-    // not fixup_spells, because we want to handle marking emergency spells
-    // ourselves, and we should never have any SPELL_NO_SPELL to strip out
-    normalize_spell_freq(spells, xl);
 }

@@ -47,8 +47,6 @@
 #include "viewmap.h"
 #include "xom.h"
 
-static void _quadrant_blink(coord_def dir, int pow);
-
 /**
  * Place a cloud of translocational energy at a player's previous location,
  * to make it easier for players to tell what just happened.
@@ -80,7 +78,7 @@ void disjunction()
     for (int step = 0; step < steps; ++step)
     {
         vector<monster*> mvec;
-        for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+        for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE); ri; ++ri)
         {
             monster* mons = monster_at(*ri);
             if (!mons || !you.see_cell(*ri))
@@ -140,76 +138,6 @@ void uncontrolled_blink(bool override_stasis)
     move_player_to_grid(target, false);
     _place_tloc_cloud(origin);
 }
-
-/**
- * Attempt to blink the player to a random nearby tile, in a direction of
- * the player's choosing.
- *
- * @param pow           Determines the number of iterations to run for (1-21),
- *                      which increases the odds of actually getting a blink in
- *                      the right direction.
- * @param fail          Whether this came from a miscast spell (& should
- *                      therefore fail after selecting a direction)
- * @param safe_cancel   Whether it's OK to let the player cancel the control
- *                      of the blink (or whether there should be a prompt -
- *                      for e.g. cblink under the ORB, in which a recast could
- *                      turn into random blink instead)
- * @param end_ctele     Whether to end cTele.
- * @return              Whether the blink succeed, aborted, or was miscast.
- */
-spret_type semicontrolled_blink(int pow, bool fail, bool safe_cancel,
-                                bool end_ctele)
-{
-    dist bmove;
-    direction_chooser_args args;
-    args.restricts = DIR_DIR;
-    args.mode = TARG_ANY;
-
-    while (true)
-    {
-        mprf(MSGCH_PROMPT, "Which direction? [ESC to cancel]");
-        direction(bmove, args);
-
-        if (crawl_state.seen_hups)
-        {
-            mpr("Cancelling blink due to HUP.");
-            return SPRET_ABORT;
-        }
-
-        if (bmove.isValid && !bmove.delta.origin())
-            break;
-
-        if (safe_cancel
-            || yesno("Are you sure you want to cancel this blink?", false ,'n'))
-        {
-            canned_msg(MSG_OK);
-            return SPRET_ABORT;
-        }
-    }
-
-    fail_check();
-
-    if (you.no_tele(true, true, true))
-    {
-        canned_msg(MSG_STRANGE_STASIS);
-        return SPRET_SUCCESS; // of a sort
-    }
-
-    if (!you.attempt_escape(2)) // prints its own messages
-        return SPRET_SUCCESS; // of a sort
-
-    _quadrant_blink(bmove.delta, pow);
-    // Controlled blink causes glowing.
-    contaminate_player(1000, true);
-    // End teleport control if this was a random blink upgraded by cTele.
-    if (end_ctele && you.duration[DUR_CONTROL_TELEPORT])
-    {
-        mprf(MSGCH_DURATION, "You feel uncertain.");
-        you.duration[DUR_CONTROL_TELEPORT] = 0;
-    }
-    return SPRET_SUCCESS;
-}
-
 
 /**
  * Let the player choose a destination for their controlled blink.
@@ -387,35 +315,17 @@ spret_type controlled_blink(bool fail, bool safe_cancel)
 /**
  * Cast the player spell Blink.
  *
- * @param allow_control     Whether cTele can be used to transform the blink
- *                          into a semicontrolled blink. (False for e.g. Xom.)
  * @param fail              Whether the player miscast the spell.
  * @return                  Whether the spell was successfully cast, aborted,
  *                          or miscast.
  */
-spret_type cast_blink(bool allow_control, bool fail)
+spret_type cast_blink(bool fail)
 {
     // effects that cast the spell through the player, I guess (e.g. xom)
     if (you.no_tele(false, false, true))
         return fail ? SPRET_FAIL : SPRET_SUCCESS; // probably always SUCCESS
 
-    if (allow_control && player_control_teleport()
-        && allow_control_teleport(true))
-    {
-        if (!you.confused())
-            return semicontrolled_blink(100, fail);
-
-        // can't put this in allow_control_teleport(), since that's called for
-        // status lights, etc (and we don't want those to flip on and off
-        // whenever you're confused... probably?)
-        mpr("You're too confused to control your translocation!");
-        // anyway, fallthrough to random blink
-    }
-
     fail_check();
-    // print messages only after successfully casting
-    if (allow_control && player_control_teleport())
-        allow_control_teleport();
     uncontrolled_blink();
     return SPRET_SUCCESS;
 }
@@ -423,13 +333,11 @@ spret_type cast_blink(bool allow_control, bool fail)
 /**
  * Cast the player spell Controlled Blink.
  *
- * @param pow     The power with which the spell is being cast.
- *                Only used when the blink is degraded to semicontrolled.
  * @param fail    Whether the player miscast the spell.
  * @param safe    Whether it's safe to abort (not e.g. unknown ?blink)
  * @return        Whether the spell was successfully cast, aborted, or miscast.
  */
-spret_type cast_controlled_blink(int pow, bool fail, bool safe)
+spret_type cast_controlled_blink(bool fail, bool safe)
 {
     // don't prompt if it's useless
     if (you.no_tele(true, true, true))
@@ -446,57 +354,19 @@ spret_type cast_controlled_blink(int pow, bool fail, bool safe)
         return SPRET_ABORT;
     }
 
-    if (!allow_control_teleport())
-        return semicontrolled_blink(pow, fail, safe, false);
+    if (player_has_orb())
+    {
+        if (!yesno("Your blink will be uncontrolled - continue anyway?",
+                   false, 'n'))
+        {
+            return SPRET_ABORT;
+        }
+
+        mprf(MSGCH_ORB, "The Orb prevents control of your translocation!");
+        return cast_blink(fail);
+    }
 
     return controlled_blink(fail, safe);
-}
-
-/**
- * Can the player control their teleportation?
- *
- * Doesn't guarantee that they *can*, just that there aren't any effects
- * preventing them from doing so.
- *
- * @param quiet     Whether to suppress messages.
- * @return          Whether the player can currently control their blinks/
- *                  teleports.
- */
-bool allow_control_teleport(bool quiet)
-{
-    // Attempt to order from most to least permanent.
-    if (orb_haloed(you.pos()))
-    {
-        if (!quiet)
-            mprf(MSGCH_ORB, "The Orb prevents control of your teleportation!");
-        return false;
-    }
-
-    if (testbits(env.level_flags, LFLAG_NO_TELE_CONTROL))
-    {
-        if (!quiet)
-            mpr("A powerful magic prevents control of your teleportation.");
-        return false;
-    }
-
-    if (you.beheld())
-    {
-        if (!quiet)
-        {
-            mpr("It is impossible to concentrate on your destination while "
-                "mesmerised.");
-        }
-        return false;
-    }
-
-    return true;
-}
-
-spret_type cast_teleport_self(bool fail)
-{
-    fail_check();
-    you_teleport();
-    return SPRET_SUCCESS;
 }
 
 void you_teleport()
@@ -516,20 +386,14 @@ void you_teleport()
 
         int teleport_delay = 3 + random2(3);
 
-        // Doesn't care whether the cTele will actually work or not.
-        if (player_control_teleport())
+        if (player_in_branch(BRANCH_ABYSS))
         {
-            mpr("You feel your translocation being delayed.");
-            teleport_delay += 1 + random2(3);
-        }
-        if (player_in_branch(BRANCH_ABYSS) && !one_chance_in(5))
-        {
-            mpr("You feel the power of the Abyss delaying your translocation.");
+            mpr("You feel the power of the Abyss delaying your translocation!");
             teleport_delay += 5 + random2(10);
         }
-        else if (orb_haloed(you.pos()))
+        else if (player_has_orb())
         {
-            mprf(MSGCH_ORB, "You feel the Orb delaying this translocation!");
+            mprf(MSGCH_ORB, "You feel the Orb delaying your translocation!");
             teleport_delay += 5 + random2(5);
         }
 
@@ -588,18 +452,8 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 #endif
 }
 
-static bool _teleport_player(bool allow_control, bool wizard_tele,
-                             bool teleportitis)
+static bool _teleport_player(bool wizard_tele, bool teleportitis)
 {
-    bool is_controlled = (allow_control && !you.confused()
-                          && player_control_teleport()
-                          && allow_control_teleport()
-                          && !you.berserk());
-
-    // All wizard teleports are automatically controlled.
-    if (wizard_tele)
-        is_controlled = true;
-
     if (!wizard_tele && !teleportitis
         && (crawl_state.game_is_sprint() || you.no_tele(true, true))
             && !player_in_branch(BRANCH_ABYSS))
@@ -635,16 +489,8 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
     const coord_def old_pos = you.pos();
     bool      large_change  = false;
 
-    if (is_controlled)
+    if (wizard_tele)
     {
-        // Only have the messages and the more prompt for non-wizard.
-        if (!wizard_tele)
-        {
-            mpr("You may choose your destination (press '.' or delete to select).");
-            mpr("Expect minor deviation.");
-            more();
-        }
-
         while (true)
         {
             level_pos lpos;
@@ -658,116 +504,29 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
             {
                 mprf(MSGCH_ERROR, "Controlled teleport interrupted by HUP signal, "
                                   "cancelling teleport.");
-                if (!wizard_tele)
-                    contaminate_player(1000, true);
                 return false;
             }
 
             dprf("Target square (%d,%d)", pos.x, pos.y);
 
             if (!chose || pos == you.pos())
-            {
-                if (!wizard_tele)
-                {
-                    if (!yesno("Are you sure you want to cancel this teleport?",
-                               true, 'n'))
-                    {
-                        continue;
-                    }
-                }
-                if (!wizard_tele)
-                    contaminate_player(1000, true);
                 return false;
-            }
 
-            monster* beholder = you.get_beholder(pos);
-            if (beholder && !wizard_tele)
-            {
-                mprf("You cannot teleport away from %s!",
-                     beholder->name(DESC_THE, true).c_str());
-                mpr("Choose another destination (press '.' or delete to select).");
-                more();
-                continue;
-            }
-
-            monster* fearmonger = you.get_fearmonger(pos);
-            if (fearmonger && !wizard_tele)
-            {
-                mprf("You cannot teleport closer to %s!",
-                     fearmonger->name(DESC_THE, true).c_str());
-                mpr("Choose another destination (press '.' or delete to select).");
-                more();
-                continue;
-            }
             break;
         }
 
-        // Don't randomly walk wizard teleports.
-        if (!wizard_tele)
+        if (!you.see_cell(pos))
+            large_change = true;
+
+        if (_cell_vetoes_teleport(pos, true, wizard_tele))
         {
-            pos.x += random2(3) - 1;
-            pos.y += random2(3) - 1;
-
-            if (one_chance_in(4))
-            {
-                pos.x += random2(3) - 1;
-                pos.y += random2(3) - 1;
-            }
-            dprf("Scattered target square (%d, %d)", pos.x, pos.y);
+            mprf(MSGCH_WARN, "Even you can't go there right now. Sorry!");
+            return false;
         }
-
-        if (!in_bounds(pos))
-        {
-            mpr("Nearby solid objects disrupt your rematerialisation!");
-            is_controlled = false;
-        }
-
-        if (is_controlled)
-        {
-            if (!you.see_cell(pos))
-                large_change = true;
-
-            // Merfolk should be able to control-tele into deep water.
-            if (_cell_vetoes_teleport(pos, true, wizard_tele))
-            {
-                if (wizard_tele)
-                {
-                    mprf(MSGCH_WARN, "Even you can't go there right now. Sorry!");
-                    return false;
-                }
-
-                dprf("Target square (%d, %d) vetoed, now random teleport.", pos.x, pos.y);
-                is_controlled = false;
-                large_change  = false;
-            }
-            else if (testbits(env.pgrid(pos), FPROP_NO_CTELE_INTO) && !wizard_tele)
-            {
-                is_controlled = false;
-                large_change = false;
-                mprf(MSGCH_WARN, "A strong magical force throws you back!");
-            }
-            else
-            {
-                // Leave a purple cloud.
-                if (!wizard_tele)
-                    _place_tloc_cloud(old_pos);
-
-                move_player_to_grid(pos, false);
-
-                // Controlling teleport contaminates the player. - bwr
-                if (!wizard_tele)
-                    contaminate_player(1000, true);
-            }
-            // End teleport control.
-            if (you.duration[DUR_CONTROL_TELEPORT])
-            {
-                mprf(MSGCH_DURATION, "You feel uncertain.");
-                you.duration[DUR_CONTROL_TELEPORT] = 0;
-            }
-        }
+        else
+            move_player_to_grid(pos, false);
     }
-
-    if (!is_controlled)
+    else
     {
         coord_def newpos;
 
@@ -808,9 +567,9 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
         }
         while (--tries > 0
                && (_cell_vetoes_teleport(newpos)
-                   || need_distance_check && (newpos - centre).abs()
-                                              <= dist_range(34)
-                   || testbits(env.pgrid(newpos), FPROP_NO_RTELE_INTO)));
+                   || need_distance_check && (newpos - centre).rdist()
+                                              <= 30
+                   || testbits(env.pgrid(newpos), FPROP_NO_TELE_INTO)));
 
         // Running out of tries shouldn't happen; no message. Return false so
         // it doesn't count as a random teleport for Xom purposes.
@@ -822,13 +581,8 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
         {
             int mons_near_target = 0;
             for (monster_near_iterator mi(newpos, LOS_NO_TRANS); mi; ++mi)
-            {
-                if (!mons_is_firewood(*mi)
-                    && mons_attitude(*mi) == ATT_HOSTILE)
-                {
+                if (!mons_is_firewood(*mi) && mons_attitude(*mi) == ATT_HOSTILE)
                     mons_near_target++;
-                }
-            }
             if (!mons_near_target)
             {
                 dprf("teleportitis: no monster near target");
@@ -865,7 +619,7 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
     }
 
     _handle_teleport_update(large_change, old_pos);
-    return !is_controlled;
+    return !wizard_tele;
 }
 
 bool you_teleport_to(const coord_def where_to, bool move_monsters)
@@ -935,17 +689,15 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     return true;
 }
 
-void you_teleport_now(bool allow_control, bool wizard_tele, bool teleportitis)
+void you_teleport_now(bool wizard_tele, bool teleportitis)
 {
-    const bool randtele = _teleport_player(allow_control, wizard_tele,
-                                           teleportitis);
+    const bool randtele = _teleport_player(wizard_tele, teleportitis);
 
-    // Xom is amused by uncontrolled teleports that land you in a
-    // dangerous place, unless the player is in the Abyss and
-    // teleported to escape from all the monsters chasing him/her,
-    // since in that case the new dangerous area is almost certainly
-    // *less* dangerous than the old dangerous area.
-    // Teleporting in a labyrinth is also funny, more so for non-minotaurs.
+    // Xom is amused by teleports that land you in a dangerous place, unless
+    // the player is in the Abyss and teleported to escape from all the
+    // monsters chasing him/her, since in that case the new dangerous area is
+    // almost certainly *less* dangerous than the old dangerous area.
+    // Teleporting in a labyrinth is also funny.
     if (randtele
         && (player_in_branch(BRANCH_LABYRINTH)
             || !player_in_branch(BRANCH_ABYSS) && player_in_a_dangerous_place()))
@@ -1004,15 +756,6 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         return SPRET_ABORT;
     }
 
-    // Can't apport the Orb in zotdef or sprint
-    if (item_is_orb(item)
-        && (crawl_state.game_is_zotdef()
-            || crawl_state.game_is_sprint()))
-    {
-        mpr("You cannot apport the Orb!");
-        return SPRET_ABORT;
-    }
-
     fail_check();
 
     // We need to modify the item *before* we move it, because
@@ -1036,6 +779,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
             orb_pickup_noise(where, 30,
                 "The Orb shrieks as your magic touches it!",
                 "The Orb lets out a furious burst of light as your magic touches it!");
+            start_orb_run(CHAPTER_ANGERED_PANDEMONIUM, "Now pick up the Orb and get out of here!");
         }
     }
 
@@ -1079,7 +823,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     // Try to find safe terrain for the item.
     while (location_on_path < dist)
     {
-        if (!feat_virtually_destroys_item(grd(new_spot), item))
+        if (!feat_eliminates_items(grd(new_spot)))
             break;
         location_on_path++;
         new_spot = beam.path_taken[location_on_path];
@@ -1101,58 +845,6 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     origin_set(new_spot);
 
     return SPRET_SUCCESS;
-}
-
-/**
- * Attempt to blink in the given direction.
- *
- * @param dir   A direction to blink in.
- * @param pow   Determines number of iterations.
- *              (pow^2 / 500 + 1, where pow is 0-100; so 1-21 iterations)
- */
-static void _quadrant_blink(coord_def dir, int pow)
-{
-    pow = min(100, max(0, pow));
-
-    const int dist = random2(6) + 2;  // 2-7
-
-    // This is where you would *like* to go.
-    const coord_def base = you.pos() + dir * dist;
-
-    // This can take a while if pow is high and there's lots of translucent
-    // walls nearby.
-    coord_def target;
-    bool found = false;
-    for (int i = 0; i < pow*pow / 500 + 1; ++i)
-    {
-        // Find a space near our base point...
-        // First try to find a random square not adjacent to the basepoint,
-        // then one adjacent if that fails.
-        if (!random_near_space(&you, base, target)
-            && !random_near_space(&you, base, target, true))
-        {
-
-            continue; // could probably 'break;' random_near_space uses quite
-                      // a lot of iterations...
-        }
-
-        // ... which is close enough, but also far enough from us.
-        if (distance2(base, target) > 10 || distance2(you.pos(), target) < 8)
-            continue;
-
-        if (!you.see_cell_no_trans(target))
-            continue;
-
-        found = true;
-        break;
-    }
-
-    if (!found)
-        return uncontrolled_blink();
-
-    coord_def origin = you.pos();
-    move_player_to_grid(target, false);
-    _place_tloc_cloud(origin);
 }
 
 spret_type cast_golubrias_passage(const coord_def& where, bool fail)
@@ -1199,14 +891,6 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
         else
             // XXX: bleh, dumb message
             mpr("Creating passages of Golubria requires sufficient empty space.");
-        return SPRET_ABORT;
-    }
-
-    if (!allow_control_teleport(true) ||
-        testbits(env.pgrid(randomized_where), FPROP_NO_CTELE_INTO) ||
-        testbits(env.pgrid(randomized_here), FPROP_NO_CTELE_INTO))
-    {
-        mpr("A powerful magic interferes with the creation of the passage.");
         return SPRET_ABORT;
     }
 
@@ -1260,89 +944,9 @@ spret_type cast_dispersal(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-int singularity_range(int pow, int strength)
+int gravitas_range(int pow, int strength)
 {
-    // XXX: unify some of this functionality.
-    // A singularity is HD (pow / 10) + 1; its strength is
-    // (HD / (range^2)) for a given range, so for a given strength the
-    // range is sqrt(pow/10 + 1) / strength.
-
     return max(0, min(LOS_RADIUS, (int)isqrt((pow/10 + 1) / strength)));
-}
-
-spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
-                            bool fail)
-{
-    if (cell_is_solid(where))
-    {
-        if (agent->is_player())
-            mpr("You can't place that within a solid object!");
-        return SPRET_ABORT;
-    }
-
-    actor* victim = actor_at(where);
-    if (victim)
-    {
-        if (you.can_see(victim))
-        {
-            if (agent->is_player())
-                mpr("You can't place the singularity on a creature.");
-            return SPRET_ABORT;
-        }
-
-        fail_check();
-
-        if (agent->is_player())
-            canned_msg(MSG_GHOSTLY_OUTLINE);
-        else if (you.can_see(victim))
-        {
-            mprf("%s %s for a moment.",
-                 victim->name(DESC_THE).c_str(),
-                 victim->conj_verb("distort").c_str());
-        }
-        return SPRET_SUCCESS;
-    }
-
-    fail_check();
-
-    for (monster_iterator mi; mi; ++mi)
-        if (mi->type == MONS_SINGULARITY && mi->summoner == agent->mid)
-        {
-            simple_monster_message(*mi, " implodes!");
-            monster_die(*mi, KILL_RESET, NON_MONSTER);
-        }
-
-    monster* singularity = create_monster(
-                                mgen_data(MONS_SINGULARITY,
-                                          agent->is_player()
-                                          ? BEH_FRIENDLY
-                                          : SAME_ATTITUDE(agent->as_monster()),
-                                          agent,
-                                          // It's summoned, but it uses
-                                          // its own mechanic to time out.
-                                          0, SPELL_SINGULARITY,
-                                          where, MHITNOT, MG_FORCE_PLACE,
-                                          GOD_NO_GOD, MONS_NO_MONSTER,
-                                          pow / 20, COLOUR_INHERIT,
-                                          PROX_ANYWHERE,
-                                          level_id::current(),
-                                          (pow / 10) + 1));
-
-    if (singularity)
-    {
-        if (you.can_see(singularity))
-        {
-            const bool friendly = singularity->wont_attack();
-            mprf("Space collapses on itself with a %s crunch%s",
-                 friendly ? "satisfying" : "horrifying",
-                 friendly ? "." : "!");
-        }
-        invalidate_agrid(true);
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return SPRET_SUCCESS;
 }
 
 #define GRAVITY "by gravitational forces"
@@ -1350,11 +954,13 @@ spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
 void attract_actor(const actor* agent, actor* victim, const coord_def pos,
                    int pow, int strength)
 {
+    ASSERT(victim); // XXX: change to actor &victim
+
     ray_def ray;
     if (!find_ray(victim->pos(), pos, ray, opc_solid))
     {
         // This probably shouldn't ever happen, but just in case:
-        if (you.can_see(victim))
+        if (you.can_see(*victim))
         {
             mprf("%s violently %s moving!",
                  victim->name(DESC_THE).c_str(),
@@ -1377,68 +983,12 @@ void attract_actor(const actor* agent, actor* victim, const coord_def pos,
         }
         else if (actor* act_at_space = actor_at(newpos))
         {
-            if (victim != act_at_space
-                && act_at_space->type != MONS_SINGULARITY)
-            {
+            if (victim != act_at_space)
                 victim->collide(newpos, agent, pow);
-            }
             break;
         }
         else
             victim->move_to_pos(newpos, false);
-    }
-}
-
-void singularity_pull(const monster *singularity)
-{
-    actor *agent = actor_by_mid(singularity->summoner);
-
-    for (actor_near_iterator ai(singularity->pos(), LOS_NO_TRANS); ai; ++ai)
-    {
-        if (*ai == singularity
-            || agent && mons_aligned(*ai, agent))
-        {
-            continue;
-        }
-
-        if (is_sanctuary(ai->pos()))
-            continue;
-
-        const int range = isqrt((singularity->pos() - ai->pos()).abs());
-        const int strength =
-            min(4, (singularity->get_hit_dice()) / (range*range));
-        if (strength <= 0)
-            continue;
-
-        static const char *messages[] =
-        {
-            "%s pulls at %s.",
-            "%s crushes %s!",
-            "%s violently warps %s!",
-            "%s twists %s apart!",
-        };
-
-        if (ai->is_monster())
-            behaviour_event(ai->as_monster(), ME_ANNOY, singularity);
-
-        if (you.can_see(*ai))
-        {
-            // Note that we don't care if you see the singularity if
-            // you can see its impact on the monster; "Something
-            // violently warps Sigmund!" is perfectly acceptable,
-            // after all.
-            mprf(messages[strength - 1],
-                 singularity->name(DESC_THE).c_str(),
-                 ai->name(DESC_THE).c_str());
-        }
-        ai->hurt(singularity, roll_dice(strength, 12), BEAM_MMISSILE,
-                 KILLED_BY_BEAM, "", GRAVITY);
-
-        if (ai->alive() && !ai->is_stationary())
-        {
-            attract_actor(singularity, *ai, singularity->pos(),
-                          10 * singularity->get_hit_dice(), strength);
-        }
     }
 }
 
@@ -1450,7 +1000,7 @@ bool fatal_attraction(actor *victim, actor *agent, int pow)
         if (*ai == victim || *ai == agent || ai->is_stationary())
             continue;
 
-        const int range = isqrt((victim->pos() - ai->pos()).abs());
+        const int range = (victim->pos() - ai->pos()).rdist();
         const int strength =
             min(4, (pow / 10) / (range*range));
         if (strength <= 0)

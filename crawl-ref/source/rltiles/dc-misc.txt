@@ -188,9 +188,9 @@ cloud_calc_dust3
 
 cloud_forest_fire CLOUD_FOREST_FIRE
 
-cloud_ghostly_flame0 CLOUD_GHOSTLY_FLAME_0
-cloud_ghostly_flame1 CLOUD_GHOSTLY_FLAME_1
-cloud_ghostly_flame2 CLOUD_GHOSTLY_FLAME_2
+cloud_spectral0 CLOUD_SPECTRAL_0
+cloud_spectral1 CLOUD_SPECTRAL_1
+cloud_spectral2 CLOUD_SPECTRAL_2
 
 cloud_acid0 CLOUD_ACID_0
 cloud_acid1 CLOUD_ACID_1

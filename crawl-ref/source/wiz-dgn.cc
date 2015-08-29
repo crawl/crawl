@@ -346,15 +346,12 @@ void wizard_reveal_traps()
 
 void wizard_map_level()
 {
-    if (testbits(env.level_flags, LFLAG_NO_MAP))
+    if (!is_map_persistent())
     {
         if (!yesno("Force level to be mappable?", true, 'n'))
-        {
             canned_msg(MSG_OK);
-            return;
-        }
-
-        unset_level_flags(LFLAG_NO_MAP);
+        else
+            env.properties[FORCE_MAPPABLE_KEY] = true;
     }
 
     magic_mapping(1000, 100, true, true);
@@ -509,7 +506,7 @@ static void _free_all_vaults()
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
         env.level_map_ids(*ri) = INVALID_MAP_INDEX;
 
-    for (auto vp : env.level_vaults)
+    for (auto &vp : env.level_vaults)
         vp->seen = false;
 
     dgn_erase_unused_vault_placements();

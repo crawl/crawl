@@ -315,9 +315,10 @@ A cloak that twitches and jerks without any intervention.
 %%%%
 boots of the Assassin
 
-Some soft boots, specially designed by the Assassin's Guild. They make the
-wearer more perceptive of potential victims, and grant the ability to find
-vulnerabilities when attacking unaware opponents.
+Some soft boots, specially designed by the Assassin's Guild, that allow the
+wearer to sense potential victims nearby. They also allow the wearer to easily
+find vulnerabilities when attacking unaware opponents, allowing effective
+stabbing attacks with any weapon.
 %%%%
 Lear's hauberk
 
@@ -500,8 +501,8 @@ This stick is loaded with more than just lead.
 %%%%
 dragonskin cloak
 
-This opalescent cloak gleams with all dragon colours. It protects its wearer
-from elemental attacks of all kinds, although somewhat unreliably.
+This opalescent cloak gleams with the colours of all kinds of dragons. It
+protects its wearer from most elemental attacks, although somewhat unreliably.
 %%%%
 ring of the Octopus King
 
@@ -584,7 +585,7 @@ tiny portion of the caster’s life essence, taken alongside the magic used ever
 time its wielder casts a spell. Of course - the demon is more than happy to
 suck the life from others, as well.
 %%%%
-quick blades "Gyre" and "Gimble"
+pair of quick blades "Gyre" and "Gimble"
 
 Two quick blades joined by a chain. Swinging one compels the wielder to swing
 the other, as if they have minds of their own.
@@ -597,6 +598,7 @@ almost as effectively.
 
 Perhaps you could wear it on your head?
 %%%%
+# TAG_MAJOR_VERSION == 34
 crown of Eternal Torment
 
 A gold crown set with jet-black gems. It permanently afflicts its wearer with

@@ -33,6 +33,8 @@
  *  Windows
  * TARGET_OS_LINUX
  *  Linux
+ * TARGET_OS_CYGWIN
+ *  Cygwin
  * TARGET_OS_MACOSX
  *  Mac OS X
  * TARGET_OS_FREEBSD
@@ -196,7 +198,14 @@
 #endif
 
 #if !defined (OS_DETECTED)
-#if defined (__linux__) || defined (linux) || defined (__linux) || defined (__gnu_linux__) || defined (__CYGWIN__)
+#if defined (__CYGWIN__) || defined (__CYGWIN32__)
+#define OS_DETECTED
+#define TARGET_OS_CYGWIN
+#endif
+#endif
+
+#if !defined (OS_DETECTED)
+#if defined (__linux__) || defined (linux) || defined (__linux) || defined (__gnu_linux__)
 #define OS_DETECTED
 #define TARGET_OS_LINUX
 #endif

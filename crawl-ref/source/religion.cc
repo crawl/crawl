@@ -55,6 +55,7 @@
 #include "output.h"
 #include "player-stats.h"
 #include "prompt.h"
+#include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-miscast.h"
@@ -331,10 +332,10 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "step out of the time flow"
     },
     // Ashenzari
-    { "",
-      "scry through walls",
+    { "scry through walls",
       "The more cursed you are, the more Ashenzari supports your skills.",
-      "Ashenzari reveals the unseen and keeps your mind clear.",
+      "Ashenzari reveals the unseen.",
+      "Ashenzari keeps your mind clear.",
       "Ashenzari helps you to reconsider your skills."
     },
     // Dithmenos
@@ -476,10 +477,10 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "step out of the time flow"
     },
     // Ashenzari
-    { "",
-      "scry through walls",
+    { "scry through walls",
       "Ashenzari no longer supports your skills.",
-      "Ashenzari no longer reveals the unseen or keeps your mind clear.",
+      "Ashenzari no longer reveals the unseen.",
+      "Ashenzari no longer keeps your mind clear.",
       "Ashenzari no longer helps you to reconsider your skills."
     },
     // Dithmenos
@@ -545,28 +546,10 @@ bool is_unknown_god(god_type god)
 
 bool is_unavailable_god(god_type god)
 {
-    if (god == GOD_JIYVA && jiyva_is_dead())
-        return true;
-
-    // Don't allow Fedhas in ZotDef, as his invocations are duplicated, and
-    // passives thoroughly overpowered. Protection for plants, speed-up of
-    // oklobs, etc...
-    // Basically, ZotDef is Fedhas.
-
-    // Don't allow exploration-piety gods, either -- nothing to explore.
-    // We could give some piety for every wave, but there's little point.
-    if (crawl_state.game_is_zotdef() && (god == GOD_FEDHAS
-                                         || god == GOD_ASHENZARI
-                                         || god == GOD_NEMELEX_XOBEH
-                                         || god == GOD_ELYVILON))
-    {
-        return true;
-    }
-
-    return false;
+    return god == GOD_JIYVA && jiyva_is_dead();
 }
 
-god_type random_god(bool available)
+god_type random_god()
 {
     god_type god;
 
@@ -574,7 +557,7 @@ god_type random_god(bool available)
     {
         god = static_cast<god_type>(random2(NUM_GODS - 1) + 1);
     }
-    while (available && is_unavailable_god(god));
+    while (is_unavailable_god(god));
 
     return god;
 }
@@ -676,8 +659,6 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_ZIN:
     {
         string like = "you donate money";
-        if (verbose)
-            like += " (by <w>p</w>raying at an altar)";
         likes.push_back(like);
         break;
     }
@@ -686,7 +667,7 @@ string get_god_likes(god_type which_god, bool verbose)
     {
         string like = "you bless dead orcs";
         if (verbose)
-            like += " (by standing over their remains and <w>p</w>raying";
+            like += " (by standing over their remains and <w>p</w>raying)";
         likes.push_back(like);
         break;
     }
@@ -1347,7 +1328,7 @@ static monster_type _yred_servants[] =
 {
     MONS_MUMMY, MONS_WIGHT, MONS_FLYING_SKULL, MONS_WRAITH,
     MONS_VAMPIRE, MONS_PHANTASMAL_WARRIOR, MONS_SKELETAL_WARRIOR,
-    MONS_FLAYED_GHOST, MONS_DEATH_COB, MONS_GHOUL, MONS_BONE_DRAGON,
+    MONS_FLAYED_GHOST, MONS_VAMPIRE_KNIGHT, MONS_GHOUL, MONS_BONE_DRAGON,
     MONS_PROFANE_SERVITOR
 };
 
@@ -2041,7 +2022,6 @@ string god_name(god_type which_god, bool long_name)
     case GOD_NO_GOD:        return "No God";
     case GOD_RANDOM:        return "random";
     case GOD_NAMELESS:      return "nameless";
-    case GOD_VIABLE:        return "viable";
     case GOD_ZIN:           return "Zin";
     case GOD_SHINING_ONE:   return "the Shining One";
     case GOD_KIKUBAAQUDGHA: return "Kikubaaqudgha";
@@ -2064,6 +2044,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_QAZLAL:        return "Qazlal";
     case GOD_RU:            return "Ru";
     case GOD_JIYVA: // This is handled at the beginning of the function
+    case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
     }
     return "";
@@ -2288,7 +2269,7 @@ void dock_piety(int piety_loss, int penance)
     }
 }
 
-// Scales a piety number, applying modifiers (faith, forlorn).
+// Scales a piety number, applying modifiers (faith).
 int piety_scale(int piety)
 {
     return piety + (you.faith() * div_rand_round(piety, 3));
@@ -2479,24 +2460,39 @@ static void _gain_piety_point()
             switch (you.religion)
             {
                 case GOD_ZIN:
-                    simple_god_message(" will now cure all your mutations... once.");
+                    simple_god_message(" will now cure all your mutations... "
+                                       "once.");
                     break;
                 case GOD_SHINING_ONE:
                     if (you.species == SP_FELID)
                         break;
-                    simple_god_message(" will now bless your weapon at an altar... once.");
+                    simple_god_message(" will now bless your weapon with holy "
+                                       "wrath... once.");
                     break;
                 case GOD_KIKUBAAQUDGHA:
-                    simple_god_message(" will now enhance your necromancy at an altar... once.");
+                    if (you.species == SP_FELID)
+                    {
+                        simple_god_message(" will now grant you a "
+                                           "Necronomicon.");
+                    }
+                    else
+                    {
+                        simple_god_message(" will now grant you a Necronomicon "
+                                           "or bloody your weapon with pain... "
+                                           "once.");
+                    }
                     break;
                 case GOD_LUGONU:
                     if (you.species == SP_FELID)
                         break;
-                    simple_god_message(" will now corrupt your weapon at an altar... once.");
+                    simple_god_message(" will now corrupt your weapon with "
+                                       "distortion... once.");
                     break;
                 case GOD_JIYVA:
-                    simple_god_message(" will now unseal the treasures of the Slime Pits.");
-                    dlua.callfn("dgn_set_persistent_var", "sb", "fix_slime_vaults", true);
+                    simple_god_message(" will now unseal the treasures of the "
+                                       "Slime Pits.");
+                    dlua.callfn("dgn_set_persistent_var", "sb",
+                                "fix_slime_vaults", true);
                     // If we're on Slime:6, pretend we just entered the level
                     // in order to bring down the vault walls.
                     if (level_id::current() == level_id(BRANCH_SLIME, 6))
@@ -2734,7 +2730,7 @@ static string _god_hates_your_god_reaction(god_type god, god_type your_god)
     return "";
 }
 
-void excommunication(god_type new_god, bool immediate)
+void excommunication(bool voluntary, god_type new_god, bool immediate)
 {
     const god_type old_god = you.religion;
     ASSERT(old_god != new_god);
@@ -2752,6 +2748,19 @@ void excommunication(god_type new_god, bool immediate)
     you.duration[DUR_RECITE] = 0;
     you.piety = 0;
     you.piety_hysteresis = 0;
+
+    // so that the player isn't punished for "switching" between good gods via aX
+    if (is_good_god(old_god) && voluntary)
+    {
+        you.saved_good_god_piety = old_piety;
+        you.previous_good_god = old_god;
+    }
+    else
+    {
+        you.saved_good_god_piety = 0;
+        you.previous_good_god = GOD_NO_GOD;
+    }
+
     if (old_god == GOD_ASHENZARI)
         ash_init_bondage(&you);
 
@@ -2952,6 +2961,8 @@ void excommunication(god_type new_god, bool immediate)
             mprf(MSGCH_GOD, old_god, "Your aura of darkness fades away.");
             invalidate_agrid(true);
         }
+        if (you.form == TRAN_SHADOW)
+            untransform();
         _set_penance(old_god, 25);
         break;
 
@@ -2967,6 +2978,7 @@ void excommunication(god_type new_god, bool immediate)
             branch_bribe[it->id] = 0;
         add_daction(DACT_BRIBE_TIMEOUT);
         add_daction(DACT_REMOVE_GOZAG_SHOPS);
+        shopping_list.remove_dead_shops();
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
@@ -3006,6 +3018,12 @@ void excommunication(god_type new_god, bool immediate)
         break;
 
     case GOD_CHEIBRIADOS:
+        simple_god_message(" continues to slow your movements.", old_god);
+        _set_penance(old_god, 25);
+        redraw_screen();
+        notify_stat_change();
+        break;
+
     default:
         _set_penance(old_god, 25);
         break;
@@ -3032,6 +3050,8 @@ void excommunication(god_type new_god, bool immediate)
         you.stop_train.insert(abil_skill(abil));
 
     update_can_train();
+    you.can_train.set(SK_INVOCATIONS, false);
+    reset_training();
 
     // Perhaps we abandoned Trog with everything but Spellcasting maxed out.
     check_selected_skills();
@@ -3231,7 +3251,7 @@ int gozag_service_fee()
         return 0;
 
     const int gold = you.attribute[ATTR_GOLD_GENERATED];
-    int fee = 50 + (int)(gold - gold / log10(gold + 10.0))/2;
+    int fee = (int)(gold - gold / log10(gold + 10.0))/2;
 
     dprf("found %d gold, fee %d", gold, fee);
     return fee;
@@ -3255,9 +3275,6 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_FEDHAS && you.holiness() == MH_UNDEAD)
         return false;
 
-    if (which_god == GOD_SIF_MUNA && !you.spell_no)
-        return false;
-
 #if TAG_MAJOR_VERSION == 34
     // Dithmenos hates fiery species.
     if (which_god == GOD_DITHMENOS
@@ -3271,15 +3288,16 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_GOZAG && you.gold < gozag_service_fee())
         return false;
 
-    if (player_mutation_level(MUT_NO_LOVE) && (which_god == GOD_BEOGH
-                                           ||  which_god == GOD_JIYVA
-                                           ||  which_god == GOD_ELYVILON))
+    if (player_mutation_level(MUT_NO_LOVE)
+        && (which_god == GOD_BEOGH
+            ||  which_god == GOD_JIYVA
+            ||  which_god == GOD_ELYVILON))
     {
         return false;
     }
 
     if (player_mutation_level(MUT_NO_ARTIFICE)
-            && which_god == GOD_NEMELEX_XOBEH)
+        && which_god == GOD_NEMELEX_XOBEH)
     {
       return false;
     }
@@ -3306,7 +3324,7 @@ static void _god_welcome_handle_gear()
             if (you.inv[i].defined())
                 you.inv[i].flags |= ISFLAG_KNOW_CURSE;
 
-        set_ident_type(OBJ_SCROLLS, SCR_REMOVE_CURSE, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_SCROLLS, SCR_REMOVE_CURSE, true);
         auto_id_inventory();
         ash_detect_portals(true);
     }
@@ -3346,6 +3364,8 @@ static void _make_empty_vec(CrawlStoreValue &v, store_val_type vectype)
 void join_religion(god_type which_god, bool immediate)
 {
     ASSERT(which_god != GOD_NO_GOD);
+    ASSERT(which_god != GOD_ECUMENICAL);
+    ASSERT(you.species != SP_DEMIGOD);
 
     redraw_screen();
 
@@ -3355,7 +3375,7 @@ void join_religion(god_type which_god, bool immediate)
 
     // Leave your prior religion first.
     if (!you_worship(GOD_NO_GOD))
-        excommunication(which_god, immediate);
+        excommunication(true, which_god, immediate);
 
     // Welcome to the fold!
     you.religion = static_cast<god_type>(which_god);
@@ -3371,17 +3391,18 @@ void join_religion(god_type which_god, bool immediate)
         you.piety = 10; // one moderate sacrifice should get you to *.
         you.piety_hysteresis = 0;
         you.gift_timeout = 0;
-        _make_empty_vec(you.props["available_sacrifices"], SV_INT);
+        _make_empty_vec(you.props[AVAILABLE_SAC_KEY], SV_INT);
         _make_empty_vec(you.props[HEALTH_SAC_KEY], SV_INT);
         _make_empty_vec(you.props[ESSENCE_SAC_KEY], SV_INT);
         _make_empty_vec(you.props[PURITY_SAC_KEY], SV_INT);
         _make_empty_vec(you.props[ARCANA_SAC_KEY], SV_INT);
-        you.props["ru_progress_to_next_sacrifice"] = 0;
+        you.props[RU_SACRIFICE_PROGRESS_KEY] = 0;
         // offer the first sacrifice faster than normal;
         int delay = 50;
         if (crawl_state.game_is_sprint())
           delay /= SPRINT_MULTIPLIER;
-        you.props["ru_sacrifice_delay"] = delay;
+        you.props[RU_SACRIFICE_DELAY_KEY] = delay;
+        you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
     }
     else
     {
@@ -3499,29 +3520,42 @@ void join_religion(god_type which_god, bool immediate)
     // interesting.
     you.penance[you.religion] = 0;
 
-    if (is_good_god(you.religion) && is_good_god(old_god))
+    if (is_good_god(you.religion))
     {
-        // Some feedback that piety moved over.
-        switch (you.religion)
+        uint8_t effective_old_piety = old_piety;
+        god_type effective_old_god = old_god;
+        if (you.previous_good_god != GOD_NO_GOD)
         {
-        case GOD_ELYVILON:
-            simple_god_message((" says: Farewell. Go and aid the meek with "
-                               + god_name(you.religion) + ".").c_str(), old_god);
-            break;
-        case GOD_SHINING_ONE:
-            simple_god_message((" says: Farewell. Go and vanquish evil with "
-                               + god_name(you.religion) + ".").c_str(), old_god);
-            break;
-        case GOD_ZIN:
-            simple_god_message((" says: Farewell. Go and enforce order with "
-                               + god_name(you.religion) + ".").c_str(), old_god);
-            break;
-        default:
-            mprf(MSGCH_ERROR, "Unknown good god.");
+            effective_old_god = you.previous_good_god;
+            effective_old_piety = you.saved_good_god_piety;
         }
-        // Give a piety bonus when switching between good gods.
-        if (old_piety > piety_breakpoint(0))
-            gain_piety(old_piety - piety_breakpoint(0), 2, false);
+        if (is_good_god(effective_old_god))
+        {
+            if (you.religion != effective_old_god)
+            {
+                // Some feedback that piety moved over.
+                switch (you.religion)
+                {
+                case GOD_ELYVILON:
+                    simple_god_message((" says: Farewell. Go and aid the meek with "
+                                       + god_name(you.religion) + ".").c_str(), effective_old_god);
+                    break;
+                case GOD_SHINING_ONE:
+                    simple_god_message((" says: Farewell. Go and vanquish evil with "
+                                       + god_name(you.religion) + ".").c_str(), effective_old_god);
+                    break;
+                case GOD_ZIN:
+                    simple_god_message((" says: Farewell. Go and enforce order with "
+                                       + god_name(you.religion) + ".").c_str(), effective_old_god);
+                    break;
+                default:
+                    mprf(MSGCH_ERROR, "Unknown good god.");
+                }
+            }
+            // Give a piety bonus when switching between good gods.
+            if (effective_old_piety > piety_breakpoint(0))
+                gain_piety(effective_old_piety - piety_breakpoint(0), 2, false);
+        }
     }
 
     // Warn if a good god is starting wrath now.
@@ -3553,7 +3587,7 @@ void join_religion(god_type which_god, bool immediate)
     {
         // monks get bonus piety for first god
         if (you_worship(GOD_RU))
-            you.props["ru_progress_to_next_sacrifice"] = 9999;
+            you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
         else
             gain_piety(35, 1, false);
     }
@@ -3631,6 +3665,10 @@ void join_religion(god_type which_god, bool immediate)
         }
     }
 
+    // now that you have a god, you can't have any saved piety for your previous god
+    you.previous_good_god = GOD_NO_GOD;
+    you.saved_good_god_piety = 0;
+
     // Refresh wielded/quivered weapons in case we have a new conduct
     // on them.
     you.wield_change = true;
@@ -3667,12 +3705,7 @@ void god_pitch(god_type which_god)
     if (!player_can_join_god(which_god))
     {
         you.turn_is_over = false;
-        if (which_god == GOD_SIF_MUNA)
-        {
-            simple_god_message(" does not accept worship from the ignorant!",
-                               which_god);
-        }
-        else if (which_god == GOD_GOZAG)
+        if (which_god == GOD_GOZAG)
         {
             simple_god_message(" does not accept service from beggars like you!",
                                which_god);
@@ -3879,7 +3912,7 @@ bool god_hates_eating(god_type god, monster_type mc)
         return true;
     if (is_good_god(you.religion) && mons_class_holiness(mc) == MH_HOLY)
         return true;
-    if (you_worship(GOD_ZIN) && mons_class_intel(mc) >= I_NORMAL)
+    if (you_worship(GOD_ZIN) && mons_class_intel(mc) >= I_HUMAN)
         return true;
     return false;
 }
@@ -4034,6 +4067,7 @@ void handle_god_time(int /*time_delta*/)
     if (!you_worship(GOD_NO_GOD))
     {
         int delay;
+        int sacrifice_count;
         switch (you.religion)
         {
         case GOD_TROG:
@@ -4088,17 +4122,20 @@ void handle_god_time(int /*time_delta*/)
             break;
 
         case GOD_RU:
-            ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
-            ASSERT(you.props.exists("ru_sacrifice_delay"));
+            ASSERT(you.props.exists(RU_SACRIFICE_PROGRESS_KEY));
+            ASSERT(you.props.exists(RU_SACRIFICE_DELAY_KEY));
+            ASSERT(you.props.exists(AVAILABLE_SAC_KEY));
 
-            delay = you.props["ru_sacrifice_delay"].get_int();
-            if (you.props["ru_progress_to_next_sacrifice"].get_int() >= delay)
+            delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
+            sacrifice_count = you.props[AVAILABLE_SAC_KEY].get_vector().size();
+
+            // 6* is max piety for Ru
+            if (sacrifice_count == 0 && you.piety < piety_breakpoint(5)
+                && you.props[RU_SACRIFICE_PROGRESS_KEY].get_int() >= delay)
             {
-                if (you.piety < piety_breakpoint(5)) // 6* is max piety for Ru
-                    ru_offer_new_sacrifices();
-
-                you.props["ru_progress_to_next_sacrifice"] = 0;
+              ru_offer_new_sacrifices();
             }
+
             break;
             return;
 
@@ -4292,7 +4329,7 @@ int piety_breakpoint(int i)
 bool tso_unchivalric_attack_safe_monster(const monster* mon)
 {
     const mon_holy_type holiness = mon->holiness();
-    return mons_intel(mon) < I_NORMAL
+    return mons_intel(mon) < I_HUMAN
            || mons_is_object(mon->mons_species())
            || mon->undead_or_demonic()
            || mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)
@@ -4397,7 +4434,7 @@ int get_tension(god_type god)
     {
         const monster* mon = monster_at(*ri);
 
-        if (mon && mon->alive() && you.can_see(mon))
+        if (mon && mon->alive() && you.can_see(*mon))
         {
             int exper = get_monster_tension(mon, god);
 

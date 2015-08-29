@@ -536,7 +536,7 @@ ring of strength
 Ten pierścień zwiększa lub zmniejsza fizyczną siłę nosiciela, w zależności od
 mocy i kierunku czaru nań rzuconego.
 %%%%
-ring of sustain abilities
+ring of sustain attributes
 
 Ten pierścień chroni przed tymczasową utratą siły, inteligencji i zręczności.
 %%%%

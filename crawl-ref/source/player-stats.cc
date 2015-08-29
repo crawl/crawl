@@ -83,7 +83,7 @@ int player::max_dex() const
 }
 
 // Base stat including innate mutations (which base_stats does not)
-static int _base_stat(stat_type s)
+int innate_stat(stat_type s)
 {
     return you.max_stat(s, true);
 }
@@ -119,14 +119,14 @@ bool attribute_increase()
 #else
     mprf(MSGCH_INTRINSIC_GAIN, "Your experience leads to an increase in your attributes!");
     learned_something_new(HINT_CHOOSE_STAT);
-    if (_base_stat(STAT_STR) != you.strength()
-        || _base_stat(STAT_INT) != you.intel()
-        || _base_stat(STAT_DEX) != you.dex())
+    if (innate_stat(STAT_STR) != you.strength()
+        || innate_stat(STAT_INT) != you.intel()
+        || innate_stat(STAT_DEX) != you.dex())
     {
         mprf(MSGCH_PROMPT, "Your base attributes are Str %d, Int %d, Dex %d.",
-             _base_stat(STAT_STR),
-             _base_stat(STAT_INT),
-             _base_stat(STAT_DEX));
+             innate_stat(STAT_STR),
+             innate_stat(STAT_INT),
+             innate_stat(STAT_DEX));
     }
     mprf(MSGCH_PROMPT, "Increase (S)trength, (I)ntelligence, or (D)exterity? ");
 #endif
@@ -499,12 +499,20 @@ static string _stat_name(stat_type stat)
     }
 }
 
+int stat_loss_roll()
+{
+    const int loss = 30 + random2(30);
+    dprf("Stat loss points: %d", loss);
+
+    return loss;
+}
+
 bool lose_stat(stat_type which_stat, int stat_loss, bool force)
 {
     if (which_stat == STAT_RANDOM)
         which_stat = static_cast<stat_type>(random2(NUM_STATS));
 
-    // scale modifier by player_sust_abil() - right-shift
+    // scale modifier by player_sust_attr() - right-shift
     // permissible because stat_loss is unsigned: {dlb}
     if (!force)
     {
@@ -515,13 +523,13 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force)
             return false;
         }
 
-        int sust = player_sust_abil();
+        int sust = player_sust_attr();
         stat_loss >>= sust;
     }
 
     mprf(stat_loss > 0 ? MSGCH_WARN : MSGCH_PLAIN,
          "You feel %s%s%s.",
-         stat_loss > 0 && player_sust_abil(false) ? "somewhat " : "",
+         stat_loss > 0 && player_sust_attr(false) ? "somewhat " : "",
          stat_desc(which_stat, SD_LOSS),
          stat_loss > 0 ? "" : " for a moment");
 
@@ -529,6 +537,8 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force)
     {
         you.stat_loss[which_stat] = min<int>(100,
                                         you.stat_loss[which_stat] + stat_loss);
+        if (!you.attribute[ATTR_STAT_LOSS_XP])
+            you.attribute[ATTR_STAT_LOSS_XP] = stat_loss_roll();
         _handle_stat_change(which_stat);
         return true;
     }
@@ -536,7 +546,7 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force)
         return false;
 }
 
-static stat_type _random_lost_stat()
+stat_type random_lost_stat()
 {
     stat_type choice = NUM_STATS;
     int found = 0;
@@ -570,7 +580,7 @@ bool restore_stat(stat_type which_stat, int stat_gain,
     }
 
     if (which_stat == STAT_RANDOM)
-        which_stat = _random_lost_stat();
+        which_stat = random_lost_stat();
 
     if (which_stat >= NUM_STATS || you.stat_loss[which_stat] == 0)
         return false;
@@ -586,6 +596,11 @@ bool restore_stat(stat_type which_stat, int stat_gain,
         stat_gain = you.stat_loss[which_stat];
 
     you.stat_loss[which_stat] -= stat_gain;
+
+    // If we're fully recovered, clear out stat loss recovery timer.
+    if (random_lost_stat() == NUM_STATS)
+        you.attribute[ATTR_STAT_LOSS_XP] = 0;
+
     _handle_stat_change(which_stat);
     return true;
 }

@@ -388,10 +388,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 4;
         *ofs_y = 0;
         break;
-    case TILEP_MONS_FIRE_GIANT:
-        *ofs_x = 5;
-        *ofs_y = 0;
-        break;
     // Shift upwards.
     case TILEP_MONS_CENTAUR_WARRIOR_MELEE:
     case TILEP_MONS_DEEP_ELF_SORCERER:
@@ -574,6 +570,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ORC_WIZARD:
     case TILEP_MONS_ORC_SORCERER:
     case TILEP_MONS_NERGALLE:
+    case TILEP_MONS_ETTIN:
+    case TILEP_MONS_HILL_GIANT:
+    case TILEP_MONS_FROST_GIANT:
+    case TILEP_MONS_FIRE_GIANT:
         *ofs_x = -2;
         *ofs_y = 1;
         break;
@@ -595,14 +595,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 1;
         *ofs_y = 2;
         break;
-    case TILEP_MONS_ETTIN:
-        *ofs_x = 2;
-        *ofs_y = 1;
-        break;
-    case TILEP_MONS_FROST_GIANT:
-        *ofs_x = 2;
-        *ofs_y = 3;
-        break;
     case TILEP_MONS_ZOMBIE_LARGE:
         *ofs_x = 4;
         *ofs_y = 1;
@@ -610,10 +602,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ZOMBIE_SMALL:
         *ofs_x = 4;
         *ofs_y = 3;
-        break;
-    case TILEP_MONS_HILL_GIANT:
-        *ofs_x = 6;
-        *ofs_y = 2;
         break;
     case TILEP_MONS_TROLL:
         *ofs_x = -3;
@@ -797,6 +785,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_ORC_PRIEST:
     case TILEP_MONS_ORC_WARRIOR:
     case TILEP_MONS_ORC_KNIGHT:
+    case TILEP_MONS_ORC_WARLORD:
     case TILEP_MONS_KIRKE:
     case TILEP_MONS_SIREN:
     case TILEP_MONS_SIREN_WATER:
@@ -810,7 +799,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_SAINT_ROKA:
-    case TILEP_MONS_ORC_WARLORD:
     case TILEP_MONS_MINOTAUR:
     case TILEP_MONS_NORRIS:
         *ofs_x = 3;
@@ -865,11 +853,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_TWO_HEADED_OGRE: // second weapon
         *ofs_x = 0;
         *ofs_y = 2;
-        break;
-
-    case TILEP_MONS_ETTIN: // second weapon
-        *ofs_x = -2;
-        *ofs_y = 1;
         break;
 
     case TILEP_MONS_NAGA:
@@ -1097,6 +1080,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_ABOMINATION_LARGE_2:
+    case TILEP_MONS_ETTIN: // second weapon
         *ofs_x = 2;
         *ofs_y = 0;
         break;
@@ -1295,10 +1279,10 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
     ASSERT(mcache_ghost::valid(mon));
 
     const uint32_t seed = hash32(&mon.mname[0], mon.mname.size())
-                        ^ hash32(&mon.u.ghost, sizeof(mon.u.ghost));
+                        ^ hash32(&mon.i_ghost, sizeof(mon.i_ghost));
 
-    tilep_race_default(mon.u.ghost.species, 0, &m_doll);
-    tilep_job_default(mon.u.ghost.job, &m_doll);
+    tilep_race_default(mon.i_ghost.species, 0, &m_doll);
+    tilep_job_default(mon.i_ghost.job, &m_doll);
 
     for (int p = TILEP_PART_CLOAK; p < TILEP_PART_MAX; p++)
     {
@@ -1309,7 +1293,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
         }
     }
 
-    int ac = mon.u.ghost.ac;
+    int ac = mon.i_ghost.ac;
     ac *= (5 + hash_rand(11, seed, 1000));
     ac /= 10;
 
@@ -1328,8 +1312,8 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
     else
         m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_ROBE_BLUE;
 
-    int sk = mon.u.ghost.best_skill;
-    int dam = mon.u.ghost.damage;
+    int sk = mon.i_ghost.best_skill;
+    int dam = mon.i_ghost.damage;
     dam *= (5 + hash_rand(11, seed, 1001));
     dam /= 10;
 
@@ -1452,7 +1436,7 @@ mcache_demon::mcache_demon(const monster_info& minf)
                                         element_colour(minf.colour()))
         + hash_rand(tile_player_count(TILEP_DEMON_BODY), seed, 2);
 
-    if (minf.fly)
+    if (minf.is(MB_AIRBORNE))
     {
         m_demon.wings = tile_player_coloured(TILEP_DEMON_WINGS,
                                              element_colour(minf.colour()))

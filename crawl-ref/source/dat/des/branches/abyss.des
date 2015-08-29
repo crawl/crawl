@@ -29,11 +29,7 @@ function abyss_entry(e, glyph)
   e.depth_chance("D:21-24", 3333)
   e.depth_chance("D:25",    10000)
   e.depth_chance("D:26-",   3333)
-  if you.where() == 'Depths:4' or you.where() == 'D:25' then
-    e.kfeat(glyph .. ' = enter_abyss no_mimic')
-  else
-    e.kfeat(glyph .. ' = enter_abyss')
-  end
+  e.kfeat(glyph .. ' = enter_abyss')
 end
 }}
 
@@ -111,7 +107,7 @@ NAME:    abyss_entry_glasseish
 TAGS:    nolayout_encompass transparent
 WEIGHT:  5
 : abyss_entry(_G, 'O')
-KPROP:   T = no_rtele_into
+KPROP:   T = no_tele_into
 SUBST:   T : T l 1 2 A X
 MONS:    tentacled starspawn / starcursed mass / wretched star
 MONS:    plant col:random name:demonic name_adjective tile:mons_demonic_plant
@@ -313,7 +309,7 @@ MONS:   fire bat w:12 / bat simulacrum / spectral bat / vampire bat
 MONS:   vampire, vampire knight / vampire mage w:7
 MONS:   crimson imp w:12 / white imp / shadow imp / iron imp
 MONS:   kobold demonologist, deep elf summoner / orc sorcerer w:7
-MONS:   worker ant w:40 / goliath beetle w:20 / vampire mosquito
+MONS:   worker ant w:40 / spider w:20 / vampire mosquito
 KMONS:  8 = demonic crawler
 KMONS:  9 = emperor scorpion
 KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
@@ -532,7 +528,7 @@ MAP
 ENDMAP
 
 NAME:    hangedman_abyss_batty_box
-MONS:    bat / fire bat / vampire bat, butterfly, raven
+MONS:    bat / fire bat / vampire bat, butterfly, wyvern
 MONS:    spatial vortex, wind drake, harpy, unseen horror
 KMONS:   8 = wind drake w:9 / harpy w:1
 KITEM:   8 = acquire any / any good_item / stone q:1 w:5
@@ -1243,7 +1239,7 @@ KMONS:  O = hellephant
 MONS:   elephant, dire elephant, hellephant
 KITEM:  O = abyssal rune of Zot
 SUBST:  l = .....llllx, L : llllX
-KPROP:  ' = no_rtele_into
+KPROP:  ' = no_tele_into
 NSUBST: ' = 2 = 322 / 9 = 221. / *:., X = 1:l / *:x
 SUBST:  x : cccvvx, x = cccvvx
 MAP

@@ -27,7 +27,7 @@ bool is_unknown_god(god_type god);
 // orthogonal to whether the player can worship the god in question.
 bool is_unavailable_god(god_type god);
 
-god_type random_god(bool available = true);
+god_type random_god();
 
 int piety_breakpoint(int i);
 string god_name(god_type which_god, bool long_name = false);
@@ -43,7 +43,7 @@ bool xp_penance(god_type god);
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
 
-void excommunication(god_type new_god = GOD_NO_GOD, bool immediate = false);
+void excommunication(bool voluntary = false, god_type new_god = GOD_NO_GOD, bool immediate = false);
 
 bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true);
 void dock_piety(int pietyloss, int penance);

@@ -33,8 +33,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
                          bool fail)
 {
     // FIXME: This would be better handled by a flag to enforce max range.
-    if (distance2(where, agent->pos()) > dist_range(
-            spell_range(SPELL_CONJURE_FLAME, pow))
+    if (grid_distance(where, agent->pos()) > spell_range(SPELL_CONJURE_FLAME, pow)
         || !in_bounds(where))
     {
         if (agent->is_player())
@@ -64,7 +63,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
     actor* victim = actor_at(where);
     if (victim)
     {
-        if (agent->can_see(victim))
+        if (agent->can_see(*victim))
         {
             if (agent->is_player())
                 mpr("You can't place the cloud on a creature.");
@@ -134,7 +133,6 @@ spret_type stinking_cloud(int pow, bolt &beem, bool fail)
 
     // Fire tracer.
     beem.source            = you.pos();
-    beem.smart_monster     = true;
     beem.attitude          = ATT_FRIENDLY;
     beem.friend_info.count = 0;
     beem.is_tracer         = true;
@@ -159,7 +157,7 @@ spret_type stinking_cloud(int pow, bolt &beem, bool fail)
 spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
                       bool fail)
 {
-    if (distance2(beam.target, you.pos()) > dist_range(beam.range)
+    if (grid_distance(beam.target, you.pos()) > beam.range
         || !in_bounds(beam.target))
     {
         mpr("That is beyond the maximum range.");
@@ -309,9 +307,9 @@ void corpse_rot(actor* caster)
 {
     // If there is no caster (god wrath), centre the effect on the player.
     const coord_def center = caster ? caster->pos() : you.pos();
-    bool saw_rot = caster && (caster->is_player() || you.can_see(caster));
+    bool saw_rot = false;
 
-    for (radius_iterator ri(center, 6, C_ROUND, LOS_NO_TRANS); ri; ++ri)
+    for (radius_iterator ri(center, LOS_NO_TRANS); ri; ++ri)
     {
         if (!is_sanctuary(*ri) && env.cgrid(*ri) == EMPTY_CLOUD)
             for (stack_iterator si(*ri); si; ++si)
@@ -338,8 +336,8 @@ void corpse_rot(actor* caster)
 
     if (saw_rot)
         mprf("You %s decay.", you.can_smell() ? "smell" : "sense");
-
-    // Should make zombies decay into skeletons?
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 }
 
 void holy_flames(monster* caster, actor* defender)
@@ -373,15 +371,6 @@ void holy_flames(monster* caster, actor* defender)
                                    " is surrounded by blessed fire!");
     }
 }
-
-struct dist2_sorter
-{
-    coord_def pos;
-    bool operator()(const actor* a, const actor* b)
-    {
-        return distance2(a->pos(), pos) > distance2(b->pos(), pos);
-    }
-};
 
 static bool _safe_cloud_spot(const monster* mon, coord_def p)
 {
@@ -479,8 +468,8 @@ random_pick_entry<cloud_type> cloud_cone_clouds[] =
   { 0,  100, 100, PEAK, CLOUD_COLD },
   { 0,  100, 100, PEAK, CLOUD_POISON },
   { 30, 100, 125, RISE, CLOUD_NEGATIVE_ENERGY },
-  { 40, 100, 135, RISE, CLOUD_ACID },
-  { 50, 100, 175, RISE, CLOUD_STORM },
+  { 40, 100, 135, RISE, CLOUD_STORM },
+  { 50, 100, 175, RISE, CLOUD_ACID },
   { 0,0,0,FLAT,CLOUD_NONE }
 };
 

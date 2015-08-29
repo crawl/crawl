@@ -7,6 +7,8 @@
 
 #include "spl-selfench.h"
 
+#include <cmath>
+
 #include "areas.h"
 #include "art-enum.h"
 #include "butcher.h" // butcher_corpse
@@ -79,7 +81,7 @@ spret_type ice_armour(int pow, bool fail)
         return SPRET_ABORT;
     }
 
-    if (player_stoneskin() || you.form == TRAN_STATUE)
+    if (you.duration[DUR_STONESKIN] || you.form == TRAN_STATUE)
     {
         mpr("The film of ice won't work on stone.");
         return SPRET_ABORT;
@@ -176,7 +178,7 @@ int harvest_corpses(const actor &harvester, bool dry_run)
  */
 spret_type corpse_armour(int pow, bool fail)
 {
-    if (player_stoneskin() || you.form == TRAN_STATUE)
+    if (you.duration[DUR_STONESKIN] || you.form == TRAN_STATUE)
     {
         mpr("The corpses won't embrace your stony flesh.");
         return SPRET_ABORT;
@@ -208,7 +210,9 @@ spret_type corpse_armour(int pow, bool fail)
     else
         mpr("Your shell of carrion and bone grows thicker.");
 
-    you.attribute[ATTR_BONE_ARMOUR] += harvested;
+    // value of ATTR_BONE_ARMOUR will be sqrt(9*harvested), rounded randomly
+    int squared = sqr(you.attribute[ATTR_BONE_ARMOUR]) + 9 * harvested;
+    you.attribute[ATTR_BONE_ARMOUR] = sqrt(squared) + random_real();
     you.redraw_armour_class = true;
 
     return SPRET_SUCCESS;
@@ -278,6 +282,7 @@ spret_type cast_revivification(int pow, bool fail)
             paralyse_player("Death's Door abortion", 5 + random2(5));
             confuse_player(10 + random2(10));
             you.duration[DUR_DEATHS_DOOR] = 0;
+            you.increase_duration(DUR_EXHAUSTED, roll_dice(1,3));
         }
         return SPRET_SUCCESS;
     }
@@ -318,45 +323,6 @@ spret_type cast_swiftness(int power, bool fail)
     you.set_duration(DUR_SWIFTNESS, 12 + random2(power)/2, 30,
                      "You feel quick.");
     you.attribute[ATTR_SWIFTNESS] = you.duration[DUR_SWIFTNESS];
-    did_god_conduct(DID_HASTY, 8, true);
-
-    return SPRET_SUCCESS;
-}
-
-spret_type cast_fly(int power, bool fail)
-{
-    if (!flight_allowed())
-        return SPRET_ABORT;
-
-    fail_check();
-    const int dur_change = 25 + random2(power) + random2(power);
-    const bool was_flying = you.airborne();
-
-    you.increase_duration(DUR_FLIGHT, dur_change, 100);
-    you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
-
-    if (!was_flying)
-        float_player();
-    else
-        mpr("You feel more buoyant.");
-    return SPRET_SUCCESS;
-}
-
-spret_type cast_teleport_control(int power, bool fail)
-{
-    fail_check();
-    if (allow_control_teleport(true))
-        mpr("You feel in control.");
-    else
-        mpr("You feel your control is inadequate.");
-
-    if (you.duration[DUR_TELEPORT] && !player_control_teleport())
-    {
-        mpr("You feel your translocation being delayed.");
-        you.increase_duration(DUR_TELEPORT, 1 + random2(3));
-    }
-
-    you.increase_duration(DUR_CONTROL_TELEPORT, 10 + random2(power), 50);
 
     return SPRET_SUCCESS;
 }
@@ -446,7 +412,7 @@ spret_type cast_song_of_slaying(int pow, bool fail)
 
     you.set_duration(DUR_SONG_OF_SLAYING, 20 + random2avg(pow, 2));
 
-    you.props["song_of_slaying_bonus"] = 0;
+    you.props[SONG_OF_SLAYING_KEY] = 0;
     return SPRET_SUCCESS;
 }
 
@@ -508,8 +474,11 @@ spret_type cast_shroud_of_golubria(int pow, bool fail)
 
 spret_type cast_transform(int pow, transformation_type which_trans, bool fail)
 {
-    if (!transform(pow, which_trans, false, true))
+    if (!transform(pow, which_trans, false, true)
+        || !check_form_stat_safety(which_trans))
+    {
         return SPRET_ABORT;
+    }
 
     fail_check();
     transform(pow, which_trans);

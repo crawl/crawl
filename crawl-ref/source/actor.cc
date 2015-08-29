@@ -42,12 +42,6 @@ level_id actor::shaft_dest(bool known = false) const
     return generic_shaft_dest(pos(), known);
 }
 
-bool actor::airborne() const
-{
-    flight_type fly = flight_mode();
-    return fly == FL_LEVITATE || fly == FL_WINGED && !(cannot_move() || caught());
-}
-
 /**
  * Check if the actor is on the ground (or in water).
  */
@@ -218,7 +212,7 @@ void actor::shield_block_succeeded(actor *foe)
     }
 }
 
-bool actor::inaccuracy() const
+int actor::inaccuracy() const
 {
     return wearing(EQ_AMULET, AMU_INACCURACY);
 }
@@ -430,7 +424,7 @@ bool actor::check_clinging(bool stepped, bool door)
 
     if (!stepped && was_clinging && !clinging)
     {
-        if (you.can_see(this))
+        if (you.can_see(*this))
         {
             mprf("%s %s off the %s.", name(DESC_THE).c_str(),
                  conj_verb("fall").c_str(),
@@ -587,9 +581,10 @@ void actor::accum_has_constricted()
 
 bool actor::can_constrict(actor* defender)
 {
+    ASSERT(defender); // XXX: change to actor &defender
     return (!is_constricting() || has_usable_tentacle())
            && !defender->is_constricted()
-           && can_see(defender)
+           && can_see(*defender)
            && !confused()
            && body_size(PSIZE_BODY) >= defender->body_size(PSIZE_BODY)
            && defender->res_constrict() < 3
@@ -647,7 +642,7 @@ void actor::handle_constriction()
 
         string exclamations;
         if (damage <= 0 && is_player()
-            && you.can_see(defender))
+            && you.can_see(*defender))
         {
             exclamations = ", but do no damage.";
         }
@@ -668,7 +663,7 @@ void actor::handle_constriction()
             }
         }
 
-        if (is_player() || you.can_see(this))
+        if (is_player() || you.can_see(*this))
         {
             mprf("%s %s %s%s%s",
                  (is_player() ? "You"
@@ -682,7 +677,7 @@ void actor::handle_constriction()
 #endif
                  exclamations.c_str());
         }
-        else if (you.can_see(defender) || defender->is_player())
+        else if (you.can_see(*defender) || defender->is_player())
         {
             mprf("%s %s constricted%s%s",
                  defender->name(DESC_THE).c_str(),
@@ -785,9 +780,7 @@ bool actor::torpor_slowed() const
         const monster *mons = *ri;
         if (mons && mons->type == MONS_TORPOR_SNAIL
             && !is_sanctuary(mons->pos())
-            && !mons_aligned(mons, this)
-            && !mons->has_ench(ENCH_CHARM) && mons->attitude == ATT_HOSTILE)
-            // friendly torpor snails are way too abusable otherwise :(
+            && !mons_aligned(mons, this))
         {
             return true;
         }
@@ -836,7 +829,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     {
         if (other->is_monster())
             behaviour_event(other->as_monster(), ME_WHACK, agent);
-        if (you.can_see(this) || you.can_see(other))
+        if (you.can_see(*this) || you.can_see(*other))
         {
             mprf("%s %s with %s!",
                  name(DESC_THE).c_str(),
@@ -856,7 +849,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         return;
     }
 
-    if (you.can_see(this))
+    if (you.can_see(*this))
     {
         if (!can_pass_through_feat(grd(newpos)))
         {

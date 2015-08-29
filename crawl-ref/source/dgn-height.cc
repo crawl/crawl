@@ -127,9 +127,8 @@ coord_def dgn_island_plan::pick_island_spot()
         c = dgn_random_point_in_margin(level_border_depth * 2);
 
         bool collides = false;
-        for (int j = 0, size = islands.size(); j < size; ++j)
+        for (const coord_def island : islands)
         {
-            const coord_def island = islands[j];
             const coord_def dist = island - c;
             if (dist.abs() < island_separation_dist2)
             {

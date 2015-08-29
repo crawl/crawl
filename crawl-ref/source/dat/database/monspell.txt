@@ -171,11 +171,7 @@ Druid's Call cast
 %%%%
 Legendary Destruction cast
 
-@The_monster@ offers @possessive@ life energy for powerful magic!
-%%%%
-Ephemeral Infusion cast
-
-@The_monster@ gestures around itself.
+@Major Destruction cast@
 %%%%
 Phantom Mirror cast
 
@@ -582,13 +578,13 @@ Bolt of Draining anubis guard cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
-Ghostly Flames revenant cast
+Ghostly Fireball revenant cast
 
 @The_monster@ lashes out with ghostly flames.
 %%%%
-Ghostly Fireball revenant cast
+Spectral Cloud revenant cast
 
-@ghostly flames revenant cast@
+@The_monster@ conjures spectral mists around @target@.
 %%%%
 Dispel Undead revenant cast
 

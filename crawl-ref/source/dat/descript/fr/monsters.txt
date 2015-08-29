@@ -435,12 +435,6 @@ azure jelly
 Un blob extrêmement froid et d'un cytoplasme bleu clair, formant des morceaux
 de gel dans l'air autour de lui.
 %%%%
-baby alligator
-
-Un jeune alligator. Même s'il n'a pas encore les mâchoires écrasantes ni la
-force nécessaire pour s'élancer rapidement, il est plus souple qu'un adulte et
-ses dents de lait sont quand même très tranchantes.
-%%%%
 ball lightning
 
 Une énorme sphère rapide d'énergie électrique coruscante. Ça va exploser à la
@@ -956,11 +950,6 @@ Un vil prédateur interdimentionnel qui se nourrit de l'énergie vitale des êtr
 vivants. Le peu qui l'ont vu et qui lui ont survécu disent qu'il ressemble a
 une énorme mite épineuse. Son cycle de vie étrange consiste à produire de
 l'ambroisie, très prisée chez les dieux et les magiciens.
-%%%%
-goliath beetle
-
-Un gros scarabée avec de grandes mandibules écrasantes et une carapace très
-solide.
 %%%%
 giant cockroach
 
@@ -1654,12 +1643,6 @@ l'illusion, et sont simultanément intelligent et cruels.
 rat
 
 Un rongeur sale qui a grandi dans l'environnement vaste et agressif du donjon.
-%%%%
-raven
-
-Un oiseau charognard opportuniste qui est un peu proactif dans la production de
-charognes. Il a un attrait particulièrement malsain pour les globes oculaires
-et tout ce qui y ressemble, comme les oignons marinés, les noix et les olives.
 %%%%
 ravenous feature mimic
 

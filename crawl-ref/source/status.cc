@@ -174,12 +174,7 @@ bool fill_status_info(int status, status_info* inf)
 
     case DUR_CORROSION:
         inf->light_text = make_stringf("Corr (%d)",
-                          (-3 * you.props["corrosion_amount"].get_int()));
-        break;
-
-    case DUR_CONTROL_TELEPORT:
-        if (!allow_control_teleport(true))
-            inf->light_colour = DARKGREY;
+                          (-4 * you.props["corrosion_amount"].get_int()));
         break;
 
     case DUR_NO_POTIONS:
@@ -315,12 +310,15 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case DUR_POWERED_BY_DEATH:
-        if (handle_pbd_corpses() > 0)
+    {
+        const int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
+        if (pbd_str > 0)
         {
             inf->light_colour = LIGHTMAGENTA;
-            inf->light_text   = "Regen+";
+            inf->light_text   = make_stringf("Regen (%d)", pbd_str);
         }
         break;
+    }
 
     case STATUS_MISSILES:
         _describe_missiles(inf);
@@ -398,16 +396,9 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case DUR_SONG_OF_SLAYING:
-        inf->light_text = make_stringf("Slay (%u)",
-                                       you.props["song_of_slaying_bonus"].get_int());
-        break;
-
-    case STATUS_NO_CTELE:
-        if (!allow_control_teleport(true))
-        {
-            inf->light_colour = RED;
-            inf->light_text = "-cTele";
-        }
+        inf->light_text
+            = make_stringf("Slay (%u)",
+                           you.props[SONG_OF_SLAYING_KEY].get_int());
         break;
 
     case STATUS_BEOGH:
@@ -533,10 +524,12 @@ bool fill_status_info(int status, status_info* inf)
         vector<const char *> places;
         for (int i = 0; i < NUM_BRANCHES; i++)
         {
-            if (branch_bribe[i] > 0)
+            branch_type br = gozag_fixup_branch(static_cast<branch_type>(i));
+
+            if (branch_bribe[br] > 0)
             {
                 if (player_in_branch(static_cast<branch_type>(i)))
-                    bribe = branch_bribe[i];
+                    bribe = branch_bribe[br];
 
                 places.push_back(branches[static_cast<branch_type>(i)]
                                  .longname);
@@ -662,6 +655,11 @@ static void _describe_hunger(status_info* inf)
         inf->light_text   = (vamp ? "Bloodless" : "Starving");
         inf->short_text   = (vamp ? "bloodless" : "starving");
         break;
+    case HS_FAINTING:
+        inf->light_colour = RED;
+        inf->light_text   = (vamp ? "Bloodless" : "Fainting");
+        inf->short_text   = (vamp ? "bloodless" : "fainting");
+        break;
     case HS_SATIATED: // no status light
     default:
         break;
@@ -706,7 +704,7 @@ static void _describe_regen(status_info* inf)
     const bool regen = (you.duration[DUR_REGENERATION] > 0
                         || you.duration[DUR_TROGS_HAND] > 0);
     const bool no_heal =
-            (you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING)
+            (you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
             || (player_mutation_level(MUT_SLOW_HEALING) == 3);
     // Does vampire hunger level affect regeneration rate significantly?
     const bool vampmod = !no_heal && !regen && you.species == SP_VAMPIRE
