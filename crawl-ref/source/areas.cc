@@ -26,24 +26,24 @@
 #include "traps.h"
 #include "travel.h"
 
-enum areaprop_flag
+enum class areaprop
 {
-    APROP_SANCTUARY_1   = (1 << 0),
-    APROP_SANCTUARY_2   = (1 << 1),
-    APROP_SILENCE       = (1 << 2),
-    APROP_HALO          = (1 << 3),
-    APROP_LIQUID        = (1 << 4),
-    APROP_ACTUAL_LIQUID = (1 << 5),
-    APROP_ORB           = (1 << 6),
-    APROP_UMBRA         = (1 << 7),
-    APROP_QUAD          = (1 << 8),
-    APROP_DISJUNCTION   = (1 << 9),
-    APROP_SOUL_AURA     = (1 << 10),
+    SANCTUARY_1   = (1 << 0),
+    SANCTUARY_2   = (1 << 1),
+    SILENCE       = (1 << 2),
+    HALO          = (1 << 3),
+    LIQUID        = (1 << 4),
+    ACTUAL_LIQUID = (1 << 5),
+    ORB           = (1 << 6),
+    UMBRA         = (1 << 7),
+    QUAD          = (1 << 8),
+    DISJUNCTION   = (1 << 9),
+    SOUL_AURA     = (1 << 10),
 #if TAG_MAJOR_VERSION == 34
-    APROP_HOT           = (1 << 11),
+    HOT           = (1 << 11),
 #endif
 };
-DEF_BITFIELD(areaprops, areaprop_flag);
+DEF_BITFIELD(areaprops, areaprop);
 
 struct area_centre
 {
@@ -62,12 +62,12 @@ static propgrid_t _agrid;
 static bool _agrid_valid = false;
 static bool no_areas = false;
 
-static void _set_agrid_flag(const coord_def& p, areaprop_flag f)
+static void _set_agrid_flag(const coord_def& p, areaprop f)
 {
     _agrid(p) |= f;
 }
 
-static bool _check_agrid_flag(const coord_def& p, areaprop_flag f)
+static bool _check_agrid_flag(const coord_def& p, areaprop f)
 {
     return bool(_agrid(p) & f);
 }
@@ -104,7 +104,7 @@ static void _actor_areas(actor *a)
         _agrid_centres.emplace_back(AREA_SILENCE, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE); ri; ++ri)
-            _set_agrid_flag(*ri, APROP_SILENCE);
+            _set_agrid_flag(*ri, areaprop::SILENCE);
         no_areas = false;
     }
 
@@ -113,7 +113,7 @@ static void _actor_areas(actor *a)
         _agrid_centres.emplace_back(AREA_HALO, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
-            _set_agrid_flag(*ri, APROP_HALO);
+            _set_agrid_flag(*ri, areaprop::HALO);
         no_areas = false;
     }
 
@@ -125,10 +125,10 @@ static void _actor_areas(actor *a)
         {
             dungeon_feature_type f = grd(*ri);
 
-            _set_agrid_flag(*ri, APROP_LIQUID);
+            _set_agrid_flag(*ri, areaprop::LIQUID);
 
             if (feat_has_solid_floor(f) && !feat_is_water(f))
-                _set_agrid_flag(*ri, APROP_ACTUAL_LIQUID);
+                _set_agrid_flag(*ri, areaprop::ACTUAL_LIQUID);
         }
         no_areas = false;
     }
@@ -138,7 +138,7 @@ static void _actor_areas(actor *a)
         _agrid_centres.emplace_back(AREA_UMBRA, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
-            _set_agrid_flag(*ri, APROP_UMBRA);
+            _set_agrid_flag(*ri, areaprop::UMBRA);
         no_areas = false;
     }
 
@@ -148,7 +148,7 @@ static void _actor_areas(actor *a)
         _agrid_centres.emplace_back(AREA_HOT, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
-            _set_agrid_flag(*ri, APROP_HOT);
+            _set_agrid_flag(*ri, areaprop::HOT);
         no_areas = false;
     }
 #endif
@@ -158,7 +158,7 @@ static void _actor_areas(actor *a)
  * Update the area grid cache.
  *
  * Updates the _agrid FixedArray of grid information flags using the
- * areaprop_flag types.
+ * areaprop types.
  */
 static void _update_agrid()
 {
@@ -182,7 +182,7 @@ static void _update_agrid()
         const int r = 2;
         _agrid_centres.emplace_back(AREA_ORB, you.pos(), r);
         for (radius_iterator ri(you.pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
-            _set_agrid_flag(*ri, APROP_ORB);
+            _set_agrid_flag(*ri, areaprop::ORB);
         no_areas = false;
     }
 
@@ -194,7 +194,7 @@ static void _update_agrid()
              ri; ++ri)
         {
             if (cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
-                _set_agrid_flag(*ri, APROP_QUAD);
+                _set_agrid_flag(*ri, areaprop::QUAD);
         }
         no_areas = false;
     }
@@ -207,7 +207,7 @@ static void _update_agrid()
              ri; ++ri)
         {
             if (cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
-                _set_agrid_flag(*ri, APROP_DISJUNCTION);
+                _set_agrid_flag(*ri, areaprop::DISJUNCTION);
         }
         no_areas = false;
     }
@@ -215,7 +215,7 @@ static void _update_agrid()
     if (!env.sunlight.empty())
     {
         for (const auto &entry : env.sunlight)
-            _set_agrid_flag(entry.first, APROP_HALO);
+            _set_agrid_flag(entry.first, areaprop::HALO);
         no_areas = false;
     }
 
@@ -227,24 +227,24 @@ static void _update_agrid()
 static area_centre_type _get_first_area(const coord_def& f)
 {
     areaprops a = _agrid(f);
-    if (a & APROP_SANCTUARY_1)
+    if (a & areaprop::SANCTUARY_1)
         return AREA_SANCTUARY;
-    if (a & APROP_SANCTUARY_2)
+    if (a & areaprop::SANCTUARY_2)
         return AREA_SANCTUARY;
-    if (a & APROP_SILENCE)
+    if (a & areaprop::SILENCE)
         return AREA_SILENCE;
 #if TAG_MAJOR_VERSION == 34
-    if (a & APROP_HOT)
+    if (a & areaprop::HOT)
         return AREA_HOT;
 #endif
-    if (a & APROP_HALO)
+    if (a & areaprop::HALO)
         return AREA_HALO;
-    if (a & APROP_UMBRA)
+    if (a & areaprop::UMBRA)
         return AREA_UMBRA;
     // liquid is always applied; actual_liquid is on top
     // of this. If we find the first, we don't care about
     // the second.
-    if (a & APROP_LIQUID)
+    if (a & areaprop::LIQUID)
         return AREA_LIQUID;
 
     return AREA_NONE;
@@ -534,7 +534,7 @@ bool silenced(const coord_def& p)
         return false;
     if (!_agrid_valid)
         _update_agrid();
-    return _check_agrid_flag(p, APROP_SILENCE);
+    return _check_agrid_flag(p, areaprop::SILENCE);
 }
 
 /////////////
@@ -546,7 +546,7 @@ bool haloed(const coord_def& p)
         return false;
     if (!_agrid_valid)
         _update_agrid();
-    return _check_agrid_flag(p, APROP_HALO);
+    return _check_agrid_flag(p, areaprop::HALO);
 }
 
 bool actor::haloed() const
@@ -638,10 +638,10 @@ bool liquefied(const coord_def& p, bool check_actual)
 
     // "actually" liquefied (ie, check for movement)
     if (check_actual)
-        return _check_agrid_flag(p, APROP_ACTUAL_LIQUID);
+        return _check_agrid_flag(p, areaprop::ACTUAL_LIQUID);
     // just recoloured for consistency
     else
-        return _check_agrid_flag(p, APROP_LIQUID);
+        return _check_agrid_flag(p, areaprop::LIQUID);
 }
 
 /////////////
@@ -655,7 +655,7 @@ bool orb_haloed(const coord_def& p)
     if (!_agrid_valid)
         _update_agrid();
 
-    return _check_agrid_flag(p, APROP_ORB);
+    return _check_agrid_flag(p, areaprop::ORB);
 }
 
 /////////////
@@ -669,7 +669,7 @@ bool quad_haloed(const coord_def& p)
     if (!_agrid_valid)
         _update_agrid();
 
-    return _check_agrid_flag(p, APROP_QUAD);
+    return _check_agrid_flag(p, areaprop::QUAD);
 }
 
 /////////////
@@ -683,7 +683,7 @@ bool disjunction_haloed(const coord_def& p)
     if (!_agrid_valid)
         _update_agrid();
 
-    return _check_agrid_flag(p, APROP_DISJUNCTION);
+    return _check_agrid_flag(p, areaprop::DISJUNCTION);
 }
 
 /////////////
@@ -697,7 +697,7 @@ bool umbraed(const coord_def& p)
     if (!_agrid_valid)
         _update_agrid();
 
-    return _check_agrid_flag(p, APROP_UMBRA);
+    return _check_agrid_flag(p, areaprop::UMBRA);
 }
 
 // Whether actor is in an umbra.
@@ -771,7 +771,7 @@ bool heated(const coord_def& p)
     if (!_agrid_valid)
         _update_agrid();
 
-    return _check_agrid_flag(p, APROP_HOT);
+    return _check_agrid_flag(p, areaprop::HOT);
 }
 
 bool actor::heated() const

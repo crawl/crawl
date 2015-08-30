@@ -70,20 +70,19 @@ struct demon_mutation_info
         : mut(m), when(w), facet(f) { }
 };
 
-enum mut_flag_type
+enum class mutflag
 {
-    MUTFLAG_GOOD    = 1 << 0, // used by benemut etc
-    MUTFLAG_BAD     = 1 << 1, // used by malmut etc
-    MUTFLAG_JIYVA   = 1 << 2, // jiyva-only muts
-    MUTFLAG_QAZLAL  = 1 << 3, // qazlal wrath
-    MUTFLAG_XOM     = 1 << 4, // xom being xom
-    MUTFLAG_CORRUPT = 1 << 5, // wretched stars
+    GOOD    = 1 << 0, // used by benemut etc
+    BAD     = 1 << 1, // used by malmut etc
+    JIYVA   = 1 << 2, // jiyva-only muts
+    QAZLAL  = 1 << 3, // qazlal wrath
+    XOM     = 1 << 4, // xom being xom
+    CORRUPT = 1 << 5, // wretched stars
 
-    MUTFLAG_LAST    = MUTFLAG_CORRUPT
+    LAST    = CORRUPT
 };
-DEF_BITFIELD(mut_flags_type, mut_flag_type, 5);
-COMPILE_CHECK(mut_flags_type::exponent(mut_flags_type::last_exponent)
-              == MUTFLAG_LAST);
+DEF_BITFIELD(mutflags, mutflag, 5);
+COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::LAST);
 
 #include "mutation-data.h"
 
@@ -151,32 +150,32 @@ equipment_type beastly_slot(int mut)
     }
 }
 
-static bool _mut_has_use(const mutation_def &mut, mut_flag_type use)
+static bool _mut_has_use(const mutation_def &mut, mutflag use)
 {
     return bool(mut.uses & use);
 }
 
-#define MUT_BAD(mut) _mut_has_use((mut), MUTFLAG_BAD)
-#define MUT_GOOD(mut) _mut_has_use((mut), MUTFLAG_GOOD)
+#define MUT_BAD(mut) _mut_has_use((mut), mutflag::BAD)
+#define MUT_GOOD(mut) _mut_has_use((mut), mutflag::GOOD)
 
-static int _mut_weight(const mutation_def &mut, mut_flag_type use)
+static int _mut_weight(const mutation_def &mut, mutflag use)
 {
     switch (use)
     {
-        case MUTFLAG_JIYVA:
-        case MUTFLAG_QAZLAL:
-        case MUTFLAG_XOM:
-        case MUTFLAG_CORRUPT:
+        case mutflag::JIYVA:
+        case mutflag::QAZLAL:
+        case mutflag::XOM:
+        case mutflag::CORRUPT:
             return 1;
-        case MUTFLAG_GOOD:
-        case MUTFLAG_BAD:
+        case mutflag::GOOD:
+        case mutflag::BAD:
         default:
             return mut.weight;
     }
 }
 
 static int mut_index[NUM_MUTATIONS];
-static map<mut_flag_type, int> total_weight;
+static map<mutflag, int> total_weight;
 
 void init_mut_index()
 {
@@ -190,7 +189,7 @@ void init_mut_index()
         ASSERT_RANGE(mut, 0, NUM_MUTATIONS);
         ASSERT(mut_index[mut] == -1);
         mut_index[mut] = i;
-        for (const auto flag : mut_flags_type::range())
+        for (const auto flag : mutflags::range())
         {
             if (_mut_has_use(mut_data[i], flag))
                 total_weight[flag] += _mut_weight(mut_data[i], flag);
@@ -759,7 +758,7 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_weight = false)
     return x_chance_in_y(weight, 10);
 }
 
-static mutation_type _get_mut_with_use(mut_flag_type mt)
+static mutation_type _get_mut_with_use(mutflag mt)
 {
     const int tweight = lookup(total_weight, mt, 0);
     ASSERT(tweight);
@@ -782,7 +781,7 @@ static mutation_type _get_mut_with_use(mut_flag_type mt)
 
 static mutation_type _get_random_slime_mutation()
 {
-    return _get_mut_with_use(MUTFLAG_JIYVA);
+    return _get_mut_with_use(mutflag::JIYVA);
 }
 
 static mutation_type _delete_random_slime_mutation()
@@ -808,7 +807,7 @@ static mutation_type _delete_random_slime_mutation()
 
 static bool _is_slime_mutation(mutation_type m)
 {
-    return _mut_has_use(mut_data[mut_index[m]], MUTFLAG_JIYVA);
+    return _mut_has_use(mut_data[mut_index[m]], mutflag::JIYVA);
 }
 
 static mutation_type _get_random_xom_mutation()
@@ -822,7 +821,7 @@ static mutation_type _get_random_xom_mutation()
         if (one_chance_in(1000))
             return NUM_MUTATIONS;
         else if (one_chance_in(5))
-            mutat = _get_mut_with_use(MUTFLAG_XOM);
+            mutat = _get_mut_with_use(mutflag::XOM);
     }
     while (!_accept_mutation(mutat, false));
 
@@ -831,30 +830,30 @@ static mutation_type _get_random_xom_mutation()
 
 static mutation_type _get_random_corrupt_mutation()
 {
-    return _get_mut_with_use(MUTFLAG_CORRUPT);
+    return _get_mut_with_use(mutflag::CORRUPT);
 }
 
 static mutation_type _get_random_qazlal_mutation()
 {
-    return _get_mut_with_use(MUTFLAG_QAZLAL);
+    return _get_mut_with_use(mutflag::QAZLAL);
 }
 
 static mutation_type _get_random_mutation(mutation_type mutclass)
 {
-    mut_flag_type mt;
+    mutflag mt;
     switch (mutclass)
     {
         case RANDOM_MUTATION:
             // maintain an arbitrary ratio of good to bad muts to allow easier
             // weight changes within categories - 60% good seems to be about
             // where things are right now
-            mt = x_chance_in_y(3, 5) ? MUTFLAG_GOOD : MUTFLAG_BAD;
+            mt = x_chance_in_y(3, 5) ? mutflag::GOOD : mutflag::BAD;
             break;
         case RANDOM_BAD_MUTATION:
-            mt = MUTFLAG_BAD;
+            mt = mutflag::BAD;
             break;
         case RANDOM_GOOD_MUTATION:
-            mt = MUTFLAG_GOOD;
+            mt = mutflag::GOOD;
             break;
         default:
             die("invalid mutation class: %d", mutclass);

@@ -900,10 +900,10 @@ static void _debug_pane_bounds()
 #endif
 }
 
-enum update_flag
+enum class update_flag
 {
-    UF_AFFECT_EXCLUDES = (1 << 0),
-    UF_ADDED_EXCLUDE   = (1 << 1),
+    AFFECT_EXCLUDES = (1 << 0),
+    ADDED_EXCLUDE   = (1 << 1),
 };
 DEF_BITFIELD(update_flags, update_flag);
 
@@ -937,7 +937,7 @@ static update_flags player_view_update_at(const coord_def &gc)
             bool was_exclusion = is_exclude_root(gc);
             set_exclude(gc, size, false, false, true);
             if (!did_exclude && !was_exclusion)
-                ret |= UF_ADDED_EXCLUDE;
+                ret |= update_flag::ADDED_EXCLUDE;
         }
     }
 
@@ -946,7 +946,7 @@ static update_flags player_view_update_at(const coord_def &gc)
         hints_observe_cell(gc);
 
     if (env.map_knowledge(gc).changed() || !env.map_knowledge(gc).seen())
-        ret |= UF_AFFECT_EXCLUDES;
+        ret |= update_flag::AFFECT_EXCLUDES;
 
     set_terrain_visible(gc);
 
@@ -990,9 +990,9 @@ static void player_view_update()
     for (radius_iterator ri(you.pos(), you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
         update_flags flags = player_view_update_at(*ri);
-        if (flags & UF_AFFECT_EXCLUDES)
+        if (flags & update_flag::AFFECT_EXCLUDES)
             update_excludes.push_back(*ri);
-        if (flags & UF_ADDED_EXCLUDE)
+        if (flags & update_flag::ADDED_EXCLUDE)
             need_update = true;
     }
     // Update exclusion LOS for possibly affected excludes.
