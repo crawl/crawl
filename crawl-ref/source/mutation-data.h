@@ -1,17 +1,18 @@
 struct mutation_def
 {
     mutation_type mutation;
-    short       weight;     // Commonality of the mutation; bigger = appears
-                            // more often.
-    short       levels;     // The number of levels of the mutation.
-    mut_flags_type uses;    // Bitfield holding types of effects that grant
-                            // this mutation (MUTFLAG_*)
-    bool        form_based; // A mutation that is suppressed when shapechanged.
-    const char* short_desc; // What appears on the '%' screen.
-    const char* have[3];    // What appears on the 'A' screen.
-    const char* gain[3];    // Message when you gain the mutation.
-    const char* lose[3];    // Message when you lose the mutation.
-    const char* desc;       // A descriptive phrase that can be used in a sentence.
+    short       weight;     ///< Commonality of the mutation; bigger = appears
+                            /// more often.
+    short       levels;     ///< The number of levels of the mutation.
+    mutflags    uses;       ///< Bitfield holding types of effects that grant
+                            /// this mutation (mutflag::*)
+    bool        form_based; ///< Mutation is suppressed when shapechanged.
+    const char* short_desc; ///< What appears on the '%' screen.
+    const char* have[3];    ///< What appears on the 'A' screen.
+    const char* gain[3];    ///< Message when you gain the mutation.
+    const char* lose[3];    ///< Message when you lose the mutation.
+    const char* desc;       ///< A descriptive phrase that can be used in
+                            /// a sentence.
 };
 
 static const mutation_def mut_data[] =
