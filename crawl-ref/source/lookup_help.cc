@@ -58,19 +58,19 @@ typedef MenuEntry* (*menu_entry_generator)(char letter, const string &str,
 typedef function<int (const string &, const string &, string)> key_describer;
 
 /// A set of optional functionality for lookup types.
-enum lookup_type_flag
+enum class lookup_type
 {
-    LTYPF_NONE            = 0,
+    NONE            = 0,
     /// append the 'type' to the db lookup (e.g. "<input> spell")
-    LTYPF_DB_SUFFIX       = 1<<0,
+    DB_SUFFIX       = 1<<0,
     /// whether the sorting functionality should be turned off
-    LTYPF_DISABLE_SORT    = 1<<1,
+    DISABLE_SORT    = 1<<1,
     /// whether the display menu for this supports tiles
-    LTYPF_SUPPORT_TILES   = 1<<2,
+    SUPPORT_TILES   = 1<<2,
     /// whether the display menu for this has toggleable sorting
-    LTYPF_TOGGLEABLE_SORT = 1<<3,
+    TOGGLEABLE_SORT = 1<<3,
 };
-DEF_BITFIELD(lookup_type_flags, lookup_type_flag);
+DEF_BITFIELD(lookup_type_flags, lookup_type);
 
 /// A description of a lookup that the player can do. (e.g. (M)onster data)
 class LookupType
@@ -119,7 +119,7 @@ public:
     /// a function returning 'true' if the search result corresponding to
     /// the corresponding search should be filtered out of the results
     db_find_filter filter_forbid;
-    /// A set of optional functionality; see lookup_type_flag for details
+    /// A set of optional functionality; see lookup_type for details
     lookup_type_flags flags;
 private:
     MenuEntry* make_menu_entry(char letter, string &key) const;
@@ -128,7 +128,10 @@ private:
     /**
      * Does this lookup type support toggling the sort order of results?
      */
-    bool toggleable_sort() const { return bool(flags & LTYPF_TOGGLEABLE_SORT); }
+    bool toggleable_sort() const
+    {
+        return bool(flags & lookup_type::TOGGLEABLE_SORT);
+    }
 
 private:
     /// Function that fetches a list of keys, without taking arguments.
@@ -739,7 +742,7 @@ string LookupType::prompt_string() const
  */
 string LookupType::suffix() const
 {
-    if (flags & LTYPF_DB_SUFFIX)
+    if (flags & lookup_type::DB_SUFFIX)
         return " " + type;
     return "";
 }
@@ -773,7 +776,7 @@ void LookupType::display_keys(vector<string> &key_list) const
     // For tiles builds use a tiles menu to display monsters.
     const bool text_only =
 #ifdef USE_TILE_LOCAL
-    !(flags & LTYPF_SUPPORT_TILES);
+    !(flags & lookup_type::SUPPORT_TILES);
 #else
     true;
 #endif
@@ -1269,43 +1272,43 @@ static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
                _get_monster_keys, nullptr, nullptr,
                _describe_monster,
-               LTYPF_SUPPORT_TILES | LTYPF_TOGGLEABLE_SORT),
+               lookup_type::SUPPORT_TILES | lookup_type::TOGGLEABLE_SORT),
     LookupType('S', "spell", nullptr, _spell_filter,
                nullptr, nullptr, _spell_menu_gen,
                _describe_spell,
-               LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
+               lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
     LookupType('K', "skill", nullptr, nullptr,
                nullptr, _get_skill_keys, _skill_menu_gen,
                _describe_generic,
-               LTYPF_SUPPORT_TILES),
+               lookup_type::SUPPORT_TILES),
     LookupType('A', "ability", nullptr, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
                _describe_generic,
-               LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
+               lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
     LookupType('C', "card", _recap_card_keys, _card_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_card,
-               LTYPF_DB_SUFFIX),
+               lookup_type::DB_SUFFIX),
     LookupType('I', "item", nullptr, _item_filter,
                item_name_list_for_glyph, nullptr, _simple_menu_gen,
                _describe_item,
-               LTYPF_NONE),
+               lookup_type::NONE),
     LookupType('F', "feature", _recap_feat_keys, _feature_filter,
                nullptr, nullptr, _feature_menu_gen,
                _describe_generic,
-               LTYPF_SUPPORT_TILES),
+               lookup_type::SUPPORT_TILES),
     LookupType('G', "god", nullptr, nullptr,
                nullptr, _get_god_keys, _god_menu_gen,
                _describe_god,
-               LTYPF_SUPPORT_TILES),
+               lookup_type::SUPPORT_TILES),
     LookupType('B', "branch", nullptr, nullptr,
                nullptr, _get_branch_keys, _simple_menu_gen,
                _describe_branch,
-               LTYPF_DISABLE_SORT),
+               lookup_type::DISABLE_SORT),
     LookupType('L', "cloud", nullptr, nullptr,
                nullptr, _get_cloud_keys, _cloud_menu_gen,
                _describe_cloud,
-               LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
+               lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
 };
 
 /**
@@ -1435,11 +1438,11 @@ static bool _find_description(string &response)
         return false;
 
     ASSERT(*lookup_type_ptr);
-    const LookupType lookup_type = **lookup_type_ptr;
+    const LookupType ltype = **lookup_type_ptr;
 
-    const bool want_regex = !(lookup_type.no_search());
+    const bool want_regex = !(ltype.no_search());
     const string regex = want_regex ?
-                         _prompt_for_regex(lookup_type, response) :
+                         _prompt_for_regex(ltype, response) :
                          "";
 
     if (!response.empty())
@@ -1454,30 +1457,30 @@ static bool _find_description(string &response)
 
 
     // Try to get an exact match first.
-    const bool exact_match = _exact_lookup_match(lookup_type, regex);
+    const bool exact_match = _exact_lookup_match(ltype, regex);
 
-    vector<string> key_list = lookup_type.matching_keys(regex);
+    vector<string> key_list = ltype.matching_keys(regex);
 
-    const bool by_symbol = lookup_type.supports_glyph_lookup()
+    const bool by_symbol = ltype.supports_glyph_lookup()
                            && regex.size() == 1;
-    const string type = lowercase_string(lookup_type.type);
+    const string type = lowercase_string(ltype.type);
     response = _keylist_invalid_reason(key_list, type, regex, by_symbol);
     if (!response.empty())
         return true;
 
     if (key_list.size() == 1)
     {
-        lookup_type.describe(key_list[0]);
+        ltype.describe(key_list[0]);
         return true;
     }
 
-    if (exact_match && lookup_type.describe(regex, true) != ' ')
+    if (exact_match && ltype.describe(regex, true) != ' ')
         return true;
 
-    if (!(lookup_type.flags & LTYPF_DISABLE_SORT))
+    if (!(ltype.flags & lookup_type::DISABLE_SORT))
         sort(key_list.begin(), key_list.end());
 
-    lookup_type.display_keys(key_list);
+    ltype.display_keys(key_list);
     return true;
 }
 
