@@ -4225,9 +4225,9 @@ void dithmenos_shadow_melee(actor* target)
     shadow_monster_reset(mon);
 }
 
-void dithmenos_shadow_throw(coord_def target, const item_def &item)
+void dithmenos_shadow_throw(const dist &d, const item_def &item)
 {
-    if (target.origin()
+    if (d.target.origin()
         || !_dithmenos_shadow_acts())
     {
         return;
@@ -4248,10 +4248,10 @@ void dithmenos_shadow_throw(coord_def target, const item_def &item)
         new_item.flags    |= ISFLAG_SUMMONED;
         mon->inv[MSLOT_MISSILE] = ammo_index;
 
-        mon->target = clamp_in_bounds(target);
+        mon->target = clamp_in_bounds(d.target);
 
         bolt beem;
-        beem.target = target;
+        beem.set_target(d);
         setup_monster_throw_beam(mon, beem);
         beem.item = &mitm[mon->inv[MSLOT_MISSILE]];
         mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
