@@ -2413,10 +2413,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-        fail_check();
         summon_demon_type(random_choose(MONS_HELLWING, MONS_NEQOXEC,
                           MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_YNOXINUL),
-                          20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB);
+                          20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB, 0, !fail);
+        fail_check();
         break;
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
@@ -2450,10 +2450,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
-        fail_check();
         summon_demon_type(random_choose(MONS_EXECUTIONER, MONS_GREEN_DEATH,
                           MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON),
-                          20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB);
+                          20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB, 0, !fail);
+        fail_check();
         break;
 
     case ABIL_TROG_BURN_SPELLBOOKS:
