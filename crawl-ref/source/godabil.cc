@@ -4227,11 +4227,9 @@ void dithmenos_shadow_melee(actor* target)
 
 void dithmenos_shadow_throw(const dist &d, const item_def &item)
 {
-    if (d.target.origin()
-        || !_dithmenos_shadow_acts())
-    {
+    ASSERT(d.isValid);
+    if (!_dithmenos_shadow_acts())
         return;
-    }
 
     monster* mon = shadow_monster();
     if (!mon)
