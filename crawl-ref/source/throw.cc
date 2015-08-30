@@ -964,7 +964,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         && thrown.base_type == OBJ_MISSILES
         && thrown.sub_type != MI_NEEDLE)
     {
-        dithmenos_shadow_throw(thr.target, item);
+        dithmenos_shadow_throw(thr, item);
     }
 
     return hit;
@@ -1017,7 +1017,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     if (_setup_missile_beam(mons, beam, item, ammo_name, returning))
         return false;
 
-    beam.aimed_at_spot = returning;
+    beam.aimed_at_spot |= returning;
 
     const launch_retval projected =
         is_launched(mons, mons->mslot_item(MSLOT_WEAPON),
