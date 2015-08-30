@@ -1616,6 +1616,30 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         }
     }
 
+    // Rune locks
+    int min_runes = 0;
+    for (branch_iterator it; it; ++it)
+    {
+        if (ftype != it->entry_stairs)
+            continue;
+
+        if (!is_existing_level(level_id(it->id, 1)))
+        {
+            min_runes = runes_for_branch(it->id);
+            if (runes_in_pack() < min_runes)
+            {
+                if (min_runes == 1)
+                    mpr("You need a rune to enter this place.");
+                else
+                    mprf("You need at least %d runes to enter this place.",
+                         min_runes);
+                return false;
+            }
+        }
+
+        break;
+    }
+
     return true;
 }
 
