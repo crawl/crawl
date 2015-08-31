@@ -2682,9 +2682,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_FEDHAS_EVOLUTION:
-        fail_check();
-        fedhas_evolve_flora();
-        break;
+        return fedhas_evolve_flora(fail);
 
     case ABIL_TRAN_BAT:
         fail_check();
