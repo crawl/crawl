@@ -242,13 +242,13 @@ https://github.com/git-for-windows/build-extra/releases/latest
   take over 30 minutes to run as it downloads over 200 packages and compiles
   git itself before it completes.
 
-* Once the installation is complete, you can start MSYS2 by clicking the 'Git
-  SDK' icon created on your desktop or by running
+* Once the installation is complete, you can start the MSYS2 shell by clicking
+  the 'Git SDK' icon created on your desktop or by running
   'c:\git-sdk-32\mingw32_shell.bat' (replace each 32 with 64 if you've
   installed the 64-bit version).
 
 
-Running MSYS2 and building Crawl:
+Running the MSYS2 shell and building Crawl:
 
 * Start MSYS2 by either clicking the 'Git SDK' desktop icon or running
   'c:\git-sdk-32\mingw32_shell.bat' (replace each 32 with 64 if you've
@@ -261,11 +261,11 @@ Running MSYS2 and building Crawl:
 * Build Crawl by running 'make'. If you want a graphical build, you will need
   to add ' TILES=y' on the 'make' command line.
 
-* When the process finishes, you should be able to run crawl.exe. For Tiles,
-  you can do this right from source directory by typing './crawl'. Console
-  Crawl won't start directly from the MSYS2 shell, but you can start crawl.exe
-  from the source directory using the grapical file explorer or run it from the
-  Windows command shell cmd.exe. This also works for the Tiles version.
+* When the build process finishes, you can run crawl.exe directly from the
+  source directory in the MSYS2 shell. For Tiles, type './crawl', and for
+  console, type 'start crawl', which will open Crawl in a new console window
+  (necessary for it to run properly). Both versions can also be started by
+  double-clicking crawl.exe using the graphical file explorer.
 
 * If you get a build error about missing SDL.h even though you do have contribs
   installed, your version of MSYS may suffer from a bug that has been fixed
