@@ -113,8 +113,8 @@ int count_corpses_in_los(vector<stack_iterator> *positions);
 int fedhas_check_corpse_spores(bool quiet = false);
 int fedhas_corpse_spores(beh_type attitude = BEH_FRIENDLY);
 bool mons_is_evolvable(const monster* mon);
-bool fedhas_check_evolve_flora(bool quiet = false);
-void fedhas_evolve_flora();
+bool fedhas_check_evolve_flora(bool quiet);
+spret_type fedhas_evolve_flora(bool fail);
 
 void lugonu_bend_space();
 
