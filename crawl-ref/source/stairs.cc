@@ -534,7 +534,9 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
 
         if (!is_existing_level(level_id(it->id, 1))
             && runes_for_branch(it->id) > 0)
+        {
             _rune_effect(stair_find);
+        }
 
         break;
     }
