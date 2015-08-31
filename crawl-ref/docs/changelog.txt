@@ -345,6 +345,10 @@ Monsters
   Discharge.
 * Seraphim are now considerably stronger, and have a new spellset. They can
   now (very occasionally) appear on the orb run.
+* Death cobs have been greatly strengthened and their attacks increase your
+  hunger, even when guarded by AC.
+* Hungry ghosts' hungering effect now apply even when their attack damage is
+  reduced by AC.
 * New monsters:
   - Robin of the Strong Arm, appearing in the early Dungeon. An unusually
     strong hobgoblin, with a personal army of hobgoblins and goblins. She
@@ -366,6 +370,11 @@ Monsters
     alert other guards.
   - Death scarabs, swarming insects appearing in Tomb. They trail miasma and
     have a vampiric bite that also drains speed.
+  - Salamander Stormcallers, appearing in Dungeon and Vaults. They can unleash
+    a powerful firestorm on you, but must chant for three turns to prepare it.
+  - Entropy Weavers, in Spider and Depths. They can greatly corrode you after
+    chanting for three turns. They also have many light attacks that can become
+    deadly if you have low AC.
 * Renamed monsters:
   - Silver statues -> obsidian statues.
   - Green rats -> river rats.
