@@ -965,6 +965,7 @@ void game_options::reset_options()
     tile_show_items      = "!?/%=([)x}:|\\";
     tile_skip_title      = false;
     tile_menu_icons      = true;
+    tile_light_blur      = 8;
 
     // minimap colours
     tile_player_col       = str_to_tile_colour("white");

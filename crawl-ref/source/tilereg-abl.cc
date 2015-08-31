@@ -194,7 +194,7 @@ void AbilityRegion::pack_buffers()
                 m_buf.add_icons_tile(TILEI_MESH, x, y);
 
             if (item.flag & TILEI_FLAG_CURSOR)
-                m_buf.add_icons_tile(TILEI_CURSOR, x, y);
+                m_buf.add_overlay_tile(TILEI_CURSOR, x, y);
 
             if (item.quantity > 0) // mp cost
                 draw_number(x, y, item.quantity);

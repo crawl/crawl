@@ -31,7 +31,7 @@ void packed_cell::clear()
     glowing_mold     = false;
     is_sanctuary     = false;
     is_liquefied     = false;
-    mangrove_water = false;
+    mangrove_water   = false;
     orb_glow         = 0;
     blood_rotation   = 0;
     old_blood        = false;
@@ -40,6 +40,8 @@ void packed_cell::clear()
     disjunct         = 0;
 #if TAG_MAJOR_VERSION == 34
     heat_aura        = 0;
+    for (int i = 0; i < LIGHT_MAX_VALUE; i++)
+        lighting[i] = 0;
 #endif
 }
 
@@ -70,6 +72,8 @@ bool packed_cell::operator ==(const packed_cell &other) const
     if (num_dngn_overlay != other.num_dngn_overlay) return false;
     for (int i = 0; i < num_dngn_overlay; ++i)
         if (dngn_overlay[i] != other.dngn_overlay[i]) return false;
+    for (int i = 0; i < LIGHT_MAX_VALUE; i++)
+        if (lighting[i] != other.lighting[i]) return false;
     return true;
 }
 
@@ -499,4 +503,82 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
             shadow_tile = TILE_DNGN_WALL_SHADOW_DARK;
         _pack_wall_shadows(gc, cell, shadow_tile);
     }
+}
+
+static uint32_t _mix (uint32_t x, uint32_t y, int y_percent)
+{
+    ASSERT(y_percent <= 100);
+    ASSERT(y_percent >= 0);
+    int x_percent = 100 - y_percent;
+
+    int x_a = (x & 0xff);
+    int y_a = (y & 0xff);
+
+    int r = (((x & 0xff000000) >> 24) * x_percent + ((y & 0xff000000) >> 24) * y_percent) / 100;
+    int g = (((x & 0xff0000) >> 16) * x_percent  + ((y & 0xff0000) >> 16) * y_percent) / 100;
+    int b = (((x & 0xff00) >> 8) * x_percent  + ((y & 0xff00) >> 8) * y_percent) / 100;
+    int a = (x_a * x_percent + y_a * y_percent) / 100;
+
+    return (r << 24) + (g << 16) + (b << 8) + a;
+}
+
+static uint32_t _get_color(const coord_def &gc)
+{
+    if (_safe_feat(gc) == DNGN_UNSEEN)
+        return 0x000000ff;
+
+    uint32_t color = 0x00000000;
+    if (env.map_knowledge(gc).visible())
+    {
+        int range = max(abs(you.pos().x - gc.x), abs(you.pos().y - gc.y));
+
+        color = _mix(color, 0xf4d2a0cf, (32 - range * 3));
+
+        if (env.map_knowledge(gc).flags & MAP_UMBRAED)
+            color = _mix(color, 0x850eb07f, 50);
+        else if (env.map_knowledge(gc).flags & MAP_HALOED)
+            color = _mix(color, 0xf6dc017f, 50);
+    }
+
+    if (!env.map_knowledge(gc).visible())
+        color = _mix(color, 0x000000bf, 70);
+    if (env.map_knowledge(gc).mapped())
+        color = _mix(color, 0x13137dbf, 70);
+
+    return color;
+}
+
+void pack_cell_lighting(const coord_def &gc, packed_cell *cell)
+{
+    uint32_t center = _get_color(gc);
+    cell->lighting[LIGHT_CENTRE] = center;
+    if (_safe_feat(gc) == DNGN_UNSEEN || _is_seen_wall(gc)) {
+        cell->lighting[LIGHT_N]  = center;
+        cell->lighting[LIGHT_NE] = center;
+        cell->lighting[LIGHT_E]  = center;
+        cell->lighting[LIGHT_SE] = center;
+        cell->lighting[LIGHT_S]  = center;
+        cell->lighting[LIGHT_SW] = center;
+        cell->lighting[LIGHT_W]  = center;
+        cell->lighting[LIGHT_NW] = center;
+        return;
+    }
+
+    uint32_t n = _get_color(coord_def(gc.x, gc.y - 1));
+    uint32_t ne = _get_color(coord_def(gc.x + 1, gc.y - 1));
+    uint32_t e = _get_color(coord_def(gc.x + 1, gc.y));
+    uint32_t se = _get_color(coord_def(gc.x + 1, gc.y + 1));
+    uint32_t s = _get_color(coord_def(gc.x, gc.y + 1));
+    uint32_t sw = _get_color(coord_def(gc.x - 1, gc.y + 1));
+    uint32_t w = _get_color(coord_def(gc.x - 1, gc.y));
+    uint32_t nw = _get_color(coord_def(gc.x - 1, gc.y - 1));
+
+    cell->lighting[LIGHT_N]      = _mix(center, n, 35);
+    cell->lighting[LIGHT_NE]     = _mix(center, _mix(ne, _mix(n, e, 50), 75), 50);
+    cell->lighting[LIGHT_E]      = _mix(center, e, 35);
+    cell->lighting[LIGHT_SE]     = _mix(center, _mix(se, _mix(s, e, 50), 75), 50);
+    cell->lighting[LIGHT_S]      = _mix(center, s, 35);
+    cell->lighting[LIGHT_SW]     = _mix(center, _mix(sw, _mix(s, w, 50), 75), 50);
+    cell->lighting[LIGHT_W]      = _mix(center, w, 35);
+    cell->lighting[LIGHT_NW]     = _mix(center, _mix(nw, _mix(n, w, 50), 75), 50);
 }

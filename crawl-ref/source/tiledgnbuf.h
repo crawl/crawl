@@ -31,6 +31,7 @@ public:
     void add_command_tile(int tileidx, int x, int y);
     void add_icons_tile(int tileidx, int x, int y);
     void add_icons_tile(int tileidx, int x, int y, int ox, int oy);
+    void add_overlay_tile(int tileidx, int x, int y);
 
     void clear();
     void draw();
@@ -45,6 +46,7 @@ protected:
     void pack_player(int x, int y, bool submerged);
     void pack_doll(const dolls_data &doll, int x, int y,
                    bool submerged, bool ghost);
+    void pack_lighting(int x, int y, const packed_cell &cell);
 
     TileBuffer m_buf_floor;
     TileBuffer m_buf_wall;
@@ -57,6 +59,8 @@ protected:
     TileBuffer m_buf_skills;
     TileBuffer m_buf_commands;
     TileBuffer m_buf_icons;
+    ShapeBuffer m_buf_lighting;
+    TileBuffer m_buf_overlay;
 };
 
 #endif

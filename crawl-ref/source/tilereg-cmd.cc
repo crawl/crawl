@@ -173,7 +173,7 @@ void CommandRegion::pack_buffers()
                 m_buf.add_command_tile(item.tile, x, y);
 
             if (item.flag & TILEI_FLAG_CURSOR)
-                m_buf.add_icons_tile(TILEI_CURSOR, x, y);
+                m_buf.add_overlay_tile(TILEI_CURSOR, x, y);
         }
     }
 }

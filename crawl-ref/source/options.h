@@ -435,6 +435,7 @@ public:
     string      tile_show_items; // show which item types in tile inventory
     bool        tile_skip_title; // wait for a key at title screen?
     bool        tile_menu_icons; // display icons in menus?
+    int         tile_light_blur; // (0 - 16)
 
     // minimap colours
     VColour     tile_player_col;

@@ -93,7 +93,7 @@ void DungeonRegion::pack_cursor(cursor_type type, unsigned int tile)
         return;
 
     const coord_def ep(gc.x - m_cx_to_gx, gc.y - m_cy_to_gy);
-    m_buf_dngn.add_icons_tile(tile, ep.x, ep.y);
+    m_buf_dngn.add_overlay_tile(tile, ep.x, ep.y);
 }
 
 void DungeonRegion::pack_buffers()
@@ -115,6 +115,7 @@ void DungeonRegion::pack_buffers()
             {
                 tile_cell.flv = env.tile_flv(gc);
                 pack_cell_overlays(gc, &tile_cell);
+                pack_cell_lighting(gc, &tile_cell);
             }
             else
             {

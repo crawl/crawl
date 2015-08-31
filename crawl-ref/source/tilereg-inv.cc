@@ -107,10 +107,10 @@ void InventoryRegion::pack_buffers()
                 m_buf.add_main_tile(TILE_ITEM_SLOT_CURSED, x, y);
 
             if (item.flag & TILEI_FLAG_SELECT)
-                m_buf.add_icons_tile(TILEI_ITEM_SLOT_SELECTED, x, y);
+                m_buf.add_overlay_tile(TILEI_ITEM_SLOT_SELECTED, x, y);
 
             if (item.flag & TILEI_FLAG_CURSOR)
-                m_buf.add_icons_tile(TILEI_CURSOR, x, y);
+                m_buf.add_overlay_tile(TILEI_CURSOR, x, y);
 
             if (item.tile)
                 m_buf.add_main_tile(item.tile, x, y);

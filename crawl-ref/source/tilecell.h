@@ -10,6 +10,20 @@ enum halo_type
     HALO_UMBRA = 3,
 };
 
+enum light_segment
+{
+    LIGHT_CENTRE = 0,
+    LIGHT_N,
+    LIGHT_NE,
+    LIGHT_E,
+    LIGHT_SE,
+    LIGHT_S,
+    LIGHT_SW,
+    LIGHT_W,
+    LIGHT_NW,
+    LIGHT_MAX_VALUE
+};
+
 struct packed_cell
 {
     // For anything that requires multiple dungeon tiles (such as waves)
@@ -40,6 +54,7 @@ struct packed_cell
 #if TAG_MAJOR_VERSION == 34
     uint8_t heat_aura;
 #endif
+    FixedVector<uint32_t, LIGHT_MAX_VALUE> lighting;
 
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
@@ -83,6 +98,9 @@ struct packed_cell
 // For a given location, pack any waves/ink/wall shadow tiles
 // that require knowledge of the surrounding env cells.
 void pack_cell_overlays(const coord_def &gc, packed_cell *cell);
+
+// Pack the lighting vector, based on the surrounding tiles.
+void pack_cell_lighting(const coord_def &gc, packed_cell *cell);
 
 #endif // TILECELL_H
 #endif // USE_TILE
