@@ -5242,6 +5242,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ZIN_SANCTUARY;
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
         return TILEG_ABILITY_ZIN_CURE_MUTATIONS;
+    case ABIL_ZIN_DONATE_GOLD:
+        return TILEG_ABILITY_ZIN_DONATE_GOLD;
     // TSO
     case ABIL_TSO_DIVINE_SHIELD:
         return TILEG_ABILITY_TSO_DIVINE_SHIELD;
@@ -5249,11 +5251,17 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_TSO_CLEANSING_FLAME;
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
         return TILEG_ABILITY_TSO_DIVINE_WARRIOR;
+    case ABIL_TSO_BLESS_WEAPON:
+        return TILEG_ABILITY_TSO_BLESS_WEAPON;
     // Kiku
     case ABIL_KIKU_RECEIVE_CORPSES:
         return TILEG_ABILITY_KIKU_RECEIVE_CORPSES;
     case ABIL_KIKU_TORMENT:
         return TILEG_ABILITY_KIKU_TORMENT;
+    case ABIL_KIKU_BLESS_WEAPON:
+        return TILEG_ABILITY_KIKU_BLESS_WEAPON;
+    case ABIL_KIKU_GIFT_NECRONOMICON:
+        return TILEG_ABILITY_KIKU_NECRONOMICON;
     // Yredelemnul
     case ABIL_YRED_INJURY_MIRROR:
         return TILEG_ABILITY_YRED_INJURY_MIRROR;
@@ -5322,6 +5330,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_LUGONU_CORRUPT;
     case ABIL_LUGONU_ABYSS_ENTER:
         return TILEG_ABILITY_LUGONU_ENTER_ABYSS;
+    case ABIL_LUGONU_BLESS_WEAPON:
+        return TILEG_ABILITY_LUGONU_BLESS_WEAPON;
     // Nemelex
     case ABIL_NEMELEX_TRIPLE_DRAW:
         return TILEG_ABILITY_NEMELEX_TRIPLE_DRAW;
