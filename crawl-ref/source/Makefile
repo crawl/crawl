@@ -188,7 +188,15 @@ ifdef CROSSHOST
 	endif
 
 endif
+
+msys =
 ifneq (,$(findstring MINGW,$(uname_S)))
+	msys = Yes
+endif
+ifneq (,$(findstring MSYS,$(uname_S)))
+	msys = Yes
+endif
+ifdef msys
 	GAME = crawl.exe
 	bin_prefix = .
 	WIN32 = Yes
