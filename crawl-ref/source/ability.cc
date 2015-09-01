@@ -1059,7 +1059,6 @@ talent get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
-    case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
     case ABIL_LUGONU_CORRUPT:
     case ABIL_FEDHAS_RAIN:
     case ABIL_QAZLAL_DISASTER_AREA:
@@ -1076,6 +1075,11 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_DITHMENOS_SHADOW_FORM:
         invoc = true;
         failure = 80 - (you.piety / 25) - you.skill(SK_INVOCATIONS, 4);
+        break;
+
+    case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
+        invoc = true;
+        failure = 90 - (you.piety / 5) - you.skill(SK_INVOCATIONS, 2);
         break;
 
     case ABIL_NEMELEX_STACK_FIVE:
