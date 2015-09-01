@@ -69,10 +69,10 @@ public:
     map_feature_marker(const coord_def &pos = coord_def(0, 0),
                        dungeon_feature_type feat = DNGN_UNSEEN);
     map_feature_marker(const map_feature_marker &other);
-    void write(writer &) const;
-    void read(reader &);
-    string debug_describe() const;
-    map_marker *clone() const;
+    void write(writer &) const override;
+    void read(reader &) override;
+    string debug_describe() const override;
+    map_marker *clone() const override;
     static map_marker *read(reader &, map_marker_type);
     static map_marker *parse(const string &s, const string &) throw (string);
 
@@ -86,10 +86,10 @@ public:
     map_corruption_marker(const coord_def &pos = coord_def(0, 0),
                           int dur = 0);
 
-    void write(writer &) const;
-    void read(reader &);
-    map_marker *clone() const;
-    string debug_describe() const;
+    void write(writer &) const override;
+    void read(reader &) override;
+    map_marker *clone() const override;
+    string debug_describe() const override;
 
     static map_marker *read(reader &, map_marker_type);
 
@@ -103,10 +103,10 @@ public:
     map_tomb_marker(const coord_def& pos = coord_def(0, 0),
                     int dur = 0, int src = 0, int targ = 0);
 
-    void write(writer &) const;
-    void read(reader &);
-    map_marker *clone() const;
-    string debug_describe() const;
+    void write(writer &) const override;
+    void read(reader &) override;
+    map_marker *clone() const override;
+    string debug_describe() const override;
 
     static map_marker *read(reader &, map_marker_type);
 
@@ -122,10 +122,10 @@ public:
                     beh_type bh = BEH_HOSTILE, god_type gd = GOD_NO_GOD,
                     int pow = 0);
 
-    void write (writer &) const;
-    void read (reader &);
-    map_marker *clone() const;
-    string debug_describe() const;
+    void write (writer &) const override;
+    void read (reader &) override;
+    map_marker *clone() const override;
+    string debug_describe() const override;
 
     static map_marker *read(reader &, map_marker_type);
 
@@ -150,10 +150,10 @@ public:
                     coord_def cp = coord_def(-1, -1)
                     );
 
-    void write (writer &) const;
-    void read (reader &);
-    map_marker *clone() const;
-    string debug_describe() const;
+    void write (writer &) const override;
+    void read (reader &) override;
+    map_marker *clone() const override;
+    string debug_describe() const override;
 
     static map_marker *read(reader &, map_marker_type);
 
@@ -175,10 +175,10 @@ public:
                     int dur = 0, int mnum = 0,
                     dungeon_feature_type oldfeat = DNGN_CLOSED_DOOR);
 
-    void write (writer &) const;
-    void read (reader &);
-    map_marker *clone() const;
-    string debug_describe() const;
+    void write (writer &) const override;
+    void read (reader &) override;
+    map_marker *clone() const override;
+    string debug_describe() const override;
 
     static map_marker *read(reader &, map_marker_type);
 
@@ -199,10 +199,10 @@ public:
                     int dur = 0, terrain_change_type type = TERRAIN_CHANGE_GENERIC,
                     int mnum = 0, int oldcol = BLACK);
 
-    void write (writer &) const;
-    void read (reader &);
-    map_marker *clone() const;
-    string debug_describe() const;
+    void write (writer &) const override;
+    void read (reader &) override;
+    map_marker *clone() const override;
+    string debug_describe() const override;
 
     static map_marker *read(reader &, map_marker_type);
 
@@ -224,10 +224,10 @@ public:
                               int max_radius = LOS_RADIUS, int dur = 10,
                               actor* agent = nullptr);
 
-    void write(writer &) const;
-    void read(reader &);
-    map_marker *clone() const;
-    string debug_describe() const;
+    void write(writer &) const override;
+    void read(reader &) override;
+    map_marker *clone() const override;
+    string debug_describe() const override;
 
     static map_marker *read(reader &, map_marker_type);
 
@@ -252,15 +252,15 @@ public:
                    bool mapdef_marker = true);
     ~map_lua_marker();
 
-    void activate(bool verbose);
+    void activate(bool verbose) override;
 
-    void write(writer &) const;
-    void read(reader &);
-    map_marker *clone() const;
-    string debug_describe() const;
-    string property(const string &pname) const;
+    void write(writer &) const override;
+    void read(reader &) override;
+    map_marker *clone() const override;
+    string debug_describe() const override;
+    string property(const string &pname) const override;
 
-    bool notify_dgn_event(const dgn_event &e);
+    bool notify_dgn_event(const dgn_event &e) override;
 
     static map_marker *read(reader &, map_marker_type);
     static map_marker *parse(const string &s, const string &) throw (string);
@@ -283,12 +283,12 @@ class map_wiz_props_marker : public map_marker
 public:
     map_wiz_props_marker(const coord_def &pos = coord_def(0, 0));
     map_wiz_props_marker(const map_wiz_props_marker &other);
-    void write(writer &) const;
-    void read(reader &);
-    string debug_describe() const;
-    string property(const string &pname) const;
+    void write(writer &) const override;
+    void read(reader &) override;
+    string debug_describe() const override;
+    string property(const string &pname) const override;
     string set_property(const string &key, const string &val);
-    map_marker *clone() const;
+    map_marker *clone() const override;
     static map_marker *read(reader &, map_marker_type);
     static map_marker *parse(const string &s, const string &) throw (string);
 
@@ -302,10 +302,10 @@ public:
     map_position_marker(const coord_def &pos = coord_def(0, 0),
                         const coord_def _dest = INVALID_COORD);
     map_position_marker(const map_position_marker &other);
-    void write(writer &) const;
-    void read(reader &);
-    string debug_describe() const;
-    map_marker *clone() const;
+    void write(writer &) const override;
+    void read(reader &) override;
+    string debug_describe() const override;
+    map_marker *clone() const override;
     static map_marker *read(reader &, map_marker_type);
 
 public:

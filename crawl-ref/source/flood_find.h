@@ -26,7 +26,7 @@ public:
     bool did_leave_vault() const { return left_vault; }
 
 protected:
-    bool path_flood(const coord_def &c, const coord_def &dc);
+    bool path_flood(const coord_def &c, const coord_def &dc) override;
 protected:
     bool point_hunt, want_exit, no_vault, check_traversable;
     bool needed_features[NUM_FEATURES];

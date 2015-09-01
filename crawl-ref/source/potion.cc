@@ -69,7 +69,7 @@ public:
         static PotionCuring inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const
+    bool can_quaff(string *reason = nullptr) const override
     {
         // cure status effects
         if (you.duration[DUR_CONF]
@@ -95,7 +95,7 @@ public:
         return true;
     }
 
-    bool effect(bool=true, int=40, bool is_device = true) const
+    bool effect(bool=true, int=40, bool is_device = true) const override
     {
         const bool ddoor = you.duration[DUR_DEATHS_DOOR];
         if ((you.can_device_heal() || !is_device) && !ddoor)
@@ -133,7 +133,7 @@ public:
         static PotionHealWounds inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const
+    bool can_quaff(string *reason = nullptr) const override
     {
         if (!you.can_device_heal())
         {
@@ -156,7 +156,7 @@ public:
         return true;
     }
 
-    bool effect(bool=true, int=40, bool is_device = true) const
+    bool effect(bool=true, int=40, bool is_device = true) const override
     {
         if (you.duration[DUR_DEATHS_DOOR])
         {
@@ -212,7 +212,7 @@ public:
         static PotionBlood inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const
+    bool effect(bool=true, int pow = 40, bool=true) const override
     {
         if (you.species == SP_VAMPIRE)
         {
@@ -225,7 +225,7 @@ public:
         return true;
     }
 
-    bool can_quaff(string *reason = nullptr) const
+    bool can_quaff(string *reason = nullptr) const override
     {
         if (you.hunger_state == HS_ENGORGED)
         {
@@ -236,7 +236,7 @@ public:
         return true;
     }
 
-    bool quaff(bool was_known) const
+    bool quaff(bool was_known) const override
     {
         if (was_known && (!check_known_quaff() || !_prompt_quaff_blood()))
             return false;
@@ -259,7 +259,7 @@ public:
         static PotionHaste inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const
+    bool can_quaff(string *reason = nullptr) const override
     {
         if (you.stasis(false))
         {
@@ -270,12 +270,12 @@ public:
         return true;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const
+    bool effect(bool=true, int pow = 40, bool=true) const override
     {
         return haste_player(40 + random2(pow));
     }
 
-    bool quaff(bool was_known) const
+    bool quaff(bool was_known) const override
     {
         if (!check_known_quaff())
             return false;
@@ -297,7 +297,7 @@ public:
         static PotionMight inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const
+    bool effect(bool=true, int pow = 40, bool=true) const override
     {
         const bool were_mighty = you.duration[DUR_MIGHT] > 0;
 
@@ -321,7 +321,7 @@ public:
         static PotionBrilliance inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const
+    bool effect(bool=true, int pow = 40, bool=true) const override
     {
         const bool were_brilliant = you.duration[DUR_BRILLIANCE] > 0;
 
@@ -345,7 +345,7 @@ public:
         static PotionAgility inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const
+    bool effect(bool=true, int pow = 40, bool=true) const override
     {
         const bool were_agile = you.duration[DUR_AGILITY] > 0;
 
@@ -372,7 +372,7 @@ public:
         static PotionFlight inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const
+    bool can_quaff(string *reason = nullptr) const override
     {
         if (!flight_allowed(true, reason))
         {
@@ -383,7 +383,7 @@ public:
         return true;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const
+    bool effect(bool=true, int pow = 40, bool=true) const override
     {
         you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
         fly_player(pow);
@@ -402,13 +402,13 @@ public:
         static PotionPoison inst; return inst;
     }
 
-    bool effect(bool=true, int=40, bool=true) const
+    bool effect(bool=true, int=40, bool=true) const override
     {
         mprf(MSGCH_WARN, "That liquid tasted very nasty...");
         return poison_player(10 + random2avg(15, 2), "", "a potion of poison");
     }
 
-    bool quaff(bool was_known) const
+    bool quaff(bool was_known) const override
     {
         if (player_res_poison() >= 1)
             mpr("You feel slightly nauseous.");
@@ -429,7 +429,7 @@ public:
         static PotionCancellation inst; return inst;
     }
 
-    bool effect(bool=true, int=40, bool=true) const
+    bool effect(bool=true, int=40, bool=true) const override
     {
         debuff_player();
         mpr("You feel magically purged.");
@@ -448,7 +448,7 @@ public:
         static PotionAmbrosia inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const
+    bool can_quaff(string *reason = nullptr) const override
     {
         if (you.duration[DUR_DIVINE_STAMINA])
         {
@@ -468,7 +468,7 @@ public:
         return true;
     }
 
-    bool effect(bool=true, int=40, bool=true) const
+    bool effect(bool=true, int=40, bool=true) const override
     {
         const int ambrosia_turns = 3 + random2(8);
         if (confuse_player(ambrosia_turns))
@@ -495,7 +495,7 @@ public:
         static PotionInvisibility inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const
+    bool effect(bool=true, int pow = 40, bool=true) const override
     {
         if (you.backlit())
         {
@@ -533,12 +533,12 @@ public:
         return true;
     }
 
-    bool can_quaff(string *reason = nullptr) const
+    bool can_quaff(string *reason = nullptr) const override
     {
         return invis_allowed(true, reason);
     }
 
-    bool quaff(bool was_known) const
+    bool quaff(bool was_known) const override
     {
         // Let invis_allowed print the messages and possibly do a prompt.
         if (was_known && !invis_allowed())
@@ -561,7 +561,7 @@ public:
         static PotionExperience inst; return inst;
     }
 
-    bool effect(bool=true, int=40, bool=true) const
+    bool effect(bool=true, int=40, bool=true) const override
     {
         if (you.experience_level < you.get_max_xl())
         {
@@ -589,7 +589,7 @@ public:
         static PotionMagic inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const
+    bool can_quaff(string *reason = nullptr) const override
     {
 #if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DJINNI)
@@ -604,7 +604,7 @@ public:
         return true;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const
+    bool effect(bool=true, int pow = 40, bool=true) const override
     {
 #if TAG_MAJOR_VERSION == 34
         // Allow repairing rot, disallow going through Death's Door.
@@ -631,12 +631,12 @@ public:
         static PotionBerserk inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const
+    bool can_quaff(string *reason = nullptr) const override
     {
         return you.can_go_berserk(true, true, true, reason);
     }
 
-    bool effect(bool was_known = true, int pow = 40, bool=true) const
+    bool effect(bool was_known = true, int pow = 40, bool=true) const override
     {
         if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED)
         {
@@ -649,7 +649,7 @@ public:
         return true;
     }
 
-    bool quaff(bool was_known) const
+    bool quaff(bool was_known) const override
     {
         if (was_known
             && (!check_known_quaff() || !berserk_check_wielded_weapon()))
@@ -691,7 +691,7 @@ public:
         static PotionCureMutation inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const
+    bool can_quaff(string *reason = nullptr) const override
     {
         if (_disallow_mutate(reason))
             return false;
@@ -709,7 +709,7 @@ public:
         return true;
     }
 
-    bool effect(bool=true, int=40, bool=true) const
+    bool effect(bool=true, int=40, bool=true) const override
     {
         mpr("It has a very clean taste.");
         bool mutated = false;
@@ -736,14 +736,14 @@ public:
         static PotionMutation inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const
+    bool can_quaff(string *reason = nullptr) const override
     {
         if (_disallow_mutate(reason))
             return false;
         return true;
     }
 
-    bool effect(bool=true, int=40, bool=true) const
+    bool effect(bool=true, int=40, bool=true) const override
     {
         mpr("You feel extremely strange.");
         bool mutated = false;
@@ -754,7 +754,7 @@ public:
         return mutated;
     }
 
-    bool quaff(bool was_known) const
+    bool quaff(bool was_known) const override
     {
         if (was_known && !check_known_quaff())
             return false;
@@ -786,14 +786,14 @@ public:
         static PotionBeneficialMutation inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const
+    bool can_quaff(string *reason = nullptr) const override
     {
         if (_disallow_mutate(reason))
             return false;
         return true;
     }
 
-    bool effect(bool = true, int = 40, bool=true) const
+    bool effect(bool = true, int = 40, bool=true) const override
     {
         const bool mutated = mutate(RANDOM_GOOD_MUTATION,
                                     "potion of beneficial mutation",
@@ -812,7 +812,7 @@ public:
         return mutated;
     }
 
-    bool quaff(bool was_known) const
+    bool quaff(bool was_known) const override
     {
         if (was_known && !check_known_quaff())
             return false;
@@ -844,7 +844,7 @@ public:
         static PotionResistance inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const
+    bool effect(bool=true, int pow = 40, bool=true) const override
     {
         mprf(MSGCH_DURATION, "You feel protected.");
         you.increase_duration(DUR_RESISTANCE, random2(pow) + 35);
@@ -863,13 +863,13 @@ public:
         static PotionDegeneration inst; return inst;
     }
 
-    bool effect(bool=true, int=40, bool=true) const
+    bool effect(bool=true, int=40, bool=true) const override
     {
         mpr("There was something very wrong with that liquid.");
         return lose_stat(STAT_RANDOM, 1 + random2avg(4, 2));
     }
 
-    bool quaff(bool was_known) const
+    bool quaff(bool was_known) const override
     {
         if (effect())
             xom_is_stimulated( 50 / _xom_factor(was_known));
@@ -888,17 +888,17 @@ public:
         static PotionLignify inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const
+    bool can_quaff(string *reason = nullptr) const override
     {
         return transform(0, TRAN_TREE, false, true, reason);
     }
 
-    bool effect(bool was_known = true, int=40, bool=true) const
+    bool effect(bool was_known = true, int=40, bool=true) const override
     {
         return transform(30, TRAN_TREE, !was_known);
     }
 
-    bool quaff(bool was_known) const
+    bool quaff(bool was_known) const override
     {
         if (was_known
             && (!check_known_quaff() || !check_form_stat_safety(TRAN_TREE)))
@@ -930,12 +930,12 @@ public:
         static PotionDecay inst; return inst;
     }
 
-    bool effect(bool=true, int=40, bool=true) const
+    bool effect(bool=true, int=40, bool=true) const override
     {
         return you.rot(&you, 3 + random2(3));;
     }
 
-    bool quaff(bool was_known) const
+    bool quaff(bool was_known) const override
     {
         if (effect())
             xom_is_stimulated( 50 / _xom_factor(was_known));
@@ -954,7 +954,7 @@ public:
         static PotionBloodCoagulated inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const
+    bool effect(bool=true, int pow = 40, bool=true) const override
     {
         if (you.species == SP_VAMPIRE)
         {
@@ -967,7 +967,7 @@ public:
         return true;
     }
 
-    bool can_quaff(string *reason = nullptr) const
+    bool can_quaff(string *reason = nullptr) const override
     {
         if (you.hunger_state == HS_ENGORGED)
         {
@@ -977,7 +977,7 @@ public:
         return true;
     }
 
-    bool quaff(bool was_known) const
+    bool quaff(bool was_known) const override
     {
         if (was_known && (!check_known_quaff() || !_prompt_quaff_blood()))
             return false;
@@ -999,13 +999,13 @@ public:
         static PotionGainStrength inst; return inst;
     }
 
-    bool effect(bool=true, int=40, bool=true) const
+    bool effect(bool=true, int=40, bool=true) const override
     {
         return mutate(MUT_STRONG, "potion of gain strength",
                       true, false, false, true);
     }
 
-    bool quaff(bool was_known) const
+    bool quaff(bool was_known) const override
     {
         if (was_known && !check_known_quaff())
             return false;
@@ -1027,13 +1027,13 @@ public:
         static PotionGainDexterity inst; return inst;
     }
 
-    bool effect(bool=true, int=40, bool=true) const
+    bool effect(bool=true, int=40, bool=true) const override
     {
         return mutate(MUT_AGILE, "potion of gain dexterity",
                       true, false, false, true);
     }
 
-    bool quaff(bool was_known) const
+    bool quaff(bool was_known) const override
     {
         if (was_known && !check_known_quaff())
             return false;
@@ -1055,13 +1055,13 @@ public:
         static PotionGainIntelligence inst; return inst;
     }
 
-    bool effect(bool=true, int=40, bool=true) const
+    bool effect(bool=true, int=40, bool=true) const override
     {
         return mutate(MUT_STRONG, "potion of gain intelligence",
                       true, false, false, true);
     }
 
-    bool quaff(bool was_known) const
+    bool quaff(bool was_known) const override
     {
         if (was_known && !check_known_quaff())
             return false;
@@ -1083,7 +1083,7 @@ public:
         static PotionPorridge inst; return inst;
     }
 
-    bool effect(bool=true, int=40, bool=true) const
+    bool effect(bool=true, int=40, bool=true) const override
     {
         if (you.species == SP_VAMPIRE
             || player_mutation_level(MUT_CARNIVOROUS) == 3)
@@ -1098,7 +1098,7 @@ public:
         return true;
     }
 
-    bool can_quaff(string *reason) const
+    bool can_quaff(string *reason) const override
     {
         if (you.hunger_state == HS_ENGORGED)
         {
@@ -1120,7 +1120,7 @@ public:
     {
         static PotionWater inst; return inst;
     }
-    bool effect(bool=true, int=40, bool=true) const
+    bool effect(bool=true, int=40, bool=true) const override
     {
         mpr("This tastes like water.");
         return true;
@@ -1138,7 +1138,7 @@ public:
         static PotionSlowing inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const
+    bool can_quaff(string *reason = nullptr) const override
     {
         if (you.stasis(false))
         {
@@ -1149,7 +1149,7 @@ public:
         return true;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const
+    bool effect(bool=true, int pow = 40, bool=true) const override
     {
         return slow_player(10 + random2(pow));
     }
@@ -1166,7 +1166,7 @@ public:
         static PotionRestoreAbilities inst; return inst;
     }
 
-    bool effect(bool=true, int=40, bool=true) const
+    bool effect(bool=true, int=40, bool=true) const override
     {
         bool nothing_happens = true;
         if (you.duration[DUR_BREATH_WEAPON])
@@ -1195,7 +1195,7 @@ public:
     {
         static PotionStale inst; return inst;
     }
-    bool effect(bool=true, int=40, bool=true) const
+    bool effect(bool=true, int=40, bool=true) const override
     {
         mpr("That potion was far past its expiry date.");
         return true;
