@@ -466,7 +466,7 @@ public:
      * Get a string describing the form you're turning into. (If not the same
      * as the one used to describe this form in @.
      */
-    string get_transform_description() const { return "your old self."; }
+    string get_transform_description() const override { return "your old self."; }
 };
 
 class FormSpider : public Form
@@ -489,7 +489,7 @@ public:
     /**
      * Find the player's base unarmed damage in this form.
      */
-    int get_base_unarmed_damage() const
+    int get_base_unarmed_damage() const override
     {
         return 8 + div_rand_round(you.strength() + you.dex(), 3);
     }
@@ -497,7 +497,7 @@ public:
     /**
      * % screen description
      */
-    string get_long_name() const
+    string get_long_name() const override
     {
         return "blade " + blade_parts(true);
     }
@@ -505,7 +505,7 @@ public:
     /**
      * @ description
      */
-    string get_description(bool past_tense) const
+    string get_description(bool past_tense) const override
     {
         return make_stringf("You %s blades for %s.",
                             past_tense ? "had" : "have",
@@ -515,7 +515,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation_type previous_trans) const
+    string transform_message(transformation_type previous_trans) const override
     {
         const bool singular = player_mutation_level(MUT_MISSING_HAND);
 
@@ -528,7 +528,7 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const
+    string get_untransform_message() const override
     {
         const bool singular = player_mutation_level(MUT_MISSING_HAND);
 
@@ -543,7 +543,7 @@ public:
     /**
      * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
      */
-    string get_uc_attack_name(string default_name) const
+    string get_uc_attack_name(string default_name) const override
     {
         return "Blade " + blade_parts(true);
     }
@@ -560,7 +560,7 @@ public:
     /**
      * Find the player's base unarmed damage in this form.
      */
-    int get_base_unarmed_damage() const
+    int get_base_unarmed_damage() const override
     {
         return 6 + div_rand_round(you.strength(), 3);
     }
@@ -568,7 +568,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation_type previous_trans) const
+    string transform_message(transformation_type previous_trans) const override
     {
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
             return "You inwardly fear your resemblance to a lawn ornament.";
@@ -582,7 +582,7 @@ public:
      * Get a string describing the form you're turning into. (If not the same
      * as the one used to describe this form in @.
      */
-    string get_transform_description() const
+    string get_transform_description() const override
     {
         return "a living statue of rough stone.";
     }
@@ -590,7 +590,7 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const
+    string get_untransform_message() const override
     {
         // This only handles lava orcs going statue -> stoneskin.
         if (
@@ -614,7 +614,7 @@ public:
     /**
      * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
      */
-    string get_uc_attack_name(string default_name) const
+    string get_uc_attack_name(string default_name) const override
     {
         if (you.has_usable_claws(true))
             return "Stone claws";
@@ -637,7 +637,7 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const
+    string get_untransform_message() const override
     {
 #if TAG_MAJOR_VERSION == 34
         if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
@@ -650,7 +650,7 @@ public:
     /**
      * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
      */
-    string get_uc_attack_name(string default_name) const
+    string get_uc_attack_name(string default_name) const override
     {
         const bool singular = player_mutation_level(MUT_MISSING_HAND);
         return make_stringf("Ice fist%s", singular ? "" : "s");
@@ -672,7 +672,7 @@ public:
      *
      * @return  A monster type corresponding to the player in this form.
      */
-    monster_type get_equivalent_mons() const
+    monster_type get_equivalent_mons() const override
     {
         return dragon_form_dragon_type();
     }
@@ -681,7 +681,7 @@ public:
      * The AC bonus of the form, multiplied by 100 to match
      * player::armour_class().
      */
-    int get_ac_bonus() const
+    int get_ac_bonus() const override
     {
         if (species_is_draconian(you.species))
             return 1000;
@@ -691,7 +691,7 @@ public:
     /**
      * Find the player's base unarmed damage in this form.
      */
-    int get_base_unarmed_damage() const
+    int get_base_unarmed_damage() const override
     {
         // You also get another 6 damage from claws.
         return 12 + div_rand_round(you.strength() * 2, 3);
@@ -700,7 +700,7 @@ public:
     /**
      * How many levels of resistance against fire does this form provide?
      */
-    int res_fire() const
+    int res_fire() const override
     {
         switch (dragon_form_dragon_type())
         {
@@ -716,7 +716,7 @@ public:
     /**
      * How many levels of resistance against cold does this form provide?
      */
-    int res_cold() const
+    int res_cold() const override
     {
         switch (dragon_form_dragon_type())
         {
@@ -743,7 +743,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation_type previous_trans) const
+    string transform_message(transformation_type previous_trans) const override
     {
         return "Your body is suffused with negative energy!";
     }
@@ -751,7 +751,7 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const
+    string get_untransform_message() const override
     {
         if (you.undead_state() == US_ALIVE)
             return "You feel yourself come back to life.";
@@ -775,7 +775,7 @@ public:
      *
      * @return  A monster type corresponding to the player in this form.
      */
-    monster_type get_equivalent_mons() const
+    monster_type get_equivalent_mons() const override
     {
         return you.species == SP_VAMPIRE ? MONS_VAMPIRE_BAT : MONS_BAT;
     }
@@ -786,7 +786,7 @@ public:
      * @return  The stealth modifier for the given form. (0 = default to
      *          racial values.)
      */
-    int get_stealth_mod() const
+    int get_stealth_mod() const override
     {
         return you.species == SP_VAMPIRE ? 20 : stealth_mod;
     }
@@ -794,7 +794,7 @@ public:
     /**
      * What brand type does this form attack with when unarmed?
      */
-    brand_type get_uc_brand() const
+    brand_type get_uc_brand() const override
     {
         // thematic but probably irrelevant
         if (you.species == SP_VAMPIRE)
@@ -805,12 +805,12 @@ public:
     /**
      * Find the player's base unarmed damage in this form.
      */
-    int get_base_unarmed_damage() const
+    int get_base_unarmed_damage() const override
     {
         return you.species == SP_VAMPIRE ? 2 : 1;
     }
 
-    string get_description(bool past_tense) const
+    string get_description(bool past_tense) const override
     {
         return make_stringf("You %s in %sbat-form.",
                             past_tense ? "were" : "are",
@@ -821,7 +821,7 @@ public:
      * Get a string describing the form you're turning into. (If not the same
      * as the one used to describe this form in @.
      */
-    string get_transform_description() const
+    string get_transform_description() const override
     {
         return make_stringf("a %sbat.",
                             you.species == SP_VAMPIRE ? "vampire " : "");
@@ -849,7 +849,7 @@ public:
         return inst;
     }
 
-    string get_description(bool past_tense) const
+    string get_description(bool past_tense) const override
     {
         if (you.attribute[ATTR_APPENDAGE] == MUT_TENTACLE_SPIKE)
         {
@@ -866,7 +866,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation_type previous_trans) const
+    string transform_message(transformation_type previous_trans) const override
     {
         // ATTR_APPENDAGE must be set earlier!
         switch (you.attribute[ATTR_APPENDAGE])
@@ -885,7 +885,7 @@ public:
     /**
      * Get a message for untransforming from this form. (Handled elsewhere.)
      */
-    string get_untransform_message() const { return ""; }
+    string get_untransform_message() const override { return ""; }
 };
 
 class FormTree : public Form
@@ -899,7 +899,7 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const { return "You feel less woody."; }
+    string get_untransform_message() const override { return "You feel less woody."; }
 };
 
 class FormPorcupine : public Form
@@ -952,7 +952,7 @@ public:
      * @return      Whether this form prevents the player from wearing the
      *              item. (Other things may also prevent it, of course)
      */
-    bool can_wear_item(const item_def& item) const
+    bool can_wear_item(const item_def& item) const override
     {
         if (is_helmet(item) && !is_hard_helmet(item))
             return true; // mushroom caps!
@@ -962,7 +962,7 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const { return "You stop sporulating."; }
+    string get_untransform_message() const override { return "You stop sporulating."; }
 };
 
 class FormShadow : public Form
@@ -976,7 +976,7 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const
+    string get_untransform_message() const override
     {
         if (you.invisible())
             return "You feel less shadowy.";
@@ -1006,7 +1006,7 @@ public:
     /**
      * Get a string describing the form you're turning into.
      */
-    string get_transform_description() const
+    string get_transform_description() const override
     {
         return make_stringf("a %d-headed hydra.", you.heads());
     }
@@ -1014,7 +1014,7 @@ public:
     /**
      * @ description
      */
-    string get_description(bool past_tense) const
+    string get_description(bool past_tense) const override
     {
         return make_stringf("You %s %s",
                             past_tense ? "were" : "are",
@@ -1024,7 +1024,7 @@ public:
     /**
      * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
      */
-    string get_uc_attack_name(string default_name) const
+    string get_uc_attack_name(string default_name) const override
     {
         return make_stringf("Bite (x%d)", you.heads());
     }
@@ -1032,7 +1032,7 @@ public:
     /**
      * Find the player's base unarmed damage in this form.
      */
-    int get_base_unarmed_damage() const
+    int get_base_unarmed_damage() const override
     {
         // 3 damage per head for 1-10
         const int normal_heads_damage = min(you.heads(), 10) * 3;

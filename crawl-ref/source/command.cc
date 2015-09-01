@@ -576,7 +576,7 @@ class help_highlighter : public MenuHighlighter
 {
 public:
     help_highlighter(string = "");
-    int entry_colour(const MenuEntry *entry) const;
+    int entry_colour(const MenuEntry *entry) const override;
 private:
     text_pattern pattern;
     string get_species_key() const;

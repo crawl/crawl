@@ -65,7 +65,7 @@ class InvTitle : public MenuEntry
 public:
     InvTitle(Menu *mn, const string &title, invtitle_annotator tfn);
 
-    string get_text(const bool = false) const;
+    string get_text(const bool = false) const override;
 
 private:
     Menu *m;
@@ -91,7 +91,7 @@ public:
     const item_def *item;
 
     InvEntry(const item_def &i, bool show_bg = false);
-    string get_text(const bool need_cursor = false) const;
+    string get_text(const bool need_cursor = false) const override;
     void set_show_glyph(bool doshow);
     static void set_show_cursor(bool doshow);
 
@@ -105,17 +105,17 @@ public:
     bool         is_item_art() const;
     bool         is_item_equipped() const;
 
-    virtual int highlight_colour() const
+    virtual int highlight_colour() const override
     {
         return menu_colour(get_text(), item_prefix(*item), tag);
     }
 
-    virtual void select(int qty = -1);
+    virtual void select(int qty = -1) override;
 
-    virtual string get_filter_text() const;
+    virtual string get_filter_text() const override;
 
 #ifdef USE_TILE
-    virtual bool get_tiles(vector<tile_def>& tiles) const;
+    virtual bool get_tiles(vector<tile_def>& tiles) const override;
 #endif
 
 private:
@@ -128,6 +128,7 @@ public:
     InvMenu(int mflags = MF_MULTISELECT);
 
 public:
+    // Not an override, but an overload. Not virtual!
     unsigned char getkey() const;
 
     void set_preselect(const vector<SelItem> *pre);
@@ -138,6 +139,7 @@ public:
     // effect.
     void set_title_annotator(invtitle_annotator fn);
 
+    // Not an override, but an overload. Not virtual!
     void set_title(MenuEntry *title, bool first = true);
     void set_title(const string &s);
 
@@ -164,10 +166,10 @@ public:
     void sort_menu(vector<InvEntry*> &items, const menu_sort_condition *cond);
 
 protected:
-    bool process_key(int key);
+    bool process_key(int key) override;
     void do_preselect(InvEntry *ie);
-    virtual bool is_selectable(int index) const;
-    virtual bool allow_easy_exit() const;
+    virtual bool is_selectable(int index) const override;
+    virtual bool allow_easy_exit() const override;
 
 protected:
     menu_type type;

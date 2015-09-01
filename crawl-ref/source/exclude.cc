@@ -134,7 +134,7 @@ class opacity_excl : public opacity_func
 public:
     CLONE(opacity_excl)
 
-    opacity_type operator()(const coord_def& p) const
+    opacity_type operator()(const coord_def& p) const override
     {
         map_cell& cell = env.map_knowledge(p);
         if (!cell.seen())

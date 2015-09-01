@@ -2285,7 +2285,7 @@ public:
         selected_qty = inv->selected_qty;
     }
 
-    virtual string get_text(bool need_cursor) const
+    virtual string get_text(bool need_cursor) const override
     {
         need_cursor = need_cursor && show_cursor;
         int flags = item->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
@@ -2361,7 +2361,7 @@ public:
                                            name.c_str());
     }
 
-    virtual int highlight_colour() const
+    virtual int highlight_colour() const override
     {
         if (selected_qty >= 1)
             return WHITE;
@@ -2370,12 +2370,12 @@ public:
 
     }
 
-    virtual bool selected() const
+    virtual bool selected() const override
     {
         return selected_qty != 0 && quantity;
     }
 
-    virtual void select(int qty)
+    virtual void select(int qty) override
     {
         if (qty == -2)
             selected_qty = 0;
@@ -2400,7 +2400,7 @@ public:
     {
     }
 
-    virtual string get_text(const bool = false) const
+    virtual string get_text(const bool = false) const override
     {
         int flags = item->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
 

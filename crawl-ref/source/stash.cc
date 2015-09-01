@@ -427,13 +427,14 @@ public:
         set_type(MT_PICKUP);
         set_tag("stash");       // override "inventory" tag
     }
+    // Not virtual!
     unsigned char getkey() const;
 public:
     bool can_travel;
 protected:
-    void draw_title();
-    int title_height() const;
-    bool process_key(int key);
+    void draw_title() override;
+    int title_height() const override;
+    bool process_key(int key) override;
 private:
     formatted_string create_title_string(bool wrap = true) const;
 };
@@ -890,7 +891,7 @@ public:
         on_list = _on_list;
     }
 
-    string get_text(const bool = false) const
+    string get_text(const bool = false) const override
     {
         ASSERT(level == MEL_ITEM);
         ASSERT(hotkeys.size());
@@ -1635,7 +1636,7 @@ public:
 #endif
     }
 protected:
-    int process_key(int ch)
+    int process_key(int ch) override
     {
         if (ch == '?' && !pos)
         {
@@ -1859,8 +1860,8 @@ public:
     const char* filtered;
 
 protected:
-    bool process_key(int key);
-    void draw_title();
+    bool process_key(int key) override;
+    void draw_title() override;
 };
 
 void StashSearchMenu::draw_title()
