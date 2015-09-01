@@ -1554,6 +1554,11 @@ A vampiric thrall bound into servitude by esoteric rituals. Though its rigid
 limbs give it an awkward gait, it moves with surprising speed, leaping upon its
 victims and leeching away their life essence with its vicious claws.
 %%%%
+juggernaut
+
+A gigantic humanoid with incredibly thick skin. Its immense fists can deal
+incredible damage.
+%%%%
 jumping spider
 
 A large venomous spider, which weaves webs between its front legs and leaps at

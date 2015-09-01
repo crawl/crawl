@@ -598,6 +598,7 @@ fire_giant MONS_FIRE_GIANT
 frost_giant MONS_FROST_GIANT
 stone_giant MONS_STONE_GIANT
 titan MONS_TITAN
+juggernaut MONS_JUGGERNAUT
 %rim 1
 
 ## Drakes (also 'l')

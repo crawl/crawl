@@ -1487,6 +1487,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_STONE_GIANT;
     case MONS_TITAN:
         return TILEP_MONS_TITAN;
+    case MONS_JUGGERNAUT:
+        return TILEP_MONS_JUGGERNAUT;
 
     // dragons ('D')
     case MONS_WYVERN:
@@ -3744,6 +3746,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_STONE_GIANT;
     case MONS_TITAN:
         return TILE_CORPSE_TITAN;
+    case MONS_JUGGERNAUT:
+        return TILE_CORPSE_JUGGERNAUT;
 
     // dragons ('D')
     case MONS_WYVERN:

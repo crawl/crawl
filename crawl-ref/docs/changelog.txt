@@ -375,6 +375,8 @@ Monsters
   - Entropy Weavers, in Spider and Depths. They can greatly corrode you after
     chanting for three turns. They also have many light attacks that can become
     deadly if you have low AC.
+  - Juggernauts, terrifying giants that lurk in Depths. They move quickly and
+    deliver fantastically punishing blows, but must rest after each attack.
 * Renamed monsters:
   - Silver statues -> obsidian statues.
   - Green rats -> river rats.
