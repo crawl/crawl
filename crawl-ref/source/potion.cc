@@ -225,7 +225,7 @@ public:
         return true;
     }
 
-    bool can_quaff(string *reason = nullptr)
+    bool can_quaff(string *reason = nullptr) const
     {
         if (you.hunger_state == HS_ENGORGED)
         {
@@ -967,7 +967,7 @@ public:
         return true;
     }
 
-    bool can_quaff(string *reason = nullptr)
+    bool can_quaff(string *reason = nullptr) const
     {
         if (you.hunger_state == HS_ENGORGED)
         {
@@ -1098,7 +1098,7 @@ public:
         return true;
     }
 
-    bool can_quaff(string *reason)
+    bool can_quaff(string *reason) const
     {
         if (you.hunger_state == HS_ENGORGED)
         {
