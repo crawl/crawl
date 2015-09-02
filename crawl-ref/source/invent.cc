@@ -358,27 +358,9 @@ string slot_description()
 
 void InvMenu::set_title(const string &s)
 {
-    string stitle = s;
-    if (stitle.empty())
-    {
-#ifdef USE_TILE_WEB
-        // Webtiles handles menus specially, so disable the crt
-        tiles_crt_control crt_enabled(false);
-#endif
-
-        // We're not printing anything yet, but this select the crt layer
-        // so that get_number_of_cols returns the appropriate value.
-        cgotoxy(1, 1);
-
-        stitle = "Inventory: " + slot_description();
-
-        string prompt = "(_ for help)";
-        stitle = stitle + string(max(0, get_number_of_cols() - strwidth(stitle)
-                                        - strwidth(prompt)),
-                                 ' ') + prompt;
-    }
-
-    set_title(new InvTitle(this, stitle, title_annotate));
+    set_title(new InvTitle(this, s.empty() ? "Inventory: " + slot_description()
+                                           : s,
+                           title_annotate));
 }
 
 static bool _has_melded_armour()
@@ -905,6 +887,11 @@ vector<SelItem> InvMenu::get_selitems() const
     return selected_items;
 }
 
+string InvMenu::help_key() const
+{
+    return type == MT_DROP || type == MT_PICKUP ? "pick-up" : "";
+}
+
 bool InvMenu::process_key(int key)
 {
     if (type == MT_KNOW)
@@ -940,14 +927,6 @@ bool InvMenu::process_key(int key)
         CASE_ESCAPE
             lastch = key;
             return false;
-
-        case '_':
-            show_known_menu_help();
-#ifdef USE_TILE_WEB
-            webtiles_update_scroll_pos();
-#endif
-            draw_menu();
-            return true;
 
         case CONTROL('D'):
             // If we cannot select anything (e.g. on the unknown items
