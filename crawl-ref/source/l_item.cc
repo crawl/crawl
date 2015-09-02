@@ -583,8 +583,8 @@ IDEF(has_skeleton)
         return 0;
 
     lua_pushboolean(ls, item->is_type(OBJ_CORPSES, CORPSE_BODY)
-            && mons_skeleton(item->mon_type)
-        || item->is_type(OBJ_CORPSES, CORPSE_SKELETON) );
+                         && mons_skeleton(item->mon_type)
+                        || item->is_type(OBJ_CORPSES, CORPSE_SKELETON));
 
     return 1;
 }
@@ -595,7 +595,7 @@ IDEF(can_zombify)
         return 0;
 
     lua_pushboolean(ls, item->is_type(OBJ_CORPSES, CORPSE_BODY)
-        && mons_zombifiable(item->mon_type));
+                        && mons_zombifiable(item->mon_type));
 
     return 1;
 }
