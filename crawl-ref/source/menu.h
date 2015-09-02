@@ -483,6 +483,8 @@ protected:
     virtual bool process_key(int keyin);
 
     virtual bool allow_easy_exit() const;
+
+    virtual string help_key() const { return ""; }
 };
 
 /// Allows toggling by specific keys.

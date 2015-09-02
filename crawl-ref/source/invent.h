@@ -170,6 +170,7 @@ protected:
     void do_preselect(InvEntry *ie);
     virtual bool is_selectable(int index) const override;
     virtual bool allow_easy_exit() const override;
+    virtual string help_key() const override;
 
 protected:
     menu_type type;

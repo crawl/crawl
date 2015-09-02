@@ -2274,6 +2274,12 @@ public:
 
         return ckey;
     }
+
+protected:
+    string help_key() const override
+    {
+        return "known-menu";
+    }
 };
 
 class KnownEntry : public InvEntry
