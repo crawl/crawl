@@ -24,7 +24,8 @@ fi
 rm -f conftest.cc conftest.o
 
 cat <<END >conftest.cc
-#include <string.h>
+#include <cstring>
+using namespace std;
 int main()
 {
     const char *src = "hello";
@@ -42,7 +43,8 @@ fi
 rm -f conftest.cc conftest.o
 
 cat <<END >conftest.cc
-#include <stdlib.h>
+#include <cstdlib>
+using namespace std;
 int main()
 {
     char file[] = "XXXXXX";
