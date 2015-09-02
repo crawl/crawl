@@ -171,6 +171,7 @@ int fdatasync(int fd)
 }
 # endif
 
+# ifndef CRAWL_HAVE_MKSTEMP
 int mkstemp(char *dummy)
 {
     HANDLE fh;
@@ -193,6 +194,7 @@ int mkstemp(char *dummy)
 
     die("can't create temporary file in %%TMPDIR%%");
 }
+# endif
 
 #else
 // non-Windows
