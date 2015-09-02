@@ -3070,7 +3070,7 @@ mon_energy_usage mons_class_energy(monster_type mc)
 
 mon_energy_usage mons_energy(const monster* mon)
 {
-    mon_energy_usage meu = mons_class_energy(mon->type);
+    mon_energy_usage meu = mons_class_energy(mons_base_type(mon));
     if (mon->ghost.get())
         meu.move = meu.swim = mon->ghost->move_energy;
     return meu;
