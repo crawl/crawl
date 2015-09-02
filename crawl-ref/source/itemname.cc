@@ -17,6 +17,7 @@
 #include "art-enum.h"
 #include "asg.h" // for make_name()'s use
 #include "butcher.h"
+#include "cio.h"
 #include "colour.h"
 #include "command.h"
 #include "decks.h"
@@ -2279,6 +2280,63 @@ protected:
     string help_key() const override
     {
         return "known-menu";
+    }
+
+    bool allow_easy_exit() const override
+    {
+        return true;
+    }
+
+    bool process_key(int key) override
+    {
+        bool resetting = (lastch == CONTROL('D'));
+        if (resetting)
+        {
+            //return the menu title to its previous text.
+            set_title(temp_title);
+            update_title();
+            num = -2;
+
+            // Disarm ^D here, because process_key doesn't always set lastch.
+            lastch = ' ';
+        }
+        else
+            num = -1;
+
+        switch (key)
+        {
+        case ',':
+            return true;
+        case '*':
+            if (!resetting)
+                break;
+        case '^':
+            key = ',';
+            break;
+
+        case '-':
+        case '\\':
+        case CK_ENTER:
+        CASE_ESCAPE
+            lastch = key;
+            return false;
+
+        case CONTROL('D'):
+            // If we cannot select anything (e.g. on the unknown items
+            // page), ignore Ctrl-D. Likewise if the last key was
+            // Ctrl-D (we have already disarmed Ctrl-D for the next
+            // keypress by resetting lastch).
+            if (flags & (MF_SINGLESELECT | MF_MULTISELECT) && !resetting)
+            {
+                lastch = CONTROL('D');
+                temp_title = title->text;
+                set_title("Select to reset item to default: ");
+                update_title();
+            }
+
+            return true;
+        }
+        return Menu::process_key(key);
     }
 };
 
