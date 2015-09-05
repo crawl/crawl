@@ -348,15 +348,15 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
         return max(damage - saved, 0);
 
     case AC_NORMAL:
-        saved = random2(1 + ac);
+        saved = (1 + ac) / 2;
         break;
     case AC_HALF:
-        saved = random2(1 + ac) / 2;
+        saved = (1 + ac) / 4;
         ac /= 2;
         gdr /= 2;
         break;
     case AC_TRIPLE:
-        saved = random2(1 + ac) + random2(1 + ac) + random2(1 + ac);
+        saved = 3 * (1 + ac) / 2;
         ac *= 3;
         // apply GDR only twice rather than thrice, that's probably still waaay
         // too good.  50% gives 75% rather than 100%, too.

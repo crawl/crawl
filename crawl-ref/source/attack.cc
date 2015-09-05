@@ -1375,7 +1375,7 @@ int attack::calc_damage()
         if (using_weapon() || wpn_skill == SK_THROWING)
         {
             damage_max = weapon_damage();
-            damage += random2(damage_max);
+            damage += damage_max/2;
 
             int wpn_damage_plus = 0;
             if (weapon) // can be 0 for throwing projectiles
@@ -1391,15 +1391,15 @@ int attack::calc_damage()
             wpn_damage_plus += attacker->scan_artefacts(ARTP_SLAYING);
 
             if (wpn_damage_plus >= 0)
-                damage += random2(wpn_damage_plus);
+                damage += wpn_damage_plus/2;
             else
-                damage -= random2(1 - wpn_damage_plus);
+                damage -= (1 - wpn_damage_plus)/2;
 
-            damage -= 1 + random2(3);
+            damage -= 2;
         }
 
         damage_max += attk_damage;
-        damage     += 1 + random2(attk_damage);
+        damage     += 1 + attk_damage/2;
 
         damage = apply_damage_modifiers(damage, damage_max);
 
@@ -1415,7 +1415,7 @@ int attack::calc_damage()
 
         potential_damage = player_stat_modify_damage(potential_damage);
 
-        damage = random2(potential_damage+1);
+        damage = (potential_damage+1)/2;
 
         damage = player_apply_weapon_skill(damage);
         damage = player_apply_fighting_skill(damage, false);
