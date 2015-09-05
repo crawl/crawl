@@ -1377,11 +1377,6 @@ void player_reacts()
     // increment constriction durations
     you.accum_has_constricted();
 
-    const int food_use = div_rand_round(player_hunger_rate() * you.time_taken,
-                                        BASELINE_DELAY);
-    if (food_use > 0 && you.hunger > 0)
-        make_hungry(food_use, true);
-
     _regenerate_hp_and_mp(you.time_taken);
 
     dec_disease_player(you.time_taken);
