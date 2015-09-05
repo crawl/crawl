@@ -1,4 +1,4 @@
-Stone Soup 0.17 (up to 0.17-a0-1649-g91c94ae)
+Stone Soup 0.17 (up to 0.17-a0-1763-g847a857)
 --------------------------------------------
 
 Branches, Environment
@@ -52,6 +52,9 @@ Character
 * Powered by Death is now triggered by kills, instead of corpses.
 * Black Mark no longer gives vampirism; its other effects are now stronger.
 * Clawed attacks no longer have bleeding-over-time damage effects.
+* There's now a distinct hunger state of Fainting and appropriate warning
+  messages for when the player is so low on nutrition that they might become
+  paralyzed.
 
 Geometry
 --------
@@ -91,6 +94,10 @@ Gods
 * Zin's Vitalization no longer provides nutrition, and now has a small MP cost.
 * Jiyva's Slime Prayer now lasts longer and has a small MP cost.
 * Sif no longer requires worshippers to know spells.
+* The player now no longer needs an altar to use the following abilities, which
+  are accessible from the ability menu: Zin's Donate Gold and Cure All
+  Mutations, Kiku's Bless Weapon and Gift Necronomicon, Lucy's Bless Weapon,
+  and The Shining One's Bless Weapon.
 
 Items
 -----
@@ -181,6 +188,8 @@ Monsters
 * Monsters can no longer have Animate Dead nor Simulacrum spells.
 * Monsters that worship Dith or Yred (including allies of the player) are
   immune to the umbra accuracy reduction.
+* Monsters can no longer have a flee ability (Polar Bears, Black Bears, and
+  Krakens).
 * Removed monsters:
   - Unborn.
   - Ravens.
