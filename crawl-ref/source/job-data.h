@@ -51,7 +51,7 @@ static const map<job_type, job_def> job_data =
     { "robe", "book of Debilitation" },
     WCHOICE_RANGED,
     { { SK_FIGHTING, 1 }, { SK_DODGING, 2 }, { SK_SPELLCASTING, 1 },
-      { SK_HEXES, 3 }, { SK_WEAPON, 2 }, },
+      { SK_HEXES, 3 }, { SK_WEAPON, 4 }, },
 } },
 
 { JOB_ARTIFICER, {
@@ -172,7 +172,7 @@ static const map<job_type, job_def> job_data =
     { "short sword", "leather armour" },
     WCHOICE_RANGED,
     { { SK_FIGHTING, 2 }, { SK_DODGING, 2 }, { SK_STEALTH, 1 },
-      { SK_WEAPON, 4 }, },
+      { SK_WEAPON, 8 }, },
 } },
 
 { JOB_ICE_ELEMENTALIST, {
