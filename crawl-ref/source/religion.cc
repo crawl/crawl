@@ -3259,7 +3259,7 @@ int gozag_service_fee()
 
 bool player_can_join_god(god_type which_god)
 {
-    if (you.species == SP_DEMIGOD)
+    if (you.species == SP_DEMIGOD || you.species == SP_DEMONSPAWN)
         return false;
 
     if (is_good_god(which_god) && you.undead_or_demonic())
@@ -3366,6 +3366,7 @@ void join_religion(god_type which_god, bool immediate)
     ASSERT(which_god != GOD_NO_GOD);
     ASSERT(which_god != GOD_ECUMENICAL);
     ASSERT(you.species != SP_DEMIGOD);
+    ASSERT(you.species != SP_DEMONSPAWN);
 
     redraw_screen();
 

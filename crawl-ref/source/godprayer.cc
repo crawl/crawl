@@ -142,7 +142,7 @@ static bool _try_god_conversion(god_type god, bool beogh_priest)
 {
     ASSERT(god != GOD_NO_GOD);
 
-    if (you.species == SP_DEMIGOD)
+    if (you.species == SP_DEMIGOD || you.species == SP_DEMONSPAWN)
     {
         mpr("A being of your status worships no god.");
         return false;

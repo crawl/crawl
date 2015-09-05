@@ -617,7 +617,7 @@ static int _heretic_recite_weakness(const monster *mon)
             degree++;
 
         // Or those who believe in themselves...
-        if (mon->type == MONS_DEMIGOD)
+        if (mon->type == MONS_DEMIGOD || mon->type == MONS_DEMONSPAWN)
             degree++;
 
         // ...but evil gods are worse.

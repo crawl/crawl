@@ -363,7 +363,7 @@ static string _get_branches(bool display)
 static string _get_altars(bool display)
 {
     // Just wastes space for demigods.
-    if (you.species == SP_DEMIGOD)
+    if (you.species == SP_DEMIGOD || you.species == SP_DEMONSPAWN)
         return "";
 
     string disp;

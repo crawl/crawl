@@ -1210,6 +1210,7 @@ static void _redraw_title()
         }
     }
     else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
+             && you.species != SP_DEMONSPAWN
              && !had_gods())
     {
         string godpiety = "**....";

@@ -1060,7 +1060,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEMONSPAWN,      SK_AIR_MAGIC,      -1),
     APT(SP_DEMONSPAWN,      SK_EARTH_MAGIC,    -1),
     APT(SP_DEMONSPAWN,      SK_POISON_MAGIC,    0),
-    APT(SP_DEMONSPAWN,      SK_INVOCATIONS,     3),
+    APT(SP_DEMONSPAWN,      SK_INVOCATIONS,   UNUSABLE_SKILL),
     APT(SP_DEMONSPAWN,      SK_EVOCATIONS,      0),
 
     // SP_GHOUL
