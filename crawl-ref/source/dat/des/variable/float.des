@@ -2203,45 +2203,6 @@ ENDMAP
 
 ###############################################################################
 
-NAME:    hangedman_surveillance_ring
-TAGS:    no_monster_gen no_item_gen transparent patrolling
-ORIENT:  float
-DEPTH:   Depths, !Depths:$
-WEIGHT:  3
-MONS:    generate_awake giant eyeball, eye of devastation, giant orange brain
-MONS:    generate_awake golden eye, slime creature, jelly
-KFEAT:   > = known shaft trap
-KFEAT:   n = iron_grate
-KMASK:   ' = !no_monster_gen
-KMASK:   ' = !no_item_gen
-SHUFFLE: {[(
-SUBST:   ( = (:70 <, [ = [:50 <
-MAP
-  '''''''''''''''''
-  ''''''cnnnc''''''
-''''ccccc.}.ccccc''''
-'''cc%.c..4..c.%cc'''
-''cc%..+.cnc.+..%cc''
-''c%.3%cnc6cnc%3.%c''
-''c..%cc.....cc%..c''
-''cc+cc.......cc+cc''
-'cc..n.........n..cc'
-'n..cc....<....cc..n'
-'n.1n2...[{(...2n1.n'
-'n..cc....>....cc..n'
-'cc..n.........n..cc'
-''cc+cc.......cc+cc''
-''c..*cc.....cc*..c''
-''c*55*ccc.ccc*55*c''
-''cc*54n.+++.n45*cc''
-'''cc*.n..2..n.*cc'''
-''''ccccc...ccccc''''
-  ''''..c+++c..''''
-  ''''.........''''
-ENDMAP
-
-###############################################################################
-
 NAME:    hangedman_opposites_gauntlet
 TAGS:    no_monster_gen patrolling
 ORIENT:  float
@@ -6078,43 +6039,6 @@ xG.....Gx
 x.......x
 xG.....Gx
  @@@@@@@
-ENDMAP
-
-NAME:   kennysheep_steamy
-ORIENT: float
-TAGS:   no_monster_gen
-DEPTH:  D:5-10
-MONS:   steam dragon, fungus
-KFEAT:  ^ = known shaft trap
-SUBST:  p = .....^22222wwwww
-MAP
-   xxxxx
- xxxpppxx
- xpp1.ppxx
-xxp....ppx
-xpp...1ppx
-xpp....ppx
-xxpp.pppxx
- xpp.ppxx
- xxp.px
-  xp.px
-  xp.px
-  xp.px
-  xp.px
-  xp.px
-  xx.px
-   x.px
-   x.pxx
-   xp.px
-   xp.px
-   xp.px
-  xxp.px
-  xpp.px
- xxpp.px
- xppp.pxx
- xppp.ppx
- xppp.ppx
-xx@@@@@@xx
 ENDMAP
 
 NAME:   kennysheep_funnel

@@ -928,18 +928,6 @@ x..x
 .xx.
 ENDMAP
 
-NAME:  vaults_dpeg_emergency_exit
-TAGS:  vaults_empty no_tele_into
-DEPTH: Vaults:1-3
-KFEAT: ^ = known shaft trap
-MAP
-.....
-.mmm.
-.m^m.
-.mmm.
-.....
-ENDMAP
-
 NAME:  vaults_dpeg_hooks
 TAGS:  vaults_empty
 SUBST: _ : +..

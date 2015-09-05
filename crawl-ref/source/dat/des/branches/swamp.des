@@ -494,25 +494,6 @@ ttttttt
 ttttttt
 ENDMAP
 
-NAME: wheals_swamp_sinkhole
-TAGS: extra no_monster_gen decor
-DEPTH: Swamp:1-2
-WEIGHT: 5
-KFEAT: ^ = known shaft trap
-SUBST: u = Ww
-KPROP: wW^ = no_tele_into
-MAP
-ttttttttt
-twwwwwwwt
-twuuuuuwt
-twuWWWuwt
-twuW^Wuwt
-twuWWWuwt
-twuuuuuwt
-@wwwwwwwt
-ttttttttt
-ENDMAP
-
 NAME: nicolae_swamp_triple_paths
 TAGS: transparent extra decor
 SUBST: T = t_

@@ -136,42 +136,6 @@ xxxx...U..x
 ENDMAP
 
 ###############################################################################
-NAME:    evilmike_arrival_grusome_pit
-WEIGHT: 1
-TAGS:    arrival no_rotate no_item_gen
-ORIENT:  northwest
-# the exit will be placed elsewhere 25% of the time
-SUBST:   { = {:30 .
-ITEM:    q:1 chunk, skeleton, corpse
-SUBST:   Y = A.
-KFEAT:   A = known shaft trap
-SUBST:   ` = df `:60
-SUBST:   . = ' .:120
-SUBST:   ` = ''., V = Xx, U = Xxxx, x = X x:60
-KPROP:   X' = bloody
-SUBST:   X = x, ' = .
-SUBST:   . = .:320 d:5 e:20 f:5
-SUBST:   y : x
-MAP
-yyyyyyyyyyyy
-yyVVVVVyyyyy
-yVV...VVyyyy
-yV.YYY`VVyyyyyyyyyyyyyyyyyyyyyyy
-yV.YAY`.Vyyyyyyyyyyyyyyxxxxyxxxy
-yV.YYY`.UUyyyyxxxxxxyxxx..xxxxxy
-yVV.```` UUUyUU....xxx.........@
-yyVVVVU.``.UUU................xy
-yyyyyyUU.`````......`.`.`.`...xy
-     yyUUU..`.``...``........xxy
-     yyyyUUUU..``.``.......xxxyy
-     yyyyyyyUU............xxyyyy
-     yyyyyyyyxxxx...{..xxxxyy
-     yyyyyyyyyyyxx...xxxyyyyy
-     yyyyyyyyyyyyxxxxxyyyyyyy
-     yyyyyyyyyyyyyyyyyyyyyyyy
-ENDMAP
-
-##############################################################################
 # Was evilmike_arrival_teleporters
 NAME:    evilmike_arrival_plus
 TAGS:    arrival
@@ -2581,36 +2545,6 @@ m'''m.....m'''m
 m'I'm.....m'I'm
 m'''m.....m'''m
 mmmmm.....mmmmm
-ENDMAP
-
-##############################################################
-# This map provides no space to run around/away, so there is
-# either some staircase or a known shaft.
-NAME:   minmay_arrival_hallway
-TAGS:   arrival no_monster_gen
-ORIENT: float
-SUBST:  x : x:10 c:2 v:1
-SUBST:  a : ab
-NSUBST: a = 1:< / 1:> / *:.
-NSUBST: b = 1:b / 1:b. / *:.
-KFEAT:  b = known shaft trap
-SUBST:  G : G T t
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx
-@..xxx...xxx...xxx...xxx
-@..xxx.a.xxx.a.xxx.G.xxx
-@..xxx...xxx...xxx...xxx
-@....................xxx
-@..................[.xxx
-@....................xxx
-@..xxx...xxx...xxx...xxx
-@..xxx.a.xxx.a.xxx.G.xxx
-@..xxx...xxx...xxx...xxx
-xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################

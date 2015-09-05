@@ -432,58 +432,6 @@ MAP
                ........3.......
 ENDMAP
 
-NAME:   hangedman_spider_trapstep
-TAGS:   no_monster_gen no_pool_fixup patrolling allow_dup
-DEPTH:  Spider:1-2, Zot, !Zot:$
-KMONS:  0 = patrolling spider
-KMONS:  1 = tarantella
-: if you.in_branch("Zot") then
-KMONS:  2* = jumping spider / orb spider w:5
-KMONS:  3| = ghost moth / moth of wrath
-KITEM:  | = acquire any w:5 / any good_item
-KFEAT:  ` = known zot trap
-KFEAT:  ^ = web w:7 / known web trap w:1 / any trap w:1 / . w:7
-:   if you.depth() == dgn.br_depth("Zot") - 1 then
-KFEAT:  ~ = zot trap w:20 / web w:8 / known web trap w:2 / . w:5
-:   else
-KFEAT:  ~ = zot trap w:15 / shaft trap / web w:4 / known web trap w:1 / . w:5
-:   end
-NSUBST: 4 = 1:122 / 1:112
-SUBST:  X = c
-: else
-KMONS:  2 = tarantella
-KMONS:  3 = orb spider
-KITEM:  | = superb_item / any good_item w:5
-KFEAT:  ` = known shaft trap
-KFEAT:  ^ = web w:9 / known web trap w:1 / . w:6
-KFEAT:  ~ = shaft trap w:15 / web / . w:5
-NSUBST: 4 = 1:2 / *:W
-SUBST:  X = x
-: end
-KITEM:  * = star_item / superb_item w:5
-KFEAT:  123*| = shallow_water
-KMASK:  . = !no_monster_gen
-SUBST:  ' = ..^
-MAP
-    ..''0''..
-   ..XX'''XX..
-  .0XX`'G'`XX0.
- ..XX~'''''~XX..
-..XX~''^^^''~XX..
-.XX~''^xxx^''~XX.
-.X~''^Wx1xW^''~X.
-.X~'^xxwxwxx^'~X.
-.X~'^x4xwx4x^'~X.
-.X~'^xWwxwWx^'~X.
-.X~''^xW2Wx^''~X.
-.XX^''^xxx^^'^XX.
-..XXW''^^^''WXX..
- ..XX3'''''3XX..
-  ..XXW*|*WXX..
-   ..XXXXXXX..
-    .........
-ENDMAP
-
 NAME:    hangedman_creepy_crawlies
 TAGS:    no_monster_gen patrolling
 ORIENT:  float
@@ -770,25 +718,6 @@ WWWW1111WWWW
 .xWWWWWWWWx.
 xW...WW...Wx
 W....WW....W
-ENDMAP
-
-NAME:   nicolae_trapdoor_corridor
-DEPTH:  Spider:1-2
-MONS:   trapdoor spider
-SUBST:  z = ....***
-NSUBST: ! = 1:^ / *:.
-NSUBST: ' = 1:^ / *:.
-KFEAT:  * = shaft trap w:40 / web / floor
-KFEAT:  ^ = known shaft trap
-MAP
-xxxxxxxxxxxxx
-@!.1.xxzzzzxxx
-@!.1.zzz1zzz.xxx
-xxx.zzzxxzz.1.'@
-  xxzzzzzzxx1.'@
-   xxzz1zzxxxxxx
-    xxzzzxx
-     xxxxx
 ENDMAP
 
 NAME:   nicolae_orb_island

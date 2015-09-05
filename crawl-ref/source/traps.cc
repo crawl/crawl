@@ -1625,35 +1625,7 @@ dungeon_feature_type trap_category(trap_type type)
 
 bool is_valid_shaft_level(bool known)
 {
-    const level_id place = level_id::current();
-    if (crawl_state.test
-        || crawl_state.game_is_sprint())
-    {
-        return false;
-    }
-
-    if (!is_connected_branch(place))
-        return false;
-
-    const Branch &branch = branches[place.branch];
-
-    if (env.turns_on_level == -1
-        && branch.branch_flags & BFLAG_NO_SHAFTS)
-    {
-        return false;
-    }
-
-    // When generating levels, don't place an unknown shaft on the level
-    // immediately above the bottom of a branch if that branch is
-    // significantly more dangerous than normal.
-    int min_delta = 1;
-    if (!known && env.turns_on_level == -1
-        && branch.branch_flags & BFLAG_DANGEROUS_END)
-    {
-        min_delta = 2;
-    }
-
-    return (brdepth[place.branch] - place.depth) >= min_delta;
+    return false;
 }
 
 static level_id _generic_shaft_dest(level_pos lpos, bool known = false)

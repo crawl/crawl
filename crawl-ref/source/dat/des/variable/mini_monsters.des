@@ -829,121 +829,6 @@ cc.ww.%c......c%.ww.cc
    cccccW.@@.Wccccc
 ENDMAP
 
-NAME:   introduction_to_nature_1
-TAGS:   no_monster_gen no_pool_fixup uniq_introduction_to_nature
-DEPTH:  D:8-13
-WEIGHT: 3
-ITEM:   any potion
-ITEM:   Young Poisoner's Handbook / book of Changes / \
-        randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&sticks_to_snakes&call_canine_familiar&spider_form / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&sting&sticks_to_snakes&cure_poison&spider_form w:245
-: if crawl.coinflip() then
-KITEM:  f = arrow ego:poisoned / javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
-: else
-KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / needle ego:paralysis
-: end
-KITEM:  g = any potion q:2-3
-MONS:   plant, oklob sapling, ball python
-MONS:   adder, oklob plant, water moccasin
-KMONS:  7 = spider
-KMONS:  8 = worker ant
-KMONS:  9 = hound / jackal
-KMONS:  & = bush
-KFEAT:  78 = W
-KFEAT:  ' = known shaft trap
-KFEAT:  ~ = known alarm trap / floor
-KFEAT:  ` = known web trap / floor w:30
-: if you.absdepth() < 11 then
-KFEAT:  ? = altar_fedhas
-SUBST:  m : 1twx
-SUBST:  5 = 25
-SUBST:  7 = 78
-: else
-SUBST:  ? = 6
-: end
-: if crawl.coinflip() then
-SHUFFLE: def
-: end
-SUBST:  & = wwwW&1
-SUBST:  x : xxxcc
-MAP
- tttttttttt@1
-@teWWtwwww+tt`w1
-wt~xWWWxxxxtw`Ww1
-wt6xxxx77+dtwwwWx
-wtt+3?xxxxttwWW1x
-w1434.x'x'ft5wxxx
-w1.4.mwxwxttWwgx
-.w1..mmxxxWWww.x
-..w33.Ww2Wwww.4x
-.4....3wwww.3.xx
- ..........3.&1
-   @9.......11
-    ...1.
-ENDMAP
-
-NAME:   introduction_to_nature_2
-TAGS:   no_monster_gen no_pool_fixup uniq_introduction_to_nature
-DEPTH:  D:8-13
-ITEM:   any potion
-ITEM:   Young Poisoner's Handbook / book of Changes / \
-        randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&sticks_to_snakes&call_canine_familiar&spider_form / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&sting&sticks_to_snakes&cure_poison&spider_form w:245
-: if crawl.coinflip() then
-KITEM:  f = arrow ego:poisoned / javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
-: else
-KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / needle ego:paralysis
-: end
-KITEM:  g = any potion q:2 / any potion q:3
-MONS:   plant, oklob sapling, ball python
-MONS:   adder, oklob plant, water moccasin
-KMONS:  7 = spider
-KMONS:  8 = worker ant
-KMONS:  9 = hound / jackal band
-KMONS:  & = bush
-KFEAT:  78 = W
-KFEAT:  ' = known shaft trap
-KFEAT:  ` = known web trap / floor w:60
-: if you.absdepth() < 11 then
-KFEAT:  ? = altar_fedhas
-SUBST:  m : 1twx
-SUBST:  5 = 25
-SUBST:  7 = 78
-: else
-SUBST:  T = tx
-SUBST:  ? = 6
-: end
-: if crawl.coinflip() then
-SHUFFLE: def
-: end
-SUBST:  & = ww&&1
-SUBST:  x : xxxcc
-SUBST:  z : wW
-MAP
-        tttttttttt@
-      tttwg1tetwtttt
-   ttttw12w5tt't4..xxxxxxxx
-  1tttwwwWwwtttt.34..x>``7x
-...twww1ww1ttw....x.`x````x
-..9t1wwwwWwwtw.3....`&```fx
-....tWwwWWwwtx....x.`x````x
-@...twWWwWwwW+.......x```7x
- ...ttwwwWwWtx..3..xxxxxxxx
- ..4t3tttwWttwWWWW33tttx
- .wwt4t?1WwtwwwwWwtt1ttt
-  zzttdtWtttttwwwwwt1.tt
-   wz1tttt   ttwwwwtt6tt
-   ttttttt       1wwtttt
-                  @ ttt
-                      t
-ENDMAP
-
 NAME:    hangedman_parallel_progression
 TAGS:    patrolling no_monster_gen transparent
 TAGS:    layout_rooms layout_corridors
@@ -1350,32 +1235,6 @@ cccccc=2ccc
 cccccccnccc
 cccccccnccc
        @
-ENDMAP
-
-# Inspired by the Jorge Luis Borges' story "The Library of Babel".
-NAME:    bh_hangedman_babel_library
-TAGS:    transparent no_monster_gen no_item_gen
-DEPTH:   D:10-, !D:$, Elf, !Elf:$
-MONS:    wizard / deep elf mage
-ITEM:    bread ration
-ITEM:    randbook numspells:2 title:Dhcmrlchtdj
-ITEM:    randbook numspells:2 title:Combed_Thunderclap disc:air
-ITEM:    randbook numspells:2 title:Plaster_Cramp disc:earth
-ITEM:    randbook numspells:2 title:Axaxaxas_mlö
-ITEM:    randbook numspells:3 title:Forking_Paths owner:Ts'ui_Pên disc:hexes disc2:charms
-ITEM:    randbook numspells:2 title:Sand
-KFEAT:   ^ : known shaft trap
-SHUFFLE: defg, efghij, bm, bm / ++
-MAP
-   xxx@xxx     xxx@xxx
-  xx.....xx   xx.....xx
- xx1.....dxxxxxf.....1xx
-xx....^....xbx....^....xx
-@....^<^.........^>^....@
-xx....^....xmx....^....xx
- xxe.....1xxxxx1.....gxx
-  xx.....xx   xx.....xx
-   xxx@xxx     xxx@xxx
 ENDMAP
 
 #################################################################
@@ -2043,21 +1902,6 @@ MAP
 .x(..............Sx.
 .xxxxxxx..xxxxxxxxx.
 ....................
-ENDMAP
-
-NAME:  cheibrodos_gnoll_hut
-DEPTH: D:2-5
-TAGS:  no_item_gen no_monster_gen
-MONS:  gnoll, hound, bush
-KFEAT: S = known shaft trap
-MAP
-...@...
-..3.3..
-xxx+xxx
-x%+...x
-xxx2.2x
-xS+.1.x
-xxxxxxx
 ENDMAP
 
 NAME: lightli_minifort
@@ -3745,49 +3589,6 @@ cCCCcEEE..c...FFFFc
 cCCCcEEEEEcFFFFFFFc
 cCCCcEEEEEcFFFFFFFc
 ccccccccccccccccccc
-ENDMAP
-
-NAME:    hangedman_feature_mirror
-TAGS:    transparent extra allow_dup no_monster_gen
-TAGS:    no_item_gen no_trap_gen no_pool_fixup patrolling
-DEPTH:   D, Depths, Orc, Elf, Crypt, Snake, Shoals, Geh, Coc, Dis, Tar, Zot
-WEIGHT:  10 (D), 1 (Geh, Coc, Dis, Tar, Zot), 4
-KFEAT:   A = stone_arch
-KFEAT:   D = any shop
-KFEAT:   ^ : known teleport trap / known shaft trap
-KFEAT:   Z = known zot trap
-SUBST:   A : C:20 D:20 ATVY^{[(<>, b : c:30 G:20 bvwtdGG123, 0 : 0:3 9:2 ':1
-SUBST:   .' : .:99 W:1, [ : [], ( : ()
-NSUBST:  { = 1:{ / 1:}, [ = 1:[ / 1:(, ] = 1:[ / 1:], ( = 1:] / 1:), ) = 1:( / 1:)
-: if you.in_branch("D") or you.in_branch("Depths") then
-:    if you.absdepth() < 2 then
-SUBST:   CDY[{^ = T, 9 : 0'
-:    elseif you.absdepth() < 5 then
-SUBST:   CDY = T, 9 : 0'
-:    elseif you.absdepth() > 20 then
-MARKER:  A = lua:props_marker { portal=1 }
-:    end
-: elseif you.in_branch("Orc") then
-SUBST:   G = I, t23 = 1:9 I:1
-: elseif you.in_branch("Geh") or you.in_branch("Coc")
-: or you.in_branch("Dis") or you.in_branch("Tar") then
-SUBST:   DTV : Y:9 ^:1, t123 : G:9 ^:1, b : c
-: elseif you.in_branch("Crypt") then
-SUBST:   TV : VY, t123 : c
-: elseif you.in_branch("Zot") then
-SUBST:   D : V:9 Z:1, ^ : ^Z, t123 : G:9 Z:1
-: else
-SUBST:   A = T
-: end
-MAP
-...
-.b..
-.0C.
-.b..                                ...
-...                                ..b.
-                                   .C0.
-                                   ..b.
-                                    ...
 ENDMAP
 
 NAME:    hangedman_corner_corridor

@@ -1261,29 +1261,6 @@ MAP
     .....
 ENDMAP
 
-NAME:   nemelex_spade_bored_becter
-TAGS:   overflow_altar_nemelex_xobeh transparent
-TAGS:   no_rotate no_vmirror no_monster_gen no_item_gen
-DEPTH:  D:2-9
-KFEAT:  _ = altar_nemelex_xobeh
-KFEAT:  o = known shaft trap
-NSUBST: ' = 6:o / *:.
-TILE:   x = wall_pebble_darkgray
-MAP
-     .....
-    ..xxx..
-   ..xx'xx..
-  ..xx'''xx..
- ..xx''_''xx..
-..xx'''''''xx..
-.xx'''''''''xx.
-.x'''xxxxx'''x.
-.xx'+x.x.x+'xx.
-..xxx..x..xxx..
- .....xxx.....
-     .....
-ENDMAP
-
 ### Okawaru overflow altars ###################################################
 
 NAME:    okawaru_metal_pillars_1_2
@@ -1472,32 +1449,6 @@ c-...-c
 c-...-c
 cN-.-Oc
 ccc@ccc
-ENDMAP
-
-NAME:   grunt_qazlal_sundering
-DEPTH:  D:2-, !D:$
-TAGS:   no_monster_gen no_item_gen no_trap_gen temple_overflow_1
-TAGS:   temple_overflow_qazlal uniq_altar_qazlal
-KFEAT:  _ = altar_qazlal
-KPROP:  c = no_tele_into
-SUBST:  c = cccl^.
-SUBST:  - = ..l^
-KFEAT:  ^ = known shaft trap
-KITEM:  . = nothing w:189 / stone / large rock q:1 w:1
-KFEAT:  . = .
-: interest_check(_G)
-MAP
- ----@----
--ccc-.-ccc-
--ccc-.-ccc-
--ccc-.-ccc-
------.-----
-@...._....@
------.-----
--ccc-.-ccc-
--ccc-.-ccc-
--ccc-.-ccc-
- ----@----
 ENDMAP
 
 NAME:  nicolae_qazlal_eye_of_the_storm
@@ -1920,45 +1871,6 @@ xx.....xx
  xx@@@xx
 ENDMAP
 
-NAME:   trog_butcher_becter
-TAGS:   overflow_altar_trog
-DEPTH:  D:2-9, Orc, !Orc:$
-: if you.absdepth() < 6 then
-MONS:   orc ; hand axe . animal skin
-MONS:   giant gecko / rat / giant newt / quokka
-{{
-  dgn.delayed_decay(_G, 'd',
-                    'giant gecko chunk q:1 / rat chunk q:1 / ' ..
-                    'giant newt chunk q:1 / quokka chunk q:1')
-}}
-: else
-MONS:   orc warrior ; war axe . animal skin
-MONS:   sheep / iguana / worker ant
-{{
-  dgn.delayed_decay(_G, 'd',
-                    'sheep chunk q:1 / iguana chunk q:1 / ' ..
-                    'worker ant chunk q:1')
-}}
-: end
-NSUBST: ' = 3:2 / *:.
-KPROP:  1y" = bloody
-KFEAT:  _ = altar_trog
-KFEAT:  ^ = known shaft trap
-KFEAT:  m = iron_grate
-SUBST:  y = x
-SUBST:  " = .
-MAP
-  xxxxxxx
- xx'''''xx
-xx.xxxxxxxx
-xx+xmmmx^yx
-xx.."1d""yx
-xx..._"..xx
- xx.....xx
-  xx...xx
-     @
-ENDMAP
-
 NAME:   trog_hazing_becter
 TAGS:   overflow_altar_trog no_monster_gen no_item_gen no_pool_fixup
 DEPTH:  D:2-9, Orc, !Orc:$
@@ -2082,40 +1994,6 @@ ENDMAP
 
 ### Xom overflow altars #######################################################
 
-NAME:   tgw_xom
-DEPTH:  D:2-, Depths
-TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_xom
-TAGS:   uniq_altar_xom
-KFEAT:  _ = altar_xom
-MONS:   orc; club ego:chaos ident:type / orc; dagger ego:chaos ident:type
-MONS:   orc; spear ego:chaos ident:type / gnoll; club ego:chaos ident:type
-MONS:   gnoll; dagger ego:chaos ident:type / gnoll; spear ego:chaos ident:type
-MONS:   place:D:1-8
-NSUBST: ' = 1:_ / *:.
-SUBST:  . = .:200 ~:10 W:60 w:50 x:80 n:80 v b l Z T U M:20
-:   if you.depth() == dgn.br_depth(you.branch()) then
-KFEAT:  ~ = teleport trap w:20 / alarm trap w:3
-:   else
-KFEAT:  ~ = known shaft trap / teleport trap / alarm trap w:3
-:   end
-NSUBST: Z = 1:* / *:%
-SUBST:  M : 123333M, 1 = 1.., 2 = 2.., M = 123.
-COLOUR: . = random
-MAP
-   xxxxxx@xxxxxx
-  xx...........xx
- xx.............xx
-xx...............xx
-x.................x
-x.................x
-x'...............'x
-x'...............'x
-xx'.............'xx
- xx'''''''''''''xx
-  xx'''''''''''xx
-   xxxxxxxxxxxxx
-ENDMAP
-
 NAME:    xom_teletrap_fun
 TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom
 TAGS:    transparent
@@ -2185,31 +2063,6 @@ MAP
  w.....w
  ww...ww
   wwwww
-ENDMAP
-
-NAME:    xom_redecorated
-DEPTH:   D:2-, !D:$
-TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom decor
-SUBST:   x = ccbbbv
-NSUBST:  . = 2:T / .
-SUBST:   . = lWwtm_~......
-KFEAT:   _ = altar_xom
-NSUBST:  T = 3:T / .
-KFEAT:   T = known teleport trap
-KFEAT:   ~ = shaft trap / alarm trap / teleport trap
-: interest_check(_G)
-MAP
-      @
-   xxxTxxx
-  xx.....xx
- xx.......xx
- x.........x
-@T...._....T@
- x.........x
- xx.......xx
-  xx.....xx
-   xxxTxxx
-      @
 ENDMAP
 
 NAME:   led_xom_imps
@@ -2974,26 +2827,6 @@ v._.$.O.v
 v.......v
 vv.....vv
  vvv+vvv
-ENDMAP
-
-NAME:   grunt_temple_overflow_forces_of_nature
-DEPTH:  D:2-9
-TAGS:   temple_overflow_2 temple_overflow_fedhas temple_overflow_qazlal
-TAGS:   transparent
-MONS:   fungus / plant / bush
-SUBST:  2 = 1.
-KFEAT:  _ = altar_fedhas
-KFEAT:  O = altar_qazlal
-KPROP:  12Ll = no_tele_into
-SUBST:  L = ll^.
-SUBST:  l = cll.
-KFEAT:  ^ = known shaft trap
-MAP
- 222.@.LLL
-21112.LlllL
-21_.....OlL
-21112.LlllL
- 222.@.LLL
 ENDMAP
 
 ### Variable overflow altars ##################################################
