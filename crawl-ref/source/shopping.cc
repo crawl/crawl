@@ -1146,6 +1146,7 @@ unsigned int item_value(item_def item, bool ident)
 
             case SPWPN_SPEED:
             case SPWPN_VAMPIRISM:
+            case SPWPN_ANTIMAGIC:
                 valued *= 30;
                 break;
 
@@ -1392,12 +1393,14 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_INVISIBILITY:
             case SPARM_MAGIC_RESISTANCE:
             case SPARM_PROTECTION:
+            case SPARM_ARCHERY:
                 valued += 50;
                 break;
 
             case SPARM_POSITIVE_ENERGY:
             case SPARM_POISON_RESISTANCE:
             case SPARM_REFLECTION:
+            case SPARM_SPIRIT_SHIELD:
                 valued += 20;
                 break;
 
