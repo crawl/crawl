@@ -528,6 +528,10 @@ static uint32_t _get_color(const coord_def &gc)
         return 0x000000ff;
 
     uint32_t color = 0x00000000;
+
+    if (_safe_feat(gc) == DNGN_LAVA)
+        color = _mix(color, 0xda49007f, 66);
+
     if (env.map_knowledge(gc).visible())
     {
         int range = max(abs(you.pos().x - gc.x), abs(you.pos().y - gc.y));
@@ -535,7 +539,7 @@ static uint32_t _get_color(const coord_def &gc)
         color = _mix(color, 0xf4d2a0cf, (32 - range * 3));
 
         if (env.map_knowledge(gc).flags & MAP_UMBRAED)
-            color = _mix(color, 0x850eb07f, 50);
+            color = _mix(color, 0x7400da7f, 50);
         else if (env.map_knowledge(gc).flags & MAP_HALOED)
             color = _mix(color, 0xf6dc017f, 50);
     }
@@ -552,7 +556,7 @@ void pack_cell_lighting(const coord_def &gc, packed_cell *cell)
 {
     uint32_t center = _get_color(gc);
     cell->lighting[LIGHT_CENTRE] = center;
-    if (_safe_feat(gc) == DNGN_UNSEEN || _is_seen_wall(gc)) {
+    if (_is_seen_wall(gc)) {
         cell->lighting[LIGHT_N]  = center;
         cell->lighting[LIGHT_NE] = center;
         cell->lighting[LIGHT_E]  = center;
