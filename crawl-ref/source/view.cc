@@ -1078,12 +1078,12 @@ class shake_viewport_animation: public animation
 public:
     shake_viewport_animation() { frames = 5; frame_delay = 40; }
 
-    void init_frame(int frame)
+    void init_frame(int frame) override
     {
         offset = coord_def(random2(3) - 1, random2(3) - 1);
     }
 
-    coord_def cell_cb(const coord_def &pos, int &colour)
+    coord_def cell_cb(const coord_def &pos, int &colour) override
     {
         return pos + offset;
     }
@@ -1096,12 +1096,12 @@ class checkerboard_animation: public animation
 {
 public:
     checkerboard_animation() { frame_delay = 100; frames = 5; }
-    void init_frame(int frame)
+    void init_frame(int frame) override
     {
         current_frame = frame;
     }
 
-    coord_def cell_cb(const coord_def &pos, int &colour)
+    coord_def cell_cb(const coord_def &pos, int &colour) override
     {
         if (current_frame % 2 == (pos.x + pos.y) % 2 && pos != you.pos())
             return coord_def(-1, -1);
@@ -1117,7 +1117,7 @@ class banish_animation: public animation
 public:
     banish_animation(): remaining(false) { }
 
-    void init_frame(int frame)
+    void init_frame(int frame) override
     {
         current_frame = frame;
 
@@ -1136,7 +1136,7 @@ public:
         remaining = false;
     }
 
-    coord_def cell_cb(const coord_def &pos, int &colour)
+    coord_def cell_cb(const coord_def &pos, int &colour) override
     {
         if (pos == you.pos())
             return pos;
@@ -1165,12 +1165,12 @@ public:
 class slideout_animation: public animation
 {
 public:
-    void init_frame(int frame)
+    void init_frame(int frame) override
     {
         current_frame = frame;
     }
 
-    coord_def cell_cb(const coord_def &pos, int &colour)
+    coord_def cell_cb(const coord_def &pos, int &colour) override
     {
         coord_def ret;
         if (pos.y % 2)
@@ -1192,7 +1192,7 @@ public:
 class orb_animation: public animation
 {
 public:
-    void init_frame(int frame)
+    void init_frame(int frame) override
     {
         current_frame = frame;
         range = current_frame > 5
@@ -1201,7 +1201,7 @@ public:
         frame_delay = 3 * (6 - range) * (6 - range);
     }
 
-    coord_def cell_cb(const coord_def &pos, int &colour)
+    coord_def cell_cb(const coord_def &pos, int &colour) override
     {
         const coord_def diff = pos - you.pos();
         const int dist = diff.x * diff.x * 4 / 9 + diff.y * diff.y;

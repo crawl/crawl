@@ -358,27 +358,9 @@ string slot_description()
 
 void InvMenu::set_title(const string &s)
 {
-    string stitle = s;
-    if (stitle.empty())
-    {
-#ifdef USE_TILE_WEB
-        // Webtiles handles menus specially, so disable the crt
-        tiles_crt_control crt_enabled(false);
-#endif
-
-        // We're not printing anything yet, but this select the crt layer
-        // so that get_number_of_cols returns the appropriate value.
-        cgotoxy(1, 1);
-
-        stitle = "Inventory: " + slot_description();
-
-        string prompt = "(_ for help)";
-        stitle = stitle + string(max(0, get_number_of_cols() - strwidth(stitle)
-                                        - strwidth(prompt)),
-                                 ' ') + prompt;
-    }
-
-    set_title(new InvTitle(this, stitle, title_annotate));
+    set_title(new InvTitle(this, s.empty() ? "Inventory: " + slot_description()
+                                           : s,
+                           title_annotate));
 }
 
 static bool _has_melded_armour()
@@ -611,11 +593,6 @@ bool InvMenu::is_selectable(int index) const
     }
 
     return Menu::is_selectable(index);
-}
-
-bool InvMenu::allow_easy_exit() const
-{
-    return type == MT_KNOW || Menu::allow_easy_exit();
 }
 
 template <const string &(InvEntry::*method)() const>
@@ -905,68 +882,9 @@ vector<SelItem> InvMenu::get_selitems() const
     return selected_items;
 }
 
-bool InvMenu::process_key(int key)
+string InvMenu::help_key() const
 {
-    if (type == MT_KNOW)
-    {
-        bool resetting = (lastch == CONTROL('D'));
-        if (resetting)
-        {
-            //return the menu title to its previous text.
-            set_title(temp_title);
-            update_title();
-            num = -2;
-
-            // Disarm ^D here, because process_key doesn't always set lastch.
-            lastch = ' ';
-        }
-        else
-            num = -1;
-
-        switch (key)
-        {
-        case ',':
-            return true;
-        case '*':
-            if (!resetting)
-                break;
-        case '^':
-            key = ',';
-            break;
-
-        case '-':
-        case '\\':
-        case CK_ENTER:
-        CASE_ESCAPE
-            lastch = key;
-            return false;
-
-        case '_':
-            show_known_menu_help();
-#ifdef USE_TILE_WEB
-            webtiles_update_scroll_pos();
-#endif
-            draw_menu();
-            return true;
-
-        case CONTROL('D'):
-            // If we cannot select anything (e.g. on the unknown items
-            // page), ignore Ctrl-D. Likewise if the last key was
-            // Ctrl-D (we have already disarmed Ctrl-D for the next
-            // keypress by resetting lastch).
-            if (flags & (MF_SINGLESELECT | MF_MULTISELECT) && !resetting)
-            {
-                lastch = CONTROL('D');
-                temp_title = title->text;
-                set_title("Select to reset item to default: ");
-                update_title();
-            }
-
-            return true;
-        }
-    }
-
-    return Menu::process_key(key);
+    return type == MT_DROP || type == MT_PICKUP ? "pick-up" : "";
 }
 
 unsigned char InvMenu::getkey() const

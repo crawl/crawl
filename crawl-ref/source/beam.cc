@@ -346,7 +346,7 @@ template<int adder, int mult_num = 0, int mult_denom = 1>
 class tohit_calculator : public tohit_deducer
 {
 public:
-    int operator()(int pow) const
+    int operator()(int pow) const override
     {
         return adder + pow * mult_num / mult_denom;
     }
@@ -358,7 +358,7 @@ template<int numdice, int adder, int mult_num, int mult_denom>
 class dicedef_calculator : public dam_deducer
 {
 public:
-    dice_def operator()(int pow) const
+    dice_def operator()(int pow) const override
     {
         return dice_def(numdice, adder + pow * mult_num / mult_denom);
     }
@@ -368,7 +368,7 @@ template<int numdice, int adder, int mult_num, int mult_denom>
 class calcdice_calculator : public dam_deducer
 {
 public:
-    dice_def operator()(int pow) const
+    dice_def operator()(int pow) const override
     {
         return calc_dice(numdice, adder + pow * mult_num / mult_denom);
     }

@@ -1084,6 +1084,7 @@ static const pop_entry pop_depths[] =
   {  4, 14,   25, RISE, MONS_DEEP_ELF_ANNIHILATOR },
   {  4, 14,   25, RISE, MONS_DEEP_ELF_SORCERER },
   {  4, 14,   25, RISE, MONS_DEEP_ELF_DEATH_MAGE },
+  {  5, 14,   50, FLAT, MONS_JUGGERNAUT },
   {  6, 14,   50, FLAT, MONS_TITAN },
   {  6, 14,   50, FLAT, MONS_CAUSTIC_SHRIKE },
   { 10, 14,   10, FLAT, MONS_ANCIENT_LICH },

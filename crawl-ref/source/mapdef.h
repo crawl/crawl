@@ -53,7 +53,7 @@ class map_load_exception : public exception
 public:
     map_load_exception(const string &_mapname) : mapname(_mapname) { }
     ~map_load_exception() throw () { }
-    const char *what() const throw()
+    const char *what() const throw() override
     {
         return mapname.c_str();
     }

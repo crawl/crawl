@@ -606,9 +606,12 @@ bool Menu::process_key(int keyin)
         break;
 
     case '_':
-        show_pickup_menu_help();
-        nav     = true;
-        repaint = true;
+        if (help_key() != "")
+        {
+            show_specific_help(help_key());
+            nav     = true;
+            repaint = true;
+        }
         break;
 
 #ifdef TOUCH_UI

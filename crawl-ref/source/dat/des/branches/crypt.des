@@ -1599,7 +1599,6 @@ KMONS:  t = w:20 hell knight / smoke demon / red devil
 KMONS:  X = w:1 curse skull / w:19 hell knight
 : end
 ####### Randomisation of doors
-SUBST:  K : Kvvv
 NSUBST: K = 1:+ / *:v
 NSUBST: ' = 1:+ / *:v
 NSUBST: " = 1:+ / *:v

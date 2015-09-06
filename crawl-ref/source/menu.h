@@ -211,7 +211,7 @@ public:
     MonsterMenuEntry(const string &str, const monster_info* mon, int hotkey);
 
 #ifdef USE_TILE
-    virtual bool get_tiles(vector<tile_def>& tileset) const;
+    virtual bool get_tiles(vector<tile_def>& tileset) const override;
 #endif
 };
 
@@ -221,7 +221,7 @@ class PlayerMenuEntry : public MenuEntry
 public:
     PlayerMenuEntry(const string &str);
 
-    virtual bool get_tiles(vector<tile_def>& tileset) const;
+    virtual bool get_tiles(vector<tile_def>& tileset) const override;
 };
 #endif
 
@@ -236,7 +236,7 @@ public:
                      int hotkey);
 
 #ifdef USE_TILE
-    virtual bool get_tiles(vector<tile_def>& tileset) const;
+    virtual bool get_tiles(vector<tile_def>& tileset) const override;
 #endif
 };
 
@@ -287,9 +287,9 @@ class MenuDisplayText : public MenuDisplay
 {
 public:
     MenuDisplayText(Menu *menu);
-    virtual void draw_stock_item(int index, const MenuEntry *me);
-    virtual void draw_more();
-    virtual void set_offset(int lines) { m_starty = lines; }
+    virtual void draw_stock_item(int index, const MenuEntry *me) override;
+    virtual void draw_more() override;
+    virtual void set_offset(int lines) override { m_starty = lines; }
     virtual void set_num_columns(int columns) {}
 protected:
     int m_starty;
@@ -299,10 +299,10 @@ class MenuDisplayTile : public MenuDisplay
 {
 public:
     MenuDisplayTile(Menu *menu);
-    virtual void draw_stock_item(int index, const MenuEntry *me);
-    virtual void set_offset(int lines);
-    virtual void draw_more();
-    virtual void set_num_columns(int columns);
+    virtual void draw_stock_item(int index, const MenuEntry *me) override;
+    virtual void set_offset(int lines) override;
+    virtual void draw_more() override;
+    virtual void set_num_columns(int columns) override;
 };
 
 ///////////////////////////////////////////////////////////////////////
@@ -483,6 +483,8 @@ protected:
     virtual bool process_key(int keyin);
 
     virtual bool allow_easy_exit() const;
+
+    virtual string help_key() const { return ""; }
 };
 
 /// Allows toggling by specific keys.
@@ -493,7 +495,7 @@ public:
         : Menu(_flags, "", text_only) {}
     void add_toggle_key(int newkey) { toggle_keys.push_back(newkey); }
 protected:
-    virtual int pre_process(int key);
+    virtual int pre_process(int key) override;
 
     vector<int> toggle_keys;
 };
@@ -563,13 +565,13 @@ public:
     int get_lastch() { return lastch; }
     virtual ~formatted_scroller();
 protected:
-    virtual bool page_down();
-    virtual bool line_down();
-    virtual bool page_up();
-    virtual bool line_up();
+    virtual bool page_down() override;
+    virtual bool line_down() override;
+    virtual bool page_up() override;
+    virtual bool line_up() override;
 
-    virtual void draw_index_item(int index, const MenuEntry* me) const;
-    virtual bool process_key(int keyin);
+    virtual void draw_index_item(int index, const MenuEntry* me) const override;
+    virtual bool process_key(int keyin) override;
     bool jump_to(int linenum);
 
 #ifdef USE_TILE_WEB
@@ -678,11 +680,11 @@ public:
     TextItem();
     virtual ~TextItem();
 
-    virtual void set_bounds(const coord_def& min_coord, const coord_def& max_coord);
+    virtual void set_bounds(const coord_def& min_coord, const coord_def& max_coord) override;
     virtual void set_bounds_no_multiply(const coord_def& min_coord,
-                                        const coord_def& max_coord);
+                                        const coord_def& max_coord) override;
 
-    virtual void render();
+    virtual void render() override;
 
     void set_text(const string& text);
     const string& get_text() const;
@@ -706,8 +708,8 @@ class NoSelectTextItem : public TextItem
 public:
     NoSelectTextItem();
     virtual ~NoSelectTextItem();
-    virtual bool selected() const;
-    virtual bool can_be_highlighted() const;
+    virtual bool selected() const override;
+    virtual bool can_be_highlighted() const override;
 };
 
 /**
@@ -718,7 +720,7 @@ public:
 class FormattedTextItem : public TextItem
 {
 public:
-    virtual void render();
+    virtual void render() override;
 };
 
 /**
@@ -731,8 +733,8 @@ public:
     TextTileItem();
     virtual ~TextTileItem();
 
-    virtual void set_bounds(const coord_def& min_coord, const coord_def& max_coord);
-    virtual void render();
+    virtual void set_bounds(const coord_def& min_coord, const coord_def& max_coord) override;
+    virtual void render() override;
 
     virtual void add_tile(tile_def tile);
     void clear_tile() { m_tiles.clear(); };
@@ -754,7 +756,7 @@ public:
     SaveMenuItem();
     virtual ~SaveMenuItem();
 
-    virtual void render();
+    virtual void render() override;
 
     void set_doll(dolls_data doll);
 
