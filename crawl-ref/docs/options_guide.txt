@@ -1768,6 +1768,11 @@ tile_menu_icons = true
         the reduction of space.
         If you would rather have the plain menus set this option to false.
 
+tile_light_blur = 6
+        This option controls the amount that light will spill over between
+        tiles. This can be set to a value between 0 and 16, where 16 fills 50%
+        of each adjacent tile, and 0 disables the effect entirely.
+
 tile_player_col       = white
 tile_monster_col      = #660000
 tile_neutral_col      = #660000

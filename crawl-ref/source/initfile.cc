@@ -3686,6 +3686,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_show_items = field;
     else BOOL_OPTION(tile_skip_title);
     else BOOL_OPTION(tile_menu_icons);
+    else INT_OPTION(tile_light_blur, 0, 16);
     else if (key == "tile_player_col")
         tile_player_col = str_to_tile_colour(field);
     else if (key == "tile_monster_col")
