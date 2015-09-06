@@ -217,18 +217,20 @@ static VColour _to_vcolour(const uint32_t col)
                    (col & 0xff00) >> 8, (col & 0xff));
 }
 
-void DungeonCellBuffer::pack_lighting(int x, int y, const packed_cell &cell)
+void DungeonCellBuffer::pack_lighting(int xs, int ys, const packed_cell &cell)
 {
-    float blur = min(max(Options.tile_light_blur, 0), 16);
-    m_buf_lighting.add(x + 0.0 / 32, y + 0.0 / 32, x + blur / 32, y + blur / 32, _to_vcolour(cell.lighting[LIGHT_NW]));
-    m_buf_lighting.add(x + blur / 32, y + 0.0 / 32, x + (32.0-blur) / 32, y + blur / 32, _to_vcolour(cell.lighting[LIGHT_N]));
-    m_buf_lighting.add(x + (32.0-blur) / 32, y + 0.0 / 32, x + 32.0 / 32, y + blur / 32, _to_vcolour(cell.lighting[LIGHT_NE]));
-    m_buf_lighting.add(x + 0.0 / 32, y + blur / 32, x + blur / 32, y + (32.0-blur) / 32, _to_vcolour(cell.lighting[LIGHT_W]));
-    m_buf_lighting.add(x + blur / 32, y + blur / 32, x + (32.0-blur) / 32, y + (32.0-blur) / 32, _to_vcolour(cell.lighting[LIGHT_CENTRE]));
-    m_buf_lighting.add(x + (32.0-blur) / 32, y + blur / 32, x + 32.0 / 32, y + (32.0-blur) / 32, _to_vcolour(cell.lighting[LIGHT_E]));
-    m_buf_lighting.add(x + 0.0 / 32, y + (32.0-blur) / 32, x + blur / 32, y + 32.0 / 32, _to_vcolour(cell.lighting[LIGHT_SW]));
-    m_buf_lighting.add(x + blur / 32, y + (32.0-blur) / 32, x + (32.0-blur) / 32, y + 32.0 / 32, _to_vcolour(cell.lighting[LIGHT_S]));
-    m_buf_lighting.add(x + (32.0-blur) / 32, y + (32.0-blur) / 32, x + 32.0 / 32, y + 32.0 / 32, _to_vcolour(cell.lighting[LIGHT_SE]));
+    float r = min(max(Options.tile_light_blur, 0), 16) / 32.0;
+    int xe = xs + 1;
+    int ye = ys + 1;
+    m_buf_lighting.add(xs, ys, xs + r, ys + r, _to_vcolour(cell.lighting[LIGHT_NW]));
+    m_buf_lighting.add(xs + r, ys, xe - r, ys + r, _to_vcolour(cell.lighting[LIGHT_N]));
+    m_buf_lighting.add(xe - r, ys, xe, ys + r, _to_vcolour(cell.lighting[LIGHT_NE]));
+    m_buf_lighting.add(xs, ys + r, xs + r, ye - r, _to_vcolour(cell.lighting[LIGHT_W]));
+    m_buf_lighting.add(xs + r, ys + r, xe - r, ye - r, _to_vcolour(cell.lighting[LIGHT_CENTRE]));
+    m_buf_lighting.add(xe - r, ys + r, xe, ye - r, _to_vcolour(cell.lighting[LIGHT_E]));
+    m_buf_lighting.add(xs, ye - r, xs + r, ye, _to_vcolour(cell.lighting[LIGHT_SW]));
+    m_buf_lighting.add(xs + r, ye - r, xe - r, ye, _to_vcolour(cell.lighting[LIGHT_S]));
+    m_buf_lighting.add(xe - r, ye - r, xe, ye, _to_vcolour(cell.lighting[LIGHT_SE]));
 }
 
 void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
