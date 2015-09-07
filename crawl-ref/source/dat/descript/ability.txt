@@ -754,3 +754,7 @@ you've built your reputation!
 
 All other gods hate Beogh, and don't take desertion lightly.
 %%%%
+Donate Gold ability
+
+Donate half of your gold to Zin, which will increase your piety over time. The
+overall increase is determined by the size of your donation.
