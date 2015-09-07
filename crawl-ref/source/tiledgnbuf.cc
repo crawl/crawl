@@ -319,8 +319,6 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
             if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
 
-            if (cell.orb_glow)
-                m_buf_feat.add(TILE_ORB_GLOW + cell.orb_glow - 1, x, y);
             if (cell.quad_glow)
                 m_buf_feat.add(TILE_QUAD_GLOW, x, y);
             if (cell.disjunct)

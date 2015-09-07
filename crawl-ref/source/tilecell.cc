@@ -5,6 +5,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "colour.h"
 #include "env.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
@@ -522,67 +523,59 @@ static uint32_t _mix (uint32_t x, uint32_t y, int y_percent)
     return (r << 24) + (g << 16) + (b << 8) + a;
 }
 
-static uint32_t _get_color(const coord_def &gc)
+static uint32_t _get_colour(const coord_def &gc)
 {
     if (_safe_feat(gc) == DNGN_UNSEEN)
         return 0x000000ff;
 
-    uint32_t color = 0x00000000;
+    uint32_t colour = 0x00000000;
 
     if (_safe_feat(gc) == DNGN_LAVA)
-        color = _mix(color, 0xda49007f, 66);
+        colour = _mix(colour, 0xda49007f, 66);
 
     if (env.map_knowledge(gc).visible())
     {
-        int range = max(abs(you.pos().x - gc.x), abs(you.pos().y - gc.y));
+        int range = min(8, max(abs(you.pos().x - gc.x), abs(you.pos().y - gc.y)));
 
-        color = _mix(color, 0xf4d2a0cf, (32 - range * 3));
+        colour = _mix(colour, 0xf4d2a0cf, (32 - range * 3));
 
         if (env.map_knowledge(gc).flags & MAP_UMBRAED)
-            color = _mix(color, 0x7400da7f, 50);
+            colour = _mix(colour, 0x7400da7f, 50);
         else if (env.map_knowledge(gc).flags & MAP_HALOED)
-            color = _mix(color, 0xf6dc017f, 50);
+            colour = _mix(colour, 0xf6dc017f, 50);
+        
+        if (env.map_knowledge(gc).flags & MAP_ORB_HALOED)
+            colour = _mix(colour, get_orb_phase(gc) ? 0x4e194a7f : 0x6922647f, 50);
     }
+    else
+        colour = _mix(colour, 0x000000bf, 70);
 
-    if (!env.map_knowledge(gc).visible())
-        color = _mix(color, 0x000000bf, 70);
     if (env.map_knowledge(gc).mapped())
-        color = _mix(color, 0x13137dbf, 70);
+        colour = _mix(colour, 0x13137dbf, 70);
 
-    return color;
+    return colour;
 }
 
 void pack_cell_lighting(const coord_def &gc, packed_cell *cell)
 {
-    uint32_t center = _get_color(gc);
-    cell->lighting[LIGHT_CENTRE] = center;
-    if (_is_seen_wall(gc)) {
-        cell->lighting[LIGHT_N]  = center;
-        cell->lighting[LIGHT_NE] = center;
-        cell->lighting[LIGHT_E]  = center;
-        cell->lighting[LIGHT_SE] = center;
-        cell->lighting[LIGHT_S]  = center;
-        cell->lighting[LIGHT_SW] = center;
-        cell->lighting[LIGHT_W]  = center;
-        cell->lighting[LIGHT_NW] = center;
-        return;
-    }
+    uint32_t centre = _get_colour(gc);
+    cell->lighting[LIGHT_CENTRE] = centre;
 
-    uint32_t n = _get_color(coord_def(gc.x, gc.y - 1));
-    uint32_t ne = _get_color(coord_def(gc.x + 1, gc.y - 1));
-    uint32_t e = _get_color(coord_def(gc.x + 1, gc.y));
-    uint32_t se = _get_color(coord_def(gc.x + 1, gc.y + 1));
-    uint32_t s = _get_color(coord_def(gc.x, gc.y + 1));
-    uint32_t sw = _get_color(coord_def(gc.x - 1, gc.y + 1));
-    uint32_t w = _get_color(coord_def(gc.x - 1, gc.y));
-    uint32_t nw = _get_color(coord_def(gc.x - 1, gc.y - 1));
+    uint32_t n = _get_colour(coord_def(gc.x, gc.y - 1));
+    uint32_t ne = _get_colour(coord_def(gc.x + 1, gc.y - 1));
+    uint32_t e = _get_colour(coord_def(gc.x + 1, gc.y));
+    uint32_t se = _get_colour(coord_def(gc.x + 1, gc.y + 1));
+    uint32_t s = _get_colour(coord_def(gc.x, gc.y + 1));
+    uint32_t sw = _get_colour(coord_def(gc.x - 1, gc.y + 1));
+    uint32_t w = _get_colour(coord_def(gc.x - 1, gc.y));
+    uint32_t nw = _get_colour(coord_def(gc.x - 1, gc.y - 1));
 
-    cell->lighting[LIGHT_N]      = _mix(center, n, 35);
-    cell->lighting[LIGHT_NE]     = _mix(center, _mix(ne, _mix(n, e, 50), 75), 50);
-    cell->lighting[LIGHT_E]      = _mix(center, e, 35);
-    cell->lighting[LIGHT_SE]     = _mix(center, _mix(se, _mix(s, e, 50), 75), 50);
-    cell->lighting[LIGHT_S]      = _mix(center, s, 35);
-    cell->lighting[LIGHT_SW]     = _mix(center, _mix(sw, _mix(s, w, 50), 75), 50);
-    cell->lighting[LIGHT_W]      = _mix(center, w, 35);
-    cell->lighting[LIGHT_NW]     = _mix(center, _mix(nw, _mix(n, w, 50), 75), 50);
+    cell->lighting[LIGHT_N]      = _mix(centre, n, 35);
+    cell->lighting[LIGHT_NE]     = _mix(centre, _mix(ne, _mix(n, e, 50), 75), 50);
+    cell->lighting[LIGHT_E]      = _mix(centre, e, 35);
+    cell->lighting[LIGHT_SE]     = _mix(centre, _mix(se, _mix(s, e, 50), 75), 50);
+    cell->lighting[LIGHT_S]      = _mix(centre, s, 35);
+    cell->lighting[LIGHT_SW]     = _mix(centre, _mix(sw, _mix(s, w, 50), 75), 50);
+    cell->lighting[LIGHT_W]      = _mix(centre, w, 35);
+    cell->lighting[LIGHT_NW]     = _mix(centre, _mix(nw, _mix(n, w, 50), 75), 50);
 }
