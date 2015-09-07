@@ -506,11 +506,9 @@ tileidx_t tileidx_feature(const coord_def &gc)
         unsigned colour = env.map_knowledge(gc).feat_colour();
         if (colour == 0)
         {
-            colour = (feat == DNGN_FLOOR) ? env.floor_colour :
-                     (feat == DNGN_ROCK_WALL ||
-                      feat == DNGN_PERMAROCK_WALL ||
-                      feat == DNGN_CLEAR_PERMAROCK_WALL) ?
-                         env.rock_colour : 0; // meh
+            colour = feat == DNGN_FLOOR     ? env.floor_colour :
+                     feat == DNGN_ROCK_WALL ? env.rock_colour
+                                            : 0; // meh
         }
         if (colour >= ETC_FIRST)
         {
