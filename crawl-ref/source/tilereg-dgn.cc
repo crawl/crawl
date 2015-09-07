@@ -115,7 +115,6 @@ void DungeonRegion::pack_buffers()
             {
                 tile_cell.flv = env.tile_flv(gc);
                 pack_cell_overlays(gc, &tile_cell);
-                pack_cell_lighting(gc, &tile_cell);
             }
             else
             {
@@ -1061,6 +1060,7 @@ bool DungeonRegion::update_tip_text(string &tip)
             const coord_def vc(gc.x - m_cx_to_gx, gc.y - m_cy_to_gy);
             const screen_cell_t &cell = vbuf[crawl_view.viewsz.x * vc.y + vc.x];
             tip += tile_debug_string(cell.tile.fg, cell.tile.bg, cell.tile.cloud, 'V');
+            tip += make_stringf("\nlight: %#.8x\n", cell.tile.lighting[LIGHT_CENTRE]);
         }
 
         tip += make_stringf("\nFLV: floor: %d (%s) (%d)"

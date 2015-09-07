@@ -179,8 +179,7 @@ void MonsterRegion::pack_buffers()
                     cell.bg = env.tile_bg(ep);
                     cell.flv = env.tile_flv(gc);
                     tile_apply_properties(gc, cell);
-
-                    pack_cell_lighting(gc, &cell);
+                    tile_apply_lighting(gc, &cell);
 
                     m_buf.add(cell, x, y);
 

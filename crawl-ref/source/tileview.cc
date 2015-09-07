@@ -1461,3 +1461,81 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     }
 }
 #endif
+
+static uint32_t _mix_colour (uint32_t x, uint32_t y, int y_percent)
+{
+    ASSERT(y_percent <= 100);
+    ASSERT(y_percent >= 0);
+    int x_percent = 100 - y_percent;
+
+    int x_a = (x & 0xff);
+    int y_a = (y & 0xff);
+
+    int r = (((x >> 24) & 0xff) * x_percent + ((y >> 24) & 0xff) * y_percent) / 100;
+    int g = (((x >> 16) & 0xff) * x_percent  + ((y >> 16) & 0xff) * y_percent) / 100;
+    int b = (((x >> 8) & 0xff) * x_percent  + ((y >> 8) & 0xff) * y_percent) / 100;
+    int a = (x_a * x_percent + y_a * y_percent) / 100;
+
+    return (r << 24) + (g << 16) + (b << 8) + a;
+}
+
+static uint32_t _get_colour(const coord_def &gc)
+{
+    const map_cell& mc = env.map_knowledge(gc);
+    const dungeon_feature_type feat = mc.feat();
+    if (feat == DNGN_UNSEEN)
+        return 0x000000ff;
+
+    uint32_t colour = 0x00000000;
+
+    if (feat == DNGN_LAVA)
+        colour = _mix_colour(colour, 0xda49007f, 66);
+
+    if (mc.visible())
+    {
+        int range = min(8, max(abs(you.pos().x - gc.x), abs(you.pos().y - gc.y)));
+        colour = _mix_colour(colour, 0xf4d2a0cf, (32 - range * 3));
+
+        if (mc.flags & MAP_UMBRAED)
+            colour = _mix_colour(colour, 0x7400da7f, 50);
+        else if (mc.flags & MAP_HALOED)
+            colour = _mix_colour(colour, 0xf6dc017f, 50);
+        
+        if (mc.flags & MAP_ORB_HALOED)
+            colour = _mix_colour(colour, get_orb_phase(gc) ? 0x4e194a7f : 0x6922647f, 50);
+
+        if (mc.flags & MAP_QUAD_HALOED)
+            colour = _mix_colour(colour, 0x0000b37f, 50);
+    }
+    else
+        colour = _mix_colour(colour, 0x000000bf, 70);
+
+    if (mc.mapped())
+        colour = _mix_colour(colour, 0x13137dbf, 70);
+
+    return colour;
+}
+
+void tile_apply_lighting(const coord_def &gc, packed_cell *cell)
+{
+    uint32_t centre = _get_colour(gc);
+    cell->lighting[LIGHT_CENTRE] = centre;
+
+    uint32_t n = _get_colour(coord_def(gc.x, gc.y - 1));
+    uint32_t ne = _get_colour(coord_def(gc.x + 1, gc.y - 1));
+    uint32_t e = _get_colour(coord_def(gc.x + 1, gc.y));
+    uint32_t se = _get_colour(coord_def(gc.x + 1, gc.y + 1));
+    uint32_t s = _get_colour(coord_def(gc.x, gc.y + 1));
+    uint32_t sw = _get_colour(coord_def(gc.x - 1, gc.y + 1));
+    uint32_t w = _get_colour(coord_def(gc.x - 1, gc.y));
+    uint32_t nw = _get_colour(coord_def(gc.x - 1, gc.y - 1));
+
+    cell->lighting[LIGHT_N]  = _mix_colour(centre, n, 35);
+    cell->lighting[LIGHT_NE] = _mix_colour(centre, _mix_colour(ne, _mix_colour(n, e, 50), 75), 50);
+    cell->lighting[LIGHT_E]  = _mix_colour(centre, e, 35);
+    cell->lighting[LIGHT_SE] = _mix_colour(centre, _mix_colour(se, _mix_colour(s, e, 50), 75), 50);
+    cell->lighting[LIGHT_S]  = _mix_colour(centre, s, 35);
+    cell->lighting[LIGHT_SW] = _mix_colour(centre, _mix_colour(sw, _mix_colour(s, w, 50), 75), 50);
+    cell->lighting[LIGHT_W]  = _mix_colour(centre, w, 35);
+    cell->lighting[LIGHT_NW] = _mix_colour(centre, _mix_colour(nw, _mix_colour(n, w, 50), 75), 50);
+}
