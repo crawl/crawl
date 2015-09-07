@@ -4,7 +4,6 @@ function ($, comm, client, util, options) {
 
     var HISTORY_SIZE = 10;
 
-    var messages = [];
     var more = false;
     var old_scroll_top;
     var histories = {};
@@ -39,22 +38,18 @@ function ($, comm, client, util, options) {
             set_last_prefix_glyph("_", "command_marker");
     }
 
+    function remove_old_messages()
+    {
+        var all_messages = $("#messages .game_message");
+        var messages_to_remove = all_messages.slice(0, -10);
+        messages_to_remove.remove();
+    }
+
     function add_message(data)
     {
-        var last_message = messages[messages.length-1];
-        messages.push(data);
-        var msg_elem;
-        var reusable_msg_elems = $("#messages .game_message.cleared");
-        if (reusable_msg_elems.length > 0)
-        {
-            msg_elem = reusable_msg_elems.first();
-            msg_elem.removeClass("cleared");
-        }
-        else
-        {
-            msg_elem = $("<div>");
-            $("#messages").append(msg_elem);
-        }
+        remove_old_messages();
+        var msg_elem = $("<div>");
+        $("#messages").append(msg_elem);
         msg_elem.addClass("game_message");
         var prefix_glyph = $("<span></span>");
         prefix_glyph.addClass("prefix_glyph");
@@ -69,17 +64,10 @@ function ($, comm, client, util, options) {
             msg_elem.append(" ");
             msg_elem.append(repeats);
         }
-        /*$("#messages_container")
-            .stop(true, false)
-            .animate({
-                scrollTop: $("#messages").height()
-            }, 1000);*/
-        $("#messages_container").scrollTop($("#messages").height());
     }
 
     function rollback(count)
     {
-        messages = messages.slice(0, -count);
         $("#messages .game_message").not(".cleared").slice(-count)
             .addClass("cleared").html("&nbsp;");
     }
@@ -278,7 +266,6 @@ function ($, comm, client, util, options) {
 
     $(document).off("game_init.messages")
         .on("game_init.messages", function () {
-            messages = [];
             more = false;
             $(document).off("game_keydown.messages game_keypress.messages")
                 .on("game_keydown.messages", messages_key_handler)
