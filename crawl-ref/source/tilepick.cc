@@ -160,8 +160,9 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_UNSEEN:
         return TILE_DNGN_UNSEEN;
     case DNGN_ROCK_WALL:
-    case DNGN_PERMAROCK_WALL:
         return TILE_WALL_NORMAL;
+    case DNGN_PERMAROCK_WALL:
+        return TILE_WALL_PERMAROCK;
     case DNGN_SLIMY_WALL:
         return TILE_WALL_SLIME;
     case DNGN_OPEN_SEA:
@@ -175,8 +176,9 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_CLEAR_ROCK_WALL:
         return TILE_DNGN_TRANSPARENT_WALL;
     case DNGN_CLEAR_STONE_WALL:
-    case DNGN_CLEAR_PERMAROCK_WALL:
         return TILE_DNGN_TRANSPARENT_STONE;
+    case DNGN_CLEAR_PERMAROCK_WALL:
+        return TILE_WALL_PERMAROCK_CLEAR;
     case DNGN_STONE_WALL:
         return TILE_DNGN_STONE_WALL;
     case DNGN_CLOSED_DOOR:
@@ -498,13 +500,17 @@ tileidx_t tileidx_feature(const coord_def &gc)
     case DNGN_ROCK_WALL:
     case DNGN_STONE_WALL:
     case DNGN_CRYSTAL_WALL:
+    case DNGN_PERMAROCK_WALL:
+    case DNGN_CLEAR_PERMAROCK_WALL:
     {
         unsigned colour = env.map_knowledge(gc).feat_colour();
         if (colour == 0)
         {
-            colour = (feat == DNGN_FLOOR)     ? env.floor_colour :
-                     (feat == DNGN_ROCK_WALL) ? env.rock_colour
-                                              : 0; // meh
+            colour = (feat == DNGN_FLOOR) ? env.floor_colour :
+                     (feat == DNGN_ROCK_WALL ||
+                      feat == DNGN_PERMAROCK_WALL ||
+                      feat == DNGN_CLEAR_PERMAROCK_WALL) ?
+                         env.rock_colour : 0; // meh
         }
         if (colour >= ETC_FIRST)
         {
