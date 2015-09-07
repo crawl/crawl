@@ -546,6 +546,9 @@ static uint32_t _get_colour(const coord_def &gc)
         
         if (env.map_knowledge(gc).flags & MAP_ORB_HALOED)
             colour = _mix(colour, get_orb_phase(gc) ? 0x4e194a7f : 0x6922647f, 50);
+
+        if (env.map_knowledge(gc).flags & MAP_QUAD_HALOED)
+            colour = _mix(colour, 0x0000b37f, 50);
     }
     else
         colour = _mix(colour, 0x000000bf, 70);
