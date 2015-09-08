@@ -133,6 +133,7 @@ int actor::check_res_magic(int power)
     // them a better shot at getting to level two or three and spells that can
     // help them out (or building a level or two of their base skill so they
     // aren't resisted as often). - bwr
+    // If you change this, also change desc_success_chance() to match.
     if (is_monster() && mrs < 6 && coinflip())
         return -1;
 
