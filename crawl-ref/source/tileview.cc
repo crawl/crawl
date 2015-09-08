@@ -1500,9 +1500,9 @@ static uint32_t _get_colour(const coord_def &gc)
         colour = _mix_colour(colour, 0xf4d2a0cf, (32 - range * 3));
 
         if (mc.flags & MAP_UMBRAED)
-            colour = _mix_colour(colour, 0x7400da7f, 50);
+            colour = _mix_colour(colour, 0x4637727f, 50);
         else if (mc.flags & MAP_HALOED)
-            colour = _mix_colour(colour, 0xf6dc017f, 50);
+            colour = _mix_colour(colour, 0xf6ec947f, 50);
         
         if (mc.flags & MAP_ORB_HALOED)
             colour = _mix_colour(colour, get_orb_phase(gc) ? 0x4e194a7f : 0x6922647f, 50);
