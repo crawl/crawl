@@ -2787,12 +2787,12 @@ This statue, made of a fine glassy orange crystal, depicts a mystic known as
 Wucad Mu, who mastered the matters of the mind. Beware of the statue's powers,
 as you have no chance in mental combat against it.
 %%%%
-Moon Troll
+moon troll
 
 A bizarre breed of intelligent troll, glowing with mysterious power from beyond
 this world.
 %%%%
-Lunar Statue
+lunar statue
 
 <zot statue>
 %%%%

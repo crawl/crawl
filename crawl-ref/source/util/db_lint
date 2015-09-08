@@ -119,7 +119,10 @@ sub check_desc_needed($@)
         err "$file: No description for $kind '$_'\n" unless $entries{$_};
         delete $keys{$_};
     }
-    err "$file: Unused description for $kind '$_'\n" for sort keys %keys;
+    for (sort keys %keys)
+    {
+        err "$file: Unused description for $kind '$_'\n" unless /^_/;
+    }
 }
 
 sub check_desc_links()
