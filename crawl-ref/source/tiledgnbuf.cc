@@ -56,7 +56,6 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
 
     pack_foreground(x, y, cell);
-
     pack_lighting(x, y, cell);
 
     // Draw cloud layer(s)
@@ -211,10 +210,10 @@ void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
     }
 }
 
-static VColour _to_vcolour(const uint32_t col)
+static VColour _to_vcolour(const uint32_t colour)
 {
-    return VColour((col & 0xff000000) >> 24, (col & 0xff0000) >> 16,
-                   (col & 0xff00) >> 8, (col & 0xff));
+    return VColour((colour >> 24) & 0xff, (colour >> 16) & 0xff,
+                   (colour >> 8) & 0xff, (colour & 0xff));
 }
 
 void DungeonCellBuffer::pack_lighting(int xs, int ys, const packed_cell &cell)
