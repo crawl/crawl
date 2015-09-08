@@ -1481,6 +1481,9 @@ static uint32_t _mix_colour (uint32_t x, uint32_t y, int y_percent)
 
 static uint32_t _get_colour(const coord_def &gc)
 {
+    if (!map_bounds(gc))
+        return 0x000000ff;
+    
     const map_cell& mc = env.map_knowledge(gc);
     const dungeon_feature_type feat = mc.feat();
     if (feat == DNGN_UNSEEN)
