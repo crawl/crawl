@@ -1547,8 +1547,8 @@ static spret_type _do_cast(spell_type spell, int powc,
     const coord_def target = spd.isTarget ? beam.target : you.pos() + spd.delta;
     if (spell == SPELL_FREEZE || spell == SPELL_VAMPIRIC_DRAINING)
     {
-	    if (!adjacent(you.pos(), target))
-		    return SPRET_ABORT;
+        if (!adjacent(you.pos(), target))
+            return SPRET_ABORT;
     }
 
     switch (spell)
