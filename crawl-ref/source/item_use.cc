@@ -1760,8 +1760,7 @@ void drink(int slot)
         level_change();
 }
 
-// XXX: Only checks brands that can be rebranded to,
-// there's probably a nicer way of doing this.
+// XXX: there's probably a nicer way of doing this.
 bool god_hates_brand(const int brand)
 {
     if (is_good_god(you.religion)
@@ -1787,6 +1786,9 @@ bool god_hates_brand(const int brand)
     {
         return true;
     }
+
+    if (you_worship(GOD_YREDELEMNUL) && brand == SPWPN_HOLY_WRATH)
+        return true;
 
     return false;
 }
