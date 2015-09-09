@@ -1466,7 +1466,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  32, SCR_FEAR,
                  32, SCR_FOG,
                  32, SCR_RANDOM_USELESSNESS,
-                 32, SCR_BLINKING,
+                150, SCR_BLINKING,
                  // [Cha] don't generate noise scrolls if in sprint
                  32, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
                  32, SCR_IMMOLATION,
