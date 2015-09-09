@@ -29,6 +29,16 @@
 #include "travel.h"
 #include "viewgeom.h"
 
+#define COLOUR_LAVA 0xda49009f
+#define COLOUR_CLOSE 0xf4d2a0cf
+#define COLOUR_UMBRA 0x4637727f
+#define COLOUR_HALO 0xf6ec947f
+#define COLOUR_ORB_GLOW_1 0x4e194a7f
+#define COLOUR_ORB_GLOW_2 0x6922647f
+#define COLOUR_QUAD_GLOW 0x0000b37f
+#define COLOUR_MAGIC_MAP 0x190d4d9f
+#define COLOUR_OOR 0x000000bf
+
 void tile_new_level(bool first_time, bool init_unseen)
 {
     if (first_time)
@@ -1468,8 +1478,8 @@ static uint32_t _mix_colour (uint32_t x, uint32_t y, int y_percent)
     ASSERT(y_percent >= 0);
     int x_percent = 100 - y_percent;
 
-    int x_a = (x & 0xff);
-    int y_a = (y & 0xff);
+    int x_a = x & 0xff;
+    int y_a = y & 0xff;
 
     int r = (((x >> 24) & 0xff) * x_percent + ((y >> 24) & 0xff) * y_percent) / 100;
     int g = (((x >> 16) & 0xff) * x_percent  + ((y >> 16) & 0xff) * y_percent) / 100;
@@ -1491,30 +1501,30 @@ static uint32_t _get_colour(const coord_def &gc)
 
     uint32_t colour = 0x00000000;
 
-    if (feat == DNGN_LAVA)
-        colour = _mix_colour(colour, 0xda49007f, 66);
+    if (feat == DNGN_LAVA || feat == DNGN_LAVA_SEA)
+        colour = _mix_colour(colour, COLOUR_LAVA, 50);
 
     if (mc.visible())
     {
         int range = min(8, max(abs(you.pos().x - gc.x), abs(you.pos().y - gc.y)));
-        colour = _mix_colour(colour, 0xf4d2a0cf, (32 - range * 3));
+        colour = _mix_colour(colour, COLOUR_CLOSE, (32 - range * 3));
 
         if (mc.flags & MAP_UMBRAED)
-            colour = _mix_colour(colour, 0x4637727f, 50);
+            colour = _mix_colour(colour, COLOUR_UMBRA, 50);
         else if (mc.flags & MAP_HALOED)
-            colour = _mix_colour(colour, 0xf6ec947f, 50);
+            colour = _mix_colour(colour, COLOUR_HALO, 50);
         
         if (mc.flags & MAP_ORB_HALOED)
-            colour = _mix_colour(colour, get_orb_phase(gc) ? 0x4e194a7f : 0x6922647f, 50);
+            colour = _mix_colour(colour, get_orb_phase(gc) ? COLOUR_ORB_GLOW_1 : COLOUR_ORB_GLOW_2, 50);
 
         if (mc.flags & MAP_QUAD_HALOED)
-            colour = _mix_colour(colour, 0x0000b37f, 50);
+            colour = _mix_colour(colour, COLOUR_QUAD_GLOW, 50);
     }
     else
-        colour = _mix_colour(colour, 0x000000bf, 70);
+        colour = _mix_colour(colour, COLOUR_OOR, 70);
 
     if (mc.mapped())
-        colour = _mix_colour(colour, 0x13137dbf, 70);
+        colour = _mix_colour(colour, COLOUR_MAGIC_MAP, 70);
 
     return colour;
 }
