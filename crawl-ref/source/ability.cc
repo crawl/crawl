@@ -878,7 +878,7 @@ talent get_talent(ability_type ability, bool check_confused)
         // end demonic powers {dlb}
 
     case ABIL_BLINK:
-        failure = 48 - (12 * player_mutation_level(MUT_BLINK))
+        failure = 48 - (17 * player_mutation_level(MUT_BLINK))
                   - you.experience_level / 2;
         break;
 
