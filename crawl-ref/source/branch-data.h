@@ -60,7 +60,7 @@ const Branch branches[NUM_BRANCHES] =
       GREEN, BROWN,
       'L', 4 },
 
-    { BRANCH_SWAMP, BRANCH_LAIR, 3, 6, 4, 15,
+    { BRANCH_SWAMP, BRANCH_LAIR, 3, 6, 7, 15,
       BFLAG_DANGEROUS_END | BFLAG_SPOTTY,
       DNGN_ENTER_SWAMP, DNGN_EXIT_SWAMP,
       "Swamp", "the Swamp", "Swamp",
@@ -68,7 +68,7 @@ const Branch branches[NUM_BRANCHES] =
       BROWN, BROWN,
       'S', 0 },
 
-    { BRANCH_SHOALS, BRANCH_LAIR, 3, 6, 4, 15,
+    { BRANCH_SHOALS, BRANCH_LAIR, 3, 6, 7, 15,
       BFLAG_DANGEROUS_END,
       DNGN_ENTER_SHOALS, DNGN_EXIT_SHOALS,
       "Shoals", "the Shoals", "Shoals",
@@ -76,7 +76,7 @@ const Branch branches[NUM_BRANCHES] =
       BROWN, BROWN,
       'A', 3 },
 
-    { BRANCH_SNAKE, BRANCH_LAIR, 3, 6, 4, 15,
+    { BRANCH_SNAKE, BRANCH_LAIR, 3, 6, 7, 15,
       BFLAG_DANGEROUS_END,
       DNGN_ENTER_SNAKE, DNGN_EXIT_SNAKE,
       "Snake Pit", "the Snake Pit", "Snake",
@@ -84,7 +84,7 @@ const Branch branches[NUM_BRANCHES] =
       LIGHTGREEN, YELLOW,
       'P', 0 },
 
-    { BRANCH_SPIDER, BRANCH_LAIR, 3, 6, 4, 15,
+    { BRANCH_SPIDER, BRANCH_LAIR, 3, 6, 7, 15,
       BFLAG_DANGEROUS_END,
       DNGN_ENTER_SPIDER, DNGN_EXIT_SPIDER,
       "Spider Nest", "the Spider Nest", "Spider",
