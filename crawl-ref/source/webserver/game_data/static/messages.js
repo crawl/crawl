@@ -41,7 +41,7 @@ function ($, comm, client, util, options) {
     function remove_old_messages()
     {
         var all_messages = $("#messages .game_message");
-        var messages_to_remove = all_messages.slice(0, -10);
+        var messages_to_remove = all_messages.slice(0, -15);
         messages_to_remove.remove();
     }
 
