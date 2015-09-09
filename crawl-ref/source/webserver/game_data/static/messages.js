@@ -38,11 +38,22 @@ function ($, comm, client, util, options) {
             set_last_prefix_glyph("_", "command_marker");
     }
 
+    /**
+    * Remove all message elements from the player messages window save for the
+    * last 15.
+
+    * This is necessary to prevent <div> elements from messages no longer in
+    * view from pilling up over longer WebTiles session and thus slowing down
+    * the browser.
+    */
     function remove_old_messages()
     {
         var all_messages = $("#messages .game_message");
-        var messages_to_remove = all_messages.slice(0, -15);
-        messages_to_remove.remove();
+        if (all_messages.length > 15)
+        {
+            var messages_to_remove = all_messages.slice(0, -15);
+            messages_to_remove.remove();
+        }
     }
 
     function add_message(data)
