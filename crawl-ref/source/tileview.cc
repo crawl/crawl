@@ -1472,19 +1472,18 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 }
 #endif
 
-static uint32_t _mix_colour (uint32_t x, uint32_t y, int y_percent)
+static uint32_t _mix_colour (const uint32_t x, const uint32_t y, const int y_percent)
 {
     ASSERT(y_percent <= 100);
     ASSERT(y_percent >= 0);
-    int x_percent = 100 - y_percent;
+    const int x_percent = 100 - y_percent;
+    const int x_a = x & 0xff;
+    const int y_a = y & 0xff;
 
-    int x_a = x & 0xff;
-    int y_a = y & 0xff;
-
-    int r = (((x >> 24) & 0xff) * x_percent + ((y >> 24) & 0xff) * y_percent) / 100;
-    int g = (((x >> 16) & 0xff) * x_percent  + ((y >> 16) & 0xff) * y_percent) / 100;
-    int b = (((x >> 8) & 0xff) * x_percent  + ((y >> 8) & 0xff) * y_percent) / 100;
-    int a = (x_a * x_percent + y_a * y_percent) / 100;
+    const int r = (((x >> 24) & 0xff) * x_percent + ((y >> 24) & 0xff) * y_percent) / 100;
+    const int g = (((x >> 16) & 0xff) * x_percent  + ((y >> 16) & 0xff) * y_percent) / 100;
+    const int b = (((x >> 8) & 0xff) * x_percent  + ((y >> 8) & 0xff) * y_percent) / 100;
+    const int a = (x_a * x_percent + y_a * y_percent) / 100;
 
     return (r << 24) + (g << 16) + (b << 8) + a;
 }
@@ -1506,7 +1505,7 @@ static uint32_t _get_colour(const coord_def &gc)
 
     if (mc.visible())
     {
-        int range = min(8, max(abs(you.pos().x - gc.x), abs(you.pos().y - gc.y)));
+        const int range = min(8, max(abs(you.pos().x - gc.x), abs(you.pos().y - gc.y)));
         colour = _mix_colour(colour, COLOUR_CLOSE, (32 - range * 3));
 
         if (mc.flags & MAP_UMBRAED)
@@ -1534,14 +1533,14 @@ void tile_apply_lighting(const coord_def &gc, packed_cell *cell)
     uint32_t centre = _get_colour(gc);
     cell->lighting[LIGHT_CENTRE] = centre;
 
-    uint32_t n = _get_colour(coord_def(gc.x, gc.y - 1));
-    uint32_t ne = _get_colour(coord_def(gc.x + 1, gc.y - 1));
-    uint32_t e = _get_colour(coord_def(gc.x + 1, gc.y));
-    uint32_t se = _get_colour(coord_def(gc.x + 1, gc.y + 1));
-    uint32_t s = _get_colour(coord_def(gc.x, gc.y + 1));
-    uint32_t sw = _get_colour(coord_def(gc.x - 1, gc.y + 1));
-    uint32_t w = _get_colour(coord_def(gc.x - 1, gc.y));
-    uint32_t nw = _get_colour(coord_def(gc.x - 1, gc.y - 1));
+    const uint32_t n = _get_colour(coord_def(gc.x, gc.y - 1));
+    const uint32_t ne = _get_colour(coord_def(gc.x + 1, gc.y - 1));
+    const uint32_t e = _get_colour(coord_def(gc.x + 1, gc.y));
+    const uint32_t se = _get_colour(coord_def(gc.x + 1, gc.y + 1));
+    const uint32_t s = _get_colour(coord_def(gc.x, gc.y + 1));
+    const uint32_t sw = _get_colour(coord_def(gc.x - 1, gc.y + 1));
+    const uint32_t w = _get_colour(coord_def(gc.x - 1, gc.y));
+    const uint32_t nw = _get_colour(coord_def(gc.x - 1, gc.y - 1));
 
     cell->lighting[LIGHT_N]  = _mix_colour(centre, n, 35);
     cell->lighting[LIGHT_NE] = _mix_colour(centre, _mix_colour(ne, _mix_colour(n, e, 50), 75), 50);

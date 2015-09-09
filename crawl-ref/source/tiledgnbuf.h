@@ -46,7 +46,7 @@ protected:
     void pack_player(int x, int y, bool submerged);
     void pack_doll(const dolls_data &doll, int x, int y,
                    bool submerged, bool ghost);
-    void pack_lighting(int x, int y, const packed_cell &cell);
+    void pack_lighting(const int x, const int y, const packed_cell &cell);
 
     TileBuffer m_buf_floor;
     TileBuffer m_buf_wall;
