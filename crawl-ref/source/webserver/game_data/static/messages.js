@@ -64,6 +64,7 @@ function ($, comm, client, util, options) {
             msg_elem.append(" ");
             msg_elem.append(repeats);
         }
+        $("#messages_container").scrollTop($("#messages").height());
     }
 
     function rollback(count)
