@@ -1704,7 +1704,7 @@ bool name_zombie(monster* mon, const monster* orig)
 // Derived undead deal 80% of the damage of the base form.
 static int _downscale_zombie_damage(int damage)
 {
-    return max(1, damage - damage / 5);
+    return max(1, 4 * damage / 5);
 }
 
 static mon_attack_def _downscale_zombie_attack(const monster* mons,
