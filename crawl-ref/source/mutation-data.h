@@ -496,22 +496,14 @@ static const mutation_def mut_data[] =
    "jumping",
 },
 #endif
-{ MUT_BLINK, 3, 3, mutflag::GOOD, false,
+{ MUT_BLINK, 3, 1, mutflag::GOOD, false,
   "blink",
 
-  {"You can translocate small distances at will.",
-   "You are good at translocating small distances at will.",
-   "You can easily translocate small distances at will."},
+  {"You can translocate small distances at will.", "", ""},
+  {"You feel jittery.", "", ""},
+  {"You no longer feel jittery.", "", ""},
 
-  {"You feel jittery.",
-   "You feel more jittery.",
-   "You feel even more jittery."},
-
-  {"You feel a little less jittery.",
-   "You feel less jittery.",
-   "You feel less jittery."},
-
-   "ability to blink",
+  "ability to blink",
 },
 
 #if TAG_MAJOR_VERSION == 34
