@@ -651,7 +651,7 @@ static void _describe_hunger(status_info* inf)
         inf->light_text   = (vamp ? "Near Bloodless" : "Near Starving");
         break;
     case HS_STARVING:
-        inf->light_colour = RED;
+        inf->light_colour = LIGHTRED;
         inf->light_text   = (vamp ? "Bloodless" : "Starving");
         inf->short_text   = (vamp ? "bloodless" : "starving");
         break;
