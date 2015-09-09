@@ -741,9 +741,8 @@ public:
     }
 
 #ifdef USE_TILE_WEB
-    void send(int old_msgs = 0)
+    void send()
     {
-        unsent += old_msgs;
         if (unsent == 0 || (send_ignore_one && unsent == 1)) return;
 
         if (client_rollback > 0)
@@ -751,8 +750,6 @@ public:
             tiles.json_write_int("rollback", client_rollback);
             client_rollback = 0;
         }
-        if (old_msgs > 0)
-            tiles.json_write_int("old_msgs", old_msgs);
         tiles.json_open_array("messages");
         for (int i = -unsent; i < (send_ignore_one ? -1 : 0); ++i)
         {
@@ -791,7 +788,7 @@ void webtiles_send_last_messages(int n)
         tiles.json_write_bool("more", _more);
         _last_more = _more;
     }
-    buffer.send(n);
+    buffer.send();
     tiles.json_close_object(true);
     tiles.finish_message();
 }
