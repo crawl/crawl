@@ -1766,7 +1766,8 @@ bool god_hates_brand(const int brand)
     if (is_good_god(you.religion)
         && (brand == SPWPN_DRAINING
             || brand == SPWPN_VAMPIRISM
-            || brand == SPWPN_CHAOS))
+            || brand == SPWPN_CHAOS
+            || brand == SPWPN_PAIN))
     {
         return true;
     }
