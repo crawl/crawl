@@ -40,6 +40,18 @@ define(function () {
     exports.HALO_MONSTER = 2;
     exports.HALO_UMBRA = 3;
 
+    // Lighting
+    exports.LIGHT_CENTRE = 0;
+    exports.LIGHT_N = 1;
+    exports.LIGHT_NE = 2;
+    exports.LIGHT_E = 3;
+    exports.LIGHT_SE = 4;
+    exports.LIGHT_S = 5;
+    exports.LIGHT_SW = 6;
+    exports.LIGHT_W = 7;
+    exports.LIGHT_NW = 8;
+    exports.LIGHT_MAX_VALUE = 9;
+
     // equipment_type
     exports.equip = {};
     val = 0;

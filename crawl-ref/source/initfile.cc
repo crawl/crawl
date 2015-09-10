@@ -4605,7 +4605,7 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_int("tile_font_lbl_size", Options.tile_font_lbl_size);
 
     tiles.json_write_bool("show_game_turns", Options.show_game_turns);
-
+    tiles.json_write_int("tile_light_blur", Options.tile_light_blur);
     _write_minimap_colours();
 
     tiles.json_close_object();

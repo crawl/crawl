@@ -1244,6 +1244,24 @@ void TilesFramework::_send_cell(const coord_def &gc,
                 json_write_int(next_pc.dngn_overlay[i]);
             json_close_array();
         }
+
+        bool lighting_changed = false;
+        for (int i = 0; i < LIGHT_MAX_VALUE; i++)
+        {
+            if (next_pc.lighting[i] != current_pc.lighting[i])
+            {
+                lighting_changed = true;
+                break;
+            }
+        }
+
+        if (lighting_changed)
+        {
+            json_open_array("lg");
+            for (int i = 0; i < LIGHT_MAX_VALUE; i++)
+                json_write_uint(next_pc.lighting[i]);
+            json_close_array();
+        }
     }
     json_close_object(true);
 }
@@ -1985,6 +2003,13 @@ void TilesFramework::json_write_int(const string& name, int value)
         json_write_name(name);
 
     json_write_int(value);
+}
+
+void TilesFramework::json_write_uint(uint32_t value)
+{
+    json_write_comma();
+
+    write_message("%u", value);
 }
 
 void TilesFramework::json_write_bool(bool value)

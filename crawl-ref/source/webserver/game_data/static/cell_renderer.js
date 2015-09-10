@@ -650,14 +650,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                         this.draw_dngn(dngn.HEAT_AURA + cell.heat_aura - 1, x, y);
                     if (cell.silenced)
                         this.draw_dngn(dngn.SILENCED, x, y);
-                    if (cell.halo == enums.HALO_RANGE)
-                        this.draw_dngn(dngn.HALO_RANGE, x, y);
-                    if (cell.halo == enums.HALO_UMBRA)
-                        this.draw_dngn(dngn.UMBRA, x, y);
-                    if (cell.orb_glow)
-                        this.draw_dngn(dngn.ORB_GLOW + cell.orb_glow - 1, x, y);
-                    if (cell.quad_glow)
-                        this.draw_dngn(dngn.QUAD_GLOW, x, y);
                     if (cell.disjunct)
                         this.draw_dngn(dngn.DISJUNCT + cell.disjunct - 1, x, y);
 
@@ -878,14 +870,8 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             if (fg.PERM_SUMMON)
                 this.draw_icon(icons.PERM_SUMMON, x, y);
 
-            if (bg.UNSEEN && (bg.value || fg.value))
-                this.draw_icon(icons.MESH, x, y);
-
             if (bg.OOR && (bg.value || fg.value))
                 this.draw_icon(icons.OOR_MESH, x, y);
-
-            if (bg.MM_UNSEEN && (bg.value || fg.value))
-                this.draw_icon(icons.MAGIC_MAP_MESH, x, y);
 
             // Don't let the "new stair" icon cover up any existing icons, but
             // draw it otherwise.
@@ -950,8 +936,34 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 else if (fg.DEMON_5)
                     this.draw_icon(icons.DEMON_NUM5, x, y);
             }
+
+            if (cell.lg)
+                this.draw_lighting(cell.lg, x, y);
         },
 
+        draw_lighting: function(lg, x, y)
+        {
+            var r = options.get("tile_light_blur") / 32;
+            var array =
+            [
+                [ 0, 0, r, r, enums.LIGHT_NW ],
+                [ r, 0, 1 - r, r, enums.LIGHT_N ],
+                [ 1 - r, 0, 1, r, enums.LIGHT_NE ],
+                [ 0, r, r, 1 - r, enums.LIGHT_W ],
+                [ r, r, 1 - r, 1 - r, enums.LIGHT_CENTRE ],
+                [ 1 - r, r, 1, 1 - r, enums.LIGHT_E ],
+                [ 0, 1 - r, r, 1 , enums.LIGHT_SW ],
+                [ r, 1 - r, 1 - r, 1, enums.LIGHT_S ],
+                [ 1 - r, 1 - r, 1, 1, enums.LIGHT_SE ],
+            ];
+
+            for (var i in array)
+                this.draw_colour(lg[array[i][4]],
+                                 x + array[i][0] * this.x_scale * 32,
+                                 y + array[i][1] * this.y_scale * 32,
+                                 x + array[i][2] * this.x_scale * 32,
+                                 y + array[i][3] * this.y_scale * 32);
+        },
 
         // Helper functions for drawing from specific textures
         draw_tile: function(idx, x, y, mod, ofsx, ofsy, y_max)
@@ -996,6 +1008,16 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                                y + sy * this.y_scale,
                                w * this.x_scale,
                                (h + ey - pos_ey_adjust) * this.y_scale)
+        },
+
+        draw_colour: function(colour, xs, ys, xe, ye)
+        {
+            var r = (colour >> 24) & 0xff;
+            var g = (colour >> 16) & 0xff;
+            var b = (colour >> 8) & 0xff;
+            var a = colour & 0xff;
+            this.ctx.fillStyle = "rgba(" + r + "," + g + "," + b + "," + a / 0xff + ")";
+            this.ctx.fillRect(xs, ys, xe - xs, ye - ys);
         },
 
         draw_dngn: function(idx, x, y)

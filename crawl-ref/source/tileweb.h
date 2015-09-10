@@ -173,6 +173,7 @@ public:
     void json_write_name(const string& name);
     void json_write_int(int value);
     void json_write_int(const string& name, int value);
+    void json_write_uint(uint32_t value);
     void json_write_bool(bool value);
     void json_write_bool(const string& name, bool value);
     void json_write_null();
