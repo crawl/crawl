@@ -3625,7 +3625,8 @@ bool is_useless_item(const item_def &item, bool temp)
                    || you.undead_state(temp);
 
         case AMU_FAITH:
-            return you.species == SP_DEMIGOD && !you.religion;
+            return (you.species == SP_DEMIGOD && !you.religion)
+                || (you.religion == GOD_RU && you.piety == piety_breakpoint(5));
 
         case AMU_GUARDIAN_SPIRIT:
             return you.spirit_shield(false, false);

@@ -337,4 +337,6 @@ void zappy(zap_type z_type, int power, bolt &pbolt);
 void bolt_parent_init(const bolt &parent, bolt &child);
 
 int explosion_noise(int rad);
+
+bool shoot_through_monster(const bolt& beam, const monster* victim);
 #endif

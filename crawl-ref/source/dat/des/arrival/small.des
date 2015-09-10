@@ -138,7 +138,7 @@ ENDMAP
 ###############################################################################
 NAME:    evilmike_arrival_grusome_pit
 WEIGHT: 1
-TAGS:    arrival no_rotate no_item_gen
+TAGS:    arrival no_rotate
 ORIENT:  northwest
 # the exit will be placed elsewhere 25% of the time
 SUBST:   { = {:30 .
@@ -1356,7 +1356,7 @@ ENDMAP
 
 ############################################################
 NAME:   zaba_arrival_water
-TAGS:   arrival no_monster_gen no_item_gen no_rotate
+TAGS:   arrival no_monster_gen no_rotate
 ORIENT: float
 SUBST:  T = TV, ? = wW, > = >d
 ITEM:   stone
@@ -2410,11 +2410,12 @@ ENDMAP
 # Eye to eye with the dorky.
 NAME:    lordsloth_arrival_two_stooges
 ORIENT:  float
-TAGS:    arrival no_rotate no_monster_gen no_item_gen
+TAGS:    arrival no_rotate no_monster_gen
 SUBST:   ':l...' , '=l. , l:lllWw , n:nv , v:vvvc
 KMONS:   1 = orc / goblin / kobold
 KFEAT:   1 = .
 KPROP:   1 = no_tele_into
+KMASK:   1 = no_item_gen
 MAP
 .....................
 .....................
@@ -2505,15 +2506,16 @@ ENDMAP
 # There's a large version (with WEIGHT 2) in the huge maps section.
 NAME:   minmay_arrival_arboretum_small
 WEIGHT: 8
-TAGS:   arrival no_monster_gen no_item_gen
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MONS:   plant / bush w:3, fungus col:any, fungus col:yellow, fungus col:red
 MONS:   fungus col:white, fungus col:magenta, fungus col:darkgrey
 KPROP:  ' = no_tele_into
 SUBST:  ' = ...111t, 1:1112, 2=1111112, 2:234567
-FTILE:  .1234567t = floor_moss
-COLOUR: . = green
+FTILE:  D1234567t = floor_moss
+COLOUR: D = green
 SUBST:  " = .
+KMASK:  D1234567 = no_item_gen
 MAP
 xxxxxxxxxxxxxxxxx
 x'''''''''''''''x
@@ -2713,7 +2715,7 @@ ENDMAP
 ##############################################################
 # Moated graveyard arrival (oiseaux)
 NAME:    moated_graveyard_arrival
-TAGS:    arrival no_monster_gen no_item_gen no_trap_gen no_pool_fixup no_rotate
+TAGS:    arrival no_monster_gen no_trap_gen no_pool_fixup no_rotate
 ORIENT:  float
 FTILE:   t{G = FLOOR_PEBBLE_BROWN
 TILE:    ' = FLOOR_PEBBLE_BROWN / FLOOR_PEBBLE_DARKGRAY
@@ -3105,33 +3107,35 @@ ENDMAP
 
 NAME: nicolae_arrival_washed_ashore
 ORIENT: northwest
-TAGS: arrival no_monster_gen no_item_gen no_pool_fixup
+TAGS: arrival no_monster_gen no_pool_fixup
 SUBST: B = bb., S = bWW, Z = WWw
 COLOUR: b : brown
 FTILE: b{ = floor_sand
 KFEAT: O = open_sea
 KFEAT: b = .
 MAP
-OOOOOOOOOOOOOOOOOOOx
-Owwwwwwwwwwwwwwwwxxx
-Owwwwwwwwwwwwwwwxxxx
-OwwwwwwwwwwwwZZZxxxx
-OwwwwwwwwwZZZZSSxxxx
-OwwwwwwwZZZSSSSSbxxx
-OwwwwwwZZSSSSSSbbxxx
-OwwwwwZZSSSSbbbbbxxx
-OwwwwZZSSSbbbbbbbbx
-OwwwwZSSS{bbbbbbbbx
-OwwwZZSSbbbbbbbbbbx
-OwwwZSSSbbbbbbbbbxx
-OwwwZSSbbbbbbbbbbx
-OwwZZSSbbbbbbbbbbx
-OwwZSSSbbbbbbbbbBB
-OwwZSSbbbbbbbbbBB@
-OwxxxbbbbbbbbbBB@
-OxxxxxxxbbbxxxB@
-Oxxxxxxxxxxx
-xxxxxxx
+OOOOOOOOOOOOOOOOOOOOOx
+Owwwwwwwwwwwwwwwwxxxxx
+OwwwwwwwwZZZZZZZZxx
+OwwwwwwZZZSSSSSSZxx
+OwwwwwZZSSSSSSSSSxx
+OwwwwZZSSSSSbbbbbxx
+OwwwZZSSSSbbbbbbxxx
+OwwZZSSSSbbbbbbbxxx
+OwwZSSSS{bbbbbbbxxx
+OwZZSSSbbbbbbbbbBxx
+OwZSSSbbbbbbbbbbBxx
+OwZSSSbbbbbbbbbbBxx
+OwZSSbbbbbbbbbbbBBx
+OwZSSbbbbbbbbbbbBBx
+OwZSSbbbbbbbbbbbBB@
+OwZSSbbbbbbbbbbbBB@
+OwZZSbxxxBBBBBBBBB@
+OxxxxxxxxxxxBBBBBB@
+Oxxxxxxxxxxxxx@@@@@
+Ox
+Ox
+xx
 ENDMAP
 
 ##############################################################
@@ -3155,4 +3159,32 @@ xxgfedddefgxx
 xxgfedddefgxx
  xxxeeeeexxx
    xxxxxxx
+ENDMAP
+
+NAME:   mainiacjoe_arrival_reflecting_pool
+TAGS:   arrival no_monster_gen no_pool_fixup
+ORIENT: float
+SUBST:  G : G:30 T:20 t
+SUBST:  D : t:30 T:20 G
+SUBST:  w : w:30 W
+SUBST:  c : xcvb
+MAP
+   x@x
+   x.x
+  ccAcc
+ccc...ccc
+c...w...c
+c.G.w.G.c
+c...w...c
+c.D.w.D.c
+c...w...c
+c.G.w.G.c
+c...w...c
+c.D.w.D.c
+c...w...c
+c.G.w.G.c
+c...w...c
+ccc...ccc
+  cc{cc
+   ccc
 ENDMAP

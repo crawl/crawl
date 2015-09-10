@@ -1194,7 +1194,7 @@ TAGS:       no_item_gen no_monster_gen no_rotate
 :           volcano_setup(_G)
 ITEM:       fruit
 COLOUR:     m = blue
-MONS:       human ; hammer ego:flaming ident:type . robe ego:fire_resistance ident:type
+MONS:       human ; mace ego:flaming ident:type . robe ego:fire_resistance ident:type
 MONS:       toenail golem
 :           place_chained_volcano(_G)
 :           set_feature_name("clear_rock_wall", "glass window")

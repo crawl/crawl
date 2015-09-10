@@ -931,6 +931,7 @@ ENDMAP
 
 NAME: nicolae_snake_squiggles
 TAGS: transparent extra decor
+DEPTH: Snake
 NSUBST: A = x / ., B = x / ., C = x / ., D = x / ., E = x / ., F = x / ., \
         G = x / ., H = x / ., I = x / ., J = x / ., K = x / ., L = x / ., \
         M = x / ., N = x / ., O = x / ., P = x / ., Q = x / ., R = x / ., \
@@ -953,6 +954,44 @@ MAP
    ..NxM.LxK..
     ..Mx.xL..
      .......
+ENDMAP
+
+NAME: nicolae_large_snake_swirl
+TAGS: transparent
+DEPTH: Snake
+: if you.depth() == 1 then
+SUBST: s = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST: s = [{(
+: else
+SUBST: s = ]})[{(
+: end
+MAP
+xxxxxxxxxxx
+@.........xxx
+............xx
+.............xx
+..............x@......@x
+..............xx.......x
+...............x.......x
+...............x.......x
+.....xxxxx.....x......xx
+...xxx.........x......x
+..xx...........x......x
+.xx...........xx.....xx
+@x....xxxx....x......x
+xx...xx......xx.....xx
+x....x..s...xx.....xx
+x....xx...xxx.....xx
+x.....xxxxx......xx
+x...............xx
+x.............xxx
+xx.........xxxx
+ x.....xxxxx
+ xx......@
+  xx......
+   xxx...@
+     xxxxx
 ENDMAP
 
 ################################################################################

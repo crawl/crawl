@@ -2104,39 +2104,6 @@ bool fedhas_passthrough(const monster_info* target)
                || target->attitude != ATT_HOSTILE);
 }
 
-// Fedhas worshipers can shoot through non-hostile plants, can a
-// particular beam go through a particular monster?
-bool fedhas_shoot_through(const bolt& beam, const monster* victim)
-{
-    actor *originator = beam.agent();
-    if (!victim || !originator)
-        return false;
-
-    bool origin_worships_fedhas;
-    mon_attitude_type origin_attitude;
-    if (originator->is_player())
-    {
-        origin_worships_fedhas = you_worship(GOD_FEDHAS);
-        origin_attitude = ATT_FRIENDLY;
-    }
-    else
-    {
-        monster* temp = originator->as_monster();
-        if (!temp)
-            return false;
-        origin_worships_fedhas = temp->god == GOD_FEDHAS;
-        origin_attitude = temp->attitude;
-    }
-
-    return origin_worships_fedhas
-           && fedhas_protects(victim)
-           && !beam.is_enchantment()
-           && !(beam.is_explosion && beam.in_explosion_phase)
-           && beam.name != "lightning arc"
-           && (mons_atts_aligned(victim->attitude, origin_attitude)
-               || victim->neutral());
-}
-
 // Basically we want to break a circle into n_arcs equal sized arcs and find
 // out which arc the input point pos falls on.
 static int _arc_decomposition(const coord_def & pos, int n_arcs)

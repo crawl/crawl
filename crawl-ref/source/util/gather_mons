@@ -45,6 +45,8 @@ for (grep /\.des$/, `git ls-files`)
     { undef local $/; $_ = <IN>; }
     close IN;
 
+    s/"\s*\.\.(?:\n:)?\s*"//g;
+
     for (/^ *(?:MONS:|KMONS: *[^=:]+[=:]) *((?:.*\\\n)*.*)/mg)
     {
         s/\\\n *//g;
@@ -52,7 +54,6 @@ for (grep /\.des$/, `git ls-files`)
     }
     for (/(?:mons *\("|kmons *\(" *[^=:]+[=:])(.+?)\)$/smg)
     {
-        s/"\s*\.\.(?:\n:)?\s*"//g;
         s/"[^"]*"/LUA/g;
         s/"$//;
         s/"[^"]*$/LUA/;
@@ -77,9 +78,6 @@ for (grep /\.des$/, `git ls-files`)
 
 $mons{"freed slave"} = 1;
 
-# Unlike genus-only monsters, these are not even up to name translations.
-delete $mons{$_} for ("base draconian", "greater demon");
-
 if ($db)
 {
     # No description needed, but they still should present translated
@@ -92,16 +90,6 @@ large skeleton
 small simulacrum
 large simulacrum
 END
-}
-
-unless ($db)
-{
-    open IN, "util/cpp_version spl-summoning.cc|" or die "Can't read spl-summoning.cc\n";
-    while (<IN>)
-    {
-        $mons{$1} = 1 if (/^    { MONS_[A-Z0-9_]+, "([A-Za-z0-9 ']+)" },$/);
-    }
-    close IN;
 }
 
 print "$_\n" for sort keys %mons;

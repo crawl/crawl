@@ -1186,8 +1186,12 @@ vector<string> desc_success_chance(const monster_info& mi, int pow)
         descs.push_back("magic immune");
     else
     {
-        descs.push_back(make_stringf("chance to defeat MR: %d%%",
-                                     hex_success_chance(mr, pow, 100)).c_str());
+        int success = hex_success_chance(mr, pow, 100);
+
+        // See comment in actor::check_res_magic; monster targets only.
+        if (mr < 6)
+            success = (success + 100)/2;
+        descs.push_back(make_stringf("chance to defeat MR: %d%%", success));
     }
     return descs;
 }
@@ -1526,6 +1530,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     }
 
     const coord_def target = spd.isTarget ? beam.target : you.pos() + spd.delta;
+    if (spell == SPELL_FREEZE || spell == SPELL_VAMPIRIC_DRAINING)
+    {
+        if (!adjacent(you.pos(), target))
+            return SPRET_ABORT;
+    }
 
     switch (spell)
     {

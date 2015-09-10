@@ -4820,9 +4820,16 @@ static void _cast_flay(monster* source, actor *defender)
         }
     }
 
+    // Due to Deep Dwarf damage shaving, the player may take less than the intended
+    // amount of damage. Keep track of the actual amount of damage done by comparing
+    // hp before and after the player is hurt; use this as the actual value for
+    // flay damage to prevent the player from regaining extra hp when it wears off
+
+    const int orig_hp = defender->stat_hp();
+
     defender->hurt(source, damage_taken, BEAM_NONE,
                    KILLED_BY_MONSTER, "", "flay_damage", true);
-    defender->props["flay_damage"].get_int() += damage_taken;
+    defender->props["flay_damage"].get_int() += orig_hp - defender->stat_hp();
 
     vector<coord_def> old_blood;
     CrawlVector &new_blood = defender->props["flay_blood"].get_vector();

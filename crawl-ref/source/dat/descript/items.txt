@@ -574,10 +574,6 @@ halberd
 A polearm consisting of an axe blade topped with a spike, mounted on a long
 shaft.
 %%%%
-hammer
-
-A large hammer with a spiked head.
-%%%%
 hand axe
 
 A small axe.
