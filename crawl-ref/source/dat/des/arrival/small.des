@@ -3156,3 +3156,31 @@ xxgfedddefgxx
  xxxeeeeexxx
    xxxxxxx
 ENDMAP
+
+NAME:   mainiacjoe_arrival_reflecting_pool
+TAGS:   arrival no_monster_gen no_pool_fixup no_item_gen
+ORIENT: float
+SUBST:  G : G:30 T:20 t
+SUBST:  D : t:30 T:20 G
+SUBST:  w : w:30 W
+SUBST:  c : xcvb
+MAP
+   x@x
+   x.x
+  ccAcc
+ccc...ccc
+c...w...c
+c.G.w.G.c
+c...w...c
+c.D.w.D.c
+c...w...c
+c.G.w.G.c
+c...w...c
+c.D.w.D.c
+c...w...c
+c.G.w.G.c
+c...w...c
+ccc...ccc
+  cc{cc
+   ccc
+ENDMAP
