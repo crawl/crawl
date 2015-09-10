@@ -210,13 +210,13 @@ void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
     }
 }
 
-static VColour _to_vcolour(const uint32_t colour)
+static VColour _to_vcolour(uint32_t colour)
 {
     return VColour((colour >> 24) & 0xff, (colour >> 16) & 0xff,
                    (colour >> 8) & 0xff, (colour & 0xff));
 }
 
-void DungeonCellBuffer::pack_lighting(const int x, const int y, const packed_cell &cell)
+void DungeonCellBuffer::pack_lighting(int x, int y, const packed_cell &cell)
 {
     const float r = min(max(Options.tile_light_blur, 0), 16) / 32.0;
 

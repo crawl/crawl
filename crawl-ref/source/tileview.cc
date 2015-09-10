@@ -1477,7 +1477,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 }
 #endif
 
-static uint32_t _mix_colour (const uint32_t x, const uint32_t y, const int y_percent)
+static uint32_t _mix_colour (uint32_t x, uint32_t y, int y_percent)
 {
     ASSERT(y_percent <= 100);
     ASSERT(y_percent >= 0);
@@ -1535,8 +1535,15 @@ static uint32_t _get_colour(const coord_def &gc)
 
 void tile_apply_lighting(const coord_def &gc, packed_cell *cell)
 {
+    if (!map_bounds(gc))
+        return;
+
     uint32_t centre = _get_colour(gc);
     cell->lighting[LIGHT_CENTRE] = centre;
+
+    const dungeon_feature_type feat = env.map_knowledge(gc).feat();
+    if (feat == DNGN_UNSEEN)
+        return;
 
     const uint32_t n = _get_colour(coord_def(gc.x, gc.y - 1));
     const uint32_t ne = _get_colour(coord_def(gc.x + 1, gc.y - 1));
