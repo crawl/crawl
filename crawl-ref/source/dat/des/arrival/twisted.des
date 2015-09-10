@@ -80,11 +80,12 @@ ENDMAP
 #########################################
 # Representatives of all player genuses, locked up.
 NAME:    kb_arrival_jail
-TAGS:    arrival no_monster_gen no_item_gen
+TAGS:    arrival no_monster_gen
 ORIENT:  north
 SHUFFLE: ABCDEFGHIJKLMNOPQRSTUVWXYZ
 KFEAT:   ABCDEFGHIJKLMNOPQRSTUVWXYZ = floor
 KPROP:   ABCDEFGHIJKLMNOPQRSTUVWXYZ = no_tele_into
+KMASK:   ABCDEFGHIJKLMNOPQRSTUVWXYZ = no_item_gen
 KMONS:   A = human ; nothing
 KMONS:   B = elf ; nothing
 KMONS:   C = dwarf ; nothing
@@ -148,7 +149,7 @@ ENDMAP
 #########################################
 # A horror show for the beginning adventurer
 NAME:    shiori_arrival_whats_in_store_for_you
-TAGS:    arrival no_monster_gen no_pool_fixup no_item_gen
+TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  west
 SHUFFLE: =@/AB ,  AB/CD
 SUBST:   A=+ , B=@ , C=c , D=c
@@ -159,6 +160,7 @@ KFEAT:   E = permanent teleport trap
 KFEAT:   MNOQ = shallow_water
 SHUFFLE: M/N/O/P/Q
 SUBST:   P = MNO
+KMASK:   EMNOQ = no_item_gen
 #
 # Player monsters:
 KMONS: M = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
@@ -490,7 +492,7 @@ ENDMAP
 # demanded. But I'd like to keep it on D:1 (dp).
 # Edited: translucent walls are less fun, but perfectly safe.
 NAME:    shiori_arrival_elements
-TAGS:    arrival no_monster_gen no_item_gen no_tele_into
+TAGS:    arrival no_monster_gen no_tele_into
 ORIENT:  float
 MARKER:  A = lua:fog_machine { \
              pow_max = 10, delay_min = 50, delay_max = 300, \
@@ -499,7 +501,6 @@ MARKER:  A = lua:fog_machine { \
 SUBST:   A = a ,  a = a m:1
 FTILE:   a = floor_slime
 COLOUR:  a = lightgreen
-SUBST:   a = .
 MARKER:  W = lua:fog_machine{\
              pow_max = 10, delay_min = 50, delay_max = 300, \
              size = 8, start_clouds = 1, \
@@ -507,7 +508,6 @@ MARKER:  W = lua:fog_machine{\
 SUBST:   W = w
 SUBST:   w : Ww'" , ' = wwW"
 COLOUR:  " = blue
-SUBST:   " = .
 SUBST:   _ = w
 MARKER:  F = lua:fog_machine {\
              pow_max = 10, delay_min = 50, delay_max = 300, \
@@ -517,7 +517,6 @@ SUBST:   F = f
 SUBST:   f : fflF , f = llf , F = f
 FTILE:   f = floor_rough_red
 COLOUR:  f = red
-SUBST:   f = .
 MARKER:  E = lua:fog_machine{\
              pow_max = 20, delay_min = 50, delay_max = 300, \
              size = 12, start_clouds = 1, \
@@ -528,23 +527,24 @@ COLOUR:  e = brown
 SUBST:   e =.
 SUBST:   = = m
 SUBST:   X : c.
+KMASK:   afW"` = no_item_gen
 MAP
           ...
        ccc===ccc
-      cc..aaa..cc
-      c.aaaAaaa.c
-      c..aaaaa..c
-      cc...a...cc
+      cc``aaa``cc
+      c`aaaAaaa`c
+      c``aaaaa``c
+      cc```a```cc
   cccccccnn=nnccccccc
- cc..ccccc...ccccc..cc
- c.w..ccccc+ccccc..f.c
- c.ww.nccX...Xccn.ff.c
-.=www.n_c.....cln.fff=.
+ cc``ccccc...ccccc``cc
+ c`w``ccccc+ccccc``f`c
+ c`ww`nccX...Xccn.ff`c
+.=www`n_c.....cln.fff=.
 .=wWww=.+..{..+.=ffFf=.
-.=www.n_c.....cln.fff=.
- c.ww.nccX...Xccn.ff.c
- c.w..ccccc+ccccc..f.c
- cc..cccccG.Gccccc..cc
+.=www`n_c.....cln`fff=.
+ c`ww`nccX...Xccn`ff`c
+ c`w``ccccc+ccccc``f`c
+ cc``cccccG.Gccccc``cc
   cccccccnn+nnccccccc
       cc...e...cc
       c..eeeee..c
@@ -717,7 +717,7 @@ ENDMAP
 ###############################################################################
 
 NAME: nicolae_arrival_kraken_aquarium_a
-TAGS: arrival no_monster_gen no_pool_fixup no_trap_gen no_item_gen generate_awake
+TAGS: arrival no_monster_gen no_pool_fixup no_trap_gen generate_awake
 ORIENT: float
 WEIGHT: 1
 KMONS: K = kraken att:neutral
@@ -729,6 +729,7 @@ KMONS: ! = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
            dwarf; nothing / octopode; nothing / vampire spells:. / \
            formicid; nothing / gargoyle; nothing / vine stalker; nothing
 KPROP: Kw'! = no_tele_into
+KMASK: '! = no_item_gen
 KFEAT: ' = .
 MAP
   .......
@@ -747,7 +748,7 @@ ENDMAP
 ###############################################################################
 
 NAME: nicolae_arrival_kraken_aquarium_b
-TAGS: arrival no_monster_gen no_pool_fixup no_trap_gen no_item_gen
+TAGS: arrival no_monster_gen no_pool_fixup no_trap_gen
 ORIENT: float
 WEIGHT: 1
 KMONS: K = kraken att:neutral
@@ -759,6 +760,7 @@ KMONS: ! = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
            dwarf; nothing / octopode; nothing / vampire spells:. / \
            formicid; nothing / gargoyle; nothing / vine stalker; nothing
 KPROP: Kw'! = no_tele_into
+KMASK: '! = no_item_gen
 KFEAT: ' = .
 MAP
 .........
@@ -904,11 +906,12 @@ XXxxxxxxx'xxxxx'x'JxxXX   XXxxGHIxx
 ENDMAP
 
 NAME: nicolae_arrival_memento_mori
-TAGS: arrival no_monster_gen no_trap_gen no_item_gen
+TAGS: arrival no_monster_gen no_trap_gen
 SUBST: n = nN
 KPROP: u = no_tele_into
 KPROP: Nu = bloody
 SUBST: N = n, u = uU
+KMASK: uU = no_item_gen
 : local yourcorpse = ""
 : local yourskel = ""
 : -- The corpseless. Before the game starts, you.monster() is "program bug".

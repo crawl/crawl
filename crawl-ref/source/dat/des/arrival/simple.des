@@ -1707,7 +1707,7 @@ MAP
 ENDMAP
 
 NAME:   scummos_arrival_gate
-TAGS:   arrival no_monster_gen no_item_gen
+TAGS:   arrival no_monster_gen
 ORIENT: float
 KFEAT:  y = floor
 FTILE:  y = floor_sandstone
@@ -1727,7 +1727,7 @@ xxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   scummos_arrival_checkerplants
-TAGS:   arrival no_monster_gen no_item_gen transparent
+TAGS:   arrival no_monster_gen transparent
 ORIENT: float
 KMONS:  b = fungus
 MAP
