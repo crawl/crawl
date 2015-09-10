@@ -1648,30 +1648,27 @@ ENDMAP
 
 NAME: nicolae_abyss_rune_containment_breach
 TAGS: abyss_rune unrand patrolling no_monster_gen no_item_gen no_trap_gen
-SUBST: N = nn., n = nnnnnc
+SUBST: n = nnnnnnc
 KITEM: O = abyssal rune of zot
 KMONS: Om = spatial maelstrom
 MAP
-       ......
-     ..........
-   ....NNNNNN....
-  ...NNnnnnnnNN...
-  ..NnnnnnnnnnnN..
- ..NnnnnnnnnnnnnN..
- ..NnnnnnnnnnnnnN..
-..NnnnnnnNNnnnnnnN..
-..NnnnnnN..NnnnnnN..
-..NnnnnN.mm.NnnnnN..
-..NnnnnN.Om.NnnnnN..
-..NnnnnnN..NnnnnnN..
-..NnnnnnnNNnnnnnnN..
- ..NnnnnnnnnnnnnN..
- ..NnnnnnnnnnnnnN..
-  ..NnnnnnnnnnnN..
-  ...NNnnnnnnNN...
-   ....NNNNNN....
-     ..........
-       ......
+.................
+.................
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnmmmnnnnn..
+..nnnnnmOmnnnnn..
+..nnnnnmmmnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+.................
+.................
 ENDMAP
 
 ###############################################################################
