@@ -1475,7 +1475,6 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         }
     }
 }
-#endif
 
 static uint32_t _mix_colour (uint32_t x, uint32_t y, int y_percent)
 {
@@ -1563,3 +1562,4 @@ void tile_apply_lighting(const coord_def &gc, packed_cell *cell)
     cell->lighting[LIGHT_W]  = _mix_colour(centre, w, 35);
     cell->lighting[LIGHT_NW] = _mix_colour(centre, _mix_colour(nw, _mix_colour(n, w, 50), 75), 50);
 }
+#endif
