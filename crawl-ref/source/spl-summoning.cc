@@ -125,46 +125,59 @@ spret_type cast_summon_small_mammal(int pow, god_type god, bool fail)
 
 spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 {
-    item_def* stick = nullptr;
-
+    // The first items placed into this list will be the first
+    // to be converted; for players with bow skill we prefer
+    // plain arrows.
+    // For players without bow skill, we prefer arrows with the
+    // smallest quantity, in order to free up inventory sooner
+    list<item_def*> valid_sticks;
+    int num_sticks = 0;
     for (item_def& i : you.inv)
         if (i.is_type(OBJ_MISSILES, MI_ARROW)
-            && check_warning_inscriptions(i, OPER_DESTROY)
-            // Prefer unbranded ones.
-            && get_ammo_brand(i) == SPMSL_NORMAL)
+            && check_warning_inscriptions(i, OPER_DESTROY))
         {
-            stick = &i;
-            break;
+            // If the player has bow skill, assume that they
+            // would prefer that their regular ammo would be
+            // used first
+            if (get_ammo_brand(i) == SPMSL_NORMAL)
+                valid_sticks.push_front(&i);
+            else
+                valid_sticks.push_back(&i);
+            num_sticks += i.quantity;
         }
 
-    if (!stick)
-        for (item_def& i : you.inv)
-            if (i.is_type(OBJ_MISSILES, MI_ARROW)
-                && check_warning_inscriptions(i, OPER_DESTROY))
-            {
-                stick = &i;
-                break;
-            }
-
-    if (!stick)
+    if (valid_sticks.empty())
     {
         mpr("You don't have anything to turn into a snake.");
         return SPRET_ABORT;
     }
-
+    // Sort by the quantity if the player has no bow skill; this will
+    // put arrows with the smallest quantity first in line
+    // If the player has bow skill, we will already have plain arrows
+    // in the first element, so skip this
+    if (you.skills[SK_BOWS] < 1)
+        valid_sticks.sort([](const item_def* a, const item_def* b) -> bool
+                             {
+                                 return a->quantity < b->quantity;
+                             }
+                         );
     const int dur = min(3 + random2(pow) / 20, 5);
     int how_many_max = 1 + min(6, random2(pow) / 15);
 
     int count = 0;
 
     fail_check();
-    if (stick->quantity < how_many_max)
-        how_many_max = stick->quantity;
-
+    if (num_sticks < how_many_max)
+        how_many_max = num_sticks;
+    item_def *stick = nullptr;
     for (int i = 0; i < how_many_max; i++)
     {
         monster_type mon;
-
+        if (!stick || stick->quantity == 0)
+        {
+            stick = valid_sticks.front();
+            valid_sticks.pop_front();
+        }
         if (one_chance_in(5 - min(4, div_rand_round(pow * 2, 25))))
         {
             mon = x_chance_in_y(pow / 3, 100) ? MONS_WATER_MOCCASIN
@@ -172,24 +185,21 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         }
         else
             mon = MONS_BALL_PYTHON;
-
         if (monster *snake = create_monster(mgen_data(mon, BEH_FRIENDLY, &you,
                                       0, SPELL_STICKS_TO_SNAKES, you.pos(),
                                       MHITYOU, MG_AUTOFOE, god), false))
         {
             count++;
+            dec_inv_item_quantity(letter_to_index(stick->slot), 1);
             snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
         }
     }
-
     if (!count)
-    {
-        mpr("You see a puff of smoke.");
-        return SPRET_SUCCESS;
-    }
-
-    dec_inv_item_quantity(letter_to_index(stick->slot), count);
-    mpr((count > 1) ? "You create some snakes!" : "You create a snake!");
+        mpr("You fail to create any snakes.");
+    else if (count > 1)
+        mprf("You create %d snakes!",count);
+    else
+        mpr("You create a snake!");
     return SPRET_SUCCESS;
 }
 
