@@ -411,11 +411,8 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
     // Temporary Tukima's Dance weapons stay as weapons (no free gold),
     // permanent dancing weapons turn to gold like other monsters.
     bool goldify = in_good_standing(GOD_GOZAG)
-                   && mons_class_gives_xp(mons.type)
-                   && !mons_is_conjured(mons.type)
-                   && !force
-                   && !(mons.type == MONS_DANCING_WEAPON
-                        && mons.has_ench(ENCH_ABJ));
+                   && mons_gives_xp(&mons, &you)
+                   && !force;
 
     const bool no_coinflip =
         mons.props.exists("always_corpse")
