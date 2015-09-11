@@ -2511,7 +2511,7 @@ ORIENT: float
 MONS:   plant / bush w:3, fungus col:any, fungus col:yellow, fungus col:red
 MONS:   fungus col:white, fungus col:magenta, fungus col:darkgrey
 KPROP:  ' = no_tele_into
-SUBST:  ' = ...111t, 1:1112, 2=1111112, 2:234567
+SUBST:  ' = DDD111t, 1:1112, 2=1111112, 2:234567
 FTILE:  D1234567t = floor_moss
 COLOUR: D = green
 SUBST:  " = .

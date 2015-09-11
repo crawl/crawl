@@ -485,71 +485,69 @@ ENDMAP
 #######################################################################
 # Four elements.
 # Pretty hazardous, but the Earth side is always safe to leave through.
-# Players can safely watch at the clouds. All exits are runed except for
-# the safe one.
+# Players can safely watch at the clouds.
 # This vault is great. I've seen players marvel at it. If need be, we
 # may delegate it to another branch, where less caution measures are
 # demanded. But I'd like to keep it on D:1 (dp).
-# Edited: translucent walls are less fun, but perfectly safe.
 NAME:    shiori_arrival_elements
 TAGS:    arrival no_monster_gen no_tele_into
 ORIENT:  float
-MARKER:  A = lua:fog_machine { \
+MARKER:  D = lua:fog_machine { \
              pow_max = 10, delay_min = 50, delay_max = 300, \
              size = 8, start_clouds = 1, \
              cloud_type = "noxious fumes" }
-SUBST:   A = a ,  a = a m:1
-FTILE:   a = floor_slime
-COLOUR:  a = lightgreen
+SUBST:   D = E
+FTILE:   EF = floor_slime
+COLOUR:  EF = lightgreen
+SUBST:   E = E n:1
 MARKER:  W = lua:fog_machine{\
              pow_max = 10, delay_min = 50, delay_max = 300, \
              size = 8, start_clouds = 1, \
              cloud_type = "freezing vapour"}
-SUBST:   W = w
-SUBST:   w : Ww'" , ' = wwW"
-COLOUR:  " = blue
-SUBST:   _ = w
-MARKER:  F = lua:fog_machine {\
+SUBST:   W = w, w : HIWw, I = HWww
+FTILE:   H = floor_rough_blue
+COLOUR:  H = blue
+SUBST:   J = w
+MARKER:  K = lua:fog_machine {\
              pow_max = 10, delay_min = 50, delay_max = 300, \
              size = 8, start_clouds = 1, \
              cloud_type = "flame"}
-SUBST:   F = f
-SUBST:   f : fflF , f = llf , F = f
-FTILE:   f = floor_rough_red
-COLOUR:  f = red
-MARKER:  E = lua:fog_machine{\
+SUBST:   K = l, l : LMMl , M = Lll
+FTILE:   L = floor_rough_red
+COLOUR:  L = red
+SUBST:   N = l
+MARKER:  O = lua:fog_machine{\
              pow_max = 20, delay_min = 50, delay_max = 300, \
              size = 12, start_clouds = 1, \
              cloud_type = "black smoke"}
-SUBST:   E = e , e = e n:1
-FTILE:   e = floor_mud
-COLOUR:  e = brown
-SUBST:   e =.
-SUBST:   = = m
+SUBST:   O = P
+FTILE:   PQ = floor_mud
+COLOUR:  PQ = brown
+SUBST:   P = P n:1
 SUBST:   X : c.
-KMASK:   afW"` = no_item_gen
+KMASK:   EFHLW = no_item_gen
 MAP
           ...
-       ccc===ccc
-      cc``aaa``cc
-      c`aaaAaaa`c
-      c``aaaaa``c
-      cc```a```cc
-  cccccccnn=nnccccccc
- cc``ccccc...ccccc``cc
- c`w``ccccc+ccccc``f`c
- c`ww`nccX...Xccn.ff`c
-.=www`n_c.....cln.fff=.
-.=wWww=.+..{..+.=ffFf=.
-.=www`n_c.....cln`fff=.
- c`ww`nccX...Xccn`ff`c
- c`w``ccccc+ccccc``f`c
- cc``cccccG.Gccccc``cc
+       cccnnnccc
+      ccFFEEEFFcc
+      cFEEEDEEEFc
+      cFFEEEEEFFc
+      ccFFFEFFFcc
+  cccccccnnnnnccccccc
+ ccHHccccc...cccccLLcc
+ cHwHHccccc+cccccLLlLc
+ cHwwHnccX...XccnLllLc
+.nwwwHnJc.....cNnLllln.
+.nwWwwn.+..{..+.nllKln.
+.nwwwHnJc.....cNnLllln.
+ cHwwHnccX...XccnLllLc
+ cHwHHccccc+cccccLLlLc
+ ccHHcccccG.GcccccLLcc
   cccccccnn+nnccccccc
-      cc...e...cc
-      c..eeeee..c
-      c.eeeEeee.c
-      cc..eee..cc
+      ccQQQPQQQcc
+      cQQPPPPPQQc
+      cQPPPOPPPQc
+      ccQQPPPQQcc
        ccc+++ccc
 ENDMAP
 
