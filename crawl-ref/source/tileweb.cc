@@ -1246,7 +1246,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
         }
 
         bool lighting_changed = false;
-        for (int i = 0; i < LIGHT_MAX_VALUE; i++)
+        for (int i = 0; i < NUM_LIGHT_SEGS; i++)
         {
             if (next_pc.lighting[i] != current_pc.lighting[i])
             {
@@ -1258,7 +1258,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (lighting_changed)
         {
             json_open_array("lg");
-            for (int i = 0; i < LIGHT_MAX_VALUE; i++)
+            for (int i = 0; i < NUM_LIGHT_SEGS; i++)
                 json_write_uint(next_pc.lighting[i]);
             json_close_array();
         }

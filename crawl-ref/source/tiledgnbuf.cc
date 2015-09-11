@@ -240,7 +240,7 @@ void DungeonCellBuffer::pack_lighting(int x, int y, const packed_cell &cell)
         { 1 - r, 1 - r, 1, 1, LIGHT_SE },
     };
 
-    for (int i = 0; i < LIGHT_MAX_VALUE; i++)
+    for (int i = 0; i < NUM_LIGHT_SEGS; i++)
     {
         const colour_region region = regions[i];
         m_buf_lighting.add(x + region.x1, y + region.y1, x + region.x2,

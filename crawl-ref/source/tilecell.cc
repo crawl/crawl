@@ -40,7 +40,7 @@ void packed_cell::clear()
     disjunct         = 0;
 #if TAG_MAJOR_VERSION == 34
     heat_aura        = 0;
-    for (int i = 0; i < LIGHT_MAX_VALUE; i++)
+    for (int i = 0; i < NUM_LIGHT_SEGS; i++)
         lighting[i] = 0;
 #endif
 }
@@ -72,7 +72,7 @@ bool packed_cell::operator ==(const packed_cell &other) const
     if (num_dngn_overlay != other.num_dngn_overlay) return false;
     for (int i = 0; i < num_dngn_overlay; ++i)
         if (dngn_overlay[i] != other.dngn_overlay[i]) return false;
-    for (int i = 0; i < LIGHT_MAX_VALUE; i++)
+    for (int i = 0; i < NUM_LIGHT_SEGS; i++)
         if (lighting[i] != other.lighting[i]) return false;
     return true;
 }

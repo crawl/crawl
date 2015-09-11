@@ -50,7 +50,7 @@ define(function () {
     exports.LIGHT_SW = 6;
     exports.LIGHT_W = 7;
     exports.LIGHT_NW = 8;
-    exports.LIGHT_MAX_VALUE = 9;
+    exports.NUM_LIGHT_SEGS = 9;
 
     // equipment_type
     exports.equip = {};
