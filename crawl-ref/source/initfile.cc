@@ -3661,6 +3661,14 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (!resolved.empty())
             additional_macro_files.push_back(resolved);
     }
+    else if (key == "macros")
+    {
+        // orig_field because this function wants capitals
+        const string possible_error = read_rc_file_macro(orig_field);
+
+        if (possible_error != "")
+            report_error(possible_error.c_str(), orig_field.c_str());
+    }
 #ifdef USE_TILE
     else if (key == "tile_show_items")
         tile_show_items = field;

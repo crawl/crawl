@@ -1719,6 +1719,30 @@ show_god_gift = unident|yes|no
 
 3-m     Macro related Options.
 ------------------------------
+macros += M: \{9} za
+        This options adds a macro or keymap.
+
+        Each definition consists of exactly three arguments separated by
+        spaces. The first one describes whether it is a macro or a keymap:
+        "M:" macro,
+        "K:"  default context keymap,
+        "K1:" level-map context keymap,
+        "K2:" targeting context keymap
+        "K3:" confirmation context keymap.
+
+        The second argument describes the trigger key and consists the
+        character or keycode of that key (for example 'a', 'A' or \{9} for the
+        A, Shift-A or Tab keys). The third argument describes the macro or
+        keymap action and consists the command sequence to be associated with
+        the second argument. (for example "zap" for zapping the spell in slot a
+        at the previous target).
+
+        If you have any macros/keymaps in your rc file, they will automatically
+        be saved to your macro.txt file on load, silently overriding any
+        macros/keymaps already saved to your macro.txt file.
+
+        This syntax is based on but not identical to the format used in the
+        macro.txt file.
 
 flush.failure = true
 flush.command = false

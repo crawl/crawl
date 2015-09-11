@@ -1066,6 +1066,77 @@ static void _read_macros_from(const char* filename)
     }
 }
 
+/*
+ * Based on _read_macros_from(), reads macros or keymaps from rc files.
+ *
+ * @param field The orig_field (not lowercased) of the macro option (the
+ * bit after "macros +=")
+ *
+ * @return The string of any errors which occurred, or "" if no error.
+ * %s is the field argument.
+ */
+
+string read_rc_file_macro(const string& field)
+{
+    const int first_space = field.find(' ');
+
+    if (first_space < 0)
+        return "Cannot parse marcos += %s , there is only one argument";
+
+    // Start by deciding what context the macro/keymap is in
+    const string context = field.substr(0, first_space);
+
+    bool keymap = false;
+    KeymapContext keymc = KMC_DEFAULT;
+
+    if (context == "K")
+    {
+        keymap = true;
+        keymc  = KMC_DEFAULT;
+    }
+    else if (context.length() >= 2 && context[0] == 'K')
+    {
+        const KeymapContext ctx =
+              KeymapContext(KMC_DEFAULT + context[1] - '0');
+
+        if (ctx >= KMC_DEFAULT && ctx < KMC_CONTEXT_COUNT)
+        {
+            keymap = true;
+            keymc  = ctx;
+        }
+    }
+    else if (context == "M")
+        keymap = false;
+    else
+        return "'" + context
+                   + "' is not a valid macro or keymap context (macros += %s)";
+
+    // Now grab the key and action to be performed
+    const string key_and_action = field.substr((first_space + 1));
+
+    const int second_space = key_and_action.find(' ');
+
+    if (second_space < 0)
+        return "Cannot parse marcos += %s , there are only two arguments";
+
+    const string macro_key_string = key_and_action.substr(0, second_space);
+    const string action_string = key_and_action.substr((second_space + 1));
+
+
+    keyseq key = parse_keyseq(macro_key_string);
+
+    keyseq action = parse_keyseq(action_string);
+
+    macro_add((keymap ? Keymaps[keymc] : Macros), key, action);
+
+    // If we didn't save here, macros in rc files would be saved iff you also
+    // changed another macro with cntrl-D and saved at the exit prompt.
+    // Consistent behavior works better.
+    macro_save();
+
+    return "";
+}
+
 void macro_init()
 {
     for (const auto &fn : Options.additional_macro_files)
