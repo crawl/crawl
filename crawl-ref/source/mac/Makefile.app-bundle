@@ -91,7 +91,6 @@ endif
 	cp -r $(CRAWL_SRC)/dat $(RESOURCES)
 	cp -r $(CRAWL_BASE)/docs $(RESOURCES)
 	cp $(CRAWL_BASE)/licence.txt $(RESOURCES)/LICENCE.txt
-	cp $(CRAWL_BASE)/README.md $(RESOURCES)
 	cp $(CRAWL_BASE)/CREDITS.txt $(RESOURCES)
 	rm -rf $(RESOURCES)/docs/obsolete
 	rm -rf $(RESOURCES)/docs/template
