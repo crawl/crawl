@@ -1495,12 +1495,14 @@ static uint32_t _mix_colour (uint32_t x, uint32_t y, int y_percent)
 static uint32_t _get_colour(const coord_def &gc)
 {
     if (!map_bounds(gc))
+        // e.g. open sea / lava
         return 0x000000ff;
-    
+
     const map_cell& mc = env.map_knowledge(gc);
     const dungeon_feature_type feat = mc.feat();
     if (feat == DNGN_UNSEEN)
-        return 0x000000ff;
+        // Partially transparent for Ash item detection etc.
+        return 0x0000007b;
 
     uint32_t colour = 0x00000000;
 
@@ -1534,16 +1536,7 @@ static uint32_t _get_colour(const coord_def &gc)
 
 void tile_apply_lighting(const coord_def &gc, packed_cell *cell)
 {
-    if (!map_bounds(gc))
-        return;
-
-    uint32_t centre = _get_colour(gc);
-    cell->lighting[LIGHT_CENTRE] = centre;
-
-    const dungeon_feature_type feat = env.map_knowledge(gc).feat();
-    if (feat == DNGN_UNSEEN)
-        return;
-
+    const uint32_t centre = _get_colour(gc);
     const uint32_t n = _get_colour(coord_def(gc.x, gc.y - 1));
     const uint32_t ne = _get_colour(coord_def(gc.x + 1, gc.y - 1));
     const uint32_t e = _get_colour(coord_def(gc.x + 1, gc.y));
@@ -1553,6 +1546,7 @@ void tile_apply_lighting(const coord_def &gc, packed_cell *cell)
     const uint32_t w = _get_colour(coord_def(gc.x - 1, gc.y));
     const uint32_t nw = _get_colour(coord_def(gc.x - 1, gc.y - 1));
 
+    cell->lighting[LIGHT_CENTRE] = centre;
     cell->lighting[LIGHT_N]  = _mix_colour(centre, n, 35);
     cell->lighting[LIGHT_NE] = _mix_colour(centre, _mix_colour(ne, _mix_colour(n, e, 50), 75), 50);
     cell->lighting[LIGHT_E]  = _mix_colour(centre, e, 35);
