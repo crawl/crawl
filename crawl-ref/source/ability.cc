@@ -96,6 +96,7 @@ enum ability_flag_type
     ABFLAG_SKILL_DRAIN    = 0x00080000, // drains skill levels
     ABFLAG_GOLD           = 0x00100000, // costs gold
     ABFLAG_SACRIFICE      = 0x00200000, // sacrifice (Ru)
+    ABFLAG_HOSTILE        = 0x00400000, // failure summons a hostile (Makhleb)
 };
 
 static int  _find_ability_slot(const ability_def& abil);
@@ -308,11 +309,11 @@ static const ability_def Ability_List[] =
     { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction",
       0, scaling_cost::fixed(1), 20, 0, ABFLAG_NONE},
     { ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, "Lesser Servant of Makhleb",
-      0, scaling_cost::fixed(4), 50, 2, ABFLAG_NONE},
+      0, scaling_cost::fixed(4), 50, 2, ABFLAG_HOSTILE},
     { ABIL_MAKHLEB_MAJOR_DESTRUCTION, "Major Destruction",
       0, scaling_cost::fixed(6), 100, generic_cost::range(0, 1), ABFLAG_NONE},
     { ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "Greater Servant of Makhleb",
-      0, scaling_cost::fixed(10), 100, 5, ABFLAG_NONE},
+      0, scaling_cost::fixed(10), 100, 5, ABFLAG_HOSTILE},
 
     // Sif Muna
     { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Energy",
@@ -1661,7 +1662,7 @@ bool activate_talent(const talent& tal)
     switch (ability_result)
     {
         case SPRET_SUCCESS:
-            ASSERT(!fail);
+            ASSERT(!fail || testbits(abil.flags, ABFLAG_HOSTILE));
             practise(EX_USED_ABIL, abil.ability);
             _pay_ability_costs(abil);
             count_action(tal.is_invocation ? CACT_INVOKE : CACT_ABIL, abil.ability);
@@ -2375,7 +2376,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         summon_demon_type(random_choose(MONS_HELLWING, MONS_NEQOXEC,
                           MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_YNOXINUL),
                           20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB, 0, !fail);
-        fail_check();
         break;
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
@@ -2412,7 +2412,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         summon_demon_type(random_choose(MONS_EXECUTIONER, MONS_GREEN_DEATH,
                           MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON),
                           20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB, 0, !fail);
-        fail_check();
         break;
 
     case ABIL_TROG_BURN_SPELLBOOKS:
