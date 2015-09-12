@@ -220,7 +220,7 @@ void DungeonCellBuffer::pack_lighting(int x, int y, const packed_cell &cell)
 {
     const float r = min(max(Options.tile_light_blur, 0), 16) / 32.0;
 
-    const struct colour_region
+    const struct
     {
         float x1;
         float y1;
@@ -240,12 +240,9 @@ void DungeonCellBuffer::pack_lighting(int x, int y, const packed_cell &cell)
         { 1 - r, 1 - r, 1, 1, LIGHT_SE },
     };
 
-    for (int i = 0; i < NUM_LIGHT_SEGS; i++)
-    {
-        const colour_region region = regions[i];
+    for (const auto &region : regions)
         m_buf_lighting.add(x + region.x1, y + region.y1, x + region.x2,
                            y + region.y2, _to_vcolour(cell.lighting[region.seg]));
-    }
 }
 
 void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
