@@ -438,7 +438,6 @@ struct help_file
 static help_file help_files[] =
 {
     { "crawl_manual.txt",  '*', true },
-    { "../README.md",      '!', false },
     { "aptitudes.txt",     '%', false },
     { "quickstart.txt",    '^', false },
     { "macros_guide.txt",  '~', false },
@@ -635,7 +634,6 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
             "aspect of Dungeon Crawl.\n"
 
             "<w>?</w>: List of commands\n"
-            "<w>!</w>: Read Me!\n"
             "<w>^</w>: Quickstart Guide\n"
             "<w>:</w>: Browse character notes\n"
             "<w>~</w>: Macros help\n"
