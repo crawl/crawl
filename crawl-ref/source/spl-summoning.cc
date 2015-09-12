@@ -1160,11 +1160,11 @@ static bool _summon_greater_demon(int pow, god_type god, int spell, bool quiet)
 }
 
 bool summon_demon_type(monster_type mon, int pow, god_type god,
-                       int spell)
+                       int spell, bool friendly)
 {
     return _summon_demon_wrapper(pow, god, spell, mon,
                                  min(2 + (random2(pow) / 4), 6),
-                                 random2(pow) > 3, false, false);
+                                 friendly, false, false);
 }
 
 spret_type cast_summon_demon(int pow, god_type god, bool fail)

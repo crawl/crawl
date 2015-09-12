@@ -1059,7 +1059,6 @@ talent get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
-    case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
     case ABIL_LUGONU_CORRUPT:
     case ABIL_FEDHAS_RAIN:
     case ABIL_QAZLAL_DISASTER_AREA:
@@ -1076,6 +1075,11 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_DITHMENOS_SHADOW_FORM:
         invoc = true;
         failure = 80 - (you.piety / 25) - you.skill(SK_INVOCATIONS, 4);
+        break;
+
+    case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
+        invoc = true;
+        failure = 90 - (you.piety / 5) - you.skill(SK_INVOCATIONS, 2);
         break;
 
     case ABIL_NEMELEX_STACK_FIVE:
@@ -2368,10 +2372,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-        fail_check();
         summon_demon_type(random_choose(MONS_HELLWING, MONS_NEQOXEC,
                           MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_YNOXINUL),
-                          20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB);
+                          20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB, 0, !fail);
+        fail_check();
         break;
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
@@ -2405,10 +2409,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
-        fail_check();
         summon_demon_type(random_choose(MONS_EXECUTIONER, MONS_GREEN_DEATH,
                           MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON),
-                          20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB);
+                          20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB, 0, !fail);
+        fail_check();
         break;
 
     case ABIL_TROG_BURN_SPELLBOOKS:
