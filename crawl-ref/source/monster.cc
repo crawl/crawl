@@ -4893,6 +4893,12 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     return true;
 }
 
+bool monster::is_cloud_safe(const coord_def &place)
+{
+    int cl = env.cgrid(place);
+    return cl == EMPTY_CLOUD || !mons_avoids_cloud(this, cl);
+}
+
 bool monster::check_set_valid_home(const coord_def &place,
                                     coord_def &chosen,
                                     int &nvalid) const
@@ -4911,6 +4917,21 @@ bool monster::check_set_valid_home(const coord_def &place,
 
     if (one_chance_in(++nvalid))
         chosen = place;
+
+    return true;
+}
+
+
+bool monster::is_location_safe(const coord_def &place)
+{
+    if (!monster_habitable_grid(this, grd(place)))
+        return false;
+
+    if (!is_trap_safe(place, true))
+        return false;
+
+    if (!is_cloud_safe(place))
+        return false;
 
     return true;
 }

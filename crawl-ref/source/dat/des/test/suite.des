@@ -38,3 +38,24 @@ x2PPx
 x.1xx
 xxxxx
 ENDMAP
+
+NAME:    monster_avoids_cloud
+DEPTH:   D:1
+TAGS:    no_monster_gen
+KMONS:   1 = generate_awake goblin
+MARKER:  F = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 1000, pow_max = 1000, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MAP
+xxxxxxxxx
+x.......x
+x...F...x
+x..FFF..x
+x...F...x
+x...1...x
+xFFFFFFFx
+xmmmmmmmx
+.........
+ENDMAP
+
+
