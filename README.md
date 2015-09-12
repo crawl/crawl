@@ -36,7 +36,7 @@ Both classical ASCII and tiles (GUI) versions of Crawl are available to [downloa
 Our official homepage is [https://crawl.develz.org](https://crawl.develz.org/). You can find online play, offline downloads, a community forum and the development bug tracker/wiki.
 
 ### IRC
-Chat with fellow crawlers in [##crawl on irc.freenode.net](https://webchat.freenode.net/), or talk development in ##crawl-dev.
+Chat with fellow crawlers in [##crawl on irc.freenode.net](https://webchat.freenode.net/?channels=##crawl), or talk development in [##crawl-dev](https://webchat.freenode.net/?channels=##crawl-dev).
 
 ## How you can help
 
