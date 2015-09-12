@@ -3410,6 +3410,8 @@ w:50
 
 @The_monster@ says, "I hate sacrificants."
 
+@The_monster@ says, "Once, I gave up eating meat for a week. I hated that."
+
 @The_monster@ says, "I hate hidden layers of reality."
 
 @The_monster@ says, "I hate existential doubt."
