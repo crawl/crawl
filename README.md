@@ -79,7 +79,7 @@ Please be sure to read [docs/develop/coding_conventions.txt](crawl-ref/docs/deve
 
 ## License and history information
 
-Crawl is licensed as GPLv2+. See [license.txt](crawl-ref/license.txt) for the full text.
+Crawl is licensed as GPLv2+. See [licence.txt](crawl-ref/licence.txt) for the full text.
 
 Crawl is a descendant of Linley's Dungeon Crawl. Development of the main branch stalled at version 4.0.0b26, with a final alpha of 4.1 being released by Brent Ross in 2005. Since 2006, the Dungeon Crawl Stone Soup team has continued development. [CREDITS.txt](crawl-ref/CREDITS.txt) contains a full list of contributors.
 
