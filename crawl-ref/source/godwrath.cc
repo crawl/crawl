@@ -1822,10 +1822,9 @@ void beogh_idol_revenge()
 
 static void _tso_blasts_cleansing_flame(const char *message)
 {
-    // TSO won't protect you from his own cleansing flame, and Xom is too
-    // capricious to protect you from it.
-    if (!you_worship(GOD_SHINING_ONE) && !you_worship(GOD_XOM)
-        && !player_under_penance() && x_chance_in_y(you.piety, MAX_PIETY * 2))
+    // TSO won't protect you from his own cleansing flame.
+    if (!you_worship(GOD_SHINING_ONE) && !player_under_penance()
+        && x_chance_in_y(you.piety, MAX_PIETY * 2))
     {
         god_speaks(you.religion,
                    make_stringf("\"Mortal, I have averted the wrath of %s... "
@@ -1852,10 +1851,9 @@ static void _god_smites_you(god_type god, const char *message,
 {
     ASSERT(god != GOD_NO_GOD);
 
-    // Your god won't protect you from his own smiting, and Xom is too
-    // capricious to protect you from any god's smiting.
-    if (!you_worship(god) && !you_worship(GOD_XOM)
-        && !player_under_penance() && x_chance_in_y(you.piety, MAX_PIETY * 2))
+    // Your god won't protect you from his own smiting.
+    if (!you_worship(god) && && !player_under_penance()
+        && x_chance_in_y(you.piety, MAX_PIETY * 2))
     {
         god_speaks(you.religion,
                    make_stringf("\"Mortal, I have averted the wrath of %s... "
