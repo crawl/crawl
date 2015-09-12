@@ -3408,7 +3408,7 @@ w:50
 
 @The_monster@ says, "I hate sacrifices."
 
-@The_monster@ says, "I hate sacrificiants."
+@The_monster@ says, "I hate sacrificants."
 
 @The_monster@ says, "I hate hidden layers of reality."
 
