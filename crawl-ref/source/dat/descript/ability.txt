@@ -598,25 +598,17 @@ lower the remaining bribe fund; upon its exhaustion, bribed enemies will become
 indifferent if they have not become your allies.
 %%%%
 # Pakellas
-Minor Device Surge ability
+Device Surge ability
 
-Spend a small amount of magic to slightly empower your next use of an evokable
-device.
+Spend some magical power to empower a use of a magical device. The amount of
+magical power a follower of Pakellas can use varies, but correlates with
+how devoted they are to Pakellas.
 %%%%
 Quick Charge ability
 
 Spend all of your current pool of magic to charge a wand or rod. The
 effectiveness of this depends on your current pool of magic and your
 Evocations skill.
-%%%%
-Device Surge ability
-
-Spend some magic to empower your next use of an evokable device.
-%%%%
-Major Device Surge ability
-
-Spend a large amount of magic to greatly empower your next use of an evokable
-device.
 %%%%
 Supercharge ability
 
