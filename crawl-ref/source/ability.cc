@@ -390,14 +390,10 @@ static const ability_def Ability_List[] =
       generic_cost::range(10, 14), abflag::NONE },
 
     // Pakellas
-    { ABIL_PAKELLAS_MINOR_DEVICE_SURGE, "Minor Device Surge",
-        3, 0, 50, 2, abflag::NONE },
+    { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
+        0, 0, 100, 2, abflag::NONE },
     { ABIL_PAKELLAS_QUICK_CHARGE, "Quick Charge",
         0, 0, 100, 3, abflag::NONE },
-    { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
-        6, 0, 100, 3, abflag::NONE },
-    { ABIL_PAKELLAS_MAJOR_DEVICE_SURGE, "Major Device Surge",
-        9, 0, 150, 4, abflag::NONE },
     { ABIL_PAKELLAS_SUPERCHARGE, "Supercharge", 0, 0, 0, 0, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, abflag::NONE },
@@ -929,11 +925,6 @@ talent get_talent(ability_type ability, bool check_confused)
         failure = 30 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 6);
         break;
 
-    case ABIL_PAKELLAS_MINOR_DEVICE_SURGE:
-        invoc = true;
-        failure = 30 - (you.piety / 25) - you.skill(SK_EVOCATIONS, 6);
-        break;
-
     case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_YRED_INJURY_MIRROR:
@@ -979,7 +970,7 @@ talent get_talent(ability_type ability, bool check_confused)
 
     case ABIL_PAKELLAS_DEVICE_SURGE:
         invoc = true;
-        failure = 50 - (you.piety / 25) - you.skill(SK_EVOCATIONS, 5);
+        failure = 40 - (you.piety / 25) - you.skill(SK_EVOCATIONS, 5);
         break;
 
     case ABIL_ZIN_IMPRISON:
@@ -1010,11 +1001,6 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_QAZLAL_DISASTER_AREA:
         invoc = true;
         failure = 70 - (you.piety / 25) - you.skill(SK_INVOCATIONS, 4);
-        break;
-
-    case ABIL_PAKELLAS_MAJOR_DEVICE_SURGE:
-        invoc = true;
-        failure = 70 - (you.piety / 25) - you.skill(SK_EVOCATIONS, 4);
         break;
 
     case ABIL_ZIN_SANCTUARY:
@@ -1486,9 +1472,13 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return true;
 
-    case ABIL_PAKELLAS_MINOR_DEVICE_SURGE:
     case ABIL_PAKELLAS_DEVICE_SURGE:
-    case ABIL_PAKELLAS_MAJOR_DEVICE_SURGE:
+        if (you.magic_points == 0)
+        {
+            if (!quiet)
+                mpr("You have no magic power.");
+            return false;
+        }
         return evoke_check(-1, quiet);
 
     case ABIL_PAKELLAS_QUICK_CHARGE:
@@ -2892,9 +2882,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;
 
-    case ABIL_PAKELLAS_MINOR_DEVICE_SURGE:
     case ABIL_PAKELLAS_DEVICE_SURGE:
-    case ABIL_PAKELLAS_MAJOR_DEVICE_SURGE:
     {
         int slot = prompt_invent_item("Surge which item? (* to show all)",
                                       MT_INVLIST,
@@ -2906,15 +2894,25 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         fail_check();
 
-        you.attribute[ATTR_PAKELLAS_DEVICE_SURGE] =
-            abil.ability == ABIL_PAKELLAS_MAJOR_DEVICE_SURGE ? 3 :
-            abil.ability == ABIL_PAKELLAS_DEVICE_SURGE       ? 2
-                                                             : 1;
-        const bool ret = evoke_item(slot);
-        you.attribute[ATTR_PAKELLAS_DEVICE_SURGE] = 0;
+        // Fizzling should only happen if the player has less than 3 MP.
+        const int mp = min(you.magic_points, min(9, max(3,
+                           1 + random2avg(you.piety * 9 / piety_breakpoint(5),
+                                          2))));
 
-        if (!ret)
-            return SPRET_ABORT;
+        const int severity = div_rand_round(mp, 3);
+        you.attribute[ATTR_PAKELLAS_DEVICE_SURGE] = severity;
+        if (severity == 0)
+            mpr("The surge fizzles.");
+        else
+        {
+            const bool ret = evoke_item(slot);
+            you.attribute[ATTR_PAKELLAS_DEVICE_SURGE] = 0;
+
+            if (!ret)
+                return SPRET_ABORT;
+        }
+
+        dec_mp(mp);
 
         break;
     }
