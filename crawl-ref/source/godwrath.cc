@@ -564,6 +564,9 @@ static monster* get_avatar(god_type god)
     if (!avatar)
         return nullptr;
 
+    // shadow_monster() has the player's mid, which is no good here.
+    avatar->set_new_monster_id();
+
     avatar->mname = _god_wrath_name(god);
     avatar->flags |= MF_NAME_REPLACE;
     avatar->attitude = ATT_HOSTILE;
