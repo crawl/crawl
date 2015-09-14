@@ -210,7 +210,7 @@ static InventoryTile _tile_for_ability(ability_type ability)
     InventoryTile desc;
     desc.tile     = tileidx_ability(ability);
     desc.idx      = (int) ability;
-    desc.quantity = get_ability_def(ability).mp_cost;
+    desc.quantity = ability_mp_cost(ability);
 
     if (!check_ability_possible(ability, true, true))
         desc.flag |= TILEI_FLAG_INVALID;

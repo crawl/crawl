@@ -98,6 +98,19 @@ enum ability_flag_type
     ABFLAG_SACRIFICE      = 0x00200000, // sacrifice (Ru)
     ABFLAG_HOSTILE        = 0x00400000, // failure summons a hostile (Makhleb)
 };
+DEF_BITFIELD(ability_flags, ability_flag_type);
+
+// Structure for representing an ability:
+struct ability_def
+{
+    ability_type        ability;
+    const char *        name;
+    unsigned int        mp_cost;        // magic cost of ability
+    scaling_cost        hp_cost;        // hit point cost of ability
+    unsigned int        food_cost;      // + rand2avg(food_cost, 2)
+    generic_cost        piety_cost;     // + random2((piety_cost + 1) / 2 + 1)
+    ability_flags       flags;          // used for additional cost notices
+};
 
 static int  _find_ability_slot(const ability_def& abil);
 static spret_type _do_ability(const ability_def& abil, bool fail);
@@ -468,13 +481,18 @@ static const ability_def Ability_List[] =
     { ABIL_CONVERT_TO_BEOGH, "Convert to Beogh", 0, 0, 0, 0, ABFLAG_NONE},
 };
 
-const ability_def& get_ability_def(ability_type abil)
+static const ability_def& get_ability_def(ability_type abil)
 {
     for (const ability_def &ab_def : Ability_List)
         if (ab_def.ability == abil)
             return ab_def;
 
     return Ability_List[0];
+}
+
+unsigned int ability_mp_cost(ability_type abil)
+{
+    return get_ability_def(abil).mp_cost;
 }
 
 /**
