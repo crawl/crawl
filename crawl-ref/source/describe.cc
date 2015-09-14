@@ -3677,18 +3677,22 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.quote += "\n";
     inf.quote += quote2;
 
+    const string it = mi.pronoun(PRONOUN_SUBJECTIVE);
+    const string it_o = mi.pronoun(PRONOUN_OBJECTIVE);
+    const string It = uppercase_first(it);
+
     switch (mi.type)
     {
     case MONS_VAMPIRE:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_VAMPIRE_MAGE:
         if (you.undead_state() == US_ALIVE && mi.attitude == ATT_HOSTILE)
-            inf.body << "\nIt wants to drink your blood!\n";
+            inf.body << "\n" << It << " wants to drink your blood!\n";
         break;
 
     case MONS_REAPER:
         if (you.undead_state(false) == US_ALIVE && mi.attitude == ATT_HOSTILE)
-            inf.body <<  "\nIt has come for your soul!\n";
+            inf.body <<  "\n" << It << " has come for your soul!\n";
         break;
 
     case MONS_RED_DRACONIAN:
@@ -3778,48 +3782,34 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     bool stair_use = false;
     if (!mons_class_can_use_stairs(mi.type))
     {
-        inf.body << "\n" << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-                 << " is incapable of using stairs.\n";
+        inf.body << "\n" << It << " is incapable of using stairs.\n";
         stair_use = true;
     }
 
     if (mi.intel() <= I_BRAINLESS)
     {
         // Matters for Ely.
-        inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-                 << " is mindless.\n";
+        inf.body << It << " is mindless.\n";
     }
     else if (mi.intel() >= I_HUMAN)
     {
         // Matters for Yred, Gozag, Zin, TSO, Alistair....
-        inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-                 << " is intelligent.\n";
+        inf.body << It << " is intelligent.\n";
     }
 
     if (mi.is(MB_CHAOTIC))
-    {
-        inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-                 << " is vulnerable to silver and hated by Zin.\n";
-    }
+        inf.body << It << " is vulnerable to silver and hated by Zin.\n";
 
     if (in_good_standing(GOD_ZIN, 0))
     {
         const int check = mi.hd - zin_recite_power();
         if (check >= 0)
-        {
-            inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-                     << " is too strong to be recited to.";
-        }
+            inf.body << It << " is too strong to be recited to.";
         else if (check >= -5)
-        {
-            inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-                     << " may be too strong to be recited to.";
-        }
+            inf.body << It << " may be too strong to be recited to.";
         else
-        {
-            inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-                     << " is weak enough to be recited to.";
-        }
+            inf.body << It << " is weak enough to be recited to.";
+
         if (you.wizard)
         {
             inf.body << " (Recite power:" << zin_recite_power()
@@ -3831,25 +3821,24 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     if (mi.is(MB_SUMMONED))
     {
         inf.body << "\n" << "This monster has been summoned, and is thus only "
-                       "temporary. Killing it yields no experience, nutrition "
-                       "or items";
+                       "temporary. Killing " << it_o << " yields no "
+                       "experience, nutrition or items";
         if (!stair_use)
-            inf.body << ", and it is incapable of using stairs";
+            inf.body << ", and " << it << " is incapable of using stairs";
         inf.body << ".\n";
     }
     else if (mi.is(MB_PERM_SUMMON))
     {
         inf.body << "\n" << "This monster has been summoned in a durable "
-                       "way, and only partially exists. Killing it yields no "
-                       "experience, nutrition or items. You cannot easily "
-                       "abjure it, though.\n";
+                    "way, and only partially exists. Killing " << it_o << " "
+                    "yields no experience, nutrition or items. You "
+                    "cannot easily abjure " << it_o << ", though.\n";
     }
     else if (mons_class_leaves_hide(mi.type))
     {
-        inf.body << "\nIf " << mi.pronoun(PRONOUN_SUBJECTIVE) << " is slain "
-        "and butchered, it may be possible to recover "
-        << mi.pronoun(PRONOUN_POSSESSIVE) << " hide, which can be "
-        "enchanted into armour.\n";
+        inf.body << "\nIf " << it << " is slain and butchered, it may be "
+                    "possible to recover " << mi.pronoun(PRONOUN_POSSESSIVE)
+                 << " hide, which can be enchanted into armour.\n";
     }
 
     if (mi.is(MB_SUMMONED_CAPPED))
