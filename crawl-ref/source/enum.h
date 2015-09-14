@@ -46,7 +46,7 @@ public:
     constexpr enum_bitfield(E flag) : flags(underlying_type(flag)) {}
     template<class ... Es>
     constexpr enum_bitfield(E flag, E flag2, Es... rest)
-        : flags(enum_bitfield(rest...).flags | underlying_type(flag)) {}
+        : flags(enum_bitfield(flag2, rest...).flags | underlying_type(flag)) {}
 
     explicit constexpr operator underlying_type () const { return flags; }
     explicit constexpr operator bool () const { return flags; }
