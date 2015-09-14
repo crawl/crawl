@@ -3785,10 +3785,16 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (mi.intel() <= I_BRAINLESS)
     {
+        // Matters for Ely.
         inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
                  << " is mindless.\n";
     }
-
+    else if (mi.intel() >= I_HUMAN)
+    {
+        // Matters fo Yred, Gozag, Zin, TSO, Alistair....
+        inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
+                 << " is intelligent.\n";
+    }
 
     if (mi.is(MB_CHAOTIC))
     {
