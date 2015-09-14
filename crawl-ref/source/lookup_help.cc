@@ -1105,6 +1105,22 @@ static string _branch_entry_runes(branch_type br)
     return desc;
 }
 
+static string _branch_exit_runes(branch_type br)
+{
+    string desc;
+    const int num_runes = runes_for_leaving_branch(br);
+
+    if (num_runes > 0)
+    {
+        desc = make_stringf("\n\nLeaving this %s requires at least %d "
+                            "rune%s of Zot.",
+                            br == BRANCH_ZIGGURAT ? "portal" : "branch",
+                            num_runes, num_runes > 1 ? "s" : "");
+    }
+
+    return desc;
+}
+
 static branch_type _rune_to_branch(int rune)
 {
     switch (rune)
@@ -1260,6 +1276,7 @@ static int _describe_branch(const string &key, const string &suffix,
     const string info  = _branch_noise(branch)
                          + _branch_location(branch)
                          + _branch_entry_runes(branch)
+                         + _branch_exit_runes(branch)
                          + _branch_depth(branch)
                          + _branch_subbranches(branch)
                          + _branch_runes(branch);

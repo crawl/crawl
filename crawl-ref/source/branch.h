@@ -87,4 +87,5 @@ bool branch_is_unfinished(branch_type branch);
 
 branch_type parent_branch(branch_type branch);
 int runes_for_branch(branch_type branch);
+int runes_for_leaving_branch(branch_type branch);
 #endif

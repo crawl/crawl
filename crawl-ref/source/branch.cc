@@ -197,3 +197,8 @@ int runes_for_branch(branch_type branch)
     default:              return 0;
     }
 }
+
+int runes_for_leaving_branch(branch_type branch)
+{
+    return branch == BRANCH_LAIR ? 1 : 0;
+}

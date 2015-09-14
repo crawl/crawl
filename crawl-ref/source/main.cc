@@ -1617,7 +1617,6 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     }
 
     // Rune locks
-    int min_runes = 0;
     for (branch_iterator it; it; ++it)
     {
         if (ftype != it->entry_stairs)
@@ -1625,7 +1624,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
 
         if (!is_existing_level(level_id(it->id, 1)))
         {
-            min_runes = runes_for_branch(it->id);
+            const int min_runes = runes_for_branch(it->id);
             if (runes_in_pack() < min_runes)
             {
                 if (min_runes == 1)
@@ -1635,9 +1634,36 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
                          min_runes);
                 return false;
             }
+
+            const int exit_runes = runes_for_leaving_branch(it->id);
+            if (runes_in_pack() < exit_runes)
+            {
+                const string runes = exit_runes == 1
+                    ? "a rune"
+                    : make_stringf("at least %d runes", exit_runes);
+                const string prompt = "You will not be able to leave this "
+                                      "place without " + runes + ". "
+                                      "Really enter?";
+
+                if (!yesno(prompt.c_str(), false, 'n'))
+                    return false;
+            }
         }
 
         break;
+    }
+    if (ftype == your_branch().exit_stairs)
+    {
+        const int exit_runes = runes_for_leaving_branch(you.where_are_you);
+        if (runes_in_pack() < exit_runes)
+        {
+            if (exit_runes == 1)
+                mpr("You need a rune to leave this place.");
+            else
+                mprf("You need at least %d runes to leave this place.",
+                        exit_runes);
+            return false;
+        }
     }
 
     return true;
