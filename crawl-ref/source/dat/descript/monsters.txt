@@ -2004,7 +2004,7 @@ A dirty rodent that has grown large and aggressive in the dungeon environment.
 %%%%
 raiju
 
-An profoundly unnatural hound, crackling with electricity. Remarkably, it can
+A profoundly unnatural hound, crackling with electricity. Remarkably, it can
 transform into living lightning and bolt forth, harmlessly passing pack mates
 while painfully piercing prey.
 %%%%
