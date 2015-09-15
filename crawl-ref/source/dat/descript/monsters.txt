@@ -1169,8 +1169,7 @@ dungeon, inflicting the anguish it felt in life upon those still living.
 %%%%
 flying skull
 
-An undead skull kept aloft and flitting swiftly about by unholy magic. It
-periodically emits loud, blood-curdling shrieks.
+An undead skull kept aloft and flitting swiftly about by unholy magic.
 %%%%
 freed slave
 
