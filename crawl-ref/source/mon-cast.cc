@@ -5387,7 +5387,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster(
-                mgen_data(summon_any_demon(RANDOM_DEMON_COMMON),
+                mgen_data(summon_any_demon(RANDOM_DEMON_COMMON, true),
                           SAME_ATTITUDE(mons), mons, duration, spell_cast,
                           mons->pos(), mons->foe, 0, god));
         }
@@ -5435,7 +5435,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
             create_monster(
-                mgen_data(summon_any_demon(RANDOM_DEMON_LESSER),
+                mgen_data(summon_any_demon(RANDOM_DEMON_LESSER, true),
                           SAME_ATTITUDE(mons), mons,
                           duration, spell_cast, mons->pos(), mons->foe, 0,
                           god));
@@ -5623,7 +5623,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         duration  = min(2 + mons->spell_hd(spell_cast) / 10, 6);
 
         create_monster(
-            mgen_data(summon_any_demon(RANDOM_DEMON_GREATER),
+            mgen_data(summon_any_demon(RANDOM_DEMON_GREATER, true),
                       SAME_ATTITUDE(mons), mons,
                       duration, spell_cast,
                       mons->pos(), mons->foe, 0, god));

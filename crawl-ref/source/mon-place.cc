@@ -596,7 +596,7 @@ monster_type resolve_monster_type(monster_type mon_type,
                 random_range(MONS_FIRST_NONBASE_DRACONIAN, MONS_LAST_DRACONIAN));
     }
     else if (mon_type >= RANDOM_DEMON_LESSER && mon_type <= RANDOM_DEMON)
-        mon_type = summon_any_demon(mon_type);
+        mon_type = summon_any_demon(mon_type, true);
     else if (mon_type == RANDOM_DEMONSPAWN)
     {
         do
@@ -3070,7 +3070,8 @@ static monster_type _band_member(band_type band, int which,
                                           50, RANDOM_DEMON_COMMON,
                                           20, RANDOM_DEMON_GREATER,
                                           10, RANDOM_DEMON,
-                                           0));
+                                           0),
+                                    true);
         }
         break;
 
@@ -4064,10 +4065,12 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
 
 static void _get_vault_mon_list(vector<mons_spec> &list);
 
-monster_type summon_any_demon(monster_type dct)
+monster_type summon_any_demon(monster_type dct, bool use_local_demons)
 {
     // Draw random demon types in Pan from the local pools first.
-    if (player_in_branch(BRANCH_PANDEMONIUM) && !one_chance_in(40))
+    if (use_local_demons
+        && player_in_branch(BRANCH_PANDEMONIUM)
+        && !one_chance_in(40))
     {
         monster_type typ = MONS_0;
         int count = 0;
