@@ -1440,12 +1440,16 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             // Hooves and talons force boots off at 3.
             if (you.mutation[mutat] >= 3 && !you.melded[EQ_BOOTS])
                 remove_one_equip(EQ_BOOTS, false, true);
+            // Recheck Ashenzari bondage in case our available slots changed.
+            ash_check_bondage();
             break;
 
         case MUT_CLAWS:
             // Claws force gloves off at 3.
             if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
                 remove_one_equip(EQ_GLOVES, false, true);
+            // Recheck Ashenzari bondage in case our available slots changed.
+            ash_check_bondage();
             break;
 
         case MUT_HORNS:
@@ -1464,6 +1468,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             {
                 remove_one_equip(EQ_HELMET, false, true);
             }
+            // Recheck Ashenzari bondage in case our available slots changed.
+            ash_check_bondage();
             break;
 
         case MUT_ACUTE_VISION:
@@ -1557,6 +1563,16 @@ static bool _delete_single_mutation_level(mutation_type mutat,
 
     case MUT_BIG_WINGS:
         lose_permafly_source();
+        break;
+
+    case MUT_HORNS:
+    case MUT_ANTENNAE:
+    case MUT_BEAK:
+    case MUT_CLAWS:
+    case MUT_HOOVES:
+    case MUT_TALONS:
+        // Recheck Ashenzari bondage in case our available slots changed.
+        ash_check_bondage();
         break;
 
     default:
