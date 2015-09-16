@@ -27,9 +27,17 @@ function pan_lord_epilogue(name)
         Cerebov = "Searing heat pours from the floors and walls of this place.",
         ['Gloorx Vloq'] = "Shadowy figures dance across your vision."
     }
+    local runes = {
+        Mnoleg = "glowing",
+        ['Lom Lobon'] = "magical",
+        Cerebov = "fiery",
+        ['Gloorx Vloq'] = "dark"
+    }
 
     crawl.mpr(msgs[name], "warning")
     crawl.mpr("The mighty Pandemonium lord " .. name .. " resides here.", "warning")
+    -- Same message as branch_runes from lookup_help.cc
+    crawl.mpr("They guard the " .. runes[name] .. " rune of Zot.")
     crawl.take_note('Entered the realm of ' .. name .. '.')
     crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.', "")
 end
