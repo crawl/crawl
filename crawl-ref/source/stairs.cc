@@ -23,6 +23,7 @@
 #include "hiscores.h"
 #include "itemname.h"
 #include "items.h"
+#include "lookup_help.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
@@ -672,6 +673,8 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         if (old_level.branch == BRANCH_ABYSS)
         {
             mprf(MSGCH_BANISHMENT, "You plunge deeper into the Abyss.");
+            if (!you.runes[RUNE_ABYSSAL] && you.depth > 2)
+                mpr("The abyssal Rune of Zot can be found at this depth.");
             break;
         }
         if (!force_stair)
@@ -736,6 +739,22 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
                     mpr(branches[branch].entry_message);
                 else
                     mprf("Welcome to %s!", branches[branch].longname);
+
+                // "This branch contains the %s rune%s of Zot."
+                string rune_msg = branch_rune_desc(branch);
+                int branch_rune = branch_to_rune(branch);
+                if (branch != BRANCH_PANDEMONIUM && !rune_msg.empty()
+                    && !you.runes[branch_rune])
+                {
+                    mpr(rune_msg);
+                }
+                else if (branch == BRANCH_PANDEMONIUM
+                         && !you.runes[RUNE_DEMONIC])
+                {
+                    // branch_rune_desc lists all five runes for pan, so we can't
+                    // use its output.
+                    mpr("This branch contains the demonic rune of Zot.");
+                }
             }
 
             // Entered a regular (non-portal) branch from above.

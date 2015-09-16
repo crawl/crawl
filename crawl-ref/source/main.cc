@@ -1681,7 +1681,7 @@ static bool _prompt_unique_pan_rune(dungeon_feature_type ygrd)
     item_def* rune = find_floor_item(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT);
     if (rune && item_is_unique_rune(*rune))
     {
-        return yes_or_no("An item of great power still resides in this realm, "
+        return yes_or_no("A rune of Zot still resides in this realm, "
                          "and once you leave you can never return. "
                          "Are you sure you want to leave?");
     }
