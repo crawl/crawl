@@ -4893,6 +4893,12 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     return true;
 }
 
+bool monster::is_cloud_safe(const coord_def &place)
+{
+    int cl = env.cgrid(place);
+    return cl == EMPTY_CLOUD || !mons_avoids_cloud(this, cl);
+}
+
 bool monster::check_set_valid_home(const coord_def &place,
                                     coord_def &chosen,
                                     int &nvalid) const
@@ -4911,6 +4917,21 @@ bool monster::check_set_valid_home(const coord_def &place,
 
     if (one_chance_in(++nvalid))
         chosen = place;
+
+    return true;
+}
+
+
+bool monster::is_location_safe(const coord_def &place)
+{
+    if (!monster_habitable_grid(this, grd(place)))
+        return false;
+
+    if (!is_trap_safe(place, true))
+        return false;
+
+    if (!is_cloud_safe(place))
+        return false;
 
     return true;
 }
@@ -6299,38 +6320,6 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     }
     else if (type == MONS_STARCURSED_MASS)
         starcursed_merge_fineff::schedule(this);
-    else if (mons_is_demonspawn(type)
-             && draco_or_demonspawn_subspecies(this)
-                    == MONS_TORTUROUS_DEMONSPAWN
-             && (random2(damage) > 8 || max_hit_points <= 2 * damage))
-    {
-        // Powered by pain
-        switch (random2(4))
-        {
-            case 0:
-            case 1:
-                if (!has_ench(ENCH_ANTIMAGIC))
-                    break;
-                simple_monster_message(this, " focuses on the pain.");
-                simple_monster_message(this, " looks invigorated.");
-                del_ench(ENCH_ANTIMAGIC);
-                break;
-            case 2:
-                if (has_ench(ENCH_MIGHT))
-                    break;
-                simple_monster_message(this, " focuses on the pain.");
-                add_ench(ENCH_MIGHT);
-                simple_monster_message(this, " seems to grow stronger.");
-                break;
-            case 3:
-                if (has_ench(ENCH_AGILE))
-                    break;
-                simple_monster_message(this, " focuses on the pain.");
-                add_ench(ENCH_AGILE);
-                simple_monster_message(this, " suddenly seems more agile.");
-                break;
-        }
-    }
     else if (type == MONS_RAKSHASA && !has_ench(ENCH_PHANTOM_MIRROR)
              && hit_points < max_hit_points / 2
              && hit_points - damage > 0)
@@ -6795,30 +6784,12 @@ bool monster::is_jumpy() const
     return type == MONS_JUMPING_SPIDER;
 }
 
-int monster::aug_amount() const
-{
-    if (!mons_is_demonspawn(type)
-        || draco_or_demonspawn_subspecies(this) != MONS_TORTUROUS_DEMONSPAWN)
-    {
-        return 0;
-    }
-
-    int amount = 0;
-
-    for (int i = 0; i < 3; ++i)
-    {
-        if (hit_points >= ((i + 3) * max_hit_points) / 6)
-            amount++;
-    }
-    return amount;
-}
-
 // HD for spellcasting purposes.
-// Currently only for torturous demonspawn, though there's a possibility here
-// for Archmagi, etc. to have an impact in some cases.
+// Currently unused, though there's a possibility here for Archmagi, etc. to
+// have an impact in some cases.
 int monster::spell_hd(spell_type spell) const
 {
-    return get_hit_dice() + 2 * aug_amount();
+    return get_hit_dice();
 }
 
 void monster::align_avatars(bool force_friendly)

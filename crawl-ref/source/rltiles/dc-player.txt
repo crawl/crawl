@@ -617,10 +617,6 @@ large_mace LARGE_MACE
 black_whip BLACK_WHIP
 sacred_scourge SACRED_SCOURGE
 sacred_scourge_two SACRED_SCOURGE2
-hammer HAMMER
-hammer2
-hammer_one HAMMER1
-hammer_two HAMMER2
 flail_stick FLAIL_STICK
 flail_ball FLAIL
 flail_ball2

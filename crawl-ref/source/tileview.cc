@@ -1237,6 +1237,8 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             orig = TILE_WALL_LAB_STONE;
         else if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_WALL_LAB_METAL;
+        else if (orig == TILE_WALL_PERMAROCK)
+            orig = TILE_WALL_PERMAROCK_BROWN;
     }
     else if (player_in_branch(BRANCH_CRYPT))
     {
@@ -1285,7 +1287,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     else if (player_in_branch(BRANCH_BAILEY))
     {
         if (orig == TILE_DNGN_STONE_WALL)
-            orig = TILE_WALL_STONE_BRICK;
+            orig = TILE_WALL_STONE_SMOOTH;
     }
     else if (player_in_branch(BRANCH_OSSUARY))
     {
@@ -1307,7 +1309,10 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         *bg = flv.floor;
     else if (orig == TILE_WALL_NORMAL)
         *bg = flv.wall;
-    else if (orig == TILE_DNGN_STONE_WALL || orig == TILE_DNGN_CRYSTAL_WALL)
+    else if (orig == TILE_DNGN_STONE_WALL
+             || orig == TILE_DNGN_CRYSTAL_WALL
+             || orig == TILE_WALL_PERMAROCK
+             || orig == TILE_WALL_PERMAROCK_CLEAR)
     {
         *bg = pick_dngn_tile(tile_dngn_coloured(orig, env.grid_colours(gc)),
                              flv.special);

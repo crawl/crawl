@@ -438,7 +438,6 @@ struct help_file
 static help_file help_files[] =
 {
     { "crawl_manual.txt",  '*', true },
-    { "../README.md",      '!', false },
     { "aptitudes.txt",     '%', false },
     { "quickstart.txt",    '^', false },
     { "macros_guide.txt",  '~', false },
@@ -576,7 +575,7 @@ class help_highlighter : public MenuHighlighter
 {
 public:
     help_highlighter(string = "");
-    int entry_colour(const MenuEntry *entry) const;
+    int entry_colour(const MenuEntry *entry) const override;
 private:
     text_pattern pattern;
     string get_species_key() const;
@@ -635,7 +634,6 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
             "aspect of Dungeon Crawl.\n"
 
             "<w>?</w>: List of commands\n"
-            "<w>!</w>: Read Me!\n"
             "<w>^</w>: Quickstart Guide\n"
             "<w>:</w>: Browse character notes\n"
             "<w>~</w>: Macros help\n"
@@ -724,8 +722,9 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
     return cmd_help.getkey();
 }
 
-static void _show_specific_help(const string &help)
+void show_specific_help(const string &key)
 {
+    const string help = getHelpString(key);
     vector<formatted_string> formatted_lines;
     for (const string &line : split_string("\n", help, false, true))
     {
@@ -738,17 +737,7 @@ static void _show_specific_help(const string &help)
 
 void show_levelmap_help()
 {
-    _show_specific_help(getHelpString("level-map"));
-}
-
-void show_pickup_menu_help()
-{
-    _show_specific_help(getHelpString("pick-up"));
-}
-
-void show_known_menu_help()
-{
-    _show_specific_help(getHelpString("known-menu"));
+    show_specific_help("level-map");
 }
 
 void show_targeting_help()
@@ -767,27 +756,27 @@ void show_targeting_help()
 }
 void show_interlevel_travel_branch_help()
 {
-    _show_specific_help(getHelpString("interlevel-travel.branch.prompt"));
+    show_specific_help("interlevel-travel.branch.prompt");
 }
 
 void show_interlevel_travel_depth_help()
 {
-    _show_specific_help(getHelpString("interlevel-travel.depth.prompt"));
+    show_specific_help("interlevel-travel.depth.prompt");
 }
 
 void show_stash_search_help()
 {
-    _show_specific_help(getHelpString("stash-search.prompt"));
+    show_specific_help("stash-search.prompt");
 }
 
 void show_butchering_help()
 {
-    _show_specific_help(getHelpString("butchering"));
+    show_specific_help("butchering");
 }
 
 void show_skill_menu_help()
 {
-    _show_specific_help(getHelpString("skill-menu"));
+    show_specific_help("skill-menu");
 }
 
 static void _add_command(column_composer &cols, const int column,

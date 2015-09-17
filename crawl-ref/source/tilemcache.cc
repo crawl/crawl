@@ -46,7 +46,7 @@ class mcache_monster : public mcache_entry
 public:
     mcache_monster(const monster_info& mon);
 
-    virtual int info(tile_draw_info *dinfo) const;
+    virtual int info(tile_draw_info *dinfo) const override;
 
     static bool valid(const monster_info& mon);
 
@@ -65,7 +65,7 @@ class mcache_draco : public mcache_entry
 public:
     mcache_draco(const monster_info& mon);
 
-    virtual int info(tile_draw_info *dinfo) const;
+    virtual int info(tile_draw_info *dinfo) const override;
 
     static bool valid(const monster_info& mon);
 
@@ -82,11 +82,11 @@ class mcache_ghost : public mcache_entry
 public:
     mcache_ghost(const monster_info& mon);
 
-    virtual const dolls_data *doll() const;
+    virtual const dolls_data *doll() const override;
 
     static bool valid(const monster_info& mon);
 
-    virtual bool transparent() const;
+    virtual bool transparent() const override;
 
 protected:
     dolls_data m_doll;
@@ -97,7 +97,7 @@ class mcache_demon : public mcache_entry
 public:
     mcache_demon(const monster_info& minf);
 
-    virtual int info(tile_draw_info *dinfo) const;
+    virtual int info(tile_draw_info *dinfo) const override;
 
     static bool valid(const monster_info& mon);
 
@@ -1380,8 +1380,6 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_HALBERD;
         else if (dam > 10)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_TRIDENT2;
-        else if (dam > 10)
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_HAMMER;
         else
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_SPEAR;
         break;

@@ -210,9 +210,6 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_SCYTHE:
         tile = TILEP_HAND1_SCYTHE;
         break;
-    case WPN_HAMMER:
-        tile = TILEP_HAND1_HAMMER;
-        break;
     case WPN_TRIDENT:
         tile = TILEP_HAND1_TRIDENT2;
         break;

@@ -411,11 +411,8 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
     // Temporary Tukima's Dance weapons stay as weapons (no free gold),
     // permanent dancing weapons turn to gold like other monsters.
     bool goldify = in_good_standing(GOD_GOZAG)
-                   && mons_class_gives_xp(mons.type)
-                   && !mons_is_conjured(mons.type)
-                   && !force
-                   && !(mons.type == MONS_DANCING_WEAPON
-                        && mons.has_ench(ENCH_ABJ));
+                   && mons_gives_xp(&mons, &you)
+                   && !force;
 
     const bool no_coinflip =
         mons.props.exists("always_corpse")
@@ -2499,25 +2496,6 @@ item_def* monster_die(monster* mons, killer_type killer,
         ? _calc_player_experience(mons) : 0;
     const unsigned int monster_xp = _calc_monster_experience(mons, killer,
                                                              killer_index);
-    // Monster Powered by Death. Nearby putrid demonspawn monsters
-    // get healed when any xp-granting kill occurs.
-    if (gives_player_xp || monster_xp)
-    {
-        for (monster_near_iterator mi(mons->pos()); mi; ++mi)
-        {
-            if ((*mi)->alive()
-                && mons_is_demonspawn((*mi)->type)
-                && draco_or_demonspawn_subspecies(*mi) == MONS_PUTRID_DEMONSPAWN)
-            {
-                // Heal 20hp on average.
-                if ((*mi)->heal(8 + random2avg(25, 2)))
-                {
-                    simple_monster_message(*mi, " regenerates before your"
-                                           " eyes!");
-                }
-            }
-        }
-    }
 
     // Player Powered by Death
     if (gives_player_xp && player_mutation_level(MUT_POWERED_BY_DEATH)

@@ -53,18 +53,6 @@ struct scaling_cost
     operator bool () const { return value != 0; }
 };
 
-// Structure for representing an ability:
-struct ability_def
-{
-    ability_type        ability;
-    const char *        name;
-    unsigned int        mp_cost;        // magic cost of ability
-    scaling_cost        hp_cost;        // hit point cost of ability
-    unsigned int        food_cost;      // + rand2avg(food_cost, 2)
-    generic_cost        piety_cost;     // + random2((piety_cost + 1) / 2 + 1)
-    unsigned int        flags;          // used for additional cost notices
-};
-
 struct talent
 {
     ability_type which;
@@ -75,7 +63,7 @@ struct talent
 
 int get_gold_cost(ability_type ability);
 const string make_cost_description(ability_type ability);
-const ability_def& get_ability_def(ability_type abil);
+unsigned int ability_mp_cost(ability_type abil);
 talent get_talent(ability_type ability, bool check_confused);
 const char* ability_name(ability_type ability);
 vector<const char*> get_ability_names();

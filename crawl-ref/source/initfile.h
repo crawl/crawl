@@ -85,12 +85,12 @@ class StringLineInput : public LineInput
 public:
     StringLineInput(const string &s) : str(s), pos(0) { }
 
-    bool eof()
+    bool eof() override
     {
         return pos >= str.length();
     }
 
-    string get_line()
+    string get_line() override
     {
         if (eof())
             return "";

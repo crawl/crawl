@@ -17,6 +17,7 @@
 #include "art-enum.h"
 #include "asg.h" // for make_name()'s use
 #include "butcher.h"
+#include "cio.h"
 #include "colour.h"
 #include "command.h"
 #include "decks.h"
@@ -2274,6 +2275,69 @@ public:
 
         return ckey;
     }
+
+protected:
+    string help_key() const override
+    {
+        return "known-menu";
+    }
+
+    bool allow_easy_exit() const override
+    {
+        return true;
+    }
+
+    bool process_key(int key) override
+    {
+        bool resetting = (lastch == CONTROL('D'));
+        if (resetting)
+        {
+            //return the menu title to its previous text.
+            set_title(temp_title);
+            update_title();
+            num = -2;
+
+            // Disarm ^D here, because process_key doesn't always set lastch.
+            lastch = ' ';
+        }
+        else
+            num = -1;
+
+        switch (key)
+        {
+        case ',':
+            return true;
+        case '*':
+            if (!resetting)
+                break;
+        case '^':
+            key = ',';
+            break;
+
+        case '-':
+        case '\\':
+        case CK_ENTER:
+        CASE_ESCAPE
+            lastch = key;
+            return false;
+
+        case CONTROL('D'):
+            // If we cannot select anything (e.g. on the unknown items
+            // page), ignore Ctrl-D. Likewise if the last key was
+            // Ctrl-D (we have already disarmed Ctrl-D for the next
+            // keypress by resetting lastch).
+            if (flags & (MF_SINGLESELECT | MF_MULTISELECT) && !resetting)
+            {
+                lastch = CONTROL('D');
+                temp_title = title->text;
+                set_title("Select to reset item to default: ");
+                update_title();
+            }
+
+            return true;
+        }
+        return Menu::process_key(key);
+    }
 };
 
 class KnownEntry : public InvEntry
@@ -2285,7 +2349,7 @@ public:
         selected_qty = inv->selected_qty;
     }
 
-    virtual string get_text(bool need_cursor) const
+    virtual string get_text(bool need_cursor) const override
     {
         need_cursor = need_cursor && show_cursor;
         int flags = item->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
@@ -2361,7 +2425,7 @@ public:
                                            name.c_str());
     }
 
-    virtual int highlight_colour() const
+    virtual int highlight_colour() const override
     {
         if (selected_qty >= 1)
             return WHITE;
@@ -2370,12 +2434,12 @@ public:
 
     }
 
-    virtual bool selected() const
+    virtual bool selected() const override
     {
         return selected_qty != 0 && quantity;
     }
 
-    virtual void select(int qty)
+    virtual void select(int qty) override
     {
         if (qty == -2)
             selected_qty = 0;
@@ -2400,7 +2464,7 @@ public:
     {
     }
 
-    virtual string get_text(const bool = false) const
+    virtual string get_text(const bool = false) const override
     {
         int flags = item->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
 
@@ -2456,10 +2520,11 @@ void check_item_knowledge(bool unknown_items)
                 continue;
 
             // Curse scrolls are only created by Ashenzari.
-            if (i == OBJ_SCROLLS &&
-                (j == SCR_CURSE_WEAPON
-                 || j == SCR_CURSE_ARMOUR
-                 || j == SCR_CURSE_JEWELLERY))
+            if (i == OBJ_SCROLLS
+                && (j == SCR_CURSE_WEAPON
+                    || j == SCR_CURSE_ARMOUR
+                    || j == SCR_CURSE_JEWELLERY)
+                && !you_worship(GOD_ASHENZARI))
             {
                 continue;
             }
@@ -3561,7 +3626,8 @@ bool is_useless_item(const item_def &item, bool temp)
                    || you.undead_state(temp);
 
         case AMU_FAITH:
-            return you.species == SP_DEMIGOD && !you.religion;
+            return (you.species == SP_DEMIGOD && !you.religion)
+                || (you.religion == GOD_RU && you.piety == piety_breakpoint(5));
 
         case AMU_GUARDIAN_SPIRIT:
             return you.spirit_shield(false, false);

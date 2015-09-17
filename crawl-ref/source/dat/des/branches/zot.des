@@ -2450,8 +2450,7 @@ SUBST:    K = 4:30 5 8 9
 SUBST:    L = 4 5:30 8 9
 SUBST:    M = 4 5 8:30 9
 
-COLOUR:   c = magenta
-TILE:     c = dngn_stone_wall_magenta
+COLOUR:   cX = lightmagenta
 
 KITEM:    Z = Orb of Zot
 

@@ -352,32 +352,8 @@ static bool _fall_down_stairs(const dungeon_feature_type ftype, bool going_up)
     return false;
 }
 
-static bool _require_runes(dungeon_feature_type ftype)
+static void _rune_effect(dungeon_feature_type ftype)
 {
-    int min_runes = 0;
-
-    for (branch_iterator it; it; ++it)
-    {
-        if (ftype == it->entry_stairs)
-        {
-            if (!is_existing_level(level_id(it->id, 1)))
-                min_runes = runes_for_branch(it->id);
-            break;
-        }
-    }
-
-    if (min_runes == 0)
-        return false;
-
-    if (runes_in_pack() < min_runes)
-    {
-        if (min_runes == 1)
-            mpr("You need a rune to enter this place.");
-        else
-            mprf("You need at least %d runes to enter this place.", min_runes);
-        return true;
-    }
-
     // Nothing even remotely flashy for Zig.
     if (ftype != DNGN_ENTER_ZIGGURAT)
     {
@@ -419,8 +395,6 @@ static bool _require_runes(dungeon_feature_type ftype)
             mpr("With a loud hiss the gate opens wide!");
         more();
     }
-
-    return false;
 }
 
 static void _new_level_amuses_xom(dungeon_feature_type feat,
@@ -551,9 +525,21 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         _maybe_destroy_trap(you.pos());
     }
 
-    // Check the player's runes and maybe perform the entry sequence.
-    if (_require_runes(stair_find))
-        return;
+    // Maybe perform the entry sequence (we check that they have enough runes
+    // in main.cc: _can_take_stairs())
+    for (branch_iterator it; it; ++it)
+    {
+        if (stair_find != it->entry_stairs)
+            continue;
+
+        if (!is_existing_level(level_id(it->id, 1))
+            && runes_for_branch(it->id) > 0)
+        {
+            _rune_effect(stair_find);
+        }
+
+        break;
+    }
 
     // Bail if any markers veto the move.
     if (_marker_vetoes_level_change())

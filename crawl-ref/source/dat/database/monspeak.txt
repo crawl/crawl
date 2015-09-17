@@ -808,8 +808,6 @@ VISUAL:@The_monster@ waves at you.
 @The_monster@ says, "Be careful!"
 
 @The_monster@ says, "I'll never leave you."
-
-@The_monster@ says, "I would die for you."
 %%%%
 _friendly_humanoid_medium_
 
@@ -1418,6 +1416,16 @@ Qazlal player ghost
 @The_monster@ says, "Let nature run its course against you!"
 
 @The_monster@ says, "The earth shall destroy you!"
+%%%%
+Ru player ghost
+
+@The_monster@ says, "I sacrificed my body for ultimate power!"
+
+@The_monster@ says, "I'll show you the great annihilating truth!"
+
+@The_monster@ tells you, "None of this matters. None of this is real!"
+
+@The_monster@ says @to_foe@, "First you will suffer, then you will die."
 %%%%
 Sif Muna player ghost
 
@@ -2478,6 +2486,11 @@ w:50
 
 @The_monster@ says, "So-called 'good' gods are just as evil as the rest. I hate hypocrisy."
 
+@The_monster@ says, "I hate temples."
+
+w:5
+@The_monster@ says, "What about an ecumenical tavern?"
+
 %%%%
 Orc Donald
 
@@ -2534,6 +2547,8 @@ w:50
 @The_monster@ says, "Why do these elves have so many gross rats and spiders?"
 
 @The_monster@ says, "None of these elves know how to fight. I hate that."
+
+@The_monster@ says, "What's the point of a Hall of Blades anyway?"
 %%%%
 Swamp Donald
 
@@ -2657,8 +2672,6 @@ w:50
 
 @The_monster@ says, "I can't get this icky slime off my feet."
 
-@The_monster@ says, "My other sword rusted away completely. I hate that!"
-
 @The_monster@ says, "I keep getting this feeling like someone's watching me. Creepy."
 
 @The_monster@ says, "I used up all my cure mutation potions. I hate that."
@@ -2703,8 +2716,6 @@ w:50
 @The_monster@ says, "Robes are for wimps. Real warriors wear heavy armour!"
 
 @The_monster@ says, "Nagas are pretty ugly. I hate nagas."
-
-@The_monster@ says, "I really didn't expect a pair of shoes to bite me."
 
 @The_monster@ says, "Did all the warriors here go to shield school or something?"
 
@@ -2856,6 +2867,12 @@ w:50
 @The_monster@ says, "I've never heard of a star cursing anything."
 
 @The_monster@ says, "I've never heard of a star spawning anything."
+
+@The_monster@ throws up his hands and says, "Alright, I admit it, I'm lost!"
+
+@The_monster@ says, "I hate wrenching sensations."
+
+@The_monster@ says, "What's so abyssal about tentacles and stars?"
 %%%%
 Zot Donald
 
@@ -2909,8 +2926,6 @@ Zin Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "At least you won't get hungry."
-
 @The_monster@ says, "So much for spreading the word; you get punched in the face instead."
 
 @The_monster@ says, "This pamphlet doesn't say what the point to Recitation is."
@@ -2920,8 +2935,6 @@ w:50
 @The_monster@ says, "What does Zin need our gold for, anyway?"
 
 @The_monster@ says, "Something seems a little bit odd about a God who wants to be paid."
-
-@The_monster@ says, "That's really confusing. What's the point of divine satiation if you're not allowed to eat?"
 
 @The_monster@ says, "At least you'll get really skinny."
 
@@ -3364,11 +3377,13 @@ w:50
 
 @The_monster@ says, "So the shops here weren't enough for you?"
 
-@The_monster@ says, "Feeling hungry, yet?"
+@The_monster@ says, "Feeling hungry yet?"
 
 @The_monster@ says, "I saw some gold over there. Quick, better go get it!"
 
 @The_monster@ says, "I bet you can make some really great dragon armour out of gold."
+
+@The_monster@ says, "What do potions have to do with a god of gold, anyway?"
 %%%%
 Qazlal Donald
 
@@ -3389,6 +3404,27 @@ w:50
 
 @The_monster@ says, "Great. Now my shield is all dirty."
 %%%%
+Ru Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "Missing something?"
+
+@The_monster@ says, "I hate sacrifices."
+
+@The_monster@ says, "I hate sacrificants."
+
+@The_monster@ says, "Once, I gave up eating meat for a week. I hated that."
+
+@The_monster@ says, "Once, I gave up drinking for a week. I hated that."
+
+@The_monster@ says, "I hate hidden layers of reality."
+
+@The_monster@ says, "I hate existential doubt."
+
+@The_monster@ says, "The great annihilating truth is that I hate you."
+%%%%
 No God Donald
 
 w:50
@@ -3397,6 +3433,8 @@ w:50
 @The_monster@ says, "Don't you get lonely without a god?"
 
 @The_monster@ says, "I hate the gods."
+
+@The_monster@ says, "I hate atheists."
 
 w:5
 @The_monster@ says, "I hate the gods, and the gods hate me."

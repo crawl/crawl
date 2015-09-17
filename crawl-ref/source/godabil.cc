@@ -2104,39 +2104,6 @@ bool fedhas_passthrough(const monster_info* target)
                || target->attitude != ATT_HOSTILE);
 }
 
-// Fedhas worshipers can shoot through non-hostile plants, can a
-// particular beam go through a particular monster?
-bool fedhas_shoot_through(const bolt& beam, const monster* victim)
-{
-    actor *originator = beam.agent();
-    if (!victim || !originator)
-        return false;
-
-    bool origin_worships_fedhas;
-    mon_attitude_type origin_attitude;
-    if (originator->is_player())
-    {
-        origin_worships_fedhas = you_worship(GOD_FEDHAS);
-        origin_attitude = ATT_FRIENDLY;
-    }
-    else
-    {
-        monster* temp = originator->as_monster();
-        if (!temp)
-            return false;
-        origin_worships_fedhas = temp->god == GOD_FEDHAS;
-        origin_attitude = temp->attitude;
-    }
-
-    return origin_worships_fedhas
-           && fedhas_protects(victim)
-           && !beam.is_enchantment()
-           && !(beam.is_explosion && beam.in_explosion_phase)
-           && beam.name != "lightning arc"
-           && (mons_atts_aligned(victim->attitude, origin_attitude)
-               || victim->neutral());
-}
-
 // Basically we want to break a circle into n_arcs equal sized arcs and find
 // out which arc the input point pos falls on.
 static int _arc_decomposition(const coord_def & pos, int n_arcs)
@@ -3375,99 +3342,48 @@ int fedhas_corpse_spores(beh_type attitude)
 
 struct monster_conversion
 {
-    monster_conversion() :
-        piety_cost(0),
-        fruit_cost(0)
-    {
-    }
-
+    monster_type new_type;
     int piety_cost;
     int fruit_cost;
-    monster_type new_type;
 };
 
-// Given a monster (which should be a plant/fungus), see if
-// fedhas_evolve_flora() can upgrade it, and set up a monster_conversion
-// structure for it. Return true (and fill in possible_monster) if the
-// monster can be upgraded, and return false otherwise.
-static bool _possible_evolution(const monster_info& input,
-                                monster_conversion& possible_monster)
+static const map<monster_type, monster_conversion> conversions =
 {
-    switch (input.type)
-    {
-    case MONS_PLANT:
-    case MONS_BUSH:
-    case MONS_BURNING_BUSH:
-        possible_monster.new_type = MONS_OKLOB_PLANT;
-        possible_monster.fruit_cost = 1;
-        break;
+    { MONS_PLANT,          { MONS_OKLOB_PLANT, 0, 1 } },
+    { MONS_BUSH,           { MONS_OKLOB_PLANT, 0, 1 } },
+    { MONS_BURNING_BUSH,   { MONS_OKLOB_PLANT, 0, 1 } },
+    { MONS_OKLOB_SAPLING,  { MONS_OKLOB_PLANT, 4, 0 } },
+    { MONS_FUNGUS,         { MONS_WANDERING_MUSHROOM, 3, 0 } },
+    { MONS_TOADSTOOL,      { MONS_WANDERING_MUSHROOM, 3, 0 } },
+    { MONS_BALLISTOMYCETE, { MONS_HYPERACTIVE_BALLISTOMYCETE, 4, 0 } },
+};
 
-    case MONS_OKLOB_SAPLING:
-        possible_monster.new_type = MONS_OKLOB_PLANT;
-        possible_monster.piety_cost = 4;
-        break;
+bool mons_is_evolvable(const monster* mon)
+{
+    return conversions.count(mon->type);
+}
 
-    case MONS_FUNGUS:
-    case MONS_TOADSTOOL:
-        possible_monster.new_type = MONS_WANDERING_MUSHROOM;
-        possible_monster.piety_cost = 3;
-        break;
+bool fedhas_check_evolve_flora(bool quiet)
+{
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+        if (mons_is_evolvable(*mi))
+            return true;
 
-    case MONS_BALLISTOMYCETE:
-        possible_monster.new_type = MONS_HYPERACTIVE_BALLISTOMYCETE;
-        possible_monster.piety_cost = 4;
-        break;
-
-    default:
-        return false;
-    }
-
-    return true;
+    if (!quiet)
+        mpr("No evolvable flora in sight.");
+    return false;
 }
 
 static vector<string> _evolution_name(const monster_info& mon)
 {
-    monster_conversion conversion;
-    if (!_possible_evolution(mon, conversion))
+    if (auto conv = map_find(conversions, mon.type))
+        return { "can evolve into " + mons_type_name(conv->new_type, DESC_A) };
+    else
         return { "cannot be evolved" };
-    return { "can evolve into " + mons_type_name(conversion.new_type, DESC_A) };
 }
 
-bool mons_is_evolvable(const monster* mon)
+spret_type fedhas_evolve_flora(bool fail)
 {
-    monster_conversion temp;
-    return _possible_evolution(monster_info(mon), temp);
-}
-
-#define FEDHAS_EVOLVE_TARGET_KEY "fedhas_evolve_target"
-
-bool fedhas_check_evolve_flora(bool quiet)
-{
-    monster_conversion upgrade;
-
-    // This is a little sloppy, but cancel early if nothing useful is in
-    // range.
-    bool in_range = false;
-    for (radius_iterator rad(you.pos(), LOS_NO_TRANS, true); rad; ++rad)
-    {
-        const monster* temp = monster_at(*rad);
-        if (temp && mons_is_evolvable(temp))
-        {
-            in_range = true;
-            break;
-        }
-    }
-
-    if (!in_range)
-    {
-        if (!quiet)
-            mpr("No evolvable flora in sight.");
-        return false;
-    }
-
-    if (quiet) // just checking if there's something we can evolve here
-        return true;
-
     dist spelld;
 
     direction_chooser_args args;
@@ -3487,7 +3403,7 @@ bool fedhas_check_evolve_flora(bool quiet)
     {
         // Check for user cancel.
         canned_msg(MSG_OK);
-        return false;
+        return SPRET_ABORT;
     }
 
     monster* const plant = monster_at(spelld.target);
@@ -3498,14 +3414,14 @@ bool fedhas_check_evolve_flora(bool quiet)
             mpr("The tree has already reached the pinnacle of evolution.");
         else
             mpr("You must target a plant or fungus.");
-        return false;
+        return SPRET_ABORT;
     }
 
-    if (!_possible_evolution(monster_info(plant), upgrade))
+    if (!mons_is_evolvable(plant))
     {
         if (plant->type == MONS_GIANT_SPORE)
             mpr("You can evolve only complete plants, not seeds.");
-        else  if (mons_is_plant(plant))
+        else if (mons_is_plant(plant))
         {
             simple_monster_message(plant, " has already reached the pinnacle"
                                    " of evolution.");
@@ -3513,8 +3429,10 @@ bool fedhas_check_evolve_flora(bool quiet)
         else
             mpr("Only plants or fungi may be evolved.");
 
-        return false;
+        return SPRET_ABORT;
     }
+
+    monster_conversion upgrade = *map_find(conversions, plant->type);
 
     vector<pair<int, int> > collected_fruit;
     if (upgrade.fruit_cost)
@@ -3524,63 +3442,48 @@ bool fedhas_check_evolve_flora(bool quiet)
         if (total_fruit < upgrade.fruit_cost)
         {
             mpr("Not enough fruit available.");
-            return false;
+            return SPRET_ABORT;
         }
     }
 
     if (upgrade.piety_cost && upgrade.piety_cost > you.piety)
     {
         mpr("Not enough piety available.");
-        return false;
+        return SPRET_ABORT;
     }
 
-    you.props[FEDHAS_EVOLVE_TARGET_KEY].get_coord() = spelld.target;
-    return true;
-}
+    fail_check();
 
-void fedhas_evolve_flora()
-{
-    monster_conversion upgrade;
-    const coord_def target = you.props[FEDHAS_EVOLVE_TARGET_KEY].get_coord();
-    you.props.erase(FEDHAS_EVOLVE_TARGET_KEY);
-
-    monster* const plant = monster_at(target);
-
-    ASSERT(plant);
-    ASSERT(_possible_evolution(monster_info(plant), upgrade));
-
-    switch (plant->type)
+    switch (upgrade.new_type)
     {
-    case MONS_PLANT:
-    case MONS_BUSH:
-    case MONS_BURNING_BUSH:
+    case MONS_OKLOB_PLANT:
     {
-        string evolve_desc = " can now spit acid";
-        int skill = you.skill(SK_INVOCATIONS);
-        if (skill >= 20)
-            evolve_desc += " continuously";
-        else if (skill >= 15)
-            evolve_desc += " quickly";
-        else if (skill >= 10)
-            evolve_desc += " rather quickly";
-        else if (skill >= 5)
-            evolve_desc += " somewhat quickly";
-        evolve_desc += ".";
+        if (plant->type == MONS_OKLOB_SAPLING)
+            simple_monster_message(plant, " appears stronger.");
+        else
+        {
+            string evolve_desc = " can now spit acid";
+            const int skill = you.skill(SK_INVOCATIONS);
+            if (skill >= 20)
+                evolve_desc += " continuously";
+            else if (skill >= 15)
+                evolve_desc += " quickly";
+            else if (skill >= 10)
+                evolve_desc += " rather quickly";
+            else if (skill >= 5)
+                evolve_desc += " somewhat quickly";
+            evolve_desc += ".";
 
-        simple_monster_message(plant, evolve_desc.c_str());
+            simple_monster_message(plant, evolve_desc.c_str());
+        }
         break;
     }
 
-    case MONS_OKLOB_SAPLING:
-        simple_monster_message(plant, " appears stronger.");
-        break;
-
-    case MONS_FUNGUS:
-    case MONS_TOADSTOOL:
+    case MONS_WANDERING_MUSHROOM:
         simple_monster_message(plant, " can now pick up its mycelia and move.");
         break;
 
-    case MONS_BALLISTOMYCETE:
+    case MONS_HYPERACTIVE_BALLISTOMYCETE:
         simple_monster_message(plant, " appears agitated.");
         env.level_state |= LSTATE_GLOW_MOLD;
         break;
@@ -3619,17 +3522,15 @@ void fedhas_evolve_flora()
                         + you.skill_rdiv(SK_INVOCATIONS));
 
     if (upgrade.fruit_cost)
-    {
-        vector<pair<int, int> > collected_fruit;
-        _collect_fruit(collected_fruit);
         _decrease_amount(collected_fruit, upgrade.fruit_cost);
-    }
 
     if (upgrade.piety_cost)
     {
         lose_piety(upgrade.piety_cost);
         mpr("Your piety has decreased.");
     }
+
+    return SPRET_SUCCESS;
 }
 
 static int _lugonu_warp_monster(monster* mon, int pow)
@@ -4225,13 +4126,11 @@ void dithmenos_shadow_melee(actor* target)
     shadow_monster_reset(mon);
 }
 
-void dithmenos_shadow_throw(coord_def target, const item_def &item)
+void dithmenos_shadow_throw(const dist &d, const item_def &item)
 {
-    if (target.origin()
-        || !_dithmenos_shadow_acts())
-    {
+    ASSERT(d.isValid);
+    if (!_dithmenos_shadow_acts())
         return;
-    }
 
     monster* mon = shadow_monster();
     if (!mon)
@@ -4248,10 +4147,10 @@ void dithmenos_shadow_throw(coord_def target, const item_def &item)
         new_item.flags    |= ISFLAG_SUMMONED;
         mon->inv[MSLOT_MISSILE] = ammo_index;
 
-        mon->target = clamp_in_bounds(target);
+        mon->target = clamp_in_bounds(d.target);
 
         bolt beem;
-        beem.target = target;
+        beem.set_target(d);
         setup_monster_throw_beam(mon, beem);
         beem.item = &mitm[mon->inv[MSLOT_MISSILE]];
         mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
@@ -4918,12 +4817,14 @@ branch_type gozag_fixup_branch(branch_type branch)
 
 static const map<branch_type, int> branch_bribability_factor =
 {
+    { BRANCH_DUNGEON,     2 },
     { BRANCH_ORC,         2 },
     { BRANCH_ELF,         3 },
     { BRANCH_SNAKE,       3 },
     { BRANCH_SHOALS,      3 },
     { BRANCH_CRYPT,       3 },
     { BRANCH_TOMB,        3 },
+    { BRANCH_DEPTHS,      4 },
     { BRANCH_VAULTS,      4 },
     { BRANCH_ZOT,         4 },
     { BRANCH_VESTIBULE,   4 },

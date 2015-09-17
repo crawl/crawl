@@ -1550,15 +1550,6 @@ halberd
     -James Clarence Mangan , _A Farewell to Patrick Sarsfield, Earl of Lucan_.
      ca. 1840.
 %%%%
-hammer
-
-“The hammah that John Henry swung,
- It weighed over nine poun',
- He broke a rib in his left han' side,
- And his intrels fell on the groun',
- And his intrels fell on the groun'.”
-    -Onah L. Spencer, _John Henry_. Early 20th cent.
-%%%%
 hand axe
 
 “Lizzie Borden took an axe
@@ -1937,6 +1928,13 @@ morningstar
  Which, where they fell, destroyed.”
     -Robert Southey, _Madoc_. 1805.
 %%%%
+morningstar "Eos"
+
+“But soon as early Dawn appeared, the rosy-fingered, then gathered the folk
+ about the pyre of glorious Hector.”
+    -Homer, _The Iliad_, XXIV, 776.
+     trans. A. T. Murray, 1857.
+%%%%
 moth of wrath
 
 “When within sight of their foe Berserks wrought themselves into such a state
@@ -2272,6 +2270,14 @@ ring
  And a hempen rope for your own love
  To hang upon a tree.”
     -Oscar Wilde, “Chanson”. 1881.
+%%%%
+ring of the Octopus King
+
+“A mermaid who fancied to sing,
+ Roused lust in the Octopus King.
+ Her squiggly suitor,
+ Tried hard to woo her,
+ But she couldn't wear all his rings.”
 %%%%
 ring mail
 

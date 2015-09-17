@@ -204,6 +204,8 @@ the Present
 the Morning
 
 the Evening
+
+the Equinox
 %%%%
 _sky_colour_name_
 

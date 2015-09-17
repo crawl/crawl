@@ -43,6 +43,7 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 struct bolt;
 class stack_iterator;
+class dist;
 
 bool can_do_capstone_ability(god_type god);
 bool bless_weapon(god_type god, brand_type brand, colour_t colour);
@@ -90,7 +91,6 @@ bool kiku_gift_necronomicon();
 bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monster* target);
 bool fedhas_passthrough(const monster_info* target);
-bool fedhas_shoot_through(const bolt& beam, const monster* victim);
 struct mgen_data;
 int place_ring(vector<coord_def>& ring_points,
                const coord_def& origin,
@@ -112,8 +112,8 @@ int count_corpses_in_los(vector<stack_iterator> *positions);
 int fedhas_check_corpse_spores(bool quiet = false);
 int fedhas_corpse_spores(beh_type attitude = BEH_FRIENDLY);
 bool mons_is_evolvable(const monster* mon);
-bool fedhas_check_evolve_flora(bool quiet = false);
-void fedhas_evolve_flora();
+bool fedhas_check_evolve_flora(bool quiet);
+spret_type fedhas_evolve_flora(bool fail);
 
 void lugonu_bend_space();
 
@@ -131,7 +131,7 @@ bool dithmenos_shadow_step();
 monster* shadow_monster(bool equip = true);
 void shadow_monster_reset(monster *mon);
 void dithmenos_shadow_melee(actor* target);
-void dithmenos_shadow_throw(coord_def target, const item_def &item);
+void dithmenos_shadow_throw(const dist &d, const item_def &item);
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 
 int gozag_potion_price();

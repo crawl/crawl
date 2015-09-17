@@ -19,7 +19,7 @@
 #
 NAME:   layout_layer_cave
 DEPTH:  D:4-, Lair, Snake
-WEIGHT: 20, 15 (Snake)
+WEIGHT: 5, 15 (Snake)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 {{

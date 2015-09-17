@@ -531,6 +531,7 @@ public:
             go_to(original);
     }
 
+    // Not virtual!
     void go_to(const level_id& next)
     {
 #ifdef USE_TILE

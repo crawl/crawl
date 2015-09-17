@@ -25,6 +25,10 @@ lernaean_hydra08
 lernaean_hydra09
 lernaean_hydra10
 royal_jelly MONS_ROYAL_JELLY
+serpent_of_hell-geh MONS_SERPENT_OF_HELL_GEHENNA
+serpent_of_hell-coc MONS_SERPENT_OF_HELL_COCYTUS
+serpent_of_hell-dis MONS_SERPENT_OF_HELL_DIS
+serpent_of_hell-tar MONS_SERPENT_OF_HELL_TARTARUS
 %sdir mon/holy
 seraph MONS_SERAPH
 %sdir mon/sprint
@@ -594,6 +598,7 @@ fire_giant MONS_FIRE_GIANT
 frost_giant MONS_FROST_GIANT
 stone_giant MONS_STONE_GIANT
 titan MONS_TITAN
+juggernaut MONS_JUGGERNAUT
 %rim 1
 
 ## Drakes (also 'l')
@@ -612,10 +617,6 @@ giaggostuono MONS_GIAGGOSTUONO
 ## Dragons ('D')
 %sdir mon/unique
 xtahua MONS_XTAHUA
-serpent_of_hell-geh MONS_SERPENT_OF_HELL_GEHENNA
-serpent_of_hell-coc MONS_SERPENT_OF_HELL_COCYTUS
-serpent_of_hell-dis MONS_SERPENT_OF_HELL_DIS
-serpent_of_hell-tar MONS_SERPENT_OF_HELL_TARTARUS
 %sdir mon/dragons
 wyvern MONS_WYVERN
 fire_dragon MONS_FIRE_DRAGON

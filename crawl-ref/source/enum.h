@@ -43,10 +43,10 @@ public:
     }
 
     constexpr enum_bitfield() : flags(0) {}
-    constexpr enum_bitfield(E flag) : flags(flag) {}
+    constexpr enum_bitfield(E flag) : flags(underlying_type(flag)) {}
     template<class ... Es>
     constexpr enum_bitfield(E flag, E flag2, Es... rest)
-        : flags(enum_bitfield(rest...).flags | flag) {}
+        : flags(enum_bitfield(flag2, rest...).flags | underlying_type(flag)) {}
 
     explicit constexpr operator underlying_type () const { return flags; }
     explicit constexpr operator bool () const { return flags; }
@@ -2894,6 +2894,9 @@ enum monster_type                      // menv[].type
     MONS_FIRE_GIANT,
     MONS_FROST_GIANT,
     MONS_TITAN,
+#if TAG_MAJOR_VERSION > 34
+    MONS_JUGGERNAUT,
+#endif
     MONS_HUMAN,
     MONS_SLAVE,
     MONS_HELL_KNIGHT,
@@ -3421,6 +3424,7 @@ enum monster_type                      // menv[].type
     MONS_ENTROPY_WEAVER,
     MONS_MOON_TROLL,
     MONS_MUTANT_BEAST,
+    MONS_JUGGERNAUT,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

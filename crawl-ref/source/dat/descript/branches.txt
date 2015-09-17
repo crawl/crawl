@@ -15,18 +15,16 @@ dungeon. It usually contains altars to most of the known gods.
 %%%%
 Orcish Mines
 
-These bustling goldmines are filled with orcs, their humanoid labourers, and
-piles of freshly mined gold. Enterprising merchants have set up trading posts
-to help relieve the orcs of the latter. Prospective customers should be warned:
-the haphazard manner in which orcs dig their mineshafts has resulted in a
-complex and treacherous tangle of chambers, in which it is easy to be trapped.
+The Orcish Mines are filled with the cave orcs native to the Dungeon, their
+humanoid labourers, and piles of freshly mined gold. Enterprising merchants
+have set up trading posts to help relieve the orcs of the latter.
 %%%%
 Elven Halls
 
-This is the realm of the deep elves, a race that turned their backs on the sun
-long ago. Their halls are filled with riches, but a deadly welcome awaits any
-would-be robbers. In their long seclusion, the deep elves have perfected dark
-sorceries of a power the orcs can only dream of!
+The Elven Halls are home to the deep elves, a race that turned their backs on
+the sun long ago. Their halls are filled with riches, but a deadly welcome
+awaits any would-be robbers. In their long seclusion, the deep elves have
+perfected dark sorceries of a power the orcs can only dream of!
 %%%%
 Lair
 
@@ -93,21 +91,26 @@ death is exceedingly short.
 %%%%
 Hell
 
-The hallway to the four hells is guarded by Geryon.
+The Vestibule of Hell is guarded by Geryon, along with various denizens of
+each of the hells themselves.
 
 Portals to the Vestibule of Hell are found abundantly in the Depths.
 %%%%
 Dis
 
-Who will stand the test of iron?
+The Iron City of Dis is home to many of the most resilient guardians of hell.
+Those who do not belong in the halls of Dis will find the very earth itself
+opposing them.
 %%%%
 Gehenna
 
-Gehenna is a realm of flames, lava and hellfire.
+Gehenna is a realm of flames, lava and hellfire. Those who linger will have
+fire and brimstone rained down upon them.
 %%%%
 Cocytus
 
-Cocytus is a grim and frost-bitten wasteland.
+Cocytus is a grim and frost-bitten wasteland. Intruders will find the biting
+winds and icy inhabitants of the wastes impeding their progress.
 %%%%
 Tartarus
 
@@ -133,10 +136,10 @@ schemes around this place and its denizens.
 
 Portals to the Abyss are found abundantly in the Depths.
 
-The Abyss consists of five infinite levels. The abyssal rune can be found from
-the third level onwards, and is more common at greater depths. Portals back to
-the dungeon are scattered throughout the Abyss, and are found more commonly at
-greater depths or while carrying the abyssal rune.
+The Abyss consists of five infinite levels. The abyssal rune of Zot can be
+found from the third level onwards, and is more common at greater depths.
+Portals back to the dungeon are scattered throughout the Abyss, and are found
+more commonly at greater depths or while carrying the abyssal rune.
 %%%%
 Pandemonium
 
@@ -149,12 +152,12 @@ Portals to Pandemonium are found abundantly in the Depths.
 Pandemonium is endless. Each area of Pandemonium has a small chance of
 containing a portal back to the dungeon, either directly or via the Abyss.
 
-No fewer than five runes can be found in Pandemonium:
- • a fiery rune in the well-heated realm of Cerebov
- • a glowing rune in the contaminated domain of Mnoleg
- • a magical rune guarded by the arcane powers of Lom Lobon and his minions
- • a dark rune in the shadowy abode of Gloorx Vloq
- • a demonic rune existing in multiple places, owned by less famous lords
+No fewer than five runes of Zot can be found in Pandemonium:
+ • the fiery rune resides in the blazing realm of Cerebov
+ • the glowing rune can be found in the contaminated domain of Mnoleg
+ • the magical rune is guarded by the arcane powers of Lom Lobon
+ • the dark rune is hidden in the shadowy abode of Gloorx Vloq
+ • the demonic rune exists in multiple places, owned by less famous lords
 %%%%
 Ziggurat
 
@@ -191,7 +194,7 @@ leading into the secret treasure troves and chambers of the rich. Too scared to
 loot them himself, he instead charged an extortionate fee for entry to anyone
 who wanted to rifle through them.
 
-The items inside this trove are likely to be useful, but beware: the wizard is
+The items inside such troves are likely to be useful, but beware: the wizard is
 long dead, and even while alive he never offered a money-back guarantee.
 %%%%
 Sewer
@@ -231,10 +234,10 @@ refreezing.
 %%%%
 Volcano
 
-Built from enormous blocks of obsidian, this sweltering chamber may once have
-served as a temple to some strange deity, or perhaps the dwelling of a mighty
-fire giant. The air shimmers with oppressive heat, and the dull roar of the
-volcano's heart never ceases.
+Built from enormous blocks of obsidian, the volcano's sweltering chambers may
+once have served as a temple to some strange deity, or perhaps the dwelling of
+a mighty fire giant. The air shimmers with oppressive heat, and the dull roar
+of the volcano's heart never ceases.
 %%%%
 Wizlab
 

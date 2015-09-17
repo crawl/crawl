@@ -961,7 +961,7 @@ public:
     AuxKick()
     : AuxAttackType(-1, "kick") { };
 
-    int get_damage() const
+    int get_damage() const override
     {
         if (you.has_usable_hooves())
         {
@@ -980,7 +980,7 @@ public:
         return player_mutation_level(MUT_TENTACLE_SPIKE);
     }
 
-    string get_verb() const
+    string get_verb() const override
     {
         if (you.has_usable_talons())
             return "claw";
@@ -989,7 +989,7 @@ public:
         return name;
     }
 
-    string get_name() const
+    string get_name() const override
     {
         if (player_mutation_level(MUT_TENTACLE_SPIKE))
             return "tentacle spike";
@@ -1003,7 +1003,7 @@ public:
     AuxHeadbutt()
     : AuxAttackType(5, "headbutt") { };
 
-    int get_damage() const
+    int get_damage() const override
     {
         return damage + player_mutation_level(MUT_HORNS) * 3;
     }
@@ -1022,12 +1022,12 @@ public:
     AuxTailslap()
     : AuxAttackType(6, "tail-slap") { };
 
-    int get_damage() const
+    int get_damage() const override
     {
         return damage + max(0, player_mutation_level(MUT_STINGER) * 2 - 1);
     }
 
-    int get_brand() const
+    int get_brand() const override
     {
         return player_mutation_level(MUT_STINGER) ? SPWPN_VENOM : SPWPN_NORMAL;
     }
@@ -1039,7 +1039,7 @@ public:
     AuxPunch()
     : AuxAttackType(5, "punch") { };
 
-    int get_damage() const
+    int get_damage() const override
     {
         const int base_dam = damage + you.skill_rdiv(SK_UNARMED_COMBAT, 1, 2);
 
@@ -1052,7 +1052,7 @@ public:
         return base_dam;
     }
 
-    string get_name() const
+    string get_name() const override
     {
         if (you.form == TRAN_BLADE_HANDS)
             return "slash";
@@ -1074,7 +1074,7 @@ public:
     AuxBite()
     : AuxAttackType(0, "bite") { };
 
-    int get_damage() const
+    int get_damage() const override
     {
         const int fang_damage = you.has_usable_fangs() * 2;
         if (player_mutation_level(MUT_ANTIMAGIC_BITE))
@@ -1088,7 +1088,7 @@ public:
         return fang_damage + str_damage;
     }
 
-    int get_brand() const
+    int get_brand() const override
     {
         if (player_mutation_level(MUT_ANTIMAGIC_BITE))
             return SPWPN_ANTIMAGIC;
@@ -1106,7 +1106,10 @@ public:
     AuxPseudopods()
     : AuxAttackType(4, "bludgeon") { };
 
-    int get_damage() const { return damage * you.has_usable_pseudopods(); }
+    int get_damage() const override
+    {
+        return damage * you.has_usable_pseudopods();
+    }
 };
 
 class AuxTentacles: public AuxAttackType
@@ -3671,12 +3674,6 @@ int melee_attack::apply_damage_modifiers(int damage, int damage_max)
         frenzy_degree = as_mon->get_ench(ENCH_BATTLE_FRENZY).degree;
     else if (as_mon->has_ench(ENCH_ROUSED))
         frenzy_degree = as_mon->get_ench(ENCH_ROUSED).degree;
-    else
-    {
-        frenzy_degree = as_mon->aug_amount();
-        if (frenzy_degree <= 0)
-            frenzy_degree = -1;
-    }
 
     if (frenzy_degree != -1)
     {

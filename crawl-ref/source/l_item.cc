@@ -24,6 +24,7 @@
 #include "item_use.h"
 #include "l_defs.h"
 #include "libutil.h"
+#include "mon-util.h"
 #include "output.h"
 #include "player.h"
 #include "prompt.h"
@@ -552,6 +553,49 @@ IDEF(can_cut_meat)
         return 0;
 
     lua_pushboolean(ls, can_cut_meat(*item));
+
+    return 1;
+}
+
+IDEF(is_corpse)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, item->is_type(OBJ_CORPSES, CORPSE_BODY));
+
+    return 1;
+}
+
+IDEF(is_skeleton)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, item->is_type(OBJ_CORPSES, CORPSE_SKELETON));
+
+    return 1;
+}
+
+IDEF(has_skeleton)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, item->is_type(OBJ_CORPSES, CORPSE_BODY)
+                         && mons_skeleton(item->mon_type)
+                        || item->is_type(OBJ_CORPSES, CORPSE_SKELETON));
+
+    return 1;
+}
+
+IDEF(can_zombify)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, item->is_type(OBJ_CORPSES, CORPSE_BODY)
+                        && mons_zombifiable(item->mon_type));
 
     return 1;
 }
@@ -1242,6 +1286,10 @@ static ItemAccessor item_attrs[] =
     { "dropped",           l_item_dropped },
     { "is_melded",         l_item_is_melded },
     { "can_cut_meat",      l_item_can_cut_meat },
+    { "is_skeleton",       l_item_is_skeleton },
+    { "is_corpse",         l_item_is_corpse },
+    { "has_skeleton",      l_item_has_skeleton },
+    { "can_zombify",       l_item_can_zombify },
     { "is_preferred_food", l_item_is_preferred_food },
     { "is_bad_food",       l_item_is_bad_food },
     { "is_useless",        l_item_is_useless },

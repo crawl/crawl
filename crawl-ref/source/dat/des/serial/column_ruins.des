@@ -46,10 +46,10 @@ end
 
 function init_column_ruins_hut(e)
   e.ftile('x = floor_rough_brown')
-  e.rtile('x = wall_stone_brick')
+  e.rtile('x = wall_catacombs')
   e.kmask('x = no_wall_fixup')
   e.ftile('+ = floor_rough_brown')
-  e.rtile('+ = wall_stone_brick')
+  e.rtile('+ = wall_catacombs')
   e.kmask('+ = no_wall_fixup')
 end
 
@@ -106,7 +106,7 @@ CHANCE: 3%
   local a = 10 + crawl.random2(11)
   if crawl.one_chance_in(33) then
     lfloortile('floor_rough_brown')
-    lrocktile('wall_stone_brick')
+    lrocktile('wall_catacombs')
     hook("post_place", function()
       dgn.place_maps{tag="serial_column_ruins_pillar", count=a}
       dgn.place_maps{tag="serial_column_ruins_portal", count=p}

@@ -89,7 +89,7 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
                               int radius, bool allow_centre, coord_def& empty,
                               const monster* viable_mon = nullptr);
 
-monster_type summon_any_demon(monster_type dct);
+monster_type summon_any_demon(monster_type dct, bool use_local_demons = false);
 
 monster_type summon_any_dragon(dragon_class_type dct);
 

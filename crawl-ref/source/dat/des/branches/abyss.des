@@ -1424,7 +1424,7 @@ KMONS:   e = crystal guardian
 # Note: if anything in these two item sets becomes useful for more then a tiny
 # fraction of characters finding the abyssal rune, remove or replace them.
 KITEM:   24d = scroll of random uselessness w:15 q:1 / fruit q:1 w:5 / \
-         club w:5 / hammer w:5 / stone q:1 / needle q:1 ego:confusion / \
+         club w:5 / stone q:1 / needle q:1 ego:confusion / \
          mundane animal skin / mundane ring mail / gold q:1
 KITEM:   13e = wand of slowing / wand of confusion / wand of magic darts / \
          wand of flame w:5 / wand of frost w:5 / plain deck w:5 / \
@@ -1648,30 +1648,27 @@ ENDMAP
 
 NAME: nicolae_abyss_rune_containment_breach
 TAGS: abyss_rune unrand patrolling no_monster_gen no_item_gen no_trap_gen
-SUBST: N = nn., n = nnnnnc
+SUBST: n = nnnnnnc
 KITEM: O = abyssal rune of zot
 KMONS: Om = spatial maelstrom
 MAP
-       ......
-     ..........
-   ....NNNNNN....
-  ...NNnnnnnnNN...
-  ..NnnnnnnnnnnN..
- ..NnnnnnnnnnnnnN..
- ..NnnnnnnnnnnnnN..
-..NnnnnnnNNnnnnnnN..
-..NnnnnnN..NnnnnnN..
-..NnnnnN.mm.NnnnnN..
-..NnnnnN.Om.NnnnnN..
-..NnnnnnN..NnnnnnN..
-..NnnnnnnNNnnnnnnN..
- ..NnnnnnnnnnnnnN..
- ..NnnnnnnnnnnnnN..
-  ..NnnnnnnnnnnN..
-  ...NNnnnnnnNN...
-   ....NNNNNN....
-     ..........
-       ......
+.................
+.................
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnmmmnnnnn..
+..nnnnnmOmnnnnn..
+..nnnnnmmmnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+.................
+.................
 ENDMAP
 
 ###############################################################################

@@ -287,8 +287,8 @@ Shoots a random harmful blast at the targeted creature.
 %%%%
 Lesser Servant of Makhleb ability
 
-Summons a minor demon. High Invocations skill reduces the chance of it being
-hostile.
+Summons a minor demon. Failing to use this ability correctly will turn the
+demon hostile.
 %%%%
 Major Destruction ability
 
@@ -296,8 +296,8 @@ Shoots a random harmful beam or explosion at the targeted creature.
 %%%%
 Greater Servant of Makhleb ability
 
-Summons a major demon. High Invocations skill reduces the chance of it being
-hostile.
+Summons a major demon. Failing to use this ability correctly will turn the
+demon hostile.
 %%%%
 # Sif Muna
 Channel Energy ability
@@ -754,3 +754,7 @@ you've built your reputation!
 
 All other gods hate Beogh, and don't take desertion lightly.
 %%%%
+Donate Gold ability
+
+Donate half of your gold to Zin, which will increase your piety over time. The
+overall increase is determined by the size of your donation.

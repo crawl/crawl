@@ -31,7 +31,7 @@ struct lua_element_colour_calc : public element_colour_calc
         {};
 
     virtual int get(const coord_def& loc = coord_def(),
-                    bool non_random = false);
+                    bool non_random = false) override;
 
 protected:
     lua_datum function;

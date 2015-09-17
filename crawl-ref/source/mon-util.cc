@@ -1708,19 +1708,10 @@ bool name_zombie(monster* mon, const monster* orig)
     return name_zombie(mon, orig->type, name);
 }
 
+// Derived undead deal 80% of the damage of the base form.
 static int _downscale_zombie_damage(int damage)
 {
-    // These are cumulative, of course: {dlb}
-    if (damage > 1)
-        damage--;
-    if (damage > 4)
-        damage--;
-    if (damage > 11)
-        damage--;
-    if (damage > 14)
-        damage--;
-
-    return damage;
+    return max(1, 4 * damage / 5);
 }
 
 static mon_attack_def _downscale_zombie_attack(const monster* mons,
@@ -3077,7 +3068,7 @@ mon_energy_usage mons_class_energy(monster_type mc)
 
 mon_energy_usage mons_energy(const monster* mon)
 {
-    mon_energy_usage meu = mons_class_energy(mon->type);
+    mon_energy_usage meu = mons_class_energy(mons_base_type(mon));
     if (mon->ghost.get())
         meu.move = meu.swim = mon->ghost->move_energy;
     return meu;

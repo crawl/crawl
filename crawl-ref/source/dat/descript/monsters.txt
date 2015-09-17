@@ -1169,8 +1169,7 @@ dungeon, inflicting the anguish it felt in life upon those still living.
 %%%%
 flying skull
 
-An undead skull kept aloft and flitting swiftly about by unholy magic. It
-periodically emits loud, blood-curdling shrieks.
+An undead skull kept aloft and flitting swiftly about by unholy magic.
 %%%%
 freed slave
 
@@ -1553,6 +1552,11 @@ jiangshi
 A vampiric thrall bound into servitude by esoteric rituals. Though its rigid
 limbs give it an awkward gait, it moves with surprising speed, leaping upon its
 victims and leeching away their life essence with its vicious claws.
+%%%%
+juggernaut
+
+A gigantic humanoid with incredibly thick skin. Its immense fists can deal
+incredible damage.
 %%%%
 jumping spider
 
@@ -1999,7 +2003,7 @@ A dirty rodent that has grown large and aggressive in the dungeon environment.
 %%%%
 raiju
 
-An profoundly unnatural hound, crackling with electricity. Remarkably, it can
+A profoundly unnatural hound, crackling with electricity. Remarkably, it can
 transform into living lightning and bolt forth, harmlessly passing pack mates
 while painfully piercing prey.
 %%%%
@@ -2782,12 +2786,12 @@ This statue, made of a fine glassy orange crystal, depicts a mystic known as
 Wucad Mu, who mastered the matters of the mind. Beware of the statue's powers,
 as you have no chance in mental combat against it.
 %%%%
-Moon Troll
+moon troll
 
 A bizarre breed of intelligent troll, glowing with mysterious power from beyond
 this world.
 %%%%
-Lunar Statue
+lunar statue
 
 <zot statue>
 %%%%

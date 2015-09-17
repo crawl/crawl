@@ -1152,7 +1152,7 @@ KITEM:   ! = damaged executioner's axe, damaged short sword, \
              damaged long sword, damaged morningstar
 KITEM:   + = damaged eveningstar, damaged short sword, \
              damaged long sword, damaged war axe
-KITEM:   & = damaged hammer / nothing
+KITEM:   & = damaged mace / nothing
 MONS:    fungus, plant
 MONS:    adder, scorpion
 MONS:    rat / porcupine, river rat / hell rat

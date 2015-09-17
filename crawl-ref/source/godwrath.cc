@@ -564,6 +564,9 @@ static monster* get_avatar(god_type god)
     if (!avatar)
         return nullptr;
 
+    // shadow_monster() has the player's mid, which is no good here.
+    avatar->set_new_monster_id();
+
     avatar->mname = _god_wrath_name(god);
     avatar->flags |= MF_NAME_REPLACE;
     avatar->attitude = ATT_HOSTILE;
@@ -1822,29 +1825,16 @@ void beogh_idol_revenge()
 
 static void _tso_blasts_cleansing_flame(const char *message)
 {
-    // TSO won't protect you from his own cleansing flame, and Xom is too
-    // capricious to protect you from it.
-    if (!you_worship(GOD_SHINING_ONE) && !you_worship(GOD_XOM)
-        && !player_under_penance() && x_chance_in_y(you.piety, MAX_PIETY * 2))
-    {
-        god_speaks(you.religion,
-                   make_stringf("\"Mortal, I have averted the wrath of %s... "
-                                "this time.\"",
-                                god_name(GOD_SHINING_ONE).c_str()).c_str());
-    }
-    else
-    {
-        // If there's a message, display it before firing.
-        if (message)
-            god_speaks(GOD_SHINING_ONE, message);
+    // If there's a message, display it before firing.
+    if (message)
+        god_speaks(GOD_SHINING_ONE, message);
 
-        simple_god_message(" blasts you with cleansing flame!",
-                           GOD_SHINING_ONE);
+    simple_god_message(" blasts you with cleansing flame!",
+                       GOD_SHINING_ONE);
 
-        // damage is 2d(pow), *3/2 for undead and demonspawn
-        cleansing_flame(5 + (you.experience_level * 7) / 12,
-                        CLEANSING_FLAME_TSO, you.pos());
-    }
+    // damage is 2d(pow), *3/2 for undead and demonspawn
+    cleansing_flame(5 + (you.experience_level * 7) / 12,
+                    CLEANSING_FLAME_TSO, you.pos());
 }
 
 static void _god_smites_you(god_type god, const char *message,
@@ -1852,48 +1842,36 @@ static void _god_smites_you(god_type god, const char *message,
 {
     ASSERT(god != GOD_NO_GOD);
 
-    // Your god won't protect you from his own smiting, and Xom is too
-    // capricious to protect you from any god's smiting.
-    if (!you_worship(god) && !you_worship(GOD_XOM)
-        && !player_under_penance() && x_chance_in_y(you.piety, MAX_PIETY * 2))
+    if (death_type == NUM_KILLBY)
     {
-        god_speaks(you.religion,
-                   make_stringf("\"Mortal, I have averted the wrath of %s... "
-                                "this time.\"", god_name(god).c_str()).c_str());
+        switch (god)
+        {
+            case GOD_BEOGH:     death_type = KILLED_BY_BEOGH_SMITING; break;
+            case GOD_SHINING_ONE: death_type = KILLED_BY_TSO_SMITING; break;
+            default:            death_type = KILLED_BY_DIVINE_WRATH;  break;
+        }
     }
-    else
+
+    string aux;
+
+    if (death_type != KILLED_BY_BEOGH_SMITING
+        && death_type != KILLED_BY_TSO_SMITING)
     {
-        if (death_type == NUM_KILLBY)
-        {
-            switch (god)
-            {
-                case GOD_BEOGH:     death_type = KILLED_BY_BEOGH_SMITING; break;
-                case GOD_SHINING_ONE: death_type = KILLED_BY_TSO_SMITING; break;
-                default:            death_type = KILLED_BY_DIVINE_WRATH;  break;
-            }
-        }
-
-        string aux;
-
-        if (death_type != KILLED_BY_BEOGH_SMITING
-            && death_type != KILLED_BY_TSO_SMITING)
-        {
-            aux = "smitten by " + god_name(god);
-        }
-
-        // If there's a message, display it before smiting.
-        if (message)
-            god_speaks(god, message);
-
-        int divine_hurt = 10 + random2(10);
-
-        for (int i = 0; i < 5; ++i)
-            divine_hurt += random2(you.experience_level);
-
-        simple_god_message(" smites you!", god);
-        ouch(divine_hurt, death_type, MID_NOBODY, aux.c_str());
-        dec_penance(god, 1);
+        aux = "smitten by " + god_name(god);
     }
+
+    // If there's a message, display it before smiting.
+    if (message)
+        god_speaks(god, message);
+
+    int divine_hurt = 10 + random2(10);
+
+    for (int i = 0; i < 5; ++i)
+        divine_hurt += random2(you.experience_level);
+
+    simple_god_message(" smites you!", god);
+    ouch(divine_hurt, death_type, MID_NOBODY, aux.c_str());
+    dec_penance(god, 1);
 }
 
 void reduce_xp_penance(god_type god, int amount)

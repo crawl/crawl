@@ -16,6 +16,7 @@
 #include "coordit.h"
 #include "dungeon.h"
 #include "godconduct.h"
+#include "libutil.h" // testbits
 #include "los.h"
 #include "mapmark.h"
 #include "melee_attack.h"
@@ -954,8 +955,9 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     const bool player = act->is_player();
 
     if (!player
-        && you_worship(GOD_FEDHAS)
-        && fedhas_protects(act->as_monster())
+        && (you_worship(GOD_FEDHAS)
+            && fedhas_protects(act->as_monster())
+            || testbits(act->as_monster()->flags, MF_DEMONIC_GUARDIAN))
         && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
         && (act->as_monster()->friendly() || act->as_monster()->neutral()))
     {
@@ -1517,8 +1519,10 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         const int hp_threshold = clouds[cloud.type].expected_base_damage +
                                  random2avg(rand_dam, trials);
 
+        // intelligent monsters want a larger margin of safety
+        int safety_mult = (mons_intel(mons) > I_ANIMAL) ? 2 : 1;
         // dare we risk the damage?
-        const bool hp_ok = mons->hit_points >= hp_threshold;
+        const bool hp_ok = mons->hit_points > safety_mult * hp_threshold;
         // dare we risk the status effects?
         const bool sfx_ok = cloud.type != CLOUD_MEPHITIC
                             || x_chance_in_y(mons->get_hit_dice() - 1, 5);

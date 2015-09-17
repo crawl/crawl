@@ -47,7 +47,7 @@ function bailey_portal(e, ptype)
   e.chance(500)
 
   e.kfeat("O = enter_bailey")
-  e.tile("c = wall_stone_brick")
+  e.tile("c = wall_stone_smooth")
 end
 
 function bailey_portal_axe(e)

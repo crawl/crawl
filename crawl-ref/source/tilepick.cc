@@ -160,8 +160,9 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_UNSEEN:
         return TILE_DNGN_UNSEEN;
     case DNGN_ROCK_WALL:
-    case DNGN_PERMAROCK_WALL:
         return TILE_WALL_NORMAL;
+    case DNGN_PERMAROCK_WALL:
+        return TILE_WALL_PERMAROCK;
     case DNGN_SLIMY_WALL:
         return TILE_WALL_SLIME;
     case DNGN_OPEN_SEA:
@@ -175,8 +176,9 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_CLEAR_ROCK_WALL:
         return TILE_DNGN_TRANSPARENT_WALL;
     case DNGN_CLEAR_STONE_WALL:
-    case DNGN_CLEAR_PERMAROCK_WALL:
         return TILE_DNGN_TRANSPARENT_STONE;
+    case DNGN_CLEAR_PERMAROCK_WALL:
+        return TILE_WALL_PERMAROCK_CLEAR;
     case DNGN_STONE_WALL:
         return TILE_DNGN_STONE_WALL;
     case DNGN_CLOSED_DOOR:
@@ -498,13 +500,15 @@ tileidx_t tileidx_feature(const coord_def &gc)
     case DNGN_ROCK_WALL:
     case DNGN_STONE_WALL:
     case DNGN_CRYSTAL_WALL:
+    case DNGN_PERMAROCK_WALL:
+    case DNGN_CLEAR_PERMAROCK_WALL:
     {
         unsigned colour = env.map_knowledge(gc).feat_colour();
         if (colour == 0)
         {
-            colour = (feat == DNGN_FLOOR)     ? env.floor_colour :
-                     (feat == DNGN_ROCK_WALL) ? env.rock_colour
-                                              : 0; // meh
+            colour = feat == DNGN_FLOOR     ? env.floor_colour :
+                     feat == DNGN_ROCK_WALL ? env.rock_colour
+                                            : 0; // meh
         }
         if (colour >= ETC_FIRST)
         {
@@ -1487,6 +1491,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_STONE_GIANT;
     case MONS_TITAN:
         return TILEP_MONS_TITAN;
+    case MONS_JUGGERNAUT:
+        return TILEP_MONS_JUGGERNAUT;
 
     // dragons ('D')
     case MONS_WYVERN:
@@ -3107,7 +3113,6 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
 #endif
     case WPN_QUARTERSTAFF:          return TILE_WPN_QUARTERSTAFF;
     case WPN_CLUB:                  return TILE_WPN_CLUB;
-    case WPN_HAMMER:                return TILE_WPN_HAMMER;
     case WPN_MACE:                  return TILE_WPN_MACE;
     case WPN_FLAIL:                 return TILE_WPN_FLAIL;
     case WPN_GREAT_MACE:            return TILE_WPN_GREAT_MACE;
@@ -3744,6 +3749,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_STONE_GIANT;
     case MONS_TITAN:
         return TILE_CORPSE_TITAN;
+    case MONS_JUGGERNAUT:
+        return TILE_CORPSE_JUGGERNAUT;
 
     // dragons ('D')
     case MONS_WYVERN:
@@ -5242,6 +5249,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ZIN_SANCTUARY;
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
         return TILEG_ABILITY_ZIN_CURE_MUTATIONS;
+    case ABIL_ZIN_DONATE_GOLD:
+        return TILEG_ABILITY_ZIN_DONATE_GOLD;
     // TSO
     case ABIL_TSO_DIVINE_SHIELD:
         return TILEG_ABILITY_TSO_DIVINE_SHIELD;
@@ -5249,11 +5258,17 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_TSO_CLEANSING_FLAME;
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
         return TILEG_ABILITY_TSO_DIVINE_WARRIOR;
+    case ABIL_TSO_BLESS_WEAPON:
+        return TILEG_ABILITY_TSO_BLESS_WEAPON;
     // Kiku
     case ABIL_KIKU_RECEIVE_CORPSES:
         return TILEG_ABILITY_KIKU_RECEIVE_CORPSES;
     case ABIL_KIKU_TORMENT:
         return TILEG_ABILITY_KIKU_TORMENT;
+    case ABIL_KIKU_BLESS_WEAPON:
+        return TILEG_ABILITY_KIKU_BLESS_WEAPON;
+    case ABIL_KIKU_GIFT_NECRONOMICON:
+        return TILEG_ABILITY_KIKU_NECRONOMICON;
     // Yredelemnul
     case ABIL_YRED_INJURY_MIRROR:
         return TILEG_ABILITY_YRED_INJURY_MIRROR;
@@ -5322,6 +5337,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_LUGONU_CORRUPT;
     case ABIL_LUGONU_ABYSS_ENTER:
         return TILEG_ABILITY_LUGONU_ENTER_ABYSS;
+    case ABIL_LUGONU_BLESS_WEAPON:
+        return TILEG_ABILITY_LUGONU_BLESS_WEAPON;
     // Nemelex
     case ABIL_NEMELEX_TRIPLE_DRAW:
         return TILEG_ABILITY_NEMELEX_TRIPLE_DRAW;
