@@ -989,6 +989,9 @@ void attract_actor(const actor* agent, actor* victim, const coord_def pos,
         }
         else
             victim->move_to_pos(newpos, false);
+
+        behaviour_event(victim->as_monster(), ME_ANNOY, agent,
+                        agent ? agent->pos() : coord_def(0, 0));
     }
 }
 
