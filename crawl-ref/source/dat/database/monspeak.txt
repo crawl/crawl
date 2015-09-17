@@ -808,8 +808,6 @@ VISUAL:@The_monster@ waves at you.
 @The_monster@ says, "Be careful!"
 
 @The_monster@ says, "I'll never leave you."
-
-@The_monster@ says, "I would die for you."
 %%%%
 _friendly_humanoid_medium_
 
