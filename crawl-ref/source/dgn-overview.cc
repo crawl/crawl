@@ -727,21 +727,6 @@ void enter_branch(branch_type branch, level_id from)
     }
 }
 
-// Mark a shop guaranteed on this level if we haven't been there yet.
-// Used by Gozag's call merchant ability.
-// Only one per level!
-void mark_offlevel_shop(level_id lid, shop_type type)
-{
-    ASSERT(!shops_present.count(level_pos(lid, coord_def())));
-    shops_present[level_pos(lid, coord_def())] = type;
-}
-
-void unmark_offlevel_shop(level_id lid)
-{
-    ASSERT(shops_present.count(level_pos(lid, coord_def())));
-    shops_present.erase(level_pos(lid, coord_def()));
-}
-
 // Add an annotation on a level if we corrupt with Lugonu's ability
 void mark_corrupted_level(level_id li)
 {

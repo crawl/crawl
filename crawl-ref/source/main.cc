@@ -2369,12 +2369,6 @@ static void _prep_input()
 
         you.seen_portals = 0;
     }
-    if (you.props.exists(GOZAG_ANNOUNCE_SHOP_KEY))
-    {
-        mpr_nojoin(MSGCH_GOD,
-                   you.props[GOZAG_ANNOUNCE_SHOP_KEY].get_string().c_str());
-        you.props.erase(GOZAG_ANNOUNCE_SHOP_KEY);
-    }
     if (you.seen_invis)
         you.seen_invis = false;
 }

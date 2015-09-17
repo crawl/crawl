@@ -4380,36 +4380,6 @@ int gozag_price_for_shop(bool max)
     return price;
 }
 
-static vector<level_id> _get_gozag_shop_candidates()
-{
-    vector<level_id> candidates;
-
-    branch_type allowed_branches[3] = {BRANCH_DUNGEON, BRANCH_VAULTS, BRANCH_DEPTHS};
-    for (int ii = 0; ii < 3; ii++)
-    {
-        branch_type i = allowed_branches[ii];
-
-        level_id lid(i, brdepth[i]);
-
-        for (int j = 1; j <= brdepth[i] && candidates.size() < 4; j++)
-        {
-            // Don't try to place shops on Vaults:$, since they'll be totally
-            // insignificant next to the regular loot/shops
-            if (i == BRANCH_VAULTS && j == brdepth[i])
-                continue;
-            lid.depth = j;
-            if (!is_existing_level(lid)
-                && !you.props.exists(make_stringf(GOZAG_SHOP_KEY,
-                                                  lid.describe().c_str())))
-            {
-                candidates.push_back(lid);
-            }
-        }
-    }
-
-    return candidates;
-}
-
 bool gozag_setup_call_merchant(bool quiet)
 {
     const int gold_min = gozag_price_for_shop(true);
@@ -4422,31 +4392,20 @@ bool gozag_setup_call_merchant(bool quiet)
         }
         return false;
     }
-
-    vector<level_id> candidates = _get_gozag_shop_candidates();
-
-    if (!candidates.size())
+    if (!is_connected_branch(level_id::current().branch))
     {
-        const map_def *shop_vault = find_map_by_name("serial_shops"); // XXX
-        if (!shop_vault)
-            die("Someone changed the shop vault name!");
-        if (!is_connected_branch(level_id::current().branch))
+        if (!quiet)
         {
-            if (!quiet)
-            {
-                mprf("No merchants are willing to come to this level in the "
-                     "absence of new frontiers.");
-                return false;
-            }
+            mprf("No merchants are willing to come to this location.");
+            return false;
         }
-        if (grd(you.pos()) != DNGN_FLOOR)
+    }
+    if (grd(you.pos()) != DNGN_FLOOR)
+    {
+        if (!quiet)
         {
-            if (!quiet)
-            {
-                mprf("You need to be standing on an open floor tile to call a "
-                     "shop here.");
-                return false;
-            }
+            mprf("You need to be standing on open floor to call a merchant.");
+            return false;
         }
     }
 
@@ -4634,42 +4593,11 @@ static string _gozag_shop_spec(int index)
 }
 
 /**
- * "Place" a gozag-called shop in a level you haven't yet seen.
- * (Mark it to be placed when the level is generated & message/annotate
- * appropriately.)
+ * Attempt to call the shop specified at the given index at your position.
  *
- * @param index         The index of the shop offer to be placed.
- * @param candidates    Potentially viable levels to place the shop in.
+ * @param index     The index of the shop (in gozag props)
  */
-static void _gozag_place_shop_offlevel(int index, vector<level_id> &candidates)
-{
-    ASSERT(candidates.size());
-
-    vector<int> weights;
-    for (unsigned int j = 0; j < candidates.size(); j++)
-        weights.push_back(candidates.size() - j);
-    const int which = choose_random_weighted(weights.begin(), weights.end());
-    const level_id lid = candidates[which];
-
-    // "place" the shop
-    you.props[make_stringf(GOZAG_SHOP_KEY, lid.describe().c_str())]
-                                    .get_string() = _gozag_shop_spec(index);
-
-    const string name =
-        you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)];
-    mprf(MSGCH_GOD, "%s sets up shop in %s.", name.c_str(),
-         branches[lid.branch].longname);
-    dprf("%s", lid.describe().c_str());
-
-    mark_offlevel_shop(lid, _gozag_shop_type(index));
-}
-
-/**
- * Place a gozag-called shop in your current location.
- *
- * @param index     The index of the shop offer to be placed.
- */
-static void _gozag_place_shop_here(int index)
+static void _gozag_place_shop(int index)
 {
     ASSERT(grd(you.pos()) == DNGN_FLOOR);
     keyed_mapspec kmspec;
@@ -4683,26 +4611,21 @@ static void _gozag_place_shop_here(int index)
     place_spec_shop(you.pos(), *spec);
 
     link_items();
-    env.markers.add(new map_feature_marker(you.pos(),
-                                           DNGN_ABANDONED_SHOP));
+    env.markers.add(new map_feature_marker(you.pos(), DNGN_ABANDONED_SHOP));
     env.markers.clear_need_activate();
 
-    mprf(MSGCH_GOD, "A shop appears before you!");
-}
+    shop_struct *shop = get_shop(you.pos());
+    ASSERT(shop);
 
-/**
- * Attempt to call the shop specified at the given index.
- *
- * @param index     The index of the shop (in gozag props)
- */
-static void _gozag_place_shop(int index)
-{
-    vector<level_id> candidates = _get_gozag_shop_candidates();
+    const gender_type gender = random_choose(GENDER_FEMALE, GENDER_MALE,
+                                             GENDER_NEUTER);
 
-    if (candidates.size())
-        _gozag_place_shop_offlevel(index, candidates);
-    else
-        _gozag_place_shop_here(index);
+    mprf(MSGCH_GOD, "%s invites you to visit %s %s%s%s.",
+                    shop->shop_name.c_str(),
+                    decline_pronoun(gender, PRONOUN_POSSESSIVE),
+                    shop_type_name(shop->type).c_str(),
+                    !shop->shop_suffix_name.empty() ? " " : "",
+                    shop->shop_suffix_name.c_str());
 }
 
 bool gozag_call_merchant()
