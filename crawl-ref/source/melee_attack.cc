@@ -3674,12 +3674,6 @@ int melee_attack::apply_damage_modifiers(int damage, int damage_max)
         frenzy_degree = as_mon->get_ench(ENCH_BATTLE_FRENZY).degree;
     else if (as_mon->has_ench(ENCH_ROUSED))
         frenzy_degree = as_mon->get_ench(ENCH_ROUSED).degree;
-    else
-    {
-        frenzy_degree = as_mon->aug_amount();
-        if (frenzy_degree <= 0)
-            frenzy_degree = -1;
-    }
 
     if (frenzy_degree != -1)
     {
