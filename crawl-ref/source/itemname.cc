@@ -2520,10 +2520,11 @@ void check_item_knowledge(bool unknown_items)
                 continue;
 
             // Curse scrolls are only created by Ashenzari.
-            if (i == OBJ_SCROLLS &&
-                (j == SCR_CURSE_WEAPON
-                 || j == SCR_CURSE_ARMOUR
-                 || j == SCR_CURSE_JEWELLERY))
+            if (i == OBJ_SCROLLS
+                && (j == SCR_CURSE_WEAPON
+                    || j == SCR_CURSE_ARMOUR
+                    || j == SCR_CURSE_JEWELLERY)
+                && !you_worship(GOD_ASHENZARI))
             {
                 continue;
             }
