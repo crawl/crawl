@@ -803,16 +803,21 @@ w:1
 
 @The_weapon@ sings out, "Sing loudly and carry a big sword!"
 
+@The_weapon@ ponders the difference in lifespan between man and sword.
+
 w:1
 @The_weapon@ says, "All work and no play makes @player_name@ a dull boy!"
 
 # Blue Oyster Cult "Black Blade"
-@The_weapon@ says, "I wish I'd pick another to be my killing tool."
+@The_weapon@ says, "I wish I'd pick another to be my killing [tool|fool]."
 
 @The_weapon@ hoarsely says, "Need a drink... quick! Stab something."
 
 w:1
 @The_weapon@ says, "You haven't happened to see my sheath laying around anywhere? I feel so exposed."
+
+w:1
+@The_weapon@ complains, "Oh, are your palms wet and greasy. But I allow you to wield me for a while."
 
 ############ speaking, low tension ############
 %%%%
