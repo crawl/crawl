@@ -566,10 +566,8 @@ three lists at a time, with varying prices.
 %%%%
 Call Merchant ability
 
-Sends funds to a merchant to help them set up shop in the dungeon. The shop may
-appear in an unvisited area of the Dungeon, the Vaults or the Depths, or near
-your location if there are no other appropriate locations for a store. The cost
-of funding a shop increases with the number of shops funded.{{
+Sends funds to a merchant to help them set up shop at your location. The cost of
+funding a shop increases with the number of shops funded.{{
     if you.race() == "Mummy" then
         return
     end

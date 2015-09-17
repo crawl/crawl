@@ -96,7 +96,6 @@ static void _place_extra_vaults();
 static void _place_chance_vaults();
 static void _place_minivaults();
 static int _place_uniques();
-static void _place_gozag_shop(dungeon_feature_type stair);
 static void _place_traps();
 static void _prepare_water();
 static void _check_doors();
@@ -307,9 +306,6 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
             {
                 for (monster_iterator mi; mi; ++mi)
                     gozag_set_bribe(*mi);
-
-                if (you.props.exists(GOZAG_ANNOUNCE_SHOP_KEY))
-                    unmark_offlevel_shop(level_id::current());
 
                 return true;
             }
@@ -2279,9 +2275,6 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
     _fixup_branch_stairs();
     fixup_misplaced_items();
 
-    if (crawl_state.game_standard_levelgen())
-        _place_gozag_shop(dest_stairs_type);
-
     link_items();
 
     if (!player_in_branch(BRANCH_COCYTUS)
@@ -3026,87 +3019,6 @@ static bool _builder_normal()
 
     _dgn_ensure_vault_placed(_build_primary_vault(vault), false);
     return true;
-}
-
-static void _place_gozag_shop(dungeon_feature_type stair)
-{
-    string key = make_stringf(GOZAG_SHOP_KEY,
-                              level_id::current().describe().c_str());
-
-    if (!you.props.exists(key))
-        return;
-
-    bool encompass = false;
-    for (const auto &type : env.level_layout_types)
-    {
-        if (type == "encompass")
-        {
-            encompass = true;
-            break;
-        }
-    }
-
-    vector<coord_weight> places;
-    const int dist_max = distance2(coord_def(0, 0), coord_def(20, 20));
-    const coord_def start_pos = dgn_find_nearby_stair(stair, you.pos(), true);
-    for (rectangle_iterator ri(0); ri; ++ri)
-    {
-        if (grd(*ri) != DNGN_FLOOR
-            || !(encompass || !map_masked(*ri, MMT_VAULT)))
-        {
-            continue;
-        }
-        const int dist2 = distance2(start_pos, *ri);
-        if (dist2 > dist_max)
-            continue;
-        places.emplace_back(*ri, dist_max - dist2);
-    }
-    coord_def *shop_place = random_choose_weighted(places);
-    if (!shop_place)
-        throw dgn_veto_exception("Cannot find place Gozag shop.");
-
-
-    // Player may have abandoned Gozag before arriving here; only generate
-    // the shop if they're still a follower.
-    if (!you_worship(GOD_GOZAG))
-    {
-        grd(*shop_place) = DNGN_ABANDONED_SHOP;
-        return;
-    }
-
-    string spec = you.props[key].get_string();
-    keyed_mapspec kmspec;
-    kmspec.set_feat(you.props[key].get_string(), false);
-    if (!kmspec.get_feat().shop.get())
-        die("Invalid shop spec?");
-    feature_spec feat = kmspec.get_feat();
-    shop_spec *spec_struct = feat.shop.get();
-    ASSERT(spec_struct);
-    place_spec_shop(*shop_place, *spec_struct);
-
-    shop_struct *shop = get_shop(*shop_place);
-    ASSERT(shop);
-
-    env.map_knowledge(*shop_place).set_feature(grd(*shop_place));
-    env.map_knowledge(*shop_place).flags |= MAP_MAGIC_MAPPED_FLAG;
-    env.pgrid(*shop_place) |= FPROP_SEEN_OR_NOEXP;
-    seen_notable_thing(grd(*shop_place), *shop_place);
-
-    const gender_type gender = random_choose(GENDER_FEMALE, GENDER_MALE,
-                                             GENDER_NEUTER);
-
-    string announce = make_stringf(
-                                   "%s invites you to visit %s %s%s%s.",
-                                   shop->shop_name.c_str(),
-                                   decline_pronoun(gender, PRONOUN_POSSESSIVE),
-                                   shop_type_name(shop->type).c_str(),
-                                   !shop->shop_suffix_name.empty() ? " " : "",
-                                   shop->shop_suffix_name.c_str());
-
-    you.props[GOZAG_ANNOUNCE_SHOP_KEY] = announce;
-
-    env.markers.add(new map_feature_marker(*shop_place,
-                                           DNGN_ABANDONED_SHOP));
 }
 
 // Shafts can be generated visible.

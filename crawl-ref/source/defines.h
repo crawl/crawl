@@ -300,9 +300,6 @@ const char * const MONSTER_NUMBER = "monster-number";
 const char * const CORPSE_NEVER_DECAYS = "corpse-no-decay";
 const char * const MONSTER_MID = "monster-mid";
 
-const char * const GOZAG_SHOP_KEY = "gozag_shop_%s";
-const char * const GOZAG_ANNOUNCE_SHOP_KEY = "gozag_announce_shop";
-
 const char * const NEUTRAL_BRIBE_KEY         = "gozag_bribed";
 const char * const FRIENDLY_BRIBE_KEY        = "gozag_permabribed";
 
