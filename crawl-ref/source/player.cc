@@ -8393,6 +8393,10 @@ void player_close_door(coord_def doorpos)
      you.turn_is_over = true;
 }
 
+bool player_hands_cursed() {
+    return you.props["ASHENZARI_HANDS_CURSED"];
+}
+
 /**
  * Return a string describing the player's hand(s) taking a given verb.
  *
