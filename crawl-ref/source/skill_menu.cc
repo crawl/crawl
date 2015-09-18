@@ -191,6 +191,7 @@ void SkillMenuEntry::set_display()
     switch (skm.get_state(SKM_VIEW))
     {
     case SKM_VIEW_TRAINING:  set_training();         break;
+    case SKM_VIEW_COST:      set_cost();             break;
     case SKM_VIEW_PROGRESS:  set_progress();         break;
     case SKM_VIEW_TRANSFER:  set_reskill_progress(); break;
     case SKM_VIEW_NEW_LEVEL: set_new_level();        break;
@@ -471,6 +472,7 @@ void SkillMenuEntry::set_title()
     case SKM_VIEW_PROGRESS:  m_progress->set_text("Progr"); break;
     case SKM_VIEW_TRANSFER:  m_progress->set_text("Trnsf"); break;
     case SKM_VIEW_POINTS:    m_progress->set_text("Points");break;
+    case SKM_VIEW_COST:      m_progress->set_text("Cost");  break;
     case SKM_VIEW_NEW_LEVEL: m_progress->set_text("> New"); break;
     default: die("Invalid view state.");
     }
@@ -483,6 +485,34 @@ void SkillMenuEntry::set_training()
     else
         m_progress->set_text(make_stringf(" %2d%%", you.training[m_sk]));
     m_progress->set_fg_colour(BROWN);
+}
+
+void SkillMenuEntry::set_cost()
+{
+    if (you.skills[m_sk] == 27)
+        return;
+    fixup_skills();
+    unsigned int average_cost = one_level_cost(0);
+    unsigned int next_level = (you.skills[m_sk] == 27) ? 0 :
+                               one_level_cost(m_sk);
+    if (skill_has_manual(m_sk))
+    {
+        next_level /= 2;
+        m_progress->set_fg_colour(LIGHTGREEN);
+    }
+    else
+    {
+        m_progress->set_fg_colour(LIGHTGREY);
+    }
+    float ratio = (float)next_level / average_cost;
+    if (next_level > 0 && average_cost > 0)
+    {
+        // Don't let the displayed number go greater than 4 characters
+        if (ratio < 100)
+            m_progress->set_text(make_stringf("%4.1f", ratio));
+        else
+            m_progress->set_text(make_stringf(" %d", (int) ratio));
+    }
 }
 
 SkillMenuSwitch::SkillMenuSwitch(string name, int hotkey) : m_name(name)
@@ -591,6 +621,9 @@ string SkillMenuSwitch::get_help()
         return "The progress of the knowledge transfer is displayed in "
                "<cyan>cyan</cyan> in front of the skill receiving the "
                "knowledge. The donating skill is marked with <cyan>*</cyan>.";
+    case SKM_VIEW_COST:
+        return "The current cost of gaining points in a skill. This takes "
+			   "aptitudes as well as manuals into account.";
     default: return "";
     }
 }
@@ -616,6 +649,7 @@ string SkillMenuSwitch::get_name(skill_menu_state state)
     case SKM_VIEW_TRANSFER:  return "transfer";
     case SKM_VIEW_POINTS:    return "points";
     case SKM_VIEW_NEW_LEVEL: return "new level";
+    case SKM_VIEW_COST:      return "cost";
     default: die ("Invalid switch state.");
     }
 }
@@ -1144,7 +1178,7 @@ void SkillMenu::init_switches()
             sw->set_state(SKM_VIEW_TRANSFER);
         }
     }
-
+    sw->add(SKM_VIEW_COST);
     if (you.wizard)
     {
         sw->add(SKM_VIEW_PROGRESS);

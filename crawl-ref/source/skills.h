@@ -35,6 +35,10 @@ typedef set<skill_type> skill_set;
 
 string skill_names(const skill_set &skills);
 
+int calc_median_skill_level();
+unsigned int one_level_cost(skill_type sk);
+unsigned int one_level_cost(int lev);
+
 unsigned int skill_cost_needed(int level);
 int calc_skill_cost(int skill_cost_level);
 void check_skill_cost_change();
