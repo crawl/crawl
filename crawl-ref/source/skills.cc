@@ -160,6 +160,38 @@ int calc_skill_cost(int skill_cost_level)
     ASSERT_RANGE(skill_cost_level, 1, 27 + 1);
     return cost[skill_cost_level - 1];
 }
+// Calculate the cost of going from level lev to lev+1
+unsigned int one_level_cost(int lev)
+{
+    if (lev > 26)
+            return 0;
+    return skill_exp_needed(lev+1, SK_FIGHTING, SP_HUMAN)-skill_exp_needed(lev,SK_FIGHTING,SP_HUMAN);
+}
+// As above, but takes the skill instead of the level
+unsigned int one_level_cost(skill_type sk)
+{
+    if (you.skills[sk] > 26)
+        return 0;
+    return skill_exp_needed(you.skills[sk]+1,sk)-skill_exp_needed(you.skills[sk],sk);
+}
+// Could be used to determine the baseline value used in comparing skill costs
+int calc_median_skill_level()
+{
+    vector<int> skill_levels;
+    for (skill_type i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
+    {
+        //Only count skills that we actually have at least one level in
+        if (you.skills[i] > 0)
+            skill_levels.push_back(you.skills[i] + (get_skill_percentage(i) > 50 ? 1 : 0));
+        }
+        //We have no skills for some reason, so just return 0
+        if (skill_levels.size() == 0)
+        {
+            return 0;
+        }
+        sort(skill_levels.begin(), skill_levels.end());
+        return skill_levels[skill_levels.size() / 2];
+}
 
 // Characters are actually granted skill points, not skill levels.
 // Here we take racial aptitudes into account in determining final
@@ -1451,7 +1483,6 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
                           27000, 29750 };
 
     ASSERT_RANGE(lev, 0, 27 + 1);
-
     return exp[lev] * species_apt_factor(sk, sp);
 }
 

@@ -4043,6 +4043,7 @@ enum skill_menu_state
     SKM_VIEW_PROGRESS,
     SKM_VIEW_TRAINING,
     SKM_VIEW_TRANSFER,
+    SKM_VIEW_COST,
 };
 
 enum skill_focus_mode

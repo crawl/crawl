@@ -74,7 +74,7 @@ public:
     void set_display();
     void set_name(bool keep_hotkey);
     void set_skill(skill_type sk = SK_NONE);
-
+    void set_cost();
 private:
     skill_type m_sk;
 
