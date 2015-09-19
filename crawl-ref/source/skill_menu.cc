@@ -100,7 +100,7 @@ static bool _show_skill(skill_type sk, skill_menu_state state)
 {
     switch (state)
     {
-    case SKM_SHOW_DEFAULT: return you.can_train[sk] || you.skills[sk];
+    case SKM_SHOW_DEFAULT: return you.can_train[sk] || you.skill(sk, 10);
     case SKM_SHOW_ALL:     return true;
     default:               return false;
     }
