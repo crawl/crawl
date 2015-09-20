@@ -142,6 +142,9 @@ void CLua::save_persist()
     // that we know that it hasn't been overwritten by a player version.
     execfile("dlua/persist.lua", true, true);
     callfn("c_save_persist", ">s", &persist);
+    if (Options.no_save)
+        return;
+
     FILE *f;
     const string persistfile = _get_persist_file();
 
@@ -167,6 +170,8 @@ void CLua::save_persist()
 
 void CLua::load_persist()
 {
+    if (Options.no_save)
+        return;
     string persistfile = _get_persist_file();
     if (!file_exists(persistfile))
         return;
