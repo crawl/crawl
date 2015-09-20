@@ -445,14 +445,14 @@ void mark_mon_equipment_seen(const monster *mons)
 
         item.flags |= ISFLAG_SEEN;
 
-        // ID brands of non-randart weapons held by enemies.
-        if (is_artefact(item))
-            continue;
-
+        // ID brands of weapons held by enemies.
         if (slot == MSLOT_WEAPON
             || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(mons))
         {
-            item.flags |= ISFLAG_KNOW_TYPE;
+            if (is_artefact(item))
+                artefact_learn_prop(item, ARTP_BRAND);
+            else
+                item.flags |= ISFLAG_KNOW_TYPE;
         }
     }
 }
