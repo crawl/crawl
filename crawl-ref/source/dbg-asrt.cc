@@ -428,7 +428,7 @@ static void _debug_marker_scan()
 
         if (type < MAT_FEATURE || type >= NUM_MAP_MARKER_TYPES)
         {
-            mprf(MSGCH_ERROR, "Makrer #%d at (%d, %d) has invalid type %d",
+            mprf(MSGCH_ERROR, "Marker #%d at (%d, %d) has invalid type %d",
                  i, marker->pos.x, marker->pos.y, (int) type);
         }
 
