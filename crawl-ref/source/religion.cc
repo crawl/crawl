@@ -3320,9 +3320,9 @@ static void _god_welcome_handle_gear()
     {
         // Seemingly redundant with auto_id_inventory(), but we don't want to
         // announce items where the only new information is their cursedness.
-        for (int i = 0; i < ENDOFPACK; i++)
-            if (you.inv[i].defined())
-                you.inv[i].flags |= ISFLAG_KNOW_CURSE;
+        for (auto &item : you.inv)
+            if (item.defined())
+                item.flags |= ISFLAG_KNOW_CURSE;
 
         set_ident_type(OBJ_SCROLLS, SCR_REMOVE_CURSE, true);
         auto_id_inventory();

@@ -742,22 +742,22 @@ bool curse_an_item(bool ignore_holy_wrath)
     }
 
     int count = 0;
-    int item  = ENDOFPACK;
+    item_def *found = nullptr;
 
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (auto &item : you.inv)
     {
-        if (!you.inv[i].defined())
+        if (!item.defined())
             continue;
 
-        if (is_weapon(you.inv[i])
-            || you.inv[i].base_type == OBJ_ARMOUR
-            || you.inv[i].base_type == OBJ_JEWELLERY)
+        if (is_weapon(item)
+            || item.base_type == OBJ_ARMOUR
+            || item.base_type == OBJ_JEWELLERY)
         {
-            if (you.inv[i].cursed())
+            if (item.cursed())
                 continue;
 
-            if (ignore_holy_wrath && you.inv[i].base_type == OBJ_WEAPONS
-                && get_weapon_brand(you.inv[i]) == SPWPN_HOLY_WRATH)
+            if (ignore_holy_wrath && item.base_type == OBJ_WEAPONS
+                && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
             {
                 continue;
             }
@@ -765,27 +765,24 @@ bool curse_an_item(bool ignore_holy_wrath)
             // Item is valid for cursing, so we'll give it a chance.
             count++;
             if (one_chance_in(count))
-                item = i;
+                found = &item;
         }
     }
 
     // Any item to curse?
-    if (item == ENDOFPACK)
+    if (!found)
         return false;
 
-    do_curse_item(you.inv[item], false);
+    do_curse_item(*found, false);
 
     return true;
 }
 
 void auto_id_inventory()
 {
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def& item = you.inv[i];
+    for (auto &item : you.inv)
         if (item.defined())
             god_id_item(item, false);
-    }
 }
 
 void do_curse_item(item_def &item, bool quiet)

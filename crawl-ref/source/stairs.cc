@@ -205,12 +205,9 @@ static void _clear_golubria_traps()
 
 static void _clear_prisms()
 {
-    for (int i = 0; i < MAX_MONSTERS; ++i)
-    {
-        monster* mons = &menv[i];
-        if (mons->type == MONS_FULMINANT_PRISM)
-            mons->reset();
-    }
+    for (auto &mons : menv)
+        if (mons.type == MONS_FULMINANT_PRISM)
+            mons.reset();
 }
 
 void leaving_level_now(dungeon_feature_type stair_used)

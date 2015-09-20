@@ -958,10 +958,7 @@ void maybe_shift_abyss_around_player()
         you.pet_target = MHITNOT;
 
 #ifdef DEBUG_DIAGNOSTICS
-    int j = 0;
-    for (int i = 0; i < MAX_ITEMS; ++i)
-        if (mitm[i].defined())
-            ++j;
+    int j = count_if(begin(mitm), end(mitm), mem_fn(&item_def::defined));
 
     dprf(DIAG_ABYSS, "Number of items present: %d", j);
 

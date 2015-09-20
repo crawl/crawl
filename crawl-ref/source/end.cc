@@ -217,9 +217,9 @@ NORETURN void screen_end_game(string text)
 
 NORETURN void end_game(scorefile_entry &se)
 {
-    for (int i = 0; i < ENDOFPACK; i++)
-        if (you.inv[i].defined() && item_type_unknown(you.inv[i]))
-            add_inscription(you.inv[i], "unknown");
+    for (auto &item : you.inv)
+        if (item.defined() && item_type_unknown(item))
+            add_inscription(item, "unknown");
 
     identify_inventory();
 

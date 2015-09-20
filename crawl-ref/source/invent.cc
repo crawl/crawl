@@ -7,6 +7,7 @@
 
 #include "invent.h"
 
+#include <algorithm> // any_of
 #include <cctype>
 #include <cstdlib>
 #include <cstring>
@@ -373,10 +374,8 @@ static bool _has_melded_armour()
 
 static bool _has_tran_unwearable_armour()
 {
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (const auto &item : you.inv)
     {
-        item_def &item(you.inv[i]);
-
         if (item.defined() && item.base_type == OBJ_ARMOUR
             && can_wear_armour(item, false, true)
             && !can_wear_armour(item, false, false))
@@ -389,10 +388,8 @@ static bool _has_tran_unwearable_armour()
 
 static bool _has_hand_evokable()
 {
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (const auto &item : you.inv)
     {
-        item_def &item(you.inv[i]);
-
         if (item.defined()
             && item_is_evokable(item, true, true, true, false, false)
             && !item_is_evokable(item, true, true, true, false, true))
@@ -1103,13 +1100,13 @@ bool is_item_selected(const item_def &i, int selector)
 static void _get_inv_items_to_show(vector<const item_def*> &v,
                                    int selector, int excluded_slot)
 {
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (const auto &item : you.inv)
     {
-        if (you.inv[i].defined()
-            && you.inv[i].link != excluded_slot
-            && is_item_selected(you.inv[i], selector))
+        if (item.defined()
+            && item.link != excluded_slot
+            && is_item_selected(item, selector))
         {
-            v.push_back(&you.inv[i]);
+            v.push_back(&item);
         }
     }
 }
@@ -1125,17 +1122,12 @@ static void _get_inv_items_to_show(vector<const item_def*> &v,
  */
 bool any_items_of_type(int selector, int excluded_slot)
 {
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (you.inv[i].defined()
-            && you.inv[i].link != excluded_slot
-            && is_item_selected(you.inv[i], selector))
-        {
-            return true;
-        }
-    }
-
-    return false;
+    return any_of(begin(you.inv), end(you.inv),
+                  [=] (const item_def &item) -> bool
+                  {
+                      return item.defined() && item.link != excluded_slot
+                          && is_item_selected(item, selector);
+                  });
 }
 
 // Use title = nullptr for stock Inventory title
@@ -2103,9 +2095,8 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
  */
 void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers)
 {
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (auto &item : you.inv)
     {
-        item_def& item(you.inv[i]);
         // can't charge non-evokers, or evokers that are full
         if (!is_xp_evoker(item) || evoker_debt(item.sub_type) == 0)
             continue;
@@ -2116,12 +2107,12 @@ void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers)
 
 void identify_inventory()
 {
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (auto &item : you.inv)
     {
-        if (you.inv[i].defined())
+        if (item.defined())
         {
-            set_ident_type(you.inv[i], true);
-            set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
+            set_ident_type(item, true);
+            set_ident_flags(item, ISFLAG_IDENT_MASK);
         }
     }
 }

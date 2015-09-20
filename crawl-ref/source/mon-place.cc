@@ -1168,11 +1168,11 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
 monster* get_free_monster()
 {
-    for (int i = 0; i < MAX_MONSTERS; ++i)
-        if (env.mons[i].type == MONS_NO_MONSTER)
+    for (auto &mons : menv)
+        if (mons.type == MONS_NO_MONSTER)
         {
-            env.mons[i].reset();
-            return &env.mons[i];
+            mons.reset();
+            return &mons;
         }
 
     return nullptr;
@@ -3651,10 +3651,9 @@ monster* mons_place(mgen_data mg)
 #ifdef DEBUG_MON_CREATION
     mprf(MSGCH_DIAGNOSTICS, "in mons_place()");
 #endif
-    int mon_count = 0;
-    for (int il = 0; il < MAX_MONSTERS; il++)
-        if (menv[il].type != MONS_NO_MONSTER)
-            mon_count++;
+    const int mon_count = count_if(begin(menv), end(menv),
+                                   [] (const monster &mons) -> bool
+                                   { return mons.type != MONS_NO_MONSTER; });
 
     if (mg.cls == WANDERING_MONSTER)
     {

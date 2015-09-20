@@ -1616,8 +1616,8 @@ static void tag_construct_you_items(writer &th)
 {
     // how many inventory slots?
     marshallByte(th, ENDOFPACK);
-    for (int i = 0; i < ENDOFPACK; ++i)
-        marshallItem(th, you.inv[i]);
+    for (const auto &item : you.inv)
+        marshallItem(th, item);
 
     marshallFixedBitVector<NUM_RUNE_TYPES>(th, you.runes);
     marshallByte(th, you.obtainable_runes);
@@ -5337,13 +5337,9 @@ static void tag_read_level_items(reader &th)
 #ifdef DEBUG_ITEM_SCAN
     // There's no way to fix this, even with wizard commands, so get
     // rid of it when restoring the game.
-    for (int i = 0; i < MAX_ITEMS; i++)
-    {
-        item_def &item(mitm[i]);
-
+    for (auto &item : mitm)
         if (item.pos.origin())
             item.clear();
-    }
 #endif
 }
 

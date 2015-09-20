@@ -557,10 +557,8 @@ void hints_dissection_reminder()
 
 static bool _advise_use_healing_potion()
 {
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (auto &obj : you.inv)
     {
-        item_def &obj(you.inv[i]);
-
         if (!obj.defined())
             continue;
 
@@ -783,10 +781,8 @@ static bool _mons_is_highlighted(const monster* mons)
 
 static bool _advise_use_wand()
 {
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (auto &obj : you.inv)
     {
-        item_def &obj(you.inv[i]);
-
         if (!obj.defined())
             continue;
 

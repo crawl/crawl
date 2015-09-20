@@ -6,6 +6,8 @@
 #ifndef FIXARY_H
 #define FIXARY_H
 
+#include <algorithm>
+
 #include "fixedvector.h"
 
 // ==========================================================================
@@ -86,8 +88,8 @@ public:
 
     void init(const TYPE& def)
     {
-        for (int i = 0; i < WIDTH; ++i)
-            mData[i].init(def);
+        for (auto &col : mData)
+            col.init(def);
     }
 
 protected:

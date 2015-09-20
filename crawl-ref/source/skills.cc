@@ -377,14 +377,14 @@ static void _erase_from_stop_train(const skill_set &can_train)
  */
 static void _check_inventory_skills()
 {
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (const auto &item : you.inv)
     {
         // Exit early if there's no more skill to check.
         if (you.stop_train.empty())
             return;
 
         skill_set skills;
-        if (!you.inv[i].defined() || !item_skills(you.inv[i], skills))
+        if (!item.defined() || !item_skills(item, skills))
             continue;
 
         _erase_from_stop_train(skills);

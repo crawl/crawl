@@ -642,24 +642,23 @@ bool eat_from_inventory()
     bool found_valid = false;
 
     vector<item_def *> food_items;
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (auto &item : you.inv)
     {
-        if (!you.inv[i].defined())
+        if (!item.defined())
             continue;
 
-        item_def *item = &you.inv[i];
         // Chunks should have been handled before.
-        if (item->base_type != OBJ_FOOD || item->sub_type == FOOD_CHUNK)
+        if (item.base_type != OBJ_FOOD || item.sub_type == FOOD_CHUNK)
             continue;
 
-        if (is_bad_food(*item))
+        if (is_bad_food(item))
             continue;
 
-        if (!can_eat(*item, true))
+        if (!can_eat(item, true))
         {
             if (!inedible_food)
             {
-                wonteat = item;
+                wonteat = &item;
                 inedible_food++;
             }
             else
@@ -668,14 +667,14 @@ bool eat_from_inventory()
                 // FIXME: Use a common check for herbivorous/carnivorous
                 //        dislikes, for e.g. "Blech! You need blood!"
                 ASSERT(wonteat->defined());
-                if (wonteat->sub_type != item->sub_type)
+                if (wonteat->sub_type != item.sub_type)
                     inedible_food++;
             }
             continue;
         }
 
         found_valid = true;
-        food_items.push_back(item);
+        food_items.push_back(&item);
     }
 
     if (found_valid)
@@ -774,26 +773,24 @@ int prompt_eat_chunks(bool only_auto)
     }
 
     // Then search through the inventory.
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (auto &item : you.inv)
     {
-        if (!you.inv[i].defined())
+        if (!item.defined())
             continue;
-
-        item_def *item = &you.inv[i];
 
         // Vampires can't eat anything in their inventory.
         if (you.species == SP_VAMPIRE)
             continue;
 
-        if (item->base_type != OBJ_FOOD || item->sub_type != FOOD_CHUNK)
+        if (item.base_type != OBJ_FOOD || item.sub_type != FOOD_CHUNK)
             continue;
 
         // Don't prompt for bad food types.
-        if (is_bad_food(*item))
+        if (is_bad_food(item))
             continue;
 
         found_valid = true;
-        chunks.push_back(item);
+        chunks.push_back(&item);
     }
 
     const bool easy_eat = Options.easy_eat_chunks || only_auto;

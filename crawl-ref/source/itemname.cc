@@ -58,12 +58,9 @@ static string _random_consonant_set(int seed);
 
 static void _maybe_identify_pack_item()
 {
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def& item = you.inv[i];
+    for (auto &item : you.inv)
         if (item.defined() && !get_ident_type(item))
             maybe_identify_base_type(item);
-    }
 }
 
 // quant_name is useful since it prints out a different number of items
@@ -2228,12 +2225,9 @@ bool set_ident_type(object_class_type basetype, int subtype, bool identify,
 
 void pack_item_identify_message(int base_type, int sub_type)
 {
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def& item = you.inv[i];
+    for (const auto &item : you.inv)
         if (item.defined() && item.is_type(base_type, sub_type))
             mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-    }
 }
 
 bool get_ident_type(const item_def &item)

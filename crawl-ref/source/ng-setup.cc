@@ -478,23 +478,24 @@ static void _setup_generic(const newgame_def& ng)
     // A first pass to link the items properly.
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (!you.inv[i].defined())
+        auto &item = you.inv[i];
+        if (!item.defined())
             continue;
-        you.inv[i].pos = ITEM_IN_INVENTORY;
-        you.inv[i].link = i;
-        you.inv[i].slot = index_to_letter(you.inv[i].link);
-        item_colour(you.inv[i]);  // set correct special and colour
+        item.pos = ITEM_IN_INVENTORY;
+        item.link = i;
+        item.slot = index_to_letter(item.link);
+        item_colour(item);  // set correct special and colour
     }
 
-    // A second pass to apply item_slot option.
-    for (int i = 0; i < ENDOFPACK; ++i)
+    // A second pass to apply the item_slot option.
+    for (auto &item : you.inv)
     {
-        if (!you.inv[i].defined())
+        if (!item.defined())
             continue;
-        if (!you.inv[i].props.exists("adjusted"))
+        if (!item.props.exists("adjusted"))
         {
-            you.inv[i].props["adjusted"] = true;
-            auto_assign_item_slot(you.inv[i]);
+            item.props["adjusted"] = true;
+            auto_assign_item_slot(item);
         }
     }
 

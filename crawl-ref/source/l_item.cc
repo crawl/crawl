@@ -7,6 +7,7 @@
 
 #include "l_libs.h"
 
+#include <algorithm>
 #include <sstream>
 
 #include "adjust.h"
@@ -413,19 +414,13 @@ static int l_item_do_stacks(lua_State *ls)
         lua_pushnil(ls);
     else if (lua_gettop(ls) == 0 || lua_isnil(ls, 1))
     {
-        bool any_stack = false;
-        // Optimisation: don't bother iterating if it can't possibly stack.
-        if (is_stackable_item(*first))
-        {
-            // Compare against all of inventory, return true for any match.
-            // Note that items_stack already handles undefined items.
-            for (int inv_slot = 0; inv_slot < ENDOFPACK; ++inv_slot)
-                if (items_stack(*first, you.inv[inv_slot]))
-                {
-                    any_stack = true;
-                    break;
-                }
-        }
+        const bool any_stack =
+            is_stackable_item(*first)
+            && any_of(begin(you.inv), end(you.inv),
+                      [&] (const item_def &item) -> bool
+                      {
+                          return items_stack(*first, item);
+                      });
         lua_pushboolean(ls, any_stack);
     }
     else if (ITEM(second, 1))

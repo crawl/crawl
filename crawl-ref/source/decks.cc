@@ -3223,9 +3223,8 @@ void init_deck(item_def &item)
 
 void shuffle_all_decks_on_level()
 {
-    for (int i = 0; i < MAX_ITEMS; ++i)
+    for (auto &item : mitm)
     {
-        item_def& item(mitm[i]);
         if (item.defined() && is_deck(item))
         {
 #ifdef DEBUG_DIAGNOSTICS
@@ -3242,9 +3241,8 @@ static bool _shuffle_inventory_decks()
 {
     bool success = false;
 
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (auto &item : you.inv)
     {
-        item_def& item(you.inv[i]);
         if (item.defined() && is_deck(item))
         {
 #ifdef DEBUG_DIAGNOSTICS

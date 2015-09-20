@@ -3240,20 +3240,18 @@ void MiscastEffect::_zot()
         case 10:
         {
             vector<string> wands;
-            for (int i = 0; i < ENDOFPACK; ++i)
+            for (auto &wand : you.inv)
             {
-                if (!you.inv[i].defined())
+                if (!wand.defined() || wand.base_type != OBJ_WANDS)
                     continue;
 
-                if (you.inv[i].base_type == OBJ_WANDS)
+                const int charges = wand.plus;
+                if (charges > 0 && coinflip())
                 {
-                    const int charges = you.inv[i].plus;
-                    if (charges > 0 && coinflip())
-                    {
-                        you.inv[i].plus -= min(1 + random2(wand_charge_value(you.inv[i].sub_type)), charges);
-                        // Display new number of charges when messaging.
-                        wands.push_back(you.inv[i].name(DESC_PLAIN));
-                    }
+                    const int charge_val = wand_charge_value(wand.sub_type);
+                    wand.plus -= min(1 + random2(charge_val), charges);
+                    // Display new number of charges when messaging.
+                    wands.push_back(wand.name(DESC_PLAIN));
                 }
             }
             if (!wands.empty())

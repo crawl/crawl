@@ -477,6 +477,6 @@ void tag_followers()
 
 void untag_followers()
 {
-    for (int m = 0; m < MAX_MONSTERS; ++m)
-        menv[m].flags &= (~MF_TAKING_STAIRS);
+    for (auto &mons : menv)
+        mons.flags &= ~MF_TAKING_STAIRS;
 }
