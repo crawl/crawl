@@ -21,7 +21,7 @@ public:
                               spell_type none,
                               spell_pick_vetoer veto_func = nullptr);
 
-    virtual bool veto(spell_type spell);
+    virtual bool veto(spell_type spell) override;
 
 protected:
     spell_pick_vetoer veto_func;

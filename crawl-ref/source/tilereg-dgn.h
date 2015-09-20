@@ -25,12 +25,12 @@ public:
     DungeonRegion(const TileRegionInit &init);
     virtual ~DungeonRegion();
 
-    virtual void render();
-    virtual void clear();
-    virtual int handle_mouse(MouseEvent &event);
-    virtual bool update_tip_text(string &tip);
-    virtual bool update_alt_text(string &alt);
-    virtual void on_resize();
+    virtual void render() override;
+    virtual void clear() override;
+    virtual int handle_mouse(MouseEvent &event) override;
+    virtual bool update_tip_text(string &tip) override;
+    virtual bool update_alt_text(string &alt) override;
+    virtual void on_resize() override;
 
     void load_dungeon(const crawl_view_buffer &vbuf, const coord_def &gc);
     void place_cursor(cursor_type type, const coord_def &gc);

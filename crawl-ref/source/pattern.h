@@ -43,7 +43,7 @@ public:
 
     bool empty() const { return !pattern.length(); }
 
-    bool valid() const
+    bool valid() const override
     {
         return isvalid
             && (compiled_pattern || (isvalid = compile()));
@@ -56,12 +56,12 @@ public:
         return matches(s, strlen(s));
     }
 
-    bool matches(const string &s) const
+    bool matches(const string &s) const override
     {
         return matches(s.c_str(), s.length());
     }
 
-    const string &tostring() const
+    const string &tostring() const override
     {
         return pattern;
     }

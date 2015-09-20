@@ -32,9 +32,9 @@ public:
     GridRegion(const TileRegionInit &init);
     virtual ~GridRegion();
 
-    virtual void clear();
-    virtual void render();
-    virtual void on_resize();
+    virtual void clear() override;
+    virtual void render() override;
+    virtual void on_resize() override;
 
     virtual void update() = 0;
     void place_cursor(const coord_def &cursor);
