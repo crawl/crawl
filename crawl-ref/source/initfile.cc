@@ -1687,27 +1687,8 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 }
 
 game_options::game_options()
+    : seed(0), no_save(false), language(LANG_EN), lang_name(nullptr)
 {
-    language = LANG_EN;
-    lang_name = 0;
-    fake_langs.clear();
-#if 0
-    if (Version::ReleaseType == VER_ALPHA)
-    {
-        set_lang(getenv("LC_ALL"))
-        || set_lang(getenv("LC_MESSAGES"))
-        || set_lang(getenv("LANG"));
-    }
-//#elif defined USE_TILE_LOCAL
-    if (Version::ReleaseType == VER_ALPHA)
-    {
-        char ln[30];
-        if (GetLocaleInfoA(LOCALE_USER_DEFAULT, LOCALE_SENGLANGUAGE, ln, sizeof(ln)))
-            set_lang(ln);
-    }
-#endif
-    seed = 0;
-    no_save = false;
     reset_options();
 }
 
