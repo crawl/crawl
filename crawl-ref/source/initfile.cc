@@ -959,7 +959,6 @@ void game_options::reset_options()
 #endif
 #endif
     terp_files.clear();
-    no_save              = false;
 
 #ifdef USE_TILE
     tile_show_items      = "!?/%=([)x}:|\\";
@@ -1708,6 +1707,7 @@ game_options::game_options()
     }
 #endif
     seed = 0;
+    no_save = false;
     reset_options();
 }
 
