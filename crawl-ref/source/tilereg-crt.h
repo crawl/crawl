@@ -24,12 +24,12 @@ public:
     CRTRegion(FontWrapper *font);
     virtual ~CRTRegion();
 
-    virtual void render();
-    virtual void clear();
+    virtual void render() override;
+    virtual void clear() override;
 
-    virtual int handle_mouse(MouseEvent& event);
+    virtual int handle_mouse(MouseEvent& event) override;
 
-    virtual void on_resize();
+    virtual void on_resize() override;
 
     void attach_menu(PrecisionMenu* menu);
     void detach_menu();
@@ -46,7 +46,7 @@ class CRTSingleSelect : public CRTRegion
 public:
     CRTSingleSelect(FontWrapper* font);
 
-    virtual int handle_mouse(MouseEvent& event);
+    virtual int handle_mouse(MouseEvent& event) override;
 };
 
 #endif

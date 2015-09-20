@@ -34,21 +34,21 @@ public:
 
     void set_small_layout(bool use_small_layout, const coord_def &windowsz);
 
-    virtual void update();
-    virtual void clear();
-    virtual void render();
-    virtual void on_resize();
-    virtual int handle_mouse(MouseEvent &event);
-    virtual bool update_tip_text(string &tip);
-    virtual bool update_tab_tip_text(string &tip, bool active);
-    virtual bool update_alt_text(string &alt);
+    virtual void update() override;
+    virtual void clear() override;
+    virtual void render() override;
+    virtual void on_resize() override;
+    virtual int handle_mouse(MouseEvent &event) override;
+    virtual bool update_tip_text(string &tip) override;
+    virtual bool update_tab_tip_text(string &tip, bool active) override;
+    virtual bool update_alt_text(string &alt) override;
 
-    virtual const string name() const { return ""; }
+    virtual const string name() const override { return ""; }
 
 protected:
-    virtual void pack_buffers();
-    virtual void draw_tag();
-    virtual void activate() {}
+    virtual void pack_buffers() override;
+    virtual void draw_tag() override;
+    virtual void activate() override {}
 
     bool invalid_index(int idx) const;
     bool active_is_valid() const;

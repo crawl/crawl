@@ -79,9 +79,9 @@ class FileLineInput : public LineInput
 public:
     FileLineInput(const char *name);
     ~FileLineInput();
-    bool eof() { return seen_eof || !f; };
-    bool error() { return !f; };
-    string get_line();
+    bool eof() override { return seen_eof || !f; };
+    bool error() override { return !f; };
+    string get_line() override;
 };
 
 // The file is always UTF-8, no BOM.
@@ -93,8 +93,8 @@ class UTF8FileLineInput : public LineInput
 public:
     UTF8FileLineInput(const char *name);
     ~UTF8FileLineInput();
-    bool eof() { return seen_eof || !f; };
-    bool error() { return !f; };
-    string get_line();
+    bool eof() override { return seen_eof || !f; };
+    bool error() override { return !f; };
+    string get_line() override;
 };
 #endif

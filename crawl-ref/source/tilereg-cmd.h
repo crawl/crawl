@@ -67,18 +67,18 @@ public:
                   const string help="Execute commands");
     int n_common_commands;
 
-    virtual void update();
-    virtual int handle_mouse(MouseEvent &event);
-    virtual bool update_tip_text(string &tip);
-    virtual bool update_tab_tip_text(string &tip, bool active);
-    virtual bool update_alt_text(string &alt);
+    virtual void update() override;
+    virtual int handle_mouse(MouseEvent &event) override;
+    virtual bool update_tip_text(string &tip) override;
+    virtual bool update_tab_tip_text(string &tip, bool active) override;
+    virtual bool update_alt_text(string &alt) override;
 
-    virtual const string name() const { return m_name; }
+    virtual const string name() const override { return m_name; }
 
 protected:
-    virtual void pack_buffers();
-    virtual void draw_tag();
-    virtual void activate();
+    virtual void pack_buffers() override;
+    virtual void draw_tag() override;
+    virtual void activate() override;
 
 private:
     vector<command_type> _common_commands;
