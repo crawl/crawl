@@ -15,7 +15,7 @@
 : DELAY_TIME = 100
 # whether to start playing immediately when a new game is started
 # unfortunately this doesn't work if the game starts with a -more-
-: AUTO_START = false
+: AUTO_START = true
 # experimental: do second lair rune branch before depths
 : EARLY_SECOND_RUNE = true
 # do non-water lair rune first, or pick randomly?
@@ -33,7 +33,7 @@
 # tab just takes a single action (for testing)
 : SINGLE_STEP = false
 # panic (stop) at full inventory
-: FULL_INVENTORY_PANIC = true
+: FULL_INVENTORY_PANIC = false
 
 # qw can play any starting combo. These ones are recommended:
 combo = DDBe.handaxe, GrBe.handaxe, MiBe.handaxe
