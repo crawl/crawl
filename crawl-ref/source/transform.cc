@@ -1008,7 +1008,11 @@ public:
      */
     string get_transform_description() const override
     {
-        return make_stringf("a %d-headed hydra.", you.heads());
+        const auto heads = you.heads();
+        const string headstr = (heads < 11 ? number_in_words(heads)
+                                           : to_string(heads))
+                             + "-headed hydra.";
+        return article_a(headstr);
     }
 
     /**
