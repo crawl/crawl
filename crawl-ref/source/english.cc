@@ -348,9 +348,17 @@ string article_a(const string &name, bool lowercase)
     {
         case 'a': case 'e': case 'i': case 'o': case 'u':
         case 'A': case 'E': case 'I': case 'O': case 'U':
-            // XXX: Hack
+            // XXX: Hack for hydras.
             if (starts_with(name, "one-"))
                 return a + name;
+            return an + name;
+        case '1':
+            // XXX: Hack^2 for hydras.
+            if (starts_with(name, "11-") || starts_with(name, "18-"))
+                return an + name;
+            return a + name;
+        case '8':
+            // Eighty, eight hundred, eight thousand, ...
             return an + name;
         default:
             return a + name;
