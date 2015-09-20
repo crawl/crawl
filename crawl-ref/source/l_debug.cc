@@ -172,12 +172,10 @@ LUAFN(debug_bouncy_beam)
 // If menv[] is full, dismiss all monsters not near the player.
 LUAFN(debug_cull_monsters)
 {
-    for (int il = 0; il < MAX_MONSTERS; il++)
-    {
-        if (menv[il].type == MONS_NO_MONSTER)
-            // At least one empty space in menv
+    // At least one empty space in menv
+    for (const auto &mons : menv)
+        if (mons.type == MONS_NO_MONSTER)
             return 0;
-    }
 
     mprf(MSGCH_DIAGNOSTICS, "menv[] is full, dismissing non-near monsters");
 

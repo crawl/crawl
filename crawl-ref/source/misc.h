@@ -10,6 +10,7 @@
 #include "target.h"
 
 #include <algorithm>
+#include <numeric> // iota
 #include <queue>
 
 extern const struct coord_def Compass[9];
@@ -144,10 +145,10 @@ struct simple_connect
     int connect;
     int compass_idx[8];
 
-    simple_connect()
+    simple_connect(int cmode, cost_T &cf, est_T &ef)
+        : cost_function(cf), estimate_function(ef), connect(cmode)
     {
-        for (unsigned i=0; i<8; i++)
-            compass_idx[i] = i;
+        iota(begin(compass_idx), end(compass_idx), 0);
     }
 
     void operator()(const position_node & node,
@@ -266,11 +267,8 @@ void search_astar(const coord_def & start,
     if (connect_mode < 1 || connect_mode > 8)
         connect_mode = 8;
 
-    simple_connect<cost_T, est_T> connect;
-    connect.connect = connect_mode;
-    connect.cost_function = connection_cost;
-    connect.estimate_function = cost_estimate;
-
+    simple_connect<cost_T, est_T> connect(connect_mode, connection_cost,
+                                          cost_estimate);
     search_astar(start, valid_target, connect, visited, candidates);
 }
 

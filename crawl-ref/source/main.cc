@@ -585,23 +585,14 @@ static void _wanderer_startup_message()
 
 static void _wanderer_note_items()
 {
-    ostringstream equip_str;
-    equip_str << you.your_name
-            << " set off with: ";
-    bool first_item = true;
-
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        item_def& item(you.inv[i]);
-        if (item.defined())
-        {
-            if (!first_item)
-                equip_str << ", ";
-            equip_str << item.name(DESC_A, false, true);
-            first_item = false;
-        }
-    }
-    take_note(Note(NOTE_MESSAGE, 0, 0, equip_str.str().c_str()));
+    const string equip_str =
+        you.your_name + " set off with: "
+        + comma_separated_fn(begin(you.inv), end(you.inv),
+                             [] (const item_def &item) -> string
+                             {
+                                 return item.name(DESC_A, false, true);
+                             }, ", ");
+    take_note(Note(NOTE_MESSAGE, 0, 0, equip_str));
 }
 
 /**

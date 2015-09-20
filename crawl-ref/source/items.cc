@@ -7,10 +7,12 @@
 
 #include "items.h"
 
+#include <algorithm>
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <functional> // mem_fn
 #include <limits>
 
 #include "adjust.h"
@@ -545,12 +547,12 @@ void unlink_item(int dest)
     mitm[dest].props.clear();
 
     // Look through all items for links to this item.
-    for (int c = 0; c < MAX_ITEMS; c++)
+    for (auto &item : mitm)
     {
-        if (mitm[c].defined() && mitm[c].link == dest)
+        if (item.defined() && item.link == dest)
         {
             // unlink item
-            mitm[c].link = old_link;
+            item.link = old_link;
 
             if (!linked)
             {
@@ -2616,9 +2618,9 @@ static void _autoinscribe_floor_items()
 
 static void _autoinscribe_inventory()
 {
-    for (int i = 0; i < ENDOFPACK; i++)
-        if (you.inv[i].defined())
-            _autoinscribe_item(you.inv[i]);
+    for (auto &item : you.inv)
+        if (item.defined())
+            _autoinscribe_item(item);
 }
 
 bool need_to_autoinscribe()
@@ -2828,18 +2830,12 @@ static bool _similar_jewellery(const item_def& pickup_item,
 static bool _item_different_than_inv(const item_def& pickup_item,
                                      item_comparer comparer)
 {
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        const item_def& inv_item(you.inv[i]);
-
-        if (!inv_item.defined())
-            continue;
-
-        if ((*comparer)(pickup_item, inv_item))
-            return false;
-    }
-
-    return true;
+    return none_of(begin(you.inv), end(you.inv),
+                   [&] (const item_def &inv_item) -> bool
+                   {
+                       return inv_item.defined()
+                           && comparer(pickup_item, inv_item);
+                   });
 }
 
 static bool _interesting_explore_pickup(const item_def& item)
@@ -3038,13 +3034,7 @@ void autopickup()
 
 int inv_count()
 {
-    int count = 0;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-        if (you.inv[i].defined())
-            count++;
-
-    return count;
+    return count_if(begin(you.inv), end(you.inv), mem_fn(&item_def::defined));
 }
 
 item_def *find_floor_item(object_class_type cls, int sub_type)

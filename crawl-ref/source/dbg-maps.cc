@@ -133,9 +133,9 @@ static bool _do_build_level()
 
     // Record floor items for objstat.
     if (crawl_state.obj_stat_gen)
-        for (int i = 0; i < MAX_ITEMS; ++i)
-            if (mitm[i].defined())
-                objstat_record_item(mitm[i]);
+        for (auto &item : mitm)
+            if (item.defined())
+                objstat_record_item(item);
 
     {
         unwind_bool wiz(you.wizard, true);

@@ -6,6 +6,7 @@
 #ifndef FIXVEC_H
 #define FIXVEC_H
 
+#include <algorithm>
 #include <cstdarg>
 #include <cstring>
 
@@ -127,8 +128,7 @@ FixedVector<TYPE, SIZE>::FixedVector(TYPE value0, TYPE value1, ...)
 template <class TYPE, int SIZE>
 void FixedVector<TYPE, SIZE>::init(const TYPE& def)
 {
-    for (int i = 0; i < SIZE; ++i)
-        mData[i] = def;
+    fill(::begin(mData), ::end(mData), def);
 }
 
 #endif    // FIXVEC_H

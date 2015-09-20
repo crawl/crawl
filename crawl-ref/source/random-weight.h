@@ -47,9 +47,9 @@ template <typename T, int SIZE>
 int random_choose_weighted(const FixedVector<T, SIZE>& choices)
 {
     int total = 0;
-    for (int i = 0; i < SIZE; ++i)
-        if (choices[i] > 0)
-            total += choices[i];
+    for (auto weight : choices)
+        if (weight > 0)
+            total += weight;
 
     int r = random2(total);
     int sum = 0;

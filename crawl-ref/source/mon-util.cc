@@ -7,7 +7,7 @@
 
 #include "mon-util.h"
 
-#include <algorithm> // find
+#include <algorithm>
 #include <cmath>
 #include <sstream>
 
@@ -5000,18 +5000,18 @@ void debug_monspells()
 // are handled properly.
 void reset_all_monsters()
 {
-    for (int i = 0; i < MAX_MONSTERS; i++)
+    for (auto &mons : menv)
     {
         // The monsters here have already been saved or discarded, so this
         // is the only place when a constricting monster can legitimately
         // be reset. Thus, clear constriction manually.
-        if (!invalid_monster(&menv[i]))
+        if (!invalid_monster(&mons))
         {
-            delete menv[i].constricting;
-            menv[i].constricting = nullptr;
-            menv[i].clear_constricted();
+            delete mons.constricting;
+            mons.constricting = nullptr;
+            mons.clear_constricted();
         }
-        menv[i].reset();
+        mons.reset();
     }
 
     env.mid_cache.clear();
@@ -5053,27 +5053,21 @@ vector<monster* > get_on_level_followers()
 // monsters, otherwise all of them
 int count_monsters(monster_type mtyp, bool friendly_only)
 {
-    int count = 0;
-    for (int mon = 0; mon < MAX_MONSTERS; mon++)
-    {
-        monster *mons = &menv[mon];
-        if (mons->alive() && mons->type == mtyp
-            && (!friendly_only || mons->friendly()))
-        {
-            count++;
-        }
-    }
-    return count;
+    return count_if(begin(menv), end(menv),
+                    [=] (const monster &mons) -> bool
+                    {
+                        return mons.alive() && mons.type == mtyp
+                            && (!friendly_only || mons.friendly());
+                    });
 }
 
 int count_allies()
 {
-    int count = 0;
-    for (int mon = 0; mon < MAX_MONSTERS; mon++)
-        if (menv[mon].alive() && menv[mon].friendly())
-            count++;
-
-    return count;
+    return count_if(begin(menv), end(menv),
+                    [] (const monster &mons) -> bool
+                    {
+                        return mons.alive() && mons.friendly();
+                    });
 }
 
 bool mons_stores_tracking_data(const monster* mons)

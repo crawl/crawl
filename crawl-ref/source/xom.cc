@@ -2158,14 +2158,13 @@ static void _xom_zero_miscast()
     vector<string> messages;
     vector<string> priority;
 
-    vector<int> inv_items;
-    for (int i = 0; i < ENDOFPACK; ++i)
+    vector<item_def *> inv_items;
+    for (auto &item : you.inv)
     {
-        const item_def &item(you.inv[i]);
         if (item.defined() && !item_is_equipped(item)
             && !item.is_critical())
         {
-            inv_items.push_back(i);
+            inv_items.push_back(&item);
         }
     }
 
@@ -2278,12 +2277,9 @@ static void _xom_zero_miscast()
         }
     }
 
-    if (feat_has_solid_floor(feat)
-        && !inv_items.empty())
+    if (feat_has_solid_floor(feat) && !inv_items.empty())
     {
-        int idx = inv_items[random2(inv_items.size())];
-
-        const item_def &item(you.inv[idx]);
+        const item_def &item = **random_iterator(inv_items);
 
         string name;
         if (item.quantity == 1)
@@ -2432,14 +2428,12 @@ static void _xom_zero_miscast()
     // Misc.
     if (!inv_items.empty())
     {
-        int idx = inv_items[random2(inv_items.size())];
+        item_def &item = **random_iterator(inv_items);
 
-        item_def* item = &you.inv[idx];
-
-        string name = item->name(DESC_YOUR, false, false, false);
+        string name = item.name(DESC_YOUR, false, false, false);
         string verb = coinflip() ? "glow" : "vibrate";
 
-        if (item->quantity == 1)
+        if (item.quantity == 1)
             verb += "s";
 
         messages.push_back(name + " briefly " + verb + ".");

@@ -143,11 +143,11 @@ void wizard_create_spec_monster_name()
 
         if (idx >= MAX_MONSTERS || menv[idx].type != MONS_KRAKEN)
         {
-            for (idx = 0; idx < MAX_MONSTERS; idx++)
+            for (auto &mons : menv)
             {
-                if (menv[idx].type == MONS_KRAKEN && menv[idx].alive())
+                if (mons.type == MONS_KRAKEN && mons.alive())
                 {
-                    menv[idx].colour = element_colour(ETC_KRAKEN);
+                    mons.colour = element_colour(ETC_KRAKEN);
                     return;
                 }
             }

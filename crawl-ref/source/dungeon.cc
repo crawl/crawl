@@ -1313,9 +1313,8 @@ static void _fixup_walls()
 // link_items() must be called after this function.
 void fixup_misplaced_items()
 {
-    for (int i = 0; i < MAX_ITEMS; i++)
+    for (auto &item : mitm)
     {
-        item_def& item(mitm[i]);
         if (!item.defined() || item.held_by_monster())
             continue;
 

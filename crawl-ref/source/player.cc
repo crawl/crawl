@@ -5159,8 +5159,8 @@ player::player()
     symbol          = MONS_PLAYER;
     form            = TRAN_NONE;
 
-    for (int i = 0; i < ENDOFPACK; i++)
-        inv[i].clear();
+    for (auto &item : inv)
+        item.clear();
     runes.reset();
     obtainable_runes = 15;
 
