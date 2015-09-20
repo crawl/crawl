@@ -861,6 +861,10 @@ int recharge_wand(bool known, const string &pre_msg)
         else // It's a rod.
         {
             bool work = false;
+            // Keep track of the original name so that the original enchantment
+            // is displayed in the 'glows for a moment' output
+            // This is consistent with scrolls of enchant weapon/armour
+            const string orig_name = wand.name(DESC_YOUR);
 
             if (wand.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT)
             {
@@ -893,7 +897,7 @@ int recharge_wand(bool known, const string &pre_msg)
             if (known && !pre_msg.empty())
                 mpr(pre_msg);
 
-            mprf("%s glows for a moment.", wand.name(DESC_YOUR).c_str());
+            mprf("%s glows for a moment.", orig_name.c_str());
         }
 
         you.wield_change = true;
