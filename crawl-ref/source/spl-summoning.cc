@@ -156,11 +156,13 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
     // If the player has bow skill, we will already have plain arrows
     // in the first element, so skip this
     if (you.skills[SK_BOWS] < 1)
+    {
         valid_sticks.sort([](const item_def* a, const item_def* b) -> bool
                              {
                                  return a->quantity < b->quantity;
                              }
                          );
+    }
     const int dur = min(3 + random2(pow) / 20, 5);
     int how_many_max = 1 + min(6, random2(pow) / 15);
 
