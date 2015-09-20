@@ -343,14 +343,14 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_HOBGOBLIN:
     case TILEP_MONS_ROBIN:
     case TILEP_MONS_TIAMAT:
-    case TILEP_MONS_TIAMAT+1:
-    case TILEP_MONS_TIAMAT+2:
-    case TILEP_MONS_TIAMAT+3:
-    case TILEP_MONS_TIAMAT+4:
-    case TILEP_MONS_TIAMAT+5:
-    case TILEP_MONS_TIAMAT+6:
-    case TILEP_MONS_TIAMAT+7:
-    case TILEP_MONS_TIAMAT+8:
+    case TILEP_MONS_TIAMAT_1:
+    case TILEP_MONS_TIAMAT_2:
+    case TILEP_MONS_TIAMAT_3:
+    case TILEP_MONS_TIAMAT_4:
+    case TILEP_MONS_TIAMAT_5:
+    case TILEP_MONS_TIAMAT_6:
+    case TILEP_MONS_TIAMAT_7:
+    case TILEP_MONS_TIAMAT_8:
     case TILEP_MONS_MERFOLK_IMPALER:
     case TILEP_MONS_TENGU:
     case TILEP_MONS_TENGU_CONJURER:
@@ -401,7 +401,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_SKELETON_SMALL:
     case TILEP_MONS_PSYCHE:
     case TILEP_MONS_DUVESSA:
-    case TILEP_MONS_DUVESSA+1:
+    case TILEP_MONS_DUVESSA_1:
         *ofs_x = 0;
         *ofs_y = -1;
         break;
@@ -535,8 +535,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -4;
         break;
     case TILEP_MONS_HELL_WIZARD:
-    case TILEP_MONS_HELL_WIZARD + 1:
-    case TILEP_MONS_HELL_WIZARD + 2:
+    case TILEP_MONS_HELL_WIZARD_1:
+    case TILEP_MONS_HELL_WIZARD_2:
         *ofs_x = 2;
         *ofs_y = -2;
         break;
