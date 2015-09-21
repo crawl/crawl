@@ -510,7 +510,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         handle_items_on_shaft(you.pos(), false);
 
         string howfar;
-        if (force_stair && shaft_depth > 1)
+        if (shaft_depth > 1)
             howfar = make_stringf(" for %d floors", shaft_depth);
 
         mprf("You %s a shaft%s!", you.airborne() ? "are sucked into"
