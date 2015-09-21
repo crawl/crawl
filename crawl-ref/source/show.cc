@@ -470,11 +470,11 @@ static void _update_monster(monster* mons)
 
     // ripple effect?
     if (grd(gp) == DNGN_SHALLOW_WATER
-        && mons->airborne()
-        && env.cgrid(gp) == EMPTY_CLOUD
+            && mons->airborne()
+            && env.cgrid(gp) == EMPTY_CLOUD
         || is_opaque_cloud(env.cgrid(gp))
-        && !mons->submerged()
-        && !mons->is_insubstantial())
+            && !mons->submerged()
+            && !mons->is_insubstantial())
     {
         _mark_invisible_at(gp);
         mons->unseen_pos = gp;
