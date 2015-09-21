@@ -501,7 +501,7 @@ void SkillMenuEntry::set_cost()
     }
     else
     {
-        m_progress->set_fg_colour(LIGHTGREY);
+        m_progress->set_fg_colour(CYAN);
     }
     auto ratio = (float)next_level / baseline;
     if (next_level > 0)
@@ -621,8 +621,18 @@ string SkillMenuSwitch::get_help()
                "<cyan>cyan</cyan> in front of the skill receiving the "
                "knowledge. The donating skill is marked with <cyan>*</cyan>.";
     case SKM_VIEW_COST:
-        return "The current cost of gaining points in a skill. This takes "
-			   "aptitudes as well as manuals into account.";
+    {
+        string result =
+               "The relative cost of raising each skill is in"
+               "<cyan>cyan</cyan>";
+        if (skm.is_set(SKMF_MANUAL))
+        {
+            result += " (or <lightgreen>green</lightgreen> if enhanced by a "
+                      "manual)";
+        }
+        result += ".\n";
+        return result;
+    }
     default: return "";
     }
 }

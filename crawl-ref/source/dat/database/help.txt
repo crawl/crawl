@@ -261,6 +261,7 @@ Apart from (de)selecting skills, you also have the following toggles:
 <w>*</w> :  Display all skills, even those you can't train yet.
 <w>?</w> :  Allows you to read the descriptions of skills.
 <w>_</w> :  Show or hide skill level modifications (drain, god powers, crosstraining).
+<w>!</w> :  Switch between displaying training percentage or skill cost.
 
                         <h>Training restrictions</h>
 Fighting, Throwing, Armour, Dodging, Stealth, Unarmed Combat, and Spellcasting
