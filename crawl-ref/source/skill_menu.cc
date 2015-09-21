@@ -500,9 +500,8 @@ void SkillMenuEntry::set_cost()
         m_progress->set_fg_colour(LIGHTGREEN);
     }
     else
-    {
         m_progress->set_fg_colour(CYAN);
-    }
+
     auto ratio = (float)next_level / baseline;
     // Don't let the displayed number go greater than 4 characters
     if (next_level > 0)
@@ -618,7 +617,7 @@ string SkillMenuSwitch::get_help()
     case SKM_VIEW_COST:
     {
         string result =
-               "The relative cost of raising each skill is in"
+               "The relative cost of raising each skill is in "
                "<cyan>cyan</cyan>";
         if (skm.is_set(SKMF_MANUAL))
         {
