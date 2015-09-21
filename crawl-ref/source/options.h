@@ -277,7 +277,8 @@ public:
     vector<text_pattern> note_messages;  // Interesting messages
     vector<pair<text_pattern, string> > autoinscriptions;
     vector<text_pattern> note_items;     // Objects to note
-    FixedBitVector<27+1> note_skill_levels;   // Skill levels to note
+    // Skill levels to note
+    FixedBitVector<MAX_SKILL_LEVEL + 1> note_skill_levels;
     vector<pair<text_pattern, string>> auto_spell_letters;
     vector<pair<text_pattern, string>> auto_item_letters;
 
