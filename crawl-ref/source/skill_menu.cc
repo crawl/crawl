@@ -504,14 +504,9 @@ void SkillMenuEntry::set_cost()
         m_progress->set_fg_colour(CYAN);
     }
     auto ratio = (float)next_level / baseline;
+    // Don't let the displayed number go greater than 4 characters
     if (next_level > 0)
-    {
-        // Don't let the displayed number go greater than 4 characters
-        if (ratio < 100)
-            m_progress->set_text(make_stringf("%4.1f", ratio));
-        else
-            m_progress->set_text(make_stringf(" %d", (int) ratio));
-    }
+        m_progress->set_text(make_stringf("%4.*f", ratio < 100 ? 1 : 0, ratio));
 }
 
 SkillMenuSwitch::SkillMenuSwitch(string name, int hotkey) : m_name(name)
