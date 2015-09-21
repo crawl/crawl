@@ -60,7 +60,9 @@ enum element_type
     ETC_DITHMENOS,      // Dithmenos altar colours
     ETC_ELEMENTAL,      // Cycling elemental colours
     ETC_INCARNADINE,    // Draining clouds coloured like raw flesh
+#if TAG_MAJOR_VERSION == 34
     ETC_SHINING,        // shining gold (Gozag)
+#endif
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 

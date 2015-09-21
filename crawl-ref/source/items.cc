@@ -3822,7 +3822,7 @@ colour_t item_def::get_colour() const
         case OBJ_MISCELLANY:
             return miscellany_colour();
         case OBJ_GOLD:
-            return special > 0 ? static_cast<colour_t>(ETC_SHINING) : (YELLOW);
+            return YELLOW;
         case OBJ_RUNES:
             return rune_colour();
         case OBJ_DETECTED:
