@@ -492,9 +492,8 @@ void SkillMenuEntry::set_cost()
     if (you.skills[m_sk] == 27)
         return;
     fixup_skills();
-    unsigned int average_cost = one_level_cost(0);
-    unsigned int next_level = (you.skills[m_sk] == 27) ? 0 :
-                               one_level_cost(m_sk);
+    auto baseline = skill_cost_baseline();
+    auto next_level = one_level_cost(m_sk);
     if (skill_has_manual(m_sk))
     {
         next_level /= 2;
@@ -504,8 +503,8 @@ void SkillMenuEntry::set_cost()
     {
         m_progress->set_fg_colour(LIGHTGREY);
     }
-    float ratio = (float)next_level / average_cost;
-    if (next_level > 0 && average_cost > 0)
+    auto ratio = (float)next_level / baseline;
+    if (next_level > 0)
     {
         // Don't let the displayed number go greater than 4 characters
         if (ratio < 100)
