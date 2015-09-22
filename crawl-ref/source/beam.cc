@@ -638,10 +638,18 @@ void bolt::initialise_fire()
     if (you.see_cell(source) && target == source && visible())
         seen = true;
 
-    // XXX: Should non-agents count as seeing invisible?
     // The agent may die during the beam's firing, need to save these now.
-    nightvision = agent() && agent()->nightvision();
-    can_see_invis = agent() && agent()->can_see_invisible();
+    // If the beam was reflected, assume it can "see" anything, since neither
+    // the reflector nor the original source was particularly aiming for this
+    // target.
+    if (reflections > 0)
+        nightvision = can_see_invis = true;
+    else
+    {
+        // XXX: Should non-agents count as seeing invisible?
+        nightvision = agent() && agent()->nightvision();
+        can_see_invis = agent() && agent()->can_see_invisible();
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     // Not a "real" tracer, merely a range/reachability check.
@@ -1196,6 +1204,7 @@ void bolt::affect_cell()
         {
             affect_monster(m);
             if ((hit == AUTOMATIC_HIT && !pierce && !ignores_monster(m))
+                // Assumes tracers will always have an agent!
                 && (!is_tracer || m->visible_to(agent())))
             {
                 finish_beam();
