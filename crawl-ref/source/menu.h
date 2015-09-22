@@ -290,7 +290,7 @@ public:
     virtual void draw_stock_item(int index, const MenuEntry *me) override;
     virtual void draw_more() override;
     virtual void set_offset(int lines) override { m_starty = lines; }
-    virtual void set_num_columns(int columns) {}
+    virtual void set_num_columns(int columns) override {}
 protected:
     int m_starty;
 };
@@ -561,7 +561,7 @@ public:
     virtual void add_text(const string& s, bool new_line = false,
                           int wrap_col = 0);
     virtual bool jump_to_hotkey(int keyin);
-    virtual vector<MenuEntry *> show(bool reuse_selections = false);
+    virtual vector<MenuEntry *> show(bool reuse_selections = false) override;
     int get_lastch() { return lastch; }
     virtual ~formatted_scroller();
 protected:

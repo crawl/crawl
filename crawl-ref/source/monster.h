@@ -177,8 +177,8 @@ public:
     bool del_ench(enchant_type ench, bool quiet = false, bool effect = true);
     bool lose_ench_duration(const mon_enchant &e, int levels);
     bool lose_ench_levels(const mon_enchant &e, int lev, bool infinite = false);
-    void lose_energy(energy_use_type et, int div = 1, int mult = 1);
-    void gain_energy(energy_use_type et, int div = 1, int mult = 1);
+    void lose_energy(energy_use_type et, int div = 1, int mult = 1) override;
+    void gain_energy(energy_use_type et, int div = 1, int mult = 1) override;
 
     void scale_hp(int num, int den);
     bool gain_exp(int exp, int max_levels_to_gain = 2);
@@ -233,8 +233,8 @@ public:
 
     // actor interface
     int mindex() const override;
-    int      get_hit_dice() const;
-    int      get_experience_level() const;
+    int      get_hit_dice() const override;
+    int      get_experience_level() const override;
     god_type deity() const override;
     bool     alive() const override;
     bool     defined() const { return alive(); }
