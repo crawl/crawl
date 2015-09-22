@@ -419,9 +419,9 @@ public:
     // Set player position without updating view geometry.
     void set_position(const coord_def &c) override;
     // Low-level move the player. Use this instead of changing pos directly.
-    void moveto(const coord_def &c, bool clear_net = true);
+    void moveto(const coord_def &c, bool clear_net = true) override;
     bool move_to_pos(const coord_def &c, bool clear_net = true,
-                     bool /*force*/ = false);
+                     bool /*force*/ = false) override;
     // Move the player during an abyss shift.
     void shiftto(const coord_def &c);
     bool blink_to(const coord_def& c, bool quiet = false) override;
@@ -632,7 +632,7 @@ public:
                            bool slow_cold_blood = true) override;
     void god_conduct(conduct_type thing_done, int level) override;
 
-    void make_hungry(int nutrition, bool silent = true);
+    void make_hungry(int nutrition, bool silent = true) override;
     bool poison(actor *agent, int amount = 1, bool force = false) override;
     bool sicken(int amount) override;
     void paralyse(actor *, int str, string source = "") override;
@@ -724,7 +724,7 @@ public:
     bool petrifying() const override;
     bool petrified() const override;
     bool liquefied_ground() const override;
-    bool incapacitated() const
+    bool incapacitated() const override
     {
         return actor::incapacitated() || duration[DUR_CLUMSY];
     }
