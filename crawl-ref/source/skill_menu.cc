@@ -491,7 +491,6 @@ void SkillMenuEntry::set_cost()
 {
     if (you.skills[m_sk] == MAX_SKILL_LEVEL)
         return;
-    fixup_skills();
     auto baseline = skill_cost_baseline();
     auto next_level = one_level_cost(m_sk);
     if (skill_has_manual(m_sk))
