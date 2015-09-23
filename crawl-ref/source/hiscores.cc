@@ -1539,8 +1539,10 @@ void scorefile_entry::init(time_t dt)
 
     save_rcs_version = crawl_state.save_rcs_version;
     if (crawl_state.minor_version > 0)
+    {
         save_tag_version = make_stringf("%d.%d", TAG_MAJOR_VERSION,
                                         crawl_state.minor_version);
+    }
 
     /*
      *  old scoring system (0.1-0.3):
