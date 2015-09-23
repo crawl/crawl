@@ -77,11 +77,9 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
         {
             e.preventDefault();
             e.stopPropagation();
-            if (message_history.length)
+            var lim = Math.min(message_history.length, history_limit)
+            if (message_history.length && history_pos < lim - 1)
             {
-                if (history_pos >= history_limit - 1)
-                    return true;
-
                 /* Save any unsent input line before reading history so it can
                  * be reloaded after going past the beginning of message
                  * history with down arrow. */
@@ -96,11 +94,8 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
         {
             e.preventDefault();
             e.stopPropagation();
-            if (message_history.length)
+            if (message_history.length && history_pos > -1)
             {
-                if (history_pos <= -1)
-                    return true;
-
                 if (history_pos == 0)
                 {
                     message = unsent_message;
