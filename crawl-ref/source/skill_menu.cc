@@ -1024,8 +1024,7 @@ void SkillMenu::toggle(skill_menu_switch sw)
         you.train_alt = tmp;
 
         reset_training();
-        if (get_state(SKM_VIEW) == SKM_VIEW_TRAINING)
-            refresh_display();
+        refresh_display();
         break;
     case SKM_DO:
         you.skill_menu_do = get_state(SKM_DO);
