@@ -51,7 +51,8 @@ game_state::game_state()
       tiles_disabled(false),
       title_screen(true),
 #endif
-      darken_range(nullptr), unsaved_macros(false), mon_act(nullptr)
+      darken_range(nullptr), unsaved_macros(false), mon_act(nullptr),
+      disables(), minor_version(-1), save_rcs_version()
 {
     reset_cmd_repeat();
     reset_cmd_again();
