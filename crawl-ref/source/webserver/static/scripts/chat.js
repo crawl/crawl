@@ -4,6 +4,10 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
             count: 0,
             names: ""
     };
+    var history_limit = 25;
+    var message_history = [];
+    var unsent_message = "";
+    var history_pos = -1;
 
     function update_spectators(data)
     {
@@ -47,6 +51,7 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
 
     function chat_message_send(e)
     {
+        // The Enter key sends a message.
         if (e.which == 13)
         {
             var content = $("#chat_input").val();
@@ -59,9 +64,54 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
                 });
                 $("#chat_input").val("");
                 $('#chat_history_container').scrollTop($('#chat_history_container')[0].scrollHeight);
+                message_history.unshift(content)
+                if (message_history.length > history_limit)
+                    message_history.length = history_limit;
+                history_pos = -1;
+                unsent_message = ""
             }
             return false;
         }
+        // Up arrow to access message history.
+        else if (e.which == 38)
+        {
+            e.preventDefault();
+            e.stopPropagation();
+            if (message_history.length)
+            {
+                if (history_pos >= history_limit - 1)
+                    return true;
+
+                /* Save any unsent input line before reading history so it can
+                 * be reloaded after going past the beginning of message
+                 * history with down arrow. */
+                var cur_line = $("#chat_input").val()
+                if (history_pos == -1)
+                    unsent_message = cur_line;
+                $("#chat_input").val(message_history[++history_pos]);
+            }
+        }
+        // Down arrow to access message history and any unsent message.
+        else if (e.which == 40)
+        {
+            e.preventDefault();
+            e.stopPropagation();
+            if (message_history.length)
+            {
+                if (history_pos <= -1)
+                    return true;
+
+                if (history_pos == 0)
+                {
+                    message = unsent_message;
+                    history_pos--;
+                }
+                else
+                    message = message_history[--history_pos];
+                $("#chat_input").val(message);
+            }
+        }
+        // Esc key to return to game.
         else if (e.which == 27)
         {
             e.preventDefault();
