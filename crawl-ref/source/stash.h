@@ -418,6 +418,5 @@ string stash_annotate_item(const char *s, const item_def *item,
 
 #define STASH_LUA_SEARCH_ANNOTATE "ch_stash_search_annotate_item"
 #define STASH_LUA_DUMP_ANNOTATE   "ch_stash_dump_annotate_item"
-#define STASH_LUA_VIEW_ANNOTATE   "ch_stash_view_annotate_item"
 
 #endif
