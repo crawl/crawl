@@ -641,7 +641,9 @@ void bolt::initialise_fire()
     // The agent may die during the beam's firing, need to save these now.
     // If the beam was reflected, assume it can "see" anything, since neither
     // the reflector nor the original source was particularly aiming for this
-    // target.
+    // target. WARNING: if you change this logic, keep in mind that
+    // menv[YOU_FAULTLESS] cannot be safely queried for properties like
+    // can_see_invisible.
     if (reflections > 0)
         nightvision = can_see_invis = true;
     else
