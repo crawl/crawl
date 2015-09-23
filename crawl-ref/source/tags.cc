@@ -3239,7 +3239,7 @@ static void tag_read_you(reader &th)
 
     EAT_CANARY;
 
-    unmarshallString(th);
+    crawl_state.save_rcs_version = unmarshallString(th);
 
     you.props.clear();
     you.props.read(th);

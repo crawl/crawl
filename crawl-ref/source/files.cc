@@ -1911,7 +1911,7 @@ static bool _restore_game(const string& filename)
 
     _restore_tagged_chunk(you.save, "you", TAG_YOU, "Save data is invalid.");
 
-    const int minorVersion = crawl_state.minorVersion;
+    const int minorVersion = crawl_state.minor_version;
 
     if (you.save->has_chunk(CHUNK("st", "stashes")))
     {
@@ -2199,7 +2199,7 @@ static bool _restore_tagged_chunk(package *save, const string name,
             end(-1, false, "\n%s %s\n", complaint, reason.c_str());
     }
 
-    crawl_state.minorVersion = inf.getMinorVersion();
+    crawl_state.minor_version = inf.getMinorVersion();
     try
     {
         tag_read(inf, tag);
