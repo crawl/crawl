@@ -1772,7 +1772,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         {
             if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
             {
-                mprf(MSGCH_WARN, "The divine experience leaves you feeling exhausted!");
+                mprf(MSGCH_WARN, "The divine experience drains your vigour!");
 
                 slow_player(random2(20));
             }
