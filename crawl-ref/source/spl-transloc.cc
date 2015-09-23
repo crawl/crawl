@@ -926,7 +926,8 @@ static int _disperse_monster(monster* mon, int pow)
     else
         monster_teleport(mon, true);
 
-    if (mon->check_res_magic(pow) <= 0)
+    // Moving the monster may have killed it in apply_location_effects.
+    if (mon->alive() && mon->check_res_magic(pow) <= 0)
         mon->confuse(&you, 1 + random2avg(pow / 10, 2));
 
     return 1;
