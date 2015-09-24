@@ -60,11 +60,12 @@ static int _stat_modifier(stat_type stat, bool innate_only);
  * @param s     The stat in question (e.g. STAT_STR).
  * @param base  Whether to disregard stat modifiers other than those from
  *              mutations.
- * @return      The player's maximum for the given stat; capped at 72.
+ * @return      The player's maximum for the given stat; capped at
+ *              MAX_STAT_VALUE.
  */
 int player::max_stat(stat_type s, bool base) const
 {
-    return min(base_stats[s] + _stat_modifier(s, base), 72);
+    return min(base_stats[s] + _stat_modifier(s, base), MAX_STAT_VALUE);
 }
 
 int player::max_strength() const
@@ -266,7 +267,7 @@ void jiyva_stat_action()
         {
             if (x != y && cur_stat[y] > 1
                 && target_stat[x] - cur_stat[x] > target_stat[y] - cur_stat[y]
-                && cur_stat[x] < 72)
+                && cur_stat[x] < MAX_STAT_VALUE)
             {
                 choices++;
                 if (one_chance_in(choices))
@@ -608,8 +609,7 @@ bool restore_stat(stat_type which_stat, int stat_gain,
 static void _normalize_stat(stat_type stat)
 {
     ASSERT(you.stat_loss[stat] >= 0);
-    // XXX: this doesn't prevent effective stats over 72.
-    you.base_stats[stat] = min<int8_t>(you.base_stats[stat], 72);
+    you.base_stats[stat] = min<int8_t>(you.base_stats[stat], MAX_STAT_VALUE);
 }
 
 static void _handle_stat_change(stat_type stat)
