@@ -1012,8 +1012,8 @@ void MiscastEffect::_hexes(int severity)
                 reroll = false;
                 break;
             }
-        break;
         }
+        break;
     }
 }
 
