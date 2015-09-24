@@ -200,7 +200,7 @@ local function spell_attack(x,y)
   -- Spells that could hurt you (clouds, fireball) will still trigger "are you
   -- sure" so that safeguard is not bypassed.
   move = 'z' .. AUTOMAGIC_SPELL_SLOT .. 'r' .. vector_move(x, y) .. 'f'
-  crawl.process_keys(move)
+  crawl.process_keys(move, true)
 end
 
 local function set_stop_level(key, value, mode)

@@ -106,6 +106,7 @@ struct game_state
     bool tiles_disabled;
     bool title_screen;
 #endif
+    bool invisible_targeting;
 
     // Area beyond which view should be darkened,  0 = disabled.
     targetter *darken_range;
