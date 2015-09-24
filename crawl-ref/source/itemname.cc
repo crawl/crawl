@@ -717,54 +717,85 @@ static const char* scroll_type_name(int scrolltype)
  * @return              A string describing the effect of the given jewellery
  *                      subtype.
  */
-const char* jewellery_effect_name(int jeweltype)
- {
-    switch (static_cast<jewellery_type>(jeweltype))
-     {
+const char* jewellery_effect_name(int jeweltype, bool terse)
+{
+    if (!terse) {
+        switch (static_cast<jewellery_type>(jeweltype))
+        {
 #if TAG_MAJOR_VERSION == 34
-    case RING_REGENERATION:          return "obsoleteness";
+        case RING_REGENERATION:          return "obsoleteness";
 #endif
-    case RING_PROTECTION:            return "protection";
-    case RING_PROTECTION_FROM_FIRE:  return "protection from fire";
-    case RING_POISON_RESISTANCE:     return "poison resistance";
-    case RING_PROTECTION_FROM_COLD:  return "protection from cold";
-    case RING_STRENGTH:              return "strength";
-    case RING_SLAYING:               return "slaying";
-    case RING_SEE_INVISIBLE:         return "see invisible";
-    case RING_INVISIBILITY:          return "invisibility";
-    case RING_LOUDNESS:              return "loudness";
-    case RING_TELEPORTATION:         return "teleportation";
-    case RING_EVASION:               return "evasion";
-    case RING_SUSTAIN_ATTRIBUTES:    return "sustain attributes";
-    case RING_STEALTH:               return "stealth";
-    case RING_DEXTERITY:             return "dexterity";
-    case RING_INTELLIGENCE:          return "intelligence";
-    case RING_WIZARDRY:              return "wizardry";
-    case RING_MAGICAL_POWER:         return "magical power";
-    case RING_FLIGHT:                return "flight";
-    case RING_LIFE_PROTECTION:       return "positive energy";
-    case RING_PROTECTION_FROM_MAGIC: return "protection from magic";
-    case RING_FIRE:                  return "fire";
-    case RING_ICE:                   return "ice";
+        case RING_PROTECTION:            return "protection";
+        case RING_PROTECTION_FROM_FIRE:  return "protection from fire";
+        case RING_POISON_RESISTANCE:     return "poison resistance";
+        case RING_PROTECTION_FROM_COLD:  return "protection from cold";
+        case RING_STRENGTH:              return "strength";
+        case RING_SLAYING:               return "slaying";
+        case RING_SEE_INVISIBLE:         return "see invisible";
+        case RING_INVISIBILITY:          return "invisibility";
+        case RING_LOUDNESS:              return "loudness";
+        case RING_TELEPORTATION:         return "teleportation";
+        case RING_EVASION:               return "evasion";
+        case RING_SUSTAIN_ATTRIBUTES:    return "sustain attributes";
+        case RING_STEALTH:               return "stealth";
+        case RING_DEXTERITY:             return "dexterity";
+        case RING_INTELLIGENCE:          return "intelligence";
+        case RING_WIZARDRY:              return "wizardry";
+        case RING_MAGICAL_POWER:         return "magical power";
+        case RING_FLIGHT:                return "flight";
+        case RING_LIFE_PROTECTION:       return "positive energy";
+        case RING_PROTECTION_FROM_MAGIC: return "protection from magic";
+        case RING_FIRE:                  return "fire";
+        case RING_ICE:                   return "ice";
 #if TAG_MAJOR_VERSION == 34
-    case RING_TELEPORT_CONTROL:      return "teleport control";
+        case RING_TELEPORT_CONTROL:      return "teleport control";
 #endif
-    case AMU_RAGE:              return "rage";
-    case AMU_CLARITY:           return "clarity";
-    case AMU_WARDING:           return "warding";
-    case AMU_RESIST_CORROSION:  return "resist corrosion";
-    case AMU_THE_GOURMAND:      return "gourmand";
+        case AMU_RAGE:              return "rage";
+        case AMU_CLARITY:           return "clarity";
+        case AMU_WARDING:           return "warding";
+        case AMU_RESIST_CORROSION:  return "resist corrosion";
+        case AMU_THE_GOURMAND:      return "gourmand";
 #if TAG_MAJOR_VERSION == 34
-    case AMU_CONSERVATION:      return "conservation";
-    case AMU_CONTROLLED_FLIGHT: return "controlled flight";
+        case AMU_CONSERVATION:      return "conservation";
+        case AMU_CONTROLLED_FLIGHT: return "controlled flight";
 #endif
-    case AMU_INACCURACY:        return "inaccuracy";
-    case AMU_RESIST_MUTATION:   return "resist mutation";
-    case AMU_GUARDIAN_SPIRIT:   return "guardian spirit";
-    case AMU_FAITH:             return "faith";
-    case AMU_STASIS:            return "stasis";
-    case AMU_REGENERATION:      return "regeneration";
-    default: return "buggy jewellery";
+        case AMU_INACCURACY:        return "inaccuracy";
+        case AMU_RESIST_MUTATION:   return "resist mutation";
+        case AMU_GUARDIAN_SPIRIT:   return "guardian spirit";
+        case AMU_FAITH:             return "faith";
+        case AMU_STASIS:            return "stasis";
+        case AMU_REGENERATION:      return "regeneration";
+        default: return "buggy jewellery";
+        }
+    } else {
+        if (jewellery_base_ability_string(jeweltype)[0] != '\0')
+            return jewellery_base_ability_string(jeweltype);
+        switch (static_cast<jewellery_type>(jeweltype))
+        {
+#if TAG_MAJOR_VERSION == 34
+        case RING_REGENERATION:          return "obsoleteness";
+#endif
+        case RING_PROTECTION:            return "AC";
+        case RING_PROTECTION_FROM_FIRE:  return "rF+";
+        case RING_POISON_RESISTANCE:     return "rPois";
+        case RING_PROTECTION_FROM_COLD:  return "rC+";
+        case RING_STRENGTH:              return "Str";
+        case RING_SLAYING:               return "Slay";
+        case RING_SEE_INVISIBLE:         return "sInv";
+        case RING_INVISIBILITY:          return "+Inv";
+        case RING_LOUDNESS:              return "Stlth-";
+        case RING_EVASION:               return "EV";
+        case RING_STEALTH:               return "Stlth+";
+        case RING_DEXTERITY:             return "Dex";
+        case RING_INTELLIGENCE:          return "Int";
+        case RING_MAGICAL_POWER:         return "MP+9";
+        case RING_FLIGHT:                return "+Fly";
+        case RING_LIFE_PROTECTION:       return "rN+";
+        case RING_PROTECTION_FROM_MAGIC: return "MR+";
+        case AMU_RAGE:                   return "+Rage";
+        case AMU_REGENERATION:           return "Regen";
+        default: return "buggy";
+        }
     }
 }
 
@@ -1220,6 +1251,8 @@ string ego_type_string(const item_def &item, bool terse, int override_brand)
         if (item.props.exists(HELLFIRE_BOLT_KEY))
             return "hellfire";
         return missile_brand_name(item, terse ? MBN_TERSE : MBN_BRAND);
+    case OBJ_JEWELLERY:
+        return jewellery_effect_name(item.sub_type, terse);
     default:
         return "";
     }
