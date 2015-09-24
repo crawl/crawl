@@ -73,7 +73,7 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
             return false;
         }
         // Up arrow to access message history.
-        else if (e.which == 38)
+        else if (e.which == 38 && !e.shiftKey)
         {
             e.preventDefault();
             e.stopPropagation();
@@ -90,7 +90,7 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
             }
         }
         // Down arrow to access message history and any unsent message.
-        else if (e.which == 40)
+        else if (e.which == 40 && !e.shiftKey)
         {
             e.preventDefault();
             e.stopPropagation();
