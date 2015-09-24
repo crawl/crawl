@@ -320,11 +320,8 @@ static int l_item_do_ego(lua_State *ls)
 
     const char *s = nullptr;
 
-    if ((item->base_type == OBJ_WEAPONS || item->base_type == OBJ_ARMOUR)
-        && item_type_known(*item) || item->base_type == OBJ_MISSILES)
-    {
+    if (item_type_known(*item) || item->base_type == OBJ_MISSILES)
         s = ego_type_string(*item, terse).c_str();
-    }
 
     if (s && *s)
         lua_pushstring(ls, s);

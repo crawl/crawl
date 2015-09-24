@@ -127,7 +127,7 @@ static void _print_quote(const describe_info &inf)
     process_quote<default_desc_proc>(proc, inf);
 }
 
-static const char* _jewellery_base_ability_string(int subtype)
+const char* jewellery_base_ability_string(int subtype)
 {
     switch (subtype)
     {
@@ -245,7 +245,7 @@ static vector<string> _randart_propnames(const item_def& item,
     if (item.base_type == OBJ_JEWELLERY
         && (item_ident(item, ISFLAG_KNOW_TYPE)))
     {
-        const char* type = _jewellery_base_ability_string(item.sub_type);
+        const char* type = jewellery_base_ability_string(item.sub_type);
         if (*type)
             propnames.push_back(type);
     }
