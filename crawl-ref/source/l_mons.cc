@@ -23,7 +23,7 @@
     {                                                                \
         luaL_argerror(ls, 1, "Invalid monster wrapper");             \
     } \
-    monster *name(___mw->mons)
+    monster *name(___mw ? ___mw->mons : nullptr)
 
 /////////////////////////////////////////////////////////////////////
 // Monster handling
