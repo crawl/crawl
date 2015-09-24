@@ -960,9 +960,10 @@ easy_confirm = (none | safe | all)
            none = force capitals on Y/N questions
            safe = force only on dangerous questions (default)
             all = never force capitals
-        WARNING TO KEYPAD USERS: The number 7 is mapped to the letter
-        'y', which can result in accidentally answering yes to
-        questions.
+        WARNING TO PUTTY USERS: If your Putty configuration sets the
+        numeric keypad to "NetHack mode", the keypad '7' will be mapped
+        to the letter 'y', which can result in accidentally answering
+        yes to questions.
 
 allow_self_target = (yes | no | prompt)
         Allow targeting yourself with risky magic (e.g., the spell
