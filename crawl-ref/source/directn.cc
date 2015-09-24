@@ -1812,6 +1812,9 @@ void direction_chooser::handle_wizard_command(command_type key_command,
 
 void direction_chooser::do_redraws()
 {
+    if (crawl_state.invisible_targeting)
+        return;
+
     // Check if our targeting behaviour forces a redraw.
     if (behaviour->should_redraw())
     {
