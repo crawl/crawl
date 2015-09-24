@@ -611,7 +611,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
     int total_damage = 0;
 
     bolt beam;
-    beam.source_id = agent->mid;
+    beam.source_id = agent ? agent->mid : MID_NOBODY;
     beam.foe_ratio = 80;
 
     switch (spell)
