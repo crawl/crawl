@@ -24,6 +24,7 @@
     Haran Pilpel
     Johanna Ploog
     David Lawrence Ramsey
+    J. Van
     Robert Vollmert
     Enne Walker
 
@@ -294,6 +295,5 @@ The Dungeon Crawl Stone Soup development team is:
     reaverb
     Sage
     Marc H. Thoben
-    Jason Van
     Chris West
     Samuel Wilson
