@@ -71,6 +71,12 @@ public:
         return *this;
     }
 
+    field_type &operator^=(field_type other)
+    {
+        flags ^= other.flags;
+        return *this;
+    }
+
     constexpr field_type operator|(field_type other) const
     {
         return field_type(flags | other.flags);
@@ -79,6 +85,11 @@ public:
     constexpr field_type operator&(field_type other) const
     {
         return field_type(flags & other.flags);
+    }
+
+    constexpr field_type operator^(field_type other) const
+    {
+        return field_type(flags ^ other.flags);
     }
 
     constexpr field_type operator~() const
@@ -132,6 +143,8 @@ public:
     inline constexpr fieldT operator|(flagT a, fieldT b) { return fieldT(a) | b; } \
     inline constexpr fieldT operator&(flagT a, flagT b)  { return fieldT(a) & b; } \
     inline constexpr fieldT operator&(flagT a, fieldT b) { return fieldT(a) & b; } \
+    inline constexpr fieldT operator^(flagT a, flagT b)  { return fieldT(a) ^ b; } \
+    inline constexpr fieldT operator^(flagT a, fieldT b) { return fieldT(a) ^ b; } \
     inline constexpr fieldT operator~(flagT a) { return ~fieldT(a); } \
     COMPILE_CHECK(is_enum<flagT>::value)
 // The last line above is really just to eat a semicolon; template
@@ -144,8 +157,8 @@ public:
  * This macro produces a typedef and several inline function definitions;
  * use it only at file/namespace scope. It requires a trailing semicolon.
  *
- * The operations ~, |, and (binary) & on flags or fields yields a field.
- * Fields also support &= and |=. Fields can be explicitly converted to
+ * The operations ~, |, ^, and (binary) & on flags or fields yield a field.
+ * Fields also support &=, |=, and ^=. Fields can be explicitly converted to
  * an integer of the enum's underlying type, or to bool. Note that in C++
  * using a bitfield expression as the condition of a control structure,
  * or as an operand of a logical operator, counts as explicit conversion
