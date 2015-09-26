@@ -637,6 +637,9 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             // no contradictory props
         case ARTP_CONFUSE:
             return !item.is_type(OBJ_JEWELLERY, AMU_CLARITY);
+        case ARTP_MAGICAL_POWER:
+            return item_class != OBJ_WEAPONS
+                   || get_weapon_brand(item) != SPWPN_ANTIMAGIC;
         default:
             return true;
     }
