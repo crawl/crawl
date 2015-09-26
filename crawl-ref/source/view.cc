@@ -53,6 +53,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
+#include "show.h"
 #include "showsymb.h"
 #include "state.h"
 #include "stringutil.h"
@@ -73,7 +74,7 @@
 
 //#define DEBUG_PANE_BOUNDS
 
-static bool _show_terrain = false;
+static layers_type _layers = LAYERS_ALL;
 
 crawl_view_geometry crawl_view;
 
@@ -763,12 +764,7 @@ string screenshot()
 
 int viewmap_flash_colour()
 {
-    if (_show_terrain)
-        return BLACK;
-    else if (you.berserk())
-        return RED;
-
-    return BLACK;
+	return _layers & LAYERS_ALL && you.berserk() ? RED : BLACK;
 }
 
 // Updates one square of the view area. Should only be called for square
@@ -1297,7 +1293,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
         mcache.clear_nonref();
 #endif
 
-    if (show_updates || _show_terrain)
+    if (show_updates || _layers == LAYERS_NONE)
     {
         if (!is_map_persistent())
             ash_detect_portals(false);
@@ -1308,7 +1304,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
         tiles.clear_overlays();
 #endif
 
-        show_init(_show_terrain);
+        show_init(_layers);
     }
 
     if (show_updates)
@@ -1320,7 +1316,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
     if (run_dont_draw || you.asleep())
     {
         // Reset env.show if we munged it.
-        if (_show_terrain)
+        if (_layers == LAYERS_NONE)
             show_init();
         return;
     }
@@ -1372,7 +1368,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
     you.flash_where = 0;
 
     // Reset env.show if we munged it.
-    if (_show_terrain)
+    if (_layers == LAYERS_NONE)
         show_init();
 
     _debug_pane_bounds();
@@ -1390,7 +1386,8 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         _draw_out_of_bounds(cell);
     else if (!crawl_view.in_los_bounds_g(gc))
         _draw_outside_los(cell, gc);
-    else if (gc == you.pos() && you.on_current_level && !_show_terrain
+    else if (gc == you.pos() && you.on_current_level
+             && _layers & LAYER_PLAYER
              && !crawl_state.game_is_arena()
              && !crawl_state.arena_suspended)
     {
@@ -1469,10 +1466,10 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     tile_apply_properties(gc, cell->tile);
 #endif
 #ifndef USE_TILE_LOCAL
-    if ((_show_terrain || Options.always_show_exclusions)
+    if ((_layers == LAYERS_NONE || Options.always_show_exclusions)
         && you.on_current_level
         && map_bounds(gc)
-        && (_show_terrain
+        && (_layers == LAYERS_NONE
             || gc != you.pos()
                && (env.map_knowledge(gc).monster() == MONS_NO_MONSTER
                    || !you.see_cell(gc)))
@@ -1486,21 +1483,53 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 #endif
 }
 
-void toggle_show_terrain()
+void reset_layers()
 {
-    _show_terrain = !_show_terrain;
-    if (_show_terrain)
-    {
-        mprf("Showing terrain only. Press <w>%s</w> to return to normal view.",
-             command_to_string(CMD_SHOW_TERRAIN).c_str());
-    }
-    else
-        mpr("Returning to normal view.");
+    _layers = LAYERS_ALL;
 }
 
-void reset_show_terrain()
+void config_layers()
 {
-    _show_terrain = false;
+    layers_type saved = _layers;
+    bool exit = false;
+
+    while (!exit) {
+        mprf(MSGCH_PROMPT, "Select layers to display: "
+                           "<%s>(m)onsters</%s>|"
+                           "<%s>(p)layer</%s>|"
+                           "<%s>(i)tems</%s>|"
+                           "<%s>(c)louds</%s>",
+           _layers & LAYER_MONSTERS ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTERS ? "lightgrey" : "darkgrey",
+           _layers & LAYER_PLAYER   ? "lightgrey" : "darkgrey",
+           _layers & LAYER_PLAYER   ? "lightgrey" : "darkgrey",
+           _layers & LAYER_ITEMS    ? "lightgrey" : "darkgrey",
+           _layers & LAYER_ITEMS    ? "lightgrey" : "darkgrey",
+           _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey",
+           _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey");
+        mprf(MSGCH_PROMPT, "Press any other key to exit.  Press | to invert all and exit.");
+
+        switch (get_ch()) {
+            case 'm': _layers ^= LAYER_MONSTERS; break;
+            case 'p': _layers ^= LAYER_PLAYER;   break;
+            case 'i': _layers ^= LAYER_ITEMS;    break;
+            case 'c': _layers ^= LAYER_CLOUDS;   break;
+            case CK_ESCAPE:
+                _layers = saved;
+                exit = true;
+                break;
+            case '|':
+                _layers ^= LAYERS_ALL;
+                exit = true;
+                break;
+            default:
+                exit = true;
+                break;
+        }
+
+        viewwindow();
+        clear_messages();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////
