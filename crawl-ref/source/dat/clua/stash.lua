@@ -94,6 +94,26 @@ function ch_stash_search_annotate_item(it)
     end
   end
 
+  if it.class(true) == "armour" and not it.artefact then
+    local props = {
+      ["troll"] = "Regen+",
+      ["steam"] = "rSteam",
+      ["mottled"] = "rNapalm",
+      ["quicksilver"] = "MR+",
+      ["swamp"] = "rPois",
+      ["fire"] = "rF++ rC-",
+      ["ice"] = "rC++ rF-",
+      ["pearl"] = "rN+",
+      ["storm"] = "rElec",
+      ["shadow"] = "Stlth++++",
+      ["gold"] = "rF+ rC+ rPois"
+    }
+    local t = it.name("base"):match("%w+")
+    if props[t] then
+      annot = annot .. "{" .. props[t] .. "} "
+    end
+  end
+
   if it.class(true) == "potion" and it.is_preferred_food then
     annot = annot .. "{food} "
   end
