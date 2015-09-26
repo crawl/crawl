@@ -600,7 +600,6 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         return false; // don't duplicate intrinsic props
 
     const object_class_type item_class = item.base_type;
-    const int item_type = item.sub_type;
 
     switch (prop)
     {
@@ -623,7 +622,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
             // works poorly with ranged weapons
         case ARTP_CAUSE_TELEPORTATION:
-            return item_type != OBJ_WEAPONS
+            return item_class != OBJ_WEAPONS
                    && !crawl_state.game_is_sprint()
                    && !extant_props[ARTP_PREVENT_TELEPORTATION];
             // no tele in sprint, and too annoying on weapons (swappable)
