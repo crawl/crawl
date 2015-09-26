@@ -27,6 +27,7 @@
 #include "unicode.h"
 #include "wiz-you.h"
 
+#ifdef WIZARD
 static uint8_t _jewellery_type_from_artefact_prop(const string &s
 #if TAG_MAJOR_VERSION == 34
                                                   , bool is_amulet
@@ -600,3 +601,4 @@ void wizard_load_dump_file()
             canned_msg(MSG_NOTHING_THERE);
     }
 }
+#endif // WIZARD
