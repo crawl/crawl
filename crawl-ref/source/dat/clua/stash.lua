@@ -77,6 +77,23 @@ function ch_stash_search_annotate_item(it)
     end
   end
 
+  if it.class(true) == "magical staff" and not it.artefact then
+    local props = {
+      ["air"] = "rElec",
+      ["cold"] = "rC+",
+      ["death"] = "rN+",
+      ["energy"] = "channel",
+      ["fire"] = "rF+",
+      ["poison"] = "rPois",
+      ["power"] = "MP+",
+      ["summoning"] = "Ward",
+      ["wizardry"] = "Wiz"
+    }
+    if props[it.subtype()] then
+      annot = annot .. "{" .. props[it.subtype()] .. "} "
+    end
+  end
+
   if it.class(true) == "potion" and it.is_preferred_food then
     annot = annot .. "{food} "
   end
