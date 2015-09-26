@@ -2250,7 +2250,7 @@ bool set_ident_type(object_class_type basetype, int subtype, bool identify,
 
     // We identified something, maybe we identified other things by process of
     // elimination.
-    if (identify)
+    if (identify && !(you.dead || crawl_state.updating_scores))
         _maybe_identify_pack_item();
 
     return true;
