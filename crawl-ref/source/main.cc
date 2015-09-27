@@ -2092,7 +2092,7 @@ void process_command(command_type cmd)
         if (player_on_single_stack() && !you.running)
             pickup(true);
         break;
-;   case CMD_SHOW_TERRAIN: config_layers(); break;
+    case CMD_SHOW_TERRAIN: config_layers(); break;
     case CMD_ADJUST_INVENTORY: adjust(); break;
 
     case CMD_SAFE_WAIT:

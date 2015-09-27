@@ -1293,7 +1293,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
         mcache.clear_nonref();
 #endif
 
-    if (show_updates || _layers == LAYERS_NONE)
+    if (show_updates || _layers != LAYERS_ALL)
     {
         if (!is_map_persistent())
             ash_detect_portals(false);
@@ -1316,7 +1316,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
     if (run_dont_draw || you.asleep())
     {
         // Reset env.show if we munged it.
-        if (_layers == LAYERS_NONE)
+        if (_layers != LAYERS_ALL)
             show_init();
         return;
     }
@@ -1368,7 +1368,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
     you.flash_where = 0;
 
     // Reset env.show if we munged it.
-    if (_layers == LAYERS_NONE)
+    if (_layers != LAYERS_ALL)
         show_init();
 
     _debug_pane_bounds();
@@ -1466,7 +1466,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     tile_apply_properties(gc, cell->tile);
 #endif
 #ifndef USE_TILE_LOCAL
-    if ((_layers == LAYERS_NONE || Options.always_show_exclusions)
+    if ((_layers != LAYERS_ALL || Options.always_show_exclusions)
         && you.on_current_level
         && map_bounds(gc)
         && (_layers == LAYERS_NONE
