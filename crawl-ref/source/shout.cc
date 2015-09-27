@@ -861,6 +861,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                             mi->name(DESC_PLAIN).c_str(),
                             mi->pos().x, mi->pos().y);
             behaviour_event(*mi, ME_ALERT, 0, where);
+            break;
 
         case SENSE_WEB_VIBRATION:
             if (!mons_class_flag(mi->type, M_WEB_SENSE))
