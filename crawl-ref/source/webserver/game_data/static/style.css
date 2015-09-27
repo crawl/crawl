@@ -88,6 +88,7 @@ body {
     height: 100%;
 }
 
+/* Some of these values are also hard coded to cell_renderer.js */
 #stats_hp_bar {
     background-color: #555753; /* darkgray */
 }

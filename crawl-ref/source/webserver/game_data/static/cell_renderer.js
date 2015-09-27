@@ -29,9 +29,15 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             elem.detach();
         }
 
-        healthy = $("#stats_hp_bar_full").css("background-color");
-        hp_spend = $("#stats_hp_bar_decrease").css("background-color");
-        magic = $("#stats_mp_bar_full").css("background-color");
+        // FIXME: CSS lookup doesn't work on Chrome after saving and loading a
+        // game, style information is missing for some reason.
+        // Use hard coded values instead.
+        healthy = "#8ae234";
+        hp_spend = "#a40000";
+        magic = "#729fcf";
+        // healthy = $("#stats_hp_bar_full").css("background-color");
+        // hp_spend = $("#stats_hp_bar_decrease").css("background-color");
+        // magic = $("#stats_mp_bar_full").css("background-color");
         magic_spend = "black";
     }
 
