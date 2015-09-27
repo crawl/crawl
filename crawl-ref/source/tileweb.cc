@@ -1545,13 +1545,15 @@ void TilesFramework::_send_everything()
 
     send_message("{\"msg\":\"flash\",\"col\":%d}", m_current_flash_colour);
 
-    _send_map(true);
-
     _send_cursor(CURSOR_MOUSE);
     _send_cursor(CURSOR_TUTORIAL);
 
      // Player
     _send_player(true);
+
+    // Map is sent after player, otherwise HP/MP bar can be left behind in the
+    // old location if the player has moved
+    _send_map(true);
 
     // Menus
     json_open_object();
