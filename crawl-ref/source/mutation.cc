@@ -97,8 +97,36 @@ static const body_facet_def _body_facets[] =
     { EQ_BOOTS, MUT_TALONS, 3 }
 };
 
+/**
+ * Conflicting mutation pairs. Entries are symmetric (so if A conflicts
+ * with B, B conflicts with A in the same way).
+ *
+ * The third value in each entry means:
+ *   0: If the new mutation is forced, remove all levels of the old
+ *      mutation. Either way, keep scanning for more conflicts and
+ *      do what they say (accepting the mutation if there are no
+ *      further conflicts).
+ *
+ *  -1: If the new mutation is forced, remove all levels of the old
+ *      mutation and scan for more conflicts. If it is not forced,
+ *      fail at giving the new mutation.
+ *
+ *   1: If the new mutation is temporary, just allow the conflict.
+ *      Otherwise, trade off: delete one level of the old mutation,
+ *      don't give the new mutation, and consider it a success. 
+ *
+ * It makes sense to have two entries for the same pair, one with value 0
+ * and one with 1: that would replace all levels of the old mutation if
+ * forced, or a single level if not forced. However, the 0 entry must
+ * precede the 1 entry; so if you re-order this list, keep all the 0s
+ * before all the 1s.
+ */
 static const int conflict[][3] =
 {
+    { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
+    { MUT_REGENERATION,        MUT_SLOW_HEALING,           0},
+    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
+    { MUT_FAST,                MUT_SLOW,                   0},
 #if TAG_MAJOR_VERSION == 34
     { MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK,          1},
 #endif
@@ -114,10 +142,6 @@ static const int conflict[][3] =
     { MUT_REGENERATION,        MUT_SLOW_HEALING,           1},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
     { MUT_FAST,                MUT_SLOW,                   1},
-    { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
-    { MUT_REGENERATION,        MUT_SLOW_HEALING,           0},
-    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
-    { MUT_FAST,                MUT_SLOW,                   0},
     { MUT_BREATHE_FLAMES,      MUT_SPIT_POISON,           -1},
     { MUT_FANGS,               MUT_BEAK,                  -1},
     { MUT_ANTENNAE,            MUT_HORNS,                 -1},
