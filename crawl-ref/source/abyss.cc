@@ -56,7 +56,6 @@
 const coord_def ABYSS_CENTRE(GXM / 2, GYM / 2);
 
 static const int ABYSSAL_RUNE_MAX_ROLL = 200;
-static const int ABYSSAL_RUNE_MIN_LEVEL = 3;
 
 abyss_state abyssal_state;
 
