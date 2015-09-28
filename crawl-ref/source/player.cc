@@ -3549,8 +3549,6 @@ void display_char_status()
     if (you.species == SP_VAMPIRE)
         _display_vampire_status();
 
-    // A hard-coded duration/status list used to be used here. This list is no
-    // longer hard-coded. May 2014. -reaverb
     status_info inf;
     for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {
