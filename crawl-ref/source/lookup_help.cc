@@ -1130,7 +1130,8 @@ static branch_type _rune_to_branch(int rune)
     }
 }
 
-// Note: doesn't return any rune for Pandemonium
+// Note: doesn't return any rune for Pandemonium. Doesn't return
+// rune_type so we don't have to include itemprop-enum.h in our header.
 int branch_to_rune(branch_type br)
 {
     switch (br)
