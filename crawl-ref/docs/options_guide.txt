@@ -693,6 +693,14 @@ always_show_exclusions = true
         This option has no effect in tiles builds, where exclusions are
         always shown both in the viewport and on the level map.
 
+layers_toggle = monsters, player, items, clouds
+        The layers to hide when using the '|' command.
+
+layers_menu = false
+        If true, the '|' command also displays a menu to situationally
+        toggle any of the layers.  The initial state is still determined
+        by the layers_toggle option, if set.
+
 3-f     Travel and Exploration.
 -------------------------------
 
