@@ -2580,8 +2580,6 @@ static string _status_mut_abilities(int sw)
     string text = "<w>@:</w> ";
     vector<string> status;
 
-    // A hard-coded duration/status list used to be used here. This list is no
-    // longer hard-coded. May 2014. -reaverb
     status_info inf;
     for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {
