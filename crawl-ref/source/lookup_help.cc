@@ -1147,7 +1147,7 @@ int branch_to_rune(branch_type br)
         case BRANCH_COCYTUS:    return RUNE_COCYTUS;
         case BRANCH_TARTARUS:   return RUNE_TARTARUS;
         case BRANCH_ABYSS:      return RUNE_ABYSSAL;
-        default:                return 0;
+        default:                return NUM_RUNE_TYPES;
     }
 }
 
