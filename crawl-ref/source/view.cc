@@ -764,7 +764,7 @@ string screenshot()
 
 int viewmap_flash_colour()
 {
-	return _layers & LAYERS_ALL && you.berserk() ? RED : BLACK;
+    return _layers & LAYERS_ALL && you.berserk() ? RED : BLACK;
 }
 
 // Updates one square of the view area. Should only be called for square
@@ -1488,7 +1488,7 @@ void reset_layers()
     _layers = LAYERS_ALL;
 }
 
-void config_layers()
+static void _config_layers_menu()
 {
     layers_type saved = _layers;
     bool exit = false;
@@ -1506,8 +1506,10 @@ void config_layers()
            _layers & LAYER_ITEMS    ? "lightgrey" : "darkgrey",
            _layers & LAYER_ITEMS    ? "lightgrey" : "darkgrey",
            _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey",
-           _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey");
-        mprf(MSGCH_PROMPT, "Press any other key to exit.  Press | to invert all and exit.");
+           _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey"
+        );
+        mprf(MSGCH_PROMPT, "Press <w>%s</w> to return to full view.  Press any other key to exit.",
+             command_to_string(CMD_SHOW_TERRAIN).c_str());
 
         switch (get_ch()) {
             case 'm': _layers ^= LAYER_MONSTERS; break;
@@ -1519,7 +1521,7 @@ void config_layers()
                 exit = true;
                 break;
             case '|':
-                _layers ^= LAYERS_ALL;
+                _layers = LAYERS_ALL;
                 exit = true;
                 break;
             default:
@@ -1529,6 +1531,23 @@ void config_layers()
 
         viewwindow();
         clear_messages();
+    }
+}
+
+void config_layers()
+{
+    _layers ^= Options.layers_toggle;
+
+    viewwindow();
+
+    if (Options.layers_menu)
+        _config_layers_menu();
+    else {
+        if (_layers == LAYERS_ALL)
+            clear_messages();
+        else
+            mprf(MSGCH_PROMPT, "Hiding layers.  Press <w>%s</w> to return to full view.",
+                 command_to_string(CMD_SHOW_TERRAIN).c_str());
     }
 }
 
