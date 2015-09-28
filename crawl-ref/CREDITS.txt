@@ -286,13 +286,13 @@ The Dungeon Crawl Stone Soup development team is:
     John McCartney
     Steve Melenchuk
     Neil Middleton
+    Seve Monahan
     Neil Moore
     Steven Noonan
     Stefan O'Rear
     Charles Otto
     Aaron Pixton
     David Ploog
-    reaverb
     Sage
     Marc H. Thoben
     Chris West
