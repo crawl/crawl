@@ -128,9 +128,8 @@ const char* missile_brand_name(const item_def& item, mbn_type t);
 bool item_type_has_ids(object_class_type base_type);
 bool get_ident_type(const item_def &item);
 bool get_ident_type(object_class_type basetype, int subtype);
-bool set_ident_type(item_def &item, bool identify, bool force = false);
-bool set_ident_type(object_class_type basetype, int subtype, bool identify,
-                    bool force = false);
+bool set_ident_type(item_def &item, bool identify);
+bool set_ident_type(object_class_type basetype, int subtype, bool identify);
 void pack_item_identify_message(int base_type, int sub_type);
 
 string item_prefix(const item_def &item, bool temp = true);
