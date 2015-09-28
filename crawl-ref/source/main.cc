@@ -762,7 +762,10 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('I'): debug_item_statistics(); break;
 
     // case 'j': break;
-    case 'J': jiyva_eat_offlevel_items(); break;
+    case 'J':
+        mpr("Running Jiyva off-level sacrifice.");
+        jiyva_eat_offlevel_items();
+        break;
     // case CONTROL('J'): break;
 
     case 'k':
@@ -782,7 +785,10 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'M': wizard_create_spec_monster(); break;
     // case CONTROL('M'): break; // XXX do not use, menu command
 
-    case 'n': you.set_gold(0); break;
+    case 'n':
+        mpr("Setting gold to 0.");
+        you.set_gold(0);
+        break;
     // case 'N': break;
     // case CONTROL('N'): break;
 
@@ -857,7 +863,10 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '!': wizard_memorise_spec_spell(); break;
     case '@': wizard_set_stats(); break;
     case '#': wizard_load_dump_file(); break;
-    case '$': you.add_gold(1000); break;
+    case '$':
+        mpr("Adding 1000 gold.");
+        you.add_gold(1000);
+        break;
     case '%': wizard_create_spec_object_by_name(); break;
     case '^': wizard_set_piety(); break;
     case '&': wizard_list_companions(); break;

@@ -414,7 +414,10 @@ void wizard_tweak_object()
 
         msgwin_get_line("New value? ", specs, sizeof(specs));
         if (specs[0] == '\0')
+        {
+            canned_msg(MSG_OK);
             return;
+        }
 
         char *end;
         const bool hex = (keyin == 'e');
@@ -429,7 +432,10 @@ void wizard_tweak_object()
         }
 
         if (end == specs)
+        {
+            canned_msg(MSG_OK);
             return;
+        }
 
         if (keyin == 'a')
             you.inv[item].plus = new_val;
@@ -642,10 +648,16 @@ void wizard_uncurse_item()
 
         if (item.cursed())
             do_uncurse_item(item);
-        else if (_item_type_can_be_cursed(item.base_type))
-            do_curse_item(item);
         else
-            mpr("That type of item cannot be cursed.");
+        {
+            if (!_item_type_can_be_cursed(item.base_type))
+            {
+                mpr("That type of item cannot be cursed.");
+                return;
+            }
+            do_curse_item(item);
+        }
+        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
     }
 }
 
@@ -1458,7 +1470,7 @@ void debug_item_statistics()
     switch (keyin)
     {
     case 'a': _debug_acquirement_stats(ostat); break;
-    case 'b': _debug_rap_stats(ostat);
+    case 'b': _debug_rap_stats(ostat); break;
     default:
         canned_msg(MSG_OK);
         break;
