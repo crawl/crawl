@@ -2199,12 +2199,12 @@ bool item_type_known(const object_class_type base_type, const int sub_type)
     return you.type_ids[base_type][sub_type];
 }
 
-bool set_ident_type(item_def &item, bool identify, bool force)
+bool set_ident_type(item_def &item, bool identify)
 {
     if (is_artefact(item) || crawl_state.game_is_arena())
         return false;
 
-    if (!set_ident_type(item.base_type, item.sub_type, identify, force))
+    if (!set_ident_type(item.base_type, item.sub_type, identify))
         return false;
 
     if (in_inventory(item))
@@ -2230,8 +2230,7 @@ bool set_ident_type(item_def &item, bool identify, bool force)
     return true;
 }
 
-bool set_ident_type(object_class_type basetype, int subtype, bool identify,
-                    bool force)
+bool set_ident_type(object_class_type basetype, int subtype, bool identify)
 {
     preserve_quiver_slots p;
 
