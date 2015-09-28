@@ -673,7 +673,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         if (old_level.branch == BRANCH_ABYSS)
         {
             mprf(MSGCH_BANISHMENT, "You plunge deeper into the Abyss.");
-            if (!you.runes[RUNE_ABYSSAL] && you.depth > 2)
+            if (!you.runes[RUNE_ABYSSAL] && you.depth >= ABYSSAL_RUNE_MIN_LEVEL)
                 mpr("The abyssal Rune of Zot can be found at this depth.");
             break;
         }
