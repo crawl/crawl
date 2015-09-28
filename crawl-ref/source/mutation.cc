@@ -113,7 +113,7 @@ static const body_facet_def _body_facets[] =
  *
  *   1: If the new mutation is temporary, just allow the conflict.
  *      Otherwise, trade off: delete one level of the old mutation,
- *      don't give the new mutation, and consider it a success. 
+ *      don't give the new mutation, and consider it a success.
  *
  * It makes sense to have two entries for the same pair, one with value 0
  * and one with 1: that would replace all levels of the old mutation if

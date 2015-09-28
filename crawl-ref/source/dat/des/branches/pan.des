@@ -36,7 +36,7 @@ function pan_lord_epilogue(name)
 
     crawl.mpr(msgs[name], "warning")
     crawl.mpr("The mighty Pandemonium lord " .. name .. " resides here.", "warning")
-    -- Same message as branch_runes from lookup_help.cc
+    -- Counterpart to branch_rune_desc from lookup_help.cc
     crawl.mpr("They guard the " .. runes[name] .. " rune of Zot.")
     crawl.take_note('Entered the realm of ' .. name .. '.')
     crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.', "")
