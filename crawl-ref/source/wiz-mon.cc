@@ -356,6 +356,7 @@ void wizard_spawn_control()
             const int rate = atoi(specs);
             if (rate || specs[0] == '0')
             {
+                mprf("Setting monster spawn rate to %i.", rate);
                 env.spawn_random_rate = rate;
                 done = true;
             }
@@ -384,6 +385,7 @@ void wizard_spawn_control()
             const int num = min(atoi(specs), max_spawn);
             if (num > 0)
             {
+                mprf("Spawning %i monster%s.", num, num == 1 ? "" : "s");
                 int curr_rate = env.spawn_random_rate;
                 // Each call to spawn_random_monsters() will spawn one with
                 // the rate at 5 or less.
@@ -624,6 +626,7 @@ void debug_stethoscope(int mon)
 // Detects all monsters on the level, using their exact positions.
 void wizard_detect_creatures()
 {
+    int count = 0;
     for (monster_iterator mi; mi; ++mi)
     {
         env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
@@ -631,7 +634,9 @@ void wizard_detect_creatures()
 #ifdef USE_TILE
         tiles.update_minimap(mi->pos());
 #endif
+        count++;
     }
+    mprf("Detected %i monster%s.", count, count == 1 ? "" : "s");
 }
 
 // Dismisses all monsters on the level or all monsters that match a user
@@ -653,7 +658,8 @@ void wizard_dismiss_all_monsters(bool force_all)
         }
     }
 
-    dismiss_monsters(buf);
+    int count = dismiss_monsters(buf);
+    mprf("Dismissed %i monster%s.", count, count == 1 ? "" : "s");
     // If it was turned off turn autopickup back on if all monsters went away.
     if (!*buf)
         autotoggle_autopickup(false);
