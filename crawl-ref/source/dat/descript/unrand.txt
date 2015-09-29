@@ -597,3 +597,8 @@ A gold crown set with jet-black gems. It permanently afflicts its wearer with
 agonising pain, substantially reducing their resilience but rendering them
 immune to further torments.
 %%%%
+robe of vines
+
+A robe of woven, growing vines. The vines' rapid growth seems to be conveyed to
+the wearer.
+%%%%

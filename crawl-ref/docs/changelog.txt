@@ -104,6 +104,7 @@ Items
 * New items:
   - Maxwell's Etheric Cage, a helmet giving rElec, +4 MP and a large boost to
     MP regen, at the cost of causing intermittent light contamination.
+  - the robe of vines, a +3 robe with Regen++++++++.
 * Poisonous chunks and rot chunks have been merged into 'inedible' chunks,
   which are only edible by ghouls. Some monsters have had their meat cleaned.
 * Unrandart changes:
