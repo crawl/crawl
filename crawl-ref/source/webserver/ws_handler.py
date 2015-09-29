@@ -519,6 +519,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("register_fail", reason = error)
 
     def go_lobby(self):
+        if not config.dgl_mode: return
         if self.is_running():
             self.process.stop()
         elif self.watched_game:
