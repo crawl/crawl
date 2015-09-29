@@ -1231,6 +1231,15 @@ LIFE:    3
 CURSED:  1
 BOOL:    evil, seeinv, nogen
 
+ENUM:    ROBE_OF_VINES
+NAME:    robe of vines
+OBJ:     OBJ_ARMOUR/ARM_ROBE
+PLUS:    +3
+COLOUR:  GREEN
+TILE:    urand_vines
+TILE_EQ: vines
+REGEN:   8
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
