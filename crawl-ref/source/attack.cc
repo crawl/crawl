@@ -171,13 +171,10 @@ int attack::calc_to_hit(bool random)
         else if (you.form_uses_xl())
             mhit += maybe_random_div(you.experience_level * 100, 100, random);
         else
-        {                       // ...you must be unarmed or throwing
-            // Members of clawed species have presumably been using the claws,
-            // making them more practiced and thus more accurate in unarmed
-            // combat. They keep this benefit even when the claws are covered
-            // (or missing because of a change in form).
-            mhit += you.innate_mutation[MUT_CLAWS]
-                    && wpn_skill == SK_UNARMED_COMBAT ? 4 : 2;
+        {
+            // Claws give a slight bonus to accuracy when active
+            mhit += (player_mutation_level(MUT_CLAWS) > 0
+                     && wpn_skill == SK_UNARMED_COMBAT) ? 4 : 2;
 
             mhit += maybe_random_div(you.skill(wpn_skill, 100), 100,
                                      random);
