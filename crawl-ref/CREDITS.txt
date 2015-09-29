@@ -114,6 +114,7 @@
     Paul Dejean
     Denzi
     Lothar Dierkes
+    Kevin Donnelly
     drachereborn
     Mike Drinen
     DrKe
@@ -231,6 +232,7 @@
     Solf
     Michael Spang
     David Speare
+    John Stahara
     Jan 'heftig' Steffens
     Timothy Stiles
     Johan Strandell
