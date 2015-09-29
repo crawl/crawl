@@ -643,6 +643,12 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
     def _on_process_output(self, line):
         self.check_where()
 
+        try:
+            json_decode(line)
+        except ValueError:
+            self.logger.warning("Invalid JSON output from Crawl process: %s",
+                                line)
+
         # send messages from wrapper scripts only to the player
         for receiver in self._receivers:
             if not receiver.watched_game:
