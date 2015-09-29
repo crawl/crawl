@@ -109,43 +109,42 @@ struct mut_conflict {
     mutation_type       muts[2];
     mutation_resolution forced;
     mutation_resolution unforced;
-    mutation_resolution temp;
 };
 
 /**
  * Conflicting mutation pairs and how to resolve them based on the nature of the incoming
- * mutation (forced, unforced, or temporary). Entries are symmetric (so if A conflicts
- * with B, B conflicts with A in the same way).
+ * mutation (forced or unforced). Entries are symmetric (so if A conflicts with B, B
+ * conflicts with A in the same way).
  */
 static const mut_conflict mut_conflicts[] = {            // resolution:
-    // mutation_a               mutation_b                  if_forced     if_unforced   if_temp
-    { {MUT_REGENERATION,        MUT_SLOW_METABOLISM},       MUTR_REPLACE, MUTR_COEXIST, MUTR_COEXIST },
-    { {MUT_REGENERATION,        MUT_SLOW_HEALING},          MUTR_REPLACE, MUTR_MODIFY,  MUTR_COEXIST },
-    { {MUT_ACUTE_VISION,        MUT_BLURRY_VISION},         MUTR_REPLACE, MUTR_MODIFY,  MUTR_COEXIST },
-    { {MUT_FAST,                MUT_SLOW},                  MUTR_REPLACE, MUTR_MODIFY,  MUTR_COEXIST },
+    // mutation_a               mutation_b                  if_forced     if_unforced
+    { {MUT_REGENERATION,        MUT_SLOW_METABOLISM},       MUTR_REPLACE, MUTR_COEXIST },
+    { {MUT_REGENERATION,        MUT_SLOW_HEALING},          MUTR_REPLACE, MUTR_MODIFY },
+    { {MUT_ACUTE_VISION,        MUT_BLURRY_VISION},         MUTR_REPLACE, MUTR_MODIFY },
+    { {MUT_FAST,                MUT_SLOW},                  MUTR_REPLACE, MUTR_MODIFY },
 #if TAG_MAJOR_VERSION == 34
-    { {MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK},         MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
+    { {MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK},         MUTR_MODIFY,  MUTR_MODIFY },
 #endif
-    { {MUT_STRONG,              MUT_WEAK},                  MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
-    { {MUT_CLEVER,              MUT_DOPEY},                 MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
-    { {MUT_AGILE,               MUT_CLUMSY},                MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
-    { {MUT_SLOW_HEALING,        MUT_NO_DEVICE_HEAL},        MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
-    { {MUT_ROBUST,              MUT_FRAIL},                 MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
-    { {MUT_HIGH_MAGIC,          MUT_LOW_MAGIC},             MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
-    { {MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC},         MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
-    { {MUT_CARNIVOROUS,         MUT_HERBIVOROUS},           MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
-    { {MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM},       MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
-    { {MUT_BREATHE_FLAMES,      MUT_SPIT_POISON},           MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
-    { {MUT_FANGS,               MUT_BEAK},                  MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
-    { {MUT_ANTENNAE,            MUT_HORNS},                 MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
-    { {MUT_HOOVES,              MUT_TALONS},                MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
-    { {MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE},            MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
-    { {MUT_MUTATION_RESISTANCE, MUT_EVOLUTION},             MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
-    { {MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE},           MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
-    { {MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY},    MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
-    { {MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY},    MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
-    { {MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY},   MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
-    { {MUT_MAGIC_RESISTANCE,    MUT_MAGICAL_VULNERABILITY}, MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
+    { {MUT_STRONG,              MUT_WEAK},                  MUTR_MODIFY,  MUTR_MODIFY },
+    { {MUT_CLEVER,              MUT_DOPEY},                 MUTR_MODIFY,  MUTR_MODIFY },
+    { {MUT_AGILE,               MUT_CLUMSY},                MUTR_MODIFY,  MUTR_MODIFY },
+    { {MUT_SLOW_HEALING,        MUT_NO_DEVICE_HEAL},        MUTR_MODIFY,  MUTR_MODIFY },
+    { {MUT_ROBUST,              MUT_FRAIL},                 MUTR_MODIFY,  MUTR_MODIFY },
+    { {MUT_HIGH_MAGIC,          MUT_LOW_MAGIC},             MUTR_MODIFY,  MUTR_MODIFY },
+    { {MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC},         MUTR_MODIFY,  MUTR_MODIFY },
+    { {MUT_CARNIVOROUS,         MUT_HERBIVOROUS},           MUTR_MODIFY,  MUTR_MODIFY },
+    { {MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM},       MUTR_MODIFY,  MUTR_MODIFY },
+    { {MUT_BREATHE_FLAMES,      MUT_SPIT_POISON},           MUTR_REPLACE, MUTR_IGNORE },
+    { {MUT_FANGS,               MUT_BEAK},                  MUTR_REPLACE, MUTR_IGNORE },
+    { {MUT_ANTENNAE,            MUT_HORNS},                 MUTR_REPLACE, MUTR_IGNORE },
+    { {MUT_HOOVES,              MUT_TALONS},                MUTR_REPLACE, MUTR_IGNORE },
+    { {MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE},            MUTR_REPLACE, MUTR_IGNORE },
+    { {MUT_MUTATION_RESISTANCE, MUT_EVOLUTION},             MUTR_REPLACE, MUTR_IGNORE },
+    { {MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE},           MUTR_REPLACE, MUTR_IGNORE },
+    { {MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY},    MUTR_REPLACE, MUTR_IGNORE },
+    { {MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY},    MUTR_REPLACE, MUTR_IGNORE },
+    { {MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY},   MUTR_REPLACE, MUTR_IGNORE },
+    { {MUT_MAGIC_RESISTANCE,    MUT_MAGICAL_VULNERABILITY}, MUTR_REPLACE, MUTR_IGNORE },
 };
 
 equipment_type beastly_slot(int mut)
@@ -941,7 +940,9 @@ static int _handle_conflicting_mutations(mutation_type mutation,
             if (you.innate_mutation[conf_mut] >= you.mutation[conf_mut])
                 return -1;
 
-            switch (override ? conflict.forced : temp ? conflict.temp : conflict.unforced)
+            switch (override ? conflict.forced
+                    : temp   ? (conflict.unforced == MUTR_IGNORE ? MUTR_IGNORE : MUTR_COEXIST)
+                    :          conflict.unforced)
             {
             case MUTR_IGNORE:
                 return -1;
@@ -949,7 +950,7 @@ static int _handle_conflicting_mutations(mutation_type mutation,
             case MUTR_REPLACE:
                 while (delete_mutation(conf_mut, reason, true, true))
                     ;
-                return 0;
+                break;
 
             case MUTR_COEXIST:
                 return 0;
