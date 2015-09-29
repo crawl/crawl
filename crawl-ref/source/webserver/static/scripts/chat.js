@@ -21,12 +21,13 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
     function receive_message(data)
     {
         var msg = $("<div>").append(data.content);
-        var histcon = $('#chat_history_container');
-        var atBottom = (histcon[0].scrollHeight - histcon.scrollTop() == histcon.outerHeight());
+        var histcon = $('#chat_history_container')[0];
+        var atBottom = Math.abs(histcon.scrollHeight - histcon.scrollTop
+                                - histcon.clientHeight) < 1.0;
         msg.find(".chat_msg").html(linkify(msg.find(".chat_msg").text()));
         $("#chat_history").append(msg.html() + "<br>");
         if (atBottom)
-            $('#chat_history_container').scrollTop($('#chat_history_container')[0].scrollHeight);
+            histcon.scrollTop = histcon.scrollHeight;
         if ($("#chat_body").css("display") === "none")
         {
             new_message_count++;
