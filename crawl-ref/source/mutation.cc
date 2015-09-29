@@ -97,62 +97,55 @@ static const body_facet_def _body_facets[] =
     { EQ_BOOTS, MUT_TALONS, 3 }
 };
 
-/**
- * Conflicting mutation pairs. Entries are symmetric (so if A conflicts
- * with B, B conflicts with A in the same way).
- *
- * The third value in each entry means:
- *   0: If the new mutation is forced, remove all levels of the old
- *      mutation. Either way, keep scanning for more conflicts and
- *      do what they say (accepting the mutation if there are no
- *      further conflicts).
- *
- *  -1: If the new mutation is forced, remove all levels of the old
- *      mutation and scan for more conflicts. If it is not forced,
- *      fail at giving the new mutation.
- *
- *   1: If the new mutation is temporary, just allow the conflict.
- *      Otherwise, trade off: delete one level of the old mutation,
- *      don't give the new mutation, and consider it a success. 
- *
- * It makes sense to have two entries for the same pair, one with value 0
- * and one with 1: that would replace all levels of the old mutation if
- * forced, or a single level if not forced. However, the 0 entry must
- * precede the 1 entry; so if you re-order this list, keep all the 0s
- * before all the 1s.
- */
-static const int conflict[][3] =
+enum mutation_resolution
 {
-    { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
-    { MUT_REGENERATION,        MUT_SLOW_HEALING,           0},
-    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
-    { MUT_FAST,                MUT_SLOW,                   0},
+    MUTR_REPLACE, // Remove the existing mutation and replace with the new one.
+    MUTR_COEXIST, // Allow both mutations to exist.
+    MUTR_MODIFY,  // Delete a level of the existing mutation.
+    MUTR_IGNORE,  // Discard the new mutation, leaving existing mutations unchanged.
+};
+
+struct mut_conflict {
+    mutation_type       muts[2];
+    mutation_resolution forced;
+    mutation_resolution unforced;
+    mutation_resolution temp;
+};
+
+/**
+ * Conflicting mutation pairs and how to resolve them based on the nature of the incoming
+ * mutation (forced, unforced, or temporary). Entries are symmetric (so if A conflicts
+ * with B, B conflicts with A in the same way).
+ */
+static const mut_conflict mut_conflicts[] = {            // resolution:
+    // mutation_a               mutation_b                  if_forced     if_unforced   if_temp
+    { {MUT_REGENERATION,        MUT_SLOW_METABOLISM},       MUTR_REPLACE, MUTR_COEXIST, MUTR_COEXIST },
+    { {MUT_REGENERATION,        MUT_SLOW_HEALING},          MUTR_REPLACE, MUTR_MODIFY,  MUTR_COEXIST },
+    { {MUT_ACUTE_VISION,        MUT_BLURRY_VISION},         MUTR_REPLACE, MUTR_MODIFY,  MUTR_COEXIST },
+    { {MUT_FAST,                MUT_SLOW},                  MUTR_REPLACE, MUTR_MODIFY,  MUTR_COEXIST },
 #if TAG_MAJOR_VERSION == 34
-    { MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK,          1},
+    { {MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK},         MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
 #endif
-    { MUT_STRONG,              MUT_WEAK,                   1},
-    { MUT_CLEVER,              MUT_DOPEY,                  1},
-    { MUT_AGILE,               MUT_CLUMSY,                 1},
-    { MUT_SLOW_HEALING,        MUT_NO_DEVICE_HEAL,         1},
-    { MUT_ROBUST,              MUT_FRAIL,                  1},
-    { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,              1},
-    { MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC,          1},
-    { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,            1},
-    { MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM,        1},
-    { MUT_REGENERATION,        MUT_SLOW_HEALING,           1},
-    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
-    { MUT_FAST,                MUT_SLOW,                   1},
-    { MUT_BREATHE_FLAMES,      MUT_SPIT_POISON,           -1},
-    { MUT_FANGS,               MUT_BEAK,                  -1},
-    { MUT_ANTENNAE,            MUT_HORNS,                 -1},
-    { MUT_HOOVES,              MUT_TALONS,                -1},
-    { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,            -1},
-    { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,             -1},
-    { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,           -1},
-    { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,    -1},
-    { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,    -1},
-    { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY,   -1},
-    { MUT_MAGIC_RESISTANCE,    MUT_MAGICAL_VULNERABILITY, -1},
+    { {MUT_STRONG,              MUT_WEAK},                  MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
+    { {MUT_CLEVER,              MUT_DOPEY},                 MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
+    { {MUT_AGILE,               MUT_CLUMSY},                MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
+    { {MUT_SLOW_HEALING,        MUT_NO_DEVICE_HEAL},        MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
+    { {MUT_ROBUST,              MUT_FRAIL},                 MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
+    { {MUT_HIGH_MAGIC,          MUT_LOW_MAGIC},             MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
+    { {MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC},         MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
+    { {MUT_CARNIVOROUS,         MUT_HERBIVOROUS},           MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
+    { {MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM},       MUTR_MODIFY,  MUTR_MODIFY,  MUTR_COEXIST },
+    { {MUT_BREATHE_FLAMES,      MUT_SPIT_POISON},           MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
+    { {MUT_FANGS,               MUT_BEAK},                  MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
+    { {MUT_ANTENNAE,            MUT_HORNS},                 MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
+    { {MUT_HOOVES,              MUT_TALONS},                MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
+    { {MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE},            MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
+    { {MUT_MUTATION_RESISTANCE, MUT_EVOLUTION},             MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
+    { {MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE},           MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
+    { {MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY},    MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
+    { {MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY},    MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
+    { {MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY},   MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
+    { {MUT_MAGIC_RESISTANCE,    MUT_MAGICAL_VULNERABILITY}, MUTR_REPLACE, MUTR_IGNORE,  MUTR_IGNORE  },
 };
 
 equipment_type beastly_slot(int mut)
@@ -906,13 +899,13 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
  */
 int mut_check_conflict(mutation_type mut, bool innate_only)
 {
-    for (const int (&confl)[3] : conflict)
+    for (const mut_conflict conflict : mut_conflicts)
     {
-        if (confl[0] != mut && confl[1] != mut)
+        if (conflict.muts[0] != mut && conflict.muts[1] != mut)
             continue;
 
-        const mutation_type confl_mut
-           = static_cast<mutation_type>(confl[0] == mut ? confl[1] : confl[0]);
+        const mutation_type confl_mut = conflict.muts[0] == mut ? conflict.muts[1]
+                                                                : conflict.muts[0];
 
         const int level = innate_only ? you.innate_mutation[confl_mut]
                                       : player_mutation_level(confl_mut);
@@ -935,53 +928,35 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                                          const string &reason,
                                          bool temp = false)
 {
-    // If we have one of the pair, delete all levels of the other,
-    // and continue processing.
-    for (const int (&confl)[3] : conflict)
+    for (const mut_conflict conflict : mut_conflicts)
     {
-        for (int j = 0; j < 2; ++j)
+        if (conflict.muts[0] != mutation && conflict.muts[1] != mutation)
+            continue;
+
+        const mutation_type conf_mut = conflict.muts[0] == mutation ? conflict.muts[1]
+                                                                    : conflict.muts[0];
+
+        if (you.mutation[conf_mut] > 0)
         {
-            const mutation_type a = (mutation_type)confl[j];
-            const mutation_type b = (mutation_type)confl[1-j];
+            if (you.innate_mutation[conf_mut] >= you.mutation[conf_mut])
+                return -1;
 
-            if (mutation == a && you.mutation[b] > 0)
+            switch (override ? conflict.forced : temp ? conflict.temp : conflict.unforced)
             {
-                if (you.innate_mutation[b] >= you.mutation[b])
-                    return -1;
+            case MUTR_IGNORE:
+                return -1;
 
-                int res = confl[2];
-                switch (res)
-                {
-                case -1:
-                    // Fail if not forced, otherwise override.
-                    if (!override)
-                        return -1;
-                case 0:
-                    // Ignore if not forced, otherwise override.
-                    // All cases but regen:slowmeta will currently trade off.
-                    if (override)
-                    {
-                        while (delete_mutation(b, reason, true, true))
-                            ;
-                    }
-                    break;
-                case 1:
-                    // If we have one of the pair, delete a level of the
-                    // other, and that's it.
-                    //
-                    // Temporary mutations can co-exist with things they would
-                    // ordinarily conflict with
-                    if (temp)
-                        return 0;       // Allow conflicting transient mutations
-                    else
-                    {
-                        delete_mutation(b, reason, true, true);
-                        return 1;     // Nothing more to do.
-                    }
+            case MUTR_REPLACE:
+                while (delete_mutation(conf_mut, reason, true, true))
+                    ;
+                return 0;
 
-                default:
-                    die("bad mutation conflict resulution");
-                }
+            case MUTR_COEXIST:
+                return 0;
+
+            case MUTR_MODIFY:
+                delete_mutation(conf_mut, reason, true, true);
+                return 1;
             }
         }
     }
