@@ -700,7 +700,7 @@ static void _set_removed_types_as_identified()
 }
 
 #ifdef WIZARD
-static void _do_wizard_command(int wiz_command, bool silent_fail)
+static void _do_wizard_command(int wiz_command)
 {
     ASSERT(you.wizard);
 
@@ -709,7 +709,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '?':
     {
         const int key = list_wizard_commands(true);
-        _do_wizard_command(key, true);
+        _do_wizard_command(key);
         return;
     }
 
@@ -914,12 +914,15 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     // case '/': break;
 
+    case ' ':
+    case '\r':
+    case '\n':
+    case ESCAPE:
+        canned_msg(MSG_OK);
+        break;
     default:
-        if (!silent_fail)
-        {
-            formatted_mpr(formatted_string::parse_string(
-                              "Not a <magenta>Wizard</magenta> Command."));
-        }
+        formatted_mpr(formatted_string::parse_string(
+                          "Not a <magenta>Wizard</magenta> Command."));
         break;
     }
     // Force the placement of any delayed monster gifts.
@@ -1018,7 +1021,7 @@ static void _handle_wizard_command()
         }
     }
 
-    _do_wizard_command(wiz_command, false);
+    _do_wizard_command(wiz_command);
 }
 
 static void _enter_explore_mode()
