@@ -135,7 +135,7 @@ yum install gcc gcc-c++ make bison flex ncurses-devel lua-devel sqlite-devel \
   dejavu-sans-fonts dejavu-sans-mono-fonts
 (the last six are needed only for tile builds). As with Debian, this package
 list avoids the need for the bundled "contribs". For Fedora 20 or later,
-replace lua-devel by compat-lua-devel.
+replace lua-devel by compat-lua-devel, also replace 'yum' with 'dnf'.
 
 ccache can be installed with:
 yum install ccache
