@@ -643,7 +643,10 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
     def _on_process_output(self, line):
         self.check_where()
 
-        self.write_to_all(line, True)
+        # send messages from wrapper scripts only to the player
+        for receiver in self._receivers:
+            if not receiver.watched_game:
+                receiver.write_message(line, True)
 
     def _on_process_error(self, line):
         if line.startswith("ERROR"):
