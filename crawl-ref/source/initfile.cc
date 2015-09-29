@@ -2858,9 +2858,11 @@ void game_options::read_option_line(const string &str, bool runscript)
         copy_if(all_pizzas.begin(), all_pizzas.end(), back_inserter(pizzas),
                 [](string p) { return !trimmed_string(p).empty(); });
     }
-    else if (key == "layers_toggle") {
-		layers_toggle = LAYERS_NONE;
-        for (const string &ch : split_string(",", field)) {
+    else if (key == "layers_toggle")
+    {
+        layers_toggle = LAYERS_NONE;
+        for (const string &ch : split_string(",", field))
+        {
             if (ch == "monsters")
                 layers_toggle |= LAYER_MONSTERS;
             else if (ch == "player")

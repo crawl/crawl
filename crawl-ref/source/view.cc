@@ -1493,7 +1493,10 @@ static void _config_layers_menu()
     layers_type saved = _layers;
     bool exit = false;
 
-    while (!exit) {
+    msgwin_set_temporary(true);
+
+    while (!exit)
+    {
         mprf(MSGCH_PROMPT, "Select layers to display: "
                            "<%s>(m)onsters</%s>|"
                            "<%s>(p)layer</%s>|"
@@ -1508,10 +1511,11 @@ static void _config_layers_menu()
            _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey",
            _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey"
         );
-        mprf(MSGCH_PROMPT, "Press <w>%s</w> to return to full view.  Press any other key to exit.",
+        mprf(MSGCH_PROMPT, "Press <w>%s</w> to return to full view. Press any other key to exit.",
              command_to_string(CMD_SHOW_TERRAIN).c_str());
 
-        switch (get_ch()) {
+        switch (get_ch())
+        {
             case 'm': _layers ^= LAYER_MONSTERS; break;
             case 'p': _layers ^= LAYER_PLAYER;   break;
             case 'i': _layers ^= LAYER_ITEMS;    break;
@@ -1530,8 +1534,13 @@ static void _config_layers_menu()
         }
 
         viewwindow();
+
+		msgwin_clear_temporary();
         clear_messages();
     }
+
+    canned_msg(MSG_OK);
+	msgwin_set_temporary(false);
 }
 
 void config_layers()
@@ -1542,12 +1551,16 @@ void config_layers()
 
     if (Options.layers_menu)
         _config_layers_menu();
-    else {
+    else
+    {
         if (_layers == LAYERS_ALL)
-            clear_messages();
+            canned_msg(MSG_OK);
         else
-            mprf(MSGCH_PROMPT, "Hiding layers.  Press <w>%s</w> to return to full view.",
+        {
+            mprf(MSGCH_PROMPT, "Hiding layers. Press <w>%s</w> to "
+                               "return to full view.",
                  command_to_string(CMD_SHOW_TERRAIN).c_str());
+        }
     }
 }
 
