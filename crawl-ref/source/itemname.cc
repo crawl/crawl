@@ -3662,7 +3662,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return player_prot_life(false, temp, false) == 3;
 
         case AMU_REGENERATION:
-            return (player_mutation_level(MUT_SLOW_HEALING) == 3)
+            return (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
                    || temp && you.species == SP_VAMPIRE
                       && you.hunger_state <= HS_STARVING;
 
