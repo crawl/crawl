@@ -705,7 +705,7 @@ static void _describe_regen(status_info* inf)
                         || you.duration[DUR_TROGS_HAND] > 0);
     const bool no_heal =
             (you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
-            || (player_mutation_level(MUT_SLOW_HEALING) == 3);
+            || (player_mutation_level(MUT_SLOW_REGENERATION) == 3);
     // Does vampire hunger level affect regeneration rate significantly?
     const bool vampmod = !no_heal && !regen && you.species == SP_VAMPIRE
                          && you.hunger_state != HS_SATIATED;
