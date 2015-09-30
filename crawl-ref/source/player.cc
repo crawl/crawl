@@ -5975,11 +5975,13 @@ int player::armour_class(bool /*calc_unid*/) const
 
     AC += wearing(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
 
+    // Tuned for skill/AC: 1/0.5, 10/5, 27/15
     if (wearing_ego(EQ_WEAPON, SPWPN_PROTECTION))
-        AC += 500;
+        AC += 56 * you.skill(item_attack_skill(*you.weapon()));
 
+    // Tuned for skill/AC: 1/0.3, 10/3, 27/9
     if (wearing_ego(EQ_SHIELD, SPARM_PROTECTION))
-        AC += 300;
+        AC += 34 * you.skill(SK_SHIELDS);
 
     AC += scan_artefacts(ARTP_AC) * 100;
 
