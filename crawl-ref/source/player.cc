@@ -4891,10 +4891,7 @@ void dec_ambrosia_player(int delay)
     const int mp_restoration = div_rand_round(delay*(3 + random2(3)), BASELINE_DELAY);
 
     if (!you.duration[DUR_DEATHS_DOOR])
-    {
-        const int mut_factor = 3 - you.mutation[MUT_NO_DEVICE_HEAL];
-        inc_hp(div_rand_round(hp_restoration * mut_factor, 3));
-    }
+        inc_hp(you.scale_device_healing(hp_restoration));
 
     inc_mp(mp_restoration);
 
@@ -7821,7 +7818,21 @@ bool player::form_uses_xl() const
 
 bool player::can_device_heal()
 {
-    return mutation[MUT_NO_DEVICE_HEAL] < 3;
+    return mutation[MUT_NO_DEVICE_HEAL] < 3
+        && !player_equip_unrand(UNRAND_VINES);
+}
+
+int player::scale_device_healing(int healing_amount)
+{
+    if (player_equip_unrand(UNRAND_VINES)) {
+        mpr("wearing unrand");
+    } else {
+        mpr("not wearing");
+    }
+    int device_heal_degree = player_equip_unrand(UNRAND_VINES) ? 3 :
+            you.mutation[MUT_NO_DEVICE_HEAL];
+    mprf("degree: %d", device_heal_degree);
+    return div_rand_round(healing_amount * (3 - device_heal_degree), 3);
 }
 
 #if TAG_MAJOR_VERSION == 34

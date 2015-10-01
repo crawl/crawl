@@ -102,7 +102,7 @@ public:
         {
           int amount = 5 + random2(7);
           if (is_device)
-            amount = amount * (3 - you.mutation[MUT_NO_DEVICE_HEAL]) / 3;
+            amount = you.scale_device_healing(amount);
           // Pay for rot right off the top.
           amount = unrot_hp(amount);
           inc_hp(amount);
@@ -171,7 +171,7 @@ public:
 
         int amount = 10 + random2avg(28, 3);
         if (is_device)
-            amount = amount * (3 - you.mutation[MUT_NO_DEVICE_HEAL] ) / 3;
+            amount = you.scale_device_healing(amount);
         // Pay for rot right off the top.
         amount = unrot_hp(amount);
         inc_hp(amount);

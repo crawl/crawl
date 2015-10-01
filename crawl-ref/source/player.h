@@ -777,6 +777,7 @@ public:
     bool do_shaft_ability();
 
     bool can_device_heal();
+    int scale_device_healing(int healing_amount);
 
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,
