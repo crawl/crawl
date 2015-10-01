@@ -1316,12 +1316,16 @@ void Menu::write_title()
     if (!first)
         ASSERT(title2);
 
-    formatted_string fs =
-        formatted_string(item_colour(-1, first ? title : title2));
-
+    auto col = item_colour(-1, first ? title : title2);
     string text = (first ? title->get_text() : title2->get_text());
 
-    fs.cprintf("%s", text.c_str());
+    formatted_string fs = formatted_string(col);
+
+    if (flags & MF_ALLOW_FORMATTING)
+        fs = formatted_string::parse_string(text, true, nullptr, col);
+    else
+        fs.cprintf("%s", text.c_str());
+
     if (flags & MF_SHOW_PAGENUMBERS)
     {
         // The total number of pages is well defined, but the current

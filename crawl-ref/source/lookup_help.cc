@@ -1105,73 +1105,6 @@ static string _branch_entry_runes(branch_type br)
     return desc;
 }
 
-static branch_type _rune_to_branch(int rune)
-{
-    switch (rune)
-    {
-    case RUNE_SWAMP:       return BRANCH_SWAMP;
-    case RUNE_SNAKE:       return BRANCH_SNAKE;
-    case RUNE_SHOALS:      return BRANCH_SHOALS;
-    case RUNE_SPIDER:      return BRANCH_SPIDER;
-    case RUNE_SLIME:       return BRANCH_SLIME;
-    case RUNE_VAULTS:      return BRANCH_VAULTS;
-    case RUNE_TOMB:        return BRANCH_TOMB;
-    case RUNE_DIS:         return BRANCH_DIS;
-    case RUNE_GEHENNA:     return BRANCH_GEHENNA;
-    case RUNE_COCYTUS:     return BRANCH_COCYTUS;
-    case RUNE_TARTARUS:    return BRANCH_TARTARUS;
-    case RUNE_ABYSSAL:     return BRANCH_ABYSS;
-    case RUNE_DEMONIC:     return BRANCH_PANDEMONIUM;
-    case RUNE_MNOLEG:      return BRANCH_PANDEMONIUM;
-    case RUNE_LOM_LOBON:   return BRANCH_PANDEMONIUM;
-    case RUNE_CEREBOV:     return BRANCH_PANDEMONIUM;
-    case RUNE_GLOORX_VLOQ: return BRANCH_PANDEMONIUM;
-    default:               return NUM_BRANCHES;
-    }
-}
-
-// Note: doesn't return any rune for Pandemonium. Doesn't return
-// rune_type so we don't have to include itemprop-enum.h in our header.
-int branch_to_rune(branch_type br)
-{
-    switch (br)
-    {
-        case BRANCH_SWAMP:      return RUNE_SWAMP;
-        case BRANCH_SNAKE:      return RUNE_SNAKE;
-        case BRANCH_SHOALS:     return RUNE_SHOALS;
-        case BRANCH_SPIDER:     return RUNE_SPIDER;
-        case BRANCH_SLIME:      return RUNE_SLIME;
-        case BRANCH_VAULTS:     return RUNE_VAULTS;
-        case BRANCH_TOMB:       return RUNE_TOMB;
-        case BRANCH_DIS:        return RUNE_DIS;
-        case BRANCH_GEHENNA:    return RUNE_GEHENNA;
-        case BRANCH_COCYTUS:    return RUNE_COCYTUS;
-        case BRANCH_TARTARUS:   return RUNE_TARTARUS;
-        case BRANCH_ABYSS:      return RUNE_ABYSSAL;
-        default:                return NUM_RUNE_TYPES;
-    }
-}
-
-string branch_rune_desc(branch_type br)
-{
-    string desc;
-    vector<string> rune_names;
-
-    for (int i = 0; i < NUM_RUNE_TYPES; ++i)
-        if (_rune_to_branch(i) == br)
-            rune_names.push_back(rune_type_name(i));
-
-    if (!rune_names.empty())
-    {
-        desc = make_stringf("This branch contains the %s rune%s of Zot.",
-                            comma_separated_line(begin(rune_names),
-                                                 end(rune_names)).c_str(),
-                            rune_names.size() > 1 ? "s" : "");
-    }
-
-    return desc;
-}
-
 static string _branch_depth(branch_type br)
 {
     string desc;
@@ -1284,7 +1217,7 @@ static int _describe_branch(const string &key, const string &suffix,
                          + _branch_depth(branch)
                          + _branch_subbranches(branch)
                          + "\n\n"
-                         + branch_rune_desc(branch);
+                         + branch_rune_desc(branch, false);
 
     return _describe_key(key, suffix, footer, info);
 }

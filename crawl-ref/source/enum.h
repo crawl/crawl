@@ -2436,7 +2436,6 @@ enum menu_type
     MT_DROP,
     MT_PICKUP,
     MT_KNOW,
-    MT_RUNES,
     MT_SELONE,                         // Select one
 };
 
