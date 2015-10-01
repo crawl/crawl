@@ -3525,7 +3525,7 @@ bool is_useless_item(const item_def &item, bool temp)
         // heal wand is useless for VS if they can't get allies
         if (item.sub_type == WAND_HEAL_WOUNDS
             && item_type_known(item)
-            && you.innate_mutation[MUT_NO_DEVICE_HEAL] == 3
+            && !you.can_device_heal()
             && player_mutation_level(MUT_NO_LOVE))
         {
             return true;
