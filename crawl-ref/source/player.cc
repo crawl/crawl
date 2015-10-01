@@ -7824,14 +7824,8 @@ bool player::can_device_heal()
 
 int player::scale_device_healing(int healing_amount)
 {
-    if (player_equip_unrand(UNRAND_VINES)) {
-        mpr("wearing unrand");
-    } else {
-        mpr("not wearing");
-    }
     int device_heal_degree = player_equip_unrand(UNRAND_VINES) ? 3 :
-            you.mutation[MUT_NO_DEVICE_HEAL];
-    mprf("degree: %d", device_heal_degree);
+            player_mutation_level(MUT_NO_DEVICE_HEAL);
     return div_rand_round(healing_amount * (3 - device_heal_degree), 3);
 }
 
