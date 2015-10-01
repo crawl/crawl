@@ -3816,7 +3816,7 @@ static gender_type _mons_class_gender(monster_type mc)
                   GENDER_NEUTER;
 }
 
-// Use of variant (case is irrelevant here):
+// Use of variant (upper-/lowercase is irrelevant here):
 // PRONOUN_SUBJECTIVE : _She_ is tap dancing.
 // PRONOUN_POSSESSIVE : _Its_ sword explodes!
 // PRONOUN_REFLEXIVE  : The wizard mumbles to _herself_.
