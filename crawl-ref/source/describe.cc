@@ -4014,12 +4014,12 @@ int describe_monsters(const monster_info &mi, bool force_seen,
 static const char* xl_rank_names[] =
 {
     "weakling",
-    "average",
+    "amateur",
+    "novice",
+    "journeyman",
     "experienced",
-    "powerful",
-    "mighty",
-    "great",
-    "awesomely powerful",
+    "veteran",
+    "master",
     "legendary"
 };
 
