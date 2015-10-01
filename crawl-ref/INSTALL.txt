@@ -130,15 +130,14 @@ Prerequisites (Fedora):
 
 On Fedora, and possibly other RPM-based systems, you can get the dependencies
 by running the following as root:
-yum install gcc gcc-c++ make bison flex ncurses-devel lua-devel sqlite-devel \
-  zlib-devel pkgconfig SDL-devel SDL_image-devel libpng-devel freetype-devel \
-  dejavu-sans-fonts dejavu-sans-mono-fonts
+dnf install gcc gcc-c++ make bison flex ncurses-devel compat-lua-devel \
+  sqlite-devel zlib-devel pkgconfig SDL-devel SDL_image-devel libpng-devel \
+  freetype-devel dejavu-sans-fonts dejavu-sans-mono-fonts
 (the last six are needed only for tile builds). As with Debian, this package
-list avoids the need for the bundled "contribs". For Fedora 20 or later,
-replace lua-devel by compat-lua-devel, also replace 'yum' with 'dnf'.
+list avoids the need for the bundled "contribs".
 
 ccache can be installed with:
-yum install ccache
+dnf install ccache
 
 
 Prerequisites (other systems):
@@ -347,39 +346,6 @@ Building on Windows (MSVC)
   Try at your own risk, but the first one has been tested and found to be
   effective.
 
-Building Tiles versions
------------------------
-
-* On most platforms, you can simply type:
-    make TILES=y
-
-* If you compiled the ASCII binary before, you'll need to run 'make clean'
-  before running 'make'.
-
-* All platforms require the same prerequisites listed in the other sections
-  above for building each of these platforms.
-
-* All platforms additionally require the development versions of the following
-  software packages installed.
-
-    * SDL2 (http://www.libsdl.org/download-1.2.php)
-    * SDL2_image (http://www.libsdl.org/projects/SDL_image/)
-    * libpng (http://www.libpng.org/pub/png/libpng.html)
-    * Freetype 2 (http://www.freetype.org/download.html)
-
-  On Linux, these can be installed via a package manager (apt-get, emerge, yum,
-  etc).
-
-  On Mac OS X, these will be compiled automatically when you build the Xcode
-  project.
-
-  On Windows (MinGW or Cygwin), these will be compiled as needed when you run
-  'make TILES=y'.
-
-* If you want both ASCII and Tiles binaries you need to compile them
-  separately, rename one of them, and copy them into the same Crawl directory.
-
-
 *****************************************************************************
 
 Data files
@@ -404,9 +370,6 @@ setup), it will search for its data files under the current directory, and if
 it can't find them there, one level above the current directory. In short, it
 uses these search paths: ., ./dat, ./docs, .., ../dat, ../docs.
 
-
-*****************************************************************************
-
 The level compiler
 ------------------
 
@@ -430,46 +393,25 @@ intermediate files are provided under source/prebuilt. The makefiles provided
 with the Crawl source distribution will use these pre-generated files
 automatically if flex/bison is not available.
 
-
-*****************************************************************************
-Optional Libraries (Lua and PCRE)
----------------------------------
-
 Lua
 ---
 
-Security on multiuser systems (Unix):
-
-As of 0.8, setuid and setgid installs are no longer supported, thus any
-previous concerns are no longer applicable. Lua user scripts are sandboxed and
-should be generally safe even on public servers (besides increasing the attack
-surface).
-
-As of 0.3, the Lua source is included with Crawl. It will be used if you don't
-have Lua headers installed. Note that we don't provide security support for
-Lua, and thus if you run a public server or a kiosk, it is strongly recommended
-to use system Lua which does receive security updates from whatever
-distribution you use.
-
+The Lua source is included with Crawl. It will be used if you don't have Lua
+headers installed. Note that we don't provide security support for Lua, and
+thus if you run a public server or a kiosk, it is strongly recommended to use
+system Lua which does receive security updates from whatever distribution you
+use.
 
 PCRE
 ----
 
-As of 0.6.0, PCRE 7.9 source is included with Crawl. It is enabled by
-default. The sources in contrib/pcre are identical to the 7.9 distro except for
-the use of a custom-made Makefile instead of the automake system that was in
-place previously.
-
-On Unixes, you're better served by the existing POSIX regular expression
-support. If you want PCRE, your package management system is again your best
-bet. Remember to install development headers, not just the plain library.
-
+PCRE 8.12, with a custom build system but otherwise unchanged, is included with
+Crawl. It is enabled by default on Windows; otherwise, unless you build with
+BUILD_PCRE (to use the contrib) or USE_PCRE (to use a development package from
+your manager), the system POSIX regex will be used.
 
 Unicode
 -------
-
-As of 0.8, Unicode support is included in all ports. Still, you might need to
-ensure your terminal can display non-basic glyphs.
 
 On Unix, you want an UTF-8 locale. All modern distributions install one by
 default, but you might have somehow dropped required settings. To check this,
