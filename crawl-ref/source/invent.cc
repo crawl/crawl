@@ -781,30 +781,27 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         if (!inv_class[i])
             continue;
 
-        if (type != MT_RUNES)
+        string subtitle = item_class_name(i);
+
+        // Mention the class selection shortcuts.
+        if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
         {
-            string subtitle = item_class_name(i);
-
-            // Mention the class selection shortcuts.
-            if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
+            vector<char> glyphs;
+            get_class_hotkeys(i, glyphs);
+            if (!glyphs.empty())
             {
-                vector<char> glyphs;
-                get_class_hotkeys(i, glyphs);
-                if (!glyphs.empty())
-                {
-                    // longest string
-                    const string str = "Magical Staves ";
-                    subtitle += string(strwidth(str) - strwidth(subtitle),
-                                       ' ');
-                    subtitle += "(select all with <w>";
-                    for (char gly : glyphs)
-                         subtitle += gly;
-                    subtitle += "</w><blue>)";
-                }
+                // longest string
+                const string str = "Magical Staves ";
+                subtitle += string(strwidth(str) - strwidth(subtitle),
+                                   ' ');
+                subtitle += "(select all with <w>";
+                for (char gly : glyphs)
+                    subtitle += gly;
+                subtitle += "</w><blue>)";
             }
-
-            add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
         }
+        add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
+
         items_in_class.clear();
 
         InvEntry *forced_first = nullptr;

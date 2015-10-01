@@ -3939,7 +3939,7 @@ static tileidx_t _tileidx_corpse(const item_def &item)
 
 static tileidx_t _tileidx_rune(const item_def &item)
 {
-    switch (item.plus)
+    switch (item.rune_enum)
     {
     // the hell runes:
     case RUNE_DIS:         return TILE_MISC_RUNE_DIS;

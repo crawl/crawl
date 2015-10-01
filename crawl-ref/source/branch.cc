@@ -3,7 +3,9 @@
 #include "branch.h"
 #include "branch-data.h"
 
+#include "itemname.h"
 #include "player.h"
+#include "stringutil.h"
 #include "travel.h"
 
 FixedVector<level_id, NUM_BRANCHES> brentry;
@@ -196,4 +198,46 @@ int runes_for_branch(branch_type branch)
     case BRANCH_ZOT:      return ZOT_ENTRY_RUNES;
     default:              return 0;
     }
+}
+
+/**
+ * Write a description of the rune(s), if any, this branch contains.
+ *
+ * @param br             the branch in question
+ * @param remaining_only whether to only mention a rune if the player
+ *                       hasn't picked it up yet.
+ * @returns a string mentioning all applicable runes.
+ */
+string branch_rune_desc(branch_type br, bool remaining_only)
+{
+    string desc;
+    vector<string> rune_names;
+
+    for (rune_type rune : branches[br].runes)
+        if (!(remaining_only && you.runes[rune]))
+            rune_names.push_back(rune_type_name(br));
+
+    if (!rune_names.empty())
+    {
+        desc = make_stringf("This branch contains the %s rune%s of Zot.",
+                            comma_separated_line(begin(rune_names),
+                                                 end(rune_names)).c_str(),
+                            rune_names.size() > 1 ? "s" : "");
+    }
+
+    return desc;
+}
+
+level_id rune_location(rune_type rune)
+{
+    for (const auto& br : branches)
+        if (find(br.runes.begin(), br.runes.end(), rune) != br.runes.end())
+        {
+            // For now, this is the only branch where the rune is not
+            // necessarily at the bottom.
+            return br.id == BRANCH_ABYSS ? level_id(br.id, -1) :
+                                           level_id(br.id, brdepth[br.id]);
+        }
+
+    return level_id();
 }

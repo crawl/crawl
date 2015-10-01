@@ -16,6 +16,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "asg.h" // for make_name()'s use
+#include "branch.h"
 #include "butcher.h"
 #include "cio.h"
 #include "colour.h"
@@ -36,6 +37,7 @@
 #include "notes.h"
 #include "options.h"
 #include "output.h"
+#include "place.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
@@ -50,6 +52,9 @@
 #include "unicode.h"
 #include "unwind.h"
 #include "viewgeom.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
 
 static bool _is_consonant(char let);
 static char _random_vowel(int seed);
@@ -2721,59 +2726,81 @@ void check_item_knowledge(bool unknown_items)
 
 void display_runes()
 {
-    const bool has_orb = player_has_orb();
-    vector<const item_def*> items;
+    auto col = runes_in_pack() < ZOT_ENTRY_RUNES ?  "lightgrey" :
+               runes_in_pack() < you.obtainable_runes ? "green" :
+                                                   "lightgreen";
 
-    if (has_orb)
-    {
-        item_def* orb = new item_def;
-        if (orb != 0)
-        {
-            orb->base_type = OBJ_ORBS;
-            orb->sub_type  = ORB_ZOT;
-            orb->quantity  = 1;
-            item_colour(*orb);
-            items.push_back(orb);
-        }
-    }
+    auto title = make_stringf("<white>Runes of Zot (</white>"
+                              "<%s>%d</%s><white>/%d) & Orbs of Power</white>",
+                              col, runes_in_pack(), col, you.obtainable_runes);
+    title = string(max(0, 39 - printed_width(title) / 2), ' ') + title;
 
-    for (int i = 0; i < NUM_RUNE_TYPES; i++)
+    Menu menu(MF_NOSELECT | MF_ALLOW_FORMATTING);
+
+    menu.set_title(new MenuEntry(title));
+
+    for (int i = 0; i < NUM_RUNE_TYPES; ++i)
     {
-        if (!you.runes[i])
+        if (i == RUNE_ELF || i == RUNE_FOREST)
             continue;
 
-        item_def* ptmp = new item_def;
-        if (ptmp != 0)
+        string text = "<";
+        text += you.runes[i] ? colour_to_str(rune_colour(i))
+                             : string("darkgrey");
+        text += ">";
+        text += rune_type_name(i);
+        text += " rune of Zot";
+        if (!you.runes[i])
         {
-            ptmp->base_type = OBJ_MISCELLANY;
-            ptmp->sub_type  = MISC_RUNE_OF_ZOT;
-            ptmp->quantity  = 1;
-            ptmp->plus      = i;
-            item_colour(*ptmp);
-            items.push_back(ptmp);
+            text += " (";
+            const level_id place = rune_location((rune_type)i);
+            if (place.depth == -1)
+            {
+                text += "in ";
+                text += branches[place.branch].longname;
+            }
+            else
+                text += prep_branch_level_name(place);
+            text += ")";
         }
+        text += "</";
+        text += you.runes[i] ? colour_to_str(rune_colour(i))
+                             : string("darkgrey");
+        text += ">";
+
+        auto entry = new MenuEntry(text);
+#ifdef USE_TILE
+        item_info dummy;
+        dummy.base_type = OBJ_MISCELLANY;
+        dummy.sub_type = MISC_RUNE_OF_ZOT;
+        dummy.rune_enum = you.runes[i] ? i : NUM_RUNE_TYPES;
+        item_colour(dummy);
+        entry->add_tile(tile_def(tileidx_item(dummy), TEX_DEFAULT));
+#endif
+        menu.add_entry(entry);
     }
 
-    if (items.empty())
+    menu.add_entry(new MenuEntry(""));
+
+    if (player_has_orb())
     {
-        mpr("You haven't found any runes yet.");
-        return;
+        auto entry = new MenuEntry("<magenta>The Orb of Zot</magenta>");
+#ifdef USE_TILE
+        item_info dummy;
+        dummy.base_type = OBJ_ORBS;
+        dummy.sub_type = ORB_ZOT;
+        entry->add_tile(tile_def(tileidx_item(dummy), TEX_DEFAULT));
+#endif
+        menu.add_entry(entry);
+    }
+    else
+    {
+        menu.add_entry(new MenuEntry("<darkgrey>The Orb of Zot ("
+                                     + prep_branch_level_name({BRANCH_ZOT, brdepth[BRANCH_ZOT]})
+                                     + ")</darkgrey>"));
     }
 
-    InvMenu menu;
-
-    menu.set_title(make_stringf("Runes of Zot: %d/%d",
-                                has_orb ? (int)items.size() - 1
-                                        : (int)items.size(),
-                                you.obtainable_runes));
-    menu.set_flags(MF_NOSELECT);
-    menu.set_type(MT_RUNES);
-    menu.load_items(items, unknown_item_mangle, 'a', false);
     menu.show();
-    menu.getkey();
-    redraw_screen();
-
-    deleteAll(items);
 }
 
 // Seed ranges for _random_consonant_set: (B)eginning and one-past-the-(E)nd

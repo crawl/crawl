@@ -23,7 +23,6 @@
 #include "hiscores.h"
 #include "itemname.h"
 #include "items.h"
-#include "lookup_help.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
@@ -740,20 +739,9 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
                 else
                     mprf("Welcome to %s!", branches[branch].longname);
 
-                // "This branch contains the %s rune%s of Zot."
-                if (branch != BRANCH_PANDEMONIUM)
-                {
-                    const string rune_msg = branch_rune_desc(branch);
-                    const int branch_rune = branch_to_rune(branch);
-                    if (!rune_msg.empty() && !you.runes[branch_rune])
-                        mpr(rune_msg);
-                }
-                else if (!you.runes[RUNE_DEMONIC])
-                {
-                    // branch_rune_desc lists all five runes for pan, so we
-                    // can't use its output.
-                    mpr("This branch contains the demonic rune of Zot.");
-                }
+                const string rune_msg = branch_rune_desc(branch, true);
+                if (!rune_msg.empty())
+                    mpr(rune_msg);
             }
 
             // Entered a regular (non-portal) branch from above.
