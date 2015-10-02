@@ -1248,7 +1248,7 @@ PLUS:    +7
 COLOUR:  LIGHTCYAN
 TILE:    urand_kryias
 TILE_EQ: kryias
-INSCRIP: DeviceHeal+++
+INSCRIP: DeviceHeal*2
 COLD:    1
 
 # This entry must always be last.
