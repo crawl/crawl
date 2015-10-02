@@ -7816,17 +7816,30 @@ bool player::form_uses_xl() const
     return form == TRAN_WISP || form == TRAN_FUNGUS;
 }
 
+static int _get_device_heal_factor()
+{
+    int factor = 0;
+
+    // start with penalties
+    factor -= player_equip_unrand(UNRAND_VINES) ? 3 : 0;
+    factor -= you.mutation[MUT_NO_DEVICE_HEAL];
+
+    // then apply bonuses
+    factor += player_equip_unrand(UNRAND_KRYIAS) ? 3 : 0;
+
+    return factor;
+}
+
 bool player::can_device_heal()
 {
-    return mutation[MUT_NO_DEVICE_HEAL] < 3
-        && !player_equip_unrand(UNRAND_VINES);
+    return _get_device_heal_factor() > 0;
 }
 
 int player::scale_device_healing(int healing_amount)
 {
-    int device_heal_degree = player_equip_unrand(UNRAND_VINES) ? 3 :
-            player_mutation_level(MUT_NO_DEVICE_HEAL);
-    return div_rand_round(healing_amount * (3 - device_heal_degree), 3);
+    // make sure we don't turn healing negative.
+    return div_rand_round(healing_amount *
+            max(0, 3 + _get_device_heal_factor()), 3);
 }
 
 #if TAG_MAJOR_VERSION == 34

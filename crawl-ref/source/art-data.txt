@@ -1238,8 +1238,18 @@ PLUS:    +5
 COLOUR:  GREEN
 TILE:    urand_vines
 TILE_EQ: vines
-INSCRIP: DeviceHeal-
+INSCRIP: DeviceHeal---
 REGEN:   10
+
+ENUM:    KRYIAS
+NAME:    Kryia's mail coat
+OBJ:     OBJ_ARMOUR/ARM_SCALE_MAIL
+PLUS:    +7
+COLOUR:  LIGHTCYAN
+TILE:    urand_kryias
+TILE_EQ: kryias
+INSCRIP: DeviceHeal+++
+COLD:    1
 
 # This entry must always be last.
 ENUM:   DUMMY2

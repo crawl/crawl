@@ -1350,6 +1350,18 @@ static void _VINES_unequip(item_def *item, bool *show_msgs)
 
 ///////////////////////////////////////////////////
 
+static void _KRYIAS_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "Your attunement to healing devices increases!");
+}
+
+static void _KRYIAS_unequip(item_def *item, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "Your attunement to healing devices decreases.");
+}
+
+///////////////////////////////////////////////////
+
 // Vampiric effect triggers on every hit, see attack::apply_damage_brand()
 
 static void _LEECH_equip(item_def *item, bool *show_msgs, bool unmeld)
