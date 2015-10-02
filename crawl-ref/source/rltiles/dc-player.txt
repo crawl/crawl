@@ -456,6 +456,8 @@ lears_hauberk LEARS_HAUBERK
 faerie_dragon_armour FAERIE_DRAGON_ARMOUR
 moon_troll_leather_armour MOON_TROLL_LEATHER_ARMOUR
 orange_crystal ORANGE_CRYSTAL
+vines VINES
+kryias KRYIAS
 %end_ctg
 
 ### Arms

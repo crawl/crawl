@@ -7818,28 +7818,31 @@ bool player::form_uses_xl() const
 
 static int _get_device_heal_factor()
 {
-    int factor = 0;
+    // healing factor is expressed in thirds, so default is 3/3 -- 100%.
+    int factor = 3;
 
     // start with penalties
     factor -= player_equip_unrand(UNRAND_VINES) ? 3 : 0;
     factor -= you.mutation[MUT_NO_DEVICE_HEAL];
 
     // then apply bonuses
-    factor += player_equip_unrand(UNRAND_KRYIAS) ? 3 : 0;
+    // Kryia's doubles device healing for non-deep dwarves, because deep dwarves
+    // are abusive bastards.
+    if (you.species != SP_DEEP_DWARF)
+        factor *= player_equip_unrand(UNRAND_KRYIAS) ? 2 : 1;
 
-    return factor;
+    // make sure we don't turn healing negative.
+    return max(0, factor);
 }
 
 bool player::can_device_heal()
 {
-    return _get_device_heal_factor() > -3;
+    return _get_device_heal_factor() > 0;
 }
 
 int player::scale_device_healing(int healing_amount)
 {
-    // make sure we don't turn healing negative.
-    return div_rand_round(healing_amount *
-            max(0, 3 + _get_device_heal_factor()), 3);
+    return div_rand_round(healing_amount * _get_device_heal_factor(), 3);
 }
 
 #if TAG_MAJOR_VERSION == 34
