@@ -603,3 +603,13 @@ A robe of woven, growing vines. The vines' rapid growth seems to be conveyed to
 the wearer, but they also prevent the wearer from being healed by potions and
 wands.
 %%%%
+Kryia's mail coat
+
+This armour is said to have been forged for Kryia in her old age. The queen
+continued to insist on leading her armies from the front even into old age, but
+as her aging body failed her, this coat helped to enhance the healing draughts
+that kept her alive.
+
+The wearer of this garment will have significantly increased healing from
+devices.
+%%%%
