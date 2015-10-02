@@ -7832,7 +7832,7 @@ static int _get_device_heal_factor()
 
 bool player::can_device_heal()
 {
-    return _get_device_heal_factor() > 0;
+    return _get_device_heal_factor() > -3;
 }
 
 int player::scale_device_healing(int healing_amount)
