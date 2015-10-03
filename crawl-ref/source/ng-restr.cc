@@ -88,7 +88,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
 
     // Can't use them with a shield.
     if (ng.species == SP_SPRIGGAN && ng.job == JOB_FIGHTER
-        && wpn == WPN_TRIDENT)
+        && (wpn == WPN_TRIDENT || wpn == WPN_SPEAR))
     {
         return CC_BANNED;
     }
