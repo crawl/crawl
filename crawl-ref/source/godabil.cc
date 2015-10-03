@@ -5657,6 +5657,14 @@ static int _get_sacrifice_piety(ability_type sac)
     else if (sac_def.sacrifice_skill != SK_NONE)
         piety_gain += _piety_for_skill(sac_def.sacrifice_skill);
 
+    // special cases for Sac Hand
+    // No one-handed bows.
+    if (you.species != SP_FORMICID)
+        piety_gain += _piety_for_skill(SK_BOWS);
+    // No one-handed polearms for spriggans.
+    else if (you.species == SP_SPRIGGAN)
+        piety_gain += _piety_for_skill(SK_POLEARMS);
+
     switch (sacrifice)
     {
         case ABIL_RU_SACRIFICE_ESSENCE:
@@ -6175,6 +6183,14 @@ bool ru_do_sacrifice(ability_type sac)
     }
     else if (sac_def.sacrifice_skill != SK_NONE)
         _ru_kill_skill(sac_def.sacrifice_skill);
+
+    // special cases for Sac Hand
+    // No one-handed polearms for spriggans. Seriously, why are you doing this?
+    if (you.species == SP_SPRIGGAN)
+        _ru_kill_skill(SK_POLEARMS);
+    // No one-handed bows.
+    else if (you.species != SP_FORMICID)
+        _ru_kill_skill(SK_BOWS);
 
     mark_milestone("sacrifice", mile_text.c_str());
 
