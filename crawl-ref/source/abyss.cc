@@ -280,12 +280,9 @@ static bool _abyss_place_rune(const map_bitmask &abyss_genlevel_mask)
     {
         dprf(DIAG_ABYSS, "Placing abyssal rune at (%d,%d)",
              chosen_spot.x, chosen_spot.y);
-        int item_ind  = items(true, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, 0);
+        int item_ind  = items(true, OBJ_RUNES, RUNE_ABYSSAL, 0);
         if (item_ind != NON_ITEM)
-        {
-            mitm[item_ind].plus = RUNE_ABYSSAL;
             item_colour(mitm[item_ind]);
-        }
         move_item_to_grid(&item_ind, chosen_spot);
         return item_ind != NON_ITEM;
     }
@@ -504,7 +501,7 @@ static dungeon_feature_type _abyss_pick_altar()
 static bool _abyssal_rune_at(const coord_def p)
 {
     for (stack_iterator si(p); si; ++si)
-        if (item_is_rune(*si, RUNE_ABYSSAL))
+        if (si->is_type(OBJ_RUNES, RUNE_ABYSSAL))
             return true;
     return false;
 }
@@ -1340,8 +1337,7 @@ static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
 static void _generate_area(const map_bitmask &abyss_genlevel_mask)
 {
     // Any rune on the floor prevents the abyssal rune from being generated.
-    const bool placed_abyssal_rune =
-        find_floor_item(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT);
+    const bool placed_abyssal_rune = find_floor_item(OBJ_RUNES);
 
     dprf(DIAG_ABYSS, "_generate_area(). turns_on_level: %d, rune_on_floor: %s",
          env.turns_on_level, placed_abyssal_rune? "yes" : "no");

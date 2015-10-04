@@ -402,7 +402,7 @@ bool god_id_item(item_def& item, bool silent)
     {
         // Don't identify runes or the orb, since this has no gameplay purpose
         // and might mess up other things.
-        if (item_is_rune(item) || item_is_orb(item))
+        if (item.base_type == OBJ_RUNES || item_is_orb(item))
             return false;
 
         ided = ISFLAG_KNOW_CURSE;

@@ -759,8 +759,9 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_BOOKS,
     OBJ_MISCELLANY,
     OBJ_FOOD,
-    // These two can't actually be in your inventory.
+    // These four can't actually be in your inventory.
     OBJ_CORPSES,
+    OBJ_RUNES,
     OBJ_ORBS,
     OBJ_GOLD);
 
@@ -935,6 +936,8 @@ const char *item_class_name(int type, bool terse)
         case OBJ_RODS:       return "Rods";
         case OBJ_ORBS:       return "Orbs of Power";
         case OBJ_MISCELLANY: return "Miscellaneous";
+        case OBJ_CORPSES:    return "Carrion";
+        case OBJ_RUNES:      return "Runes of Zot";
         }
     }
     return "";
@@ -2074,7 +2077,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
 #if TAG_MAJOR_VERSION == 34
             && item.sub_type != MISC_BUGGY_EBONY_CASKET
 #endif
-            && item.sub_type != MISC_RUNE_OF_ZOT)
+            )
         {
             return true;
         }

@@ -210,11 +210,7 @@ static show_item_type _item_to_show_code(const item_def &item)
     case OBJ_BOOKS:      return SHOW_ITEM_BOOK;
     case OBJ_STAVES:     return SHOW_ITEM_STAFF;
     case OBJ_RODS:       return SHOW_ITEM_ROD;
-    case OBJ_MISCELLANY:
-        if (item.sub_type == MISC_RUNE_OF_ZOT)
-            return SHOW_ITEM_RUNE;
-        else
-            return SHOW_ITEM_MISCELLANY;
+    case OBJ_MISCELLANY: return SHOW_ITEM_MISCELLANY;
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
             return SHOW_ITEM_SKELETON;
@@ -222,6 +218,7 @@ static show_item_type _item_to_show_code(const item_def &item)
             return SHOW_ITEM_CORPSE;
     case OBJ_GOLD:       return SHOW_ITEM_GOLD;
     case OBJ_DETECTED:   return SHOW_ITEM_DETECTED;
+    case OBJ_RUNES:      return SHOW_ITEM_RUNE;
     default:             return SHOW_ITEM_ORB; // bad item character
     }
 }

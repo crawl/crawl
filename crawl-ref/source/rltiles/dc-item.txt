@@ -1101,29 +1101,29 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 misc_quad MISC_QUAD_DAMAGE
 %sdir item/misc/runes
 generic MISC_RUNE_OF_ZOT
-rune_tartarus MISC_RUNE_TARTARUS
-rune_cocytus MISC_RUNE_COCYTUS
-rune_dis MISC_RUNE_DIS
-rune_gehenna MISC_RUNE_GEHENNA
-rune_cerebov MISC_RUNE_CEREBOV
-rune_gloorx_vloq MISC_RUNE_GLOORX_VLOQ
-rune_mnoleg MISC_RUNE_MNOLEG
-rune_lom_lobon MISC_RUNE_LOM_LOBON
-rune_snake MISC_RUNE_SNAKE
-rune_swamp MISC_RUNE_SWAMP
-rune_shoals MISC_RUNE_SHOALS
-rune_spider MISC_RUNE_SPIDER
-rune_slime MISC_RUNE_SLIME
-rune_vaults MISC_RUNE_VAULTS
-rune_tomb MISC_RUNE_TOMB
-rune_abyss MISC_RUNE_ABYSS
-rune_demonic_1 MISC_RUNE_DEMONIC
+rune_tartarus RUNE_TARTARUS
+rune_cocytus RUNE_COCYTUS
+rune_dis RUNE_DIS
+rune_gehenna RUNE_GEHENNA
+rune_cerebov RUNE_CEREBOV
+rune_gloorx_vloq RUNE_GLOORX_VLOQ
+rune_mnoleg RUNE_MNOLEG
+rune_lom_lobon RUNE_LOM_LOBON
+rune_snake RUNE_SNAKE
+rune_swamp RUNE_SWAMP
+rune_shoals RUNE_SHOALS
+rune_spider RUNE_SPIDER
+rune_slime RUNE_SLIME
+rune_vaults RUNE_VAULTS
+rune_tomb RUNE_TOMB
+rune_abyss RUNE_ABYSS
+rune_demonic_1 RUNE_DEMONIC
 rune_demonic_2
 rune_demonic_3
 rune_demonic_4
 rune_demonic_5
 rune_demonic_6
-rune_elven MISC_RUNE_ELVEN
+rune_elven RUNE_ELVEN
 
 #OBJ_CORPSES
 #handled in dc-corpse.txt

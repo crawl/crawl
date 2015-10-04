@@ -1998,6 +1998,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_ORBS:              // always forced in current setup {dlb}
+    case OBJ_RUNES:
         item.sub_type = force_type;
         break;
 

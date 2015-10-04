@@ -973,7 +973,6 @@ static string misc_type_name(int type, bool known)
     case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
     case MISC_PHANTOM_MIRROR:            return "phantom mirror";
 
-    case MISC_RUNE_OF_ZOT:
     default:
         return "buggy miscellaneous item";
     }
@@ -1147,6 +1146,7 @@ const char *base_type_string(object_class_type type)
     case OBJ_MISCELLANY: return "miscellaneous";
     case OBJ_CORPSES: return "corpse";
     case OBJ_GOLD: return "gold";
+    case OBJ_RUNES: return "rune";
     default: return "";
     }
 }
@@ -1196,15 +1196,12 @@ string sub_type_string(const item_def &item, bool known)
     }
     case OBJ_STAVES: return staff_type_name(static_cast<stave_type>(sub_type));
     case OBJ_RODS:   return rod_type_name(static_cast<rod_type>(sub_type));
-    case OBJ_MISCELLANY:
-        if (sub_type == MISC_RUNE_OF_ZOT)
-            return "rune of Zot";
-        else
-            return misc_type_name(sub_type, known);
+    case OBJ_MISCELLANY: return misc_type_name(sub_type, known);
     // these repeat as base_type_string
-    case OBJ_ORBS: return "orb of Zot"; break;
-    case OBJ_CORPSES: return "corpse"; break;
-    case OBJ_GOLD: return "gold"; break;
+    case OBJ_ORBS: return "orb of Zot";
+    case OBJ_CORPSES: return "corpse";
+    case OBJ_GOLD: return "gold";
+    case OBJ_RUNES: return "rune of Zot";
     default: return "";
     }
 }
@@ -1926,14 +1923,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         break;
     }
     case OBJ_MISCELLANY:
-        if (item_typ == MISC_RUNE_OF_ZOT)
-        {
-            if (!dbname)
-                buff << rune_type_name(rune_enum) << " ";
-            buff << "rune of Zot";
-            break;
-        }
-
         if (is_deck(*this) || item_typ == MISC_DECK_UNKNOWN)
         {
             _name_deck(*this, desc, ident, buff);
@@ -2046,6 +2035,12 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     // rearranged 15 Apr 2000 {dlb}:
     case OBJ_ORBS:
         buff.str("Orb of Zot");
+        break;
+
+    case OBJ_RUNES:
+        if (!dbname)
+            buff << rune_type_name(sub_type) << " ";
+        buff << "rune of Zot";
         break;
 
     case OBJ_GOLD:
@@ -2422,9 +2417,7 @@ public:
         }
         else if (item->base_type == OBJ_MISCELLANY)
         {
-            if (item->sub_type == MISC_RUNE_OF_ZOT)
-                name = "runes";
-            else if (item->sub_type == MISC_PHANTOM_MIRROR)
+            if (item->sub_type == MISC_PHANTOM_MIRROR)
                 name = pluralise(item->name(DESC_PLAIN));
             else
                 name = "miscellaneous";
@@ -2438,6 +2431,8 @@ public:
         }
         else if (item->sub_type == get_max_subtype(item->base_type))
             name = "unknown " + lowercase_string(item_class_name(item->base_type));
+        else if (item->base_type == OBJ_RUNES)
+            name = "runes";
         else
         {
             name = item->name(DESC_PLAIN,false,true,false,false,flags);
@@ -2639,13 +2634,13 @@ void check_item_knowledge(bool unknown_items)
         {
             OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
             OBJ_BOOKS, OBJ_RODS, OBJ_GOLD,
-            OBJ_MISCELLANY, OBJ_MISCELLANY
+            OBJ_MISCELLANY, OBJ_RUNES,
         };
         static const int misc_ST_list[] =
         {
             FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_BEEF_JERKY, FOOD_BREAD_RATION, FOOD_FRUIT, FOOD_PIZZA, FOOD_ROYAL_JELLY,
-            BOOK_MANUAL, NUM_RODS, 1, MISC_RUNE_OF_ZOT,
-            NUM_MISCELLANY
+            BOOK_MANUAL, NUM_RODS, 1,
+            NUM_MISCELLANY, NUM_RUNE_TYPES,
         };
         COMPILE_CHECK(ARRAYSZ(misc_list) == ARRAYSZ(misc_ST_list));
         for (unsigned i = 0; i < ARRAYSZ(misc_list); i++)
@@ -2730,9 +2725,9 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
     auto entry = static_cast<InvEntry*>(me);
     ASSERT(entry);
 
-    if (entry->item->is_type(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT))
+    if (entry->item->base_type == OBJ_RUNES)
     {
-        auto rune = static_cast<rune_type>(entry->item->rune_enum);
+        auto rune = static_cast<rune_type>(entry->item->sub_type);
         string text = "<";
         text += you.runes[rune] ? colour_to_str(rune_colour(rune))
                                 : string("darkgrey");
@@ -2759,7 +2754,7 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
         entry->text = text;
         // Use the generic tile for rune that haven't been gotten yet, to make
         // it more clear at a glance.
-        const_cast<item_def*>(entry->item)->rune_enum = NUM_RUNE_TYPES;
+        const_cast<item_def*>(entry->item)->sub_type = NUM_RUNE_TYPES;
     }
     else if (entry->item->is_type(OBJ_ORBS, ORB_ZOT))
     {
@@ -2793,25 +2788,18 @@ void display_runes()
 
     vector<const item_def*> items;
 
-    auto item = new item_def();
-    item->base_type = OBJ_MISCELLANY;
-    item->sub_type = MISC_RUNE_OF_ZOT;
-    // Spider should show up at the beginning, with the other Lair runes.
-    item->rune_enum = RUNE_SPIDER;
-    items.push_back(item);
     for (int i = 0; i < NUM_RUNE_TYPES; ++i)
     {
-        if (i == RUNE_ELF || i == RUNE_FOREST || i == RUNE_SPIDER)
+        if (i == RUNE_ELF || i == RUNE_FOREST)
             continue;
 
-        item = new item_def();
-        item->base_type = OBJ_MISCELLANY;
-        item->sub_type = MISC_RUNE_OF_ZOT;
-        item->rune_enum = i;
+        auto item = new item_def();
+        item->base_type = OBJ_RUNES;
+        item->sub_type = i;
         item_colour(*item);
         items.push_back(item);
     }
-    item = new item_def();
+    auto item = new item_def();
     item->base_type = OBJ_ORBS;
     item->sub_type = ORB_ZOT;
     items.push_back(item);
@@ -3822,7 +3810,6 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif
         // These can always be used.
         case MISC_LANTERN_OF_SHADOWS:
-        case MISC_RUNE_OF_ZOT:
             return false;
 
         // Purely summoning misc items don't work w/ sac love
@@ -4036,8 +4023,6 @@ void init_item_name_cache()
             int npluses = 0;
             if (base_type == OBJ_BOOKS && sub_type == BOOK_MANUAL)
                 npluses = NUM_SKILLS;
-            else if (base_type == OBJ_MISCELLANY && sub_type == MISC_RUNE_OF_ZOT)
-                npluses = NUM_RUNE_TYPES;
 
             item_def item;
             item.base_type = base_type;
@@ -4052,7 +4037,7 @@ void init_item_name_cache()
                     item.special = DECK_RARITY_COMMON;
                     init_deck(item);
                 }
-                string name = item.name(plus ? DESC_PLAIN : DESC_DBNAME,
+                string name = item.name(plus || item.base_type == OBJ_RUNES ? DESC_PLAIN : DESC_DBNAME,
                                         true, true);
                 lowercase(name);
                 cglyph_t g = get_item_glyph(&item);

@@ -3882,6 +3882,15 @@ void unmarshallItem(reader &th, item_def &item)
         return;
     item.sub_type    = unmarshallUByte(th);
     item.plus        = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_RUNE_TYPE
+        && item.is_type(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT))
+    {
+        item.base_type = OBJ_RUNES;
+        item.sub_type = item.plus;
+        item.plus = 0;
+    }
+#endif
     item.plus2       = unmarshallShort(th);
     item.special     = unmarshallInt(th);
     item.quantity    = unmarshallShort(th);

@@ -1026,6 +1026,7 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_CORPSES:
     case OBJ_MISSILES:
     case OBJ_ORBS:
+    case OBJ_RUNES:
         flagset = 0;
         break;
     case OBJ_BOOKS:
@@ -2185,15 +2186,9 @@ reach_type weapon_reach(const item_def &item)
 //
 // Macguffins
 //
-bool item_is_rune(const item_def &item, rune_type which_rune)
-{
-    return item.is_type(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT)
-           && (which_rune == NUM_RUNE_TYPES || item.plus == which_rune);
-}
-
 bool item_is_unique_rune(const item_def &item)
 {
-    return item_is_rune(item)
+    return item.base_type == OBJ_RUNES
            && item.plus != RUNE_DEMONIC
            && item.plus != RUNE_ABYSSAL;
 }
@@ -2848,7 +2843,7 @@ bool is_item_jelly_edible(const item_def &item)
     }
 
     // Don't eat special game items.
-    if (item_is_orb(item) || item_is_rune(item))
+    if (item_is_orb(item) || item.base_type == OBJ_RUNES)
         return false;
 
     return true;
