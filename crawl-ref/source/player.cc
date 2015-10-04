@@ -1080,13 +1080,13 @@ int player_teleport(bool calc_unid)
 }
 
 // Computes bonuses to regeneration from most sources. Does not handle
-// slow healing, vampireness, or Trog's Hand.
+// slow regeneration, vampireness, or Trog's Hand.
 static int _player_bonus_regen()
 {
     int rr = 0;
 
-    // Trog's Hand is handled separately so that it will bypass slow healing,
-    // and it overrides the spell.
+    // Trog's Hand is handled separately so that it will bypass slow
+    // regeneration, and it overrides the spell.
     if (you.duration[DUR_REGENERATION]
         && !you.duration[DUR_TROGS_HAND])
     {
@@ -1117,11 +1117,11 @@ static int _player_bonus_regen()
     return rr;
 }
 
-// Slow healing mutation: slows or stops regeneration when monsters are
+// Slow regeneration mutation: slows or stops regeneration when monsters are
 // visible at level 1 or 2 respectively, stops regeneration at level 3.
-static int _slow_heal_rate()
+static int _slow_regeneration_rate()
 {
-    if (player_mutation_level(MUT_SLOW_HEALING) == 3)
+    if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
         return 0;
 
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
@@ -1130,7 +1130,7 @@ static int _slow_heal_rate()
             && !mi->wont_attack()
             && !mi->neutral())
         {
-            return 2 - player_mutation_level(MUT_SLOW_HEALING);
+            return 2 - player_mutation_level(MUT_SLOW_REGENERATION);
         }
     }
     return 2;
@@ -1176,10 +1176,10 @@ int player_regen()
             rr += (100 - you.hp_max) / 6;
 #endif
 
-    // Slow heal mutation.
-    if (player_mutation_level(MUT_SLOW_HEALING) > 0)
+    // Slow regeneration mutation.
+    if (player_mutation_level(MUT_SLOW_REGENERATION) > 0)
     {
-        rr *= _slow_heal_rate();
+        rr *= _slow_regeneration_rate();
         rr /= 2;
     }
     if (you.duration[DUR_COLLAPSE])
@@ -1188,7 +1188,7 @@ int player_regen()
     if (you.disease)
         rr = 0;
 
-    // Trog's Hand. This circumvents the slow healing effect.
+    // Trog's Hand. This circumvents the slow regeneration mutation.
     if (you.duration[DUR_TROGS_HAND])
         rr += 100;
 
@@ -1260,7 +1260,7 @@ int player_hunger_rate(bool temp)
     }
 
     if (you.hp < you.hp_max
-        && player_mutation_level(MUT_SLOW_HEALING) < 3)
+        && player_mutation_level(MUT_SLOW_REGENERATION) < 3)
     {
         // jewellery
         hunger += 3 * you.wearing(EQ_AMULET, AMU_REGENERATION);
@@ -4825,7 +4825,7 @@ void dec_disease_player(int delay)
 
         // Extra regeneration means faster recovery from disease.
         // But not if not actually regenerating!
-        if (player_mutation_level(MUT_SLOW_HEALING) < 3
+        if (player_mutation_level(MUT_SLOW_REGENERATION) < 3
             && !(you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING))
         {
             rr += _player_bonus_regen();
@@ -5463,7 +5463,7 @@ bool player::is_sufficiently_rested() const
 {
     // Only return false if resting will actually help.
     return (hp >= _rest_trigger_level(hp_max)
-            || player_mutation_level(MUT_SLOW_HEALING) == 3
+            || player_mutation_level(MUT_SLOW_REGENERATION) == 3
             || you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
         && (magic_points >= _rest_trigger_level(max_magic_points)
             || you.spirit_shield() && you.species == SP_DEEP_DWARF);
