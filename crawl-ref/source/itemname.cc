@@ -2714,7 +2714,7 @@ void check_item_knowledge(bool unknown_items)
     menu.set_title(stitle);
     menu.show(true);
 
-    char last_char = menu.getkey();
+    auto last_char = menu.getkey();
 
     deleteAll(items);
     deleteAll(items_missile);

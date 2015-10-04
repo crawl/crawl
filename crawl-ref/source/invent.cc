@@ -881,9 +881,9 @@ string InvMenu::help_key() const
     return type == MT_DROP || type == MT_PICKUP ? "pick-up" : "";
 }
 
-unsigned char InvMenu::getkey() const
+int InvMenu::getkey() const
 {
-    unsigned char mkey = lastch;
+    auto mkey = lastch;
     if (type == MT_KNOW && (mkey == 0 || mkey == CK_ENTER))
         return mkey;
 
