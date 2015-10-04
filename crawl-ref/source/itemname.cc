@@ -54,6 +54,7 @@
 #include "viewgeom.h"
 #ifdef USE_TILE
  #include "tilepick.h"
+ #include "rltiles/tiledef-feat.h"
 #endif
 
 static bool _is_consonant(char let);
