@@ -962,6 +962,7 @@ static string misc_type_name(int type, bool known)
     case MISC_DISC_OF_STORMS:            return "disc of storms";
 #if TAG_MAJOR_VERSION == 34
     case MISC_BOTTLED_EFREET:            return "empty flask";
+    case MISC_RUNE_OF_ZOT:               return "obsolete rune of zot";
 #endif
     case MISC_STONE_OF_TREMORS:          return "stone of tremors";
     case MISC_QUAD_DAMAGE:               return "quad damage";
@@ -2806,7 +2807,7 @@ void display_runes()
     menu.load_items(items, _fixup_runeorb_entry);
 
     menu.show();
-    
+
     deleteAll(items);
 }
 
