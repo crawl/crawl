@@ -1322,7 +1322,7 @@ void Menu::write_title()
     formatted_string fs = formatted_string(col);
 
     if (flags & MF_ALLOW_FORMATTING)
-        fs = formatted_string::parse_string(text, true, nullptr, col);
+        fs += formatted_string::parse_string(text);
     else
         fs.cprintf("%s", text.c_str());
 

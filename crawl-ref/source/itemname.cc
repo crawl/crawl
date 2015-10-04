@@ -2725,42 +2725,54 @@ void check_item_knowledge(bool unknown_items)
         check_item_knowledge(!unknown_items);
 }
 
-static unique_ptr<MenuEntry> _rune_entry(rune_type rune)
+static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
 {
-    string text = "<";
-    text += you.runes[rune] ? colour_to_str(rune_colour(rune))
-                            : string("darkgrey");
-    text += ">";
-    text += rune_type_name(rune);
-    text += " rune of Zot";
-    if (!you.runes[rune])
-    {
-        text += " (";
-        const level_id place = rune_location(rune);
-        if (place.depth == -1)
-        {
-            text += "in ";
-            text += branches[place.branch].longname;
-        }
-        else
-            text += prep_branch_level_name(place);
-        text += ")";
-    }
-    text += "</";
-    text += you.runes[rune] ? colour_to_str(rune_colour(rune))
-                            : string("darkgrey");
-    text += ">";
+    auto entry = static_cast<InvEntry*>(me);
+    ASSERT(entry);
 
-    auto entry = unique_ptr<MenuEntry>(new MenuEntry(text));
-#ifdef USE_TILE
-    item_info dummy;
-    dummy.base_type = OBJ_MISCELLANY;
-    dummy.sub_type = MISC_RUNE_OF_ZOT;
-    dummy.rune_enum = you.runes[rune] ? rune : NUM_RUNE_TYPES;
-    item_colour(dummy);
-    entry->add_tile(tile_def(tileidx_item(dummy), TEX_DEFAULT));
-    entry->add_tile(tile_def(TILE_ITEM_SLOT, TEX_FEAT));
-#endif
+    if (entry->item->is_type(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT))
+    {
+        auto rune = static_cast<rune_type>(entry->item->rune_enum);
+        string text = "<";
+        text += you.runes[rune] ? colour_to_str(rune_colour(rune))
+                                : string("darkgrey");
+        text += ">";
+        text += rune_type_name(rune);
+        text += " rune of Zot";
+        if (!you.runes[rune])
+        {
+            text += " (";
+            const level_id place = rune_location(rune);
+            if (place.depth == -1)
+            {
+                text += "in ";
+                text += branches[place.branch].longname;
+            }
+            else
+                text += prep_branch_level_name(place);
+            text += ")";
+        }
+        text += "</";
+        text += you.runes[rune] ? colour_to_str(rune_colour(rune))
+                                : string("darkgrey");
+        text += ">";
+        entry->text = text;
+        // Use the generic tile for rune that haven't been gotten yet, to make
+        // it more clear at a glance.
+        const_cast<item_def*>(entry->item)->rune_enum = NUM_RUNE_TYPES;
+    }
+    else if (entry->item->is_type(OBJ_ORBS, ORB_ZOT))
+    {
+        if (player_has_orb())
+            entry->text = "<magenta>The Orb of Zot</magenta>";
+        else
+        {
+            entry->text = "<darkgrey>The Orb of Zot ("
+                                     + prep_branch_level_name({BRANCH_ZOT, brdepth[BRANCH_ZOT]})
+                                     + ")</darkgrey>";
+        }
+    }
+
     return entry;
 }
 
@@ -2775,39 +2787,36 @@ void display_runes()
                               col, runes_in_pack(), col, you.obtainable_runes);
     title = string(max(0, 39 - printed_width(title) / 2), ' ') + title;
 
-    Menu menu(MF_NOSELECT | MF_ALLOW_FORMATTING);
+    InvMenu menu(MF_NOSELECT | MF_ALLOW_FORMATTING);
 
-    menu.set_title(new MenuEntry(title));
+    menu.set_title(title);
 
+    vector<const item_def*> items;
+
+    auto item = new item_def();
+    item->base_type = OBJ_MISCELLANY;
+    item->sub_type = MISC_RUNE_OF_ZOT;
     // Spider should show up at the beginning, with the other Lair runes.
-    menu.add_entry(_rune_entry(RUNE_SPIDER));
+    item->rune_enum = RUNE_SPIDER;
+    items.push_back(item);
     for (int i = 0; i < NUM_RUNE_TYPES; ++i)
     {
         if (i == RUNE_ELF || i == RUNE_FOREST || i == RUNE_SPIDER)
             continue;
 
-        menu.add_entry(_rune_entry(static_cast<rune_type>(i)));
+        item = new item_def();
+        item->base_type = OBJ_MISCELLANY;
+        item->sub_type = MISC_RUNE_OF_ZOT;
+        item->rune_enum = i;
+        item_colour(*item);
+        items.push_back(item);
     }
+    item = new item_def();
+    item->base_type = OBJ_ORBS;
+    item->sub_type = ORB_ZOT;
+    items.push_back(item);
 
-    menu.add_entry(new MenuEntry(""));
-
-    if (player_has_orb())
-    {
-        auto entry = new MenuEntry("<magenta>The Orb of Zot</magenta>");
-#ifdef USE_TILE
-        item_info dummy;
-        dummy.base_type = OBJ_ORBS;
-        dummy.sub_type = ORB_ZOT;
-        entry->add_tile(tile_def(tileidx_item(dummy), TEX_DEFAULT));
-#endif
-        menu.add_entry(entry);
-    }
-    else
-    {
-        menu.add_entry(new MenuEntry("<darkgrey>The Orb of Zot ("
-                                     + prep_branch_level_name({BRANCH_ZOT, brdepth[BRANCH_ZOT]})
-                                     + ")</darkgrey>"));
-    }
+    menu.load_items(items, _fixup_runeorb_entry);
 
     menu.show();
 }
