@@ -182,31 +182,31 @@ string InvEntry::get_text(bool need_cursor) const
     ostringstream tstr;
 
     const bool nosel = hotkeys.empty();
-    if (nosel && tag != "pickup")
-        return text;
     const char key = nosel ? ' ' : static_cast<char>(hotkeys[0]);
 
     tstr << ' ' << key;
+    
+    if (!nosel || tag == "pickup")
+    {
+        if (need_cursor)
+            tstr << '[';
+        else
+            tstr << ' ';
 
-    if (need_cursor)
-        tstr << '[';
-    else
-        tstr << ' ';
+        if (nosel)
+            tstr << ' ';
+        else if (!selected_qty)
+            tstr << '-';
+        else if (selected_qty < quantity)
+            tstr << '#';
+        else
+            tstr << '+';
 
-    if (nosel)
-        tstr << ' ';
-    else if (!selected_qty)
-        tstr << '-';
-    else if (selected_qty < quantity)
-        tstr << '#';
-    else
-        tstr << '+';
-
-    if (need_cursor)
-        tstr << ']';
-    else
-        tstr << ' ';
-
+        if (need_cursor)
+            tstr << ']';
+        else
+            tstr << ' ';
+    }
     if (InvEntry::show_glyph)
         tstr << "(" << glyph_to_tagstr(get_item_glyph(item)) << ")" << " ";
 
