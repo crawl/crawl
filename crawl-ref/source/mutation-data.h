@@ -246,22 +246,22 @@ static const mutation_def mut_data[] =
    "regeneration",
 },
 
-{ MUT_SLOW_HEALING, 3, 3, mutflag::BAD | mutflag::CORRUPT, false,
-  "slow healing",
+{ MUT_SLOW_REGENERATION, 3, 3, mutflag::BAD | mutflag::CORRUPT, false,
+  "slow regeneration",
 
-  {"You heal slowly when monsters are visible.",
-   "You do not heal naturally when monsters are visible.",
-   "You do not heal naturally."},
+  {"You regenerate slowly when monsters are visible.",
+   "You do not regenerate naturally when monsters are visible.",
+   "You do not regenerate naturally."},
 
-  {"Your natural healing is weakened.",
-   "Your natural healing is weakened.",
-   "You stop healing."},
+  {"Your natural regeneration is weakened.",
+   "Your natural regeneration is weakened.",
+   "You stop regenerating."},
 
-  {"Your natural healing is strengthened.",
-   "Your natural healing is strengthened.",
-   "Your natural healing is strengthened."},
+  {"Your natural regeneration is strengthened.",
+   "Your natural regeneration is strengthened.",
+   "Your natural regeneration is strengthened."},
 
-   "slow healing",
+   "slow regeneration",
 },
 
 { MUT_FAST_METABOLISM, 0, 3, mutflag::BAD, false,
