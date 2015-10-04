@@ -2724,6 +2724,44 @@ void check_item_knowledge(bool unknown_items)
         check_item_knowledge(!unknown_items);
 }
 
+static unique_ptr<MenuEntry> _rune_entry(rune_type rune)
+{
+    string text = "<";
+    text += you.runes[rune] ? colour_to_str(rune_colour(rune))
+                            : string("darkgrey");
+    text += ">";
+    text += rune_type_name(rune);
+    text += " rune of Zot";
+    if (!you.runes[rune])
+    {
+        text += " (";
+        const level_id place = rune_location(rune);
+        if (place.depth == -1)
+        {
+            text += "in ";
+            text += branches[place.branch].longname;
+        }
+        else
+            text += prep_branch_level_name(place);
+        text += ")";
+    }
+    text += "</";
+    text += you.runes[rune] ? colour_to_str(rune_colour(rune))
+                            : string("darkgrey");
+    text += ">";
+
+    auto entry = unique_ptr<MenuEntry>(new MenuEntry(text));
+#ifdef USE_TILE
+    item_info dummy;
+    dummy.base_type = OBJ_MISCELLANY;
+    dummy.sub_type = MISC_RUNE_OF_ZOT;
+    dummy.rune_enum = you.runes[i] ? i : NUM_RUNE_TYPES;
+    item_colour(dummy);
+    entry->add_tile(tile_def(tileidx_item(dummy), TEX_DEFAULT));
+#endif
+    return entry;
+}
+
 void display_runes()
 {
     auto col = runes_in_pack() < ZOT_ENTRY_RUNES ?  "lightgrey" :
@@ -2739,45 +2777,14 @@ void display_runes()
 
     menu.set_title(new MenuEntry(title));
 
+    // Spider should show up at the beginning, with the other Lair runes.
+    menu.add_entry(_rune_entry(RUNE_SPIDER));
     for (int i = 0; i < NUM_RUNE_TYPES; ++i)
     {
-        if (i == RUNE_ELF || i == RUNE_FOREST)
+        if (i == RUNE_ELF || i == RUNE_FOREST || i == RUNE_SPIDER)
             continue;
 
-        string text = "<";
-        text += you.runes[i] ? colour_to_str(rune_colour(i))
-                             : string("darkgrey");
-        text += ">";
-        text += rune_type_name(i);
-        text += " rune of Zot";
-        if (!you.runes[i])
-        {
-            text += " (";
-            const level_id place = rune_location((rune_type)i);
-            if (place.depth == -1)
-            {
-                text += "in ";
-                text += branches[place.branch].longname;
-            }
-            else
-                text += prep_branch_level_name(place);
-            text += ")";
-        }
-        text += "</";
-        text += you.runes[i] ? colour_to_str(rune_colour(i))
-                             : string("darkgrey");
-        text += ">";
-
-        auto entry = new MenuEntry(text);
-#ifdef USE_TILE
-        item_info dummy;
-        dummy.base_type = OBJ_MISCELLANY;
-        dummy.sub_type = MISC_RUNE_OF_ZOT;
-        dummy.rune_enum = you.runes[i] ? i : NUM_RUNE_TYPES;
-        item_colour(dummy);
-        entry->add_tile(tile_def(tileidx_item(dummy), TEX_DEFAULT));
-#endif
-        menu.add_entry(entry);
+        menu.add_entry(_rune_entry(static_cast<rune_type>(i)));
     }
 
     menu.add_entry(new MenuEntry(""));
