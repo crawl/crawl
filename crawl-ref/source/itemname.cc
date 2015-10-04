@@ -2750,7 +2750,8 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
         entry->text = text;
         // Use the generic tile for rune that haven't been gotten yet, to make
         // it more clear at a glance.
-        const_cast<item_def*>(entry->item)->sub_type = NUM_RUNE_TYPES;
+        if (!you.runes[rune])
+            const_cast<item_def*>(entry->item)->sub_type = NUM_RUNE_TYPES;
     }
     else if (entry->item->is_type(OBJ_ORBS, ORB_ZOT))
     {
