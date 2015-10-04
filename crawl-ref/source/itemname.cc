@@ -2429,10 +2429,10 @@ public:
             name = lowercase_string(item_class_name(item->base_type));
             name = pluralise(name);
         }
-        else if (item->sub_type == get_max_subtype(item->base_type))
-            name = "unknown " + lowercase_string(item_class_name(item->base_type));
         else if (item->base_type == OBJ_RUNES)
             name = "runes";
+        else if (item->sub_type == get_max_subtype(item->base_type))
+            name = "unknown " + lowercase_string(item_class_name(item->base_type));
         else
         {
             name = item->name(DESC_PLAIN,false,true,false,false,flags);
