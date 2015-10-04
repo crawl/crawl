@@ -52,10 +52,6 @@
 #include "unicode.h"
 #include "unwind.h"
 #include "viewgeom.h"
-#ifdef USE_TILE
- #include "tilepick.h"
- #include "rltiles/tiledef-feat.h"
-#endif
 
 static bool _is_consonant(char let);
 static char _random_vowel(int seed);
