@@ -2792,12 +2792,14 @@ void display_runes()
         auto item = new item_def();
         item->base_type = OBJ_RUNES;
         item->sub_type = i;
+        item->quantity = 1;
         item_colour(*item);
         items.push_back(item);
     }
     auto item = new item_def();
     item->base_type = OBJ_ORBS;
     item->sub_type = ORB_ZOT;
+    item->quantity = 1;
     items.push_back(item);
 
     menu.load_items(items, _fixup_runeorb_entry);
