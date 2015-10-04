@@ -182,6 +182,8 @@ string InvEntry::get_text(bool need_cursor) const
     ostringstream tstr;
 
     const bool nosel = hotkeys.empty();
+    if (nosel && tag != "pickup")
+        return text;
     const char key = nosel ? ' ' : static_cast<char>(hotkeys[0]);
 
     tstr << ' ' << key;
@@ -830,8 +832,10 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 else
                     ie->tag = "pickup";
             }
+            if (get_flags() & MF_NOSELECT)
+                ie->hotkeys.clear();
             // If there's no hotkey, provide one.
-            if (ie->hotkeys[0] == ' ')
+            else if (ie->hotkeys[0] == ' ')
             {
                 if (ie->tag == "nopickup")
                     ie->hotkeys.clear();
