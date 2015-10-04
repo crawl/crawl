@@ -1263,7 +1263,7 @@ static string _describe_ammo(const item_def &item)
                 "the end of its range.";
             break;
         case SPMSL_STEEL:
-            description += "Compared to normal ammo, it does 30% more "
+            description += "Compared to normal ammo, it does increased "
                 "damage.";
             break;
         case SPMSL_SILVER:
