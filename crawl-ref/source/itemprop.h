@@ -173,8 +173,6 @@ int  ammo_type_damage(int missile_type) PURE;
 reach_type weapon_reach(const item_def &item) PURE;
 
 // Macguffins
-bool item_is_rune(const item_def &item,
-                  rune_type which_rune = NUM_RUNE_TYPES) PURE;
 bool item_is_unique_rune(const item_def &item) PURE;
 bool item_is_orb(const item_def &orb) PURE;
 bool item_is_horn_of_geryon(const item_def &item) PURE;

@@ -1782,10 +1782,6 @@ unsigned int item_value(item_def item, bool ident)
     case OBJ_MISCELLANY:
         switch (item.sub_type)
         {
-        case MISC_RUNE_OF_ZOT:
-            valued += 10000;
-            break;
-
         case MISC_HORN_OF_GERYON:
             valued += 600;
             break;
@@ -1871,6 +1867,10 @@ unsigned int item_value(item_def item, bool ident)
 
     case OBJ_ORBS:
         valued = 250000;
+        break;
+
+    case OBJ_RUNES:
+        valued = 10000;
         break;
 
     default:

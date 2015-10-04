@@ -1681,7 +1681,7 @@ static bool _prompt_unique_pan_rune(dungeon_feature_type ygrd)
         return true;
     }
 
-    item_def* rune = find_floor_item(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT);
+    item_def* rune = find_floor_item(OBJ_RUNES);
     if (rune && item_is_unique_rune(*rune))
     {
         return yes_or_no("A rune of Zot still resides in this realm, "

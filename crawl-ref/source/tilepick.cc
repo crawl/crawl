@@ -3939,32 +3939,32 @@ static tileidx_t _tileidx_corpse(const item_def &item)
 
 static tileidx_t _tileidx_rune(const item_def &item)
 {
-    switch (item.rune_enum)
+    switch (item.sub_type)
     {
     // the hell runes:
-    case RUNE_DIS:         return TILE_MISC_RUNE_DIS;
-    case RUNE_GEHENNA:     return TILE_MISC_RUNE_GEHENNA;
-    case RUNE_COCYTUS:     return TILE_MISC_RUNE_COCYTUS;
-    case RUNE_TARTARUS:    return TILE_MISC_RUNE_TARTARUS;
+    case RUNE_DIS:         return TILE_RUNE_DIS;
+    case RUNE_GEHENNA:     return TILE_RUNE_GEHENNA;
+    case RUNE_COCYTUS:     return TILE_RUNE_COCYTUS;
+    case RUNE_TARTARUS:    return TILE_RUNE_TARTARUS;
 
     // special pandemonium runes:
-    case RUNE_MNOLEG:      return TILE_MISC_RUNE_MNOLEG;
-    case RUNE_LOM_LOBON:   return TILE_MISC_RUNE_LOM_LOBON;
-    case RUNE_CEREBOV:     return TILE_MISC_RUNE_CEREBOV;
-    case RUNE_GLOORX_VLOQ: return TILE_MISC_RUNE_GLOORX_VLOQ;
+    case RUNE_MNOLEG:      return TILE_RUNE_MNOLEG;
+    case RUNE_LOM_LOBON:   return TILE_RUNE_LOM_LOBON;
+    case RUNE_CEREBOV:     return TILE_RUNE_CEREBOV;
+    case RUNE_GLOORX_VLOQ: return TILE_RUNE_GLOORX_VLOQ;
 
-    case RUNE_DEMONIC:     return TILE_MISC_RUNE_DEMONIC
-        + ((uint32_t)item.rnd) % tile_main_count(TILE_MISC_RUNE_DEMONIC);
-    case RUNE_ABYSSAL:     return TILE_MISC_RUNE_ABYSS;
+    case RUNE_DEMONIC:     return TILE_RUNE_DEMONIC
+        + ((uint32_t)item.rnd) % tile_main_count(TILE_RUNE_DEMONIC);
+    case RUNE_ABYSSAL:     return TILE_RUNE_ABYSS;
 
-    case RUNE_SNAKE:       return TILE_MISC_RUNE_SNAKE;
-    case RUNE_SPIDER:      return TILE_MISC_RUNE_SPIDER;
-    case RUNE_SLIME:       return TILE_MISC_RUNE_SLIME;
-    case RUNE_VAULTS:      return TILE_MISC_RUNE_VAULTS;
-    case RUNE_TOMB:        return TILE_MISC_RUNE_TOMB;
-    case RUNE_SWAMP:       return TILE_MISC_RUNE_SWAMP;
-    case RUNE_SHOALS:      return TILE_MISC_RUNE_SHOALS;
-    case RUNE_ELF:         return TILE_MISC_RUNE_ELVEN;
+    case RUNE_SNAKE:       return TILE_RUNE_SNAKE;
+    case RUNE_SPIDER:      return TILE_RUNE_SPIDER;
+    case RUNE_SLIME:       return TILE_RUNE_SLIME;
+    case RUNE_VAULTS:      return TILE_RUNE_VAULTS;
+    case RUNE_TOMB:        return TILE_RUNE_TOMB;
+    case RUNE_SWAMP:       return TILE_RUNE_SWAMP;
+    case RUNE_SHOALS:      return TILE_RUNE_SHOALS;
+    case RUNE_ELF:         return TILE_RUNE_ELVEN;
 
     case RUNE_FOREST:
     default:               return TILE_MISC_RUNE_OF_ZOT;
@@ -4046,9 +4046,6 @@ static tileidx_t _tileidx_misc(const item_def &item)
 
     case MISC_PHANTOM_MIRROR:
         return TILE_MISC_PHANTOM_MIRROR;
-
-    case MISC_RUNE_OF_ZOT:
-        return _tileidx_rune(item);
 
     case MISC_QUAD_DAMAGE:
         return TILE_MISC_QUAD_DAMAGE;
@@ -4206,6 +4203,9 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_MISCELLANY:
         return _tileidx_misc(item);
+
+    case OBJ_RUNES:
+        return _tileidx_rune(item);
 
     case OBJ_DETECTED:
         return TILE_UNSEEN_ITEM;

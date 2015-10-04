@@ -4278,17 +4278,20 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     if (spec.item_special)
         item.special = spec.item_special;
 
-    if (spec.plus >= 0 && item.is_type(OBJ_BOOKS, BOOK_MANUAL)
-        || item_is_rune(item))
+    if (spec.plus >= 0 && item.is_type(OBJ_BOOKS, BOOK_MANUAL))
     {
         item.plus = spec.plus;
         item_colour(item);
     }
 
-    if (item_is_rune(item) && you.runes[item.plus])
+    if (item.base_type == OBJ_RUNES)
     {
-        destroy_item(item, true);
-        return false;
+        if (you.runes[item.sub_type])
+        {
+            destroy_item(item, true);
+            return false;
+        }
+        item_colour(item);
     }
 
     if (props.exists("cursed"))
@@ -4433,16 +4436,7 @@ int dgn_place_item(const item_spec &spec,
             if (_apply_item_props(item, spec, (useless_tries >= 10), false))
                 return item_made;
             else
-            {
-                if (base_type == OBJ_MISCELLANY
-                    && spec.sub_type == MISC_RUNE_OF_ZOT)
-                {
-                    return NON_ITEM;
-                }
-
                 useless_tries++;
-            }
-
         }
 
     }
@@ -4496,11 +4490,8 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
     {
         item_spec spec = list.get_item(i);
 
-        if (spec.base_type == OBJ_UNASSIGNED
-            || (spec.base_type == OBJ_MISCELLANY && spec.sub_type == MISC_RUNE_OF_ZOT))
-        {
+        if (spec.base_type == OBJ_UNASSIGNED)
             continue;
-        }
 
         // Don't give monster a randart, and don't randomly give
         // monster an ego item.

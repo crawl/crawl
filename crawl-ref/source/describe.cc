@@ -2000,6 +2000,7 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_SCROLLS:
     case OBJ_ORBS:
     case OBJ_GOLD:
+    case OBJ_RUNES:
         // No extra processing needed for these item types.
         break;
 
