@@ -347,6 +347,10 @@ public:
     void set_highlighter(MenuHighlighter *h);
     void set_title(MenuEntry *e, bool first = true);
     void add_entry(MenuEntry *entry);
+    void add_entry(unique_ptr<MenuEntry> entry)
+    {
+        add_entry(entry.release());
+    }
     void get_selected(vector<MenuEntry*> *sel) const;
     virtual int get_cursor() const;
 
