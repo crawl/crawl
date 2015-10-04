@@ -2755,7 +2755,7 @@ static unique_ptr<MenuEntry> _rune_entry(rune_type rune)
     item_info dummy;
     dummy.base_type = OBJ_MISCELLANY;
     dummy.sub_type = MISC_RUNE_OF_ZOT;
-    dummy.rune_enum = you.runes[i] ? i : NUM_RUNE_TYPES;
+    dummy.rune_enum = you.runes[rune] ? rune : NUM_RUNE_TYPES;
     item_colour(dummy);
     entry->add_tile(tile_def(tileidx_item(dummy), TEX_DEFAULT));
 #endif
