@@ -2758,6 +2758,7 @@ static unique_ptr<MenuEntry> _rune_entry(rune_type rune)
     dummy.rune_enum = you.runes[rune] ? rune : NUM_RUNE_TYPES;
     item_colour(dummy);
     entry->add_tile(tile_def(tileidx_item(dummy), TEX_DEFAULT));
+    entry->add_tile(tile_def(TILE_ITEM_SLOT, TEX_FEAT));
 #endif
     return entry;
 }
