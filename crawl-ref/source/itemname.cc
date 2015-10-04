@@ -2807,6 +2807,8 @@ void display_runes()
     menu.load_items(items, _fixup_runeorb_entry);
 
     menu.show();
+    
+    deleteAll(items);
 }
 
 // Seed ranges for _random_consonant_set: (B)eginning and one-past-the-(E)nd
