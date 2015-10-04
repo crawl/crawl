@@ -362,7 +362,7 @@ public:
         select_filter = filter;
     }
 
-    int getkey() const { return lastch; }
+    virtual int getkey() const { return lastch; }
 
     void reset();
     virtual vector<MenuEntry *> show(bool reuse_selections = false);

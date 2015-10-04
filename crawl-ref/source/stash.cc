@@ -427,8 +427,6 @@ public:
         set_type(MT_PICKUP);
         set_tag("stash");       // override "inventory" tag
     }
-    // Not virtual!
-    unsigned char getkey() const;
 public:
     bool can_travel;
 protected:
@@ -524,11 +522,6 @@ bool StashMenu::process_key(int key)
     return Menu::process_key(key);
 }
 
-unsigned char StashMenu::getkey() const
-{
-    return lastch;
-}
-
 static MenuEntry *stash_menu_fixup(MenuEntry *me)
 {
     const item_def *item = static_cast<const item_def *>(me->data);
@@ -559,7 +552,7 @@ bool Stash::show_menu(const level_pos &prefix, bool can_travel,
     while (true)
     {
         sel = menu.show();
-        if (menu.getkey() == 1)
+        if (menu.getkey() == 1) // See StashMenu::process_key
             return true;
 
         if (sel.size() != 1)
@@ -948,7 +941,7 @@ bool ShopInfo::show_menu(const level_pos &place,
     while (true)
     {
         sel = menu.show();
-        if (menu.getkey() == 1)
+        if (menu.getkey() == 1) // See StashMenu::process_key
             return true;
 
         if (sel.size() != 1)

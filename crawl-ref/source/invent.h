@@ -128,8 +128,7 @@ public:
     InvMenu(int mflags = MF_MULTISELECT);
 
 public:
-    // Not an override, but an overload. Not virtual!
-    unsigned char getkey() const;
+    int getkey() const override;
 
     void set_preselect(const vector<SelItem> *pre);
     void set_type(menu_type t);
