@@ -401,6 +401,7 @@ static const duration_def duration_data[] =
     { DUR_COLLAPSE, 0, "", "", "collapse", "", D_NO_FLAGS },
     { DUR_BRAINLESS, 0, "", "", "brainless", "", D_NO_FLAGS },
     { DUR_CLUMSY, 0, "", "", "clumsy", "", D_NO_FLAGS },
+    { DUR_UNPROTECTION, 0, "", "", "unprotection", "", D_NO_FLAGS },
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

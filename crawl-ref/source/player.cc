@@ -5975,14 +5975,6 @@ int player::armour_class(bool /*calc_unid*/) const
 
     AC += wearing(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
 
-    // Tuned for skill/AC: 1/0.5, 10/5, 27/15
-    if (wearing_ego(EQ_WEAPON, SPWPN_PROTECTION))
-        AC += 56 * you.skill(item_attack_skill(*you.weapon()));
-
-    // Tuned for skill/AC: 1/0.3, 10/3, 27/9
-    if (wearing_ego(EQ_SHIELD, SPARM_PROTECTION))
-        AC += 34 * you.skill(SK_SHIELDS);
-
     AC += scan_artefacts(ARTP_AC) * 100;
 
     if (duration[DUR_ICY_ARMOUR])
@@ -6033,6 +6025,19 @@ int player::armour_class(bool /*calc_unid*/) const
           ? 100 + _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL) * 100 : 0;        // +2, +3, +4
     AC -= player_mutation_level(MUT_PHYSICAL_VULNERABILITY)
           ? player_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 300 : 0;       // +3, +6, +9
+
+    if (you.duration[DUR_UNPROTECTION] == 0)
+    {
+        // Skill/AC: 1/0.5, 10/5, 27/15
+        if (wearing_ego(EQ_WEAPON, SPWPN_PROTECTION))
+            AC += 56 * you.skill(item_attack_skill(*you.weapon()));
+        // Skill/AC: 1/0.3, 10/3, 27/9
+        if (wearing_ego(EQ_SHIELD, SPARM_PROTECTION))
+            AC += 34 * you.skill(SK_SHIELDS);
+    }
+    else
+        AC = AC /= 2;
+
     return AC / 100;
 }
  /**

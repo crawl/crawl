@@ -1207,6 +1207,13 @@ static void _decrement_durations()
 
     if (!env.sunlight.empty())
         process_sunlights();
+
+    if (_decrement_a_duration(DUR_UNPROTECTION, delay,
+                              "Your normal sense of protection returns."))
+    {
+        you.redraw_armour_class = true;
+    }
+    dprf("unprot dur is %d", you.duration[DUR_UNPROTECTION]);
 }
 
 
