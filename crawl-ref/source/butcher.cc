@@ -334,8 +334,15 @@ static void _create_monster_hide(const item_def corpse)
 
 void maybe_drop_monster_hide(const item_def corpse)
 {
-    if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3))
+    const monster_type montype =
+        static_cast<monster_type>(corpse.orig_monnum);
+    bool uniq = !invalid_monster_type(montype) && mons_is_unique(montype);
+
+    if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3)
+        || uniq)
+    {
         _create_monster_hide(corpse);
+    }
 }
 
 /** Skeletonise this corpse.
