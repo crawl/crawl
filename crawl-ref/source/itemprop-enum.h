@@ -338,7 +338,7 @@ enum rune_type
     RUNE_GLOORX_VLOQ,
 
     RUNE_SPIDER,
-    RUNE_FOREST,
+    RUNE_FOREST, // unused
     NUM_RUNE_TYPES
 };
 

@@ -710,6 +710,9 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
 #endif
+    // Outside the #if because we probably won't remove these.
+    { OBJ_RUNES,     RUNE_ELF },
+    { OBJ_RUNES,     RUNE_FOREST },
 };
 
 bool item_type_removed(object_class_type base, int subtype)
