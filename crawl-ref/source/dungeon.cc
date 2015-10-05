@@ -4436,7 +4436,13 @@ int dgn_place_item(const item_spec &spec,
             if (_apply_item_props(item, spec, (useless_tries >= 10), false))
                 return item_made;
             else
+            {
+                // _apply_item_props will not generate a rune you already have,
+                // so don't bother looping.
+                if (base_type == OBJ_RUNES)
+                    return NON_ITEM;
                 useless_tries++;
+            }
         }
 
     }
