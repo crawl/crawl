@@ -419,9 +419,10 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
         || force
         || goldify
         || mons_class_flag(mons.type, M_ALWAYS_CORPSE)
-        || mons_is_demonspawn(mons.type)
-           && mons_class_flag(draco_or_demonspawn_subspecies(&mons),
-                              M_ALWAYS_CORPSE);
+        || mons_is_or_was_unique(mons)
+        || (mons_is_demonspawn(mons.type)
+            && mons_class_flag(draco_or_demonspawn_subspecies(&mons),
+                               M_ALWAYS_CORPSE));
 
     // 50/50 chance of getting a corpse, usually.
     if (!no_coinflip && coinflip())
