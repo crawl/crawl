@@ -185,7 +185,7 @@ string InvEntry::get_text(bool need_cursor) const
     const char key = nosel ? ' ' : static_cast<char>(hotkeys[0]);
 
     tstr << ' ' << key;
-    
+
     if (!nosel || tag == "pickup")
     {
         if (need_cursor)

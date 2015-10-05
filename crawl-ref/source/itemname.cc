@@ -2788,7 +2788,7 @@ void display_runes()
 
     for (int i = 0; i < NUM_RUNE_TYPES; ++i)
     {
-        if (i == RUNE_ELF || i == RUNE_FOREST)
+        if (item_type_removed(OBJ_RUNES, i))
             continue;
 
         auto item = new item_def();

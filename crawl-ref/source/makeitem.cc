@@ -1629,6 +1629,23 @@ static void _generate_rod_item(item_def& item, int force_type, int item_level)
         do_curse_item(item);
 }
 
+static void _generate_rune_item(item_def& item, int force_type)
+{
+    if (force_type == OBJ_RANDOM)
+    {
+        vector<int> possibles;
+        for (int i = 0; i < NUM_RUNE_TYPES; i++)
+            if (!item_type_removed(OBJ_RUNES, i) && !you.runes[i])
+                possibles.push_back(i);
+
+        item.sub_type = possibles.empty()
+                      ? RUNE_DEMONIC
+                      : *random_iterator(possibles);
+    }
+    else
+        item.sub_type = force_type;
+}
+
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
                                           int item_level)
 {
@@ -1999,7 +2016,7 @@ int items(bool allow_uniques,
 
     case OBJ_ORBS:              // always forced in current setup {dlb}
     case OBJ_RUNES:
-        item.sub_type = force_type;
+        _generate_rune_item(item, force_type);
         break;
 
     case OBJ_MISCELLANY:
