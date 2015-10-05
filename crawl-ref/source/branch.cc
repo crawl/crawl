@@ -215,7 +215,7 @@ string branch_rune_desc(branch_type br, bool remaining_only)
 
     for (rune_type rune : branches[br].runes)
         if (!(remaining_only && you.runes[rune]))
-            rune_names.push_back(rune_type_name(br));
+            rune_names.push_back(rune_type_name(rune));
 
     if (!rune_names.empty())
     {
