@@ -2786,25 +2786,31 @@ void display_runes()
 
     vector<const item_def*> items;
 
-    for (int i = 0; i < NUM_RUNE_TYPES; ++i)
+    // Add the runes in branch order.
+    for (branch_iterator it; it; ++it)
     {
-        if (item_type_removed(OBJ_RUNES, i))
-            continue;
-
-        auto item = new item_def();
-        item->base_type = OBJ_RUNES;
-        item->sub_type = i;
-        item->quantity = 1;
-        item_colour(*item);
-        items.push_back(item);
+        const branch_type br = it->id;
+        for (auto rune : branches[br].runes)
+        {
+            auto item = new item_def();
+            item->base_type = OBJ_RUNES;
+            item->sub_type = rune;
+            item->quantity = 1;
+            item_colour(*item);
+            items.push_back(item);
+        }
     }
+
     auto item = new item_def();
     item->base_type = OBJ_ORBS;
     item->sub_type = ORB_ZOT;
     item->quantity = 1;
     items.push_back(item);
 
-    menu.load_items(items, _fixup_runeorb_entry);
+    // We've sorted this vector already, so disable menu sorting. Maybe we
+    // could a menu entry comparator and modify InvMenu::load_items() to allow
+    // passing this in instead of doing a sort ahead of time.
+    menu.load_items(items, _fixup_runeorb_entry, 0, false);
 
     menu.show();
 
