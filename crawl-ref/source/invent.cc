@@ -220,10 +220,14 @@ string InvEntry::get_text(bool need_cursor) const
         colour_tag_adjustment = colour_tag.size() * 2 + 5;
     }
 
+    const int textwidth = strwidth(text) - tagged_string_tag_length(text);
     const int excess = strwidth(tstr.str()) - colour_tag_adjustment
-                     + strwidth(text) - max_chars_in_line;
+                     + textwidth - max_chars_in_line;
     if (excess > 0)
-        tstr << chop_string(text, max(0, strwidth(text) - excess - 2)) << "..";
+    {
+        tstr << chop_tagged_string(text, max(0, textwidth - excess - 2))
+             << "..";
+    }
     else
         tstr << text;
 
