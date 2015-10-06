@@ -2111,7 +2111,7 @@ bool StashTracker::display_search_results(
         ++hotkey;
     }
 
-    stashmenu.set_flags(MF_SINGLESELECT);
+    stashmenu.set_flags(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
 
     vector<MenuEntry*> sel;
     while (true)
