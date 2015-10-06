@@ -600,7 +600,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             if (emphasise(*ri))
                 env.map_knowledge(*ri).flags |= MAP_EMPHASIZE;
 
-            if (is_notable_terrain(feat) && !feat_is_mimicable(feat))
+            if (is_notable_terrain(feat) && (wizard_map || !feat_is_mimicable(feat)))
                 seen_notable_thing(feat, *ri);
 
             if (wizard_map)
