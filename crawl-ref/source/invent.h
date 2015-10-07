@@ -149,6 +149,11 @@ public:
                            MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
                            menu_letter ckey = 'a', bool sort = true);
 
+    // Make sure this menu does not outlive items, or mayhem will ensue!
+    menu_letter load_items(const vector<item_def>& items,
+                           MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
+                           menu_letter ckey = 'a', bool sort = true);
+
     // Loads items from the player's inventory into the menu, and sets the
     // title to the stock title. If "procfn" is provided, it'll be called for
     // each MenuEntry added, *excluding the title*.
@@ -157,10 +162,6 @@ public:
 
     vector<SelItem> get_selitems() const;
 
-    // Returns vector of item_def pointers to each item_def in the given
-    // vector. Note: make sure the original vector stays around for the lifetime
-    // of the use of the item pointers, or mayhem results!
-    static vector<const item_def*> xlat_itemvect(const vector<item_def> &);
     const menu_sort_condition *find_menu_sort_condition() const;
     void sort_menu(vector<InvEntry*> &items, const menu_sort_condition *cond);
 

@@ -546,7 +546,7 @@ bool Stash::show_menu(const level_pos &prefix, bool can_travel,
     menu.can_travel   = can_travel;
     mtitle->quantity  = item_list->size();
     menu.set_title(mtitle);
-    menu.load_items(InvMenu::xlat_itemvect(*item_list), stash_menu_fixup);
+    menu.load_items(*item_list, stash_menu_fixup);
 
     vector<MenuEntry*> sel;
     while (true)

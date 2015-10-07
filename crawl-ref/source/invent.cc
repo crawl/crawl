@@ -311,18 +311,6 @@ InvMenu::InvMenu(int mflags)
     InvEntry::set_show_cursor(false);
 }
 
-// Returns vector of item_def pointers to each item_def in the given
-// vector. Note: make sure the original vector stays around for the lifetime
-// of the use of the item pointers, or mayhem results!
-vector<const item_def*>
-InvMenu::xlat_itemvect(const vector<item_def> &v)
-{
-    vector<const item_def*> xlatitems;
-    for (const item_def &item : v)
-        xlatitems.push_back(&item);
-    return xlatitems;
-}
-
 void InvMenu::set_type(menu_type t)
 {
     type = t;
@@ -753,6 +741,16 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_RUNES,
     OBJ_ORBS,
     OBJ_GOLD);
+
+menu_letter InvMenu::load_items(const vector<item_def>& mitems,
+                                MenuEntry *(*procfn)(MenuEntry *me),
+                                menu_letter ckey, bool sort)
+{
+    vector<const item_def*> xlatitems;
+    for (const item_def &item : mitems)
+        xlatitems.push_back(&item);
+    return load_items(xlatitems, procfn, ckey, sort);
+}
 
 menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                                 MenuEntry *(*procfn)(MenuEntry *me),
