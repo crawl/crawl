@@ -3443,6 +3443,8 @@ static int _find_ability_slot(const ability_def &abil)
     // Skip over a-e (invocations), a-g for Elyvilon
     int first_slot = letter_to_index('f');
 
+    ASSERT(first_slot < 52);
+
     switch (abil.ability)
     {
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
