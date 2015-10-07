@@ -23,6 +23,7 @@
 #include "command.h"
 #include "decks.h"
 #include "describe.h"
+#include "dgn-overview.h"
 #include "english.h"
 #include "errors.h" // sysfail
 #include "evoke.h"
@@ -2790,6 +2791,9 @@ void display_runes()
     for (branch_iterator it; it; ++it)
     {
         const branch_type br = it->id;
+        if (!connected_branch_can_exist(br))
+            continue;
+
         for (auto rune : branches[br].runes)
         {
             auto item = new item_def();
