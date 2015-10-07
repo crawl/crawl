@@ -3442,8 +3442,6 @@ static int _find_ability_slot(const ability_def &abil)
 
     // Skip over a-e (invocations), a-g for Elyvilon
     int first_slot = letter_to_index('f');
-    if (you_worship(GOD_ELYVILON))
-        first_slot = letter_to_index('h');
 
     switch (abil.ability)
     {
