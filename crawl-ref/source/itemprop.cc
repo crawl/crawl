@@ -2192,8 +2192,8 @@ reach_type weapon_reach(const item_def &item)
 bool item_is_unique_rune(const item_def &item)
 {
     return item.base_type == OBJ_RUNES
-           && item.plus != RUNE_DEMONIC
-           && item.plus != RUNE_ABYSSAL;
+           && item.sub_type != RUNE_DEMONIC
+           && item.sub_type != RUNE_ABYSSAL;
 }
 
 bool item_is_orb(const item_def &item)
