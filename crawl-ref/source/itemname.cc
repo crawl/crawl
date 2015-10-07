@@ -2735,14 +2735,7 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
         if (!you.runes[rune])
         {
             text += " (";
-            const level_id place = rune_location(rune);
-            if (place.depth == -1)
-            {
-                text += "in ";
-                text += branches[place.branch].longname;
-            }
-            else
-                text += prep_branch_level_name(place);
+            text += branches[rune_location(rune)].longname;
             text += ")";
         }
         text += "</";
@@ -2761,9 +2754,7 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
             entry->text = "<magenta>The Orb of Zot</magenta>";
         else
         {
-            entry->text = "<darkgrey>The Orb of Zot ("
-                                     + prep_branch_level_name({BRANCH_ZOT, brdepth[BRANCH_ZOT]})
-                                     + ")</darkgrey>";
+            entry->text = "<darkgrey>The Orb of Zot (the Realm of Zot)</darkgrey>";
         }
     }
 
@@ -2777,8 +2768,8 @@ void display_runes()
                                                    "lightgreen";
 
     auto title = make_stringf("<white>Runes of Zot (</white>"
-                              "<%s>%d</%s><white>/%d) & Orbs of Power</white>",
-                              col, runes_in_pack(), col, you.obtainable_runes);
+                              "<%s>%d</%s><white> collected) & Orbs of Power</white>",
+                              col, runes_in_pack(), col);
     title = string(max(0, 39 - printed_width(title) / 2), ' ') + title;
 
     InvMenu menu(MF_NOSELECT | MF_ALLOW_FORMATTING);
