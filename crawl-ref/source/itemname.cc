@@ -2785,7 +2785,7 @@ void display_runes()
 
     menu.set_title(title);
 
-    vector<const item_def*> items;
+    vector<item_def> items;
 
     // Add the runes in branch order.
     for (branch_iterator it; it; ++it)
@@ -2796,19 +2796,19 @@ void display_runes()
 
         for (auto rune : branches[br].runes)
         {
-            auto item = new item_def();
-            item->base_type = OBJ_RUNES;
-            item->sub_type = rune;
-            item->quantity = 1;
-            item_colour(*item);
+            item_def item;
+            item.base_type = OBJ_RUNES;
+            item.sub_type = rune;
+            item.quantity = 1;
+            item_colour(item);
             items.push_back(item);
         }
     }
 
-    auto item = new item_def();
-    item->base_type = OBJ_ORBS;
-    item->sub_type = ORB_ZOT;
-    item->quantity = 1;
+    item_def item;
+    item.base_type = OBJ_ORBS;
+    item.sub_type = ORB_ZOT;
+    item.quantity = 1;
     items.push_back(item);
 
     // We've sorted this vector already, so disable menu sorting. Maybe we
@@ -2817,8 +2817,6 @@ void display_runes()
     menu.load_items(items, _fixup_runeorb_entry, 0, false);
 
     menu.show();
-
-    deleteAll(items);
 }
 
 // Seed ranges for _random_consonant_set: (B)eginning and one-past-the-(E)nd
