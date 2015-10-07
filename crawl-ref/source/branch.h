@@ -91,5 +91,5 @@ branch_type parent_branch(branch_type branch);
 int runes_for_branch(branch_type branch);
 
 string branch_rune_desc(branch_type br, bool remaining_only);
-level_id rune_location(rune_type rune);
+branch_type rune_location(rune_type rune);
 #endif

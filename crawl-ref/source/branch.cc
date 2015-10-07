@@ -228,16 +228,11 @@ string branch_rune_desc(branch_type br, bool remaining_only)
     return desc;
 }
 
-level_id rune_location(rune_type rune)
+branch_type rune_location(rune_type rune)
 {
     for (const auto& br : branches)
         if (find(br.runes.begin(), br.runes.end(), rune) != br.runes.end())
-        {
-            // For now, this is the only branch where the rune is not
-            // necessarily at the bottom.
-            return br.id == BRANCH_ABYSS ? level_id(br.id, -1) :
-                                           level_id(br.id, brdepth[br.id]);
-        }
+            return br.id;
 
-    return level_id();
+    return NUM_BRANCHES;
 }
