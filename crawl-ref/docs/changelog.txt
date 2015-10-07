@@ -86,8 +86,8 @@ Gods
 * Beogh's smite damage now scales better with invocations.
 * Okawaru's Finesse no longer gives contamination.
 * Lugonu and Trog no longer accept corpse sacrifices.
-* The Shining One no longer blesses allies' weapons and armour; their angel
-  summoning ability is now slightly cheaper.
+* The Shining One no longer blesses allies' weapons and armour; the Summon
+  Divine Warrior ability is now slightly cheaper.
 * Cheibriados' slouch damage is now based on monster movement speed.
 * Ashenzari now gives the Scrying ability at 1* piety, boosts skills at 2*, and
   grants SInv at 3*.
@@ -95,9 +95,9 @@ Gods
 * Jiyva's Slime Prayer now lasts longer and has a small MP cost.
 * Sif no longer requires worshippers to know spells.
 * The player now no longer needs an altar to use the following abilities, which
-  are accessible from the ability menu: Zin's Donate Gold and Cure All
-  Mutations, Kiku's Bless Weapon and Gift Necronomicon, Lucy's Bless Weapon,
-  and The Shining One's Bless Weapon.
+  are accessible from the ability menu: Zin's Donate Gold, Kiku's Bless Weapon
+  and Gift Necronomicon, Lugonu's Bless Weapon, and The Shining One's Bless
+  Weapon.
 
 Items
 -----
@@ -188,15 +188,15 @@ Monsters
 * Blocks of ice are now susceptible to LRD and Shatter.
 * Demonspawn warmongers now have Haste Other instead of Grand Avatar, and can
   spawn with a shield.
-* Demonspawn bloodsaints no longer have ephemeral infusion nor damage
-  themselves when casting Legendary Destruction.
+* Demonspawn blood saints no longer have ephemeral infusion, and no longer
+   damage themselves when casting Legendary Destruction.
 * Monsters can no longer have the Inner Flame spell.
 * Hellwings no longer have the Teleport Other spell.
 * Monsters can no longer have Animate Dead nor Simulacrum spells.
 * Monsters that worship Dith or Yred (including allies of the player) are
   immune to the umbra accuracy reduction.
-* Monsters can no longer have a flee ability (Polar Bears, Black Bears, and
-  Krakens).
+* Monsters can no longer have a flee ability (polar bears, black bears, and
+  krakens).
 * Derived undead (skeletons, zombies, spectres, and simulacra) now do 80% of the
   damage of the base monster and inherit the energy use pattern of the base
   monster.
