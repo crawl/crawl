@@ -4369,13 +4369,13 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
             if (greed_inducing && (Options.explore_stop & ES_GREEDY_ITEM))
                 ; // Stop for this condition
             else if (!greed_inducing
-                     && ((Options.explore_stop & ES_ITEM)
-                         || ((Options.explore_stop & ES_GLOWING_ITEM)
-                             && (i.flags & ISFLAG_COSMETIC_MASK))
-                         || ((Options.explore_stop & ES_ARTEFACT)
-                             && (i.flags & ISFLAG_ARTEFACT_MASK))
-                         || ((Options.explore_stop & ES_RUNE)
-                             && i.base_type == OBJ_RUNES)))
+                     && (Options.explore_stop & ES_ITEM
+                         || Options.explore_stop & ES_GLOWING_ITEM
+                            && i.flags & ISFLAG_COSMETIC_MASK
+                         || Options.explore_stop & ES_ARTEFACT
+                            && i.flags & ISFLAG_ARTEFACT_MASK
+                         || Options.explore_stop & ES_RUNE
+                            && i.base_type == OBJ_RUNES))
             {
                 ; // More conditions to stop for
             }
