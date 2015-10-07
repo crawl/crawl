@@ -210,28 +210,13 @@ string InvEntry::get_text(bool need_cursor) const
     if (InvEntry::show_glyph)
         tstr << "(" << glyph_to_tagstr(get_item_glyph(item)) << ")" << " ";
 
-    unsigned max_chars_in_line = get_number_of_cols() - 2;
-    int colour_tag_adjustment = 0;
-    if (InvEntry::show_glyph)
-    {
-        // colour tags have to be taken into account for terminal width
-        // calculations on the ^x screen (monsters/items/features in LOS)
-        string colour_tag = colour_to_str(get_item_glyph(item).col);
-        colour_tag_adjustment = colour_tag.size() * 2 + 5;
-    }
+    tstr << text;
+    const string str = tstr.str();
 
-    const int textwidth = strwidth(text) - tagged_string_tag_length(text);
-    const int excess = strwidth(tstr.str()) - colour_tag_adjustment
-                     + textwidth - max_chars_in_line;
-    if (excess > 0)
-    {
-        tstr << chop_tagged_string(text, max(0, textwidth - excess - 2))
-             << "..";
-    }
+    if (printed_width(str) > get_number_of_cols())
+        return chop_tagged_string(str, get_number_of_cols() - 2) + "..";
     else
-        tstr << text;
-
-    return tstr.str();
+        return str;
 }
 
 void get_class_hotkeys(const int type, vector<char> &glyphs)
