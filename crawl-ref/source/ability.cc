@@ -3440,8 +3440,12 @@ static int _find_ability_slot(const ability_def &abil)
 
     // No requested slot, find new one and make it preferred.
 
-    // Skip over a-e (invocations), a-g for Elyvilon
+    // a-e is for invocations
     int first_slot = letter_to_index('f');
+
+    // Reserve the first ability slot (f) for Draconian breath
+    if (you.species == SP_BASE_DRACONIAN)
+        first_slot += 1;
 
     ASSERT(first_slot < 52);
 
