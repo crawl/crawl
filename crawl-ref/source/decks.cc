@@ -2626,7 +2626,7 @@ bool recruit_mercenary(int mid)
     simple_monster_message(mon, " joins your ranks!");
     mon->attitude = ATT_FRIENDLY;
     mons_att_changed(mon);
-    take_note(Note(NOTE_MESSAGE, 0, 0, message.c_str()), true);
+    take_note(Note(NOTE_MESSAGE, 0, 0, message), true);
     you.del_gold(fee);
     return true;
 }

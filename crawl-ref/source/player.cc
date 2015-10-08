@@ -6810,7 +6810,7 @@ void player::paralyse(actor *who, int str, string source)
 
     if (!paralysis && !source.empty())
     {
-        take_note(Note(NOTE_PARALYSIS, str, 0, source.c_str()));
+        take_note(Note(NOTE_PARALYSIS, str, 0, source));
         props["paralysed_by"] = source;
     }
 

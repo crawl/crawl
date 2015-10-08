@@ -396,7 +396,7 @@ void banished(const string &who)
     }
 
     const string what = "Cast into the Abyss" + _who_banished(who);
-    take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
+    take_note(Note(NOTE_MESSAGE, 0, 0, what), true);
 
     stop_delay(true);
     run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);

@@ -990,8 +990,8 @@ void set_ident_flags(item_def &item, iflags_t flags)
             && is_interesting_item(item))
         {
             // Make a note of it.
-            take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A).c_str(),
-                           origin_desc(item).c_str()));
+            take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A),
+                           origin_desc(item)));
 
             // Sometimes (e.g. shops) you can ID an item before you get it;
             // don't note twice in those cases.
