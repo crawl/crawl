@@ -668,7 +668,7 @@ void attack::chaos_affects_defender()
     default:                    chaos_effect += "(other)"; break;
     }
 
-    take_note(Note(NOTE_MESSAGE, 0, 0, chaos_effect.c_str()), true);
+    take_note(Note(NOTE_MESSAGE, 0, 0, chaos_effect), true);
 #endif
 
     switch (static_cast<chaos_type>(choice))
@@ -936,7 +936,7 @@ brand_type attack::random_chaos_brand()
     // Pretty much duplicated by the chaos effect note,
     // which will be much more informative.
     if (brand != SPWPN_CHAOS)
-        take_note(Note(NOTE_MESSAGE, 0, 0, brand_name.c_str()), true);
+        take_note(Note(NOTE_MESSAGE, 0, 0, brand_name), true);
 #endif
     return brand;
 }

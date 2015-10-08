@@ -1002,8 +1002,8 @@ static void _check_note_item(item_def &item)
 
     if (item.base_type == OBJ_RUNES || item_is_orb(item) || is_artefact(item))
     {
-        take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_A).c_str(),
-                       origin_desc(item).c_str()));
+        take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_A),
+                       origin_desc(item)));
         item.flags |= ISFLAG_NOTED_GET;
 
         // If it's already fully identified when picked up, don't take

@@ -1040,7 +1040,7 @@ static void _note_potion_effect(potion_type pot)
 
     potion_msg += ("(" + potion_name + ")");
 
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, potion_msg.c_str()), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, potion_msg), true);
 }
 
 static int _xom_do_potion(bool debug = false)
@@ -1249,8 +1249,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
                 poly += (powerup ? "upgrade" : "downgrade");
                 poly += ")";
 #endif
-                take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, poly.c_str()),
-                          true);
+                take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, poly), true);
             }
             return helpful ? XOM_GOOD_POLYMORPH : XOM_BAD_POLYMORPH;
         }
@@ -2561,7 +2560,7 @@ static int _xom_miscast(const int max_level, const bool nasty,
     if (nasty)
         desc += " (Xom was nasty)";
 #endif
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, desc.c_str()), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, desc), true);
 
     string hand_str;
     bool   can_plural;
@@ -2669,7 +2668,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
         string conf_msg = "confusion";
         if (mons_too)
             conf_msg += " (+ monsters)";
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, conf_msg.c_str()), true);
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, conf_msg), true);
     }
 
     return rc ? XOM_BAD_CONFUSION : XOM_DID_NOTHING;

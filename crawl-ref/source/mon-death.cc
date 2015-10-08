@@ -2394,7 +2394,7 @@ item_def* monster_die(monster* mons, killer_type killer,
              && !summoned
              && killer != KILL_RESET)
     {
-        take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname.c_str()));
+        take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname));
     }
     else if (mons_is_tentacle_head(mons_base_type(mons)))
     {

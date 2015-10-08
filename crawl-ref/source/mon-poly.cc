@@ -557,8 +557,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         string new_name = can_see ? mons->full_name(DESC_A)
                                   : "something unseen";
 
-        take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a.c_str(),
-                       new_name.c_str()));
+        take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a, new_name));
 
         if (can_see)
             mons->flags |= MF_SEEN;
@@ -676,7 +675,7 @@ void seen_monster(monster* mons)
             name += make_stringf(" (%s)",
                                  short_ghost_description(mons, true).c_str());
         }
-        take_note(Note(NOTE_SEEN_MONSTER, mons->type, 0, name.c_str()));
+        take_note(Note(NOTE_SEEN_MONSTER, mons->type, 0, name));
     }
 
     if (!(mons->flags & MF_TSO_SEEN))

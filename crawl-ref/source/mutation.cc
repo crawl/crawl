@@ -1621,7 +1621,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
         calc_mp();
 
     if (!transient)
-        take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat], reason.c_str()));
+        take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat], reason));
 
     if (you.hp <= 0)
     {

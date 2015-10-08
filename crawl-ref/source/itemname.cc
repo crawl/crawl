@@ -2218,8 +2218,8 @@ bool set_ident_type(item_def &item, bool identify)
         && !(item.flags & (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET)))
     {
         // Make a note of it.
-        take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A).c_str(),
-                       origin_desc(item).c_str()));
+        take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A),
+                       origin_desc(item)));
 
         // Sometimes (e.g. shops) you can ID an item before you get it;
         // don't note twice in those cases.

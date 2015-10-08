@@ -649,7 +649,7 @@ static void _take_starting_note()
             << species_name(you.species) << " "
             << get_job_name(you.char_class)
             << " began the quest for the Orb.";
-    take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str().c_str()));
+    take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str()));
     mark_milestone("begin", "began the quest for the Orb.");
 
     notestr.str("");
@@ -659,7 +659,7 @@ static void _take_starting_note()
     if (you.wizard)
     {
         notestr << "You started the game in wizard mode.";
-        take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str().c_str()));
+        take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str()));
 
         notestr.str("");
         notestr.clear();
