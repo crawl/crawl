@@ -115,15 +115,29 @@ Enum find_earliest_match(const string &spec, Enum begin, Enum end,
 template <typename Z, typename F>
 string comma_separated_fn(Z start, Z end, F stringify,
                           const string &andc = " and ",
-                          const string &comma = ", ")
+                          const string &comma = ", ",
+                          function<bool (decltype(*start))> filter = nullptr)
 {
     string text;
+    bool first = true;
     for (Z i = start; i != end; ++i)
     {
-        if (i != start)
+        if (filter && !filter(*i))
+            continue;
+
+        if (first)
+            first = false;
+        else
         {
             Z tmp = i;
-            if (++tmp != end)
+            // Advance until we find an item selected by the filter.
+            do
+            {
+                ++tmp;
+            }
+            while (tmp != end && filter && !filter(*tmp));
+
+            if (tmp != end)
                 text += comma;
             else
                 text += andc;
