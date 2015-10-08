@@ -786,6 +786,13 @@ static ability_type _fixup_ability(ability_type ability)
         else
             return ability;
 
+    case ABIL_LUGONU_ABYSS_EXIT:
+    case ABIL_LUGONU_ABYSS_ENTER:
+        if (brdepth[BRANCH_ABYSS] == -1)
+            return ABIL_NON_ABILITY;
+        else
+            return ability;
+
     default:
         return ability;
     }
@@ -1432,7 +1439,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return !is_level_incorruptible(quiet);
 
     case ABIL_LUGONU_ABYSS_ENTER:
-        if (player_in_branch(BRANCH_ABYSS) || brdepth[BRANCH_ABYSS] == -1)
+        if (player_in_branch(BRANCH_ABYSS))
         {
             if (!quiet)
                 mpr("You're already here!");
@@ -3507,39 +3514,34 @@ static int _find_ability_slot(const ability_def &abil)
 vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
 {
     vector<ability_type> abilities;
-    if (you_worship(GOD_TROG) && (include_unusable || !silenced(you.pos())))
-        abilities.push_back(ABIL_TROG_BURN_SPELLBOOKS);
-    else if (you_worship(GOD_CHEIBRIADOS) && (include_unusable
-                                              || !(silenced(you.pos())
-                                                   || player_under_penance())))
+    if (you_worship(GOD_RU))
     {
-        abilities.push_back(ABIL_CHEIBRIADOS_TIME_BEND);
-    }
-    else if (you_worship(GOD_RU))
-    {
-
         ASSERT(you.props.exists(AVAILABLE_SAC_KEY));
-        CrawlVector &available_sacrifices
-            = you.props[AVAILABLE_SAC_KEY].get_vector();
-
-        int num_sacrifices = available_sacrifices.size();
-        for (int i = 0; i < num_sacrifices; ++i)
+        bool any_sacrifices = false;
+        for (const auto& store : you.props[AVAILABLE_SAC_KEY].get_vector())
         {
-            abilities.push_back(
-                static_cast<ability_type>(available_sacrifices[i].get_int()));
+            any_sacrifices = true;
+            abilities.push_back(static_cast<ability_type>(store.get_int()));
         }
-        if (num_sacrifices > 0)
+        if (any_sacrifices)
             abilities.push_back(ABIL_RU_REJECT_SACRIFICES);
     }
-    else if (you.transfer_skill_points > 0)
+    if (you.transfer_skill_points > 0)
         abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);
-    if (you_worship(GOD_ZIN) && (include_unusable || !silenced(you.pos())))
-        abilities.push_back(ABIL_ZIN_DONATE_GOLD);
-
-    // Remaining abilities are unusable if under penance, or if silenced.
-    if (!include_unusable && (player_under_penance() || silenced(you.pos())))
+    if (!include_unusable && silenced(you.pos()))
         return abilities;
+    // Remaining abilities are unusable if silenced.
 
+    if (you_worship(GOD_TROG))
+        abilities.push_back(ABIL_TROG_BURN_SPELLBOOKS);
+    if (you_worship(GOD_ZIN))
+        abilities.push_back(ABIL_ZIN_DONATE_GOLD);
+    if (!include_unusable && player_under_penance())
+        return abilities;
+    // Remaining abilities are unusable if under penance.
+
+    if (you_worship(GOD_CHEIBRIADOS))
+        abilities.push_back(ABIL_CHEIBRIADOS_TIME_BEND);
     for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
         if (!you_worship(GOD_GOZAG) && you.piety < piety_breakpoint(i)
@@ -3550,13 +3552,8 @@ vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
 
         const ability_type abil =
             _fixup_ability(god_abilities[you.religion][i]);
-        if (abil == ABIL_NON_ABILITY
-            || brdepth[BRANCH_ABYSS] == -1
-               && (abil == ABIL_LUGONU_ABYSS_EXIT
-                   || abil == ABIL_LUGONU_ABYSS_ENTER))
-        {
+        if (abil == ABIL_NON_ABILITY)
             continue;
-        }
 
         abilities.push_back(abil);
         if (abil == ABIL_ELYVILON_LESSER_HEALING)
