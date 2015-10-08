@@ -74,7 +74,7 @@ static bool _do_build_level()
 {
     clear_messages();
     mprf("On %s; %d g, %d fail, %u err%s, %u uniq, "
-         "%d try, %d (%.2lf%%) vetos",
+         "%d try, %d (%.2f%%) vetos",
          level_id::current().describe().c_str(), levels_tried, levels_failed,
          (unsigned int)errors.size(), last_error.empty() ? ""
          : (" (" + last_error + ")").c_str(), (unsigned int) use_count.size(),
@@ -245,7 +245,7 @@ bool mapstat_build_levels()
     {
         clear_messages();
         mprf("On %d of %d; %d g, %d fail, %u err%s, %u uniq, "
-             "%d try, %d (%.2lf%%) vetoes",
+             "%d try, %d (%.2f%%) vetoes",
              i, SysEnv.map_gen_iters, levels_tried, levels_failed,
              (unsigned int)errors.size(),
              last_error.empty() ? "" : (" (" + last_error + ")").c_str(),
