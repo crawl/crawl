@@ -1555,8 +1555,9 @@ victims and leeching away their life essence with its vicious claws.
 %%%%
 juggernaut
 
-A gigantic humanoid with incredibly thick skin. Its immense fists can deal
-incredible damage.
+A gigantic humanoid with thick iron plates welded to its skin. Juggernauts
+sprint towards their targets, their immense fists dealing incredible damage,
+but have to rest between blows.
 %%%%
 jumping spider
 
