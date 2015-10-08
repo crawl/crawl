@@ -217,18 +217,21 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
      with_props("daeva / angel / cherub / pearl dragon / " ..
                 "ophan / apis", { weight = 2 }),
      with_props("hill giant / cyclops / stone giant / fire giant / " ..
-                "frost giant / ettin / titan", { weight = 2 }),
+                "frost giant / ettin / titan / juggernaut", { weight = 2 }),
      with_props("fire elemental / fire drake / hell hound / efreet / " ..
-                "fire dragon / fire giant / orb of fire", { weight = 2 }),
+                "salamander stormcaller / fire dragon / fire giant / " ..
+                "orb of fire w:12", { weight = 2 }),
      with_props("ice beast / ice dragon / frost giant / " ..
                 "ice devil / blizzard demon / ice fiend / simulacrum / " ..
                 "white draconian knight / shard shrike", { weight = 2 }),
      with_props("insubstantial wisp / air elemental / titan / raiju / " ..
                 "storm dragon / electric golem / spriggan air mage / " ..
                 "shock serpent", { weight = 2 }),
-     with_props("gargoyle / earth elemental / torpor snail / boulder beetle / " ..
-                "stone giant / iron dragon / crystal guardian / " ..
-                "war gargoyle / iron golem / hell sentinel", { weight = 2 }),
+     with_props("gargoyle / earth elemental / torpor snail / " ..
+                "boulder beetle / entropy weaver / stone giant / " ..
+                "iron dragon / crystal guardian / war gargoyle / " ..
+                "iron golem / octopode crusher / hell sentinel / " ..
+                "juggernaut / caustic shrike", { weight = 2 }),
      with_props("spectral thing / shadow wraith / eidolon w:4 / " ..
                 "shadow dragon / deep elf death mage w:6 / " ..
                 "death knight w:4 / revenant w:4 / profane servitor w:6 / " ..
