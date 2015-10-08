@@ -999,18 +999,13 @@ static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)
     if (cl.type == CLOUD_INK && player_in_branch(BRANCH_SHOALS))
         return;
 
-    bool disturbance = false;
-
-    if (env.map_knowledge(gc).invisible_monster())
-        disturbance = true;
-
     if (you.see_cell(gc))
     {
         const coord_def ep = grid2show(gc);
-        env.tile_cloud(ep) = tileidx_cloud(cl, disturbance);
+        env.tile_cloud(ep) = tileidx_cloud(cl);
     }
     else
-        env.tile_bk_cloud(gc) = tileidx_cloud(cl, disturbance);
+        env.tile_bk_cloud(gc) = tileidx_cloud(cl);
 }
 
 unsigned int num_tile_rays = 0;

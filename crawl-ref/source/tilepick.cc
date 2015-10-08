@@ -4379,7 +4379,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
     return 0;
 }
 
-tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
+tileidx_t tileidx_cloud(const cloud_info &cl)
 {
     int type  = cl.type;
     int colour = cl.colour;
@@ -4508,19 +4508,6 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
 
     if (colour != -1)
         ch = tile_main_coloured(ch, colour);
-
-    // The following clouds are supposed to be opaque, but I didn't make any
-    // disturbance tile for them.
-    // CLOUD_FOREST_FIRE and CLOUD_HOLY_FLAMES: are not in the above switch.
-    // CLOUD_INK: special cloud with a specific check in tileview.cc.
-    if (disturbance && type != CLOUD_FOREST_FIRE
-#if TAG_MAJOR_VERSION == 34
-        && type != CLOUD_GLOOM
-#endif
-        && type != CLOUD_INK && type != CLOUD_HOLY_FLAMES)
-    {
-        ch += tile_main_count(ch);
-    }
 
     // XXX: Should be no need for TILE_FLAG_FLYING anymore since clouds are
     // drawn in a separate layer but I'll leave it for now in case anything changes --mumra
