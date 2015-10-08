@@ -591,7 +591,7 @@ static void _wanderer_note_items()
                              [] (const item_def &item) -> string
                              {
                                  return item.name(DESC_A, false, true);
-                             }, ", ");
+                             }, ", ", ", ", mem_fn(&item_def::defined));
     take_note(Note(NOTE_MESSAGE, 0, 0, equip_str));
 }
 
