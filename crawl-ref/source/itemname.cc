@@ -2754,7 +2754,8 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
             entry->text = "<magenta>The Orb of Zot</magenta>";
         else
         {
-            entry->text = "<darkgrey>The Orb of Zot (the Realm of Zot)</darkgrey>";
+            entry->text = "<darkgrey>The Orb of Zot"
+                          " (the Realm of Zot)</darkgrey>";
         }
     }
 
