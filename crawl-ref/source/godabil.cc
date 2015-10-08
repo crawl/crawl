@@ -100,6 +100,21 @@ bool can_do_capstone_ability(god_type god)
    return in_good_standing(god, 5) && !you.one_time_ability_used[god];
 }
 
+static const char *_god_blessing_description(god_type god)
+{
+    switch (god)
+    {
+    case GOD_SHINING_ONE:
+        return "blessed by the Shining One";
+    case GOD_LUGONU:
+        return "corrupted by Lugonu";
+    case GOD_KIKUBAAQUDGHA:
+        return "bloodied by Kikubaaqudgha";
+    default:
+        return "touched by the gods";
+    }
+}
+
 /**
  * Perform a capstone god ability that blesses a weapon with the god's
  * brand.
@@ -172,13 +187,8 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     calc_mp(); // in case the old brand was antimagic,
     you.redraw_armour_class = true; // protection,
     you.redraw_evasion = true;      // or evasion
-    string desc  = old_name + " "
-                 + (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
-                    god == GOD_LUGONU        ? "corrupted by Lugonu" :
-                    god == GOD_KIKUBAAQUDGHA ? "bloodied by Kikubaaqudgha"
-                                             : "touched by the gods");
-    take_note(Note(NOTE_ID_ITEM, 0, 0,
-              wpn.name(DESC_A).c_str(), desc.c_str()));
+    const string desc = old_name + " " + _god_blessing_description(god);
+    take_note(Note(NOTE_ID_ITEM, 0, 0, wpn.name(DESC_A), desc));
     wpn.flags |= ISFLAG_NOTED_ID;
     wpn.props[FORCED_ITEM_COLOUR_KEY] = colour;
 
