@@ -3084,6 +3084,17 @@ tormentor
 “Thou art to me a delicious torment.”
     -Ralph Waldo Emerson, _Essays: First Series_, Essay VI: Friendship. 1841.
 %%%%
+torpor snail
+
+“Snail, snail, slug-slow,
+ To me thy four horns show;
+ If thou dost not show me thy four,
+ I will throw thee out of the door,
+ For the crow in the gutter,
+ To eat for bread and butter.”
+    -Silesian rhyme. Quoted by S.W. Singer in _Notes and Queries_, no. 69.
+     1851.
+%%%%
 training dummy
 
 “Things are only mannequins and even the great world-historical events are only
