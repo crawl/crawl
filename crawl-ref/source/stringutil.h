@@ -7,6 +7,7 @@
 #define STRINGS_H
 
 #include "config.h"
+#include "libutil.h" // always_true
 
 #ifdef CRAWL_HAVE_STRLCPY
 #include <cstring>
@@ -112,17 +113,17 @@ Enum find_earliest_match(const string &spec, Enum begin, Enum end,
     return selected;
 }
 
-template <typename Z, typename F>
+template <typename Z, typename F, typename G>
 string comma_separated_fn(Z start, Z end, F stringify,
-                          const string &andc = " and ",
-                          const string &comma = ", ",
-                          function<bool (decltype(*start))> filter = nullptr)
+                          const string &andc,
+                          const string &comma,
+                          G filter)
 {
     string text;
     bool first = true;
     for (Z i = start; i != end; ++i)
     {
-        if (filter && !filter(*i))
+        if (!filter(*i))
             continue;
 
         if (first)
@@ -135,7 +136,7 @@ string comma_separated_fn(Z start, Z end, F stringify,
             {
                 ++tmp;
             }
-            while (tmp != end && filter && !filter(*tmp));
+            while (tmp != end && !filter(*tmp));
 
             if (tmp != end)
                 text += comma;
@@ -146,6 +147,15 @@ string comma_separated_fn(Z start, Z end, F stringify,
         text += stringify(*i);
     }
     return text;
+}
+
+template <typename Z, typename F>
+string comma_separated_fn(Z start, Z end, F stringify,
+                          const string &andc = " and ",
+                          const string &comma = ", ")
+{
+    return comma_separated_fn(start, end, stringify, andc, comma,
+                              always_true<decltype(*start)>);
 }
 
 template <typename Z>
