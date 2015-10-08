@@ -901,10 +901,12 @@ static void _tile_place_item_marker(const coord_def &gc, const item_def &item)
 static void _tile_place_invisible_monster(const coord_def &gc)
 {
     const coord_def ep = grid2show(gc);
+    const map_cell& cell = env.map_knowledge(gc);
 
     // Shallow water has its own modified tile for disturbances
     // see tileidx_feature
-    if (env.map_knowledge(gc).feat() != DNGN_SHALLOW_WATER)
+    // That tile is hidden by clouds though
+    if (cell.feat() != DNGN_SHALLOW_WATER || cell.cloud() != CLOUD_NONE)
     {
         if (you.see_cell(gc))
             env.tile_fg(ep) = TILE_UNSEEN_MONSTER;
