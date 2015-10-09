@@ -4484,7 +4484,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
         if (mon->inv[i] != NON_ITEM)
         {
             item_def &item(mitm[mon->inv[i]]);
-            mon->unequip(item, i, 0, true);
+            mon->unequip(item, false, true);
             destroy_item(mon->inv[i], true);
             mon->inv[i] = NON_ITEM;
         }
@@ -4559,7 +4559,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
                     if (mspec.abjuration_duration != 0)
                         item.flags |= ISFLAG_SUMMONED;
 
-                    if (!mon->pickup_item(item, 0, true))
+                    if (!mon->pickup_item(item, false, true))
                         destroy_item(item_made, true);
                     break;
                 }
@@ -4571,7 +4571,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
     if (mon->inv[MSLOT_WEAPON] == NON_ITEM
         && mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM)
     {
-        mon->swap_weapons(false);
+        mon->swap_weapons(MB_FALSE);
     }
 }
 
