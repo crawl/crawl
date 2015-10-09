@@ -449,6 +449,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 self.exit_message = errmsg
                 self.exit_dump_url = None
                 self.handle_process_end()
+                return
         else:
             if signal == subprocess.signal.SIGTERM:
                 self._purge_stale_lock()
@@ -465,6 +466,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                     self.logger.warning("Couldn't terminate pid %s gracefully.",
                                         self._stale_pid)
                     self.send_to_all("force_terminate?")
+                return
+        self.send_to_all("hide_dialog")
 
     def _check_stale_process(self):
         self._kill_stale_process(0)
