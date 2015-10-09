@@ -285,6 +285,23 @@ function (exports, $, key_conversion, chat, comm) {
 
     function handle_keydown(e)
     {
+        if ($("#stale_processes_message").is(":visible"))
+        {
+            e.preventDefault();
+            send_message("stop_stale_process_purge");
+            hide_dialog();
+            return;
+        }
+        if ($("#force_terminate").is(":visible"))
+        {
+            e.preventDefault();
+            if (e.which == "y".charCodeAt(0))
+                force_terminate_yes();
+            else
+                force_terminate_no();
+            return;
+        }
+
         if (!in_game())
         {
             if (e.which == 27)
@@ -928,26 +945,6 @@ function (exports, $, key_conversion, chat, comm) {
         send_message("force_terminate", { answer: true });
         hide_dialog();
     }
-    function stale_processes_keypress(ev)
-    {
-        if ($("#stale_processes_message").is(":visible"))
-        {
-            ev.preventDefault();
-            send_message("stop_stale_process_purge");
-            hide_dialog();
-        }
-    }
-    function force_terminate_keypress(ev)
-    {
-        if ($("#force_terminate").is(":visible"))
-        {
-            ev.preventDefault();
-            if (ev.which == "y".charCodeAt(0))
-                force_terminate_yes();
-            else
-                force_terminate_no();
-        }
-    }
     function handle_stale_processes(data)
     {
         $(".game_name").html(data.game);
@@ -1134,8 +1131,6 @@ function (exports, $, key_conversion, chat, comm) {
     {
         $(document).on("keypress.client", handle_keypress);
         $(document).on("keydown.client", handle_keydown);
-        $(document).on("game_keypress", stale_processes_keypress);
-        $(document).on("game_keypress", force_terminate_keypress);
     }
 
     // Global functions for backwards compatibility (HACK)
