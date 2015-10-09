@@ -1266,7 +1266,7 @@ easy_door = true
         opening doors by walking into them.
 
 warn_hatches = false
-        Ask for confirmation before using a one-way escape hatch.
+        Ask for confirmation before using a one-way escape hatch or shaft.
 
 enable_recast_spell = true
         If enabled, allows recasting the previously cast spell by pressing
