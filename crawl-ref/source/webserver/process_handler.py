@@ -398,9 +398,11 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             except Exception:
                 self.logger.error("Error while handling lockfile %s.", lockfile,
                                   exc_info=True)
-                errmsg = ("Error while trying to terminate a stale process.<br>" +
+                errmsg = ("Error while trying to terminate a stale process.\n" +
                           "Please contact an administrator.")
-                self.send_to_all("stale_process_fail", content=errmsg)
+                self.exit_reason = "error"
+                self.exit_message = errmsg
+                self.exit_dump_url = None
                 self.handle_process_end()
         else:
             # No more locks, can start
@@ -441,9 +443,11 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             else:
                 self.logger.error("Error while killing process %s.", self._stale_pid,
                                   exc_info=True)
-                errmsg = ("Error while trying to terminate a stale process.<br>" +
+                errmsg = ("Error while trying to terminate a stale process.\n" +
                           "Please contact an administrator.")
-                self.send_to_all("stale_process_fail", content=errmsg)
+                self.exit_reason = "error"
+                self.exit_message = errmsg
+                self.exit_dump_url = None
                 self.handle_process_end()
         else:
             if signal == subprocess.signal.SIGTERM:

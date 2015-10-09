@@ -951,11 +951,6 @@ function (exports, $, key_conversion, chat, comm) {
         $(".recover_timeout").html("" + data.timeout);
         show_dialog("#stale_processes_message");
     }
-    function handle_stale_process_fail(data)
-    {
-        $("#message_box").html(data.content);
-        show_dialog("#message_box");
-    }
     function handle_force_terminate(data)
     {
         show_dialog("#force_terminate");
@@ -963,7 +958,6 @@ function (exports, $, key_conversion, chat, comm) {
 
     comm.register_handlers({
         "stale_processes": handle_stale_processes,
-        "stale_process_fail": handle_stale_process_fail,
         "force_terminate?": handle_force_terminate
     });
 
