@@ -291,29 +291,14 @@ public:
                           bool ignore_transform = false,
                           bool quiet = true) const override;
 
-    int       missile_count();
     void      wield_melee_weapon(int near = -1);
     void      swap_weapons(int near = -1);
-
     bool      pickup_item(item_def &item, int near = -1, bool force = false);
-    void      pickup_message(const item_def &item, int near);
-    bool      pickup_wand(item_def &item, int near, bool force = false);
-    bool      pickup_scroll(item_def &item, int near);
-    bool      pickup_potion(item_def &item, int near, bool force = false);
-    bool      pickup_gold(item_def &item, int near);
-    bool      pickup_launcher(item_def &launcher, int near, bool force = false);
-    bool      pickup_melee_weapon(item_def &item, int near);
-    bool      pickup_weapon(item_def &item, int near, bool force);
-    bool      pickup_armour(item_def &item, int near, bool force);
-    bool      pickup_jewellery(item_def &item, int near, bool force);
-    bool      pickup_misc(item_def &item, int near);
-    bool      pickup_missile(item_def &item, int near, bool force);
-    bool      drop_item(int eslot, int near);
-    void      equip(item_def &item, int slot, int near = -1);
+    bool      drop_item(mon_inv_type eslot, int near);
     bool      unequip(item_def &item, int slot, int near = -1,
                       bool force = false);
     void      steal_item_from_player();
-    item_def* take_item(int steal_what, int mslot);
+    item_def* take_item(int steal_what, mon_inv_type mslot);
     item_def* disarm();
 
     bool      can_use_missile(const item_def &item) const;
@@ -578,18 +563,34 @@ private:
     int hit_dice;
 
 private:
-    void init_with(const monster& mons);
-    void swap_slots(mon_inv_type a, mon_inv_type b);
-    bool need_message(int &near) const;
-    bool level_up();
-    bool level_up_change();
-    bool pickup(item_def &item, int slot, int near);
+    bool pickup(item_def &item, mon_inv_type slot, int near);
+    void pickup_message(const item_def &item, int near);
+    bool pickup_wand(item_def &item, int near, bool force = false);
+    bool pickup_scroll(item_def &item, int near);
+    bool pickup_potion(item_def &item, int near, bool force = false);
+    bool pickup_gold(item_def &item, int near);
+    bool pickup_launcher(item_def &launcher, int near, bool force = false);
+    bool pickup_melee_weapon(item_def &item, int near);
+    bool pickup_weapon(item_def &item, int near, bool force);
+    bool pickup_armour(item_def &item, int near, bool force);
+    bool pickup_jewellery(item_def &item, int near, bool force);
+    bool pickup_misc(item_def &item, int near);
+    bool pickup_missile(item_def &item, int near, bool force);
+
+    void equip(item_def &item, int slot, int near = -1);
     void equip_weapon(item_def &item, int near, bool msg = true);
     void equip_armour(item_def &item, int slot, int near);
     void equip_jewellery(item_def &item, int near);
     void unequip_weapon(item_def &item, int near, bool msg = true);
     void unequip_armour(item_def &item, int near);
     void unequip_jewellery(item_def &item, int near);
+
+    bool need_message(int &near) const;
+
+    void init_with(const monster& mons);
+
+    bool level_up();
+    bool level_up_change();
     int armour_bonus(const item_def &item, bool calc_unid = true) const;
 
     void id_if_worn(mon_inv_type mslot, object_class_type base_type,

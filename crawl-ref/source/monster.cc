@@ -432,14 +432,6 @@ item_def *monster::missiles() const
     return inv[MSLOT_MISSILE] != NON_ITEM ? &mitm[inv[MSLOT_MISSILE]] : nullptr;
 }
 
-int monster::missile_count()
-{
-    if (const item_def *missile = missiles())
-        return missile->quantity;
-
-    return 0;
-}
-
 item_def *monster::launcher() const
 {
     item_def *weap = mslot_item(MSLOT_WEAPON);
@@ -836,13 +828,6 @@ bool monster::likes_wand(const item_def &item) const
     }
 }
 
-void monster::swap_slots(mon_inv_type a, mon_inv_type b)
-{
-    const int swap = inv[a];
-    inv[a] = inv[b];
-    inv[b] = swap;
-}
-
 void monster::equip_weapon(item_def &item, int near, bool msg)
 {
     if (msg && !need_message(near))
@@ -1153,7 +1138,7 @@ void monster::pickup_message(const item_def &item, int near)
     }
 }
 
-bool monster::pickup(item_def &item, int slot, int near)
+bool monster::pickup(item_def &item, mon_inv_type slot, int near)
 {
     ASSERT(item.defined());
 
@@ -1261,11 +1246,8 @@ bool monster::pickup(item_def &item, int slot, int near)
     return true;
 }
 
-bool monster::drop_item(int eslot, int near)
+bool monster::drop_item(mon_inv_type eslot, int near)
 {
-    if (eslot < 0 || eslot >= NUM_MONSTER_SLOTS)
-        return false;
-
     int item_index = inv[eslot];
     if (item_index == NON_ITEM)
         return true;
@@ -1367,10 +1349,11 @@ bool monster::pickup_launcher(item_def &launch, int near, bool force)
     // out of ammo. (jpeg)
     const int mdam_rating = mons_weapon_damage_rating(launch);
     const missile_type mt = fires_ammo_type(launch);
-    int eslot = -1;
+    mon_inv_type eslot = NUM_MONSTER_SLOTS;
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
-        if (const item_def *elaunch = mslot_item(static_cast<mon_inv_type>(i)))
+        auto slot = static_cast<mon_inv_type>(i);
+        if (const item_def *elaunch = mslot_item(slot))
         {
             if (!is_range_weapon(*elaunch))
                 continue;
@@ -1382,13 +1365,13 @@ bool monster::pickup_launcher(item_def &launch, int near, bool force)
                           && get_weapon_brand(launch) != SPWPN_NORMAL
                           && _nonredundant_launcher_ammo_brands(&launch,
                                                                 missiles()))
-                   && drop_item(i, near) && pickup(launch, i, near);
+                   && drop_item(slot, near) && pickup(launch, slot, near);
         }
         else
-            eslot = i;
+            eslot = slot;
     }
 
-    return eslot == -1 ? false : pickup(launch, eslot, near);
+    return eslot == NUM_MONSTER_SLOTS ? false : pickup(launch, eslot, near);
 }
 
 static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
@@ -1556,7 +1539,7 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
 
     const int new_wpn_dam = mons_weapon_damage_rating(item)
                             + _ego_damage_bonus(item);
-    int eslot = -1;
+    mon_inv_type eslot = NUM_MONSTER_SLOTS;
     item_def *weap;
 
     // Monsters have two weapon slots, one of which can be a ranged, and
@@ -1566,13 +1549,14 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
 
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
-        weap = mslot_item(static_cast<mon_inv_type>(i));
+        auto slot = static_cast<mon_inv_type>(i);
+        weap = mslot_item(slot);
 
         if (!weap)
         {
             // If no weapon in this slot, mark this one.
-            if (eslot == -1)
-                eslot = i;
+            if (eslot == NUM_MONSTER_SLOTS)
+                eslot = slot;
         }
         else
         {
@@ -1613,12 +1597,12 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
             if (new_wpn_better && !weap->cursed())
             {
                 if (!dual_wielding
-                    || i == MSLOT_WEAPON
+                    || slot == MSLOT_WEAPON
                     || old_wpn_dam
                        < mons_weapon_damage_rating(*mslot_item(MSLOT_WEAPON))
                          + _ego_damage_bonus(*mslot_item(MSLOT_WEAPON)))
                 {
-                    eslot = i;
+                    eslot = slot;
                     if (!dual_wielding)
                         break;
                 }
@@ -1632,7 +1616,7 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
     }
 
     // No slot found to place this item.
-    if (eslot == -1)
+    if (eslot == NUM_MONSTER_SLOTS)
         return false;
 
     // Current item cannot be dropped.
@@ -2265,7 +2249,7 @@ void monster::swap_weapons(int near)
         return;
     }
 
-    swap_slots(MSLOT_WEAPON, MSLOT_ALT_WEAPON);
+    swap(inv[MSLOT_WEAPON], inv[MSLOT_ALT_WEAPON]);
 
     if (alt)
         equip(*alt, MSLOT_WEAPON, near);
@@ -6391,16 +6375,7 @@ void monster::steal_item_from_player()
 
         mon_inv_type monslot = item_to_mslot(you.inv[m]);
         if (monslot == NUM_MONSTER_SLOTS)
-        {
-            // Try a related slot instead to allow for stealing of other
-            // valuable items.
-            if (you.inv[m].base_type == OBJ_BOOKS)
-                monslot = MSLOT_SCROLL;
-            else if (you.inv[m].base_type == OBJ_JEWELLERY)
-                monslot = MSLOT_MISCELLANY;
-            else
-                continue;
-        }
+            continue;
 
         // Only try to steal stuff we can still store somewhere.
         if (inv[monslot] != NON_ITEM)
@@ -6542,7 +6517,7 @@ void monster::steal_item_from_player()
  *
  * @returns new_item the new item, now in the monster's inventory.
  */
-item_def* monster::take_item(int steal_what, int mslot)
+item_def* monster::take_item(int steal_what, mon_inv_type mslot)
 {
     // Create new item.
     int index = get_mitm_slot(10);

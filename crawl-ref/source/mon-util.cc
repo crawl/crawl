@@ -4109,8 +4109,11 @@ mon_inv_type item_to_mslot(const item_def &item)
         return MSLOT_MISSILE;
     case OBJ_ARMOUR:
         return equip_slot_to_mslot(get_armour_slot(item));
+    case OBJ_JEWELLERY:
+        return MSLOT_JEWELLERY;
     case OBJ_WANDS:
         return MSLOT_WAND;
+    case OBJ_BOOKS:
     case OBJ_SCROLLS:
         return MSLOT_SCROLL;
     case OBJ_POTIONS:
