@@ -957,23 +957,28 @@ NAME: cheibrodos_shoals_oceanic_diplomacy
 DEPTH: Shoals, !Shoals:$
 TAGS: water_ok no_item_gen no_monster_gen
 ORIENT: float
-MONS: merfolk
-KMONS: ' = merfolk impaler ; demon trident good_item | trident good_item . gold
-KMONS: " = octopode crusher ; shield good_item . hat good_item . gold
+SHUFFLE: 1Ww / 2DD
+MONS: merfolk, faun
+MONS: merfolk impaler ; demon trident good_item | trident good_item . gold
+MONS: satyr ; greatsling good_item . sling bullet good_item . gold / \
+      satyr ; longbow good_item . arrow good_item . gold
+COLOUR:   c = white
+COLOUR:   1234'D = cyan
+FTILE:    1234'D+WwG = floor_pebble_cyan
 MAP
       cccccccccccc
      ccGcGccccGcGcc
   .cccwWWWW11WWWWwccc.
-@.ccwwWWWW1..1WWWWwwcc.@
+@.ccwwWWWW1''1WWWWwwcc.@
 ..cwWWWWccc++cccWWWWwc..
-.c+WWWWcc......ccWWWW+c.
-.ccccccc........ccccccc.
-.ccccccG'......"Gcccccc.
-.ccccccc........ccccccc.
-.c+WWWWcc......ccWWWW+c.
-..cwWWWWccc++cccWWWWwc..
-@.ccwwWWWW1..1WWWWwwcc.@
-  .cccwWWWW11WWWWwccc.
+.c+WWWWcc''''''ccWWWW+c.
+.ccccccc''''''''ccccccc.
+.ccccccG3''''''4Gcccccc.
+.ccccccc''''''''ccccccc.
+.c+DDDDcc''''''ccDDDD+c.
+..cDDDDDccc++cccDDDDDc..
+@.ccDDDDDD2''2DDDDDDcc.@
+  .cccDDDDD22DDDDDccc.
      ccGcGccccGcGcc
       cccccccccccc
 ENDMAP
