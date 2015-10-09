@@ -1434,22 +1434,21 @@ static string _describe_armour(const item_def &item, bool verbose)
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
             description += "\nThis armour may have some hidden properties.";
     }
-
-    if (!is_artefact(item))
+    else
     {
         const int max_ench = armour_max_enchant(item);
         if (armour_is_hide(item))
         {
-            description += "\nEnchanting it will turn it into a suit of "
+            description += "\n\nEnchanting it will turn it into a suit of "
                            "magical armour.";
         }
         else if (item.plus < max_ench || !item_ident(item, ISFLAG_KNOW_PLUSES))
         {
-            description += "\nIt can be maximally enchanted to +"
+            description += "\n\nIt can be maximally enchanted to +"
                            + to_string(max_ench) + ".";
         }
         else
-            description += "\nIt cannot be enchanted further.";
+            description += "\n\nIt cannot be enchanted further.";
     }
 
     return description;
