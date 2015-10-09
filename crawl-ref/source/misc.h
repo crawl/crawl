@@ -286,6 +286,8 @@ struct counted_monster_list
 
 bool today_is_halloween();
 
+bool tobool(maybe_bool mb, bool def);
+
 /** Remove from a container all elements matching a predicate.
  *
  * @tparam C the container type. Must be reorderable (not a map or set!),

@@ -37,6 +37,7 @@
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
@@ -828,11 +829,8 @@ bool monster::likes_wand(const item_def &item) const
     }
 }
 
-void monster::equip_weapon(item_def &item, int near, bool msg)
+void monster::equip_weapon(item_def &item, bool msg)
 {
-    if (msg && !need_message(near))
-        msg = false;
-
     if (msg)
     {
         const string str = " wields " +
@@ -929,24 +927,24 @@ int monster::armour_bonus(const item_def &item, bool calc_unid) const
     return armour_ac + armour_plus;
 }
 
-void monster::equip_armour(item_def &item, int slot, int near)
+void monster::equip_armour(item_def &item, bool msg)
 {
-    if (need_message(near))
+    if (msg)
     {
         const string str = " wears " +
                            item.name(DESC_A) + ".";
         simple_monster_message(this, str.c_str());
     }
 
-    if (slot == EQ_SHIELD && has_ench(ENCH_CONDENSATION_SHIELD))
+    if (is_shield(item) && has_ench(ENCH_CONDENSATION_SHIELD))
         del_ench(ENCH_CONDENSATION_SHIELD);
 }
 
-void monster::equip_jewellery(item_def &item, int near)
+void monster::equip_jewellery(item_def &item, bool msg)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
-    if (need_message(near))
+    if (msg)
     {
         const string str = " puts on " +
                            item.name(DESC_A) + ".";
@@ -976,24 +974,22 @@ void monster::equip_jewellery(item_def &item, int near)
     }
 }
 
-void monster::equip(item_def &item, int slot, int near)
+void monster::equip(item_def &item, bool msg)
 {
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
     case OBJ_RODS:
-    {
-        bool give_msg = (slot == MSLOT_WEAPON || mons_wields_two_weapons(this));
-        equip_weapon(item, near, give_msg);
+        equip_weapon(item, msg);
         break;
-    }
+
     case OBJ_ARMOUR:
-        equip_armour(item, slot, near);
+        equip_armour(item, msg);
         break;
 
     case OBJ_JEWELLERY:
-        equip_jewellery(item, near);
+        equip_jewellery(item, msg);
     break;
 
     default:
@@ -1001,11 +997,8 @@ void monster::equip(item_def &item, int slot, int near)
     }
 }
 
-void monster::unequip_weapon(item_def &item, int near, bool msg)
+void monster::unequip_weapon(item_def &item, bool msg)
 {
-    if (msg && !need_message(near))
-        msg = false;
-
     if (msg)
     {
         const string str = " unwields " +
@@ -1057,9 +1050,9 @@ void monster::unequip_weapon(item_def &item, int near, bool msg)
         end_spectral_weapon(spectral_weapon, false);
 }
 
-void monster::unequip_armour(item_def &item, int near)
+void monster::unequip_armour(item_def &item, bool msg)
 {
-    if (need_message(near))
+    if (msg)
     {
         const string str = " takes off " +
                            item.name(DESC_A) + ".";
@@ -1067,11 +1060,11 @@ void monster::unequip_armour(item_def &item, int near)
     }
 }
 
-void monster::unequip_jewellery(item_def &item, int near)
+void monster::unequip_jewellery(item_def &item, bool msg)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
-    if (need_message(near))
+    if (msg)
     {
         const string str = " takes off " +
                            item.name(DESC_A) + ".";
@@ -1079,7 +1072,16 @@ void monster::unequip_jewellery(item_def &item, int near)
     }
 }
 
-bool monster::unequip(item_def &item, int slot, int near, bool force)
+/**
+ * Applies appropriate effects when unequipping an item.
+ *
+ * Note: this method does NOT modify this->inv to point to NON_ITEM!
+ * @param item  the item to be removed.
+ * @param msg   whether to give a message
+ * @param force whether to remove the item even if cursed.
+ * @return whether the item was unequipped successfully.
+ */
+bool monster::unequip(item_def &item, bool msg, bool force)
 {
     if (!force && item.cursed())
         return false;
@@ -1090,17 +1092,15 @@ bool monster::unequip(item_def &item, int slot, int near, bool force)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-    {
-        bool give_msg = (slot == MSLOT_WEAPON || mons_wields_two_weapons(this));
-        unequip_weapon(item, near, give_msg);
+        unequip_weapon(item, msg);
         break;
-    }
+
     case OBJ_ARMOUR:
-        unequip_armour(item, near);
+        unequip_armour(item, msg);
         break;
 
     case OBJ_JEWELLERY:
-        unequip_jewellery(item, near);
+        unequip_jewellery(item, msg);
     break;
 
     default:
@@ -1120,25 +1120,22 @@ void monster::lose_pickup_energy()
     }
 }
 
-void monster::pickup_message(const item_def &item, int near)
+void monster::pickup_message(const item_def &item)
 {
-    if (need_message(near))
+    if (is_range_weapon(item)
+        || is_throwable(this, item)
+        || item.base_type == OBJ_MISSILES)
     {
-        if (is_range_weapon(item)
-            || is_throwable(this, item)
-            || item.base_type == OBJ_MISSILES)
-        {
-            flags |= MF_SEEN_RANGED;
-        }
-
-        mprf("%s picks up %s.",
-             name(DESC_THE).c_str(),
-             item.base_type == OBJ_GOLD ? "some gold"
-                                        : item.name(DESC_A).c_str());
+        flags |= MF_SEEN_RANGED;
     }
+
+    mprf("%s picks up %s.",
+         name(DESC_THE).c_str(),
+         item.base_type == OBJ_GOLD ? "some gold"
+                                    : item.name(DESC_A).c_str());
 }
 
-bool monster::pickup(item_def &item, mon_inv_type slot, int near)
+bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
 {
     ASSERT(item.defined());
 
@@ -1187,7 +1184,7 @@ bool monster::pickup(item_def &item, mon_inv_type slot, int near)
         && inv[MSLOT_SHIELD] != NON_ITEM
         && hands_reqd(item) == HANDS_TWO)
     {
-        if (!drop_item(MSLOT_SHIELD, near))
+        if (!drop_item(MSLOT_SHIELD, msg))
             return false;
     }
 
@@ -1213,11 +1210,12 @@ bool monster::pickup(item_def &item, mon_inv_type slot, int near)
                           mindex()),
                 pos());
 
-            pickup_message(item, near);
+            if (msg)
+                pickup_message(item);
             merge_item_stacks(item, dest);
             inc_mitm_item_quantity(inv[slot], item.quantity);
             destroy_item(item.index());
-            equip(item, slot, near);
+            equip(item, msg);
             lose_pickup_energy();
             return true;
         }
@@ -1240,13 +1238,14 @@ bool monster::pickup(item_def &item, mon_inv_type slot, int near)
 
     item.set_holding_monster(*this);
 
-    pickup_message(item, near);
-    equip(item, slot, near);
+    if (msg)
+        pickup_message(item);
+    equip(item, msg);
     lose_pickup_energy();
     return true;
 }
 
-bool monster::drop_item(mon_inv_type eslot, int near)
+bool monster::drop_item(mon_inv_type eslot, bool msg)
 {
     int item_index = inv[eslot];
     if (item_index == NON_ITEM)
@@ -1262,14 +1261,14 @@ bool monster::drop_item(mon_inv_type eslot, int near)
         || eslot == MSLOT_JEWELLERY
         || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(this))
     {
-        if (!unequip(*pitem, eslot, near))
+        if (!unequip(*pitem, msg))
             return false;
         was_unequipped = true;
     }
 
     if (pitem->flags & ISFLAG_SUMMONED)
     {
-        if (need_message(near))
+        if (msg)
         {
             mprf("%s %s as %s drops %s!",
                  pitem->name(DESC_THE).c_str(),
@@ -1283,7 +1282,7 @@ bool monster::drop_item(mon_inv_type eslot, int near)
     }
     else
     {
-        if (need_message(near))
+        if (msg)
         {
             mprf("%s drops %s.", name(DESC_THE).c_str(),
                  pitem->name(DESC_A).c_str());
@@ -1293,13 +1292,13 @@ bool monster::drop_item(mon_inv_type eslot, int near)
         {
             // Re-equip item if we somehow failed to drop it.
             if (was_unequipped)
-                equip(*pitem, eslot, near);
+                equip(*pitem, msg);
 
             return false;
         }
     }
 
-    if (props.exists("wand_known") && near && pitem->base_type == OBJ_WANDS)
+    if (props.exists("wand_known") && msg && pitem->base_type == OBJ_WANDS)
         props.erase("wand_known");
 
     inv[eslot] = NON_ITEM;
@@ -1335,7 +1334,7 @@ static bool _nonredundant_launcher_ammo_brands(item_def *launcher,
     }
 }
 
-bool monster::pickup_launcher(item_def &launch, int near, bool force)
+bool monster::pickup_launcher(item_def &launch, bool msg, bool force)
 {
     // Don't allow monsters to pick up launchers that would also
     // refuse to pick up the matching ammo.
@@ -1365,13 +1364,13 @@ bool monster::pickup_launcher(item_def &launch, int near, bool force)
                           && get_weapon_brand(launch) != SPWPN_NORMAL
                           && _nonredundant_launcher_ammo_brands(&launch,
                                                                 missiles()))
-                   && drop_item(slot, near) && pickup(launch, slot, near);
+                   && drop_item(slot, msg) && pickup(launch, slot, msg);
         }
         else
             eslot = slot;
     }
 
-    return eslot == NUM_MONSTER_SLOTS ? false : pickup(launch, eslot, near);
+    return eslot == NUM_MONSTER_SLOTS ? false : pickup(launch, eslot, msg);
 }
 
 static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
@@ -1514,7 +1513,7 @@ static int _ego_damage_bonus(item_def &item)
     }
 }
 
-bool monster::pickup_melee_weapon(item_def &item, int near)
+bool monster::pickup_melee_weapon(item_def &item, bool msg)
 {
     // Draconian monks are masters of unarmed combat.
     // Monstrous demonspawn prefer to RIP AND TEAR with their claws.
@@ -1531,10 +1530,10 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
     {
         // If we have either weapon slot free, pick up the weapon.
         if (inv[MSLOT_WEAPON] == NON_ITEM)
-            return pickup(item, MSLOT_WEAPON, near);
+            return pickup(item, MSLOT_WEAPON, msg);
 
         if (inv[MSLOT_ALT_WEAPON] == NON_ITEM)
-            return pickup(item, MSLOT_ALT_WEAPON, near);
+            return pickup(item, MSLOT_ALT_WEAPON, msg);
     }
 
     const int new_wpn_dam = mons_weapon_damage_rating(item)
@@ -1620,10 +1619,10 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
         return false;
 
     // Current item cannot be dropped.
-    if (inv[eslot] != NON_ITEM && !drop_item(eslot, near))
+    if (inv[eslot] != NON_ITEM && !drop_item(eslot, msg))
         return false;
 
-    return pickup(item, eslot, near);
+    return pickup(item, eslot, msg);
 }
 
 bool monster::wants_weapon(const item_def &weap) const
@@ -1750,14 +1749,11 @@ static int _get_monster_armour_value(const monster *mon,
 /**
  * Attempt to have a monster pick up and wear the given armour item.
  * @param item  The item in question.
- * @param near  If -1, print an equip message if the the monster picks up the
- *              item and is visible to the player. If 0, never print a pickup
- *              message, and for any other value print the message regardless
- *              of visibility.
+ * @param msg   Whether to print a message
  * @param force If true, force the monster to pick up and wear the item.
  * @return  True if the monster picks up and wears the item, false otherwise.
  */
-bool monster::pickup_armour(item_def &item, int near, bool force)
+bool monster::pickup_armour(item_def &item, bool msg, bool force)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
 
@@ -1837,7 +1833,7 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
 
     // No armour yet -> get this one.
     if (!mslot_item(mslot) && value_new > 0)
-        return pickup(item, mslot, near);
+        return pickup(item, mslot, msg);
 
     // Simplistic armour evaluation (comparing AC and resistances).
     if (const item_def *existing_armour = slot_item(eq, false))
@@ -1860,11 +1856,11 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
                 return false;
         }
 
-        if (!drop_item(mslot, near))
+        if (!drop_item(mslot, msg))
             return false;
     }
 
-    return pickup(item, mslot, near);
+    return pickup(item, mslot, msg);
 }
 
 static int _get_monster_jewellery_value(const monster *mon,
@@ -1913,7 +1909,7 @@ static int _get_monster_jewellery_value(const monster *mon,
     return value;
 }
 
-bool monster::pickup_jewellery(item_def &item, int near, bool force)
+bool monster::pickup_jewellery(item_def &item, bool msg, bool force)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
@@ -1930,7 +1926,7 @@ bool monster::pickup_jewellery(item_def &item, int near, bool force)
 
     // No armour yet -> get this one.
     if (!mslot_item(mslot) && value_new > 0)
-        return pickup(item, mslot, near);
+        return pickup(item, mslot, msg);
 
     // Simplistic jewellery evaluation (comparing AC and resistances).
     if (const item_def *existing_jewellery = slot_item(eq, false))
@@ -1953,14 +1949,14 @@ bool monster::pickup_jewellery(item_def &item, int near, bool force)
             }
         }
 
-        if (!drop_item(mslot, near))
+        if (!drop_item(mslot, msg))
             return false;
     }
 
-    return pickup(item, mslot, near);
+    return pickup(item, mslot, msg);
 }
 
-bool monster::pickup_weapon(item_def &item, int near, bool force)
+bool monster::pickup_weapon(item_def &item, bool msg, bool force)
 {
     if (!force && !wants_weapon(item))
         return false;
@@ -1974,9 +1970,9 @@ bool monster::pickup_weapon(item_def &item, int near, bool force)
     //   pick it up if it is better than the one we have.
 
     if (is_range_weapon(item))
-        return pickup_launcher(item, near, force);
+        return pickup_launcher(item, msg, force);
 
-    if (pickup_melee_weapon(item, near))
+    if (pickup_melee_weapon(item, msg))
         return true;
 
     return false;
@@ -1985,14 +1981,12 @@ bool monster::pickup_weapon(item_def &item, int near, bool force)
 /**
  * Have a monster pick up a missile item.
  *
- * @param item The item to pick up.
- * @param near If -1, a message is printed if the player can see the monster,
- *             if non-zero a message is always printed, and no message is
- *             printed if 0.
+ * @param item  The item to pick up.
+ * @param msg   Whether to print a message about the pickup.
  * @param force If true, the monster will always try to pick up the item.
  * @return  True if the monster picked up the missile, false otherwise.
 */
-bool monster::pickup_missile(item_def &item, int near, bool force)
+bool monster::pickup_missile(item_def &item, bool msg, bool force)
 {
     const item_def *miss = missiles();
 
@@ -2024,7 +2018,7 @@ bool monster::pickup_missile(item_def &item, int near, bool force)
     }
 
     if (miss && items_stack(*miss, item))
-        return pickup(item, MSLOT_MISSILE, near);
+        return pickup(item, MSLOT_MISSILE, msg);
 
     if (!force && !can_use_missile(item))
         return false;
@@ -2051,7 +2045,7 @@ bool monster::pickup_missile(item_def &item, int near, bool force)
                            && _nonredundant_launcher_ammo_brands(launch, miss))
                     && item.quantity * 2 > miss->quantity)
                 {
-                    if (!drop_item(MSLOT_MISSILE, near))
+                    if (!drop_item(MSLOT_MISSILE, msg))
                         return false;
                     break;
                 }
@@ -2064,15 +2058,15 @@ bool monster::pickup_missile(item_def &item, int near, bool force)
             && get_ammo_brand(*miss) == SPMSL_NORMAL
             && get_ammo_brand(item) != SPMSL_NORMAL)
         {
-            if (!drop_item(MSLOT_MISSILE, near))
+            if (!drop_item(MSLOT_MISSILE, msg))
                 return false;
         }
     }
 
-    return pickup(item, MSLOT_MISSILE, near);
+    return pickup(item, MSLOT_MISSILE, msg);
 }
 
-bool monster::pickup_wand(item_def &item, int near, bool force)
+bool monster::pickup_wand(item_def &item, bool msg, bool force)
 {
     if (!force)
     {
@@ -2097,13 +2091,13 @@ bool monster::pickup_wand(item_def &item, int near, bool force)
         if (wand->plus > 0 && !force)
             return false;
 
-        if (!drop_item(MSLOT_WAND, near))
+        if (!drop_item(MSLOT_WAND, msg))
             return false;
     }
 
-    if (pickup(item, MSLOT_WAND, near))
+    if (pickup(item, MSLOT_WAND, msg))
     {
-        if (near)
+        if (msg)
             props["wand_known"] = item_type_known(item);
         return true;
     }
@@ -2111,30 +2105,34 @@ bool monster::pickup_wand(item_def &item, int near, bool force)
         return false;
 }
 
-bool monster::pickup_scroll(item_def &item, int near)
+bool monster::pickup_scroll(item_def &item, bool msg)
 {
-    return pickup(item, MSLOT_SCROLL, near);
+    return pickup(item, MSLOT_SCROLL, msg);
 }
 
-bool monster::pickup_potion(item_def &item, int near, bool force)
+bool monster::pickup_potion(item_def &item, bool msg, bool force)
 {
     if (!can_drink() && !force)
         return false;
-    return pickup(item, MSLOT_POTION, near);
+    return pickup(item, MSLOT_POTION, msg);
 }
 
-bool monster::pickup_gold(item_def &item, int near)
+bool monster::pickup_gold(item_def &item, bool msg)
 {
-    return pickup(item, MSLOT_GOLD, near);
+    return pickup(item, MSLOT_GOLD, msg);
 }
 
-bool monster::pickup_misc(item_def &item, int near)
+bool monster::pickup_misc(item_def &item, bool msg, bool force)
 {
-    return pickup(item, MSLOT_MISCELLANY, near);
+    // Monsters can't use any miscellaneous items right now, so don't
+    // let them pick them up unless explicitly given.
+    if (!force)
+        return false;
+    return pickup(item, MSLOT_MISCELLANY, msg);
 }
 
 // Eaten items are handled elsewhere, in _handle_pickup() in mon-act.cc.
-bool monster::pickup_item(item_def &item, int near, bool force)
+bool monster::pickup_item(item_def &item, bool msg, bool force)
 {
     // Equipping stuff can be forced when initially equipping monsters.
     if (!force)
@@ -2191,47 +2189,39 @@ bool monster::pickup_item(item_def &item, int near, bool force)
     {
     // Pickup some stuff only if WANDERING.
     case OBJ_ARMOUR:
-        return pickup_armour(item, near, force);
+        return pickup_armour(item, msg, force);
     case OBJ_GOLD:
-        return pickup_gold(item, near);
+        return pickup_gold(item, msg);
     case OBJ_JEWELLERY:
-        return pickup_jewellery(item, near, force);
+        return pickup_jewellery(item, msg, force);
     // Fleeing monsters won't pick up these.
     // Hostiles won't pick them up if they were ever dropped/thrown by you.
     case OBJ_STAVES:
     case OBJ_WEAPONS:
     case OBJ_RODS:
-        return pickup_weapon(item, near, force);
+        return pickup_weapon(item, msg, force);
     case OBJ_MISSILES:
-        return pickup_missile(item, near, force);
+        return pickup_missile(item, msg, force);
     // Other types can always be picked up
     // (barring other checks depending on subtype, of course).
     case OBJ_WANDS:
-        return pickup_wand(item, near, force);
+        return pickup_wand(item, msg, force);
     case OBJ_SCROLLS:
-        return pickup_scroll(item, near);
+        return pickup_scroll(item, msg);
     case OBJ_POTIONS:
-        return pickup_potion(item, near, force);
+        return pickup_potion(item, msg, force);
     case OBJ_BOOKS:
     case OBJ_MISCELLANY:
-        // Monsters can't use any miscellaneous items right now, so don't
-        // let them pick them up unless explicitly given.
-        if (force)
-            return pickup_misc(item, near);
-        // else fall through
+        return pickup_misc(item, msg, force);
     default:
         return false;
     }
 }
 
-bool monster::need_message(int &near) const
+void monster::swap_weapons(maybe_bool maybe_msg)
 {
-    return near != -1 ? near
-                      : (near = observable());
-}
+    const bool msg = tobool(maybe_msg, observable());
 
-void monster::swap_weapons(int near)
-{
     // Don't let them swap weapons if berserk. ("You are too berserk!")
     if (berserk())
         return;
@@ -2239,7 +2229,7 @@ void monster::swap_weapons(int near)
     item_def *weap = mslot_item(MSLOT_WEAPON);
     item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);
 
-    if (weap && !unequip(*weap, MSLOT_WEAPON, near))
+    if (weap && !unequip(*weap, msg))
     {
         // Item was cursed.
         // A centaur may randomly decide to not shoot you, but bashing
@@ -2252,7 +2242,7 @@ void monster::swap_weapons(int near)
     swap(inv[MSLOT_WEAPON], inv[MSLOT_ALT_WEAPON]);
 
     if (alt)
-        equip(*alt, MSLOT_WEAPON, near);
+        equip(*alt, msg);
 
     // Monsters can swap weapons really fast. :-)
     if ((weap || alt) && speed_increment >= 2)
@@ -2262,7 +2252,7 @@ void monster::swap_weapons(int near)
     }
 }
 
-void monster::wield_melee_weapon(int near)
+void monster::wield_melee_weapon(maybe_bool msg)
 {
     const item_def *weap = mslot_item(MSLOT_WEAPON);
     if (!weap || (!weap->cursed() && is_range_weapon(*weap)))
@@ -2274,7 +2264,7 @@ void monster::wield_melee_weapon(int near)
         if (alt && !is_range_weapon(*alt)
             || weap && !alt && type != MONS_STATUE)
         {
-            swap_weapons(near);
+            swap_weapons(msg);
         }
     }
 }
@@ -4719,11 +4709,6 @@ void monster::uglything_init(bool only_mutate)
 
 void monster::ghost_demon_init()
 {
-    // Unequip weapon before setting stats, in case of protection/evasion.
-    item_def *wpn = weapon();
-    if (wpn)
-        unequip_weapon(*wpn, false, false);
-
     hit_dice        = ghost->xl;
     max_hit_points  = min<short int>(ghost->max_hp, MAX_MONSTER_HP);
     hit_points      = max_hit_points;
@@ -4731,10 +4716,6 @@ void monster::ghost_demon_init()
     speed_increment = 70;
     if (ghost->colour != COLOUR_UNDEF)
         colour = ghost->colour;
-
-    // And re-equip it.
-    if (wpn)
-        equip_weapon(*wpn, false, false);
 
     load_ghost_spells();
 }
@@ -6535,10 +6516,10 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot)
         && inv[MSLOT_SHIELD] != NON_ITEM
         && hands_reqd(new_item) == HANDS_TWO)
     {
-        drop_item(MSLOT_SHIELD, true);
+        drop_item(MSLOT_SHIELD, observable());
     }
     if (inv[mslot] != NON_ITEM)
-        drop_item(mslot, true);
+        drop_item(mslot, observable());
 
     // Set quantity, and set the item as unlinked.
     new_item.quantity -= random2(new_item.quantity);
@@ -6549,7 +6530,7 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot)
     inv[mslot] = index;
     new_item.set_holding_monster(*this);
 
-    equip(new_item, mslot, true);
+    equip(new_item, true);
 
     // Item is gone from player's inventory.
     dec_inv_item_quantity(steal_what, new_item.quantity);

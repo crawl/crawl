@@ -618,26 +618,12 @@ maybe_bool CLua::callmaybefn(const char *fn, const char *params, ...)
     return callmaybefn(fn, params, args);
 }
 
-static bool _tobool(maybe_bool mb, bool def)
-{
-    switch (mb)
-    {
-    case MB_TRUE:
-        return true;
-    case MB_FALSE:
-        return false;
-    case MB_MAYBE:
-    default:
-        return def;
-    }
-}
-
 bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
 {
     va_list args;
     va_start(args, params);
     maybe_bool r = callmbooleanfn(fn, params, args);
-    return _tobool(r, def);
+    return tobool(r, def);
 }
 
 bool CLua::proc_returns(const char *par) const

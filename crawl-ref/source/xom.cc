@@ -1514,7 +1514,7 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
         return XOM_DID_NOTHING;
 
     // Make the monster unwield its weapon.
-    mon->unequip(*(mon->mslot_item(MSLOT_WEAPON)), MSLOT_WEAPON, 0, true);
+    mon->unequip(*(mon->mslot_item(MSLOT_WEAPON)), false, true);
     mon->inv[MSLOT_WEAPON] = NON_ITEM;
 
     mprf("%s %s dances into the air!",
