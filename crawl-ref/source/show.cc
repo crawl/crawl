@@ -467,7 +467,7 @@ static void _update_monster(monster* mons)
 
     // ripple effect?
     if (grd(gp) == DNGN_SHALLOW_WATER
-            && mons->airborne()
+            && !mons->airborne()
             && env.cgrid(gp) == EMPTY_CLOUD
         || is_opaque_cloud(env.cgrid(gp))
             && !mons->submerged()
