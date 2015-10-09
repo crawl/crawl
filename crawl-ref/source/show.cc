@@ -465,7 +465,8 @@ static void _update_monster(monster* mons)
     if (!you.turn_is_over)
         mons->went_unseen_this_turn = false;
 
-    // ripple effect?
+    // Ripple effect?
+    // Should match directn.cc's _mon_exposed
     if (grd(gp) == DNGN_SHALLOW_WATER
             && !mons->airborne()
             && env.cgrid(gp) == EMPTY_CLOUD
