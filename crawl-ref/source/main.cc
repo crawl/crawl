@@ -1588,6 +1588,12 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         return false;
     }
 
+    if (feat_is_escape_hatch(ftype))
+    {
+        return !Options.warn_hatches || yesno("Really go through this one-way escape hatch?",
+                                              true, 'n');
+    }
+
     // bidirectional, but not actually a portal
     if (ftype == DNGN_PASSAGE_OF_GOLUBRIA)
         return true;
