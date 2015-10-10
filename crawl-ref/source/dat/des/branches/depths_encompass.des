@@ -10,13 +10,12 @@
             e.kmons('2 = nonbase draconian / base draconian w:20')
             e.kmons('3 = draconian zealot / draconian monk w:2')
         else
-            e.kmons('1 = deep elf fighter / deep elf conjurer / '
-                    .. 'deep elf summoner / deep elf knight w:5 / '
-                    .. 'deep elf mage w:5 / '
-                    .. 'deep elf demonologist w:5 /'
+            e.kmons('1 = tengu warrior / tengu conjurer / '
+                    .. 'giant orange brain / spriggan berserker w:5 / '
+                    .. 'spriggan air mage w:5 / deep elf demonologist w:5 / '
                     .. 'nothing w:68')
-            e.kmons('2 = deep elf knight / deep elf fighter w:20')
-            e.kmons('3 = deep elf high priest')
+            e.kmons('2 = spriggan berserker / tengu warrior w:20')
+            e.kmons('3 = deep elf high priest / salamander stormcaller')
         end
         e.subst('% = * %:20 .')
         e.lua_marker(':', fog_machine { cloud_type = "flame",
@@ -593,7 +592,6 @@ ENDMAP
 NAME: grunt_profane_loot
 TAGS: grunt_profane_loot no_monster_gen
 : grunt_profane_halls_setup(_G)
-SHUFFLE: }])>
 SHUFFLE: KLMN
 KMONS: K = storm dragon
 KMONS: L = shadow dragon
