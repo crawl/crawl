@@ -118,6 +118,10 @@ body {
     background-color: #204a87; /* blue */
 }
 
+#stats[data-species="Felid"] #stats_quiver_line {
+    display: none;
+}
+
 /* Temperature bar, hidden normally */
 #stats_heatline {
     display:none;
