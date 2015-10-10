@@ -2321,11 +2321,9 @@ bb$.vvv.....bbb.$vv
 ENDMAP
 
 ###############################################################################
-# Nasty temple of Zin. Note that the boss is locked in a room until
-# the player opens it... and the player can see it ahead of time.
-
+# Nasty temple of Zin.
 NAME:   evilmike_silver_temple
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen patrolling
 DEPTH:  Depths, !Depths:$
 ORIENT: float
 MONS:   daeva god:Zin, angel god:Zin dbname:zin_angel, cherub god:Zin
@@ -2336,13 +2334,11 @@ KMONS:  4 = Mennas, angel god:Zin dbname:zin_angel
 : end
 NSUBST: A = 3 / '
 KFEAT:  _ = altar_zin
-FTILE:  '+_!$%*|1234D = floor_vault
+FTILE:  '+_!$%*|1234 = floor_vault
 TILE:   v = dngn_metal_wall_white
-TILE:   c = dngn_transparent_wall_white
-COLOUR: v = white
-KFEAT:  D = runed_door
+TILE:   n = dngn_transparent_stone_white
+COLOUR: vn = white
 SUBST:  !' = .
-: set_feature_name("metal_wall", "silver wall")
 MAP
 ............@@@@@@@............
 ....vvvvvvv...T.T...vvvvvvv....
@@ -2354,7 +2350,7 @@ MAP
 .v'''vvvvvvvvv...vvvv'vv'''v'v.
 .v'''v'''vvvvv...vvvv'vv'''v'v.
 .v'''v'''vv3'vv.vv'3v''''v'''v.
-.v'''+'''vv''vvDvv''vvvvvvvv+v.
+.v'''+'''vv''vv+vv''vvvvvvvv+v.
 .v+vvv'A'vv+vvv'vvv+vvvvvvvv1v.
 .v1'vv%%%v'''''''''''vvvvvv''v.
 .vv''vvvvv'v'v'''v'v'vvvvv''vv.
@@ -2365,9 +2361,9 @@ MAP
 ...v.vvv''vvv'2'1'vvv''vvv.v...
 .v...vvvv''vvv'''vvv''vvvv...v.
 ...v.vvvvv'3vvvnvvv3'vvvvv.v...
-.v...vvvvvvDv'''''Dvvvvvvv...v.
+.v...vvvvvv+v'''''+vvvvvvv...v.
 ...v.v$$$$v''''4''''v****v.v...
-.v...v$$$$D'''v_v'''D*||*v...v.
+.v...v$$$$+'''v_v'''+*||*v...v.
 ...v.v$$$$vvvvvvvvvvv****v.v...
 .....vvvvvvvvvvvvvvvvvvvvv.....
 ...............................
