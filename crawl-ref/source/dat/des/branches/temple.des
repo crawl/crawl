@@ -3591,3 +3591,39 @@ xxxxxxxxxxxxxxxxxxxxxxxx......ccc.ccc......xxxxxxxxxxxxxxxxxxxxxxxx
                                 xxx
                                  x
 ENDMAP
+
+# 6 gods
+NAME:    hc_temple_tempest_star_small
+PLACE:   Temple
+ORIENT:  encompass
+TAGS:    no_rotate no_pool_fixup no_cloud_gen
+SUBST:   c:cWwl
+MAP
+                    c
+                   ccc
+                  ccccc
+                 ccc.ccc
+                ccc...ccc
+               ccc..B..ccc
+              ccc.......ccc
+cccccccccccccccc......ccccccccccccccccccc
+ ccc........ccc.....ccccccccc.........cc
+  ccc..B...cccc....ccccc.........B...cc
+   ccc......ccc....c................cc
+    ccc......ccc........cccccc.....cc
+     cccc......ccc.........cccccc.cc
+      cccccc........{........cccccc
+     cc.cccccc.........ccc......cccc
+    cc.....cccccc........ccc......ccc
+   cc................c....ccc......ccc
+  cc...B.........ccccc....cccc...B..ccc
+ cc.........ccccccccc.....ccc........ccc
+ccccccccccccccccccc......cccccccccccccccc
+              ccc.......ccc
+               ccc..B..ccc
+                ccc...ccc
+                 ccc.ccc
+                  ccccc
+                   ccc
+                    c
+ENDMAP
