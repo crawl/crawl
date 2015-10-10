@@ -329,18 +329,15 @@ SUBVAULT: d : grunt_profane_temple
 SUBVAULT: e : grunt_profane_temple
 SUBVAULT: f : grunt_profane_temple
 SUBVAULT: g : grunt_profane_temple
-NSUBST: D = 1:K / 1:L / 1:M / 1:N
 : grunt_profane_halls_setup(_G)
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+NSUBST: D = 1:K / 1:L / 1:M / 1:N
 KMONS: K = storm dragon
 KMONS: L = shadow dragon
 KMONS: M = quicksilver dragon
 KMONS: N = golden dragon
 : else
-KMONS: K = deep elf blademaster / deep elf master archer
-KMONS: L = deep elf annihilator
-KMONS: M = deep elf death mage
-KMONS: N = deep elf sorcerer
+KMONS: D = 8 band
 : end
 KMONS: 0 = 0 band w:15 / nothing
 KMONS: 9 = 9 band / 0 band
