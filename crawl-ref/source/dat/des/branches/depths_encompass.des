@@ -807,55 +807,6 @@ ORIENT:  encompass
 PLACE:   Depths:$
 DEPTH:   Depths:2-
 WEIGHT:  1 (Depths:$), 10
-MONS:    lindwurm / elephant w:20 / polar bear w:5                          / \
-         alligator w:5 / mana viper w:5 / manticore / wolf spider w:3       / \
-         hornet w:2 / boulder beetle w:3 / raiju w:2
-MONS:    fire dragon w:16 / ice dragon w:16 / swamp dragon w:5              / \
-         dire elephant / fire crab w:4 / catoblepas w:4                     / \
-         hydra w:5 / anaconda w:5 / shock serpent w:5                       / \
-         snapping turtle w:5 / harpy w:5 / hell beast
-MONS:    storm dragon w:20 / shadow dragon w:20 / iron dragon               / \
-         golden dragon / quicksilver dragon w:15 / caustic shrike           / \
-         torpor snail / emperor scorpion w:5 / hellephant w:5               / \
-         ghost moth w:3 / death drake w:2 / alligator snapping turtle w:5
-MONS:    great orb of eyes / eye of draining / ugly thing                   / \
-         shapeshifter hd:5 w:5 / very large slime creature                  / \
-         freezing wraith / shadow / air elemental / water elemental         / \
-         dancing weapon w:5 ; short sword good_item
-MONS:    giant orange brain / eye of devastation / golden eye w:5           / \
-         very ugly thing / titanic slime creature / shapeshifter hd:8 w:20  / \
-         hydra simulacrum w:4 / anaconda simulacrum w:3                     / \
-         harpy simulacrum w:3 / eidolon w:5 / shadow wraith w:5             / \
-         dancing weapon w:5 ; long sword good_item
-MONS:    giant eyeball w:45 / tentacled monstrosity w:15                    / \
-         bone dragon w:15 / glowing shapeshifter hd:13 w:30                 / \
-         glowing shapeshifter hd:14 w:15 / azure jelly                      / \
-         flayed ghost w:20 / war gargoyle / crystal guardian                / \
-         dancing weapon w:5 ; glaive good_item
-MONS:    centaur warrior / orc knight / hill giant / cyclops w:5            / \
-         deep troll / boggart w:5 / necromancer                             / \
-         deep elf conjurer / deep elf priest w:5 / vampire                  / \
-         skeletal warrior w:5 / spriggan rider w:5
-KMONS:   8 = ogre mage / rakshasa / hell knight                             / \
-         orc high priest / orc sorcerer / deep elf knight w:15              / \
-         deep elf conjurer / naga mage / naga sharpshooter w:5              / \
-         guardian serpent w:5 / phantasmal warrior w:5
-KMONS:   9 = fire giant w:8 / frost giant w:11 / stone giant                / \
-         ettin w:11 / tengu reaver w:5 / spriggan air mage w:6              / \
-         spriggan berserker w:4 / minotaur w:5                              / \
-         deep troll earth mage w:8 / deep troll shaman w:2                  / \
-         octopode crusher w:5 / salamander firebrand w:5                    / \
-         orc warlord ; battleaxe good_item . plate armour . arbalest . bolt / \
-         deep elf death mage w:5 / deep elf demonologist w:5                / \
-         vampire knight / vampire mage w:5 / ancient champion w:6
-KMONS:   0 = titan w:15 / lich / sphinx / spriggan defender                 / \
-         deep elf annihilator / deep elf sorcerer                           / \
-         deep elf high priest w:5 / greater naga w:5                        / \
-         blizzard demon w:5 / reaper w:5
-KMONS:   & = draconian knight / draconian monk w:15                         / \
-         draconian annihilator / deep elf blademaster w:15                  / \
-         deep elf master archer w:15 / lich w:15 /                          / \
-         ancient lich w:15 / balrug w:5 / executioner w:5
 KMONS:   Z = base draconian
 KFEAT:   z = known zot trap w:499 / floor w:1
 KFEAT:   Z = enter_zot
@@ -865,21 +816,22 @@ NSUBST:  ] = 1:) / 1:] / 1:>
 SUBST:   B : b.., C : cb., D : x.., E : xx., F : xx.
 SUBST:   L : xx., M : xx., j : x.., k : x.., n : x.
 SUBST:   HJOQRm = x, IKNPSl = .
-SUBST:   b : bbbbbbvc,  ^ = 224999, y = Y
-SUBST:   @ = 114777, & = &:25 0:2
+SUBST:   b : bbbbbbvc, ^ = 09, y = Y
+SUBST:   & = &:25 0:2
 : local Z = you.depth()
-:   subst("9 = 9:90 0:" .. Z + 5)
-:   subst("8 = 9:" .. Z + 2 .. " 8:20")
-:   subst("5 = 6:" .. Z + 2 .. " 5:20")
-:   subst("2 = 3:" .. Z + 2 .. " 2:20")
-:   subst("1 = 1:" .. 26 - Z * 2 .. " 2:" .. Z + 1)
-:   subst("4 = 4:" .. 26 - Z * 2 .. " 5:" .. Z + 1)
-:   subst("7 = 7:" .. 26 - Z * 2 .. " 8:" .. Z + 1)
+:   subst("9 = 9:90 8:" .. Z + 5)
+:   subst("1 = 9:" .. Z + 2 .. " 0:20")
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 SUBST:  )]} = ., > = <, " = `
 NSUBST: ' = 1:Z / 2:` / *:`
+KMONS:  & = draconian knight / draconian monk w:15                         / \
+        draconian annihilator / deep elf blademaster w:15                  / \
+        deep elf master archer w:15 / lich w:15 /                          / \
+        ancient lich w:15 / balrug w:5 / executioner w:5
+: else
+KMONS:  & = 8
 : end
-SUBST:  '" = ., ! = 1, $ = 4, ? = 7, 7 = 7:499 .:1
+SUBST:  '" = .
 MARKER: Y = lua:props_marker { portal=1 }
 FTILE:  Z` = floor_marble
 MAP
@@ -889,64 +841,64 @@ xxxxxxxxxxJ.............xxxxxx
 xxxxxxxxxxx......c.........xxx
 xxxxxxxxx"".....cbc..x......xxx
 xxxxxklxP".....cbcbc.x......Mxxxx
-xxxxxl'"7.....xF.b.cc...n....Lxxxx
-xxxxxx""1....x...x..cc.x.......xxx
-xxxxxP74.........b..7cc.........xxx
-xxxx"".....x..xxb.bxb.cc..8.....xxx
-xxJx".....x..E...b...b.cc@..n...xxx
-xx.......x.......xx.4x.8cc.x.....xx
+xxxxxl'"0.....xF.b.cc...n....Lxxxx
+xxxxxx""0....x...x..cc.x.......xxx
+xxxxxP00.........b..0cc.........xxx
+xxxx"".....x..xxb.bxb.cc..1.....xxx
+xxJx".....x..E...b...b.cc0..n...xxx
+xx.......x.......xx.0x.1cc.x.....xx
 xx.............F...x.b*..cc......xx
 xx.....x..E........xb.bxb.cc.xx..xx
-xx....x..x...........b.7.b9cc....xxxxxxxxxxxxx
-xx...cF..x..F....%...xx.5x..cc...xxxxxxxxxxxxxx
-xx..cb...b......%*.....x.b...bc..xxxx@.%.%.@.xxx
+xx....x..x...........b.0.b9cc....xxxxxxxxxxxxx
+xx...cF..x..F....%...xx.1x..cc...xxxxxxxxxxxxxx
+xx..cb...b......%*.....x.b...bc..xxxx0.%.%.0.xxx
 xx.cbcbxb.bx...%*.*%...xb.bxbcbc.xxxxx........xxx
 xx..cb...b.x.....*%....x.b...bc..xxxxxx........xxx
 xx...cc..x..xx...%...xx..x..cc...xxxxxxx%.......xxx
-xx....cc7b71.b.......b%65b8cc....xxxxxxxx...I.x.xxxx
+xx....cc0b00.b.......b%91b1cc....xxxxxxxx...I.x.xxxx
 xx..xx.cc.bcb.bx...xb.bxb.cc..xx.xx..xxxxx...H.^..xxx
 xx......cc..*b.x...x%b%*|cc......xx....xxxx.x...x..xxx
-xx.....x.cc8.x1.xxx.3x*&cc.......xx.......xx...H....xxx
-xxxx..n..@cc.b72.b..2b|cc.....xMx.x.xLx.....x.x.I....xx
- xxx....8..cc.bxb.bxb.cc.8.xxx...xxx...xxx...x......@xx
-  xx........cc9..b..8cc.........x...x........xx......xx
-  xxxxL....x.cc..x..cc...x.@..SR..@..RS..@.x..xx....%xx
+xx.....x.cc1.x0.xxx.9x*&cc.......xx.......xx...H....xxx
+xxxx..n..0cc.b01.b..1b|cc.....xMx.x.xLx.....x.x.I....xx
+ xxx....1..cc.bxb.bxb.cc.1.xxx...xxx...xxx...x......0xx
+  xx........cc9..b..1cc.........x...x........xx......xx
+  xxxxL....x.cc..x..cc...x.0..SR..0..RS..0.x..xx....%xx
   xxxxxM..n...cc.b.cc....x....SR.....RS....x..xxx%...xx
      xxx.....x.cbcbc.....x....SR.....RS....x..xxxx..%xx
     xxcc.....x..cbc..x..x..SSSJ.x.Q.x.HSSS..x..xxxx..xx
-    xcc..........c...x..L..RRR.K.cPc.I.RRR..M..xxxxx@xx
+    xcc..........c...x..L..RRR.K.cPc.I.RRR..M..xxxxx0xx
    xxc.xx...............x.x...x.J...H.x...x.x...xxxxxxx
-   xc@.xx...xxxxxxxxxxxx.x.....c.>.[.c.....x....xxxxxxx
-   xc....xx.....nnnnxxxxxx.@..NO..z..ON..@.xxxxxxxxxxxxxxx
+   xc0.xx...xxxxxxxxxxxx.x.....c.>.[.c.....x....xxxxxxx
+   xc....xx.....nnnnxxxxxx.0..NO..z..ON..0.xxxxxxxxxxxxxxx
   xc.....xx........nx....x.....c.(.{.c.....x.xxxxxxxxxxxxxx
   xc.......xx......nx...x.x...x.H...J.x...x.x............xxxxxx
   xxc......xx.......xx..M..RRR.I.cPc.K.RRR..L...Y..c......xxxxx
    xc...j....xx......x..x..SSSH.x.Q.x.JSSS..x.....cbc........xx
    xxc.......xx.c....x...x....SR.....RS....x].Y..xbcbx.......xxx
     xc..........b....xx..x....SR.....RS....x....x..b..x......Lxxxxx
-    x@cc......cb%bc...x..x.@..SR..@..RS..@.x.x.x..1c...x.x....Mxxxx
-    xc..cc..cc.@b.....KJ........x...x.....x....b..7b81.b.........xx
+    x0cc......cb%bc...x..x.0..SR..0..RS..0.x.x.x..0c...x.x....Mxxxx
+    xc..cc..cc.0b.....KJ........x...x.....x....b..0b10.b.........xx
     xc....cc....c.xx..KJ...xxx...xxx...xxx.}.xb.bcbcbcb.bx.......xxx
     xxc........c..xx...KJ.....xLx.x.xMx]....x..b..%b%..b..x......xxx
-     xc.....k..c....xx..KJJ.......xx.....x.x..1c.1ccc1.c1..x.x....xxx
-     xxc..%...c.....xx...KKxx.....xx...Y...b.47b*cc&cc%b92.b.......xx
-     xxc..%%..c.......xx....xxxx..xx.....xb.bcbcbc6x6cbcbcb.bx.....xx
+     xc.....k..c....xx..KJJ.......xx.....x.x..0c.0ccc0.c0..x.x....xxx
+     xxc..%...c.....xx...KKxx.....xx...Y...b.00b*cc&cc%b91.b.......xx
+     xxc..%%..c.......xx....xxxx..xx.....xb.bcbcbc9x9cbcbcb.bx.....xx
      xc..k.....c......xx.......xxxxx.Y..x..b..*b9..x..9b*..b..x....xx
-    xxc........c...j....xx......nnnx...x...c.4cc.7|x|*4cc7.c...x...xx
-    xc....cc....c.......xx.c......nx..cb.74c%cc3.|x%*|.2cc*b82.bc..xx
-    xc@.cc..cc."b".........b......nx.cbcbccccc&xxx%|%xxxccbcbcbcbc.xx
-    x.cc......cb'bc......cb%bc....nx..cb..8c%cc3.|*%x.....%C...Bx..xx
-    xc........1"b".cc..cc.@b.......x...x..4c.4cc.*|x....C..x...x...xx
-   xxc.mm....ll4c....cc....c.xx....x....x..b..%c91.x.....%.x..x....xx
-   xc..mm...%ll..c........c..xx....x.....xb.bccccc5x....D.x........xx
+    xxc........c...j....xx......nnnx...x...c.0cc.0|x|*0cc0.c...x...xx
+    xc....cc....c.......xx.c......nx..cb.00c%cc9.|x%*|.1cc*b11.bc..xx
+    xc0.cc..cc."b".........b......nx.cbcbccccc&xxx%|%xxxccbcbcbcbc.xx
+    x.cc......cb'bc......cb%bc....nx..cb..1c%cc9.|*%x.....%C...Bx..xx
+    xc........0"b".cc..cc.0b.......x...x..0c.0cc.*|x....C..x...x...xx
+   xxc.mm....ll0c....cc....c.xx....x....x..b..%c90.x.....%.x..x....xx
+   xc..mm...%ll..c........c..xx....x.....xb.bccccc1x....D.x........xx
    xc......xx%...c.....k..c....xx..........b..9c*ccc.C%D...........xx
-  xc%.....%xx.....c..%...c.....xx........x.x.5.c.4cc.....D.x.......xx
+  xc%.....%xx.....c..%...c.....xx........x.x.1.c.0cc.....D.x.......xx
   xc%....xx%......c..%%..c.......xx.........x..b..*b%..x.........HOxx
   xxc...%xx......c..k.....c......xx..........xb.bcbcCxx..x.......Pxxx
-   xc..ll%...mm..c........c...j....xx..........b..5b........"""JRlxxx
-   xxc2ll....mm.c....cc....c.......xx.cxM....x.x..8c........"'"jxxxxx
-    xc^5........c@.ccxxcc..c.........ccxxL......x..b..x....."""kxxxxx
-    xxcc......cc.ccxxxxxxcc@cc.....@ccxxxx.......xbcBx......Jjklxxxxx
+   xc..ll%...mm..c........c...j....xx..........b..1b........"""JRlxxx
+   xxc1ll....mm.c....cc....c.......xx.cxM....x.x..1c........"'"jxxxxx
+    xc^1........c0.ccxxcc..c.........ccxxL......x..b..x....."""kxxxxx
+    xxcc......cc.ccxxxxxxcc0cc.....0ccxxxx.......xbcBx......Jjklxxxxx
      xxxcc%%ccxxxxxx    xxxxxxcc..ccxxx xx........cbx.......Rxxxxxxxx
        xxxccxxx              xxxccxxx   xxxxx......c......HPlxxxxxxxx
          xxxx                  xxxx     xxxxxx............Oxxxxxxxxxx
