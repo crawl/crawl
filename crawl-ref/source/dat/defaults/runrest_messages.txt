@@ -21,7 +21,6 @@ ignore += chunks of flesh in your inventory have rotted
 ignore += The winds around you calm down.
 ignore += Lightning arcs down from a storm cloud
 ignore += (crumbles|melts) away\.
-ignore += our air elemental.*the air
 
 stop += You feel you are being watched
 stop += [Ss]omething.* misses you.
