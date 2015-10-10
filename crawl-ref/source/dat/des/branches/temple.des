@@ -3560,23 +3560,23 @@ MAP
                        xx......ccccc......xx
 xxxxxxxxxxxxxxxxxxxxxxxx......ccc.ccc......xxxxxxxxxxxxxxxxxxxxxxxx
  xx..........................ccc...ccc..........................xx
-  xx...B.............C......ccc.....ccc.....C..............B...xx
+  xx...B..............C.....ccc.....ccc.....C..............B...xx
    xx......................ccc................................xx
     xx.......cccccccccc...ccc......ccccccccccccccccccc.......xx
      xx.......ccc.D.cc...ccc.....ccccccccc.....cccccc.......xx
       xx.......ccc..c...cccc....ccccc.............cc.......xx
        xx.......ccc......ccc....c................cc.......xx
-        xx.......ccc......ccc........ccccccc.....c.......xx
-         xx.......ccccc.....ccc.........ccccccc.........xx
+        xx.......ccc......ccc........cccccc......c.......xx
+         xx.......cccc......ccc.........cccccc..........xx
           xx..C....cccccc........{........cccccc....C..xx
-         xx..........cccccc.........ccc.....ccccc.......xx
+         xx..........cccccc.........ccc......cccc.......xx
         xx.......c......cccccc........ccc......ccc.......xx
        xx.......cc................c....ccc......ccc.......xx
       xx.......cc.............ccccc....cccc...c..ccc.......xx
      xx.......cccccc.....ccccccccc.....ccc...cc.D.ccc.......xx
     xx.......ccccccccccccccccccc......ccc...cccccccccc.......xx
    xx................................ccc......................xx
-  xx...B.............C......ccc.....ccc.....C..............B...xx
+  xx...B..............C.....ccc.....ccc.....C..............B...xx
  xx..........................ccc...ccc..........................xx
 xxxxxxxxxxxxxxxxxxxxxxxx......ccc.ccc......xxxxxxxxxxxxxxxxxxxxxxxx
                        xx......ccccc......xx
