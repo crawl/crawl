@@ -26,6 +26,7 @@
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
+#include "prompt.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "state.h"
@@ -586,20 +587,61 @@ int detect_creatures(int pow, bool telepathic)
     return creatures_found;
 }
 
+static bool _uncurse_hands()
+{
+    bool plural = false;
+    const string msg = "Your " + you.hand_name(true, &plural);
+    mprf("%s%s", msg.c_str(), plural ? " lose their black sheen." :
+                                       " loses its black sheen.");
+    you.props["ASHENZARI_HANDS_CURSED"] = false;
+    ash_check_bondage();
+    return true;
+}
+
+static bool _hands_are_cursed()
+{
+    return bool(you.props["ASHENZARI_HANDS_CURSED"]);
+}
+
 static bool _selectively_remove_curse(const string &pre_msg)
 {
     bool used = false;
 
     while (1)
     {
-        if (!any_items_of_type(OSEL_CURSED_WORN) && used)
+        if (!any_items_of_type(OSEL_CURSED_WORN) && used
+             && !_hands_are_cursed())
         {
             mpr("You have uncursed all your worn items.");
             return used;
         }
 
-        int item_slot = prompt_invent_item("Uncurse which item?", MT_INVLIST,
-                                           OSEL_CURSED_WORN, true, true, false);
+        string prompt_msg = "Uncurse which item";
+        if (bool(you.props["ASHENZARI_HANDS_CURSED"]))
+            prompt_msg += " (- for hands)";
+        prompt_msg += "?";
+        const char *msg = prompt_msg.c_str();
+
+        int item_slot = prompt_invent_item(msg,
+                                           MT_INVLIST, OSEL_CURSED_WORN,
+                                           true, true, false, '-');
+
+        // Uncurse hands (if there was nothing else that could be uncursed).
+        if (item_slot == PROMPT_NOTHING && _hands_are_cursed()
+            && yesno("Uncurse your hands?", false, 'n'))
+        {
+                         used = _uncurse_hands();
+                         continue;
+        }
+
+        // Uncurse hands (if there was)
+        if (item_slot == PROMPT_GOT_SPECIAL)
+        {
+            _uncurse_hands();
+            used = true;
+            continue;
+        }
+
         if (prompt_failed(item_slot))
             return used;
 
@@ -632,10 +674,18 @@ bool remove_curse(bool alreadyknown, const string &pre_msg)
             return true;
         }
         else
+        {
             return false;
+        }
     }
 
+
     bool success = false;
+
+    // This catches Ashenzari abandoners who need to uncurse their
+    // hands.
+    if (_hands_are_cursed())
+        success = _uncurse_hands();
 
     // Only cursed *weapons* in hand count as cursed. - bwr
     // Not you.weapon() because we want to handle melded weapons too.

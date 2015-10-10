@@ -28,6 +28,7 @@
 #include "godabil.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -339,6 +340,13 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         }
         else
             return false;
+    }
+
+    // Ensure uncursed hands
+    if (player_hands_cursed())
+    {
+        mpr("You can't wield anything, your hands are cursed!");
+        return false;
     }
 
     const unsigned int old_talents = your_talents(false).size();
@@ -2346,6 +2354,12 @@ static void _vulnerability_scroll()
     you.set_duration(DUR_LOWERED_MR, 40, 0, "Magic quickly surges around you.");
 }
 
+static void _curse_hands()
+{
+    you.props["ASHENZARI_HANDS_CURSED"] = true;
+    ash_check_bondage();
+}
+
 static bool _is_cancellable_scroll(scroll_type scroll)
 {
     return scroll == SCR_IDENTIFY
@@ -2460,15 +2474,19 @@ string cannot_read_item_reason(const item_def &item)
             return "";
 
         case SCR_CURSE_WEAPON:
-            if (!you.weapon())
-                return "This scroll only affects a wielded weapon!";
-
             // assumption: wielded weapons always have their curse & brand known
-            if (you.weapon()->cursed())
-                return "Your weapon is already cursed!";
-
-            if (get_weapon_brand(*you.weapon()) == SPWPN_HOLY_WRATH)
-                return "Holy weapons cannot be cursed!";
+            if (you.weapon())
+            {
+                if (you.weapon()->cursed())
+                    return "Your weapon is already cursed!";
+                if (get_weapon_brand(*you.weapon()) == SPWPN_HOLY_WRATH)
+                    return "Holy weapons cannot be cursed!";
+            }
+            else
+            {
+                if (player_hands_cursed())
+                    return "Your hands are already cursed!";
+            }
             return "";
 
         case SCR_ENCHANT_ARMOUR:
@@ -2484,6 +2502,9 @@ string cannot_read_item_reason(const item_def &item)
             return _no_items_reason(OSEL_RECHARGE);
 
         case SCR_REMOVE_CURSE:
+            // You can use this scroll if only your hands are cursed.
+            if (player_hands_cursed())
+                return "";
             return _no_items_reason(OSEL_CURSED_WORN);
 
         case SCR_CURSE_ARMOUR:
@@ -2740,8 +2761,9 @@ void read_scroll(int item_slot)
             const string weapon_name =
                 weapon ? weapon->name(DESC_YOUR)
                        : "Your " + you.hand_name(true, &plural);
-            mprf("%s very briefly gain%s a black sheen.",
+            mprf("%s briefly gain%s a black sheen.",
                  weapon_name.c_str(), plural ? "" : "s");
+            _curse_hands();
         }
         else
         {

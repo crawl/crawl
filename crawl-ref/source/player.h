@@ -1060,6 +1060,7 @@ void float_player();
 bool land_player(bool quiet = false);
 void player_open_door(coord_def doorpos);
 void player_close_door(coord_def doorpos);
+bool player_hands_cursed();
 
 void dec_disease_player(int delay);
 

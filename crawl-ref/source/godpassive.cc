@@ -213,6 +213,9 @@ void ash_check_bondage(bool msg)
         else
             s = ET_JEWELS;
 
+        // Ashenzari bound hands
+        if (i == EQ_WEAPON && player_hands_cursed())
+            cursed[ET_WEAPON] = 3;
         // transformed away slots are still considered to be possibly bound
         if (you_can_wear(i))
         {
@@ -583,8 +586,12 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
     switch (type)
     {
     case (ET_WEAPON):
-        ASSERT(wpn);
-
+        // Cursed hands.
+        if (!wpn)
+        {
+            boost[SK_UNARMED_COMBAT] = 2;
+            break;
+        }
         // Boost weapon skill. Plain "staff" means an unrand magical staff,
         // boosted later.
         if (wpn->base_type == OBJ_WEAPONS
