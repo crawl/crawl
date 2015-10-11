@@ -6553,3 +6553,17 @@ bool pakellas_check_quick_charge(bool quiet)
 
     return true;
 }
+
+void pakellas_add_drained_mp(int drain)
+{
+    const int diff = you.max_magic_points - you.magic_points;
+    int contam = 0;
+    if (drain > diff)
+    {
+        contam = 1000 * (drain - diff);
+        drain = diff;
+    }
+    contam += 100 * drain;
+    inc_mp(drain);
+    contaminate_player(contam, true);
+}

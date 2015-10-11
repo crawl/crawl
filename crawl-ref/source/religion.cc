@@ -436,8 +436,10 @@ const vector<god_power> god_powers[NUM_GODS] =
     {
       { 1, ABIL_PAKELLAS_DEVICE_SURGE,
            "spend magic to empower your devices" },
-      { 2, ABIL_PAKELLAS_QUICK_CHARGE,
+      { 2, ABIL_PAKELLAS_DRAIN_MAGIC, "drain magic from a nearby foe" },
+      { 3, ABIL_PAKELLAS_QUICK_CHARGE,
            "spend your magic to charge your devices" },
+      { 4, ABIL_PAKELLAS_MASS_DRAIN_MAGIC, "drain magic from all nearby foes" },
       { 7, ABIL_PAKELLAS_SUPERCHARGE,
            "Pakellas will now supercharge a wand or rod... once.",
            "Pakellas is no longer ready to supercharge a wand or rod." },
@@ -2325,6 +2327,13 @@ static void _gain_piety_point()
                             end(you.ability_letter_table),
                             ABIL_YRED_ANIMATE_REMAINS, ABIL_YRED_ANIMATE_DEAD);
                 }
+                if (power.abil == ABIL_PAKELLAS_MASS_DRAIN_MAGIC)
+                {
+                    replace(begin(you.ability_letter_table),
+                            end(you.ability_letter_table),
+                            ABIL_PAKELLAS_DRAIN_MAGIC,
+                            ABIL_PAKELLAS_MASS_DRAIN_MAGIC);
+                }
             }
         }
         if (you_worship(GOD_SHINING_ONE) && rank == 1)
@@ -2488,6 +2497,13 @@ void lose_piety(int pgn)
                     replace(begin(you.ability_letter_table),
                             end(you.ability_letter_table),
                             ABIL_YRED_ANIMATE_DEAD, ABIL_YRED_ANIMATE_REMAINS);
+                }
+                if (power.abil == ABIL_PAKELLAS_MASS_DRAIN_MAGIC)
+                {
+                    replace(begin(you.ability_letter_table),
+                            end(you.ability_letter_table),
+                            ABIL_PAKELLAS_MASS_DRAIN_MAGIC,
+                            ABIL_PAKELLAS_DRAIN_MAGIC);
                 }
             }
         }
@@ -3269,6 +3285,8 @@ void set_god_ability_slots()
             // Animate Dead doesn't have its own hotkey; it steals
             // Animate Remains'
             && power.abil != ABIL_YRED_ANIMATE_DEAD
+            // ditto Pakellas' Mass Drain Magic to Drain Magic
+            && power.abil != ABIL_PAKELLAS_MASS_DRAIN_MAGIC
             && find(begin(you.ability_letter_table),
                     end(you.ability_letter_table), power.abil)
                == end(you.ability_letter_table)
