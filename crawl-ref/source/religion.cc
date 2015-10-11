@@ -440,6 +440,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_PAKELLAS_QUICK_CHARGE,
            "spend your magic to charge your devices" },
       { 4, ABIL_PAKELLAS_MASS_DRAIN_MAGIC, "drain magic from all nearby foes" },
+      { 5, ABIL_PAKELLAS_SAP_MAGIC, "inflict a magic sap on your foes" },
       { 7, ABIL_PAKELLAS_SUPERCHARGE,
            "Pakellas will now supercharge a wand or rod... once.",
            "Pakellas is no longer ready to supercharge a wand or rod." },

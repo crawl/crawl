@@ -27,6 +27,7 @@
 #include "exclude.h"
 #include "fight.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "godpassive.h"
 #include "items.h"
 #include "libutil.h"
@@ -3636,13 +3637,20 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         mons_cast(mons, beem, spell_cast, flags);
         if (battlesphere)
             trigger_battlesphere(mons, beem);
-        if (flags & MON_SPELL_WIZARD && mons->has_ench(ENCH_SAP_MAGIC))
+        if (mons->has_ench(ENCH_SAP_MAGIC) && mons->antimagic_susceptible())
         {
-            mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
-                                       mons->get_ench(ENCH_SAP_MAGIC)
-                                             .agent(),
-                                       BASELINE_DELAY
-                                       * spell_difficulty(spell_cast)));
+            actor *sapper = mons->get_ench(ENCH_SAP_MAGIC).agent();
+            if (flags & MON_SPELL_WIZARD || (sapper && sapper->is_player()))
+            {
+                mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0, sapper,
+                                           BASELINE_DELAY
+                                           * spell_difficulty(spell_cast)));
+            }
+            if (sapper && sapper->is_player())
+            {
+                canned_msg(MSG_GAIN_MAGIC);
+                pakellas_add_drained_mp(spell_difficulty(spell_cast));
+            }
         }
         // Wellsprings "cast" from their own hp.
         if (spell_cast == SPELL_PRIMAL_WAVE

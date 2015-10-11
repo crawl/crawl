@@ -397,6 +397,7 @@ static const ability_def Ability_List[] =
         0, 0, 100, 3, abflag::NONE },
     { ABIL_PAKELLAS_MASS_DRAIN_MAGIC, "Mass Drain Magic",
         0, 0, 200, 3, abflag::NONE },
+    { ABIL_PAKELLAS_SAP_MAGIC, "Sap Magic", 0, 0, 150, 4, abflag::NONE },
     { ABIL_PAKELLAS_SUPERCHARGE, "Supercharge", 0, 0, 0, 0, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, abflag::NONE },
@@ -908,8 +909,9 @@ talent get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_TROG_BROTHERS_IN_ARMS:    // piety >= 100
+    case ABIL_PAKELLAS_SAP_MAGIC:       // piety >= 120
         invoc = true;
-        failure = piety_breakpoint(5) - you.piety; // starts at 60%
+        failure = piety_breakpoint(5) - you.piety; // starts at 60% / 40%
         break;
 
     case ABIL_JIYVA_SLIMIFY:
@@ -2991,6 +2993,40 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     {
         fail_check();
         cast_los_attack_spell(SPELL_DRAIN_MAGIC, you.piety, &you, true);
+        break;
+    }
+
+    case ABIL_PAKELLAS_SAP_MAGIC:
+    {
+        beam.range = LOS_RADIUS;
+        if (!spell_direction(spd, beam, DIR_TARGET, TARG_HOSTILE, 0, false))
+            return SPRET_ABORT;
+
+        if (beam.target == you.pos())
+        {
+            mpr("You cannot drain magic from yourself!");
+            return SPRET_ABORT;
+        }
+
+        monster* mons = monster_at(beam.target);
+
+        if (mons == nullptr || !you.can_see(*mons))
+        {
+            mpr("There is no monster there to drain!");
+            return SPRET_ABORT;
+        }
+
+        if (!mons->antimagic_susceptible()
+            || mons_is_firewood(mons)
+            || mons_is_conjured(mons->type))
+        {
+            mpr("You cannot drain magic from that!");
+            return SPRET_ABORT;
+        }
+
+        fail_check();
+
+        enchant_actor_with_flavour(mons, &you, BEAM_SAP_MAGIC, you.piety);
         break;
     }
 
