@@ -2077,6 +2077,13 @@ const char *ammo_name(const item_def &bow)
     return ammo_name(fires_ammo_type(bow));
 }
 
+const char *ammo_name(const weapon_type bow)
+{
+    missile_type mi = Weapon_prop[Weapon_index[bow]].ammo;
+    ASSERT(mi != MI_NONE);
+    return ammo_name(mi);
+}
+
 // Returns true if item has an associated launcher.
 bool has_launcher(const item_def &ammo)
 {
