@@ -615,7 +615,7 @@ devices.
 %%%%
 whip "Skinflayer"
 
-A vicious instrument of torture designed to gradually fleece away its victims'
+A vicious instrument of torture designed to gradually flense away its victims'
 dermal protection. Causing only mild discomfort at first, repeated strikes
 inflict an ever-increasing amount of pain as skin shreds and nerves
 become exposed.
