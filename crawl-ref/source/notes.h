@@ -28,7 +28,7 @@ enum NOTE_TYPES
     NOTE_LEARN_SPELL,           /* needs: spell idx */
     NOTE_GET_GOD,               /* needs: god id */
     NOTE_GOD_GIFT,              /* needs: god id */
-    NOTE_GOD_POWER,             /* needs: god id, idx */
+    NOTE_PIETY_RANK,            /* needs: god id, rank */
     NOTE_GET_MUTATION,          /* needs: mutation idx, reason (string) */
     NOTE_LOSE_MUTATION,         /* needs: mutation idx, reason (string) */
     NOTE_ID_ITEM,               /* needs: item name (string) */
