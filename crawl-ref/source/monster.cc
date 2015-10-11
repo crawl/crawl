@@ -3622,11 +3622,13 @@ void monster::blame_damage(const actor* attacker, int amount)
     }
 }
 
-void monster::suicide(int hp)
+void monster::suicide(int hp_target)
 {
-    if (hit_points > 0)
-        blame_damage(nullptr, hit_points);
-    hit_points = hp;
+    ASSERT(hp_target <= 0);
+    const int dam = hit_points - hp_target;
+    if (dam > 0)
+        blame_damage(nullptr, dam);
+    hit_points = hp_target;
 }
 
 mon_holy_type monster::holiness(bool /*temp*/) const

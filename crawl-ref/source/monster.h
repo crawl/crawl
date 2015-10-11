@@ -482,7 +482,7 @@ public:
     void teleport(bool right_now = false,
                   bool wizard_tele = false) override;
     bool shift(coord_def p = coord_def(0, 0));
-    void suicide(int hp = -1);
+    void suicide(int hp_target = -1);
 
     void put_to_sleep(actor *attacker, int power = 0, bool hibernate = false)
         override;
