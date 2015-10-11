@@ -1253,8 +1253,9 @@ COLD:    1
 
 ENUM:    SKINFLAYER
 NAME:    whip "Skinflayer"
-OBJ:     OBJ_WEAPONS/WPN_WHIP
-COLOUR:  LIGHTRED
+OBJ:     OBJ_WEAPONS/WPN_DEMON_WHIP
+PLUS:    -2
+COLOUR:  RED
 TILE:    urand_skinflayer
 TILE_EQ: skinflayer
 
