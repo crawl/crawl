@@ -1461,9 +1461,9 @@ static int _fit_armour_size(armour_type sub_type, size_type size)
     const size_type max = Armour_prop[ Armour_index[sub_type] ].fit_max;
 
     if (size < min)
-        return min - size;    // -'ve means levels too small
+        return min - size;    // negative means levels too small
     else if (size > max)
-        return max - size;    // +'ve means levels too large
+        return max - size;    // positive means levels too large
 
     return 0;
 }
