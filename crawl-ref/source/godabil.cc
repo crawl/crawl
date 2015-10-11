@@ -14,6 +14,7 @@
 
 #include "act-iter.h"
 #include "areas.h"
+#include "artefact.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -41,6 +42,7 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "macro.h"
+#include "makeitem.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
@@ -4984,6 +4986,79 @@ bool gozag_bribe_branch()
 
     canned_msg(MSG_OK);
     return false;
+}
+
+int gozag_artefactise_item_price()
+{
+    return GOZAG_ARTEFACT_ITEM_AMOUNT
+        * (you.attribute[ATTR_GOZAG_ARTEFACTS] + 1);
+}
+bool gozag_check_artefactise_item(bool quiet)
+{
+    const int cost = gozag_artefactise_item_price();
+    if (you.gold < cost)
+    {
+        if (!quiet)
+            mprf("Gozag charges %d to artefactise an item.", cost);
+        return false;
+    }
+    return true;
+}
+
+bool gozag_artefactise_item()
+{
+    int price = gozag_artefactise_item_price();
+    ASSERT(you.gold >= price);
+    int item_slot = prompt_invent_item("Artefactise which item?", MT_INVLIST,
+        OSEL_ANY, true, true, false);
+    if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
+        return false;
+
+    item_def &i(you.inv[item_slot]);
+
+    if (item_equip_slot(i) != EQ_NONE)
+    {
+        simple_god_message(" will not artefactise an eqipped item!");
+        return false;
+    }
+
+    if (is_unrandom_artefact(i))
+    {
+        simple_god_message(" will not modify such a well-known artefact!");
+        return false;
+    }
+
+    if (is_random_artefact(i))
+    {
+        if (!yesno("This item is already an artefact, are you sure?", true,
+            'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+
+        i.special = 0;
+        i.flags  &= ~ISFLAG_RANDART;
+        i.props.clear();
+    }
+
+    if (!make_item_randart(i, true, 7))
+    {
+        // make_item_randart doesn't change plusses
+        i.plus = get_randart_weapon_plus();
+        simple_god_message(" refuses to artefactise this!");
+        return false;
+    }
+    you.del_gold(price);
+    you.attribute[ATTR_GOZAG_ARTEFACTS]++;
+
+    string message = " artefactises " + i.name(DESC_YOUR) + "!";
+    simple_god_message(message.c_str());
+
+    take_note(Note(NOTE_ID_ITEM, 0, 0,
+              i.name(DESC_A).c_str(), "created by Gozag"));
+
+    return true;
 }
 
 static int _upheaval_radius(int pow)
