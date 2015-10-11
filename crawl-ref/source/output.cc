@@ -2101,7 +2101,7 @@ static string _god_asterisks()
     }
     else
     {
-        const int prank = piety_rank() - 1;
+        const int prank = piety_rank();
         return string(prank, '*') + string(6 - prank, '.');
     }
 }

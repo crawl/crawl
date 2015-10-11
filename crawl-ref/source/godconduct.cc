@@ -458,9 +458,8 @@ static peeve_map divine_peeves[] =
  */
 static void _dithmenos_kill(int &piety, int &denom, const monster* /*victim*/)
 {
-    // Full gains at full piety down to 2/3 at 6* piety.
-    // (piety_rank starts at 1, not 0.)
-    piety *= 25 - piety_rank();
+    // Full gains at full piety down to 3/4 at 6* piety.
+    piety *= 24 - piety_rank();
     denom *= 24;
 }
 
