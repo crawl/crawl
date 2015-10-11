@@ -1681,20 +1681,17 @@ static void _qazlal_elemental_vulnerability()
  */
 static bool _qazlal_retribution()
 {
-    switch (random2(3))
+    if (coinflip())
     {
-    case 0:
-        _qazlal_summon_elementals();
-        break;
-    case 1:
-        _qazlal_elemental_vulnerability();
-        break;
-    case 2:
         simple_god_message(" causes a mighty clap of thunder!",
                            GOD_QAZLAL);
         noisy(25, you.pos());
-        break;
     }
+
+    if (coinflip())
+        _qazlal_summon_elementals();
+    else
+        _qazlal_elemental_vulnerability();
 
     return true;
 }
