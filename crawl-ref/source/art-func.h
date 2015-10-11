@@ -1380,7 +1380,7 @@ static void _LEECH_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _SKINFLAYER_melee_effects(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
-    if (mondied || !mons_has_flesh(defender->as_monster()))
+    if (mondied || dam < 1 || !mons_has_flesh(defender->as_monster()))
         return;
 
     int &lasthit = defender->props["skinflayer_lasthit"];
