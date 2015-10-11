@@ -746,6 +746,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
     case ENCH_SHORT_LIVED:
         // Conjured ball lightnings explode when they time out.
+        suicide();
         monster_die(this, KILL_TIMEOUT, NON_MONSTER);
         break;
     case ENCH_SUBMERGED:
