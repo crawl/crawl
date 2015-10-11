@@ -1327,6 +1327,13 @@ static string _describe_armour(const item_def &item, bool verbose)
                     + to_string(property(item, PARM_AC))
                     + "       Skill to remove penalty: "
                     + make_stringf("%.1f", skill);
+
+        if (crawl_state.need_save)
+        {
+            description += "\n                            "
+                        + make_stringf("(Your skill: %.1f)",
+                            (float) you.skill(SK_SHIELDS, 10) / 10);
+        }
     }
 
     const int ego = get_armour_ego_type(item);
