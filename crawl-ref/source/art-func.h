@@ -1386,7 +1386,7 @@ static void _SKINFLAYER_melee_effects(item_def* weapon, actor* attacker,
     int lasthit = defender->props["skinflayer_lasthit"];
     int bonus = defender->props["skinflayer_bonus"];
 
-    bonus = lasthit && you.elapsed_time - lasthit < 100 ? bonus + 1 : 0;
+    bonus = min(15, lasthit && you.elapsed_time - lasthit < 100 ? bonus + 1 : 0);
 
     string verb = bonus == 0 ? "begins to peel."
                 : bonus == 2 ? "starts to shred."
