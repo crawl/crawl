@@ -1349,7 +1349,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>s</w>      gain 20000 skill points\n"
                        "<w>S</w>      set skill to level\n"
                        "<w>x</w>      gain an experience level\n"
-                       "<w>$</w>      get 1000 gold\n"
+                       "<w>$</w>      get 10000 gold\n"
                        "<w>n</w>      lose all gold\n"
                        "<w>]</w>      get a mutation\n"
                        "<w>_</w>      gain religion\n"
