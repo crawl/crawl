@@ -2379,7 +2379,7 @@ static void _gain_piety_point()
         if (you.piety >= piety_breakpoint(i)
             && old_piety < piety_breakpoint(i))
         {
-            take_note(Note(NOTE_GOD_POWER, you.religion, i));
+            take_note(Note(NOTE_PIETY_RANK, you.religion, i+1));
 
             // Redraw piety display and, in case the best skill is Invocations,
             // redraw the god title.
@@ -2451,6 +2451,8 @@ static void _gain_piety_point()
 
     if (you.piety >= piety_breakpoint(5) && old_piety < piety_breakpoint(5))
     {
+        take_note(Note(NOTE_PIETY_RANK, you.religion, 6));
+
         // Redraw piety display and, in case the best skill is Invocations,
         // redraw the god title.
         you.redraw_title = true;
