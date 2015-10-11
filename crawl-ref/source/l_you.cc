@@ -182,7 +182,7 @@ LUARET1(you_see_cell_rel, boolean,
         you.see_cell(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
 LUARET1(you_see_cell_no_trans_rel, boolean,
         you.see_cell_no_trans(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
-LUARET1(you_piety_rank, number, piety_rank(you.piety) - 1)
+LUARET1(you_piety_rank, number, piety_rank())
 LUARET1(you_constricted, boolean, you.is_constricted())
 LUARET1(you_constricting, boolean, you.is_constricting())
 

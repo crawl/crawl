@@ -5851,7 +5851,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
 
     if (penance[GOD_ASHENZARI])
         level = max(level - 4 * scale, level / 2);
-    else if (religion == GOD_ASHENZARI && piety_rank() > 2)
+    else if (in_good_standing(GOD_ASHENZARI, 1))
     {
         if (skill_boost.count(sk)
             && skill_boost.find(sk)->second)
