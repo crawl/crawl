@@ -4017,7 +4017,7 @@ static const char* xl_rank_names[] =
     "amateur",
     "novice",
     "journeyman",
-    "experienced",
+    "adept",
     "veteran",
     "master",
     "legendary"
