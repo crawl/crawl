@@ -401,7 +401,7 @@ static bool _reroll_random(newgame_def& ng)
 #endif
         game_ended();
     }
-    return toalower(c) == 'n';
+    return toalower(c) == 'n' || c == '\t' || c == '!' || c == '#';
 }
 
 static void _choose_char(newgame_def& ng, newgame_def& choice,
