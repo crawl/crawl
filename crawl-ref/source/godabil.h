@@ -163,4 +163,5 @@ bool ru_power_leap();
 bool ru_apocalypse();
 
 bool pakellas_check_quick_charge(bool quiet);
+void pakellas_add_drained_mp(int drain);
 #endif
