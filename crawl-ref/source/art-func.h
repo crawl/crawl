@@ -1375,3 +1375,27 @@ static void _LEECH_equip(item_def *item, bool *show_msgs, bool unmeld)
         _equip_mpr(show_msgs, "You feel very empty.");
     // else let player-equip.cc handle message
 }
+
+///////////////////////////////////////////////////
+static void _SKINFLAYER_melee_effects(item_def* weapon, actor* attacker,
+                                   actor* defender, bool mondied, int dam)
+{
+    int lasthit = defender->props["skinflayer_lasthit"];
+    int bonus = defender->props["skinflayer_bonus"];
+
+    if (mondied || mons_has_flesh(defender)
+        return;
+
+    bonus = lasthit && you.elapsed_time - lasthit < 100 ? bonus + 1 : 0;
+
+    string verb = bonus == 0 ? "begins to peel."
+                : bonus == 2 ? "starts to shred."
+                : bonus == 4 ? "hangs in tatters!"
+                :              "";
+    if (verb.length() > 0)
+        mprf("%s's skin %s", defender->name(DESC_THE).c_str(), verb.c_str());
+
+    defender->hurt(attacker, 1 << bonus, BEAM_NONE);
+    defender->props["skinflayer_lasthit"] = you.elapsed_time;
+    defender->props["skinflayer_bonus"] = bonus;
+}
