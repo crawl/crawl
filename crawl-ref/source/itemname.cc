@@ -3561,8 +3561,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (item.sub_type == WAND_HEAL_WOUNDS
             && item_type_known(item)
             && !you.can_device_heal()
-            && player_mutation_level(MUT_NO_LOVE)
-            && !player_rotted())
+            && player_mutation_level(MUT_NO_LOVE))
         {
             return true;
         }
@@ -3643,7 +3642,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.species == SP_FORMICID;
 #endif
         case POT_HEAL_WOUNDS:
-            return !you.can_device_heal() && !player_rotted();
+            return !you.can_device_heal();
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
         case POT_AMBROSIA:

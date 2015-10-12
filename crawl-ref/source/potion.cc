@@ -106,7 +106,9 @@ public:
             int amount = 5 + random2(7);
             if (is_device && !you.can_device_heal() && player_rotted())
             {
-                amount = unrot_hp(amount);
+                // Treat the effectiveness of rot removal as if the player
+                // had two levels of MUT_NO_DEVICE_HEAL
+                unrot_hp(div_rand_round(amount,3));
                 unrotted = true;
             }
             else
@@ -151,7 +153,7 @@ public:
 
     bool can_quaff(string *reason = nullptr) const override
     {
-        if (!you.can_device_heal() && player_rotted() == 0)
+        if (!you.can_device_heal())
         {
             if (reason)
                 *reason = "That would not heal you.";
@@ -179,19 +181,13 @@ public:
             mpr("You feel queasy.");
             return false;
         }
-        int amount = 10 + random2avg(28, 3);
-        if (!you.can_device_heal() && player_rotted() && is_device)
-        {
-            unrot_hp(amount);
-            mpr("You feel much better.");
-                return true;
-        }
         if (!you.can_device_heal() && is_device)
         {
             mpr("That seemed strangely inert.");
             return false;
         }
 
+        int amount = 10 + random2avg(28, 3);
         if (is_device)
             amount = you.scale_device_healing(amount);
         // Pay for rot right off the top.
