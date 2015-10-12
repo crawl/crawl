@@ -1771,7 +1771,7 @@ bool beogh_gift_item()
                               use_alt_slot ? MSLOT_ALT_WEAPON :
                                              MSLOT_WEAPON);
     if (use_alt_slot)
-        mons->swap_weapons(true);
+        mons->swap_weapons();
 
     dprf("is_ranged weap: %d", range_weapon);
     if (range_weapon)

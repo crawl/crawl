@@ -1424,18 +1424,17 @@ ENDMAP
 NAME:    ldierk_water_garden
 TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
-SHUFFLE: 123t
 SUBST:   W : wW
-MONS:    plant, toadstool, bush
+MONS:    toadstool
 MAP
   W       W
- W1W     W2W
-W1T1WWWWW2T2W
-.W1.......2W.
+ WtW     WtW
+WtTtWWWWWtTtW
+.Wt.......tW.
 @.W...{...W.@
-.W3.......tW.
-W3T3WWWWWtTtW
- W3W     WtW
+.Wt.......1W.
+WtTtWWWWW1T1W
+ WtW     W1W
   W       W
 ENDMAP
 

@@ -165,7 +165,7 @@ bool deviant_route_warning::warn_continue_travel(
     // If the user says "Yes, shut up and take me there", we won't ask
     // again for that destination. If the user says "No", we will
     // prompt again.
-    return warned = yesno(prompt.c_str(), true, 'y', true, false);
+    return warned = yesno(prompt.c_str(), true, 'n', true, false);
 }
 
 static deviant_route_warning _Route_Warning;

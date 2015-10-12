@@ -1300,33 +1300,40 @@ static string _describe_armour(const item_def &item, bool verbose)
 
     description.reserve(200);
 
-    if (verbose
-        && item.sub_type != ARM_SHIELD
-        && item.sub_type != ARM_BUCKLER
-        && item.sub_type != ARM_LARGE_SHIELD)
+    if (verbose)
     {
-        const int evp = property(item, PARM_EVASION);
-        description += "\n\nBase armour rating: "
-                     + to_string(property(item, PARM_AC))
-                     + "       Encumbrance rating: "
-                     + to_string(-evp / 10);
-
-        // only display player-relevant info if the player exists
-        if (crawl_state.need_save && get_armour_slot(item) == EQ_BODY_ARMOUR)
+        if (is_shield(item))
         {
-            description += make_stringf("\nWearing mundane armour of this type "
-                                        "will give the following: %d AC",
-                                        you.base_ac_from(item));
+            const float skill = you.get_shield_skill_to_offset_penalty(item);
+            description += "\n";
+            description += "\nBase shield rating: "
+                        + to_string(property(item, PARM_AC))
+                        + "       Skill to remove penalty: "
+                        + make_stringf("%.1f", skill);
+
+            if (crawl_state.need_save)
+            {
+                description += "\n                            "
+                            + make_stringf("(Your skill: %.1f)",
+                               (float) you.skill(SK_SHIELDS, 10) / 10);
+            }
         }
-    }
-    else if (verbose)
-    {
-        const float skill = you.get_shield_skill_to_offset_penalty(item);
-        description += "\n";
-        description += "\nBase shield rating: "
-                    + to_string(property(item, PARM_AC))
-                    + "       Skill to remove penalty: "
-                    + make_stringf("%.1f", skill);
+        else
+        {
+            const int evp = property(item, PARM_EVASION);
+            description += "\n\nBase armour rating: "
+                        + to_string(property(item, PARM_AC))
+                        + "       Encumbrance rating: "
+                        + to_string(-evp / 10);
+
+            // only display player-relevant info if the player exists
+            if (crawl_state.need_save && get_armour_slot(item) == EQ_BODY_ARMOUR)
+            {
+                description += make_stringf("\nWearing mundane armour of this type "
+                                            "will give the following: %d AC",
+                                             you.base_ac_from(item));
+            }
+        }
     }
 
     const int ego = get_armour_ego_type(item);
@@ -1434,22 +1441,21 @@ static string _describe_armour(const item_def &item, bool verbose)
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
             description += "\nThis armour may have some hidden properties.";
     }
-
-    if (!is_artefact(item))
+    else
     {
         const int max_ench = armour_max_enchant(item);
         if (armour_is_hide(item))
         {
-            description += "\nEnchanting it will turn it into a suit of "
+            description += "\n\nEnchanting it will turn it into a suit of "
                            "magical armour.";
         }
         else if (item.plus < max_ench || !item_ident(item, ISFLAG_KNOW_PLUSES))
         {
-            description += "\nIt can be maximally enchanted to +"
+            description += "\n\nIt can be maximally enchanted to +"
                            + to_string(max_ench) + ".";
         }
         else
-            description += "\nIt cannot be enchanted further.";
+            description += "\n\nIt cannot be enchanted further.";
     }
 
     return description;
@@ -4018,7 +4024,7 @@ static const char* xl_rank_names[] =
     "amateur",
     "novice",
     "journeyman",
-    "experienced",
+    "adept",
     "veteran",
     "master",
     "legendary"

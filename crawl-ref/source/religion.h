@@ -85,7 +85,7 @@ static inline bool in_good_standing(god_type god, int pbreak = -1)
 }
 
 int had_gods();
-int piety_rank(int piety = -1);
+int piety_rank();
 int piety_scale(int piety_change);
 bool god_likes_your_god(god_type god, god_type your_god = you.religion);
 bool god_hates_your_god(god_type god, god_type your_god = you.religion);

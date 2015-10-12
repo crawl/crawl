@@ -3072,7 +3072,7 @@ static bool _handle_pickup(monster* mons)
             if (si->flags & ISFLAG_NO_PICKUP)
                 continue;
 
-            if (mons->pickup_item(*si, nearby))
+            if (mons->pickup_item(*si, nearby, false))
                 count_pickup++;
 
             if (count_pickup > 1 || coinflip())

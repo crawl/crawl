@@ -431,7 +431,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_DEFORMED, 8, 1,
-  mutflag::BAD | mutflag::XOM | mutflag::CORRUPT | mutflag::QAZLAL,
+  mutflag::BAD | mutflag::XOM | mutflag::CORRUPT,
   true,
   "deformed body",
 

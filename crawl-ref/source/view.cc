@@ -614,6 +614,9 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             {
                 set_terrain_mapped(*ri);
 
+                if (get_cell_map_feature(env.map_knowledge(*ri)) == MF_STAIR_BRANCH)
+                    seen_notable_thing(feat, *ri);
+
                 if (get_feature_dchar(feat) == DCHAR_ALTAR)
                     num_altars++;
                 else if (get_feature_dchar(feat) == DCHAR_ARCH)

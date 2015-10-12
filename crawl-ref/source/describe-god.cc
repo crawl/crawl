@@ -693,8 +693,7 @@ static string _get_god_misc_info(god_type which_god)
                                       " purely based on piety.";
 
             if (which_god == GOD_ASHENZARI
-                && which_god == you.religion
-                && piety_rank() > 2)
+                && in_good_standing(which_god, 1))
             {
                 return piety_only + "\n\n" + _describe_ash_skill_boost();
             }

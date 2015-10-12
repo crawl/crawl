@@ -886,3 +886,17 @@ bool today_is_halloween()
     // tm_mon is zero-based in case you are wondering
     return date->tm_mon == 9 && date->tm_mday == 31;
 }
+
+bool tobool(maybe_bool mb, bool def)
+{
+    switch (mb)
+    {
+    case MB_TRUE:
+        return true;
+    case MB_FALSE:
+        return false;
+    case MB_MAYBE:
+    default:
+        return def;
+    }
+}

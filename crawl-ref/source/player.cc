@@ -3499,6 +3499,8 @@ static void _display_attack_delay()
                               && weapon_min_delay(*you.weapon())
                                  == no_shield_delay;
 
+    const bool shield_affecting_delay = delay != no_shield_delay;
+
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
     int avg = 10 * delay;
@@ -3507,10 +3509,12 @@ static void _display_attack_delay()
     if (you.duration[DUR_FINESSE])
         avg = max(20, avg / 2);
 
-    _display_char_status(avg, "Your attack speed is %s%s",
+    _display_char_status(avg, "Your attack speed is %s%s%s",
                          _attack_delay_desc(avg),
                          at_min_delay ?
-                            " (and cannot be increased with skill)" : "");
+                            " (and cannot be improved with additional skill)" : "",
+                         shield_affecting_delay ?
+                            " (but will be slowed by your insufficient shield skill)" : "");
 }
 
 // forward declaration
@@ -5847,7 +5851,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
 
     if (penance[GOD_ASHENZARI])
         level = max(level - 4 * scale, level / 2);
-    else if (religion == GOD_ASHENZARI && piety_rank() > 2)
+    else if (in_good_standing(GOD_ASHENZARI, 1))
     {
         if (skill_boost.count(sk)
             && skill_boost.find(sk)->second)
