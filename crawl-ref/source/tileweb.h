@@ -78,6 +78,8 @@ struct player_info
     FixedVector<int8_t, NUM_EQUIP> equip;
     int8_t quiver_item;
     string unarmed_attack;
+    uint8_t unarmed_attack_colour;
+    bool quiver_available;
 };
 
 class TilesFramework

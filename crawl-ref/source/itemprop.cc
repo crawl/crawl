@@ -1461,9 +1461,9 @@ static int _fit_armour_size(armour_type sub_type, size_type size)
     const size_type max = Armour_prop[ Armour_index[sub_type] ].fit_max;
 
     if (size < min)
-        return min - size;    // -'ve means levels too small
+        return min - size;    // negative means levels too small
     else if (size > max)
-        return max - size;    // +'ve means levels too large
+        return max - size;    // positive means levels too large
 
     return 0;
 }
@@ -2075,6 +2075,13 @@ const char *ammo_name(const item_def &bow)
 {
     ASSERT(is_range_weapon(bow));
     return ammo_name(fires_ammo_type(bow));
+}
+
+const char *ammo_name(const weapon_type bow)
+{
+    missile_type mi = Weapon_prop[Weapon_index[bow]].ammo;
+    ASSERT(mi != MI_NONE);
+    return ammo_name(mi);
 }
 
 // Returns true if item has an associated launcher.

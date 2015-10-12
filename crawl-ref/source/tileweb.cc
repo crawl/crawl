@@ -35,6 +35,7 @@
 #include "skills.h"
 #include "state.h"
 #include "stringutil.h"
+#include "throw.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
 #include "tiledef-icons.h"
@@ -44,6 +45,7 @@
 #include "tilepick.h"
 #include "tilepick-p.h"
 #include "tileview.h"
+#include "transform.h"
 #include "travel.h"
 #include "unicode.h"
 #include "unwind.h"
@@ -655,7 +657,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.under_penance, (bool) player_under_penance(), "penance");
     uint8_t prank = 0;
     if (!you_worship(GOD_NO_GOD))
-        prank = max(0, piety_rank() - 1);
+        prank = max(0, piety_rank());
     else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
              && !had_gods())
     {
@@ -801,6 +803,10 @@ void TilesFramework::_send_player(bool force_full)
 
     _update_string(force_full, c.unarmed_attack,
                    you.unarmed_attack_name(), "unarmed_attack");
+    _update_int(force_full, c.unarmed_attack_colour,
+                (uint8_t) get_form()->uc_colour, "unarmed_attack_colour");
+    _update_int(force_full, c.quiver_available, !fire_warn_if_impossible(true),
+                "quiver_available");
 
     json_close_object(true);
 

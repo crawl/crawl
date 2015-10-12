@@ -2379,7 +2379,7 @@ static void _gain_piety_point()
         if (you.piety >= piety_breakpoint(i)
             && old_piety < piety_breakpoint(i))
         {
-            take_note(Note(NOTE_GOD_POWER, you.religion, i));
+            take_note(Note(NOTE_PIETY_RANK, you.religion, i+1));
 
             // Redraw piety display and, in case the best skill is Invocations,
             // redraw the god title.
@@ -2451,6 +2451,8 @@ static void _gain_piety_point()
 
     if (you.piety >= piety_breakpoint(5) && old_piety < piety_breakpoint(5))
     {
+        take_note(Note(NOTE_PIETY_RANK, you.religion, 6));
+
         // Redraw piety display and, in case the best skill is Invocations,
         // redraw the god title.
         you.redraw_title = true;
@@ -4293,29 +4295,21 @@ colour_t god_message_altar_colour(god_type god)
     }
 }
 
-int piety_rank(int piety)
+int piety_rank()
 {
-    if (piety < 0)
-        piety = you.piety;
-
-    // XXX: when is this used?
+    // XXX: this seems to be used only in dat/database/godspeak.txt?
     if (you_worship(GOD_XOM))
     {
         const int breakpoints[] = { 20, 50, 80, 120, 180, INT_MAX };
         for (unsigned int i = 0; i < ARRAYSZ(breakpoints); ++i)
-            if (piety <= breakpoints[i])
+            if (you.piety <= breakpoints[i])
                 return i + 1;
         die("INT_MAX is no good");
     }
 
-    const int breakpoints[] = { 160, 120, 100, 75, 50, 30, 1 };
-    const int numbreakpoints = ARRAYSZ(breakpoints);
-
-    for (int i = 0; i < numbreakpoints; ++i)
-    {
-        if (piety >= breakpoints[i])
-            return numbreakpoints - i;
-    }
+    for (int i = MAX_GOD_ABILITIES; i >= 0; --i)
+        if (you.piety >= piety_breakpoint(i))
+            return i + 1;
 
     return 0;
 }

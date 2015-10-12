@@ -158,6 +158,7 @@ bool is_range_weapon(const item_def &item) PURE;
 missile_type fires_ammo_type(const item_def &item) PURE;
 const char *ammo_name(missile_type ammo) IMMUTABLE;
 const char *ammo_name(const item_def &bow) PURE;
+const char *ammo_name(const weapon_type bow) PURE;
 bool has_launcher(const item_def &ammo) PURE;
 bool is_throwable(const actor *actor, const item_def &wpn,
                   bool force = false) PURE;

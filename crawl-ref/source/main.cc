@@ -1691,7 +1691,7 @@ static bool _prompt_unique_pan_rune(dungeon_feature_type ygrd)
     return true;
 }
 
-static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
+static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
 {
     // Certain portal types always carry warnings.
     if (!_prompt_dangerous_portal(ygrd))
@@ -1753,6 +1753,14 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
         }
     }
 
+    if (Options.warn_hatches)
+    {
+        if (feat_is_escape_hatch(ygrd))
+            return yesno("Really go through this one-way escape hatch?", true, 'n');
+        if (down && shaft) // voluntary shaft usage
+            return yesno("Really dive through this shaft in the floor?", true, 'n');
+    }
+
     return true;
 }
 
@@ -1766,14 +1774,12 @@ static void _take_stairs(bool down)
     const bool shaft = (down && get_trap_type(you.pos()) == TRAP_SHAFT
                              && ygrd != DNGN_UNDISCOVERED_TRAP);
 
-    if (!_can_take_stairs(ygrd, down, shaft))
+    if (!(_can_take_stairs(ygrd, down, shaft)
+          && _prompt_stairs(ygrd, down, shaft)
+          && you.attempt_escape())) // false means constricted and don't escape
+    {
         return;
-
-    if (!_prompt_stairs(ygrd, down))
-        return;
-
-    if (!you.attempt_escape()) // false means constricted and don't escape
-        return;
+    }
 
     you.stop_constricting_all(true);
     you.stop_being_constricted();
