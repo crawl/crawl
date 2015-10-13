@@ -1181,6 +1181,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
                 {
                     json_write_comma();
                     write_message("\"doll\":[[%d,%d]]", TILEP_MONS_UNKNOWN, TILE_Y);
+                    json_write_null("mcache");
                 }
             }
         }
@@ -1217,7 +1218,11 @@ void TilesFramework::_send_cell(const coord_def &gc,
                     mcache_entry *entry = mcache.get(mcache_idx);
                     if (entry)
                         _send_mcache(entry, in_water, false);
+                    else
+                        json_write_null("mcache");
                 }
+                else
+                    json_write_null("mcache");
             }
         }
         else if (fg_idx >= TILE_MAIN_MAX)
@@ -1226,6 +1231,16 @@ void TilesFramework::_send_cell(const coord_def &gc,
             {
                 json_write_comma();
                 write_message("\"doll\":[[%u,%d]]", (unsigned int) fg_idx, TILE_Y);
+                json_write_null("mcache");
+            }
+        }
+        else
+        {
+            if (fg_changed)
+            {
+                json_write_comma();
+                json_write_null("doll");
+                json_write_null("mcache");
             }
         }
 
