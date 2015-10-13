@@ -775,7 +775,7 @@ class PrecisionMenu;
 /**
  * Abstract base class interface for all attachable objects.
  * Objects are generally containers that hold MenuItems, however special
- * objects are also possible, for instance MenuDescriptor, MenuButton.
+ * objects are also possible, for instance MenuDescriptor.
  * All objects should have an unique string name, although the uniqueness
  * is not enforced or checked right now.
  */
@@ -1111,17 +1111,6 @@ protected:
 #endif
     COLOURS m_old_bg_colour;
     COLOURS m_old_fg_colour;
-};
-
-/**
- * Base operations for a button to work.
- * TODO: implement
- */
-class MenuButton : public MenuObject
-{
-public:
-
-protected:
 };
 
 /**
