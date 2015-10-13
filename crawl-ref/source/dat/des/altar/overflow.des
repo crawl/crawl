@@ -3078,6 +3078,56 @@ MAP
       """""""
 ENDMAP
 
+NAME:    palyth_temple_overflow_mages
+DEPTH:   D:5-9
+TAGS:    template_overflow_3 temple_overflow_sif_muna
+TAGS:    temple_overflow_kikubaaqudgha temple_overflow_vehumet
+TAGS:    no_item_gen no_monster_gen
+SHUFFLE: ABC
+: local result = crawl.random2(3)
+: local spawn_mage = crawl.random2(5)
+: if result == 0 then
+KFEAT:   A = altar_sif_muna
+KFEAT:   B = altar_kikubaaqudgha
+KFEAT:   C = altar_vehumet
+: if spawn_mage then
+KITEM:   B = randbook owner:Kikubaaqudgha disc:necromancy numspells:1 slevels:3
+: end
+: elseif result == 1 then
+KFEAT:   A = altar_kikubaaqudgha
+KFEAT:   B = altar_sif_muna
+KFEAT:   C = altar_vehumet
+: if spawn_mage then
+KITEM:   B = randbook owner:Sif_Muna disc:summoning numspells:1 slevels:3
+: end
+: else
+KFEAT:   A = altar_sif_muna
+KFEAT:   B = altar_vehumet
+KFEAT:   C = altar_kikubaaqudgha
+: if spawn_mage then
+KITEM:   B = randbook owner:Vehumet disc:conjuration numspells:1 slevels:3
+: end
+: end
+KMONS:   A = orc wizard
+KMONS:   C = orc wizard
+: if spawn_mage then
+KMONS:   B = deep elf mage
+: else
+KMONS:   B = orc wizard
+: end
+MAP
+ccccccccccccc
+c.A.c.B.c.C.c
+c...c...c...c
+cc+ccc+ccc+cc
+c...........c
+c....T.T....c
+cc....T....cc
+ cc..T.T..cc
+  cc.....cc
+   ccc@ccc
+ENDMAP
+
 ### Variable overflow altars ##################################################
 
 # To make an overflow temple for N altars, give it the tag
