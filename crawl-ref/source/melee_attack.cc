@@ -945,7 +945,7 @@ bool melee_attack::check_unrand_effects()
         // Recent merge added damage_done to this method call
         unrand_entry->melee_effects(weapon, attacker, defender,
                                     died, damage_done);
-        return !defender->alive();
+        return !defender->alive(); // may have changed
     }
 
     return false;
