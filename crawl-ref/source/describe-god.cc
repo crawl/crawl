@@ -565,32 +565,6 @@ static void _print_string_wrapped(string str, int width)
 }
 
 /**
- * Turn a list of gods into a nice, comma-separated list of their names, with
- * an 'and' at the end if appropriate.
- *
- * XXX: this can almost certainly be templatized and put somewhere else; it
- * might already exist? (the dubiously named comma_separated_line?)
- *
- * @param gods[in]  The enums of the gods in question.
- * @return          A comma-separated list of the given gods' names.
- */
-static string _comma_separate_gods(const vector<god_type> &gods)
-{
-    // ugly special case to prevent foo, and bar
-    if (gods.size() == 2)
-        return god_name(gods[0]) + " and " + god_name(gods[1]);
-
-    string names = "";
-    for (unsigned int i = 0; i < gods.size() - 1; i++)
-        names += god_name(gods[i]) + ", ";
-    if (gods.size() > 1)
-        names += "and ";
-    if (gods.size() > 0)
-        names += god_name(gods[gods.size()-1]);
-    return names;
-}
-
-/**
  * Describe the causes of the given god's wrath.
  *
  * @param which_god     The god in question.
@@ -621,15 +595,21 @@ static string _describe_god_wrath_causes(god_type which_god)
                    " forgives followers who leave " + god_name(which_god)+"'s"
                    " service; however, those who take up the worship of evil"
                    " gods will be punished. (" +
-                   _comma_separate_gods(evil_gods) + " are evil gods.)";
+                   comma_separated_fn(begin(evil_gods), end(evil_gods),
+                                      bind(god_name, placeholders::_1, false)) +
+                   " are evil gods.)";
 
         case GOD_ZIN:
             return uppercase_first(god_name(which_god)) +
                    " does not punish followers who leave "+god_name(which_god)+
                    "'s service; however, those who take up the worship of evil"
                    " or chaotic gods will be scourged. (" +
-                   _comma_separate_gods(evil_gods) + " are evil, and " +
-                   _comma_separate_gods(chaotic_gods) + " are chaotic.)";
+                   comma_separated_fn(begin(evil_gods), end(evil_gods),
+                                      bind(god_name, placeholders::_1, false)) +
+                   " are evil, and " +
+                   comma_separated_fn(begin(chaotic_gods), end(chaotic_gods),
+                                      bind(god_name, placeholders::_1, false)) +
+                   " are chaotic.)";
         default:
             return uppercase_first(god_name(which_god)) +
                    " does not appreciate abandonment, and will call down"
