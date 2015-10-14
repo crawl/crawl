@@ -2092,7 +2092,7 @@ void process_command(command_type cmd)
         if (player_on_single_stack() && !you.running)
             pickup(true);
         break;
-    case CMD_SHOW_TERRAIN: config_layers(); break;
+    case CMD_SHOW_TERRAIN: toggle_show_terrain(); break;
     case CMD_ADJUST_INVENTORY: adjust(); break;
 
     case CMD_SAFE_WAIT:
@@ -2487,7 +2487,7 @@ void world_reacts()
 
     update_monsters_in_view();
 
-    reset_layers();
+    reset_show_terrain();
 
     crawl_state.clear_mon_acting();
 

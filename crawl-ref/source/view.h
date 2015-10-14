@@ -76,8 +76,8 @@ void update_monsters_in_view();
 bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf = nullptr);
 void flush_comes_into_view();
 void mark_mon_equipment_seen(const monster *mons);
-void reset_layers();
-void config_layers();
+void toggle_show_terrain();
+void reset_show_terrain();
 
 void handle_terminal_resize(bool redraw = true);
 

@@ -75,6 +75,7 @@
 //#define DEBUG_PANE_BOUNDS
 
 static layers_type _layers = LAYERS_ALL;
+static layers_type _layers_saved = LAYERS_NONE;
 
 crawl_view_geometry crawl_view;
 
@@ -1483,20 +1484,23 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 #endif
 }
 
-void reset_layers()
-{
-    _layers = LAYERS_ALL;
-}
-
+// Hide view layers. The player can toggle certain layers back on
+// and the resulting configuration will be remembered for the
+// remainder of the game session.
+// Pressing | again will return to normal view. Leaving the prompt
+// by any other means will give back control of the keys, but the
+// view will remain in its altered state until the | key is pressed
+// again or the player performs an action.
 static void _config_layers_menu()
 {
-    layers_type saved = _layers;
     bool exit = false;
 
-    msgwin_set_temporary(true);
+    _layers = _layers_saved;
 
+    msgwin_set_temporary(true);
     while (!exit)
     {
+        viewwindow();
         mprf(MSGCH_PROMPT, "Select layers to display: "
                            "<%s>(m)onsters</%s>|"
                            "<%s>(p)layer</%s>|"
@@ -1511,57 +1515,52 @@ static void _config_layers_menu()
            _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey",
            _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey"
         );
-        mprf(MSGCH_PROMPT, "Press <w>%s</w> to return to full view. Press any other key to exit.",
-             command_to_string(CMD_SHOW_TERRAIN).c_str());
+        mprf(MSGCH_PROMPT, "Press <w>%s</w> to return to normal view. "
+                           "Press any other key to exit.",
+                           command_to_string(CMD_SHOW_TERRAIN).c_str());
 
         switch (get_ch())
         {
-            case 'm': _layers ^= LAYER_MONSTERS; break;
-            case 'p': _layers ^= LAYER_PLAYER;   break;
-            case 'i': _layers ^= LAYER_ITEMS;    break;
-            case 'c': _layers ^= LAYER_CLOUDS;   break;
-            case CK_ESCAPE:
-                _layers = saved;
-                exit = true;
-                break;
-            case '|':
-                _layers = LAYERS_ALL;
-                exit = true;
-                break;
-            default:
-                exit = true;
-                break;
+        case 'm': _layers_saved = _layers ^= LAYER_MONSTERS; break;
+        case 'p': _layers_saved = _layers ^= LAYER_PLAYER;   break;
+        case 'i': _layers_saved = _layers ^= LAYER_ITEMS;    break;
+        case 'c': _layers_saved = _layers ^= LAYER_CLOUDS;   break;
+
+        // Remaining cases fall through to exit.
+        case '|':
+            _layers = LAYERS_ALL;
+        default:
+            exit = true;
+            break;
         }
 
-        viewwindow();
-
-		msgwin_clear_temporary();
-        clear_messages();
+        msgwin_clear_temporary();
     }
+    msgwin_set_temporary(false);
 
     canned_msg(MSG_OK);
-	msgwin_set_temporary(false);
+    if (_layers != LAYERS_ALL)
+    {
+        mprf(MSGCH_PLAIN, "Press <w>%s</w> or perform an action "
+                          "to restore all view layers.",
+                          command_to_string(CMD_SHOW_TERRAIN).c_str());
+    }
 }
 
-void config_layers()
+void toggle_show_terrain()
 {
-    _layers ^= Options.layers_toggle;
-
-    viewwindow();
-
-    if (Options.layers_menu)
+    if (_layers == LAYERS_ALL)
         _config_layers_menu();
     else
-    {
-        if (_layers == LAYERS_ALL)
-            canned_msg(MSG_OK);
-        else
-        {
-            mprf(MSGCH_PROMPT, "Hiding layers. Press <w>%s</w> to "
-                               "return to full view.",
-                 command_to_string(CMD_SHOW_TERRAIN).c_str());
-        }
-    }
+        reset_show_terrain();
+}
+
+void reset_show_terrain()
+{
+    if (_layers != LAYERS_ALL)
+        mprf(MSGCH_PROMPT, "Restoring view layers.");
+
+    _layers = LAYERS_ALL;
 }
 
 ////////////////////////////////////////////////////////////////////////////
