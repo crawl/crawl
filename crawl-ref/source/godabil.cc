@@ -4986,6 +4986,50 @@ bool gozag_bribe_branch()
     return false;
 }
 
+int gozag_duplicate_item_price()
+{
+    return GOZAG_DUPLICATE_ITEM_AMOUNT
+        * (you.attribute[ATTR_GOZAG_DUPLICATES] + 1);
+}
+bool gozag_check_duplicate_item(bool quiet)
+{
+    const int cost = gozag_duplicate_item_price();
+    if (you.gold < cost)
+    {
+        if (!quiet)
+            mprf("Gozag charges %d to duplicate an item.", cost);
+        return false;
+    }
+    return true;
+}
+
+bool gozag_duplicate_item()
+{
+    int price = gozag_duplicate_item_price();
+    ASSERT(you.gold >= price);
+    int item_slot = prompt_invent_item("Duplicate which item?", MT_INVLIST,
+        OSEL_ANY, true, true, false);
+    if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
+        return false;
+
+    item_def i = you.inv[item_slot];
+    if (!copy_item_to_grid(i, you.pos()))
+    {
+        simple_god_message(" refuses to duplicate this!");
+        return false;
+    }
+    you.del_gold(price);
+    you.attribute[ATTR_GOZAG_DUPLICATES]++;
+
+    string message = " duplicates " + i.name(DESC_YOUR) + "!";
+    simple_god_message(message.c_str());
+
+    take_note(Note(NOTE_ID_ITEM, 0, 0,
+              i.name(DESC_A).c_str(), "duplicated by Gozag"));
+
+    return true;
+}
+
 static int _upheaval_radius(int pow)
 {
     return pow >= 100 ? 2 : 1;

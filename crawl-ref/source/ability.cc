@@ -198,7 +198,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_NON_ABILITY, ABIL_DITHMENOS_SHADOW_FORM },
     // Gozag
     { ABIL_GOZAG_POTION_PETITION, ABIL_GOZAG_CALL_MERCHANT,
-      ABIL_GOZAG_BRIBE_BRANCH, ABIL_NON_ABILITY, ABIL_NON_ABILITY },
+      ABIL_GOZAG_BRIBE_BRANCH, ABIL_GOZAG_DUPLICATE_ITEM, ABIL_NON_ABILITY },
     // Qazlal
     { ABIL_NON_ABILITY, ABIL_QAZLAL_UPHEAVAL, ABIL_QAZLAL_ELEMENTAL_FORCE,
       ABIL_NON_ABILITY, ABIL_QAZLAL_DISASTER_AREA },
@@ -468,6 +468,8 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, abflag::GOLD },
     { ABIL_GOZAG_BRIBE_BRANCH, "Bribe Branch",
       0, 0, 0, 0, abflag::GOLD },
+    { ABIL_GOZAG_DUPLICATE_ITEM, "Duplicate Item",
+      0, 0, 0, 0, abflag::GOLD },
 
     // Qazlal
     { ABIL_QAZLAL_UPHEAVAL, "Upheaval", 4, 0, 0, 3, abflag::NONE },
@@ -559,6 +561,8 @@ int get_gold_cost(ability_type ability)
         return gozag_potion_price();
     case ABIL_GOZAG_BRIBE_BRANCH:
         return GOZAG_BRIBE_AMOUNT;
+    case ABIL_GOZAG_DUPLICATE_ITEM:
+        return gozag_duplicate_item_price();
     default:
         return 0;
     }
@@ -955,6 +959,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_GOZAG_POTION_PETITION:
     case ABIL_GOZAG_CALL_MERCHANT:
     case ABIL_GOZAG_BRIBE_BRANCH:
+    case ABIL_GOZAG_DUPLICATE_ITEM:
     case ABIL_RU_DRAW_OUT_POWER:
     case ABIL_RU_POWER_LEAP:
     case ABIL_RU_APOCALYPSE:
@@ -1546,6 +1551,9 @@ static bool _check_ability_possible(const ability_def& abil,
 
     case ABIL_GOZAG_BRIBE_BRANCH:
         return gozag_check_bribe_branch(quiet);
+
+    case ABIL_GOZAG_DUPLICATE_ITEM:
+        return gozag_check_duplicate_item(quiet);
 
     case ABIL_RU_SACRIFICE_EXPERIENCE:
         if (you.experience_level <= RU_SAC_XP_LEVELS)
@@ -2794,6 +2802,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_GOZAG_BRIBE_BRANCH:
         fail_check();
         if (!gozag_bribe_branch())
+            return SPRET_ABORT;
+        break;
+
+    case ABIL_GOZAG_DUPLICATE_ITEM:
+        fail_check();
+        if (!gozag_duplicate_item())
             return SPRET_ABORT;
         break;
 
