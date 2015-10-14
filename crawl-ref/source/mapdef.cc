@@ -2334,13 +2334,19 @@ void map_def::read_full(reader& inf, bool check_cache_version)
     const uint8_t minor = unmarshallUByte(inf);
 
     if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION)
-        throw map_load_exception(name);
+        throw map_load_exception(make_stringf(
+            "Map was built for a different version of Crawl (%s) "
+            "(map: %d.%d us: %d.%d)",
+            name.c_str(), int(major), int(minor),
+            TAG_MAJOR_VERSION, TAG_MINOR_VERSION));
 
     string fp_name;
     unmarshallString4(inf, fp_name);
 
     if (fp_name != name)
-        throw map_load_exception(name);
+        throw map_load_exception(make_stringf(
+            "Map fp_name (%s) != name (%s)!",
+            fp_name.c_str(), name.c_str()));
 
     prelude.read(inf);
     mapchunk.read(inf);
@@ -2402,7 +2408,8 @@ void map_def::load()
 
     reader inf(loadfile, TAG_MINOR_VERSION);
     if (!inf.valid())
-        throw map_load_exception(name);
+        throw map_load_exception(
+                make_stringf("Map inf is invalid: %s", name.c_str()));
     inf.advance(cache_offset);
     read_full(inf, true);
 

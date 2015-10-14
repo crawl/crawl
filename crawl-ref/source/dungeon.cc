@@ -316,7 +316,7 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
         }
         catch (map_load_exception &mload)
         {
-            mprf(MSGCH_ERROR, "Failed to load map %s, reloading all maps",
+            mprf(MSGCH_ERROR, "Failed to load map, reloading all maps (%s).",
                  mload.what());
             reread_maps();
         }
