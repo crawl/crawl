@@ -2454,6 +2454,7 @@ enum menu_type
 
 enum mon_holy_type_flags
 {
+    MH_NONE              = 0,
     MH_HOLY              = 1<<0,
     MH_NATURAL           = 1<<1,
     MH_UNDEAD            = 1<<2,
@@ -2463,7 +2464,7 @@ enum mon_holy_type_flags
     MH_EVIL              = 1<<6, // priests/wizards with evil spells
     MH_UNHOLY            = 1<<7, // ditto, unholy spells
 };
-DEF_BITFIELD(mon_holy_type,mon_holy_type_flags);
+DEF_BITFIELD(mon_holy_type, mon_holy_type_flags, 7);
 
 enum targ_mode_type
 {
