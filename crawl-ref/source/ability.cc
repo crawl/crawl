@@ -117,96 +117,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail);
 static void _pay_ability_costs(const ability_def& abil);
 static int _scale_piety_cost(ability_type abil, int original_cost);
 
-/**
- * This all needs to be split into data/util/show files
- * and the struct mechanism here needs to be rewritten (again)
- * along with the display routine to piece the strings
- * together dynamically ... I'm getting to it now {dlb}
- *
- * This array corresponds with ::god_gain_power_messages and
- * ::god_lose_power_messages, which have the same shape.
- *
- * It makes more sense to think of them as an array
- * of structs than two arrays that share common index
- * values -- well, doesn't it? {dlb}
- *
- * @note Declaring this const messes up externs later, so don't do it!
- */
-ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
-{
-    // no god
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY },
-    // Zin
-    { ABIL_ZIN_RECITE, ABIL_ZIN_VITALISATION, ABIL_ZIN_IMPRISON,
-      ABIL_NON_ABILITY, ABIL_ZIN_SANCTUARY },
-    // TSO
-    { ABIL_NON_ABILITY, ABIL_TSO_DIVINE_SHIELD, ABIL_NON_ABILITY,
-      ABIL_TSO_CLEANSING_FLAME, ABIL_TSO_SUMMON_DIVINE_WARRIOR },
-    // Kikubaaqudgha
-    { ABIL_KIKU_RECEIVE_CORPSES, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY, ABIL_KIKU_TORMENT },
-    // Yredelemnul
-    { ABIL_YRED_ANIMATE_REMAINS_OR_DEAD, ABIL_YRED_RECALL_UNDEAD_SLAVES,
-      ABIL_NON_ABILITY, ABIL_YRED_DRAIN_LIFE, ABIL_YRED_ENSLAVE_SOUL },
-    // Xom
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY },
-    // Vehumet
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY },
-    // Okawaru
-    { ABIL_OKAWARU_HEROISM, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY, ABIL_OKAWARU_FINESSE },
-    // Makhleb
-    { ABIL_NON_ABILITY, ABIL_MAKHLEB_MINOR_DESTRUCTION,
-      ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, ABIL_MAKHLEB_MAJOR_DESTRUCTION,
-      ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB },
-    // Sif Muna
-    { ABIL_SIF_MUNA_CHANNEL_ENERGY, ABIL_SIF_MUNA_FORGET_SPELL,
-      ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY },
-    // Trog
-    { ABIL_TROG_BERSERK, ABIL_TROG_REGEN_MR, ABIL_NON_ABILITY,
-      ABIL_TROG_BROTHERS_IN_ARMS, ABIL_NON_ABILITY },
-    // Nemelex
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NEMELEX_TRIPLE_DRAW,
-      ABIL_NEMELEX_DEAL_FOUR, ABIL_NEMELEX_STACK_FIVE },
-    // Elyvilon
-    { ABIL_ELYVILON_LESSER_HEALING, ABIL_ELYVILON_HEAL_OTHER,
-      ABIL_ELYVILON_PURIFICATION, ABIL_ELYVILON_GREATER_HEALING,
-      ABIL_ELYVILON_DIVINE_VIGOUR },
-    // Lugonu
-    { ABIL_LUGONU_ABYSS_EXIT, ABIL_LUGONU_BEND_SPACE, ABIL_LUGONU_BANISH,
-      ABIL_LUGONU_CORRUPT, ABIL_LUGONU_ABYSS_ENTER },
-    // Beogh
-    { ABIL_NON_ABILITY, ABIL_BEOGH_SMITING, ABIL_NON_ABILITY,
-      ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, ABIL_BEOGH_GIFT_ITEM },
-    // Jiyva
-    { ABIL_JIYVA_CALL_JELLY, ABIL_JIYVA_JELLY_PARALYSE, ABIL_NON_ABILITY,
-      ABIL_JIYVA_SLIMIFY, ABIL_JIYVA_CURE_BAD_MUTATION },
-    // Fedhas
-    { ABIL_FEDHAS_EVOLUTION, ABIL_FEDHAS_SUNLIGHT, ABIL_FEDHAS_PLANT_RING,
-      ABIL_FEDHAS_SPAWN_SPORES, ABIL_FEDHAS_RAIN},
-    // Cheibriados
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_CHEIBRIADOS_DISTORTION,
-      ABIL_CHEIBRIADOS_SLOUCH, ABIL_CHEIBRIADOS_TIME_STEP },
-    // Ashenzari
-    { ABIL_ASHENZARI_SCRYING, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY, ABIL_ASHENZARI_TRANSFER_KNOWLEDGE },
-    // Dithmenos
-    { ABIL_NON_ABILITY, ABIL_DITHMENOS_SHADOW_STEP, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY, ABIL_DITHMENOS_SHADOW_FORM },
-    // Gozag
-    { ABIL_GOZAG_POTION_PETITION, ABIL_GOZAG_CALL_MERCHANT,
-      ABIL_GOZAG_BRIBE_BRANCH, ABIL_NON_ABILITY, ABIL_NON_ABILITY },
-    // Qazlal
-    { ABIL_NON_ABILITY, ABIL_QAZLAL_UPHEAVAL, ABIL_QAZLAL_ELEMENTAL_FORCE,
-      ABIL_NON_ABILITY, ABIL_QAZLAL_DISASTER_AREA },
-    // Ru
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_RU_DRAW_OUT_POWER,
-      ABIL_RU_POWER_LEAP, ABIL_RU_APOCALYPSE }
-};
-
 // The description screen was way out of date with the actual costs.
 // This table puts all the information in one place... -- bwr
 //
@@ -310,9 +220,6 @@ static const ability_def Ability_List[] =
     { ABIL_YRED_ANIMATE_DEAD, "Animate Dead", 2, 0, 50, 0, abflag::NONE },
     { ABIL_YRED_DRAIN_LIFE, "Drain Life", 6, 0, 200, 2, abflag::NONE },
     { ABIL_YRED_ENSLAVE_SOUL, "Enslave Soul", 8, 0, 150, 4, abflag::NONE },
-    // Placeholder for Animate Remains or Animate Dead.
-    { ABIL_YRED_ANIMATE_REMAINS_OR_DEAD, "Animate Remains or Dead",
-      2, 0, 100, 0, abflag::NONE },
 
     // Okawaru
     { ABIL_OKAWARU_HEROISM, "Heroism", 2, 0, 50, 2, abflag::NONE },
@@ -752,16 +659,15 @@ static const string _detailed_cost_description(ability_type ability)
     return ret.str();
 }
 
-static ability_type _fixup_ability(ability_type ability)
+ability_type fixup_ability(ability_type ability)
 {
     switch (ability)
     {
-    case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD:
-        // Placeholder for Animate Remains or Animate Dead.
-        if (yred_can_animate_dead())
-            return ABIL_YRED_ANIMATE_DEAD;
-        else
-            return ABIL_YRED_ANIMATE_REMAINS;
+    case ABIL_YRED_ANIMATE_REMAINS:
+        // suppress animate remains once animate dead is unlocked (ugh)
+        if (in_good_standing(GOD_YREDELEMNUL, 2))
+            return ABIL_NON_ABILITY;
+        return ability;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
@@ -793,6 +699,14 @@ static ability_type _fixup_ability(ability_type ability)
         else
             return ability;
 
+    case ABIL_TSO_BLESS_WEAPON:
+    case ABIL_KIKU_BLESS_WEAPON:
+    case ABIL_LUGONU_BLESS_WEAPON:
+        if (you.species == SP_FELID)
+            return ABIL_NON_ABILITY;
+        else
+            return ability;
+
     default:
         return ability;
     }
@@ -806,7 +720,7 @@ talent get_talent(ability_type ability, bool check_confused)
     // Placeholder handling, part 1: The ability we have might be a
     // placeholder, so convert it into its corresponding ability before
     // doing anything else, so that we'll handle its flags properly.
-    result.which = _fixup_ability(ability);
+    result.which = fixup_ability(ability);
 
     const ability_def &abil = get_ability_def(result.which);
 
@@ -979,10 +893,6 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_STOP_RECALL:
         invoc = true;
         failure = 0;
-        break;
-
-    case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD: // Placeholder.
-        invoc = true;
         break;
 
     // Trog and Jiyva abilities, only based on piety.
@@ -2275,10 +2185,21 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_YRED_ANIMATE_REMAINS:
+        fail_check();
+        canned_msg(MSG_ANIMATE_REMAINS);
+        if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY,
+                            MHITYOU, &you, "", GOD_YREDELEMNUL) < 0)
+        {
+            mpr("There are no remains here to animate!");
+            return SPRET_ABORT;
+        }
+        break;
+
     case ABIL_YRED_ANIMATE_DEAD:
         fail_check();
-        if (!yred_animate_remains_or_dead())
-            return SPRET_ABORT;
+        canned_msg(MSG_CALL_DEAD);
+        animate_dead(&you, you.skill_rdiv(SK_INVOCATIONS) + 1, BEH_FRIENDLY,
+                     MHITYOU, &you, "", GOD_YREDELEMNUL);
         break;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
@@ -3216,8 +3137,11 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_BLINK, check_confused);
 
     // Religious abilities.
-    for (ability_type abil : get_god_abilities(include_unusable))
+    for (ability_type abil : get_god_abilities(include_unusable, false,
+                                               include_unusable))
+    {
         _add_talent(talents, abil, check_confused);
+    }
 
     // And finally, the ability to opt-out of your faith {dlb}:
     if (!you_worship(GOD_NO_GOD))
@@ -3333,105 +3257,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     return talents;
 }
 
-// Note: we're trying for a behaviour where the player gets
-// to keep their assigned invocation slots if they get excommunicated
-// and then rejoin (but if they spend time with another god we consider
-// the old invocation slots void and erase them). We also try to
-// protect any bindings the character might have made into the
-// traditional invocation slots (A-E and X). -- bwr
-static void _set_god_ability_helper(ability_type abil, char letter)
-{
-    int i;
-    const int index = letter_to_index(letter);
-
-    for (i = 0; i < 52; i++)
-        if (you.ability_letter_table[i] == abil)
-            break;
-
-    if (i == 52)    // Ability is not already assigned.
-    {
-        // If slot is unoccupied, move in.
-        if (you.ability_letter_table[index] == ABIL_NON_ABILITY)
-            you.ability_letter_table[index] = abil;
-    }
-}
-
-// Return GOD_NO_GOD if it isn't a god ability, otherwise return
-// the index of the god.
-static int _is_god_ability(ability_type abil)
-{
-    if (abil == ABIL_NON_ABILITY)
-        return GOD_NO_GOD;
-
-    // Not in god_abilities because players get them at 0*
-    // TODO: Fix that and remove the following.
-    if (abil == ABIL_CHEIBRIADOS_TIME_BEND)
-        return GOD_CHEIBRIADOS;
-    if (abil == ABIL_TROG_BURN_SPELLBOOKS)
-        return GOD_TROG;
-    if (abil == ABIL_ZIN_DONATE_GOLD)
-        return GOD_ZIN;
-
-    for (int i = 0; i < NUM_GODS; ++i)
-        for (int j = 0; j < MAX_GOD_ABILITIES; ++j)
-        {
-            if (god_abilities[i][j] == abil)
-                return i;
-        }
-
-    return GOD_NO_GOD;
-}
-
-void set_god_ability_slots()
-{
-    ASSERT(!you_worship(GOD_NO_GOD));
-
-    _set_god_ability_helper(ABIL_RENOUNCE_RELIGION, 'X');
-
-    // Clear out other god invocations.
-    for (int i = 0; i < 52; i++)
-    {
-        const int god = _is_god_ability(you.ability_letter_table[i]);
-        if (god != GOD_NO_GOD && god != you.religion)
-            you.ability_letter_table[i] = ABIL_NON_ABILITY;
-    }
-
-    // Finally, add in current god's invocations in traditional slots.
-    int num = 0;
-    if (you_worship(GOD_CHEIBRIADOS))
-    {
-        _set_god_ability_helper(ABIL_CHEIBRIADOS_TIME_BEND,
-                                'a' + num++);
-    }
-
-    for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
-    {
-        if (god_abilities[you.religion][i] != ABIL_NON_ABILITY)
-        {
-            _set_god_ability_helper(god_abilities[you.religion][i],
-                                    'a' + num++);
-
-            if (you_worship(GOD_ELYVILON))
-            {
-                if (god_abilities[you.religion][i]
-                        == ABIL_ELYVILON_LESSER_HEALING)
-                {
-                    _set_god_ability_helper(ABIL_ELYVILON_LIFESAVING, 'p');
-                }
-            }
-            else if (you_worship(GOD_YREDELEMNUL))
-            {
-                if (god_abilities[you.religion][i]
-                        == ABIL_YRED_RECALL_UNDEAD_SLAVES)
-                {
-                    _set_god_ability_helper(ABIL_YRED_INJURY_MIRROR,
-                                            'a' + num++);
-                }
-            }
-        }
-    }
-}
-
 // Returns an index (0-51) if successful, -1 if you should
 // just use the next one.
 static int _find_ability_slot(const ability_def &abil)
@@ -3442,7 +3267,7 @@ static int _find_ability_slot(const ability_def &abil)
         // table will contain that placeholder. Convert the latter to
         // its corresponding ability before comparing the two, so that
         // we'll find the placeholder's index properly.
-        if (_fixup_ability(you.ability_letter_table[slot]) == abil.ability)
+        if (fixup_ability(you.ability_letter_table[slot]) == abil.ability)
             return slot;
 
     // No requested slot, find new one and make it preferred.
@@ -3515,7 +3340,8 @@ static int _find_ability_slot(const ability_def &abil)
     return -1;
 }
 
-vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
+vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
+                                       bool ignore_penance)
 {
     vector<ability_type> abilities;
     if (you_worship(GOD_RU))
@@ -3532,55 +3358,28 @@ vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
     }
     if (you.transfer_skill_points > 0)
         abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);
-    if (!include_unusable && silenced(you.pos()))
+    if (!ignore_silence && silenced(you.pos()))
         return abilities;
     // Remaining abilities are unusable if silenced.
 
-    if (you_worship(GOD_TROG))
-        abilities.push_back(ABIL_TROG_BURN_SPELLBOOKS);
-    if (you_worship(GOD_ZIN))
-        abilities.push_back(ABIL_ZIN_DONATE_GOLD);
-    if (!include_unusable && player_under_penance())
-        return abilities;
-    // Remaining abilities are unusable if under penance.
-
-    if (you_worship(GOD_CHEIBRIADOS))
-        abilities.push_back(ABIL_CHEIBRIADOS_TIME_BEND);
-    for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
+    for (const auto& power : get_god_powers(you.religion))
     {
-        if (!you_worship(GOD_GOZAG) && you.piety < piety_breakpoint(i)
-            && !ignore_piety)
-        {
+        // not an activated power
+        if (power.abil == ABIL_NON_ABILITY)
             continue;
-        }
-
-        const ability_type abil =
-            _fixup_ability(god_abilities[you.religion][i]);
-        if (abil == ABIL_NON_ABILITY)
-            continue;
-
-        abilities.push_back(abil);
-        if (abil == ABIL_ELYVILON_LESSER_HEALING)
-            abilities.push_back(ABIL_ELYVILON_LIFESAVING);
-        else if (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES
-                 || abil == ABIL_STOP_RECALL && you_worship(GOD_YREDELEMNUL))
+        const ability_type abil = fixup_ability(power.abil);
+        ASSERT(abil != ABIL_NON_ABILITY);
+        if ((power.rank <= 0
+             || power.rank == 7 && can_do_capstone_ability(you.religion)
+             || piety_rank() >= power.rank
+             || ignore_piety)
+            && (!player_under_penance()
+                || power.rank == -1
+                || ignore_penance))
         {
-            abilities.push_back(ABIL_YRED_INJURY_MIRROR);
+            abilities.push_back(abil);
         }
     }
-
-    if (can_do_capstone_ability(GOD_ZIN))
-        abilities.push_back(ABIL_ZIN_CURE_ALL_MUTATIONS);
-    if (can_do_capstone_ability(GOD_SHINING_ONE) && you.species != SP_FELID)
-        abilities.push_back(ABIL_TSO_BLESS_WEAPON);
-    if (can_do_capstone_ability(GOD_KIKUBAAQUDGHA))
-    {
-        if (you.species != SP_FELID)
-            abilities.push_back(ABIL_KIKU_BLESS_WEAPON);
-        abilities.push_back(ABIL_KIKU_GIFT_NECRONOMICON);
-    }
-    if (can_do_capstone_ability(GOD_LUGONU) && you.species != SP_FELID)
-        abilities.push_back(ABIL_LUGONU_BLESS_WEAPON);
 
     return abilities;
 }
