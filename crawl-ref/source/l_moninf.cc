@@ -87,6 +87,30 @@ MIRES1(res_draining, MR_RES_NEG)
 MIRES1(res_shock, MR_RES_ELEC)
 MIRES1(res_corr, MR_RES_ACID)
 
+LUAFN(moninf_get_holiness)
+{
+    MONINF(ls, 1, mi);
+
+    string holi = luaL_checkstring(ls, 2);
+    lowercase(holi);
+    mon_holy_type arg = holiness_by_name(holi);
+    if(!holi.empty() && arg == MH_NONE)
+    {
+        luaL_argerror(ls, 2, (string("no such holiness: '")
+                              + holi + "'").c_str());
+        return 0;
+    }
+
+    if(!holi.empty())
+    {
+        PLUARET(boolean, bool(mi->holi & arg));
+    }
+    else
+    {
+        PLUARET(string, holiness_description(mi->holi).c_str());
+    }
+}
+
 // const char* here would save a tiny bit of memory, but every map
 // for an unique pair of types costs 35KB of code. We have
 // map<string, int> elsewhere.
@@ -320,6 +344,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(is_safe),
     MIREG(is_firewood),
     MIREG(stabbability),
+    MIREG(holiness),
     MIREG(attitude),
     MIREG(threat),
     MIREG(is_caught),
