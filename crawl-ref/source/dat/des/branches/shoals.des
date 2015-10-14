@@ -57,6 +57,13 @@ function shoals_atoll_place_items(data, triggerable, triggerer, marker, ev)
         end
     end
 end
+
+function shoals_ice_setup(e)
+  e.subst("- = xxxW.")
+  e.rtile("x = wall_zot_cyan")
+  e.colour(".x@geO = white")
+  e.ftile(".x@+geO = floor_ice")
+end
 }}
 
 ##############################################################################
@@ -1089,6 +1096,19 @@ PLACE: Shoals:$
 WEIGHT: 8
 : shoals_finale_setup(_G, 'hangedman', crawl.random_range(5,6))
 
+# Grunt's icy Shoals ending
+NAME: shoals_end_grunt_ice
+PLACE: Shoals:$
+WEIGHT: 8
+: shoals_finale_setup(_G, 'grunt_ice', crawl.random_range(5,6))
+
+# Grunt's garden Shoals ending
+# Weighted lower on account of being more open and potentially nasty.
+NAME: shoals_end_grunt_garden
+PLACE: Shoals:$
+WEIGHT: 4
+: shoals_finale_setup(_G, 'grunt_garden', crawl.random_range(5,6))
+
 ################################################################################
 # Shoal huts.
 
@@ -1234,4 +1254,146 @@ xx3wxw..C.@
  xx2..DC.x.
   xx....x.
    xxxx@.
+ENDMAP
+
+################################################################################
+# Shoal icebergs (Grunt).
+
+NAME:   shoals_iceberg_rune
+TAGS:   shoal_rune_grunt_ice shoal_mimic_grunt_ice water_ok no_dump
+TAGS:   transparent allow_dup
+: if shoals_vault_is_mimic() then
+KITEM:  O = barnacled rune of Zot mimic
+: else
+KITEM:  O = barnacled rune of Zot
+: end
+KPROP:  O = no_tide
+NSUBST: A = 1:. / 1:x. / *:x
+NSUBST: 1 = 4:1 / 4:1.
+: if crawl.one_chance_in(3) then
+NSUBST: w = 1:K / *:w
+KMONS:  K = kraken simulacrum
+KFEAT:  K = deep_water
+: end
+MONS:   merfolk impaler ; trident ego:freezing good_item . robe w:7 / \
+        merfolk impaler ; demon trident ego:freezing good_item . robe w:1 / \
+        merfolk impaler w:2 / frost giant / \
+        merfolk javelineer / merfolk aquamancer
+: shoals_ice_setup(_G)
+MAP
+   .......
+  .-------.
+ ..xxxxxxx..
+.-xA.---.Ax-.
+.-x.10w01.x-.
+.-x-0x1x0-x-.
+.-x-w1O1w-x-.
+.-x-0x1x0-x-.
+.-x.10w01.x-.
+.-xA.---.Ax-.
+ ..xxxxxxx..
+  .-------.
+   .......
+ENDMAP
+
+# Shoal iceberg
+NAME:      shoals_iceberg
+TAGS:      shoal_hut_grunt_ice water_ok no_dump allow_dup transparent
+NSUBST:    A = 1:. / 1:x. / *:x
+NSUBST:    0 = 2:. / 2:0 / * = 0.
+: shoals_ice_setup(_G)
+MAP
+   .......
+  .-------.
+ ..xxxxxxx..
+.-xA.---.Ax-.
+.-x..0w0..x-.
+.-x-0x.x0-x-.
+.-x-w.|.w-x-.
+.-x-0x.x0-x-.
+.-x..0w0..x-.
+.-xA.---.Ax-.
+ ..xxxxxxx..
+  .-------.
+   .......
+ENDMAP
+
+# Ilsuiw's winter home.
+NAME:    shoals_ilsuiw_ice
+TAGS:    shoal_guardian
+KMONS:   e = Ilsuiw band, merfolk avatar
+MONS:    merfolk aquamancer / merfolk javelineer
+NSUBST:  1 = 2:1 / *:.
+NSUBST:  A = 1:. / 1:x. / *:x
+: shoals_ice_setup(_G)
+MAP
+   .......
+  ..-----..
+ ...xxxxx...
+...A.---.A...
+.-x..1w1..x-.
+.-x-1x.x1-x-.
+.-x-w.e.w-x-.
+.-x-1x.x1-x-.
+.-x..1w1..x-.
+...A.---.A...
+ ...xxxxx...
+  ..-----..
+   .......
+ENDMAP
+
+################################################################################
+# Shoal gardens (Grunt).
+# This theme doesn't have a guardian vault - Ilsuiw doesn't hang around in
+# gardens. If we get another satyr unique at some point, that would be a
+# good candidate for this.
+
+NAME:   shoals_garden_rune
+TAGS:   shoal_rune_grunt_garden shoal_mimic_grunt_garden water_ok no_dump
+TAGS:   allow_dup transparent
+: if shoals_vault_is_mimic() then
+KITEM:  O = barnacled rune of Zot mimic
+: else
+KITEM:  O = barnacled rune of Zot
+: end
+KPROP:  O = no_tide
+MONS:   satyr w:30 / merfolk impaler / merfolk javelineer / merfolk aquamancer
+MONS:   faun / 0
+MONS:   nothing w:20 / plant
+SUBST:  . = ..3
+NSUBST: 1 = 4:1 / 4:1. / 8:2 / 4:P / *:.
+SUBST:  P = .3
+MAP
+   .....
+ ...PPP...
+ .PPP1PPP.
+..P11111P..
+.PP11111PP.
+.P111O111P.
+.PP11111PP.
+..P11111P..
+ .PPP1PPP.
+ ...PPP...
+   .....
+ENDMAP
+
+NAME:   shoals_garden
+TAGS:   shoal_hut_grunt_garden water_ok no_dump allow_dup transparent
+MONS:   faun / 0
+MONS:   nothing w:20 / plant
+SUBST:  . = ..2
+NSUBST: 1 = 2:1 / 2:. / 4:1. / 8:2 / 4:P / *:.
+SUBST:  P = .2
+MAP
+   .....
+ ...PPP...
+ .PPP1PPP.
+..P11111P..
+.PP11111PP.
+.P111|111P.
+.PP11111PP.
+..P11111P..
+ .PPP1PPP.
+ ...PPP...
+   .....
 ENDMAP
