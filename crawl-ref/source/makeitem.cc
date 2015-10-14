@@ -196,6 +196,13 @@ static bool _try_make_item_unrand(item_def& item, int force_type)
     return false;
 }
 
+int get_randart_weapon_plus()
+{
+    // Mean +6.
+    int i = 12 - biased_random2(7,2) - biased_random2(7,2) - biased_random2(7,2);
+    return max(i, random2(2));
+}
+
 // Return whether we made an artefact.
 static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart = false)
@@ -217,8 +224,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         if (item.sub_type == WPN_CLUB)
             return false;
 
-        // Mean enchantment +6.
-        item.plus = 12 - biased_random2(7,2) - biased_random2(7,2) - biased_random2(7,2);
+        item.plus = get_randart_weapon_plus();
 
         bool cursed = false;
         if (one_chance_in(5))
@@ -228,9 +234,6 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         }
         else if (item.plus < 0 && !one_chance_in(3))
             cursed = true;
-
-        // On weapons, an enchantment of less than 0 is never viable.
-        item.plus = max(static_cast<int>(item.plus), random2(2));
 
         // The rest are normal randarts.
         make_item_randart(item);

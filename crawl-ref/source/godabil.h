@@ -38,6 +38,7 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define GOZAG_BRIBE_AMOUNT 3000
 #define GOZAG_MAX_BRIBABILITY 8
 #define GOZAG_MAX_POTIONS 3
+#define GOZAG_ARTEFACT_ITEM_AMOUNT 5000
 
 #define RU_SAC_XP_LEVELS 2
 
@@ -146,6 +147,9 @@ bool gozag_branch_bribable(branch_type branch);
 void gozag_deduct_bribe(branch_type br, int amount);
 bool gozag_check_bribe_branch(bool quiet = false);
 bool gozag_bribe_branch();
+int gozag_artefactise_item_price();
+bool gozag_check_artefactise_item(bool quiet = false);
+bool gozag_artefactise_item();
 
 spret_type qazlal_upheaval(coord_def target, bool quiet = false,
                            bool fail = false);

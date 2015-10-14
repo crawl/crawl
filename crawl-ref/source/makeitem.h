@@ -34,3 +34,4 @@ void squash_plusses(int item_slot);
 void makeitem_tests();
 #endif
 #endif
+int get_randart_weapon_plus();

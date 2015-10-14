@@ -864,8 +864,8 @@ static void _do_wizard_command(int wiz_command)
     case '@': wizard_set_stats(); break;
     case '#': wizard_load_dump_file(); break;
     case '$':
-        mpr("Adding 1000 gold.");
-        you.add_gold(1000);
+        mpr("Adding 10000 gold.");
+        you.add_gold(10000);
         break;
     case '%': wizard_create_spec_object_by_name(); break;
     case '^': wizard_set_piety(); break;

@@ -833,12 +833,14 @@ const char *artp_name(artefact_prop_type prop)
 }
 
 static void _get_randart_properties(const item_def &item,
-                                    artefact_properties_t &item_props)
+                                    artefact_properties_t &item_props,
+                                    int quality)
 {
     const object_class_type item_class = item.base_type;
 
     // first figure out how good we want the artefact to be, range 1 to 7.
-    int quality = max(1, binomial(7, 30));
+    if (quality == 0)
+        quality = max(1, binomial(7, 30));
     // then consider adding bad properties. the better the artefact, the more
     // likely we add a bad property, up to a max of 2.
     int bad = binomial(1 + div_rand_round(quality, 5), 30);
@@ -1006,7 +1008,7 @@ void setup_unrandart(item_def &item, bool creating)
     item.plus      = unrand->plus;
 }
 
-static bool _init_artefact_properties(item_def &item)
+static bool _init_artefact_properties(item_def &item, int quality)
 {
     ASSERT(is_artefact(item));
 
@@ -1025,7 +1027,7 @@ static bool _init_artefact_properties(item_def &item)
 
     artefact_properties_t prop;
     prop.init(0);
-    _get_randart_properties(item, prop);
+    _get_randart_properties(item, prop, quality);
 
     for (int i = 0; i < ART_PROPERTIES; i++)
     {
@@ -1085,7 +1087,7 @@ void artefact_properties(const item_def &item,
             proprt[i] = static_cast<short>(unrand->prpty[i]);
     }
     else
-        _get_randart_properties(item, proprt);
+        _get_randart_properties(item, proprt, 0);
 }
 
 void artefact_properties(const item_def &item,
@@ -1687,7 +1689,7 @@ static void _artefact_setup_prop_vectors(item_def &item)
 
 // If force_mundane is true, normally mundane items are forced to
 // nevertheless become artefacts.
-bool make_item_randart(item_def &item, bool force_mundane)
+bool make_item_randart(item_def &item, bool force_mundane, int quality)
 {
     if (item.base_type != OBJ_WEAPONS
         && item.base_type != OBJ_ARMOUR
@@ -1728,7 +1730,7 @@ bool make_item_randart(item_def &item, bool force_mundane)
     do
     {
         // Now that we found something, initialise the props array.
-        if (--randart_tries <= 0 || !_init_artefact_properties(item))
+        if (--randart_tries <= 0 || !_init_artefact_properties(item, quality))
         {
             // Something went wrong that no amount of rerolling will fix.
             item.special = 0;
@@ -1840,7 +1842,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 
     item.flags |= ISFLAG_UNRANDART;
     _artefact_setup_prop_vectors(item);
-    _init_artefact_properties(item);
+    _init_artefact_properties(item, 0);
 
     if (unrand->prpty[ARTP_CURSE] != 0)
         do_curse_item(item);

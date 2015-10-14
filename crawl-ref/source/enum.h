@@ -378,6 +378,7 @@ enum ability_type
     ABIL_GOZAG_POTION_PETITION = 1180,
     ABIL_GOZAG_CALL_MERCHANT,
     ABIL_GOZAG_BRIBE_BRANCH,
+    ABIL_GOZAG_ARTEFACTISE_ITEM,
     // Qazlal
     ABIL_QAZLAL_UPHEAVAL = 1190,
     ABIL_QAZLAL_ELEMENTAL_FORCE,
@@ -513,6 +514,7 @@ enum attribute_type
 #endif
     ATTR_GOZAG_SHOPS,          // Number of shops you've funded from Gozag.
     ATTR_GOZAG_SHOPS_CURRENT,  // As above, but since most recent time worshipping.
+    ATTR_GOZAG_ARTEFACTS,      // Number of items Gozag has artefactised for you.
 #if TAG_MAJOR_VERSION == 34
     ATTR_DIVINE_FIRE_RES,      // Divine fire resistance (Qazlal).
     ATTR_DIVINE_COLD_RES,      // Divine cold resistance (Qazlal).
