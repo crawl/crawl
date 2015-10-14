@@ -51,14 +51,14 @@ static const int BRANCH_END = 100;
 class map_load_exception : public exception
 {
 public:
-    map_load_exception(const string &_mapname) : mapname(_mapname) { }
+    map_load_exception(const string &_reason) : reason(_reason) { }
     ~map_load_exception() throw () { }
     const char *what() const throw() override
     {
-        return mapname.c_str();
+        return reason.c_str();
     }
 private:
-    string mapname;
+    string reason;
 };
 
 // [dshaligram] Maps can be mirrored; for every orientation, there must be
