@@ -76,9 +76,9 @@ enum layer_type
     LAYER_PLAYER   = (1 << 1),
     LAYER_ITEMS    = (1 << 2),
     LAYER_CLOUDS   = (1 << 3),
-    LAYERS_ALL     = ~(-1 << 4),
 };
 DEF_BITFIELD(layers_type, layer_type, 3);
+static const constexpr layers_type LAYERS_ALL = layers_type::all_bits;
 
 void show_init(layers_type layers = LAYERS_ALL);
 void update_item_at(const coord_def &gp, bool detected = false);
