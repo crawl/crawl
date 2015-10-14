@@ -1,0 +1,8 @@
+---
+Language: Cpp
+
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Allman
+BreakBeforeTernaryOperators: false
+IndentWidth: 4
+PointerAlignment: Left
