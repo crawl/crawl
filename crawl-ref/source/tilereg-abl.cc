@@ -152,7 +152,8 @@ bool AbilityRegion::update_alt_text(string &alt)
 int AbilityRegion::get_max_slots()
 {
     return ABIL_MAX_INTRINSIC + (ABIL_MAX_EVOKE - ABIL_MIN_EVOKE) + 1
-           + MAX_GOD_ABILITIES + 1;
+           // for god abilities
+           + 6;
 }
 
 void AbilityRegion::pack_buffers()

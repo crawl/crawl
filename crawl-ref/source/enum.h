@@ -303,7 +303,6 @@ enum ability_type
     ABIL_YRED_ANIMATE_DEAD,
     ABIL_YRED_DRAIN_LIFE,
     ABIL_YRED_ENSLAVE_SOUL,
-    ABIL_YRED_ANIMATE_REMAINS_OR_DEAD,
     // Vehumet
     // = 1040
     // Okawaru

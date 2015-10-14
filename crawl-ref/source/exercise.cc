@@ -50,7 +50,6 @@ skill_type abil_skill(ability_type abil)
     case ABIL_FEDHAS_SPAWN_SPORES:
     case ABIL_FEDHAS_EVOLUTION:
     case ABIL_CHEIBRIADOS_TIME_BEND:
-    case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD: // Placeholder.
     case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_YRED_DRAIN_LIFE:

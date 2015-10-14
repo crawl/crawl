@@ -7554,20 +7554,13 @@ void player::set_gold(int amount)
         // XXX: this might benefit from being in its own function
         if (you_worship(GOD_GOZAG))
         {
-            vector<ability_type> abilities = get_god_abilities(true, true);
-            for (size_t i = 0; i < abilities.size(); i++)
+            for (const auto& power : get_god_powers(you.religion))
             {
-                const int cost = get_gold_cost(abilities[i]);
+                const int cost = get_gold_cost(power.abil);
                 if (gold >= cost && old_gold < cost)
-                {
-                    mprf(MSGCH_GOD, "You now have enough gold to %s.",
-                         god_gain_power_messages[you.religion][i]);
-                }
+                    power.display(true, "You now have enough gold to %s.");
                 else if (old_gold >= cost && gold < cost)
-                {
-                    mprf(MSGCH_GOD, "You no longer have enough gold to %s.",
-                         god_gain_power_messages[you.religion][i]);
-                }
+                    power.display(false, "You no longer have enough gold to %s.");
             }
         }
     }

@@ -5269,8 +5269,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_YRED_DRAIN_LIFE;
     case ABIL_YRED_ENSLAVE_SOUL:
         return TILEG_ABILITY_YRED_ENSLAVE_SOUL;
-    case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD:
-        return TILEG_ABILITY_YRED_ANIMATE_DEAD;
     // Xom, Vehumet = 90
     // Okawaru
     case ABIL_OKAWARU_HEROISM:
