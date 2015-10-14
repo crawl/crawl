@@ -597,6 +597,57 @@ int monster::scan_artefacts(artefact_prop_type ra_prop, bool calc_unid,
     return ret;
 }
 
+mon_holy_type holiness_by_name(string name)
+{
+    lowercase(name);
+    for (const auto bit : mon_holy_type::range())
+    {
+        if(name == holiness_name(mon_holy_type::exponent(bit)))
+            return mon_holy_type::exponent(bit);
+    }
+    return MH_NONE;
+}
+
+const char * holiness_name(mon_holy_type_flags which_holiness)
+{
+    switch(which_holiness)
+    {
+    case MH_HOLY:
+        return "holy";
+    case MH_NATURAL:
+        return "natural";
+    case MH_UNDEAD:
+        return "undead";
+    case MH_DEMONIC:
+        return "demonic";
+    case MH_NONLIVING:
+        return "nonliving";
+    case MH_PLANT:
+        return "plant";
+    case MH_EVIL:
+        return "evil";
+    case MH_UNHOLY:
+        return "unholy";
+    default:
+        return "bug";
+    }
+}
+
+string holiness_description(mon_holy_type holiness)
+{
+    string description = "";
+    for (const auto bit : mon_holy_type::range())
+    {
+        if (holiness & bit)
+        {
+            if (!description.empty())
+                description += ",";
+            description += holiness_name(bit);
+        }
+    }
+    return description;
+}
+
 mon_holy_type mons_class_holiness(monster_type mc)
 {
     ASSERT_smc();
