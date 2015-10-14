@@ -11,27 +11,42 @@
 
 #include "tag-version.h"
 
-// Provide a last_exponent static member variable only if the LastExponent
-// template parameter is nonnegative.
-template<int LastExponent, bool Provided = LastExponent >= 0>
+// Provide a last_exponent static member variable and an all_bits() static
+// member function only if the LastExponent template parameter is nonnegative.
+// Uses the CRTP so that all_bits has the correct derived type; that is,
+// the Bitfield template parameter is expected to be the very class that is
+// inheriting from this base class.
+template<class Bitfield, int LastExponent, bool Provided = LastExponent >= 0>
 struct _enum_bitfield_exponent_base { };
 
-template<int LastExponent>
-struct _enum_bitfield_exponent_base<LastExponent, true>
+template<class Bitfield, int LastExponent>
+struct _enum_bitfield_exponent_base<Bitfield, LastExponent, true>
 {
     static constexpr int last_exponent = LastExponent;
+    /// A bitfield with all bits set. Assumes there are no skipped enumerators!
+    static constexpr Bitfield all_bits
+    {
+        // FIXME: this is undefined behaviour if LastExponent is completely
+        // full.
+        (Bitfield::underlying_type(1) << LastExponent + 1) - 1
+    };
 };
 
 // If LastExponent is nonnegative, is the last exponent that will
-// be iterated over by range()
+// be iterated over by range().
 template<class E, int LastExponent = -1>
-class enum_bitfield : public _enum_bitfield_exponent_base<LastExponent>
+class enum_bitfield : public _enum_bitfield_exponent_base<
+                                 // ugly CRTP is ugly
+                                 enum_bitfield<E, LastExponent>,
+                                 LastExponent>
 {
 public:
     typedef typename underlying_type<E>::type underlying_type;
     typedef enum_bitfield<E, LastExponent> field_type;
     underlying_type flags;
 private:
+    // So the base class can call this constructor.
+    friend class _enum_bitfield_exponent_base<field_type, LastExponent>;
     explicit constexpr enum_bitfield(underlying_type rawflags)
         : flags(rawflags)
     {}
@@ -170,9 +185,9 @@ public:
  *                 I wouldn't try anything trickier than scope resolution.
  * @param lastExp  The last exponent over which fieldT::range() should
  *                 iterate. If unspecified or negative, the bitfield will not
- *                 have the last_exponent static member variable, and the
- *                 bitfield's nested range class will not have a default
- *                 constructor.
+ *                 have the last_exponent or all_bits static member variables,
+ *                 and the bitfield's nested range class will not have a
+ *                 default constructor.
  */
 #define DEF_BITFIELD(fieldT, ...) \
     typedef enum_bitfield<__VA_ARGS__> fieldT; \
