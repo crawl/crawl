@@ -165,8 +165,7 @@ struct god_power
     { }
 
     god_power(int rank_, const char* gain_, const char* loss_ = "") :
-              rank{rank_}, abil{ABIL_NON_ABILITY}, gain{gain_},
-              loss{*loss ? loss : gain}
+              god_power(rank_, ABIL_NON_ABILITY, gain_, loss_)
     { }
 
     void display(bool gaining, const char* fmt) const;
