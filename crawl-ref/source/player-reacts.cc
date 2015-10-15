@@ -1242,7 +1242,7 @@ static void _regenerate_hp_and_mp(int delay)
     if (crawl_state.disables[DIS_PLAYER_REGEN])
         return;
 
-    if (you.hp < you.hp_max && !you.duration[DUR_DEATHS_DOOR])
+    if (!you.duration[DUR_DEATHS_DOOR])
     {
         const int base_val = player_regen();
         you.hit_points_regeneration += div_rand_round(base_val * delay, BASELINE_DELAY);
