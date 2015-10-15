@@ -511,7 +511,8 @@ bool attack::distortion_affects_defender()
         {
             if (defender_visible)
                     obvious_effect = true;
-            defender->banish(attacker, attacker->name(DESC_PLAIN, true));
+            defender->banish(attacker, attacker->name(DESC_PLAIN, true),
+                             attacker->get_experience_level());
         }
         return true;
     case TELE_INSTANT:
@@ -530,7 +531,6 @@ bool attack::distortion_affects_defender()
             distortion_tele_fineff::schedule(defender);
         else
             defender->teleport();
-
         break;
     case NONE:
         // Do nothing

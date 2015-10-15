@@ -572,6 +572,7 @@ void floor_transition(dungeon_feature_type how, const dungeon_feature_type whenc
         you.attribute[ATTR_BANISHMENT_IMMUNITY] = you.elapsed_time + 100
                                                   + random2(100);
         you.banished_by = "";
+        you.banished_power = 0;
     }
 
     // Interlevel travel data.
