@@ -368,6 +368,15 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
     }
 
     saved = max(saved, min(gdr * max_damage / 100, ac / 2));
+    if ((saved >= damage) && is_player())
+    {
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        if (body_armour)
+            count_action(CACT_ARMOUR, body_armour->sub_type);
+        else
+            count_action(CACT_ARMOUR, 0, 0); // unarmoured alttype
+    }
+
     return max(damage - saved, 0);
 }
 
