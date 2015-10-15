@@ -4097,7 +4097,7 @@ int bolt::apply_AC(const actor *victim, int hurted)
         ac_rule = AC_NONE;
 
     // beams don't obey GDR -> max_damage is 0
-    return victim->apply_ac(hurted, 0, ac_rule);
+    return victim->apply_ac(hurted, 0, ac_rule, 0, !is_tracer);
 }
 
 void bolt::update_hurt_or_helped(monster* mon)
