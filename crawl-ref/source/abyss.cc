@@ -395,12 +395,15 @@ void banished(const string &who)
         return;
     }
 
+    const int depth = 1;
     const string what = "Cast into the Abyss" + _who_banished(who);
     take_note(Note(NOTE_MESSAGE, 0, 0, what), true);
 
     stop_delay(true);
     run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
-    down_stairs(DNGN_ENTER_ABYSS);  // heh heh
+    push_features_to_abyss();
+    floor_transition(DNGN_ENTER_ABYSS, orig_terrain(you.pos()),
+                     level_id(BRANCH_ABYSS, depth), true);
 
     // Xom just might decide to interfere.
     if (you_worship(GOD_XOM) && who != "Xom" && who != "wizard command"
