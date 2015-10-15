@@ -1776,10 +1776,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             // die some time
             this->set_hit_dice(this->get_experience_level() - 1);
             if (this->get_experience_level() <= 0)
-            {
-                suicide();
-                monster_die(as_monster(), KILL_MON, mindex());
-            }
+                this->self_destruct();
 
             // The ballisto dying, then a spore being created in its slot
             // env.mons means we can appear to be alive, but in fact be

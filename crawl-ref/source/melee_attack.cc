@@ -743,8 +743,12 @@ bool melee_attack::attack()
     if (!cleaving && !handle_phase_attempted())
         return false;
 
-    if (attacker != defender && attacker->self_destructs())
+    if (attacker != defender && attacker->is_monster()
+        && mons_self_destructs(attacker->as_monster()))
+    {
+        attacker->self_destruct();
         return did_hit = perceived_attack = true;
+    }
 
     if (!cleaving)
         cleave_setup();
