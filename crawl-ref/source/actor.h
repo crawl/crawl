@@ -202,7 +202,7 @@ public:
                       bool cleanup_dead = true,
                       bool attacker_effects = true) = 0;
     virtual bool heal(int amount, bool max_too = false) = 0;
-    virtual void banish(actor *agent, const string &who = "") = 0;
+    virtual void banish(actor *agent, const string &who = "", const int power = 0) = 0;
     virtual void blink() = 0;
     virtual void teleport(bool right_now = false,
                           bool wizard_tele = false) = 0;

@@ -2384,7 +2384,7 @@ static void _check_banished()
         else
             mprf(MSGCH_BANISHMENT, "The Abyss bends around you!");
         more();
-        banished(you.banished_by);
+        banished(you.banished_by, you.banished_power);
     }
 }
 
