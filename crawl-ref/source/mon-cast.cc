@@ -367,7 +367,7 @@ int mons_power_for_hd(spell_type spell, int hd, bool random)
 {
     const int power = hd * _mons_power_hd_factor(spell, random);
     if (spell == SPELL_PAIN)
-        return max(50 * ENCH_POW_FACTOR, power);
+        return min(50 * ENCH_POW_FACTOR, power);
     return power;
 }
 
