@@ -5627,20 +5627,10 @@ void monster::apply_location_effects(const coord_def &oldpos,
     }
 }
 
-bool monster::self_destructs()
+void monster::self_destruct()
 {
-    if (type == MONS_GIANT_SPORE
-        || type == MONS_BALL_LIGHTNING
-        || type == MONS_LURKING_HORROR
-        || type == MONS_ORB_OF_DESTRUCTION
-        || type == MONS_FULMINANT_PRISM)
-    {
-        suicide();
-        // Do the explosion right now.
-        monster_die(as_monster(), KILL_MON, mindex());
-        return true;
-    }
-    return false;
+    suicide();
+    monster_die(as_monster(), KILL_MON, mindex());
 }
 
 /** A higher-level moving method than moveto().
