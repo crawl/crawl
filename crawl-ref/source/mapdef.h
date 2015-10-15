@@ -51,7 +51,9 @@ static const int BRANCH_END = 100;
 // because the .dsc file has changed under it.
 struct map_load_exception : public runtime_error
 {
-    using runtime_error::runtime_error;
+    // g++ 4.7 doesn't have inherited constructors, sadly
+    map_load_exception(const string &s) : runtime_error(s) { }
+    map_load_exception(const char *s) : runtime_error(s) { }
 };
 
 // [dshaligram] Maps can be mirrored; for every orientation, there must be
