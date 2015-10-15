@@ -3929,15 +3929,13 @@ void inc_mp(int mp_gain, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (mp_gain < 1)
-        return;
-
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_DJINNI)
         return inc_hp(mp_gain * DJ_MP_RATE);
 #endif
 
-    bool wasnt_max = (you.magic_points < you.max_magic_points);
+    if (mp_gain < 1 || you.magic_points >= you.max_magic_points)
+        return;
 
     you.magic_points += mp_gain;
 
@@ -3946,11 +3944,8 @@ void inc_mp(int mp_gain, bool silent)
 
     if (!silent)
     {
-        if (wasnt_max
-            && should_stop_resting(you.magic_points, you.max_magic_points))
-        {
+        if (should_stop_resting(you.magic_points, you.max_magic_points))
             interrupt_activity(AI_FULL_MP);
-        }
         you.redraw_magic_points = true;
     }
 }
@@ -3962,17 +3957,15 @@ void inc_hp(int hp_gain)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (hp_gain < 1)
+    if (hp_gain < 1 || you.hp >= you.hp_max)
         return;
-
-    bool wasnt_max = (you.hp < you.hp_max);
 
     you.hp += hp_gain;
 
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
 
-    if (wasnt_max && should_stop_resting(you.hp, you.hp_max))
+    if (should_stop_resting(you.hp, you.hp_max))
         interrupt_activity(AI_FULL_HP);
 
     you.redraw_hit_points = true;
