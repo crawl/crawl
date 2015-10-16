@@ -1772,6 +1772,12 @@ void monster::apply_enchantment(const mon_enchant &me)
 
             beam.explode();
 
+            // Ballistos are immune to their own explosions, but must
+            // die some time
+            this->set_hit_dice(this->get_experience_level() - 1);
+            if (this->get_experience_level() <= 0)
+                this->self_destruct();
+
             // The ballisto dying, then a spore being created in its slot
             // env.mons means we can appear to be alive, but in fact be
             // an entirely different monster.

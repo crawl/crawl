@@ -15,6 +15,7 @@
 
 #include <cstdio>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -48,17 +49,11 @@ static const int BRANCH_END = 100;
 
 // Exception thrown when a map cannot be loaded from its .dsc file
 // because the .dsc file has changed under it.
-class map_load_exception : public exception
+struct map_load_exception : public runtime_error
 {
-public:
-    map_load_exception(const string &_mapname) : mapname(_mapname) { }
-    ~map_load_exception() throw () { }
-    const char *what() const throw() override
-    {
-        return mapname.c_str();
-    }
-private:
-    string mapname;
+    // g++ 4.7 doesn't have inherited constructors, sadly
+    map_load_exception(const string &s) : runtime_error(s) { }
+    map_load_exception(const char *s) : runtime_error(s) { }
 };
 
 // [dshaligram] Maps can be mirrored; for every orientation, there must be

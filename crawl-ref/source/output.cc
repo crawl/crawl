@@ -2095,14 +2095,17 @@ static string _god_asterisks()
     {
         const int p_rank = xom_favour_rank() - 1;
         if (p_rank >= 0)
-            return string(p_rank, '.') + "*" + string(5 - p_rank, '.');
+        {
+            return string(p_rank, '.') + "*"
+                   + string(NUM_PIETY_STARS - 1 - p_rank, '.');
+        }
         else
-            return "......"; // very special plaything
+            return string(NUM_PIETY_STARS, '.'); // very special plaything
     }
     else
     {
         const int prank = piety_rank();
-        return string(prank, '*') + string(6 - prank, '.');
+        return string(prank, '*') + string(NUM_PIETY_STARS - prank, '.');
     }
 }
 

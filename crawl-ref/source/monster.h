@@ -130,7 +130,7 @@ public:
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,
                                 int killernum = -1) override;
-    bool self_destructs() override;
+    void self_destruct() override;
 
     void moveto(const coord_def& c, bool clear_net = true) override;
     bool move_to_pos(const coord_def &newpos, bool clear_net = true,

@@ -438,7 +438,7 @@ static void _check_spell_skills()
 
 static void _check_abil_skills()
 {
-    for (ability_type abil : get_god_abilities(true, true))
+    for (ability_type abil : get_god_abilities())
     {
         // Exit early if there's no more skill to check.
         if (you.stop_train.empty())
