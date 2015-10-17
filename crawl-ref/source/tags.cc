@@ -3895,6 +3895,18 @@ void unmarshallItem(reader &th, item_def &item)
     item.special     = unmarshallInt(th);
     item.quantity    = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
+    // These used to come in stacks in monster inventory as throwing weapons.
+    // Replace said stacks (but not single items) with tomahawks.
+    if (item.quantity > 1 && item.base_type == OBJ_WEAPONS
+        && (item.sub_type == WPN_CLUB || item.sub_type == WPN_HAND_AXE
+            || item.sub_type == WPN_DAGGER || item.sub_type == WPN_SPEAR))
+    {
+        item.base_type = OBJ_MISSILES;
+        item.sub_type = MI_TOMAHAWK;
+        item.plus = item.plus2 = 0;
+        item.special = SPMSL_NORMAL;
+    }
+
     if (th.getMinorVersion() < TAG_MINOR_REMOVE_ITEM_COLOUR)
         /* item.colour = */ unmarshallUByte(th);
 #endif
