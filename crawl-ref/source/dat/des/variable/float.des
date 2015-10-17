@@ -2384,7 +2384,7 @@ MONS:    orc high priest / orc sorcerer / naga warrior / naga mage / \
          deep elf knight / phantasmal warrior / spriggan berserker / \
          guardian serpent w:5 / harpy w:5 / salamander mystic
 MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
-         hell knight w:5 / orc warlord / minotaur / octopode crusher / \
+         hell knight w:5 / orc warlord / minotaur / \
          vampire knight / vampire mage / ghoul w:5 / base draconian / \
          spriggan berserker w:3 / spriggan air mage w:4 / \
          deep troll earth mage w:4 / deep elf death mage w:2
@@ -2884,16 +2884,14 @@ KMONS:    RS = electric eel / water elemental
 ## Main monster sets
 KMONS:    1 = spriggan rider / spriggan berserker / centaur warrior \
               / minotaur / satyr / merfolk impaler / deep elf knight
-KMONS:    2 = spriggan defender / deep elf blademaster / deep elf master archer\
-              / octopode crusher
+KMONS:    2 = spriggan defender / deep elf blademaster / deep elf master archer
 KMONS:    3 = spriggan air mage / spriggan druid / deep elf annihilator
 KMONS:    4 = orange crystal statue
 KMONS:    5Z = catoblepas / dire elephant / emperor scorpion \
               / alligator snapping turtle / shambling mangrove / thorn hunter
 KMONS:    6 = merfolk avatar
 KMONS:    7 = water nymph / wind drake / sphinx
-KMONS:    D = merfolk javelineer / octopode crusher / tengu reaver \
-              / spriggan air mage
+KMONS:    D = merfolk javelineer / tengu reaver / spriggan air mage
 KMONS:    E = quicksilver dragon / storm dragon / titan / golden dragon \
               / w:5 caustic shrike
 KMONS:    O = the Enchantress band
