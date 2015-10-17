@@ -1584,7 +1584,7 @@ void read_init_file(bool runscript)
     for (const string &extra : SysEnv.extra_opts_last)
     {
         Options.line_num++;
-        Options.read_option_line(extra, false);
+        Options.read_option_line(extra, true);
     }
 
     Options.filename     = init_file_name;
@@ -2274,14 +2274,14 @@ void game_options::set_option_fragment(const string &s, bool prepend)
     {
         // Boolean option.
         if (s[0] == '!')
-            read_option_line(s.substr(1) + " = false");
+            read_option_line(s.substr(1) + " = false", true);
         else
-            read_option_line(s + " = true");
+            read_option_line(s + " = true", true);
     }
     else
     {
         // key:val option.
-        read_option_line(s.substr(0, st) + " = " + s.substr(st + 1));
+        read_option_line(s.substr(0, st) + " = " + s.substr(st + 1), true);
     }
 }
 
