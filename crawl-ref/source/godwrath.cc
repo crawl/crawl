@@ -1495,7 +1495,7 @@ static bool _fedhas_summon_plants()
     {
         // Randomize the order so that plants don't always appear
         // in the same places when no enemies are nearby
-        shuffle_array(radius_points[0].begin(), radius_points[0].end());
+        shuffle_array(radius_points);
         unsigned target_count = random_range(2, 8);
         if (target_count < radius_points[0].size())
             prioritise_adjacent(you.pos(), radius_points[0]);
