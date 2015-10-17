@@ -2804,13 +2804,13 @@ static string _sacrifice_message(string msg, const string& itname, bool glowing,
 {
     if (glowing)
     {
-        replace_all(msg, "[", "");
-        replace_all(msg, "]", "");
+        msg = replace_all(msg, "[", "");
+        msg = replace_all(msg, "]", "");
     }
     else
         _erase_between(msg, "[", "]");
-    replace_all(msg, "%", (plural ? "" : "s"));
-    replace_all(msg, "&", conjugate_verb("be", plural));
+    msg = replace_all(msg, "%", (plural ? "" : "s"));
+    msg = replace_all(msg, "&", conjugate_verb("be", plural));
 
     const char *tag_start, *tag_end;
     switch (piety_gain)
