@@ -53,12 +53,12 @@ static const species_skill_aptitude species_skill_aptitudes[] =
 
     // SP_HIGH_ELF
     APT(SP_HIGH_ELF,        SK_FIGHTING,        0),
-    APT(SP_HIGH_ELF,        SK_SHORT_BLADES,    0),
-    APT(SP_HIGH_ELF,        SK_LONG_BLADES,     0),
-    APT(SP_HIGH_ELF,        SK_AXES,            0),
-    APT(SP_HIGH_ELF,        SK_MACES_FLAILS,    0),
-    APT(SP_HIGH_ELF,        SK_POLEARMS,        0),
-    APT(SP_HIGH_ELF,        SK_STAVES,          0),
+    APT(SP_HIGH_ELF,        SK_SHORT_BLADES,   -1),
+    APT(SP_HIGH_ELF,        SK_LONG_BLADES,    -1),
+    APT(SP_HIGH_ELF,        SK_AXES,           -1),
+    APT(SP_HIGH_ELF,        SK_MACES_FLAILS,   -1),
+    APT(SP_HIGH_ELF,        SK_POLEARMS,       -1),
+    APT(SP_HIGH_ELF,        SK_STAVES,         -1),
     APT(SP_HIGH_ELF,        SK_SLINGS,          0),
     APT(SP_HIGH_ELF,        SK_BOWS,            0),
     APT(SP_HIGH_ELF,        SK_CROSSBOWS,       0),
