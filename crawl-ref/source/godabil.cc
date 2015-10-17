@@ -4821,7 +4821,8 @@ int gozag_type_bribable(monster_type type)
     // Unique rune guardians can't be bribed, sorry!
     if (mons_is_unique(type)
         && (mons_genus(type) == MONS_HELL_LORD
-            || mons_genus(type) == MONS_PANDEMONIUM_LORD))
+            || mons_genus(type) == MONS_PANDEMONIUM_LORD
+            || type == MONS_ANTAEUS))
     {
         return 0;
     }
