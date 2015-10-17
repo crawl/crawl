@@ -1780,12 +1780,6 @@ A more intelligent cousin of the mighty kraken, capable of using tools and
 spells. They are fully amphibious, but most of their species choose to stay
 beneath the waves and serve their King.
 %%%%
-octopode crusher
-
-This unusually strong warrior has achieved mastery over the rocks as well as
-the waves. Its tentacles move with uncanny grace and seem capable of sending
-you hurtling through the air.
-%%%%
 ogre
 
 A large, ugly, and fat creature, distantly related to orcs and goblins. It is

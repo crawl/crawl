@@ -313,22 +313,6 @@ MAP
 .......
 ENDMAP
 
-NAME:   hangedman_shoal_octodias
-DEPTH:  Shoals
-KMONS:  1 = octopode crusher
-KFEAT:  1 = deep_water
-MAP
- xWxwxWx
-xwwwxwwwx
-WwxwwwxwW
-xwwwxwwwx
-wxwx1xwxw
-xwwwxwwwx
-WwxwwwxwW
-xwwwxwwwx
- xWxwxWx
-ENDMAP
-
 NAME:    hangedman_shoal_volcano
 TAGS:    no_monster_gen no_item_gen patrolling
 DEPTH:   Shoals

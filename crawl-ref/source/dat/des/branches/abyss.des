@@ -1053,7 +1053,7 @@ ENDMAP
 NAME:  abyss_rune_water_cross
 TAGS:  abyss_rune unrand patrolling
 MONS:  smoke demon, drowned soul
-KMONS: O = octopode crusher
+KMONS: O = merfolk impaler
 KITEM: O = abyssal rune of Zot
 KFEAT: O = shallow_water
 MAP
