@@ -50,12 +50,11 @@ They have low health, but their stone bodies are incredibly tough.
 %%%%
 Halfling
 
-Small but hardy, Halflings excel with slings. They have an increased resistance
-to mutagenic effects.
+Small but hardy, Halflings have an increased resistance to mutagenic effects.
 %%%%
 High Elf
 
-High Elves are adept with blades and with many schools of magic, and have high
+High Elves are adept with weapons and many schools of magic, and have high
 attributes.
 %%%%
 Hill Orc
