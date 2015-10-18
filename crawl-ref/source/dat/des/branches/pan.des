@@ -711,39 +711,39 @@ epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
 MAP
-              xx@xx
-           xxxx...xxxx
+              .@.@.
+           xx.......xx
          xxx...ccc...xxx
-       xxx....ccOcc....xxx
-      xx..cc..c.c.c..cc..xx
+       xxxc...ccOcc...cxxx
+      xx.ccc..c.c.c..ccc.xx
      xx.3.....cc.cc.....3.xx
     xxcc......c...c......ccxx
    xx.cccc.6.cc...cc.6.cccc.xx
    x.3.ccc...c.....c...ccc.3.x
-  xx...cccc..c..2..c..cccc...xx
-  x.c....cc..c.....c..cc....c.x
+  xxc..cccc..c..2..c..cccc..cxx
+  xcc....cc..c.....c..cc....ccx
  xx.c..6.................6..c.xx
  x..........3.......3..........x
- x.....cccc..cc...cc..cccc.....x
-xx.ccccc.....c..4..c.....ccccc.xx
-x.cc.c........5...5........c.cc.x
-@.cOc....2......1......2....cOc.@
-x.cc.c........5...5........c.cc.x
-xx.ccccc.....c..4..c.....ccccc.xx
- x.....cccc..cc...cc..cccc.....x
+ ......cccc..cc...cc..cccc......
+...ccccc.....c..4..c.....ccccc...
+@.cc.c........5...5........c.cc.@
+..cOc....2......1......2....cOc..
+@.cc.c........5...5........c.cc.@
+...ccccc.....c..4..c.....ccccc...
+ ......cccc..cc...cc..cccc......
  x..........3.......3..........x
  xx.c..6.................6..c.xx
-  x.c....cc..c.....c..cc....c.x
-  xx...cccc..c..2..c..cccc...xx
+  xcc....cc..c.....c..cc....ccx
+  xxc..cccc..c..2..c..cccc..cxx
    x.3.ccc...c.....c...ccc.3.x
    xx.cccc.6.cc...cc.6.cccc.xx
     xxcc......c...c......ccxx
      xx.3.....cc.cc.....3.xx
-      xx..cc..c.c.c..cc..xx
-       xxx....ccOcc....xxx
+      xx.ccc..c.c.c..ccc.xx
+       xxxc...ccOcc...cxxx
          xxx...ccc...xxx
-           xxxx...xxxx
-              xx@xx
+           xx.......xx
+              .@.@.
 ENDMAP
 
 
