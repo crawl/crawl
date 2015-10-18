@@ -2558,11 +2558,12 @@ void bolt::affect_endpoint()
         return;
     }
 
-    cloud_type cloud = get_cloud_type();
+    _maybe_imb_explosion(this, pos());
+
+    const cloud_type cloud = get_cloud_type();
 
     if (is_tracer)
     {
-        _maybe_imb_explosion(this, pos());
         if (cloud == CLOUD_NONE)
             return;
 
@@ -2595,8 +2596,13 @@ void bolt::affect_endpoint()
         noise_generated = true;
     }
 
-    if (origin_spell == SPELL_PRIMAL_WAVE) // &&coinflip()
+    if (cloud != CLOUD_NONE)
+        big_cloud(cloud, agent(), pos(), get_cloud_pow(), get_cloud_size());
+
+    // you like special cases, right?
+    switch (origin_spell)
     {
+    case SPELL_PRIMAL_WAVE:
         if (you.see_cell(pos()))
         {
             mpr("The wave splashes down.");
@@ -2608,10 +2614,9 @@ void bolt::affect_endpoint()
                   pos(), "You hear a splash.");
         }
         create_feat_splash(pos(), 2, random_range(3, 12, 2));
-    }
+        break;
 
-    if (origin_spell == SPELL_BLINKBOLT)
-    {
+    case SPELL_BLINKBOLT:
         if (!agent() || !agent()->alive())
             return;
 
@@ -2625,23 +2630,13 @@ void bolt::affect_endpoint()
             }
         }
         return;
-    }
 
-    // FIXME: why doesn't this just have is_explosion set?
-    if (origin_spell == SPELL_ORB_OF_ELECTRICITY)
-    {
-        target = pos();
-        refine_for_explosion();
-        explode();
-    }
-
-    if (cloud != CLOUD_NONE)
-        big_cloud(cloud, agent(), pos(), get_cloud_pow(), get_cloud_size());
-
-    if (origin_spell == SPELL_SEARING_BREATH)
+    case SPELL_SEARING_BREATH:
         place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
 
-    _maybe_imb_explosion(this, pos());
+    default:
+        break;
+    }
 }
 
 bool bolt::stop_at_target() const
