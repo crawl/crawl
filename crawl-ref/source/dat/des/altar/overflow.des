@@ -612,7 +612,7 @@ TAGS:    temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas
 DEPTH:   Lair, D:2-
 KFEAT:   _ = altar_fedhas
 KPROP:   xzd3P = no_tele_into
-MONS:    plant, fungus, oklob plant, bush, toadstool col:random
+MONS:    plant, fungus, oklob plant, bush, toadstool
 KITEM:   d = fruit q:3 / fruit q:2 / fruit q:1 / nothing
 KFEAT:   d = floor
 SUBST:   x = TTPPPPP.
