@@ -6277,7 +6277,7 @@ bool bolt::nasty_to(const monster* mon) const
         return mon->holiness() != MH_UNDEAD;
 
     if (flavour == BEAM_TUKIMAS_DANCE)
-        return tukima_affects(mon);
+        return tukima_affects(*mon);
 
     // everything else is considered nasty by everyone
     return true;
