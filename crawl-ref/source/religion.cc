@@ -227,6 +227,7 @@ const vector<god_power> god_powers[NUM_GODS] =
 {
     // no god
     { },
+
     // Zin
     { {-1, ABIL_ZIN_DONATE_GOLD, "donate money to Zin" },
       { 1, ABIL_ZIN_RECITE, "recite Zin's Axioms of Law" },
@@ -235,7 +236,9 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, ABIL_ZIN_SANCTUARY, "call upon Zin to create a sanctuary" },
       { 7, ABIL_ZIN_CURE_ALL_MUTATIONS,
            "Zin will cure all your mutations... once.",
-           "Zin is no longer ready to cure all your mutations." }, },
+           "Zin is no longer ready to cure all your mutations." },
+    },
+
     // TSO
     { { 1, "You and your allies can gain power from killing the unholy and evil.",
            "You and your allies can no longer gain power from killing the unholy and evil." },
@@ -244,7 +247,9 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, ABIL_TSO_SUMMON_DIVINE_WARRIOR, "summon a divine warrior" },
       { 7, ABIL_TSO_BLESS_WEAPON,
            "The Shining One will bless your weapon with holy wrath... once.",
-           "The Shining One is no longer ready to bless your weapon." }, },
+           "The Shining One is no longer ready to bless your weapon." },
+    },
+
     // Kikubaaqudgha
     { { 1, ABIL_KIKU_RECEIVE_CORPSES, "receive cadavers from Kikubaaqudgha" },
       { 2, "Kikubaaqudgha is protecting you from necromantic miscasts and death curses.",
@@ -257,14 +262,18 @@ const vector<god_power> god_powers[NUM_GODS] =
            "Kikubaaqudgha is no longer ready to enhance your necromancy." },
       { 7, ABIL_KIKU_GIFT_NECRONOMICON,
            "Kikubaaqudgha will grant you a Necronomicon.",
-           "Kikubaaqudgha is no longer ready to enhance your necromancy." }, },
+           "Kikubaaqudgha is no longer ready to enhance your necromancy." },
+    },
+
     // Yredelemnul
     { { 1, ABIL_YRED_ANIMATE_REMAINS, "animate remains" },
       { 2, ABIL_YRED_RECALL_UNDEAD_SLAVES, "recall your undead slaves" },
       { 2, ABIL_YRED_INJURY_MIRROR, "mirror injuries on your foes" },
       { 3, ABIL_YRED_ANIMATE_DEAD, "animate legions of the dead" },
       { 4, ABIL_YRED_DRAIN_LIFE, "drain ambient lifeforce" },
-      { 5, ABIL_YRED_ENSLAVE_SOUL, "enslave living souls" }, },
+      { 5, ABIL_YRED_ENSLAVE_SOUL, "enslave living souls" },
+    },
+
     // Xom
     { },
     // Vehumet
@@ -272,41 +281,55 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, "Vehumet is aiding your destructive magics.",
            "Vehumet will no longer aid your destructive magics." },
       { 4, "Vehumet is extending the range of your destructive magics.",
-           "Vehumet will no longer extend the range of your destructive magics." }, },
+           "Vehumet will no longer extend the range of your destructive magics." },
+    },
+
     // Okawaru
     { { 1, ABIL_OKAWARU_HEROISM, "gain great but temporary skills" },
-      { 5, ABIL_OKAWARU_FINESSE, "speed up your combat" }, },
+      { 5, ABIL_OKAWARU_FINESSE, "speed up your combat" },
+    },
+
     // Makhleb
     { { 1, "gain health from killing" },
       { 2, ABIL_MAKHLEB_MINOR_DESTRUCTION, "harness Makhleb's destructive might" },
       { 3, ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, "summon a lesser servant of Makhleb" },
       { 4, ABIL_MAKHLEB_MAJOR_DESTRUCTION, "hurl Makhleb's greater destruction" },
-      { 5, ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "summon a greater servant of Makhleb" }, },
+      { 5, ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "summon a greater servant of Makhleb" },
+    },
+
     // Sif Muna
     { { 1, ABIL_SIF_MUNA_CHANNEL_ENERGY, "tap ambient magical fields" },
       { 2, ABIL_SIF_MUNA_FORGET_SPELL, "freely open your mind to new spells",
                                        "forget spells at will" },
       { 4, "Sif Muna is protecting you from the effects of miscast magic.",
-           "Sif Muna no longer protects you from the effects of miscast magic." }, },
+           "Sif Muna no longer protects you from the effects of miscast magic." },
+    },
+
     // Trog
     {
       {-1, ABIL_TROG_BURN_SPELLBOOKS, "call upon Trog to burn spellbooks in your surroundings" },
       { 1, ABIL_TROG_BERSERK, "go berserk at will" },
       { 2, ABIL_TROG_REGEN_MR, "call upon Trog for regeneration and protection"
                                "from hostile enchantments" },
-      { 4, ABIL_TROG_BROTHERS_IN_ARMS, "call in reinforcements" }, },
+      { 4, ABIL_TROG_BROTHERS_IN_ARMS, "call in reinforcements" },
+    },
+
     // Nemelex
     { { 3, ABIL_NEMELEX_TRIPLE_DRAW, "choose one out of three cards" },
       { 4, ABIL_NEMELEX_DEAL_FOUR, "deal four cards at a time" },
       { 5, ABIL_NEMELEX_STACK_FIVE, "order the top five cards of a deck, losing the rest",
-                                    "stack decks" }, },
+                                    "stack decks" },
+    },
+
     // Elyvilon
     { { 1, ABIL_ELYVILON_LESSER_HEALING, "provide lesser healing for yourself" },
       { 1, ABIL_ELYVILON_LIFESAVING, "call on Elyvilon to save your life" },
       { 2, ABIL_ELYVILON_HEAL_OTHER, "heal and attempt to pacify others" },
       { 3, ABIL_ELYVILON_PURIFICATION, "purify yourself" },
       { 4, ABIL_ELYVILON_GREATER_HEALING, "provide greater healing for yourself" },
-      { 5, ABIL_ELYVILON_DIVINE_VIGOUR, "call upon Elyvilon for divine vigour" }, },
+      { 5, ABIL_ELYVILON_DIVINE_VIGOUR, "call upon Elyvilon for divine vigour" },
+    },
+
     // Lugonu
     { { 1, ABIL_LUGONU_ABYSS_EXIT, "depart the Abyss", "depart the Abyss at will" },
       { 2, ABIL_LUGONU_BEND_SPACE, "bend space around yourself" },
@@ -314,7 +337,9 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 4, ABIL_LUGONU_CORRUPT, "corrupt the fabric of space" },
       { 5, ABIL_LUGONU_ABYSS_ENTER, "gate yourself to the Abyss" },
       { 7, ABIL_LUGONU_BLESS_WEAPON, "Lugonu will corrupt your weapon with distortion... once.",
-                                     "Lugonu is no longer ready to corrupt your weapon." }, },
+                                     "Lugonu is no longer ready to corrupt your weapon." },
+    },
+
     // Beogh
     { { 1, "Beogh aids your use of armour.",
            "Beogh no longer aids your use of armour." },
@@ -322,12 +347,16 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, "gain orcish followers" },
       { 4, ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "recall your orcish followers" },
       { 5, "walk on water" },
-      { 5, ABIL_BEOGH_GIFT_ITEM, "give items to your followers" }, },
+      { 5, ABIL_BEOGH_GIFT_ITEM, "give items to your followers" },
+    },
+
     // Jiyva
     { { 1, ABIL_JIYVA_CALL_JELLY, "request a jelly" },
       { 2, ABIL_JIYVA_JELLY_PARALYSE, "temporarily halt your jellies' item consumption" },
       { 4, ABIL_JIYVA_SLIMIFY, "turn your foes to slime" },
-      { 5, ABIL_JIYVA_CURE_BAD_MUTATION, "call upon Jiyva to remove your harmful mutations" }, },
+      { 5, ABIL_JIYVA_CURE_BAD_MUTATION, "call upon Jiyva to remove your harmful mutations" },
+    },
+
     // Fedhas
     {
       { 0, "pray to speed up the decay of corpses" },
@@ -335,14 +364,18 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 2, ABIL_FEDHAS_SUNLIGHT, "call sunshine" },
       { 3, ABIL_FEDHAS_PLANT_RING, "cause a ring of plants to grow" },
       { 4, ABIL_FEDHAS_SPAWN_SPORES, "spawn explosive spores" },
-      { 5, ABIL_FEDHAS_RAIN, "control the weather" }, },
+      { 5, ABIL_FEDHAS_RAIN, "control the weather" },
+    },
+
     // Cheibriados
     { { 0, ABIL_CHEIBRIADOS_TIME_BEND, "bend time to slow others" },
       { 1, "Cheibriados slows and strengthens your metabolism.",
            "Cheibriados no longer slows and strengthens your metabolism." },
       { 3, ABIL_CHEIBRIADOS_DISTORTION, "warp the flow of time around you" },
       { 4, ABIL_CHEIBRIADOS_SLOUCH, "inflict damage on those overly hasty" },
-      { 5, ABIL_CHEIBRIADOS_TIME_STEP, "step out of the time flow" }, },
+      { 5, ABIL_CHEIBRIADOS_TIME_STEP, "step out of the time flow" },
+    },
+
     // Ashenzari
     { { 1, ABIL_ASHENZARI_SCRYING, "scry through walls" },
       { 2, "The more cursed you are, the more Ashenzari supports your skills.",
@@ -353,18 +386,24 @@ const vector<god_power> god_powers[NUM_GODS] =
            "Ashenzari no longer keeps your mind clear." },
       { 5, ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
            "Ashenzari helps you to reconsider your skills.",
-           "Ashenzari no longer helps you to reconsider your skills." }, },
+           "Ashenzari no longer helps you to reconsider your skills." },
+    },
+
     // Dithmenos
     { { 2, ABIL_DITHMENOS_SHADOW_STEP, "step into the shadows of nearby creatures" },
       { 3, "You now sometimes bleed smoke when heavily injured by enemies.",
            "You no longer bleed smoke." },
       { 4, "Your shadow now sometimes tangibly mimics your actions.",
            "Your shadow no longer tangibly mimics your actions." },
-      { 5, ABIL_DITHMENOS_SHADOW_FORM, "transform into a swirling mass of shadows" }, },
+      { 5, ABIL_DITHMENOS_SHADOW_FORM, "transform into a swirling mass of shadows" },
+    },
+
     // Gozag
     { { 0, ABIL_GOZAG_POTION_PETITION, "petition Gozag for potion effects" },
       { 0, ABIL_GOZAG_CALL_MERCHANT, "fund merchants seeking to open stores in the dungeon" },
-      { 0, ABIL_GOZAG_BRIBE_BRANCH, "bribe branches to halt enemies' attacks and recruit allies" }, },
+      { 0, ABIL_GOZAG_BRIBE_BRANCH, "bribe branches to halt enemies' attacks and recruit allies" },
+    },
+
     // Qazlal
     {
       { 0, "Qazlal grants you immunity to your own clouds." },
@@ -375,7 +414,9 @@ const vector<god_power> god_powers[NUM_GODS] =
            "The storm surrounding you is now too weak to repel missiles." },
       { 4, "You adapt resistances upon receiving elemental damage.",
            "You no longer adapt resistances upon receiving elemental damage." },
-      { 5, ABIL_QAZLAL_DISASTER_AREA, "call upon nature's wrath in a wide area around you" }, },
+      { 5, ABIL_QAZLAL_DISASTER_AREA, "call upon nature's wrath in a wide area around you" },
+    },
+
     // Ru
     { { 1, "You exude an aura of power that intimidates your foes.",
            "You no longer exude an aura of power that intimidates your foes." },
