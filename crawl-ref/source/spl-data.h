@@ -3634,6 +3634,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SUMMON_EXECUTIONERS, "Summon Executioners",
+    SPTYP_SUMMONING,
+    SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_SELFENCH | SPFLAG_MONS_ABJURE,
+    9,
+    200,
+    -1, -1,
+    6, 0,
+    nullptr,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,
