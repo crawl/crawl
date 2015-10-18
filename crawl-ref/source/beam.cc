@@ -2360,32 +2360,29 @@ static void _maybe_imb_explosion(bolt *parent, coord_def center)
     {
         if (!imb_can_splash(parent->source, center, parent->path_taken, *ai))
             continue;
-        if (beam.is_tracer || x_chance_in_y(3, 4))
+        if (!beam.is_tracer && one_chance_in(4))
+            continue;
+
+        if (first && !beam.is_tracer)
         {
-            if (first && !beam.is_tracer)
-            {
-                if (you.see_cell(center))
-                    mpr("The orb of energy explodes!");
-                noisy(spell_effect_noise(SPELL_ISKENDERUNS_MYSTIC_BLAST),
-                      center);
-                first = false;
-            }
-            beam.friend_info.reset();
-            beam.foe_info.reset();
-            beam.friend_info.dont_stop = parent->friend_info.dont_stop;
-            beam.foe_info.dont_stop = parent->foe_info.dont_stop;
-            beam.target = center + (*ai - center) * 2;
-            beam.fire();
-            parent->friend_info += beam.friend_info;
-            parent->foe_info    += beam.foe_info;
-            if (beam.is_tracer)
-            {
-                if (beam.beam_cancelled)
-                {
-                    parent->beam_cancelled = true;
-                    return;
-                }
-            }
+            if (you.see_cell(center))
+                mpr("The orb of energy explodes!");
+            noisy(spell_effect_noise(SPELL_ISKENDERUNS_MYSTIC_BLAST),
+                  center);
+            first = false;
+        }
+        beam.friend_info.reset();
+        beam.foe_info.reset();
+        beam.friend_info.dont_stop = parent->friend_info.dont_stop;
+        beam.foe_info.dont_stop = parent->foe_info.dont_stop;
+        beam.target = center + (*ai - center) * 2;
+        beam.fire();
+        parent->friend_info += beam.friend_info;
+        parent->foe_info    += beam.foe_info;
+        if (beam.is_tracer && beam.beam_cancelled)
+        {
+            parent->beam_cancelled = true;
+            return;
         }
     }
 }
@@ -2566,25 +2563,26 @@ void bolt::affect_endpoint()
     if (is_tracer)
     {
         _maybe_imb_explosion(this, pos());
-        if (cloud != CLOUD_NONE)
+        if (cloud == CLOUD_NONE)
+            return;
+
+        targetter_cloud tgt(agent(), range, get_cloud_size(true),
+                            get_cloud_size(false, true));
+        tgt.set_aim(pos());
+        for (const auto &entry : tgt.seen)
         {
-            targetter_cloud tgt(agent(), range, get_cloud_size(true),
-                                                get_cloud_size(false, true));
-            tgt.set_aim(pos());
-            for (const auto &entry : tgt.seen)
-            {
-                if (entry.second != AFF_YES && entry.second != AFF_MAYBE)
-                    continue;
+            if (entry.second != AFF_YES && entry.second != AFF_MAYBE)
+                continue;
 
-                if (entry.first == you.pos())
-                    tracer_affect_player();
-                else if (monster* mon = monster_at(entry.first))
-                    tracer_affect_monster(mon);
+            if (entry.first == you.pos())
+                tracer_affect_player();
+            else if (monster* mon = monster_at(entry.first))
+                tracer_affect_monster(mon);
 
-                if (agent()->is_player() && beam_cancelled)
-                    return;
-            }
+            if (agent()->is_player() && beam_cancelled)
+                return;
         }
+
         return;
     }
 
@@ -2605,23 +2603,25 @@ void bolt::affect_endpoint()
             noisy(spell_effect_noise(SPELL_PRIMAL_WAVE), pos());
         }
         else
+        {
             noisy(spell_effect_noise(SPELL_PRIMAL_WAVE),
                   pos(), "You hear a splash.");
+        }
         create_feat_splash(pos(), 2, random_range(3, 12, 2));
     }
 
     if (origin_spell == SPELL_BLINKBOLT)
     {
-        if (agent() && agent()->alive())
+        if (!agent() || !agent()->alive())
+            return;
+
+        for (vector<coord_def>::reverse_iterator citr = path_taken.rbegin();
+             citr != path_taken.rend(); ++citr)
         {
-            for (vector<coord_def>::reverse_iterator citr = path_taken.rbegin();
-                 citr != path_taken.rend(); ++citr)
+            if (agent()->is_habitable(*citr) &&
+                agent()->blink_to(*citr, false))
             {
-                if (agent()->is_habitable(*citr) &&
-                    agent()->blink_to(*citr, false))
-                {
-                    return;
-                }
+                return;
             }
         }
         return;
@@ -4232,27 +4232,27 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
 
 void bolt::handle_stop_attack_prompt(monster* mon)
 {
-    if ((thrower == KILL_YOU_MISSILE || thrower == KILL_YOU)
-        && !is_harmless(mon))
+    if (thrower != KILL_YOU_MISSILE && thrower != KILL_YOU
+        || is_harmless(mon)
+        || friend_info.dont_stop && foe_info.dont_stop)
     {
-        if (!friend_info.dont_stop || !foe_info.dont_stop)
-        {
-            const bool autohit_first = (hit == AUTOMATIC_HIT);
-            bool prompted = false;
+        return;
+    }
 
-            if (stop_attack_prompt(mon, true, target, autohit_first, &prompted)
-                || _stop_because_god_hates_target_prompt(mon, origin_spell))
-            {
-                beam_cancelled = true;
-                finish_beam();
-            }
+    const bool autohit_first = (hit == AUTOMATIC_HIT);
+    bool prompted = false;
 
-            if (prompted)
-            {
-                friend_info.dont_stop = true;
-                foe_info.dont_stop = true;
-            }
-        }
+    if (stop_attack_prompt(mon, true, target, autohit_first, &prompted)
+        || _stop_because_god_hates_target_prompt(mon, origin_spell))
+    {
+        beam_cancelled = true;
+        finish_beam();
+    }
+
+    if (prompted)
+    {
+        friend_info.dont_stop = true;
+        foe_info.dont_stop = true;
     }
 }
 
