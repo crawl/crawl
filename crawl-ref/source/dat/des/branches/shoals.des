@@ -61,8 +61,8 @@ end
 function shoals_ice_setup(e)
   e.subst("- = xxxW.")
   e.rtile("x = wall_zot_cyan")
-  e.colour(".x@geO = white")
-  e.ftile(".x@+geO = floor_ice")
+  e.colour(".x@01eO| = white")
+  e.ftile(".x@+01eO| = floor_ice")
 end
 }}
 
