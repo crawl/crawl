@@ -723,7 +723,7 @@ static bool _fail_tukimas()
 /**
  * Gets an item description for use in Tukima's Dance messages.
  **/
-static string _get_item_desc(item_def* wpn, bool target_is_player)
+static string _get_item_desc(const item_def* wpn, bool target_is_player)
 {
     return wpn->name(target_is_player ? DESC_YOUR : DESC_THE);
 }
@@ -731,25 +731,21 @@ static string _get_item_desc(item_def* wpn, bool target_is_player)
 /**
  * Checks if Tukima's Dance can actually affect the target (and anger them)
  *
- * @param mon     The targeted monster
- * @return        Whether the target can be affected by Tukima's Dance
+ * @param target  The targeted monster (or player).
+ * @return        Whether the target can be affected by Tukima's Dance.
  **/
-bool tukima_affects(const monster *mon)
+bool tukima_affects(const actor &target)
 {
-    ASSERT(mon);
-
-    item_def* wpn = mon->weapon();
+    const item_def* wpn = target.weapon();
     return wpn
            && is_weapon(*wpn)
            && !is_range_weapon(*wpn)
            && !is_special_unrandom_artefact(*wpn)
-           && !mons_class_is_animated_weapon(mon->type);
+           && !mons_class_is_animated_weapon(target.type);
 }
 
 /**
  * Checks if Tukima's Dance is being cast on a valid target.
- *
- * TODO: reduce redundancy with tukima_affects()
  *
  * @param target     The spell's target.
  * @return           Whether the target is valid.
@@ -757,7 +753,7 @@ bool tukima_affects(const monster *mon)
 static bool _check_tukima_validity(const actor *target)
 {
     bool target_is_player = target == &you;
-    item_def* wpn = target->weapon();
+    const item_def* wpn = target->weapon();
     bool can_see_target = target_is_player || target->visible_to(&you);
 
     // See if the wielded item is appropriate.
@@ -781,10 +777,7 @@ static bool _check_tukima_validity(const actor *target)
         return false;
     }
 
-    if (!is_weapon(*wpn)
-        || is_range_weapon(*wpn)
-        || is_special_unrandom_artefact(*wpn)
-        || mons_class_is_animated_weapon(target->type))
+    if (!tukima_affects(*target))
     {
         if (!can_see_target)
             return _fail_tukimas();
