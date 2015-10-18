@@ -1186,9 +1186,9 @@ static int damage_or_escape_net(int hold)
         damage += 2;
 
     // Check stats.
-    if (x_chance_in_y(you.strength(), 18))
+    if (x_chance_in_y(you.strength(), 9))
         damage++;
-    if (x_chance_in_y(you.dex(), 12))
+    if (x_chance_in_y(you.dex(), 6))
         escape++;
     if (x_chance_in_y(you.evasion(), 20))
         escape++;

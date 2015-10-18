@@ -2283,7 +2283,7 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
  */
 static int _player_armour_adjusted_dodge_bonus(int scale)
 {
-    const int ev_dex = stepdown_value(you.dex(), 10, 24, MAX_STAT_VALUE,
+    const int ev_dex = stepdown_value(you.dex() * 2, 10, 24, MAX_STAT_VALUE,
             MAX_STAT_VALUE);
 
     const int dodge_bonus =
@@ -2294,7 +2294,7 @@ static int _player_armour_adjusted_dodge_bonus(int scale)
     if (armour_dodge_penalty <= 0)
         return dodge_bonus;
 
-    const int str = max(1, you.strength());
+    const int str = max(1, you.strength() * 2);
     if (armour_dodge_penalty >= str)
         return dodge_bonus * str / (armour_dodge_penalty * 2);
     return dodge_bonus - dodge_bonus * armour_dodge_penalty / (str * 2);
@@ -2399,11 +2399,11 @@ int player_shield_class()
 
         int stat = 0;
         if (item.sub_type == ARM_BUCKLER)
-            stat = you.dex() * 38;
+            stat = you.dex() * 76;
         else if (item.sub_type == ARM_LARGE_SHIELD)
-            stat = you.dex() * 12 + you.strength() * 26;
+            stat = you.dex() * 24 + you.strength() * 52;
         else
-            stat = you.dex() * 19 + you.strength() * 19;
+            stat = you.dex() * 38 + you.strength() * 38;
         stat = stat * (base_shield + 13) / 26;
 
         shield += stat;
@@ -2800,7 +2800,7 @@ void level_change(bool skip_attribute_increase)
                      new_exp);
             }
 
-            const bool manual_stat_level = new_exp % 3 == 0;  // 3,6,9,12...
+            const bool manual_stat_level = new_exp % 4 == 0 || new_exp == 27;
 
             // Must do this before actually changing experience_level,
             // so we will re-prompt on load if a hup is received.
@@ -3133,7 +3133,7 @@ int check_stealth()
         return 0;
     }
 
-    int stealth = you.dex() * 3;
+    int stealth = you.dex() * 6;
 
     if (you.form == TRAN_BLADE_HANDS && you.species == SP_FELID
         && !you.airborne())

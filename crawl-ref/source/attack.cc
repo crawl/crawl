@@ -1353,14 +1353,14 @@ int attack::calc_stat_to_hit_base()
 
     // dex is modified by strength towards the average, by the
     // weighted amount weapon_str_weight() / 20.
-    return you.dex() + (you.strength() - you.dex()) * weight / 20;
+    return you.dex() + (you.strength() - you.dex()) * weight / 10;
 }
 
 // weighted average of strength and dex, between str and (str+dex)/2
 int attack::calc_stat_to_dam_base()
 {
     const int weight = weapon ? 10 - weapon_str_weight(*weapon) : 6;
-    return you.strength() + (you.dex() - you.strength()) * weight / 20;
+    return you.strength() + (you.dex() - you.strength()) * weight / 10;
 }
 
 int attack::calc_damage()
@@ -1888,7 +1888,8 @@ int attack::player_stab_weapon_bonus(int damage)
     {
         // We might be unarmed if we're using the boots of the Assassin.
         const bool extra_good = using_weapon() && weapon->sub_type == WPN_DAGGER;
-        int bonus = you.dex() * (stab_skill + 100) / (extra_good ? 500 : 1000);
+        int bonus = you.dex() * 2 * (stab_skill + 100) / (extra_good ? 500
+                                                                     : 1000);
 
         bonus   = stepdown_value(bonus, 10, 10, 30, 30);
         damage += bonus;
@@ -1986,7 +1987,7 @@ void attack::player_stab_check()
     {
         stab_attempt = x_chance_in_y(you.skill_rdiv(wpn_skill, 1, 2)
                                      + you.skill_rdiv(SK_STEALTH, 1, 2)
-                                     + you.dex() + 1,
+                                     + (you.dex() * 2) + 1,
                                      roll);
     }
 

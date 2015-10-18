@@ -30,7 +30,7 @@
 #include "spl-util.h"
 #include "state.h"
 
-#define MIN_START_STAT       3
+#define MIN_START_STAT       2
 
 static void _init_player()
 {
@@ -39,7 +39,6 @@ static void _init_player()
 }
 
 // Make sure no stats are unacceptably low
-// (currently possible only for GhBe - 1KB)
 static void _unfocus_stats()
 {
     int needed;

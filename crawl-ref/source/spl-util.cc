@@ -348,7 +348,7 @@ int spell_hunger(spell_type which_spell, bool rod)
         hunger = max(hunger, level * 5);
     }
     else
-        hunger -= you.skill(SK_SPELLCASTING, you.intel());
+        hunger -= you.skill(SK_SPELLCASTING, you.intel() * 2);
 
     if (hunger < 0)
         hunger = 0;

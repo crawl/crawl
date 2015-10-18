@@ -667,7 +667,7 @@ struct artefact_prop_data
 static int _gen_good_stat_artp() { return 1 + random2(3); }
 
 /// Generate 'bad' values for stat artps (e.g. ARTP_STRENGTH)
-static int _gen_bad_stat_artp() { return -2 - random2(4); }
+static int _gen_bad_stat_artp() { return -1 - random2(3); }
 
 /// Generate 'good' values for resist-ish artps (e.g. ARTP_FIRE)
 static int _gen_good_res_artp() { return 1; }

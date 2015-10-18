@@ -1102,7 +1102,7 @@ public:
         if (player_mutation_level(MUT_ANTIMAGIC_BITE))
             return fang_damage + div_rand_round(you.get_hit_dice(), 3);
 
-        const int str_damage = div_rand_round(max(you.strength()-10, 0), 5);
+        const int str_damage = div_rand_round(max(you.strength()-5, 0), 5);
 
         if (player_mutation_level(MUT_ACIDIC_BITE))
             return fang_damage + str_damage + roll_dice(2,4);
@@ -1477,7 +1477,7 @@ int melee_attack::player_aux_stat_modify_damage(int damage)
 {
     int dammod = 20;
     // Use the same str/dex weighting that unarmed combat does, for now.
-    const int dam_stat_val = (7 * you.strength() + 3 * you.dex())/10;
+    const int dam_stat_val = (7 * you.strength() + 3 * you.dex())/5;
 
     if (dam_stat_val > 10)
         dammod += random2(dam_stat_val - 9);
@@ -2314,7 +2314,7 @@ int melee_attack::calc_to_hit(bool random)
     {
         // Just trying to touch is easier than trying to damage.
         if (you.duration[DUR_CONFUSING_TOUCH])
-            mhit += maybe_random2(you.dex(), random);
+            mhit += maybe_random2(you.dex() * 2, random);
 
         // TODO: Review this later (transformations getting extra hit
         // almost across the board seems bad) - Cryp71c
@@ -3287,8 +3287,8 @@ void melee_attack::mons_do_tendril_disarm()
 
     if (player_mutation_level(MUT_TENDRILS)
         && one_chance_in(5)
-        && (random2(you.dex()) > adj_mon_hd
-            || random2(you.strength()) > adj_mon_hd))
+        && (random2(you.dex() * 2) > adj_mon_hd
+            || random2(you.strength() * 2) > adj_mon_hd))
     {
         item_def* mons_wpn = mon->disarm();
         if (mons_wpn)
@@ -3431,7 +3431,7 @@ void melee_attack::do_minotaur_retaliation()
     // This will usually be 2, but could be 3 if the player mutated more.
     const int mut = player_mutation_level(MUT_HORNS);
 
-    if (5 * you.strength() + 7 * you.dex() > random2(600))
+    if (5 * you.strength() + 7 * you.dex() > random2(300))
     {
         // Use the same damage formula as a regular headbutt.
         int dmg = 5 + mut * 3;
@@ -3568,7 +3568,7 @@ void melee_attack::chaos_affect_actor(actor *victim)
 bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 {
     if (atk != UNAT_CONSTRICT
-        && you.strength() + you.dex() <= random2(50))
+        && you.strength() + you.dex() <= random2(25))
     {
         return false;
     }
@@ -3623,8 +3623,8 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
     int your_to_hit;
 
     your_to_hit = 1300
-                + you.dex() * 60
-                + you.strength() * 15
+                + you.dex() * 120
+                + you.strength() * 30
                 + you.skill(SK_FIGHTING, 30);
     your_to_hit /= 100;
 

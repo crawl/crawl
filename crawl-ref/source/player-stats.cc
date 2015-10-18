@@ -391,8 +391,8 @@ static int _strength_modifier(bool innate_only)
     }
 
     // mutations
-    result += 2 * (_mut_level(MUT_STRONG, innate_only)
-                   - _mut_level(MUT_WEAK, innate_only));
+    result += _mut_level(MUT_STRONG, innate_only)
+              - _mut_level(MUT_WEAK, innate_only);
 #if TAG_MAJOR_VERSION == 34
     result += _mut_level(MUT_STRONG_STIFF, innate_only)
               - _mut_level(MUT_FLEXIBLE_WEAK, innate_only);
@@ -426,8 +426,8 @@ static int _int_modifier(bool innate_only)
     }
 
     // mutations
-    result += 2 * (_mut_level(MUT_CLEVER, innate_only)
-                   - _mut_level(MUT_DOPEY, innate_only));
+    result += _mut_level(MUT_CLEVER, innate_only)
+              - _mut_level(MUT_DOPEY, innate_only);
 
     return result;
 }
@@ -460,13 +460,13 @@ static int _dex_modifier(bool innate_only)
     }
 
     // mutations
-    result += 2 * (_mut_level(MUT_AGILE, innate_only)
-                  - _mut_level(MUT_CLUMSY, innate_only));
+    result += _mut_level(MUT_AGILE, innate_only)
+              - _mut_level(MUT_CLUMSY, innate_only);
 #if TAG_MAJOR_VERSION == 34
     result += _mut_level(MUT_FLEXIBLE_WEAK, innate_only)
               - _mut_level(MUT_STRONG_STIFF, innate_only);
 #endif
-    result += 2 * _mut_level(MUT_THIN_SKELETAL_STRUCTURE, innate_only);
+    result += _mut_level(MUT_THIN_SKELETAL_STRUCTURE, innate_only);
     result -= _mut_level(MUT_ROUGH_BLACK_SCALES, innate_only);
 
     return result;

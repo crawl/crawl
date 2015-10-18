@@ -884,7 +884,7 @@ public:
     bool effect(bool=true, int=40, bool=true) const override
     {
         mpr("There was something very wrong with that liquid.");
-        return lose_stat(STAT_RANDOM, 1 + random2avg(4, 2));
+        return lose_stat(STAT_RANDOM, 1 + coinflip());
     }
 
     bool quaff(bool was_known) const override

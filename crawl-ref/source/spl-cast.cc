@@ -314,7 +314,7 @@ int raw_spell_fail(spell_type spell)
 
     // Don't cap power for failure rate purposes.
     chance -= 6 * calc_spell_power(spell, false, true, false);
-    chance -= (you.intel() * 2);
+    chance -= (you.intel() * 4);
 
     const int armour_shield_penalty = player_armour_shield_spell_penalty();
     dprf("Armour+Shield spell failure penalty: %d", armour_shield_penalty);
@@ -417,7 +417,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
             power += 600;
 
         if (apply_intel)
-            power = (power * you.intel()) / 10;
+            power = (power * you.intel()) / 5;
 
         // [dshaligram] Enhancers don't affect fail rates any more, only spell
         // power. Note that this does not affect Vehumet's boost in castability.

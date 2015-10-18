@@ -39,34 +39,34 @@ static const mutation_def mut_data[] =
 { MUT_STRONG, 7, 2, mutflag::GOOD, false,
   "strong",
 
-  {"Your muscles are strong. (Str +2)",
-   "Your muscles are very strong. (Str +4)", ""},
+  {"Your muscles are strong. (Str +1)",
+   "Your muscles are very strong. (Str +2)", ""},
   {"", "", ""},
   {"", "", ""},
 
-  "strong muscles (Str +2)",
+  "strong muscles (Str +1)",
 },
 
 { MUT_CLEVER, 7, 2, mutflag::GOOD, false,
   "clever",
 
-  {"Your mind is acute. (Int +2)",
-   "Your mind is very acute. (Int +4)", ""},
+  {"Your mind is acute. (Int +1)",
+   "Your mind is very acute. (Int +2)", ""},
   {"", "", ""},
   {"", "", ""},
 
-  "mental acuity (Int +2)",
+  "mental acuity (Int +1)",
 },
 
 { MUT_AGILE, 7, 2, mutflag::GOOD, false,
   "agile",
 
-  {"You are agile. (Dex +2)",
-   "You are very agile. (Dex +4)", ""},
+  {"You are agile. (Dex +1)",
+   "You are very agile. (Dex +2)", ""},
   {"", "", ""},
   {"", "", ""},
 
-  "agility (Dex +2)",
+  "agility (Dex +1)",
 },
 
 { MUT_POISON_RESISTANCE, 4, 1, mutflag::GOOD, true,
@@ -302,18 +302,18 @@ static const mutation_def mut_data[] =
 
 { MUT_WEAK, 8, 2, mutflag::BAD | mutflag::XOM, false,
   "weak",
-  {"You are weak. (Str -2)",
-   "You are very weak. (Str -4)", ""},
+  {"You are weak. (Str -1)",
+   "You are very weak. (Str -2)", ""},
   {"", "", ""},
   {"", "", ""},
 
-  "weak muscles (Str -2)",
+  "weak muscles (Str -1)",
 },
 
 { MUT_DOPEY, 8, 2, mutflag::BAD | mutflag::XOM, false,
   "dopey",
-  {"You are dopey. (Int -2)",
-   "You are very dopey. (Int -4)", ""},
+  {"You are dopey. (Int -1)",
+   "You are very dopey. (Int -2)", ""},
   {"", "", ""},
   {"", "", ""},
 
@@ -322,12 +322,12 @@ static const mutation_def mut_data[] =
 
 { MUT_CLUMSY, 8, 2, mutflag::BAD | mutflag::XOM, false,
   "clumsy",
-  {"You are clumsy. (Dex -2)",
-   "You are very clumsy. (Dex -4)", ""},
+  {"You are clumsy. (Dex -1)",
+   "You are very clumsy. (Dex -2)", ""},
   {"", "", ""},
   {"", "", ""},
 
-  "clumsiness (Dex -2)",
+  "clumsiness (Dex -1)",
 },
 
 #if TAG_MAJOR_VERSION == 34

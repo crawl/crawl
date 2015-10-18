@@ -491,7 +491,7 @@ public:
      */
     int get_base_unarmed_damage() const override
     {
-        return 8 + div_rand_round(you.strength() + you.dex(), 3);
+        return 8 + div_rand_round((you.strength() + you.dex()) * 2, 3);
     }
 
     /**
@@ -562,7 +562,7 @@ public:
      */
     int get_base_unarmed_damage() const override
     {
-        return 6 + div_rand_round(you.strength(), 3);
+        return 6 + div_rand_round((you.strength() * 2), 3);
     }
 
     /**
@@ -694,7 +694,7 @@ public:
     int get_base_unarmed_damage() const override
     {
         // You also get another 6 damage from claws.
-        return 12 + div_rand_round(you.strength() * 2, 3);
+        return 12 + div_rand_round(you.strength() * 4, 3);
     }
 
     /**

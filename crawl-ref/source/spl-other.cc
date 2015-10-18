@@ -364,7 +364,7 @@ spret_type cast_intoxicate(int pow, bool fail)
     if (x_chance_in_y(60 - pow/3, 100))
         confuse_player(3+random2(10 + (100 - pow) / 10));
 
-    if (one_chance_in(20) && lose_stat(STAT_INT, 1 + random2(3)))
+    if (one_chance_in(20) && lose_stat(STAT_INT, 1 + coinflip()))
         mpr("Your head spins!");
 
     apply_area_visible(_intoxicate_monsters, pow, &you);

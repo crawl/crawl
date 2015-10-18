@@ -54,8 +54,8 @@ static const map<species_type, species_def> species_data =
     9, 3,
     MONS_CENTAUR,
     HT_LAND, US_ALIVE, SIZE_LARGE,
-    10, 7, 4, // 21
-    { STAT_STR, STAT_DEX }, 4,
+    5, 3, 2, // 10
+    { STAT_STR, STAT_DEX }, 5,
     { { MUT_TOUGH_SKIN, 3, 1 }, { MUT_FAST, 2, 1 },  { MUT_DEFORMED, 1, 1 },
       { MUT_HOOVES, 3, 1 }, },
     {},
@@ -73,8 +73,8 @@ static const map<species_type, species_def> species_data =
     15, 6,
     MONS_DEEP_DWARF,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    11, 8, 8, // 27
-    { STAT_STR, STAT_INT }, 4,
+    5, 4, 4, // 13
+    { STAT_STR, STAT_INT }, 5,
     { { MUT_SLOW_REGENERATION, 3, 1 }, { MUT_PASSIVE_MAPPING, 1, 1 },
       { MUT_PASSIVE_MAPPING, 1, 9 }, { MUT_PASSIVE_MAPPING, 1, 18 },
       { MUT_NEGATIVE_ENERGY_RESISTANCE, 1, 14 }, },
@@ -94,8 +94,8 @@ static const map<species_type, species_def> species_data =
     15, 4,
     MONS_ELF,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    5, 12, 10, // 27
-    { STAT_INT }, 4,
+    2, 6, 5, // 13
+    { STAT_INT }, 5,
     {},
     {},
     {},
@@ -113,7 +113,7 @@ static const map<species_type, species_def> species_data =
     15, 4,
     MONS_DEMIGOD,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    11, 12, 11, // 34
+    5, 6, 5, // 16
     set<stat_type>(), 28, // No natural stat gain (double chosen instead)
     { { MUT_SUSTAIN_ATTRIBUTES, 1, 1 }, {MUT_HIGH_MAGIC, 1, 1} },
     {},
@@ -132,8 +132,8 @@ static const map<species_type, species_def> species_data =
     12, 3,
     MONS_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    10, 8, 6, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    5, 4, 3, // 12
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_COLD_BLOODED, 1, 1 }, },
     {},
     {},
@@ -152,8 +152,8 @@ static const map<species_type, species_def> species_data =
     12, 3,
     MONS_RED_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    10, 8, 6, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    5, 4, 3, // 12
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_HEAT_RESISTANCE, 1, 7 }, },
     { "You can breathe blasts of fire." },
     { "breathe fire" },
@@ -169,8 +169,8 @@ static const map<species_type, species_def> species_data =
     12, 3,
     MONS_WHITE_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    10, 8, 6, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    5, 4, 3, // 12
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_COLD_RESISTANCE, 1, 7 }, },
     { "You can breathe waves of freezing cold.",
       "You can buffet flying creatures when you breathe cold." },
@@ -187,8 +187,8 @@ static const map<species_type, species_def> species_data =
     12, 3,
     MONS_GREEN_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    10, 8, 6, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    5, 4, 3, // 12
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_POISON_RESISTANCE, 1, 7 },
       { MUT_STINGER, 1, 14 }, },
     { "You can breathe blasts of noxious fumes." },
@@ -205,8 +205,8 @@ static const map<species_type, species_def> species_data =
     12, 3,
     MONS_YELLOW_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    10, 8, 6, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    5, 4, 3, // 12
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_ACIDIC_BITE, 1, 14 }, },
     { "You can spit globs of acid.", "You are resistant to acid." },
     { "spit acid", "acid resistance" },
@@ -222,8 +222,8 @@ static const map<species_type, species_def> species_data =
     12, 3,
     MONS_GREY_DRACONIAN,
     HT_AMPHIBIOUS, US_ALIVE, SIZE_MEDIUM,
-    10, 8, 6, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    5, 4, 3, // 12
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_UNBREATHING, 1, 7 }, },
     { "You can walk through water." },
     { "walk through water" },
@@ -239,8 +239,8 @@ static const map<species_type, species_def> species_data =
     12, 3,
     MONS_BLACK_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    10, 8, 6, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    5, 4, 3, // 12
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_SHOCK_RESISTANCE, 1, 7 },
       { MUT_BIG_WINGS, 1, 14 }, },
     { "You can breathe wild blasts of lightning." },
@@ -257,8 +257,8 @@ static const map<species_type, species_def> species_data =
     12, 6,
     MONS_PURPLE_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    10, 8, 6, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    5, 4, 3, // 12
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_COLD_BLOODED, 1, 1 }, },
     { "You can breathe bolts of dispelling energy." },
     { "breathe power" },
@@ -274,8 +274,8 @@ static const map<species_type, species_def> species_data =
     12, 3,
     MONS_MOTTLED_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    10, 8, 6, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    5, 4, 3, // 12
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_COLD_BLOODED, 1, 1 }, },
     { "You can spit globs of burning liquid.",
       "You can ignite nearby creatures when you spit burning liquid." },
@@ -292,8 +292,8 @@ static const map<species_type, species_def> species_data =
     12, 3,
     MONS_PALE_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    10, 8, 6, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    5, 4, 3, // 12
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_COLD_BLOODED, 1, 1 }, },
     { "You can breathe blasts of scalding, opaque steam." },
     { "breathe steam" },
@@ -309,8 +309,8 @@ static const map<species_type, species_def> species_data =
     15, 3,
     MONS_DEMONSPAWN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    8, 9, 8, // 25
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    4, 4, 4, // 12
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     {},
     {},
     {},
@@ -329,8 +329,8 @@ static const map<species_type, species_def> species_data =
     18, 6,
     MONS_FELID,
     HT_LAND, US_ALIVE, SIZE_LITTLE,
-    4, 9, 11, // 24
-    { STAT_INT, STAT_DEX }, 5,
+    2, 4, 5, // 11
+    { STAT_INT, STAT_DEX }, 6,
     { { MUT_CARNIVOROUS, 3, 1 }, { MUT_FAST, 1, 1 }, { MUT_FANGS, 3, 1 },
       { MUT_SHAGGY_FUR, 1, 1 }, { MUT_ACUTE_VISION, 1, 1 }, { MUT_PAWS, 1, 1 },
       { MUT_SLOW_METABOLISM, 1, 1 }, { MUT_CLAWS, 1, 1 },
@@ -351,8 +351,8 @@ static const map<species_type, species_def> species_data =
     15, 4,
     MONS_FORMICID,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    12, 7, 6, // 25
-    { STAT_STR, STAT_INT }, 4,
+    6, 3, 3, // 12
+    { STAT_STR, STAT_INT }, 5,
     { { MUT_ANTENNAE, 3, 1 }, },
     { "You are under a permanent stasis effect.",
       "You can dig through walls and to a lower floor.",
@@ -372,8 +372,8 @@ static const map<species_type, species_def> species_data =
     15, 3,
     MONS_GHOUL,
     HT_LAND, US_HUNGRY_DEAD, SIZE_MEDIUM,
-    11, 3, 4, // 18
-    { STAT_STR }, 5,
+    5, 1, 2, // 8
+    { STAT_STR }, 6,
     { { MUT_CARNIVOROUS, 3, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 },
       { MUT_TORMENT_RESISTANCE, 1, 1 },
       { MUT_SLOW_REGENERATION, 1, 1 }, { MUT_COLD_RESISTANCE, 1, 1 },
@@ -394,8 +394,8 @@ static const map<species_type, species_def> species_data =
     15, 3,
     MONS_GARGOYLE,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    11, 8, 5, // 24
-    { STAT_STR, STAT_INT }, 4,
+    5, 4, 2, // 11
+    { STAT_STR, STAT_INT }, 5,
     { { MUT_ROT_IMMUNITY, 1, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 1, 1 },
       { MUT_PETRIFICATION_RESISTANCE, 1, 1 }, { MUT_SHOCK_RESISTANCE, 1, 1 },
       { MUT_UNBREATHING, 1, 1 }, { MUT_BIG_WINGS, 1, 14 }, },
@@ -415,8 +415,8 @@ static const map<species_type, species_def> species_data =
     18, 3,
     MONS_HALFLING,
     HT_LAND, US_ALIVE, SIZE_SMALL,
-    8, 7, 9, // 24
-    { STAT_DEX }, 5,
+    4, 3, 4, // 11
+    { STAT_DEX }, 6,
     { { MUT_MUTATION_RESISTANCE, 1, 1 }, },
     {},
     {},
@@ -433,8 +433,8 @@ static const map<species_type, species_def> species_data =
     15, 4,
     MONS_ELF,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    7, 11, 10, // 28
-    { STAT_INT, STAT_DEX }, 3,
+    3, 5, 5, // 13
+    { STAT_INT, STAT_DEX }, 4,
     {},
     {},
     {},
@@ -451,8 +451,8 @@ static const map<species_type, species_def> species_data =
     15, 3,
     MONS_ORC,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    10, 8, 6, // 24
-    { STAT_STR }, 5,
+    5, 4, 3, // 12
+    { STAT_STR }, 6,
     {},
     {},
     {},
@@ -469,8 +469,8 @@ static const map<species_type, species_def> species_data =
     15, 3,
     MONS_HUMAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    8, 8, 8, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    4, 4, 4, // 12
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     {},
     {},
     {},
@@ -488,8 +488,8 @@ static const map<species_type, species_def> species_data =
     18, 3,
     MONS_KOBOLD,
     HT_LAND, US_ALIVE, SIZE_SMALL,
-    6, 6, 11, // 23
-    { STAT_STR, STAT_DEX }, 5,
+    3, 3, 5, // 11
+    { STAT_STR, STAT_DEX }, 6,
     { { MUT_CARNIVOROUS, 3, 1 }, },
     {},
     {},
@@ -506,8 +506,8 @@ static const map<species_type, species_def> species_data =
     15, 3,
     MONS_MERFOLK,
     HT_WATER, US_ALIVE, SIZE_MEDIUM,
-    8, 7, 9, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 5,
+    4, 3, 4, // 11
+    { STAT_STR, STAT_INT, STAT_DEX }, 6,
     {},
     { "You revert to your normal form in water.",
       "You are very nimble and swift while swimming." },
@@ -525,8 +525,8 @@ static const map<species_type, species_def> species_data =
     12, 3,
     MONS_MINOTAUR,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    12, 5, 5, // 22
-    { STAT_STR, STAT_DEX }, 4,
+    6, 2, 2, // 10
+    { STAT_STR, STAT_DEX }, 5,
     { { MUT_HORNS, 2, 1 }, },
     { "You reflexively headbutt those who attack you in melee." },
     { "retaliatory headbutt" },
@@ -543,8 +543,8 @@ static const map<species_type, species_def> species_data =
     15, 5,
     MONS_MUMMY,
     HT_LAND, US_UNDEAD, SIZE_MEDIUM,
-    11, 7,  7, // 25
-    { STAT_STR, STAT_INT, STAT_DEX }, 5,
+    5, 3, 3, // 11
+    { STAT_STR, STAT_INT, STAT_DEX }, 6,
     { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, { MUT_COLD_RESISTANCE, 1, 1 },
       { MUT_TORMENT_RESISTANCE, 1, 1 },
       { MUT_UNBREATHING, 1, 1 },
@@ -567,8 +567,8 @@ static const map<species_type, species_def> species_data =
     18, 5,
     MONS_NAGA,
     HT_LAND, US_ALIVE, SIZE_LARGE,
-    10, 8, 6, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    5, 4, 3, // 12
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_ACUTE_VISION, 1, 1 }, { MUT_SLOW, 2, 1 },  { MUT_DEFORMED, 1, 1 },
       { MUT_SPIT_POISON, 2, 1 },  { MUT_POISON_RESISTANCE, 1, 1 },
       { MUT_SLOW_METABOLISM, 1, 1 }, { MUT_CONSTRICTING_TAIL, 1, 13 } },
@@ -588,8 +588,8 @@ static const map<species_type, species_def> species_data =
     9, 4,
     MONS_OGRE,
     HT_LAND, US_ALIVE, SIZE_LARGE,
-    12, 7, 5, // 24
-    { STAT_STR }, 3,
+    6, 3, 2, // 11
+    { STAT_STR }, 4,
     { { MUT_TOUGH_SKIN, 1, 1 }, },
     {},
     {},
@@ -606,8 +606,8 @@ static const map<species_type, species_def> species_data =
     18, 3,
     MONS_OCTOPODE,
     HT_WATER, US_ALIVE, SIZE_MEDIUM,
-    7, 10, 7, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 5,
+    3, 5, 3, // 11
+    { STAT_STR, STAT_INT, STAT_DEX }, 6,
     { { MUT_CAMOUFLAGE, 1, 1 }, { MUT_GELATINOUS_BODY, 1, 1 }, },
     { "You cannot wear most types of armour.",
       "You are amphibious." },
@@ -627,8 +627,8 @@ static const map<species_type, species_def> species_data =
     18, 7,
     MONS_SPRIGGAN,
     HT_LAND, US_ALIVE, SIZE_LITTLE,
-    4, 9, 11, // 24
-    { STAT_INT, STAT_DEX }, 5,
+    2, 4, 5, // 11
+    { STAT_INT, STAT_DEX }, 6,
     { { MUT_FAST, 3, 1 }, { MUT_HERBIVOROUS, 3, 1 },
       { MUT_ACUTE_VISION, 1, 1 }, { MUT_SLOW_METABOLISM, 2, 1 }, },
     {},
@@ -646,8 +646,8 @@ static const map<species_type, species_def> species_data =
     15, 3,
     MONS_TENGU,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    8, 8, 9, // 25
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    4, 4, 4, // 12
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_BEAK, 1, 1 }, { MUT_TALONS, 3, 1 },
       { MUT_TENGU_FLIGHT, 1, 5 }, { MUT_TENGU_FLIGHT, 1, 14 }, },
     {},
@@ -666,8 +666,8 @@ static const map<species_type, species_def> species_data =
     9, 3,
     MONS_TROLL,
     HT_LAND, US_ALIVE, SIZE_LARGE,
-    15, 4, 5, // 24
-    { STAT_STR }, 3,
+    7, 2, 2, // 11
+    { STAT_STR }, 4,
     { { MUT_TOUGH_SKIN, 2, 1 }, { MUT_REGENERATION, 2, 1 }, { MUT_CLAWS, 3, 1 },
       { MUT_GOURMAND, 1, 1 }, { MUT_FAST_METABOLISM, 3, 1 },
       { MUT_SHAGGY_FUR, 1, 1 }, },
@@ -686,8 +686,8 @@ static const map<species_type, species_def> species_data =
     18, 4,
     MONS_VAMPIRE,
     HT_LAND, US_SEMI_UNDEAD, SIZE_MEDIUM,
-    7, 10, 9, // 26
-    { STAT_INT, STAT_DEX }, 5,
+    3, 5, 4, // 12
+    { STAT_INT, STAT_DEX }, 6,
     { { MUT_FANGS, 3, 1 }, { MUT_ACUTE_VISION, 1, 1 },
       { MUT_UNBREATHING, 1, 1 }, },
     {},
@@ -706,8 +706,8 @@ static const map<species_type, species_def> species_data =
     15, 5,
     MONS_VINE_STALKER,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    10, 8, 9, // 27
-    { STAT_STR, STAT_DEX }, 4,
+    5, 4, 4, // 13
+    { STAT_STR, STAT_DEX }, 5,
     { { MUT_FANGS, 2, 1 }, { MUT_FANGS, 1, 8 },
       { MUT_MANA_SHIELD, 1, 1 }, { MUT_ANTIMAGIC_BITE, 1, 1 },
       { MUT_NO_DEVICE_HEAL, 3, 1 }, { MUT_ROT_IMMUNITY, 1, 1 },
@@ -729,8 +729,8 @@ static const map<species_type, species_def> species_data =
     15, 3,
     MONS_ELF,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    8, 8, 8, // 24
-    { STAT_INT, STAT_DEX }, 4,
+    4, 4, 4, // 12
+    { STAT_INT, STAT_DEX }, 5,
     {},
     {},
     {},
@@ -746,8 +746,8 @@ static const map<species_type, species_def> species_data =
     15, 3,
     MONS_LAVA_ORC,
     HT_AMPHIBIOUS_LAVA, US_ALIVE, SIZE_MEDIUM,
-    10, 8, 6, // 24
-    { STAT_INT, STAT_DEX }, 5,
+    5, 4, 3, // 12
+    { STAT_INT, STAT_DEX }, 6,
     {},
     {},
     {},
@@ -763,8 +763,8 @@ static const map<species_type, species_def> species_data =
     9, 3,
     MONS_DJINNI,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    8, 8, 8, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    4, 4, 4, // 12
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, },
     { "You are immune to all types of fire, even holy and hellish.",
       "You are vulnerable to cold.",

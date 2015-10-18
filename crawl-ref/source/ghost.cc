@@ -418,7 +418,7 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
     damage *= 30 + you.skills[SK_FIGHTING];
     damage /= 30;
 
-    damage += you.strength() / 4;
+    damage += you.strength() / 2;
 
     if (damage > MAX_GHOST_DAMAGE)
         damage = MAX_GHOST_DAMAGE;
