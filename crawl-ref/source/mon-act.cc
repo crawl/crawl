@@ -3195,6 +3195,10 @@ static bool _mons_can_displace(const monster* mpusher,
         return false;
     }
 
+    // Boulders and OODs should crash into things, not push them around.
+    if (mpusher->is_projectile() || mpushee->is_projectile())
+        return false;
+
     // Fleeing monsters cannot push past other fleeing monsters
     // (This helps to prevent some traffic jams in confined spaces)
     if (mons_is_fleeing(mpusher) && mons_is_fleeing(mpushee))
