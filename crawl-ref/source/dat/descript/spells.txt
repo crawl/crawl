@@ -1286,6 +1286,10 @@ Summon Emperor Scorpions spell
 
 Summons multiple noble and monstrous emperor scorpions.
 %%%%
+Summon Executioners spell
+
+Summons multiple Executioners to tear apart foes of the caster.
+%%%%
 Summon Eyeballs spell
 
 Summons multiple floating eyeballs that may be able to paralyse, drain,

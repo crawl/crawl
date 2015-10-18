@@ -1512,6 +1512,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 #endif
     case SPELL_GRAVITAS:
     case SPELL_ENTROPIC_WEAVE:
+    case SPELL_SUMMON_EXECUTIONERS:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -6477,7 +6478,22 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         if (orig_noise)
             mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
         break;
->>>>>>> 8371658... Remove Chant Fire Storm; rework Chant Word of Entropy to Entropic Weave.
+
+    case SPELL_SUMMON_EXECUTIONERS:
+    {
+        sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
+
+        duration  = min(2 + mons->spell_hd(spell_cast) / 10, 6);
+
+        for (sumcount = 0; sumcount < sumcount2; ++sumcount)
+        {
+            create_monster(
+                mgen_data(MONS_EXECUTIONER, SAME_ATTITUDE(mons), mons,
+                          duration, spell_cast, mons->pos(), mons->foe, 0,
+                          god));
+        }
+        return;
+    }
     }
 
     // If a monster just came into view and immediately cast a spell,
