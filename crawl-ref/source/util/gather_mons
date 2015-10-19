@@ -3,6 +3,9 @@
 # Run gather_mons -d if you want dbname: to be heeded (descs, etc).
 my $db = grep /^-d$/, @ARGV;
 
+# Used for generating the list of vault monsters for the monster tool.
+my $vault_only = grep /^-v$/, @ARGV;
+
 open IN, "util/cpp_version mon-data.h|" or die "Can't read mon-data.h\n";
 while (<IN>)
 {
@@ -12,6 +15,13 @@ close IN;
 
 sub vault_mon()
 {
+    if ($vault_only)
+    {
+        s/\s/ /g;
+        s/ +/ /g;
+        print "\"$_\",\n" if /name:/;
+        return;
+    }
     s/^ */ /; # easier to parse this way
     return unless /name:/; # not interesting to us
     s/ spells:[^ ]+//g; # can have ;
@@ -63,6 +73,7 @@ for (grep /\.des$/, `git ls-files`)
     {
         s/^\s*"//s;
         s/"\s*,\s*$//sg;
+        s/"\s*\n\s*$//sg;
         s/\\\n *//g;
         s/--[^\n]*\n//sg;
         s|"\s*,\s*"|/|sg;
@@ -92,4 +103,7 @@ large simulacrum
 END
 }
 
-print "$_\n" for sort keys %mons;
+unless ($vault_only)
+{
+    print "$_\n" for sort keys %mons;
+}
