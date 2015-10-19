@@ -29,6 +29,7 @@
 #include "unwind.h"
 #include "env.h"
 #include "colour.h"
+#include "coordit.h"
 #include "dungeon.h"
 #include "los.h"
 #include "message.h"
@@ -51,8 +52,8 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "artefact.h"
-#include "vault_monsters.h"
 #include <sstream>
 #include <set>
 #include <unistd.h>
@@ -61,7 +62,7 @@ extern const spell_type serpent_of_hell_breaths[4][3];
 
 const coord_def MONSTER_PLACE(20, 20);
 
-const std::string CANG = "cang";
+const string CANG = "cang";
 
 const int PLAYER_MAXHP = 500;
 const int PLAYER_MAXMP = 50;
@@ -73,14 +74,14 @@ const struct coord_def Compass[9] = {
     coord_def(-1, 0), coord_def(-1, -1), coord_def(0, 0),
 };
 
-bool is_element_colour(int col)
+static bool _is_element_colour(int col)
 {
     col = col & 0x007f;
     ASSERT(col < NUM_COLOURS);
     return col >= ETC_FIRE;
 }
 
-static std::string colour_codes[] = {"",   "02", "03", "10", "05", "06",
+static string colour_codes[] = {"",   "02", "03", "10", "05", "06",
                                      "07", "15", "14", "12", "09", "11",
                                      "04", "13", "08", "00"};
 
@@ -91,48 +92,44 @@ static int bgr[8] = {0, 4, 2, 6, 1, 5, 3, 7};
 #endif
 #define CONTROL(x) char(x - 'A' + 1)
 
-static std::string colour(int colour, std::string text, bool bg = false)
+static string colour(int colour, string text, bool bg = false)
 {
-    if (is_element_colour(colour))
+    if (_is_element_colour(colour))
         colour = element_colour(colour, true);
 
     if (isatty(1))
     {
         if (!colour)
             return text;
-        return make_stringf("\e[0;%d%d%sm%s\e[0m", bg ? 4 : 3, bgr[colour & 7],
+        return make_stringf("\\e[0;%d%d%sm%s\\e[0m", bg ? 4 : 3, bgr[colour & 7],
                             (!bg && (colour & 8)) ? ";1" : "", text.c_str());
     }
 
-    const std::string code(colour_codes[colour]);
+    const string code(colour_codes[colour]);
 
     if (code.empty())
         return text;
 
-    return std::string() + CONTROL('C') + code + (bg ? ",01" : "") + text
+    return string() + CONTROL('C') + code + (bg ? ",01" : "") + text
            + CONTROL('O');
 }
 
-std::string uppercase_first(std::string s);
-
-template <class T> inline std::string to_string(const T& t);
-
 static void record_resvul(int color, const char* name, const char* caption,
-                          std::string& str, int rval)
+                          string& str, int rval)
 {
     if (str.empty())
-        str = " | " + std::string(caption) + ": ";
+        str = " | " + string(caption) + ": ";
     else
         str += ", ";
 
     if (color && (rval == 3 || rval == 1 && color == BROWN
-                  || std::string(caption) == "Vul")
+                  || string(caption) == "Vul")
         && (int)color <= 7)
     {
         color += 8;
     }
 
-    std::string token(name);
+    string token(name);
     if (rval > 1 && rval <= 3)
     {
         while (rval-- > 0)
@@ -142,8 +139,8 @@ static void record_resvul(int color, const char* name, const char* caption,
     str += colour(color, token);
 }
 
-static void record_resist(int colour, std::string name, std::string& res,
-                          std::string& vul, int rval)
+static void record_resist(int colour, string name, string& res,
+                          string& vul, int rval)
 {
     if (rval > 0)
         record_resvul(colour, name.c_str(), "Res", res, rval);
@@ -151,21 +148,20 @@ static void record_resist(int colour, std::string name, std::string& res,
         record_resvul(colour, name.c_str(), "Vul", vul, -rval);
 }
 
-static void monster_action_cost(std::string& qual, int cost, const char* desc)
+static void monster_action_cost(string& qual, int cost, const char* desc)
 {
-    char buf[80];
     if (cost != 10)
     {
-        snprintf(buf, sizeof buf, "%s: %d%%", desc, cost * 10);
         if (!qual.empty())
             qual += "; ";
-        qual += buf;
+        qual += desc;
+        qual += ": " + to_string(cost * 10) + "%";
     }
 }
 
-static std::string monster_int(const monster& mon)
+static string monster_int(const monster& mon)
 {
-    std::string intel = "???";
+    string intel = "???";
     switch (mons_intel(&mon))
     {
     case I_BRAINLESS:
@@ -183,7 +179,7 @@ static std::string monster_int(const monster& mon)
     return intel;
 }
 
-static std::string monster_size(const monster& mon)
+static string monster_size(const monster& mon)
 {
     switch (mon.body_size())
     {
@@ -206,23 +202,20 @@ static std::string monster_size(const monster& mon)
     }
 }
 
-static std::string monster_speed(const monster& mon, const monsterentry* me,
+static string monster_speed(const monster& mon, const monsterentry* me,
                                  int speed_min, int speed_max)
 {
-    std::string speed;
+    string speed;
 
-    char buf[50];
     if (speed_max != speed_min)
-        snprintf(buf, sizeof buf, "%i-%i", speed_min, speed_max);
+        speed += to_string(speed_min) + "-" + to_string(speed_max);
     else if (speed_max == 0)
-        snprintf(buf, sizeof buf, "%s", colour(BROWN, "0").c_str());
+        speed += colour(BROWN, "0");
     else
-        snprintf(buf, sizeof buf, "%i", speed_max);
-
-    speed += buf;
+        speed += to_string(speed_max);
 
     const mon_energy_usage& cost = mons_energy(&mon);
-    std::string qualifiers;
+    string qualifiers;
 
     bool skip_action = false;
     if (cost.attack != 10 && cost.attack == cost.missile
@@ -257,7 +250,7 @@ static std::string monster_speed(const monster& mon, const monsterentry* me,
     return speed;
 }
 
-static void mons_flag(std::string& flag, const std::string& newflag)
+static void mons_flag(string& flag, const string& newflag)
 {
     if (flag.empty())
         flag = " | ";
@@ -266,8 +259,8 @@ static void mons_flag(std::string& flag, const std::string& newflag)
     flag += newflag;
 }
 
-static void mons_check_flag(bool set, std::string& flag,
-                            const std::string& newflag)
+static void mons_check_flag(bool set, string& flag,
+                            const string& newflag)
 {
     if (set)
         mons_flag(flag, newflag);
@@ -288,9 +281,8 @@ static void initialize_crawl()
     init_show_table(); // Initializes indices for get_feature_def.
 
     dgn_reset_level();
-    for (int y = 0; y < GYM; ++y)
-        for (int x = 0; x < GXM; ++x)
-            grd[x][y] = DNGN_FLOOR;
+    for (rectangle_iterator ri(0); ri; ++ri)
+        grd(*ri) = DNGN_FLOOR;
 
     los_changed();
     you.hp = you.hp_max = PLAYER_MAXHP;
@@ -298,7 +290,7 @@ static void initialize_crawl()
     you.species = SP_HUMAN;
 }
 
-static std::string dice_def_string(dice_def dice)
+static string dice_def_string(dice_def dice)
 {
     return dice.num == 1 ? make_stringf("d%d", dice.size) :
                            make_stringf("%dd%d", dice.num, dice.size);
@@ -311,25 +303,25 @@ static dice_def mi_calc_iood_damage(monster* mons)
     return dice_def(9, power / 4);
 }
 
-static std::string mi_calc_smiting_damage(monster* mons) { return "7-17"; }
+static string mi_calc_smiting_damage(monster* mons) { return "7-17"; }
 
-static std::string mi_calc_airstrike_damage(monster* mons)
+static string mi_calc_airstrike_damage(monster* mons)
 {
     return make_stringf("0-%d", 10 + 2 * mons->get_experience_level());
 }
 
-static std::string mi_calc_glaciate_damage(monster* mons)
+static string mi_calc_glaciate_damage(monster* mons)
 {
     int pow = 12 * mons->get_experience_level();
     // Minimum of the number of dice, or the max damage at max range
-    int min = std::min(10, (54 + 3 * pow / 2) / 6);
+    int minimum = min(10, (54 + 3 * pow / 2) / 6);
     // Maximum damage at minimum range.
     int max = (54 + 3 * pow / 2) / 3;
 
-    return make_stringf("%d-%d", min, max);
+    return make_stringf("%d-%d", minimum, max);
 }
 
-static std::string mi_calc_chain_lightning_damage(monster* mons)
+static string mi_calc_chain_lightning_damage(monster* mons)
 {
     int pow = 4 * mons->get_experience_level();
 
@@ -348,7 +340,7 @@ static std::string mi_calc_chain_lightning_damage(monster* mons)
     return make_stringf("%d-%d", min, max);
 }
 
-static std::string mons_human_readable_spell_damage_string(monster* monster,
+static string mons_human_readable_spell_damage_string(monster* monster,
                                                            spell_type sp)
 {
     bolt spell_beam = mons_spell_beam(
@@ -371,14 +363,14 @@ static std::string mons_human_readable_spell_damage_string(monster* monster,
     return "";
 }
 
-static std::string shorten_spell_name(std::string name)
+static string shorten_spell_name(string name)
 {
     lowercase(name);
-    std::string::size_type pos = name.find('\'');
-    if (pos != std::string::npos)
+    string::size_type pos = name.find('\'');
+    if (pos != string::npos)
     {
         pos = name.find(' ', pos);
-        if (pos != std::string::npos)
+        if (pos != string::npos)
         {
             // strip wizard names
             if (starts_with(name, "iskenderun's")
@@ -393,7 +385,7 @@ static std::string shorten_spell_name(std::string name)
             }
         }
     }
-    if ((pos = name.find(" of ")) != std::string::npos)
+    if ((pos = name.find(" of ")) != string::npos)
         name = name.substr(0, 1) + "." + name.substr(pos + 4);
     if (starts_with(name, "summon "))
         name = "sum." + name.substr(7);
@@ -402,9 +394,9 @@ static std::string shorten_spell_name(std::string name)
     return name;
 }
 
-std::string spell_flag_string(const mon_spell_slot& slot)
+static string _spell_flag_string(const mon_spell_slot& slot)
 {
-    std::string flags;
+    string flags;
 
     if (!(slot.flags & MON_SPELL_ANTIMAGIC_MASK))
         flags += colour(LIGHTCYAN, "!AM");
@@ -433,25 +425,24 @@ std::string spell_flag_string(const mon_spell_slot& slot)
 }
 
 // ::first is spell name, ::second is possible damages
-typedef std::multimap<std::string, std::string> spell_damage_map;
-static spell_damage_map record_spell_set(monster* mp, std::string& ret)
+typedef multimap<string, string> spell_damage_map;
+static void record_spell_set(monster* mp, set<string>& spell_lists,
+                             spell_damage_map& damages)
 {
-    spell_damage_map damages;
-    for (std::size_t i = 0; i < mp->spells.size(); ++i)
+    string ret;
+    for (const auto& slot : mp->spells)
     {
-        spell_type sp = mp->spells[i].spell;
+        spell_type sp = slot.spell;
         if (!ret.empty())
             ret += ", ";
         if (sp == SPELL_SERPENT_OF_HELL_BREATH)
         {
             const int idx =
-                mp->type == MONS_SERPENT_OF_HELL ?
-                    0 :
-                    mp->type == MONS_SERPENT_OF_HELL_COCYTUS ?
-                    1 :
-                    mp->type == MONS_SERPENT_OF_HELL_DIS ?
-                    2 :
-                    mp->type == MONS_SERPENT_OF_HELL_TARTARUS ? 3 : -1;
+                mp->type == MONS_SERPENT_OF_HELL ?              0 :
+                    mp->type == MONS_SERPENT_OF_HELL_COCYTUS ?  1 :
+                    mp->type == MONS_SERPENT_OF_HELL_DIS ?      2 :
+                    mp->type == MONS_SERPENT_OF_HELL_TARTARUS ? 3 :
+                                                               -1;
             ASSERT(idx >= 0 && idx <= 3);
             ASSERT(mp->number == ARRAYSZ(serpent_of_hell_breaths[idx]));
 
@@ -459,7 +450,7 @@ static spell_damage_map record_spell_set(monster* mp, std::string& ret)
             for (unsigned int k = 0; k < mp->number; ++k)
             {
                 const spell_type breath = serpent_of_hell_breaths[idx][k];
-                const std::string rawname = spell_title(breath);
+                const string rawname = spell_title(breath);
                 ret += k == 0 ? "" : ", ";
                 ret += make_stringf("head %d: ", k + 1)
                        + shorten_spell_name(rawname) + " (";
@@ -468,61 +459,56 @@ static spell_damage_map record_spell_set(monster* mp, std::string& ret)
             }
             ret += "}";
 
-            ret += spell_flag_string(mp->spells[i]);
+            ret += _spell_flag_string(slot);
         }
         else
         {
-            std::string spell_name = spell_title(sp);
+            string spell_name = spell_title(sp);
             spell_name = shorten_spell_name(spell_name);
             ret += spell_name;
-            ret += spell_flag_string(mp->spells[i]);
+            ret += _spell_flag_string(slot);
 
-            for (int i = 0; i < 100; i++)
+            for (int j = 0; j < 100; j++)
             {
-                std::string damage =
+                string damage =
                     mons_human_readable_spell_damage_string(mp, sp);
-                std::set<std::string> added_damages;
-                if (!damage.empty() && !added_damages.count(damage))
+                const auto range = damages.equal_range(spell_name);
+                if (!damage.empty()
+                    && none_of(range.first, range.second, [&](const pair<string,string>& entry){ return entry.first == spell_name && entry.second == damage; }))
                 {
-                    damages.insert(std::pair<std::string, std::string>(
-                        spell_name, damage));
-                    added_damages.insert(damage);
+                    damages.emplace(spell_name, damage);
                 }
             }
         }
     }
-    return damages;
+    spell_lists.insert(ret);
 }
 
-static std::string construct_spells(std::set<std::string> spells,
-                                    spell_damage_map damages)
+static string construct_spells(const set<string>& spell_lists,
+                               const spell_damage_map& damages)
 {
-    std::string ret;
-    for (std::set<std::string>::const_iterator i = spells.begin();
-         i != spells.end(); ++i)
+    string ret;
+    for (const string& spell_list : spell_lists)
     {
-        if (i != spells.begin())
+        if (!ret.empty())
             ret += " / ";
-        ret += *i;
+        ret += spell_list;
     }
-    std::map<std::string, std::string> merged_spell_dam;
-    for (spell_damage_map::const_iterator i = damages.begin();
-         i != damages.end(); ++i)
+    map<string, string> merged_damages;
+    for (const auto& entry : merged_damages)
     {
-        std::string dam = merged_spell_dam[i->first];
+        string dam = merged_damages[entry.first];
         if (!dam.empty())
             dam += " / ";
-        dam += i->second;
-        merged_spell_dam[i->first] = dam;
+        dam += entry.second;
+        merged_damages[entry.first] = dam;
     }
 
-    for (std::map<std::string, std::string>::const_iterator i =
-             merged_spell_dam.begin();
-         i != merged_spell_dam.end(); ++i)
+    for (const auto& entry : merged_damages)
     {
-        ret =
-            replace_all(ret, i->first, make_stringf("%s (%s)", i->first.c_str(),
-                                                    i->second.c_str()));
+        ret = replace_all(ret, entry.first,
+                          make_stringf("%s (%s)", entry.first.c_str(),
+                                                  entry.second.c_str()));
     }
 
     return ret;
@@ -536,9 +522,9 @@ static inline void set_min_max(int num, int& min, int& max)
         max = num;
 }
 
-static std::string monster_symbol(const monster& mon)
+static string monster_symbol(const monster& mon)
 {
-    std::string symbol;
+    string symbol;
     const monsterentry* me = mon.find_monsterentry();
     if (me)
     {
@@ -549,7 +535,7 @@ static std::string monster_symbol(const monster& mon)
     return symbol;
 }
 
-int mi_create_monster(mons_spec spec)
+static int _mi_create_monster(mons_spec spec)
 {
     item_list items = spec.items;
     for (unsigned int i = 0; i < spec.items.size(); i++)
@@ -576,19 +562,19 @@ int mi_create_monster(mons_spec spec)
     return NON_MONSTER;
 }
 
-static std::string damage_flavour(const std::string& name,
-                                  const std::string& damage)
+static string damage_flavour(const string& name,
+                                  const string& damage)
 {
     return "(" + name + ":" + damage + ")";
 }
 
-static std::string damage_flavour(const std::string& name, int low, int high)
+static string damage_flavour(const string& name, int low, int high)
 {
     return make_stringf("(%s:%d-%d)", name.c_str(), low, high);
 }
 
-static void rebind_mspec(std::string* requested_name,
-                         const std::string& actual_name, mons_spec* mspec)
+static void rebind_mspec(string* requested_name,
+                         const string& actual_name, mons_spec* mspec)
 {
     if (*requested_name != actual_name
         && (requested_name->find("draconian") == 0
@@ -602,7 +588,7 @@ static void rebind_mspec(std::string* requested_name,
         // coloured drac in response. Try to reuse that colour for further
         // tests.
         mons_list mons;
-        const std::string err = mons.add_mons(actual_name, false);
+        const string err = mons.add_mons(actual_name, false);
         if (err.empty())
         {
             *mspec = mons.get_monster(0);
@@ -611,7 +597,76 @@ static void rebind_mspec(std::string* requested_name,
     }
 }
 
-static std::string canned_reports[][2] = {
+const vector<string> monsters = {
+#include "vault_monster_data.h"
+};
+
+/**
+ * Return a vault-defined monster spec.
+ *
+ * This function parses the contents of (the generated) vault_monster_data.h
+ * and attempts to return a specification. If there is an invalid specification,
+ * no error will be recorded.
+ *
+ * @param monster_name Monster being searched for.
+ * @param[out] vault_spec the spec found for the monster, if any
+ * @return A mons_spec instance that either contains the relevant data, or
+ *         nothing if not found.
+ *
+**/
+static mons_spec _get_vault_monster(string monster_name, string* vault_spec)
+{
+    lowercase(monster_name);
+    trim_string(monster_name);
+
+    monster_name = replace_all_of(monster_name, "'", "");
+
+    mons_list mons;
+    mons_spec no_monster;
+
+    for (const string& spec : monsters)
+    {
+        mons.clear();
+
+        const string err = mons.add_mons(spec, false);
+        if (err.empty())
+        {
+            mons_spec this_mons = mons.get_monster(0);
+            int index = _mi_create_monster(this_mons);
+
+            if (index < 0 || index >= MAX_MONSTERS)
+                continue;
+
+            bool this_spec = false;
+
+            monster* mp = &menv[index];
+
+            if (mp)
+            {
+                string name =
+                    replace_all_of(mp->name(DESC_PLAIN, true), "'", "");
+                lowercase(name);
+                if (name == monster_name)
+                    this_spec = true;
+            }
+
+            mons_remove_from_grid(mp);
+
+            if (this_spec)
+            {
+                if (vault_spec)
+                    *vault_spec = spec;
+                return this_mons;
+            }
+        }
+    }
+
+    if (vault_spec)
+        *vault_spec = "";
+
+    return no_monster;
+}
+static string canned_reports[][2] = {
     {"cang", ("cang (" + colour(LIGHTRED, "Ω")
               + (") | Spd: c | HD: i | HP: 666 | AC/EV: e/π | Dam: 999"
                  " | Res: sanity | XP: ∞ | Int: god | Sz: !!!"))},
@@ -642,7 +697,7 @@ int main(int argc, char* argv[])
     initialize_crawl();
 
     mons_list mons;
-    std::string target = argv[1];
+    string target = argv[1];
 
     if (argc > 2)
         for (int x = 2; x < argc; x++)
@@ -661,23 +716,22 @@ int main(int argc, char* argv[])
     }
 
     // [ds] Nobody mess with cang.
-    for (unsigned i = 0; i < sizeof(canned_reports) / sizeof(*canned_reports);
-         ++i)
+    for (const auto& row : canned_reports)
     {
-        if (canned_reports[i][0] == target)
+        if (row[0] == target)
         {
-            printf("%s\n", canned_reports[i][1].c_str());
+            printf("%s\n", row[1].c_str());
             return 0;
         }
     }
 
-    std::string orig_target = std::string(target);
+    string orig_target = string(target);
 
-    std::string err = mons.add_mons(target, false);
+    string err = mons.add_mons(target, false);
     if (!err.empty())
     {
         target = "the " + target;
-        const std::string test = mons.add_mons(target, false);
+        const string test = mons.add_mons(target, false);
         if (test.empty())
             err = test;
     }
@@ -691,7 +745,7 @@ int main(int argc, char* argv[])
          || spec_type == MONS_PLAYER_GHOST)
         || !err.empty())
     {
-        spec = get_vault_monster(orig_target, &vault_spec);
+        spec = _get_vault_monster(orig_target, &vault_spec);
         spec_type = static_cast<monster_type>(spec.type);
         if (spec_type < 0 || spec_type >= NUM_MONSTERS
             || spec_type == MONS_PLAYER_GHOST)
@@ -703,7 +757,7 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        // get_vault_monster created the monster; make uniques ungenerated again
+        // _get_vault_monster created the monster; make uniques ungenerated again
         if (mons_is_unique(spec_type))
             you.unique_creatures.set(spec_type, false);
 
@@ -724,7 +778,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    int index = mi_create_monster(spec);
+    int index = _mi_create_monster(spec);
     if (index < 0 || index >= MAX_MONSTERS)
     {
         printf("Failed to create test monster for %s\n", target.c_str());
@@ -740,42 +794,19 @@ int main(int argc, char* argv[])
     int mev = 0;
     int speed_min = 0, speed_max = 0;
     // Calculate averages.
-    std::set<std::string> spells;
+    set<string> spell_lists;
     spell_damage_map damages;
     for (int i = 0; i < ntrials; ++i)
     {
         monster* mp = &menv[index];
-        const std::string mname = mp->name(DESC_PLAIN, true);
+        const string mname = mp->name(DESC_PLAIN, true);
         exper += exper_value(mp);
         mac += mp->armour_class();
         mev += mp->evasion();
         set_min_max(mp->speed, speed_min, speed_max);
         set_min_max(mp->hit_points, hp_min, hp_max);
 
-        std::string new_spells;
-        const spell_damage_map new_damages = record_spell_set(mp, new_spells);
-        for (spell_damage_map::const_iterator i = new_damages.begin();
-             i != new_damages.end(); ++i)
-        {
-            bool skip = false;
-            std::pair<spell_damage_map::iterator, spell_damage_map::iterator>
-                old_damages;
-            old_damages = damages.equal_range(i->first);
-            for (spell_damage_map::iterator j = old_damages.first;
-                 j != old_damages.second; ++j)
-            {
-                if (j->second == i->second)
-                {
-                    skip = true;
-                    break;
-                }
-            }
-            if (skip)
-                continue;
-            damages.insert(*i);
-        }
-        if (!new_spells.empty())
-            spells.insert(new_spells);
+        record_spell_set(mp, spell_lists, damages);
 
         // Destroy the monster.
         mp->reset();
@@ -783,7 +814,7 @@ int main(int argc, char* argv[])
 
         rebind_mspec(&target, mname, &spec);
 
-        index = mi_create_monster(spec);
+        index = _mi_create_monster(spec);
         if (index == -1)
         {
             printf("Unexpected failure generating monster for %s\n",
@@ -797,7 +828,7 @@ int main(int argc, char* argv[])
 
     monster& mon(menv[index]);
 
-    const std::string symbol(monster_symbol(mon));
+    const string symbol(monster_symbol(mon));
 
     const bool shapeshifter = mon.is_shapeshifter()
                               || spec_type == MONS_SHAPESHIFTER
@@ -817,10 +848,10 @@ int main(int argc, char* argv[])
 
     if (me)
     {
-        std::string monsterflags;
-        std::string monsterresistances;
-        std::string monstervulnerabilities;
-        std::string monsterattacks;
+        string monsterflags;
+        string monsterresistances;
+        string monstervulnerabilities;
+        string monsterattacks;
 
         lowercase(target);
 
@@ -851,7 +882,7 @@ int main(int argc, char* argv[])
 
         printf(" | AC/EV: %i/%i", mac, mev);
 
-        std::string defenses;
+        string defenses;
         if (mon.is_spiny() > 0)
             defenses += colour(YELLOW, "(spiny 5d4)");
         if (mons_species(mons_base_type(&mon)) == MONS_MINOTAUR)
@@ -945,7 +976,7 @@ int main(int argc, char* argv[])
                     monsterattacks +=
                         colour(LIGHTCYAN,
                                damage_flavour("elec", hd,
-                                              hd + std::max(hd / 2 - 1, 0)));
+                                              hd + max(hd / 2 - 1, 0)));
                     break;
                 case AF_FIRE:
                     monsterattacks += colour(
@@ -1145,7 +1176,7 @@ int main(int argc, char* argv[])
                         "web sense");
         mons_check_flag(mon.is_unbreathing(), monsterflags, "unbreathing");
 
-        std::string spell_string = construct_spells(spells, damages);
+        string spell_string = construct_spells(spell_lists, damages);
         if (shapeshifter || mon.type == MONS_PANDEMONIUM_LORD
             || mon.type == MONS_LICH || mon.type == MONS_ANCIENT_LICH
             || mon.type == MONS_CHIMERA
@@ -1177,8 +1208,7 @@ int main(int argc, char* argv[])
                 monsterresistances += ", ";
             monsterresistances +=
                 colour(MAGENTA,
-                       std::string() + "magic("
-                           + to_string((short int)hd * res * 4 / 3 * -1) + ")");
+                       "magic(" + to_string(hd * res * 4 / 3 * -1) + ")");
         }
         else if (me->resist_magic > 0)
         {
@@ -1187,8 +1217,7 @@ int main(int argc, char* argv[])
             else
                 monsterresistances += ", ";
             monsterresistances += colour(
-                MAGENTA, std::string("magic(")
-                             + to_string((short int)me->resist_magic) + ")");
+                MAGENTA, "magic(" + to_string(me->resist_magic) + ")");
         }
 
         const resists_t res(shapeshifter ? me->resists :
@@ -1270,15 +1299,8 @@ int main(int argc, char* argv[])
     return 1;
 }
 
-template <class T> inline std::string to_string(const T& t)
-{
-    std::stringstream ss;
-    ss << t;
-    return ss.str();
-}
-
 //////////////////////////////////////////////////////////////////////////
-// acr.cc stuff
+// main.cc stuff
 
 CLua clua(true);
 CLua dlua(false);      // Lua interpreter for the dungeon builder.
@@ -1286,18 +1308,8 @@ crawl_environment env; // Requires dlua.
 player you;
 game_state crawl_state;
 
-FILE *yyin;
-int yylineno;
-
-std::string init_file_error; // externed in newgame.cc
-
-int stealth;                // externed in view.cc
-bool apply_berserk_penalty; // externed in evoke.cc
-
+void process_command(command_type);
 void process_command(command_type) {}
 
-int yyparse() {
-  return 0;
-}
-
+void world_reacts();
 void world_reacts() {}
