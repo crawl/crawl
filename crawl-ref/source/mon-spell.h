@@ -2093,4 +2093,9 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_BLUE_DEVIL,
+      {
+       { SPELL_SUMMON_ICE_BEAST, 20, MON_SPELL_DEMONIC },
+      }
+    },
 };
