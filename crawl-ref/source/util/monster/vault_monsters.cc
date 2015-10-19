@@ -34,7 +34,7 @@
  *         nothing if not found.
  *
 **/
-mons_spec get_vault_monster (std::string monster_name, std::string *vault_spec)
+mons_spec get_vault_monster(std::string monster_name, std::string* vault_spec)
 {
     lowercase(monster_name);
     trim_string(monster_name);
@@ -59,17 +59,16 @@ mons_spec get_vault_monster (std::string monster_name, std::string *vault_spec)
             int index = mi_create_monster(this_mons);
 
             if (index < 0 || index >= MAX_MONSTERS)
-            {
                 continue;
-            }
 
             bool this_spec = false;
 
-            monster *mp = &menv[index];
+            monster* mp = &menv[index];
 
             if (mp)
             {
-                std::string name = replace_all_of(mp->name(DESC_PLAIN, true), "'","");
+                std::string name =
+                    replace_all_of(mp->name(DESC_PLAIN, true), "'", "");
                 lowercase(name);
                 if (name == monster_name)
                     this_spec = true;
@@ -81,7 +80,7 @@ mons_spec get_vault_monster (std::string monster_name, std::string *vault_spec)
             {
                 if (vault_spec)
                     *vault_spec = *it;
-                return (this_mons);
+                return this_mons;
             }
         }
     }
@@ -89,5 +88,5 @@ mons_spec get_vault_monster (std::string monster_name, std::string *vault_spec)
     if (vault_spec)
         *vault_spec = "";
 
-    return (no_monster);
+    return no_monster;
 }

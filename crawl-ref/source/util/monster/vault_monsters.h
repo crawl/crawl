@@ -7,6 +7,7 @@
 
 #include "AppHdr.h"
 
-mons_spec get_vault_monster (std::string monster_name, std::string *vault_spec = 0);
+mons_spec get_vault_monster(std::string monster_name,
+                            std::string* vault_spec = 0);
 
 #endif
