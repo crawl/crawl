@@ -668,9 +668,8 @@ blood saint
 %%%%
 blue devil
 
-A muscular horned humanoid figure originating from some frigid hell. It swoops
-through the air on powerful wings, taking sadistic joy from harrying those who
-would try to flee its grasp.
+A muscular horned humanoid figure originating from some frigid hell. It can
+call forth ice beasts to freeze its foes.
 %%%%
 bog body
 
@@ -1399,7 +1398,9 @@ A frightful demon, covered in roaring hellfire.
 %%%%
 hellwing
 
-A hideous skeletal demon, with wings of ancient withered skin.
+A hideous skeletal demon. It swoops through the air on powerful wings of
+ancient withered skin, taking sadistic joy from harrying those who would try
+to flee its grasp.
 %%%%
 hill giant
 
