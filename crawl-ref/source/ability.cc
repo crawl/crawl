@@ -721,24 +721,20 @@ talent get_talent(ability_type ability, bool check_confused)
     // placeholder, so convert it into its corresponding ability before
     // doing anything else, so that we'll handle its flags properly.
     result.which = fixup_ability(ability);
+    // Initialize result
+    result.is_invocation = 0;
+    result.hotkey = 0;
+    result.fail = 0;
 
     const ability_def &abil = get_ability_def(result.which);
 
     int failure = 0;
     bool invoc = false;
 
-    if (check_confused)
+    if (check_confused && you.confused() && !testbits(abil.flags, abflag::CONF_OK))
     {
-        if (you.confused() && !testbits(abil.flags, abflag::CONF_OK))
-        {
-            // Initialize these so compilers don't complain.
-            result.is_invocation = 0;
-            result.hotkey = 0;
-            result.fail = 0;
-
-            result.which = ABIL_NON_ABILITY;
-            return result;
-        }
+        result.which = ABIL_NON_ABILITY;
+        return result;
     }
 
     // Look through the table to see if there's a preference, else find
@@ -891,6 +887,8 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_RU_SACRIFICE_RESISTANCE:
     case ABIL_RU_REJECT_SACRIFICES:
     case ABIL_STOP_RECALL:
+    case ABIL_RENOUNCE_RELIGION:
+    case ABIL_CONVERT_TO_BEOGH:
         invoc = true;
         failure = 0;
         break;
@@ -1031,12 +1029,6 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_NEMELEX_TRIPLE_DRAW:
         invoc = true;
         failure = 60 - (you.piety / 20) - you.skill(SK_EVOCATIONS, 5);
-        break;
-
-    case ABIL_RENOUNCE_RELIGION:
-    case ABIL_CONVERT_TO_BEOGH:
-        invoc = true;
-        failure = 0;
         break;
 
         // end invocations {dlb}
