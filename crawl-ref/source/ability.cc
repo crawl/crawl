@@ -1141,8 +1141,6 @@ bool activate_ability()
             no_ability_msg();
         crawl_state.zero_turns_taken();
         return false;
-
-    {
     }
 
     msg::streams(MSGCH_PROMPT) << "Use which ability?" << endl;
