@@ -1131,23 +1131,16 @@ bool activate_ability()
         return false;
     }
 
-    vector<talent> talents = your_talents(false);
+    const bool confused = you.confused();
+    vector<talent> talents = your_talents(confused);
     if (talents.empty())
     {
-        no_ability_msg();
+        if (confused)
+            canned_msg(MSG_TOO_CONFUSED);
+        else
+            no_ability_msg();
         crawl_state.zero_turns_taken();
         return false;
-    }
-
-    if (you.confused())
-    {
-        talents = your_talents(true);
-        if (talents.empty())
-        {
-            canned_msg(MSG_TOO_CONFUSED);
-            crawl_state.zero_turns_taken();
-            return false;
-        }
     }
 
     int selected = -1;
