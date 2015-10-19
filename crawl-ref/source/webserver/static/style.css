@@ -102,7 +102,7 @@ body {
 }
 
 #player_list tr:hover {
-    background-color: #101010;
+    background-color: #191919;
 }
 
 #player_list .milestone_container {
@@ -151,7 +151,7 @@ body {
     border: 1px solid white;
 }
 .button {
-    background-color: #DDDDDD;
+    background-color: #ffffff;
     border: 1px solid white;
 }
 
@@ -166,12 +166,12 @@ body {
     bottom: 20px;
     right: 20px;
 
-    color: #A2A2A2;
+    color: #fefefe;
 
     font-size: small;
 
     padding: 5px;
-    border: 1px solid #626262;
+    border: 1px solid #a2a2a2;
 
     z-index: 3000;
 }
@@ -187,11 +187,11 @@ body {
 }
 
 #chat_caption:hover {
-    background-color: #111111;
+    background-color: #1b1b1b;
 }
 
 #chat_login_text {
-    border-top: 1px dashed #626262;
+    border-top: 1px dashed #a2a2a2;
 }
 
 .chat_automated {
