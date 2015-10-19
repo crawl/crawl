@@ -7,6 +7,6 @@
 
 #include "AppHdr.h"
 
-std::vector<std::string> get_vault_monsters ();
+std::vector<std::string> get_vault_monsters();
 
 #endif
