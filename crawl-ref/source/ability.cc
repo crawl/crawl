@@ -716,22 +716,17 @@ talent get_talent(ability_type ability, bool check_confused)
 {
     ASSERT(ability != ABIL_NON_ABILITY);
 
-    talent result;
     // Placeholder handling, part 1: The ability we have might be a
     // placeholder, so convert it into its corresponding ability before
     // doing anything else, so that we'll handle its flags properly.
-    result.which = fixup_ability(ability);
-    // Initialize result
-    result.is_invocation = 0;
-    result.hotkey = 0;
-    result.fail = 0;
-
+    talent result { fixup_ability(ability), 0, 0, false };
     const ability_def &abil = get_ability_def(result.which);
 
     int failure = 0;
     bool invoc = false;
 
-    if (check_confused && you.confused() && !testbits(abil.flags, abflag::CONF_OK))
+    if (check_confused && you.confused()
+        && !testbits(abil.flags, abflag::CONF_OK))
     {
         result.which = ABIL_NON_ABILITY;
         return result;
