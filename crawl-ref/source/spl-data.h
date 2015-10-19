@@ -258,7 +258,7 @@ static const struct spell_desc spelldata[] =
     SPELL_CONTROLLED_BLINK, "Controlled Blink",
     SPTYP_TRANSLOCATION,
     SPFLAG_ESCAPE | SPFLAG_EMERGENCY | SPFLAG_UTILITY,
-    7,
+    8,
     0,
     -1, -1,
     2, 0, // Not noisier than Blink, to keep this spell relevant
