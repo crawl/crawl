@@ -1,0 +1,9 @@
+To update trunk:
+   git checkout bleeding-edge-crawl
+   cd crawl-ref && git checkout master && cd ..
+   make install-trunk
+
+To update for 0.9:
+   git checkout dscss09
+   cd crawl-ref && git checkout stone_soup-0.9 && cd ..
+   make install
