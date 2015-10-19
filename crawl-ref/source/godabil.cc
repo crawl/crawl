@@ -5699,12 +5699,12 @@ static int _get_sacrifice_piety(ability_type sac)
             }
             break;
         case ABIL_RU_SACRIFICE_HAND:
-            // No one-handed polearms or staves for spriggans.
+            // No one-handed polearms for spriggans.
             if (you.species == SP_SPRIGGAN)
-            {
                 piety_gain += _piety_for_skill(SK_POLEARMS);
+            // No one-handed staves for small races.
+            if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
                 piety_gain += _piety_for_skill(SK_STAVES);
-            }
             // No one-handed bows.
             if (you.species != SP_FORMICID)
                 piety_gain += _piety_for_skill(SK_BOWS);
@@ -6172,10 +6172,10 @@ bool ru_do_sacrifice(ability_type sac)
     {
         // No one-handed polearms or staves for spriggans.
         if (you.species == SP_SPRIGGAN)
-        {
             _ru_kill_skill(SK_POLEARMS);
+        // No one-handed staves for small races.
+        if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             _ru_kill_skill(SK_STAVES);
-        }
         // No one-handed bows.
         if (you.species != SP_FORMICID)
             _ru_kill_skill(SK_BOWS);
