@@ -1316,7 +1316,12 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             for (auto facet : mg.props[MUTANT_BEAST_FACETS].get_vector())
                 gen_facets.push_back(facet.get_int());
 
-        init_mutant_beast(*mon, mg.hd, gen_facets);
+        set<int> avoid_facets;
+        if (mg.props.exists(MUTANT_BEAST_AVOID_FACETS))
+            for (auto facet : mg.props[MUTANT_BEAST_AVOID_FACETS].get_vector())
+                avoid_facets.insert(facet.get_int());
+
+        init_mutant_beast(*mon, mg.hd, gen_facets, avoid_facets);
     }
 
     // Is it a god gift?
