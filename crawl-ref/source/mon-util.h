@@ -509,5 +509,6 @@ bool mons_can_display_wounds(const monster* mon);
 bool mons_class_gives_xp(monster_type mc, bool indirect = false);
 bool mons_gives_xp(const monster* mon, const actor* agent);
 
-void init_mutant_beast(monster &mon, short HD, vector<int> beast_facets);
+void init_mutant_beast(monster &mon, short HD, vector<int> beast_facets,
+                       set<int> avoid_facets);
 #endif

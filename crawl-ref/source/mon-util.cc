@@ -47,6 +47,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
+#include "mutant-beast.h"
 #include "notes.h"
 #include "options.h"
 #include "random.h"
@@ -5303,17 +5304,27 @@ bool mons_can_display_wounds(const monster* mon)
     return mons_class_can_display_wounds(mon->type);
 }
 
+bool god_hates_beast_facet(god_type god, beast_facet facet)
+{
+    ASSERT_RANGE(facet, BF_FIRST, BF_LAST+1);
+
+    // Only one so far.
+    return god == GOD_DITHMENOS && facet == BF_FIRE;
+}
 
 /**
  * Set up fields for mutant beasts that vary by tier & facets (that is, that
  * vary between individual beasts).
  *
- * @param mons      The beast to be initialized.
- * @param HD        The beast's HD. If 0, default to mon-data's version.
- * @param facets    The beast's facets (e.g. fire, bat).
- *                  If empty, chooses two distinct facets at random.
+ * @param mons          The beast to be initialized.
+ * @param HD            The beast's HD. If 0, default to mon-data's version.
+ * @param beast_facets  The beast's facets (e.g. fire, bat).
+ *                      If empty, chooses two distinct facets at random.
+ * @param avoid_facets  A set of facets to avoid when randomly generating
+ *                      beasts. Irrelevant if beast_facets is non-empty.
  */
-void init_mutant_beast(monster &mons, short HD, vector<int> beast_facets)
+void init_mutant_beast(monster &mons, short HD, vector<int> beast_facets,
+                       set<int> avoid_facets)
 {
     if (!HD)
         HD = mons.get_experience_level();
@@ -5323,13 +5334,16 @@ void init_mutant_beast(monster &mons, short HD, vector<int> beast_facets)
 
     if (beast_facets.empty())
     {
-        beast_facets.push_back(random_range(BF_FIRST, BF_LAST));
-
-        vector<int> second_facets;
+        vector<int> available_facets;
         for (int f = BF_FIRST; f <= BF_LAST; ++f)
-            if (f != beast_facets[0])
-                second_facets.push_back(f);
-        beast_facets.push_back(second_facets[random2(second_facets.size())]);
+            if (avoid_facets.count(f) == 0)
+                available_facets.insert(available_facets.end(), f);
+
+        ASSERT(available_facets.size() >= 2);
+
+        shuffle_array(available_facets);
+        beast_facets.push_back(available_facets[0]);
+        beast_facets.push_back(available_facets[1]);
 
         ASSERT(beast_facets.size() == 2);
         ASSERT(beast_facets[0] != beast_facets[1]);
