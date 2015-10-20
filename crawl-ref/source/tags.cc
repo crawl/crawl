@@ -2334,7 +2334,7 @@ static void tag_read_you(reader &th)
             if (a >= ABIL_ASHENZARI_END_TRANSFER + 1
                 && a <= ABIL_ASHENZARI_END_TRANSFER + 3)
             {
-                a += ABIL_STOP_RECALL - ABIL_ASHENZARI_END_TRANSFER;
+                a += ABIL_STOP_RECALL - ABIL_ASHENZARI_END_TRANSFER - 1;
             }
         }
         if (a == ABIL_FLY
