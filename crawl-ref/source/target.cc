@@ -1237,7 +1237,14 @@ bool targetter_shotgun::set_aim(coord_def a)
 {
     zapped.clear();
 
-    if (!targetter::set_aim(a))
+    // confused monster targetting might be fuzzed across a wall, so
+    // skip the validation in the parent function and set aim directly.
+    // N.B. We assume this targetter can actually handle an invalid aim
+    // (not all targetters can).
+    if (!agent || agent->is_monster())
+        aim = a;
+    // ... but for UI consistency, players should be restricted to LOS.
+    else if (!targetter::set_aim(a))
         return false;
 
     ray_def orig_ray;
