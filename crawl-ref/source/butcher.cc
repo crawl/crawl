@@ -189,7 +189,7 @@ void butchery(item_def* specific_corpse)
         if (Options.confirm_butcher == CONFIRM_NEVER
             && !_should_butcher(*corpses[0].first))
         {
-            mprf("There isn't anything suitable to %sbutcher here.",
+            mprf("It would be a sin to %sbutcher this!",
                  bottle_blood ? "bottle or " : "");
             return;
         }
