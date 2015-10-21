@@ -208,6 +208,7 @@ protected:
     vector<sockaddr_un> m_dest_addrs;
 
     bool m_controlled_from_web;
+    bool m_need_flush;
 
     void _await_connection();
     wint_t _handle_control_message(sockaddr_un addr, string data);
