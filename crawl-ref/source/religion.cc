@@ -308,7 +308,7 @@ const vector<god_power> god_powers[NUM_GODS] =
     // Trog
     {
       { 1, ABIL_TROG_BERSERK, "go berserk at will" },
-      { 2, ABIL_TROG_REGEN_MR, "call upon Trog for regeneration and protection"
+      { 2, ABIL_TROG_REGEN_MR, "call upon Trog for regeneration and protection "
                                "from hostile enchantments" },
       { 4, ABIL_TROG_BROTHERS_IN_ARMS, "call in reinforcements" },
       {-1, ABIL_TROG_BURN_SPELLBOOKS, "call upon Trog to burn spellbooks in your surroundings" },
