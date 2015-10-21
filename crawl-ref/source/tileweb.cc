@@ -215,6 +215,7 @@ void TilesFramework::finish_message()
         fragment_start += fragment_size;
     }
     m_msg_buf.clear();
+    m_need_flush = true;
 }
 
 void TilesFramework::send_message(const char *format, ...)
@@ -241,7 +242,11 @@ void TilesFramework::send_message(const char *format, ...)
 
 void TilesFramework::flush_messages()
 {
-    send_message("*{\"msg\":\"flush_messages\"}");
+    if (m_need_flush)
+    {
+        send_message("*{\"msg\":\"flush_messages\"}");
+        m_need_flush = false;
+    }
 }
 
 void TilesFramework::_await_connection()
