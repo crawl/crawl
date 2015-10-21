@@ -1940,6 +1940,44 @@ static bool _phial_of_floods()
     return false;
 }
 
+static bool _xoms_chessboard(item_def &board)
+{
+    if (get_nearby_monsters(false, true).empty())
+    {
+        mpr("Xom won't come play if there aren't more players.");
+        return false;
+    }
+
+    mpr("You make a move on Xom's chessboard...");
+
+    if (one_chance_in(100))
+    {
+        god_speaks(GOD_XOM, "Xom booms, \"MINE!\"");
+        mpr("...but Xom just steals the piece!");
+        ASSERT(in_inventory(board));
+        dec_inv_item_quantity(board.link, 1);
+        return true;
+    }
+
+    // Those who do not follow the mad god have
+    // a chance of a bad Xom action instead if they
+    // break a rule. Who knows how bad it could be, though?
+    // It's Xom.
+    // Those who have abandoned Xom will know only suffering
+    int fail_rate = 30 - you.skill(SK_EVOCATIONS);
+    if (!you_worship(GOD_XOM) &&
+        (x_chance_in_y(fail_rate, 100) || player_under_penance(GOD_XOM)))
+    {
+        god_speaks(GOD_XOM, "Xom laughs nastily.");
+        xom_acts(false, random_range(0, 100));
+        return true;
+    }
+
+    xom_rearrange_pieces(you.skill_rdiv(SK_EVOCATIONS, 100, 27));
+    xom_is_stimulated(10);
+    return true;
+}
+
 static void _expend_xp_evoker(item_def &item)
 {
     evoker_debt(item.sub_type) = XP_EVOKE_DEBT;
@@ -2324,6 +2362,15 @@ bool evoke_item(int slot, bool check_range)
             if (_evoke_horn_of_geryon(item))
             {
                 _expend_xp_evoker(item);
+                pract = 1;
+            }
+            else
+                return false;
+            break;
+
+        case MISC_XOMS_CHESSBOARD:
+            if (_xoms_chessboard(item))
+            {
                 pract = 1;
             }
             else
