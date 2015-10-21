@@ -3757,6 +3757,8 @@ colour_t item_def::miscellany_colour() const
         case MISC_BUGGY_EBONY_CASKET:
             return DARKGREY;
 #endif
+        case MISC_XOMS_CHESSBOARD:
+            return ETC_RANDOM;
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
         case MISC_ZIGGURAT:

@@ -4029,6 +4029,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
         return evoker_is_charged(item) ? TILE_MISC_PHIAL_OF_FLOODS
                                        : TILE_MISC_PHIAL_OF_FLOODS_INERT;
 
+    case MISC_XOMS_CHESSBOARD:
+        return TILE_MISC_XOMS_CHESSBOARD;
+
     case MISC_LANTERN_OF_SHADOWS:
         return TILE_MISC_LANTERN_OF_SHADOWS;
 
