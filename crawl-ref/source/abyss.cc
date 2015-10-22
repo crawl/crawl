@@ -393,12 +393,6 @@ void banished(const string &who, const int power)
     if (brdepth[BRANCH_ABYSS] == -1)
         return;
 
-    if (!player_in_branch(BRANCH_ABYSS))
-    {
-        mark_milestone("abyss.enter",
-                       "was cast into the Abyss!" + _who_banished(who));
-    }
-
     if (player_in_branch(BRANCH_ABYSS))
     {
         if (level_id::current().depth < brdepth[BRANCH_ABYSS])
@@ -422,6 +416,9 @@ void banished(const string &who, const int power)
     push_features_to_abyss();
     floor_transition(DNGN_ENTER_ABYSS, orig_terrain(you.pos()),
                      level_id(BRANCH_ABYSS, depth), true);
+    // This is an honest abyss entry, mark milestone
+    mark_milestone("abyss.enter",
+        "was cast into the Abyss!" + _who_banished(who), "parent");
 
     // Xom just might decide to interfere.
     if (you_worship(GOD_XOM) && who != "Xom" && who != "wizard command"
