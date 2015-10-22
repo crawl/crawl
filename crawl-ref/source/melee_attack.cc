@@ -160,7 +160,7 @@ bool melee_attack::handle_phase_attempted()
                 count_action(CACT_MELEE, WPN_STAFF);
         }
         else
-            count_action(CACT_MELEE, 0, 0); // unarmed alttype
+            count_action(CACT_MELEE, 0, 0); // unarmed auxtype
     }
     else
     {
@@ -1315,7 +1315,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 {
     did_hit = true;
 
-    count_action(CACT_MELEE, 0, atk + 1); // aux_attack alttype
+    count_action(CACT_MELEE, 0, atk + 1); // aux_attack auxtype
 
     aux_damage  = player_aux_stat_modify_damage(aux_damage);
 
