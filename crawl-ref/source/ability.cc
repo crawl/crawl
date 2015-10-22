@@ -3248,7 +3248,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 // Note: we're trying for a behaviour where the player gets
 // to keep their assigned invocation slots if they get excommunicated
 // and then rejoin (but if they spend time with another god we consider
-// the old invocation slots void and erase them).  We also try to
+// the old invocation slots void and erase them). We also try to
 // protect any bindings the character might have made into the
 // traditional invocation slots (A-E and X). -- bwr
 static void _set_god_ability_helper(ability_type abil, char letter)
@@ -3279,7 +3279,7 @@ static int _is_god_ability(ability_type abil)
     // TODO: Fix that and remove the following.
     if (abil == ABIL_CHEIBRIADOS_TIME_BEND)
         return GOD_CHEIBRIADOS;
-    if (abil == ABIL_ELYVILON_LESSER_HEALING_OTHERS)
+    if (abil == ABIL_ELYVILON_LESSER_HEALING)
         return GOD_ELYVILON;
     if (abil == ABIL_TROG_BURN_SPELLBOOKS)
         return GOD_TROG;
@@ -3536,24 +3536,8 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
 
 void swap_ability_slots(int index1, int index2, bool silent)
 {
-    if (index1 == index2)
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-
-    mprf_nocap("%c - %s", static_cast<char>(keyin),
-         ability_name(talents[selected].which));
-
-    for (unsigned int i = 0; i < talents.size(); ++i)
-    {
-        if (talents[i].hotkey == keyin)
-        {
-            mprf_nocap("%c - %s", old_key, ability_name(talents[i].which));
-            break;
-        }
-    }
-
+    if (!silent)
+        mprf_nocap("%c - %s", index_to_letter(index2), ability_name(you.ability_letter_table[index2]));
 
     // Swap references in the letter table.
     ability_type tmp = you.ability_letter_table[index2];
