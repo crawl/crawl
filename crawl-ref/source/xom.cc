@@ -3162,8 +3162,8 @@ static int _xom_do_banishment(bool debug = false)
 
     god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
 
-    // Handles note taking.
-    banished("Xom");
+    // Handles note taking, scales depth by XL
+    banished("Xom", you.experience_level);
     const int result = xom_maybe_reverts_banishment(true, debug);
 
     return result;

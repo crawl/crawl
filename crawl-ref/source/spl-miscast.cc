@@ -551,7 +551,7 @@ bool MiscastEffect::_send_to_abyss()
     {
         return _malign_gateway(); // attempt to degrade to malign gateway
     }
-    target->banish(act_source, cause);
+    target->banish(act_source, cause, target->get_experience_level());
     return true;
 }
 
