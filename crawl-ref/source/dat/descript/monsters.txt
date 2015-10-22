@@ -2438,7 +2438,7 @@ beneath the weight of its impacts.
 %%%%
 titan
 
-This huge, bolt-hurling, lightning-limned humanoid is unusually large and
+This huge, bolt-hurling, lightning-lined humanoid is unusually large and
 powerful, even among giants.
 %%%%
 thorn hunter
