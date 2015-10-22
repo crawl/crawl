@@ -5676,11 +5676,11 @@ void player::shield_block_succeeded(actor *foe)
 
     shield_blocks++;
     practise(EX_SHIELD_BLOCK);
-    const item_def *shield = you.slot_item(EQ_SHIELD);
+    const item_def *shield = slot_item(EQ_SHIELD);
     if (shield)
         count_action(CACT_BLOCK, shield->sub_type);
     else
-        count_action(CACT_BLOCK, 0, 0); // alttype Other
+        count_action(CACT_BLOCK, 0, 0); // auxtype Other
 }
 
 int player::missile_deflection() const
