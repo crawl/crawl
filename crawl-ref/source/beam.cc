@@ -4515,7 +4515,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     // purple draconian breath
     if (origin_spell == SPELL_QUICKSILVER_BOLT)
-        debuff_monster(mon);
+        debuff_monster(*mon);
 
     if (dmg)
         beogh_follower_convert(mon, true);
