@@ -2636,7 +2636,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_CHEIBRIADOS_SLOUCH:
         fail_check();
-        if (!cheibriados_slouch(0))
+        if (!cheibriados_slouch())
             return SPRET_ABORT;
         break;
 
