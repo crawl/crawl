@@ -1278,23 +1278,6 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return true;
 
-    case ABIL_TSO_BLESS_WEAPON:
-    case ABIL_KIKU_BLESS_WEAPON:
-    case ABIL_KIKU_GIFT_NECRONOMICON:
-    case ABIL_LUGONU_BLESS_WEAPON:
-        if (grd(you.pos()) != DNGN_FLOOR)
-        {
-            if (!quiet)
-            {
-                mprf("You need to be standing on an open floor tile to receive "
-                     "a %s here.",
-                     abil.ability == ABIL_KIKU_GIFT_NECRONOMICON
-                     ? "Necronomicon" : "blessing");
-            }
-            return false;
-        }
-        return true;
-
     case ABIL_ELYVILON_PURIFICATION:
         if (!you.disease && !you.duration[DUR_POISONING]
             && !you.duration[DUR_CONF] && !you.duration[DUR_SLOW]

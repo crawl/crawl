@@ -203,7 +203,7 @@ Brand Weapon With Holy Wrath ability
 
 Permanently blesses a weapon of your choice with the holy wrath of the Shining
 One. Demon weapons will be converted into a more powerful sacred weapon. This
-blessing may only be used once, and it can't be used on artefact weapons.
+blessing may only be used once, and it cannot be used on artefact weapons.
 %%%%
 # Kikubaaqudgha
 Receive Corpses ability
@@ -220,15 +220,15 @@ Kikubaaqudgha may shield you from the effect, depending on your piety.
 Brand Weapon With Pain ability
 
 Permanently bloodies a weapon of your choice with the essence of pain
-itself. This blessing can't be used on artefact weapons. You must choose
-between this gift or that of a Necronomicon, and either gift may only be
+itself. This blessing cannot be used on artefact weapons. You must choose
+between this gift or that of the Necronomicon, and either gift may only be
 received once.
 %%%%
 Receive Necronomicon ability
 
-Kikubaaqudgha will share the most powerful and sinister secrets of Necromancy
-with you by granting this spellbook. You must choose between this gift or that
-of the pain brand for your weapon, and either gift may only be received once.
+Grants you the Necronomicon, a spellbook containing the most powerful and
+sinister secrets of Necromancy. You must choose between this gift or that of
+branding a weapon with pain, and either gift may only be received once.
 %%%%
 # Yredelemnul
 Animate Remains ability
@@ -412,8 +412,8 @@ ability will leave your health and magic depleted.
 %%%%
 Brand Weapon With Distortion ability
 
-Permanently corrupt a weapon of your choice with a localized field of
-distortion. This blessing may only be used once, and it can't be used on
+Permanently corrupts a weapon of your choice with a localized field of
+distortion. This blessing may only be used once, and it cannot be used on
 artefact weapons.
 %%%%
 # Nemelex Xobeh
