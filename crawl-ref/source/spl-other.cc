@@ -335,7 +335,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
+static int _intoxicate_monsters(coord_def where, int pow)
 {
     monster* mons = monster_at(where);
     if (mons == nullptr
@@ -367,7 +367,9 @@ spret_type cast_intoxicate(int pow, bool fail)
     if (one_chance_in(20) && lose_stat(STAT_INT, 1 + random2(3)))
         mpr("Your head spins!");
 
-    apply_area_visible(_intoxicate_monsters, pow, &you);
+    apply_area_visible([pow] (coord_def where) {
+        return _intoxicate_monsters(where, pow);
+    }, you.pos());
     return SPRET_SUCCESS;
 }
 

@@ -6100,7 +6100,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             simple_monster_message(mons, " radiates an aura of cold.");
         else if (mons->see_cell_no_trans(you.pos()))
             mpr("A wave of cold passes over you.");
-        apply_area_visible(englaciate, min(splpow, 200), mons);
+        apply_area_visible([splpow, mons] (coord_def where) {
+            return englaciate(where, min(splpow, 200), mons);
+        }, mons->pos());
         return;
 
     case SPELL_AWAKEN_VINES:
@@ -6147,9 +6149,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         const int power = min(200, splpow);
         const int num_targs = 1 + random2(random_range(1, 3) + power / 20);
-        const int dam = apply_random_around_square(discharge_monsters,
-                                                   mons->pos(), true, power,
-                                                   num_targs, mons);
+        const int dam =
+            apply_random_around_square([power, mons] (coord_def where) {
+                return discharge_monsters(where, power, mons);
+            }, mons->pos(), true, num_targs);
+
         if (dam > 0)
             scaled_delay(100);
         else
