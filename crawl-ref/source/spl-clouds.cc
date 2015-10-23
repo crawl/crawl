@@ -114,46 +114,6 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
     return SPRET_SUCCESS;
 }
 
-// Assumes beem.range has already been set. -cao
-spret_type stinking_cloud(int pow, bolt &beem, bool fail)
-{
-    beem.name        = "stinking cloud";
-    beem.colour      = GREEN;
-    beem.damage      = dice_def(1, 0);
-    beem.hit         = 20;
-    beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
-    beem.flavour     = BEAM_MEPHITIC;
-    beem.ench_power  = pow;
-    beem.source_id   = MID_PLAYER;
-    beem.thrower     = KILL_YOU;
-    beem.pierce      = false;
-    beem.is_explosion = true;
-    beem.origin_spell = SPELL_MEPHITIC_CLOUD;
-    beem.aux_source.clear();
-
-    // Fire tracer.
-    beem.source            = you.pos();
-    beem.attitude          = ATT_FRIENDLY;
-    beem.friend_info.count = 0;
-    beem.is_tracer         = true;
-    beem.fire();
-
-    if (beem.beam_cancelled)
-    {
-        // We don't want to fire through friendlies.
-        canned_msg(MSG_OK);
-        return SPRET_ABORT;
-    }
-
-    fail_check();
-
-    // Really fire.
-    beem.is_tracer = false;
-    beem.fire();
-
-    return SPRET_SUCCESS;
-}
-
 spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
                       bool fail)
 {

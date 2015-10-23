@@ -74,6 +74,22 @@ static const zap_info zap_data[] =
 },
 
 {
+    ZAP_MEPHITIC,
+    "stinking cloud",
+    100,
+    nullptr,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    GREEN,
+    false,
+    BEAM_MEPHITIC,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    true,
+    0 // Noise comes from explosion
+},
+
+{
     ZAP_HASTE,
     "",
     100,
