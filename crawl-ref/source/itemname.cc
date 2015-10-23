@@ -15,7 +15,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
-#include "asg.h" // for make_name()'s use
+#include "pcg.h" // for make_name()'s use
 #include "branch.h"
 #include "butcher.h"
 #include "cio.h"
@@ -2842,8 +2842,8 @@ const size_t RCS_END = RCS_EM;
  */
 string make_name(uint32_t seed, makename_type name_type)
 {
-    uint32_t sarg[1] = { seed };
-    AsgKISS rng = AsgKISS(sarg, 1);
+    uint64_t sarg[1] = { static_cast<uint64_t>(seed) };
+    PcgRNG rng = PcgRNG(sarg, 1);
 
     string name;
 

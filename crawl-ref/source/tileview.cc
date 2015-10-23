@@ -3,7 +3,6 @@
 #include "tileview.h"
 
 #include "areas.h"
-#include "asg.h"
 #include "branch.h"
 #include "cloud.h"
 #include "colour.h"
@@ -18,6 +17,7 @@
 #include "kills.h"
 #include "mon-util.h"
 #include "options.h"
+#include "pcg.h"
 #include "player.h"
 #include "state.h"
 #include "terrain.h"
@@ -300,12 +300,12 @@ void tile_init_flavour()
     vector<unsigned int> output;
     {
         domino::DominoSet<domino::EdgeDomino> dominoes(domino::cohen_set, 8);
-        uint32_t seed[] =
+        uint64_t seed[] =
         {
-            static_cast<uint32_t>(ui_random(INT_MAX)),
-            static_cast<uint32_t>(ui_random(INT_MAX)),
+            static_cast<uint64_t>(ui_random(INT_MAX)) << 32 | ui_random(INT_MAX),
+            static_cast<uint64_t>(ui_random(INT_MAX)) << 32 | ui_random(INT_MAX),
         };
-        AsgKISS rng(seed, 2);
+        PcgRNG rng(seed, 2);
         dominoes.Generate(X_WIDTH, Y_WIDTH, output, rng);
     }
     for (rectangle_iterator ri(0); ri; ++ri)

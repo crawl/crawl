@@ -15,29 +15,29 @@
 # include <process.h>
 #endif
 
-#include "asg.h"
+#include "pcg.h"
 #include "syscalls.h"
 
 void seed_rng(uint32_t seed)
 {
-    uint32_t sarg[1] = { seed };
-    seed_asg(sarg, 1);
+    uint64_t sarg[1] = { seed };
+    seed_rng(sarg, 1);
 }
 
 void seed_rng()
 {
     /* Use a 160-bit wide seed */
-    uint32_t seed_key[5];
+    uint64_t seed_key[2];
     read_urandom((char*)(&seed_key), sizeof(seed_key));
 
 #ifdef UNIX
     struct tms buf;
-    seed_key[0] += times(&buf);
+    seed_key[0] ^= times(&buf);
 #endif
-    seed_key[1] += getpid();
-    seed_key[2] += time(nullptr);
+    seed_key[1] ^= getpid();
+    seed_key[2] ^= time(nullptr);
 
-    seed_asg(seed_key, 5);
+    seed_rng(seed_key, 2);
 }
 
 uint32_t random_int()
@@ -301,9 +301,22 @@ int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale)
 }
 
 // range [0, 1.0)
+// This uses a technique described by Saito and Matsumoto at
+// MCQMC'08. Given that the IEEE floating point numbers are
+// uniformly distributed over [1,2), we generate a number in
+// this range and then offset it onto the range [0,1). The
+// choice of bits (masking v. shifting) is arbitrary and
+// should be immaterial for high quality generators.
 double random_real()
 {
-    return get_uint32() / (1.0 + AsgKISS::max());
+  static const uint64_t UPPER_MASK = 0x3FF0000000000000ULL;
+  static const uint64_t LOWER_MASK = 0xFFFFFFFFFFFFFULL;
+  const uint64_t value = UPPER_MASK | (get_uint64() & LOWER_MASK);
+  double result;
+  // Portable memory transmutation. The union trick almost always
+  // works, but this is safer.
+  memcpy(&result, &value, sizeof(value));
+  return result - 1.0;
 }
 
 // Roll n_trials, return true if at least one succeeded.  n_trials might be
