@@ -119,8 +119,6 @@ static const char *_god_blessing_description(god_type god)
  * Perform a capstone god ability that blesses a weapon with the god's
  * brand.
 
- * This requires that the player be on ordinary dungeon floor since an altar to
- * the good is created for thematic purposes.
  * @param god    The god performing the blessing.
  * @param brand  The brand being granted.
  * @param colour The colour to flash when the weapon is branded.
@@ -128,7 +126,6 @@ static const char *_god_blessing_description(god_type god)
 */
 bool bless_weapon(god_type god, brand_type brand, colour_t colour)
 {
-    ASSERT(grd(you.pos()) == DNGN_FLOOR);
     ASSERT(can_do_capstone_ability(god));
 
     int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
@@ -192,9 +189,6 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     wpn.flags |= ISFLAG_NOTED_ID;
     wpn.props[FORCED_ITEM_COLOUR_KEY] = colour;
 
-    dungeon_terrain_changed(you.pos(), altar_for_god(god), true, false, true);
-    mprf(MSGCH_GOD, "%s appears before you!",
-         feature_description_at(you.pos(), false, DESC_A, false).c_str());
     mprf(MSGCH_GOD, "Your %s shines brightly!", wpn.name(DESC_QUALNAME).c_str());
     flash_view(UA_PLAYER, colour);
     simple_god_message(" booms: Use this gift wisely!");
@@ -1321,7 +1315,6 @@ bool zin_remove_all_mutations()
 {
     ASSERT(how_mutated());
     ASSERT(can_do_capstone_ability(you.religion));
-    ASSERT(grd(you.pos()) == DNGN_FLOOR);
 
     if (!yesno("Do you wish to cure all of your mutations?", true, 'n'))
     {
@@ -1329,10 +1322,6 @@ bool zin_remove_all_mutations()
         return false;
     }
     zin_recite_interrupt();
-    dungeon_terrain_changed(you.pos(), altar_for_god(GOD_ZIN),
-                            true, false, true);
-    mprf(MSGCH_GOD, "%s appears before you!",
-         feature_description_at(you.pos(), false, DESC_A, false).c_str());
     flash_view(UA_PLAYER, WHITE);
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
@@ -2023,7 +2012,6 @@ bool kiku_take_corpse()
 
 bool kiku_gift_necronomicon()
 {
-    ASSERT(grd(you.pos()) == DNGN_FLOOR);
     ASSERT(can_do_capstone_ability(you.religion));
 
     if (!yesno("Do you wish to receive a Necronomicon?", true, 'n'))
@@ -2038,10 +2026,6 @@ bool kiku_gift_necronomicon()
     {
         return false;
     }
-    dungeon_terrain_changed(you.pos(), altar_for_god(GOD_KIKUBAAQUDGHA),
-                            true, false, true);
-    mprf(MSGCH_GOD, "%s appears before you!",
-         feature_description_at(you.pos(), false, DESC_A, false).c_str());
     simple_god_message(" grants you a gift!");
     flash_view(UA_PLAYER, RED);
 #ifndef USE_TILE_LOCAL
