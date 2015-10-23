@@ -29,14 +29,6 @@ void seed_rng()
     /* Use a 128-bit wide seed */
     uint64_t seed_key[2];
     read_urandom((char*)(&seed_key), sizeof(seed_key));
-
-#ifdef UNIX
-    struct tms buf;
-    seed_key[0] ^= times(&buf);
-#endif
-    seed_key[1] ^= getpid();
-    seed_key[2] ^= time(nullptr);
-
     seed_rng(seed_key, 2);
 }
 
