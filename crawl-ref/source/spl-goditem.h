@@ -8,8 +8,10 @@ spret_type cast_healing(int pow, int max_pow, bool divine_ability = false,
                         bool not_self = false,
                         targ_mode_type mode = TARG_NUM_MODES);
 
+bool player_is_debuffable();
 void debuff_player();
-void debuff_monster(monster* mons);
+bool monster_is_debuffable(const monster &mon);
+void debuff_monster(monster &mon);
 
 int detect_traps(int pow);
 int detect_items(int pow);
