@@ -231,7 +231,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\areas.cc" />
     <ClCompile Include="..\arena.cc" />
     <ClCompile Include="..\artefact.cc" />
-    <ClCompile Include="..\asg.cc" />
     <ClCompile Include="..\attack.cc" />
     <ClCompile Include="..\attitude-change.cc" />
     <ClCompile Include="..\beam.cc" />
@@ -366,6 +365,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\ng-wanderer.cc" />
     <ClCompile Include="..\orb.cc" />
     <ClCompile Include="..\package.cc" />
+    <ClCompile Include="..\pcg.cc" />
     <ClCompile Include="..\perlin.cc" />
     <ClCompile Include="..\place-info.cc" />
     <ClCompile Include="..\player-act.cc" />
@@ -620,7 +620,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\art-enum.h" />
     <ClInclude Include="..\art-func.h" />
     <ClInclude Include="..\artefact.h" />
-    <ClInclude Include="..\asg.h" />
     <ClInclude Include="..\attack.h" />
     <ClInclude Include="..\attitude-change.h" />
     <ClInclude Include="..\beam.h" />
@@ -810,6 +809,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\ouch.h" />
     <ClInclude Include="..\output.h" />
     <ClInclude Include="..\pattern.h" />
+    <ClInclude Include="..\pcg.h" />
     <ClInclude Include="..\place.h" />
     <ClInclude Include="..\playable.h" />
     <ClInclude Include="..\player.h" />
