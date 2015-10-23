@@ -2319,8 +2319,6 @@ static void tag_read_you(reader &th)
     for (int i = 0; i < count; i++)
     {
         int a = unmarshallShort(th);
-        ASSERT_RANGE(a, -1, NUM_ABILITIES);
-        ASSERT(a != 0);
 #if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() < TAG_MINOR_ABIL_1000)
         {
@@ -2368,7 +2366,13 @@ static void tag_read_you(reader &th)
             else if (a > ABIL_DIG && a < ABIL_MIN_EVOKE)
                 a -= 1;
         }
+
+        // Bad offset from games transferred prior to 0.17-a0-2121-g4af814f.
+        if (a == NUM_ABILITIES)
+            a = ABIL_NON_ABILITY;
 #endif
+        ASSERT_RANGE(a, ABIL_NON_ABILITY, NUM_ABILITIES);
+        ASSERT(a != 0);
         you.ability_letter_table[i] = static_cast<ability_type>(a);
     }
 
