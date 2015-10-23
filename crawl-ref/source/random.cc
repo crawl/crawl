@@ -28,7 +28,7 @@ void seed_rng()
 {
     /* Use a 128-bit wide seed */
     uint64_t seed_key[2];
-    read_urandom((char*)(&seed_key), sizeof(seed_key));
+    ASSERT(read_urandom((char*)(&seed_key), sizeof(seed_key)));
     seed_rng(seed_key, 2);
 }
 
