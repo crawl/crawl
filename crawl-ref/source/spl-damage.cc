@@ -131,10 +131,7 @@ spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
 
     tempbeam.explode(false);
     if (tempbeam.beam_cancelled)
-    {
-        canned_msg(MSG_OK);
         return SPRET_ABORT;
-    }
 
     beam.refine_for_explosion();
     beam.explode(false);
