@@ -9,7 +9,6 @@ adjust.o \
 areas.o \
 arena.o \
 artefact.o \
-asg.o \
 attack.o \
 attitude-change.o \
 beam.o \
@@ -177,6 +176,7 @@ ouch.o \
 output.o \
 package.o \
 pattern.o \
+pcg.o \
 perlin.o \
 place-info.o \
 place.o \

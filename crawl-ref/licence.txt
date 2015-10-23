@@ -15,6 +15,7 @@ These include:
 * MIT: json.cc/json.h, some .js files in webserver/static/scripts/contrib/
        worley.{cc,h}
 * zlib: webserver/static/scripts/contrib/inflate.js
+* Apache v2: pcg.cc
 
 While a majority of the tiles are in the Public Domain, there is no accurate
 list. To err on the side of caution, please refer to Chris Hamons'
