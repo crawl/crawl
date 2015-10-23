@@ -309,14 +309,14 @@ int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale)
 // should be immaterial for high quality generators.
 double random_real()
 {
-  static const uint64_t UPPER_MASK = 0x3FF0000000000000ULL;
-  static const uint64_t LOWER_MASK = 0xFFFFFFFFFFFFFULL;
-  const uint64_t value = UPPER_MASK | (get_uint64() & LOWER_MASK);
-  double result;
-  // Portable memory transmutation. The union trick almost always
-  // works, but this is safer.
-  memcpy(&result, &value, sizeof(value));
-  return result - 1.0;
+    static const uint64_t UPPER_MASK = 0x3FF0000000000000ULL;
+    static const uint64_t LOWER_MASK = 0xFFFFFFFFFFFFFULL;
+    const uint64_t value = UPPER_MASK | (get_uint64() & LOWER_MASK);
+    double result;
+    // Portable memory transmutation. The union trick almost always
+    // works, but this is safer.
+    memcpy(&result, &value, sizeof(value));
+    return result - 1.0;
 }
 
 // Roll n_trials, return true if at least one succeeded.  n_trials might be
