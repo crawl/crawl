@@ -50,13 +50,9 @@ PcgRNG::PcgRNG(uint64_t init_key[], int key_length)
     if (key_length > 0)
         state_ = init_key[0];
     if (key_length > 1)
-    {
         inc_ = init_key[1];
-    }
     else
-    {
-        inc_ ^= get_uint32();      
-    }
+        inc_ ^= get_uint32();
 }
 
 uint32_t get_uint32(int generator)
