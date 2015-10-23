@@ -1551,9 +1551,6 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_iood(&you, powc, &beam, 0, 0, MHITNOT, fail);
 
     // Clouds and explosions.
-    case SPELL_MEPHITIC_CLOUD:
-        return stinking_cloud(powc, beam, fail);
-
     case SPELL_POISONOUS_CLOUD:
     case SPELL_HOLY_BREATH:
     case SPELL_FREEZING_CLOUD:
