@@ -64,7 +64,7 @@ uint32_t get_uint32(int generator)
     return PcgRNG::generator(generator).get_uint32();
 }
 
-uint32_t get_uint64(int generator)
+uint64_t get_uint64(int generator)
 {
     return PcgRNG::generator(generator).get_uint64();
 }

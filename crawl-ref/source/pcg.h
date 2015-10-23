@@ -21,6 +21,6 @@ class PcgRNG
 };
 
 uint32_t get_uint32(int generator = 0);
-uint32_t get_uint64(int generator = 0);
+uint64_t get_uint64(int generator = 0);
 void seed_rng(uint64_t[], int);
 #endif
