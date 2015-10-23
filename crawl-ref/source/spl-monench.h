@@ -3,7 +3,7 @@
 
 #include "spl-cast.h"
 
-int englaciate(coord_def where, int pow, int, actor *agent);
+int englaciate(coord_def where, int pow, actor *agent);
 spret_type cast_englaciation(int pow, bool fail);
 bool backlight_monster(monster* mons);
 

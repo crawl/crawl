@@ -1437,10 +1437,9 @@ static bool _irradiate_is_safe()
  *
  * @param where     The cell in question.
  * @param pow       The power with which the spell is being cast.
- * @param aux       Not sure; seems to be always 0?
  * @param agent     The agent (player or monster) doing the irradiating.
  */
-static int _irradiate_cell(coord_def where, int pow, int aux, actor *agent)
+static int _irradiate_cell(coord_def where, int pow, actor *agent)
 {
     monster *mons = monster_at(where);
     if (!mons)
@@ -1512,7 +1511,9 @@ spret_type cast_irradiate(int powc, actor* who, bool fail)
     beam.loudness = 0;
     beam.explode(true, true);
 
-    apply_random_around_square(_irradiate_cell, who->pos(), true, powc, 8, who);
+    apply_random_around_square([powc, who] (coord_def where) {
+        return _irradiate_cell(where, powc, who);
+    }, who->pos(), true, 8);
 
     if (who->is_player())
     {
@@ -1554,7 +1555,7 @@ static int _ignite_tracer_cloud_value(coord_def where, actor *agent)
  *                  If it's not a tracer, return 1 if a flame cloud is created
  *                  and 0 otherwise.
  */
-static int _ignite_poison_clouds(coord_def where, int pow, int, actor *agent)
+static int _ignite_poison_clouds(coord_def where, int pow, actor *agent)
 {
     const bool tracer = (pow == -1);  // Only testing damage, not dealing it
 
@@ -1591,7 +1592,7 @@ static int _ignite_poison_clouds(coord_def where, int pow, int, actor *agent)
  *                  If it's not a tracer, return 1 if damage is caused & 0
  *                  otherwise.
  */
-static int _ignite_poison_monsters(coord_def where, int pow, int, actor *agent)
+static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
 {
     bolt beam;
     beam.flavour = BEAM_FIRE;   // This is dumb, only used for adjust!
@@ -1663,7 +1664,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *agent)
  *                  otherwise.
  */
 
-static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
+static int _ignite_poison_player(coord_def where, int pow, actor *agent)
 {
     if (agent->is_player() || where != you.pos())
         return 0;
@@ -1780,10 +1781,11 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool mon_tracer)
     else if (mon_tracer)
     {
         // Estimate how much useful effect we'd get if we cast the spell now
-        int work = 0;
-        work += apply_area_visible(_ignite_poison_clouds, -1, agent);
-        work += apply_area_visible(_ignite_poison_monsters, -1, agent);
-        work += apply_area_visible(_ignite_poison_player, -1, agent);
+        const int work = apply_area_visible([agent] (coord_def where) {
+            return _ignite_poison_clouds(where, -1, agent)
+                 + _ignite_poison_monsters(where, -1, agent)
+                 + _ignite_poison_player(where, -1, agent);
+        }, agent->pos());
 
         return work > 0 ? SPRET_SUCCESS : SPRET_ABORT;
     }
@@ -1799,10 +1801,16 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool mon_tracer)
          agent->conj_verb("ignite").c_str(),
          agent->pronoun(PRONOUN_POSSESSIVE).c_str());
 
-    apply_area_visible(_ignite_poison_clouds, pow, agent);
-    apply_area_visible(_ignite_poison_monsters, pow, agent);
-    // Only relevant if a monster is casting this spell (never hurts the caster)
-    apply_area_visible(_ignite_poison_player, pow, agent);
+    // this could conceivably cause crashes if the player dies midway through
+    // maybe split it up...?
+    apply_area_visible([pow, agent] (coord_def where) {
+        _ignite_poison_clouds(where, pow, agent);
+        _ignite_poison_monsters(where, pow, agent);
+        // Only relevant if a monster is casting this spell
+        // (never hurts the caster)
+        _ignite_poison_player(where, pow, agent);
+        return 0; // ignored
+    }, agent->pos());
 
     return SPRET_SUCCESS;
 }
@@ -1817,12 +1825,12 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool mon_tracer)
  */
 void local_ignite_poison(coord_def pos, int pow, actor* agent)
 {
-    _ignite_poison_clouds(pos, pow, 0, agent);
-    _ignite_poison_monsters(pos, pow, 0, agent);
-    _ignite_poison_player(pos, pow, 0, agent);
+    _ignite_poison_clouds(pos, pow, agent);
+    _ignite_poison_monsters(pos, pow, agent);
+    _ignite_poison_player(pos, pow, agent);
 }
 
-int discharge_monsters(coord_def where, int pow, int, actor *agent)
+int discharge_monsters(coord_def where, int pow, actor *agent)
 {
     actor* victim = actor_at(where);
 
@@ -1889,8 +1897,9 @@ int discharge_monsters(coord_def where, int pow, int, actor *agent)
     {
         mpr("The lightning arcs!");
         pow /= (coinflip() ? 2 : 3);
-        damage += apply_random_around_square(discharge_monsters, where,
-                                             true, pow, 1, agent);
+        damage += apply_random_around_square([pow, agent] (coord_def where2) {
+            return discharge_monsters(where2, pow, agent);
+        }, where, true, 1);
     }
     else if (damage > 0)
     {
@@ -1937,8 +1946,10 @@ spret_type cast_discharge(int pow, bool fail)
         return SPRET_ABORT;
 
     const int num_targs = 1 + random2(random_range(1, 3) + pow / 20);
-    const int dam = apply_random_around_square(discharge_monsters, you.pos(),
-                                               true, pow, num_targs, &you);
+    const int dam =
+        apply_random_around_square([pow] (coord_def where) {
+            return discharge_monsters(where, pow, &you);
+        }, you.pos(), true, num_targs);
 
     dprf("Arcs: %d Damage: %d", num_targs, dam);
 

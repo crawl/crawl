@@ -3543,7 +3543,9 @@ static int _lugonu_warp_monster(monster* mon, int pow)
 
 static void _lugonu_warp_area(int pow)
 {
-    apply_monsters_around_square(_lugonu_warp_monster, you.pos(), pow);
+    apply_monsters_around_square([pow] (monster* mon) {
+        return _lugonu_warp_monster(mon, pow);
+    }, you.pos());
 }
 
 void lugonu_bend_space()
@@ -3607,30 +3609,29 @@ static int _slouch_damage(monster *mon)
                 - player_numer / player_movement_speed() / player_speed());
 }
 
-// Must return an int, not a bool, for apply_area_visible.
-static int _slouchable(coord_def where, int /*pow*/, int, actor* agent)
+static bool _slouchable(coord_def where)
 {
     monster* mon = monster_at(where);
     if (mon == nullptr || mon->is_stationary() || mon->cannot_move()
         || mons_is_projectile(mon->type)
         || mon->asleep() && !mons_is_confused(mon))
     {
-        return 0;
+        return false;
     }
 
-    return (_slouch_damage(mon) > 0) ? 1 : 0;
+    return _slouch_damage(mon) > 0;
 }
 
 static bool _act_slouchable(const actor *act)
 {
     if (act->is_player())
         return false;  // too slow-witted
-    return _slouchable(act->pos(), 0, 0, 0);
+    return _slouchable(act->pos());
 }
 
-static int _slouch_monsters(coord_def where, int /*pow*/, int, actor* agent)
+static int _slouch_monsters(coord_def where)
 {
-    if (!_slouchable(where, 0, 0, agent))
+    if (!_slouchable(where))
         return 0;
 
     monster* mon = monster_at(where);
@@ -3640,13 +3641,13 @@ static int _slouch_monsters(coord_def where, int /*pow*/, int, actor* agent)
     // towards the middle.
     const int dmg = roll_dice(_slouch_damage(mon), 3) / 2;
 
-    mon->hurt(agent, dmg, BEAM_MMISSILE, KILLED_BY_BEAM, "", "", true);
+    mon->hurt(&you, dmg, BEAM_MMISSILE, KILLED_BY_BEAM, "", "", true);
     return 1;
 }
 
 bool cheibriados_slouch()
 {
-    int count = apply_area_visible(_slouchable, 0, &you);
+    int count = apply_area_visible(_slouchable, you.pos());
     if (!count)
         if (!yesno("There's no one hasty visible. Invoke Slouch anyway?",
                    true, 'n'))
@@ -3662,7 +3663,7 @@ bool cheibriados_slouch()
     mpr("You can feel time thicken for a moment.");
     dprf("your speed is %d", player_movement_speed());
 
-    apply_area_visible(_slouch_monsters, 0, &you);
+    apply_area_visible(_slouch_monsters, you.pos());
     return true;
 }
 
@@ -6500,7 +6501,7 @@ bool ru_power_leap()
     return return_val;
 }
 
-static int _apocalypseable(coord_def where, int pow, int, actor* agent)
+static int _apocalypseable(coord_def where)
 {
     monster* mon = monster_at(where);
     if (mon == nullptr || mons_is_projectile(mon->type) || mon->friendly())
@@ -6508,9 +6509,9 @@ static int _apocalypseable(coord_def where, int pow, int, actor* agent)
     return 1;
 }
 
-static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
+static int _apply_apocalypse(coord_def where)
 {
-    if (!_apocalypseable(where, pow, dummy, agent))
+    if (!_apocalypseable(where))
         return 0;
     monster* mons = monster_at(where);
     ASSERT(mons);
@@ -6556,22 +6557,23 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
     }
 
     //damage scales with XL and piety
+    const int pow = you.piety;
     int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 584);
     int dmg = 10 + roll_dice(num_dice, die_size);
 
-    mons->hurt(agent, dmg, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
+    mons->hurt(&you, dmg, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
 
     if (mons->alive() && enchantment != ENCH_NONE)
     {
         simple_monster_message(mons, message.c_str());
-        mons->add_ench(mon_enchant(enchantment, 1, agent, duration));
+        mons->add_ench(mon_enchant(enchantment, 1, &you, duration));
     }
     return 1;
 }
 
 bool ru_apocalypse()
 {
-    int count = apply_area_visible(_apocalypseable, you.piety, &you);
+    int count = apply_area_visible(_apocalypseable, you.pos());
     if (!count)
     {
         if (!yesno("There are no visible enemies. Unleash your apocalypse anyway?",
@@ -6582,7 +6584,7 @@ bool ru_apocalypse()
     }
     mpr("You reveal the great annihilating truth to your foes!");
     noisy(30, you.pos());
-    apply_area_visible(_apply_apocalypse, you.piety, &you);
+    apply_area_visible(_apply_apocalypse, you.pos());
     drain_player(100, false, true);
     return true;
 }

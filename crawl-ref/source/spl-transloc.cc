@@ -937,8 +937,9 @@ spret_type cast_dispersal(int pow, bool fail)
 {
     fail_check();
     const int radius = spell_range(SPELL_DISPERSAL, pow);
-    if (!apply_monsters_around_square(_disperse_monster, you.pos(), pow,
-                                      radius))
+    if (!apply_monsters_around_square([pow] (monster* mon) {
+            return _disperse_monster(mon, pow);
+        }, you.pos(), radius))
     {
         mpr("The air shimmers briefly around you.");
     }

@@ -437,24 +437,14 @@ static bool _check_recite()
 }
 
 
-static int _zin_recite_to_monsters(coord_def where, int prayertype, int, actor *)
-{
-    ASSERT_RANGE(prayertype, 0, NUM_RECITE_TYPES);
-    return zin_recite_to_single_monster(where);
-}
-
-
 static void _handle_recitation(int step)
 {
     mprf("\"%s\"",
          zin_recite_text(you.attribute[ATTR_RECITE_SEED],
                          you.attribute[ATTR_RECITE_TYPE], step).c_str());
 
-    if (apply_area_visible(_zin_recite_to_monsters,
-                           you.attribute[ATTR_RECITE_TYPE], &you))
-    {
+    if (apply_area_visible(zin_recite_to_single_monster, you.pos()))
         viewwindow();
-    }
 
     // Recite trains more than once per use, because it has a
     // long timer in between uses and actually takes up multiple
