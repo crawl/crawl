@@ -6079,6 +6079,9 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
                     ++cells_seen;
 
                 explosion_affect_cell(delta + pos());
+
+                if (beam_cancelled) // don't spam prompts
+                    return false;
             }
         }
     }
