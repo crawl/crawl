@@ -3608,7 +3608,7 @@ static int _slouch_damage(monster *mon)
 }
 
 // Must return an int, not a bool, for apply_area_visible.
-static int _slouchable(coord_def where, int pow, int, actor* agent)
+static int _slouchable(coord_def where, int /*pow*/, int, actor* agent)
 {
     monster* mon = monster_at(where);
     if (mon == nullptr || mon->is_stationary() || mon->cannot_move()
@@ -3628,9 +3628,9 @@ static bool _act_slouchable(const actor *act)
     return _slouchable(act->pos(), 0, 0, 0);
 }
 
-static int _slouch_monsters(coord_def where, int pow, int dummy, actor* agent)
+static int _slouch_monsters(coord_def where, int /*pow*/, int, actor* agent)
 {
-    if (!_slouchable(where, pow, dummy, agent))
+    if (!_slouchable(where, 0, 0, agent))
         return 0;
 
     monster* mon = monster_at(where);
@@ -3644,9 +3644,9 @@ static int _slouch_monsters(coord_def where, int pow, int dummy, actor* agent)
     return 1;
 }
 
-bool cheibriados_slouch(int pow)
+bool cheibriados_slouch()
 {
-    int count = apply_area_visible(_slouchable, pow, &you);
+    int count = apply_area_visible(_slouchable, 0, &you);
     if (!count)
         if (!yesno("There's no one hasty visible. Invoke Slouch anyway?",
                    true, 'n'))
@@ -3662,7 +3662,7 @@ bool cheibriados_slouch(int pow)
     mpr("You can feel time thicken for a moment.");
     dprf("your speed is %d", player_movement_speed());
 
-    apply_area_visible(_slouch_monsters, pow, &you);
+    apply_area_visible(_slouch_monsters, 0, &you);
     return true;
 }
 
