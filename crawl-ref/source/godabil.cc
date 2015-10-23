@@ -3651,6 +3651,7 @@ bool cheibriados_slouch(int pow)
         if (!yesno("There's no one hasty visible. Invoke Slouch anyway?",
                    true, 'n'))
         {
+            canned_msg(MSG_OK);
             return false;
         }
 
