@@ -749,12 +749,12 @@ Convert to Beogh ability
 
 Swears fealty to Beogh, the god of cave orcs. This god demands that all
 non-believers must die, but new believers must be spared and accepted into the
-fold. Beware, for orcs who haven't seen you convert may still be hostile until
-you've built your reputation!
+fold. Beware, for orcs who do not see you convert may still be hostile until
+you have built your reputation!
 
-All other gods hate Beogh, and don't take desertion lightly.
+All other gods hate Beogh, and do not take desertion lightly.
 %%%%
 Donate Gold ability
 
-Donate half of your gold to Zin, which will increase your piety over time. The
+Donates half of your gold to Zin, which will increase your piety over time. The
 overall increase is determined by the size of your donation.
