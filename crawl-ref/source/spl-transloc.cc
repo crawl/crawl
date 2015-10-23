@@ -1002,19 +1002,20 @@ void attract_actor(const actor* agent, actor* victim, const coord_def pos,
 bool fatal_attraction(actor *victim, actor *agent, int pow)
 {
     bool affected = false;
-    for (actor_near_iterator ai(victim->pos(), LOS_NO_TRANS); ai; ++ai)
+    const auto pos = victim->pos(); // in case it dies
+    for (actor_near_iterator ai(pos, LOS_NO_TRANS); ai; ++ai)
     {
         if (*ai == victim || *ai == agent || ai->is_stationary())
             continue;
 
-        const int range = (victim->pos() - ai->pos()).rdist();
+        const int range = (pos - ai->pos()).rdist();
         const int strength =
             min(4, (pow / 10) / (range*range));
         if (strength <= 0)
             continue;
 
         affected = true;
-        attract_actor(agent, *ai, victim->pos(), pow, strength);
+        attract_actor(agent, *ai, pos, pow, strength);
     }
 
     return affected;
