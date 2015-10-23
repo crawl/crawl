@@ -55,9 +55,14 @@ public:
     virtual bool move_to_pos(const coord_def &c, bool clear_net = true,
                              bool force = false) = 0;
 
+
     virtual void apply_location_effects(const coord_def &oldpos,
                                         killer_type killer = KILL_NONE,
                                         int killernum = -1) = 0;
+
+    // Place actor as near a location as possible. If slid, will prefer
+    // positions closer to the starting location.
+    virtual void place_near(const coord_def &c, bool slide = true);
 
     virtual void set_position(const coord_def &c);
     const coord_def& pos() const { return position; }

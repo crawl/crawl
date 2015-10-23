@@ -8,6 +8,7 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "attack.h"
+#include "coordit.h"
 #include "directn.h"
 #include "env.h"
 #include "fprop.h"
@@ -870,4 +871,27 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
          KILLED_BY_COLLISION, "",
          feature_description_at(newpos, false, DESC_A, false));
+}
+
+void actor::place_near(const coord_def &c, bool slide)
+{
+    vector<coord_def> candidates;
+
+    for (radius_iterator ri(c, c.distance_from(position) - 1, C_SQUARE, true); ri; ++ri)
+        if (!actor_at(*ri) && can_pass_through(*ri))
+            candidates.push_back(*ri);
+
+    if (candidates.size() == 0)
+        return;
+
+    sort(begin(candidates), end(candidates),
+         [&](coord_def a, coord_def b) {
+        if (a.distance_from(c) < b.distance_from(c))
+            return true;
+        else if (slide && a == b)
+            return a.distance_from(position) < b.distance_from(position);
+        return false;
+    });
+
+    move_to_pos(candidates.front());
 }

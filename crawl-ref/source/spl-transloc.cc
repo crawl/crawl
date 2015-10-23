@@ -977,19 +977,11 @@ void attract_actor(const actor* agent, actor* victim, const coord_def pos,
         ray.advance();
         const coord_def newpos = ray.pos();
 
-        if (!victim->can_pass_through_feat(grd(newpos)))
+        if (!victim->can_pass_through_feat(grd(newpos)) || newpos == pos)
         {
             victim->collide(newpos, agent, pow);
             break;
         }
-        else if (actor* act_at_space = actor_at(newpos))
-        {
-            if (victim != act_at_space)
-                victim->collide(newpos, agent, pow);
-            break;
-        }
-        else
-            victim->move_to_pos(newpos, false);
 
         if (auto mons = victim->as_monster())
         {
@@ -997,6 +989,8 @@ void attract_actor(const actor* agent, actor* victim, const coord_def pos,
                                                          : coord_def(0, 0));
         }
     }
+
+    victim->place_near(pos);
 }
 
 bool fatal_attraction(actor *victim, actor *agent, int pow)
