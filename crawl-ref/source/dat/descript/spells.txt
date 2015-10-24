@@ -1210,6 +1210,11 @@ Steam Ball spell
 
 Throws a ball of hot steam towards a targeted creature.
 %%%%
+Steam Blast spell
+
+Mixes ice and fire to create a blast of scalding steam, resulting in both injury
+and, for a short period, concealment within its area of effect.
+%%%%
 Sticks to Snakes spell
 
 Transforms a number of arrows in inventory into short-lived snakes, creating

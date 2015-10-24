@@ -3630,6 +3630,18 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_STEAM_BLAST, "Steam Blast",
+    SPTYP_FIRE | SPTYP_ICE,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF
+    | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
+    4,
+    100,
+    4, 4,
+    3, 0,
+    nullptr,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

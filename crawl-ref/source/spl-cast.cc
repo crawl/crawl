@@ -1049,6 +1049,8 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_MEPHITIC_CLOUD:
         return new targetter_beam(&you, range, ZAP_BREATHE_MEPHITIC, pow,
                                   pow >= 100 ? 1 : 0, 1);
+    case SPELL_STEAM_BLAST:
+        return new targetter_beam(&you, range, ZAP_STEAM_BLAST, pow, 0, 1);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return new targetter_imb(&you, pow, range);
     case SPELL_FIRE_STORM:

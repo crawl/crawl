@@ -1211,4 +1211,20 @@ static const zap_info zap_data[] =
     6
 },
 
+{
+    ZAP_STEAM_BLAST,
+    "blast of steam",
+    50,
+    new dicedef_calculator<3, 4, 1, 5>,
+    new tohit_calculator<6, 1, 6>,
+    LIGHTGREY,
+    false,
+    BEAM_STEAM,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    true,
+    0
+},
+
 };

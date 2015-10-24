@@ -1188,7 +1188,8 @@ void bolt::affect_cell()
     // If the player can ever walk through walls, this will need
     // special-casing too.
     bool hit_player = found_player();
-    if (hit_player && can_affect_actor(&you))
+    if (hit_player && can_affect_actor(&you)
+        && origin_spell != SPELL_STEAM_BLAST)
     {
         affect_player();
         if (hit == AUTOMATIC_HIT && !pierce)
@@ -1199,7 +1200,8 @@ void bolt::affect_cell()
     // stop single target beams from affecting a monster if they already
     // affected the player on this square. -cao
     const bool still_wall = (was_solid && old_pos == pos());
-    if ((!hit_player || pierce || is_explosion) && !still_wall)
+    if ((!hit_player || pierce || is_explosion) && !still_wall
+        && origin_spell != SPELL_STEAM_BLAST)
     {
         monster *m = monster_at(pos());
         if (m && can_affect_actor(m))
@@ -2498,6 +2500,9 @@ cloud_type bolt::get_cloud_type() const
     if (origin_spell == SPELL_SPECTRAL_CLOUD)
         return CLOUD_SPECTRAL;
 
+    if (origin_spell == SPELL_STEAM_BLAST)
+        return CLOUD_STEAM;
+
     return CLOUD_NONE;
 }
 
@@ -2518,6 +2523,7 @@ int bolt::get_cloud_pow() const
 int bolt::get_cloud_size(bool min, bool max) const
 {
     if (origin_spell == SPELL_MEPHITIC_CLOUD
+        || origin_spell == SPELL_STEAM_BLAST
         || origin_spell == SPELL_MIASMA_BREATH
         || origin_spell == SPELL_FREEZING_CLOUD)
     {
@@ -2893,13 +2899,22 @@ void bolt::affect_place_explosion_clouds()
         return;
     }
 
-    if (flavour == BEAM_MEPHITIC)
+    if (flavour == BEAM_MEPHITIC || origin_spell == SPELL_STEAM_BLAST)
     {
+        const bool is_meph = flavour == BEAM_MEPHITIC;
         const coord_def center = (aimed_at_feet ? source : ray.pos());
-        if (p == center || x_chance_in_y(125 + ench_power, 225))
+        const int cloud_chance_denom = is_meph ? 225 : 450;
+        if (p == center || x_chance_in_y(125 + ench_power, cloud_chance_denom))
         {
-            place_cloud(CLOUD_MEPHITIC, p, roll_dice(2, 3 + ench_power / 20),
-                        agent());
+            const cloud_type ctype = is_meph ? CLOUD_MEPHITIC : CLOUD_STEAM;
+            place_cloud(ctype, p, roll_dice(2, 3 + ench_power / 20), agent());
+            // steam blast also scalds every tile that clouds appear on.
+            if (!is_meph)
+            {
+                actor *act = actor_at(p);
+                if (act)
+                    affect_actor(act);
+            }
         }
     }
 
@@ -5838,6 +5853,10 @@ const map<spell_type, explosion_sfx> spell_explosions = {
     { SPELL_EXPLOSIVE_BOLT, {
         "The explosive bolt releases an explosion!",
         "an explosion",
+    } },
+    { SPELL_STEAM_BLAST, {
+        "The ball explodes into a blast of steam!",
+        "a loud popping sound", // apparently sounds like popcorn...?
     } },
 };
 

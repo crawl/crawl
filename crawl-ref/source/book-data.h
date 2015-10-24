@@ -151,6 +151,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Clouds
     SPELL_MEPHITIC_CLOUD,
     SPELL_CONJURE_FLAME,
+    SPELL_STEAM_BLAST,
     SPELL_POISONOUS_CLOUD,
     SPELL_FREEZING_CLOUD,
     SPELL_RING_OF_FLAMES,
@@ -339,7 +340,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_IGNITE_POISON,
     SPELL_INTOXICATE,
     SPELL_CONDENSATION_SHIELD,
-    SPELL_PETRIFY,
+    SPELL_STEAM_BLAST,
     SPELL_IRRADIATE,
 },
 

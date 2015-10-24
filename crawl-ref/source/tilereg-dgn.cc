@@ -537,6 +537,7 @@ static bool _spell_in_range(spell_type spell, actor* target)
     switch (spell)
     {
     case SPELL_MEPHITIC_CLOUD:
+    case SPELL_STEAM_BLAST:
     case SPELL_FIREBALL:
     case SPELL_FREEZING_CLOUD:
     case SPELL_POISONOUS_CLOUD:
