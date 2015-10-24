@@ -1025,8 +1025,11 @@ bool startup_step()
 
     bool newchar = false;
     newgame_def ng;
-    if (choice.filename.empty())
+    if (choice.filename.empty() && !choice.name.empty())
+    {
         choice.filename = get_save_filename(choice.name);
+    }
+
     if (save_exists(choice.filename) && restore_game(choice.filename))
         save_player_name();
     else if (choose_game(ng, choice, defaults)
