@@ -38,13 +38,14 @@ PcgRNG::get_uint64()
 }
 
 PcgRNG::PcgRNG()
-{
-    // Choose base state arbitrarily. There's nothing up my sleeve.
-    state_ = 18446744073709551557ULL; // Largest 64-bit prime
-    inc_ =   2305843009213693951ULL; // Largest Mersenne prime under 64-bits
-}
+      // Choose base state arbitrarily. There's nothing up my sleeve.
+    : state_(18446744073709551557ULL),
+      // Largest Mersenne prime under 64-bits
+      inc_(2305843009213693951ULL)
+{ }
 
 PcgRNG::PcgRNG(uint64_t init_key[], int key_length)
+    : PcRNG()
 {
 
     if (key_length > 0)
