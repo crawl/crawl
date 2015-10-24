@@ -890,10 +890,12 @@ again:
             else
             {
                 // bad name
-                textcolour(RED);
                 cgotoxy(SCROLLER_MARGIN_X ,GAME_MODES_START_Y - 1);
                 clear_to_end_of_line();
+                textcolour(RED);
                 cprintf("That's a silly name");
+                // Don't make the next key re-enter the game.
+                menu.clear_selections();
             }
             continue;
 
