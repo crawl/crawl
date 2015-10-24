@@ -920,7 +920,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_MEPHITIC_CLOUD:
-        beam.name     = "foul vapour";
+        beam.name     = "stinking cloud";
         beam.damage   = dice_def(1, 0);
         beam.colour   = GREEN;
         beam.flavour  = BEAM_MEPHITIC;

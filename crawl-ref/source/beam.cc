@@ -5813,17 +5813,63 @@ int bolt::range_used_on_hit() const
     return used;
 }
 
+// Information for how various explosions look & sound.
+struct explosion_sfx
+{
+    // A message printed when the player sees the explosion.
+    const char *seeMsg;
+    // What the player hears when the explosion goes off unseen.
+    const char *sound;
+};
+
+// A map from origin_spells to special explosion info for each.
+const map<spell_type, explosion_sfx> spell_explosions = {
+    { SPELL_HELLFIRE, {
+        "The hellfire explodes!",
+        "a strangely unpleasant explosion",
+    } },
+    { SPELL_HELLFIRE_BURST, {
+        "The hellfire explodes!",
+        "a strangely unpleasant explosion",
+    } },
+    { SPELL_FIREBALL, {
+        "The fireball explodes!",
+        "an explosion",
+    } },
+    { SPELL_ORB_OF_ELECTRICITY, {
+        "The orb of electricity explodes!",
+        "a clap of thunder",
+    } },
+    { SPELL_FIRE_STORM, {
+        "A raging storm of fire appears!",
+        "a raging storm",
+    } },
+    { SPELL_MEPHITIC_CLOUD, {
+        "The ball explodes into a vile cloud!",
+        "a loud \'bang\'",
+    } },
+    { SPELL_GHOSTLY_FIREBALL, {
+        "The ghostly flame explodes!",
+        "the shriek of haunting fire",
+    } },
+    { SPELL_EXPLOSIVE_BOLT, {
+        "The explosive bolt releases an explosion!",
+        "an explosion",
+    } },
+};
+
 // Takes a bolt and refines it for use in the explosion function.
 // Explosions which do not follow from beams bypass this function.
 void bolt::refine_for_explosion()
 {
     ASSERT(!special_explosion);
 
-    const char *seeMsg  = nullptr;
-    const char *hearMsg = nullptr;
+    string seeMsg;
+    string hearMsg;
 
     if (ex_size == 0)
         ex_size = 1;
+    glyph   = dchar_glyph(DCHAR_FIRED_BURST);
 
     // Assume that the player can see/hear the explosion, or
     // gets burned by it anyway.  :)
@@ -5834,99 +5880,44 @@ void bolt::refine_for_explosion()
     string tmp;
     if (item != nullptr)
     {
-        tmp  = "The " + item->name(DESC_PLAIN, false, false, false)
-               + " explodes!";
-
-        seeMsg  = tmp.c_str();
+        seeMsg  = "The " + item->name(DESC_PLAIN, false, false, false)
+                  + " explodes!";
         hearMsg = "You hear an explosion!";
-
-        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
     }
-
-    if (origin_spell == SPELL_HELLFIRE || origin_spell == SPELL_HELLFIRE_BURST)
+    else
     {
-        seeMsg  = "The hellfire explodes!";
-        hearMsg = "You hear a strangely unpleasant explosion!";
-
-        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
-        flavour = BEAM_HELLFIRE;
-    }
-
-    if (origin_spell == SPELL_FIREBALL)
-    {
-        seeMsg  = "The fireball explodes!";
-        hearMsg = "You hear an explosion!";
-
-        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
-        flavour = BEAM_FIRE;
-        ex_size = 1;
+        const explosion_sfx *explosion = map_find(spell_explosions,
+                                                  origin_spell);
+        if (explosion)
+        {
+            seeMsg = explosion->seeMsg;
+            hearMsg = make_stringf("You hear %s!", explosion->sound);
+        }
+        else
+        {
+            seeMsg  = "The beam explodes into a cloud of software bugs!";
+            hearMsg = "You hear the sound of one hand!";
+        }
     }
 
     if (origin_spell == SPELL_ORB_OF_ELECTRICITY)
     {
-        seeMsg  = "The orb of electricity explodes!";
-        hearMsg = "You hear a clap of thunder!";
-
-        glyph      = dchar_glyph(DCHAR_FIRED_BURST);
-        flavour    = BEAM_ELECTRICITY;
         colour     = LIGHTCYAN;
         ex_size    = 2;
     }
 
-    if (origin_spell == SPELL_FIRE_STORM)
-    {
-        seeMsg  = "A raging storm of fire appears!";
-        hearMsg = "You hear a raging storm!";
-
-        // Everything else is handled elsewhere...
-    }
-
-    if (origin_spell == SPELL_MEPHITIC_CLOUD)
-    {
-        seeMsg     = "The ball explodes into a vile cloud!";
-        hearMsg    = "You hear a loud \'bang\'!";
-        if (!is_tracer)
-            name = "stinking cloud";
-    }
-
-    if (origin_spell == SPELL_GHOSTLY_FIREBALL)
-    {
-        seeMsg  = "The ghostly flame explodes!";
-        hearMsg = "You hear the shriek of haunting fire!";
-
-        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
-        ex_size = 1;
-    }
-
-    if (origin_spell == SPELL_EXPLOSIVE_BOLT)
-
-    {
-        seeMsg  = "The explosive bolt releases an explosion!";
-        hearMsg = "You hear an explosion!";
-
-        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
-        flavour = BEAM_FIRE;
-        ex_size = 1;
-    }
-
-    if (seeMsg == nullptr)
-    {
-        seeMsg  = "The beam explodes into a cloud of software bugs!";
-        hearMsg = "You hear the sound of one hand!";
-    }
-
-    if (!is_tracer && *seeMsg && *hearMsg)
+    if (!is_tracer && !seeMsg.empty() && !hearMsg.empty())
     {
         heard = player_can_hear(target);
         // Check for see/hear/no msg.
         if (you.see_cell(target) || target == you.pos())
-            mpr(seeMsg);
+            mpr(seeMsg.c_str());
         else
         {
             if (!heard)
                 msg_generated = false;
             else
-                mprf(MSGCH_SOUND, "%s", hearMsg);
+                mprf(MSGCH_SOUND, "%s", hearMsg.c_str());
         }
     }
 }
