@@ -1400,17 +1400,8 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     {
         beam.thrower = KILL_YOU_MISSILE;
         zappy(zap, calc_spell_power(spell, true, false, true, rod), beam);
-    }
-    else if (spell == SPELL_MEPHITIC_CLOUD)
-    {
-        beam.flavour = BEAM_MEPHITIC;
-        beam.ex_size = 1;
-        beam.damage = dice_def(1, 1); // so that foe_info is populated
-        beam.hit = 20;
-        beam.thrower = KILL_YOU;
-        beam.ench_power = calc_spell_power(spell, true, false, true, rod);
-        beam.pierce  = false;
-        beam.is_explosion = true;
+        if (spell == SPELL_MEPHITIC_CLOUD)
+            beam.damage = dice_def(1, 1); // so that foe_info is populated
     }
 
     if (beam.flavour != BEAM_VISUAL)
