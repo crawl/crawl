@@ -45,7 +45,7 @@ PcgRNG::PcgRNG()
 { }
 
 PcgRNG::PcgRNG(uint64_t init_key[], int key_length)
-    : PcRNG()
+    : PcgRNG()
 {
 
     if (key_length > 0)
