@@ -1035,13 +1035,14 @@ spret_type cast_gravitas(int pow, const coord_def& where, bool fail)
     fail_check();
 
     monster* mons = monster_at(where);
-    if (!mons || mons->submerged())
-    {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return SPRET_SUCCESS;
-    }
 
-    mprf("Gravity reorients around %s.", mons->name(DESC_THE).c_str());
+    mprf("Gravity reorients around %s.",
+         mons                      ? mons->name(DESC_THE).c_str() :
+         feat_is_solid(grd(where)) ? feature_description(grd(where),
+                                                         NUM_TRAPS, "",
+                                                         DESC_THE, false)
+                                                         .c_str()
+                                   : "empty space");
     fatal_attraction(where, &you, pow);
     return SPRET_SUCCESS;
 }

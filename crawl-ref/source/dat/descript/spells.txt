@@ -578,9 +578,10 @@ result in premature detonation.
 %%%%
 Gell's Gravitas spell
 
-Briefly redirects space around the target, making 'down' become exactly where
-the target is standing. All nearby creatures, save the caster, fall helplessly
-toward the victim – typically colliding with it, or with each other.
+Briefly redirects gravity around a target point, causing 'down' to be towards
+that point. All nearby creatures, save the caster, fall helplessly toward that
+point – typically colliding with each other, or with a victim standing at that
+point.
 %%%%
 Ghostly Fireball spell
 
