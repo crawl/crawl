@@ -580,8 +580,7 @@ Gell's Gravitas spell
 
 Briefly redirects gravity around a target point, causing 'down' to be towards
 that point. All nearby creatures, save the caster, fall helplessly toward that
-point – typically colliding with each other, or with a victim standing at that
-point.
+point – typically colliding with each other, or with a victim standing there.
 %%%%
 Ghostly Fireball spell
 
