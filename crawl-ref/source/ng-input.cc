@@ -73,9 +73,10 @@ static void _show_name_prompt(int where)
 bool is_good_name(const string& name, bool blankOK, bool verbose)
 {
     // verification begins here {dlb}:
-    if (name.empty())
+    // Disallow names that would result in a save named just ".cs".
+    if (strip_filename_unsafe_chars(name).empty())
     {
-        if (blankOK)
+        if (blankOK && name.empty())
             return true;
 
         if (verbose)
