@@ -1003,13 +1003,12 @@ void attract_actor(const actor* agent, actor* victim, const coord_def pos,
     }
 }
 
-bool fatal_attraction(actor *victim, actor *agent, int pow)
+bool fatal_attraction(const coord_def& pos, actor *agent, int pow)
 {
     bool affected = false;
-    const auto pos = victim->pos(); // in case it dies
     for (actor_near_iterator ai(pos, LOS_NO_TRANS); ai; ++ai)
     {
-        if (*ai == victim || *ai == agent || ai->is_stationary())
+        if (*ai == agent || ai->is_stationary() || ai->pos() == pos)
             continue;
 
         const int range = (pos - ai->pos()).rdist();
@@ -1043,6 +1042,6 @@ spret_type cast_gravitas(int pow, const coord_def& where, bool fail)
     }
 
     mprf("Gravity reorients around %s.", mons->name(DESC_THE).c_str());
-    fatal_attraction(mons, &you, pow);
+    fatal_attraction(where, &you, pow);
     return SPRET_SUCCESS;
 }

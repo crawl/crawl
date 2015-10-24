@@ -3756,10 +3756,12 @@ void bolt::affect_player_enchantment(bool resistible)
         nice  = true;
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case BEAM_ATTRACT:
-        if (fatal_attraction(&you, agent(), ench_power))
+        if (fatal_attraction(you.pos(), agent(), ench_power))
             obvious_effect = true;
         break;
+#endif
 
     default:
         // _All_ enchantments should be enumerated here!
@@ -5136,7 +5138,9 @@ bool bolt::has_saving_throw() const
     case BEAM_IGNITE_POISON:
     case BEAM_AGILITY:
     case BEAM_RESISTANCE:
+#if TAG_MAJOR_VERSION == 34
     case BEAM_ATTRACT:
+#endif
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores MR 1/3 of the time
@@ -5760,16 +5764,18 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_AFFECTED;
 
+#if TAG_MAJOR_VERSION == 34
     case BEAM_ATTRACT:
     {
         const bool could_see = you.can_see(*mon);
-        if (fatal_attraction(mon, agent(), ench_power)
+        if (fatal_attraction(mon->pos(), agent(), ench_power)
             && (could_see || you.can_see(*mon)))
         {
             obvious_effect = true;
         }
         return MON_AFFECTED;
     }
+#endif
 
     default:
         break;
@@ -6524,7 +6530,9 @@ static string _beam_type_name(beam_type type)
     case BEAM_BOUNCY_TRACER:         return "bouncy tracer";
     case BEAM_DEATH_RATTLE:          return "breath of the dead";
     case BEAM_RESISTANCE:            return "resistance";
+#if TAG_MAJOR_VERSION == 34
     case BEAM_ATTRACT:               return "attraction";
+#endif
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

@@ -1294,11 +1294,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
-    case SPELL_GRAVITAS:
-        beam.flavour  = BEAM_ATTRACT;
-        beam.pierce   = true;
-        break;
-
     default:
         if (check_validity)
         {
@@ -1514,6 +1509,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FLAY:
     case SPELL_CHANT_FIRE_STORM:
     case SPELL_CHANT_WORD_OF_ENTROPY:
+    case SPELL_GRAVITAS:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -6474,6 +6470,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                         CLEANSING_FLAME_SPELL, mons->pos(), mons);
         return;
 
+    case SPELL_GRAVITAS:
+        fatal_attraction(foe->pos(), mons, splpow);
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
