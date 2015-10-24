@@ -997,6 +997,9 @@ void attract_actor(const actor* agent, actor* victim, const coord_def pos,
             behaviour_event(mons, ME_ANNOY, agent, agent ? agent->pos()
                                                          : coord_def(0, 0));
         }
+
+        if (victim->pos() == pos)
+            break;
     }
 }
 
@@ -1011,7 +1014,7 @@ bool fatal_attraction(actor *victim, actor *agent, int pow)
 
         const int range = (pos - ai->pos()).rdist();
         const int strength =
-            min(4, (pow / 10) / (range*range));
+            min(LOS_RADIUS, ((pow + 100) / 20) / (range*range));
         if (strength <= 0)
             continue;
 
