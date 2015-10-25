@@ -3260,12 +3260,13 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 /**
  * Maybe move an ability to the slot given by the ability_slot option.
  *
- * @param[in] abil_type the ability to be checked
  * @param[in] slot current slot of the ability
- * @returns the new slot of the ability if it was moved, slot otherwise.
+ * @returns the new slot of the ability; may still be slot, if the ability
+ *          was not reassigned.
  */
-int auto_assign_ability_slot(ability_type abil_type, int slot)
+int auto_assign_ability_slot(int slot)
 {
+    const ability_type abil_type = you.ability_letter_table[slot];
     const string abilname = lowercase_string(ability_name(abil_type));
     bool overwrite = false;
     // check to see whether we've chosen an automatic label:
@@ -3385,7 +3386,7 @@ static int _find_ability_slot(const ability_type abil)
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {
             you.ability_letter_table[slot] = abil;
-            return auto_assign_ability_slot(abil, slot);
+            return auto_assign_ability_slot(slot);
         }
     }
 
@@ -3395,7 +3396,7 @@ static int _find_ability_slot(const ability_type abil)
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {
             you.ability_letter_table[slot] = abil;
-            return auto_assign_ability_slot(abil, slot);
+            return auto_assign_ability_slot(slot);
         }
     }
 

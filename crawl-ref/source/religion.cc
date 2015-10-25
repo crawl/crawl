@@ -3196,7 +3196,7 @@ void set_god_ability_slots()
             && you.ability_letter_table[num] == ABIL_NON_ABILITY)
         {
             you.ability_letter_table[num] = power.abil;
-            auto_assign_ability_slot(power.abil, num);
+            auto_assign_ability_slot(num);
             ++num;
         }
     }
