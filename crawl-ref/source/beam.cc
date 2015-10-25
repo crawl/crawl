@@ -3200,7 +3200,10 @@ void bolt::reflect()
     bounce_pos.reset();
 
     if (pos() == you.pos())
+    {
         reflector = MID_PLAYER;
+        count_action(CACT_BLOCK, 0, 1); // auxtype Reflected
+    }
     else if (monster* m = monster_at(pos()))
         reflector = m->mid;
     else
@@ -3362,18 +3365,23 @@ bool bolt::misses_player()
     int defl = you.missile_deflection();
 
     if (!_test_beam_hit(real_tohit, dodge_less, pierce, 0, r))
+    {
         mprf("The %s misses you.", name.c_str());
+        count_action(CACT_DODGE, DODGE_EVASION);
+    }
     else if (defl && !_test_beam_hit(real_tohit, dodge_less, pierce, defl, r))
     {
         // active voice to imply stronger effect
         mprf(defl == 1 ? "The %s is repelled." : "You deflect the %s!",
              name.c_str());
         you.ablate_deflection();
+        count_action(CACT_DODGE, DODGE_DEFLECT);
     }
     else if (!_test_beam_hit(real_tohit, dodge, pierce, defl, r))
     {
         mprf("You momentarily phase out as the %s "
              "passes through you.", name.c_str());
+        count_action(CACT_DODGE, DODGE_PHASE);
     }
     else
     {
@@ -4086,7 +4094,7 @@ int bolt::apply_AC(const actor *victim, int hurted)
         ac_rule = AC_NONE;
 
     // beams don't obey GDR -> max_damage is 0
-    return victim->apply_ac(hurted, 0, ac_rule);
+    return victim->apply_ac(hurted, 0, ac_rule, 0, !is_tracer);
 }
 
 void bolt::update_hurt_or_helped(monster* mon)
