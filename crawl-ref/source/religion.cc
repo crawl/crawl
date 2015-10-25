@@ -3175,7 +3175,7 @@ void set_god_ability_slots()
                 break;
             if (god == you.religion)
                 continue;
-            for (const god_power& power : god_powers[you.religion])
+            for (const god_power& power : god_powers[god])
                 if (slot == power.abil)
                     slot = ABIL_NON_ABILITY;
         }
