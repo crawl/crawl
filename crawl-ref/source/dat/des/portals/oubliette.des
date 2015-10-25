@@ -1,10 +1,10 @@
 # Oubliette
 #
 # An early portal vault featuring an ally. 
-# Many thanks to gammafunk, |amethyst, PleasingFungus!
+# Many thanks to |amethyst, gammafunk, greensnark, PleasingFungus!
 #
 # About ally placement:
-#  - early on, in the arrival subvault
+#  - in the arrival subvault
 #  - with attributes att:friendly and no_staird
 #  - when placing uniques, provide a default to fall back on
 #  - unless you know what you are doing, no items
@@ -78,6 +78,7 @@
 #     a scroll of summoning
 #   - ally is Pikel, opposition are humans
 #   - ally is Duwan (or Duvessa); the other twin is at the end of the map
+#   - ally is Natasha; who will free Boris
 #
 # For later:
 #   - Could sometimes employ religion: e.g. the humanoids who have captured a
