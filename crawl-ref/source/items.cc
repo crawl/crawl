@@ -1811,8 +1811,12 @@ item_def *auto_assign_item_slot(item_def& item)
     // check to see whether we've chosen an automatic label:
     for (auto& mapping : Options.auto_item_letters)
     {
-        if (!mapping.first.matches(item.name(DESC_QUALNAME)))
+        if (!mapping.first.matches(item.name(DESC_QUALNAME))
+            && !mapping.first.matches(item_prefix(item)
+                                      + " " + item.name(DESC_A)))
+        {
             continue;
+        }
         for (char i : mapping.second)
         {
             if (i == '+')
@@ -1822,12 +1826,15 @@ item_def *auto_assign_item_slot(item_def& item)
             else if (isaalpha(i))
             {
                 const int index = letter_to_index(i);
+                auto &iitem = you.inv[index];
 
                 // Slot is empty, or overwrite is on and the rule doesn't
                 // match the item already there.
-                if (!you.inv[index].defined()
-                    || overwrite && !mapping.first.matches(
-                                         you.inv[index].name(DESC_QUALNAME)))
+                if (!iitem.defined()
+                    || overwrite
+                       && !mapping.first.matches(iitem.name(DESC_QUALNAME))
+                       && !mapping.first.matches(item_prefix(iitem)
+                                                 + " " + iitem.name(DESC_A)))
                 {
                     newslot = index;
                     break;
