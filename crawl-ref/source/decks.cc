@@ -2552,7 +2552,7 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
         if (give_monster_proper_name(&tempmon, false))
             mg.mname = tempmon.mname;
         else
-            mg.mname = make_name(random_int());
+            mg.mname = make_name();
         // This is used for giving the merc better stuff in mon-gear.
         mg.props["mercenary items"] = true;
 

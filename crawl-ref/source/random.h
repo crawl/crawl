@@ -8,9 +8,15 @@
 
 #include "hash.h"
 
+#define RNG_GAMEPLAY 0
+#define RNG_UI 1
+
 void seed_rng();
 void seed_rng(uint32_t seed);
+void seed_rng(uint64_t[], int);
 
+uint32_t get_uint32(int generator = RNG_GAMEPLAY);
+uint64_t get_uint64(int generator = RNG_GAMEPLAY);
 bool coinflip();
 int div_rand_round(int num, int den);
 int div_round_up(int num, int den);
@@ -22,7 +28,6 @@ int maybe_random_div(int nom, int denom, bool random_factor);
 int maybe_roll_dice(int num, int size, bool random);
 int random_range(int low, int high);
 int random_range(int low, int high, int nrolls);
-uint32_t random_int();
 double random_real();
 
 int random2avg(int max, int rolls);

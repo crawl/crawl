@@ -6,6 +6,8 @@
 #ifndef ITEMNAME_H
 #define ITEMNAME_H
 
+#include "random.h"
+
 #define CORPSE_NAME_KEY      "corpse_name_key"
 #define CORPSE_NAME_TYPE_KEY "corpse_name_type_key"
 
@@ -117,7 +119,8 @@ bool is_bad_item(const item_def &item, bool temp = false);
 bool is_dangerous_item(const item_def& item, bool temp = false);
 bool is_useless_item(const item_def &item, bool temp = false);
 
-string make_name(uint32_t seed, makename_type name_type = MNAME_DEFAULT);
+string make_name(uint32_t seed = get_uint32(),
+                 makename_type name_type = MNAME_DEFAULT);
 void make_name_tests();
 
 const char* brand_type_name(int brand, bool terse) PURE;

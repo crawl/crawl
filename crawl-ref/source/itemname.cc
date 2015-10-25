@@ -2831,6 +2831,7 @@ const size_t RCS_END = RCS_EM;
  *
  * @param seed      The seed to generate the name from.
  *                  The same seed will always generate the same name.
+ *                  By default a random number from the RNG.
  * @param name_type The type of name to be generated.
  *                  If MNAME_SCROLL, increase length by 6 and force to allcaps.
  *                  If MNAME_JIYVA, start with J, do not generate spaces,
@@ -2843,7 +2844,7 @@ const size_t RCS_END = RCS_EM;
 string make_name(uint32_t seed, makename_type name_type)
 {
     uint64_t sarg[1] = { static_cast<uint64_t>(seed) };
-    PcgRNG rng = PcgRNG(sarg, 1);
+    PcgRNG rng = PcgRNG(sarg, ARRAYSZ(sarg));
 
     string name;
 
@@ -3122,7 +3123,7 @@ static void _test_jiyva_names(const string fname)
     seed_rng(27);
     for (int i = 0; i < 1000000; i++)
     {
-        const string name = make_name(random_int(), MNAME_JIYVA);
+        const string name = make_name(get_uint32(), MNAME_JIYVA);
         ASSERT(name[0] == 'J');
         if (name.length() > longest.length())
             longest = name;
@@ -3146,7 +3147,7 @@ void make_name_tests()
 
     seed_rng(27);
     for (int i = 0; i < 1000000; ++i)
-        make_name(random_int());
+        make_name();
 }
 
 bool is_interesting_item(const item_def& item)

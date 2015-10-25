@@ -5331,7 +5331,7 @@ player::player()
 
     abyss_speed         = 0;
     for (int i = 0; i < NUM_SEEDS; i++)
-        game_seeds[i] = random_int();
+        game_seeds[i] = get_uint32();
 
     old_hunger          = hunger;
     transit_stair       = DNGN_UNSEEN;

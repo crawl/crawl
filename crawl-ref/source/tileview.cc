@@ -300,12 +300,8 @@ void tile_init_flavour()
     vector<unsigned int> output;
     {
         domino::DominoSet<domino::EdgeDomino> dominoes(domino::cohen_set, 8);
-        uint64_t seed[] =
-        {
-            static_cast<uint64_t>(ui_random(INT_MAX)) << 32 | ui_random(INT_MAX),
-            static_cast<uint64_t>(ui_random(INT_MAX)) << 32 | ui_random(INT_MAX),
-        };
-        PcgRNG rng(seed, 2);
+        uint64_t seed[] = { get_uint64(RNG_UI), get_uint64(RNG_UI) };
+        PcgRNG rng(seed, ARRAYSZ(seed));
         dominoes.Generate(X_WIDTH, Y_WIDTH, output, rng);
     }
     for (rectangle_iterator ri(0); ri; ++ri)

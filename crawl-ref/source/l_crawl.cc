@@ -1181,8 +1181,8 @@ LUAFN(_crawl_millis)
 
 static string _crawl_make_name(lua_State *ls)
 {
-    // A quick wrapper around itemname:make_name. Seed is random_int().
-    return make_name(random_int());
+    // A quick wrapper around itemname:make_name.
+    return make_name();
 }
 
 LUARET1(crawl_make_name, string, _crawl_make_name(ls).c_str())

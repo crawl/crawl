@@ -12,7 +12,6 @@
 #include "initfile.h"
 #include "libutil.h"
 #include "options.h"
-#include "random.h" // random_int for make_name
 #include "stringutil.h"
 #include "unicode.h"
 #include "version.h"
@@ -128,7 +127,7 @@ static string _random_name()
 {
     for (int i = 0; i < 100; ++i)
     {
-        const string name = make_name(random_int());
+        const string name = make_name();
         const string filename = get_save_filename(name);
         if (!save_exists(filename))
             return name;
