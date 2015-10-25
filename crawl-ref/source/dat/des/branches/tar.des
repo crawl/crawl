@@ -1246,3 +1246,79 @@ MONS:    soul eater
 MAP
 1
 ENDMAP
+
+##############################################################################
+# Ereshkigal (Tartarus) Cathedral by Grunt
+##############################################################################
+
+NAME:     tar_grunt_cathedral
+ORIENT:   encompass
+MONS:     patrolling Ereshkigal, patrolling shadow fiend, reaper, shadow demon
+MONS:     lich / ancient lich w:5, shadow dragon, shadow wraith / soul eater
+NSUBST:   K = 1:D / *:.
+: serpent_of_hell_setup(_G)
+NSUBST:   P = 1:O / *:|
+KITEM:    $ = $ no_pickup
+SHUFFLE:  {([<
+: tar_setup(_G)
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccccc.........................ccccc.........................ccccccc
+ccccc7.........................................................7ccccc
+ccc..............................7.7..............................ccc
+c.....7cc.....................ccccccccc.....................cc7.....c
+c....cccccc.................ccc|||||||ccc.................cccccc....c
+c..cccccccccc.............ccc...........ccc.............cccccccccc..c
+c..cccccccccccc....{....ccc......5.5......ccc....[....cccccccccccc..c
+c..cccccccccccccc.....ccc......ccccccc......ccc.....cccccccccccccc..c
+c..cccccccccccccccccccc......ccc.....ccc......cccccccccccccccccccc..c
+c..+......c...+...ccc......ccc.........ccc......ccc...+...c......+..c
+c..+......+.4.+.6.+..7...ccc.............ccc...7..+.6.+.4.+......+..c
+c..c...6..+.3.c...+....ccc.................ccc....+...c.3.+..6...c..c
+c..c......c..ccc++c++ccc.....................ccc++c++ccc..c......c..c
+c..c..ccccc||cc...+.............ccccc.............+...cc||ccccc..c..c
+c..c..cccccccc.7..+............cc$P$cc............+..7.cccccccc..c..c
+c..c..ccccccc...ccc..6.........c.ccc.c.........6..ccc...ccccccc..c..c
+c..c..cccccc...cc..............c.ccc.c..............cc...cccccc..c..c
+c..c..ccccc...cc...........4...c.....c...3...........cc...ccccc..c..c
+c..c..ccccc..cc.........cc.....c..2..c.....cc.........cc..ccccc..c..c
+c..c..ccccc..c.........cccc....cc...cc....cccc.........c..ccccc..c..c
+c..c..ccccc..c.........cccc.....c...c.....cccc.........c..ccccc..c..c
+c..c......c..c..........cc......c...c......cc..........c..c......c..c
+c..c...7..+..c........3.......................4........c..+..7...c..c
+c..c......+..c..............K...........K..............c..+......c..c
+c..c......c..c.........................................c..c......c..c
+c..c..ccccc..c......cccccc.....cc...cc.....cccccc......c..ccccc..c..c
+c..c..ccccc..c.....cc....ccc...c.....c...ccc....cc.....c..ccccc..c..c
+c.7c..ccccc$3c.....c$cc.......................cc$c.....c4$ccccc..c7.c
+c..c..ccccc$$c.....cPcc.2.........1.........2.ccPc.....c$$ccccc..c..c
+c.7c..ccccc$4c.....c$cc.......................cc$c.....c3$ccccc..c7.c
+c..c..ccccc..c.....cc....ccc...c.....c...ccc....cc.....c..ccccc..c..c
+c..c..ccccc..c......cccccc.....cc...cc.....cccccc......c..ccccc..c..c
+c..c......c..c.........................................c..c......c..c
+c..c......+..c.........................................c..+......c..c
+c..c...7..+..c..............K...........K..............c..+..7...c..c
+c..c......c..c........4.........c...c.........3........c..c......c..c
+c..c..ccccc..c..........cc......c...c......cc..........c..ccccc..c..c
+c..c..ccccc..c.........cccc....cc...cc....cccc.........c..ccccc..c..c
+c..c..ccccc..cc........cccc....c..2..c....cccc........cc..ccccc..c..c
+c..c..ccccc...cc........cc.....c.....c.....cc........cc...ccccc..c..c
+c..c..cccccc...cc..........3...c.ccc.c...4..........cc...cccccc..c..c
+c..c..ccccccc...ccc..6.........c.ccc.c.........6..ccc...ccccccc..c..c
+c..c..cccccccc.7..+............cc$P$cc............+..7.cccccccc..c..c
+c..c..ccccc||cc...+.............ccccc.............+...cc||ccccc..c..c
+c..c......c..ccc++c++ccc.....................ccc++c++ccc..c......c..c
+c..c...6..+.3.c...+....ccc.................ccc....+...c.3.+..6...c..c
+c..+......+.4.+.6.+..7...ccc.............ccc...7..+.6.+.4.+......+..c
+c..+......c...+...ccc......ccc.........ccc......ccc...+...c......+..c
+c..cccccccccccccccccccc......ccc.....ccc......cccccccccccccccccccc..c
+c..cccccccccccccc.....ccc......ccccccc......ccc.....cccccccccccccc..c
+c..cccccccccccc....(....ccc......5.5......ccc....<....cccccccccccc..c
+c..cccccccccc.............ccc...........ccc.............cccccccccc..c
+c....cccccc.................ccc|||||||ccc.................cccccc....c
+c.....7cc.....................ccccccccc.....................cc7.....c
+ccc..............................7.7..............................ccc
+ccccc7.........................................................7ccccc
+ccccccc.........................ccccc.........................ccccccc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
