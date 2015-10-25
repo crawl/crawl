@@ -1183,7 +1183,7 @@ ENDMAP
 #   50-50 chance of spiral arms, 50-50 chance of a moat
 #   No loot but the elves' gear, but at the depth this appears that may be good
 NAME:    elves_outpost_lemuel
-DEPTH:   D:11-, Orc:3-, Elf
+DEPTH:   D:11-, Orc, Elf
 MONS:    deep elf fighter
 MONS:    w:20 deep elf mage / deep elf conjurer / deep elf summoner
 SHUFFLE: ?_/bb, _'/ww
@@ -4947,7 +4947,7 @@ cc...cc
 ENDMAP
 
 NAME:   kennysheep_orc_chapel
-DEPTH:  D:3-4, Orc:2-
+DEPTH:  D:3-4, Orc
 SUBST:  $ = $.
 : if you.in_branch("Orc") then
 KMONS:  1 = orc high priest band

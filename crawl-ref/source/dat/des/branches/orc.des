@@ -669,7 +669,7 @@ ENDMAP
 # Some deep elves on a diplomatic mission (Shiori)
 # They have brought some of their enchanted armaments as gifts
 NAME:    elf_legates
-DEPTH:   Orc:3-
+DEPTH:   Orc
 SHUFFLE: 23
 SUBST:   6 : 6 .
 NSUBST:  0 = 3=9. / *=0.
@@ -701,7 +701,7 @@ ENDMAP
 # Orcish barracks (minmay)
 #
 NAME:   minmay_orc_barracks
-DEPTH:  Orc:2-
+DEPTH:  Orc
 MONS:   orc / orc warrior w:2, orc knight / orc warlord
 SUBST:  c : cx
 MAP
@@ -767,7 +767,7 @@ ENDMAP
 # Still another temple (minmay)
 #
 NAME:   minmay_orc_temple_c
-DEPTH:  Orc:2-
+DEPTH:  Orc
 MONS:   orc, orc priest, orc high priest
 SUBST:  . = 1 .:200
 SUBST:  . = 0 .:200
@@ -803,7 +803,7 @@ ENDMAP
 #######################
 # Yet Another Temple
 NAME:   bh_open_orc_temple
-DEPTH:  Orc:3-
+DEPTH:  Orc
 SUBST:  " = 1.......
 MONS:   orc w:8 / orc priest w:2 / orc warrior
 MONS:   patrolling orc high priest
@@ -831,7 +831,7 @@ ENDMAP
 # Treasure chamber (minmay)
 #
 NAME:   minmay_orc_treasury
-DEPTH:  Orc:3-
+DEPTH:  Orc
 MONS:   orc warlord band, orc knight band
 SUBST:  $ = $:100 *|
 MAP
@@ -865,7 +865,7 @@ ENDMAP
 
 NAME:    guppyfry_orc_lava_fort
 TAGS:    no_item_gen no_monster_gen
-DEPTH:   Orc:3-
+DEPTH:   Orc
 KMONS:   1 = orc high priest / orc sorcerer
 KMONS:   2 = orc knight
 KMONS:   3 = orc warrior / orc ; arbalest . bolt . spear | hand axe | mace
@@ -1265,7 +1265,6 @@ NAME: nicolae_orc_pool_cavern
 TAGS: extra decor transparent
 DEPTH: Orc
 SUBST: W = ww., X = x:80 .:40 w
-PLACE: Orc:3
 MAP
        xxx@@x
     xxxxxx..xx

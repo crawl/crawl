@@ -396,7 +396,7 @@ KFEAT:    S = any shop
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
-:           door_description_suffix=" to Orc:4",
+:           door_description_suffix=" to Orc:2",
 :           })
 MAP
 xxxxxxxxxxxxxxxxxx

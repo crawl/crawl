@@ -173,7 +173,7 @@ ENDMAP
 # Steading of the Giant Chief
 #
 NAME:    giant_chief_lemuel
-DEPTH:   D:11-, Orc:3-, Depths:2-
+DEPTH:   D:11-, Orc, Depths:2-
 ORIENT:  north
 SHUFFLE: ae / bB / gG / dD
 SUBST:   ; = .'
@@ -434,7 +434,7 @@ ENDMAP
 NAME:   orc_temple
 ORIENT: southwest
 TAGS:   no_rotate
-DEPTH:  Depths, !Depths:$, Orc:2-
+DEPTH:  Depths, !Depths:$, Orc
 MONS:   orc warlord, patrolling orc priest, patrolling orc high priest
 MONS:   orc warrior, orc wizard, orc knight, orc sorcerer
 KFEAT:  C = altar_beogh
