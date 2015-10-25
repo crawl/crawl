@@ -3310,7 +3310,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             return report_error("Error parsing %s string: %s\n",
                                 key.c_str(), field.c_str());
         }
-        pair<text_pattern,string> entry(lowercase_string(thesplit[0]),
+        pair<text_pattern,string> entry(text_pattern(thesplit[0], true),
                                         thesplit[1]);
 
         if (minus_equal)
