@@ -3660,7 +3660,7 @@ function plan_use_good_consumables()
         return drink(it)
       end
       if it.name():find("cure mutation") then
-        if base_mutation("slow healing") > 0 and you.race() ~= "Deep Dwarf"
+        if base_mutation("slow regeneration") > 0 and you.race() ~= "Deep Dwarf"
            and you.race() ~= "Ghoul" or
            base_mutation("dopey") > 1 or
            intrinsic_like_dex() and base_mutation("clumsy") > 1 or
