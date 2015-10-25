@@ -91,8 +91,8 @@ enum class abflag
                    //0x00002000,
                    //0x00004000,
                    //0x00008000,
-    LEVEL_DRAIN    = 0x00010000, // drains 2 levels
-    STAT_DRAIN     = 0x00020000, // stat drain
+                   //0x00010000,
+                   //0x00020000,
                    //0x00040000,
     SKILL_DRAIN    = 0x00080000, // drains skill levels
     GOLD           = 0x00100000, // costs gold
@@ -520,12 +520,6 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::VARIABLE_FRUIT)
         ret += ", Fruit or Piety";
 
-    if (abil.flags & abflag::LEVEL_DRAIN)
-        ret += ", Level drain";
-
-    if (abil.flags & abflag::STAT_DRAIN)
-        ret += ", Stat drain";
-
     if (abil.flags & abflag::SKILL_DRAIN)
         ret += ", Skill drain";
 
@@ -648,12 +642,6 @@ static const string _detailed_cost_description(ability_type ability)
 
     if (abil.flags & abflag::CONF_OK)
         ret << "\nYou can use it even if confused.";
-
-    if (abil.flags & abflag::LEVEL_DRAIN)
-        ret << "\nIt will lower your experience level by one when used.";
-
-    if (abil.flags & abflag::STAT_DRAIN)
-        ret << "\nIt will temporarily drain your strength, intelligence or dexterity when used.";
 
     if (abil.flags & abflag::SKILL_DRAIN)
         ret << "\nIt will temporarily drain your skills when used.";
@@ -2903,9 +2891,6 @@ static void _pay_ability_costs(const ability_def& abil)
         if (abil.flags & abflag::PERMANENT_HP)
             rot_hp(hp_cost);
     }
-
-    if (abil.flags & abflag::LEVEL_DRAIN)
-        adjust_level(-1);
 
     if (food_cost)
         make_hungry(food_cost, false, true);
