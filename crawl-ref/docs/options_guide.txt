@@ -54,7 +54,7 @@ The contents of this text are:
                 jewellery_prompt, easy_confirm, allow_self_target,
                 confirm_butcher, easy_eat_chunks, easy_quit_item_prompts,
                 easy_exit_menu, ability_menu, sort_menus, spell_slot,
-                autofight_stop, autofight_hunger_stop,
+                item_slot, ability_slot, autofight_stop, autofight_hunger_stop,
                 autofight_hunger_stop_undead, autofight_throw,
                 autofight_throw_nomove, autofight_fire_stop, autofight_caught,
                 autofight_wait, autofight_prompt_range,
@@ -1136,12 +1136,16 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
 
 spell_slot ^= <regex>:<list of spell letters>
         (Ordered list option, one value per line)
-        When you memorise any spell that matches the regex, it will
-        assign itself to the first available letter in the list. (If
-        all letters in the list are occupied for each regex the spell
-        matches, it will use the default ordering abc...xyzABC..XYZ.)
-        If a spell matches multiple expressions, only the first is
-        considered.
+        When you memorise any spell that matches the regex, it will assign
+        itself to the first available letter in the list. A + in the list of
+        letters turns on "overwrite mode": all letters up to the next "-" are
+        considered available even if already assigned; in that case, any
+        spell already assigned to that slot, as long as it does not also
+        match the same <regex>, will be moved.
+
+        If all letters in the list are occupied for each regex the spell
+        matches, it will use the default ordering abc...xyzABC..XYZ. If a
+        spell matches multiple regexes, only the first is considered.
 
         Examples:
         * if you want Haste to be placed on H:
@@ -1149,22 +1153,28 @@ spell_slot ^= <regex>:<list of spell letters>
         * if you want Deflect Missiles to be placed on r normally or R if
           r is unavailable:
             spell_slot ^= Deflect:rR
+        * if you want the first "Bolt" spell to be placed on a, even if
+          there is already a non-bolt spell there:
+            spell_slot ^= Bolt:+a
         * if you want to change the default spell slot assignment
           to use capital letters: (place this after all other
           spell_slot lines):
             spell_slot += .*:ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
-item_slot ^= <regex>:<inventory letter>
+item_slot ^= <regex>:<inventory letters>
         (Ordered list option, one value per line)
-        Uses the same interface as spell_slot.
+        Uses the same interface as spell_slot, except that overwrite mode
+        is on by default; overwrite mode can be disabled with a - in the
+        list of letters.
+
         Additionally, the item_slot option is applied on an item when it is
         identified, so it can be moved to the right place even if it was
         picked up unidentified.
-        Also, item_slot will cause items to be moved to their designated spot
-        even if there already is an item there, unlike spell_slot. However, if
-        that item matches the regex as well, it will try the next inventory
-        letter the player specified, and see if that slot is empty or has an
-        item that doesn't match the regex.
+
+ability_slot ^= <regex>:<ability letters>
+        (Ordered list option, one value per line)
+        Uses the same interface as spell_slot, but applies to abilities
+        in the 'a' menu.
 
 autofight_stop = 30
         Autofight will not act if your HP is at or lower than this
