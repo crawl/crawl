@@ -158,6 +158,7 @@ bool is_range_weapon(const item_def &item) PURE;
 missile_type fires_ammo_type(const item_def &item) PURE;
 const char *ammo_name(missile_type ammo) IMMUTABLE;
 const char *ammo_name(const item_def &bow) PURE;
+const char *ammo_name(const weapon_type bow) PURE;
 bool has_launcher(const item_def &ammo) PURE;
 bool is_throwable(const actor *actor, const item_def &wpn,
                   bool force = false) PURE;
@@ -173,8 +174,6 @@ int  ammo_type_damage(int missile_type) PURE;
 reach_type weapon_reach(const item_def &item) PURE;
 
 // Macguffins
-bool item_is_rune(const item_def &item,
-                  rune_type which_rune = NUM_RUNE_TYPES) PURE;
 bool item_is_unique_rune(const item_def &item) PURE;
 bool item_is_orb(const item_def &orb) PURE;
 bool item_is_horn_of_geryon(const item_def &item) PURE;

@@ -210,11 +210,7 @@ static show_item_type _item_to_show_code(const item_def &item)
     case OBJ_BOOKS:      return SHOW_ITEM_BOOK;
     case OBJ_STAVES:     return SHOW_ITEM_STAFF;
     case OBJ_RODS:       return SHOW_ITEM_ROD;
-    case OBJ_MISCELLANY:
-        if (item.sub_type == MISC_RUNE_OF_ZOT)
-            return SHOW_ITEM_RUNE;
-        else
-            return SHOW_ITEM_MISCELLANY;
+    case OBJ_MISCELLANY: return SHOW_ITEM_MISCELLANY;
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
             return SHOW_ITEM_SKELETON;
@@ -222,6 +218,7 @@ static show_item_type _item_to_show_code(const item_def &item)
             return SHOW_ITEM_CORPSE;
     case OBJ_GOLD:       return SHOW_ITEM_GOLD;
     case OBJ_DETECTED:   return SHOW_ITEM_DETECTED;
+    case OBJ_RUNES:      return SHOW_ITEM_RUNE;
     default:             return SHOW_ITEM_ORB; // bad item character
     }
 }
@@ -461,20 +458,21 @@ static void _update_monster(monster* mons)
     if (you.attribute[ATTR_SEEN_INVIS_TURN] != you.num_turns)
     {
         you.attribute[ATTR_SEEN_INVIS_TURN] = you.num_turns;
-        you.attribute[ATTR_SEEN_INVIS_SEED] = random_int();
+        you.attribute[ATTR_SEEN_INVIS_SEED] = get_uint32();
     }
     // After the player finishes this turn, the monster's unseen pos (and
     // its invis indicator due to going unseen) will be erased.
     if (!you.turn_is_over)
         mons->went_unseen_this_turn = false;
 
-    // ripple effect?
+    // Ripple effect?
+    // Should match directn.cc's _mon_exposed
     if (grd(gp) == DNGN_SHALLOW_WATER
-        && mons->airborne()
-        && env.cgrid(gp) == EMPTY_CLOUD
+            && !mons->airborne()
+            && env.cgrid(gp) == EMPTY_CLOUD
         || is_opaque_cloud(env.cgrid(gp))
-        && !mons->submerged()
-        && !mons->is_insubstantial())
+            && !mons->submerged()
+            && !mons->is_insubstantial())
     {
         _mark_invisible_at(gp);
         mons->unseen_pos = gp;
@@ -509,10 +507,10 @@ static void _update_monster(monster* mons)
 
 /**
  * Update map knowledge and set the map tiles at a location.
- * @param gp            The location to update.
- * @param terrain_only  If True, only the feature information/tiles are updated.
+ * @param gp      The location to update.
+ * @param layers  The information layers to display.
 **/
-void show_update_at(const coord_def &gp, bool terrain_only)
+void show_update_at(const coord_def &gp, layers_type layers)
 {
     if (you.see_cell(gp))
         env.map_knowledge(gp).clear_data();
@@ -525,22 +523,29 @@ void show_update_at(const coord_def &gp, bool terrain_only)
 
     // If there's items on the boundary (shop inventory),
     // we don't show them.
-    if (!terrain_only && in_bounds(gp))
+    if (in_bounds(gp))
     {
-        monster* mons = monster_at(gp);
-        if (mons && mons->alive())
-            _update_monster(mons);
-        else if (env.map_knowledge(gp).flags & MAP_INVISIBLE_UPDATE)
-            _mark_invisible_at(gp);
-
-        const int cloud = env.cgrid(gp);
-        if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE
-            && env.cloud[cloud].pos == gp)
+        if (layers & LAYER_MONSTERS)
         {
-            _update_cloud(cloud);
+            monster* mons = monster_at(gp);
+            if (mons && mons->alive())
+                _update_monster(mons);
+            else if (env.map_knowledge(gp).flags & MAP_INVISIBLE_UPDATE)
+                _mark_invisible_at(gp);
         }
 
-        update_item_at(gp);
+        if (layers & LAYER_CLOUDS)
+        {
+            const int cloud = env.cgrid(gp);
+            if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE
+                && env.cloud[cloud].pos == gp)
+            {
+                _update_cloud(cloud);
+            }
+        }
+
+        if (layers & LAYER_ITEMS)
+            update_item_at(gp);
     }
 
 #ifdef USE_TILE
@@ -551,14 +556,14 @@ void show_update_at(const coord_def &gp, bool terrain_only)
 #endif
 }
 
-void show_init(bool terrain_only)
+void show_init(layers_type layers)
 {
     clear_terrain_visibility();
     if (crawl_state.game_is_arena())
     {
         for (rectangle_iterator ri(crawl_view.vgrdc, LOS_MAX_RANGE); ri; ++ri)
         {
-            show_update_at(*ri, terrain_only);
+            show_update_at(*ri, layers);
             // Invis indicators and update flags not used in Arena.
             env.map_knowledge(*ri).flags &= ~MAP_INVISIBLE_UPDATE;
         }
@@ -568,7 +573,7 @@ void show_init(bool terrain_only)
     vector <coord_def> update_locs;
     for (radius_iterator ri(you.pos(), you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
-        show_update_at(*ri, terrain_only);
+        show_update_at(*ri, layers);
         update_locs.push_back(*ri);
     }
 

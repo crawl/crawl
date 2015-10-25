@@ -28,21 +28,6 @@
 
 vector<Note> note_list;
 
-// return the real number of the power (casting out nonexistent powers),
-// starting from 0, or -1 if the power doesn't exist
-static int _real_god_power(int religion, int idx)
-{
-    if (god_gain_power_messages[religion][idx][0] == 0)
-        return -1;
-
-    int count = 0;
-    for (int j = 0; j < idx; ++j)
-        if (god_gain_power_messages[religion][j][0])
-            ++count;
-
-    return count;
-}
-
 static bool _is_highest_skill(int skill)
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
@@ -140,13 +125,6 @@ static bool _is_noteworthy(const Note& note)
     if (note.type == NOTE_XOM_EFFECT)
         return Options.note_xom_effects;
 
-    // God powers might be noteworthy if it's an actual power.
-    if (note.type == NOTE_GOD_POWER
-        && _real_god_power(note.first, note.second) == -1)
-    {
-        return false;
-    }
-
     // HP noteworthiness is handled in its own function.
     if (note.type == NOTE_HP_CHANGE
         && !_is_noteworthy_hp(note.first, note.second))
@@ -178,7 +156,7 @@ static bool _is_noteworthy(const Note& note)
         const Note& rnote(oldnote);
         switch (note.type)
         {
-        case NOTE_GOD_POWER:
+        case NOTE_PIETY_RANK:
             if (rnote.first == note.first && rnote.second == note.second)
                 return false;
             break;
@@ -201,17 +179,6 @@ static bool _is_noteworthy(const Note& note)
         }
     }
     return true;
-}
-
-static const char* _number_to_ordinal(int number)
-{
-    const char* ordinals[5] = { "first", "second", "third", "fourth", "fifth" };
-
-    if (number < 1)
-        return "[unknown ordinal (too small)]";
-    if (number > 5)
-        return "[unknown ordinal (too big)]";
-    return ordinals[number-1];
 }
 
 string Note::describe(bool when, bool where, bool what) const
@@ -325,12 +292,11 @@ string Note::describe(bool when, bool where, bool what) const
         case NOTE_POLY_MONSTER:
             result << name << " changed into " << desc;
             break;
-        case NOTE_GOD_POWER:
-            result << "Acquired "
-                   << apostrophise(god_name(static_cast<god_type>(first)))
-                   << " "
-                   << _number_to_ordinal(_real_god_power(first, second)+1)
-                   << " power";
+        case NOTE_PIETY_RANK:
+            result << "Reached "
+                   << string(second, '*')
+                   << " piety under "
+                   << god_name(static_cast<god_type>(first));
             break;
         case NOTE_GET_MUTATION:
             result << "Gained mutation: "

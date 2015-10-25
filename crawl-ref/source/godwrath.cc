@@ -350,15 +350,15 @@ static void _ely_dull_inventory_weapons()
 
     you.m_quiver.get_desired_item(nullptr, &quiver_link);
 
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (auto &item : you.inv)
     {
-        if (!you.inv[i].defined())
+        if (!item.defined())
             continue;
 
-        if (you.inv[i].base_type == OBJ_WEAPONS)
+        if (item.base_type == OBJ_WEAPONS)
         {
             // Don't dull artefacts at all, or weapons below -1.
-            if (is_artefact(you.inv[i]) || you.inv[i].plus <= -1)
+            if (is_artefact(item) || item.plus <= -1)
                 continue;
 
             // 2/3 of the time, don't do anything.
@@ -367,18 +367,18 @@ static void _ely_dull_inventory_weapons()
 
             bool wielded = false;
 
-            if (you.inv[i].link == you.equip[EQ_WEAPON])
+            if (item.link == you.equip[EQ_WEAPON])
                 wielded = true;
 
             // Dull the weapon.
-            if (you.inv[i].plus > -1)
-                you.inv[i].plus--;
+            if (item.plus > -1)
+                item.plus--;
 
             // Update the weapon display, if necessary.
             if (wielded)
                 you.wield_change = true;
 
-            chance += item_value(you.inv[i], true) / 50;
+            chance += item_value(item, true) / 50;
             num_dulled++;
         }
     }
@@ -1681,20 +1681,17 @@ static void _qazlal_elemental_vulnerability()
  */
 static bool _qazlal_retribution()
 {
-    switch (random2(3))
+    if (coinflip())
     {
-    case 0:
-        _qazlal_summon_elementals();
-        break;
-    case 1:
-        _qazlal_elemental_vulnerability();
-        break;
-    case 2:
         simple_god_message(" causes a mighty clap of thunder!",
                            GOD_QAZLAL);
         noisy(25, you.pos());
-        break;
     }
+
+    if (coinflip())
+        _qazlal_summon_elementals();
+    else
+        _qazlal_elemental_vulnerability();
 
     return true;
 }
@@ -1772,7 +1769,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         {
             if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
             {
-                mprf(MSGCH_WARN, "The divine experience leaves you feeling exhausted!");
+                mprf(MSGCH_WARN, "The divine experience drains your vigour!");
 
                 slow_player(random2(20));
             }

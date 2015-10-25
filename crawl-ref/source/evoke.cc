@@ -42,6 +42,7 @@
 #include "mon-clone.h"
 #include "mon-pick.h"
 #include "mon-place.h"
+#include "mutant-beast.h"
 #include "player.h"
 #include "player-stats.h"
 #include "prompt.h"
@@ -860,6 +861,10 @@ int recharge_wand(bool known, const string &pre_msg)
         else // It's a rod.
         {
             bool work = false;
+            // Keep track of the original name so that the original enchantment
+            // is displayed in the 'glows for a moment' output
+            // This is consistent with scrolls of enchant weapon/armour
+            const string orig_name = wand.name(DESC_YOUR);
 
             if (wand.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT)
             {
@@ -892,7 +897,7 @@ int recharge_wand(bool known, const string &pre_msg)
             if (known && !pre_msg.empty())
                 mpr(pre_msg);
 
-            mprf("%s glows for a moment.", wand.name(DESC_YOUR).c_str());
+            mprf("%s glows for a moment.", orig_name.c_str());
         }
 
         you.wield_change = true;
@@ -1038,6 +1043,11 @@ static bool _box_of_beasts(item_def &box)
                              3 + random2(3), 0,
                              you.pos(),
                              MHITYOU, MG_AUTOFOE);
+
+    auto &avoids = mg.props[MUTANT_BEAST_AVOID_FACETS].get_vector();
+    for (int facet = BF_FIRST; facet <= BF_LAST; ++facet)
+        if (god_hates_beast_facet(you.religion, static_cast<beast_facet>(facet)))
+            avoids.push_back(facet);
     mg.hd = beast_tiers[tier];
     dprf("hd %d (min %d, tier %d)", mg.hd, hd_min, tier);
     const monster* mons = create_monster(mg);

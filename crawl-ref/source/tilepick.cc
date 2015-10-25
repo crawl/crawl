@@ -831,6 +831,11 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
             z_tile = TILEP_MONS_ZOMBIE_OGRE;
             break;
         }
+        if (subtype == MONS_JUGGERNAUT)
+        {
+                z_tile = TILEP_MONS_ZOMBIE_JUGGERNAUT;
+                break;
+        }
     case MON_SHAPE_HUMANOID_WINGED:
         if (mons_genus(subtype) == MONS_HARPY)
         {
@@ -3939,32 +3944,32 @@ static tileidx_t _tileidx_corpse(const item_def &item)
 
 static tileidx_t _tileidx_rune(const item_def &item)
 {
-    switch (item.plus)
+    switch (item.sub_type)
     {
     // the hell runes:
-    case RUNE_DIS:         return TILE_MISC_RUNE_DIS;
-    case RUNE_GEHENNA:     return TILE_MISC_RUNE_GEHENNA;
-    case RUNE_COCYTUS:     return TILE_MISC_RUNE_COCYTUS;
-    case RUNE_TARTARUS:    return TILE_MISC_RUNE_TARTARUS;
+    case RUNE_DIS:         return TILE_RUNE_DIS;
+    case RUNE_GEHENNA:     return TILE_RUNE_GEHENNA;
+    case RUNE_COCYTUS:     return TILE_RUNE_COCYTUS;
+    case RUNE_TARTARUS:    return TILE_RUNE_TARTARUS;
 
     // special pandemonium runes:
-    case RUNE_MNOLEG:      return TILE_MISC_RUNE_MNOLEG;
-    case RUNE_LOM_LOBON:   return TILE_MISC_RUNE_LOM_LOBON;
-    case RUNE_CEREBOV:     return TILE_MISC_RUNE_CEREBOV;
-    case RUNE_GLOORX_VLOQ: return TILE_MISC_RUNE_GLOORX_VLOQ;
+    case RUNE_MNOLEG:      return TILE_RUNE_MNOLEG;
+    case RUNE_LOM_LOBON:   return TILE_RUNE_LOM_LOBON;
+    case RUNE_CEREBOV:     return TILE_RUNE_CEREBOV;
+    case RUNE_GLOORX_VLOQ: return TILE_RUNE_GLOORX_VLOQ;
 
-    case RUNE_DEMONIC:     return TILE_MISC_RUNE_DEMONIC
-        + ((uint32_t)item.rnd) % tile_main_count(TILE_MISC_RUNE_DEMONIC);
-    case RUNE_ABYSSAL:     return TILE_MISC_RUNE_ABYSS;
+    case RUNE_DEMONIC:     return TILE_RUNE_DEMONIC
+        + ((uint32_t)item.rnd) % tile_main_count(TILE_RUNE_DEMONIC);
+    case RUNE_ABYSSAL:     return TILE_RUNE_ABYSS;
 
-    case RUNE_SNAKE:       return TILE_MISC_RUNE_SNAKE;
-    case RUNE_SPIDER:      return TILE_MISC_RUNE_SPIDER;
-    case RUNE_SLIME:       return TILE_MISC_RUNE_SLIME;
-    case RUNE_VAULTS:      return TILE_MISC_RUNE_VAULTS;
-    case RUNE_TOMB:        return TILE_MISC_RUNE_TOMB;
-    case RUNE_SWAMP:       return TILE_MISC_RUNE_SWAMP;
-    case RUNE_SHOALS:      return TILE_MISC_RUNE_SHOALS;
-    case RUNE_ELF:         return TILE_MISC_RUNE_ELVEN;
+    case RUNE_SNAKE:       return TILE_RUNE_SNAKE;
+    case RUNE_SPIDER:      return TILE_RUNE_SPIDER;
+    case RUNE_SLIME:       return TILE_RUNE_SLIME;
+    case RUNE_VAULTS:      return TILE_RUNE_VAULTS;
+    case RUNE_TOMB:        return TILE_RUNE_TOMB;
+    case RUNE_SWAMP:       return TILE_RUNE_SWAMP;
+    case RUNE_SHOALS:      return TILE_RUNE_SHOALS;
+    case RUNE_ELF:         return TILE_RUNE_ELVEN;
 
     case RUNE_FOREST:
     default:               return TILE_MISC_RUNE_OF_ZOT;
@@ -4046,9 +4051,6 @@ static tileidx_t _tileidx_misc(const item_def &item)
 
     case MISC_PHANTOM_MIRROR:
         return TILE_MISC_PHANTOM_MIRROR;
-
-    case MISC_RUNE_OF_ZOT:
-        return _tileidx_rune(item);
 
     case MISC_QUAD_DAMAGE:
         return TILE_MISC_QUAD_DAMAGE;
@@ -4206,6 +4208,9 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_MISCELLANY:
         return _tileidx_misc(item);
+
+    case OBJ_RUNES:
+        return _tileidx_rune(item);
 
     case OBJ_DETECTED:
         return TILE_UNSEEN_ITEM;
@@ -4379,7 +4384,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
     return 0;
 }
 
-tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
+tileidx_t tileidx_cloud(const cloud_info &cl)
 {
     int type  = cl.type;
     int colour = cl.colour;
@@ -4508,19 +4513,6 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
 
     if (colour != -1)
         ch = tile_main_coloured(ch, colour);
-
-    // The following clouds are supposed to be opaque, but I didn't make any
-    // disturbance tile for them.
-    // CLOUD_FOREST_FIRE and CLOUD_HOLY_FLAMES: are not in the above switch.
-    // CLOUD_INK: special cloud with a specific check in tileview.cc.
-    if (disturbance && type != CLOUD_FOREST_FIRE
-#if TAG_MAJOR_VERSION == 34
-        && type != CLOUD_GLOOM
-#endif
-        && type != CLOUD_INK && type != CLOUD_HOLY_FLAMES)
-    {
-        ch += tile_main_count(ch);
-    }
 
     // XXX: Should be no need for TILE_FLAG_FLYING anymore since clouds are
     // drawn in a separate layer but I'll leave it for now in case anything changes --mumra
@@ -5282,8 +5274,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_YRED_DRAIN_LIFE;
     case ABIL_YRED_ENSLAVE_SOUL:
         return TILEG_ABILITY_YRED_ENSLAVE_SOUL;
-    case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD:
-        return TILEG_ABILITY_YRED_ANIMATE_DEAD;
     // Xom, Vehumet = 90
     // Okawaru
     case ABIL_OKAWARU_HEROISM:

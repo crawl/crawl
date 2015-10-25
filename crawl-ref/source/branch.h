@@ -7,6 +7,7 @@
 #define BRANCH_H
 
 #include "enum.h"
+#include "itemprop-enum.h"
 
 enum branch_flag_type
 {
@@ -43,6 +44,7 @@ struct Branch
     colour_t floor_colour;          // Zot needs special handling.
     colour_t rock_colour;
     int travel_shortcut;         // Which key to press for travel.
+    vector<rune_type> runes;      // Contained rune(s) (if any).
     int ambient_noise;           // affects noise loudness and player stealth
 };
 
@@ -87,4 +89,7 @@ bool branch_is_unfinished(branch_type branch);
 
 branch_type parent_branch(branch_type branch);
 int runes_for_branch(branch_type branch);
+
+string branch_rune_desc(branch_type br, bool remaining_only);
+branch_type rune_location(rune_type rune);
 #endif

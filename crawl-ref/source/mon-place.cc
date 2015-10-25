@@ -1168,11 +1168,11 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
 monster* get_free_monster()
 {
-    for (int i = 0; i < MAX_MONSTERS; ++i)
-        if (env.mons[i].type == MONS_NO_MONSTER)
+    for (auto &mons : menv)
+        if (mons.type == MONS_NO_MONSTER)
         {
-            env.mons[i].reset();
-            return &env.mons[i];
+            mons.reset();
+            return &mons;
         }
 
     return nullptr;
@@ -1316,7 +1316,12 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             for (auto facet : mg.props[MUTANT_BEAST_FACETS].get_vector())
                 gen_facets.push_back(facet.get_int());
 
-        init_mutant_beast(*mon, mg.hd, gen_facets);
+        set<int> avoid_facets;
+        if (mg.props.exists(MUTANT_BEAST_AVOID_FACETS))
+            for (auto facet : mg.props[MUTANT_BEAST_AVOID_FACETS].get_vector())
+                avoid_facets.insert(facet.get_int());
+
+        init_mutant_beast(*mon, mg.hd, gen_facets, avoid_facets);
     }
 
     // Is it a god gift?
@@ -1581,7 +1586,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             give_weapon(mon, place.absdepth(), summoned);
 
         unwind_var<int> save_speedinc(mon->speed_increment);
-        mon->wield_melee_weapon(false);
+        mon->wield_melee_weapon(MB_FALSE);
     }
 
     if (mg.cls == MONS_SLIME_CREATURE)
@@ -3651,10 +3656,9 @@ monster* mons_place(mgen_data mg)
 #ifdef DEBUG_MON_CREATION
     mprf(MSGCH_DIAGNOSTICS, "in mons_place()");
 #endif
-    int mon_count = 0;
-    for (int il = 0; il < MAX_MONSTERS; il++)
-        if (menv[il].type != MONS_NO_MONSTER)
-            mon_count++;
+    const int mon_count = count_if(begin(menv), end(menv),
+                                   [] (const monster &mons) -> bool
+                                   { return mons.type != MONS_NO_MONSTER; });
 
     if (mg.cls == WANDERING_MONSTER)
     {

@@ -205,12 +205,9 @@ static void _clear_golubria_traps()
 
 static void _clear_prisms()
 {
-    for (int i = 0; i < MAX_MONSTERS; ++i)
-    {
-        monster* mons = &menv[i];
-        if (mons->type == MONS_FULMINANT_PRISM)
-            mons->reset();
-    }
+    for (auto &mons : menv)
+        if (mons.type == MONS_FULMINANT_PRISM)
+            mons.reset();
 }
 
 void leaving_level_now(dungeon_feature_type stair_used)
@@ -513,7 +510,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         handle_items_on_shaft(you.pos(), false);
 
         string howfar;
-        if (force_stair && shaft_depth > 1)
+        if (shaft_depth > 1)
             howfar = make_stringf(" for %d floors", shaft_depth);
 
         mprf("You %s a shaft%s!", you.airborne() ? "are sucked into"
@@ -675,6 +672,8 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         if (old_level.branch == BRANCH_ABYSS)
         {
             mprf(MSGCH_BANISHMENT, "You plunge deeper into the Abyss.");
+            if (!you.runes[RUNE_ABYSSAL] && you.depth >= ABYSSAL_RUNE_MIN_LEVEL)
+                mpr("The abyssal Rune of Zot can be found at this depth.");
             break;
         }
         if (!force_stair)
@@ -739,6 +738,10 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
                     mpr(branches[branch].entry_message);
                 else
                     mprf("Welcome to %s!", branches[branch].longname);
+
+                const string rune_msg = branch_rune_desc(branch, true);
+                if (!rune_msg.empty())
+                    mpr(rune_msg);
             }
 
             // Entered a regular (non-portal) branch from above.

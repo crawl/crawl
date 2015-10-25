@@ -248,17 +248,38 @@ bool add_spell_to_memory(spell_type spell)
 
     // now we find an available label:
     // first check to see whether we've chosen an automatic label:
+    bool overwrite = false;
     for (const auto &entry : Options.auto_spell_letters)
     {
         if (!entry.first.matches(sname))
             continue;
         for (char ch : entry.second)
         {
-            if (isaalpha(ch)
-                && you.spell_letter_table[letter_to_index(ch)] == -1)
+            if (ch == '+')
+                overwrite = true;
+            else if (ch == '-')
+                overwrite = false;
+            else if (isaalpha(ch))
             {
-                j = letter_to_index(ch);
-                break;
+                const int slot = letter_to_index(ch);
+                const int existing = you.spell_letter_table[slot];
+                if (existing == -1)
+                {
+                    j = slot;
+                    break;
+                }
+                else if (overwrite)
+                {
+                    const string ename = lowercase_string(
+                            spell_title(static_cast<spell_type>(existing)));
+                    // Don't overwrite a spell matched by the same rule.
+                    if (!entry.first.matches(ename))
+                    {
+                        j = slot;
+                        break;
+                    }
+                }
+                // Otherwise continue on to the next letter in this rule.
             }
         }
         if (j != -1)
@@ -274,6 +295,18 @@ bool add_spell_to_memory(spell_type spell)
 
     if (you.num_turns)
         mprf("Spell assigned to '%c'.", index_to_letter(j));
+
+    // Swapping with an existing spell.
+    if (you.spell_letter_table[j] != -1)
+    {
+        // Find a spot for the spell being moved. Assumes there will be one.
+        for (int free = 0; free < 52; free++)
+            if (you.spell_letter_table[free] == -1)
+            {
+                you.spell_letter_table[free] = you.spell_letter_table[j];
+                break;
+            }
+    }
 
     you.spell_letter_table[j] = i;
 
@@ -477,38 +510,36 @@ const char *spell_title(spell_type spell)
 
 // Apply a function-pointer to all visible squares
 // Returns summation of return values from passed in function.
-int apply_area_visible(cell_func cf, int power, actor *agent)
+int apply_area_visible(cell_func cf, const coord_def &where)
 {
     int rv = 0;
 
-    for (radius_iterator ri(agent->pos(), LOS_NO_TRANS); ri; ++ri)
-        rv += cf(*ri, power, 0, agent);
+    for (radius_iterator ri(where, LOS_NO_TRANS); ri; ++ri)
+        rv += cf(*ri);
 
     return rv;
 }
 
 // Applies the effect to all nine squares around/including the target.
 // Returns summation of return values from passed in function.
-static int _apply_area_square(cell_func cf, const coord_def& where,
-                              int power, actor *agent)
+static int _apply_area_square(cell_func cf, const coord_def& where)
 {
     int rv = 0;
 
     for (adjacent_iterator ai(where, false); ai; ++ai)
-        rv += cf(*ai, power, 0, agent);
+        rv += cf(*ai);
 
     return rv;
 }
 
 // Applies the effect to the eight squares beside the target.
 // Returns summation of return values from passed in function.
-static int _apply_area_around_square(cell_func cf, const coord_def& where,
-                                     int power, actor *agent)
+static int _apply_area_around_square(cell_func cf, const coord_def& where)
 {
     int rv = 0;
 
     for (adjacent_iterator ai(where, true); ai; ++ai)
-        rv += cf(*ai, power, 0, agent);
+        rv += cf(*ai);
 
     return rv;
 }
@@ -516,7 +547,7 @@ static int _apply_area_around_square(cell_func cf, const coord_def& where,
 // Like apply_area_around_square, but for monsters in those squares,
 // and takes care not to affect monsters twice that change position.
 int apply_monsters_around_square(monster_func mf, const coord_def& where,
-                                  int power, int radius)
+                                 int radius)
 {
     int rv = 0;
     set<const monster*> affected;
@@ -525,7 +556,7 @@ int apply_monsters_around_square(monster_func mf, const coord_def& where,
         monster* mon = monster_at(*ri);
         if (mon && !affected.count(mon))
         {
-            rv += mf(mon, power);
+            rv += mf(mon);
             affected.insert(mon);
         }
     }
@@ -536,8 +567,7 @@ int apply_monsters_around_square(monster_func mf, const coord_def& where,
 // Affect up to max_targs monsters around a point, chosen randomly.
 // Return varies with the function called; return values will be added up.
 int apply_random_around_square(cell_func cf, const coord_def& where,
-                               bool exclude_center, int power, int max_targs,
-                               actor *agent)
+                               bool exclude_center, int max_targs)
 {
     int rv = 0;
 
@@ -545,10 +575,10 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         return 0;
 
     if (max_targs >= 9 && !exclude_center)
-        return _apply_area_square(cf, where, power, agent);
+        return _apply_area_square(cf, where);
 
     if (max_targs >= 8 && exclude_center)
-        return _apply_area_around_square(cf, where, power, agent);
+        return _apply_area_around_square(cf, where);
 
     coord_def targs[8];
 
@@ -648,7 +678,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         for (int i = 0; i < targs_found; i++)
         {
             ASSERT(!targs[i].origin());
-            rv += cf(targs[i], power, 0, agent);
+            rv += cf(targs[i]);
         }
     }
 
@@ -1403,17 +1433,8 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     {
         beam.thrower = KILL_YOU_MISSILE;
         zappy(zap, calc_spell_power(spell, true, false, true, rod), beam);
-    }
-    else if (spell == SPELL_MEPHITIC_CLOUD)
-    {
-        beam.flavour = BEAM_MEPHITIC;
-        beam.ex_size = 1;
-        beam.damage = dice_def(1, 1); // so that foe_info is populated
-        beam.hit = 20;
-        beam.thrower = KILL_YOU;
-        beam.ench_power = calc_spell_power(spell, true, false, true, rod);
-        beam.pierce  = false;
-        beam.is_explosion = true;
+        if (spell == SPELL_MEPHITIC_CLOUD)
+            beam.damage = dice_def(1, 1); // so that foe_info is populated
     }
 
     if (beam.flavour != BEAM_VISUAL)

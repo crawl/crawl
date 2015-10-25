@@ -100,12 +100,25 @@ bool can_do_capstone_ability(god_type god)
    return in_good_standing(god, 5) && !you.one_time_ability_used[god];
 }
 
+static const char *_god_blessing_description(god_type god)
+{
+    switch (god)
+    {
+    case GOD_SHINING_ONE:
+        return "blessed by the Shining One";
+    case GOD_LUGONU:
+        return "corrupted by Lugonu";
+    case GOD_KIKUBAAQUDGHA:
+        return "bloodied by Kikubaaqudgha";
+    default:
+        return "touched by the gods";
+    }
+}
+
 /**
  * Perform a capstone god ability that blesses a weapon with the god's
  * brand.
 
- * This requires that the player be on ordinary dungeon floor since an altar to
- * the good is created for thematic purposes.
  * @param god    The god performing the blessing.
  * @param brand  The brand being granted.
  * @param colour The colour to flash when the weapon is branded.
@@ -113,7 +126,6 @@ bool can_do_capstone_ability(god_type god)
 */
 bool bless_weapon(god_type god, brand_type brand, colour_t colour)
 {
-    ASSERT(grd(you.pos()) == DNGN_FLOOR);
     ASSERT(can_do_capstone_ability(god));
 
     int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
@@ -172,19 +184,11 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     calc_mp(); // in case the old brand was antimagic,
     you.redraw_armour_class = true; // protection,
     you.redraw_evasion = true;      // or evasion
-    string desc  = old_name + " "
-                 + (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
-                    god == GOD_LUGONU        ? "corrupted by Lugonu" :
-                    god == GOD_KIKUBAAQUDGHA ? "bloodied by Kikubaaqudgha"
-                                             : "touched by the gods");
-    take_note(Note(NOTE_ID_ITEM, 0, 0,
-              wpn.name(DESC_A).c_str(), desc.c_str()));
+    const string desc = old_name + " " + _god_blessing_description(god);
+    take_note(Note(NOTE_ID_ITEM, 0, 0, wpn.name(DESC_A), desc));
     wpn.flags |= ISFLAG_NOTED_ID;
     wpn.props[FORCED_ITEM_COLOUR_KEY] = colour;
 
-    dungeon_terrain_changed(you.pos(), altar_for_god(god), true, false, true);
-    mprf(MSGCH_GOD, "%s appears before you!",
-         feature_description_at(you.pos(), false, DESC_A, false).c_str());
     mprf(MSGCH_GOD, "Your %s shines brightly!", wpn.name(DESC_QUALNAME).c_str());
     flash_view(UA_PLAYER, colour);
     simple_god_message(" booms: Use this gift wisely!");
@@ -1311,7 +1315,6 @@ bool zin_remove_all_mutations()
 {
     ASSERT(how_mutated());
     ASSERT(can_do_capstone_ability(you.religion));
-    ASSERT(grd(you.pos()) == DNGN_FLOOR);
 
     if (!yesno("Do you wish to cure all of your mutations?", true, 'n'))
     {
@@ -1319,10 +1322,6 @@ bool zin_remove_all_mutations()
         return false;
     }
     zin_recite_interrupt();
-    dungeon_terrain_changed(you.pos(), altar_for_god(GOD_ZIN),
-                            true, false, true);
-    mprf(MSGCH_GOD, "%s appears before you!",
-         feature_description_at(you.pos(), false, DESC_A, false).c_str());
     flash_view(UA_PLAYER, WHITE);
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
@@ -1761,7 +1760,7 @@ bool beogh_gift_item()
                               use_alt_slot ? MSLOT_ALT_WEAPON :
                                              MSLOT_WEAPON);
     if (use_alt_slot)
-        mons->swap_weapons(true);
+        mons->swap_weapons();
 
     dprf("is_ranged weap: %d", range_weapon);
     if (range_weapon)
@@ -1831,39 +1830,6 @@ bool yred_injury_mirror()
     return in_good_standing(GOD_YREDELEMNUL, 1)
            && you.duration[DUR_MIRROR_DAMAGE]
            && crawl_state.which_god_acting() != GOD_YREDELEMNUL;
-}
-
-bool yred_can_animate_dead()
-{
-    return in_good_standing(GOD_YREDELEMNUL, 2);
-}
-
-/**
- * Animates corpses/skeletons where you are or in LOS, depending on piety.
- *
- * @returns false if it did nothing and you could have known so.
- */
-bool yred_animate_remains_or_dead()
-{
-    if (yred_can_animate_dead())
-    {
-        canned_msg(MSG_CALL_DEAD);
-
-        animate_dead(&you, you.skill_rdiv(SK_INVOCATIONS) + 1, BEH_FRIENDLY,
-                     MHITYOU, &you, "", GOD_YREDELEMNUL);
-    }
-    else
-    {
-        canned_msg(MSG_ANIMATE_REMAINS);
-
-        if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY,
-                            MHITYOU, &you, "", GOD_YREDELEMNUL) < 0)
-        {
-            mpr("There are no remains here to animate!");
-            return false;
-        }
-    }
-    return true;
 }
 
 void yred_make_enslaved_soul(monster* mon, bool force_hostile)
@@ -2046,7 +2012,6 @@ bool kiku_take_corpse()
 
 bool kiku_gift_necronomicon()
 {
-    ASSERT(grd(you.pos()) == DNGN_FLOOR);
     ASSERT(can_do_capstone_ability(you.religion));
 
     if (!yesno("Do you wish to receive a Necronomicon?", true, 'n'))
@@ -2061,10 +2026,6 @@ bool kiku_gift_necronomicon()
     {
         return false;
     }
-    dungeon_terrain_changed(you.pos(), altar_for_god(GOD_KIKUBAAQUDGHA),
-                            true, false, true);
-    mprf(MSGCH_GOD, "%s appears before you!",
-         feature_description_at(you.pos(), false, DESC_A, false).c_str());
     simple_god_message(" grants you a gift!");
     flash_view(UA_PLAYER, RED);
 #ifndef USE_TILE_LOCAL
@@ -3566,7 +3527,9 @@ static int _lugonu_warp_monster(monster* mon, int pow)
 
 static void _lugonu_warp_area(int pow)
 {
-    apply_monsters_around_square(_lugonu_warp_monster, you.pos(), pow);
+    apply_monsters_around_square([pow] (monster* mon) {
+        return _lugonu_warp_monster(mon, pow);
+    }, you.pos());
 }
 
 void lugonu_bend_space()
@@ -3630,30 +3593,29 @@ static int _slouch_damage(monster *mon)
                 - player_numer / player_movement_speed() / player_speed());
 }
 
-// Must return an int, not a bool, for apply_area_visible.
-static int _slouchable(coord_def where, int pow, int, actor* agent)
+static bool _slouchable(coord_def where)
 {
     monster* mon = monster_at(where);
     if (mon == nullptr || mon->is_stationary() || mon->cannot_move()
         || mons_is_projectile(mon->type)
         || mon->asleep() && !mons_is_confused(mon))
     {
-        return 0;
+        return false;
     }
 
-    return (_slouch_damage(mon) > 0) ? 1 : 0;
+    return _slouch_damage(mon) > 0;
 }
 
 static bool _act_slouchable(const actor *act)
 {
     if (act->is_player())
         return false;  // too slow-witted
-    return _slouchable(act->pos(), 0, 0, 0);
+    return _slouchable(act->pos());
 }
 
-static int _slouch_monsters(coord_def where, int pow, int dummy, actor* agent)
+static int _slouch_monsters(coord_def where)
 {
-    if (!_slouchable(where, pow, dummy, agent))
+    if (!_slouchable(where))
         return 0;
 
     monster* mon = monster_at(where);
@@ -3663,17 +3625,18 @@ static int _slouch_monsters(coord_def where, int pow, int dummy, actor* agent)
     // towards the middle.
     const int dmg = roll_dice(_slouch_damage(mon), 3) / 2;
 
-    mon->hurt(agent, dmg, BEAM_MMISSILE, KILLED_BY_BEAM, "", "", true);
+    mon->hurt(&you, dmg, BEAM_MMISSILE, KILLED_BY_BEAM, "", "", true);
     return 1;
 }
 
-bool cheibriados_slouch(int pow)
+bool cheibriados_slouch()
 {
-    int count = apply_area_visible(_slouchable, pow, &you);
+    int count = apply_area_visible(_slouchable, you.pos());
     if (!count)
         if (!yesno("There's no one hasty visible. Invoke Slouch anyway?",
                    true, 'n'))
         {
+            canned_msg(MSG_OK);
             return false;
         }
 
@@ -3684,7 +3647,7 @@ bool cheibriados_slouch(int pow)
     mpr("You can feel time thicken for a moment.");
     dprf("your speed is %d", player_movement_speed());
 
-    apply_area_visible(_slouch_monsters, pow, &you);
+    apply_area_visible(_slouch_monsters, you.pos());
     return true;
 }
 
@@ -4549,7 +4512,7 @@ static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
     you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, index)].get_int() = type;
 
     you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)].get_string()
-                                    = make_name(random_int());
+                                    = make_name();
 
     const bool need_suffix = type != SHOP_GENERAL
                              && type != SHOP_GENERAL_ANTIQUE
@@ -4844,7 +4807,8 @@ int gozag_type_bribable(monster_type type)
     // Unique rune guardians can't be bribed, sorry!
     if (mons_is_unique(type)
         && (mons_genus(type) == MONS_HELL_LORD
-            || mons_genus(type) == MONS_PANDEMONIUM_LORD))
+            || mons_genus(type) == MONS_PANDEMONIUM_LORD
+            || type == MONS_ANTAEUS))
     {
         return 0;
     }
@@ -5350,7 +5314,7 @@ static map<const char*, vector<mutation_type>> sacrifice_vector_map =
     /// Mutations granted by ABIL_RU_SACRIFICE_PURITY
     { PURITY_SAC_KEY, {
         MUT_SCREAM,
-        MUT_SLOW_HEALING,
+        MUT_SLOW_REGENERATION,
         MUT_NO_DEVICE_HEAL,
         MUT_DOPEY,
         MUT_CLUMSY,
@@ -5417,9 +5381,9 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
             continue;
 
         // special case a few weird interactions
-        // vampires can't get slow healing for some reason related to their
-        // existing regen silliness
-        if (you.species == SP_VAMPIRE && mut == MUT_SLOW_HEALING)
+        // vampires can't get slow regeneration for some reason related to
+        // their existing regen silliness
+        if (you.species == SP_VAMPIRE && mut == MUT_SLOW_REGENERATION)
             continue;
 
         // demonspawn can't get frail if they have a robust facet
@@ -5719,6 +5683,17 @@ static int _get_sacrifice_piety(ability_type sac)
             {
                 piety_gain -= 10;
             }
+            break;
+        case ABIL_RU_SACRIFICE_HAND:
+            // No one-handed polearms for spriggans.
+            if (you.species == SP_SPRIGGAN)
+                piety_gain += _piety_for_skill(SK_POLEARMS);
+            // No one-handed staves for small races.
+            if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
+                piety_gain += _piety_for_skill(SK_STAVES);
+            // No one-handed bows.
+            if (you.species != SP_FORMICID)
+                piety_gain += _piety_for_skill(SK_BOWS);
             break;
         default:
             break;
@@ -6176,6 +6151,22 @@ bool ru_do_sacrifice(ability_type sac)
     else if (sac_def.sacrifice_skill != SK_NONE)
         _ru_kill_skill(sac_def.sacrifice_skill);
 
+    // Maybe this should go in _extra_sacrifice_code, but it would be
+    // inconsistent for the milestone to have reduced Shields skill
+    // but not the others.
+    if (sac == ABIL_RU_SACRIFICE_HAND)
+    {
+        // No one-handed polearms or staves for spriggans.
+        if (you.species == SP_SPRIGGAN)
+            _ru_kill_skill(SK_POLEARMS);
+        // No one-handed staves for small races.
+        if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
+            _ru_kill_skill(SK_STAVES);
+        // No one-handed bows.
+        if (you.species != SP_FORMICID)
+            _ru_kill_skill(SK_BOWS);
+    }
+
     mark_milestone("sacrifice", mile_text.c_str());
 
     // Any special handling that's needed.
@@ -6494,7 +6485,7 @@ bool ru_power_leap()
     return return_val;
 }
 
-static int _apocalypseable(coord_def where, int pow, int, actor* agent)
+static int _apocalypseable(coord_def where)
 {
     monster* mon = monster_at(where);
     if (mon == nullptr || mons_is_projectile(mon->type) || mon->friendly())
@@ -6502,9 +6493,9 @@ static int _apocalypseable(coord_def where, int pow, int, actor* agent)
     return 1;
 }
 
-static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
+static int _apply_apocalypse(coord_def where)
 {
-    if (!_apocalypseable(where, pow, dummy, agent))
+    if (!_apocalypseable(where))
         return 0;
     monster* mons = monster_at(where);
     ASSERT(mons);
@@ -6550,22 +6541,23 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
     }
 
     //damage scales with XL and piety
+    const int pow = you.piety;
     int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 584);
     int dmg = 10 + roll_dice(num_dice, die_size);
 
-    mons->hurt(agent, dmg, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
+    mons->hurt(&you, dmg, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
 
     if (mons->alive() && enchantment != ENCH_NONE)
     {
         simple_monster_message(mons, message.c_str());
-        mons->add_ench(mon_enchant(enchantment, 1, agent, duration));
+        mons->add_ench(mon_enchant(enchantment, 1, &you, duration));
     }
     return 1;
 }
 
 bool ru_apocalypse()
 {
-    int count = apply_area_visible(_apocalypseable, you.piety, &you);
+    int count = apply_area_visible(_apocalypseable, you.pos());
     if (!count)
     {
         if (!yesno("There are no visible enemies. Unleash your apocalypse anyway?",
@@ -6576,7 +6568,7 @@ bool ru_apocalypse()
     }
     mpr("You reveal the great annihilating truth to your foes!");
     noisy(30, you.pos());
-    apply_area_visible(_apply_apocalypse, you.piety, &you);
+    apply_area_visible(_apply_apocalypse, you.pos());
     drain_player(100, false, true);
     return true;
 }

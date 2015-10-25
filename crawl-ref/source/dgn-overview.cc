@@ -295,14 +295,8 @@ static string _get_unseen_branches()
             continue;
 
         const branch_type branch = it->id;
-
-        if (branch == BRANCH_SPIDER && stair_level.count(BRANCH_SNAKE)
-            || branch == BRANCH_SNAKE && stair_level.count(BRANCH_SPIDER)
-            || branch == BRANCH_SWAMP && stair_level.count(BRANCH_SHOALS)
-            || branch == BRANCH_SHOALS && stair_level.count(BRANCH_SWAMP))
-        {
+        if (!connected_branch_can_exist(branch))
             continue;
-        }
 
         if (branch == BRANCH_VESTIBULE || !is_connected_branch(branch))
             continue;
@@ -991,4 +985,23 @@ void unmarshallUniqueAnnotations(reader& inf)
         level.load(inf);
         auto_unique_annotations.insert(make_pair(name, level));
     }
+}
+
+/**
+ * Can the player encounter the given connected branch, given their
+ * knowledge of which have been seen so far?
+ * @param br A connected branch.
+ * @returns True if the branch can exist, false otherwise.
+*/
+bool connected_branch_can_exist(branch_type br)
+{
+    if (br == BRANCH_SPIDER && stair_level.count(BRANCH_SNAKE)
+        || br == BRANCH_SNAKE && stair_level.count(BRANCH_SPIDER)
+        || br == BRANCH_SWAMP && stair_level.count(BRANCH_SHOALS)
+        || br == BRANCH_SHOALS && stair_level.count(BRANCH_SWAMP))
+    {
+        return false;
+    }
+
+    return true;
 }

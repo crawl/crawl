@@ -193,7 +193,7 @@ void ghost_demon::init_pandemonium_lord()
 {
     do
     {
-        name = make_name(random_int());
+        name = make_name();
     }
     while (!getLongDescription(name).empty());
 

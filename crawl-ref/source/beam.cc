@@ -638,10 +638,20 @@ void bolt::initialise_fire()
     if (you.see_cell(source) && target == source && visible())
         seen = true;
 
-    // XXX: Should non-agents count as seeing invisible?
     // The agent may die during the beam's firing, need to save these now.
-    nightvision = agent() && agent()->nightvision();
-    can_see_invis = agent() && agent()->can_see_invisible();
+    // If the beam was reflected, assume it can "see" anything, since neither
+    // the reflector nor the original source was particularly aiming for this
+    // target. WARNING: if you change this logic, keep in mind that
+    // menv[YOU_FAULTLESS] cannot be safely queried for properties like
+    // can_see_invisible.
+    if (reflections > 0)
+        nightvision = can_see_invis = true;
+    else
+    {
+        // XXX: Should non-agents count as seeing invisible?
+        nightvision = agent() && agent()->nightvision();
+        can_see_invis = agent() && agent()->can_see_invisible();
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     // Not a "real" tracer, merely a range/reachability check.
@@ -1196,6 +1206,7 @@ void bolt::affect_cell()
         {
             affect_monster(m);
             if ((hit == AUTOMATIC_HIT && !pierce && !ignores_monster(m))
+                // Assumes tracers will always have an agent!
                 && (!is_tracer || m->visible_to(agent())))
             {
                 finish_beam();
@@ -2349,32 +2360,29 @@ static void _maybe_imb_explosion(bolt *parent, coord_def center)
     {
         if (!imb_can_splash(parent->source, center, parent->path_taken, *ai))
             continue;
-        if (beam.is_tracer || x_chance_in_y(3, 4))
+        if (!beam.is_tracer && one_chance_in(4))
+            continue;
+
+        if (first && !beam.is_tracer)
         {
-            if (first && !beam.is_tracer)
-            {
-                if (you.see_cell(center))
-                    mpr("The orb of energy explodes!");
-                noisy(spell_effect_noise(SPELL_ISKENDERUNS_MYSTIC_BLAST),
-                      center);
-                first = false;
-            }
-            beam.friend_info.reset();
-            beam.foe_info.reset();
-            beam.friend_info.dont_stop = parent->friend_info.dont_stop;
-            beam.foe_info.dont_stop = parent->foe_info.dont_stop;
-            beam.target = center + (*ai - center) * 2;
-            beam.fire();
-            parent->friend_info += beam.friend_info;
-            parent->foe_info    += beam.foe_info;
-            if (beam.is_tracer)
-            {
-                if (beam.beam_cancelled)
-                {
-                    parent->beam_cancelled = true;
-                    return;
-                }
-            }
+            if (you.see_cell(center))
+                mpr("The orb of energy explodes!");
+            noisy(spell_effect_noise(SPELL_ISKENDERUNS_MYSTIC_BLAST),
+                  center);
+            first = false;
+        }
+        beam.friend_info.reset();
+        beam.foe_info.reset();
+        beam.friend_info.dont_stop = parent->friend_info.dont_stop;
+        beam.foe_info.dont_stop = parent->foe_info.dont_stop;
+        beam.target = center + (*ai - center) * 2;
+        beam.fire();
+        parent->friend_info += beam.friend_info;
+        parent->foe_info    += beam.foe_info;
+        if (beam.is_tracer && beam.beam_cancelled)
+        {
+            parent->beam_cancelled = true;
+            return;
         }
     }
 }
@@ -2550,30 +2558,32 @@ void bolt::affect_endpoint()
         return;
     }
 
-    cloud_type cloud = get_cloud_type();
+    _maybe_imb_explosion(this, pos());
+
+    const cloud_type cloud = get_cloud_type();
 
     if (is_tracer)
     {
-        _maybe_imb_explosion(this, pos());
-        if (cloud != CLOUD_NONE)
+        if (cloud == CLOUD_NONE)
+            return;
+
+        targetter_cloud tgt(agent(), range, get_cloud_size(true),
+                            get_cloud_size(false, true));
+        tgt.set_aim(pos());
+        for (const auto &entry : tgt.seen)
         {
-            targetter_cloud tgt(agent(), range, get_cloud_size(true),
-                                                get_cloud_size(false, true));
-            tgt.set_aim(pos());
-            for (const auto &entry : tgt.seen)
-            {
-                if (entry.second != AFF_YES && entry.second != AFF_MAYBE)
-                    continue;
+            if (entry.second != AFF_YES && entry.second != AFF_MAYBE)
+                continue;
 
-                if (entry.first == you.pos())
-                    tracer_affect_player();
-                else if (monster* mon = monster_at(entry.first))
-                    tracer_affect_monster(mon);
+            if (entry.first == you.pos())
+                tracer_affect_player();
+            else if (monster* mon = monster_at(entry.first))
+                tracer_affect_monster(mon);
 
-                if (agent()->is_player() && beam_cancelled)
-                    return;
-            }
+            if (agent()->is_player() && beam_cancelled)
+                return;
         }
+
         return;
     }
 
@@ -2586,51 +2596,47 @@ void bolt::affect_endpoint()
         noise_generated = true;
     }
 
-    if (origin_spell == SPELL_PRIMAL_WAVE) // &&coinflip()
+    if (cloud != CLOUD_NONE)
+        big_cloud(cloud, agent(), pos(), get_cloud_pow(), get_cloud_size());
+
+    // you like special cases, right?
+    switch (origin_spell)
     {
+    case SPELL_PRIMAL_WAVE:
         if (you.see_cell(pos()))
         {
             mpr("The wave splashes down.");
             noisy(spell_effect_noise(SPELL_PRIMAL_WAVE), pos());
         }
         else
+        {
             noisy(spell_effect_noise(SPELL_PRIMAL_WAVE),
                   pos(), "You hear a splash.");
+        }
         create_feat_splash(pos(), 2, random_range(3, 12, 2));
-    }
+        break;
 
-    if (origin_spell == SPELL_BLINKBOLT)
-    {
-        if (agent() && agent()->alive())
+    case SPELL_BLINKBOLT:
+        if (!agent() || !agent()->alive())
+            return;
+
+        for (vector<coord_def>::reverse_iterator citr = path_taken.rbegin();
+             citr != path_taken.rend(); ++citr)
         {
-            for (vector<coord_def>::reverse_iterator citr = path_taken.rbegin();
-                 citr != path_taken.rend(); ++citr)
+            if (agent()->is_habitable(*citr) &&
+                agent()->blink_to(*citr, false))
             {
-                if (agent()->is_habitable(*citr) &&
-                    agent()->blink_to(*citr, false))
-                {
-                    return;
-                }
+                return;
             }
         }
         return;
-    }
 
-    // FIXME: why doesn't this just have is_explosion set?
-    if (origin_spell == SPELL_ORB_OF_ELECTRICITY)
-    {
-        target = pos();
-        refine_for_explosion();
-        explode();
-    }
-
-    if (cloud != CLOUD_NONE)
-        big_cloud(cloud, agent(), pos(), get_cloud_pow(), get_cloud_size());
-
-    if (origin_spell == SPELL_SEARING_BREATH)
+    case SPELL_SEARING_BREATH:
         place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
 
-    _maybe_imb_explosion(this, pos());
+    default:
+        break;
+    }
 }
 
 bool bolt::stop_at_target() const
@@ -3750,11 +3756,6 @@ void bolt::affect_player_enchantment(bool resistible)
         nice  = true;
         break;
 
-    case BEAM_ATTRACT:
-        if (fatal_attraction(&you, agent(), ench_power))
-            obvious_effect = true;
-        break;
-
     default:
         // _All_ enchantments should be enumerated here!
         mpr("Software bugs nibble your toes!");
@@ -4221,27 +4222,27 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
 
 void bolt::handle_stop_attack_prompt(monster* mon)
 {
-    if ((thrower == KILL_YOU_MISSILE || thrower == KILL_YOU)
-        && !is_harmless(mon))
+    if (thrower != KILL_YOU_MISSILE && thrower != KILL_YOU
+        || is_harmless(mon)
+        || friend_info.dont_stop && foe_info.dont_stop)
     {
-        if (!friend_info.dont_stop || !foe_info.dont_stop)
-        {
-            const bool autohit_first = (hit == AUTOMATIC_HIT);
-            bool prompted = false;
+        return;
+    }
 
-            if (stop_attack_prompt(mon, true, target, autohit_first, &prompted)
-                || _stop_because_god_hates_target_prompt(mon, origin_spell))
-            {
-                beam_cancelled = true;
-                finish_beam();
-            }
+    const bool autohit_first = (hit == AUTOMATIC_HIT);
+    bool prompted = false;
 
-            if (prompted)
-            {
-                friend_info.dont_stop = true;
-                foe_info.dont_stop = true;
-            }
-        }
+    if (stop_attack_prompt(mon, true, target, autohit_first, &prompted)
+        || _stop_because_god_hates_target_prompt(mon, origin_spell))
+    {
+        beam_cancelled = true;
+        finish_beam();
+    }
+
+    if (prompted)
+    {
+        friend_info.dont_stop = true;
+        foe_info.dont_stop = true;
     }
 }
 
@@ -5130,7 +5131,6 @@ bool bolt::has_saving_throw() const
     case BEAM_IGNITE_POISON:
     case BEAM_AGILITY:
     case BEAM_RESISTANCE:
-    case BEAM_ATTRACT:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores MR 1/3 of the time
@@ -5754,17 +5754,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_AFFECTED;
 
-    case BEAM_ATTRACT:
-    {
-        const bool could_see = you.can_see(*mon);
-        if (fatal_attraction(mon, agent(), ench_power)
-            && (could_see || you.can_see(*mon)))
-        {
-            obvious_effect = true;
-        }
-        return MON_AFFECTED;
-    }
-
     default:
         break;
     }
@@ -5807,17 +5796,63 @@ int bolt::range_used_on_hit() const
     return used;
 }
 
+// Information for how various explosions look & sound.
+struct explosion_sfx
+{
+    // A message printed when the player sees the explosion.
+    const char *seeMsg;
+    // What the player hears when the explosion goes off unseen.
+    const char *sound;
+};
+
+// A map from origin_spells to special explosion info for each.
+const map<spell_type, explosion_sfx> spell_explosions = {
+    { SPELL_HELLFIRE, {
+        "The hellfire explodes!",
+        "a strangely unpleasant explosion",
+    } },
+    { SPELL_HELLFIRE_BURST, {
+        "The hellfire explodes!",
+        "a strangely unpleasant explosion",
+    } },
+    { SPELL_FIREBALL, {
+        "The fireball explodes!",
+        "an explosion",
+    } },
+    { SPELL_ORB_OF_ELECTRICITY, {
+        "The orb of electricity explodes!",
+        "a clap of thunder",
+    } },
+    { SPELL_FIRE_STORM, {
+        "A raging storm of fire appears!",
+        "a raging storm",
+    } },
+    { SPELL_MEPHITIC_CLOUD, {
+        "The ball explodes into a vile cloud!",
+        "a loud \'bang\'",
+    } },
+    { SPELL_GHOSTLY_FIREBALL, {
+        "The ghostly flame explodes!",
+        "the shriek of haunting fire",
+    } },
+    { SPELL_EXPLOSIVE_BOLT, {
+        "The explosive bolt releases an explosion!",
+        "an explosion",
+    } },
+};
+
 // Takes a bolt and refines it for use in the explosion function.
 // Explosions which do not follow from beams bypass this function.
 void bolt::refine_for_explosion()
 {
     ASSERT(!special_explosion);
 
-    const char *seeMsg  = nullptr;
-    const char *hearMsg = nullptr;
+    string seeMsg;
+    string hearMsg;
 
     if (ex_size == 0)
         ex_size = 1;
+    glyph   = dchar_glyph(DCHAR_FIRED_BURST);
 
     // Assume that the player can see/hear the explosion, or
     // gets burned by it anyway.  :)
@@ -5828,88 +5863,33 @@ void bolt::refine_for_explosion()
     string tmp;
     if (item != nullptr)
     {
-        tmp  = "The " + item->name(DESC_PLAIN, false, false, false)
-               + " explodes!";
-
-        seeMsg  = tmp.c_str();
+        seeMsg  = "The " + item->name(DESC_PLAIN, false, false, false)
+                  + " explodes!";
         hearMsg = "You hear an explosion!";
-
-        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
     }
-
-    if (origin_spell == SPELL_HELLFIRE || origin_spell == SPELL_HELLFIRE_BURST)
+    else
     {
-        seeMsg  = "The hellfire explodes!";
-        hearMsg = "You hear a strangely unpleasant explosion!";
-
-        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
-        flavour = BEAM_HELLFIRE;
-    }
-
-    if (origin_spell == SPELL_FIREBALL)
-    {
-        seeMsg  = "The fireball explodes!";
-        hearMsg = "You hear an explosion!";
-
-        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
-        flavour = BEAM_FIRE;
-        ex_size = 1;
+        const explosion_sfx *explosion = map_find(spell_explosions,
+                                                  origin_spell);
+        if (explosion)
+        {
+            seeMsg = explosion->seeMsg;
+            hearMsg = make_stringf("You hear %s!", explosion->sound);
+        }
+        else
+        {
+            seeMsg  = "The beam explodes into a cloud of software bugs!";
+            hearMsg = "You hear the sound of one hand!";
+        }
     }
 
     if (origin_spell == SPELL_ORB_OF_ELECTRICITY)
     {
-        seeMsg  = "The orb of electricity explodes!";
-        hearMsg = "You hear a clap of thunder!";
-
-        glyph      = dchar_glyph(DCHAR_FIRED_BURST);
-        flavour    = BEAM_ELECTRICITY;
         colour     = LIGHTCYAN;
         ex_size    = 2;
     }
 
-    if (origin_spell == SPELL_FIRE_STORM)
-    {
-        seeMsg  = "A raging storm of fire appears!";
-        hearMsg = "You hear a raging storm!";
-
-        // Everything else is handled elsewhere...
-    }
-
-    if (origin_spell == SPELL_MEPHITIC_CLOUD)
-    {
-        seeMsg     = "The ball explodes into a vile cloud!";
-        hearMsg    = "You hear a loud \'bang\'!";
-        if (!is_tracer)
-            name = "stinking cloud";
-    }
-
-    if (origin_spell == SPELL_GHOSTLY_FIREBALL)
-    {
-        seeMsg  = "The ghostly flame explodes!";
-        hearMsg = "You hear the shriek of haunting fire!";
-
-        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
-        ex_size = 1;
-    }
-
-    if (origin_spell == SPELL_EXPLOSIVE_BOLT)
-
-    {
-        seeMsg  = "The explosive bolt releases an explosion!";
-        hearMsg = "You hear an explosion!";
-
-        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
-        flavour = BEAM_FIRE;
-        ex_size = 1;
-    }
-
-    if (seeMsg == nullptr)
-    {
-        seeMsg  = "The beam explodes into a cloud of software bugs!";
-        hearMsg = "You hear the sound of one hand!";
-    }
-
-    if (!is_tracer && *seeMsg && *hearMsg)
+    if (!is_tracer && !seeMsg.empty() && !hearMsg.empty())
     {
         heard = player_can_hear(target);
         // Check for see/hear/no msg.
@@ -5920,7 +5900,7 @@ void bolt::refine_for_explosion()
             if (!heard)
                 msg_generated = false;
             else
-                mprf(MSGCH_SOUND, "%s", hearMsg);
+                mprf(MSGCH_SOUND, "%s", hearMsg.c_str());
         }
     }
 }
@@ -6073,6 +6053,9 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
                     ++cells_seen;
 
                 explosion_affect_cell(delta + pos());
+
+                if (beam_cancelled) // don't spam prompts
+                    return false;
             }
         }
     }
@@ -6266,7 +6249,7 @@ bool bolt::nasty_to(const monster* mon) const
         return mon->holiness() != MH_UNDEAD;
 
     if (flavour == BEAM_TUKIMAS_DANCE)
-        return tukima_affects(mon);
+        return tukima_affects(*mon);
 
     // everything else is considered nasty by everyone
     return true;
@@ -6524,7 +6507,6 @@ static string _beam_type_name(beam_type type)
     case BEAM_BOUNCY_TRACER:         return "bouncy tracer";
     case BEAM_DEATH_RATTLE:          return "breath of the dead";
     case BEAM_RESISTANCE:            return "resistance";
-    case BEAM_ATTRACT:               return "attraction";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

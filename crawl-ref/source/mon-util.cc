@@ -7,7 +7,7 @@
 
 #include "mon-util.h"
 
-#include <algorithm> // find
+#include <algorithm>
 #include <cmath>
 #include <sstream>
 
@@ -48,6 +48,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
+#include "mutant-beast.h"
 #include "notes.h"
 #include "options.h"
 #include "random.h"
@@ -3034,7 +3035,7 @@ bool give_monster_proper_name(monster* mon, bool orcs_only)
     mon->mname = _get_proper_monster_name(mon);
 
     if (mon->friendly())
-        take_note(Note(NOTE_NAMED_ALLY, 0, 0, mon->mname.c_str()));
+        take_note(Note(NOTE_NAMED_ALLY, 0, 0, mon->mname));
 
     return mon->is_named();
 }
@@ -3244,8 +3245,7 @@ bool mons_self_destructs(const monster* m)
         || m->type == MONS_BALL_LIGHTNING
         || m->type == MONS_LURKING_HORROR
         || m->type == MONS_ORB_OF_DESTRUCTION
-        || m->type == MONS_FULMINANT_PRISM
-        || m->type == MONS_BENNU;
+        || m->type == MONS_FULMINANT_PRISM;
 }
 
 bool mons_att_wont_attack(mon_attitude_type fr)
@@ -3823,7 +3823,7 @@ static gender_type _mons_class_gender(monster_type mc)
                   GENDER_NEUTER;
 }
 
-// Use of variant (case is irrelevant here):
+// Use of variant (upper-/lowercase is irrelevant here):
 // PRONOUN_SUBJECTIVE : _She_ is tap dancing.
 // PRONOUN_POSSESSIVE : _Its_ sword explodes!
 // PRONOUN_REFLEXIVE  : The wizard mumbles to _herself_.
@@ -4116,8 +4116,11 @@ mon_inv_type item_to_mslot(const item_def &item)
         return MSLOT_MISSILE;
     case OBJ_ARMOUR:
         return equip_slot_to_mslot(get_armour_slot(item));
+    case OBJ_JEWELLERY:
+        return MSLOT_JEWELLERY;
     case OBJ_WANDS:
         return MSLOT_WAND;
+    case OBJ_BOOKS:
     case OBJ_SCROLLS:
         return MSLOT_SCROLL;
     case OBJ_POTIONS:
@@ -5007,18 +5010,18 @@ void debug_monspells()
 // are handled properly.
 void reset_all_monsters()
 {
-    for (int i = 0; i < MAX_MONSTERS; i++)
+    for (auto &mons : menv)
     {
         // The monsters here have already been saved or discarded, so this
         // is the only place when a constricting monster can legitimately
         // be reset. Thus, clear constriction manually.
-        if (!invalid_monster(&menv[i]))
+        if (!invalid_monster(&mons))
         {
-            delete menv[i].constricting;
-            menv[i].constricting = nullptr;
-            menv[i].clear_constricted();
+            delete mons.constricting;
+            mons.constricting = nullptr;
+            mons.clear_constricted();
         }
-        menv[i].reset();
+        mons.reset();
     }
 
     env.mid_cache.clear();
@@ -5060,27 +5063,21 @@ vector<monster* > get_on_level_followers()
 // monsters, otherwise all of them
 int count_monsters(monster_type mtyp, bool friendly_only)
 {
-    int count = 0;
-    for (int mon = 0; mon < MAX_MONSTERS; mon++)
-    {
-        monster *mons = &menv[mon];
-        if (mons->alive() && mons->type == mtyp
-            && (!friendly_only || mons->friendly()))
-        {
-            count++;
-        }
-    }
-    return count;
+    return count_if(begin(menv), end(menv),
+                    [=] (const monster &mons) -> bool
+                    {
+                        return mons.alive() && mons.type == mtyp
+                            && (!friendly_only || mons.friendly());
+                    });
 }
 
 int count_allies()
 {
-    int count = 0;
-    for (int mon = 0; mon < MAX_MONSTERS; mon++)
-        if (menv[mon].alive() && menv[mon].friendly())
-            count++;
-
-    return count;
+    return count_if(begin(menv), end(menv),
+                    [] (const monster &mons) -> bool
+                    {
+                        return mons.alive() && mons.friendly();
+                    });
 }
 
 bool mons_stores_tracking_data(const monster* mons)
@@ -5314,17 +5311,27 @@ bool mons_can_display_wounds(const monster* mon)
     return mons_class_can_display_wounds(mon->type);
 }
 
+bool god_hates_beast_facet(god_type god, beast_facet facet)
+{
+    ASSERT_RANGE(facet, BF_FIRST, BF_LAST+1);
+
+    // Only one so far.
+    return god == GOD_DITHMENOS && facet == BF_FIRE;
+}
 
 /**
  * Set up fields for mutant beasts that vary by tier & facets (that is, that
  * vary between individual beasts).
  *
- * @param mons      The beast to be initialized.
- * @param HD        The beast's HD. If 0, default to mon-data's version.
- * @param facets    The beast's facets (e.g. fire, bat).
- *                  If empty, chooses two distinct facets at random.
+ * @param mons          The beast to be initialized.
+ * @param HD            The beast's HD. If 0, default to mon-data's version.
+ * @param beast_facets  The beast's facets (e.g. fire, bat).
+ *                      If empty, chooses two distinct facets at random.
+ * @param avoid_facets  A set of facets to avoid when randomly generating
+ *                      beasts. Irrelevant if beast_facets is non-empty.
  */
-void init_mutant_beast(monster &mons, short HD, vector<int> beast_facets)
+void init_mutant_beast(monster &mons, short HD, vector<int> beast_facets,
+                       set<int> avoid_facets)
 {
     if (!HD)
         HD = mons.get_experience_level();
@@ -5334,13 +5341,16 @@ void init_mutant_beast(monster &mons, short HD, vector<int> beast_facets)
 
     if (beast_facets.empty())
     {
-        beast_facets.push_back(random_range(BF_FIRST, BF_LAST));
-
-        vector<int> second_facets;
+        vector<int> available_facets;
         for (int f = BF_FIRST; f <= BF_LAST; ++f)
-            if (f != beast_facets[0])
-                second_facets.push_back(f);
-        beast_facets.push_back(second_facets[random2(second_facets.size())]);
+            if (avoid_facets.count(f) == 0)
+                available_facets.insert(available_facets.end(), f);
+
+        ASSERT(available_facets.size() >= 2);
+
+        shuffle_array(available_facets);
+        beast_facets.push_back(available_facets[0]);
+        beast_facets.push_back(available_facets[1]);
 
         ASSERT(beast_facets.size() == 2);
         ASSERT(beast_facets[0] != beast_facets[1]);

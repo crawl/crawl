@@ -7,6 +7,7 @@
 
 #include "l_libs.h"
 
+#include <algorithm>
 #include <sstream>
 
 #include "adjust.h"
@@ -319,12 +320,8 @@ static int l_item_do_ego(lua_State *ls)
 
     const char *s = nullptr;
 
-    if ((item->base_type == OBJ_WEAPONS || item->base_type == OBJ_ARMOUR)
-        && item_ident(*item, ISFLAG_KNOW_TYPE)
-        || item->base_type == OBJ_MISSILES)
-    {
+    if (item_type_known(*item) || item->base_type == OBJ_MISSILES)
         s = ego_type_string(*item, terse).c_str();
-    }
 
     if (s && *s)
         lua_pushstring(ls, s);
@@ -413,19 +410,13 @@ static int l_item_do_stacks(lua_State *ls)
         lua_pushnil(ls);
     else if (lua_gettop(ls) == 0 || lua_isnil(ls, 1))
     {
-        bool any_stack = false;
-        // Optimisation: don't bother iterating if it can't possibly stack.
-        if (is_stackable_item(*first))
-        {
-            // Compare against all of inventory, return true for any match.
-            // Note that items_stack already handles undefined items.
-            for (int inv_slot = 0; inv_slot < ENDOFPACK; ++inv_slot)
-                if (items_stack(*first, you.inv[inv_slot]))
-                {
-                    any_stack = true;
-                    break;
-                }
-        }
+        const bool any_stack =
+            is_stackable_item(*first)
+            && any_of(begin(you.inv), end(you.inv),
+                      [&] (const item_def &item) -> bool
+                      {
+                          return items_stack(*first, item);
+                      });
         lua_pushboolean(ls, any_stack);
     }
     else if (ITEM(second, 1))
@@ -998,7 +989,7 @@ IDEF(sub_type)
 
 IDEF(ego_type)
 {
-    if (CLua::get_vm(ls).managed_vm && !item_ident(*item, ISFLAG_KNOW_TYPE)
+    if (CLua::get_vm(ls).managed_vm && !item_type_known(*item)
         && item->base_type != OBJ_MISSILES)
     {
         lua_pushstring(ls, "unknown");
@@ -1011,7 +1002,8 @@ IDEF(ego_type)
 
 IDEF(ego_type_terse)
 {
-    if (CLua::get_vm(ls).managed_vm && !item_ident(*item, ISFLAG_KNOW_TYPE))
+    if (CLua::get_vm(ls).managed_vm && !item_type_known(*item)
+        && item->base_type != OBJ_MISSILES)
     {
         lua_pushstring(ls, "unknown");
         return 1;

@@ -1080,13 +1080,13 @@ int player_teleport(bool calc_unid)
 }
 
 // Computes bonuses to regeneration from most sources. Does not handle
-// slow healing, vampireness, or Trog's Hand.
+// slow regeneration, vampireness, or Trog's Hand.
 static int _player_bonus_regen()
 {
     int rr = 0;
 
-    // Trog's Hand is handled separately so that it will bypass slow healing,
-    // and it overrides the spell.
+    // Trog's Hand is handled separately so that it will bypass slow
+    // regeneration, and it overrides the spell.
     if (you.duration[DUR_REGENERATION]
         && !you.duration[DUR_TROGS_HAND])
     {
@@ -1117,11 +1117,11 @@ static int _player_bonus_regen()
     return rr;
 }
 
-// Slow healing mutation: slows or stops regeneration when monsters are
+// Slow regeneration mutation: slows or stops regeneration when monsters are
 // visible at level 1 or 2 respectively, stops regeneration at level 3.
-static int _slow_heal_rate()
+static int _slow_regeneration_rate()
 {
-    if (player_mutation_level(MUT_SLOW_HEALING) == 3)
+    if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
         return 0;
 
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
@@ -1130,7 +1130,7 @@ static int _slow_heal_rate()
             && !mi->wont_attack()
             && !mi->neutral())
         {
-            return 2 - player_mutation_level(MUT_SLOW_HEALING);
+            return 2 - player_mutation_level(MUT_SLOW_REGENERATION);
         }
     }
     return 2;
@@ -1176,10 +1176,10 @@ int player_regen()
             rr += (100 - you.hp_max) / 6;
 #endif
 
-    // Slow heal mutation.
-    if (player_mutation_level(MUT_SLOW_HEALING) > 0)
+    // Slow regeneration mutation.
+    if (player_mutation_level(MUT_SLOW_REGENERATION) > 0)
     {
-        rr *= _slow_heal_rate();
+        rr *= _slow_regeneration_rate();
         rr /= 2;
     }
     if (you.duration[DUR_COLLAPSE])
@@ -1188,7 +1188,7 @@ int player_regen()
     if (you.disease)
         rr = 0;
 
-    // Trog's Hand. This circumvents the slow healing effect.
+    // Trog's Hand. This circumvents the slow regeneration mutation.
     if (you.duration[DUR_TROGS_HAND])
         rr += 100;
 
@@ -1260,7 +1260,7 @@ int player_hunger_rate(bool temp)
     }
 
     if (you.hp < you.hp_max
-        && player_mutation_level(MUT_SLOW_HEALING) < 3)
+        && player_mutation_level(MUT_SLOW_REGENERATION) < 3)
     {
         // jewellery
         hunger += 3 * you.wearing(EQ_AMULET, AMU_REGENERATION);
@@ -2283,8 +2283,8 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
  */
 static int _player_armour_adjusted_dodge_bonus(int scale)
 {
-    // stepdowns at 10 and 24 dex; the last two parameters are not important.
-    const int ev_dex = stepdown_value(you.dex(), 10, 24, 72, 72);
+    const int ev_dex = stepdown_value(you.dex(), 10, 24, MAX_STAT_VALUE,
+            MAX_STAT_VALUE);
 
     const int dodge_bonus =
         (70 + you.skill(SK_DODGING, 10) * ev_dex) * scale
@@ -3499,6 +3499,8 @@ static void _display_attack_delay()
                               && weapon_min_delay(*you.weapon())
                                  == no_shield_delay;
 
+    const bool shield_affecting_delay = delay != no_shield_delay;
+
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
     int avg = 10 * delay;
@@ -3507,10 +3509,12 @@ static void _display_attack_delay()
     if (you.duration[DUR_FINESSE])
         avg = max(20, avg / 2);
 
-    _display_char_status(avg, "Your attack speed is %s%s",
+    _display_char_status(avg, "Your attack speed is %s%s%s",
                          _attack_delay_desc(avg),
                          at_min_delay ?
-                            " (and cannot be increased with skill)" : "");
+                            " (and cannot be improved with additional skill)" : "",
+                         shield_affecting_delay ?
+                            " (but will be slowed by your insufficient shield skill)" : "");
 }
 
 // forward declaration
@@ -3549,8 +3553,6 @@ void display_char_status()
     if (you.species == SP_VAMPIRE)
         _display_vampire_status();
 
-    // A hard-coded duration/status list used to be used here. This list is no
-    // longer hard-coded. May 2014. -reaverb
     status_info inf;
     for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {
@@ -3927,15 +3929,13 @@ void inc_mp(int mp_gain, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (mp_gain < 1)
-        return;
-
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_DJINNI)
         return inc_hp(mp_gain * DJ_MP_RATE);
 #endif
 
-    bool wasnt_max = (you.magic_points < you.max_magic_points);
+    if (mp_gain < 1 || you.magic_points >= you.max_magic_points)
+        return;
 
     you.magic_points += mp_gain;
 
@@ -3944,11 +3944,8 @@ void inc_mp(int mp_gain, bool silent)
 
     if (!silent)
     {
-        if (wasnt_max
-            && should_stop_resting(you.magic_points, you.max_magic_points))
-        {
+        if (should_stop_resting(you.magic_points, you.max_magic_points))
             interrupt_activity(AI_FULL_MP);
-        }
         you.redraw_magic_points = true;
     }
 }
@@ -3960,17 +3957,15 @@ void inc_hp(int hp_gain)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (hp_gain < 1)
+    if (hp_gain < 1 || you.hp >= you.hp_max)
         return;
-
-    bool wasnt_max = (you.hp < you.hp_max);
 
     you.hp += hp_gain;
 
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
 
-    if (wasnt_max && should_stop_resting(you.hp, you.hp_max))
+    if (should_stop_resting(you.hp, you.hp_max))
         interrupt_activity(AI_FULL_HP);
 
     you.redraw_hit_points = true;
@@ -4827,7 +4822,7 @@ void dec_disease_player(int delay)
 
         // Extra regeneration means faster recovery from disease.
         // But not if not actually regenerating!
-        if (player_mutation_level(MUT_SLOW_HEALING) < 3
+        if (player_mutation_level(MUT_SLOW_REGENERATION) < 3
             && !(you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING))
         {
             rr += _player_bonus_regen();
@@ -4893,10 +4888,7 @@ void dec_ambrosia_player(int delay)
     const int mp_restoration = div_rand_round(delay*(3 + random2(3)), BASELINE_DELAY);
 
     if (!you.duration[DUR_DEATHS_DOOR])
-    {
-        const int mut_factor = 3 - you.mutation[MUT_NO_DEVICE_HEAL];
-        inc_hp(div_rand_round(hp_restoration * mut_factor, 3));
-    }
+        inc_hp(you.scale_device_healing(hp_restoration));
 
     inc_mp(mp_restoration);
 
@@ -5159,8 +5151,8 @@ player::player()
     symbol          = MONS_PLAYER;
     form            = TRAN_NONE;
 
-    for (int i = 0; i < ENDOFPACK; i++)
-        inv[i].clear();
+    for (auto &item : inv)
+        item.clear();
     runes.reset();
     obtainable_runes = 15;
 
@@ -5339,7 +5331,7 @@ player::player()
 
     abyss_speed         = 0;
     for (int i = 0; i < NUM_SEEDS; i++)
-        game_seeds[i] = random_int();
+        game_seeds[i] = get_uint32();
 
     old_hunger          = hunger;
     transit_stair       = DNGN_UNSEEN;
@@ -5468,7 +5460,7 @@ bool player::is_sufficiently_rested() const
 {
     // Only return false if resting will actually help.
     return (hp >= _rest_trigger_level(hp_max)
-            || player_mutation_level(MUT_SLOW_HEALING) == 3
+            || player_mutation_level(MUT_SLOW_REGENERATION) == 3
             || you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
         && (magic_points >= _rest_trigger_level(max_magic_points)
             || you.spirit_shield() && you.species == SP_DEEP_DWARF);
@@ -5852,7 +5844,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
 
     if (penance[GOD_ASHENZARI])
         level = max(level - 4 * scale, level / 2);
-    else if (religion == GOD_ASHENZARI && piety_rank() > 2)
+    else if (in_good_standing(GOD_ASHENZARI, 1))
     {
         if (skill_boost.count(sk)
             && skill_boost.find(sk)->second)
@@ -6815,7 +6807,7 @@ void player::paralyse(actor *who, int str, string source)
 
     if (!paralysis && !source.empty())
     {
-        take_note(Note(NOTE_PARALYSIS, str, 0, source.c_str()));
+        take_note(Note(NOTE_PARALYSIS, str, 0, source));
         props["paralysed_by"] = source;
     }
 
@@ -7555,20 +7547,13 @@ void player::set_gold(int amount)
         // XXX: this might benefit from being in its own function
         if (you_worship(GOD_GOZAG))
         {
-            vector<ability_type> abilities = get_god_abilities(true, true);
-            for (size_t i = 0; i < abilities.size(); i++)
+            for (const auto& power : get_god_powers(you.religion))
             {
-                const int cost = get_gold_cost(abilities[i]);
+                const int cost = get_gold_cost(power.abil);
                 if (gold >= cost && old_gold < cost)
-                {
-                    mprf(MSGCH_GOD, "You now have enough gold to %s.",
-                         god_gain_power_messages[you.religion][i]);
-                }
+                    power.display(true, "You now have enough gold to %s.");
                 else if (old_gold >= cost && gold < cost)
-                {
-                    mprf(MSGCH_GOD, "You no longer have enough gold to %s.",
-                         god_gain_power_messages[you.religion][i]);
-                }
+                    power.display(false, "You no longer have enough gold to %s.");
             }
         }
     }
@@ -7821,9 +7806,33 @@ bool player::form_uses_xl() const
     return form == TRAN_WISP || form == TRAN_FUNGUS;
 }
 
+static int _get_device_heal_factor()
+{
+    // healing factor is expressed in thirds, so default is 3/3 -- 100%.
+    int factor = 3;
+
+    // start with penalties
+    factor -= player_equip_unrand(UNRAND_VINES) ? 3 : 0;
+    factor -= you.mutation[MUT_NO_DEVICE_HEAL];
+
+    // then apply bonuses
+    // Kryia's doubles device healing for non-deep dwarves, because deep dwarves
+    // are abusive bastards.
+    if (you.species != SP_DEEP_DWARF)
+        factor *= player_equip_unrand(UNRAND_KRYIAS) ? 2 : 1;
+
+    // make sure we don't turn healing negative.
+    return max(0, factor);
+}
+
 bool player::can_device_heal()
 {
-    return mutation[MUT_NO_DEVICE_HEAL] < 3;
+    return _get_device_heal_factor() > 0;
+}
+
+int player::scale_device_healing(int healing_amount)
+{
+    return div_rand_round(healing_amount * _get_device_heal_factor(), 3);
 }
 
 #if TAG_MAJOR_VERSION == 34

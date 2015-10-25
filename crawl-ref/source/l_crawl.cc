@@ -34,8 +34,10 @@ module "crawl"
 #include "prompt.h"
 #include "religion.h"
 #include "state.h"
+#include "state.h"
 #include "stringutil.h"
 #include "tutorial.h"
+#include "unwind.h"
 #include "version.h"
 #include "view.h"
 #include "worley.h"
@@ -377,6 +379,9 @@ static int crawl_process_keys(lua_State *ls)
         luaL_argerror(ls, 1, "First key is invalid command");
         return 0;
     }
+
+    unwind_bool gen(crawl_state.invisible_targeting,
+            lua_isboolean(ls, 2) && lua_toboolean(ls, 2));
 
     flush_input_buffer(FLUSH_BEFORE_COMMAND);
     for (int i = 1, len = strlen(keys); i < len; i++)
@@ -1176,8 +1181,8 @@ LUAFN(_crawl_millis)
 
 static string _crawl_make_name(lua_State *ls)
 {
-    // A quick wrapper around itemname:make_name. Seed is random_int().
-    return make_name(random_int());
+    // A quick wrapper around itemname:make_name.
+    return make_name();
 }
 
 LUARET1(crawl_make_name, string, _crawl_make_name(ls).c_str())

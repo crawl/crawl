@@ -401,7 +401,7 @@ static bool _reroll_random(newgame_def& ng)
 #endif
         game_ended();
     }
-    return toalower(c) == 'n';
+    return toalower(c) == 'n' || c == '\t' || c == '!' || c == '#';
 }
 
 static void _choose_char(newgame_def& ng, newgame_def& choice,
@@ -1418,6 +1418,7 @@ static weapon_type _fixup_weapon(weapon_type wp,
     return WPN_UNKNOWN;
 }
 
+static const int WEAPON_COLUMN_WIDTH = 36;
 static void _construct_weapon_menu(const newgame_def& ng,
                                    const weapon_type& defweapon,
                                    const vector<weapon_choice>& weapons,
@@ -1432,10 +1433,12 @@ static void _construct_weapon_menu(const newgame_def& ng,
 
     for (unsigned int i = 0; i < weapons.size(); ++i)
     {
+        weapon_type wpn_type = weapons[i].first;
+        char_choice_restriction wpn_restriction = weapons[i].second;
         tmp = new TextItem();
         text.clear();
 
-        if (weapons[i].second == CC_UNRESTRICTED)
+        if (wpn_restriction == CC_UNRESTRICTED)
         {
             tmp->set_fg_colour(WHITE);
             tmp->set_highlight_colour(GREEN);
@@ -1447,11 +1450,11 @@ static void _construct_weapon_menu(const newgame_def& ng,
         }
         const char letter = 'a' + i;
         tmp->add_hotkey(letter);
-        tmp->set_id(weapons[i].first);
+        tmp->set_id(wpn_type);
 
         text += letter;
         text += " - ";
-        switch (weapons[i].first)
+        switch (wpn_type)
         {
         case WPN_UNARMED:
             text += species_has_claws(ng.species) ? "claws" : "unarmed";
@@ -1466,13 +1469,21 @@ static void _construct_weapon_menu(const newgame_def& ng,
             else
                 thrown_name = "javelins";
             text += thrown_name;
+            text += " and throwing nets";
             break;
         default:
-            text += weapon_base_name(weapons[i].first);
+            text += weapon_base_name(wpn_type);
+            if (is_ranged_weapon_type(wpn_type))
+            {
+                text += " and ";
+                text += wpn_type == WPN_HUNTING_SLING ? ammo_name(MI_SLING_BULLET)
+                                                      : ammo_name(wpn_type);
+                text += "s";
+            }
             break;
         }
         // Fill to column width to give extra padding for the highlight
-        text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
+        text.append(WEAPON_COLUMN_WIDTH - text.size() - 1 , ' ');
         tmp->set_text(text);
 
         min_coord.x = X_MARGIN;
@@ -1484,7 +1495,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
         menu->attach_item(tmp);
         tmp->set_visible(true);
         // Is this item our default weapon?
-        if (weapons[i].first == defweapon)
+        if (wpn_type == defweapon)
             menu->set_active_item(tmp);
     }
     // Add all the special button entries

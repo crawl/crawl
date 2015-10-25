@@ -743,6 +743,8 @@ mummy_priest MONS_MUMMY_PRIEST
 %sdir mon/unique
 aizul MONS_AIZUL
 vashnia MONS_VASHNIA
+# No longer exists, but a nice tile for players to use.
+lamia MONS_LAMIA
 %sdir mon
 naga MONS_NAGA
 naga_mage MONS_NAGA_MAGE

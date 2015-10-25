@@ -1534,12 +1534,12 @@ void recharge_rods(int aut, bool level_only)
 {
     if (!level_only)
     {
-        for (int item = 0; item < ENDOFPACK; ++item)
-            _recharge_rod(you.inv[item], aut, true);
+        for (auto &item : you.inv)
+            _recharge_rod(item, aut, true);
     }
 
-    for (int item = 0; item < MAX_ITEMS; ++item)
-        _recharge_rod(mitm[item], aut, false);
+    for (auto &item : mitm)
+        _recharge_rod(item, aut, false);
 }
 
 static void _drop_tomb(const coord_def& pos, bool premature, bool zin)

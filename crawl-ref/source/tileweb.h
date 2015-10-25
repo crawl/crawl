@@ -78,6 +78,8 @@ struct player_info
     FixedVector<int8_t, NUM_EQUIP> equip;
     int8_t quiver_item;
     string unarmed_attack;
+    uint8_t unarmed_attack_colour;
+    bool quiver_available;
 };
 
 class TilesFramework
@@ -206,6 +208,7 @@ protected:
     vector<sockaddr_un> m_dest_addrs;
 
     bool m_controlled_from_web;
+    bool m_need_flush;
 
     void _await_connection();
     wint_t _handle_control_message(sockaddr_un addr, string data);

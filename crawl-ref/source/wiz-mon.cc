@@ -143,11 +143,11 @@ void wizard_create_spec_monster_name()
 
         if (idx >= MAX_MONSTERS || menv[idx].type != MONS_KRAKEN)
         {
-            for (idx = 0; idx < MAX_MONSTERS; idx++)
+            for (auto &mons : menv)
             {
-                if (menv[idx].type == MONS_KRAKEN && menv[idx].alive())
+                if (mons.type == MONS_KRAKEN && mons.alive())
                 {
-                    menv[idx].colour = element_colour(ETC_KRAKEN);
+                    mons.colour = element_colour(ETC_KRAKEN);
                     return;
                 }
             }
@@ -356,6 +356,7 @@ void wizard_spawn_control()
             const int rate = atoi(specs);
             if (rate || specs[0] == '0')
             {
+                mprf("Setting monster spawn rate to %i.", rate);
                 env.spawn_random_rate = rate;
                 done = true;
             }
@@ -384,6 +385,7 @@ void wizard_spawn_control()
             const int num = min(atoi(specs), max_spawn);
             if (num > 0)
             {
+                mprf("Spawning %i monster%s.", num, num == 1 ? "" : "s");
                 int curr_rate = env.spawn_random_rate;
                 // Each call to spawn_random_monsters() will spawn one with
                 // the rate at 5 or less.
@@ -624,6 +626,7 @@ void debug_stethoscope(int mon)
 // Detects all monsters on the level, using their exact positions.
 void wizard_detect_creatures()
 {
+    int count = 0;
     for (monster_iterator mi; mi; ++mi)
     {
         env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
@@ -631,7 +634,9 @@ void wizard_detect_creatures()
 #ifdef USE_TILE
         tiles.update_minimap(mi->pos());
 #endif
+        count++;
     }
+    mprf("Detected %i monster%s.", count, count == 1 ? "" : "s");
 }
 
 // Dismisses all monsters on the level or all monsters that match a user
@@ -653,7 +658,8 @@ void wizard_dismiss_all_monsters(bool force_all)
         }
     }
 
-    dismiss_monsters(buf);
+    int count = dismiss_monsters(buf);
+    mprf("Dismissed %i monster%s.", count, count == 1 ? "" : "s");
     // If it was turned off turn autopickup back on if all monsters went away.
     if (!*buf)
         autotoggle_autopickup(false);
@@ -765,215 +771,30 @@ void wizard_give_monster_item(monster* mon)
     if (prompt_failed(player_slot))
         return;
 
-    for (int i = 0; i < NUM_EQUIP; ++i)
-        if (you.equip[i] == player_slot)
-        {
-            mpr("Can't give equipped items to a monster.");
-            return;
-        }
+    item_def &item = you.inv[player_slot];
 
-    item_def     &item = you.inv[player_slot];
-    mon_inv_type mon_slot = NUM_MONSTER_SLOTS;
-
-    switch (item.base_type)
+    if (item_is_equipped(item))
     {
-    case OBJ_WEAPONS:
-    case OBJ_STAVES:
-    case OBJ_RODS:
-        // Let wizard specify which slot to put weapon into via
-        // inscriptions.
-        if (item.inscription.find("first") != string::npos
-            || item.inscription.find("primary") != string::npos)
-        {
-            mpr("Putting weapon into primary slot by inscription");
-            mon_slot = MSLOT_WEAPON;
-            break;
-        }
-        else if (item.inscription.find("second") != string::npos
-                 || item.inscription.find("alt") != string::npos)
-        {
-            mpr("Putting weapon into alt slot by inscription");
-            mon_slot = MSLOT_ALT_WEAPON;
-            break;
-        }
-
-        // For monsters which can wield two weapons, prefer whichever
-        // slot is empty (if there is an empty slot).
-        if (mons_wields_two_weapons(mon))
-        {
-            if (mon->inv[MSLOT_WEAPON] == NON_ITEM)
-            {
-                mpr("Dual wielding monster, putting into empty primary slot");
-                mon_slot = MSLOT_WEAPON;
-                break;
-            }
-            else if (mon->inv[MSLOT_ALT_WEAPON] == NON_ITEM)
-            {
-                mpr("Dual wielding monster, putting into empty alt slot");
-                mon_slot = MSLOT_ALT_WEAPON;
-                break;
-            }
-        }
-
-        // Try to replace a ranged weapon with a ranged weapon and
-        // a non-ranged weapon with a non-ranged weapon
-        if (mon->inv[MSLOT_WEAPON] != NON_ITEM
-            && (is_range_weapon(mitm[mon->inv[MSLOT_WEAPON]])
-                == is_range_weapon(item)))
-        {
-            mpr("Replacing primary slot with similar weapon");
-            mon_slot = MSLOT_WEAPON;
-            break;
-        }
-        if (mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM
-            && (is_range_weapon(mitm[mon->inv[MSLOT_ALT_WEAPON]])
-                == is_range_weapon(item)))
-        {
-            mpr("Replacing alt slot with similar weapon");
-            mon_slot = MSLOT_ALT_WEAPON;
-            break;
-        }
-
-        // Prefer the empty slot (if any)
-        if (mon->inv[MSLOT_WEAPON] == NON_ITEM)
-        {
-            mpr("Putting weapon into empty primary slot");
-            mon_slot = MSLOT_WEAPON;
-            break;
-        }
-        else if (mon->inv[MSLOT_ALT_WEAPON] == NON_ITEM)
-        {
-            mpr("Putting weapon into empty alt slot");
-            mon_slot = MSLOT_ALT_WEAPON;
-            break;
-        }
-
-        // Default to primary weapon slot
-        mpr("Defaulting to primary slot");
-        mon_slot = MSLOT_WEAPON;
-        break;
-
-    case OBJ_ARMOUR:
-    {
-        // May only return shield or armour slot.
-        equipment_type eq = get_armour_slot(item);
-
-        // Force non-shield, non-body armour to be worn anyway.
-        if (eq == EQ_NONE)
-            eq = EQ_BODY_ARMOUR;
-
-        mon_slot = equip_slot_to_mslot(eq);
-        break;
+        mpr("Can't give equipped items to a monster.");
+        return;
     }
-    case OBJ_MISSILES:
-        mon_slot = MSLOT_MISSILE;
-        break;
-    case OBJ_WANDS:
-        mon_slot = MSLOT_WAND;
-        break;
-    case OBJ_SCROLLS:
-        mon_slot = MSLOT_SCROLL;
-        break;
-    case OBJ_POTIONS:
-        mon_slot = MSLOT_POTION;
-        break;
-    case OBJ_MISCELLANY:
-        mon_slot = MSLOT_MISCELLANY;
-        break;
-    case OBJ_JEWELLERY:
-        mon_slot = MSLOT_JEWELLERY;
-        break;
-    default:
+
+    mon_inv_type mon_slot = item_to_mslot(item);
+
+    if (mon_slot == NUM_MONSTER_SLOTS)
+    {
         mpr("You can't give that type of item to a monster.");
         return;
     }
 
-    if (item_use == MONUSE_STARTING_EQUIPMENT
-        && !mons_is_unique(mon->type))
+    if (mon_slot == MSLOT_WEAPON
+        && item.inscription.find("alt") != string::npos)
     {
-        switch (mon_slot)
-        {
-        case MSLOT_WEAPON:
-        case MSLOT_ALT_WEAPON:
-        case MSLOT_ARMOUR:
-        case MSLOT_JEWELLERY:
-        case MSLOT_MISSILE:
-            break;
-
-        default:
-            mpr("That type of monster can only use weapons and armour.");
-            return;
-        }
+        mon_slot = MSLOT_ALT_WEAPON;
     }
 
-    int index = get_mitm_slot(10);
-    if (index == NON_ITEM)
-    {
-        mpr("Too many items on level, bailing.");
-        return;
-    }
-
-    // Move monster's old item to player's inventory as last step.
-    int  old_eq     = NON_ITEM;
-    bool unequipped = false;
-    if (mon_slot != NUM_MONSTER_SLOTS
-        && mon->inv[mon_slot] != NON_ITEM
-        && !items_stack(item, mitm[mon->inv[mon_slot]]))
-    {
-        old_eq = mon->inv[mon_slot];
-        // Alternative weapons don't get (un)wielded unless the monster
-        // can wield two weapons.
-        if (mon_slot != MSLOT_ALT_WEAPON || mons_wields_two_weapons(mon))
-        {
-            mon->unequip(*(mon->mslot_item(mon_slot)), mon_slot, 1, true);
-            unequipped = true;
-        }
-        mon->inv[mon_slot] = NON_ITEM;
-    }
-
-    mitm[index] = item;
-
-    unwind_var<int> save_speedinc(mon->speed_increment);
-    if (!mon->pickup_item(mitm[index], false, true))
-    {
-        mpr("Monster wouldn't take item.");
-        if (old_eq != NON_ITEM && mon_slot != NUM_MONSTER_SLOTS)
-        {
-            mon->inv[mon_slot] = old_eq;
-            if (unequipped)
-                mon->equip(mitm[old_eq], mon_slot, 1);
-        }
-        unlink_item(index);
-        destroy_item(mitm[index]);
-        return;
-    }
-
-    // Item is gone from player's inventory.
-    dec_inv_item_quantity(player_slot, item.quantity);
-
-    if ((mon->flags & MF_HARD_RESET) && !(item.flags & ISFLAG_SUMMONED))
-    {
-        mprf(MSGCH_WARN, "WARNING: Monster has MF_HARD_RESET and all its "
-             "items will disappear when it does.");
-    }
-    else if ((item.flags & ISFLAG_SUMMONED) && !mon->is_summoned())
-    {
-        mprf(MSGCH_WARN, "WARNING: Item is summoned and will disappear when "
-             "the monster does.");
-    }
-    // Monster's old item moves to player's inventory.
-    if (old_eq != NON_ITEM)
-    {
-        mpr("Fetching monster's old item.");
-        if (mitm[old_eq].flags & ISFLAG_SUMMONED)
-        {
-            mprf(MSGCH_WARN, "WARNING: Item is summoned and shouldn't really "
-                 "be anywhere but in the inventory of a summoned monster.");
-        }
-        mitm[old_eq].pos.reset();
-        mitm[old_eq].link = NON_ITEM;
-        move_item_to_inv(old_eq, mitm[old_eq].quantity);
-    }
+    if (!mon->take_item(player_slot, mon_slot))
+        mpr("Error: monster failed to take item.");
 }
 
 static void _move_player(const coord_def& where)

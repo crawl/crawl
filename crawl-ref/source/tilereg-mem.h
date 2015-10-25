@@ -9,18 +9,18 @@ class MemoriseRegion : public SpellRegion
 public:
     MemoriseRegion(const TileRegionInit &init);
 
-    virtual void update();
-    virtual int handle_mouse(MouseEvent &event);
-    virtual bool update_tip_text(string &tip);
-    virtual bool update_tab_tip_text(string &tip, bool active);
+    virtual void update() override;
+    virtual int handle_mouse(MouseEvent &event) override;
+    virtual bool update_tip_text(string &tip) override;
+    virtual bool update_tab_tip_text(string &tip, bool active) override;
 
-    virtual const string name() const { return "Memorisation"; }
+    virtual const string name() const override { return "Memorisation"; }
 
 protected:
-    virtual int get_max_slots();
+    virtual int get_max_slots() override;
 
-    virtual void draw_tag();
-    virtual void activate();
+    virtual void draw_tag() override;
+    virtual void activate() override;
 };
 
 #endif

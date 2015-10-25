@@ -10,6 +10,8 @@ int strwidth(const char *s);
 int strwidth(const string &s);
 string chop_string(const char *s, int width, bool spaces = true);
 string chop_string(const string &s, int width, bool spaces = true);
+string chop_tagged_string(const char *s, int width, bool spaces = true);
+string chop_tagged_string(const string &s, int width, bool spaces = true);
 
 int wctoutf8(char *d, ucs_t s);
 int utf8towc(ucs_t *d, const char *s);
@@ -79,9 +81,9 @@ class FileLineInput : public LineInput
 public:
     FileLineInput(const char *name);
     ~FileLineInput();
-    bool eof() { return seen_eof || !f; };
-    bool error() { return !f; };
-    string get_line();
+    bool eof() override { return seen_eof || !f; };
+    bool error() override { return !f; };
+    string get_line() override;
 };
 
 // The file is always UTF-8, no BOM.
@@ -93,8 +95,8 @@ class UTF8FileLineInput : public LineInput
 public:
     UTF8FileLineInput(const char *name);
     ~UTF8FileLineInput();
-    bool eof() { return seen_eof || !f; };
-    bool error() { return !f; };
-    string get_line();
+    bool eof() override { return seen_eof || !f; };
+    bool error() override { return !f; };
+    string get_line() override;
 };
 #endif

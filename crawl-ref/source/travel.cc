@@ -165,7 +165,7 @@ bool deviant_route_warning::warn_continue_travel(
     // If the user says "Yes, shut up and take me there", we won't ask
     // again for that destination. If the user says "No", we will
     // prompt again.
-    return warned = yesno(prompt.c_str(), true, 'y', true, false);
+    return warned = yesno(prompt.c_str(), true, 'n', true, false);
 }
 
 static deviant_route_warning _Route_Warning;
@@ -4369,13 +4369,13 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
             if (greed_inducing && (Options.explore_stop & ES_GREEDY_ITEM))
                 ; // Stop for this condition
             else if (!greed_inducing
-                     && ((Options.explore_stop & ES_ITEM)
-                         || ((Options.explore_stop & ES_GLOWING_ITEM)
-                             && (i.flags & ISFLAG_COSMETIC_MASK))
-                         || ((Options.explore_stop & ES_ARTEFACT)
-                             && (i.flags & ISFLAG_ARTEFACT_MASK))
-                         || ((Options.explore_stop & ES_RUNE)
-                             && item_is_rune(i))))
+                     && (Options.explore_stop & ES_ITEM
+                         || Options.explore_stop & ES_GLOWING_ITEM
+                            && i.flags & ISFLAG_COSMETIC_MASK
+                         || Options.explore_stop & ES_ARTEFACT
+                            && i.flags & ISFLAG_ARTEFACT_MASK
+                         || Options.explore_stop & ES_RUNE
+                            && i.base_type == OBJ_RUNES))
             {
                 ; // More conditions to stop for
             }

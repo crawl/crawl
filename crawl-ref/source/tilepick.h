@@ -37,7 +37,7 @@ tileidx_t tileidx_item(const item_info &item);
 tileidx_t tileidx_item_throw(const item_info &item, int dx, int dy);
 tileidx_t tileidx_known_base_item(tileidx_t label);
 
-tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance = false);
+tileidx_t tileidx_cloud(const cloud_info &cl);
 tileidx_t tileidx_bolt(const bolt &bolt);
 tileidx_t vary_bolt_tile(tileidx_t tile, int dist);
 tileidx_t tileidx_zap(int colour);

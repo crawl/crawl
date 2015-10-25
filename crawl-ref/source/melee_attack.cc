@@ -694,6 +694,17 @@ bool melee_attack::handle_phase_killed()
         _hydra_consider_devouring(*defender->as_monster());
     }
 
+    // Wyrmbane needs to be notified of deaths, including ones due to aux
+    // attacks, but other users of melee_effects() don't want to possibly
+    // be called twice. Adding another entry for a single artefact would
+    // be overkill, so here we call it by hand. check_unrand_effects()
+    // avoided triggering Wyrmbane's death effect earlier in the attack.
+    if (unrand_entry && weapon && weapon->special == UNRAND_WYRMBANE)
+    {
+        unrand_entry->melee_effects(weapon, attacker, defender,
+                                               true, special_damage);
+    }
+
     return attack::handle_phase_killed();
 }
 
@@ -732,8 +743,12 @@ bool melee_attack::attack()
     if (!cleaving && !handle_phase_attempted())
         return false;
 
-    if (attacker != defender && attacker->self_destructs())
+    if (attacker != defender && attacker->is_monster()
+        && mons_self_destructs(attacker->as_monster()))
+    {
+        attacker->self_destruct();
         return did_hit = perceived_attack = true;
+    }
 
     if (!cleaving)
         cleave_setup();
@@ -924,10 +939,17 @@ bool melee_attack::check_unrand_effects()
 {
     if (unrand_entry && unrand_entry->melee_effects && weapon)
     {
+        const bool died = !defender->alive();
+
+        // Don't trigger the Wyrmbane death effect yet; that is done in
+        // handle_phase_killed().
+        if (weapon->special == UNRAND_WYRMBANE && died)
+            return true;
+
         // Recent merge added damage_done to this method call
         unrand_entry->melee_effects(weapon, attacker, defender,
-                                    !defender->alive(), damage_done);
-        return !defender->alive();
+                                    died, damage_done);
+        return !defender->alive(); // may have changed
     }
 
     return false;

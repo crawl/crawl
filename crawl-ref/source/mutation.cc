@@ -97,27 +97,51 @@ static const body_facet_def _body_facets[] =
     { EQ_BOOTS, MUT_TALONS, 3 }
 };
 
+/**
+ * Conflicting mutation pairs. Entries are symmetric (so if A conflicts
+ * with B, B conflicts with A in the same way).
+ *
+ * The third value in each entry means:
+ *   0: If the new mutation is forced, remove all levels of the old
+ *      mutation. Either way, keep scanning for more conflicts and
+ *      do what they say (accepting the mutation if there are no
+ *      further conflicts).
+ *
+ *  -1: If the new mutation is forced, remove all levels of the old
+ *      mutation and scan for more conflicts. If it is not forced,
+ *      fail at giving the new mutation.
+ *
+ *   1: If the new mutation is temporary, just allow the conflict.
+ *      Otherwise, trade off: delete one level of the old mutation,
+ *      don't give the new mutation, and consider it a success.
+ *
+ * It makes sense to have two entries for the same pair, one with value 0
+ * and one with 1: that would replace all levels of the old mutation if
+ * forced, or a single level if not forced. However, the 0 entry must
+ * precede the 1 entry; so if you re-order this list, keep all the 0s
+ * before all the 1s.
+ */
 static const int conflict[][3] =
 {
+    { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
+    { MUT_REGENERATION,        MUT_SLOW_REGENERATION,      0},
+    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
+    { MUT_FAST,                MUT_SLOW,                   0},
 #if TAG_MAJOR_VERSION == 34
     { MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK,          1},
 #endif
     { MUT_STRONG,              MUT_WEAK,                   1},
     { MUT_CLEVER,              MUT_DOPEY,                  1},
     { MUT_AGILE,               MUT_CLUMSY,                 1},
-    { MUT_SLOW_HEALING,        MUT_NO_DEVICE_HEAL,         1},
+    { MUT_SLOW_REGENERATION,        MUT_NO_DEVICE_HEAL,    1},
     { MUT_ROBUST,              MUT_FRAIL,                  1},
     { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,              1},
     { MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC,          1},
     { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,            1},
     { MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM,        1},
-    { MUT_REGENERATION,        MUT_SLOW_HEALING,           1},
+    { MUT_REGENERATION,        MUT_SLOW_REGENERATION,      1},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
     { MUT_FAST,                MUT_SLOW,                   1},
-    { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
-    { MUT_REGENERATION,        MUT_SLOW_HEALING,           0},
-    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
-    { MUT_FAST,                MUT_SLOW,                   0},
     { MUT_BREATHE_FLAMES,      MUT_SPIT_POISON,           -1},
     { MUT_FANGS,               MUT_BEAK,                  -1},
     { MUT_ANTENNAE,            MUT_HORNS,                 -1},
@@ -872,10 +896,10 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
 /**
  * Does the player have a mutation that conflicts with the given mutation?
  *
- * @param mut           A mutation. (E.g. MUT_SLOW_HEALING, MUT_REGENERATION...)
+ * @param mut           A mutation. (E.g. MUT_SLOW_REGENERATION, MUT_REGENERATION...)
  * @param innate_only   Whether to only check innate mutations (from e.g. race)
  * @return              The level of the conflicting mutation.
- *                      E.g., if MUT_SLOW_HEALING is passed in and the player
+ *                      E.g., if MUT_SLOW_REGENERATION is passed in and the player
  *                      has 2 levels of MUT_REGENERATION, 2 will be returned.)
  *                      No guarantee is offered on ordering if there are
  *                      multiple conflicting mutations with different levels.
@@ -1042,7 +1066,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     // Vampires' healing and thirst rates depend on their blood level.
     if (you.species == SP_VAMPIRE
         && (mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS
-            || mutat == MUT_REGENERATION || mutat == MUT_SLOW_HEALING
+            || mutat == MUT_REGENERATION || mutat == MUT_SLOW_REGENERATION
             || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM))
     {
         return true;
@@ -1597,7 +1621,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
         calc_mp();
 
     if (!transient)
-        take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat], reason.c_str()));
+        take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat], reason));
 
     if (you.hp <= 0)
     {

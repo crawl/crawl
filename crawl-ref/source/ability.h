@@ -80,9 +80,12 @@ vector<talent> your_talents(bool check_confused, bool include_unusable = false);
 bool string_matches_ability_name(const string& key);
 ability_type ability_by_name(const string &name);
 string print_abilities();
+ability_type fixup_ability(ability_type ability);
 
-void set_god_ability_slots();
-vector<ability_type> get_god_abilities(bool include_unusable = false,
-                                       bool ignore_piety = false);
+int auto_assign_ability_slot(ability_type abil_type, int slot);
+vector<ability_type> get_god_abilities(bool ignore_silence = true,
+                                       bool ignore_piety = true,
+                                       bool ignore_penance = true);
+void swap_ability_slots(int index1, int index2, bool silent = false);
 
 #endif

@@ -600,7 +600,6 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         return false; // don't duplicate intrinsic props
 
     const object_class_type item_class = item.base_type;
-    const int item_type = item.sub_type;
 
     switch (prop)
     {
@@ -610,7 +609,10 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_SEE_INVISIBLE:
             return !item.is_type(OBJ_ARMOUR, ARM_NAGA_BARDING);
             // naga already have rPois & sInv!
+        case ARTP_CORRODE:
+            return !extant_props[ARTP_RCORR];
         case ARTP_RCORR:
+            return item_class == OBJ_ARMOUR && !extant_props[ARTP_CORRODE];
         case ARTP_REGENERATION:
         case ARTP_PREVENT_SPELLCASTING:
             return item_class == OBJ_ARMOUR; // limit availability to armour
@@ -620,7 +622,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
             // works poorly with ranged weapons
         case ARTP_CAUSE_TELEPORTATION:
-            return item_type != OBJ_WEAPONS
+            return item_class != OBJ_WEAPONS
                    && !crawl_state.game_is_sprint()
                    && !extant_props[ARTP_PREVENT_TELEPORTATION];
             // no tele in sprint, and too annoying on weapons (swappable)
@@ -634,6 +636,9 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             // no contradictory props
         case ARTP_CONFUSE:
             return !item.is_type(OBJ_JEWELLERY, AMU_CLARITY);
+        case ARTP_MAGICAL_POWER:
+            return item_class != OBJ_WEAPONS
+                   || get_weapon_brand(item) != SPWPN_ANTIMAGIC;
         default:
             return true;
     }
@@ -1302,7 +1307,7 @@ string make_artefact_name(const item_def &item, bool appearance)
     else
     {
         // construct a unique name
-        const string st_p = make_name(random_int());
+        const string st_p = make_name();
         result += item_base_name(item);
 
         if (one_chance_in(3))

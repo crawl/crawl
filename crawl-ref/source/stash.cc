@@ -427,8 +427,6 @@ public:
         set_type(MT_PICKUP);
         set_tag("stash");       // override "inventory" tag
     }
-    // Not virtual!
-    unsigned char getkey() const;
 public:
     bool can_travel;
 protected:
@@ -524,11 +522,6 @@ bool StashMenu::process_key(int key)
     return Menu::process_key(key);
 }
 
-unsigned char StashMenu::getkey() const
-{
-    return lastch;
-}
-
 static MenuEntry *stash_menu_fixup(MenuEntry *me)
 {
     const item_def *item = static_cast<const item_def *>(me->data);
@@ -553,13 +546,13 @@ bool Stash::show_menu(const level_pos &prefix, bool can_travel,
     menu.can_travel   = can_travel;
     mtitle->quantity  = item_list->size();
     menu.set_title(mtitle);
-    menu.load_items(InvMenu::xlat_itemvect(*item_list), stash_menu_fixup);
+    menu.load_items(*item_list, stash_menu_fixup);
 
     vector<MenuEntry*> sel;
     while (true)
     {
         sel = menu.show();
-        if (menu.getkey() == 1)
+        if (menu.getkey() == 1) // See StashMenu::process_key
             return true;
 
         if (sel.size() != 1)
@@ -948,7 +941,7 @@ bool ShopInfo::show_menu(const level_pos &place,
     while (true)
     {
         sel = menu.show();
-        if (menu.getkey() == 1)
+        if (menu.getkey() == 1) // See StashMenu::process_key
             return true;
 
         if (sel.size() != 1)
@@ -2118,7 +2111,7 @@ bool StashTracker::display_search_results(
         ++hotkey;
     }
 
-    stashmenu.set_flags(MF_SINGLESELECT);
+    stashmenu.set_flags(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
 
     vector<MenuEntry*> sel;
     while (true)

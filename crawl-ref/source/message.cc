@@ -1404,7 +1404,7 @@ static void mpr_check_patterns(const string& message,
 
         if (pat.matches(message))
         {
-            take_note(Note(NOTE_MESSAGE, channel, param, message.c_str()));
+            take_note(Note(NOTE_MESSAGE, channel, param, message));
             break;
         }
     }

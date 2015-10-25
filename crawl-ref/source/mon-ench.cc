@@ -746,6 +746,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
     case ENCH_SHORT_LIVED:
         // Conjured ball lightnings explode when they time out.
+        suicide();
         monster_die(this, KILL_TIMEOUT, NON_MONSTER);
         break;
     case ENCH_SUBMERGED:
@@ -1770,6 +1771,12 @@ void monster::apply_enchantment(const mon_enchant &me)
             setup_spore_explosion(beam, *this);
 
             beam.explode();
+
+            // Ballistos are immune to their own explosions, but must
+            // die some time
+            this->set_hit_dice(this->get_experience_level() - 1);
+            if (this->get_experience_level() <= 0)
+                this->self_destruct();
 
             // The ballisto dying, then a spore being created in its slot
             // env.mons means we can appear to be alive, but in fact be

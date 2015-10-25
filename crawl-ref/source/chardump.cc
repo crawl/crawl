@@ -632,7 +632,7 @@ static bool _dump_item_origin(const item_def &item)
     if (fs(IODS_JEWELLERY) && item.base_type == OBJ_JEWELLERY)
         return true;
 
-    if (fs(IODS_RUNES) && item_is_rune(item))
+    if (fs(IODS_RUNES) && item.base_type == OBJ_RUNES)
         return true;
 
     if (fs(IODS_RODS) && item.base_type == OBJ_RODS)
@@ -658,22 +658,19 @@ static bool _dump_item_origin(const item_def &item)
  //---------------------------------------------------------------
 static void _sdump_inventory(dump_params &par)
 {
-    int i, j;
+    int i;
 
     string &text(par.text);
 
-    int inv_class2[NUM_OBJECT_CLASSES];
+    int inv_class2[NUM_OBJECT_CLASSES] = { 0, };
     int inv_count = 0;
 
-    for (i = 0; i < NUM_OBJECT_CLASSES; i++)
-        inv_class2[i] = 0;
-
-    for (i = 0; i < ENDOFPACK; i++)
+    for (const auto &item : you.inv)
     {
-        if (you.inv[i].defined())
+        if (item.defined())
         {
             // adds up number of each class in invent.
-            inv_class2[you.inv[i].base_type]++;
+            inv_class2[item.base_type]++;
             inv_count++;
         }
     }
@@ -694,46 +691,27 @@ static void _sdump_inventory(dump_params &par)
             if (inv_class2[i] == 0)
                 continue;
 
-            switch (i)
-            {
-            case OBJ_WEAPONS:    text += "Hand weapons";    break;
-            case OBJ_MISSILES:   text += "Missiles";        break;
-            case OBJ_ARMOUR:     text += "Armour";          break;
-            case OBJ_WANDS:      text += "Magical devices"; break;
-            case OBJ_FOOD:       text += "Comestibles";     break;
-            case OBJ_SCROLLS:    text += "Scrolls";         break;
-            case OBJ_JEWELLERY:  text += "Jewellery";       break;
-            case OBJ_POTIONS:    text += "Potions";         break;
-            case OBJ_BOOKS:      text += "Books";           break;
-            case OBJ_STAVES:     text += "Magical staves";  break;
-            case OBJ_RODS:       text += "Rods";            break;
-            case OBJ_ORBS:       text += "Orbs of Power";   break;
-            case OBJ_MISCELLANY: text += "Miscellaneous";   break;
-            case OBJ_CORPSES:    text += "Carrion";         break;
-
-            default:
-                die("Bad item class");
-            }
+            text += item_class_name(i);
             text += "\n";
 
-            for (j = 0; j < ENDOFPACK; j++)
+            for (const auto &item : you.inv)
             {
-                if (!you.inv[j].defined() || you.inv[j].base_type != i)
+                if (!item.defined() || item.base_type != i)
                     continue;
 
                 text += " ";
-                text += you.inv[j].name(DESC_INVENTORY_EQUIP);
+                text += item.name(DESC_INVENTORY_EQUIP);
 
                 inv_count--;
 
-                if (origin_describable(you.inv[j]) && _dump_item_origin(you.inv[j]))
-                    text += "\n" "   (" + origin_desc(you.inv[j]) + ")";
+                if (origin_describable(item) && _dump_item_origin(item))
+                    text += "\n" "   (" + origin_desc(item) + ")";
 
-                if (is_dumpable_artefact(you.inv[j])
+                if (is_dumpable_artefact(item)
                     || Options.dump_book_spells
-                       && you.inv[j].base_type == OBJ_BOOKS)
+                       && item.base_type == OBJ_BOOKS)
                 {
-                    text += chardump_desc(you.inv[j]);
+                    text += chardump_desc(item);
                 }
                 else
                     text += "\n";

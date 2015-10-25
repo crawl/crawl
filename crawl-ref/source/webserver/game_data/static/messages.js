@@ -80,8 +80,7 @@ function ($, comm, client, util, options) {
 
     function rollback(count)
     {
-        $("#messages .game_message").not(".cleared").slice(-count)
-            .addClass("cleared").html("&nbsp;");
+        $("#messages .game_message").slice(-count).remove();
     }
 
     function handle_messages(msg)

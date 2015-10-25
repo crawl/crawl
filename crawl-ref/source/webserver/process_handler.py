@@ -398,9 +398,11 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             except Exception:
                 self.logger.error("Error while handling lockfile %s.", lockfile,
                                   exc_info=True)
-                errmsg = ("Error while trying to terminate a stale process.<br>" +
+                errmsg = ("Error while trying to terminate a stale process.\n" +
                           "Please contact an administrator.")
-                self.send_to_all("stale_process_fail", content=errmsg)
+                self.exit_reason = "error"
+                self.exit_message = errmsg
+                self.exit_dump_url = None
                 self.handle_process_end()
         else:
             # No more locks, can start
@@ -441,10 +443,13 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             else:
                 self.logger.error("Error while killing process %s.", self._stale_pid,
                                   exc_info=True)
-                errmsg = ("Error while trying to terminate a stale process.<br>" +
+                errmsg = ("Error while trying to terminate a stale process.\n" +
                           "Please contact an administrator.")
-                self.send_to_all("stale_process_fail", content=errmsg)
+                self.exit_reason = "error"
+                self.exit_message = errmsg
+                self.exit_dump_url = None
                 self.handle_process_end()
+                return
         else:
             if signal == subprocess.signal.SIGTERM:
                 self._purge_stale_lock()
@@ -461,6 +466,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                     self.logger.warning("Couldn't terminate pid %s gracefully.",
                                         self._stale_pid)
                     self.send_to_all("force_terminate?")
+                return
+        self.send_to_all("hide_dialog")
 
     def _check_stale_process(self):
         self._kill_stale_process(0)
@@ -643,7 +650,16 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
     def _on_process_output(self, line):
         self.check_where()
 
-        self.write_to_all(line, True)
+        try:
+            json_decode(line)
+        except ValueError:
+            self.logger.warning("Invalid JSON output from Crawl process: %s",
+                                line)
+
+        # send messages from wrapper scripts only to the player
+        for receiver in self._receivers:
+            if not receiver.watched_game:
+                receiver.write_message(line, True)
 
     def _on_process_error(self, line):
         if line.startswith("ERROR"):
@@ -729,133 +745,3 @@ class DGLLessCrawlProcessHandler(CrawlProcessHandler):
 
     def check_where(self):
         pass
-
-
-class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
-    def __init__(self, game_params, username, logger, io_loop):
-        super(CompatCrawlProcessHandler, self).__init__(game_params, username,
-                                                        logger, io_loop)
-        self.client_path = game_params["client_prefix"]
-
-    def start(self):
-        game = self.game_params
-        call = self._base_call()
-
-        self.logger.info("Starting %s (compat-mode).", game["id"])
-
-        self.process = subprocess.Popen(call,
-                                        stdin = subprocess.PIPE,
-                                        stdout = subprocess.PIPE,
-                                        stderr = subprocess.PIPE)
-
-        self.io_loop.add_handler(self.process.stdout.fileno(), self.on_stdout,
-                                self.io_loop.READ | self.io_loop.ERROR)
-        self.io_loop.add_handler(self.process.stderr.fileno(), self.on_stderr,
-                                self.io_loop.READ | self.io_loop.ERROR)
-
-        self.logger.info("Crawl FDs: fd%s, fd%s, fd%s",
-                         self.process.stdin.fileno(),
-                         self.process.stdout.fileno(),
-                         self.process.stderr.fileno())
-
-        self.last_activity_time = time.time()
-
-        self.create_mock_ttyrec()
-
-        processes[os.path.abspath(self.ttyrec_filename)] = self
-
-        self.check_where()
-
-    def create_mock_ttyrec(self):
-        running_game_path = self.config_path("running_game_path")
-        self.ttyrec_filename = os.path.join(running_game_path,
-                                            self.username + ":" +
-                                            self.lock_basename)
-        f = open(self.ttyrec_filename, "w")
-        f.close()
-
-    def delete_mock_ttyrec(self):
-        if self.ttyrec_filename:
-            os.remove(self.ttyrec_filename)
-            self.ttyrec_filename = None
-
-    def poll_crawl(self):
-        if self.process is not None and self.process.poll() is not None:
-            self.io_loop.remove_handler(self.process.stdout.fileno())
-            self.io_loop.remove_handler(self.process.stderr.fileno())
-            self.process.stdout.close()
-            self.process.stderr.close()
-            self.process = None
-
-            self.logger.info("Crawl terminated. (compat-mode)")
-
-            try:
-                del processes[os.path.abspath(self.ttyrec_filename)]
-            except KeyError:
-                self.logger.warning("Process entry already deleted")
-
-            self.delete_mock_ttyrec()
-            self.handle_process_end()
-
-    def add_watcher(self, watcher):
-        super(CompatCrawlProcessHandler, self).add_watcher(watcher)
-
-        if self.process:
-            self.process.stdin.write("^r")
-
-    def handle_input(self, msg):
-        if msg.startswith("{"):
-            obj = json_decode(msg)
-
-            self.note_activity()
-
-            if obj["msg"] == "input" and self.process:
-                self.last_action_time = time.time()
-
-                data = ""
-                for x in obj.get("data", []):
-                    data += chr(x)
-
-                data += obj.get("text", u"").encode("utf8")
-
-                if data == "^":
-                    self.process.stdin.write("\\94\n")
-
-                self.process.stdin.write(data)
-
-            elif obj["msg"] == "key" and self.process:
-                self.process.stdin.write("\\" + str(obj["keycode"]) + "\n")
-
-        else:
-            if not msg.startswith("^"):
-                self.note_activity()
-            self.process.stdin.write(msg.encode("utf8"))
-
-    def on_stderr(self, fd, events):
-        if events & self.io_loop.ERROR:
-            self.poll_crawl()
-        elif events & self.io_loop.READ:
-            s = self.process.stderr.readline()
-
-            if not (s.isspace() or s == ""):
-                self.logger.info("ERR: %s", s.strip())
-
-            self.poll_crawl()
-
-    def on_stdout(self, fd, events):
-        if events & self.io_loop.ERROR:
-            self.poll_crawl()
-        elif events & self.io_loop.READ:
-            msg = self.process.stdout.readline()
-
-            self.write_to_all(msg, True)
-
-            self.poll_crawl()
-            self.check_where()
-
-    def _send_client(self, watcher):
-        templ_path = os.path.join(config.template_path, self.client_path)
-        loader = DynamicTemplateLoader.get(templ_path)
-        templ = loader.load("game.html")
-        game_html = templ.generate(prefix = self.client_path)
-        watcher.send_message("game_client", content = game_html)

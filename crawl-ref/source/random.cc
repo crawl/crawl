@@ -3,46 +3,51 @@
 #include "random.h"
 
 #include <cmath>
-#ifdef UNIX
-// for times()
-#include <sys/times.h>
-#endif
-// for getpid()
-#include <sys/types.h>
 #ifndef TARGET_COMPILER_VC
 # include <unistd.h>
 #else
 # include <process.h>
 #endif
 
-#include "asg.h"
+#include "pcg.h"
 #include "syscalls.h"
+
+static FixedVector<PcgRNG, 2> rngs;
+
+uint32_t get_uint32(int generator)
+{
+    return rngs[generator].get_uint32();
+}
+
+uint64_t get_uint64(int generator)
+{
+    return rngs[generator].get_uint64();
+}
+
+static void _seed_rng(uint64_t seed_array[], int seed_len)
+{
+    PcgRNG seeded(seed_array, seed_len);
+    // Use the just seeded RNG to initialize the rest.
+    for (PcgRNG& rng : rngs)
+    {
+        uint64_t key[2] = { seeded.get_uint64(), seeded.get_uint64() };
+        rng = PcgRNG(key, ARRAYSZ(key));
+    }
+}
 
 void seed_rng(uint32_t seed)
 {
-    uint32_t sarg[1] = { seed };
-    seed_asg(sarg, 1);
+    uint64_t sarg[1] = { seed };
+    _seed_rng(sarg, ARRAYSZ(sarg));
 }
 
 void seed_rng()
 {
-    /* Use a 160-bit wide seed */
-    uint32_t seed_key[5];
-    read_urandom((char*)(&seed_key), sizeof(seed_key));
-
-#ifdef UNIX
-    struct tms buf;
-    seed_key[0] += times(&buf);
-#endif
-    seed_key[1] += getpid();
-    seed_key[2] += time(nullptr);
-
-    seed_asg(seed_key, 5);
-}
-
-uint32_t random_int()
-{
-    return get_uint32();
+    /* Use a 128-bit wide seed */
+    uint64_t seed_key[2];
+    bool seeded = read_urandom((char*)(&seed_key), sizeof(seed_key));
+    ASSERT(seeded);
+    _seed_rng(seed_key, ARRAYSZ(seed_key));
 }
 
 // [low, high]
@@ -84,16 +89,12 @@ const char* random_choose_weighted(int weight, const char* first, ...)
     return chosen;
 }
 
-#ifndef UINT32_MAX
-#define UINT32_MAX ((uint32_t)(-1))
-#endif
-
 static int _random2(int max, int rng)
 {
     if (max <= 1)
         return 0;
 
-    uint32_t partn = UINT32_MAX / max;
+    uint32_t partn = PcgRNG::max() / max;
 
     while (true)
     {
@@ -108,13 +109,13 @@ static int _random2(int max, int rng)
 // [0, max)
 int random2(int max)
 {
-    return _random2(max, 0);
+    return _random2(max, RNG_GAMEPLAY);
 }
 
 // [0, max), separate RNG state
 int ui_random(int max)
 {
-    return _random2(max, 1);
+    return _random2(max, RNG_UI);
 }
 
 // [0, 1]
@@ -301,9 +302,22 @@ int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale)
 }
 
 // range [0, 1.0)
+// This uses a technique described by Saito and Matsumoto at
+// MCQMC'08. Given that the IEEE floating point numbers are
+// uniformly distributed over [1,2), we generate a number in
+// this range and then offset it onto the range [0,1). The
+// choice of bits (masking v. shifting) is arbitrary and
+// should be immaterial for high quality generators.
 double random_real()
 {
-    return get_uint32() / (1.0 + AsgKISS::max());
+    static const uint64_t UPPER_MASK = 0x3FF0000000000000ULL;
+    static const uint64_t LOWER_MASK = 0xFFFFFFFFFFFFFULL;
+    const uint64_t value = UPPER_MASK | (get_uint64() & LOWER_MASK);
+    double result;
+    // Portable memory transmutation. The union trick almost always
+    // works, but this is safer.
+    memcpy(&result, &value, sizeof(value));
+    return result - 1.0;
 }
 
 // Roll n_trials, return true if at least one succeeded.  n_trials might be

@@ -224,7 +224,7 @@ bool is_valid_feature_type(dungeon_feature_type feat)
 const feature_def &get_feature_def(dungeon_feature_type feat)
 {
     ASSERT_RANGE(feat, 0, NUM_FEATURES);
-    ASSERT(is_valid_feature_type(feat));
+    ASSERTM(is_valid_feature_type(feat), "Invalid feature type %d", int(feat));
     return feat_defs[feat_index[feat]];
 }
 

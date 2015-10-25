@@ -414,7 +414,10 @@ void wizard_tweak_object()
 
         msgwin_get_line("New value? ", specs, sizeof(specs));
         if (specs[0] == '\0')
+        {
+            canned_msg(MSG_OK);
             return;
+        }
 
         char *end;
         const bool hex = (keyin == 'e');
@@ -429,7 +432,10 @@ void wizard_tweak_object()
         }
 
         if (end == specs)
+        {
+            canned_msg(MSG_OK);
             return;
+        }
 
         if (keyin == 'a')
             you.inv[item].plus = new_val;
@@ -642,10 +648,16 @@ void wizard_uncurse_item()
 
         if (item.cursed())
             do_uncurse_item(item);
-        else if (_item_type_can_be_cursed(item.base_type))
-            do_curse_item(item);
         else
-            mpr("That type of item cannot be cursed.");
+        {
+            if (!_item_type_can_be_cursed(item.base_type))
+            {
+                mpr("That type of item cannot be cursed.");
+                return;
+            }
+            do_curse_item(item);
+        }
+        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
     }
 }
 
@@ -668,12 +680,10 @@ static void _forget_item(item_def &item)
 void wizard_unidentify_pack()
 {
     mpr("You feel a rush of antiknowledge.");
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        item_def& item = you.inv[i];
+    for (auto &item : you.inv)
         if (item.defined())
             _forget_item(item);
-    }
+
     you.wield_change  = true;
     you.redraw_quiver = true;
 
@@ -697,13 +707,9 @@ void wizard_unidentify_pack()
 void wizard_list_items()
 {
     mpr("Item stacks (by location and top item):");
-    for (int i = 0; i < MAX_ITEMS; ++i)
+    for (const auto &item : mitm)
     {
-        item_def &item(mitm[i]);
-        if (!item.defined() || item.held_by_monster())
-            continue;
-
-        if (item.link != NON_ITEM)
+        if (item.defined() && !item.held_by_monster() && item.link != NON_ITEM)
         {
             mprf("(%2d,%2d): %s%s", item.pos.x, item.pos.y,
                  item.name(DESC_PLAIN, false, false, false).c_str(),
@@ -1464,7 +1470,7 @@ void debug_item_statistics()
     switch (keyin)
     {
     case 'a': _debug_acquirement_stats(ostat); break;
-    case 'b': _debug_rap_stats(ostat);
+    case 'b': _debug_rap_stats(ostat); break;
     default:
         canned_msg(MSG_OK);
         break;
@@ -1506,12 +1512,9 @@ void wizard_draw_card()
 void wizard_identify_all_items()
 {
     wizard_identify_pack();
-    for (int i = 0; i < MAX_ITEMS; ++i)
-    {
-        item_def& item = mitm[i];
+    for (auto &item : mitm)
         if (item.defined())
             set_ident_flags(item, ISFLAG_IDENT_MASK);
-    }
     for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
     {
         object_class_type i = (object_class_type)ii;
@@ -1525,12 +1528,9 @@ void wizard_identify_all_items()
 void wizard_unidentify_all_items()
 {
     wizard_unidentify_pack();
-    for (int i = 0; i < MAX_ITEMS; ++i)
-    {
-        item_def& item = mitm[i];
+    for (auto &item : mitm)
         if (item.defined())
             _forget_item(item);
-    }
     for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
     {
         object_class_type i = (object_class_type)ii;

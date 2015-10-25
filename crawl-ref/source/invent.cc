@@ -7,6 +7,7 @@
 
 #include "invent.h"
 
+#include <algorithm> // any_of
 #include <cctype>
 #include <cstdlib>
 #include <cstring>
@@ -185,46 +186,37 @@ string InvEntry::get_text(bool need_cursor) const
 
     tstr << ' ' << key;
 
-    if (need_cursor)
-        tstr << '[';
-    else
-        tstr << ' ';
+    if (!nosel || tag == "pickup")
+    {
+        if (need_cursor)
+            tstr << '[';
+        else
+            tstr << ' ';
 
-    if (nosel)
-        tstr << ' ';
-    else if (!selected_qty)
-        tstr << '-';
-    else if (selected_qty < quantity)
-        tstr << '#';
-    else
-        tstr << '+';
+        if (nosel)
+            tstr << ' ';
+        else if (!selected_qty)
+            tstr << '-';
+        else if (selected_qty < quantity)
+            tstr << '#';
+        else
+            tstr << '+';
 
-    if (need_cursor)
-        tstr << ']';
-    else
-        tstr << ' ';
-
+        if (need_cursor)
+            tstr << ']';
+        else
+            tstr << ' ';
+    }
     if (InvEntry::show_glyph)
         tstr << "(" << glyph_to_tagstr(get_item_glyph(item)) << ")" << " ";
 
-    unsigned max_chars_in_line = get_number_of_cols() - 2;
-    int colour_tag_adjustment = 0;
-    if (InvEntry::show_glyph)
-    {
-        // colour tags have to be taken into account for terminal width
-        // calculations on the ^x screen (monsters/items/features in LOS)
-        string colour_tag = colour_to_str(get_item_glyph(item).col);
-        colour_tag_adjustment = colour_tag.size() * 2 + 5;
-    }
+    tstr << text;
+    const string str = tstr.str();
 
-    const int excess = strwidth(tstr.str()) - colour_tag_adjustment
-                     + strwidth(text) - max_chars_in_line;
-    if (excess > 0)
-        tstr << chop_string(text, max(0, strwidth(text) - excess - 2)) << "..";
+    if (printed_width(str) > get_number_of_cols())
+        return chop_tagged_string(str, get_number_of_cols() - 2) + "..";
     else
-        tstr << text;
-
-    return tstr.str();
+        return str;
 }
 
 void get_class_hotkeys(const int type, vector<char> &glyphs)
@@ -319,18 +311,6 @@ InvMenu::InvMenu(int mflags)
     InvEntry::set_show_cursor(false);
 }
 
-// Returns vector of item_def pointers to each item_def in the given
-// vector. Note: make sure the original vector stays around for the lifetime
-// of the use of the item pointers, or mayhem results!
-vector<const item_def*>
-InvMenu::xlat_itemvect(const vector<item_def> &v)
-{
-    vector<const item_def*> xlatitems;
-    for (const item_def &item : v)
-        xlatitems.push_back(&item);
-    return xlatitems;
-}
-
 void InvMenu::set_type(menu_type t)
 {
     type = t;
@@ -373,10 +353,8 @@ static bool _has_melded_armour()
 
 static bool _has_tran_unwearable_armour()
 {
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (const auto &item : you.inv)
     {
-        item_def &item(you.inv[i]);
-
         if (item.defined() && item.base_type == OBJ_ARMOUR
             && can_wear_armour(item, false, true)
             && !can_wear_armour(item, false, false))
@@ -389,10 +367,8 @@ static bool _has_tran_unwearable_armour()
 
 static bool _has_hand_evokable()
 {
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (const auto &item : you.inv)
     {
-        item_def &item(you.inv[i]);
-
         if (item.defined()
             && item_is_evokable(item, true, true, true, false, false)
             && !item_is_evokable(item, true, true, true, false, true))
@@ -760,10 +736,21 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_BOOKS,
     OBJ_MISCELLANY,
     OBJ_FOOD,
-    // These two can't actually be in your inventory.
+    // These four can't actually be in your inventory.
     OBJ_CORPSES,
+    OBJ_RUNES,
     OBJ_ORBS,
     OBJ_GOLD);
+
+menu_letter InvMenu::load_items(const vector<item_def>& mitems,
+                                MenuEntry *(*procfn)(MenuEntry *me),
+                                menu_letter ckey, bool sort)
+{
+    vector<const item_def*> xlatitems;
+    for (const item_def &item : mitems)
+        xlatitems.push_back(&item);
+    return load_items(xlatitems, procfn, ckey, sort);
+}
 
 menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                                 MenuEntry *(*procfn)(MenuEntry *me),
@@ -784,30 +771,27 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         if (!inv_class[i])
             continue;
 
-        if (type != MT_RUNES)
+        string subtitle = item_class_name(i);
+
+        // Mention the class selection shortcuts.
+        if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
         {
-            string subtitle = item_class_name(i);
-
-            // Mention the class selection shortcuts.
-            if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
+            vector<char> glyphs;
+            get_class_hotkeys(i, glyphs);
+            if (!glyphs.empty())
             {
-                vector<char> glyphs;
-                get_class_hotkeys(i, glyphs);
-                if (!glyphs.empty())
-                {
-                    // longest string
-                    const string str = "Magical Staves ";
-                    subtitle += string(strwidth(str) - strwidth(subtitle),
-                                       ' ');
-                    subtitle += "(select all with <w>";
-                    for (char gly : glyphs)
-                         subtitle += gly;
-                    subtitle += "</w><blue>)";
-                }
+                // longest string
+                const string str = "Magical Staves ";
+                subtitle += string(strwidth(str) - strwidth(subtitle),
+                                   ' ');
+                subtitle += "(select all with <w>";
+                for (char gly : glyphs)
+                    subtitle += gly;
+                subtitle += "</w><blue>)";
             }
-
-            add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
         }
+        add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
+
         items_in_class.clear();
 
         InvEntry *forced_first = nullptr;
@@ -836,8 +820,10 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 else
                     ie->tag = "pickup";
             }
+            if (get_flags() & MF_NOSELECT)
+                ie->hotkeys.clear();
             // If there's no hotkey, provide one.
-            if (ie->hotkeys[0] == ' ')
+            else if (ie->hotkeys[0] == ' ')
             {
                 if (ie->tag == "nopickup")
                     ie->hotkeys.clear();
@@ -887,9 +873,9 @@ string InvMenu::help_key() const
     return type == MT_DROP || type == MT_PICKUP ? "pick-up" : "";
 }
 
-unsigned char InvMenu::getkey() const
+int InvMenu::getkey() const
 {
-    unsigned char mkey = lastch;
+    auto mkey = lastch;
     if (type == MT_KNOW && (mkey == 0 || mkey == CK_ENTER))
         return mkey;
 
@@ -937,6 +923,8 @@ const char *item_class_name(int type, bool terse)
         case OBJ_RODS:       return "Rods";
         case OBJ_ORBS:       return "Orbs of Power";
         case OBJ_MISCELLANY: return "Miscellaneous";
+        case OBJ_CORPSES:    return "Carrion";
+        case OBJ_RUNES:      return "Runes of Zot";
         }
     }
     return "";
@@ -1103,13 +1091,13 @@ bool is_item_selected(const item_def &i, int selector)
 static void _get_inv_items_to_show(vector<const item_def*> &v,
                                    int selector, int excluded_slot)
 {
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (const auto &item : you.inv)
     {
-        if (you.inv[i].defined()
-            && you.inv[i].link != excluded_slot
-            && is_item_selected(you.inv[i], selector))
+        if (item.defined()
+            && item.link != excluded_slot
+            && is_item_selected(item, selector))
         {
-            v.push_back(&you.inv[i]);
+            v.push_back(&item);
         }
     }
 }
@@ -1125,17 +1113,12 @@ static void _get_inv_items_to_show(vector<const item_def*> &v,
  */
 bool any_items_of_type(int selector, int excluded_slot)
 {
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (you.inv[i].defined()
-            && you.inv[i].link != excluded_slot
-            && is_item_selected(you.inv[i], selector))
-        {
-            return true;
-        }
-    }
-
-    return false;
+    return any_of(begin(you.inv), end(you.inv),
+                  [=] (const item_def &item) -> bool
+                  {
+                      return item.defined() && item.link != excluded_slot
+                          && is_item_selected(item, selector);
+                  });
 }
 
 // Use title = nullptr for stock Inventory title
@@ -2081,7 +2064,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
 #if TAG_MAJOR_VERSION == 34
             && item.sub_type != MISC_BUGGY_EBONY_CASKET
 #endif
-            && item.sub_type != MISC_RUNE_OF_ZOT)
+            )
         {
             return true;
         }
@@ -2103,9 +2086,8 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
  */
 void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers)
 {
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (auto &item : you.inv)
     {
-        item_def& item(you.inv[i]);
         // can't charge non-evokers, or evokers that are full
         if (!is_xp_evoker(item) || evoker_debt(item.sub_type) == 0)
             continue;
@@ -2116,12 +2098,12 @@ void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers)
 
 void identify_inventory()
 {
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (auto &item : you.inv)
     {
-        if (you.inv[i].defined())
+        if (item.defined())
         {
-            set_ident_type(you.inv[i], true);
-            set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
+            set_ident_type(item, true);
+            set_ident_flags(item, ISFLAG_IDENT_MASK);
         }
     }
 }

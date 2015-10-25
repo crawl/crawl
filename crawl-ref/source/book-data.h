@@ -294,9 +294,9 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Akashic Record
     SPELL_DISPERSAL,
-    SPELL_CONTROLLED_BLINK,
     SPELL_MALIGN_GATEWAY,
     SPELL_DISJUNCTION,
+    SPELL_CONTROLLED_BLINK,
 },
 
 {   // Book of Debilitation

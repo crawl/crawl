@@ -59,6 +59,8 @@ msc += $warning:crackle.*magical portal
 msc += lightcyan:LOW MAGIC WARNING
 msc += $warning:fails to return
 msc += $warning:no longer ripe
+msc += $warning:This .* contains the .* runes? of Zot.
+msc += $warning:They guard the .* runes? of Zot.
 
 # Unimportant messages and combat clutter
 #

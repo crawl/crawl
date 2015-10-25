@@ -171,13 +171,10 @@ int attack::calc_to_hit(bool random)
         else if (you.form_uses_xl())
             mhit += maybe_random_div(you.experience_level * 100, 100, random);
         else
-        {                       // ...you must be unarmed or throwing
-            // Members of clawed species have presumably been using the claws,
-            // making them more practiced and thus more accurate in unarmed
-            // combat. They keep this benefit even when the claws are covered
-            // (or missing because of a change in form).
-            mhit += you.innate_mutation[MUT_CLAWS]
-                    && wpn_skill == SK_UNARMED_COMBAT ? 4 : 2;
+        {
+            // Claws give a slight bonus to accuracy when active
+            mhit += (player_mutation_level(MUT_CLAWS) > 0
+                     && wpn_skill == SK_UNARMED_COMBAT) ? 4 : 2;
 
             mhit += maybe_random_div(you.skill(wpn_skill, 100), 100,
                                      random);
@@ -671,7 +668,7 @@ void attack::chaos_affects_defender()
     default:                    chaos_effect += "(other)"; break;
     }
 
-    take_note(Note(NOTE_MESSAGE, 0, 0, chaos_effect.c_str()), true);
+    take_note(Note(NOTE_MESSAGE, 0, 0, chaos_effect), true);
 #endif
 
     switch (static_cast<chaos_type>(choice))
@@ -939,7 +936,7 @@ brand_type attack::random_chaos_brand()
     // Pretty much duplicated by the chaos effect note,
     // which will be much more informative.
     if (brand != SPWPN_CHAOS)
-        take_note(Note(NOTE_MESSAGE, 0, 0, brand_name.c_str()), true);
+        take_note(Note(NOTE_MESSAGE, 0, 0, brand_name), true);
 #endif
     return brand;
 }

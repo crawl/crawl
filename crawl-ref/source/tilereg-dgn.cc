@@ -4,6 +4,8 @@
 
 #include "tilereg-dgn.h"
 
+#include <algorithm> // any_of
+
 #include "cio.h"
 #include "cloud.h"
 #include "command.h"
@@ -465,38 +467,21 @@ static bool _is_appropriate_evokable(const item_def& item,
 
 static bool _have_appropriate_evokable(const actor* target)
 {
-    // Felids cannot use wands.
-    if (you.species == SP_FELID)
-        return false;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def &item(you.inv[i]);
-
-        if (!item.defined())
-            continue;
-
-        if (_is_appropriate_evokable(item, target))
-            return true;
-    }
-
-    return false;
+    return any_of(begin(you.inv), end(you.inv),
+                  [target] (const item_def &item) -> bool
+                  {
+                      return item.defined()
+                          && _is_appropriate_evokable(item, target);
+                  });
 }
 
 static item_def* _get_evokable_item(const actor* target)
 {
     vector<const item_def*> list;
 
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def &item(you.inv[i]);
-
-        if (!item.defined())
-            continue;
-
-        if (_is_appropriate_evokable(item, target))
+    for (const auto &item : you.inv)
+        if (item.defined() && _is_appropriate_evokable(item, target))
             list.push_back(&item);
-    }
 
     ASSERT(!list.empty());
 

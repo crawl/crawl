@@ -3,7 +3,6 @@
 #include "tileview.h"
 
 #include "areas.h"
-#include "asg.h"
 #include "branch.h"
 #include "cloud.h"
 #include "colour.h"
@@ -18,6 +17,7 @@
 #include "kills.h"
 #include "mon-util.h"
 #include "options.h"
+#include "pcg.h"
 #include "player.h"
 #include "state.h"
 #include "terrain.h"
@@ -305,12 +305,8 @@ void tile_init_flavour()
     vector<unsigned int> output;
     {
         domino::DominoSet<domino::EdgeDomino> dominoes(domino::cohen_set, 8);
-        uint32_t seed[] =
-        {
-            static_cast<uint32_t>(ui_random(INT_MAX)),
-            static_cast<uint32_t>(ui_random(INT_MAX)),
-        };
-        AsgKISS rng(seed, 2);
+        uint64_t seed[] = { get_uint64(RNG_UI), get_uint64(RNG_UI) };
+        PcgRNG rng(seed, ARRAYSZ(seed));
         dominoes.Generate(X_WIDTH, Y_WIDTH, output, rng);
     }
     for (rectangle_iterator ri(0); ri; ++ri)
@@ -906,10 +902,12 @@ static void _tile_place_item_marker(const coord_def &gc, const item_def &item)
 static void _tile_place_invisible_monster(const coord_def &gc)
 {
     const coord_def ep = grid2show(gc);
+    const map_cell& cell = env.map_knowledge(gc);
 
     // Shallow water has its own modified tile for disturbances
     // see tileidx_feature
-    if (env.map_knowledge(gc).feat() != DNGN_SHALLOW_WATER)
+    // That tile is hidden by clouds though
+    if (cell.feat() != DNGN_SHALLOW_WATER || cell.cloud() != CLOUD_NONE)
     {
         if (you.see_cell(gc))
             env.tile_fg(ep) = TILE_UNSEEN_MONSTER;
@@ -1004,18 +1002,13 @@ static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)
     if (cl.type == CLOUD_INK && player_in_branch(BRANCH_SHOALS))
         return;
 
-    bool disturbance = false;
-
-    if (env.map_knowledge(gc).invisible_monster())
-        disturbance = true;
-
     if (you.see_cell(gc))
     {
         const coord_def ep = grid2show(gc);
-        env.tile_cloud(ep) = tileidx_cloud(cl, disturbance);
+        env.tile_cloud(ep) = tileidx_cloud(cl);
     }
     else
-        env.tile_bk_cloud(gc) = tileidx_cloud(cl, disturbance);
+        env.tile_bk_cloud(gc) = tileidx_cloud(cl);
 }
 
 unsigned int num_tile_rays = 0;

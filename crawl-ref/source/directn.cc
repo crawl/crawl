@@ -457,15 +457,16 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
 
 // Unseen monsters in shallow water show a "strange disturbance".
 // (Unless flying!)
+// These should match tests in show.cc's _update_monster
 static bool _mon_exposed_in_water(const monster* mon)
 {
-    return grd(mon->pos()) == DNGN_SHALLOW_WATER
-           && !mon->airborne();
+    return grd(mon->pos()) == DNGN_SHALLOW_WATER && !mon->airborne()
+           && env.cgrid(mon->pos()) == EMPTY_CLOUD;
 }
 
 static bool _mon_exposed_in_cloud(const monster* mon)
 {
-    return is_opaque_cloud(env.cgrid(mon->pos()))
+    return is_opaque_cloud(env.cgrid(mon->pos())) && !mon->submerged()
            && !mon->is_insubstantial();
 }
 
@@ -1812,6 +1813,9 @@ void direction_chooser::handle_wizard_command(command_type key_command,
 
 void direction_chooser::do_redraws()
 {
+    if (crawl_state.invisible_targeting)
+        return;
+
     // Check if our targeting behaviour forces a redraw.
     if (behaviour->should_redraw())
     {

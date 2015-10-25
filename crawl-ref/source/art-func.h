@@ -1042,7 +1042,7 @@ static void _ARC_BLADE_melee_effects(item_def* weapon, actor* attacker,
         const int num_targs = 1 + random2(random_range(1, 3) + pow / 20);
         int dam_dealt = 0;
         for (int i = 0; defender->alive() && i < num_targs; i++)
-            dam_dealt += discharge_monsters(defender->pos(), pow, 0, attacker);
+            dam_dealt += discharge_monsters(defender->pos(), pow, attacker);
         if (dam_dealt > 0)
             scaled_delay(100);
         else
@@ -1334,6 +1334,33 @@ static void _ETERNAL_TORMENT_world_reacts(item_def *item)
 static void _ETERNAL_TORMENT_unequip(item_def *item, bool *show_msgs)
 {
     calc_hp();
+}
+
+///////////////////////////////////////////////////
+
+static void _VINES_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "The vines latch onto your body!");
+}
+
+static void _VINES_unequip(item_def *item, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "The vines fall away from your body!");
+}
+
+///////////////////////////////////////////////////
+
+static void _KRYIAS_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    if (you.species == SP_DEEP_DWARF)
+        _equip_mpr(show_msgs, "You feel no connection to the armour.");
+    else
+        _equip_mpr(show_msgs, "Your attunement to healing devices increases!");
+}
+
+static void _KRYIAS_unequip(item_def *item, bool *show_msgs)
+{
+        _equip_mpr(show_msgs, "Your attunement to healing devices decreases.");
 }
 
 ///////////////////////////////////////////////////

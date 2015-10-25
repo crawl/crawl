@@ -100,7 +100,9 @@ static bool _show_skill(skill_type sk, skill_menu_state state)
 {
     switch (state)
     {
-    case SKM_SHOW_DEFAULT: return you.can_train[sk] || you.skills[sk];
+    case SKM_SHOW_DEFAULT:
+        return you.can_train[sk] || you.skill(sk, 10, false, false)
+               || sk == you.transfer_from_skill || sk == you.transfer_to_skill;
     case SKM_SHOW_ALL:     return true;
     default:               return false;
     }
@@ -160,7 +162,7 @@ bool SkillMenuEntry::is_set(int flag) const
 bool SkillMenuEntry::mastered() const
 {
     return (is_set(SKMF_EXPERIENCE) ? skm.get_raw_skill_level(m_sk)
-                                    : you.skills[m_sk]) >= 27;
+                                    : you.skills[m_sk]) >= MAX_SKILL_LEVEL;
 }
 
 void SkillMenuEntry::refresh(bool keep_hotkey)
@@ -189,6 +191,7 @@ void SkillMenuEntry::set_display()
     switch (skm.get_state(SKM_VIEW))
     {
     case SKM_VIEW_TRAINING:  set_training();         break;
+    case SKM_VIEW_COST:      set_cost();             break;
     case SKM_VIEW_PROGRESS:  set_progress();         break;
     case SKM_VIEW_TRANSFER:  set_reskill_progress(); break;
     case SKM_VIEW_NEW_LEVEL: set_new_level();        break;
@@ -228,7 +231,7 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
     if (is_set(SKMF_SKILL_ICONS))
     {
         m_name->clear_tile();
-        if (you.skills[m_sk] >= 27)
+        if (you.skills[m_sk] >= MAX_SKILL_LEVEL)
             m_name->add_tile(tile_def(tileidx_skill(m_sk, -1), TEX_GUI));
         else if (!you.training[m_sk])
             m_name->add_tile(tile_def(tileidx_skill(m_sk, 0), TEX_GUI));
@@ -469,6 +472,7 @@ void SkillMenuEntry::set_title()
     case SKM_VIEW_PROGRESS:  m_progress->set_text("Progr"); break;
     case SKM_VIEW_TRANSFER:  m_progress->set_text("Trnsf"); break;
     case SKM_VIEW_POINTS:    m_progress->set_text("Points");break;
+    case SKM_VIEW_COST:      m_progress->set_text("Cost");  break;
     case SKM_VIEW_NEW_LEVEL: m_progress->set_text("> New"); break;
     default: die("Invalid view state.");
     }
@@ -481,6 +485,26 @@ void SkillMenuEntry::set_training()
     else
         m_progress->set_text(make_stringf(" %2d%%", you.training[m_sk]));
     m_progress->set_fg_colour(BROWN);
+}
+
+void SkillMenuEntry::set_cost()
+{
+    if (you.skills[m_sk] == MAX_SKILL_LEVEL)
+        return;
+    auto baseline = skill_cost_baseline();
+    auto next_level = one_level_cost(m_sk);
+    if (skill_has_manual(m_sk))
+    {
+        next_level /= 2;
+        m_progress->set_fg_colour(LIGHTGREEN);
+    }
+    else
+        m_progress->set_fg_colour(CYAN);
+
+    auto ratio = (float)next_level / baseline;
+    // Don't let the displayed number go greater than 4 characters
+    if (next_level > 0)
+        m_progress->set_text(make_stringf("%4.*f", ratio < 100 ? 1 : 0, ratio));
 }
 
 SkillMenuSwitch::SkillMenuSwitch(string name, int hotkey) : m_name(name)
@@ -589,6 +613,19 @@ string SkillMenuSwitch::get_help()
         return "The progress of the knowledge transfer is displayed in "
                "<cyan>cyan</cyan> in front of the skill receiving the "
                "knowledge. The donating skill is marked with <cyan>*</cyan>.";
+    case SKM_VIEW_COST:
+    {
+        string result =
+               "The relative cost of raising each skill is in "
+               "<cyan>cyan</cyan>";
+        if (skm.is_set(SKMF_MANUAL))
+        {
+            result += " (or <lightgreen>green</lightgreen> if enhanced by a "
+                      "manual)";
+        }
+        result += ".\n";
+        return result;
+    }
     default: return "";
     }
 }
@@ -614,6 +651,7 @@ string SkillMenuSwitch::get_name(skill_menu_state state)
     case SKM_VIEW_TRANSFER:  return "transfer";
     case SKM_VIEW_POINTS:    return "points";
     case SKM_VIEW_NEW_LEVEL: return "new level";
+    case SKM_VIEW_COST:      return "cost";
     default: die ("Invalid switch state.");
     }
 }
@@ -986,8 +1024,7 @@ void SkillMenu::toggle(skill_menu_switch sw)
         you.train_alt = tmp;
 
         reset_training();
-        if (get_state(SKM_VIEW) == SKM_VIEW_TRAINING)
-            refresh_display();
+        refresh_display();
         break;
     case SKM_DO:
         you.skill_menu_do = get_state(SKM_DO);
@@ -1142,7 +1179,7 @@ void SkillMenu::init_switches()
             sw->set_state(SKM_VIEW_TRANSFER);
         }
     }
-
+    sw->add(SKM_VIEW_COST);
     if (you.wizard)
     {
         sw->add(SKM_VIEW_PROGRESS);

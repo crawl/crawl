@@ -28,7 +28,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/areas.cc \
     $(CRAWL_PATH)/arena.cc \
     $(CRAWL_PATH)/artefact.cc \
-    $(CRAWL_PATH)/asg.cc \
     $(CRAWL_PATH)/attack.cc \
     $(CRAWL_PATH)/attitude-change.cc \
     $(CRAWL_PATH)/beam.cc \
@@ -196,6 +195,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/output.cc \
     $(CRAWL_PATH)/package.cc \
     $(CRAWL_PATH)/pattern.cc \
+    $(CRAWL_PATH)/pcg.cc \
     $(CRAWL_PATH)/perlin.cc \
     $(CRAWL_PATH)/place-info.cc \
     $(CRAWL_PATH)/place.cc \

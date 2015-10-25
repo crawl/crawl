@@ -790,6 +790,7 @@ void game_options::reset_options()
     equip_unequip          = false;
     jewellery_prompt       = false;
     easy_door              = true;
+    warn_hatches           = false;
     enable_recast_spell    = true;
     confirm_butcher        = CONFIRM_AUTO;
     easy_eat_chunks        = false;
@@ -862,6 +863,7 @@ void game_options::reset_options()
     status_caption_colour  = BROWN;
 
     easy_exit_menu         = false;
+    ability_menu           = true;
     dos_use_background_intensity = true;
 
     assign_item_slot       = SS_FORWARD;
@@ -959,7 +961,6 @@ void game_options::reset_options()
 #endif
 #endif
     terp_files.clear();
-    no_save              = false;
 
 #ifdef USE_TILE
     tile_show_items      = "!?/%=([)x}:|\\";
@@ -1129,6 +1130,7 @@ void game_options::reset_options()
     note_skill_levels.set(27);
     auto_spell_letters.clear();
     auto_item_letters.clear();
+    auto_ability_letters.clear();
     force_more_message.clear();
     flash_screen_message.clear();
     sound_mappings.clear();
@@ -1584,7 +1586,7 @@ void read_init_file(bool runscript)
     for (const string &extra : SysEnv.extra_opts_last)
     {
         Options.line_num++;
-        Options.read_option_line(extra, false);
+        Options.read_option_line(extra, true);
     }
 
     Options.filename     = init_file_name;
@@ -1688,26 +1690,8 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 }
 
 game_options::game_options()
+    : seed(0), no_save(false), language(LANG_EN), lang_name(nullptr)
 {
-    language = LANG_EN;
-    lang_name = 0;
-    fake_langs.clear();
-#if 0
-    if (Version::ReleaseType == VER_ALPHA)
-    {
-        set_lang(getenv("LC_ALL"))
-        || set_lang(getenv("LC_MESSAGES"))
-        || set_lang(getenv("LANG"));
-    }
-//#elif defined USE_TILE_LOCAL
-    if (Version::ReleaseType == VER_ALPHA)
-    {
-        char ln[30];
-        if (GetLocaleInfoA(LOCALE_USER_DEFAULT, LOCALE_SENGLANGUAGE, ln, sizeof(ln)))
-            set_lang(ln);
-    }
-#endif
-    seed = 0;
     reset_options();
 }
 
@@ -2292,14 +2276,14 @@ void game_options::set_option_fragment(const string &s, bool prepend)
     {
         // Boolean option.
         if (s[0] == '!')
-            read_option_line(s.substr(1) + " = false");
+            read_option_line(s.substr(1) + " = false", true);
         else
-            read_option_line(s + " = true");
+            read_option_line(s + " = true", true);
     }
     else
     {
         // key:val option.
-        read_option_line(s.substr(0, st) + " = " + s.substr(st + 1));
+        read_option_line(s.substr(0, st) + " = " + s.substr(st + 1), true);
     }
 }
 
@@ -2566,6 +2550,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "include" && key != "bindkey"
         && key != "spell_slot"
         && key != "item_slot"
+        && key != "ability_slot"
         && key.find("font") == string::npos)
     {
         lowercase(field);
@@ -2664,6 +2649,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION_NAMED("easy_armour", easy_unequip);
     else BOOL_OPTION_NAMED("easy_armor", easy_unequip);
     else BOOL_OPTION(easy_door);
+    else BOOL_OPTION(warn_hatches);
     else BOOL_OPTION(enable_recast_spell);
     else if (key == "confirm_butcher")
     {
@@ -3308,19 +3294,21 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
     }
     else if (key == "spell_slot"
-             || key == "item_slot")
+             || key == "item_slot"
+             || key == "ability_slot")
 
     {
-        const bool item = key == "item_slot";
-        auto& auto_letters = item ? auto_item_letters : auto_spell_letters;
+        auto& auto_letters = (key == "item_slot"  ? auto_item_letters
+                           : (key == "spell_slot" ? auto_spell_letters
+                                                  : auto_ability_letters));
         if (plain)
             auto_letters.clear();
 
         vector<string> thesplit = split_string(":", field);
         if (thesplit.size() != 2)
         {
-            return report_error("Error parsing %s lettering string: %s\n",
-                                item ? "item" : "spell", field.c_str());
+            return report_error("Error parsing %s string: %s\n",
+                                key.c_str(), field.c_str());
         }
         pair<text_pattern,string> entry(lowercase_string(thesplit[0]),
                                         thesplit[1]);
@@ -3450,6 +3438,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         tc_disconnected = str_to_colour(field, tc_disconnected);
     else LIST_OPTION(auto_exclude);
     else BOOL_OPTION(easy_exit_menu);
+    else BOOL_OPTION(ability_menu);
     else BOOL_OPTION(dos_use_background_intensity);
     else if (key == "item_stack_summary_minimum")
         item_stack_summary_minimum = atoi(field.c_str());
@@ -3679,6 +3668,14 @@ void game_options::read_option_line(const string &str, bool runscript)
         const string resolved = resolve_include(orig_field, "macro ");
         if (!resolved.empty())
             additional_macro_files.push_back(resolved);
+    }
+    else if (key == "macros")
+    {
+        // orig_field because this function wants capitals
+        const string possible_error = read_rc_file_macro(orig_field);
+
+        if (possible_error != "")
+            report_error(possible_error.c_str(), orig_field.c_str());
     }
 #ifdef USE_TILE
     else if (key == "tile_show_items")

@@ -613,10 +613,9 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
                 ellipses = line_end - 2;
 
             size_t idx = &line[ellipses] - &base[0];
-            ret[idx] = '.';
-            ret[idx+1] = '.';
-
-            return ret.chop(idx + 2);
+            ret = ret.chop(idx);
+            ret += formatted_string("..");
+            return ret;
         }
         else
         {

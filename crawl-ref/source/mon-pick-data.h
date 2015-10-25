@@ -893,7 +893,9 @@ static const pop_entry pop_abyss[] =
 };
 
 static const pop_entry pop_pan[] =
-{ // Pandemonium
+{ // Pandemonium - only used for 1 in 40 random Pan spawns (the rest are drawn
+  // from each floor's monster list), and for the Orb run (where monsters are
+  // picked randomly without checking rarity).
   {  1,  1,    4, FLAT, MONS_EYE_OF_DRAINING },
   {  1,  1,    4, FLAT, MONS_GOLDEN_EYE },
   {  1,  1,    4, FLAT, MONS_GREAT_ORB_OF_EYES },

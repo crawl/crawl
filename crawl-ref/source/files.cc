@@ -1004,16 +1004,15 @@ static void _grab_followers()
     }
 
     // Clear flags of monsters that didn't follow.
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (auto &mons : menv)
     {
-        monster* mons = &menv[i];
-        if (!mons->alive())
+        if (!mons.alive())
             continue;
-        if (mons->type == MONS_BATTLESPHERE)
-            end_battlesphere(mons, false);
-        if (mons->type == MONS_SPECTRAL_WEAPON)
-            end_spectral_weapon(mons, false);
-        mons->flags &= ~MF_TAKING_STAIRS;
+        if (mons.type == MONS_BATTLESPHERE)
+            end_battlesphere(&mons, false);
+        if (mons.type == MONS_SPECTRAL_WEAPON)
+            end_spectral_weapon(&mons, false);
+        mons.flags &= ~MF_TAKING_STAIRS;
     }
 }
 
@@ -1032,19 +1031,9 @@ static void _do_lost_monsters()
 // followers won't be considered lost.
 static void _do_lost_items()
 {
-    for (int i = 0; i < MAX_ITEMS; i++)
-    {
-        item_def& item(mitm[i]);
-
-        if (!item.defined())
-            continue;
-
-        // Item is in player inventory, so it's not lost.
-        if (item.pos == coord_def(-1,-1))
-            continue;
-
-        item_was_lost(item);
-    }
+    for (const auto &item : mitm)
+        if (item.defined() && item.pos != ITEM_IN_INVENTORY)
+            item_was_lost(item);
 }
 
 /**
@@ -1926,7 +1915,7 @@ static bool _restore_game(const string& filename)
 
     _restore_tagged_chunk(you.save, "you", TAG_YOU, "Save data is invalid.");
 
-    const int minorVersion = crawl_state.minorVersion;
+    const int minorVersion = crawl_state.minor_version;
 
     if (you.save->has_chunk(CHUNK("st", "stashes")))
     {
@@ -2214,7 +2203,7 @@ static bool _restore_tagged_chunk(package *save, const string name,
             end(-1, false, "\n%s %s\n", complaint, reason.c_str());
     }
 
-    crawl_state.minorVersion = inf.getMinorVersion();
+    crawl_state.minor_version = inf.getMinorVersion();
     try
     {
         tag_read(inf, tag);

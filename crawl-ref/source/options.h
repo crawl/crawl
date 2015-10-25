@@ -208,6 +208,7 @@ public:
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
     bool        jewellery_prompt; // Always prompt for slot when changing jewellery.
     bool        easy_door;       // 'O', 'C' don't prompt with just one door.
+    bool        warn_hatches;    // offer a y/n prompt when the player uses an escape hatch
     bool        enable_recast_spell; // Allow recasting spells with 'z' Enter.
     int         confirm_butcher; // When to prompt for butchery
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
@@ -277,9 +278,11 @@ public:
     vector<text_pattern> note_messages;  // Interesting messages
     vector<pair<text_pattern, string> > autoinscriptions;
     vector<text_pattern> note_items;     // Objects to note
-    FixedBitVector<27+1> note_skill_levels;   // Skill levels to note
+    // Skill levels to note
+    FixedBitVector<MAX_SKILL_LEVEL + 1> note_skill_levels;
     vector<pair<text_pattern, string>> auto_spell_letters;
     vector<pair<text_pattern, string>> auto_item_letters;
+    vector<pair<text_pattern, string>> auto_ability_letters;
 
     bool        pickup_thrown;  // Pickup thrown missiles
     int         travel_delay;   // How long to pause between travel moves
@@ -373,6 +376,7 @@ public:
     int         pickup_menu_limit;  // Over this number of items, menu for
                                     // pickup
     bool        easy_exit_menu;     // Menus are easier to get out of
+    bool        ability_menu;       // 'a'bility starts with a full-screen menu
 
     int         assign_item_slot;   // How free slots are assigned
     maybe_bool  show_god_gift;      // Show {god gift} in item names

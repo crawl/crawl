@@ -592,9 +592,12 @@ static void _maybe_spawn_monsters(int dam, const char* aux,
     if (!damager)
         return;
 
-    // Exclude torment damage.
-    if (aux && strstr(aux, "torment"))
+    // Exclude torment damage. Ugh.
+    if (aux && (strstr(aux, "torment") || strstr(aux, "Torment")
+                || strstr(aux, "exploding lurking horror")))
+    {
         return;
+    }
 
     monster_type mon;
     int how_many = 0;

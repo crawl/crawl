@@ -53,6 +53,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
+#include "show.h"
 #include "showsymb.h"
 #include "state.h"
 #include "stringutil.h"
@@ -73,7 +74,8 @@
 
 //#define DEBUG_PANE_BOUNDS
 
-static bool _show_terrain = false;
+static layers_type _layers = LAYERS_ALL;
+static layers_type _layers_saved = LAYERS_NONE;
 
 crawl_view_geometry crawl_view;
 
@@ -445,14 +447,14 @@ void mark_mon_equipment_seen(const monster *mons)
 
         item.flags |= ISFLAG_SEEN;
 
-        // ID brands of non-randart weapons held by enemies.
-        if (is_artefact(item))
-            continue;
-
+        // ID brands of weapons held by enemies.
         if (slot == MSLOT_WEAPON
             || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(mons))
         {
-            item.flags |= ISFLAG_KNOW_TYPE;
+            if (is_artefact(item))
+                artefact_learn_prop(item, ARTP_BRAND);
+            else
+                item.flags |= ISFLAG_KNOW_TYPE;
         }
     }
 }
@@ -614,6 +616,9 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             {
                 set_terrain_mapped(*ri);
 
+                if (get_cell_map_feature(env.map_knowledge(*ri)) == MF_STAIR_BRANCH)
+                    seen_notable_thing(feat, *ri);
+
                 if (get_feature_dchar(feat) == DCHAR_ALTAR)
                     num_altars++;
                 else if (get_feature_dchar(feat) == DCHAR_ARCH)
@@ -763,12 +768,7 @@ string screenshot()
 
 int viewmap_flash_colour()
 {
-    if (_show_terrain)
-        return BLACK;
-    else if (you.berserk())
-        return RED;
-
-    return BLACK;
+    return _layers & LAYERS_ALL && you.berserk() ? RED : BLACK;
 }
 
 // Updates one square of the view area. Should only be called for square
@@ -1297,7 +1297,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
         mcache.clear_nonref();
 #endif
 
-    if (show_updates || _show_terrain)
+    if (show_updates || _layers != LAYERS_ALL)
     {
         if (!is_map_persistent())
             ash_detect_portals(false);
@@ -1308,7 +1308,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
         tiles.clear_overlays();
 #endif
 
-        show_init(_show_terrain);
+        show_init(_layers);
     }
 
     if (show_updates)
@@ -1320,7 +1320,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
     if (run_dont_draw || you.asleep())
     {
         // Reset env.show if we munged it.
-        if (_show_terrain)
+        if (_layers != LAYERS_ALL)
             show_init();
         return;
     }
@@ -1372,7 +1372,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
     you.flash_where = 0;
 
     // Reset env.show if we munged it.
-    if (_show_terrain)
+    if (_layers != LAYERS_ALL)
         show_init();
 
     _debug_pane_bounds();
@@ -1390,7 +1390,8 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         _draw_out_of_bounds(cell);
     else if (!crawl_view.in_los_bounds_g(gc))
         _draw_outside_los(cell, gc);
-    else if (gc == you.pos() && you.on_current_level && !_show_terrain
+    else if (gc == you.pos() && you.on_current_level
+             && _layers & LAYER_PLAYER
              && !crawl_state.game_is_arena()
              && !crawl_state.arena_suspended)
     {
@@ -1469,10 +1470,10 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     tile_apply_properties(gc, cell->tile);
 #endif
 #ifndef USE_TILE_LOCAL
-    if ((_show_terrain || Options.always_show_exclusions)
+    if ((_layers != LAYERS_ALL || Options.always_show_exclusions)
         && you.on_current_level
         && map_bounds(gc)
-        && (_show_terrain
+        && (_layers == LAYERS_NONE
             || gc != you.pos()
                && (env.map_knowledge(gc).monster() == MONS_NO_MONSTER
                    || !you.see_cell(gc)))
@@ -1486,21 +1487,83 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 #endif
 }
 
+// Hide view layers. The player can toggle certain layers back on
+// and the resulting configuration will be remembered for the
+// remainder of the game session.
+// Pressing | again will return to normal view. Leaving the prompt
+// by any other means will give back control of the keys, but the
+// view will remain in its altered state until the | key is pressed
+// again or the player performs an action.
+static void _config_layers_menu()
+{
+    bool exit = false;
+
+    _layers = _layers_saved;
+
+    msgwin_set_temporary(true);
+    while (!exit)
+    {
+        viewwindow();
+        mprf(MSGCH_PROMPT, "Select layers to display: "
+                           "<%s>(m)onsters</%s>|"
+                           "<%s>(p)layer</%s>|"
+                           "<%s>(i)tems</%s>|"
+                           "<%s>(c)louds</%s>",
+           _layers & LAYER_MONSTERS ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTERS ? "lightgrey" : "darkgrey",
+           _layers & LAYER_PLAYER   ? "lightgrey" : "darkgrey",
+           _layers & LAYER_PLAYER   ? "lightgrey" : "darkgrey",
+           _layers & LAYER_ITEMS    ? "lightgrey" : "darkgrey",
+           _layers & LAYER_ITEMS    ? "lightgrey" : "darkgrey",
+           _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey",
+           _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey"
+        );
+        mprf(MSGCH_PROMPT, "Press <w>%s</w> to return to normal view. "
+                           "Press any other key to exit.",
+                           command_to_string(CMD_SHOW_TERRAIN).c_str());
+
+        switch (get_ch())
+        {
+        case 'm': _layers_saved = _layers ^= LAYER_MONSTERS; break;
+        case 'p': _layers_saved = _layers ^= LAYER_PLAYER;   break;
+        case 'i': _layers_saved = _layers ^= LAYER_ITEMS;    break;
+        case 'c': _layers_saved = _layers ^= LAYER_CLOUDS;   break;
+
+        // Remaining cases fall through to exit.
+        case '|':
+            _layers = LAYERS_ALL;
+        default:
+            exit = true;
+            break;
+        }
+
+        msgwin_clear_temporary();
+    }
+    msgwin_set_temporary(false);
+
+    canned_msg(MSG_OK);
+    if (_layers != LAYERS_ALL)
+    {
+        mprf(MSGCH_PLAIN, "Press <w>%s</w> or perform an action "
+                          "to restore all view layers.",
+                          command_to_string(CMD_SHOW_TERRAIN).c_str());
+    }
+}
+
 void toggle_show_terrain()
 {
-    _show_terrain = !_show_terrain;
-    if (_show_terrain)
-    {
-        mprf("Showing terrain only. Press <w>%s</w> to return to normal view.",
-             command_to_string(CMD_SHOW_TERRAIN).c_str());
-    }
+    if (_layers == LAYERS_ALL)
+        _config_layers_menu();
     else
-        mpr("Returning to normal view.");
+        reset_show_terrain();
 }
 
 void reset_show_terrain()
 {
-    _show_terrain = false;
+    if (_layers != LAYERS_ALL)
+        mprf(MSGCH_PROMPT, "Restoring view layers.");
+
+    _layers = LAYERS_ALL;
 }
 
 ////////////////////////////////////////////////////////////////////////////

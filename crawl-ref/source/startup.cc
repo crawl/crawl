@@ -890,10 +890,12 @@ again:
             else
             {
                 // bad name
-                textcolour(RED);
                 cgotoxy(SCROLLER_MARGIN_X ,GAME_MODES_START_Y - 1);
                 clear_to_end_of_line();
+                textcolour(RED);
                 cprintf("That's a silly name");
+                // Don't make the next key re-enter the game.
+                menu.clear_selections();
             }
             continue;
 
@@ -1023,8 +1025,9 @@ bool startup_step()
 
     bool newchar = false;
     newgame_def ng;
-    if (choice.filename.empty())
+    if (choice.filename.empty() && !choice.name.empty())
         choice.filename = get_save_filename(choice.name);
+
     if (save_exists(choice.filename) && restore_game(choice.filename))
         save_player_name();
     else if (choose_game(ng, choice, defaults)

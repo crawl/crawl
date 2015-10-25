@@ -540,7 +540,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
     // Pretty much duplicated by the chaos effect note,
     // which will be much more informative.
     if (brand != SPMSL_CHAOS)
-        take_note(Note(NOTE_MESSAGE, 0, 0, brand_name.c_str()), true);
+        take_note(Note(NOTE_MESSAGE, 0, 0, brand_name), true);
 #endif
     return brand;
 }

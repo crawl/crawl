@@ -578,9 +578,9 @@ result in premature detonation.
 %%%%
 Gell's Gravitas spell
 
-Briefly redirects space around the target, making 'down' become exactly where
-the target is standing. All nearby creatures, save the caster, fall helplessly
-toward the victim – typically colliding with it, or with each other.
+Briefly redirects gravity around a target point, causing 'down' to be towards
+that point. All nearby creatures, save the caster, fall helplessly toward that
+point – typically colliding with each other, or with a victim standing there.
 %%%%
 Ghostly Fireball spell
 
@@ -708,7 +708,7 @@ Hurls a large and heavy metal shot.
 %%%%
 Irradiate spell
 
-Transmutes a ultra-thin layer of the caster's skin (or equivalent) directly
+Transmutes an ultra-thin layer of the caster's skin (or equivalent) directly
 into pure magical energy, blasting and deforming adjacent creatures. The caster
 is not left entirely unaffected; some of the magic lingers, enough to leave
 them dangerously contaminated after just two or three castings.

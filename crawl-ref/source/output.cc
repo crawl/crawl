@@ -2095,14 +2095,17 @@ static string _god_asterisks()
     {
         const int p_rank = xom_favour_rank() - 1;
         if (p_rank >= 0)
-            return string(p_rank, '.') + "*" + string(5 - p_rank, '.');
+        {
+            return string(p_rank, '.') + "*"
+                   + string(NUM_PIETY_STARS - 1 - p_rank, '.');
+        }
         else
-            return "......"; // very special plaything
+            return string(NUM_PIETY_STARS, '.'); // very special plaything
     }
     else
     {
-        const int prank = piety_rank() - 1;
-        return string(prank, '*') + string(6 - prank, '.');
+        const int prank = piety_rank();
+        return string(prank, '*') + string(NUM_PIETY_STARS - prank, '.');
     }
 }
 
@@ -2580,8 +2583,6 @@ static string _status_mut_abilities(int sw)
     string text = "<w>@:</w> ";
     vector<string> status;
 
-    // A hard-coded duration/status list used to be used here. This list is no
-    // longer hard-coded. May 2014. -reaverb
     status_info inf;
     for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {

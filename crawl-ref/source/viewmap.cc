@@ -983,6 +983,7 @@ bool show_map(level_pos &lpos,
                 {
                     lpos = dest;
                 }
+                los_changed();
                 continue;
             }
 

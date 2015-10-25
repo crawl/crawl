@@ -1040,7 +1040,7 @@ static void _note_potion_effect(potion_type pot)
 
     potion_msg += ("(" + potion_name + ")");
 
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, potion_msg.c_str()), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, potion_msg), true);
 }
 
 static int _xom_do_potion(bool debug = false)
@@ -1249,8 +1249,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
                 poly += (powerup ? "upgrade" : "downgrade");
                 poly += ")";
 #endif
-                take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, poly.c_str()),
-                          true);
+                take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, poly), true);
             }
             return helpful ? XOM_GOOD_POLYMORPH : XOM_BAD_POLYMORPH;
         }
@@ -1515,7 +1514,7 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
         return XOM_DID_NOTHING;
 
     // Make the monster unwield its weapon.
-    mon->unequip(*(mon->mslot_item(MSLOT_WEAPON)), MSLOT_WEAPON, 0, true);
+    mon->unequip(*(mon->mslot_item(MSLOT_WEAPON)), false, true);
     mon->inv[MSLOT_WEAPON] = NON_ITEM;
 
     mprf("%s %s dances into the air!",
@@ -2158,14 +2157,13 @@ static void _xom_zero_miscast()
     vector<string> messages;
     vector<string> priority;
 
-    vector<int> inv_items;
-    for (int i = 0; i < ENDOFPACK; ++i)
+    vector<item_def *> inv_items;
+    for (auto &item : you.inv)
     {
-        const item_def &item(you.inv[i]);
         if (item.defined() && !item_is_equipped(item)
             && !item.is_critical())
         {
-            inv_items.push_back(i);
+            inv_items.push_back(&item);
         }
     }
 
@@ -2278,12 +2276,9 @@ static void _xom_zero_miscast()
         }
     }
 
-    if (feat_has_solid_floor(feat)
-        && !inv_items.empty())
+    if (feat_has_solid_floor(feat) && !inv_items.empty())
     {
-        int idx = inv_items[random2(inv_items.size())];
-
-        const item_def &item(you.inv[idx]);
+        const item_def &item = **random_iterator(inv_items);
 
         string name;
         if (item.quantity == 1)
@@ -2432,14 +2427,12 @@ static void _xom_zero_miscast()
     // Misc.
     if (!inv_items.empty())
     {
-        int idx = inv_items[random2(inv_items.size())];
+        item_def &item = **random_iterator(inv_items);
 
-        item_def* item = &you.inv[idx];
-
-        string name = item->name(DESC_YOUR, false, false, false);
+        string name = item.name(DESC_YOUR, false, false, false);
         string verb = coinflip() ? "glow" : "vibrate";
 
-        if (item->quantity == 1)
+        if (item.quantity == 1)
             verb += "s";
 
         messages.push_back(name + " briefly " + verb + ".");
@@ -2567,7 +2560,7 @@ static int _xom_miscast(const int max_level, const bool nasty,
     if (nasty)
         desc += " (Xom was nasty)";
 #endif
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, desc.c_str()), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, desc), true);
 
     string hand_str;
     bool   can_plural;
@@ -2675,7 +2668,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
         string conf_msg = "confusion";
         if (mons_too)
             conf_msg += " (+ monsters)";
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, conf_msg.c_str()), true);
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, conf_msg), true);
     }
 
     return rc ? XOM_BAD_CONFUSION : XOM_DID_NOTHING;

@@ -1169,6 +1169,7 @@ void torment_player(actor *attacker, torment_source_type taux)
     case TORMENT_LURKING_HORROR:
         type = KILLED_BY_SPORE;
         aux = "an exploding lurking horror";
+        break;
 
     case TORMENT_MISCAST:
         aux = "by torment";

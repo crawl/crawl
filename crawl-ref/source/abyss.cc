@@ -56,7 +56,6 @@
 const coord_def ABYSS_CENTRE(GXM / 2, GYM / 2);
 
 static const int ABYSSAL_RUNE_MAX_ROLL = 200;
-static const int ABYSSAL_RUNE_MIN_LEVEL = 3;
 
 abyss_state abyssal_state;
 
@@ -281,12 +280,9 @@ static bool _abyss_place_rune(const map_bitmask &abyss_genlevel_mask)
     {
         dprf(DIAG_ABYSS, "Placing abyssal rune at (%d,%d)",
              chosen_spot.x, chosen_spot.y);
-        int item_ind  = items(true, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, 0);
+        int item_ind  = items(true, OBJ_RUNES, RUNE_ABYSSAL, 0);
         if (item_ind != NON_ITEM)
-        {
-            mitm[item_ind].plus = RUNE_ABYSSAL;
             item_colour(mitm[item_ind]);
-        }
         move_item_to_grid(&item_ind, chosen_spot);
         return item_ind != NON_ITEM;
     }
@@ -400,7 +396,7 @@ void banished(const string &who)
     }
 
     const string what = "Cast into the Abyss" + _who_banished(who);
-    take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
+    take_note(Note(NOTE_MESSAGE, 0, 0, what), true);
 
     stop_delay(true);
     run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
@@ -505,7 +501,7 @@ static dungeon_feature_type _abyss_pick_altar()
 static bool _abyssal_rune_at(const coord_def p)
 {
     for (stack_iterator si(p); si; ++si)
-        if (item_is_rune(*si, RUNE_ABYSSAL))
+        if (si->is_type(OBJ_RUNES, RUNE_ABYSSAL))
             return true;
     return false;
 }
@@ -958,10 +954,7 @@ void maybe_shift_abyss_around_player()
         you.pet_target = MHITNOT;
 
 #ifdef DEBUG_DIAGNOSTICS
-    int j = 0;
-    for (int i = 0; i < MAX_ITEMS; ++i)
-        if (mitm[i].defined())
-            ++j;
+    int j = count_if(begin(mitm), end(mitm), mem_fn(&item_def::defined));
 
     dprf(DIAG_ABYSS, "Number of items present: %d", j);
 
@@ -1344,8 +1337,7 @@ static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
 static void _generate_area(const map_bitmask &abyss_genlevel_mask)
 {
     // Any rune on the floor prevents the abyssal rune from being generated.
-    const bool placed_abyssal_rune =
-        find_floor_item(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT);
+    const bool placed_abyssal_rune = find_floor_item(OBJ_RUNES);
 
     dprf(DIAG_ABYSS, "_generate_area(). turns_on_level: %d, rune_on_floor: %s",
          env.turns_on_level, placed_abyssal_rune? "yes" : "no");
@@ -1370,11 +1362,11 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
 
 static void _initialize_abyss_state()
 {
-    abyssal_state.major_coord.x = random_int() & 0x7FFFFFFF;
-    abyssal_state.major_coord.y = random_int() & 0x7FFFFFFF;
-    abyssal_state.seed = random_int() & 0x7FFFFFFF;
+    abyssal_state.major_coord.x = get_uint32() & 0x7FFFFFFF;
+    abyssal_state.major_coord.y = get_uint32() & 0x7FFFFFFF;
+    abyssal_state.seed = get_uint32() & 0x7FFFFFFF;
     abyssal_state.phase = 0.0;
-    abyssal_state.depth = random_int() & 0x7FFFFFFF;
+    abyssal_state.depth = get_uint32() & 0x7FFFFFFF;
     abyssal_state.destroy_all_terrain = false;
     abyssal_state.level = _get_random_level();
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
@@ -1384,7 +1376,7 @@ void set_abyss_state(coord_def coord, uint32_t depth)
 {
     abyssal_state.major_coord = coord;
     abyssal_state.depth = depth;
-    abyssal_state.seed = random_int() & 0x7FFFFFFF;
+    abyssal_state.seed = get_uint32() & 0x7FFFFFFF;
     abyssal_state.phase = 0.0;
     abyssal_state.destroy_all_terrain = true;
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());

@@ -24,6 +24,7 @@
     Haran Pilpel
     Johanna Ploog
     David Lawrence Ramsey
+    J. Van
     Robert Vollmert
     Enne Walker
 
@@ -113,6 +114,7 @@
     Paul Dejean
     Denzi
     Lothar Dierkes
+    Kevin Donnelly
     drachereborn
     Mike Drinen
     DrKe
@@ -230,6 +232,7 @@
     Solf
     Michael Spang
     David Speare
+    John Stahara
     Jan 'heftig' Steffens
     Timothy Stiles
     Johan Strandell
@@ -285,15 +288,14 @@ The Dungeon Crawl Stone Soup development team is:
     John McCartney
     Steve Melenchuk
     Neil Middleton
+    Seve Monahan
     Neil Moore
     Steven Noonan
     Stefan O'Rear
     Charles Otto
     Aaron Pixton
     David Ploog
-    reaverb
     Sage
     Marc H. Thoben
-    Jason Van
     Chris West
     Samuel Wilson

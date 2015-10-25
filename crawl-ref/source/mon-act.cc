@@ -2779,8 +2779,8 @@ static void _clear_monster_flags()
     // monsters get their actions in the next round.
     // Also clear one-turn deep sleep flag.
     // XXX: MF_JUST_SLEPT only really works for player-cast hibernation.
-    for (int i = 0; i < MAX_MONSTERS; i++)
-        menv[i].flags &= ~MF_JUST_SUMMONED & ~MF_JUST_SLEPT;
+    for (auto &mons : menv)
+        mons.flags &= ~MF_JUST_SUMMONED & ~MF_JUST_SLEPT;
 }
 
 /**
@@ -3072,7 +3072,7 @@ static bool _handle_pickup(monster* mons)
             if (si->flags & ISFLAG_NO_PICKUP)
                 continue;
 
-            if (mons->pickup_item(*si, nearby))
+            if (mons->pickup_item(*si, nearby, false))
                 count_pickup++;
 
             if (count_pickup > 1 || coinflip())
@@ -3194,6 +3194,10 @@ static bool _mons_can_displace(const monster* mpusher,
     {
         return false;
     }
+
+    // Boulders and OODs should crash into things, not push them around.
+    if (mpusher->is_projectile() || mpushee->is_projectile())
+        return false;
 
     // Fleeing monsters cannot push past other fleeing monsters
     // (This helps to prevent some traffic jams in confined spaces)

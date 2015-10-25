@@ -314,9 +314,9 @@ static void _apply_daction(daction_type act)
         }
         break;
     case DACT_ROT_CORPSES:
-        for (int i = 0; i < MAX_ITEMS; i++)
-            if (mitm[i].is_type(OBJ_CORPSES, CORPSE_BODY))
-                mitm[i].special = 1; // thoroughly rotten
+        for (auto &item : mitm)
+            if (item.is_type(OBJ_CORPSES, CORPSE_BODY))
+                item.special = 1; // thoroughly rotten
         break;
     case DACT_GOLD_ON_TOP:
     {

@@ -53,7 +53,7 @@ class SkillTextTileItem : public TextTileItem
 public:
     SkillTextTileItem() {};
 protected:
-    bool handle_mouse(const MouseEvent& me);
+    bool handle_mouse(const MouseEvent& me) override;
 };
 #endif
 
@@ -74,7 +74,7 @@ public:
     void set_display();
     void set_name(bool keep_hotkey);
     void set_skill(skill_type sk = SK_NONE);
-
+    void set_cost();
 private:
     skill_type m_sk;
 
@@ -129,7 +129,7 @@ public:
 
     void clear_flag(int flag);
     void init(int flag);
-    void clear();
+    void clear() override;
     bool is_set(int flag) const;
     void set_flag(int flag);
     void toggle_flag(int flag);

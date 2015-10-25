@@ -284,11 +284,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if config.dgl_mode:
             game_params["id"] = game_id
             args = (game_params, self.username, self.logger, self.ioloop)
-            if (game_params.get("compat_mode") or
-                "client_prefix" in game_params):
-                self.process = process_handler.CompatCrawlProcessHandler(*args)
-            else:
-                self.process = process_handler.CrawlProcessHandler(*args)
+            self.process = process_handler.CrawlProcessHandler(*args)
         else:
             self.process = process_handler.DGLLessCrawlProcessHandler(self.logger, self.ioloop)
 
@@ -519,6 +515,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("register_fail", reason = error)
 
     def go_lobby(self):
+        if not config.dgl_mode: return
         if self.is_running():
             self.process.stop()
         elif self.watched_game:
@@ -542,26 +539,20 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             f.write(contents.encode("utf8"))
 
     def on_message(self, message):
-        if message.startswith("{"):
-            try:
-                obj = json_decode(message)
-                if obj["msg"] in self.message_handlers:
-                    handler = self.message_handlers[obj["msg"]]
-                    del obj["msg"]
-                    handler(**obj)
-                elif self.process:
-                    self.process.handle_input(message)
-                elif not self.watched_game:
-                    self.logger.warning("Didn't know how to handle msg: %s",
-                                        obj["msg"])
-            except Exception:
-                self.logger.warning("Error while handling JSON message!",
-                                    exc_info=True)
-
-        elif self.process:
-            # This is just for compatibility with 0.9, 0.10 only sends
-            # JSON
-            self.process.handle_input(message)
+        try:
+            obj = json_decode(message)
+            if obj["msg"] in self.message_handlers:
+                handler = self.message_handlers[obj["msg"]]
+                del obj["msg"]
+                handler(**obj)
+            elif self.process:
+                self.process.handle_input(message)
+            elif not self.watched_game:
+                self.logger.warning("Didn't know how to handle msg: %s",
+                                    obj["msg"])
+        except Exception:
+            self.logger.warning("Error while handling JSON message!",
+                                exc_info=True)
 
     def flush_messages(self):
         if self.client_closed or len(self.message_queue) == 0:

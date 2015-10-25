@@ -1105,52 +1105,6 @@ static string _branch_entry_runes(branch_type br)
     return desc;
 }
 
-static branch_type _rune_to_branch(int rune)
-{
-    switch (rune)
-    {
-    case RUNE_SWAMP:       return BRANCH_SWAMP;
-    case RUNE_SNAKE:       return BRANCH_SNAKE;
-    case RUNE_SHOALS:      return BRANCH_SHOALS;
-    case RUNE_SPIDER:      return BRANCH_SPIDER;
-    case RUNE_SLIME:       return BRANCH_SLIME;
-    case RUNE_VAULTS:      return BRANCH_VAULTS;
-    case RUNE_TOMB:        return BRANCH_TOMB;
-    case RUNE_DIS:         return BRANCH_DIS;
-    case RUNE_GEHENNA:     return BRANCH_GEHENNA;
-    case RUNE_COCYTUS:     return BRANCH_COCYTUS;
-    case RUNE_TARTARUS:    return BRANCH_TARTARUS;
-    case RUNE_ABYSSAL:     return BRANCH_ABYSS;
-    case RUNE_DEMONIC:     return BRANCH_PANDEMONIUM;
-    case RUNE_MNOLEG:      return BRANCH_PANDEMONIUM;
-    case RUNE_LOM_LOBON:   return BRANCH_PANDEMONIUM;
-    case RUNE_CEREBOV:     return BRANCH_PANDEMONIUM;
-    case RUNE_GLOORX_VLOQ: return BRANCH_PANDEMONIUM;
-    default:               return NUM_BRANCHES;
-    }
-}
-
-static string _branch_runes(branch_type br)
-{
-    string desc;
-    vector<string> rune_names;
-
-    for (int i = 0; i < NUM_RUNE_TYPES; ++i)
-        if (_rune_to_branch(i) == br)
-            rune_names.push_back(rune_type_name(i));
-
-    // Abyss and Pan runes are explained in their descriptions.
-    if (!rune_names.empty() && br != BRANCH_ABYSS && br != BRANCH_PANDEMONIUM)
-    {
-        desc = make_stringf("\n\nThis branch contains the %s rune%s of Zot.",
-                            comma_separated_line(begin(rune_names),
-                                                 end(rune_names)).c_str(),
-                            rune_names.size() > 1 ? "s" : "");
-    }
-
-    return desc;
-}
-
 static string _branch_depth(branch_type br)
 {
     string desc;
@@ -1262,7 +1216,8 @@ static int _describe_branch(const string &key, const string &suffix,
                          + _branch_entry_runes(branch)
                          + _branch_depth(branch)
                          + _branch_subbranches(branch)
-                         + _branch_runes(branch);
+                         + "\n\n"
+                         + branch_rune_desc(branch, false);
 
     return _describe_key(key, suffix, footer, info);
 }

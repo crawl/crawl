@@ -585,23 +585,14 @@ static void _wanderer_startup_message()
 
 static void _wanderer_note_items()
 {
-    ostringstream equip_str;
-    equip_str << you.your_name
-            << " set off with: ";
-    bool first_item = true;
-
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        item_def& item(you.inv[i]);
-        if (item.defined())
-        {
-            if (!first_item)
-                equip_str << ", ";
-            equip_str << item.name(DESC_A, false, true);
-            first_item = false;
-        }
-    }
-    take_note(Note(NOTE_MESSAGE, 0, 0, equip_str.str().c_str()));
+    const string equip_str =
+        you.your_name + " set off with: "
+        + comma_separated_fn(begin(you.inv), end(you.inv),
+                             [] (const item_def &item) -> string
+                             {
+                                 return item.name(DESC_A, false, true);
+                             }, ", ", ", ", mem_fn(&item_def::defined));
+    take_note(Note(NOTE_MESSAGE, 0, 0, equip_str));
 }
 
 /**
@@ -658,7 +649,7 @@ static void _take_starting_note()
             << species_name(you.species) << " "
             << get_job_name(you.char_class)
             << " began the quest for the Orb.";
-    take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str().c_str()));
+    take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str()));
     mark_milestone("begin", "began the quest for the Orb.");
 
     notestr.str("");
@@ -668,7 +659,7 @@ static void _take_starting_note()
     if (you.wizard)
     {
         notestr << "You started the game in wizard mode.";
-        take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str().c_str()));
+        take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str()));
 
         notestr.str("");
         notestr.clear();
@@ -709,7 +700,7 @@ static void _set_removed_types_as_identified()
 }
 
 #ifdef WIZARD
-static void _do_wizard_command(int wiz_command, bool silent_fail)
+static void _do_wizard_command(int wiz_command)
 {
     ASSERT(you.wizard);
 
@@ -718,7 +709,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '?':
     {
         const int key = list_wizard_commands(true);
-        _do_wizard_command(key, true);
+        _do_wizard_command(key);
         return;
     }
 
@@ -771,7 +762,10 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('I'): debug_item_statistics(); break;
 
     // case 'j': break;
-    case 'J': jiyva_eat_offlevel_items(); break;
+    case 'J':
+        mpr("Running Jiyva off-level sacrifice.");
+        jiyva_eat_offlevel_items();
+        break;
     // case CONTROL('J'): break;
 
     case 'k':
@@ -791,7 +785,10 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'M': wizard_create_spec_monster(); break;
     // case CONTROL('M'): break; // XXX do not use, menu command
 
-    case 'n': you.set_gold(0); break;
+    case 'n':
+        mpr("Setting gold to 0.");
+        you.set_gold(0);
+        break;
     // case 'N': break;
     // case CONTROL('N'): break;
 
@@ -866,7 +863,10 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '!': wizard_memorise_spec_spell(); break;
     case '@': wizard_set_stats(); break;
     case '#': wizard_load_dump_file(); break;
-    case '$': you.add_gold(1000); break;
+    case '$':
+        mpr("Adding 1000 gold.");
+        you.add_gold(1000);
+        break;
     case '%': wizard_create_spec_object_by_name(); break;
     case '^': wizard_set_piety(); break;
     case '&': wizard_list_companions(); break;
@@ -914,12 +914,15 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     // case '/': break;
 
+    case ' ':
+    case '\r':
+    case '\n':
+    case ESCAPE:
+        canned_msg(MSG_OK);
+        break;
     default:
-        if (!silent_fail)
-        {
-            formatted_mpr(formatted_string::parse_string(
-                              "Not a <magenta>Wizard</magenta> Command."));
-        }
+        formatted_mpr(formatted_string::parse_string(
+                          "Not a <magenta>Wizard</magenta> Command."));
         break;
     }
     // Force the placement of any delayed monster gifts.
@@ -1018,7 +1021,7 @@ static void _handle_wizard_command()
         }
     }
 
-    _do_wizard_command(wiz_command, false);
+    _do_wizard_command(wiz_command);
 }
 
 static void _enter_explore_mode()
@@ -1678,17 +1681,17 @@ static bool _prompt_unique_pan_rune(dungeon_feature_type ygrd)
         return true;
     }
 
-    item_def* rune = find_floor_item(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT);
+    item_def* rune = find_floor_item(OBJ_RUNES);
     if (rune && item_is_unique_rune(*rune))
     {
-        return yes_or_no("An item of great power still resides in this realm, "
+        return yes_or_no("A rune of Zot still resides in this realm, "
                          "and once you leave you can never return. "
                          "Are you sure you want to leave?");
     }
     return true;
 }
 
-static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
+static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
 {
     // Certain portal types always carry warnings.
     if (!_prompt_dangerous_portal(ygrd))
@@ -1750,6 +1753,14 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
         }
     }
 
+    if (Options.warn_hatches)
+    {
+        if (feat_is_escape_hatch(ygrd))
+            return yesno("Really go through this one-way escape hatch?", true, 'n');
+        if (down && shaft) // voluntary shaft usage
+            return yesno("Really dive through this shaft in the floor?", true, 'n');
+    }
+
     return true;
 }
 
@@ -1763,14 +1774,12 @@ static void _take_stairs(bool down)
     const bool shaft = (down && get_trap_type(you.pos()) == TRAP_SHAFT
                              && ygrd != DNGN_UNDISCOVERED_TRAP);
 
-    if (!_can_take_stairs(ygrd, down, shaft))
+    if (!(_can_take_stairs(ygrd, down, shaft)
+          && _prompt_stairs(ygrd, down, shaft)
+          && you.attempt_escape())) // false means constricted and don't escape
+    {
         return;
-
-    if (!_prompt_stairs(ygrd, down))
-        return;
-
-    if (!you.attempt_escape()) // false means constricted and don't escape
-        return;
+    }
 
     you.stop_constricting_all(true);
     you.stop_being_constricted();
@@ -1891,7 +1900,7 @@ static void _do_rest()
     if (i_feel_safe())
     {
         if ((you.hp == you.hp_max
-                || player_mutation_level(MUT_SLOW_HEALING) == 3
+                || player_mutation_level(MUT_SLOW_REGENERATION) == 3
                 || (you.species == SP_VAMPIRE
                     && you.hunger_state <= HS_STARVING))
             && you.magic_points == you.max_magic_points)
@@ -2175,7 +2184,7 @@ void process_command(command_type cmd)
     case CMD_DISPLAY_INVENTORY:        display_inventory();            break;
     case CMD_DISPLAY_KNOWN_OBJECTS: check_item_knowledge(); redraw_screen(); break;
     case CMD_DISPLAY_MUTATIONS: display_mutations(); redraw_screen();  break;
-    case CMD_DISPLAY_RUNES:            display_runes();                break;
+    case CMD_DISPLAY_RUNES: display_runes(); redraw_screen();          break;
     case CMD_DISPLAY_SKILLS:           skill_menu(); redraw_screen();  break;
     case CMD_EXPERIENCE_CHECK:         _experience_check();            break;
     case CMD_FULL_VIEW:                full_describe_view();           break;

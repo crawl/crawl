@@ -710,6 +710,9 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
 #endif
+    // Outside the #if because we probably won't remove these.
+    { OBJ_RUNES,     RUNE_ELF },
+    { OBJ_RUNES,     RUNE_FOREST },
 };
 
 bool item_type_removed(object_class_type base, int subtype)
@@ -742,22 +745,22 @@ bool curse_an_item(bool ignore_holy_wrath)
     }
 
     int count = 0;
-    int item  = ENDOFPACK;
+    item_def *found = nullptr;
 
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (auto &item : you.inv)
     {
-        if (!you.inv[i].defined())
+        if (!item.defined())
             continue;
 
-        if (is_weapon(you.inv[i])
-            || you.inv[i].base_type == OBJ_ARMOUR
-            || you.inv[i].base_type == OBJ_JEWELLERY)
+        if (is_weapon(item)
+            || item.base_type == OBJ_ARMOUR
+            || item.base_type == OBJ_JEWELLERY)
         {
-            if (you.inv[i].cursed())
+            if (item.cursed())
                 continue;
 
-            if (ignore_holy_wrath && you.inv[i].base_type == OBJ_WEAPONS
-                && get_weapon_brand(you.inv[i]) == SPWPN_HOLY_WRATH)
+            if (ignore_holy_wrath && item.base_type == OBJ_WEAPONS
+                && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
             {
                 continue;
             }
@@ -765,27 +768,24 @@ bool curse_an_item(bool ignore_holy_wrath)
             // Item is valid for cursing, so we'll give it a chance.
             count++;
             if (one_chance_in(count))
-                item = i;
+                found = &item;
         }
     }
 
     // Any item to curse?
-    if (item == ENDOFPACK)
+    if (!found)
         return false;
 
-    do_curse_item(you.inv[item], false);
+    do_curse_item(*found, false);
 
     return true;
 }
 
 void auto_id_inventory()
 {
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def& item = you.inv[i];
+    for (auto &item : you.inv)
         if (item.defined())
             god_id_item(item, false);
-    }
 }
 
 void do_curse_item(item_def &item, bool quiet)
@@ -990,8 +990,8 @@ void set_ident_flags(item_def &item, iflags_t flags)
             && is_interesting_item(item))
         {
             // Make a note of it.
-            take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A).c_str(),
-                           origin_desc(item).c_str()));
+            take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A),
+                           origin_desc(item)));
 
             // Sometimes (e.g. shops) you can ID an item before you get it;
             // don't note twice in those cases.
@@ -1029,6 +1029,7 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_CORPSES:
     case OBJ_MISSILES:
     case OBJ_ORBS:
+    case OBJ_RUNES:
         flagset = 0;
         break;
     case OBJ_BOOKS:
@@ -1460,9 +1461,9 @@ static int _fit_armour_size(armour_type sub_type, size_type size)
     const size_type max = Armour_prop[ Armour_index[sub_type] ].fit_max;
 
     if (size < min)
-        return min - size;    // -'ve means levels too small
+        return min - size;    // negative means levels too small
     else if (size > max)
-        return max - size;    // +'ve means levels too large
+        return max - size;    // positive means levels too large
 
     return 0;
 }
@@ -2076,6 +2077,13 @@ const char *ammo_name(const item_def &bow)
     return ammo_name(fires_ammo_type(bow));
 }
 
+const char *ammo_name(const weapon_type bow)
+{
+    missile_type mi = Weapon_prop[Weapon_index[bow]].ammo;
+    ASSERT(mi != MI_NONE);
+    return ammo_name(mi);
+}
+
 // Returns true if item has an associated launcher.
 bool has_launcher(const item_def &ammo)
 {
@@ -2188,17 +2196,11 @@ reach_type weapon_reach(const item_def &item)
 //
 // Macguffins
 //
-bool item_is_rune(const item_def &item, rune_type which_rune)
-{
-    return item.is_type(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT)
-           && (which_rune == NUM_RUNE_TYPES || item.plus == which_rune);
-}
-
 bool item_is_unique_rune(const item_def &item)
 {
-    return item_is_rune(item)
-           && item.plus != RUNE_DEMONIC
-           && item.plus != RUNE_ABYSSAL;
+    return item.base_type == OBJ_RUNES
+           && item.sub_type != RUNE_DEMONIC
+           && item.sub_type != RUNE_ABYSSAL;
 }
 
 bool item_is_orb(const item_def &item)
@@ -2851,7 +2853,7 @@ bool is_item_jelly_edible(const item_def &item)
     }
 
     // Don't eat special game items.
-    if (item_is_orb(item) || item_is_rune(item))
+    if (item_is_orb(item) || item.base_type == OBJ_RUNES)
         return false;
 
     return true;

@@ -80,8 +80,6 @@ bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);
 bool beogh_gift_item();
 
 bool yred_injury_mirror();
-bool yred_can_animate_dead();
-bool yred_animate_remains_or_dead();
 void yred_make_enslaved_soul(monster* mon, bool force_hostile = false);
 
 bool kiku_receive_corpses(int pow);
@@ -119,7 +117,7 @@ void lugonu_bend_space();
 
 void cheibriados_time_bend(int pow);
 void cheibriados_temporal_distortion();
-bool cheibriados_slouch(int pow);
+bool cheibriados_slouch();
 void cheibriados_time_step(int pow);
 bool ashenzari_transfer_knowledge();
 bool ashenzari_end_transfer(bool finished = false, bool force = false);

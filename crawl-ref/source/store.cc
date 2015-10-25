@@ -1422,17 +1422,8 @@ CrawlStoreValue& CrawlHashTable::get_value(const string &key)
     init_hash_map();
 
     ACCESS(key);
-    iterator i = hash_map->find(key);
-
-    if (i == hash_map->end())
-    {
-        (*hash_map)[key]     = CrawlStoreValue();
-        CrawlStoreValue &val = (*hash_map)[key];
-
-        return val;
-    }
-
-    return i->second;
+    // Inserts CrawlStoreValue() if the key was not found.
+    return (*hash_map)[key];
 }
 
 const CrawlStoreValue& CrawlHashTable::get_value(const string &key) const

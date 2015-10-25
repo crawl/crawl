@@ -794,7 +794,7 @@ int apply_chunked_AC(int dam, int ac)
 
     int hurt = 0;
     for (int i = 0; i < dam; i++)
-        if (random_int() < cr)
+        if (get_uint32() < cr)
             hurt++;
 
     return hurt;
@@ -885,4 +885,18 @@ bool today_is_halloween()
     const struct tm *date = TIME_FN(&curr_time);
     // tm_mon is zero-based in case you are wondering
     return date->tm_mon == 9 && date->tm_mday == 31;
+}
+
+bool tobool(maybe_bool mb, bool def)
+{
+    switch (mb)
+    {
+    case MB_TRUE:
+        return true;
+    case MB_FALSE:
+        return false;
+    case MB_MAYBE:
+    default:
+        return def;
+    }
 }

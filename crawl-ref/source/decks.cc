@@ -2552,7 +2552,7 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
         if (give_monster_proper_name(&tempmon, false))
             mg.mname = tempmon.mname;
         else
-            mg.mname = make_name(random_int());
+            mg.mname = make_name();
         // This is used for giving the merc better stuff in mon-gear.
         mg.props["mercenary items"] = true;
 
@@ -2626,7 +2626,7 @@ bool recruit_mercenary(int mid)
     simple_monster_message(mon, " joins your ranks!");
     mon->attitude = ATT_FRIENDLY;
     mons_att_changed(mon);
-    take_note(Note(NOTE_MESSAGE, 0, 0, message.c_str()), true);
+    take_note(Note(NOTE_MESSAGE, 0, 0, message), true);
     you.del_gold(fee);
     return true;
 }
@@ -3223,9 +3223,8 @@ void init_deck(item_def &item)
 
 void shuffle_all_decks_on_level()
 {
-    for (int i = 0; i < MAX_ITEMS; ++i)
+    for (auto &item : mitm)
     {
-        item_def& item(mitm[i]);
         if (item.defined() && is_deck(item))
         {
 #ifdef DEBUG_DIAGNOSTICS
@@ -3242,9 +3241,8 @@ static bool _shuffle_inventory_decks()
 {
     bool success = false;
 
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (auto &item : you.inv)
     {
-        item_def& item(you.inv[i]);
         if (item.defined() && is_deck(item))
         {
 #ifdef DEBUG_DIAGNOSTICS

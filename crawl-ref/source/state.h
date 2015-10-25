@@ -106,6 +106,7 @@ struct game_state
     bool tiles_disabled;
     bool title_screen;
 #endif
+    bool invisible_targeting;
 
     // Area beyond which view should be darkened,  0 = disabled.
     targetter *darken_range;
@@ -119,7 +120,11 @@ struct game_state
     FixedBitVector<NUM_DISABLEMENTS> disables;
 
     // Version of the last character save.
-    int minorVersion;
+    int minor_version;
+
+    // Git version of the character save. This will be empty unless the
+    // character has been loaded from a previous save.
+    std::string save_rcs_version;
 
 protected:
     void reset_cmd_repeat();

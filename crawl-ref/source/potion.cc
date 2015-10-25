@@ -74,7 +74,8 @@ public:
         // cure status effects
         if (you.duration[DUR_CONF]
             || you.duration[DUR_POISONING]
-            || you.disease)
+            || you.disease
+            || player_rotted())
         {
             return true;
         }
@@ -98,20 +99,37 @@ public:
     bool effect(bool=true, int=40, bool is_device = true) const override
     {
         const bool ddoor = you.duration[DUR_DEATHS_DOOR];
-        if ((you.can_device_heal() || !is_device) && !ddoor)
+        bool unrotted = false;
+
+        if ((you.can_device_heal() || !is_device) && !ddoor || player_rotted())
         {
-          int amount = 5 + random2(7);
-          if (is_device)
-            amount = amount * (3 - you.mutation[MUT_NO_DEVICE_HEAL]) / 3;
-          // Pay for rot right off the top.
-          amount = unrot_hp(amount);
-          inc_hp(amount);
+            int amount = 5 + random2(7);
+            if (is_device && !you.can_device_heal() && player_rotted())
+            {
+                // Treat the effectiveness of rot removal as if the player
+                // had two levels of MUT_NO_DEVICE_HEAL
+                unrot_hp(div_rand_round(amount,3));
+                unrotted = true;
+            }
+            else
+            {
+                if (is_device)
+                    amount = you.scale_device_healing(amount);
+                if (player_rotted())
+                    unrotted = true;
+                // Pay for rot right off the top.
+                amount = unrot_hp(amount);
+                inc_hp(amount);
+            }
         }
 
         if (ddoor)
             mpr("You feel queasy.");
-        else
+        else if (you.can_device_heal() || you.duration[DUR_POISONING]
+            || you.duration[DUR_CONF] || unrotted)
             canned_msg(MSG_GAIN_HEALTH);
+        else
+            mpr("That felt strangely inert.");
         // need to redraw from yellow to green even if no hp was gained
         if (you.duration[DUR_POISONING])
             you.redraw_hit_points = true;
@@ -171,7 +189,7 @@ public:
 
         int amount = 10 + random2avg(28, 3);
         if (is_device)
-            amount = amount * (3 - you.mutation[MUT_NO_DEVICE_HEAL] ) / 3;
+            amount = you.scale_device_healing(amount);
         // Pay for rot right off the top.
         amount = unrot_hp(amount);
         inc_hp(amount);

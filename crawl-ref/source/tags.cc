@@ -1616,8 +1616,8 @@ static void tag_construct_you_items(writer &th)
 {
     // how many inventory slots?
     marshallByte(th, ENDOFPACK);
-    for (int i = 0; i < ENDOFPACK; ++i)
-        marshallItem(th, you.inv[i]);
+    for (const auto &item : you.inv)
+        marshallItem(th, item);
 
     marshallFixedBitVector<NUM_RUNE_TYPES>(th, you.runes);
     marshallByte(th, you.obtainable_runes);
@@ -2319,8 +2319,6 @@ static void tag_read_you(reader &th)
     for (int i = 0; i < count; i++)
     {
         int a = unmarshallShort(th);
-        ASSERT_RANGE(a, -1, NUM_ABILITIES);
-        ASSERT(a != 0);
 #if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() < TAG_MINOR_ABIL_1000)
         {
@@ -2334,7 +2332,7 @@ static void tag_read_you(reader &th)
             if (a >= ABIL_ASHENZARI_END_TRANSFER + 1
                 && a <= ABIL_ASHENZARI_END_TRANSFER + 3)
             {
-                a += ABIL_STOP_RECALL - ABIL_ASHENZARI_END_TRANSFER;
+                a += ABIL_STOP_RECALL - ABIL_ASHENZARI_END_TRANSFER - 1;
             }
         }
         if (a == ABIL_FLY
@@ -2368,7 +2366,13 @@ static void tag_read_you(reader &th)
             else if (a > ABIL_DIG && a < ABIL_MIN_EVOKE)
                 a -= 1;
         }
+
+        // Bad offset from games transferred prior to 0.17-a0-2121-g4af814f.
+        if (a == NUM_ABILITIES)
+            a = ABIL_NON_ABILITY;
 #endif
+        ASSERT_RANGE(a, ABIL_NON_ABILITY, NUM_ABILITIES);
+        ASSERT(a != 0);
         you.ability_letter_table[i] = static_cast<ability_type>(a);
     }
 
@@ -3155,7 +3159,7 @@ static void tag_read_you(reader &th)
         if (th.getMinorVersion() >= TAG_MINOR_REMOVE_ABYSS_SEED
             && th.getMinorVersion() < TAG_MINOR_ADD_ABYSS_SEED)
         {
-            abyssal_state.seed = random_int();
+            abyssal_state.seed = get_uint32();
         }
         else
 #endif
@@ -3169,7 +3173,7 @@ static void tag_read_you(reader &th)
         unmarshallFloat(th); // converted abyssal_state.depth to int.
         abyssal_state.depth = 0;
         abyssal_state.destroy_all_terrain = true;
-        abyssal_state.seed = random_int();
+        abyssal_state.seed = get_uint32();
     }
 #endif
     abyssal_state.phase = unmarshallFloat(th);
@@ -3224,7 +3228,7 @@ static void tag_read_you(reader &th)
     for (int i = 0; i < count; i++)
         you.game_seeds[i] = unmarshallInt(th);
     for (int i = count; i < NUM_SEEDS; i++)
-        you.game_seeds[i] = random_int();
+        you.game_seeds[i] = get_uint32();
 #if TAG_MAJOR_VERSION == 34
     }
 #endif
@@ -3239,7 +3243,7 @@ static void tag_read_you(reader &th)
 
     EAT_CANARY;
 
-    unmarshallString(th);
+    crawl_state.save_rcs_version = unmarshallString(th);
 
     you.props.clear();
     you.props.read(th);
@@ -3891,10 +3895,31 @@ void unmarshallItem(reader &th, item_def &item)
         return;
     item.sub_type    = unmarshallUByte(th);
     item.plus        = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_RUNE_TYPE
+        && item.is_type(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT))
+    {
+        item.base_type = OBJ_RUNES;
+        item.sub_type = item.plus;
+        item.plus = 0;
+    }
+#endif
     item.plus2       = unmarshallShort(th);
     item.special     = unmarshallInt(th);
     item.quantity    = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
+    // These used to come in stacks in monster inventory as throwing weapons.
+    // Replace said stacks (but not single items) with tomahawks.
+    if (item.quantity > 1 && item.base_type == OBJ_WEAPONS
+        && (item.sub_type == WPN_CLUB || item.sub_type == WPN_HAND_AXE
+            || item.sub_type == WPN_DAGGER || item.sub_type == WPN_SPEAR))
+    {
+        item.base_type = OBJ_MISSILES;
+        item.sub_type = MI_TOMAHAWK;
+        item.plus = item.plus2 = 0;
+        item.special = SPMSL_NORMAL;
+    }
+
     if (th.getMinorVersion() < TAG_MINOR_REMOVE_ITEM_COLOUR)
         /* item.colour = */ unmarshallUByte(th);
 #endif
@@ -5346,13 +5371,9 @@ static void tag_read_level_items(reader &th)
 #ifdef DEBUG_ITEM_SCAN
     // There's no way to fix this, even with wizard commands, so get
     // rid of it when restoring the game.
-    for (int i = 0; i < MAX_ITEMS; i++)
-    {
-        item_def &item(mitm[i]);
-
+    for (auto &item : mitm)
         if (item.pos.origin())
             item.clear();
-    }
 #endif
 }
 

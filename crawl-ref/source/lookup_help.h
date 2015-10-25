@@ -7,5 +7,4 @@
 #define LOOKUP_HELP_H
 
 void keyhelp_query_descriptions();
-
 #endif

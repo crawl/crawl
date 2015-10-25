@@ -44,32 +44,32 @@ public:
     bool attack();
 
     // To-hit is a function of attacker/defender, inherited from attack
-    int calc_to_hit(bool random = true);
+    int calc_to_hit(bool random = true) override;
 
     static void chaos_affect_actor(actor *victim);
 
 private:
     /* Attack phases */
-    bool handle_phase_attempted();
-    bool handle_phase_dodged();
-    bool handle_phase_hit();
-    bool handle_phase_damaged();
-    bool handle_phase_aux();
-    bool handle_phase_killed();
-    bool handle_phase_end();
+    bool handle_phase_attempted() override;
+    bool handle_phase_dodged() override;
+    bool handle_phase_hit() override;
+    bool handle_phase_damaged() override;
+    bool handle_phase_aux(); // specific to melee attacks
+    bool handle_phase_killed() override;
+    bool handle_phase_end() override;
 
     /* Combat Calculations */
-    bool using_weapon();
-    int weapon_damage();
-    int calc_mon_to_hit_base();
-    int apply_damage_modifiers(int damage, int damage_max);
-    int calc_damage();
+    bool using_weapon() override;
+    int weapon_damage() override;
+    int calc_mon_to_hit_base() override;
+    int apply_damage_modifiers(int damage, int damage_max) override;
+    int calc_damage() override;
 
     /* Attack effects */
     void check_autoberserk();
-    bool check_unrand_effects();
+    bool check_unrand_effects() override;
 
-    bool attack_ignores_shield(bool verbose);
+    bool attack_ignores_shield(bool verbose) override;
 
     void rot_defender(int amount);
     void splash_defender_with_acid(int strength);
@@ -97,13 +97,13 @@ private:
 
     /* Output methods */
     void set_attack_verb(int damage) override;
-    void announce_hit();
+    void announce_hit() override;
 
     /* Misc methods */
     void handle_noise(const coord_def & pos);
 private:
     // Monster-attack specific stuff
-    bool mons_attack_effects();
+    bool mons_attack_effects() override;
     void mons_apply_attack_flavour();
     string mons_attack_verb();
     string mons_attack_desc();
@@ -123,16 +123,16 @@ private:
     bool player_aux_apply(unarmed_attack_type atk);
 
     int  player_aux_stat_modify_damage(int damage);
-    int  player_apply_misc_modifiers(int damage);
-    int  player_apply_final_multipliers(int damage);
+    int  player_apply_misc_modifiers(int damage) override;
+    int  player_apply_final_multipliers(int damage) override;
 
-    void player_exercise_combat_skills();
+    void player_exercise_combat_skills() override;
     bool player_monattk_hit_effects();
     void attacker_sustain_passive_damage();
     int  staff_damage(skill_type skill);
     void apply_staff_damage();
-    void player_stab_check();
-    bool player_good_stab();
+    void player_stab_check() override;
+    bool player_good_stab() override;
     void player_announce_aux_hit();
     string player_why_missed();
     void player_warn_miss();

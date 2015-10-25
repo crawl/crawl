@@ -35,6 +35,7 @@
 #include "skills.h"
 #include "state.h"
 #include "stringutil.h"
+#include "throw.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
 #include "tiledef-icons.h"
@@ -44,6 +45,7 @@
 #include "tilepick.h"
 #include "tilepick-p.h"
 #include "tileview.h"
+#include "transform.h"
 #include "travel.h"
 #include "unicode.h"
 #include "unwind.h"
@@ -213,6 +215,7 @@ void TilesFramework::finish_message()
         fragment_start += fragment_size;
     }
     m_msg_buf.clear();
+    m_need_flush = true;
 }
 
 void TilesFramework::send_message(const char *format, ...)
@@ -239,7 +242,11 @@ void TilesFramework::send_message(const char *format, ...)
 
 void TilesFramework::flush_messages()
 {
-    send_message("*{\"msg\":\"flush_messages\"}");
+    if (m_need_flush)
+    {
+        send_message("*{\"msg\":\"flush_messages\"}");
+        m_need_flush = false;
+    }
 }
 
 void TilesFramework::_await_connection()
@@ -655,7 +662,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.under_penance, (bool) player_under_penance(), "penance");
     uint8_t prank = 0;
     if (!you_worship(GOD_NO_GOD))
-        prank = max(0, piety_rank() - 1);
+        prank = max(0, piety_rank());
     else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
              && !had_gods())
     {
@@ -801,6 +808,10 @@ void TilesFramework::_send_player(bool force_full)
 
     _update_string(force_full, c.unarmed_attack,
                    you.unarmed_attack_name(), "unarmed_attack");
+    _update_int(force_full, c.unarmed_attack_colour,
+                (uint8_t) get_form()->uc_colour, "unarmed_attack_colour");
+    _update_int(force_full, c.quiver_available, !fire_warn_if_impossible(true),
+                "quiver_available");
 
     json_close_object(true);
 
@@ -920,7 +931,8 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
                                         TILEP_BASE_NAGA);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED
+        || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_LIGHTNING_SCALES)
     {
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
@@ -929,7 +941,8 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
                                         TILEP_BASE_CENTAUR);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
+        || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_BLACK_KNIGHT)
     {
         flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
@@ -1173,6 +1186,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
                 {
                     json_write_comma();
                     write_message("\"doll\":[[%d,%d]]", TILEP_MONS_UNKNOWN, TILE_Y);
+                    json_write_null("mcache");
                 }
             }
         }
@@ -1209,7 +1223,11 @@ void TilesFramework::_send_cell(const coord_def &gc,
                     mcache_entry *entry = mcache.get(mcache_idx);
                     if (entry)
                         _send_mcache(entry, in_water, false);
+                    else
+                        json_write_null("mcache");
                 }
+                else
+                    json_write_null("mcache");
             }
         }
         else if (fg_idx >= TILE_MAIN_MAX)
@@ -1218,6 +1236,16 @@ void TilesFramework::_send_cell(const coord_def &gc,
             {
                 json_write_comma();
                 write_message("\"doll\":[[%u,%d]]", (unsigned int) fg_idx, TILE_Y);
+                json_write_null("mcache");
+            }
+        }
+        else
+        {
+            if (fg_changed)
+            {
+                json_write_comma();
+                json_write_null("doll");
+                json_write_null("mcache");
             }
         }
 
@@ -1543,13 +1571,15 @@ void TilesFramework::_send_everything()
 
     send_message("{\"msg\":\"flash\",\"col\":%d}", m_current_flash_colour);
 
-    _send_map(true);
-
     _send_cursor(CURSOR_MOUSE);
     _send_cursor(CURSOR_TUTORIAL);
 
      // Player
     _send_player(true);
+
+    // Map is sent after player, otherwise HP/MP bar can be left behind in the
+    // old location if the player has moved
+    _send_map(true);
 
     // Menus
     json_open_object();

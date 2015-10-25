@@ -402,7 +402,7 @@ bool god_id_item(item_def& item, bool silent)
     {
         // Don't identify runes or the orb, since this has no gameplay purpose
         // and might mess up other things.
-        if (item_is_rune(item) || item_is_orb(item))
+        if (item.base_type == OBJ_RUNES || item_is_orb(item))
             return false;
 
         ided = ISFLAG_KNOW_CURSE;
@@ -479,7 +479,7 @@ void ash_id_monster_equipment(monster* mon)
             continue;
         }
 
-        if (x_chance_in_y(piety_rank() - 1, 6))
+        if (x_chance_in_y(piety_rank(), 6))
         {
             if (i == MSLOT_WAND)
             {
@@ -648,7 +648,7 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
 int ash_skill_boost(skill_type sk, int scale)
 {
     // It gives a bonus to skill points. The formula is:
-    // factor * piety_rank * skill_level
+    // factor * (piety_rank + 1) * skill_level
     // low bonus    -> factor = 3
     // medium bonus -> factor = 5
     // high bonus   -> factor = 7
@@ -658,7 +658,7 @@ int ash_skill_boost(skill_type sk, int scale)
     for (skill_type cross : get_crosstrain_skills(sk))
         skill_points += you.skill_points[cross] * 2 / 5;
 
-    skill_points += (you.skill_boost[sk] * 2 + 1) * piety_rank()
+    skill_points += (you.skill_boost[sk] * 2 + 1) * (piety_rank() + 1)
                     * max(you.skill(sk, 10, true), 1) * species_apt_factor(sk);
 
     int level = you.skills[sk];
@@ -769,7 +769,7 @@ void qazlal_element_adapt(beam_type flavour, int strength)
 {
     if (strength <= 0
         || !in_good_standing(GOD_QAZLAL, 4)
-        || !x_chance_in_y(strength, 12 - piety_rank()))
+        || !x_chance_in_y(strength, 11 - piety_rank()))
     {
         return;
     }

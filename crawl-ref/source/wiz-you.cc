@@ -214,7 +214,10 @@ void wizard_change_species()
                     specs, sizeof(specs));
 
     if (specs[0] == '\0')
+    {
+        canned_msg(MSG_OK);
         return;
+    }
 
     species_type sp = find_species_from_string(specs);
 
@@ -289,6 +292,7 @@ void wizard_heal(bool super_heal)
 {
     if (super_heal)
     {
+        mpr("Super healing.");
         // Clear more stuff.
         unrot_hp(9999);
         you.magic_contamination = 0;
@@ -301,6 +305,8 @@ void wizard_heal(bool super_heal)
         you.props["corrosion_amount"] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
     }
+    else
+        mpr("Healing.");
 
     // Clear most status ailments.
     you.disease = 0;
@@ -735,8 +741,11 @@ void wizard_set_stats()
 {
     char buf[80];
     mprf(MSGCH_PROMPT, "Enter values for Str, Int, Dex (space separated): ");
-    if (cancellable_get_line_autohist(buf, sizeof buf))
+    if (cancellable_get_line_autohist(buf, sizeof buf) || buf[0] == '\0')
+    {
+        canned_msg(MSG_OK);
         return;
+    }
 
     int sstr = you.strength(false),
         sdex = you.dex(false),
@@ -744,6 +753,7 @@ void wizard_set_stats()
 
     sscanf(buf, "%d %d %d", &sstr, &sint, &sdex);
 
+    mprf("Setting attributes (Str, Int, Dex) to: %i, %i, %i", sstr, sint, sdex);
     you.base_stats[STAT_STR] = debug_cap_stat(sstr);
     you.base_stats[STAT_INT] = debug_cap_stat(sint);
     you.base_stats[STAT_DEX] = debug_cap_stat(sdex);
@@ -961,6 +971,7 @@ void wizard_get_god_gift()
 void wizard_toggle_xray_vision()
 {
     you.xray_vision = !you.xray_vision;
+    mprf("X-ray vision %s.", you.xray_vision ? "enabled" : "disabled");
     viewwindow(true);
 }
 
@@ -996,11 +1007,17 @@ void wizard_god_wrath()
 
 void wizard_god_mollify()
 {
+    bool mollified = false;
     for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
     {
         if (player_under_penance((god_type) i))
+        {
             dec_penance((god_type) i, you.penance[i]);
+            mollified = true;
+        }
     }
+    if (!mollified)
+        mpr("You are not under penance.");
 }
 
 void wizard_transform()

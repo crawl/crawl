@@ -12,7 +12,6 @@
 #include "initfile.h"
 #include "libutil.h"
 #include "options.h"
-#include "random.h" // random_int for make_name
 #include "stringutil.h"
 #include "unicode.h"
 #include "version.h"
@@ -73,9 +72,10 @@ static void _show_name_prompt(int where)
 bool is_good_name(const string& name, bool blankOK, bool verbose)
 {
     // verification begins here {dlb}:
-    if (name.empty())
+    // Disallow names that would result in a save named just ".cs".
+    if (strip_filename_unsafe_chars(name).empty())
     {
-        if (blankOK)
+        if (blankOK && name.empty())
             return true;
 
         if (verbose)
@@ -127,7 +127,7 @@ static string _random_name()
 {
     for (int i = 0; i < 100; ++i)
     {
-        const string name = make_name(random_int());
+        const string name = make_name();
         const string filename = get_save_filename(name);
         if (!save_exists(filename))
             return name;

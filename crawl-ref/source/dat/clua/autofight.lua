@@ -223,17 +223,17 @@ end
 
 local function attack_fire(x,y)
   move = 'fr' .. vector_move(x, y) .. 'f'
-  crawl.process_keys(move)
+  crawl.process_keys(move, true)
 end
 
 local function attack_fire_stop(x,y)
   move = 'fr' .. vector_move(x, y) .. '.'
-  crawl.process_keys(move)
+  crawl.process_keys(move, true)
 end
 
 local function attack_reach(x,y)
   move = 'vr' .. vector_move(x, y) .. '.'
-  crawl.process_keys(move)
+  crawl.process_keys(move, true)
 end
 
 local function attack_melee(x,y)

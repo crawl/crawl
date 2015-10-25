@@ -71,6 +71,12 @@ public:
         return *this;
     }
 
+    field_type &operator^=(field_type other)
+    {
+        flags ^= other.flags;
+        return *this;
+    }
+
     constexpr field_type operator|(field_type other) const
     {
         return field_type(flags | other.flags);
@@ -79,6 +85,11 @@ public:
     constexpr field_type operator&(field_type other) const
     {
         return field_type(flags & other.flags);
+    }
+
+    constexpr field_type operator^(field_type other) const
+    {
+        return field_type(flags ^ other.flags);
     }
 
     constexpr field_type operator~() const
@@ -132,6 +143,8 @@ public:
     inline constexpr fieldT operator|(flagT a, fieldT b) { return fieldT(a) | b; } \
     inline constexpr fieldT operator&(flagT a, flagT b)  { return fieldT(a) & b; } \
     inline constexpr fieldT operator&(flagT a, fieldT b) { return fieldT(a) & b; } \
+    inline constexpr fieldT operator^(flagT a, flagT b)  { return fieldT(a) ^ b; } \
+    inline constexpr fieldT operator^(flagT a, fieldT b) { return fieldT(a) ^ b; } \
     inline constexpr fieldT operator~(flagT a) { return ~fieldT(a); } \
     COMPILE_CHECK(is_enum<flagT>::value)
 // The last line above is really just to eat a semicolon; template
@@ -144,8 +157,8 @@ public:
  * This macro produces a typedef and several inline function definitions;
  * use it only at file/namespace scope. It requires a trailing semicolon.
  *
- * The operations ~, |, and (binary) & on flags or fields yields a field.
- * Fields also support &= and |=. Fields can be explicitly converted to
+ * The operations ~, |, ^, and (binary) & on flags or fields yield a field.
+ * Fields also support &=, |=, and ^=. Fields can be explicitly converted to
  * an integer of the enum's underlying type, or to bool. Note that in C++
  * using a bitfield expression as the condition of a control structure,
  * or as an operand of a logical operator, counts as explicit conversion
@@ -290,7 +303,6 @@ enum ability_type
     ABIL_YRED_ANIMATE_DEAD,
     ABIL_YRED_DRAIN_LIFE,
     ABIL_YRED_ENSLAVE_SOUL,
-    ABIL_YRED_ANIMATE_REMAINS_OR_DEAD,
     // Vehumet
     // = 1040
     // Okawaru
@@ -610,8 +622,7 @@ enum beam_type                  // bolt::flavour
     BEAM_DRAIN_MAGIC,
     BEAM_TUKIMAS_DANCE,
     BEAM_RESISTANCE,
-    BEAM_ATTRACT,
-    BEAM_LAST_ENCHANTMENT = BEAM_ATTRACT,
+    BEAM_LAST_ENCHANTMENT = BEAM_RESISTANCE,
 
     BEAM_MEPHITIC,
     BEAM_INK,
@@ -2431,7 +2442,6 @@ enum menu_type
     MT_DROP,
     MT_PICKUP,
     MT_KNOW,
-    MT_RUNES,
     MT_SELONE,                         // Select one
 };
 
@@ -3621,7 +3631,7 @@ enum mutation_type
     MUT_SHOCK_VULNERABILITY,
 #endif
     MUT_SLOW,
-    MUT_SLOW_HEALING,
+    MUT_SLOW_REGENERATION,
     MUT_SLOW_METABOLISM,
     MUT_SPINY,
     MUT_SPIT_POISON,
@@ -3752,6 +3762,7 @@ enum object_class_type                 // mitm[].base_type
     OBJ_CORPSES,
     OBJ_GOLD,
     OBJ_RODS,
+    OBJ_RUNES,
     NUM_OBJECT_CLASSES,
     OBJ_UNASSIGNED = 100,
     OBJ_RANDOM,      // used for blanket random sub_type .. see dungeon::items()
@@ -4051,6 +4062,7 @@ enum skill_menu_state
     SKM_VIEW_PROGRESS,
     SKM_VIEW_TRAINING,
     SKM_VIEW_TRANSFER,
+    SKM_VIEW_COST,
 };
 
 enum skill_focus_mode
@@ -4689,6 +4701,7 @@ enum zap_type
     ZAP_CORROSIVE_BOLT,
     ZAP_RANDOM_BOLT_TRACER,
     ZAP_SCATTERSHOT,
+    ZAP_MEPHITIC,
 
     NUM_ZAPS
 };

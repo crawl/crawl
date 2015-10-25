@@ -381,11 +381,9 @@ static bool _get_mem_list(spell_list &mem_spells,
     unsigned int  num_unknown    = 0;
 
     // Collect the list of all spells in all available spellbooks.
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (auto &book : you.inv)
     {
-        item_def& book(you.inv[i]);
-
-        if (!item_is_spellbook(book))
+        if (!book.defined() || !item_is_spellbook(book))
             continue;
 
         num_books++;
@@ -1258,7 +1256,7 @@ bool make_book_level_randart(item_def &book, int level, string owner)
     else if (one_chance_in(30))
         name = god_name(GOD_SIF_MUNA, false);
     else if (one_chance_in(3))
-        name = make_name(random_int());
+        name = make_name();
     else
         has_owner = false;
 
@@ -1818,7 +1816,7 @@ bool make_book_theme_randart(item_def &book,
         if (owner.empty())
         {
             if (god_gift || one_chance_in(5)) // Use a random name.
-                owner = make_name(random_int());
+                owner = make_name();
             else if (!god_gift && one_chance_in(9))
             {
                 god = GOD_SIF_MUNA;

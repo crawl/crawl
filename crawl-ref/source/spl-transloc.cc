@@ -926,7 +926,8 @@ static int _disperse_monster(monster* mon, int pow)
     else
         monster_teleport(mon, true);
 
-    if (mon->check_res_magic(pow) <= 0)
+    // Moving the monster may have killed it in apply_location_effects.
+    if (mon->alive() && mon->check_res_magic(pow) <= 0)
         mon->confuse(&you, 1 + random2avg(pow / 10, 2));
 
     return 1;
@@ -936,8 +937,9 @@ spret_type cast_dispersal(int pow, bool fail)
 {
     fail_check();
     const int radius = spell_range(SPELL_DISPERSAL, pow);
-    if (!apply_monsters_around_square(_disperse_monster, you.pos(), pow,
-                                      radius))
+    if (!apply_monsters_around_square([pow] (monster* mon) {
+            return _disperse_monster(mon, pow);
+        }, you.pos(), radius))
     {
         mpr("The air shimmers briefly around you.");
     }
@@ -990,27 +992,33 @@ void attract_actor(const actor* agent, actor* victim, const coord_def pos,
         else
             victim->move_to_pos(newpos, false);
 
-        behaviour_event(victim->as_monster(), ME_ANNOY, agent,
-                        agent ? agent->pos() : coord_def(0, 0));
+        if (auto mons = victim->as_monster())
+        {
+            behaviour_event(mons, ME_ANNOY, agent, agent ? agent->pos()
+                                                         : coord_def(0, 0));
+        }
+
+        if (victim->pos() == pos)
+            break;
     }
 }
 
-bool fatal_attraction(actor *victim, actor *agent, int pow)
+bool fatal_attraction(const coord_def& pos, actor *agent, int pow)
 {
     bool affected = false;
-    for (actor_near_iterator ai(victim->pos(), LOS_NO_TRANS); ai; ++ai)
+    for (actor_near_iterator ai(pos, LOS_NO_TRANS); ai; ++ai)
     {
-        if (*ai == victim || *ai == agent || ai->is_stationary())
+        if (*ai == agent || ai->is_stationary() || ai->pos() == pos)
             continue;
 
-        const int range = (victim->pos() - ai->pos()).rdist();
+        const int range = (pos - ai->pos()).rdist();
         const int strength =
-            min(4, (pow / 10) / (range*range));
+            min(LOS_RADIUS, ((pow + 100) / 20) / (range*range));
         if (strength <= 0)
             continue;
 
         affected = true;
-        attract_actor(agent, *ai, victim->pos(), pow, strength);
+        attract_actor(agent, *ai, pos, pow, strength);
     }
 
     return affected;
@@ -1027,13 +1035,14 @@ spret_type cast_gravitas(int pow, const coord_def& where, bool fail)
     fail_check();
 
     monster* mons = monster_at(where);
-    if (!mons || mons->submerged())
-    {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return SPRET_SUCCESS;
-    }
 
-    mprf("Gravity reorients around %s.", mons->name(DESC_THE).c_str());
-    fatal_attraction(mons, &you, pow);
+    mprf("Gravity reorients around %s.",
+         mons                      ? mons->name(DESC_THE).c_str() :
+         feat_is_solid(grd(where)) ? feature_description(grd(where),
+                                                         NUM_TRAPS, "",
+                                                         DESC_THE, false)
+                                                         .c_str()
+                                   : "empty space");
+    fatal_attraction(where, &you, pow);
     return SPRET_SUCCESS;
 }

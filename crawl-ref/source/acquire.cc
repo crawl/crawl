@@ -782,6 +782,7 @@ static const acquirement_subtype_finder _subtype_finders[] =
     0, // no corpses
     0, // gold handled elsewhere, and doesn't have subtypes anyway
     _acquirement_rod_subtype,
+    0, // no runes either
 };
 
 static int _find_acquirement_subtype(object_class_type &class_wanted,

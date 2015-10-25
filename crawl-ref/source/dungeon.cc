@@ -316,7 +316,7 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
         }
         catch (map_load_exception &mload)
         {
-            mprf(MSGCH_ERROR, "Failed to load map %s, reloading all maps",
+            mprf(MSGCH_ERROR, "Failed to load map, reloading all maps (%s).",
                  mload.what());
             reread_maps();
         }
@@ -1313,9 +1313,8 @@ static void _fixup_walls()
 // link_items() must be called after this function.
 void fixup_misplaced_items()
 {
-    for (int i = 0; i < MAX_ITEMS; i++)
+    for (auto &item : mitm)
     {
-        item_def& item(mitm[i]);
         if (!item.defined() || item.held_by_monster())
             continue;
 
@@ -4279,17 +4278,20 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     if (spec.item_special)
         item.special = spec.item_special;
 
-    if (spec.plus >= 0 && item.is_type(OBJ_BOOKS, BOOK_MANUAL)
-        || item_is_rune(item))
+    if (spec.plus >= 0 && item.is_type(OBJ_BOOKS, BOOK_MANUAL))
     {
         item.plus = spec.plus;
         item_colour(item);
     }
 
-    if (item_is_rune(item) && you.runes[item.plus])
+    if (item.base_type == OBJ_RUNES)
     {
-        destroy_item(item, true);
-        return false;
+        if (you.runes[item.sub_type])
+        {
+            destroy_item(item, true);
+            return false;
+        }
+        item_colour(item);
     }
 
     if (props.exists("cursed"))
@@ -4435,15 +4437,12 @@ int dgn_place_item(const item_spec &spec,
                 return item_made;
             else
             {
-                if (base_type == OBJ_MISCELLANY
-                    && spec.sub_type == MISC_RUNE_OF_ZOT)
-                {
+                // _apply_item_props will not generate a rune you already have,
+                // so don't bother looping.
+                if (base_type == OBJ_RUNES)
                     return NON_ITEM;
-                }
-
                 useless_tries++;
             }
-
         }
 
     }
@@ -4485,7 +4484,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
         if (mon->inv[i] != NON_ITEM)
         {
             item_def &item(mitm[mon->inv[i]]);
-            mon->unequip(item, i, 0, true);
+            mon->unequip(item, false, true);
             destroy_item(mon->inv[i], true);
             mon->inv[i] = NON_ITEM;
         }
@@ -4497,11 +4496,8 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
     {
         item_spec spec = list.get_item(i);
 
-        if (spec.base_type == OBJ_UNASSIGNED
-            || (spec.base_type == OBJ_MISCELLANY && spec.sub_type == MISC_RUNE_OF_ZOT))
-        {
+        if (spec.base_type == OBJ_UNASSIGNED)
             continue;
-        }
 
         // Don't give monster a randart, and don't randomly give
         // monster an ego item.
@@ -4563,7 +4559,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
                     if (mspec.abjuration_duration != 0)
                         item.flags |= ISFLAG_SUMMONED;
 
-                    if (!mon->pickup_item(item, 0, true))
+                    if (!mon->pickup_item(item, false, true))
                         destroy_item(item_made, true);
                     break;
                 }
@@ -4575,7 +4571,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
     if (mon->inv[MSLOT_WEAPON] == NON_ITEM
         && mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM)
     {
-        mon->swap_weapons(false);
+        mon->swap_weapons(MB_FALSE);
     }
 }
 
