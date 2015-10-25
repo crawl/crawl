@@ -176,7 +176,7 @@ enum tag_minor_version
     TAG_MINOR_EXORCISE,            // liches, a. liches, & spellforged servitors are no longer ghost_demons
     TAG_MINOR_BLINK_MUT,           // 1-level blink mutation
     TAG_MINOR_RUNE_TYPE,           // runes became a base type
-    TAG_MINOR_OUBLIETTE,           // Add the Oubliette portal    
+    TAG_MINOR_OUBLIETTE,           // Add the Oubliette portal
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

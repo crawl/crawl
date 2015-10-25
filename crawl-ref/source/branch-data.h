@@ -308,7 +308,7 @@ const Branch branches[NUM_BRANCHES] =
       "Depths", "the Depths", "Depths",
       nullptr,
       LIGHTGREY, BROWN,
-      'U', {}, 0 },      
+      'U', {}, 0 },
 
 #if TAG_MAJOR_VERSION == 34
     { BRANCH_OUBLIETTE, NUM_BRANCHES, -1, -1, 1, 5,
