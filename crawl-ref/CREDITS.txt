@@ -114,6 +114,7 @@
     Paul Dejean
     Denzi
     Lothar Dierkes
+    Mark 'Palyth' Donahue
     Kevin Donnelly
     drachereborn
     Mike Drinen
@@ -186,6 +187,7 @@
     Andrew Minton
     Shawn M Moore
     Akinori Musha
+    Mushboom
     Eva Myers
     nagdon
     Naruni
