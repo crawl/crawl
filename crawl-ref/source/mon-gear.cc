@@ -20,6 +20,16 @@
 #include "tilepick.h"
 #include "unwind.h"
 
+static void _strip_item_ego(item_def &item)
+{
+    item.brand = 0; // SP{WPN,ARM,MSL}_NORMAL
+
+    // Remove glow, since that might be because of the ego...
+    set_equip_desc(item, ISFLAG_NO_DESC);
+    // ...but give it back if it came from curses or plusses.
+    item_set_appearance(item);
+}
+
 static void _give_monster_item(monster* mon, int thing,
                                bool force_item = false)
 {
@@ -42,7 +52,7 @@ static void _give_monster_item(monster* mon, int thing,
         if (is_blessed(mthing))
             convert2bad(mthing);
         if (get_weapon_brand(mthing) == SPWPN_HOLY_WRATH)
-            set_item_ego_type(mthing, OBJ_WEAPONS, SPWPN_NORMAL);
+            _strip_item_ego(mthing);
     }
 
     if (!is_artefact(mthing)
@@ -1909,12 +1919,9 @@ static void _give_shield(monster* mon, int level)
     case MONS_NIKOLA:
         shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_GLOVES,
                                        level * 2 + 1, 1);
-
-        if (shield) // gauntlets
-        {
-            if (get_armour_ego_type(*shield) == SPARM_ARCHERY)
-                set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_NORMAL);
-        }
+        // Gloves.
+        if (shield && get_armour_ego_type(*shield) == SPARM_ARCHERY)
+            _strip_item_ego(*shield);
         break;
 
     case MONS_ROBIN:
