@@ -5673,11 +5673,6 @@ void player::shield_block_succeeded(actor *foe)
 
     shield_blocks++;
     practise(EX_SHIELD_BLOCK);
-    const item_def *shield = slot_item(EQ_SHIELD);
-    if (shield)
-        count_action(CACT_BLOCK, shield->sub_type);
-    else
-        count_action(CACT_BLOCK, 0, 0); // auxtype Other
 }
 
 int player::missile_deflection() const
@@ -5731,7 +5726,7 @@ void player::ablate_deflection()
 }
 
 /**
- * What's the base value of the penalties the player receives from their
+ * What's the base value of the penalties the player recieves from their
  * body armour?
  *
  * Used as the base for adjusted armour penalty calculations, as well as for
@@ -7765,24 +7760,6 @@ void count_action(caction_type type, int subtype)
     if (!you.action_count.count(pair))
         you.action_count[pair].init(0);
     you.action_count[pair][you.experience_level - 1]++;
-}
-
-/**
- *   The alternate type is stored in the higher bytes.
-**/
-void count_action(caction_type type, int subtype, int auxtype)
-{
-    subtype = ((1 + auxtype) << 16) | subtype;
-    count_action(type, subtype);
-}
-
-/**
- *   If there was no original auxtype it will be returned as -1
-**/
-void count_action_get_types(int *subtype, int *auxtype, int compound_subtype)
-{
-    *subtype = (short)(compound_subtype & 0xFFFF);
-    *auxtype = (compound_subtype >> 16) - 1;
 }
 
 /**
