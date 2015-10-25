@@ -85,5 +85,6 @@ ability_type fixup_ability(ability_type ability);
 vector<ability_type> get_god_abilities(bool ignore_silence = true,
                                        bool ignore_piety = true,
                                        bool ignore_penance = true);
+void swap_ability_slots(int index1, int index2, bool silent = false);
 
 #endif

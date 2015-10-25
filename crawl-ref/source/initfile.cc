@@ -1130,6 +1130,7 @@ void game_options::reset_options()
     note_skill_levels.set(27);
     auto_spell_letters.clear();
     auto_item_letters.clear();
+    auto_ability_letters.clear();
     force_more_message.clear();
     flash_screen_message.clear();
     sound_mappings.clear();
@@ -2549,6 +2550,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "include" && key != "bindkey"
         && key != "spell_slot"
         && key != "item_slot"
+        && key != "ability_slot"
         && key.find("font") == string::npos)
     {
         lowercase(field);
@@ -3292,19 +3294,21 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
     }
     else if (key == "spell_slot"
-             || key == "item_slot")
+             || key == "item_slot"
+             || key == "ability_slot")
 
     {
-        const bool item = key == "item_slot";
-        auto& auto_letters = item ? auto_item_letters : auto_spell_letters;
+        auto& auto_letters = (key == "item_slot"  ? auto_item_letters
+                           : (key == "spell_slot" ? auto_spell_letters
+                                                  : auto_ability_letters));
         if (plain)
             auto_letters.clear();
 
         vector<string> thesplit = split_string(":", field);
         if (thesplit.size() != 2)
         {
-            return report_error("Error parsing %s lettering string: %s\n",
-                                item ? "item" : "spell", field.c_str());
+            return report_error("Error parsing %s string: %s\n",
+                                key.c_str(), field.c_str());
         }
         pair<text_pattern,string> entry(lowercase_string(thesplit[0]),
                                         thesplit[1]);
