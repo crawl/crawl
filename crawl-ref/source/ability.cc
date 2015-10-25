@@ -3459,13 +3459,17 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
 
 void swap_ability_slots(int index1, int index2, bool silent)
 {
-    if (!silent)
-        mprf_nocap("%c - %s", index_to_letter(index2), ability_name(you.ability_letter_table[index2]));
-
     // Swap references in the letter table.
     ability_type tmp = you.ability_letter_table[index2];
     you.ability_letter_table[index2] = you.ability_letter_table[index1];
     you.ability_letter_table[index1] = tmp;
+
+    if (!silent)
+    {
+        mprf_nocap("%c - %s", index_to_letter(index2),
+                   ability_name(you.ability_letter_table[index2]));
+    }
+
 }
 
 
