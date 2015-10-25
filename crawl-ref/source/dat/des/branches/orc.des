@@ -521,6 +521,24 @@ cccI.....Iccc
    .......
 ENDMAP
 
+NAME:   kennysheep_orc_monster_closet_entryway
+TAGS:   orc_entry
+KFEAT:  O = enter_orcish_mines
+MONS:   gnoll / gnoll sergeant / orc warrior / orc w:15 /\
+                big kobold / ogre
+MONS:   troll
+MAP
+xxxxxxx
+xI121Ix
+x11111x
+x11O11x
+x11111x
+xI111Ix
+xxx+xxx
+@.....@
+xxxxxxx
+ENDMAP
+
 
 ############################################################################
 # (Mini)vaults specific to the Orcish Mines
@@ -1943,6 +1961,64 @@ ccc5.11.c1.cc77.766Pcc.c....5ccc
            ccc..ccccc
             ccc33ccc
              cc2@3c
+ENDMAP
+
+##################################################
+NAME:   kennysheep_orc_mage_school
+TAGS:   patrolling no_item_gen no_monster_gen
+PLACE:  Orc:$
+ORIENT: float
+MONS:   orc sorcerer / ogre mage w:2, orc wizard, orc / ogre w:3
+KMONS:  4 = Erolcha / ogre mage, ogre mage
+KMONS:  5 = Nergalle / orc sorcerer, orc sorcerer
+NSUBST: . = 8:1 / 16:2 / 8:3
+KFEAT:  A = distillery shop / scroll shop
+KFEAT:  B = book shop / gadget shop
+KFEAT:  C = antique weapon shop / antique armour shop
+NSUBST: Y = 1:A / 1:B / 1:C / 1:ABC / *:I
+KFEAT:  ' = floor
+KFEAT:  D = altar_beogh
+KFEAT:  E = altar_kikubaaqudgha
+KFEAT:  F = altar_vehumet
+KFEAT:  mn = rock_wall
+COLOUR: n = black
+TILE:   n = wall_hall_darkgray
+COLOUR: m = white
+TILE:   m = wall_hall_white
+MAP
+                     ccccccccc
+                   cccbbbbbbbccc  ccccc
+                 lccbbblllllbbbccccbbbcc
+                llclllllllllllllcclllbbcc
+               lllccllllllll...cc...llbbcc
+               llllcccI.lll....+..Immmlbbc
+               llccc.........I.c....Fmllbc
+              lllc.............+.....m.lbccccc
+              llcc..lll...lll..c.....I.lccbbbcccc
+    '''''     llcY.cbbbc..lccccc......4ccbbYbbbbcc
+  '''''''''   llcc..lll...lcbbbc......cclll.lllbbcc
+ '''''''''''  lllc........lclll......cc.......llbbcc
+''''''cc''cc'lcclccc......lc........cc.....I...llbbc
+''''''cc''cc'lcclllcccc...lcI...ll..c...I.l.l.I.llbc
+''''''''''''''llllllll....lc...cbl..c....ll.ll...lbcc
+'''''''''''''''''''.......lc...cbl..+...ll...ll..lbbc
+@'''''''''''''''''''...I..lcY..cbl..+..Il..D...I..Ybc
+'''''''''''''''''''.......lc...cbl..+...ll...ll..lbbc
+''''''''''''''llllllll....lc...cbl..c....ll.ll...lbcc
+''''''cc''cc'lcclllcccc...lcI...ll..c...I.l.l.I.llbc
+''''''cc''cc'lcclccc......lc........cc.....I...llbbc
+ '''''''''''  lllc........lclll......cc.......llbbcc
+  '''''''''   llcc..lll...lcbbbc......cclll.lllbbcc
+    '''''     llcY.cbbbc..lccccc......5ccbbYbbbbcc
+              llcc..lll...lll..c.....I.lccbbbcccc
+              lllc.............+.....n.lbccccc
+               llccc.........I.c....Enllbc
+               llllcccI.lll....+..Innnlbbc
+               lllccllllllll...cc...llbbcc
+                llclllllllllllllcclllbbcc
+                 lccbbblllllbbbccccbbbcc
+                   cccbbbbbbbccc  ccccc
+                     ccccccccc
 ENDMAP
 
 ##################################################
