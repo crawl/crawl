@@ -113,6 +113,7 @@ struct ability_def
     ability_flags       flags;          // used for additional cost notices
 };
 
+static int _lookup_ability_slot(ability_type abil);
 static int _find_ability_slot(ability_type abil);
 static spret_type _do_ability(const ability_def& abil, bool fail);
 static void _pay_ability_costs(const ability_def& abil);
@@ -735,11 +736,9 @@ talent get_talent(ability_type ability, bool check_confused)
 
     // Look through the table to see if there's a preference, else find
     // a new empty slot for this ability. - bwr
-    const int index = _find_ability_slot(abil.ability);
-    if (index != -1)
-        result.hotkey = index_to_letter(index);
-    else
-        result.hotkey = 0;      // means 'find later on'
+    _find_ability_slot(abil.ability);
+    // Assign the hotkey later, since it might be replaced by a subsequent
+    // talent.
 
     switch (ability)
     {
@@ -3249,6 +3248,12 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         // Skip preassigned hotkeys.
         if (tal.hotkey != 0)
             continue;
+        const int index = _lookup_ability_slot(tal.which);
+        if (index > -1)
+        {
+            tal.hotkey = index_to_letter(index);
+            continue;
+        }
 
         // Try to find a free hotkey for i, starting from Z.
         for (int k = 51; k >= 0; ++k)
@@ -3331,18 +3336,28 @@ int auto_assign_ability_slot(ability_type abil_type, int slot)
     return slot;
 }
 
-// Returns an index (0-51) if successful, -1 if you should
-// just use the next one.
-static int _find_ability_slot(const ability_type abil)
+// Returns an index (0-51) if already assigned, -1 if not.
+static int _lookup_ability_slot(const ability_type abil)
 {
+    // Placeholder handling, part 2: The ability we have might
+    // correspond to a placeholder, in which case the ability letter
+    // table will contain that placeholder. Convert the latter to
+    // its corresponding ability before comparing the two, so that
+    // we'll find the placeholder's index properly.
     for (int slot = 0; slot < 52; slot++)
-        // Placeholder handling, part 2: The ability we have might
-        // correspond to a placeholder, in which case the ability letter
-        // table will contain that placeholder. Convert the latter to
-        // its corresponding ability before comparing the two, so that
-        // we'll find the placeholder's index properly.
         if (fixup_ability(you.ability_letter_table[slot]) == abil)
             return slot;
+    return -1;
+}
+
+// Assign a new ability slot if necessary. Returns an index (0-51) if
+// successful, -1 if you should just use the next one.
+static int _find_ability_slot(const ability_type abil)
+{
+    // If we were already assigned a slot, use it.
+    int had_slot = _lookup_ability_slot(abil);
+    if (had_slot > -1)
+        return had_slot;
 
     // No requested slot, find new one and make it preferred.
 
