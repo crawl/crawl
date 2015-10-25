@@ -370,7 +370,9 @@ restart_after_save = false
 
 default_manual_training = false
         When set to true, new characters will start with skill training
-        set to manual mode instead of automatic mode.
+        set to manual mode instead of automatic mode. This will also set the
+        [!] selection on the skill (m) menu to "cost" by default, instead of
+        "training".
 
 autopickup_starting_ammo = true
         When set, at game start, autopickup is forced on (as per the \
