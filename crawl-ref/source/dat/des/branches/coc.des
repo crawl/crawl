@@ -637,3 +637,122 @@ ccccccccccccccccccccxxxxcccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
+
+##############################################################################
+# Antaeus (Cocytus) Cove by Grunt
+##############################################################################
+
+NAME:     coc_grunt_cove
+ORIENT:   encompass
+MONS:     ice dragon / nothing
+MONS:     ice devil w:6 / blue devil w:4 / bog body w:4 / ice dragon w:3 / \
+          freezing wraith w:2 / frost giant w:1
+MONS:     patrolling Ice Fiend, patrolling blizzard demon
+KMONS:    8 = ice statue
+KMONS:    9 = elemental wellspring
+KFEAT:    9 = w
+KFEAT:   X = open_sea
+: serpent_of_hell_setup(_G)
+SHUFFLE:  ABCEF
+SUBVAULT: A : coc_grunt_cove_antaeus
+SUBVAULT: B : coc_grunt_cove_fiend
+SUBVAULT: C : coc_grunt_cove_fiend
+SUBVAULT: E : coc_grunt_cove_fiend
+SUBVAULT: F : coc_grunt_cove_fiend
+: set_border_fill_type("open_sea")
+: coc_setup(_G)
+MAP
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwX
+XwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwX
+Xwwwwwwwwwww........wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwX
+Xwwwwwwwwww...........wwwwwwwwwwwwwwwwwwwwwww......wwwwwwwwwwwwwwwwwwX
+Xwwwwwwww........2.....wwwwwwwwwwwwwwwwwwww.........wwwwwwwwwwwwwwwwwX
+Xwwwwwww.....2........wwwwwwwwwwwwwww......................wwwwwwwwwwX
+Xwwwwww..............www.wwwwwwwww...........ccccc............wwwwwwwX
+Xwwww.............wwwww...wwwwwwww..........ccccccc...3.......wwwwwwwX
+Xwwww.....1......wwwwwww.wwwwwwww......ccccccccBBccc...........wwwwwwX
+Xwww............wwwwwwwwwwwwww......ccccccccccBBBBcc$$.ccccc...wwwwwwX
+Xwww...........wwwwwwwwwwwwww......cccccccccc.BBBBcc$$cccccc...wwwwwwX
+Xww....1.....wwwwwwwwwwwwww.......cccccccccc..cBBcccccccccccc...wwwwwX
+Xww.........wwwwwwwwwwwwww.......ccccccccccc.cccccccccccCCccc...wwwwwX
+Xww........wwwwwwwwwwwwwww......ccccAAccc......cccccc..CCCCccc..wwwwwX
+Xw........wwwwwwwwwwwwww.....ccccccAAAA...c.....cc....cCCCCccc..wwwwwX
+Xw..2....wwwwwwwwwwww.....cccccccccAAAAccccc....4..cccccCCcccc..wwwwwX
+Xw......wwwwwwwwwwww.....cccccccccccAAccccccc......ccccccccccc..wwwwwX
+Xw......wwwwwwwwwww....cccccccccccccccccccccc...8...cccccccccc..wwwwwX
+Xw.....wwwwwwwwwwww...ccccccc.....cccccccccccc.......ccccccccc..wwwwwX
+Xw.2..wwwwwwwwwwww....cccccc...........ccccccc..4.cc...ccEEccc..wwwwwX
+Xw....wwwwwwwwwwww...ccccc...............ccccc...ccccc..EEEEcc..wwwwwX
+Xw...wwwwwwwwwwww...ccccc.....www....4.....cc..c.cccccccEEEEcc..wwwwwX
+Xww.wwwwwwwwwwww...ccccc...wwwwww...2......c..cc..cccccccEEccc..wwwwwX
+Xww.wwwwwwwwwww...cccccc..wwwwwwww4..4.....c.ccc..cccccccccccc..wwwwwX
+Xww.wwwwwwwwww...cccccc...wwwwwwww.......2...cccc...cFFccccccc..wwwwwX
+Xwwwwwwwwwwww....ccccc...wwwww2wwwww...1.....ccccc..FFFFcccccc..wwwwwX
+Xwwwwwwwwwwww...ccccc....wwww.4.w9ww.2.4...3...cccccFFFFccccc...wwwwwX
+Xwwwwwwwwwww...ccccc....wwwww.2.wwwww....D......cccccFFcccc.....wwwwwX
+Xww.wwwwwwww..cccccc...wwwwwwwwwwwwww........2...cccccccccc....wwwwwwX
+Xww.wwwwwww...ccccc...wwwwwwwwwwwwwwwww...41........ccccccc....wwwwwwX
+Xww..wwwwww..ccccc...wwwww..wwwwwwwwwww..2...4.4.....cccccc....wwwwwwX
+Xww..wwwww...cccc...wwwwwww..wwwwwwwwwwww.....2.......cccccc...wwwwwwX
+Xww...wwww...cccc...wwwwwww..wwww...wwwwwww..4..........cccc....wwwwwX
+Xww...wwww...ccc...wwwwwwww...www....wwwwww.............ccccc....wwwwX
+Xww.2..ww...cccc...wwwwwwww.2.www.2...wwwwwwww...........cccc....wwwwX
+Xww....ww...cccc..wwwwwwwww...www......wwwwwwwww.........ccccc...wwwwX
+Xww..1.ww..ccccc..wwwwwwwww...www...1..wwwwwww9wwwwwwwww..cccc...wwwwX
+Xww....ww..cccc..wwwwwwwww.1.wwwww......wwwwwwwwwwwwwwww..cccc...wwwwX
+Xww..2.ww..cccc..wwwwwwww...wwwwwww..2..wwwwwwwwwwwwwwww..cccc...wwwwX
+Xwww...ww..cccc..wwwwwww.2.wwwwwwww.....wwwww....wwwwwww..cccc...wwwwX
+Xwww..www..cccc.wwwwwwww..wwwwwwwwww...wwwwww..2..wwwww...cccc...wwwwX
+Xwwww.www..cccc.wwwwwwwwwwwwwwwwwwwwwwwwwwwww..4..wwwww..cccc....wwwwX
+Xwwwwwwwww.cccc.wwwww..wwwwwwwwwwwwwwwwwwwwwww....wwww...cccc...wwwwwX
+Xwwwwwwwww.ccc..wwww.2.wwwwwwwwwwwwwwwwwwwwwww..2.www....cccc...wwwwwX
+Xwwwwwwwww.ccc..wwww..wwwwwwwwwwwwww......wwwww..wwww...cccc...www.wwX
+Xwwww..www..cc.www..1.wwwwwwwwwwwwww....1..wwwwwwwww....cccc...ww...wX
+Xwww....www.cc.www....wwwwwwwww.2.www.2....wwwwwwwww...ccccc..wwww.wwX
+Xww..1..www....www.2..wwwwwww....wwwww.....wwwwwwww....cccc...wwwwwwwX
+Xww....wwwww..wwwww..wwwwwww...1.wwwwww..2.wwwwwww....ccccc..wwwwwwwwX
+Xww....wwwwwwwwwwwwwwww...2......wwwwww....wwwwww....ccccc..wwwwwwwwwX
+Xw..2..wwwwwwwwwwwwwwwwww.......wwwwwwww...wwwww....cccccc..wwwwww..wX
+Xw....wwwwwwwww.wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww....cccccc..wwwwww...wX
+Xww..wwwwwwwww.8.wwwwwwwwwwwwwwwwwwwwwwwwwwww.....cccccc...wwwww..2.wX
+Xwww.wwwwwwwwww.wwwwwwwwwwwwwwwwwwwwwwwwwww.....ccccccc...wwwwww....wX
+Xwwwwwwww..wwwwwwwwww....wwwwwwwwwwwwww.......cccccccc...wwwwww....wwX
+Xwwwwww..1.2wwwwwww........wwwwwwww..........cccccccc...wwwwwww..2.wwX
+Xwwwww.......wwwww....cc..............ccccccccccccc....wwwwwww.....wwX
+Xwwww....2.1.wwwww..ccccccccc.....ccccccccccccccc.....wwwwwww......wwX
+Xwwww.......wwwwww..cccccccccccccccccccccccccccc.....wwwwwww.......wwX
+Xwww........wwwwwww..cccccccccccccccccccc..........wwwwwwww....1...wwX
+Xwww........wwwwwwww......ccccccccccc............wwwwwwwww........wwwX
+Xww........wwwwwwwww..........................wwwwwwwwwww........wwwwX
+Xww.(.....wwwwww.wwwwww.................wwwwwwwwwwwwwwww....1..wwwwwwX
+Xw........www.....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.........wwwwwwwX
+Xw..{.[..www..2..1..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww....2....wwwwwwwwX
+Xw......wwww........www........wwww....2.....wwwww..2......wwwwwwwwwwX
+Xww....wwwwwwwww..wwwww...2..1...wwwwww....1...ww.......wwwwwwwwwwwwwX
+Xwwwwwwwwwwwwwwwwwwwwwww.........wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME:  coc_grunt_cove_antaeus
+TAGS:  coc_grunt_cove_antaeus
+MONS:  patrolling Antaeus, patrolling Ice Fiend
+KITEM: $ = $ no_pickup
+KITEM: O = icy rune of Zot
+MAP
+ $|
+|1|$
+$2O|
+ |$
+ENDMAP
+
+NAME:  coc_grunt_cove_fiend
+TAGS:  coc_grunt_cove_fiend allow_dup
+MONS:  patrolling Ice Fiend
+KITEM: $ = $ no_pickup
+MAP
+ $*
+*1*$
+$*|*
+ *$
+ENDMAP
