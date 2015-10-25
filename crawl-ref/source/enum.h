@@ -622,12 +622,7 @@ enum beam_type                  // bolt::flavour
     BEAM_DRAIN_MAGIC,
     BEAM_TUKIMAS_DANCE,
     BEAM_RESISTANCE,
-#if TAG_MAJOR_VERSION == 34
-    BEAM_ATTRACT,
-    BEAM_LAST_ENCHANTMENT = BEAM_ATTRACT,
-#else
     BEAM_LAST_ENCHANTMENT = BEAM_RESISTANCE,
-#endif
 
     BEAM_MEPHITIC,
     BEAM_INK,
