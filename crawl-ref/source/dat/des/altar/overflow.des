@@ -3266,6 +3266,24 @@ FGGGG.CCCCA
 FFFFF@AAAAA
 ENDMAP
 
+NAME:    marbit_many_paths
+TAGS:    temple_overflow_generic_1
+: interest_check(_G)
+DEPTH:   D:2-
+SHUFFLE: pqr / bqr / pbr / pqb / bbr / pbb / bqb
+SUBST:   pqr = .
+NSUBST:  . = 1:0 / *:.
+FTILE:   .C0 = FLOOR_PEBBLE_GREEN
+MAP
+ xxxxxxxxx
+xx..qxq..xx
+xpqrpqrpqrxx
+@qrpqrpqrpBx
+xrpqrpqrpqxx
+xx..pxp..xx
+ xxxxxxxxx
+ENDMAP
+
 NAME:   amethyst_overflow_temple_binary
 TAGS:   temple_overflow_generic_2
 SUBST:  p : .:15 c:10 g:3 n:2
