@@ -5925,7 +5925,7 @@ void bolt::refine_for_explosion()
         heard = player_can_hear(target);
         // Check for see/hear/no msg.
         if (you.see_cell(target) || target == you.pos())
-            mpr(seeMsg.c_str());
+            mpr(seeMsg);
         else
         {
             if (!heard)
