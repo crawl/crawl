@@ -236,6 +236,9 @@ bool ranged_attack::handle_phase_dodged()
             defender->ablate_deflection();
         }
 
+        if (defender->is_player())
+            count_action(CACT_DODGE, DODGE_DEFLECT);
+
         return true;
     }
 
@@ -243,6 +246,9 @@ bool ranged_attack::handle_phase_dodged()
 
     if (ev_margin + (ev - ev_nophase) > 0)
     {
+        if (defender->is_player())
+            count_action(CACT_DODGE, DODGE_PHASE);
+
         if (needs_message && defender_visible)
         {
             mprf("%s momentarily %s out as %s "
@@ -256,6 +262,9 @@ bool ranged_attack::handle_phase_dodged()
 
         return true;
     }
+
+    if (defender->is_player())
+        count_action(CACT_DODGE, DODGE_EVASION);
 
     if (needs_message)
     {

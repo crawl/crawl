@@ -333,7 +333,7 @@ int actor::spirit_shield(bool calc_unid, bool items) const
 }
 
 int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
-                    int stab_bypass) const
+                    int stab_bypass, bool for_real) const
 {
     int ac = max(armour_class() - stab_bypass, 0);
     int gdr = gdr_perc();
@@ -368,6 +368,15 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
     }
 
     saved = max(saved, min(gdr * max_damage / 100, ac / 2));
+    if (for_real && (damage > 0) && (saved >= damage) && is_player())
+    {
+        const item_def *body_armour = slot_item(EQ_BODY_ARMOUR);
+        if (body_armour)
+            count_action(CACT_ARMOUR, body_armour->sub_type);
+        else
+            count_action(CACT_ARMOUR, 0, 0); // unarmoured auxtype
+    }
+
     return max(damage - saved, 0);
 }
 

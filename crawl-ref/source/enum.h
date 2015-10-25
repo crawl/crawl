@@ -784,20 +784,35 @@ enum branch_type                // you.where_are_you
     NUM_BRANCHES
 };
 
+enum dodge_type    // subtype for counted actions
+{
+    DODGE_EVASION,
+    DODGE_DEFLECT,
+    DODGE_PHASE,
+    NUM_DODGES
+};
+
 enum caction_type    // Primary categorization of counted actions.
-{                    // A subtype will also be given in each case:
+{                    // A subtype and auxtype will also be given in each case:
+                     // if an auxillary type is used it will be > -1
     CACT_MELEE,      // weapon subtype or unrand index
+                     //   auxtype = 0 for unarmed
+                     //   auxtype = (unarmed_attack_type + 1) for aux attacks
     CACT_FIRE,       // weapon subtype or unrand index
-    CACT_THROW,      // item basetype << 16 | subtype
+    CACT_THROW,      // auxtype = item basetype, subtype = item subtype
     CACT_CAST,       // spell_type
     CACT_INVOKE,     // ability_type
     CACT_ABIL,       // ability_type
-    CACT_EVOKE,      // evoc_type
-                     //   or item.basetype << 16 | subtype
-                     //   or unrand index
+    CACT_EVOKE,      // evoc_type or unrand index
+                     //   auxtype = item basetype, subtype = item subtype
     CACT_USE,        // object_class_type
     CACT_STAB,       // stab_type
-    CACT_EAT,        // food_type, or -1 for corpse
+    CACT_EAT,        // food_type, or auxtype = 0 for corpse
+    CACT_ARMOUR,     // armour subtype or auxtype = 0 for unarmoured
+    CACT_DODGE,      // dodge_type
+    CACT_BLOCK,      // armour subtype or
+                     //   auxtype = 0 for other blocks (god ability, spell, etc)
+                     //   auxtype = 1 for reflection
     NUM_CACTIONS,
 };
 
