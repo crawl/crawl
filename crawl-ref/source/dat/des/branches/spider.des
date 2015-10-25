@@ -1633,3 +1633,95 @@ xxcc-.i.5...""...h...."".......-"c
  xxc"""""5""""""h"h""5""""""""""cc
   xc----@-"-----x------""-@----ccx
 ENDMAP
+
+##########################################
+#Arachne Lair Rune Vault
+NAME:   johnstein_spider_rune_arachne_lair
+TAGS:   no_monster_gen
+KMONS:  e = emperor scorpion
+KMONS:  m = moth of wrath / ghost moth w:40 / nothing w:10
+KMONS:  p = wasp w:30 / hornet
+KMONS:  o = orb spider w:40 / demonic crawler
+KMONS:  t = trapdoor spider w:15 / nothing
+KMONS:  s = torpor snail
+ORIENT: float
+PLACE:  Spider:$
+# '"-_!?^
+# ABCDEFG
+#pick 1 of 3 different flavors
+: if crawl.one_chance_in(3) then
+    SUBST:  "-? = .
+    SUBST:  '_!^ = Y
+    FTILE:  Y = FLOOR_HALL
+    COLOUR: Y = blue
+    KMONS:  Z = Arachne, torpor snail
+    KMONS:  1 = spider / tarantella / wolf spider \
+              / redback / jumping spider w:50
+: elseif crawl.one_chance_in(2) then
+    SUBST:  '-! = .
+    SUBST:  "_?^ = Y
+    FTILE:  Y = FLOOR_ROUGH_RED
+    COLOUR: Y = red
+    KMONS:  Z = Arachne, ghost moth
+    KMONS:  1 = spider / redback / wolf spider \
+              / tarantella w:50 / jumping spider
+: else
+    SUBST:  '"_ = .
+    SUBST:  -!?^ = Y
+    FTILE:  Y = FLOOR_SANDSTONE
+    COLOUR: Y = brown
+    KMONS:  Z = Arachne, emperor scorpion
+    KMONS:  1 = spider / tarantella / wolf spider w:50 \
+            / redback / jumping spider
+: end
+
+NSUBST: 3 = 4:e / 1:s / *:t.2
+NSUBST: 2 = 4:o / 4:p / 2:m / *:t..1
+
+KITEM:  O = gossamer rune of Zot
+NSUBST: O = 1:O / *:%.
+
+#thin out loot and monsters
+SUBST: % = ...%%t
+SUBST: 1 = 11...t
+
+KFEAT: Yt = web / floor w:40
+
+MAP
+    .......@@@@@.......
+   ..cccccco...occcccc..
+   .cc.Occcc+++ccccO.cc.
+   cc.m.c..2.2.2..c.m.cc
+  cc..3cc.2.2Z2.2.cc3..cc
+ xc...cc.2'''''''2.cc...cx
+ xc.2cc..1c''!''c1..cc2.cx
+ xc..c.'1ccc!!!ccc1'.c..cx
+xxc.1.'''1c--!--c1'''.1.cxx
+xcc.1''''_"?????"_''''1.ccx
+xc.1..'''"???^???"'''..1.cx
+xc..c..'1c??^^^??c1'..c..cx
+xc.2c..1ccc?^^^?ccc1..c2.cx
+xc1.cc..1c'!^^^!'c1..cc.1cx
+xc.3Oc..1''!^^^!''1..cO3.cx
+xc1.cc..1c'!^^^!'c1..cc.1cx
+xc.2c..1ccc?^^^?ccc1..c2.cx
+xc..c..'1c"?^^^?"c1'..c..cx
+xc....'''"""?^?"""'''....cx
+xcc.1''''_""???""_''''1.ccx
+ xcc.1'''1c1-!-1c1'''1.ccx
+ xcc.1.'1ccc'!'ccc1'.1.ccx
+ xcc..c..1c'''''c1..c..ccx
+ xcc..cc.2'''''''2.cc..ccx
+ xc2.ccc...2.Z.2...ccc.2cx
+ xc..cccc1..222..1cccc..cx
+ xc..cccc.1..2..1.cccc..cx
+ xc2.ccc...........ccc.2cx
+  cc..c1.1cc+++cc1.1c..cc
+   c..cc1.cc.1.cc.1cc..c
+   cc1.cc..c111c..cc.1cc
+    cc.3cc%c.1.c%cc3.cc
+     cc.mccc...cccm.cc
+     .cc.Occo.occO.cc.
+     ..ccccc...ccccc..
+      .....@@@@@.....
+ENDMAP
