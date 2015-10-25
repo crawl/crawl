@@ -7,32 +7,46 @@
 ##############################################################
 # layout_pan_divisions
 #
-# This is either a very randomized encompass vault, or a
-# subvault-based layout.  Take your pick.
+# These are either very randomized encompass vaults, or
+# subvault-based layouts.  Take your pick.
 #
 # Inspired by layout_subdivisions (previously layout_dis) and
 # grunt_profane_halls.  Also sort of like Vaults:$.
 #
+# Theses are the only layout_type_divisions layout in
+# Pandemonium and are intended to have a total weight of 25.
+# If more forms or other layout_type_divisions layouts are
+# added to the branch, the existing weights should be adjusted
+# to avoid increasuing the total weight.
+#
+
+
+
+##############################################################
+# layout_pan_divisions_a
+#
+# This is the original pan_divisions layout.
+#
 # This layout uses 5 subvaults to place a maze of adjoining
-# rooms.  There are 4 quadrants (as in Vaults:$) and a center.
-# Subvaults should have randomization and the allow_dup tag.
-# More quadrants and centers are welcome.
+# rooms.  There are 4 quadrants (as in Vaults:$) and an octagon
+# for the center.  Subvaults should have randomization and the
+# allow_dup tag.  More quadrants and centers are welcome.
 #
-# The weight for this layout is rather high because it is the
-# only layout_type_divisions layout in Pandemonium.  If another
-# such layout is added to the branch, the weight of this one
-# should be reduced.
+# Quadrants for this map should have the tag
+# "pan_division_quadrant_a".
 #
-NAME:     layout_pan_divisions
+# Octagons should have the tag "pan_division_octagon".
+#
+NAME:     layout_pan_divisions_a
 DEPTH:    Pan
-WEIGHT:   25
+WEIGHT:   15
 ORIENT:   encompass
 TAGS:     overwritable layout allow_dup unrand layout_type_divisions
-SUBVAULT: A : pan_division_quadrant
-SUBVAULT: B : pan_division_quadrant
-SUBVAULT: C : pan_division_quadrant
-SUBVAULT: D : pan_division_quadrant
-SUBVAULT: E : pan_division_center
+SUBVAULT: A : pan_division_quadrant_a
+SUBVAULT: B : pan_division_quadrant_a
+SUBVAULT: C : pan_division_quadrant_a
+SUBVAULT: D : pan_division_quadrant_a
+SUBVAULT: E : pan_division_octagon
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBx
@@ -99,12 +113,22 @@ xDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+
+
+##############################################################
+#
+# These are the quadrants for the layout_pan_divisions_a map.
+#  They all must have the "pan_division_quadrant_b" tag.
+#
+# The octagons for themap center are farther down.
+#
+
 # Here in case people want to see or start from an empty
-# quadrant to work from.  The 'x's are areas that are
-# normally not used.
-NAME:   pan_division_quadrant_base
-WEIGHT: 0
-TAGS:   pan_division_quadrant allow_dup unrand
+# quadrant for layout_pan_divisions_a.  The 'x's are areas that
+# are normally not used.
+NAME:    pan_division_quadrant_a_base
+WEIGHT:  0
+TAGS:    pan_division_quadrant_a allow_dup unrand
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -138,11 +162,12 @@ xxxxxxxx.
 xxxxxxx
 ENDMAP
 
-# This one gets a lower weight because it is bigger than most.
-# If four of these were placed, the map would be too big.
-NAME:    pan_division_quadrant_1
+# This one gets a lower weight and luniq because it is bigger
+# than most.  If four of these were placed, the map would be too
+# big.
+NAME:    pan_division_quadrant_a1
 WEIGHT:  5
-TAGS:    pan_division_quadrant allow_dup unrand
+TAGS:    pan_division_quadrant_a allow_dup unrand luniq
 SHUFFLE: aa / yz
 SHUFFLE: pq
 SHUFFLE: rr / su
@@ -186,9 +211,9 @@ NNNNN..x.
 NNNNNN.
 ENDMAP
 
-NAME:    pan_division_quadrant_2
+NAME:    pan_division_quadrant_a2
 WEIGHT:  10
-TAGS:    pan_division_quadrant allow_dup unrand
+TAGS:    pan_division_quadrant_a allow_dup unrand
 SHUFFLE: pq / rs
 SHUFFLE: yz / uu
 SHUFFLE: DE
@@ -232,9 +257,9 @@ xxxxxxZZ.
 xxxxxxZx
 ENDMAP
 
-NAME:    pan_division_quadrant_3
+NAME:    pan_division_quadrant_a3
 WEIGHT:  10
-TAGS:    pan_division_quadrant allow_dup unrand
+TAGS:    pan_division_quadrant_a allow_dup unrand
 SHUFFLE: pq / rs
 SHUFFLE: ua / yz
 SHUFFLE: DE / FF
@@ -275,9 +300,9 @@ xxxxxxxD.
 xxxxxxx
 ENDMAP
 
-NAME:    pan_division_quadrant_4
+NAME:    pan_division_quadrant_a4
 WEIGHT:  10
-TAGS:    pan_division_quadrant allow_dup unrand
+TAGS:    pan_division_quadrant_a allow_dup unrand
 SHUFFLE: pq / rs
 SHUFFLE: ua
 SHUFFLE: yz
@@ -320,10 +345,10 @@ xxxxxxxx.
 xxxxxxx
 ENDMAP
 
-# This one has a lower weight because the false center is unusual.
-NAME:     pan_division_quadrant_5
+# This one has a lower weight so the false center will be unusual.
+NAME:     pan_division_quadrant_a5
 WEIGHT:   5
-TAGS:     pan_division_quadrant allow_dup unrand
+TAGS:     pan_division_quadrant_a allow_dup unrand
 SHUFFLE:  pq / rs
 SHUFFLE:  yz
 SHUFFLE:  DE
@@ -333,7 +358,7 @@ SHUFFLE:  PQ / RS
 SUBST:    pyDJLP = .
 SUBST:    rszEKNOQR = x
 SUBST:    qMS = +
-SUBVAULT: A : pan_division_center
+SUBVAULT: A : pan_division_octagon
 MAP
 xxxxxxxxxxxxxxLLLLLLLxxxxxxxxx
 xxxxxxxxxxxxxLLLLLLLxxxxxxxxxx
@@ -367,9 +392,9 @@ xxxxxxx..
 xxxxxxx
 ENDMAP
 
-NAME:    pan_division_quadrant_6
+NAME:    pan_division_quadrant_a6
 WEIGHT:  10
-TAGS:    pan_division_quadrant allow_dup unrand
+TAGS:    pan_division_quadrant_a allow_dup unrand
 SHUFFLE: pq / rs
 SHUFFLE: yz
 SHUFFLE: DD / EF
@@ -414,9 +439,442 @@ xxxxxxxx.
 xxxxxxx
 ENDMAP
 
-NAME:    pan_division_center_empty
+
+
+##############################################################
+# layout_pan_divisions_b
+#
+# The center of this map may be a simple wall plus, a pillar,
+# or a small room.
+#
+# Quadrants for this map should have the tag
+#  "pan_division_quadrant_b".
+#
+NAME:     layout_pan_divisions_b
+DEPTH:    Pan
+WEIGHT:   10
+ORIENT:   encompass
+TAGS:     overwritable layout allow_dup unrand layout_type_divisions
+SHUFFLE: yz
+SHUFFLE: as
+SUBST:   y = a
+SUBST:   z = s
+SUBST:   a : suuu
+SHUFFLE: pqrsu/pqrsu/JKLMN/OPQRS
+SUBST:   R : S
+SUBST:   S : P..
+SUBST:   qsuJK = .
+SUBST:   prLNOPQ = x
+SUBST:   M = +
+SUBVAULT: A : pan_division_quadrant_b
+SUBVAULT: B : pan_division_quadrant_b
+SUBVAULT: C : pan_division_quadrant_b
+SUBVAULT: D : pan_division_quadrant_b
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.x.BBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.+.BBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.x.BBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxxBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.xxBBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.+.BBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxx.BBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxxBBBBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xAAAAAAAAA...AAAAAAAAAAAAAAAAA.x.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xxxxxxxxxxx+xxxxxxAAAAAAAAAAAA.+.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xDDDDDDDDD...DDDDxxx..AAAAAA...x...BBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xDDDDDDDDDDDDDDDDDDx+xAAAAAA.uarzu.BBBBBBBBBBBBBBBBBBBBBBBBBBBx
+xDDDDDDDDDDDDDDDDDD..xxxAA...sqpqy...BBBBBBBBBBBBBBBBBBBBBBBBBx
+xDDDDDDDDDDDDDDDDDDDDDDxxxx+xrppprx+xxxxBBBBBBBBBBBBBBBBBBBBBBx
+xDDDDDDDDDDDDDDDDDDDDDDDDD...yqpqs...CCxxx..BBBBBBBBBBBBBBBBBBx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDD.uzrau.CCCCCCx+xBBBBBBBBBBBBBBBBBBx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDD...x...CCCCCC..xxxBBBB...BBBBBBBBBx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDDDD.+.CCCCCCCCCCCCxxxxxx+xxxxxxxxxxx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDDDD.x.CCCCCCCCCCCCCCCCC...CCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDDDDxxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDD.xxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDD.+.CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDDxx.CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDxxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDD.x.CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDD.+.CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDD.x.CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xDDDDDDDDDDDDDDDDDDDDDDDDDDxCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+
+##############################################################
+#
+# These are the quadrants for the layout_pan_divisions_b map.
+#  They all must have the "pan_division_quadrant_b" tag.
+#
+
+# An empty/base quadrant for layout_pan_divisions_b.  The 'x's
+# are areas that are normally not used.
+NAME:    pan_division_quadrant_b_base
+WEIGHT:  0
+TAGS:    pan_division_quadrant_b allow_dup unrand
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxx...........................
+xxxxxxx...........................
+xxxxxxx..........................
+xxxxxxx..........................
+xxxxxxx..........................
+xxxxxxx...........................
+xxxxxxx...........................
+xxxxxxx...........................
+xxxxxxx...........................
+xxxxxxx..........................
+xxxxxxx..........................
+xxxxxxx........................
+xxxxxxx........................
+xxxxxxx........................
+xxxxxxx........................
+xxxxxxx.......................
+xxxxxxx.......................
+xxxxxxx.......................
+xxxxxxx..   .................
+                 ............
+                     ......
+                     ......
+                       ..
+ENDMAP
+
+NAME:    pan_division_quadrant_b1
 WEIGHT:  10
-TAGS:    pan_division_center allow_dup unrand
+TAGS:    pan_division_quadrant_b allow_dup unrand
+SHUFFLE: pq/rs
+SUBST:   a : z.
+SHUFFLE: yza
+SHUFFLE: D/E
+NSUBST:  M = 1:M / *:L
+SHUFFLE: JK/LM
+SHUFFLE: NOP/QRS
+SUBST:   u : x..
+SUBST:   z : x....
+SUBST:   pqaDJKNO = .
+SUBST:   ryzELPQ = x
+SUBST:   sMRS = +
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxyxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxyxxxxxxuu..p..r....NQQ.....
+xxxxxxyyyxxxxxu...p.rr....NQ......
+xxxxxxyyyxxxxu....p.r.....xQ.....
+xxxxx.....xxx.....qrr.....+......
+xxxxx.....xx......ps.....QxQQ....
+xxxx.......+......xr.....RN.QRQ...
+xxxxz.....axx.....x......QN...QQQ.
+xxxzz.....aax....xxxNNOxSxxNNNONxx
+xxxzzz...aaaxx.xxx.x.QQQ..x.......
+xxzzzz...aaaax+x...xxQ....xx.....
+xxxxxxx+xxxxxx......+......+.....
+xxE........x........xx.....xx..
+xxxE.......xx........x......x..
+xxxx........x........xx.....xx.
+xxxxx.......xx........x......x.
+xxxxxD.......+......xxxxxx+xxx
+xxxxxxD......xx...x+x.J..L....
+xxxxxxDD......x.xxx...J.LL....
+xxxxxxxDD   ..xxx.....J.M....
+                 .....KLL....
+                     .JM...
+                     .xL...
+                       ..
+ENDMAP
+
+# This one has a lower weight so the octagon will be unusual.
+NAME:     pan_division_quadrant_b2
+WEIGHT:   5
+TAGS:     pan_division_quadrant_b allow_dup unrand
+SHUFFLE:  pq/rs
+SUBST:    u : x.
+SHUFFLE:  yz/aa
+SHUFFLE:  DE/FF
+SUBST:    H : x.
+SHUFFLE:  JK/LM
+SUBST:    pqaFJK = .
+SUBST:    ryDL = x
+SUBST:    szEM = +
+SUBVAULT: A : pan_division_octagon
+MAP
+xxxxxxxxxxxxxxxxxxxxxxuxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxuxxxxxxxxxx
+xxxxxxxxxxFxxxxxxxxx.xxuuxxxxxxxxx
+xxxxxxxxxxFFFxxxxxxx.xxuu.xxxxxxxx
+xxxxxxxxxFFFFFFxxxx...xxu..xxxxxxx
+xxxxxxxxx........xx...xxu...xJxxxx
+xxxxxxFFxDD......+.....xu...LJJJxx
+xxxxxxFF..DED...xx.....xx...L.J...
+xxxxxxFF....DDD.x.......+...MJJ...
+xxxxxxF.......Dxxxxx+xxxx...LK...
+xxxxxxF........xxAA...AAxx..xJ...
+xxxxxx........xxAAAAAAAAAxx.x....
+xxxxxxxxx+xxxxxAAAAAAAAAAAxxxpp...
+xxxxxx.......xAAAAAAAAAAAAAx..pqp.
+xxxxxx.......xAAAAAAAAAAAAAxrrsrxx
+xxxxxx.......x.AAAAAAAAAAA.x......
+xxxxxx.......+.AAAAAAAAAAA.+.....
+xxxxxx.......x.AAAAAAAAAAA.x.....
+xxxxxx.......xAAAAAAAAAAAAAx...
+xxxxxx.......xAAAAAAAAAAAAAx...
+xxxxxxxxx+xxxxxAAAAAAAAAAAxxx..
+xxxxHHHH......xxAAAAAAAAAxx.xx.
+xxxxxHH........xxAA...AAxx...x
+xxxxxH..........xxxx+xxxx.....
+xxxxxx..........+.......y.....
+xxxxxx...   ....x......yy....
+                 ......z.....
+                     .yy...
+                     .y....
+                       ..
+ENDMAP
+
+NAME:    pan_division_quadrant_b3
+WEIGHT:  10
+TAGS:    pan_division_quadrant_b allow_dup unrand
+SHUFFLE: pq/rs
+SUBST:   u : x.
+SHUFFLE: yz/aa
+SHUFFLE: DD/EF
+SHUFFLE: JK/LM
+SHUFFLE: NO/PP
+SUBST:   Z : x.
+SUBST:   pqaEJKN = .
+SUBST:   ryDLP = x
+SUBST:   szFMO = +
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxNNNNNNxxxxxxxxxx.xuuxxxxxxxxxxx
+xxxNNNNNxxxxxxxxx...xuuuuxxxxxxxxx
+xxNNNNNNxxxxxxx.....xuuuuuuxxxxxxx
+xxNNNNNxxxxxx.......+........x....
+xNNNNNNxxxxZxxx.....x.......px....
+xNNNNNxxxZZZZZx+x...x.......qr...
+NNNNNNO.........xxx.x......pps...
+xxxxxxx.........x.xxxxx....p.r...
+xxxxxxxy.......Lx.....xxx.pp.r....
+xxxxaaayy......MJ.....x.x+x..r....
+xxxaaaa.yy....LLK....xx...xxxxxxxx
+xxaaaaa..y....L.J....+......x.....
+xxaaaaa..z...LL.JJJ.xx.....xx....
+xxaaaaa..y...L..J.x+x......+.....
+xxxaaaaaxx+xxxx+xLL.xxx...xx...
+xxxxaaayy.....x.xx....x+x.x....
+xxxxxxxy......x..xx.....xxx....
+xxxxxxx.......x...xx.....+.....
+xxxxxxx.......+....xx...Exxx+x
+xxxxxxx.......x.....xx.EED....
+xxxxxxx.......x......xxFDD....
+xxxxxxx..   ..x.......x......
+                 .....x......
+                     .+....
+                     .x....
+                       ..
+ENDMAP
+
+NAME:    pan_division_quadrant_b4
+WEIGHT:  10
+TAGS:    pan_division_quadrant_b allow_dup unrand
+SHUFFLE: pq/rs
+SUBST:   u : x.
+SHUFFLE: yz
+SHUFFLE: DE/FF
+SHUFFLE: JKL/MNO
+SHUFFLE: PQH/RSZ
+SUBST:   pqyDJKPQ = .
+SUBST:   rzFLMHR = x
+SUBST:   sENOSZ = +
+MAP
+xxxxxxxxxxxxxxxxxyxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxyyxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxyyyxxxxxxxxxxxxxxxx
+xxxxxxxxxxxzzz....xxxxxxxxxxxxxxxx
+xxxxxxxxxxxzz.....xxxxxxxxxxxxxxxx
+xxxxxxxxxxxz......xxxxxxxxxxxxxxxx
+xxxxxxxxxxx.......xxxxxxxxxxxxxxxx
+xxxxxxxxxxy.......x.......xrrrrrr.
+xxxxxxxxxyy.......+.......xrrrr...
+xxxxxxxxyyy.......x.......xrr....
+xxxxxxxxxxxxxx+xxxx.......+......
+xxxxxxxuuuuu......x.......xrr....
+xxxxxxxuuuuu......+.......x.rrr...
+xxxxxxxuuuu.......x.......x...rsr.
+xxxxxxxxuuu.....Mxxxx+xxxxxpppqpxx
+xxDDDDDxuu......MK......x.x.......
+xxDDDDDxxu......OJ.....xx.xx.....
+xDDDDDDDE.......x......x...x.....
+xDDDDDDDxxxx+xxxx.....xx...xx..
+DDDDDDDDDx.....JM.....+.....+..
+xDDDDDDDxx.....KN....xx.....xx.
+xDDDDDDDE......JM....x.......x.
+xxDDDDDxx......xxxxxxxxHxxZHxx
+xxDDDDDx.......x......R..P....
+xxxxxxxx......xx......R.PP....
+xxxxxxx..   ..x.......R.Q....
+                 .....SPP....
+                     .RP...
+                     .xP...
+                       ..
+ENDMAP
+
+# This one is kind of big, so it has a lower weight.
+NAME:    pan_division_quadrant_b5
+WEIGHT:  5
+TAGS:    pan_division_quadrant_b allow_dup unrand
+NSUBST:  s = 1:s / *:r
+SHUFFLE: pq/rs
+SUBST:   u : x.
+SHUFFLE: yza
+SHUFFLE: DE/FF
+SHUFFLE: HZ
+SHUFFLE: JKL/MNO
+SHUFFLE: PQ/RS
+SUBST:   pqaDHJKPQ = .
+SUBST:   ryzFZLMR = x
+SUBST:   sENOS = +
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx.xxx...xxx
+xxxxxxxxxxxxxyxxxxxxxxx..xx.....xx
+xxxxxxxxxxxxyyyxxxxxxxx..x.......x
+xxxxxxxxzzz.....zzzxxx...+.......x
+xxxxxxDxzz.......zzxxx...x.......x
+xxxxDDDxz.........zxx....xx.....xx
+xxDDDDDx...........xx.....xx...xx.
+DDDDDDDE...........+.......xx+xx..
+DDDDDDDx...........x......rx.....
+DDDDDDDxxxxxx+xxxxxx......sq.....
+DDDDDxxx.x.......x.xxx...rrp.....
+DDDxEx...x......Rx...x+x.r.p......
+Dxxx.....x......SP.....xxx.p......
+xx.......+.....RRQ.....R.xxxxxxxxx
+xxHH.....x.....R.P....RxPP.P..R...
+xxHHHH...x....RR.P...P+P...P.RR..
+xxHHHHHxZx....R..P.PPxR....P.R...
+xxHHHxxxxxxxx+xxxxxx.R.....QRR.
+xxHxxxxuuu......MJ.x+x.....PS..
+xxxxxxxuuu......xJ...xxx...xR..
+xxxxxxxuu.......x......xxx.x...
+xxxxxxxuu......JO........xxxxx
+xxxxxxxu.......KM.......xx....
+xxxxxxxu......JJM.......+.....
+xxxxxxx..   ..J.M......xx....
+                 ......x.....
+                     .xx...
+                     .x....
+                       ..
+ENDMAP
+
+NAME:    pan_division_quadrant_b6
+WEIGHT:  10
+TAGS:    pan_division_quadrant_b allow_dup unrand
+SUBST:   u : xrr
+SHUFFLE: pq/rs
+SHUFFLE: yza
+SHUFFLE: DE/FF
+SHUFFLE: JKL/MNO
+SHUFFLE: PQ/RS
+SUBST:   Z : x.
+SUBST:   pqyzDJKPQ = .
+SUBST:   raFLMR = x
+SUBST:   sENOS = +
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxDDDDDDDxxxxxxxxxxu
+xxxxxxxxxxxxxxxxxDDDDDDDxxxxxxxxxu
+xxxxxxxxxxxxxxxxxxDDDDDDDxxxxxxxuu
+xxxxxxxxxxxxxxxxxxxDDDDDDDxxxxxxuu
+xxxxxxxxxxxxxxxxxxxxDDDDDDDxxxxuuu
+xxxxxxxxxxxxxxxxxxxxxxxxExxxxxxuuu
+xxxxxxxxxxxxxxxxxxxxxx....r..p....
+xxxxxxxxxxxxxxxxxxxxx.....r.pp....
+xxxxxxxxxxxz...yyxxx......r.q....
+xZZZ....xxzz....yxx.......spp....
+xZZ.....xzzz.....x........rp.....
+xZ......x........+........xp......
+x.......+........x........x.......
+xZ......x.....zzzx+xxx+xxxxxxx+xxx
+xZZ.....xy....zzxx.x......x.......
+xZZZ....xyy...zxx..xx.....xx.....
+xxxxxxx+xxxx+xxx....+......x.....
+xxxxxxx.......+.....xx.....xx..
+xxxxxxx.......xxx....x......+..
+xxxxxxxJJ.....x.x+x..xx.....xx.
+xxxxxxxMxxOMMMx...xxx.x......x.
+xxxxxxx...JKJ.x.....xxxxxx+xxx
+xxxxxxx.....JJx.....R.P.......
+xxxxxxx.......x.....R.P.......
+xxxxxxx..   ..x.....RRP......
+                 ....SQ......
+                     Rx....
+                     .x....
+                       ..
+ENDMAP
+
+
+
+##############################################################
+#
+# These are the octagons.  They are mostly used for the center
+#  of the layout_pan_divisions_a map.  Thay all must have the
+#  "pan_division_octagon" tag.
+#
+
+
+NAME:    pan_division_octagon_empty
+WEIGHT:  10
+TAGS:    pan_division_octagon allow_dup unrand
 MAP
    ..   ..
   .........
@@ -433,17 +891,16 @@ MAP
    ..   ..
 ENDMAP
 
-NAME:    pan_division_center_box
+NAME:    pan_division_octagon_box
 WEIGHT:  10
-TAGS:    pan_division_center allow_dup unrand
+TAGS:    pan_division_octagon allow_dup unrand luniq
 SHUFFLE: py / rz
 SHUFFLE: pqy / uuu
 SUBST:   pq = x
 SUBST:   y = +
 SUBST:   ruz = .
-SUBST:   A : .:35 I:4 J:1 Y:10
-KFEAT:   I = exit_through_abyss
-KFEAT:   J = exit_pandemonium
+SUBST:   A : .:35 I:5 Y:10
+KFEAT:   I = exit_pandemonium
 MAP
    ..   ..
   .........
@@ -460,14 +917,44 @@ MAP
    ..   ..
 ENDMAP
 
-NAME:    pan_division_center_rings
+NAME:    pan_division_octagon_halves
+WEIGHT:  10
+TAGS:    pan_division_octagon allow_dup unrand
+SHUFFLE: pq/rs
+SUBST:   s = z
+SUBST:   p = y
+SHUFFLE: yz
+SHUFFLE: JK/LM
+SUBST:   L = D
+SUBST:   M = E
+SHUFFLE: DE/FF/FF
+SUBST:   qyFJK = .
+SUBST:   rzDL = x
+SUBST:   EM = +
+MAP
+   .q   J.
+  ..q...J..
+ ...q...J...
+....q...K....
+rrrsz...DLMLL
+ .yyx...D...
+ ...xx+xx...
+ ...D...xyy.
+LLMLD...zsrrr
+....K...q....
+ ...J...q...
+  ..J...q..
+   .J   q.
+ENDMAP
+
+NAME:    pan_division_octagon_rings
 WEIGHT:  5
-TAGS:    pan_division_center allow_dup unrand
+TAGS:    pan_division_octagon allow_dup unrand
 SHUFFLE: DEFH
 NSUBST:  D = 1=+ / *=x
 NSUBST:  E = 1=x+++ / *=x
 NSUBST:  F = 1=x+ / *=x
-NSUBST:  H = 1=+ / 1=xxx+ / *=x
+NSUBST:  H = 1=xxx+ / *=x
 SUBST:   p : xq
 SUBST:   q : xxx.
 SHUFFLE: rs
@@ -491,9 +978,9 @@ MAP
    ..   ..
 ENDMAP
 
-NAME:    pan_division_center_divided
+NAME:    pan_division_octagon_divided
 WEIGHT:  5
-TAGS:    pan_division_center allow_dup unrand
+TAGS:    pan_division_octagon allow_dup unrand
 SUBST:   Z : pyy
 SUBST:   S : xpp
 SHUFFLE: py / qz
@@ -520,9 +1007,9 @@ x+x.upSpu.x+x
    .x   x.
 ENDMAP
 
-NAME:    pan_division_center_altar
+NAME:    pan_division_octagon_altar
 WEIGHT:  1
-TAGS:    pan_division_center allow_dup unrand
+TAGS:    pan_division_octagon allow_dup unrand luniq
 SHUFFLE: pqrs
 SHUFFLE: uyz
 SUBST:   p : xxx.
