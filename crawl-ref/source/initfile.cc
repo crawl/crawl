@@ -863,6 +863,7 @@ void game_options::reset_options()
     status_caption_colour  = BROWN;
 
     easy_exit_menu         = false;
+    ability_menu           = true;
     dos_use_background_intensity = true;
 
     assign_item_slot       = SS_FORWARD;
@@ -3433,6 +3434,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         tc_disconnected = str_to_colour(field, tc_disconnected);
     else LIST_OPTION(auto_exclude);
     else BOOL_OPTION(easy_exit_menu);
+    else BOOL_OPTION(ability_menu);
     else BOOL_OPTION(dos_use_background_intensity);
     else if (key == "item_stack_summary_minimum")
         item_stack_summary_minimum = atoi(field.c_str());
