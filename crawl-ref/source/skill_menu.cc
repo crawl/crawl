@@ -1173,16 +1173,18 @@ void SkillMenu::init_switches()
     if (!is_set(SKMF_SPECIAL) || you.wizard)
     {
         sw->add(SKM_VIEW_TRAINING);
+
         if (transferring)
         {
             sw->add(SKM_VIEW_TRANSFER);
             sw->set_state(SKM_VIEW_TRANSFER);
         }
-    }
-    sw->add(SKM_VIEW_COST);
 
-    if (Options.default_manual_training)
-        sw->set_state(SKM_VIEW_COST);
+        sw->add(SKM_VIEW_COST);
+
+        if (Options.default_manual_training)
+                sw->set_state(SKM_VIEW_COST);
+    }
 
     if (you.wizard)
     {
