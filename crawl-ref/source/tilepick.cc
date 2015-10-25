@@ -831,6 +831,11 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
             z_tile = TILEP_MONS_ZOMBIE_OGRE;
             break;
         }
+        if (subtype == MONS_JUGGERNAUT)
+        {
+                z_tile = TILEP_MONS_ZOMBIE_JUGGERNAUT;
+                break;
+        }
     case MON_SHAPE_HUMANOID_WINGED:
         if (mons_genus(subtype) == MONS_HARPY)
         {
