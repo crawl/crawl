@@ -736,9 +736,8 @@ talent get_talent(ability_type ability, bool check_confused)
 
     // Look through the table to see if there's a preference, else find
     // a new empty slot for this ability. - bwr
-    _find_ability_slot(abil.ability);
-    // Assign the hotkey later, since it might be replaced by a subsequent
-    // talent.
+    const int index = _find_ability_slot(abil.ability);
+    result.hotkey = index >= 0 ? index_to_letter(index) : 0;
 
     switch (ability)
     {
@@ -3238,9 +3237,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     // Find hotkeys for the non-hotkeyed talents.
     for (talent &tal : talents)
     {
-        // Skip preassigned hotkeys.
-        if (tal.hotkey != 0)
-            continue;
         const int index = _lookup_ability_slot(tal.which);
         if (index > -1)
         {
