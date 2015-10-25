@@ -1362,11 +1362,11 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
 
 static void _initialize_abyss_state()
 {
-    abyssal_state.major_coord.x = random_int() & 0x7FFFFFFF;
-    abyssal_state.major_coord.y = random_int() & 0x7FFFFFFF;
-    abyssal_state.seed = random_int() & 0x7FFFFFFF;
+    abyssal_state.major_coord.x = get_uint32() & 0x7FFFFFFF;
+    abyssal_state.major_coord.y = get_uint32() & 0x7FFFFFFF;
+    abyssal_state.seed = get_uint32() & 0x7FFFFFFF;
     abyssal_state.phase = 0.0;
-    abyssal_state.depth = random_int() & 0x7FFFFFFF;
+    abyssal_state.depth = get_uint32() & 0x7FFFFFFF;
     abyssal_state.destroy_all_terrain = false;
     abyssal_state.level = _get_random_level();
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
@@ -1376,7 +1376,7 @@ void set_abyss_state(coord_def coord, uint32_t depth)
 {
     abyssal_state.major_coord = coord;
     abyssal_state.depth = depth;
-    abyssal_state.seed = random_int() & 0x7FFFFFFF;
+    abyssal_state.seed = get_uint32() & 0x7FFFFFFF;
     abyssal_state.phase = 0.0;
     abyssal_state.destroy_all_terrain = true;
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());

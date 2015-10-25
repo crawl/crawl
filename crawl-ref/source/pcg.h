@@ -14,13 +14,8 @@ class PcgRNG
         static constexpr uint32_t min() { return 0; }
         static constexpr uint32_t max() { return 0xffffffffU; }
 
-        static PcgRNG &generator(int which = 0);
     private:
         uint64_t state_;
         uint64_t inc_;
 };
-
-uint32_t get_uint32(int generator = 0);
-uint64_t get_uint64(int generator = 0);
-void seed_rng(uint64_t[], int);
 #endif

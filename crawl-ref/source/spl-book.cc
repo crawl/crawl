@@ -1256,7 +1256,7 @@ bool make_book_level_randart(item_def &book, int level, string owner)
     else if (one_chance_in(30))
         name = god_name(GOD_SIF_MUNA, false);
     else if (one_chance_in(3))
-        name = make_name(random_int());
+        name = make_name();
     else
         has_owner = false;
 
@@ -1816,7 +1816,7 @@ bool make_book_theme_randart(item_def &book,
         if (owner.empty())
         {
             if (god_gift || one_chance_in(5)) // Use a random name.
-                owner = make_name(random_int());
+                owner = make_name();
             else if (!god_gift && one_chance_in(9))
             {
                 god = GOD_SIF_MUNA;

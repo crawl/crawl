@@ -3159,7 +3159,7 @@ static void tag_read_you(reader &th)
         if (th.getMinorVersion() >= TAG_MINOR_REMOVE_ABYSS_SEED
             && th.getMinorVersion() < TAG_MINOR_ADD_ABYSS_SEED)
         {
-            abyssal_state.seed = random_int();
+            abyssal_state.seed = get_uint32();
         }
         else
 #endif
@@ -3173,7 +3173,7 @@ static void tag_read_you(reader &th)
         unmarshallFloat(th); // converted abyssal_state.depth to int.
         abyssal_state.depth = 0;
         abyssal_state.destroy_all_terrain = true;
-        abyssal_state.seed = random_int();
+        abyssal_state.seed = get_uint32();
     }
 #endif
     abyssal_state.phase = unmarshallFloat(th);
@@ -3228,7 +3228,7 @@ static void tag_read_you(reader &th)
     for (int i = 0; i < count; i++)
         you.game_seeds[i] = unmarshallInt(th);
     for (int i = count; i < NUM_SEEDS; i++)
-        you.game_seeds[i] = random_int();
+        you.game_seeds[i] = get_uint32();
 #if TAG_MAJOR_VERSION == 34
     }
 #endif

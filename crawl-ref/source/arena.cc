@@ -1136,7 +1136,7 @@ void arena_placed_monster(monster* mons)
     }
 
     if (arena::name_monsters && !mons->is_named())
-        mons->mname = make_name(random_int());
+        mons->mname = make_name();
 
     if (summoned)
     {

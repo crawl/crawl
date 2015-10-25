@@ -4512,7 +4512,7 @@ static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
     you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, index)].get_int() = type;
 
     you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)].get_string()
-                                    = make_name(random_int());
+                                    = make_name();
 
     const bool need_suffix = type != SHOP_GENERAL
                              && type != SHOP_GENERAL_ANTIQUE
