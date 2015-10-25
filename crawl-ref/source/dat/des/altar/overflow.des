@@ -154,6 +154,33 @@ MAP
 .............
 ENDMAP
 
+NAME: nicolae_ashenzari_panopticon
+TAGS: uniq_altar_ashenzari temple_overflow_1 temple_overflow_ashenzari \
+      transparent decor
+SHUFFLE: ABCDEF/abcdef
+SUBST: ACEbdf = x, Ba = m, Dc = ., Fe = @
+NSUBST: m = + / m
+KFEAT: _ = altar_ashenzari
+MAP
+E....F..E..F...CE
+CC...D..C..D..CC.
+.CC..DD.C.DD.CC..
+..CC..D.C.D.CC...
+...CC.DDCDDCC....
+FDD.CC.DCDCC..DDF
+..DDDCABABA.DDD..
+....DDB...BDD....
+ECCCCCA._.ACCCCCE
+....DDB...BDD....
+..DDD.ABABACDDD..
+FDD..CCDCD.CC.DDF
+....CCDDCDD.CC...
+...CC.D.C.D..CC..
+..CC.DD.C.DD..CC.
+.CC..D..C..D...CC
+EC...F..E..F....E
+ENDMAP
+
 ### Cheibriados overflow altars ###############################################
 
 NAME:   cheibriados_altar_1
@@ -1433,6 +1460,23 @@ MAP
 .xGx'xGx.
 .xxx'xxx.
 ....'....
+ENDMAP
+
+NAME:   kennysheep_okawaru_gauntlet
+TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
+TAGS:   no_pool_fixup
+DEPTH:  D:2-9
+KFEAT:  _ = altar_okawaru
+KMONS:  1 = goblin ; spear
+KPROP:  1 = no_tele_into
+MAP
+      vvvvvvv
+ .....w1w...v
+......www.G.v
+@........G_Gv
+......www.G.v
+ .....w1w...v
+      vvvvvvv
 ENDMAP
 
 ### Qazlal overflow altars ####################################################
@@ -2996,6 +3040,44 @@ MAP
  222.@.LLL
 ENDMAP
 
+NAME:   kennysheep_ying_yang
+DEPTH:  D
+TAGS:   temple_overflow_2 temple_overflow_elyvilon temple_overflow_yredelemnul
+TAGS:   no_monster_gen no_trap_gen no_pool_fixup patrolling
+KFEAT:  A = altar_elyvilon
+KFEAT:  B = altar_yredelemnul
+KFEAT:  D = tree
+KFEAT:  '"wW = floor
+TILE:   D = dngn_tree_dead
+FTILE:  .t1ATW = floor_grass
+COLOUR: tW = white
+FTILE:  'D2BVw = floor_crypt
+COLOUR: Dw = black
+: interest_check(_G)
+MAP
+       """""""
+     """""ccc"""
+  """""""''Dccc"""
+  "ccccccD''DDccc"
+ ""ctttttcD'''DDc""
+ "cct....tcD'''Dcc"
+ "ct.www.TtD''''Dc""
+""ct.wwwA.tD''''Dcc"
+"cct.www.TtD'''''Dc"
+"ct......tcD'''''Dc"
+"ct.....tccD'''''Dc"
+"ct.....tcD''''''Dc"
+"ct.....tDV'WWW'DDc"
+"cct....tD'BWWW'Dcc"
+""ct....tDV'WWW'Dc""
+ "cct...tcD''''Dcc"
+ ""ctt...tcDDDDDc""
+  "ccctt..tcccccc"
+  """ccct.."""""""
+    """ccc"""""
+      """""""
+ENDMAP
+
 ### Variable overflow altars ##################################################
 
 # To make an overflow temple for N altars, give it the tag
@@ -3527,31 +3609,4 @@ MAP
  xxG...G...Gxx
  xxxxexxxdxxxx
  xxxxxxxxxxxxx
-ENDMAP
-
-NAME: nicolae_ashenzari_panopticon
-TAGS: uniq_altar_ashenzari temple_overflow_1 temple_overflow_ashenzari \
-      transparent decor
-SHUFFLE: ABCDEF/abcdef
-SUBST: ACEbdf = x, Ba = m, Dc = ., Fe = @
-NSUBST: m = + / m
-KFEAT: _ = altar_ashenzari
-MAP
-E....F..E..F...CE
-CC...D..C..D..CC.
-.CC..DD.C.DD.CC..
-..CC..D.C.D.CC...
-...CC.DDCDDCC....
-FDD.CC.DCDCC..DDF
-..DDDCABABA.DDD..
-....DDB...BDD....
-ECCCCCA._.ACCCCCE
-....DDB...BDD....
-..DDD.ABABACDDD..
-FDD..CCDCD.CC.DDF
-....CCDDCDD.CC...
-...CC.D.C.D..CC..
-..CC.DD.C.DD..CC.
-.CC..D..C..D...CC
-EC...F..E..F....E
 ENDMAP

@@ -6589,3 +6589,256 @@ MAP
    cccccccccccccccccccccccc
     ccccccccccccccccccccc
 ENDMAP
+
+NAME:   kennysheep_windowed_halls
+DEPTH:  D:5-, Depths
+ORIENT: float
+SUBST:  c : cccvb
+MAP
+ccccccccccccccccccccccc
+c0...0c0...0c0...0c***c
+c.....c.....c.....c9|9c
+c..c..c..c..c..c..c***c
+c..c..c..c..c..c..ccc+c
+c..c.....c.....c......c
+c..c.....c.....c......c
+c..cnnccccnnccccnnccccc
+c.....................@
+c.....................@
+c..ccccnnccccnncccccccc
+c..c.....c.....c......c
+c..c.....c.....c......c
+c..c..c..c..c..c..ccc+c
+c..c..c..c..c..c..c000c
+c.....c.....c.....c*G*c
+c0...0c0...0c0...0c000c
+ccccccccccccccccccccccc
+ENDMAP
+
+NAME: kennysheep_ambush_hall
+DEPTH: D:8-, Depths, Elf, Zot
+ORIENT: float
+TAGS: transparent
+SUBST: T : TGV.
+MAP
+      x..@..x
+   xxxxxx.xxxxxx
+  xx....x+x....xx
+ xx....x...x....xx
+ x...0x.....x0...x
+xx..0x..T.T..x0..xx
+x%..x.........x..%x
+x...x.........x...x
+x*..x..T...T..x..*x
+x...x.........x...x
+x%..x.........x..%x
+xx..0x..T.T..x0..xx
+ x...0x.....x0...x
+ xx....x...x....xx
+  xx....x+x....xx
+   xxxxxx.xxxxxx
+      x..@..x
+ENDMAP
+
+NAME: kennysheep_blocky_hall
+DEPTH: D:8-, Depths, Elf, Zot
+ORIENT: float
+TAGS: transparent
+MAP
+        xxxxxxxxxxxxx
+        x...........x
+        x.....0.....+
+        x...........x
+xx+xxxxxx...xxxxx...x
+x...........x   x...x
+x...........x   x...x
+x..........%x   x...x
+x...xxxxxxxxx   x...xxxxx
+x...x           x.......x
+x.0.x           x.......x
+x...x           x%......x
+x...xxxxx       xxxxx...x
+x......%x           x...x
+x.......x           x.0.x
+x.......x           x...x
+xxxxx...x   xxxxxxxxx...x
+    x...x   x%..........x
+    x...x   x...........x
+    x...x   x...........x
+    x...xxxxx...xxxxxx+xx
+    x...........x
+    +.....0.....x
+    x...........x
+    xxxxxxxxxxxxx
+ENDMAP
+
+NAME: kennysheep_blocky_room
+DEPTH: D:8-, Depths, Elf, Zot
+ORIENT: float
+TAGS: transparent
+: if you.absdepth() < 5 then
+SUBST:  9 = 0
+NSUBST: * = 2:* / *:%
+: end
+MAP
+        xxxxxxxxxxxxx
+        x...........x
+        x.....0.....+
+        x...........x
+xx+xxxxxx...xxxxx...x
+x...........x..0x...x
+x...........x...x...x
+x...........x...x...x
+x...xxxxxxx+x...x...xxxxx
+x...x9........G.x.......x
+x.0.x....G......x.......x
+x...x.......*...+.......x
+x...xxx+x..*%*..xxxxx...x
+x.......x...*.......x...x
+x.......x......G....x.0.x
+x.......x.G........9x...x
+xxxxx...x...x+xxxxxxx...x
+    x...x...x...........x
+    x...x...x...........x
+    x...x0..x...........x
+    x...xxxxx...xxxxxx+xx
+    x...........x
+    +.....0.....x
+    x...........x
+    xxxxxxxxxxxxx
+ENDMAP
+
+NAME: kennysheep_room_grid
+DEPTH: D:12-, Depths, Elf, Zot
+ORIENT: float
+TAGS: transparent
+: if you.absdepth() < 5 then
+SUBST:  9 = 0
+NSUBST: * = 2:* / *:%
+: end
+MAP
+ xxxxx xxxxx xxxxx
+xx...x@x...x@x...xx
+x.....x.....x.....x
+x..0..x..0..x..0..x
+x.....x.....x.....x
+xx...xxx...xxx...xx
+ @xxxxxxxxxxxxxxx@
+xx...xxx...xxx...xx
+x.....x.9*9.x.....x
+x..0..x.*%*.x..0..x
+x.....x.0*0.x.....x
+xx...xxx...xxx...xx
+ @xxxxxxx+xxxxxxx@
+xx...xxx...xxx...xx
+x.....x.....x.....x
+x..0..x..0..x..0..x
+x.....x.....x.....x
+xx...x@x...x@x...xx
+ xxxxx xxxxx  xxxx
+ENDMAP
+
+NAME: kennysheep_bubbly
+DEPTH: D:12-, Depths, Elf, Zot
+ORIENT: float
+MAP
+         xxxxxxx
+       xxx.....xxx
+      xx.........xx
+     xx...........xx
+     x.............x
+    xx...0.xxx.0...xx
+    x.....xx xx.....x
+    x....xx   xx....+
+    x....x     x....+
+    x....xx   xx....+
+    x.....xx xx.....x
+    xx...0.xxx.0...xx
+     x.............x
+  xxxxx...........xx
+ xx...xx.........xx
+xx.....xx......xxx
++..0$0..xxx+++xx
++..$%$..x......xx
++..0$0..x.......xx
+xx.....xx........xx
+ xx...xx..........x
+  xxxxx....0*9....x
+      x....*%*....x
+      x....9*0....x
+      x...........x
+      xx.........xx
+       xx.......xx
+        xx.....xx
+         xxxxxxx
+ENDMAP
+
+
+NAME: kennysheep_spiral_hall
+DEPTH: D:4-, Depths, Elf, Zot
+ORIENT: float
+TAGS: transparent
+SUBST:  G : GTV.
+MAP
+    xx.@.xx
+   xx.....xx
+   x.......x
+  xx.......xx
+  x.........x
+  x.........xx
+ xxxxx.......x
+ xG..xxxx....x
+ x......x....x
+ x......xx...x
+xx...x...x...xx
+x....x...x0...x
+x...xx...xx...x
+x...x.....x...x
+x...x.....x...x
+x...x..%..x...x
+x...x0%G%0x...x
+x...x..%..x...x
+x...x.....x...x
+x...x.....x...x
+x...xx...xx...x
+x...0x...x....x
+xx...x...x...xx
+ x...xx......x
+ x....x......x
+ x....xxxx..Gx
+ x.......xxxxx
+ xx.........x
+  x.........x
+  xx.......xx
+   x.......x
+   xx.....xx
+    xx.@.xx
+ENDMAP
+
+NAME: kennysheep_oblong_rooms
+DEPTH: D:$, Depths, Elf, Zot
+ORIENT: float
+TAGS: transparent
+SUBST:  G : GTV.
+MAP
+        ccccccccccccc
+    ccccc...........ccccc
+  ccc........0.0........ccc
+  c...........G...........c
+  +.....G....0.0....G.....+
+  c.......................c
+  ccc...................ccc
+    ccccc...........ccccc
+        ccccc+++ccccc
+     cccc...........cccc
+cccccc.................cccccc
+c*cc.....................cc*c
+c|8......G.........G......8|c
+c*cc..........G..........cc*c
+cccccc.................cccccc
+     cccc...........cccc
+        cccccc.cccccc
+            cc8cc
+            c*|*c
+            ccccc
+ENDMAP
