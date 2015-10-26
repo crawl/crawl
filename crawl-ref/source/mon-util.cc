@@ -2276,7 +2276,6 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
         return { MST_NECROMANCER_I, MST_NECROMANCER_II };
 
     case MONS_ORC_WIZARD:
-    case MONS_DEEP_ELF_FIGHTER:
         return { MST_ORC_WIZARD_I, MST_ORC_WIZARD_II, MST_ORC_WIZARD_III };
 
     case MONS_WIZARD:

@@ -148,6 +148,7 @@ static const pop_entry _okawaru_servants[] =
   {  7, 21,   1, FLAT, MONS_MINOTAUR },
   {  9, 27,   2, FLAT, MONS_STONE_GIANT },
   {  9, 27,   1, FLAT, MONS_DEEP_ELF_KNIGHT },
+  {  9, 27,   1, FLAT, MONS_DEEP_ELF_ARCHER },
   { 11, 21,   1, FLAT, MONS_ORC_WARLORD },
   { 11, 27,   2, FLAT, MONS_FIRE_GIANT },
   { 11, 27,   2, FLAT, MONS_FROST_GIANT },

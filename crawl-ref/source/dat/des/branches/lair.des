@@ -434,12 +434,12 @@ ENDMAP
 ################################################################################
 # A guard hut placed over the entrance of the lair,
 # and a guard to watch over it.
-NAME:   grunt_lair_entry_elf_guard_hut
+NAME:   grunt_lair_entry_orc_guard_hut
 ORIENT: float
 TAGS:   lair_entry transparent
 MONS:   plant / fungus / nothing
 MONS:   w:100 bat / w:100 rat / w:30 river rat / crocodile / yak / w:20 nothing
-MONS:   patrolling deep elf fighter
+MONS:   patrolling orc warrior
 KFEAT:  O = enter_lair
 SUBST:  D = 1:5 2:2 .
 SUBST:  . = 1:2 2:2 .

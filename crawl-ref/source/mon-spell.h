@@ -2069,4 +2069,13 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 11, MON_SPELL_WIZARD },
       }
     },
+
+    {  MST_DEEP_ELF_ARCHER,
+      {
+       { SPELL_BLINK_AWAY, 36, MON_SPELL_WIZARD | MON_SPELL_SHORT_RANGE },
+       { SPELL_SLOW, 12, MON_SPELL_WIZARD },
+       { SPELL_CONFUSE, 12, MON_SPELL_WIZARD },
+       { SPELL_REPEL_MISSILES, 12, MON_SPELL_WIZARD },
+      }
+    },
 };

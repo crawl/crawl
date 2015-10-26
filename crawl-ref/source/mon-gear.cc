@@ -467,7 +467,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                        WPN_TRIDENT);
         break;
 
-    case MONS_DEEP_ELF_FIGHTER:
     case MONS_DEEP_ELF_HIGH_PRIEST:
     case MONS_DEEP_ELF_KNIGHT:
         item.base_type = OBJ_WEAPONS;
@@ -496,6 +495,19 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         }
         break;
     }
+
+    case MONS_DEEP_ELF_ARCHER:
+        force_uncursed = true;
+        item.base_type = OBJ_WEAPONS;
+        if (!melee_only)
+        {
+            item.sub_type  = random_choose_weighted(2, WPN_SHORTBOW,
+                                                    1, WPN_LONGBOW,
+                                                    0);
+            break;
+        }
+        item.sub_type  = random_choose(WPN_SHORT_SWORD, WPN_DAGGER);
+        break;
 
     case MONS_DEEP_ELF_MASTER_ARCHER:
         item.base_type = OBJ_WEAPONS;
@@ -1778,11 +1790,6 @@ static void _give_shield(monster* mon, int level)
         }
         break;
 
-    case MONS_DEEP_ELF_FIGHTER:
-        if (one_chance_in(6))
-            make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER, level);
-        break;
-
     case MONS_MINOTAUR:
         // Don't pre-equip the Lab minotaur.
         if (player_in_branch(BRANCH_LABYRINTH) && !(mon->flags & MF_NO_REWARD))
@@ -1951,6 +1958,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
 
     switch (type)
     {
+    case MONS_DEEP_ELF_ARCHER:
     case MONS_DEEP_ELF_BLADEMASTER:
     case MONS_DEEP_ELF_MASTER_ARCHER:
         item.base_type = OBJ_ARMOUR;
@@ -1962,7 +1970,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_DEATH_MAGE:
     case MONS_DEEP_ELF_DEMONOLOGIST:
-    case MONS_DEEP_ELF_FIGHTER:
     case MONS_DEEP_ELF_HIGH_PRIEST:
     case MONS_DEEP_ELF_KNIGHT:
     case MONS_DEEP_ELF_MAGE:

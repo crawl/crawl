@@ -46,8 +46,6 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_NAGA_MAGE, MONS_GREATER_NAGA),
     monster_level_up(MONS_NAGA_WARRIOR, MONS_GREATER_NAGA),
 
-    monster_level_up(MONS_DEEP_ELF_FIGHTER, MONS_DEEP_ELF_KNIGHT),
-
     monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_DEATH_MAGE, 250),
     monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_DEMONOLOGIST, 333),
     monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_ANNIHILATOR, 500),
