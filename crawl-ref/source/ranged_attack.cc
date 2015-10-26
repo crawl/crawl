@@ -238,8 +238,14 @@ bool ranged_attack::handle_phase_dodged()
             defender->ablate_deflection();
         }
 
+        if (defender->is_player())
+            count_action(CACT_DODGE, DODGE_DEFLECT);
+
         return true;
     }
+
+    if (defender->is_player())
+        count_action(CACT_DODGE, DODGE_EVASION);
 
     if (needs_message)
     {

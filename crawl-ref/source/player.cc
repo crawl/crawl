@@ -5746,6 +5746,11 @@ void player::shield_block_succeeded(actor *foe)
 
     shield_blocks++;
     practise(EX_SHIELD_BLOCK);
+    const item_def *shield = slot_item(EQ_SHIELD);
+    if (shield)
+        count_action(CACT_BLOCK, shield->sub_type);
+    else
+        count_action(CACT_BLOCK, -1, 0); // auxtype Other
 }
 
 int player::missile_deflection() const
@@ -7811,6 +7816,25 @@ void count_action(caction_type type, int subtype)
     if (!you.action_count.count(pair))
         you.action_count[pair].init(0);
     you.action_count[pair][you.experience_level - 1]++;
+}
+
+/**
+ *   The alternate type is stored in the higher bytes.
+**/
+void count_action(caction_type type, int subtype, int auxtype)
+{
+    int compound_subtype;
+    compound_subtype = (auxtype << 16) | (short)subtype;
+    count_action(type, compound_subtype);
+}
+
+/**
+ *   If there was no original auxtype it will be returned as -1
+**/
+void count_action_get_types(int *subtype, int *auxtype, int compound_subtype)
+{
+    *subtype = (short)(compound_subtype & 0xFFFF);
+    *auxtype = (short)((compound_subtype >> 16) & 0xFFFF);
 }
 
 /**

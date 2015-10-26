@@ -252,7 +252,7 @@ public:
     virtual int armour_class(bool calc_unid = true) const = 0;
     virtual int gdr_perc() const = 0;
     int apply_ac(int damage, int max_damage = 0, ac_type ac_rule = AC_NORMAL,
-                 int stab_bypass = 0) const;
+                 int stab_bypass = 0, bool for_real = true) const;
     virtual int evasion(ev_ignore_type ign = EV_IGNORE_NONE,
                         const actor *attacker = nullptr) const = 0;
     virtual bool shielded() const = 0;
