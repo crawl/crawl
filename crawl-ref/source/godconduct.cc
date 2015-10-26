@@ -485,7 +485,7 @@ struct like_response
     const char *message;
     /// Special-case code for weird likes. May modify piety bonus/denom, or
     /// may have other side effects. If nullptr, doesn't trigger, ofc.
-    void (*special)(int &piety, int &denom, const monster* victim);
+    function <void (int &piety, int &denom, const monster* victim)> special;
 
     /// Apply this response to a given conduct, severity level, and victim.
     /// @param victim may be null.
