@@ -126,7 +126,7 @@ static bool _attacking_holy_matters(const monster* victim)
             || testbits(victim->flags, MF_WAS_NEUTRAL);
 }
 
-#if (__GNUC__ * 100 + __GNUC_MINOR__ <= 408) && !defined(__clang__)
+#if (__GNUC__ * 100 + __GNUC_MINOR__ < 408) && !defined(__clang__)
 // g++ 4.7 incorrectly treats a function<> initialised from a null function
 // pointer as non-empty.
 typedef bool (*valid_victim_t)(const monster *);
