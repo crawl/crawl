@@ -14,6 +14,8 @@
 #include "state.h"
 #include "stringutil.h" // uppercase_first
 
+#include <functional>
+
 // Forward declarations.
 static bool _god_likes_killing(const monster* victim);
 
@@ -139,7 +141,7 @@ struct dislike_response
     const char *message;
     /// A function that checks the victim of the conduct to see if the conduct
     /// should actually, really apply to it. If nullptr, all victims are valid.
-    bool (*valid_victim)(const monster* victim);
+    function<bool (const monster *)> valid_victim;
     /// A flat decrease to penance, after penance_factor is applied.
     int penance_offset;
 
