@@ -794,7 +794,7 @@ void game_options::reset_options()
     enable_recast_spell    = true;
     confirm_butcher        = CONFIRM_AUTO;
     easy_eat_chunks        = false;
-    auto_eat_chunks        = false;
+    auto_eat_chunks        = true;
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
     allow_self_target      = CONFIRM_PROMPT;
