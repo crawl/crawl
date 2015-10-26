@@ -126,6 +126,17 @@ static bool _attacking_holy_matters(const monster* victim)
             || testbits(victim->flags, MF_WAS_NEUTRAL);
 }
 
+#if (__GNUC__ * 100 + __GNUC_MINOR__ <= 408) && !defined(__clang__)
+// g++ 4.7 incorrectly treats a function<> initialised from a null function
+// pointer as non-empty.
+typedef bool (*valid_victim_t)(const monster *);
+typedef void (*special_piety_t)(int &piety, int &denom, const monster* victim);
+#else
+// But g++ 5.x seems to have problems converting lambdas into function pointers?
+typedef function<bool (const monster *)> valid_victim_t;
+typedef function<void (int &piety, int &denom, const monster* victim)>
+    special_piety_t;
+#endif
 
 /// A definition of the way in which a god dislikes a conduct being taken.
 struct dislike_response
@@ -141,7 +152,7 @@ struct dislike_response
     const char *message;
     /// A function that checks the victim of the conduct to see if the conduct
     /// should actually, really apply to it. If nullptr, all victims are valid.
-    function<bool (const monster *)> valid_victim;
+    valid_victim_t valid_victim;
     /// A flat decrease to penance, after penance_factor is applied.
     int penance_offset;
 
@@ -485,7 +496,7 @@ struct like_response
     const char *message;
     /// Special-case code for weird likes. May modify piety bonus/denom, or
     /// may have other side effects. If nullptr, doesn't trigger, ofc.
-    function <void (int &piety, int &denom, const monster* victim)> special;
+    special_piety_t special;
 
     /// Apply this response to a given conduct, severity level, and victim.
     /// @param victim may be null.
@@ -555,8 +566,7 @@ static int _piety_bonus_for_holiness(mon_holy_type holiness)
  * @return              An appropropriate like_response.
  */
 static like_response _on_kill(mon_holy_type holiness, bool god_is_good = false,
-                             void (*special)(int &piety, int &denom,
-                                             const monster* victim) = nullptr)
+                              special_piety_t special = nullptr)
 {
     like_response response = {
         _piety_bonus_for_holiness(holiness),
