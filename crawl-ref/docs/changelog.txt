@@ -1,5 +1,10 @@
-Stone Soup 0.17 (up to 0.17-a0-1763-g847a857)
---------------------------------------------
+Stone Soup 0.17 (up to 0.17-a0-2199-gca56801)
+---------------------------------------------
+
+Highlights
+----------
+* Square line of sight.
+* Shorter Lair rune branches.
 
 Branches, Environment
 ---------------------
@@ -9,6 +14,9 @@ Branches, Environment
 * Slime wall damage no longer varies by depth.
 * AC now applies before resists for cloud damage.
 * Ghostly flame clouds have been renamed to spectral mist clouds.
+* Troves no longer ask for items that the player character's species cannot
+  use.
+* Pandemonium now spawns primarily tier 3 and above demons.
 * New altar type: 'ecumenical altars', which allow the player to worship a
   random god.
 * New WizLab: Lehudib's Moon Base, where the player can fight the legendary
@@ -37,7 +45,7 @@ Character
 * Cleaving attacks now function even under confusion.
 * Control-attacking & manipulating doors are no longer permitted under
   confusion.
-* Confusion will never cause you to stumble into deep water/lava.
+* Confusion will never cause characters to stumble into deep water/lava.
 * Corrosion can affect characters not using weapons or armour, and applies -4
   to both armour and slaying (instead of -5/-3).
 * Multi-turn actions, other than climbing/descending stairs, no longer reduce
@@ -55,6 +63,13 @@ Character
 * There's now a distinct hunger state of Fainting and appropriate warning
   messages for when the player is so low on nutrition that they might become
   paralyzed.
+* The Breathe Flames and Spit Poison mutations are now mutually exclusive.
+* Demonspawn can shoot through their own demonic guardians.
+* Ability scores now cap at 125, up from 72.
+* Some species now have lower Throwing aptitudes:
+  - Centaur, Halfling, and Kobold go from +3 to +1;
+  - Ogre, Spriggan, Tengu, High Elf, and Deep Elf go from +1 to 0;
+  - Hill Orc and Gargoyle go from 0 to -1.
 
 Geometry
 --------
@@ -79,6 +94,8 @@ Gods
   - Bribes now work on any intelligent monster in the branch, with bribe
     susceptibility based on HD and a scaling factor by branch. Unique Hell or
     Pan lords can't be bribed.
+  - Bribes now trigger on monsters coming into view, rather than on level
+    entry.
 * Ru:
   - New sacrifice: Sacrifice Eye, similar to the effect of amulets of
     inaccuracy (and stacking with the amulet).
@@ -98,13 +115,22 @@ Gods
   are accessible from the ability menu: Zin's Donate Gold, Kiku's Bless Weapon
   and Gift Necronomicon, Lugonu's Bless Weapon, and The Shining One's Bless
   Weapon.
+* Gods no longer protect worshippers from Beogh smiting or TSO cleansing
+  flame.
+* Qazlal's wrath now causes noise 50% of the time before other possible
+  actions, and can no longer inflict Deformed Body.
+* Notes are now generated whenever you reach a piety rank for a god for the
+  first time, instead of on abilities being gained.
 
 Items
 -----
 * New items:
   - Maxwell's Etheric Cage, a helmet giving rElec, +4 MP and a large boost to
     MP regen, at the cost of causing intermittent light contamination.
-  - the robe of vines, a +3 robe with Regen++++++++.
+  - the Robe of Vines, a +5 robe with massive regeneration but which renders
+    the wearer unable to heal by external means.
+  - Kryia's mail coat, +7 scale mail which amplifies the effect of healing
+    items (and grants rC+ to boot).
 * Poisonous chunks and rot chunks have been merged into 'inedible' chunks,
   which are only edible by ghouls. Some monsters have had their meat cleaned.
 * Unrandart changes:
@@ -136,6 +162,7 @@ Items
   - Potions of restore abilities.
   - Rings of teleport control.
   - The Book of Control.
+  - Hammers.
 
 Monsters
 --------
@@ -218,8 +245,8 @@ Spells
 * Ignite Poison is now level 3 Fire/Poison/Transmutations; it no longer ignites
   items or poisonous creatures, only poisoned creatures and clouds, but does
   dramatically more damage to the former, especially at low power.
-* Gell's Gravitas is now level 3 and smite-targeted, but no longer confuses
-  enemies.
+* Gell's Gravitas is now level 3 and smite-targeted; it can now target empty
+  space, but no longer confuses monsters.
 * Summon Guardian Golem is now level 3.
 * Aura of Abjuration is now level 5, and has been moved from the Grand Grimoire
   to the book of Summonings.
@@ -242,6 +269,7 @@ Spells
   levels.
 * Corpse Rot now affects all corpses in LOS.
 * Darkness is now level 6.
+* Controlled Blink is now level 8.
 * Removed spells:
   - Abjuration.
   - Control Teleport.
@@ -256,10 +284,14 @@ Interface
   (with 'v'), just as the normal examine mode does.
 * The inventory descriptions for weapons & shields now shows the skill required
   to reach minimum attack delay / remove attack delay penalty, respectively.
+* The rune menu now shows you all runes and their locations before they are
+  found, including the Orb of Zot.
+* New ability_slot option, which allows you to specify default letters for
+  abilities.
 
 Technical
 ---------
-* Support compilation under Cygwin
+* Compilation under Cygwin is now supported.
 
 Stone Soup 0.16.2 (20150811)
 --------------------------------------------
