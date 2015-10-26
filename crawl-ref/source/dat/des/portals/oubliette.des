@@ -224,11 +224,29 @@ if ally_type == "handover" then
 end
 
   enemy_list = {
-    { weight = 10, enemy = 'kobolds', mob = 10 },
-    { weight = 10, enemy = 'humans',  mob = 2 },
-    { weight = 10, enemy = 'orcs',    mob = 5 },
-    { weight = 10, enemy = 'zombies', mob = 7 }
+    { weight = 10, enemy = 'kobold', mob = 5 },
+    { weight = 10, enemy = 'human',  mob = 2 },
+    { weight = 10, enemy = 'orc',    mob = 5 },
+    { weight = 10, enemy = 'zombie', mob = 5 }
   }
+
+chosen = util.random_weighted_from("weight", enemy_list)
+enemy_type = chosen.enemy
+enemy_number = chosen.mob
+
+if ally == "Pikel" then 
+  enemy_type = "human" -- always fighting his former Slaves
+  enemy_number = 2
+end
+
+function place_minor_enemies(e)
+  e.nsubst("1 = " .. enemy_number .. " =1 / *:.")  
+  if enemy_type == "zombie" then
+    e.kmons("1 = hound zombie / gnoll zombie / wolf zombie w:5")
+  else
+    e.kmons("1 = " .. enemy_type)
+  end
+end
 
 }}
 
@@ -325,22 +343,22 @@ ENDMAP
 
 NAME:   oubliette_subvault_minor
 TAGS:   oubliette_subvault_minor
-MONS:   hobgoblin / worm
+: place_minor_enemies(_G)
 MAP
 xxxxxxxxx
 x...1...xx
-....1....
+...111...
 x...1...xx
 xxxxxxxxx
 ENDMAP
 
-NAME:   oubliette_tiny_minor_2
-TAGS:   oubliette_tiny_minor_subvault
-MONS:   crimson imp
+NAME:   oubliette_subvault_minor_row
+TAGS:   oubliette_subvault_minor
+: place_minor_enemies(_G)
 MAP
 xxxxxxxxx
 x..xxx..xx
-....1....
+..11111..
 x..xxx..xx
 xxxxxxxxx
 ENDMAP
