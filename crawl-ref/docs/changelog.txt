@@ -1,4 +1,4 @@
-Stone Soup 0.17 (up to 0.17-a0-2199-gca56801)
+Stone Soup 0.17 (up to 0.17-a0-2202-g1e9daa3)
 ---------------------------------------------
 
 Highlights
@@ -288,6 +288,10 @@ Interface
   found, including the Orb of Zot.
 * New ability_slot option, which allows you to specify default letters for
   abilities.
+* The 'a'bility command shows the menu by default; to get the old behaviour,
+  use the option "ability_menu = false".
+* The auto_eat_chunks option is now true by default, so hungry characters eat
+  chunks while resting, travelling, and exploring.
 
 Technical
 ---------
