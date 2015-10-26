@@ -34,6 +34,7 @@
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
+#include "melee_attack.h"
 #include "message.h"
 #include "mutation.h"
 #include "notes.h"
@@ -987,6 +988,12 @@ static string _describe_action(caction_type type)
         return " Fire";
     case CACT_THROW:
         return "Throw";
+    case CACT_ARMOUR:
+        return "Armor"; // "Armour" is too long
+    case CACT_BLOCK:
+        return "Block";
+    case CACT_DODGE:
+        return "Dodge";
     case CACT_CAST:
         return " Cast";
     case CACT_INVOKE:
@@ -1021,25 +1028,48 @@ static const char* _stab_names[] =
     "Betrayed ally",
 };
 
-static string _describe_action_subtype(caction_type type, int subtype)
+static const char* _aux_attack_names[1 + UNAT_LAST_ATTACK] =
 {
+    "No attack",
+    "Constrict",
+    "Kick",
+    "Headbutt",
+    "Peck",
+    "Tailslap",
+    "Punch",
+    "Bite",
+    "Pseudopods",
+    "Tentacles",
+};
+
+static string _describe_action_subtype(caction_type type, int compound_subtype)
+{
+    int subtype;
+    int auxtype;
+    count_action_get_types(&subtype, &auxtype, compound_subtype);
+
     switch (type)
     {
     case CACT_THROW:
     {
-        int basetype = subtype >> 16;
-        subtype = (short)(subtype & 0xFFFF);
-
-        if (basetype == OBJ_MISSILES)
+        if (auxtype == OBJ_MISSILES)
             return uppercase_first(item_base_name(OBJ_MISSILES, subtype));
-        else if (basetype == OBJ_WEAPONS)
-            ; // fallthrough
         else
-            return "other";
+            return "Other";
     }
     case CACT_MELEE:
     case CACT_FIRE:
-        if (subtype >= UNRAND_START)
+        if (subtype == -1)
+        {
+            if (auxtype == -1)
+                return "Unarmed";
+            else
+            {
+                ASSERT_RANGE(auxtype, 0, UNAT_LAST_ATTACK);
+                return _aux_attack_names[auxtype];
+            }
+        }
+        else if (subtype >= UNRAND_START)
         {
             // Paranoia: an artefact may lose its specialness.
             const char *tn = get_unrand_entry(subtype)->type_name;
@@ -1047,8 +1077,36 @@ static string _describe_action_subtype(caction_type type, int subtype)
                 return uppercase_first(tn);
             subtype = get_unrand_entry(subtype)->sub_type;
         }
-        return (subtype == -1) ? "Unarmed"
-               : uppercase_first(item_base_name(OBJ_WEAPONS, subtype));
+        return uppercase_first(item_base_name(OBJ_WEAPONS, subtype));
+    case CACT_ARMOUR:
+        return (subtype == -1) ? "Skin"
+               : uppercase_first(item_base_name(OBJ_ARMOUR, subtype));
+    case CACT_BLOCK:
+    {
+        if (subtype > -1)
+            return uppercase_first(item_base_name(OBJ_ARMOUR, subtype));
+        switch (auxtype)
+        {
+        case 0:
+            return "Other";
+        case 1:
+            return "Reflected";
+        default:
+            return "Error";
+        }
+    }
+    case CACT_DODGE:
+    {
+        switch ((dodge_type)subtype)
+        {
+        case DODGE_EVASION:
+            return "Dodged";
+        case DODGE_DEFLECT:
+            return "Deflected";
+        default:
+            return "Error";
+        }
+    }
     case CACT_CAST:
         return spell_title((spell_type)subtype);
     case CACT_INVOKE:
@@ -1058,11 +1116,11 @@ static string _describe_action_subtype(caction_type type, int subtype)
         if (subtype >= UNRAND_START && subtype <= UNRAND_LAST)
             return uppercase_first(get_unrand_entry(subtype)->name);
 
-        if (subtype >= 1 << 16)
+        if (auxtype > -1)
         {
             item_def dummy;
-            dummy.base_type = (object_class_type)(subtype >> 16);
-            dummy.sub_type  = subtype & 0xffff;
+            dummy.base_type = (object_class_type)(auxtype);
+            dummy.sub_type  = subtype;
             dummy.quantity  = 1;
             return uppercase_first(dummy.name(DESC_DBNAME, true));
         }
