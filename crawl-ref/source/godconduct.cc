@@ -230,7 +230,7 @@ static const dislike_response GOOD_KILL_HOLY_RESPONSE = {
 /// TSO's response to the player stabbing or poisoning monsters.
 static const dislike_response TSO_UNCHIVALRIC_RESPONSE = {
     1, 2, " forgives your inadvertent dishonourable attack, just"
-              " this once.", nullptr, [] (const monster* victim) {
+              " this once.", nullptr, [] (const monster* victim) -> bool {
         return !victim || !tso_unchivalric_attack_safe_monster(victim);
     }
 };
@@ -243,7 +243,7 @@ static const dislike_response GOOD_ATTACK_NEUTRAL_RESPONSE = {
 /// Various gods' response to attacking a pal.
 static const dislike_response ATTACK_FRIEND_RESPONSE = {
     1, 3, " forgives your inadvertent attack on an ally, just this once.",
-    nullptr, [] (const monster* victim) {
+    nullptr, [] (const monster* victim) -> bool {
         dprf("hates friend : %d", god_hates_attacking_friend(you.religion, victim));
         return god_hates_attacking_friend(you.religion, victim);
     }
@@ -251,7 +251,7 @@ static const dislike_response ATTACK_FRIEND_RESPONSE = {
 
 /// Ely response to a friend dying.
 static const dislike_response ELY_FRIEND_DEATH_RESPONSE = {
-    1, 0, nullptr, nullptr, [] (const monster* victim) {
+    1, 0, nullptr, nullptr, [] (const monster* victim) -> bool {
         // For everyone but Fedhas, plants are items not creatures,
         // and animated items are, well, items as well.
         return victim && !mons_is_object(victim->type)
@@ -263,7 +263,7 @@ static const dislike_response ELY_FRIEND_DEATH_RESPONSE = {
 
 /// Fedhas's response to a friend(ly plant) dying.
 static const dislike_response FEDHAS_FRIEND_DEATH_RESPONSE = {
-    1, 0, nullptr, nullptr, [] (const monster* victim) {
+    1, 0, nullptr, nullptr, [] (const monster* victim) -> bool {
         // ballistomycetes are penalized separately.
         return victim && fedhas_protects(victim)
         && victim->mons_species() != MONS_BALLISTOMYCETE;
@@ -382,7 +382,7 @@ static peeve_map divine_peeves[] =
         { DID_KILL_LIVING, {
             1, 2, nullptr, " does not appreciate your shedding blood"
                             " when asking for salvation!",
-            [] (const monster*) {
+            [] (const monster*) -> bool {
                 // Killing is only disapproved of during prayer.
                 return you.duration[DUR_LIFESAVING] != 0;
             }
@@ -400,12 +400,12 @@ static peeve_map divine_peeves[] =
     // GOD_JIYVA,
     {
         { DID_KILL_SLIME, {
-            1, 2, nullptr, nullptr, [] (const monster* victim) {
+            1, 2, nullptr, nullptr, [] (const monster* victim) -> bool {
                 return victim && !victim->is_shapeshifter();
             }
         } },
         { DID_ATTACK_NEUTRAL, {
-            1, 1, nullptr, nullptr, [] (const monster* victim) {
+            1, 1, nullptr, nullptr, [] (const monster* victim) -> bool {
                 return victim
                     && mons_is_slime(victim) && !victim->is_shapeshifter();
             }
