@@ -993,6 +993,8 @@ easy_eat_chunks = false
 auto_eat_chunks = false
         Setting this option to true will allow you to automatically eat a chunk
         if you get hungry while you are travelling, auto-exploring or resting.
+        Automatic eating is disabled whenever autopickup is disabled, whether
+        with ctrl-a or because of an invisible monster.
 
 easy_quit_item_prompts = true
         Setting this option to true allows the quitting of item listing
