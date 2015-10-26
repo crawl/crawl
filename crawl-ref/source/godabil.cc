@@ -2926,8 +2926,7 @@ static bool _prompt_amount(int max, int& selected, const string& prompt)
         // Cancel
         if (key_is_escape(keyin) || keyin == ' ' || keyin == '0')
         {
-            canned_msg(MSG_OK);
-            return false;
+            mpr("You must create at least one plant");
         }
 
         // Default is max
@@ -2986,7 +2985,7 @@ static void _decrease_amount(vector<pair<int, int> >& available, int amount)
 // prompted to select a stack of fruit, and then plants are placed on open
 // squares adjacent to the user. Of course, one piece of fruit is
 // consumed per plant, so a complete ring may not be formed.
-bool fedhas_plant_ring_from_fruit()
+spret_type fedhas_plant_ring_from_fruit()
 {
     // How much fruit is available?
     vector<pair<int, int> > collected_fruit;
@@ -3014,7 +3013,7 @@ bool fedhas_plant_ring_from_fruit()
         else
             mpr("No fruit available.");
 
-        return false;
+        return SPRET_ABORT;
     }
 
     prioritise_adjacent(you.pos(), adjacent);
@@ -3037,12 +3036,7 @@ bool fedhas_plant_ring_from_fruit()
 
     // And how many plants does the user want to create?
     int target_count;
-    if (!_prompt_amount(max_use, target_count,
-                        "How many plants will you create?"))
-    {
-        // User cancelled at the prompt.
-        return false;
-    }
+    _prompt_amount(max_use, target_count, "How many plants will you create?");
 
     const int hp_adjust = you.skill(SK_INVOCATIONS, 10);
 
@@ -3080,11 +3074,15 @@ bool fedhas_plant_ring_from_fruit()
     }
 
     if (created_count)
+    {
         _decrease_amount(collected_fruit, created_count);
+        return SPRET_SUCCESS;
+    }
     else
+    {
         canned_msg(MSG_NOTHING_HAPPENS);
-
-    return created_count;
+        return SPRET_ABORT;
+    }
 }
 
 // Create a circle of water around the target, with a radius of

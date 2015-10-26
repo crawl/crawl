@@ -2570,8 +2570,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_FEDHAS_PLANT_RING:
         fail_check();
-        if (!fedhas_plant_ring_from_fruit())
-            return SPRET_ABORT;
+        return fedhas_plant_ring_from_fruit();
         break;
 
     case ABIL_FEDHAS_RAIN:
