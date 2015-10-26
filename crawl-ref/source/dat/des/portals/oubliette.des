@@ -258,6 +258,7 @@ default-depth: Oubli
 #### arrival subvaults (entry, exit, ally) #################
 
 NAME:   oubliette_subvault_arrival_free
+TAGS:   oubliette_subvault_arrival_free
 WEIGHT: 2
 : place_ally(_G)
 : oubliette_setup_features(_G)
@@ -272,6 +273,7 @@ xxxxx
 ENDMAP
 
 NAME:    oubliette_subvault_arrival_prison
+TAGS:    oubliette_subvault_arrival_prison
 WEIGHT:  2
 SUBST:   m = mmx
 : place_ally(_G)
@@ -288,7 +290,9 @@ ENDMAP
 
 # For arrival vaults with monsters beating up on the ally: 
 # exit should be close to entry position
+
 NAME:    oubliette_subvault_arrival_fight
+TAGS:    oubliette_subvault_arrival_fight
 MONS:    place:D:4 generate_awake / nothing w:4
 : place_ally(_G)
 : oubliette_setup_features(_G)
@@ -302,10 +306,25 @@ x@1@x
 xxxxx
 ENDMAP
 
+NAME:    oubliette_subvault_arrival_fight_zombies
+TAGS:    oubliette_subvault_arrival_fight
+MONS:    orc zombie / kobold zombie / gnoll zombie generate_awake
+: place_ally(_G)
+: oubliette_setup_features(_G)
+MAP
+xxxxx
+xA.<x
+x...xx
+x111.+
+x1@1xx
+x@1@x
+xxxxx
+ENDMAP
+
 #### minor subvaults #######################################
 
-NAME:   oubliette_tiny_minor_1
-TAGS:   oubliette_tiny_minor_subvault
+NAME:   oubliette_subvault_minor
+TAGS:   oubliette_subvault_minor
 MONS:   hobgoblin / worm
 MAP
 xxxxxxxxx
@@ -328,8 +347,8 @@ ENDMAP
 
 #### boss subvaults (end monster, loot) ####################
 
-NAME:   oubliette_tiny_boss_1
-TAGS:   oubliette_tiny_boss_subvault
+NAME:   oubliette_subvault_boss
+TAGS:   oubliette_subvault_boss
 MONS:   ogre
 {{ 
  if companion ~= nil then
@@ -357,8 +376,8 @@ NAME:     oubliette_tiny
 ORIENT:   encompass
 TAGS:     no_rotate
 : subvault("A : oubliette_subvault_arrival_" .. arrival_type)
-SUBVAULT: B : oubliette_minor_subvault
-SUBVAULT: C : oubliette_tiny_boss_subvault
+SUBVAULT: B : oubliette_subvault_minor
+SUBVAULT: C : oubliette_subvault_boss
 : oubliette_setup_features(_G)
 MAP
 AAAAA
