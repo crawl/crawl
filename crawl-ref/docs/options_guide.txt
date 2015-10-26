@@ -990,7 +990,7 @@ easy_eat_chunks = false
         to eat, and eat it without prompting.
         You will always be prompted to eat harmful chunks.
 
-auto_eat_chunks = false
+auto_eat_chunks = true
         Setting this option to true will allow you to automatically eat a chunk
         if you get hungry while you are travelling, auto-exploring or resting.
         Automatic eating is disabled whenever autopickup is disabled, whether
