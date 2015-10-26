@@ -6,12 +6,8 @@
 # About ally placement:
 #  - in the arrival subvault
 #  - with attributes att:friendly and no_staird
-#  - when placing uniques, provide a default to fall back on
+#  - when placing uniques, make sure they don't exist yet
 #  - unless you know what you are doing, no items
-#
-# Example:
-#   KMONS: @ = Sigmund att:friendly no_stairs ; nothing , \
-#              human att:friendly no_stairs ; nothing
 
 # TODO:
 #  - killing the ally should give a new milestone ("You killed your friend
@@ -19,15 +15,15 @@
 #  - needs a dungeon depth for monster spawning purposes (scroll of summoning)
 #  - portal/rock colours/tiles are preliminary
 #  - timer announcement messages need care!
-#  - make sure that uniques haven't been encountered in this game already
 
 # Principal goal: a very early portal vault, like Sewer or Ossuary, which
 # starts with the player liberating or otherwise acquiring an ally, and then
 # fighting as a team for the prize.
 #
-#   - depth range D:3-8 (in two sets: early=D:3-5 and late=D:6-8)
-#   - small levels (I think that some Sewer maps are already too big)
-#   - both ally or player alone are too weak to win the fight
+#   - depth range D:3-4
+#   - small-ish levels
+#   - ideally, both ally or player alone are too weak to win the fight
+#     (this is impossible for combos like TrBe, but we should try)
 #
 # Because of the last goal, the portal vault makes a lot more sense in the
 # early game. Also place only one exit, right next to the entrance. (To make
@@ -42,7 +38,7 @@
 #   3. Rarely, the ally is weak but has a scroll of summoning or a wand of
 #      enslavement (on the floor, in his prison).
 #
-# What kinds of allies:
+# What kinds of allies (should be stronger than a typical player at that stage):
 #   1. A humanoid: big kobold; gnoll; type 4 demon. Centaur?
 #   2. An early unique: Sigmund; Crazy Yiuf etc.
 #   3. An animal (presumably stored for food or labour): yak; two sheep.
@@ -53,7 +49,7 @@
 # summoners: this is very early game! The opposition should come in two or
 # three waves, so that the player can get a feeling for the combined power
 # of character + ally.
-#   1. Kobolds (with big kobold at end).
+#   1. Kobolds (with big kobolds at end).
 #   2. Orcs (with orc warrior at end).
 #   3. Gnolls (having good weapons at the end).
 #   4. Hobgoblin (having axes; ogre at end).
@@ -113,7 +109,7 @@ function oubliette_portal(e)
       ranges = {
         { 5000, 'steady ' },  { 4000, '' },
         { 2500, 'desperate ' }, { 1500, 'hopeless ' },
-        { 0, 'moribound ' }
+        { 0, 'moribund ' }
       }
     }
 
@@ -141,22 +137,99 @@ function oubliette_setup_features(e)
   e.kfeat("< = exit_oubliette")
 end
  
-oubliette_ally = util.random_from({"Sigmund", "Dowan", "Duvessa", "Pikel", "random"}) 
+  ally_types = {
+    { weight = 10, type = 'humanoid'},
+    { weight = 10, type = 'unique' },
+    { weight = 5,  type = 'animal' },
+    { weight = 5,  type = 'undead' },
+    { weight = 1,  type = 'handover'}  -- the ally is weak, but gives you an item
+  }
+
+  ally_type = util.random_weighted_from("weight", ally_types).type
+
+  uniques_list = {
+    { weight = 100, unique = 'Sigmund', companion = 'Edmund', item = 'scythe' },
+    { weight = 50,  unique = 'Dowan',   companion = 'Duvessa' },
+    { weight = 50,  unique = 'Duvessa', companion = 'Dowan' },
+    { weight = 10,  unique = 'Pikel' },
+    { weight = 1,   unique = 'Natasha', companion = 'Boris' }
+  }
+-- TODO: check if uniques have not been placed already
+
+  humanoids_list = {
+    { weight = 10, humanoid = 'big kobold' },
+    { weight = 10, humanoid = 'orc priest' },
+    { weight = 10, humanoid = 'gnoll ; halberd' }
+  }
+
+  animals_list = {
+    { weight = 10, animal = 'yak',  mob = 2 },
+    { weight = 10, animal = 'wolf', mob = 1 }
+  }  
+
+  undead_list = {
+    { weight = 10, undead = 'troll zombie' }
+  }
+
+  handover_list = {
+    { weight = 10, handover = 'kobold', item = 'wand of enslavement charges:6' }
+  }
+
+if ally_type == "unique" then
+   chosen = util.random_weighted_from("weight", uniques_list)
+   ally = chosen.unique
+   companion = chosen.companion
+   allyitem = chosen.item
+elseif ally_type == "humanoid" then
+   chosen = util.random_weighted_from("weight", humanoids_list)
+   ally = chosen.humanoid
+elseif ally_type == "animal" then
+   chosen = util.random_weighted_from("weight", animals_list)   
+   ally = chosen.animal
+   allies_number = chosen.mob
+elseif ally_type == "undead" then
+   chosen = util.random_weighted_from("weight", undead_list)   
+   ally = chosen.undead
+elseif ally_type == "handover" then
+   chosen = util.random_weighted_from("weight", handover_list)   
+   ally = chosen.handover
+   handover_item = chosen.item
+end
 
 function place_ally(e)
-    if oubliette_ally == "Sigmund" then
-        e.kmons("@ = Sigmund att:friendly no_stairs ; nothing")
-    elseif oubliette_ally == "Dowan" then
-        e.kmons("@ = Dowan att:friendly no_stairs ; nothing")
-    elseif oubliette_ally == "Duvessa" then
-        e.kmons("@ = Duvessa att:friendly no_stairs ; nothing")
-    elseif oubliette_ally == "Pikel" then
-        e.kmons("@ = Pikel att:friendly no_stairs ; nothing")
-    else
-        e.kmons("@ = big kobold att:friendly no_stairs ; nothing")
-        e.kmons("@ = Dowan att:friendly no_stairs ; nothing")
-    end
+  -- A weak ally handing over an item to the player
+  if handover_item ~= nil then
+    e.nsubst("@ = 1:T / *:@")
+    e.kitem("T = " .. handover_item .. "ident:type")
+  end
+  -- Sometimes more than one ally
+  if allies_number == nil then
+    allies_number = 1
+  end
+  e.nsubst("@ = " .. allies_number .. ":@ / *:.")
+  e.kmons("@ = " .. ally .. " att:friendly no_stairs")
 end
+
+  arrival_list = {
+    { weight = 10, type = "prison" },
+    { weight = 10, type = "fight" },
+    { weight = 10, type = "free" }
+  }
+
+-- There are different types of arrival rooms.
+-- Some types of ally force a particular type.
+arrival_type = util.random_weighted_from("weight", arrival_list).type
+if ally_type == "handover" then
+  arrival_type = "prison"
+end
+
+  enemy_list = {
+    { weight = 10, enemy = 'kobolds', mob = 10 },
+    { weight = 10, enemy = 'humans',  mob = 2 },
+    { weight = 10, enemy = 'orcs',    mob = 5 },
+    { weight = 10, enemy = 'zombies', mob = 7 }
+  }
+
 }}
 
 ############################################################
@@ -165,7 +238,7 @@ end
 default-depth: D:2
 # TODO: Change to D:3-5 later on
 
-NAME:   portal_oubliette_entry_generic
+NAME:   portal_oubliette_entry_generic_LL
 : oubliette_portal(_G)
 MAP
 ...
@@ -176,7 +249,7 @@ ENDMAP
 #### The destination Oubliette vaults ######################
 #
 # Each map is built out of several subvaults:
-#  - the arrival (containg stone arch, exit, and ally)
+#  - the arrival (containing stone arch, exit, and ally)
 #  - minor opposition
 #  - boss fight
 
@@ -184,48 +257,48 @@ default-depth: Oubli
 
 #### arrival subvaults (entry, exit, ally) #################
 
-NAME:   oubliette_tiny_arrival_1
-TAGS:   oubliette_tiny_arrival_subvault
+NAME:   oubliette_subvault_arrival_free
+WEIGHT: 2
 : place_ally(_G)
 : oubliette_setup_features(_G)
 MAP
 xxxxx
 x...x
 x.A.xx
-x.@..+
+x@@@.+
 x.<.xx
 x...x
 xxxxx
 ENDMAP
 
-NAME:    oubliette_tiny_arrival_2
-TAGS:    oubliette_tiny_arrival_subvault
-SHUFFLE: =m
-SUBST:   = : +
+NAME:    oubliette_subvault_arrival_prison
+WEIGHT:  2
+SUBST:   m = mmx
 : place_ally(_G)
 : oubliette_setup_features(_G)
 MAP
 xxxxx
-x@=.x
-xmx.xx
-x..A.+
-xmx.xx
-x<=.x
+xA.<x
+xx+xxx
+x....+
+xm=mxx
+x@@@x
 xxxxx
 ENDMAP
 
-NAME:    oubliette_tiny_arrival_infighting
-TAGS:    oubliette_tiny_arrival_subvault
-MONS:    rat generate_awake / jackal generate_awake w:5 / nothing
+# For arrival vaults with monsters beating up on the ally: 
+# exit should be close to entry position
+NAME:    oubliette_subvault_arrival_fight
+MONS:    place:D:4 generate_awake / nothing w:4
 : place_ally(_G)
 : oubliette_setup_features(_G)
 MAP
 xxxxx
-xA..x
-x..1xx
-x.1@1+
-x..1xx
-x<..x
+xA.<x
+x...xx
+x.1..+
+x1@1xx
+x@1@x
 xxxxx
 ENDMAP
 
@@ -258,28 +331,23 @@ ENDMAP
 NAME:   oubliette_tiny_boss_1
 TAGS:   oubliette_tiny_boss_subvault
 MONS:   ogre
-# FIXME: The following code is supposed to use the oubliette_ally variable
-#        (which is rolled correctly at the beginning) to affect the final
-#        subvault. It doesn't, though.
-#
-# {{ 
-#   if oubliette_ally == "Dowan" then
-#     e.nsubst("* = 1:X / *:*")
-#     e.kmons("X = Duvessa")
-#   elseif oubliette_ally == "Duvessa" then
-#     e.nsubst("* = 1:X / *:*")
-#     e.kmons("X = Dovan")
-#   else
-#     e.nsubst("* = 1:X / *:*")
-#     e.kitem("X = any scythe")     
-#   end
-# }}
+{{ 
+ if companion ~= nil then
+   nsubst("* = 1:X / *:*")
+   kmons("X = " .. companion .. " att:friendly no_stairs")
+ end
+ if allyitem ~= nil then
+   nsubst("* = 1:Y / *:*")
+   local d = crawl.random2(7)
+   kitem("Y = " .. allyitem .. " plus:" .. d)
+ end
+}}
 MAP
-xxxxxxx
- x...*x
-+..1.*x	
- x...*x
-xxxxxxx
+xxxxxxxx
+ x...x*x
++..1.=*x	
+ x...x*x
+xxxxxxxx
 ENDMAP
 
 
@@ -288,16 +356,16 @@ ENDMAP
 NAME:     oubliette_tiny
 ORIENT:   encompass
 TAGS:     no_rotate
-SUBVAULT: A : oubliette_tiny_arrival_subvault
-SUBVAULT: B : oubliette_tiny_minor_subvault
+: subvault("A : oubliette_subvault_arrival_" .. arrival_type)
+SUBVAULT: B : oubliette_minor_subvault
 SUBVAULT: C : oubliette_tiny_boss_subvault
 : oubliette_setup_features(_G)
 MAP
 AAAAA
-AAAAABBBBBBBBBCCCCCCC
-AAAAAABBBBBBBBBCCCCCC
-AAAAAABBBBBBBBCCCCCCC
-AAAAAABBBBBBBBBCCCCCC
-AAAAABBBBBBBBBCCCCCCC
+AAAAABBBBBBBBBCCCCCCCC
+AAAAAABBBBBBBBBCCCCCCC
+AAAAAABBBBBBBBCCCCCCCC
+AAAAAABBBBBBBBBCCCCCCC
+AAAAABBBBBBBBBCCCCCCCC
 AAAAA
 ENDMAP
