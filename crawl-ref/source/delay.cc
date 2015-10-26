@@ -1087,6 +1087,7 @@ static command_type _get_running_command()
 static bool _auto_eat(delay_type type)
 {
     return Options.auto_eat_chunks
+           && Options.autopickup_on > 0
            && (!you.gourmand()
                || you.duration[DUR_GOURMAND] >= GOURMAND_MAX / 4
                || you.hunger_state < HS_SATIATED)
