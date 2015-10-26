@@ -253,7 +253,7 @@ function fiery_guardians (e, intelligent, village)
             e.mons("orc warrior ; " .. warriorstuff
                   .. " / two-headed ogre ; " .. ogrestuff .. " . " .. ogrestuff
                   .. " / " .. centaur
-                  .. " / deep elf fighter ; " .. elfstuff)
+                  .. " / deep elf mage ; " .. elfstuff)
             e.mons("fire bat / fire drake / hog / hell hound w:3")
             return
         end
@@ -281,15 +281,14 @@ function fiery_guardians (e, intelligent, village)
            e.mons("salamander")
            e.mons("salamander mystic")
         elseif set_weight < 11 then
-           e.mons("deep elf fighter ; " .. elfstuff
-                  .. " / deep elf mage ; " .. elfstuff)
+           e.mons("deep elf mage ; " .. elfstuff)
            e.mons("deep elf knight ; " .. elfstuff)
         else
         -- Mix of the above and worse.
            e.mons("orc warrior ; " .. warriorstuff
                   .. " / two-headed ogre ; " .. ogrestuff .. " . " .. ogrestuff
                   .. " / " .. centaur
-                  .. " / deep elf fighter ; " .. elfstuff)
+                  .. " / deep elf mage ; " .. elfstuff)
            e.kmons("2 = Harold ; throwing net . halberd " .. flame
                    .. " . ring mail " .. res
                    .. " / red draconian ; " .. dracstuff

@@ -1184,7 +1184,6 @@ ENDMAP
 #   No loot but the elves' gear, but at the depth this appears that may be good
 NAME:    elves_outpost_lemuel
 DEPTH:   D:11-, Orc, Elf
-MONS:    deep elf fighter
 MONS:    deep elf mage
 SHUFFLE: ?_/bb, _'/ww
 SUBST:   ?_' = .
@@ -1194,7 +1193,7 @@ MAP
 ?''__''''''.
 ?''bbbbbb_'.
 ._'b1111b_'.
-._'.1221>'_.
+._'.1111>'_.
 .'_b1111b'_.
 .'_bbbbbb''?
 .''''''__''?
@@ -1369,7 +1368,7 @@ DEPTH:  D:4-, Elf
 WEIGHT: 7
 NSUBST: 1 = 2:1 / *:.
 : if you.in_branch("Elf") then
-MONS:   deep elf fighter
+MONS:   deep elf mage
 : else
 MONS:   goblin / hobgoblin / kobold / orc
 : end
@@ -1390,7 +1389,7 @@ SHUFFLE: mA
 SUBST:   A = x
 NSUBST:  1 = 2:1 / *:.
 : if you.in_branch("Elf") then
-MONS:    deep elf fighter
+MONS:    deep elf mage
 : else
 MONS:    goblin / hobgoblin / kobold / orc
 : end
@@ -1757,7 +1756,7 @@ ENDMAP
 NAME:  guppyfry_early_elven_hall
 DEPTH: D:6-9
 TAGS:  patrolling no_monster_gen transparent
-MONS:  deep elf fighter, plant
+MONS:  deep elf mage, plant
 ITEM:  any scroll / any food / any book
 SUBST: - = 2....GTd$%
 MARKER: H = lua:props_marker { stop_explore = "statue" }
@@ -1812,7 +1811,7 @@ SUBST:   ? = 123d
 : if you.in_branch("Snake") then
 MONS:    naga, naga warrior, naga mage w:9 / greater naga w:1
 : elseif you.in_branch("Elf") then
-MONS:    deep elf fighter, deep elf mage, deep elf mage
+MONS:    deep elf mage, deep elf knight / deep elf archer, deep elf mage
 : elseif you.in_branch("Orc") then
 MONS:    orc, orc warrior, orc wizard w:9 / orc sorcerer w:1
 : else
@@ -2054,7 +2053,7 @@ SUBST: 1 : 13
 # scale the deck quality accordingly - it's mostly for theming, but we might as
 # well make it depth-appropriate loot too.
 : if you.in_branch("Elf") then
-MONS: deep elf mage, deep elf mage, deep elf fighter
+MONS: deep elf mage, deep elf mage, deep elf mage
 ITEM: legendary deck
 : elseif you.in_branch("Orc") then
 MONS: orc warrior, orc wizard, orc
@@ -5847,7 +5846,7 @@ KMONS:   M = Wiglaf / ancient champion, ancient champion / nothing
 KMONS:   N = Frederick / draconian knight, draconian knight / nothing
 KMONS:   O = Sojobo / tengu reaver, tengu reaver / nothing
 KMONS:   W = gnoll sergeant ; trident . scale mail | chain mail . shield
-KMONS:   X = deep elf fighter ; rapier | long sword . robe | leather armour . buckler | nothing
+KMONS:   X = deep elf knight ; rapier | long sword . robe | leather armour . buckler | nothing
 KMONS:   Y = wight ; falchion | long sword . ring mail | scale mail . shield | nothing
 KITEM:   S = good_item long sword / good_item great sword / good_item demon blade /\
              good_item triple sword / good_item double sword

@@ -129,7 +129,8 @@ ORIENT: north
 KMONS:  O = the Enchantress patrolling
 MONS:   spriggan defender, spriggan berserker, spriggan rider, spriggan air mage
 MONS:   faun / centaur warrior / manticore w:5 / yaktaur captain w:5
-MONS:   tengu warrior / hill giant / deep elf knight / shapeshifter w:5
+MONS:   tengu warrior / hill giant / deep elf knight w:5 / \
+        deep elf archer w:5 / shapeshifter w:5
 MONS:   tengu conjurer w:20 / ogre mage w:15 / boggart band / rakshasa / \
         cyclops w:5
 KMONS:  8 = ettin ; giant club randart . giant club randart / \
@@ -260,8 +261,9 @@ MONS:   sphinx w:20 / tengu reaver w:15 / deep elf high priest / \
         ettin w:5 ; giant club randart . giant club randart
 MONS:   spriggan air mage w:15 / spriggan druid / spriggan berserker / \
         dire elephant w:5 / shambling mangrove w:3 / anaconda w:2
-MONS:   manticore / deep elf knight / rakshasa / ogre mage / \
-        boggart band w:5 / glowing shapeshifter w:5 / yaktaur captain w:4
+MONS:   manticore / deep elf knight w:5 / deep elf archer w:5 / \
+        rakshasa / ogre mage / boggart band w:5 / glowing shapeshifter w:5 / \
+        yaktaur captain w:4
 KFEAT:  _ = altar_vehumet
 KFEAT:  - = floor
 SUBST:  T = tx

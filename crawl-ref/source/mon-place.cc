@@ -2253,15 +2253,8 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
 
-    case MONS_DEEP_ELF_FIGHTER:
-        if (coinflip())
-        {
-            band = BAND_DEEP_ELF_FIGHTER;
-            band_size = 2 + random2(3);
-        }
-        break;
-
     case MONS_DEEP_ELF_KNIGHT:
+    case MONS_DEEP_ELF_ARCHER:
         if (coinflip())
         {
             band = BAND_DEEP_ELF_KNIGHT;
@@ -3059,15 +3052,10 @@ static monster_type _band_member(band_type band, int which,
     case BAND_HELLWING:
         return coinflip() ? MONS_HELLWING : MONS_SMOKE_DEMON;
 
-    case BAND_DEEP_ELF_FIGHTER:
-        return random_choose_weighted(5, MONS_DEEP_ELF_MAGE,
-                                      4, MONS_DEEP_ELF_FIGHTER,
-                                      0);
-
     case BAND_DEEP_ELF_KNIGHT:
         return random_choose_weighted(92, MONS_DEEP_ELF_MAGE,
-                                      72, MONS_DEEP_ELF_FIGHTER,
-                                      28, MONS_DEEP_ELF_KNIGHT,
+                                      24, MONS_DEEP_ELF_KNIGHT,
+                                      24, MONS_DEEP_ELF_ARCHER,
                                        3, MONS_DEEP_ELF_DEATH_MAGE,
                                        2, MONS_DEEP_ELF_DEMONOLOGIST,
                                        2, MONS_DEEP_ELF_ANNIHILATOR,
@@ -3075,8 +3063,9 @@ static monster_type _band_member(band_type band, int which,
                                        0);
 
     case BAND_DEEP_ELF_HIGH_PRIEST:
-        return random_choose_weighted(6, MONS_DEEP_ELF_FIGHTER,
-                                      5, MONS_DEEP_ELF_MAGE,
+        return random_choose_weighted(5, MONS_DEEP_ELF_MAGE,
+                                      2, MONS_DEEP_ELF_KNIGHT,
+                                      2, MONS_DEEP_ELF_ARCHER,
                                       1, MONS_DEEP_ELF_DEMONOLOGIST,
                                       1, MONS_DEEP_ELF_ANNIHILATOR,
                                       1, MONS_DEEP_ELF_SORCERER,

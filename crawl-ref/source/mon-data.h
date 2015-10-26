@@ -256,6 +256,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_DEEP_ELF_SUMMONER)
     AXED_MON(MONS_DEEP_ELF_CONJURER)
     AXED_MON(MONS_DEEP_ELF_PRIEST)
+    AXED_MON(MONS_DEEP_ELF_FIGHTER)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -732,18 +733,6 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DEEP_ELF_FIGHTER, 'e', LIGHTRED, "deep elf fighter",
-    M_WARM_BLOOD | M_FIGHTER | M_SPEAKS,
-    MR_NO_FLAGS,
-    10, MONS_ELF, MONS_ELF, MH_NATURAL, 40,
-    { {AT_HIT, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 3 },
-    0, 13, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
-    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
-},
-
-{
     MONS_DEEP_ELF_KNIGHT, 'e', CYAN, "deep elf knight",
     M_WARM_BLOOD | M_FIGHTER | M_SPEAKS,
     MR_NO_FLAGS,
@@ -751,6 +740,18 @@ static monsterentry mondata[] =
     { {AT_HIT, AF_PLAIN, 21}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 11, 3, 3 },
     0, 15, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
+    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
+},
+
+{
+    MONS_DEEP_ELF_ARCHER, 'e', BROWN, "deep elf archer",
+    M_WARM_BLOOD | M_ARCHER | M_DONT_MELEE | M_SPEAKS,
+    MR_NO_FLAGS,
+    10, MONS_ELF, MONS_ELF, MH_NATURAL, 80,
+    { {AT_HIT, AF_PLAIN, 21}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 10, 4, 2 },
+    0, 15, MST_DEEP_ELF_ARCHER, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
@@ -853,7 +854,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DEEP_ELF_ELEMENTALIST, 'e', ETC_FLASH, "deep elf elementalist",
+    MONS_DEEP_ELF_ELEMENTALIST, 'e', LIGHTRED, "deep elf elementalist",
     M_WARM_BLOOD | M_SEE_INVIS | M_SPEAKS,
     MR_NO_FLAGS,
     17, MONS_ELF, MONS_ELF, MH_NATURAL, 120,

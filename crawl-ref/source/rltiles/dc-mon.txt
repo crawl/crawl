@@ -857,8 +857,10 @@ fannar MONS_FANNAR
 %rim 1
 %sdir mon
 elf MONS_ELF
-deep_elf_fighter MONS_DEEP_ELF_FIGHTER
 deep_elf_knight MONS_DEEP_ELF_KNIGHT
+%rim 0
+deep_elf_archer MONS_DEEP_ELF_ARCHER
+%rim 1
 deep_elf_mage MONS_DEEP_ELF_MAGE
 deep_elf_sorcerer MONS_DEEP_ELF_SORCERER
 deep_elf_death_mage MONS_DEEP_ELF_DEATH_MAGE

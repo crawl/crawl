@@ -269,7 +269,7 @@ NAME:   minmay_elf_outpost
 TAGS:   no_rotate
 ORIENT: northwest
 DEPTH:  D:12-
-MONS:   deep elf fighter / nothing, deep elf knight
+MONS:   deep elf mage / nothing, deep elf knight / deep elf archer
 MONS:   deep elf mage w:30 / nothing
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
@@ -1106,22 +1106,27 @@ KFEAT:  _ = altar_okawaru
 SUBST:  = = nv
 FTILE:  '+Gvc12345_defghijk = floor_hall
 : if you.absdepth() < 16 then
-MONS:   deep elf fighter / orc warrior
+MONS:   deep elf knight w:1 / deep elf archer w:1 / orc warrior
 MONS:   w:20 orc warrior / centaur warrior
 MONS:   orc warrior
 MONS:   w:8 patrolling orc knight / w:2 patrolling orc warlord
 : elseif you.absdepth() < 21 then
-MONS:   w:1 deep elf knight / w:4 orc warrior / w:2 centaur warrior
-MONS:   w:12 orc knight / w:6 deep elf knight / w:4 centaur warrior / w:2 yaktaur captain
+MONS:   w:1 deep elf knight / w:1 deep elf archer / w:8 orc warrior / \
+        w:4 centaur warrior
+MONS:   w:12 orc knight / w:3 deep elf knight / w:3 deep elf archer / \
+        w:4 centaur warrior / w:2 yaktaur captain
 MONS:   orc knight
 KMONS:  4 = patrolling Wiglaf, patrolling orc warlord
 : elseif you.absdepth() < 26 then
-MONS:   w:1 deep elf knight / w:4 orc knight / w:2 centaur warrior / w:1 yaktaur captain
-MONS:   w:4 orc knight / w:1 deep elf knight / w:3 yaktaur captain
+MONS:   w:1 deep elf knight / w:1 deep elf archer / w:8 orc knight / \
+        w:4 centaur warrior / w:2 yaktaur captain
+MONS:   w:8 orc knight / w:1 deep elf knight / w:1 deep elf archer / \
+        w:6 yaktaur captain
 MONS:   orc warlord
 KMONS:  4 = patrolling Wiglaf, patrolling deep elf blademaster
 : else
-MONS:   w:1 deep elf knight / w:4 orc knight / w:3 yaktaur captain
+MONS:   w:1 deep elf knight / w:1 deep elf archer / w:8 orc knight / \
+        w:6 yaktaur captain
 MONS:   w:4 orc warlord / w:1 deep elf blademaster / w:3 deep elf master archer
 MONS:   deep elf blademaster
 KMONS:  4 = patrolling Wiglaf, patrolling draconian knight

@@ -217,8 +217,8 @@ MONS:    ogre mage, two-headed ogre / ogre w:16
 MONS:    orc knight, orc priest / orc warrior / orc wizard / orc w:15
 KMONS:   7 = yaktaur
 KMONS:   8 = yaktaur / nothing w:5
-KMONS:   9 = deep elf knight
-KMONS:   0 = deep elf mage / deep elf fighter / nothing
+KMONS:   9 = deep elf knight / deep elf archer
+KMONS:   0 = deep elf mage / nothing w:5
 KMONS:   A = boggart / kobold demonologist
 KMONS:   B = big kobold / kobold w:5
 KMONS:   C = skeletal warrior
@@ -253,7 +253,7 @@ NAME:   grunt_vaults_entry_tiered
 TAGS:   vaults_entry no_monster_gen no_tele_into transparent
 MONS:   human w:29 / orc warrior w:1
 MONS:   necromancer / wizard / yaktaur w:2
-MONS:   vault guard w:29 / deep elf knight w:1
+MONS:   vault guard w:58 / deep elf knight w:1 / deep elf archer w:1
 SUBST:  x : xcv
 NSUBST: 2 = 1:2 / * = 12, 3 = 1:3 / * = 113
 KFEAT:  O = enter_vaults
@@ -285,7 +285,7 @@ MONS: human ; arbalest . bolt q:10 . short sword | dagger . \
               leather armour w:5 | ring mail | scale mail / \
       orc warrior ; arbalest . bolt q:10 . short sword | dagger . \
                     leather armour w:5 | ring mail | scale mail / \
-      deep elf fighter / gargoyle / yaktaur
+      deep elf knight w:5 / deep elf archer w:5 / gargoyle / yaktaur
 MONS: vault guard / orc knight w:2
 MONS: wizard / tengu conjurer / orc sorcerer / ogre mage
 NSUBST: T = 1:U / *:T

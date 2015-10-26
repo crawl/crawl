@@ -293,7 +293,7 @@ TAGS:    uniq_second_food extra chance_second_food patrolling no_rotate no_vmirr
 # D, Orc, Elf, Swamp, Shoals, Vaults, Crypt, Hells.
 KMONS:   A = kobold
 KMONS:   B = orc
-KMONS:   C = deep elf fighter
+KMONS:   C = deep elf mage
 KMONS:   D = spriggan
 KMONS:   E = merfolk
 KMONS:   F = human
@@ -391,8 +391,7 @@ DEPTH:  D:8-14
 WEIGHT: 10
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
         patrolling
-MONS:   deep elf fighter ; rapier | falchion / \
-        human ; short sword | rapier / \
+MONS:   human ; short sword | rapier / \
         orc warrior ; dagger / \
         spriggan ; dagger
 ITEM:   slice of pizza q:8, bread ration q:2

@@ -2375,8 +2375,9 @@ MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
          vampire / deep elf mage w:5
 MONS:    orc high priest / orc sorcerer / naga warrior / naga mage / \
          skeletal warrior / yaktaur captain w:5 / ogre mage / \
-         deep elf knight / phantasmal warrior / spriggan berserker / \
-         guardian serpent w:5 / harpy w:5 / salamander mystic
+         deep elf knight w:5 / deep elf archer w:5 / phantasmal warrior / \
+         spriggan berserker / guardian serpent w:5 / harpy w:5 / \
+         salamander mystic
 MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
          hell knight w:5 / orc warlord / minotaur / \
          vampire knight / vampire mage / ghoul w:5 / base draconian / \
@@ -2500,7 +2501,8 @@ KMONS: I = frost giant w:5 / ice dragon / blizzard demon / white draconian / \
 KMONS: E = titan w:5 / storm dragon / black draconian / ball lightning
 KMONS: O = orc knight / orc sorcerer / orc warlord w:5 / orc high priest / \
            orc warrior
-KMONS: N = deep elf knight / deep elf annihilator w:5 / deep elf death mage / \
+KMONS: N = deep elf knight w:5 / deep elf archer w:5 / \
+           deep elf annihilator w:5 / deep elf death mage / \
            deep elf mage / deep elf sorcerer
 KMONS: L = death yak / catoblepas w:5 / basilisk / lindwurm / blink frog
 KMONS: S = swamp dragon / hydra w:5 / thorn hunter / large slime creature / \
@@ -2561,8 +2563,8 @@ MONS:    necromancer band / vampire mage band w:6
 MONS:    vampire knight w:25 / bone dragon / ghoul / lich
 SUBST:   x = e
 : else
-KMONS:   12 = deep elf mage / deep elf knight
-MONS:    deep elf fighter band w:6 / deep elf knight band
+KMONS:   12 = deep elf mage / deep elf knight w:5 / deep elf archer w:5
+MONS:    deep elf knight band / deep elf archer band
 MONS:    deep elf annihilator / deep elf sorcerer / deep elf high priest
 : end
 SUBST:   a : X., A : Y., b : XX., B : YY.
