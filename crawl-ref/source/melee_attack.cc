@@ -160,7 +160,7 @@ bool melee_attack::handle_phase_attempted()
                 count_action(CACT_MELEE, WPN_STAFF);
         }
         else
-            count_action(CACT_MELEE, -1);
+            count_action(CACT_MELEE, 0, 0); // unarmed auxtype
     }
     else
     {
@@ -254,6 +254,8 @@ bool melee_attack::handle_phase_dodged()
 
     if (ev_margin + (ev - ev_nophase) > 0)
     {
+        if (defender->is_player())
+            count_action(CACT_DODGE, DODGE_PHASE);
         if (needs_message && defender_visible)
         {
             mprf("%s momentarily %s out as %s "
@@ -267,6 +269,8 @@ bool melee_attack::handle_phase_dodged()
     }
     else
     {
+        if (defender->is_player())
+            count_action(CACT_DODGE, DODGE_EVASION);
         if (needs_message)
         {
             // TODO: Unify these, placed player_warn_miss here so I can remove
@@ -1332,6 +1336,8 @@ bool melee_attack::player_aux_unarmed()
 bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 {
     did_hit = true;
+
+    count_action(CACT_MELEE, 0, atk + 1); // aux_attack auxtype
 
     aux_damage  = player_aux_stat_modify_damage(aux_damage);
 
