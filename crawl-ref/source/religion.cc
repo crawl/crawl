@@ -3195,8 +3195,13 @@ void set_god_ability_slots()
                == end(you.ability_letter_table)
             && you.ability_letter_table[num] == ABIL_NON_ABILITY)
         {
-            you.ability_letter_table[num] = power.abil;
-            auto_assign_ability_slot(num);
+            // Assign sequentially: first ability 'a', third ability 'c',
+            // etc., even if one is remapped.
+            if (find_ability_slot(power.abil, index_to_letter(num)) < 0)
+            {
+                you.ability_letter_table[num] = power.abil;
+                auto_assign_ability_slot(num);
+            }
             ++num;
         }
     }
