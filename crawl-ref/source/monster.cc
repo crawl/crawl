@@ -4939,7 +4939,8 @@ bool monster::find_home_near_place(const coord_def &c)
         q.pop();
         if (dist(p - c) >= last_dist && nvalid)
         {
-            ASSERT(move_to_pos(place));
+            bool moved_to_pos = move_to_pos(place);
+            ASSERT(moved_to_pos);
             // can't apply location effects here, since the monster might not
             // be on the level yet, which interacts poorly with e.g. shafts
             return true;
@@ -4976,7 +4977,8 @@ bool monster::find_home_anywhere()
     for (int tries = 0; tries < 600; ++tries)
         if (check_set_valid_home(random_in_bounds(), place, nvalid))
         {
-            ASSERT(move_to_pos(place));
+            bool moved_to_pos = move_to_pos(place);
+            ASSERT(moved_to_pos);
             // can't apply location effects here, since the monster might not
             // be on the level yet, which interacts poorly with e.g. shafts
             return true;
