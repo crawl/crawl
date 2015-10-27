@@ -4895,13 +4895,22 @@ bool gozag_bribe_branch()
             if (it->entry_stairs == grd(you.pos())
                 && gozag_branch_bribable(it->id))
             {
+                branch_type stair_branch = gozag_fixup_branch(it->id);
                 string prompt =
                     make_stringf("Do you want to bribe the denizens of %s?",
-                                 it->longname);
+                                 stair_branch == BRANCH_VESTIBULE ? "the Hells"
+                                 : branches[stair_branch].longname);
                 if (yesno(prompt.c_str(), true, 'n'))
                 {
-                    branch = it->id;
+                    branch = stair_branch;
                     prompted = true;
+                }
+                // If we're in the Vestibule, standing on a portal to a Hell
+                // sub-branch, don't prompt twice to bribe the Hells.
+                else if (branch == stair_branch)
+                {
+                    canned_msg(MSG_OK);
+                    return false;
                 }
                 break;
             }
