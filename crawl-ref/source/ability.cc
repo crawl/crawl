@@ -3345,10 +3345,12 @@ int find_ability_slot(const ability_type abil, char firstletter)
 
     switch (abil)
     {
+    case ABIL_KIKU_GIFT_NECRONOMICON:
+        first_slot = letter_to_index('N');
+        break;
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
     case ABIL_TSO_BLESS_WEAPON:
     case ABIL_KIKU_BLESS_WEAPON:
-    case ABIL_KIKU_GIFT_NECRONOMICON:
     case ABIL_LUGONU_BLESS_WEAPON:
         first_slot = letter_to_index('W');
         break;
