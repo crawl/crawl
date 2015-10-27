@@ -229,11 +229,11 @@ const vector<god_power> god_powers[NUM_GODS] =
     { },
 
     // Zin
-    { {-1, ABIL_ZIN_DONATE_GOLD, "donate money to Zin" },
-      { 1, ABIL_ZIN_RECITE, "recite Zin's Axioms of Law" },
+    { { 1, ABIL_ZIN_RECITE, "recite Zin's Axioms of Law" },
       { 2, ABIL_ZIN_VITALISATION, "call upon Zin for vitalisation" },
       { 3, ABIL_ZIN_IMPRISON, "call upon Zin to imprison the lawless" },
       { 5, ABIL_ZIN_SANCTUARY, "call upon Zin to create a sanctuary" },
+      {-1, ABIL_ZIN_DONATE_GOLD, "donate money to Zin" },
       { 7, ABIL_ZIN_CURE_ALL_MUTATIONS,
            "Zin will cure all your mutations... once.",
            "Zin is no longer ready to cure all your mutations." },
