@@ -114,7 +114,6 @@ struct ability_def
 };
 
 static int _lookup_ability_slot(ability_type abil);
-static int _find_ability_slot(ability_type abil);
 static spret_type _do_ability(const ability_def& abil, bool fail);
 static void _pay_ability_costs(const ability_def& abil);
 static int _scale_piety_cost(ability_type abil, int original_cost);
@@ -724,7 +723,7 @@ talent get_talent(ability_type ability, bool check_confused)
 
     // Look through the table to see if there's a preference, else find
     // a new empty slot for this ability. - bwr
-    const int index = _find_ability_slot(abil.ability);
+    const int index = find_ability_slot(abil.ability);
     result.hotkey = index >= 0 ? index_to_letter(index) : 0;
 
     switch (ability)
@@ -3326,7 +3325,7 @@ static int _lookup_ability_slot(const ability_type abil)
 
 // Assign a new ability slot if necessary. Returns an index (0-51) if
 // successful, -1 if you should just use the next one.
-static int _find_ability_slot(const ability_type abil)
+int find_ability_slot(const ability_type abil, char firstletter)
 {
     // If we were already assigned a slot, use it.
     int had_slot = _lookup_ability_slot(abil);
@@ -3335,8 +3334,8 @@ static int _find_ability_slot(const ability_type abil)
 
     // No requested slot, find new one and make it preferred.
 
-    // a-e is for invocations
-    int first_slot = letter_to_index('f');
+    // firstletter defaults to 'f', because a-e is for invocations
+    int first_slot = letter_to_index(firstletter);
 
     // Reserve the first ability slot (f) for Draconian breath
     if (you.species == SP_BASE_DRACONIAN)

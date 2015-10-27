@@ -82,6 +82,7 @@ ability_type ability_by_name(const string &name);
 string print_abilities();
 ability_type fixup_ability(ability_type ability);
 
+int find_ability_slot(ability_type abil, char firstletter = 'f');
 int auto_assign_ability_slot(int slot);
 vector<ability_type> get_god_abilities(bool ignore_silence = true,
                                        bool ignore_piety = true,
