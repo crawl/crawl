@@ -1281,15 +1281,6 @@ static bool _check_ability_possible(const ability_def& abil,
                 mpr("You have no mutations to be cured!");
             return false;
         }
-        if (grd(you.pos()) != DNGN_FLOOR)
-        {
-            if (!quiet)
-            {
-                mprf("You need to be standing on an open floor tile to receive "
-                     "Zin's cure here.");
-            }
-            return false;
-        }
         return true;
 
     case ABIL_ZIN_SANCTUARY:
