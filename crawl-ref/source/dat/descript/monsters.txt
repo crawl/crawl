@@ -857,10 +857,6 @@ A champion of the deep elves, who scorns magic and is devoted to the study of
 the sword. A blademaster wields two weapons with astonishing dexterity and
 speed.
 %%%%
-deep elf conjurer
-
-A deep elf well-versed in a variety of destructive magics.
-%%%%
 deep elf death mage
 
 A deep elf surrounded by a shimmering aura of negative energy, as a result of
@@ -907,10 +903,6 @@ deep elf sorcerer
 
 A mighty spellcaster who draws power from the very Hells, and possesses lethal
 arcane abilities of destruction, summoning and banishment.
-%%%%
-deep elf summoner
-
-A deep elf skilled at summoning plagues of insidious vermin.
 %%%%
 deep dwarf
 

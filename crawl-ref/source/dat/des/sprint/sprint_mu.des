@@ -410,10 +410,10 @@ ENDMAP
 # Elf 1, gauntlet
 NAME: sprint_mu_elf_gauntlet
 TAGS: sprint_mu_elf no_rotate no_hmirror no_vmirror
-MONS: deep elf knight / deep elf priest / deep elf summoner / deep elf conjurer
+MONS: deep elf knight / deep elf priest / deep elf mage w:20
 MONS: deep elf annihilator ; robe ego:poison_resistance | robe ego:resistance | robe /\
       deep elf demonologist ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
-      w:5 deep elf conjurer ; robe ego:poison_resistance | robe ego:cold_resistance | robe
+      w:5 deep elf mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe
 MONS: deep elf death mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
       deep elf high priest ; robe ego:poison_resistance | robe ego:cold_resistance | robe
 MONS: deep elf blademaster ; chain mail ego:cold_resistance /\

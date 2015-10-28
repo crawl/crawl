@@ -2276,7 +2276,7 @@ KMONS:   P = deep troll / skeletal warrior / spriggan rider w:5
 KMONS:   Q = naga warrior / orc warlord / minotaur
 KMONS:   R = spriggan defender / reaper / merfolk impaler w:5
 KMONS:   S = deep elf mage / wizard / boggart
-KMONS:   T = deep elf conjurer / orc sorcerer / giant orange brain
+KMONS:   T = deep elf mage / orc sorcerer / giant orange brain
 KMONS:   U = deep elf annihilator / sphinx w:5 / lich w:5
 KMONS:   V = cyclops / centaur warrior / naga sharpshooter
 KMONS:   W = manticore / yaktaur captain / stone giant
@@ -2376,7 +2376,7 @@ TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
 MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
-         deep elf conjurer / deep troll / boggart w:5 / efreet w:5 / \
+         deep elf mage / deep troll / boggart w:5 / efreet w:5 / \
          rakshasa w:5 / wizard / necromancer / spriggan rider w:5 / \
          vampire / deep elf mage w:5
 MONS:    orc high priest / orc sorcerer / naga warrior / naga mage / \
@@ -2507,7 +2507,7 @@ KMONS: E = titan w:5 / storm dragon / black draconian / ball lightning
 KMONS: O = orc knight / orc sorcerer / orc warlord w:5 / orc high priest / \
            orc warrior
 KMONS: N = deep elf knight / deep elf annihilator w:5 / deep elf death mage / \
-           deep elf summoner / deep elf sorcerer
+           deep elf mage / deep elf sorcerer
 KMONS: L = death yak / catoblepas w:5 / basilisk / lindwurm / blink frog
 KMONS: S = swamp dragon / hydra w:5 / thorn hunter / large slime creature / \
            alligator
@@ -2567,7 +2567,7 @@ MONS:    necromancer band / vampire mage band w:6
 MONS:    vampire knight w:25 / bone dragon / ghoul / lich
 SUBST:   x = e
 : else
-KMONS:   12 = deep elf conjurer / deep elf knight
+KMONS:   12 = deep elf mage / deep elf knight
 MONS:    deep elf fighter band w:6 / deep elf knight band
 MONS:    deep elf annihilator / deep elf sorcerer / deep elf high priest
 : end

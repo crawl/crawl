@@ -677,7 +677,7 @@ SUBST:   X = xx. b:2 I:1 $:1 *:1
 MONS:    patrolling orc warlord
 MONS:    patrolling orc sorcerer
 MONS:    patrolling orc high priest
-MONS:    deep elf fighter / deep elf summoner / deep elf conjurer / deep elf priest
+MONS:    deep elf fighter / deep elf mage w:20 / deep elf priest
 MONS:    deep elf fighter / deep elf mage / deep elf priest
 MONS:    deep elf fighter / nothing
 ITEM:    good_item scimitar / good_item chain mail

@@ -1185,7 +1185,7 @@ ENDMAP
 NAME:    elves_outpost_lemuel
 DEPTH:   D:11-, Orc, Elf
 MONS:    deep elf fighter
-MONS:    w:20 deep elf mage / deep elf conjurer / deep elf summoner
+MONS:    deep elf mage
 SHUFFLE: ?_/bb, _'/ww
 SUBST:   ?_' = .
 MAP
@@ -1474,7 +1474,7 @@ ENDMAP
 
 NAME:    billiards_dpeg
 DEPTH:   D:9-, Elf
-MONS:    orc wizard, deep elf conjurer
+MONS:    orc wizard, deep elf mage
 NSUBST:  X = 1:+ / *:x
 : if you.absdepth() > 11 then
 SUBST:   1 = 2, * = * |
@@ -1617,7 +1617,7 @@ ENDMAP
 NAME:    hangedman_summoners_spam
 TAGS:    no_monster_gen patrolling
 DEPTH:   Depths, Elf, Crypt, Abyss
-MONS:    boggart, orc high priest, kobold demonologist, deep elf summoner
+MONS:    boggart, orc high priest, kobold demonologist, deep elf mage
 MONS:    shadow demon, deep elf demonologist, vampire mage
 KMONS:   8 = mummy priest
 ITEM:    book of callings w:5 / book of summonings / grand grimoire w:5 / \
@@ -1812,7 +1812,7 @@ SUBST:   ? = 123d
 : if you.in_branch("Snake") then
 MONS:    naga, naga warrior, naga mage w:9 / greater naga w:1
 : elseif you.in_branch("Elf") then
-MONS:    deep elf fighter, deep elf mage, deep elf conjurer / deep elf summoner
+MONS:    deep elf fighter, deep elf mage, deep elf mage
 : elseif you.in_branch("Orc") then
 MONS:    orc, orc warrior, orc wizard w:9 / orc sorcerer w:1
 : else
@@ -1932,7 +1932,7 @@ NAME:  grunt_absolute_annihilation
 DEPTH: Depths
 MONS:    ancient lich
 MONS:    deep elf annihilator / draconian annihilator w:5 / lich
-MONS:    deep elf conjurer / tengu conjurer / wizard / orc sorcerer / \
+MONS:    deep elf mage / tengu conjurer / wizard / orc sorcerer / \
          naga mage / ogre mage
 ITEM:    book of annihilations, book of power, book of conjurations
 ITEM:    randbook disc:conjuration, staff of conjuration
@@ -3513,9 +3513,9 @@ MONS:   deep elf annihilator w:30 / deep elf sorcerer w:20 / \
         deep elf demonologist / deep elf death mage
 ITEM:   any scroll / any book w:6
 : else
-MONS:   wizard w:50 / necromancer w:20 / deep elf mage w:20  / \
-        deep elf summoner / deep elf conjurer / orc sorcerer / \
-        ogre mage / naga mage / vampire mage / kobold demonologist w:5
+MONS:   wizard w:50 / necromancer w:20 / deep elf mage w:40 / \
+        orc sorcerer / ogre mage / naga mage / vampire mage / \
+        kobold demonologist w:5
 ITEM:   any scroll / any book w:3
 : end
 MAP
