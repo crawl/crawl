@@ -1261,63 +1261,6 @@ xxxxxxYwwwwwwYYYYwwwYYYwwYxxxxxxxX.....Xxxxx
 xxxxxxxYYYxYYxxxxYYYxxxYYxxxxxxxxxxXXXxxxxxx
 ENDMAP
 
-NAME:   sewer_kobold_necro_badplayer
-TAGS:   no_item_gen no_monster_gen no_pool_fixup
-ORIENT: encompass
-WEIGHT: 3
-KMONS:  1  = rat
-KMONS:  4  = rat w:85 / river rat w:15
-KMONS:  23 = big kobold spells:animate_dead.55.wizard name:necromancer n_suf \
-             col:white ; dagger | club . robe
-KITEM:  ?  = potion of curing / potion of heal wounds / potion of might /\
-             potion of magic / potion of haste w:5 /\
-             potion of brilliance w:5
-KFEAT:  1 = '
-KFEAT:  3 = ~
-KFEAT:  & = .
-KPROP:  # = no_tele_into
-NSUBST: 1 = 3=1 / *=' , 2 = 1=2 / *='
-NSUBST: a = 1=+ / *=x , b = 1=+ / *=x
-NSUBST: { = 1=< / *=~
-NSUBST: % = 2=% / *=. , ^ = 5=^ / *='
-NSUBST: 3 = 2:3 / 1:3~ / *:~
-NSUBST: & = 4:* / 4:? / 8:& / 4:4 / 2:4. / *:.
-SUBST:  ' = W.. , ~ = wx , # = Wwx
-: dgn.delayed_decay(_G, '%', 'rat skeleton w:30 / rat corpse')
-: dgn.delayed_decay(_G, '^', 'rat skeleton w:24 / rat corpse w:8 /' ..
-:    'river rat skeleton w:15 / river rat corpse w:5')
-: dgn.delayed_decay(_G, '&', 'river rat skeleton w:30 /' ..
-:    'river rat corpse')
-: sewer_setup(_G)
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x###############################x
-x##3~~~~~~~~~~~~{~~~~~~~~~~~~3##x
-x##~&&&&&&&&&&&&&&&&&&&&&&&&&~##x
-x##~&&&&&&&&&&&&&&&&&&&&&&&&&~##x
-x##~&&&&&&&&&&&&&&&&&&&&&&&&&~##x
-x##~&&&&&&bbbbbbbbbbbbb&&&&&&~##x
-x##~&&&&bbb^^^^^2^^^^^bbb&&&&~##x
-x#~~&&&bb^^^^^^^^^^^^^^^bb&&&~~#x
-x#~&&&&b^^^^^aaaaaaa^^^^^b&&&&~#x
-x#~&&&&b^^^aaa11111aaa^^^b&&&&~#x
-x#~&&&&b^^aa1%%%%%%%1aa^^b&&&&~#x
-x#{&&&&b^^a1%%%%%%%%%1a^^b&&&&{#x
-x#~&&&&b2^a1%%%%%%%%%1a^2b&&&&~#x
-x#~&&&&b^^aa1%%<%%%%1aa^^b&&&&~#x
-x#~&&&&b^^^aaa'A%%'aaa^^^b&&&&~#x
-x#~~&&&bb^^^^aaaaaaa^^^^bb&&&~~#x
-x##~&&&&bb^^^^^^^^^^^^^bb&&&&~##x
-x##~&&&&&bb^^^^^2^^^^^bb&&&&&~##x
-x##~&&&&&&bbbbbbbbbbbbb&&&&&&~##x
-x##~~&&&&&&&&&&&&&&&&&&&&&&&~~##x
-x##~~&&&&&&&&&&&&&&&&&&&&&&&~~##x
-x##~3&&&&&&&&&&&&&&&&&&&&&&&3~##x
-x###~~~~~~~~~~~~{~~~~~~~~~~~~###x
-x###############################x
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
 #############################################################
 # Kobolds who escaped to the sewers to worship Makhleb in peace
 # The temple has 3 sealed chambers at the end, each with loot and a
