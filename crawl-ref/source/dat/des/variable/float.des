@@ -2745,9 +2745,7 @@ TAGS:    transparent no_monster_gen no_item_gen
 DEPTH:   Depths, Geh, !Geh:$
 PLACE:   Depths:$
 WEIGHT:  5 (Depths:$, Geh), 10
-# Spell set is Hell Knight II; it has the more powerful ranged spell.
-MONS:    hell knight spells:pain.17.wizard;bolt_of_fire.17.wizard;\
-                     blink.17.wizard
+MONS:    hell knight
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 MONS:    mottled draconian, black draconian, ettin
 NSUBST:  2 = 2:2 / 2:3 / 2:4 / * = 222334

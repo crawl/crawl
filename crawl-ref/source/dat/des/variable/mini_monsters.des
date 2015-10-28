@@ -1922,33 +1922,7 @@ DEPTH:    Depths, Vaults, !Vaults:$
 : if you.in_branch("Vaults") then
 SUBST:   c : vvb, @ = .
 : end
-# This spell set is Lich IV, picked for having IMB and IOOD.
-MONS:     lich spells:iskenderun's_mystic_blast.12.wizard;\
-                      bolt_of_cold.12.wizard;\
-                      invisibility.24.wizard;\
-                      animate_dead.12.wizard;\
-                      orb_of_destruction.12.wizard
-# The wizard spell set is Wizard II, picked for having IMB and venom bolt;
-# same logic for naga mages.
-# The tengu conjurer spellset is Tengu Conjurer II, picked for having
-# Bolt of Magma.
-MONS:     wizard spells:venom_bolt.10.wizard;\
-                        iskenderun's_mystic_blast.10.wizard;\
-                        invisibility.10.wizard;\
-                        confuse.10.wizard;\
-                        slow.10.wizard;\
-                        teleport_self.10.wizard.emergency / \
-          naga mage / \
-          tengu conjurer spells:throw_flame.10.wizard;\
-                                bolt_of_magma.19.wizard;\
-                                iskenderun's_battlesphere.19.wizard;\
-                                blink.10.wizard
-# The tengu reaver spell set is Tengu Reaver III, picked for having Poisonous
-# Cloud.
-MONS:     tengu reaver spells:venom_bolt.13.wizard;\
-                              corrosive_bolt.13.wizard;\
-                              iskenderun's_battlesphere.27.wizard;\
-                              poisonous_cloud.13.wizard
+MONS:     lich, wizard / naga mage / tengu conjurer, tengu reaver
 ITEM:     book of Power, robe good_item, hat good_item, robe, hat
 KFEAT:    _ = altar_vehumet
 SHUFFLE: ef, gh, ij
@@ -1973,29 +1947,8 @@ ENDMAP
 
 NAME:  grunt_absolute_annihilation
 DEPTH: Depths
-# These spell sets are Lich III and Lich IV; they have LCS and IOOD
-# respectively.
-MONS:    ancient lich spells:corrosive_bolt.12.wizard;\
-                             slow.12.wizard;\
-                             invisibility.24.wizard;\
-                             throw_icicle.12.wizard;\
-                             lehudib's_crystal_spear.12.wizard \
-                      spells:iskenderun's_mystic_blast.12.wizard;\
-                             bolt_of_cold.12.wizard;\
-                             invisibility.24.wizard;\
-                             animate_dead.12.wizard;\
-                             orb_of_destruction.12.wizard
-MONS:    deep elf annihilator / draconian annihilator w:5 / \
-         lich spells:corrosive_bolt.12.wizard;\
-                     slow.12.wizard;\
-                     invisibility.24.wizard;\
-                     throw_icicle.12.wizard;\
-                     lehudib's_crystal_spear.12.wizard \
-              spells:iskenderun's_mystic_blast.12.wizard;\
-                     bolt_of_cold.12.wizard;\
-                     invisibility.24.wizard;\
-                     animate_dead.12.wizard;\
-                     orb_of_destruction.12.wizard
+MONS:    ancient lich
+MONS:    deep elf annihilator / draconian annihilator w:5 / lich
 MONS:    deep elf conjurer / tengu conjurer / wizard / orc sorcerer / \
          naga mage / ogre mage
 ITEM:    book of annihilations, book of power, book of conjurations
