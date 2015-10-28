@@ -1381,6 +1381,58 @@ dabad
 cdedc
 ENDMAP
 
+###############################################################################
+NAME:    spider_temple_joshua
+DEPTH:   Spider, !Spider:$
+TAGS:    no_monster_gen
+ORIENT:  north
+MONS:    entropy weaver, wolf spider, oklob plant
+MONS:    jumping spider / redback / trapdoor spider / wolf spider
+MONS:    emperor scorpion, obsidian statue / orange crystal statue
+# Randomise wall type: in 50% of maps, you cannot dig to the stairs.
+SUBST:   x : xxxxxxvvvccb
+COLOUR:  ' = red
+FTILE:   ' = floor_rough_red
+SUBST:   ' = .
+# With 25% chance, have lava and obsidian statue instead of water and oklobs:
+SUBST:   w : Ww.
+SUBST:   w = W.
+NSUBST:  3 = 2:3 / *:W
+SHUFFLE: wU3 / wU3 / wU3 / l6l
+# The legs are coloured and contain 10 spider monsters:
+COLOUR:  " : white / yellow / brown
+NSUBST:  " = 10:4 / *:"
+SUBST:   " = .
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx"""""""xxxxxxxxxxxxxx""""""xxxxx
+xxxxx"xxxxxx"xxx..}...xxx"xxxxx"xxxxx
+xxxxx+xxxxxxx"xx...)..xx"xxxxxx+xxxxx
+xxxxx'xxxxxxxx"x..]...x"xxxxxxx'xxxxx
+xx"""""""xxxxxx+......+xxxxx"""""""xx
+x"xxxxxxx"xxwWxxxx+xxxxxW.x"xxxxxxx"x
+xx"xxxxxxx+..wWWw.1...wWW.+xxxxxxx"xx
+xxx"xxxxxxx..WWW.2.0.WWWW.xxxxxxx"xxx
+xxxx"xxxxxx..wWWw.W3WWWWw.xxxxxx"xxxx
+xxxxx"xxxxx.0.wWWW3U3WWw0.xxxxx"xxxxx
+xxxxxx+xxxx2.0.wWWW3WWw02.xxxx+xxxxxx
+xxxxxx'xxxx.0.wWWWWWWw....xxxx'xxxxxx
+x"""""""""+x..WW....WW...x+"""""""""x
+x"xxxxxxxxxxxxW...1...Wxxxxxxxxxxxx"x
+x"xxx""""""""+W.0...0.W+""""""""xxx"x
+x""+'"xxxxxxxxxm.....mxxxxxxxxx"'+""x
+xxxxx"x........x+xxxxx........x"xxxxx
+....x"x........xWWWWWx........x"x....
+....x"x........xxxxxWx........x"x....
+....x"xx.......xxxWWWx.......xx"x....
+....xx"xx.....xxxx+xxxx.....xx"xx....
+.....xx"xx....x.......x....xx"xx.....
+......xx"xx...x..050..x...xx"xx......
+.......xx+xx..mx.....xm..xx+xx.......
+........xx'x...xm+++mx...x'xx........
+..................@..................
+ENDMAP
+
 ##############################################################################
 # Rune vaults
 ##############################################################################
