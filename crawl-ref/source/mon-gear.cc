@@ -504,12 +504,10 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         break;
 
     case MONS_DEEP_ELF_ANNIHILATOR:
-    case MONS_DEEP_ELF_CONJURER:
     case MONS_DEEP_ELF_DEATH_MAGE:
     case MONS_DEEP_ELF_DEMONOLOGIST:
     case MONS_DEEP_ELF_MAGE:
     case MONS_DEEP_ELF_SORCERER:
-    case MONS_DEEP_ELF_SUMMONER:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose(WPN_LONG_SWORD,  WPN_LONG_SWORD,
                                        WPN_SHORT_SWORD, WPN_RAPIER,
@@ -1962,7 +1960,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
     case MONS_IJYB:
     case MONS_DUVESSA:
     case MONS_DEEP_ELF_ANNIHILATOR:
-    case MONS_DEEP_ELF_CONJURER:
     case MONS_DEEP_ELF_DEATH_MAGE:
     case MONS_DEEP_ELF_DEMONOLOGIST:
     case MONS_DEEP_ELF_FIGHTER:
@@ -1971,7 +1968,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
     case MONS_DEEP_ELF_MAGE:
     case MONS_DEEP_ELF_PRIEST:
     case MONS_DEEP_ELF_SORCERER:
-    case MONS_DEEP_ELF_SUMMONER:
     case MONS_ORC:
     case MONS_ORC_HIGH_PRIEST:
     case MONS_ORC_PRIEST:

@@ -48,15 +48,12 @@ static const monster_level_up mon_grow[] =
 
     monster_level_up(MONS_DEEP_ELF_FIGHTER, MONS_DEEP_ELF_KNIGHT),
 
-    // Deep elf magi can become either summoners or conjurers.
-    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_SUMMONER, 500),
-    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_CONJURER),
+    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_DEATH_MAGE, 250),
+    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_DEMONOLOGIST, 333),
+    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_ANNIHILATOR, 500),
+    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_SORCERER),
 
     monster_level_up(MONS_DEEP_ELF_PRIEST, MONS_DEEP_ELF_HIGH_PRIEST),
-    monster_level_up(MONS_DEEP_ELF_CONJURER, MONS_DEEP_ELF_ANNIHILATOR),
-
-    monster_level_up(MONS_DEEP_ELF_SUMMONER, MONS_DEEP_ELF_DEMONOLOGIST, 500),
-    monster_level_up(MONS_DEEP_ELF_SUMMONER, MONS_DEEP_ELF_SORCERER),
 
     monster_level_up(MONS_GNOLL, MONS_GNOLL_SERGEANT),
 

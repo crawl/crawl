@@ -242,7 +242,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:30 place:Orc / orc wizard / orc warrior / w:3 orc knight /\
                     orc priest / orc high priest w:1 / blork the orc w:3 / urug w:1",
                 "w:2 place:Elf / deep elf fighter / deep elf priest /\
-                    w:2 deep elf conjurer / w:2 deep elf summoner",
+                    w:4 deep elf mage",
                 "place:Lair / sheep / w:5 yak / w:5 crocodile / w:3 basilisk /\
                     w:1 death yak / river rat / hell rat / porcupine",
                 "w:20 merfolk / w:5 siren / hippogriff / centaur / w:5 griffon /\

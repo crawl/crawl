@@ -25,10 +25,9 @@ function init_research(e, disc)
   e.tags('patrolling')
   e.weight('1')
   if you.in_branch("Elf") then
-     e.kmons('0 = deep elf mage / deep elf knight / deep elf conjurer')
+     e.kmons('0 = deep elf mage w:20 / deep elf knight')
   else
-     e.kmons('0 = wizard / ogre mage / naga mage w:8 / \
-                  deep elf mage w:4 / deep elf conjurer w:6')
+     e.kmons('0 = wizard / ogre mage / naga mage w:8 / deep elf mage')
   end
   e.kmask('@, = !no_monster_gen')
   e.shuffle('abcdefghi')

@@ -85,7 +85,7 @@ ENDMAP
 
 NAME: grunt_enter_depths_magical_seal
 KMONS: O = ogre mage band / necromancer band
-MONS: wizard / deep elf conjurer / orc sorcerer / naga mage
+MONS: wizard / deep elf mage / orc sorcerer / naga mage
 : depths_entry(_G)
 MAP
   bbbbbbb

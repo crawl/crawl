@@ -49,7 +49,7 @@ function base_monster_setup(e)
            simulacrum / ogre mage band w:5 /\
            wolf spider / yaktaur / air elemental / fire elemental /\
            water elemental / earth elemental / deep elf knight band w:5 /\
-           deep elf mage band w:3 / deep elf summoner band w:3 /\
+           deep elf mage band w:6 /\
            great orb of eyes / naga mage band w:5 / naga warrior band w:5 /\
            necromancer band w:5 / orc knight band w:5 /\
            harpy band w:5 / fire crab / redback band /\
@@ -119,7 +119,7 @@ function base_monster_setup(e)
   e.kmons("M = stone giant / hill giant / cyclops / frost giant /\
            fire giant / ettin / deep troll / iron troll")
   e.kmons("N = stone giant / titan / frost giant / fire giant / ettin")
-  e.kmons("O = deep elf mage / deep elf summoner / deep elf conjurer /\
+  e.kmons("O = deep elf mage w:30 /\
            deep elf annihilator / deep elf knight band / deep elf death mage /\
            deep elf high priest / deep elf knight / deep elf sorcerer /\
            deep elf demonologist /\

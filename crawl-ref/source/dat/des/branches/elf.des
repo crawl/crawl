@@ -105,7 +105,7 @@ SHUFFLE: asd/x$+
 SHUFFLE: fgh/x$+
 SUBST:   a = x, s = x, d = x, f = x, g = x, h = x
 MONS:    deep elf fighter
-MONS:    deep elf mage / deep elf priest / deep elf summoner w:5
+MONS:    deep elf mage w:15 / deep elf priest
 MAP
 xxxxxxxxxxxxxxxaaa
 xxxxxxxxxxxxxxxasa
@@ -147,7 +147,7 @@ ORIENT:  southwest
 PLACE:   Elf:1
 TAGS:    patrolling
 MONS:    deep elf fighter / deep elf mage w:5
-MONS:    deep elf summoner / nothing
+MONS:    deep elf mage / nothing
 MAP
 xxxxxxxxx
 x.+.....x
@@ -264,7 +264,7 @@ NAME:   minmay_elf_arrival_circle
 ORIENT: float
 PLACE:  Elf:1
 TAGS:   patrolling
-MONS:   deep elf fighter, deep elf mage / deep elf conjurer w:3
+MONS:   deep elf fighter, deep elf mage
 SUBST:  B : b.
 MAP
        xx+xx
@@ -292,8 +292,8 @@ NAME:   minmay_elf_arrival_plus
 TAGS:   patrolling
 ORIENT: float
 PLACE:  Elf:1
-MONS:   deep elf fighter w:15 / deep elf mage / \
-        deep elf summoner / deep elf priest / deep elf conjurer / nothing w:40
+MONS:   deep elf fighter w:15 / deep elf mage w:30 / \
+        deep elf priest / nothing w:40
 MAP
      x@...@x
      x.....x
@@ -318,7 +318,7 @@ NAME:   minmay_elf_arrival_summoners
 TAGS:   patrolling
 ORIENT: float
 PLACE:  Elf:1
-MONS:   deep elf summoner / deep elf mage / deep elf priest
+MONS:   deep elf mage w:20 / deep elf priest
 KFEAT:  m = iron_grate
 MAP
   xxxxxxx
@@ -382,7 +382,7 @@ NAME:   minmay_elf_crystal_pentagon
 DEPTH:  Elf
 ORIENT: float
 WEIGHT: 8
-MONS:   deep elf mage / deep elf summoner / nothing w:25
+MONS:   deep elf mage w:20 / nothing w:25
 MAP
    +bbbbbbbbbbb+
    b...........b
@@ -409,7 +409,7 @@ TAGS:   misc_elf_vault
 DEPTH:  Elf
 ORIENT: float
 WEIGHT: 6
-MONS:   deep elf mage / deep elf summoner / deep elf conjurer / nothing w:45
+MONS:   deep elf mage w:5 / nothing
 MAP
     +bbbbbbbbb+
     b...1b1...b
@@ -435,8 +435,7 @@ TAGS:   misc_elf_vault
 DEPTH:  Elf
 ORIENT: float
 WEIGHT: 4
-MONS:   deep elf mage / deep elf summoner / deep elf conjurer / \
-        deep elf death mage / nothing w:70
+MONS:   deep elf mage w:30 / deep elf death mage / nothing w:70
 MAP
     +bbbbbbb+
    bb.......bb
@@ -461,8 +460,8 @@ NAME:   minmay_elf_crystal_octagon
 DEPTH:  Elf
 ORIENT: float
 WEIGHT: 2
-MONS:   deep elf mage / deep elf summoner / deep elf conjurer / \
-        deep elf death mage / deep elf sorcerer / nothing w:100
+MONS:   deep elf mage w:30 / deep elf death mage / deep elf sorcerer / \
+        nothing w:100
 MAP
      +bbbbb+
     bb.....bb
@@ -505,7 +504,7 @@ ENDMAP
 NAME:  minmay_elf_sorcery
 TAGS:  misc_elf_vault
 DEPTH: Elf
-MONS:  deep elf summoner / deep elf conjurer / deep elf mage / nothing
+MONS:  deep elf mage w:30 / nothing
 KMONS: 2 = deep elf sorcerer w:90 / deep elf annihilator / deep elf demonologist
 KITEM: 2 = randbook disc:conjuration disc2:summoning slevels:16
 SUBST: x : xxc, m : mmcxb
@@ -533,7 +532,7 @@ ENDMAP
 NAME:  minmay_elf_annihilation
 TAGS:  misc_elf_vault
 DEPTH: Elf
-MONS:  deep elf conjurer / nothing
+MONS:  deep elf mage / nothing
 KMONS: 2 = deep elf annihilator / deep elf sorcerer w:2
 KITEM: 2 = randbook disc:conjuration slevels:16
 SUBST: x : x c:1
@@ -562,7 +561,7 @@ ENDMAP
 NAME:  minmay_elf_demonology
 TAGS:  misc_elf_vault
 DEPTH: Elf
-MONS:  deep elf summoner / nothing
+MONS:  deep elf mage / nothing
 KMONS: 2 = deep elf demonologist w:90 / deep elf sorcerer / deep elf high priest
 KITEM: 2 = randbook disc:summoning slevels:16
 MAP
@@ -784,7 +783,7 @@ ENDMAP
 
 NAME:  guppyfry_elf_lava
 DEPTH: Elf:2-
-MONS:  deep elf conjurer / deep elf mage / deep elf summoner
+MONS:  deep elf mage
 MONS:  deep elf annihilator / deep elf death mage / deep elf demonologist
 KFEAT: v = general shop type:Elven suffix:Fire count:7 ; \
        w:10 ring of fire | w:5 scroll of immolation | w:10 ring of protection from fire | \
@@ -1190,7 +1189,7 @@ ENDMAP
 NAME:    hangedman_elven_crosses_minicolossus
 TAGS:    no_monster_gen transparent misc_elf_vault
 DEPTH:   Elf
-MONS:    deep elf conjurer, deep elf knight / deep elf priest w:6
+MONS:    deep elf mage, deep elf knight / deep elf priest w:6
 MONS:    deep elf fighter / deep elf mage
 MONS:    dancing weapon ; short sword ego:flaming | short sword ego:freezing | \
                           short sword ego:venom | short sword ego:electrocution
@@ -1232,11 +1231,9 @@ DEPTH:   Elf
 # Place two pairings of obvious descendents / ascendents.
 MONS:    deep elf mage, deep elf sorcerer
 MONS:    deep elf priest, deep elf high priest
-MONS:    deep elf conjurer, deep elf annihilator
-MONS:    deep elf summoner
-KMONS:   8 = deep elf demonologist
+MONS:    deep elf annihilator, deep elf demonologist
 NSUBST:  1 = 2 = 111.. / 1:. / 2:1, 3 = 2 = 333.. / 1:. / 2:3
-SHUFFLE: 12 / 34 / 56 / 78
+SHUFFLE: 12 / 34 / 15 / 16
 SUBST:   ' : x., " : x., - : x++
 MAP
 xxxxxxxxxxx'........
@@ -1296,7 +1293,7 @@ TAGS:     no_dump no_item_gen no_monster_gen
 PLACE:    Elf:2
 ORIENT:   north
 MONS:     deep elf fighter / deep elf priest w:4
-MONS:     deep elf knight w:11 / deep elf conjurer w:1
+MONS:     deep elf knight w:11 / deep elf mage w:1
 MONS:     deep elf blademaster, dancing weapon
 : halls_of_blades_weapon(_G)
 SHUFFLE:  CD / CD / DC / DC / DD
@@ -1367,7 +1364,7 @@ PLACE:    Elf:2
 WEIGHT:   5
 ORIENT:   north
 MONS:     deep elf fighter / deep elf priest w:4
-MONS:     deep elf knight w:11 / deep elf conjurer w:1
+MONS:     deep elf knight w:11 / deep elf mage w:1
 MONS:     deep elf blademaster, dancing weapon
 : halls_of_blades_weapon(_G)
 SHUFFLE:  CD / CD / DC / DC / DD
