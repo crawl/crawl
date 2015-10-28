@@ -2595,7 +2595,12 @@ ENDMAP
 
 NAME:  minmay_protected_statue
 DEPTH: D:9-, Depths, !Depths:$
-MONS:  obsidian statue / orange crystal statue, plant, bush
+: if you.in_branch("Depths") then
+MONS: orange crystal statue
+: else
+MONS:  obsidian statue / orange crystal statue
+: end
+MONS: plant, bush
 SUBST: n : n:20 G 2:1 3:1
 KFEAT: n = iron_grate
 MAP
@@ -2714,7 +2719,11 @@ ENDMAP
 NAME:   statue_in_the_mist_lemuel
 TAGS:   extra no_exits
 DEPTH:  D:9-, Depths, Orc, Elf, Snake, Swamp
+: if you.in_branch("Depths") or you.in_branch("Elf") then
+KMONS:  1 = orange crystal statue
+: else
 KMONS:  1 = orange crystal statue / obsidian statue / ice statue
+: end
 KITEM:  1 = %, % / $
 MARKER: G = lua:fog_machine { cloud_type= "grey smoke", \
             pow_min = 10, pow_max = 20, delay_min = 15, delay_max = 35, \
@@ -2730,7 +2739,11 @@ ENDMAP
 NAME:    david_greed
 DEPTH:   D:10-, Elf
 WEIGHT:  4
+: if you.in_branch("Elf") then
+MONS:    orange crystal statue / obsidian statue
+: else
 MONS:    obsidian statue / orange crystal statue / ice statue
+: end
 ITEM:    nothing / any good_item
 SHUFFLE: d|
 MAP
@@ -2738,7 +2751,7 @@ xxxxxxxxxxxx
 xxxxxxbbbbbx
 xbbbbbb..1bx
 @.........bx
-I.*..d|...bx
+I.*.....d|bx
 @.........bx
 xbbbbbb..1bx
 xxxxxxbbbbbx
@@ -2854,17 +2867,14 @@ DEPTH:    D:10-, Lair, Snake, Shoals, Depths
 # Weights for levels not of subdepth 1 intentionally lower.
 WEIGHT:   1 (D:10-, Lair:2-, Snake:2-, Shoals:2-, Depths:2-)
 WEIGHT:   10 (Lair:1, Shoals:1, Snake:1, Depths:1)
-: if you.in_branch("Snake") or you.in_branch("Shoals") then
-MONS:     oklob plant / obsidian statue / orange crystal statue / ice statue /\
-          w:1 Roxanne
-: elseif you.in_branch("D") or you.in_branch("Lair") then
+: if you.in_branch("D") or you.in_branch("Lair") then
 MONS:     oklob plant, electric eel
 SHUFFLE:  1" / 22
-: elseif you.in_branch("Vaults") then
-MONS:     obsidian statue / orange crystal statue / ice statue / w:1 Roxanne
-: elseif you.in_branch("Depths") then
-MONS:     obsidian statue / orange crystal statue / ice statue / w:3 Roxanne
-SUBST:    " = 1
+: elseif you.in_branch("Snake") or you.in_branch("Shoals") then
+MONS:     oklob plant / obsidian statue / orange crystal statue / ice statue /\
+          w:1 Roxanne
+: else
+MONS:     orange crystal statue / w:1 Roxanne
 : end
 #
 # Sometimes add some additional rock walls
@@ -6225,7 +6235,11 @@ ENDMAP
 # Lava pond
 NAME:  minivault_15
 TAGS:  extra
-KMONS: 1 = obsidian statue / ice statue
+: if you.in_branch("D") then
+KMONS: 1 = orange crystal statue / obsidian statue / ice statue
+: else
+KMONS: 1 = orange crystal statue
+: end
 KFEAT: 1 = <
 MAP
 .........
@@ -6243,7 +6257,11 @@ NAME:   minivault_16
 TAGS:   allow_dup extra luniq
 WEIGHT: 40
 # as this replaces the former statue only minivaults
+: if you.in_branch("D") then
 MONS:   orange crystal statue / obsidian statue / ice statue
+: else
+MONS:   orange crystal statue
+: end
 SUBST:  G = G111
 MAP
 ...........

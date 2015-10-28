@@ -175,12 +175,16 @@ ENDMAP
 
 NAME:  lemuel_statue_altar
 TAGS:  transparent decor
-DEPTH: D:2-, Orc, Depths, Vaults, Elf, Crypt, Forest
+DEPTH: D:2-, Orc, Depths, Vaults, Elf, Crypt
 : if you.absdepth() < 10 then
 SUBST: F = G
 : end
 SUBST: F = G:99 F:1
+: if you.in_branch("D") or you.in_branch("Orc") then
 KMONS: F = orange crystal statue / obsidian statue / ice statue
+: else
+KMONS: F = orange crystal statue
+: end
 : interest_check(_G)
 KMASK: _>C = opaque
 MAP

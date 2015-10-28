@@ -1212,7 +1212,7 @@ MONS:    zombie
 MONS:    mummy / nothing
 SHUFFLE: 2F, cbv
 SUBST:   F = G:99 F:1
-KMONS:   F = orange crystal statue / obsidian statue / ice statue
+KMONS:   F = orange crystal statue / obsidian statue
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx3$$xxxxxxxxxxxxx
@@ -2896,7 +2896,7 @@ KMONS:    1 = spriggan rider / spriggan berserker / centaur warrior \
 KMONS:    2 = spriggan defender / deep elf blademaster / deep elf master archer\
               / octopode crusher
 KMONS:    3 = spriggan air mage / spriggan druid / deep elf annihilator
-KMONS:    4 = ice statue / w:5 orange crystal statue
+KMONS:    4 = orange crystal statue
 KMONS:    5Z = catoblepas / dire elephant / emperor scorpion \
               / alligator snapping turtle / shambling mangrove / thorn hunter
 KMONS:    6 = merfolk avatar
@@ -3388,7 +3388,7 @@ NAME:    lemuel_ice_statue
 MONS:    ice statue
 TAGS:    no_pool_fixup
 ORIENT:  float
-DEPTH:   D:7-, Elf, Depths
+DEPTH:   D:7-
 SUBST:   * : *$
 SUBST:   * = |:5 * .
 SUBST:   T = TU

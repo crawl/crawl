@@ -60,7 +60,11 @@ ENDMAP
 NAME:    statuecave_lemuel
 ORIENT:  northeast
 DEPTH:   D:7-, Lair, Crypt:1-4
-MONS:    ice statue / orange crystal statue
+: if you.in_branch("Crypt") then
+MONS:    orange crystal statue
+: else
+MONS:    ice statue / obsidian statue / orange crystal statue
+: end
 SHUFFLE: 1|/!*
 SUBST:   *:*$, ?:x., !:., '=w.
 ITEM:    ring of teleportation / ring of flight
@@ -284,9 +288,10 @@ x.......................
 ENDMAP
 
 NAME:   minmay_ice_pillars
-TAGS:   no_rotate no_pool_fixup no_monster_gen
+TAGS:   no_rotate no_pool_fixup no_monster_gen no_tele_into
 ORIENT: north
-DEPTH:  Depths, !Depths:$
+DEPTH:  D:11-, !D:$
+WEIGHT: 5
 MONS:   ice beast / nothing w:3, ice statue, ice dragon / nothing
 SUBST:  y : y:48 w:1 W:1, Y : Y:48 W:1 .:1, y = wwW, Y = WW.
 MAP
