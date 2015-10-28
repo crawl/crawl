@@ -3898,7 +3898,8 @@ void handle_god_time(int /*time_delta*/)
         {
             // This should be guaranteed; otherwise the god wouldn't have
             // appeared in the angry_gods list.
-            ASSERT(divine_retribution(angry_gods[random2(angry_gods.size())]));
+            const bool succ = divine_retribution(*random_iterator(angry_gods));
+            ASSERT(succ);
         }
         you.attribute[ATTR_GOD_WRATH_COUNT]--;
     }
