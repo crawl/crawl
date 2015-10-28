@@ -1,4 +1,4 @@
-Stone Soup 0.17 (up to 0.17-a0-2202-g1e9daa3)
+Stone Soup 0.17 (up to 0.17-a0-2225-g9662c60)
 ---------------------------------------------
 
 Highlights
@@ -96,6 +96,7 @@ Gods
     Pan lords can't be bribed.
   - Bribes now trigger on monsters coming into view, rather than on level
     entry.
+  - Call Merchant now always places shops at the player's location.
 * Ru:
   - New sacrifice: Sacrifice Eye, similar to the effect of amulets of
     inaccuracy (and stacking with the amulet).
@@ -217,6 +218,8 @@ Monsters
   spawn with a shield.
 * Demonspawn blood saints no longer have ephemeral infusion, and no longer
    damage themselves when casting Legendary Destruction.
+* Orange crystal statues now have Shadow Creatures and both they and obsidian
+  statues are faster at casting their spells.
 * Monsters can no longer have the Inner Flame spell.
 * Hellwings no longer have the Teleport Other spell.
 * Monsters can no longer have Animate Dead nor Simulacrum spells.
