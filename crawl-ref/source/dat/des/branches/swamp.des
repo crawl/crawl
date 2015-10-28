@@ -1306,11 +1306,7 @@ ENDMAP
 
 NAME: nicolae_swamp_necromancer_hut
 SUBST: q = tW., r = W., W = zWW
-# Necromancer gets the spell set without bolt of fire so he doesn't torch the place.
-MONS: necromancer spells:bolt_of_cold.15.wizard;\
-                         agony.15.wizard;\
-                         animate_dead.15.wizard;\
-                         simulacrum.15.wizard
+MONS: necromancer
 KMONS: z = crocodile zombie / swamp drake zombie / swamp worm zombie / \
         water moccasin zombie / swamp dragon zombie / \
         komodo dragon zombie / hornet zombie / alligator zombie / \
