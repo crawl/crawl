@@ -1731,8 +1731,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_OBSIDIAN_STATUE,
       {
-       { SPELL_SUMMON_MINOR_DEMON, 30, MON_SPELL_DEMONIC },
-       { SPELL_SUMMON_DEMON, 30, MON_SPELL_DEMONIC },
+       { SPELL_SUMMON_MINOR_DEMON, 50, MON_SPELL_DEMONIC },
+       { SPELL_SUMMON_DEMON, 50, MON_SPELL_DEMONIC },
       }
     },
 
