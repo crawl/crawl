@@ -1280,63 +1280,6 @@ xccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 ###############################################################################
-NAME:    spider_temple_joshua
-DEPTH:   Depths, !Depths:$
-ORIENT:  north
-MONS:    naga mage / naga w:5 / naga skeleton w:2
-MONS:    wolf spider
-MONS:    oklob plant
-MONS:    jelly
-MONS:    trapdoor spider / wolf spider
-MONS:    guardian serpent
-MONS:    obsidian statue
-# Randomise wall type: in 50% of maps, you cannot dig to the stairs.
-SUBST:   x : xxxxxxvvvccb
-KFEAT:   = = closed_door
-COLOUR:  ' = red
-FTILE:   ' = floor_rough_red
-SUBST:   ' = .
-# With 25% chance, have lava and obsidian statue instead of water and oklobs:
-SUBST:   w : Ww.
-SUBST:   w = W.
-SHUFFLE: wU3 / wU3 / wU3 / l7L
-SUBST:   L = l
-# The legs are coloured and contain 10 spider monsters:
-COLOUR:  " : white / yellow / brown
-NSUBST:  " = 10:5 / *:"
-SUBST:   " = .
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxx"""""""xxxxxxxxxxxxxx""""""xxxxx
-xxxxx"xxxxxx"xxx..}...xxx"xxxxx"xxxxx
-xxxxx=xxxxxxx"xx...)..xx"xxxxxx=xxxxx
-xxxxx'xxxxxxxx"x..]...x"xxxxxxx'xxxxx
-xx"""""""xxxxxx=......=xxxxx"""""""xx
-x"xxxxxxx"xxwWxxxx+xxxxxW.x"xxxxxxx"x
-xx"xxxxxxx=..wWWw.1...wWW.=xxxxxxx"xx
-xxx"xxxxxxx.4WWW.2.2.WWWW.xxxxxxx"xxx
-xxxx"xxxxxx..wWWw.W3WWWWw.xxxxxx"xxxx
-xxxxx"xxxxx.1.wWWW3U3WWw2.xxxxx"xxxxx
-xxxxxx=xxxx2.1.wWWW3WWw12.xxxx=xxxxxx
-xxxxxx'xxxx.2.wWWWWWWw....xxxx'xxxxxx
-x"""""""""=x..WW....WW...x="""""""""x
-x"xxxxxxxxxxxxW...1...Wxxxxxxxxxxxx"x
-x"xxx""""""""+W.4...4.W+""""""""xxx"x
-x""='"xxxxxxxxxm.....mxxxxxxxxx"'=""x
-xxxxx"x........x+xxxxx........x"xxxxx
-....x"x........xWWWWWx........x"x....
-....x"x........xxxxxWx........x"x....
-....x"xx.......xxxWWWx.......xx"x....
-....xx"xx.....xxxx+xxxx.....xx"xx....
-.....xx"xx....x.......x....xx"xx.....
-......xx"xx...x..262..x...xx"xx......
-.......xx=xx..mx.....xm..xx=xx.......
-........xx'x...xm+++mx...x'xx........
-..................@..................
-ENDMAP
-
-
-###############################################################################
 NAME:    grunt_house_of_mirrors
 TAGS:    no_tele_into
 DEPTH:   Depths, !Depths:$
