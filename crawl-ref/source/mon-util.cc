@@ -2420,19 +2420,19 @@ mon_spell_slot drac_breath(monster_type drac_type)
     return slot;
 }
 
-const mon_spell_slot lich_primary_summoner_spells[] =
+static const vector<mon_spell_slot> lich_primary_summoner_spells =
 {
     { SPELL_SUMMON_GREATER_DEMON, 18, MON_SPELL_WIZARD },
 };
 
-const mon_spell_slot lich_primary_conjurer_spells[] =
+static const vector<mon_spell_slot> lich_primary_conjurer_spells =
 {
     { SPELL_IOOD, 18, MON_SPELL_WIZARD },
     { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 18, MON_SPELL_WIZARD },
     { SPELL_CORROSIVE_BOLT, 18, MON_SPELL_WIZARD },
 };
 
-const mon_spell_slot lich_secondary_spells[] =
+static const vector<mon_spell_slot> lich_secondary_spells =
 {
     { SPELL_MALIGN_GATEWAY, 12, MON_SPELL_WIZARD },
     { SPELL_SPELLFORGED_SERVITOR, 12, MON_SPELL_WIZARD },
@@ -2458,14 +2458,15 @@ const mon_spell_slot lich_secondary_spells[] =
     { SPELL_SLEEP, 12, MON_SPELL_WIZARD },
 };
 
-const mon_spell_slot lich_buff_spells[] =
+static const vector<mon_spell_slot> lich_buff_spells =
 {
     { SPELL_HASTE, 12, MON_SPELL_WIZARD },
     { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
     { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
 };
 
-static bool _lich_spell_is_used(const monster_spells &spells, spell_type spell)
+static bool _random_caster_spell_is_used(const monster_spells &spells,
+                                         spell_type spell)
 {
     for (auto slot : spells)
         if (slot.spell == spell)
@@ -2474,8 +2475,8 @@ static bool _lich_spell_is_used(const monster_spells &spells, spell_type spell)
     return false;
 }
 
-static bool _lich_has_spell_of_school(const monster_spells &spells,
-                                      spschool_flag_type discipline)
+static bool _random_caster_has_spell_of_school(const monster_spells &spells,
+                                               spschool_flag_type discipline)
 {
     for (auto slot : spells)
         if (spell_typematch(slot.spell, discipline))
@@ -2484,14 +2485,16 @@ static bool _lich_has_spell_of_school(const monster_spells &spells,
     return false;
 }
 
-static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
-                                int *weights, int total_weight,
-                                bool use_weights, bool force_conj)
+static bool _random_caster_spell_is_good(const monster_spells &spells,
+                                         spell_type spell,
+                                         int *weights, int total_weight,
+                                         bool use_weights, bool force_conj)
 {
-    if (_lich_spell_is_used(spells, spell))
+    if (_random_caster_spell_is_used(spells, spell))
         return false;
 
-    if (force_conj && !_lich_has_spell_of_school(spells, SPTYP_CONJURATION))
+    if (force_conj
+        && !_random_caster_has_spell_of_school(spells, SPTYP_CONJURATION))
     {
         return spell_typematch(spell, SPTYP_CONJURATION)
                && spell != SPELL_BATTLESPHERE
@@ -2515,8 +2518,9 @@ static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
     return false;
 }
 
-static void _calculate_lich_spell_weights(const monster_spells &spells,
-                                          int *weights, int &total_weight)
+static void _calculate_random_caster_spell_weights(const monster_spells &spells,
+                                                   int *weights,
+                                                   int &total_weight)
 {
     for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
         // there are no primary hexes, and hexes are interesting to have on
@@ -2548,59 +2552,107 @@ static void _calculate_lich_spell_weights(const monster_spells &spells,
 
 }
 
-static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
-                            size_t set_len, bool force_conj)
+static void _add_random_caster_spell(monster_spells &spells,
+                                     const vector<mon_spell_slot> *set,
+                                     bool secondary, bool force_conj)
 {
     int weights[SPTYP_LAST_EXPONENT + 1];
     int total_weight;
-    _calculate_lich_spell_weights(spells, weights, total_weight);
+    const size_t set_len = set->size();
+    _calculate_random_caster_spell_weights(spells, weights, total_weight);
 
     mon_spell_slot next_spell;
     do
     {
-        next_spell = set[random2(set_len)];
+        next_spell = (*set)[random2(set_len)];
     }
-    while (!_lich_spell_is_good(spells, next_spell.spell, weights,
-                                total_weight, set == lich_secondary_spells,
-                                force_conj));
+    while (!_random_caster_spell_is_good(spells, next_spell.spell, weights,
+                                         total_weight, secondary, force_conj));
 
     next_spell.freq = next_spell.freq - 4 + random2(9);
     spells.push_back(next_spell);
 }
 
-static void _load_lich_spells(monster &lich)
+struct random_caster_spell_def
 {
-    const size_t num_spells = 5 + random2(3);
+    size_t min_spells;
+    size_t max_spells;
+    bool force_second_conj;
+    bool bonus_conj;
+    const vector<mon_spell_slot> *primary_summoner_spells;
+    const vector<mon_spell_slot> *primary_conjurer_spells;
+    const vector<mon_spell_slot> *secondary_spells;
+    const vector<mon_spell_slot> *buff_spells;
+};
+
+static const map<monster_type, random_caster_spell_def> random_caster_spells =
+{
+    {
+      MONS_LICH,
+      {
+        5, 7,
+        true,
+        false,
+        &lich_primary_summoner_spells,
+        &lich_primary_conjurer_spells,
+        &lich_secondary_spells,
+        &lich_buff_spells
+      }
+    },
+    {
+      MONS_ANCIENT_LICH,
+      {
+        5, 7,
+        true,
+        true,
+        &lich_primary_summoner_spells,
+        &lich_primary_conjurer_spells,
+        &lich_secondary_spells,
+        &lich_buff_spells
+      }
+    },
+};
+
+static void _load_random_caster_spells(monster &caster)
+{
+    const auto entry = random_caster_spells.find(caster.type);
+    ASSERT(entry != random_caster_spells.end());
+    const auto def = entry->second;
+
+    const size_t num_spells = random_range(def.min_spells, def.max_spells);
 
     if (coinflip())
     {
-        _add_lich_spell(lich.spells, lich_primary_summoner_spells,
-                        ARRAYSZ(lich_primary_summoner_spells), false);
+        _add_random_caster_spell(caster.spells, def.primary_summoner_spells,
+                                 false, false);
     }
     else
-        _add_lich_spell(lich.spells, lich_primary_conjurer_spells,
-                        ARRAYSZ(lich_primary_conjurer_spells), false);
+        _add_random_caster_spell(caster.spells, def.primary_conjurer_spells,
+                                 false, false);
 
-    if (lich.type == MONS_ANCIENT_LICH && coinflip())
+    if (def.bonus_conj && coinflip())
     {
-        _add_lich_spell(lich.spells, lich_primary_conjurer_spells,
-                        ARRAYSZ(lich_primary_conjurer_spells), false);
+        _add_random_caster_spell(caster.spells, def.primary_conjurer_spells,
+                                 false, false);
     }
 
-    bool force_conj = true;
-    while (lich.spells.size() < num_spells - 1)
+    const unsigned int max = def.buff_spells > 0 ? num_spells - 1 : num_spells;
+    bool force_conj = def.force_second_conj;
+    while (caster.spells.size() < max)
     {
-        _add_lich_spell(lich.spells, lich_secondary_spells,
-                        ARRAYSZ(lich_secondary_spells), force_conj);
+        _add_random_caster_spell(caster.spells, def.secondary_spells,
+                                 true, force_conj);
         force_conj = false;
     }
 
-    _add_lich_spell(lich.spells, lich_buff_spells,
-                    ARRAYSZ(lich_buff_spells), false);
+    if (def.buff_spells)
+    {
+        _add_random_caster_spell(caster.spells, def.buff_spells,
+                                 false, false);
+    }
 
-    normalize_spell_freq(lich.spells, lich.get_experience_level());
+    normalize_spell_freq(caster.spells, caster.get_experience_level());
 }
-
 
 void mons_load_spells(monster* mon)
 {
@@ -2618,7 +2670,7 @@ void mons_load_spells(monster* mon)
             mon->spells.push_back(breath);
     }
     else if (mon->type == MONS_LICH || mon->type == MONS_ANCIENT_LICH)
-        _load_lich_spells(*mon);
+        _load_random_caster_spells(*mon);
 
     if (book == MST_NO_SPELLS)
         return;
