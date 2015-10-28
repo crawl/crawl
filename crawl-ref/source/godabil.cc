@@ -2925,15 +2925,11 @@ static int _prompt_plant_ring_size(int max)
 
         // Cancel
         if (key_is_escape(keyin) || keyin == ' ' || keyin == '0')
-        {
             mpr("You must create at least one plant");
-        }
 
         // Default is max
         if (keyin == '\n' || keyin == '\r')
-        {
             return max;
-        }
 
         // Otherwise they should enter a digit
         if (isadigit(keyin))
