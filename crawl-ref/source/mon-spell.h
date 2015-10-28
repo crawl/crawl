@@ -1741,6 +1741,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BRAIN_FEED, 20, MON_SPELL_MAGICAL },
        { SPELL_DRAINING_GAZE, 20, MON_SPELL_MAGICAL },
        { SPELL_MASS_CONFUSION, 20, MON_SPELL_MAGICAL },
+       { SPELL_SHADOW_CREATURES, 40, MON_SPELL_MAGICAL },
       }
     },
 

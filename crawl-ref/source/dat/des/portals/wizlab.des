@@ -1185,10 +1185,10 @@ TAGS:       no_rotate
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                 hd:20 hp:80 tile:mons_wucad_mu_statue \
-                spells:brain_feed.40.natural;\
-                       draining_gaze.40.natural;\
-                       mass_confusion.40.natural;\
-                       shadow_creatures.80.natural
+                spells:brain_feed.24.natural;\
+                       draining_gaze.24.natural;\
+                       mass_confusion.24.natural;\
+                       shadow_creatures.48.natural
 KITEM:      8 = staff of energy unrand:staff_of_wucad_mu
 COLOUR:     c = darkgrey
 COLOUR:     t = lightred / red w:3
@@ -1802,9 +1802,9 @@ MONS:       cacodemon
 MONS:       quicksilver dragon / war gargoyle / crystal guardian \
             / wretched star
 MONS:       orange crystal statue name:lunar_statue n_rpl n_des \
-              spells:brain_feed.40.natural;draining_gaze.40.natural;\
-                     lehudib's_crystal_spear.40.natural;\
-                     shadow_creatures.80.natural \
+              spells:brain_feed.24.natural;draining_gaze.24.natural;\
+                     lehudib's_crystal_spear.24.natural;\
+                     shadow_creatures.48.natural \
               col:lightmagenta tile:mons_zot_statue
 {{
 if you.unrands("moon troll leather armour") then
