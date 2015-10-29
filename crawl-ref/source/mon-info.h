@@ -146,6 +146,8 @@ enum monster_info_flags
     MB_CHANT_WORD_OF_ENTROPY,
 #endif
     MB_AIRBORNE,
+    MB_BRILLIANCE_AURA,
+    MB_EMPOWERED_SPELLS,
     NUM_MB_FLAGS
 };
 

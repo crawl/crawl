@@ -1510,6 +1510,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_ENTROPIC_WEAVE:
     case SPELL_SUMMON_EXECUTIONERS:
     case SPELL_DOOM_HOWL:
+    case SPELL_AURA_OF_BRILLIANCE:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -1679,6 +1680,13 @@ static bool _mirrorable(const monster* agent, const monster* mon)
            && !mon->is_summoned()
            && !mons_is_conjured(mon->type)
            && !mons_is_unique(mon->type);
+}
+
+static bool _valid_aura_of_brilliance_ally(const monster* caster,
+                                           const monster* target)
+{
+    return mons_aligned(caster, target) && caster != target
+           && target->is_actual_spellcaster();
 }
 
 enum battlecry_type
@@ -3052,6 +3060,45 @@ static void _cast_black_mark(monster* agent)
     }
 }
 
+void aura_of_brilliance(monster* agent)
+{
+    bool did_something = false;
+    for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
+    {
+        if (!ai->visible_to(agent)
+            || ai->is_player()
+            || !mons_aligned(*ai, agent))
+        {
+            continue;
+        }
+        monster* mon = ai->as_monster();
+        if (_valid_aura_of_brilliance_ally(agent, mon))
+        {
+            if (!mon->has_ench(ENCH_EMPOWERED_SPELLS) && you.can_see(*mon))
+            {
+               mprf("%s is empowered by %s aura!",
+                    mon->name(DESC_THE).c_str(),
+                    apostrophise(agent->name(DESC_THE)).c_str());
+            }
+            mon_enchant ench = mon->get_ench(ENCH_EMPOWERED_SPELLS);
+            if (ench.ench != ENCH_NONE)
+            {
+                ench.duration = 2 * BASELINE_DELAY;
+                mon->update_ench(ench);
+            }
+            else
+            {
+                mon->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1,
+                                          agent, 2 * BASELINE_DELAY));
+            }
+            did_something = true;
+        }
+    }
+
+    if (!did_something)
+        agent->del_ench(ENCH_BRILLIANCE_AURA);
+}
+
 static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
 {
     targetter_cone hitfunc(caster, spell_range(SPELL_GLACIATE, pow));
@@ -3442,6 +3489,7 @@ static bool _long_target_range(const monster *mons)
 bool handle_mon_spell(monster* mons, bolt &beem)
 {
     bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
+    bool reroll        = mons->has_ench(ENCH_EMPOWERED_SPELLS);
     const actor *foe = mons->get_foe();
 
     if (is_sanctuary(mons->pos()) && !mons->wont_attack())
@@ -3655,7 +3703,17 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 // If we roll above the weight of the spell list,
                 // don't cast a spell at all.
                 if (i == hspell_pass.size())
+                {
+                    // Aura of Brilliance forces a reroll if the monster
+                    // otherwise would not have cast a spell.
+                    if (reroll)
+                    {
+                        reroll = false;
+                        attempt--;
+                        continue;
+                    }
                     return false;
+                }
 
                 spell_cast = hspell_pass[i].spell;
                 flags = hspell_pass[i].flags;
@@ -6679,6 +6737,12 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_CALL_OF_CHAOS:
         _mons_call_of_chaos(*mons);
         return;
+
+    case SPELL_AURA_OF_BRILLIANCE:
+        simple_monster_message(mons, " begins emitting a brilliant aura!");
+        mons->add_ench(ENCH_BRILLIANCE_AURA);
+        aura_of_brilliance(mons);
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -8272,6 +8336,15 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_CALL_OF_CHAOS:
         return !_mons_call_of_chaos(*mon, true);
+
+    case SPELL_AURA_OF_BRILLIANCE:
+        if (mon->has_ench(ENCH_BRILLIANCE_AURA) || !foe || !mon->can_see(*foe))
+            return true;
+
+        for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
+            if (_valid_aura_of_brilliance_ally(mon, *mi))
+                return false;
+        return true;
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:

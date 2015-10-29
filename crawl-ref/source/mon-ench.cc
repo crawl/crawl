@@ -1035,6 +1035,16 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer unusually resistant.");
         break;
 
+    case ENCH_BRILLIANCE_AURA:
+        if (!quiet)
+            simple_monster_message(this, " is no longer giving off an aura.");
+        break;
+
+    case ENCH_EMPOWERED_SPELLS:
+        if (!quiet)
+            simple_monster_message(this, " seems less brilliant.");
+        break;
+
     default:
         break;
     }
@@ -1513,6 +1523,8 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_GOLD_LUST:
     case ENCH_RESISTANCE:
     case ENCH_HEXED:
+    case ENCH_BRILLIANCE_AURA:
+    case ENCH_EMPOWERED_SPELLS:
         decay_enchantment(en);
         break;
 
@@ -2233,6 +2245,7 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "chanting_fire_storm", "chanting_word_of_entropy",
 #endif
+    "aura_of_brilliance", "empowered_spells",
     "buggy",
 };
 
@@ -2496,6 +2509,12 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_FROZEN:
         cturn = 3 * BASELINE_DELAY;
+        break;
+    case ENCH_BRILLIANCE_AURA:
+        cturn = 20 * BASELINE_DELAY;
+        break;
+    case ENCH_EMPOWERED_SPELLS:
+        cturn = 2 * BASELINE_DELAY;
         break;
     default:
         break;

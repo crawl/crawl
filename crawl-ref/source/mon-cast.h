@@ -20,6 +20,8 @@ bool get_push_space(const coord_def& pos, coord_def& newpos,
                     actor* act, bool ignore_tension = false,
                     const vector<coord_def>* excluded = nullptr);
 
+void aura_of_brilliance(monster* agent);
+
 bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos);
 bool scattershot_tracer(monster *caster, int pow, coord_def aim);
 

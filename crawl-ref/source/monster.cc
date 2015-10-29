@@ -6714,11 +6714,10 @@ bool monster::is_jumpy() const
 }
 
 // HD for spellcasting purposes.
-// Currently unused, though there's a possibility here for Archmagi, etc. to
-// have an impact in some cases.
+// Currently only used for Aura of Brilliance.
 int monster::spell_hd(spell_type spell) const
 {
-    return get_hit_dice();
+    return get_hit_dice() + has_ench(ENCH_EMPOWERED_SPELLS) ? 5 : 0;
 }
 
 void monster::align_avatars(bool force_friendly)

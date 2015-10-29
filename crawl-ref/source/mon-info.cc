@@ -150,6 +150,10 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
                                          >= mons.get_experience_level() / 2;
             return heavily_drained ? MB_HEAVILY_DRAINED : MB_LIGHTLY_DRAINED;
         }
+    case ENCH_BRILLIANCE_AURA:
+        return MB_BRILLIANCE_AURA;
+    case ENCH_EMPOWERED_SPELLS:
+        return MB_EMPOWERED_SPELLS;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1540,6 +1544,10 @@ vector<string> monster_info::attributes() const
         v.emplace_back("control wrested from you");
     if (is(MB_BONE_ARMOUR))
         v.emplace_back("corpse armoured");
+    if (is(MB_BRILLIANCE_AURA))
+        v.emplace_back("aura of brilliance");
+    if (is(MB_EMPOWERED_SPELLS))
+        v.emplace_back("spells empowered");
     return v;
 }
 
