@@ -2068,6 +2068,8 @@ enum enchant_type
     ENCH_CHANT_FIRE_STORM, // chanting the fire storm spell
     ENCH_CHANT_WORD_OF_ENTROPY, // chanting word of entropy
 #endif
+    ENCH_BRILLIANCE_AURA, // emanating a brilliance aura
+    ENCH_EMPOWERED_SPELLS, // affected by above
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -4585,6 +4587,7 @@ enum spell_type
     SPELL_VIOLENT_UNRAVELLING,
     SPELL_DOOM_HOWL,
     SPELL_AWAKEN_EARTH,
+    SPELL_AURA_OF_BRILLIANCE,
     NUM_SPELLS
 };
 

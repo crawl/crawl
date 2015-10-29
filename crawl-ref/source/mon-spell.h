@@ -419,6 +419,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DEEP_ELF_HIGH_PRIEST,
       {
+       { SPELL_AURA_OF_BRILLIANCE, 25, MON_SPELL_PRIEST },
        { SPELL_SUMMON_DEMON, 12, MON_SPELL_PRIEST },
        { SPELL_HELLFIRE_BURST, 12, MON_SPELL_PRIEST },
        { SPELL_MALIGN_OFFERING, 12, MON_SPELL_PRIEST },
