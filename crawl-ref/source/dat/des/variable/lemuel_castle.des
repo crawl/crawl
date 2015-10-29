@@ -50,7 +50,7 @@ function castle_lemuel_subvault_setup(e)
             e.subst("* : *$")
             e.subst("| = |*")
             e.mons("deep elf fighter / deep elf mage w:4")
-            e.mons("deep elf knight / deep elf mage w:20 / deep elf priest")
+            e.mons("deep elf knight / deep elf mage w:30")
             e.mons("deep elf annihilator / deep elf sorcerer / deep elf high priest / \
                     deep elf death mage / deep elf demonologist")
             e.mons("nothing")

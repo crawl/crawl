@@ -2072,7 +2072,7 @@ NAME:  evilmike_abyss_exit_smiterflies
 TAGS:  abyss_exit
 KMONS: O = generate_awake statue spells:summon_butterflies.100.magical \
            tile:mons_statue_mage col:lightblue
-MONS:  smoke demon, deep elf priest
+MONS:  smoke demon, deep elf mage
 : init_abyss_exit(_G, "O")
 MAP
        ccc

@@ -218,7 +218,7 @@ MONS:    orc knight, orc priest / orc warrior / orc wizard / orc w:15
 KMONS:   7 = yaktaur
 KMONS:   8 = yaktaur / nothing w:5
 KMONS:   9 = deep elf knight
-KMONS:   0 = deep elf mage / deep elf priest / deep elf fighter / nothing w:15
+KMONS:   0 = deep elf mage / deep elf fighter / nothing
 KMONS:   A = boggart / kobold demonologist
 KMONS:   B = big kobold / kobold w:5
 KMONS:   C = skeletal warrior
