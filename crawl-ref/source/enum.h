@@ -2842,8 +2842,8 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_DEEP_ELF_SUMMONER,
     MONS_DEEP_ELF_CONJURER,
-#endif
     MONS_DEEP_ELF_PRIEST,
+#endif
     MONS_DEEP_ELF_HIGH_PRIEST,
     MONS_DEEP_ELF_DEMONOLOGIST,
     MONS_DEEP_ELF_ANNIHILATOR,

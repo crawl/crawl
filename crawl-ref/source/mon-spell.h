@@ -417,15 +417,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_DEEP_ELF_PRIEST,
-      {
-       { SPELL_PAIN, 14, MON_SPELL_PRIEST },
-       { SPELL_MALIGN_OFFERING, 14, MON_SPELL_PRIEST },
-       { SPELL_SMITING, 14, MON_SPELL_PRIEST },
-       { SPELL_TWISTED_RESURRECTION, 14, MON_SPELL_PRIEST },
-      }
-    },
-
     {  MST_DEEP_ELF_HIGH_PRIEST,
       {
        { SPELL_SUMMON_DEMON, 12, MON_SPELL_PRIEST },

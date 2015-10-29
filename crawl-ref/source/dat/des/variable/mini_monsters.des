@@ -2054,7 +2054,7 @@ SUBST: 1 : 13
 # scale the deck quality accordingly - it's mostly for theming, but we might as
 # well make it depth-appropriate loot too.
 : if you.in_branch("Elf") then
-MONS: deep elf priest, deep elf mage, deep elf fighter
+MONS: deep elf mage, deep elf mage, deep elf fighter
 ITEM: legendary deck
 : elseif you.in_branch("Orc") then
 MONS: orc warrior, orc wizard, orc
@@ -4997,7 +4997,7 @@ NAME:   kennysheep_underground_church
 TAGS:   no_pool_fixup misc_elf_vault
 DEPTH:  Depths, Elf, Zot
 : if not you.in_branch("Zot") then
-MONS:   deep elf high priest, deep elf priest
+MONS:   deep elf high priest, deep elf mage
 :else
 MONS:   draconian zealot, base draconian
 :end

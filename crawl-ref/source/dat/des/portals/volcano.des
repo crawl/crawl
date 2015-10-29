@@ -282,7 +282,7 @@ function fiery_guardians (e, intelligent, village)
            e.mons("salamander mystic")
         elseif set_weight < 11 then
            e.mons("deep elf fighter ; " .. elfstuff
-                  .. " / deep elf priest ; " .. elfstuff)
+                  .. " / deep elf mage ; " .. elfstuff)
            e.mons("deep elf knight ; " .. elfstuff)
         else
         -- Mix of the above and worse.

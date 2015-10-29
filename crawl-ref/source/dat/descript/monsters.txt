@@ -894,11 +894,6 @@ deep elf master archer
 A deep elf archer who has devoted a lifetime to the mastery of archery,
 dismissing magic as a frivolous distraction.
 %%%%
-deep elf priest
-
-This deep elf is a servant of the ancient dark god of the deep elves, and has
-been granted command of torturous energies by its enigmatic lord.
-%%%%
 deep elf sorcerer
 
 A mighty spellcaster who draws power from the very Hells, and possesses lethal

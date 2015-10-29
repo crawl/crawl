@@ -251,6 +251,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_BRAIN_WORM)
     AXED_MON(MONS_DEEP_ELF_SUMMONER)
     AXED_MON(MONS_DEEP_ELF_CONJURER)
+    AXED_MON(MONS_DEEP_ELF_PRIEST)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -783,18 +784,6 @@ static monsterentry mondata[] =
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 9, 3, 3 },
     0, 13, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
-    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
-},
-
-{
-    MONS_DEEP_ELF_PRIEST, 'e', GREEN, "deep elf priest",
-    M_WARM_BLOOD | M_SPEAKS,
-    MR_NO_FLAGS,
-    11, MONS_ELF, MONS_ELF, MH_NATURAL | MH_EVIL, 60,
-    { {AT_HIT, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 3 },
-    0, 13, MST_DEEP_ELF_PRIEST, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },

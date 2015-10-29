@@ -4544,9 +4544,8 @@ static const pop_entry _invitation_orc[] =
 
 static const pop_entry _invitation_elf[] =
 { // Elf enemies
-  {  1,   1,   90, FLAT, MONS_DEEP_ELF_FIGHTER },
-  {  1,   1,   70, FLAT, MONS_DEEP_ELF_PRIEST },
-  {  1,   1,   40, FLAT, MONS_DEEP_ELF_MAGE },
+  {  1,   1,  125, FLAT, MONS_DEEP_ELF_FIGHTER },
+  {  1,   1,   75, FLAT, MONS_DEEP_ELF_MAGE },
   { 0,0,0,FLAT,MONS_0 }
 };
 
