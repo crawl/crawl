@@ -842,6 +842,18 @@ friendly hound
 
 VISUAL:@The_monster@ wags @possessive@ tail.
 
+VISUAL:@The_monster@ barks happily!
+
+VISUAL:@The_monster@ runs in silly circles!
+
+VISUAL:@The_monster@ looks up at you expectantly.
+
+VISUAL:@The_monster@ scratches @possessive@ ear.
+
+VISUAL:@The_monster@ scratches at a flea.
+
+VISUAL:@The_monster@ cocks @possessive@ head sideways at you.
+
 @hound@
 %%%%
 default insect
