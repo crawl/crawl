@@ -41,12 +41,11 @@ MARKER:  A = lua:tutorial5.msg("dungeon_overview")
 MARKER:  _ = lua:tutorial5.msg("altar")
 MARKER:  B = lua:tutorial5.msg("religion")
 MARKER:  C = lua:tutorial5.msg("piety_on_kill")
-MARKER:  D = lua:tutorial5.msg("sacrificing")
-MARKER:  E = lua:tutorial5.msg("burn_book")
-MARKER:  F = lua:tutorial5.msg("berserk")
-MARKER:  H = lua:tutorial5.msg("exhaustion")
-MARKER:  I = lua:tutorial5.msg("hunger")
-MARKER:  J = lua:tutorial5.msg("berserk2")
+MARKER:  D = lua:tutorial5.msg("burn_book")
+MARKER:  E = lua:tutorial5.msg("berserk")
+MARKER:  F = lua:tutorial5.msg("exhaustion")
+MARKER:  G = lua:tutorial5.msg("hunger")
+MARKER:  H = lua:tutorial5.msg("berserk2")
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  onclimb = "tutorial5.exit" }
 MARKER:  ( = lua:one_way_stair { dst  = "tutorial_lesson5", \
@@ -76,19 +75,19 @@ xxxxxxxxxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxx.x}xxx
 xxxxxxxxxxxxxxxx.....1.xxxxxxxxxxxxxxxxxxxx.....xx
 xxxxxx....C......1.....xxxxxxxxxxxxxxxxxx....1...x
 xxxxxx.xxxxxxxxx...1...xxxxxxxxxxxxxxxxx...2....)x
-xxxxxx.xxxxxxxxxx.....xxxxxxxxxxxxxxJ....1....1xxx
-xxxxxx.xxxxxxxxxxxxDxxxxxxxxxxxxxxx.xxxxx...2...xx
+xxxxxx.xxxxxxxxxx.....xxxxxxxxxxxxxxH....1....1xxx
+xxxxxx.xxxxxxxxxxxx.xxxxxxxxxxxxxxx.xxxxx...2...xx
 xxxxxxBxxxxxxxxxxxx.xxxxxxxxxxxxxxx.xxxxxxx..4.xxx
 xtt..G.G..ttxxxxxxx.xxxxxxxxxxxxxxxx..xxxxxx.]xxxx
 xt........txxxxxxxx.xxxxxxxxxxxxxxxxxx.xxxxxxxxxxx
 x..mmm.mmm..xxxxxxx.xxxxxxxxxxxxxxxxxxx...xxxxxxxx
-x..mYbbbYm..xxxxxxxExxxxxxxxxxxxxxxxxx..1...xxxxxx
+x..mYbbbYm..xxxxxxxDxxxxxxxxxxxxxxxxxx..1...xxxxxx
 x...bb_bb...xxxxxxx.xxxxxxxxxxxxxxxxxxx..1...xxxxx
 x..mVbbbVm..xxxxxxx.xxxxxxxxxxxxxxxxxxxx....xxxxxx
 x..mmm.mmm..xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx.xxxxx
-xt.........txxxxxxxexxxxxxxxxxxxxxxxxxxxxxxxxIxxxx
+xt.........txxxxxxxexxxxxxxxxxxxxxxxxxxxxxxxxGxxxx
 xtt..G.G..ttxxxxx.....xxxxxxxx.......xxxxxx..xxxxx
-xxxxxxAxxxxxxxxxx...........F+.....3.H.....xxxxxxx
+xxxxxxAxxxxxxxxxx...........E+.....3.F.....xxxxxxx
 xxxxxx.xxxxxxxxxx.....xxxxxxxx.......xxxxxxxxxxxxx
 xxxxxx.xxxxxxxxxx.2...xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxx+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
