@@ -5706,6 +5706,10 @@ bool monster::do_shaft()
     if (!is_valid_shaft_level())
         return false;
 
+    // Tentacles are immune to shafting
+    if (mons_is_tentacle_or_tentacle_segment(type))
+        return false;
+
     // Handle instances of do_shaft() being invoked magically when
     // the monster isn't standing over a shaft.
     if (get_trap_type(pos()) != TRAP_SHAFT)
