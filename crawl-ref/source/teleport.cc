@@ -21,7 +21,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
-#include "random-weight.h"
+#include "random.h"
 #include "terrain.h"
 #include "view.h"
 

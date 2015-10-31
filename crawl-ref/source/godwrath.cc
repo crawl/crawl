@@ -32,7 +32,7 @@
 #include "mon-poly.h"
 #include "mutation.h"
 #include "player-stats.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "shopping.h"
 #include "shout.h"

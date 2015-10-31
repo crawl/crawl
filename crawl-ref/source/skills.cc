@@ -27,7 +27,7 @@
 #include "misc.h"
 #include "notes.h"
 #include "output.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "skill_menu.h"
 #include "sprint.h"

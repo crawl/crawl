@@ -4,7 +4,7 @@
 
 #include "itemprop.h"
 #include "ng-setup.h"
-#include "random-weight.h"
+#include "random.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
