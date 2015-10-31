@@ -3399,11 +3399,7 @@ bool bolt::misses_player()
 void bolt::affect_player_enchantment(bool resistible)
 {
     if (resistible
-        && ((flavour != BEAM_MALMUTATE
-             && flavour != BEAM_CORRUPT_BODY
-             && flavour != BEAM_SAP_MAGIC
-             && has_saving_throw())
-              || flavour == BEAM_VIRULENCE)
+        && has_saving_throw()
         && you.check_res_magic(ench_power) > 0)
     {
         // You resisted it.
@@ -5122,9 +5118,11 @@ bool bolt::has_saving_throw() const
     case BEAM_BLINK_CLOSE:
     case BEAM_BLINK:
     case BEAM_MALIGN_OFFERING:
-    case BEAM_VIRULENCE:        // saving throw handled specially
     case BEAM_AGILITY:
     case BEAM_RESISTANCE:
+    case BEAM_MALMUTATE:
+    case BEAM_CORRUPT_BODY:
+    case BEAM_SAP_MAGIC:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores MR 1/3 of the time
@@ -5254,8 +5252,8 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
     // Early out if the enchantment is meaningless.
     if (!ench_flavour_affects_monster(flavour, mon))
         return MON_UNAFFECTED;
-    // Check magic resistance.
-    if (has_saving_throw())
+    // Check magic resistance. (virulence is special-cased)
+    if (has_saving_throw() && flavour != BEAM_VIRULENCE)
     {
         if (mons_immune_magic(mon))
             return MON_UNAFFECTED;
