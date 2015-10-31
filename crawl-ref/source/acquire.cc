@@ -901,6 +901,118 @@ static bool _skill_useless_with_god(int skill)
     }
 }
 
+/**
+ * Randomly decide whether the player should get a manual from a given instance
+ * of book acquirement.
+ *
+ * @param agent     The source of the acquirement (e.g. a god)
+ * @return          Whether the player should get a manual from this book
+ *                  acquirement.
+ */
+static bool _should_acquire_manual(int agent)
+{
+    if (agent == GOD_XOM || agent == GOD_SIF_MUNA)
+        return false;
+
+    int magic_weights = 0;
+    int other_weights = 0;
+
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        const int weight = you.skills[sk];
+
+        if (_is_magic_skill(sk))
+            magic_weights += weight;
+        else
+            other_weights += weight;
+    }
+
+    if (you_worship(GOD_TROG))
+        magic_weights = 0;
+
+    // If someone has 25% or more magic skills, never give manuals.
+    // Otherwise, count magic skills double to bias against manuals
+    // for magic users.
+    return magic_weights * 3 < other_weights
+           && x_chance_in_y(other_weights, 2*magic_weights + other_weights);
+}
+
+/**
+ * For the purposes of acquirement, does the player have any skill in magic,
+ *
+ * @return  true iff the player has any nonzero magic skill AND if they do not
+ *          worship Trog.
+ */
+static bool _knows_and_likes_magic()
+{
+    if (you_worship(GOD_TROG))
+        return false;
+
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+        if (_is_magic_skill(sk) && you.skills[sk] >= 1)
+            return true;
+
+    return false;
+}
+
+/**
+ * Turn a given book into an acquirement-quality manual.
+ *
+ * @param book[out]     The book to be turned into a manual.
+ * @return              Whether a manual was successfully created.
+ */
+static bool _acquire_manual(item_def &book)
+{
+    int weights[NUM_SKILLS];
+    int total_weights = 0;
+
+    const bool knows_magic = _knows_and_likes_magic();
+
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        int skl = you.skills[sk];
+
+        if (skl == 27 || is_useless_skill(sk))
+        {
+            weights[sk] = 0;
+            continue;
+        }
+
+        int w = (skl < 12) ? skl + 3 : max(0, 25 - skl);
+
+        // Give a bonus for some highly sought after skills.
+        if (sk == SK_FIGHTING || sk == SK_ARMOUR || sk == SK_SPELLCASTING
+            || sk == SK_INVOCATIONS || sk == SK_EVOCATIONS)
+        {
+            w += 5;
+        }
+
+        // Greatly reduce the chances of getting a manual for a skill
+        // you couldn't use unless you switched your religion.
+        if (_skill_useless_with_god(sk))
+            w /= 2;
+
+        // If we don't have any magic skills, make non-magic skills
+        // more likely.
+        if (!knows_magic && !_is_magic_skill(sk))
+            w *= 2;
+
+        weights[sk] = w;
+        total_weights += w;
+    }
+
+    // Are we too skilled to get any manuals?
+    if (total_weights == 0)
+        return false;
+
+    book.sub_type = BOOK_MANUAL;
+    book.skill = static_cast<skill_type>(
+                    choose_random_weighted(weights, weights + NUM_SKILLS));
+    // Set number of bonus skill points.
+    book.skill_points = random_range(2000, 3000);
+    return true;
+}
+
 static bool _do_book_acquirement(item_def &book, int agent)
 {
     // items() shouldn't make book a randart for acquirement items.
@@ -915,37 +1027,9 @@ static bool _do_book_acquirement(item_def &book, int agent)
 
     int choice = NUM_BOOKS;
 
-    bool knows_magic = false;
     // Manuals are too useful for Xom, and useless when gifted from Sif Muna.
-    if (agent != GOD_XOM && agent != GOD_SIF_MUNA)
-    {
-        int magic_weights = 0;
-        int other_weights = 0;
-
-        for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-        {
-            int weight = you.skills[sk];
-
-            if (_is_magic_skill(sk))
-                magic_weights += weight;
-            else
-                other_weights += weight;
-        }
-
-        if (you_worship(GOD_TROG))
-            magic_weights = 0;
-
-        // If someone has 25% or more magic skills, never give manuals.
-        // Otherwise, count magic skills double to bias against manuals
-        // for magic users.
-        if (magic_weights * 3 < other_weights
-            && x_chance_in_y(other_weights, 2*magic_weights + other_weights))
-        {
-            choice = BOOK_MANUAL;
-            if (magic_weights > 0)
-                knows_magic = true;
-        }
-    }
+    if (_should_acquire_manual(agent))
+        return _acquire_manual(book);
 
     if (choice == NUM_BOOKS)
     {
@@ -1012,56 +1096,6 @@ static bool _do_book_acquirement(item_def &book, int agent)
             return false;
         break;
     }
-
-    case BOOK_MANUAL:
-    {
-        int weights[NUM_SKILLS];
-        int total_weights = 0;
-
-        for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-        {
-            int skl = you.skills[sk];
-
-            if (skl == 27 || is_useless_skill(sk))
-            {
-                weights[sk] = 0;
-                continue;
-            }
-
-            int w = (skl < 12) ? skl + 3 : max(0, 25 - skl);
-
-            // Give a bonus for some highly sought after skills.
-            if (sk == SK_FIGHTING || sk == SK_ARMOUR || sk == SK_SPELLCASTING
-                || sk == SK_INVOCATIONS || sk == SK_EVOCATIONS)
-            {
-                w += 5;
-            }
-
-            // Greatly reduce the chances of getting a manual for a skill
-            // you couldn't use unless you switched your religion.
-            if (_skill_useless_with_god(sk))
-                w /= 2;
-
-            // If we don't have any magic skills, make non-magic skills
-            // more likely.
-            if (!knows_magic && !_is_magic_skill(sk))
-                w *= 2;
-
-            weights[sk] = w;
-            total_weights += w;
-        }
-
-        // Are we too skilled to get any manuals?
-        if (total_weights == 0)
-            return false;
-
-        book.sub_type = BOOK_MANUAL;
-        book.skill = static_cast<skill_type>(
-                        choose_random_weighted(weights, weights + NUM_SKILLS));
-        // Set number of bonus skill points.
-        book.skill_points = random_range(2000, 3000);
-        break;
-    } // manuals
     } // switch book choice
     return true;
 }
