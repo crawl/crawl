@@ -507,10 +507,33 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-    if (player_mutation_level(MUT_MISSING_HAND) && slot == EQ_SHIELD)
+    if (player_mutation_level(MUT_MISSING_HAND) && is_shield(item))
     {
         if (verbose)
-            mpr("You don't have enough limbs.");
+        {
+            if (you.species == SP_OCTOPODE)
+                mpr("You need the rest of your tentacles for walking.");
+            else
+                mprf("You'd need another %s to do that!", you.hand_name(false).c_str());
+        }
+        return false;
+    }
+
+    if (!ignore_temporary && you.weapon()
+        && is_shield(item)
+        && is_shield_incompatible(*you.weapon(), &item))
+    {
+        if (verbose)
+        {
+            if (you.species == SP_OCTOPODE)
+                mpr("You need the rest of your tentacles for walking.");
+            else
+            {
+                // Singular hand should have already been handled above.
+                mprf("You'd need three %s to do that!",
+                     you.hand_name(true).c_str());
+            }
+        }
         return false;
     }
 
@@ -760,38 +783,6 @@ bool do_wear_armour(int item, bool quiet)
             mpr("You're already wearing that object!");
             return false;
         }
-    }
-
-    if (player_mutation_level(MUT_MISSING_HAND) && is_shield(invitem))
-    {
-        if (!quiet)
-        {
-            if (you.species == SP_OCTOPODE)
-                mpr("You need the rest of your tentacles for walking.");
-            else
-                mprf("You'd need another %s to do that!", you.hand_name(false).c_str());
-        }
-        return false;
-    }
-
-    // if you're wielding something,
-    if (you.weapon()
-        // attempting to wear a shield,
-        && is_shield(invitem)
-        && is_shield_incompatible(*you.weapon(), &invitem))
-    {
-        if (!quiet)
-        {
-            if (you.species == SP_OCTOPODE)
-                mpr("You need the rest of your tentacles for walking.");
-            else
-            {
-                // Singular hand should have already been handled above.
-                mprf("You'd need three %s to do that!",
-                     you.hand_name(true).c_str());
-            }
-        }
-        return false;
     }
 
     bool swapping = false;
