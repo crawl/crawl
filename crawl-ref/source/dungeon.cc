@@ -55,7 +55,7 @@
 #include "mon-poly.h"
 #include "notes.h"
 #include "place.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "rot.h"
 #include "show.h"

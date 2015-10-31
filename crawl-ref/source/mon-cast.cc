@@ -48,7 +48,7 @@
 #include "mon-tentacle.h"
 #include "mutation.h"
 #include "player-stats.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "shout.h"
 #include "showsymb.h"
