@@ -1080,9 +1080,9 @@ static void _remove_amulet_of_faith(item_def &item)
         if (you.piety - piety_loss > 10)
         {
             mprf(MSGCH_GOD,
-                 "%s leaches power out of you as you remove it.",
+                 "%s leeches power out of you as you remove it.",
                  item.name(DESC_YOUR).c_str());
-            dprf("%s: piety leach: %d",
+            dprf("%s: piety leech: %d",
                  item.name(DESC_PLAIN).c_str(), piety_loss);
             lose_piety(piety_loss);
         }
