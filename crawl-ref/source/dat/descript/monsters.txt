@@ -2822,12 +2822,6 @@ The likeness of a beautiful elven archer, sculpted in finest marble. It holds a
 bow aloft, and appears to be magically animated, letting it use the bow to
 riddle you with arrows.
 %%%%
-big kobold necromancer
-
-A kobold that is not only bigger and smarter than most, but also a good deal
-more evil. Fortunately, from the looks of this place, it's unlikely it could
-get its grubby hands onto the corpse of anything dangerous.
-%%%%
 captured wizard
 
 With wild eyes, this wizard frantically mumbles and waves his arms, but is
