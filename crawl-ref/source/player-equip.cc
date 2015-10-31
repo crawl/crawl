@@ -1079,10 +1079,8 @@ static void _remove_amulet_of_faith(item_def &item)
         // Piety penalty for removing the Amulet of Faith.
         if (you.piety - piety_loss > 10)
         {
-            mprf(MSGCH_GOD,
-                 "%s leeches power out of you as you remove it.",
-                 item.name(DESC_YOUR).c_str());
-            dprf("%s: piety leech: %d",
+            mprf(MSGCH_GOD, "You feel less pious.");
+            dprf("%s: piety drain: %d",
                  item.name(DESC_PLAIN).c_str(), piety_loss);
             lose_piety(piety_loss);
         }
