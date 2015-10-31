@@ -196,10 +196,7 @@ dice_def calc_dice(int num_dice, int max_damage)
     }
     else
     {
-        // Divide the damage among the dice, and add one
-        // occasionally to make up for the fractions. -- bwr
-        ret.size  = max_damage / num_dice;
-        ret.size += x_chance_in_y(max_damage % num_dice, num_dice);
+        ret.size = div_rand_round(max_damage, num_dice);
     }
 
     return ret;
