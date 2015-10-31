@@ -129,7 +129,7 @@ item_def* newgame_make_item(object_class_type base,
     if (item.base_type == OBJ_ARMOUR
         && !can_wear_armour(item, false, false))
     {
-        if (item.sub_type == ARM_HELMET)
+        if (item.sub_type == ARM_HELMET || item.sub_type == ARM_HAT)
             item.sub_type = ARM_HAT;
         else if (item.sub_type == ARM_BUCKLER)
             item.sub_type = ARM_SHIELD;
