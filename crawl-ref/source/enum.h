@@ -5097,4 +5097,10 @@ enum timed_effect_type
     NUM_TIMERS,
 };
 
+enum rng_type {
+    RNG_GAMEPLAY,
+    RNG_UI,
+    NUM_RNGS,
+};
+
 #endif // ENUM_H
