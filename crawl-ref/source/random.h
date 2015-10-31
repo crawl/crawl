@@ -8,9 +8,6 @@
 
 #include "hash.h"
 
-#define RNG_GAMEPLAY 0
-#define RNG_UI 1
-
 void seed_rng();
 void seed_rng(uint32_t seed);
 void seed_rng(uint64_t[], int);

@@ -12,7 +12,7 @@
 #include "pcg.h"
 #include "syscalls.h"
 
-static FixedVector<PcgRNG, 2> rngs;
+static FixedVector<PcgRNG, NUM_RNGS> rngs;
 
 uint32_t get_uint32(int generator)
 {
