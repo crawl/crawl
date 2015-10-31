@@ -506,7 +506,7 @@ void record_monster_defeat(monster* mons, killer_type killer)
         return;
     if (mons->has_ench(ENCH_FAKE_ABJURATION))
         return;
-    if (MONST_INTERESTING(mons))
+    if (MONST_INTERESTING(mons) && !mons->is_summoned())
     {
         take_note(Note(NOTE_DEFEAT_MONSTER, mons->type, mons->friendly(),
                        mons->full_name(DESC_A).c_str(),
