@@ -433,7 +433,7 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
 }
 
 // Portal Projectile requires MP per shot.
-static bool _is_pproj_active()
+bool is_pproj_active()
 {
     return !you.confused() && you.duration[DUR_PORTAL_PROJECTILE]
            && enough_mp(1, true, false);
@@ -444,7 +444,7 @@ static bool _is_pproj_active()
 void fire_thing(int item)
 {
     dist target;
-    item = get_ammo_to_shoot(item, target, _is_pproj_active());
+    item = get_ammo_to_shoot(item, target, is_pproj_active());
     if (item == -1)
         return;
 
@@ -675,7 +675,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     dist thr;
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
-    const bool teleport = _is_pproj_active();
+    const bool teleport = is_pproj_active();
 
     if (you.confused())
     {

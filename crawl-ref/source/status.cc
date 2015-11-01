@@ -17,6 +17,7 @@
 #include "religion.h"
 #include "spl-transloc.h"
 #include "stringutil.h"
+#include "throw.h"
 #include "transform.h"
 #include "traps.h"
 
@@ -602,6 +603,20 @@ bool fill_status_info(int status, status_info* inf)
         if (weapon && item_attack_skill(*weapon) == SK_AXES)
             inf->light_colour = DARKGREY;
 
+        break;
+    }
+
+    case DUR_PORTAL_PROJECTILE:
+    {
+        if (!is_pproj_active())
+            inf->light_colour = DARKGREY;
+        break;
+    }
+
+    case DUR_INFUSION:
+    {
+        if (!enough_mp(1, true, false))
+            inf->light_colour = DARKGREY;
         break;
     }
 
