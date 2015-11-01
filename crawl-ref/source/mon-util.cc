@@ -5304,7 +5304,7 @@ bool mons_can_display_wounds(const monster* mon)
 }
 
 // Is this monster interesting enough to make notes about?
-void mons_is_notable(const monster& mons)
+bool mons_is_notable(const monster& mons)
 {
     if (crawl_state.game_is_arena())
         return false;
