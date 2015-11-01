@@ -1793,8 +1793,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
 #endif
 
-    mark_interesting_monst(mon, mg.behaviour);
-
     if (crawl_state.game_is_arena())
         arena_placed_monster(mon);
     else if (!crawl_state.generating_level && !dont_place && you.can_see(*mon))
@@ -3571,48 +3569,6 @@ static monster_type _band_member(band_type band, int which,
     default:
         die("unhandled band type %d", band);
     }
-}
-
-void mark_interesting_monst(monster* mons, beh_type behaviour)
-{
-    if (crawl_state.game_is_arena())
-        return;
-
-    bool interesting = false;
-
-    // Unique monsters are always interesting
-    if (mons_is_unique(mons->type))
-        interesting = true;
-    // If it's never going to attack us, then not interesting
-    else if (behaviour == BEH_FRIENDLY)
-        interesting = false;
-    // Hostile ghosts and illusions are always interesting.
-    else if (mons->type == MONS_PLAYER_GHOST
-             || mons->type == MONS_PLAYER_ILLUSION)
-    {
-        interesting = true;
-    }
-    // Jellies are never interesting to Jiyva.
-    else if (mons->type == MONS_JELLY && you_worship(GOD_JIYVA))
-        interesting = false;
-    else if (mons_threat_level(mons) == MTHRT_NASTY)
-        interesting = true;
-    // Don't waste time on moname() if user isn't using this option
-    else if (!Options.note_monsters.empty())
-    {
-        const string iname = mons_type_name(mons->type, DESC_A);
-        for (const text_pattern &pat : Options.note_monsters)
-        {
-            if (pat.matches(iname))
-            {
-                interesting = true;
-                break;
-            }
-        }
-    }
-
-    if (interesting)
-        mons->flags |= MF_INTERESTING;
 }
 
 // PUBLIC FUNCTION -- mons_place().
