@@ -676,7 +676,8 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 
             case SPWPN_PROTECTION:
                 if (showMsgs)
-                    mpr("You feel less protected.");
+                    mpr("Your armour is temporarily weakened!");
+                you.duration[DUR_UNPROTECTION] = UNPROTECTION_MAX;
                 you.redraw_armour_class = true;
                 break;
 

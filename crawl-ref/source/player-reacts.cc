@@ -159,7 +159,9 @@ static bool _decrement_a_duration(duration_type dur, int delay,
                                  const char* midmsg = nullptr,
                                  msg_channel_type chan = MSGCH_DURATION)
 {
-    ASSERT(you.duration[dur] >= 0);
+    if (you.duration[dur] < 0)
+        you.duration[dur] = 0;
+
     if (you.duration[dur] == 0)
         return false;
 
@@ -1195,6 +1197,13 @@ static void _decrement_durations()
 
     if (!env.sunlight.empty())
         process_sunlights();
+
+    if (_decrement_a_duration(DUR_UNPROTECTION, delay,
+                              "Your normal sense of protection returns."))
+    {
+        you.redraw_armour_class = true;
+    }
+    dprf("unprot dur is %d", you.duration[DUR_UNPROTECTION]);
 }
 
 

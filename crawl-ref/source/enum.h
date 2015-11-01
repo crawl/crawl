@@ -1895,6 +1895,7 @@ enum duration_type
     DUR_COLLAPSE,
     DUR_BRAINLESS,
     DUR_CLUMSY,
+    DUR_UNPROTECTION,
     NUM_DURATIONS
 };
 

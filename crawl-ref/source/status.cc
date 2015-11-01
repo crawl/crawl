@@ -605,6 +605,15 @@ bool fill_status_info(int status, status_info* inf)
         break;
     }
 
+    case DUR_UNPROTECTION:
+    {
+        inf->light_colour = RED;
+        inf->light_text   = "-AC";
+        inf->short_text   = "-AC";
+        inf->long_text    = "You recently unequipped a protection brand.";
+        break;
+    }
+
     default:
         if (!found)
         {

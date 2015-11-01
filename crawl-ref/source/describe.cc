@@ -1017,8 +1017,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
                 description += "It poisons the flesh of those it strikes.";
             break;
         case SPWPN_PROTECTION:
-            description += "It protects the one who wields it against "
-                "injury (+5 to AC).";
+            description += "It increases wielder's AC based on their weapon "
+                "skill. Unwielding it will reduce your AC for a time.";
             break;
         case SPWPN_EVASION:
             description += "It affects your evasion (+5 to EV).";
