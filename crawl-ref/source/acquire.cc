@@ -61,6 +61,31 @@ static int _acquirement_armour_subtype(bool divine, int & /*quantity*/)
 }
 
 /**
+ * Take a set of weighted elements and a filter, and return a random element
+ * from those elements that fulfills the filter condition.
+ *
+ * @param weights       The elements to choose from.
+ * @param filter        An optional filter; if present, only elements for which
+ *                      the filter returns true may be chosen.
+ * @return              A random element from the given list.
+ */
+template<class M, class Pred>
+M filtered_vector_select(vector<pair<M, int>> weights, Pred filter)
+{
+    for (auto &weight : weights)
+    {
+        if (filter && !filter(weight.first))
+            weight.second = 0;
+        else
+            weight.second = max(weight.second, 0); // cleanup
+    }
+
+    M *chosen_elem = random_choose_weighted(weights);
+    ASSERT(chosen_elem);
+    return *chosen_elem;
+}
+
+/**
  * Choose a random slot to acquire armour for.
  *
  * For most races, even odds for all armour slots when acquiring, or 50-50
@@ -94,13 +119,9 @@ static equipment_type _acquirement_armour_slot(bool divine)
         { EQ_BOOTS,         1 },
     };
 
-    for (auto &weight : weights)
-        if (!you_can_wear(weight.first))
-            weight.second = 0;
-
-    const equipment_type* slot = random_choose_weighted(weights);
-    ASSERT(slot);
-    return *slot;
+    return filtered_vector_select(weights, [] (equipment_type etyp) {
+        return you_can_wear(etyp); // evading template nonsense
+    });
 }
 
 
@@ -173,16 +194,9 @@ static armour_type _acquirement_shield_type()
                                 + div_rand_round(you.skills[SK_SHIELDS], 2) },
     };
 
-    for (auto &weight : weights)
-    {
-        if (!check_armour_size(weight.first, you.body_size(PSIZE_TORSO, true)))
-            weight.second = 0;
-        weight.second = max(weight.second, 0);
-    }
-
-    const armour_type* shield_type = random_choose_weighted(weights);
-    ASSERT(shield_type);
-    return *shield_type;
+    return filtered_vector_select(weights, [] (armour_type shtyp) {
+        return check_armour_size(shtyp,  you.body_size(PSIZE_TORSO, true));
+    });
 }
 
 /**
@@ -309,16 +323,11 @@ static armour_type _useless_armour_type()
                 { ARM_LARGE_SHIELD,  1 },
             };
 
-            const size_type player_size = you.body_size(PSIZE_TORSO, true);
-            // XXX: export this idiom ^ v
-            for (auto &weight : shield_weights)
-                if (check_armour_size(weight.first, player_size))
-                    weight.second = 0;
-
-            const armour_type* shield_type
-                = random_choose_weighted(shield_weights);
-            ASSERT(shield_type);
-            return *shield_type;
+            return filtered_vector_select(shield_weights,
+                                          [] (armour_type shtyp) {
+                return !check_armour_size(shtyp,
+                                          you.body_size(PSIZE_TORSO, true));
+            });
         }
         case EQ_BODY_ARMOUR:
             // only the rarest & most precious of unwearable armours for Xom
@@ -911,6 +920,7 @@ static bool _skill_useless_with_god(int skill)
  */
 static bool _should_acquire_manual(int agent)
 {
+    // Manuals are too useful for Xom, and useless when gifted from Sif Muna.
     if (agent == GOD_XOM || agent == GOD_SIF_MUNA)
         return false;
 
@@ -1011,7 +1021,6 @@ static bool _do_book_acquirement(item_def &book, int agent)
     // items() shouldn't make book a randart for acquirement items.
     ASSERT(!is_random_artefact(book));
 
-    // Manuals are too useful for Xom, and useless when gifted from Sif Muna.
     if (_should_acquire_manual(agent))
         return _acquire_manual(book);
 
