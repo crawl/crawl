@@ -435,7 +435,7 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
         return nullptr;
 
     // Don't attempt to place corpses within walls, either.
-    if (feat_is_solid(grd(mons.pos())))
+    if (feat_is_solid(grd(mons.pos())) && !force)
         return nullptr;
 
     // If we were told not to leave a corpse, don't.
