@@ -3600,7 +3600,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
         return you.has_usable_tentacles() && !one_chance_in(3);
 
     case UNAT_BITE:
-        return you.mutation[MUT_ANTIMAGIC_BITE]
+        return player_mutation_level(MUT_ANTIMAGIC_BITE)
                || (you.has_usable_fangs()
                    || player_mutation_level(MUT_ACIDIC_BITE))
                    && x_chance_in_y(2, 5);
