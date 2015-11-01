@@ -980,13 +980,6 @@ static bool _acquire_manual(item_def &book)
 
         int w = (skl < 12) ? skl + 3 : max(0, 25 - skl);
 
-        // Give a bonus for some highly sought after skills.
-        if (sk == SK_FIGHTING || sk == SK_ARMOUR || sk == SK_SPELLCASTING
-            || sk == SK_INVOCATIONS || sk == SK_EVOCATIONS)
-        {
-            w += 5;
-        }
-
         // Greatly reduce the chances of getting a manual for a skill
         // you couldn't use unless you switched your religion.
         if (_skill_useless_with_god(sk))
