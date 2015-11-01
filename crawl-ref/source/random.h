@@ -28,7 +28,6 @@ int random_range(int low, int high, int nrolls);
 double random_real();
 
 int random2avg(int max, int rolls);
-int bestroll(int max, int rolls);
 int biased_random2(int max, int n);
 int random2limit(int max, int limit);
 int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale = 100);

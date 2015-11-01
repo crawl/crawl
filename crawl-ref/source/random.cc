@@ -218,21 +218,6 @@ int div_round_up(int num, int den)
     return num / den + (num % den != 0);
 }
 
-// [0, max)
-int bestroll(int max, int rolls)
-{
-    int best = 0;
-
-    for (int i = 0; i < rolls; i++)
-    {
-        int curr = random2(max);
-        if (curr > best)
-            best = curr;
-    }
-
-    return best;
-}
-
 // random2avg() returns same mean value as random2() but with a lower variance
 // never use with rolls < 2 as that would be silly - use random2() instead {dlb}
 // [0, max)
