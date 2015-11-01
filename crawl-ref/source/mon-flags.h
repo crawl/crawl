@@ -179,8 +179,8 @@ enum monster_flag_type : uint64_t
     MF_JUST_SUMMONED      = BIT(1),
     /// is following player through stairs
     MF_TAKING_STAIRS      = BIT(2),
-    /// Player finds monster interesting
-    MF_INTERESTING        = BIT(3),
+
+    //                      BIT(3),
 
     /// Player has already seen monster
     MF_SEEN               = BIT(4),

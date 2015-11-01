@@ -344,7 +344,6 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
         *obvious = true;
     }
 
-    mark_interesting_monst(mons, mons->behaviour);
     if (you.can_see(*mons))
     {
         handle_seen_interrupt(mons);

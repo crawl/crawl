@@ -2774,7 +2774,6 @@ void define_monster(monster* mons)
         ghost.init_pandemonium_lord();
         mons->set_ghost(ghost);
         mons->ghost_demon_init();
-        mons->flags |= MF_INTERESTING;
         mons->bind_melee_flags();
         mons->bind_spell_flags();
         break;
@@ -5302,6 +5301,46 @@ bool mons_can_display_wounds(const monster* mon)
     get_tentacle_head(mon);
 
     return mons_class_can_display_wounds(mon->type);
+}
+
+// Is this monster interesting enough to make notes about?
+void mons_is_notable(const monster& mons)
+{
+    if (crawl_state.game_is_arena())
+        return false;
+
+    // (Ex-)Unique monsters are always interesting
+    if (mons_is_or_was_unique(mons))
+        return true;
+    // If it's never going to attack us, then not interesting
+    if (mons.friendly())
+        return false;
+    // Hostile ghosts and illusions are always interesting.
+    if (mons.type == MONS_PLAYER_GHOST
+        || mons.type == MONS_PLAYER_ILLUSION
+        || mons.type == MONS_PANDEMONIUM_LORD)
+    {
+        return true;
+    }
+    // Jellies are never interesting to Jiyva.
+    if (mons.type == MONS_JELLY && you_worship(GOD_JIYVA))
+        return false;
+    if (mons_threat_level(&mons) == MTHRT_NASTY)
+        return true;
+    // Don't waste time on moname() if user isn't using this option
+    if (!Options.note_monsters.empty())
+    {
+        const string iname = mons_type_name(mons.type, DESC_A);
+        for (const text_pattern &pat : Options.note_monsters)
+        {
+            if (pat.matches(iname))
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 bool god_hates_beast_facet(god_type god, beast_facet facet)
