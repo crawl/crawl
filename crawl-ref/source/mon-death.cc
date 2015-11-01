@@ -498,15 +498,17 @@ static string _milestone_kill_verb(killer_type killer)
            killer == KILL_SLIMIFIED ? "slimified" : "killed";
 }
 
-void record_monster_defeat(monster* mons, killer_type killer)
+void record_monster_defeat(const monster* mons, killer_type killer)
 {
     if (crawl_state.game_is_arena())
         return;
     if (killer == KILL_RESET || killer == KILL_DISMISSED)
         return;
-    if (mons->has_ench(ENCH_FAKE_ABJURATION))
+    if (mons->has_ench(ENCH_FAKE_ABJURATION) || mons->is_summoned())
         return;
-    if (mons_is_notable(*mons) && !mons->is_summoned())
+    if (mons->is_named() && mons->friendly())
+        take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname));
+    else if (mons_is_notable(*mons))
     {
         take_note(Note(NOTE_DEFEAT_MONSTER, mons->type, mons->friendly(),
                        mons->full_name(DESC_A).c_str(),
@@ -520,10 +522,7 @@ void record_monster_defeat(monster* mons, killer_type killer)
         milestone += ".";
         mark_milestone("ghost", milestone);
     }
-    // Or summoned uniques, which a summoned ghost is treated as {due}
-    else if (mons_is_or_was_unique(*mons)
-             && !mons->is_summoned()
-             && !testbits(mons->flags, MF_SPECTRALISED))
+    if (mons_is_or_was_unique(*mons) && !testbits(mons->flags, MF_SPECTRALISED))
     {
         mark_milestone("uniq",
                        _milestone_kill_verb(killer)
@@ -2388,13 +2387,6 @@ item_def* monster_die(monster* mons, killer_type killer,
         // His slaves don't care if he's dead or not, just whether or not
         // he goes away.
         pikel_band_neutralise();
-    }
-    else if (mons->is_named()
-             && mons->friendly()
-             && !summoned
-             && killer != KILL_RESET)
-    {
-        take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname));
     }
     else if (mons_is_tentacle_head(mons_base_type(mons)))
     {
