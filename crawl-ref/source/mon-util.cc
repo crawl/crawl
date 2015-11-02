@@ -5327,17 +5327,13 @@ bool mons_is_notable(const monster& mons)
         return false;
     if (mons_threat_level(&mons) == MTHRT_NASTY)
         return true;
+    const auto nm = Options.note_monsters;
     // Don't waste time on moname() if user isn't using this option
-    if (!Options.note_monsters.empty())
+    if (!nm.empty())
     {
         const string iname = mons_type_name(mons.type, DESC_A);
-        for (const text_pattern &pat : Options.note_monsters)
-        {
-            if (pat.matches(iname))
-            {
-                return true;
-            }
-        }
+        return any_of(begin(nm), end(nm), [&](const text_pattern &pat) -> bool
+                                          { return pat.matches(iname); });
     }
 
     return false;
