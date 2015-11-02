@@ -257,40 +257,24 @@ static const pop_entry pop_lair[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-/* If a save originated before the Lair rune branches were reduced to 4
- * levels, the Lair rune branches will still last 5 levels. If this is
- * the case, having just the spawn lists which assume 4 level branches
- * could cause some odd spawns. Extending a few FLAT ranges from 4 to 5
- * partially corrects this. This solution does not affect future saves
- * outside some OOD spawns.
- *
- * After the release of 0.17 stable, this can be removed.
-*/
-
-#if TAG_MAJOR_VERSION == 34
-#define BRANCH_END 5
-#else
-#define BRANCH_END 4
-#endif
-
 static const pop_entry pop_swamp[] =
 { // Swamp
-  {  1,  BRANCH_END, 2000, FLAT, MONS_NO_MONSTER }, // was plant + fungus
+  {  1,  4, 2000, FLAT, MONS_NO_MONSTER }, // was plant + fungus
   { -6,  4,  480, RISE, MONS_SLIME_CREATURE },
   { -2,  6,  245, SEMI, MONS_SHADOW },
   {  0,  5,  480, SEMI, MONS_SPRIGGAN_RIDER },
   {  0,  6,   40, PEAK, MONS_UGLY_THING },
-  {  1,  BRANCH_END, 1000, FLAT, MONS_ALLIGATOR },
-  {  1,  BRANCH_END, 1000, FLAT, MONS_SPINY_FROG },
-  {  1,  BRANCH_END,  925, FLAT, MONS_BOG_BODY },
-  {  1,  BRANCH_END,  925, FLAT, MONS_SWAMP_DRAKE },
-  {  1,  BRANCH_END,  915, FLAT, MONS_HYDRA },
-  {  1,  BRANCH_END,  825, FLAT, MONS_GIANT_LEECH },
-  {  1,  BRANCH_END,  665, FLAT, MONS_VAMPIRE_MOSQUITO },
-  {  1,  BRANCH_END,  500, FLAT, MONS_SWAMP_DRAGON },
-  {  1,  BRANCH_END,  335, FLAT, MONS_INSUBSTANTIAL_WISP },
-  {  1,  BRANCH_END,  345, FLAT, MONS_WASP },
-  {  1,  BRANCH_END,  192, FLAT, MONS_HORNET },
+  {  1,  4, 1000, FLAT, MONS_ALLIGATOR },
+  {  1,  4, 1000, FLAT, MONS_SPINY_FROG },
+  {  1,  4,  925, FLAT, MONS_BOG_BODY },
+  {  1,  4,  925, FLAT, MONS_SWAMP_DRAKE },
+  {  1,  4,  915, FLAT, MONS_HYDRA },
+  {  1,  4,  825, FLAT, MONS_GIANT_LEECH },
+  {  1,  4,  665, FLAT, MONS_VAMPIRE_MOSQUITO },
+  {  1,  4,  500, FLAT, MONS_SWAMP_DRAGON },
+  {  1,  4,  335, FLAT, MONS_INSUBSTANTIAL_WISP },
+  {  1,  4,  345, FLAT, MONS_WASP },
+  {  1,  4,  192, FLAT, MONS_HORNET },
   {  1,  4,  100, FALL, MONS_KOMODO_DRAGON },
   {  1,  4,   25, RISE, MONS_TENTACLED_MONSTROSITY },
   {  1,  4,  435, RISE, MONS_THORN_HUNTER },
@@ -314,14 +298,14 @@ static const pop_entry pop_shoals[] =
   {  0,  6,   73, SEMI, MONS_KRAKEN },
   {  0,  7,  265, SEMI, MONS_MERFOLK_IMPALER },
   {  0,  7,  125, SEMI, MONS_MERFOLK_AQUAMANCER },
-  {  1,  BRANCH_END,  735, FLAT, MONS_MERFOLK },
-  {  1,  BRANCH_END,  475, FLAT, MONS_SEA_SNAKE },
-  {  1,  BRANCH_END,  385, FLAT, MONS_SNAPPING_TURTLE },
-  {  1,  BRANCH_END,  360, FLAT, MONS_MANTICORE },
-  {  1,  BRANCH_END,  300, FLAT, MONS_SIREN },
-  {  1,  BRANCH_END,  195, FLAT, MONS_WATER_ELEMENTAL },
-  {  1,  BRANCH_END,  125, FLAT, MONS_WIND_DRAKE },
-  {  1,  BRANCH_END,  175, FLAT, MONS_HARPY },
+  {  1,  4,  735, FLAT, MONS_MERFOLK },
+  {  1,  4,  475, FLAT, MONS_SEA_SNAKE },
+  {  1,  4,  385, FLAT, MONS_SNAPPING_TURTLE },
+  {  1,  4,  360, FLAT, MONS_MANTICORE },
+  {  1,  4,  300, FLAT, MONS_SIREN },
+  {  1,  4,  195, FLAT, MONS_WATER_ELEMENTAL },
+  {  1,  4,  125, FLAT, MONS_WIND_DRAKE },
+  {  1,  4,  175, FLAT, MONS_HARPY },
   {  1,  7,  135, PEAK, MONS_MERFOLK_JAVELINEER },
   {  1,  7,   85, PEAK, MONS_ALLIGATOR_SNAPPING_TURTLE },
   {  2,  4,  190, SEMI, MONS_SATYR },
@@ -351,14 +335,14 @@ static const pop_entry pop_spider[] =
   { -1,  4,  260, RISE, MONS_HORNET },
   { -1,  6,   89, SEMI, MONS_BOULDER_BEETLE },
   { -1,  9,  765, SEMI, MONS_DEMONIC_CRAWLER },
-  {  1,  BRANCH_END,  955, FLAT, MONS_WOLF_SPIDER },
-  {  1,  BRANCH_END,  880, FLAT, MONS_TRAPDOOR_SPIDER },
-  {  1,  BRANCH_END,  765, FLAT, MONS_JUMPING_SPIDER },
-  {  1,  BRANCH_END,  690, FLAT, MONS_TARANTELLA },
-  {  1,  BRANCH_END,  605, FLAT, MONS_REDBACK },
-  {  1,  BRANCH_END,  550, FLAT, MONS_ORB_SPIDER },
-  {  1,  BRANCH_END,  335, FLAT, MONS_SPIDER },
-  {  1,  BRANCH_END,   52, FLAT, MONS_WASP },
+  {  1,  4,  955, FLAT, MONS_WOLF_SPIDER },
+  {  1,  4,  880, FLAT, MONS_TRAPDOOR_SPIDER },
+  {  1,  4,  765, FLAT, MONS_JUMPING_SPIDER },
+  {  1,  4,  690, FLAT, MONS_TARANTELLA },
+  {  1,  4,  605, FLAT, MONS_REDBACK },
+  {  1,  4,  550, FLAT, MONS_ORB_SPIDER },
+  {  1,  4,  335, FLAT, MONS_SPIDER },
+  {  1,  4,   52, FLAT, MONS_WASP },
   {  1,  6,  100, FLAT, MONS_TORPOR_SNAIL },
   {  1,  6,  190, SEMI, MONS_EMPEROR_SCORPION },
   {  1,  6,  155, SEMI, MONS_MOTH_OF_WRATH },
@@ -366,7 +350,6 @@ static const pop_entry pop_spider[] =
   {  1,  9,  200, PEAK, MONS_GHOST_MOTH },
   { 0,0,0,FLAT,MONS_0 }
 };
-#undef BRANCH_END
 
 static const pop_entry pop_slime[] =
 { // Slime Pits
