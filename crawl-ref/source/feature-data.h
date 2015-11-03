@@ -190,15 +190,6 @@ static feature_def feat_defs[] =
     FFT_NONE, MF_FLOOR,
 },
 
-#if TAG_MAJOR_VERSION == 34
-{
-    DNGN_BADLY_SEALED_DOOR, "", "badly_sealed_door",
-    DCHAR_FLOOR, DCHAR_FLOOR_MAGIC,
-    COLOUR_IS(ETC_FLOOR),
-    FFT_NONE, MF_FLOOR,
-},
-#endif
-
 {
     DNGN_EXPIRED_PORTAL, "collapsed entrance", "expired_portal",
     DCHAR_FLOOR, DCHAR_FLOOR_MAGIC,
@@ -536,7 +527,14 @@ FOUNTAIN(DNGN_DRY_FOUNTAIN_BLOOD, "dry fountain", "non-fountain_blood", LIGHTGRE
 },
 
 {
-    DNGN_ABYSSAL_STAIR, "gateway leading deeper into the Abyss", "abyssal_stair",
+    DNGN_ABYSSAL_STAIR_UP, "gateway leading to a shallower region of the Abyss", "abyssal_stair_up",
+    DCHAR_STAIRS_UP, NUM_DCHAR_TYPES,
+    COLOUR_AND_MAP(LIGHTCYAN),
+    FFT_NONE, MF_STAIR_BRANCH,
+},
+
+{
+    DNGN_ABYSSAL_STAIR_DOWN, "gateway leading deeper into the Abyss", "abyssal_stair_down",
     DCHAR_STAIRS_DOWN, NUM_DCHAR_TYPES,
     COLOUR_AND_MAP(LIGHTCYAN),
     FFT_NONE, MF_STAIR_BRANCH,

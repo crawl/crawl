@@ -655,7 +655,8 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
     // Falling down the stairs or portal.
     if (!going_up && !shaft
         && force_stair != DNGN_ENTER_ABYSS
-        && force_stair != DNGN_ABYSSAL_STAIR
+        && force_stair != DNGN_ABYSSAL_STAIR_UP
+        && force_stair != DNGN_ABYSSAL_STAIR_DOWN
         && force_stair != DNGN_EXIT_ABYSS)
     {
         _fall_down_stairs(stair_find, false);
@@ -667,13 +668,22 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
     switch (you.where_are_you)
     {
     case BRANCH_ABYSS:
-        // There are no abyssal stairs that go up, so this whole case is only
-        // when going down.
         if (old_level.branch == BRANCH_ABYSS)
         {
-            mprf(MSGCH_BANISHMENT, "You plunge deeper into the Abyss.");
-            if (!you.runes[RUNE_ABYSSAL] && you.depth >= ABYSSAL_RUNE_MIN_LEVEL)
-                mpr("The abyssal rune of Zot can be found at this depth.");
+            if (going_up)
+            {
+                mprf(MSGCH_BANISHMENT,
+                     "You pass to a shallower region of the Abyss.");
+            }
+            else
+            {
+                mprf(MSGCH_BANISHMENT, "You plunge deeper into the Abyss.");
+                if (!you.runes[RUNE_ABYSSAL]
+                    && you.depth >= ABYSSAL_RUNE_MIN_LEVEL)
+                {
+                    mpr("The abyssal rune of Zot can be found at this depth.");
+                }
+            }
             break;
         }
         if (!force_stair)
@@ -847,6 +857,9 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
 
     switch (feat)
     {
+    case DNGN_ABYSSAL_STAIR_UP:
+        ASSERT(player_in_branch(BRANCH_ABYSS));
+        push_features_to_abyss();
     case DNGN_ESCAPE_HATCH_UP:
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
@@ -873,7 +886,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         else
             die("hell exit without return destination");
 
-    case DNGN_ABYSSAL_STAIR:
+    case DNGN_ABYSSAL_STAIR_DOWN:
         ASSERT(player_in_branch(BRANCH_ABYSS));
         push_features_to_abyss();
     case DNGN_ESCAPE_HATCH_DOWN:

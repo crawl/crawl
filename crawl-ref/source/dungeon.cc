@@ -715,7 +715,7 @@ static bool _is_perm_down_stair(const coord_def &c)
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
-    case DNGN_ABYSSAL_STAIR:
+    case DNGN_ABYSSAL_STAIR_DOWN:
         return true;
     default:
         return false;

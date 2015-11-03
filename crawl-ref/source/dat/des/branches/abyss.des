@@ -17,7 +17,7 @@ function init_abyss_exit(e, glyph)
       e.kitem(glyph .. " = any no_pickup")
     end
   else
-    e.kfeat(glyph .. " = exit_abyss w:6 / abyssal_stair w:4")
+    e.kfeat(glyph .. " = exit_abyss w:6 / abyssal_stair_down w:4")
   end
 end
 
@@ -221,7 +221,7 @@ CHANCE: 0 : 80% (Abyss:4)
 CHANCE: 0 : 75% (Abyss:5)
 
 NAME:    abyss_fake_exit
-KFEAT:   O = exit_abyss mimic w:6 / abyssal_stair mimic w:4
+KFEAT:   O = exit_abyss mimic w:6 / abyssal_stair_down mimic w:4
 MAP
 O
 ENDMAP
@@ -354,7 +354,7 @@ TAGS:   no_item_gen no_monster_gen no_pool_fixup
 MONS:   earth elemental
 KFEAT:  A = altar_lugonu
 KFEAT:  B = dry_fountain
-KFEAT:  C = abyssal_stair
+KFEAT:  C = abyssal_stair_down
 SUBST:  x = xcv++, y = ..w, z = Wl
 MAP
 yyyyyyyy
@@ -2285,7 +2285,7 @@ NAME:  bh_abyss_exit_choice
 TAGS:  abyss_exit unrand transparent
 DEPTH: Abyss:1-4
 KFEAT: <: exit_abyss
-KFEAT: >: abyssal_stair
+KFEAT: >: abyssal_stair_down
 MAP
 xxxxxxxxxxx
 x00........

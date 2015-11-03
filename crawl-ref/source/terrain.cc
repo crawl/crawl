@@ -116,7 +116,8 @@ bool feat_is_staircase(dungeon_feature_type feat)
 
     return feat_is_branch_entrance(feat)
            || feat_is_branch_exit(feat)
-           || feat == DNGN_ABYSSAL_STAIR;
+           || feat == DNGN_ABYSSAL_STAIR_UP
+           || feat == DNGN_ABYSSAL_STAIR_DOWN;
 }
 
 /** Is this feature a branch entrance that should show up on ^O?
@@ -258,7 +259,8 @@ bool feat_is_gate(dungeon_feature_type feat)
     case DNGN_ENTER_ABYSS:
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
-    case DNGN_ABYSSAL_STAIR:
+    case DNGN_ABYSSAL_STAIR_UP:
+    case DNGN_ABYSSAL_STAIR_DOWN:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
@@ -306,6 +308,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
+    case DNGN_ABYSSAL_STAIR_UP:
     case DNGN_ENTER_SHOP:
     case DNGN_EXIT_HELL:
         return CMD_GO_UPSTAIRS;
@@ -317,7 +320,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_ABYSS:
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
-    case DNGN_ABYSSAL_STAIR:
+    case DNGN_ABYSSAL_STAIR_DOWN:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:

@@ -4436,7 +4436,7 @@ void unmarshallMapCell(reader &th, map_cell& cell)
         feature = unmarshallFeatureType_Info(th);
     if (feature == DNGN_SEALED_DOOR && th.getMinorVersion() < TAG_MINOR_0_12)
         feature = DNGN_CLOSED_DOOR;
-    if (feature == DNGN_BADLY_SEALED_DOOR)
+    if (feature == DNGN_ABYSSAL_STAIR_UP && th.getMinorVersion() < TAG_MINOR_BIDIRECTIONAL_ABYSS)
         feature = DNGN_SEALED_DOOR;
     if (feature == DNGN_ESCAPE_HATCH_UP
         && player_in_branch(BRANCH_LABYRINTH))
@@ -5128,7 +5128,7 @@ static void tag_read_level(reader &th)
 #if TAG_MAJOR_VERSION == 34
             if (feat == DNGN_SEALED_DOOR && th.getMinorVersion() < TAG_MINOR_0_12)
                 grd[i][j] = DNGN_CLOSED_DOOR;
-            if (feat == DNGN_BADLY_SEALED_DOOR)
+            if (feat == DNGN_ABYSSAL_STAIR_UP && th.getMinorVersion() < TAG_MINOR_BIDIRECTIONAL_ABYSS)
                 grd[i][j] = DNGN_SEALED_DOOR;
             if (feat == DNGN_ESCAPE_HATCH_UP
                 && player_in_branch(BRANCH_LABYRINTH))

@@ -183,10 +183,19 @@ static void _abyss_fixup_vault(const vault_placement *vp)
         const dungeon_feature_type feat(grd(p));
         if (feat_is_stair(feat)
             && feat != DNGN_EXIT_ABYSS
-            && feat != DNGN_ABYSSAL_STAIR
+            && feat != DNGN_ABYSSAL_STAIR_UP
+            && feat != DNGN_ABYSSAL_STAIR_DOWN
             && !feat_is_portal_entrance(feat))
         {
             grd(p) = DNGN_FLOOR;
+        }
+
+        if (feat == DNGN_EXIT_ABYSS && level_id::current().depth > 1)
+            grd(p) = DNGN_ABYSSAL_STAIR_UP;
+        else if (feat == DNGN_ABYSSAL_STAIR_UP
+                 && level_id::current().depth == 1)
+        {
+            grd(p) = DNGN_EXIT_ABYSS;
         }
 
         tile_init_flavour(p);
@@ -385,7 +394,7 @@ void banished(const string &who)
     if (player_in_branch(BRANCH_ABYSS))
     {
         if (level_id::current().depth < brdepth[BRANCH_ABYSS])
-            down_stairs(DNGN_ABYSSAL_STAIR);
+            down_stairs(DNGN_ABYSSAL_STAIR_DOWN);
         else
         {
             // On Abyss:5 we can't go deeper; cause a shift to a new area
@@ -460,7 +469,8 @@ static bool _abyss_check_place_feat(coord_def p,
              dungeon_feature_name(which_feat));
 
         // When placing Abyss exits, try to use a vault if we have one.
-        if (which_feat == DNGN_EXIT_ABYSS
+        if ((which_feat == DNGN_EXIT_ABYSS
+             || which_feat == DNGN_ABYSSAL_STAIR_UP)
             && use_map && *use_map
             && _abyss_place_vault_tagged(abyss_genlevel_mask, "abyss_exit"))
         {
@@ -518,8 +528,14 @@ private:
         // env.map_knowledge().known() doesn't work on unmappable levels because
         // mapping flags are not set on such levels.
         for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
-            if (grd(*ri) == DNGN_EXIT_ABYSS && env.map_knowledge(*ri).seen())
+        {
+            if ((grd(*ri) == DNGN_EXIT_ABYSS
+                 || grd(*ri) == DNGN_ABYSSAL_STAIR_UP)
+                 && env.map_knowledge(*ri).seen())
+            {
                 return true;
+            }
+        }
 
         return false;
     }
@@ -1129,7 +1145,8 @@ static void _update_abyss_terrain(const coord_def &p,
     switch (currfeat)
     {
         case DNGN_EXIT_ABYSS:
-        case DNGN_ABYSSAL_STAIR:
+        case DNGN_ABYSSAL_STAIR_UP:
+        case DNGN_ABYSSAL_STAIR_DOWN:
             return;
         default:
             break;
@@ -1218,8 +1235,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                  bool morph = false, bool now = false)
 {
     // The chance is reciprocal to these numbers.
-    const int exit_chance = you.runes[RUNE_ABYSSAL] ? 1250
-                            : 7500 - 1250 * (you.depth - 1);
+    const int exit_chance = you.runes[RUNE_ABYSSAL] ? 475 : 1900;
 
     int exits_wanted  = 0;
     int altars_wanted = 0;
@@ -1268,7 +1284,9 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         _abyss_check_place_feat(p, exit_chance,
                                 &exits_wanted,
                                 &use_abyss_exit_map,
-                                DNGN_EXIT_ABYSS,
+                                level_id::current().depth == 1
+                                ? DNGN_EXIT_ABYSS
+                                : DNGN_ABYSSAL_STAIR_UP,
                                 abyss_genlevel_mask)
         ||
         _abyss_check_place_feat(p, 10000,
@@ -1279,7 +1297,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         ||
         level_id::current().depth < brdepth[BRANCH_ABYSS]
         && _abyss_check_place_feat(p, 1900, nullptr, nullptr,
-                                   DNGN_ABYSSAL_STAIR,
+                                   DNGN_ABYSSAL_STAIR_DOWN,
                                    abyss_genlevel_mask);
     }
     if (ii)
