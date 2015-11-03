@@ -1597,8 +1597,7 @@ bool make_book_theme_randart(item_def &book,
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
-    // TODO: constify
-    god_type god = origin_as_god_gift(book);
+    const god_type god = origin_as_god_gift(book);
 
     const bool completely_random =
         god == GOD_XOM || (god == GOD_NO_GOD && !origin_is_acquirement(book));
@@ -1818,21 +1817,21 @@ bool make_book_theme_randart(item_def &book,
                 owner = make_name();
             else if (!god_gift && one_chance_in(9))
             {
-                god = GOD_SIF_MUNA;
+                god_type name_god = GOD_SIF_MUNA;
                 switch (disc1)
                 {
                 case SPTYP_NECROMANCY:
                     if (all_spells_disc1 && !one_chance_in(6))
-                        god = GOD_KIKUBAAQUDGHA;
+                        name_god = GOD_KIKUBAAQUDGHA;
                     break;
                 case SPTYP_CONJURATION:
                     if (all_spells_disc1 && !one_chance_in(4))
-                        god = GOD_VEHUMET;
+                        name_god = GOD_VEHUMET;
                     break;
                 default:
                     break;
                 }
-                owner = god_name(god, false);
+                owner = god_name(name_god, false);
             }
         }
     }
