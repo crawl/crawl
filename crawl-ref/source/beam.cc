@@ -3134,8 +3134,11 @@ bool bolt::harmless_to_player() const
                || is_big_cloud() && player_res_poison(false) > 0;
 
     case BEAM_MEPHITIC:
-        return player_res_poison(false) > 0 || you.clarity(false)
-               || you.is_unbreathing();
+        // With clarity, meph still does a tiny amount of damage (1d3 - 1).
+        // Normally we'd just ignore it, but we shouldn't let a player
+        // kill themselves without a warning.
+        return player_res_poison(false) > 0 || you.is_unbreathing()
+            || you.clarity(false) && you.hp > 2;
 
     case BEAM_ELECTRICITY:
         return player_res_electricity(false);
