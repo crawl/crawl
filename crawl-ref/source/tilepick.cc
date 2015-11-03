@@ -4333,7 +4333,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
     {
         int type = label - TILE_RING_ID_FIRST + RING_FIRST_RING
 #if TAG_MAJOR_VERSION == 34
-                   + 1 // we have a save-compat ring tile before FIRST_RING
+                   - 1 // we have a save-compat ring tile before FIRST_RING
 #endif
             ;
         int desc = you.item_description[IDESC_RINGS][type] % NDSC_JEWEL_PRI;
