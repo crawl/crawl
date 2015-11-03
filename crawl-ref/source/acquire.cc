@@ -1011,31 +1011,19 @@ static bool _do_book_acquirement(item_def &book, int agent)
     // items() shouldn't make book a randart for acquirement items.
     ASSERT(!is_random_artefact(book));
 
-    int          level       = (you.skills[SK_SPELLCASTING] + 2) / 3;
-
-    level = max(1, level);
-
-    if (agent == GOD_XOM)
-        level = random_range(1, 9);
-
-    int choice = NUM_BOOKS;
-
     // Manuals are too useful for Xom, and useless when gifted from Sif Muna.
     if (_should_acquire_manual(agent))
         return _acquire_manual(book);
-
-    if (choice == NUM_BOOKS)
-    {
-        choice = random_choose_weighted(
-                                        30, BOOK_RANDART_THEME,
-           agent == GOD_SIF_MUNA ? 10 : 40, NUM_BOOKS, // normal books
-                     level == -1 ?  0 :  1, BOOK_RANDART_LEVEL, 0);
-    }
 
     // Acquired randart books have a chance of being named after the player.
     string owner = "";
     if (agent == AQ_SCROLL && one_chance_in(12))
         owner = you.your_name;
+
+    const int choice = random_choose_weighted(
+                                    30, BOOK_RANDART_THEME,
+       agent == GOD_SIF_MUNA ? 10 : 40, NUM_BOOKS, // normal books
+                                     1, BOOK_RANDART_LEVEL, 0);
 
     switch (choice)
     {
@@ -1084,6 +1072,10 @@ static bool _do_book_acquirement(item_def &book, int agent)
 
     case BOOK_RANDART_LEVEL:
     {
+        const int level = agent == GOD_XOM ?
+            random_range(1, 9) :
+            max(1, (you.skills[SK_SPELLCASTING] + 2) / 3);
+
         book.sub_type  = BOOK_RANDART_LEVEL;
         if (!make_book_level_randart(book, level, owner))
             return false;
