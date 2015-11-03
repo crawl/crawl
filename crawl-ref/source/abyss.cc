@@ -1430,7 +1430,9 @@ static void abyss_area_shift()
     }
 
     // Place some monsters to keep the abyss party going.
-    int num_monsters = 15 + you.depth * (1 + coinflip());
+    int num_monsters =
+        15 + (1 + coinflip()) * (you.runes[RUNE_ABYSSAL] ? brdepth[BRANCH_ABYSS]
+                                                         : you.depth);
     _abyss_generate_monsters(num_monsters);
 
     // And allow monsters in transit another chance to return.
