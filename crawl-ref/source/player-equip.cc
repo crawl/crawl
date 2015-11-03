@@ -384,8 +384,7 @@ static void _wield_cursed(item_def& item, bool known_cursed, bool unmeld)
     if (!known_cursed)
     {
         amusement *= 2;
-        god_type god;
-        if (origin_is_god_gift(item, &god) && god == GOD_XOM)
+        if (origin_as_god_gift(item) == GOD_XOM)
             amusement *= 2;
     }
     const int wpn_skill = item_attack_skill(item.base_type, item.sub_type);
@@ -602,8 +601,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 {
                     // Xom loves it when you ID a distortion weapon this way,
                     // and even more so if he gifted the weapon himself.
-                    god_type god;
-                    if (origin_is_god_gift(item, &god) && god == GOD_XOM)
+                    if (origin_as_god_gift(item) == GOD_XOM)
                         xom_is_stimulated(200);
                     else
                         xom_is_stimulated(100);
@@ -905,8 +903,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
         {
             int amusement = 64;
 
-            god_type god;
-            if (origin_is_god_gift(arm, &god) && god == GOD_XOM)
+            if (origin_as_god_gift(arm) == GOD_XOM)
                 amusement *= 2;
 
             xom_is_stimulated(amusement);
@@ -1238,8 +1235,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         {
             amusement *= 2;
 
-            god_type god;
-            if (origin_is_god_gift(item, &god) && god == GOD_XOM)
+            if (origin_as_god_gift(item) == GOD_XOM)
                 amusement *= 2;
         }
         xom_is_stimulated(amusement);

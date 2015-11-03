@@ -658,7 +658,7 @@ IDEF(god_gift)
     if (!item || !item->defined())
         return 0;
 
-    lua_pushboolean(ls, origin_is_god_gift(*item));
+    lua_pushboolean(ls, origin_as_god_gift(*item) != GOD_NO_GOD);
 
     return 1;
 }

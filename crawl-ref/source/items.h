@@ -117,7 +117,7 @@ void origin_purchased(item_def &item);
 void origin_acquired(item_def &item, int agent);
 void origin_set_startequip(item_def &item);
 void origin_set_unknown(item_def &item);
-bool origin_is_god_gift(const item_def& item, god_type *god = nullptr);
+god_type origin_as_god_gift(const item_def& item);
 bool origin_is_acquirement(const item_def& item,
                            item_source_type *type = nullptr);
 

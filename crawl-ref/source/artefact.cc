@@ -241,8 +241,7 @@ string replace_name_parts(const string &name_in, const item_def& item)
 {
     string name = name_in;
 
-    god_type god_gift;
-    (void) origin_is_god_gift(item, &god_gift);
+    const god_type god_gift = origin_as_god_gift(item);
 
     // Don't allow "player's Death" type names for god gifts (except
     // for those from Xom).
@@ -959,8 +958,8 @@ static bool _init_artefact_book(item_def &book)
            || book.sub_type == BOOK_RANDART_THEME);
     ASSERT(book.book_param != 0);
 
-    god_type god;
-    bool redo = (!origin_is_god_gift(book, &god) || god != GOD_XOM);
+    const god_type god = origin_as_god_gift(book);
+    bool redo = god != GOD_XOM;
 
     // plus contains a parameter to make_book_foo_randart(), which might get
     // changed after the book has been made into a randart, so reset it on each
@@ -1721,8 +1720,7 @@ bool make_item_randart(item_def &item, bool force_mundane)
     _artefact_setup_prop_vectors(item);
     item.flags |= ISFLAG_RANDART;
 
-    god_type god_gift;
-    (void) origin_is_god_gift(item, &god_gift);
+    const god_type god_gift = origin_as_god_gift(item);
 
     int randart_tries = 500;
     do

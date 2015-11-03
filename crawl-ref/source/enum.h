@@ -2150,7 +2150,7 @@ enum flush_reason_type
 
 enum god_type
 {
-    GOD_NO_GOD,
+    GOD_NO_GOD = 0,
     GOD_ZIN,
     GOD_SHINING_ONE,
     GOD_KIKUBAAQUDGHA,
