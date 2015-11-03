@@ -528,7 +528,7 @@ static void _remember_drawn_card(item_def& deck, card_type card, bool allow_id)
     drawn.push_back(static_cast<char>(card));
 
     // Once you've drawn two cards, you know the deck.
-    if (allow_id && (drawn.size() >= 2 || origin_is_god_gift(deck)))
+    if (allow_id && (drawn.size() >= 2 || origin_as_god_gift(deck)))
         _deck_ident(deck);
 }
 

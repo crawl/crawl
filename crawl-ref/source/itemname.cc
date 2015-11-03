@@ -80,7 +80,7 @@ string quant_name(const item_def &item, int quant,
 
 static const char* _interesting_origin(const item_def &item)
 {
-    if (origin_is_god_gift(item))
+    if (origin_as_god_gift(item) != GOD_NO_GOD)
         return "god gift";
 
     if (item.orig_monnum == MONS_DONALD && get_equip_desc(item)

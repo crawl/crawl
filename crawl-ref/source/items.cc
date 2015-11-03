@@ -1075,14 +1075,18 @@ static bool _origin_is_original_equip(const item_def &item)
     return _origin_is_special(item) && item.orig_monnum == -IT_SRC_START;
 }
 
-bool origin_is_god_gift(const item_def& item, god_type *god)
+/**
+ * What god gifted this item to the player?
+ *
+ * @param item      The item in question.
+ * @returns         The god that gifted this item to the player, if any;
+ *                  else GOD_NO_GOD.
+ */
+god_type origin_as_god_gift(const item_def& item)
 {
-    god_type ogod = static_cast<god_type>(-item.orig_monnum);
+    const god_type ogod = static_cast<god_type>(-item.orig_monnum);
     if (ogod <= GOD_NO_GOD || ogod >= NUM_GODS)
-        ogod = GOD_NO_GOD;
-
-    if (god)
-        *god = ogod;
+        return GOD_NO_GOD;
     return ogod;
 }
 

@@ -1120,8 +1120,7 @@ bool make_book_level_randart(item_def &book, int level, string owner)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
-    god_type god;
-    (void) origin_is_god_gift(book, &god);
+    const god_type god = origin_as_god_gift(book);
 
     const bool completely_random =
         god == GOD_XOM || (god == GOD_NO_GOD && !origin_is_acquirement(book));
@@ -1598,8 +1597,8 @@ bool make_book_theme_randart(item_def &book,
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
-    god_type god;
-    (void) origin_is_god_gift(book, &god);
+    // TODO: constify
+    god_type god = origin_as_god_gift(book);
 
     const bool completely_random =
         god == GOD_XOM || (god == GOD_NO_GOD && !origin_is_acquirement(book));
