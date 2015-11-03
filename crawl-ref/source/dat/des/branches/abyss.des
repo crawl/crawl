@@ -203,7 +203,6 @@ CHANCE: 0 : 90% (Abyss:1)
 CHANCE: 0 : 80% (Abyss:2)
 CHANCE: 0 : 70% (Abyss:3)
 CHANCE: 0 : 60% (Abyss:4)
-CHANCE: 0 : 50% (Abyss:5)
 
 # FIXME: this is actually a flat chance on placing the rune at all,
 # rather than control over the rare vault-less abyssal rune placement.
@@ -218,7 +217,6 @@ CHANCE: 0 : 95% (Abyss:1)
 CHANCE: 0 : 90% (Abyss:2)
 CHANCE: 0 : 85% (Abyss:3)
 CHANCE: 0 : 80% (Abyss:4)
-CHANCE: 0 : 75% (Abyss:5)
 
 NAME:    abyss_fake_exit
 KFEAT:   O = exit_abyss mimic w:6 / abyssal_stair_down mimic w:4
@@ -2283,7 +2281,7 @@ ENDMAP
 
 NAME:  bh_abyss_exit_choice
 TAGS:  abyss_exit unrand transparent
-DEPTH: Abyss:1-4
+DEPTH: Abyss, !Abyss:$
 KFEAT: <: exit_abyss
 KFEAT: >: abyssal_stair_down
 MAP
