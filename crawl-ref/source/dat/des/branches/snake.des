@@ -1004,7 +1004,7 @@ ENDMAP
 NAME:    snake_hunt
 PLACE:   Snake:$
 WEIGHT:  20
-TAGS:    no_rotate
+TAGS:    no_rotate opaque
 ORIENT:  northwest
 KFEAT:   Z = known teleport trap w:2 / .
 KFEAT:   z = permanent teleport trap / Zot trap / . w:20
