@@ -1570,6 +1570,115 @@ static void _add_included_spells(spell_type (&chosen_spells)[RANDBOOK_SIZE],
     }
 }
 
+/**
+ * Possibly generate a 'subject' for a book based on its owner.
+ *
+ * @param owner     The book's owner; e.g. "Xom".
+ * @return          A random book subject, or the empty string.
+ *                  May contain placeholders (@foo@).
+ */
+static string _maybe_gen_book_subject(string owner)
+{
+    // Sometimes use a completely random title.
+    if (owner == "Xom" && !one_chance_in(20))
+        return getRandNameString("Xom_book_title");
+    if (one_chance_in(20) && (owner.empty() || one_chance_in(3)))
+        return getRandNameString("random_book_title");
+    return "";
+}
+
+/**
+ * Generates a random, vaguely appropriate name for a randbook.
+ *
+ * @param   subject     The subject of the book. If non-empty, the book will
+ *                      have a name of the form "[Foo] of <subject>".
+ * @param   owner       The name of the book's 'owner', if any.
+ *                      (E.g., Xom, Cerebov, Boris...)
+ *                      Prepended to the book's name (Foo's...); "Xom" has
+ *                      futher effects.
+ * @param   disc1       A spellschool (discipline) associated with the book.
+ * @param   disc2       A spellschool (discipline) associated with the book.
+ * @return              A book name. May contain placeholders (@foo@).
+ */
+static string _gen_randbook_name(string subject, string owner,
+                                 spschool_flag_type disc1,
+                                 spschool_flag_type disc2)
+{
+    const string apostrophised_owner = owner.empty() ?
+                                        "" :
+                                        apostrophise(owner) + " ";
+
+    const string real_subject = subject.empty() ?
+                                _maybe_gen_book_subject(owner) :
+                                subject;
+
+    if (!real_subject.empty())
+    {
+        return make_stringf("%s%s of %s",
+                            apostrophised_owner.c_str(),
+                            getRandNameString("book_noun").c_str(),
+                            real_subject.c_str());
+    }
+
+    string name = apostrophised_owner;
+
+    // Give a name that reflects the primary and secondary
+    // spell disciplines of the spells contained in the book.
+    name += getRandNameString("book_name") + " ";
+
+    // For the actual name there's a 66% chance of getting something like
+    //  <book> of the Fiery Traveller (Translocation/Fire), else
+    //  <book> of Displacement and Flames.
+    string type_name;
+    if (disc1 != disc2 && !one_chance_in(3))
+    {
+        string lookup = spelltype_long_name(disc2);
+        type_name = getRandNameString(lookup + " adj");
+    }
+
+    if (type_name.empty())
+    {
+        // No adjective found, use the normal method of combining two nouns.
+        type_name = getRandNameString(spelltype_long_name(disc1));
+        if (type_name.empty())
+            name += spelltype_long_name(disc1);
+        else
+            name += type_name;
+
+        if (disc1 != disc2)
+        {
+            name += " and ";
+            type_name = getRandNameString(spelltype_long_name(disc2));
+
+            if (type_name.empty())
+                name += spelltype_long_name(disc2);
+            else
+                name += type_name;
+        }
+    }
+    else
+    {
+        string bookname = type_name + " ";
+
+        // Add the noun for the first discipline.
+        type_name = getRandNameString(spelltype_long_name(disc1));
+        if (type_name.empty())
+            bookname += spelltype_long_name(disc1);
+        else
+        {
+            if (type_name.find("the ", 0) != string::npos)
+            {
+                type_name = replace_all(type_name, "the ", "");
+                bookname = "the " + bookname;
+            }
+            bookname += type_name;
+        }
+        name += bookname;
+    }
+
+    return name;
+}
+
 // Takes a book of any type, a spell discipline or two, the number of spells
 // (up to 8), the total spell levels of all spells, a spell that absolutely
 // has to be included, and the name of whomever the book should be named after.
@@ -1836,89 +1945,11 @@ bool make_book_theme_randart(item_def &book,
         }
     }
 
-    string name = "";
-
-    if (!owner.empty())
-    {
-        name = apostrophise(owner) + " ";
-        book.props["is_named"].get_bool() = true;
-    }
-    else
-        book.props["is_named"].get_bool() = false;
-
-    string bookname = "";
-    if (!title.empty())
-        bookname = title;
-    else
-    {
-        // Sometimes use a completely random title.
-        if (owner == "Xom" && !one_chance_in(20))
-            bookname = getRandNameString("Xom_book_title");
-        else if (one_chance_in(20) && (owner.empty() || one_chance_in(3)))
-            bookname = getRandNameString("random_book_title");
-        bookname = replace_name_parts(bookname, book);
-    }
-
-    if (!bookname.empty())
-        name += getRandNameString("book_noun") + " of " + bookname;
-    else
-    {
-        // Give a name that reflects the primary and secondary
-        // spell disciplines of the spells contained in the book.
-        name += getRandNameString("book_name") + " ";
-
-        // For the actual name there's a 66% chance of getting something like
-        //  <book> of the Fiery Traveller (Translocation/Fire), else
-        //  <book> of Displacement and Flames.
-        string type_name;
-        if (disc1 != disc2 && !one_chance_in(3))
-        {
-            string lookup = spelltype_long_name(disc2);
-            type_name = getRandNameString(lookup + " adj");
-        }
-
-        if (type_name.empty())
-        {
-            // No adjective found, use the normal method of combining two nouns.
-            type_name = getRandNameString(spelltype_long_name(disc1));
-            if (type_name.empty())
-                name += spelltype_long_name(disc1);
-            else
-                name += type_name;
-
-            if (disc1 != disc2)
-            {
-                name += " and ";
-                type_name = getRandNameString(spelltype_long_name(disc2));
-
-                if (type_name.empty())
-                    name += spelltype_long_name(disc2);
-                else
-                    name += type_name;
-            }
-        }
-        else
-        {
-            bookname = type_name + " ";
-
-            // Add the noun for the first discipline.
-            type_name = getRandNameString(spelltype_long_name(disc1));
-            if (type_name.empty())
-                bookname += spelltype_long_name(disc1);
-            else
-            {
-                if (type_name.find("the ", 0) != string::npos)
-                {
-                    type_name = replace_all(type_name, "the ", "");
-                    bookname = "the " + bookname;
-                }
-                bookname += type_name;
-            }
-            name += bookname;
-        }
-    }
-
-    set_artefact_name(book, name);
+    book.props["is_named"].get_bool() = !owner.empty();
+    set_artefact_name(book,
+                      replace_name_parts(_gen_randbook_name(title, owner,
+                                                            disc1, disc2),
+                                         book));
 
     // Save primary/secondary disciplines back into the book.
     book.book_param = max1;
