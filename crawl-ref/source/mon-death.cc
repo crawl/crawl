@@ -1121,7 +1121,7 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
     beam.source       = origin.pos();
     beam.source_name  = origin.base_name(DESC_BASENAME, true);
     beam.target       = origin.pos();
-    beam.noise_msg    = "You hear an explosion!";
+    beam.explode_noise_msg = "You hear an explosion!";
 
     if (!crawl_state.game_is_arena() && origin.attitude == ATT_FRIENDLY
         && !origin.is_summoned())
@@ -1151,7 +1151,7 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.flavour   = BEAM_ELECTRICITY;
     beam.damage    = dice_def(3, 5 + origin.get_hit_dice() * 5 / 4);
     beam.name      = "blast of lightning";
-    beam.noise_msg = "You hear a clap of thunder!";
+    beam.explode_noise_msg = "You hear a clap of thunder!";
     beam.colour    = LIGHTCYAN;
     beam.ex_size   = x_chance_in_y(origin.get_hit_dice(), 24) ? 3 : 2;
     // Don't credit the player for ally-summoned ball lightning explosions.
@@ -1177,7 +1177,7 @@ static void _setup_bennu_explosion(bolt& beam, const monster& origin)
     beam.flavour = BEAM_GHOSTLY_FLAME;
     beam.damage  = dice_def(3, 5 + origin.get_hit_dice() * 5 / 4);
     beam.name    = "pyre of ghostly fire";
-    beam.noise_msg = "You hear an otherworldly crackling!";
+    beam.explode_noise_msg = "You hear an otherworldly crackling!";
     beam.colour  = CYAN;
     beam.ex_size = 2;
 }

@@ -4820,8 +4820,8 @@ void bolt::affect_monster(monster* mon)
                 mprf("The %s %s %s.", name.c_str(), hit_verb.c_str(),
                      mon->name(DESC_THE).c_str());
             }
-            else if (heard && !noise_msg.empty())
-                mprf(MSGCH_SOUND, "%s", noise_msg.c_str());
+            else if (heard && !hit_noise_msg.empty())
+                mprf(MSGCH_SOUND, "%s", hit_noise_msg.c_str());
         }
         // no to-hit check
         enchantment_affect_monster(mon);
@@ -4978,8 +4978,8 @@ void bolt::affect_monster(monster* mon)
              mon->name(DESC_THE).c_str());
 
     }
-    else if (heard && !noise_msg.empty())
-        mprf(MSGCH_SOUND, "%s", noise_msg.c_str());
+    else if (heard && !hit_noise_msg.empty())
+        mprf(MSGCH_SOUND, "%s", hit_noise_msg.c_str());
     // The player might hear something, if _they_ fired a missile
     // (not magic beam).
     else if (!silenced(you.pos()) && flavour == BEAM_MISSILE
@@ -6005,8 +6005,8 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
         heard = heard || heard_expl;
 
-        if (heard_expl && !noise_msg.empty() && !you.see_cell(pos()))
-            mprf(MSGCH_SOUND, "%s", noise_msg.c_str());
+        if (heard_expl && !explode_noise_msg.empty() && !you.see_cell(pos()))
+            mprf(MSGCH_SOUND, "%s", explode_noise_msg.c_str());
     }
 
     // Run DFS to determine which cells are influenced
