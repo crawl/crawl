@@ -1000,11 +1000,10 @@ ENDMAP
 
 ################################################################################
 # Snake Pit: the hunt
-# XXX: Fix occasional isolated doors embedded in rock.
 NAME:    snake_hunt
 PLACE:   Snake:$
 WEIGHT:  20
-TAGS:    no_rotate opaque
+TAGS:    no_rotate
 ORIENT:  northwest
 KFEAT:   Z = known teleport trap w:2 / .
 KFEAT:   z = permanent teleport trap / Zot trap / . w:20
@@ -1014,11 +1013,12 @@ MONS:    guardian serpent / nothing
 MONS:    naga warrior / naga sharpshooter w:5 / nothing w:15
 MONS:    naga mage w:40 / naga ritualist / naga sharpshooter / nothing w:60
 MONS:    greater naga / guardian serpent
-SHUFFLE: 'X / "Y
-SHUFFLE: 'X / 'X / AB, "Y / CD
-SUBST:   A=x, B=x, C=x, D=x
+SHUFFLE: 'Y / "Z
+SHUFFLE: 'Y / 'Y / AB, "Z / CD
+SUBST:   ABCD = x
 SUBST:   ' = .:250 1 2 3 4:15 5:5
 SUBST:   " = .:250 1 2 3 4:5  5:15
+SUBST:   Z = Y
 SUBST:   X=xc..++, Y=xc++
 SUBST:   T : T U V .:30 b
 SUBST:   _ : ....!x, ! = x .:2
@@ -1042,7 +1042,7 @@ xxxxxxx''xxxx''''xxx..45554..xxx""""xxxx""xx
 xxxxxx''xxx''''''''xxx.666.xxx""""""""xxx""x
 xxxxxx'xxx''''''''''xxxcXcxxx""""""""""xxx"x
 xxxxxx''x''''''''''''xx.3.xx""""""""""""x""x
-xxxxxxx'Y'''''''''''''45354"""""""""""""Y"xx
+xxxxxxx'Y'''''''''''''45354"""""""""""""Z"xx
 xxxxxxxxxx''''''''''xx.....xx""""""""""xxxxx
 xxxxxxxxxxx''''''''xxxxx.xxxxx""""""""xxxxxx
 xxxxxxxxxxxxx''''xxxxxxx.xxxxxxx""""xxxxxxxx
