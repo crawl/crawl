@@ -786,7 +786,7 @@ static void _describe_god_powers(god_type which_god, int numcols)
         cprintf("You passively detect gold.\n");
         cprintf("%s turns your defeated foes' bodies to gold.\n",
                 uppercase_first(god_name(which_god)).c_str());
-        cprintf("Your enemies may become distracted by glittering piles of gold.\n");
+        cprintf("Your enemies may become distracted by gold.\n");
         break;
     }
 
