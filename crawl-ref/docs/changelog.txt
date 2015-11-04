@@ -862,7 +862,7 @@ Items
     a starting weapon; the basic crossbow has been renamed to an 'arbalest';
     and a new, rare 'triple crossbow' type has been added.
   - (Plain) bows have been renamed to shortbows.
-* Weapon enchantment & slaying bonsues have been merged into a single number,
+* Weapon enchantment & slaying bonuses have been merged into a single number,
   giving both +accuracy & +damage. Scrolls of enchant weapon I, II, and III
   have all been merged into a new "enchant weapon" scroll. The scrolls are
   rarer, but always succeed.
