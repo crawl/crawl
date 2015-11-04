@@ -2057,6 +2057,7 @@ void handle_monster_move(monster* mons)
         && !mons->asleep()
         && !mons_is_conjured(mons->type)
         && !mons_is_tentacle_or_tentacle_segment(mons->type)
+        && !mons_is_firewood(mons)
         && !mons->wont_attack())
     {
         const int gold = you.props["gozag_gold_aura_amount"].get_int();
