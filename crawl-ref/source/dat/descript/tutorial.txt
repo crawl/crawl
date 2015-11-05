@@ -372,16 +372,17 @@ of the screen. </localtiles>Rereading old messages with
 %%%%
 tutorial3 trap
 
-Traps can have a variety of unpleasant effects, and may be hidden until you
-discover them by stepping on them. If there's no way around, you'll have to
-trigger the trap and deal with its effects.
+Traps can have a variety of unpleasant effects, such as alerting monsters or
+teleporting you into danger. They will often be hidden until you discover them
+by stepping on them. If there's no way around, you'll have to trigger the trap
+and deal with the consequences.
 %%%%
 tutorial3 potion
 
-Alarm traps make a lot of noise and apply an enchantment that lets monsters
-know where to find you. You can quaff this potion with
+Potions may provide vital healing or useful enchantments, but some have less
+desirable effects. You can quaff this potion with
 <input>$cmd[CMD_QUAFF]</input><localtiles> or with
-<input>mouseclick</input></localtiles> to cancel any enchantments affecting you.
+<input>mouseclick</input></localtiles> to discover what it does.
 %%%%
 tutorial3 artefact_armour
 
