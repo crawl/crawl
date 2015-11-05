@@ -199,7 +199,9 @@ static void _delete_files()
 
 NORETURN void screen_end_game(string text)
 {
+#ifdef USE_TILE_WEB
     tiles.send_exit_reason("quit");
+#endif
     crawl_state.cancel_cmd_all();
     _delete_files();
 
