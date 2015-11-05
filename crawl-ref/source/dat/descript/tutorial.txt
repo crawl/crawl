@@ -427,7 +427,7 @@ The amulet is useless; you may want to drop it with
 %%%%
 tutorial3 gold
 
-Gold can be spent in shops. It has no weight and cannot be dropped.
+Gold can be spent in shops. It takes no inventory space and cannot be dropped.
 %%%%
 tutorial3 shop
 
