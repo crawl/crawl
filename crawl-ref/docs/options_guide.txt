@@ -1743,16 +1743,16 @@ show_god_gift = unident|yes|no
 
 3-m     Macro related Options.
 ------------------------------
-macros += M: \{9} za
+macros += M \{9} za
         This options adds a macro or keymap.
 
         Each definition consists of exactly three arguments separated by
         spaces. The first one describes whether it is a macro or a keymap:
-        "M:" macro,
-        "K:"  default context keymap,
-        "K1:" level-map context keymap,
-        "K2:" targeting context keymap
-        "K3:" confirmation context keymap.
+        "M" macro,
+        "K"  default context keymap,
+        "K1" level-map context keymap,
+        "K2" targeting context keymap
+        "K3" confirmation context keymap.
 
         The second argument describes the trigger key and consists the
         character or keycode of that key (for example 'a', 'A' or \{9} for the
