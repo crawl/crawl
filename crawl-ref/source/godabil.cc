@@ -2914,12 +2914,12 @@ bool prioritise_adjacent(const coord_def &target, vector<coord_def>& candidates)
     return true;
 }
 
-static int _prompt_plant_ring_size(int max)
+static bool _prompt_amount(int max, int& selected, const string& prompt)
 {
+    selected = max;
     while (true)
     {
-        msg::streams(MSGCH_PROMPT) <<  "How many plants will you create? ("
-                << max << " max) " << endl;
+        msg::streams(MSGCH_PROMPT) << prompt << " (" << max << " max) " << endl;
 
         const int keyin = get_ch();
 
@@ -2929,19 +2929,22 @@ static int _prompt_plant_ring_size(int max)
 
         // Default is max
         if (keyin == '\n' || keyin == '\r')
-            return max;
+        {
+            selected = max;
+            return true;
+        }
 
         // Otherwise they should enter a digit
         if (isadigit(keyin))
         {
-            int selected = keyin - '0';
+            selected = keyin - '0';
             if (selected > 0 && selected <= max)
-                return selected;
+                return true;
         }
         // else they entered some garbage?
     }
 
-    return max;
+    return false;
 }
 
 static int _collect_fruit(vector<pair<int,int> >& available_fruit)
@@ -3030,7 +3033,8 @@ spret_type fedhas_plant_ring_from_fruit()
     }
 
     // And how many plants does the user want to create?
-    int target_count = _prompt_plant_ring_size(max_use);
+    int target_count;
+    _prompt_amount(max_use, target_count, "How many plants will you create?");
 
     const int hp_adjust = you.skill(SK_INVOCATIONS, 10);
 
