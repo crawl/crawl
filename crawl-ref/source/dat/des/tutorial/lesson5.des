@@ -26,9 +26,9 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 DESC:    "Lesson 5: Gods and Divine Abilities"
 ORDER:   5
 ORIENT:  encompass
-KFEAT:   bABCDEFHIJ = .
-COLOUR:  ABCDEFHIJ = lightblue
-FTILE:   ABCDEFHIJ = tutorial_pad
+KFEAT:   bABCDEFHI = .
+COLOUR:  ABCDEFHI = lightblue
+FTILE:   ABCDEFHI = tutorial_pad
 KPROP:   b_ = bloody / nothing
 KFEAT:   _ = altar_trog
 ITEM:    mace mundane not_cursed
@@ -44,8 +44,8 @@ MARKER:  C = lua:tutorial5.msg("piety_on_kill")
 MARKER:  D = lua:tutorial5.msg("burn_book")
 MARKER:  E = lua:tutorial5.msg("berserk")
 MARKER:  F = lua:tutorial5.msg("exhaustion")
-MARKER:  G = lua:tutorial5.msg("hunger")
-MARKER:  H = lua:tutorial5.msg("berserk2")
+MARKER:  H = lua:tutorial5.msg("hunger")
+MARKER:  I = lua:tutorial5.msg("berserk2")
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  onclimb = "tutorial5.exit" }
 MARKER:  ( = lua:one_way_stair { dst  = "tutorial_lesson5", \
@@ -75,7 +75,7 @@ xxxxxxxxxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxx.x}xxx
 xxxxxxxxxxxxxxxx.....1.xxxxxxxxxxxxxxxxxxxx.....xx
 xxxxxx....C......1.....xxxxxxxxxxxxxxxxxx....1...x
 xxxxxx.xxxxxxxxx...1...xxxxxxxxxxxxxxxxx...2....)x
-xxxxxx.xxxxxxxxxx.....xxxxxxxxxxxxxxH....1....1xxx
+xxxxxx.xxxxxxxxxx.....xxxxxxxxxxxxxxI....1....1xxx
 xxxxxx.xxxxxxxxxxxx.xxxxxxxxxxxxxxx.xxxxx...2...xx
 xxxxxxBxxxxxxxxxxxx.xxxxxxxxxxxxxxx.xxxxxxx..4.xxx
 xtt..G.G..ttxxxxxxx.xxxxxxxxxxxxxxxx..xxxxxx.]xxxx
@@ -85,7 +85,7 @@ x..mYbbbYm..xxxxxxxDxxxxxxxxxxxxxxxxxx..1...xxxxxx
 x...bb_bb...xxxxxxx.xxxxxxxxxxxxxxxxxxx..1...xxxxx
 x..mVbbbVm..xxxxxxx.xxxxxxxxxxxxxxxxxxxx....xxxxxx
 x..mmm.mmm..xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx.xxxxx
-xt.........txxxxxxxexxxxxxxxxxxxxxxxxxxxxxxxxGxxxx
+xt.........txxxxxxxexxxxxxxxxxxxxxxxxxxxxxxxxHxxxx
 xtt..G.G..ttxxxxx.....xxxxxxxx.......xxxxxx..xxxxx
 xxxxxxAxxxxxxxxxx...........E+.....3.F.....xxxxxxx
 xxxxxx.xxxxxxxxxx.....xxxxxxxx.......xxxxxxxxxxxxx
