@@ -1679,6 +1679,87 @@ static string _gen_randbook_name(string subject, string owner,
     return name;
 }
 
+/**
+ * Possibly choose a random 'owner' for a themed random spellbook.
+ *
+ * @param god           The god responsible for gifting the book, if any.
+ * @param disc1         A spellschool (discipline) associated with the book.
+ * @param disc2         A spellschool (discipline) associated with the book.
+ * @param highlevel     Whether the book contains "high-level" spells.
+ * @param all_spells_disc1      Are all spells in the book of the same school?
+ * @return              The name of the book's 'owner', or the empty string.
+ */
+static string _gen_randbook_owner(god_type god, spschool_flag_type disc1,
+                                  spschool_flag_type disc2, bool highlevel,
+                                  bool all_spells_disc1)
+{
+    // If the owner hasn't been set already use
+    // a) the god's name for god gifts (only applies to Sif Muna and Xom),
+    // b) a name depending on the spell disciplines, for pure books
+    // c) a random name (all god gifts not named earlier)
+    // d) an applicable god's name
+    // ... else leave it unnamed (around 57% chance for non-god gifts)
+
+    // name of gifting god?
+    const bool god_gift = god != GOD_NO_GOD;
+    if (god_gift && !one_chance_in(4))
+        return god_name(god, false);
+
+    // thematically appropriate name?
+    if (god_gift && one_chance_in(3) || one_chance_in(5))
+    {
+        vector<string> lookups;
+        const string d1_name = spelltype_long_name(disc1);
+
+        if (disc1 != disc2)
+        {
+            const string lookup = d1_name + " " + spelltype_long_name(disc2);
+            if (highlevel)
+                lookups.push_back("highlevel " + lookup + " owner");
+            lookups.push_back(lookup + " owner");
+        }
+
+        if (all_spells_disc1)
+        {
+            if (highlevel)
+                lookups.push_back("highlevel " + d1_name + " owner");
+            lookups.push_back(d1_name + "owner");
+        }
+
+        for (string &lookup : lookups)
+        {
+            const string owner = getRandNameString(lookup);
+            if (!owner.empty() && owner != "__NONE")
+                return owner;
+        }
+    }
+
+    // random name?
+    if (god_gift || one_chance_in(5))
+        return make_name();
+
+    // applicable god's name?
+    if (!god_gift && one_chance_in(9))
+    {
+        switch (disc1)
+        {
+            case SPTYP_NECROMANCY:
+                if (all_spells_disc1 && !one_chance_in(6))
+                    return god_name(GOD_KIKUBAAQUDGHA, false);
+                break;
+            case SPTYP_CONJURATION:
+                if (all_spells_disc1 && !one_chance_in(4))
+                    return god_name(GOD_VEHUMET, false);
+                break;
+            default:
+                break;
+        }
+        return god_name(GOD_SIF_MUNA, false);
+    }
+
+    return "";
+}
+
 // Takes a book of any type, a spell discipline or two, the number of spells
 // (up to 8), the total spell levels of all spells, a spell that absolutely
 // has to be included, and the name of whomever the book should be named after.
@@ -1872,77 +1953,14 @@ bool make_book_theme_randart(item_def &book,
     if (disc1 == disc2)
         all_spells_disc1 = true;
 
-    // If the owner hasn't been set already use
-    // a) the god's name for god gifts (only applies to Sif Muna and Xom),
-    // b) a name depending on the spell disciplines, for pure books
-    // c) a random name (all god gifts not named earlier)
-    // d) an applicable god's name
-    // ... else leave it unnamed (around 57% chance for non-god gifts)
     if (owner.empty())
     {
-        const bool god_gift = (god != GOD_NO_GOD);
-        if (god_gift && !one_chance_in(4))
-            owner = god_name(god, false);
-        else if (god_gift && one_chance_in(3) || one_chance_in(5))
-        {
-            bool highlevel = (highest_level >= 7 + random2(3)
-                              && (lowest_level > 1 || coinflip()));
+        // WTF
+        const bool highlevel = (highest_level >= 7 + random2(3)
+                                && (lowest_level > 1 || coinflip()));
 
-            if (disc1 != disc2)
-            {
-                string schools[2];
-                schools[0] = spelltype_long_name(disc1);
-                schools[1] = spelltype_long_name(disc2);
-                sort(schools, schools + 2);
-                string lookup = schools[0] + " " + schools[1];
-
-                if (highlevel)
-                    owner = getRandNameString("highlevel " + lookup + " owner");
-
-                if (owner.empty() || owner == "__NONE")
-                    owner = getRandNameString(lookup + " owner");
-
-                if (owner == "__NONE")
-                    owner = "";
-            }
-
-            if (owner.empty() && all_spells_disc1)
-            {
-                string lookup = spelltype_long_name(disc1);
-                if (highlevel && disc1 == disc2)
-                    owner = getRandNameString("highlevel " + lookup + " owner");
-
-                if (owner.empty() || owner == "__NONE")
-                    owner = getRandNameString(lookup + " owner");
-
-                if (owner == "__NONE")
-                    owner = "";
-            }
-        }
-
-        if (owner.empty())
-        {
-            if (god_gift || one_chance_in(5)) // Use a random name.
-                owner = make_name();
-            else if (!god_gift && one_chance_in(9))
-            {
-                god_type name_god = GOD_SIF_MUNA;
-                switch (disc1)
-                {
-                case SPTYP_NECROMANCY:
-                    if (all_spells_disc1 && !one_chance_in(6))
-                        name_god = GOD_KIKUBAAQUDGHA;
-                    break;
-                case SPTYP_CONJURATION:
-                    if (all_spells_disc1 && !one_chance_in(4))
-                        name_god = GOD_VEHUMET;
-                    break;
-                default:
-                    break;
-                }
-                owner = god_name(name_god, false);
-            }
-        }
+        owner = _gen_randbook_owner(god, disc1, disc2, highlevel,
+                                    all_spells_disc1);
     }
 
     book.props["is_named"].get_bool() = !owner.empty();
