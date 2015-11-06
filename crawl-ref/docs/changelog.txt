@@ -5,6 +5,7 @@ Highlights
 ----------
 * Square line of sight.
 * Shorter Lair rune branches.
+* New rune vaults for many branches.
 
 Branches, Environment
 ---------------------
@@ -295,6 +296,8 @@ Interface
   use the option "ability_menu = false".
 * The auto_eat_chunks option is now true by default, so hungry characters eat
   chunks while resting, travelling, and exploring.
+* Allow searching for jewellery, dragon armour/hides and magical staves using
+  abbreviations for their granted properties.
 
 Technical
 ---------
