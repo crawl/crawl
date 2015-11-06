@@ -1,4 +1,8 @@
 %%%%
+Abjuration spell
+
+Reduces the remaining duration of any nearby hostile summoned creatures.
+%%%%
 Agony spell
 
 Cuts the resilience of a target creature in half. This damage is never directly

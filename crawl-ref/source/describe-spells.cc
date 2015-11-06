@@ -139,11 +139,16 @@ static void _monster_spellbooks(const monster_info &mi,
                                               set_name.c_str(), (int) i + 1);
         }
 
+        // Does the monster have a spell that allows them to cast Abjuration?
+        bool mons_abjure = false;
+
         for (auto spell : book_spells)
         {
             if (spell != SPELL_SERPENT_OF_HELL_BREATH)
             {
                 output_book.spells.emplace_back(spell);
+                if (get_spell_flags(spell) & SPFLAG_MONS_ABJURE)
+                    mons_abjure = true;
                 continue;
             }
 
@@ -163,6 +168,9 @@ static void _monster_spellbooks(const monster_info &mi,
             for (auto breath : serpent_of_hell_breaths[serpent_index])
                 output_book.spells.emplace_back(breath);
         }
+
+        if (mons_abjure)
+            output_book.spells.emplace_back(SPELL_ABJURATION);
 
         // XXX: it seems like we should be able to just place this in the
         // vector at the start, without having to copy it in now...?
