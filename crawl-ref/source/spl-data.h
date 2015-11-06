@@ -392,7 +392,7 @@ static const struct spell_desc spelldata[] =
 
 // Used indirectly, by monsters abjuring via other summon spells.
 {
-    SPELL_ABJURATION, "abjuration",
+    SPELL_ABJURATION, "Abjuration",
     SPTYP_SUMMONING,
     SPFLAG_ESCAPE | SPFLAG_NEEDS_TRACER | SPFLAG_MONSTER,
     3,
