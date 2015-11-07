@@ -770,7 +770,7 @@ static void _describe_god_powers(god_type which_god, int numcols)
         const int umbra_size = you.umbra_radius();
         if (umbra_size >= 0)
         {
-            cprintf("You radiate a%s aura of darkness, enhancing your stealth"
+            cprintf("You radiate a%s aura of darkness, enhancing your stealth "
                     "and reducing the accuracy of your foes.\n",
                     umbra_size > 5 ? " large" :
                     umbra_size > 3 ? "n" :
