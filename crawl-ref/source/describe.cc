@@ -316,11 +316,16 @@ static vector<string> _randart_propnames(const item_def& item,
                 break;
             case PROPN_SYMBOLIC: // e.g. F++
             {
+                work << artp_name(ann.prop);
+
                 // XXX: actually handle absurd values instead of displaying
                 // the wrong number of +s or -s
-                const int sval = min(abs(val), 6);
-                work << artp_name(ann.prop)
-                     << string(sval, (val > 0 ? '+' : '-'));
+                char symbol = val > 0 ? '+' : '-';
+                if (abs(val) > 4)
+                    work << symbol << val;
+                else
+                    work << string(val, symbol);
+
                 break;
             }
             case PROPN_PLAIN: // e.g. rPois or SInv
