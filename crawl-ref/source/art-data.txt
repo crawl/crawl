@@ -1234,12 +1234,12 @@ BOOL:    evil, seeinv, nogen
 ENUM:    VINES
 NAME:    robe of vines
 OBJ:     OBJ_ARMOUR/ARM_ROBE
-PLUS:    +2
+PLUS:    +5
 COLOUR:  GREEN
 TILE:    urand_vines
 TILE_EQ: vines
 INSCRIP: NoDeviceHeal
-REGEN:   7
+REGEN:   10
 
 ENUM:    KRYIAS
 NAME:    Kryia's mail coat
