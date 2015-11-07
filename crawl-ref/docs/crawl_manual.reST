@@ -214,15 +214,16 @@ Attributes grow permanently from gaining levels, and may increase or decrease
 temporarily from mutations or while using certain artefacts or abilities.
 
 If any attribute drops to zero for some reason, you will experience very
-unpleasant side-effects, being slowed significantly and taking damage if the
-stat is drained further, as well as some stat-specific negative effects. These
-effects will persist for a short while even after the attribute is restored.
+unpleasant side-effects, being slowed and suffering some stat-specific
+negative effects. These effects will persist for a short while even after the
+attribute is restored.
 
 Upon gaining levels 3, 6, 9, etc., you may choose an attribute to raise. Most
 species gain additional attributes at some levels, with the frequency and the
 attribute to be increased determined by species.
 
-The next numbers shown are Experience and the (dungeon) Level:
+Finally some additional information about your character and your progress through
+the dungeon is displayed.
 
 Experience Level
   Abbreviated to "XL". Starting characters have experience level 1; the highest
@@ -233,6 +234,18 @@ Place
   This shows the branch you are currently in, as well as the level within the
   branch. The starting branch is called Dungeon, so that the place information
   will read "Dungeon:1" for a new character.
+
+Gold
+  Displays the number of gold pieces you have found. Gold is found scattered
+  around the dungeon, and is primarily used to buy items from shops.
+
+Time
+  This indicates the amount of time that has passed since entering the dungeon,
+  and also displays in brackets the amount of time that your previous action took.
+  Most actions take 1.0 units of time, but certain actions are particularly slow
+  or quick (such as changing armour and swapping weapons respectively), and other
+  actions can vary in time taken depending on your status (such as attacking with
+  different weapons and at different skill levels).
 
 There are some additional stats that aren't as important on a turn to turn basis
 and thus aren't listed in the main stats area. They can easily be checked with
@@ -291,9 +304,8 @@ on Automated Travel and Exploration below.
 Resting
 ========================================
 
-If you press '5', you rest for 100 turns or until your hit points or magic
-return to full, whichever is sooner. You can rest for just one turn by pressing
-'.' or 's'.
+If you press '5', you will rest until your hit points or magic return to full.
+You can rest for just one turn by pressing '.' or 's'.
 
 Resting stops if a monster appears or if you are otherwise interrupted.
 
@@ -335,14 +347,15 @@ least three magical runes of Zot. The bottoms of several branches contain such
 runes.
 
 Occasionally you will find an archway (displayed as "\\" or as an actual arch);
-these lead to special places like shops, a mythical labyrinth, or Hell. You can
-enter it by typing '<' or '>'. A few portals only accept one of '<' and '>'.
+these lead to special places like shops, themed one-off portals, or special
+branches such as Hell and Pandemonium. You can enter these by typing '<' or '>'.
+A few portals only accept one of '<' and '>'.
 
 Doors and Traps
 ========================================
 
-Doors can usually be opened by just walking into them (there is an option for
-disabling this); else this can also be done using the 'O' command. They can be
+Doors can usually be opened by just walking into them (there is an option to
+disable this); else this can also be done using the 'O' command. They can be
 closed with the 'C' command. Pressing Ctrl plus a direction, or '*' followed by
 a direction, will open/close doors, too.
 
@@ -366,7 +379,7 @@ shopkeeper would buy stolen goods from a disreputable adventurer, anyway?)
 
 To purchase one or more items, select them by pressing the letters of the item
 in the shop menu and then press Enter to make the purchase; you can examine
-stuff before you buy it by pressing '!' and then the letter of the item.
+items before buying them by pressing '!' and then the letter of the item.
 
 If you've lost track of the shops in the dungeon, you can get a list of all the
 shops you've found in the dungeon overview (use 'Ctrl-O').
@@ -417,8 +430,8 @@ of all places where objects matching the search are (or have been) located; you
 can then travel there or examine the pile. The Find command will also search in
 shop inventories. Furthermore, you can search skills like 'long blades' (this
 will find all weapons training the long blades skill) or general terms like
-'shop', 'altar', 'portal', 'artefact', 'teleport trap', etc. You can get help on
-finding by pressing '?' at the prompt.
+'shop', 'altar', 'portal', 'artefact', etc. You can get help on finding by
+pressing '?' at the prompt.
 
 The Goal
 ========================================
@@ -462,11 +475,9 @@ need in the dungeons. They range from different weapon skills (both for close
 and ranged combat) to many magical skills and several additional activities like
 Dodging or Stealth. See Appendix `3. List of Skills`_ for a detailed
 description of all skills present in Crawl. The ease with which a character
-learns a skill depends solely on species. These aptitudes are hinted at in the
-list of species (see Appendix `1. List of Character Species`_). For the curious,
-the full table can be checked in aptitudes.txt (also from the help screen during
-play via '?%'), though it is not necessary to bother with the numbers in order
-to win!
+learns a skill depends solely on species. These aptitudes are displayed when
+viewing your skills, and a full table can be viewed in aptitudes.txt (also from
+the help screen during play via '?%').
 
 You can see your character's skills by pressing the 'm' key; the higher the
 level of a skill, the better you are at it. All characters start with a few
@@ -702,7 +713,6 @@ against vulnerable enemies.
 
 You can wield weapons with the 'w' command, which is a very quick action. If for
 some reason you want to go bare-handed, type 'w' followed by a hyphen ('-').
-Note that sometimes wielding non-weapons can be useful.
 
 The ' (apostrophe) key is a shortcut which automatically wields the item in slot
 a. If item a is being wielded, ' causes you to wield item b instead, if
@@ -784,24 +794,23 @@ to +2.
 
 Food is extremely important. You can find many different kinds of food in the
 dungeon. If you don't eat when you get hungry, you will eventually die of
-starvation. Fighting, carrying heavy loads, casting spells, and using some
-magical items will make you hungry. When you are starving, you fight less
-effectively as well. You can eat food with the 'e' command.
+starvation. Fighting, casting spells, and using some magical items will make you
+hungry. When you are starving, you fight much less effectively and cannot cast
+spells or use many abilities. You can eat food with the 'e' command.
 
-You may wish to dine on the corpses of your casualties (unless you are a
-Spriggan, and cannot eat meat, or you are a Mummy, who need not, and cannot, eat
-at all). Despite the fact that corpses are represented by the same '%' sign as
-food, you can't eat them without first cutting off the more edible pieces with
-the 'c' command. Being hungry helps you choke down the raw flesh. Cutting off the
-best parts will take some turns and produce a number of 'chunks' eventually.
-These can be eaten with the 'e' command as above.
+You may wish to dine on the corpses of your casualties. Despite the fact that
+corpses are represented by the same '%' sign as food, you can't eat them without
+first cutting off the more edible pieces with the 'c' command. Being hungry helps
+you choke down the raw flesh. Chopping up corpses will take some time and will
+produce a number of 'chunks', which can be eaten with the 'e' command as above.
 
-Kobolds, Trolls and Ghouls are happy to eat raw meat at any time.
+Some species are happy to eat raw meat at any time, and others cannot eat meat at
+all. Information on special diets is displayed on the 'A' screen.
 
-Vampires are a special case. Members of this species can try to drink blood from
-a fresh corpse (use the 'e' command). Once they have reached experience level 6,
-they can also bottle potions of blood from corpses. This is done using the
-'a'bilities menu.
+Vampires are a special case. Members of this species can try to drink blood
+directly from a fresh corpse (use the 'e' command). They can also bottle potions
+of blood from corpses instead of chopping corpses into chunks with the 'c'
+command.
 
 ? Magical Scrolls
 ========================================
@@ -846,7 +855,7 @@ simultaneously, one on each hand; which hand you put a ring on is immaterial
 to its function. If you try to put on a ring while both ring fingers are full,
 you will be asked which one to remove. Octopodes are an exception, and may
 wear up to eight rings on their tentacles. Some rings function automatically,
-while others require activation (the 'a' command).
+while others require activation (with the 'a' command).
 
 Amulets are similar to rings, but have different range of effects. Amulets are
 worn around the neck, and you can wear only one at a time.
@@ -871,7 +880,7 @@ Rods ('|') hold unique spells that you can evoke while wielding the rod,
 using the 'v' command. The effectiveness of these spells is increased by
 Evocations skill. They have a pool of magical energy which regenerates
 according to the rod's enchantment (which can be increased using scrolls of
-recharging) and your Evocations skill. They're shorter than full-length staves
+recharging) and your Evocations skill. They are shorter than full-length staves
 and thus use the Maces &amp; Flails skill instead of Staves when used as cudgels.
 
 : Books
@@ -881,9 +890,6 @@ Most books contain magical spells which your character may be able to learn. You
 can read a book with the 'r' command, which lets you access a description of
 each spell, memorise spells from it with the 'M' command, or forget a spell with
 the 'F' command, destroying the book in the process.
-
-Some powerful spellbooks require a certain amount of magical skill to read their
-contents.
 
 Occasionally you will find manuals of some skill. Carrying these will cause your
 experience to have twice the effect as usual when used for training that skill.
@@ -912,7 +918,7 @@ Artefacts
 Weapons, armour, jewellery and spellbooks can be artefacts. These come in two
 flavours: randomly created artefacts ('randarts') and predefined ones
 ('unrandarts'). Randarts will always carry unusual names, such as "golden
-bastard sword" or "shimmering scale mail". Artefacts cannot be modified in any
+double sword" or "shimmering scale mail". Artefacts cannot be modified in any
 way, including enchantments.
 
 Apart from that, otherwise mundane items can get one special property. These are
@@ -1049,29 +1055,26 @@ and if you find religion to be an inconvenience you can always renounce your
 faith (use the 'a' command - but most gods resent being scorned). There is also
 a second page with additional details, press '^!' to access it.
 
-The 'p' command lets you pray to your god. If your god asks appreciates corpse
-sacrifice, pressing 'p' over corpses will offer them to your god. Praying also
-gives you a sense of what your god thinks of you. Some gods may grant a gift
-when praying at their altar with high piety; if so, this is explained in the '^'
-and '^!' screens.
+The 'p' command lets you pray to your god. Praying gives you a sense of what
+your god thinks of you, and for a few gods is used to trigger sacrifices of
+certain items or corpses.
 
 To use any powers which your god deems you fit for, access the abilities menu
 via the 'a' command; god-given abilities are listed as invocations.
 
 Depending on background, some characters start out religious; others have to
 pray at an altar to dedicate themselves to a life of servitude. There are altars
-scattered all over the dungeon, and your character has heard rumours of a
-special temple somewhere near the surface. At an altar, you can read a
-description of that god's general attitude by pressing 'p'. You will be asked
-afterward if you really want to attend this circle. If you want to see a list of
-the standard gods and which of them is already present with an altar in your
-dungeon, press 'Ctrl-O'. You can also learn about standard and obscure gods by
-pressing '?/G'.
+scattered all over the dungeon, and there are rumours of a special temple
+somewhere near the surface. At an altar, you can read a description of that
+god's general attitude by pressing 'p'. You will be asked afterward if you
+really want to attend this circle. If you want to see a list of the standard
+gods and which of them is already present with an altar in your dungeon, press
+'Ctrl-O'. You can also learn about standard and obscure gods by pressing '?/G'.
 
 Note that the good gods will not accept demonic or undead devotees.
 
-If you like to start the game with a religion, choose your background from
-Berserker, Chaos Knight or Abyssal Knight.
+If you would like to start the game with a religion, choose your background
+from Berserker, Chaos Knight or Abyssal Knight.
 
 ****************************************
 K. Mutations
@@ -1082,9 +1085,9 @@ pure, there are too many toxic wastes and mutagenic radiations in the Dungeon
 for that to be possible. If your character is so affected by these that he or
 she undergoes physiological change, you can use the 'A' command to see how much
 of a freak they've become and the 'a' command to activate any mutations which
-can be controlled. Many mutations are actually beneficial to the characters, but
-there are plenty of nasty ones as well. Many mutations have three levels, each
-of which counts as a single mutation.
+can be controlled. Many mutations are actually beneficial to your character, but
+there are plenty of nasty ones as well. Many mutations have multiple levels,
+each of which counts as a single mutation.
 
 You can also become mutated by overusing certain powerful enchantments,
 particularly Haste (not the kind you get from being berserk) and Invisibility,
@@ -1104,7 +1107,7 @@ random mutations.
 Demonspawn are a special case. Characters of this species get certain special
 mutations as they gain levels; these are listed in cyan. They are permanent and
 can never be removed. If one of your Demonspawn powers has been augmented by a
-mutation, it is displayed in a lighter colour.
+random mutation, it is displayed in a lighter colour.
 
 Many a species starts with some special intrinsic feats, like the greater speed
 of Centaurs or Spriggans, or the eating habits of Trolls, Kobolds and others.
