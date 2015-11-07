@@ -1238,7 +1238,7 @@ PLUS:    +5
 COLOUR:  GREEN
 TILE:    urand_vines
 TILE_EQ: vines
-INSCRIP: DeviceHeal---
+INSCRIP: NoDeviceHeal
 REGEN:   10
 
 ENUM:    KRYIAS
