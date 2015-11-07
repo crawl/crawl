@@ -318,13 +318,12 @@ static vector<string> _randart_propnames(const item_def& item,
             {
                 work << artp_name(ann.prop);
 
-                // XXX: actually handle absurd values instead of displaying
-                // the wrong number of +s or -s
                 char symbol = val > 0 ? '+' : '-';
-                if (abs(val) > 4)
-                    work << symbol << val;
+                const int sval = abs(val);
+                if (sval > 4)
+                    work << symbol << sval;
                 else
-                    work << string(val, symbol);
+                    work << string(sval, symbol);
 
                 break;
             }
