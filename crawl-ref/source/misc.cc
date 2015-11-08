@@ -245,7 +245,7 @@ vector<monster* > get_nearby_monsters(bool want_move,
 
 static bool _exposed_monsters_nearby(bool want_move)
 {
-    const int radius = want_move ? LOS_RADIUS : 2;
+    const int radius = want_move ? 2 : 1;
     for (radius_iterator ri(you.pos(), radius, C_SQUARE, LOS_DEFAULT); ri; ++ri)
         if (env.map_knowledge(*ri).flags & MAP_INVISIBLE_MONSTER)
             return true;
