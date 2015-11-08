@@ -1153,9 +1153,9 @@ NSUBST:  P = 1:1 / *:2
 NSUBST:  Q = 1:O / *:|
 NSUBST:  R = 1:D / *:.
 NSUBST:  G = 4:8 / *:G
-NSUBST:  d = 1:+ / 1:v / *:+vvv
-NSUBST:  e = 1:+ / 1:v / *:+vvv
-NSUBST:  f = 1:+ / 1:v / *:+vvv
+NSUBST:  d = 1:+ / 1:v / *=+vvv
+NSUBST:  e = 1:+ / 1:v / *=+vvv
+NSUBST:  f = 1:+ / 1:v / *=+vvv
 NSUBST:  . = 20:4 / 10:5 / *:.
 TILE:    G = dngn_statue_iron_golem
 COLOUR:  G = cyan
