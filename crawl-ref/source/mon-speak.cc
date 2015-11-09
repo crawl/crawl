@@ -332,8 +332,11 @@ static string _get_speak_string(const vector<string> &prefixes,
     return msg;
 }
 
-// Returns true if the monster did speak, false otherwise.
-// Maybe monsters will speak!
+/**
+ * Rolls a chance for a monster to speak, and calls mons_speaks as necessary.
+ *
+ * @param mons The monster in question.
+ */
 void maybe_mons_speaks(monster* mons)
 {
     // Very fast wandering/patrolling monsters might, in one monster turn,
