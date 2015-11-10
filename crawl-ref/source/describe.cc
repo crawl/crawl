@@ -851,7 +851,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
       : "";
     description += make_stringf(
     "\nBase accuracy: %+d  Base damage: %d  Base attack delay: %.1f"
-    "\nThis weapon's minimum attack delay of %.1f is reached at skill level %d."
+    "\nThis weapon's minimum attack delay (%.1f) is reached at skill level %d."
     "%s",
      property(item, PWPN_HIT),
      base_dam + ammo_dam,
