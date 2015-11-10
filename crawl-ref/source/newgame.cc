@@ -1104,8 +1104,23 @@ static void _construct_backgrounds_menu(const newgame_def& ng,
                                         MenuFreeform* menu)
 {
     menu_letter letter = 'a';
+    // Add entries for any job groups with at least one playable background.
     for (job_group& group : jobs_order)
-        group.attach(ng, defaults, menu, letter);
+    {
+        bool skip_group = false;
+        if (ng.species != SP_UNKNOWN)
+        {
+            skip_group = true;
+            for (job_type &job : group.jobs)
+                if (job_allowed(ng.species, job) > CC_BANNED)
+                {
+                    skip_group = false;
+                    break;
+                }
+        }
+        if (!skip_group)
+            group.attach(ng, defaults, menu, letter);
+    }
 
     // Add all the special button entries
     TextItem* tmp = new TextItem();
