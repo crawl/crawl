@@ -244,103 +244,77 @@ brand_type player::damage_brand(int)
 
 
 /**
- * Return the delay caused by attacking with the provided weapon & projectile.
+ * Return the delay caused by attacking with your weapon and this projectile.
  *
- * @param weap          The weapon to be used; may be null.
- * @param projectile    The projectile to be fired/thrown; may be null.
- * @param random        Whether to randomize delay, or provide a fixed value
- *                      for display (the worst-case scenario).
- * @param scaled        Whether to apply special delay modifiers (finesse)
- * @param do_shield     Whether to apply shield slowdown and speed brand.
- * @return              The time taken by an attack with the given weapon &
- *                      projectile, in aut.
+ * @param projectile  The projectile to be fired/thrown, if any.
+ * @param rescale     Whether to re-scale the time to account for the fact that
+ *                    finesse doesn't stack with haste.
+ * @return            A random_var representing the range of possible values of
+ *                    attack delay. It can be casted to an int, in which case
+ *                    its value is determined by the appropriate rolls.
  */
-random_var player::attack_delay(const item_def *weap,
-                                const item_def *projectile, bool random,
-                                bool scaled, bool do_shield) const
+random_var player::attack_delay(const item_def *projectile, bool rescale) const
 {
+    const item_def* weap = weapon();
     random_var attk_delay = constant(15);
     // a semi-arbitrary multiplier, to minimize loss of precision from integer
     // math.
     const int DELAY_SCALE = 20;
     const int base_shield_penalty = adjusted_shield_penalty(DELAY_SCALE);
 
-    bool check_weapon = (!projectile && !!weap)
-                        || projectile
-                            && (is_launched(this, weap, *projectile)
-                                != LRET_THROWN);
-
-    if (!check_weapon)
+    if (projectile && is_launched(this, weap, *projectile) == LRET_THROWN
+        || !weap)
     {
-        if (form_uses_xl())
-        {
-            attk_delay =
-                constant(10)
-                - div_rand_round(constant(you.experience_level * 10), 54);
-        }
-        else
-        {
-            // UC/throwing attacks are sped up by skill
-            // (min delay (10 - 270/54) = 5)
-            const skill_type sk = projectile ? SK_THROWING : SK_UNARMED_COMBAT;
-            attk_delay = constant(10)
-                         - div_rand_round(constant(you.skill(sk, 10)), 54);
+        int sk = form_uses_xl() ? experience_level * 10 :
+                 projectile     ? skill(SK_THROWING, 10) :
+                                  skill(SK_UNARMED_COMBAT, 10);
+        attk_delay = constant(10) - div_rand_round(constant(sk), 27*2);
 
-            // Bats are faster (for whatever good it does them).
-            if (you.form == TRAN_BAT && !projectile)
-                attk_delay = div_rand_round(attk_delay * constant(3), 5);
-        }
+        // Bats are faster (for whatever good it does them).
+        if (you.form == TRAN_BAT && !projectile)
+            attk_delay = div_rand_round(attk_delay * 3, 5);
     }
-    else
+    else if (weap &&
+             (projectile ? projectile->launched_by(*weap)
+                         : is_melee_weapon(*weap)))
     {
-        if (weap && is_weapon(*weap)
-            && (!projectile && !is_range_weapon(*weap)
-                || projectile
-                   && is_launched(this, weap, *projectile) == LRET_LAUNCHED))
-        {
-            const skill_type wpn_skill = item_attack_skill(*weap);
-            attk_delay = constant(property(*weap, PWPN_SPEED));
-            attk_delay -=
-                div_rand_round(constant(you.skill(wpn_skill, 10)),
-                               DELAY_SCALE);
+        const skill_type wpn_skill = item_attack_skill(*weap);
+        attk_delay = constant(property(*weap, PWPN_SPEED));
+        attk_delay -= div_rand_round(constant(you.skill(wpn_skill, 10)),
+                                     DELAY_SCALE);
 
-            // apply minimum to weapon skill modification
-            attk_delay = rv::max(attk_delay, weapon_min_delay(*weap));
+        if (get_weapon_brand(*weap) == SPWPN_SPEED)
+            attk_delay = div_rand_round(attk_delay * 2, 3);
 
-            if (weap->base_type == OBJ_WEAPONS
-                && get_weapon_brand(*weap) == SPWPN_SPEED
-                && do_shield)
-            {
-                attk_delay = div_rand_round(constant(2) * attk_delay, 3);
-            }
-        }
+        // apply minimum to weapon skill modification
+        attk_delay = rv::max(attk_delay, weapon_min_delay(*weap));
     }
 
     // At the moment it never gets this low anyway.
     attk_delay = rv::max(attk_delay, constant(3));
 
-    // Calculate this separately to avoid overflowing the weights in
-    // the random_var.
-    random_var shield_penalty = constant(0);
     if (base_shield_penalty)
     {
-        shield_penalty =
+        // Calculate this separately to avoid overflowing the weights in
+        // the random_var.
+        random_var shield_penalty =
             div_rand_round(rv::min(rv::roll_dice(1, base_shield_penalty),
                                    rv::roll_dice(1, base_shield_penalty)),
                            DELAY_SCALE);
+        attk_delay += shield_penalty;
     }
 
-    if (!do_shield)
-        shield_penalty = constant(0);
+    if (you.duration[DUR_FINESSE])
+    {
+        ASSERT(!you.duration[DUR_BERSERK]);
+        // Finesse shouldn't stack with Haste, so we make this attack take
+        // longer so when Haste speeds it up, only Finesse will apply.
+        if (you.duration[DUR_HASTE] && rescale)
+            attk_delay = haste_mul(attk_delay);
+        attk_delay = rv::max(2, div_rand_round(attk_delay, 2));
+    }
 
-    int final_delay = random ? attk_delay.roll() + shield_penalty.roll()
-                             : attk_delay.max() + shield_penalty.max();
-    // Stop here if we just want the unmodified value.
-    if (!scaled)
-        return final_delay;
-
-    const int scaling = finesse_adjust_delay(you.time_taken);
-    return max(2, div_rand_round(scaling * final_delay, 10));
+    return attk_delay;
 }
 
 // Returns the item in the given equipment slot, nullptr if the slot is empty.

@@ -383,21 +383,17 @@ int monster::damage_type(int which_attack)
 }
 
 /**
- * Return the delay caused by attacking with the provided weapon & projectile.
+ * Return the delay caused by attacking with weapon and projectile.
  *
- * @param weap          The weapon to be used; may be null.
- * @param projectile    The projectile to be fired/thrown; may be null.
- * @param random        Whether to randomize delay, or provide a fixed value
- *                      for display.
- * @param scaled        Unused (interface parameter)
- * @return              The time taken by an attack with the given weapon &
- *                      projectile, in aut.
+ * @param projectile    The projectile to be fired/thrown, if any.
+ * @return              The time taken by an attack with the monster's weapon
+ *                      and the given projectile, in aut.
  */
-random_var monster::attack_delay(const item_def *weap,
-                                 const item_def *projectile,
-                                 bool random, bool scaled,
-                                 bool /*shield*/) const
+random_var monster::attack_delay(const item_def *projectile,
+                                 bool /*rescale*/) const
 {
+    const item_def* weap = weapon();
+
     const bool use_unarmed =
         (projectile) ? is_launched(this, weap, *projectile) != LRET_LAUNCHED
                      : !weap;
@@ -405,10 +401,10 @@ random_var monster::attack_delay(const item_def *weap,
     if (use_unarmed || !weap)
         return 10;
 
-    int delay = property(*weap, PWPN_SPEED);
+    random_var delay = property(*weap, PWPN_SPEED);
     if (get_weapon_brand(*weap) == SPWPN_SPEED)
-        delay = random ? div_rand_round(2 * delay, 3) : (2 * delay)/3;
-    return random ? div_rand_round(10 + delay, 2) : (10 + delay) / 2;
+        delay = div_rand_round(2 * delay, 3);
+    return constant(10) + delay / 2;
 }
 
 int monster::has_claws(bool allow_tran) const

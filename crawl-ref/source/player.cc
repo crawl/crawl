@@ -3495,32 +3495,22 @@ static void _display_attack_delay()
     you.m_quiver.get_desired_item(&ammo, nullptr);
     const bool uses_ammo = ammo && you.weapon()
                            && ammo->launched_by(*you.weapon());
-    const int delay = you.attack_delay(you.weapon(), uses_ammo ? ammo : nullptr,
-                                       false, false);
+    const int delay = you.attack_delay(uses_ammo ? ammo : nullptr, false).expected();
 
-    const int no_shield_delay = you.attack_delay(you.weapon(),
-                                                 uses_ammo ? ammo : nullptr,
-                                                 false, false, false);
     const bool at_min_delay = you.weapon()
-                              && weapon_min_delay(*you.weapon())
-                                 == no_shield_delay;
-
-    const bool shield_affecting_delay = delay != no_shield_delay;
+                              && you.skill(item_attack_skill(*you.weapon()))
+                                 >= weapon_min_delay_skill(*you.weapon());
 
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
     int avg = 10 * delay;
 
-    // Haste shouldn't be counted, but let's show finesse.
-    if (you.duration[DUR_FINESSE])
-        avg = max(20, avg / 2);
-
     _display_char_status(avg, "Your attack speed is %s%s%s",
                          _attack_delay_desc(avg),
                          at_min_delay ?
-                            " (and cannot be improved with additional skill)" : "",
-                         shield_affecting_delay ?
-                            " (but will be slowed by your insufficient shield skill)" : "");
+                            " (and cannot be improved with additional weapon skill)" : "",
+                         you.adjusted_shield_penalty() ?
+                            " (and is slowed by your insufficient shield skill)" : "");
 }
 
 // forward declaration

@@ -42,8 +42,7 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            int effective_attack_number = 0);
 
 int weapon_min_delay_skill(const item_def &weapon);
-int weapon_min_delay(const item_def &weapon);
-int finesse_adjust_delay(int delay);
+int weapon_min_delay(const item_def &weapon, bool check_speed = true);
 
 int mons_weapon_damage_rating(const item_def &launcher);
 int mons_missile_damage(monster* mons, const item_def *launch,
