@@ -3329,8 +3329,8 @@ int find_ability_slot(const ability_type abil, char firstletter)
     // firstletter defaults to 'f', because a-e is for invocations
     int first_slot = letter_to_index(firstletter);
 
-    // Reserve the first ability slot (f) for Draconian breath
-    if (you.species == SP_BASE_DRACONIAN)
+    // Reserve the first non-god ability slot (f) for Draconian breath
+    if (you.species == SP_BASE_DRACONIAN && first_slot >= letter_to_index('f'))
         first_slot += 1;
 
     ASSERT(first_slot < 52);
