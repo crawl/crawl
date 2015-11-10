@@ -3484,22 +3484,28 @@ static const char* _attack_delay_desc(int attack_delay)
 
 /**
  * Print a message indicating the player's attack delay with their current
- * weapon & quivered ammo (if applicable).
+ * weapon & its ammo (if applicable).
  *
- * Uses melee attack delay for ranged weapons if no appropriate ammo is
- * is quivered, purely for simplicity of implementation; XXX fix this
+ * Assumes the attack speed of a ranged weapon does not depend on what
+ * ammunition is being used (as long as it is valid).
  */
 static void _display_attack_delay()
 {
-    const item_def* ammo = nullptr;
-    you.m_quiver.get_desired_item(&ammo, nullptr);
-    const bool uses_ammo = ammo && you.weapon()
-                           && ammo->launched_by(*you.weapon());
-    const int delay = you.attack_delay(uses_ammo ? ammo : nullptr, false).expected();
+    const item_def* weapon = you.weapon();
+    int delay;
+    if (weapon && is_range_weapon(*weapon))
+    {
+        item_def ammo;
+        ammo.base_type = OBJ_MISSILES;
+        ammo.sub_type = fires_ammo_type(*weapon);
+        delay = you.attack_delay(&ammo, false).expected();
+    }
+    else
+        delay = you.attack_delay(nullptr, false).expected();
 
-    const bool at_min_delay = you.weapon()
-                              && you.skill(item_attack_skill(*you.weapon()))
-                                 >= weapon_min_delay_skill(*you.weapon());
+    const bool at_min_delay = weapon
+                              && you.skill(item_attack_skill(*weapon))
+                                 >= weapon_min_delay_skill(*weapon);
 
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
