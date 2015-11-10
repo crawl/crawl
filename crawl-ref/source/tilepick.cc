@@ -5440,6 +5440,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_RU_SACRIFICE_SKILL;
     case ABIL_RU_SACRIFICE_EYE:
         return TILEG_ABILITY_RU_SACRIFICE_EYE;
+    case ABIL_RU_SACRIFICE_RESISTANCE:
+        return TILEG_ABILITY_RU_SACRIFICE_RESISTANCE;
     case ABIL_RU_REJECT_SACRIFICES:
         return TILEG_ABILITY_RU_REJECT_SACRIFICES;
 
