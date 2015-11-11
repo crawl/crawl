@@ -31,3 +31,8 @@ Acquirement ability
 
 Bemachtigt een gekozen type voorwerp.
 %%%%
+Sacrifice an Eye ability
+
+Offert een oog op, waardoor je moeilijker doelwitten kan raken, alsof
+je een amulet van onnauwkeurigheid draagt.
+%%%%
