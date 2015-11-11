@@ -3384,8 +3384,8 @@ ENDMAP
 NAME:  kb_rosetta
 TAGS:  vaults_hard
 DEPTH: D:6-, Depths, Vaults, Elf
-SUBST: x : xcvmnot
-SUBST: X : GItTU
+SUBST: x : xcvmnt
+SUBST: X : GtTU
 MAP
    ...   ...
   ..x.. ..x..
