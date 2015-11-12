@@ -224,14 +224,6 @@ Releases a massive electrical discharge that arcs from target to target until
 it grounds out. It may ground out harmlessly if there are no targets
 sufficiently close to the caster. Its damage partially bypasses armour.
 %%%%
-Chant Fire Storm spell
-
-After chanting for a brief time, unleashes a fire storm on the caster's target.
-%%%%
-Chant Word of Entropy spell
-
-After chanting for a brief time, severely corrodes the caster's target.
-%%%%
 Chaos Breath spell
 
 Exhales a large cloud of fumes filled with the very essence of chaos.
@@ -506,6 +498,10 @@ Ensorcelled Hibernation spell
 
 Lowers its target's metabolic rate, inducing hibernation. After awakening, the
 target will be unable to be put to sleep again for some time.
+%%%%
+Entropic Weave spell
+
+Corrodes away the target's equipment.
 %%%%
 Excruciating Wounds spell
 

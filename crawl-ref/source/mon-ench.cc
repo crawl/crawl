@@ -1911,8 +1911,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_WORD_OF_RECALL:
-    case ENCH_CHANT_FIRE_STORM:
-    case ENCH_CHANT_WORD_OF_ENTROPY:
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the recitation
         if (silenced(pos()) || paralysed() || petrified()
@@ -1935,36 +1933,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             int breath_timeout_turns = random_range(4, 12);
 
-            if (en == ENCH_WORD_OF_RECALL)
-                mons_word_of_recall(this, random_range(3, 7));
-            else if (en == ENCH_CHANT_FIRE_STORM
-                  || en == ENCH_CHANT_WORD_OF_ENTROPY)
-            {
-                actor *mons_foe = get_foe();
-                coord_def foe_pos;
-                if (mons_foe)
-                    foe_pos = mons_foe->pos();
-
-                if  (mons_foe
-                     && !(is_sanctuary(pos())
-                        || is_sanctuary(mons_foe->pos())))
-                {
-                    if (can_see(*mons_foe))
-                    {
-                        if (en == ENCH_CHANT_FIRE_STORM)
-                            finish_chanting_fire_storm(this, foe_pos);
-                        else // word of entropy
-                            finish_chanting_word_of_entropy(this, mons_foe);
-                    }
-                    // remove the timeout because the effect was entirely dodged
-                    else
-                        breath_timeout_turns = 0;
-                }
-
-            }
-            else
-                die("Unknown chant type!"); // squash a warning
-
+            mons_word_of_recall(this, random_range(3, 7));
             add_ench(mon_enchant(ENCH_BREATH_WEAPON, 1, this,
                                  breath_timeout_turns * BASELINE_DELAY));
         }
@@ -2260,8 +2229,11 @@ static const char *enchant_names[] =
     "negative_vuln",
 #endif
     "condensation_shield", "resistant",
-    "hexed", "corpse_armour", "chanting_fire_storm",
-    "chanting_word_of_entropy", "buggy",
+    "hexed", "corpse_armour",
+#if TAG_MAJOR_VERSION == 34
+    "chanting_fire_storm", "chanting_word_of_entropy",
+#endif
+    "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

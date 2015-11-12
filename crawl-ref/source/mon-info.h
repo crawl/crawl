@@ -141,8 +141,10 @@ enum monster_info_flags
     MB_RESISTANCE,
     MB_HEXED,
     MB_BONE_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     MB_CHANT_FIRE_STORM,
     MB_CHANT_WORD_OF_ENTROPY,
+#endif
     MB_AIRBORNE,
     NUM_MB_FLAGS
 };

@@ -1507,9 +1507,11 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AIRSTRIKE:
     case SPELL_WATERSTRIKE:
     case SPELL_FLAY:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_CHANT_FIRE_STORM:
-    case SPELL_CHANT_WORD_OF_ENTROPY:
+#endif
     case SPELL_GRAVITAS:
+    case SPELL_ENTROPIC_WEAVE:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -2520,36 +2522,6 @@ bool mons_word_of_recall(monster* mons, int recall_target)
             break;
     }
     return num_recalled;
-}
-
-/**
- * Launch a fire storm!
- *
- * @param mons[in] The monster doing the chant
- * @param foe_pos  The target area to fire storm.
- * @returns void
- */
-void finish_chanting_fire_storm(monster* mons, coord_def foe_pos)
-{
-    bolt beem;
-    beem.target = foe_pos;
-    mons_cast(mons, beem, SPELL_FIRE_STORM, MON_SPELL_WIZARD,
-            true);
-}
-
-/**
- * Corrode the target badly, generate noise, and do some messaging.
- *
- * @param mons[in] The monster doing the chant
- * @param mons_foe The target to corrode.
- * @returns void
- */
-void finish_chanting_word_of_entropy(monster* mons, actor *mons_foe)
-{
-    simple_monster_message(mons, " screams the final syllables of the word of"
-                                " entropy!");
-    noisy(10, mons->pos(), mons->mid, NF_NONE);
-    mons_foe->corrode_equipment("the word of entropy", 4);
 }
 
 static bool _valid_vine_spot(coord_def p)
@@ -4898,11 +4870,41 @@ static enchant_type get_enchant_type_from_chant(spell_type chant)
             return ENCH_NONE;
         case SPELL_WORD_OF_RECALL:
             return ENCH_WORD_OF_RECALL;
-        case SPELL_CHANT_FIRE_STORM:
-            return ENCH_CHANT_FIRE_STORM;
-        case SPELL_CHANT_WORD_OF_ENTROPY:
-            return ENCH_CHANT_WORD_OF_ENTROPY;
     }
+}
+
+static bool _spell_charged(monster *mons, int count)
+{
+    mon_enchant ench = mons->get_ench(ENCH_SPELL_CHARGED);
+    if (ench.ench == ENCH_NONE || ench.degree < count)
+    {
+        if (ench.ench == ENCH_NONE)
+        {
+            mons->add_ench(mon_enchant(ENCH_SPELL_CHARGED, 1, mons,
+                                       INFINITE_DURATION));
+        }
+        else
+        {
+            ench.degree++;
+            mons->update_ench(ench);
+        }
+
+        if (!mons_near(mons))
+            return false;
+        string msg =
+            getSpeakString(make_stringf("%s charge",
+                                        mons->name(DESC_PLAIN, true).c_str())
+                           .c_str());
+        if (!msg.empty())
+        {
+            msg = replace_all(msg, "@The_monster@", mons->name(DESC_THE));
+            mprf(mons->wont_attack() ? MSGCH_FRIEND_ENCHANT
+                 : MSGCH_MONSTER_ENCHANT, "%s", msg.c_str());
+        }
+        return false;
+    }
+    mons->del_ench(ENCH_SPELL_CHARGED);
+    return true;
 }
 
 
@@ -4993,7 +4995,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         || spell_cast == SPELL_LEDAS_LIQUEFACTION
         || spell_cast == SPELL_PORTAL_PROJECTILE
         || spell_cast == SPELL_FORCEFUL_INVITATION
-        || spell_cast == SPELL_PLANEREND)
+        || spell_cast == SPELL_PLANEREND
+        || spell_cast == SPELL_FIRE_STORM)
     {
         do_noise = false;       // Spell itself does the messaging.
     }
@@ -5949,22 +5952,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_IOOD:
-        if (mons->type == MONS_ORB_SPIDER && !mons->has_ench(ENCH_IOOD_CHARGED))
-        {
-            mons->add_ench(ENCH_IOOD_CHARGED);
-
-            if (!mons_near(mons))
-                return;
-            string msg = getSpeakString("orb spider charge");
-            if (!msg.empty())
-            {
-                msg = replace_all(msg, "@The_monster@", mons->name(DESC_THE));
-                mprf(mons->wont_attack() ? MSGCH_FRIEND_ENCHANT
-                     : MSGCH_MONSTER_ENCHANT, "%s", msg.c_str());
-            }
+        if (mons->type == MONS_ORB_SPIDER && !_spell_charged(mons, 1))
             return;
-        }
-        mons->del_ench(ENCH_IOOD_CHARGED);
         if (orig_noise)
             mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
         cast_iood(mons, 6 * mons->spell_hd(spell_cast), &pbolt);
@@ -6048,8 +6037,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     case SPELL_WORD_OF_RECALL:
-    case SPELL_CHANT_FIRE_STORM:
-    case SPELL_CHANT_WORD_OF_ENTROPY:
     {
         mon_enchant chant_timer =
             mon_enchant(get_enchant_type_from_chant(spell_cast), 1, mons, 30);
@@ -6474,6 +6461,21 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_GRAVITAS:
         fatal_attraction(foe->pos(), mons, splpow);
         return;
+
+    case SPELL_ENTROPIC_WEAVE:
+        foe->corrode_equipment("the entropic weave");
+        return;
+
+    case SPELL_FIRE_STORM:
+        if (mons->type == MONS_SALAMANDER_STORMCALLER
+            && !_spell_charged(mons, 2))
+        {
+            return;
+        }
+        if (orig_noise)
+            mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
+        break;
+>>>>>>> 8371658... Remove Chant Fire Storm; rework Chant Word of Entropy to Entropic Weave.
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -7731,6 +7733,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CHAOTIC_MIRROR:
     case SPELL_AIRSTRIKE:
     case SPELL_SUMMON_MUSHROOMS:
+    case SPELL_ENTROPIC_WEAVE:
         return !foe;
 
     case SPELL_FREEZE:
@@ -7988,10 +7991,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
         return true;
 
-    case SPELL_CHANT_FIRE_STORM:
-    case SPELL_CHANT_WORD_OF_ENTROPY:
-        return mon->has_ench(ENCH_BREATH_WEAPON) || !foe;
-
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
     case SPELL_SHAFT_SELF:
@@ -8004,6 +8003,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_INNER_FLAME:
     case SPELL_ANIMATE_DEAD:
     case SPELL_SIMULACRUM:
+    case SPELL_CHANT_FIRE_STORM:
 #endif
     case SPELL_NO_SPELL:
         return true;

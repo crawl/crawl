@@ -3607,6 +3607,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_CHANT_FIRE_STORM, "Chant Fire Storm",
     SPTYP_CONJURATION | SPTYP_FIRE,
@@ -3617,11 +3618,12 @@ static const struct spell_desc spelldata[] =
     5, 0,
     nullptr,
 },
+#endif
 
 {
-    SPELL_CHANT_WORD_OF_ENTROPY, "Chant Word of Entropy",
+    SPELL_ENTROPIC_WEAVE, "Entropic Weave",
     SPTYP_HEXES,
-    SPFLAG_UTILITY,
+    SPFLAG_UTILITY | SPFLAG_MR_CHECK,
     5,
     200,
     -1, -1,

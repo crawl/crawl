@@ -883,6 +883,14 @@ orb spider charge
 @The_monster@ pulsates with a strange energy.
 
 @The_monster@ begins to weave its threads into a brightly glowing ball.
+%%%%
+salamander stormcaller charge
+
+@The_monster@ gathers magical energy.
+
+@The_monster@ heats up noticeably.
+
+@The_monster@ prepares to call down a storm.
 #########################################
 # Speech strings by monster symbol
 #########################################
