@@ -827,8 +827,7 @@ HEADER_END
         {
             $part = "CLOAK";
         }
-        elsif ($artefact->{sub_type} =~ /_CAP/
-               || $artefact->{sub_type} =~ /_HAT/)
+        elsif ($artefact->{sub_type} =~ /_CAP|_HAT|_HELMET/)
         {
             $part = "HELM";
         }
