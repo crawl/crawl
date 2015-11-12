@@ -2090,7 +2090,6 @@ int exper_value(const monster* mon, bool real)
             case SPELL_SUMMON_HORRIBLE_THINGS:
             case SPELL_PLANEREND:
             case SPELL_SUMMON_EMPEROR_SCORPIONS:
-            case SPELL_CHANT_FIRE_STORM:
                 diff += 7;
                 break;
 
@@ -3827,8 +3826,7 @@ static const spell_type smitey_spells[] = {
     SPELL_CHAOTIC_MIRROR,
     SPELL_OZOCUBUS_REFRIGERATION,
     SPELL_MASS_CONFUSION,
-    SPELL_CHANT_FIRE_STORM,
-    SPELL_CHANT_WORD_OF_ENTROPY,
+    SPELL_ENTROPIC_WEAVE,
 };
 
 /**

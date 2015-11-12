@@ -2078,13 +2078,13 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_CONJURE_FLAME, 30, MON_SPELL_WIZARD },
        { SPELL_STICKY_FLAME_RANGE, 45, MON_SPELL_WIZARD },
-       { SPELL_CHANT_FIRE_STORM, 30, MON_SPELL_WIZARD },
+       { SPELL_FIRE_STORM, 30, MON_SPELL_WIZARD },
       }
     },
 
     {  MST_ENTROPY_WEAVER,
       {
-       { SPELL_CHANT_WORD_OF_ENTROPY, 50, MON_SPELL_WIZARD },
+       { SPELL_ENTROPIC_WEAVE, 50, MON_SPELL_WIZARD },
       }
     },
 

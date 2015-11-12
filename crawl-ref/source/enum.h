@@ -2014,7 +2014,7 @@ enum enchant_type
     ENCH_TOXIC_RADIANCE,
     ENCH_GRASPING_ROOTS_SOURCE, // Not actually entangled, but entangling others
     ENCH_GRASPING_ROOTS,
-    ENCH_IOOD_CHARGED,
+    ENCH_SPELL_CHARGED,
     ENCH_FIRE_VULN,
     ENCH_TORNADO_COOLDOWN,
     ENCH_MERFOLK_AVATAR_SONG,
@@ -2050,8 +2050,10 @@ enum enchant_type
     ENCH_RESISTANCE,
     ENCH_HEXED,
     ENCH_BONE_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     ENCH_CHANT_FIRE_STORM, // chanting the fire storm spell
     ENCH_CHANT_WORD_OF_ENTROPY, // chanting word of entropy
+#endif
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -4522,8 +4524,10 @@ enum spell_type
     SPELL_SINGULARITY,
 #endif
     SPELL_GRAVITAS,
+#if TAG_MAJOR_VERSION == 34
     SPELL_CHANT_FIRE_STORM,
-    SPELL_CHANT_WORD_OF_ENTROPY,
+#endif
+    SPELL_ENTROPIC_WEAVE,
     NUM_SPELLS
 };
 

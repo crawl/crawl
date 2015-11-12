@@ -209,10 +209,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_HEXED;
     case ENCH_BONE_ARMOUR:
         return MB_BONE_ARMOUR;
-    case ENCH_CHANT_FIRE_STORM:
-        return MB_CHANT_FIRE_STORM;
-    case ENCH_CHANT_WORD_OF_ENTROPY:
-        return MB_CHANT_WORD_OF_ENTROPY;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1603,10 +1599,6 @@ vector<string> monster_info::attributes() const
         v.emplace_back("control wrested from you");
     if (is(MB_BONE_ARMOUR))
         v.emplace_back("corpse armoured");
-    if (is(MB_CHANT_FIRE_STORM))
-        v.emplace_back("chanting fire storm");
-    if (is(MB_CHANT_WORD_OF_ENTROPY))
-        v.emplace_back("chanting word of entropy");
     return v;
 }
 
