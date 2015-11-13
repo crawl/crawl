@@ -2094,4 +2094,10 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_DEATHCAP,
+      {
+       { SPELL_DRAIN_LIFE, 30, MON_SPELL_MAGICAL },
+      }
+    },
+
 };
