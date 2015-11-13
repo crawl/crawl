@@ -1857,14 +1857,10 @@ bool melee_attack::player_monattk_hit_effects()
 
     // These effects apply only to monsters that are still alive:
 
-    // Returns true if a head was cut off *and* the wound was cauterized,
-    // in which case the cauterization was the ego effect, so don't burn
-    // the hydra some more.
-    //
-    // Also returns true if the hydra's last head was cut off, in which
-    // case nothing more should be done to the hydra.
+    // Returns true if the hydra was killed by the decapitation, in which case
+    // nothing more should be done to the hydra.
     if (consider_decapitation(damage_done))
-        return defender->alive();
+        return false;
 
     // Mutually exclusive with (overrides) brand damage!
     special_damage = 0;
@@ -1932,9 +1928,7 @@ void melee_attack::handle_noise(const coord_def & pos)
  * @param dam           The damage done in the attack that may or may not chop
   *                     off a head.
  * @param damage_type   The type of damage done in the attack.
- * @return              Whether a head was chopped off & cauterized, or whether
- *                      the defender is now entirely headless.
- *                      (relevant for considering whether to do fire damage.)
+ * @return              Whether the defender was killed by the decapitation.
  */
 bool melee_attack::consider_decapitation(int dam, int damage_type)
 {
@@ -1966,7 +1960,7 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     {
         if (defender_visible)
             mpr("The flame cauterises the wound!");
-        return true;
+        return false;
     }
 
     int heads = defender->heads();
@@ -2615,14 +2609,13 @@ bool melee_attack::mons_attack_effects()
         return false;
     }
 
-    // consider_decapitation() returns true if the wound was cauterized or the
-    // last head was removed. In the former case, we shouldn't apply
-    // the brand damage (so we return here). If the monster was killed
-    // by the decapitation, we should stop the rest of the attack, too.
+    // consider_decapitation() returns true if the defender was killed
+    // by the decapitation, in which case we should stop the rest of the
+    // attack, too.
     if (consider_decapitation(damage_done,
                               attacker->damage_type(attack_number)))
     {
-        return defender->alive();
+        return false;
     }
 
     if (attacker != defender && attk_flavour == AF_TRAMPLE)
