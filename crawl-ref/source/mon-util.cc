@@ -3611,26 +3611,11 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     }
 }
 
-// Returns true if the monster has an ability that only needs LOS to
-// affect the target.
+// Returns true if the monster has an ability that can affect the target
+// anywhere in LOS_DEFAULT; i.e., even through glass.
 bool mons_has_los_ability(monster_type mon_type)
 {
-    // These eyes only need LOS, as well.  (The other eyes use spells.)
-    if (mon_type == MONS_GIANT_EYEBALL
-        || mon_type == MONS_EYE_OF_DRAINING
-        || mon_type == MONS_GOLDEN_EYE
-        || mon_type == MONS_MOTH_OF_WRATH
-        || mon_type == MONS_GHOST_MOTH
-        || mon_type == MONS_STARCURSED_MASS)
-    {
-        return true;
-    }
-
-    // Beholding just needs LOS.
-    if (mons_is_siren_beholder(mon_type))
-        return true;
-
-    return false;
+    return mons_is_siren_beholder(mon_type);
 }
 
 bool mons_has_ranged_spell(const monster* mon, bool attack_only,
