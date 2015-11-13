@@ -656,9 +656,8 @@ Transforms the caster into a many-headed hydra for a brief duration. Its many
 heads strike in all directions. Edible foes slain by the gnashing teeth are
 instantly devoured, reinvigorating the caster in their reptilian rampage.
 
-The caster will sprout new heads when decapitated, unless the wound is
-cauterized by flame. If all of the caster's heads are lopped off, the form will
-end.
+With increasing power, the form will initially have a greater number of heads.
+If all of the caster's heads are lopped off, the form will end.
 %%%%
 Ice Form spell
 

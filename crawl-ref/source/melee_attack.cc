@@ -1944,8 +1944,8 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     if (!defender->alive())
         return true;
 
-    // if your last head got chopped off, don't 'cauterize the wound'.
-    if (defender->is_player() && you.form != TRAN_HYDRA)
+    // Player hydras can't grow more heads.
+    if (defender->is_player())
         return false;
 
     // Only living hydras get to regenerate heads.
@@ -1967,17 +1967,9 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     if (heads >= limit - 1)
         return false; // don't overshoot the head limit!
 
-    if (defender->is_monster())
-    {
-        simple_monster_message(defender->as_monster(), " grows two more!");
-        defender->as_monster()->num_heads += 2;
-        defender->heal(8 + random2(8), true);
-    }
-    else
-    {
-        mpr("You grow two more!");
-        set_hydra_form_heads(heads + 2);
-    }
+    simple_monster_message(defender->as_monster(), " grows two more!");
+    defender->as_monster()->num_heads += 2;
+    defender->heal(8 + random2(8), true);
 
     return false;
 }
