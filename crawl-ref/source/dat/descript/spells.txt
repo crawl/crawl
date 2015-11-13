@@ -657,7 +657,8 @@ heads strike in all directions. Edible foes slain by the gnashing teeth are
 instantly devoured, reinvigorating the caster in their reptilian rampage.
 
 With increasing power, the form will initially have a greater number of heads.
-If all of the caster's heads are lopped off, the form will end.
+If all of the caster's heads are lopped off, the form will end, and the only
+way to regrow lost heads while the form lasts is to renew the transformation.
 %%%%
 Ice Form spell
 
