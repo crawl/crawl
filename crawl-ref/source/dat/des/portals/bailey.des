@@ -404,9 +404,8 @@ KITEM:  B = unobtainable good_item broad axe w:5 / unobtainable broad axe /\
             unobtainable war axe / unobtainable good_item war axe w:5 /\
             unobtainable good_item executioner's axe w:1
 #
-# Traps are alarm on the entrance and alarm/net near the loot. Yes, I want
-# everyone to wake up.
-KFEAT: ~ = known alarm trap / floor
+# Yes, I want everyone to wake up.
+KFEAT: ~ : known alarm trap / floor
 #
 # There is only one way up. You have to pass near the axe-throwing kobolds
 # twice. This is intended. Teleportation traps ensure you won't get
@@ -419,9 +418,9 @@ MAP
   XXXXXXXXX
   XXXXBXXXX
   XXXXYXXXX
-  XXX~A~XXX
+  XXX.A.XXX
   XBZ~~~ZBX
-  XXX~<~XXX
+  XXX.<.XXX
 cccccc+cccccc
 ct1..w.w..1sc
 c+cccw.wccc+c
