@@ -624,8 +624,7 @@ bool fill_status_info(int status, status_info* inf)
     {
         if (player_has_orb())
         {
-            inf->light_colour = WHITE;
-
+            inf->light_colour = MAGENTA;
             inf->light_text = "Orb";
         }
 
