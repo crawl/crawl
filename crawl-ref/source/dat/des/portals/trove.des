@@ -118,8 +118,7 @@ function trove.get_trove_item(e, value, base_item)
     end
   end
 
-  local pots = {
-       {base="potion", type="cure mutation", quant=2} }
+  local pots = { }
 
   local heal_pots = {
        {base="potion", type="curing", quant=12+d(4)+d(4)},
@@ -134,6 +133,10 @@ function trove.get_trove_item(e, value, base_item)
     if you.race() ~= "Formicid" then
       table.insert(pots, {base="potion", type="haste", quant=3+d(3)+d(2)})
     end
+    if you.race() ~= "Ghoul" then
+      table.insert(pots, {base="potion", type="cure mutation", quant=2})
+    end
+
     for _, toll in ipairs(pots) do
       table.insert(prices, toll)
     end
