@@ -620,6 +620,18 @@ bool fill_status_info(int status, status_info* inf)
         break;
     }
 
+    case STATUS_ORB:
+    {
+        if (player_has_orb())
+        {
+            inf->light_colour = WHITE;
+
+            inf->light_text = "Orb";
+        }
+
+        break;
+    }
+
     default:
         if (!found)
         {

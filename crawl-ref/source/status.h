@@ -47,7 +47,8 @@ enum status_type
     STATUS_BRIBE,
     STATUS_CLOUD,
     STATUS_BONE_ARMOUR,
-    STATUS_LAST_STATUS = STATUS_BONE_ARMOUR
+    STATUS_ORB,
+    STATUS_LAST_STATUS = STATUS_ORB
 };
 
 struct status_info
