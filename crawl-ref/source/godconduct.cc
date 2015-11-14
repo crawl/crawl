@@ -268,9 +268,7 @@ static const dislike_response ELY_FRIEND_DEATH_RESPONSE = {
         // For everyone but Fedhas, plants are items not creatures,
         // and animated items are, well, items as well.
         return victim && !mons_is_object(victim->type)
-                      && victim->holiness() != MH_PLANT
-        // Converted allies (marked as TSOites) can be martyrs.
-                      && victim->god == GOD_SHINING_ONE;
+                      && victim->holiness() != MH_PLANT;
     }
 };
 
