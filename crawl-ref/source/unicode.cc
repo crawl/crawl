@@ -571,7 +571,6 @@ string chop_tagged_string(const char *s, int width, bool spaces)
 
         if (in_tag)
         {
-            tag_first = false;
             if (c == '>')
                 in_tag = false;
 
@@ -580,6 +579,7 @@ string chop_tagged_string(const char *s, int width, bool spaces)
                 in_tag = false;
             else
                 visible = false;
+            tag_first = false;
         }
         else if (c == '<')
         {
