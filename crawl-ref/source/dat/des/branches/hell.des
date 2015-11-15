@@ -43,7 +43,7 @@ end
 function hell_lava_spawns(e)
     e.kmons("~ = patrolling molten gargoyle w:5 / patrolling smoke demon w:5 / \
                  patrolling fire elemental w:60 / \
-                 patrolling salamander firebrand w:30")
+                 patrolling salamander stormcaller w:30")
     e.kfeat("~l = l")
     e.kmask("l = no_monster_gen")
     e.nsubst("l = 6:~ / 4 = ~l / *:l")

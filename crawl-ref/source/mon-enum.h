@@ -119,7 +119,9 @@ enum attack_flavour
     AF_WEAKNESS_POISON,
     AF_SHADOWSTAB,
     AF_DROWN,
+#if TAG_MAJOR_VERSION == 34
     AF_FIREBRAND,
+#endif
     AF_CORRODE,
     AF_SCARAB,
     AF_KITE,  // Hops backwards if attacking with a polearm.

@@ -5572,7 +5572,7 @@ KFEAT:   ^ = known zot trap
 : if you.in_branch("Geh") then
 KMONS:   9 = sun demon / smoke demon / hell knight / \
              red devil w:5 / efreet w:5
-KMONS:   8 = hellion / balrug / salamander firebrand
+KMONS:   8 = hellion / balrug / salamander stormcaller
 KMONS:   7 = brimstone fiend
 MARKER:  F = lua:fog_machine {cloud_type = "flame", \
              pow_min = 8, pow_max = 10, delay = 100, \
@@ -6088,7 +6088,7 @@ KMONS:  8 = w:5 shadow fiend / w:5 ice fiend / w:5 brimstone fiend / hell sentin
             iron dragon / tormentor / iron golem / place:Dis
 : elseif you.in_branch("Geh") then
 KMONS:  8 = brimstone fiend / w:5 hell sentinel / hellion / balrug / \
-            fire giant / salamander firebrand / place:Geh
+            fire giant / salamander stormcaller / place:Geh
 : elseif you.in_branch("Tar") then
 KMONS:  8 = w:15 shadow fiend / reaper / w:5 soul eater / shadow dragon / lich / \
             ancient lich / w:5 revenant / w:15 place:Tar

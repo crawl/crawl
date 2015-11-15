@@ -2738,7 +2738,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = random_range(2, 3);
         break;
 
-    case MONS_SALAMANDER_FIREBRAND:
+    case MONS_SALAMANDER_STORMCALLER:
         if (coinflip())
         {
             band = BAND_SALAMANDER_ELITES;
