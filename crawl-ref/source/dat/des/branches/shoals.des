@@ -1087,17 +1087,20 @@ ENDMAP
 ##############################################################################
 
 NAME: shoals_end_simple
+ORIENT: float
 PLACE: Shoals:$
 : shoals_finale_setup(_G, 'simple')
 
 # HangedMan's alternative Shoals ending
 NAME: shoals_end_hangedman
+ORIENT: float
 PLACE: Shoals:$
 WEIGHT: 8
 : shoals_finale_setup(_G, 'hangedman', crawl.random_range(5,6))
 
 # Grunt's icy Shoals ending
 NAME: shoals_end_grunt_ice
+ORIENT: float
 PLACE: Shoals:$
 WEIGHT: 8
 : shoals_finale_setup(_G, 'grunt_ice', crawl.random_range(5,6))
@@ -1105,6 +1108,7 @@ WEIGHT: 8
 # Grunt's garden Shoals ending
 # Weighted lower on account of being more open and potentially nasty.
 NAME: shoals_end_grunt_garden
+ORIENT: float
 PLACE: Shoals:$
 WEIGHT: 4
 : shoals_finale_setup(_G, 'grunt_garden', crawl.random_range(5,6))
