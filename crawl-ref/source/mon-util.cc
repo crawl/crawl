@@ -3615,7 +3615,8 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
 // anywhere in LOS_DEFAULT; i.e., even through glass.
 bool mons_has_los_ability(monster_type mon_type)
 {
-    return mons_is_siren_beholder(mon_type);
+    return mons_is_siren_beholder(mon_type)
+           || mon_type == MONS_STARCURSED_MASS;
 }
 
 bool mons_has_ranged_spell(const monster* mon, bool attack_only,
