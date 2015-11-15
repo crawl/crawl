@@ -785,8 +785,8 @@ static bool _handle_potion(monster& mons)
             set_ident_type(OBJ_POTIONS, ptype, true);
 
         // Remove the oldest blood timer.
-        if (is_blood_potion(potion))
-            remove_oldest_perishable_item(potion);
+        if (is_blood_potion(*potion))
+            remove_oldest_perishable_item(*potion);
 
         // Remove it from inventory.
         if (dec_mitm_item_quantity(potion->index(), 1))
@@ -1033,7 +1033,7 @@ static bool _handle_scroll(monster& mons)
             for (int i = 0; i < count; ++i)
             {
                 create_monster(
-                    mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE(&mons), &mons,
+                    mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE((&mons)), &mons,
                               3, MON_SUMM_SCROLL, mons.pos(), mons.foe,
                               0, GOD_NO_GOD));
             }
@@ -1238,25 +1238,32 @@ static bool _thunderbolt_tracer(monster &caster, int pow, coord_def aim)
 }
 
 // handle_rod
-// -- implemented as a dependent to handle_wand currently
-// (no wand + rod turns this way)
 // notes:
 // shamelessly repurposing handle_wand code
 // not one word about the name of this function!
 static bool _handle_rod(monster &mons, bolt &beem)
 {
-    item_def &rod(*mons.weapon());
-
-    // Make sure the item actually is a rod.
-    ASSERT(rod.base_type == OBJ_RODS);
+    item_def* rod = mons.mslot_item(MSLOT_WEAPON);
+    // FIXME: monsters should be able to use rods
+    //        out of sight of the player [rob]
+    if (!mons_near(&mons)
+        || mons.asleep()
+        || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
+        || mons.has_ench(ENCH_SUBMERGED)
+        || coinflip()
+        || !rod
+        || rod->base_type != OBJ_RODS)
+    {
+        return false;
+    }
 
     // was the player visible when we started?
     bool was_visible = you.can_see(mons);
 
-    spell_type mzap = spell_in_rod(static_cast<rod_type>(rod.sub_type));
+    spell_type mzap = spell_in_rod(static_cast<rod_type>(rod->sub_type));
     int rate        = spell_difficulty(mzap) * ROD_CHARGE_MULT;
 
-    if (rod.plus < rate)
+    if (rod->plus < rate)
         return false;
 
     // XXX: There should be a better way to do this than hardcoding
@@ -1274,7 +1281,7 @@ static bool _handle_rod(monster &mons, bolt &beem)
         if (mons.props.exists("thunderbolt_last")
             && mons.props["thunderbolt_last"].get_int() + 1 == you.num_turns)
         {
-            rate = min(5 * ROD_CHARGE_MULT, (int)rod.plus);
+            rate = min(5 * ROD_CHARGE_MULT, (int)rod->plus);
             mons.props["thunderbolt_mana"].get_int() = rate;
         }
         break;
@@ -1283,7 +1290,7 @@ static bool _handle_rod(monster &mons, bolt &beem)
     case SPELL_WEAVE_SHADOWS:
         _rod_fired_pre(mons);
         mons_cast(&mons, beem, mzap, MON_SPELL_NO_FLAGS, false);
-        _rod_fired_post(mons, rod, beem, rate, was_visible);
+        _rod_fired_post(mons, *rod, beem, rate, was_visible);
         return true;
 
        break;
@@ -1310,7 +1317,7 @@ static bool _handle_rod(monster &mons, bolt &beem)
 
     beem         = _generate_item_beem(beem, theBeam, mons);
     beem.aux_source =
-        rod.name(DESC_QUALNAME, false, true, false, false);
+        rod->name(DESC_QUALNAME, false, true, false, false);
 
     if (mons.confused())
     {
@@ -1345,7 +1352,7 @@ static bool _handle_rod(monster &mons, bolt &beem)
             beem.is_tracer = false;
             beem.fire();
         }
-        return _rod_fired_post(mons, rod, beem, rate, was_visible);
+        return _rod_fired_post(mons, *rod, beem, rate, was_visible);
     }
 
     return false;
@@ -1361,28 +1368,16 @@ static bool _handle_rod(monster &mons, bolt &beem)
 //---------------------------------------------------------------
 static bool _handle_wand(monster& mons, bolt &beem)
 {
+    item_def *wand = mons.mslot_item(MSLOT_WAND);
     // Yes, there is a logic to this ordering {dlb}:
-    // FIXME: monsters should be able to use wands or rods
+    // FIXME: monsters should be able to use wands
     //        out of sight of the player [rob]
     if (!mons_near(&mons)
         || mons.asleep()
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
-        || coinflip())
-    {
-        return false;
-    }
-
-    if (mons.inv[MSLOT_WEAPON] != NON_ITEM
-        && mitm[mons.inv[MSLOT_WEAPON]].base_type == OBJ_RODS)
-    {
-        return _handle_rod(mons, beem);
-    }
-
-    item_def *wand = mons.mslot_item(MSLOT_WAND);
-
-    // Make sure the item actually is a wand.
-    if (!wand
+        || coinflip()
+        || !wand
         || wand->base_type != OBJ_WANDS)
     {
         return false;
@@ -2241,6 +2236,12 @@ void handle_monster_move(monster* mons)
             if (_handle_evoke_equipment(*mons))
             {
                 DEBUG_ENERGY_USE("_handle_evoke_equipment()");
+                return;
+            }
+
+            if (_handle_rod(*mons, beem))
+            {
+                DEBUG_ENERGY_USE("_handle_rod()");
                 return;
             }
 
