@@ -10,16 +10,9 @@
 #include <cstdarg>
 #include <cstring>
 
-// ==========================================================================
-//    class FixedVector
-// ==========================================================================
-
 template <class TYPE, int SIZE> class FixedVector
 {
 
-//-----------------------------------
-//    Types
-//
 public:
     typedef TYPE            value_type;
     typedef TYPE&           reference;
@@ -33,9 +26,6 @@ public:
     typedef TYPE*           iterator;
     typedef const TYPE*     const_iterator;
 
-//-----------------------------------
-//    Initialization/Destruction
-//
 public:
     ~FixedVector()                           {}
 
@@ -51,9 +41,6 @@ public:
     // instead of "int a[3] = {0, 1, 2}" you'd use "FixedVector<int, 3>
     // a(0, 1, 2)". Note that there must be SIZE arguments.
 
-//-----------------------------------
-//    API
-//
 public:
     // ----- Size -----
     bool empty() const { return SIZE == 0; }
@@ -97,16 +84,10 @@ public:
     const_iterator end() const { return begin() + size(); }
     void init(const TYPE& def);
 
-//-----------------------------------
-//    Member Data
-//
 protected:
     TYPE    mData[SIZE];
 };
 
-// ==========================================================================
-//    Outlined Methods
-// ==========================================================================
 template <class TYPE, int SIZE>
 FixedVector<TYPE, SIZE>::FixedVector(TYPE value0, TYPE value1, ...)
 {

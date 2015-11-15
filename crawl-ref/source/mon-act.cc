@@ -511,13 +511,6 @@ bool mons_can_move_towards_target(const monster* mon)
     return false;
 }
 
-//---------------------------------------------------------------
-//
-// handle_movement
-//
-// Move the monster closer to its target square.
-//
-//---------------------------------------------------------------
 static void _handle_movement(monster* mons)
 {
     _maybe_set_patrol_route(mons);
@@ -747,14 +740,6 @@ static void _handle_movement(monster* mons)
         mmov.reset();
 }
 
-//---------------------------------------------------------------
-//
-// _handle_potion
-//
-// Give the monster a chance to quaff a potion. Returns true if
-// the monster imbibed.
-//
-//---------------------------------------------------------------
 static bool _handle_potion(monster& mons)
 {
     item_def* potion = mons.mslot_item(MSLOT_POTION);
@@ -965,14 +950,6 @@ static bool _handle_reaching(monster* mons)
     return ret;
 }
 
-//---------------------------------------------------------------
-//
-// handle_scroll
-//
-// Give the monster a chance to read a scroll. Returns true if
-// the monster read something.
-//
-//---------------------------------------------------------------
 static bool _handle_scroll(monster& mons)
 {
     item_def* scroll = mons.mslot_item(MSLOT_SCROLL);
@@ -1358,14 +1335,6 @@ static bool _handle_rod(monster &mons, bolt &beem)
     return false;
 }
 
-//---------------------------------------------------------------
-//
-// handle_wand
-//
-// Give the monster a chance to zap a wand or rod. Returns true
-// if the monster zapped.
-//
-//---------------------------------------------------------------
 static bool _handle_wand(monster& mons, bolt &beem)
 {
     item_def *wand = mons.mslot_item(MSLOT_WAND);
@@ -1499,14 +1468,6 @@ static bool _handle_wand(monster& mons, bolt &beem)
     return false;
 }
 
-//---------------------------------------------------------------
-//
-// handle_throw
-//
-// Give the monster a chance to throw something. Returns true if
-// the monster hurled.
-//
-//---------------------------------------------------------------
 bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
 {
     // Yes, there is a logic to this ordering {dlb}:
@@ -2769,13 +2730,11 @@ static void _update_monster_attitude(monster *mon)
     }
 }
 
-//---------------------------------------------------------------
-//
-// handle_monsters
-//
-// This is the routine that controls monster AI.
-//
-//---------------------------------------------------------------
+/**
+ * Get all monsters to make an action, if they can/want to.
+ *
+ * @param with_noise whether to process noises after the loop.
+ */
 void handle_monsters(bool with_noise)
 {
     for (monster_iterator mi; mi; ++mi)
@@ -3001,13 +2960,6 @@ static bool _monster_eat_item(monster* mons, bool nearby)
 }
 
 
-//---------------------------------------------------------------
-//
-// handle_pickup
-//
-// Returns false if monster doesn't spend any time picking something up.
-//
-//---------------------------------------------------------------
 static bool _handle_pickup(monster* mons)
 {
     if (mons->asleep() || mons->submerged())

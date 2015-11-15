@@ -1049,11 +1049,6 @@ static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
     mons_cast(mons, pbolt, spell_cast, MON_SPELL_NATURAL);
 }
 
-//---------------------------------------------------------------
-//
-// mon_special_ability
-//
-//---------------------------------------------------------------
 bool mon_special_ability(monster* mons, bolt & beem)
 {
     bool used = false;

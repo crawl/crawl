@@ -760,9 +760,6 @@ void do_crash_dump()
 
 // Assertions and such
 
-//---------------------------------------------------------------
-// BreakStrToDebugger
-//---------------------------------------------------------------
 NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
 {
 // FIXME: this needs a way to get the SDL_window in windowmanager-sdl.cc
@@ -800,11 +797,6 @@ NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
 }
 
 #ifdef ASSERTS
-//---------------------------------------------------------------
-//
-// AssertFailed
-//
-//---------------------------------------------------------------
 NORETURN void AssertFailed(const char *expr, const char *file, int line,
                            const char *text, ...)
 {

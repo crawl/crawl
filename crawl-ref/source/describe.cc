@@ -74,16 +74,6 @@ int count_desc_lines(const string &_desc, const int width)
 
 static void _adjust_item(item_def &item);
 
-//---------------------------------------------------------------
-//
-// print_description
-//
-// Takes a descrip string filled up with stuff from other functions,
-// and displays it with minor formatting to avoid cut-offs in mid
-// word and such.
-//
-//---------------------------------------------------------------
-
 void print_description(const string &body)
 {
     describe_info inf;
@@ -888,11 +878,6 @@ static string _handedness_string(const item_def &item)
     return description;
 }
 
-//---------------------------------------------------------------
-//
-// describe_weapon
-//
-//---------------------------------------------------------------
 static string _describe_weapon(const item_def &item, bool verbose)
 {
     string description;
@@ -1161,11 +1146,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
     return description;
 }
 
-//---------------------------------------------------------------
-//
-// describe_ammo
-//
-//---------------------------------------------------------------
 static string _describe_ammo(const item_def &item)
 {
     string description;
@@ -1293,11 +1273,6 @@ static string _describe_ammo(const item_def &item)
     return description;
 }
 
-//---------------------------------------------------------------
-//
-// describe_armour
-//
-//---------------------------------------------------------------
 static string _describe_armour(const item_def &item, bool verbose)
 {
     string description;
@@ -1465,11 +1440,6 @@ static string _describe_armour(const item_def &item, bool verbose)
     return description;
 }
 
-//---------------------------------------------------------------
-//
-// describe_jewellery
-//
-//---------------------------------------------------------------
 static string _describe_jewellery(const item_def &item, bool verbose)
 {
     string description;
@@ -1547,11 +1517,6 @@ static bool _compare_card_names(card_type a, card_type b)
     return string(card_name(a)) < string(card_name(b));
 }
 
-//---------------------------------------------------------------
-//
-// describe_misc_item
-//
-//---------------------------------------------------------------
 static bool _check_buggy_deck(const item_def &deck, string &desc)
 {
     if (!is_deck(deck))
@@ -1646,10 +1611,6 @@ static string _describe_deck(const item_def &item)
 
     return description;
 }
-
-// ========================================================================
-//      Public Functions
-// ========================================================================
 
 bool is_dumpable_artefact(const item_def &item)
 {
@@ -2266,11 +2227,14 @@ static command_type _get_action(int key, vector<command_type> actions)
     return CMD_NO_CMD;
 }
 
-//---------------------------------------------------------------
-//
-// _actions_prompt
-//
-// print a list of actions to be performed on the item
+/**
+ * Print a list of actions to be performed on the item
+ *
+ * @param item the item to have actions done on
+ * @param allow_inscribe whether to include inscribing in the list
+ * @param do_prompt whether to actually print the prompt
+ * @return whether to stay in the inventory menu afterwards
+ */
 static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
 {
 #ifdef USE_TILE_LOCAL
@@ -2506,14 +2470,15 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
     return true;
 }
 
-//---------------------------------------------------------------
-//
-// describe_item
-//
-// Describes all items in the game.
-// Returns false if we should break out of the inventory loop.
-//---------------------------------------------------------------
-bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
+/**
+ *  Describe any item in the game.
+ *
+ *  @param item the item to be described.
+ *  @param allow_inscribe whether to include inscribing in the menu of actions.
+ *         XXX: why wouldn't you want to allow inscribing?
+ *  @return whether to stay in the inventory menu afterwards.
+ */
+bool describe_item(item_def &item, bool allow_inscribe)
 {
     if (!item.defined())
         return true;

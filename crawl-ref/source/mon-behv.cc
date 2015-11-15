@@ -232,13 +232,9 @@ static bool _monster_guesses_invis_player(const monster &mon)
     return false;
 }
 
-//---------------------------------------------------------------
-//
-// handle_behaviour
-//
-// 1. Evaluates current AI state
-// 2. Sets monster target x,y based on current foe
-//---------------------------------------------------------------
+/**
+ * Evaluates the monster's AI state, and sets its target based on its foe.
+ */
 void handle_behaviour(monster* mon)
 {
     // Test spawners should always be BEH_SEEK against a foe, since
@@ -998,14 +994,16 @@ void set_nearest_monster_foe(monster* mon, bool near_player)
     }
 }
 
-//-----------------------------------------------------------------
-//
-// behaviour_event
-//
-// 1. Change any of: monster state, foe, and attitude
-// 2. Call handle_behaviour to re-evaluate AI state and target x, y
-//
-//-----------------------------------------------------------------
+/**
+ * Make a monster react to an event, possibly re-evaluating its attitude,
+ * foe, AI state, or target.
+ *
+ * @param mon the monster getting updated
+ * @param event what it's reacting to
+ * @param src who did it
+ * @param src_pos and where
+ * @param allow_shout whether the monster can shout in reaction.
+ */
 void behaviour_event(monster* mon, mon_event_type event, const actor *src,
                      coord_def src_pos, bool allow_shout)
 {

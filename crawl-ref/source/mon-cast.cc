@@ -3269,14 +3269,15 @@ static spell_type _pick_spell_from_list(const monster_spells &spells,
     return spell_cast;
 }
 
-//---------------------------------------------------------------
-//
-// handle_mon_spell
-//
-// Give the monster a chance to cast a spell. Returns true if
-// a spell was cast.
-//
-//---------------------------------------------------------------
+/**
+ * Give a monster a chance to cast a spell.
+ *
+ * @param mons the monster that might cast.
+ * @param beem[in,out] Contains some basic information like who the monster
+ *                     is attacking; filled out with more information about
+ *                     the attack.
+ * @param return whether a spell was cast.
+ */
 bool handle_mon_spell(monster* mons, bolt &beem)
 {
     bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}

@@ -265,13 +265,14 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
     }
 }
 
-//---------------------------------------------------------------
-//
-// prompt_for_quantity
-//
-// Returns -1 if ; or enter is pressed (pickup all).
-// Else, returns quantity.
-//---------------------------------------------------------------
+/**
+ * Prompt the user for a quantity of things.
+ *
+ * @param prompt the message to be used before the prompt.
+ * @return -1 if <enter> or ';' are pressed (meaning all);
+ *         0 if the user escaped;
+ *         the number chosen otherwise.
+ */
 int prompt_for_quantity(const char *prompt)
 {
     msgwin_prompt(prompt);
@@ -286,14 +287,14 @@ int prompt_for_quantity(const char *prompt)
     return prompt_for_int("", false);
 }
 
-//---------------------------------------------------------------
-//
-// prompt_for_int
-//
-// If nonneg, then it returns a non-negative number or -1 on fail
-// If !nonneg, then it returns an integer, and 0 on fail
-//
-//---------------------------------------------------------------
+/**
+ * Returns an integer, with a failure state.
+ *
+ * @param prompt the message to be used before the prompt.
+ * @param nonneg if true, the failure sentinel is -1;
+ *               if false, the sentinel is 0.
+ * @return the chosen number, or the chosen sentinel value.
+ */
 int prompt_for_int(const char *prompt, bool nonneg)
 {
     char specs[80];
