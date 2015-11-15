@@ -4686,7 +4686,7 @@ bool slow_player(int turns)
     if (turns <= 0)
         return false;
 
-    if (stasis_blocks_effect(true, "%s rumbles.", 20, "%s rumbles."))
+    if (stasis_blocks_effect(true, "%s rumbles."))
         return false;
 
     // Doubling these values because moving while slowed takes twice the
@@ -4762,11 +4762,8 @@ bool haste_player(int turns, bool rageext)
     if (turns <= 0)
         return false;
 
-    if (stasis_blocks_effect(true, "%s emits a piercing whistle.", 20,
-                             "%s makes your neck tingle."))
-    {
+    if (stasis_blocks_effect(true, "%s makes your neck tingle.."))
         return false;
-    }
 
     // Cutting the nominal turns in half since hasted actions take half the
     // usual delay.
