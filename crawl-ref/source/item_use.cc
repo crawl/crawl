@@ -2882,8 +2882,7 @@ void read_scroll(int item_slot)
 }
 
 bool stasis_blocks_effect(bool calc_unid,
-                          const char *msg, int noise,
-                          const char *silenced_msg,
+                          const char *msg,
                           const char *formicid_msg)
 {
     if (you.stasis(calc_unid))
@@ -2906,17 +2905,7 @@ bool stasis_blocks_effect(bool calc_unid,
             {
                 const string name(amulet? amulet->name(DESC_YOUR) : "Something");
                 const string message = make_stringf(msg, name.c_str());
-
-                if (noise)
-                {
-                    if (!noisy(noise, you.pos(), message.c_str())
-                        && silenced_msg)
-                    {
-                        mprf(silenced_msg, name.c_str());
-                    }
-                }
-                else
-                    mpr(message);
+                mpr(message);
             }
         }
         return true;

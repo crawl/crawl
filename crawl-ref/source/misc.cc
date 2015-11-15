@@ -702,11 +702,8 @@ void swap_with_monster(monster* mon_to_swap)
     ASSERT(mon.alive());
     const coord_def newpos = mon.pos();
 
-    if (stasis_blocks_effect(true, "%s emits a piercing whistle.",
-                             20, "%s makes your neck tingle."))
-    {
+    if (stasis_blocks_effect(true, "%s makes your neck tingle."))
         return;
-    }
 
     // Be nice: no swapping into uninhabitable environments.
     if (!you.is_habitable(newpos) || !mon.is_habitable(you.pos()))
