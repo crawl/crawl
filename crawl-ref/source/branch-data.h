@@ -142,7 +142,7 @@ const Branch branches[NUM_BRANCHES] =
       'H', {}, 0 },
 
     { BRANCH_DIS, BRANCH_VESTIBULE, 1, 1, 7, 28,
-      BFLAG_ISLANDED | BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END,
+      BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END,
       DNGN_ENTER_DIS, DNGN_ENTER_HELL,
       "Dis", "the Iron City of Dis", "Dis",
       nullptr,
@@ -150,7 +150,7 @@ const Branch branches[NUM_BRANCHES] =
       'I', { RUNE_DIS }, 0 },
 
     { BRANCH_GEHENNA, BRANCH_VESTIBULE, 1, 1, 7, 28,
-      BFLAG_ISLANDED | BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END,
+      BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END,
       DNGN_ENTER_GEHENNA, DNGN_ENTER_HELL,
       "Gehenna", "Gehenna", "Geh",
       nullptr,
@@ -158,7 +158,7 @@ const Branch branches[NUM_BRANCHES] =
       'G', { RUNE_GEHENNA }, 0 },
 
     { BRANCH_COCYTUS, BRANCH_VESTIBULE, 1, 1, 7, 28,
-      BFLAG_ISLANDED | BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END,
+      BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END,
       DNGN_ENTER_COCYTUS, DNGN_ENTER_HELL,
       "Cocytus", "Cocytus", "Coc",
       nullptr,
@@ -166,7 +166,7 @@ const Branch branches[NUM_BRANCHES] =
       'X', { RUNE_COCYTUS }, 0 },
 
     { BRANCH_TARTARUS, BRANCH_VESTIBULE, 1, 1, 7, 28,
-      BFLAG_ISLANDED | BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END,
+      BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END,
       DNGN_ENTER_TARTARUS, DNGN_ENTER_HELL,
       "Tartarus", "Tartarus", "Tar",
       nullptr,
