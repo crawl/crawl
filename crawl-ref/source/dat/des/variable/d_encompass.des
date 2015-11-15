@@ -145,7 +145,7 @@ KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 :           "deep elf high priest", "spriggan defender", },
 :     [you.absdepth() - 18] =
 :         { "death knight", "ancient champion",
-:           "merfolk aquamancer", "salamander firebrand",
+:           "merfolk aquamancer", "salamander stormcaller",
 :           "Margery", "Saint Roka", "Sojobo", },
 : }
 : local kmonsters = {}

@@ -755,7 +755,6 @@ greater_naga MONS_GREATER_NAGA
 guardian_serpent MONS_GUARDIAN_SERPENT
 salamander MONS_SALAMANDER
 salamander_mystic MONS_SALAMANDER_MYSTIC
-salamander_firebrand MONS_SALAMANDER_FIREBRAND
 salamander_stormcaller MONS_SALAMANDER_STORMCALLER
 
 ## Ogres ('O')

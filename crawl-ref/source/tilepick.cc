@@ -1804,8 +1804,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_SALAMANDER;
     case MONS_SALAMANDER_MYSTIC:
         return TILEP_MONS_SALAMANDER_MYSTIC;
-    case MONS_SALAMANDER_FIREBRAND:
-        return TILEP_MONS_SALAMANDER_FIREBRAND;
     case MONS_SALAMANDER_STORMCALLER:
         return TILEP_MONS_SALAMANDER_STORMCALLER;
 

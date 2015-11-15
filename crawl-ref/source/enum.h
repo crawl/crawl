@@ -2960,7 +2960,6 @@ enum monster_type                      // menv[].type
     MONS_LAVA_SNAKE,
     MONS_SALAMANDER,
 #if TAG_MAJOR_VERSION > 34
-    MONS_SALAMANDER_FIREBRAND,
     MONS_SALAMANDER_MYSTIC,
     MONS_SALAMANDER_STORMCALLER,
 #endif
