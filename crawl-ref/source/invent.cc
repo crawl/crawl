@@ -243,7 +243,6 @@ void get_class_hotkeys(const int type, vector<char> &glyphs)
         break;
     case OBJ_BOOKS:
         glyphs.push_back('+');
-        glyphs.push_back(':');
         break;
     case OBJ_SCROLLS:
         glyphs.push_back('?');
