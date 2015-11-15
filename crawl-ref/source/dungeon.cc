@@ -6572,6 +6572,9 @@ void vault_placement::apply_grid()
         // could be overwritten with subsequent walls.
         for (rectangle_iterator ri(pos, pos + size - 1); ri; ++ri)
         {
+            if (map.is_overwritable_layout() && map_masked(*ri, MMT_VAULT))
+                continue;
+
             const coord_def dp = *ri - pos;
 
             const int feat = map.map.glyph(dp);
