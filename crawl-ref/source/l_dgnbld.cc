@@ -146,19 +146,13 @@ static bool _valid_coord(lua_State *ls, map_lines &lines, int x, int y, bool err
     return true;
 }
 
-static void _apply_char_to_grid(map_lines &lines, int x, int y, char fill)
-{
-    if (!(env.level_map_mask(coord_def(x, y)) & MMT_VAULT))
-        lines(x, y) = fill;
-}
-
 // Does what fill_area did, but here, so that it can be used through
 // multiple functions (including make_box).
 static int _fill_area(lua_State *ls, map_lines &lines, int x1, int y1, int x2, int y2, char fill)
 {
     for (int y = y1; y <= y2; ++y)
         for (int x = x1; x <= x2; ++x)
-            _apply_char_to_grid(lines, x, y, fill);
+            lines(x, y) = fill;
 
     return 0;
 }
@@ -166,15 +160,9 @@ static int _fill_area(lua_State *ls, map_lines &lines, int x1, int y1, int x2, i
 static void _border_area(map_lines &lines, int x1, int y1, int x2, int y2, char border)
 {
     for (int x = x1 + 1; x < x2; ++x)
-    {
-        _apply_char_to_grid(lines, x, y1, border);
-        _apply_char_to_grid(lines, x, y2, border);
-    }
+        lines(x, y1) = border, lines(x, y2) = border;
     for (int y = y1; y <= y2; ++y)
-    {
-        _apply_char_to_grid(lines, x1, y, border);
-        _apply_char_to_grid(lines, x2, y, border);
-    }
+        lines(x1, y) = border, lines(x2, y) = border;
 }
 
 // Does what count_passable_neighbors does, but in C++ form.
