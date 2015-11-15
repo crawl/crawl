@@ -1032,48 +1032,6 @@ static bool _handle_scroll(monster& mons)
     return read;
 }
 
-static int _generate_rod_power(monster &mons, int overriding_power = 0)
-{
-    // power is actually 5 + Evocations + 2d(Evocations)
-    // modified by shield and shield skill
-    int shield_num = 1;
-    int shield_den = 1;
-    int shield_base = 1;
-
-    if (mons.inv[MSLOT_SHIELD] != NON_ITEM)
-    {
-        item_def *shield = mons.mslot_item(MSLOT_SHIELD);
-        switch (shield->sub_type)
-        {
-        case ARM_BUCKLER:
-            shield_base += 4;
-            break;
-        case ARM_SHIELD:
-            shield_base += 2;
-            break;
-        case ARM_LARGE_SHIELD:
-            shield_base++;
-            break;
-        default:
-            break;
-        }
-    }
-
-    const int power_base = mons.skill(SK_EVOCATIONS);
-    int power            = 5 + power_base + (2 * random2(power_base));
-
-    if (shield_base > 1)
-    {
-        const int shield_mod = ((power / shield_base) * shield_num) / shield_den;
-        power -= shield_mod;
-    }
-
-    if (overriding_power > 0)
-        power = overriding_power;
-
-    return power;
-}
-
 static bolt& _generate_item_beem(bolt &beem, bolt& from, monster& mons)
 {
     beem.name         = from.name;
@@ -1279,7 +1237,8 @@ static bool _handle_rod(monster &mons, bolt &beem)
     bool zap = false;
 
     // set up the beam
-    const int power = max(_generate_rod_power(mons), 1);
+    const int power = 5 + mons.skill(SK_EVOCATIONS)
+                        + 2 * random2(mons.skill(SK_EVOCATIONS));
 
     dprf("using rod with power %d", power);
 
