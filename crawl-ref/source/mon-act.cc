@@ -757,7 +757,7 @@ static void _handle_movement(monster* mons)
 // the monster imbibed.
 //
 //---------------------------------------------------------------
-static bool _handle_potion(monster* mons, bolt & beem)
+static bool _handle_potion(monster* mons)
 {
     ASSERT(mons); // XXX: change to monster &mons
     if (mons->asleep()
@@ -808,7 +808,7 @@ static bool _handle_potion(monster* mons, bolt & beem)
     return rc;
 }
 
-static bool _handle_evoke_equipment(monster* mons, bolt & beem)
+static bool _handle_evoke_equipment(monster* mons)
 {
     ASSERT(mons); // XXX: change to monster &mons
     // TODO: check non-ring, non-amulet equipment
@@ -2258,7 +2258,7 @@ void handle_monster_move(monster* mons)
 
         if (friendly_or_near)
         {
-            if (_handle_potion(mons, beem))
+            if (_handle_potion(mons))
             {
                 DEBUG_ENERGY_USE("_handle_potion()");
                 return;
@@ -2270,7 +2270,7 @@ void handle_monster_move(monster* mons)
                 return;
             }
 
-            if (_handle_evoke_equipment(mons, beem))
+            if (_handle_evoke_equipment(mons))
             {
                 DEBUG_ENERGY_USE("_handle_evoke_equipment()");
                 return;
