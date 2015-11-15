@@ -457,11 +457,6 @@ void wizard_set_piety()
     wizard_set_piety_to(atoi(buf));
 }
 
-//---------------------------------------------------------------
-//
-// debug_add_skills
-//
-//---------------------------------------------------------------
 #ifdef WIZARD
 void wizard_exercise_skill()
 {

@@ -89,11 +89,6 @@ void wizard_create_spec_object_by_name()
     }
 }
 
-//---------------------------------------------------------------
-//
-// create_spec_object
-//
-//---------------------------------------------------------------
 void wizard_create_spec_object()
 {
     char           specs[80];
@@ -733,11 +728,6 @@ void wizard_list_items()
     }
 }
 
-//---------------------------------------------------------------
-//
-// debug_item_statistics
-//
-//---------------------------------------------------------------
 static void _debug_acquirement_stats(FILE *ostat)
 {
     int p = get_mitm_slot(11);

@@ -112,7 +112,7 @@ struct crawl_environment
     int absdepth0;
     vector<pair<coord_def, int> > sunlight;
 
-    //------------------------------------------------------------------------
+    // Remaining fields not marshalled:
 
     // Volatile level flags, not saved.
     uint32_t level_state;

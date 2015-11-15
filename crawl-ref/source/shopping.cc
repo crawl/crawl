@@ -824,7 +824,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                     item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
                                    | ISFLAG_NOTED_GET);
                 }
-                describe_item(item, false, true);
+                describe_item(item);
                 if (id_stock)
                     item.flags = old_flags;
             }

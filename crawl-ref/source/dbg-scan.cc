@@ -80,11 +80,6 @@ static void _dump_item(const char *name, int num, const item_def &item,
     crawl_state.cancel_cmd_repeat();
 }
 
-//---------------------------------------------------------------
-//
-// debug_item_scan
-//
-//---------------------------------------------------------------
 void debug_item_scan()
 {
     int   i;

@@ -843,27 +843,6 @@ void do_look_around(const coord_def &whence)
     }
 }
 
-//---------------------------------------------------------------
-//
-// direction
-//
-// use restrict == DIR_DIR to allow only a compass direction;
-//              == DIR_TARGET to allow only choosing a square;
-//              == DIR_NONE to allow either.
-//
-// outputs: dist structure:
-//
-//           isValid        a valid target or direction was chosen
-//           isCancel       player hit 'escape'
-//           isTarget       targeting was used
-//           choseRay       player wants a specific ray
-//           ray            ...this one
-//           isEndpoint     player wants the ray to stop on the dime
-//           tx,ty          target x,y
-//           dx,dy          direction delta for DIR_DIR
-//
-//--------------------------------------------------------------
-
 #ifndef USE_TILE_LOCAL
 // XXX: Hack - can't pass mlist entries into _find_mlist().
 static bool mlist_full_info;

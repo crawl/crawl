@@ -10,14 +10,8 @@
 
 #include "fixedvector.h"
 
-// ==========================================================================
-//    class FixedArray
-// ==========================================================================
 template <class TYPE, int WIDTH, int HEIGHT> class FixedArray
 {
-//-----------------------------------
-//    Types
-//
 public:
     typedef TYPE            value_type;
     typedef TYPE&           reference;
@@ -32,9 +26,6 @@ public:
     // client code (if inlining is on there won't be a speed hit)
     typedef FixedVector<TYPE, HEIGHT> Column;
 
-//-----------------------------------
-//    Initialization/Destruction
-//
 public:
     ~FixedArray()                           {}
 
@@ -45,9 +36,6 @@ public:
         init(def);
     }
 
-//-----------------------------------
-//    API
-//
 public:
     // ----- Size -----
     bool empty() const { return WIDTH == 0 || HEIGHT == 0; }
@@ -99,9 +87,6 @@ protected:
 // A fixed array centered around the origin.
 template <class TYPE, int RADIUS> class SquareArray
 {
-//-----------------------------------
-//    Types
-//
 public:
     typedef TYPE            value_type;
     typedef TYPE&           reference;
@@ -112,9 +97,6 @@ public:
     typedef unsigned long   size_type;
     typedef long            difference_type;
 
-//-----------------------------------
-//    Initialization/Destruction
-//
 public:
     ~SquareArray()                           {}
 
@@ -125,9 +107,6 @@ public:
         init(def);
     }
 
-//-----------------------------------
-//    API
-//
 public:
     // ----- Size -----
     bool empty() const { return data.empty(); }

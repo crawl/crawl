@@ -1261,17 +1261,17 @@ void run_animation(animation_type anim, use_animation_type type, bool cleanup)
     }
 }
 
-//---------------------------------------------------------------
-//
-// Draws the main window using the character set returned
-// by get_show_glyph().
-//
-// If show_updates is set, env.show and dependent structures
-// are updated. Should be set if anything in view has changed.
-//
-// If tiles_only is set, only the tile view will be updated. This
-// is only relevant for Webtiles.
-//---------------------------------------------------------------
+/**
+ * Draws the main window using the character set returned
+ * by get_show_glyph().
+ *
+ * @param show_updates if true, env.show and dependent structures
+ *                     are updated. Should be set if anything in
+ *                     view has changed.
+ * @param tiles_only if true, only the tile view will be updated. This
+ *                   is only relevant for Webtiles.
+ * @param a[in] the animation to be showing, if any.
+ */
 void viewwindow(bool show_updates, bool tiles_only, animation *a)
 {
     // The player could be at (0,0) if we are called during level-gen; this can

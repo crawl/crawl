@@ -2245,12 +2245,13 @@ coord_def item_pos(const item_def &item)
     return pos;
 }
 
-//---------------------------------------------------------------
-//
-// move_top_item -- moves the top item of a stack to a new
-// location.
-//
-//---------------------------------------------------------------
+/**
+ * Move the top item of a stack to a new location.
+ *
+ * @param pos the location of the stack
+ * @param dest the position to be moved to
+ * @return whether there were any items at pos to be moved.
+ */
 bool move_top_item(const coord_def &pos, const coord_def &dest)
 {
     int item = igrd(pos);
@@ -2499,13 +2500,9 @@ static bool _drop_item_order(const SelItem &first, const SelItem &second)
     return first.slot < second.slot;
 }
 
-//---------------------------------------------------------------
-//
-// drop
-//
-// Prompts the user for an item to drop
-//
-//---------------------------------------------------------------
+/**
+ * Prompts the user for an item to drop.
+ */
 void drop()
 {
     if (inv_count() < 1 && you.gold == 0)

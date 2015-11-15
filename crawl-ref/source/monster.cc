@@ -4354,14 +4354,12 @@ int monster::skill(skill_type sk, int scale, bool real, bool drained) const
     }
 }
 
-//---------------------------------------------------------------
-//
-// monster::shift
-//
-// Moves a monster to approximately p and returns true if
-// the monster was moved.
-//
-//---------------------------------------------------------------
+/**
+ * Move a monster to an approximate location.
+ *
+ * @param p the position to end up near.
+ * @return whether it tried to move the monster at all.
+ */
 bool monster::shift(coord_def p)
 {
     coord_def result;

@@ -2578,9 +2578,7 @@ static string _dragon_abil(string desc)
 // status, mutations and abilities.
 static string _status_mut_abilities(int sw)
 {
-    //----------------------------
     // print status information
-    //----------------------------
     string text = "<w>@:</w> ";
     vector<string> status;
 
@@ -2610,9 +2608,7 @@ static string _status_mut_abilities(int sw)
     text += comma_separated_line(status.begin(), status.end(), ", ", ", ");
     text += "\n";
 
-    //----------------------------
     // print mutation information
-    //----------------------------
     text += "<w>A:</w> ";
 
     vector<string> mutations;
@@ -2696,21 +2692,15 @@ static string _status_mut_abilities(int sw)
                                      ", ", ", ");
     }
 
-    //----------------------------
     // print ability information
-    //----------------------------
 
     text += print_abilities();
 
-    //--------------
     // print the Orb
-    //--------------
     if (player_has_orb())
         text += "\n<w>0:</w> Orb of Zot";
 
-    //--------------
     // print runes
-    //--------------
     vector<string> runes;
     for (int i = 0; i < NUM_RUNE_TYPES; i++)
         if (you.runes[i])

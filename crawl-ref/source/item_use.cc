@@ -371,14 +371,16 @@ bool item_is_worn(int inv_slot)
     return false;
 }
 
-//---------------------------------------------------------------
-//
-// armour_prompt
-//
-// Prompt the user for some armour. Returns true if the user picked
-// something legit.
-//
-//---------------------------------------------------------------
+/**
+ * Prompt user for carried armour.
+ *
+ * @param mesg Title for the prompt
+ * @param index[out] the inventory slot of the item chosen; not initialised
+ *                   if a valid item was not chosen.
+ * @param oper if equal to OPER_TAKEOFF, only show items relevant to the 'T'
+ *             command.
+ * @return whether a valid armour item was chosen.
+ */
 bool armour_prompt(const string & mesg, int *index, operation_types oper)
 {
     ASSERT(index != nullptr);
@@ -407,11 +409,6 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
 }
 
 
-//---------------------------------------------------------------
-//
-// wear_armour
-//
-//---------------------------------------------------------------
 void wear_armour(int slot) // slot is for tiles
 {
     if (you.species == SP_FELID)

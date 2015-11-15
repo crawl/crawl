@@ -1267,32 +1267,30 @@ static void _catchup_monster_moves(monster* mon, int turns)
     dprf("moved to (%d, %d)", mon->pos().x, mon->pos().y);
 }
 
-//---------------------------------------------------------------
-//
-// timeout_enchantments
-//
-// Update a monster's enchantments when the player returns
-// to the level.
-//
-// Management for enchantments... problems with this are the oddities
-// (monster dying from poison several thousands of turns later), and
-// game balance.
-//
-// Consider: Poison/Sticky Flame a monster at range and leave, monster
-// dies but can't leave level to get to player (implied game balance of
-// the delayed damage is that the monster could be a danger before
-// it dies). This could be fixed by keeping some monsters active
-// off level and allowing them to take stairs (a very serious change).
-//
-// Compare this to the current abuse where the player gets
-// effectively extended duration of these effects (although only
-// the actual effects only occur on level, the player can leave
-// and heal up without having the effect disappear).
-//
-// This is a simple compromise between the two... the enchantments
-// go away, but the effects don't happen off level.  -- bwr
-//
-//---------------------------------------------------------------
+/**
+ * Update a monster's enchantments when the player returns
+ * to the level.
+ *
+ * Management for enchantments... problems with this are the oddities
+ * (monster dying from poison several thousands of turns later), and
+ * game balance.
+ *
+ * Consider: Poison/Sticky Flame a monster at range and leave, monster
+ * dies but can't leave level to get to player (implied game balance of
+ * the delayed damage is that the monster could be a danger before
+ * it dies). This could be fixed by keeping some monsters active
+ * off level and allowing them to take stairs (a very serious change).
+ *
+ * Compare this to the current abuse where the player gets
+ * effectively extended duration of these effects (although only
+ * the actual effects only occur on level, the player can leave
+ * and heal up without having the effect disappear).
+ *
+ * This is a simple compromise between the two... the enchantments
+ * go away, but the effects don't happen off level.  -- bwr
+ *
+ * @param levels XXX: sometimes the missing aut/10, sometimes aut/100
+ */
 void monster::timeout_enchantments(int levels)
 {
     if (enchantments.empty())
@@ -1410,13 +1408,11 @@ void monster::timeout_enchantments(int levels)
     }
 }
 
-//---------------------------------------------------------------
-//
-// update_level
-//
-// Update the level when the player returns to it.
-//
-//---------------------------------------------------------------
+/**
+ * Update the level upon the player's return.
+ *
+ * @param elapsedTime how long the player was away.
+ */
 void update_level(int elapsedTime)
 {
     ASSERT(!crawl_state.game_is_arena());
