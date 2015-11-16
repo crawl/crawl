@@ -5752,14 +5752,13 @@ int player::unadjusted_body_armour_penalty() const
  */
 int player::adjusted_body_armour_penalty(int scale) const
 {
-    const int base_ev_penalty = unadjusted_body_armour_penalty();
+    const int base_ev_penalty =
+        min(0, unadjusted_body_armour_penalty()
+                   - you.mutation[MUT_STURDY_FRAME] * 2);
 
     // New formula for effect of str on aevp: (2/5) * evp^2 / (str+3)
-    return 2 * base_ev_penalty * base_ev_penalty
-           * (450 - skill(SK_ARMOUR, 10))
-           * scale
-           / (5 * (strength() + 3))
-           / 450;
+    return 2 * base_ev_penalty * base_ev_penalty * (450 - skill(SK_ARMOUR, 10))
+           * scale / (5 * (strength() + 3)) / 450;
 }
 
 /**
