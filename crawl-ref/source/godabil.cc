@@ -2026,6 +2026,7 @@ bool kiku_gift_necronomicon()
     {
         return false;
     }
+    set_ident_type(mitm[thing_created], true);
     simple_god_message(" grants you a gift!");
     flash_view(UA_PLAYER, RED);
 #ifndef USE_TILE_LOCAL
