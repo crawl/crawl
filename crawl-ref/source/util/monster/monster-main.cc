@@ -537,18 +537,6 @@ static string monster_symbol(const monster& mon)
 
 static int _mi_create_monster(mons_spec spec)
 {
-    item_list items = spec.items;
-    for (unsigned int i = 0; i < spec.items.size(); i++)
-    {
-        int ego = spec.items.get_item(i).ego;
-        if (ego >= 0)
-            continue;
-        // XXX: this is an unholy hack; xref set_unique_item_status
-        item_def tempitem;
-        tempitem.flags |= ISFLAG_UNRANDART;
-        tempitem.special = -ego;
-        set_unique_item_status(tempitem, UNIQ_NOT_EXISTS);
-    }
     monster* monster =
         dgn_place_monster(spec, MONSTER_PLACE, true, false, false);
     if (monster)
@@ -808,6 +796,11 @@ int main(int argc, char* argv[])
 
         record_spell_set(mp, spell_lists, damages);
 
+        // If it was a unique or had unrands, let it/them generate in future
+        // iterations as well.
+        for (int obj : mp->inv)
+            if (obj != NON_ITEM)
+                set_unique_item_status(mitm[obj], UNIQ_NOT_EXISTS);
         // Destroy the monster.
         mp->reset();
         you.unique_creatures.set(spec_type, false);
