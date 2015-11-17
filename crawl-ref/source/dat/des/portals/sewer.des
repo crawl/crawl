@@ -1295,8 +1295,9 @@ KITEM:   456 = star_item
 KFEAT:   - = deep_water
 KPROP:   W- = no_tele_into
 SUBST:   W = WWWw.
-COLOUR:  - = lightgreen
 SUBST:   - = wwwW-
+COLOUR:  w- = green
+COLOUR:  W = lightgreen
 ITEM:    potion of curing / potion of heal wounds / \
          potion of might w:2 / potion of brilliance w:2 / \
          potion of agility w:2 / potion of flight w:14 / \
