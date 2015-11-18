@@ -1127,8 +1127,8 @@ SUBST:  _ = <
 : ice_cave_appearance(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
-xxx.........xxxxxxxxxxxccccccccccccc---------ccc
-xx...G.M.G...xxxxxxxxxxcccccccccccc---G-|-G---cc
+xxx...GMG...xxxxxxxxxxxccccccccccccc---------ccc
+xx...........xxxxxxxxxxcccccccccccc---G-|-G---cc
 xx....*.*....xxxxxxxxxxcccccccccccc----!-!----cc
 x......*......xxxxxxxxxccccccccccc------!------c
 x.1..G.1.G..1.xxxxxxxxxccccccccccc----2---2----c
