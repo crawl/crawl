@@ -5209,7 +5209,10 @@ bool monster::can_go_frenzy() const
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
 
-    if (mons_intel(this) == I_BRAINLESS)
+    // Insects are I_BRAINLESS and we want them to be able
+    // to berserk, so also check MH_NATURAL.
+    // This could maybe all be replaced by mons_is_object()?
+    if (mons_intel(this) == I_BRAINLESS && holiness() != MH_NATURAL)
         return false;
 
     if (paralysed() || petrified() || petrifying() || asleep())
