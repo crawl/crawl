@@ -299,7 +299,8 @@ KMONS:   E = merfolk
 KMONS:   F = human
 KMONS:   G = necrophage
 KMONS:   H = crimson imp
-KITEM:   1 = stone q:1 no_pickup / large rock q:1 w:5
+KITEM:   1 = stone q:1 w:50 no_pickup / large rock q:1 w:24 / \
+             mundane hand axe w:1 no_pickup
 KITEM:   Ya = bread ration / meat ration
 KITEM:   b = royal jelly / fruit q:1
 KFEAT:   1Yab = shallow_water
