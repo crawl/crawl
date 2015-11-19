@@ -458,10 +458,13 @@ Also, if you have any further suggestions, feel free to add them.
 8. Submitting your tiles
 ========================
 
-Please submit your new tiles as a new item in the Graphics category of our
-Mantis tracker (http://crawl.develz.org/mantis/bug_report_page.php), or send an
-email containing your tiles to one of the tiles developers
-(ennewalker, evktalo, jpeg).
+To submit new tiles, please add them as a new item in the Graphics category of our
+Mantis tracker (http://crawl.develz.org/mantis/bug_report_page.php), or contact one of
+our tiles developers (these currently include ontoclasm and roctavian).
+
+Please note that, unless you specify otherwise, tiles you submit to Crawl will be
+released under the CC0 license, which is similar to placing them in the public domain.
+See https://creativecommons.org/publicdomain/zero/1.0/ for more information.
 
 9. Reducing file size
 =====================
