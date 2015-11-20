@@ -16,6 +16,7 @@
 #include "branch.h"
 #include "cloud.h"
 #include "colour.h"
+#include "database.h"
 #include "describe.h"
 #include "directn.h"
 #include "english.h"
@@ -912,6 +913,24 @@ static void _spellcasting_god_conduct(spell_type spell)
 }
 
 /**
+ * Let the Majin-Bo congratulate you on casting a spell while using it.
+ *
+ * @param spell     The spell just successfully cast.
+ */
+static void _majin_speak(spell_type spell)
+{
+    // since this isn't obviously mental communication, let it be silenced
+    if (silenced(you.pos()))
+        return;
+
+    const int level = spell_difficulty(spell);
+    const bool weak = level <= 4;
+    const string lookup = weak ? "majin-bo cast weak" : "majin-bo cast";
+    const string msg = "A voice whispers, \"" + getSpeakString(lookup) + "\"";
+    mprf(MSGCH_TALK, "%s", msg.c_str());
+}
+
+/**
  * Handles side effects of successfully casting a spell.
  *
  * Spell noise, magic 'sap' effects, and god conducts.
@@ -936,9 +955,17 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
         }
         // Make some noise if it's actually the player casting.
         noisy(spell_noise(spell), you.pos());
+
+        if (real_spell
+            && player_equip_unrand(UNRAND_MAJIN)
+            && one_chance_in(500))
+        {
+            _majin_speak(spell);
+        }
     }
 
     alert_nearby_monsters();
+
 }
 
 #ifdef WIZARD

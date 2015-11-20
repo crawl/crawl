@@ -1755,3 +1755,55 @@ erotic
 
 w:1
 moving
+###############################################################################
+###############################################################################
+#
+# The MAJIN-BO likes to encourage its user.
+#
+###############################################################################
+###############################################################################
+%%%%
+majin-bo greeting
+
+Well, hello there.
+
+Aren't you a tasty little thing?
+
+We're going to have a lot of fun together.
+
+Let's make your enemies cower, shall we?
+
+w:1
+You scratch my back, I'll scratch yours... and I'm one HELL of a backscratcher.
+%%%%
+majin-bo cast
+
+That's more like it.
+
+This should be good.
+
+Feel the power of Hell.
+
+Embrace the darkness.
+
+Isn't this worth a little damnation?
+
+I'll handle this.
+
+Let me show you how it's done.
+
+Your soul is simply delicious.
+
+Has anyone ever told you how good your soul tastes?
+%%%%
+majin-bo cast weak
+
+You're beginning to bore me.
+
+My talents are wasted here.
+
+Why bother with such petty cantrips?
+
+A demon of Hell at your fingers, and you cast that...
+
+Now, try casting something FUN.

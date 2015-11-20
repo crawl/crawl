@@ -42,6 +42,8 @@
 
 // prop recording whether the singing sword has said hello yet
 #define SS_WELCOME_KEY "ss_welcome"
+// similarly, for the majin-bo
+#define MB_WELCOME_KEY "mb_welcome"
 
 /*******************
  * Helper functions.
@@ -1211,8 +1213,19 @@ static void _FLAMING_DEATH_melee_effects(item_def* weapon, actor* attacker,
 
 static void _MAJIN_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    if (you.max_magic_points)
-        _equip_mpr(show_msgs, "You feel a darkness envelop your magic.");
+    if (!you.max_magic_points)
+        return;
+
+    const bool should_msg = !show_msgs || *show_msgs;
+    _equip_mpr(show_msgs, "You feel a darkness envelop your magic.");
+
+    if (!item->props.exists(MB_WELCOME_KEY) && should_msg)
+    {
+        const string msg = "A voice whispers, \"" +
+                           getSpeakString("majin-bo greeting") + "\"";
+        mprf(MSGCH_TALK, "%s", msg.c_str());
+        item->props[MB_WELCOME_KEY].get_bool() = true;
+    }
 }
 
 static void _MAJIN_unequip(item_def *item, bool *show_msgs)
