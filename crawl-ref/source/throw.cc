@@ -747,13 +747,12 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
             // normal projectiles.
             monster *m = monster_at(thr.target);
             if (m)
-                cancelled = stop_attack_prompt(m, false, thr.target, false);
+                cancelled = stop_attack_prompt(m, false, thr.target);
         }
         else
         {
             // Set values absurdly high to make sure the tracer will
             // complain if we're attempting to fire through allies.
-            pbolt.hit    = AUTOMATIC_HIT;
             pbolt.damage = dice_def(1, 100);
 
             // Init tracer variables.

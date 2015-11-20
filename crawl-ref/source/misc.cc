@@ -575,9 +575,8 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
 }
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
-                        coord_def beam_target, bool autohit_first,
-                        bool *prompted, coord_def attack_pos,
-                        bool check_landing_only)
+                        coord_def beam_target, bool *prompted,
+                        coord_def attack_pos, bool check_landing_only)
 {
     ASSERT(mon); // XXX: change to const monster &mon
     bool penance = false;
@@ -608,17 +607,11 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
         verb = "fire ";
         if (beam_target == mon->pos())
             verb += "at ";
-        else if (you.pos() < beam_target && beam_target < mon->pos()
-                 || you.pos() > beam_target && beam_target > mon->pos())
+        else
         {
-            if (autohit_first)
-                return false;
-
             verb += "in " + apostrophise(mon_name) + " direction";
             mon_name = "";
         }
-        else
-            verb += "through ";
     }
     else
         verb = "attack ";
