@@ -471,7 +471,9 @@ tileidx_t tileidx_feature(const coord_def &gc)
     tileidx_t override = env.tile_flv(gc).feat;
     bool can_override = !feat_is_door(feat)
                         && feat != DNGN_FLOOR
-                        && feat != DNGN_UNSEEN;
+                        && feat != DNGN_UNSEEN
+                        && feat != DNGN_PASSAGE_OF_GOLUBRIA
+                        && feat != DNGN_MALIGN_GATEWAY;
     if (override && can_override)
         return override;
 
