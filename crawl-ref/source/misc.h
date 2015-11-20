@@ -55,8 +55,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool check_landing_only = false);
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
-                        coord_def beam_target, bool autohit_first = false,
-                        bool *prompted = nullptr,
+                        coord_def beam_target, bool *prompted = nullptr,
                         coord_def attack_pos = coord_def(0, 0),
                         bool check_landing_only = false);
 
