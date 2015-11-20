@@ -4232,10 +4232,9 @@ void bolt::handle_stop_attack_prompt(monster* mon)
         return;
     }
 
-    const bool autohit_first = (hit == AUTOMATIC_HIT);
     bool prompted = false;
 
-    if (stop_attack_prompt(mon, true, target, autohit_first, &prompted)
+    if (stop_attack_prompt(mon, true, target, &prompted)
         || _stop_because_god_hates_target_prompt(mon, origin_spell))
     {
         beam_cancelled = true;
