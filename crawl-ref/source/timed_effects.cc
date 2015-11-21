@@ -122,7 +122,6 @@ static map<branch_type, hell_effect_spec> hell_effects_by_branch =
         { MONS_BONE_DRAGON, 5 },
         { MONS_ICE_DRAGON, 5 },
         { MONS_BLIZZARD_DEMON, 5 },
-        { MONS_BLUE_DEVIL, 5 },
         { MONS_ICE_DEVIL, 5 },
     }}},
     { BRANCH_TARTARUS, { {MONS_SHADOW_FIEND}, SPTYP_NECROMANCY, {

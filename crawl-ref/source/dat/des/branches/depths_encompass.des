@@ -487,7 +487,7 @@ NAME: grunt_profane_temple_coc
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
-KMONS: 4 = blue devil / simulacrum w:20 / freezing wraith
+KMONS: 4 = ice devil / simulacrum w:20 / freezing wraith
 KMONS: 5 = ice devil
 KMONS: 6 = blizzard demon / ice dragon
 KMONS: 8 = ice statue
