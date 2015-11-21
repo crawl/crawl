@@ -1738,7 +1738,7 @@ static mon_attack_def _downscale_zombie_attack(const monster* mons,
  * @param facet     The facet in question; e.g. BF_STING.
  * @param tier      The tier of the mutant beast; e.g.
  * @return          The attack corresponding to the given facet; e.g. BT_LARVAL
- *                  { AT_REACH_STING, AF_VENOM, 10 }. Scales with HD.
+ *                  { AT_STING, AF_REACH_STING, 10 }. Scales with HD.
  *                  For facets that don't provide an attack, is { }.
  */
 static mon_attack_def _mutant_beast_facet_attack(int facet, int tier)
@@ -1747,7 +1747,7 @@ static mon_attack_def _mutant_beast_facet_attack(int facet, int tier)
     switch (facet)
     {
         case BF_STING:
-            return { AT_REACH_STING, AF_WEAKNESS_POISON, dam };
+            return { AT_STING, AF_REACH_STING, dam };
         case BF_OX:
             return { AT_TRAMPLE, AF_TRAMPLE, dam };
         case BF_WEIRD:

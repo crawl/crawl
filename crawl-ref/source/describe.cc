@@ -3139,12 +3139,13 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_PURE_FIRE:       return "deal pure fire damage";
     case AF_DRAIN_SPEED:     return "drain speed";
     case AF_VULN:            return "reduce resistance to hostile enchantments";
-    case AF_WEAKNESS_POISON: return "cause poisoning and weakness";
     case AF_SHADOWSTAB:      return "deal extra damage from the shadows";
     case AF_DROWN:           return "deal drowning damage";
     case AF_CORRODE:         return "cause corrosion";
     case AF_SCARAB:          return "drain speed and drain health";
     case AF_TRAMPLE:         return "knock back the defender";
+    case AF_REACH_STING:     return "cause poisoning from a distance";
+    case AF_WEAKNESS:        return "cause weakness";
     default:                 return "";
     }
 }
@@ -3154,8 +3155,6 @@ static string _monster_attacks_description(const monster_info& mi)
     ostringstream result;
     set<attack_flavour> attack_flavours;
     vector<string> attack_descs;
-    // Weird attack types that act like attack flavours.
-    bool reach_sting = false;
 
     for (const auto &attack : mi.attack)
     {
@@ -3167,14 +3166,7 @@ static string _monster_attacks_description(const monster_info& mi)
             if (desc[0]) // non-empty
                 attack_descs.push_back(desc);
         }
-
-        if (attack.type == AT_REACH_STING)
-            reach_sting = true;
     }
-
-    // Assumes nothing has both AT_REACH_STING and AF_REACH.
-    if (reach_sting)
-        attack_descs.emplace_back(_describe_attack_flavour(AF_REACH));
 
     if (!attack_descs.empty())
     {
