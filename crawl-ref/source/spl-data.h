@@ -2929,6 +2929,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_IGNITE_POISON_SINGLE, "Localized Ignite Poison",
     SPTYP_FIRE | SPTYP_TRANSMUTATION,
@@ -2939,6 +2940,7 @@ static const struct spell_desc spelldata[] =
     3, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_ORB_OF_ELECTRICITY, "Orb of Electricity",
