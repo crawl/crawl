@@ -234,6 +234,8 @@ Monsters
 * Derived undead (skeletons, zombies, spectres, and simulacra) now do 80% of the
   damage of the base monster and inherit the energy use pattern of the base
   monster.
+* Derived undead created by spells or items are temporary, falling apart after
+  some time. Yredelemnul still creates permanent undead.
 * Removed monsters:
   - Unborn.
   - Ravens.
@@ -249,6 +251,8 @@ Spells
 * Enslavement is replaced by Tukima's Dance in the Enchanter starting book, and
   by Gell's Gravitas in the Arcane Marksman starting book. Tukima's Dance no
   longer appears in the Book of Enchantments.
+* Animate Skeleton and Animate Dead now create temporary undead that expire
+  after some time.
 * Ignite Poison is now level 3 Fire/Poison/Transmutations; it no longer ignites
   items or poisonous creatures, only poisoned creatures and clouds, but does
   dramatically more damage to the former, especially at low power.
