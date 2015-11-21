@@ -95,7 +95,7 @@ public:
 };
 
 void save_ghost(bool force = false);
-bool load_ghost(bool creating_level, bool delete_file = true);
+bool load_ghost(bool creating_level);
 
 FILE *lk_open(const char *mode, const string &file);
 FILE *lk_open_exclusive(const string &file);

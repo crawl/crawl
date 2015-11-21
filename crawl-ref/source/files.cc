@@ -1094,26 +1094,6 @@ static bool _leave_level(dungeon_feature_type stair_taken,
     return popped;
 }
 
-/**
- * Warn the player that two ghost files have been loaded into the current
- * level, resulting in somewhere between two and twenty ghosts being present.
- *
- * Warnings may be more spooky than actually useful.
- *
- * @return  A message that will send shivers down players' spines, assuming
- *          they aren't in wisp form!
- */
-static const char* _double_ghost_spookmessage()
-{
-    static const char* spookmessages[] = {
-        "You are filled with an overwhelming sense of foreboding!",
-        "You feel a terrible frisson of fear!",
-        "You are flooded with an inexplicable sense of dread!",
-        "You feel that you have entered a very terrible place...",
-        "There is something very spooky about this place!"
-    };
-    return RANDOM_ELEMENT(spookmessages);
-}
 
 /**
  * Generate a new level.
@@ -1153,25 +1133,13 @@ static void _make_level(dungeon_feature_type stair_taken,
     _clear_env_map();
     builder(true, stair_type);
 
-    const bool is_halloween = today_is_halloween();
-
     if (!crawl_state.game_is_tutorial()
         && !Options.seed
         && !player_in_branch(BRANCH_ABYSS)
         && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
-        && one_chance_in(is_halloween ? 2 : 3))
+        && one_chance_in(3))
     {
-        // are we loading more than one ghost? (or trying, anyway)
-        bool doubleghost = is_halloween && coinflip();
-        if (doubleghost)
-            doubleghost = load_ghost(true);
-
-        const bool delete_ghost = !is_halloween;
-        doubleghost = load_ghost(true, delete_ghost) && doubleghost;
-
-        // did we actually manage to load more than one ghost (file)?
-        if (doubleghost)
-            mpr(_double_ghost_spookmessage());
+        load_ghost(true);
     }
     env.turns_on_level = 0;
     // sanctuary
@@ -1724,10 +1692,9 @@ static string _find_ghost_file()
  * Attempt to load one or more ghosts into the level.
  *
  * @param creating_level    Whether a level is currently being generated.
- * @param delete_file       Whether to delete the ghost file after loading it.
  * @return                  Whether ghosts were actually generated.
  */
-bool load_ghost(bool creating_level, bool delete_file)
+bool load_ghost(bool creating_level)
 {
     const bool wiz_cmd = (crawl_state.prev_cmd == CMD_WIZARD);
 
@@ -1788,11 +1755,8 @@ bool load_ghost(bool creating_level, bool delete_file)
     }
     inf.close();
 
-    if (delete_file)
-    {
-        // Remove bones file - ghosts are hardly permanent.
-        unlink(ghost_filename.c_str());
-    }
+    // Remove bones file - ghosts are hardly permanent.
+    unlink(ghost_filename.c_str());
 
     if (!debug_check_ghosts())
     {
