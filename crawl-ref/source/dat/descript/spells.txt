@@ -768,11 +768,6 @@ Fires a mighty bolt of lightning. It inflicts less damage than other similar
 bolts, but its damage partially bypasses armour and it can be bounced off walls
 to hit targets twice.
 %%%%
-Localized Ignite Poison spell
-
-Converts the poison within a targeted creature into liquid flame, burning a
-poisoned creature from within.
-%%%%
 Magic Dart spell
 
 Fires a small bolt of magical energy which never misses.

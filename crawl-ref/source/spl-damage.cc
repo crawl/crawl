@@ -1815,21 +1815,6 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool mon_tracer)
     return SPRET_SUCCESS;
 }
 
-/**
- * Cast Localized Ignite Poison, burning poisoned creatures & poisonous clouds
- * in the given tile.
- *
- * @param pos       The tile in question.
- * @param pow       The power with which the spell is being cast.
- * @param agent     The spell's caster.
- */
-void local_ignite_poison(coord_def pos, int pow, actor* agent)
-{
-    _ignite_poison_clouds(pos, pow, agent);
-    _ignite_poison_monsters(pos, pow, agent);
-    _ignite_poison_player(pos, pow, agent);
-}
-
 int discharge_monsters(coord_def where, int pow, actor *agent)
 {
     actor* victim = actor_at(where);

@@ -3160,9 +3160,6 @@ bool bolt::harmless_to_player() const
     case BEAM_VIRULENCE:
         return player_res_poison(false) >= 3;
 
-    case BEAM_IGNITE_POISON:
-        return !ignite_poison_affects(&you);
-
     default:
         return false;
     }
@@ -3696,10 +3693,6 @@ void bolt::affect_player_enchantment(bool resistible)
         mpr("You feel yourself grow more vulnerable to poison.");
         you.increase_duration(DUR_POISON_VULN, 12 + random2(18), 50);
         obvious_effect = true;
-        break;
-
-    case BEAM_IGNITE_POISON:
-        local_ignite_poison(you.pos(), ench_power, agent());
         break;
 
     case BEAM_AGILITY:
@@ -5130,7 +5123,6 @@ bool bolt::has_saving_throw() const
     case BEAM_BLINK:
     case BEAM_MALIGN_OFFERING:
     case BEAM_VIRULENCE:        // saving throw handled specially
-    case BEAM_IGNITE_POISON:
     case BEAM_AGILITY:
     case BEAM_RESISTANCE:
         return false;
@@ -5193,10 +5185,6 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
 
     case BEAM_VIRULENCE:
         rc = (mon->res_poison() < 3);
-        break;
-
-    case BEAM_IGNITE_POISON:
-        rc = ignite_poison_affects(mon);
         break;
 
     case BEAM_DRAIN_MAGIC:
@@ -5677,11 +5665,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             simple_monster_message(mon, " grows more vulnerable to poison.");
             obvious_effect = true;
         }
-        return MON_AFFECTED;
-
-    case BEAM_IGNITE_POISON:
-        local_ignite_poison(mon->pos(), ench_power, agent());
-        obvious_effect = true;
         return MON_AFFECTED;
 
     case BEAM_AGILITY:
@@ -6498,7 +6481,6 @@ static string _beam_type_name(beam_type type)
     case BEAM_VULNERABILITY:         return "vulnerability";
     case BEAM_MALIGN_OFFERING:       return "malign offering";
     case BEAM_VIRULENCE:             return "virulence";
-    case BEAM_IGNITE_POISON:         return "ignite poison";
     case BEAM_AGILITY:               return "agility";
     case BEAM_SAP_MAGIC:             return "sap magic";
     case BEAM_CORRUPT_BODY:          return "corrupt body";

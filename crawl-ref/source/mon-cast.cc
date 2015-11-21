@@ -301,9 +301,6 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
         case SPELL_SENTINEL_MARK:
             return 16 * ENCH_POW_FACTOR;
 
-        case SPELL_IGNITE_POISON_SINGLE:
-            return 12 * ENCH_POW_FACTOR;
-
         case SPELL_SAP_MAGIC:
         case SPELL_MESMERISE:
             return 10 * ENCH_POW_FACTOR;
@@ -1157,11 +1154,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_VIRULENCE:
         beam.flavour    = BEAM_VIRULENCE;
-        beam.pierce     = true;
-        break;
-
-    case SPELL_IGNITE_POISON_SINGLE:
-        beam.flavour    = BEAM_IGNITE_POISON;
         beam.pierce     = true;
         break;
 
@@ -7785,9 +7777,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_VIRULENCE:
         return !foe || foe->res_poison(false) >= 3;
 
-    case SPELL_IGNITE_POISON_SINGLE:
-        return !foe || !ignite_poison_affects(foe);
-
     case SPELL_FLASH_FREEZE:
         return !foe
                || foe->is_player() && you.duration[DUR_FROZEN]
@@ -8022,6 +8011,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_ANIMATE_DEAD:
     case SPELL_SIMULACRUM:
     case SPELL_CHANT_FIRE_STORM:
+    case SPELL_IGNITE_POISON_SINGLE:
 #endif
     case SPELL_NO_SPELL:
         return true;

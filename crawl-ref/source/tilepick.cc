@@ -4899,7 +4899,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_HELLFIRE_BURST:           return TILEG_HELLFIRE_BURST;
     case SPELL_HOLY_BREATH:              return TILEG_HOLY_BREATH;
     case SPELL_HOLY_FLAMES:              return TILEG_HOLY_FLAMES;
-    case SPELL_IGNITE_POISON_SINGLE:     return TILEG_IGNITE_POISON_SINGLE;
     case SPELL_INJURY_BOND:              return TILEG_INJURY_BOND;
     case SPELL_INK_CLOUD:                return TILEG_INK_CLOUD;
     case SPELL_INVISIBILITY_OTHER:       return TILEG_INVISIBILITY_OTHER;

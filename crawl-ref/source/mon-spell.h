@@ -1629,7 +1629,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_MAGMA, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE_OTHER, 24, MON_SPELL_WIZARD },
-       { SPELL_IGNITE_POISON_SINGLE, 12, MON_SPELL_WIZARD },
       }
     },
 

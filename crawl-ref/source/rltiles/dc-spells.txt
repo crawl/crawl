@@ -235,7 +235,6 @@ hellfire_burst HELLFIRE_BURST
 %sdir misc
 error HOLY_BREATH
 error HOLY_FLAMES
-error IGNITE_POISON_SINGLE
 error INJURY_BOND
 error INK_CLOUD
 error INVISIBILITY_OTHER
