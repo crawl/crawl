@@ -83,7 +83,7 @@ bool melee_attack::can_reach()
 {
     return attk_type == AT_HIT && weapon && weapon_reach(*weapon) > REACH_NONE
            || attk_flavour == AF_REACH
-           || attk_type == AT_REACH_STING;
+           || attk_flavour == AF_REACH_STING;
 }
 
 bool melee_attack::handle_phase_attempted()
@@ -2399,7 +2399,9 @@ string melee_attack::mons_attack_verb()
         "splash",
 #endif
         "pounce on",
+#if TAG_MAJOR_VERSION == 34
         "sting",
+#endif
     };
     COMPILE_CHECK(ARRAYSZ(attack_types) == AT_LAST_REAL_ATTACK);
 
@@ -2693,6 +2695,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_POISON:
     case AF_POISON_STRONG:
+    case AF_REACH_STING:
         if (one_chance_in(3))
             mons_do_poison();
         break;
@@ -3095,11 +3098,6 @@ void melee_attack::mons_apply_attack_flavour()
         }
         break;
 
-    case AF_WEAKNESS_POISON:
-        if (coinflip() && mons_do_poison())
-            defender->weaken(attacker, 12);
-        break;
-
     case AF_SHADOWSTAB:
         attacker->as_monster()->del_ench(ENCH_INVIS, true);
         break;
@@ -3124,6 +3122,11 @@ void melee_attack::mons_apply_attack_flavour()
                     attack_strength_punctuation(special_damage).c_str());
             }
         }
+        break;
+
+    case AF_WEAKNESS:
+        if (coinflip())
+            defender->weaken(attacker, 12);
         break;
     }
 }
