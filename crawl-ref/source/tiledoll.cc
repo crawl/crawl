@@ -400,12 +400,20 @@ void fill_doll_equipment(dolls_data &result)
             result.parts[TILEP_PART_HELM] = tilep_equ_helm(you.inv[item]);
         else if (player_mutation_level(MUT_HORNS) > 0)
         {
-            if (you.species == SP_FELID
-                && is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID))
+            if (you.species == SP_FELID)
             {
-                // Felid horns are offset by the tile variant.
-                result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_CAT
-                    + result.parts[TILEP_PART_BASE] - TILEP_BASE_FELID;
+                if (is_player_tile(result.parts[TILEP_PART_BASE],
+                                  TILEP_BASE_FELID))
+                {
+                    // Felid horns are offset by the tile variant.
+                    result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_CAT
+                        + result.parts[TILEP_PART_BASE] - TILEP_BASE_FELID;
+                }
+                else if (is_player_tile(result.parts[TILEP_PART_BASE],
+                                  TILEP_TRAN_STATUE_FELID))
+                {
+                    result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_CAT;
+                }
             }
             else
                 switch (player_mutation_level(MUT_HORNS))

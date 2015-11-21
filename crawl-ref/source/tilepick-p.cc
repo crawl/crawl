@@ -1087,10 +1087,13 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_ARM] = TILEP_FLAG_HIDE;
     }
     if (is_player_tile(doll.parts[TILEP_PART_HELM], TILEP_HELM_HORNS_CAT)
-        && (!is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_FELID)
+        && (!is_player_tile(doll.parts[TILEP_PART_BASE],
+                            TILEP_BASE_FELID)
+            && (!is_player_tile(doll.parts[TILEP_PART_BASE],
+                                TILEP_TRAN_STATUE_FELID)
             // Every felid tile has its own horns.
             || doll.parts[TILEP_PART_BASE] - TILEP_BASE_FELID
-               != doll.parts[TILEP_PART_HELM] - TILEP_HELM_HORNS_CAT))
+               != doll.parts[TILEP_PART_HELM] - TILEP_HELM_HORNS_CAT)))
     {
         flag[TILEP_PART_ARM] = TILEP_FLAG_HIDE;
     }
