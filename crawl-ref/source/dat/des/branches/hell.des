@@ -182,9 +182,9 @@ NAME:   grunt_hell_entry_demonic_statue
 WEIGHT: 6
 ORIENT: float
 TAGS:   no_monster_gen no_tele_into
-MONS:   blue devil / orange demon / red devil / w:5 rust devil / \
+MONS:   ice devil / orange demon / red devil / w:5 rust devil / \
         w:35 nothing
-MONS:   ice devil / sun demon / soul eater / w:30 nothing
+MONS:   sun demon / soul eater / w:20 nothing
 MONS:   shadow demon / blizzard demon / hell beast
 ITEM:   skeleton
 KFEAT:  b = .
@@ -294,7 +294,7 @@ NAME: grunt_mini_vestibule
 TAGS: nolayout_encompass no_monster_gen uniq_hell_entry_high
 : hell_entry_feature(_G, 'O')
 KMONS: O = hell beast
-MONS: blue devil / simulacrum w:20 / freezing wraith / ice devil
+MONS: simulacrum w:20 / freezing wraith / ice devil
 MONS: rust devil w:20 / iron troll
 MONS: red devil w:20 / hell hound / sun demon
 MONS: skeleton / zombie / skeletal warrior band / flying skull band / \
@@ -430,7 +430,7 @@ ENDMAP
 NAME:    hangedman_coc_ice_floe
 WEIGHT:  7
 TAGS:    transparent no_pool_fixup uniq_hell_entry_coc
-KMONS:   O = blue devil / white imp w:20 / nothing
+KMONS:   O = ice devil / white imp w:20 / nothing
 KFEAT:   A = stone_arch
 SHUFFLE: ab / ab / ba
 SUBST:   a : xww, b = x
@@ -978,8 +978,7 @@ TAGS: vestibule_coc
 KFEAT:  C=enter_cocytus
 SUBST:  8 = 8 .:59
 KMONS:  8 = ice statue
-KMONS:  3 = blue devil
-KMONS:  2 = ice devil
+KMONS:  3 = ice devil
 : hell_water_spawns(_G)
 MAP
 ...........wwwwwwwwwww...........
@@ -993,7 +992,7 @@ MAP
         ..www..T.T..www..
          ..www.....www..
           ...ww...ww...
-           .....2.....
+           .....3.....
             .........
              .......
               .....
@@ -1006,8 +1005,8 @@ KFEAT:   C = enter_cocytus
 SHUFFLE: ab
 SUBST:   a = I, b : w., W = w.
 KMONS:   I = ice statue
-KMONS:   3 = ice devil / blizzard demon
-KMONS:   2 = blue devil / freezing wraith / white imp / nothing
+KMONS:   3 = blizzard demon
+KMONS:   2 = ice devil / freezing wraith / white imp / nothing
 : hell_water_spawns(_G)
 MAP
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -1031,7 +1030,7 @@ ENDMAP
 NAME: vestibule_coc_grunt_go_with_the_floe
 TAGS: vestibule_coc no_pool_fixup
 MONS: frost giant / blizzard demon / ice statue
-MONS: blizzard demon / ice devil, ice devil / blue devil / freezing wraith
+MONS: blizzard demon, ice devil / freezing wraith
 NSUBST: 3 = 3:3 / *:.
 SUBST: W = wW.
 KFEAT: A = stone_arch

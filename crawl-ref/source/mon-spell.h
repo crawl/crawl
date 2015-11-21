@@ -2092,10 +2092,4 @@ static const mon_spellbook mspell_list[] =
        { SPELL_DRAIN_LIFE, 30, MON_SPELL_MAGICAL },
       }
     },
-
-    {  MST_BLUE_DEVIL,
-      {
-       { SPELL_SUMMON_ICE_BEAST, 20, MON_SPELL_DEMONIC },
-      }
-    },
 };

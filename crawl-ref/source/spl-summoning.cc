@@ -1134,7 +1134,7 @@ static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
     if (x_chance_in_y(chance, 100))
     {
         // tier 4
-        type = random_choose(MONS_BLUE_DEVIL,    MONS_RUST_DEVIL,
+        type = random_choose(MONS_ICE_DEVIL,     MONS_RUST_DEVIL,
                              MONS_ORANGE_DEMON,  MONS_RED_DEVIL,
                              MONS_SIXFIRHY,      MONS_HELLWING);
     }
@@ -1142,9 +1142,8 @@ static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
     {
         // tier 3
         type = random_choose(MONS_SUN_DEMON,     MONS_SOUL_EATER,
-                             MONS_ICE_DEVIL,     MONS_SMOKE_DEMON,
-                             MONS_NEQOXEC,       MONS_YNOXINUL,
-                             MONS_CHAOS_SPAWN);
+                             MONS_CHAOS_SPAWN,   MONS_SMOKE_DEMON,
+                             MONS_NEQOXEC,       MONS_YNOXINUL);
     }
 
     return _summon_demon_wrapper(pow, god, spell, type,

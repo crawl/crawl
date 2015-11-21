@@ -1637,7 +1637,7 @@ WEIGHT: 5
 FTILE:  *|c.12${} = floor_infernal_blank
 TILE:   c = dngn_stone_dark
 SUBST:  *=*|
-MONS:   blue devil w:1 / hellwing w:3 / rust devil w:1 / orange demon w:1 /\
+MONS:   ice devil w:1 / hellwing w:3 / rust devil w:1 / orange demon w:1 /\
         red devil w:1 / demonic crawler / sixfirhy w:1
 MONS:   lesser demon, river rat / giant cockroach
 NSUBST: . = 6:3 / 6:! / 56:' / .

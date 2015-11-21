@@ -736,7 +736,7 @@ KMONS:      * = lorocyproca / reaper / shadow demon / tormentor / hellion /\
 KMONS:      | = hell sentinel / brimstone fiend / shadow fiend /\
                 ice fiend / executioner
 :           set_random_mon_list(
-:               "smoke demon / ynoxinul / neqoxec / ice devil /" ..
+:               "smoke demon / ynoxinul / neqoxec / " ..
 :               "chaos spawn / soul eater / sun demon / " ..
 :               "lorocyproca / reaper / shadow demon / tormentor / hellion")
 :           else
@@ -1335,7 +1335,7 @@ KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip ego:vorpal w:6 | dagger \
              spear ego:vorpal w:6 . tomahawk ego:dispersal . robe
 KMONS:   04 = large abomination w:15 / small abomination w:15 / unseen horror w:5 / \
               thrashing horror w:30 / skeleton w:30 / freezing wraith w:5 /  \
-              hellwing / chaos spawn w:5 / orange demon / blue devil /  \
+              hellwing / chaos spawn w:5 / orange demon / ice devil /  \
               hell hound / red devil w:5 / lesser demon w:25 / mana viper w:5 / \
               worldbinder w:30 / fire elemental w:5 / air elemental w:5
 KMONS:   95 = ynoxinul / smoke demon / sixfirhy / sun demon w:5 / efreet w:5 / \
@@ -1672,7 +1672,7 @@ MARKER:     h = lua:fog_machine { \
                 excl_rad = 0 }
 KMONS:      2 = lorocyproca w:1 / hell beast w:15 / reaper /\
             green death / soul eater w:20 / tormentor w:5
-KMONS:      3u = ice devil / red devil / orange demon / blue devil / \
+KMONS:      3u = ice devil / red devil / orange demon / \
             rust devil w:5 / ynoxinul / sun demon
 KMONS:      4 = kobold demonologist
 KMONS:      5 = deep elf demonologist
@@ -1692,7 +1692,7 @@ KITEM:      B = randbook disc:summoning
 NSUBST:     i = 2:B / 1:j / *:i
 SHUFFLE:    A<, 4d, 7f, 4d / 5e, 7f / 8g
 SUBST:      7 = 4, 8 = 5, df = 6, eg = 3
-:           set_random_mon_list([[lesser demon w:50 / red devil / blue devil / ]]
+:           set_random_mon_list([[lesser demon w:50 / red devil / ice devil / ]]
 :                            .. [[orange demon / ynoxinul / kobold demonologist / ]])
 :           wizlab_setup(_G)
 :           set_feature_name("stone_wall", "black wall")

@@ -666,11 +666,6 @@ blood saint
 
 <demonspawn>
 %%%%
-blue devil
-
-A muscular horned humanoid figure originating from some frigid hell. It can
-call forth ice beasts to freeze its foes.
-%%%%
 bog body
 
 An undead figure preserved by the brackish waters of a bog. Though it has been

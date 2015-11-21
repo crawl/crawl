@@ -2612,7 +2612,7 @@ TAGS:  no_pool_fixup no_monster_gen
 DEPTH: D:12-, Depths, !Depths:$, Lair, Coc, !Coc:$
 KMONS: 1 = ice statue
 KMONS: 2 = white imp / ice beast w:30 / polar bear / nothing w:50
-KMONS: 3 = ice devil w:5 / blue devil w:5 / ice dragon / freezing wraith
+KMONS: 3 = ice devil / ice dragon / freezing wraith
 KMONS: 4 = ice fiend / blizzard demon / ice dragon w:5
 KFEAT: 1 = >
 : if you.absdepth() > 20 then
@@ -5581,7 +5581,7 @@ SUBST:   ~ = l
 FTILE:   F = floor_volcanic
 COLOUR:  F = lightred
 : elseif you.in_branch("Coc") then
-KMONS:   9 = ice devil / blue devil w:5 / ice dragon / simulacrum w:5 / \
+KMONS:   9 = ice devil w:15 / ice dragon / simulacrum w:5 / \
              skeletal warrior ; hunting sling ego:freezing ident:type . \
              mundane sling bullet . mace ego:freezing ident:type
 KMONS:   8 = blizzard demon / lich / shard shrike / \
@@ -5922,9 +5922,9 @@ DEPTH:  D:$, Depths
 WEIGHT: 3
 MONS:   obsidian statue
 MONS:   patrolling hell knight
-MONS:   sun demon / soul eater / ice devil / smoke demon / neqoxec / \
+MONS:   sun demon / soul eater / smoke demon / neqoxec / \
         ynoxinul / chaos spawn
-MONS:   blue devil / rust devil / orange demon / red devil / hellwing / \
+MONS:   ice devil / rust devil / orange demon / red devil / hellwing / \
         sixfirhy
 KPROP:  ._-cGO12345 = bloody / nothing w:20
 KFEAT:  _ = altar_makhleb

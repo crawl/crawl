@@ -244,7 +244,7 @@ function choose_mset_2(e)
 -- Ice
   elseif rnd < 86 then
     e.kmons("1 = ice beast / polar bear / white imp / simulacrum /\
-               freezing wraith / blue devil")
+               freezing wraith / ice devil")
 -- Air
   elseif rnd < 88 then
     e.kmons("1 = insubstantial wisp / air elemental / wind drake w:5")

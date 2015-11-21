@@ -2579,8 +2579,8 @@ KMONS:   O = ice statue
 KITEM:   O = demonic rune of Zot
 KMONS:   P = pandemonium lord
 KFEAT:   P = (
-MONS:    blizzard demon, ice devil / blue devil w:20
-: set_random_mon_list("blizzard demon / ice devil / blue devil")
+MONS:    blizzard demon, ice devil
+: set_random_mon_list("blizzard demon / ice devil")
 MAP
 ccccccccccccccccccc
 .WwcwW1.1O1.1WwcwW.

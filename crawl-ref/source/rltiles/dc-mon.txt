@@ -317,7 +317,6 @@ soul_eater MONS_SOUL_EATER
 sun_demon MONS_SUN_DEMON
 
 # type '3' demons
-blue_devil MONS_BLUE_DEVIL
 chaos_spawn1 MONS_CHAOS_SPAWN
 chaos_spawn2
 chaos_spawn3

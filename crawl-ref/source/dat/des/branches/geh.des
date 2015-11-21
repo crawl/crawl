@@ -151,7 +151,7 @@ KPROP:   l = no_cloud_gen
 :  elseif you.in_branch("Coc") then
 KMONS:   1 = ice fiend
 KMONS:   2 = blizzard demon
-KMONS:   34 = ice devil / blue devil
+KMONS:   34 = ice devil
 KMONS:   56 = reaper ; scythe ego:freezing ident:type / shard shrike w:5
 KMONS:   7 = alligator snapping turtle skeleton / anaconda simulacrum / \
          golden dragon simulacrum w:5 / iron troll simulacrum w:5 / hydra simulacrum

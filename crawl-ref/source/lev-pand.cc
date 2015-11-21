@@ -48,7 +48,6 @@ void init_pandemonium()
         env.mons_alloc[pc] = random_choose_weighted(5, MONS_SMOKE_DEMON,
                                                     5, MONS_YNOXINUL,
                                                     5, MONS_ABOMINATION_LARGE,
-                                                    5, MONS_ICE_DEVIL,
                                                     5, MONS_SOUL_EATER,
                                                     5, MONS_DEMONIC_CRAWLER,
                                                     5, MONS_SUN_DEMON,

@@ -578,8 +578,8 @@ DEPTH:   Dis, !Dis:$
 ORIENT:  float
 MONS:    skeletal warrior / vampire w:6 / wight w:2          / \
          zombie / skeleton / hell hound / rust devil w:14    / \
-         red devil / blue devil / sun demon w:6              / \
-         ice devil w:6 / hellwing / soul eater w:6
+         red devil / ice devil w:16 / sun demon w:6          / \
+         hellwing / soul eater w:6
 MONS:    reaper / hellion / tormentor / executioner w:2      / \
          bone dragon / lich / ancient champion               / \
          balrug w:2 / blizzard demon w:2 / shadow demon w:2  / \

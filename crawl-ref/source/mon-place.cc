@@ -3391,8 +3391,7 @@ static monster_type _band_member(band_type band, int which,
     case BAND_GELID_DEMONSPAWN:
         if (which == 1 || one_chance_in(5))
         {
-            return random_choose_weighted( 2, MONS_BLUE_DEVIL,
-                                           2, MONS_ICE_DEVIL,
+            return random_choose_weighted( 4, MONS_ICE_DEVIL,
                                            3, MONS_GELID_DEMONSPAWN,
                                            0);
         }
@@ -4099,7 +4098,7 @@ monster_type summon_any_demon(monster_type dct, bool use_local_demons)
         {
             // tier 4
             return random_choose(
-                MONS_BLUE_DEVIL,
+                MONS_ICE_DEVIL,
                 MONS_RUST_DEVIL,
                 MONS_ORANGE_DEMON,
                 MONS_RED_DEVIL,
@@ -4112,7 +4111,6 @@ monster_type summon_any_demon(monster_type dct, bool use_local_demons)
             return random_choose(
                 MONS_SUN_DEMON,
                 MONS_SOUL_EATER,
-                MONS_ICE_DEVIL,
                 MONS_SMOKE_DEMON,
                 MONS_NEQOXEC,
                 MONS_YNOXINUL,

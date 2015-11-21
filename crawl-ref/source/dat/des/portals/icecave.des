@@ -146,7 +146,7 @@ function ice_cave_random_monster_list_undead_demon(e)
   cruel_simulacrum(e)
   e.set_random_mon_list("white imp w:30 / ufetubus w:20 / freezing wraith / " ..
                          mocking_ice .. " / " .. savage_ice .. " / " ..
-                         cruel_ice .. " / blue devil / ice devil / ice fiend w:5")
+                         cruel_ice .. " / ice devil w:20 / ice fiend w:5")
 end
 
 -- : ice_cave_random_monster_list_undead_necromancer(_G)
@@ -168,7 +168,7 @@ function ice_cave_caverns_undead_demon_monster_set(e)
   e.mons("ice statue")
   e.mons("ice devil")
   e.mons(cruel_ice)
-  e.mons("freezing wraith / blue devil / white ugly thing w:1")
+  e.mons("freezing wraith / ice devil / white ugly thing w:1")
   e.mons("patrolling ice fiend")
   e.kmons("8 = blizzard demon")
   e.shuffle("7` / 7` / `8")
@@ -694,7 +694,7 @@ xxx.........xxxxxxxxxxx...xxxxwwwxxx...xx
                              xxxx
 ENDMAP
 
-# Foes: ice & blue devils, white imps & ufetubi, an ice statue.
+# Foes: ice devils, white imps & ufetubi, an ice statue.
 # Loot: weapons and/or armour.
 NAME:    ice_cave_small_demon
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
@@ -723,23 +723,22 @@ NSUBST:  w = 3:! / *:w
 SUBST:   ! = w
 {{
 ice_cave_appearance(_G)
-dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / blue devil w:20 / \
-                         ice devil")
+dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / ice devil w:30")
 ice_cave_item_attributes(_G)
 }}
 : if dgn.persist.ice_cave_hard then
 MONS:    white imp / ufetubus
-MONS:    ice devil / blue devil w:3 / nothing w:2
+MONS:    ice devil w:13 / nothing w:2
 MONS:    ice statue
-MONS:    blue devil
+MONS:    ice devil
 MONS:    ice fiend
 MONS:    blizzard demon
 SHUFFLE: 5` / `6
 : else
 MONS:    white imp / ufetubus
-MONS:    blue devil / ice devil w:2 / nothing w:5
+MONS:    ice devil w:12 / nothing w:5
 MONS:    ice statue
-MONS:    blue devil / nothing
+MONS:    ice devil / nothing
 MONS:    ice devil
 : end
 SHUFFLE: dg, efh
@@ -813,7 +812,7 @@ KMONS:  S = ice statue
 KITEM:  I = any scroll
 KMONS:  I = ice statue
 : if dgn.persist.ice_cave_hard then
-MONS:   ice devil / blue devil / nothing w:7
+MONS:   ice devil w:20 / nothing w:7
 : cruel_simulacrum(_G)
 : mons(cruel_ice)
 # Use KMONS for some items below.
@@ -821,7 +820,7 @@ KMONS:  3 = ice fiend
 KMONS:  4 = blizzard demon
 SHUFFLE: 3` / 3` / `4
 : else
-MONS:   ice devil w:2 / blue devil / nothing
+MONS:   ice devil w:12 / nothing
 : mocking_simulacrum(_G)
 : mons(mocking_ice)
 KMONS:  3 = necromancer

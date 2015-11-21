@@ -258,7 +258,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "killer bee w:20 / w:5 queen bee",
                 "zombie / skeleton / wight / necrophage /\
                     phantom w:5 / w:1 josephine",
-                "w:7 blue devil / rust devil w:5 / orange demon / red devil w:5 /\
+                "w:7 ice devil / rust devil w:5 / orange demon / red devil w:5 /\
                     sixfirhy w:2 / hellwing",
                 "w:20 mummy / w:5 guardian mummy / w:5 menkaure",
                 -- Fire, Air, Earth, Water, Death
