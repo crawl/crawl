@@ -2567,11 +2567,6 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 1 + random2(5);
         break;
 
-    case MONS_SPIDER:
-        band = BAND_SPIDER;
-        band_size = 1 + random2(4);
-        break;
-
     case MONS_JUMPING_SPIDER:
         if (coinflip())
         {
@@ -3277,14 +3272,10 @@ static monster_type _band_member(band_type band, int which,
                                        5, MONS_JUMPING_SPIDER,
                                        0);
 
-    case BAND_SPIDER:
-        return MONS_SPIDER;
-
     case BAND_JUMPING_SPIDER:
         return random_choose_weighted(12, MONS_JUMPING_SPIDER,
                                        8, MONS_WOLF_SPIDER,
                                        7, MONS_ORB_SPIDER,
-                                       6, MONS_SPIDER,
                                        5, MONS_REDBACK,
                                        2, MONS_DEMONIC_CRAWLER,
                                        0);
@@ -3294,7 +3285,6 @@ static monster_type _band_member(band_type band, int which,
                                        7, MONS_WOLF_SPIDER,
                                        3, MONS_ORB_SPIDER,
                                        8, MONS_REDBACK,
-                                      10, MONS_SPIDER,
                                        2, MONS_DEMONIC_CRAWLER,
                                        0);
 
