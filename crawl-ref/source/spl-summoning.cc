@@ -209,11 +209,10 @@ monster_type pick_swarmer()
 {
     return random_choose_weighted(3, MONS_KILLER_BEE,
                                   3, MONS_WORKER_ANT,
-                                  2, MONS_SPIDER,
+                                  3, MONS_WASP,
                                   1, MONS_SCORPION,
                                   1, MONS_WORM,
                                   1, MONS_VAMPIRE_MOSQUITO,
-                                  1, MONS_WASP,
                                   1, MONS_BUTTERFLY,
                                   0);
 }
