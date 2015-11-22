@@ -70,17 +70,6 @@ bool trap_def::type_has_ammo() const
     return false;
 }
 
-// Used for when traps run out of ammo.
-void trap_def::disarm()
-{
-    if (type == TRAP_NET)
-    {
-        item_def trap_item = generate_trap_item();
-        copy_item_to_grid(trap_item, pos);
-    }
-    destroy();
-}
-
 void trap_def::destroy(bool known)
 {
     if (!in_bounds(pos))
@@ -590,7 +579,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 env.map_knowledge(pos).set_feature(DNGN_FLOOR);
                 mprf("%s disappears.", name(DESC_THE).c_str());
             }
-            disarm();
+            destroy();
         }
         if (!triggerer.no_tele(true, you_know || you_trigger))
             triggerer.teleport(true);
@@ -1468,7 +1457,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         else if (player_can_hear(pos) && you.see_cell(pos))
             mpr("You hear a soft click.");
 
-        disarm();
+        destroy();
         return;
     }
 
@@ -1480,7 +1469,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
         {
             mprf("You avoid triggering %s.", name(DESC_A).c_str());
-            return;         // no ammo generated either
+            return;
         }
     }
     else if (!force_hit && one_chance_in(5))
