@@ -53,9 +53,7 @@ void random_uselessness();
 
 void prompt_inscribe_item();
 
-bool stasis_blocks_effect(bool calc_unid,
-                          const char *msg, int noise = 0,
-                          const char *silenced_msg = nullptr,
+bool stasis_blocks_effect(bool calc_unid, const char *msg,
                           const char *formicid_msg = nullptr);
 
 #ifdef USE_TILE
