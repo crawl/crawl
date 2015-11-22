@@ -2548,7 +2548,7 @@ PLACE:   Lair:$
 TAGS:    no_wall_fixup no_monster_gen no_rotate
 ORIENT:  southeast
 MONS:    plant
-MONS:    torpor snail, worm, brain worm
+MONS:    torpor snail, worm, worm / giant leech
 MONS:    giant leech, lindwurm, fire dragon / ice dragon
 KMONS:   8 = wasp
 SHUFFLE: ABC

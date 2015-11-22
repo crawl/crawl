@@ -49,7 +49,7 @@ function pan_lord_setup(_G, name)
         Mnoleg = "large abomination w:200 / " ..
                  "neqoxec w:200 / chaos spawn w:200 / " ..
                  "cacodemon w:300 / tormentor / " ..
-                 "tentacled monstrosity w:5 / brain worm / " ..
+                 "tentacled monstrosity w:5 / " ..
                  "giant eyeball / golden eye band / eye of devastation / " ..
                  "eye of draining / shining eye / very ugly thing band / "..
                  "monstrous corrupter",
@@ -537,7 +537,7 @@ TAGS:      mnoleg uniq_mnoleg
 : pan_lord_setup(_G, 'Mnoleg')
 TILE:      c = dngn_stone_wall_yellow
 MONS:      patrolling Mnoleg
-MONS:      brain worm, ugly thing, large abomination, neqoxec
+MONS:      neqoxec, ugly thing, large abomination, neqoxec
 MONS:      very ugly thing, tormentor
 KMONS:     A = cacodemon
 KMONS:     B = tentacled monstrosity
@@ -596,7 +596,7 @@ MONS:       giant eyeball / golden eye / eye of devastation / \
             eye of draining / shining eye
 MONS:       w:3 large abomination / w:2 tentacled monstrosity
 MONS:       cacodemon
-MONS:       neqoxec / brain worm
+MONS:       neqoxec
 NSUBST:     C = 1:4 / *:N
 NSUBST:     N = 2:4 / *:5
 NSUBST:     M = 5:3 / 2=3. / *:.

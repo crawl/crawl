@@ -259,7 +259,7 @@ ENDMAP
 NAME:  worms_lemuel
 TAGS:  no_rotate no_monster_gen
 DEPTH: D:8-13, Lair, Spider
-KMONS: 1 = worm w:190 / brain worm
+KMONS: 1 = worm
 KMONS: 2| = swamp worm
 KMONS: P = plant
 KITEM: | = |, *, %
@@ -311,28 +311,11 @@ MAP
   .... . . . ..
 ENDMAP
 
-NAME:   minmay_brainsmasher
-DEPTH:  D:8-
-WEIGHT: 3
-MONS:   brain worm
-KFEAT:  m = iron_grate
-MAP
-  .....
- .......
-....%....
-...mmm...
-..%m1m%..
-...mmm...
-....%....
- .......
-  .....
-ENDMAP
-
 NAME:    hangedman_stitches_earthworm
 TAGS:    no_monster_gen no_item_gen transparent no_pool_fixup
 DEPTH:   Depths, Spider:2-, Abyss
 KMONS:   0 = 0
-KMONS:   1 = brain worm
+KMONS:   1 = giant leech
 KMONS:   2 = boulder beetle
 KMONS:   3 = trapdoor spider / orb spider w:5
 KMONS:   4 = thrashing horror
@@ -954,7 +937,7 @@ KMONS:   8 = ball python / adder w:8
 KMONS:   A = river rat
 KMONS:   B = vampire bat / fire bat w:8
 KMONS:   C = iguana / basilisk w:8
-KMONS:   D = brain worm
+KMONS:   D = worm / giant leech
 KMONS:   E = jelly
 KMONS:   F = worker ant
 KMONS:   G = hound / wolf w:3
@@ -2959,17 +2942,6 @@ MAP
 ..J..mmmm.mmmm..J..
 ...............JJ..
 ...................
-ENDMAP
-
-NAME:  minmay_brain_eaters
-DEPTH: D:10-
-MONS:  brain worm, giant orange brain
-MAP
-xxxxx
-x1%1x
-x%2%x
-x1%1x
-xx+xx
 ENDMAP
 
 NAME:    onia_ninara_cookie

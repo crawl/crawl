@@ -161,7 +161,6 @@ swamp_worm MONS_SWAMP_WORM
 %rim 1
 %sdir mon/animals
 worm MONS_WORM
-brain_worm MONS_BRAIN_WORM
 giant_leech MONS_GIANT_LEECH
 %rim 0
 torpor_snail MONS_TORPOR_SNAIL

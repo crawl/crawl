@@ -689,11 +689,6 @@ boulder beetle
 A huge grey beetle with an almost impenetrable rocky carapace, capable of
 rolling at its foes at high speed.
 %%%%
-brain worm
-
-A slimy mauve worm with a greatly distended head, this creature feeds on the
-intellects of sentient beings.
-%%%%
 briar patch
 
 A tangled cluster of thorny briars, sharp enough to pierce thick hide and

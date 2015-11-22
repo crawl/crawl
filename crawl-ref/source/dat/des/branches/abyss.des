@@ -1856,7 +1856,7 @@ ENDMAP
 NAME:  evilmike_abyss_exit_10
 TAGS:  abyss_exit
 SUBST: X = x.., x = xxxcv
-MONS:  brain worm / w:5 neqoxec
+MONS:  neqoxec
 : init_abyss_exit(_G, "O")
 MAP
 XXXXXXXXXXX

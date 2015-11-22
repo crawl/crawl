@@ -230,8 +230,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "zombie / skeleton / wight w:5 / necrophage / phantom w:5",
                 "worker ant / soldier ant w:2 / queen ant w:1 / killer bee w:2",
                 "ooze / w:5 jelly",
-                "giant cockroach w:20 / spider / worm /\
-                    w:5 brain worm",
+                "giant cockroach w:20 / spider / worm",
                 "giant spore hd:3"
             }
         elseif round <= 5 then
@@ -276,7 +275,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "giant frog w:20 / blink frog w:6 / spiny frog w:6 / prince ribbit w:2",
                 "gnoll / gnoll shaman / gnoll sergeant / hound / wolf",
                 -- Gimmicks
-                "brain worm", "giant spore hd:3", "orc priest", "vampire bat",
+                "neqoxec", "giant spore hd:3", "orc priest", "vampire bat",
                 "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame"
              }
         elseif round <= 10 then
@@ -314,7 +313,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Misc
                 "centaur w:20 / centaur warrior w:2 / nessos w:1",
                 "ugly thing",
-                "giant leech / worm / brain worm w:5",
+                "giant leech / worm",
                 "ogre w:15 / two-headed ogre / ogre mage w:5 / w:1 erolcha",
                 "troll / deep troll w:12 / iron troll w:2",
                 "fire drake / swamp drake / steam dragon / swamp dragon /\
@@ -323,7 +322,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "shapeshifter hd:7",
                 "polar bear",
                 -- Gimmicks
-                "brain worm", "giant spore hd:3", "deep elf priest always_corpse",
+                "neqoxec", "giant spore hd:3", "deep elf priest always_corpse",
                 "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame",
                 "dwarf name:drunken n_adj n_des n_noc perm_ench:confusion",
                 "hungry ghost"

@@ -127,12 +127,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_BRAIN_WORM,
-      {
-       { SPELL_BRAIN_FEED, 55, MON_SPELL_MAGICAL },
-      }
-    },
-
     {  MST_GIANT_ORANGE_BRAIN,
       {
        { SPELL_BRAIN_FEED, 10, MON_SPELL_MAGICAL },
