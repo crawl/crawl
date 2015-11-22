@@ -1531,7 +1531,7 @@ bool nasty_stasis(const item_def &item, operation_types oper)
     return (oper == OPER_PUTON
            && (item.is_type(OBJ_JEWELLERY, AMU_STASIS)
                && (you.duration[DUR_HASTE] || you.duration[DUR_SLOW]
-                   || you.duration[DUR_TELEPORT] || you.duration[DUR_FINESSE])))
+                   || you.duration[DUR_TELEPORT])))
             || (oper == OPER_PUTON || oper == OPER_WEAR
                 || oper == OPER_WIELD && !_is_wielded(item))
                 && (_is_known_no_tele_item(item) && you.duration[DUR_TELEPORT]);
