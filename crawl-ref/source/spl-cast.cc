@@ -1319,7 +1319,7 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (spell == SPELL_HASTE && spd.isMe()
             && stasis_blocks_effect(false, "%s prevents hasting.",
-                                    0, nullptr, "You cannot haste."))
+                                    "You cannot haste."))
         {
             return SPRET_ABORT;
         }
