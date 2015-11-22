@@ -491,7 +491,7 @@ WEIGHT:  5
 KMONS:   1 = scorpion w:20 / wasp w:13 / worker ant w:35 / \
              giant cockroach w:1 / worm w:1
 KMONS:   2 = soldier ant / redback / vampire mosquito w:5
-KMONS:   3aAdD = brain worm / boulder beetle w:5
+KMONS:   3aAdD = boulder beetle
 KMONS:   4bB = demonic crawler
 KMONS:   5eE = place:Spider:$ zombie
 KMONS:   6cCfF = wolf spider / emperor scorpion w:8

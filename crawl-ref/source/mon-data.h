@@ -248,6 +248,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_SALAMANDER_FIREBRAND)
     AXED_MON(MONS_OCTOPODE_CRUSHER)
     AXED_MON(MONS_BLUE_DEVIL)
+    AXED_MON(MONS_BRAIN_WORM)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -2221,18 +2222,6 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     { 4, 3, 3, 0 },
     1, 5, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_BRAINLESS, HT_LAND, 6, DEFAULT_ENERGY,
-    MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_SNAKE
-},
-
-{
-    MONS_BRAIN_WORM, 'w', LIGHTMAGENTA, "brain worm",
-    M_NO_SKELETON,
-    MR_NO_FLAGS,
-    10, MONS_WORM, MONS_BRAIN_WORM, MH_NATURAL, 20,
-    { {AT_BITE, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 3, 0 },
-    1, 5, MST_BRAIN_WORM, CE_NOXIOUS, S_SILENT,
-    I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_SNAKE
 },
 

@@ -1386,8 +1386,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     // worms ('w')
     case MONS_WORM:
         return TILEP_MONS_WORM;
-    case MONS_BRAIN_WORM:
-        return TILEP_MONS_BRAIN_WORM;
     case MONS_SWAMP_WORM:
         return TILEP_MONS_SWAMP_WORM;
     case MONS_GIANT_LEECH:
@@ -3710,8 +3708,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // worms and gastropods ('w')
     case MONS_WORM:
         return TILE_CORPSE_WORM;
-    case MONS_BRAIN_WORM:
-        return TILE_CORPSE_BRAIN_WORM;
     case MONS_SWAMP_WORM:
         return TILE_CORPSE_SWAMP_WORM;
     case MONS_GIANT_LEECH:

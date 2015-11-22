@@ -72,7 +72,6 @@ static const pop_entry pop_d[] =
   { 11, 21,  335, SEMI, MONS_MOTTLED_DRAGON },
   { 11, 21,  260, PEAK, MONS_BASILISK },
   { 11, 21,  192, PEAK, MONS_SKELETAL_WARRIOR },
-  { 11, 21,  146, PEAK, MONS_BRAIN_WORM },
   { 11, 23,  515, SEMI, MONS_HYDRA },
   { 12, 20,  515, SEMI, MONS_VAMPIRE_MOSQUITO },
   { 12, 22,  440, FALL, MONS_SLIME_CREATURE },
@@ -249,7 +248,6 @@ static const pop_entry pop_lair[] =
   {  3,  9,   52, SEMI, MONS_CATOBLEPAS },
   {  3,  9,   25, PEAK, MONS_OKLOB_PLANT },
   {  4,  8,   89, RISE, MONS_BOULDER_BEETLE },
-  {  4,  8,   14, SEMI, MONS_BRAIN_WORM },
   {  4, 10,   52, SEMI, MONS_POLAR_BEAR },
   {  4, 10,   25, PEAK, MONS_LINDWURM },
   {  5, 12,   66, RISE, MONS_FIRE_CRAB },
@@ -845,7 +843,6 @@ static const pop_entry pop_abyss[] =
   {  1,  5,    3, FLAT, MONS_DRACONIAN_SCORCHER },
   {  3,  5,    1, FLAT, MONS_CORRUPTER },
   // Misc
-  {  1,  5,   50, FALL, MONS_BRAIN_WORM },
   {  1,  5,    8, FLAT, MONS_DEATH_DRAKE },
   {  1,  5,    2, FLAT, MONS_SHADOW_DRAGON },
   {  1,  5,    2, FLAT, MONS_QUICKSILVER_DRAGON },
