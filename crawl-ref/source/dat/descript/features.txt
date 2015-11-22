@@ -518,7 +518,7 @@ An idol of Beogh
     else
       return "A crude statue depicting Beogh, the god of the primitive orcs "
           .. "living here. Their religion calls for the murder of all "
-          .. "non-believers. Beogh is known to be vengeful to those who dare
+          .. "non-believers. Beogh is known to be vengeful to those who dare "
           .. "damage such idols.";
   end
 }}
