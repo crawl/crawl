@@ -1173,10 +1173,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_STASIS:
-        // Berserk is possible with a Battlelust card or with a moth of wrath
-        // that affects you while donning the amulet.
+        // Berserk is possible with a moth of wrath that affects you while
+        // donning the amulet.
         int amount = you.duration[DUR_HASTE] + you.duration[DUR_SLOW]
-                     + you.duration[DUR_BERSERK] + you.duration[DUR_FINESSE];
+                     + you.duration[DUR_BERSERK];
         if (you.duration[DUR_TELEPORT])
             amount += 30 + random2(150);
         if (amount)
@@ -1201,13 +1201,11 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
                 mprf(MSGCH_DURATION, "You feel strangely stable.");
             if (you.duration[DUR_BERSERK])
                 mprf(MSGCH_DURATION, "You violently calm down.");
-            if (you.duration[DUR_FINESSE])
-                mprf(MSGCH_DURATION, "You suddenly lose your finesse.");
+
             you.duration[DUR_HASTE] = 0;
             you.duration[DUR_SLOW] = 0;
             you.duration[DUR_TELEPORT] = 0;
             you.duration[DUR_BERSERK] = 0;
-            you.duration[DUR_FINESSE] = 0;
         }
         else
             mprf("You feel %s static.", you.species == SP_FORMICID ? "familiarly" : "strangely");

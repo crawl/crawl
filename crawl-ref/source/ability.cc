@@ -673,7 +673,6 @@ ability_type fixup_ability(ability_type ability)
         }
         return ability;
 
-    case ABIL_OKAWARU_FINESSE:
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
         if (you.species == SP_FORMICID)
@@ -1364,15 +1363,6 @@ static bool _check_ability_possible(const ability_def& abil,
         {
             if (!quiet)
                 mpr("You have nothing more to learn.");
-            return false;
-        }
-        return true;
-
-    case ABIL_OKAWARU_FINESSE:
-        if (stasis_blocks_effect(false,
-                                 quiet ? nullptr
-                                       : "%s makes your neck tingle."))
-        {
             return false;
         }
         return true;
@@ -2261,14 +2251,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_OKAWARU_FINESSE:
         fail_check();
-        if (stasis_blocks_effect(true, "%s emits a piercing whistle.",
-                                 20, "%s makes your neck tingle."))
-        {
-            // Identify the amulet and spend costs - finesse will be aborted
-            // for free with an identified amulet.
-            break;
-        }
-
         if (you.duration[DUR_FINESSE])
         {
             // "Your [hand(s)] get{s} new energy."
