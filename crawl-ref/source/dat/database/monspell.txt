@@ -137,6 +137,10 @@ Orb of Destruction cast
 
 @The_monster@ launches a ball of destructive magic.
 %%%%
+unseen Orb of Destruction cast
+
+@The_something@ conjures a glowing orb.
+%%%%
 Sticky Flame cast
 
 @The_monster@ sprays @target@ with burning goo.
