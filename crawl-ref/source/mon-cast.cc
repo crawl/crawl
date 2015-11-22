@@ -4882,7 +4882,7 @@ static bool _spell_charged(monster *mons, int count)
             mons->update_ench(ench);
         }
 
-        if (!mons_near(mons))
+        if (!mons_near(mons) || !you.can_see(*mons))
             return false;
         string msg =
             getSpeakString(make_stringf("%s charge",
