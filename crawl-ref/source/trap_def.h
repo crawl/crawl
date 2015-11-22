@@ -17,7 +17,6 @@ struct trap_def
     bool is_known(const actor* act = 0) const;
     bool is_safe(actor* act = 0) const;
     void trigger(actor& triggerer, bool flat_footed = false);
-    void disarm();
     void destroy(bool known = false);
     void hide();
     void reveal();
