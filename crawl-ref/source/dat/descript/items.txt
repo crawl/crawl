@@ -661,8 +661,7 @@ A very large and very heavy stone. {{
    then
        return ""
    else
-       return "Exceptional strength is needed even to carry one, and " ..
-              "only large creatures are capable of throwing it."
+       return "Only large creatures are capable of throwing it."
    end
 }}
 %%%%
