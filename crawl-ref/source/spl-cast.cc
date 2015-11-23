@@ -1280,6 +1280,8 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (spell == SPELL_DISPEL_UNDEAD)
             targ = TARG_HOSTILE_UNDEAD;
+        else if (spell == SPELL_VIOLENT_UNRAVELLING)
+            targ = TARG_DISPELLABLE;
 
         targeting_type dir  =
             (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_MOVABLE_OBJECT :
