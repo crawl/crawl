@@ -382,7 +382,6 @@ wizlab_portal4
 wizlab_portal5
 wizlab_portal6
 wizlab_portal7
-wizlab_portal8
 wizlab_gone DNGN_PORTAL_WIZLAB_GONE
 ossuary_portal DNGN_PORTAL_OSSUARY
 ossuary_gone DNGN_PORTAL_OSSUARY_GONE
