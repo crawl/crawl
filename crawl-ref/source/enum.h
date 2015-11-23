@@ -2461,6 +2461,7 @@ enum targ_mode_type
     TARG_EVOLVABLE_PLANTS,  // Targeting mode for Fedhas' evolution
     TARG_HOSTILE_UNDEAD,    // For dispel undead
     TARG_BEOGH_GIFTABLE,    // For Beogh followers who can be given gifts
+    TARG_DISPELLABLE,       // For hostiles that have dispellable enchs
     TARG_NUM_MODES
 };
 
