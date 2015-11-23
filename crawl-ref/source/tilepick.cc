@@ -1579,8 +1579,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_JUMPING_SPIDER;
     case MONS_WOLF_SPIDER:
         return TILEP_MONS_WOLF_SPIDER;
-    case MONS_TRAPDOOR_SPIDER:
-        return TILEP_MONS_TRAPDOOR_SPIDER;
     case MONS_REDBACK:
         return TILEP_MONS_REDBACK;
     case MONS_DEMONIC_CRAWLER:
@@ -3671,8 +3669,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_JUMPING_SPIDER;
     case MONS_WOLF_SPIDER:
         return TILE_CORPSE_WOLF_SPIDER;
-    case MONS_TRAPDOOR_SPIDER:
-        return TILE_CORPSE_TRAPDOOR_SPIDER;
     case MONS_REDBACK:
         return TILE_CORPSE_REDBACK;
     case MONS_DEMONIC_CRAWLER:

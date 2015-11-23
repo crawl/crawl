@@ -220,12 +220,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         // something has submerged.
         if (!quiet && mons_near(this))
         {
-            if (type == MONS_TRAPDOOR_SPIDER)
-            {
-                mprf("%s hides itself under the floor.",
-                     name(DESC_A, true).c_str());
-            }
-            else if (seen_context == SC_SURFACES)
+            if (seen_context == SC_SURFACES)
             {
                 // The monster surfaced and submerged in the same turn
                 // without doing anything else.
@@ -246,9 +241,6 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_CONFUSION:
     case ENCH_MAD:
-        if (type == MONS_TRAPDOOR_SPIDER && has_ench(ENCH_SUBMERGED))
-            del_ench(ENCH_SUBMERGED);
-
         if (mons_is_lurking(this))
         {
             behaviour = BEH_WANDER;
@@ -790,13 +782,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     seen_context = SC_JUST_SEEN;
                 }
 
-                if (type == MONS_TRAPDOOR_SPIDER)
-                {
-                    mprf(channel,
-                         "%s leaps out from its hiding place under the floor!",
-                         name(DESC_A, true).c_str());
-                }
-                else if (type == MONS_LOST_SOUL)
+                if (type == MONS_LOST_SOUL)
                 {
                     mprf(channel, "%s flickers into view.",
                                   name(DESC_A).c_str());

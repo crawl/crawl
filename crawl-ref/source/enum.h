@@ -2693,7 +2693,9 @@ enum monster_type                      // menv[].type
 #endif
     MONS_SPIDER,
     MONS_WOLF_SPIDER,
+#if TAG_MAJOR_VERSION == 34
     MONS_TRAPDOOR_SPIDER,
+#endif
     MONS_JUMPING_SPIDER,
     MONS_ORB_SPIDER,
     MONS_TARANTELLA,

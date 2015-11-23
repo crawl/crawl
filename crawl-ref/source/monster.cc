@@ -250,8 +250,8 @@ bool monster::swimming() const
 
 bool monster::wants_submerge() const
 {
-    // Trapdoor spiders and swamp worms don't re-submerge randomly.
-    if (type == MONS_TRAPDOOR_SPIDER || type == MONS_SWAMP_WORM)
+    // Swamp worms don't re-submerge randomly.
+    if (type == MONS_SWAMP_WORM)
         return false;
 
     // Don't submerge if we just unsubmerged to shout.
@@ -5569,14 +5569,11 @@ void monster::apply_location_effects(const coord_def &oldpos,
     if (alive())
         mons_check_pool(this, pos(), killer, killernum);
 
-    if (alive() && has_ench(ENCH_SUBMERGED)
-        && (!monster_can_submerge(this, grd(pos()))
-            || type == MONS_TRAPDOOR_SPIDER))
+    if (alive()
+        && has_ench(ENCH_SUBMERGED)
+        && !monster_can_submerge(this, grd(pos())))
     {
         del_ench(ENCH_SUBMERGED);
-
-        if (type == MONS_TRAPDOOR_SPIDER)
-            behaviour_event(this, ME_EVAL);
     }
 
     terrain_property_t &prop = env.pgrid(pos());

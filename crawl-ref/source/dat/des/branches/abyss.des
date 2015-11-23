@@ -1893,8 +1893,7 @@ ENDMAP
 # Technically possible for this one to require dig, but pretty unlikely.
 NAME:  evilmike_abyss_exit_12
 TAGS:  abyss_exit
-SUBST: X = x., x = xxx++1
-MONS:  w:2 trapdoor spider / nothing
+SUBST: X = x., x = xxx++.
 : init_abyss_exit(_G, "O")
 MAP
 XXXxxxXXX

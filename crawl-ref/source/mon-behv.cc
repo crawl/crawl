@@ -480,12 +480,7 @@ void handle_behaviour(monster* mon)
             break;
 
         case BEH_LURK:
-            // Make sure trapdoor spiders are not hiding in plain sight
-            if (mon->type == MONS_TRAPDOOR_SPIDER && !mon->submerged())
-                mon->add_ench(ENCH_SUBMERGED);
-
-            // Fall through to get a target, but don't change to wandering.
-
+            // Get a target, but don't change to wandering.
         case BEH_SEEK:
             // No foe?  Then wander or seek the player.
             if (mon->foe == MHITNOT)

@@ -215,7 +215,7 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
         case HT_AMPHIBIOUS_LAVA:
             return feat == DNGN_LAVA;
         case HT_LAND:
-            // Currently, trapdoor spider and air elemental only.
+            // Lost souls.
             return feat == DNGN_FLOOR;
         default:
             return false;
@@ -1612,9 +1612,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // more aware of the player than they'd be otherwise).
     if (mons_is_statue(mg.cls))
         mon->behaviour = BEH_WANDER;
-    // Trapdoor spiders lurk, they don't sleep
-    if (mg.cls == MONS_TRAPDOOR_SPIDER)
-        mon->behaviour = BEH_LURK;
 
     mon->foe_memory = 0;
 

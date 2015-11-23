@@ -317,7 +317,7 @@ DEPTH:   Depths, Spider:2-, Abyss
 KMONS:   0 = 0
 KMONS:   1 = giant leech
 KMONS:   2 = boulder beetle
-KMONS:   3 = trapdoor spider / orb spider w:5
+KMONS:   3 = redback w:5 / orb spider w:5 / nothing
 KMONS:   4 = thrashing horror
 KITEM:   0.@ = stone no_pickup q:1 w:90 / nothing
 KITEM:   12345 = % w:90 no_pickup / * no_pickup

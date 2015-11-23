@@ -26,14 +26,14 @@ function base_monster_setup(e)
            killer bee band / wasp / eye of draining / manticore /\
            wyvern / troll / two-headed ogre / yak band /\
            hill giant / komodo dragon / wraith / soldier ant / unseen horror /\
-           trapdoor spider / basilisk / cyclops band / efreet /\
+           basilisk / cyclops band / efreet /\
            mottled dragon / blink frog band / vampire mosquito band /\
            griffon / gargoyle / molten gargoyle /\
            kobold demonologist band / deep troll /\
            deep elf mage / boulder beetle / hornet /\
            orc high priest band w:5 / orc sorcerer band w:5 / orc knight band /\
            flayed ghost / freezing wraith / shadow wraith / shadow /\
-           redback / phantasmal warrior / spiny frog / hell rat /\
+           redback w:20 / phantasmal warrior / spiny frog / hell rat /\
            black mamba / fire drake / hydra w:5 / polar bear / lindwurm /\
            elephant / death yak / wolf band / sheep band /\
            swamp drake / bog body / giant leech / swamp dragon w:3 /\

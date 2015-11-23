@@ -1977,11 +1977,6 @@ training dummy
 
 Un mannequin utilisé pour l'entrainement au combat.
 %%%%
-trapdoor spider
-
-Un arachnide rapide qui à la fois surprend ses proies et fait fuir ses ennemis
-en s'occultant lui-même dans les recoins du sol du donjon.
-%%%%
 troll
 
 Le troll de base est une créature humanoïde imposante et physiquement
