@@ -1881,6 +1881,53 @@ void monster_info::set_colour(int col)
     _colour = col;
 }
 
+/**
+ * Can this monster be debuffed, to the best of the player's knowledge?
+ *
+ * XXX: horribly redundant with spl-goditem.cc::debuff_monster()
+ */
+bool monster_info::debuffable() const
+{
+    // List of magical enchantments which will be dispelled.
+    static const monster_info_flags lost_enchantments[] =
+    {
+        MB_SLOWED,
+        MB_HASTED,
+        MB_SWIFT,
+        MB_STRONG,
+        MB_AGILE,
+        MB_CONFUSED,
+        MB_INVISIBLE,
+        MB_GLOWING,
+        MB_CHARMED,
+        MB_HEXED,
+        MB_PARALYSED,
+        MB_PETRIFYING,
+        MB_PETRIFIED,
+        MB_REGENERATION,
+        MB_INNER_FLAME,
+        MB_OZOCUBUS_ARMOUR,
+        MB_INJURY_BOND,
+        MB_DIMENSION_ANCHOR,
+        MB_CONTROL_WINDS,
+        MB_TOXIC_RADIANCE,
+        MB_AGILE,
+        MB_BLACK_MARK,
+        MB_SHROUD,
+        MB_SAP_MAGIC,
+        MB_REPEL_MSL,
+        MB_DEFLECT_MSL,
+        MB_CONDENSATION_SHIELD,
+        MB_RESISTANCE,
+        MB_HEXED,
+    };
+
+    for (monster_info_flags mb : lost_enchantments)
+        if (is(mb))
+            return true;
+    return false;
+}
+
 void get_monster_info(vector<monster_info>& mons)
 {
     vector<monster* > visible;
