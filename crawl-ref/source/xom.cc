@@ -693,7 +693,7 @@ static void _try_brand_switch(const int item_index)
 
     item_def &item(mitm[item_index]);
 
-    if (item.base_type != OBJ_WEAPONS || is_range_weapon(item))
+    if (item.base_type != OBJ_WEAPONS)
         return;
 
     if (is_unrandom_artefact(item))
