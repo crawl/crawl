@@ -1922,10 +1922,9 @@ bool monster_info::debuffable() const
         MB_HEXED,
     };
 
-    for (monster_info_flags mb : lost_enchantments)
-        if (is(mb))
-            return true;
-    return false;
+    return any_of(begin(lost_enchantments), end(lost_enchantments),
+                  [this](monster_info_flags flag) -> bool
+                  { return this->is(flag); });
 }
 
 void get_monster_info(vector<monster_info>& mons)

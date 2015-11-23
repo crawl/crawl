@@ -210,9 +210,8 @@ aff_type targetter_beam::is_affected(coord_def loc)
     return on_path ? AFF_TRACER : AFF_NO;
 }
 
-targetter_unravelling::targetter_unravelling(const actor *act, int range,
-                                             int pow) :
-                       targetter_beam(act, range, ZAP_UNRAVELLING, pow, 1, 1)
+targetter_unravelling::targetter_unravelling(const actor *act, int r, int pow)
+    : targetter_beam(act, r, ZAP_UNRAVELLING, pow, 1, 1)
 {
 }
 
