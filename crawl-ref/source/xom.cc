@@ -700,7 +700,7 @@ static void _try_brand_switch(const int item_index)
         return;
 
     // Only do it some of the time.
-    if (coinflip())
+    if (one_chance_in(3))
         return;
 
     if (get_weapon_brand(item) == SPWPN_NORMAL)
