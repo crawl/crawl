@@ -61,7 +61,6 @@ static const pop_entry pop_d[] =
   { 10, 18, 1000, FLAT, MONS_HILL_GIANT },
   { 10, 18,  370, SEMI, MONS_GARGOYLE },
   { 10, 18,  335, SEMI, MONS_WRAITH },
-  { 10, 18,  220, PEAK, MONS_TRAPDOOR_SPIDER },
   { 10, 20,  515, SEMI, MONS_UNSEEN_HORROR },
   { 10, 20,  192, PEAK, MONS_KOMODO_DRAGON },
   { 11, 18,  235, SEMI, MONS_KOBOLD_DEMONOLOGIST },
@@ -335,10 +334,9 @@ static const pop_entry pop_spider[] =
   { -1,  6,   89, SEMI, MONS_BOULDER_BEETLE },
   { -1,  9,  765, SEMI, MONS_DEMONIC_CRAWLER },
   {  1,  4,  955, FLAT, MONS_WOLF_SPIDER },
-  {  1,  4,  880, FLAT, MONS_TRAPDOOR_SPIDER },
-  {  1,  4,  765, FLAT, MONS_JUMPING_SPIDER },
-  {  1,  4,  690, FLAT, MONS_TARANTELLA },
-  {  1,  4,  605, FLAT, MONS_REDBACK },
+  {  1,  4,  985, FLAT, MONS_JUMPING_SPIDER },
+  {  1,  4,  910, FLAT, MONS_TARANTELLA },
+  {  1,  4, 1045, FLAT, MONS_REDBACK },
   {  1,  4,  550, FLAT, MONS_ORB_SPIDER },
   {  1,  4,   52, FLAT, MONS_WASP },
   {  1,  6,  100, FLAT, MONS_TORPOR_SNAIL },
@@ -479,7 +477,6 @@ static const pop_entry pop_crypt[] =
 
 static const pop_entry pop_tomb[] =
 { // Tomb (OOD cap: 5)
-  {  1,  3,    3, SEMI, MONS_TRAPDOOR_SPIDER },
   {  1,  5,  200, FLAT, MONS_SKELETON },
   {  1,  5,  185, FLAT, MONS_ZOMBIE },
   {  1,  5,   50, SEMI, MONS_SIMULACRUM },

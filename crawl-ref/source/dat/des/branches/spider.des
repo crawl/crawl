@@ -41,7 +41,7 @@ ENDMAP
 NAME:   spider_nest_entry_a
 TAGS:   spider_entry patrolling no_monster_gen
 KFEAT:  O = enter_spider_nest
-MONS:   trapdoor spider / w:5 redback / w:5 jumping spider / nothing w:20
+MONS:   redback w:5 / jumping spider w:5 / nothing w:30
 MAP
 .WWW.WWW.
 W.WW.WW.W
@@ -58,7 +58,7 @@ NAME:   spider_nest_entry_webs
 TAGS:   spider_entry patrolling no_monster_gen
 KFEAT:  O = enter_spider_nest
 KFEAT:  ^ = web
-MONS:   trapdoor spider
+MONS:   redback / nothing
 MAP
 .......x.....
 ..^...xxx.^..
@@ -210,7 +210,7 @@ WEIGHT:  5
 ORIENT:  southeast
 MONS:    scorpion
 MONS:    scorpion / emperor scorpion w:1
-MONS:    trapdoor spider generate_awake / nothing w:20
+MONS:    redback / nothing w:25
 MONS:    redback / wolf spider
 MONS:    jumping spider / tarantella w:20
 MONS:    emperor scorpion / demonic crawler / nothing
@@ -254,7 +254,7 @@ ORIENT: southeast
 DEPTH:  Spider, !Spider:$
 KMONS:  1 = wasp
 KMONS:  2 = scorpion / wolf spider w:3
-KMONS:  3 = trapdoor spider generate_awake / nothing
+KMONS:  3 = redback / nothing w:15
 KMONS:  74 = redback / wolf spider / nothing w:15
 KMONS:  5 = jumping spider / tarantella w:20
 KMONS:  6 = emperor scorpion / scorpion
@@ -307,7 +307,7 @@ KMONS:  M = fungus
  lua_marker('Z', wm)
 }}
 SUBST:  W = Ww , z : * , * = %%$*..M , . = WW.
-MONS:   wolf spider / trapdoor spider generate_awake / redback / tarantella w:2
+MONS:   wolf spider / redback w:15 / tarantella w:2 / nothing w:5
 MAP
   xxxxx    xxxx
  xxxxxxx xxxxxxx
@@ -330,7 +330,7 @@ ENDMAP
 NAME:   spiders_nest_the_unseen
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  Spider:3-
-MONS:   trapdoor spider, patrolling ghost moth
+MONS:   patrolling ghost moth
 SUBST:  | = %%d, * = ..%%d
 ITEM:   potion of ambrosia ident:type
 MAP
@@ -340,10 +340,10 @@ MAP
   ..xx......xx..
  ..xx........xx..
  .xx..........xx.
-..x*..1........x.
-.xx|2.1..........
-.xx|..1..........
-..x*..1........x.
+..x*...........x.
+.xx|1............
+.xx|.............
+..x*...........x.
  .xx..........xx.
  ..xx........xx..
   ..xx......xx..
@@ -396,11 +396,11 @@ SUBST:   2 = 2 *:4
 KMONS:   2 = tarantella / redback w:12 / jumping spider w:8 / wolf spider w:5
 KMONS:   3 = redback
 SUBST:   4 = 4 *:3
-KMONS:   4 = jumping spider / wolf spider w:5 / trapdoor spider w:20 / redback w:2
+KMONS:   4 = jumping spider / wolf spider w:5 / redback w:15
 SUBST:   6 = 6 *:2
 KMONS:   6 = redback / wolf spider w:4 / jumping spider w:1
-SUBST:   7 = 7 .:50
-KMONS:   7 = trapdoor spider
+SUBST:   7 = 7 .:75
+KMONS:   7 = redback
 KITEM:   t = potion of ambrosia ident:type
 MAP
      ..........   ......  ........
@@ -721,7 +721,7 @@ ENDMAP
 # Misc minivaults
 NAME:   guppyfry_spider_mini_1
 DEPTH:  Spider
-MONS:   jumping spider / trapdoor spider / redback
+MONS:   jumping spider / redback w:15 / nothing w:5
 MAP
 x@.xxxxxxxx.
 xx..xxxxx..@
@@ -739,7 +739,7 @@ ENDMAP
 
 NAME:   guppyfry_spider_mini_2
 DEPTH:  Spider
-MONS:   jumping spider / trapdoor spider / redback
+MONS:   jumping spider / redback w:15 / nothing w:5
 MAP
 xx..xxxx..xx
 x....xx....x
@@ -756,7 +756,7 @@ ENDMAP
 
 NAME:   guppyfry_spider_mini_3
 DEPTH:  Spider
-MONS:   jumping spider / trapdoor spider / redback
+MONS:   jumping spider / redback w:15 / nothing w:5
 MAP
 W....WW....W
 xW...WW...Wx
@@ -769,25 +769,6 @@ WWWW1111WWWW
 .xWWWWWWWWx.
 xW...WW...Wx
 W....WW....W
-ENDMAP
-
-NAME:   nicolae_trapdoor_corridor
-DEPTH:  Spider:1-2
-MONS:   trapdoor spider
-SUBST:  z = ....***
-NSUBST: ! = 1:^ / *:.
-NSUBST: ' = 1:^ / *:.
-KFEAT:  * = shaft trap w:40 / web / floor
-KFEAT:  ^ = known shaft trap
-MAP
-xxxxxxxxxxxxx
-@!.1.xxzzzzxxx
-@!.1.zzz1zzz.xxx
-xxx.zzzxxzz.1.'@
-  xxzzzzzzxx1.'@
-   xxzz1zzxxxxxx
-    xxzzzxx
-     xxxxx
 ENDMAP
 
 NAME:   nicolae_orb_island
@@ -847,7 +828,7 @@ ENDMAP
 NAME:   nicolae_spider_nook
 DEPTH:  Spider
 TAGS:   no_monster_gen
-MONS:   wolf spider / redback / trapdoor spider / jumping spider
+MONS:   wolf spider / redback w:15 / jumping spider / nothing w:5
 KITEM:  d = | w:5 / * w:20 / $
 KMONS:  d = orb spider
 MAP
@@ -1017,11 +998,10 @@ MONS:   orb spider
 SHUFFLE: ABC, DEF, GH, IJ, abcdefghi
 SUBST:  AEFGI = x, BCDHJ = .
 NSUBST: a = 1:} / 1:] / 1:) / 1:1 / *:.
-KMONS:  bcdefghi = tarantella / redback / wolf spider / \
+KMONS:  bcdefghi = tarantella / redback w:15 / wolf spider / \
         jumping spider / orb spider / demonic crawler / \
         scorpion / emperor scorpion / \
-        trapdoor spider / wasp / \
-        hornet / nothing w:100
+        wasp / hornet / nothing w:100
 SUBST: X = xxxx^....0
 KFEAT: ^ = web / floor w:20
 MAP
@@ -1386,7 +1366,7 @@ DEPTH:   Spider, !Spider:$
 TAGS:    no_monster_gen
 ORIENT:  north
 MONS:    entropy weaver, wolf spider, oklob plant
-MONS:    jumping spider / redback / trapdoor spider / wolf spider
+MONS:    jumping spider / redback w:15 / wolf spider
 MONS:    emperor scorpion, obsidian statue / orange crystal statue
 # Randomise wall type: in 50% of maps, you cannot dig to the stairs.
 SUBST:   x : xxxxxxvvvccb
@@ -1443,7 +1423,7 @@ ORIENT: northwest
 KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
 MONS:   ghost moth, hornet / w:5 wasp, emperor scorpion / w:5 spark wasp
 MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
-MONS:   trapdoor spider / nothing
+MONS:   redback / nothing w:15
 MONS:   ghost moth
 MONS:   orb spider
 KMONS:  8 = moth of wrath / ghost moth
@@ -1501,7 +1481,7 @@ KITEM:  O = gossamer rune of Zot
 ITEM:   potion of ambrosia ident:type
 MONS:   ghost moth / w:7 nothing, moth of wrath / ghost moth, emperor scorpion
 MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
-MONS:   orb spider / nothing, trapdoor spider / nothing
+MONS:   orb spider / nothing, redback / nothing w:15
 NSUBST: 4 = 3:3
 NSUBST: 7 = 3:1 / 1:2
 SUBST:  W = W..
@@ -1543,7 +1523,7 @@ MONS:   wasp / hornet / w:5 nothing
 MONS:   w:2 demonic crawler / w:4 emperor scorpion / w:1 spark wasp
 MONS:   tarantella / w:22 wolf spider / jumping spider / w:8 demonic crawler / \
         w:7 nothing
-MONS:   trapdoor spider / nothing
+MONS:   redback / nothing w:15
 MONS:   orb spider
 NSUBST: 8 = 2:c / *:7, " = 1:. / 1:c. / *:c
 SUBST:  - = .....WWW^
@@ -1588,7 +1568,7 @@ KITEM:  O = gossamer rune of Zot
 KITEM:  P = potion of ambrosia ident:type
 MONS:   ghost moth, moth of wrath, emperor scorpion / w:5 spark wasp
 MONS:   wolf spider w:11 / redback / tarantella / jumping spider
-MONS:   orb spider / hornet, trapdoor spider
+MONS:   orb spider / hornet, redback / nothing
 NSUBST: 1 = 2:1 / 1:1.. / *:4, 4 = 20:4 / 16:. / * = 44...
 SUBST:  2 = 12, " = ^^...6, - = .....w^^
 KFEAT:  ^ = known web trap
@@ -1693,7 +1673,7 @@ KMONS:  e = emperor scorpion / spark wasp w:5
 KMONS:  m = moth of wrath / ghost moth w:40 / nothing w:10
 KMONS:  p = wasp w:30 / hornet
 KMONS:  o = orb spider w:40 / demonic crawler
-KMONS:  t = trapdoor spider w:15 / nothing
+KMONS:  t = redback / nothing
 KMONS:  s = torpor snail / entropy weaver
 ORIENT: float
 PLACE:  Spider:$

@@ -267,10 +267,10 @@ TAGS:   uniq_second_food extra chance_second_food
 TAGS:   no_monster_gen no_item_gen patrolling
 MONS:   spriggan skeleton / centaur skeleton
 MONS:   troll skeleton / hungry ghost
-KMONS:  A = trapdoor spider w:6 / unseen horror / nothing w:4
-ITEM:  fruit q:1
-ITEM:  royal jelly q:2
-ITEM:  bread ration q:3
+KMONS:  A = unseen horror w:16 / nothing w:4
+ITEM:   fruit q:1
+ITEM:   royal jelly q:2
+ITEM:   bread ration q:3
 SUBST:  D : DDDDE
 NSUBST: D = 1:A / 2:d / 2:e / 1:1, E = 2:d / 2:e / 2:1
 MAP

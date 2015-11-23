@@ -343,9 +343,9 @@ TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror
 MONS: two-headed ogre hd:3 hp:40
 MONS: hill giant hd:5 hp:68
 MONS: Erolcha
-MONS: trapdoor spider, redback
+MONS: redback
 KFEAT: ~ = net trap
-NSUBST: ^ = 2:4 / 1:5 / 10:~ / *:.
+NSUBST: ^ = 2:4 / 10:~ / *:.
 COLOUR: # = yellow
 KFEAT: # = closed_door
 : lua_marker('#', props_marker {

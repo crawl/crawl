@@ -153,7 +153,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     const int x_distance  = abs(delta.x);
     const int y_distance  = abs(delta.y);
     monster* mons = monster_at(beam.target);
-    // don't allow targeting of submerged monsters (includes trapdoor spiders)
+    // don't allow targeting of submerged monsters
     if (mons && mons->submerged())
         mons = nullptr;
 
@@ -1055,7 +1055,7 @@ static const pop_entry pop_spiders[] =
 { // Sack of Spiders
   {  0,  13,   40, FALL, MONS_WORKER_ANT },
   {  0,  13,   80, FALL, MONS_SOLDIER_ANT },
-  {  6,  19,   80, PEAK, MONS_TRAPDOOR_SPIDER },
+  {  6,  19,   80, PEAK, MONS_REDBACK},
   {  8,  27,   90, PEAK, MONS_REDBACK },
   { 10,  27,   10, SEMI, MONS_ORB_SPIDER },
   { 12,  29,  100, PEAK, MONS_JUMPING_SPIDER },

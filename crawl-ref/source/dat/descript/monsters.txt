@@ -2451,11 +2451,6 @@ training dummy
 
 A mannequin used for battle practice.
 %%%%
-trapdoor spider
-
-A fast-moving arachnid that both surprises its prey and evades its enemies by
-concealing itself in crannies in the dungeon floor.
-%%%%
 troll
 
 The common troll is a huge and physically powerful humanoid creature. Short on

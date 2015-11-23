@@ -3078,8 +3078,7 @@ static bool _mons_can_displace(const monster* mpusher,
     if (mons_is_batty(mpusher) || mons_is_batty(mpushee))
         return false;
 
-    // Anyone can displace a submerged monster (otherwise monsters can
-    // get stuck behind a trapdoor spider, giving away its presence).
+    // Anyone can displace a submerged monster.
     if (mpushee->submerged())
         return true;
 
@@ -3701,30 +3700,6 @@ static bool _monster_move(monster* mons)
 
     const habitat_type habitat = mons_primary_habitat(mons);
     bool deep_water_available = false;
-
-    if (mons->type == MONS_TRAPDOOR_SPIDER)
-    {
-        if (mons->submerged())
-            return false;
-
-        // Trapdoor spiders sometime hide if they can't see their foe.
-        // (but friendly trapdoor spiders won't hide at all, for sanity's
-        // sake.)
-        const actor *foe = mons->get_foe();
-        const bool can_see = foe && mons->can_see(*foe);
-
-        if (monster_can_submerge(mons, grd(mons->pos()))
-            && !can_see && !mons_is_confused(mons)
-            && !mons->friendly()
-            && !mons->caught()
-            && !mons->berserk_or_insane()
-            && one_chance_in(5))
-        {
-            mons->add_ench(ENCH_SUBMERGED);
-            mons->behaviour = BEH_LURK;
-            return false;
-        }
-    }
 
     // Berserking monsters make a lot of racket.
     if (mons->berserk_or_insane())

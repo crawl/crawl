@@ -52,7 +52,7 @@ KMONS:  q = mummy priest
 KMONS:  s = Tiamat
 KMONS:  t = fire giant
 KMONS:  G = Lom Lobon
-KMONS:  u = trapdoor spider
+KMONS:  u = redback
 KMONS:  v = shining eye
 KMONS:  z = the Lernaean hydra
 KFEAT:  A = armour shop
@@ -76,13 +76,13 @@ xxxcTTBBBBBBBBBBBBBWWW.4c$$crrrrr+..$$$cc.mhm$c..wn|x*xxxx+c$$$$cxxx
 xxxcxxBBBBBBBBBBBBBx+xxxcc+cccrSrc~...dc..mmm$c.pwoxx+xLr..cc$$$cxxx
 xxxc$$BBBBBBBBBBBBB****xxxF+$crrrccc++cc.cc..$c..wxxrrrrr...cc$$cxxx
 xxxcccBBBBBBBBBBBBBx+xxx*xxx$crrccc..ccc..c+ccc..wxrrrrrrr...c$$cxxx
-xxxcYr.......+$.$+$$6$$+*Axxucrrcccc$$ccc.JJcFw..xxrrrrrr....cc$cxxx
+xxxcYr.......+$.$+$$6$$+*Axx.crrcccc$$ccc.JJcFw..xxrrrrrr....cc$cxxx
 xxxccc++++cccx$5$xxxxxxxxxxx$cc+c$$ce$c$cccJcqwp.c.....l|.....cecxxx
 xxxc..E....cccc.ccc.......xxucc*c$$$$$$$$$cJccc77c.....|k.....c$cxxx
 xxxcv......vc$c+c$cJJ......+$cccc$$$$$$$$$cJc.+77ccrrrrrrrrrrcc$cxxx
 xxxc..c..E..c$I$I$c+++xxxxxxuc**+$$$$$$cccc+crxx+cc$$$$$$$$$$c$$cxxx
 xxxcv......vc$***$cPPPP...ExLccccc$$$ccc....crxWWWcc$$$$$$$$cc$$cxxx
-xxxc..E..c..cccccccPPP....x+uc***ccccc...ccccrxWWWWcc******cc$$$cxxx
+xxxc..E..c..cccccccPPP....x+.c***ccccc...ccccrxWWWWcc******cc$$$cxxx
 xxxcv......vcxQQQQ.......Wxccc*t...t...cccrrrrxWWWWWcccccccc..$$cxxx
 xxxc..c..E..cxQQQ.......WWxc***....cccccrrrrccxxWWWWcWWWWWc.S..$cxxx
 xxxcv......vcxx.......WWWxxc**..t.ccrrrrrrrrc$$x+WWW+WWzWW+....$cxxx

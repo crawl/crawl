@@ -1444,9 +1444,6 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         else if (at.context == SC_SURFACES_BRIEFLY)
             text += "surfaces briefly.";
         else if (at.context == SC_SURFACES)
-            if (mon->type == MONS_TRAPDOOR_SPIDER)
-                text += " leaps out from its hiding place under the floor!";
-            else
                 text += " surfaces.";
         else if (at.context == SC_FISH_SURFACES_SHOUT
               || at.context == SC_FISH_SURFACES)
