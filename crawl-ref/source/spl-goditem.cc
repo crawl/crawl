@@ -484,11 +484,8 @@ static void _dispellable_monster_buffs(const monster &mon,
         // ...except for natural invisibility...
         if (ench == ENCH_INVIS && mons_class_flag(mon.type, M_INVIS))
             continue;
-        // ...permaconfusion...
+        // ...and permaconfusion.
         if (ench == ENCH_CONFUSION && mons_class_flag(mon.type, M_CONFUSED))
-            continue;
-        // ...and regeneration from Trog.
-        if (ench == ENCH_REGENERATION && mon.has_ench(ENCH_RAISED_MR))
             continue;
 
         if (mon.has_ench(ench))
