@@ -3113,9 +3113,9 @@ ENDMAP
 
 NAME:    lasty_cornered_adventurer
 TAGS:    no_monster_gen patrolling
-DEPTH:   D:4-6
+DEPTH:   D:8-11
 WEIGHT:  4
-MONS:    ooze, jelly
+MONS:    jelly, slime creature
 {{
 dgn.delayed_decay_extra(_G, 'A', 'human corpse', 'damaged shield ident:pluses / nothing, '
                         .. 'damaged helmet ident:pluses / nothing, % / nothing, '
@@ -3124,13 +3124,11 @@ dgn.delayed_decay_extra(_G, 'A', 'human corpse', 'damaged shield ident:pluses / 
 }}
 KMONS:   A = toadstool
 KFEAT:   B = altar_jiyva
-NSUBST:  C = 2:2 / *:.
-NSUBST:  D = 4:1 / *:W
-SUBST:   1 = 13
-: if you.depth() > 4 then
-SUBST:   3 = 2
-: else
-SUBST:   3 = 1
+NSUBST:  C = 2:1 / *:.
+NSUBST:  D = 3:2 / *:W
+SUBST:   2 = 21
+: if you.depth() < 10 then
+SUBST:   2 = 1
 : end
 MAP
 xxxxxxxxxxxxxx
