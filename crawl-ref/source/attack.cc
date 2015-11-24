@@ -572,26 +572,26 @@ enum chaos_type
 // AF_CHAOS.
 void attack::chaos_affects_defender()
 {
-    monster * const mon   = defender->as_monster();
-    const bool firewood   = mon && mons_is_firewood(mon);
-    const bool immune     = mon && mons_immune_magic(mon);
-    const bool is_natural = mon && defender->holiness() == MH_NATURAL;
-    const bool is_shifter = mon && mon->is_shapeshifter();
-    const bool can_clone  = mon && mons_clonable(mon, true);
-    const bool can_poly   = is_shifter || (defender->can_safely_mutate()
-                                           && !immune && !firewood);
-    const bool can_rage   = defender->can_go_berserk();
-    const bool can_slow   = !firewood;
-    const bool can_petrify= mon && !defender->res_petrify();
+    monster * const mon    = defender->as_monster();
+    const bool firewood    = mon && mons_is_firewood(mon);
+    const bool immune      = mon && mons_immune_magic(mon);
+    const bool is_natural  = mon && defender->holiness() == MH_NATURAL;
+    const bool is_shifter  = mon && mon->is_shapeshifter();
+    const bool can_clone   = mon && mons_clonable(mon, true);
+    const bool can_poly    = is_shifter || (defender->can_safely_mutate()
+                                            && !immune && !firewood);
+    const bool can_rage    = defender->can_go_berserk();
+    const bool can_slow    = !firewood;
+    const bool can_petrify = mon && !defender->res_petrify();
 
-    int clone_chance   = can_clone                      ?  1 : 0;
-    int poly_chance    = can_poly                       ?  1 : 0;
-    int poly_up_chance = can_poly                && mon ?  1 : 0;
-    int shifter_chance = can_poly  && is_natural && mon ?  1 : 0;
-    int rage_chance    = can_rage                       ? 10 : 0;
-    int miscast_chance = 10;
-    int slowpara_chance= can_slow                       ? 10 : 0;
-    int petrify_chance = can_slow && can_petrify        ? 10 : 0;
+    int clone_chance    = can_clone                      ?  1 : 0;
+    int poly_chance     = can_poly                       ?  1 : 0;
+    int poly_up_chance  = can_poly                && mon ?  1 : 0;
+    int shifter_chance  = can_poly  && is_natural && mon ?  1 : 0;
+    int rage_chance     = can_rage                       ? 10 : 0;
+    int miscast_chance  = 10;
+    int slowpara_chance = can_slow                       ? 10 : 0;
+    int petrify_chance  = can_slow && can_petrify        ? 10 : 0;
 
     // Already a shifter?
     if (is_shifter)
