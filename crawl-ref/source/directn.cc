@@ -105,6 +105,7 @@ static bool _find_feature(const coord_def& where, int mode, bool need_path,
 static bool _find_shadow_step_mons(const coord_def& where, int mode,
                                    bool need_path, int range,
                                    targetter *hitfunc);
+static bool _want_target_monster(const monster *mon, int mode);
 
 #ifndef USE_TILE_LOCAL
 static bool _find_mlist(const coord_def& where, int mode, bool need_path,
@@ -1047,7 +1048,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     // First try to pick our previous target.
     const monster* mons_target = _get_current_target();
     if (mons_target != nullptr
-        && _want_target_monster(mons_target, mode))
+        && _want_target_monster(mons_target, mode)
         && in_range(mons_target->pos()))
     {
         success = true;
