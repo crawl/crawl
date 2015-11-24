@@ -3878,7 +3878,7 @@ bool god_likes_spell(spell_type spell, god_type god)
 
 bool god_hates_spellcasting(god_type god)
 {
-    return god == GOD_TROG || god == GOD_PAKELLAS;
+    return god == GOD_TROG;
 }
 
 bool god_hates_spell(spell_type spell, god_type god, bool rod_spell)
