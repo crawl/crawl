@@ -380,16 +380,16 @@ ENDMAP
 ### Altars to Jiyva ##########################################################
 
 NAME:   jiyva_altar_1
-DEPTH:  D:4-
+DEPTH:  D:8-
 KFEAT:  _ = altar_jiyva
-: if you.depth() < 6 then
-NSUBST: 1 = 1:1 / *:2
-: elseif you.depth() < 9 then
-NSUBST: 1 = 2:1 / *:2
-: elseif you.depth() < 13 then
+: if you.depth() > 9 then
 NSUBST: 1 = 3:1 / *:2
+: elseif you.depth() > 11 then
+NSUBST: 1 = 2:1 / *:2
+: elseif you.depth() > 13 then
+NSUBST: 1 = 1:1 / *:2
 : end
-MONS:  jelly, ooze
+MONS:  jelly, slime creature
 MAP
 .....
 ..1..
