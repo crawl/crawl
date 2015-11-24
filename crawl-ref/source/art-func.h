@@ -635,7 +635,7 @@ static monster* _find_nearest_possible_beholder()
         monster *mon = monster_at(*di);
         if (mon && you.can_see(*mon)
             && you.possible_beholder(mon)
-            && !mons_class_flag(mon->type, M_NO_EXP_GAIN))
+            && mons_is_threatening(mon))
         {
             return mon;
         }
