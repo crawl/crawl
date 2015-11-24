@@ -2498,7 +2498,11 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
         for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
         {
             mons = monster_at(*ri);
-            if (mons && hitfunc->is_affected(*ri) == AFF_YES)
+            if (!mons)
+                continue;
+
+            aff_type aff = hitfunc->is_affected(*ri);
+            if (aff == AFF_YES || aff == AFF_MAYBE)
             {
                 if (_mons_is_valid_target(mons, mode, range))
                     return _want_target_monster(mons, (targ_mode_type) mode);
