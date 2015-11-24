@@ -579,7 +579,7 @@ void attack::chaos_affects_defender()
     const bool can_poly    = is_shifter || (defender->can_safely_mutate()
                                             && !immune && !firewood);
     const bool can_rage    = defender->can_go_berserk();
-    const bool can_slow    = !firewood;
+    const bool can_slow    = !firewood && !(mon && mon->is_stationary());
     const bool can_petrify = mon && !defender->res_petrify();
 
     int clone_chance    = can_clone                      ?  1 : 0;
