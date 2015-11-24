@@ -30,6 +30,7 @@
 #include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-poly.h"
+#include "religion.h"
 #include "spl-miscast.h"
 #include "state.h"
 #include "stepdown.h"
@@ -738,6 +739,12 @@ void attack::chaos_affects_defender()
         beam.flavour = BEAM_HEALING;
         break;
     case CHAOS_HASTE:
+        if (defender->is_player() && you_worship(GOD_CHEIBRIADOS))
+        {
+            simple_god_message(" protects you from inadvertent hurry.");
+            obvious_effect = true;
+            break;
+        }
         beam.flavour = BEAM_HASTE;
         break;
     case CHAOS_INVIS:
