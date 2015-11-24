@@ -953,7 +953,7 @@ talent get_talent(ability_type ability, bool check_confused)
 
     case ABIL_PAKELLAS_QUICK_CHARGE:
         invoc = true;
-        failure = 40 - (you.piety / 20) - you.skill(SK_EVOCATIONS, 5);
+        failure = 40 - (you.piety / 25) - you.skill(SK_EVOCATIONS, 5);
         break;
 
     case ABIL_ZIN_VITALISATION:
@@ -988,7 +988,7 @@ talent get_talent(ability_type ability, bool check_confused)
 
     case ABIL_PAKELLAS_DEVICE_SURGE:
         invoc = true;
-        failure = 40 - (you.piety / 25) - you.skill(SK_EVOCATIONS, 5);
+        failure = 40 - (you.piety / 20) - you.skill(SK_EVOCATIONS, 5);
         break;
 
     case ABIL_ZIN_IMPRISON:

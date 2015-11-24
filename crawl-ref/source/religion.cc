@@ -434,11 +434,11 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
     // Pakellas
     {
-      { 1, ABIL_PAKELLAS_DEVICE_SURGE,
-           "spend magic to empower your devices" },
-      { 2, ABIL_PAKELLAS_DRAIN_MAGIC, "drain magic from a nearby foe" },
-      { 3, ABIL_PAKELLAS_QUICK_CHARGE,
+      { 1, ABIL_PAKELLAS_QUICK_CHARGE,
            "spend your magic to charge your devices" },
+      { 2, ABIL_PAKELLAS_DRAIN_MAGIC, "drain magic from a nearby foe" },
+      { 3, ABIL_PAKELLAS_DEVICE_SURGE,
+           "spend magic to empower your devices" },
       { 4, ABIL_PAKELLAS_MASS_DRAIN_MAGIC, "drain magic from all nearby foes" },
       { 5, ABIL_PAKELLAS_SAP_MAGIC, "inflict a magic sap on your foes" },
       { 7, ABIL_PAKELLAS_SUPERCHARGE,
