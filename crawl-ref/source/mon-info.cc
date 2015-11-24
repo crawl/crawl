@@ -32,6 +32,7 @@
 #include "options.h"
 #include "religion.h"
 #include "skills.h"
+#include "spl-goditem.h" // dispellable_enchantments
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1822,52 +1823,31 @@ void monster_info::set_colour(int col)
 }
 
 /**
- * Can this monster be debuffed, to the best of the player's knowledge?
+ * Does this monster have the given enchantment,
+ * to the best of the player's knowledge?
  *
- * XXX: horribly redundant with spl-goditem.cc::debuff_monster()
+ * Only handles trivially mapped MBs.
  */
+bool monster_info::has_trivial_ench(enchant_type ench) const
+{
+    monster_info_flags *flag = map_find(trivial_ench_mb_mappings, ench);
+    return flag && is(*flag);
+}
+
+/// Can this monster be debuffed, to the best of the player's knowledge?
 bool monster_info::debuffable() const
 {
-    // List of magical enchantments which will be dispelled.
-    static const monster_info_flags lost_enchantments[] =
-    {
-        MB_SLOWED,
-        MB_HASTED,
-        MB_SWIFT,
-        MB_STRONG,
-        MB_AGILE,
-        MB_CONFUSED,
-        MB_GLOWING,
-        MB_CHARMED,
-        MB_HEXED,
-        MB_PARALYSED,
-        MB_PETRIFYING,
-        MB_PETRIFIED,
-        MB_REGENERATION,
-        MB_INNER_FLAME,
-        MB_OZOCUBUS_ARMOUR,
-        MB_INJURY_BOND,
-        MB_DIMENSION_ANCHOR,
-        MB_CONTROL_WINDS,
-        MB_TOXIC_RADIANCE,
-        MB_AGILE,
-        MB_BLACK_MARK,
-        MB_SHROUD,
-        MB_SAP_MAGIC,
-        MB_REPEL_MSL,
-        MB_DEFLECT_MSL,
-        MB_CONDENSATION_SHIELD,
-        MB_RESISTANCE,
-        MB_HEXED,
-    };
+    // NOTE: assumes that all debuffable enchantments are trivially mapped
+    // to MBs.
 
     // can't debuff innately invisible monsters
     if (is(MB_INVISIBLE) && !mons_class_flag(type, M_INVIS))
         return true;
 
-    return any_of(begin(lost_enchantments), end(lost_enchantments),
-                  [this](monster_info_flags flag) -> bool
-                  { return this->is(flag); });
+    return any_of(begin(dispellable_enchantments),
+                  end(dispellable_enchantments),
+                  [this](enchant_type ench) -> bool
+                  { return this->has_trivial_ench(ench); });
 }
 
 void get_monster_info(vector<monster_info>& mons)

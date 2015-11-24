@@ -348,6 +348,7 @@ struct monster_info : public monster_info_base
     unsigned colour(bool base_colour = false) const;
     void set_colour(int colour);
 
+    bool has_trivial_ench(enchant_type ench) const;
     bool debuffable() const;
 
 protected:
