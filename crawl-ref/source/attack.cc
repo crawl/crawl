@@ -1525,10 +1525,59 @@ bool attack::attack_shield_blocked(bool verbose)
 
 attack_flavour attack::random_chaos_attack_flavour()
 {
-    attack_flavour flavours[] =
-        {AF_FIRE, AF_COLD, AF_ELEC, AF_POISON, AF_VAMPIRIC, AF_DISTORT,
-         AF_CONFUSE, AF_CHAOS};
-    return RANDOM_ELEMENT(flavours);
+    attack_flavour flavour = AF_PLAIN;
+
+    while (true)
+    {
+        flavour = random_choose_weighted(10, AF_FIRE,
+                                         10, AF_COLD,
+                                         10, AF_ELEC,
+                                         10, AF_POISON,
+                                         10, AF_CHAOS,
+                                          5, AF_DRAIN_XP,
+                                          5, AF_VAMPIRIC,
+                                          5, AF_HOLY,
+                                          5, AF_ANTIMAGIC,
+                                          2, AF_CONFUSE,
+                                          2, AF_DISTORT,
+                                          0);
+
+        if (one_chance_in(3))
+            break;
+
+        bool susceptible = true;
+        switch (flavour)
+        {
+        case AF_FIRE:
+            if (defender->is_fiery())
+                susceptible = false;
+            break;
+        case AF_COLD:
+            if (defender->is_icy())
+                susceptible = false;
+            break;
+        case AF_POISON:
+            if (defender->holiness() == MH_UNDEAD)
+                susceptible = false;
+            break;
+        case AF_VAMPIRIC:
+        case AF_DRAIN_XP:
+            if (defender->holiness() != MH_NATURAL)
+                susceptible = false;
+            break;
+        case AF_HOLY:
+            if (!defender->holy_wrath_susceptible())
+                susceptible = false;
+            break;
+        default:
+            break;
+        }
+
+        if (susceptible)
+            break;
+    }
+
+    return flavour;
 }
 
 bool attack::apply_damage_brand(const char *what)
