@@ -408,7 +408,6 @@ bool direction_chooser::targets_enemies() const
 {
     switch (mode)
     {
-        case TARG_ENEMY:
         case TARG_HOSTILE:
         case TARG_HOSTILE_SUBMERGED:
         case TARG_HOSTILE_UNDEAD:
@@ -1050,7 +1049,6 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     if (mons_target != nullptr
         && (mode != TARG_EVOLVABLE_PLANTS
             && mons_attitude(mons_target) == ATT_HOSTILE
-            || mode == TARG_ENEMY && !mons_target->friendly()
             || mode == TARG_EVOLVABLE_PLANTS
             && mons_is_evolvable(mons_target)
             || mode == TARG_HOSTILE_UNDEAD && !mons_target->friendly()
@@ -2394,8 +2392,6 @@ static bool _want_target_monster(const monster *mon, int mode)
     case TARG_DISPELLABLE:
         return mons_attitude(mon) == ATT_HOSTILE
             && monster_is_debuffable(*mon);
-    case TARG_ENEMY:
-        return !mon->friendly() && mons_class_gives_xp(mon->type);
     // intentionally no default
     }
     die("Unknown targetting mode!");

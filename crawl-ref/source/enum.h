@@ -2453,7 +2453,6 @@ enum mon_holy_type
 enum targ_mode_type
 {
     TARG_ANY,
-    TARG_ENEMY,  // hostile + neutral
     TARG_FRIEND,
     TARG_INJURED_FRIEND, // for healing
     TARG_HOSTILE,
