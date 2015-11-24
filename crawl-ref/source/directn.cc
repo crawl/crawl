@@ -1047,22 +1047,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     // First try to pick our previous target.
     const monster* mons_target = _get_current_target();
     if (mons_target != nullptr
-        && (mode != TARG_EVOLVABLE_PLANTS
-            && mons_attitude(mons_target) == ATT_HOSTILE
-            || mode == TARG_EVOLVABLE_PLANTS
-            && mons_is_evolvable(mons_target)
-            || mode == TARG_HOSTILE_UNDEAD && !mons_target->friendly()
-            && mons_target->holiness() == MH_UNDEAD
-            || mode == TARG_BEOGH_GIFTABLE
-            && !beogh_can_gift_items_to(mons_target)
-            || mode == TARG_DISPELLABLE
-            && (!mons_target->friendly()
-                || !monster_is_debuffable(*mons_target))
-            || mode == TARG_INJURED_FRIEND
-            && (mons_target->friendly() && mons_get_damage_level(mons_target) > MDAM_OKAY
-                || (!mons_target->wont_attack()
-                    && !mons_target->neutral()
-                    && is_pacifiable(mons_target) >= 0)))
+        && _want_target_monster(mons_target, mode))
         && in_range(mons_target->pos()))
     {
         success = true;
