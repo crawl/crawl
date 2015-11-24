@@ -1042,7 +1042,6 @@ static void _update_mlist(bool enable)
 bool direction_chooser::find_default_monster_target(coord_def& result) const
 {
     bool success = false;
-    int search_range = range;
     bool (*find_targ)(const coord_def&, int, bool, int, targetter*);
 
     // First try to pick our previous target.
@@ -1063,7 +1062,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
 
         // The previous target is no good. Try to find one from scratch.
         success = _find_square_wrapper(result, 1, find_targ, needs_path, mode,
-                                       search_range, hitfunc, true);
+                                       range, hitfunc, true);
 
         // We might be able to hit monsters in LOS that are outside of
         // normal range, but inside explosion/cloud range
@@ -1080,7 +1079,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
         // pretty confusing.)
         if (!success && needs_path
             && _find_square_wrapper(result, 1, find_targ, false, mode,
-                                    search_range, hitfunc, true))
+                                    range, hitfunc, true))
         {
             // Special colouring in tutorial or hints mode.
             const bool need_hint = Hints.hints_events[HINT_TARGET_NO_FOE];
