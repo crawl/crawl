@@ -597,31 +597,6 @@ void attack::chaos_affects_defender()
     if (is_shifter)
         shifter_chance = 0;
 
-    // A chaos self-attack increases the chance of certain effects,
-    // due to a short-circuit/feedback/resonance/whatever.
-    if (attacker == defender)
-    {
-        clone_chance   *= 2;
-        poly_chance    *= 2;
-        poly_up_chance *= 2;
-        shifter_chance *= 2;
-        miscast_chance *= 2;
-
-        // Inform player that something is up.
-        if (!fake_chaos_attack && you.see_cell(defender->pos()))
-        {
-            if (defender->is_player())
-                mpr("You give off a flash of multicoloured light!");
-            else if (you.can_see(*defender))
-            {
-                simple_monster_message(mon, " gives off a flash of"
-                                            " multicoloured light!");
-            }
-            else
-                mpr("There is a flash of multicoloured light!");
-        }
-    }
-
     // NOTE: Must appear in exact same order as in chaos_type enumeration.
     int probs[NUM_CHAOS_TYPES] =
     {
