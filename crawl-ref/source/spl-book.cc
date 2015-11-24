@@ -51,6 +51,9 @@
 #define RANDART_BOOK_TYPE_LEVEL "level"
 #define RANDART_BOOK_TYPE_THEME "theme"
 
+/// Should the book's name NOT use articles? (Foo's Bar of Baz, not the Foo's)
+#define BOOK_TITLED_KEY "is_named"
+
 static const map<rod_type, spell_type> _rod_spells =
 {
     { ROD_LIGHTNING,   SPELL_THUNDERBOLT },
@@ -1337,7 +1340,7 @@ bool make_book_level_randart(item_def &book, int level, string owner)
     const string name = _gen_randlevel_name(level, god, owner);
     set_artefact_name(book, replace_name_parts(name, book));
     // None of these books need a definite article prepended.
-    book.props["is_named"].get_bool() = true;
+    book.props[BOOK_TITLED_KEY].get_bool() = true;
 
     return true;
 }
@@ -1983,7 +1986,7 @@ bool make_book_theme_randart(item_def &book,
                                     all_spells_disc1);
     }
 
-    book.props["is_named"].get_bool() = !owner.empty();
+    book.props[BOOK_TITLED_KEY].get_bool() = !owner.empty();
     set_artefact_name(book,
                       replace_name_parts(_gen_randbook_name(title, owner,
                                                             disc1, disc2),
@@ -2075,7 +2078,7 @@ void make_book_Kiku_gift(item_def &book, bool first)
         spell_vec[i].get_int() = chosen_spells[i];
 
     string name = "Kikubaaqudgha's ";
-    book.props["is_named"].get_bool() = true;
+    book.props[BOOK_TITLED_KEY].get_bool() = true;
     name += getRandNameString("book_name") + " ";
     string type_name = getRandNameString("Necromancy");
     if (type_name.empty())
@@ -2092,8 +2095,8 @@ bool book_has_title(const item_def &book)
     if (!is_artefact(book))
         return false;
 
-    return book.props.exists("is_named")
-           && book.props["is_named"].get_bool() == true;
+    return book.props.exists(BOOK_TITLED_KEY)
+           && book.props[BOOK_TITLED_KEY].get_bool() == true;
 }
 
 void destroy_spellbook(const item_def &book)
