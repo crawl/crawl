@@ -582,18 +582,15 @@ void attack::chaos_affects_defender()
     const bool can_slow    = !firewood && !(mon && mon->is_stationary());
     const bool can_petrify = mon && !defender->res_petrify();
 
-    int clone_chance    = can_clone                      ?  1 : 0;
-    int poly_chance     = can_poly                       ?  1 : 0;
-    int poly_up_chance  = can_poly                && mon ?  1 : 0;
-    int shifter_chance  = can_poly  && is_natural && mon ?  1 : 0;
-    int rage_chance     = can_rage                       ? 10 : 0;
-    int miscast_chance  = 10;
-    int slowpara_chance = can_slow                       ? 10 : 0;
-    int petrify_chance  = can_slow && can_petrify        ? 10 : 0;
-
-    // Already a shifter?
-    if (is_shifter)
-        shifter_chance = 0;
+    int clone_chance    = can_clone                     ?  1 : 0;
+    int poly_chance     = can_poly                      ?  1 : 0;
+    int poly_up_chance  = can_poly && mon               ?  1 : 0;
+    int shifter_chance  = can_poly && mon && is_natural
+                          && !is_shifter                ?  1 : 0;
+    int rage_chance     = can_rage                      ?  5 : 0;
+    int speed_chance    = can_slow                      ? 10 : 0;
+    int para_chance     = !firewood                     ?  5 : 0;
+    int petrify_chance  = can_slow && can_petrify       ? 10 : 0;
 
     // NOTE: Must appear in exact same order as in chaos_type enumeration.
     int probs[NUM_CHAOS_TYPES] =
@@ -602,15 +599,15 @@ void attack::chaos_affects_defender()
         poly_chance,    // CHAOS_POLY
         poly_up_chance, // CHAOS_POLY_UP
         shifter_chance, // CHAOS_MAKE_SHIFTER
-        miscast_chance, // CHAOS_MISCAST
+        20,             // CHAOS_MISCAST
         rage_chance,    // CHAOS_RAGE
 
         10,             // CHAOS_HEAL
-        slowpara_chance,// CHAOS_HASTE
+        speed_chance,   // CHAOS_HASTE
         10,             // CHAOS_INVIS
 
-        slowpara_chance,// CHAOS_SLOW
-        slowpara_chance,// CHAOS_PARALYSIS
+        speed_chance,   // CHAOS_SLOW
+        para_chance,    // CHAOS_PARALYSIS
         petrify_chance, // CHAOS_PETRIFY
     };
 
