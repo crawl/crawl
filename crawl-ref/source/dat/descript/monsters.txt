@@ -687,7 +687,7 @@ dragon's fearsome breath was lost in the process.
 boulder beetle
 
 A huge grey beetle with an almost impenetrable rocky carapace, capable of
-rolling at its foes at high speed.
+rolling at its foes at high speed. When rolling, it's vulnerable to attack.
 %%%%
 briar patch
 

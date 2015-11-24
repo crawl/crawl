@@ -3430,6 +3430,10 @@ int monster::armour_class(bool calc_unid) const
     if (has_ench(ENCH_CORROSION))
         ac /= 2;
 
+    // Rolling boulder beetles are vulnerable
+    if (this->rolling())
+        ac /= 2;
+
     return max(ac, 0);
 }
 
