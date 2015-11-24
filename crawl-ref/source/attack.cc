@@ -568,9 +568,6 @@ enum chaos_type
     NUM_CHAOS_TYPES
 };
 
-// XXX: We might want to vary the probabilities for the various effects
-// based on whether the source is a weapon of chaos or a monster with
-// AF_CHAOS.
 void attack::chaos_affects_defender()
 {
     monster * const mon    = defender->as_monster();
