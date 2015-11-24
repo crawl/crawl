@@ -120,6 +120,7 @@ public:
 
 private:
     bool targets_objects() const;
+    bool targets_enemies() const;
     bool choose_compass();      // Used when we only need to choose a direction
 
     bool do_main_loop();

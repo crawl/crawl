@@ -403,6 +403,22 @@ bool direction_chooser::targets_objects() const
     return restricts == DIR_TARGET_OBJECT || restricts == DIR_MOVABLE_OBJECT;
 }
 
+/// Are we looking for enemies?
+bool direction_chooser::targets_enemies() const
+{
+    switch (mode)
+    {
+        case TARG_ENEMY:
+        case TARG_HOSTILE:
+        case TARG_HOSTILE_SUBMERGED:
+        case TARG_HOSTILE_UNDEAD:
+        case TARG_DISPELLABLE:
+            return true;
+        default:
+            return false;
+    }
+}
+
 void direction_chooser::describe_cell() const
 {
     if (!you.see_cell(target()))
@@ -971,10 +987,7 @@ bool direction_chooser::move_is_ok() const
             // cancel_at_self == not allowed to target yourself
             // (SPFLAG_NOT_SELF)
 
-            if (!targets_objects()
-                && (mode == TARG_ENEMY || mode == TARG_HOSTILE
-                    || mode == TARG_HOSTILE_SUBMERGED
-                    || mode == TARG_HOSTILE_UNDEAD))
+            if (!targets_objects() && targets_enemies())
             {
                 if (!may_target_self && (cancel_at_self || Options.allow_self_target == CONFIRM_CANCEL))
                 {
@@ -1117,17 +1130,8 @@ coord_def direction_chooser::find_default_target() const
                                            : TARGOBJ_ANY,
                                        range, hitfunc, true, LS_FLIPVH);
     }
-    else if (mode == TARG_ENEMY || mode == TARG_HOSTILE
-             || mode == TARG_HOSTILE_SUBMERGED
-             || mode == TARG_EVOLVABLE_PLANTS
-             || mode == TARG_BEOGH_GIFTABLE
-             || mode == TARG_DISPELLABLE
-             || mode == TARG_HOSTILE_UNDEAD
-             || mode == TARG_INJURED_FRIEND
-             || (mode == TARG_ANY || mode == TARG_FRIEND) && cancel_at_self)
-    {
+    else if ((mode != TARG_ANY && mode != TARG_FRIEND) || cancel_at_self)
         success = find_default_monster_target(result);
-    }
 
     if (!success)
         result = you.pos();
@@ -2367,40 +2371,34 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
 
 static bool _want_target_monster(const monster *mon, int mode)
 {
-    // Now compare target modes.
-    if (mode == TARG_ANY)
-        return true;
-
-    if (mode == TARG_HOSTILE || mode == TARG_HOSTILE_SUBMERGED)
-        return mons_attitude(mon) == ATT_HOSTILE;
-
-    if (mode == TARG_FRIEND)
-        return mon->friendly();
-
-    if (mode == TARG_INJURED_FRIEND)
+    switch (mode)
     {
-        return mon->friendly() && mons_get_damage_level(mon) > MDAM_OKAY
-               || !mon->wont_attack() && !mon->neutral() && is_pacifiable(mon) >= 0;
-    }
-
-    if (mode == TARG_EVOLVABLE_PLANTS)
+    case TARG_ANY:
+        return true;
+    case TARG_HOSTILE:
+    case TARG_HOSTILE_SUBMERGED:
+        return mons_attitude(mon) == ATT_HOSTILE;
+    case TARG_FRIEND:
+        return mon->friendly();
+    case TARG_INJURED_FRIEND:
+        if (mon->friendly() && mons_get_damage_level(mon) > MDAM_OKAY)
+            return true;
+        return !mon->wont_attack() && !mon->neutral()
+            && is_pacifiable(mon) >= 0;
+    case TARG_EVOLVABLE_PLANTS:
         return mons_is_evolvable(mon);
-
-    if (mode == TARG_HOSTILE_UNDEAD)
-        return !mon->friendly() && mon->holiness() == MH_UNDEAD;
-
-    if (mode == TARG_BEOGH_GIFTABLE)
+    case TARG_HOSTILE_UNDEAD:
+         return !mon->friendly() && mon->holiness() == MH_UNDEAD;
+    case TARG_BEOGH_GIFTABLE:
         return beogh_can_gift_items_to(mon);
-
-    if (mode == TARG_DISPELLABLE)
-        return !mon->friendly() && monster_is_debuffable(*mon);
-
-    ASSERT(mode == TARG_ENEMY);
-    if (mon->friendly())
-        return false;
-
-    // Don't target zero xp monsters.
-    return mons_class_gives_xp(mon->type);
+    case TARG_DISPELLABLE:
+        return mons_attitude(mon) == ATT_HOSTILE
+            && monster_is_debuffable(*mon);
+    case TARG_ENEMY:
+        return !mon->friendly() && mons_class_gives_xp(mon->type);
+    // intentionally no default
+    }
+    die("Unknown targetting mode!");
 }
 
 #ifdef CLUA_BINDINGS
