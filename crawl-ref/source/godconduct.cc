@@ -459,15 +459,6 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_PAKELLAS
     {
-        { DID_SPELL_MEMORISE, {
-            10, 10
-        } },
-        { DID_SPELL_CASTING, {
-            1, 5,
-        } },
-        { DID_SPELL_PRACTISE, {
-            1, 0, nullptr, " doesn't appreciate your training magic!"
-        } },
         { DID_CHANNEL, {
             1, 1,
         } },
@@ -863,9 +854,6 @@ static like_map divine_likes[] =
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_KILL_WIZARD, {
-            -6, 10, 0, " appreciates your killing of a magic user."
-        } },
     },
 };
 
