@@ -129,9 +129,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     if (ench == ENCH_CONFUSION && mons_class_flag(mons.type, M_CONFUSED))
         return NUM_MB_FLAGS;
 
-    if (ench == ENCH_INVIS)
-        you.seen_invis = true;
-
     const monster_info_flags *flag = map_find(trivial_ench_mb_mappings, ench);
     if (flag)
         return *flag;

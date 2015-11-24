@@ -2369,8 +2369,6 @@ static void _prep_input()
 
         you.seen_portals = 0;
     }
-    if (you.seen_invis)
-        you.seen_invis = false;
 }
 
 static void _check_banished()

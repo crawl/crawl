@@ -5325,7 +5325,6 @@ player::player()
     reset_escaped_death();
     on_current_level    = true;
     seen_portals        = 0;
-    seen_invis          = false;
     frame_no            = 0;
 
     save                = nullptr;
