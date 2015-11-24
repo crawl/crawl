@@ -284,6 +284,21 @@ Gcc'ccG
    @
 ENDMAP
 
+NAME: chequers_ossuary_entry_cave
+TAGS: transparent
+: ossuary_portal(_G)
+MAP
+xxxxxcccccccxxxxx
+xxxxcc'''''ccxxxx
+xxxxcG''O''Gcxxxx
+xxxxcc'''''ccxxxx
+xxxxxccc'cccxxxxx
+xxxxxxxc'cxxxxxxx
+xxxxxxxcAcxxxxxxx
+.................
+@@@@@@@@@@@@@@@@@
+ENDMAP
+
 #### The portal vaults ####################################
 
 # Reset default depth to prevent random generation of portal vaults.
