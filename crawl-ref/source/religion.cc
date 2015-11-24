@@ -943,7 +943,8 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
     case GOD_PAKELLAS:
         really_dislikes.emplace_back("you channel magical energy");
-        // deliberate fall-through
+        break;
+
     case GOD_TROG:
         really_dislikes.emplace_back("you memorise spells");
         really_dislikes.emplace_back("you attempt to cast spells");
