@@ -1239,6 +1239,29 @@ static int l_item_get_items_at(lua_State *ls)
     return 1;
 }
 
+static int l_item_shop_inventory(lua_State *ls)
+{
+    shop_struct *shop = get_shop(you.pos());
+    if (!shop)
+        return 0;
+
+    lua_newtable(ls);
+
+    const vector<item_def> items = shop->stock;
+    int index = 0;
+    for (const auto &item : items)
+    {
+        lua_newtable(ls);
+        _clua_push_item_temp(ls, item);
+        lua_rawseti(ls, -2, 1);
+        lua_pushnumber(ls, item_price(item, *shop));
+        lua_rawseti(ls, -2, 2);
+        lua_rawseti(ls, -2, ++index);
+    }
+
+    return 1;
+}
+
 struct ItemAccessor
 {
     const char *attribute;
@@ -1336,6 +1359,7 @@ static const struct luaL_reg item_lib[] =
     { "fired_item",        l_item_fired_item },
     { "inslot",            l_item_inslot },
     { "get_items_at",      l_item_get_items_at },
+    { "shop_inventory",    l_item_shop_inventory },
     { nullptr, nullptr },
 };
 
