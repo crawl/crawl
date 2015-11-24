@@ -442,55 +442,20 @@ void debuff_player()
 static void _dispellable_monster_buffs(const monster &mon,
                                        vector<enchant_type> &buffs)
 {
-    // List of magical enchantments which will be dispelled.
-    static const enchant_type lost_enchantments[] =
-    {
-        ENCH_SLOW,
-        ENCH_HASTE,
-        ENCH_SWIFT,
-        ENCH_MIGHT,
-        ENCH_AGILE,
-        ENCH_FEAR,
-        ENCH_CONFUSION,
-        ENCH_INVIS,
-        ENCH_CORONA,
-        ENCH_SILVER_CORONA,
-        ENCH_CHARM,
-        ENCH_PARALYSIS,
-        ENCH_PETRIFYING,
-        ENCH_PETRIFIED,
-        ENCH_REGENERATION,
-        ENCH_TP,
-        ENCH_INNER_FLAME,
-        ENCH_OZOCUBUS_ARMOUR,
-        ENCH_INJURY_BOND,
-        ENCH_DIMENSION_ANCHOR,
-        ENCH_CONTROL_WINDS,
-        ENCH_TOXIC_RADIANCE,
-        ENCH_AGILE,
-        ENCH_BLACK_MARK,
-        ENCH_SHROUD,
-        ENCH_SAP_MAGIC,
-        ENCH_REPEL_MISSILES,
-        ENCH_DEFLECT_MISSILES,
-        ENCH_CONDENSATION_SHIELD,
-        ENCH_RESISTANCE,
-        ENCH_HEXED,
-    };
-
     // Dispel all magical enchantments...
-    for (enchant_type ench : lost_enchantments)
+    for (enchant_type ench : dispellable_enchantments)
     {
-        // ...except for natural invisibility...
-        if (ench == ENCH_INVIS && mons_class_flag(mon.type, M_INVIS))
-            continue;
-        // ...and permaconfusion.
+        // except for permaconfusion.
         if (ench == ENCH_CONFUSION && mons_class_flag(mon.type, M_CONFUSED))
             continue;
 
         if (mon.has_ench(ench))
             buffs.push_back(ench);
     }
+
+    // special-case invis, to avoid hitting naturally invis monsters.
+    if (mon.has_ench(ENCH_INVIS) && !mons_class_flag(mon.type, M_INVIS))
+        buffs.push_back(ENCH_INVIS);
 }
 
 
