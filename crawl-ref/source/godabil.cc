@@ -5825,6 +5825,12 @@ static const char* _describe_sacrifice_piety_gain(int piety_gain)
         return "a trivial";
 }
 
+static const string _piety_asterisks(int piety)
+{
+    const int prank = piety_rank(piety);
+    return string(prank, '*') + string(NUM_PIETY_STARS - prank, '.');
+}
+
 static void _apply_ru_sacrifice(mutation_type sacrifice)
 {
     perma_mutate(sacrifice, 1, "Ru sacrifice");
@@ -5834,7 +5840,9 @@ static void _apply_ru_sacrifice(mutation_type sacrifice)
 static bool _execute_sacrifice(int piety_gain, const char* message)
 {
     mprf("Ru asks you to %s.", message);
-    mprf("This is %s sacrifice.", _describe_sacrifice_piety_gain(piety_gain));
+    mprf("This is %s sacrifice. Piety after sacrifice: %s",
+         _describe_sacrifice_piety_gain(piety_gain),
+         _piety_asterisks(you.piety + piety_gain).c_str());
     if (!yesno("Do you really want to make this sacrifice?",
                false, 'n'))
     {
