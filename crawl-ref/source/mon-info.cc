@@ -1837,7 +1837,6 @@ bool monster_info::debuffable() const
         MB_STRONG,
         MB_AGILE,
         MB_CONFUSED,
-        MB_INVISIBLE,
         MB_GLOWING,
         MB_CHARMED,
         MB_HEXED,
@@ -1861,6 +1860,10 @@ bool monster_info::debuffable() const
         MB_RESISTANCE,
         MB_HEXED,
     };
+
+    // can't debuff innately invisible monsters
+    if (is(MB_INVISIBLE) && !mons_class_flag(type, M_INVIS))
+        return true;
 
     return any_of(begin(lost_enchantments), end(lost_enchantments),
                   [this](monster_info_flags flag) -> bool
