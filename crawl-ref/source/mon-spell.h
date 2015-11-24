@@ -1256,7 +1256,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MAGIC_DART, 13, MON_SPELL_WIZARD },
        { SPELL_SLOW, 13, MON_SPELL_WIZARD },
        { SPELL_CALL_IMP, 13, MON_SPELL_WIZARD },
-       { SPELL_CONJURE_FLAME, 13, MON_SPELL_WIZARD },
       }
     },
 
@@ -2014,7 +2013,6 @@ static const mon_spellbook mspell_list[] =
     {  MST_DEEP_ELF_KNIGHT_I,
       {
        { SPELL_DAZZLING_SPRAY, 24, MON_SPELL_WIZARD },
-       { SPELL_CONJURE_FLAME, 12, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
        { SPELL_SWIFTNESS, 12, MON_SPELL_WIZARD },
       }
@@ -2065,7 +2063,6 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SALAMANDER_STORMCALLER,
       {
-       { SPELL_CONJURE_FLAME, 30, MON_SPELL_WIZARD },
        { SPELL_STICKY_FLAME_RANGE, 45, MON_SPELL_WIZARD },
        { SPELL_FIRE_STORM, 30, MON_SPELL_WIZARD },
       }
