@@ -1753,11 +1753,18 @@ bool attack::apply_damage_brand(const char *what)
 
     case SPWPN_CONFUSE:
     {
-        // This was originally for confusing touch and it doesn't really
-        // work on the player, but a monster with a chaos weapon will
-        // occasionally come up with this brand. -cao
+        // If a monster with a chaos weapon gets this brand, act like
+        // AF_CONFUSE.
         if (defender->is_player())
+        {
+            if (one_chance_in(10)
+                || (damage_done > 2 && one_chance_in(3)))
+            {
+                defender->confuse(attacker,
+                                  1 + random2(3+attacker->get_hit_dice()));
+            }
             break;
+        }
 
         // Also used for players in fungus form.
         if (attacker->is_player()
