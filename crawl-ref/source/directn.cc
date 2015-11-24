@@ -105,7 +105,7 @@ static bool _find_feature(const coord_def& where, int mode, bool need_path,
 static bool _find_shadow_step_mons(const coord_def& where, int mode,
                                    bool need_path, int range,
                                    targetter *hitfunc);
-static bool _want_target_monster(const monster *mon, int mode);
+static bool _want_target_monster(const monster *mon, targ_mode_type mode);
 
 #ifndef USE_TILE_LOCAL
 static bool _find_mlist(const coord_def& where, int mode, bool need_path,
@@ -2353,7 +2353,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
 }
 #endif
 
-static bool _want_target_monster(const monster *mon, int mode)
+static bool _want_target_monster(const monster *mon, targ_mode_type mode)
 {
     switch (mode)
     {
@@ -2378,6 +2378,8 @@ static bool _want_target_monster(const monster *mon, int mode)
     case TARG_DISPELLABLE:
         return mons_attitude(mon) == ATT_HOSTILE
             && monster_is_debuffable(*mon);
+    case TARG_NUM_MODES:
+        break;
     // intentionally no default
     }
     die("Unknown targetting mode!");
@@ -2429,7 +2431,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
     if (need_path && _blocked_ray(mon->pos()))
         return false;
 
-    return _want_target_monster(mon, mode);
+    return _want_target_monster(mon, (targ_mode_type) mode);
 }
 
 static bool _find_shadow_step_mons(const coord_def& where, int mode,
@@ -2500,7 +2502,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
             if (mons && hitfunc->is_affected(*ri) == AFF_YES)
             {
                 if (_mons_is_valid_target(mons, mode, range))
-                    return _want_target_monster(mons, mode);
+                    return _want_target_monster(mons, (targ_mode_type) mode);
             }
         }
     }
