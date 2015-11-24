@@ -133,13 +133,13 @@ struct monsterentry
     // max damage in a turn is total of these four?
     mon_attack_def attack[MAX_NUM_ATTACKS];
 
-    // hpdice[4]: [0]=HD [1]=min_hp [2]=rand_hp [3]=add_hp
-    // min hp = [0]*[1]+[3] & max hp = [0]*([1]+[2])+[3])
-    // example: the Iron Golem, hpdice={15,7,4,0}
+    // hpdice[3]: [0]=HD [1]=min_hp [2]=rand_hp
+    // min hp = [0]*[1] & max hp = [0]*([1]+[2]))
+    // example: the Iron Golem, hpdice={15,7,4}
     //      15*7 < hp < 15*(7+4),
     //       105 < hp < 165
     // hp will be around 135 each time.
-    unsigned       hpdice[4];
+    unsigned       hpdice[3];
 
     int8_t AC; // armour class
     int8_t ev; // evasion

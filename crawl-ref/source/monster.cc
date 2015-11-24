@@ -3582,7 +3582,7 @@ bool monster::heal(int amount, bool max_too)
         {
             const monsterentry* m = get_monster_data(type);
             const int maxhp =
-                m->hpdice[0] * (m->hpdice[1] + m->hpdice[2]) + m->hpdice[3];
+                m->hpdice[0] * (m->hpdice[1] + m->hpdice[2]);
 
             // Limit HP growth.
             if (random2(3 * maxhp) > 2 * max_hit_points)
