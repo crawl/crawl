@@ -1142,16 +1142,13 @@ static string _randlevel_difficulty_name(int level)
 /**
  * Generate a name for a randomly-generated single-level spellbook.
  *
+ * @param level     The level of the spells in the book.
  * @param god       The god responsible for the book, if any.
- * @param owner     An owner for the book; may be the empty string.
- *                  If nonempty, prefixed to the start of the name;
- *                  otherwise, a random owner may be generated.
  * @return          A spellbook name. May contain placeholders (@foo@).
  */
-static string _gen_randlevel_name(int level, god_type god, string owner)
+static string _gen_randlevel_name(int level, god_type god)
 {
-    const string owner_name = owner.empty() ? _gen_randlevel_owner(god)
-                                            : owner;
+    const string owner_name = _gen_randlevel_owner(god);
     const bool has_owner = !owner_name.empty();
     const string apostrophised_owner = owner_name.empty() ? "" :
                                        apostrophise(owner_name) + " ";
@@ -1203,11 +1200,9 @@ static string _gen_randlevel_name(int level, god_type god, string owner)
  *
  * @param book[out]    The book in question.
  * @param level        The level of the spells. If -1, choose a level randomly.
- * @param owner        An "owner" for the book; used for naming. If the empty
- *                     string, choose randomly (may choose no owner).
  * @return             Whether the book was successfully transformed.
  */
-bool make_book_level_randart(item_def &book, int level, string owner)
+bool make_book_level_randart(item_def &book, int level)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -1337,7 +1332,7 @@ bool make_book_level_randart(item_def &book, int level, string owner)
     for (int i = 0; i < RANDBOOK_SIZE; i++)
         spell_vec[i].get_int() = chosen_spells[i];
 
-    const string name = _gen_randlevel_name(level, god, owner);
+    const string name = _gen_randlevel_name(level, god);
     set_artefact_name(book, replace_name_parts(name, book));
     // None of these books need a definite article prepended.
     book.props[BOOK_TITLED_KEY].get_bool() = true;
