@@ -2467,15 +2467,16 @@ public:
 
     virtual void select(int qty) override
     {
+        // Toggle  grey -> - -> + -> grey  if we autopickup the item by
+        // default, or  grey -> + -> - -> grey  if we do not.
         if (qty == -2)
             selected_qty = 0;
         else if (selected_qty == 0)
-            selected_qty = item_needs_autopickup(*item) ? 2 : 1;
+            selected_qty = item_needs_autopickup(*item, true) ? 2 : 1;
+        else if (selected_qty == (item_needs_autopickup(*item, true) ? 2 : 1))
+            selected_qty = 3 - selected_qty; // 2 <-> 1
         else
-            ++selected_qty;
-
-        if (selected_qty > 2)
-            selected_qty = 1; //Set to 0 to allow triple toggle
+            selected_qty = 0;
 
         // Set the force_autopickup values
         const int forceval = (selected_qty == 2 ? -1 : selected_qty);
