@@ -1398,12 +1398,13 @@ MONS:   naga / nothing
 MONS:   naga warrior / naga sharpshooter w:5 / naga w:15 / nothing
 MONS:   naga mage w:20 / naga ritualist / naga sharpshooter / naga w:30 / \
         nothing w:20
-MONS:   guardian serpent w:20 / salamander mystic w:5 / naga ritualist w:5 / \
+MONS:   guardian serpent / salamander mystic w:5 / naga ritualist w:5 / \
         nothing
 MONS:   greater naga w:30 / naga warrior w:5 / naga sharpshooter w:5
-MONS:   anaconda / black mamba / shock serpent w:5 / mana viper w:15
+MONS:   anaconda / black mamba / shock serpent w:5 / mana viper
 
 KMONS:  Z = Vashnia / greater naga, greater naga
+SUBST:  Z = ZZZ5
 
 NSUBST: 5 = 6:5 / *:55.
 NSUBST: 6 = 8:6 / *:.
@@ -1412,7 +1413,7 @@ KITEM:  O = serpentine rune of Zot
 NSUBST: O = 1:O / *:%.
 MAP
 cccccccccccccccccccccccccccccccccccccccc
-c4c...4.4...OccO...44...OccO...4.4...c4c
+c4cO..4.4...OccO...44...OccO...4.4..Oc4c
 c.cc..252...cccc..5225..cccc...252..cc.c
 c1.cc.131..cc..cc..33..cc..cc..131.cc.1c
 c...cc....cc....cc....cc....cc....cc...c

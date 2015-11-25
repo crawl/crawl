@@ -2249,7 +2249,7 @@ ORIENT:  float
 WEIGHT:  20
 SUBST:   1 = 111''
 SUBST:   % = %'
-KMONS:   1 =  swamp dragon / swamp drake / hydra w:12 / bog body w:4
+KMONS:   1 =  swamp dragon / swamp drake / hydra w:15 / bog body w:5
 SUBST:   ' = .....WWW, - = ..wwwWW, T = .wWtt, C = ccct
 KFEAT:   1 =  floor / floor / shallow_water
 KITEM:   O = decaying rune of Zot
@@ -2257,7 +2257,7 @@ NSUBST:  O = 1:O / *:*
 : if crawl.one_chance_in(11) then
      KMONS: O = the lernaean hydra
 : else
-     KMONS: O* = thorn hunter / shambling mangrove / spriggan druid
+     KMONS: O* = thorn hunter / shambling mangrove / spriggan berserker
      KITEM: * = *
 : end
 MAP
