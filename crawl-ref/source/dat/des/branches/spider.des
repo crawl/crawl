@@ -1694,7 +1694,7 @@ KMONS:  m = moth of wrath / ghost moth w:40 / nothing w:10
 KMONS:  p = wasp w:30 / hornet
 KMONS:  o = orb spider w:40 / demonic crawler
 KMONS:  t = trapdoor spider w:15 / nothing
-KMONS:  s = torpor snail
+KMONS:  s = torpor snail / entropy weaver
 ORIENT: float
 PLACE:  Spider:$
 # '"-_!?^
@@ -1712,14 +1712,14 @@ PLACE:  Spider:$
     SUBST:  "_?^ = Y
     FTILE:  Y = FLOOR_ROUGH_RED
     COLOUR: Y = red
-    KMONS:  Z = Arachne, ghost moth
+    KMONS:  Z = Arachne, entropy weaver
     KMONS:  1 = redback / wolf spider / tarantella w:50 / jumping spider
 : else
     SUBST:  '"_ = .
     SUBST:  -!?^ = Y
     FTILE:  Y = FLOOR_SANDSTONE
     COLOUR: Y = brown
-    KMONS:  Z = Arachne, emperor scorpion
+    KMONS:  Z = Arachne, spark wasp
     KMONS:  1 = tarantella / wolf spider w:50 / redback / jumping spider
 : end
 
