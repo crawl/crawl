@@ -594,9 +594,7 @@ ifdef LTO
       CFOPTIMIZE += -fno-fat-lto-objects
     endif
   else
-    # Clang uses a different syntax than gcc, using -O4 instead.  This means
-    # you can't select a different level of optimization to go with LTO.
-    CFOPTIMIZE := $(patsubst -O%,,$(CFOPTIMIZE)) -O4
+    CFOPTIMIZE += -flto
   endif
 endif
 
