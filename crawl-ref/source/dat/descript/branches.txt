@@ -169,7 +169,8 @@ safety will be present on every level, once left, a ziggurat cannot be
 re-entered.
 
 One ziggurat is guaranteed in the Depths. Tales tell of an magical item found
-at the bottom of each ziggurat, granting access to a new ziggurat in turn. Each
+at the bottom of each ziggurat, granting access to a new ziggurat in turn. Such
+an item is also said to be found at the bottom of the Tomb of the Ancients. Each
 time a zigguarat is conquered by exiting it from the final floor, subsequent
 ziggurats will become increasingly dangerous and lucrative.
 %%%%
