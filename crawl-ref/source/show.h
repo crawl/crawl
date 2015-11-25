@@ -71,13 +71,15 @@ class monster;
 
 enum layer_type
 {
-    LAYERS_NONE    = 0,
-    LAYER_MONSTERS = (1 << 0),
-    LAYER_PLAYER   = (1 << 1),
-    LAYER_ITEMS    = (1 << 2),
-    LAYER_CLOUDS   = (1 << 3),
+    LAYERS_NONE           = 0,
+    LAYER_MONSTERS        = (1 << 0),
+    LAYER_PLAYER          = (1 << 1),
+    LAYER_ITEMS           = (1 << 2),
+    LAYER_CLOUDS          = (1 << 3),
+    LAYER_MONSTER_WEAPONS = (1 << 4),
+    LAYER_MONSTER_HEALTH  = (1 << 5),
 };
-DEF_BITFIELD(layers_type, layer_type, 3);
+DEF_BITFIELD(layers_type, layer_type, 5);
 static const layers_type LAYERS_ALL = LAYER_MONSTERS | LAYER_PLAYER
                                     | LAYER_ITEMS | LAYER_CLOUDS;
 
