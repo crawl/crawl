@@ -97,15 +97,6 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 Listet entdeckte Gegenstands-Typen auf
 %%%%
-CMD_SAVE_GAME_NOW
-
-Speichern und verlassen
-%%%%
-CMD_SAVE_GAME_NOW verbose
-
-Speichere, für später, und verlasse das Spiel. Sobald du das Spiel fortsetzt,
-wird die Speicherdatei gelöscht.
-%%%%
 CMD_EDIT_PLAYER_TILE
 
 Verändere das Aussehen der Spielfigur

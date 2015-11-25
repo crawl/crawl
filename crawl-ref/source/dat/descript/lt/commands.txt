@@ -90,14 +90,6 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 Atrastų daiktų tipų sąrašas
 %%%%
-CMD_SAVE_GAME_NOW
-
-Išsaugoti ir išeiti
-%%%%
-CMD_SAVE_GAME_NOW verbose
-
-Išsaugo žaidimą ir išeina. Pratęsus žaidimą, išsaugota byla ištrinama.
-%%%%
 CMD_EDIT_PLAYER_TILE
 
 Pakeisti žaidėjo paveikslėlį
