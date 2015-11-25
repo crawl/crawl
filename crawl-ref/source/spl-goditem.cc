@@ -507,7 +507,7 @@ int detect_items(int pow)
         map_radius = 7 + random2(7) + pow;
     else
     {
-        if (you_worship(GOD_ASHENZARI))
+        if (have_passive(passive_t::detect_items))
         {
             map_radius = min(you.piety / 20 - 1, LOS_RADIUS);
             if (map_radius <= 0)
@@ -667,7 +667,7 @@ static bool _selectively_remove_curse(const string &pre_msg)
 
 bool remove_curse(bool alreadyknown, const string &pre_msg)
 {
-    if (you_worship(GOD_ASHENZARI) && alreadyknown)
+    if (have_passive(passive_t::want_curses) && alreadyknown)
     {
         if (_selectively_remove_curse(pre_msg))
         {

@@ -16,6 +16,7 @@
 #include "env.h"
 #include "godabil.h"
 #include "godcompanions.h"
+#include "godpassive.h" // passive_t::convert_orcs
 #include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -72,7 +73,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
         return;
 
     // For followers of Beogh, decide whether orcs will join you.
-    if (you_worship(GOD_BEOGH)
+    if (will_have_passive(passive_t::convert_orcs)
         && mons->foe == MHITYOU
         && mons_genus(mons->type) == MONS_ORC
         && !mons->is_summoned()
@@ -86,7 +87,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
 
         const int hd = mons->get_experience_level();
 
-        if (in_good_standing(GOD_BEOGH, 2)
+        if (have_passive(passive_t::convert_orcs)
             && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
                  > random2(hd) + hd + random2(5))
         {

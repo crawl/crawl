@@ -1148,13 +1148,15 @@ static void _inc_penance(god_type god, int val)
         you.penance[god] = min((uint8_t)MAX_PENANCE, you.penance[god]);
 
         // Orcish bonuses don't apply under penance.
-        if (god == GOD_BEOGH)
-        {
+        if (will_have_passive(passive_t::bonus_ac))
             you.redraw_armour_class = true;
 
-            if (_need_water_walking() && !beogh_water_walk())
-                fall_into_a_pool(grd(you.pos()));
+        if (will_have_passive(passive_t::water_walk)
+            && _need_water_walking() && !have_passive(passive_t::water_walk))
+        {
+            fall_into_a_pool(grd(you.pos()));
         }
+
         // Neither does Trog's regeneration or magic resistance.
         else if (god == GOD_TROG)
         {
@@ -1518,7 +1520,7 @@ bool is_follower(const monster* mon)
 {
     if (you_worship(GOD_YREDELEMNUL))
         return is_yred_undead_slave(mon);
-    else if (you_worship(GOD_BEOGH))
+    else if (will_have_passive(passive_t::convert_orcs))
         return is_orcish_follower(mon);
     else if (you_worship(GOD_JIYVA))
         return is_fellow_slime(mon);
@@ -2255,19 +2257,18 @@ static void _gain_piety_point()
         }
         if (you_worship(GOD_SHINING_ONE) && rank == 1)
             mprf(MSGCH_GOD, "A divine halo surrounds you!");
-        if (you_worship(GOD_DITHMENOS) && rank == 1)
+        if (rank == rank_for_passive(passive_t::umbra))
             mprf(MSGCH_GOD, "You are shrouded in an aura of darkness!");
-        if (you_worship(GOD_ASHENZARI))
+        if (rank == rank_for_passive(passive_t::clarity))
         {
-            if (rank == 3)
-            {
-                autotoggle_autopickup(false);
-                // Inconsistent with donning amulets, but matches the
-                // message better and is not abusable.
-                you.duration[DUR_CONF] = 0;
-            }
-            auto_id_inventory();
+            autotoggle_autopickup(false);
+            // Inconsistent with donning amulets, but matches the
+            // message better and is not abusable.
+            you.duration[DUR_CONF] = 0;
         }
+        if (rank >= rank_for_passive(passive_t::identify_items))
+            auto_id_inventory();
+
         if (you_worship(GOD_JIYVA) && can_do_capstone_ability(you.religion))
         {
             simple_god_message(" will now unseal the treasures of the "
@@ -2283,18 +2284,22 @@ static void _gain_piety_point()
         }
     }
 
-    if (you_worship(GOD_BEOGH))
-    {
-        // Every piety level change also affects AC from orcish gear.
+    // Every piety level change also affects AC.
+    if (will_have_passive(passive_t::bonus_ac))
         you.redraw_armour_class = true;
-        // The player's symbol depends on Beogh piety.
-        update_player_symbol();
-    }
 
-    if (you_worship(GOD_CHEIBRIADOS)
+    // The player's symbol depends on Beogh piety.
+    if (you_worship(GOD_BEOGH))
+        update_player_symbol();
+
+    if (have_passive(passive_t::stat_boost)
         && chei_stat_boost(old_piety) < chei_stat_boost())
     {
-        simple_god_message(" raises the support of your attributes as your movement slows.");
+        string msg = " raises the support of your attributes";
+        if (have_passive(passive_t::slowed))
+            msg += " as your movement slows";
+        msg += ".";
+        simple_god_message(msg.c_str());
         notify_stat_change();
     }
 
@@ -2304,7 +2309,7 @@ static void _gain_piety_point()
         you.redraw_armour_class = true;
     }
 
-    if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_DITHMENOS))
+    if (you_worship(GOD_SHINING_ONE) || have_passive(passive_t::umbra))
     {
         // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
@@ -2426,18 +2431,23 @@ void lose_piety(int pgn)
     if (you.piety > 0 && you.piety <= 5)
         learned_something_new(HINT_GOD_DISPLEASED);
 
-    if (you_worship(GOD_BEOGH))
-    {
-        if (_need_water_walking() && !beogh_water_walk())
-            fall_into_a_pool(grd(you.pos()));
-        // Every piety level change also affects AC from orcish gear.
+    // Every piety level change also affects AC.
+    if (will_have_passive(passive_t::bonus_ac))
         you.redraw_armour_class = true;
-    }
 
-    if (you_worship(GOD_CHEIBRIADOS)
+    if (will_have_passive(passive_t::water_walk) && _need_water_walking()
+        && !have_passive(passive_t::water_walk))
+    {
+        fall_into_a_pool(grd(you.pos()));
+    }
+    if (will_have_passive(passive_t::stat_boost)
         && chei_stat_boost(old_piety) > chei_stat_boost())
     {
-        simple_god_message(" reduces the support of your attributes as your movement quickens.");
+        string msg = " reduces the support of your attributes";
+        if (will_have_passive(passive_t::slowed))
+            msg += " as your movement quickens";
+        msg += ".";
+        simple_god_message(msg.c_str());
         notify_stat_change();
     }
 
@@ -2447,7 +2457,7 @@ void lose_piety(int pgn)
         you.redraw_armour_class = true;
     }
 
-    if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_DITHMENOS))
+    if (you_worship(GOD_SHINING_ONE) || have_passive(passive_t::umbra))
     {
         // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
@@ -3101,21 +3111,26 @@ static void _god_welcome_handle_gear()
 
     if (you_worship(GOD_ASHENZARI))
     {
+        if (!item_type_known(OBJ_SCROLLS, SCR_REMOVE_CURSE))
+        {
+            set_ident_type(OBJ_SCROLLS, SCR_REMOVE_CURSE, true);
+            pack_item_identify_message(OBJ_SCROLLS, SCR_REMOVE_CURSE);
+        }
+    }
+
+    if (have_passive(passive_t::identify_items))
+    {
         // Seemingly redundant with auto_id_inventory(), but we don't want to
         // announce items where the only new information is their cursedness.
         for (auto &item : you.inv)
             if (item.defined())
                 item.flags |= ISFLAG_KNOW_CURSE;
 
-        if (!item_type_known(OBJ_SCROLLS, SCR_REMOVE_CURSE))
-        {
-            set_ident_type(OBJ_SCROLLS, SCR_REMOVE_CURSE, true);
-            pack_item_identify_message(OBJ_SCROLLS, SCR_REMOVE_CURSE);
-        }
-
         auto_id_inventory();
-        ash_detect_portals(true);
     }
+
+    if (have_passive(passive_t::detect_portals))
+        ash_detect_portals(true);
 
     // Give a reminder to remove any disallowed equipment.
     for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
@@ -3278,20 +3293,21 @@ void join_religion(god_type which_god, bool immediate)
         gain_piety(30, 1, false);
     }
 
+    // The player's symbol depends on Beogh worship.
     if (you_worship(GOD_BEOGH))
-    {
-        // The player's symbol depends on Beogh worship.
         update_player_symbol();
-    }
 
     _god_welcome_handle_gear();
     ash_check_bondage();
 
     // Chei worshippers start their stat gain immediately.
-    if (you_worship(GOD_CHEIBRIADOS))
+    if (have_passive(passive_t::stat_boost))
     {
-        simple_god_message(" begins to support your attributes as your "
-                           "movement slows.");
+        string msg = " begins to support your attributes";
+        if (have_passive(passive_t::slowed))
+            msg += " as your movement slows";
+        msg += ".";
+        simple_god_message(msg.c_str());
         notify_stat_change();
     }
 
@@ -4398,8 +4414,11 @@ static void _place_delayed_monsters()
 
         if (mon)
         {
-            if (you_worship(GOD_YREDELEMNUL) || you_worship(GOD_BEOGH))
+            if (you_worship(GOD_YREDELEMNUL)
+                || have_passive(passive_t::convert_orcs))
+            {
                 add_companion(mon);
+            }
             placed++;
         }
 

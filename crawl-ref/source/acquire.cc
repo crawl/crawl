@@ -21,6 +21,7 @@
 #include "dungeon.h"
 #include "food.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1423,7 +1424,7 @@ int acquirement_create_item(object_class_type class_wanted,
             acq_item.quantity = quant;
 
         // Remove curse flag from item, unless worshipping Ashenzari.
-        if (you_worship(GOD_ASHENZARI))
+        if (have_passive(passive_t::want_curses))
             do_curse_item(acq_item, true);
         else
             do_uncurse_item(acq_item, false);

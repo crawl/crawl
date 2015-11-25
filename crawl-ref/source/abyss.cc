@@ -24,6 +24,7 @@
 #include "dgn-overview.h"
 #include "dgn-proclayouts.h"
 #include "files.h"
+#include "godpassive.h" // passive_t::slow_abyss
 #include "hiscores.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1592,7 +1593,7 @@ retry:
 static void _increase_depth()
 {
     int delta = you.time_taken * (you.abyss_speed + 40) / 200;
-    if (!you_worship(GOD_CHEIBRIADOS) || you.penance[GOD_CHEIBRIADOS])
+    if (!have_passive(passive_t::slow_abyss))
         delta *= 2;
     if (you.duration[DUR_TELEPORT])
         delta *= 5;

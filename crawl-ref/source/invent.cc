@@ -22,6 +22,7 @@
 #include "env.h"
 #include "food.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "initfile.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1058,7 +1059,7 @@ bool is_item_selected(const item_def &i, int selector)
             return false;
         if ((!item_ident(i, ISFLAG_KNOW_CURSE) || item_known_cursed(i))
             // Ashenzari would just preserve the curse.
-            && !you_worship(GOD_ASHENZARI))
+            && !have_passive(passive_t::want_curses))
         {
             return true;
         }

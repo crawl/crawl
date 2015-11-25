@@ -1591,7 +1591,7 @@ static bool _animate_dead_okay(spell_type spell)
         return false;
 
     // Annoying to drag around hordes of the undead as well as the living.
-    if (you_worship(GOD_BEOGH))
+    if (will_have_passive(passive_t::convert_orcs))
         return false;
 
     return true;

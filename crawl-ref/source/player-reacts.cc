@@ -403,7 +403,7 @@ void player_reacts_to_monsters()
 
     check_monster_detect();
 
-    if (in_good_standing(GOD_ASHENZARI) || you.mutation[MUT_JELLY_GROWTH])
+    if (have_passive(passive_t::detect_items) || you.mutation[MUT_JELLY_GROWTH])
         detect_items(-1);
 
     if (you.duration[DUR_TELEPATHY])
@@ -968,7 +968,7 @@ static void _decrement_durations()
     {
         int resilience = 400;
 
-        if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
+        if (have_passive(passive_t::slow_metabolism))
             resilience = resilience * 3 / 2;
 
         // Faster rotting when hungry.

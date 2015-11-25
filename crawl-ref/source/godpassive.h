@@ -10,6 +10,94 @@
 #include "player.h"
 
 class monster;
+class dist;
+
+// Passive god abilities.
+enum class passive_t
+{
+    /// Placeholder for absence of a passive ability.
+    none = 0,
+
+    /// The god prefers that items be cursed: acquirement grants cursed items,
+    /// enchant scrolls and miscasts preserve curse status, and remove curse
+    /// allows selecting a subset of items.
+    want_curses,
+
+    /// You detect the presence of portals.
+    detect_portals,
+
+    /// You identity items on sight, including monster equipment.
+    identify_items,
+
+    /// You have (improved) automatic mapping.
+    auto_map,
+
+    /// You detect the threat level of monsters.
+    detect_montier,
+    
+    /// You detect the presence of items.
+    detect_items,
+
+    /// You are better at searching for traps.
+    search_traps,
+
+    /// You have innate see invisible.
+    sinv,
+
+    /// You have innate clarity.
+    clarity,
+
+    /// You get a boost to skills from cursed slots.
+    bondage_skill_boost,
+
+    /// You convert orcs into followers.
+    convert_orcs,
+
+    /// You can walk on water.
+    water_walk,
+
+    /// You share experience with followers.
+    share_exp,
+
+    /// Your god blesses your followers.
+    bless_followers,
+
+    /// You receive a bonus to armour class.
+    bonus_ac,
+
+    /// You cannot be hasted.
+    no_haste,
+
+    /// You move slowly.
+    slowed,
+
+    /// Fewer creatures spawn on the orb run.
+    slow_orb_run,
+
+    /// Fewer creatures spawn in the Abyss, and it morphs less quickly.
+    slow_abyss,
+    
+    /// Your attributes are boosted.
+    stat_boost,
+
+    /// Hunger, poison, and disease affect you more slowly.
+    slow_metabolism,
+
+    /// You have an umbra.
+    umbra,
+    
+    /// You emit clouds when hit.
+    hit_smoke,
+
+    /// Your shadow attacks alongside you.
+    shadow_attacks,
+
+    /// Your shadow casts attack spells alongside you.
+    shadow_spells,
+
+    /// You see better in the dark.
+    nightvision,
+};
 
 enum jiyva_slurp_results
 {
@@ -26,6 +114,9 @@ enum ru_interference
     DO_REDIRECT_ATTACK
 };
 
+bool have_passive(passive_t passive);
+bool will_have_passive(passive_t passive);
+int rank_for_passive(passive_t passive);
 int chei_stat_boost(int piety = you.piety);
 void jiyva_eat_offlevel_items();
 void jiyva_slurp_bonus(int item_value, int *js);
@@ -46,4 +137,10 @@ void qazlal_storm_clouds();
 void qazlal_element_adapt(beam_type flavour, int strength);
 bool does_ru_wanna_redirect(monster* mon);
 ru_interference get_ru_attack_interference_level();
+
+monster* shadow_monster(bool equip = true);
+void shadow_monster_reset(monster *mon);
+void dithmenos_shadow_melee(actor* target);
+void dithmenos_shadow_throw(const dist &d, const item_def &item);
+void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 #endif

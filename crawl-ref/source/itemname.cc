@@ -29,6 +29,7 @@
 #include "evoke.h"
 #include "food.h"
 #include "goditem.h"
+#include "godpassive.h" // passive_t::want_curses, no_haste
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -3186,7 +3187,8 @@ bool is_emergency_item(const item_def &item)
         switch (item.sub_type)
         {
         case WAND_HASTING:
-            return !you_worship(GOD_CHEIBRIADOS) && you.species != SP_FORMICID;
+            return !have_passive(passive_t::no_haste)
+                && you.species != SP_FORMICID;
         case WAND_TELEPORTATION:
             return you.species != SP_FORMICID;
         case WAND_HEAL_WOUNDS:
@@ -3213,7 +3215,8 @@ bool is_emergency_item(const item_def &item)
         switch (item.sub_type)
         {
         case POT_HASTE:
-            return !you_worship(GOD_CHEIBRIADOS) && you.species != SP_FORMICID;
+            return !have_passive(passive_t::no_haste)
+                && you.species != SP_FORMICID;
         case POT_HEAL_WOUNDS:
             return you.can_device_heal();
         case POT_CURING:
@@ -3295,7 +3298,7 @@ bool is_bad_item(const item_def &item, bool temp)
             if (you.species == SP_FELID)
                 return false;
         case SCR_CURSE_JEWELLERY:
-            return !you_worship(GOD_ASHENZARI);
+            return !have_passive(passive_t::want_curses);
         default:
             return false;
         }

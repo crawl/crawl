@@ -27,6 +27,7 @@
 #include "food.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h" // passive_t::convert_orcs
 #include "hints.h"
 #include "itemprop.h"
 #include "mapdef.h"
@@ -366,7 +367,7 @@ bool melee_attack::handle_phase_hit()
             Hints.hints_melee_counter++;
 
         // TODO: Remove this (placed here so I can get rid of player_attack)
-        if (in_good_standing(GOD_BEOGH, 2)
+        if (have_passive(passive_t::convert_orcs)
             && mons_genus(defender->mons_species()) == MONS_ORC
             && !defender->is_summoned()
             && !defender->as_monster()->is_shapeshifter()

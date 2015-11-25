@@ -24,7 +24,7 @@
 #include "fprop.h"
 #include "ghost.h"
 #include "godabil.h"
-#include "godabil.h"
+#include "godpassive.h" // passive_t::slow_abyss, slow_orb_run
 #include "lev-pand.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -360,7 +360,7 @@ void spawn_random_monsters()
         rate = _vestibule_spawn_rate();
 
     if (player_on_orb_run())
-        rate = you_worship(GOD_CHEIBRIADOS) ? 16 : 8;
+        rate = have_passive(passive_t::slow_orb_run) ? 16 : 8;
     else if (!player_in_starting_abyss())
         rate = _scale_spawn_parameter(rate, 6 * rate, 0);
 
@@ -375,7 +375,7 @@ void spawn_random_monsters()
     {
         if (!player_in_starting_abyss())
             rate = 5;
-        if (you_worship(GOD_CHEIBRIADOS))
+        if (have_passive(passive_t::slow_abyss))
             rate *= 2;
     }
 

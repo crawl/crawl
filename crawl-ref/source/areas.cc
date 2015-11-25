@@ -16,6 +16,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "godconduct.h"
+#include "godpassive.h" // passive_t::umbra
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
@@ -710,11 +711,11 @@ int player::umbra_radius() const
 {
     int size = -1;
 
-    if (religion == GOD_DITHMENOS && piety >= piety_breakpoint(0)
-        && !penance[GOD_DITHMENOS])
+    if (have_passive(passive_t::umbra))
     {
         // The cap is reached at piety 160 = ******.
-        size = min((int)piety, piety_breakpoint(5)) * LOS_RADIUS / piety_breakpoint(5);
+        size = min((int)piety, piety_breakpoint(5)) * LOS_RADIUS
+                                                    / piety_breakpoint(5);
     }
 
     if (player_equip_unrand(UNRAND_SHADOWS))

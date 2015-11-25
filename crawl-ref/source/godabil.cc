@@ -27,7 +27,6 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "english.h"
-#include "fight.h"
 #include "files.h"
 #include "food.h"
 #include "godblessing.h"
@@ -48,7 +47,6 @@
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-book.h"
-#include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-poly.h"
@@ -78,7 +76,6 @@
 #include "target.h"
 #include "teleport.h" // monster_teleport
 #include "terrain.h"
-#include "throw.h"
 #ifdef USE_TILE
  #include "tiledef-main.h"
 #endif
@@ -1611,11 +1608,6 @@ void trog_remove_trogs_hand()
         mprf(MSGCH_DURATION, "Your skin stops crawling.");
     mprf(MSGCH_DURATION, "You feel less resistant to hostile enchantments.");
     you.duration[DUR_TROGS_HAND] = 0;
-}
-
-bool beogh_water_walk()
-{
-    return in_good_standing(GOD_BEOGH, 4);
 }
 
 /**
@@ -3956,218 +3948,6 @@ bool dithmenos_shadow_step()
          apostrophise(victim->name(DESC_THE)).c_str());
 
     return true;
-}
-
-static bool _dithmenos_shadow_acts()
-{
-    if (!in_good_standing(GOD_DITHMENOS, 3))
-        return false;
-
-    // 10% chance at 4* piety; 50% chance at 200 piety.
-    const int range = MAX_PIETY - piety_breakpoint(3);
-    const int min   = range / 5;
-    return x_chance_in_y(min + ((range - min)
-                                * (you.piety - piety_breakpoint(3))
-                                / (MAX_PIETY - piety_breakpoint(3))),
-                         2 * range);
-}
-
-monster* shadow_monster(bool equip)
-{
-    if (monster_at(you.pos()))
-        return nullptr;
-
-    int wpn_index  = NON_ITEM;
-
-    // Do a basic clone of the weapon.
-    item_def* wpn = you.weapon();
-    if (equip
-        && wpn
-        && (wpn->base_type == OBJ_WEAPONS
-            || wpn->base_type == OBJ_STAVES
-            || wpn->base_type == OBJ_RODS))
-    {
-        wpn_index = get_mitm_slot(10);
-        if (wpn_index == NON_ITEM)
-            return nullptr;
-        item_def& new_item = mitm[wpn_index];
-        if (wpn->base_type == OBJ_STAVES)
-        {
-            new_item.base_type = OBJ_WEAPONS;
-            new_item.sub_type  = WPN_STAFF;
-        }
-        else if (wpn->base_type == OBJ_RODS)
-        {
-            new_item.base_type = OBJ_WEAPONS;
-            new_item.sub_type  = WPN_ROD;
-        }
-        else
-        {
-            new_item.base_type = wpn->base_type;
-            new_item.sub_type  = wpn->sub_type;
-        }
-        new_item.quantity = 1;
-        new_item.rnd = 1;
-        new_item.flags   |= ISFLAG_SUMMONED;
-    }
-
-    monster* mon = get_free_monster();
-    if (!mon)
-    {
-        if (wpn_index)
-            destroy_item(wpn_index);
-        return nullptr;
-    }
-
-    mon->type       = MONS_PLAYER_SHADOW;
-    mon->behaviour  = BEH_SEEK;
-    mon->attitude   = ATT_FRIENDLY;
-    mon->flags      = MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
-                    | MF_WAS_IN_VIEW | MF_HARD_RESET;
-    mon->hit_points = you.hp;
-    mon->set_hit_dice(min(27, max(1,
-                                  you.skill_rdiv(wpn_index != NON_ITEM
-                                                 ? item_attack_skill(mitm[wpn_index])
-                                                 : SK_UNARMED_COMBAT, 10, 20)
-                                  + you.skill_rdiv(SK_FIGHTING, 10, 20))));
-    mon->set_position(you.pos());
-    mon->mid        = MID_PLAYER;
-    mon->inv[MSLOT_WEAPON]  = wpn_index;
-    mon->inv[MSLOT_MISSILE] = NON_ITEM;
-
-    mgrd(you.pos()) = mon->mindex();
-
-    return mon;
-}
-
-void shadow_monster_reset(monster *mon)
-{
-    if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
-        destroy_item(mon->inv[MSLOT_WEAPON]);
-    if (mon->inv[MSLOT_MISSILE] != NON_ITEM)
-        destroy_item(mon->inv[MSLOT_MISSILE]);
-
-    mon->reset();
-}
-
-/**
- * Check if the player is in melee range of the target.
- *
- * Certain effects, e.g. distortion blink, can cause monsters to leave melee
- * range between the initial hit & the shadow mimic.
- *
- * XXX: refactor this with attack/fight code!
- *
- * @param target    The creature to be struck.
- * @return          Whether the player is melee range of the target, using
- *                  their current weapon.
- */
-static bool _in_melee_range(actor* target)
-{
-    const int dist = (you.pos() - target->pos()).abs();
-    return dist < 2 || (dist <= 2 && you.reach_range() != REACH_NONE);
-}
-
-void dithmenos_shadow_melee(actor* target)
-{
-    if (!target
-        || !target->alive()
-        || !_in_melee_range(target)
-        || !_dithmenos_shadow_acts())
-    {
-        return;
-    }
-
-    monster* mon = shadow_monster();
-    if (!mon)
-        return;
-
-    mon->target     = target->pos();
-    mon->foe        = target->mindex();
-
-    fight_melee(mon, target);
-
-    shadow_monster_reset(mon);
-}
-
-void dithmenos_shadow_throw(const dist &d, const item_def &item)
-{
-    ASSERT(d.isValid);
-    if (!_dithmenos_shadow_acts())
-        return;
-
-    monster* mon = shadow_monster();
-    if (!mon)
-        return;
-
-    int ammo_index = get_mitm_slot(10);
-    if (ammo_index != NON_ITEM)
-    {
-        item_def& new_item = mitm[ammo_index];
-        new_item.base_type = item.base_type;
-        new_item.sub_type  = item.sub_type;
-        new_item.quantity  = 1;
-        new_item.rnd = 1;
-        new_item.flags    |= ISFLAG_SUMMONED;
-        mon->inv[MSLOT_MISSILE] = ammo_index;
-
-        mon->target = clamp_in_bounds(d.target);
-
-        bolt beem;
-        beem.set_target(d);
-        setup_monster_throw_beam(mon, beem);
-        beem.item = &mitm[mon->inv[MSLOT_MISSILE]];
-        mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
-    }
-
-    shadow_monster_reset(mon);
-}
-
-void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
-{
-    if (!orig_beam)
-        return;
-
-    const coord_def target = orig_beam->target;
-
-    if (orig_beam->target.origin()
-        || (orig_beam->is_enchantment() && !is_valid_mon_spell(spell))
-        || orig_beam->flavour == BEAM_ENSLAVE
-           && monster_at(target) && monster_at(target)->friendly()
-        || !_dithmenos_shadow_acts())
-    {
-        return;
-    }
-
-    monster* mon = shadow_monster();
-    if (!mon)
-        return;
-
-    // Don't let shadow spells get too powerful.
-    mon->set_hit_dice(max(1,
-                          min(3 * spell_difficulty(spell),
-                              you.experience_level) / 2));
-
-    mon->target = clamp_in_bounds(target);
-    if (actor_at(target))
-        mon->foe = actor_at(target)->mindex();
-
-    spell_type shadow_spell = spell;
-    if (!orig_beam->is_enchantment())
-    {
-        shadow_spell = (orig_beam->pierce) ? SPELL_SHADOW_BOLT
-                                           : SPELL_SHADOW_SHARD;
-    }
-
-    bolt beem;
-    beem.target = target;
-    beem.aimed_at_spot = orig_beam->aimed_at_spot;
-
-    mprf(MSGCH_FRIEND_SPELL, "%s mimicks your spell!",
-         mon->name(DESC_THE).c_str());
-    mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
-
-    shadow_monster_reset(mon);
 }
 
 static potion_type _gozag_potion_list[][4] =

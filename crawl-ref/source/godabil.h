@@ -43,7 +43,6 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 struct bolt;
 class stack_iterator;
-class dist;
 
 bool can_do_capstone_ability(god_type god);
 bool bless_weapon(god_type god, brand_type brand, colour_t colour);
@@ -75,7 +74,6 @@ void trog_remove_trogs_hand();
 void jiyva_paralyse_jellies();
 bool jiyva_remove_bad_mutation();
 
-bool beogh_water_walk();
 bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);
 bool beogh_gift_item();
 
@@ -126,11 +124,6 @@ bool can_convert_to_beogh();
 void spare_beogh_convert();
 
 bool dithmenos_shadow_step();
-monster* shadow_monster(bool equip = true);
-void shadow_monster_reset(monster *mon);
-void dithmenos_shadow_melee(actor* target);
-void dithmenos_shadow_throw(const dist &d, const item_def &item);
-void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 
 int gozag_potion_price();
 bool gozag_setup_potion_petition(bool quiet = false);
