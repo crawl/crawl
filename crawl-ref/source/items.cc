@@ -1451,7 +1451,10 @@ bool items_stack(const item_def &item1, const item_def &item2)
         return false;
     }
 
-    return items_similar(item1, item2);
+    return items_similar(item1, item2)
+        // Don't leak information when checking if an "(unknown)" shop item
+        // matches an unidentified item in inventory.
+        && fully_identified(item1) == fully_identified(item2);
 }
 
 /**

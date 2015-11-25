@@ -37,7 +37,7 @@
 #include "mutation.h"
 #include "player.h"
 #include "player-stats.h"
-#include "random-weight.h"
+#include "random.h"
 #include "rot.h"
 #include "religion.h"
 #include "skills.h"

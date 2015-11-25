@@ -913,8 +913,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_DIG, 13, MON_SPELL_DEMONIC },
        { SPELL_RANDOM_BOLT, 13, MON_SPELL_DEMONIC },
-       { SPELL_CHAOS_BREATH, 27, MON_SPELL_DEMONIC },
-       { SPELL_CHAIN_OF_CHAOS, 13, MON_SPELL_DEMONIC },
        { SPELL_SUMMON_EYEBALLS, 13, MON_SPELL_DEMONIC },
        { SPELL_MALIGN_GATEWAY, 27, MON_SPELL_DEMONIC },
        { SPELL_SUMMON_HORRIBLE_THINGS, 27, MON_SPELL_DEMONIC },
@@ -948,7 +946,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_DISPEL_UNDEAD, 20, MON_SPELL_DEMONIC },
        { SPELL_SUMMON_EXECUTIONERS, 40, MON_SPELL_DEMONIC },
        { SPELL_BLACK_MARK, 20, MON_SPELL_DEMONIC },
-       { SPELL_LRD, 20, MON_SPELL_DEMONIC },
       }
     },
 
@@ -1259,7 +1256,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MAGIC_DART, 13, MON_SPELL_WIZARD },
        { SPELL_SLOW, 13, MON_SPELL_WIZARD },
        { SPELL_CALL_IMP, 13, MON_SPELL_WIZARD },
-       { SPELL_CONJURE_FLAME, 13, MON_SPELL_WIZARD },
       }
     },
 
@@ -2016,15 +2012,6 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DEEP_ELF_KNIGHT_I,
       {
-       { SPELL_DAZZLING_SPRAY, 24, MON_SPELL_WIZARD },
-       { SPELL_CONJURE_FLAME, 12, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
-       { SPELL_SWIFTNESS, 12, MON_SPELL_WIZARD },
-      }
-    },
-
-    {  MST_DEEP_ELF_KNIGHT_II,
-      {
        { SPELL_THROW_ICICLE, 24, MON_SPELL_WIZARD },
        { SPELL_HASTE, 12, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
@@ -2032,7 +2019,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_DEEP_ELF_KNIGHT_III,
+    {  MST_DEEP_ELF_KNIGHT_II,
       {
        { SPELL_STONE_ARROW, 24, MON_SPELL_WIZARD },
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
@@ -2068,7 +2055,6 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SALAMANDER_STORMCALLER,
       {
-       { SPELL_CONJURE_FLAME, 30, MON_SPELL_WIZARD },
        { SPELL_STICKY_FLAME_RANGE, 45, MON_SPELL_WIZARD },
        { SPELL_FIRE_STORM, 30, MON_SPELL_WIZARD },
       }

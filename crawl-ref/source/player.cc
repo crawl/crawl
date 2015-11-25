@@ -1265,20 +1265,6 @@ int player_hunger_rate(bool temp)
                 - player_mutation_level(MUT_SLOW_METABOLISM);
     }
 
-    if (you.hp < you.hp_max
-        && player_mutation_level(MUT_SLOW_REGENERATION) < 3)
-    {
-        // jewellery
-        hunger += 3 * you.wearing(EQ_AMULET, AMU_REGENERATION);
-
-        // troll leather
-        if (you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
-            || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
-        {
-            hunger += coinflip() ? 2 : 1;
-        }
-    }
-
     // If Cheibriados has slowed your life processes, you will hunger less.
     if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
         hunger /= 2;
@@ -5356,7 +5342,6 @@ player::player()
     reset_escaped_death();
     on_current_level    = true;
     seen_portals        = 0;
-    seen_invis          = false;
     frame_no            = 0;
 
     save                = nullptr;

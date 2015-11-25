@@ -17,7 +17,7 @@
 #include "itemname.h"
 #include "libutil.h"
 #include "maps.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "state.h"

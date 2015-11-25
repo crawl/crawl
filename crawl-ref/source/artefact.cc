@@ -24,7 +24,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-book.h"

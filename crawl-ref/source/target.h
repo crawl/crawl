@@ -47,11 +47,20 @@ public:
     virtual aff_type is_affected(coord_def loc) override;
 protected:
     vector<coord_def> path_taken; // Path beam took.
+    void set_explosion_aim(bolt tempbeam);
+    void set_explosion_target(bolt &tempbeam);
+    int min_expl_rad, max_expl_rad;
 private:
     bool penetrates_targets;
     int range;
-    int min_expl_rad, max_expl_rad;
     explosion_map exp_map_min, exp_map_max;
+};
+
+class targetter_unravelling : public targetter_beam
+{
+public:
+    targetter_unravelling(const actor *act, int range, int pow);
+    bool set_aim(coord_def a) override;
 };
 
 class targetter_imb : public targetter_beam

@@ -48,7 +48,7 @@
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"

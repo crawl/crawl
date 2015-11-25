@@ -397,8 +397,6 @@ public:
   // View code clears and needs new data in places where we can't announce the
   // portal right away; delay the announcements then.
   int seen_portals;
-  // Same with invisible monsters, for ring auto-id.
-  bool seen_invis;
 
   // Number of viewport refreshes.
   unsigned int frame_no;
