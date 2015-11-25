@@ -32,6 +32,7 @@
 #include "fight.h"
 #include "godabil.h"
 #include "godconduct.h"
+#include "godpassive.h" // passive_t::convert_orcs
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
@@ -4373,7 +4374,7 @@ void bolt::enchantment_affect_monster(monster* mon)
 
             set_attack_conducts(conducts, mon, you.can_see(*mon));
 
-            if (in_good_standing(GOD_BEOGH, 2)
+            if (have_passive(passive_t::convert_orcs)
                 && mons_genus(mon->type) == MONS_ORC
                 && mon->asleep() && mons_near(mon))
             {

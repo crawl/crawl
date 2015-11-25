@@ -14,6 +14,7 @@
 #include "dactions.h"
 #include "dungeon.h"
 #include "godcompanions.h"
+#include "godpassive.h" // passive_t::convert_orcs
 #include "items.h"
 #include "libutil.h" // map_find
 #include "mon-place.h"
@@ -353,7 +354,7 @@ void follower::restore_mons_items(monster& m)
 static bool _is_religious_follower(const monster* mon)
 {
     return (you_worship(GOD_YREDELEMNUL)
-            || you_worship(GOD_BEOGH)
+            || will_have_passive(passive_t::convert_orcs)
             || you_worship(GOD_FEDHAS))
                 && is_follower(mon);
 }

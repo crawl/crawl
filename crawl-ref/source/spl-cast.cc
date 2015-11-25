@@ -27,6 +27,7 @@
 #include "godabil.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h" // passive_t::shadow_spells
 #include "hints.h"
 #include "item_use.h"
 #include "libutil.h"
@@ -1468,9 +1469,9 @@ spret_type your_spells(spell_type spell, int powc,
         if (you.props.exists("battlesphere") && allow_fail)
             trigger_battlesphere(&you, beam);
         actor* victim = actor_at(beam.target);
-        if (you_worship(GOD_DITHMENOS)
+        if (will_have_passive(passive_t::shadow_spells)
             && allow_fail
-            && !god_hates_spell(spell, GOD_DITHMENOS, !allow_fail)
+            && !god_hates_spell(spell, you.religion, !allow_fail)
             && (flags & SPFLAG_TARGETING_MASK)
             && !(flags & SPFLAG_NEUTRAL)
             && (beam.is_enchantment()

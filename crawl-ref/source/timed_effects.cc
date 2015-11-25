@@ -819,9 +819,7 @@ static void _handle_sickness(int /*time_delta*/)
     // If Cheibriados has slowed your biology, disease might
     // not actually do anything.
     if (you.disease && one_chance_in(30)
-        && !(you_worship(GOD_CHEIBRIADOS)
-             && you.piety >= piety_breakpoint(0)
-             && coinflip()))
+        && !(have_passive(passive_t::slow_metabolism) && coinflip()))
     {
         mprf(MSGCH_WARN, "Your disease is taking its toll.");
         lose_stat(STAT_RANDOM, 1);
@@ -847,7 +845,7 @@ static void _abyss_speed(int /*time_delta*/)
     if (!player_in_branch(BRANCH_ABYSS))
         return;
 
-    if (you_worship(GOD_CHEIBRIADOS) && coinflip())
+    if (have_passive(passive_t::slow_abyss) && coinflip())
         ; // Speed change less often for Chei.
     else if (coinflip() && you.abyss_speed < 100)
         ++you.abyss_speed;

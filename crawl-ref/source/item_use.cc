@@ -28,6 +28,7 @@
 #include "godabil.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -2114,7 +2115,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
             canned_msg(MSG_NOTHING_HAPPENS);
 
         // That proved that it was uncursed.
-        if (!you_worship(GOD_ASHENZARI))
+        if (!have_passive(passive_t::want_curses))
             arm.flags |= ISFLAG_KNOW_CURSE;
 
         return false;

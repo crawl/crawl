@@ -398,7 +398,7 @@ static void _splash()
 {
     if (you.can_swim())
         noisy(4, you.pos(), "Floosh!");
-    else if (!beogh_water_walk())
+    else if (!have_passive(passive_t::water_walk))
         noisy(8, you.pos(), "Splash!");
 }
 
@@ -459,7 +459,8 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         if (feat_is_water(new_grid) && !stepped)
             _splash();
 
-        if (feat_is_water(new_grid) && !you.can_swim() && !beogh_water_walk())
+        if (feat_is_water(new_grid) && !you.can_swim()
+            && !have_passive(passive_t::water_walk))
         {
             if (stepped)
             {
@@ -586,7 +587,7 @@ bool player_in_connected_branch()
 
 bool player_likes_water(bool permanently)
 {
-    return !permanently && beogh_water_walk()
+    return !permanently && have_passive(passive_t::water_walk)
            || (species_likes_water(you.species) || !permanently)
                && form_likes_water();
 }
@@ -1266,7 +1267,7 @@ int player_hunger_rate(bool temp)
     }
 
     // If Cheibriados has slowed your life processes, you will hunger less.
-    if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
+    if (have_passive(passive_t::slow_metabolism))
         hunger /= 2;
 
     if (hunger < 1)
@@ -1988,7 +1989,7 @@ int player_movement_speed()
     mv += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
 
     // Cheibriados
-    if (you_worship(GOD_CHEIBRIADOS))
+    if (have_passive(passive_t::slowed))
         mv += 2 + min(div_rand_round(you.piety, 20), 8);
     else if (player_under_penance(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
@@ -2049,7 +2050,7 @@ int player_speed()
     if (you.duration[DUR_SLOW] || have_stat_zero())
         ps = haste_mul(ps);
 
-    if (you.duration[DUR_BERSERK] && !you_worship(GOD_CHEIBRIADOS))
+    if (you.duration[DUR_BERSERK] && !have_passive(passive_t::no_haste))
         ps = berserk_div(ps);
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
@@ -2091,7 +2092,7 @@ static int _player_armour_beogh_bonus(const item_def& item)
 
     int bonus = 0;
 
-    if (in_good_standing(GOD_BEOGH))
+    if (have_passive(passive_t::bonus_ac))
     {
         if (you.piety >= piety_breakpoint(5))
             bonus = 10;
@@ -3226,7 +3227,7 @@ int check_stealth()
     if (you.umbra())
     {
         int umbra_mul = 1, umbra_div = 1;
-        if (you_worship(GOD_DITHMENOS) || you_worship(GOD_YREDELEMNUL))
+        if (have_passive(passive_t::umbra) || you_worship(GOD_YREDELEMNUL))
         {
             umbra_mul = you.piety + MAX_PIETY;
             umbra_div = MAX_PIETY;
@@ -3582,7 +3583,7 @@ bool player::clarity(bool calc_unid, bool items) const
     if (player_mutation_level(MUT_CLARITY))
         return true;
 
-    if (in_good_standing(GOD_ASHENZARI, 3))
+    if (have_passive(passive_t::clarity))
         return true;
 
     return actor::clarity(calc_unid, items);
@@ -4523,7 +4524,7 @@ int poison_survival()
     if (!get_player_poisoning())
         return you.hp;
     const int rr = player_regen();
-    const bool chei = (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(0));
+    const bool chei = have_passive(passive_t::slow_metabolism);
     const bool dd = (you.species == SP_DEEP_DWARF);
     const int amount = you.duration[DUR_POISONING];
     const double full_aut = _poison_dur_to_aut(amount);
@@ -5453,7 +5454,7 @@ bool player::is_sufficiently_rested() const
 
 bool player::in_water() const
 {
-    return ground_level() && !beogh_water_walk()
+    return ground_level() && !have_passive(passive_t::water_walk)
            && feat_is_water(grd(pos()));
 }
 
@@ -5829,7 +5830,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
 
     if (penance[GOD_ASHENZARI])
         level = max(level - 4 * scale, level / 2);
-    else if (in_good_standing(GOD_ASHENZARI, 1))
+    else if (have_passive(passive_t::bondage_skill_boost))
     {
         if (skill_boost.count(sk)
             && skill_boost.find(sk)->second)
@@ -6576,8 +6577,7 @@ undead_state_type player::undead_state(bool temp) const
 
 bool player::nightvision() const
 {
-    return religion == GOD_DITHMENOS && piety >= piety_breakpoint(0)
-           || religion == GOD_YREDELEMNUL && piety >= piety_breakpoint(2);
+    return have_passive(passive_t::nightvision);
 }
 
 reach_type player::reach_range() const
@@ -7091,7 +7091,7 @@ bool player::can_see_invisible(bool calc_unid, bool items) const
     if (player_mutation_level(MUT_EYEBALLS) == 3)
         return true;
 
-    if (in_good_standing(GOD_ASHENZARI, 2))
+    if (have_passive(passive_t::sinv))
         return true;
 
     return false;
@@ -7757,7 +7757,7 @@ int player_monster_detect_radius()
 
     if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN))
         radius = max(radius, 4);
-    if (in_good_standing(GOD_ASHENZARI))
+    if (have_passive(passive_t::detect_montier))
         radius = max(radius, you.piety / 20);
     return min(radius, LOS_RADIUS);
 }

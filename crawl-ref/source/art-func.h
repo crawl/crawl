@@ -28,6 +28,7 @@
 #include "food.h"          // For evokes
 #include "ghost.h"         // For is_dragonkind ghost_demon datas
 #include "godconduct.h"    // did_god_conduct
+#include "godpassive.h"    // passive_t::want_curses
 #include "mgen_data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
@@ -171,7 +172,7 @@ static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _CURSES_world_reacts(item_def *item)
 {
     // don't spam messages for ash worshippers
-    if (one_chance_in(30) && !you_worship(GOD_ASHENZARI))
+    if (one_chance_in(30) && !have_passive(passive_t::want_curses))
         curse_an_item(true);
 }
 

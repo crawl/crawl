@@ -24,6 +24,7 @@
 #include "feature.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godpassive.h" // passive_t::water_walk
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -1480,7 +1481,7 @@ void fall_into_a_pool(dungeon_feature_type terrain)
 {
     if (terrain == DNGN_DEEP_WATER)
     {
-        if (beogh_water_walk() || form_likes_water())
+        if (have_passive(passive_t::water_walk) || form_likes_water())
             return;
 
         if (species_likes_water(you.species) && !you.transform_uncancellable)

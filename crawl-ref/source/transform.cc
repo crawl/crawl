@@ -18,6 +18,7 @@
 #include "env.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "godpassive.h" // passive_t::water_walk
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -1460,10 +1461,8 @@ bool feat_dangerous_for_form(transformation_type which_trans,
 
     if (feat == DNGN_DEEP_WATER)
     {
-        if (beogh_water_walk())
-            return false;
-
-        return !form_likes_water(which_trans);
+        return !have_passive(passive_t::water_walk)
+            && !form_likes_water(which_trans);
     }
 
     return false;

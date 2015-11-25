@@ -614,7 +614,7 @@ void wizard_make_object_randart()
     }
 
     // Remove curse flag from item, unless worshipping Ashenzari.
-    if (you_worship(GOD_ASHENZARI))
+    if (have_passive(passive_t::want_curses))
         do_curse_item(item, true);
     else
         do_uncurse_item(item, false);

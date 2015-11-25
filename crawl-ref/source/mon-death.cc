@@ -32,6 +32,7 @@
 #include "godblessing.h"
 #include "godcompanions.h"
 #include "godconduct.h"
+#include "godpassive.h" // passive_t::bless_followers, share_exp, convert_orcs
 #include "hints.h"
 #include "hiscores.h"
 #include "itemname.h"
@@ -251,7 +252,7 @@ static void _give_monster_experience(int experience, int killer_index)
 
     if (mon->gain_exp(experience))
     {
-        if (!in_good_standing(GOD_BEOGH) || !one_chance_in(3))
+        if (!have_passive(passive_t::bless_followers) || !one_chance_in(3))
             return;
 
         // Randomly bless the follower who gained experience.
@@ -343,7 +344,7 @@ static void _give_player_experience(int experience, killer_type killer,
     if (exp_gain > 0 && !was_visible)
         mpr("You feel a bit more experienced.");
 
-    if (kc == KC_YOU && you_worship(GOD_BEOGH))
+    if (kc == KC_YOU && have_passive(passive_t::share_exp))
         _beogh_spread_experience(experience / 2);
 }
 
@@ -708,7 +709,7 @@ static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
 static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
                                     int killer_index)
 {
-    if (!in_good_standing(GOD_BEOGH, 2)
+    if (!have_passive(passive_t::convert_orcs)
         || mons_genus(mons.type) != MONS_ORC
         || mons.is_summoned() || mons.is_shapeshifter()
         || !mons_near(&mons) || mons_is_god_gift(&mons))
@@ -1574,7 +1575,7 @@ static bool _reaping(monster *mons)
 
 static bool _god_will_bless_follower(monster* victim)
 {
-    return in_good_standing(GOD_BEOGH)
+    return have_passive(passive_t::bless_followers)
            && random2(you.piety) >= piety_breakpoint(2)
            || in_good_standing(GOD_SHINING_ONE)
               && (victim->is_evil() || victim->is_unholy())
