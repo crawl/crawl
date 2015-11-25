@@ -2875,73 +2875,69 @@ ENDMAP
 ## Plants, beasts, and humanoids alike gather in a splendid palace devoted to
 ## the worship of a life-bringing water deity.
 NAME:     gammafunk_depths_water_palace
-DEPTH:    Depths:2-, !Depths:$
+DEPTH:    Depths, !Depths:$
 ORIENT:   float
 TAGS:     no_monster_gen patrolling no_pool_fixup
 ## Plants or water monsters
-KMONS:    f = plant / fungus
-KMONS:    RS = electric eel / water elemental
+KMONS:    P = plant / fungus
+KMONS:    R = water elemental
+KMONS:    S = water elemental / w:2 merfolk impaler / w:2 merfolk javelineer
 ## Main monster sets
-KMONS:    1 = spriggan rider / spriggan berserker / centaur warrior \
-              / minotaur / satyr / merfolk impaler / deep elf knight
-KMONS:    2 = spriggan defender / deep elf blademaster / deep elf master archer
-KMONS:    3 = spriggan air mage / spriggan druid / deep elf annihilator
+KMONS:    1 = spriggan berserker / ettin / deep troll shaman
+KMONS:    2 = spriggan defender / yaktaur captain / stone giant
+KMONS:    3 = spriggan air mage / deep elf annihilator / entropy weaver \
+              / rakshasa
 KMONS:    4 = orange crystal statue
-KMONS:    5Z = catoblepas / dire elephant / emperor scorpion \
-              / alligator snapping turtle / shambling mangrove / thorn hunter
-KMONS:    6 = merfolk avatar
-KMONS:    7 = water nymph / wind drake / sphinx
-KMONS:    D = merfolk javelineer / tengu reaver / spriggan air mage
-KMONS:    E = quicksilver dragon / storm dragon / titan / golden dragon \
-              / w:5 caustic shrike
-KMONS:    O = the Enchantress band
+KMONS:    5Z = fire dragon / ice dragon / iron dragon / w:5 spark wasp band \
+               / sphinx / emperor scorpion
+KMONS:    6 = storm dragon / golden dragon / quicksilver dragon
+KMONS:    7 = w:15 tengu reaver / stone giant / fire giant / frost giant
+KMONS:    D = titan / juggernaut / w:15 caustic shrike
+KMONS:    O = w:5 the Enchantress band / iron giant band, iron giant band
 ## The loot items need this to be placed in water
 KITEM:    % = %
 KITEM:    $ = $
 KITEM:    * = *
-KITEM:    E| = |
-KFEAT:    f5Z67DER%$*| = W
+KITEM:    D| = |
+KFEAT:    P5Z67DR%$*| = W
 KFEAT:    S = w
 KFEAT:    u = t
-KPROP:    ~`ZR = no_tele_into
+KPROP:    ~"ZR = no_tele_into
 SHUFFLE:  HI / JK
-NSUBST:   H = 1:4 / *:G, I = ', J = G, K = D, L = 2:6 / *:7
-SUBST:    B : cf, C : cf, ~" = ffffW, '` = W
+NSUBST:   H = 1:4 / *:G
+SUBST:    I = -, J = G, K = 7, L = 6 7 D:2, B : cP, C : cP, ~' = PPPPW, -" = W
 COLOUR:   c = white
 COLOUR:   x = cyan
 TILE:     u = dngn_mangrove
 TILE:     x = wall_pebble_cyan
-FTILE:    .+ctuGTUf1234O = floor_pebble_cyan
-veto {{
-  return crawl.game_started() and you.uniques("the Enchantress")
-}}
+FTILE:    .+ctuGTUP1234O = floor_pebble_cyan
 MAP
       ccccccccccccccccccccccccc
-    cccttct1t.t.'Gx'Hx'Hx'ucuTccc
-   cc'...+....3.''''''I''''+'wwwcc
-  ccG'.2.+.t2t.t''Gx'Hx'Hx'+'''wwcc
-  ccc'.GcccBBccccccccccccccc''''wwc
-  ccGR.cc~``cccccUGUccccc""'5x'''Sc
- cccc'.n~Z`cccc''*E*''cccc"'u'u''wcc
- cT'''.n``~ccc'''$%$'''ccc"''x7u'wwc
- ct1...cR~cccL'''ccc'''Lccc"'u'x''wc
- cccc++c`~ccc''cccGccc''ccc"''u5u'Sc
-cctGt..c~~cc''cc*%$%*cc''cc""''x''wcc
-c..1...c~ccc''cu''D''uc'5cccG'u'u'wTc
-+.''''.nucU|$''''...''''''++'D''''llc
-+.'ll'2nTcG||'D''.O.''D'''++'''U''lGc
-+.''''.nucU|$''''...''''''++'D''''llc
-c..1...c~ccc''cu''D''uc'5cccG'u'u'wTc
-cctGt..c~~cc''cc*%$%*cc''cc""''x''wcc
- cccc++c`~ccc''cccGccc''ccc"''u5u'Sc
- ct1...cR~cccL'''ccc'''Lccc"'u'x''wc
- cT'''.n``~ccc'''$%$'''ccc"''x7u'wwc
- cccc'.n~Z`cccc''*E*''cccc"'u'u''wcc
-  ccGR.cc~``cccccUGUccccc""'5x'''Sc
-  ccc'.GcccCCccccccccccccccc''''wwc
-  ccG'.2.+.t2t.t''''Jx'''''+'''wwcc
-   cc'...+....3.''''''K''''+'wwwcc
-    cccttct1t.t.'Gx''''Jx'ucuTccc
+    cccttct1t.t.-Gx-Hx-Hx-ucuTccc
+   cc-...+....3.------I----+-wwwcc
+  ccG-.2.+.t2t.t--Gx-Hx-Hx-+---wwcc
+  ccc-.GcccBBccccccccccccccc----wwc
+  ccGR.cc~""cccccUGUccccc''-5x---Sc
+ cccc-.n~Z"cccc--*D*--cccc'-u-u--wcc
+ cT---.n""~ccc---$%$---ccc'--x6u-wwc
+ ct1...c"~cccL---ccc---Lccc'-u-x--wc
+ cccc++cR~ccc--cccGccc--ccc'--u5u-Sc
+cctGt..c~~cc--cc*%$%*cc--cc''--x--wcc
+c..1...c~ccc--cu--7--uc--cccG-u-u-wTc
++.---..nucU|$----...------++-7----llc
++.-U-.2nUcGD|----.O.--7---++---U--lGc
++.---..nucU|$----...------++-7----llc
+c..1...c~ccc--cu--7--uc--cccG-u-u-wTc
+cctGt..c~~cc--cc*%$%*cc--cc''--x--wcc
+ cccc++cR~ccc--cccGccc--ccc'--u5u-Sc
+ ct1...c"~cccL---ccc---Lccc'-u-x--wc
+ cT---.n""~ccc---$%$---ccc'--x6u-wwc
+ cccc-.n~Z"cccc--*D*--cccc'-u-u--wcc
+  ccGR.cc~""cccccUGUccccc''-5x---Sc
+  ccc-.GcccCCccccccccccccccc----wwc
+  ccG-.2.+.t2t.t----Jx-----+---wwcc
+   cc-...+....3.------K----+-wwwcc
+    cccttct1t.t.-Gx----Jx-ucuTccc
      ccccccccccccccccccccccccccc
 ENDMAP
 
