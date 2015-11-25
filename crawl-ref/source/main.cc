@@ -2297,7 +2297,9 @@ void process_command(command_type cmd)
             = (Options.restart_after_game && Options.restart_after_save)
               ? "Save game and return to main menu?"
               : "Save game and exit?";
-        if (yesno(prompt, true, 'n'))
+        explicit_keymap map;
+        map['S'] = 'y';
+        if (yesno(prompt, true, 'n', true, true, false, &map))
             save_game(true);
         else
             canned_msg(MSG_OK);
