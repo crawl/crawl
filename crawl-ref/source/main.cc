@@ -1151,7 +1151,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_REDRAW_SCREEN:
     case CMD_MACRO_ADD:
     case CMD_SAVE_GAME:
-    case CMD_SAVE_GAME_NOW:
     case CMD_SUSPEND_GAME:
     case CMD_QUIT:
     case CMD_FIX_WAYPOINT:
@@ -2305,11 +2304,6 @@ void process_command(command_type cmd)
             canned_msg(MSG_OK);
         break;
     }
-
-    case CMD_SAVE_GAME_NOW:
-        mpr("Saving game... please wait.");
-        save_game(true);
-        break;
 
     case CMD_QUIT:
         if (crawl_state.disables[DIS_CONFIRMATIONS]

@@ -44,15 +44,6 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 Uzskaitīt atklāto priekšmetu veidus.
 %%%%
-CMD_SAVE_GAME_NOW
-
-Saglabāt un iziet
-%%%%
-CMD_SAVE_GAME_NOW verbose
-
-Saglabā spēli vēlākam un iziet no tās. Tiklīdz spēle tiek atsākta, saglabātā
-datne tiek atkal izdzēsta.
-%%%%
 CMD_DISPLAY_COMMANDS
 
 Spēles palīdzību

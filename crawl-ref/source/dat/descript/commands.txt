@@ -103,15 +103,6 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 List discovered item types
 %%%%
-CMD_SAVE_GAME_NOW
-
-Save and exit
-%%%%
-CMD_SAVE_GAME_NOW verbose
-
-Saves the game for later and exits. Once you resume the game, the save file is
-deleted again.
-%%%%
 CMD_EDIT_PLAYER_TILE
 
 Modify the player tile
