@@ -291,9 +291,6 @@ void mark_had_book(const item_def &book)
     for (spell_type stype : spells_in_book(book))
         you.seen_spell.set(stype);
 
-    if (book.sub_type == BOOK_RANDART_LEVEL)
-        ASSERT_RANGE(book.book_param, 1, 10); // book's level
-
     if (!book.props.exists(SPELL_LIST_KEY))
         mark_had_book(static_cast<book_type>(book.sub_type));
 }
@@ -1227,8 +1224,6 @@ bool make_book_level_randart(item_def &book, int level)
                                 18 - 2*level));
     ASSERT_RANGE(num_spells, 0 + 1, RANDBOOK_SIZE + 1);
 
-    book.book_param = level;
-
     book.sub_type = BOOK_RANDART_LEVEL;
     _make_book_randart(book);
 
@@ -1839,8 +1834,6 @@ bool make_book_theme_randart(item_def &book,
     ASSERT(count_bits(disc1) == 1);
     ASSERT(count_bits(disc2) == 1);
 
-    book.book_param = num_spells | (max_levels << 8); // NOTE: What's this do?
-
     book.sub_type = BOOK_RANDART_THEME;
     _make_book_randart(book);   // NOTE: have any spells been set here?
 
@@ -1986,9 +1979,6 @@ bool make_book_theme_randart(item_def &book,
                       replace_name_parts(_gen_randbook_name(title, owner,
                                                             disc1, disc2),
                                          book));
-
-    // Save primary/secondary disciplines back into the book.
-    book.book_param = max1;
 
     return true;
 }
