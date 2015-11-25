@@ -655,27 +655,6 @@ static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
  */
 static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
 {
-    // Total weight if none have been seen is 100.
-    int result = random_choose_weighted(           // Decks given lowest weight.
-                                                   1, MISC_DECK_OF_WONDERS,
-                                                   2, MISC_DECK_OF_CHANGES,
-                                                   2, MISC_DECK_OF_DEFENCE,
-                                                   // These have charges, so
-                                                   // give them a constant
-                                                   // weight.
-    (player_mutation_level(MUT_NO_LOVE) ?     0 :  7), MISC_BOX_OF_BEASTS,
-    (player_mutation_level(MUT_NO_LOVE) ?     0 :  7), MISC_SACK_OF_SPIDERS,
-    (player_mutation_level(MUT_NO_LOVE) ?     0 :  7), MISC_PHANTOM_MIRROR,
-                                                   // The player never needs
-                                                   // more than one.
-    (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 :  7), MISC_DISC_OF_STORMS,
-    (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 15), MISC_LAMP_OF_FIRE,
-    (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    0 : 15), MISC_PHIAL_OF_FLOODS,
-    (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 15), MISC_FAN_OF_GALES,
-    (you.seen_misc[MISC_STONE_OF_TREMORS] ?   0 : 15), MISC_STONE_OF_TREMORS,
-    (you.seen_misc[MISC_LANTERN_OF_SHADOWS] ? 0 :  7), MISC_LANTERN_OF_SHADOWS,
-                                                   0);
-
     // Give a crystal ball based on both evocations and either spellcasting or
     // invocations if we haven't seen one.
     int skills = you.skills[SK_EVOCATIONS]
@@ -683,8 +662,39 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
     if (x_chance_in_y(skills, MAX_SKILL_LEVEL * MAX_SKILL_LEVEL)
         && !you.seen_misc[MISC_CRYSTAL_BALL_OF_ENERGY])
     {
-        result = MISC_CRYSTAL_BALL_OF_ENERGY;
+        return MISC_CRYSTAL_BALL_OF_ENERGY;
     }
+
+    // Total weight if none have been seen is 100.
+    const vector<pair<int, int> > choices =
+    {
+        // Decks have lowest weight.
+        {MISC_DECK_OF_WONDERS,                              1},
+        {MISC_DECK_OF_CHANGES,                              2},
+        {MISC_DECK_OF_DEFENCE,                              2},
+        // These have charges, so give them a constant weight.
+        {MISC_BOX_OF_BEASTS,
+            (player_mutation_level(MUT_NO_LOVE) ?     0 :  7)},
+        {MISC_SACK_OF_SPIDERS,
+            (player_mutation_level(MUT_NO_LOVE) ?     0 :  7)},
+        {MISC_PHANTOM_MIRROR,
+            (player_mutation_level(MUT_NO_LOVE) ?     0 :  7)},
+        // The player never needs more than one.
+        {MISC_DISC_OF_STORMS,
+            (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 :  7)},
+        {MISC_LAMP_OF_FIRE,
+            (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 15)},
+        {MISC_PHIAL_OF_FLOODS,
+            (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    0 : 15)},
+        {MISC_FAN_OF_GALES,
+            (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 15)},
+        {MISC_STONE_OF_TREMORS,
+            (you.seen_misc[MISC_STONE_OF_TREMORS] ?   0 : 15)},
+        {MISC_LANTERN_OF_SHADOWS,
+            (you.seen_misc[MISC_LANTERN_OF_SHADOWS] ? 0 :  7)}
+    };
+
+    int result = *random_choose_weighted(choices);
 
     return result;
 }
