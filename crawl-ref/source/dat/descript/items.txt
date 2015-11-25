@@ -34,8 +34,7 @@ This amulet enables its wearer to attempt to enter a state of berserk rage.
 %%%%
 amulet of regeneration
 
-This amulet greatly increases the recuperative powers of its wearer, but also
-considerably speeds their metabolism while doing so.
+This amulet greatly increases the recuperative powers of its wearer.
 %%%%
 amulet of resist corrosion
 
@@ -661,8 +660,7 @@ A very large and very heavy stone. {{
    then
        return ""
    else
-       return "Exceptional strength is needed even to carry one, and " ..
-              "only large creatures are capable of throwing it."
+       return "Only large creatures are capable of throwing it."
    end
 }}
 %%%%
@@ -1436,7 +1434,7 @@ may be turned into armour by magical means.
 troll leather armour
 
 Armour made from the stiff and knobbly skin of a common troll. It magically
-regenerates its wearer's flesh at a fairly slow rate.
+regenerates its wearer's flesh.
 %%%%
 wand of cold
 

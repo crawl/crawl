@@ -307,6 +307,66 @@ spret_type cast_healing(int pow, int max_pow, bool divine_ability,
                           divine_ability, where, not_self, mode);
 }
 
+/// Effects that occur when the player is debuffed.
+struct player_debuff_effects
+{
+    /// Attributes removed by a debuff.
+    vector<attribute_type> attributes;
+    /// Durations removed by a debuff.
+    vector<duration_type> durations;
+    /// Whether there's any contam to be removed by a debuff.
+    bool contam;
+};
+
+/**
+ * What dispellable effects currently exist on the player?
+ *
+ * @param[out] buffs   The dispellable effects that exist on the player.
+ *                     Assumed to be empty when passed in.
+ */
+static void _dispellable_player_buffs(player_debuff_effects &buffs)
+{
+    // attributes
+    static const attribute_type dispellable_attributes[] = {
+        ATTR_DELAYED_FIREBALL, ATTR_SWIFTNESS,
+        ATTR_REPEL_MISSILES, ATTR_DEFLECT_MISSILES,
+    };
+
+    for (auto attribute : dispellable_attributes)
+        if (you.attribute[attribute])
+            buffs.attributes.push_back(attribute);
+
+    // durations
+    for (unsigned int i = 0; i < NUM_DURATIONS; ++i)
+    {
+        const int dur = you.duration[i];
+        if (dur <= 0 || !duration_dispellable((duration_type) i))
+            continue;
+        if (i == DUR_TRANSFORMATION && you.form == TRAN_SHADOW)
+            continue;
+        buffs.durations.push_back((duration_type) i);
+        // this includes some buffs that won't be reduced in duration -
+        // anything already at 1 aut, or flight/transform while <= 11 aut
+        // that's probably not an actual problem
+    }
+
+    buffs.contam = get_contamination_level() > 0;
+}
+
+/**
+ * Does the player have any magical effects that can be removed (by debuff)?
+ *
+ * @return  Whether there are any effects to be dispelled.
+ */
+bool player_is_debuffable()
+{
+    player_debuff_effects buffs;
+    _dispellable_player_buffs(buffs);
+    return buffs.contam
+            || !buffs.durations.empty()
+            || !buffs.attributes.empty();
+}
+
 /**
  * Remove magical effects from the player.
  *
@@ -317,59 +377,44 @@ void debuff_player()
 {
     bool need_msg = false, danger = false;
 
-    if (you.attribute[ATTR_DELAYED_FIREBALL])
+    // find the list of debuffable effects currently active
+    player_debuff_effects buffs;
+    _dispellable_player_buffs(buffs);
+
+    for (auto attr : buffs.attributes)
     {
-        you.attribute[ATTR_DELAYED_FIREBALL] = 0;
-        mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
+        you.attribute[attr] = 0;
+        if (attr == ATTR_DELAYED_FIREBALL)
+            mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
+        else
+            need_msg = true;
     }
 
-    if (you.attribute[ATTR_REPEL_MISSILES])
+    for (auto duration : buffs.durations)
     {
-        you.attribute[ATTR_REPEL_MISSILES] = 0;
-        need_msg = true;
-    }
-
-    if (you.attribute[ATTR_DEFLECT_MISSILES])
-    {
-        you.attribute[ATTR_DEFLECT_MISSILES] = 0;
-        need_msg = true;
-    }
-
-    if (you.attribute[ATTR_SWIFTNESS] > 0)
-    {
-        you.attribute[ATTR_SWIFTNESS] = 0;
-        need_msg = true;
-    }
-
-    for (unsigned int i = 0; i < NUM_DURATIONS; ++i)
-    {
-        int& dur = you.duration[i];
-        if (duration_dispellable((duration_type) i) && dur > 0)
+        int &len = you.duration[duration];
+        if ((duration == DUR_FLIGHT || duration == DUR_TRANSFORMATION)
+            && len > 11)
         {
-            if (i == DUR_TRANSFORMATION && you.form == TRAN_SHADOW)
-                continue;
-            else if ((i == DUR_FLIGHT || i == DUR_TRANSFORMATION) && dur > 11)
-            {
-                dur = 11;
-                need_msg = true;
-                danger = need_expiration_warning(you.pos());
-            }
-            else if (i == DUR_TELEPORT)
-            {
-                dur = 0;
-                mprf(MSGCH_DURATION, "You feel strangely stable.");
-            }
-            else if (i == DUR_PETRIFYING)
-            {
-                dur = 0;
-                mprf(MSGCH_DURATION, "You feel limber!");
-                you.redraw_evasion = true;
-            }
-            else if (dur > 1)
-            {
-                dur = 1;
-                need_msg = true;
-            }
+            len = 11;
+            need_msg = true;
+            danger = need_expiration_warning(you.pos());
+        }
+        else if (duration == DUR_TELEPORT)
+        {
+            len = 0;
+            mprf(MSGCH_DURATION, "You feel strangely stable.");
+        }
+        else if (duration == DUR_PETRIFYING)
+        {
+            len = 0;
+            mprf(MSGCH_DURATION, "You feel limber!");
+            you.redraw_evasion = true;
+        }
+        else if (len > 1)
+        {
+            len = 1;
+            need_msg = true;
         }
     }
 
@@ -386,63 +431,62 @@ void debuff_player()
         mpr("You feel slightly less contaminated with magical energies.");
 }
 
-void debuff_monster(monster* mon)
+
+/**
+  * What dispellable effects currently exist on a given monster?
+  *
+  * @param[in] mon      The monster in question.
+  * @param[out] buffs   The dispellable effects that exist on that monster.
+  *                     Assumed to be empty when passed in.
+  */
+static void _dispellable_monster_buffs(const monster &mon,
+                                       vector<enchant_type> &buffs)
 {
-    // List of magical enchantments which will be dispelled.
-    static const enchant_type lost_enchantments[] =
-    {
-        ENCH_SLOW,
-        ENCH_HASTE,
-        ENCH_SWIFT,
-        ENCH_MIGHT,
-        ENCH_AGILE,
-        ENCH_FEAR,
-        ENCH_CONFUSION,
-        ENCH_INVIS,
-        ENCH_CORONA,
-        ENCH_CHARM,
-        ENCH_PARALYSIS,
-        ENCH_PETRIFYING,
-        ENCH_PETRIFIED,
-        ENCH_REGENERATION,
-        ENCH_TP,
-        ENCH_INNER_FLAME,
-        ENCH_OZOCUBUS_ARMOUR,
-        ENCH_INJURY_BOND,
-        ENCH_DIMENSION_ANCHOR,
-        ENCH_CONTROL_WINDS,
-        ENCH_TOXIC_RADIANCE,
-        ENCH_AGILE,
-        ENCH_BLACK_MARK,
-        ENCH_SHROUD,
-        ENCH_SAP_MAGIC,
-        ENCH_REPEL_MISSILES,
-        ENCH_DEFLECT_MISSILES,
-        ENCH_CONDENSATION_SHIELD,
-        ENCH_RESISTANCE,
-        ENCH_HEXED,
-    };
-
-    bool dispelled = false;
-
     // Dispel all magical enchantments...
-    for (enchant_type ench : lost_enchantments)
+    for (enchant_type ench : dispellable_enchantments)
     {
-        // ...except for natural invisibility...
-        if (ench == ENCH_INVIS && mons_class_flag(mon->type, M_INVIS))
-            continue;
-        // ...permaconfusion...
-        if (ench == ENCH_CONFUSION && mons_class_flag(mon->type, M_CONFUSED))
-            continue;
-        // ...and regeneration from Trog.
-        if (ench == ENCH_REGENERATION && mon->has_ench(ENCH_RAISED_MR))
+        // except for permaconfusion.
+        if (ench == ENCH_CONFUSION && mons_class_flag(mon.type, M_CONFUSED))
             continue;
 
-        if (mon->del_ench(ench, true, true))
-            dispelled = true;
+        if (mon.has_ench(ench))
+            buffs.push_back(ench);
     }
-    if (dispelled)
-        simple_monster_message(mon, "'s magical effects unravel!");
+
+    // special-case invis, to avoid hitting naturally invis monsters.
+    if (mon.has_ench(ENCH_INVIS) && !mons_class_flag(mon.type, M_INVIS))
+        buffs.push_back(ENCH_INVIS);
+}
+
+
+/**
+ * Does a given monster have any buffs that can be removed?
+ *
+ * @param mon           The monster in question.
+ */
+bool monster_is_debuffable(const monster &mon)
+{
+    vector<enchant_type> buffs;
+    _dispellable_monster_buffs(mon, buffs);
+    return !buffs.empty();
+}
+
+/**
+ * Remove magical effects from a given monster.
+ *
+ * @param mon           The monster to be debuffed.
+ */
+void debuff_monster(monster &mon)
+{
+    vector<enchant_type> buffs;
+    _dispellable_monster_buffs(mon, buffs);
+    if (buffs.empty())
+        return;
+
+    for (enchant_type buff : buffs)
+        mon.del_ench(buff, true, true);
+
+    simple_monster_message(&mon, "'s magical effects unravel!");
 }
 
 int detect_traps(int pow)

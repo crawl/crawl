@@ -1522,3 +1522,7 @@ Word of Recall spell
 Recalls intelligent allies from elsewhere on the same level to the caster,
 after a short delay.
 %%%%
+Yara's Violent Unravelling spell
+
+Tears apart the bonds that bind enchantments to the target creature,
+transforming the magic into a spray of deadly, mutagenic radiation.

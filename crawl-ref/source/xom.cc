@@ -693,14 +693,14 @@ static void _try_brand_switch(const int item_index)
 
     item_def &item(mitm[item_index]);
 
-    if (item.base_type != OBJ_WEAPONS || is_range_weapon(item))
+    if (item.base_type != OBJ_WEAPONS)
         return;
 
     if (is_unrandom_artefact(item))
         return;
 
     // Only do it some of the time.
-    if (one_chance_in(5))
+    if (one_chance_in(3))
         return;
 
     if (get_weapon_brand(item) == SPWPN_NORMAL)

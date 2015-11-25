@@ -1631,7 +1631,7 @@ ENDMAP
 
 ##########################################################################
 # Water temples
-#   Total weight: 26 = 8+7+7+1+1+1+1
+#   Total weight: 27 = 8+7+7+1+1+1+1+1
 
 # 12 gods
 NAME:    eino_temple_water_12
@@ -2001,6 +2001,77 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+# 6-12 gods
+NAME: chequers_temple_sunken_temple
+TAGS: temple_variable
+TAGS: temple_altars_6 temple_altars_7 temple_altars_8 temple_altars_9 temple_altars_10 temple_altars_11 temple_altars_12
+PLACE: Temple
+WEIGHT: 1
+ORIENT: encompass
+{{
+local altar_count = get_altar_count(_G, 12)
+nsubst("O = " .. altar_count .. ":B / *:O")
+}}
+SUBST: - = .W, x = .:5 Wx, G = .:20 G, " = ":20 W, z = wW
+RTILE: S = wall_vines
+COLOUR: -S = green
+KFEAT: O = altar_ecumenical
+: set_border_fill_type("open_sea")
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwzxxxxxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwzxG-Gxzwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwzx-{-xzwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzzzxG-Gxzzzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzxxx---xxxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzxG-----Gxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzxO-----Oxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzxG-----Gxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzxO-----Oxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzxG-----Gxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzxO-----Oxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzxG-----Gxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzxO-----Oxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzxG-----Gxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzxO-----Oxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzxG-----Gxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzxO-----Oxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzxG-----Gxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzxxxxxxxxxzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwzzzzzzzzzzzwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
 ##########################################################################

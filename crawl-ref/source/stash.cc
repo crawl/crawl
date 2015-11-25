@@ -82,6 +82,14 @@ string stash_annotate_item(const char *s, const item_def *item, bool exclusive)
         text += item->name(DESC_QUALNAME);
     }
 
+    // note that we can't add this in stash.lua (where most other annotations
+    // are added) because that is shared between stash search annotations and
+    // autopickup configuration annotations, and annotating an item based on
+    // item_needs_autopickup while trying to decide if the item needs to be
+    // autopickedup leads to infinite recursion
+    if (item_needs_autopickup(*item))
+        text += "\nautopickup";
+
     return text;
 }
 

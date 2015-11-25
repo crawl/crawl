@@ -37,7 +37,7 @@
 #include "mon-transit.h"
 #include "output.h"
 #include "prompt.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-miscast.h"

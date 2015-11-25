@@ -75,6 +75,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Enchantments
     SPELL_CAUSE_FEAR,
+    SPELL_VIOLENT_UNRAVELLING,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
     SPELL_HASTE,
@@ -112,6 +113,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_GRAVITAS,
     SPELL_PETRIFY,
     SPELL_ENGLACIATION,
+    SPELL_VIOLENT_UNRAVELLING,
 },
 
 {   // Book of Changes

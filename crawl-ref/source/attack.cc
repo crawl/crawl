@@ -30,6 +30,7 @@
 #include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-poly.h"
+#include "religion.h"
 #include "spl-miscast.h"
 #include "state.h"
 #include "stepdown.h"
@@ -567,60 +568,29 @@ enum chaos_type
     NUM_CHAOS_TYPES
 };
 
-// XXX: We might want to vary the probabilities for the various effects
-// based on whether the source is a weapon of chaos or a monster with
-// AF_CHAOS.
 void attack::chaos_affects_defender()
 {
-    monster * const mon   = defender->as_monster();
-    const bool firewood   = mon && mons_is_firewood(mon);
-    const bool immune     = mon && mons_immune_magic(mon);
-    const bool is_natural = mon && defender->holiness() == MH_NATURAL;
-    const bool is_shifter = mon && mon->is_shapeshifter();
-    const bool can_clone  = mon && mons_clonable(mon, true);
-    const bool can_poly   = is_shifter || (defender->can_safely_mutate()
-                                           && !immune && !firewood);
-    const bool can_rage   = defender->can_go_berserk();
-    const bool can_slow   = !firewood;
-    const bool can_petrify= mon && !defender->res_petrify();
+    monster * const mon    = defender->as_monster();
+    const bool firewood    = mon && mons_is_firewood(mon);
+    const bool immune      = mon && mons_immune_magic(mon);
+    const bool is_natural  = mon && defender->holiness() == MH_NATURAL;
+    const bool is_shifter  = mon && mon->is_shapeshifter();
+    const bool can_clone   = mon && mons_clonable(mon, true);
+    const bool can_poly    = is_shifter || (defender->can_safely_mutate()
+                                            && !immune && !firewood);
+    const bool can_rage    = defender->can_go_berserk();
+    const bool can_slow    = !firewood && !(mon && mon->is_stationary());
+    const bool can_petrify = mon && !defender->res_petrify();
 
-    int clone_chance   = can_clone                      ?  1 : 0;
-    int poly_chance    = can_poly                       ?  1 : 0;
-    int poly_up_chance = can_poly                && mon ?  1 : 0;
-    int shifter_chance = can_poly  && is_natural && mon ?  1 : 0;
-    int rage_chance    = can_rage                       ? 10 : 0;
-    int miscast_chance = 10;
-    int slowpara_chance= can_slow                       ? 10 : 0;
-    int petrify_chance = can_slow && can_petrify        ? 10 : 0;
-
-    // Already a shifter?
-    if (is_shifter)
-        shifter_chance = 0;
-
-    // A chaos self-attack increases the chance of certain effects,
-    // due to a short-circuit/feedback/resonance/whatever.
-    if (attacker == defender)
-    {
-        clone_chance   *= 2;
-        poly_chance    *= 2;
-        poly_up_chance *= 2;
-        shifter_chance *= 2;
-        miscast_chance *= 2;
-
-        // Inform player that something is up.
-        if (!fake_chaos_attack && you.see_cell(defender->pos()))
-        {
-            if (defender->is_player())
-                mpr("You give off a flash of multicoloured light!");
-            else if (you.can_see(*defender))
-            {
-                simple_monster_message(mon, " gives off a flash of"
-                                            " multicoloured light!");
-            }
-            else
-                mpr("There is a flash of multicoloured light!");
-        }
-    }
+    int clone_chance    = can_clone                     ?  1 : 0;
+    int poly_chance     = can_poly                      ?  1 : 0;
+    int poly_up_chance  = can_poly && mon               ?  1 : 0;
+    int shifter_chance  = can_poly && mon && is_natural
+                          && !is_shifter                ?  1 : 0;
+    int rage_chance     = can_rage                      ?  5 : 0;
+    int speed_chance    = can_slow                      ? 10 : 0;
+    int para_chance     = !firewood                     ?  5 : 0;
+    int petrify_chance  = can_slow && can_petrify       ? 10 : 0;
 
     // NOTE: Must appear in exact same order as in chaos_type enumeration.
     int probs[NUM_CHAOS_TYPES] =
@@ -629,15 +599,15 @@ void attack::chaos_affects_defender()
         poly_chance,    // CHAOS_POLY
         poly_up_chance, // CHAOS_POLY_UP
         shifter_chance, // CHAOS_MAKE_SHIFTER
-        miscast_chance, // CHAOS_MISCAST
+        20,             // CHAOS_MISCAST
         rage_chance,    // CHAOS_RAGE
 
         10,             // CHAOS_HEAL
-        slowpara_chance,// CHAOS_HASTE
+        speed_chance,   // CHAOS_HASTE
         10,             // CHAOS_INVIS
 
-        slowpara_chance,// CHAOS_SLOW
-        slowpara_chance,// CHAOS_PARALYSIS
+        speed_chance,   // CHAOS_SLOW
+        para_chance,    // CHAOS_PARALYSIS
         petrify_chance, // CHAOS_PETRIFY
     };
 
@@ -763,6 +733,12 @@ void attack::chaos_affects_defender()
         beam.flavour = BEAM_HEALING;
         break;
     case CHAOS_HASTE:
+        if (defender->is_player() && you_worship(GOD_CHEIBRIADOS))
+        {
+            simple_god_message(" protects you from inadvertent hurry.");
+            obvious_effect = true;
+            break;
+        }
         beam.flavour = BEAM_HASTE;
         break;
     case CHAOS_INVIS:
@@ -1549,10 +1525,59 @@ bool attack::attack_shield_blocked(bool verbose)
 
 attack_flavour attack::random_chaos_attack_flavour()
 {
-    attack_flavour flavours[] =
-        {AF_FIRE, AF_COLD, AF_ELEC, AF_POISON, AF_VAMPIRIC, AF_DISTORT,
-         AF_CONFUSE, AF_CHAOS};
-    return RANDOM_ELEMENT(flavours);
+    attack_flavour flavour = AF_PLAIN;
+
+    while (true)
+    {
+        flavour = random_choose_weighted(10, AF_FIRE,
+                                         10, AF_COLD,
+                                         10, AF_ELEC,
+                                         10, AF_POISON,
+                                         10, AF_CHAOS,
+                                          5, AF_DRAIN_XP,
+                                          5, AF_VAMPIRIC,
+                                          5, AF_HOLY,
+                                          5, AF_ANTIMAGIC,
+                                          2, AF_CONFUSE,
+                                          2, AF_DISTORT,
+                                          0);
+
+        if (one_chance_in(3))
+            break;
+
+        bool susceptible = true;
+        switch (flavour)
+        {
+        case AF_FIRE:
+            if (defender->is_fiery())
+                susceptible = false;
+            break;
+        case AF_COLD:
+            if (defender->is_icy())
+                susceptible = false;
+            break;
+        case AF_POISON:
+            if (defender->holiness() == MH_UNDEAD)
+                susceptible = false;
+            break;
+        case AF_VAMPIRIC:
+        case AF_DRAIN_XP:
+            if (defender->holiness() != MH_NATURAL)
+                susceptible = false;
+            break;
+        case AF_HOLY:
+            if (!defender->holy_wrath_susceptible())
+                susceptible = false;
+            break;
+        default:
+            break;
+        }
+
+        if (susceptible)
+            break;
+    }
+
+    return flavour;
 }
 
 bool attack::apply_damage_brand(const char *what)
@@ -1728,11 +1753,18 @@ bool attack::apply_damage_brand(const char *what)
 
     case SPWPN_CONFUSE:
     {
-        // This was originally for confusing touch and it doesn't really
-        // work on the player, but a monster with a chaos weapon will
-        // occasionally come up with this brand. -cao
+        // If a monster with a chaos weapon gets this brand, act like
+        // AF_CONFUSE.
         if (defender->is_player())
+        {
+            if (one_chance_in(10)
+                || (damage_done > 2 && one_chance_in(3)))
+            {
+                defender->confuse(attacker,
+                                  1 + random2(3+attacker->get_hit_dice()));
+            }
             break;
+        }
 
         // Also used for players in fungus form.
         if (attacker->is_player()

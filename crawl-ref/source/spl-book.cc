@@ -51,6 +51,9 @@
 #define RANDART_BOOK_TYPE_LEVEL "level"
 #define RANDART_BOOK_TYPE_THEME "theme"
 
+/// Should the book's name NOT use articles? (Foo's Bar of Baz, not the Foo's)
+#define BOOK_TITLED_KEY "is_named"
+
 static const map<rod_type, spell_type> _rod_spells =
 {
     { ROD_LIGHTNING,   SPELL_THUNDERBOLT },
@@ -1107,6 +1110,94 @@ static void _make_book_randart(item_def &book)
 }
 
 /**
+ * Choose an owner for a randomly-generated single-level spellbook.
+ *
+ * @param god       The god responsible for the book, if any.
+ *                  If set, will be the book's owner.
+ * @return          An owner for the book; may be the empty string.
+ */
+static string _gen_randlevel_owner(god_type god)
+{
+    if (god != GOD_NO_GOD)
+        return god_name(god, false);
+    if (one_chance_in(30))
+        return god_name(GOD_SIF_MUNA, false);
+    if (one_chance_in(3))
+        return make_name();
+    return "";
+}
+
+/// What's the DB lookup string for a given randbook spell level?
+static string _randlevel_difficulty_name(int level)
+{
+    if (level == 1)
+        return "starting";
+    if (level <= 3 || level == 4 && coinflip())
+        return "easy";
+    if (level <= 6)
+        return "moderate";
+    return "difficult";
+}
+
+/**
+ * Generate a name for a randomly-generated single-level spellbook.
+ *
+ * @param god       The god responsible for the book, if any.
+ * @param owner     An owner for the book; may be the empty string.
+ *                  If nonempty, prefixed to the start of the name;
+ *                  otherwise, a random owner may be generated.
+ * @return          A spellbook name. May contain placeholders (@foo@).
+ */
+static string _gen_randlevel_name(int level, god_type god, string owner)
+{
+    const string owner_name = owner.empty() ? _gen_randlevel_owner(god)
+                                            : owner;
+    const bool has_owner = !owner_name.empty();
+    const string apostrophised_owner = owner_name.empty() ? "" :
+                                       apostrophise(owner_name) + " ";
+
+    if (god == GOD_XOM && coinflip())
+    {
+        const string xomname = getRandNameString("book_noun") + " of "
+                               + getRandNameString("Xom_book_title");
+        return apostrophised_owner + xomname;
+    }
+
+    const string lookup = _randlevel_difficulty_name(level) + " level book";
+
+    // First try for names respecting the book's previous owner/author
+    // (if one exists), then check for general difficulty.
+    string bookname;
+    if (has_owner)
+        bookname = getRandNameString(lookup + " owner");
+
+    if (bookname.empty())
+        bookname = getRandNameString(lookup);
+
+    bookname = uppercase_first(bookname);
+    if (has_owner)
+    {
+        if (bookname.substr(0, 4) == "The ")
+            bookname = bookname.substr(4);
+        else if (bookname.substr(0, 2) == "A ")
+            bookname = bookname.substr(2);
+        else if (bookname.substr(0, 3) == "An ")
+            bookname = bookname.substr(3);
+    }
+
+    if (bookname.find("@level@", 0) != string::npos)
+    {
+        const string level_name = uppercase_first(number_in_words(level));
+        bookname = replace_all(bookname, "@level@", level_name);
+    }
+
+    if (bookname.empty())
+        bookname = getRandNameString("book");
+
+    return apostrophised_owner + bookname;
+}
+
+/**
  * Turn the given book into a randomly-generated spellbook ("randbook"),
  * containing only spells of a given level.
  *
@@ -1246,78 +1337,10 @@ bool make_book_level_randart(item_def &book, int level, string owner)
     for (int i = 0; i < RANDBOOK_SIZE; i++)
         spell_vec[i].get_int() = chosen_spells[i];
 
-    bool has_owner = true;
-    string name = "";
-    if (!owner.empty())
-        name = owner;
-    else if (god != GOD_NO_GOD)
-        name = god_name(god, false);
-    else if (one_chance_in(30))
-        name = god_name(GOD_SIF_MUNA, false);
-    else if (one_chance_in(3))
-        name = make_name();
-    else
-        has_owner = false;
-
-    if (has_owner)
-        name = apostrophise(name) + " ";
-
+    const string name = _gen_randlevel_name(level, god, owner);
+    set_artefact_name(book, replace_name_parts(name, book));
     // None of these books need a definite article prepended.
-    book.props["is_named"].get_bool() = true;
-
-    string bookname;
-    if (god == GOD_XOM && coinflip())
-    {
-        bookname = getRandNameString("book_noun") + " of "
-                   + getRandNameString("Xom_book_title");
-        bookname = replace_name_parts(bookname, book);
-    }
-    else
-    {
-        string lookup;
-        if (level == 1)
-            lookup = "starting";
-        else if (level <= 3 || level == 4 && coinflip())
-            lookup = "easy";
-        else if (level <= 6)
-            lookup = "moderate";
-        else
-            lookup = "difficult";
-
-        lookup += " level book";
-
-        // First try for names respecting the book's previous owner/author
-        // (if one exists), then check for general difficulty.
-        if (has_owner)
-            bookname = getRandNameString(lookup + " owner");
-
-        if (!has_owner || bookname.empty())
-            bookname = getRandNameString(lookup);
-
-        bookname = uppercase_first(bookname);
-        if (has_owner)
-        {
-            if (bookname.substr(0, 4) == "The ")
-                bookname = bookname.substr(4);
-            else if (bookname.substr(0, 2) == "A ")
-                bookname = bookname.substr(2);
-            else if (bookname.substr(0, 3) == "An ")
-                bookname = bookname.substr(3);
-        }
-
-        if (bookname.find("@level@", 0) != string::npos)
-        {
-            const string level_name = uppercase_first(number_in_words(level));
-            bookname = replace_all(bookname, "@level@", level_name);
-        }
-    }
-
-    if (bookname.empty())
-        bookname = getRandNameString("book");
-
-    name += bookname;
-
-    set_artefact_name(book, name);
+    book.props[BOOK_TITLED_KEY].get_bool() = true;
 
     return true;
 }
@@ -1963,7 +1986,7 @@ bool make_book_theme_randart(item_def &book,
                                     all_spells_disc1);
     }
 
-    book.props["is_named"].get_bool() = !owner.empty();
+    book.props[BOOK_TITLED_KEY].get_bool() = !owner.empty();
     set_artefact_name(book,
                       replace_name_parts(_gen_randbook_name(title, owner,
                                                             disc1, disc2),
@@ -2055,7 +2078,7 @@ void make_book_Kiku_gift(item_def &book, bool first)
         spell_vec[i].get_int() = chosen_spells[i];
 
     string name = "Kikubaaqudgha's ";
-    book.props["is_named"].get_bool() = true;
+    book.props[BOOK_TITLED_KEY].get_bool() = true;
     name += getRandNameString("book_name") + " ";
     string type_name = getRandNameString("Necromancy");
     if (type_name.empty())
@@ -2072,8 +2095,8 @@ bool book_has_title(const item_def &book)
     if (!is_artefact(book))
         return false;
 
-    return book.props.exists("is_named")
-           && book.props["is_named"].get_bool() == true;
+    return book.props.exists(BOOK_TITLED_KEY)
+           && book.props[BOOK_TITLED_KEY].get_bool() == true;
 }
 
 void destroy_spellbook(const item_def &book)

@@ -262,6 +262,11 @@ static int _shop_get_item_value(const item_def& item, int greed, bool id)
     return max(result, 1);
 }
 
+int item_price(const item_def& item, const shop_struct& shop)
+{
+    return _shop_get_item_value(item, shop.greed, shoptype_identifies_stock(shop.type));
+}
+
 // Comparator for sorting a permutation list according to the shop, the
 // original list of item IDs, and the current ordering mode.
 class ShopSorter

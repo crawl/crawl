@@ -842,7 +842,34 @@ friendly hound
 
 VISUAL:@The_monster@ wags @possessive@ tail.
 
+VISUAL:@The_monster@ barks [happily|excitedly]!
+
+VISUAL:@The_monster@ runs in silly circles!
+
+VISUAL:@The_monster@ looks up at you expectantly.
+
+VISUAL:@The_monster@ scratches @possessive@ ear.
+
+VISUAL:@The_monster@ cocks @possessive@ head sideways at you.
+
+VISUAL:@The_monster@ scratches at a flea.
+
+w:1
+VISUAL:@The_monster@ gnaws at a bone — where's that from?
+
 @hound@
+%%%%
+friendly hound Shoals
+
+w:50
+@friendly hound@
+
+VISUAL:@The_monster@ [plays|frolics] in the surf!
+
+There's a distinct wet dog smell emanating from @the_monster@.
+
+w:1
+VISUAL:@The_monster@ hopefully picks up a piece of driftwood and looks at you.
 %%%%
 default insect
 

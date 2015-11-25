@@ -29,7 +29,7 @@
 #include "macro.h"
 #include "message.h"
 #include "output.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "skills.h"
 #include "spl-book.h"
