@@ -366,6 +366,10 @@ static const duration_def duration_data[] =
       "You are regenerating under the effects of ambrosia.", D_DISPELLABLE },
     { DUR_DEVICE_SURGE, WHITE, "Surge", "device surging", "device surge",
       "You have readied a device surge.", D_EXPIRES},
+    { DUR_DOOM_HOWL,
+        RED, "Howl",
+        "doom howling", "howl",
+        "A terrible howling echoes in your mind.", D_DISPELLABLE },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -403,6 +407,7 @@ static const duration_def duration_data[] =
     { DUR_COLLAPSE, 0, "", "", "collapse", "", D_NO_FLAGS },
     { DUR_BRAINLESS, 0, "", "", "brainless", "", D_NO_FLAGS },
     { DUR_CLUMSY, 0, "", "", "clumsy", "", D_NO_FLAGS },
+    { DUR_DOOM_HOWL_IMMUNITY, 0, "", "", "howl immunity", "", D_NO_FLAGS },
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

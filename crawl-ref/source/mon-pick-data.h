@@ -653,6 +653,7 @@ static const pop_entry pop_tar[] =
   {  1,  9,  125, PEAK, MONS_LICH },
   {  3,  7,   11, PEAK, MONS_ANCIENT_LICH },
   {  1,  7,  550, FALL, MONS_HELL_HOUND },
+  {  1,  7,  729, FLAT, MONS_DOOM_HOUND },
   {  1,  7,   46, FALL, MONS_HELL_KNIGHT },
   {  1,  7,   35, PEAK, MONS_NECROMANCER },
   {  1,  7,   89, FALL, MONS_CRIMSON_IMP },
