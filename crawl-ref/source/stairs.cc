@@ -747,9 +747,11 @@ void floor_transition(dungeon_feature_type how, const dungeon_feature_type whenc
     const bool newlevel = load_level(how, LOAD_ENTER_LEVEL, old_level);
 
     if (newlevel)
+    {
         _new_level_amuses_xom(how, whence, shaft,
                               (shaft ? whither.depth - old_level.depth : 1),
                               !forced);
+    }
 
     // This should maybe go in load_level?
     if (you.where_are_you == BRANCH_ABYSS)

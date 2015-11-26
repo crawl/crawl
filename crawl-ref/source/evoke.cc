@@ -2370,9 +2370,7 @@ bool evoke_item(int slot, bool check_range)
 
         case MISC_XOMS_CHESSBOARD:
             if (_xoms_chessboard(item))
-            {
                 pract = 1;
-            }
             else
                 return false;
             break;
