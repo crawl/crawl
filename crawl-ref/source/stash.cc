@@ -2402,7 +2402,7 @@ bool stash_search_result::show_menu() const
     }
     else if (shop)
         return shop->show_menu(pos, can_travel_to(pos.id));
-    else if (stash)
+    else if (stash && !matching_items.empty())
         return stash->show_menu(pos, can_travel_to(pos.id), matching_items);
     else
         return false;
