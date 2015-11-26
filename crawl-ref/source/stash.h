@@ -37,7 +37,7 @@ public:
     vector<item_def> get_items() const;
 
     bool show_menu(const level_pos &place, bool can_travel,
-                   const vector<item_def>* matching_items = nullptr) const;
+                   const vector<item_def>& matching_items) const;
 
     // Returns true if this Stash contains items that are eligible for
     // autopickup.

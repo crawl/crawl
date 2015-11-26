@@ -544,18 +544,16 @@ static MenuEntry *stash_menu_fixup(MenuEntry *me)
 }
 
 bool Stash::show_menu(const level_pos &prefix, bool can_travel,
-                      const vector<item_def>* matching_items) const
+                      const vector<item_def>& matching_items) const
 {
     const string prefix_str = prefix.id.describe();
-    const vector<item_def> *item_list = matching_items ? matching_items
-                                                       : &items;
     StashMenu menu;
 
     MenuEntry *mtitle = new MenuEntry("Stash (" + prefix_str, MEL_TITLE);
     menu.can_travel   = can_travel;
-    mtitle->quantity  = item_list->size();
+    mtitle->quantity  = matching_items.size();
     menu.set_title(mtitle);
-    menu.load_items(*item_list, stash_menu_fixup);
+    menu.load_items(matching_items, stash_menu_fixup);
 
     vector<MenuEntry*> sel;
     while (true)
@@ -1714,21 +1712,24 @@ static void _inventory_search(const base_pattern &search,
 
         const string s   = Stash::stash_item_name(item);
         const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
-        stash_search_result res;
         bool found_something = false;
         if (search.matches(ann + s))
             found_something = true;
         if (is_dumpable_artefact(item))
         {
-            const string desc =
-                munge_description(get_item_description(item, false, true));
-            if (search.matches(desc))
+            if (search.matches(chardump_desc(item)))
                 found_something = true;
         }
         if (found_something)
         {
+            // Needs to be not equal to ITEM_IN_INVENTORY
+            item.pos = you.pos();
+            stash_search_result res;
             res.match = s;
+            res.count = 1;
+            res.matches = item.quantity;
             res.in_inventory = true;
+            res.pos = level_pos::current();
             res.matching_items.push_back(item);
             results.push_back(res);
         }
@@ -1864,7 +1865,7 @@ void StashTracker::get_matching_stashes(
     for (stash_search_result &result : results)
     {
         int ldist = level_distance(curr, result.pos.id);
-        if (ldist == -1 && !result.in_inventory)
+        if (ldist == -1)
             ldist = 1000;
 
         result.player_distance = ldist;
@@ -2395,13 +2396,14 @@ bool stash_search_result::show_menu() const
 {
     if (in_inventory)
     {
-        item_def first =  matching_items.front();
-        return describe_item(first, true);
+        item_def item = matching_items.front();
+        describe_item(item);
+        return false;
     }
     else if (shop)
         return shop->show_menu(pos, can_travel_to(pos.id));
     else if (stash)
-        return stash->show_menu(pos, can_travel_to(pos.id), &matching_items);
+        return stash->show_menu(pos, can_travel_to(pos.id), matching_items);
     else
         return false;
 }
