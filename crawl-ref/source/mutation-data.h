@@ -1632,6 +1632,23 @@ static const mutation_def mut_data[] =
    "yellow scales (+AC)",
 },
 
+{ MUT_STURDY_FRAME, 2, 3, mutflag::GOOD, true,
+  "sturdy frame",
+
+  {"Your movements are slightly less encumbered by armour (ER -2).",
+   "Your movements are less encumbered by armour (ER -4).",
+   "Your movements are significantly less encumbered by armour (ER -6)."},
+
+  {"You feel less encumbered by your armour."
+   "You feel less encumbered by your armour.",
+   "You feel less encumbered by your armour."},
+
+  {"You feel more encumbered by your armour.",
+   "You feel more encumbered by your armour.",
+   "You feel more encumbered by your armour."},
+
+   "sturdy frame (-ER)",
+},
 { MUT_CAMOUFLAGE, 1, 3, mutflag::GOOD, true,
   "camouflage",
 
