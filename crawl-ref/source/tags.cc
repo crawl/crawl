@@ -60,6 +60,7 @@
 #endif
 #include "place.h"
 #include "player-stats.h"
+#include "prompt.h" // index_to_letter
 #include "religion.h"
 #include "skills.h"
 #include "spl-wpnench.h"
@@ -3277,13 +3278,24 @@ static void tag_read_you_items(reader &th)
     ASSERT(count == ENDOFPACK); // not supposed to change
     for (int i = 0; i < count; ++i)
     {
-        unmarshallItem(th, you.inv[i]);
+        item_def &it = you.inv[i];
+        unmarshallItem(th, it);
 #if TAG_MAJOR_VERSION == 34
-        // Items in inventory have already been handled.
-        if (th.getMinorVersion() < TAG_MINOR_ISFLAG_HANDLED
-            && you.inv[i].defined())
+        // Fixups for actual items.
+        if (it.defined())
         {
-            you.inv[i].flags |= ISFLAG_HANDLED;
+            // From 0.18-a0-273-gf174401 to 0.18-a0-290-gf199c8b, stash
+            // search would change the position of items in inventory.
+            if (it.pos != ITEM_IN_INVENTORY)
+            {
+                mprf(MSGCH_ERROR, "Fixing bad position for inventory slot %c",
+                                  index_to_letter(i));
+                it.pos = ITEM_IN_INVENTORY;
+            }
+
+            // Items in inventory have already been handled.
+            if (th.getMinorVersion() < TAG_MINOR_ISFLAG_HANDLED)
+                it.flags |= ISFLAG_HANDLED;
         }
 #endif
     }
