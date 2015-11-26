@@ -1079,12 +1079,11 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
             success = _find_square_wrapper(result, 1,
                                            _find_monster_expl_always,
                                            needs_path, mode, range, hitfunc,
+                                           true)
+                   || _find_square_wrapper(result, 1,
+                                           _find_monster_expl_maybe,
+                                           needs_path, mode, range, hitfunc,
                                            true);
-            if (!success)
-                success = _find_square_wrapper(result, 1,
-                                               _find_monster_expl_maybe,
-                                               needs_path, mode, range, hitfunc,
-                                               true);
         }
 
         // If we couldn't, maybe it was because of line-of-fire issues.
