@@ -1565,6 +1565,49 @@ MAP
 .............
 ENDMAP
 
+# high evo !apt band takes down filthy low evo !apt brute
+# 2/3  chance of a kobold or corpse with a wand
+# 3/10 chance for a troll corpse (i.e. chance for early troll hide)
+NAME:    johnstein_pakellas_death_squad
+DEPTH:   D:2-
+TAGS:    temple_overflow_pakellas uniq_altar_pakellas
+KFEAT:   _ = altar_pakellas
+KPROP:   xcmnvbt' = bloody / nothing w:80
+NSUBST:  ' = 2:g / 1:G / 1:h / *:.
+SUBST:   G = GG.
+SHUFFLE: xcmnvbt 
+{{
+  local  mon = crawl.random_element({
+    ['kobold']   = 1,
+    ['spriggan'] = 1,
+    ['felid']    = 1,
+  })
+  local corpse = mon .. ' corpse'
+  local wands   = 'wand of flame charges:0 / ' ..
+                  'wand of frost charges:0 / ' ..
+                  'wand of magic darts charges:0 '
+
+  if (mon == 'kobold' and crawl.coinflip()) then
+    kmons("G = kobold; any wand charges:1")
+  else
+    dgn.delayed_decay_extra(_G, 'G', corpse, wands )
+  end
+
+  dgn.delayed_decay_extra(_G, 'g', corpse )
+  dgn.delayed_decay_extra(_G, 'h', 'troll corpse w:3 / ogre corpse' )
+}}
+MAP
+.........
+.xxx+xxx.
+.x'''''x.
+.x'''''x.
+.+''_''+.
+.x'''''x.
+.x'''''x.
+.xxx+xxx.
+.........
+ENDMAP
+
 ### Qazlal overflow altars ####################################################
 
 # There's always a safe path to the altar.
