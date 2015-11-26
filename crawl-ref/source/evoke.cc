@@ -2420,6 +2420,7 @@ bool evoke_item(int slot, bool check_range)
                     pract = 1;
                     break;
             }
+            break;
 
         case MISC_ZIGGURAT:
             // Don't set did_work to false, _make_zig handles the message.
