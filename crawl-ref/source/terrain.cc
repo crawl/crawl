@@ -1969,6 +1969,9 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
         }
     }
 
+    if (grd(pos) == DNGN_RUNED_DOOR && newfeat != DNGN_RUNED_DOOR)
+        opened_runed_door();
+
     grd(pos) = newfeat;
     set_terrain_changed(pos);
 
