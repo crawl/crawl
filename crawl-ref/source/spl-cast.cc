@@ -1071,7 +1071,7 @@ static bool _spellcasting_aborted(spell_type spell,
             {
                 if (action.matches(name))
                 {
-                    string prompt = "About to use " + string(name) + ". Continue anyway?";
+                    string prompt = "Really cast " + string(name) + "?";
                     if (!yesno(prompt.c_str(), false, 'n'))
                     {
                         canned_msg(MSG_OK);
