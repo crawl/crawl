@@ -620,5 +620,6 @@ from one. It leaves ice crystals in its wake as it swings through the air.
 %%%%
 armour of Talos
 
-A huge and weighty suit of bronze plate armour.
+A huge and weighty suit of bronze plate armour. Only one with a correspondingly
+huge body can wear it.
 %%%%
