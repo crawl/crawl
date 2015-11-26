@@ -90,6 +90,14 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 已发现物品种类列表
 %%%%
+CMD_SAVE_GAME_NOW
+
+保存并退出
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+保存游戏并退出。一旦你重新开始游戏，这个存档就会被删除。
+%%%%
 CMD_EDIT_PLAYER_TILE
 
 修改角色的贴图

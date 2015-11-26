@@ -91,6 +91,15 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 Lista dei tipi di oggetti scoperti
 %%%%
+CMD_SAVE_GAME_NOW
+
+Salva ed esci
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+Salvi il gioco per dopo ed esci. Una volta ripreso il gioco, il salvataggio è
+perduto.
+%%%%
 CMD_EDIT_PLAYER_TILE
 
 Modifica la casella del giocatore

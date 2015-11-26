@@ -97,6 +97,15 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 Lista de objetos descubiertos
 %%%%
+CMD_SAVE_GAME_NOW
+
+Guardar la partida y salir
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+Guarda el juego para más tarde y sale. Una vez reanudes el juego, el archivo
+del juego guardado se vuelve a borrar.
+%%%%
 CMD_EDIT_PLAYER_TILE
 
 Modificar el aspecto del jugador

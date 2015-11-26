@@ -44,6 +44,10 @@ CMD_DISPLAY_CHARACTER_STATUS
 
 Pokaż status postaci
 %%%%
+CMD_SAVE_GAME_NOW
+
+Zapisz i wyjdź
+%%%%
 CMD_DISPLAY_COMMANDS
 
 Pomoc

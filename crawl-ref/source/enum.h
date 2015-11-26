@@ -1001,6 +1001,7 @@ enum command_type
     CMD_REDRAW_SCREEN,
     CMD_MACRO_ADD,
     CMD_SAVE_GAME,
+    CMD_SAVE_GAME_NOW,
     CMD_SUSPEND_GAME,
     CMD_QUIT,
     CMD_WIZARD,
