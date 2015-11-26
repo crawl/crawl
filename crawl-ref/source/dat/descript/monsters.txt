@@ -2269,12 +2269,6 @@ sphinx
 A large creature with a woman's head, a lion's body and the wings of a huge
 bird, able to cloud the minds of its foes and wield fell magics.
 %%%%
-spider
-
-An ordinary orb-weaving spider with a distinctive white cross on its back.
-While not as grotesquely huge as other arachnids to be found in this
-environment, it is still as big as a small cat.
-%%%%
 spiny frog
 
 These frogs are the size of a wolf, and are covered in small spines and spurs,
