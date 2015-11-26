@@ -7877,7 +7877,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return !_should_recall(mon);
 
     case SPELL_SHATTER:
-        return !friendly && !mons_shatter(mon, false);
+        return friendly || !mons_shatter(mon, false);
 
     case SPELL_SYMBOL_OF_TORMENT:
         return !_trace_los(mon, _torment_vulnerable)
