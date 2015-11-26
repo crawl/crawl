@@ -15,7 +15,6 @@
 #define BEOGH_SH_GIFT_KEY "given beogh shield"
 
 #define AVAILABLE_SAC_KEY "available_sacrifices"
-#define AVAILABLE_SAC_PIETY_KEY "available_sacrifice_piety"
 #define HEALTH_SAC_KEY "current_health_sacrifice"
 #define ESSENCE_SAC_KEY "current_essence_sacrifice"
 #define PURITY_SAC_KEY "current_purity_sacrifice"
