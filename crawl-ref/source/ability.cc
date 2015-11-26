@@ -391,10 +391,10 @@ static const ability_def Ability_List[] =
 
     // Pakellas
     { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
-        0, 0, 100, 2, abflag::NONE },
+        0, 0, 100, generic_cost::fixed(1), abflag::NONE },
     { ABIL_PAKELLAS_DRAIN_MAGIC, "Drain Magic", 0, 0, 200, 3, abflag::NONE },
     { ABIL_PAKELLAS_QUICK_CHARGE, "Quick Charge",
-        0, 0, 100, 3, abflag::NONE },
+        0, 0, 100, 2, abflag::NONE },
     { ABIL_PAKELLAS_MASS_DRAIN_MAGIC, "Mass Drain Magic",
         0, 0, 200, 3, abflag::NONE },
     { ABIL_PAKELLAS_SAP_MAGIC, "Sap Magic", 0, 0, 150, 4, abflag::NONE },
