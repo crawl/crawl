@@ -630,6 +630,8 @@ local function ziggurat_stairs(entry, exit)
 
   if you.depth() < dgn.br_depth(you.branch()) then
     zigstair(exit.x, exit.y, "stone_stairs_down_i")
+  else
+    dgn.create_item(exit.x, exit.y, "figurine of a ziggurat")
   end
 
   zigstair(exit.x, exit.y + 1, "exit_ziggurat")

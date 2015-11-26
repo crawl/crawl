@@ -47,10 +47,6 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 Listar tipo de itens descobertos
 %%%%
-CMD_SAVE_GAME_NOW
-
-Salvar e sair
-%%%%
 CMD_EDIT_PLAYER_TILE
 
 Mudar o título do jogador

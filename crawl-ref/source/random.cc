@@ -195,9 +195,7 @@ dice_def calc_dice(int num_dice, int max_damage)
         ret.size = 1;
     }
     else
-    {
         ret.size = div_rand_round(max_damage, num_dice);
-    }
 
     return ret;
 }

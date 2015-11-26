@@ -49,8 +49,6 @@ const monster_type fixup_zombie_type(const monster_type cls,
  * *********************************************************************** */
 monster* place_monster(mgen_data mg, bool force_pos = false, bool dont_place = false);
 
-monster_type pick_random_zombie();
-
 /* ***********************************************************************
  * Returns a monster class type of a zombie for generation
  * on the player's current level.

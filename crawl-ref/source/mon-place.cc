@@ -1816,31 +1816,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     return mon;
 }
 
-monster_type pick_random_zombie()
-{
-    static vector<monster_type> zombifiable;
-
-    if (zombifiable.empty())
-    {
-        for (monster_type mcls = MONS_0; mcls < NUM_MONSTERS; ++mcls)
-        {
-            if (mons_species(mcls) != mcls || mcls == MONS_PROGRAM_BUG)
-                continue;
-
-            if (!mons_zombie_size(mcls) || mons_is_unique(mcls))
-                continue;
-            if (mons_class_holiness(mcls) != MH_NATURAL)
-                continue;
-
-            zombifiable.push_back(mcls);
-        }
-
-        ASSERT(!zombifiable.empty());
-    }
-
-    return zombifiable[random2(zombifiable.size())];
-}
-
 // Check base monster class against zombie type and position if set.
 static bool _good_zombie(monster_type base, monster_type cs,
                          const coord_def& pos)

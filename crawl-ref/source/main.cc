@@ -1151,7 +1151,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_REDRAW_SCREEN:
     case CMD_MACRO_ADD:
     case CMD_SAVE_GAME:
-    case CMD_SAVE_GAME_NOW:
     case CMD_SUSPEND_GAME:
     case CMD_QUIT:
     case CMD_FIX_WAYPOINT:
@@ -2083,8 +2082,6 @@ void process_command(command_type cmd)
         mprf("Autopickup is now %s.", Options.autopickup_on > 0 ? "on" : "off");
         break;
 
-    case CMD_TOGGLE_VIEWPORT_MONSTER_HP: toggle_viewport_monster_hp(); break;
-    case CMD_TOGGLE_VIEWPORT_WEAPONS: toggle_viewport_weapons(); break;
     case CMD_TOGGLE_TRAVEL_SPEED:        _toggle_travel_speed(); break;
 
         // Map commands.
@@ -2297,17 +2294,14 @@ void process_command(command_type cmd)
             = (Options.restart_after_game && Options.restart_after_save)
               ? "Save game and return to main menu?"
               : "Save game and exit?";
-        if (yesno(prompt, true, 'n'))
+        explicit_keymap map;
+        map['S'] = 'y';
+        if (yesno(prompt, true, 'n', true, true, false, &map))
             save_game(true);
         else
             canned_msg(MSG_OK);
         break;
     }
-
-    case CMD_SAVE_GAME_NOW:
-        mpr("Saving game... please wait.");
-        save_game(true);
-        break;
 
     case CMD_QUIT:
         if (crawl_state.disables[DIS_CONFIRMATIONS]

@@ -962,6 +962,8 @@ SUBST:    $ = *:2 |:1 $:17
 #
 KITEM:    $ = $ no_pickup
 KITEM:    * = * no_pickup
+NSUBST:   | = 1:d / *:|
+ITEM:     figurine of a ziggurat no_pickup
 KITEM:    | = | no_pickup
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

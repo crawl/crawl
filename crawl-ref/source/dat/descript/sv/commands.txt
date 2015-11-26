@@ -19,10 +19,6 @@ CMD_DISPLAY_SKILLS
 
 Hantera färdigheter
 %%%%
-CMD_SAVE_GAME_NOW
-
-Spara och avsluta
-%%%%
 CMD_DISPLAY_COMMANDS
 
 Spelhjälp

@@ -103,15 +103,6 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 Liste des types d'objets identifiés
 %%%%
-CMD_SAVE_GAME_NOW
-
-Sauvegarde et quitte.
-%%%%
-CMD_SAVE_GAME_NOW verbose
-
-Sauvegarde la partie pour plus tard, et quitte le jeu. Une fois que vous aurez
-repris le jeu, le fichier de sauvegarde sera détruit.
-%%%%
 CMD_EDIT_PLAYER_TILE
 
 Modifie le graphisme du personnage
