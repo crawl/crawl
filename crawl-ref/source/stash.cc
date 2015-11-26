@@ -1705,7 +1705,7 @@ static bool _compare_by_name(const stash_search_result& lhs,
 static void _inventory_search(const base_pattern &search,
                               vector<stash_search_result> &results)
 {
-    for (item_def &item : you.inv)
+    for (const item_def &item : you.inv)
     {
         if (!item.defined())
             continue;
