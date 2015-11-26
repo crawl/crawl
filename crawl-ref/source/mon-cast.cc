@@ -6944,7 +6944,7 @@ static coord_def _choose_throwing_target(const monster &thrower,
             || !thrower.see_cell(*di)
             || !victim.see_cell(*di)
             || !victim.is_habitable(*di)
-            || !find_ray(victim.pos(), *di, ray, opc_solid_see))
+            || !find_ray(thrower.pos(), *di, ray, opc_solid_see))
         {
             continue;
         }
