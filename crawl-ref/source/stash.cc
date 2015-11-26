@@ -1722,8 +1722,6 @@ static void _inventory_search(const base_pattern &search,
         }
         if (found_something)
         {
-            // Needs to be not equal to ITEM_IN_INVENTORY
-            item.pos = you.pos();
             stash_search_result res;
             res.match = s;
             res.count = 1;
@@ -1731,6 +1729,8 @@ static void _inventory_search(const base_pattern &search,
             res.in_inventory = true;
             res.pos = level_pos::current();
             res.matching_items.push_back(item);
+            // Needs to be not equal to ITEM_IN_INVENTORY
+            res.matching_items.back().pos = you.pos();
             results.push_back(res);
         }
     }
