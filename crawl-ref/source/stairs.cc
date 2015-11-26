@@ -539,7 +539,9 @@ static level_id _travel_destination(const dungeon_feature_type how,
         return stair_destination(how, dst, true);
 }
 
-void floor_transition(dungeon_feature_type how, const dungeon_feature_type whence, level_id whither, bool forced, bool going_up, bool shaft, bool wizard)
+void floor_transition(dungeon_feature_type how,
+                      const dungeon_feature_type whence, level_id whither,
+                      bool forced, bool going_up, bool shaft, bool wizard)
 {
     const level_id old_level = level_id::current();
 
