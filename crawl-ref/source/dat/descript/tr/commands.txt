@@ -35,10 +35,6 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 Keşfedilmiş eşya türlerinin listesi
 %%%%
-CMD_SAVE_GAME_NOW
-
-Kaydet ve çık
-%%%%
 CMD_DISPLAY_COMMANDS
 
 Oyun yardımı

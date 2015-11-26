@@ -1040,12 +1040,6 @@ static bool _do_book_acquirement(item_def &book, int agent)
 
     if (_should_acquire_manual(agent))
         return _acquire_manual(book);
-
-    // Acquired randart books have a chance of being named after the player.
-    string owner = "";
-    if (agent == AQ_SCROLL && one_chance_in(12))
-        owner = you.your_name;
-
     const int choice = random_choose_weighted(
                                     30, BOOK_RANDART_THEME,
        agent == GOD_SIF_MUNA ? 10 : 40, NUM_BOOKS, // normal books
@@ -1088,6 +1082,12 @@ static bool _do_book_acquirement(item_def &book, int agent)
         // else intentional fall-through
     }
     case BOOK_RANDART_THEME:
+    {
+        // Acquired randart books have a chance of being named after the player.
+        const string owner = agent == AQ_SCROLL && one_chance_in(12) ?
+                                you.your_name :
+                                "";
+
         book.sub_type = BOOK_RANDART_THEME;
         if (!make_book_theme_randart(book, SPTYP_NONE, SPTYP_NONE,
                                      5 + coinflip(), 20, SPELL_NO_SPELL, owner))
@@ -1095,6 +1095,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
             return false;
         }
         break;
+    }
 
     case BOOK_RANDART_LEVEL:
     {
@@ -1103,7 +1104,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
             max(1, (you.skills[SK_SPELLCASTING] + 2) / 3);
 
         book.sub_type  = BOOK_RANDART_LEVEL;
-        if (!make_book_level_randart(book, level, owner))
+        if (!make_book_level_randart(book, level))
             return false;
         break;
     }

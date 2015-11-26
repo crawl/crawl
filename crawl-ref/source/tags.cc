@@ -3262,7 +3262,9 @@ static void tag_read_you(reader &th)
     // Both saves prior to TAG_MINOR_RU_DELAY_STACKING, and saves transferred
     // from before that tag to a version where this minor tag was backwards.
     if (!you.props.exists(RU_SACRIFICE_PENALTY_KEY))
-       you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
+        you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
+    if (th.getMinorVersion() < TAG_MINOR_ZIGFIGS)
+        you.props["zig-fixup"] = true;
 #endif
 }
 

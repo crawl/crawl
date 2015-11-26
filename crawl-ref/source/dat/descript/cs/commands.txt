@@ -96,15 +96,6 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 Seznam objevených předmětů
 %%%%
-CMD_SAVE_GAME_NOW
-
-Uložit a ukončit
-%%%%
-CMD_SAVE_GAME_NOW verbose
-
-Uloží a ukončí hru. Při opětovném vstupu do hry je soubor s uloženou hrou
-smazán.
-%%%%
 CMD_EDIT_PLAYER_TILE
 
 Změnit vzhled postavy

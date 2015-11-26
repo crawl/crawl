@@ -511,7 +511,6 @@ struct item_def
                                     // for rods, is charge * ROD_CHARGE_MULT
         short initial_cards;        ///< the # of cards a deck *started* with
         short net_durability;       ///< damage dealt to a net
-        short book_param;           ///< level of spells in a monolevel book
     };
     union
     {

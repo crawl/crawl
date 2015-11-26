@@ -1499,24 +1499,32 @@ static void _config_layers_menu()
     bool exit = false;
 
     _layers = _layers_saved;
+    crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+    crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
 
     msgwin_set_temporary(true);
     while (!exit)
     {
         viewwindow();
-        mprf(MSGCH_PROMPT, "Select layers to display: "
+        mprf(MSGCH_PROMPT, "Select layers to display:\n"
                            "<%s>(m)onsters</%s>|"
                            "<%s>(p)layer</%s>|"
                            "<%s>(i)tems</%s>|"
-                           "<%s>(c)louds</%s>",
-           _layers & LAYER_MONSTERS ? "lightgrey" : "darkgrey",
-           _layers & LAYER_MONSTERS ? "lightgrey" : "darkgrey",
-           _layers & LAYER_PLAYER   ? "lightgrey" : "darkgrey",
-           _layers & LAYER_PLAYER   ? "lightgrey" : "darkgrey",
-           _layers & LAYER_ITEMS    ? "lightgrey" : "darkgrey",
-           _layers & LAYER_ITEMS    ? "lightgrey" : "darkgrey",
-           _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey",
-           _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey"
+                           "<%s>(c)louds</%s>|"
+                           "<%s>monster (w)eapons</%s>|"
+                           "<%s>monster (h)ealth</%s>",
+           _layers & LAYER_MONSTERS        ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTERS        ? "lightgrey" : "darkgrey",
+           _layers & LAYER_PLAYER          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_PLAYER          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_ITEMS           ? "lightgrey" : "darkgrey",
+           _layers & LAYER_ITEMS           ? "lightgrey" : "darkgrey",
+           _layers & LAYER_CLOUDS          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_CLOUDS          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTER_WEAPONS ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTER_WEAPONS ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey"
         );
         mprf(MSGCH_PROMPT, "Press <w>%s</w> to return to normal view. "
                            "Press any other key to exit.",
@@ -1524,18 +1532,25 @@ static void _config_layers_menu()
 
         switch (get_ch())
         {
-        case 'm': _layers_saved = _layers ^= LAYER_MONSTERS; break;
-        case 'p': _layers_saved = _layers ^= LAYER_PLAYER;   break;
-        case 'i': _layers_saved = _layers ^= LAYER_ITEMS;    break;
-        case 'c': _layers_saved = _layers ^= LAYER_CLOUDS;   break;
+        case 'm': _layers_saved = _layers ^= LAYER_MONSTERS;        break;
+        case 'p': _layers_saved = _layers ^= LAYER_PLAYER;          break;
+        case 'i': _layers_saved = _layers ^= LAYER_ITEMS;           break;
+        case 'c': _layers_saved = _layers ^= LAYER_CLOUDS;          break;
+        case 'w': _layers_saved = _layers ^= LAYER_MONSTER_WEAPONS; break;
+        case 'h': _layers_saved = _layers ^= LAYER_MONSTER_HEALTH;  break;
 
         // Remaining cases fall through to exit.
         case '|':
             _layers = LAYERS_ALL;
+            crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+            crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
         default:
             exit = true;
             break;
         }
+
+        crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+        crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
 
         msgwin_clear_temporary();
     }
@@ -1564,6 +1579,8 @@ void reset_show_terrain()
         mprf(MSGCH_PROMPT, "Restoring view layers.");
 
     _layers = LAYERS_ALL;
+    crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+    crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
 }
 
 ////////////////////////////////////////////////////////////////////////////

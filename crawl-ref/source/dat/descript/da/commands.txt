@@ -100,15 +100,6 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 Viser en liste over typer af genstande, du har mødt
 %%%%
-CMD_SAVE_GAME_NOW
-
-Gem og afslut
-%%%%
-CMD_SAVE_GAME_NOW verbose
-
-Gemmer spillet til senere og afslutter. Når du genoptager spillet, vil de gemte
-data blive slettet.
-%%%%
 CMD_EDIT_PLAYER_TILE
 
 Lav om på spillergrafikken

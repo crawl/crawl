@@ -1348,7 +1348,7 @@ static const struct spell_desc spelldata[] =
     SPTYP_TRANSMUTATION,
     SPFLAG_BATTLE | SPFLAG_NO_GHOST,
     2,
-    200,
+    100,
     -1, -1,
     2, 0,
     nullptr,

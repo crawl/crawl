@@ -970,6 +970,7 @@ static string misc_type_name(int type, bool known)
     case MISC_PHIAL_OF_FLOODS:           return "phial of floods";
     case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
     case MISC_PHANTOM_MIRROR:            return "phantom mirror";
+    case MISC_ZIGGURAT:                  return "figurine of a ziggurat";
 
     default:
         return "buggy miscellaneous item";
@@ -2466,15 +2467,16 @@ public:
 
     virtual void select(int qty) override
     {
+        // Toggle  grey -> - -> + -> grey  if we autopickup the item by
+        // default, or  grey -> + -> - -> grey  if we do not.
         if (qty == -2)
             selected_qty = 0;
         else if (selected_qty == 0)
-            selected_qty = item_needs_autopickup(*item) ? 2 : 1;
+            selected_qty = item_needs_autopickup(*item, true) ? 2 : 1;
+        else if (selected_qty == (item_needs_autopickup(*item, true) ? 2 : 1))
+            selected_qty = 3 - selected_qty; // 2 <-> 1
         else
-            ++selected_qty;
-
-        if (selected_qty > 2)
-            selected_qty = 1; //Set to 0 to allow triple toggle
+            selected_qty = 0;
 
         // Set the force_autopickup values
         const int forceval = (selected_qty == 2 ? -1 : selected_qty);
@@ -3813,6 +3815,7 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif
         // These can always be used.
         case MISC_LANTERN_OF_SHADOWS:
+        case MISC_ZIGGURAT:
             return false;
 
         // Purely summoning misc items don't work w/ sac love
