@@ -5490,6 +5490,27 @@ static int _piety_for_skill(skill_type skill)
     return skill_exp_needed(you.skills[skill], skill, you.species) / 500;
 }
 
+static int _piety_for_skill_by_sacrifice(ability_type sacrifice)
+{
+    int piety_gain = 0;
+    const sacrifice_def &sac_def = _get_sacrifice_def(sacrifice);
+
+    piety_gain += _piety_for_skill(sac_def.sacrifice_skill);
+    if (sacrifice == ABIL_RU_SACRIFICE_HAND)
+    {
+        // No one-handed polearms for spriggans.
+        if (you.species == SP_SPRIGGAN)
+            piety_gain += _piety_for_skill(SK_POLEARMS);
+        // No one-handed staves for small races.
+        if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
+            piety_gain += _piety_for_skill(SK_STAVES);
+        // No one-handed bows.
+        if (you.species != SP_FORMICID)
+            piety_gain += _piety_for_skill(SK_BOWS);
+    }
+    return piety_gain;
+}
+
 #define AS_MUT(csv) (static_cast<mutation_type>((csv).get_int()))
 
 /**
@@ -5512,7 +5533,7 @@ static int _get_stat_piety(stat_type input_stat, int multiplier)
     return stat_val * multiplier;
 }
 
-static int _get_sacrifice_piety(ability_type sac)
+int get_sacrifice_piety(ability_type sac, bool include_skill)
 {
     if (sac == ABIL_RU_REJECT_SACRIFICES)
         return INT_MAX; // used as the null sacrifice
@@ -5551,8 +5572,8 @@ static int _get_sacrifice_piety(ability_type sac)
             piety_gain += _piety_for_skill(arcane_skill);
         }
     }
-    else if (sac_def.sacrifice_skill != SK_NONE)
-        piety_gain += _piety_for_skill(sac_def.sacrifice_skill);
+    else if (sac_def.sacrifice_skill != SK_NONE && include_skill)
+        piety_gain += _piety_for_skill_by_sacrifice(sac_def.sacrifice);
 
     switch (sacrifice)
     {
@@ -5617,17 +5638,6 @@ static int _get_sacrifice_piety(ability_type sac)
                 piety_gain -= 10;
             }
             break;
-        case ABIL_RU_SACRIFICE_HAND:
-            // No one-handed polearms for spriggans.
-            if (you.species == SP_SPRIGGAN)
-                piety_gain += _piety_for_skill(SK_POLEARMS);
-            // No one-handed staves for small races.
-            if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
-                piety_gain += _piety_for_skill(SK_STAVES);
-            // No one-handed bows.
-            if (you.species != SP_FORMICID)
-                piety_gain += _piety_for_skill(SK_BOWS);
-            break;
         default:
             break;
     }
@@ -5641,7 +5651,12 @@ static int _get_sacrifice_piety(ability_type sac)
         piety_gain *= 1 + mut_check_conflict(mut);
     }
 
-    return piety_gain;
+    // Randomize piety gain very slightly to prevent counting.
+    // We fuzz the piety gain by up to +-10%, or 5 piety, whichever is smaller.
+    int piety_blur_inc = min(5, piety_gain / 10);
+    int piety_blur = random2((2 * piety_blur_inc) + 1) - piety_blur_inc;
+
+    return piety_gain + piety_blur;
 }
 
 // Remove the offer of sacrifices after they've been offered for sufficient
@@ -5662,6 +5677,10 @@ static void _ru_expire_sacrifices()
         ASSERT(you.props.exists(key));
         you.props[key].get_vector().clear();
     }
+
+    // Clear out stored sacrfiice values.
+    for (int i = 0; i < NUM_ABILITIES; ++i)
+        you.sacrifice_piety[i] = 0;
 }
 
 /**
@@ -5683,7 +5702,7 @@ static ability_type _random_cheap_sacrifice(
     int valid_sacrifices = 0;
     for (auto sacrifice : possible_sacrifices)
     {
-        if (_get_sacrifice_piety(sacrifice) + you.piety > piety_cap)
+        if (get_sacrifice_piety(sacrifice) + you.piety > piety_cap)
             continue;
 
         ++valid_sacrifices;
@@ -5715,7 +5734,7 @@ static ability_type _get_cheapest_sacrifice(
     int cheapest_sacrifices = 0;
     for (auto sacrifice : possible_sacrifices)
     {
-        int sac_piety = _get_sacrifice_piety(sacrifice);
+        int sac_piety = get_sacrifice_piety(sacrifice);
         if (sac_piety >= last_piety)
             continue;
 
@@ -5766,16 +5785,14 @@ void ru_offer_new_sacrifices()
                          possible_sacrifices.end(),
                          ABIL_RU_REJECT_SACRIFICES,
                          [](ability_type a, ability_type b) {
-                             return _get_sacrifice_piety(a)
-                                  < _get_sacrifice_piety(b) ? a : b;
+                             return get_sacrifice_piety(a)
+                                  < get_sacrifice_piety(b) ? a : b;
                          });
-
-        const int piety_cap
-            = max(179, you.piety + _get_sacrifice_piety(min_piety_sacrifice));
+        const int min_piety = get_sacrifice_piety(min_piety_sacrifice);
+        const int piety_cap = max(179, you.piety + min_piety);
 
         dprf("cheapest sac %d (%d piety); cap %d",
-             min_piety_sacrifice, _get_sacrifice_piety(min_piety_sacrifice),
-             piety_cap);
+             min_piety_sacrifice, min_piety, piety_cap);
 
         // XXX: replace this with random_if when that's merged
         ability_type chosen_sacrifice
@@ -5801,6 +5818,8 @@ void ru_offer_new_sacrifices()
         // add it to the list of chosen sacrifices to offer, and remove it from
         // the list of possiblities for the later sacrifices
         available_sacrifices.push_back(chosen_sacrifice);
+        you.sacrifice_piety[chosen_sacrifice] =
+                                get_sacrifice_piety(chosen_sacrifice, false);
         possible_sacrifices.erase(remove(possible_sacrifices.begin(),
                                          possible_sacrifices.end(),
                                          chosen_sacrifice),
@@ -6055,12 +6074,18 @@ bool ru_do_sacrifice(ability_type sac)
         mile_text = make_stringf("%s.", sac_def.milestone_text);
     }
 
-    piety_gain = _get_sacrifice_piety(sac);
+    // If we're haven't yet calculated piety gain, get it now. Otherwise,
+    // use the calculated value and then add in the skill piety, which isn't
+    // saved because it can change over time.
+    piety_gain = you.sacrifice_piety[sac];
+    if (piety_gain == 0)
+        piety_gain = get_sacrifice_piety(sac);
+    else if (sac_def.sacrifice_skill != SK_NONE)
+        piety_gain += _piety_for_skill_by_sacrifice(sac);
 
     // get confirmation that the sacrifice is desired.
     if (!_execute_sacrifice(piety_gain, offer_text.c_str()))
         return false;
-
     // Apply the sacrifice, starting by mutating the player.
     if (variable_sac)
     {
@@ -6123,12 +6148,8 @@ bool ru_do_sacrifice(ability_type sac)
     else
         you.props["num_sacrifice_muts"] = num_sacrifices;
 
-    // Randomize piety gain very slightly to prevent counting.
-    // We fuzz the piety gain by up to +-10%, or 5 piety, whichever is smaller.
-    int piety_blur_inc = min(5, piety_gain / 10);
-    int piety_blur = random2((2 * piety_blur_inc) + 1) - piety_blur_inc;
-    int new_piety = you.piety + piety_gain + piety_blur;
-
+    // Actually give the piety for this sacrifice.
+    int new_piety = you.piety + piety_gain;
     if (new_piety > piety_breakpoint(5))
         new_piety = piety_breakpoint(5);
     set_piety(new_piety);

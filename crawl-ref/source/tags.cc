@@ -1467,6 +1467,10 @@ static void tag_construct_you(writer &th)
         marshallShort(th, you.demonic_traits[j].mutation);
     }
 
+    // set up sacrifice piety by ability
+    for (int j = 0; j < NUM_ABILITIES; ++j)
+        marshallByte(th, you.sacrifice_piety[j]);
+
     CANARY;
 
     // how many penances?
@@ -2560,7 +2564,7 @@ static void tag_read_you(reader &th)
         else
         {
 #endif
-        you.sacrifices[j] = unmarshallUByte(th);
+        you.sacrifices[j]       = unmarshallUByte(th);
 #if TAG_MAJOR_VERSION == 34
         }
 #endif
@@ -2628,7 +2632,7 @@ static void tag_read_you(reader &th)
 #endif
 
     for (int j = count; j < NUM_MUTATIONS; ++j)
-        you.mutation[j] = you.innate_mutation[j] = you.sacrifices[j] = 0;
+        you.mutation[j] = you.innate_mutation[j] = you.sacrifices[j];
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_NO_DEVICE_HEAL)
@@ -2842,6 +2846,20 @@ static void tag_read_you(reader &th)
         you.demonic_traits.push_back(dt);
     }
 
+    // set up sacrifice piety by abilities
+    for (int j = 0; j < NUM_ABILITIES; ++j)
+    {
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_RU_PIETY_CONSISTENCY)
+            you.sacrifice_piety[j] = 0;
+        else
+#endif
+            you.sacrifice_piety[j]  = unmarshallUByte(th);
+    }
+
+    for (int j = 0; j < NUM_ABILITIES; ++j)
+        you.sacrifice_piety[j] = you.sacrifice_piety[j] ?
+            you.sacrifice_piety[j] : 0;
     EAT_CANARY;
 
     // how many penances?

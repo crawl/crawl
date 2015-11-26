@@ -228,6 +228,8 @@ public:
   FixedVector<uint8_t, NUM_MUTATIONS> temp_mutation;
   FixedVector<uint8_t, NUM_MUTATIONS> sacrifices;
 
+  FixedVector<uint8_t, NUM_ABILITIES> sacrifice_piety;
+
   struct demon_trait
   {
       int           level_gained;

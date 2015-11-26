@@ -15,6 +15,7 @@
 #define BEOGH_SH_GIFT_KEY "given beogh shield"
 
 #define AVAILABLE_SAC_KEY "available_sacrifices"
+#define AVAILABLE_SAC_PIETY_KEY "available_sacrifice_piety"
 #define HEALTH_SAC_KEY "current_health_sacrifice"
 #define ESSENCE_SAC_KEY "current_essence_sacrifice"
 #define PURITY_SAC_KEY "current_purity_sacrifice"
@@ -151,6 +152,7 @@ void qazlal_elemental_force();
 bool qazlal_disaster_area();
 
 void init_sac_index();
+int get_sacrifice_piety(ability_type sac, bool include_skill = true);
 void ru_offer_new_sacrifices();
 string ru_sac_text(ability_type sac);
 bool ru_do_sacrifice(ability_type sac);
