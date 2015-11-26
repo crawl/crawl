@@ -956,6 +956,12 @@ dire elephant
 A huge pachyderm, wilder and fiercer than normal elephants, with a very thick
 hide, powerful legs, and a memory to die for.
 %%%%
+doom hound
+
+A lapdog of the queen of Tartarus. She has granted it and its kind protection
+from the torments of the underworld, so they now hunt her enemies. Though they
+may appear alone, they rarely remain so for long...
+%%%%
 draconian
 
 A brown-scaled humanoid with a reptilian tail and small wings. It is yet to

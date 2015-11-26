@@ -1183,6 +1183,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_HOG;
     case MONS_HELL_HOUND:
         return TILEP_MONS_HELL_HOUND;
+    case MONS_DOOM_HOUND:
+        return TILEP_MONS_DOOM_HOUND;
     case MONS_RAIJU:
         return TILEP_MONS_RAIJU;
     case MONS_HELL_HOG:
@@ -3536,6 +3538,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_HOG;
     case MONS_HELL_HOUND:
         return TILE_CORPSE_HELL_HOUND;
+    case MONS_DOOM_HOUND:
+        return TILE_CORPSE_DOOM_HOUND;
     case MONS_RAIJU:
         return TILE_CORPSE_RAIJU;
     case MONS_HELL_HOG:

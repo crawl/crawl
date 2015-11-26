@@ -86,6 +86,7 @@ wolf MONS_WOLF
 raiju MONS_RAIJU
 hell_hound MONS_HELL_HOUND
 %rim 0
+doom_hound MONS_DOOM_HOUND
 hog MONS_HOG
 hell_hog MONS_HELL_HOG
 holy_swine MONS_HOLY_SWINE
