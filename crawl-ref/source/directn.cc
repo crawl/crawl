@@ -14,6 +14,7 @@
 #include <cstring>
 #include <sstream>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "attitude-change.h"
 #include "cloud.h"
@@ -2495,13 +2496,11 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
 
     if (hitfunc->set_aim(where))
     {
-        for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+        for (monster_near_iterator mi(&you); mi; ++mi)
         {
-            mons = monster_at(*ri);
-            if (!mons)
-                continue;
+            mons = *mi;
 
-            aff_type aff = hitfunc->is_affected(*ri);
+            aff_type aff = hitfunc->is_affected(mons->pos());
             if (aff == AFF_YES || aff == AFF_MAYBE)
             {
                 if (_mons_is_valid_target(mons, mode, range))
