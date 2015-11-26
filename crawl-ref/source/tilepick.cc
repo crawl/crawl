@@ -5059,6 +5059,8 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_DISPLAY_CHARACTER_STATUS;
     case CMD_DISPLAY_KNOWN_OBJECTS:
         return TILEG_CMD_KNOWN_ITEMS;
+    case CMD_SAVE_GAME_NOW:
+        return TILEG_CMD_SAVE_GAME_NOW;
     case CMD_EDIT_PLAYER_TILE:
         return TILEG_CMD_EDIT_PLAYER_TILE;
     case CMD_DISPLAY_COMMANDS:
