@@ -2720,8 +2720,11 @@ string get_skill_description(skill_type skill, bool need_title)
  */
 int hex_chance(const spell_type spell, const int hd)
 {
+    const int cap = 200;
     const int pow = mons_power_for_hd(spell, hd, false) / ENCH_POW_FACTOR;
-    const int chance = hex_success_chance(you.res_magic(), pow, 100, true);
+    const int capped_pow = min(cap, pow);
+    const int chance = hex_success_chance(you.res_magic(), capped_pow,
+                                          100, true);
     if (spell == SPELL_STRIP_RESISTANCE)
         return chance + (100 - chance) / 3; // ignores mr 1/3rd of the time
     return chance;
