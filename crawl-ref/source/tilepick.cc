@@ -4053,6 +4053,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_PHANTOM_MIRROR:
         return TILE_MISC_PHANTOM_MIRROR;
 
+    case MISC_ZIGGURAT:
+        return TILE_MISC_ZIGGURAT;
+
     case MISC_QUAD_DAMAGE:
         return TILE_MISC_QUAD_DAMAGE;
     }
