@@ -2764,9 +2764,9 @@ void monster::moveto(const coord_def& c, bool clear_net)
         props[IOOD_Y].get_float() += c.y - pos().y;
     }
 
-    set_position(c);
+    clear_constrictions_far_from(c);
 
-    clear_far_constrictions();
+    set_position(c);
 }
 
 bool monster::fumbles_attack()

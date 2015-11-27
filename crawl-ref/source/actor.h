@@ -425,6 +425,7 @@ public:
 
     bool can_constrict(actor* defender);
     void clear_far_constrictions();
+    void clear_constrictions_far_from(const coord_def &where);
     void accum_has_constricted();
     void handle_constriction();
     bool is_constricted() const;
