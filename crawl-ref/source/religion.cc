@@ -1505,7 +1505,7 @@ static bool _give_pakellas_gift()
         simple_god_message(" grants you a gift!");
         more();
 
-        _inc_gift_timeout(100 + random2avg(19, 2));
+        _inc_gift_timeout(150 + random2avg(29, 2));
         you.num_current_gifts[you.religion]++;
         you.num_total_gifts[you.religion]++;
         take_note(Note(NOTE_GOD_GIFT, you.religion));
