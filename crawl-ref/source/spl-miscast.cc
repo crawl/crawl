@@ -551,7 +551,7 @@ bool MiscastEffect::_send_to_abyss()
     {
         return _malign_gateway(); // attempt to degrade to malign gateway
     }
-    target->banish(act_source, cause);
+    target->banish(act_source, cause, target->get_experience_level());
     return true;
 }
 
@@ -1157,7 +1157,7 @@ void MiscastEffect::_charms(int severity)
                 }
                 else if (target->is_monster())
                 {
-                    debuff_monster(target->as_monster());
+                    debuff_monster(*target->as_monster());
                     enchant_actor_with_flavour(target->as_monster(), nullptr,
                                                BEAM_DRAIN_MAGIC, 50 + random2avg(51, 2));
                 }

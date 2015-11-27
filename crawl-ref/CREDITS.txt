@@ -179,7 +179,6 @@
     Markus Maier
     MainiacJoe
     Arien Malec
-    Alan Malloy
     Paul Maloney
     Wille Mäntylä
     James 'Eronarn' Meickle
@@ -286,6 +285,7 @@ The Dungeon Crawl Stone Soup development team is:
     Raphaël Langella
     Nat Lanza
     Jesse Luehrs
+    Alan Malloy
     Shmuale Mark
     John McCartney
     Steve Melenchuk

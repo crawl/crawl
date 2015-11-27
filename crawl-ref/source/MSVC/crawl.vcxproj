@@ -818,7 +818,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\quiver.h" />
     <ClInclude Include="..\random-pick.h" />
     <ClInclude Include="..\random-var.h" />
-    <ClInclude Include="..\random-weight.h" />
     <ClInclude Include="..\random.h" />
     <ClInclude Include="..\ranged_attack.h" />
     <ClInclude Include="..\ray.h" />

@@ -4031,6 +4031,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
         return evoker_is_charged(item) ? TILE_MISC_PHIAL_OF_FLOODS
                                        : TILE_MISC_PHIAL_OF_FLOODS_INERT;
 
+    case MISC_XOMS_CHESSBOARD:
+        return TILE_MISC_XOMS_CHESSBOARD;
+
     case MISC_LANTERN_OF_SHADOWS:
         return TILE_MISC_LANTERN_OF_SHADOWS;
 
@@ -4051,6 +4054,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
 
     case MISC_PHANTOM_MIRROR:
         return TILE_MISC_PHANTOM_MIRROR;
+
+    case MISC_ZIGGURAT:
+        return TILE_MISC_ZIGGURAT;
 
     case MISC_QUAD_DAMAGE:
         return TILE_MISC_QUAD_DAMAGE;
@@ -4597,7 +4603,7 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         break;
 
     case ETC_MUTAGENIC:
-        if (bolt.name == "irradiate")
+        if (bolt.name == "irradiate" || bolt.name == "unravelling")
             return TILE_BOLT_IRRADIATE;
         break;
     }
@@ -4734,6 +4740,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SONG_OF_SLAYING:          return TILEG_SONG_OF_SLAYING;
     case SPELL_SPECTRAL_WEAPON:          return TILEG_SPECTRAL_WEAPON;
     case SPELL_DISCORD:                  return TILEG_DISCORD;
+    case SPELL_VIOLENT_UNRAVELLING:      return TILEG_VIOLENT_UNRAVELLING;
 
     // Translocation
     case SPELL_APPORTATION:              return TILEG_APPORTATION;

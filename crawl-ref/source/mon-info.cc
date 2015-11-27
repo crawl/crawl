@@ -32,6 +32,7 @@
 #include "options.h"
 #include "religion.h"
 #include "skills.h"
+#include "spl-goditem.h" // dispellable_enchantments
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
@@ -39,6 +40,76 @@
 #include "tilepick.h"
 #endif
 #include "traps.h"
+
+/// Simple 1:1 mappings between monster enchantments & info flags.
+static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
+    { ENCH_BERSERK,         MB_BERSERK },
+    { ENCH_POISON,          MB_POISONED },
+    { ENCH_CORONA,          MB_GLOWING },
+    { ENCH_SILVER_CORONA,   MB_GLOWING },
+    { ENCH_SLOW,            MB_SLOWED },
+    { ENCH_SICK,            MB_SICK },
+    { ENCH_INSANE,          MB_INSANE },
+    { ENCH_BATTLE_FRENZY,   MB_FRENZIED },
+    { ENCH_ROUSED,          MB_ROUSED },
+    { ENCH_HASTE,           MB_HASTED },
+    { ENCH_MIGHT,           MB_STRONG },
+    { ENCH_CONFUSION,       MB_CONFUSED },
+    { ENCH_INVIS,           MB_INVISIBLE },
+    { ENCH_CHARM,           MB_CHARMED },
+    { ENCH_STICKY_FLAME,    MB_BURNING },
+    { ENCH_PETRIFIED,       MB_PETRIFIED },
+    { ENCH_PETRIFYING,      MB_PETRIFYING },
+    { ENCH_LOWERED_MR,      MB_VULN_MAGIC },
+    { ENCH_SWIFT,           MB_SWIFT },
+    { ENCH_SILENCE,         MB_SILENCING },
+    { ENCH_PARALYSIS,       MB_PARALYSED },
+    { ENCH_SOUL_RIPE,       MB_POSSESSABLE },
+    { ENCH_REGENERATION,    MB_REGENERATION },
+    { ENCH_RAISED_MR,       MB_RAISED_MR },
+    { ENCH_MIRROR_DAMAGE,   MB_MIRROR_DAMAGE },
+    { ENCH_FEAR_INSPIRING,  MB_FEAR_INSPIRING },
+    { ENCH_WITHDRAWN,       MB_WITHDRAWN },
+    { ENCH_DAZED,           MB_DAZED },
+    { ENCH_MUTE,            MB_MUTE },
+    { ENCH_BLIND,           MB_BLIND },
+    { ENCH_DUMB,            MB_DUMB },
+    { ENCH_MAD,             MB_MAD },
+    { ENCH_INNER_FLAME,     MB_INNER_FLAME },
+    { ENCH_BREATH_WEAPON,   MB_BREATH_WEAPON },
+    { ENCH_DEATHS_DOOR,     MB_DEATHS_DOOR },
+    { ENCH_ROLLING,         MB_ROLLING },
+    { ENCH_STONESKIN,       MB_STONESKIN },
+    { ENCH_OZOCUBUS_ARMOUR, MB_OZOCUBUS_ARMOUR },
+    { ENCH_WRETCHED,        MB_WRETCHED },
+    { ENCH_SCREAMED,        MB_SCREAMED },
+    { ENCH_WORD_OF_RECALL,  MB_WORD_OF_RECALL },
+    { ENCH_INJURY_BOND,     MB_INJURY_BOND },
+    { ENCH_FLAYED,          MB_FLAYED },
+    { ENCH_WEAK,            MB_WEAK },
+    { ENCH_DIMENSION_ANCHOR, MB_DIMENSION_ANCHOR },
+    { ENCH_CONTROL_WINDS,   MB_CONTROL_WINDS },
+    { ENCH_TOXIC_RADIANCE,  MB_TOXIC_RADIANCE },
+    { ENCH_GRASPING_ROOTS,  MB_GRASPING_ROOTS },
+    { ENCH_FIRE_VULN,       MB_FIRE_VULN },
+    { ENCH_TORNADO,         MB_TORNADO },
+    { ENCH_TORNADO_COOLDOWN, MB_TORNADO_COOLDOWN },
+    { ENCH_BARBS,           MB_BARBS },
+    { ENCH_POISON_VULN,     MB_POISON_VULN },
+    { ENCH_ICEMAIL,         MB_ICEMAIL },
+    { ENCH_AGILE,           MB_AGILE },
+    { ENCH_FROZEN,          MB_FROZEN },
+    { ENCH_BLACK_MARK,      MB_BLACK_MARK },
+    { ENCH_SAP_MAGIC,       MB_SAP_MAGIC },
+    { ENCH_SHROUD,          MB_SHROUD },
+    { ENCH_CORROSION,       MB_CORROSION },
+    { ENCH_REPEL_MISSILES,  MB_REPEL_MSL },
+    { ENCH_DEFLECT_MISSILES, MB_DEFLECT_MSL },
+    { ENCH_CONDENSATION_SHIELD, MB_CONDENSATION_SHIELD },
+    { ENCH_RESISTANCE,      MB_RESISTANCE },
+    { ENCH_HEXED,           MB_HEXED },
+    { ENCH_BONE_ARMOUR,     MB_BONE_ARMOUR },
+};
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
 {
@@ -59,156 +130,26 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     if (ench == ENCH_CONFUSION && mons_class_flag(mons.type, M_CONFUSED))
         return NUM_MB_FLAGS;
 
+    const monster_info_flags *flag = map_find(trivial_ench_mb_mappings, ench);
+    if (flag)
+        return *flag;
+
     switch (ench)
     {
-    case ENCH_BERSERK:
-        return MB_BERSERK;
-    case ENCH_POISON:
-        return MB_POISONED;
-    case ENCH_SICK:
-        return MB_SICK;
-    case ENCH_CORONA:
-    case ENCH_SILVER_CORONA:
-        return MB_GLOWING;
-    case ENCH_SLOW:
-        return MB_SLOWED;
-    case ENCH_INSANE:
-        return MB_INSANE;
-    case ENCH_BATTLE_FRENZY:
-        return MB_FRENZIED;
-    case ENCH_ROUSED:
-        return MB_ROUSED;
-    case ENCH_HASTE:
-        return MB_HASTED;
-    case ENCH_MIGHT:
-        return MB_STRONG;
-    case ENCH_CONFUSION:
-        return MB_CONFUSED;
-    case ENCH_INVIS:
-    {
-        you.seen_invis = true;
-        return MB_INVISIBLE;
-    }
-    case ENCH_CHARM:
-        return MB_CHARMED;
-    case ENCH_STICKY_FLAME:
-        return MB_BURNING;
     case ENCH_HELD:
         return get_trapping_net(mons.pos(), true) == NON_ITEM
                ? MB_WEBBED : MB_CAUGHT;
-    case ENCH_PETRIFIED:
-        return MB_PETRIFIED;
-    case ENCH_PETRIFYING:
-        return MB_PETRIFYING;
-    case ENCH_LOWERED_MR:
-        return MB_VULN_MAGIC;
-    case ENCH_SWIFT:
-        return MB_SWIFT;
-    case ENCH_SILENCE:
-        return MB_SILENCING;
-    case ENCH_PARALYSIS:
-        return MB_PARALYSED;
-    case ENCH_SOUL_RIPE:
-        return MB_POSSESSABLE;
-    case ENCH_REGENERATION:
-        return MB_REGENERATION;
-    case ENCH_RAISED_MR:
-        return MB_RAISED_MR;
-    case ENCH_MIRROR_DAMAGE:
-        return MB_MIRROR_DAMAGE;
-    case ENCH_FEAR_INSPIRING:
-        return MB_FEAR_INSPIRING;
-    case ENCH_WITHDRAWN:
-        return MB_WITHDRAWN;
-    case ENCH_DAZED:
-        return MB_DAZED;
-    case ENCH_MUTE:
-        return MB_MUTE;
-    case ENCH_BLIND:
-        return MB_BLIND;
-    case ENCH_DUMB:
-        return MB_DUMB;
-    case ENCH_MAD:
-        return MB_MAD;
-    case ENCH_INNER_FLAME:
-        return MB_INNER_FLAME;
-    case ENCH_BREATH_WEAPON:
-        return MB_BREATH_WEAPON;
-    case ENCH_DEATHS_DOOR:
-        return MB_DEATHS_DOOR;
-    case ENCH_ROLLING:
-        return MB_ROLLING;
-    case ENCH_STONESKIN:
-        return MB_STONESKIN;
-    case ENCH_OZOCUBUS_ARMOUR:
-        return MB_OZOCUBUS_ARMOUR;
-    case ENCH_WRETCHED:
-        return MB_WRETCHED;
-    case ENCH_SCREAMED:
-        return MB_SCREAMED;
-    case ENCH_WORD_OF_RECALL:
-        return MB_WORD_OF_RECALL;
-    case ENCH_INJURY_BOND:
-        return MB_INJURY_BOND;
     case ENCH_WATER_HOLD:
         if (mons.res_water_drowning())
             return MB_WATER_HOLD;
         else
             return MB_WATER_HOLD_DROWN;
-    case ENCH_FLAYED:
-        return MB_FLAYED;
-    case ENCH_WEAK:
-        return MB_WEAK;
-    case ENCH_DIMENSION_ANCHOR:
-        return MB_DIMENSION_ANCHOR;
-    case ENCH_CONTROL_WINDS:
-        return MB_CONTROL_WINDS;
-    case ENCH_TOXIC_RADIANCE:
-        return MB_TOXIC_RADIANCE;
-    case ENCH_GRASPING_ROOTS:
-        return MB_GRASPING_ROOTS;
-    case ENCH_FIRE_VULN:
-        return MB_FIRE_VULN;
-    case ENCH_TORNADO:
-        return MB_TORNADO;
-    case ENCH_TORNADO_COOLDOWN:
-        return MB_TORNADO_COOLDOWN;
-    case ENCH_BARBS:
-        return MB_BARBS;
-    case ENCH_POISON_VULN:
-        return MB_POISON_VULN;
-    case ENCH_ICEMAIL:
-        return MB_ICEMAIL;
-    case ENCH_AGILE:
-        return MB_AGILE;
-    case ENCH_FROZEN:
-        return MB_FROZEN;
-    case ENCH_BLACK_MARK:
-        return MB_BLACK_MARK;
-    case ENCH_SAP_MAGIC:
-        return MB_SAP_MAGIC;
-    case ENCH_SHROUD:
-        return MB_SHROUD;
-    case ENCH_CORROSION:
-        return MB_CORROSION;
     case ENCH_DRAINED:
         {
             const bool heavily_drained = mons.get_ench(ench).degree
                                          >= mons.get_experience_level() / 2;
             return heavily_drained ? MB_HEAVILY_DRAINED : MB_LIGHTLY_DRAINED;
         }
-    case ENCH_REPEL_MISSILES:
-        return MB_REPEL_MSL;
-    case ENCH_DEFLECT_MISSILES:
-        return MB_DEFLECT_MSL;
-    case ENCH_CONDENSATION_SHIELD:
-        return MB_CONDENSATION_SHIELD;
-    case ENCH_RESISTANCE:
-        return MB_RESISTANCE;
-    case ENCH_HEXED:
-        return MB_HEXED;
-    case ENCH_BONE_ARMOUR:
-        return MB_BONE_ARMOUR;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1879,6 +1820,34 @@ void monster_info::set_colour(int col)
 {
     ASSERT_RANGE(col, -1, NUM_COLOURS);
     _colour = col;
+}
+
+/**
+ * Does this monster have the given enchantment,
+ * to the best of the player's knowledge?
+ *
+ * Only handles trivially mapped MBs.
+ */
+bool monster_info::has_trivial_ench(enchant_type ench) const
+{
+    monster_info_flags *flag = map_find(trivial_ench_mb_mappings, ench);
+    return flag && is(*flag);
+}
+
+/// Can this monster be debuffed, to the best of the player's knowledge?
+bool monster_info::debuffable() const
+{
+    // NOTE: assumes that all debuffable enchantments are trivially mapped
+    // to MBs.
+
+    // can't debuff innately invisible monsters
+    if (is(MB_INVISIBLE) && !mons_class_flag(type, M_INVIS))
+        return true;
+
+    return any_of(begin(dispellable_enchantments),
+                  end(dispellable_enchantments),
+                  [this](enchant_type ench) -> bool
+                  { return this->has_trivial_ench(ench); });
 }
 
 void get_monster_info(vector<monster_info>& mons)

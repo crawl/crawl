@@ -295,18 +295,6 @@ void list_jewellery()
     }
 }
 
-void toggle_viewport_monster_hp()
-{
-    crawl_state.viewport_monster_hp = !crawl_state.viewport_monster_hp;
-    viewwindow();
-}
-
-void toggle_viewport_weapons()
-{
-    crawl_state.viewport_weapons = !crawl_state.viewport_weapons;
-    viewwindow();
-}
-
 static bool _cmdhelp_textfilter(const string &tag)
 {
 #ifdef WIZARD
@@ -1057,11 +1045,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(1, "         in view\n",
                        false, true, _cmdhelp_textfilter);
     _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle terrain-only view");
-    if (!is_tiles())
-    {
-        _add_command(cols, 1, CMD_TOGGLE_VIEWPORT_MONSTER_HP, "colour monsters in view by HP");
-        _add_command(cols, 1, CMD_TOGGLE_VIEWPORT_WEAPONS, "show monster weapons");
-    }
     _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
     _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
     _add_command(cols, 1, CMD_TOGGLE_TRAVEL_SPEED, "set your travel speed to your");

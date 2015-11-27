@@ -314,7 +314,8 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         attk_delay = rv::max(2, div_rand_round(attk_delay, 2));
     }
 
-    return attk_delay;
+    // see comment on player.cc:player_speed
+    return div_rand_round(attk_delay * you.time_taken, 10);
 }
 
 // Returns the item in the given equipment slot, nullptr if the slot is empty.

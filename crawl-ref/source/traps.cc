@@ -37,7 +37,7 @@
 #include "mon-transit.h"
 #include "output.h"
 #include "prompt.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-miscast.h"
@@ -1661,11 +1661,8 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
 
     if (known)
     {
-        // Chances are 5/8s for 1 level, 2/8s for 2 levels, 1/8 for 3 levels
-        int s = random2(8) + 1;
-        if (s == 1)
-            lid.depth += 3;
-        else if (s <= 3)
+        // Chances are 2/3 for 1 level, 1/3 for 2 levels
+        if (one_chance_in(3))
             lid.depth += 2;
         else
             lid.depth += 1;

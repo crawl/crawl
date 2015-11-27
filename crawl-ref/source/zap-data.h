@@ -1211,4 +1211,20 @@ static const zap_info zap_data[] =
     6
 },
 
+{
+    ZAP_UNRAVELLING,
+    "unravelling",
+    200,
+    nullptr,
+    new tohit_calculator<0, 1, 1>,
+    ETC_MUTAGENIC,
+    true,
+    BEAM_UNRAVELLING,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    false,
+    0 // dubious
+},
+
 };

@@ -1385,8 +1385,11 @@ bool is_stackable_item(const item_def &item)
         return true;
     }
 
-    if (item.is_type(OBJ_MISCELLANY, MISC_PHANTOM_MIRROR))
+    if (item.is_type(OBJ_MISCELLANY, MISC_PHANTOM_MIRROR)
+        || item.is_type(OBJ_MISCELLANY, MISC_ZIGGURAT))
+    {
         return true;
+    }
 
     return false;
 }
@@ -1451,7 +1454,10 @@ bool items_stack(const item_def &item1, const item_def &item2)
         return false;
     }
 
-    return items_similar(item1, item2);
+    return items_similar(item1, item2)
+        // Don't leak information when checking if an "(unknown)" shop item
+        // matches an unidentified item in inventory.
+        && fully_identified(item1) == fully_identified(item2);
 }
 
 /**
@@ -2701,14 +2707,14 @@ static int _autopickup_subtype(const item_def &item)
     }
 }
 
-static bool _is_option_autopickup(const item_def &item)
+static bool _is_option_autopickup(const item_def &item, bool ignore_force)
 {
     string iname = _autopickup_item_name(item);
 
     if (item.base_type < NUM_OBJECT_CLASSES)
     {
         const int force = you.force_autopickup[item.base_type][_autopickup_subtype(item)];
-        if (force != 0)
+        if (!ignore_force && force != 0)
             return force == 1;
     }
     else
@@ -2738,7 +2744,13 @@ static bool _is_option_autopickup(const item_def &item)
     return Options.autopickups[item.base_type];
 }
 
-bool item_needs_autopickup(const item_def &item)
+/** Is the item something that we should try to autopickup?
+ *
+ * @param ignore_force If true, ignore force_autopickup settings from the
+ *                     \ menu (default false).
+ * @return True if the object should be picked up.
+ */
+bool item_needs_autopickup(const item_def &item, bool ignore_force)
 {
     if (item_is_stationary(item))
         return false;
@@ -2755,7 +2767,7 @@ bool item_needs_autopickup(const item_def &item)
     if (item.props.exists("needs_autopickup"))
         return true;
 
-    return _is_option_autopickup(item);
+    return _is_option_autopickup(item, ignore_force);
 }
 
 bool can_autopickup()
@@ -3745,8 +3757,12 @@ colour_t item_def::miscellany_colour() const
         case MISC_BUGGY_EBONY_CASKET:
             return DARKGREY;
 #endif
+        case MISC_XOMS_CHESSBOARD:
+            return ETC_RANDOM;
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
+        case MISC_ZIGGURAT:
+            return ETC_BONE;
         default:
             return LIGHTGREEN;
     }

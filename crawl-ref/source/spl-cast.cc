@@ -1061,6 +1061,27 @@ static bool _spellcasting_aborted(spell_type spell,
 
     if (uncastable)
         mpr(msg);
+    else
+    {
+        vector<text_pattern> &actions = Options.confirm_action;
+        if (!actions.empty())
+        {
+            const char* name = spell_title(spell);
+            for (const text_pattern &action : actions)
+            {
+                if (action.matches(name))
+                {
+                    string prompt = "Really cast " + string(name) + "?";
+                    if (!yesno(prompt.c_str(), false, 'n'))
+                    {
+                        canned_msg(MSG_OK);
+                        return true;
+                    }
+                    break;
+                }
+            }
+        }
+    }
 
     return uncastable;
 }
@@ -1106,6 +1127,8 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_GRAVITAS:
         return new targetter_smite(&you, range, gravitas_range(pow, 2),
                                                 gravitas_range(pow));
+    case SPELL_VIOLENT_UNRAVELLING:
+        return new targetter_unravelling(&you, range, pow);
     case SPELL_MAGIC_DART:
     case SPELL_FORCE_LANCE:
     case SPELL_SHOCK:
@@ -1278,6 +1301,8 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (spell == SPELL_DISPEL_UNDEAD)
             targ = TARG_HOSTILE_UNDEAD;
+        else if (spell == SPELL_VIOLENT_UNRAVELLING)
+            targ = TARG_DISPELLABLE;
 
         targeting_type dir  =
             (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_MOVABLE_OBJECT :

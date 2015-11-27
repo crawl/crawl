@@ -12,7 +12,7 @@
 #include "pcg.h"
 #include "syscalls.h"
 
-static FixedVector<PcgRNG, 2> rngs;
+static FixedVector<PcgRNG, NUM_RNGS> rngs;
 
 uint32_t get_uint32(int generator)
 {
@@ -195,12 +195,7 @@ dice_def calc_dice(int num_dice, int max_damage)
         ret.size = 1;
     }
     else
-    {
-        // Divide the damage among the dice, and add one
-        // occasionally to make up for the fractions. -- bwr
-        ret.size  = max_damage / num_dice;
-        ret.size += x_chance_in_y(max_damage % num_dice, num_dice);
-    }
+        ret.size = div_rand_round(max_damage, num_dice);
 
     return ret;
 }
@@ -219,21 +214,6 @@ int div_rand_round(int num, int den)
 int div_round_up(int num, int den)
 {
     return num / den + (num % den != 0);
-}
-
-// [0, max)
-int bestroll(int max, int rolls)
-{
-    int best = 0;
-
-    for (int i = 0; i < rolls; i++)
-    {
-        int curr = random2(max);
-        if (curr > best)
-            best = curr;
-    }
-
-    return best;
 }
 
 // random2avg() returns same mean value as random2() but with a lower variance
@@ -310,9 +290,9 @@ int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale)
 // should be immaterial for high quality generators.
 double random_real()
 {
-    static const uint64_t UPPER_MASK = 0x3FF0000000000000ULL;
-    static const uint64_t LOWER_MASK = 0xFFFFFFFFFFFFFULL;
-    const uint64_t value = UPPER_MASK | (get_uint64() & LOWER_MASK);
+    static const uint64_t UPPER_BITS = 0x3FF0000000000000ULL;
+    static const uint64_t LOWER_MASK = 0x000FFFFFFFFFFFFFULL;
+    const uint64_t value = UPPER_BITS | (get_uint64() & LOWER_MASK);
     double result;
     // Portable memory transmutation. The union trick almost always
     // works, but this is safer.

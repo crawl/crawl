@@ -121,7 +121,7 @@ god_type origin_as_god_gift(const item_def& item);
 bool origin_is_acquirement(const item_def& item,
                            item_source_type *type = nullptr);
 
-bool item_needs_autopickup(const item_def &);
+bool item_needs_autopickup(const item_def &, bool ignore_force = false);
 bool can_autopickup();
 
 bool need_to_autopickup();

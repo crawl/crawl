@@ -2083,8 +2083,6 @@ void process_command(command_type cmd)
         mprf("Autopickup is now %s.", Options.autopickup_on > 0 ? "on" : "off");
         break;
 
-    case CMD_TOGGLE_VIEWPORT_MONSTER_HP: toggle_viewport_monster_hp(); break;
-    case CMD_TOGGLE_VIEWPORT_WEAPONS: toggle_viewport_weapons(); break;
     case CMD_TOGGLE_TRAVEL_SPEED:        _toggle_travel_speed(); break;
 
         // Map commands.
@@ -2297,7 +2295,9 @@ void process_command(command_type cmd)
             = (Options.restart_after_game && Options.restart_after_save)
               ? "Save game and return to main menu?"
               : "Save game and exit?";
-        if (yesno(prompt, true, 'n'))
+        explicit_keymap map;
+        map['S'] = 'y';
+        if (yesno(prompt, true, 'n', true, true, false, &map))
             save_game(true);
         else
             canned_msg(MSG_OK);
@@ -2369,8 +2369,6 @@ static void _prep_input()
 
         you.seen_portals = 0;
     }
-    if (you.seen_invis)
-        you.seen_invis = false;
 }
 
 static void _check_banished()
@@ -2386,7 +2384,7 @@ static void _check_banished()
         else
             mprf(MSGCH_BANISHMENT, "The Abyss bends around you!");
         more();
-        banished(you.banished_by);
+        banished(you.banished_by, you.banished_power);
     }
 }
 

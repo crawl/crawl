@@ -199,7 +199,7 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
                 "caustic shrike w:4", { weight = 5 }),
      with_props("place:Shoals:$ w:125 band / merfolk aquamancer / " ..
                 "water nymph w:5 / merfolk impaler w:5 / " ..
-                "merfolk javelineer / octopode crusher w:12", { weight = 5 }),
+                "merfolk javelineer", { weight = 5 }),
      "place:Spider:$ w:115 / ghost moth w:15 / hornet / " ..
                 "orb spider",
      "place:Crypt:$ 9 w:260 / curse skull w:5 / profane servitor w:5 / " ..
@@ -230,7 +230,7 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
      with_props("gargoyle / earth elemental / torpor snail / " ..
                 "boulder beetle / entropy weaver / stone giant / " ..
                 "iron dragon / crystal guardian / war gargoyle / " ..
-                "iron golem / octopode crusher / hell sentinel / " ..
+                "iron golem / iron giant / hell sentinel / " ..
                 "juggernaut / caustic shrike", { weight = 2 }),
      with_props("spectral thing / shadow wraith / eidolon w:4 / " ..
                 "shadow dragon / deep elf death mage w:6 / " ..
@@ -331,15 +331,15 @@ local function mons_panlord_gen(x, y, nth)
 end
 
 mset_if(depth_ge(8), mons_panlord_gen)
-mset_if(depth_ge(14), with_props("place:Snake:$ w:14 / place:Swamp:$ w:14 / " ..
-                      "place:Shoals:$ w:14 / place:Spider:$ w:14 / " ..
-                      "greater naga w:12 / guardian serpent w:8 / hydra w:5 / " ..
-                      "swamp dragon w:5 / tentacled monstrosity / " ..
-                      "merfolk aquamancer w:6 / merfolk javelineer w:8 / " ..
-                      "alligator snapping turtle w:6 / " ..
-                      "octopode crusher / ghost moth w:8 / " ..
-                      "emperor scorpion w:8 / moth of wrath w:4",
-                      { weight = 5 }))
+mset_if(depth_ge(14),
+        with_props("place:Snake:$ w:14 / place:Swamp:$ w:14 / " ..
+                   "place:Shoals:$ w:14 / place:Spider:$ w:14 / " ..
+                   "greater naga w:12 / guardian serpent w:8 / " ..
+                   "hydra w:5 / swamp dragon w:5 / tentacled monstrosity / " ..
+                   "merfolk aquamancer w:6 / merfolk javelineer w:8 / " ..
+                   "alligator snapping turtle w:6 / ghost moth w:8 / " ..
+                   "emperor scorpion w:8 / moth of wrath w:4",
+                   { weight = 5 }))
 
 function ziggurat_monster_creators()
   return util.map(monster_creator_fn, mons_populations)
@@ -630,6 +630,8 @@ local function ziggurat_stairs(entry, exit)
 
   if you.depth() < dgn.br_depth(you.branch()) then
     zigstair(exit.x, exit.y, "stone_stairs_down_i")
+  else
+    dgn.create_item(exit.x, exit.y, "figurine of a ziggurat")
   end
 
   zigstair(exit.x, exit.y + 1, "exit_ziggurat")

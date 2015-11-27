@@ -14,6 +14,7 @@
 #include "los_def.h"
 #include "losglobal.h"
 #include "spl-damage.h"
+#include "spl-goditem.h" // player_is_debuffable
 #include "terrain.h"
 
 #define notify_fail(x) (why_not = (x), false)
@@ -61,9 +62,9 @@ bool targetter::has_additional_sites(coord_def loc)
 
 targetter_beam::targetter_beam(const actor *act, int r, zap_type zap,
                                int pow, int min_ex_rad, int max_ex_rad) :
-                               range(r),
                                min_expl_rad(min_ex_rad),
-                               max_expl_rad(max_ex_rad)
+                               max_expl_rad(max_ex_rad),
+                               range(r)
 {
     ASSERT(act);
     ASSERT(min_ex_rad >= 0);
@@ -101,26 +102,34 @@ bool targetter_beam::set_aim(coord_def a)
     path_taken = tempbeam.path_taken;
 
     if (max_expl_rad > 0)
-    {
-        bolt tempbeam2 = beam;
-        tempbeam2.target = origin;
-        for (auto c : path_taken)
-        {
-            if (cell_is_solid(c) && !tempbeam.can_affect_wall(grd(c)))
-                break;
-            tempbeam2.target = c;
-            if (anyone_there(c) && !tempbeam.ignores_monster(monster_at(c)))
-                break;
-        }
-        tempbeam2.use_target_as_pos = true;
-        exp_map_min.init(INT_MAX);
-        tempbeam2.determine_affected_cells(exp_map_min, coord_def(), 0,
-                                           min_expl_rad, true, true);
-        exp_map_max.init(INT_MAX);
-        tempbeam2.determine_affected_cells(exp_map_max, coord_def(), 0,
-                                           max_expl_rad, true, true);
-    }
+        set_explosion_aim(beam);
+
     return true;
+}
+
+void targetter_beam::set_explosion_aim(bolt tempbeam)
+{
+    set_explosion_target(tempbeam);
+    tempbeam.use_target_as_pos = true;
+    exp_map_min.init(INT_MAX);
+    tempbeam.determine_affected_cells(exp_map_min, coord_def(), 0,
+                                      min_expl_rad, true, true);
+    exp_map_max.init(INT_MAX);
+    tempbeam.determine_affected_cells(exp_map_max, coord_def(), 0,
+                                      max_expl_rad, true, true);
+}
+
+void targetter_beam::set_explosion_target(bolt &tempbeam)
+{
+    tempbeam.target = origin;
+    for (auto c : path_taken)
+    {
+        if (cell_is_solid(c) && !tempbeam.can_affect_wall(grd(c)))
+            break;
+        tempbeam.target = c;
+        if (anyone_there(c) && !tempbeam.ignores_monster(monster_at(c)))
+            break;
+    }
 }
 
 bool targetter_beam::valid_aim(coord_def a)
@@ -199,6 +208,53 @@ aff_type targetter_beam::is_affected(coord_def loc)
         }
     }
     return on_path ? AFF_TRACER : AFF_NO;
+}
+
+targetter_unravelling::targetter_unravelling(const actor *act, int r, int pow)
+    : targetter_beam(act, r, ZAP_UNRAVELLING, pow, 1, 1)
+{
+}
+
+/**
+ * Will a casting of Violent Unravelling explode a target at the given loc?
+ *
+ * @param c     The location in question.
+ * @return      Whether, to the player's knowledge, there's a valid target for
+ *              Violent Unravelling at the given coordinate.
+ */
+static bool unravelling_explodes_at(const coord_def c)
+{
+    if (you.pos() == c && player_is_debuffable())
+        return true;
+
+    const monster_info* mi = env.map_knowledge(c).monsterinfo();
+    return mi && mi->debuffable();
+}
+
+bool targetter_unravelling::set_aim(coord_def a)
+{
+    if (!targetter::set_aim(a))
+        return false;
+
+    bolt tempbeam = beam;
+
+    tempbeam.target = aim;
+    tempbeam.path_taken.clear();
+    tempbeam.fire();
+    path_taken = tempbeam.path_taken;
+
+    bolt explosion_beam = beam;
+    set_explosion_target(beam);
+    if (unravelling_explodes_at(beam.target))
+        min_expl_rad = 1;
+    else
+        min_expl_rad = 0;
+
+    set_explosion_aim(beam);
+   // else
+   //     reset_explosion_aim();
+
+    return true;
 }
 
 targetter_imb::targetter_imb(const actor *act, int pow, int r) :

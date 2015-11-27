@@ -8,8 +8,45 @@ spret_type cast_healing(int pow, int max_pow, bool divine_ability = false,
                         bool not_self = false,
                         targ_mode_type mode = TARG_NUM_MODES);
 
+/// List of monster enchantments which can be dispelled.
+const enchant_type dispellable_enchantments[] =
+{
+    ENCH_SLOW,
+    ENCH_HASTE,
+    ENCH_SWIFT,
+    ENCH_MIGHT,
+    ENCH_AGILE,
+    ENCH_FEAR,
+    ENCH_CONFUSION,
+    ENCH_CORONA,
+    ENCH_SILVER_CORONA,
+    ENCH_CHARM,
+    ENCH_PARALYSIS,
+    ENCH_PETRIFYING,
+    ENCH_PETRIFIED,
+    ENCH_REGENERATION,
+    ENCH_TP,
+    ENCH_INNER_FLAME,
+    ENCH_OZOCUBUS_ARMOUR,
+    ENCH_INJURY_BOND,
+    ENCH_DIMENSION_ANCHOR,
+    ENCH_CONTROL_WINDS,
+    ENCH_TOXIC_RADIANCE,
+    ENCH_AGILE,
+    ENCH_BLACK_MARK,
+    ENCH_SHROUD,
+    ENCH_SAP_MAGIC,
+    ENCH_REPEL_MISSILES,
+    ENCH_DEFLECT_MISSILES,
+    ENCH_CONDENSATION_SHIELD,
+    ENCH_RESISTANCE,
+    ENCH_HEXED,
+};
+
+bool player_is_debuffable();
 void debuff_player();
-void debuff_monster(monster* mons);
+bool monster_is_debuffable(const monster &mon);
+void debuff_monster(monster &mon);
 
 int detect_traps(int pow);
 int detect_items(int pow);

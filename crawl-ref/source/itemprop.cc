@@ -26,8 +26,8 @@
 #include "misc.h"
 #include "notes.h"
 #include "options.h"
+#include "random.h"
 #include "religion.h"
-#include "random-weight.h"
 #include "shopping.h"
 #include "skills.h"
 #include "stringutil.h"
@@ -2589,6 +2589,9 @@ int get_jewellery_life_protection(const item_def &ring, bool check_artp)
 
     // check for ego resistance
     if (ring.sub_type == RING_LIFE_PROTECTION)
+        res += 1;
+
+    if (ring.sub_type == AMU_WARDING)
         res += 1;
 
     if (check_artp && is_artefact(ring))

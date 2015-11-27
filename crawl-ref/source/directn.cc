@@ -14,6 +14,7 @@
 #include <cstring>
 #include <sstream>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "attitude-change.h"
 #include "cloud.h"
@@ -98,13 +99,20 @@ static bool _find_object(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
 static bool _find_monster(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
+static bool _find_monster_expl_maybe(const coord_def& where, int mode,
+                                     bool need_path, int range,
+                                     targetter *hitfunc);
+static bool _find_monster_expl_always(const coord_def& where, int mode,
+                                      bool need_path, int range,
+                                      targetter *hitfunc);
 static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
-                           int range, targetter *hitfunc);
+                           int range, targetter *hitfunc, aff_type aff);
 static bool _find_feature(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
 static bool _find_shadow_step_mons(const coord_def& where, int mode,
                                    bool need_path, int range,
                                    targetter *hitfunc);
+static bool _want_target_monster(const monster *mon, targ_mode_type mode);
 
 #ifndef USE_TILE_LOCAL
 static bool _find_mlist(const coord_def& where, int mode, bool need_path,
@@ -401,6 +409,21 @@ void direction_chooser::print_key_hints() const
 bool direction_chooser::targets_objects() const
 {
     return restricts == DIR_TARGET_OBJECT || restricts == DIR_MOVABLE_OBJECT;
+}
+
+/// Are we looking for enemies?
+bool direction_chooser::targets_enemies() const
+{
+    switch (mode)
+    {
+        case TARG_HOSTILE:
+        case TARG_HOSTILE_SUBMERGED:
+        case TARG_HOSTILE_UNDEAD:
+        case TARG_DISPELLABLE:
+            return true;
+        default:
+            return false;
+    }
 }
 
 void direction_chooser::describe_cell() const
@@ -971,10 +994,7 @@ bool direction_chooser::move_is_ok() const
             // cancel_at_self == not allowed to target yourself
             // (SPFLAG_NOT_SELF)
 
-            if (!targets_objects()
-                && (mode == TARG_ENEMY || mode == TARG_HOSTILE
-                    || mode == TARG_HOSTILE_SUBMERGED
-                    || mode == TARG_HOSTILE_UNDEAD))
+            if (!targets_objects() && targets_enemies())
             {
                 if (!may_target_self && (cancel_at_self || Options.allow_self_target == CONFIRM_CANCEL))
                 {
@@ -1029,26 +1049,12 @@ static void _update_mlist(bool enable)
 bool direction_chooser::find_default_monster_target(coord_def& result) const
 {
     bool success = false;
-    int search_range = range;
     bool (*find_targ)(const coord_def&, int, bool, int, targetter*);
 
     // First try to pick our previous target.
     const monster* mons_target = _get_current_target();
     if (mons_target != nullptr
-        && (mode != TARG_EVOLVABLE_PLANTS
-            && mons_attitude(mons_target) == ATT_HOSTILE
-            || mode == TARG_ENEMY && !mons_target->friendly()
-            || mode == TARG_EVOLVABLE_PLANTS
-            && mons_is_evolvable(mons_target)
-            || mode == TARG_HOSTILE_UNDEAD && !mons_target->friendly()
-            && mons_target->holiness() == MH_UNDEAD
-            || mode == TARG_BEOGH_GIFTABLE
-            && !beogh_can_gift_items_to(mons_target)
-            || mode == TARG_INJURED_FRIEND
-            && (mons_target->friendly() && mons_get_damage_level(mons_target) > MDAM_OKAY
-                || (!mons_target->wont_attack()
-                    && !mons_target->neutral()
-                    && is_pacifiable(mons_target) >= 0)))
+        && _want_target_monster(mons_target, mode)
         && in_range(mons_target->pos()))
     {
         success = true;
@@ -1063,14 +1069,19 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
 
         // The previous target is no good. Try to find one from scratch.
         success = _find_square_wrapper(result, 1, find_targ, needs_path, mode,
-                                       search_range, hitfunc, true);
+                                       range, hitfunc, true);
 
         // We might be able to hit monsters in LOS that are outside of
         // normal range, but inside explosion/cloud range
         if (!success && hitfunc && hitfunc->can_affect_outside_range()
             && (you.current_vision > range || hitfunc->can_affect_walls()))
         {
-            success = _find_square_wrapper(result, 1, _find_monster_expl,
+            success = _find_square_wrapper(result, 1,
+                                           _find_monster_expl_always,
+                                           needs_path, mode, range, hitfunc,
+                                           true)
+                   || _find_square_wrapper(result, 1,
+                                           _find_monster_expl_maybe,
                                            needs_path, mode, range, hitfunc,
                                            true);
         }
@@ -1080,7 +1091,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
         // pretty confusing.)
         if (!success && needs_path
             && _find_square_wrapper(result, 1, find_targ, false, mode,
-                                    search_range, hitfunc, true))
+                                    range, hitfunc, true))
         {
             // Special colouring in tutorial or hints mode.
             const bool need_hint = Hints.hints_events[HINT_TARGET_NO_FOE];
@@ -1114,16 +1125,8 @@ coord_def direction_chooser::find_default_target() const
                                            : TARGOBJ_ANY,
                                        range, hitfunc, true, LS_FLIPVH);
     }
-    else if (mode == TARG_ENEMY || mode == TARG_HOSTILE
-             || mode == TARG_HOSTILE_SUBMERGED
-             || mode == TARG_EVOLVABLE_PLANTS
-             || mode == TARG_BEOGH_GIFTABLE
-             || mode == TARG_HOSTILE_UNDEAD
-             || mode == TARG_INJURED_FRIEND
-             || (mode == TARG_ANY || mode == TARG_FRIEND) && cancel_at_self)
-    {
+    else if ((mode != TARG_ANY && mode != TARG_FRIEND) || cancel_at_self)
         success = find_default_monster_target(result);
-    }
 
     if (!success)
         result = you.pos();
@@ -2361,39 +2364,36 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
 }
 #endif
 
-static bool _want_target_monster(const monster *mon, int mode)
+static bool _want_target_monster(const monster *mon, targ_mode_type mode)
 {
-    // Now compare target modes.
-    if (mode == TARG_ANY)
-        return true;
-
-    if (mode == TARG_HOSTILE || mode == TARG_HOSTILE_SUBMERGED)
-        return mons_attitude(mon) == ATT_HOSTILE;
-
-    if (mode == TARG_FRIEND)
-        return mon->friendly();
-
-    if (mode == TARG_INJURED_FRIEND)
+    switch (mode)
     {
-        return mon->friendly() && mons_get_damage_level(mon) > MDAM_OKAY
-               || !mon->wont_attack() && !mon->neutral() && is_pacifiable(mon) >= 0;
-    }
-
-    if (mode == TARG_EVOLVABLE_PLANTS)
+    case TARG_ANY:
+        return true;
+    case TARG_HOSTILE:
+    case TARG_HOSTILE_SUBMERGED:
+        return mons_attitude(mon) == ATT_HOSTILE;
+    case TARG_FRIEND:
+        return mon->friendly();
+    case TARG_INJURED_FRIEND:
+        if (mon->friendly() && mons_get_damage_level(mon) > MDAM_OKAY)
+            return true;
+        return !mon->wont_attack() && !mon->neutral()
+            && is_pacifiable(mon) >= 0;
+    case TARG_EVOLVABLE_PLANTS:
         return mons_is_evolvable(mon);
-
-    if (mode == TARG_HOSTILE_UNDEAD)
-        return !mon->friendly() && mon->holiness() == MH_UNDEAD;
-
-    if (mode == TARG_BEOGH_GIFTABLE)
+    case TARG_HOSTILE_UNDEAD:
+         return !mon->friendly() && mon->holiness() == MH_UNDEAD;
+    case TARG_BEOGH_GIFTABLE:
         return beogh_can_gift_items_to(mon);
-
-    ASSERT(mode == TARG_ENEMY);
-    if (mon->friendly())
-        return false;
-
-    // Don't target zero xp monsters.
-    return mons_class_gives_xp(mon->type);
+    case TARG_DISPELLABLE:
+        return mons_attitude(mon) == ATT_HOSTILE
+            && monster_is_debuffable(*mon);
+    case TARG_NUM_MODES:
+        break;
+    // intentionally no default
+    }
+    die("Unknown targetting mode!");
 }
 
 #ifdef CLUA_BINDINGS
@@ -2442,7 +2442,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
     if (need_path && _blocked_ray(mon->pos()))
         return false;
 
-    return _want_target_monster(mon, mode);
+    return _want_target_monster(mon, (targ_mode_type) mode);
 }
 
 static bool _find_shadow_step_mons(const coord_def& where, int mode,
@@ -2470,8 +2470,24 @@ static bool _find_shadow_step_mons(const coord_def& where, int mode,
     return hitfunc->has_additional_sites(where);
 }
 
+static bool _find_monster_expl_always(const coord_def& where, int mode,
+                                      bool need_path, int range,
+                                      targetter *hitfunc)
+{
+    return _find_monster_expl(where, mode, need_path, range, hitfunc,
+                              AFF_YES);
+}
+
+static bool _find_monster_expl_maybe(const coord_def& where, int mode,
+                                     bool need_path, int range,
+                                     targetter *hitfunc)
+{
+    return _find_monster_expl(where, mode, need_path, range, hitfunc,
+                              AFF_MAYBE);
+}
+
 static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
-                               int range, targetter *hitfunc)
+                               int range, targetter *hitfunc, aff_type aff)
 {
     const monster* mons;
     coord_def jump_pos;
@@ -2507,13 +2523,14 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
 
     if (hitfunc->set_aim(where))
     {
-        for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+        for (monster_near_iterator mi(&you); mi; ++mi)
         {
-            mons = monster_at(*ri);
-            if (mons && hitfunc->is_affected(*ri) == AFF_YES)
+            mons = *mi;
+
+            if (hitfunc->is_affected(mons->pos()) == aff)
             {
                 if (_mons_is_valid_target(mons, mode, range))
-                    return _want_target_monster(mons, mode);
+                    return _want_target_monster(mons, (targ_mode_type) mode);
             }
         }
     }

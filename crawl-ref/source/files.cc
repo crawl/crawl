@@ -1492,6 +1492,22 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (you.position != env.old_player_pos)
        shake_off_monsters(you.as_player());
 
+#if TAG_MAJOR_VERSION == 34
+    if (make_changes && you.props.exists("zig-fixup")
+        && you.where_are_you == BRANCH_TOMB
+        && you.depth == brdepth[BRANCH_TOMB])
+    {
+        if (!just_created_level)
+        {
+            int obj = items(false, OBJ_MISCELLANY, MISC_ZIGGURAT, 0);
+            ASSERT(obj != NON_ITEM);
+            bool success = move_item_to_grid(&obj, you.pos(), true);
+            ASSERT(success);
+        }
+        you.props.erase("zig-fixup");
+    }
+#endif
+
     return just_created_level;
 }
 

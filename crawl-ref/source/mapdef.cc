@@ -37,7 +37,7 @@
 #include "mon-place.h"
 #include "mutant-beast.h"
 #include "place.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "shopping.h"
 #include "spl-book.h"

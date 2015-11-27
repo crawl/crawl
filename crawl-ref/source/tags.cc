@@ -60,6 +60,7 @@
 #endif
 #include "place.h"
 #include "player-stats.h"
+#include "prompt.h" // index_to_letter
 #include "religion.h"
 #include "skills.h"
 #include "spl-wpnench.h"
@@ -1466,6 +1467,10 @@ static void tag_construct_you(writer &th)
         marshallShort(th, you.demonic_traits[j].mutation);
     }
 
+    // set up sacrifice piety by ability
+    for (int j = 0; j < NUM_ABILITIES; ++j)
+        marshallByte(th, you.sacrifice_piety[j]);
+
     CANARY;
 
     // how many penances?
@@ -2559,7 +2564,7 @@ static void tag_read_you(reader &th)
         else
         {
 #endif
-        you.sacrifices[j] = unmarshallUByte(th);
+        you.sacrifices[j]       = unmarshallUByte(th);
 #if TAG_MAJOR_VERSION == 34
         }
 #endif
@@ -2627,7 +2632,7 @@ static void tag_read_you(reader &th)
 #endif
 
     for (int j = count; j < NUM_MUTATIONS; ++j)
-        you.mutation[j] = you.innate_mutation[j] = you.sacrifices[j] = 0;
+        you.mutation[j] = you.innate_mutation[j] = you.sacrifices[j];
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_NO_DEVICE_HEAL)
@@ -2841,6 +2846,20 @@ static void tag_read_you(reader &th)
         you.demonic_traits.push_back(dt);
     }
 
+    // set up sacrifice piety by abilities
+    for (int j = 0; j < NUM_ABILITIES; ++j)
+    {
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_RU_PIETY_CONSISTENCY)
+            you.sacrifice_piety[j] = 0;
+        else
+#endif
+            you.sacrifice_piety[j]  = unmarshallUByte(th);
+    }
+
+    for (int j = 0; j < NUM_ABILITIES; ++j)
+        you.sacrifice_piety[j] = you.sacrifice_piety[j] ?
+            you.sacrifice_piety[j] : 0;
     EAT_CANARY;
 
     // how many penances?
@@ -3262,7 +3281,9 @@ static void tag_read_you(reader &th)
     // Both saves prior to TAG_MINOR_RU_DELAY_STACKING, and saves transferred
     // from before that tag to a version where this minor tag was backwards.
     if (!you.props.exists(RU_SACRIFICE_PENALTY_KEY))
-       you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
+        you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
+    if (th.getMinorVersion() < TAG_MINOR_ZIGFIGS)
+        you.props["zig-fixup"] = true;
 #endif
 }
 
@@ -3275,13 +3296,24 @@ static void tag_read_you_items(reader &th)
     ASSERT(count == ENDOFPACK); // not supposed to change
     for (int i = 0; i < count; ++i)
     {
-        unmarshallItem(th, you.inv[i]);
+        item_def &it = you.inv[i];
+        unmarshallItem(th, it);
 #if TAG_MAJOR_VERSION == 34
-        // Items in inventory have already been handled.
-        if (th.getMinorVersion() < TAG_MINOR_ISFLAG_HANDLED
-            && you.inv[i].defined())
+        // Fixups for actual items.
+        if (it.defined())
         {
-            you.inv[i].flags |= ISFLAG_HANDLED;
+            // From 0.18-a0-273-gf174401 to 0.18-a0-290-gf199c8b, stash
+            // search would change the position of items in inventory.
+            if (it.pos != ITEM_IN_INVENTORY)
+            {
+                mprf(MSGCH_ERROR, "Fixing bad position for inventory slot %c",
+                                  index_to_letter(i));
+                it.pos = ITEM_IN_INVENTORY;
+            }
+
+            // Items in inventory have already been handled.
+            if (th.getMinorVersion() < TAG_MINOR_ISFLAG_HANDLED)
+                it.flags |= ISFLAG_HANDLED;
         }
 #endif
     }

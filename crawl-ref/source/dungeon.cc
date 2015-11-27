@@ -55,7 +55,7 @@
 #include "mon-poly.h"
 #include "notes.h"
 #include "place.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "rot.h"
 #include "show.h"
@@ -3533,11 +3533,31 @@ static void _place_aquatic_monsters()
                       false);
 }
 
+static vector<monster_type> _zombifiables()
+{
+    vector<monster_type> z;
+    for (monster_type mcls = MONS_0; mcls < NUM_MONSTERS; ++mcls)
+    {
+        if (mons_species(mcls) != mcls
+            || !mons_zombie_size(mcls)
+            || mons_is_unique(mcls)
+            || mons_class_holiness(mcls) != MH_NATURAL
+            || mons_class_flag(mcls, M_NO_GEN_DERIVED))
+        {
+            continue;
+        }
+
+        z.push_back(mcls);
+    }
+    return z;
+}
+
 // For Crypt, adds a bunch of skeletons and zombies that do not respect
 // absdepth (and thus tend to be varied and include several types that
 // would not otherwise spawn there).
 static void _place_assorted_zombies()
 {
+    static const vector<monster_type> zombifiable = _zombifiables();
     int num_zombies = random_range(6, 12, 3);
     for (int i = 0; i < num_zombies; ++i)
     {
@@ -3545,16 +3565,15 @@ static void _place_assorted_zombies()
         monster_type z_base;
         do
         {
-            z_base = pick_random_zombie();
+            z_base = zombifiable[random2(zombifiable.size())];
         }
-        while (mons_class_flag(z_base, M_NO_GEN_DERIVED)
-               || !(skel ? mons_skeleton(z_base) : mons_zombifiable(z_base)));
+        while (skel && !mons_skeleton(z_base));
 
         mgen_data mg;
         mg.cls = (skel ? MONS_SKELETON : MONS_ZOMBIE);
         mg.base_type = z_base;
-        mg.behaviour              = BEH_SLEEP;
-        mg.map_mask              |= MMT_NO_MONS;
+        mg.behaviour = BEH_SLEEP;
+        mg.map_mask |= MMT_NO_MONS;
         mg.preferred_grid_feature = DNGN_FLOOR;
 
         place_monster(mg);

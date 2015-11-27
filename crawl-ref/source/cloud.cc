@@ -507,16 +507,6 @@ static void _handle_spectral_cloud(const cloud_struct& cloud)
                                100, RANDOM_MONSTER,
                                0);
 
-    if (basetype == RANDOM_MONSTER && one_chance_in(4))
-    {
-        do
-        {
-            basetype = pick_random_zombie();
-        }
-        while (mons_class_flag(basetype, M_NO_GEN_DERIVED)
-               || !monster_habitable_grid(basetype, grd(cloud.pos)));
-    }
-
     monster* agent = monster_by_mid(cloud.source);
     create_monster(mgen_data(MONS_SPECTRAL_THING,
                              (cloud.whose == KC_OTHER ?

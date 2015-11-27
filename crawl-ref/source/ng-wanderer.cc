@@ -4,7 +4,7 @@
 
 #include "itemprop.h"
 #include "ng-setup.h"
-#include "random-weight.h"
+#include "random.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
@@ -402,7 +402,7 @@ static void _wanderer_random_evokable()
         int selected_evoker =
               random_choose(MISC_BOX_OF_BEASTS, MISC_LAMP_OF_FIRE,
                             MISC_STONE_OF_TREMORS, MISC_FAN_OF_GALES,
-                            MISC_PHIAL_OF_FLOODS);
+                            MISC_PHIAL_OF_FLOODS, MISC_XOMS_CHESSBOARD);
         int charges = 0;
         if (selected_evoker == MISC_BOX_OF_BEASTS)
             charges = random_range(10, 15, 2);

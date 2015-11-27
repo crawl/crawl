@@ -15,6 +15,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "branch.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "decks.h"
@@ -43,6 +44,7 @@
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mutant-beast.h"
+#include "place.h"
 #include "player.h"
 #include "player-stats.h"
 #include "prompt.h"
@@ -1158,6 +1160,30 @@ static bool _sack_of_spiders(item_def &sack)
     return success;
 }
 
+static bool _make_zig(item_def &zig)
+{
+    if (feat_is_critical(grd(you.pos())))
+    {
+        mpr("You can't place a gateway to a ziggurat here.");
+        return false;
+    }
+    for (int lev = 1; lev <= brdepth[BRANCH_ZIGGURAT]; lev++)
+    {
+        if (is_level_on_stack(level_id(BRANCH_ZIGGURAT, lev))
+            || you.where_are_you == BRANCH_ZIGGURAT)
+        {
+            mpr("Finish your current ziggurat first!");
+            return false;
+        }
+    }
+
+    ASSERT(in_inventory(zig));
+    dec_inv_item_quantity(zig.link, 1);
+    dungeon_terrain_changed(you.pos(), DNGN_ENTER_ZIGGURAT);
+    mpr("You set the figurine down, and a mystic portal to a ziggurat forms.");
+    return true;
+}
+
 static bool _ball_of_energy()
 {
     bool ret = false;
@@ -1914,6 +1940,44 @@ static bool _phial_of_floods()
     return false;
 }
 
+static bool _xoms_chessboard(item_def &board)
+{
+    if (get_nearby_monsters(false, true).empty())
+    {
+        mpr("Xom won't come play if there aren't more players.");
+        return false;
+    }
+
+    mpr("You make a move on Xom's chessboard...");
+
+    if (one_chance_in(100))
+    {
+        god_speaks(GOD_XOM, "Xom booms, \"MINE!\"");
+        mpr("...but Xom just steals the piece!");
+        ASSERT(in_inventory(board));
+        dec_inv_item_quantity(board.link, 1);
+        return true;
+    }
+
+    // Those who do not follow the mad god have
+    // a chance of a bad Xom action instead if they
+    // break a rule. Who knows how bad it could be, though?
+    // It's Xom.
+    // Those who have abandoned Xom will know only suffering
+    int fail_rate = 30 - you.skill(SK_EVOCATIONS);
+    if (!you_worship(GOD_XOM) &&
+        (x_chance_in_y(fail_rate, 100) || player_under_penance(GOD_XOM)))
+    {
+        god_speaks(GOD_XOM, "Xom laughs nastily.");
+        xom_acts(false, random_range(0, 100));
+        return true;
+    }
+
+    xom_rearrange_pieces(you.skill_rdiv(SK_EVOCATIONS, 100, 27));
+    xom_is_stimulated(10);
+    return true;
+}
+
 static void _expend_xp_evoker(item_def &item)
 {
     evoker_debt(item.sub_type) = XP_EVOKE_DEBT;
@@ -2304,6 +2368,13 @@ bool evoke_item(int slot, bool check_range)
                 return false;
             break;
 
+        case MISC_XOMS_CHESSBOARD:
+            if (_xoms_chessboard(item))
+                pract = 1;
+            else
+                return false;
+            break;
+
         case MISC_BOX_OF_BEASTS:
             if (_box_of_beasts(item))
                 pract = 1;
@@ -2349,6 +2420,11 @@ bool evoke_item(int slot, bool check_range)
                     pract = 1;
                     break;
             }
+            break;
+
+        case MISC_ZIGGURAT:
+            // Don't set did_work to false, _make_zig handles the message.
+            unevokable = !_make_zig(item);
             break;
 
         default:

@@ -24,7 +24,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-book.h"
@@ -932,62 +932,6 @@ static void _get_randart_properties(const item_def &item,
     }
 }
 
-static bool _redo_book(item_def &book)
-{
-    int num_spells  = 0;
-    int num_unknown = 0;
-
-    for (spell_type spell : spellbook_template(static_cast<book_type>(book.sub_type)))
-    {
-        num_spells++;
-        if (!you.seen_spell[spell])
-            num_unknown++;
-    }
-
-    if (num_spells <= 5 && num_unknown == 0)
-        return true;
-    else if (num_spells > 5 && num_unknown <= 1)
-        return true;
-
-    return false;
-}
-
-static bool _init_artefact_book(item_def &book)
-{
-    ASSERT(book.sub_type == BOOK_RANDART_LEVEL
-           || book.sub_type == BOOK_RANDART_THEME);
-    ASSERT(book.book_param != 0);
-
-    const god_type god = origin_as_god_gift(book);
-    bool redo = god != GOD_XOM;
-
-    // plus contains a parameter to make_book_foo_randart(), which might get
-    // changed after the book has been made into a randart, so reset it on each
-    // iteration of the loop.
-    // XXX: ...is this really necessary...?
-    const int book_param = book.book_param;
-    bool book_good = false;
-    for (int i = 0; i < 4; i++)
-    {
-        book.book_param = book_param;
-
-        if (book.sub_type == BOOK_RANDART_LEVEL)
-            book_good = make_book_level_randart(book, book.book_param);
-        else
-            book_good = make_book_theme_randart(book);
-
-        if (!book_good)
-            continue;
-
-        if (redo && _redo_book(book))
-            continue;
-
-        break;
-    }
-
-    return book_good;
-}
-
 void setup_unrandart(item_def &item, bool creating)
 {
     ASSERT(is_unrandom_artefact(item));
@@ -1019,8 +963,7 @@ static bool _init_artefact_properties(item_def &item)
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
         rap[i] = static_cast<short>(0);
 
-    if (item.base_type == OBJ_BOOKS)
-        return _init_artefact_book(item);
+    ASSERT(item.base_type != OBJ_BOOKS);
 
     artefact_properties_t prop;
     prop.init(0);
@@ -1690,19 +1633,9 @@ bool make_item_randart(item_def &item, bool force_mundane)
 {
     if (item.base_type != OBJ_WEAPONS
         && item.base_type != OBJ_ARMOUR
-        && item.base_type != OBJ_JEWELLERY
-        && item.base_type != OBJ_BOOKS)
+        && item.base_type != OBJ_JEWELLERY)
     {
         return false;
-    }
-
-    if (item.base_type == OBJ_BOOKS)
-    {
-        if (item.sub_type != BOOK_RANDART_LEVEL
-            && item.sub_type != BOOK_RANDART_THEME)
-        {
-            return false;
-        }
     }
 
     // This item already is a randart.

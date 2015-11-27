@@ -2256,8 +2256,7 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
                  MST_GREATER_MUMMY_III, MST_GREATER_MUMMY_IV };
 
     case MONS_DEEP_ELF_KNIGHT:
-        return { MST_DEEP_ELF_KNIGHT_I, MST_DEEP_ELF_KNIGHT_II,
-                 MST_DEEP_ELF_KNIGHT_III };
+        return { MST_DEEP_ELF_KNIGHT_I, MST_DEEP_ELF_KNIGHT_II };
 
     default:
         return { static_cast<mon_spellbook_type>(
