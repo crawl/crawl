@@ -2027,6 +2027,9 @@ static bool _xoms_chessboard(item_def &board)
         return false;
     }
 
+    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
+        pakellas_evoke_backfire(SPELL_DISJUNCTION); // approx
+    surge_power(you.spec_evoke());
     mpr("You make a move on Xom's chessboard...");
 
     if (one_chance_in(100))
@@ -2043,7 +2046,7 @@ static bool _xoms_chessboard(item_def &board)
     // break a rule. Who knows how bad it could be, though?
     // It's Xom.
     // Those who have abandoned Xom will know only suffering
-    int fail_rate = 30 - you.skill(SK_EVOCATIONS);
+    int fail_rate = 30 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS));
     if (!you_worship(GOD_XOM) &&
         (x_chance_in_y(fail_rate, 100) || player_under_penance(GOD_XOM)))
     {
@@ -2052,7 +2055,8 @@ static bool _xoms_chessboard(item_def &board)
         return true;
     }
 
-    xom_rearrange_pieces(you.skill_rdiv(SK_EVOCATIONS, 100, 27));
+    xom_rearrange_pieces(
+        player_adjust_evoc_power(you.skill_rdiv(SK_EVOCATIONS, 100, 27)));
     xom_is_stimulated(10);
     return true;
 }
