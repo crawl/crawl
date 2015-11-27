@@ -1803,7 +1803,8 @@ void StashTracker::search_stashes()
         return ;
     }
 
-    _inventory_search(*search, results);
+    if (!curr_lev)
+        _inventory_search(*search, results);
     get_matching_stashes(*search, results, curr_lev);
 
     if (results.empty())
