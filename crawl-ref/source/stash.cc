@@ -409,6 +409,9 @@ string Stash::stash_item_name(const item_def &item)
 {
     string name = item.name(DESC_A);
 
+    if (in_inventory(item))
+        name = "(carried) " + name;
+
     if (!_is_rottable(item))
         return name;
 
@@ -2132,9 +2135,7 @@ bool StashTracker::display_search_results(
                 matchtitle << "(" << waypoint << ") ";
         }
 
-        if (res.in_inventory)
-            matchtitle << "(carried)";
-        else
+        if (!res.in_inventory)
             matchtitle << "[" << res.pos.id.describe() << "]";
 
         matchtitle << " " << res.match;
