@@ -1639,7 +1639,7 @@ static const mutation_def mut_data[] =
    "Your movements are less encumbered by armour (ER -4).",
    "Your movements are significantly less encumbered by armour (ER -6)."},
 
-  {"You feel less encumbered by your armour."
+  {"You feel less encumbered by your armour.",
    "You feel less encumbered by your armour.",
    "You feel less encumbered by your armour."},
 
