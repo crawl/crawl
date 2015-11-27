@@ -513,10 +513,7 @@ void handle_behaviour(monster* mon)
             // los of the target, it's possible for just naively moving toward
             // the target will not let us reach it (due to walls or whatever)
             if (!mon->see_cell(mon->target))
-            {
                 try_pathfind(mon);
-                ASSERT(mon->see_cell(mon->target));
-            }
 
             // Foe gone out of LOS?
             if (!proxFoe
