@@ -410,9 +410,19 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
     const newgame_def ng_reset = ng;
 
     if (ng.type == GAME_TYPE_TUTORIAL)
+    {
         choose_tutorial_character(choice);
+        choice.allowed_jobs.clear();
+        choice.allowed_species.clear();
+        choice.allowed_weapons.clear();
+    }
     else if (ng.type == GAME_TYPE_HINTS)
+    {
         pick_hints(choice);
+        choice.allowed_jobs.clear();
+        choice.allowed_species.clear();
+        choice.allowed_weapons.clear();
+    }
 
 #if defined(DGAMELAUNCH) && defined(TOURNEY)
     // Apologies to non-public servers.

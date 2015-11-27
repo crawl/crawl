@@ -28,6 +28,10 @@ function ch_stash_search_annotate_item(it)
     annot = annot .. "{dropped} "
   end
 
+  if it.ininventory then
+    annot = annot .. "{inventory} "
+  end
+
   if it.is_throwable then
     annot = annot .. "{throwable} "
   end
@@ -130,6 +134,13 @@ function ch_stash_search_annotate_item(it)
       annot = annot .. "{"
   end
   annot = annot .. it.class(true) .. "}"
+
+  if annot:find("rC+") then
+      annot = annot .. " {resist cold} {cold resistance}"
+  end
+  if annot:find("rF+") then
+      annot = annot .. " {resist fire} {fire resistance}"
+  end
 
   return annot
 end

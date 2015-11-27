@@ -409,6 +409,9 @@ string Stash::stash_item_name(const item_def &item)
 {
     string name = item.name(DESC_A);
 
+    if (in_inventory(item))
+        name = "(carried) " + name;
+
     if (!_is_rottable(item))
         return name;
 
@@ -1803,7 +1806,8 @@ void StashTracker::search_stashes()
         return ;
     }
 
-    _inventory_search(*search, results);
+    if (!curr_lev)
+        _inventory_search(*search, results);
     get_matching_stashes(*search, results, curr_lev);
 
     if (results.empty())
@@ -2131,9 +2135,7 @@ bool StashTracker::display_search_results(
                 matchtitle << "(" << waypoint << ") ";
         }
 
-        if (res.in_inventory)
-            matchtitle << "(carried)";
-        else
+        if (!res.in_inventory)
             matchtitle << "[" << res.pos.id.describe() << "]";
 
         matchtitle << " " << res.match;
