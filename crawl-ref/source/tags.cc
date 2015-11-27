@@ -3294,6 +3294,9 @@ static void tag_read_you_items(reader &th)
     // how many inventory slots?
     count = unmarshallByte(th);
     ASSERT(count == ENDOFPACK); // not supposed to change
+#if TAG_MAJOR_VERSION == 34
+    string bad_slots;
+#endif
     for (int i = 0; i < count; ++i)
     {
         item_def &it = you.inv[i];
@@ -3306,8 +3309,7 @@ static void tag_read_you_items(reader &th)
             // search would change the position of items in inventory.
             if (it.pos != ITEM_IN_INVENTORY)
             {
-                mprf(MSGCH_ERROR, "Fixing bad position for inventory slot %c",
-                                  index_to_letter(i));
+                bad_slots += index_to_letter(i);
                 it.pos = ITEM_IN_INVENTORY;
             }
 
@@ -3317,6 +3319,13 @@ static void tag_read_you_items(reader &th)
         }
 #endif
     }
+#if TAG_MAJOR_VERSION == 34
+    if (!bad_slots.empty())
+    {
+        mprf(MSGCH_ERROR, "Fixed bad positions for inventory slots %s",
+                          bad_slots.c_str());
+    }
+#endif
 
     // Initialize cache of equipped unrand functions
     for (int i = 0; i < NUM_EQUIP; ++i)
