@@ -71,6 +71,9 @@ static skill_type _equipped_skill()
     if (iweap && iweap->base_type == OBJ_WEAPONS)
         return item_attack_skill(*iweap);
 
+    if (!iweap && you.m_quiver.get_fire_item() != -1)
+        return SK_THROWING;
+
     return SK_UNARMED_COMBAT;
 }
 
