@@ -697,6 +697,7 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_MAKHLEB:
     case GOD_LUGONU:
     case GOD_QAZLAL:
+    case GOD_PAKELLAS:
         likes.emplace_back("you or your allies kill the undead");
         break;
 
@@ -802,7 +803,6 @@ string get_god_likes(god_type which_god, bool verbose)
         really_likes.emplace_back("you kill the priests of other religions");
         break;
 
-    case GOD_PAKELLAS:
     case GOD_TROG:
         really_likes.emplace_back("you kill wizards and other users of magic");
         break;
