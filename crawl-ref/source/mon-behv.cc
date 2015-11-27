@@ -508,6 +508,13 @@ void handle_behaviour(monster* mon)
                 break;
             }
 
+            // just because a move takes us closer to the target doesn't mean
+            // that the move will stay in los of the target, and if it leaves
+            // los of the target, it's possible for just naively moving toward
+            // the target will not let us reach it (due to walls or whatever)
+            if (!mon->see_cell(mon->target))
+                try_pathfind(mon);
+
             // Foe gone out of LOS?
             if (!proxFoe
                 && !(mon->friendly()
