@@ -361,12 +361,6 @@ bool monster_caught_in_net(monster* mon, actor* agent)
         return false;
     }
 
-    if (mon->type == MONS_OOZE)
-    {
-        simple_monster_message(mon, " oozes right through the net!");
-        return false;
-    }
-
     if (!mon->caught() && mon->add_ench(ENCH_HELD))
     {
         if (mons_near(mon) && !mon->visible_to(&you))
@@ -419,23 +413,14 @@ void check_net_will_hold_monster(monster* mons)
                 mpr("All of a sudden the net rips apart!");
         }
     }
-    else if (mons->is_insubstantial()
-             || mons->type == MONS_OOZE)
+    else if (mons->is_insubstantial())
     {
         const int net = get_trapping_net(mons->pos());
         if (net != NON_ITEM)
             free_stationary_net(net);
 
-        if (mons->is_insubstantial())
-        {
-            simple_monster_message(mons,
-                                   " drifts right through the net!");
-        }
-        else
-        {
-            simple_monster_message(mons,
-                                   " oozes right through the net!");
-        }
+        simple_monster_message(mons,
+                               " drifts right through the net!");
     }
     else
         mons->add_ench(ENCH_HELD);
