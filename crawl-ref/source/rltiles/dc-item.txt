@@ -985,7 +985,13 @@ misc_disc MISC_DISC_OF_STORMS
 misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR
 misc_zigfig MISC_ZIGGURAT
-misc_chesspiece MISC_XOMS_CHESSBOARD
+misc_pawn MISC_CHESSPIECE_FIRST
+misc_rook
+misc_knight
+misc_bishop
+misc_queen
+misc_king
+misc_thimble MISC_CHESSPIECE_LAST
 misc_deck MISC_DECK
 %start
 %compose misc_deck
