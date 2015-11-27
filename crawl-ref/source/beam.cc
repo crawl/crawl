@@ -3573,7 +3573,8 @@ void bolt::affect_player_enchantment(bool resistible)
             mpr("This spell isn't strong enough to banish yourself.");
             break;
         }
-        you.banish(agent(), get_source_name());
+        you.banish(agent(), get_source_name(),
+                   agent()->get_experience_level());
         obvious_effect = true;
         break;
 

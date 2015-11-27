@@ -102,6 +102,7 @@ void xom_new_level_noise_or_stealth();
 void debug_xom_effects();
 #endif
 
+int xom_rearrange_pieces(int sever, bool debug = false);
 bool swap_monsters(monster* m1, monster* m2);
 bool move_stair(coord_def stair_pos, bool away, bool allow_under);
 

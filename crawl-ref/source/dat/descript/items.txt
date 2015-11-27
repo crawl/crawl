@@ -1539,6 +1539,12 @@ A long plaited strip of leather. Originally developed for use in disagreements
 with cattle, this simple weapon is now widely used to settle differences
 between all sorts of creatures.
 %%%%
+piece from Xom's chessboard
+
+A shimmering multi-coloured chesspiece belonging to Xom, god of chaos.
+Moving it will invite Xom to take a turn in some cosmic game, though only
+worshippers know the 'rules'. A bad move could prove quite disaterous.
+%%%%
 young poisoner's handbook
 
 A introductory book for the magic arts of poison.

@@ -89,6 +89,15 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 Näytä tunnetut esinetyypit
 %%%%
+CMD_SAVE_GAME_NOW
+
+Tallenna ja poistu
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+Tallentaa pelin myöhempää jatkoa varten ja poistuu. Kun jatkat peliä, tallennus
+poistuu.
+%%%%
 CMD_EDIT_PLAYER_TILE
 
 Muokkaa pelaajatiiltä

@@ -31,8 +31,8 @@ function shoals_vault_is_mimic(e)
     return false
   end
 
-  local tag = unpack(params)
-  return tag ~= nil and string.find(tag, "mimic")
+  local tag, tag2 = unpack(params)
+  return tag2 ~= nil and string.find(tag2, "mimic")
 end
 
 -- When the kraken dies, the tides will control the water, so the items will

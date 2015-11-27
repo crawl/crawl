@@ -369,18 +369,29 @@ static string _who_banished(const string &who)
     return who.empty() ? who : " (" + who + ")";
 }
 
-void banished(const string &who)
+static int _banished_depth(const int power)
+{
+    // Linear, with the max going from (1,1) to (25,5)
+    // and the min going from (9,1) to (27,5)
+    // Currently using HD for power
+
+    // This means an orc will send you to A:1, an orc warrior
+    // has a small chance of A:2,
+    // Elves have a good shot at sending you to A:3, but won't
+    // always
+    // Ancient Liches are sending you to A:5 and there's nothing
+    // you can do about that.
+    const int maxdepth = min(5, max(div_rand_round((power + 5), 6), 1));
+    const int mindepth = max(1, (4 * power + 7) / 23);
+    return random_range(mindepth, maxdepth);
+}
+
+void banished(const string &who, const int power)
 {
     ASSERT(!crawl_state.game_is_arena());
     push_features_to_abyss();
     if (brdepth[BRANCH_ABYSS] == -1)
         return;
-
-    if (!player_in_branch(BRANCH_ABYSS))
-    {
-        mark_milestone("abyss.enter",
-                       "was cast into the Abyss!" + _who_banished(who));
-    }
 
     if (player_in_branch(BRANCH_ABYSS))
     {
@@ -395,12 +406,19 @@ void banished(const string &who)
         return;
     }
 
-    const string what = "Cast into the Abyss" + _who_banished(who);
+    const int depth = _banished_depth(power);
+    const string what = make_stringf("Cast into level %d of the Abyss", depth)
+                      + _who_banished(who);
     take_note(Note(NOTE_MESSAGE, 0, 0, what), true);
 
     stop_delay(true);
     run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
-    down_stairs(DNGN_ENTER_ABYSS);  // heh heh
+    push_features_to_abyss();
+    floor_transition(DNGN_ENTER_ABYSS, orig_terrain(you.pos()),
+                     level_id(BRANCH_ABYSS, depth), true);
+    // This is an honest abyss entry, mark milestone
+    mark_milestone("abyss.enter",
+        "was cast into the Abyss!" + _who_banished(who), "parent");
 
     // Xom just might decide to interfere.
     if (you_worship(GOD_XOM) && who != "Xom" && who != "wizard command"

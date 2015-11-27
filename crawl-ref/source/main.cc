@@ -1151,6 +1151,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_REDRAW_SCREEN:
     case CMD_MACRO_ADD:
     case CMD_SAVE_GAME:
+    case CMD_SAVE_GAME_NOW:
     case CMD_SUSPEND_GAME:
     case CMD_QUIT:
     case CMD_FIX_WAYPOINT:
@@ -2303,6 +2304,11 @@ void process_command(command_type cmd)
         break;
     }
 
+    case CMD_SAVE_GAME_NOW:
+        mpr("Saving game... please wait.");
+        save_game(true);
+        break;
+
     case CMD_QUIT:
         if (crawl_state.disables[DIS_CONFIRMATIONS]
             || yes_or_no("Are you sure you want to abandon this character and quit the game?"))
@@ -2378,7 +2384,7 @@ static void _check_banished()
         else
             mprf(MSGCH_BANISHMENT, "The Abyss bends around you!");
         more();
-        banished(you.banished_by);
+        banished(you.banished_by, you.banished_power);
     }
 }
 

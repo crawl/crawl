@@ -465,38 +465,58 @@ bool attack::distortion_affects_defender()
         return false;
     }
 
-    if (one_chance_in(3))
+    enum disto_effect
     {
-        special_damage_message =
-            make_stringf("Space bends around %s.",
-            defender_name(false).c_str());
+        SMALL_DMG,
+        BIG_DMG,
+        BANISH,
+        BLINK,
+        TELE_INSTANT,
+        TELE_DELAYED,
+        NONE
+    };
+
+    const disto_effect choice = random_choose_weighted(33, SMALL_DMG,
+                                                       22, BIG_DMG,
+                                                       5,  BANISH,
+                                                       15, BLINK,
+                                                       10, TELE_INSTANT,
+                                                       10, TELE_DELAYED,
+                                                       5,  NONE,
+                                                       0);
+
+    if (simu && !(choice == SMALL_DMG || choice == BIG_DMG))
+        return false;
+
+    switch (choice)
+    {
+    case SMALL_DMG:
+        special_damage_message = make_stringf("Space bends around %s.",
+                                              defender_name(false).c_str());
         special_damage += 1 + random2avg(7, 2);
-        return false;
-    }
-
-    if (one_chance_in(3))
-    {
-        special_damage_message =
-            make_stringf("Space warps horribly around %s!",
-                         defender_name(false).c_str());
+        break;
+    case BIG_DMG:
+        special_damage_message = make_stringf("Space warps horribly around %s!",
+                                              defender_name(false).c_str());
         special_damage += 3 + random2avg(24, 2);
-        return false;
-    }
-
-    if (simu)
-        return false;
-
-    if (one_chance_in(3))
-    {
+        break;
+    case BLINK:
         if (defender_visible)
             obvious_effect = true;
         if (!defender->no_tele(true, false))
             blink_fineff::schedule(defender);
-        return false;
-    }
-
-    if (!one_chance_in(3))
-    {
+        break;
+    case BANISH:
+        if (!player_in_branch(BRANCH_ABYSS))
+        {
+            if (defender_visible)
+                    obvious_effect = true;
+            defender->banish(attacker, attacker->name(DESC_PLAIN, true),
+                             attacker->get_experience_level());
+        }
+        return true;
+    case TELE_INSTANT:
+    case TELE_DELAYED:
         if (defender_visible)
             obvious_effect = true;
         if (crawl_state.game_is_sprint() && defender->is_player()
@@ -504,21 +524,17 @@ bool attack::distortion_affects_defender()
         {
             if (defender->is_player())
                 canned_msg(MSG_STRANGE_STASIS);
+            return false;
         }
-        else if (coinflip())
+
+        if (choice == TELE_INSTANT)
             distortion_tele_fineff::schedule(defender);
         else
             defender->teleport();
-        return false;
-    }
-
-    if (!player_in_branch(BRANCH_ABYSS) && coinflip())
-    {
-        if (defender_visible)
-            obvious_effect = true;
-
-        defender->banish(attacker, attacker->name(DESC_PLAIN, true));
-        return true;
+        break;
+    case NONE:
+        // Do nothing
+        break;
     }
 
     return false;

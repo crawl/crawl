@@ -1067,6 +1067,27 @@ static bool _spellcasting_aborted(spell_type spell,
 
     if (uncastable)
         mpr(msg);
+    else
+    {
+        vector<text_pattern> &actions = Options.confirm_action;
+        if (!actions.empty())
+        {
+            const char* name = spell_title(spell);
+            for (const text_pattern &action : actions)
+            {
+                if (action.matches(name))
+                {
+                    string prompt = "Really cast " + string(name) + "?";
+                    if (!yesno(prompt.c_str(), false, 'n'))
+                    {
+                        canned_msg(MSG_OK);
+                        return true;
+                    }
+                    break;
+                }
+            }
+        }
+    }
 
     return uncastable;
 }

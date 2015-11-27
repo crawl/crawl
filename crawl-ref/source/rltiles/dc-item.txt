@@ -984,6 +984,8 @@ misc_disc MISC_DISC_OF_STORMS
 %rim 0
 misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR
+misc_zigfig MISC_ZIGGURAT
+misc_chesspiece MISC_XOMS_CHESSBOARD
 misc_deck MISC_DECK
 %start
 %compose misc_deck

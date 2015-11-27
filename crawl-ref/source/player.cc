@@ -5278,6 +5278,7 @@ player::player()
     type_ids.init(false);
 
     banished_by.clear();
+    banished_power = 0;
 
     last_mid = 0;
     last_cast_spell = SPELL_NO_SPELL;
@@ -5567,7 +5568,7 @@ void player::god_conduct(conduct_type thing_done, int level)
     ::did_god_conduct(thing_done, level);
 }
 
-void player::banish(actor* /*agent*/, const string &who)
+void player::banish(actor* /*agent*/, const string &who, const int power)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (brdepth[BRANCH_ABYSS] == -1)
@@ -5581,6 +5582,7 @@ void player::banish(actor* /*agent*/, const string &who)
 
     banished    = true;
     banished_by = who;
+    banished_power = power;
 }
 
 // For semi-undead species (Vampire!) reduce food cost for spells and abilities
@@ -5753,14 +5755,13 @@ int player::unadjusted_body_armour_penalty() const
  */
 int player::adjusted_body_armour_penalty(int scale) const
 {
-    const int base_ev_penalty = unadjusted_body_armour_penalty();
+    const int base_ev_penalty =
+        min(0, unadjusted_body_armour_penalty()
+                   - you.mutation[MUT_STURDY_FRAME] * 2);
 
     // New formula for effect of str on aevp: (2/5) * evp^2 / (str+3)
-    return 2 * base_ev_penalty * base_ev_penalty
-           * (450 - skill(SK_ARMOUR, 10))
-           * scale
-           / (5 * (strength() + 3))
-           / 450;
+    return 2 * base_ev_penalty * base_ev_penalty * (450 - skill(SK_ARMOUR, 10))
+           * scale / (5 * (strength() + 3)) / 450;
 }
 
 /**

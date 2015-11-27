@@ -94,6 +94,14 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 발견한 물건들의 목록 표시
 %%%%
+CMD_SAVE_GAME_NOW
+
+저장 후 종료
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+현재 게임을 저장하고 종료한다. 게임을 재개하면, 저장해둔 파일은 다시 삭제된다.
+%%%%
 CMD_EDIT_PLAYER_TILE
 
 캐릭터의 외모 변경
