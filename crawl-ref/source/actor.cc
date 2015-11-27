@@ -523,12 +523,12 @@ void actor::clear_far_constrictions()
     clear_constrictions_far_from(pos());
 }
 
-void actor::clear_constrictions_far_from(const coord_def &pos)
+void actor::clear_constrictions_far_from(const coord_def &where)
 {
     clear_far_engulf();
     actor* const constrictor = actor_by_mid(constricted_by);
 
-    if (!constrictor || !adjacent(pos, constrictor->pos()))
+    if (!constrictor || !adjacent(where, constrictor->pos()))
         stop_being_constricted();
 
     if (!constricting)
@@ -538,7 +538,7 @@ void actor::clear_constrictions_far_from(const coord_def &pos)
     for (const auto &entry : *constricting)
     {
         actor* const constrictee = actor_by_mid(entry.first);
-        if (!constrictee || !adjacent(pos, constrictee->pos()))
+        if (!constrictee || !adjacent(where, constrictee->pos()))
             need_cleared.push_back(entry.first);
     }
 
