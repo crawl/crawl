@@ -189,7 +189,7 @@ Chant Word of Entropy cast
 
 @The_monster@ begins to chant a word of entropy!
 #################################################
-# The next two have special hard-coded messaging.
+# These have special hard-coded messaging.
 #################################################
 %%%%
 Siren Song cast
@@ -197,6 +197,10 @@ Siren Song cast
 __NONE
 %%%%
 Avatar Song cast
+
+__NONE
+%%%%
+Seal Doors cast
 
 __NONE
 #####################################################
@@ -210,10 +214,6 @@ You hear a note loudly blown on a horn!
 Signal Horn cast
 
 @The_monster@ blows a loud note on a signal horn!
-%%%%
-Seal Doors cast
-
-@The_monster@ activates a sealing rune.
 %%%%
 Spit Acid cast
 
