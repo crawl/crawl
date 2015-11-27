@@ -447,8 +447,12 @@ static bool _player_caught_in_web()
         return false;
 
     you.attribute[ATTR_HELD] = 10;
+
+    you.redraw_armour_class = true;
+    you.redraw_evasion      = true;
+    you.redraw_quiver       = true;
+
     // No longer stop_running() and stop_delay().
-    redraw_screen(); // Account for changes in display.
     return true;
 }
 
