@@ -3638,7 +3638,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_ENTROPIC_WEAVE, "Entropic Weave",
     SPTYP_HEXES,
-    SPFLAG_UTILITY | SPFLAG_MR_CHECK,
+    SPFLAG_UTILITY,
     5,
     200,
     -1, -1,

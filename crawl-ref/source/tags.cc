@@ -1468,7 +1468,8 @@ static void tag_construct_you(writer &th)
     }
 
     // set up sacrifice piety by ability
-    for (int j = 0; j < NUM_ABILITIES; ++j)
+    marshallShort(th, 1 + ABIL_FINAL_SACRIFICE - ABIL_FIRST_SACRIFICE);
+    for (int j = ABIL_FIRST_SACRIFICE; j <= ABIL_FINAL_SACRIFICE; ++j)
         marshallByte(th, you.sacrifice_piety[j]);
 
     CANARY;
@@ -2846,20 +2847,45 @@ static void tag_read_you(reader &th)
         you.demonic_traits.push_back(dt);
     }
 
-    // set up sacrifice piety by abilities
-    for (int j = 0; j < NUM_ABILITIES; ++j)
-    {
 #if TAG_MAJOR_VERSION == 34
-        if (th.getMinorVersion() < TAG_MINOR_RU_PIETY_CONSISTENCY)
-            you.sacrifice_piety[j] = 0;
-        else
+    if (th.getMinorVersion() < TAG_MINOR_SAC_PIETY_LEN)
+    {
+        const int OLD_NUM_ABILITIES = 1503;
+
+        // set up sacrifice piety by abilities
+        for (int j = 0; j < NUM_ABILITIES; ++j)
+        {
+            if (th.getMinorVersion() < TAG_MINOR_RU_PIETY_CONSISTENCY
+                || j >= OLD_NUM_ABILITIES) // NUM_ABILITIES may have increased
+            {
+                you.sacrifice_piety[j] = 0;
+            }
+            else
+                you.sacrifice_piety[j] = unmarshallUByte(th);
+        }
+
+        // If NUM_ABILITIES decreased, discard the extras.
+        if (th.getMinorVersion() >= TAG_MINOR_RU_PIETY_CONSISTENCY)
+        {
+            for (int j = NUM_ABILITIES; j < OLD_NUM_ABILITIES; ++j)
+                (void) unmarshallUByte(th);
+        }
+    }
+    else
 #endif
-            you.sacrifice_piety[j]  = unmarshallUByte(th);
+    {
+        const int num_saved = unmarshallShort(th);
+
+        you.sacrifice_piety.init(0);
+        for (int j = 0; j < num_saved; ++j)
+        {
+            const int idx = ABIL_FIRST_SACRIFICE + j;
+            const uint8_t val = unmarshallUByte(th);
+            if (idx <= ABIL_FINAL_SACRIFICE)
+                you.sacrifice_piety[idx] = val;
+        }
     }
 
-    for (int j = 0; j < NUM_ABILITIES; ++j)
-        you.sacrifice_piety[j] = you.sacrifice_piety[j] ?
-            you.sacrifice_piety[j] : 0;
     EAT_CANARY;
 
     // how many penances?
@@ -3294,6 +3320,9 @@ static void tag_read_you_items(reader &th)
     // how many inventory slots?
     count = unmarshallByte(th);
     ASSERT(count == ENDOFPACK); // not supposed to change
+#if TAG_MAJOR_VERSION == 34
+    string bad_slots;
+#endif
     for (int i = 0; i < count; ++i)
     {
         item_def &it = you.inv[i];
@@ -3306,8 +3335,7 @@ static void tag_read_you_items(reader &th)
             // search would change the position of items in inventory.
             if (it.pos != ITEM_IN_INVENTORY)
             {
-                mprf(MSGCH_ERROR, "Fixing bad position for inventory slot %c",
-                                  index_to_letter(i));
+                bad_slots += index_to_letter(i);
                 it.pos = ITEM_IN_INVENTORY;
             }
 
@@ -3317,6 +3345,13 @@ static void tag_read_you_items(reader &th)
         }
 #endif
     }
+#if TAG_MAJOR_VERSION == 34
+    if (!bad_slots.empty())
+    {
+        mprf(MSGCH_ERROR, "Fixed bad positions for inventory slots %s",
+                          bad_slots.c_str());
+    }
+#endif
 
     // Initialize cache of equipped unrand functions
     for (int i = 0; i < NUM_EQUIP; ++i)

@@ -404,7 +404,7 @@ random_var monster::attack_delay(const item_def *projectile,
     random_var delay = property(*weap, PWPN_SPEED);
     if (get_weapon_brand(*weap) == SPWPN_SPEED)
         delay = div_rand_round(2 * delay, 3);
-    return constant(10) + delay / 2;
+    return (constant(10) + delay) / 2;
 }
 
 int monster::has_claws(bool allow_tran) const
@@ -2764,9 +2764,9 @@ void monster::moveto(const coord_def& c, bool clear_net)
         props[IOOD_Y].get_float() += c.y - pos().y;
     }
 
-    set_position(c);
+    clear_constrictions_far_from(c);
 
-    clear_far_constrictions();
+    set_position(c);
 }
 
 bool monster::fumbles_attack()

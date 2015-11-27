@@ -71,6 +71,9 @@ static skill_type _equipped_skill()
     if (iweap && iweap->base_type == OBJ_WEAPONS)
         return item_attack_skill(*iweap);
 
+    if (!iweap && you.m_quiver.get_fire_item() != -1)
+        return SK_THROWING;
+
     return SK_UNARMED_COMBAT;
 }
 
@@ -345,6 +348,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     // disable death and delay, but make sure that these values
     // get reset when the function call ends
     unwind_var<FixedBitVector<NUM_DISABLEMENTS> > disabilities(crawl_state.disables);
+    crawl_state.disables.set(DIS_CONFIRMATIONS);
     crawl_state.disables.set(DIS_DEATH);
     crawl_state.disables.set(DIS_DELAY);
     crawl_state.disables.set(DIS_AFFLICTIONS);

@@ -2191,6 +2191,9 @@ static bool _seal_doors_and_stairs(const monster* warden,
         // Try to seal the door
         if (grd(*ri) == DNGN_CLOSED_DOOR || grd(*ri) == DNGN_RUNED_DOOR)
         {
+            if (check_only)
+                return true;
+
             set<coord_def> all_door;
             find_connected_identical(*ri, all_door);
             for (const auto &dc : all_door)
@@ -2202,6 +2205,9 @@ static bool _seal_doors_and_stairs(const monster* warden,
         }
         else if (feat_is_travelable_stair(grd(*ri)))
         {
+            if (check_only)
+                return true;
+
             dungeon_feature_type stype;
             if (feat_stair_direction(grd(*ri)) == CMD_GO_UPSTAIRS)
                 stype = DNGN_SEALED_STAIRS_UP;
@@ -2216,6 +2222,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
 
     if (had_effect)
     {
+        ASSERT(!check_only);
         mprf(MSGCH_MONSTER_SPELL, "%s activates a sealing rune.",
                 (warden->visible_to(&you) ? warden->name(DESC_THE, true).c_str()
                                           : "Someone"));
