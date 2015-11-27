@@ -1608,6 +1608,24 @@ MAP
 .........
 ENDMAP
 
+#dig wand with a single charge that could be used to get to P's altar
+NAME:    johnstein_pakellas_dig
+DEPTH:   D:2-
+TAGS:    temple_overflow_pakellas uniq_altar_pakellas
+KFEAT:   _ = altar_pakellas
+KITEM:   ' = wand of digging charges:1
+MAP
+.......
+.xxxxx.
+.xcccx.
+.xc_cx.
+.xxmxx.
+.x.'.x.
+.x...x.
+.xx+xx.
+.......
+ENDMAP
+
 ### Qazlal overflow altars ####################################################
 
 # There's always a safe path to the altar.
