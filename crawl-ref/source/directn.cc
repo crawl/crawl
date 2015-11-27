@@ -2278,7 +2278,7 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
     // Monster types that you can't gain experience from don't count as
     // monsters.
     if (mode != TARG_EVOLVABLE_PLANTS
-        && !mons_class_gives_xp(mon->type, true)
+        && mons_is_firewood(mon)
         && !mons_is_active_ballisto(mon))
     {
         return false;
