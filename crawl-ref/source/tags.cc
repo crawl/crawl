@@ -2511,6 +2511,11 @@ static void tag_read_you(reader &th)
         }
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_BIDIRECTIONAL_ABYSS
+        && you.where_are_you == BRANCH_ABYSS)
+    {
+        you.attribute[ATTR_MAX_ABYSS_DEPTH] = you.depth;
+    }
 #endif
 
 #if TAG_MAJOR_VERSION == 34

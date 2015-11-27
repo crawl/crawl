@@ -523,6 +523,7 @@ enum attribute_type
     ATTR_LAST_FLIGHT_STATUS,   // Whether spawm_flight should be restored after form change
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
     ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.
+    ATTR_MAX_ABYSS_DEPTH,      // How far we went into Abyss on current trip.
     NUM_ATTRIBUTES
 };
 

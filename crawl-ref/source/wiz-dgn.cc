@@ -138,6 +138,19 @@ static void _wizard_go_to_level(const level_pos &pos)
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
     you.depth         = pos.id.depth;
 
+    if (you.where_are_you == BRANCH_ABYSS)
+    {
+        if (old_level.branch == BRANCH_ABYSS)
+        {
+            you.attribute[ATTR_MAX_ABYSS_DEPTH] =
+                max(you.attribute[ATTR_MAX_ABYSS_DEPTH], you.depth);
+        }
+        else
+            you.attribute[ATTR_MAX_ABYSS_DEPTH] = you.depth;
+    }
+    else
+        you.attribute[ATTR_MAX_ABYSS_DEPTH] = 0;
+
     leaving_level_now(stair_taken);
     const bool newlevel = load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
     tile_new_level(newlevel);

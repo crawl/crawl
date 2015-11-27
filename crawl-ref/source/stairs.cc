@@ -573,6 +573,7 @@ void floor_transition(dungeon_feature_type how,
         mark_milestone("abyss.exit", "escaped from the Abyss!");
         you.attribute[ATTR_BANISHMENT_IMMUNITY] = you.elapsed_time + 100
                                                   + random2(100);
+        you.attribute[ATTR_MAX_ABYSS_DEPTH] = 0;
         you.banished_by = "";
         you.banished_power = 0;
     }
@@ -765,9 +766,13 @@ void floor_transition(dungeon_feature_type how,
                               !forced);
     }
 
-    // This should maybe go in load_level?
     if (you.where_are_you == BRANCH_ABYSS)
+    {
+        you.attribute[ATTR_MAX_ABYSS_DEPTH] =
+            max(you.attribute[ATTR_MAX_ABYSS_DEPTH], you.depth);
+        // This should maybe go in load_level?
         generate_random_blood_spatter_on_level();
+    }
 
     you.turn_is_over = true;
 

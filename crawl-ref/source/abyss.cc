@@ -1421,6 +1421,12 @@ void set_abyss_state(coord_def coord, uint32_t depth)
     _abyss_apply_terrain(abyss_genlevel_mask, true, true);
 }
 
+int abyss_monster_depth()
+{
+    return you.runes[RUNE_ABYSSAL] ? brdepth[BRANCH_ABYSS]
+                                   : you.attribute[ATTR_MAX_ABYSS_DEPTH];
+}
+
 static void abyss_area_shift()
 {
     dprf(DIAG_ABYSS, "area_shift() - player at pos (%d, %d)",
@@ -1448,9 +1454,8 @@ static void abyss_area_shift()
     }
 
     // Place some monsters to keep the abyss party going.
-    int num_monsters =
-        15 + (1 + coinflip()) * (you.runes[RUNE_ABYSSAL] ? brdepth[BRANCH_ABYSS]
-                                                         : you.depth);
+    const int mon_depth = abyss_monster_depth();
+    int num_monsters = 15 + random_range(mon_depth, 2 * mon_depth);
     _abyss_generate_monsters(num_monsters);
 
     // And allow monsters in transit another chance to return.

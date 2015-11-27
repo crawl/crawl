@@ -38,6 +38,7 @@ bool is_level_incorruptible(bool quiet = false);
 bool lugonu_corrupt_level(int power);
 void run_corruption_effects(int duration);
 void set_abyss_state(coord_def coord, uint32_t depth);
+int abyss_monster_depth();
 void destroy_abyss();
 
 #endif
