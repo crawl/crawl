@@ -14,6 +14,7 @@
 #include <cstring>
 #include <sstream>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "attitude-change.h"
 #include "cloud.h"
@@ -98,8 +99,14 @@ static bool _find_object(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
 static bool _find_monster(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
+static bool _find_monster_expl_maybe(const coord_def& where, int mode,
+                                     bool need_path, int range,
+                                     targetter *hitfunc);
+static bool _find_monster_expl_always(const coord_def& where, int mode,
+                                      bool need_path, int range,
+                                      targetter *hitfunc);
 static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
-                           int range, targetter *hitfunc);
+                           int range, targetter *hitfunc, aff_type aff);
 static bool _find_feature(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
 static bool _find_shadow_step_mons(const coord_def& where, int mode,
@@ -1069,7 +1076,12 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
         if (!success && hitfunc && hitfunc->can_affect_outside_range()
             && (you.current_vision > range || hitfunc->can_affect_walls()))
         {
-            success = _find_square_wrapper(result, 1, _find_monster_expl,
+            success = _find_square_wrapper(result, 1,
+                                           _find_monster_expl_always,
+                                           needs_path, mode, range, hitfunc,
+                                           true)
+                   || _find_square_wrapper(result, 1,
+                                           _find_monster_expl_maybe,
                                            needs_path, mode, range, hitfunc,
                                            true);
         }
@@ -2458,8 +2470,24 @@ static bool _find_shadow_step_mons(const coord_def& where, int mode,
     return hitfunc->has_additional_sites(where);
 }
 
+static bool _find_monster_expl_always(const coord_def& where, int mode,
+                                      bool need_path, int range,
+                                      targetter *hitfunc)
+{
+    return _find_monster_expl(where, mode, need_path, range, hitfunc,
+                              AFF_YES);
+}
+
+static bool _find_monster_expl_maybe(const coord_def& where, int mode,
+                                     bool need_path, int range,
+                                     targetter *hitfunc)
+{
+    return _find_monster_expl(where, mode, need_path, range, hitfunc,
+                              AFF_MAYBE);
+}
+
 static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
-                               int range, targetter *hitfunc)
+                               int range, targetter *hitfunc, aff_type aff)
 {
     const monster* mons;
     coord_def jump_pos;
@@ -2495,14 +2523,11 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
 
     if (hitfunc->set_aim(where))
     {
-        for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+        for (monster_near_iterator mi(&you); mi; ++mi)
         {
-            mons = monster_at(*ri);
-            if (!mons)
-                continue;
+            mons = *mi;
 
-            aff_type aff = hitfunc->is_affected(*ri);
-            if (aff == AFF_YES || aff == AFF_MAYBE)
+            if (hitfunc->is_affected(mons->pos()) == aff)
             {
                 if (_mons_is_valid_target(mons, mode, range))
                     return _want_target_monster(mons, (targ_mode_type) mode);

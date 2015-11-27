@@ -267,10 +267,6 @@ The enslaved soul will retain the monster's faculties, equipment and abilities,
 as well as some of its innate healing. However, only one soul can be enslaved
 at a time.
 %%%%
-Animate Remains or Dead ability
-
-If you get this description, it is a bug.
-%%%%
 # Okawaru
 Heroism ability
 

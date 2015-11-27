@@ -228,6 +228,8 @@ public:
   FixedVector<uint8_t, NUM_MUTATIONS> temp_mutation;
   FixedVector<uint8_t, NUM_MUTATIONS> sacrifices;
 
+  FixedVector<uint8_t, NUM_ABILITIES> sacrifice_piety;
+
   struct demon_trait
   {
       int           level_gained;
@@ -356,6 +358,7 @@ public:
   // If true, player is headed to the Abyss.
   bool banished;
   string banished_by;
+  int banished_power;
 
   bool wield_change;          // redraw weapon
   bool redraw_quiver;         // redraw quiver
@@ -620,7 +623,7 @@ public:
     bool malmutate(const string &reason) override;
     bool polymorph(int pow) override;
     void backlight();
-    void banish(actor* /*agent*/, const string &who = "") override;
+    void banish(actor* /*agent*/, const string &who = "", const int power = 0) override;
     void blink() override;
     void teleport(bool right_now = false,
                   bool wizard_tele = false) override;

@@ -6965,7 +6965,7 @@ static coord_def _choose_throwing_target(const monster &thrower,
             || !thrower.see_cell(*di)
             || !victim.see_cell(*di)
             || !victim.is_habitable(*di)
-            || !find_ray(victim.pos(), *di, ray, opc_solid_see))
+            || !find_ray(thrower.pos(), *di, ray, opc_solid_see))
         {
             continue;
         }
@@ -7885,7 +7885,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return !_should_recall(mon);
 
     case SPELL_SHATTER:
-        return !friendly && !mons_shatter(mon, false);
+        return friendly || !mons_shatter(mon, false);
 
     case SPELL_SYMBOL_OF_TORMENT:
         return !_trace_los(mon, _torment_vulnerable)

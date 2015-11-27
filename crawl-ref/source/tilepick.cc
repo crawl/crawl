@@ -4031,6 +4031,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
         return evoker_is_charged(item) ? TILE_MISC_PHIAL_OF_FLOODS
                                        : TILE_MISC_PHIAL_OF_FLOODS_INERT;
 
+    case MISC_XOMS_CHESSBOARD:
+        return TILE_MISC_XOMS_CHESSBOARD;
+
     case MISC_LANTERN_OF_SHADOWS:
         return TILE_MISC_LANTERN_OF_SHADOWS;
 
@@ -4051,6 +4054,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
 
     case MISC_PHANTOM_MIRROR:
         return TILE_MISC_PHANTOM_MIRROR;
+
+    case MISC_ZIGGURAT:
+        return TILE_MISC_ZIGGURAT;
 
     case MISC_QUAD_DAMAGE:
         return TILE_MISC_QUAD_DAMAGE;
@@ -5061,6 +5067,8 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_DISPLAY_CHARACTER_STATUS;
     case CMD_DISPLAY_KNOWN_OBJECTS:
         return TILEG_CMD_KNOWN_ITEMS;
+    case CMD_SAVE_GAME_NOW:
+        return TILEG_CMD_SAVE_GAME_NOW;
     case CMD_EDIT_PLAYER_TILE:
         return TILEG_CMD_EDIT_PLAYER_TILE;
     case CMD_DISPLAY_COMMANDS:

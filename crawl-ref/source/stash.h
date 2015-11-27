@@ -37,7 +37,7 @@ public:
     vector<item_def> get_items() const;
 
     bool show_menu(const level_pos &place, bool can_travel,
-                   const vector<item_def>* matching_items = nullptr) const;
+                   const vector<item_def>& matching_items) const;
 
     // Returns true if this Stash contains items that are eligible for
     // autopickup.
@@ -187,16 +187,19 @@ struct stash_search_result
     // The items that matched the search, if any.
     vector<item_def> matching_items;
 
+    // Whether the found items are in the player's inventory.
+    bool in_inventory;
+
     stash_search_result() : pos(), player_distance(0), matches(0),
                             count(0), match(), stash(nullptr), shop(nullptr),
-                            matching_items()
+                            matching_items(), in_inventory(false)
     {
     }
 
     stash_search_result(const stash_search_result &o)
         : pos(o.pos), player_distance(o.player_distance), matches(o.matches),
           count(o.count), match(o.match), stash(o.stash), shop(o.shop),
-          matching_items(o.matching_items)
+          matching_items(o.matching_items), in_inventory(o.in_inventory)
     {
     }
 
@@ -210,6 +213,7 @@ struct stash_search_result
         stash = o.stash;
         shop = o.shop;
         matching_items = o.matching_items;
+        in_inventory = o.in_inventory;
         return *this;
     }
 

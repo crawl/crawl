@@ -90,6 +90,15 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 発見済みのアイテムの表示
 %%%%
+CMD_SAVE_GAME_NOW
+
+ゲームを保存して終了
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+ゲームを保存した後に終了します。
+一度ゲームを再開すると保存ファイルは再び削除されます。
+%%%%
 CMD_EDIT_PLAYER_TILE
 
 プレイヤータイルの改造

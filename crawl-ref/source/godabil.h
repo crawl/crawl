@@ -151,6 +151,7 @@ void qazlal_elemental_force();
 bool qazlal_disaster_area();
 
 void init_sac_index();
+int get_sacrifice_piety(ability_type sac, bool include_skill = true);
 void ru_offer_new_sacrifices();
 string ru_sac_text(ability_type sac);
 bool ru_do_sacrifice(ability_type sac);
