@@ -815,7 +815,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
     level_id whither = _travel_destination(how, old_feat,
                            bool(force_stair), going_up, known_shaft);
 
-    if (!whither.is_valid())
+    if (!whither.is_valid() && !(old_feat == DNGN_EXIT_DUNGEON && going_up))
         return;
 
     floor_transition(how, old_feat, whither,
