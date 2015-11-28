@@ -141,7 +141,7 @@ bool attack::handle_phase_end()
 int attack::calc_to_hit(bool random)
 {
     int mhit = attacker->is_player() ?
-                15 + (calc_stat_to_hit_base() / 2)
+                15 + (you.dex() / 2)
               : calc_mon_to_hit_base();
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -1211,12 +1211,11 @@ string attack::defender_name(bool allow_reflexive)
 int attack::player_stat_modify_damage(int damage)
 {
     int dammod = 39;
-    const int dam_stat_val = calc_stat_to_dam_base();
 
-    if (dam_stat_val > 11)
-        dammod += (random2(dam_stat_val - 11) * 2);
-    else if (dam_stat_val < 9)
-        dammod -= (random2(9 - dam_stat_val) * 3);
+    if (you.strength() > 11)
+        dammod += (random2(you.strength() - 11) * 2);
+    else if (you.strength() < 9)
+        dammod -= (random2(9 - you.strength()) * 3);
 
     damage *= dammod;
     damage /= 39;
@@ -1331,25 +1330,6 @@ int attack::calc_base_unarmed_damage()
         damage = 0;
 
     return damage;
-}
-
-// TODO: Potentially remove, consider integrating with other to-hit or stat
-// calculating methods
-// weighted average of strength and dex, between (str+dex)/2 and dex
-int attack::calc_stat_to_hit_base()
-{
-    const int weight = weapon ? weapon_str_weight(*weapon) : 4;
-
-    // dex is modified by strength towards the average, by the
-    // weighted amount weapon_str_weight() / 20.
-    return you.dex() + (you.strength() - you.dex()) * weight / 20;
-}
-
-// weighted average of strength and dex, between str and (str+dex)/2
-int attack::calc_stat_to_dam_base()
-{
-    const int weight = weapon ? 10 - weapon_str_weight(*weapon) : 6;
-    return you.strength() + (you.dex() - you.strength()) * weight / 20;
 }
 
 int attack::calc_damage()

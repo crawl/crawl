@@ -1467,13 +1467,11 @@ void melee_attack::player_warn_miss()
 int melee_attack::player_aux_stat_modify_damage(int damage)
 {
     int dammod = 20;
-    // Use the same str/dex weighting that unarmed combat does, for now.
-    const int dam_stat_val = (7 * you.strength() + 3 * you.dex())/10;
 
-    if (dam_stat_val > 10)
-        dammod += random2(dam_stat_val - 9);
-    else if (dam_stat_val < 10)
-        dammod -= random2(11 - dam_stat_val);
+    if (you.strength() > 10)
+        dammod += random2(you.strength() - 9);
+    else if (you.strength() < 10)
+        dammod -= random2(11 - you.strength());
 
     damage *= dammod;
     damage /= 20;
@@ -3546,8 +3544,7 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack)
     int your_to_hit;
 
     your_to_hit = 1300
-                + you.dex() * 60
-                + you.strength() * 15
+                + you.dex() * 75
                 + you.skill(SK_FIGHTING, 30);
     your_to_hit /= 100;
 

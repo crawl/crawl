@@ -128,8 +128,6 @@ protected:
     virtual int weapon_damage() = 0;
     virtual int get_weapon_plus();
     virtual int calc_base_unarmed_damage();
-    int calc_stat_to_hit_base();
-    int calc_stat_to_dam_base();
     virtual int calc_mon_to_hit_base() = 0;
     virtual int apply_damage_modifiers(int damage, int damage_max) = 0;
     virtual int calc_damage();
