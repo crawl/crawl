@@ -47,4 +47,5 @@ int count_traps(trap_type ttyp);
 void place_webs(int num);
 bool maybe_destroy_web(actor *oaf);
 bool ensnare(actor *fly);
+bool can_monster_be_caught_in_net(const monster_info& mi);
 #endif
