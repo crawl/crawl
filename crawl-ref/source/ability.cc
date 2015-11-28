@@ -92,7 +92,7 @@ enum class abflag
     FRUIT          = 0x00000200, // ability requires fruit
     VARIABLE_FRUIT = 0x00000400, // ability requires fruit or piety
     VARIABLE_MP    = 0x00000800, // costs a variable amount of MP
-    ALL_MP         = 0x00001000, // costs all of your current MP
+                   //0x00001000,
                    //0x00002000,
                    //0x00004000,
                    //0x00008000,
@@ -393,7 +393,7 @@ static const ability_def Ability_List[] =
     { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
         0, 0, 100, generic_cost::fixed(1), abflag::VARIABLE_MP },
     { ABIL_PAKELLAS_QUICK_CHARGE, "Quick Charge",
-        0, 0, 100, 2, abflag::ALL_MP },
+        0, 0, 100, 2, abflag::NONE },
     { ABIL_PAKELLAS_SUPERCHARGE, "Supercharge", 0, 0, 0, 0, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, abflag::NONE },
@@ -484,6 +484,11 @@ int get_gold_cost(ability_type ability)
     }
 }
 
+const int _pakellas_quick_charge_mp_cost()
+{
+    return max(1, you.magic_points * 2 / 3);
+}
+
 const string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
@@ -497,8 +502,9 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::VARIABLE_MP)
         ret += ", MP";
 
-    if (abil.flags & abflag::ALL_MP)
-        ret += make_stringf(", %d MP", max(1, you.magic_points));
+    // TODO: make this less hard-coded
+    if (ability == ABIL_PAKELLAS_QUICK_CHARGE)
+        ret += make_stringf(", %d MP", _pakellas_quick_charge_mp_cost());
 
     if (abil.hp_cost)
     {
@@ -2927,16 +2933,18 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     {
         fail_check();
 
+        const int mp_to_use = _pakellas_quick_charge_mp_cost();
+        ASSERT(mp_to_use > 0);
+
         const int den = 100 * (get_real_mp(false) - you.mp_max_adj);
         const int num =
-            stepdown(random2avg(you.skill(SK_EVOCATIONS, 10), 2)
-                        * you.magic_points,
+            stepdown(random2avg(you.skill(SK_EVOCATIONS, 10), 2) * mp_to_use,
                      den / 3);
 
         if (recharge_wand(true, "", num, den) <= 0)
             return SPRET_ABORT;
 
-        dec_mp(you.magic_points);
+        dec_mp(mp_to_use);
 
         break;
     }

@@ -602,7 +602,7 @@ how devoted they are to Pakellas.
 %%%%
 Quick Charge ability
 
-Spend all of your current pool of magic to charge a wand or rod. The
+Spend two thirds of your current pool of magic to charge a wand or rod. The
 effectiveness of this depends on your current pool of magic and your
 Evocations skill.
 %%%%
