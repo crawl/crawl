@@ -333,6 +333,8 @@ string gametype_to_str(game_type type)
         return "arena";
     case GAME_TYPE_SPRINT:
         return "sprint";
+    case GAME_TYPE_HINTS:
+        return "hints";
     default:
         return "none";
     }
