@@ -256,7 +256,7 @@ brand_type player::damage_brand(int)
 random_var player::attack_delay(const item_def *projectile, bool rescale) const
 {
     const item_def* weap = weapon();
-    random_var attk_delay = constant(15);
+    random_var attk_delay(15);
     // a semi-arbitrary multiplier, to minimize loss of precision from integer
     // math.
     const int DELAY_SCALE = 20;
@@ -268,7 +268,7 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         int sk = form_uses_xl() ? experience_level * 10 :
                  projectile     ? skill(SK_THROWING, 10) :
                                   skill(SK_UNARMED_COMBAT, 10);
-        attk_delay = constant(10) - div_rand_round(constant(sk), 27*2);
+        attk_delay = random_var(10) - div_rand_round(random_var(sk), 27*2);
 
         // Bats are faster (for whatever good it does them).
         if (you.form == TRAN_BAT && !projectile)
@@ -279,19 +279,19 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
                          : is_melee_weapon(*weap)))
     {
         const skill_type wpn_skill = item_attack_skill(*weap);
-        attk_delay = constant(property(*weap, PWPN_SPEED));
-        attk_delay -= div_rand_round(constant(you.skill(wpn_skill, 10)),
+        attk_delay = random_var(property(*weap, PWPN_SPEED));
+        attk_delay -= div_rand_round(random_var(you.skill(wpn_skill, 10)),
                                      DELAY_SCALE);
 
         if (get_weapon_brand(*weap) == SPWPN_SPEED)
             attk_delay = div_rand_round(attk_delay * 2, 3);
 
         // apply minimum to weapon skill modification
-        attk_delay = rv::max(attk_delay, weapon_min_delay(*weap));
+        attk_delay = rv::max(attk_delay, random_var(weapon_min_delay(*weap)));
     }
 
     // At the moment it never gets this low anyway.
-    attk_delay = rv::max(attk_delay, constant(3));
+    attk_delay = rv::max(attk_delay, random_var(3));
 
     if (base_shield_penalty)
     {
@@ -311,7 +311,7 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         // longer so when Haste speeds it up, only Finesse will apply.
         if (you.duration[DUR_HASTE] && rescale)
             attk_delay = haste_mul(attk_delay);
-        attk_delay = rv::max(2, div_rand_round(attk_delay, 2));
+        attk_delay = rv::max(random_var(2), div_rand_round(attk_delay, 2));
     }
 
     // see comment on player.cc:player_speed
