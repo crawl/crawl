@@ -1481,10 +1481,13 @@ ENDMAP
 
 ### Pakellas overflow altars ###################################################
 NAME:   grunt_pakellas_salt
+DEPTH:  D:2-
 TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
-TAGS:   temple_overflow_pakellas uniq_altar_pakellas
+TAGS:   temple_overflow_pakellas uniq_altar_pakellas no_rotate no_hmirror
+TAGS:   no_vmirror
 KFEAT:  _ = altar_pakellas
 SUBST:  c : cvb
+: interest_check(_G)
 MAP
   .....
  ..ccc..
@@ -1496,10 +1499,13 @@ MAP
 ENDMAP
 
 NAME:   grunt_pakellas_sulfur
+DEPTH:  D:2-
 TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
-TAGS:   temple_overflow_pakellas uniq_altar_pakellas
+TAGS:   temple_overflow_pakellas uniq_altar_pakellas no_rotate no_hmirror
+TAGS:   no_vmirror
 KFEAT:  _ = altar_pakellas
 SUBST:  c : cvb
+: interest_check(_G)
 MAP
      ...
     ..c..
@@ -1517,10 +1523,13 @@ MAP
 ENDMAP
 
 NAME:   grunt_pakellas_mercury
+DEPTH:  D:2-
 TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
-TAGS:   temple_overflow_pakellas uniq_altar_pakellas
+TAGS:   temple_overflow_pakellas uniq_altar_pakellas no_rotate no_hmirror
+TAGS:   no_vmirror
 KFEAT:  _ = altar_pakellas
 SUBST:  c : cvb
+: interest_check(_G)
 MAP
  .....
 .c...c.
@@ -1537,12 +1546,14 @@ MAP
 ENDMAP
 
 NAME:   grunt_pakellas_basics
+DEPTH:  D:2-
 WEIGHT: 20
 TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
 TAGS:   no_rotate no_hmirror temple_overflow_pakellas uniq_altar_pakellas
 KFEAT:  _ = altar_pakellas
 SUBST:  d : c.
 SUBST:  c : cvb
+: interest_check(_G)
 MAP
      ...
     ..c..
