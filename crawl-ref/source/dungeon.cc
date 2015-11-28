@@ -742,6 +742,8 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
         return true;
+    case DNGN_ENTER_HELL:
+        return parent_branch(you.where_are_you) == BRANCH_VESTIBULE;
     default:
         return false;
     }
@@ -768,6 +770,8 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
         return true;
+    case DNGN_ENTER_HELL:
+        return parent_branch(you.where_are_you) == BRANCH_VESTIBULE;
     default:
         return false;
     }
