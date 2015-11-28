@@ -753,6 +753,7 @@ void wizard_set_stats()
     you.base_stats[STAT_INT] = debug_cap_stat(sint);
     you.base_stats[STAT_DEX] = debug_cap_stat(sdex);
     you.stat_loss.init(0);
+    you.attribute[ATTR_STAT_LOSS_XP] = 0;
     you.redraw_stats.init(true);
     you.redraw_evasion = true;
 }
