@@ -1789,7 +1789,7 @@ string get_item_description(const item_def &item, bool verbose,
 
         if (item_type_known(item))
         {
-            const int max_charges = wand_max_charges(item.sub_type);
+            const int max_charges = wand_max_charges(item);
             if (item.charges < max_charges
                 || !item_ident(item, ISFLAG_KNOW_PLUSES))
             {

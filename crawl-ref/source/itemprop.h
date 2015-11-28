@@ -105,7 +105,7 @@ bool check_armour_size(armour_type sub_type, size_type size) PURE;
 
 bool item_is_rechargeable(const item_def &it, bool hide_charged = false) PURE;
 int wand_charge_value(int type) PURE;
-int wand_max_charges(int type) PURE;
+int wand_max_charges(const item_def &item) PURE;
 bool is_known_empty_wand(const item_def &item) PURE;
 bool is_offensive_wand(const item_def &item) PURE;
 bool is_enchantable_armour(const item_def &arm, bool uncurse,

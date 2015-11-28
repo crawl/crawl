@@ -1527,7 +1527,7 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged)
 
         // Don't offer wands already maximally charged.
         if (item_ident(it, ISFLAG_KNOW_PLUSES)
-            && it.charges >= wand_max_charges(it.sub_type))
+            && it.charges >= wand_max_charges(it))
         {
             return false;
         }
@@ -1580,9 +1580,16 @@ int wand_charge_value(int type)
     }
 }
 
-int wand_max_charges(int type)
+int wand_max_charges(const item_def &item)
 {
-    return wand_charge_value(type) * 3;
+    ASSERT(item.base_type == OBJ_WANDS);
+
+    const int charge_value = wand_charge_value(item.sub_type);
+
+    if (item.props.exists(PAKELLAS_SUPERCHARGE_KEY))
+        return 9 * charge_value / 2;
+
+    return charge_value * 3;
 }
 
 /**

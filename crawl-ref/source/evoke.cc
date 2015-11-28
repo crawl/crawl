@@ -843,7 +843,7 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
 
         if (wand.base_type == OBJ_WANDS)
         {
-            int charge_gain = wand_charge_value(wand.sub_type);
+            int charge_gain = wand_max_charges(wand) / 3;
 
             const int new_charges =
                 num > 0 && den > 0

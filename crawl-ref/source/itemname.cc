@@ -1750,6 +1750,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             break;
         }
 
+        if (!dbname && props.exists(PAKELLAS_SUPERCHARGE_KEY))
+            buff << "supercharged ";
+
         if (know_type)
             buff << "wand of " << _wand_type_name(item_typ);
         else
@@ -2569,7 +2572,7 @@ void check_item_knowledge(bool unknown_items)
                     if (!unknown_items)
                         ptmp->flags |= ISFLAG_KNOW_TYPE;
                     if (i == OBJ_WANDS)
-                        ptmp->plus = wand_max_charges(j);
+                        ptmp->plus = wand_max_charges(*ptmp);
                     items.push_back(ptmp);
 
                     if (you.force_autopickup[i][j] == 1)

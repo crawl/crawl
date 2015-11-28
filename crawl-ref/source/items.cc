@@ -4409,7 +4409,7 @@ bool get_item_by_name(item_def *item, const char* specs,
         break;
 
     case OBJ_WANDS:
-        item->plus = wand_max_charges(item->sub_type);
+        item->plus = wand_max_charges(*item);
         break;
 
     case OBJ_RODS:

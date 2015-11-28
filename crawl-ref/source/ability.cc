@@ -2973,8 +2973,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         else
         {
             set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
-            wand.charges    = 4 * wand_charge_value(wand.sub_type);
-            wand.used_count = ZAPCOUNT_RECHARGED;
+            wand.charges = 9 * wand_charge_value(wand.sub_type) / 2;
+            wand.props[PAKELLAS_SUPERCHARGE_KEY].get_bool() = true;
         }
 
         you.wield_change = true;
