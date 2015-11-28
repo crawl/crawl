@@ -272,6 +272,13 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
             if (mut == MUT_STINGER && drag == MONS_SWAMP_DRAGON)
                 return MUTACT_FULL;
         }
+        // Vampire bats keep their fangs.
+        if (you.form == TRAN_BAT
+            && you.species == SP_VAMPIRE
+            && mut == MUT_FANGS)
+        {
+            return MUTACT_FULL;
+        }
         // Dex and HP changes are kept in all forms.
         if (mut == MUT_ROUGH_BLACK_SCALES || mut == MUT_RUGGED_BROWN_SCALES)
             return MUTACT_PARTIAL;
