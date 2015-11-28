@@ -2927,7 +2927,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     {
         fail_check();
 
-        const int den = 100 * you.max_magic_points;
+        const int den = 100 * (get_real_mp(false) - you.mp_max_adj);
         const int num =
             stepdown(random2avg(you.skill(SK_EVOCATIONS, 10), 2)
                         * you.magic_points,
