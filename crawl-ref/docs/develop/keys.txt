@@ -1,135 +1,135 @@
-<esc>	nothing (intentionally)
-<home>	move northwest (same as y, 7)
-<end>	move southwest (same as b, 1)
-<ins>	nothing
-<del>	nothing
-`	repeat last command
-1	move southwest (same as b)
-2	move south (same as j, <down>)
-3	move southeast (same as n)
-4	move west (same as h, <left>)
-5	rest
-6	move east (same as l, <right>)
-7	move northwest (same as y)
-8	move north (same as k, <up>)
-9	move northeast (same as u)
-0	repeat next command
--	tiles doll editor
-=	adjust
-<bs>	nothing (might conflict with ^H on console)
-<tab>	run custom lua
-q	quaff
-w	wield
-e	eat
-r	read
-t	shout
-y	move northwest (same as 7)
-u	move northeast (same as 9)
-i	inventory
-o	autoexplore
-p	pray
-[	view worn armour
-]	view inventory armour
-\	view unidentified items
-a	ability
-s	wait (same as .)
-d	drop
-f	fire missiles
-g	pick up (same as ,)
-h	move west (same as 4, <left>)
-j	move south (same as 2, <down>)
-k	move north (same as 8, <up>)
-l	move east (same as 6, <right>)
-;	examine floor
-'	swap wielded items specifically between slot a and b
-<cr>	nothing (intentionally)
-z	cast spell
-x	examine
-c	chop corpse
-v	evoke item
-b	move southwest (same as 1)
-n	move southeast (same as 3)
-m	skills
-,	pick up (same as g)
-.	wait (same as s)
-/	shift prefix
-<space>	nothing (intentionally)
-<pgup>	move northeast (same as u, 9)
-<up>	move north (same as k, 8)
-<pgdn>	move southeast (same as n, 3)
-<left>	move west (same as h, 4)
-<down>	move south (same as j, 2)
-<right>	move east (same as l, 6)
-~	macro (same as ^d)
-!	annotate level
-@	character info
-#	chardump
-$	shopping list
-%	detailed character overview
-^	religion
-&	wizmode
-*	ctrl prefix
-(	cycle missiles
-)	cycle missiles backwards
-_	read mail (console)
-+	explore mode
-Q	quiver
-W	wear armour
-E	game progress summary
-R	remove jewellery
-T	take off armour
-Y	run northwest
-U	run northeast
-I	view spells
-O	open door
-P	put on jewellery
-{	inscribe
-}	show runes
-|	toggle view layers
-A	view abilities and mutations
-S	save and quit with prompt
-D	drop previously picked up item
-F	fire specific missiles
-G	autotravel (same as ^g)
-H	run west
-J	run north
-K	run south
-L	run east
-:	note
-"	view jewellery
-Z	force cast spell
-X	view map
-C	close door
-V	evoke wand
-B	run southwest
-N	run southeast
-M	memorise
-<	go upstairs
->	go downstairs
-?	help
-^q	quit without saving
-^w	assign waypoint
-^e	adjust travel speed
-^r	redraw screen
-^t	nothing
-^y	fight northwest
-^u	fight northeast
-^i	nothing (conflicts with <tab> on console)
-^o	view dungeon overview
-^p	view previous messages
-^a	toggle autopickup
-^s	quick save and quit
-^d	macro (same as ~)
-^f	find item
-^g	autotravel (same as G)
-^h	fight west
-^j	fight south
-^k	fight north
-^l	fight east
-^z	suspend to shell
-^x	view visible things
-^c	clear rembered monsters/items from map
-^v	nothing
-^b	fight southwest
-^n	fight southeast
-^m	nothing (conflicts with <cr> on console)
+<esc>   nothing (intentionally)
+<home>  move northwest (same as y, 7)
+<end>   move southwest (same as b, 1)
+<ins>   nothing
+<del>   nothing
+`       repeat last command
+1       move southwest (same as b)
+2       move south (same as j, <down>)
+3       move southeast (same as n)
+4       move west (same as h, <left>)
+5       rest
+6       move east (same as l, <right>)
+7       move northwest (same as y)
+8       move north (same as k, <up>)
+9       move northeast (same as u)
+0       repeat next command
+-       tiles doll editor
+=       adjust
+<bs>    nothing (might conflict with ^H on console)
+<tab>   run custom lua
+q       quaff
+w       wield
+e       eat
+r       read
+t       shout
+y       move northwest (same as 7)
+u       move northeast (same as 9)
+i       inventory
+o       autoexplore
+p       pray
+[       view worn armour
+]       view inventory armour
+\       view unidentified items
+a       ability
+s       wait (same as .)
+d       drop
+f       fire missiles
+g       pick up (same as ,)
+h       move west (same as 4, <left>)
+j       move south (same as 2, <down>)
+k       move north (same as 8, <up>)
+l       move east (same as 6, <right>)
+;       examine floor
+'       swap wielded items specifically between slot a and b
+<cr>    nothing (intentionally)
+z       cast spell
+x       examine
+c       chop corpse
+v       evoke item
+b       move southwest (same as 1)
+n       move southeast (same as 3)
+m       skills
+,       pick up (same as g)
+.       wait (same as s)
+/       shift prefix
+<space> nothing (intentionally)
+<pgup>  move northeast (same as u, 9)
+<up>    move north (same as k, 8)
+<pgdn>  move southeast (same as n, 3)
+<left>  move west (same as h, 4)
+<down>  move south (same as j, 2)
+<right> move east (same as l, 6)
+~       macro (same as ^d)
+!       annotate level
+@       character info
+#       chardump
+$       shopping list
+%       detailed character overview
+^       religion
+&       wizmode
+*       ctrl prefix
+(       cycle missiles
+)       cycle missiles backwards
+_       read mail (console)
++       explore mode
+Q       quiver
+W       wear armour
+E       game progress summary
+R       remove jewellery
+T       take off armour
+Y       run northwest
+U       run northeast
+I       view spells
+O       open door
+P       put on jewellery
+{       inscribe
+}       show runes
+|       toggle view layers
+A       view abilities and mutations
+S       save and quit with prompt
+D       drop previously picked up item
+F       fire specific missiles
+G       autotravel (same as ^g)
+H       run west
+J       run north
+K       run south
+L       run east
+:       note
+"       view jewellery
+Z       force cast spell
+X       view map
+C       close door
+V       evoke wand
+B       run southwest
+N       run southeast
+M       memorise
+<       go upstairs
+>       go downstairs
+?       help
+^Q      quit without saving
+^W      assign waypoint
+^E      adjust travel speed
+^R      redraw screen
+^T      nothing
+^Y      fight northwest
+^U      fight northeast
+^I      nothing (conflicts with <tab> on console)
+^O      view dungeon overview
+^P      view previous messages
+^A      toggle autopickup
+^S      quick save and quit
+^D      macro (same as ~)
+^F      find item
+^G      autotravel (same as G)
+^H      fight west
+^J      fight south
+^K      fight north
+^L      fight east
+^Z      suspend to shell
+^X      view visible things
+^C      clear rembered monsters/items from map
+^V      nothing
+^B      fight southwest
+^N      fight southeast
+^M      nothing (conflicts with <cr> on console)
