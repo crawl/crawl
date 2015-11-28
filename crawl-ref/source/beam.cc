@@ -4117,7 +4117,7 @@ void bolt::update_hurt_or_helped(monster* mon)
         {
             foe_info.helped++;
             // Accidentally helped a foe.
-            if (!is_tracer && !effect_known && !mons_is_firewood(mon))
+            if (!is_tracer && !effect_known && mons_is_threatening(mon))
             {
                 const int interest =
                     (flavour == BEAM_INVISIBILITY && can_see_invis) ? 25 : 100;
