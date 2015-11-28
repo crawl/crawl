@@ -600,33 +600,11 @@ Spend some magical power to empower a use of a magical device. The amount of
 magical power a follower of Pakellas can use varies, but correlates with
 how devoted they are to Pakellas.
 %%%%
-Drain Magic ability
-
-Drains some magic power from a single magic-using enemy, hindering their
-ability to use magic while replenishing your own magic. This process is not
-completely efficient and will yield some residual magic contamination -
-especially if your reserves of magic are already full.
-%%%%
 Quick Charge ability
 
 Spend all of your current pool of magic to charge a wand or rod. The
 effectiveness of this depends on your current pool of magic and your
 Evocations skill.
-%%%%
-Mass Drain Magic ability
-
-Drains some magic power from all nearby magic-using enemies, hindering their
-ability to use magic while replenishing your own magic. This process is not
-completely efficient and will yield some residual magic contamination -
-especially if your reserves of magic are already full.
-%%%%
-Sap Magic ability
-
-Inflicts a magical sap on a magic-using foe - every time they use a magical
-ability, some of their magical power is drained and returned to you,
-interfering with their ability to cast magic. As with other forms of magic
-drain, this will yield some magic contamination, especially if your reserves
-of magic are already full.
 %%%%
 Supercharge ability
 

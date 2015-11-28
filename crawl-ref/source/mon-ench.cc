@@ -2380,19 +2380,13 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_RESISTANCE:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
-    case ENCH_SAP_MAGIC:
-        if (agent() && agent()->is_player())
-        {
-            cturn = 1000 / _mod_speed(25, mons->speed);
-            break;
-        }
-        // deliberate fall-through
     case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
     case ENCH_REGENERATION:
     case ENCH_RAISED_MR:
     case ENCH_MIRROR_DAMAGE:
     case ENCH_DEATHS_DOOR:
+    case ENCH_SAP_MAGIC:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:
