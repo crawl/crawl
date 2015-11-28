@@ -218,7 +218,8 @@ void butchery(item_def* specific_corpse)
             butchered_any = true;
 #else
     item_def* to_eat = nullptr;
-    bool butcher_all   = false;
+    bool butcher_all    = false;
+    bool butcher_edible = false;
     for (auto &entry : corpses)
     {
         item_def * const it = entry.first;
@@ -226,6 +227,13 @@ void butchery(item_def* specific_corpse)
 
         if (butcher_all)
             to_eat = it;
+        else if (butcher_edible)
+        {
+            if (is_bad_food(*it))
+                continue;
+
+            to_eat = it;
+        }
         else
         {
             string corpse_name = it->name(DESC_A);
@@ -243,7 +251,8 @@ void butchery(item_def* specific_corpse)
             {
                 const bool can_bottle =
                     can_bottle_blood_from_corpse(it->mon_type);
-                mprf(MSGCH_PROMPT, "%s %s? [(y)es/(c)hop/(n)o/(a)ll/(q)uit/?]",
+                mprf(MSGCH_PROMPT,
+                     "%s %s? [(y)es/(c)hop/(n)o/(a)ll/(e)dible/(q)uit/?]",
                      can_bottle ? "Bottle" : "Butcher",
                      corpse_name.c_str());
                 repeat_prompt = false;
@@ -256,6 +265,13 @@ void butchery(item_def* specific_corpse)
                 case 'y':
                 case 'c':
                 case 'd':
+                    to_eat = it;
+                    break;
+
+                case 'e':
+                    butcher_edible = true;
+                    if (is_bad_food(*it))
+                        continue;
                     to_eat = it;
                     break;
 
@@ -285,7 +301,8 @@ void butchery(item_def* specific_corpse)
     // No point in displaying this if the player pressed 'a' above.
     if (!to_eat && !butcher_all)
     {
-        mprf("There isn't anything else to %sbutcher here.",
+        mprf("There isn't anything %s to %sbutcher here.",
+             butcher_edible ? "edible" : "else",
              bottle_blood ? "bottle or " : "");
     }
 #endif

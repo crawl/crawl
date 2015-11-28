@@ -1185,15 +1185,8 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     aux_attack = aux->get_name();
     aux_verb = aux->get_verb();
 
-
-    // prob of vampiric bite:
-    // 1/4 when non-thirsty, 1/2 when thirsty, 100% when
-    // bloodless
     if (atk == UNAT_BITE
-        && _vamp_wants_blood_from_monster(defender->as_monster())
-        && (you.hunger_state <= HS_STARVING
-            || you.hunger_state < HS_SATIATED && coinflip()
-            || you.hunger_state >= HS_SATIATED && one_chance_in(4)))
+        && _vamp_wants_blood_from_monster(defender->as_monster()))
     {
         damage_brand = SPWPN_VAMPIRISM;
     }
@@ -1296,8 +1289,7 @@ bool melee_attack::player_aux_unarmed()
         if (atk == UNAT_CONSTRICT && !attacker->can_constrict(defender))
             continue;
 
-        to_hit = random2(calc_your_to_hit_unarmed(atk,
-                         damage_brand == SPWPN_VAMPIRISM));
+        to_hit = random2(calc_your_to_hit_unarmed(atk));
 
         handle_noise(defender->pos());
         alert_nearby_monsters();
@@ -1846,8 +1838,10 @@ bool melee_attack::player_monattk_hit_effects()
         return false;
 
     // Thirsty vampires will try to use a stabbing situation to draw blood.
-    if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
-        && damage_done > 0 && stab_attempt && stab_bonus > 0)
+    if (you.species == SP_VAMPIRE
+        && damage_done > 0
+        && stab_attempt
+        && stab_bonus > 0)
     {
         _player_vampire_draws_blood(defender->as_monster(), damage_done, true);
     }
@@ -3565,7 +3559,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 // to-hit method
 // Returns the to-hit for your extra unarmed attacks.
 // DOES NOT do the final roll (i.e., random2(your_to_hit)).
-int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
+int melee_attack::calc_your_to_hit_unarmed(int uattack)
 {
     int your_to_hit;
 
@@ -3580,20 +3574,7 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
     if (player_mutation_level(MUT_EYEBALLS))
         your_to_hit += 2 * player_mutation_level(MUT_EYEBALLS) + 1;
 
-    // Vampires know how to bite and aim better when thirsty.
-    if (you.species == SP_VAMPIRE && uattack == UNAT_BITE)
-    {
-        your_to_hit += 1;
-
-        if (vampiric)
-        {
-            if (you.hunger_state <= HS_STARVING)
-                your_to_hit += 2;
-            else if (you.hunger_state < HS_SATIATED)
-                your_to_hit += 1;
-        }
-    }
-    else if (you.species != SP_VAMPIRE && you.hunger_state <= HS_STARVING)
+    if (you.species != SP_VAMPIRE && you.hunger_state <= HS_STARVING)
         your_to_hit -= 3;
 
     your_to_hit += slaying_bonus();
@@ -3726,10 +3707,6 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
         if (heal > you.experience_level)
             heal = you.experience_level;
 
-        // Decrease healing when done in bat form.
-        if (you.form == TRAN_BAT)
-            heal /= 2;
-
         if (heal > 0 && !you.duration[DUR_DEATHS_DOOR])
         {
             inc_hp(heal);
@@ -3739,15 +3716,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
 
     // Gain nutrition.
     if (you.hunger_state != HS_ENGORGED)
-    {
-        int food_value = 30 + random2avg(59, 2);
-
-        // Bats get rather less nutrition out of it.
-        if (you.form == TRAN_BAT)
-            food_value /= 2;
-
-        lessen_hunger(food_value, false);
-    }
+        lessen_hunger(30 + random2avg(59, 2), false);
 
     did_god_conduct(DID_DRINK_BLOOD, 5 + random2(4));
 
@@ -3757,7 +3726,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
 bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
 {
     return you.species == SP_VAMPIRE
-           && you.hunger_state < HS_ENGORGED
+           && you.hunger_state < HS_SATIATED
            && !mon->is_summoned()
            && mons_has_blood(mon->type);
 }
