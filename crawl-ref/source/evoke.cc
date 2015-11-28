@@ -1944,7 +1944,7 @@ static bool _xoms_chessboard(item_def &board)
 {
     if (get_nearby_monsters(false, true).empty())
     {
-        mpr("Xom won't come play if there aren't more players.");
+        mpr("You can't see any nearby monsters.");
         return false;
     }
 
@@ -1959,14 +1959,9 @@ static bool _xoms_chessboard(item_def &board)
         return true;
     }
 
-    // Those who do not follow the mad god have
-    // a chance of a bad Xom action instead if they
-    // break a rule. Who knows how bad it could be, though?
-    // It's Xom.
-    // Those who have abandoned Xom will know only suffering
+    // Chance of a bad Xom action instead.
     int fail_rate = 30 - you.skill(SK_EVOCATIONS);
-    if (!you_worship(GOD_XOM) &&
-        (x_chance_in_y(fail_rate, 100) || player_under_penance(GOD_XOM)))
+    if (x_chance_in_y(fail_rate, 100))
     {
         god_speaks(GOD_XOM, "Xom laughs nastily.");
         xom_acts(false, random_range(0, 100));
