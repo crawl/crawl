@@ -1479,6 +1479,81 @@ MAP
       vvvvvvv
 ENDMAP
 
+### Pakellas overflow altars ###################################################
+NAME:   grunt_pakellas_salt
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
+TAGS:   temple_overflow_pakellas uniq_altar_pakellas
+KFEAT:  _ = altar_pakellas
+SUBST:  c : cvb
+MAP
+  .....
+ ..ccc..
+..c...c..
+.ccc_ccc.
+..c...c..
+ ..ccc..
+  .....
+ENDMAP
+
+NAME:   grunt_pakellas_sulfur
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
+TAGS:   temple_overflow_pakellas uniq_altar_pakellas
+KFEAT:  _ = altar_pakellas
+SUBST:  c : cvb
+MAP
+     ...
+    ..c..
+   ..c.c..
+  ..c...c..
+ ..c.._..c..
+..c.......c..
+.ccccccccccc.
+......l......
+   ...l...
+   .lllll.
+   ...l...
+     .l.
+     ...
+ENDMAP
+
+NAME:   grunt_pakellas_mercury
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
+TAGS:   temple_overflow_pakellas uniq_altar_pakellas
+KFEAT:  _ = altar_pakellas
+SUBST:  c : cvb
+MAP
+ .....
+.c...c.
+.c...c.
+..ccc..
+.c...c.
+.c._.c.
+.c...c.
+..ccc..
+ ..c..
+ .ccc.
+ ..c..
+  ...
+ENDMAP
+
+NAME:   grunt_pakellas_basics
+WEIGHT: 20
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
+TAGS:   no_rotate no_hmirror temple_overflow_pakellas uniq_altar_pakellas
+KFEAT:  _ = altar_pakellas
+SUBST:  d : c.
+SUBST:  c : cvb
+MAP
+     ...
+    ..c..
+ ....c.c....
+..ddcdddcdd..
+ ..c.._..c..
+..c.......c..
+.ccccccccccc.
+.............
+ENDMAP
+
 ### Qazlal overflow altars ####################################################
 
 # There's always a safe path to the altar.
