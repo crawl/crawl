@@ -3887,6 +3887,10 @@ bool god_hates_spell(spell_type spell, god_type god, bool rod_spell)
         if (is_fiery_spell(spell))
             return true;
         break;
+    case GOD_PAKELLAS:
+        if (spell == SPELL_SUBLIMATION_OF_BLOOD)
+            return true;
+        break;
     default:
         break;
     }

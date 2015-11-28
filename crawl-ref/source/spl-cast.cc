@@ -914,6 +914,9 @@ static void _spellcasting_god_conduct(spell_type spell)
     if (spell == SPELL_SWIFTNESS)
         did_god_conduct(DID_HASTY, conduct_level);
 
+    if (spell == SPELL_SUBLIMATION_OF_BLOOD)
+        did_god_conduct(DID_CHANNEL, conduct_level);
+
     if (god_loathes_spell(spell, you.religion))
         excommunication();
 }
