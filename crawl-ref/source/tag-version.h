@@ -178,6 +178,7 @@ enum tag_minor_version
     TAG_MINOR_RUNE_TYPE,           // runes became a base type
     TAG_MINOR_ZIGFIGS,             // let characters from before ziggurat changes continue zigging
     TAG_MINOR_RU_PIETY_CONSISTENCY,// make Ru piety constant once determined.
+    TAG_MINOR_SAC_PIETY_LEN,       // marshall length with sacrifice piety
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

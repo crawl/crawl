@@ -3403,7 +3403,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case MISC_XOMS_CHESSBOARD:
-            return !you_worship(GOD_XOM);
+            return true;
         default:
             return false;
         }
