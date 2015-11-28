@@ -91,8 +91,8 @@ enum class abflag
     CONF_OK        = 0x00000100, // can use even if confused
     FRUIT          = 0x00000200, // ability requires fruit
     VARIABLE_FRUIT = 0x00000400, // ability requires fruit or piety
-                   //0x00000800,
-                   //0x00001000,
+    VARIABLE_MP    = 0x00000800, // costs a variable amount of MP
+    ALL_MP         = 0x00001000, // costs all of your current MP
                    //0x00002000,
                    //0x00004000,
                    //0x00008000,
@@ -391,9 +391,9 @@ static const ability_def Ability_List[] =
 
     // Pakellas
     { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
-        0, 0, 100, generic_cost::fixed(1), abflag::NONE },
+        0, 0, 100, generic_cost::fixed(1), abflag::VARIABLE_MP },
     { ABIL_PAKELLAS_QUICK_CHARGE, "Quick Charge",
-        0, 0, 100, 2, abflag::NONE },
+        0, 0, 100, 2, abflag::ALL_MP },
     { ABIL_PAKELLAS_SUPERCHARGE, "Supercharge", 0, 0, 0, 0, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, abflag::NONE },
@@ -493,6 +493,12 @@ const string make_cost_description(ability_type ability)
         ret += make_stringf(", %d %sMP", abil.mp_cost,
             abil.flags & abflag::PERMANENT_MP ? "Permanent " : "");
     }
+
+    if (abil.flags & abflag::VARIABLE_MP)
+        ret += ", MP";
+
+    if (abil.flags & abflag::ALL_MP)
+        ret += make_stringf(", %d MP", max(1, you.magic_points));
 
     if (abil.hp_cost)
     {
