@@ -2848,7 +2848,7 @@ static void _swing_at_target(coord_def move)
             mpr("You swing at nothing.");
         make_hungry(3, true);
         // Take the usual attack delay.
-        you.time_taken = you.attack_delay();
+        you.time_taken = you.attack_delay().roll();
     }
     you.turn_is_over = true;
     return;
