@@ -1541,9 +1541,9 @@ between all sorts of creatures.
 %%%%
 piece from Xom's chessboard
 
-A shimmering multi-coloured chesspiece belonging to Xom, god of chaos.
-Moving it will invite Xom to take a turn in some cosmic game, though only
-worshippers know the 'rules'. A bad move could prove quite disastrous.
+A shimmering multi-coloured chesspiece belonging to Xom, god of chaos. Moving
+it in the presence of other creatures will invite Xom to take a turn in some
+cosmic game. A bad move may instead incur Xom's displeasure.
 %%%%
 young poisoner's handbook
 

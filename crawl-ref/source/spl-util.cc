@@ -1282,26 +1282,32 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
                     " at a time.";
         }
         if (player_mutation_level(MUT_NO_LOVE))
-            return "you cannot coerce anything to answer your summons!";
+            return "you cannot coerce anything to answer your summons.";
         break;
 
     case SPELL_SUMMON_FOREST:
         if (temp && you.duration[DUR_FORESTED])
-            return "you can only summon one forest at a time!";
+            return "you can only summon one forest at a time.";
         if (player_mutation_level(MUT_NO_LOVE))
-            return "you cannot coerce anything to answer your summons!";
+            return "you cannot coerce anything to answer your summons.";
+        break;
+
+    case SPELL_ANIMATE_DEAD:
+    case SPELL_ANIMATE_SKELETON:
+    case SPELL_TWISTED_RESURRECTION:
+    case SPELL_CONTROL_UNDEAD:
+    case SPELL_DEATH_CHANNEL:
+    case SPELL_SIMULACRUM:
+        if (player_mutation_level(MUT_NO_LOVE))
+            return "you cannot coerce anything to obey you.";
         break;
 
     case SPELL_SUMMON_SMALL_MAMMAL:
     case SPELL_SUMMON_HORRIBLE_THINGS:
-    case SPELL_ANIMATE_DEAD:
-    case SPELL_ANIMATE_SKELETON:
     case SPELL_HAUNT:
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_CALL_IMP:
-    case SPELL_TWISTED_RESURRECTION:
     case SPELL_SUMMON_GREATER_DEMON:
-    case SPELL_DEATH_CHANNEL:
     case SPELL_SHADOW_CREATURES:
     case SPELL_CALL_CANINE_FAMILIAR:
     case SPELL_SUMMON_DRAGON:
@@ -1314,7 +1320,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_DRAGON_CALL:
     case SPELL_SUMMON_MANA_VIPER:
         if (player_mutation_level(MUT_NO_LOVE))
-            return "you cannot coerce anything to answer your summons!";
+            return "you cannot coerce anything to answer your summons.";
         break;
 
     default:
