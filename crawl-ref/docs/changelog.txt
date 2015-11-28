@@ -1,5 +1,101 @@
-Stone Soup 0.18 (initial 0.18-a0)
----------------------------------
+Stone Soup 0.18 (up to 0.18-a0-346-ga0a4001)
+--------------------------------------------
+
+Branches, Environment
+---------------------
+* The enemies in the Elven Halls ending vault are now less likely to be lured
+  out of the vault.
+* Ziggurat portals no longer appear in Pan.
+
+Character
+---------
+* A new mutation: Sturdy Frame, reducing base ER by 2/4/6 and thus making
+  heavy armour easier to wear. Can be a demonspawn mutation.
+* The player no longer takes an accuracy for fighting while invisible but
+  without SInv (also true of monsters).
+* Formicids now have 0 Throwing aptitude (was -2).
+* Formicid shafting now has a 2/3 chance of shafting one floor and 1/3 of two
+  floors. Existing shafts are unaffected.
+
+Gods
+----
+* Xom now chaos brands more weapon gifts, and can chaos brand ranged weapons
+  again.
+* Finesse is no longer blocked by stasis.
+* Jiyva altars in Dungeon no longer appear as early in Dungeon.
+* Cheibriados now blocks chaos effects from hasting the player.
+* Piety given for a Ru sacrifice is more explicitly stated.
+
+Items
+-----
+* New items:
+  - The +8 frozen axe "Frostbite" {freezing cloud, *Noise +Fly rC+}, an
+    executioner's axe with a chance of placing freezing clouds on enemies it
+    strikes.
+  - The +12 armour of Talos {ponderous, rF+}, a troll/ogre-sized suit of
+    plate mail.
+  - A figurine of a ziggurat - evoke to create a ziggurat portal. Appears on
+    Zig:27 of all ziggurats and in the Tomb:3 loot.
+  - Pieces from Xom's chessboard - evoke to randomly swap the positions of
+    you and all enemies and LOS, or (on failure) to trigger a Xom effect.
+* The robe of vines is now +2, Regen+7.
+* Amulets of stasis do not generate sound when blocking an effect.
+* The Majin-Bo now speaks occasionally.
+
+Monsters
+--------
+* New monsters:
+  - Spark wasps, lethally electric swarming insects that appear singularly in
+    Spider and in packs in Depths.
+  - Iron giants, with all the resilience that iron implies and the ability to
+    throw you into the pack of giants they lead.
+* Mnoleg gains Random Bolt and Dig.
+* Gloorx Vloq gains Summon Executioners and Black Mark.
+* Juggernauts now have two less damaging attacks instead of one powerful
+  attack.
+* Jellies and death oozes cannot be blinded.
+* Jumping spiders and mana vipers can be blinded.
+* Jumping spiders cannot see invisible.
+* Giant eyeballs and golden eyes can now see invisible.
+* Monsters no longer lose rod power by wearing a shield.
+* Salamander stormcallers' chant does not need to be continuous; they now
+  only need to try to cast Fire Storm at their target three times for it to
+  trigger.
+* Entropy weavers' corrosion is now instant and smite-targeted, but only
+  applies one level of corrosion.
+* Ice devils are now tier 4 demons, with lowered HD to match.
+* Hellwings now have the swoop attack formerly possessed by blue devils.
+* Orange demons have their attacks split - they now have a reaching poison
+  sting and a melee-only weakness attack.
+* Salamander mystics lose Localised Ignite Poison.
+* Natasha, deep elf knights, and salamander stormcallers can no longer cast
+  Conjure Flame.
+* Spectral mist can no longer summon completely random spectral enemies.
+* Banishment from powerful monsters can now send you deeper into the Abyss
+  than Abyss:1.
+* Removed monsters:
+  - Octopode crushers.
+  - (Plain) spiders.
+  - Salamander firebrands.
+  - Blue devils.
+  - Brain worms.
+
+Spells
+------
+* New spell: Yara's Violent Unravelling (L5 Hexes/Transumations); dispels
+  all cancellable effects on the target and - if any were dispelled - causes
+  a radius 1 explosion with damage proportional to the number of dispelled
+  effects.
+* Sticks to Snakes now caps its maximum spell power at 100.
+* Control Undead and Simulacrum are no longer allowed under Sacrifice Love.
+
+Interface
+---------
+* Earth elementalists now have their stones start on b.
+* Characters starting with a primary ranged weapon now have their melee weapon
+  on b by default.
+* An option is added to the butchering prompt to allow butchering only
+  (e)dible corpses.
 
 Stone Soup 0.17 (20151106)
 --------------------------
