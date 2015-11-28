@@ -2117,9 +2117,11 @@ item_def* monster_die(monster* mons, killer_type killer,
                     hp_heal = random2(1 + 2 * mons->get_experience_level());
                     mp_heal = random2(2 + mons->get_experience_level() / 3);
                     break;
-                case GOD_PAKELLAS:
                 case GOD_VEHUMET:
                     mp_heal = 1 + random2(mons->get_experience_level() / 2);
+                    break;
+                case GOD_PAKELLAS:
+                    mp_heal = random2(2 + mons->get_experience_level() / 4);
                     break;
                 default:
                     die("bad kill-on-healing god!");
