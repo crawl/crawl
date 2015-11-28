@@ -392,12 +392,8 @@ static const ability_def Ability_List[] =
     // Pakellas
     { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
         0, 0, 100, generic_cost::fixed(1), abflag::NONE },
-    { ABIL_PAKELLAS_DRAIN_MAGIC, "Drain Magic", 0, 0, 200, 3, abflag::NONE },
     { ABIL_PAKELLAS_QUICK_CHARGE, "Quick Charge",
         0, 0, 100, 2, abflag::NONE },
-    { ABIL_PAKELLAS_MASS_DRAIN_MAGIC, "Mass Drain Magic",
-        0, 0, 200, 3, abflag::NONE },
-    { ABIL_PAKELLAS_SAP_MAGIC, "Sap Magic", 0, 0, 150, 4, abflag::NONE },
     { ABIL_PAKELLAS_SUPERCHARGE, "Supercharge", 0, 0, 0, 0, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, abflag::NONE },
@@ -711,13 +707,6 @@ ability_type fixup_ability(ability_type ability)
         else
             return ability;
 
-    case ABIL_PAKELLAS_DRAIN_MAGIC:
-        // suppress regular drain magic once mass drain magic is unlocked (ugh)
-        if (in_good_standing(GOD_PAKELLAS, 3))
-            return ABIL_NON_ABILITY;
-        else
-            return ABIL_PAKELLAS_DRAIN_MAGIC;
-
     default:
         return ability;
     }
@@ -909,20 +898,13 @@ talent get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_TROG_BROTHERS_IN_ARMS:    // piety >= 100
-    case ABIL_PAKELLAS_SAP_MAGIC:       // piety >= 120
         invoc = true;
-        failure = piety_breakpoint(5) - you.piety; // starts at 60% / 40%
+        failure = piety_breakpoint(5) - you.piety; // starts at 60%
         break;
 
     case ABIL_JIYVA_SLIMIFY:
         invoc = true;
         failure = 90 - you.piety / 2;
-        break;
-
-    case ABIL_PAKELLAS_DRAIN_MAGIC:     // piety >= 50
-    case ABIL_PAKELLAS_MASS_DRAIN_MAGIC:
-        invoc = true;
-        failure = piety_breakpoint(3) - you.piety; // starts at 50%
         break;
 
     // Other invocations, based on piety and Invocations skill.
@@ -2935,42 +2917,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
-    case ABIL_PAKELLAS_DRAIN_MAGIC:
-    {
-        beam.range = LOS_RADIUS;
-        if (!spell_direction(spd, beam, DIR_TARGET, TARG_HOSTILE, 0, false))
-            return SPRET_ABORT;
-
-        if (beam.target == you.pos())
-        {
-            mpr("You cannot drain magic from yourself!");
-            return SPRET_ABORT;
-        }
-
-        monster* mons = monster_at(beam.target);
-
-        if (mons == nullptr || !you.can_see(*mons))
-        {
-            mpr("There is no monster there to drain!");
-            return SPRET_ABORT;
-        }
-
-        if (!mons->antimagic_susceptible()
-            || mons_is_firewood(mons)
-            || mons_is_conjured(mons->type))
-        {
-            mpr("You cannot drain magic from that!");
-            return SPRET_ABORT;
-        }
-
-        fail_check();
-
-        mprf("You drain magic from %s!", mons->name(DESC_THE).c_str());
-        enchant_actor_with_flavour(mons, &you, BEAM_DRAIN_MAGIC, you.piety);
-        pakellas_add_drained_mp(random2(you.piety / 16) + 1);
-        break;
-    }
-
     case ABIL_PAKELLAS_QUICK_CHARGE:
     {
         fail_check();
@@ -2986,47 +2932,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         dec_mp(you.magic_points);
 
-        break;
-    }
-
-    case ABIL_PAKELLAS_MASS_DRAIN_MAGIC:
-    {
-        fail_check();
-        cast_los_attack_spell(SPELL_DRAIN_MAGIC, you.piety, &you, true);
-        break;
-    }
-
-    case ABIL_PAKELLAS_SAP_MAGIC:
-    {
-        beam.range = LOS_RADIUS;
-        if (!spell_direction(spd, beam, DIR_TARGET, TARG_HOSTILE, 0, false))
-            return SPRET_ABORT;
-
-        if (beam.target == you.pos())
-        {
-            mpr("You cannot drain magic from yourself!");
-            return SPRET_ABORT;
-        }
-
-        monster* mons = monster_at(beam.target);
-
-        if (mons == nullptr || !you.can_see(*mons))
-        {
-            mpr("There is no monster there to drain!");
-            return SPRET_ABORT;
-        }
-
-        if (!mons->antimagic_susceptible()
-            || mons_is_firewood(mons)
-            || mons_is_conjured(mons->type))
-        {
-            mpr("You cannot drain magic from that!");
-            return SPRET_ABORT;
-        }
-
-        fail_check();
-
-        enchant_actor_with_flavour(mons, &you, BEAM_SAP_MAGIC, you.piety);
         break;
     }
 

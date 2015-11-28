@@ -5723,9 +5723,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_SAP_MAGIC:
-        // Player Sap Magic is a Pakellas ability and already has a fail
-        // chance built in
-        if (!(agent() && agent()->is_player()) && !SAP_MAGIC_CHANCE())
+        if (!SAP_MAGIC_CHANCE())
         {
             if (you.can_see(*mon))
                 canned_msg(MSG_NOTHING_HAPPENS);

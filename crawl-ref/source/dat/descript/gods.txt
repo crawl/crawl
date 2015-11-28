@@ -319,11 +319,9 @@ forbidden from using external means to do so; instead, they are granted
 magical energy on killing beings. They may use increasing amounts of magical
 energy to strengthen their devices, temporarily granting them additional
 power, and can also use their magical energy to recharge their devices.
-They may also absorb magical energies directly from ther foes, initially
-on an individual basis but soon growing to expand their entire immediate
-environment. Sufficiently devout followers will begin to receive devices from
-Pakellas, and may eventually petition Pakellas to personally charge one of
-their devices beyond its normal limits.
+Sufficiently devout followers will begin to receive devices from Pakellas, and
+may eventually petition Pakellas to personally charge one of their devices
+beyond its normal limits.
 %%%%
 Qazlal powers
 

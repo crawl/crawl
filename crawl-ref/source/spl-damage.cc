@@ -587,86 +587,6 @@ static void _post_drain_life(actor* agent, bool player,
     }
 }
 
-static bool _drain_magicable(const actor* agent, const actor* act)
-{
-    if (!act->antimagic_susceptible()
-        || mons_is_conjured(act->type)
-        || act->is_monster()
-           && mons_is_firewood(act->as_monster()))
-    {
-        return false;
-    }
-
-    if (!agent)
-        return true;
-
-    const monster* mons = agent->as_monster();
-    const monster* m = act->as_monster();
-
-    return !(agent->is_player() && act->wont_attack()
-             || mons && act->is_player() && mons->wont_attack()
-             || mons && m && mons_atts_aligned(mons->attitude, m->attitude));
-}
-
-static bool _drain_magicable_hitfunc(const actor* act)
-{
-    return _drain_magicable(&you, act);
-}
-
-static int _drain_magic_player(actor* agent, int pow, int avg,
-                               bool actual, bool added_effects)
-{
-    if (actual)
-    {
-        int old_mp = you.magic_points;
-        enchant_actor_with_flavour(&you, agent, BEAM_DRAIN_MAGIC, pow);
-        return old_mp - you.magic_points;
-    }
-
-    return min(avg, you.magic_points);
-}
-
-static int _drain_magic_monster(actor* agent, monster* target, int pow, int avg,
-                                bool actual, bool added_effects)
-{
-    ASSERT(target); // XXX: change to monster &target
-
-    if (actual)
-    {
-        if (agent && agent->is_player())
-        {
-            mprf("You drain magic from %s!",
-                 target->name(DESC_THE).c_str());
-        }
-
-        behaviour_event(target, ME_ANNOY, agent,
-                        agent ? agent->pos() : coord_def(0, 0));
-
-        enchant_actor_with_flavour(target, agent, BEAM_DRAIN_MAGIC, pow);
-    }
-
-    if (!target->is_summoned())
-        return avg;
-
-    return 0;
-}
-
-static void _post_drain_magic(actor* agent, bool player,
-                              vector<monster *> affected_monsters,
-                              int pow, int total_damage)
-{
-    total_damage /= 2;
-
-    total_damage = min(pow * 2, total_damage);
-
-    if (total_damage && agent)
-    {
-        if (agent->is_player())
-            pakellas_add_drained_mp(total_damage);
-        // FIXME: monster case?
-    }
-}
-
 spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
                                  bool actual, bool added_effects, bool fail,
                                  bool allow_cancel)
@@ -721,21 +641,6 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
             damage_monster = &_drain_monster;
             post_hook = &_post_drain_life;
             hurted = 3 + random2(7) + random2(pow);
-            break;
-
-        case SPELL_DRAIN_MAGIC:
-            player_msg = "You draw magical power from your surroundings.";
-            global_msg = "Something draws magical power from your"
-                         " surroundings.";
-            mons_vis_msg = " draws from the surrounding magical power!";
-            mons_invis_msg = "The surrounding magical power dissipates!";
-            flash_colour = DARKGREY;
-            vulnerable = &_drain_magicable;
-            vul_hitfunc = &_drain_magicable_hitfunc;
-            damage_player = &_drain_magic_player;
-            damage_monster = &_drain_magic_monster;
-            post_hook = &_post_drain_magic;
-            hurted = 2 + random2(pow / 8);
             break;
 
         default: return SPRET_ABORT;
