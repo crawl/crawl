@@ -1779,17 +1779,16 @@ void StashTracker::search_stashes()
         return;
     }
 
-    string csearch = *buf? buf : lastsearch;
-    string help = lastsearch;
-    lastsearch = csearch;
+    string csearch_literal = *buf? buf : lastsearch;
+    string csearch = csearch_literal;
 
-    if (csearch == "@")
-        csearch = ".";
-    bool curr_lev = (csearch[0] == '@');
+    bool curr_lev = (csearch[0] == '@' || csearch == ".");
     if (curr_lev)
+    {
         csearch.erase(0, 1);
-    if (csearch == ".")
-        curr_lev = true;
+        if (csearch.length() == 0)
+            csearch = ".";
+    }
 
     vector<stash_search_result> results;
 
@@ -1806,9 +1805,10 @@ void StashTracker::search_stashes()
     if (!search->valid() && csearch != "*")
     {
         mprf(MSGCH_PLAIN, "Your search expression is invalid.");
-        lastsearch = help;
         return ;
     }
+
+    lastsearch = csearch_literal;
 
     if (!curr_lev)
         _inventory_search(*search, results);
