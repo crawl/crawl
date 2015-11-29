@@ -410,7 +410,10 @@ string Stash::stash_item_name(const item_def &item)
     string name = item.name(DESC_A);
 
     if (in_inventory(item))
-        name = "(carried) " + name;
+    {
+        name.insert(0, "(carried) ");
+        return name;
+    }
 
     if (!_is_rottable(item))
         return name;
