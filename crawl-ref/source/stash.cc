@@ -68,19 +68,20 @@ string stash_annotate_item(const char *s, const item_def *item, bool exclusive)
 {
     string text = userdef_annotate_item(s, item, exclusive);
 
-    if (item->has_spells())
-    {
-        formatted_string fs;
-        describe_spellset(item_spellset(*item), item, fs);
-        text += "\n";
-        text += fs.tostring();
-    }
+    for (auto contents : item_spellset(*item))
+        for (auto spell : contents.spells)
+        {
+            text += " {";
+            text += spell_title(spell);
+            text += "}";
+        }
 
     // Include singular form (slice of pizza vs slices of pizza).
     if (item->quantity > 1)
     {
-        text += "\n";
+        text += " {";
         text += item->name(DESC_QUALNAME);
+        text += "}";
     }
 
     // note that we can't add this in stash.lua (where most other annotations
@@ -89,7 +90,7 @@ string stash_annotate_item(const char *s, const item_def *item, bool exclusive)
     // item_needs_autopickup while trying to decide if the item needs to be
     // autopickedup leads to infinite recursion
     if (item_needs_autopickup(*item))
-        text += "\nautopickup";
+        text += " {autopickup}";
 
     return text;
 }
