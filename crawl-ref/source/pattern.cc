@@ -14,6 +14,7 @@
 #endif
 
 #include "pattern.h"
+#include "stringutil.h"
 
 #if defined(REGEX_PCRE)
 ////////////////////////////////////////////////////////////////////
@@ -47,6 +48,20 @@ static bool _pattern_match(void *compiled_pattern, const char *text, int length)
     return pcre_rc >= 0;
 }
 
+static pattern_match _pattern_match_location(void *compiled_pattern,
+                                             const char *text, int length)
+{
+    int ovector[42];
+    int pcre_rc = pcre_exec(static_cast<pcre *>(compiled_pattern),
+                            nullptr,
+                            text, length, 0, 0,
+                            ovector, sizeof(ovector) / sizeof(*ovector));
+    if (pcre_rc >= 0)
+        return pattern_match::succeeded(string(text), ovector[0], ovector[1]);
+    else
+        return pattern_match::failed(string(text));
+}
+
 ////////////////////////////////////////////////////////////////////
 #else
 ////////////////////////////////////////////////////////////////////
@@ -58,7 +73,7 @@ static void *_compile_pattern(const char *pattern, bool icase)
     if (!re)
         return nullptr;
 
-    int flags = REG_EXTENDED | REG_NOSUB;
+    int flags = REG_EXTENDED;
     if (icase)
         flags |= REG_ICASE;
     int rc = regcomp(re, pattern, flags);
@@ -87,8 +102,36 @@ static bool _pattern_match(void *compiled_pattern, const char *text, int length)
     return !regexec(re, text, 0, nullptr, 0);
 }
 
+static pattern_match _pattern_match_location(void *compiled_pattern,
+                                             const char *text, int length)
+{
+    regmatch_t match;
+    regex_t *re = static_cast<regex_t *>(compiled_pattern);
+    if (!regexec(re, text, 1, &match, 0))
+        return pattern_match::succeeded(string(text), match.rm_so, match.rm_eo);
+    else
+        return pattern_match::failed(string(text));
+}
+
 ////////////////////////////////////////////////////////////////////
 #endif
+
+string pattern_match::annotate_string(const string &color) const
+{
+    string ret(text);
+
+    if (*this && start < end)
+    {
+        ret.insert(end, make_stringf("</%s>", color.c_str()));
+        ret.insert(start, make_stringf("<%s>", color.c_str()));
+    }
+
+    size_t pos = string::npos;
+    while ((pos = ret.find('\n')) != string::npos)
+        ret.replace(pos, 1, " ");
+
+    return ret;
+}
 
 text_pattern::~text_pattern()
 {
@@ -142,4 +185,12 @@ bool text_pattern::compile() const
 bool text_pattern::matches(const char *s, int length) const
 {
     return valid() && _pattern_match(compiled_pattern, s, length);
+}
+
+pattern_match text_pattern::match_location(const char *s, int length) const
+{
+    if (valid())
+        return _pattern_match_location(compiled_pattern, s, length);
+    else
+        return pattern_match::failed(string(s));
 }
