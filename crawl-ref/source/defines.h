@@ -29,7 +29,7 @@
 typedef uint32_t ucs_t;
 
 // max size of inventory array {dlb}:
-#define ENDOFPACK 52
+#define ENDOFPACK 62
 
 // Max ghosts on a level.
 const int MAX_GHOSTS = 10;

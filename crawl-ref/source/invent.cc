@@ -1183,33 +1183,6 @@ void display_inventory()
         redraw_screen();
 }
 
-// Reads in digits for a count and apprends then to val, the
-// return value is the character that stopped the reading.
-static unsigned char _get_invent_quant(unsigned char keyin, int &quant)
-{
-    quant = keyin - '0';
-
-    while (true)
-    {
-        keyin = get_ch();
-
-        if (!isadigit(keyin))
-            break;
-
-        quant *= 10;
-        quant += (keyin - '0');
-
-        if (quant > 9999999)
-        {
-            quant = 9999999;
-            keyin = '\0';
-            break;
-        }
-    }
-
-    return keyin;
-}
-
 // This function prompts the user for an item, handles the '?' and '*'
 // listings, and returns the inventory slot to the caller (which if
 // must_exist is true, as it is by default, will be an assigned item,
@@ -1314,14 +1287,6 @@ vector<SelItem> prompt_invent_items(
             need_redraw = !(keyin == '?' || keyin == '*'
                             || keyin == ',' || keyin == '+');
         }
-        else if (isadigit(keyin))
-        {
-            // The "read in quantity" mode
-            keyin = _get_invent_quant(keyin, count);
-
-            need_prompt = false;
-            need_getch  = false;
-        }
         else if (key_is_escape(keyin)
                 || (Options.easy_quit_item_prompts
                     && allow_easy_quit
@@ -1330,7 +1295,7 @@ vector<SelItem> prompt_invent_items(
             ret = PROMPT_ABORT;
             break;
         }
-        else if (isaalpha(keyin))
+        else if (isaalpha(keyin) || isadigit(keyin))
         {
             ret = letter_to_index(keyin);
 
@@ -1357,30 +1322,6 @@ vector<SelItem> prompt_invent_items(
                            ret != PROMPT_GOT_SPECIAL ? &you.inv[ret] : nullptr);
     }
     return items;
-}
-
-static int _digit_to_index(char digit, operation_types oper)
-{
-    const char iletter = static_cast<char>(oper);
-
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (you.inv[i].defined())
-        {
-            const string& r(you.inv[i].inscription);
-            // Note that r.size() is unsigned.
-            for (unsigned int j = 0; j + 2 < r.size(); ++j)
-            {
-                if (r[j] == '@'
-                     && (r[j+1] == iletter || r[j+1] == '*')
-                     && r[j+2] == digit)
-                {
-                    return i;
-                }
-            }
-        }
-    }
-    return -1;
 }
 
 static bool _has_warning_inscription(const item_def& item,
@@ -1852,8 +1793,7 @@ int prompt_invent_item(const char *prompt,
             need_getch  = false;
 
             // Don't redraw if we're just going to display another listing
-            need_redraw = (keyin != '?' && keyin != '*')
-                          && !(count && auto_list && isadigit(keyin));
+            need_redraw = (keyin != '?' && keyin != '*');
 
             if (!items.empty())
             {
@@ -1865,28 +1805,6 @@ int prompt_invent_item(const char *prompt,
                     redraw_screen();
                     clear_messages();
                 }
-            }
-        }
-        else if (count != nullptr && isadigit(keyin))
-        {
-            // The "read in quantity" mode
-            keyin = _get_invent_quant(keyin, *count);
-
-            need_prompt = false;
-            need_getch  = false;
-
-            if (auto_list)
-                need_redraw = true;
-        }
-        else if (count == nullptr && isadigit(keyin))
-        {
-            // scan for our item
-            int res = _digit_to_index(keyin, oper);
-            if (res != -1)
-            {
-                ret = res;
-                if (!do_warning || check_warning_inscriptions(you.inv[ret], oper))
-                    break;
             }
         }
         else if (key_is_escape(keyin)
@@ -1902,7 +1820,7 @@ int prompt_invent_item(const char *prompt,
             keyin = '?';
             need_getch = false;
         }
-        else if (isaalpha(keyin))
+        else if (isaalpha(keyin) || isadigit(keyin))
         {
             ret = letter_to_index(keyin);
 
