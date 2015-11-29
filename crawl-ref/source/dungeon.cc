@@ -344,7 +344,7 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
 static bool _build_level_vetoable(bool enable_random_maps,
                                   dungeon_feature_type dest_stairs_type)
 {
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
     mapstat_report_map_build_start();
 #endif
 
@@ -361,7 +361,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
     {
         dprf(DIAG_DNGN, "<white>VETO</white>: %s: %s",
              level_id::current().describe().c_str(), e.what());
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
         mapstat_report_map_veto(e.what());
 #endif
         return false;
@@ -1790,7 +1790,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
     {
         const int newzones = dgn_count_disconnected_zones(false);
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
         ostringstream vlist;
         for (unsigned i = nvaults; i < env.level_vaults.size(); ++i)
         {
@@ -1805,7 +1805,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
         {
             throw dgn_veto_exception(make_stringf(
                  "Had %d zones, now has %d%s%s.", dgn_zones, newzones,
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
                  "; broken by ", vlist.str().c_str()
 #else
                  "", ""
@@ -4011,7 +4011,7 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
     // exits will not be correctly set.
     const vault_placement *saved_place = dgn_register_place(place, true);
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
     if (crawl_state.map_stat_gen)
         mapstat_report_map_use(place.map);
 #endif
