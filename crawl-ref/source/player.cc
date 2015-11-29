@@ -2460,7 +2460,7 @@ void forget_map(bool rot)
     const bool rot_resist = player_in_branch(BRANCH_LABYRINTH)
                                 && you.species == SP_MINOTAUR
                             || player_in_branch(BRANCH_ABYSS)
-                                && you_worship(GOD_LUGONU);
+                                && have_passive(passive_t::map_rot_res_abyss);
     const double geometric_chance = 0.99;
     const int radius = (rot_resist ? 200 : 100);
 

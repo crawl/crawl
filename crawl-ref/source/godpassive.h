@@ -97,6 +97,15 @@ enum class passive_t
 
     /// You see better in the dark.
     nightvision,
+
+    /// No distortion unwield effects.
+    safe_distortion,
+
+    /// Less map rot in the abyss.
+    map_rot_res_abyss,
+
+    /// Higher chance for spawning the abyssal rune.
+    attract_abyssal_rune,
 };
 
 enum jiyva_slurp_results

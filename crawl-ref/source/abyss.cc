@@ -169,9 +169,9 @@ static int _abyssal_rune_roll()
 {
     if (you.runes[RUNE_ABYSSAL] || you.depth < ABYSSAL_RUNE_MIN_LEVEL)
         return -1;
-    const bool lugonu_favoured = in_good_standing(GOD_LUGONU, 4);
+    const bool god_favoured = have_passive(passive_t::attract_abyssal_rune);
 
-    const double depth = you.depth + lugonu_favoured;
+    const double depth = you.depth + god_favoured;
 
     return (int) pow(100.0, depth/(1 + brdepth[BRANCH_ABYSS]));
 }
