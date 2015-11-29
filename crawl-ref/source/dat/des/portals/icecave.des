@@ -201,7 +201,7 @@ function ice_cave_caverns_undead_demon_loot(e)
   e.item("book of ice / book of unlife / staff of cold / staff of death / \
           randbook disc:ice disc2:necromancy numspells:6 w:2 / nothing w:30")
   e.item("ring of ice / ring of protection from cold / \
-          ring of positive energy / wand of cold / wand of draining / \
+          ring of positive energy / wand of destruction / \
           any ring w:1 / any wand w:1 / nothing")
 end
 
@@ -215,7 +215,7 @@ function ice_cave_caverns_natural_giant_loot(e)
   e.item("book of ice / randbook disc:ice numspells:6 w:2 / \
           arbalest ego:freezing good_item no_uniq ident:type / \
           longbow ego:freezing good_item no_uniq ident:type / nothing w:20")
-  e.item("ring of ice / ring of protection from cold / wand of cold / \
+  e.item("ring of ice / ring of protection from cold / wand of destruction / \
           arrow ego:frost q:25 / bolt ego:frost q:20 / nothing")
 end
 
@@ -640,12 +640,11 @@ MONS:    freezing wraith
 : mocking_simulacrum(_G)
 : mons(mocking_ice)
 : mons("necromancer / necromancer ; robe " .. coldres ..
-:   " / necromancer ; robe " .. coldres .. " . wand of cold " ..
-:   " / necromancer ; robe " .. coldres .. " . wand of draining")
+:   " / necromancer ; robe " .. coldres .. " . wand of destruction")
 : savage_simulacrum(_G)
 : mons(savage_ice)
 MONS:    ice statue
-ITEM:    wand of frost / wand of cold w:5
+ITEM:    wand of minor destruction / wand of destruction w:5
 ITEM:    ring of ice / staff of cold
 : if crawl.coinflip() then
 ITEM:    manual of ice magic

@@ -2111,9 +2111,9 @@ TAGS:  uniq_altar_vehumet temple_overflow_1 temple_overflow_vehumet
 TAGS:  transparent patrolling
 DEPTH: D:3-9
 KFEAT: _ = altar_vehumet
-MONS:  goblin; wand of flame | wand of frost | wand of magic darts /\
-       hobgoblin; wand of flame | wand of frost | wand of magic darts /\
-       kobold; wand of flame | wand of frost | wand of magic darts
+MONS:  goblin; wand of minor destruction /\
+       hobgoblin; wand of minor destruction /\
+       kobold; wand of minor destruction
 MAP
 .......
 ...x...
@@ -2801,9 +2801,7 @@ TAGS:  temple_overflow_2 temple_overflow_makhleb temple_overflow_vehumet
 DEPTH: D:3-9
 KFEAT: A = altar_makhleb
 KFEAT: B = altar_vehumet
-MONS:  crimson imp ; wand of magic darts charges:1 | \
-                     wand of flame charges:1 | \
-                     wand of frost charges:1
+MONS:  crimson imp ; wand of minor destruction charges:1
 MAP
  xxxxx
 xxA.Bxx

@@ -705,10 +705,16 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_BOOKS,     BOOK_WIZARDRY },
     { OBJ_BOOKS,     BOOK_CONTROL },
     { OBJ_BOOKS,     BOOK_BUGGY_DESTRUCTION },
+    { OBJ_RODS,      ROD_DESTRUCTION },
     { OBJ_RODS,      ROD_VENOM },
     { OBJ_RODS,      ROD_WARDING },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
+    { OBJ_WANDS,     WAND_FROST },
+    { OBJ_WANDS,     WAND_MAGIC_DARTS },
+    { OBJ_WANDS,     WAND_COLD },
+    { OBJ_WANDS,     WAND_LIGHTNING },
+    { OBJ_WANDS,     WAND_DRAINING },
 #endif
     // Outside the #if because we probably won't remove these.
     { OBJ_RUNES,     RUNE_ELF },
@@ -1561,18 +1567,13 @@ int wand_charge_value(int type)
         return 3;
 
     case WAND_FIREBALL:
-    case WAND_LIGHTNING:
-    case WAND_DRAINING:
-    case WAND_FIRE:
-    case WAND_COLD:
+    case WAND_DESTRUCTION:
         return 5;
 
     default:
         return 8;
 
-    case WAND_FLAME:
-    case WAND_FROST:
-    case WAND_MAGIC_DARTS:
+    case WAND_MINOR_DESTRUCTION:
     case WAND_SLOWING:
     case WAND_CONFUSION:
     case WAND_RANDOM_EFFECTS:
@@ -1619,19 +1620,14 @@ bool is_offensive_wand(const item_def& item)
     case WAND_INVISIBILITY:
         return false;
 
-    case WAND_FLAME:
-    case WAND_FROST:
+    case WAND_MINOR_DESTRUCTION:
     case WAND_SLOWING:
-    case WAND_MAGIC_DARTS:
     case WAND_PARALYSIS:
-    case WAND_FIRE:
-    case WAND_COLD:
+    case WAND_DESTRUCTION:
     case WAND_CONFUSION:
     case WAND_FIREBALL:
     case WAND_TELEPORTATION:
-    case WAND_LIGHTNING:
     case WAND_POLYMORPH:
-    case WAND_DRAINING:
     case WAND_DISINTEGRATION:
         return true;
     }

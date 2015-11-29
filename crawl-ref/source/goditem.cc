@@ -138,8 +138,12 @@ bool is_potentially_evil_item(const item_def& item)
         }
         break;
     case OBJ_WANDS:
-        if (item.sub_type == WAND_RANDOM_EFFECTS)
+        if (item.sub_type == WAND_MINOR_DESTRUCTION
+            || item.sub_type == WAND_DESTRUCTION
+            || item.sub_type == WAND_RANDOM_EFFECTS)
+        {
             return true;
+        }
         break;
     case OBJ_RODS:
         if (item.sub_type == ROD_DESTRUCTION
@@ -208,8 +212,6 @@ bool is_evil_item(const item_def& item)
                || item_brand == SPWPN_REAPING;
         }
         break;
-    case OBJ_WANDS:
-        return item.sub_type == WAND_DRAINING;
     case OBJ_POTIONS:
         return is_blood_potion(item);
     case OBJ_SCROLLS:
@@ -400,8 +402,12 @@ static bool _is_potentially_fiery_item(const item_def& item)
         }
         break;
     case OBJ_WANDS:
-        if (item.sub_type == WAND_RANDOM_EFFECTS)
+        if (item.sub_type == WAND_MINOR_DESTRUCTION
+            || item.sub_type == WAND_DESTRUCTION
+            || item.sub_type == WAND_RANDOM_EFFECTS)
+        {
             return true;
+        }
         break;
     case OBJ_RODS:
         if (item.sub_type == ROD_DESTRUCTION
@@ -440,12 +446,8 @@ bool is_fiery_item(const item_def& item)
         }
         break;
     case OBJ_WANDS:
-        if (item.sub_type == WAND_FLAME
-            || item.sub_type == WAND_FIRE
-            || item.sub_type == WAND_FIREBALL)
-        {
+        if (item.sub_type == WAND_FIREBALL)
             return true;
-        }
         break;
     case OBJ_SCROLLS:
         if (item.sub_type == SCR_IMMOLATION)

@@ -650,7 +650,7 @@ MONS:    deep elf conjurer / deep elf knight w:7 / wizard / ogre mage / \
          centaur warrior w:8 ; shortbow ego:flaming | shortbow ego:freezing . arrow / \
          two-headed ogre w:5 ; great mace ego:freezing ident:type . \
          great mace ego:flaming ident:type / efreet w:5 / \
-         rakshasa w:5 ; wand of flame | wand of frost . whip . robe
+         rakshasa w:5 ; wand of minor destruction . whip . robe
 MONS:    ugly thing w:15 / shapeshifter / unseen horror w:15 / \
          chaos spawn / fire elemental / water elemental w:5 / \
          air elemental / earth elemental w:5 / mana viper w:5 / \
@@ -664,7 +664,7 @@ MONS:    ugly thing w:15 / shapeshifter / unseen horror w:15 / \
 MONS:    frost giant w:5 / fire giant w:5 / naga mage w:15 / hell knight w:5 / \
          salamander mystic w:5 / spriggan air mage / deep troll earth mage / \
          yaktaur captain ; arbalest ego:flaming | arbalest ego:freezing . bolt / \
-         rakshasa w:5 ; robe . wand of fire | wand of cold . \
+         rakshasa w:5 ; robe . wand of destruction . \
          glaive w:2 ego:flaming | glaive w:2 ego:freezing
 MONS:    lorocyproca w:5 / fire dragon perm_ench:shapeshifter w:12 / fire dragon w:3 / \
          ice dragon perm_ench:shapeshifter w:12 / ice dragon w:3 / \
@@ -677,8 +677,7 @@ MONS:    lorocyproca w:5 / fire dragon perm_ench:shapeshifter w:12 / fire dragon
          great mace ego:flaming | great mace ego:freezing
 KMONS:   A = fire giant ; battleaxe ego:freezing ident:type
 KMONS:   B = frost giant ; great sword ego:flaming ident:type
-KMONS:   C = rakshasa ; robe good_item . wand of cold | wand of fire | \
-                      wand of lightning . \
+KMONS:   C = rakshasa ; robe good_item . wand of destruction . \
                       glaive ego:freezing | glaive ego:flaming . \
                       potion of heal wounds | potion of might | \
                       potion of haste | nothing w:20

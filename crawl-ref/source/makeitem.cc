@@ -1306,10 +1306,7 @@ bool is_high_tier_wand(int type)
     switch (type)
     {
     case WAND_PARALYSIS:
-    case WAND_FIRE:
-    case WAND_COLD:
-    case WAND_LIGHTNING:
-    case WAND_DRAINING:
+    case WAND_DESTRUCTION:
     case WAND_DISINTEGRATION:
         return true;
     default:
@@ -1328,7 +1325,8 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
         {
             item.sub_type = _random_wand_subtype();
         }
-        while (item_level < 2 && is_high_tier_wand(item.sub_type));
+        while (item_level < 2 && is_high_tier_wand(item.sub_type)
+               || item_type_removed(OBJ_WANDS, item.sub_type));
     }
 
     // Generate charges randomly...

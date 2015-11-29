@@ -4103,6 +4103,20 @@ void unmarshallItem(reader &th, item_def &item)
         item.sub_type = WPN_FLAIL;
     }
 
+    // these wand types were merged
+    if (item.is_type(OBJ_WANDS, WAND_FROST)
+        || item.is_type(OBJ_WANDS, WAND_MAGIC_DARTS))
+    {
+        item.sub_type = WAND_MINOR_DESTRUCTION;
+    }
+
+    if (item.is_type(OBJ_WANDS, WAND_COLD)
+        || item.is_type(OBJ_WANDS, WAND_LIGHTNING)
+        || item.is_type(OBJ_WANDS, WAND_DRAINING))
+    {
+        item.sub_type = WAND_DESTRUCTION;
+    }
+
     if (item.base_type == OBJ_WEAPONS
         && (item.special == SPWPN_RETURNING
             || item.special == SPWPN_REACHING

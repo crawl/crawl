@@ -3185,26 +3185,41 @@ zap_type item_def::zap() const
 
     switch (wand_sub_type)
     {
-    case WAND_FLAME:           result = ZAP_THROW_FLAME;     break;
-    case WAND_FROST:           result = ZAP_THROW_FROST;     break;
     case WAND_SLOWING:         result = ZAP_SLOW;            break;
     case WAND_HASTING:         result = ZAP_HASTE;           break;
-    case WAND_MAGIC_DARTS:     result = ZAP_MAGIC_DART;      break;
     case WAND_HEAL_WOUNDS:     result = ZAP_HEAL_WOUNDS;     break;
     case WAND_PARALYSIS:       result = ZAP_PARALYSE;        break;
-    case WAND_FIRE:            result = ZAP_BOLT_OF_FIRE;    break;
-    case WAND_COLD:            result = ZAP_BOLT_OF_COLD;    break;
     case WAND_CONFUSION:       result = ZAP_CONFUSE;         break;
     case WAND_INVISIBILITY:    result = ZAP_INVISIBILITY;    break;
     case WAND_DIGGING:         result = ZAP_DIG;             break;
     case WAND_FIREBALL:        result = ZAP_FIREBALL;        break;
     case WAND_TELEPORTATION:   result = ZAP_TELEPORT_OTHER;  break;
-    case WAND_LIGHTNING:       result = ZAP_LIGHTNING_BOLT;  break;
     case WAND_POLYMORPH:       result = ZAP_POLYMORPH;       break;
     case WAND_ENSLAVEMENT:     result = ZAP_ENSLAVEMENT;     break;
-    case WAND_DRAINING:        result = ZAP_BOLT_OF_DRAINING; break;
     case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATE;    break;
+    case WAND_MINOR_DESTRUCTION:
+        result = random_choose(ZAP_THROW_FLAME,
+                               ZAP_THROW_FROST,
+                               ZAP_MAGIC_DART,
+                               ZAP_SHOCK,
+                               ZAP_STING);
+        break;
+    case WAND_DESTRUCTION:
+        result = random_choose(ZAP_BOLT_OF_FIRE,
+                               ZAP_BOLT_OF_COLD,
+                               ZAP_VENOM_BOLT,
+                               ZAP_BOLT_OF_DRAINING,
+                               ZAP_QUICKSILVER_BOLT,
+                               ZAP_CRYSTAL_BOLT,
+                               ZAP_LIGHTNING_BOLT,
+                               ZAP_CORROSIVE_BOLT);
+        break;
     case WAND_RANDOM_EFFECTS:  /* impossible */
+    case WAND_FROST:           /* removed */
+    case WAND_MAGIC_DARTS:
+    case WAND_COLD:
+    case WAND_LIGHTNING:
+    case WAND_DRAINING:
     case NUM_WANDS: break;
     }
     return result;

@@ -220,9 +220,7 @@ KITEM:    a = potion of curing q:4 ident:all, \
 KITEM:    b = scroll of blinking q:1 ident:all, \
               scroll of amnesia q:2 ident:all, \
               scroll of remove curse q:3 ident:all
-KITEM:    d = wand of fire charges:7 ident:all /\
-              wand of cold charges:7 ident:all /\
-              wand of draining charges:7 ident:all, \
+KITEM:    d = wand of destruction charges:7 ident:all /\
               staff of energy not_cursed ident:all
 KITEM:    e = rapier plus:2 ego:electrocution ident:all not_cursed /\
            rapier plus:2 ego:draining ident:all not_cursed /\

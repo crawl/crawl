@@ -68,7 +68,7 @@
       elseif s == "C" then i = "amulet of clarity | book of callings | " ..
        "book of cantrips | book of changes | book of conjurations | " ..
        "centaur barding | chain mail | club | crystal ball of energy | " ..
-       "crystal plate armour | rod of clouds | wand of cold | " ..
+       "crystal plate armour | rod of clouds | " ..
        "potion of cancellation | potion of cure mutation | " ..
        "book of clouds | cloak | staff of cold | wand of confusion | " ..
        "staff of conjuration | deck of changes | manual of crossbows | " ..
@@ -80,7 +80,7 @@
        "dire flail | disc of storms | double sword | " ..
        "potion of degeneration | ring of dexterity | rod of destruction | " ..
        "staff of death | wand of digging | wand of disintegration | " ..
-       "wand of draining | manual of dodging"
+       "wand of destruction | manual of dodging"
 
       elseif s == "E" then i = "book of enchantments | executioner's axe | " ..
        "staff of earth | deck of escape | eveningstar | ring of evasion | " ..
@@ -90,9 +90,9 @@
 
       elseif s == "F" then i = "book of fire | book of flames | flail | " ..
        "book of frost | falchion | fan of gales | fire dragon armour | " ..
-       "wand of fire | potion of flight | ring of fire | scroll of fear | " ..
+       "potion of flight | ring of fire | scroll of fear | " ..
        "fen folio | ring of flight | scroll of fog | staff of fire | " ..
-       "wand of fireball | fruit | wand of flame | wand of frost | " ..
+       "wand of fireball | " ..
        "manual of fighting | amulet of faith | manual of fire magic"
 
       elseif s == "G" then i = "amulet of guardian spirit | giant club | " ..
@@ -118,13 +118,13 @@
       elseif s == "L" then i = "lamp of fire | lantern of shadows | " ..
        "large rock | large shield | leather armour | lightning rod | " ..
        "long sword | potion of lignification | ring of loudness | " ..
-       "wand of lightning | manual of long blades | lajatang | longbow "
+       "manual of long blades | lajatang | longbow "
 
       elseif s == "M" then i = "manual of maces & flails | meat ration | " ..
        "book of minor magic | morningstar | mottled dragon armour | mace | " ..
        "potion of magic | ring of magical power | potion of mutation | " ..
-       "potion of might | scroll of magic mapping | wand of magic darts | " ..
-       "book of maledictions"
+       "potion of might | scroll of magic mapping | " ..
+       "wand of minor destruction | book of maledictions"
 
       elseif s == "N" then i = "book of necromancy | naga barding | " ..
        "necronomicon | needle | scroll of noise | manual of necromancy"

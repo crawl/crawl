@@ -590,27 +590,22 @@ static const char* _wand_type_name(int wandtype)
 {
     switch (static_cast<wand_type>(wandtype))
     {
-    case WAND_FLAME:           return "flame";
-    case WAND_FROST:           return "frost";
-    case WAND_SLOWING:         return "slowing";
-    case WAND_HASTING:         return "hasting";
-    case WAND_MAGIC_DARTS:     return "magic darts";
-    case WAND_HEAL_WOUNDS:     return "heal wounds";
-    case WAND_PARALYSIS:       return "paralysis";
-    case WAND_FIRE:            return "fire";
-    case WAND_COLD:            return "cold";
-    case WAND_CONFUSION:       return "confusion";
-    case WAND_INVISIBILITY:    return "invisibility";
-    case WAND_DIGGING:         return "digging";
-    case WAND_FIREBALL:        return "fireball";
-    case WAND_TELEPORTATION:   return "teleportation";
-    case WAND_LIGHTNING:       return "lightning";
-    case WAND_POLYMORPH:       return "polymorph";
-    case WAND_ENSLAVEMENT:     return "enslavement";
-    case WAND_DRAINING:        return "draining";
-    case WAND_RANDOM_EFFECTS:  return "random effects";
-    case WAND_DISINTEGRATION:  return "disintegration";
-    default:                   return "bugginess";
+    case WAND_MINOR_DESTRUCTION: return "minor destruction";
+    case WAND_SLOWING:           return "slowing";
+    case WAND_HASTING:           return "hasting";
+    case WAND_HEAL_WOUNDS:       return "heal wounds";
+    case WAND_PARALYSIS:         return "paralysis";
+    case WAND_DESTRUCTION:       return "destruction";
+    case WAND_CONFUSION:         return "confusion";
+    case WAND_INVISIBILITY:      return "invisibility";
+    case WAND_DIGGING:           return "digging";
+    case WAND_FIREBALL:          return "fireball";
+    case WAND_TELEPORTATION:     return "teleportation";
+    case WAND_POLYMORPH:         return "polymorph";
+    case WAND_ENSLAVEMENT:       return "enslavement";
+    case WAND_RANDOM_EFFECTS:    return "random effects";
+    case WAND_DISINTEGRATION:    return "disintegration";
+    default:                     return "bugginess";
     }
 }
 
@@ -1116,7 +1111,9 @@ static const char* rod_type_name(int type)
 
     case ROD_IGNITION:        return "ignition";
     case ROD_CLOUDS:          return "clouds";
+#if TAG_MAJOR_VERSION == 34
     case ROD_DESTRUCTION:     return "destruction";
+#endif
 
     default: return "bugginess";
     }

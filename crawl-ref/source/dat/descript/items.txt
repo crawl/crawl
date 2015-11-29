@@ -1053,11 +1053,6 @@ This rod allows its wielder to blast a cone-shaped area in front of them with
 various destructive clouds, their lethality increasing with the evocation
 ability of the wielder.
 %%%%
-rod of destruction
-
-This rod can be evoked to release a damaging spell picked at random from a
-small set, all able to pierce through monsters to damage the ones behind them.
-%%%%
 rod of ignition
 
 This rod allows its wielder to launch a fiery bolt of explosive energy.
@@ -1442,13 +1437,14 @@ troll leather armour
 Armour made from the stiff and knobbly skin of a common troll. It magically
 regenerates its wearer's flesh.
 %%%%
-wand of cold
-
-A magical device which throws great bolts of cold.
-%%%%
 wand of confusion
 
 A magical device which induces confusion and bewilderment in a target creature.
+%%%%
+wand of destruction
+
+A magical device which throws a damaging bolt with variable characteristics,
+but always able to pierce through monsters to damage the ones behind them.
 %%%%
 wand of digging
 
@@ -1459,30 +1455,13 @@ wand of disintegration
 A magical device which disrupts the physical structure of anything but the
 hardest walls — even granite statues, to say nothing of flesh.
 %%%%
-wand of draining
-
-A magical device which throws a bolt of negative energy which drains the life
-essences of living creatures.
-%%%%
 wand of enslavement
 
 A magical device which causes slavish obedience in a creature.
 %%%%
-wand of fire
-
-A magical device which throws great bolts of fire.
-%%%%
 wand of fireball
 
 A magical device which throws exploding blasts of flame.
-%%%%
-wand of flame
-
-A magical device which throws little puffs of flame.
-%%%%
-wand of frost
-
-A magical device which throws little puffs of frost.
 %%%%
 wand of hasting
 
@@ -1497,14 +1476,9 @@ wand of invisibility
 
 A magical device which hides a creature from the view of others.
 %%%%
-wand of lightning
+wand of minor destruction
 
-A magical device which throws great bolts of lightning.
-%%%%
-wand of magic darts
-
-A magical device which throws small bolts of destructive energy. They never
-miss.
+A magical device which throws one of several types of small damaging spells.
 %%%%
 wand of paralysis
 

@@ -1660,7 +1660,7 @@ DEPTH:   D:9-11, Orc
 MONS:    crimson imp, white imp, shadow imp, iron imp
 MONS:    orc, orc wizard w:39 / Blork the orc w:1, swamp drake
 KMONS:   0 = orc ; robe . wand of confusion | wand of slowing w:35 | \
-                   wand of magic darts w:35 | wand of flame | wand of frost . \
+                   wand of minor destruction w:55 . \
                    potion of invisibility | potion of haste | nothing w:980
 KMONS:   89 = deep elf mage
 KITEM:   8d = robe, hat w:40 / hat good_item, \
@@ -1698,12 +1698,12 @@ ENDMAP
 NAME:    hangedman_elemental_death_ray
 TAGS:    transparent patrolling
 DEPTH:   Depths
-MONS:    necromancer ; wand of cold | wand of frost w:5 . \
+MONS:    necromancer ; wand of destruction | wand of minor destruction w:5 . \
          staff of fire ident:type w:15 | quarterstaff ego:flaming ident:type w:14 | \
          rod of ignition w:1 ident:type . \
          robe ego:fire_resistance w:15 | robe ego:cold_resistance w:14 | \
          robe ego:resistance w:1
-MONS:    necromancer ; wand of fire | wand of flame w:5 . \
+MONS:    necromancer ; wand of destruction | wand of minor destruction w:5 . \
          staff of cold ident:type | quarterstaff ego:freezing ident:type | \
          robe ego:fire_resistance w:15 | robe ego:cold_resistance w:14 | \
          robe ego:resistance w:1

@@ -2246,15 +2246,14 @@ NAME:    hangedman_opposites_gauntlet
 TAGS:    no_monster_gen patrolling
 ORIENT:  float
 DEPTH:   D:14-15, Depths, !Depths:$
-MONS:    orc knight ; wand of frost . arbalest ego:flaming . bolt ego:none . chain mail / \
-         orc knight ; wand of flame . arbalest ego:freezing . bolt ego:none . chain mail
+MONS:    orc knight ; wand of minor destruction . arbalest ego:flaming . bolt ego:none . chain mail
 MONS:    ettin ; giant club ego:holy_wrath ident:type . great mace ego:draining ident:type
 MONS:    rakshasa ; scythe ego:antimagic | trident ego:antimagic / \
          siren ; chain mail . javelin ego:poisoned
 MONS:    fire giant ; battleaxe ego:freezing ident:type
 MONS:    frost giant ; great sword ego:flaming ident:type
 MONS:    golden dragon / crystal guardian w:8
-MONS:    vampire knight ; wand of lightning | wand of draining . \
+MONS:    vampire knight ; wand of destruction . \
          great sword . chain mail / tengu reaver ; chain mail . \
          halberd ego:antimagic ident:type | glaive ego:antimagic ident:type
 KMONS:   A = fire drake / salamander / fire elemental

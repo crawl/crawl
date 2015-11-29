@@ -126,7 +126,7 @@ TAGS:     uniq_second_food extra chance_second_food
 SUBVAULT: X : fruiting_plant
 SUBVAULT: W : fruiting_plant
 KITEM:    p =  potion of poison w:5 / potion of ambrosia w:1 / nothing
-MONS:     big kobold ; wand of magic darts ident:type . short sword
+MONS:     big kobold ; wand of minor destruction ident:type . short sword
 MAP
 XXXXX..WWWWW
 XXXXX..WWWWW

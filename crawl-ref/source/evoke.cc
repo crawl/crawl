@@ -445,16 +445,6 @@ static targetter *_wand_targetter(const item_def *wand)
     {
     case WAND_FIREBALL:
         return new targetter_beam(&you, range, ZAP_FIREBALL, power, 1, 1);
-    case WAND_LIGHTNING:
-        return new targetter_beam(&you, range, ZAP_LIGHTNING_BOLT, power, 0, 0);
-    case WAND_FLAME:
-        return new targetter_beam(&you, range, ZAP_THROW_FLAME, power, 0, 0);
-    case WAND_FIRE:
-        return new targetter_beam(&you, range, ZAP_BOLT_OF_FIRE, power, 0, 0);
-    case WAND_FROST:
-        return new targetter_beam(&you, range, ZAP_THROW_FROST, power, 0, 0);
-    case WAND_COLD:
-        return new targetter_beam(&you, range, ZAP_BOLT_OF_COLD, power, 0, 0);
     case WAND_DIGGING:
         return new targetter_beam(&you, range, ZAP_DIG, power, 0, 0);
     default:
@@ -581,7 +571,9 @@ void zap_wand(int slot)
 
         hitfunc = _wand_targetter(&wand);
     }
-    const bool randeff = wand.sub_type == WAND_RANDOM_EFFECTS;
+    const bool randeff = wand.sub_type == WAND_RANDOM_EFFECTS
+                         || wand.sub_type == WAND_MINOR_DESTRUCTION
+                         || wand.sub_type == WAND_DESTRUCTION;
 
     const int power = (15 + you.skill(SK_EVOCATIONS, 5) / 2)
         * (player_mutation_level(MUT_MP_WANDS) + 3) / 3;

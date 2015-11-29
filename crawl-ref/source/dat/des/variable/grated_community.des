@@ -242,8 +242,7 @@ KMONS: P = plant
   : elseif occupant == 2 then
 MONS:  deep elf annihilator / draconian annihilator / draconian scorcher
 KFEAT: * = altar_vehumet / w:2 altar_makhleb
-KITEM: " = gold, wand of draining / wand of fire / wand of cold,\
-           potion of brilliance / nothing
+KITEM: " = gold, wand of destruction, potion of brilliance / nothing
 KFEAT: 8 = granite_statue / w:1 floor
 KITEM: ? = scroll of immolation / nothing, any scroll / nothing
 : kitem("! = q:" .. crawl.random_range(1, 3) .. " scroll of immolation /\

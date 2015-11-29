@@ -412,8 +412,8 @@ static void _wanderer_random_evokable()
     else
     {
         wand_type selected_wand =
-              random_choose(WAND_ENSLAVEMENT, WAND_CONFUSION, WAND_MAGIC_DARTS,
-                            WAND_FROST, WAND_FLAME);
+              random_choose(WAND_ENSLAVEMENT, WAND_CONFUSION,
+                            WAND_MINOR_DESTRUCTION);
         newgame_make_item(OBJ_WANDS, selected_wand, 1, 15);
     }
 }

@@ -402,7 +402,7 @@ SUBST: G : YlG
 :   potion of blood | any weapon ego:draining w:15 | any weapon ego:pain | \
 :   any weapon ego:vampirism | any weapon ego:chaos w:1 | rod of clouds w:3 | \
 :   demon blade w:5 | demon trident w:5 | wand of random effects w:3 | \
-:   demon whip w:5 | wand of draining | scroll of torment | staff of death | \
+:   demon whip w:5 | wand of destruction | scroll of torment | staff of death | \
 :   lantern of shadows w:5 | book of necromancy | book of death | \
 :   book of unlife | randbook disc:necromancy w:5 | necronomicon w:1 | \
 :   grand grimoire w:1 | mace unrand:sceptre_of_torment w:1 | \
@@ -478,8 +478,8 @@ MARKER: s = lua:fog_machine { cloud_type = "flame", \
 KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    book of conjurations | book of power | book of annihilations | \
    randbook disc:conjuration | book of the tempests | book of clouds | \
-   wand of fire | wand of fireball | wand of flame | wand of disintegration | \
-   wand of frost | wand of cold | wand of lightning | wand of magic darts | \
+   wand of fireball | wand of minor destruction | wand of disintegration | \
+   wand of destruction | \
    staff of conjuration | lightning rod | rod of inaccuracy | \
    rod of destruction | iron rod | large rock ego:exploding | \
    arrow ego:exploding | bolt ego:exploding | javelin ego:exploding | \
@@ -519,8 +519,8 @@ MARKER: a = lua:fog_machine { cloud_type = "thin mist", \
                      "staff of air","staff of earth"}
   local randbooks = {"randbook disc:fire","randbook disc:ice",
                      "randbook disc:air","randbook disc:earth"}
-  local wands     = {"wand of fire","wand of cold",
-                     "wand of lightning","wand of digging"}
+  local wands     = {"wand of destruction","wand of destruction",
+                     "wand of destruction","wand of digging"}
   local choices   = {1, 2, 3, 4}
   local i, j, temp
   for i = 4, 2, -1 do

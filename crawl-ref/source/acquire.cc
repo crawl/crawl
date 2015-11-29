@@ -751,27 +751,22 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
 {
     vector<pair<wand_type, int>> weights = {
         // normally 25
-        { WAND_HEAL_WOUNDS,     _hw_wand_weight() },
-        { WAND_HASTING,         _haste_wand_weight() },
+        { WAND_HEAL_WOUNDS,       _hw_wand_weight() },
+        { WAND_HASTING,           _haste_wand_weight() },
         // normally 15
-        { WAND_TELEPORTATION,   _tele_wand_weight() },
-        { WAND_FIRE,            8 },
-        { WAND_COLD,            8 },
-        { WAND_LIGHTNING,       8 },
-        { WAND_DRAINING,        8 },
-        { WAND_INVISIBILITY,    8 },
-        { WAND_FIREBALL,        8 },
-        { WAND_DIGGING,         5 },
-        { WAND_DISINTEGRATION,  5 },
-        { WAND_POLYMORPH,       5 },
-        { WAND_ENSLAVEMENT,     player_mutation_level(MUT_NO_LOVE) ? 0 : 5 },
-        { WAND_FLAME,           1 },
-        { WAND_FROST,           1 },
-        { WAND_CONFUSION,       1 },
-        { WAND_PARALYSIS,       1 },
-        { WAND_SLOWING,         1 },
-        { WAND_MAGIC_DARTS,     1 },
-        { WAND_RANDOM_EFFECTS,  1 },
+        { WAND_TELEPORTATION,     _tele_wand_weight() },
+        { WAND_DESTRUCTION,       8 },
+        { WAND_INVISIBILITY,      8 },
+        { WAND_FIREBALL,          8 },
+        { WAND_DIGGING,           5 },
+        { WAND_DISINTEGRATION,    5 },
+        { WAND_POLYMORPH,         5 },
+        { WAND_ENSLAVEMENT,       player_mutation_level(MUT_NO_LOVE) ? 0 : 5 },
+        { WAND_MINOR_DESTRUCTION, 1 },
+        { WAND_CONFUSION,         1 },
+        { WAND_PARALYSIS,         1 },
+        { WAND_SLOWING,           1 },
+        { WAND_RANDOM_EFFECTS,    1 },
     };
 
     // Unknown wands get a huge weight bonus.

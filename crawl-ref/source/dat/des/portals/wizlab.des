@@ -1528,7 +1528,7 @@ MARKER:     ! = lua:fog_machine { \
             }
 ITEM:       w:20 potion of flight / potion of magic / potion of haste / \
             potion of resistance / gold / potion of agility / potion of brilliance
-ITEM:       wand of lightning / staff of air / ring of flight / \
+ITEM:       wand of destruction / staff of air / ring of flight / \
             gold / scroll of silence / quick blade / ring of evasion / \
             ring of see invisible / book of clouds / any book w:15 / \
             any good_item / any w:20
@@ -1685,8 +1685,8 @@ kmons     ("1 = patrolling Hellbinder dbname:Hellbinder name:" .. string.gsub(wi
 KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
 KITEM:      i = rod of shadows / ring of fire / ring of protection from fire /\
             scroll of torment / scroll of summoning / demon blade w:1 /\
-            demon whip w:1 / demon trident w:1 / gold / wand of fire /\
-            wand of draining / staff of summoning / any book w:30 / any good_item w:15
+            demon whip w:1 / demon trident w:1 / gold / wand of destruction /\
+            staff of summoning / any book w:30 / any good_item w:15
 KITEM:      j = quarterstaff ego:vampirism ident:all unrand:majin-bo
 KITEM:      B = randbook disc:summoning
 NSUBST:     i = 2:B / 1:j / *:i

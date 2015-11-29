@@ -800,19 +800,14 @@ static bool _advise_use_wand()
         // Can it be used to fight?
         switch (obj.sub_type)
         {
-        case WAND_FLAME:
-        case WAND_FROST:
+        case WAND_MINOR_DESTRUCTION:
+        case WAND_DESTRUCTION:
         case WAND_SLOWING:
-        case WAND_MAGIC_DARTS:
         case WAND_PARALYSIS:
-        case WAND_FIRE:
-        case WAND_COLD:
         case WAND_CONFUSION:
         case WAND_FIREBALL:
         case WAND_TELEPORTATION:
-        case WAND_LIGHTNING:
         case WAND_ENSLAVEMENT:
-        case WAND_DRAINING:
         case WAND_RANDOM_EFFECTS:
         case WAND_DISINTEGRATION:
             return true;
