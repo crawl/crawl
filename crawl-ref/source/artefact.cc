@@ -1558,10 +1558,6 @@ static bool _randart_is_conflicting(const item_def &item,
         conflicts = ARTP_PREVENT_TELEPORTATION;
         break;
 
-    case AMU_RESIST_MUTATION:
-        conflicts = ARTP_CONTAM;
-        break;
-
     case AMU_RAGE:
         conflicts = ARTP_STEALTH;
         break;

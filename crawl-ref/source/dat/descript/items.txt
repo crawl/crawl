@@ -28,6 +28,10 @@ amulet of inaccuracy
 This amulet makes its wearer less accurate in melee combat and when targeting
 monsters via ranged attacks or spells.
 %%%%
+amulet of nothing
+
+This amulet has no base properties.
+%%%%
 amulet of rage
 
 This amulet enables its wearer to attempt to enter a state of berserk rage.
@@ -40,10 +44,6 @@ amulet of resist corrosion
 
 This amulet protects the wearer from acid damage and from corrosion caused by
 acids, although not infallibly so.
-%%%%
-amulet of resist mutation
-
-This amulet protects its wearer from mutations, although not infallibly so.
 %%%%
 amulet of stasis
 
