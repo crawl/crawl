@@ -34,7 +34,7 @@ enum class passive_t
 
     /// You detect the threat level of monsters.
     detect_montier,
-    
+
     /// You detect the presence of items.
     detect_items,
 
@@ -76,7 +76,7 @@ enum class passive_t
 
     /// Fewer creatures spawn in the Abyss, and it morphs less quickly.
     slow_abyss,
-    
+
     /// Your attributes are boosted.
     stat_boost,
 
@@ -85,7 +85,7 @@ enum class passive_t
 
     /// You have an umbra.
     umbra,
-    
+
     /// You emit clouds when hit.
     hit_smoke,
 

@@ -1295,4 +1295,3 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
 
     shadow_monster_reset(mon);
 }
-
