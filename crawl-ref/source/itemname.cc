@@ -73,6 +73,14 @@ string quant_name(const item_def &item, int quant,
 {
     // item_name now requires a "real" item, so we'll mangle a tmp
     item_def tmp = item;
+
+    // correctly show the number of charges we'd remove
+    if (tmp.base_type == OBJ_WANDS)
+    {
+        int tmp_charge = remove_least_charged_wand(tmp, quant);
+        tmp.charges = tmp_charge;
+    }
+
     tmp.quantity = quant;
 
     return tmp.name(des, terse);

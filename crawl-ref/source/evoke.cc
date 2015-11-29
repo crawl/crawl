@@ -865,7 +865,7 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
                            max<int>(wand.charges + 1,
                                     wand.charges + 3 * charge_gain * num / den))
                 : max<int>(wand.charges,
-                           min(charge_gain * 3,
+                           min(charge_gain * 3 * wand.quantity,
                                wand.charges +
                                1 + random2avg(((charge_gain - 1) * 3) + 1, 3)));
 

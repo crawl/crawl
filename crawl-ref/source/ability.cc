@@ -3001,10 +3001,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
             return SPRET_ABORT;
 
-        item_def& wand(you.inv[item_slot]);
+        item_def *wand(&you.inv[item_slot]);
+        ASSERT(wand);
 
-        string prompt = "Do you wish to have " + wand.name(DESC_YOUR)
-                           + " supercharged?";
+        int new_wand_idx = NON_ITEM;
+
+        string prompt = "Do you wish to have "
+                        + quant_name(*wand, 1, DESC_YOUR)
+                        + " supercharged?";
 
         if (!yesno(prompt.c_str(), true, 'n'))
         {
@@ -3012,28 +3016,54 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         }
 
-        if (wand.base_type == OBJ_RODS)
+        if (wand->base_type == OBJ_RODS)
         {
-            wand.charge_cap = wand.charges =
+            wand->charge_cap = wand->charges =
                 (MAX_ROD_CHARGE + 1) * ROD_CHARGE_MULT;
-            wand.rod_plus = MAX_WPN_ENCHANT + 1;
+            wand->rod_plus = MAX_WPN_ENCHANT + 1;
         }
         else
         {
-            set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
-            wand.charges = 9 * wand_charge_value(wand.sub_type) / 2;
-            wand.used_count = ZAPCOUNT_RECHARGED;
-            wand.props[PAKELLAS_SUPERCHARGE_KEY].get_bool() = true;
+            if (wand->quantity > 1)
+            {
+                new_wand_idx = get_mitm_slot(10);
+                if (new_wand_idx == NON_ITEM)
+                {
+                    return SPRET_ABORT;
+                }
+
+                item_def &new_wand = mitm[new_wand_idx];
+                new_wand = *wand;
+                new_wand.quantity = 1;
+                new_wand.slot = 0;
+                new_wand.link = NON_ITEM;
+                new_wand.pos.reset();
+                dec_inv_item_quantity(letter_to_index(wand->slot), 1);
+                if (wand->charges > wand_max_charges(*wand) * wand->quantity)
+                    wand->charges = wand_max_charges(*wand) * wand->quantity;
+                wand = &new_wand;
+            }
+            set_ident_flags(*wand, ISFLAG_KNOW_PLUSES);
+            wand->charges = 9 * wand_charge_value(wand->sub_type) / 2;
+            wand->used_count = ZAPCOUNT_RECHARGED;
+            wand->props[PAKELLAS_SUPERCHARGE_KEY].get_bool() = true;
         }
 
         you.wield_change = true;
         you.one_time_ability_used.set(GOD_PAKELLAS);
 
-        take_note(Note(NOTE_ID_ITEM, 0, 0, wand.name(DESC_A).c_str(),
+        take_note(Note(NOTE_ID_ITEM, 0, 0, wand->name(DESC_A).c_str(),
                   "supercharged by Pakellas"));
 
         mprf(MSGCH_GOD, "Your %s glows brightly!",
-             wand.name(DESC_QUALNAME).c_str());
+             wand->name(DESC_QUALNAME).c_str());
+
+        if (new_wand_idx != NON_ITEM && !move_item_to_inv(*wand))
+        {
+            mprf("You have no room in your pack for your %s, and drop it.",
+                 wand->name(DESC_QUALNAME).c_str());
+            move_item_to_grid(&new_wand_idx, you.pos());
+        }
 
         flash_view(UA_PLAYER, LIGHTGREEN);
 
