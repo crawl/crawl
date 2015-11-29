@@ -109,8 +109,9 @@ void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
 
     if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
     {
-        formatted_string::parse_string(me->get_text(needs_cursor),
-                                       true, nullptr, col).display();
+        formatted_string s = formatted_string::parse_string(
+            me->get_text(needs_cursor), true, nullptr, col);
+        s.chop(get_number_of_cols()).display();
     }
     else
     {
