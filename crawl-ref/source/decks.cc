@@ -1627,7 +1627,7 @@ static void _shaft_card(int power, deck_rarity_type rarity)
 
             if (mons && !mons->wont_attack()
                 && grd(mons->pos()) == DNGN_FLOOR
-                && !mons_is_firewood(mons)
+                && mons_is_threatening(mons)
                 && x_chance_in_y(power_level, 3))
             {
                 mons->do_shaft();
@@ -2694,7 +2694,7 @@ static void _cloud_card(int power, deck_rarity_type rarity)
             default: cloudy = CLOUD_DEBUGGING;
         }
 
-        if (!mons || (mons && (mons->wont_attack() || mons_is_firewood(mons))))
+        if (!mons || mons->wont_attack() || !mons_is_threatening(mons))
             continue;
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
@@ -2828,11 +2828,10 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
     {
         monster *mons = monster_at(*di);
 
-        if (mons && (mons->wont_attack() || mons_is_firewood(mons)))
+        if (!mons || mons->wont_attack() || !mons_is_threatening(mons))
             continue;
 
-        if (mons &&
-            x_chance_in_y((power_level + 1) * 5 + random2(5),
+        if (x_chance_in_y((power_level + 1) * 5 + random2(5),
                           mons->get_hit_dice()))
         {
             if (mons->can_polymorph())
@@ -2866,7 +2865,7 @@ static void _wild_magic_card(int power, deck_rarity_type rarity)
     {
         monster *mons = monster_at(*di);
 
-        if (!mons || mons->wont_attack() || mons_is_firewood(mons))
+        if (!mons || mons->wont_attack() || !mons_is_threatening(mons))
             continue;
 
         if (x_chance_in_y((power_level + 1) * 5 + random2(5),

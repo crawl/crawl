@@ -2865,7 +2865,7 @@ int dismiss_monsters(string pattern)
     {
         if (mi->alive()
             && (mobile ? !mons_class_is_stationary(mi->type) :
-                harmful ? !mons_is_firewood(*mi) && !mi->wont_attack() :
+                harmful ? mons_is_threatening(*mi) && !mi->wont_attack() :
                 los ? you.see_cell(mi->pos())
                 : tpat.empty() || tpat.matches(mi->name(DESC_PLAIN, true))))
         {

@@ -1357,7 +1357,7 @@ static void _merfolk_avatar_song(monster* mons)
     int ally_hd = 0;
     for (monster_near_iterator mi(&you); mi; ++mi)
     {
-        if (*mi != mons && mons_aligned(mons, *mi) && !mons_is_firewood(*mi)
+        if (*mi != mons && mons_aligned(mons, *mi) && mons_is_threatening(*mi)
             && mi->type != MONS_DROWNED_SOUL)
         {
             ally_hd += mi->get_experience_level();
