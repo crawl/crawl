@@ -484,7 +484,7 @@ int get_gold_cost(ability_type ability)
     }
 }
 
-const int _pakellas_quick_charge_mp_cost()
+static const int _pakellas_quick_charge_mp_cost()
 {
     return max(1, you.magic_points * 2 / 3);
 }
