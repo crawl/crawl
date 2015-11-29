@@ -167,7 +167,8 @@ Menu::Menu(int _flags, const string& tagname, bool text_only)
     title2(nullptr), flags(_flags), tag(tagname), first_entry(0), y_offset(0),
     pagesize(0), max_pagesize(0), more("-more-", true), items(), sel(),
     select_filter(), highlighter(new MenuHighlighter), num(-1), lastch(0),
-    alive(false), last_selected(-1)
+    alive(false), last_selected(-1), quant(false), quant_item(-1),
+    multi_title("")
 {
 #ifdef USE_TILE_LOCAL
     if (text_only)
@@ -441,7 +442,7 @@ bool Menu::process_key(int keyin)
         return true;
     }
 
-    bool nav = false, repaint = false;
+    bool nav = false, repaint = false, selected = false;
 
     if (f_keyfilter)
         keyin = (*f_keyfilter)(keyin);
@@ -460,6 +461,15 @@ bool Menu::process_key(int keyin)
     case CK_MOUSE_B2:
     case CK_MOUSE_CMD:
     CASE_ESCAPE
+        if (quant)
+        {
+            quant = false;
+            quant_item = -1;
+            multi_title = "";
+            nav = true;
+            repaint = true;
+            break;
+        }
         sel.clear();
         lastch = keyin;
         return false;
@@ -614,6 +624,19 @@ bool Menu::process_key(int keyin)
         }
         break;
 
+    case '#':
+        if (is_set(MF_NO_SELECT_QTY))
+            break;
+
+        quant = true;
+        quant_item = -1;
+        multi_title = "Select a slot to partially select.";
+        update_title();
+
+        nav     = true;
+        repaint = true;
+        break;
+
 #ifdef TOUCH_UI
     case CK_TOUCH_DUMMY:  // mouse click in top/bottom region of menu
     case 0:               // do the same as <enter> key
@@ -621,6 +644,19 @@ bool Menu::process_key(int keyin)
             return true;
 #endif
     case CK_ENTER:
+        if (quant)
+        {
+            nav     = true;
+            repaint = true;
+            quant   = false;
+            multi_title = "";
+            if (quant_item == -1)
+                break;
+
+            select_items(quant_item, num);
+            selected = true;
+            break;
+        }
         if (!(flags & MF_PRESELECTED) || !sel.empty())
             return false;
         // else fall through
@@ -634,15 +670,40 @@ bool Menu::process_key(int keyin)
         if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
             return false;
 
-        if (!is_set(MF_NO_SELECT_QTY) && isadigit(keyin))
+        if (quant)
         {
-            if (num > 999)
-                num = -1;
-            num = (num == -1) ? keyin - '0' :
-                                num * 10 + keyin - '0';
+            if (quant_item > -1)
+            {
+                if (isadigit(keyin))
+                {
+                    if (num > 999)
+                        num = -1;
+                    num = (num == -1) ? keyin - '0' :
+                                        num * 10 + keyin - '0';
+                    break;
+                }
+                quant = false;
+                quant_item = -1;
+                multi_title = "";
+                nav     = true;
+                repaint = true;
+                break;
+            }
+            quant_item = keyin;
+            multi_title = "Enter in a quantity and press enter, or any other"
+                          " key to abort.";
+            update_title();
+            break;
         }
 
         select_items(keyin, num);
+        selected = true;
+
+        break;
+    }
+
+    if (selected)
+    {
         get_selected(&sel);
         if (sel.size() == 1 && (flags & MF_SINGLESELECT))
             return false;
@@ -654,8 +715,6 @@ bool Menu::process_key(int keyin)
         {
             return false;
         }
-
-        break;
     }
 
     if (last_selected != -1 && get_cursor() == -1)
@@ -1317,7 +1376,9 @@ void Menu::write_title()
         ASSERT(title2);
 
     auto col = item_colour(-1, first ? title : title2);
-    string text = (first ? title->get_text() : title2->get_text());
+    string text = (!multi_title.empty() ? multi_title :
+                   first                ? title->get_text()
+                                        : title2->get_text());
 
     formatted_string fs = formatted_string(col);
 

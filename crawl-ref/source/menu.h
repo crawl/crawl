@@ -422,6 +422,10 @@ protected:
 
     MenuDisplay *mdisplay;
 
+    bool quant;
+    int quant_item;
+
+    string multi_title;
 protected:
     void check_add_formatted_line(int firstcol, int nextcol,
                                   string &line, bool check_eol);

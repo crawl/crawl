@@ -4,7 +4,9 @@ pick-up
                    <h>Picking up and dropping items</h>
 <h>Item letters</h>
 Pressing an item's letter key will select the item.
-Entering a number before the letter will only select that quantity.
+Pressing # before an item's letter will allow you enter a numeric quantity
+for items to pick up or drop. Press Enter to confirm the quantity, or any
+other non-numeric key to abort entering a quantity.
 
 <h>Regular expressions</h>
 You can press <w>Ctrl-F</w> to enter a word (or a regular expression).
