@@ -200,7 +200,7 @@ static const char *divine_title[NUM_GODS][8] =
 
     // Pakellas -- inventor theme
     {"Reactionary",       "Apprentice",             "Inquisitive",              "Experimenter",
-        "Inventor",           "Pioneer",               "Brilliant",                "Ingenious"},
+        "Inventor",           "Pioneer",               "Brilliant",                "Grand Gadgeteer"},
 };
 
 string god_title(god_type which_god, species_type which_species, int piety)
