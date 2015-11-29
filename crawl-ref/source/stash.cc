@@ -614,7 +614,7 @@ bool Stash::matches_search(const string &prefix,
     {
         const string s   = stash_item_name(item);
         const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
-        if (search.matches(prefix + " " + ann + s))
+        if (search.matches(prefix + " " + ann + " " + s))
         {
             if (!res.count++)
                 res.match = s;
@@ -1004,7 +1004,7 @@ bool ShopInfo::matches_search(const string &prefix,
                                                  &item.item, true);
 
         bool thismatch = false;
-        if (search.matches(prefix + " " + ann + sname))
+        if (search.matches(prefix + " " + ann + " " + sname))
             thismatch = true;
         else
         {
@@ -1720,7 +1720,7 @@ static void _inventory_search(const base_pattern &search,
         const string s   = Stash::stash_item_name(item);
         const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
         bool found_something = false;
-        if (search.matches(ann + s))
+        if (search.matches(ann + " " + s))
             found_something = true;
         if (is_dumpable_artefact(item))
         {
