@@ -4394,7 +4394,8 @@ void unmarshallItem(reader &th, item_def &item)
     // to 0.17-a0-912-g3e33c8f. Also check for overcharged wands, in
     // case someone was patient enough to let it wrap around.
     if (item.base_type == OBJ_WANDS
-        && (item.charges < 0 || item.charges > wand_max_charges(item.sub_type)))
+        && (item.charges < 0
+            || item.charges > wand_max_charges(item.sub_type) * item.quantity))
     {
         item.charges = 0;
     }

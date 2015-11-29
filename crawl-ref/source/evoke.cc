@@ -820,7 +820,7 @@ int recharge_wand(bool known, const string &pre_msg)
 
             const int new_charges =
                 max<int>(wand.charges,
-                         min(charge_gain * 3,
+                         min(wand_max_charges(wand.sub_type) * wand.quantity,
                              wand.charges +
                              1 + random2avg(((charge_gain - 1) * 3) + 1, 3)));
 

@@ -6483,6 +6483,9 @@ void monster::steal_item_from_player()
         if (you.inv[steal_what].defined())
             remove_newest_perishable_item(you.inv[steal_what]);
     }
+
+    if (you.inv[steal_what].base_type == OBJ_WANDS)
+        new_item.charges = remove_most_charged_wand(you.inv[steal_what]);
 }
 
 /**

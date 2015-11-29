@@ -1380,7 +1380,8 @@ bool is_stackable_item(const item_def &item)
         || item.base_type == OBJ_FOOD
         || item.base_type == OBJ_SCROLLS
         || item.base_type == OBJ_POTIONS
-        || item.base_type == OBJ_GOLD)
+        || item.base_type == OBJ_GOLD
+        || item.base_type == OBJ_WANDS)
     {
         return true;
     }
@@ -1483,6 +1484,8 @@ void merge_item_stacks(const item_def &source, item_def &dest, int quant)
         merge_perishable_stacks(source, dest, quant);
     if (source.base_type == OBJ_GOLD) // Gozag
         dest.special = max(source.special, dest.special);
+    if (source.base_type == OBJ_WANDS)
+        dest.plus += source.plus;
 }
 
 static int _userdef_find_free_slot(const item_def &i)
@@ -1603,6 +1606,62 @@ void get_gold(const item_def& item, int quant, bool quiet)
     }
 }
 
+/**
+ * The number of empty wands in a stack of wands.
+ *
+ * @param   stack The stack of wands.
+ * @returns The number of wands in the pile that are empty.
+ */
+size_t num_empty_wands(const item_def &stack)
+{
+    const int max_charges = wand_max_charges(stack.sub_type);
+    return (stack.quantity * max_charges - stack.charges) / max_charges;
+}
+
+/**
+ * Remove some wands from a stack, preferring charged wands.
+ *
+ * @param   stack The stack of wands.
+ * @param   quant The number of wands to remove.
+ * @returns The number of charges that have been pulled from the pile.
+ */
+int remove_most_charged_wand(item_def &stack, int quant)
+{
+    const int new_charges = min<int>(stack.charges,
+                                     quant * wand_max_charges(stack.sub_type));
+    stack.charges -= new_charges;
+    return new_charges;
+}
+
+/**
+ * Remove some wands from a stack, preferring empty wands.
+ *
+ * @param   stack The stack of wands.
+ * @param   quant The number of wands to remove.
+ * @returns The number of charges that have been pulled from the pile.
+ */
+int remove_least_charged_wand(item_def &stack, int quant)
+{
+    int num_charged = quant - num_empty_wands(stack);
+    if (num_charged <= 0)
+        return 0;
+
+    const int max_charges = wand_max_charges(stack.sub_type);
+    int new_charges = 0;
+    // first, take a partially charged wand if there is one
+    if (stack.charges % max_charges > 0)
+    {
+        new_charges = stack.charges % max_charges;
+        stack.charges -= new_charges;
+        num_charged -= 1;
+    }
+
+    // then take as many fully charged wands as necessary
+    stack.charges -= num_charged * max_charges;
+    new_charges   += num_charged * max_charges;
+    return new_charges;
+}
+
 void note_inscribe_item(item_def &item)
 {
     _autoinscribe_item(item);
@@ -1633,8 +1692,14 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
         put_in_inv = true;
         // if you succeeded, actually reduce the number in the original stack
         if (quant_got != it.quantity && is_perishable_stack(it))
+        {
             for (int i = 0; i < quant_got; i++)
                 remove_oldest_perishable_item(it);
+
+            // updating the stack in inventory is handled in the merge call
+            if (it.base_type == OBJ_WANDS)
+                (void)remove_most_charged_wand(it, quant_got);
+        }
 
         // cleanup items that ended up in an inventory slot (not gold, etc)
         if (inv_slot != -1)
@@ -1899,9 +1964,14 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
 
     note_inscribe_item(item);
 
-    // avoid blood potion timer/stack size mismatch
-    if (quant_got != it.quantity && is_perishable_stack(it))
-        remove_newest_perishable_item(item);
+    if (quant_got != it.quantity)
+    {
+        // avoid blood potion timer/stack size mismatch
+        if (is_perishable_stack(it))
+            remove_newest_perishable_item(item);
+        if (it.base_type == OBJ_WANDS)
+            it.charges = remove_least_charged_wand(item, quant_got);
+    }
 
     if (crawl_state.game_is_hints())
     {
@@ -2191,6 +2261,8 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
             if (items_stack(item, *si))
             {
                 item_def copy = item;
+                if (item.base_type == OBJ_WANDS)
+                    copy.charges = remove_least_charged_wand(item, quant_drop);
                 merge_item_stacks(copy, *si, quant_drop);
                 inc_mitm_item_quantity(si->index(), quant_drop);
 
@@ -2232,10 +2304,16 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
     }
 
     move_item_to_grid(&new_item_idx, p, true);
-    // In the case of a partial drop, since only the oldest items have
-    // been dropped, remove the newest ones.
-    if (item.quantity != quant_drop && is_perishable_stack(item))
-        remove_newest_perishable_item(new_item);
+    if (item.quantity != quant_drop)
+    {
+        // In the case of a partial drop, since only the oldest items have
+        // been dropped, remove the newest ones.
+        if (is_perishable_stack(item))
+            remove_newest_perishable_item(new_item);
+
+        if (item.base_type == OBJ_WANDS)
+            new_item.charges = remove_least_charged_wand(item, quant_drop);
+    }
 
     return true;
 }
@@ -2374,6 +2452,11 @@ bool drop_item(int item_dropped, int quant_drop)
             return false;
     }
 
+    // need to figure this out before modifying the item so that when
+    // splitting a wand stack we get the number of dropped charges correct
+    const string drop_name =
+        quant_name(you.inv[item_dropped], quant_drop, DESC_A);
+
     if (!copy_item_to_grid(you.inv[item_dropped],
                             you.pos(), quant_drop, true, true))
     {
@@ -2381,8 +2464,7 @@ bool drop_item(int item_dropped, int quant_drop)
         return false;
     }
 
-    mprf("You drop %s.",
-         quant_name(you.inv[item_dropped], quant_drop, DESC_A).c_str());
+    mprf("You drop %s.", drop_name.c_str());
 
     // If you drop an item in as a merfolk, it is below the water line and
     // makes no noise falling.
