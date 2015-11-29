@@ -196,6 +196,9 @@ static bool dgn_check_connectivity = false;
 static int  dgn_zones = 0;
 
 static vector<string> _you_vault_list;
+#ifdef DEBUG_STATISTICS
+static vector<string> _you_all_vault_list;
+#endif
 
 struct coloured_feature
 {
@@ -425,6 +428,11 @@ static bool _build_level_vetoable(bool enable_random_maps,
         vector<string> &vec(you.vault_list[level_id::current()]);
         vec.insert(vec.end(), _you_vault_list.begin(), _you_vault_list.end());
     }
+
+#ifdef DEBUG_STATISTICS
+    for (auto vault : _you_all_vault_list)
+        mapstat_report_map_success(vault);
+#endif
 
     return true;
 }
@@ -1120,6 +1128,9 @@ void dgn_reset_level(bool enable_random_maps)
     you.unique_items = temp_unique_items;
 
     _you_vault_list.clear();
+#ifdef DEBUG_STATISTICS
+    _you_all_vault_list.clear();
+#endif
     env.level_build_method.clear();
     env.level_layout_types.clear();
     level_clear_vault_memory();
@@ -6746,6 +6757,10 @@ static void _remember_vault_placement(const vault_placement &place, bool extra)
         else
             you.vault_list[level_id::current()].push_back(place.map.name);
     }
+
+#ifdef DEBUG_STATISTICS
+    _you_all_vault_list.push_back(place.map.name);
+#endif
 }
 
 string dump_vault_maps()
