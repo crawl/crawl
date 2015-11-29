@@ -506,6 +506,8 @@ mon_dam_level_type mons_get_damage_level(const monster* mons);
 string get_damage_level_string(mon_holy_type holi, mon_dam_level_type mdam);
 bool mons_class_can_display_wounds(monster_type mc);
 bool mons_can_display_wounds(const monster* mon);
+bool mons_class_is_threatening(monster_type mo);
+bool mons_is_threatening(const monster* mon);
 bool mons_class_gives_xp(monster_type mc, bool indirect = false);
 bool mons_gives_xp(const monster* mon, const actor* agent);
 bool mons_is_notable(const monster& mon);

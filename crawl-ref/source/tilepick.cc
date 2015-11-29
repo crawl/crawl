@@ -3723,9 +3723,9 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_VAMPIRE_MOSQUITO:
         return TILE_CORPSE_VAMPIRE_MOSQUITO;
     case MONS_WASP:
-        return TILE_CORPSE_YELLOW_WASP;
+        return TILE_CORPSE_WASP;
     case MONS_HORNET:
-        return TILE_CORPSE_RED_WASP;
+        return TILE_CORPSE_HORNET;
     case MONS_SPARK_WASP:
         return TILE_CORPSE_SPARK_WASP;
     case MONS_GHOST_MOTH:

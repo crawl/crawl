@@ -659,6 +659,16 @@ bool mons_gives_xp(const monster* victim, const actor* agent)
         && !killed_friend;
 }
 
+bool mons_class_is_threatening(monster_type mo)
+{
+    return !mons_class_flag(mo, M_NO_THREAT);
+}
+
+bool mons_is_threatening(const monster *mons)
+{
+    return mons_class_is_threatening(mons->type) || mons_is_active_ballisto(mons);
+}
+
 /**
  * Is this an active ballistomycete?
  *
@@ -682,7 +692,7 @@ bool mons_is_active_ballisto(const monster* mon)
 bool mons_class_is_firewood(monster_type mc)
 {
     return mons_class_is_stationary(mc)
-           && mons_class_flag(mc, M_NO_EXP_GAIN)
+           && mons_class_flag(mc, M_NO_THREAT)
            && !mons_is_tentacle_or_tentacle_segment(mc);
 }
 
@@ -4637,7 +4647,7 @@ int get_dist_to_nearest_monster()
             continue;
 
         // Plants/fungi don't count.
-        if (!mons_class_gives_xp(mon->type) && !mons_is_active_ballisto(mon))
+        if (!mons_is_threatening(mon))
             continue;
 
         if (mon->wont_attack())
