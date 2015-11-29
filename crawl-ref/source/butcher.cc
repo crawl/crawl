@@ -278,7 +278,7 @@ void butchery(item_def* specific_corpse)
                 case 'q':
                 CASE_ESCAPE
                     canned_msg(MSG_OK);
-                    return;
+                    goto done;
 
                 case '?':
                     show_butchering_help();
@@ -310,6 +310,7 @@ void butchery(item_def* specific_corpse)
     //XXX: this assumes that we're not being called from a delay ourselves.
     // It's not a problem in the case of macros, though, because
     // delay.cc:_push_delay should handle them OK.
+done:
     if (butchered_any)
         handle_delay();
 
