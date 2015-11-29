@@ -2793,7 +2793,7 @@ bool monster::fumbles_attack()
 
 bool monster::cannot_fight() const
 {
-    return !mons_class_gives_xp(type) || mons_is_statue(type);
+    return !mons_is_threatening(this) || mons_is_statue(type);
 }
 
 void monster::attacking(actor * /* other */, bool /* ranged */)

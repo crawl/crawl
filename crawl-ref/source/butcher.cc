@@ -252,7 +252,7 @@ void butchery(item_def* specific_corpse)
                 const bool can_bottle =
                     can_bottle_blood_from_corpse(it->mon_type);
                 mprf(MSGCH_PROMPT,
-                     "%s %s? [(y)es/(c)hop/(n)o/(a)ll/(e)dible/(q)uit/?]",
+                     "%s %s? [(y)es/(c)hoosy/(n)o/(a)ll/(e)dible/(q)uit/?]",
                      can_bottle ? "Bottle" : "Butcher",
                      corpse_name.c_str());
                 repeat_prompt = false;
@@ -263,8 +263,18 @@ void butchery(item_def* specific_corpse)
                     butcher_all = true;
                 // fallthrough
                 case 'y':
-                case 'c':
                 case 'd':
+                    to_eat = it;
+                    break;
+
+                case 'c':
+                    // Since corpses are sorted by quality, we assume any
+                    // subequent ones will be bad, and quit immediately.
+                    if (is_bad_food(*it))
+                    {
+                        canned_msg(MSG_OK);
+                        goto done;
+                    }
                     to_eat = it;
                     break;
 
@@ -278,7 +288,7 @@ void butchery(item_def* specific_corpse)
                 case 'q':
                 CASE_ESCAPE
                     canned_msg(MSG_OK);
-                    return;
+                    goto done;
 
                 case '?':
                     show_butchering_help();
@@ -310,6 +320,7 @@ void butchery(item_def* specific_corpse)
     //XXX: this assumes that we're not being called from a delay ourselves.
     // It's not a problem in the case of macros, though, because
     // delay.cc:_push_delay should handle them OK.
+done:
     if (butchered_any)
         handle_delay();
 

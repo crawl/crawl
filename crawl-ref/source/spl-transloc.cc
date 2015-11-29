@@ -581,7 +581,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis)
         {
             int mons_near_target = 0;
             for (monster_near_iterator mi(newpos, LOS_NO_TRANS); mi; ++mi)
-                if (!mons_is_firewood(*mi) && mons_attitude(*mi) == ATT_HOSTILE)
+                if (mons_is_threatening(*mi) && mons_attitude(*mi) == ATT_HOSTILE)
                     mons_near_target++;
             if (!mons_near_target)
             {

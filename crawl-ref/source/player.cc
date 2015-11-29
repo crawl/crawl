@@ -1132,7 +1132,7 @@ static int _slow_regeneration_rate()
 
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mons_is_firewood(*mi)
+        if (mons_is_threatening(*mi)
             && !mi->wont_attack()
             && !mi->neutral())
         {
@@ -7642,7 +7642,7 @@ bool player::made_nervous_by(const coord_def &p)
     if (form != TRAN_FUNGUS)
         return false;
     monster* mons = monster_at(p);
-    if (mons && !mons_is_firewood(mons))
+    if (mons && mons_is_threatening(mons))
         return false;
     for (monster_near_iterator mi(&you); mi; ++mi)
     {
@@ -7650,7 +7650,7 @@ bool player::made_nervous_by(const coord_def &p)
             && !mi->asleep()
             && !mi->confused()
             && !mi->cannot_act()
-            && !mons_is_firewood(*mi)
+            && mons_is_threatening(*mi)
             && !mi->wont_attack()
             && !mi->neutral())
         {

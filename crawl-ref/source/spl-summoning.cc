@@ -460,8 +460,7 @@ static bool _place_dragon()
     // Pick a random hostile in sight
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mons_aligned(&you, *mi)
-            && !mons_is_firewood(*mi))
+        if (!mons_aligned(&you, *mi) && mons_is_threatening(*mi))
         {
             targets.push_back(*mi);
         }
