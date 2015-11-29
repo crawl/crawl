@@ -787,7 +787,6 @@ ORIENT:   encompass
 KITEM:    a = amulet of faith randart not_cursed ident:all /\
     amulet of guardian spirit randart not_cursed ident:all /\
     amulet of resist corrosion randart not_cursed ident:all /\
-    amulet of resist mutation randart not_cursed ident:all /\
     amulet of rage randart not_cursed ident:all /\
     amulet of stasis randart not_cursed ident:all /\
     amulet of the gourmand randart not_cursed ident:all /\

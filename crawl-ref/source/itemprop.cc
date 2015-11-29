@@ -713,6 +713,7 @@ const set<pair<object_class_type, int> > removed_items =
     // Outside the #if because we probably won't remove these.
     { OBJ_RUNES,     RUNE_ELF },
     { OBJ_RUNES,     RUNE_FOREST },
+    { OBJ_JEWELLERY, AMU_NOTHING }, // These should only spawn as uniques
 };
 
 bool item_type_removed(object_class_type base, int subtype)

@@ -144,9 +144,9 @@
        "quick blade"
 
       elseif s == "R" then i = "amulet of rage | amulet of regeneration | " ..
-       "rapier | amulet of resist corrosion | amulet of resist mutation | " ..
-       "royal jelly | potion of resistance | scroll of recharging | robe | " ..
-       "ring mail | scroll of random uselessness | scroll of remove curse | " ..
+       "rapier | amulet of resist corrosion | royal jelly | " ..
+       "potion of resistance | scroll of recharging | robe | ring mail | " ..
+       "scroll of random uselessness | scroll of remove curse | " ..
        "wand of random effects"
 
       elseif s == "S" then i = "scimitar | amulet of stasis | short sword | " ..
