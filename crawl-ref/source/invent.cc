@@ -1584,7 +1584,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         && is_weapon(item))
     {
         if (get_weapon_brand(item) == SPWPN_DISTORTION
-            && !you_worship(GOD_LUGONU)
+            && !have_passive(passive_t::safe_distortion)
             && !you.duration[DUR_WEAPON_BRAND])
         {
             return true;

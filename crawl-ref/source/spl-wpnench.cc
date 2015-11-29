@@ -8,6 +8,7 @@
 #include "spl-wpnench.h"
 
 #include "areas.h"
+#include "godpassive.h"
 #include "itemprop.h"
 #include "makeitem.h"
 #include "message.h"
@@ -240,7 +241,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
     const brand_type orig_brand = get_weapon_brand(weapon);
     const bool dangerous_disto = orig_brand == SPWPN_DISTORTION
                                  && !has_temp_brand
-                                 && !you_worship(GOD_LUGONU);
+                                 && !have_passive(passive_t::safe_distortion);
 
     if (dangerous_disto)
     {
