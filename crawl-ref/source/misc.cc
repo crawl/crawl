@@ -596,7 +596,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
 
     // Listed in the form: "your rat", "Blork the orc".
     string mon_name = mon->name(DESC_PLAIN);
-    if (!mon_name.find("the ")) // no "your the royal jelly" nor "the the RJ"
+    if (!mon_name.find("the ")) // no "your the Royal Jelly" nor "the the RJ"
         mon_name.erase(0, 4);
     if (adj.find("your"))
         adj = "the " + adj;
@@ -673,7 +673,7 @@ bool stop_attack_prompt(targetter &hitfunc, const char* verb,
 
     // Listed in the form: "your rat", "Blork the orc".
     string mon_name = victims.describe(DESC_PLAIN);
-    if (!mon_name.find("the ")) // no "your the royal jelly" nor "the the RJ"
+    if (!mon_name.find("the ")) // no "your the Royal Jelly" nor "the the RJ"
         mon_name.erase(0, 4);
     if (adj.find("your"))
         adj = "the " + adj;

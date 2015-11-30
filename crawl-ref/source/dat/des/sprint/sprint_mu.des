@@ -556,7 +556,7 @@ ENDMAP
 # Slime 1, circle
 NAME: sprint_mu_slime_circle
 TAGS: sprint_mu_slime no_rotate no_hmirror no_vmirror
-MONS: the royal jelly, shining eye, giant eyeball, acid blob, azure jelly
+MONS: the Royal Jelly, shining eye, giant eyeball, acid blob, azure jelly
 SHUFFLE: 234
 SUBST: 4 = 45
 KFEAT: M = slimy_wall
