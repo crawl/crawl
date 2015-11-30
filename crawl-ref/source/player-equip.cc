@@ -1086,7 +1086,7 @@ static void _remove_amulet_of_faith(item_def &item)
 
 static void _remove_amulet_of_dismissal(item_def &item)
 {
-    mpr("Translocational energies flood into your body!");
+    mpr("The amulet's energy floods into your body!");
     contaminate_player(7000, true);
 }
 
@@ -1172,7 +1172,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_DISMISSAL:
-        mpr("You field a field of translocational energy surge around you.");
+        mpr("You feel a field of translocational energy surge around you.");
         break;
 
     case AMU_GUARDIAN_SPIRIT:
