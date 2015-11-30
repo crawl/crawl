@@ -68,13 +68,13 @@ string stash_annotate_item(const char *s, const item_def *item, bool exclusive)
 {
     string text = userdef_annotate_item(s, item, exclusive);
 
-    for (auto contents : item_spellset(*item))
-        for (auto spell : contents.spells)
-        {
-            text += " {";
-            text += spell_title(spell);
-            text += "}";
-        }
+    if (item->has_spells())
+    {
+        formatted_string fs;
+        describe_spellset(item_spellset(*item), item, fs);
+        text += "\n";
+        text += fs.tostring();
+    }
 
     // Include singular form (slice of pizza vs slices of pizza).
     if (item->quantity > 1)
