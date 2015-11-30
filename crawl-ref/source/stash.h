@@ -21,7 +21,7 @@ struct stash_search_result;
 class Stash
 {
 public:
-    Stash(int xp = -1, int yp = -1);
+    Stash(coord_def pos_ = coord_def());
     Stash(const Stash &other) { *this = other; };
 
     static bool is_boring_feature(dungeon_feature_type feat);
@@ -56,19 +56,13 @@ public:
                         vector<stash_search_result> &results)
             const;
 
-    void write(FILE *f, int refx = 0, int refy = 0,
-                 string place = "",
-                 bool identify = false) const;
+    void write(FILE *f, coord_def refpos, string place = "",
+               bool identify = false) const;
 
     bool empty() const
     {
         return items.empty() && feat == DNGN_FLOOR;
     }
-
-    bool isAt(const coord_def& c) const { return c.x == x && c.y == y; }
-    int  abs_pos() const { return abspos; }
-    int  getX() const { return x; }
-    int  getY() const { return y; }
 
     bool is_verified() const {  return verified; }
 
@@ -79,8 +73,7 @@ private:
 
 private:
     bool verified;      // Is this correct to the best of our knowledge?
-    uint8_t x, y;
-    int  abspos;
+    coord_def pos;
     dungeon_feature_type feat;
     string feat_desc; // Only for interesting features.
     trap_type trap;
@@ -97,7 +90,7 @@ private:
 class ShopInfo
 {
 public:
-    ShopInfo(int xp, int yp);
+    ShopInfo(coord_def pos_);
 
     bool matches_search(const string &prefix,
                         const base_pattern &search,
@@ -120,8 +113,6 @@ public:
 
     void add_item(const item_def &item, unsigned price);
 
-    bool isAt(const coord_def& c) const { return x == c.x && y == c.y; }
-
     // Messy!
     struct shop_item
     {
@@ -133,8 +124,10 @@ public:
     // corresponding shop_item_name:
     string get_shop_item_name(const item_def&) const;
 
+    bool is_at(coord_def other) const { return pos == other; }
+
 private:
-    int x, y;
+    coord_def pos;
     string name;
 
     int shoptype;
@@ -239,9 +232,7 @@ public:
     // sacrificed
     bool sacrificeable(const coord_def &c) const;
 
-    // Add stash at (x,y), or player's current location if no parameters are
-    // supplied
-    void  add_stash(int x = -1, int y = -1);
+    void  add_stash(coord_def p);
 
     void  kill_stash(const Stash &s);
     void  move_stash(const coord_def& from, const coord_def& to);
@@ -264,7 +255,7 @@ public:
     void _waypoint_search(int n, vector<stash_search_result> &results) const;
 
  private:
-    typedef map<int, Stash>  stashes_t;
+    typedef map<coord_def, Stash> stashes_t;
     typedef vector<ShopInfo> shops_t;
 
     // which level
@@ -309,9 +300,7 @@ public:
     // Mark nets at (x,y) on current level as no longer trapping an actor.
     bool unmark_trapping_nets(const coord_def &c);
 
-    // Add stash at (x,y), or player's current location if no parameters are
-    // supplied.
-    void add_stash(int x = -1, int y = -1);
+    void  add_stash(coord_def p);
 
     void save(writer&) const;
     void load(reader&);
