@@ -574,17 +574,15 @@ bool Stash::matches_search(const string &prefix,
     {
         const string s   = stash_item_name(item);
         const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
-        if (search.matches(prefix + " " + ann + " " + s))
+        pattern_match match(search.match_location(s));
+        if (!match)
+            match = search.match_location(prefix + " " + ann + " " + s);
+        if (!match && is_dumpable_artefact(item))
+            match = search.match_location(chardump_desc(item));
+        if (match)
         {
             stash_search_result res;
-            res.match = s;
-            res.item = item;
-            results.push_back(res);
-        }
-        else if (is_dumpable_artefact(item) && search.matches(chardump_desc(item)))
-        {
-            stash_search_result res;
-            res.match = s;
+            res.match = match;
             res.item = item;
             results.push_back(res);
         }
@@ -593,11 +591,15 @@ bool Stash::matches_search(const string &prefix,
     if (results.empty() && feat != DNGN_FLOOR)
     {
         const string fdesc = feature_description();
-        if (!fdesc.empty() && search.matches(fdesc))
+        if (!fdesc.empty())
         {
-            stash_search_result res;
-            res.match = fdesc;
-            results.push_back(res);
+            pattern_match feat_match(search.match_location(fdesc));
+            if (feat_match)
+            {
+                stash_search_result res;
+                res.match = feat_match;
+                results.push_back(res);
+            }
         }
     }
 
@@ -956,16 +958,15 @@ bool ShopInfo::matches_search(const string &prefix,
         const string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
                                                  &item.item, true);
 
-        bool thismatch = false;
-        if (search.matches(prefix + " " + ann + " " + sname))
-            thismatch = true;
-        else if (search.matches(shop_item_desc(item)))
-            thismatch = true;
-
-        if (thismatch)
+        pattern_match itemname_match(search.match_location(sname));
+        if (!itemname_match)
+            itemname_match = search.match_location(prefix + " " + ann + " " + sname);
+        if (!itemname_match)
+            itemname_match = search.match_location(shop_item_desc(item));
+        if (itemname_match)
         {
             stash_search_result res;
-            res.match = sname;
+            res.match = itemname_match;
             res.item = item.item;
             results.push_back(res);
         }
@@ -976,10 +977,13 @@ bool ShopInfo::matches_search(const string &prefix,
         string shoptitle = prefix + " {shop} " + name;
         if (!visited && items.empty())
             shoptitle += "*";
-        if (search.matches(shoptitle))
+        pattern_match shoptitle_match(search.match_location(name));
+        if (!shoptitle_match)
+            shoptitle_match = search.match_location(shoptitle);
+        if (shoptitle_match)
         {
             stash_search_result res;
-            res.match = name;
+            res.match = shoptitle_match;
             results.push_back(res);
         }
     }
@@ -1627,10 +1631,10 @@ static bool _compare_by_distance(const stash_search_result& lhs,
             return lhs_dist < rhs_dist;
     }
 
-    if (lhs.match != rhs.match)
+    if (lhs.match.matched_text() != rhs.match.matched_text())
     {
         // Then by name.
-        return lhs.match < rhs.match;
+        return lhs.match.matched_text() < rhs.match.matched_text();
     }
     else
         return false;
@@ -1640,10 +1644,10 @@ static bool _compare_by_distance(const stash_search_result& lhs,
 static bool _compare_by_name(const stash_search_result& lhs,
                              const stash_search_result& rhs)
 {
-    if (lhs.match != rhs.match)
+    if (lhs.match.matched_text() != rhs.match.matched_text())
     {
         // Sort by name
-        return lhs.match < rhs.match;
+        return lhs.match.matched_text() < rhs.match.matched_text();
     }
     else if (lhs.player_distance != rhs.player_distance)
     {
@@ -1664,16 +1668,15 @@ static void _inventory_search(const base_pattern &search,
 
         const string s   = Stash::stash_item_name(item);
         const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
-        bool found_something = false;
-        if (search.matches(ann + " " + s))
-            found_something = true;
-        else if (is_dumpable_artefact(item)
-                 && search.matches(chardump_desc(item)))
-            found_something = true;
-        if (found_something)
+        pattern_match itemname_match(search.match_location(s));
+        if (!itemname_match)
+            itemname_match = search.match_location(ann + " " + s);
+        if (!itemname_match && is_dumpable_artefact(item))
+            itemname_match = search.match_location(chardump_desc(item));
+        if (itemname_match)
         {
             stash_search_result res;
-            res.match = s;
+            res.match = itemname_match;
             res.item = item;
             res.in_inventory = true;
             res.pos = level_pos::current();
@@ -1964,7 +1967,7 @@ bool StashTracker::display_search_results(
         if (!res.in_inventory)
             matchtitle << "[" << res.pos.id.describe() << "]";
 
-        matchtitle << " " << res.match;
+        matchtitle << " " << res.match.annotate_string("lightcyan");
 
         MenuEntry *me = new MenuEntry(matchtitle.str(), MEL_ITEM, 1, hotkey);
         me->data = &res;
