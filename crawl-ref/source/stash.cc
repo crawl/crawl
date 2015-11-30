@@ -15,6 +15,7 @@
 #include "chardump.h"
 #include "clua.h"
 #include "cluautil.h"
+#include "colour.h"
 #include "command.h"
 #include "coordit.h"
 #include "describe.h"
@@ -1984,7 +1985,7 @@ bool StashTracker::display_search_results(
         if (!res.in_inventory)
             matchtitle << "[" << res.pos.id.describe() << "] ";
 
-        string item_desc = res.match.annotate_string("lightcyan");
+        string item_desc = res.match.annotate_string(colour_to_str(Options.search_highlight_colour));
         size_t pos;
         while ((pos = item_desc.find('\n')) != string::npos)
             item_desc.replace(pos, 1, "  ");
