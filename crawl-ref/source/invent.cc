@@ -1570,6 +1570,9 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
     }
 
+    if (item.is_type(OBJ_JEWELLERY, AMU_DISMISSAL))
+        return true;
+
     if (nasty_stasis(item, oper))
         return true;
 

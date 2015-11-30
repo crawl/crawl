@@ -71,7 +71,7 @@ function crypt_loot_plus(e)
   local vamp = "ego:vampirism ident:type"
   local book = "randbook disc:necromancy numspells:6 spells:"
   local ring = "ring of positive energy randart good_item"
-  local amulet = "amulet of warding randart good_item"
+  local amulet = "amulet of regeneration randart good_item"
   -- One drop-off of these,
   e.kitem("d = double sword w:5 " .. drain .." / triple sword w:5 " .. drain ..
           " / quick blade " .. drain .. " / executioner's axe " .. drain ..
@@ -1090,7 +1090,7 @@ KMONS:   0 = zombie
 ITEM:    any weapon good_item ego:draining, any weapon ego:pain
 ITEM:    scroll of torment ident:type, randbook disc:necromancy numspells:3
 ITEM:    lantern of shadows, staff of death ident:type
-ITEM:    amulet of warding randart good_item
+ITEM:    amulet of regeneration randart good_item
 KITEM:   $ = $ no_pickup
 KFEAT:   D = altar_yredelemnul
 KFEAT:   E = altar_kikubaaqudgha

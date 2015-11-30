@@ -174,7 +174,7 @@
       elseif s == "V" then i = "scroll of vulnerability"
 
       elseif s == "W" then i = "ring of wizardry | book of the warp | " ..
-       "deck of war | deck of wonders | whip | amulet of warding | " ..
+       "deck of war | deck of wonders | whip | amulet of dismissal | " ..
        "staff of wizardry | war axe"
 
       elseif s == "X" then i = "any"

@@ -130,7 +130,7 @@ const char* jewellery_base_ability_string(int subtype)
     case RING_TELEPORT_CONTROL:   return "+cTele";
 #endif
     case AMU_CLARITY:             return "Clar";
-    case AMU_WARDING:             return "Ward";
+    case AMU_DISMISSAL:           return "Dsmss";
     case AMU_RESIST_CORROSION:    return "rCorr";
     case AMU_THE_GOURMAND:        return "Gourm";
 #if TAG_MAJOR_VERSION == 34
@@ -378,8 +378,8 @@ static const char* _jewellery_base_ability_description(int subtype)
 #endif
     case AMU_CLARITY:
         return "It provides mental clarity.";
-    case AMU_WARDING:
-        return "It may prevent the melee attacks of summoned creatures.";
+    case AMU_DISMISSAL:
+        return "It may teleport away creatures that harm you.";
     case AMU_RESIST_CORROSION:
         return "It protects you from acid and corrosion.";
     case AMU_THE_GOURMAND:
