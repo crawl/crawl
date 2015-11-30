@@ -1912,8 +1912,8 @@ bool StashTracker::display_search_results(
             matchtitle << "[" << res.pos.id.describe() << "] ";
 
         string item_desc = res.match.annotate_string(colour_to_str(Options.search_highlight_colour));
-        replace_all(item_desc, "\n", "  ");
-        replace_all(item_desc, "   ", "  ");
+        item_desc = replace_all(item_desc, "\n", "  ");
+        item_desc = replace_all(item_desc, "   ", "  ");
 
         matchtitle << item_desc;
 
