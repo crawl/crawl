@@ -1725,11 +1725,15 @@ void StashTracker::search_stashes()
     string csearch = csearch_literal;
 
     bool curr_lev = (csearch[0] == '@' || csearch == ".");
+    bool nohl;
     if (curr_lev)
     {
         csearch.erase(0, 1);
         if (csearch.length() == 0)
+        {
             csearch = ".";
+            nohl = true;
+        }
     }
 
     vector<stash_search_result> results;
@@ -1767,6 +1771,10 @@ void StashTracker::search_stashes()
         mprf(MSGCH_PLAIN, "Too many matches; use a more specific search.");
         return;
     }
+
+    if (nohl)
+        for (auto &res : results)
+            res.match.nohl();
 
     bool sort_by_dist = true;
     bool filter_useless = false;
