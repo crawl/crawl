@@ -4,6 +4,7 @@
 
 #include "clua.h"
 #include "libutil.h" // map_find
+#include "options.h"
 
 //////////////////////////////////////////////////////////////////////
 // Miscellaneous globals
@@ -25,10 +26,11 @@ static base_pattern *get_text_pattern(const string &s, bool checkcase)
         pattern_cache.clear();
     }
 
-    if (s.length() > 0 && s[0] == '/')
+    if (s[0] == '/' || Options.regex_search)
     {
         string pattern(s);
-        pattern.erase(0, 1);
+        if (s[0] == '/')
+            pattern.erase(0, 1);
         pattern_cache[s] = new text_pattern(pattern, !checkcase);
     }
     else
