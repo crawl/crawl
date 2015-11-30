@@ -579,7 +579,6 @@ bool Stash::matches_search(const string &prefix,
             stash_search_result res;
             res.match = s;
             res.item = item;
-            res.matches += item.quantity;
             results.push_back(res);
         }
         else if (is_dumpable_artefact(item) && search.matches(chardump_desc(item)))
@@ -587,7 +586,6 @@ bool Stash::matches_search(const string &prefix,
             stash_search_result res;
             res.match = s;
             res.item = item;
-            res.matches += item.quantity;
             results.push_back(res);
         }
     }
@@ -599,7 +597,6 @@ bool Stash::matches_search(const string &prefix,
         {
             stash_search_result res;
             res.match = fdesc;
-            res.matches = 1;
             results.push_back(res);
         }
     }
@@ -970,7 +967,6 @@ bool ShopInfo::matches_search(const string &prefix,
             stash_search_result res;
             res.match = sname;
             res.item = item.item;
-            res.matches++;
             results.push_back(res);
         }
     }
@@ -1631,12 +1627,7 @@ static bool _compare_by_distance(const stash_search_result& lhs,
             return lhs_dist < rhs_dist;
     }
 
-    if (lhs.matches != rhs.matches)
-    {
-        // Then by decreasing number of matches
-        return lhs.matches > rhs.matches;
-    }
-    else if (lhs.match != rhs.match)
+    if (lhs.match != rhs.match)
     {
         // Then by name.
         return lhs.match < rhs.match;
@@ -1658,11 +1649,6 @@ static bool _compare_by_name(const stash_search_result& lhs,
     {
         // Then sort by increasing distance
         return lhs.player_distance < rhs.player_distance;
-    }
-    else if (lhs.matches != rhs.matches)
-    {
-        // Then by decreasing number of matches
-        return lhs.matches > rhs.matches;
     }
     else
         return false;
@@ -1689,7 +1675,6 @@ static void _inventory_search(const base_pattern &search,
             stash_search_result res;
             res.match = s;
             res.item = item;
-            res.matches = item.quantity;
             res.in_inventory = true;
             res.pos = level_pos::current();
             results.push_back(res);

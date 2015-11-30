@@ -166,9 +166,6 @@ struct stash_search_result
     // is on.
     int player_distance;
 
-    // Number of items in the stash that match the search.
-    int matches;
-
     // Text that describes this search result - usually the name of
     // the first matching item in the stash or the name of the shop.
     string match;
@@ -182,16 +179,14 @@ struct stash_search_result
     // Whether the found items are in the player's inventory.
     bool in_inventory;
 
-    stash_search_result() : pos(), player_distance(0), matches(0), match(),
-                            item(), shop(nullptr),
-                            in_inventory(false)
+    stash_search_result() : pos(), player_distance(0), match(), item(),
+                            shop(nullptr), in_inventory(false)
     {
     }
 
     stash_search_result(const stash_search_result &o)
-        : pos(o.pos), player_distance(o.player_distance), matches(o.matches),
-          match(o.match), item(o.item), shop(o.shop),
-          in_inventory(o.in_inventory)
+        : pos(o.pos), player_distance(o.player_distance), match(o.match),
+          item(o.item), shop(o.shop), in_inventory(o.in_inventory)
     {
     }
 
@@ -199,7 +194,6 @@ struct stash_search_result
     {
         pos = o.pos;
         player_distance = o.player_distance;
-        matches = o.matches;
         match = o.match;
         item = o.item;
         shop = o.shop;
@@ -209,9 +203,7 @@ struct stash_search_result
 
     bool operator < (const stash_search_result &ssr) const
     {
-        return player_distance < ssr.player_distance
-                  || (player_distance == ssr.player_distance
-                      && matches > ssr.matches);
+        return player_distance < ssr.player_distance;
     }
 
     bool show_menu() const;
