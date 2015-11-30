@@ -36,9 +36,6 @@ public:
     string feature_description() const;
     vector<item_def> get_items() const;
 
-    bool show_menu(const level_pos &place, bool can_travel,
-                   const vector<item_def>& matching_items) const;
-
     // Returns true if this Stash contains items that are eligible for
     // autopickup.
     bool pickup_eligible() const;
@@ -56,7 +53,7 @@ public:
 
     bool matches_search(const string &prefix,
                         const base_pattern &search,
-                        stash_search_result &res)
+                        vector<stash_search_result> &results)
             const;
 
     void write(FILE *f, int refx = 0, int refy = 0,
@@ -109,7 +106,7 @@ public:
 
     bool matches_search(const string &prefix,
                         const base_pattern &search,
-                        stash_search_result &res)
+                        vector<stash_search_result> &results)
             const;
 
     string description() const;
@@ -172,34 +169,29 @@ struct stash_search_result
     // Number of items in the stash that match the search.
     int matches;
 
-    // Count of items stacks in the stash that matched. This will be the same as
-    // matches if each matching stack's quantity is 1.
-    int count;
-
     // Text that describes this search result - usually the name of
     // the first matching item in the stash or the name of the shop.
     string match;
 
-    // The stash or shop in question. Both can be null if this is a feature.
-    const Stash    *stash;
-    const ShopInfo *shop;
+    // Item that was matched.
+    item_def item;
 
-    // The items that matched the search, if any.
-    vector<item_def> matching_items;
+    // The shop in question, if this is result is for a shop name.
+    const ShopInfo *shop;
 
     // Whether the found items are in the player's inventory.
     bool in_inventory;
 
-    stash_search_result() : pos(), player_distance(0), matches(0),
-                            count(0), match(), stash(nullptr), shop(nullptr),
-                            matching_items(), in_inventory(false)
+    stash_search_result() : pos(), player_distance(0), matches(0), match(),
+                            item(), shop(nullptr),
+                            in_inventory(false)
     {
     }
 
     stash_search_result(const stash_search_result &o)
         : pos(o.pos), player_distance(o.player_distance), matches(o.matches),
-          count(o.count), match(o.match), stash(o.stash), shop(o.shop),
-          matching_items(o.matching_items), in_inventory(o.in_inventory)
+          match(o.match), item(o.item), shop(o.shop),
+          in_inventory(o.in_inventory)
     {
     }
 
@@ -208,11 +200,9 @@ struct stash_search_result
         pos = o.pos;
         player_distance = o.player_distance;
         matches = o.matches;
-        count = o.count;
         match = o.match;
-        stash = o.stash;
+        item = o.item;
         shop = o.shop;
-        matching_items = o.matching_items;
         in_inventory = o.in_inventory;
         return *this;
     }
@@ -359,7 +349,6 @@ private:
                               bool curr_lev = false) const;
     bool display_search_results(vector<stash_search_result> &results,
                                 bool& sort_by_dist,
-                                bool& show_as_stacks,
                                 bool& filter_useless,
                                 bool& default_execute);
     string stash_search_prompt();
