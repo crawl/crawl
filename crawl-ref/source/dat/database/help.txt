@@ -92,7 +92,7 @@ Some shortcuts:
 <w>..</w>            lists all items you know.
 <w>0</w> to <w>9</w>        lists all items at the specified waypoint.
 <w>*</w>             lists all items at all waypoints.
-<w>@<<pattern></w>    lists everything matching <<pattern> on your current level.
+<w>@<<query></w>      lists everything matching <<query> on your current level.
 <w>/<<regex></w>      lists items matching <<regex> as a regular expression.
 <w>=<<string></w>     lists items containing <<string> as a substring.
 
