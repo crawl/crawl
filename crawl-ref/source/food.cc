@@ -808,6 +808,7 @@ int prompt_eat_chunks(bool only_auto)
             // Allow undead to use easy_eat, but not auto_eat, since the player
             // might not want to drink blood as a vampire and might want to save
             // chunks as a ghoul.
+                       // Ghouls can auto_eat if they have rotted hp.
             if (easy_eat && !bad && i_feel_safe() && !(only_auto &&
                                                        you.undead_state()))
             {
@@ -815,7 +816,10 @@ int prompt_eat_chunks(bool only_auto)
                 autoeat = true;
             }
             else if (only_auto)
-                return 0;
+                               if (you.species == SP_GHOUL && player_rotted())
+                                       autoeat = true;
+                               else
+                                       return 0;
             else
             {
                 mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
