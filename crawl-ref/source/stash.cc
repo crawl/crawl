@@ -1731,10 +1731,7 @@ void StashTracker::search_stashes()
     {
         csearch.erase(0, 1);
         if (csearch.length() == 0)
-        {
             csearch = ".";
-            nohl = true;
-        }
     }
 
     base_pattern *search = nullptr;
@@ -1745,10 +1742,13 @@ void StashTracker::search_stashes()
 
     if (lua_text_pattern::is_lua_pattern(csearch))
         search = &ltpat;
-    else if (csearch[0] == '/' || Options.regex_search)
+    else if (csearch == "." || csearch == ".." || csearch[0] == '/'
+             || Options.regex_search)
     {
         if (csearch[0] == '/')
             csearch.erase(0, 1);
+        if (csearch == "." || csearch == "..")
+            nohl = true;
         tpat = csearch;
         search = &tpat;
     }
