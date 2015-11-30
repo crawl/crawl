@@ -1851,7 +1851,7 @@ void StashSearchMenu::draw_title()
         formatted_string fs = formatted_string(title->colour);
         fs.cprintf("%d %s%s",
                    title->quantity, title->text.c_str(),
-                   title->quantity > 1 ? "es" : "");
+                   title->quantity == 1 ? "" : "es");
         fs.display();
 
 #ifdef USE_TILE_WEB
