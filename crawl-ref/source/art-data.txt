@@ -913,7 +913,7 @@ LIFE:    1
 BOOL:    seeinv
 
 NAME:    amulet of Cekugob
-OBJ:     OBJ_JEWELLERY/AMU_NOTHING
+OBJ:     OBJ_JEWELLERY/AMU_DISMISSAL
 COLOUR:  ETC_SILVER
 TILE:    urand_cekugob
 AC:      1
