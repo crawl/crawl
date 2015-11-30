@@ -11,31 +11,27 @@
 
 #define PATTERN_FLUSH_CEILING 100
 
-typedef map<string, base_pattern*> pattern_map;
+typedef map<string, unique_ptr<base_pattern>> pattern_map;
 static pattern_map pattern_cache;
 
-static base_pattern *get_text_pattern(const string &s, bool checkcase)
+static base_pattern &get_text_pattern(const string &s, bool checkcase)
 {
-    if (base_pattern **pat = map_find(pattern_cache, s))
-        return *pat;
+    if (unique_ptr<base_pattern> *pat = map_find(pattern_cache, s))
+        return **pat;
 
     if (pattern_cache.size() > PATTERN_FLUSH_CEILING)
-    {
-        for (auto &kv : pattern_cache)
-            delete kv.second;
         pattern_cache.clear();
-    }
 
     if (s[0] == '/' || Options.regex_search)
     {
         string pattern(s);
         if (s[0] == '/')
             pattern.erase(0, 1);
-        pattern_cache[s] = new text_pattern(pattern, !checkcase);
+        pattern_cache[s] = unique_ptr<base_pattern>(new text_pattern(pattern, !checkcase));
     }
     else
-        pattern_cache[s] = new plaintext_pattern(s, !checkcase);
-    return pattern_cache[s];
+        pattern_cache[s] = unique_ptr<base_pattern>(new plaintext_pattern(s, !checkcase));
+    return *pattern_cache[s];
 }
 
 static int lua_pmatch(lua_State *ls)
@@ -52,8 +48,8 @@ static int lua_pmatch(lua_State *ls)
     if (lua_isboolean(ls, 3))
         checkcase = lua_toboolean(ls, 3);
 
-    base_pattern *tp = get_text_pattern(pattern, checkcase);
-    lua_pushboolean(ls, tp->matches(text));
+    base_pattern &tp = get_text_pattern(pattern, checkcase);
+    lua_pushboolean(ls, tp.matches(text));
     return 1;
 }
 
