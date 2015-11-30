@@ -1570,15 +1570,6 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
     }
 
-    if (item.is_type(OBJ_JEWELLERY, AMU_DISMISSAL))
-        return true;
-
-    if (item.is_type(OBJ_JEWELLERY, AMU_REGENERATION) &&
-        player_mutation_level(MUT_SLOW_REGENERATION) < 3)
-    {
-        return true;
-    }
-
     if (nasty_stasis(item, oper))
         return true;
 
@@ -1633,6 +1624,13 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
 
         if (is_artefact(item) && artefact_property(item, ARTP_DRAIN))
             return true;
+        if (item.is_type(OBJ_JEWELLERY, AMU_DISMISSAL))
+            return true;
+        if (item.is_type(OBJ_JEWELLERY, AMU_REGENERATION)
+            && player_mutation_level(MUT_SLOW_REGENERATION) < 3)
+        {
+            return true;
+        }
     }
 
     return false;
