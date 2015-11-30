@@ -106,6 +106,9 @@ enum class passive_t
 
     /// Higher chance for spawning the abyssal rune.
     attract_abyssal_rune,
+
+    /// Potentially save allies from death. Holy or natural, in LOS.
+    protect_ally,
 };
 
 enum jiyva_slurp_results
