@@ -2752,6 +2752,9 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
  */
 bool item_needs_autopickup(const item_def &item, bool ignore_force)
 {
+    if (in_inventory(item))
+        return false;
+
     if (item_is_stationary(item))
         return false;
 
