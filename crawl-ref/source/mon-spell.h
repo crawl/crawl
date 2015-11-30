@@ -1548,7 +1548,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_RAIJU,
       {
-       { SPELL_BLINKBOLT, 57, MON_SPELL_MAGICAL },
+       { SPELL_BLINKBOLT, 40, MON_SPELL_MAGICAL },
       }
     },
 
