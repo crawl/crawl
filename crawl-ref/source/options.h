@@ -414,7 +414,10 @@ public:
     int         rest_wait_percent; // Stop resting after restoring this
                                    // fraction of HP or MP
 
-    bool        regex_search; // whether to default to regex search for ^F
+    bool        regex_search;            // whether to default to regex search
+                                         // for ^F
+    int         search_highlight_colour; // colour to use when highlighting
+                                         // search results
 
     lang_t              language;         // Translation to use.
     const char*         lang_name;        // Database name of the language.
