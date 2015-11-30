@@ -1680,6 +1680,9 @@ static void _inventory_search(const base_pattern &search,
             stash_search_result res;
             res.match = itemname_match;
             res.item = item;
+            // Needs to not be equal to ITEM_IN_INVENTORY so the describe
+            // menu doesn't think it can manipulate the item.
+            res.item.pos = you.pos();
             res.in_inventory = true;
             res.pos = level_pos::current();
             results.push_back(res);
