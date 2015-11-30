@@ -2224,7 +2224,7 @@ ST_ItemIterator ST_ItemIterator::operator ++ (int)
 
 bool stash_search_result::show_menu() const
 {
-    if (in_inventory)
+    if (item.defined())
     {
         item_def it = item;
         describe_item(it);
