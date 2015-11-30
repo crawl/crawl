@@ -165,17 +165,12 @@ static void _fully_identify_item(item_def *item)
 // Stash
 // ----------------------------------------------------------------------
 
-Stash::Stash(int xp, int yp) : items()
+Stash::Stash(coord_def pos_) : items()
 {
     // First, fix what square we're interested in
-    if (xp == -1)
-    {
-        xp = you.pos().x;
-        yp = you.pos().y;
-    }
-    x = xp;
-    y = yp;
-    abspos = GXM * (int) y + x;
+    if (pos_.origin())
+        pos_ = you.pos();
+    pos = pos_;
 
     update();
 }
@@ -264,8 +259,7 @@ bool Stash::unmark_trapping_nets()
 
 void Stash::update()
 {
-    coord_def p(x,y);
-    feat = grd(p);
+    feat = grd(pos);
     trap = NUM_TRAPS;
 
     if (is_boring_feature(feat))
@@ -273,7 +267,7 @@ void Stash::update()
 
     if (feat_is_trap(feat))
     {
-        trap = get_trap_type(p);
+        trap = get_trap_type(pos);
         if (trap == TRAP_WEB)
             feat = DNGN_FLOOR, trap = TRAP_UNASSIGNED;
     }
@@ -281,19 +275,16 @@ void Stash::update()
     if (feat == DNGN_FLOOR)
         feat_desc = "";
     else
-    {
-        feat_desc = feature_description_at(coord_def(x, y), false,
-                                           DESC_A, false);
-    }
+        feat_desc = feature_description_at(pos, false, DESC_A, false);
 
     // If this is your position, you know what's on this square
-    if (p == you.pos())
+    if (pos == you.pos())
     {
         // Zap existing items
         items.clear();
 
         // Now, grab all items on that square and fill our vector
-        for (stack_iterator si(p, true); si; ++si)
+        for (stack_iterator si(pos, true); si; ++si)
             add_item(*si);
 
         verified = true;
@@ -302,7 +293,7 @@ void Stash::update()
     // what the player sees on the square is the first item in this vector.
     else
     {
-        if (!_grid_has_perceived_item(p))
+        if (!_grid_has_perceived_item(pos))
         {
             items.clear();
             verified = true;
@@ -310,14 +301,14 @@ void Stash::update()
         }
 
         // There's something on this square. Take a squint at it.
-        item_def *pitem = &mitm[you.visible_igrd(p)];
+        item_def *pitem = &mitm[you.visible_igrd(pos)];
         hints_first_item(*pitem);
 
         god_id_item(*pitem);
         maybe_identify_base_type(*pitem);
         const item_def& item = *pitem;
 
-        if (!_grid_has_perceived_multiple_items(p))
+        if (!_grid_has_perceived_multiple_items(pos))
             items.clear();
 
         // We knew of nothing on this square, so we'll assume this is the
@@ -329,7 +320,7 @@ void Stash::update()
                 add_item(item);
             // Note that we could be lying here, since we can have
             // a verified falsehood (if there's a mimic.)
-            verified = !_grid_has_perceived_multiple_items(p);
+            verified = !_grid_has_perceived_multiple_items(pos);
             return;
         }
 
@@ -600,11 +591,7 @@ bool Stash::matches_search(const string &prefix,
     }
 
     for (auto &res : results)
-    {
-        // XXX pos.pos looks lame. Lameness is not solicited.
-        res.pos.pos.x = x;
-        res.pos.pos.y = y;
-    }
+        res.pos.pos = pos;
 
     return !results.empty();
 }
@@ -659,15 +646,14 @@ void Stash::add_item(const item_def &item, bool add_to_front)
     it.stash_freshness     = it.freshness;
 }
 
-void Stash::write(FILE *f, int refx, int refy, string place, bool identify)
-    const
+void Stash::write(FILE *f, coord_def refpos, string place, bool identify) const
 {
     if (items.empty() && verified)
         return;
 
     no_notes nx;
 
-    fprintf(f, "(%d, %d%s%s)\n", x - refx, y - refy,
+    fprintf(f, "(%d, %d%s%s)\n", pos.x - refpos.x, pos.y - refpos.y,
             place.empty() ? "" : ", ", OUTS(place));
 
     for (int i = 0; i < (int) items.size(); ++i)
@@ -719,8 +705,8 @@ void Stash::save(writer& outf) const
     // How many items on this square?
     marshallShort(outf, (short) items.size());
 
-    marshallByte(outf, x);
-    marshallByte(outf, y);
+    marshallByte(outf, pos.x);
+    marshallByte(outf, pos.y);
 
     marshallByte(outf, feat);
     marshallByte(outf, trap);
@@ -740,8 +726,8 @@ void Stash::load(reader& inf)
     // How many items?
     int count = unmarshallShort(inf);
 
-    x = unmarshallByte(inf);
-    y = unmarshallByte(inf);
+    pos.x = unmarshallByte(inf);
+    pos.y = unmarshallByte(inf);
 
     feat =  static_cast<dungeon_feature_type>(unmarshallUByte(inf));
     trap =  static_cast<trap_type>(unmarshallUByte(inf));
@@ -749,8 +735,6 @@ void Stash::load(reader& inf)
 
     uint8_t flags = unmarshallUByte(inf);
     verified = (flags & 1) != 0;
-
-    abspos = GXM * (int) y + x;
 
     // Zap out item vector, in case it's in use (however unlikely)
     items.clear();
@@ -764,12 +748,12 @@ void Stash::load(reader& inf)
     }
 }
 
-ShopInfo::ShopInfo(int xp, int yp) : x(xp), y(yp), name(), shoptype(-1),
+ShopInfo::ShopInfo(coord_def pos_) : pos(pos_), name(), shoptype(-1),
                                      visited(false), items()
 {
     // Most of our initialization will be done externally; this class is really
     // a mildly glorified struct.
-    const shop_struct *sh = get_shop(coord_def(x, y));
+    const shop_struct *sh = get_shop(pos);
     if (sh)
         shoptype = sh->type;
 }
@@ -984,8 +968,7 @@ bool ShopInfo::matches_search(const string &prefix,
     for (auto &res : results)
     {
         res.shop = this;
-        res.pos.pos.x = x;
-        res.pos.pos.y = y;
+        res.pos.pos = pos;
     }
 
     return !results.empty();
@@ -1026,11 +1009,11 @@ void ShopInfo::save(writer& outf) const
 {
     marshallShort(outf, shoptype);
 
-    int mangledx = (short) x;
+    int mangledx = (short) pos.x;
     if (!visited)
         mangledx |= 1024;
     marshallShort(outf, mangledx);
-    marshallShort(outf, (short) y);
+    marshallShort(outf, (short) pos.y);
 
     marshallShort(outf, (short) items.size());
 
@@ -1047,11 +1030,11 @@ void ShopInfo::load(reader& inf)
 {
     shoptype = unmarshallShort(inf);
 
-    x = unmarshallShort(inf);
-    visited = !(x & 1024);
-    x &= 0xFF;
+    pos.x = unmarshallShort(inf);
+    visited = !(pos.x & 1024);
+    pos.x &= 0xFF;
 
-    y = unmarshallShort(inf);
+    pos.y = unmarshallShort(inf);
 
     int itemcount = unmarshallShort(inf);
 
@@ -1079,26 +1062,18 @@ level_id LevelStashes::where() const
 
 Stash *LevelStashes::find_stash(coord_def c)
 {
-    // FIXME: is this really necessary?
-    if (c.x == -1 || c.y == -1)
-        c = you.pos();
-
-    return map_find(m_stashes, (GXM * c.y) + c.x);
+    return map_find(m_stashes, c);
 }
 
 const Stash *LevelStashes::find_stash(coord_def c) const
 {
-    // FIXME: is this really necessary?
-    if (c.x == -1 || c.y == -1)
-        c = you.pos();
-
-    return map_find(m_stashes, (GXM * c.y) + c.x);
+    return map_find(m_stashes, c);
 }
 
 const ShopInfo *LevelStashes::find_shop(const coord_def& c) const
 {
     for (const ShopInfo &shop : m_shops)
-        if (shop.isAt(c))
+        if (shop.is_at(c))
             return &shop;
 
     return nullptr;
@@ -1138,10 +1113,10 @@ bool LevelStashes::sacrificeable(const coord_def &c) const
 ShopInfo &LevelStashes::get_shop(const coord_def& c)
 {
     for (ShopInfo &shop : m_shops)
-        if (shop.isAt(c))
+        if (shop.is_at(c))
             return shop;
 
-    ShopInfo si(c.x, c.y);
+    ShopInfo si(c);
     si.set_name(shop_name(c));
     m_shops.push_back(si);
     return get_shop(c);
@@ -1177,22 +1152,21 @@ void LevelStashes::move_stash(const coord_def& from, const coord_def& to)
     if (!s)
         return;
 
-    int old_abs = s->abs_pos();
-    s->x = to.x;
-    s->y = to.y;
-    m_stashes.insert(make_pair(s->abs_pos(), *s));
-    m_stashes.erase(old_abs);
+    coord_def old_pos = s->pos;
+    s->pos = to;
+    m_stashes.emplace(s->pos, *s);
+    m_stashes.erase(old_pos);
 }
 
 // Removes a Stash from the level.
 void LevelStashes::kill_stash(const Stash &s)
 {
-    m_stashes.erase(s.abs_pos());
+    m_stashes.erase(s.pos);
 }
 
-void LevelStashes::add_stash(int x, int y)
+void LevelStashes::add_stash(coord_def p)
 {
-    Stash *s = find_stash(coord_def(x, y));
+    Stash *s = find_stash(p);
     if (s)
     {
         s->update();
@@ -1201,9 +1175,9 @@ void LevelStashes::add_stash(int x, int y)
     }
     else
     {
-        Stash new_stash(x, y);
+        Stash new_stash(p);
         if (!new_stash.empty())
-            m_stashes[ new_stash.abs_pos() ] = new_stash;
+            m_stashes[new_stash.pos] = new_stash;
     }
 }
 
@@ -1310,10 +1284,9 @@ void LevelStashes::write(FILE *f, bool identify) const
     if (m_stashes.size())
     {
         const Stash &s = m_stashes.begin()->second;
-        int refx = s.getX(), refy = s.getY();
         string levname = short_level_name();
         for (const auto &entry : m_stashes)
-            entry.second.write(f, refx, refy, levname, identify);
+            entry.second.write(f, s.pos, levname, identify);
     }
     fprintf(f, "\n");
 }
@@ -1346,14 +1319,14 @@ void LevelStashes::load(reader& inf)
         Stash s;
         s.load(inf);
         if (!s.empty())
-            m_stashes[ s.abs_pos() ] = s;
+            m_stashes[s.pos] = s;
     }
 
     m_shops.clear();
     int shopc = unmarshallShort(inf);
     for (int i = 0; i < shopc; ++i)
     {
-        ShopInfo si(0, 0);
+        ShopInfo si{coord_def()};
         si.load(inf);
         m_shops.push_back(si);
     }
@@ -1362,7 +1335,7 @@ void LevelStashes::load(reader& inf)
 void LevelStashes::remove_shop(const coord_def& c)
 {
     for (unsigned i = 0; i < m_shops.size(); ++i)
-        if (m_shops[i].isAt(c))
+        if (m_shops[i].is_at(c))
         {
             m_shops.erase(m_shops.begin() + i);
             return;
@@ -1417,10 +1390,10 @@ void StashTracker::remove_level(const level_id &place)
     levels.erase(place);
 }
 
-void StashTracker::add_stash(int x, int y)
+void StashTracker::add_stash(coord_def p)
 {
     LevelStashes &current = get_current_level();
-    current.add_stash(x, y);
+    current.add_stash(p);
 
     if (!current.has_stashes())
         remove_level();
@@ -1492,7 +1465,7 @@ void StashTracker::update_visible_stashes()
         {
             if (!lev)
                 lev = &get_current_level();
-            lev->add_stash(ri->x, ri->y);
+            lev->add_stash(*ri);
         }
 
         if (feat == DNGN_ENTER_SHOP)
@@ -1939,11 +1912,8 @@ bool StashTracker::display_search_results(
             matchtitle << "[" << res.pos.id.describe() << "] ";
 
         string item_desc = res.match.annotate_string(colour_to_str(Options.search_highlight_colour));
-        size_t pos;
-        while ((pos = item_desc.find('\n')) != string::npos)
-            item_desc.replace(pos, 1, "  ");
-        while ((pos = item_desc.find("   ")) != string::npos)
-            item_desc.erase(pos, 1);
+        replace_all(item_desc, "\n", "  ");
+        replace_all(item_desc, "   ", "  ");
 
         matchtitle << item_desc;
 

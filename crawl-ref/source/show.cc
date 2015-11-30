@@ -247,7 +247,7 @@ void update_item_at(const coord_def &gp, bool detected)
     else
     {
         if (detected)
-            StashTrack.add_stash(gp.x, gp.y);
+            StashTrack.add_stash(gp);
 
         const vector<item_def> stash = item_list_in_stash(gp);
         if (stash.empty())
