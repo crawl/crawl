@@ -578,7 +578,7 @@ bool Stash::matches_search(const string &prefix,
         if (!match)
             match = search.match_location(s + " " + prefix + " " + ann);
         if (!match && is_dumpable_artefact(item))
-            match = search.match_location(chardump_desc(item));
+            match = search.match_location(s + " " + chardump_desc(item));
         if (match)
         {
             stash_search_result res;
@@ -962,7 +962,7 @@ bool ShopInfo::matches_search(const string &prefix,
         if (!itemname_match)
             itemname_match = search.match_location(sname + " " + prefix + " " + ann);
         if (!itemname_match)
-            itemname_match = search.match_location(shop_item_desc(item));
+            itemname_match = search.match_location(sname + " " + shop_item_desc(item));
         if (itemname_match)
         {
             stash_search_result res;
@@ -1673,7 +1673,7 @@ static void _inventory_search(const base_pattern &search,
         if (!itemname_match)
             itemname_match = search.match_location(s + " " + ann);
         if (!itemname_match && is_dumpable_artefact(item))
-            itemname_match = search.match_location(chardump_desc(item));
+            itemname_match = search.match_location(s + " " + chardump_desc(item));
         if (itemname_match)
         {
             stash_search_result res;
