@@ -773,7 +773,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         string subtitle = item_class_name(i);
 
         // Mention the class selection shortcuts.
-        if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
+        if (is_set(MF_MULTISELECT))
         {
             vector<char> glyphs;
             get_class_hotkeys(i, glyphs);
