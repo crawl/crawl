@@ -142,18 +142,6 @@ public:
     {
     }
 
-    plaintext_pattern(const plaintext_pattern &tp)
-        : base_pattern(tp),
-          pattern(tp.pattern),
-          ignore_case(tp.ignore_case)
-    {
-    }
-
-    ~plaintext_pattern()
-    {
-    }
-
-    const plaintext_pattern &operator= (const plaintext_pattern &tp);
     const plaintext_pattern &operator= (const string &spattern);
     bool operator== (const plaintext_pattern &tp) const;
 
