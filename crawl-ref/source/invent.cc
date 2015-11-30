@@ -1573,6 +1573,12 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (item.is_type(OBJ_JEWELLERY, AMU_DISMISSAL))
         return true;
 
+    if (item.is_type(OBJ_JEWELLERY, AMU_REGENERATION) &&
+        player_mutation_level(MUT_SLOW_REGENERATION) < 3)
+    {
+        return true;
+    }
+
     if (nasty_stasis(item, oper))
         return true;
 
