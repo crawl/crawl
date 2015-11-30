@@ -191,17 +191,6 @@ pattern_match text_pattern::match_location(const char *s, int length) const
         return pattern_match::failed(string(s));
 }
 
-const plaintext_pattern &plaintext_pattern::operator= (const plaintext_pattern &tp)
-{
-    if (this == &tp)
-        return tp;
-
-    pattern = tp.pattern;
-    ignore_case  = tp.ignore_case;
-
-    return *this;
-}
-
 const plaintext_pattern &plaintext_pattern::operator= (const string &spattern)
 {
     if (pattern == spattern)
