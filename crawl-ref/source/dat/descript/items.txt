@@ -13,8 +13,8 @@ being berserked against one's will.
 %%%%
 amulet of dismissal
 
-This amulet generates a field of translocational energy that will sometimes
-teleport away creatures that harm you. Removing it causes that translocational
+This amulet generates a field of translocational energy that will teleport away
+creatures that harm you one tenth of the time. Removing it causes that
 energy to latch onto the former wearer, causing an intense build-up of magical
 contamination.
 %%%%

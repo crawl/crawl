@@ -758,10 +758,10 @@ static void _maybe_dismiss(mid_t source)
         monster* mon = monster_by_mid(source);
 
         // 10% chance to teleport away monsters that harm you
-        if (!mon->no_tele() && random2(10) == 0)
+        if (!mon->no_tele() && one_chance_in(10))
         {
-            mprf(MSGCH_GOD, "The translocation field surrounding you hums and "
-                    "%s disappears!", mon->name(DESC_THE).c_str());
+            mprf(MSGCH_GOD, "The translocation field surrounding you vibrates  "
+                    "and %s disappears!", mon->name(DESC_THE).c_str());
             monster_teleport(mon, true, true);
         }
     }
