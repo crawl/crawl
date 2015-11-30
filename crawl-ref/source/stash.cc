@@ -538,46 +538,6 @@ bool StashMenu::process_key(int key)
     return Menu::process_key(key);
 }
 
-static MenuEntry *stash_menu_fixup(MenuEntry *me)
-{
-    const item_def *item = static_cast<const item_def *>(me->data);
-    if (item->base_type == OBJ_GOLD)
-    {
-        me->quantity = 0;
-        me->colour   = DARKGREY;
-    }
-
-    return me;
-}
-
-bool Stash::show_menu(const level_pos &prefix, bool can_travel,
-                      const vector<item_def>& matching_items) const
-{
-    const string prefix_str = prefix.id.describe();
-    StashMenu menu;
-
-    MenuEntry *mtitle = new MenuEntry("Stash (" + prefix_str, MEL_TITLE);
-    menu.can_travel   = can_travel;
-    mtitle->quantity  = matching_items.size();
-    menu.set_title(mtitle);
-    menu.load_items(matching_items, stash_menu_fixup);
-
-    vector<MenuEntry*> sel;
-    while (true)
-    {
-        sel = menu.show();
-        if (menu.getkey() == 1) // See StashMenu::process_key
-            return true;
-
-        if (sel.size() != 1)
-            break;
-
-        item_def *item = static_cast<item_def *>(sel[0]->data);
-        describe_item(*item);
-    }
-    return false;
-}
-
 string Stash::description() const
 {
     if (!enabled || items.empty())
@@ -605,7 +565,7 @@ string Stash::feature_description() const
 
 bool Stash::matches_search(const string &prefix,
                            const base_pattern &search,
-                           stash_search_result &res) const
+                           vector<stash_search_result> &results) const
 {
     if (!enabled || items.empty() && feat == DNGN_FLOOR)
         return false;
@@ -616,44 +576,42 @@ bool Stash::matches_search(const string &prefix,
         const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
         if (search.matches(prefix + " " + ann + " " + s))
         {
-            if (!res.count++)
-                res.match = s;
+            stash_search_result res;
+            res.match = s;
+            res.item = item;
             res.matches += item.quantity;
-            res.matching_items.push_back(item);
-            continue;
+            results.push_back(res);
         }
-
-        if (is_dumpable_artefact(item))
+        else if (is_dumpable_artefact(item) && search.matches(chardump_desc(item)))
         {
-            if (search.matches(chardump_desc(item)))
-            {
-                if (!res.count++)
-                    res.match = s;
-                res.matches += item.quantity;
-                res.matching_items.push_back(item);
-            }
+            stash_search_result res;
+            res.match = s;
+            res.item = item;
+            res.matches += item.quantity;
+            results.push_back(res);
         }
     }
 
-    if (!res.matches && feat != DNGN_FLOOR)
+    if (results.empty() && feat != DNGN_FLOOR)
     {
         const string fdesc = feature_description();
         if (!fdesc.empty() && search.matches(fdesc))
         {
+            stash_search_result res;
             res.match = fdesc;
             res.matches = 1;
+            results.push_back(res);
         }
     }
 
-    if (res.matches)
+    for (auto &res : results)
     {
-        res.stash = this;
         // XXX pos.pos looks lame. Lameness is not solicited.
         res.pos.pos.x = x;
         res.pos.pos.y = y;
     }
 
-    return !!res.matches;
+    return !results.empty();
 }
 
 void Stash::_update_corpses(int rot_time)
@@ -988,14 +946,12 @@ string ShopInfo::description() const
 
 bool ShopInfo::matches_search(const string &prefix,
                               const base_pattern &search,
-                              stash_search_result &res) const
+                              vector<stash_search_result> &results) const
 {
     if (items.empty() && visited)
         return false;
 
     no_notes nx;
-
-    bool match = false;
 
     for (const shop_item &item : items)
     {
@@ -1006,42 +962,40 @@ bool ShopInfo::matches_search(const string &prefix,
         bool thismatch = false;
         if (search.matches(prefix + " " + ann + " " + sname))
             thismatch = true;
-        else
-        {
-            string desc = shop_item_desc(item);
-            if (search.matches(desc))
-                thismatch = true;
-        }
+        else if (search.matches(shop_item_desc(item)))
+            thismatch = true;
 
         if (thismatch)
         {
-            if (!res.count++)
-                res.match = sname;
+            stash_search_result res;
+            res.match = sname;
+            res.item = item.item;
             res.matches++;
-            res.matching_items.push_back(item.item);
+            results.push_back(res);
         }
     }
 
-    if (!res.matches)
+    if (results.empty())
     {
         string shoptitle = prefix + " {shop} " + name;
         if (!visited && items.empty())
             shoptitle += "*";
         if (search.matches(shoptitle))
         {
-            match = true;
+            stash_search_result res;
             res.match = name;
+            results.push_back(res);
         }
     }
 
-    if (match || res.matches)
+    for (auto &res : results)
     {
         res.shop = this;
         res.pos.pos.x = x;
         res.pos.pos.y = y;
     }
 
-    return match || res.matches;
+    return !results.empty();
 }
 
 vector<item_def> ShopInfo::inventory() const
@@ -1321,10 +1275,13 @@ void LevelStashes::_waypoint_search(
     const Stash* stash = find_stash(waypoint.pos);
     if (!stash)
         return;
-    stash_search_result res;
-    stash->matches_search("", text_pattern(".*"), res);
-    res.pos.id = m_place;
-    results.push_back(res);
+    vector<stash_search_result> new_results;
+    stash->matches_search("", text_pattern(".*"), new_results);
+    for (auto &res : new_results)
+    {
+        res.pos.id = m_place;
+        results.push_back(res);
+    }
 }
 
 void LevelStashes::get_matching_stashes(
@@ -1351,8 +1308,9 @@ void LevelStashes::get_matching_stashes(
     {
         if (entry.second.enabled)
         {
-            stash_search_result res;
-            if (entry.second.matches_search(lplace, search, res))
+            vector<stash_search_result> new_results;
+            entry.second.matches_search(lplace, search, new_results);
+            for (auto &res : new_results)
             {
                 res.pos.id = m_place;
                 results.push_back(res);
@@ -1362,8 +1320,9 @@ void LevelStashes::get_matching_stashes(
 
     for (const ShopInfo &shop : m_shops)
     {
-        stash_search_result res;
-        if (shop.matches_search(lplace, search, res))
+        vector<stash_search_result> new_results;
+        shop.matches_search(lplace, search, new_results);
+        for (auto &res : new_results)
         {
             res.pos.id = m_place;
             results.push_back(res);
@@ -1722,22 +1681,17 @@ static void _inventory_search(const base_pattern &search,
         bool found_something = false;
         if (search.matches(ann + " " + s))
             found_something = true;
-        if (is_dumpable_artefact(item))
-        {
-            if (search.matches(chardump_desc(item)))
-                found_something = true;
-        }
+        else if (is_dumpable_artefact(item)
+                 && search.matches(chardump_desc(item)))
+            found_something = true;
         if (found_something)
         {
             stash_search_result res;
             res.match = s;
-            res.count = 1;
+            res.item = item;
             res.matches = item.quantity;
             res.in_inventory = true;
             res.pos = level_pos::current();
-            res.matching_items.push_back(item);
-            // Needs to be not equal to ITEM_IN_INVENTORY
-            res.matching_items.back().pos = you.pos();
             results.push_back(res);
         }
     }
@@ -1827,26 +1781,15 @@ void StashTracker::search_stashes()
     }
 
     bool sort_by_dist = true;
-    bool show_as_stacks = true;
-    for (const stash_search_result &result : results)
-        if (!(result.matching_items.empty() && result.shop))
-        {
-            // Only split up stacks if at least one match is a
-            // non-shop (and split anyway in the case of a
-            // weapon shop and a search for "weapon").
-            show_as_stacks = false;
-            break;
-        }
     bool filter_useless = false;
     bool default_execute = true;
     while (true)
     {
-        // Note that sort_by_dist and show_as_stacks can be modified by the
+        // Note that sort_by_dist and filter_useless can be modified by the
         // following call if requested by the user. Also, "results" will be
         // sorted by the call as appropriate:
         const bool again = display_search_results(results,
                                                   sort_by_dist,
-                                                  show_as_stacks,
                                                   filter_useless,
                                                   default_execute);
         if (!again)
@@ -1883,12 +1826,10 @@ void StashTracker::get_matching_stashes(
 class StashSearchMenu : public Menu
 {
 public:
-    StashSearchMenu(const char* stack_style_,const char* sort_style_,const char* filtered_)
+    StashSearchMenu(const char* sort_style_,const char* filtered_)
         : Menu(), can_travel(true),
           request_toggle_sort_method(false),
-          request_toggle_show_as_stack(false),
           request_toggle_filter_useless(false),
-          stack_style(stack_style_),
           sort_style(sort_style_),
           filtered(filtered_)
     { }
@@ -1896,9 +1837,7 @@ public:
 public:
     bool can_travel;
     bool request_toggle_sort_method;
-    bool request_toggle_show_as_stack;
     bool request_toggle_filter_useless;
-    const char* stack_style;
     const char* sort_style;
     const char* filtered;
 
@@ -1925,12 +1864,11 @@ void StashSearchMenu::draw_title()
         draw_title_suffix(formatted_string::parse_string(make_stringf(
                  "<lightgrey>"
                  ": <w>%s</w> [toggle: <w>!</w>],"
-                 " <w>%s</w> stacks [<w>-</w>],"
                  " by <w>%s</w> [<w>/</w>],"
                  " <w>%s</w> useless [<w>=</w>]"
                  "</lightgrey>",
                  menu_action == ACT_EXECUTE ? "travel" : "view  ",
-                 stack_style, sort_style, filtered)), false);
+                 sort_style, filtered)), false);
     }
 }
 
@@ -1939,11 +1877,6 @@ bool StashSearchMenu::process_key(int key)
     if (key == '/')
     {
         request_toggle_sort_method = true;
-        return false;
-    }
-    else if (key == '-')
-    {
-        request_toggle_show_as_stack = true;
         return false;
     }
     else if (key == '=')
@@ -1980,91 +1913,8 @@ static void _stash_filter_useless(const vector<stash_search_result> &in,
     out.reserve(in.size());
     for (const stash_search_result &res : in)
     {
-        vector<item_def> items;
-
-        // expand shop inventory
-        if (res.matching_items.empty() && res.shop)
-            items = res.shop->inventory();
-        else if (!res.count)
-        {
-            //don't filter features
+        if (!res.item.defined() || !is_useless_item(res.item, false))
             out.push_back(res);
-            continue;
-        }
-        else
-            items = res.matching_items;
-
-        stash_search_result tmp = res;
-
-        tmp.count = 0;
-        tmp.matches = 0;
-        tmp.matching_items.clear();
-        for (const item_def &item : items)
-        {
-            if (is_useless_item(item, false))
-                continue;
-
-            if (!tmp.count)
-            {
-                //find new 'first' item name
-                tmp.match = Stash::stash_item_name(item);
-                if (tmp.shop)
-                {
-                    // Need to check if the item is in the shop so we can add gold price...
-                    string sn = tmp.shop->get_shop_item_name(item);
-                    if (!sn.empty())
-                        tmp.match=sn;
-                }
-            }
-            tmp.matching_items.push_back(item);
-            tmp.matches += item.quantity;
-            tmp.count++;
-        }
-
-        if (tmp.count > 0)
-            out.push_back(tmp);
-    }
-}
-
-static void _stash_flatten_results(const vector<stash_search_result> &in,
-                                   vector<stash_search_result> &out)
-{
-    // Creates search results vector with at most one item in each entry
-    out.clear();
-    out.reserve(in.size() * 2);
-    for (const stash_search_result &res : in)
-    {
-        vector<item_def> items;
-
-        // expand shop inventory
-        if (res.matching_items.empty() && res.shop)
-            items = res.shop->inventory();
-        else if (res.count < 2)
-        {
-            out.push_back(res);
-            continue;
-        }
-        else
-            items = res.matching_items;
-
-        stash_search_result tmp = res;
-        tmp.count = 1;
-        for (const item_def &item : items)
-        {
-            tmp.match = Stash::stash_item_name(item);
-            if (tmp.shop)
-            {
-                // Need to check if the item is in the shop so we can add gold price...
-                // tmp.shop->shop_item_name()
-                string sn = tmp.shop->get_shop_item_name(item);
-                if (!sn.empty())
-                    tmp.match=sn;
-            }
-            tmp.matches = item.quantity;
-            tmp.matching_items.clear();
-            tmp.matching_items.push_back(item);
-            out.push_back(tmp);
-        }
     }
 }
 
@@ -2072,7 +1922,6 @@ static void _stash_flatten_results(const vector<stash_search_result> &in,
 bool StashTracker::display_search_results(
     vector<stash_search_result> &results_in,
     bool& sort_by_dist,
-    bool& show_as_stacks,
     bool& filter_useless,
     bool& default_execute)
 {
@@ -2080,27 +1929,16 @@ bool StashTracker::display_search_results(
         return false;
 
     vector<stash_search_result> * results = &results_in;
-    vector<stash_search_result> results_single_items;
     vector<stash_search_result> results_filtered;
 
     if (filter_useless)
     {
         _stash_filter_useless(results_in, results_filtered);
-        if (!show_as_stacks)
-        {
-            _stash_flatten_results(results_filtered, results_single_items);
-            results = &results_single_items;
-        }
-        else
-            results = &results_filtered;
+        results = &results_filtered;
     }
     else
     {
-        if (!show_as_stacks)
-        {
-            _stash_flatten_results(results_in, results_single_items);
-            results = &results_single_items;
-        }
+        results = &results_in;
     }
 
     if (sort_by_dist)
@@ -2108,8 +1946,7 @@ bool StashTracker::display_search_results(
     else
         stable_sort(results->begin(), results->end(), _compare_by_name);
 
-    StashSearchMenu stashmenu(show_as_stacks ? "hide" : "show",
-                              sort_by_dist ? "dist" : "name",
+    StashSearchMenu stashmenu(sort_by_dist ? "dist" : "name",
                               filter_useless ? "hide" : "show");
     stashmenu.set_tag("stash");
     stashmenu.can_travel   = can_travel_interlevel();
@@ -2144,23 +1981,11 @@ bool StashTracker::display_search_results(
 
         matchtitle << " " << res.match;
 
-        if (res.matches > 1 && res.count > 1)
-            matchtitle << " (+" << (res.matches - 1) << ")";
-
         MenuEntry *me = new MenuEntry(matchtitle.str(), MEL_ITEM, 1, hotkey);
         me->data = &res;
 
         if (res.shop && !res.shop->is_visited())
             me->colour = CYAN;
-
-        if (!res.matching_items.empty())
-        {
-            const item_def &first(*res.matching_items.begin());
-            const int itemcol = menu_colour(first.name(DESC_PLAIN).c_str(),
-                                            item_prefix(first), "pickup");
-            if (itemcol != -1)
-                me->colour = itemcol;
-        }
 
         stashmenu.add_entry(me);
         ++hotkey;
@@ -2177,12 +2002,6 @@ bool StashTracker::display_search_results(
         if (stashmenu.request_toggle_sort_method)
         {
             sort_by_dist = !sort_by_dist;
-            return true;
-        }
-
-        if (stashmenu.request_toggle_show_as_stack)
-        {
-            show_as_stacks = !show_as_stacks;
             return true;
         }
 
@@ -2402,14 +2221,12 @@ bool stash_search_result::show_menu() const
 {
     if (in_inventory)
     {
-        item_def item = matching_items.front();
-        describe_item(item);
+        item_def it = item;
+        describe_item(it);
         return false;
     }
     else if (shop)
         return shop->show_menu(pos, can_travel_to(pos.id));
-    else if (stash && !matching_items.empty())
-        return stash->show_menu(pos, can_travel_to(pos.id), matching_items);
     else
         return false;
 }
