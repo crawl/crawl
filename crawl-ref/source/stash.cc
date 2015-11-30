@@ -105,12 +105,7 @@ void maybe_update_stashes()
 bool is_stash(const coord_def& c)
 {
     LevelStashes *ls = StashTrack.find_current_level();
-    if (ls)
-    {
-        Stash *s = ls->find_stash(c);
-        return s && s->enabled;
-    }
-    return false;
+    return ls && ls->find_stash(c);
 }
 
 string get_stash_desc(const coord_def& c)
@@ -170,7 +165,7 @@ static void _fully_identify_item(item_def *item)
 // Stash
 // ----------------------------------------------------------------------
 
-Stash::Stash(int xp, int yp) : enabled(true), items()
+Stash::Stash(int xp, int yp) : items()
 {
     // First, fix what square we're interested in
     if (xp == -1)
@@ -541,7 +536,7 @@ bool StashMenu::process_key(int key)
 
 string Stash::description() const
 {
-    if (!enabled || items.empty())
+    if (items.empty())
         return "";
 
     const item_def &item = items[0];
@@ -568,7 +563,7 @@ bool Stash::matches_search(const string &prefix,
                            const base_pattern &search,
                            vector<stash_search_result> &results) const
 {
-    if (!enabled || items.empty() && feat == DNGN_FLOOR)
+    if (empty())
         return false;
 
     for (const item_def &item : items)
@@ -667,7 +662,7 @@ void Stash::add_item(const item_def &item, bool add_to_front)
 void Stash::write(FILE *f, int refx, int refy, string place, bool identify)
     const
 {
-    if (!enabled || (items.empty() && verified))
+    if (items.empty() && verified)
         return;
 
     no_notes nx;
@@ -732,8 +727,7 @@ void Stash::save(writer& outf) const
 
     marshallString(outf, feat_desc);
 
-    // Note: Enabled save value is inverted logic, so that it defaults to true
-    marshallByte(outf, ((verified? 1 : 0) | (!enabled? 2 : 0)));
+    marshallByte(outf, verified? 1 : 0);
 
     // And dump the items individually. We don't bother saving fields we're
     // not interested in (and don't anticipate being interested in).
@@ -755,9 +749,6 @@ void Stash::load(reader& inf)
 
     uint8_t flags = unmarshallUByte(inf);
     verified = (flags & 1) != 0;
-
-    // Note: Enabled save value is inverted so it defaults to true.
-    enabled  = (flags & 2) == 0;
 
     abspos = GXM * (int) y + x;
 
@@ -1199,29 +1190,6 @@ void LevelStashes::kill_stash(const Stash &s)
     m_stashes.erase(s.abs_pos());
 }
 
-void LevelStashes::no_stash(int x, int y)
-{
-    Stash *s = find_stash(coord_def(x, y));
-    bool en = false;
-    if (s)
-    {
-        en = s->enabled = !s->enabled;
-        s->update();
-        if (s->empty())
-            kill_stash(*s);
-    }
-    else
-    {
-        Stash newStash(x, y);
-        newStash.enabled = false;
-
-        m_stashes[ newStash.abs_pos() ] = newStash;
-    }
-
-    mpr(en? "I'll no longer ignore what I see on this square."
-          : "Ok, I'll ignore what I see on this square.");
-}
-
 void LevelStashes::add_stash(int x, int y)
 {
     Stash *s = find_stash(coord_def(x, y));
@@ -1252,19 +1220,6 @@ string LevelStashes::level_name() const
 string LevelStashes::short_level_name() const
 {
     return m_place.describe();
-}
-
-int LevelStashes::_num_enabled_stashes() const
-{
-    int rawcount = m_stashes.size();
-    if (!rawcount)
-        return 0;
-
-    for (const auto &entry : m_stashes)
-        if (!entry.second.enabled)
-            --rawcount;
-
-    return rawcount;
 }
 
 void LevelStashes::_waypoint_search(
@@ -1308,15 +1263,12 @@ void LevelStashes::get_matching_stashes(
 
     for (const auto &entry : m_stashes)
     {
-        if (entry.second.enabled)
+        vector<stash_search_result> new_results;
+        entry.second.matches_search(lplace, search, new_results);
+        for (auto &res : new_results)
         {
-            vector<stash_search_result> new_results;
-            entry.second.matches_search(lplace, search, new_results);
-            for (auto &res : new_results)
-            {
-                res.pos.id = m_place;
-                results.push_back(res);
-            }
+            res.pos.id = m_place;
+            results.push_back(res);
         }
     }
 
@@ -1346,7 +1298,7 @@ void LevelStashes::_update_identification()
 
 void LevelStashes::write(FILE *f, bool identify) const
 {
-    if (visible_stash_count() == 0)
+    if (!has_stashes())
         return;
 
     // very unlikely level names will be localized, but hey
@@ -1438,7 +1390,7 @@ bool StashTracker::update_stash(const coord_def& c)
     if (lev)
     {
         bool res = lev->update_stash(c);
-        if (!lev->stash_count())
+        if (!lev->has_stashes())
             remove_level();
         return res;
     }
@@ -1465,20 +1417,12 @@ void StashTracker::remove_level(const level_id &place)
     levels.erase(place);
 }
 
-void StashTracker::no_stash(int x, int y)
-{
-    LevelStashes &current = get_current_level();
-    current.no_stash(x, y);
-    if (!current.stash_count())
-        remove_level();
-}
-
 void StashTracker::add_stash(int x, int y)
 {
     LevelStashes &current = get_current_level();
     current.add_stash(x, y);
 
-    if (!current.stash_count())
+    if (!current.has_stashes())
         remove_level();
 }
 
@@ -1529,7 +1473,7 @@ void StashTracker::load(reader& inf)
     {
         LevelStashes st;
         st.load(inf);
-        if (st.stash_count())
+        if (st.has_stashes())
             levels[st.where()] = st;
     }
 }
@@ -1555,7 +1499,7 @@ void StashTracker::update_visible_stashes()
             get_shop(*ri);
     }
 
-    if (lev && !lev->stash_count())
+    if (lev && !lev->has_stashes())
         remove_level();
 }
 
