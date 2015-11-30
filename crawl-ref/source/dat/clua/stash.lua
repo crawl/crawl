@@ -32,6 +32,10 @@ function ch_stash_search_annotate_item(it)
     annot = annot .. "{inventory} "
   end
 
+  if it.is_in_shop then
+    annot = annot .. "{in_shop} "
+  end
+
   if it.is_throwable then
     annot = annot .. "{throwable} "
   end
