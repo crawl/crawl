@@ -1974,9 +1974,9 @@ bool StashTracker::display_search_results(
         }
 
         if (!res.in_inventory)
-            matchtitle << "[" << res.pos.id.describe() << "]";
+            matchtitle << "[" << res.pos.id.describe() << "] ";
 
-        matchtitle << " " << res.match.annotate_string("lightcyan");
+        matchtitle << res.match.annotate_string("lightcyan");
 
         MenuEntry *me = new MenuEntry(matchtitle.str(), MEL_ITEM, 1, hotkey);
         me->data = &res;
