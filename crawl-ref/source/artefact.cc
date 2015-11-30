@@ -421,6 +421,7 @@ struct jewellery_fake_artp
 static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { AMU_RAGE, { { ARTP_BERSERK, 1 } } },
     { AMU_REGENERATION, { { ARTP_REGENERATION, 1 } } },
+    { AMU_DISMISSAL, { { ARTP_CONTAM, 1 } } },
 
     { RING_INVISIBILITY, { { ARTP_INVISIBLE, 1 } } },
     { RING_MAGICAL_POWER, { { ARTP_MAGICAL_POWER, 9 } } },
