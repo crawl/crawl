@@ -1009,11 +1009,10 @@ string manual_skill_names(bool short_text)
 
 static const pop_entry pop_spiders[] =
 { // Sack of Spiders
-  {  0,   7,   10, FALL, MONS_GIANT_COCKROACH },
-  {  0,  10,   10, FALL, MONS_SCORPION },
-  {  0,  15,  100, FALL, MONS_KILLER_BEE },
-  {  7,  18,   80, PEAK, MONS_TRAPDOOR_SPIDER },
-  {  9,  27,   90, PEAK, MONS_REDBACK },
+  {  0,  13,   40, FALL, MONS_WORKER_ANT },
+  {  0,  13,   80, FALL, MONS_SOLDIER_ANT },
+  {  6,  19,   80, PEAK, MONS_TRAPDOOR_SPIDER },
+  {  8,  27,   90, PEAK, MONS_REDBACK },
   { 10,  27,   10, SEMI, MONS_ORB_SPIDER },
   { 12,  29,  100, PEAK, MONS_JUMPING_SPIDER },
   { 13,  29,  110, PEAK, MONS_TARANTELLA },
