@@ -1303,8 +1303,10 @@ confirm_action += <regex>, <regex>, ...
 
 regex_search = false
         If enabled, searching for items with ^F uses regular expression syntax
-        by default, instead of substring searching. (You can always use regular
-        expressions for searching by prefixing your query with '/'.)
+        by default, instead of substring searching. Note that regardless of
+        this setting, queries prefixed with / will be performed as a regular
+        expression search and queries prefixed with = will be performed as a
+        substring search.
 
 search_highlight_colour = lightcyan
         The colour to use to highlight the matched portion of the item name
