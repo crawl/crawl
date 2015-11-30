@@ -294,11 +294,7 @@ uint8_t is_waypoint(const coord_def &p)
 
 static inline bool is_stash(const LevelStashes *ls, const coord_def& p)
 {
-    if (!ls)
-        return false;
-
-    const Stash *s = ls->find_stash(p);
-    return s && s->enabled;
+    return ls && ls->find_stash(p);
 }
 
 static bool _monster_blocks_travel(const monster_info *mons)

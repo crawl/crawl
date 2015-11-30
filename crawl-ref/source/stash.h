@@ -62,7 +62,7 @@ public:
 
     bool empty() const
     {
-        return enabled && items.empty() && feat == DNGN_FLOOR;
+        return items.empty() && feat == DNGN_FLOOR;
     }
 
     bool isAt(const coord_def& c) const { return c.x == x && c.y == y; }
@@ -71,11 +71,6 @@ public:
     int  getY() const { return y; }
 
     bool is_verified() const {  return verified; }
-
-    bool enabled;       // If false, this Stash will neither track
-                        // items nor dump itself. Disabled stashes are
-                        // also never removed from the level's map of
-                        // stashes.
 
 private:
     void _update_corpses(int rot_time);
@@ -248,10 +243,6 @@ public:
     // supplied
     void  add_stash(int x = -1, int y = -1);
 
-    // Mark square (x,y) as not stashworthy. The player's current location is
-    // used if no parameters are supplied.
-    void  no_stash(int x = -1, int y = -1);
-
     void  kill_stash(const Stash &s);
     void  move_stash(const coord_def& from, const coord_def& to);
 
@@ -262,14 +253,12 @@ public:
     string level_name() const;
     string short_level_name() const;
 
-    int   stash_count() const { return m_stashes.size() + m_shops.size(); }
-    int   visible_stash_count() const { return _num_enabled_stashes() + m_shops.size(); }
+    bool  has_stashes() const { return m_stashes.size() + m_shops.size() > 0; }
 
     bool  is_current() const;
 
     void  remove_shop(const coord_def& c);
  private:
-    int _num_enabled_stashes() const;
     void _update_corpses(int rot_time);
     void _update_identification();
     void _waypoint_search(int n, vector<stash_search_result> &results) const;
@@ -323,10 +312,6 @@ public:
     // Add stash at (x,y), or player's current location if no parameters are
     // supplied.
     void add_stash(int x = -1, int y = -1);
-
-    // Mark square (x,y) as not stashworthy. The player's current location is
-    // used if no parameters are supplied.
-    void no_stash(int x = -1, int y = -1);
 
     void save(writer&) const;
     void load(reader&);
