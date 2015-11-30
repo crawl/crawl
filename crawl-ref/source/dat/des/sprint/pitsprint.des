@@ -114,7 +114,7 @@ function base_monster_setup(e)
            Dissolution / Xtahua / the Lernaean hydra / Jory / Mennas / Mara")
   e.kmons("L = Khufu band / Tiamat band / Murray / Mnoleg / Gloorx Vloq /\
            Lom Lobon / Cerebov w:5 / Dispater / Asmodeus / Antaeus /\
-           Ereshkigal / Ignacio / Geryon / the royal jelly /\
+           Ereshkigal / Ignacio / Geryon / the Royal Jelly /\
            the Serpent of Hell")
   e.kmons("M = stone giant / hill giant / cyclops / frost giant /\
            fire giant / ettin / deep troll / iron troll")

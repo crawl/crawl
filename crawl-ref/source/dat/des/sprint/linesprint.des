@@ -1003,7 +1003,7 @@ NAME:     slime_end
 TAGS:     slime_end
 KMONS:    1 = azure jelly / acid blob w:20 / death ooze / giant eyeball w:4 /\
               golden eye w:4 / eye of draining w:2
-KMONS:    2 = the royal jelly
+KMONS:    2 = the Royal Jelly
 KITEM:    2 = slimy rune of zot
 COLOUR:   # = lightgreen
 COLOUR:   12 = green

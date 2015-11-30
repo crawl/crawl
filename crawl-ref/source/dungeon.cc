@@ -4986,7 +4986,7 @@ static void _vault_grid_mons(vault_placement &place,
 
 // Currently only used for Slime: branch end
 // where it will turn the stone walls into clear rock walls
-// once the royal jelly has been killed.
+// once the Royal Jelly has been killed.
 bool seen_replace_feat(dungeon_feature_type old_feat,
                        dungeon_feature_type new_feat)
 {

@@ -6055,7 +6055,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 // "J"ellies.
 {
-    MONS_ROYAL_JELLY, 'J', YELLOW, "the royal jelly",
+    MONS_ROYAL_JELLY, 'J', YELLOW, "the Royal Jelly",
     M_SEE_INVIS | M_UNBLINDABLE | M_ACID_SPLASH | M_UNIQUE | M_EAT_ITEMS,
     MR_RES_POISON | mrd(MR_RES_ACID, 3),
     20, MONS_JELLY, MONS_JELLY, MH_NATURAL, 180,
