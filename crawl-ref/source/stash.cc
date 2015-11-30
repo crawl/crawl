@@ -1979,7 +1979,9 @@ bool StashTracker::display_search_results(
         string item_desc = res.match.annotate_string("lightcyan");
         size_t pos;
         while ((pos = item_desc.find('\n')) != string::npos)
-            item_desc.replace(pos, 1, " ");
+            item_desc.replace(pos, 1, "  ");
+        while ((pos = item_desc.find("   ")) != string::npos)
+            item_desc.erase(pos, 1);
 
         matchtitle << item_desc;
 
