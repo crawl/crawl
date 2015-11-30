@@ -265,12 +265,9 @@ bool actor::faith(bool calc_unid, bool items) const
     return items && wearing(EQ_AMULET, AMU_FAITH, calc_unid);
 }
 
-bool actor::warding(bool calc_unid, bool items) const
+bool actor::dismissal(bool calc_unid, bool items) const
 {
-    // Note: when adding a new source of warding, please add it to
-    // melee_attack::attack_warded_off() as well.
-    return items && (wearing(EQ_AMULET, AMU_WARDING, calc_unid)
-                     || wearing(EQ_STAFF, STAFF_SUMMONING, calc_unid));
+    return items && wearing(EQ_AMULET, AMU_DISMISSAL, calc_unid);
 }
 
 int actor::archmagi(bool calc_unid, bool items) const

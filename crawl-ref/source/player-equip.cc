@@ -1084,6 +1084,12 @@ static void _remove_amulet_of_faith(item_def &item)
     }
 }
 
+static void _remove_amulet_of_dismissal(item_def &item)
+{
+    mpr("Translocational energies flood into your body!");
+    contaminate_player(7000, true);
+}
+
 static void _equip_jewellery_effect(item_def &item, bool unmeld,
                                     equipment_type slot)
 {
@@ -1163,6 +1169,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         // What's this supposed to achieve? (jpeg)
         you.duration[DUR_GOURMAND] = 0;
         mpr("You feel a craving for the dungeon's cuisine.");
+        break;
+
+    case AMU_DISMISSAL:
+        mpr("You field a field of translocational energy surge around you.");
         break;
 
     case AMU_GUARDIAN_SPIRIT:
@@ -1332,6 +1342,11 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case AMU_FAITH:
         if (!meld)
             _remove_amulet_of_faith(item);
+        break;
+
+    case AMU_DISMISSAL:
+        if (!meld)
+            _remove_amulet_of_dismissal(item);
         break;
 
     case AMU_GUARDIAN_SPIRIT:

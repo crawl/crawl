@@ -2592,9 +2592,6 @@ int get_jewellery_life_protection(const item_def &ring, bool check_artp)
     if (ring.sub_type == RING_LIFE_PROTECTION)
         res += 1;
 
-    if (ring.sub_type == AMU_WARDING)
-        res += 1;
-
     if (check_artp && is_artefact(ring))
         res += artefact_property(ring, ARTP_NEGATIVE_ENERGY);
 

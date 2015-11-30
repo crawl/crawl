@@ -831,13 +831,6 @@ bool melee_attack::attack()
 
         if (ev_margin >= 0)
         {
-            if (attacker != defender && attack_warded_off())
-            {
-                perceived_attack = true;
-                handle_phase_end();
-                return false;
-            }
-
             bool cont = handle_phase_hit();
 
             attacker_sustain_passive_damage();

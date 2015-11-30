@@ -11,6 +11,13 @@ amulet of clarity
 This amulet protects its wearer from some forms of mental confusion, including
 being berserked against one's will.
 %%%%
+amulet of dismissal
+
+This amulet generates a field of translocational energy that will sometimes
+teleport away creatures that harm you. Removing it causes that translocational
+energy to latch onto the former wearer, causing an intense build-up of magical
+contamination.
+%%%%
 amulet of faith
 
 This is a talisman crafted to call the attention of the gods to its wearer.
@@ -61,11 +68,6 @@ amulet of the gourmand
 This amulet allows its wearer to eat fresh raw meat when not hungry, and
 drastically increases nutrition gained from them. These effects on the wearer's
 digestion are cumulative over time and are initially small.
-%%%%
-amulet of warding
-
-This amulet repels some of the attacks of creatures which have been magically
-summoned, and also makes the wearer more resistant to draining attacks.
 %%%%
 animal skin
 
