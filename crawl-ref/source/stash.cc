@@ -1737,17 +1737,24 @@ void StashTracker::search_stashes()
         }
     }
 
-    vector<stash_search_result> results;
-
     base_pattern *search = nullptr;
 
-    text_pattern tpat(csearch, true);
-    search = &tpat;
-
     lua_text_pattern ltpat(csearch);
+    text_pattern tpat(csearch, true);
+    plaintext_pattern ptpat(csearch, true);
 
     if (lua_text_pattern::is_lua_pattern(csearch))
         search = &ltpat;
+    else if (csearch[0] == '/')
+    {
+        csearch.erase(0, 1);
+        tpat = csearch;
+        search = &tpat;
+    }
+    else
+        search = &ptpat;
+
+    vector<stash_search_result> results;
 
     if (!search->valid() && csearch != "*")
     {

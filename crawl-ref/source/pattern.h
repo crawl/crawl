@@ -128,4 +128,48 @@ private:
     mutable bool isvalid;
     bool ignore_case;
 };
+
+class plaintext_pattern : public base_pattern
+{
+public:
+    plaintext_pattern(const string &s, bool icase = false)
+        : pattern(s), ignore_case(icase)
+    {
+    }
+
+    plaintext_pattern()
+        : pattern(), ignore_case(false)
+    {
+    }
+
+    plaintext_pattern(const plaintext_pattern &tp)
+        : base_pattern(tp),
+          pattern(tp.pattern),
+          ignore_case(tp.ignore_case)
+    {
+    }
+
+    ~plaintext_pattern()
+    {
+    }
+
+    const plaintext_pattern &operator= (const plaintext_pattern &tp);
+    const plaintext_pattern &operator= (const string &spattern);
+    bool operator== (const plaintext_pattern &tp) const;
+
+    bool empty() const { return !pattern.length(); }
+
+    bool valid() const override { return true; }
+    bool matches(const string &s) const override;
+    pattern_match match_location(const string &s) const override;
+
+    const string &tostring() const override
+    {
+        return pattern;
+    }
+
+private:
+    string pattern;
+    bool ignore_case;
+};
 #endif
