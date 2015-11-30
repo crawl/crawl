@@ -1972,6 +1972,14 @@ bool StashTracker::display_search_results(
         if (res.shop && !res.shop->is_visited())
             me->colour = CYAN;
 
+        if (res.item.defined())
+        {
+            const int itemcol = menu_colour(res.item.name(DESC_PLAIN).c_str(),
+                                            item_prefix(res.item), "pickup");
+            if (itemcol != -1)
+                me->colour = itemcol;
+        }
+
         stashmenu.add_entry(me);
         ++hotkey;
     }
