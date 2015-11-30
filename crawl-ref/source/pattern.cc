@@ -190,3 +190,47 @@ pattern_match text_pattern::match_location(const char *s, int length) const
     else
         return pattern_match::failed(string(s));
 }
+
+const plaintext_pattern &plaintext_pattern::operator= (const plaintext_pattern &tp)
+{
+    if (this == &tp)
+        return tp;
+
+    pattern = tp.pattern;
+    ignore_case  = tp.ignore_case;
+
+    return *this;
+}
+
+const plaintext_pattern &plaintext_pattern::operator= (const string &spattern)
+{
+    if (pattern == spattern)
+        return *this;
+
+    pattern = spattern;
+    // We don't change ignore_case
+
+    return *this;
+}
+
+bool plaintext_pattern::operator== (const plaintext_pattern &tp) const
+{
+    if (this == &tp)
+        return true;
+
+    return pattern == tp.pattern && ignore_case == tp.ignore_case;
+}
+
+bool plaintext_pattern::matches(const string &s) const
+{
+    return s.find(pattern) != string::npos;
+}
+
+pattern_match plaintext_pattern::match_location(const string &s) const
+{
+    size_t pos;
+    if ((pos = s.find(pattern)) != string::npos)
+        return pattern_match::succeeded(s, pos, pos + pattern.length());
+    else
+        return pattern_match::failed(s);
+}
