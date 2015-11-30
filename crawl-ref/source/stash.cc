@@ -1745,9 +1745,10 @@ void StashTracker::search_stashes()
 
     if (lua_text_pattern::is_lua_pattern(csearch))
         search = &ltpat;
-    else if (csearch[0] == '/')
+    else if (csearch[0] == '/' || Options.regex_search)
     {
-        csearch.erase(0, 1);
+        if (csearch[0] == '/')
+            csearch.erase(0, 1);
         tpat = csearch;
         search = &tpat;
     }
