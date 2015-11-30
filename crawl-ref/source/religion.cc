@@ -1695,8 +1695,7 @@ bool do_god_gift(bool forced)
 
     bool success = false;
 
-    // Consider a gift if we don't have a timeout and weren't already
-    // praying when we prayed.
+    // Consider a gift if we don't have a timeout and aren't under penance
     if (forced || !player_under_penance() && !you.gift_timeout)
     {
         // Remember to check for water/lava.
