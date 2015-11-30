@@ -22,7 +22,7 @@ static base_pattern &get_text_pattern(const string &s, bool checkcase)
     if (pattern_cache.size() > PATTERN_FLUSH_CEILING)
         pattern_cache.clear();
 
-    if (s[0] == '/' || Options.regex_search)
+    if (s[0] != '=' && (s[0] == '/' || Options.regex_search))
     {
         string pattern(s);
         if (s[0] == '/')
@@ -30,7 +30,12 @@ static base_pattern &get_text_pattern(const string &s, bool checkcase)
         pattern_cache[s] = unique_ptr<base_pattern>(new text_pattern(pattern, !checkcase));
     }
     else
-        pattern_cache[s] = unique_ptr<base_pattern>(new plaintext_pattern(s, !checkcase));
+    {
+        string pattern(s);
+        if (s[0] == '=')
+            pattern.erase(0, 1);
+        pattern_cache[s] = unique_ptr<base_pattern>(new plaintext_pattern(pattern, !checkcase));
+    }
     return *pattern_cache[s];
 }
 

@@ -94,6 +94,7 @@ Some shortcuts:
 <w>*</w>             lists all items at all waypoints.
 <w>@<<pattern></w>    lists everything matching <<pattern> on your current level.
 <w>/<<regex></w>      lists items matching <<regex> as a regular expression.
+<w>=<<string></w>     lists items containing <<string> as a substring.
 
 You can also examine shops and items in the search results by pressing <w>?</w> and
 then selecting the hotkey for the search result. This will give a description
@@ -138,8 +139,9 @@ boolean OR, and <<<< >> for grouping.
 For instance, to find rings (jewellery) but not ring mail you could use:
 <w>ring && !!mail</w>
 
-Note that <w>/</w> applies to an individual pattern, not the entire query: you should
-search for <w>armour && /r(C|F|Pois|Elec)</w>, not <w>/armour && r(C|F|Pois|Elec)</w>.
+Note that <w>/</w> and <w>=</w> apply to individual patterns, not the entire query:
+you should search for <w>armour && /r(C|F|Pois|Elec)</w>, not
+<w>/armour && r(C|F|Pois|Elec)</w>.
 %%%%
 level-map
 
