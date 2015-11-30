@@ -1726,7 +1726,7 @@ void StashTracker::search_stashes()
     string csearch = csearch_literal;
 
     bool curr_lev = (csearch[0] == '@' || csearch == ".");
-    bool nohl;
+    bool nohl = false;
     if (curr_lev)
     {
         csearch.erase(0, 1);
