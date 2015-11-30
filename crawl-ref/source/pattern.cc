@@ -126,10 +126,6 @@ string pattern_match::annotate_string(const string &color) const
         ret.insert(start, make_stringf("<%s>", color.c_str()));
     }
 
-    size_t pos = string::npos;
-    while ((pos = ret.find('\n')) != string::npos)
-        ret.replace(pos, 1, " ");
-
     return ret;
 }
 
