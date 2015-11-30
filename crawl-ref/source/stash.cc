@@ -1913,7 +1913,11 @@ bool StashTracker::display_search_results(
 
         string item_desc = res.match.annotate_string(colour_to_str(Options.search_highlight_colour));
         item_desc = replace_all(item_desc, "\n", "  ");
-        item_desc = replace_all(item_desc, "   ", "  ");
+        // not replace_all because that would collapse "      " to "    "
+        // rather than "  "
+        size_t pos;
+        while ((pos = item_desc.find("   ")) != string::npos)
+            item_desc.erase(pos, 1);
 
         matchtitle << item_desc;
 
