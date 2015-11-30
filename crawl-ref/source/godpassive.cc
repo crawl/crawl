@@ -105,7 +105,9 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     { },
 
     // Elyvilon
-    { },
+    {
+        { -1, passive_t::protect_ally, "can protect the life of your allies" },
+    },
 
     // Lugonu
     {

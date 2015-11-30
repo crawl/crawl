@@ -583,7 +583,7 @@ int exp_rate(int killer)
 static bool _ely_protect_ally(monster* mons, killer_type killer)
 {
     ASSERT(mons); // XXX: change to monster &mons
-    if (!you_worship(GOD_ELYVILON))
+    if (!have_passive(passive_t::protect_ally))
         return false;
 
     if (!MON_KILL(killer) && !YOU_KILL(killer))
