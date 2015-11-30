@@ -45,7 +45,9 @@ This amulet enables its wearer to attempt to enter a state of berserk rage.
 %%%%
 amulet of regeneration
 
-This amulet greatly increases the recuperative powers of its wearer.
+This amulet bonds with its wearer to greatly increases their recuperative
+powers. Removing the amulet violently severs this recuperative bond, causing
+rot.
 %%%%
 amulet of resist corrosion
 
