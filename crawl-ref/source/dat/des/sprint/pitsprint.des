@@ -999,13 +999,14 @@ KFEAT:   s = altar_dithmenos
 KFEAT:   t = altar_gozag
 KFEAT:   u = altar_qazlal
 KFEAT:   v = altar_ru
+KFEAT:   w = altar_pakellas
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 MAP
 hopnlfjida
 gqrmksvebc
-.
+w
 u
 t
 ENDMAP

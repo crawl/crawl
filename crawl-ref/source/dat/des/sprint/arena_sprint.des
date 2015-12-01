@@ -993,7 +993,7 @@ LROCKTILE:  wall_hall
 # Positions are random, and you don't have enough time to reach an altar before
 # the game starts.
 NSUBST: B = 0 / 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 / 9 / h / k / l / n / \
-            o / p / q / r / *:.
+            o / p / q / r / s / *:.
 KFEAT:  0 = altar_zin
 KFEAT:  1 = altar_the_shining_one
 KFEAT:  2 = altar_lugonu
@@ -1012,6 +1012,7 @@ KFEAT:  o = altar_dithmenos
 KFEAT:  p = altar_gozag
 KFEAT:  q = altar_qazlal
 KFEAT:  r = altar_ru
+KFEAT:  s = altar_pakellas
 KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of haste q:3, \
             wand of fire charges:5 ident:all, \
