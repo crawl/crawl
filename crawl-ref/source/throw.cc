@@ -240,6 +240,13 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
     {
         if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
             descs.emplace_back("chaotic");
+        if (item->is_type(OBJ_MISSILES, MI_THROWING_NET)
+            && (mi.body_size() >= SIZE_GIANT
+                || mons_class_is_stationary(mi.type)
+                || mons_class_flag(mi.type, M_INSUBSTANTIAL)))
+        {
+            descs.emplace_back("immune to nets");
+        }
     }
     return descs;
 }
