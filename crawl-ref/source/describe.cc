@@ -130,7 +130,7 @@ const char* jewellery_base_ability_string(int subtype)
     case RING_TELEPORT_CONTROL:   return "+cTele";
 #endif
     case AMU_CLARITY:             return "Clar";
-    case AMU_DISMISSAL:           return "Dsmss";
+    case AMU_DISMISSAL:           return "Dismiss";
     case AMU_RESIST_CORROSION:    return "rCorr";
     case AMU_THE_GOURMAND:        return "Gourm";
 #if TAG_MAJOR_VERSION == 34
