@@ -345,9 +345,9 @@ static const mutation_def mut_data[] =
 { MUT_TELEPORT, 3, 3, mutflag::BAD, false,
   "teleportitis",
 
-  {"You are occasionally teleported to nearby monsters.",
-   "You are sometimes teleported to nearby monsters.",
-   "You are often teleported to nearby monsters."},
+  {"You are occasionally teleported next to monsters.",
+   "You are sometimes teleported next to monsters.",
+   "You are often teleported next to monsters."},
 
   {"You feel weirdly uncertain.",
    "You feel even more weirdly uncertain.",

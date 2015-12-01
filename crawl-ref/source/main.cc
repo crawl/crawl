@@ -1903,7 +1903,8 @@ static void _do_rest()
                 || player_mutation_level(MUT_SLOW_REGENERATION) == 3
                 || (you.species == SP_VAMPIRE
                     && you.hunger_state <= HS_STARVING))
-            && you.magic_points == you.max_magic_points)
+            && (you.magic_points == you.max_magic_points
+                || you.spirit_shield() && you.species == SP_DEEP_DWARF))
         {
             mpr("You start waiting.");
             _start_running(RDIR_REST, RMODE_WAIT_DURATION);

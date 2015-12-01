@@ -1937,10 +1937,6 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     if (!defender->alive())
         return true;
 
-    // Player hydras can't grow more heads.
-    if (defender->is_player())
-        return false;
-
     // Only living hydras get to regenerate heads.
     if (defender->holiness() != MH_NATURAL)
         return false;
@@ -1982,9 +1978,6 @@ static bool actor_can_lose_heads(const actor* defender)
     {
         return true;
     }
-
-    if (defender->is_player() && you.form == TRAN_HYDRA)
-        return true;
 
     return false;
 }
@@ -2047,6 +2040,9 @@ bool melee_attack::attack_chops_heads(int dam, int dam_type, int wpn_brand)
  */
 void melee_attack::decapitate(int dam_type)
 {
+    // Player hydras don't gain or lose heads.
+    ASSERT(defender->is_monster());
+
     const char *verb = nullptr;
 
     if (dam_type == DVORP_CLAWING)
@@ -2074,13 +2070,6 @@ void melee_attack::decapitate(int dam_type)
                  apostrophise(defender_name(true)).c_str());
         }
 
-
-        if (defender->is_player())
-        {
-            untransform();
-            return;
-        }
-
         if (!defender->is_summoned())
         {
             bleed_onto_floor(defender->pos(), defender->type,
@@ -2100,10 +2089,7 @@ void melee_attack::decapitate(int dam_type)
              apostrophise(defender_name(true)).c_str());
     }
 
-    if (defender->is_player())
-        set_hydra_form_heads(heads - 1);
-    else
-        defender->as_monster()->num_heads--;
+    defender->as_monster()->num_heads--;
 }
 
 /**

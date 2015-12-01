@@ -130,7 +130,7 @@ const char* jewellery_base_ability_string(int subtype)
     case RING_TELEPORT_CONTROL:   return "+cTele";
 #endif
     case AMU_CLARITY:             return "Clar";
-    case AMU_DISMISSAL:           return "Dsmss";
+    case AMU_DISMISSAL:           return "Dismiss";
     case AMU_RESIST_CORROSION:    return "rCorr";
     case AMU_THE_GOURMAND:        return "Gourm";
 #if TAG_MAJOR_VERSION == 34
@@ -371,7 +371,7 @@ static const char* _jewellery_base_ability_description(int subtype)
     case RING_ICE:
         return "It enhances your ice magic, and weakens your fire magic.";
     case RING_TELEPORTATION:
-        return "It may teleport you to nearby monsters, and can be evoked to "
+        return "It may teleport you next to monsters, and can be evoked to "
                "randomly teleport.";
 #if TAG_MAJOR_VERSION == 34
     case RING_TELEPORT_CONTROL:
@@ -444,7 +444,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_BERSERK, "It lets you go berserk.", false},
         { ARTP_NOISE, "It may make noises in combat.", false},
         { ARTP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
-        { ARTP_CAUSE_TELEPORTATION, "It may teleport you to nearby monsters.", false},
+        { ARTP_CAUSE_TELEPORTATION, "It may teleport you next to monsters.", false},
         { ARTP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
           false},
         { ARTP_ANGRY,  "It may make you go berserk in combat.", false},

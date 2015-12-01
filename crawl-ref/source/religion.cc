@@ -2197,7 +2197,7 @@ void dock_piety(int piety_loss, int penance)
 // Scales a piety number, applying modifiers (faith).
 int piety_scale(int piety)
 {
-    return piety + (you.faith() * div_rand_round(piety, 3));
+    return piety + (you.faith() * div_rand_round(piety, 4));
 }
 
 /** Gain or lose piety to reach a certain value.

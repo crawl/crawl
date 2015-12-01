@@ -5225,8 +5225,7 @@ bool monster::can_go_frenzy() const
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
 
-    // Insects are I_BRAINLESS and we want them to be able
-    // to berserk, so also check MH_NATURAL.
+    // Brainless natural monsters can still be berserked/frenzied.
     // This could maybe all be replaced by mons_is_object()?
     if (mons_intel(this) == I_BRAINLESS && holiness() != MH_NATURAL)
         return false;

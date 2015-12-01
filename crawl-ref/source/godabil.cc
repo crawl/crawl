@@ -291,7 +291,6 @@ bool zin_donate_gold()
         mpr(result);
     }
 
-    zin_recite_interrupt();
     return true;
 }
 
@@ -1275,17 +1274,6 @@ static void _zin_saltify(monster* mon)
     }
 }
 
-void zin_recite_interrupt()
-{
-    if (!you.duration[DUR_RECITE])
-        return;
-    mprf(MSGCH_DURATION, "Your recitation is interrupted.");
-    mpr("You feel short of breath.");
-    you.duration[DUR_RECITE] = 0;
-
-    you.increase_duration(DUR_BREATH_WEAPON, random2(10) + random2(30));
-}
-
 bool zin_vitalisation()
 {
     surge_power(you.spec_invoc(), "divine");
@@ -1324,7 +1312,6 @@ bool zin_remove_all_mutations()
         canned_msg(MSG_OK);
         return false;
     }
-    zin_recite_interrupt();
     flash_view(UA_PLAYER, WHITE);
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
@@ -1341,8 +1328,6 @@ bool zin_remove_all_mutations()
 void zin_sanctuary()
 {
     ASSERT(!env.sanctuary_time);
-
-    zin_recite_interrupt();
 
     surge_power(you.spec_invoc(), "divine");
 
