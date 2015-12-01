@@ -4032,7 +4032,7 @@ static tileidx_t _tileidx_misc(const item_def &item)
                                        : TILE_MISC_PHIAL_OF_FLOODS_INERT;
 
     case MISC_XOMS_CHESSBOARD:
-        return TILE_MISC_XOMS_CHESSBOARD;
+        return _modrng(item.rnd, TILE_MISC_CHESSPIECE_FIRST, TILE_MISC_CHESSPIECE_LAST);
 
     case MISC_LANTERN_OF_SHADOWS:
         return TILE_MISC_LANTERN_OF_SHADOWS;

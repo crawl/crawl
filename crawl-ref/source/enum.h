@@ -3952,6 +3952,7 @@ enum artefact_prop_type
     ARTP_CORRODE,
     ARTP_DRAIN,
     ARTP_CONFUSE,
+    ARTP_FRAGILE,
     ARTP_NUM_PROPERTIES
 };
 
