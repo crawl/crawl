@@ -291,7 +291,6 @@ bool zin_donate_gold()
         mpr(result);
     }
 
-    zin_recite_interrupt();
     return true;
 }
 
@@ -1274,17 +1273,6 @@ static void _zin_saltify(monster* mon)
     }
 }
 
-void zin_recite_interrupt()
-{
-    if (!you.duration[DUR_RECITE])
-        return;
-    mprf(MSGCH_DURATION, "Your recitation is interrupted.");
-    mpr("You feel short of breath.");
-    you.duration[DUR_RECITE] = 0;
-
-    you.increase_duration(DUR_BREATH_WEAPON, random2(10) + random2(30));
-}
-
 bool zin_vitalisation()
 {
     simple_god_message(" grants you divine stamina.");
@@ -1321,7 +1309,6 @@ bool zin_remove_all_mutations()
         canned_msg(MSG_OK);
         return false;
     }
-    zin_recite_interrupt();
     flash_view(UA_PLAYER, WHITE);
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
@@ -1339,7 +1326,6 @@ void zin_sanctuary()
 {
     ASSERT(!env.sanctuary_time);
 
-    zin_recite_interrupt();
     // Yes, shamelessly stolen from NetHack...
     if (!silenced(you.pos())) // How did you manage that?
         mprf(MSGCH_SOUND, "You hear a choir sing!");

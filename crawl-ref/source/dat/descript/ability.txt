@@ -150,9 +150,7 @@ Reverts you to your normal form.
 # Zin
 Recite ability
 
-Preaches to nearby monsters about Zin's laws. The recitation will continue for
-a short while, but will be interrupted by actions such as spellcasting, reading
-scrolls, or quaffing potions.
+Preaches to nearby monsters about Zin's laws for a short duration.
 
 The recitation will have different effects depending on the target: the chaotic
 and unclean will be affected by powerful and damaging effects, undead and
