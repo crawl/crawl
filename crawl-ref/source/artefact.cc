@@ -833,6 +833,29 @@ const char *artp_name(artefact_prop_type prop)
     return artp_data[prop].name;
 }
 
+/**
+ * Add a 'good' version of a given prop to the given set of item props.
+ *
+ * The property may already exist in the set; if so, increase its value.
+ *
+ * @param prop[in]              The prop to be added.
+ * @param item_props[out]       The list of item props to be added to.
+ */
+static void _add_good_randart_prop(artefact_prop_type prop,
+                                   artefact_properties_t &item_props)
+{
+    // Add one to the starting value for stat bonuses.
+    if ((prop == ARTP_STRENGTH
+         || prop == ARTP_INTELLIGENCE
+         || prop == ARTP_DEXTERITY)
+        && item_props[prop] == 0)
+    {
+        item_props[prop]++;
+    }
+
+    item_props[prop] += artp_data[prop].gen_good_value();
+}
+
 static void _get_randart_properties(const item_def &item,
                                     artefact_properties_t &item_props)
 {
@@ -894,23 +917,15 @@ static void _get_randart_properties(const item_def &item,
         {
             // potentially increment the value of the property more than once,
             // using up a good property each time.
-            const int max = artp_data[prop].max_dup;
-            for (int i = 1;
-                 good > 0 && item_props[prop] <= max &&
-                    ((enhance > 0 && i > 1) || one_chance_in(i));
-                 i += artp_data[prop].odds_inc)
+            // always do so if there's any 'enhance' left, if possible.
+            for (int chance_denom = 1;
+                 item_props[prop] <= artp_data[prop].max_dup
+                    && (enhance > 0
+                        || good > 0 && one_chance_in(chance_denom));
+                 chance_denom += artp_data[prop].odds_inc)
             {
-                // Add one to the starting value for stat bonuses.
-                if ((prop == ARTP_STRENGTH
-                     || prop == ARTP_INTELLIGENCE
-                     || prop == ARTP_DEXTERITY)
-                    && item_props[prop] == 0)
-                {
-                   item_props[prop]++;
-                }
-
-                item_props[prop] += artp_data[prop].gen_good_value();
-                if (enhance > 0 && i > 1)
+                _add_good_randart_prop(prop, item_props);
+                if (enhance > 0 && chance_denom > 1)
                     --enhance;
                 else
                     --good;
