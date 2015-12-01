@@ -395,9 +395,9 @@ tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
 
     for (const auto& elem : choices)
     {
-        if (rand <= 0)
-            return elem.first;
         rand -= elem.second;
+        if (rand < 0)
+            return elem.first;
     }
 
     return idx;
