@@ -927,6 +927,9 @@ void game_options::reset_options()
 
     pizzas.clear();
 
+    regex_search = false;
+    search_highlight_colour = LIGHTCYAN;
+
 #ifdef WIZARD
     fsim_rounds = 4000L;
     fsim_csv    = false;
@@ -2864,6 +2867,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         copy_if(all_pizzas.begin(), all_pizzas.end(), back_inserter(pizzas),
                 [](string p) { return !trimmed_string(p).empty(); });
     }
+    else BOOL_OPTION(regex_search);
+    else COLOUR_OPTION(search_highlight_colour);
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
     else BOOL_OPTION(remember_name);
 #endif

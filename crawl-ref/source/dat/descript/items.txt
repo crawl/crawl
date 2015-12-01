@@ -11,6 +11,13 @@ amulet of clarity
 This amulet protects its wearer from some forms of mental confusion, including
 being berserked against one's will.
 %%%%
+amulet of dismissal
+
+This amulet generates a field of translocational energy that will teleport away
+creatures that harm you one tenth of the time. Removing it causes that
+energy to latch onto the former wearer, causing an intense build-up of magical
+contamination.
+%%%%
 amulet of faith
 
 This is a talisman crafted to call the attention of the gods to its wearer.
@@ -28,22 +35,24 @@ amulet of inaccuracy
 This amulet makes its wearer less accurate in melee combat and when targeting
 monsters via ranged attacks or spells.
 %%%%
+amulet of nothing
+
+This amulet has no base properties.
+%%%%
 amulet of rage
 
 This amulet enables its wearer to attempt to enter a state of berserk rage.
 %%%%
 amulet of regeneration
 
-This amulet greatly increases the recuperative powers of its wearer.
+This amulet bonds with its wearer to greatly increases their recuperative
+powers. Removing the amulet violently severs this recuperative bond, causing
+rot.
 %%%%
 amulet of resist corrosion
 
 This amulet protects the wearer from acid damage and from corrosion caused by
 acids, although not infallibly so.
-%%%%
-amulet of resist mutation
-
-This amulet protects its wearer from mutations, although not infallibly so.
 %%%%
 amulet of stasis
 
@@ -61,11 +70,6 @@ amulet of the gourmand
 This amulet allows its wearer to eat fresh raw meat when not hungry, and
 drastically increases nutrition gained from them. These effects on the wearer's
 digestion are cumulative over time and are initially small.
-%%%%
-amulet of warding
-
-This amulet repels some of the attacks of creatures which have been magically
-summoned, and also makes the wearer more resistant to draining attacks.
 %%%%
 animal skin
 

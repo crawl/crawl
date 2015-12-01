@@ -1716,7 +1716,6 @@ unsigned int item_value(item_def item, bool ident)
                 switch (item.sub_type)
                 {
                 case AMU_FAITH:
-                case AMU_RESIST_MUTATION:
                 case AMU_RAGE:
                     valued += 400;
                     break;
@@ -1726,6 +1725,7 @@ unsigned int item_value(item_def item, bool ident)
                 case AMU_REGENERATION:
                 case AMU_GUARDIAN_SPIRIT:
                 case AMU_THE_GOURMAND:
+                case AMU_DISMISSAL:
                     valued += 300;
                     break;
 
@@ -1754,11 +1754,11 @@ unsigned int item_value(item_def item, bool ident)
                     break;
 
                 case RING_SEE_INVISIBLE:
-                case AMU_WARDING:
                     valued += 150;
                     break;
 
                 case RING_LOUDNESS:
+                case AMU_NOTHING:
                     valued += 75;
                     break;
 

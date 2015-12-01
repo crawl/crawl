@@ -20,7 +20,7 @@ The cursor is usually hidden; pressing <w>.</w> or <w>'</w> makes it appear.
 You can quickly select items by type by pressing:
 <w>!</w>   potions      <w>(</w>   weapons        <w>)</w>   ammunition      <w>[</w>   armour
 <w>/</w>   wands        <w>\</w>   rods           <w>|</w>   magical staves  <w>?</w>   scrolls
-<w>"</w>   amulets      <w>=</w>   rings          <w>}</w>   miscellaneous   <w>:</w> or <w>+</w>   books
+<w>"</w>   amulets      <w>=</w>   rings          <w>}</w>   miscellaneous   <w>:</w>   books
 <w>%</w>   food
 Global selects:  <w>,</w>   select all     <w>*</w>   invert all      <w>-</w>   deselect all
 Note that for dropping, the <w>,</w> command uses the <w>drop_filter</w> option, which
@@ -79,21 +79,22 @@ Some examples of search strings:
 <w>royal</w>         finds every single royal jelly and heaps of royal jellies.
 <w>shop</w>          lists all shops. Press <w>?</w> and a shop's letter for the stock.
 <w>Lair:2</w>        find everything known to be on Lair:2.
-<w>D:[2-4]</w>       finds everything on Dungeon levels 2-4. Regexes are allowed!
-              Note that D:[3-10] will not work as intended, since [x-y] is a
+<w>/D:[2-4]</w>      finds everything on Dungeon levels 2-4. Regexes are allowed!
+              Note that /D:[3-10] will not work as intended, since [x-y] is a
               regex character range.
 <w>rPois</w>         finds all items with an rPois resistance.
-<w>rC\+\+</w>        finds all items with an rC++ resistance.
-<w>\+3</w>           finds all items with a +3 enchantment. Note with these that
-              the + symbol had to be escaped as \+ due to regex syntax.
-<w>Lair.*axe</w> and <w>axe && Lair</w> both show all axes in the Lair.
+<w>rC++</w>          finds all items with an rC++ resistance.
+<w>+3</w>            finds all items with a +3 enchantment.
+<w>/Lair.*axe</w> and <w>axe && Lair</w> both show all axes in the Lair.
 
 Some shortcuts:
 <w>.</w>             lists everything on your current level.
 <w>..</w>            lists all items you know.
 <w>0</w> to <w>9</w>        lists all items at the specified waypoint.
 <w>*</w>             lists all items at all waypoints.
-<w>@(pattern)</w>    lists everything matching (pattern) on your current level.
+<w>@<<query></w>      lists everything matching <<query> on your current level.
+<w>/<<regex></w>      lists items matching <<regex> as a regular expression.
+<w>=<<string></w>     lists items containing <<string> as a substring.
 
 You can also examine shops and items in the search results by pressing <w>?</w> and
 then selecting the hotkey for the search result. This will give a description
@@ -106,14 +107,15 @@ The stash search string is case-insensitive.
 You can search for spell names (such as <w>Ignite Poison</w>) to find spellbooks
 that contain the spell.
 
-You can search for artefact item properties (such as <w>prevents.*teleport</w>)
+You can search for artefact item properties (such as <w>/prevents.*teleport</w>)
 to find artefacts that have the property.
 
 You can search by some additional item properties: <w>artefact</w> or <w>artifact</w> will
 find identified artefacts, <w>ego</w> or <w>branded</w> will find non-artefacts with a
 brand and unidentified items which may be branded, <w>throwable</w> will find things
 you can throw, <w>stick</w> will find items that can be used with Sticks to Snakes,
-and <w>dropped</w> will find items you have dropped.
+<w>dropped</w> will find items you have dropped, <w>in_shop</w> will find items in
+shops, and <w>autopickup</w> will find items that would be automatically picked up.
 
 Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will find all weapons that
 train that skill. You can also look for <w>melee weapon</w> and <w>ranged weapon</w>.
@@ -136,6 +138,10 @@ boolean OR, and <<<< >> for grouping.
 
 For instance, to find rings (jewellery) but not ring mail you could use:
 <w>ring && !!mail</w>
+
+Note that <w>/</w> and <w>=</w> apply to individual patterns, not the entire query:
+you should search for <w>armour && /r(C|F|Pois|Elec)</w>, not
+<w>/armour && r(C|F|Pois|Elec)</w>.
 %%%%
 level-map
 

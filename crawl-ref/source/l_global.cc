@@ -4,25 +4,39 @@
 
 #include "clua.h"
 #include "libutil.h" // map_find
+#include "options.h"
 
 //////////////////////////////////////////////////////////////////////
 // Miscellaneous globals
 
 #define PATTERN_FLUSH_CEILING 100
 
-typedef map<string, text_pattern> pattern_map;
+typedef map<string, unique_ptr<base_pattern>> pattern_map;
 static pattern_map pattern_cache;
 
-static text_pattern &get_text_pattern(const string &s, bool checkcase)
+static base_pattern &get_text_pattern(const string &s, bool checkcase)
 {
-    if (text_pattern *pat = map_find(pattern_cache, s))
-        return *pat;
+    if (unique_ptr<base_pattern> *pat = map_find(pattern_cache, s))
+        return **pat;
 
     if (pattern_cache.size() > PATTERN_FLUSH_CEILING)
         pattern_cache.clear();
 
-    pattern_cache[s] = text_pattern(s, !checkcase);
-    return pattern_cache[s];
+    if (s[0] != '=' && (s[0] == '/' || Options.regex_search))
+    {
+        string pattern(s);
+        if (s[0] == '/')
+            pattern.erase(0, 1);
+        pattern_cache[s] = unique_ptr<base_pattern>(new text_pattern(pattern, !checkcase));
+    }
+    else
+    {
+        string pattern(s);
+        if (s[0] == '=')
+            pattern.erase(0, 1);
+        pattern_cache[s] = unique_ptr<base_pattern>(new plaintext_pattern(pattern, !checkcase));
+    }
+    return *pattern_cache[s];
 }
 
 static int lua_pmatch(lua_State *ls)
@@ -39,7 +53,7 @@ static int lua_pmatch(lua_State *ls)
     if (lua_isboolean(ls, 3))
         checkcase = lua_toboolean(ls, 3);
 
-    text_pattern &tp = get_text_pattern(pattern, checkcase);
+    base_pattern &tp = get_text_pattern(pattern, checkcase);
     lua_pushboolean(ls, tp.matches(text));
     return 1;
 }

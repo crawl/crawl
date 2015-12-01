@@ -1368,7 +1368,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             }
         }
     }
-    // The royal jelly belongs to Jiyva.
+    // The Royal Jelly belongs to Jiyva.
     else if (mg.cls == MONS_ROYAL_JELLY)
         mon->god = GOD_JIYVA;
     // Mennas belongs to Zin.
@@ -2904,7 +2904,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         if (you.where_are_you != BRANCH_DEPTHS)
             break;
         band = BAND_SPARK_WASPS;
-        band_size = 2 + random2(4);
+        band_size = 1 + random2(3);
         break;
 
     default: ;

@@ -1923,9 +1923,6 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
     if (items)
     {
-        if (you.wearing(EQ_AMULET, AMU_WARDING, calc_unid))
-            pl++;
-
         // rings
         pl += you.wearing(EQ_RINGS, RING_LIFE_PROTECTION, calc_unid);
 

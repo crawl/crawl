@@ -3242,6 +3242,34 @@ static spell_type _pick_spell_from_list(const monster_spells &spells,
 }
 
 /**
+ * Are we a short distance from our target?
+ *
+ * @param  mons The monster checking distance from its target.
+ * @return true if we have a target and are within LOS_RADIUS / 2 of that
+ *         target, or false otherwise.
+ */
+static bool _short_target_range(const monster *mons)
+{
+    return mons->get_foe()
+           && mons->pos().distance_from(mons->get_foe()->pos())
+              < LOS_RADIUS / 2;
+}
+
+/**
+ * Are we a long distance from our target?
+ *
+ * @param  mons The monster checking distance from its target.
+ * @return true if we have a target and are outside LOS_RADIUS / 2 of that
+ *         target, or false otherwise.
+ */
+static bool _long_target_range(const monster *mons)
+{
+    return mons->get_foe()
+           && mons->pos().distance_from(mons->get_foe()->pos())
+              > LOS_RADIUS / 2;
+}
+
+/**
  * Give a monster a chance to cast a spell.
  *
  * @param mons the monster that might cast.
@@ -3448,8 +3476,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 unsigned int i = 0;
                 for (; i < hspell_pass.size(); i++)
                 {
-                    if (hspell_pass[i].flags & MON_SPELL_EMERGENCY
-                        && !emergency)
+                    if ((hspell_pass[i].flags & MON_SPELL_EMERGENCY
+                         && !emergency)
+                        || (hspell_pass[i].flags & MON_SPELL_SHORT_RANGE
+                            && !_short_target_range(mons))
+                        || (hspell_pass[i].flags & MON_SPELL_LONG_RANGE
+                            && !_long_target_range(mons)))
                     {
                         continue;
                     }

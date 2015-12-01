@@ -1041,7 +1041,7 @@ static const pop_entry pop_depths[] =
   {  1,  7,  100, FALL, MONS_TENGU_CONJURER },
   {  1,  8,  600, FALL, MONS_STONE_GIANT },
   {  1,  8,  370, FALL, MONS_ETTIN },
-  {  1, 10,  250, SEMI, MONS_SPARK_WASP },
+  {  1, 10,  100, SEMI, MONS_SPARK_WASP },
   {  1, 12,   60, FLAT, MONS_LICH },
   {  1, 12,   40, FLAT, MONS_FLAYED_GHOST },
   {  1, 14,   80, SEMI, MONS_GLOWING_SHAPESHIFTER },
