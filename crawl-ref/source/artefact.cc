@@ -640,6 +640,9 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
                    || get_weapon_brand(item) != SPWPN_ANTIMAGIC;
         case ARTP_CONTAM:
             return !item.is_type(OBJ_JEWELLERY, AMU_DISMISSAL);
+            // not quite as interesting on armour, since you swap it less
+        case ARTP_FRAGILE:
+            return item_class != OBJ_ARMOUR;
         default:
             return true;
     }
@@ -771,6 +774,8 @@ static const artefact_prop_data artp_data[] =
     { "Drain", ARTP_VAL_BOOL, 25, // ARTP_DRAIN,
         nullptr, []() { return 1; }, 0, 0 },
     { "*Confuse", ARTP_VAL_BOOL, 25, // ARTP_CONFUSE,
+        nullptr, []() { return 1; }, 0, 0 },
+    { "Fragile", ARTP_VAL_BOOL, 25, // ARTP_FRAGILE,
         nullptr, []() { return 1; }, 0, 0 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);

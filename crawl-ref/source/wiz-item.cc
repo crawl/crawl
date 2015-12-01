@@ -1409,6 +1409,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_CORRODE",
         "ARTP_DRAIN",
         "ARTP_CONFUSE",
+        "ARTP_FRAGILE",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 
