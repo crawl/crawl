@@ -1297,8 +1297,7 @@ enable_recast_spell = true
 confirm_action += <regex>, <regex>, ...
         (List option)
         Casting a spell or ability with a name matching any of the given regular
-        expressions will prompt before use. In the future, this option may
-        control using items or other actions as well.
+        expressions will prompt before use.
 
 regex_search = false
         If enabled, searching for items with ^F uses regular expression syntax
