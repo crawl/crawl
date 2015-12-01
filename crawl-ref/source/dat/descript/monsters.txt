@@ -935,7 +935,7 @@ demigod
 
 The aura of power around this human-like figure immediately betrays its divine
 ancestry. And with the good gods (at least officially) decrying fornication,
-betting on the good nature of this individual may be unwise...
+betting on the good nature of this individual may be unwise.
 %%%%
 demonic crawler
 
@@ -1535,8 +1535,8 @@ searching for carrion to devour.
 %%%%
 jelly
 
-A pulsating mass of acidic protoplasm. It can and will eat almost anything, and
-grows a little each time...
+A pulsating mass of acidic protoplasm. It can and will eat almost anything,
+growing and splitting as it does so.
 %%%%
 jiangshi
 
@@ -2190,7 +2190,7 @@ surely appreciate being freed.
 slime creature
 
 An icky glob of slime, which slithers along the ground, occasionally merging
-with other nearby globs...
+with other nearby globs.
 %%%%
 small abomination
 
