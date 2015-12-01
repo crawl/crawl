@@ -1292,6 +1292,25 @@ static bool _check_ability_possible(const ability_def& abil,
         return false;
     }
 
+    vector<text_pattern> &actions = Options.confirm_action;
+    if (!actions.empty())
+    {
+        const char* name = ability_name(abil.ability);
+        for (const text_pattern &action : actions)
+        {
+            if (action.matches(name))
+            {
+                string prompt = "Really use " + string(name) + "?";
+                if (!yesno(prompt.c_str(), false, 'n'))
+                {
+                    canned_msg(MSG_OK);
+                    return false;
+                }
+                break;
+            }
+        }
+    }
+
     switch (abil.ability)
     {
     case ABIL_ZIN_RECITE:
@@ -1800,7 +1819,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         {
             fail_check();
             zapping(ZAP_SPIT_POISON, power, beam);
-            zin_recite_interrupt();
             you.set_duration(DUR_BREATH_WEAPON, 3 + random2(5));
         }
         break;
@@ -1830,7 +1848,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                 2 * you.experience_level : you.experience_level,
             beam, false, "You spit a glob of burning liquid.");
 
-        zin_recite_interrupt();
         you.increase_duration(DUR_BREATH_WEAPON,
                       3 + random2(10) + random2(30 - you.experience_level));
         break;
@@ -1955,7 +1972,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             break;
         }
 
-        zin_recite_interrupt();
         you.increase_duration(DUR_BREATH_WEAPON,
                       3 + random2(10) + random2(30 - you.experience_level));
 
@@ -2087,9 +2103,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         {
             you.attribute[ATTR_RECITE_TYPE] = (recite_type) random2(NUM_RECITE_TYPES); // This is just flavor
             you.attribute[ATTR_RECITE_SEED] = random2(2187); // 3^7
-            you.attribute[ATTR_RECITE_HP]   = you.hp;
             you.duration[DUR_RECITE] = 3 * BASELINE_DELAY;
             mprf("You clear your throat and prepare to recite.");
+            you.increase_duration(DUR_BREATH_WEAPON,
+                                  3 + random2(10) + random2(30));
         }
         else
         {
@@ -2100,7 +2117,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     }
     case ABIL_ZIN_VITALISATION:
         fail_check();
-        zin_recite_interrupt();
         zin_vitalisation();
         break;
 
@@ -2138,7 +2154,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         fail_check();
 
-        zin_recite_interrupt();
         power = player_adjust_invoc_power(
             3 + (roll_dice(5, you.skill(SK_INVOCATIONS, 5) + 12) / 26));
 

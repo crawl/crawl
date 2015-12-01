@@ -422,15 +422,15 @@ void player_reacts_to_monsters()
 
 static bool _check_recite()
 {
-    if (you.hp*2 < you.attribute[ATTR_RECITE_HP]
-        || silenced(you.pos())
+    if (silenced(you.pos())
         || you.paralysed()
         || you.confused()
         || you.asleep()
         || you.petrified()
         || you.berserk())
     {
-        zin_recite_interrupt();
+        mprf(MSGCH_DURATION, "Your recitation is interrupted.");
+        you.duration[DUR_RECITE] = 0;
         return false;
     }
     return true;
@@ -468,8 +468,6 @@ static void _handle_recitation(int step)
             }
         }
         mprf(MSGCH_DURATION, "You finish reciting %s", speech.c_str());
-        mpr("You feel short of breath.");
-        you.increase_duration(DUR_BREATH_WEAPON, random2(10) + random2(30));
     }
 }
 

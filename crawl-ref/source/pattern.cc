@@ -212,13 +212,17 @@ bool plaintext_pattern::operator== (const plaintext_pattern &tp) const
 
 bool plaintext_pattern::matches(const string &s) const
 {
-    return s.find(pattern) != string::npos;
+    string needle = ignore_case ? lowercase_string(pattern) : pattern;
+    string haystack = ignore_case ? lowercase_string(s) : s;
+    return haystack.find(needle) != string::npos;
 }
 
 pattern_match plaintext_pattern::match_location(const string &s) const
 {
+    string needle = ignore_case ? lowercase_string(pattern) : pattern;
+    string haystack = ignore_case ? lowercase_string(s) : s;
     size_t pos;
-    if ((pos = s.find(pattern)) != string::npos)
+    if ((pos = haystack.find(needle)) != string::npos)
         return pattern_match::succeeded(s, pos, pos + pattern.length());
     else
         return pattern_match::failed(s);

@@ -416,7 +416,6 @@ abomination_small1
 %sdir mon/aquatic
 %rim 0
 octopode MONS_OCTOPODE
-octopode_crusher MONS_OCTOPODE_CRUSHER
 
 ## Golems ('8')
 %rim 0
@@ -467,15 +466,6 @@ overlay_whip MONS_STATUE_WHIP
 %back none
 
 %rim 0
-guardian-eyeopen-flame1 MONS_STATUE_GUARDIAN
-guardian-eyeopen-flame2
-guardian-eyeopen-flame3
-guardian-eyeopen-flame4
-guardian-eyeclosed-flame1
-guardian-eyeclosed-flame2
-guardian-eyeclosed-flame3
-guardian-eyeclosed-flame4
-
 firespitter_statue MONS_FIRESPITTER_STATUE
 obelisk MONS_DIAMOND_OBELISK
 lightning_spire MONS_LIGHTNING_SPIRE

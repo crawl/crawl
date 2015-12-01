@@ -112,9 +112,8 @@ static int _can_pacify_monster(const monster* mon, const int healed,
     if (healed < 1)
         return 0;
 
-    const int factor = (mons_intel(mon) < I_HUMAN)         ? 3 : // animals
-                       (is_player_same_genus(mon->type))   ? 2   // same genus
-                                                           : 1;  // other
+    const int factor = (mons_intel(mon) < I_HUMAN) ? 3  // animals
+                                                   : 1; // other
 
     int divisor = 3;
 
