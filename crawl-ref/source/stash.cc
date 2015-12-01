@@ -1869,9 +1869,7 @@ bool StashTracker::display_search_results(
         results = &results_filtered;
     }
     else
-    {
         results = &results_in;
-    }
 
     if (sort_by_dist)
         stable_sort(results->begin(), results->end(), _compare_by_distance);

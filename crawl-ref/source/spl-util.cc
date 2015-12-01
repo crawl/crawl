@@ -1405,9 +1405,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
                 // Checks here are from get_dist_to_nearest_monster().
                 const monster* mons = monster_at(entry.first);
                 if (mons && !mons->wont_attack() && mons_is_threatening(mons))
-                {
                     return false;
-                }
             }
         }
 
