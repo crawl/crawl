@@ -1617,14 +1617,18 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (is_artefact(item) && artefact_property(item, ARTP_DRAIN))
+        if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
+                                  || artefact_property(item, ARTP_FRAGILE)))
+        {
             return true;
+        }
     }
 
     if (oper == OPER_PUTON || oper == OPER_WEAR || oper == OPER_TAKEOFF
         || oper == OPER_REMOVE)
     {
-        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
+        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM)
+            || item.is_type(OBJ_JEWELLERY, AMU_DISMISSAL))
         {
             if ((oper == OPER_TAKEOFF || oper == OPER_REMOVE)
                  && you_worship(GOD_ZIN))
@@ -1634,10 +1638,11 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (is_artefact(item) && artefact_property(item, ARTP_DRAIN))
+        if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
+                                  || artefact_property(item, ARTP_FRAGILE)))
+        {
             return true;
-        if (item.is_type(OBJ_JEWELLERY, AMU_DISMISSAL))
-            return true;
+        }
         if (item.is_type(OBJ_JEWELLERY, AMU_REGENERATION)
             && player_mutation_level(MUT_SLOW_REGENERATION) < 3)
         {

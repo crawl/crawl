@@ -187,6 +187,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_CORRODE,               PROPN_PLAIN },
         { ARTP_DRAIN,                 PROPN_PLAIN },
         { ARTP_CONFUSE,               PROPN_PLAIN },
+        { ARTP_FRAGILE,               PROPN_PLAIN },
 
         // Evokable abilities come second
         { ARTP_BLINK,                 PROPN_PLAIN },
@@ -458,6 +459,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_CORRODE, "It may corrode your equipment when you take damage.", false},
         { ARTP_DRAIN, "It causes draining when unequipped.", false},
         { ARTP_CONFUSE, "It may confuse you when you take damage.", false},
+        { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
     };
 
     // Give a short description of the base type, for base types with no

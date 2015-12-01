@@ -82,6 +82,11 @@ void monster_pathfind::set_range(int r)
         range = r;
 }
 
+void monster_pathfind::set_monster(const monster *mon)
+{
+    mons = mon;
+}
+
 coord_def monster_pathfind::next_pos(const coord_def &c) const
 {
     return c + Compass[prev[c.x][c.y]];
