@@ -839,7 +839,7 @@ static void _get_randart_properties(const item_def &item,
     const object_class_type item_class = item.base_type;
 
     // first figure out how good we want the artefact to be, range 1 to 7.
-    int quality = max(1, binomial(7, 30));
+    const int quality = max(1, binomial(7, 30));
     // then consider adding bad properties. the better the artefact, the more
     // likely we add a bad property, up to a max of 2.
     int bad = binomial(1 + div_rand_round(quality, 5), 30);
@@ -850,12 +850,12 @@ static void _get_randart_properties(const item_def &item,
     // things get spammy. Extra "good" properties will be used to enhance
     // properties only, not to add more distinct properties. There is still a
     // small chance of >4 properties.
-    int max_properties = 4 + one_chance_in(20) + one_chance_in(40);
+    const int max_properties = 4 + one_chance_in(20) + one_chance_in(40);
     int enhance = 0;
     if (good + bad > max_properties)
     {
         enhance = good + bad - max_properties;
-        good = 4 - bad;
+        good = max_properties - bad;
     }
 
     // initialize a vector of weighted artefact properties to pick from
