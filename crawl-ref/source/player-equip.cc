@@ -1199,7 +1199,9 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
             mpr("The amulet feels cold and inert.");
         else
-            mpr("The amulet begins to pulse in time with your heartbeat.");
+            mprf("The amulet begins to pulse %s.",
+                 you.undead_state() ? "steadily"
+                                    : "in time with your heartbeat");
         break;
 
     case AMU_GUARDIAN_SPIRIT:
