@@ -251,8 +251,6 @@ bool targetter_unravelling::set_aim(coord_def a)
         min_expl_rad = 0;
 
     set_explosion_aim(beam);
-   // else
-   //     reset_explosion_aim();
 
     return true;
 }
