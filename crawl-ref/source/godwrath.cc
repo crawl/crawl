@@ -1710,7 +1710,7 @@ void pakellas_evoke_backfire(spell_type spell)
                         "devices!", GOD_PAKELLAS);
     MiscastEffect(&you, nullptr, GOD_MISCAST + GOD_PAKELLAS, spell,
                   (you.experience_level / 2) + (spell_difficulty(spell) * 2),
-                  random2avg(88, 3), "the progress of Pakellas");
+                  random2avg(88, 3), _god_wrath_name(GOD_PAKELLAS));
 }
 
 bool drain_wands()
