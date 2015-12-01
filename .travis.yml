@@ -1,9 +1,25 @@
+sudo: false
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - libstdc++-4.8-dev
+            - g++-4.8
+            - gdb
+            - libegl1-mesa-dev
+            - libasound2-dev
+            - libxss-dev
+            - liblua5.1-0-dev
+            - liblua5.1-0-dbg
+            - libsdl2-dev
+            - libsdl2-image-dev
+            - libsdl2-mixer-dev
 language: cpp
 compiler:
     - clang
     - gcc
 before_install:
-    - perl .travis/apt.pl
     - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 env:
     - NOTHING=1
@@ -18,7 +34,7 @@ env:
     - WEBTILES=1 BUILD_ALL=1
 git:
     submodules: false
-install: perl .travis/deps.pl
+install: if [ "$BUILD_ALL" = "1" ]; then git submodule update --init --recursive; fi
 script: perl .travis/build.pl
 notifications:
     email:
