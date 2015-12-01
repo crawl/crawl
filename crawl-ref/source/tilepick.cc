@@ -1404,8 +1404,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_MACABRE_MASS;
     case MONS_OCTOPODE:
         return TILEP_MONS_OCTOPODE;
-    case MONS_OCTOPODE_CRUSHER:
-        return TILEP_MONS_OCTOPODE_CRUSHER;
 
     // abyssal monsters
     case MONS_LURKING_HORROR:
