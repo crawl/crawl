@@ -1154,7 +1154,7 @@ void LevelStashes::move_stash(const coord_def& from, const coord_def& to)
 
     coord_def old_pos = s->pos;
     s->pos = to;
-    m_stashes.emplace(s->pos, *s);
+    m_stashes[s->pos] = *s;
     m_stashes.erase(old_pos);
 }
 
