@@ -1372,8 +1372,7 @@ bool StashTracker::update_stash(const coord_def& c)
 
 void StashTracker::move_stash(const coord_def& from, const coord_def& to)
 {
-    LevelStashes *lev = find_current_level();
-    if (lev)
+    if (LevelStashes *lev = find_current_level())
         lev->move_stash(from, to);
 }
 
