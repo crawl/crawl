@@ -2678,9 +2678,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
     else if (mon.props.exists("monster_tile"))
     {
         tileidx_t t = mon.props["monster_tile"].get_short();
-        if (t == TILEP_MONS_STATUE_GUARDIAN)
-            return _mon_random(t);
-        else if (t == TILEP_MONS_HELL_WIZARD)
+        if (t == TILEP_MONS_HELL_WIZARD)
             return _mon_sinus(t);
         else
             return t;
