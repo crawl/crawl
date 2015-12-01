@@ -318,6 +318,25 @@ static void _mark_net_trapping(const coord_def& where)
     }
 }
 
+bool can_monster_be_caught_in_net(const monster_info& mi){
+    if (mi.body_size() >= SIZE_GIANT)
+    {
+        return false;
+    }
+
+    if (mons_class_is_stationary(mi.type))
+    {
+        return false;
+    }
+
+    if (mons_class_flag(mi.type, M_INSUBSTANTIAL))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 /**
  * Attempt to trap a monster in a net.
  *

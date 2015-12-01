@@ -1257,6 +1257,25 @@ static bool _check_ability_possible(const ability_def& abil,
         return false;
     }
 
+    vector<text_pattern> &actions = Options.confirm_action;
+    if (!actions.empty())
+    {
+        const char* name = ability_name(abil.ability);
+        for (const text_pattern &action : actions)
+        {
+            if (action.matches(name))
+            {
+                string prompt = "Really invoke " + string(name) + "?";
+                if (!yesno(prompt.c_str(), false, 'n'))
+                {
+                    canned_msg(MSG_OK);
+                    return false;
+                }
+                break;
+            }
+        }
+    }
+    
     switch (abil.ability)
     {
     case ABIL_ZIN_RECITE:
