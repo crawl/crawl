@@ -5047,8 +5047,6 @@ void handle_player_drowning(int delay)
         }
         else if (!you.res_water_drowning())
         {
-            zin_recite_interrupt();
-
             you.duration[DUR_WATER_HOLD] += delay;
             int dam =
                 div_rand_round((28 + stepdown((float)you.duration[DUR_WATER_HOLD], 28.0))

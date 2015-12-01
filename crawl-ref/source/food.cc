@@ -1001,7 +1001,6 @@ static void _eat_chunk(item_def& food)
     if (do_eat)
     {
         dprf("nutrition: %d", nutrition);
-        zin_recite_interrupt();
         start_delay(DELAY_EAT, food_turns(food) - 1,
                     (suppress_msg) ? 0 : nutrition, -1);
         lessen_hunger(nutrition, true);
@@ -1016,7 +1015,6 @@ static void _eating(item_def& food)
     int duration = food_turns(food) - 1;
 
     // use delay.parm3 to figure out whether to output "finish eating"
-    zin_recite_interrupt();
     start_delay(DELAY_EAT, duration, 0, food.sub_type, duration);
 
     lessen_hunger(food_value, true);

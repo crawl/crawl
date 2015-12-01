@@ -1724,7 +1724,6 @@ void drink(int slot)
 
     if (player_under_penance(GOD_GOZAG) && one_chance_in(3))
     {
-        zin_recite_interrupt();
         simple_god_message(" petitions for your drink to fail.", GOD_GOZAG);
         you.turn_is_over = true;
         return;
@@ -1733,7 +1732,6 @@ void drink(int slot)
     if (!quaff_potion(potion))
         return;
 
-    zin_recite_interrupt();
     if (!alreadyknown && dangerous)
     {
         // Xom loves it when you drink an unknown potion and there is
@@ -2549,7 +2547,6 @@ void read(int slot)
 
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
-    zin_recite_interrupt();
 
     if (you.duration[DUR_BRAINLESS] && !one_chance_in(5))
     {
