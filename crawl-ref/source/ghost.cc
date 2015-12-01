@@ -163,10 +163,8 @@ static brand_type _random_special_pan_lord_brand()
                                   10, SPWPN_FREEZING,
                                   10, SPWPN_ELECTROCUTION,
                                   10, SPWPN_VENOM,
-                                  10, SPWPN_SPEED,
                                   // Lower chance
                                   5, SPWPN_DRAINING,
-                                  5, SPWPN_VORPAL,
                                   // Higher chance
                                   20, SPWPN_VAMPIRISM,
                                   20, SPWPN_PAIN,
