@@ -1552,6 +1552,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_SPARK_WASP,
+      {
+       { SPELL_BLINKBOLT, 40, MON_SPELL_MAGICAL | MON_SPELL_LONG_RANGE },
+      }
+    },
+
     {  MST_OGRE_MAGE_I,
       {
        { SPELL_HASTE_OTHER, 10, MON_SPELL_WIZARD },
