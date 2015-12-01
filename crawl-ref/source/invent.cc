@@ -1557,7 +1557,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
 
     // Everything else depends on knowing the item subtype/brand.
-    if (!item_ident(item, ISFLAG_KNOW_TYPE))
+    if (!item_type_known(item))
         return false;
 
     if (oper == OPER_REMOVE
