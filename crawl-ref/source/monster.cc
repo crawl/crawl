@@ -45,6 +45,7 @@
 #include "mon-cast.h"
 #include "mon-clone.h"
 #include "mon-death.h"
+#include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
@@ -4860,6 +4861,19 @@ bool monster::is_cloud_safe(const coord_def &place)
     return cl == EMPTY_CLOUD || !mons_avoids_cloud(this, cl);
 }
 
+static bool _can_path_to_staircase(const monster *mons, coord_def place)
+{
+    monster_pathfind mp;
+    mp.set_monster(mons);
+
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if (feat_is_stone_stair(grd(*ri)))
+            if (mp.init_pathfind(place, *ri, true, false))
+                return true;
+
+    return false;
+}
+
 bool monster::check_set_valid_home(const coord_def &place,
                                     coord_def &chosen,
                                     int &nvalid) const
@@ -4876,12 +4890,14 @@ bool monster::check_set_valid_home(const coord_def &place,
     if (!is_trap_safe(place, true))
         return false;
 
+    if (type == MONS_PLAYER_GHOST && !_can_path_to_staircase(this, place))
+        return false;
+
     if (one_chance_in(++nvalid))
         chosen = place;
 
     return true;
 }
-
 
 bool monster::is_location_safe(const coord_def &place)
 {
