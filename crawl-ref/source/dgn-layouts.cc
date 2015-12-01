@@ -1110,7 +1110,7 @@ static void _build_river(dungeon_feature_type river_type) //mv
             if (j >= 5 && j <= GYM - 5)
             {
                 // Note that vaults might have been created in this area!
-                // So we'll avoid the silliness of orcs/royal jelly on
+                // So we'll avoid the silliness of orcs/Royal Jelly on
                 // lava and deep water grids. -- bwr
                 if (!one_chance_in(200) && _may_overwrite_pos(coord_def(i, j)))
                 {

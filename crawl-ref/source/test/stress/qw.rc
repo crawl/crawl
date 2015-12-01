@@ -4007,7 +4007,7 @@ function can_use_stairs(mname)
      or mname:find("statue") or mname:find("ballistomycete")
      or mname == "burning bush" or mname == "lightning spire"
      or mname:find("tentacle") or mname == "silent spectre"
-     or mname == "Geryon" or mname == "the royal jelly"
+     or mname == "Geryon" or mname == "the Royal Jelly"
      or mname:find("'s ghost") or mname:find("' ghost")
      or mname == "swamp worm" or mname == "electric eel"
      or mname == "kraken" or mname == "lava snake" then

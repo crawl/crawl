@@ -1469,25 +1469,6 @@ int attack::apply_defender_ac(int damage, int damage_max) const
     return after_ac;
 }
 
-bool attack::attack_warded_off()
-{
-    const int WARDING_CHECK = 60;
-
-    if (defender->warding()
-        && attacker->is_summoned()
-        && attacker->as_monster()->check_res_magic(WARDING_CHECK) <= 0)
-    {
-        if (needs_message)
-        {
-            mprf("%s attack is warded away.",
-                 attacker->name(DESC_ITS).c_str());
-        }
-        return true;
-    }
-
-    return false;
-}
-
 /* Determine whether a block occurred
  *
  * No blocks if defender is incapacitated, would be nice to eventually expand

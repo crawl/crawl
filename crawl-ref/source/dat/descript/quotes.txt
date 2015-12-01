@@ -832,7 +832,7 @@ amulet of resist corrosion
 
 <amulet>
 %%%%
-amulet of resist mutation
+amulet of nothing
 
 <amulet>
 %%%%

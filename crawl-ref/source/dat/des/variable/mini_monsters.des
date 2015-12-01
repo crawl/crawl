@@ -1623,7 +1623,7 @@ KMONS:   8 = mummy priest
 ITEM:    book of callings w:5 / book of summonings / grand grimoire w:5 / \
          book of beasts / randbook disc:summoning numspells:6
 ITEM:    staff of summoning w:20 / rod of shadows w:5 / rod of the swarm w:5
-ITEM:    amulet of warding w:5 ident:type / amulet of warding randart
+ITEM:    amulet of dismissal w:5 ident:type / amulet of dismissal randart
 ITEM:    fan of gales / lamp of fire / \
          stone of tremors / phial of floods / lantern of shadows
 KITEM:   % = any, any / gold / nothing, any / nothing

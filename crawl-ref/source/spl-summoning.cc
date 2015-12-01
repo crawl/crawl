@@ -207,11 +207,10 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 
 monster_type pick_swarmer()
 {
-    return random_choose_weighted(3, MONS_KILLER_BEE,
-                                  3, MONS_WORKER_ANT,
-                                  3, MONS_WASP,
-                                  1, MONS_SCORPION,
-                                  1, MONS_WORM,
+    return random_choose_weighted(4, MONS_KILLER_BEE,
+                                  3, MONS_SCORPION,
+                                  2, MONS_RIVER_RAT,
+                                  1, MONS_WASP,
                                   1, MONS_VAMPIRE_MOSQUITO,
                                   1, MONS_BUTTERFLY,
                                   0);
@@ -459,12 +458,8 @@ static bool _place_dragon()
 
     // Pick a random hostile in sight
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
-    {
         if (!mons_aligned(&you, *mi) && mons_is_threatening(*mi))
-        {
             targets.push_back(*mi);
-        }
-    }
 
     shuffle_array(targets);
 

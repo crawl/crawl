@@ -787,11 +787,10 @@ ORIENT:   encompass
 KITEM:    a = amulet of faith randart not_cursed ident:all /\
     amulet of guardian spirit randart not_cursed ident:all /\
     amulet of resist corrosion randart not_cursed ident:all /\
-    amulet of resist mutation randart not_cursed ident:all /\
     amulet of rage randart not_cursed ident:all /\
     amulet of stasis randart not_cursed ident:all /\
     amulet of the gourmand randart not_cursed ident:all /\
-    amulet of warding randart not_cursed ident:all /\
+    amulet of dismissal randart not_cursed ident:all /\
     amulet of regeneration randart ident:all not_cursed /\
     ring of slaying plus:3 randart ident:all not_cursed /\
     any jewellery randart level:27 not_cursed ident:all w:40 /\
@@ -1004,7 +1003,7 @@ NAME:     slime_end
 TAGS:     slime_end
 KMONS:    1 = azure jelly / acid blob w:20 / death ooze / giant eyeball w:4 /\
               golden eye w:4 / eye of draining w:2
-KMONS:    2 = the royal jelly
+KMONS:    2 = the Royal Jelly
 KITEM:    2 = slimy rune of zot
 COLOUR:   # = lightgreen
 COLOUR:   12 = green

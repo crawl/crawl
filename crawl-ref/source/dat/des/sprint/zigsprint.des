@@ -553,7 +553,7 @@ local rnd = crawl.random2(142)
                Frederick / Geryon / Gloorx Vloq / Ignacio / Ilsuiw / Jory /\
                Khufu / Lom Lobon / Mara / Margery / Mennas / Mnoleg / Murray /\
                the Enchantress / the Lernaean hydra / the Serpent of Hell /\
-               the royal jelly / Tiamat / Xtahua / Nellie / Chuck")
+               the Royal Jelly / Tiamat / Xtahua / Nellie / Chuck")
 -- Holy
   else
     e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \

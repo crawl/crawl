@@ -640,7 +640,7 @@ bool mons_gives_xp(const monster* victim, const actor* agent)
     ASSERT(victim && agent);
 
     // Either the player killed a monster that's no reward (created friendly or
-    // the royal jelly spawns), or a monster killed an aligned monster, or a
+    // the Royal Jelly spawns), or a monster killed an aligned monster, or a
     // friendly monster killed a no-reward monster.
     bool killed_friend;
     if (agent->is_player())

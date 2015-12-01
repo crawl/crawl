@@ -913,12 +913,12 @@ LIFE:    1
 BOOL:    seeinv
 
 NAME:    amulet of Cekugob
-OBJ:     OBJ_JEWELLERY/AMU_WARDING
+OBJ:     OBJ_JEWELLERY/AMU_DISMISSAL
 COLOUR:  ETC_SILVER
 TILE:    urand_cekugob
 AC:      1
 EV:      1
-LIFE:    1
+LIFE:    2
 BOOL:    elec, poison, notelep
 
 NAME:    amulet of the Four Winds
@@ -959,7 +959,7 @@ INT:     3
 MAGIC:   2
 
 NAME:     brooch of Shielding
-OBJ:      OBJ_JEWELLERY/AMU_WARDING
+OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:   ETC_MAGIC
 TILE:     urand_brooch_of_shielding
 AC:       4
@@ -1094,9 +1094,10 @@ REGEN:    1
 
 ENUM:     FINGER_AMULET
 NAME:     macabre finger necklace
-OBJ:      OBJ_JEWELLERY/AMU_WARDING
+OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 TILE:     urand_finger
 COLOUR:   ETC_BONE
+LIFE:     1
 
 # TAG_MAJOR_VERSION == 34
 ENUM:     SPIDER

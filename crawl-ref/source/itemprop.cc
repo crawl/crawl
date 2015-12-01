@@ -713,6 +713,7 @@ const set<pair<object_class_type, int> > removed_items =
     // Outside the #if because we probably won't remove these.
     { OBJ_RUNES,     RUNE_ELF },
     { OBJ_RUNES,     RUNE_FOREST },
+    { OBJ_JEWELLERY, AMU_NOTHING }, // These should only spawn as uniques
 };
 
 bool item_type_removed(object_class_type base, int subtype)
@@ -2596,9 +2597,6 @@ int get_jewellery_life_protection(const item_def &ring, bool check_artp)
 
     // check for ego resistance
     if (ring.sub_type == RING_LIFE_PROTECTION)
-        res += 1;
-
-    if (ring.sub_type == AMU_WARDING)
         res += 1;
 
     if (check_artp && is_artefact(ring))

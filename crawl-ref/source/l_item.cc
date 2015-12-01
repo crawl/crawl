@@ -822,6 +822,16 @@ IDEF(encumbrance)
     return 1;
 }
 
+IDEF(is_in_shop)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, is_shop_item(*item));
+
+    return 1;
+}
+
 // DLUA-only functions
 static int l_item_do_pluses(lua_State *ls)
 {
@@ -1315,6 +1325,7 @@ static ItemAccessor item_attrs[] =
     { "delay",             l_item_delay },
     { "ac",                l_item_ac },
     { "encumbrance",       l_item_encumbrance },
+    { "is_in_shop",        l_item_is_in_shop },
 
     // dlua only past this point
     { "pluses",            l_item_pluses },

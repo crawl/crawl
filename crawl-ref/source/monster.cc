@@ -2793,7 +2793,7 @@ bool monster::fumbles_attack()
 
 bool monster::cannot_fight() const
 {
-    return !mons_is_threatening(this) || mons_is_statue(type);
+    return mons_class_is_firewood(this->type) || mons_is_statue(type);
 }
 
 void monster::attacking(actor * /* other */, bool /* ranged */)
@@ -4582,7 +4582,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         }
 
         // Allow the victim to exhibit passive damage behaviour (e.g.
-        // the royal jelly).
+        // the Royal Jelly).
         react_to_damage(agent, amount, flavour);
 
         // Don't mirror Yredelemnul's effects (in particular don't mirror

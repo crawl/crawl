@@ -71,7 +71,7 @@ function crypt_loot_plus(e)
   local vamp = "ego:vampirism ident:type"
   local book = "randbook disc:necromancy numspells:6 spells:"
   local ring = "ring of positive energy randart good_item"
-  local amulet = "amulet of warding randart good_item"
+  local amulet = "amulet of regeneration randart good_item"
   -- One drop-off of these,
   e.kitem("d = double sword w:5 " .. drain .." / triple sword w:5 " .. drain ..
           " / quick blade " .. drain .. " / executioner's axe " .. drain ..
@@ -1090,7 +1090,7 @@ KMONS:   0 = zombie
 ITEM:    any weapon good_item ego:draining, any weapon ego:pain
 ITEM:    scroll of torment ident:type, randbook disc:necromancy numspells:3
 ITEM:    lantern of shadows, staff of death ident:type
-ITEM:    amulet of warding randart good_item
+ITEM:    amulet of regeneration randart good_item
 KITEM:   $ = $ no_pickup
 KFEAT:   D = altar_yredelemnul
 KFEAT:   E = altar_kikubaaqudgha
@@ -1266,8 +1266,8 @@ ENDMAP
 #       churchlike map with customizeable monster sets
 #
 NAME:   church_of_pain_bobbens
-ORIENT: float
-TAGS:   no_monster_gen no_item_gen
+ORIENT: northwest
+TAGS:   no_monster_gen no_item_gen layout_city
 PLACE:  Crypt:$
 KMONS:  0 = lost soul / nothing
 # MONSTER LAYOUT
@@ -1329,52 +1329,52 @@ NSUBST: . = 5:0 / *:.
 NSUBST: %*| = 1:d / 1:h
 : crypt_loot_plus(_G)
 MAP
-           xxxxvvvvvvvvvvvvvvvvvxxxx
-           xxxvv..WWWWWWWWWWW..vvxxx
-           xxvv..WWWWWWWWWWWWW..vvxx
-           xxv...WWWb.b.b.bWWW...vxx
-           xxv...WWb$$|*|$$bWW...vxx
-     xxxxxxxxv...WW.$/|1|/$.WW...vxxxxxxxx
-     xxccccccv...WWb$$|*|$$bWW...vccccccxx
-     xxc/.cccv...WWWb.b.b.bWWW...vccc./cxx
-     xxc...ccvv..WWWWWWWWWWWWW..vvcc...cxx
-xxxxxxxc.../ccvv..WWWWWWWWWWW..vvcc/...cxxxxxxx
-xxccccccc+cccccv...............vccccc+cccccccxx
-xxcU......cxxxxvv....2...2....vvxxxxc......Ucxx
-xxc..3....cxxxxxvv.....6.....vvxxxxxc....3..cxx
-xxc.......cxxxxxvvv.6.....6.vvvxxxxxc.......cxx
-xxc.......cxxxxxvvvvv.....vvvvvxxxxxc.......cxx
-xxc...5.5.cxxxxxvvvvvvv+vvvvvvvxxxxxc.5.5...cxx
-xxccccc+cccxxxxxvcccccU.Ucccccvxxxxxccc+cccccxx
-xxxxxxc.cxxxxxxxvc.U.cc+cc.U.cvxxxxxxxc.cxxxxxx
-    xxc.cxxxxxccccG..F...F..Gccccxxxxxc.cxx
-    xxc.cccccccG....45...54....Gccccccc.cxx
-    xxc.......+.................+.......cxx
-    xxc.cccccccG.......C.......Gccccccc.cxx
-    xxc.c...+.ccc56.........65cccxxxxcc.cxx
-  xxxxc.c/..c.ccc5...........5cccxxxxcc.cxxxx
-xxxxccc+ccc/c.+7+.............+7ccccccc+cccxxxx
-xxccc.5.5.ccccccc..c.......c..ccccccc.5.5.cccxx
-xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
-xxccc.....ccccccc..c.......c..ccccccc.....cccxx
-xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
-xxccc.....ccccccc..c.55555.c..ccccccc.....cccxx
-xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
-xxccc.....ccccccc..c6.6.6.6c..ccccccc.....cccxx
-xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
-xxccc.5.5.ccccccc..c.......c..ccccccc.5.5.cccxx
-xxxxccc+cccxxxc7+.............+7+..cccc+cccxxxx
-   xxc...cxxxxccc..c.......c..ccc./ccc...cxx
-   xxc.4.cxxxxc7+.............+7cccccc.4.cxx
-   xxc./.cxxxxccc..c.......c..cccxxxxc./.cxx
-   xxcccccxxxxc7+.............+7cxxxxcccccxx
-   xxxxxxxxxxxccc....c...c....cccxxxxxxxxxxx
-            xxxxc5.Vcc...ccV.5cxxxx
-              xxcccccc...ccccccxx
-              xxc.............cxx
-              xxc..vcccccccv..cxx
-                c.............c
-                cccccc@c@cccccc
+cccccccccccccccvvvvvvvvvvvvvvvvvccccccccccccccc
+ccccccccccccccvv..WWWWWWWWWWW..vvcccccccccccccc
+cccccccccccccvv..WWWWWWWWWWWWW..vvccccccccccccc
+cccccccccccccv...WWWb.b.b.bWWW...vccccccccccccc
+cccccccccccccv...WWb$$|*|$$bWW...vccccccccccccc
+cccccccccccccv...WW.$/|1|/$.WW...vccccccccccccc
+cccccccccccccv...WWb$$|*|$$bWW...vccccccccccccc
+cccccccc/.cccv...WWWb.b.b.bWWW...vccc./cccccccc
+cccccccc...ccvv..WWWWWWWWWWWWW..vvcc...cccccccc
+cccccccc.../ccvv..WWWWWWWWWWW..vvcc/...cccccccc
+ccccccccc+cccccv...............vccccc+ccccccccc
+cccU......cccccvv....2...2....vvccccc......Uccc
+ccc..3....ccccccvv.....6.....vvcccccc....3..ccc
+ccc.......ccccccvvv.6.....6.vvvcccccc.......ccc
+ccc.......ccccccvvvvv.....vvvvvcccccc.......ccc
+ccc...5.5.ccccccvvvvvvv+vvvvvvvcccccc.5.5...ccc
+ccccccc+ccccccccvcccccU.Ucccccvcccccccc+ccccccc
+ccccccc.ccccccccvc.U.cc+cc.U.cvcccccccc.ccccccc
+ccccccc.ccccccccccG..F...F..Gcccccccccc.ccc
+ccccccc.cccccccG....45...54....Gccccccc.ccc
+ccccccc.......+.................+.......ccc
+ccccccc.cccccccG.......C.......Gccccccc.ccc
+ccccccc.c...+.ccc56.........65ccccccccc.ccc
+ccccccc.c/..c.ccc5...........5ccccccccc.ccccc
+ccccccc+ccc/c.+7+.............+7ccccccc+ccccccc
+ccccc.5.5.ccccccc..c.......c..ccccccc.5.5.ccccc
+ccc7+.....+7ccc7+.............+7ccc7+.....+7ccc
+ccccc.....ccccccc..c.......c..ccccccc.....ccccc
+ccc7+.....+7ccc7+.............+7ccc7+.....+7ccc
+ccccc.....ccccccc..c.55555.c..ccccccc.....ccccc
+ccc7+.....+7ccc7+.............+7ccc7+.....+7ccc
+ccccc.....ccccccc..c6.6.6.6c..ccccccc.....ccccc
+ccc7+.....+7ccc7+.............+7ccc7+.....+7ccc
+ccccc.5.5.ccccccc..c.......c..ccccccc.5.5.ccccc
+ccccccc+ccccccc7+.............+7+..cccc+ccccccc
+cccccc...cccccccc..c.......c..ccc./ccc...ccc
+cccccc.4.cccccc7+.............+7cccccc.4.ccc
+cccccc./.cccccccc..c.......c..cccccccc./.ccc
+ccccccccccccccc7+.............+7cccccccccccc
+ccccccccccccccccc....c...c....cccccccccccccc
+ccccccccccccccccc5.Vcc...ccV.5ccccc
+cccccccccccccccccccccc...cccccccc
+ccccccccccccccccc.............ccc
+ccccccccccccccccc..vcccccccv..ccc
+ccccccccccccccccc.............c
+cccccccccccccccccccccc@c@cccccc
 ENDMAP
 
 
@@ -1496,7 +1496,7 @@ ENDMAP
 # XXX: Undiggable glass has been converted to grates.
 NAME:   david_glass_crypt
 ORIENT: float
-TAGS:   no_item_gen no_rotate
+TAGS:   no_item_gen no_rotate layout_city
 PLACE:  Crypt:$
 MARKER: m = lua:portal_desc {wall_phase = 1}
 KFEAT:  m = iron_grate
@@ -1846,8 +1846,9 @@ ENDMAP
 #  roughly similar loot to evilmike's haunted forest
 NAME:   due_elkab
 PLACE:  Crypt:$
-ORIENT: float
+ORIENT: north
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_trap_gen
+TAGS:   layout_city
 NSUBST: A = 1:+ / *:c
 NSUBST: B = 1:+ / *:c
 NSUBST: C = 1:6 / *:5
@@ -2067,9 +2068,9 @@ ENDMAP
 ###############################################################################
 
 NAME:    lightli_unholy_cathedral
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen layout_city
 PLACE:   Crypt:$
-ORIENT:  float
+ORIENT:  north
 MONS:    ancient champion, lich / revenant, jiangshi / ghoul w:2
 MONS:    profane servitor / bone dragon / curse toe / \
          greater mummy w:2 / ancient lich w:2
@@ -2087,19 +2088,19 @@ KFEAT:   K = altar_kikubaaqudgha
 NSUBST:  *| = 1:d / 1:h
 : crypt_loot_plus(_G)
 MAP
-          cccc
-         cc$$cc
-         c$$$$c
-     ccccc$$$$ccccc
-   cccccccc++cccccccc
-  ccccc..........ccccc
- cc**c............c**cc
- c||*+..4.K..Y.4..+*||c
- c||*+............+*||c
- cc**c............c**cc
-  ccccc.........cccccc
-  ccccccccc++ccccccccc
- ccccccccc....ccccccccc
+cccccccccccccccccccccccc
+ccccccccccc$$ccccccccccc
+cccccccccc$$$$cccccccccc
+cccccccccc$$$$cccccccccc
+ccccccccccc++ccccccccccc
+ccccccc..........ccccccc
+ccc**c............c**ccc
+cc||*+..4.K..Y.4..+*||cc
+cc||*+............+*||cc
+ccc**c............c**ccc
+ccccccc.........cccccccc
+ccccccccccc++ccccccccccc
+cccccccccc....cccccccccc
 cccc9....+.33.+....9cccc
 ccc989...+.33.+...989ccc
 cc..9..ccc....ccc..9..cc

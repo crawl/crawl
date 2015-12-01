@@ -1090,6 +1090,21 @@ static void _remove_amulet_of_faith(item_def &item)
     }
 }
 
+static void _remove_amulet_of_dismissal(item_def &item)
+{
+    mpr("The amulet's energy floods into your body!");
+    contaminate_player(7000, true);
+}
+
+static void _remove_amulet_of_regeneration(item_def &item)
+{
+    if (player_mutation_level(MUT_SLOW_REGENERATION) < 3)
+    {
+        mpr("Your flesh rots as the regenerative bond is broken!");
+        rot_hp(2 + random2(5));
+    }
+}
+
 static void _equip_jewellery_effect(item_def &item, bool unmeld,
                                     equipment_type slot)
 {
@@ -1169,6 +1184,17 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         // What's this supposed to achieve? (jpeg)
         you.duration[DUR_GOURMAND] = 0;
         mpr("You feel a craving for the dungeon's cuisine.");
+        break;
+
+    case AMU_DISMISSAL:
+        mpr("You feel a field of translocational energy surge around you.");
+        break;
+
+    case AMU_REGENERATION:
+        if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
+            mpr("The amulet feels cold and inert.");
+        else
+            mpr("The amulet begins to pulse in time with your heartbeat.");
         break;
 
     case AMU_GUARDIAN_SPIRIT:
@@ -1283,7 +1309,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case RING_STEALTH:
     case RING_TELEPORTATION:
     case RING_WIZARDRY:
-    case AMU_REGENERATION:
         break;
 
     case RING_SEE_INVISIBLE:
@@ -1338,6 +1363,16 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case AMU_FAITH:
         if (!meld)
             _remove_amulet_of_faith(item);
+        break;
+
+    case AMU_DISMISSAL:
+        if (!meld)
+            _remove_amulet_of_dismissal(item);
+        break;
+
+    case AMU_REGENERATION:
+        if (!meld)
+            _remove_amulet_of_regeneration(item);
         break;
 
     case AMU_GUARDIAN_SPIRIT:
