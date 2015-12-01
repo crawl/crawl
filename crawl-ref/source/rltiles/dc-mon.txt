@@ -416,7 +416,6 @@ abomination_small1
 %sdir mon/aquatic
 %rim 0
 octopode MONS_OCTOPODE
-octopode_crusher MONS_OCTOPODE_CRUSHER
 
 ## Golems ('8')
 %rim 0
