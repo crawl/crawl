@@ -842,7 +842,7 @@ static void _get_randart_properties(const item_def &item,
     const int quality = max(1, binomial(7, 30));
     // then consider adding bad properties. the better the artefact, the more
     // likely we add a bad property, up to a max of 2.
-    int bad = binomial(1 + div_rand_round(quality, 5), 30);
+    int bad = min(binomial(1 + div_rand_round(quality, 5), 30), 2);
     // we start by assuming we'll allow one good property per quality level
     // and an additional one for each bad property.
     int good = quality + bad;
@@ -871,8 +871,9 @@ static void _get_randart_properties(const item_def &item,
     if (item_class == OBJ_WEAPONS)
         _add_randart_weapon_brand(item, item_props);
 
-    // randomly pick properties from the list, assign values and all that,
-    // then subtract them from the good/bad count as needed
+    // randomly pick properties from the list, choose an appropriate value,
+    // then subtract them from the good/bad/enhance count as needed
+    // the 'enhance' count is not guaranteed to be used.
     while (good > 0 || bad > 0)
     {
         const artefact_prop_type *prop_ptr
