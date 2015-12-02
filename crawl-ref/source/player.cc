@@ -3905,7 +3905,7 @@ static int _rest_trigger_level(int max)
     return (max * Options.rest_wait_percent) / 100;
 }
 
-static bool should_stop_resting(int cur, int max)
+static bool _should_stop_resting(int cur, int max)
 {
     return cur == max || cur == _rest_trigger_level(max);
 }
@@ -3929,7 +3929,7 @@ void inc_mp(int mp_gain, bool silent)
 
     if (!silent)
     {
-        if (should_stop_resting(you.magic_points, you.max_magic_points))
+        if (_should_stop_resting(you.magic_points, you.max_magic_points))
             interrupt_activity(AI_FULL_MP);
         you.redraw_magic_points = true;
     }
@@ -3950,7 +3950,7 @@ void inc_hp(int hp_gain)
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
 
-    if (should_stop_resting(you.hp, you.hp_max))
+    if (_should_stop_resting(you.hp, you.hp_max))
         interrupt_activity(AI_FULL_HP);
 
     you.redraw_hit_points = true;
