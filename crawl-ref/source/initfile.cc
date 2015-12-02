@@ -4499,7 +4499,7 @@ static void _edit_save(int argc, char **argv)
                 plen_t clen = 0;
                 while (plen_t s = in.read(buf, sizeof(buf)))
                     clen += s;
-                printf("%7u/%7u %3u %s\n", cclen, clen, cfrag, chunk.c_str());
+                printf("%7d/%7d %3u %s\n", cclen, clen, cfrag, chunk.c_str());
             }
             // the directory is not a chunk visible from the outside
             printf("Fragmentation:    %u/%u (%4.2f)\n", frag, nchunks + 1,
