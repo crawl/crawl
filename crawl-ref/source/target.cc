@@ -1345,4 +1345,4 @@ aff_type targetter_shotgun::is_affected(coord_def loc)
     return (zapped[loc] >= num_beams) ? AFF_YES :
            (zapped[loc] > 0)          ? AFF_MAYBE
                                       : AFF_NO;
-
+}
