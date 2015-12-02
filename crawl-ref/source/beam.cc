@@ -5899,9 +5899,6 @@ void bolt::refine_for_explosion()
     // gets burned by it anyway.  :)
     msg_generated = true;
 
-    // tmp needed so that what c_str() points to doesn't go out of scope
-    // before the function ends.
-    string tmp;
     if (item != nullptr)
     {
         seeMsg  = "The " + item->name(DESC_PLAIN, false, false, false)

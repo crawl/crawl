@@ -519,8 +519,6 @@ void hints_death_screen()
 // know by now.
 void hints_finished()
 {
-    string text;
-
     crawl_state.type = GAME_TYPE_NORMAL;
 
     print_hint("finished");

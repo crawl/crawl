@@ -3707,11 +3707,10 @@ static void tag_read_you_dungeon(reader &th)
     ASSERT(place_info.is_global());
     you.set_place_info(place_info);
 
-    vector<PlaceInfo> list = you.get_all_place_info();
     unsigned short count_p = (unsigned short) unmarshallShort(th);
     // Use "<=" so that adding more branches or non-dungeon places
     // won't break save-file compatibility.
-    ASSERT(count_p <= list.size());
+    ASSERT(count_p <= you.get_all_place_info().size());
 
     for (int i = 0; i < count_p; i++)
     {
@@ -4212,7 +4211,6 @@ void unmarshallItem(reader &th, item_def &item)
                 || item.sub_type == FOOD_BANANA
                 || item.sub_type == FOOD_STRAWBERRY
                 || item.sub_type == FOOD_RAMBUTAN
-                || item.sub_type == FOOD_LEMON
                 || item.sub_type == FOOD_GRAPE
                 || item.sub_type == FOOD_SULTANA
                 || item.sub_type == FOOD_LYCHEE

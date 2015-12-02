@@ -418,7 +418,6 @@ class DominoSet
             std::set<uint32_t> all_set;
             for (uint32_t i = 0; i < dominoes_.size(); ++i)
                 all_set.insert(i);
-            const std::set<uint32_t> all = all_set;
 
             std::vector<Point> all_points;
             for (int32_t j = 0; j < y; ++j)
@@ -518,7 +517,6 @@ class DominoSet
             std::set<uint32_t> all_set;
             for (uint32_t i = 0; i < dominoes_.size(); ++i)
                 all_set.insert(i);
-            const std::set<uint32_t> all = all_set;
 
             std::map<uint32_t, int> result_map;
             uint32_t neighbors = 0;
@@ -535,7 +533,7 @@ class DominoSet
                     if (tiling.find(nb) != tiling.end())
                     {
                         ++neighbors;
-                        std::set<uint32_t> allowed = all;
+                        std::set<uint32_t> allowed = all_set;
                         T other = dominoes_.find(tiling.find(nb)->second)->second;
                         Direction dir;
                         asDirection(offset, dir);

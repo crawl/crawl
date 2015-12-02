@@ -219,10 +219,6 @@ void leaving_level_now(dungeon_feature_type stair_used)
                        you.depth));
     }
 
-    // Note the name ahead of time because the events may cause markers
-    // to be discarded.
-    const string newtype = env.markers.property_at(you.pos(), MAT_ANY, "dst");
-
     dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
 

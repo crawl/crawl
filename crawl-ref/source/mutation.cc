@@ -50,7 +50,6 @@ struct body_facet_def
 {
     equipment_type eq;
     mutation_type mut;
-    int level_lost;
 };
 
 struct facet_def
@@ -88,13 +87,13 @@ COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::LAST);
 
 static const body_facet_def _body_facets[] =
 {
-    //{ EQ_NONE, MUT_FANGS, 1 },
-    { EQ_HELMET, MUT_HORNS, 1 },
-    { EQ_HELMET, MUT_ANTENNAE, 1 },
-    //{ EQ_HELMET, MUT_BEAK, 1 },
-    { EQ_GLOVES, MUT_CLAWS, 3 },
-    { EQ_BOOTS, MUT_HOOVES, 3 },
-    { EQ_BOOTS, MUT_TALONS, 3 }
+    //{ EQ_NONE, MUT_FANGS },
+    { EQ_HELMET, MUT_HORNS },
+    { EQ_HELMET, MUT_ANTENNAE },
+    //{ EQ_HELMET, MUT_BEAK },
+    { EQ_GLOVES, MUT_CLAWS },
+    { EQ_BOOTS, MUT_HOOVES },
+    { EQ_BOOTS, MUT_TALONS }
 };
 
 /**

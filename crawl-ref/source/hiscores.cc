@@ -1808,7 +1808,6 @@ string scorefile_entry::terse_missile_name() const
 
 string scorefile_entry::terse_missile_cause() const
 {
-    string cause;
     const string &aux = auxkilldata;
 
     string monster_prefix = " by ";

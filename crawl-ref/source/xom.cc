@@ -2364,6 +2364,7 @@ static void _xom_zero_miscast()
             string str = "You compulsively click the heels of your ";
             str += name;
             str += " together three times.";
+            messages.push_back(str);
         }
     }
 
