@@ -269,15 +269,4 @@ private:
     size_t num_beams;
     int range;
 };
-
-class targetter_list : public targetter
-{
-public:
-    targetter_list(vector<coord_def> targets, coord_def center);
-    aff_type is_affected(coord_def loc) override;
-    bool valid_aim(coord_def a) override;
-private:
-    vector<coord_def> targets;
-};
-
 #endif

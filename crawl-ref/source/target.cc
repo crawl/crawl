@@ -1345,21 +1345,4 @@ aff_type targetter_shotgun::is_affected(coord_def loc)
     return (zapped[loc] >= num_beams) ? AFF_YES :
            (zapped[loc] > 0)          ? AFF_MAYBE
                                       : AFF_NO;
-}
 
-targetter_list::targetter_list(vector<coord_def> target_list, coord_def center)
-    : targets(target_list)
-{
-    origin = center;
-}
-
-aff_type targetter_list::is_affected(coord_def loc)
-{
-    return find(begin(targets), end(targets), loc) == end(targets) ? AFF_NO
-                                                                   : AFF_YES;
-}
-
-bool targetter_list::valid_aim(coord_def a)
-{
-    return true;
-}
