@@ -809,7 +809,7 @@ static int _get_dest_stair_type(branch_type old_branch,
 
     if (feat_is_branch_exit(stair_taken))
     {
-        for (branch_iterator it; it; it++)
+        for (branch_iterator it; it; ++it)
             if (it->exit_stairs == stair_taken)
                 return it->entry_stairs;
         die("entrance corresponding to exit %d not found", stair_taken);
@@ -817,7 +817,7 @@ static int _get_dest_stair_type(branch_type old_branch,
 
     if (feat_is_branch_entrance(stair_taken))
     {
-        for (branch_iterator it; it; it++)
+        for (branch_iterator it; it; ++it)
             if (it->entry_stairs == stair_taken)
                 return it->exit_stairs;
         die("return corresponding to entry %d not found", stair_taken);

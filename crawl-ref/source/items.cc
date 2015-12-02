@@ -1360,7 +1360,7 @@ void pickup(bool partial_quantity)
         // list them.
         if (!any_selectable)
         {
-            for (stack_iterator si(you.pos(), true); si; si++)
+            for (stack_iterator si(you.pos(), true); si; ++si)
                 mprf_nocap("%s", get_menu_colour_prefix_tags(*si, DESC_A).c_str());
         }
 

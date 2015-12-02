@@ -1425,7 +1425,7 @@ bool unwield_item(bool showMsgs)
 static void _mark_unseen_monsters()
 {
 
-    for (monster_iterator mi; mi; mi++)
+    for (monster_iterator mi; mi; ++mi)
     {
         if (testbits((*mi)->flags, MF_WAS_IN_VIEW) && !you.can_see(**mi))
         {
