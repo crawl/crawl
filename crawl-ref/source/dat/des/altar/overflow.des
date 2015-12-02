@@ -1627,17 +1627,17 @@ MAP
 ENDMAP
 
 #P altar with gadget shop
-#90% basic wands (frost, flame, darts)
-#10% any wand and  will be very expensive
+#90% basic wands (frost, flame, darts). ~150 to 250 gold
+#10% any wand and will be expensive
 NAME:    johnstein_pakellas_shop 
 DEPTH:   D:2-
 TAGS:    temple_overflow_pakellas uniq_altar_pakellas
 KFEAT:   _ = altar_pakellas
 KFEAT:   S = gadget shop name:Pakellas type:Ersatz suffix:Instruments \ 
-             count:3 ;\
-             wand of flame charges:5 w:30 |\
-             wand of frost charges:5 w:30 |\
-             wand of magic darts charges:5 w:30 |\
+             greed:30 count:3 ;\
+             wand of flame charges:15 w:30 |\
+             wand of frost charges:15 w:30 |\
+             wand of magic darts charges:15 w:30 |\
              any wand
 MAP
  .......
