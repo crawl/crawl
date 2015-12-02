@@ -2263,7 +2263,7 @@ bool evoke_item(int slot, bool check_range)
             make_hungry(50, false, true);
             pract = 1;
             did_work = true;
-            count_action(CACT_EVOKE, OBJ_STAVES << 16 | STAFF_ENERGY);
+            count_action(CACT_EVOKE, STAFF_ENERGY, OBJ_STAVES);
         }
         break;
 
@@ -2427,7 +2427,7 @@ bool evoke_item(int slot, bool check_range)
             break;
         }
         if (did_work && !unevokable)
-            count_action(CACT_EVOKE, OBJ_MISCELLANY << 16 | item.sub_type);
+            count_action(CACT_EVOKE, item.sub_type, OBJ_MISCELLANY);
         break;
 
     default:

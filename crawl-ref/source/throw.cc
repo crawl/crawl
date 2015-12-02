@@ -842,7 +842,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     }
     case LRET_THROWN:
         practise(EX_WILL_THROW_MSL, wepType);
-        count_action(CACT_THROW, wepType | (OBJ_MISSILES << 16));
+        count_action(CACT_THROW, wepType, OBJ_MISSILES);
         break;
     case LRET_FUMBLED:
         practise(EX_WILL_THROW_OTHER);
