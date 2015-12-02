@@ -646,16 +646,19 @@ static void _describe_god_powers(god_type which_god)
         int prot_chance = 10 + piety/10; // chance * 100
         const char *when = "";
 
-        switch (elyvilon_lifesaving())
+        if (which_god == GOD_ELYVILON)
         {
-            case 1:
-                when = ", especially when called upon";
-                prot_chance += 100 - 3000/piety;
-                break;
-            case 2:
-                when = ", and always does so when called upon";
-                prot_chance = 100;
-                break;
+            switch (elyvilon_lifesaving())
+            {
+                case 1:
+                    when = ", especially when called upon";
+                    prot_chance += 100 - 3000/piety;
+                    break;
+                case 2:
+                    when = ", and always does so when called upon";
+                    prot_chance = 100;
+                    break;
+            }
         }
 
         const char *how = (prot_chance >= 85) ? "carefully" :
