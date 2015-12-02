@@ -269,8 +269,11 @@ static void _shuffle_deck(item_def &deck)
     // Don't use shuffle(), since we want to apply exactly the
     // same shuffling to both the cards vector and the flags vector.
     vector<vec_size> pos;
-    for (size_t i = 0; i < cards.size(); ++i)
+    for (const auto& _ : cards)
+    {
+        UNUSED(_);
         pos.push_back(random2(cards.size()));
+    }
 
     for (vec_size i = 0; i < pos.size(); ++i)
     {
