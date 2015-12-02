@@ -714,7 +714,7 @@ static string _describe_demon(const string& name, bool flying)
     if (flying)
     {
         description << HRANDOM_ELEMENT(wing_names, 3);
-        if (head_desc.find(" with") == 0)
+        if (starts_with(head_desc, " with"))
             description << " and";
     }
 

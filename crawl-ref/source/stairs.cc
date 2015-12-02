@@ -718,7 +718,7 @@ void floor_transition(dungeon_feature_type how,
                 && !you.branches_left[old_level.branch])
             {
                 string old_branch_string = branches[old_level.branch].longname;
-                if (old_branch_string.find("The ") == 0)
+                if (starts_with(old_branch_string, "The "))
                     old_branch_string[0] = tolower(old_branch_string[0]);
                 mark_milestone("br.exit", "left " + old_branch_string + ".",
                                old_level.describe());
