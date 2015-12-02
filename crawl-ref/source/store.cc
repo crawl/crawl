@@ -1460,7 +1460,7 @@ bool CrawlHashTable::empty() const
     return hash_map->empty();
 }
 
-void CrawlHashTable::erase(const string key)
+void CrawlHashTable::erase(const string& key)
 {
     ASSERT_VALIDITY();
     init_hash_map();

@@ -3089,7 +3089,7 @@ static string _random_consonant_set(int seed)
 /**
  * Write all possible scroll names to the given file.
  */
-static void _test_scroll_names(const string fname)
+static void _test_scroll_names(const string& fname)
 {
     FILE *f = fopen(fname.c_str(), "w");
     if (!f)
@@ -3116,7 +3116,7 @@ static void _test_scroll_names(const string fname)
 /**
  * Write one million random Jiyva names to the given file.
  */
-static void _test_jiyva_names(const string fname)
+static void _test_jiyva_names(const string& fname)
 {
     FILE *f = fopen(fname.c_str(), "w");
     if (!f)

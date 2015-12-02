@@ -90,7 +90,7 @@ static void _save_level(const level_id& lid);
 
 static bool _ghost_version_compatible(reader &ghost_reader);
 
-static bool _restore_tagged_chunk(package *save, const string name,
+static bool _restore_tagged_chunk(package *save, const string &name,
                                   tag_type tag, const char* complaint);
 static bool _read_char_chunk(package *save);
 
@@ -2161,7 +2161,7 @@ static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
     return true;
 }
 
-static bool _restore_tagged_chunk(package *save, const string name,
+static bool _restore_tagged_chunk(package *save, const string &name,
                                   tag_type tag, const char* complaint)
 {
     reader inf(save, name);

@@ -156,7 +156,7 @@ void hints_load_game();
 
 void hints_starting_screen();
 void hints_new_turn();
-void print_hint(string key, const string arg1 = "", const string arg2 = "");
+void print_hint(string key, const string& arg1 = "", const string& arg2 = "");
 void hints_death_screen();
 void hints_finished();
 

@@ -1784,7 +1784,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
 }
 
 // Currently only used when orcish idols have been destroyed.
-static string _get_beogh_speech(const string key)
+static string _get_beogh_speech(const string &key)
 {
     string result = getSpeakString("Beogh " + key);
 

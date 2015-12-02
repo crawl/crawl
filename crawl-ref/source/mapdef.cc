@@ -153,7 +153,7 @@ string mapdef_split_key_item(const string &s, string *key, int *separator,
     return "";
 }
 
-int store_tilename_get_index(const string tilename)
+int store_tilename_get_index(const string& tilename)
 {
     if (tilename.empty())
         return 0;
@@ -161,7 +161,7 @@ int store_tilename_get_index(const string tilename)
     // Increase index by 1 to distinguish between first entry and none.
     unsigned int i;
     for (i = 0; i < env.tile_names.size(); ++i)
-        if (!strcmp(tilename.c_str(), env.tile_names[i].c_str()))
+        if (tilename == env.tile_names[i])
             return i+1;
 
 #ifdef DEBUG_TILE_NAMES
@@ -3327,7 +3327,7 @@ string map_def::subvault_from_tagstring(const string &sub)
     return "";
 }
 
-static void _register_subvault(const string name, const string spaced_tags)
+static void _register_subvault(const string &name, const string &spaced_tags)
 {
     if (spaced_tags.find(" allow_dup ") == string::npos
         || spaced_tags.find(" luniq ") != string::npos)

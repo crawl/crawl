@@ -274,7 +274,7 @@ bool beogh_followers_abandon_you()
     return false;
 }
 
-static void _print_converted_orc_speech(const string key,
+static void _print_converted_orc_speech(const string& key,
                                         monster* mon,
                                         msg_channel_type channel)
 {
