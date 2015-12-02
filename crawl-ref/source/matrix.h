@@ -10,13 +10,13 @@ template <typename Z>
 class Matrix
 {
 public:
-    Matrix(int width, int height)
-        : mwidth(width), mheight(height), size(width * height),
+    Matrix(int _width, int _height)
+        : mwidth(_width), mheight(_height), size(_width * _height),
           data(new Z[size])
     {
     }
-    Matrix(int width, int height, const Z &initial)
-        : Matrix(width, height)
+    Matrix(int _width, int _height, const Z &initial)
+        : Matrix(_width, _height)
     {
         init(initial);
     }
