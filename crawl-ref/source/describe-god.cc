@@ -864,7 +864,7 @@ static void _god_overview_description(god_type which_god, bool give_title)
 
     // Print god's description.
     string god_desc = getLongDescription(god_name(which_god));
-    cprintf("%s\n", get_linebreak_string(god_desc.c_str(), numcols).c_str());
+    cprintf("%s\n", get_linebreak_string(god_desc, numcols).c_str());
 
     // Title only shown for our own god.
     if (you_worship(which_god))
