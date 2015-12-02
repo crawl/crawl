@@ -318,7 +318,7 @@ static bool _create_dirs(const string &dir)
 {
     string sep = " ";
     sep[0] = FILE_SEPARATOR;
-    vector<string> segments = split_string(sep.c_str(), dir, false, false);
+    vector<string> segments = split_string(sep, dir, false, false);
 
     string path;
     for (int i = 0, size = segments.size(); i < size; ++i)

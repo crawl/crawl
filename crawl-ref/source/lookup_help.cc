@@ -364,7 +364,7 @@ static vector<string> _get_skill_keys()
 
 static bool _monster_filter(string key, string body)
 {
-    monster_type mon_num = get_monster_by_name(key.c_str());
+    monster_type mon_num = get_monster_by_name(key);
     return mons_class_flag(mon_num, M_CANT_SPAWN)
            || mons_is_tentacle_segment(mon_num);
 }

@@ -3930,7 +3930,7 @@ void marshallItem(writer &th, const item_def &item, bool iinfo)
 
     item.orig_place.save(th);
     marshallShort(th, item.orig_monnum);
-    marshallString(th, item.inscription.c_str());
+    marshallString(th, item.inscription);
 
     item.props.write(th);
 }
@@ -6237,7 +6237,7 @@ static void unmarshallSpells(reader &th, monster_spells &spells
 
 static void marshallGhost(writer &th, const ghost_demon &ghost)
 {
-    marshallString(th, ghost.name.c_str());
+    marshallString(th, ghost.name);
 
     marshallShort(th, ghost.species);
     marshallShort(th, ghost.job);
