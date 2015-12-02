@@ -1904,7 +1904,8 @@ static void _do_rest()
                 || (you.species == SP_VAMPIRE
                     && you.hunger_state <= HS_STARVING))
             && (you.magic_points == you.max_magic_points
-                || you.spirit_shield() && you.species == SP_DEEP_DWARF))
+                || you.spirit_shield() && you.species == SP_DEEP_DWARF
+                || you_worship(GOD_PAKELLAS)))
         {
             mpr("You start waiting.");
             _start_running(RDIR_REST, RMODE_WAIT_DURATION);
