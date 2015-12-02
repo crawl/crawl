@@ -1190,9 +1190,12 @@ void direction_chooser::draw_beam_if_needed()
                     bcol = (*ri == target()) ? RED : MAGENTA;
                 else if (aff == AFF_YES)
                     bcol = (*ri == target()) ? LIGHTRED : LIGHTMAGENTA;
-                // shadow step landing sites
-                else
+                else if (aff == AFF_LANDING)
                     bcol = (*ri == target()) ? LIGHTGREEN : GREEN;
+                else if (aff == AFF_MULTIPLE)
+                    bcol = (*ri == target()) ? LIGHTCYAN : CYAN;
+                else
+                    die("unhandled aff %d", aff);
                 _draw_ray_glyph(*ri, bcol, '*', bcol | COLFLAG_REVERSE);
 #endif
             }
