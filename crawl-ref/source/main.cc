@@ -2758,9 +2758,9 @@ static bool _cancel_confused_move(bool stationary)
         else
         {
             string name = bad_mons->name(DESC_PLAIN);
-            if (name.find("the ") == 0)
+            if (starts_with(name, "the "))
                name.erase(0, 4);
-            if (bad_adj.find("your") != 0)
+            if (!starts_with(bad_adj, "your"))
                bad_adj = "the " + bad_adj;
             prompt += bad_adj + name + bad_suff;
         }

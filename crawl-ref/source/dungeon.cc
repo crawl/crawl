@@ -619,9 +619,9 @@ static void _dgn_register_vault(const string &name, const string &spaced_tags)
 
     for (const string &tag : split_string(" ", spaced_tags))
     {
-        if (tag.find("uniq_") == 0)
+        if (starts_with(tag, "uniq_"))
             you.uniq_map_tags.insert(tag);
-        else if (tag.find("luniq_") == 0)
+        else if (starts_with(tag, "luniq_"))
             env.level_uniq_map_tags.insert(tag);
     }
 }
@@ -633,9 +633,9 @@ static void _dgn_unregister_vault(const map_def &map)
 
     for (const string &tag : split_string(" ", map.tags))
     {
-        if (tag.find("uniq_") == 0)
+        if (starts_with(tag, "uniq_"))
             you.uniq_map_tags.erase(tag);
-        else if (tag.find("luniq_") == 0)
+        else if (starts_with(tag, "luniq_"))
             env.level_uniq_map_tags.erase(tag);
     }
 

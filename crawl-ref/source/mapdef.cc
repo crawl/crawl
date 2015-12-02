@@ -3336,7 +3336,7 @@ static void _register_subvault(const string &name, const string &spaced_tags)
     }
 
     for (const string &tag : split_string(" ", spaced_tags))
-        if (tag.find("uniq_") == 0 || tag.find("luniq_") == 0)
+        if (starts_with(tag, "uniq_") || starts_with(tag, "luniq_"))
             env.new_used_subvault_tags.insert(tag);
 }
 
@@ -4165,11 +4165,10 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
     int mod = ends_with(s, zombie_types);
     if (!mod)
     {
-        const string spectre("spectral ");
-        if (s.find(spectre) == 0)
+        if (starts_with(s, "spectral "))
         {
             mod = ends_with(" spectre", zombie_types);
-            s = s.substr(spectre.length());
+            s = s.substr(9); // strlen("spectral ")
         }
         else
         {
@@ -5441,9 +5440,9 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     }
 
     // Check for "any objclass"
-    if (s.find("any ") == 0)
+    if (starts_with(s, "any "))
         parse_random_by_class(s.substr(4), result);
-    else if (s.find("random ") == 0)
+    else if (starts_with(s, "random "))
         parse_random_by_class(s.substr(7), result);
     // Check for actual item names.
     else
