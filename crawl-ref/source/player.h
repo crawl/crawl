@@ -1024,6 +1024,9 @@ string describe_contamination(int level);
 
 void set_mp(int new_amount);
 
+bool player_regenerates_hp();
+bool player_regenerates_mp();
+
 void contaminate_player(int change, bool controlled = false, bool msg = true);
 
 bool confuse_player(int amount, bool quiet = false);

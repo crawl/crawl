@@ -4161,6 +4161,24 @@ int get_real_mp(bool include_items)
     return enp;
 }
 
+bool player_regenerates_hp()
+{
+    if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
+        return false;
+    if (you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
+        return false;
+    return true;
+}
+
+bool player_regenerates_mp()
+{
+    // Don't let DD use guardian spirit for free HP, since their
+    // damage shaving is enough. (due, dpeg)
+    if (you.spirit_shield() && you.species == SP_DEEP_DWARF)
+        return false;
+    return true;
+}
+
 int get_contamination_level()
 {
     const int glow = you.magic_contamination;
@@ -4804,11 +4822,8 @@ void dec_disease_player(int delay)
 
         // Extra regeneration means faster recovery from disease.
         // But not if not actually regenerating!
-        if (player_mutation_level(MUT_SLOW_REGENERATION) < 3
-            && !(you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING))
-        {
+        if (player_regenerates_hp())
             rr += _player_bonus_regen();
-        }
 
         // Trog's Hand.
         if (you.duration[DUR_TROGS_HAND])
@@ -5439,11 +5454,9 @@ bool player::is_banished() const
 bool player::is_sufficiently_rested() const
 {
     // Only return false if resting will actually help.
-    return (hp >= _rest_trigger_level(hp_max)
-            || player_mutation_level(MUT_SLOW_REGENERATION) == 3
-            || you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
-        && (magic_points >= _rest_trigger_level(max_magic_points)
-            || you.spirit_shield() && you.species == SP_DEEP_DWARF);
+    return (hp >= _rest_trigger_level(hp_max) || !player_regenerates_hp())
+            && (magic_points >= _rest_trigger_level(max_magic_points)
+                || !player_regenerates_mp());
 }
 
 bool player::in_water() const
