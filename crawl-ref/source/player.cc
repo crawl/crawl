@@ -3309,6 +3309,7 @@ int get_expiration_threshold(duration_type dur)
     case DUR_TRANSFORMATION: // not on status
     case DUR_DEATHS_DOOR:    // not on status
     case DUR_SLIMIFY:
+    case DUR_DEVICE_SURGE:
         return 10 * BASELINE_DELAY;
 
     // These get no messages when they "flicker".

@@ -729,6 +729,9 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_LOWERED_MR, delay, "You feel less vulnerable to hostile enchantments.");
     _decrement_a_duration(DUR_SLIMIFY, delay, "You feel less slimy.",
                           coinflip(), "Your slime is starting to congeal.");
+    _decrement_a_duration(DUR_DEVICE_SURGE, delay,
+                          "Your device surge dissipates.",
+                          coinflip(), "Your device surge is dissipating.");
     if (_decrement_a_duration(DUR_QUAD_DAMAGE, delay, nullptr, 0,
                               "Quad Damage is wearing off."))
     {

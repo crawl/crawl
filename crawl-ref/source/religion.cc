@@ -1260,6 +1260,11 @@ static void _inc_penance(god_type god, int val)
                 you.redraw_armour_class = true;
             }
         }
+        else if (god == GOD_PAKELLAS)
+        {
+            if (you.duration[DUR_DEVICE_SURGE])
+                you.duration[DUR_DEVICE_SURGE] = 0;
+        }
 
         if (you_worship(god))
         {
@@ -2863,6 +2868,8 @@ void excommunication(bool voluntary, god_type new_god, bool immediate)
         break;
 
     case GOD_PAKELLAS:
+        if (you.duration[DUR_DEVICE_SURGE])
+            you.duration[DUR_DEVICE_SURGE] = 0;
         _set_penance(old_god, 25);
         mprf(MSGCH_GOD, old_god, "You begin regenerating magic.");
         break;

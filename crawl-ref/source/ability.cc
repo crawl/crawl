@@ -391,7 +391,8 @@ static const ability_def Ability_List[] =
 
     // Pakellas
     { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
-        0, 0, 100, generic_cost::fixed(1), abflag::VARIABLE_MP },
+        0, 0, 100, generic_cost::fixed(1),
+        abflag::VARIABLE_MP | abflag::INSTANT },
     { ABIL_PAKELLAS_QUICK_CHARGE, "Quick Charge",
         0, 0, 100, 2, abflag::NONE },
     { ABIL_PAKELLAS_SUPERCHARGE, "Supercharge", 0, 0, 0, 0, abflag::NONE },
@@ -1510,7 +1511,7 @@ static bool _check_ability_possible(const ability_def& abil,
                 mpr("You have no magic power.");
             return false;
         }
-        return evoke_check(-1, quiet);
+        return true;
 
     case ABIL_PAKELLAS_QUICK_CHARGE:
         return pakellas_check_quick_charge(quiet);
@@ -1984,8 +1985,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_EVOKE_BLINK:      // randarts
+        fail_check();
         if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
             pakellas_evoke_backfire(SPELL_BLINK);
+        else if (!pakellas_device_surge())
+            return SPRET_FAIL;
         // deliberate fall-through
     case ABIL_BLINK:            // mutation
         return cast_blink(fail);
@@ -1995,6 +1999,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
             pakellas_evoke_backfire(SPELL_BERSERKER_RAGE);
+        else if (!pakellas_device_surge())
+            return SPRET_FAIL;
         you.go_berserk(true);
         break;
 
@@ -2035,6 +2041,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
             pakellas_evoke_backfire(SPELL_INVISIBILITY);
+        else if (!pakellas_device_surge())
+            return SPRET_FAIL;
         surge_power(you.spec_evoke());
         potionlike_effect(POT_INVISIBILITY,
                           player_adjust_evoc_power(
@@ -2065,6 +2073,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         {
             if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
                 pakellas_evoke_backfire(SPELL_FLY);
+            else if (!pakellas_device_surge())
+                return SPRET_FAIL;
             surge_power(you.spec_evoke());
             fly_player(
                 player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 2) + 30));
@@ -2911,36 +2921,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_PAKELLAS_DEVICE_SURGE:
     {
-        int slot = prompt_invent_item("Surge which item? (* to show all)",
-                                      MT_INVLIST,
-                                      OSEL_EVOKABLE, true, true, true, 0, -1,
-                                      nullptr, OPER_EVOKE);
-
-        if (prompt_failed(slot))
-            return SPRET_ABORT;
-
         fail_check();
 
-        // Fizzling should only happen if the player has less than 3 MP.
-        const int mp = min(you.magic_points, min(9, max(3,
-                           1 + random2avg(you.piety * 9 / piety_breakpoint(5),
-                                          2))));
-
-        const int severity = div_rand_round(mp, 3);
-        you.attribute[ATTR_PAKELLAS_DEVICE_SURGE] = severity;
-        if (severity == 0)
-            mpr("The surge fizzles.");
-        else
-        {
-            const bool ret = evoke_item(slot);
-            you.attribute[ATTR_PAKELLAS_DEVICE_SURGE] = 0;
-
-            if (!ret)
-                return SPRET_ABORT;
-        }
-
-        dec_mp(mp);
-
+        mprf(MSGCH_DURATION, "You feel a buildup of energy.");
+        you.increase_duration(DUR_DEVICE_SURGE,
+                              random2avg(you.piety / 4, 2) + 3, 100);
         break;
     }
 

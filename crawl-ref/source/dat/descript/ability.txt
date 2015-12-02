@@ -595,9 +595,10 @@ indifferent if they have not become your allies.
 # Pakellas
 Device Surge ability
 
-Spend some magical power to empower a use of a magical device. The amount of
-magical power a follower of Pakellas can use varies, but correlates with
-how devoted they are to Pakellas.
+Ready a device surge, which - on the next use of a magical device - triggers
+to convert some of your magical power to strengthen the effect of the device.
+The amount of magical power that can be used for a surge varies, but
+correlates with how devoted they are to Pakellas.
 %%%%
 Quick Charge ability
 

@@ -1383,6 +1383,11 @@ spret_type your_spells(spell_type spell, int powc,
         }
     }
 
+    if (evoked && !you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
+        pakellas_evoke_backfire(spell);
+    if (evoked && !pakellas_device_surge())
+        return SPRET_FAIL;
+
     // Enhancers only matter for calc_spell_power() and raw_spell_fail().
     // Not sure about this: is it flavour or misleading? (jpeg)
     if (allow_fail || evoked)
@@ -1401,8 +1406,6 @@ spret_type your_spells(spell_type spell, int powc,
         mpr("You fail to access your magic.");
         fail = antimagic = true;
     }
-    else if (evoked && !you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-        pakellas_evoke_backfire(spell);
     else if (allow_fail)
     {
         int spfl = random2avg(100, 3);
