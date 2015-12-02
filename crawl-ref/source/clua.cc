@@ -583,7 +583,9 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params, ...)
 {
     va_list args;
     va_start(args, params);
-    return callmbooleanfn(fn, params, args);
+    maybe_bool r = callmbooleanfn(fn, params, args);
+    va_end(args);
+    return r;
 }
 
 maybe_bool CLua::callmaybefn(const char *fn, const char *params, va_list args)
@@ -615,7 +617,9 @@ maybe_bool CLua::callmaybefn(const char *fn, const char *params, ...)
 {
     va_list args;
     va_start(args, params);
-    return callmaybefn(fn, params, args);
+    maybe_bool r = callmaybefn(fn, params, args);
+    va_end(args);
+    return r;
 }
 
 bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
@@ -623,6 +627,7 @@ bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
     va_list args;
     va_start(args, params);
     maybe_bool r = callmbooleanfn(fn, params, args);
+    va_end(args);
     return tobool(r, def);
 }
 

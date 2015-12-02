@@ -2905,7 +2905,7 @@ static bool _interesting_explore_pickup(const item_def& item)
         return true;
 
     // Possbible ego items.
-    if (!item_type_known(item) & (item.flags & ISFLAG_COSMETIC_MASK))
+    if (!item_type_known(item) && (item.flags & ISFLAG_COSMETIC_MASK))
         return true;
 
     switch (item.base_type)

@@ -693,8 +693,11 @@ static bool _disallow_mutate(string *reason)
     if (!undead_mutation_rot())
         return false;
 
-    *reason = make_stringf("You cannot mutate%s.",
-                           !you.undead_state(false) ? " at present" : "");
+    if (reason)
+    {
+        *reason = make_stringf("You cannot mutate%s.",
+                               !you.undead_state(false) ? " at present" : "");
+    }
     return true;
 }
 

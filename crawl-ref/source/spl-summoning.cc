@@ -2545,7 +2545,7 @@ void init_servitor(monster* servitor, actor* caster)
              caster->conj_verb("summon").c_str(),
              caster->pronoun(PRONOUN_POSSESSIVE).c_str());
     }
-    else if (servitor)
+    else
         simple_monster_message(servitor, " appears!");
 
     int shortest_range = LOS_RADIUS + 1;

@@ -548,7 +548,7 @@ string zin_recite_text(const int seed, const int prayertype, int step)
     {
         step = abs(step-3);
         if (step > 3)
-            step = 0;
+            step = 1;
     }
     else
     {

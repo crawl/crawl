@@ -415,15 +415,15 @@ string describe_mutations(bool center_title)
 
     if (you.species == SP_OCTOPODE)
     {
-        const char * num_tentacles =
-               number_in_words(you.has_usable_tentacles(false)).c_str();
+        const string num_tentacles =
+               number_in_words(you.has_usable_tentacles(false));
         result += _annotate_form_based(
             make_stringf("You can wear up to %s rings at the same time.",
-                         num_tentacles),
+                         num_tentacles.c_str()),
             !get_form()->slot_available(EQ_RING_EIGHT));
         result += _annotate_form_based(
             make_stringf("You can use your tentacles to constrict %s enemies at once.",
-                         num_tentacles),
+                         num_tentacles.c_str()),
             !form_keeps_mutations());
     }
 
