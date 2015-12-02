@@ -6567,3 +6567,26 @@ bool pakellas_check_quick_charge(bool quiet)
 
     return true;
 }
+
+bool pakellas_device_surge()
+{
+    if (!you_worship(GOD_PAKELLAS) || !you.duration[DUR_DEVICE_SURGE])
+        return true;
+
+    const int mp = min(you.magic_points, min(9, max(3,
+                       1 + random2avg(you.piety * 9 / piety_breakpoint(5),
+                                      2))));
+
+    const int severity = div_rand_round(mp, 3);
+    dec_mp(mp);
+
+    you.attribute[ATTR_PAKELLAS_DEVICE_SURGE] = severity;
+    you.duration[DUR_DEVICE_SURGE] = 0;
+    if (severity == 0)
+    {
+        mprf(MSGCH_GOD, "The surge fizzles.");
+        return false;
+    }
+
+    return true;
+}
