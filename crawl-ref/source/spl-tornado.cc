@@ -50,8 +50,8 @@ public:
 };
 
 WindSystem::WindSystem(coord_def _org)
+    : org(_org)
 {
-    org = _org;
     depth.init(-1);
     cut.init(false);
     visit(org, 0, coord_def(0,0));

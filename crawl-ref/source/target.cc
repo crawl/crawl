@@ -1348,8 +1348,8 @@ aff_type targetter_shotgun::is_affected(coord_def loc)
 }
 
 targetter_list::targetter_list(vector<coord_def> target_list, coord_def center)
+    : targets(target_list)
 {
-    targets = target_list;
     origin = center;
 }
 
