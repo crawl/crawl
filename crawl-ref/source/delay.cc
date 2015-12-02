@@ -1325,10 +1325,8 @@ static bool _should_stop_activity(const delay_queue_item &item,
 
     if (ai == AI_FULL_HP || ai == AI_FULL_MP)
     {
-        int max_hp = (Options.rest_wait_percent * you.hp_max) / 100;
-        int max_mp = (Options.rest_wait_percent * you.max_magic_points) / 100;
         if (Options.rest_wait_both && curr == DELAY_REST
-            && (you.magic_points < max_mp || you.hp < max_hp))
+            && !you.is_sufficiently_rested())
         {
             return false;
         }
