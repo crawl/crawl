@@ -186,7 +186,7 @@ TextDB::TextDB(TextDB *parent)
     : _db_name(parent->_db_name),
       _directory(parent->_directory + Options.lang_name + "/"),
       _input_files(parent->_input_files), // FIXME: pointless copy
-      _db(nullptr), timestamp(""), _parent(parent), translation(nullptr),
+      _db(nullptr), timestamp(""), _parent(parent), translation(nullptr)
 {
 }
 
