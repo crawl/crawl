@@ -769,7 +769,7 @@ void show_skill_menu_help()
 
 static void _add_command(column_composer &cols, const int column,
                          const command_type cmd,
-                         const string desc,
+                         const string &desc,
                          const unsigned int space_to_colon = 7)
 {
     string command_name = command_to_string(cmd);

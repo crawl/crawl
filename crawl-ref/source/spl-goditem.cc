@@ -36,7 +36,7 @@
 #include "view.h"
 #include "viewchar.h"
 
-static void _print_holy_pacification_speech(const string key,
+static void _print_holy_pacification_speech(const string &key,
                                             monster* mon,
                                             msg_channel_type channel)
 {

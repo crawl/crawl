@@ -328,7 +328,7 @@ done:
 }
 
 
-static void _create_monster_hide(const item_def corpse)
+static void _create_monster_hide(const item_def &corpse)
 {
     // make certain sources of dragon hides less scummable
     // (kiku's corpse drop, gozag ghoul corpse shops)
@@ -360,7 +360,7 @@ static void _create_monster_hide(const item_def corpse)
         move_item_to_grid(&o, pos);
 }
 
-void maybe_drop_monster_hide(const item_def corpse)
+void maybe_drop_monster_hide(const item_def &corpse)
 {
     if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3))
         _create_monster_hide(corpse);
@@ -388,7 +388,7 @@ bool turn_corpse_into_skeleton(item_def &item)
     return true;
 }
 
-static void _bleed_monster_corpse(const item_def corpse)
+static void _bleed_monster_corpse(const item_def &corpse)
 {
     const coord_def pos = item_pos(corpse);
     if (!pos.origin())

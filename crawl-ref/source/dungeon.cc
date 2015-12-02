@@ -609,7 +609,7 @@ static void _set_grd(const coord_def &c, dungeon_feature_type feat)
     grd(c) = feat;
 }
 
-static void _dgn_register_vault(const string name, const string spaced_tags)
+static void _dgn_register_vault(const string &name, const string &spaced_tags)
 {
     if (spaced_tags.find(" allow_dup ") == string::npos)
         you.uniq_map_names.insert(name);

@@ -661,7 +661,7 @@ static string _user_home_dir()
 #endif
 }
 
-static string _user_home_subpath(const string subpath)
+static string _user_home_subpath(const string &subpath)
 {
     return catpath(_user_home_dir(), subpath);
 }

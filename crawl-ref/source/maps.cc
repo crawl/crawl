@@ -714,7 +714,7 @@ vector<string> find_map_matches(const string &name)
     return matches;
 }
 
-mapref_vector find_maps_for_tag(const string tag,
+mapref_vector find_maps_for_tag(const string &tag,
                                 bool check_depth,
                                 bool check_used)
 {
