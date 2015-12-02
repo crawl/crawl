@@ -126,7 +126,7 @@ bool feat_is_branch_entrance(dungeon_feature_type feat)
     if (feat == DNGN_ENTER_HELL)
         return false;
 
-    for (branch_iterator it; it; it++)
+    for (branch_iterator it; it; ++it)
     {
         if (it->entry_stairs == feat
             && is_connected_branch(it->id))
@@ -145,7 +145,7 @@ bool feat_is_branch_exit(dungeon_feature_type feat)
     if (feat == DNGN_ENTER_HELL || feat == DNGN_EXIT_HELL)
         return false;
 
-    for (branch_iterator it; it; it++)
+    for (branch_iterator it; it; ++it)
     {
         if (it->exit_stairs == feat
             && is_connected_branch(it->id))
@@ -167,7 +167,7 @@ bool feat_is_portal_entrance(dungeon_feature_type feat)
     if (feat == DNGN_ENTER_ABYSS || feat == DNGN_ENTER_PANDEMONIUM)
         return false;
 
-    for (branch_iterator it; it; it++)
+    for (branch_iterator it; it; ++it)
     {
         if (it->entry_stairs == feat
             && !is_connected_branch(it->id))
@@ -190,7 +190,7 @@ bool feat_is_portal_exit(dungeon_feature_type feat)
     if (feat == DNGN_EXIT_ABYSS || feat == DNGN_EXIT_PANDEMONIUM)
         return false;
 
-    for (branch_iterator it; it; it++)
+    for (branch_iterator it; it; ++it)
     {
         if (it->exit_stairs == feat
             && !is_connected_branch(it->id))
