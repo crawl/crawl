@@ -4218,10 +4218,9 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
 
 mons_spec mons_list::get_hydra_spec(const string &name) const
 {
-    int    nheads = -1;
     string prefix = name.substr(0, name.find("-"));
 
-    nheads = atoi(prefix.c_str());
+    int nheads = atoi(prefix.c_str());
     if (nheads != 0)
         ;
     else if (prefix == "0")

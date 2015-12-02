@@ -261,7 +261,7 @@ static string _describe_ash_skill_boost()
         {
             if (it->first > SK_CONJURATIONS && it->first <= SK_LAST_MAGIC)
             {
-                boosted_skills.erase(it++);
+                boosted_skills.erase(it);
                 it = boosted_skills.begin();
             }
             else

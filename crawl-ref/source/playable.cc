@@ -55,7 +55,6 @@ vector<combo_type> playable_combos()
         if (!is_starting_species(species_type(sp)))
             continue;
 
-        string species_abbr = get_species_abbrev(species_type(sp));
         for (int job = 0; job < NUM_JOBS; ++job)
         {
             if (job_allowed(species_type(sp), job_type(job)))

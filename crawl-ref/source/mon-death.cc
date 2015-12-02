@@ -2207,13 +2207,7 @@ item_def* monster_die(monster* mons, killer_type killer,
 
             monster* killer_mon = nullptr;
             if (!anon)
-            {
                 killer_mon = &menv[killer_index];
-                // If the killer is already dead, treat it like an
-                // anonymous monster.
-                if (killer_mon->type == MONS_NO_MONSTER)
-                    anon = true;
-            }
 
             if (!invalid_monster_index(killer_index)
                 && _god_will_bless_follower(mons))

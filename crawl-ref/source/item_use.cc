@@ -1481,7 +1481,6 @@ bool remove_ring(int slot, bool announce)
     int ring_wear_2;
     bool has_jewellery = false;
     bool has_melded = false;
-    const vector<equipment_type> ring_types = _current_ring_types();
     const vector<equipment_type> jewellery_slots = _current_jewellery_types();
 
     for (auto eq : jewellery_slots)
@@ -1792,7 +1791,6 @@ static void _rebrand_weapon(item_def& wpn)
         end_weapon_brand(wpn);
     int old_brand = get_weapon_brand(wpn);
     int new_brand = old_brand;
-    const string itname = wpn.name(DESC_YOUR);
 
     // now try and find an appropriate brand
     while (old_brand == new_brand || god_hates_brand(new_brand))

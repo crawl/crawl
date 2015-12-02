@@ -1249,7 +1249,7 @@ static int dgn_apply_area_cloud(lua_State *ls)
         return 0;
     }
 
-    if (kc == KC_NCATEGORIES || kc != KC_OTHER)
+    if (kc != KC_OTHER)
     {
         string error = "Invalid kill category '";
         error += kname;

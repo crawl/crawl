@@ -236,7 +236,6 @@ int SQL_DBM::do_query(const string &key, string *result)
     }
 
     int err = SQLITE_OK;
-    string res;
     while ((err = ec(sqlite3_step(s_query))) == SQLITE_ROW)
         *result = (const char *) sqlite3_column_text(s_query, 0);
 

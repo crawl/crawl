@@ -5030,7 +5030,7 @@ void handle_player_drowning(int delay)
     else
     {
         monster* mons = monster_by_mid(you.props["water_holder"].get_int());
-        if (!mons || mons && !adjacent(mons->pos(), you.pos()))
+        if (!mons || !adjacent(mons->pos(), you.pos()))
         {
             if (you.res_water_drowning())
                 mpr("The water engulfing you falls away.");

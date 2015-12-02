@@ -3977,7 +3977,6 @@ void handle_god_time(int /*time_delta*/)
             }
 
             break;
-            return;
 
         case GOD_GOZAG:
         case GOD_XOM:

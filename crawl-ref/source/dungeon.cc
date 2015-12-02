@@ -4550,7 +4550,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         type = RANDOM_MONSTER;
     }
 
-    if (type != RANDOM_MONSTER && type < NUM_MONSTERS)
+    if (type < NUM_MONSTERS)
     {
         // Don't place a unique monster a second time.
         // (Boris is handled specially.)

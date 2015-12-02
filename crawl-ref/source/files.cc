@@ -642,7 +642,6 @@ static vector<player_save_info> _find_saved_characters()
     for (const string &filename : get_dir_files(searchpath))
     {
         string::size_type point_pos = filename.find_first_of('.');
-        string basename = filename.substr(0, point_pos);
 
         if (is_save_file_name(filename))
         {

@@ -561,8 +561,6 @@ static const string _detailed_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
     ostringstream ret;
-    vector<string> values;
-    string str;
 
     bool have_cost = false;
     ret << "This ability costs: ";
