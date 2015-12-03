@@ -74,7 +74,7 @@ struct crawl_environment
 
     map<coord_def, cloud_struct> cloud;
 
-    FixedVector< shop_struct, MAX_SHOPS >    shop;  // shop list
+    map<coord_def, shop_struct> shop; // shop list
     FixedVector< trap_def, MAX_TRAPS >       trap;  // trap list
 
     FixedVector< monster_type, MAX_MONS_ALLOC > mons_alloc;

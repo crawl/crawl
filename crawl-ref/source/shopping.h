@@ -20,7 +20,7 @@ int item_price(const item_def& item, const shop_struct& shop);
 bool is_worthless_consumable(const item_def &item);
 void shop();
 
-shop_struct *get_shop(const coord_def& where);
+shop_struct *shop_at(const coord_def& where);
 
 void destroy_shop_at(coord_def p);
 

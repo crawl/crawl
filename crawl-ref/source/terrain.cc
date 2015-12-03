@@ -927,17 +927,11 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     dungeon_feature_type dfeat = grd(src);
     if (dfeat == DNGN_ENTER_SHOP)
     {
-        if (shop_struct *s = get_shop(src))
-        {
-            env.tgrid(dst)    = env.tgrid(s->pos);
-            env.tgrid(s->pos) = NON_ENTITY;
-            // Can't leave the source square as a shop now that all
-            // the bookkeeping data has moved.
-            grd(src)          = DNGN_FLOOR;
-            s->pos = dst;
-        }
-        else // Destroy invalid shops.
-            dfeat = DNGN_FLOOR;
+        ASSERT(shop_at(src));
+        env.shop[dst] = env.shop[src];
+        env.shop[dst].pos = dst;
+        env.shop.erase(src);
+        grd(src) = DNGN_FLOOR;
     }
     else if (feat_is_trap(dfeat, true))
     {
@@ -1269,8 +1263,8 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     trap_def* trap1 = find_trap(pos1);
     trap_def* trap2 = find_trap(pos2);
 
-    shop_struct* shop1 = get_shop(pos1);
-    shop_struct* shop2 = get_shop(pos2);
+    shop_struct* shop1 = shop_at(pos1);
+    shop_struct* shop2 = shop_at(pos2);
 
     // Find a temporary holding place for pos1 stuff to be moved to
     // before pos2 is moved to pos1.
@@ -1333,10 +1327,26 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
         trap2->pos = pos1;
 
     // Swap shops.
-    if (shop1)
-        shop1->pos = pos2;
-    if (shop2)
-        shop2->pos = pos1;
+    if (shop1 && !shop2)
+    {
+        env.shop[pos2] = env.shop[pos1];
+        env.shop[pos2].pos = pos2;
+        env.shop.erase(pos1);
+    }
+    else if (!shop1 && shop2)
+    {
+        env.shop[pos1] = env.shop[pos2];
+        env.shop[pos1].pos = pos1;
+        env.shop.erase(pos2);
+    }
+    else if (shop1 && shop2)
+    {
+        shop_struct tmp = env.shop[pos1];
+        env.shop[pos1] = env.shop[pos2];
+        env.shop[pos2] = tmp;
+        env.shop[pos1].pos = pos1;
+        env.shop[pos2].pos = pos2;
+    }
 
     if (!swap_everything)
     {

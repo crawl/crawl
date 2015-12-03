@@ -1252,7 +1252,7 @@ static int l_item_get_items_at(lua_State *ls)
 
 static int l_item_shop_inventory(lua_State *ls)
 {
-    shop_struct *shop = get_shop(you.pos());
+    shop_struct *shop = shop_at(you.pos());
     if (!shop)
         return 0;
 

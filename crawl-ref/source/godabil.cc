@@ -4631,7 +4631,7 @@ static void _gozag_place_shop(int index)
     env.markers.add(new map_feature_marker(you.pos(), DNGN_ABANDONED_SHOP));
     env.markers.clear_need_activate();
 
-    shop_struct *shop = get_shop(you.pos());
+    shop_struct *shop = shop_at(you.pos());
     ASSERT(shop);
 
     const gender_type gender = random_choose(GENDER_FEMALE, GENDER_MALE,

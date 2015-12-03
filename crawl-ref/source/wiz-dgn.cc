@@ -471,22 +471,6 @@ bool debug_make_shop(const coord_def& pos)
         return false;
     }
 
-    bool have_shop_slots = false;
-    for (int i = 0; i < MAX_SHOPS; ++i)
-    {
-        if (env.shop[i].type == SHOP_UNASSIGNED)
-        {
-            have_shop_slots = true;
-            break;
-        }
-    }
-
-    if (!have_shop_slots)
-    {
-        mpr("There are too many shops on this level.");
-        return false;
-    }
-
     char requested_shop[80];
     msgwin_get_line("What kind of shop? ",
                     requested_shop, sizeof(requested_shop));
@@ -506,7 +490,6 @@ bool debug_make_shop(const coord_def& pos)
     }
 
     place_spec_shop(pos, new_shop_type);
-    link_items();
     mpr("Done.");
     return true;
 }

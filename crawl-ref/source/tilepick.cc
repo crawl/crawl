@@ -120,7 +120,7 @@ static tileidx_t _tileidx_trap(trap_type type)
 
 static tileidx_t _tileidx_shop(coord_def where)
 {
-    const shop_struct *shop = get_shop(where);
+    const shop_struct *shop = shop_at(where);
 
     if (!shop)
         return TILE_DNGN_ERROR;
