@@ -2370,8 +2370,8 @@ feature -= <regex> , <regex>
         detected via magic mapping.
 
         'emphasised_colour' refers to the colour used to highlight
-        unvisited stone stairs; for non-stair features, setting emphasis
-        colours does nothing useful.
+        stone stairs with unknown destination; for non-stair features,
+        setting emphasis colours does nothing useful.
 
         Leading parameters in the {...} list can be omitted by leaving
         them blank and using placeholder commas. Trailing parameters can

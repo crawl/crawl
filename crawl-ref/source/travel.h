@@ -391,7 +391,7 @@ public:
         levels.erase(lev);
     }
 
-    bool know_stair(const coord_def &c) const;
+    bool know_stair(const coord_def &c);
     bool know_level(const level_id &lev) const
     {
         return levels.count(lev);
@@ -427,6 +427,7 @@ public:
     void clear_daction_counter(daction_type c);
 
 private:
+    void update_stone_stair(const coord_def &c);
     void fixup_levels();
 
 private:
