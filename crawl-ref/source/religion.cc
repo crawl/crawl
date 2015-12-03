@@ -2260,8 +2260,9 @@ static void _gain_piety_point()
         if (you_worship(GOD_ASHENZARI))
         {
             if (rank == 3)
-            {
                 autotoggle_autopickup(false);
+            if (rank == 4)
+            {
                 // Inconsistent with donning amulets, but matches the
                 // message better and is not abusable.
                 you.duration[DUR_CONF] = 0;
