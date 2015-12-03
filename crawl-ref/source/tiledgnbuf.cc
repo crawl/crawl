@@ -304,14 +304,14 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_TRAVEL_EXCLUSION_BG, x, y);
         }
 
-        if (bg & TILE_FLAG_RAY_MULTI)
-            m_buf_feat.add(TILE_RAY_MULTI, x, y);
-        else if (bg & TILE_FLAG_RAY)
+        if (bg & TILE_FLAG_RAY)
             m_buf_feat.add(TILE_RAY, x, y);
         else if (bg & TILE_FLAG_RAY_OOR)
             m_buf_feat.add(TILE_RAY_OUT_OF_RANGE, x, y);
         else if (bg & TILE_FLAG_LANDING)
             m_buf_feat.add(TILE_LANDING, x, y);
+        else if (bg & TILE_FLAG_RAY_MULTI)
+            m_buf_feat.add(TILE_RAY_MULTI, x, y);
     }
 }
 

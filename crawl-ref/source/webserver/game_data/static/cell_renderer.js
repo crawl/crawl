@@ -675,15 +675,13 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                         this.draw_dngn(dngn.TRAVEL_EXCLUSION_BG, x, y);
                 }
 
-                if (bg.RAY_MULTI)
-                    this.draw_dngn(dngn.RAY_MULTI, x, y);
-                else if (bg.RAY)
+                if (bg.RAY)
                     this.draw_dngn(dngn.RAY, x, y);
                 else if (bg.RAY_OOR)
                     this.draw_dngn(dngn.RAY_OUT_OF_RANGE, x, y);
                 else if (bg.LANDING)
                     this.draw_dngn(dngn.LANDING, x, y);
-                else if (bg.MULTI)
+                else if (bg.RAY_MULTI)
                     this.draw_dngn(dngn.RAY_MULTI, x, y);
 
             }
