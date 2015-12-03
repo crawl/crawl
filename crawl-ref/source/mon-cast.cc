@@ -583,15 +583,14 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
+    case SPELL_LESSER_MALMUTATE:
+        beam.flavour  = BEAM_LESSER_MALMUTATE;
+        beam.pierce   = true;
+        break;
+
     case SPELL_MALMUTATE:
         beam.flavour  = BEAM_MALMUTATE;
         beam.pierce   = true;
-        /*
-          // Be careful with this one.
-          // Having allies mutate you is infuriating.
-          beam.foe_ratio = 1000;
-        What's the point of this?  Enchantments always hit...
-        */
         break;
 
     case SPELL_FLAME_TONGUE:

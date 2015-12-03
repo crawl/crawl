@@ -4911,6 +4911,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_LEGENDARY_DESTRUCTION:    return TILEG_LEGENDARY_DESTRUCTION;
     case SPELL_MALIGN_OFFERING:          return TILEG_MALIGN_OFFERING;
     case SPELL_MALMUTATE:                return TILEG_MALMUTATE;
+    case SPELL_LESSER_MALMUTATE:         return TILEG_LESSER_MALMUTATE;
     case SPELL_MESMERISE:                return TILEG_MESMERISE;
     case SPELL_METAL_SPLINTERS:          return TILEG_METAL_SPLINTERS;
     case SPELL_MIASMA_BREATH:            return TILEG_MIASMA_BREATH;
