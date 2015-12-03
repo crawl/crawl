@@ -987,13 +987,9 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
         move_item_stack_to_grid(src, dst);
 
     if (cell_is_solid(dst))
-    {
-        int cl = env.cgrid(dst);
-        if (cl != EMPTY_CLOUD)
-            delete_cloud(cl);
-    }
+        delete_cloud(src);
     else
-        move_cloud_to(src, dst);
+        move_cloud(src, dst);
 
     // Move terrain colours and properties.
     env.pgrid(dst) = env.pgrid(src);
@@ -1289,7 +1285,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
 
             if (!env.markers.find(pos, MAT_ANY)
                 && !is_notable_terrain(grd(pos))
-                && env.cgrid(pos) == EMPTY_CLOUD)
+                && !cloud_at(pos))
             {
                 temp = pos;
                 break;
@@ -1386,10 +1382,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
         menv[mgrd(pos2)].clear_far_constrictions();
     }
 
-    // Swap clouds.
-    move_cloud(env.cgrid(pos1), temp);
-    move_cloud(env.cgrid(pos2), pos1);
-    move_cloud(env.cgrid(temp), pos2);
+    swap_clouds(pos1, pos2);
 
     if (pos1 == you.pos())
     {
@@ -1816,11 +1809,7 @@ const char* feat_type_name(dungeon_feature_type feat)
 void set_terrain_changed(const coord_def p)
 {
     if (cell_is_solid(p))
-    {
-        int cl = env.cgrid(p);
-        if (cl != EMPTY_CLOUD)
-            delete_cloud(cl);
-    }
+        delete_cloud(p);
 
     if (grd(p) == DNGN_SLIMY_WALL)
         env.level_state |= LSTATE_SLIMY_WALL;

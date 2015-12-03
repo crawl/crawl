@@ -506,9 +506,8 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
     {
         if (exc->desc.empty() && defer_updates)
         {
-            const int cl = env.cgrid(p);
-            if (env.cgrid(p) != EMPTY_CLOUD)
-                exc->desc = cloud_name_at_index(cl) + " cloud";
+            if (cloud_struct* cloud = cloud_at(p))
+                exc->desc = cloud->cloud_name(true) + " cloud";
         }
         else if (exc->radius == radius)
             return;
@@ -547,12 +546,8 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
                 }
             }
         }
-        else
-        {
-            const int cl = env.cgrid(p);
-            if (env.cgrid(p) != EMPTY_CLOUD)
-                desc = cloud_name_at_index(cl) + " cloud";
-        }
+        else if (cloud_struct* cloud = cloud_at(p))
+            exc->desc = cloud->cloud_name(true) + " cloud";
 
         curr_excludes.add_exclude(p, radius, autoexcl, desc, vaultexcl);
     }

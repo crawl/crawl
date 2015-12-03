@@ -875,7 +875,7 @@ static void _jiyva_effects(int /*time_delta*/)
             while (grd(newpos) != DNGN_FLOOR
                        && grd(newpos) != DNGN_SHALLOW_WATER
                    || monster_at(newpos)
-                   || env.cgrid(newpos) != EMPTY_CLOUD
+                   || cloud_at(newpos)
                    || testbits(env.pgrid(newpos), FPROP_NO_JIYVA));
 
             mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0, newpos,
@@ -1476,8 +1476,7 @@ void update_level(int elapsedTime)
     dprf("total monsters on level = %d", mons_total);
 #endif
 
-    for (int i = 0; i < MAX_CLOUDS; i++)
-        delete_cloud(i);
+    delete_all_clouds();
 }
 
 static void _recharge_rod(item_def &rod, int aut, bool in_inv)

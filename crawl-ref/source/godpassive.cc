@@ -724,7 +724,7 @@ void qazlal_storm_clouds()
          ri; ++ri)
     {
         int count = 0;
-        if (cell_is_solid(*ri) || env.cgrid(*ri) != EMPTY_CLOUD)
+        if (cell_is_solid(*ri) || cloud_at(*ri))
             continue;
 
         // No clouds in corridors.

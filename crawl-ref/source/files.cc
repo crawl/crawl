@@ -854,13 +854,6 @@ static void _clear_env_map()
     env.map_forgotten.reset();
 }
 
-static void _clear_clouds()
-{
-    for (int clouty = 0; clouty < MAX_CLOUDS; ++clouty)
-        delete_cloud(clouty);
-    env.cgrid.init(EMPTY_CLOUD);
-}
-
 static bool _grab_follower_at(const coord_def &pos)
 {
     if (pos == you.pos())
@@ -1244,7 +1237,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // We clear twice - on save and on load.
     // Once would be enough...
     if (make_changes)
-        _clear_clouds();
+        delete_all_clouds();
 
     // Lose all listeners.
     dungeon_events.clear();
@@ -1326,7 +1319,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Here's the second cloud clearing, on load (see above).
     if (make_changes)
     {
-        _clear_clouds();
+        delete_all_clouds();
 
         _place_player(stair_taken, old_level.branch, return_pos, dest_pos);
     }

@@ -3651,7 +3651,7 @@ void hints_inscription_info(string prompt)
 //        but it's a lot more hit'n'miss now.
 bool hints_pos_interesting(int x, int y)
 {
-    return cloud_type_at(coord_def(x, y)) != CLOUD_NONE
+    return cloud_at(coord_def(x, y))
            || _water_is_disturbed(x, y)
            || _hints_feat_interesting(grd[x][y]);
 }
@@ -3900,11 +3900,12 @@ static void _hints_describe_feature(int x, int y)
 
 static void _hints_describe_cloud(int x, int y)
 {
-    cloud_type ctype = cloud_type_at(coord_def(x, y));
-    if (ctype == CLOUD_NONE)
+    cloud_struct* cloud = cloud_at(coord_def(x, y));
+    if (!cloud)
         return;
 
-    string cname = cloud_name_at_index(env.cgrid(coord_def(x, y)));
+    const string cname = cloud->cloud_name(true);
+    const cloud_type ctype = cloud->type;
 
     ostringstream ostr;
 
@@ -3946,7 +3947,7 @@ static void _hints_describe_cloud(int x, int y)
         }
     }
 
-    if (is_opaque_cloud(env.cgrid[x][y]))
+    if (is_opaque_cloud(ctype))
     {
         ostr << (need_cloud? "\nThis cloud" : "It")
              << " is opaque. If two or more opaque clouds are between "

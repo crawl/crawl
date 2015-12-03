@@ -321,7 +321,7 @@ struct cloud_struct
     void set_whose(kill_category _whose);
     void set_killer(killer_type _killer);
 
-    string cloud_name(const string &default_name = "", bool terse = false) const;
+    string cloud_name(bool terse = false) const;
     void announce_actor_engulfed(const actor *engulfee,
                                  bool beneficial = false) const;
 

@@ -780,11 +780,10 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
 
         if (you.see_cell(gc))
         {
-            const int cloudidx = env.cgrid(gc);
-            if (cloudidx != EMPTY_CLOUD)
+            if (cloud_struct* cloud = cloud_at(gc))
             {
                 string terrain_desc = desc;
-                desc = cloud_name_at_index(cloudidx);
+                desc = cloud->cloud_name(true);
 
                 if (!terrain_desc.empty())
                     desc += "\n" + terrain_desc;

@@ -1518,7 +1518,7 @@ static bool _check_ability_possible(const ability_def& abil,
                && (quiet || berserk_check_wielded_weapon());
 
     case ABIL_EVOKE_FOG:
-        if (env.cgrid(you.pos()) != EMPTY_CLOUD)
+        if (cloud_at(you.pos()))
         {
             if (!quiet)
                 mpr("It's too cloudy to do that here.");

@@ -463,7 +463,7 @@ void create_sanctuary(const coord_def& center, int time)
 
         if (!is_harmless_cloud(cloud_type_at(pos)))
         {
-            delete_cloud(env.cgrid(pos));
+            delete_cloud(pos);
             if (you.see_cell(pos))
                 cloud_count++;
         }

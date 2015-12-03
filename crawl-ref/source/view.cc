@@ -913,23 +913,20 @@ static update_flags player_view_update_at(const coord_def &gc)
 
     // Set excludes in a radius of 1 around harmful clouds genereated
     // by neither monsters nor the player.
-    const int cloudidx = env.cgrid(gc);
-    if (cloudidx != EMPTY_CLOUD && !crawl_state.game_is_arena())
+    const cloud_struct* cloud = cloud_at(gc);
+    if (cloud && !crawl_state.game_is_arena())
     {
-        cloud_struct &cl   = env.cloud[cloudidx];
-        cloud_type   ctype = cl.type;
+        const cloud_struct &cl = *cloud;
 
         bool did_exclude = false;
         if (!cl.temporary() && is_damaging_cloud(cl.type, false))
         {
-            int size;
+            int size = cl.exclusion_radius();
 
             // Steam clouds are less dangerous than the other ones,
             // so don't exclude the neighbour cells.
-            if (ctype == CLOUD_STEAM && cl.exclusion_radius() == 1)
+            if (cl.type == CLOUD_STEAM && size == 1)
                 size = 0;
-            else
-                size = cl.exclusion_radius();
 
             bool was_exclusion = is_exclude_root(gc);
             set_exclude(gc, size, false, false, true);
