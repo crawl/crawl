@@ -105,7 +105,7 @@ bool actor::is_habitable(const coord_def &_pos) const
 
 bool actor::handle_trap()
 {
-    trap_def* trap = find_trap(pos());
+    trap_def* trap = trap_at(pos());
     if (trap)
         trap->trigger(*this);
     return trap != nullptr;

@@ -3919,7 +3919,7 @@ bool dithmenos_shadow_step()
 
         if (!zot_trap_prompted)
         {
-            trap_def* trap = find_trap(site);
+            trap_def* trap = trap_at(site);
             if (trap && env.grid(site) != DNGN_UNDISCOVERED_TRAP
                 && trap->type == TRAP_ZOT)
             {
@@ -6289,7 +6289,7 @@ void ru_draw_out_power()
     int net = get_trapping_net(you.pos());
     if (net == NON_ITEM)
     {
-        trap_def *trap = find_trap(you.pos());
+        trap_def *trap = trap_at(you.pos());
         if (trap && trap->type == TRAP_WEB)
         {
             destroy_trap(you.pos());

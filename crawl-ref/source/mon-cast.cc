@@ -5914,7 +5914,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                 delete_cloud(*ai);
 
                 // All traps are destroyed.
-                if (trap_def *ptrap = find_trap(*ai))
+                if (trap_def *ptrap = trap_at(*ai))
                     ptrap->destroy();
 
                 // Actually place the wall.

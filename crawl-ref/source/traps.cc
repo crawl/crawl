@@ -75,17 +75,12 @@ void trap_def::destroy(bool known)
     if (!in_bounds(pos))
         die("Trap position out of bounds!");
 
-    grd(pos) = DNGN_FLOOR;
-    ammo_qty = 0;
-    type     = TRAP_UNASSIGNED;
-
     if (known)
     {
         env.map_knowledge(pos).set_feature(DNGN_FLOOR);
         StashTrack.update_stash(pos);
     }
-
-    pos      = coord_def(-1,-1);
+    env.trap.erase(pos);
 }
 
 void trap_def::hide()
@@ -446,7 +441,7 @@ vector<coord_def> find_golubria_on_level()
     vector<coord_def> ret;
     for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1)); ri; ++ri)
     {
-        trap_def *trap = find_trap(*ri);
+        trap_def *trap = trap_at(*ri);
         if (trap && trap->type == TRAP_GOLUBRIA)
             ret.push_back(*ri);
     }
@@ -1026,13 +1021,11 @@ int reveal_traps(const int range)
 {
     int traps_found = 0;
 
-    for (int i = 0; i < MAX_TRAPS; i++)
+    for (auto& entry : env.trap)
     {
-        trap_def& trap = env.trap[i];
-
+        trap_def& trap = entry.second;
         if (!trap.active())
             continue;
-
         if (grid_distance(you.pos(), trap.pos) < range && !trap.is_known())
         {
             traps_found++;
@@ -1047,28 +1040,26 @@ int reveal_traps(const int range)
 
 void destroy_trap(const coord_def& pos)
 {
-    if (trap_def* ptrap = find_trap(pos))
+    if (trap_def* ptrap = trap_at(pos))
         ptrap->destroy();
 }
 
-trap_def* find_trap(const coord_def& pos)
+trap_def* trap_at(const coord_def& pos)
 {
     if (!feat_is_trap(grd(pos), true))
         return nullptr;
 
-    unsigned short t = env.tgrid(pos);
+    auto it = env.trap.find(pos);
+    ASSERT(it != env.trap.end());
+    ASSERT(it->second.pos == pos);
+    ASSERT(it->second.type != TRAP_UNASSIGNED);
 
-    ASSERT(t != NON_ENTITY);
-    ASSERT(t < MAX_TRAPS);
-    ASSERT(env.trap[t].pos == pos);
-    ASSERT(env.trap[t].type != TRAP_UNASSIGNED);
-
-    return &env.trap[t];
+    return &it->second;
 }
 
 trap_type get_trap_type(const coord_def& pos)
 {
-    if (trap_def* ptrap = find_trap(pos))
+    if (trap_def* ptrap = trap_at(pos))
         return ptrap->type;
 
     return TRAP_UNASSIGNED;
@@ -1103,7 +1094,7 @@ void search_around()
 
         int effective = (dist <= 1) ? skill : skill / (dist * 2 - 1);
 
-        trap_def* ptrap = find_trap(*ri);
+        trap_def* ptrap = trap_at(*ri);
         if (!ptrap)
         {
             // Maybe we shouldn't kill the trap for debugging
@@ -1211,7 +1202,7 @@ static int damage_or_escape_net(int hold)
 static void _free_self_from_web()
 {
     // Check if there's actually a web trap in your tile.
-    trap_def *trap = find_trap(you.pos());
+    trap_def *trap = trap_at(you.pos());
     if (trap && trap->type == TRAP_WEB)
     {
         // if so, roll a chance to escape the web (based on str).
@@ -1849,26 +1840,17 @@ trap_type random_vault_trap()
 int count_traps(trap_type ttyp)
 {
     int num = 0;
-    for (int tcount = 0; tcount < MAX_TRAPS; tcount++)
-        if (env.trap[tcount].type == ttyp)
+    for (const auto& entry : env.trap)
+        if (entry.second.type == ttyp)
             num++;
     return num;
 }
 
 void place_webs(int num)
 {
-    int slot = 0;
+    trap_def ts;
     for (int j = 0; j < num; j++)
     {
-        for (;; slot++)
-        {
-            if (slot >= MAX_TRAPS)
-                return;
-            if (env.trap[slot].type == TRAP_UNASSIGNED)
-                break;
-        }
-        trap_def& ts(env.trap[slot]);
-
         int tries;
         // this is hardly ever enough to place many webs, most of the time
         // it will fail prematurely. Which is fine.
@@ -1907,17 +1889,17 @@ void place_webs(int num)
 
         ts.type = TRAP_WEB;
         grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
-        env.tgrid(ts.pos) = slot;
         ts.prepare_ammo();
         // Reveal some webs
         if (coinflip())
             ts.reveal();
+        env.trap[ts.pos] = ts;
     }
 }
 
 bool maybe_destroy_web(actor *oaf)
 {
-    trap_def *trap = find_trap(oaf->pos());
+    trap_def *trap = trap_at(oaf->pos());
     if (!trap || trap->type != TRAP_WEB)
         return false;
 
@@ -1961,14 +1943,14 @@ bool ensnare(actor *fly)
 
     // If we're over water, an open door, shop, portal, etc, the web will
     // fail to attach and you'll be released after a single turn.
-    // Same if we're at max traps already.
-    if (grd(fly->pos()) == DNGN_FLOOR
-        && place_specific_trap(fly->pos(), TRAP_WEB)
-        // succeeded, mark the web known discovered
-        && grd(fly->pos()) == DNGN_UNDISCOVERED_TRAP
-        && you.see_cell(fly->pos()))
+    if (grd(fly->pos()) == DNGN_FLOOR)
     {
-        grd(fly->pos()) = DNGN_TRAP_WEB;
+        place_specific_trap(fly->pos(), TRAP_WEB);
+        if (grd(fly->pos()) == DNGN_UNDISCOVERED_TRAP
+            && you.see_cell(fly->pos()))
+        {
+            grd(fly->pos()) = DNGN_TRAP_WEB;
+        }
     }
 
     if (fly->is_player())

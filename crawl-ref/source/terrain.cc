@@ -935,17 +935,11 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     }
     else if (feat_is_trap(dfeat, true))
     {
-        if (trap_def *trap = find_trap(src))
-        {
-            env.tgrid(dst) = env.tgrid(trap->pos);
-            env.tgrid(trap->pos) = NON_ENTITY;
-            // Can't leave the source square as a trap now that all
-            // the bookkeeping data has moved.
-            grd(src)          = DNGN_FLOOR;
-            trap->pos = dst;
-        }
-        else // Destroy invalid traps.
-            dfeat = DNGN_FLOOR;
+        ASSERT(trap_at(src));
+        env.trap[dst] = env.trap[src];
+        env.trap[dst].pos = dst;
+        env.trap.erase(src);
+        grd(src) = DNGN_FLOOR;
     }
 
     grd(dst) = dfeat;
@@ -1260,8 +1254,8 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     const terrain_property_t prop1 = env.pgrid(pos1);
     const terrain_property_t prop2 = env.pgrid(pos2);
 
-    trap_def* trap1 = find_trap(pos1);
-    trap_def* trap2 = find_trap(pos2);
+    trap_def* trap1 = trap_at(pos1);
+    trap_def* trap2 = trap_at(pos2);
 
     shop_struct* shop1 = shop_at(pos1);
     shop_struct* shop2 = shop_at(pos2);
@@ -1321,10 +1315,26 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     env.grid_colours(pos2) = col1;
 
     // Swap traps.
-    if (trap1)
-        trap1->pos = pos2;
-    if (trap2)
-        trap2->pos = pos1;
+    if (trap1 && !trap2)
+    {
+        env.trap[pos2] = env.trap[pos1];
+        env.trap[pos2].pos = pos2;
+        env.trap.erase(pos1);
+    }
+    else if (!trap1 && trap2)
+    {
+        env.trap[pos1] = env.trap[pos2];
+        env.trap[pos1].pos = pos1;
+        env.trap.erase(pos2);
+    }
+    else if (trap1 && trap2)
+    {
+        trap_def tmp = env.trap[pos1];
+        env.trap[pos1] = env.trap[pos2];
+        env.trap[pos2] = tmp;
+        env.trap[pos1].pos = pos1;
+        env.trap[pos2].pos = pos2;
+    }
 
     // Swap shops.
     if (shop1 && !shop2)
@@ -1428,7 +1438,7 @@ static bool _ok_dest_cell(const actor* orig_actor,
     if (is_notable_terrain(dest_feat))
         return false;
 
-    if (find_trap(dest_pos))
+    if (trap_at(dest_pos))
         return false;
 
     actor* dest_actor = actor_at(dest_pos);

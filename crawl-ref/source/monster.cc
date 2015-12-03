@@ -4754,7 +4754,7 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
 {
     const mon_intel_type intel = mons_intel(this);
 
-    const trap_def *ptrap = find_trap(where);
+    const trap_def *ptrap = trap_at(where);
     if (!ptrap)
         return true;
     const trap_def& trap = *ptrap;
@@ -5603,7 +5603,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
     }
 
     // Monsters stepping on traps:
-    trap_def* ptrap = find_trap(pos());
+    trap_def* ptrap = trap_at(pos());
     if (ptrap)
         ptrap->trigger(*this);
 

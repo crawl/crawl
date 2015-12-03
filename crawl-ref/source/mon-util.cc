@@ -4047,7 +4047,7 @@ bool mons_can_traverse(const monster* mon, const coord_def& p,
     if (!mon->is_habitable(p))
         return false;
 
-    const trap_def* ptrap = find_trap(p);
+    const trap_def* ptrap = trap_at(p);
     if (checktraps && ptrap)
     {
         const trap_type tt = ptrap->type;

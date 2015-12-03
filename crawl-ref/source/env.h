@@ -32,7 +32,6 @@ struct crawl_environment
     FixedArray< unsigned short, GXM, GYM >   mgrid; // monster grid
     FixedArray< int, GXM, GYM >              igrid; // item grid
     FixedArray< unsigned short, GXM, GYM >   grid_colours; // colour overrides
-    FixedArray< unsigned short, GXM, GYM >   tgrid; // traps, shops
 
     map_mask                                 level_map_mask;
     map_mask                                 level_map_ids;
@@ -75,7 +74,7 @@ struct crawl_environment
     map<coord_def, cloud_struct> cloud;
 
     map<coord_def, shop_struct> shop; // shop list
-    FixedVector< trap_def, MAX_TRAPS >       trap;  // trap list
+    map<coord_def, trap_def> trap; // trap list
 
     FixedVector< monster_type, MAX_MONS_ALLOC > mons_alloc;
     map_markers                              markers;
