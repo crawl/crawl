@@ -3692,7 +3692,7 @@ static int _monster_abjure_target(monster* target, int pow, bool actual)
 
     // TSO and Trog's abjuration protection.
     bool shielded = false;
-    if (you_worship(GOD_SHINING_ONE))
+    if (have_passive(passive_t::abjuration_protection_hd))
     {
         pow = pow * (30 - target->get_hit_dice()) / 30;
         if (pow < duration)

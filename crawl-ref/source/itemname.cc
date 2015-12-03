@@ -3420,7 +3420,7 @@ static bool _invisibility_is_useless(const bool temp)
 {
     // If you're Corona'd or a TSO-ite, this is always useless.
     return temp ? you.backlit()
-                : you.haloed() && you_worship(GOD_SHINING_ONE);
+                : you.haloed() && will_have_passive(passive_t::halo);
 }
 
 /**
