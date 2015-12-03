@@ -192,6 +192,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
         elem = ETC_HOLY;
         break;
     case BEAM_POLYMORPH:
+    case BEAM_LESSER_MALMUTATE:
     case BEAM_MALMUTATE:
     case BEAM_CORRUPT_BODY:
         elem = ETC_MUTAGENIC;
@@ -3477,11 +3478,12 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = you.polymorph(ench_power);
         break;
 
+    case BEAM_LESSER_MALMUTATE:
     case BEAM_MALMUTATE:
     case BEAM_UNRAVELLED_MAGIC:
         mpr("Strange energies course through your body.");
-        you.malmutate(aux_source.empty() ? get_source_name() :
-                      (get_source_name() + "/" + aux_source));
+        you.malmutate(get_source_name() + (aux_source.empty() ? "" : "/")
+                      + aux_source, flavour == BEAM_LESSER_MALMUTATE);
         obvious_effect = true;
         break;
 
@@ -5164,6 +5166,7 @@ bool bolt::has_saving_throw() const
     case BEAM_MALIGN_OFFERING:
     case BEAM_AGILITY:
     case BEAM_RESISTANCE:
+    case BEAM_LESSER_MALMUTATE:
     case BEAM_MALMUTATE:
     case BEAM_CORRUPT_BODY:
     case BEAM_SAP_MAGIC:
@@ -5185,6 +5188,7 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
     bool rc = true;
     switch (flavour)
     {
+    case BEAM_LESSER_MALMUTATE:
     case BEAM_MALMUTATE:
     case BEAM_CORRUPT_BODY:
     case BEAM_UNRAVELLED_MAGIC:
@@ -5369,9 +5373,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_AFFECTED;
 
+    case BEAM_LESSER_MALMUTATE:
     case BEAM_MALMUTATE:
     case BEAM_UNRAVELLED_MAGIC:
-        if (mon->malmutate("")) // exact source doesn't matter
+        // exact source doesn't matter
+        if (mon->malmutate(""))
             obvious_effect = true;
         if (YOU_KILL(thrower))
         {
@@ -6518,6 +6524,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_DIGGING:               return "digging";
     case BEAM_TELEPORT:              return "teleportation";
     case BEAM_POLYMORPH:             return "polymorph";
+    case BEAM_LESSER_MALMUTATE:      return "lesser malmutation";
     case BEAM_MALMUTATE:             return "malmutation";
     case BEAM_ENSLAVE:               return "enslave";
     case BEAM_BANISH:                return "banishment";

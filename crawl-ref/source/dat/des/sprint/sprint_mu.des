@@ -1445,7 +1445,7 @@ ENDMAP
 NAME: sprint_mu_zot1
 TAGS: sprint_mu_zot no_rotate no_hmirror no_vmirror
 KMONS: T = col:magenta statue name:zot n_adj \
-        spells:summon_eyeballs.27.magical;malmutate.13.magical;\
+        spells:summon_eyeballs.27.magical;\
                haste.13.magical;shadow_creatures.27.magical \
         tile:mons_zot_statue
 MARKER: T = lua:fog_machine { \

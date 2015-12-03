@@ -7275,7 +7275,7 @@ bool player::is_stationary() const
     return form == TRAN_TREE;
 }
 
-bool player::malmutate(const string &reason)
+bool player::malmutate(const string &reason, bool temporary)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -7284,7 +7284,8 @@ bool player::malmutate(const string &reason)
 
     const mutation_type mut_quality = one_chance_in(5) ? RANDOM_MUTATION
                                                        : RANDOM_BAD_MUTATION;
-    if (mutate(mut_quality, reason))
+    const bool ret = temporary ? temp_mutate(mut_quality, reason) : mutate(mut_quality, reason);
+    if (ret)
     {
         learned_something_new(HINT_YOU_MUTATED);
         return true;

@@ -796,6 +796,11 @@ Malign Offering spell
 
 Drains life from an enemy, healing nearby allies in the process.
 %%%%
+Lesser Malmutate spell
+
+Bestows a temporary mutation on a target. The mutation is almost always harmful.
+It cannot affect artificial beings, and the undead will decompose if affected.
+%%%%
 Malmutate spell
 
 Bestows a mutation on a target. The mutation is almost always harmful. It
