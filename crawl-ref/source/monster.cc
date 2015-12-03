@@ -3039,6 +3039,12 @@ bool monster::confused() const
     return mons_is_confused(this);
 }
 
+bool _you_responsible_for_ench(mon_enchant me)
+{
+    return me.who == KC_YOU || me.who == KC_FRIENDLY
+        && !crawl_state.game_is_arena();
+}
+
 bool monster::confused_by_you() const
 {
     if (mons_class_flag(type, M_CONFUSED))
@@ -3047,8 +3053,8 @@ bool monster::confused_by_you() const
     const mon_enchant me = get_ench(ENCH_CONFUSION);
     const mon_enchant me2 = get_ench(ENCH_MAD);
 
-    return (me.ench == ENCH_CONFUSION && me.who == KC_YOU) ||
-           (me2.ench == ENCH_MAD && me2.who == KC_YOU);
+    return (me.ench == ENCH_CONFUSION && _you_responsible_for_ench(me))
+           || (me2.ench == ENCH_MAD && _you_responsible_for_ench(me2));
 }
 
 bool monster::paralysed() const
