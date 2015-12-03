@@ -648,7 +648,7 @@ static void _seen_altar(god_type god, const coord_def& pos)
 
 static void _seen_shop(const coord_def& pos)
 {
-    shops_present[level_pos(level_id::current(), pos)] = get_shop(pos)->type;
+    shops_present[level_pos(level_id::current(), pos)] = shop_at(pos)->type;
 }
 
 static void _seen_portal(dungeon_feature_type which_thing, const coord_def& pos)

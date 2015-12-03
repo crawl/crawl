@@ -753,7 +753,7 @@ ShopInfo::ShopInfo(coord_def pos_) : pos(pos_), name(), shoptype(-1),
 {
     // Most of our initialization will be done externally; this class is really
     // a mildly glorified struct.
-    const shop_struct *sh = get_shop(pos);
+    const shop_struct *sh = shop_at(pos);
     if (sh)
         shoptype = sh->type;
 }

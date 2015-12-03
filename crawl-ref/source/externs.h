@@ -345,6 +345,9 @@ struct shop_struct
     FixedVector<uint8_t, 3> keeper_name;
 
     vector<item_def> stock;
+#if TAG_MAJOR_VERSION == 34
+    uint8_t num; // used in a save compat hack
+#endif
 
     shop_struct () : pos(), greed(0), type(SHOP_UNASSIGNED), level(0),
                      shop_name(""), shop_type_name(""), shop_suffix_name("") { }

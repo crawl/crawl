@@ -1183,8 +1183,7 @@ void dgn_reset_level(bool enable_random_maps)
     env.tgrid.init(NON_ENTITY);
 
     // Reset all shops.
-    for (int shcount = 0; shcount < MAX_SHOPS; shcount++)
-        env.shop[shcount].type = SHOP_UNASSIGNED;
+    env.shop.clear();
 
     // Clear all markers.
     env.markers.clear();
@@ -5257,20 +5256,6 @@ int greed_for_shop_type(shop_type shop, int level_number)
 }
 
 /**
- * Attempts to find a free space in env.shop for a new shop to be placed.
- *
- * @return      An index into env.shop that isn't currently assigned, or
- *              MAX_SHOPS if none was found.
- */
-static int _get_free_shop_index()
-{
-    for (int i = 0; i < MAX_SHOPS; i++)
-        if (env.shop[i].type == SHOP_UNASSIGNED)
-            return i;
-    return MAX_SHOPS;
-}
-
-/**
  * How greedy should a given shop be? (Applies a multiplier to prices.)
  *
  * @param type              The type of the shop. (E.g. SHOP_FOOD.)
@@ -5538,11 +5523,7 @@ void place_spec_shop(const coord_def& where, shop_spec &spec)
 {
     no_notes nx;
 
-    const int shop_index = _get_free_shop_index();
-    if (shop_index == MAX_SHOPS)
-        return;
-
-    shop_struct& shop = env.shop[shop_index];
+    shop_struct& shop = env.shop[where];
 
     const int level_number = env.absdepth0;
 
@@ -5558,7 +5539,6 @@ void place_spec_shop(const coord_def& where, shop_spec &spec)
     shop.greed = _shop_greed(shop.type, level_number, spec.greed);
     shop.pos = where;
 
-    env.tgrid(where) = shop_index;
     _set_grd(where, DNGN_ENTER_SHOP);
 
     const int num_items = _shop_num_items(shop.type, spec);
