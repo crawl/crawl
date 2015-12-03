@@ -231,8 +231,8 @@ void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
 
         // Some fonts have wrong size info
         const ftint charw = bmp->width;
-        bmp->width = min(bmp->width, charsz.x);
-        bmp->rows = min(bmp->rows, charsz.y);
+        bmp->width = min(bmp->width, ftint(charsz.x));
+        bmp->rows = min(bmp->rows, ftint(charsz.y));
 
         if (outl)
         {
