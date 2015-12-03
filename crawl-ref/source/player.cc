@@ -2410,8 +2410,10 @@ int player_shield_class()
     else
     {
         if (you.duration[DUR_MAGIC_SHIELD])
+        {
             shield += 900 + player_adjust_evoc_power(
                                 you.skill(SK_EVOCATIONS, 75));
+        }
 
         if (you.duration[DUR_CONDENSATION_SHIELD])
             shield += 800 + you.props[CONDENSATION_SHIELD_KEY].get_int() * 15;

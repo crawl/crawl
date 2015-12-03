@@ -206,8 +206,10 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
             mpr("You create a snake!");
 
         if (sticks_left)
+        {
             mprf("You now have %d arrow%s.", sticks_left,
                                              sticks_left > 1 ? "s" : "");
+        }
         else
             mpr("You now have no arrows remaining.");
     }
