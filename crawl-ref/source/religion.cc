@@ -1004,6 +1004,8 @@ void dec_penance(god_type god, int val)
 #endif
     if (you.penance[god] <= val)
     {
+        const bool had_umbra = have_passive(passive_t::umbra);
+
         you.penance[god] = 0;
 
         mark_milestone("god.mollify",
@@ -1030,37 +1032,34 @@ void dec_penance(god_type god, int val)
 
         if (you_worship(god))
         {
-            // Orcish bonuses are now once more effective.
-            if (god == GOD_BEOGH)
-                 you.redraw_armour_class = true;
-            // TSO's halo is once more available.
-            else if (god == GOD_SHINING_ONE
-                     && you.piety >= piety_breakpoint(0))
+            if (!had_umbra && have_passive(passive_t::umbra))
             {
-                mprf(MSGCH_GOD, "Your divine halo returns!");
+                mprf(MSGCH_GOD, "Your aura of darkness returns!");
                 invalidate_agrid(true);
             }
-            else if (god == GOD_ASHENZARI
-                     && you.piety >= piety_breakpoint(2))
+            // Orcish bonuses are now once more effective.
+            if (have_passive(passive_t::bonus_ac))
+                 you.redraw_armour_class = true;
+            if (have_passive(passive_t::sinv))
             {
                 mprf(MSGCH_GOD, "Your vision regains its divine sight.");
                 autotoggle_autopickup(false);
             }
-            else if (god == GOD_CHEIBRIADOS)
+            if (have_passive(passive_t::stat_boost))
             {
                 simple_god_message(" restores the support of your attributes.");
                 redraw_screen();
                 notify_stat_change();
             }
-            // Likewise Dithmenos's umbra.
-            else if (god == GOD_DITHMENOS
+
+            // TSO's halo is once more available.
+            if (god == GOD_SHINING_ONE
                      && you.piety >= piety_breakpoint(0))
             {
-                mprf(MSGCH_GOD, "Your aura of darkness returns!");
+                mprf(MSGCH_GOD, "Your divine halo returns!");
                 invalidate_agrid(true);
             }
-            else if (god == GOD_QAZLAL
-                     && you.piety >= piety_breakpoint(0))
+            else if (god == GOD_QAZLAL && you.piety >= piety_breakpoint(0))
             {
                 mprf(MSGCH_GOD, "A storm instantly forms around you!");
                 you.redraw_armour_class = true; // also handles shields
@@ -1144,8 +1143,16 @@ static void _inc_penance(god_type god, int val)
 
         take_note(Note(NOTE_PENANCE, god));
 
+        const bool had_umbra = have_passive(passive_t::umbra);
+
         you.penance[god] += val;
         you.penance[god] = min((uint8_t)MAX_PENANCE, you.penance[god]);
+
+        if (had_umbra && !have_passive(passive_t::umbra))
+        {
+            mprf(MSGCH_GOD, god, "Your aura of darkness fades away.");
+            invalidate_agrid();
+        }
 
         // Orcish bonuses don't apply under penance.
         if (will_have_passive(passive_t::bonus_ac))
@@ -1157,8 +1164,14 @@ static void _inc_penance(god_type god, int val)
             fall_into_a_pool(grd(you.pos()));
         }
 
+        if (will_have_passive(passive_t::stat_boost))
+        {
+            redraw_screen();
+            notify_stat_change();
+        }
+
         // Neither does Trog's regeneration or magic resistance.
-        else if (god == GOD_TROG)
+        if (god == GOD_TROG)
         {
             if (you.duration[DUR_TROGS_HAND])
                 trog_remove_trogs_hand();
@@ -1193,17 +1206,6 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_SLIMIFY])
                 you.duration[DUR_SLIMIFY] = 0;
-        }
-        else if (god == GOD_CHEIBRIADOS)
-        {
-            redraw_screen();
-            notify_stat_change();
-        }
-        else if (god == GOD_DITHMENOS)
-        {
-            if (you.umbraed())
-                mprf(MSGCH_GOD, god, "Your aura of darkness fades away.");
-            invalidate_agrid();
         }
         else if (god == GOD_QAZLAL)
         {
@@ -2457,7 +2459,7 @@ void lose_piety(int pgn)
         you.redraw_armour_class = true;
     }
 
-    if (you_worship(GOD_SHINING_ONE) || have_passive(passive_t::umbra))
+    if (you_worship(GOD_SHINING_ONE) || will_have_passive(passive_t::umbra))
     {
         // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
@@ -2517,9 +2519,11 @@ void excommunication(bool voluntary, god_type new_god, bool immediate)
     ASSERT(old_god != new_god);
     ASSERT(old_god != GOD_NO_GOD);
 
-    const bool was_haloed  = you.haloed();
-    const bool was_umbraed = you.umbraed();
-    const int  old_piety   = you.piety;
+    const bool was_haloed     = you.haloed();
+    const bool had_umbra      = have_passive(passive_t::umbra);
+    const bool had_water_walk = have_passive(passive_t::water_walk);
+    const bool had_stat_boost = have_passive(passive_t::stat_boost);
+    const int  old_piety      = you.piety;
 
     god_acting gdact(old_god, true);
 
@@ -2579,6 +2583,20 @@ void excommunication(bool voluntary, god_type new_god, bool immediate)
             old_god);
     }
 
+    if (had_umbra)
+    {
+        mprf(MSGCH_GOD, old_god, "Your aura of darkness fades away.");
+        invalidate_agrid(true);
+    }
+    // You might have lost water walking at a bad time...
+    if (had_water_walk && _need_water_walking())
+        fall_into_a_pool(grd(you.pos()));
+    if (had_stat_boost)
+    {
+        redraw_screen();
+        notify_stat_change();
+    }
+
     switch (old_god)
     {
     case GOD_XOM:
@@ -2624,10 +2642,6 @@ void excommunication(bool voluntary, god_type new_god, bool immediate)
         break;
 
     case GOD_BEOGH:
-        // You might have lost water walking at a bad time...
-        if (_need_water_walking())
-            fall_into_a_pool(grd(you.pos()));
-
         if (query_daction_counter(DACT_ALLY_BEOGH))
         {
             simple_god_message("'s voice booms out, \"Who do you think you "
@@ -2737,11 +2751,6 @@ void excommunication(bool voluntary, god_type new_god, bool immediate)
         break;
 
     case GOD_DITHMENOS:
-        if (was_umbraed)
-        {
-            mprf(MSGCH_GOD, old_god, "Your aura of darkness fades away.");
-            invalidate_agrid(true);
-        }
         if (you.form == TRAN_SHADOW)
             untransform();
         _set_penance(old_god, 25);
@@ -2801,8 +2810,6 @@ void excommunication(bool voluntary, god_type new_god, bool immediate)
     case GOD_CHEIBRIADOS:
         simple_god_message(" continues to slow your movements.", old_god);
         _set_penance(old_god, 25);
-        redraw_screen();
-        notify_stat_change();
         break;
 
     default:
