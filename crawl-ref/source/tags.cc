@@ -3808,25 +3808,24 @@ static void tag_construct_level(writer &th)
     CANARY;
 
     // how many clouds?
-    const int nc = _last_used_index(env.cloud, MAX_CLOUDS);
-    marshallShort(th, nc);
-    for (int i = 0; i < nc; i++)
+    marshallShort(th, env.cloud.size());
+    for (const auto& entry : env.cloud)
     {
-        marshallByte(th, env.cloud[i].type);
-        if (env.cloud[i].type == CLOUD_NONE)
-            continue;
-        ASSERT_IN_BOUNDS(env.cloud[i].pos);
-        marshallByte(th, env.cloud[i].pos.x);
-        marshallByte(th, env.cloud[i].pos.y);
-        marshallShort(th, env.cloud[i].decay);
-        marshallByte(th, env.cloud[i].spread_rate);
-        marshallByte(th, env.cloud[i].whose);
-        marshallByte(th, env.cloud[i].killer);
-        marshallInt(th, env.cloud[i].source);
-        marshallShort(th, env.cloud[i].colour);
-        marshallString(th, env.cloud[i].name);
-        marshallString(th, env.cloud[i].tile);
-        marshallInt(th, env.cloud[i].excl_rad);
+        const cloud_struct& cloud = entry.second;
+        marshallByte(th, cloud.type);
+        ASSERT(cloud.type != CLOUD_NONE);
+        ASSERT_IN_BOUNDS(cloud.pos);
+        marshallByte(th, cloud.pos.x);
+        marshallByte(th, cloud.pos.y);
+        marshallShort(th, cloud.decay);
+        marshallByte(th, cloud.spread_rate);
+        marshallByte(th, cloud.whose);
+        marshallByte(th, cloud.killer);
+        marshallInt(th, cloud.source);
+        marshallShort(th, cloud.colour);
+        marshallString(th, cloud.name);
+        marshallString(th, cloud.tile);
+        marshallInt(th, cloud.excl_rad);
     }
 
     CANARY;
@@ -5230,7 +5229,6 @@ static void tag_read_level(reader &th)
             env.pgrid[i][j] = unmarshallInt(th);
 
             mgrd[i][j] = NON_MONSTER;
-            env.cgrid[i][j] = EMPTY_CLOUD;
             env.tgrid[i][j] = NON_ENTITY;
         }
 
@@ -5255,42 +5253,34 @@ static void tag_read_level(reader &th)
 
     EAT_CANARY;
 
-    env.cloud_no = 0;
-
     // how many clouds?
     const int num_clouds = unmarshallShort(th);
-    ASSERT_RANGE(num_clouds, 0, MAX_CLOUDS + 1);
+    cloud_struct cloud;
     for (int i = 0; i < num_clouds; i++)
     {
-        env.cloud[i].type  = static_cast<cloud_type>(unmarshallByte(th));
-        if (env.cloud[i].type == CLOUD_NONE)
-            continue;
-        env.cloud[i].pos.x = unmarshallByte(th);
-        env.cloud[i].pos.y = unmarshallByte(th);
-        env.cloud[i].decay = unmarshallShort(th);
-        env.cloud[i].spread_rate = unmarshallUByte(th);
-        env.cloud[i].whose = static_cast<kill_category>(unmarshallUByte(th));
-        env.cloud[i].killer = static_cast<killer_type>(unmarshallUByte(th));
-        env.cloud[i].source = unmarshallInt(th);
-        env.cloud[i].colour = unmarshallShort(th);
-        env.cloud[i].name   = unmarshallString(th);
-        env.cloud[i].tile   = unmarshallString(th);
-        env.cloud[i].excl_rad = unmarshallInt(th);
+        cloud.type  = static_cast<cloud_type>(unmarshallByte(th));
 #if TAG_MAJOR_VERSION == 34
-        // Please remove soon, after games get unstuck.
-        if (!in_bounds(env.cloud[i].pos) || cell_is_solid(env.cloud[i].pos))
-        {
-            env.cloud[i].type = CLOUD_NONE;
+        // old system marshalled empty clouds this way
+        if (cloud.type == CLOUD_NONE)
             continue;
-        }
 #else
-        ASSERT_IN_BOUNDS(env.cloud[i].pos);
+        ASSERT(cloud.type != CLOUD_NONE);
 #endif
-        env.cgrid(env.cloud[i].pos) = i;
-        env.cloud_no++;
+        cloud.pos.x = unmarshallByte(th);
+        cloud.pos.y = unmarshallByte(th);
+        ASSERT_IN_BOUNDS(cloud.pos);
+        cloud.decay = unmarshallShort(th);
+        cloud.spread_rate = unmarshallUByte(th);
+        cloud.whose = static_cast<kill_category>(unmarshallUByte(th));
+        cloud.killer = static_cast<killer_type>(unmarshallUByte(th));
+        cloud.source = unmarshallInt(th);
+        cloud.colour = unmarshallShort(th);
+        cloud.name   = unmarshallString(th);
+        cloud.tile   = unmarshallString(th);
+        cloud.excl_rad = unmarshallInt(th);
+
+        env.cloud[cloud.pos] = cloud;
     }
-    for (int i = num_clouds; i < MAX_CLOUDS; i++)
-        env.cloud[i].type = CLOUD_NONE;
 
     EAT_CANARY;
 

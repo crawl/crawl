@@ -1176,12 +1176,7 @@ void dgn_reset_level(bool enable_random_maps)
     env.mons_alloc.init(MONS_NO_MONSTER);
     setup_vault_mon_list();
 
-    // Zap clouds
-    env.cgrid.init(EMPTY_CLOUD);
-
-    const cloud_struct empty;
-    env.cloud.init(empty);
-    env.cloud_no = 0;
+    env.cloud.clear();
 
     mgrd.init(NON_MONSTER);
     igrd.init(NON_ITEM);

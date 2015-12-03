@@ -31,7 +31,6 @@ struct crawl_environment
     FixedArray<terrain_property_t, GXM, GYM> pgrid; // terrain properties
     FixedArray< unsigned short, GXM, GYM >   mgrid; // monster grid
     FixedArray< int, GXM, GYM >              igrid; // item grid
-    FixedArray< unsigned short, GXM, GYM >   cgrid; // cloud grid
     FixedArray< unsigned short, GXM, GYM >   grid_colours; // colour overrides
     FixedArray< unsigned short, GXM, GYM >   tgrid; // traps, shops
 
@@ -73,8 +72,7 @@ struct crawl_environment
     tile_flavour tile_default;
     vector<string> tile_names;
 
-    FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list
-    short cloud_no;
+    map<coord_def, cloud_struct> cloud;
 
     FixedVector< shop_struct, MAX_SHOPS >    shop;  // shop list
     FixedVector< trap_def, MAX_TRAPS >       trap;  // trap list

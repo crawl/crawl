@@ -71,16 +71,6 @@ COMPILE_CHECK(ITEM_IN_SHOP > NON_ITEM + MAX_MONSTERS);
 #error NON_ITEM must be > MAX_ITEMS
 #endif
 
-// max size of cloud array {dlb}:
-#define MAX_CLOUDS 600
-
-// empty cloud -- (CLOUDS + 1) {dlb}:
-#define EMPTY_CLOUD NON_ENTITY
-
-#if EMPTY_CLOUD <= MAX_CLOUDS
-#error EMPTY_CLOUD must be > MAX_CLOUDS
-#endif
-
 // max x-bound for level generation {dlb}
 #define GXM 80
 // max y-bound for level generation {dlb}
