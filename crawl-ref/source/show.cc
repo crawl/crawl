@@ -582,9 +582,7 @@ void show_init(layers_type layers)
         env.map_knowledge(loc).flags &= ~MAP_INVISIBLE_UPDATE;
 }
 
-// Emphasis may change while off-level (precisely, after
-// taking stairs and saving the level, when we reach
-// the next level). This catches up.
+// Emphasis may change while off-level. This catches up.
 // It should be equivalent to looping over the whole map
 // and setting MAP_EMPHASIZE for any coordinate with
 // emphasise(p) == true, but we optimise a bit.
