@@ -2708,13 +2708,13 @@ static void _cloud_card(int power, deck_rarity_type rarity)
             if (*ai == you.pos() || monster_at(*ai))
                 continue;
 
-            if (grd(*ai) == DNGN_FLOOR && env.cgrid(*ai) == EMPTY_CLOUD)
+            if (grd(*ai) == DNGN_FLOOR && !cloud_at(*ai))
             {
                 const int cloud_power = 5 + random2((power_level + 1) * 3);
                 place_cloud(cloudy, *ai, cloud_power, &you);
 
                 if (you.see_cell(*ai))
-                something_happened = true;
+                    something_happened = true;
             }
         }
     }
@@ -2761,7 +2761,7 @@ static void _storm_card(int power, deck_rarity_type rarity)
 
         if ((feat_has_solid_floor(grd(*ri))
              || grd(*ri) == DNGN_DEEP_WATER)
-            && env.cgrid(*ri) == EMPTY_CLOUD)
+            && !cloud_at(*ri))
         {
             place_cloud(CLOUD_STORM, *ri,
                         5 + (power_level + 1) * random2(10), & you);

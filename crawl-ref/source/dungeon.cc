@@ -4922,7 +4922,7 @@ static void _vault_grid(vault_placement &place,
         _vault_grid_glyph(place, where, vgrid);
 
     if (cell_is_solid(where))
-        delete_cloud_at(where);
+        delete_cloud(where);
 }
 
 static void _vault_grid_glyph_mons(vault_placement &place,

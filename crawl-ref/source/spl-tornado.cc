@@ -391,8 +391,7 @@ void tornado_damage(actor *caster, int dur)
             if (cell_is_solid(*dam_i))
                 continue;
 
-            if ((env.cgrid(*dam_i) == EMPTY_CLOUD
-                || env.cloud[env.cgrid(*dam_i)].type == CLOUD_TORNADO)
+            if ((!cloud_at(*dam_i) || cloud_at(*dam_i)->type == CLOUD_TORNADO)
                 && x_chance_in_y(rpow, 20))
             {
                 place_cloud(CLOUD_TORNADO, *dam_i, 2 + random2(2), caster);

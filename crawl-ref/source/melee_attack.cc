@@ -3300,7 +3300,7 @@ void melee_attack::emit_foul_stench()
 
         if (damage_done > 4 && x_chance_in_y(mut, 5)
             && !cell_is_solid(mon->pos())
-            && env.cgrid(mon->pos()) == EMPTY_CLOUD)
+            && !cloud_at(mon->pos()))
         {
             mpr("You emit a cloud of foul miasma!");
             place_cloud(CLOUD_MIASMA, mon->pos(), 5 + random2(6), &you);

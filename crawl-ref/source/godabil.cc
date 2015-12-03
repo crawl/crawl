@@ -1510,7 +1510,7 @@ bool trog_burn_spellbooks()
 
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
-        const unsigned short cloud = env.cgrid(*ri);
+        cloud_struct* cloud = cloud_at(*ri);
         int count = 0;
         int rarity = 0;
         for (stack_iterator si(*ri); si; ++si)
@@ -1521,7 +1521,7 @@ bool trog_burn_spellbooks()
             // If a grid is blocked, books lying there will be ignored.
             // Allow bombing of monsters.
             if (cell_is_solid(*ri)
-                || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
+                || cloud && cloud->type != CLOUD_FIRE)
             {
                 totalblocked++;
                 continue;
@@ -1555,13 +1555,13 @@ bool trog_burn_spellbooks()
 
         if (count)
         {
-            if (cloud != EMPTY_CLOUD)
+            if (cloud)
             {
                 // Reinforce the cloud.
                 mpr("The fire roars with new energy!");
                 const int extra_dur = count + random2(rarity / 2);
-                env.cloud[cloud].decay += extra_dur * 5;
-                env.cloud[cloud].set_whose(KC_YOU);
+                cloud->decay += extra_dur * 5;
+                cloud->set_whose(KC_YOU);
                 continue;
             }
 
@@ -5028,8 +5028,7 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
                 }
                 break;
             case BEAM_AIR:
-                if (!cell_is_solid(pos) && env.cgrid(pos) == EMPTY_CLOUD
-                    && coinflip())
+                if (!cell_is_solid(pos) && !cloud_at(pos) && coinflip())
                 {
                     place_cloud(CLOUD_STORM, pos,
                                 random2(you.skill_rdiv(SK_INVOCATIONS, 1, 4)),
@@ -5068,9 +5067,9 @@ void qazlal_elemental_force()
     vector<coord_def> targets;
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, true); ri; ++ri)
     {
-        if (env.cgrid(*ri) != EMPTY_CLOUD)
+        if (cloud_struct* cloud = cloud_at(*ri))
         {
-            switch (env.cloud[env.cgrid(*ri)].type)
+            switch (cloud->type)
             {
             case CLOUD_FIRE:
             case CLOUD_COLD:
@@ -5111,9 +5110,8 @@ void qazlal_elemental_force()
     for (unsigned int i = 0; placed < count && i < targets.size(); i++)
     {
         coord_def pos = targets[i];
-        const unsigned short cloud = env.cgrid(pos);
-        ASSERT(cloud != EMPTY_CLOUD);
-        cloud_struct &cl = env.cloud[cloud];
+        ASSERT(cloud_at(pos));
+        cloud_struct &cl = *cloud_at(pos);
         actor *agent = actor_by_mid(cl.source);
         mg.behaviour = !agent             ? BEH_NEUTRAL :
                        agent->is_player() ? BEH_FRIENDLY
@@ -5145,7 +5143,7 @@ void qazlal_elemental_force()
         }
         if (!create_monster(mg))
             continue;
-        delete_cloud(cloud);
+        delete_cloud(pos);
         placed++;
     }
 

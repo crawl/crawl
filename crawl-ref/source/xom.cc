@@ -2072,7 +2072,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
     else if (tension > 0 && x_chance_in_y(15, sever))
     {
 
-        if (cloud_type_at(you.pos()) != CLOUD_NONE)
+        if (cloud_at(you.pos()))
             return XOM_DID_NOTHING;
         if (debug)
             return XOM_GOOD_FOG;
@@ -3360,7 +3360,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
         }
         else if (tension > 0 && x_chance_in_y(22, sever))
         {
-            if (cloud_type_at(you.pos()) != CLOUD_NONE)
+            if (cloud_at(you.pos()))
                 return XOM_DID_NOTHING;
             if (debug)
                 return XOM_BAD_CHAOS_CLOUD;

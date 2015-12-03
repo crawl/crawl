@@ -3072,8 +3072,7 @@ static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe)
             continue;
         }
 
-        const int cloud = env.cgrid(*di);
-        if (cloud != EMPTY_CLOUD)
+        if (cloud_at(*di))
             continue;
 
         // Conjure flames *behind* the target; blocking the target from
@@ -3089,8 +3088,7 @@ static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe)
         for (adjacent_iterator ai(*di); ai; ++ai)
         {
             if (feat_is_traversable(grd(*ai))
-                && (env.cgrid(*ai) == EMPTY_CLOUD
-                    || !is_damaging_cloud(env.cloud[env.cgrid(*ai)].type)))
+                && is_damaging_cloud(cloud_type_at(*ai)))
             {
                 floor_count++;
             }
@@ -5913,8 +5911,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                     move_items(*ai, mons->pos());
 
                 // All clouds are destroyed.
-                if (env.cgrid(*ai) != EMPTY_CLOUD)
-                    delete_cloud(env.cgrid(*ai));
+                delete_cloud(*ai);
 
                 // All traps are destroyed.
                 if (trap_def *ptrap = find_trap(*ai))

@@ -410,7 +410,7 @@ static bool _cell_vetoes_teleport(const coord_def cell, bool check_monsters = tr
         return true;
 
     // As do all clouds; this may change.
-    if (env.cgrid(cell) != EMPTY_CLOUD && !wizard_tele)
+    if (cloud_at(cell) && !wizard_tele)
         return true;
 
     if (cell_is_solid(cell))

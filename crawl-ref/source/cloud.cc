@@ -33,6 +33,12 @@
 #include "tiledef-main.h"
 #include "unwind.h"
 
+cloud_struct* cloud_at(coord_def pos)
+{
+    return !in_bounds(pos) || env.cgrid(pos) == EMPTY_CLOUD
+                ? nullptr : &env.cloud[env.cgrid(pos)];
+}
+
 /// A portrait of a cloud_type.
 struct cloud_data
 {
@@ -252,7 +258,7 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
 
 static void _los_cloud_changed(const coord_def& p, cloud_type t)
 {
-    if (is_opaque_cloud_type(t))
+    if (is_opaque_cloud(t))
         los_terrain_changed(p);
 }
 
@@ -330,7 +336,7 @@ static int _spread_cloud(const cloud_struct &cloud)
             continue;
 
         if (!in_bounds(*ai)
-            || env.cgrid(*ai) != EMPTY_CLOUD
+            || cloud_at(*ai)
             || cell_is_solid(*ai)
             || is_sanctuary(*ai) && !is_harmless_cloud(cloud.type))
         {
@@ -361,7 +367,7 @@ static void _spread_fire(const cloud_struct &cloud)
     for (adjacent_iterator ai(cloud.pos); ai; ++ai)
     {
         if (!in_bounds(*ai)
-            || env.cgrid(*ai) != EMPTY_CLOUD
+            || cloud_at(*ai)
             || is_sanctuary(*ai))
         {
             continue;
@@ -411,7 +417,7 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
         if (in_bounds(p)
             && feat_is_watery(grd(p))
             && !cell_is_solid(p)
-            && env.cgrid(p) == EMPTY_CLOUD
+            && !cloud_at(p)
             && one_chance_in(7))
         {
             _place_new_cloud(CLOUD_STEAM, p, cloud.decay / 2 + 1,
@@ -462,9 +468,8 @@ static int _cloud_dissipation_rate(const cloud_struct &cloud)
     return dissipate;
 }
 
-static void _dissipate_cloud(int cloudidx)
+static void _dissipate_cloud(cloud_struct& cloud)
 {
-    cloud_struct &cloud = env.cloud[cloudidx];
     // Apply calculated rate to the actual cloud.
     cloud.decay -= _cloud_dissipation_rate(cloud);
 
@@ -478,7 +483,7 @@ static void _dissipate_cloud(int cloudidx)
 
     // Check for total dissipation and handle accordingly.
     if (cloud.decay < 1)
-        delete_cloud(cloudidx);
+        delete_cloud(cloud.pos);
 }
 
 static void _handle_spectral_cloud(const cloud_struct& cloud)
@@ -551,7 +556,7 @@ void manage_clouds()
 
         _cloud_interacts_with_terrain(cloud);
 
-        _dissipate_cloud(i);
+        _dissipate_cloud(cloud);
     }
 }
 
@@ -589,14 +594,7 @@ static void _maybe_leave_water(const cloud_struct& c)
     }
 }
 
-void delete_cloud_at(coord_def p)
-{
-    const int cloudno = env.cgrid(p);
-    if (cloudno != EMPTY_CLOUD)
-        delete_cloud(cloudno);
-}
-
-void delete_cloud(int cloud)
+static void _delete_cloud(int cloud)
 {
     cloud_struct& c = env.cloud[cloud];
     if (c.type == CLOUD_NONE)
@@ -621,16 +619,24 @@ void delete_cloud(int cloud)
     env.cloud_no--;
 }
 
-void move_cloud_to(coord_def src, coord_def dst)
+void delete_cloud(coord_def p)
 {
-    const int cloudno = env.cgrid(src);
-    move_cloud(cloudno, dst);
+    const int cloud = env.cgrid(p);
+    if (cloud != EMPTY_CLOUD)
+        _delete_cloud(cloud);
+}
+
+void delete_all_clouds()
+{
+    for (int i = 0; i < MAX_CLOUDS; ++i)
+        _delete_cloud(i);
 }
 
 // The current use of this function is for shifting in the abyss, so
 // that clouds get moved along with the rest of the map.
-void move_cloud(int cloud, const coord_def& newpos)
+void move_cloud(coord_def src, coord_def newpos)
 {
+    const int cloud = env.cgrid(src);
     ASSERT(!cell_is_solid(newpos));
 
     if (cloud == EMPTY_CLOUD)
@@ -643,23 +649,6 @@ void move_cloud(int cloud, const coord_def& newpos)
     _los_cloud_changed(oldpos, env.cloud[cloud].type);
     _los_cloud_changed(newpos, env.cloud[cloud].type);
 }
-
-#if 0
-static void _validate_clouds()
-{
-    for (rectangle_iterator ri(0); ri; ri++)
-    {
-        int c = env.cgrid(*ri);
-        if (c == EMPTY_CLOUD)
-            continue;
-        ASSERT(env.cloud[c].pos == *ri);
-    }
-
-    for (int c = 0; c < MAX_CLOUDS; c++)
-        if (env.cloud[c].type != CLOUD_NONE)
-            ASSERT(env.cgrid(env.cloud[c].pos) == c);
-}
-#endif
 
 void swap_clouds(coord_def p1, coord_def p2)
 {
@@ -695,7 +684,7 @@ void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
                        const actor *agent, int spread_rate, int colour,
                        string name, string tile, int excl_rad)
 {
-    if (!in_bounds(p) || env.cgrid(p) != EMPTY_CLOUD)
+    if (!in_bounds(p) || cloud_at(p))
         return;
 
     if (cl_type == CLOUD_INK && !feat_is_watery(grd(p)))
@@ -705,23 +694,18 @@ void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
                 excl_rad);
 }
 
-static bool _is_weak_cloud(int cl)
+static bool _is_weak_cloud(const cloud_struct& cloud)
 {
-    if (cl == EMPTY_CLOUD)
-        return true;
-
-    cloud_struct& cloud = env.cloud[cl];
-    return cloud.type >= CLOUD_GREY_SMOKE && cloud.type <= CLOUD_STEAM
-           || cloud.type == CLOUD_BLACK_SMOKE
-           || cloud.type == CLOUD_MIST
+    return is_harmless_cloud(cloud.type)
+           || cloud.type == CLOUD_STEAM
+           || cloud.type == CLOUD_NONE // placeholder cloud
            || cloud.decay <= 20; // soon gone
 }
 
-static bool cloud_is_stronger(cloud_type ct, int cl)
+static bool _cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
 {
-    if (_is_weak_cloud(cl))
+    if (_is_weak_cloud(cloud))
         return true;
-    cloud_struct& cloud = env.cloud[cl];
     if (ct == CLOUD_POISON && cloud.type == CLOUD_MEPHITIC)
         return true; // allow upgrading meph
     if (ct == CLOUD_TORNADO)
@@ -765,11 +749,11 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     if (target_cgrid != EMPTY_CLOUD)
     {
         // There's already a cloud here. See if we can overwrite it.
-        if (cloud_is_stronger(cl_type, target_cgrid))
+        if (_cloud_is_stronger(cl_type, env.cloud[target_cgrid]))
         {
             // Delete this cloud and replace it.
             cl_new = target_cgrid;
-            delete_cloud(target_cgrid);
+            delete_cloud(ctarget);
         }
         else                    // Guess not.
             return;
@@ -784,13 +768,13 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
         int cl_del = random2(MAX_CLOUDS);
 
         for (int ci = 0; ci < MAX_CLOUDS; ci++)
-            if (_is_weak_cloud(ci))
+            if (_is_weak_cloud(env.cloud[ci]))
             {
                 cl_del = ci;
                 break;
             }
 
-        delete_cloud(cl_del);
+        delete_cloud(env.cloud[cl_del].pos);
         cl_new = cl_del;
     }
 
@@ -815,30 +799,19 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     }
 }
 
-bool is_opaque_cloud_type(cloud_type ctype)
+bool is_opaque_cloud(cloud_type ctype)
 {
     return ctype >= CLOUD_OPAQUE_FIRST && ctype <= CLOUD_OPAQUE_LAST;
 }
 
-bool is_opaque_cloud(int cloud_idx)
-{
-    if (cloud_idx == EMPTY_CLOUD)
-        return false;
-
-    return is_opaque_cloud_type(env.cloud[cloud_idx].type);
-}
-
 cloud_type cloud_type_at(const coord_def &c)
 {
-    const int cloudno = env.cgrid(c);
-    return cloudno == EMPTY_CLOUD ? CLOUD_NONE
-                                  : env.cloud[cloudno].type;
+    return cloud_at(c) ? cloud_at(c)->type : CLOUD_NONE;
 }
 
-bool cloud_is_yours_at(const coord_def &pos)
+bool cloud_is_yours_at(const coord_def &c)
 {
-    const int cloudidx = env.cgrid(pos);
-    return cloudidx != EMPTY_CLOUD && YOU_KILL(env.cloud[ cloudidx ].killer);
+    return cloud_at(c) ? YOU_KILL(cloud_at(c)->killer) : false;
 }
 
 cloud_type random_smoke_type()
@@ -1343,11 +1316,11 @@ static int _actor_cloud_damage(const actor *act,
 // the damage dealt.
 int actor_apply_cloud(actor *act)
 {
-    const int cl = env.cgrid(act->pos());
-    if (cl == EMPTY_CLOUD)
+    const cloud_struct* cl = cloud_at(act->pos());
+    if (!cl)
         return 0;
 
-    const cloud_struct &cloud(env.cloud[cl]);
+    const cloud_struct &cloud(*cl);
     const bool player = act->is_player();
     monster *mons = !player? act->as_monster() : nullptr;
     const beam_type cloud_flavour = _cloud2beam(cloud.type);
@@ -1391,7 +1364,7 @@ int actor_apply_cloud(actor *act)
 
         actor *oppressor = cloud.agent();
         act->hurt(oppressor, final_damage, BEAM_MISSILE,
-                  KILLED_BY_CLOUD, "", cloud.cloud_name("", true));
+                  KILLED_BY_CLOUD, "", cloud.cloud_name(true));
     }
 
     return final_damage;
@@ -1532,30 +1505,24 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
 
 // Like the above, but allow a monster to move from one damaging cloud
 // to another, even if they're of different types.
-bool mons_avoids_cloud(const monster* mons, int cloud_num, bool placement)
+bool mons_avoids_cloud(const monster* mons, coord_def pos, bool placement)
 {
-    if (cloud_num == EMPTY_CLOUD)
+    if (!cloud_at(pos))
         return false;
 
-    const cloud_struct &cloud = env.cloud[cloud_num];
-
     // Is the target cloud okay?
-    if (!_mons_avoids_cloud(mons, cloud, placement))
+    if (!_mons_avoids_cloud(mons, *cloud_at(pos), placement))
         return false;
 
     // If we're already in a cloud that we'd want to avoid then moving
     // from one to the other is okay.
-    if (!in_bounds(mons->pos()) || mons->pos() == cloud.pos)
+    if (!in_bounds(mons->pos()) || mons->pos() == pos)
         return true;
 
-    const int our_cloud_num = env.cgrid(mons->pos());
-
-    if (our_cloud_num == EMPTY_CLOUD)
+    if (!cloud_at(mons->pos()))
         return true;
 
-    const cloud_struct &our_cloud = env.cloud[our_cloud_num];
-
-    return !_mons_avoids_cloud(mons, our_cloud, true);
+    return !_mons_avoids_cloud(mons, *cloud_at(mons->pos()), true);
 }
 // Is the cloud purely cosmetic with no gameplay effect? If so, <foo>
 // is engulfed in <cloud> messages will be suppressed.
@@ -1591,14 +1558,6 @@ bool is_harmless_cloud(cloud_type type)
     default:
         return _cloud_is_cosmetic(type);
     }
-}
-
-string cloud_name_at_index(int cloudno)
-{
-    if (!env.cloud[cloudno].name.empty())
-        return env.cloud[cloudno].name;
-    else
-        return cloud_type_name(env.cloud[cloudno].type);
 }
 
 string cloud_type_name(cloud_type type, bool terse)
@@ -1694,12 +1653,9 @@ actor *cloud_struct::agent() const
     return find_agent(source, whose);
 }
 
-string cloud_struct::cloud_name(const string &defname,
-                                     bool terse) const
+string cloud_struct::cloud_name(bool terse) const
 {
-    return !name.empty()    ? name :
-           !defname.empty() ? defname :
-                              cloud_type_name(type, terse);
+    return !name.empty() ? name : cloud_type_name(type, terse);
 }
 
 void cloud_struct::announce_actor_engulfed(const actor *act,
@@ -1739,19 +1695,6 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
 /**
  * What colour is the given cloud?
  *
- * @param cloudno       The index in env.cloud of the cloud in question.
- * @return              An appropriate colour for the cloud.
- *                      May vary from call to call (randomized for some cloud
- *                      types).
- */
-colour_t get_cloud_colour(int cloudno)
-{
-    return get_cloud_colour(env.cloud[cloudno]);
-}
-
-/**
- * What colour is the given cloud?
- *
  * @param cloudno       The cloud in question.
  * @return              An appropriate colour for the cloud.
  *                      May vary from call to call (randomized for some cloud
@@ -1759,7 +1702,7 @@ colour_t get_cloud_colour(int cloudno)
  */
 colour_t get_cloud_colour(const cloud_struct &cloud)
 {
-    // if the cloud has a set (custom?) colour, use that.
+    // if the cloud has a set custom colour, use that.
     if (cloud.colour != -1)
         return cloud.colour;
 
@@ -1803,10 +1746,10 @@ colour_t get_cloud_colour(const cloud_struct &cloud)
 
 coord_def get_cloud_originator(const coord_def& pos)
 {
-    int cl;
-    if (!in_bounds(pos) || (cl = env.cgrid(pos)) == EMPTY_CLOUD)
+    const cloud_struct* cloud = cloud_at(pos);
+    if (!cloud)
         return coord_def();
-    const actor *agent = actor_by_mid(env.cloud[cl].source);
+    const actor *agent = actor_by_mid(cloud->source);
     if (!agent)
         return coord_def();
     return agent->pos();
@@ -1823,7 +1766,7 @@ void remove_tornado_clouds(mid_t whose)
 
     for (int i = 0; i < MAX_CLOUDS; i++)
         if (env.cloud[i].type == CLOUD_TORNADO && env.cloud[i].source == whose)
-            delete_cloud(i);
+            delete_cloud(env.cloud[i].pos);
 }
 
 static void _spread_cloud(coord_def pos, cloud_type type, int radius, int pow,
@@ -1844,7 +1787,7 @@ static void _spread_cloud(coord_def pos, cloud_type type, int radius, int pow,
         if (di.radius() > radius)
             return;
 
-        if ((exp_map(*di - pos + centre) < INT_MAX) && env.cgrid(*di) == EMPTY_CLOUD
+        if ((exp_map(*di - pos + centre) < INT_MAX) && !cloud_at(*di)
             && (di.radius() < radius || x_chance_in_y(ratio, 100)))
         {
             place_cloud(type, *di, pow + random2(pow), nullptr);
@@ -1853,10 +1796,10 @@ static void _spread_cloud(coord_def pos, cloud_type type, int radius, int pow,
             // Setting this way since the agent of the cloud may be dead before
             // cloud is placed, so no agent exists to pass to place_cloud (though
             // proper blame should still be assigned)
-            if (env.cgrid(*di) != EMPTY_CLOUD)
+            if (cloud_struct* cloud = cloud_at(*di))
             {
-                env.cloud[env.cgrid(*di)].source = agent_mid;
-                env.cloud[env.cgrid(*di)].whose = kcat;
+                cloud->source = agent_mid;
+                cloud->whose = kcat;
             }
         }
 

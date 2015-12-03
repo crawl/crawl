@@ -2947,8 +2947,7 @@ void monster::banish(actor *agent, const string &, const int)
     if (!cell_is_solid(old_pos))
         place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
     for (adjacent_iterator ai(old_pos); ai; ++ai)
-        if (!cell_is_solid(*ai) && env.cgrid(*ai) == EMPTY_CLOUD
-            && coinflip())
+        if (!cell_is_solid(*ai) && !cloud_at(*ai) && coinflip())
         {
             place_cloud(CLOUD_TLOC_ENERGY, *ai, 1 + random2(8), 0);
         }
@@ -4855,10 +4854,9 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     return true;
 }
 
-bool monster::is_cloud_safe(const coord_def &place)
+bool monster::is_cloud_safe(const coord_def &place) const
 {
-    int cl = env.cgrid(place);
-    return cl == EMPTY_CLOUD || !mons_avoids_cloud(this, cl);
+    return !mons_avoids_cloud(this, place);
 }
 
 static bool _can_path_to_staircase(const monster *mons, coord_def place)
