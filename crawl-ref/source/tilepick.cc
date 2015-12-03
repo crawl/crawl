@@ -627,7 +627,7 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
         *bg = mem_bg;
     *bg |= tileidx_unseen_flag(gc);
     // Don't draw rays out of los.
-    *bg &= ~(TILE_FLAG_RAY_OOR | TILE_FLAG_RAY | TILE_FLAG_LANDING);
+    *bg &= ~(TILE_FLAG_RAY_MULTI | TILE_FLAG_RAY_OOR | TILE_FLAG_RAY | TILE_FLAG_LANDING);
 
     // Override foreground for monsters/items
     if (env.map_knowledge(gc).detected_monster())
