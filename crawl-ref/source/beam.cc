@@ -2734,6 +2734,11 @@ void bolt::affect_ground()
            && !actor_at(pos()))
         {
             beh_type beh = attitude_creation_behavior(attitude);
+            // A friendly spore or hyperactive can exist only with Fedhas
+            // in which case the inactive ballistos spawned should be
+            // good_neutral to avoid hidden piety costs of Fedhas abilities
+            if (beh == BEH_FRIENDLY)
+                beh = BEH_GOOD_NEUTRAL;
 
             const god_type god = agent() ? agent()->deity() : GOD_NO_GOD;
 
