@@ -1406,7 +1406,7 @@ bool json_check(const JsonNode *node, char errmsg[256])
         problem("key contains invalid UTF-8");
 
     if (!tag_is_valid(node->tag))
-        problem("tag is invalid (%u)", node->tag);
+        problem("tag is invalid (%d)", node->tag);
 
     if (node->tag == JSON_BOOL)
     {

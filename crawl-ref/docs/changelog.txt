@@ -39,7 +39,6 @@ Items
   - Pieces from Xom's chessboard - evoke to randomly swap the positions of
     you and all enemies and LOS, or (on failure) to trigger a Xom effect.
 * The robe of vines is now +2, Regen+7.
-* Amulets of stasis do not generate sound when blocking an effect.
 * The Majin-Bo now speaks occasionally.
 
 Monsters
@@ -57,7 +56,6 @@ Monsters
 * Jumping spiders and mana vipers can be blinded.
 * Jumping spiders cannot see invisible.
 * Giant eyeballs and golden eyes can now see invisible.
-* Monsters no longer lose rod power by wearing a shield.
 * Salamander stormcallers' chant does not need to be continuous; they now
   only need to try to cast Fire Storm at their target three times for it to
   trigger.
@@ -86,7 +84,6 @@ Spells
   all cancellable effects on the target and - if any were dispelled - causes
   a radius 1 explosion with damage proportional to the number of dispelled
   effects.
-* Sticks to Snakes now caps its maximum spell power at 100.
 
 Interface
 ---------

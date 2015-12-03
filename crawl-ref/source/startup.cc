@@ -965,8 +965,6 @@ static void _choose_arena_teams(newgame_def& choice,
 
 bool startup_step()
 {
-    string name;
-
     _initialize();
 
     newgame_def choice   = Options.game;

@@ -1913,10 +1913,9 @@ static void _give_shield(monster* mon, int level)
         break;
 
     case MONS_ROBIN:
-        shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_HELMET,
-                                       level * 2 + 1, 1);
-        // but actually, a hat
         // The Nikola Hack
+        make_item_for_monster(mon, OBJ_ARMOUR, ARM_HELMET,
+                              level * 2 + 1, 1);
         break;
 
     case MONS_CORRUPTER:
@@ -1924,7 +1923,7 @@ static void _give_shield(monster* mon, int level)
         if (one_chance_in(3))
         {
             armour_type shield_type = coinflip() ? ARM_BUCKLER : ARM_SHIELD;
-            shield = make_item_for_monster(mon, OBJ_ARMOUR, shield_type, level);
+            make_item_for_monster(mon, OBJ_ARMOUR, shield_type, level);
         }
         break;
 

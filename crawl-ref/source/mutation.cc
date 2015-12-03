@@ -50,7 +50,6 @@ struct body_facet_def
 {
     equipment_type eq;
     mutation_type mut;
-    int level_lost;
 };
 
 struct facet_def
@@ -88,13 +87,13 @@ COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::LAST);
 
 static const body_facet_def _body_facets[] =
 {
-    //{ EQ_NONE, MUT_FANGS, 1 },
-    { EQ_HELMET, MUT_HORNS, 1 },
-    { EQ_HELMET, MUT_ANTENNAE, 1 },
-    //{ EQ_HELMET, MUT_BEAK, 1 },
-    { EQ_GLOVES, MUT_CLAWS, 3 },
-    { EQ_BOOTS, MUT_HOOVES, 3 },
-    { EQ_BOOTS, MUT_TALONS, 3 }
+    //{ EQ_NONE, MUT_FANGS },
+    { EQ_HELMET, MUT_HORNS },
+    { EQ_HELMET, MUT_ANTENNAE },
+    //{ EQ_HELMET, MUT_BEAK },
+    { EQ_GLOVES, MUT_CLAWS },
+    { EQ_BOOTS, MUT_HOOVES },
+    { EQ_BOOTS, MUT_TALONS }
 };
 
 /**
@@ -416,15 +415,15 @@ string describe_mutations(bool center_title)
 
     if (you.species == SP_OCTOPODE)
     {
-        const char * num_tentacles =
-               number_in_words(you.has_usable_tentacles(false)).c_str();
+        const string num_tentacles =
+               number_in_words(you.has_usable_tentacles(false));
         result += _annotate_form_based(
             make_stringf("You can wear up to %s rings at the same time.",
-                         num_tentacles),
+                         num_tentacles.c_str()),
             !get_form()->slot_available(EQ_RING_EIGHT));
         result += _annotate_form_based(
             make_stringf("You can use your tentacles to constrict %s enemies at once.",
-                         num_tentacles),
+                         num_tentacles.c_str()),
             !form_keeps_mutations());
     }
 

@@ -736,7 +736,7 @@ static int _item_name_specialness(const item_def& item)
     return 0;
 }
 
-static void _maybe_give_corpse_hint(const item_def item)
+static void _maybe_give_corpse_hint(const item_def& item)
 {
     if (!crawl_state.game_is_hints_tutorial())
         return;
@@ -764,7 +764,7 @@ void item_check()
 
     if (items.size() == 1)
     {
-        item_def it(*items[0]);
+        const item_def& it(*items[0]);
         string name = get_menu_colour_prefix_tags(it, DESC_A);
         strm << "You see here " << name << '.' << endl;
         _maybe_give_corpse_hint(it);
@@ -1360,7 +1360,7 @@ void pickup(bool partial_quantity)
         // list them.
         if (!any_selectable)
         {
-            for (stack_iterator si(you.pos(), true); si; si++)
+            for (stack_iterator si(you.pos(), true); si; ++si)
                 mprf_nocap("%s", get_menu_colour_prefix_tags(*si, DESC_A).c_str());
         }
 
@@ -2916,7 +2916,7 @@ static bool _interesting_explore_pickup(const item_def& item)
         return true;
 
     // Possbible ego items.
-    if (!item_type_known(item) & (item.flags & ISFLAG_COSMETIC_MASK))
+    if (!item_type_known(item) && (item.flags & ISFLAG_COSMETIC_MASK))
         return true;
 
     switch (item.base_type)

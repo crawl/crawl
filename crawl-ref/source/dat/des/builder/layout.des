@@ -433,24 +433,28 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_3().
 #
-# TODO: Make Elf version and add at weight 10.
+# TODO: Differentiate Elf version more
+#       Improve room generation
+#       Make random_room_point work correctly for new room types
 #
 NAME:   layout_rooms
-DEPTH:  D, Snake, Crypt, Pan
-WEIGHT: 15 (D), 15 (Snake), 10 (Crypt), 10 (Pan)
+DEPTH:  D, Elf, Snake, Crypt, Pan
+WEIGHT: 15 (D), 10 (Elf), 15 (Snake), 10 (Crypt), 10 (Pan)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_rooms
 {{
+    local is_elf_branch = you.branch() == "Elf"
+
     function draw_room(room)
         local room_type = 0
-        if you.in_branch("Elf") then
+        if is_elf_branch then
+           room_type = 1
+        else
            if crawl.coinflip() then
-             room_type = 1
+             room_type = 0
            else
              room_type = 2
            end
-        else
-           room_type = crawl.random2(3)
         end
         if room_type == 0 then
             -- rectangular
@@ -515,7 +519,9 @@ TAGS:   overwritable layout allow_dup unrand layout_type_rooms
             x1 = start.x,
             y1 = start.y,
             x2 = finish.x,
-            y2 = finish.y})
+            y2 = finish.y,
+            force_straight = is_elf_branch,
+            allow_diagonals = is_elf_branch})
     end
 
     local gxm, gym = dgn.max_bounds()
@@ -761,22 +767,51 @@ ENDMAP
 # This replaces dungeon.cc:_plan_5().
 # Previously named "layout_misc".
 #
-# TODO: Wider paths for Zot, then add at weight 20.
-# TODO: Straight paths for Crypt, Zot.
-#
 NAME:   layout_misc_corridors
-DEPTH:  Lair, Snake, Crypt
-WEIGHT: 5 (Lair), 20 (Snake), 20 (Crypt)
+DEPTH:  Lair, Snake, Crypt, Zot
+WEIGHT: 20, 5 (Lair)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_corridors
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     function random_coord(max_x, max_y)
-        return crawl.random2(max_x - 20) + 10,
-               crawl.random2(max_y - 20) + 10
+        local x = crawl.random2(max_x - 16) + 8
+        local y = crawl.random2(max_y - 16) + 8
+        local sanity = 0
+        while (dgn.in_vault(x, y) and sanity < 10) do
+            x = crawl.random2(max_x - 16) + 8
+            y = crawl.random2(max_y - 16) + 8
+            sanity = sanity + 1
+        end
+        return x, y
     end
 
     local gxm, gym = dgn.max_bounds()
+
     local corridors = crawl.random_range(15, 25)
+    local force_straight = false
+    local allow_diagonals = false
+    local max_thickness = 1
+    if you.branch() == "Crypt" then
+        force_straight = true
+    elseif you.branch() == "Zot" then
+        corridors = crawl.random_range(10, 16)
+        force_straight = true
+        allow_diagonals = crawl.coinflip()
+        max_thickness = 3
+    end
+    if you.at_branch_bottom() then
+        corridors = math.floor(corridors * (1.2 + crawl.random_real() * 0.3))
+    end
+
+    local area_fraction = 1;
+    local x_min, x_max, y_min, y_max = primary_vault_dimensions()
+    if x_min ~= nil then
+        local vault_area = (x_max - x_min + 1) * (y_max - y_min + 1)
+        local total_area = (gxm - 2) * (gym - 2)
+        area_fraction = 1 - (vault_area / total_area)
+        corridors = math.ceil(corridors * area_fraction)
+    end
 
     extend_map { width = gxm, height = gym, fill = 'x' }
 
@@ -786,13 +821,18 @@ TAGS:   overwritable layout allow_dup unrand layout_type_corridors
     while corridors > 0 do
         new_x, new_y = random_coord(gxm, gym)
 
-        join_the_dots { x1 = x, y1 = y, x2 = new_x, y2 = new_y }
+        local thickness = crawl.random_range(1, max_thickness)
+        join_the_dots { x1 = x, y1 = y, x2 = new_x, y2 = new_y,
+                        force_straight = force_straight,
+                        allow_diagonals = allow_diagonals,
+                        thickness = thickness }
 
         x, y = new_x, new_y
         corridors = corridors - 1
     end
 
-    spotty_map { boxy = true, iterations = 100 }
+    local iterations = math.floor(crawl.random_range(75, 125) * area_fraction)
+    spotty_map { boxy = true, iterations = iterations }
 
     theme.level_material(_G)
 }}

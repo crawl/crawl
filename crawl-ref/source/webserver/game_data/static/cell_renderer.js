@@ -868,7 +868,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             if (fg.DEATHS_DOOR)
             {
                 this.draw_icon(icons.DEATHS_DOOR, x, y, -status_shift, 0);
-                status_shift += 6;
+                status_shift += 10;
             }
             if (fg.RECALL)
             {

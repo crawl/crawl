@@ -196,12 +196,24 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
             snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
         }
     }
-    if (!count)
-        mpr("You fail to create any snakes.");
-    else if (count > 1)
-        mprf("You create %d snakes!",count);
+    if (count)
+    {
+        int sticks_left = num_sticks - count;
+
+        if (count > 1)
+            mprf("You create %d snakes!", count);
+        else
+            mpr("You create a snake!");
+
+        if (sticks_left)
+            mprf("You now have %d arrow%s.", sticks_left,
+                                             sticks_left > 1 ? "s" : "");
+        else
+            mpr("You now have no arrows remaining.");
+    }
     else
-        mpr("You create a snake!");
+        mpr("You fail to create any snakes.");
+
     return SPRET_SUCCESS;
 }
 
@@ -2545,7 +2557,7 @@ void init_servitor(monster* servitor, actor* caster)
              caster->conj_verb("summon").c_str(),
              caster->pronoun(PRONOUN_POSSESSIVE).c_str());
     }
-    else if (servitor)
+    else
         simple_monster_message(servitor, " appears!");
 
     int shortest_range = LOS_RADIUS + 1;

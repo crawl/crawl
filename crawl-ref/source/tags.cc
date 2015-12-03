@@ -3707,11 +3707,10 @@ static void tag_read_you_dungeon(reader &th)
     ASSERT(place_info.is_global());
     you.set_place_info(place_info);
 
-    vector<PlaceInfo> list = you.get_all_place_info();
     unsigned short count_p = (unsigned short) unmarshallShort(th);
     // Use "<=" so that adding more branches or non-dungeon places
     // won't break save-file compatibility.
-    ASSERT(count_p <= list.size());
+    ASSERT(count_p <= you.get_all_place_info().size());
 
     for (int i = 0; i < count_p; i++)
     {
@@ -3930,7 +3929,7 @@ void marshallItem(writer &th, const item_def &item, bool iinfo)
 
     item.orig_place.save(th);
     marshallShort(th, item.orig_monnum);
-    marshallString(th, item.inscription.c_str());
+    marshallString(th, item.inscription);
 
     item.props.write(th);
 }
@@ -4212,7 +4211,6 @@ void unmarshallItem(reader &th, item_def &item)
                 || item.sub_type == FOOD_BANANA
                 || item.sub_type == FOOD_STRAWBERRY
                 || item.sub_type == FOOD_RAMBUTAN
-                || item.sub_type == FOOD_LEMON
                 || item.sub_type == FOOD_GRAPE
                 || item.sub_type == FOOD_SULTANA
                 || item.sub_type == FOOD_LYCHEE
@@ -6237,7 +6235,7 @@ static void unmarshallSpells(reader &th, monster_spells &spells
 
 static void marshallGhost(writer &th, const ghost_demon &ghost)
 {
-    marshallString(th, ghost.name.c_str());
+    marshallString(th, ghost.name);
 
     marshallShort(th, ghost.species);
     marshallShort(th, ghost.job);

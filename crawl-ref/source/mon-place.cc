@@ -3702,7 +3702,6 @@ class newmons_square_find : public travel_pathfind
 {
 private:
     dungeon_feature_type feat_wanted;
-    coord_def start;
     int maxdistance;
 
     int best_distance;
@@ -3714,9 +3713,10 @@ public:
     newmons_square_find(dungeon_feature_type grdw,
                         const coord_def &pos,
                         int maxdist = 0)
-        :  feat_wanted(grdw), start(pos), maxdistance(maxdist),
+        :  feat_wanted(grdw), maxdistance(maxdist),
            best_distance(0), nfound(0)
     {
+        start = pos;
     }
 
     // This is an overload, not an override!

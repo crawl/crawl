@@ -265,7 +265,7 @@ static string _describe_ash_skill_boost()
         {
             if (it->first > SK_CONJURATIONS && it->first <= SK_LAST_MAGIC)
             {
-                boosted_skills.erase(it++);
+                boosted_skills.erase(it);
                 it = boosted_skills.begin();
             }
             else
@@ -650,16 +650,19 @@ static void _describe_god_powers(god_type which_god)
         int prot_chance = 10 + piety/10; // chance * 100
         const char *when = "";
 
-        switch (elyvilon_lifesaving())
+        if (which_god == GOD_ELYVILON)
         {
-            case 1:
-                when = ", especially when called upon";
-                prot_chance += 100 - 3000/piety;
-                break;
-            case 2:
-                when = ", and always does so when called upon";
-                prot_chance = 100;
-                break;
+            switch (elyvilon_lifesaving())
+            {
+                case 1:
+                    when = ", especially when called upon";
+                    prot_chance += 100 - 3000/piety;
+                    break;
+                case 2:
+                    when = ", and always does so when called upon";
+                    prot_chance = 100;
+                    break;
+            }
         }
 
         const char *how = (prot_chance >= 85) ? "carefully" :
@@ -875,7 +878,7 @@ static void _god_overview_description(god_type which_god, bool give_title)
 
     // Print god's description.
     string god_desc = getLongDescription(god_name(which_god));
-    cprintf("%s\n", get_linebreak_string(god_desc.c_str(), numcols).c_str());
+    cprintf("%s\n", get_linebreak_string(god_desc, numcols).c_str());
 
     // Title only shown for our own god.
     if (you_worship(which_god))

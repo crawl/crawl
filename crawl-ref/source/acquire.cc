@@ -605,10 +605,10 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     }
     while (item_type_removed(OBJ_STAVES, result));
 
-#define TRY_GIVE(x) { if (!you.type_ids[OBJ_STAVES][x]) \
-                      {result = x; found_enhancer = true;} }
     switch (best_spell_skill)
     {
+#define TRY_GIVE(x) { if (!you.type_ids[OBJ_STAVES][x]) \
+                      {result = x; found_enhancer = true;} }
     case SK_FIRE_MAGIC:   TRY_GIVE(STAFF_FIRE);        break;
     case SK_ICE_MAGIC:    TRY_GIVE(STAFF_COLD);        break;
     case SK_AIR_MAGIC:    TRY_GIVE(STAFF_AIR);         break;
@@ -617,6 +617,7 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     case SK_NECROMANCY:   TRY_GIVE(STAFF_DEATH);       break;
     case SK_CONJURATIONS: TRY_GIVE(STAFF_CONJURATION); break;
     case SK_SUMMONINGS:   TRY_GIVE(STAFF_SUMMONING);   break;
+#undef TRY_GIVE
     default:                                           break;
     }
     if (one_chance_in(found_enhancer ? 2 : 3))
@@ -628,13 +629,6 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     case 0: case 1: result = STAFF_WIZARDRY;   break;
     case 2: case 3: result = STAFF_ENERGY;     break;
     case 4: result = STAFF_POWER;              break;
-    }
-    switch (random2(5))
-    {
-    case 0: case 1: TRY_GIVE(STAFF_WIZARDRY);   break;
-    case 2: case 3: TRY_GIVE(STAFF_ENERGY);     break;
-    case 4: TRY_GIVE(STAFF_POWER);              break;
-#undef TRY_GIVE
     }
     return result;
 }

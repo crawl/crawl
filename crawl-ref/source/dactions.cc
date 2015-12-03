@@ -356,10 +356,10 @@ static void _apply_daction(daction_type act)
     case DACT_REMOVE_GOZAG_SHOPS:
     {
         vector<map_marker *> markers = env.markers.get_all(MAT_FEATURE);
-        for (unsigned int i = 0; i < markers.size(); i++)
+        for (const auto marker : markers)
         {
             map_feature_marker *feat =
-                dynamic_cast<map_feature_marker *>(markers[i]);
+                dynamic_cast<map_feature_marker *>(marker);
             ASSERT(feat);
             if (feat->feat == DNGN_ABANDONED_SHOP)
             {

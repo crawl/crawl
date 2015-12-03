@@ -122,7 +122,7 @@ static string _get_version_changes()
         help = buf;
 
         // Look for version headings
-        if (help.find("Stone Soup ") == 0)
+        if (starts_with(help, "Stone Soup "))
         {
             // Stop if this is for an older major version; otherwise, highlight
             if (help.find(string("Stone Soup ")+Version::Major) == string::npos)
@@ -769,7 +769,7 @@ void show_skill_menu_help()
 
 static void _add_command(column_composer &cols, const int column,
                          const command_type cmd,
-                         const string desc,
+                         const string &desc,
                          const unsigned int space_to_colon = 7)
 {
     string command_name = command_to_string(cmd);

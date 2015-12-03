@@ -306,6 +306,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 
         if (bg & TILE_FLAG_RAY)
             m_buf_feat.add(TILE_RAY, x, y);
+        else if (bg & TILE_FLAG_RAY_MULTI)
+            m_buf_feat.add(TILE_RAY_MULTI, x, y);
         else if (bg & TILE_FLAG_RAY_OOR)
             m_buf_feat.add(TILE_RAY_OUT_OF_RANGE, x, y);
         else if (bg & TILE_FLAG_LANDING)
@@ -466,7 +468,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     if (fg & TILE_FLAG_DEATHS_DOOR)
     {
         m_buf_icons.add(TILEI_DEATHS_DOOR, x, y, -status_shift, 0);
-        status_shift += 6;
+        status_shift += 10;
     }
     if (fg & TILE_FLAG_RECALL)
     {
