@@ -35,8 +35,7 @@
 
 cloud_struct* cloud_at(coord_def pos)
 {
-    return !in_bounds(pos) || env.cgrid(pos) == EMPTY_CLOUD
-                ? nullptr : &env.cloud[env.cgrid(pos)];
+    return map_find(env.cloud, pos);
 }
 
 /// A portrait of a cloud_type.
@@ -262,29 +261,16 @@ static void _los_cloud_changed(const coord_def& p, cloud_type t)
         los_terrain_changed(p);
 }
 
-static void _new_cloud(int cloud, cloud_type type, const coord_def& p,
-                        int decay, kill_category whose, killer_type killer,
-                        mid_t source, uint8_t spread_rate, int colour,
-                        string name, string tile, int excl_rad)
+cloud_struct::cloud_struct(coord_def p, cloud_type c, int d, int spread,
+                           kill_category kc, killer_type kt, mid_t src, int clr,
+                           string name_, string tile_, int excl)
+    : pos(p), type(c), decay(d), spread_rate(spread), whose(kc), killer(kt),
+      source(src), colour(clr), name(name_), tile(tile_), excl_rad(excl)
 {
-    ASSERT(env.cloud[cloud].type == CLOUD_NONE);
     ASSERT(_killer_whose_match(whose, killer));
-
-    cloud_struct& c = env.cloud[cloud];
 
     if (type == CLOUD_RANDOM_SMOKE)
         type = random_smoke_type();
-
-    c.type        = type;
-    c.decay       = decay;
-    c.pos         = p;
-    c.whose       = whose;
-    c.killer      = killer;
-    c.source      = source;
-    c.spread_rate = spread_rate;
-    c.colour      = colour;
-    c.name        = name;
-    c.excl_rad    = excl_rad;
     if (!tile.empty())
     {
         tileidx_t index;
@@ -294,34 +280,7 @@ static void _new_cloud(int cloud, cloud_type type, const coord_def& p,
             tile = "";
         }
     }
-    c.tile        = tile;
-    env.cgrid(p)  = cloud;
-    env.cloud_no++;
-
-    _los_cloud_changed(p, type);
-}
-
-static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
-                             kill_category whose, killer_type killer,
-                             mid_t source,
-                             int spread_rate = -1, int colour = -1,
-                             string name = "",
-                             string tile = "", int excl_rad = -1)
-{
-    if (env.cloud_no >= MAX_CLOUDS)
-        return;
-    ASSERT(!cell_is_solid(p));
-
-    // Find slot for cloud.
-    for (int ci = 0; ci < MAX_CLOUDS; ci++)
-    {
-        if (env.cloud[ci].type == CLOUD_NONE)   // i.e., is empty
-        {
-            _new_cloud(ci, cltype, p, decay, whose, killer, source, spread_rate,
-                       colour, name, tile, excl_rad);
-            break;
-        }
-    }
+    _los_cloud_changed(pos, type);
 }
 
 static int _spread_cloud(const cloud_struct &cloud)
@@ -350,9 +309,8 @@ static int _spread_cloud(const cloud_struct &cloud)
         if (newdecay >= cloud.decay)
             newdecay = cloud.decay - 1;
 
-        _place_new_cloud(cloud.type, *ai, newdecay, cloud.whose, cloud.killer,
-                         cloud.source, cloud.spread_rate, cloud.colour,
-                         cloud.name, cloud.tile, cloud.excl_rad);
+        env.cloud[*ai] = cloud;
+        env.cloud[*ai].pos = *ai;
 
         extra_decay += 8;
     }
@@ -376,9 +334,10 @@ static void _spread_fire(const cloud_struct &cloud)
         // burning trees produce flames all around
         if (!cell_is_solid(*ai) && make_flames)
         {
-            _place_new_cloud(CLOUD_FIRE, *ai, cloud.decay/2+1, cloud.whose,
-                             cloud.killer, cloud.source, cloud.spread_rate,
-                             cloud.colour, cloud.name, cloud.tile, cloud.excl_rad);
+            env.cloud[*ai] = cloud;
+            env.cloud[*ai].type = CLOUD_FIRE;
+            env.cloud[*ai].pos = *ai;
+            env.cloud[*ai].decay = cloud.decay / 2 + 1;
         }
 
         // forest fire doesn't spread in all directions at once,
@@ -392,9 +351,9 @@ static void _spread_fire(const cloud_struct &cloud)
         if (you.see_cell(*ai))
             mpr("The forest fire spreads!");
         destroy_wall(*ai);
-        _place_new_cloud(cloud.type, *ai, random2(30)+25, cloud.whose,
-                         cloud.killer, cloud.source, cloud.spread_rate,
-                         cloud.colour, cloud.name, cloud.tile, cloud.excl_rad);
+        env.cloud[*ai] = cloud;
+        env.cloud[*ai].pos = *ai;
+        env.cloud[*ai].decay = random2(30) + 25;
         if (cloud.whose == KC_YOU)
         {
             did_god_conduct(DID_KILL_PLANT, 1);
@@ -420,8 +379,9 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
             && !cloud_at(p)
             && one_chance_in(7))
         {
-            _place_new_cloud(CLOUD_STEAM, p, cloud.decay / 2 + 1,
-                             cloud.whose, cloud.killer, cloud.source, 22);
+            env.cloud[p] = cloud_struct(p, CLOUD_STEAM, cloud.decay / 2 + 1,
+                                        22, cloud.whose, cloud.killer,
+                                        cloud.source, -1, "", "", -1);
         }
     }
 }
@@ -525,12 +485,9 @@ static void _handle_spectral_cloud(const cloud_struct& cloud)
 
 void manage_clouds()
 {
-    for (int i = 0; i < MAX_CLOUDS; ++i)
+    for (auto& entry : env.cloud)
     {
-        cloud_struct& cloud = env.cloud[i];
-
-        if (cloud.type == CLOUD_NONE)
-            continue;
+        cloud_struct& cloud = entry.second;
 
 #ifdef ASSERTS
         if (cell_is_solid(cloud.pos))
@@ -560,118 +517,96 @@ void manage_clouds()
     }
 }
 
-static void _maybe_leave_water(const cloud_struct& c)
+static void _maybe_leave_water(const coord_def pos)
 {
-    ASSERT_IN_BOUNDS(c.pos);
+    ASSERT_IN_BOUNDS(pos);
 
     // Rain clouds can occasionally leave shallow water or deepen it:
     // If we're near lava, chance of leaving water is lower;
     // if we're near deep water already, chance of leaving water
     // is slightly higher.
-    if (!one_chance_in((5 + count_neighbours(c.pos, DNGN_LAVA)) -
-                            count_neighbours(c.pos, DNGN_DEEP_WATER)))
+    if (!one_chance_in((5 + count_neighbours(pos, DNGN_LAVA)) -
+                            count_neighbours(pos, DNGN_DEEP_WATER)))
     {
         return;
     }
 
-    dungeon_feature_type feat = grd(c.pos);
+    dungeon_feature_type feat = grd(pos);
 
-    if (grd(c.pos) == DNGN_FLOOR)
+    if (grd(pos) == DNGN_FLOOR)
         feat = DNGN_SHALLOW_WATER;
-    else if (grd(c.pos) == DNGN_SHALLOW_WATER && you.pos() != c.pos
+    else if (grd(pos) == DNGN_SHALLOW_WATER && you.pos() != pos
              && one_chance_in(3) && !crawl_state.game_is_sprint())
     {
         // Don't drown the player!
         feat = DNGN_DEEP_WATER;
     }
 
-    if (grd(c.pos) != feat)
+    if (grd(pos) != feat)
     {
-        if (you.pos() == c.pos && you.ground_level())
+        if (you.pos() == pos && you.ground_level())
             mpr("The rain has left you waist-deep in water!");
-        temp_change_terrain(c.pos, feat, random_range(500, 1000),
+        temp_change_terrain(pos, feat, random_range(500, 1000),
                             TERRAIN_CHANGE_FLOOD);
     }
 }
 
-static void _delete_cloud(int cloud)
-{
-    cloud_struct& c = env.cloud[cloud];
-    if (c.type == CLOUD_NONE)
-        return;
-
-    cloud_type t = c.type;
-    if (c.type == CLOUD_RAIN)
-        _maybe_leave_water(c);
-
-    c.type        = CLOUD_NONE;
-    c.decay       = 0;
-    c.whose       = KC_OTHER;
-    c.killer      = KILL_NONE;
-    c.spread_rate = 0;
-    c.colour      = -1;
-    c.name        = "";
-    c.tile        = "";
-
-    env.cgrid(c.pos) = EMPTY_CLOUD;
-    _los_cloud_changed(c.pos, t);
-    c.pos.reset();
-    env.cloud_no--;
-}
-
 void delete_cloud(coord_def p)
 {
-    const int cloud = env.cgrid(p);
-    if (cloud != EMPTY_CLOUD)
-        _delete_cloud(cloud);
+    if (!cloud_at(p))
+        return;
+    const cloud_type type = cloud_at(p)->type;
+    env.cloud.erase(p);
+    if (type == CLOUD_RAIN)
+        _maybe_leave_water(p);
+    _los_cloud_changed(p, type);
 }
 
 void delete_all_clouds()
 {
-    for (int i = 0; i < MAX_CLOUDS; ++i)
-        _delete_cloud(i);
+    // this is ok because removing an entry from a std::map only invalidates
+    // that one's iterator
+    for (auto& entry : env.cloud)
+        delete_cloud(entry.first);
 }
 
 // The current use of this function is for shifting in the abyss, so
 // that clouds get moved along with the rest of the map.
 void move_cloud(coord_def src, coord_def newpos)
 {
-    const int cloud = env.cgrid(src);
+    if (!cloud_at(src))
+        return;
     ASSERT(!cell_is_solid(newpos));
 
-    if (cloud == EMPTY_CLOUD)
-        return;
-
-    const coord_def oldpos = env.cloud[cloud].pos;
-    env.cgrid(oldpos) = EMPTY_CLOUD;
-    env.cgrid(newpos) = cloud;
-    env.cloud[cloud].pos = newpos;
-    _los_cloud_changed(oldpos, env.cloud[cloud].type);
-    _los_cloud_changed(newpos, env.cloud[cloud].type);
+    env.cloud[newpos] = env.cloud[src];
+    env.cloud.erase(src);
+    env.cloud[newpos].pos = newpos;
+    _los_cloud_changed(src, env.cloud[newpos].type);
+    _los_cloud_changed(newpos, env.cloud[newpos].type);
 }
 
 void swap_clouds(coord_def p1, coord_def p2)
 {
     if (p1 == p2)
         return;
-    int c1 = env.cgrid(p1);
-    int c2 = env.cgrid(p2);
-    bool affects_los = false;
-    if (c1 != EMPTY_CLOUD)
+    if (!cloud_at(p1))
     {
-        env.cloud[c1].pos = p2;
-        if (is_opaque_cloud(env.cloud[c1].type))
-            affects_los = true;
+        move_cloud(p2, p1);
+        return;
     }
-    if (c2 != EMPTY_CLOUD)
+    else if (!cloud_at(p2))
     {
-        env.cloud[c2].pos = p1;
-        if (is_opaque_cloud(env.cloud[c2].type))
-            affects_los = true;
+        move_cloud(p1, p2);
+        return;
     }
-    env.cgrid(p1) = c2;
-    env.cgrid(p2) = c1;
-    if (affects_los)
+
+    cloud_struct temp = env.cloud[p1];
+    env.cloud[p1] = env.cloud[p2];
+    env.cloud[p2] = temp;
+    env.cloud[p1].pos = p1;
+    env.cloud[p2].pos = p2;
+    if (is_opaque_cloud(cloud_type_at(p1))
+        || is_opaque_cloud(cloud_type_at(p2)))
     {
         los_terrain_changed(p1);
         los_terrain_changed(p2);
@@ -687,34 +622,20 @@ void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
     if (!in_bounds(p) || cloud_at(p))
         return;
 
-    if (cl_type == CLOUD_INK && !feat_is_watery(grd(p)))
-        return;
-
     place_cloud(cl_type, p, lifetime, agent, spread_rate, colour, name, tile,
                 excl_rad);
 }
 
-static bool _is_weak_cloud(const cloud_struct& cloud)
+static bool _cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
 {
     return is_harmless_cloud(cloud.type)
            || cloud.type == CLOUD_STEAM
-           || cloud.type == CLOUD_NONE // placeholder cloud
+           || ct == CLOUD_TORNADO
+           || ct == CLOUD_POISON && cloud.type == CLOUD_MEPHITIC
            || cloud.decay <= 20; // soon gone
 }
 
-static bool _cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
-{
-    if (_is_weak_cloud(cloud))
-        return true;
-    if (ct == CLOUD_POISON && cloud.type == CLOUD_MEPHITIC)
-        return true; // allow upgrading meph
-    if (ct == CLOUD_TORNADO)
-        return true; // visual/AI only
-    return false;
-}
-
-//   Places a cloud with the given stats. May delete old clouds to
-//   make way if there are too many on level. Will overwrite an old
+//   Places a cloud with the given stats. Will overwrite an old
 //   cloud under some circumstances.
 void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
                  const actor *agent, int _spread_rate, int colour,
@@ -743,60 +664,16 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
         source = agent->mid;
     }
 
-    int cl_new = -1;
 
-    const int target_cgrid = env.cgrid(ctarget);
-    if (target_cgrid != EMPTY_CLOUD)
-    {
-        // There's already a cloud here. See if we can overwrite it.
-        if (_cloud_is_stronger(cl_type, env.cloud[target_cgrid]))
-        {
-            // Delete this cloud and replace it.
-            cl_new = target_cgrid;
-            delete_cloud(ctarget);
-        }
-        else                    // Guess not.
-            return;
-    }
+    // There's already a cloud here. See if we can overwrite it.
+    if (cloud_at(ctarget) && !_cloud_is_stronger(cl_type, *cloud_at(ctarget)))
+        return;
 
     const int spread_rate = _actual_spread_rate(cl_type, _spread_rate);
 
-    // Too many clouds.
-    if (env.cloud_no >= MAX_CLOUDS)
-    {
-        // Default to random in case there's no low quality clouds.
-        int cl_del = random2(MAX_CLOUDS);
-
-        for (int ci = 0; ci < MAX_CLOUDS; ci++)
-            if (_is_weak_cloud(env.cloud[ci]))
-            {
-                cl_del = ci;
-                break;
-            }
-
-        delete_cloud(env.cloud[cl_del].pos);
-        cl_new = cl_del;
-    }
-
-    // Create new cloud.
-    if (cl_new != -1)
-    {
-        _new_cloud(cl_new, cl_type, ctarget, cl_range * 10,
-                    whose, killer, source, spread_rate, colour, name, tile,
-                    excl_rad);
-        return;
-    }
-
-    // Find slot for cloud.
-    for (int ci = 0; ci < MAX_CLOUDS; ci++)
-    {
-        if (env.cloud[ci].type == CLOUD_NONE)   // ie is empty
-        {
-            _new_cloud(ci, cl_type, ctarget, cl_range * 10, whose, killer,
-                       source, spread_rate, colour, name, tile, excl_rad);
-            break;
-        }
-    }
+    env.cloud[ctarget] = cloud_struct(ctarget, cl_type, cl_range * 10,
+                                      spread_rate, whose, killer, source,
+                                      colour, name, tile, excl_rad);
 }
 
 bool is_opaque_cloud(cloud_type ctype)
@@ -1764,9 +1641,9 @@ void remove_tornado_clouds(mid_t whose)
     // example, this approach doesn't work if we ever make Tornado a monster
     // spell (excluding immobile and mindless casters).
 
-    for (int i = 0; i < MAX_CLOUDS; i++)
-        if (env.cloud[i].type == CLOUD_TORNADO && env.cloud[i].source == whose)
-            delete_cloud(env.cloud[i].pos);
+    for (auto& entry : env.cloud)
+        if (entry.second.type == CLOUD_TORNADO && entry.second.source == whose)
+            delete_cloud(entry.first);
 }
 
 static void _spread_cloud(coord_def pos, cloud_type type, int radius, int pow,

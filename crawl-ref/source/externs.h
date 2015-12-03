@@ -312,6 +312,9 @@ struct cloud_struct
                      name(""), tile(""), excl_rad(-1)
     {
     }
+    cloud_struct(coord_def p, cloud_type c, int d, int spread, kill_category kc,
+                 killer_type kt, mid_t src, int clr, string name_, string tile_,
+                 int excl);
 
     bool defined() const { return type != CLOUD_NONE; }
     bool temporary() const { return excl_rad == -1; }

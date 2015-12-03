@@ -978,7 +978,7 @@ void maybe_shift_abyss_around_player()
         ++j;
 
     dprf(DIAG_ABYSS, "Number of monsters present: %d", j);
-    dprf(DIAG_ABYSS, "Number of clouds present: %d", env.cloud_no);
+    dprf(DIAG_ABYSS, "Number of clouds present: %d", env.cloud.size());
 #endif
 }
 
