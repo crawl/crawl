@@ -548,7 +548,7 @@ string zin_recite_text(const int seed, const int prayertype, int step)
     {
         step = abs(step-3);
         if (step > 3)
-            step = 0;
+            step = 1;
     }
     else
     {
@@ -4328,7 +4328,7 @@ bool gozag_potion_petition()
             for (const CrawlStoreValue& store : *pots[i])
                 pot_names.emplace_back(potion_type_name(store.get_int()));
             line += comma_separated_line(pot_names.begin(), pot_names.end());
-            mpr_nojoin(MSGCH_PLAIN, line.c_str());
+            mpr_nojoin(MSGCH_PLAIN, line);
         }
         mprf(MSGCH_PROMPT, "Purchase which effect?");
         keyin = toalower(get_ch()) - 'a';
@@ -6151,7 +6151,7 @@ bool ru_do_sacrifice(ability_type sac)
             _ru_kill_skill(SK_BOWS);
     }
 
-    mark_milestone("sacrifice", mile_text.c_str());
+    mark_milestone("sacrifice", mile_text);
 
     // Any special handling that's needed.
     _extra_sacrifice_code(sac);

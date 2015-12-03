@@ -158,14 +158,13 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
     env.level_build_method += make_stringf(" [%s]",
         force_wall == NUM_FEATURES ? "any" : dungeon_feature_name(force_wall));
 
-    int number_boxes = 5000;
     dungeon_feature_type drawing = DNGN_ROCK_WALL;
 
-    number_boxes = random_choose_weighted(32, 4000,
-                                          24, 3000,
-                                          16, 5000,
-                                          8, 2000,
-                                          1, 1000, 0);
+    int number_boxes = random_choose_weighted(32, 4000,
+                                              24, 3000,
+                                              16, 5000,
+                                              8, 2000,
+                                              1, 1000, 0);
 
     if (force_wall != NUM_FEATURES)
         drawing = force_wall;

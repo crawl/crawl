@@ -3923,7 +3923,7 @@ static int _rest_trigger_level(int max)
     return (max * Options.rest_wait_percent) / 100;
 }
 
-static bool should_stop_resting(int cur, int max)
+static bool _should_stop_resting(int cur, int max)
 {
     return cur == max || cur == _rest_trigger_level(max);
 }
@@ -3947,7 +3947,7 @@ void inc_mp(int mp_gain, bool silent)
 
     if (!silent)
     {
-        if (should_stop_resting(you.magic_points, you.max_magic_points))
+        if (_should_stop_resting(you.magic_points, you.max_magic_points))
             interrupt_activity(AI_FULL_MP);
         you.redraw_magic_points = true;
     }
@@ -3968,7 +3968,7 @@ void inc_hp(int hp_gain)
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
 
-    if (should_stop_resting(you.hp, you.hp_max))
+    if (_should_stop_resting(you.hp, you.hp_max))
         interrupt_activity(AI_FULL_HP);
 
     you.redraw_hit_points = true;
@@ -4177,6 +4177,27 @@ int get_real_mp(bool include_items)
     enp = max(enp, 0);
 
     return enp;
+}
+
+bool player_regenerates_hp()
+{
+    if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
+        return false;
+    if (you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
+        return false;
+    return true;
+}
+
+bool player_regenerates_mp()
+{
+    // Don't let DD use guardian spirit for free HP, since their
+    // damage shaving is enough. (due, dpeg)
+    if (you.spirit_shield() && you.species == SP_DEEP_DWARF)
+        return false;
+    // Pakellas blocks MP regeneration.
+    if (you_worship(GOD_PAKELLAS))
+        return false;
+    return true;
 }
 
 int get_contamination_level()
@@ -4822,11 +4843,8 @@ void dec_disease_player(int delay)
 
         // Extra regeneration means faster recovery from disease.
         // But not if not actually regenerating!
-        if (player_mutation_level(MUT_SLOW_REGENERATION) < 3
-            && !(you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING))
-        {
+        if (player_regenerates_hp())
             rr += _player_bonus_regen();
-        }
 
         // Trog's Hand.
         if (you.duration[DUR_TROGS_HAND])
@@ -5048,7 +5066,7 @@ void handle_player_drowning(int delay)
     else
     {
         monster* mons = monster_by_mid(you.props["water_holder"].get_int());
-        if (!mons || mons && !adjacent(mons->pos(), you.pos()))
+        if (!mons || !adjacent(mons->pos(), you.pos()))
         {
             if (you.res_water_drowning())
                 mpr("The water engulfing you falls away.");
@@ -5457,11 +5475,9 @@ bool player::is_banished() const
 bool player::is_sufficiently_rested() const
 {
     // Only return false if resting will actually help.
-    return (hp >= _rest_trigger_level(hp_max)
-            || player_mutation_level(MUT_SLOW_REGENERATION) == 3
-            || you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
-        && (magic_points >= _rest_trigger_level(max_magic_points)
-            || you.spirit_shield() && you.species == SP_DEEP_DWARF);
+    return (hp >= _rest_trigger_level(hp_max) || !player_regenerates_hp())
+            && (magic_points >= _rest_trigger_level(max_magic_points)
+                || !player_regenerates_mp());
 }
 
 bool player::in_water() const

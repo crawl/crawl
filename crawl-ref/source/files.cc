@@ -90,7 +90,7 @@ static void _save_level(const level_id& lid);
 
 static bool _ghost_version_compatible(reader &ghost_reader);
 
-static bool _restore_tagged_chunk(package *save, const string name,
+static bool _restore_tagged_chunk(package *save, const string &name,
                                   tag_type tag, const char* complaint);
 static bool _read_char_chunk(package *save);
 
@@ -318,7 +318,7 @@ static bool _create_dirs(const string &dir)
 {
     string sep = " ";
     sep[0] = FILE_SEPARATOR;
-    vector<string> segments = split_string(sep.c_str(), dir, false, false);
+    vector<string> segments = split_string(sep, dir, false, false);
 
     string path;
     for (int i = 0, size = segments.size(); i < size; ++i)
@@ -641,9 +641,6 @@ static vector<player_save_info> _find_saved_characters()
 
     for (const string &filename : get_dir_files(searchpath))
     {
-        string::size_type point_pos = filename.find_first_of('.');
-        string basename = filename.substr(0, point_pos);
-
         if (is_save_file_name(filename))
         {
             try
@@ -809,7 +806,7 @@ static int _get_dest_stair_type(branch_type old_branch,
 
     if (feat_is_branch_exit(stair_taken))
     {
-        for (branch_iterator it; it; it++)
+        for (branch_iterator it; it; ++it)
             if (it->exit_stairs == stair_taken)
                 return it->entry_stairs;
         die("entrance corresponding to exit %d not found", stair_taken);
@@ -817,7 +814,7 @@ static int _get_dest_stair_type(branch_type old_branch,
 
     if (feat_is_branch_entrance(stair_taken))
     {
-        for (branch_iterator it; it; it++)
+        for (branch_iterator it; it; ++it)
             if (it->entry_stairs == stair_taken)
                 return it->exit_stairs;
         die("return corresponding to entry %d not found", stair_taken);
@@ -2161,7 +2158,7 @@ static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
     return true;
 }
 
-static bool _restore_tagged_chunk(package *save, const string name,
+static bool _restore_tagged_chunk(package *save, const string &name,
                                   tag_type tag, const char* complaint)
 {
     reader inf(save, name);

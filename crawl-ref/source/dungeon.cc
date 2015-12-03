@@ -609,7 +609,7 @@ static void _set_grd(const coord_def &c, dungeon_feature_type feat)
     grd(c) = feat;
 }
 
-static void _dgn_register_vault(const string name, const string spaced_tags)
+static void _dgn_register_vault(const string &name, const string &spaced_tags)
 {
     if (spaced_tags.find(" allow_dup ") == string::npos)
         you.uniq_map_names.insert(name);
@@ -619,9 +619,9 @@ static void _dgn_register_vault(const string name, const string spaced_tags)
 
     for (const string &tag : split_string(" ", spaced_tags))
     {
-        if (tag.find("uniq_") == 0)
+        if (starts_with(tag, "uniq_"))
             you.uniq_map_tags.insert(tag);
-        else if (tag.find("luniq_") == 0)
+        else if (starts_with(tag, "luniq_"))
             env.level_uniq_map_tags.insert(tag);
     }
 }
@@ -633,9 +633,9 @@ static void _dgn_unregister_vault(const map_def &map)
 
     for (const string &tag : split_string(" ", map.tags))
     {
-        if (tag.find("uniq_") == 0)
+        if (starts_with(tag, "uniq_"))
             you.uniq_map_tags.erase(tag);
-        else if (tag.find("luniq_") == 0)
+        else if (starts_with(tag, "luniq_"))
             env.level_uniq_map_tags.erase(tag);
     }
 
@@ -4550,7 +4550,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         type = RANDOM_MONSTER;
     }
 
-    if (type != RANDOM_MONSTER && type < NUM_MONSTERS)
+    if (type < NUM_MONSTERS)
     {
         // Don't place a unique monster a second time.
         // (Boris is handled specially.)

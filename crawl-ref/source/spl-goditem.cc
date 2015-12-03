@@ -36,7 +36,7 @@
 #include "view.h"
 #include "viewchar.h"
 
-static void _print_holy_pacification_speech(const string key,
+static void _print_holy_pacification_speech(const string &key,
                                             monster* mon,
                                             msg_channel_type channel)
 {
@@ -1277,7 +1277,7 @@ void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
         beam.thrower   = KILL_MISC;
         beam.source_id = MID_NOBODY;
     }
-    else if (attacker && attacker->is_player())
+    else if (attacker->is_player())
     {
         beam.thrower   = KILL_YOU;
         beam.source_id = MID_PLAYER;

@@ -121,8 +121,7 @@ static void _write_abyssal_features()
         return;
 
     dprf(DIAG_ABYSS, "Writing a mock-up of old level.");
-    const int count = abyssal_features.size();
-    ASSERT(count == sqr(2 * LOS_RADIUS + 1));
+    ASSERT((int)abyssal_features.size() == sqr(2 * LOS_RADIUS + 1));
     const int scalar = 0xFF;
     int index = 0;
     for (int x = -LOS_RADIUS; x <= LOS_RADIUS; x++)
@@ -612,8 +611,6 @@ static void _push_displaced_monster(monster* mon)
 
 static void _place_displaced_monsters()
 {
-    list<monster*>::iterator mon_itr;
-
     for (monster *mon : displaced_monsters)
     {
         if (mon->alive() && !mon->find_home_near_place(mon->pos()))

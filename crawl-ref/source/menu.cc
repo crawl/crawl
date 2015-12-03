@@ -751,7 +751,7 @@ bool Menu::draw_title_suffix(const formatted_string &fs, bool titlefirst)
         if (fs_length < avail_width)
         {
             char fmt[20];
-            sprintf(fmt, "%%%ds", avail_width-fs_length);
+            sprintf(fmt, "%%%us", avail_width-fs_length);
             cprintf(fmt, " ");
         }
     }
@@ -3075,9 +3075,8 @@ void SaveMenuItem::_pack_doll()
 #endif
 
 MenuObject::MenuObject() : m_dirty(false), m_allow_focus(true), m_min_coord(0,0),
-                           m_max_coord(0,0)
+                           m_max_coord(0,0), m_object_name("unnamed object")
 {
-    m_object_name = "unnamed object";
 #ifdef USE_TILE_LOCAL
     m_unit_width_pixels = tiles.get_crt_font()->char_width();
     m_unit_height_pixels = tiles.get_crt_font()->char_height();

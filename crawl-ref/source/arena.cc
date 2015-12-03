@@ -244,7 +244,7 @@ namespace arena
         const unwind_stringset mnames(you.uniq_map_names);
 
         string map_name = "arena_" + arena_type;
-        const map_def *map = random_map_for_tag(map_name.c_str());
+        const map_def *map = random_map_for_tag(map_name);
 
         if (!map)
             throw make_stringf("No arena maps named \"%s\"", arena_type.c_str());

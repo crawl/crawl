@@ -64,7 +64,7 @@ static inline int toalower(int c)
 }
 
 int numcmp(const char *a, const char *b, int limit = 0);
-bool numcmpstr(string a, string b);
+bool numcmpstr(const string &a, const string &b);
 
 bool version_is_stable(const char *ver);
 

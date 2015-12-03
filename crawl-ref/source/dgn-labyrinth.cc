@@ -233,6 +233,7 @@ static void _change_walls_from_centre(const dgn_region &region,
 
         ldist.emplace_back(dist, feat);
     }
+    va_end(args);
 
     _change_walls_from_centre(region, c, rectangular, MMT_VAULT, wall, ldist);
 }

@@ -12,6 +12,7 @@ enum aff_type // sign and non-zeroness matters
     // If you want to extend this to pass the probability somehow, feel free to,
     // just keep AFF_YES the minimal "bright" value.
     AFF_LANDING,     // Valid shadow step landing site
+    AFF_MULTIPLE,    // Passes through multiple times
 };
 
 class targetter
@@ -269,15 +270,4 @@ private:
     size_t num_beams;
     int range;
 };
-
-class targetter_list : public targetter
-{
-public:
-    targetter_list(vector<coord_def> targets, coord_def center);
-    aff_type is_affected(coord_def loc) override;
-    bool valid_aim(coord_def a) override;
-private:
-    vector<coord_def> targets;
-};
-
 #endif
