@@ -1649,7 +1649,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_DEMONSPAWN_CORRUPTER,
       {
        { SPELL_PLANEREND, 32, MON_SPELL_PRIEST },
-       { SPELL_CORRUPT_BODY, 32, MON_SPELL_PRIEST },
+       { SPELL_LESSER_MALMUTATE, 64, MON_SPELL_PRIEST },
       }
     },
 

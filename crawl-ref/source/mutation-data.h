@@ -152,7 +152,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_HEAT_VULNERABILITY, 0, 3,
-  mutflag::BAD | mutflag::CORRUPT | mutflag::QAZLAL, true,
+  mutflag::BAD | mutflag::QAZLAL, true,
   "heat vulnerability",
 
   {"You are vulnerable to heat.",
@@ -171,7 +171,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_COLD_VULNERABILITY, 0, 3,
-  mutflag::BAD | mutflag::CORRUPT | mutflag::QAZLAL, true,
+  mutflag::BAD | mutflag::QAZLAL, true,
 
   "cold vulnerability",
 
@@ -246,7 +246,7 @@ static const mutation_def mut_data[] =
    "regeneration",
 },
 
-{ MUT_SLOW_REGENERATION, 3, 3, mutflag::BAD | mutflag::CORRUPT, false,
+{ MUT_SLOW_REGENERATION, 3, 3, mutflag::BAD, false,
   "slow regeneration",
 
   {"You regenerate slowly when monsters are visible.",
@@ -431,7 +431,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_DEFORMED, 8, 1,
-  mutflag::BAD | mutflag::XOM | mutflag::CORRUPT,
+  mutflag::BAD | mutflag::XOM,
   true,
   "deformed body",
 
@@ -591,7 +591,7 @@ static const mutation_def mut_data[] =
    "berserk rage",
 },
 
-{ MUT_DETERIORATION, 10, 2, mutflag::BAD | mutflag::XOM | mutflag::CORRUPT, false,
+{ MUT_DETERIORATION, 10, 2, mutflag::BAD | mutflag::XOM, false,
   "deterioration",
 
   {"Your body sometimes deteriorates upon taking damage.",
@@ -609,7 +609,7 @@ static const mutation_def mut_data[] =
    "deteriorating body",
 },
 
-{ MUT_BLURRY_VISION, 10, 3, mutflag::BAD | mutflag::XOM | mutflag::CORRUPT, false,
+{ MUT_BLURRY_VISION, 10, 3, mutflag::BAD | mutflag::XOM, false,
   "blurry vision",
 
   {"Scrolls take you a little longer to read.",
@@ -664,7 +664,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_FRAIL, 10, 3,
-  mutflag::BAD | mutflag::XOM | mutflag::CORRUPT, false,
+  mutflag::BAD | mutflag::XOM, false,
   "frail",
 
   {"You are frail (-10% HP).",
@@ -1059,7 +1059,7 @@ static const mutation_def mut_data[] =
    "increased magical capacity (+10% MP)",
 },
 
-{ MUT_LOW_MAGIC, 9, 3, mutflag::BAD | mutflag::CORRUPT, false,
+{ MUT_LOW_MAGIC, 9, 3, mutflag::BAD, false,
   "low mp",
 
   {"Your magical capacity is low (-10% MP).",

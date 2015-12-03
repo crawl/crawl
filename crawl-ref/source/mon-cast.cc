@@ -1190,11 +1190,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.pierce     = true;
         break;
 
-    case SPELL_CORRUPT_BODY:
-        beam.flavour    = BEAM_CORRUPT_BODY;
-        beam.pierce     = true;
-        break;
-
     case SPELL_SHADOW_BOLT:
         beam.name     = "shadow bolt";
         beam.pierce   = true;
