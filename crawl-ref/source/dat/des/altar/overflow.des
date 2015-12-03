@@ -1566,79 +1566,83 @@ MAP
 ENDMAP
 
 # high evo !apt band takes down filthy low evo !apt brute
-# 2/3  chance of a kobold or corpse with a wand
-# 3/10 chance for a troll corpse (i.e. chance for early troll hide)
+# 25% chance of live kobold with wand; otherwise empty wand
+# 12.5% chance of troll corpse (early troll hide)
 NAME:    johnstein_pakellas_death_squad
-DEPTH:   D:2-
-TAGS:    temple_overflow_pakellas uniq_altar_pakellas
+DEPTH:   D:3-
+TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
 KFEAT:   _ = altar_pakellas
-KPROP:   xcmnvbt' = bloody / nothing w:80
+KPROP:   cvb' = bloody / nothing w:80
 NSUBST:  ' = 2:g / 1:G / 1:h / *:.
-SUBST:   G = GG.
-SHUFFLE: xcmnvbt 
+SHUFFLE: cvb
+: interest_check(_G)
 {{
   local  mon = crawl.random_element({
     ['kobold']   = 1,
     ['spriggan'] = 1,
-    ['felid']    = 1,
   })
   local corpse = mon .. ' corpse'
-  local wands   = 'wand of flame charges:0 / ' ..
-                  'wand of frost charges:0 / ' ..
-                  'wand of magic darts charges:0 '
+  local wands   = 'wand of flame charges:0 ident:pluses / ' ..
+                  'wand of frost charges:0 ident:pluses / ' ..
+                  'wand of magic darts charges:0 ident:pluses '
 
   if (mon == 'kobold' and crawl.coinflip()) then
-    kmons("G = kobold; any wand charges:1")
+    kmons("G = kobold; wand of flame | wand of frost | wand of magic darts")
+    dgn.delayed_decay_extra(_G, 'h', 'troll corpse / ogre corpse' )
   else
     dgn.delayed_decay_extra(_G, 'G', corpse, wands )
+    dgn.delayed_decay_extra(_G, 'h', 'ogre corpse' )
   end
 
   dgn.delayed_decay_extra(_G, 'g', corpse )
-  dgn.delayed_decay_extra(_G, 'h', 'troll corpse w:3 / ogre corpse' )
 }}
+: interest_check(_G)
 MAP
 .........
-.xxx+xxx.
-.x'''''x.
-.x'''''x.
+.ccc+ccc.
+.c'''''c.
+.c'''''c.
 .+''_''+.
-.x'''''x.
-.x'''''x.
-.xxx+xxx.
+.c'''''c.
+.c'''''c.
+.ccc+ccc.
 .........
 ENDMAP
 
-#dig wand with a single charge that could be used to get to P's altar
+# dig wand with a single charge that could be used to get to P's altar
 NAME:    johnstein_pakellas_dig
 DEPTH:   D:2-
-TAGS:    temple_overflow_pakellas uniq_altar_pakellas
+TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
 KFEAT:   _ = altar_pakellas
-KITEM:   ' = wand of digging charges:1
+KITEM:   ' = wand of digging ident:all charges:1 / \
+             wand of disintegration ident:all charges:1 w:2
+: interest_check(_G)
 MAP
 .......
 .xxxxx.
 .xcccx.
 .xc_cx.
-.xxmxx.
+.xcmcx.
 .x.'.x.
 .x...x.
 .xx+xx.
 .......
 ENDMAP
 
-#P altar with gadget shop
-#90% basic wands (frost, flame, darts). ~150 to 250 gold
-#10% any wand and will be expensive
-NAME:    johnstein_pakellas_shop 
+# P altar with gadget shop
+# 90% basic wands (frost, flame, darts). ~150 to 250 gold
+# 10% any wand and will be expensive
+NAME:    johnstein_pakellas_shop
 DEPTH:   D:2-
-TAGS:    temple_overflow_pakellas uniq_altar_pakellas
+TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
 KFEAT:   _ = altar_pakellas
-KFEAT:   S = gadget shop name:Pakellas type:Ersatz suffix:Instruments \ 
+KFEAT:   S = gadget shop name:Pakellas type:Prime suffix:Provisions \
              greed:30 count:3 ;\
              wand of flame charges:15 w:30 |\
              wand of frost charges:15 w:30 |\
              wand of magic darts charges:15 w:30 |\
              any wand
+: interest_check(_G)
 MAP
  .......
 .mxxxxxm.
