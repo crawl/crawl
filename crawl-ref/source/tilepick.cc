@@ -4878,7 +4878,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_CHILLING_BREATH:
     case SPELL_COLD_BREATH:              return TILEG_COLD_BREATH;
     case SPELL_CONTROL_WINDS:            return TILEG_CONTROL_WINDS;
-    case SPELL_CORRUPT_BODY:             return TILEG_CORRUPT_BODY;
     case SPELL_CREATE_TENTACLES:         return TILEG_CREATE_TENTACLES;
     case SPELL_CRYSTAL_BOLT:             return TILEG_CRYSTAL_BOLT;
     case SPELL_DEATH_RATTLE:             return TILEG_DEATH_RATTLE;

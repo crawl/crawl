@@ -329,12 +329,6 @@ Corrosive Bolt spell
 
 Fires a penetrating bolt of acid.
 %%%%
-Corrupt Body spell
-
-Instills a corruption within a target, temporarily mutating their body in a
-particularly adverse fashion. It cannot affect artificial beings, and the
-undead will decompose if affected.
-%%%%
 Corrupting Pulse spell
 
 Instills a corruption within all visible targets, temporarily mutating their

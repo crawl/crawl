@@ -76,11 +76,10 @@ enum class mutflag
     JIYVA   = 1 << 2, // jiyva-only muts
     QAZLAL  = 1 << 3, // qazlal wrath
     XOM     = 1 << 4, // xom being xom
-    CORRUPT = 1 << 5, // wretched stars
 
-    LAST    = CORRUPT
+    LAST    = XOM
 };
-DEF_BITFIELD(mutflags, mutflag, 5);
+DEF_BITFIELD(mutflags, mutflag, 4);
 COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::LAST);
 
 #include "mutation-data.h"
@@ -188,7 +187,6 @@ static int _mut_weight(const mutation_def &mut, mutflag use)
         case mutflag::JIYVA:
         case mutflag::QAZLAL:
         case mutflag::XOM:
-        case mutflag::CORRUPT:
             return 1;
         case mutflag::GOOD:
         case mutflag::BAD:
@@ -858,11 +856,6 @@ static mutation_type _get_random_xom_mutation()
     return mutat;
 }
 
-static mutation_type _get_random_corrupt_mutation()
-{
-    return _get_mut_with_use(mutflag::CORRUPT);
-}
-
 static mutation_type _get_random_qazlal_mutation()
 {
     return _get_mut_with_use(mutflag::QAZLAL);
@@ -1321,9 +1314,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     case RANDOM_SLIME_MUTATION:
         mutat = _get_random_slime_mutation();
         break;
-    case RANDOM_CORRUPT_MUTATION:
-        mutat = _get_random_corrupt_mutation();
-        break;
     case RANDOM_QAZLAL_MUTATION:
         mutat = _get_random_qazlal_mutation();
         break;
@@ -1375,8 +1365,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     const unsigned int old_talents = your_talents(false).size();
 
-    int count = (which_mutation == RANDOM_CORRUPT_MUTATION
-                 || which_mutation == RANDOM_QAZLAL_MUTATION)
+    int count = which_mutation == RANDOM_QAZLAL_MUTATION
                 ? min(2, mdef.levels - you.mutation[mutat])
                 : 1;
 
@@ -1670,7 +1659,6 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
         || which_mutation == RANDOM_GOOD_MUTATION
         || which_mutation == RANDOM_BAD_MUTATION
         || which_mutation == RANDOM_NON_SLIME_MUTATION
-        || which_mutation == RANDOM_CORRUPT_MUTATION
         || which_mutation == RANDOM_QAZLAL_MUTATION)
     {
         while (true)
