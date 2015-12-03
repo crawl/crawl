@@ -490,9 +490,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
         case SPMSL_SLEEP:
         case SPMSL_PARALYSIS:
             if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING))
-            {
                 susceptible = false;
-            }
             break;
         case SPMSL_FRENZY:
             if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING)
