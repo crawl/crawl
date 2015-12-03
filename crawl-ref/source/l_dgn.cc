@@ -1925,7 +1925,7 @@ LUAFN(_vp_size)
 LUAFN(_vp_orient)
 {
     VP(vp);
-    PLUARET(number, vp.orient)
+    PLUARET(number, vp.orient);
 }
 
 LUAFN(_vp_map)
