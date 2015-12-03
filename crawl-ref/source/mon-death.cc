@@ -2058,7 +2058,8 @@ item_def* monster_die(monster* mons, killer_type killer,
                 if (!gives_player_xp
                     && mons_class_gives_xp(mons->type)
                     && !summoned
-                    && !fake_abjure)
+                    && !fake_abjure
+                    && !mons->friendly())
                 {
                     mpr("That felt strangely unrewarding.");
                 }
@@ -2163,8 +2164,8 @@ item_def* monster_die(monster* mons, killer_type killer,
 
             _fire_kill_conducts(*mons, killer, killer_index, gives_player_xp);
 
-            // No piety loss for friends killed by other monsters.
-            // XXX: ^ this comment seems inverted...?
+            // Kill conducts do not assess piety loss for friends
+            // killed by other monsters.
             if (mons->friendly())
             {
                 const bool sentient = mons_class_intel(mons->type) >= I_HUMAN;
