@@ -94,21 +94,17 @@ LUAFN(moninf_get_holiness)
     string holi = luaL_checkstring(ls, 2);
     lowercase(holi);
     mon_holy_type arg = holiness_by_name(holi);
-    if(!holi.empty() && arg == MH_NONE)
+    if (!holi.empty() && arg == MH_NONE)
     {
         luaL_argerror(ls, 2, (string("no such holiness: '")
                               + holi + "'").c_str());
         return 0;
     }
 
-    if(!holi.empty())
-    {
+    if (!holi.empty())
         PLUARET(boolean, bool(mi->holi & arg));
-    }
     else
-    {
         PLUARET(string, holiness_description(mi->holi).c_str());
-    }
 }
 
 // const char* here would save a tiny bit of memory, but every map

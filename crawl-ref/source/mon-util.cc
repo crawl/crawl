@@ -602,7 +602,7 @@ mon_holy_type holiness_by_name(string name)
     lowercase(name);
     for (const auto bit : mon_holy_type::range())
     {
-        if(name == holiness_name(mon_holy_type::exponent(bit)))
+        if (name == holiness_name(mon_holy_type::exponent(bit)))
             return mon_holy_type::exponent(bit);
     }
     return MH_NONE;
@@ -610,7 +610,7 @@ mon_holy_type holiness_by_name(string name)
 
 const char * holiness_name(mon_holy_type_flags which_holiness)
 {
-    switch(which_holiness)
+    switch (which_holiness)
     {
     case MH_HOLY:
         return "holy";

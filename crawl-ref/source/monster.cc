@@ -3639,9 +3639,7 @@ mon_holy_type monster::holiness(bool /*temp*/) const
 
     // Assume that all unknown gods are evil.
     if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
-    {
         holi |= MH_EVIL;
-    }
 
     if (has_attack_flavour(AF_DRAIN_XP)
         || has_attack_flavour(AF_VAMPIRIC))

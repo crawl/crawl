@@ -4891,9 +4891,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
 #if TAG_MAJOR_VERSION == 34
     }
     else
-    {
         mi.holi.flags = 1<<holi_flags;
-    }
 #endif
 
 #if TAG_MAJOR_VERSION == 34
