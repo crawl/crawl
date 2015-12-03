@@ -111,6 +111,15 @@ against much stronger enemies, and pays little heed to easier victories.
 Furthermore, while fair fights are not required, harming one's allies will
 incur Okawaru's wrath.
 %%%%
+Pakellas
+
+Pakellas the Inventive believes in the supremacy of devices, magical or
+otherwise, over spells and other forms of magic. Followers, although cut off
+from ambient magical power, are provided with magical energy to empower their
+devices so long as they use them to assert Pakellas' supremacy; those in
+high standing will eventually begin to receive new devices, and may eventually
+ask for one to be recrafted personally by Pakellas.
+%%%%
 Qazlal
 
 Qazlal Stormbringer is a violent god of tempests, who delights in unleashing
@@ -302,6 +311,17 @@ Okawaru powers
 Followers of Okawaru will gain the ability to temporarily increase their skills
 in combat, and, much later, to deal much faster blows. Okawaru will eventually
 gift followers with weapons and armour.
+%%%%
+Pakellas powers
+
+Followers of Pakellas do not regenerate their magic power naturally, and are
+forbidden from using external means to do so; instead, they are granted
+magical energy on killing beings. They may use increasing amounts of magical
+energy to strengthen their devices, temporarily granting them additional
+power, and can also use their magical energy to recharge their devices.
+Sufficiently devout followers will begin to receive devices from Pakellas, and
+may eventually petition Pakellas to personally charge one of their devices
+beyond its normal limits.
 %%%%
 Qazlal powers
 
@@ -496,6 +516,15 @@ Okawaru wrath
 Okawaru's most vicious warriors are sent against rebellious servants. Novices
 find themselves swarmed by packs of ogres and gnolls, while champions are
 surrounded by titans and elvish blademasters.
+%%%%
+Pakellas wrath
+
+Those that offend Pakellas will find their magical devices drained of their
+power, their magic reserves emptied, and even their very life force fed
+into the ever-hungry engine that is progress on Pakellas' behalf. Those who
+abandon Pakellas altogether will further find that their devices fail to
+work as intended - though they still have their intended effects, they will
+also harm the user in their use.
 %%%%
 Qazlal wrath
 

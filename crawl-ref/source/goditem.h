@@ -15,6 +15,7 @@ bool is_chaotic_item(const item_def& item);
 bool is_hasty_item(const item_def& item);
 bool is_poisoned_item(const item_def& item);
 bool is_fiery_item(const item_def& item);
+bool is_channeling_item(const item_def& item);
 bool is_unholy_spell(spell_type spell);
 bool is_corpse_violating_spell(spell_type spell);
 bool is_evil_spell(spell_type spell);

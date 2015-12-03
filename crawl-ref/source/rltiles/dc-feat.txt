@@ -458,6 +458,10 @@ qazlal0 DNGN_ALTAR_QAZLAL
 qazlal1
 qazlal2
 ru DNGN_ALTAR_RU
+pakellas0 DNGN_ALTAR_PAKELLAS
+pakellas1
+pakellas2
+pakellas3
 unknown DNGN_UNKNOWN_ALTAR
 
 %sdir dngn
@@ -614,6 +618,7 @@ effect/heataura0 HEAT_AURA
 effect/heataura1
 effect/heataura2
 ray RAY
+ray_multi RAY_MULTI
 ray_out_of_range RAY_OUT_OF_RANGE
 travel_exclusion TRAVEL_EXCLUSION_BG
 travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_BG

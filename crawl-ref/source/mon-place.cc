@@ -1326,10 +1326,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     // Is it a god gift?
     if (mg.god != GOD_NO_GOD)
-    {
-        mon->god    = mg.god;
-        mon->flags |= MF_GOD_GIFT;
-    }
+        mons_make_god_gift(mon, mg.god);
     // Not a god gift, give priestly monsters a god.
     else if (mon->is_priest())
     {
@@ -1368,7 +1365,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             }
         }
     }
-    // The royal jelly belongs to Jiyva.
+    // The Royal Jelly belongs to Jiyva.
     else if (mg.cls == MONS_ROYAL_JELLY)
         mon->god = GOD_JIYVA;
     // Mennas belongs to Zin.
@@ -2904,7 +2901,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         if (you.where_are_you != BRANCH_DEPTHS)
             break;
         band = BAND_SPARK_WASPS;
-        band_size = 2 + random2(4);
+        band_size = 1 + random2(3);
         break;
 
     default: ;
@@ -3705,7 +3702,6 @@ class newmons_square_find : public travel_pathfind
 {
 private:
     dungeon_feature_type feat_wanted;
-    coord_def start;
     int maxdistance;
 
     int best_distance;
@@ -3717,9 +3713,10 @@ public:
     newmons_square_find(dungeon_feature_type grdw,
                         const coord_def &pos,
                         int maxdist = 0)
-        :  feat_wanted(grdw), start(pos), maxdistance(maxdist),
+        :  feat_wanted(grdw), maxdistance(maxdist),
            best_distance(0), nfound(0)
     {
+        start = pos;
     }
 
     // This is an overload, not an override!
@@ -3864,7 +3861,7 @@ conduct_type player_will_anger_monster(monster* mon)
         if (mon->how_chaotic())
             return DID_CHAOS;
     }
-    if (you_worship(GOD_TROG) && mon->is_actual_spellcaster())
+    if (god_hates_spellcasting(you.religion) && mon->is_actual_spellcaster())
         return DID_SPELL_CASTING;
     if (you_worship(GOD_DITHMENOS) && mons_is_fiery(mon))
         return DID_FIRE;

@@ -792,17 +792,6 @@ public:
     }
 
     /**
-     * What brand type does this form attack with when unarmed?
-     */
-    brand_type get_uc_brand() const override
-    {
-        // thematic but probably irrelevant
-        if (you.species == SP_VAMPIRE)
-            return SPWPN_VAMPIRISM;
-        return Form::get_uc_brand();
-    }
-
-    /**
      * Find the player's base unarmed damage in this form.
      */
     int get_base_unarmed_damage() const override

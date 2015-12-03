@@ -123,7 +123,7 @@ static bool _is_boring_item(int type, int sub_type)
         }
         break;
     case OBJ_JEWELLERY:
-        return sub_type == AMU_RESIST_MUTATION;
+        return sub_type == AMU_NOTHING;
     default:
         break;
     }
@@ -1332,7 +1332,7 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
     }
 
     // Generate charges randomly...
-    item.plus = random2avg(wand_max_charges(item.sub_type), 3);
+    item.plus = random2avg(wand_max_charges(item), 3);
 
     // ...but 0 charges is silly
     if (item.charges == 0)

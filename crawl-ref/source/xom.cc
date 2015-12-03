@@ -177,7 +177,7 @@ const string describe_xom_favour()
 }
 
 #define XOM_SPEECH(x) x
-static string _get_xom_speech(const string key)
+static string _get_xom_speech(const string &key)
 {
     string result = getSpeakString("Xom " + key);
 
@@ -2364,6 +2364,7 @@ static void _xom_zero_miscast()
             string str = "You compulsively click the heels of your ";
             str += name;
             str += " together three times.";
+            messages.push_back(str);
         }
     }
 

@@ -449,7 +449,7 @@ static int _read_bool_or_number(const string &field, int def_value,
     if (field == "false" || field == "0" || field == "no")
         ret = -1;
 
-    if (field.find(num_prefix) == 0)
+    if (starts_with(field, num_prefix))
         ret = atoi(field.c_str() + num_prefix.size());
 
     return ret;
@@ -469,9 +469,9 @@ static unsigned curses_attribute(const string &field)
         return CHATTR_REVERSE;
     else if (field == "dim")
         return CHATTR_DIM;
-    else if (field.find("hi:") == 0
-             || field.find("hilite:") == 0
-             || field.find("highlight:") == 0)
+    else if (starts_with(field, "hi:")
+             || starts_with(field, "hilite:")
+             || starts_with(field, "highlight:"))
     {
         int col = field.find(":");
         int colour = str_to_colour(field.substr(col + 1));
@@ -579,7 +579,7 @@ void game_options::set_activity_interrupt(
         FixedBitVector<NUM_AINTERRUPTS> &eints,
         const string &interrupt)
 {
-    if (interrupt.find(interrupt_prefix) == 0)
+    if (starts_with(interrupt, interrupt_prefix))
     {
         string delay_name = interrupt.substr(interrupt_prefix.length());
         delay_type delay = get_delay(delay_name);
@@ -661,7 +661,7 @@ static string _user_home_dir()
 #endif
 }
 
-static string _user_home_subpath(const string subpath)
+static string _user_home_subpath(const string &subpath)
 {
     return catpath(_user_home_dir(), subpath);
 }
@@ -926,6 +926,9 @@ void game_options::reset_options()
     item_stack_summary_minimum = 4;
 
     pizzas.clear();
+
+    regex_search = false;
+    search_highlight_colour = LIGHTCYAN;
 
 #ifdef WIZARD
     fsim_rounds = 4000L;
@@ -1745,15 +1748,15 @@ void game_options::read_options(LineInput &il, bool runscript,
             }
             continue;
         }
-        if (!inscriptcond && (str.find("L<") == 0 || str.find("<") == 0))
+        if (!inscriptcond && (starts_with(str, "L<") || starts_with(str, "<")))
         {
             // The init file is now forced into isconditional mode.
             isconditional = true;
             inscriptcond  = true;
 
-            str = str.substr(str.find("L<") == 0? 2 : 1);
+            str = str.substr(starts_with(str, "L<") ? 2 : 1);
             // Is this a one-liner?
-            if (!str.empty() && str[ str.length() - 1 ] == '>')
+            if (!str.empty() && str.back() == '>')
             {
                 inscriptcond = false;
                 str = str.substr(0, str.length() - 1);
@@ -1788,14 +1791,15 @@ void game_options::read_options(LineInput &il, bool runscript,
         }
 
         // Handle blocks of Lua
-        if (!inscriptblock && (str.find("Lua{") == 0 || str.find("{") == 0))
+        if (!inscriptblock
+            && (starts_with(str, "Lua{") || starts_with(str, "{")))
         {
             inscriptblock = true;
             luacode.clear();
             luacode.set_file(filename);
 
             // Strip leading Lua[
-            str = str.substr(str.find("Lua{") == 0? 4 : 1);
+            str = str.substr(starts_with(str, "Lua{") ? 4 : 1);
 
             if (!str.empty() && str.find("}") == str.length() - 1)
             {
@@ -2543,7 +2547,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "drop_filter" && key != "lua_file" && key != "terp_file"
         && key != "note_items" && key != "autoinscribe"
         && key != "note_monsters" && key != "note_messages"
-        && key != "display_char" && key.find("cset") != 0 // compatibility
+        && key != "display_char" && !starts_with(key, "cset") // compatibility
         && key != "dungeon" && key != "feature"
         && key != "mon_glyph" && key != "item_glyph"
         && key != "fire_items_start"
@@ -2716,7 +2720,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             use_animations |= new_animations;
     }
-    else if (key.find(interrupt_prefix) == 0)
+    else if (starts_with(key, interrupt_prefix))
     {
         set_activity_interrupt(key.substr(interrupt_prefix.length()),
                                field,
@@ -2724,7 +2728,7 @@ void game_options::read_option_line(const string &str, bool runscript)
                                minus_equal);
     }
     else if (key == "display_char"
-             || key.find("cset") == 0) // compatibility with old rcfiles
+             || starts_with(key, "cset")) // compatibility with old rcfiles
     {
         for (const string &over : split_string(",", field))
         {
@@ -2864,6 +2868,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         copy_if(all_pizzas.begin(), all_pizzas.end(), back_inserter(pizzas),
                 [](string p) { return !trimmed_string(p).empty(); });
     }
+    else BOOL_OPTION(regex_search);
+    else COLOUR_OPTION(search_highlight_colour);
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
     else BOOL_OPTION(remember_name);
 #endif
@@ -4493,7 +4499,7 @@ static void _edit_save(int argc, char **argv)
                 plen_t clen = 0;
                 while (plen_t s = in.read(buf, sizeof(buf)))
                     clen += s;
-                printf("%7u/%7u %3u %s\n", cclen, clen, cfrag, chunk.c_str());
+                printf("%7d/%7d %3u %s\n", cclen, clen, cfrag, chunk.c_str());
             }
             // the directory is not a chunk visible from the outside
             printf("Fragmentation:    %u/%u (%4.2f)\n", frag, nchunks + 1,
@@ -5221,7 +5227,7 @@ void menu_sort_condition::set_menu_type(string &s)
     for (const auto &mi : menu_type_map)
     {
         const string &name = mi.mname;
-        if (s.find(name) == 0)
+        if (starts_with(s, name))
         {
             s = s.substr(name.length());
             mtype = mi.mtype;
@@ -5234,7 +5240,7 @@ void menu_sort_condition::set_sort(string &s)
 {
     // Strip off the optional sort clauses and get the primary sort condition.
     string::size_type trail_pos = s.find(':');
-    if (s.find("auto:") == 0)
+    if (starts_with(s, "auto:"))
         trail_pos = s.find(':', trail_pos + 1);
 
     string sort_cond = trail_pos == string::npos? s : s.substr(0, trail_pos);

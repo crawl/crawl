@@ -265,12 +265,9 @@ bool actor::faith(bool calc_unid, bool items) const
     return items && wearing(EQ_AMULET, AMU_FAITH, calc_unid);
 }
 
-bool actor::warding(bool calc_unid, bool items) const
+bool actor::dismissal(bool calc_unid, bool items) const
 {
-    // Note: when adding a new source of warding, please add it to
-    // melee_attack::attack_warded_off() as well.
-    return items && (wearing(EQ_AMULET, AMU_WARDING, calc_unid)
-                     || wearing(EQ_STAFF, STAFF_SUMMONING, calc_unid));
+    return items && wearing(EQ_AMULET, AMU_DISMISSAL, calc_unid);
 }
 
 int actor::archmagi(bool calc_unid, bool items) const
@@ -281,6 +278,30 @@ int actor::archmagi(bool calc_unid, bool items) const
     return wearing_ego(EQ_ALL_ARMOUR, SPARM_ARCHMAGI, calc_unid);
 }
 
+/**
+ * Indicates if the actor has an active evocations enhancer.
+ *
+ * @param calc_unid Whether to identify unknown items that enhance evocations.
+ * @param items Whether to count item powers.
+ * @return The number of levels of evocations enhancement this actor has.
+ */
+int actor::spec_evoke(bool calc_unid, bool items) const
+{
+    return 0;
+}
+
+/**
+ * Indicates if the actor has an active invocations enhancer.
+ *
+ * @param calc_unid Whether to identify unknown items that enhance invocations.
+ * @param items Whether to count item powers.
+ * @return The number of levels of invocations enhancement this actor has.
+ */
+int actor::spec_invoc(bool calc_unid, bool items) const
+{
+    return 0;
+}
+
 bool actor::no_cast(bool calc_unid, bool items) const
 {
     return items && scan_artefacts(ARTP_PREVENT_SPELLCASTING, calc_unid);
@@ -288,8 +309,7 @@ bool actor::no_cast(bool calc_unid, bool items) const
 
 bool actor::rmut_from_item(bool calc_unid) const
 {
-    return wearing(EQ_AMULET, AMU_RESIST_MUTATION, calc_unid)
-           || scan_artefacts(ARTP_RMUT, calc_unid);
+    return scan_artefacts(ARTP_RMUT, calc_unid);
 }
 
 bool actor::evokable_berserk(bool calc_unid) const

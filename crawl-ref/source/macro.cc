@@ -284,7 +284,7 @@ static keyseq parse_keyseq(string s)
     int state = 0;
     keyseq v;
 
-    if (s.find("===") == 0)
+    if (starts_with(s, "==="))
     {
         buf2keyseq(s.c_str(), v);
         return v;

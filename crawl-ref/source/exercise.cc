@@ -29,6 +29,7 @@ skill_type abil_skill(ability_type abil)
     case ABIL_NEMELEX_TRIPLE_DRAW:
     case ABIL_NEMELEX_DEAL_FOUR:
     case ABIL_NEMELEX_STACK_FIVE:
+    case ABIL_PAKELLAS_DEVICE_SURGE:
         return SK_EVOCATIONS;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:

@@ -17,6 +17,7 @@
 #include "english.h"
 #include "env.h"
 #include "food.h"
+#include "godwrath.h"
 #include "item_use.h"
 #include "itemprop.h"
 #include "mapmark.h"
@@ -1630,7 +1631,7 @@ void MiscastEffect::_divination_you(int severity)
                     )
             {
                 drain_mp(3 + random2(10));
-                mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
+                canned_msg(MSG_MAGIC_DRAIN);
             }
             break;
         }
@@ -1650,7 +1651,7 @@ void MiscastEffect::_divination_you(int severity)
                     )
             {
                 drain_mp(5 + random2(20));
-                mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
+                canned_msg(MSG_MAGIC_DRAIN);
             }
             break;
         case 1:
@@ -3234,32 +3235,13 @@ void MiscastEffect::_zot()
             if (you.magic_points > 0)
             {
                 dec_mp(10 + random2(21));
-                mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
+                canned_msg(MSG_MAGIC_DRAIN);
             }
             break;
         case 10:
-        {
-            vector<string> wands;
-            for (auto &wand : you.inv)
-            {
-                if (!wand.defined() || wand.base_type != OBJ_WANDS)
-                    continue;
-
-                const int charges = wand.plus;
-                if (charges > 0 && coinflip())
-                {
-                    const int charge_val = wand_charge_value(wand.sub_type);
-                    wand.plus -= min(1 + random2(charge_val), charges);
-                    // Display new number of charges when messaging.
-                    wands.push_back(wand.name(DESC_PLAIN));
-                }
-            }
-            if (!wands.empty())
-                mpr_comma_separated_list("Magical energy is drained from your ", wands);
-            else
+            if (!drain_wands())
                 do_msg(); // For canned_msg(MSG_NOTHING_HAPPENS)
             break;
-        }
         case 11:
             lose_stat(STAT_RANDOM, 1 + random2avg((coinflip() ? 7 : 4), 2));
             break;

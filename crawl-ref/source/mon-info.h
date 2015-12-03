@@ -212,9 +212,8 @@ struct monster_info : public monster_info_base
                           monster_type p_base_type = MONS_NO_MONSTER);
 
     monster_info(const monster_info& mi)
-    : monster_info_base(mi)
+    : monster_info_base(mi), i_ghost(mi.i_ghost)
     {
-        i_ghost = mi.i_ghost;
         for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
         {
             if (mi.inv[i].get())

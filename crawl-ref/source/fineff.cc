@@ -284,7 +284,7 @@ void trj_spawn_fineff::fire()
                               mgen_data(jelly, spawn_beh, trj, 0, 0, jpos,
                                         foe, MG_DONT_COME, GOD_JIYVA)))
         {
-            // Don't allow milking the royal jelly.
+            // Don't allow milking the Royal Jelly.
             mons->flags |= MF_NO_REWARD;
             spawned++;
         }
@@ -311,10 +311,10 @@ void trj_spawn_fineff::fire()
         }
     }
     else if (spawned == 1)
-        mpr("One of the royal jelly's fragments survives.");
+        mpr("One of the Royal Jelly's fragments survives.");
     else
     {
-        mprf("The dying royal jelly spits out %s more jellies.",
+        mprf("The dying Royal Jelly spits out %s more jellies.",
              number_in_words(spawned).c_str());
     }
 }
@@ -545,7 +545,7 @@ void bennu_revive_fineff::fire()
 
 
     monster *newmons = create_monster(mgen_data(MONS_BENNU,
-                                                att, 0, 0, 0, posn, foe,
+                                                attitude, 0, 0, 0, posn, foe,
                                                 res_visible ? MG_DONT_COME : 0));
     if (newmons)
         newmons->props["bennu_revives"].get_byte() = revives + 1;

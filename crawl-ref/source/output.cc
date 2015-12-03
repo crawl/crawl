@@ -2427,8 +2427,8 @@ static vector<formatted_string> _get_overview_resistances(
 
     const int rspir = you.spirit_shield(calc_unid);
     out += _resist_composer("Spirit", cwidth, rspir) + "\n";
-    const int rward = you.warding(calc_unid);
-    out += _resist_composer("Warding", cwidth, rward) + "\n";
+    const int rward = you.dismissal(calc_unid);
+    out += _resist_composer("Dismiss", cwidth, rward) + "\n";
 
     const int notele = you.no_tele(calc_unid);
     const int rrtel = !!player_teleport(calc_unid);

@@ -262,6 +262,7 @@ KFEAT: X = altar_xom
 KFEAT: M = altar_makhleb
 KFEAT: D = altar_dithmenos
 KFEAT: G = altar_gozag
+KFEAT: P = altar_pakellas
 KFEAT: Q = altar_qazlal
 KFEAT: R = altar_ru
 KMONS: l = patrolling spatial vortex
@@ -290,7 +291,7 @@ x.f.xGlxm..
 x...xNDx...
 x+xxxXJx...
 x.s5xMRx..*
-xVSKxQ.+..j
+xVSKxQP+..j
 ENDMAP
 
 ##############################################################################
@@ -556,7 +557,7 @@ ENDMAP
 # Slime 1, circle
 NAME: sprint_mu_slime_circle
 TAGS: sprint_mu_slime no_rotate no_hmirror no_vmirror
-MONS: the royal jelly, shining eye, giant eyeball, acid blob, azure jelly
+MONS: the Royal Jelly, shining eye, giant eyeball, acid blob, azure jelly
 SHUFFLE: 234
 SUBST: 4 = 45
 KFEAT: M = slimy_wall

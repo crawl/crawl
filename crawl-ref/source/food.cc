@@ -9,6 +9,7 @@
 
 #include <cctype>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <sstream>
 
@@ -388,7 +389,7 @@ bool food_change(bool initial)
 // food_increment is positive for eating, negative for hungering
 static void _describe_food_change(int food_increment)
 {
-    int magnitude = (food_increment > 0)?food_increment:(-food_increment);
+    const int magnitude = abs(food_increment);
     string msg;
 
     if (magnitude == 0)
@@ -807,13 +808,13 @@ int prompt_eat_chunks(bool only_auto)
 
             // Allow undead to use easy_eat, but not auto_eat, since the player
             // might not want to drink blood as a vampire and might want to save
-            // chunks as a ghoul.
-            if (easy_eat && !bad && i_feel_safe() && !(only_auto &&
-                                                       you.undead_state()))
-            {
-                // If this chunk is safe to eat, just do so without prompting.
+            // chunks as a ghoul. Ghouls can auto_eat if they have rotted hp.
+            const bool no_auto = you.undead_state()
+                && !(you.species == SP_GHOUL && player_rotted());
+
+            // If this chunk is safe to eat, just do so without prompting.
+            if (easy_eat && !bad && i_feel_safe() && !(only_auto && no_auto))
                 autoeat = true;
-            }
             else if (only_auto)
                 return 0;
             else
@@ -848,10 +849,7 @@ int prompt_eat_chunks(bool only_auto)
                              item_name.c_str());
                     }
 
-                    if (eat_item(*item))
-                        return 1;
-                    else
-                        return 0;
+                    return eat_item(*item) ? 1 : 0;
                 }
                 break;
             default:
@@ -1003,7 +1001,6 @@ static void _eat_chunk(item_def& food)
     if (do_eat)
     {
         dprf("nutrition: %d", nutrition);
-        zin_recite_interrupt();
         start_delay(DELAY_EAT, food_turns(food) - 1,
                     (suppress_msg) ? 0 : nutrition, -1);
         lessen_hunger(nutrition, true);
@@ -1018,7 +1015,6 @@ static void _eating(item_def& food)
     int duration = food_turns(food) - 1;
 
     // use delay.parm3 to figure out whether to output "finish eating"
-    zin_recite_interrupt();
     start_delay(DELAY_EAT, duration, 0, food.sub_type, duration);
 
     lessen_hunger(food_value, true);

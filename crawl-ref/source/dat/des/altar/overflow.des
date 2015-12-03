@@ -1479,6 +1479,180 @@ MAP
       vvvvvvv
 ENDMAP
 
+### Pakellas overflow altars ###################################################
+NAME:   grunt_pakellas_salt
+DEPTH:  D:2-
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
+TAGS:   temple_overflow_pakellas uniq_altar_pakellas no_rotate no_hmirror
+TAGS:   no_vmirror
+KFEAT:  _ = altar_pakellas
+SUBST:  c : cvb
+: interest_check(_G)
+MAP
+  .....
+ ..ccc..
+..c...c..
+.ccc_ccc.
+..c...c..
+ ..ccc..
+  .....
+ENDMAP
+
+NAME:   grunt_pakellas_sulfur
+DEPTH:  D:2-
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
+TAGS:   temple_overflow_pakellas uniq_altar_pakellas no_rotate no_hmirror
+TAGS:   no_vmirror
+KFEAT:  _ = altar_pakellas
+SUBST:  c : cvb
+: interest_check(_G)
+MAP
+     ...
+    ..c..
+   ..c.c..
+  ..c...c..
+ ..c.._..c..
+..c.......c..
+.ccccccccccc.
+......l......
+   ...l...
+   .lllll.
+   ...l...
+     .l.
+     ...
+ENDMAP
+
+NAME:   grunt_pakellas_mercury
+DEPTH:  D:2-
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
+TAGS:   temple_overflow_pakellas uniq_altar_pakellas no_rotate no_hmirror
+TAGS:   no_vmirror
+KFEAT:  _ = altar_pakellas
+SUBST:  c : cvb
+: interest_check(_G)
+MAP
+ .....
+.c...c.
+.c...c.
+..ccc..
+.c...c.
+.c._.c.
+.c...c.
+..ccc..
+ ..c..
+ .ccc.
+ ..c..
+  ...
+ENDMAP
+
+NAME:   grunt_pakellas_basics
+DEPTH:  D:2-
+WEIGHT: 20
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
+TAGS:   no_rotate no_hmirror temple_overflow_pakellas uniq_altar_pakellas
+KFEAT:  _ = altar_pakellas
+SUBST:  d : c.
+SUBST:  c : cvb
+: interest_check(_G)
+MAP
+     ...
+    ..c..
+ ....c.c....
+..ddcdddcdd..
+ ..c.._..c..
+..c.......c..
+.ccccccccccc.
+.............
+ENDMAP
+
+# high evo !apt band takes down filthy low evo !apt brute
+# 25% chance of live kobold with wand; otherwise empty wand
+# 12.5% chance of troll corpse (early troll hide)
+NAME:    johnstein_pakellas_death_squad
+DEPTH:   D:3-
+TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
+KFEAT:   _ = altar_pakellas
+KPROP:   cvb' = bloody / nothing w:80
+NSUBST:  ' = 2:g / 1:G / 1:h / *:.
+SHUFFLE: cvb
+: interest_check(_G)
+{{
+  local  mon = crawl.random_element({
+    ['kobold']   = 1,
+    ['spriggan'] = 1,
+  })
+  local corpse = mon .. ' corpse'
+  local wands   = 'wand of flame charges:0 ident:pluses / ' ..
+                  'wand of frost charges:0 ident:pluses / ' ..
+                  'wand of magic darts charges:0 ident:pluses '
+
+  if (mon == 'kobold' and crawl.coinflip()) then
+    kmons("G = kobold; wand of flame | wand of frost | wand of magic darts")
+    dgn.delayed_decay_extra(_G, 'h', 'troll corpse / ogre corpse' )
+  else
+    dgn.delayed_decay_extra(_G, 'G', corpse, wands )
+    dgn.delayed_decay_extra(_G, 'h', 'ogre corpse' )
+  end
+
+  dgn.delayed_decay_extra(_G, 'g', corpse )
+}}
+: interest_check(_G)
+MAP
+.........
+.ccc+ccc.
+.c'''''c.
+.c'''''c.
+.+''_''+.
+.c'''''c.
+.c'''''c.
+.ccc+ccc.
+.........
+ENDMAP
+
+# dig wand with a single charge that could be used to get to P's altar
+NAME:    johnstein_pakellas_dig
+DEPTH:   D:2-
+TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
+KFEAT:   _ = altar_pakellas
+KITEM:   ' = wand of digging ident:all charges:1 / \
+             wand of disintegration ident:all charges:1 w:2
+: interest_check(_G)
+MAP
+.......
+.xxxxx.
+.xcccx.
+.xc_cx.
+.xcmcx.
+.x.'.x.
+.x...x.
+.xx+xx.
+.......
+ENDMAP
+
+# P altar with gadget shop
+# 90% basic wands (frost, flame, darts). ~150 to 250 gold
+# 10% any wand and will be expensive
+NAME:    johnstein_pakellas_shop
+DEPTH:   D:2-
+TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
+KFEAT:   _ = altar_pakellas
+KFEAT:   S = gadget shop name:Pakellas type:Prime suffix:Provisions \
+             greed:30 count:3 ;\
+             wand of flame charges:15 w:30 |\
+             wand of frost charges:15 w:30 |\
+             wand of magic darts charges:15 w:30 |\
+             any wand
+: interest_check(_G)
+MAP
+ .......
+.mxxxxxm.
+.xx.S.xx.
+.x.._..x.
+.xx...xx.
+ .xx+xx.
+ .......
+ENDMAP
+
 ### Qazlal overflow altars ####################################################
 
 # There's always a safe path to the altar.

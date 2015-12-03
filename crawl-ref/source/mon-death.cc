@@ -2096,12 +2096,14 @@ item_def* monster_die(monster* mons, killer_type killer,
             // killing born-friendly monsters.
             if (gives_player_xp
                 && (you_worship(GOD_MAKHLEB)
+                    || you_worship(GOD_PAKELLAS)
                     || you_worship(GOD_VEHUMET)
                     || you_worship(GOD_SHINING_ONE)
                        && (mons->is_evil() || mons->is_unholy()))
                 && !mons_is_object(mons->type)
                 && !player_under_penance()
-                && random2(you.piety) >= piety_breakpoint(0))
+                && (you_worship(GOD_PAKELLAS)
+                    || random2(you.piety) >= piety_breakpoint(0)))
             {
                 int hp_heal = 0, mp_heal = 0;
 
@@ -2117,6 +2119,9 @@ item_def* monster_die(monster* mons, killer_type killer,
                     break;
                 case GOD_VEHUMET:
                     mp_heal = 1 + random2(mons->get_experience_level() / 2);
+                    break;
+                case GOD_PAKELLAS:
+                    mp_heal = random2(2 + mons->get_experience_level() / 4);
                     break;
                 default:
                     die("bad kill-on-healing god!");
@@ -2207,13 +2212,7 @@ item_def* monster_die(monster* mons, killer_type killer,
 
             monster* killer_mon = nullptr;
             if (!anon)
-            {
                 killer_mon = &menv[killer_index];
-                // If the killer is already dead, treat it like an
-                // anonymous monster.
-                if (killer_mon->type == MONS_NO_MONSTER)
-                    anon = true;
-            }
 
             if (!invalid_monster_index(killer_index)
                 && _god_will_bless_follower(mons))
@@ -2865,7 +2864,7 @@ int dismiss_monsters(string pattern)
     {
         if (mi->alive()
             && (mobile ? !mons_class_is_stationary(mi->type) :
-                harmful ? !mons_is_firewood(*mi) && !mi->wont_attack() :
+                harmful ? mons_is_threatening(*mi) && !mi->wont_attack() :
                 los ? you.see_cell(mi->pos())
                 : tpat.empty() || tpat.matches(mi->name(DESC_PLAIN, true))))
         {

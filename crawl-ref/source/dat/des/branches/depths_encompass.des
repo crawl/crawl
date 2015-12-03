@@ -54,9 +54,8 @@
         e.shuffle("34")
         e.shuffle("m6")
         e.kitem("p = w:60 potion of mutation / " ..
-                "w:5 amulet of resist mutation ident:all / " ..
                 "w:1 potion of cure mutation")
-        e.kitem("P = amulet of resist mutation ident:all")
+        e.kitem("P = any jewellery good_item")
         e.kitem("Q = potion of cure mutation")
         e.kitem("R = potion of cure mutation / nothing")
         e.nsubst("u = 2:Q / 1:P / 1:R / *:u")

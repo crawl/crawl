@@ -212,7 +212,7 @@ static void _dump_player(FILE *file)
         if (sk >= 0 && you.skills[sk] < 27)
             needed_max = skill_exp_needed(you.skills[sk] + 1, sk);
 
-        fprintf(file, "%-16s|     %c     |   %d   |   %3d    |   %2d  | %6d | %d/%d\n",
+        fprintf(file, "%-16s|     %c     |   %u   |   %3u    |   %2d  | %6d | %d/%d\n",
                 skill_name(sk),
                 you.can_train[sk] ? 'X' : ' ',
                 you.train[sk],
@@ -512,7 +512,7 @@ static void _debug_dump_lua_markers(FILE *file)
         if (!result.empty() && result[result.size() - 1] == '\n')
             result = result.substr(0, result.size() - 1);
 
-        fprintf(file, "Lua marker %d at (%d, %d):\n",
+        fprintf(file, "Lua marker %u at (%d, %d):\n",
                 i, marker->pos.x, marker->pos.y);
         fprintf(file, "{{{{\n");
         fprintf(file, "%s", result.c_str());

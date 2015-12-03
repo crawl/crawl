@@ -407,6 +407,11 @@ enum ability_type
         ABIL_FINAL_SACRIFICE = ABIL_RU_SACRIFICE_RESISTANCE,
     ABIL_RU_REJECT_SACRIFICES,
 
+    // Pakellas
+    ABIL_PAKELLAS_DEVICE_SURGE = 1230,
+    ABIL_PAKELLAS_QUICK_CHARGE,
+    ABIL_PAKELLAS_SUPERCHARGE,
+
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
 
@@ -494,7 +499,9 @@ enum attribute_type
     ATTR_SEARING_RAY,          // Are we currently firing a searing ray?
     ATTR_RECITE_TYPE,          // Recitation type.
     ATTR_RECITE_SEED,          // Recite text seed.
+#if TAG_MAJOR_VERSION == 34
     ATTR_RECITE_HP,            // HP on start of recitation.
+#endif
     ATTR_SWIFTNESS,            // Duration of future antiswiftness.
 #if TAG_MAJOR_VERSION == 34
     ATTR_BARBS_MSG,            // Have we already printed a message on move?
@@ -523,6 +530,7 @@ enum attribute_type
     ATTR_LAST_FLIGHT_STATUS,   // Whether spawm_flight should be restored after form change
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
     ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.
+    ATTR_PAKELLAS_DEVICE_SURGE,// Surge power applied to next evocation.
     ATTR_MAX_ABYSS_DEPTH,      // How far we went into Abyss on current trip.
     NUM_ATTRIBUTES
 };
@@ -834,6 +842,7 @@ enum canned_message_type
     MSG_GHOSTLY_OUTLINE,
     MSG_GAIN_HEALTH,
     MSG_GAIN_MAGIC,
+    MSG_MAGIC_DRAIN,
 };
 
 enum char_set_type
@@ -1273,6 +1282,7 @@ enum conduct_type
     DID_FIRE,                             // Dithmenos
     DID_KILL_FIERY,                       // Dithmenos
     DID_SACRIFICE_LOVE,                   // Ru
+    DID_CHANNEL,                          // Pakellas
 
     NUM_CONDUCTS
 };
@@ -1654,6 +1664,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_GOZAG,
     DNGN_ALTAR_QAZLAL,
     DNGN_ALTAR_RU,
+    DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_ECUMENICAL,
 #endif
 
@@ -1722,6 +1733,7 @@ enum dungeon_feature_type
     DNGN_TRAP_SHADOW,
     DNGN_TRAP_SHADOW_DORMANT,
     DNGN_ALTAR_ECUMENICAL,
+    DNGN_ALTAR_PAKELLAS,
 #endif
 
     NUM_FEATURES
@@ -1898,6 +1910,7 @@ enum duration_type
     DUR_COLLAPSE,
     DUR_BRAINLESS,
     DUR_CLUMSY,
+    DUR_DEVICE_SURGE,
     NUM_DURATIONS
 };
 
@@ -2177,6 +2190,7 @@ enum god_type
     GOD_GOZAG,
     GOD_QAZLAL,
     GOD_RU,
+    GOD_PAKELLAS,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
@@ -3945,6 +3959,7 @@ enum artefact_prop_type
     ARTP_CORRODE,
     ARTP_DRAIN,
     ARTP_CONFUSE,
+    ARTP_FRAGILE,
     ARTP_NUM_PROPERTIES
 };
 
@@ -5020,6 +5035,7 @@ enum tile_flags ENUM_INT64
     // Should go up with RAY/RAY_OOR, but they need to be exclusive for those
     // flags and there's no room.
     TILE_FLAG_LANDING     = 0x20000000000ULL,
+    TILE_FLAG_RAY_MULTI   = 0x40000000000ULL,
 
     // Mask for the tile index itself.
     TILE_FLAG_MASK       = 0x0000FFFFULL,

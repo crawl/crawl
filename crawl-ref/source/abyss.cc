@@ -121,8 +121,7 @@ static void _write_abyssal_features()
         return;
 
     dprf(DIAG_ABYSS, "Writing a mock-up of old level.");
-    const int count = abyssal_features.size();
-    ASSERT(count == sqr(2 * LOS_RADIUS + 1));
+    ASSERT((int)abyssal_features.size() == sqr(2 * LOS_RADIUS + 1));
     const int scalar = 0xFF;
     int index = 0;
     for (int x = -LOS_RADIUS; x <= LOS_RADIUS; x++)
@@ -628,8 +627,6 @@ static void _push_displaced_monster(monster* mon)
 
 static void _place_displaced_monsters()
 {
-    list<monster*>::iterator mon_itr;
-
     for (monster *mon : displaced_monsters)
     {
         if (mon->alive() && !mon->find_home_near_place(mon->pos()))
@@ -1717,8 +1714,10 @@ static bool _incorruptible(monster_type mt)
 static bool _spawn_corrupted_servant_near(const coord_def &pos)
 {
     const beh_type beh =
-        x_chance_in_y(100, 200 + you.skill(SK_INVOCATIONS, 25)) ? BEH_HOSTILE
-        : BEH_NEUTRAL;
+        x_chance_in_y(100,
+                      player_adjust_invoc_power(
+                          200 + you.skill(SK_INVOCATIONS, 25)))
+        ? BEH_HOSTILE : BEH_NEUTRAL;
 
     // [ds] No longer summon hostiles -- don't create the monster if
     // it would be hostile.

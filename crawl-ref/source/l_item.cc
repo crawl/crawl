@@ -318,16 +318,17 @@ static int l_item_do_ego(lua_State *ls)
     if (lua_isboolean(ls, 1))
         terse = lua_toboolean(ls, 1);
 
-    const char *s = nullptr;
-
     if (item_type_known(*item) || item->base_type == OBJ_MISSILES)
-        s = ego_type_string(*item, terse).c_str();
+    {
+        const string s = ego_type_string(*item, terse);
+        if (!s.empty())
+        {
+            lua_pushstring(ls, s.c_str());
+            return 1;
+        }
+    }
 
-    if (s && *s)
-        lua_pushstring(ls, s);
-    else
-        lua_pushnil(ls);
-
+    lua_pushnil(ls);
     return 1;
 }
 
@@ -818,6 +819,16 @@ IDEF(encumbrance)
         lua_pushnumber(ls, -property(*item, PARM_EVASION) / 10);
     else
         lua_pushnil(ls);
+
+    return 1;
+}
+
+IDEF(is_in_shop)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, is_shop_item(*item));
 
     return 1;
 }
@@ -1315,6 +1326,7 @@ static ItemAccessor item_attrs[] =
     { "delay",             l_item_delay },
     { "ac",                l_item_ac },
     { "encumbrance",       l_item_encumbrance },
+    { "is_in_shop",        l_item_is_in_shop },
 
     // dlua only past this point
     { "pluses",            l_item_pluses },

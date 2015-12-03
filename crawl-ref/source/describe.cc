@@ -130,14 +130,13 @@ const char* jewellery_base_ability_string(int subtype)
     case RING_TELEPORT_CONTROL:   return "+cTele";
 #endif
     case AMU_CLARITY:             return "Clar";
-    case AMU_WARDING:             return "Ward";
+    case AMU_DISMISSAL:           return "Dismiss";
     case AMU_RESIST_CORROSION:    return "rCorr";
     case AMU_THE_GOURMAND:        return "Gourm";
 #if TAG_MAJOR_VERSION == 34
     case AMU_CONSERVATION:        return "Cons";
     case AMU_CONTROLLED_FLIGHT:   return "cFly";
 #endif
-    case AMU_RESIST_MUTATION:     return "rMut";
     case AMU_GUARDIAN_SPIRIT:     return "Spirit";
     case AMU_FAITH:               return "Faith";
     case AMU_STASIS:              return "Stasis";
@@ -188,6 +187,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_CORRODE,               PROPN_PLAIN },
         { ARTP_DRAIN,                 PROPN_PLAIN },
         { ARTP_CONFUSE,               PROPN_PLAIN },
+        { ARTP_FRAGILE,               PROPN_PLAIN },
 
         // Evokable abilities come second
         { ARTP_BLINK,                 PROPN_PLAIN },
@@ -371,7 +371,7 @@ static const char* _jewellery_base_ability_description(int subtype)
     case RING_ICE:
         return "It enhances your ice magic, and weakens your fire magic.";
     case RING_TELEPORTATION:
-        return "It may teleport you to nearby monsters, and can be evoked to "
+        return "It may teleport you next to monsters, and can be evoked to "
                "randomly teleport.";
 #if TAG_MAJOR_VERSION == 34
     case RING_TELEPORT_CONTROL:
@@ -379,8 +379,8 @@ static const char* _jewellery_base_ability_description(int subtype)
 #endif
     case AMU_CLARITY:
         return "It provides mental clarity.";
-    case AMU_WARDING:
-        return "It may prevent the melee attacks of summoned creatures.";
+    case AMU_DISMISSAL:
+        return "It may teleport away creatures that harm you.";
     case AMU_RESIST_CORROSION:
         return "It protects you from acid and corrosion.";
     case AMU_THE_GOURMAND:
@@ -389,8 +389,6 @@ static const char* _jewellery_base_ability_description(int subtype)
     case AMU_CONSERVATION:
         return "It protects your inventory from destruction.";
 #endif
-    case AMU_RESIST_MUTATION:
-        return "It protects you from mutation.";
     case AMU_GUARDIAN_SPIRIT:
         return "It causes incoming damage to be split between your health and "
                "magic.";
@@ -446,7 +444,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_BERSERK, "It lets you go berserk.", false},
         { ARTP_NOISE, "It may make noises in combat.", false},
         { ARTP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
-        { ARTP_CAUSE_TELEPORTATION, "It may teleport you to nearby monsters.", false},
+        { ARTP_CAUSE_TELEPORTATION, "It may teleport you next to monsters.", false},
         { ARTP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
           false},
         { ARTP_ANGRY,  "It may make you go berserk in combat.", false},
@@ -461,6 +459,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_CORRODE, "It may corrode your equipment when you take damage.", false},
         { ARTP_DRAIN, "It causes draining when unequipped.", false},
         { ARTP_CONFUSE, "It may confuse you when you take damage.", false},
+        { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
     };
 
     // Give a short description of the base type, for base types with no
@@ -715,7 +714,7 @@ static string _describe_demon(const string& name, bool flying)
     if (flying)
     {
         description << HRANDOM_ELEMENT(wing_names, 3);
-        if (head_desc.find(" with") == 0)
+        if (starts_with(head_desc, " with"))
             description << " and";
     }
 
@@ -1789,7 +1788,7 @@ string get_item_description(const item_def &item, bool verbose,
 
         if (item_type_known(item))
         {
-            const int max_charges = wand_max_charges(item.sub_type);
+            const int max_charges = wand_max_charges(item);
             if (item.charges < max_charges
                 || !item_ident(item, ISFLAG_KNOW_PLUSES))
             {

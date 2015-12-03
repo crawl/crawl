@@ -681,6 +681,8 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                     this.draw_dngn(dngn.RAY_OUT_OF_RANGE, x, y);
                 else if (bg.LANDING)
                     this.draw_dngn(dngn.LANDING, x, y);
+                else if (bg.RAY_MULTI)
+                    this.draw_dngn(dngn.RAY_MULTI, x, y);
 
             }
         },
@@ -868,7 +870,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             if (fg.DEATHS_DOOR)
             {
                 this.draw_icon(icons.DEATHS_DOOR, x, y, -status_shift, 0);
-                status_shift += 6;
+                status_shift += 10;
             }
             if (fg.RECALL)
             {

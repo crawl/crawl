@@ -579,8 +579,11 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
     return result;
 }
 
-static bool _want_rod()
+static bool _want_rod(int agent)
 {
+    if (agent == GOD_PAKELLAS)
+        return true;
+
     // First look at skills to determine whether the player gets a rod.
     int spell_skills = 0;
     for (int i = SK_SPELLCASTING; i <= SK_LAST_MAGIC; i++)
@@ -602,10 +605,10 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     }
     while (item_type_removed(OBJ_STAVES, result));
 
-#define TRY_GIVE(x) { if (!you.type_ids[OBJ_STAVES][x]) \
-                      {result = x; found_enhancer = true;} }
     switch (best_spell_skill)
     {
+#define TRY_GIVE(x) { if (!you.type_ids[OBJ_STAVES][x]) \
+                      {result = x; found_enhancer = true;} }
     case SK_FIRE_MAGIC:   TRY_GIVE(STAFF_FIRE);        break;
     case SK_ICE_MAGIC:    TRY_GIVE(STAFF_COLD);        break;
     case SK_AIR_MAGIC:    TRY_GIVE(STAFF_AIR);         break;
@@ -614,6 +617,7 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     case SK_NECROMANCY:   TRY_GIVE(STAFF_DEATH);       break;
     case SK_CONJURATIONS: TRY_GIVE(STAFF_CONJURATION); break;
     case SK_SUMMONINGS:   TRY_GIVE(STAFF_SUMMONING);   break;
+#undef TRY_GIVE
     default:                                           break;
     }
     if (one_chance_in(found_enhancer ? 2 : 3))
@@ -625,13 +629,6 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     case 0: case 1: result = STAFF_WIZARDRY;   break;
     case 2: case 3: result = STAFF_ENERGY;     break;
     case 4: result = STAFF_POWER;              break;
-    }
-    switch (random2(5))
-    {
-    case 0: case 1: TRY_GIVE(STAFF_WIZARDRY);   break;
-    case 2: case 3: TRY_GIVE(STAFF_ENERGY);     break;
-    case 4: TRY_GIVE(STAFF_POWER);              break;
-#undef TRY_GIVE
     }
     return result;
 }
@@ -651,15 +648,16 @@ static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
 
 /**
  * Return a miscellaneous evokable item for acquirement.
+ * @param divine Whether this acquirement is divine in nature.
  * @return   The item type chosen.
  */
-static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
+static int _acquirement_misc_subtype(bool divine, int & /*quantity*/)
 {
     // Give a crystal ball based on both evocations and either spellcasting or
     // invocations if we haven't seen one.
     int skills = you.skills[SK_EVOCATIONS]
         * max(you.skills[SK_SPELLCASTING], you.skills[SK_INVOCATIONS]);
-    if (x_chance_in_y(skills, MAX_SKILL_LEVEL * MAX_SKILL_LEVEL)
+    if (!divine && x_chance_in_y(skills, MAX_SKILL_LEVEL * MAX_SKILL_LEVEL)
         && !you.seen_misc[MISC_CRYSTAL_BALL_OF_ENERGY])
     {
         return MISC_CRYSTAL_BALL_OF_ENERGY;
@@ -669,9 +667,9 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
     const vector<pair<int, int> > choices =
     {
         // Decks have lowest weight.
-        {MISC_DECK_OF_WONDERS,                              1},
-        {MISC_DECK_OF_CHANGES,                              2},
-        {MISC_DECK_OF_DEFENCE,                              2},
+        {MISC_DECK_OF_WONDERS,              (divine ? 0 :  1)},
+        {MISC_DECK_OF_CHANGES,              (divine ? 0 :  2)},
+        {MISC_DECK_OF_DEFENCE,              (divine ? 0 :  2)},
         {MISC_XOMS_CHESSBOARD,                              5},
         // These have charges, so give them a constant weight.
         {MISC_BOX_OF_BEASTS,
@@ -738,16 +736,18 @@ static int _tele_wand_weight()
     return 15;
 }
 
-
 /**
  * Choose a random type of wand to be generated via acquirement or god gifts.
  *
  * Heavily weighted toward more useful wands and wands the player hasn't yet
  * seen.
  *
- * @return  A random wand type.
+ * @param divine    Whether the item is a god gift, rather than from
+ *                  acquirement proper.
+ *
+ * @return          A random wand type.
  */
-static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
+static int _acquirement_wand_subtype(bool divine, int & /*quantity*/)
 {
     vector<pair<wand_type, int>> weights = {
         // normally 25
@@ -775,9 +775,10 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
     };
 
     // Unknown wands get a huge weight bonus.
+    // Pakellas will try to give you wands you haven't seen before.
     for (auto &weight : weights)
         if (!get_ident_type(OBJ_WANDS, weight.first))
-            weight.second *= 2;
+            weight.second *= divine ? 50 : 2;
 
     const wand_type* wand = random_choose_weighted(weights);
     ASSERT(wand);
@@ -823,7 +824,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
     {
         // Staves and rods have a common acquirement class.
         if (class_wanted == OBJ_STAVES || class_wanted == OBJ_RODS)
-            class_wanted = _want_rod() ? OBJ_RODS : OBJ_STAVES;
+            class_wanted = _want_rod(agent) ? OBJ_RODS : OBJ_STAVES;
 
         // Vampires acquire blood, not food.
         if (class_wanted == OBJ_FOOD && you.species == SP_VAMPIRE)
@@ -1289,6 +1290,19 @@ static string _why_reject(const item_def &item, int agent)
         return "Destroying sif-gifted rarebook!";
     }
 
+    // Pakellas doesn't gift decks (that's Nemelex's turf).
+    // The crystal ball case should be handled elsewhere, but just in
+    // case, it's also handled here.
+    if (agent == GOD_PAKELLAS)
+    {
+        if (item.base_type == OBJ_MISCELLANY
+            && (is_deck(item)
+                || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY))
+        {
+            return "Destroying deck or CBoE that Pakellas hates!";
+        }
+    }
+
     return ""; // all OK
 }
 
@@ -1299,7 +1313,7 @@ int acquirement_create_item(object_class_type class_wanted,
     ASSERT(class_wanted != OBJ_RANDOM);
 
     const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM
-                         || agent == GOD_TROG);
+                         || agent == GOD_TROG || agent == GOD_PAKELLAS);
     int thing_created = NON_ITEM;
     int quant = 1;
 #define MAX_ACQ_TRIES 40

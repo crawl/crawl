@@ -143,7 +143,7 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->is_player())
     {
         // Set delay now that we know the attack won't be cancelled.
-        you.time_taken = you.attack_delay();
+        you.time_taken = you.attack_delay().roll();
         if (weapon)
         {
             if (weapon->base_type == OBJ_WEAPONS)
@@ -168,7 +168,7 @@ bool melee_attack::handle_phase_attempted()
         if (!effective_attack_number)
         {
             int energy = attacker->as_monster()->action_energy(EUT_ATTACK);
-            int delay = attacker->attack_delay();
+            int delay = attacker->attack_delay().roll();
             dprf(DIAG_COMBAT, "Attack delay %d, multiplier %1.1f", delay, energy * 0.1);
             ASSERT(energy > 0);
             ASSERT(delay > 0);
@@ -753,19 +753,25 @@ bool melee_attack::attack()
     if (!cleaving)
         cleave_setup();
 
-    string dummy;
-    const bool gyre = weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE);
-    if (gyre && !weapon->props.exists(ARTEFACT_NAME_KEY))
-       set_artefact_name(*weapon, get_artefact_name(*weapon));
-    unwind_var<string> gyre_name(gyre ? weapon->props[ARTEFACT_NAME_KEY].get_string()
-                                      : dummy);
-    if (gyre)
+    string saved_gyre_name;
+    if (weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE))
     {
-        if (!cleaving)
-            set_artefact_name(*weapon, "quick blade \"Gyre\"");
-        else
-            set_artefact_name(*weapon, "quick blade \"Gimble\"");
+        saved_gyre_name = get_artefact_name(*weapon);
+        set_artefact_name(*weapon, cleaving ? "quick blade \"Gimble\""
+                                            : "quick blade \"Gyre\"");
     }
+
+    // Restore gyre's name before we return. We cannot use an unwind_var here
+    // because the precise address of the ARTEFACT_NAME_KEY property might
+    // change, for example if a summoned item is reset.
+    ON_UNWIND
+    {
+        if (!saved_gyre_name.empty() && weapon
+                && is_unrandom_artefact(*weapon, UNRAND_GYRE))
+        {
+            set_artefact_name(*weapon, saved_gyre_name);
+        }
+    };
 
     // Attacker might have died from effects of cleaving handled prior to this
     if (!attacker->alive())
@@ -831,13 +837,6 @@ bool melee_attack::attack()
 
         if (ev_margin >= 0)
         {
-            if (attacker != defender && attack_warded_off())
-            {
-                perceived_attack = true;
-                handle_phase_end();
-                return false;
-            }
-
             bool cont = handle_phase_hit();
 
             attacker_sustain_passive_damage();
@@ -1185,15 +1184,8 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     aux_attack = aux->get_name();
     aux_verb = aux->get_verb();
 
-
-    // prob of vampiric bite:
-    // 1/4 when non-thirsty, 1/2 when thirsty, 100% when
-    // bloodless
     if (atk == UNAT_BITE
-        && _vamp_wants_blood_from_monster(defender->as_monster())
-        && (you.hunger_state <= HS_STARVING
-            || you.hunger_state < HS_SATIATED && coinflip()
-            || you.hunger_state >= HS_SATIATED && one_chance_in(4)))
+        && _vamp_wants_blood_from_monster(defender->as_monster()))
     {
         damage_brand = SPWPN_VAMPIRISM;
     }
@@ -1296,8 +1288,7 @@ bool melee_attack::player_aux_unarmed()
         if (atk == UNAT_CONSTRICT && !attacker->can_constrict(defender))
             continue;
 
-        to_hit = random2(calc_your_to_hit_unarmed(atk,
-                         damage_brand == SPWPN_VAMPIRISM));
+        to_hit = random2(calc_your_to_hit_unarmed(atk));
 
         handle_noise(defender->pos());
         alert_nearby_monsters();
@@ -1846,8 +1837,10 @@ bool melee_attack::player_monattk_hit_effects()
         return false;
 
     // Thirsty vampires will try to use a stabbing situation to draw blood.
-    if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
-        && damage_done > 0 && stab_attempt && stab_bonus > 0)
+    if (you.species == SP_VAMPIRE
+        && damage_done > 0
+        && stab_attempt
+        && stab_bonus > 0)
     {
         _player_vampire_draws_blood(defender->as_monster(), damage_done, true);
     }
@@ -1944,10 +1937,6 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     if (!defender->alive())
         return true;
 
-    // Player hydras can't grow more heads.
-    if (defender->is_player())
-        return false;
-
     // Only living hydras get to regenerate heads.
     if (defender->holiness() != MH_NATURAL)
         return false;
@@ -1989,9 +1978,6 @@ static bool actor_can_lose_heads(const actor* defender)
     {
         return true;
     }
-
-    if (defender->is_player() && you.form == TRAN_HYDRA)
-        return true;
 
     return false;
 }
@@ -2054,6 +2040,9 @@ bool melee_attack::attack_chops_heads(int dam, int dam_type, int wpn_brand)
  */
 void melee_attack::decapitate(int dam_type)
 {
+    // Player hydras don't gain or lose heads.
+    ASSERT(defender->is_monster());
+
     const char *verb = nullptr;
 
     if (dam_type == DVORP_CLAWING)
@@ -2081,13 +2070,6 @@ void melee_attack::decapitate(int dam_type)
                  apostrophise(defender_name(true)).c_str());
         }
 
-
-        if (defender->is_player())
-        {
-            untransform();
-            return;
-        }
-
         if (!defender->is_summoned())
         {
             bleed_onto_floor(defender->pos(), defender->type,
@@ -2107,10 +2089,7 @@ void melee_attack::decapitate(int dam_type)
              apostrophise(defender_name(true)).c_str());
     }
 
-    if (defender->is_player())
-        set_hydra_form_heads(heads - 1);
-    else
-        defender->as_monster()->num_heads--;
+    defender->as_monster()->num_heads--;
 }
 
 /**
@@ -3565,7 +3544,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 // to-hit method
 // Returns the to-hit for your extra unarmed attacks.
 // DOES NOT do the final roll (i.e., random2(your_to_hit)).
-int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
+int melee_attack::calc_your_to_hit_unarmed(int uattack)
 {
     int your_to_hit;
 
@@ -3580,20 +3559,7 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
     if (player_mutation_level(MUT_EYEBALLS))
         your_to_hit += 2 * player_mutation_level(MUT_EYEBALLS) + 1;
 
-    // Vampires know how to bite and aim better when thirsty.
-    if (you.species == SP_VAMPIRE && uattack == UNAT_BITE)
-    {
-        your_to_hit += 1;
-
-        if (vampiric)
-        {
-            if (you.hunger_state <= HS_STARVING)
-                your_to_hit += 2;
-            else if (you.hunger_state < HS_SATIATED)
-                your_to_hit += 1;
-        }
-    }
-    else if (you.species != SP_VAMPIRE && you.hunger_state <= HS_STARVING)
+    if (you.species != SP_VAMPIRE && you.hunger_state <= HS_STARVING)
         your_to_hit -= 3;
 
     your_to_hit += slaying_bonus();
@@ -3726,10 +3692,6 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
         if (heal > you.experience_level)
             heal = you.experience_level;
 
-        // Decrease healing when done in bat form.
-        if (you.form == TRAN_BAT)
-            heal /= 2;
-
         if (heal > 0 && !you.duration[DUR_DEATHS_DOOR])
         {
             inc_hp(heal);
@@ -3739,15 +3701,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
 
     // Gain nutrition.
     if (you.hunger_state != HS_ENGORGED)
-    {
-        int food_value = 30 + random2avg(59, 2);
-
-        // Bats get rather less nutrition out of it.
-        if (you.form == TRAN_BAT)
-            food_value /= 2;
-
-        lessen_hunger(food_value, false);
-    }
+        lessen_hunger(30 + random2avg(59, 2), false);
 
     did_god_conduct(DID_DRINK_BLOOD, 5 + random2(4));
 
@@ -3757,7 +3711,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
 bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
 {
     return you.species == SP_VAMPIRE
-           && you.hunger_state < HS_ENGORGED
+           && you.hunger_state < HS_SATIATED
            && !mon->is_summoned()
            && mons_has_blood(mon->type);
 }

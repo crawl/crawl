@@ -52,7 +52,6 @@ string zin_recite_text(const int seed, const int prayertype, int step);
 bool zin_check_able_to_recite(bool quiet = false);
 int zin_check_recite_to_monsters(bool quiet = false);
 bool zin_recite_to_single_monster(const coord_def& where);
-void zin_recite_interrupt();
 int zin_recite_power();
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
@@ -162,4 +161,7 @@ void ru_do_retribution(monster* mons, int damage);
 void ru_draw_out_power();
 bool ru_power_leap();
 bool ru_apocalypse();
+
+bool pakellas_check_quick_charge(bool quiet);
+bool pakellas_device_surge();
 #endif

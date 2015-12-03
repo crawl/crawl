@@ -49,7 +49,7 @@ ENDMAP
 #       for the whole branch.
 #
 NAME:   layout_chaotic_city
-DEPTH:  Lair:1-3, Crypt:1-4, Dis
+DEPTH:  Lair:1-3, Crypt, Dis
 WEIGHT: 10, 15 (Crypt)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_city

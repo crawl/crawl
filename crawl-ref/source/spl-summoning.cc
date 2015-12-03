@@ -196,22 +196,33 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
             snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
         }
     }
-    if (!count)
-        mpr("You fail to create any snakes.");
-    else if (count > 1)
-        mprf("You create %d snakes!",count);
+    if (count)
+    {
+        int sticks_left = num_sticks - count;
+
+        if (count > 1)
+            mprf("You create %d snakes!", count);
+        else
+            mpr("You create a snake!");
+
+        if (sticks_left)
+            mprf("You now have %d arrow%s.", sticks_left,
+                                             sticks_left > 1 ? "s" : "");
+        else
+            mpr("You now have no arrows remaining.");
+    }
     else
-        mpr("You create a snake!");
+        mpr("You fail to create any snakes.");
+
     return SPRET_SUCCESS;
 }
 
 monster_type pick_swarmer()
 {
-    return random_choose_weighted(3, MONS_KILLER_BEE,
-                                  3, MONS_WORKER_ANT,
-                                  3, MONS_WASP,
-                                  1, MONS_SCORPION,
-                                  1, MONS_WORM,
+    return random_choose_weighted(4, MONS_KILLER_BEE,
+                                  3, MONS_SCORPION,
+                                  2, MONS_RIVER_RAT,
+                                  1, MONS_WASP,
                                   1, MONS_VAMPIRE_MOSQUITO,
                                   1, MONS_BUTTERFLY,
                                   0);
@@ -459,13 +470,8 @@ static bool _place_dragon()
 
     // Pick a random hostile in sight
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
-    {
-        if (!mons_aligned(&you, *mi)
-            && !mons_is_firewood(*mi))
-        {
+        if (!mons_aligned(&you, *mi) && mons_is_threatening(*mi))
             targets.push_back(*mi);
-        }
-    }
 
     shuffle_array(targets);
 
@@ -2551,7 +2557,7 @@ void init_servitor(monster* servitor, actor* caster)
              caster->conj_verb("summon").c_str(),
              caster->pronoun(PRONOUN_POSSESSIVE).c_str());
     }
-    else if (servitor)
+    else
         simple_monster_message(servitor, " appears!");
 
     int shortest_range = LOS_RADIUS + 1;

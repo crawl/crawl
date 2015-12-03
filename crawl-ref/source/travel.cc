@@ -294,11 +294,7 @@ uint8_t is_waypoint(const coord_def &p)
 
 static inline bool is_stash(const LevelStashes *ls, const coord_def& p)
 {
-    if (!ls)
-        return false;
-
-    const Stash *s = ls->find_stash(p);
-    return s && s->enabled;
+    return ls && ls->find_stash(p);
 }
 
 static bool _monster_blocks_travel(const monster_info *mons)
@@ -3142,7 +3138,7 @@ string level_id::describe(bool long_name, bool with_number) const
         if (long_name)
         {
             // decapitalise 'the'
-            if (result.find("The") == 0)
+            if (starts_with(result, "The"))
                 result[0] = 't';
             result = make_stringf("Level %d of %s",
                       depth, result.c_str());

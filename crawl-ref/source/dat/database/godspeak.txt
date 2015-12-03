@@ -807,6 +807,37 @@ Okawaru welcome
 
 Okawaru says: Bring me glory in combat!
 %%%%
+Pakellas penance
+
+Pakellas says: That's one approach which won't work here.
+
+Pakellas says: Disappointing results so far.
+
+Pakellas says: We may have to discontinue the experiment at this rate.
+
+Pakellas says: Do not stand in the way of progress!
+%%%%
+Pakellas welcome
+
+Pakellas says: Time to continue the experiment.
+
+Pakellas says: Time to find some more test subjects.
+
+Pakellas says: Ready to try out some more devices?
+
+Pakellas says: This is producing some very interesting results.
+
+Pakellas says: What solutions will you come up with next?
+
+Pakellas says: Progress or perish!
+
+# nicolae-
+w:5
+Pakellas says: No one tells a god not to play god!
+
+w:1
+Pakellas says: They called me mad... well, we'll show them!
+%%%%
 Qazlal penance
 
 Qazlal thunders: Do not interfere with the natural order!

@@ -129,6 +129,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
         || !mons_class_gives_xp(new_mclass)           // no tentacle parts or
                                                       // harmless things
+        || !mons_class_is_threatening(new_mclass)
         || new_mclass == MONS_PROGRAM_BUG
 
         // 'morph targets are _always_ "base" classes, not derived ones.
@@ -520,10 +521,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (could_see)
     {
         string verb = "";
-        string obj = "";
-
-        obj = can_see ? mons_type_name(targetc, DESC_A)
-                      : "something you cannot see";
+        string obj = can_see ? mons_type_name(targetc, DESC_A)
+                             : "something you cannot see";
 
         if (oldc == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
         {

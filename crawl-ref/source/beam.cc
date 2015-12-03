@@ -1317,8 +1317,7 @@ void bolt::do_fire()
         if (!affects_nothing)
             affect_cell();
 
-        if (path_taken.empty() || pos() != path_taken.back())
-            path_taken.push_back(pos());
+        path_taken.push_back(pos());
 
         if (range_used() > range)
             break;
@@ -4117,7 +4116,7 @@ void bolt::update_hurt_or_helped(monster* mon)
         {
             foe_info.helped++;
             // Accidentally helped a foe.
-            if (!is_tracer && !effect_known && !mons_is_firewood(mon))
+            if (!is_tracer && !effect_known && mons_is_threatening(mon))
             {
                 const int interest =
                     (flavour == BEAM_INVISIBILITY && can_see_invis) ? 25 : 100;
@@ -4279,7 +4278,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
         return;
 
     // Check only if actual damage and the monster is worth caring about.
-    if (final > 0 && !mons_is_firewood(mon))
+    if (final > 0 && mons_is_threatening(mon))
     {
         ASSERT(preac > 0);
 
@@ -5398,7 +5397,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             return MON_UNAFFECTED;
 
         obvious_effect = true;
-        const int duration = you.skill_rdiv(SK_INVOCATIONS, 3, 4) + 2;
+        const int duration =
+            player_adjust_invoc_power(you.skill_rdiv(SK_INVOCATIONS, 3, 4) + 2);
         mon->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, agent(),
                                   duration * BASELINE_DELAY));
         simple_monster_message(mon, "'s soul is now ripe for the taking.");
@@ -5899,9 +5899,6 @@ void bolt::refine_for_explosion()
     // gets burned by it anyway.  :)
     msg_generated = true;
 
-    // tmp needed so that what c_str() points to doesn't go out of scope
-    // before the function ends.
-    string tmp;
     if (item != nullptr)
     {
         seeMsg  = "The " + item->name(DESC_PLAIN, false, false, false)

@@ -11,6 +11,8 @@
 #define CORPSE_NAME_KEY      "corpse_name_key"
 #define CORPSE_NAME_TYPE_KEY "corpse_name_type_key"
 
+#define PAKELLAS_SUPERCHARGE_KEY "pakellas_supercharged"
+
 struct item_kind
 {
     object_class_type base_type;

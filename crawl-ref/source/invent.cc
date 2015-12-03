@@ -410,6 +410,7 @@ string no_selectables_message(int item_selector)
     case OSEL_UNIDENT:
         return "You don't have any unidentified items.";
     case OSEL_RECHARGE:
+    case OSEL_SUPERCHARGE:
         return "You aren't carrying any rechargeable items.";
     case OSEL_ENCH_ARM:
         return "You aren't carrying any armour which can be enchanted further.";
@@ -773,7 +774,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         string subtitle = item_class_name(i);
 
         // Mention the class selection shortcuts.
-        if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
+        if (is_set(MF_MULTISELECT))
         {
             vector<char> glyphs;
             get_class_hotkeys(i, glyphs);
@@ -1025,7 +1026,8 @@ bool is_item_selected(const item_def &i, int selector)
                || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL);
 
     case OSEL_RECHARGE:
-        return item_is_rechargeable(i, true);
+    case OSEL_SUPERCHARGE:
+        return item_is_rechargeable(i, selector == OSEL_RECHARGE);
 
     case OSEL_EVOKABLE:
         return item_is_evokable(i, true, true, true);
@@ -1556,8 +1558,17 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (item.base_type == OBJ_RODS && oper == OPER_ATTACK)
         return true;
 
+    // The consequences of evokables are generally known unless it's a deck
+    // and you don't know what kind of a deck it is.
+    if (item.base_type == OBJ_MISCELLANY && !is_deck(item)
+        && oper == OPER_EVOKE && god_hates_item(item))
+    {
+        penance = true;
+        return true;
+    }
+
     // Everything else depends on knowing the item subtype/brand.
-    if (!item_ident(item, ISFLAG_KNOW_TYPE))
+    if (!item_type_known(item))
         return false;
 
     if (oper == OPER_REMOVE
@@ -1573,7 +1584,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (nasty_stasis(item, oper))
         return true;
 
-    if (oper == OPER_ATTACK && god_hates_item(item))
+    if (oper == OPER_ATTACK && god_hates_item(item)
+        && !you_worship(GOD_PAKELLAS))
     {
         penance = true;
         return true;
@@ -1605,14 +1617,18 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (is_artefact(item) && artefact_property(item, ARTP_DRAIN))
+        if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
+                                  || artefact_property(item, ARTP_FRAGILE)))
+        {
             return true;
+        }
     }
 
     if (oper == OPER_PUTON || oper == OPER_WEAR || oper == OPER_TAKEOFF
         || oper == OPER_REMOVE)
     {
-        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
+        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM)
+            || item.is_type(OBJ_JEWELLERY, AMU_DISMISSAL))
         {
             if ((oper == OPER_TAKEOFF || oper == OPER_REMOVE)
                  && you_worship(GOD_ZIN))
@@ -1622,8 +1638,22 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (is_artefact(item) && artefact_property(item, ARTP_DRAIN))
+        if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
+                                  || artefact_property(item, ARTP_FRAGILE)))
+        {
             return true;
+        }
+        if (item.is_type(OBJ_JEWELLERY, AMU_REGENERATION)
+            && player_mutation_level(MUT_SLOW_REGENERATION) < 3)
+        {
+            return true;
+        }
+    }
+
+    if (oper == OPER_EVOKE && god_hates_item(item))
+    {
+        penance = true;
+        return true;
     }
 
     return false;

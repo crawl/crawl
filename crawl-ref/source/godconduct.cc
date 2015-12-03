@@ -70,7 +70,7 @@ static const char *conducts[] =
     "Souled Friend Died", "Attack In Sanctuary",
     "Kill Artificial", "Destroy Spellbook",
     "Exploration", "Desecrate Holy Remains", "Seen Monster",
-    "Fire", "Kill Fiery", "Sacrificed Love"
+    "Fire", "Kill Fiery", "Sacrificed Love", "Channel",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -457,6 +457,12 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_RU,
     peeve_map(),
+    // GOD_PAKELLAS
+    {
+        { DID_CHANNEL, {
+            1, 1,
+        } },
+    },
 };
 
 
@@ -842,6 +848,20 @@ static like_map divine_likes[] =
                     you.props[RU_SACRIFICE_PROGRESS_KEY].get_int()++;
             }
         } },
+    },
+    // GOD_PAKELLAS,
+    {
+        { DID_KILL_LIVING, _on_kill(MH_NATURAL, false,
+                                  [](int &piety, int &denom,
+                                     const monster* victim)
+            {
+                piety *= 4;
+                denom *= 3;
+            }
+        ) },
+        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
     },
 };
 

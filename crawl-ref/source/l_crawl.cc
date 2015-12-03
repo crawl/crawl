@@ -917,8 +917,7 @@ static int crawl_err_trace(lua_State *ls)
     if (err)
     {
         // This code from lua.c:traceback() (mostly)
-        const char *errs = lua_tostring(ls, 1);
-        string errstr = errs? errs : "";
+        (void) lua_tostring(ls, 1);
         lua_getfield(ls, LUA_GLOBALSINDEX, "debug");
         if (!lua_istable(ls, -1))
         {

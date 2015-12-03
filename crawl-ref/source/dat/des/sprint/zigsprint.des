@@ -553,7 +553,7 @@ local rnd = crawl.random2(142)
                Frederick / Geryon / Gloorx Vloq / Ignacio / Ilsuiw / Jory /\
                Khufu / Lom Lobon / Mara / Margery / Mennas / Mnoleg / Murray /\
                the Enchantress / the Lernaean hydra / the Serpent of Hell /\
-               the royal jelly / Tiamat / Xtahua / Nellie / Chuck")
+               the Royal Jelly / Tiamat / Xtahua / Nellie / Chuck")
 -- Holy
   else
     e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \
@@ -713,6 +713,7 @@ KFEAT:  s = altar_dithmenos
 KFEAT:  t = altar_gozag
 KFEAT:  u = altar_qazlal
 KFEAT:  v = altar_ru
+KFEAT:  w = altar_pakellas
 KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
               fire dragon armour mundane not_cursed ident:all plus:5, \
               ice dragon armour mundane not_cursed ident:all plus:5, \
@@ -803,17 +804,17 @@ KFEAT:    ^ = granite_statue
 KFEAT:    & = granite_statue
 COLOUR:   & = magenta
 MAP
-f^g^h^&A&^i^j^k
-^.........RT..^
-e..HG.........l
-^..IF.........^
-d..JE.....S...m
-^...D..M..P...^
-c......L..O...n
-^...C..K..N...^
-b...B.{.......o
-^.............^
-a^r^t^v^u^s^q^p
+^f^g^h&A&i^j^k^
+e.........RT..l
+^..HG.........^
+d..IF.........m
+^..JE.....S...^
+c...D..M..P...n
+^......L..O...^
+b...C..K..N...o
+^...B.{.......^
+a.............p
+^w^v^u^t^s^r^q^
 ENDMAP
 
 NAME:  room_1

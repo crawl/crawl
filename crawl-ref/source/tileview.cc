@@ -396,7 +396,7 @@ tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
     for (const auto& elem : choices)
     {
         rand -= elem.second;
-        if (rand <= 0)
+        if (rand < 0)
             return elem.first;
     }
 
@@ -1040,6 +1040,8 @@ void tile_draw_rays(bool reset_count)
             flag = TILE_FLAG_RAY;
         else if (tile_ray_vec[i].in_range == AFF_LANDING)
             flag = TILE_FLAG_LANDING;
+        else if (tile_ray_vec[i].in_range == AFF_MULTIPLE)
+            flag = TILE_FLAG_RAY_MULTI;
         env.tile_bg(tile_ray_vec[i].ep) |= flag;
     }
 

@@ -1212,7 +1212,7 @@ string scorefile_entry::make_oneline(const string &ml) const
     vector<string> lines = split_string("\n", ml);
     for (string &s : lines)
     {
-        if (s.find("...") == 0)
+        if (starts_with(s, "..."))
         {
             s = s.substr(3);
             trim_string(s);
@@ -1769,9 +1769,9 @@ string scorefile_entry::damage_string(bool terse) const
 
 string scorefile_entry::strip_article_a(const string &s) const
 {
-    if (s.find("a ") == 0)
+    if (starts_with(s, "a "))
         return s.substr(2);
-    else if (s.find("an ") == 0)
+    else if (starts_with(s, "an "))
         return s.substr(3);
     return s;
 }
@@ -1788,7 +1788,7 @@ string scorefile_entry::terse_missile_name() const
 
     for (const string (&affixes)[2] : pre_post)
     {
-        if (aux.find(affixes[0]) != 0)
+        if (!starts_with(aux, affixes[0]))
             continue;
 
         string::size_type end = aux.rfind(affixes[1]);
@@ -1801,17 +1801,13 @@ string scorefile_entry::terse_missile_name() const
 
         // Was this prefixed by "a" or "an"?
         // (This should only ever not be the case with Robin and Ijyb.)
-        if (missile.find("an ") == 0)
-            missile = missile.substr(3);
-        else if (missile.find("a ") == 0)
-            missile = missile.substr(2);
+        missile = strip_article_a(missile);
     }
     return missile;
 }
 
 string scorefile_entry::terse_missile_cause() const
 {
-    string cause;
     const string &aux = auxkilldata;
 
     string monster_prefix = " by ";
@@ -1834,7 +1830,7 @@ string scorefile_entry::terse_missile_cause() const
 string scorefile_entry::terse_beam_cause() const
 {
     string cause = auxkilldata;
-    if (cause.find("by ") == 0 || cause.find("By ") == 0)
+    if (starts_with(cause, "by ") || starts_with(cause, "By "))
         cause = cause.substr(3);
     return cause;
 }
@@ -2131,7 +2127,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += terse? terse_missile_cause() : auxkilldata;
             needs_damage = true;
         }
-        else if (verbose && auxkilldata.find("by ") == 0)
+        else if (verbose && starts_with(auxkilldata, "by "))
         {
             // "by" is used for priest attacks where the effect is indirect
             // in verbose format we have another line for the monster
@@ -2485,8 +2481,11 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 // Lugonu's touch or "the <retribution> of <deity>";
                 // otherwise it's a beam
-                if (!isupper(auxkilldata[0]) && auxkilldata.find("the ") != 0)
+                if (!isupper(auxkilldata[0])
+                    && !starts_with(auxkilldata, "the "))
+                {
                     desc += is_vowel(auxkilldata[0]) ? "an " : "a ";
+                }
 
                 desc += auxkilldata;
             }

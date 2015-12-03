@@ -196,6 +196,9 @@ static bool dgn_check_connectivity = false;
 static int  dgn_zones = 0;
 
 static vector<string> _you_vault_list;
+#ifdef DEBUG_STATISTICS
+static vector<string> _you_all_vault_list;
+#endif
 
 struct coloured_feature
 {
@@ -344,7 +347,7 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
 static bool _build_level_vetoable(bool enable_random_maps,
                                   dungeon_feature_type dest_stairs_type)
 {
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
     mapstat_report_map_build_start();
 #endif
 
@@ -361,7 +364,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
     {
         dprf(DIAG_DNGN, "<white>VETO</white>: %s: %s",
              level_id::current().describe().c_str(), e.what());
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
         mapstat_report_map_veto(e.what());
 #endif
         return false;
@@ -425,6 +428,11 @@ static bool _build_level_vetoable(bool enable_random_maps,
         vector<string> &vec(you.vault_list[level_id::current()]);
         vec.insert(vec.end(), _you_vault_list.begin(), _you_vault_list.end());
     }
+
+#ifdef DEBUG_STATISTICS
+    for (auto vault : _you_all_vault_list)
+        mapstat_report_map_success(vault);
+#endif
 
     return true;
 }
@@ -601,7 +609,7 @@ static void _set_grd(const coord_def &c, dungeon_feature_type feat)
     grd(c) = feat;
 }
 
-static void _dgn_register_vault(const string name, const string spaced_tags)
+static void _dgn_register_vault(const string &name, const string &spaced_tags)
 {
     if (spaced_tags.find(" allow_dup ") == string::npos)
         you.uniq_map_names.insert(name);
@@ -611,9 +619,9 @@ static void _dgn_register_vault(const string name, const string spaced_tags)
 
     for (const string &tag : split_string(" ", spaced_tags))
     {
-        if (tag.find("uniq_") == 0)
+        if (starts_with(tag, "uniq_"))
             you.uniq_map_tags.insert(tag);
-        else if (tag.find("luniq_") == 0)
+        else if (starts_with(tag, "luniq_"))
             env.level_uniq_map_tags.insert(tag);
     }
 }
@@ -625,9 +633,9 @@ static void _dgn_unregister_vault(const map_def &map)
 
     for (const string &tag : split_string(" ", map.tags))
     {
-        if (tag.find("uniq_") == 0)
+        if (starts_with(tag, "uniq_"))
             you.uniq_map_tags.erase(tag);
-        else if (tag.find("luniq_") == 0)
+        else if (starts_with(tag, "luniq_"))
             env.level_uniq_map_tags.erase(tag);
     }
 
@@ -742,6 +750,8 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
         return true;
+    case DNGN_ENTER_HELL:
+        return parent_branch(you.where_are_you) == BRANCH_VESTIBULE;
     default:
         return false;
     }
@@ -768,6 +778,8 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
         return true;
+    case DNGN_ENTER_HELL:
+        return parent_branch(you.where_are_you) == BRANCH_VESTIBULE;
     default:
         return false;
     }
@@ -1116,6 +1128,9 @@ void dgn_reset_level(bool enable_random_maps)
     you.unique_items = temp_unique_items;
 
     _you_vault_list.clear();
+#ifdef DEBUG_STATISTICS
+    _you_all_vault_list.clear();
+#endif
     env.level_build_method.clear();
     env.level_layout_types.clear();
     level_clear_vault_memory();
@@ -1786,7 +1801,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
     {
         const int newzones = dgn_count_disconnected_zones(false);
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
         ostringstream vlist;
         for (unsigned i = nvaults; i < env.level_vaults.size(); ++i)
         {
@@ -1801,7 +1816,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
         {
             throw dgn_veto_exception(make_stringf(
                  "Had %d zones, now has %d%s%s.", dgn_zones, newzones,
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
                  "; broken by ", vlist.str().c_str()
 #else
                  "", ""
@@ -4026,7 +4041,7 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
     // exits will not be correctly set.
     const vault_placement *saved_place = dgn_register_place(place, true);
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
     if (crawl_state.map_stat_gen)
         mapstat_report_map_use(place.map);
 #endif
@@ -4535,7 +4550,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         type = RANDOM_MONSTER;
     }
 
-    if (type != RANDOM_MONSTER && type < NUM_MONSTERS)
+    if (type < NUM_MONSTERS)
     {
         // Don't place a unique monster a second time.
         // (Boris is handled specially.)
@@ -4971,7 +4986,7 @@ static void _vault_grid_mons(vault_placement &place,
 
 // Currently only used for Slime: branch end
 // where it will turn the stone walls into clear rock walls
-// once the royal jelly has been killed.
+// once the Royal Jelly has been killed.
 bool seen_replace_feat(dungeon_feature_type old_feat,
                        dungeon_feature_type new_feat)
 {
@@ -6742,6 +6757,10 @@ static void _remember_vault_placement(const vault_placement &place, bool extra)
         else
             you.vault_list[level_id::current()].push_back(place.map.name);
     }
+
+#ifdef DEBUG_STATISTICS
+    _you_all_vault_list.push_back(place.map.name);
+#endif
 }
 
 string dump_vault_maps()

@@ -1481,7 +1481,6 @@ bool remove_ring(int slot, bool announce)
     int ring_wear_2;
     bool has_jewellery = false;
     bool has_melded = false;
-    const vector<equipment_type> ring_types = _current_ring_types();
     const vector<equipment_type> jewellery_slots = _current_jewellery_types();
 
     for (auto eq : jewellery_slots)
@@ -1724,7 +1723,6 @@ void drink(int slot)
 
     if (player_under_penance(GOD_GOZAG) && one_chance_in(3))
     {
-        zin_recite_interrupt();
         simple_god_message(" petitions for your drink to fail.", GOD_GOZAG);
         you.turn_is_over = true;
         return;
@@ -1733,7 +1731,6 @@ void drink(int slot)
     if (!quaff_potion(potion))
         return;
 
-    zin_recite_interrupt();
     if (!alreadyknown && dangerous)
     {
         // Xom loves it when you drink an unknown potion and there is
@@ -1794,7 +1791,6 @@ static void _rebrand_weapon(item_def& wpn)
         end_weapon_brand(wpn);
     int old_brand = get_weapon_brand(wpn);
     int new_brand = old_brand;
-    const string itname = wpn.name(DESC_YOUR);
 
     // now try and find an appropriate brand
     while (old_brand == new_brand || god_hates_brand(new_brand))
@@ -2549,7 +2545,6 @@ void read(int slot)
 
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
-    zin_recite_interrupt();
 
     if (you.duration[DUR_BRAINLESS] && !one_chance_in(5))
     {

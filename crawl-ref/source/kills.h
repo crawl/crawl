@@ -111,9 +111,8 @@ struct kill_exp
     kill_exp(const kill_def &k, const kill_monster_desc &md)
         : nkills(k.kills), exp(k.exp), base_name(k.base_name(md)),
           desc(k.info(md)),
-          monnum(md.monnum), modifier(md.modifier)
+          monnum(md.monnum), modifier(md.modifier), places(k.places)
     {
-        places = k.places;
     }
 
     kill_exp(const kill_ghost &kg)

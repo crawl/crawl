@@ -114,7 +114,7 @@ function base_monster_setup(e)
            Dissolution / Xtahua / the Lernaean hydra / Jory / Mennas / Mara")
   e.kmons("L = Khufu band / Tiamat band / Murray / Mnoleg / Gloorx Vloq /\
            Lom Lobon / Cerebov w:5 / Dispater / Asmodeus / Antaeus /\
-           Ereshkigal / Ignacio / Geryon / the royal jelly /\
+           Ereshkigal / Ignacio / Geryon / the Royal Jelly /\
            the Serpent of Hell")
   e.kmons("M = stone giant / hill giant / cyclops / frost giant /\
            fire giant / ettin / deep troll / iron troll")
@@ -486,11 +486,10 @@ function coven_setup(e)
   e.kitem("b = amulet of faith randart not_cursed ident:all /\
           amulet of guardian spirit randart not_cursed ident:all /\
           amulet of resist corrosion randart not_cursed ident:all /\
-          amulet of resist mutation randart not_cursed ident:all /\
           amulet of rage randart not_cursed ident:all /\
           amulet of stasis randart not_cursed ident:all /\
           amulet of the gourmand randart not_cursed ident:all /\
-          amulet of warding randart not_cursed ident:all /\
+          amulet of dismissal randart not_cursed ident:all /\
           amulet of regeneration randart ident:all not_cursed /\
           ring of slaying plus:5 randart ident:all not_cursed /\
           any jewellery randart level:27 not_cursed ident:all w:40")
@@ -1000,13 +999,14 @@ KFEAT:   s = altar_dithmenos
 KFEAT:   t = altar_gozag
 KFEAT:   u = altar_qazlal
 KFEAT:   v = altar_ru
+KFEAT:   w = altar_pakellas
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 MAP
 hopnlfjida
 gqrmksvebc
-.
+w
 u
 t
 ENDMAP

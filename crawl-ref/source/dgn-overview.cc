@@ -768,11 +768,8 @@ static string unique_name(monster* mons)
         name += ", " + short_ghost_description(mons, true);
     else
     {
-        if (strstr(name.c_str(), "royal jelly")
-            || strstr(name.c_str(), "Royal Jelly"))
-        {
+        if (strstr(name.c_str(), "Royal Jelly"))
             name = "Royal Jelly";
-        }
         if (strstr(name.c_str(), "Lernaean hydra"))
             name = "Lernaean hydra";
         if (strstr(name.c_str(), "Serpent of Hell"))

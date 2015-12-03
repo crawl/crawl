@@ -1190,9 +1190,12 @@ void direction_chooser::draw_beam_if_needed()
                     bcol = (*ri == target()) ? RED : MAGENTA;
                 else if (aff == AFF_YES)
                     bcol = (*ri == target()) ? LIGHTRED : LIGHTMAGENTA;
-                // shadow step landing sites
-                else
+                else if (aff == AFF_LANDING)
                     bcol = (*ri == target()) ? LIGHTGREEN : GREEN;
+                else if (aff == AFF_MULTIPLE)
+                    bcol = (*ri == target()) ? LIGHTCYAN : CYAN;
+                else
+                    die("unhandled aff %d", aff);
                 _draw_ray_glyph(*ri, bcol, '*', bcol | COLFLAG_REVERSE);
 #endif
             }
@@ -2278,8 +2281,7 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
     // Monster types that you can't gain experience from don't count as
     // monsters.
     if (mode != TARG_EVOLVABLE_PLANTS
-        && mons_is_firewood(mon)
-        && !mons_is_active_ballisto(mon))
+        && !mons_is_threatening(mon))
     {
         return false;
     }

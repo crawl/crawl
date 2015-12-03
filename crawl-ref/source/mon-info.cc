@@ -570,7 +570,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (nomsg_wounds)
         dam = MDAM_OKAY;
 
-    if (mons_class_gives_xp(m->type)) // Firewood, butterflies, etc.
+    if (mons_is_threatening(m)) // Firewood, butterflies, etc.
     {
         if (m->asleep())
         {
@@ -843,7 +843,7 @@ string monster_info::_core_name() const
     else if (nametype == MONS_LERNAEAN_HYDRA)
         s = "Lernaean hydra"; // TODO: put this into mon-data.h
     else if (nametype == MONS_ROYAL_JELLY)
-        s = "royal jelly";
+        s = "Royal Jelly";
     else if (mons_species(nametype) == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
@@ -1863,9 +1863,8 @@ void get_monster_info(vector<monster_info>& mons)
 
     for (monster *mon : visible)
     {
-        if (mons_class_gives_xp(mon->type)
-            || mon->is_child_tentacle()
-            || mons_is_active_ballisto(mon))
+        if (mons_is_threatening(mon)
+            || mon->is_child_tentacle())
         {
             mons.emplace_back(mon);
         }

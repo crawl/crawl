@@ -420,8 +420,8 @@ struct jewellery_fake_artp
 
 static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { AMU_RAGE, { { ARTP_BERSERK, 1 } } },
-    { AMU_WARDING, { { ARTP_NEGATIVE_ENERGY, 1 } } },
     { AMU_REGENERATION, { { ARTP_REGENERATION, 1 } } },
+    { AMU_DISMISSAL, { { ARTP_CONTAM, 1 } } },
 
     { RING_INVISIBILITY, { { ARTP_INVISIBLE, 1 } } },
     { RING_MAGICAL_POWER, { { ARTP_MAGICAL_POWER, 9 } } },
@@ -638,6 +638,11 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_MAGICAL_POWER:
             return item_class != OBJ_WEAPONS
                    || get_weapon_brand(item) != SPWPN_ANTIMAGIC;
+        case ARTP_CONTAM:
+            return !item.is_type(OBJ_JEWELLERY, AMU_DISMISSAL);
+            // not quite as interesting on armour, since you swap it less
+        case ARTP_FRAGILE:
+            return item_class != OBJ_ARMOUR;
         default:
             return true;
     }
@@ -770,6 +775,8 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 1; }, 0, 0 },
     { "*Confuse", ARTP_VAL_BOOL, 25, // ARTP_CONFUSE,
         nullptr, []() { return 1; }, 0, 0 },
+    { "Fragile", ARTP_VAL_BOOL, 25, // ARTP_FRAGILE,
+        nullptr, []() { return 1; }, 0, 0 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000
@@ -831,16 +838,39 @@ const char *artp_name(artefact_prop_type prop)
     return artp_data[prop].name;
 }
 
+/**
+ * Add a 'good' version of a given prop to the given set of item props.
+ *
+ * The property may already exist in the set; if so, increase its value.
+ *
+ * @param prop[in]              The prop to be added.
+ * @param item_props[out]       The list of item props to be added to.
+ */
+static void _add_good_randart_prop(artefact_prop_type prop,
+                                   artefact_properties_t &item_props)
+{
+    // Add one to the starting value for stat bonuses.
+    if ((prop == ARTP_STRENGTH
+         || prop == ARTP_INTELLIGENCE
+         || prop == ARTP_DEXTERITY)
+        && item_props[prop] == 0)
+    {
+        item_props[prop]++;
+    }
+
+    item_props[prop] += artp_data[prop].gen_good_value();
+}
+
 static void _get_randart_properties(const item_def &item,
                                     artefact_properties_t &item_props)
 {
     const object_class_type item_class = item.base_type;
 
     // first figure out how good we want the artefact to be, range 1 to 7.
-    int quality = max(1, binomial(7, 30));
+    const int quality = max(1, binomial(7, 30));
     // then consider adding bad properties. the better the artefact, the more
     // likely we add a bad property, up to a max of 2.
-    int bad = binomial(1 + div_rand_round(quality, 5), 30);
+    int bad = min(binomial(1 + div_rand_round(quality, 5), 30), 2);
     // we start by assuming we'll allow one good property per quality level
     // and an additional one for each bad property.
     int good = quality + bad;
@@ -848,12 +878,12 @@ static void _get_randart_properties(const item_def &item,
     // things get spammy. Extra "good" properties will be used to enhance
     // properties only, not to add more distinct properties. There is still a
     // small chance of >4 properties.
-    int max_properties = 4 + one_chance_in(20) + one_chance_in(40);
+    const int max_properties = 4 + one_chance_in(20) + one_chance_in(40);
     int enhance = 0;
     if (good + bad > max_properties)
     {
         enhance = good + bad - max_properties;
-        good = 4 - bad;
+        good = max_properties - bad;
     }
 
     // initialize a vector of weighted artefact properties to pick from
@@ -869,8 +899,9 @@ static void _get_randart_properties(const item_def &item,
     if (item_class == OBJ_WEAPONS)
         _add_randart_weapon_brand(item, item_props);
 
-    // randomly pick properties from the list, assign values and all that,
-    // then subtract them from the good/bad count as needed
+    // randomly pick properties from the list, choose an appropriate value,
+    // then subtract them from the good/bad/enhance count as needed
+    // the 'enhance' count is not guaranteed to be used.
     while (good > 0 || bad > 0)
     {
         const artefact_prop_type *prop_ptr
@@ -891,23 +922,15 @@ static void _get_randart_properties(const item_def &item,
         {
             // potentially increment the value of the property more than once,
             // using up a good property each time.
-            const int max = artp_data[prop].max_dup;
-            for (int i = 1;
-                 good > 0 && item_props[prop] <= max &&
-                    ((enhance > 0 && i > 1) || one_chance_in(i));
-                 i += artp_data[prop].odds_inc)
+            // always do so if there's any 'enhance' left, if possible.
+            for (int chance_denom = 1;
+                 item_props[prop] <= artp_data[prop].max_dup
+                    && (enhance > 0
+                        || good > 0 && one_chance_in(chance_denom));
+                 chance_denom += artp_data[prop].odds_inc)
             {
-                // Add one to the starting value for stat bonuses.
-                if ((prop == ARTP_STRENGTH
-                     || prop == ARTP_INTELLIGENCE
-                     || prop == ARTP_DEXTERITY)
-                    && item_props[prop] == 0)
-                {
-                   item_props[prop]++;
-                }
-
-                item_props[prop] += artp_data[prop].gen_good_value();
-                if (enhance > 0 && i > 1)
+                _add_good_randart_prop(prop, item_props);
+                if (enhance > 0 && chance_denom > 1)
                     --enhance;
                 else
                     --good;
@@ -1556,10 +1579,6 @@ static bool _randart_is_conflicting(const item_def &item,
     case RING_TELEPORTATION:
     case RING_TELEPORT_CONTROL:
         conflicts = ARTP_PREVENT_TELEPORTATION;
-        break;
-
-    case AMU_RESIST_MUTATION:
-        conflicts = ARTP_CONTAM;
         break;
 
     case AMU_RAGE:

@@ -231,11 +231,8 @@ static vector<spell_type> _spellset_contents(const spellset &spells)
     {
         for (auto spell : book.spells)
         {
-            if (unique_spells.find(spell) != unique_spells.end())
-            {
-                unique_spells.erase(spell);
+            if (unique_spells.erase(spell) == 1)
                 spell_list.emplace_back(spell);
-            }
         }
     }
 

@@ -455,7 +455,7 @@ static const char *weapon_brands_verbose[] =
 static const char* _vorpal_brand_name(const item_def &item, bool terse)
 {
     if (is_range_weapon(item))
-        return terse ? "velocity" : "velocity";
+        return "velocity";
 
     // Would be nice to implement this as an array (like other brands), but
     // mapping the DVORP flags to array entries seems very fragile.
@@ -755,7 +755,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
 #endif
         case AMU_RAGE:              return "rage";
         case AMU_CLARITY:           return "clarity";
-        case AMU_WARDING:           return "warding";
+        case AMU_DISMISSAL:         return "dismissal";
         case AMU_RESIST_CORROSION:  return "resist corrosion";
         case AMU_THE_GOURMAND:      return "gourmand";
 #if TAG_MAJOR_VERSION == 34
@@ -763,7 +763,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case AMU_CONTROLLED_FLIGHT: return "controlled flight";
 #endif
         case AMU_INACCURACY:        return "inaccuracy";
-        case AMU_RESIST_MUTATION:   return "resist mutation";
+        case AMU_NOTHING:           return "nothing";
         case AMU_GUARDIAN_SPIRIT:   return "guardian spirit";
         case AMU_FAITH:             return "faith";
         case AMU_STASIS:            return "stasis";
@@ -1750,6 +1750,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             break;
         }
 
+        if (!dbname && props.exists(PAKELLAS_SUPERCHARGE_KEY))
+            buff << "supercharged ";
+
         if (know_type)
             buff << "wand of " << _wand_type_name(item_typ);
         else
@@ -2411,8 +2414,6 @@ public:
             case FOOD_ROYAL_JELLY:
                 name = "royal jellies";
                 break;
-                name = "other food";
-                break;
             }
         }
         else if (item->base_type == OBJ_MISCELLANY)
@@ -2569,7 +2570,7 @@ void check_item_knowledge(bool unknown_items)
                     if (!unknown_items)
                         ptmp->flags |= ISFLAG_KNOW_TYPE;
                     if (i == OBJ_WANDS)
-                        ptmp->plus = wand_max_charges(j);
+                        ptmp->plus = wand_max_charges(*ptmp);
                     items.push_back(ptmp);
 
                     if (you.force_autopickup[i][j] == 1)
@@ -3089,7 +3090,7 @@ static string _random_consonant_set(int seed)
 /**
  * Write all possible scroll names to the given file.
  */
-static void _test_scroll_names(const string fname)
+static void _test_scroll_names(const string& fname)
 {
     FILE *f = fopen(fname.c_str(), "w");
     if (!f)
@@ -3116,7 +3117,7 @@ static void _test_scroll_names(const string fname)
 /**
  * Write one million random Jiyva names to the given file.
  */
-static void _test_jiyva_names(const string fname)
+static void _test_jiyva_names(const string& fname)
 {
     FILE *f = fopen(fname.c_str(), "w");
     if (!f)
@@ -3403,7 +3404,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case MISC_XOMS_CHESSBOARD:
-            return !you_worship(GOD_XOM);
+            return true;
         default:
             return false;
         }

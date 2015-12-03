@@ -67,6 +67,7 @@
 #include "spl-selfench.h"
 #include "state.h"
 #include "stringutil.h"
+#include "teleport.h"
 #include "transform.h"
 #include "tutorial.h"
 #include "view.h"
@@ -747,6 +748,27 @@ static void _maybe_confuse()
     }
 }
 
+/**
+ * If you have dismissal, consider teleporting away a monster that hurt you.
+ **/
+static void _maybe_dismiss(mid_t source)
+{
+    if (you.dismissal(true, true))
+    {
+        if (monster* mon = monster_by_mid(source))
+        {
+            // 10% chance to teleport away monsters that harm you
+            if (!mon->no_tele() && one_chance_in(10))
+            {
+                mprf(MSGCH_EQUIPMENT, "The translocation field surrounding you"
+                                " vibrates and %s disappears!",
+                                mon->name(DESC_THE).c_str());
+                monster_teleport(mon, true, true);
+            }
+        }
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -998,6 +1020,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);
+            _maybe_dismiss(source);
         }
         if (you.hp > 0)
           return;

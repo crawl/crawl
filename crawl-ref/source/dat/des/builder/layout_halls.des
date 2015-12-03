@@ -277,7 +277,7 @@ ENDMAP
 #       way, like particle diffusion.
 #
 NAME:   layout_catacombs
-DEPTH:  Crypt, Tar
+DEPTH:  Crypt, !Crypt:$, Tar
 WEIGHT: 10 (Crypt), 10 (Tar)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_open_caves

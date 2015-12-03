@@ -594,7 +594,6 @@ void yell(const actor* mon)
              shout_verb.c_str(),
              you.berserk() ? " wildly" : " for attention");
         noisy(noise_level, you.pos());
-        zin_recite_interrupt();
         you.turn_is_over = true;
         return;
 
@@ -729,7 +728,6 @@ void yell(const actor* mon)
         return;
     }
 
-    zin_recite_interrupt();
     you.turn_is_over = true;
     you.pet_target = mons_targd;
     // Allow patrolling for "Stop fighting!" and "Wait here!"

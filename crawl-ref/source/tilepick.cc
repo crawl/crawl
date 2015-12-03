@@ -439,6 +439,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_QAZLAL;
     case DNGN_ALTAR_RU:
         return TILE_DNGN_ALTAR_RU;
+    case DNGN_ALTAR_PAKELLAS:
+        return TILE_DNGN_ALTAR_PAKELLAS;
     case DNGN_ALTAR_ECUMENICAL:
         return TILE_DNGN_UNKNOWN_ALTAR;
     case DNGN_FOUNTAIN_BLUE:
@@ -627,7 +629,7 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
         *bg = mem_bg;
     *bg |= tileidx_unseen_flag(gc);
     // Don't draw rays out of los.
-    *bg &= ~(TILE_FLAG_RAY_OOR | TILE_FLAG_RAY | TILE_FLAG_LANDING);
+    *bg &= ~(TILE_FLAG_RAY_MULTI | TILE_FLAG_RAY_OOR | TILE_FLAG_RAY | TILE_FLAG_LANDING);
 
     // Override foreground for monsters/items
     if (env.map_knowledge(gc).detected_monster())
@@ -1406,8 +1408,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_MACABRE_MASS;
     case MONS_OCTOPODE:
         return TILEP_MONS_OCTOPODE;
-    case MONS_OCTOPODE_CRUSHER:
-        return TILEP_MONS_OCTOPODE_CRUSHER;
 
     // abyssal monsters
     case MONS_LURKING_HORROR:
@@ -2680,9 +2680,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
     else if (mon.props.exists("monster_tile"))
     {
         tileidx_t t = mon.props["monster_tile"].get_short();
-        if (t == TILEP_MONS_STATUE_GUARDIAN)
-            return _mon_random(t);
-        else if (t == TILEP_MONS_HELL_WIZARD)
+        if (t == TILEP_MONS_HELL_WIZARD)
             return _mon_sinus(t);
         else
             return t;
@@ -3723,9 +3721,9 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_VAMPIRE_MOSQUITO:
         return TILE_CORPSE_VAMPIRE_MOSQUITO;
     case MONS_WASP:
-        return TILE_CORPSE_YELLOW_WASP;
+        return TILE_CORPSE_WASP;
     case MONS_HORNET:
-        return TILE_CORPSE_RED_WASP;
+        return TILE_CORPSE_HORNET;
     case MONS_SPARK_WASP:
         return TILE_CORPSE_SPARK_WASP;
     case MONS_GHOST_MOTH:
@@ -4032,7 +4030,7 @@ static tileidx_t _tileidx_misc(const item_def &item)
                                        : TILE_MISC_PHIAL_OF_FLOODS_INERT;
 
     case MISC_XOMS_CHESSBOARD:
-        return TILE_MISC_XOMS_CHESSBOARD;
+        return _modrng(item.rnd, TILE_MISC_CHESSPIECE_FIRST, TILE_MISC_CHESSPIECE_LAST);
 
     case MISC_LANTERN_OF_SHADOWS:
         return TILE_MISC_LANTERN_OF_SHADOWS;
@@ -5450,6 +5448,13 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_RU_SACRIFICE_RESISTANCE;
     case ABIL_RU_REJECT_SACRIFICES:
         return TILEG_ABILITY_RU_REJECT_SACRIFICES;
+    // Pakellas
+    case ABIL_PAKELLAS_DEVICE_SURGE:
+        return TILEG_ABILITY_PAKELLAS_DEVICE_SURGE;
+    case ABIL_PAKELLAS_QUICK_CHARGE:
+        return TILEG_ABILITY_PAKELLAS_QUICK_CHARGE;
+    case ABIL_PAKELLAS_SUPERCHARGE:
+        return TILEG_ABILITY_PAKELLAS_SUPERCHARGE;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:

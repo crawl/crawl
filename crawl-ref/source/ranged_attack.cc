@@ -121,12 +121,6 @@ bool ranged_attack::attack()
     {
         if (ev_margin >= 0)
         {
-            if (attacker != defender && attack_warded_off())
-            {
-                handle_phase_end();
-                return false;
-            }
-
             if (!handle_phase_hit())
             {
                 if (!defender->alive())

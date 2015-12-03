@@ -269,8 +269,11 @@ static void _shuffle_deck(item_def &deck)
     // Don't use shuffle(), since we want to apply exactly the
     // same shuffling to both the cards vector and the flags vector.
     vector<vec_size> pos;
-    for (size_t i = 0; i < cards.size(); ++i)
+    for (const auto& _ : cards)
+    {
+        UNUSED(_);
         pos.push_back(random2(cards.size()));
+    }
 
     for (vec_size i = 0; i < pos.size(); ++i)
     {
@@ -1559,8 +1562,10 @@ static void _damnation_card(int power, deck_rarity_type rarity)
     if (in_good_standing(GOD_NEMELEX_XOBEH))
         nemelex_bonus = you.piety;
 
-    int extra_targets = power_level + random2(you.skill(SK_EVOCATIONS, 20)
-                                              + nemelex_bonus) / 240;
+    int extra_targets =
+        power_level
+        + random2(player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 20))
+                  + nemelex_bonus) / 240;
 
     for (int i = 0; i < 1 + extra_targets; ++i)
     {
@@ -1627,7 +1632,7 @@ static void _shaft_card(int power, deck_rarity_type rarity)
 
             if (mons && !mons->wont_attack()
                 && grd(mons->pos()) == DNGN_FLOOR
-                && !mons_is_firewood(mons)
+                && mons_is_threatening(mons)
                 && x_chance_in_y(power_level, 3))
             {
                 mons->do_shaft();
@@ -2694,7 +2699,7 @@ static void _cloud_card(int power, deck_rarity_type rarity)
             default: cloudy = CLOUD_DEBUGGING;
         }
 
-        if (!mons || (mons && (mons->wont_attack() || mons_is_firewood(mons))))
+        if (!mons || mons->wont_attack() || !mons_is_threatening(mons))
             continue;
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
@@ -2828,11 +2833,10 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
     {
         monster *mons = monster_at(*di);
 
-        if (mons && (mons->wont_attack() || mons_is_firewood(mons)))
+        if (!mons || mons->wont_attack() || !mons_is_threatening(mons))
             continue;
 
-        if (mons &&
-            x_chance_in_y((power_level + 1) * 5 + random2(5),
+        if (x_chance_in_y((power_level + 1) * 5 + random2(5),
                           mons->get_hit_dice()))
         {
             if (mons->can_polymorph())
@@ -2866,7 +2870,7 @@ static void _wild_magic_card(int power, deck_rarity_type rarity)
     {
         monster *mons = monster_at(*di);
 
-        if (!mons || mons->wont_attack() || mons_is_firewood(mons))
+        if (!mons || mons->wont_attack() || !mons_is_threatening(mons))
             continue;
 
         if (x_chance_in_y((power_level + 1) * 5 + random2(5),
@@ -2908,18 +2912,21 @@ static int _card_power(deck_rarity_type rarity, bool punishment)
 
     if (!punishment)
     {
+        surge_power(you.spec_evoke());
         if (player_under_penance(GOD_NEMELEX_XOBEH))
             result -= you.penance[GOD_NEMELEX_XOBEH];
         else if (you_worship(GOD_NEMELEX_XOBEH))
         {
             result = you.piety;
-            result *= (you.skill(SK_EVOCATIONS, 100) + 2500);
+            result *= player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 100))
+                      + 2500;
             result /= 2700;
         }
     }
 
     result += (punishment) ? you.experience_level * 18
-                           : you.skill(SK_EVOCATIONS, 9);
+                           : player_adjust_evoc_power(
+                                 you.skill(SK_EVOCATIONS, 9));
 
     if (rarity == DECK_RARITY_RARE)
         result += 150;

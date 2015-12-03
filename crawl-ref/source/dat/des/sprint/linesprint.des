@@ -100,9 +100,9 @@ KMONS:     c = Louise / Nikola / Norris / Frederick / Boris / Margery band /\
                Xtahua / Jory / Mennas / Mara
 NSUBST:    b = 1:c. / 1:cb. / 1:cb.. / 1:cbb.. / * = .:70 c:1
 MAP
-xxxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxxxx
-x{...AAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDD&....x
-xxxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxx.x
+xxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxxxx
+x{..AAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDD&....x
+xxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxx.x
 x..........a.........a..........a.........a.............a............x
 x.xxxxxxEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFGGGGGGGGGGGGGHHHHHHHHHxxxxxx
 x.......EEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFGGGGGGGGGGGGGHHHHHHHHH&....x
@@ -200,14 +200,15 @@ KFEAT:    r = altar_dithmenos
 KFEAT:    s = altar_qazlal
 KFEAT:    t = altar_gozag
 KFEAT:    u = altar_ru
+KFEAT:    v = altar_pakellas
 : line_setup(_G)
 : lua_marker('~', props_marker {
 :           door_description_suffix=" to the Temple",
 :           })
 MAP
-xxxxxxxxxxxxxxxxxxxxxx
-~abcdefghijklmnopqrstu
-xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx
+~abcdefghijklmnopqrstuv
+xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 
@@ -787,11 +788,10 @@ ORIENT:   encompass
 KITEM:    a = amulet of faith randart not_cursed ident:all /\
     amulet of guardian spirit randart not_cursed ident:all /\
     amulet of resist corrosion randart not_cursed ident:all /\
-    amulet of resist mutation randart not_cursed ident:all /\
     amulet of rage randart not_cursed ident:all /\
     amulet of stasis randart not_cursed ident:all /\
     amulet of the gourmand randart not_cursed ident:all /\
-    amulet of warding randart not_cursed ident:all /\
+    amulet of dismissal randart not_cursed ident:all /\
     amulet of regeneration randart ident:all not_cursed /\
     ring of slaying plus:3 randart ident:all not_cursed /\
     any jewellery randart level:27 not_cursed ident:all w:40 /\
@@ -1004,7 +1004,7 @@ NAME:     slime_end
 TAGS:     slime_end
 KMONS:    1 = azure jelly / acid blob w:20 / death ooze / giant eyeball w:4 /\
               golden eye w:4 / eye of draining w:2
-KMONS:    2 = the royal jelly
+KMONS:    2 = the Royal Jelly
 KITEM:    2 = slimy rune of zot
 COLOUR:   # = lightgreen
 COLOUR:   12 = green

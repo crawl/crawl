@@ -247,7 +247,7 @@ void update_item_at(const coord_def &gp, bool detected)
     else
     {
         if (detected)
-            StashTrack.add_stash(gp.x, gp.y);
+            StashTrack.add_stash(gp);
 
         const vector<item_def> stash = item_list_in_stash(gp);
         if (stash.empty())
@@ -414,7 +414,7 @@ static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
     // Fall back to a random position adjacent to the unseen position.
     // This can only happen if the monster just became unseen.
     vector <coord_def> adj_unseen;
-    for (adjacent_iterator ai(mons->unseen_pos, false); ai; ai++)
+    for (adjacent_iterator ai(mons->unseen_pos, false); ai; ++ai)
     {
         if (_valid_invisible_spot(*ai, mons))
             adj_unseen.push_back(*ai);

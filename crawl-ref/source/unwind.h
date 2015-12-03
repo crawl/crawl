@@ -1,6 +1,8 @@
 #ifndef UNWIND_H
 #define UNWIND_H
 
+#include <functional>
+
 /** Type that gives an lvalue a dynamically-scoped temporary value. An
  *  unwind_var wraps a variable or other writable lvalue, assigns it a
  *  temporary value, and restores the original (or a specified) value when
@@ -52,5 +54,45 @@ private:
 };
 
 typedef unwind_var<bool> unwind_bool;
+
+/** Type to call a function when an instance goes out of scope or is
+ * otherwise destroyed.
+ */
+class unwinder
+{
+public:
+    /** Construct an unwinder that calls cleanup_fn when destroyed. */
+    // We templatise the parameter, rather than taking a function<>, so that
+    // we can write "unwinder foo = [](){};" without running into the
+    // "only one user-defined conversion at a time" rule.
+    template<class Fn>
+    unwinder(Fn cleanup_fn) : cleaner(cleanup_fn) { }
+
+    ~unwinder()
+    {
+        if (cleaner)
+            cleaner();
+    }
+
+    /** Cancel this unwinder, so that it calls nothing when destroyed. */
+    void cancel()
+    {
+        cleaner = nullptr;
+    }
+private:
+    function<void ()> cleaner;
+};
+
+// Preprocessor tricks, ugh.
+#define CONCAT_IMPL(x, y) x##y
+#define CONCAT_TOK(x, y) CONCAT_IMPL(x, y)
+
+/** Set up a block of code to run when the current scope is exited.
+ *
+ * Usage: ON_UNWIND { block of code here };
+ *
+ * Defines a variable, with a generated name, to hold the unwinder.
+ */
+#define ON_UNWIND unwinder CONCAT_TOK(_gensym_uw_, __LINE__) = [&] () -> void
 
 #endif

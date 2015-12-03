@@ -94,7 +94,7 @@ dgn_map_parameters::dgn_map_parameters(const string_vector &parameters)
 map_section_type vault_main(vault_placement &place, const map_def *vault,
                             bool check_place)
 {
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
     if (crawl_state.map_stat_gen)
         mapstat_report_map_try(*vault);
 #endif
@@ -164,7 +164,7 @@ static bool _resolve_map_lua(map_def &map)
     string err = map.run_lua(true);
     if (!err.empty())
     {
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
         if (crawl_state.map_stat_gen)
             mapstat_report_error(map, err);
 #endif
@@ -714,7 +714,7 @@ vector<string> find_map_matches(const string &name)
     return matches;
 }
 
-mapref_vector find_maps_for_tag(const string tag,
+mapref_vector find_maps_for_tag(const string &tag,
                                 bool check_depth,
                                 bool check_used)
 {

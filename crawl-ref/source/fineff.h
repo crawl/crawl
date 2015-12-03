@@ -298,19 +298,19 @@ public:
     bool mergeable(const final_effect &a) const override { return false; }
     void fire() override;
 
-    static void schedule(coord_def pos, int revives, beh_type att,
+    static void schedule(coord_def pos, int revives, beh_type attitude,
                          unsigned short foe)
     {
-        final_effect::schedule(new bennu_revive_fineff(pos, revives, att, foe));
+        final_effect::schedule(new bennu_revive_fineff(pos, revives, attitude, foe));
     }
 protected:
     bennu_revive_fineff(coord_def pos, int _revives, beh_type _att,
                         unsigned short _foe)
-        : final_effect(0, 0, pos), revives(_revives), att(_att), foe(_foe)
+        : final_effect(0, 0, pos), revives(_revives), attitude(_att), foe(_foe)
     {
     }
     int revives;
-    beh_type att;
+    beh_type attitude;
     unsigned short foe;
 };
 

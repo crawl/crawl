@@ -429,7 +429,7 @@ void hints_new_turn()
  * @param arg1 A string that can be inserted into the hint message.
  * @param arg2 Another string that can be inserted into the hint message.
  */
-void print_hint(string key, const string arg1, const string arg2)
+void print_hint(string key, const string& arg1, const string& arg2)
 {
     string text = getHintString(key);
     if (text.empty())
@@ -519,8 +519,6 @@ void hints_death_screen()
 // know by now.
 void hints_finished()
 {
-    string text;
-
     crawl_state.type = GAME_TYPE_NORMAL;
 
     print_hint("finished");
@@ -824,7 +822,7 @@ static bool _advise_use_wand()
 
 void hints_monster_seen(const monster& mon)
 {
-    if (!mons_class_gives_xp(mon.type))
+    if (mons_is_firewood(&mon))
     {
         if (Hints.hints_events[HINT_SEEN_ZERO_EXP_MON])
         {
@@ -2495,7 +2493,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         // "Shouts" from zero experience monsters are boring, ignore
         // them.
-        if (!mons_class_gives_xp(m->type))
+        if (!mons_is_threatening(m))
         {
             Hints.hints_events[HINT_MONSTER_SHOUT] = true;
             return;

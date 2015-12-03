@@ -303,7 +303,7 @@ static int _current_horror_level()
 
         if (mon == nullptr
             || mons_aligned(mon, &you)
-            || mons_is_firewood(mon)
+            || !mons_is_threatening(mon)
             || !you.can_see(*mon))
         {
             continue;
@@ -422,15 +422,15 @@ void player_reacts_to_monsters()
 
 static bool _check_recite()
 {
-    if (you.hp*2 < you.attribute[ATTR_RECITE_HP]
-        || silenced(you.pos())
+    if (silenced(you.pos())
         || you.paralysed()
         || you.confused()
         || you.asleep()
         || you.petrified()
         || you.berserk())
     {
-        zin_recite_interrupt();
+        mprf(MSGCH_DURATION, "Your recitation is interrupted.");
+        you.duration[DUR_RECITE] = 0;
         return false;
     }
     return true;
@@ -468,8 +468,6 @@ static void _handle_recitation(int step)
             }
         }
         mprf(MSGCH_DURATION, "You finish reciting %s", speech.c_str());
-        mpr("You feel short of breath.");
-        you.increase_duration(DUR_BREATH_WEAPON, random2(10) + random2(30));
     }
 }
 
@@ -731,6 +729,9 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_LOWERED_MR, delay, "You feel less vulnerable to hostile enchantments.");
     _decrement_a_duration(DUR_SLIMIFY, delay, "You feel less slimy.",
                           coinflip(), "Your slime is starting to congeal.");
+    _decrement_a_duration(DUR_DEVICE_SURGE, delay,
+                          "Your device surge dissipates.",
+                          coinflip(), "Your device surge is dissipating.");
     if (_decrement_a_duration(DUR_QUAD_DAMAGE, delay, nullptr, 0,
                               "Quad Damage is wearing off."))
     {
@@ -1253,9 +1254,7 @@ static void _regenerate_hp_and_mp(int delay)
 
     ASSERT_RANGE(you.hit_points_regeneration, 0, 100);
 
-    // Don't let DD use guardian spirit for free HP, since their
-    // damage shaving is enough. (due, dpeg)
-    if (you.spirit_shield() && you.species == SP_DEEP_DWARF)
+    if (!player_regenerates_mp())
         return;
 
     if (you.magic_points < you.max_magic_points)

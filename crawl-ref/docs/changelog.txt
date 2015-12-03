@@ -1,5 +1,138 @@
-Stone Soup 0.18 (initial 0.18-a0)
----------------------------------
+Stone Soup 0.18 (up to 0.18-a0-592-g12a94aa)
+--------------------------------------------
+
+Highlights
+----------
+* New god: Pakellas the Inventive.
+
+Branches, Environment
+---------------------
+* The enemies in the Elven Halls ending vault are now less likely to be lured
+  out of the vault.
+* Ziggurat portals no longer appear in Pan.
+
+Character
+---------
+* A new mutation: Sturdy Frame, reducing base ER by 2/4/6 and thus making
+  heavy armour easier to wear. Can be a demonspawn mutation.
+* The player no longer takes an accuracy penalty for fighting while invisible
+  but without SInv (also true of monsters).
+* Formicids now have 0 Throwing aptitude (was -2).
+* Taking a known shaft now has a 2/3 chance of shafting one floor and 1/3 of
+  two floors.
+
+Gods
+----
+* New god: Pakellas the Inventive. Pakellas is a temple god, with an altar
+  either in Temple or on D:2-9.
+  - Grants MP on kills (at about half the rate of Vehumet) and passive
+    wand charge identification.
+  - Blocks MP regeneration and hates channeling (staff of energy, crystal
+    ball of energy, the Staff of Wucad Mu, and Sublimation of Blood).
+  - Piety on kills.
+  - 1*: Quick Charge: spend 2/3 your current MP pool to add some charges
+    to a wand or rod proportional to your Evocations, your current MP pool,
+    and the capacity of the device.
+  - 3*: Device Surge: on your next use of an evocable item, spends 1-9 MP
+    to apply one to three enhancers to its power output, with maximum
+    MP and number of enhancers dependent on piety.
+  - Starting at 4*, Pakellas occasionally gifts rods, wands, and miscellaneous
+    evokables (always starting with a rod unless you are a felid).
+  - 6* capstone: Supercharge: sets a rod to +10 (18/18), or sets a wand's
+    capacity to 50% above normal for that wand type (in addition to recharging
+    it - this has the effect of improving Quick Charge's efficiency on the
+    wand).
+* Xom now chaos brands more weapon gifts, and can chaos brand ranged weapons
+  again.
+* Finesse is no longer blocked by stasis.
+* Jiyva altars in Dungeon no longer appear as early in Dungeon.
+* Cheibriados now blocks chaos effects from hasting the player.
+* Piety given for a Ru sacrifice is more explicitly stated.
+* Abandoning Yredelemnul now destroys your zombie minions.
+* Followers of Elyvilon can pacify insects (again).
+* Zin's Recite is now only interrupted if the player is silenced or
+  incapacitated (or goes berserk).
+
+Items
+-----
+* New items:
+  - The amulet of dismissal, which has a chance of teleporting away enemies
+    that attack you in melee combat, and contaminates the player when it is
+    removed.
+  - The +8 frozen axe "Frostbite" {freezing cloud, *Noise +Fly rC+}, an
+    executioner's axe with a chance of placing freezing clouds on enemies it
+    strikes.
+  - The +12 armour of Talos {ponderous, rF+}, a troll/ogre-sized suit of
+    plate mail.
+  - A figurine of a ziggurat - evoke to create a ziggurat portal. Appears on
+    Zig:27 of all ziggurats and in the Tomb:3 loot.
+  - Pieces from Xom's chessboard - evoke to randomly swap the positions of
+    you and all enemies and LOS, or (on failure) to trigger a Xom effect.
+* The robe of vines is now +2, Regen+7.
+* The Majin-Bo now speaks occasionally.
+* The amulet of Cekugob is now an amulet of dismissal.
+* Removing an amulet of regeneration now causes 2-7 hp of rot.
+* A new property can now generate on random artefacts: Fragile, which destroys
+  the item when it is removed.
+* Amulets of faith now grant a 25% bonus to piety, not a 33% bonus.
+* Removed items:
+  - Amulets of resist mutation and warding.
+
+Monsters
+--------
+* New monsters:
+  - Spark wasps, lethally electric swarming insects that appear singularly in
+    Spider and in packs in Depths.
+  - Iron giants, with all the resilience that iron implies and the ability to
+    throw you into the pack of giants they lead.
+* Mnoleg gains Random Bolt and Dig.
+* Gloorx Vloq gains Summon Executioners and Black Mark.
+* Juggernauts now have two less damaging attacks instead of one powerful
+  attack.
+* Jellies and death oozes cannot be blinded.
+* Jumping spiders and mana vipers can be blinded.
+* Jumping spiders cannot see invisible.
+* Giant eyeballs and golden eyes can now see invisible.
+* Salamander stormcallers' chant does not need to be continuous; they now
+  only need to try to cast Fire Storm at their target three times for it to
+  trigger.
+* Entropy weavers' corrosion is now instant and smite-targeted, but only
+  applies one level of corrosion.
+* Ice devils are now tier 4 demons, with lowered HD to match.
+* Hellwings now have the swoop attack formerly possessed by blue devils.
+* Orange demons have their attacks split - they now have a reaching poison
+  sting and a melee-only weakness attack.
+* Salamander mystics lose Localised Ignite Poison.
+* Natasha, deep elf knights, and salamander stormcallers can no longer cast
+  Conjure Flame.
+* Spectral mist can no longer summon completely random spectral enemies.
+* Banishment from powerful monsters can now send you deeper into the Abyss
+  than Abyss:1.
+* Removed monsters:
+  - Octopode crushers.
+  - (Plain) spiders.
+  - Salamander firebrands.
+  - Blue devils.
+  - Brain worms.
+
+Spells
+------
+* New spell: Yara's Violent Unravelling (L5 Hexes/Transumations); dispels
+  all cancellable effects on the target and - if any were dispelled - causes
+  a radius 1 explosion with damage proportional to the number of dispelled
+  effects.
+* Hydra Form now has a fixed number of heads.
+
+Interface
+---------
+* Earth elementalists now have their stones start on b.
+* Characters starting with a primary ranged weapon now have their melee weapon
+  on b by default.
+* An option is added to the butchering prompt to allow butchering only
+  (e)dible corpses.
+* Auto-eat now triggers for ghouls if they are rotted.
+* The religion screen now shows all god powers, with currently accessible
+  powers (per level of piety) being highlighted.
 
 Stone Soup 0.17 (20151106)
 --------------------------

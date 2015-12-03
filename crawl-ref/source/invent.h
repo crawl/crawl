@@ -34,6 +34,7 @@ enum object_selector
     OSEL_BRANDABLE_WEAPON        = -16,
     OSEL_ENCHANTABLE_WEAPON      = -17,
     OSEL_BLESSABLE_WEAPON        = -18,
+    OSEL_SUPERCHARGE             = -19,
 };
 
 #define PROMPT_ABORT         -1

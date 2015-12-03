@@ -307,7 +307,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
             found_spells = true;
         }
 
-        fprintf(stderr, "    slot #%d: ", i);
+        fprintf(stderr, "    slot #%u: ", i);
         if (!is_valid_spell(spell))
             fprintf(stderr, "Invalid spell #%d\n", (int) spell);
         else

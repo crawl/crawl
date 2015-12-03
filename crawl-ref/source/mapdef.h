@@ -1321,5 +1321,5 @@ string mapdef_split_key_item(const string &s, string *key, int *separator,
 
 const char *map_section_name(int msect);
 
-int store_tilename_get_index(const string tilename);
+int store_tilename_get_index(const string& tilename);
 #endif

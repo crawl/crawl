@@ -583,7 +583,9 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params, ...)
 {
     va_list args;
     va_start(args, params);
-    return callmbooleanfn(fn, params, args);
+    maybe_bool r = callmbooleanfn(fn, params, args);
+    va_end(args);
+    return r;
 }
 
 maybe_bool CLua::callmaybefn(const char *fn, const char *params, va_list args)
@@ -615,7 +617,9 @@ maybe_bool CLua::callmaybefn(const char *fn, const char *params, ...)
 {
     va_list args;
     va_start(args, params);
-    return callmaybefn(fn, params, args);
+    maybe_bool r = callmaybefn(fn, params, args);
+    va_end(args);
+    return r;
 }
 
 bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
@@ -623,6 +627,7 @@ bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
     va_list args;
     va_start(args, params);
     maybe_bool r = callmbooleanfn(fn, params, args);
+    va_end(args);
     return tobool(r, def);
 }
 
@@ -907,9 +912,9 @@ bool lua_text_pattern::is_lua_pattern(const string &s)
 }
 
 lua_text_pattern::lua_text_pattern(const string &_pattern)
-    : translated(false), isvalid(true), pattern(_pattern), lua_fn_name()
+    : translated(false), isvalid(true), pattern(_pattern),
+      lua_fn_name(new_fn_name())
 {
-    lua_fn_name = new_fn_name();
 }
 
 lua_text_pattern::~lua_text_pattern()
@@ -939,6 +944,17 @@ bool lua_text_pattern::matches(const string &s) const
         return false;
 
     return clua.callbooleanfn(false, lua_fn_name.c_str(), "s", s.c_str());
+}
+
+pattern_match lua_text_pattern::match_location(const string &s) const
+{
+    // lua_text_pattern is only used if a special non-regex op is detected (^F
+    // for "armour && ego", for instance), and in those situations, it's
+    // unclear what exactly to use for the matched text here (especially in
+    // more complicated expressions that include things like <<>>, !!, etc).
+    return matches(s)
+        ? pattern_match::succeeded(s)
+        : pattern_match::failed(s);
 }
 
 void lua_text_pattern::pre_pattern(string &pat, string &fn) const

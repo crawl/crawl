@@ -1132,7 +1132,7 @@ static int _slow_regeneration_rate()
 
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mons_is_firewood(*mi)
+        if (mons_is_threatening(*mi)
             && !mi->wont_attack()
             && !mi->neutral())
         {
@@ -1923,9 +1923,6 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
     if (items)
     {
-        if (you.wearing(EQ_AMULET, AMU_WARDING, calc_unid))
-            pl++;
-
         // rings
         pl += you.wearing(EQ_RINGS, RING_LIFE_PROTECTION, calc_unid);
 
@@ -2033,6 +2030,16 @@ int player_movement_speed()
         mv = FASTEST_PLAYER_MOVE_SPEED;
 
     return mv;
+}
+
+const int player_adjust_evoc_power(const int power)
+{
+    return stepdown_spellpower(100*apply_enhancement(power, you.spec_evoke()));
+}
+
+const int player_adjust_invoc_power(const int power)
+{
+    return apply_enhancement(power, you.spec_invoc());
 }
 
 // This function differs from the above in that it's used to set the
@@ -2403,7 +2410,8 @@ int player_shield_class()
     else
     {
         if (you.duration[DUR_MAGIC_SHIELD])
-            shield += 900 + you.skill(SK_EVOCATIONS, 75);
+            shield += 900 + player_adjust_evoc_power(
+                                you.skill(SK_EVOCATIONS, 75));
 
         if (you.duration[DUR_CONDENSATION_SHIELD])
             shield += 800 + you.props[CONDENSATION_SHIELD_KEY].get_int() * 15;
@@ -3301,6 +3309,7 @@ int get_expiration_threshold(duration_type dur)
     case DUR_TRANSFORMATION: // not on status
     case DUR_DEATHS_DOOR:    // not on status
     case DUR_SLIMIFY:
+    case DUR_DEVICE_SURGE:
         return 10 * BASELINE_DELAY;
 
     // These get no messages when they "flicker".
@@ -3594,6 +3603,12 @@ bool player::gourmand(bool calc_unid, bool items) const
         return true;
 
     return actor::gourmand(calc_unid, items);
+}
+
+int player::spec_evoke(bool calc_unid, bool items) const
+{
+    return actor::spec_evoke(calc_unid, items)
+           + attribute[ATTR_PAKELLAS_DEVICE_SURGE];
 }
 
 bool player::stasis(bool calc_unid, bool items) const
@@ -3908,7 +3923,7 @@ static int _rest_trigger_level(int max)
     return (max * Options.rest_wait_percent) / 100;
 }
 
-static bool should_stop_resting(int cur, int max)
+static bool _should_stop_resting(int cur, int max)
 {
     return cur == max || cur == _rest_trigger_level(max);
 }
@@ -3932,7 +3947,7 @@ void inc_mp(int mp_gain, bool silent)
 
     if (!silent)
     {
-        if (should_stop_resting(you.magic_points, you.max_magic_points))
+        if (_should_stop_resting(you.magic_points, you.max_magic_points))
             interrupt_activity(AI_FULL_MP);
         you.redraw_magic_points = true;
     }
@@ -3953,7 +3968,7 @@ void inc_hp(int hp_gain)
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
 
-    if (should_stop_resting(you.hp, you.hp_max))
+    if (_should_stop_resting(you.hp, you.hp_max))
         interrupt_activity(AI_FULL_HP);
 
     you.redraw_hit_points = true;
@@ -4162,6 +4177,27 @@ int get_real_mp(bool include_items)
     enp = max(enp, 0);
 
     return enp;
+}
+
+bool player_regenerates_hp()
+{
+    if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
+        return false;
+    if (you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
+        return false;
+    return true;
+}
+
+bool player_regenerates_mp()
+{
+    // Don't let DD use guardian spirit for free HP, since their
+    // damage shaving is enough. (due, dpeg)
+    if (you.spirit_shield() && you.species == SP_DEEP_DWARF)
+        return false;
+    // Pakellas blocks MP regeneration.
+    if (you_worship(GOD_PAKELLAS))
+        return false;
+    return true;
 }
 
 int get_contamination_level()
@@ -4807,11 +4843,8 @@ void dec_disease_player(int delay)
 
         // Extra regeneration means faster recovery from disease.
         // But not if not actually regenerating!
-        if (player_mutation_level(MUT_SLOW_REGENERATION) < 3
-            && !(you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING))
-        {
+        if (player_regenerates_hp())
             rr += _player_bonus_regen();
-        }
 
         // Trog's Hand.
         if (you.duration[DUR_TROGS_HAND])
@@ -5033,7 +5066,7 @@ void handle_player_drowning(int delay)
     else
     {
         monster* mons = monster_by_mid(you.props["water_holder"].get_int());
-        if (!mons || mons && !adjacent(mons->pos(), you.pos()))
+        if (!mons || !adjacent(mons->pos(), you.pos()))
         {
             if (you.res_water_drowning())
                 mpr("The water engulfing you falls away.");
@@ -5050,8 +5083,6 @@ void handle_player_drowning(int delay)
         }
         else if (!you.res_water_drowning())
         {
-            zin_recite_interrupt();
-
             you.duration[DUR_WATER_HOLD] += delay;
             int dam =
                 div_rand_round((28 + stepdown((float)you.duration[DUR_WATER_HOLD], 28.0))
@@ -5444,11 +5475,9 @@ bool player::is_banished() const
 bool player::is_sufficiently_rested() const
 {
     // Only return false if resting will actually help.
-    return (hp >= _rest_trigger_level(hp_max)
-            || player_mutation_level(MUT_SLOW_REGENERATION) == 3
-            || you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
-        && (magic_points >= _rest_trigger_level(max_magic_points)
-            || you.spirit_shield() && you.species == SP_DEEP_DWARF);
+    return (hp >= _rest_trigger_level(hp_max) || !player_regenerates_hp())
+            && (magic_points >= _rest_trigger_level(max_magic_points)
+                || !player_regenerates_mp());
 }
 
 bool player::in_water() const
@@ -7625,7 +7654,7 @@ bool player::made_nervous_by(const coord_def &p)
     if (form != TRAN_FUNGUS)
         return false;
     monster* mons = monster_at(p);
-    if (mons && !mons_is_firewood(mons))
+    if (mons && mons_is_threatening(mons))
         return false;
     for (monster_near_iterator mi(&you); mi; ++mi)
     {
@@ -7633,7 +7662,7 @@ bool player::made_nervous_by(const coord_def &p)
             && !mi->asleep()
             && !mi->confused()
             && !mi->cannot_act()
-            && !mons_is_firewood(*mi)
+            && mons_is_threatening(*mi)
             && !mi->wont_attack()
             && !mi->neutral())
         {

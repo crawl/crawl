@@ -70,6 +70,8 @@ enum spret_type
 
 #define fail_check() if (fail) return SPRET_FAIL
 
+void surge_power(const int enhanced, const string adj = "");
+
 typedef bool (*spell_selector)(spell_type spell);
 
 int list_spells(bool toggle_with_I = true, bool viewing = false,
@@ -77,12 +79,15 @@ int list_spells(bool toggle_with_I = true, bool viewing = false,
                 const string &title = "Your Spells",
                 spell_selector selector = nullptr);
 int raw_spell_fail(spell_type spell);
+int stepdown_spellpower(int power);
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true,
                      bool rod = false);
 int calc_spell_range(spell_type spell, int power = 0, bool rod = false);
 
 bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
+
+int apply_enhancement(const int initial_power, const int enhancer_levels);
 
 void inspect_spells();
 void do_cast_spell_cmd(bool force);

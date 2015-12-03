@@ -911,7 +911,7 @@ brand_type attack::random_chaos_brand()
     case SPWPN_VENOM:           brand_name += "venom"; break;
     case SPWPN_DRAINING:        brand_name += "draining"; break;
     case SPWPN_DISTORTION:      brand_name += "distortion"; break;
-    case SPWPN_VAMPIRISM:     brand_name += "vampirism"; break;
+    case SPWPN_VAMPIRISM:       brand_name += "vampirism"; break;
     case SPWPN_VORPAL:          brand_name += "vorpal"; break;
     case SPWPN_ANTIMAGIC:       brand_name += "antimagic"; break;
 
@@ -1467,25 +1467,6 @@ int attack::apply_defender_ac(int damage, int damage_max) const
                  after_ac);
 
     return after_ac;
-}
-
-bool attack::attack_warded_off()
-{
-    const int WARDING_CHECK = 60;
-
-    if (defender->warding()
-        && attacker->is_summoned()
-        && attacker->as_monster()->check_res_magic(WARDING_CHECK) <= 0)
-    {
-        if (needs_message)
-        {
-            mprf("%s attack is warded away.",
-                 attacker->name(DESC_ITS).c_str());
-        }
-        return true;
-    }
-
-    return false;
 }
 
 /* Determine whether a block occurred
