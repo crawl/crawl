@@ -79,9 +79,7 @@ int is_pacifiable(const monster* mon)
     const mon_holy_type holiness = mon->holiness();
 
     if (!(holiness & (MH_HOLY | MH_UNDEAD | MH_DEMONIC | MH_NATURAL)))
-    {
         return -1;
-    }
 
     if (mon->is_stationary()) // not able to leave the level
         return -1;

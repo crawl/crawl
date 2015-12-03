@@ -883,9 +883,7 @@ brand_type attack::random_chaos_brand()
             break;
         case SPWPN_CONFUSE:
             if (defender->holiness() & (MH_NONLIVING | MH_PLANT))
-            {
                 susceptible = false;
-            }
             break;
         case SPWPN_ANTIMAGIC:
             if (!defender->antimagic_susceptible())
