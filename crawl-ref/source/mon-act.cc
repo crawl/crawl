@@ -2379,7 +2379,7 @@ void monster::struggle_against_net()
 
     if (net == NON_ITEM)
     {
-        trap_def *trap = find_trap(pos());
+        trap_def *trap = trap_at(pos());
         if (trap && trap->type == TRAP_WEB)
         {
 

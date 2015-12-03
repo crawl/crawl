@@ -482,7 +482,7 @@ static bool _is_safe_move(const coord_def& c)
         //    should have been aborted already by the checks in view.cc.
     }
 
-    if (is_trap(c) && !find_trap(c)->is_safe())
+    if (is_trap(c) && !trap_at(c)->is_safe())
         return false;
 
     return _is_safe_cloud(c);

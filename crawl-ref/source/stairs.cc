@@ -103,7 +103,7 @@ static bool _marker_vetoes_level_change()
 
 static void _maybe_destroy_trap(const coord_def &p)
 {
-    trap_def* trap = find_trap(p);
+    trap_def* trap = trap_at(p);
     if (trap)
         trap->destroy(true);
 }
@@ -194,7 +194,7 @@ static void _clear_golubria_traps()
 {
     for (auto c : find_golubria_on_level())
     {
-        trap_def *trap = find_trap(c);
+        trap_def *trap = trap_at(c);
         if (trap && trap->type == TRAP_GOLUBRIA)
             trap->destroy();
     }

@@ -430,7 +430,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
     {
         if (!actor_at(*ai)
             && monster_habitable_grid(mon, grd(*ai))
-            && !find_trap(*ai))
+            && !trap_at(*ai))
         {
             if (one_chance_in(++okay_squares))
                 target_square = *ai;

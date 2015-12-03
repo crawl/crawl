@@ -1179,7 +1179,7 @@ static void _shunt_monsters_out_of_walls()
                          m.name(DESC_PLAIN, true).c_str(),
                          dungeon_feature_name(grd(m.pos())),
                          m.pos().x, m.pos().y);
-                    env.mgrid(m.pos()) = NON_ENTITY;
+                    env.mgrid(m.pos()) = NON_MONSTER;
                     m.position = *di;
                     env.mgrid(*di) = i;
                     break;
@@ -4578,16 +4578,14 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 static void tag_construct_level_items(writer &th)
 {
     // how many traps?
-    const int nt = _last_used_index(env.trap, MAX_TRAPS);
-    marshallShort(th, nt);
-    for (int i = 0; i < nt; ++i)
+    marshallShort(th, env.trap.size());
+    for (const auto& entry : env.trap)
     {
-        marshallByte(th, env.trap[i].type);
-        if (env.trap[i].type == TRAP_UNASSIGNED)
-            continue;
-        marshallCoord(th, env.trap[i].pos);
-        marshallShort(th, env.trap[i].ammo_qty);
-        marshallUByte(th, env.trap[i].skill_rnd);
+        const trap_def& trap = entry.second;
+        marshallByte(th, trap.type);
+        marshallCoord(th, trap.pos);
+        marshallShort(th, trap.ammo_qty);
+        marshallUByte(th, trap.skill_rnd);
     }
 
     // how many items?
@@ -5226,7 +5224,6 @@ static void tag_read_level(reader &th)
             env.pgrid[i][j] = unmarshallInt(th);
 
             mgrd[i][j] = NON_MONSTER;
-            env.tgrid[i][j] = NON_ENTITY;
         }
 
 #if TAG_MAJOR_VERSION == 34
@@ -5297,6 +5294,8 @@ static void tag_read_level(reader &th)
             // This was SHOP_MISCELLANY, which is now part of SHOP_EVOKABLES.
             shop.type = SHOP_EVOKABLES;
         }
+#else
+        ASSERT(shop.type != SHOP_UNASSIGNED);
 #endif
         shop.keeper_name[0] = unmarshallUByte(th);
         shop.keeper_name[1] = unmarshallUByte(th);
@@ -5387,30 +5386,31 @@ static void tag_read_level_items(reader &th)
 {
     // how many traps?
     const int trap_count = unmarshallShort(th);
-    ASSERT_RANGE(trap_count, 0, MAX_TRAPS + 1);
+    trap_def trap;
     for (int i = 0; i < trap_count; ++i)
     {
-        env.trap[i].type =
-            static_cast<trap_type>(unmarshallUByte(th));
-        if (env.trap[i].type == TRAP_UNASSIGNED)
-            continue;
-        env.trap[i].pos      = unmarshallCoord(th);
-        env.trap[i].ammo_qty = unmarshallShort(th);
+        trap.type = static_cast<trap_type>(unmarshallUByte(th));
 #if TAG_MAJOR_VERSION == 34
-        if (th.getMinorVersion() == TAG_MINOR_0_11 && env.trap[i].type >= TRAP_TELEPORT)
-            env.trap[i].type = (trap_type)(env.trap[i].type - 1);
+        if (trap.type == TRAP_UNASSIGNED)
+            continue;
+#else
+        ASSERT(trap.type != TRAP_UNASSIGNED);
+#endif
+        trap.pos      = unmarshallCoord(th);
+        trap.ammo_qty = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() == TAG_MINOR_0_11 && trap.type >= TRAP_TELEPORT)
+            trap.type = (trap_type)(trap.type - 1);
         if (th.getMinorVersion() < TAG_MINOR_TRAPS_DETERM
             || th.getMinorVersion() == TAG_MINOR_0_11)
         {
-            env.trap[i].skill_rnd = random2(256);
+            trap.skill_rnd = random2(256);
         }
         else
 #endif
-        env.trap[i].skill_rnd = unmarshallUByte(th);
-        env.tgrid(env.trap[i].pos) = i;
+        trap.skill_rnd = unmarshallUByte(th);
+        env.trap[trap.pos] = trap;
     }
-    for (int i = trap_count; i < MAX_TRAPS; ++i)
-        env.trap[i].type = TRAP_UNASSIGNED;
 
     // how many items?
     const int item_count = unmarshallShort(th);

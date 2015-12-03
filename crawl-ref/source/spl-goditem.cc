@@ -889,7 +889,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             delete_cloud(*ai);
 
             // All traps are destroyed.
-            if (trap_def *ptrap = find_trap(*ai))
+            if (trap_def *ptrap = trap_at(*ai))
             {
                 ptrap->destroy();
                 grd(*ai) = DNGN_FLOOR;

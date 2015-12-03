@@ -1183,7 +1183,7 @@ static bool _sack_of_spiders(item_def &sack)
         int rad = LOS_RADIUS / 2 + 2;
         for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
         {
-            trap_def *trap = find_trap((*mi)->pos());
+            trap_def *trap = trap_at((*mi)->pos());
             // Don't destroy non-web traps or try to trap monsters
             // currently caught by something.
             if (you.pos().distance_from((*mi)->pos()) > rad
@@ -1202,13 +1202,11 @@ static bool _sack_of_spiders(item_def &sack)
                 if (trap && trap->type == TRAP_WEB)
                     destroy_trap((*mi)->pos());
 
-                if (place_specific_trap((*mi)->pos(), TRAP_WEB))
-                {
-                    // Reveal the trap
-                    grd((*mi)->pos()) = DNGN_TRAP_WEB;
-                    trap = find_trap((*mi)->pos());
-                    trap->trigger(**mi);
-                }
+                place_specific_trap((*mi)->pos(), TRAP_WEB);
+                // Reveal the trap
+                grd((*mi)->pos()) = DNGN_TRAP_WEB;
+                trap = trap_at((*mi)->pos());
+                trap->trigger(**mi);
             }
         }
         // Decrease charges

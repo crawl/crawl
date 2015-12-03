@@ -475,7 +475,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
         return 2;
 
     // Try to avoid (known) traps.
-    const trap_def* ptrap = find_trap(npos);
+    const trap_def* ptrap = trap_at(npos);
     if (ptrap)
     {
         const bool knows_trap = ptrap->is_known(mons);

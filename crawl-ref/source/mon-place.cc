@@ -805,7 +805,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
 
     // Don't generate monsters on top of teleport traps.
     // (How did they get there?)
-    const trap_def* ptrap = find_trap(mg_pos);
+    const trap_def* ptrap = trap_at(mg_pos);
     if (ptrap && !can_place_on_trap(mg.cls, ptrap->type))
         return false;
 

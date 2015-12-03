@@ -2388,16 +2388,14 @@ static void _check_banished()
 
 static void _check_shafts()
 {
-    for (int i = 0; i < MAX_TRAPS; ++i)
+    for (auto& entry : env.trap)
     {
-        trap_def &trap = env.trap[i];
-
-        if (trap.type != TRAP_SHAFT)
+        if (entry.second.type != TRAP_SHAFT)
             continue;
 
-        ASSERT_IN_BOUNDS(trap.pos);
+        ASSERT_IN_BOUNDS(entry.first);
 
-        handle_items_on_shaft(trap.pos, true);
+        handle_items_on_shaft(entry.first, true);
     }
 }
 
@@ -2461,7 +2459,7 @@ static void _update_golubria_traps()
     vector<coord_def> traps = find_golubria_on_level();
     for (auto c : traps)
     {
-        trap_def *trap = find_trap(c);
+        trap_def *trap = trap_at(c);
         if (trap && trap->type == TRAP_GOLUBRIA)
         {
             if (--trap->ammo_qty <= 0)
