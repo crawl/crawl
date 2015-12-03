@@ -2266,9 +2266,10 @@ static void _gain_piety_point()
             mprf(MSGCH_GOD, "A divine halo surrounds you!");
         if (rank == rank_for_passive(passive_t::umbra))
             mprf(MSGCH_GOD, "You are shrouded in an aura of darkness!");
+        if (rank == rank_for_passive(passive_t::sinv))
+            autotoggle_autopickup(false);
         if (rank == rank_for_passive(passive_t::clarity))
         {
-            autotoggle_autopickup(false);
             // Inconsistent with donning amulets, but matches the
             // message better and is not abusable.
             you.duration[DUR_CONF] = 0;
