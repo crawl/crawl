@@ -1,4 +1,4 @@
-Stone Soup 0.18 (up to 0.18-a0-346-ga0a4001)
+Stone Soup 0.18 (up to 0.18-a0-515-gb8265c6)
 --------------------------------------------
 
 Branches, Environment
@@ -25,10 +25,17 @@ Gods
 * Jiyva altars in Dungeon no longer appear as early in Dungeon.
 * Cheibriados now blocks chaos effects from hasting the player.
 * Piety given for a Ru sacrifice is more explicitly stated.
+* Abandoning Yredelemnul now destroys your zombie minions.
+* Followers of Elyvilon can pacify insects (again).
+* Zin's Recite is now only interrupted if the player is silenced or
+  incapacitated (or goes berserk).
 
 Items
 -----
 * New items:
+  - The amulet of dismissal, which has a chance of teleporting away enemies
+    that attack you in melee combat, and contaminates the player when it is
+    removed.
   - The +8 frozen axe "Frostbite" {freezing cloud, *Noise +Fly rC+}, an
     executioner's axe with a chance of placing freezing clouds on enemies it
     strikes.
@@ -40,6 +47,13 @@ Items
     you and all enemies and LOS, or (on failure) to trigger a Xom effect.
 * The robe of vines is now +2, Regen+7.
 * The Majin-Bo now speaks occasionally.
+* The amulet of Cekugob is now an amulet of dismissal.
+* Removing an amulet of regeneration now causes 2-7 hp of rot.
+* A new property can now generate on random artefacts: Fragile, which destroys
+  the item when it is removed.
+* Amulets of faith now grant a 25% bonus to piety, not a 33% bonus.
+* Removed items:
+  - Amulets of resist mutation and warding.
 
 Monsters
 --------
@@ -84,6 +98,7 @@ Spells
   all cancellable effects on the target and - if any were dispelled - causes
   a radius 1 explosion with damage proportional to the number of dispelled
   effects.
+* Hydra Form now has a fixed number of heads.
 
 Interface
 ---------
@@ -92,6 +107,9 @@ Interface
   on b by default.
 * An option is added to the butchering prompt to allow butchering only
   (e)dible corpses.
+* Auto-eat now triggers for ghouls if they are rotted.
+* The religion screen now shows all god powers, with currently accessible
+  powers (per level of piety) being highlighted.
 
 Stone Soup 0.17 (20151106)
 --------------------------
