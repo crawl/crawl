@@ -1,5 +1,9 @@
-Stone Soup 0.18 (up to 0.18-a0-515-gb8265c6)
+Stone Soup 0.18 (up to 0.18-a0-592-g12a94aa)
 --------------------------------------------
+
+Highlights
+----------
+* New god: Pakellas the Inventive.
 
 Branches, Environment
 ---------------------
@@ -19,6 +23,25 @@ Character
 
 Gods
 ----
+* New god: Pakellas the Inventive. Pakellas is a temple god, with an altar
+  either in Temple or on D:2-9.
+  - Grants MP on kills (at about half the rate of Vehumet) and passive
+    wand charge identification.
+  - Blocks MP regeneration and hates channeling (staff of energy, crystal
+    ball of energy, the Staff of Wucad Mu, and Sublimation of Blood).
+  - Piety on kills.
+  - 1*: Quick Charge: spend 2/3 your current MP pool to add some charges
+    to a wand or rod proportional to your Evocations, your current MP pool,
+    and the capacity of the device.
+  - 3*: Device Surge: on your next use of an evocable item, spends 1-9 MP
+    to apply one to three enhancers to its power output, with maximum
+    MP and number of enhancers dependent on piety.
+  - Starting at 4*, Pakellas occasionally gifts rods, wands, and miscellaneous
+    evokables (always starting with a rod unless you are a felid).
+  - 6* capstone: Supercharge: sets a rod to +10 (18/18), or sets a wand's
+    capacity to 50% above normal for that wand type (in addition to recharging
+    it - this has the effect of improving Quick Charge's efficiency on the
+    wand).
 * Xom now chaos brands more weapon gifts, and can chaos brand ranged weapons
   again.
 * Finesse is no longer blocked by stasis.
