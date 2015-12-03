@@ -62,6 +62,9 @@ enum class passive_t
     /// Your god blesses your followers.
     bless_followers,
 
+    /// Your god blesses your followers when they kill evil or unholy things.
+    bless_followers_vs_unholy,
+
     /// You receive a bonus to armour class.
     bonus_ac,
 
@@ -109,6 +112,19 @@ enum class passive_t
 
     /// Potentially save allies from death. Holy or natural, in LOS.
     protect_ally,
+
+    /// Chance to nullify a deadly blow, dependant on piety.
+    protect_from_harm,
+
+    /// Divine halo around the player, size increases with piety.
+    halo,
+
+    /// Protect allies from abjuration by decreasing the power. Higher HD means
+    /// better protection.
+    abjuration_protection_hd,
+
+    /// Gain HP and MP when killing evil or unholy monsters.
+    restore_hp_mp_vs_unholy,
 };
 
 enum jiyva_slurp_results

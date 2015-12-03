@@ -630,7 +630,7 @@ static void _describe_god_powers(god_type which_god, int numcols)
     // his life.
     bool have_any = false;
 
-    if (god_can_protect_from_harm(which_god))
+    if (have_passive(passive_t::protect_from_harm))
     {
         have_any = true;
 

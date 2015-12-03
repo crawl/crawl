@@ -559,11 +559,11 @@ int player::halo_radius() const
 {
     int size = -1;
 
-    if (religion == GOD_SHINING_ONE && piety >= piety_breakpoint(0)
-        && !penance[GOD_SHINING_ONE])
+    if (have_passive(passive_t::halo))
     {
         // The cap is reached at piety 160 = ******.
-        size = min((int)piety, piety_breakpoint(5)) * LOS_RADIUS / piety_breakpoint(5);
+        size = min((int)piety, piety_breakpoint(5)) * LOS_RADIUS
+                                                    / piety_breakpoint(5);
     }
 
     if (player_equip_unrand(UNRAND_BRILLIANCE))

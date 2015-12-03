@@ -1004,6 +1004,7 @@ void dec_penance(god_type god, int val)
 #endif
     if (you.penance[god] <= val)
     {
+        const bool had_halo = have_passive(passive_t::halo);
         const bool had_umbra = have_passive(passive_t::umbra);
 
         you.penance[god] = 0;
@@ -1028,10 +1029,12 @@ void dec_penance(god_type god, int val)
             // Redraw piety display and, in case the best skill is Invocations,
             // redraw the god title.
             you.redraw_title = true;
-        }
 
-        if (you_worship(god))
-        {
+            if (!had_halo && have_passive(passive_t::halo))
+            {
+                mprf(MSGCH_GOD, "Your divine halo returns!");
+                invalidate_agrid(true);
+            }
             if (!had_umbra && have_passive(passive_t::umbra))
             {
                 mprf(MSGCH_GOD, "Your aura of darkness returns!");
@@ -1143,11 +1146,17 @@ static void _inc_penance(god_type god, int val)
 
         take_note(Note(NOTE_PENANCE, god));
 
+        const bool had_halo = have_passive(passive_t::halo);
         const bool had_umbra = have_passive(passive_t::umbra);
 
         you.penance[god] += val;
         you.penance[god] = min((uint8_t)MAX_PENANCE, you.penance[god]);
 
+        if (had_halo && !have_passive(passive_t::halo))
+        {
+            mprf(MSGCH_GOD, god, "Your divine halo fades away.");
+            invalidate_agrid();
+        }
         if (had_umbra && !have_passive(passive_t::umbra))
         {
             mprf(MSGCH_GOD, god, "Your aura of darkness fades away.");
@@ -1187,14 +1196,10 @@ static void _inc_penance(god_type god, int val)
         // Neither does TSO's halo or divine shield.
         else if (god == GOD_SHINING_ONE)
         {
-            if (you.haloed())
-                mprf(MSGCH_GOD, god, "Your divine halo fades away.");
-
             if (you.duration[DUR_DIVINE_SHIELD])
                 tso_remove_divine_shield();
 
             make_god_gifts_disappear(); // only on level
-            invalidate_agrid();
         }
         // Neither does Ely's divine vigour.
         else if (god == GOD_ELYVILON)
@@ -2257,7 +2262,7 @@ static void _gain_piety_point()
                 }
             }
         }
-        if (you_worship(GOD_SHINING_ONE) && rank == 1)
+        if (rank == rank_for_passive(passive_t::halo))
             mprf(MSGCH_GOD, "A divine halo surrounds you!");
         if (rank == rank_for_passive(passive_t::umbra))
             mprf(MSGCH_GOD, "You are shrouded in an aura of darkness!");
@@ -2311,7 +2316,7 @@ static void _gain_piety_point()
         you.redraw_armour_class = true;
     }
 
-    if (you_worship(GOD_SHINING_ONE) || have_passive(passive_t::umbra))
+    if (have_passive(passive_t::halo) || have_passive(passive_t::umbra))
     {
         // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
@@ -2459,7 +2464,8 @@ void lose_piety(int pgn)
         you.redraw_armour_class = true;
     }
 
-    if (you_worship(GOD_SHINING_ONE) || will_have_passive(passive_t::umbra))
+    if (will_have_passive(passive_t::halo)
+        || will_have_passive(passive_t::umbra))
     {
         // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
@@ -2519,7 +2525,7 @@ void excommunication(bool voluntary, god_type new_god, bool immediate)
     ASSERT(old_god != new_god);
     ASSERT(old_god != GOD_NO_GOD);
 
-    const bool was_haloed     = you.haloed();
+    const bool had_halo       = have_passive(passive_t::halo);
     const bool had_umbra      = have_passive(passive_t::umbra);
     const bool had_water_walk = have_passive(passive_t::water_walk);
     const bool had_stat_boost = have_passive(passive_t::stat_boost);
@@ -2583,6 +2589,11 @@ void excommunication(bool voluntary, god_type new_god, bool immediate)
             old_god);
     }
 
+    if (had_halo)
+    {
+        mprf(MSGCH_GOD, old_god, "Your divine halo fades away.");
+        invalidate_agrid(true);
+    }
     if (had_umbra)
     {
         mprf(MSGCH_GOD, old_god, "Your aura of darkness fades away.");
@@ -2670,12 +2681,6 @@ void excommunication(bool voluntary, god_type new_god, bool immediate)
         break;
 
     case GOD_SHINING_ONE:
-        if (was_haloed)
-        {
-            mprf(MSGCH_GOD, old_god, "Your divine halo fades away.");
-            invalidate_agrid(true);
-        }
-
         if (you.duration[DUR_DIVINE_SHIELD])
             tso_remove_divine_shield();
 
@@ -3854,21 +3859,6 @@ bool god_hates_ability(ability_type ability, god_type god)
     return false;
 }
 
-bool god_can_protect_from_harm(god_type god)
-{
-    switch (god)
-    {
-    case GOD_BEOGH:
-        return !you.penance[god];
-    case GOD_ZIN:
-    case GOD_SHINING_ONE:
-    case GOD_ELYVILON:
-        return true;
-    default:
-        return false;
-    }
-}
-
 int elyvilon_lifesaving()
 {
     if (!you_worship(GOD_ELYVILON))
@@ -3897,7 +3887,7 @@ bool god_protects_from_harm()
         }
     }
 
-    if (god_can_protect_from_harm(you.religion)
+    if (have_passive(passive_t::protect_from_harm)
         && (one_chance_in(10) || x_chance_in_y(you.piety, 1000)))
     {
         return true;
