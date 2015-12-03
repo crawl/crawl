@@ -4382,6 +4382,16 @@ void unmarshallItem(reader &th, item_def &item)
     {
         item.charges = 0;
     }
+
+    // This works around a bug in Pakellas' supercharge wherein used_count
+    // wasn't reset properly, marking the wand as empty despite being
+    // fully charged. (This bug has now been fixed and was never in trunk, so
+    // this code can probably be removed from trunk.)
+    if (item.base_type == OBJ_WANDS && item.charges > 0
+        && item.used_count == ZAPCOUNT_EMPTY)
+    {
+        item.used_count = 0;
+    }
 #endif
 
     if (is_unrandom_artefact(item))
