@@ -128,7 +128,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
               "protected from distortion unwield effects" },
         { -1, passive_t::map_rot_res_abyss,
               "remember the shape of the Abyss better" },
-        {  4, passive_t::attract_abyssal_rune,
+        {  5, passive_t::attract_abyssal_rune,
               "GOD will help you find the Abyssal rune.",
               "GOD will no longer help you find the Abyssal rune."
         },
