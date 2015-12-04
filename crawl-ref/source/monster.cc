@@ -5396,7 +5396,7 @@ bool monster::is_stationary() const
  *
  * @return Whether the monster was mutated in any way.
  */
-bool monster::malmutate(const string &/*reason*/)
+bool monster::malmutate(const string &/*reason*/, const bool /*temporary*/)
 {
     if (!can_mutate())
         return false;

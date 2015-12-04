@@ -342,7 +342,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_NEQOXEC,
       {
-       { SPELL_MALMUTATE, 19, MON_SPELL_DEMONIC },
+       { SPELL_LESSER_MALMUTATE, 19, MON_SPELL_DEMONIC },
        { SPELL_BRAIN_FEED, 19, MON_SPELL_DEMONIC },
        { SPELL_SUMMON_MINOR_DEMON, 19, MON_SPELL_DEMONIC },
       }
@@ -523,7 +523,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SHINING_EYE,
       {
-       { SPELL_MALMUTATE, 57, MON_SPELL_MAGICAL },
+       { SPELL_LESSER_MALMUTATE, 57, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1649,7 +1649,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_DEMONSPAWN_CORRUPTER,
       {
        { SPELL_PLANEREND, 32, MON_SPELL_PRIEST },
-       { SPELL_CORRUPT_BODY, 32, MON_SPELL_PRIEST },
+       { SPELL_LESSER_MALMUTATE, 64, MON_SPELL_PRIEST },
       }
     },
 

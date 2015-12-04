@@ -76,11 +76,10 @@ enum class mutflag
     JIYVA   = 1 << 2, // jiyva-only muts
     QAZLAL  = 1 << 3, // qazlal wrath
     XOM     = 1 << 4, // xom being xom
-    CORRUPT = 1 << 5, // wretched stars
 
-    LAST    = CORRUPT
+    LAST    = XOM
 };
-DEF_BITFIELD(mutflags, mutflag, 5);
+DEF_BITFIELD(mutflags, mutflag, 4);
 COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::LAST);
 
 #include "mutation-data.h"
@@ -188,7 +187,6 @@ static int _mut_weight(const mutation_def &mut, mutflag use)
         case mutflag::JIYVA:
         case mutflag::QAZLAL:
         case mutflag::XOM:
-        case mutflag::CORRUPT:
             return 1;
         case mutflag::GOOD:
         case mutflag::BAD:
@@ -788,30 +786,55 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_weight = false)
     return x_chance_in_y(weight, 10);
 }
 
-static mutation_type _get_mut_with_use(mutflag mt)
+static mutation_type _get_mut_with_use(mutflag mt, bool prefer_existing)
 {
     const int tweight = lookup(total_weight, mt, 0);
     ASSERT(tweight);
 
     int cweight = random2(tweight);
+
+    // Perform an initial loop to see if we can increase an existing mutation
+    // Since tweight includes weights of mutations we won't use, this is
+    // probably (definitely) bad, biased math. XXX please fix me.
+    if (prefer_existing)
+    {
+        dprf("Looking for an existing mut (cweight %d / tweight %d).", cweight, tweight);
+        for (const mutation_def &mutdef : mut_data)
+        {
+            dprf("Inspecting mutation %s", mutdef.short_desc);
+            cweight -= _mut_weight(mutdef, mt);
+            if (cweight >= 0 || !_mut_has_use(mutdef, mt))
+                continue;
+            if (you.mutation[mutdef.mutation] != 0)
+            {
+                dprf("Found mutation %s", mutdef.short_desc);
+                return mutdef.mutation;
+            }
+        }
+        dprf("Didn't find an existing mut");
+    }
+
     for (const mutation_def &mutdef : mut_data)
     {
         if (!_mut_has_use(mutdef, mt))
             continue;
 
         cweight -= _mut_weight(mutdef, mt);
+
         if (cweight >= 0)
             continue;
 
         return mutdef.mutation;
     }
 
+    return MUT_NON_MUTATION;
+
     die("Error while selecting mutations");
 }
 
 static mutation_type _get_random_slime_mutation()
 {
-    return _get_mut_with_use(mutflag::JIYVA);
+    return _get_mut_with_use(mutflag::JIYVA, false);
 }
 
 static mutation_type _delete_random_slime_mutation()
@@ -851,27 +874,23 @@ static mutation_type _get_random_xom_mutation()
         if (one_chance_in(1000))
             return NUM_MUTATIONS;
         else if (one_chance_in(5))
-            mutat = _get_mut_with_use(mutflag::XOM);
+            mutat = _get_mut_with_use(mutflag::XOM, false);
     }
     while (!_accept_mutation(mutat, false));
 
     return mutat;
 }
 
-static mutation_type _get_random_corrupt_mutation()
-{
-    return _get_mut_with_use(mutflag::CORRUPT);
-}
-
 static mutation_type _get_random_qazlal_mutation()
 {
-    return _get_mut_with_use(mutflag::QAZLAL);
+    return _get_mut_with_use(mutflag::QAZLAL, false);
 }
 
-static mutation_type _get_random_mutation(mutation_type mutclass)
+static mutation_type _get_random_mutation(mutation_type muttype,
+                                          mutation_permanence_class mutclass)
 {
     mutflag mt;
-    switch (mutclass)
+    switch (muttype)
     {
         case RANDOM_MUTATION:
             // maintain an arbitrary ratio of good to bad muts to allow easier
@@ -886,12 +905,13 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
             mt = mutflag::GOOD;
             break;
         default:
-            die("invalid mutation class: %d", mutclass);
+            die("invalid mutation type: %d", muttype);
     }
 
+    const bool prefer_existing = mutclass == MUTCLASS_TEMPORARY && x_chance_in_y(4, 5);
     for (int attempt = 0; attempt < 100; ++attempt)
     {
-        mutation_type mut = _get_mut_with_use(mt);
+        mutation_type mut = _get_mut_with_use(mt, prefer_existing);
         if (_accept_mutation(mut, true))
             return mut;
     }
@@ -1313,16 +1333,13 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     case RANDOM_MUTATION:
     case RANDOM_GOOD_MUTATION:
     case RANDOM_BAD_MUTATION:
-        mutat = _get_random_mutation(which_mutation);
+        mutat = _get_random_mutation(which_mutation, mutclass);
         break;
     case RANDOM_XOM_MUTATION:
         mutat = _get_random_xom_mutation();
         break;
     case RANDOM_SLIME_MUTATION:
         mutat = _get_random_slime_mutation();
-        break;
-    case RANDOM_CORRUPT_MUTATION:
-        mutat = _get_random_corrupt_mutation();
         break;
     case RANDOM_QAZLAL_MUTATION:
         mutat = _get_random_qazlal_mutation();
@@ -1375,8 +1392,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     const unsigned int old_talents = your_talents(false).size();
 
-    int count = (which_mutation == RANDOM_CORRUPT_MUTATION
-                 || which_mutation == RANDOM_QAZLAL_MUTATION)
+    int count = which_mutation == RANDOM_QAZLAL_MUTATION
                 ? min(2, mdef.levels - you.mutation[mutat])
                 : 1;
 
@@ -1670,7 +1686,6 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
         || which_mutation == RANDOM_GOOD_MUTATION
         || which_mutation == RANDOM_BAD_MUTATION
         || which_mutation == RANDOM_NON_SLIME_MUTATION
-        || which_mutation == RANDOM_CORRUPT_MUTATION
         || which_mutation == RANDOM_QAZLAL_MUTATION)
     {
         while (true)

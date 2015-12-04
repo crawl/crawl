@@ -336,7 +336,7 @@ public:
     bool can_polymorph() const override;
     bool can_bleed(bool allow_tran = true) const override;
     bool is_stationary() const override;
-    bool malmutate(const string &/*reason*/) override;
+    bool malmutate(const string &/*reason*/, const bool /*temporary*/ = false) override;
     void corrupt();
     bool polymorph(int pow) override;
     void banish(actor *agent, const string &who = "", const int power = 0) override;

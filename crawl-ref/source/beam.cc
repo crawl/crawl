@@ -192,8 +192,8 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
         elem = ETC_HOLY;
         break;
     case BEAM_POLYMORPH:
+    case BEAM_LESSER_MALMUTATE:
     case BEAM_MALMUTATE:
-    case BEAM_CORRUPT_BODY:
         elem = ETC_MUTAGENIC;
         break;
     case BEAM_CHAOS:
@@ -3476,11 +3476,12 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = you.polymorph(ench_power);
         break;
 
+    case BEAM_LESSER_MALMUTATE:
     case BEAM_MALMUTATE:
     case BEAM_UNRAVELLED_MAGIC:
         mpr("Strange energies course through your body.");
-        you.malmutate(aux_source.empty() ? get_source_name() :
-                      (get_source_name() + "/" + aux_source));
+        you.malmutate(get_source_name() + (aux_source.empty() ? "" : "/")
+                      + aux_source, flavour == BEAM_LESSER_MALMUTATE);
         obvious_effect = true;
         break;
 
@@ -3724,17 +3725,6 @@ void bolt::affect_player_enchantment(bool resistible)
         mprf(MSGCH_WARN, "Your magic feels %stainted.",
              you.duration[DUR_SAP_MAGIC] ? "more " : "");
         you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
-        break;
-
-    case BEAM_CORRUPT_BODY:
-        if (temp_mutate(RANDOM_CORRUPT_MUTATION, "corrupt body"))
-        {
-            if (one_chance_in(5))
-                temp_mutate(RANDOM_CORRUPT_MUTATION, "corrupt body");
-            mprf(MSGCH_WARN, "A corruption grows within you!");
-        }
-        else
-           mpr("You feel corrupt for a moment.");
         break;
 
     case BEAM_DRAIN_MAGIC:
@@ -5158,8 +5148,8 @@ bool bolt::has_saving_throw() const
     case BEAM_MALIGN_OFFERING:
     case BEAM_AGILITY:
     case BEAM_RESISTANCE:
+    case BEAM_LESSER_MALMUTATE:
     case BEAM_MALMUTATE:
-    case BEAM_CORRUPT_BODY:
     case BEAM_SAP_MAGIC:
     case BEAM_UNRAVELLING:
     case BEAM_UNRAVELLED_MAGIC:
@@ -5179,8 +5169,8 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
     bool rc = true;
     switch (flavour)
     {
+    case BEAM_LESSER_MALMUTATE:
     case BEAM_MALMUTATE:
-    case BEAM_CORRUPT_BODY:
     case BEAM_UNRAVELLED_MAGIC:
         rc = mon->can_mutate();
         break;
@@ -5363,9 +5353,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_AFFECTED;
 
+    case BEAM_LESSER_MALMUTATE:
     case BEAM_MALMUTATE:
     case BEAM_UNRAVELLED_MAGIC:
-        if (mon->malmutate("")) // exact source doesn't matter
+        // exact source doesn't matter
+        if (mon->malmutate(""))
             obvious_effect = true;
         if (YOU_KILL(thrower))
         {
@@ -5735,10 +5727,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             }
         }
         return MON_AFFECTED;
-
-    case BEAM_CORRUPT_BODY:
-        mon->corrupt();
-        break;
 
     case BEAM_DRAIN_MAGIC:
     {
@@ -6506,6 +6494,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_DIGGING:               return "digging";
     case BEAM_TELEPORT:              return "teleportation";
     case BEAM_POLYMORPH:             return "polymorph";
+    case BEAM_LESSER_MALMUTATE:      return "lesser malmutation";
     case BEAM_MALMUTATE:             return "malmutation";
     case BEAM_ENSLAVE:               return "enslave";
     case BEAM_BANISH:                return "banishment";
@@ -6536,7 +6525,6 @@ static string _beam_type_name(beam_type type)
     case BEAM_VIRULENCE:             return "virulence";
     case BEAM_AGILITY:               return "agility";
     case BEAM_SAP_MAGIC:             return "sap magic";
-    case BEAM_CORRUPT_BODY:          return "corrupt body";
     case BEAM_CHAOTIC_REFLECTION:    return "chaotic reflection";
     case BEAM_CRYSTAL:               return "crystal bolt";
     case BEAM_DRAIN_MAGIC:           return "drain magic";
