@@ -4863,7 +4863,7 @@ static bool _can_path_to_staircase(const monster *mons, coord_def place)
     mp.set_monster(mons);
 
     for (rectangle_iterator ri(0); ri; ++ri)
-        if (feat_is_stone_stair(grd(*ri)))
+        if (feat_is_stair(grd(*ri)))
             if (mp.init_pathfind(place, *ri, true, false))
                 return true;
 
