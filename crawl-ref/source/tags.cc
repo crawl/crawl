@@ -5285,6 +5285,8 @@ static void tag_read_level(reader &th)
             coord_def pos(i, j);
             if (feat_is_trap(grd(pos), true) && !map_find(env.cloud, pos))
                 grd(pos) = DNGN_FLOOR;
+            if (cell_is_solid(pos) && cloud_at(pos))
+                env.cloud.erase(pos);
         }
 #endif
 
