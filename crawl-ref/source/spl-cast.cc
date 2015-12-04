@@ -610,7 +610,7 @@ static bool _can_cast()
     if (silenced(you.pos()))
     {
         mpr("You cannot cast spells when silenced!");
-        more();
+        // included in default force_more_message
         return false;
     }
 

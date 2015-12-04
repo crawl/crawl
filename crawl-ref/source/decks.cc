@@ -987,7 +987,7 @@ bool deck_stack()
         mprf("You draw the first five cards out of %d and discard the rest.",
              num_cards);
     }
-    more();
+    // these are included in default force_more_message to show them before menu
 
     run_uncancel(UNC_STACK_FIVE, slot);
     return true;
