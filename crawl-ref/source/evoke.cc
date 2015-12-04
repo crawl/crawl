@@ -1157,7 +1157,7 @@ static bool _sack_of_spiders(item_def &sack)
     bool success = false;
     int count =
         player_adjust_evoc_power(
-            1 + random2(3)
+            1 + random2(2)
             + random2(div_rand_round(you.skill(SK_EVOCATIONS, 10), 30)));
     for (int n = 0; n < count; n++)
     {
