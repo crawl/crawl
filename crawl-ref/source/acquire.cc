@@ -702,8 +702,13 @@ static int _acquirement_misc_subtype(bool divine, int & /*quantity*/)
  * What weight should wands of Heal Wounds be given in wand acquirement, based
  * on their utility to the player? (More utile -> higher weight -> more likely)
  */
-static int _hw_wand_weight()
+static int _hw_wand_weight(bool divine)
 {
+    if (divine && you_worship(GOD_PAKELLAS)
+        && you.num_total_gifts[GOD_PAKELLAS] == 0)
+    {
+        return 0; // no good wands for the first gift
+    }
     if (you.innate_mutation[MUT_NO_DEVICE_HEAL] != 3)
         return 25; // quite powerful
     if (!player_mutation_level(MUT_NO_LOVE))
@@ -715,8 +720,13 @@ static int _hw_wand_weight()
  * What weight should wands of Haste be given in wand acquirement, based on
  * their utility to the player? (More utile -> higher weight -> more likely)
  */
-static int _haste_wand_weight()
+static int _haste_wand_weight(bool divine)
 {
+    if (divine && you_worship(GOD_PAKELLAS)
+        && you.num_total_gifts[GOD_PAKELLAS] == 0)
+    {
+        return 0; // no good wands for the first gift
+    }
     if (you.species != SP_FORMICID)
         return 25; // quite powerful
     if (!player_mutation_level(MUT_NO_LOVE))
@@ -729,8 +739,13 @@ static int _haste_wand_weight()
  * based on their utility to the player? (More utile -> higher weight -> more
  * likely)
  */
-static int _tele_wand_weight()
+static int _tele_wand_weight(bool divine)
 {
+    if (divine && you_worship(GOD_PAKELLAS)
+        && you.num_total_gifts[GOD_PAKELLAS] == 0)
+    {
+        return 0; // no good wands for the first gift
+    }
     if (you.species == SP_FORMICID || crawl_state.game_is_sprint())
         return 1; // can only be used to tele away enemies
     return 15;
@@ -751,10 +766,10 @@ static int _acquirement_wand_subtype(bool divine, int & /*quantity*/)
 {
     vector<pair<wand_type, int>> weights = {
         // normally 25
-        { WAND_HEAL_WOUNDS,     _hw_wand_weight() },
-        { WAND_HASTING,         _haste_wand_weight() },
+        { WAND_HEAL_WOUNDS,     _hw_wand_weight(divine) },
+        { WAND_HASTING,         _haste_wand_weight(divine) },
         // normally 15
-        { WAND_TELEPORTATION,   _tele_wand_weight() },
+        { WAND_TELEPORTATION,   _tele_wand_weight(divine) },
         { WAND_FIRE,            8 },
         { WAND_COLD,            8 },
         { WAND_LIGHTNING,       8 },

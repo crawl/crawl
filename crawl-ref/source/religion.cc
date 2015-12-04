@@ -1490,9 +1490,11 @@ static bool _give_pakellas_gift()
 
     object_class_type gift_type = OBJ_UNASSIGNED;
 
-    if (you.species == SP_FELID)
+    if (you.num_total_gifts[GOD_PAKELLAS] == 0)
+        gift_type = OBJ_WANDS;
+    else if (you.species == SP_FELID)
         gift_type = coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
-    else if (you.num_total_gifts[GOD_PAKELLAS] == 0)
+    else if (you.num_total_gifts[GOD_PAKELLAS] == 1)
         gift_type = OBJ_RODS;
     else
     {
@@ -1507,7 +1509,8 @@ static bool _give_pakellas_gift()
         simple_god_message(" grants you a gift!");
         more();
 
-        _inc_gift_timeout(150 + random2avg(29, 2));
+        if (you.num_total_gifts[GOD_PAKELLAS] > 0)
+            _inc_gift_timeout(150 + random2avg(29, 2));
         you.num_current_gifts[you.religion]++;
         you.num_total_gifts[you.religion]++;
         take_note(Note(NOTE_GOD_GIFT, you.religion));
@@ -1780,6 +1783,8 @@ bool do_god_gift(bool forced)
 
         case GOD_PAKELLAS:
             if (forced && coinflip()
+                || you.piety >= piety_breakpoint(1)
+                   && you.num_total_gifts[you.religion] == 0
                 || !forced && random2(you.piety) > piety_breakpoint(3)
                    && one_chance_in(4))
             {
