@@ -485,9 +485,15 @@ static void _handle_spectral_cloud(const cloud_struct& cloud)
 
 void manage_clouds()
 {
+    // We can't iterate over env.cloud directly because _dissipate_cloud
+    // will remove this cloud and invalidate our iterator.
+    vector<cloud_struct *> cloud_ptrs;
     for (auto& entry : env.cloud)
+        cloud_ptrs.push_back(&entry.second);
+
+    for (auto ptr : cloud_ptrs)
     {
-        cloud_struct& cloud = entry.second;
+        cloud_struct& cloud = *ptr;
 
 #ifdef ASSERTS
         if (cell_is_solid(cloud.pos))
