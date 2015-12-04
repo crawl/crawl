@@ -75,6 +75,7 @@ void trap_def::destroy(bool known)
     if (!in_bounds(pos))
         die("Trap position out of bounds!");
 
+    grd(pos) = DNGN_FLOOR;
     if (known)
     {
         env.map_knowledge(pos).set_feature(DNGN_FLOOR);
