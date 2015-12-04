@@ -3640,14 +3640,8 @@ mon_holy_type monster::holiness(bool /*temp*/) const
     if (is_priest() && is_good_god(god))
         holi |= MH_HOLY;
 
-    if (has_unholy_spell())
-        holi |= MH_UNHOLY;
-
     // Assume that all unknown gods are evil.
     if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
-        holi |= MH_EVIL;
-
-    if (has_evil_spell())
         holi |= MH_EVIL;
 
     if (has_attack_flavour(AF_DRAIN_XP)
@@ -3686,7 +3680,7 @@ bool monster::is_unholy(bool check_spells) const
 
 bool monster::is_evil(bool check_spells) const
 {
-    return bool(holiness() & MH_UNDEAD);
+    return bool(holiness() & MH_EVIL);
 }
 
 /** Is the monster considered unclean by Zin?
