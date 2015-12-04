@@ -1,27 +1,7 @@
-/*
- * ===========================================================================
- * Copyright (C) 2007 Marc H. Thoben
- * Copyright (C) 2008 Darshan Shaligram
- * Copyright (C) 2010 Jude Brown
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * ===========================================================================
- * All commits by Adam Borowski and Darshan Shaligram are instead under plain
- * GPL 2+, like Crawl itself.
- * All commits by Stefan O'Rear are under the 2-clause BSD.
- * ===========================================================================
- */
+/**
+ * @file
+ * @brief Contains code for the `monster` utility.
+**/
 
 #include "AppHdr.h"
 #include "externs.h"
