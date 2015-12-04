@@ -5256,6 +5256,7 @@ static void tag_read_level(reader &th)
 
     EAT_CANARY;
 
+    env.cloud.clear();
     // how many clouds?
     const int num_clouds = unmarshallShort(th);
     cloud_struct cloud;
@@ -5398,6 +5399,7 @@ static void tag_read_level(reader &th)
 
 static void tag_read_level_items(reader &th)
 {
+    env.trap.clear();
     // how many traps?
     const int trap_count = unmarshallShort(th);
     trap_def trap;
