@@ -4987,14 +4987,20 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_ARMOUR:         ch = TILEG_ARMOUR_ON; break;
     case SK_DODGING:        ch = TILEG_DODGING_ON; break;
     case SK_STEALTH:        ch = TILEG_STEALTH_ON; break;
-#if TAG_MAJOR_VERSION == 34
-    case SK_STABBING:       ch = TILEG_STABBING_ON; break;
-#endif
     case SK_SHIELDS:        ch = TILEG_SHIELDS_ON; break;
-#if TAG_MAJOR_VERSION == 34
-    case SK_TRAPS:          ch = TILEG_TRAPS_ON; break;
-#endif
-    case SK_UNARMED_COMBAT: ch = TILEG_UNARMED_COMBAT_ON; break;
+    case SK_UNARMED_COMBAT:
+        {
+            string hand = you.hand_name(false).c_str();
+            if (hand == "hand")
+                ch = TILEG_UNARMED_COMBAT_ON;
+            else if (hand == "paw")
+                ch = TILEG_UNARMED_COMBAT_PAW_ON;
+            else if (hand == "tentacle")
+                ch = TILEG_UNARMED_COMBAT_TENTACLE_ON;
+            else
+                ch = TILEG_UNARMED_COMBAT_CLAW_ON;
+        }
+        break;
     case SK_SPELLCASTING:   ch = TILEG_SPELLCASTING_ON; break;
     case SK_CONJURATIONS:   ch = TILEG_CONJURATIONS_ON; break;
     case SK_HEXES:          ch = TILEG_HEXES_ON; break;
