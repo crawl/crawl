@@ -857,19 +857,26 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
 
         if (wand.base_type == OBJ_WANDS)
         {
-            int charge_gain = wand_max_charges(wand) / 3;
+            const int max_charge = wand_max_charges(wand);
 
-            const int new_charges =
-                num > 0 && den > 0
-                ? min<int>(charge_gain * 3,
-                           max<int>(wand.charges + 1,
-                                    wand.charges + 3 * charge_gain * num / den))
-                : max<int>(wand.charges,
-                           min(charge_gain * 3 * wand.quantity,
-                               wand.charges +
-                               1 + random2avg(((charge_gain - 1) * 3) + 1, 3)));
+            // Assumption: each wand in a stack is roughly evenly charged,
+            // so cap at the number of charges you'd get from charging an
+            // individual wand.
+            const int max_gain =
+                max<int>(1,
+                         div_rand_round((max_charge * wand.quantity)
+                                            - wand.charges,
+                                        wand.quantity));
 
-            const bool charged = (new_charges > wand.plus);
+            const int gain =
+                min<int>(max_gain,
+                         num > 0 && den > 0
+                         ? max<int>(1, max_charge * num / den)
+                         : 1 + random2avg(((max_charge / 3 - 1) * 3) + 1, 3));
+
+            const int new_charges = min<int>(wand.charges + gain,
+                                             max_charge * wand.quantity);
+            const bool charged = (new_charges > wand.charges);
 
             string desc;
 
