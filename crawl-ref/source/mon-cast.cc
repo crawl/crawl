@@ -7432,8 +7432,9 @@ static bool _should_siren_sing(monster* mons, bool avatar)
  */
 static void _doom_howl(monster &mon)
 {
-    simple_monster_message(&mon, " unleashes an unearthly howl!");
-    mpr("The howling begins to echo in your mind!");
+    mprf("%s unleashes a %s howl, and it begins to echo in your mind!",
+         mon.name(DESC_THE).c_str(),
+         silenced(mon.pos()) ? "silent" : "terrible");
     you.duration[DUR_DOOM_HOWL] = random_range(120, 180);
 }
 
