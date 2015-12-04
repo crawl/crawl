@@ -117,10 +117,9 @@ Monsters
 
 Spells
 ------
-* New spell: Yara's Violent Unravelling (L5 Hexes/Transumations); dispels
-  all cancellable effects on the target and - if any were dispelled - causes
-  a radius 1 explosion with damage proportional to the number of dispelled
-  effects.
+* New spell: Yara's Violent Unravelling (L5 Hexes/Transumations). Dispels
+  all cancellable effects on the target and, if any were dispelled, causes
+  a damaging explosion of mutagenic energy around the victim.
 * Hydra Form now has a fixed number of heads.
 
 Interface
