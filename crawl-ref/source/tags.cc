@@ -5276,22 +5276,13 @@ static void tag_read_level(reader &th)
         cloud.tile   = unmarshallString(th);
         cloud.excl_rad = unmarshallInt(th);
 
-        env.cloud[cloud.pos] = cloud;
-    }
-
 #if TAG_MAJOR_VERSION == 34
-    // Fix up floor that trap_def::destroy left as a trap (from
-    // 0.18-a0-605-g5e852a4 to 0.18-a0-614-gc92b81f).
-    for (int i = 0; i < GXM; i++)
-        for (int j = 0; j < GYM; j++)
-        {
-            coord_def pos(i, j);
-            if (feat_is_trap(grd(pos), true) && !map_find(env.cloud, pos))
-                grd(pos) = DNGN_FLOOR;
-            if (cell_is_solid(pos) && cloud_at(pos))
-                env.cloud.erase(pos);
-        }
+        // Remove clouds stuck in walls, from 0.18-a0-603-g332275c to
+        // 0.18-a0-629-g16988c9.
+        if (!cell_is_solid(cloud.pos))
 #endif
+            env.cloud[cloud.pos] = cloud;
+    }
 
     EAT_CANARY;
 
@@ -5428,6 +5419,18 @@ static void tag_read_level_items(reader &th)
         trap.skill_rnd = unmarshallUByte(th);
         env.trap[trap.pos] = trap;
     }
+
+#if TAG_MAJOR_VERSION == 34
+    // Fix up floor that trap_def::destroy left as a trap (from
+    // 0.18-a0-605-g5e852a4 to 0.18-a0-614-gc92b81f).
+    for (int i = 0; i < GXM; i++)
+        for (int j = 0; j < GYM; j++)
+        {
+            coord_def pos(i, j);
+            if (feat_is_trap(grd(pos), true) && !map_find(env.trap, pos))
+                grd(pos) = DNGN_FLOOR;
+        }
+#endif
 
     // how many items?
     const int item_count = unmarshallShort(th);
