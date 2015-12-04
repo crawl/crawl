@@ -597,9 +597,7 @@ static void _RCLOUDS_world_reacts(item_def *item)
 
     for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID); ri; ++ri)
         if (!cell_is_solid(*ri) && !cloud_at(*ri) && one_chance_in(20))
-        {
             place_cloud(cloud, *ri, random2(10), &you, 1);
-        }
 }
 
 static void _RCLOUDS_equip(item_def *item, bool *show_msgs, bool unmeld)

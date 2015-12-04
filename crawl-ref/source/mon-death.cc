@@ -1306,9 +1306,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
             if (!cell_is_solid(*ai) && !cloud_at(*ai) && !one_chance_in(5))
-            {
                 place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), agent);
-            }
     }
 
     // Detach monster from the grid first, so it doesn't get hit by
