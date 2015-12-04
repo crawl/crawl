@@ -3959,6 +3959,12 @@ void unmarshallItem(reader &th, item_def &item)
         item.sub_type = item.plus;
         item.plus = 0;
     }
+    if (th.getMinorVersion() < TAG_MINOR_ZIGFIGS
+        // enum was accidentally inserted in the middle
+        && item.is_type(OBJ_MISCELLANY, MISC_ZIGGURAT))
+    {
+        item.sub_type = MISC_PHANTOM_MIRROR;
+    }
 #endif
     item.plus2       = unmarshallShort(th);
     item.special     = unmarshallInt(th);
