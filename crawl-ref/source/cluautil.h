@@ -27,7 +27,7 @@ extern "C" {
     do { \
         lua_push##type(ls, val); \
         return 1; \
-    } while(false)
+    } while (false)
 #define LUARET1(name, type, val) \
     static int name(lua_State *ls) \
     { \
