@@ -890,7 +890,7 @@ static void _finish_delay(const delay_queue_item &delay)
     case DELAY_PASSWALL:
     {
         mpr("You finish merging with the rock.");
-        more();  // or the above message won't be seen
+        // included in default force_more_message
 
         const coord_def pass(delay.parm1, delay.parm2);
 

@@ -368,13 +368,13 @@ static void _rune_effect(dungeon_feature_type ftype)
             flash_view(UA_BRANCH_ENTRY, rune_colour(runes[2]));
 #endif
             mpr("The lock glows eerily!");
-            more();
+            // included in default force_more_message
 
             mprf("You insert the %s rune into the lock.", rune_type_name(runes[1]));
             big_cloud(CLOUD_BLUE_SMOKE, &you, you.pos(), 20, 7 + random2(7));
             viewwindow();
             mpr("Heavy smoke blows from the lock!");
-            more();
+            // included in default force_more_message
         }
 
         mprf("You insert the %s rune into the lock.", rune_type_name(runes[0]));
@@ -383,7 +383,7 @@ static void _rune_effect(dungeon_feature_type ftype)
             mpr("The gate opens wide!");
         else
             mpr("With a loud hiss the gate opens wide!");
-        more();
+        // these are included in default force_more_message
     }
 }
 

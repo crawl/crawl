@@ -2251,7 +2251,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_TSO_BLESS_WEAPON:
         fail_check();
         simple_god_message(" will bless one of your weapons.");
-        more();
+        // included in default force_more_message
         if (!bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW))
             return SPRET_ABORT;
         break;
@@ -2275,7 +2275,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_KIKU_BLESS_WEAPON:
         fail_check();
         simple_god_message(" will bloody your weapon with pain.");
-        more();
+        // included in default force_more_message
         if (!bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED))
             return SPRET_ABORT;
         break;
@@ -2657,7 +2657,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         simple_god_message(" will brand one of your weapons with the "
                            "corruption of the Abyss.");
-        more();
+        // included in default force_more_message
         if (!bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA))
             return SPRET_ABORT;
         break;
@@ -2993,7 +2993,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     {
         fail_check();
         simple_god_message(" will supercharge a wand or rod.");
-        more();
+        // included in default force_more_message
 
         int item_slot = prompt_invent_item("Supercharge what?", MT_INVLIST,
                                            OSEL_SUPERCHARGE, true, true, false);

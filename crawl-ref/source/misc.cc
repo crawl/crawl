@@ -484,7 +484,7 @@ void revive()
     }
 
     mpr("You rejoin the land of the living...");
-    more();
+    // included in default force_more_message
 }
 
 bool bad_attack(const monster *mon, string& adj, string& suffix,

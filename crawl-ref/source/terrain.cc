@@ -1508,8 +1508,8 @@ void fall_into_a_pool(dungeon_feature_type terrain)
          (terrain == DNGN_LAVA)       ? "lava" :
          (terrain == DNGN_DEEP_WATER) ? "water"
                                       : "programming rift");
+    // included in default force_more_message
 
-    more();
     clear_messages();
     if (terrain == DNGN_LAVA)
     {
