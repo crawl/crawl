@@ -3044,14 +3044,9 @@ static void _place_traps()
     ASSERT(num_traps >= 0);
     dprf("attempting to place %d traps", num_traps);
 
-    trap_def ts;
     for (int i = 0; i < num_traps; i++)
     {
-        if (ts.type != TRAP_UNASSIGNED)
-        {
-            dprf("trap %d already placed (by a vault?)", i);
-            continue;
-        }
+        trap_def ts;
 
         int tries;
         for (tries = 0; tries < 200; ++tries)
