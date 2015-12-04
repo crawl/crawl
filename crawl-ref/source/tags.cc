@@ -5276,6 +5276,18 @@ static void tag_read_level(reader &th)
         env.cloud[cloud.pos] = cloud;
     }
 
+#if TAG_MAJOR_VERSION == 34
+    // Fix up floor that trap_def::destroy left as a trap (from
+    // 0.18-a0-605-g5e852a4 to 0.18-a0-614-gc92b81f).
+    for (int i = 0; i < GXM; i++)
+        for (int j = 0; j < GYM; j++)
+        {
+            coord_def pos(i, j);
+            if (feat_is_trap(grd(pos), true) && !map_find(env.cloud, pos))
+                grd(pos) = DNGN_FLOOR;
+        }
+#endif
+
     EAT_CANARY;
 
     // how many shops?
