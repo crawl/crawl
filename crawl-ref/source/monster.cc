@@ -2948,9 +2948,7 @@ void monster::banish(actor *agent, const string &, const int)
         place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
     for (adjacent_iterator ai(old_pos); ai; ++ai)
         if (!cell_is_solid(*ai) && !cloud_at(*ai) && coinflip())
-        {
             place_cloud(CLOUD_TLOC_ENERGY, *ai, 1 + random2(8), 0);
-        }
 }
 
 bool monster::has_spells() const
