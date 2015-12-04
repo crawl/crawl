@@ -570,10 +570,14 @@ void delete_cloud(coord_def p)
 
 void delete_all_clouds()
 {
-    // this is ok because removing an entry from a std::map only invalidates
-    // that one's iterator
+    // We can't iterate over env.cloud directly because delete_cloud
+    // will remove this cloud and invalidate our iterator.
+    vector<coord_def> cloud_locs;
     for (auto& entry : env.cloud)
-        delete_cloud(entry.first);
+        cloud_locs.push_back(entry.first);
+
+    for (auto pos : cloud_locs)
+        delete_cloud(pos);
 }
 
 // The current use of this function is for shifting in the abyss, so
