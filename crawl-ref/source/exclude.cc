@@ -547,7 +547,7 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
             }
         }
         else if (cloud_struct* cloud = cloud_at(p))
-            exc->desc = cloud->cloud_name(true) + " cloud";
+            desc = cloud->cloud_name(true) + " cloud";
 
         curr_excludes.add_exclude(p, radius, autoexcl, desc, vaultexcl);
     }
