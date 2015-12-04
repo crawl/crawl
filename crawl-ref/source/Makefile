@@ -1527,7 +1527,6 @@ $(GAME): $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
 
 util/monster/vault_monster_data.h: dat/des util/gather_mons
-	$(RM) $@
 	util/gather_mons -v > $@
 
 util/monster/monster-main.o: util/monster/vault_monster_data.h
@@ -1540,8 +1539,15 @@ test-monster: monster
 	util/monster/monster quasit
 
 clean-monster:
-	$(RM) util/monster/monster util/monster/vault_monster_data.h
+	$(RM) util/monster/monster util/monster/vault_monster_data.h tile_info.txt
 
+install-monster: monster
+	util/gather_mons -t > tile_info.txt
+	strip -s util/monster/monster
+	cp util/monster/monster $(HOME)/bin/
+	if [ -f ~/source/announcements.log ]; then \
+	  echo 'Monster database of master branch on crawl.develz.org updated to: $(VERSION)' >>~/source/announcements.log;\
+	fi
 debug: all
 debug-lite: all
 profile: all
