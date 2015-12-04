@@ -81,7 +81,7 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
         distclean debug debug-lite profile package-source source \
-        build-windows package-windows rest docs greet api android FORCE
+        build-windows package-windows rest docs greet api android FORCE monster
 
 include Makefile.obj
 
@@ -1531,9 +1531,11 @@ util/monster/vault_monster_data.h: dat/des util/gather_mons
 
 util/monster/monster-main.o: util/monster/vault_monster_data.h
 
-monster: $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
+util/monster/monster: $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) \
-	 -o util/monster/monster $(LIBS)
+	 -o $@ $(LIBS)
+
+monster: util/monster/monster
 
 test-monster: monster
 	util/monster/monster quasit
