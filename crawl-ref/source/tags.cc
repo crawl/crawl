@@ -34,6 +34,9 @@
 #include "art-enum.h"
 #include "branch.h"
 #include "butcher.h"
+#if TAG_MAJOR_VERSION == 34
+ #include "cloud.h"
+#endif
 #include "colour.h"
 #include "coordit.h"
 #include "dbg-scan.h"
