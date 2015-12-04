@@ -2322,11 +2322,8 @@ Ctrl-A
   Toggle autopickup. Note that encounters with invisible monsters always turns
   autopickup off. You need to switch it on with Ctrl-A afterwards.
 
-Ctrl-V
-  Toggle colouring monsters by their remaining HP. (Console only)
-
-Ctrl-T
-  Toggle displaying monsters' weapons' glyphs. (Console only)
+|
+  Toggle various display layers and overlays. (Console only)
 
 \`
   Re-do previous command
