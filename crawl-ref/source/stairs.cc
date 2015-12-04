@@ -776,7 +776,7 @@ void floor_transition(dungeon_feature_type how,
 
     you.clear_fearmongers();
 
-    if (!wizard)
+    if (!wizard && !shaft)
         _update_travel_cache(old_level, stair_pos);
 
     // Preventing obvious finding of stairs at your position.
