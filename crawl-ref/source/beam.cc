@@ -5612,6 +5612,12 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                       MONS_HELL_HOG : mon->holiness() == MH_HOLY ?
                       MONS_HOLY_SWINE : MONS_HOG))
         {
+            // If the monster was a Beogh follower with gifted equipment,
+            // it just dropped that equipment. Allow re-gifting once it
+            // converts back.
+            orig_mon.props.erase(BEOGH_WPN_GIFT_KEY);
+            orig_mon.props.erase(BEOGH_ARM_GIFT_KEY);
+            orig_mon.props.erase(BEOGH_SH_GIFT_KEY);
             obvious_effect = true;
 
             // Don't restore items to monster if it reverts.
