@@ -930,32 +930,32 @@ static void _write_stat(map<string, double> &stats, string field)
 }
 
 static string _brand_name(const item_type &item, int brand)
- {
-     string brand_name = "";
-     item_def dummy_item = _dummy_item(item);
+{
+    string brand_name = "";
+    item_def dummy_item = _dummy_item(item);
 
-     if (!brand)
-            brand_name = "none";
-     else
-     {
-         dummy_item.special = brand;
-         switch (item.base_type)
-            {
-            case ITEM_WEAPONS:
-                brand_name = weapon_brand_name(dummy_item, true);
-                break;
-            case ITEM_ARMOUR:
-                brand_name = armour_ego_name(dummy_item, true);
-                break;
-            case ITEM_MISSILES:
-                brand_name = missile_brand_name(dummy_item, MBN_TERSE);
-                break;
-            default:
-                break;
-            }
-     }
-     return brand_name;
- }
+    if (!brand)
+        brand_name = "none";
+    else
+    {
+        dummy_item.special = brand;
+        switch (item.base_type)
+        {
+        case ITEM_WEAPONS:
+            brand_name = weapon_brand_name(dummy_item, true);
+            break;
+        case ITEM_ARMOUR:
+            brand_name = armour_ego_name(dummy_item, true);
+            break;
+        case ITEM_MISSILES:
+            brand_name = missile_brand_name(dummy_item, MBN_TERSE);
+            break;
+        default:
+            break;
+        }
+    }
+    return brand_name;
+}
 
 static string _item_name(const item_type &item)
 {

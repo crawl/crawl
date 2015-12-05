@@ -960,7 +960,7 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
 
     const bool    fake = m->props.exists("fake");
     const coord_def c  = m->pos;
-          tileidx_t ch = TILE_FLOOR_NORMAL;
+    tileidx_t       ch = TILE_FLOOR_NORMAL;
 
     if (!fake)
     {

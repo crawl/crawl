@@ -4627,9 +4627,11 @@ bool mons_landlubbers_in_reach(const monster* mons)
                             mons->reach_range(),
                             C_SQUARE,
                             true);
-                         ai; ++ai)
+         ai; ++ai)
+    {
         if ((act = actor_at(*ai)) && !mons_aligned(mons, act))
             return true;
+    }
 
     return false;
 }

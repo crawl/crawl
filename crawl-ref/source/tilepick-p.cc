@@ -452,50 +452,50 @@ tileidx_t tileidx_player()
     // Handle shapechange first
     switch (you.form)
     {
-        // equipment-using forms are handled regularly
-        case TRAN_STATUE:
-        case TRAN_LICH:
-        case TRAN_TREE:
-            break;
-        // animals
-        case TRAN_BAT:       ch = TILEP_TRAN_BAT;       break;
-        case TRAN_SPIDER:    ch = TILEP_TRAN_SPIDER;    break;
-        case TRAN_PIG:       ch = TILEP_TRAN_PIG;       break;
-        case TRAN_PORCUPINE: ch = TILEP_MONS_PORCUPINE; break;
-        // non-animals
-        case TRAN_ICE_BEAST: ch = TILEP_TRAN_ICE_BEAST; break;
-        case TRAN_WISP:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
+    // equipment-using forms are handled regularly
+    case TRAN_STATUE:
+    case TRAN_LICH:
+    case TRAN_TREE:
+        break;
+    // animals
+    case TRAN_BAT:       ch = TILEP_TRAN_BAT;       break;
+    case TRAN_SPIDER:    ch = TILEP_TRAN_SPIDER;    break;
+    case TRAN_PIG:       ch = TILEP_TRAN_PIG;       break;
+    case TRAN_PORCUPINE: ch = TILEP_MONS_PORCUPINE; break;
+    // non-animals
+    case TRAN_ICE_BEAST: ch = TILEP_TRAN_ICE_BEAST; break;
+    case TRAN_WISP:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
 #if TAG_MAJOR_VERSION == 34
-        case TRAN_JELLY:     ch = TILEP_MONS_JELLY;     break;
+    case TRAN_JELLY:     ch = TILEP_MONS_JELLY;     break;
 #endif
-        case TRAN_FUNGUS:    ch = TILEP_TRAN_MUSHROOM;  break;
-        case TRAN_SHADOW:    ch = TILEP_TRAN_SHADOW;    break;
-        case TRAN_HYDRA:     ch = tileidx_mon_clamp(TILEP_MONS_HYDRA,
-                                                    you.heads() - 1);
-                             break;
-        case TRAN_DRAGON:
+    case TRAN_FUNGUS:    ch = TILEP_TRAN_MUSHROOM;  break;
+    case TRAN_SHADOW:    ch = TILEP_TRAN_SHADOW;    break;
+    case TRAN_HYDRA:     ch = tileidx_mon_clamp(TILEP_MONS_HYDRA,
+                                                you.heads() - 1);
+                         break;
+    case TRAN_DRAGON:
+    {
+        switch (you.species)
         {
-            switch (you.species)
-            {
-            case SP_BLACK_DRACONIAN:   ch = TILEP_TRAN_DRAGON_BLACK;   break;
-            case SP_YELLOW_DRACONIAN:  ch = TILEP_TRAN_DRAGON_YELLOW;  break;
-            case SP_GREY_DRACONIAN:    ch = TILEP_TRAN_DRAGON_GREY;    break;
-            case SP_GREEN_DRACONIAN:   ch = TILEP_TRAN_DRAGON_GREEN;   break;
-            case SP_MOTTLED_DRACONIAN: ch = TILEP_TRAN_DRAGON_MOTTLED; break;
-            case SP_PALE_DRACONIAN:    ch = TILEP_TRAN_DRAGON_PALE;    break;
-            case SP_PURPLE_DRACONIAN:  ch = TILEP_TRAN_DRAGON_PURPLE;  break;
-            case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;   break;
-            case SP_RED_DRACONIAN:     ch = TILEP_TRAN_DRAGON_RED;     break;
-            default:                   ch = TILEP_TRAN_DRAGON;         break;
-            }
-            break;
+        case SP_BLACK_DRACONIAN:   ch = TILEP_TRAN_DRAGON_BLACK;   break;
+        case SP_YELLOW_DRACONIAN:  ch = TILEP_TRAN_DRAGON_YELLOW;  break;
+        case SP_GREY_DRACONIAN:    ch = TILEP_TRAN_DRAGON_GREY;    break;
+        case SP_GREEN_DRACONIAN:   ch = TILEP_TRAN_DRAGON_GREEN;   break;
+        case SP_MOTTLED_DRACONIAN: ch = TILEP_TRAN_DRAGON_MOTTLED; break;
+        case SP_PALE_DRACONIAN:    ch = TILEP_TRAN_DRAGON_PALE;    break;
+        case SP_PURPLE_DRACONIAN:  ch = TILEP_TRAN_DRAGON_PURPLE;  break;
+        case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;   break;
+        case SP_RED_DRACONIAN:     ch = TILEP_TRAN_DRAGON_RED;     break;
+        default:                   ch = TILEP_TRAN_DRAGON;         break;
         }
-        // no special tile
-        case TRAN_BLADE_HANDS:
-        case TRAN_APPENDAGE:
-        case TRAN_NONE:
-        default:
-            break;
+        break;
+    }
+    // no special tile
+    case TRAN_BLADE_HANDS:
+    case TRAN_APPENDAGE:
+    case TRAN_NONE:
+    default:
+        break;
     }
 
     // Currently, the flying flag is only used for not drawing the tile in the

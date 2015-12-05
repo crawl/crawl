@@ -2985,12 +2985,12 @@ void start_explore(bool grab_items)
             }
         }
 
-         if ((corpse_on_pos
-              && (Options.auto_sacrifice == AS_YES
-                  || Options.auto_sacrifice == AS_BEFORE_EXPLORE)))
-         {
-             pray(false);
-         }
+        if ((corpse_on_pos
+                    && (Options.auto_sacrifice == AS_YES
+                        || Options.auto_sacrifice == AS_BEFORE_EXPLORE)))
+        {
+            pray(false);
+        }
 
     }
 
@@ -4309,7 +4309,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
                 desc = cleaned_feature_description(pos);
             runed_doors.emplace_back(desc, 1);
             es_flags |= ES_RUNED_DOOR;
-       }
+        }
     }
     else if (feat_is_altar(feat) && ES_altar)
     {

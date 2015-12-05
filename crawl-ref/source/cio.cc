@@ -87,9 +87,9 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
     case '8': return 'k';
     case '9': return 'u';
 
- #ifndef USE_TILE_LOCAL
+# ifndef USE_TILE_LOCAL
     default: return unixcurses_get_vi_key(keyin);
- #endif
+# endif
 
 #else
     case '1': return 'B';

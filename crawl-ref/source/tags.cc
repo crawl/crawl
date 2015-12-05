@@ -4243,9 +4243,9 @@ void unmarshallItem(reader &th, item_def &item)
 
         if (item.is_type(OBJ_JEWELLERY, RING_SLAYING))
         {
-             acc = item.plus;
-             dam = item.plus2;
-             slay = dam < 0 ? dam : max(acc, dam);
+            acc = item.plus;
+            dam = item.plus2;
+            slay = dam < 0 ? dam : max(acc, dam);
 
             item.plus = slay;
             item.plus2 = 0; // probably harmless but might as well
@@ -5327,10 +5327,12 @@ static void tag_read_level(reader &th)
             shop.stock.clear();
         else
 #endif
-        unmarshall_vector(th, shop.stock, [](reader& r) -> item_def
-                                             { item_def ret;
-                                               unmarshallItem(r, ret);
-                                               return ret; });
+        unmarshall_vector(th, shop.stock, [] (reader& r) -> item_def
+                                          {
+                                              item_def ret;
+                                              unmarshallItem(r, ret);
+                                              return ret;
+                                          });
         env.shop[shop.pos] = shop;
     }
 

@@ -4489,10 +4489,10 @@ void handle_player_poison(int delay)
     // so is damage shaving.
     if (you.species == SP_DEEP_DWARF && you.duration[DUR_POISONING] - decrease < 25000)
     {
-       dmg = (you.duration[DUR_POISONING] / 1000)
-              - (25000 / 1000);
-       if (dmg < 0)
-           dmg = 0;
+        dmg = (you.duration[DUR_POISONING] / 1000)
+            - (25000 / 1000);
+        if (dmg < 0)
+            dmg = 0;
     }
 
     msg_channel_type channel = MSGCH_PLAIN;
@@ -8357,7 +8357,7 @@ void player_close_door(coord_def doorpos)
             }
 
             noisy(15, you.pos());
-         }
+        }
     }
     else if (one_chance_in(skill) && !silenced(you.pos()))
     {
@@ -8412,10 +8412,10 @@ void player_close_door(coord_def doorpos)
         }
         if (is_excluded(dc))
             excludes.push_back(dc);
-     }
+    }
 
-     update_exclusion_los(excludes);
-     you.turn_is_over = true;
+    update_exclusion_los(excludes);
+    you.turn_is_over = true;
 }
 
 /**
