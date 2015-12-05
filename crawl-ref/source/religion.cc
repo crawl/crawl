@@ -1791,6 +1791,8 @@ bool do_god_gift(bool forced)
             if (forced && coinflip()
                 || you.piety >= piety_breakpoint(1)
                    && you.num_total_gifts[you.religion] == 0
+                || you.piety >= piety_breakpoint(3)
+                   && you.num_total_gifts[you.religion] == 1
                 || !forced && random2(you.piety) > piety_breakpoint(3)
                    && one_chance_in(4))
             {
