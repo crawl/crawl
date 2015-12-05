@@ -59,7 +59,7 @@ submit them to [our bug tracker](https://crawl.develz.org/mantis/).
 
 ### Monster Speech & Item Descriptions
 Monster speech provides a lot of flavour. Just like vaults, varied speech depends
-upon a large set of entries. Speech syntax is effective but unusual, so you may want to read [the formatting guide](crawl-ref/docs/monster_speech.txt).
+upon a large set of entries. Speech syntax is effective but unusual, so you may want to read [the formatting guide](crawl-ref/docs/develop/monster_speech.txt).
 
 Current item descriptions can be read in-game with `?/` or out-of-game
 them in [dat/descript/](crawl-ref/source/dat/descript/). The following conventions should be more or less obeyed:
