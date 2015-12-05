@@ -2225,13 +2225,6 @@ enum hunger_state_t                    // you.hunger_state
     HS_ENGORGED,
 };
 
-enum player_alive_t
-{
-    PA_THIRSTY = -1,
-    PA_GOOD    = 0,
-    PA_FULL    = 1,
-};
-
 enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 {
     ISFLAG_KNOW_CURSE        = 0x00000001,  // curse status
