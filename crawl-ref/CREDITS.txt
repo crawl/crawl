@@ -163,6 +163,7 @@
     Ilkka Koskela
     infiniplex
     Vambola Kotkas
+    Roma Kovalev
     Ryan Kusnery
     Jukka Kuusisto
     Lorenzo Lami
