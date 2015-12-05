@@ -1202,9 +1202,7 @@ static void _decrement_durations()
         you.props["gozag_gold_aura_amount"] = 0;
 
     dec_elixir_player(delay);
-
-    for (int i = 0; i < delay; ++i)
-        you.maybe_degrade_bone_armour(1);
+    you.maybe_degrade_bone_armour(1, delay);
 
     if (!env.sunlight.empty())
         process_sunlights();

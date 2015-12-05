@@ -8480,9 +8480,10 @@ string player::hands_act(const string &plural_verb,
  * at BONE_ARMOUR_HIT_RATIO = 50, that's 10% at one corpse, 30% at five,
  * 90% at ten...
  *
- * @param       A multiplier to base chance. Used for BONE_ARMOUR_HIT_RATIO.
+ * @param mult    A multiplier to base chance. Used for BONE_ARMOUR_HIT_RATIO.
+ * @param trials  The number of times to potentially shed armour.
  */
-void player::maybe_degrade_bone_armour(int mult)
+void player::maybe_degrade_bone_armour(int mult, int trials)
 {
     if (attribute[ATTR_BONE_ARMOUR] <= 0)
         return;
@@ -8491,21 +8492,21 @@ void player::maybe_degrade_bone_armour(int mult)
     int denom = base_denom;
     for (int i = 1; i < attribute[ATTR_BONE_ARMOUR]; ++i)
         denom = div_rand_round(denom * 4, 5);
-    denom = div_rand_round(denom, mult);
 
-    const bool degrade_armour = one_chance_in(denom);
-    dprf("degraded armour? (%d armour, 1/%d): %d", attribute[ATTR_BONE_ARMOUR],
-         denom, degrade_armour);
-    if (!degrade_armour)
+    const int degraded_armour = binomial(trials, mult, denom);
+    dprf("degraded armour? (%d armour, %d/%d in %d trials): %d",
+         attribute[ATTR_BONE_ARMOUR], mult, denom, trials, degraded_armour);
+    if (degraded_armour <= 0)
         return;
 
     you.attribute[ATTR_BONE_ARMOUR]
-        = max(0, you.attribute[ATTR_BONE_ARMOUR] - 1);
+        = max(0, you.attribute[ATTR_BONE_ARMOUR] - degraded_armour);
 
-    if (you.attribute[ATTR_BONE_ARMOUR])
-        mpr("A chunk of your corpse armour falls away.");
-    else
+    if (!you.attribute[ATTR_BONE_ARMOUR])
         mpr("The last of your corpse armour falls away.");
+    else
+        for (int i = 0; i < degraded_armour; ++i)
+            mpr("A chunk of your corpse armour falls away.");
 
     redraw_armour_class = true;
 }
