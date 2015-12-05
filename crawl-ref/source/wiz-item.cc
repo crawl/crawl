@@ -1018,6 +1018,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "acid",
 #if TAG_MAJOR_VERSION > 34
             "confuse",
+            "shielding",
 #endif
             "debug randart",
         };
@@ -1410,6 +1411,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_DRAIN",
         "ARTP_CONFUSE",
         "ARTP_FRAGILE",
+        "ARTP_SHIELDING",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 

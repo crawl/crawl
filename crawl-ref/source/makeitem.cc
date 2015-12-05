@@ -1685,13 +1685,14 @@ static int _bad_ring_plus()
  * @return              Between 1 and 6 (inclusive); 2-6 for statrings.
  *                      (+1 stat rings are extremely boring.)
  */
-static int _good_ring_plus(int subtype)
+static int _good_jewellery_plus(int subtype)
 {
     switch (subtype)
     {
         case RING_STRENGTH:
         case RING_DEXTERITY:
         case RING_INTELLIGENCE:
+        case AMU_REFLECTION:
             return 2 + (one_chance_in(3) ? random2(2) : random2avg(5, 2));
         default:
             return 1 + (one_chance_in(3) ? random2(3) : random2avg(6, 2));
@@ -1716,7 +1717,10 @@ static int _determine_ring_plus(int subtype)
     case RING_INTELLIGENCE:
         if (one_chance_in(5)) // 20% of such rings are cursed {dlb}
             return _bad_ring_plus();
-        return _good_ring_plus(subtype);
+        return _good_jewellery_plus(subtype);
+
+    case AMU_REFLECTION:
+        return _good_jewellery_plus(subtype);
 
     default:
         return 0;

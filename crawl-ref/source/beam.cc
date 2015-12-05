@@ -3339,20 +3339,29 @@ bool bolt::misses_player()
         if (testhit < block)
         {
             bool penet = false;
-            if (is_reflectable(you.shield()))
+
+            if (is_reflectable(you.shield()) || you.reflection())
             {
-                mprf("Your %s reflects the %s!",
-                      you.shield()->name(DESC_PLAIN).c_str(),
-                      name.c_str());
+                if (is_reflectable(you.shield()))
+                {
+                    mprf("Your %s reflects the %s!",
+                          you.shield()->name(DESC_PLAIN).c_str(),
+                          name.c_str());
+                }
+                mprf("The %s reflects off an invisible shield around you!",
+                          name.c_str());
                 reflect();
             }
             else if (pierces_shields())
             {
-                penet = true;
-                mprf("The %s pierces through your %s!",
-                      name.c_str(),
-                      you.shield() ? you.shield()->name(DESC_PLAIN).c_str()
-                                   : "shielding");
+                if (is_reflectable(you.shield()))
+                {
+                    penet = true;
+                    mprf("The %s pierces through your %s!",
+                          name.c_str(),
+                          you.shield() ? you.shield()->name(DESC_PLAIN).c_str()
+                                       : "shielding");
+                }
             }
             else
             {
@@ -4727,16 +4736,29 @@ bool bolt::attempt_block(monster* mon)
         {
             rc = true;
             item_def *shield = mon->mslot_item(MSLOT_SHIELD);
-            if (is_reflectable(shield))
+            if (is_reflectable(shield) || you.reflection())
             {
                 if (mon->observable())
                 {
-                    mprf("%s reflects the %s off %s %s!",
-                         mon->name(DESC_THE).c_str(),
-                         name.c_str(),
-                         mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                         shield->name(DESC_PLAIN).c_str());
-                    ident_reflector(shield);
+                    if (is_reflectable(shield))
+                    {
+                        mprf("%s reflects the %s off %s %s!",
+                             mon->name(DESC_THE).c_str(),
+                             name.c_str(),
+                             mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                             shield->name(DESC_PLAIN).c_str());
+                        ident_reflector(shield);
+                    }
+                    else
+                    {
+                        mprf("The %s bounces off an invisible shield around %s!",
+                            name.c_str(),
+                            mon->name(DESC_THE).c_str());
+
+                        item_def *amulet = mon->mslot_item(MSLOT_JEWELLERY);
+                        if (amulet)
+                            ident_reflector(amulet);
+                    }
                 }
                 else if (you.see_cell(pos()))
                     mprf("The %s bounces off of thin air!", name.c_str());

@@ -766,7 +766,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case AMU_NOTHING:           return "nothing";
         case AMU_GUARDIAN_SPIRIT:   return "guardian spirit";
         case AMU_FAITH:             return "faith";
-        case AMU_STASIS:            return "stasis";
+        case AMU_REFLECTION:        return "reflection";
         case AMU_REGENERATION:      return "regeneration";
         default: return "buggy jewellery";
         }
@@ -797,6 +797,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_PROTECTION_FROM_MAGIC: return "MR+";
         case AMU_RAGE:                   return "+Rage";
         case AMU_REGENERATION:           return "Regen";
+        case AMU_REFLECTION:             return "Reflect";
         default: return "buggy";
         }
     }
@@ -1884,7 +1885,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 buff << "cursed ";
             else if (Options.show_uncursed && desc != DESC_PLAIN
                      && (!is_randart || !know_type)
-                     && (!ring_has_pluses(*this) || !know_pluses)
+                     && (!jewellery_has_pluses(*this) || !know_pluses)
                      // If the item is worn, its curse status is known,
                      // no need to belabour the obvious.
                      && get_equip_slot(this) == -1)
@@ -1901,7 +1902,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (know_type)
         {
-            if (know_pluses && ring_has_pluses(*this))
+            if (know_pluses && jewellery_has_pluses(*this))
                 buff << make_stringf("%+d ", plus);
 
             buff << jewellery_type_name(item_typ);
@@ -3689,9 +3690,6 @@ bool is_useless_item(const item_def &item, bool temp)
                        || temp && you.hunger_state <= HS_SATIATED)
                    || you.species == SP_FORMICID
                    || player_mutation_level(MUT_NO_ARTIFICE);
-
-        case AMU_STASIS:
-            return you.stasis(false, false);
 
         case AMU_CLARITY:
             return you.clarity(false, false);

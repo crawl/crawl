@@ -319,6 +319,7 @@ public:
     virtual int spec_evoke(bool calc_unid = true, bool items = true) const;
     virtual int spec_invoc(bool calc_unid = true, bool items = true) const;
     virtual bool no_cast(bool calc_unid = true, bool items = true) const;
+    virtual bool reflection(bool calc_unid = true, bool items = true) const;
 
     virtual bool rmut_from_item(bool calc_unid = true) const;
     virtual bool evokable_berserk(bool calc_unid = true) const;

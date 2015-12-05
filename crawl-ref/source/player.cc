@@ -877,6 +877,16 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
         }
         break;
 
+    case EQ_AMULET:
+        if ((item = slot_item(static_cast<equipment_type>(EQ_AMULET)))
+            && item->sub_type == sub_type
+            && (calc_unid
+                || item_type_known(*item)))
+        {
+            ret += item->plus;
+        }
+        break;
+
     case EQ_RINGS:
         for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; slots++)
         {
@@ -2451,6 +2461,8 @@ int player_shield_class()
     shield += qazlal_sh_boost() * 100;
     shield += tso_sh_boost() * 100;
     shield += _bone_armour_bonus() * 2;
+    shield += you.wearing(EQ_AMULET, AMU_REFLECTION) * 200;
+    shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
 
     return (shield + 50) / 100;
 }
@@ -3641,7 +3653,7 @@ bool player::stasis(bool calc_unid, bool items) const
     if (species == SP_FORMICID)
         return true;
 
-    return actor::stasis(calc_unid, items);
+    return false;
 }
 
 unsigned int exp_needed(int lev, int exp_apt)
@@ -5672,6 +5684,11 @@ bool player::liquefied_ground() const
            && ground_level() && !is_insubstantial();
 }
 
+int player::shield_block_penalty() const
+{
+    return 5 * shield_blocks * shield_blocks;
+}
+
 /**
  * Returns whether the player currently has any kind of shield.
  *
@@ -5685,12 +5702,9 @@ bool player::shielded() const
            || duration[DUR_DIVINE_SHIELD]
            || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
            || qazlal_sh_boost() > 0
-           || attribute[ATTR_BONE_ARMOUR] > 0;
-}
-
-int player::shield_block_penalty() const
-{
-    return 5 * shield_blocks * shield_blocks;
+           || attribute[ATTR_BONE_ARMOUR] > 0
+           || you.wearing(EQ_AMULET, AMU_REFLECTION)
+           || you.scan_artefacts(ARTP_SHIELDING);
 }
 
 int player::shield_bonus() const
@@ -6456,7 +6470,6 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
     if (has_notele_item(calc_unid, &notele_items) || stasis_block)
     {
         vector<string> worn_notele;
-        bool amulet_handled = false;
         bool found_nonartefact = false;
         bool found_stasis = false;
 
@@ -6469,23 +6482,6 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
             }
             else
                 worn_notele.push_back(item.name(DESC_A));
-
-            if (item.base_type == OBJ_JEWELLERY && jewellery_is_amulet(item))
-                amulet_handled = true;
-        }
-
-        if (wearing(EQ_AMULET, AMU_STASIS, calc_unid))
-        {
-            //We don't want to report amulet of stasis with -Tele twice...
-            if (!amulet_handled)
-            {
-                item_def *amulet = slot_item(EQ_AMULET);
-                ASSERT(amulet);
-                worn_notele.push_back(amulet->name(DESC_A));
-                found_nonartefact = !is_artefact(*amulet);
-            }
-            //...but we also don't want to report "buggy stasis" from it.
-            found_stasis = true;
         }
 
         if (worn_notele.size() > (problems.empty() ? 3 : 1))
@@ -6505,7 +6501,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
 
         if (stasis_block && !found_stasis)
         {
-            // Formicids and AMU_STASIS are handled above, other sources
+            // Formicids are handled above, other sources
             // of stasis will display this message:
             problems.emplace_back("affected by a buggy stasis");
         }

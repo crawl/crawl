@@ -923,6 +923,7 @@ int artefact_value(const item_def &item)
 
     // This should probably be more complex... but this isn't so bad:
     ret += 6 * prop[ ARTP_AC ] + 6 * prop[ ARTP_EVASION ]
+            + 4 * prop[ ARTP_SHIELDING ]
             + 6 * prop[ ARTP_SLAYING ]
             + 3 * prop[ ARTP_STRENGTH ] + 3 * prop[ ARTP_INTELLIGENCE ]
             + 3 * prop[ ARTP_DEXTERITY ];
@@ -1735,6 +1736,7 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_PROTECTION_FROM_COLD:
                 case RING_PROTECTION_FROM_FIRE:
                 case RING_PROTECTION_FROM_MAGIC:
+                case AMU_REFLECTION:
                     valued += 250;
                     break;
 
@@ -1750,7 +1752,6 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_STEALTH:
                 case RING_TELEPORTATION:
                 case RING_FLIGHT:
-                case AMU_STASIS:
                     valued += 175;
                     break;
 
@@ -2342,7 +2343,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
         // known pluses when the new ring's pluses are unknown.
         if (item.base_type == OBJ_JEWELLERY)
         {
-            const bool has_plus = ring_has_pluses(item);
+            const bool has_plus = jewellery_has_pluses(item);
             const int delta_p = item.plus - list_item.plus;
             if (has_plus
                 && item_ident(list_item, ISFLAG_KNOW_PLUSES)

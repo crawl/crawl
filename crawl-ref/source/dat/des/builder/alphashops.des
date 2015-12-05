@@ -143,13 +143,13 @@
       elseif s == "Q" then i = "quarterstaff | quicksilver dragon armour | " ..
        "quick blade"
 
-      elseif s == "R" then i = "amulet of rage | amulet of regeneration | " ..
-       "rapier | amulet of resist corrosion | royal jelly | " ..
-       "potion of resistance | scroll of recharging | robe | ring mail | " ..
-       "scroll of random uselessness | scroll of remove curse | " ..
+      elseif s == "R" then i = "amulet of rage | amulet of reflection | " ..
+       "amulet of regeneration | rapier | amulet of resist corrosion | " ..
+       "royal jelly | potion of resistance | scroll of recharging | robe | " ..
+       "ring mail | scroll of random uselessness | scroll of remove curse | " ..
        "wand of random effects"
 
-      elseif s == "S" then i = "scimitar | amulet of stasis | short sword | " ..
+      elseif s == "S" then i = "scimitar | short sword | " ..
        "sling bullet | scale mail | book of summonings | book of the sky | " ..
        "deck of summoning | potion of slowing | ring of see invisible | " ..
        "ring of slaying | spear | ring of stealth | ring of strength | " ..

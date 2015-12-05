@@ -1054,7 +1054,7 @@ static iflags_t _full_ident_mask(const item_def& item)
         break;
     case OBJ_JEWELLERY:
         flagset = (ISFLAG_KNOW_CURSE | ISFLAG_KNOW_TYPE);
-        if (ring_has_pluses(item))
+        if (jewellery_has_pluses(item))
             flagset |= ISFLAG_KNOW_PLUSES;
         break;
     case OBJ_MISCELLANY:
@@ -2234,7 +2234,7 @@ bool item_is_spellbook(const item_def &item)
 // Ring functions:
 
 // Returns whether jewellery has plusses.
-bool ring_has_pluses(const item_def &item)
+bool jewellery_has_pluses(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
@@ -2250,6 +2250,7 @@ bool ring_has_pluses(const item_def &item)
     case RING_STRENGTH:
     case RING_INTELLIGENCE:
     case RING_DEXTERITY:
+    case AMU_REFLECTION:
         return true;
 
     default:
@@ -2269,7 +2270,7 @@ bool ring_has_stackable_effect(const item_def &item)
     if (!item_type_known(item))
         return false;
 
-    if (ring_has_pluses(item))
+    if (jewellery_has_pluses(item))
         return true;
 
     switch (item.sub_type)

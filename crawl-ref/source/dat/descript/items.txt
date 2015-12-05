@@ -43,6 +43,13 @@ amulet of rage
 
 This amulet enables its wearer to attempt to enter a state of berserk rage.
 %%%%
+amulet of reflection
+
+These carefully-faceted amulets exert a force that blocks some incoming attacks.
+More miraculously, it also will reflect ranged attacks back towards the
+attackers, making them particularly prized by travellers, merchants, and others
+who fear ambush by bandits.
+%%%%
 amulet of regeneration
 
 This amulet increases the wearer's natural regeneration rate. In order to
@@ -52,17 +59,6 @@ amulet of resist corrosion
 
 This amulet protects the wearer from acid damage and from corrosion caused by
 acids, although not infallibly so.
-%%%%
-amulet of stasis
-
-An amulet meticulously constructed with magical wards to block magical and
-physiological effects that would otherwise teleport, slow, haste, enrage, or
-paralyse its wearer. Equipping it whilst already under such an effect will
-immediately end the effect, causing a large amount of magical contamination
-in the process.
-
-While the amulet is effective against most translocations, plane shifts such as
-banishment are beyond its ability to block.
 %%%%
 amulet of the gourmand
 
