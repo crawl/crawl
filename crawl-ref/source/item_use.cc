@@ -2826,7 +2826,11 @@ void read_scroll(int item_slot)
 
     case SCR_AMNESIA:
         if (!alreadyknown)
+        {
             mpr(pre_succ_msg);
+            mpr("It is a scroll of amnesia.");
+            // included in default force_more_message (to show it before menu)
+        }
         if (you.spell_no == 0)
             mpr("You feel forgetful for a moment.");
         else if (!alreadyknown)
@@ -2860,7 +2864,8 @@ void read_scroll(int item_slot)
         && which_scroll != SCR_ENCHANT_WEAPON
         && which_scroll != SCR_IDENTIFY
         && which_scroll != SCR_ENCHANT_ARMOUR
-        && which_scroll != SCR_RECHARGING)
+        && which_scroll != SCR_RECHARGING
+        && which_scroll != SCR_AMNESIA)
     {
         mprf("It %s a %s.",
              you.inv[item_slot].quantity < prev_quantity ? "was" : "is",
