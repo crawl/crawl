@@ -811,15 +811,12 @@ are not expanded, but rather they produce special game behaviour.
 
   __NONE : no message
   __NEXT : try a more general monster description
-  __MORE : enforce a "--more--" prompt
-  __YOU_RESIST : print "You resist."
-  __NOTHING_HAPPENS : print "Nothing appears to happen."
 
 Some special keys are defined in monspeak.txt and shout.txt, such as
-__RESIST_OR_NOTHING and __SHOUT. These are normal variable expansions,
-and may be used as such. They are given special-looking names because
-Crawl looks up the noises a given monster can produce and looks for
-keys that match the string, i.e. __SHOUT, __BARK and so on.
+__SHOUT. These are normal variable expansions, and may be used as
+such. They are given special-looking names because Crawl looks up the
+noises a given monster can produce and looks for keys that match the
+string, i.e. __SHOUT, __BARK and so on.
 
 
 E. Testing your changes
