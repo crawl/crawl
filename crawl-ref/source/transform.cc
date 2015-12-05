@@ -1635,32 +1635,32 @@ static void _print_head_change_message(int old_heads, int new_heads)
  * full, other forms (excepting lichform).
  *
  * @param which_trans   The tranformation which the player is undergoing.
- * @return              True if the player is not blocked from entering the
- *                      given form by their undead race; false otherwise.
+ * @return              PA_GOOD if the player is not blocked from entering the
+ *                      given form by their undead race; PA_FULL if the player
+ *                      is too satiated; PA_THIRSTY if the player is too hungry.
  */
-bool player_alive_enough_for(transformation_type which_trans)
+player_alive_t lifeless_prevents_form(transformation_type which_trans)
 {
     if (!you.undead_state(false))
-        return true; // not undead!
+        return PA_GOOD; // not undead!
 
     if (which_trans == TRAN_NONE)
-        return true; // everything can become itself
+        return PA_GOOD; // everything can become itself
 
     if (which_trans == TRAN_SHADOW)
-        return true; // even the undead can use dith's shadow form
+        return PA_GOOD; // even the undead can use dith's shadow form
 
     if (you.species != SP_VAMPIRE)
-        return false; // ghouls & mummies can't become anything else, though
+        return PA_THIRSTY; // ghouls & mummies can't become anything else, though
 
     if (which_trans == TRAN_LICH)
-        return false; // vampires can never lichform
+        return PA_THIRSTY; // vampires can never lichform
 
-    if (which_trans == TRAN_BAT)
-        return you.hunger_state <= HS_SATIATED; // can batform on low blood
+    if (which_trans == TRAN_BAT) // can batform on low blood
+        return you.hunger_state <= HS_SATIATED ? PA_GOOD : PA_FULL;
 
     // other forms can only be entered when full or above.
-    return you.hunger_state > HS_SATIATED;
-
+    return you.hunger_state > HS_SATIATED ? PA_GOOD : PA_THIRSTY;
 }
 
 /**
@@ -1763,7 +1763,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     }
 
     // the undead cannot enter most forms.
-    if (!player_alive_enough_for(which_trans))
+    if (lifeless_prevents_form(which_trans) == PA_GOOD)
     {
         msg = "Your unliving flesh cannot be transformed in this way.";
         success = false;

@@ -299,36 +299,42 @@ bool food_change(bool initial)
 
         if (you.species == SP_VAMPIRE)
         {
-            if (newstate <= HS_SATIATED)
+            if (you.duration[DUR_BERSERK] > 1 && newstate <= HS_HUNGRY)
             {
-                if (you.duration[DUR_BERSERK] > 1 && newstate <= HS_HUNGRY)
-                {
-                    mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
-                                         "your rage any longer.");
-                    you.duration[DUR_BERSERK] = 1;
-                }
-                if (!player_alive_enough_for(you.form)
-                    && you.duration[DUR_TRANSFORMATION] > 2 * BASELINE_DELAY)
+                mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
+                                     "your rage any longer.");
+                you.duration[DUR_BERSERK] = 1;
+            }
+
+            player_alive_t transform_state = lifeless_prevents_form(you.form);
+
+            switch (transform_state)
+            {
+            case PA_THIRSTY:
+                if (you.duration[DUR_TRANSFORMATION] > 2 * BASELINE_DELAY)
                 {
                     mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
                                          "your transformation much longer.");
                     you.set_duration(DUR_TRANSFORMATION, 2);
                 }
-            }
-            else if (you.form == TRAN_BAT
-                     && you.duration[DUR_TRANSFORMATION] > 5)
-            {
-                print_stats();
-                mprf(MSGCH_WARN, "Your blood-filled body can't sustain your "
-                                 "transformation much longer.");
+                break;
+            case PA_FULL:
+                if (you.duration[DUR_TRANSFORMATION] > 5)
+                {
+                    print_stats();
+                    mprf(MSGCH_WARN, "Your blood-filled body can't sustain your "
+                                     "transformation much longer.");
 
-                // Give more time because suddenly stopping flying can be fatal.
-                you.set_duration(DUR_TRANSFORMATION, 5);
-            }
-            else if (newstate == HS_ENGORGED && is_vampire_feeding()) // Alive
-            {
-                print_stats();
-                mpr("You can't stomach any more blood right now.");
+                    // Give more time because suddenly stopping flying can be fatal.
+                    you.set_duration(DUR_TRANSFORMATION, 5);
+                }
+                break;
+            default:
+                if (newstate == HS_ENGORGED && is_vampire_feeding()) // Alive
+                {
+                    print_stats();
+                    mpr("You can't stomach any more blood right now.");
+                }
             }
         }
 
