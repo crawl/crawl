@@ -1627,8 +1627,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (oper == OPER_PUTON || oper == OPER_WEAR || oper == OPER_TAKEOFF
         || oper == OPER_REMOVE)
     {
-        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM)
-            || item.is_type(OBJ_JEWELLERY, AMU_DISMISSAL))
+        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
         {
             if ((oper == OPER_TAKEOFF || oper == OPER_REMOVE)
                  && you_worship(GOD_ZIN))
@@ -1640,12 +1639,6 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
 
         if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
                                   || artefact_property(item, ARTP_FRAGILE)))
-        {
-            return true;
-        }
-        if (item.is_type(OBJ_JEWELLERY, AMU_REGENERATION)
-            && player_mutation_level(MUT_SLOW_REGENERATION) < 3
-            && you.props[REGEN_AMULET_ACTIVE].get_int() == 1)
         {
             return true;
         }
