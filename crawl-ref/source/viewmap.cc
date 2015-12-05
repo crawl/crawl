@@ -1160,10 +1160,7 @@ bool show_map(level_pos &lpos,
                 le.go_to(lpos.id);
 
                 if (!is_map_persistent())
-                {
                     mpr("You can't annotate this level.");
-                    more();
-                }
                 else
                     do_annotate(lpos.id);
 
