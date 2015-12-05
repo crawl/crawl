@@ -599,6 +599,7 @@ void doom_howl(int time)
             mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
                                        INFINITE_DURATION));
             mons->behaviour = BEH_SEEK;
+            mons->flags |= MF_NO_REWARD | MF_HARD_RESET;
             check_place_cloud(CLOUD_BLACK_SMOKE, mons->pos(),
                               random_range(1,2), mons);
         }
