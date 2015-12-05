@@ -1909,6 +1909,7 @@ enum duration_type
     DUR_DEVICE_SURGE,
     DUR_DOOM_HOWL,
     DUR_DOOM_HOWL_IMMUNITY,
+    DUR_VERTIGO,
     NUM_DURATIONS
 };
 

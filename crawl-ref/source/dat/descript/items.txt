@@ -13,10 +13,10 @@ being berserked against one's will.
 %%%%
 amulet of dismissal
 
-This amulet generates a field of translocational energy that will teleport away
-creatures that harm you one tenth of the time. Removing it causes that
-energy to latch onto the former wearer, causing an intense build-up of magical
-contamination.
+This amulet generates a field of translocational energy that will one in ten
+times teleport away creatures that harm you. It takes a few moments to get used
+to the translocational energy field, initially disorienting the wearer for a
+few turns.
 %%%%
 amulet of faith
 
@@ -45,9 +45,8 @@ This amulet enables its wearer to attempt to enter a state of berserk rage.
 %%%%
 amulet of regeneration
 
-This amulet bonds with its wearer to greatly increases their recuperative
-powers. Removing the amulet violently severs this recuperative bond, causing
-rot.
+This amulet increases the wearer's natural regeneration rate. In order to
+function, it must first attune itself to the wearer's body at full health.
 %%%%
 amulet of resist corrosion
 

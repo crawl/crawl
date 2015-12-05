@@ -1644,7 +1644,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
         if (item.is_type(OBJ_JEWELLERY, AMU_REGENERATION)
-            && player_mutation_level(MUT_SLOW_REGENERATION) < 3)
+            && player_mutation_level(MUT_SLOW_REGENERATION) < 3
+            && you.props[REGEN_AMULET_ACTIVE].get_int() == 1)
         {
             return true;
         }

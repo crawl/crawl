@@ -24,6 +24,7 @@
 #include "macro.h" // command_to_string
 #include "message.h"
 #include "misc.h"
+#include "mutation.h"
 #include "notes.h"
 #include "options.h"
 #include "player-stats.h"
@@ -1101,18 +1102,27 @@ static void _remove_amulet_of_faith(item_def &item)
     }
 }
 
-static void _remove_amulet_of_dismissal(item_def &item)
+static void _equip_amulet_of_dismissal()
 {
-    mpr("The amulet's energy floods into your body!");
-    contaminate_player(7000, true);
+    mprf(MSGCH_DURATION, "The world spins around you as a field of "
+            "translocational energy flows through you!");
+    you.increase_duration(DUR_VERTIGO, random2(4) + 3);
 }
 
-static void _remove_amulet_of_regeneration(item_def &item)
+static void _equip_amulet_of_regeneration()
 {
-    if (player_mutation_level(MUT_SLOW_REGENERATION) < 3)
+    if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
+        mpr("The amulet feels cold and inert.");
+    else if (you.hp == you.hp_max)
     {
-        mpr("Your flesh rots as the regenerative bond is broken!");
-        rot_hp(2 + random2(5));
+        you.props[REGEN_AMULET_ACTIVE] = 1;
+        mpr("The amulet throbs as it attunes itself to your healthy body.");
+    }
+    else
+    {
+        mpr("You sense that the amulet cannot attune itself to your injured"
+            " body.");
+        you.props[REGEN_AMULET_ACTIVE] = 0;
     }
 }
 
@@ -1198,16 +1208,13 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_DISMISSAL:
-        mpr("You feel a field of translocational energy surge around you.");
+        if (!unmeld)
+            _equip_amulet_of_dismissal();
         break;
 
     case AMU_REGENERATION:
-        if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
-            mpr("The amulet feels cold and inert.");
-        else
-            mprf("The amulet begins to pulse %s.",
-                 you.undead_state() ? "steadily"
-                                    : "in time with your heartbeat");
+        if (!unmeld)
+            _equip_amulet_of_regeneration();
         break;
 
     case AMU_GUARDIAN_SPIRIT:
@@ -1322,6 +1329,8 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case RING_STEALTH:
     case RING_TELEPORTATION:
     case RING_WIZARDRY:
+    case AMU_DISMISSAL:
+    case AMU_REGENERATION:
         break;
 
     case RING_SEE_INVISIBLE:
@@ -1376,16 +1385,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case AMU_FAITH:
         if (!meld)
             _remove_amulet_of_faith(item);
-        break;
-
-    case AMU_DISMISSAL:
-        if (!meld)
-            _remove_amulet_of_dismissal(item);
-        break;
-
-    case AMU_REGENERATION:
-        if (!meld)
-            _remove_amulet_of_regeneration(item);
         break;
 
     case AMU_GUARDIAN_SPIRIT:

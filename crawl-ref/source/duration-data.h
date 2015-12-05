@@ -370,6 +370,8 @@ static const duration_def duration_data[] =
         RED, "Howl",
         "doom howling", "howl",
         "A terrible howling echoes in your mind.", D_DISPELLABLE },
+    { DUR_VERTIGO, YELLOW, "Vertigo", "", "vertigo",
+      "Vertigo is making it harder to attack, cast, and dodge.", D_NO_FLAGS },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

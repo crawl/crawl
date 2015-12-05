@@ -384,6 +384,8 @@ int raw_spell_fail(spell_type spell)
 
     chance2 += you.duration[DUR_MAGIC_SAPPED] / BASELINE_DELAY;
 
+    chance2 += you.duration[DUR_VERTIGO] ? 7 : 0;
+
     // Apply the effects of Vehumet and items of wizardry.
     chance2 = _apply_spellcasting_success_boosts(spell, chance2);
 

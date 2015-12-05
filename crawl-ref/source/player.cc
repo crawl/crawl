@@ -1100,7 +1100,8 @@ static int _player_bonus_regen()
     }
 
     // Jewellery.
-    rr += REGEN_PIP * you.wearing(EQ_AMULET, AMU_REGENERATION);
+    if (you.props[REGEN_AMULET_ACTIVE].get_int() == 1)
+        rr += REGEN_PIP * you.wearing(EQ_AMULET, AMU_REGENERATION);
 
     // Artefacts
     rr += REGEN_PIP * you.scan_artefacts(ARTP_REGENERATION);
@@ -1199,6 +1200,25 @@ int player_regen()
         rr += 100;
 
     return rr;
+}
+
+// Amulet of regeneration needs to be worn while at full health before it begins
+// to function.
+void update_regen_amulet_attunement()
+{
+    if (you.wearing(EQ_AMULET, AMU_REGENERATION)
+        && player_mutation_level(MUT_SLOW_REGENERATION) < 3)
+    {
+        if (you.hp == you.hp_max
+            && you.props[REGEN_AMULET_ACTIVE].get_int() == 0)
+        {
+            you.props[REGEN_AMULET_ACTIVE] = 1;
+            mpr("Your amulet attunes itself to your body and you begin to "
+                "regenerate more quickly.");
+        }
+    }
+    else
+        you.props[REGEN_AMULET_ACTIVE] = 0;
 }
 
 int player_hunger_rate(bool temp)
@@ -2184,7 +2204,7 @@ static int _player_adjusted_evasion_penalty(const int scale)
     }
 
     return piece_armour_evasion_penalty * scale / 10 +
-           you.adjusted_body_armour_penalty(scale) ;
+           you.adjusted_body_armour_penalty(scale);
 }
 
 // EV bonuses that work even when helpless.
@@ -2316,11 +2336,14 @@ static int _player_evasion(ev_ignore_type evit)
     const int scale = 100;
     const int size_base_ev = (10 + size_factor) * scale;
 
+    const int vertigo_penalty = you.duration[DUR_VERTIGO] ? 5 * scale : 0;
+
     const int prestepdown_evasion =
         size_base_ev
         + _player_armour_adjusted_dodge_bonus(scale)
         - _player_adjusted_evasion_penalty(scale)
-        - you.adjusted_shield_penalty(scale);
+        - you.adjusted_shield_penalty(scale)
+        - vertigo_penalty;
 
     const int poststepdown_evasion =
         stepdown_value(prestepdown_evasion, 20*scale, 30*scale, 60*scale, -1);
