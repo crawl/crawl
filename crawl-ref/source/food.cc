@@ -36,6 +36,7 @@
 #include "stepdown.h"
 #include "stringutil.h"
 #include "travel.h"
+#include "transform.h"
 #include "xom.h"
 
 static void _eat_chunk(item_def& food);
@@ -306,7 +307,7 @@ bool food_change(bool initial)
                                          "your rage any longer.");
                     you.duration[DUR_BERSERK] = 1;
                 }
-                if (you.form != TRAN_NONE && you.form != TRAN_BAT
+                if (!player_alive_enough_for(you.form)
                     && you.duration[DUR_TRANSFORMATION] > 2 * BASELINE_DELAY)
                 {
                     mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "

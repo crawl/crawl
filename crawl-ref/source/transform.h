@@ -265,6 +265,8 @@ private:
 };
 const Form* get_form(transformation_type form = you.form);
 
+bool player_alive_enough_for(transformation_type form = you.form);
+
 bool form_can_wield(transformation_type form = you.form);
 bool form_can_wear(transformation_type form = you.form);
 bool form_can_fly(transformation_type form = you.form);

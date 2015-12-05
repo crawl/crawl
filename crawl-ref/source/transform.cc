@@ -1638,7 +1638,7 @@ static void _print_head_change_message(int old_heads, int new_heads)
  * @return              True if the player is not blocked from entering the
  *                      given form by their undead race; false otherwise.
  */
-static bool _player_alive_enough_for(transformation_type which_trans)
+bool player_alive_enough_for(transformation_type which_trans)
 {
     if (!you.undead_state(false))
         return true; // not undead!
@@ -1763,7 +1763,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     }
 
     // the undead cannot enter most forms.
-    if (!_player_alive_enough_for(which_trans))
+    if (!player_alive_enough_for(which_trans))
     {
         msg = "Your unliving flesh cannot be transformed in this way.";
         success = false;
