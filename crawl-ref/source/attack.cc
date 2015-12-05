@@ -214,6 +214,10 @@ int attack::calc_to_hit(bool random)
         // armour penalty
         mhit -= (attacker_armour_tohit_penalty + attacker_shield_tohit_penalty);
 
+        // vertigo penalty
+        if (you.duration[DUR_VERTIGO])
+            mhit -= 5;
+
         // mutation
         if (player_mutation_level(MUT_EYEBALLS))
             mhit += 2 * player_mutation_level(MUT_EYEBALLS) + 1;

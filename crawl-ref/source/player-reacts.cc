@@ -642,7 +642,9 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_PHASE_SHIFT, delay,
                               "You are firmly grounded in the material plane once more.",
                               coinflip(),
-                              "You feel closer to the material plane."))
+                              "You feel closer to the material plane.")
+        || _decrement_a_duration(DUR_VERTIGO, delay,
+                              "The world stops spinning."))
     {
         you.redraw_evasion = true;
     }
@@ -1283,6 +1285,8 @@ static void _regenerate_hp_and_mp(int delay)
     }
 
     ASSERT_RANGE(you.magic_points_regeneration, 0, 100);
+
+    update_regen_amulet_attunement();
 }
 
 void player_reacts()
