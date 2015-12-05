@@ -822,9 +822,7 @@ bool mons_speaks_msg(monster* mons, const string &msg,
         if (msg_type == MSGCH_TALK_VISUAL)
             silence = false;
 
-        if (line == "__MORE" && !silence)
-            more();
-        else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(*mons))
+        if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(*mons))
             noticed = old_noticed;
         else
         {
