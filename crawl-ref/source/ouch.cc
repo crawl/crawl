@@ -24,6 +24,7 @@
 #include "art-enum.h"
 #include "beam.h"
 #include "chardump.h"
+#include "cloud.h"
 #include "colour.h"
 #include "delay.h"
 #include "describe.h"
@@ -763,6 +764,7 @@ static void _maybe_dismiss(mid_t source)
                 mprf(MSGCH_EQUIPMENT, "The translocation field surrounding you"
                                 " vibrates and %s disappears!",
                                 mon->name(DESC_THE).c_str());
+                place_cloud(CLOUD_TLOC_ENERGY, mon->pos(), 1 + random2(8), 0);
                 monster_teleport(mon, true, true);
             }
         }
