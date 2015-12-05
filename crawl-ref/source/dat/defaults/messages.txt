@@ -89,6 +89,7 @@ force_more_message += breaks free of your control
 force_more_message += doesn't seem very happy
 force_more_message += You rejoin the land of the living
 force_more_message += You cannot cast spells when silenced
+force_more_message += You don't have the energy to cast that spell
 force_more_message += This is a scroll of acquirement
 
 ## Reduce chance of drowning because flight or form runs out:
@@ -104,8 +105,10 @@ force_more_message += sound of rushing water
 force_more_message += oppressive heat about you
 force_more_message += crackle of arcane power
 
-# First chance of Beogh conversion
+# Religion
 force_more_message += press .* to convert to Beogh
+force_more_message += welcomes you( back)?!
+force_more_message += You have lost your religion
 
 # Banishment
 force_more_message += You are cast into the Abyss

@@ -44,7 +44,7 @@ bool xp_penance(god_type god);
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
 
-void excommunication(bool voluntary = false, god_type new_god = GOD_NO_GOD, bool immediate = false);
+void excommunication(bool voluntary = false, god_type new_god = GOD_NO_GOD);
 
 bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true);
 void dock_piety(int pietyloss, int penance);
@@ -56,7 +56,7 @@ int god_colour(god_type god);
 colour_t god_message_altar_colour(god_type god);
 int gozag_service_fee();
 bool player_can_join_god(god_type which_god);
-void join_religion(god_type which_god, bool immediate = true);
+void join_religion(god_type which_god);
 void god_pitch(god_type which_god);
 god_type choose_god(god_type def_god = NUM_GODS);
 

@@ -2594,7 +2594,7 @@ static string _god_hates_your_god_reaction(god_type god, god_type your_god)
     return "";
 }
 
-void excommunication(bool voluntary, god_type new_god, bool immediate)
+void excommunication(bool voluntary, god_type new_god)
 {
     const god_type old_god = you.religion;
     ASSERT(old_god != new_god);
@@ -2640,8 +2640,7 @@ void excommunication(bool voluntary, god_type new_god, bool immediate)
     you.redraw_quiver = true;
 
     mpr("You have lost your religion!");
-    if (!immediate)
-        more();
+    // included in default force_more_message
 
     if (old_god == GOD_BEOGH)
     {
@@ -3308,7 +3307,7 @@ void set_god_ability_slots()
     }
 }
 
-void join_religion(god_type which_god, bool immediate)
+void join_religion(god_type which_god)
 {
     ASSERT(which_god != GOD_NO_GOD);
     ASSERT(which_god != GOD_ECUMENICAL);
@@ -3322,7 +3321,7 @@ void join_religion(god_type which_god, bool immediate)
 
     // Leave your prior religion first.
     if (!you_worship(GOD_NO_GOD))
-        excommunication(true, which_god, immediate);
+        excommunication(true, which_god);
 
     // Welcome to the fold!
     you.religion = static_cast<god_type>(which_god);
@@ -3371,8 +3370,7 @@ void join_religion(god_type which_god, bool immediate)
     simple_god_message(
         make_stringf(" welcomes you%s!",
                      you.worshipped[which_god] ? " back" : "").c_str());
-    if (!immediate)
-        more();
+    // included in default force_more_message
     if (crawl_state.game_is_tutorial())
     {
         // Tutorial needs berserk usable.
