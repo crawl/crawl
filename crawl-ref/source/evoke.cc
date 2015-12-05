@@ -1157,7 +1157,7 @@ static bool _sack_of_spiders(item_def &sack)
     bool success = false;
     int count =
         player_adjust_evoc_power(
-            1 + random2(3)
+            1 + random2(2)
             + random2(div_rand_round(you.skill(SK_EVOCATIONS, 10), 30)));
     for (int n = 0; n < count; n++)
     {
@@ -1183,7 +1183,7 @@ static bool _sack_of_spiders(item_def &sack)
         int rad = LOS_RADIUS / 2 + 2;
         for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
         {
-            trap_def *trap = find_trap((*mi)->pos());
+            trap_def *trap = trap_at((*mi)->pos());
             // Don't destroy non-web traps or try to trap monsters
             // currently caught by something.
             if (you.pos().distance_from((*mi)->pos()) > rad
@@ -1202,13 +1202,11 @@ static bool _sack_of_spiders(item_def &sack)
                 if (trap && trap->type == TRAP_WEB)
                     destroy_trap((*mi)->pos());
 
-                if (place_specific_trap((*mi)->pos(), TRAP_WEB))
-                {
-                    // Reveal the trap
-                    grd((*mi)->pos()) = DNGN_TRAP_WEB;
-                    trap = find_trap((*mi)->pos());
-                    trap->trigger(**mi);
-                }
+                place_specific_trap((*mi)->pos(), TRAP_WEB);
+                // Reveal the trap
+                grd((*mi)->pos()) = DNGN_TRAP_WEB;
+                trap = trap_at((*mi)->pos());
+                trap->trigger(**mi);
             }
         }
         // Decrease charges
@@ -1691,35 +1689,35 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
     }
 
     // Now move clouds
-    vector<int> cloud_list;
+    vector<coord_def> cloud_list;
     for (distance_iterator di(agent->pos(), true, true, radius + 2); di; ++di)
     {
-        if (env.cgrid(*di) != EMPTY_CLOUD
+        if (cloud_at(*di)
             && cell_see_cell(agent->pos(), *di, LOS_SOLID)
             && (target.origin()
                 || _angle_between(agent->pos(), target, *di) <= PI/4.0))
         {
-            cloud_list.push_back(env.cgrid(*di));
+            cloud_list.push_back(*di);
         }
     }
 
     for (int i = cloud_list.size() - 1; i >= 0; --i)
     {
-        wind_beam.target = env.cloud[cloud_list[i]].pos;
+        wind_beam.target = cloud_list[i];
         wind_beam.fire();
 
-        int dist = env.cloud[cloud_list[i]].pos.distance_from(agent->pos());
+        int dist = cloud_list[i].distance_from(agent->pos());
         int push = (dist > 5 ? 2 : dist > 2 ? 3 : 4);
 
         for (unsigned int j = 0;
              j < wind_beam.path_taken.size() - 1 && push;
              ++j)
         {
-            if (env.cgrid(wind_beam.path_taken[j]) == cloud_list[i])
+            if (wind_beam.path_taken[j] == cloud_list[i])
             {
                 coord_def newpos = wind_beam.path_taken[j+1];
                 if (!cell_is_solid(newpos)
-                    && env.cgrid(newpos) == EMPTY_CLOUD)
+                    && !cloud_at(newpos))
                 {
                     swap_clouds(newpos, wind_beam.path_taken[j]);
                     --push;
@@ -1733,7 +1731,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
                                 == newpos.distance_from(agent->pos())
                             && *di != agent->pos() // never aimed_at_feet
                             && !cell_is_solid(*di)
-                            && env.cgrid(*di) == EMPTY_CLOUD)
+                            && !cloud_at(*di))
                         {
                             swap_clouds(*di, wind_beam.path_taken[j]);
                             --push;

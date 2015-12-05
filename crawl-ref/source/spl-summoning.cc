@@ -206,8 +206,10 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
             mpr("You create a snake!");
 
         if (sticks_left)
+        {
             mprf("You now have %d arrow%s.", sticks_left,
                                              sticks_left > 1 ? "s" : "");
+        }
         else
             mpr("You now have no arrows remaining.");
     }
@@ -538,6 +540,69 @@ void do_dragon_call(int time)
                                                + count_summons(&you, SPELL_DRAGON_CALL) * 5;
     }
     you.attribute[ATTR_NEXT_DRAGON_TIME] -= time;
+}
+
+/**
+ * Handle the Doom Howl status effect, possibly summoning hostile doom hounds
+ * around the player.
+ *
+ * @param time      The number of aut that the howling has been going on for
+ *                  since the last doom_howl call.
+ */
+void doom_howl(int time)
+{
+    // TODO: pull hound-count generation into a helper function
+    int hounds = 0;
+    if (!you.props.exists(NEXT_DOOM_HOUND_KEY))
+        you.props[NEXT_DOOM_HOUND_KEY] = random_range(30, 50);
+    // 1 hound every 3-5 turns
+    while (time > 0)
+    {
+        const int time_to_hound = you.props[NEXT_DOOM_HOUND_KEY].get_int();
+        if (time_to_hound <= time)
+        {
+            you.props[NEXT_DOOM_HOUND_KEY] = random_range(30, 50);
+            ++hounds;
+        }
+        else
+            you.props[NEXT_DOOM_HOUND_KEY].get_int() -= time;
+        time -= time_to_hound;
+    }
+
+    if (!hounds)
+        return;
+
+    const actor *target = &you;
+
+    for (int i = 0; i < hounds; ++i)
+    {
+        vector<coord_def> spots;
+        for (adjacent_iterator ai(target->pos()); ai; ++ai)
+        {
+            if (monster_habitable_grid(MONS_DOOM_HOUND, grd(*ai))
+                && !actor_at(*ai))
+            {
+                spots.push_back(*ai);
+            }
+        }
+        if (spots.size() <= 0)
+            return;
+
+        const coord_def pos = spots[random2(spots.size())];
+
+        monster *mons = create_monster(mgen_data(MONS_DOOM_HOUND, BEH_HOSTILE,
+                                                 NULL, 0, SPELL_NO_SPELL,
+                                                 pos, target->mindex(),
+                                                 MG_FORCE_BEH));
+        if (mons)
+        {
+            mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
+                                       INFINITE_DURATION));
+            mons->behaviour = BEH_SEEK;
+            check_place_cloud(CLOUD_BLACK_SMOKE, mons->pos(),
+                              random_range(1,2), mons);
+        }
+    }
 }
 
 spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)

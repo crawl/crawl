@@ -2947,11 +2947,8 @@ void monster::banish(actor *agent, const string &, const int)
     if (!cell_is_solid(old_pos))
         place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
     for (adjacent_iterator ai(old_pos); ai; ++ai)
-        if (!cell_is_solid(*ai) && env.cgrid(*ai) == EMPTY_CLOUD
-            && coinflip())
-        {
+        if (!cell_is_solid(*ai) && !cloud_at(*ai) && coinflip())
             place_cloud(CLOUD_TLOC_ENERGY, *ai, 1 + random2(8), 0);
-        }
 }
 
 bool monster::has_spells() const
@@ -4755,7 +4752,7 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
 {
     const mon_intel_type intel = mons_intel(this);
 
-    const trap_def *ptrap = find_trap(where);
+    const trap_def *ptrap = trap_at(where);
     if (!ptrap)
         return true;
     const trap_def& trap = *ptrap;
@@ -4855,10 +4852,9 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     return true;
 }
 
-bool monster::is_cloud_safe(const coord_def &place)
+bool monster::is_cloud_safe(const coord_def &place) const
 {
-    int cl = env.cgrid(place);
-    return cl == EMPTY_CLOUD || !mons_avoids_cloud(this, cl);
+    return !mons_avoids_cloud(this, place);
 }
 
 static bool _can_path_to_staircase(const monster *mons, coord_def place)
@@ -4867,7 +4863,7 @@ static bool _can_path_to_staircase(const monster *mons, coord_def place)
     mp.set_monster(mons);
 
     for (rectangle_iterator ri(0); ri; ++ri)
-        if (feat_is_stone_stair(grd(*ri)))
+        if (feat_is_stair(grd(*ri)))
             if (mp.init_pathfind(place, *ri, true, false))
                 return true;
 
@@ -5605,7 +5601,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
     }
 
     // Monsters stepping on traps:
-    trap_def* ptrap = find_trap(pos());
+    trap_def* ptrap = trap_at(pos());
     if (ptrap)
         ptrap->trigger(*this);
 

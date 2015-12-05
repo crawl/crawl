@@ -1559,22 +1559,21 @@ static int _ignite_poison_clouds(coord_def where, int pow, actor *agent)
 {
     const bool tracer = (pow == -1);  // Only testing damage, not dealing it
 
-    const int i = env.cgrid(where);
-    if (i == EMPTY_CLOUD)
+    cloud_struct* cloud = cloud_at(where);
+    if (!cloud)
         return false;
 
-    cloud_struct& cloud = env.cloud[i];
-    if (cloud.type != CLOUD_MEPHITIC && cloud.type != CLOUD_POISON)
+    if (cloud->type != CLOUD_MEPHITIC && cloud->type != CLOUD_POISON)
         return false;
 
     if (tracer)
         return _ignite_tracer_cloud_value(where, agent);
 
-    cloud.type = CLOUD_FIRE;
-    cloud.decay = 30 + random2(20 + pow); // from 3-5 turns to 3-15 turns
-    cloud.whose = agent->kill_alignment();
-    cloud.killer = agent->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
-    cloud.source = agent->mid;
+    cloud->type = CLOUD_FIRE;
+    cloud->decay = 30 + random2(20 + pow); // from 3-5 turns to 3-15 turns
+    cloud->whose = agent->kill_alignment();
+    cloud->killer = agent->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+    cloud->source = agent->mid;
     return true;
 }
 
@@ -1738,15 +1737,12 @@ static bool maybe_abort_ignite()
 
     // XXX XXX XXX major code duplication (ChrisOelmueller)
 
-    const int i = env.cgrid(you.pos());
-    if (i != EMPTY_CLOUD)
+    if (const cloud_struct* cloud = cloud_at(you.pos()))
     {
-        cloud_struct& cloud = env.cloud[i];
-
-        if (cloud.type == CLOUD_MEPHITIC || cloud.type == CLOUD_POISON)
+        if (cloud->type == CLOUD_MEPHITIC || cloud->type == CLOUD_POISON)
         {
             prompt += "in a cloud of ";
-            prompt += cloud_type_name(cloud.type, true);
+            prompt += cloud->cloud_name(true);
             prompt += "! Ignite poison anyway?";
             if (!yesno(prompt.c_str(), false, 'n'))
                 return true;

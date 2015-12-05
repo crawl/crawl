@@ -424,10 +424,8 @@ static int _count_identical(const vector<item_def>& stock, const item_def& item)
 //  * Enter buys (with prompt), as now
 //  * x exits (also Esc), as now
 //  * ! toggles examination mode (where letter keys view items)
-static bool _in_a_shop(int shopidx, int &num_in_list)
+static bool _in_a_shop(shop_struct& shop, int &num_in_list)
 {
-    shop_struct& shop = env.shop[shopidx];
-
     unwind_bool in_shop(_in_shop_now, true);
     unwind_var<ordering_mode> default_order(shopping_order);
 
@@ -1933,43 +1931,31 @@ bool is_worthless_consumable(const item_def &item)
     }
 }
 
-static void _delete_shop(int i)
-{
-    grd(you.pos()) = DNGN_ABANDONED_SHOP;
-    unnotice_feature(level_pos(level_id::current(), you.pos()));
-}
-
 void shop()
 {
-    int i;
-
-    for (i = 0; i < MAX_SHOPS; i++)
-        if (env.shop[i].pos == you.pos())
-            break;
-
-    if (i == MAX_SHOPS)
+    if (!shop_at(you.pos()))
     {
         mprf(MSGCH_ERROR, "Help! Non-existent shop.");
         return;
     }
 
-    const shop_struct& shop = env.shop[i];
-    const string shopname   = shop_name(shop.pos);
+    shop_struct& shop = *shop_at(you.pos());
+    const string shopname = shop_name(shop.pos);
 
     // Quick out, if no inventory
     if (shop.stock.empty())
     {
         mprf("%s appears to be closed.", shopname.c_str());
-        _delete_shop(i);
+        destroy_shop_at(you.pos());
         return;
     }
 
-    int  num_in_list      = 0;
-    const bool bought_something = _in_a_shop(i, num_in_list);
+    int num_in_list = 0;
+    const bool bought_something = _in_a_shop(shop, num_in_list);
 
     // If the shop is now empty, erase it from the overview.
     if (shop.stock.empty())
-        _delete_shop(i);
+        destroy_shop_at(you.pos());
 
     redraw_screen();
 
@@ -1982,27 +1968,25 @@ void shop()
 
 void destroy_shop_at(coord_def p)
 {
-    if (shop_struct *shop = get_shop(p))
+    if (shop_at(p))
     {
-        unnotice_feature(level_pos(level_id::current(), shop->pos));
-
-        shop->pos  = coord_def(0, 0);
-        shop->type = SHOP_UNASSIGNED;
+        env.shop.erase(p);
+        grd(p) = DNGN_ABANDONED_SHOP;
+        unnotice_feature(level_pos(level_id::current(), p));
     }
 }
 
-shop_struct *get_shop(const coord_def& where)
+shop_struct *shop_at(const coord_def& where)
 {
     if (grd(where) != DNGN_ENTER_SHOP)
         return nullptr;
 
-    unsigned short t = env.tgrid(where);
-    ASSERT(t != NON_ENTITY);
-    ASSERT(t < MAX_SHOPS);
-    ASSERT(env.shop[t].pos == where);
-    ASSERT(env.shop[t].type != SHOP_UNASSIGNED);
+    auto it = env.shop.find(where);
+    ASSERT(it != env.shop.end());
+    ASSERT(it->second.pos == where);
+    ASSERT(it->second.type != SHOP_UNASSIGNED);
 
-    return &env.shop[t];
+    return &it->second;
 }
 
 string shop_type_name(shop_type type)
@@ -2055,7 +2039,7 @@ static string _shop_type_suffix(shop_type type, const coord_def &where)
 
 string shop_name(const coord_def& where, bool add_stop)
 {
-    const shop_struct *cshop = get_shop(where);
+    const shop_struct *cshop = shop_at(where);
 
     // paranoia
     ASSERT(grd(where) == DNGN_ENTER_SHOP);
@@ -2482,7 +2466,7 @@ void ShoppingList::item_type_identified(object_class_type base_type,
         const level_pos place = thing_pos(thing);
 
         le.go_to(place.id);
-        const shop_struct *shop = get_shop(place.pos);
+        const shop_struct *shop = shop_at(place.pos);
         ASSERT(shop);
         if (shoptype_identifies_stock(shop->type))
             continue;
@@ -2506,7 +2490,7 @@ void ShoppingList::remove_dead_shops()
     {
         const level_pos place = thing_pos(thing);
         le.go_to(place.id); // thereby running DACT_REMOVE_GOZAG_SHOPS
-        const shop_struct *shop = get_shop(place.pos);
+        const shop_struct *shop = shop_at(place.pos);
 
         if (!shop)
             shops_to_remove.insert(place);

@@ -685,9 +685,9 @@ void check_map_validity()
         ASSERT(name);
         ASSERT(*name); // placeholders get empty names
 
-        find_trap(*ri); // this has all needed asserts already
+        trap_at(*ri); // this has all needed asserts already
 
-        if (shop_struct *shop = get_shop(*ri))
+        if (shop_struct *shop = shop_at(*ri))
             ASSERT_RANGE(shop->type, 0, NUM_SHOPS);
 
         // border must be impassable

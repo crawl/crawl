@@ -482,7 +482,7 @@ static bool _is_safe_move(const coord_def& c)
         //    should have been aborted already by the checks in view.cc.
     }
 
-    if (is_trap(c) && !find_trap(c)->is_safe())
+    if (is_trap(c) && !trap_at(c)->is_safe())
         return false;
 
     return _is_safe_cloud(c);
@@ -3649,8 +3649,50 @@ void LevelInfo::fixup()
     }
 }
 
-bool TravelCache::know_stair(const coord_def &c) const
+void TravelCache::update_stone_stair(const coord_def &c)
 {
+    LevelInfo *li = find_level_info(level_id::current());
+    if (!li)
+        return;
+    stair_info *si = li->get_stair(c);
+    // Don't bother proceeding further if we already know where the stair goes.
+    if (si && si->destination.is_valid())
+        return;
+    const dungeon_feature_type feat1 = grd(c);
+    ASSERT(feat_is_stone_stair(feat1));
+    // Compute the corresponding feature type on the other side of the stairs.
+    const dungeon_feature_type feat2 = (dungeon_feature_type)
+          (feat1 + (feat_is_stone_stair_up(feat1) ? 1 : -1)
+                   * (DNGN_STONE_STAIRS_DOWN_I - DNGN_STONE_STAIRS_UP_I));
+    LevelInfo *li2 = find_level_info(level_id::get_next_level_id(c));
+    if (!li2)
+        return;
+    for (int i = static_cast<int>(li2->stairs.size()) - 1; i >= 0; --i)
+    {
+        if (li2->stairs[i].grid == feat2)
+        {
+            // If we haven't added these stairs to our LevelInfo yet, do so
+            // before trying to update them.
+            if (!si)
+            {
+                stair_info si2;
+                si2.position = c;
+                si2.grid = grd(si2.position);
+                li->stairs.push_back(si2);
+            }
+            li->update_stair(c,level_pos(li2->id,li2->stairs[i].position));
+            // Add the other stair direction too so that X[]ing to the other
+            // level will be correct immediately.
+            li2->update_stair(li2->stairs[i].position,level_pos(li->id,c));
+            return;
+        }
+    }
+}
+
+bool TravelCache::know_stair(const coord_def &c)
+{
+    if (feat_is_stone_stair(grd(c)))
+        update_stone_stair(c);
     auto i = levels.find(level_id::current());
     return i == levels.end() ? false : i->second.know_stair(c);
 }

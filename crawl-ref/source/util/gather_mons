@@ -3,6 +3,12 @@
 # Run gather_mons -d if you want dbname: to be heeded (descs, etc).
 my $db = grep /^-d$/, @ARGV;
 
+# Used for generating the list of vault monsters for the monster tool.
+my $vault_only = grep /^-v$/, @ARGV;
+
+# Used for generating tile_info.txt for the tile lookup on CDO.
+my $find_tiles = grep /^-t$/, @ARGV;
+
 open IN, "util/cpp_version mon-data.h|" or die "Can't read mon-data.h\n";
 while (<IN>)
 {
@@ -10,8 +16,30 @@ while (<IN>)
 }
 close IN;
 
+if ($find_tiles)
+{
+    open IN, "rltiles/dc-mon.txt" or die "Can't read dc-mon.txt\n";
+    my $sdir = "";
+    while (<IN>)
+    {
+        $sdir = $1 if /^%sdir (.*)$/;
+        if (my ($loc, $tile) = /^([a-z0-9_\-\/]+) ([A-Z0-9_]+)/)
+        {
+            $tiles{$tile} = $loc =~ /mon\// ? "$loc.png" : "$sdir/$loc.png";
+        }
+    }
+    close IN;
+}
+
 sub vault_mon()
 {
+    if ($vault_only)
+    {
+        s/\s/ /g;
+        s/ +/ /g;
+        print "\"$_\",\n" if /name:/;
+        return;
+    }
     s/^ */ /; # easier to parse this way
     return unless /name:/; # not interesting to us
     s/ spells:[^ ]+//g; # can have ;
@@ -35,6 +63,12 @@ sub vault_mon()
     $_=$tags{'dbname'} if $db && $tags{'dbname'};
     s/_/ /g;
 
+    if ($find_tiles and exists $tags{'tile'} and not exists $mons{$_})
+    {
+        my $tile = $tags{'tile'};
+        $tile =~ tr/a-z/A-Z/;
+        print("$_, $tiles{$tile}\n");
+    }
     $mons{$_} = 1;
 }
 
@@ -63,6 +97,7 @@ for (grep /\.des$/, `git ls-files`)
     {
         s/^\s*"//s;
         s/"\s*,\s*$//sg;
+        s/"\s*\n\s*$//sg;
         s/\\\n *//g;
         s/--[^\n]*\n//sg;
         s|"\s*,\s*"|/|sg;
@@ -92,4 +127,7 @@ large simulacrum
 END
 }
 
-print "$_\n" for sort keys %mons;
+unless ($vault_only or $find_tiles)
+{
+    print "$_\n" for sort keys %mons;
+}

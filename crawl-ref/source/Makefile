@@ -81,7 +81,7 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
         distclean debug debug-lite profile package-source source \
-        build-windows package-windows rest docs greet api android FORCE
+        build-windows package-windows rest docs greet api android FORCE monster
 
 include Makefile.obj
 
@@ -1248,6 +1248,11 @@ else
 webserver:
 endif
 
+ifeq (,$(filter monster,$(MAKECMDGOALS)))
+OBJECTS += main.o
+else
+OBJECTS += util/monster/monster-main.o
+endif
 
 # There might not have been any goals passed on the commandline, so...
 GOALS = $(or $(MAKECMDGOALS),$(.DEFAULT_GOAL))
@@ -1493,7 +1498,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 endif
 
-clean: clean-rltiles clean-webserver clean-android
+clean: clean-rltiles clean-webserver clean-android clean-monster
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
@@ -1521,6 +1526,30 @@ distclean: clean clean-contrib clean-rltiles
 $(GAME): $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
 
+util/monster/vault_monster_data.h: dat/des util/gather_mons
+	util/gather_mons -v > $@
+
+util/monster/monster-main.o: util/monster/vault_monster_data.h
+
+util/monster/monster: $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
+	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) \
+	 -o $@ $(LIBS)
+
+monster: util/monster/monster
+
+test-monster: monster
+	util/monster/monster quasit
+
+clean-monster:
+	$(RM) util/monster/monster util/monster/vault_monster_data.h tile_info.txt
+
+install-monster: monster
+	util/gather_mons -t > tile_info.txt
+	strip -s util/monster/monster
+	cp util/monster/monster $(HOME)/bin/
+	if [ -f ~/source/announcements.log ]; then \
+	  echo 'Monster database of master branch on crawl.develz.org updated to: $(VERSION)' >>~/source/announcements.log;\
+	fi
 debug: all
 debug-lite: all
 profile: all

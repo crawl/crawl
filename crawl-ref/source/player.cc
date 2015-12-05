@@ -172,7 +172,7 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
                        bool *prompted)
 {
     // If there's no trap, let's go.
-    trap_def* trap = find_trap(p);
+    trap_def* trap = trap_at(p);
     if (!trap || env.grid(p) == DNGN_UNDISCOVERED_TRAP)
         return true;
 
@@ -348,7 +348,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     }
 
     // prompt when swapping into known zot traps
-    if (!quiet && find_trap(loc) && find_trap(loc)->type == TRAP_ZOT
+    if (!quiet && trap_at(loc) && trap_at(loc)->type == TRAP_ZOT
         && env.grid(loc) != DNGN_UNDISCOVERED_TRAP
         && !yes_or_no("Do you really want to swap %s into the Zot trap?",
                       mons->name(DESC_YOUR).c_str()))
@@ -488,7 +488,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
     // Traps go off.
     // (But not when losing flight - i.e., moving into the same tile)
-    trap_def* ptrap = find_trap(you.pos());
+    trap_def* ptrap = trap_at(you.pos());
     if (ptrap && old_pos != you.pos())
         ptrap->trigger(you, !stepped); // blinking makes it hard to evade
 
@@ -2410,8 +2410,10 @@ int player_shield_class()
     else
     {
         if (you.duration[DUR_MAGIC_SHIELD])
+        {
             shield += 900 + player_adjust_evoc_power(
                                 you.skill(SK_EVOCATIONS, 75));
+        }
 
         if (you.duration[DUR_CONDENSATION_SHIELD])
             shield += 800 + you.props[CONDENSATION_SHIELD_KEY].get_int() * 15;
@@ -4195,7 +4197,7 @@ bool player_regenerates_mp()
     if (you.spirit_shield() && you.species == SP_DEEP_DWARF)
         return false;
     // Pakellas blocks MP regeneration.
-    if (you_worship(GOD_PAKELLAS))
+    if (you_worship(GOD_PAKELLAS) || player_under_penance(GOD_PAKELLAS))
         return false;
     return true;
 }
@@ -7900,7 +7902,7 @@ void temperature_check()
         {
             const coord_def p(*ai);
             if (in_bounds(p)
-                && env.cgrid(p) == EMPTY_CLOUD
+                && !cloud_at(p)
                 && !cell_is_solid(p)
                 && one_chance_in(5))
             {

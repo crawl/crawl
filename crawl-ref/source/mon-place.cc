@@ -805,7 +805,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
 
     // Don't generate monsters on top of teleport traps.
     // (How did they get there?)
-    const trap_def* ptrap = find_trap(mg_pos);
+    const trap_def* ptrap = trap_at(mg_pos);
     if (ptrap && !can_place_on_trap(mg.cls, ptrap->type))
         return false;
 
@@ -3802,13 +3802,11 @@ coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
 
 bool can_spawn_mushrooms(coord_def where)
 {
-    int cl = env.cgrid(where);
-    if (cl == EMPTY_CLOUD)
+    cloud_struct *cloud = cloud_at(where);
+    if (!cloud)
         return true;
-
-    cloud_struct &cloud = env.cloud[env.cgrid(where)];
     if (you_worship(GOD_FEDHAS)
-        && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY))
+        && (cloud->whose == KC_YOU || cloud->whose == KC_FRIENDLY))
     {
         return true;
     }
@@ -3817,7 +3815,7 @@ bool can_spawn_mushrooms(coord_def where)
     dummy.type = MONS_TOADSTOOL;
     define_monster(&dummy);
 
-    return actor_cloud_immune(&dummy, cloud);
+    return actor_cloud_immune(&dummy, *cloud);
 }
 
 conduct_type player_will_anger_monster(monster_type type)
@@ -3997,7 +3995,7 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
 
         success = monster_habitable_grid(mon_type, grd(*ri));
         if (success && viable_mon)
-            success = !mons_avoids_cloud(viable_mon, env.cgrid(*ri), true);
+            success = !mons_avoids_cloud(viable_mon, *ri, true);
 
         if (success && one_chance_in(++good_count))
             empty = *ri;

@@ -1599,17 +1599,15 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
     int count = 0;
     coord_def f;
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
-        if (grd(*ai) == DNGN_FLOOR && !find_trap(*ai) && one_chance_in(++count))
+        if (grd(*ai) == DNGN_FLOOR && !trap_at(*ai) && one_chance_in(++count))
             f = *ai;
 
     if (count > 0)              // found a spot
     {
-        if (place_specific_trap(f, TRAP_TELEPORT, 1 + random2(5 * power_level)))
-        {
-            // Mark it discovered if enough power.
-            if (x_chance_in_y(power_level, 2))
-                find_trap(f)->reveal();
-        }
+        place_specific_trap(f, TRAP_TELEPORT, 1 + random2(5 * power_level));
+        // Mark it discovered if enough power.
+        if (x_chance_in_y(power_level, 2))
+            trap_at(f)->reveal();
     }
 }
 
@@ -1619,10 +1617,10 @@ static void _shaft_card(int power, deck_rarity_type rarity)
 
     if (is_valid_shaft_level())
     {
-        if (grd(you.pos()) == DNGN_FLOOR
-            && place_specific_trap(you.pos(), TRAP_SHAFT))
+        if (grd(you.pos()) == DNGN_FLOOR)
         {
-            find_trap(you.pos())->reveal();
+            place_specific_trap(you.pos(), TRAP_SHAFT);
+            trap_at(you.pos())->reveal();
             mpr("A shaft materialises beneath you!");
         }
 
@@ -2708,13 +2706,13 @@ static void _cloud_card(int power, deck_rarity_type rarity)
             if (*ai == you.pos() || monster_at(*ai))
                 continue;
 
-            if (grd(*ai) == DNGN_FLOOR && env.cgrid(*ai) == EMPTY_CLOUD)
+            if (grd(*ai) == DNGN_FLOOR && !cloud_at(*ai))
             {
                 const int cloud_power = 5 + random2((power_level + 1) * 3);
                 place_cloud(cloudy, *ai, cloud_power, &you);
 
                 if (you.see_cell(*ai))
-                something_happened = true;
+                    something_happened = true;
             }
         }
     }
@@ -2761,7 +2759,7 @@ static void _storm_card(int power, deck_rarity_type rarity)
 
         if ((feat_has_solid_floor(grd(*ri))
              || grd(*ri) == DNGN_DEEP_WATER)
-            && env.cgrid(*ri) == EMPTY_CLOUD)
+            && !cloud_at(*ri))
         {
             place_cloud(CLOUD_STORM, *ri,
                         5 + (power_level + 1) * random2(10), & you);

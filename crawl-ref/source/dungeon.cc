@@ -89,7 +89,7 @@ static bool _builder_normal();
 static void _builder_items();
 static void _builder_monsters();
 static coord_def _place_specific_feature(dungeon_feature_type feat);
-static bool _place_specific_trap(const coord_def& where, trap_spec* spec,
+static void _place_specific_trap(const coord_def& where, trap_spec* spec,
                                  int charges = 0, bool known = false);
 static void _place_branch_entrances(bool use_vaults);
 static void _place_extra_vaults();
@@ -648,7 +648,7 @@ bool dgn_square_travel_ok(const coord_def &c)
     const dungeon_feature_type feat = grd(c);
     if (feat_is_trap(feat))
     {
-        const trap_def * const trap = find_trap(c);
+        const trap_def * const trap = trap_at(c);
         return !(trap && trap->type == TRAP_TELEPORT_PERMANENT);
     }
     else
@@ -1161,8 +1161,7 @@ void dgn_reset_level(bool enable_random_maps)
     env.map_seen.reset();
 
     // Delete all traps.
-    for (int i = 0; i < MAX_TRAPS; i++)
-        env.trap[i].type = TRAP_UNASSIGNED;
+    env.trap.clear();
 
     // Initialise all items.
     for (int i = 0; i < MAX_ITEMS; i++)
@@ -1176,20 +1175,13 @@ void dgn_reset_level(bool enable_random_maps)
     env.mons_alloc.init(MONS_NO_MONSTER);
     setup_vault_mon_list();
 
-    // Zap clouds
-    env.cgrid.init(EMPTY_CLOUD);
-
-    const cloud_struct empty;
-    env.cloud.init(empty);
-    env.cloud_no = 0;
+    env.cloud.clear();
 
     mgrd.init(NON_MONSTER);
     igrd.init(NON_ITEM);
-    env.tgrid.init(NON_ENTITY);
 
     // Reset all shops.
-    for (int shcount = 0; shcount < MAX_SHOPS; shcount++)
-        env.shop[shcount].type = SHOP_UNASSIGNED;
+    env.shop.clear();
 
     // Clear all markers.
     env.markers.clear();
@@ -3049,17 +3041,12 @@ static void _place_traps()
     const int num_traps = num_traps_for_place();
     int level_number = env.absdepth0;
 
-    ASSERT_RANGE(num_traps, 0, MAX_TRAPS + 1);
+    ASSERT(num_traps >= 0);
     dprf("attempting to place %d traps", num_traps);
 
     for (int i = 0; i < num_traps; i++)
     {
-        trap_def& ts(env.trap[i]);
-        if (ts.type != TRAP_UNASSIGNED)
-        {
-            dprf("trap %d already placed (by a vault?)", i);
-            continue;
-        }
+        trap_def ts;
 
         int tries;
         for (tries = 0; tries < 200; ++tries)
@@ -3089,10 +3076,10 @@ static void _place_traps()
 
         ts.type = type;
         grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
-        env.tgrid(ts.pos) = i;
         if (ts.type == TRAP_SHAFT && _shaft_known(level_number))
             ts.reveal();
         ts.prepare_ammo();
+        env.trap[ts.pos] = ts;
         dprf("placed a trap");
     }
 
@@ -4922,7 +4909,7 @@ static void _vault_grid(vault_placement &place,
         _vault_grid_glyph(place, where, vgrid);
 
     if (cell_is_solid(where))
-        delete_cloud_at(where);
+        delete_cloud(where);
 }
 
 static void _vault_grid_glyph_mons(vault_placement &place,
@@ -5262,20 +5249,6 @@ int greed_for_shop_type(shop_type shop, int level_number)
 }
 
 /**
- * Attempts to find a free space in env.shop for a new shop to be placed.
- *
- * @return      An index into env.shop that isn't currently assigned, or
- *              MAX_SHOPS if none was found.
- */
-static int _get_free_shop_index()
-{
-    for (int i = 0; i < MAX_SHOPS; i++)
-        if (env.shop[i].type == SHOP_UNASSIGNED)
-            return i;
-    return MAX_SHOPS;
-}
-
-/**
  * How greedy should a given shop be? (Applies a multiplier to prices.)
  *
  * @param type              The type of the shop. (E.g. SHOP_FOOD.)
@@ -5543,11 +5516,7 @@ void place_spec_shop(const coord_def& where, shop_spec &spec)
 {
     no_notes nx;
 
-    const int shop_index = _get_free_shop_index();
-    if (shop_index == MAX_SHOPS)
-        return;
-
-    shop_struct& shop = env.shop[shop_index];
+    shop_struct& shop = env.shop[where];
 
     const int level_number = env.absdepth0;
 
@@ -5563,7 +5532,6 @@ void place_spec_shop(const coord_def& where, shop_spec &spec)
     shop.greed = _shop_greed(shop.type, level_number, spec.greed);
     shop.pos = where;
 
-    env.tgrid(where) = shop_index;
     _set_grd(where, DNGN_ENTER_SHOP);
 
     const int num_items = _shop_num_items(shop.type, spec);
@@ -5720,14 +5688,14 @@ static bool _connect_spotty(const coord_def& from,
     return !spotty_path.empty();
 }
 
-bool place_specific_trap(const coord_def& where, trap_type spec_type, int charges)
+void place_specific_trap(const coord_def& where, trap_type spec_type, int charges)
 {
     trap_spec spec(spec_type);
 
-    return _place_specific_trap(where, &spec, charges);
+    _place_specific_trap(where, &spec, charges);
 }
 
-static bool _place_specific_trap(const coord_def& where, trap_spec* spec,
+static void _place_specific_trap(const coord_def& where, trap_spec* spec,
                                  int charges, bool known)
 {
     trap_type spec_type = spec->tr_type;
@@ -5748,19 +5716,13 @@ static bool _place_specific_trap(const coord_def& where, trap_spec* spec,
         spec_type = static_cast<trap_type>(random2(TRAP_MAX_REGULAR + 1));
     }
 
-    for (int tcount = 0; tcount < MAX_TRAPS; tcount++)
-        if (env.trap[tcount].type == TRAP_UNASSIGNED)
-        {
-            env.trap[tcount].type = spec_type;
-            env.trap[tcount].pos  = where;
-            grd(where)            = known ? trap_category(spec_type)
-                                          : DNGN_UNDISCOVERED_TRAP;
-            env.tgrid(where)      = tcount;
-            env.trap[tcount].prepare_ammo(charges);
-            return true;
-        }
-
-    return false;
+    trap_def t;
+    t.type = spec_type;
+    t.pos = where;
+    grd(where) = known ? trap_category(spec_type)
+                       : DNGN_UNDISCOVERED_TRAP;
+    t.prepare_ammo(charges);
+    env.trap[where] = t;
 }
 
 static void _add_plant_clumps(int frequency /* = 10 */,

@@ -121,7 +121,7 @@ static bool _do_build_level()
                 if (mons)
                     objstat_record_monster(mons);
 
-                const shop_struct * const shop = get_shop(pos);
+                const shop_struct * const shop = shop_at(pos);
                 if (shop && shop->defined())
                 {
                     for (const auto &item : shop->stock)

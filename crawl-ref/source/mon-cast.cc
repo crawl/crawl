@@ -91,6 +91,7 @@ static void _maybe_throw_ally(const monster &mons);
 static int _throw_site_score(const monster &thrower, const actor &victim,
                              const coord_def &site);
 static void _siren_sing(monster* mons, bool avatar);
+static void _doom_howl(monster &mon);
 static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot);
 
 void init_mons_spells()
@@ -1505,6 +1506,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_GRAVITAS:
     case SPELL_ENTROPIC_WEAVE:
     case SPELL_SUMMON_EXECUTIONERS:
+    case SPELL_DOOM_HOWL:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -3072,8 +3074,7 @@ static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe)
             continue;
         }
 
-        const int cloud = env.cgrid(*di);
-        if (cloud != EMPTY_CLOUD)
+        if (cloud_at(*di))
             continue;
 
         // Conjure flames *behind* the target; blocking the target from
@@ -3089,8 +3090,7 @@ static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe)
         for (adjacent_iterator ai(*di); ai; ++ai)
         {
             if (feat_is_traversable(grd(*ai))
-                && (env.cgrid(*ai) == EMPTY_CLOUD
-                    || !is_damaging_cloud(env.cloud[env.cgrid(*ai)].type)))
+                && is_damaging_cloud(cloud_type_at(*ai)))
             {
                 floor_count++;
             }
@@ -5913,11 +5913,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                     move_items(*ai, mons->pos());
 
                 // All clouds are destroyed.
-                if (env.cgrid(*ai) != EMPTY_CLOUD)
-                    delete_cloud(env.cgrid(*ai));
+                delete_cloud(*ai);
 
                 // All traps are destroyed.
-                if (trap_def *ptrap = find_trap(*ai))
+                if (trap_def *ptrap = trap_at(*ai))
                     ptrap->destroy();
 
                 // Actually place the wall.
@@ -6524,6 +6523,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
         return;
     }
+
+    case SPELL_DOOM_HOWL:
+        _doom_howl(*mons);
+        break;
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -7423,6 +7426,19 @@ static bool _should_siren_sing(monster* mons, bool avatar)
 }
 
 /**
+ * Have a monster attempt to cast Doom Howl.
+ *
+ * @param mon   The howling monster.
+ */
+static void _doom_howl(monster &mon)
+{
+    mprf("%s unleashes a %s howl, and it begins to echo in your mind!",
+         mon.name(DESC_THE).c_str(),
+         silenced(mon.pos()) ? "silent" : "terrible");
+    you.duration[DUR_DOOM_HOWL] = random_range(120, 180);
+}
+
+/**
  * Have a siren or merfolk avatar attempt to mesmerize the player.
  *
  * @param mons   The singing monster.
@@ -8035,6 +8051,10 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
             }
 
         return true;
+
+    case SPELL_DOOM_HOWL:
+        return !foe || !foe->is_player() || you.duration[DUR_DOOM_HOWL]
+                || you.duration[DUR_DOOM_HOWL_IMMUNITY];
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:

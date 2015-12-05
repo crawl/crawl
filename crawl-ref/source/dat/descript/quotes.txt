@@ -1170,6 +1170,14 @@ dire flail
 when they see their doughty knight's skull beaten in by our brave countryman.’”
     -_Tales of Chivalry; or, Perils by Flood and Field_. 1830.
 %%%%
+doom hound
+
+“Standing over Hugo, and plucking at his throat, there stood a foul thing, a
+great, black beast, shaped like a hound, yet larger than any hound that ever
+mortal eye has rested upon. And even as they looked the thing tore the throat
+out of Hugo Baskerville...”
+    -Arthur Conan Doyle, _The Hound of the Baskervilles_. 1902.
+%%%%
 Dragon's Call spell
 
  “This is where the dragons went.
@@ -3312,6 +3320,13 @@ time to time, to pass across the glowing face of the pile, like a bat in front
 of a candle.”
     -Victor Hugo, _The Hunchback of Notre-Dame_, 10, ch. IV. 1831.
      trans. Isabel F. Hapgood
+%%%%
+wolf
+
+“Teacher: How does a dog smell?
+ Student: I don't know.
+ Teacher: Correct!”
+    -Traditional Spanish joke.
 %%%%
 water nymph
 

@@ -1168,7 +1168,7 @@ bool bolt::hit_wall()
 void bolt::affect_cell()
 {
     // Shooting through clouds affects accuracy.
-    if (env.cgrid(pos()) != EMPTY_CLOUD && hit != AUTOMATIC_HIT)
+    if (cloud_at(pos()) && hit != AUTOMATIC_HIT)
         hit = max(hit - 2, 0);
 
     fake_flavour();
@@ -2826,20 +2826,17 @@ void bolt::affect_place_clouds()
     const coord_def p = pos();
 
     // Is there already a cloud here?
-    const int cloudidx = env.cgrid(p);
-    if (cloudidx != EMPTY_CLOUD)
+    if (cloud_struct* cloud = cloud_at(p))
     {
-        cloud_type& ctype = env.cloud[cloudidx].type;
-
         // fire cancelling cold & vice versa
-        if ((ctype == CLOUD_COLD
+        if ((cloud->type == CLOUD_COLD
              && (flavour == BEAM_FIRE || flavour == BEAM_LAVA))
-            || (ctype == CLOUD_FIRE && flavour == BEAM_COLD))
+            || (cloud->type == CLOUD_FIRE && flavour == BEAM_COLD))
         {
             if (player_can_hear(p))
                 mprf(MSGCH_SOUND, "You hear a sizzling sound!");
 
-            delete_cloud(cloudidx);
+            delete_cloud(p);
             extra_range_used += 5;
         }
         return;

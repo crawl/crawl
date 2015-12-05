@@ -12,6 +12,7 @@
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "cloud.h"
 #include "colour.h"
 #include "dbg-util.h"
 #include "delay.h"
@@ -437,11 +438,10 @@ void debug_stethoscope(int mon)
         else
             stethpos = you.pos() + stth.delta;
 
-        if (env.cgrid(stethpos) != EMPTY_CLOUD)
+        if (cloud_struct* cloud = cloud_at(stethpos))
         {
             mprf(MSGCH_DIAGNOSTICS, "cloud type: %d delay: %d",
-                 env.cloud[ env.cgrid(stethpos) ].type,
-                 env.cloud[ env.cgrid(stethpos) ].decay);
+                 cloud->type, cloud->decay);
         }
 
         if (!monster_at(stethpos))

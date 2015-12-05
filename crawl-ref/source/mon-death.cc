@@ -1305,11 +1305,8 @@ static bool _explode_monster(monster* mons, killer_type killer,
     else if (mons->has_ench(ENCH_INNER_FLAME))
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
-            if (!cell_is_solid(*ai) && env.cgrid(*ai) == EMPTY_CLOUD
-                && !one_chance_in(5))
-            {
+            if (!cell_is_solid(*ai) && !cloud_at(*ai) && !one_chance_in(5))
                 place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), agent);
-            }
     }
 
     // Detach monster from the grid first, so it doesn't get hit by
@@ -3287,7 +3284,7 @@ void mons_felid_revive(monster* mons)
         revive_place.y = random2(GYM);
         if (!in_bounds(revive_place)
             || grd(revive_place) != DNGN_FLOOR
-            || env.cgrid(revive_place) != EMPTY_CLOUD
+            || cloud_at(revive_place)
             || monster_at(revive_place)
             || env.pgrid(revive_place) & FPROP_NO_TELE_INTO
             || grid_distance(revive_place, mons->pos()) < 9)

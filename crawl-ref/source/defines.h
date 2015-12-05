@@ -34,14 +34,12 @@ typedef uint32_t ucs_t;
 // Max ghosts on a level.
 const int MAX_GHOSTS = 10;
 
-#define NON_ENTITY 27000
-
 enum extra_monster_index_type
 {
     MAX_MONSTERS = 700,                  // max size of monster array {dlb}
     ANON_FRIENDLY_MONSTER = MAX_MONSTERS,// unknown/dead ally, for actor blaming
     YOU_FAULTLESS,                       // full xp but no penalty (reflection)
-    NON_MONSTER  = NON_ENTITY,           // no monster
+    NON_MONSTER  = 27000,                // no monster
 
     MHITNOT = NON_MONSTER,
     MHITYOU,
@@ -59,7 +57,7 @@ enum extra_monster_index_type
 // max size of item list {dlb}:
 #define MAX_ITEMS 2000
 // non-item -- (ITEMS + 1) {dlb}
-#define NON_ITEM  NON_ENTITY
+#define NON_ITEM 27000
 #define ITEM_IN_INVENTORY (coord_def(-1, -1))
 #define ITEM_IN_MONSTER_INVENTORY (coord_def(-2, -2))
 #define ITEM_IN_SHOP 32767
@@ -69,16 +67,6 @@ COMPILE_CHECK(ITEM_IN_SHOP > NON_ITEM + MAX_MONSTERS);
 
 #if NON_ITEM <= MAX_ITEMS
 #error NON_ITEM must be > MAX_ITEMS
-#endif
-
-// max size of cloud array {dlb}:
-#define MAX_CLOUDS 600
-
-// empty cloud -- (CLOUDS + 1) {dlb}:
-#define EMPTY_CLOUD NON_ENTITY
-
-#if EMPTY_CLOUD <= MAX_CLOUDS
-#error EMPTY_CLOUD must be > MAX_CLOUDS
 #endif
 
 // max x-bound for level generation {dlb}
@@ -125,12 +113,6 @@ const int LABYRINTH_BORDER = 4;
 #define VIEW_MIN_WIDTH  ENV_SHOW_DIAMETER
 #define VIEW_MIN_HEIGHT ENV_SHOW_DIAMETER
 #define MSG_MIN_HEIGHT  5
-
-// max traps per level
-#define MAX_TRAPS         400
-
-// max shops per level
-#define MAX_SHOPS         64
 
 // max shops randomly generated in a level.
 // changing this affects the total number of shops in a game

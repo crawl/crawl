@@ -23,7 +23,6 @@
 #include "beam.h"          // For Lajatang of Order's silver damage
 #include "cloud.h"         // For storm bow's and robe of clouds' rain
 #include "english.h"       // For apostrophise
-#include "env.h"           // For storm bow env.cgrid
 #include "fight.h"
 #include "food.h"          // For evokes
 #include "ghost.h"         // For is_dragonkind ghost_demon datas
@@ -566,7 +565,7 @@ static void _STORM_BOW_world_reacts(item_def *item)
         return;
 
     for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID); ri; ++ri)
-        if (!cell_is_solid(*ri) && env.cgrid(*ri) == EMPTY_CLOUD && one_chance_in(5))
+        if (!cell_is_solid(*ri) && !cloud_at(*ri) && one_chance_in(5))
             place_cloud(CLOUD_RAIN, *ri, random2(20), &you, 3);
 }
 
@@ -597,11 +596,8 @@ static void _RCLOUDS_world_reacts(item_def *item)
         cloud = CLOUD_MIST;
 
     for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID); ri; ++ri)
-        if (!cell_is_solid(*ri) && env.cgrid(*ri) == EMPTY_CLOUD
-                && one_chance_in(20))
-        {
+        if (!cell_is_solid(*ri) && !cloud_at(*ri) && one_chance_in(20))
             place_cloud(cloud, *ri, random2(10), &you, 1);
-        }
 }
 
 static void _RCLOUDS_equip(item_def *item, bool *show_msgs, bool unmeld)
@@ -1387,7 +1383,7 @@ static void _FROSTBITE_melee_effects(item_def* weapon, actor* attacker,
     coord_def spot = defender->pos();
     if (!mondied
         && !cell_is_solid(spot)
-        && env.cgrid(spot) == EMPTY_CLOUD
+        && !cloud_at(spot)
         && one_chance_in(5))
     {
          place_cloud(CLOUD_COLD, spot, random_range(3, 5), attacker, 0);

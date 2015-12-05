@@ -374,27 +374,11 @@ void wizard_map_level()
     magic_mapping(1000, 100, true, true);
 }
 
-static int find_trap_slot()
-{
-    for (int i = 0; i < MAX_TRAPS; ++i)
-        if (env.trap[i].type == TRAP_UNASSIGNED)
-            return i;
-
-    return -1;
-}
-
 bool debug_make_trap(const coord_def& pos)
 {
     char requested_trap[80];
-    int trap_slot  = find_trap_slot();
     trap_type trap = TRAP_UNASSIGNED;
     int gridch     = grd(pos);
-
-    if (trap_slot == -1)
-    {
-        mpr("Sorry, this level can't take any more traps.");
-        return false;
-    }
 
     if (gridch != DNGN_FLOOR)
     {
@@ -459,21 +443,16 @@ bool debug_make_trap(const coord_def& pos)
         }
     }
 
-    bool success = place_specific_trap(you.pos(), trap);
-    if (success)
-    {
-        mprf("Created %s, marked it undiscovered.",
-             (trap == TRAP_RANDOM)
-                ? "a random trap"
-                : env.trap[env.tgrid(you.pos())].name(DESC_A).c_str());
-    }
-    else
-        mpr("Could not create trap - too many traps on level.");
+    place_specific_trap(you.pos(), trap);
+    mprf("Created %s, marked it undiscovered.",
+         (trap == TRAP_RANDOM)
+            ? "a random trap"
+            : trap_at(you.pos())->name(DESC_A).c_str());
 
     if (trap == TRAP_SHAFT && !is_valid_shaft_level())
         mpr("NOTE: Shaft traps aren't valid on this level.");
 
-    return success;
+    return true;
 }
 
 bool debug_make_shop(const coord_def& pos)
@@ -481,22 +460,6 @@ bool debug_make_shop(const coord_def& pos)
     if (grd(pos) != DNGN_FLOOR)
     {
         mpr("Insufficient floor-space for new Wal-Mart.");
-        return false;
-    }
-
-    bool have_shop_slots = false;
-    for (int i = 0; i < MAX_SHOPS; ++i)
-    {
-        if (env.shop[i].type == SHOP_UNASSIGNED)
-        {
-            have_shop_slots = true;
-            break;
-        }
-    }
-
-    if (!have_shop_slots)
-    {
-        mpr("There are too many shops on this level.");
         return false;
     }
 
@@ -519,7 +482,6 @@ bool debug_make_shop(const coord_def& pos)
     }
 
     place_spec_shop(pos, new_shop_type);
-    link_items();
     mpr("Done.");
     return true;
 }

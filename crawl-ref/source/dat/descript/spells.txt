@@ -434,6 +434,11 @@ creature that resists the effect will still be irresistibly blinked a shorter
 distance, and any monster it affects at all has a chance of being confused by
 the warping of space.
 %%%%
+Doom Howl spell
+
+Unleashes a piercing howl that catches and echoes in victims' minds. While
+those echoes linger, more hounds will hear and track them to their source.
+%%%%
 Dragon Form spell
 
 {{

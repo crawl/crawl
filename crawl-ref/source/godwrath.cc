@@ -1752,9 +1752,7 @@ static bool _pakellas_drain_rods()
             {
                 you.inv[i].charges = 0;
                 if (you.inv[i].charge_cap > 6 * ROD_CHARGE_MULT)
-                {
                     you.inv[i].charge_cap -= ROD_CHARGE_MULT;
-                }
                 if (you.inv[i].rod_plus > -3)
                     you.inv[i].rod_plus -= 1 + random2(2);
 

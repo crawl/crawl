@@ -522,9 +522,10 @@ Pakellas wrath
 Those that offend Pakellas will find their magical devices drained of their
 power, their magic reserves emptied, and even their very life force fed
 into the ever-hungry engine that is progress on Pakellas' behalf. Those who
-abandon Pakellas altogether will further find that their devices fail to
-work as intended - though they still have their intended effects, they will
-also harm the user in their use.
+abandon Pakellas altogether will further find themselves unable to regenerate
+their magical power so long as Pakellas' attention remains on them, and that
+their devices fail to work as intended - though they still have their
+intended effects, they will also harm the user in their use.
 %%%%
 Qazlal wrath
 

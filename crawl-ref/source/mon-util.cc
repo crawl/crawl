@@ -1033,7 +1033,7 @@ bool mons_is_statue(monster_type mc)
  */
 static void _mimic_vanish(const coord_def& pos, const string& name)
 {
-    const bool can_place_smoke = env.cgrid(pos) == EMPTY_CLOUD;
+    const bool can_place_smoke = !cloud_at(pos);
     if (can_place_smoke)
         place_cloud(CLOUD_BLACK_SMOKE, pos, 2 + random2(2), nullptr);
     if (!you.see_cell(pos))
@@ -4047,7 +4047,7 @@ bool mons_can_traverse(const monster* mon, const coord_def& p,
     if (!mon->is_habitable(p))
         return false;
 
-    const trap_def* ptrap = find_trap(p);
+    const trap_def* ptrap = trap_at(p);
     if (checktraps && ptrap)
     {
         const trap_type tt = ptrap->type;

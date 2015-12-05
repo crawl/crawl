@@ -933,12 +933,10 @@ static int dgn_cloud_at(lua_State *ls)
     if (!in_bounds(c))
         return 0;
 
-    int cloudno = env.cgrid(c);
-
-    if (cloudno == EMPTY_CLOUD)
-        lua_pushstring(ls, "none");
+    if (cloud_struct* cloud = cloud_at(c))
+        lua_pushstring(ls, cloud->cloud_name(true).c_str());
     else
-        lua_pushstring(ls, cloud_name_at_index(cloudno).c_str());
+        lua_pushstring(ls, "none");
 
     return 1;
 }
@@ -1276,8 +1274,8 @@ static int dgn_delete_cloud(lua_State *ls)
 {
     COORDS(c, 1, 2);
 
-    if (in_bounds(c) && env.cgrid(c) != EMPTY_CLOUD)
-        delete_cloud(env.cgrid(c));
+    if (in_bounds(c))
+        delete_cloud(c);
 
     return 0;
 }
@@ -1925,7 +1923,7 @@ LUAFN(_vp_size)
 LUAFN(_vp_orient)
 {
     VP(vp);
-    PLUARET(number, vp.orient)
+    PLUARET(number, vp.orient);
 }
 
 LUAFN(_vp_map)

@@ -5,6 +5,7 @@
 #include <cmath>
 #include <utility> // swap
 
+#include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
 #include "english.h"
@@ -575,7 +576,7 @@ static bool _cloudable(coord_def loc, bool avoid_clouds)
 {
     return in_bounds(loc)
            && !cell_is_solid(loc)
-           && (!avoid_clouds || env.cgrid(loc) == EMPTY_CLOUD);
+           && !(avoid_clouds && cloud_at(loc));
 }
 
 bool targetter_cloud::valid_aim(coord_def a)
@@ -596,7 +597,7 @@ bool targetter_cloud::valid_aim(coord_def a)
         return notify_fail(_wallmsg(a));
     if (agent)
     {
-        if (env.cgrid(a) != EMPTY_CLOUD && avoid_clouds)
+        if (cloud_at(a) && avoid_clouds)
             return notify_fail("There's already a cloud there.");
         ASSERT(_cloudable(a, avoid_clouds));
     }

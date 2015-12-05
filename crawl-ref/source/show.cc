@@ -260,9 +260,8 @@ void update_item_at(const coord_def &gp, bool detected)
     env.map_knowledge(gp).set_item(get_item_info(eitem), more_items);
 }
 
-static void _update_cloud(int cloudno)
+static void _update_cloud(cloud_struct& cloud)
 {
-    cloud_struct& cloud = env.cloud[cloudno];
     const coord_def gp = cloud.pos;
 
     unsigned short ch = 0;
@@ -288,7 +287,7 @@ static void _update_cloud(int cloudno)
     else if (dur > 3)
         dur = 3;
 
-    cloud_info ci(cloud.type, get_cloud_colour(cloudno), dur, ch, gp,
+    cloud_info ci(cloud.type, get_cloud_colour(cloud), dur, ch, gp,
                   cloud.killer);
     env.map_knowledge(gp).set_cloud(ci);
 }
@@ -469,8 +468,8 @@ static void _update_monster(monster* mons)
     // Should match directn.cc's _mon_exposed
     if (grd(gp) == DNGN_SHALLOW_WATER
             && !mons->airborne()
-            && env.cgrid(gp) == EMPTY_CLOUD
-        || is_opaque_cloud(env.cgrid(gp))
+            && !cloud_at(gp)
+        || cloud_at(gp) && is_opaque_cloud(cloud_at(gp)->type)
             && !mons->submerged()
             && !mons->is_insubstantial())
     {
@@ -535,14 +534,8 @@ void show_update_at(const coord_def &gp, layers_type layers)
         }
 
         if (layers & LAYER_CLOUDS)
-        {
-            const int cloud = env.cgrid(gp);
-            if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE
-                && env.cloud[cloud].pos == gp)
-            {
-                _update_cloud(cloud);
-            }
-        }
+            if (cloud_struct* cloud = cloud_at(gp))
+                _update_cloud(*cloud);
 
         if (layers & LAYER_ITEMS)
             update_item_at(gp);
@@ -582,9 +575,7 @@ void show_init(layers_type layers)
         env.map_knowledge(loc).flags &= ~MAP_INVISIBLE_UPDATE;
 }
 
-// Emphasis may change while off-level (precisely, after
-// taking stairs and saving the level, when we reach
-// the next level). This catches up.
+// Emphasis may change while off-level. This catches up.
 // It should be equivalent to looping over the whole map
 // and setting MAP_EMPHASIZE for any coordinate with
 // emphasise(p) == true, but we optimise a bit.

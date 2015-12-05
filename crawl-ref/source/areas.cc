@@ -400,7 +400,7 @@ void create_sanctuary(const coord_def& center, int time)
         if (testbits(env.pgrid(pos), FPROP_BLOODY) && you.see_cell(pos))
             blood_count++;
 
-        if (trap_def* ptrap = find_trap(pos))
+        if (trap_def* ptrap = trap_at(pos))
         {
             if (!ptrap->is_known())
             {
@@ -463,7 +463,7 @@ void create_sanctuary(const coord_def& center, int time)
 
         if (!is_harmless_cloud(cloud_type_at(pos)))
         {
-            delete_cloud(env.cgrid(pos));
+            delete_cloud(pos);
             if (you.see_cell(pos))
                 cloud_count++;
         }

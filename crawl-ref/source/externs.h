@@ -312,6 +312,9 @@ struct cloud_struct
                      name(""), tile(""), excl_rad(-1)
     {
     }
+    cloud_struct(coord_def p, cloud_type c, int d, int spread, kill_category kc,
+                 killer_type kt, mid_t src, int clr, string name_, string tile_,
+                 int excl);
 
     bool defined() const { return type != CLOUD_NONE; }
     bool temporary() const { return excl_rad == -1; }
@@ -321,7 +324,7 @@ struct cloud_struct
     void set_whose(kill_category _whose);
     void set_killer(killer_type _killer);
 
-    string cloud_name(const string &default_name = "", bool terse = false) const;
+    string cloud_name(bool terse = false) const;
     void announce_actor_engulfed(const actor *engulfee,
                                  bool beneficial = false) const;
 
@@ -342,6 +345,9 @@ struct shop_struct
     FixedVector<uint8_t, 3> keeper_name;
 
     vector<item_def> stock;
+#if TAG_MAJOR_VERSION == 34
+    uint8_t num; // used in a save compat hack
+#endif
 
     shop_struct () : pos(), greed(0), type(SHOP_UNASSIGNED), level(0),
                      shop_name(""), shop_type_name(""), shop_suffix_name("") { }

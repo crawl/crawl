@@ -2379,7 +2379,7 @@ void monster::struggle_against_net()
 
     if (net == NON_ITEM)
     {
-        trap_def *trap = find_trap(pos());
+        trap_def *trap = trap_at(pos());
         if (trap && trap->type == TRAP_WEB)
         {
 
@@ -2612,8 +2612,8 @@ static void _post_monster_move(monster* mons)
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
             if (!cell_is_solid(*ai)
-                && (env.cgrid(*ai) == EMPTY_CLOUD
-                    || env.cloud[env.cgrid(*ai)].type == ctype))
+                && (!cloud_at(*ai)
+                    || cloud_at(*ai)->type == ctype))
             {
                 place_cloud(ctype, *ai, 2 + random2(6), mons);
             }
@@ -3177,8 +3177,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     if (target_grid == DNGN_SHALLOW_WATER && mons_base_type(mons) == MONS_KRAKEN)
         return false;
 
-    const int targ_cloud_num = env.cgrid(targ);
-    if (mons_avoids_cloud(mons, targ_cloud_num))
+    if (mons_avoids_cloud(mons, targ))
         return false;
 
     if (env.level_state & LSTATE_SLIMY_WALL && _check_slime_walls(mons, targ))

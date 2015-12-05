@@ -410,7 +410,7 @@ static bool _cell_vetoes_teleport(const coord_def cell, bool check_monsters = tr
         return true;
 
     // As do all clouds; this may change.
-    if (env.cgrid(cell) != EMPTY_CLOUD && !wizard_tele)
+    if (cloud_at(cell) && !wizard_tele)
         return true;
 
     if (cell_is_solid(cell))
@@ -899,8 +899,8 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
     place_specific_trap(randomized_here, TRAP_GOLUBRIA);
     env.level_state |= LSTATE_GOLUBRIA;
 
-    trap_def *trap = find_trap(randomized_where);
-    trap_def *trap2 = find_trap(randomized_here);
+    trap_def *trap = trap_at(randomized_where);
+    trap_def *trap2 = trap_at(randomized_here);
     if (!trap || !trap2)
     {
         mpr("Something buggy happened.");

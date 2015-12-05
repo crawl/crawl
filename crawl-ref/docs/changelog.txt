@@ -1,4 +1,4 @@
-Stone Soup 0.18 (up to 0.18-a0-592-g12a94aa)
+Stone Soup 0.18 (up to 0.18-a0-642-g77daf3c)
 --------------------------------------------
 
 Highlights
@@ -33,6 +33,8 @@ Gods
   - 1*: Quick Charge: spend 2/3 your current MP pool to add some charges
     to a wand or rod proportional to your Evocations, your current MP pool,
     and the capacity of the device.
+  - At 2*, Pakellas gifts you a wand once (of any type other than heal
+    wounds, hasting, and teleportation).
   - 3*: Device Surge: on your next use of an evocable item, spends 1-9 MP
     to apply one to three enhancers to its power output, with maximum
     MP and number of enhancers dependent on piety.
@@ -85,6 +87,8 @@ Monsters
     Spider and in packs in Depths.
   - Iron giants, with all the resilience that iron implies and the ability to
     throw you into the pack of giants they lead.
+  - Doom hounds, lurking in Tartarus who can howl to summon a pack of their
+    brethren.
 * Mnoleg gains Random Bolt and Dig.
 * Gloorx Vloq gains Summon Executioners and Black Mark.
 * Juggernauts now have two less damaging attacks instead of one powerful
@@ -117,10 +121,9 @@ Monsters
 
 Spells
 ------
-* New spell: Yara's Violent Unravelling (L5 Hexes/Transumations); dispels
-  all cancellable effects on the target and - if any were dispelled - causes
-  a radius 1 explosion with damage proportional to the number of dispelled
-  effects.
+* New spell: Yara's Violent Unravelling (L5 Hexes/Transumations). Dispels
+  all cancellable effects on the target and, if any were dispelled, causes
+  a damaging explosion of mutagenic energy around the victim.
 * Hydra Form now has a fixed number of heads.
 
 Interface
