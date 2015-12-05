@@ -2891,12 +2891,6 @@ bool stasis_blocks_effect(bool calc_unid,
 {
     if (you.stasis(calc_unid))
     {
-        item_def *amulet = you.slot_item(EQ_AMULET, false);
-
-        // For non-amulet sources of stasis.
-        if (amulet && amulet->sub_type != AMU_STASIS)
-            amulet = 0;
-
         if (msg)
         {
             // Override message for formicids
@@ -2907,7 +2901,7 @@ bool stasis_blocks_effect(bool calc_unid,
             }
             else
             {
-                const string name(amulet? amulet->name(DESC_YOUR) : "Something");
+                const string name("Something");
                 const string message = make_stringf(msg, name.c_str());
                 mpr(message);
             }

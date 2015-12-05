@@ -228,7 +228,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     artefact_known_props_t known;
     artefact_properties(item, proprt, known);
 
-    if (proprt[ARTP_AC])
+    if (proprt[ARTP_AC] || proprt[ARTP_SHIELDING])
         you.redraw_armour_class = true;
 
     if (proprt[ARTP_EVASION])
@@ -293,7 +293,7 @@ static void _unequip_artefact_effect(item_def &item,
     artefact_properties(item, proprt, known);
     const bool msg = !show_msgs || *show_msgs;
 
-    if (proprt[ARTP_AC])
+    if (proprt[ARTP_AC] || proprt[ARTP_SHIELDING])
         you.redraw_armour_class = true;
 
     if (proprt[ARTP_EVASION])
@@ -1151,6 +1151,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case RING_PROTECTION:
+    case AMU_REFLECTION:
         you.redraw_armour_class = true;
         break;
 
@@ -1221,44 +1222,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     case AMU_GUARDIAN_SPIRIT:
         _spirit_shield_message(unmeld);
         break;
-
-    case AMU_STASIS:
-        // Berserk is possible with a moth of wrath that affects you while
-        // donning the amulet.
-        int amount = you.duration[DUR_HASTE] + you.duration[DUR_SLOW]
-                     + you.duration[DUR_BERSERK];
-        if (you.duration[DUR_TELEPORT])
-            amount += 30 + random2(150);
-        if (amount)
-        {
-            mprf("The amulet engulfs you in a%s magical discharge!",
-                 (amount > 250) ? " massive" :
-                 (amount >  50) ? " violent" :
-                                  "");
-            // XXX: This can probably be improved.
-            contaminate_player(pow(amount, 0.333) * 1000, item_type_known(item));
-
-            int dir = 0;
-            if (you.duration[DUR_HASTE])
-                dir++;
-            if (you.duration[DUR_SLOW])
-                dir--;
-            if (dir > 0)
-                mprf(MSGCH_DURATION, "You abruptly slow down.");
-            else if (dir < 0)
-                mprf(MSGCH_DURATION, "Your slowness suddenly goes away.");
-            if (you.duration[DUR_TELEPORT])
-                mprf(MSGCH_DURATION, "You feel strangely stable.");
-            if (you.duration[DUR_BERSERK])
-                mprf(MSGCH_DURATION, "You violently calm down.");
-
-            you.duration[DUR_HASTE] = 0;
-            you.duration[DUR_SLOW] = 0;
-            you.duration[DUR_TELEPORT] = 0;
-            you.duration[DUR_BERSERK] = 0;
-        }
-        else
-            mprf("You feel %s static.", you.species == SP_FORMICID ? "familiarly" : "strangely");
     }
 
     bool new_ident = false;
@@ -1339,6 +1302,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         break;
 
     case RING_PROTECTION:
+    case AMU_REFLECTION:
         you.redraw_armour_class = true;
         break;
 

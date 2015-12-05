@@ -139,7 +139,7 @@ const char* jewellery_base_ability_string(int subtype)
 #endif
     case AMU_GUARDIAN_SPIRIT:     return "Spirit";
     case AMU_FAITH:               return "Faith";
-    case AMU_STASIS:              return "Stasis";
+    case AMU_REFLECTION:          return "Reflect";
     case AMU_INACCURACY:          return "Inacc";
     }
     return "";
@@ -216,6 +216,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_INTELLIGENCE,          PROPN_NUMERAL },
         { ARTP_DEXTERITY,             PROPN_NUMERAL },
         { ARTP_SLAYING,               PROPN_NUMERAL },
+        { ARTP_SHIELDING,             PROPN_NUMERAL },
 
         // Qualitative attributes (and Stealth)
         { ARTP_SEE_INVISIBLE,         PROPN_PLAIN },
@@ -394,9 +395,8 @@ static const char* _jewellery_base_ability_description(int subtype)
                "magic.";
     case AMU_FAITH:
         return "It allows you to gain divine favour quickly.";
-    case AMU_STASIS:
-        return "It prevents you from being teleported, slowed, hasted or "
-               "paralysed.";
+    case AMU_REFLECTION:
+        return "It shields you and reflects attacks.";
     case AMU_INACCURACY:
         return "It reduces the accuracy of all your attacks.";
     }
@@ -460,6 +460,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_DRAIN, "It causes draining when unequipped.", false},
         { ARTP_CONFUSE, "It may confuse you when you take damage.", false},
         { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
+        { ARTP_SHIELDING, "It affects your SH (%d).", false},
     };
 
     // Give a short description of the base type, for base types with no
@@ -1482,6 +1483,11 @@ static string _describe_jewellery(const item_def &item, bool verbose)
                 description += make_stringf("\nIt affects your accuracy and"
                       " damage with ranged weapons and melee attacks (%+d).",
                       item.plus);
+                break;
+
+            case AMU_REFLECTION:
+                description += make_stringf("\nIt affects your shielding (%+d).",
+                                            item.plus);
                 break;
 
             default:

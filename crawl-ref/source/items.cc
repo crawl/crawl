@@ -4452,7 +4452,7 @@ bool get_item_by_name(item_def *item, const char* specs,
         break;
 
     case OBJ_JEWELLERY:
-        if (jewellery_is_amulet(*item))
+        if (jewellery_is_amulet(*item) && item->sub_type != AMU_REFLECTION)
             break;
 
         switch (item->sub_type)
@@ -4463,6 +4463,7 @@ bool get_item_by_name(item_def *item, const char* specs,
         case RING_STRENGTH:
         case RING_DEXTERITY:
         case RING_INTELLIGENCE:
+        case AMU_REFLECTION:
             item->plus = 5;
         default:
             break;

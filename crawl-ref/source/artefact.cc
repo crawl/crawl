@@ -421,6 +421,7 @@ struct jewellery_fake_artp
 static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { AMU_RAGE, { { ARTP_BERSERK, 1 } } },
     { AMU_REGENERATION, { { ARTP_REGENERATION, 1 } } },
+    { AMU_REFLECTION, { { ARTP_SHIELDING, 0 } } },
 
     { RING_INVISIBILITY, { { ARTP_INVISIBLE, 1 } } },
     { RING_MAGICAL_POWER, { { ARTP_MAGICAL_POWER, 9 } } },
@@ -774,6 +775,7 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 1; }, 0, 0 },
     { "Fragile", ARTP_VAL_BOOL, 25, // ARTP_FRAGILE,
         nullptr, []() { return 1; }, 0, 0 },
+    { "SH", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_SHIELDING,
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000
@@ -1514,12 +1516,12 @@ static bool _randart_is_redundant(const item_def &item,
         provides = ARTP_SLAYING;
         break;
 
-    case AMU_STASIS:
-        provides = ARTP_PREVENT_TELEPORTATION;
-        break;
-
     case AMU_REGENERATION:
         provides = ARTP_REGENERATION;
+        break;
+
+    case AMU_REFLECTION:
+        provides = ARTP_SHIELDING;
         break;
     }
 
@@ -1545,15 +1547,6 @@ static bool _randart_is_conflicting(const item_def &item,
 
     if (item.base_type != OBJ_JEWELLERY)
         return false;
-
-    if (item.sub_type == AMU_STASIS
-        && (proprt[ARTP_BLINK] != 0
-            || proprt[ARTP_CAUSE_TELEPORTATION] != 0
-            || proprt[ARTP_ANGRY] != 0
-            || proprt[ARTP_BERSERK] != 0))
-    {
-        return true;
-    }
 
     if (item.sub_type == RING_WIZARDRY && proprt[ARTP_INTELLIGENCE] < 0)
         return true;

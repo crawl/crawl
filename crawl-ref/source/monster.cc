@@ -948,20 +948,6 @@ void monster::equip_jewellery(item_def &item, bool msg)
         simple_monster_message(this, str.c_str());
     }
 
-    if (item.sub_type == AMU_STASIS)
-    {
-        if (has_ench(ENCH_TP))
-            del_ench(ENCH_TP);
-        if (has_ench(ENCH_SLOW))
-            del_ench(ENCH_SLOW);
-        if (has_ench(ENCH_HASTE))
-            del_ench(ENCH_HASTE);
-        if (has_ench(ENCH_PARALYSIS))
-            del_ench(ENCH_PARALYSIS);
-        if (has_ench(ENCH_BERSERK))
-            del_ench(ENCH_BERSERK);
-    }
-
     if (item.sub_type == AMU_CLARITY)
     {
         if (has_ench(ENCH_CONFUSION))
@@ -1870,7 +1856,8 @@ static int _get_monster_jewellery_value(const monster *mon,
 
     if (item.sub_type == RING_PROTECTION
         || item.sub_type == RING_EVASION
-        || item.sub_type == RING_SLAYING)
+        || item.sub_type == RING_SLAYING
+        || item.sub_type == AMU_REFLECTION)
     {
         value += item.plus;
     }
@@ -3179,7 +3166,8 @@ bool monster::pacified() const
 bool monster::shielded() const
 {
     return shield() || has_ench(ENCH_CONDENSATION_SHIELD)
-                    || has_ench(ENCH_BONE_ARMOUR);
+                    || has_ench(ENCH_BONE_ARMOUR)
+                    || reflection();
 }
 
 int monster::shield_bonus() const
@@ -3206,6 +3194,15 @@ int monster::shield_bonus() const
     {
         const int bone_armour = 6 + get_hit_dice() / 3;
         sh = max(sh + bone_armour, bone_armour);
+    }
+
+    // shielding from jewellery
+    const item_def *amulet = mslot_item(MSLOT_JEWELLERY);
+    if (amulet && amulet->sub_type == AMU_REFLECTION)
+    {
+        const int jewellery_plus = amulet->plus;
+        ASSERT(abs(jewellery_plus) < 30); // sanity check
+        sh += jewellery_plus * 2;
     }
 
     return sh;
@@ -6690,10 +6687,7 @@ bool monster::check_stasis(bool silent, bool calc_unid) const
         return false;
 
     if (!silent && you.can_see(*this) && !mons_is_lurking(this))
-    {
         simple_monster_message(this, " looks uneasy for a moment.");
-        id_if_worn(MSLOT_JEWELLERY, OBJ_JEWELLERY, AMU_STASIS);
-    }
 
     return true;
 }

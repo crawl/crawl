@@ -174,17 +174,31 @@ bool ranged_attack::handle_phase_blocked()
     ASSERT(!attack_ignores_shield(false));
     string punctuation = ".";
     string verb = "block";
-    if (defender_shield && is_shield(*defender_shield)
-        && shield_reflects(*defender_shield))
+
+    const bool reflected_by_shield = defender_shield
+                                     && is_shield(*defender_shield)
+                                     && shield_reflects(*defender_shield);
+    if (reflected_by_shield || defender->reflection())
     {
         reflected = true;
         verb = "reflect";
         if (defender->observable())
         {
-            punctuation = " off " + defender->pronoun(PRONOUN_POSSESSIVE)
-                          + " " + defender_shield->name(DESC_PLAIN).c_str()
-                          + "!";
-            ident_reflector(defender_shield);
+            if (reflected_by_shield) {
+                punctuation = " off " + defender->pronoun(PRONOUN_POSSESSIVE)
+                              + " " + defender_shield->name(DESC_PLAIN).c_str()
+                              + "!";
+                ident_reflector(defender_shield);
+            }
+            else
+            {
+                punctuation = " off an invisible shield around "
+                            + defender->pronoun(PRONOUN_POSSESSIVE) + "!";
+
+                item_def *amulet = defender->slot_item(EQ_AMULET, false);
+                if (amulet)
+                   ident_reflector(amulet);
+            }
         }
         else
             punctuation = "!";

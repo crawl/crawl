@@ -487,7 +487,7 @@ function coven_setup(e)
           amulet of guardian spirit randart not_cursed ident:all /\
           amulet of resist corrosion randart not_cursed ident:all /\
           amulet of rage randart not_cursed ident:all /\
-          amulet of stasis randart not_cursed ident:all /\
+          amulet of reflection randart not_cursed ident:all /\
           amulet of the gourmand randart not_cursed ident:all /\
           amulet of dismissal randart not_cursed ident:all /\
           amulet of regeneration randart ident:all not_cursed /\

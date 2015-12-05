@@ -184,7 +184,7 @@ int &evoker_debt(int evoker_type);
 bool evoker_is_charged(const item_def &item);
 
 // ring functions:
-bool ring_has_pluses(const item_def &item) PURE;
+bool jewellery_has_pluses(const item_def &item) PURE;
 bool ring_has_stackable_effect(const item_def &item) PURE;
 
 // food functions:
