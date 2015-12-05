@@ -14,6 +14,7 @@
 #include "butcher.h" // butcher_corpse
 #include "coordit.h" // radius_iterator
 #include "godconduct.h"
+#include "godpassive.h"
 #include "hints.h"
 #include "items.h" // stack_iterator
 #include "libutil.h"
@@ -32,7 +33,7 @@ int allowed_deaths_door_hp()
 {
     int hp = calc_spell_power(SPELL_DEATHS_DOOR, true) / 10;
 
-    if (in_good_standing(GOD_KIKUBAAQUDGHA))
+    if (have_passive(passive_t::deaths_door_hp_boost))
         hp += you.piety / 15;
 
     return max(hp, 1);

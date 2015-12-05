@@ -17,6 +17,7 @@
 #include "english.h"
 #include "env.h"
 #include "food.h"
+#include "godpassive.h"
 #include "item_use.h"
 #include "itemprop.h"
 #include "mapmark.h"
@@ -1720,7 +1721,8 @@ void MiscastEffect::_divination_mon(int severity)
 
 void MiscastEffect::_necromancy(int severity)
 {
-    if (target->is_player() && in_good_standing(GOD_KIKUBAAQUDGHA, 1))
+    if (target->is_player()
+        && have_passive(passive_t::miscast_protection_necromancy))
     {
         if (spell != SPELL_NO_SPELL)
         {

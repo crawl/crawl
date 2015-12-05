@@ -3702,7 +3702,7 @@ static int _monster_abjure_target(monster* target, int pow, bool actual)
             shielded = true;
         }
     }
-    else if (you_worship(GOD_TROG))
+    else if (have_passive(passive_t::abjuration_protection))
     {
         pow = pow / 2;
         if (pow < duration)

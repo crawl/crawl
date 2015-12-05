@@ -119,12 +119,45 @@ enum class passive_t
     /// Divine halo around the player, size increases with piety.
     halo,
 
+    /// Protect allies from abjuration by decreasing the power to half.
+    abjuration_protection,
+
     /// Protect allies from abjuration by decreasing the power. Higher HD means
     /// better protection.
     abjuration_protection_hd,
 
+    /// Gain HP when killing monsters.
+    restore_hp,
+
     /// Gain HP and MP when killing evil or unholy monsters.
     restore_hp_mp_vs_unholy,
+
+    /// Mutation resistance increasing with piety.
+    resist_mutation,
+
+    /// Polymorph resistance increasing with piety.
+    resist_polymorph,
+
+    /// Chance of avoiding hell effects, increasing with piety.
+    resist_hell_effects,
+
+    /// Warning about shapeshifters when they come to view.
+    warn_shapeshifter,
+
+    /// Torment resistance, piety dependant.
+    resist_torment,
+
+    /// You are left with more HP when using Death's Door, piety dependant.
+    deaths_door_hp_boost,
+
+    /// Protection against miscasts. Piety dependant.
+    miscast_protection
+
+    /// Protection against necromancy miscasts and mummy death curses.
+    miscast_protection_necromancy,
+
+    /// Chance to extend berserk duration and avoid paralysis, piety dependant.
+    extend_berserk,
 };
 
 enum jiyva_slurp_results

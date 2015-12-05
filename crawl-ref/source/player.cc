@@ -1618,8 +1618,9 @@ bool player_res_torment(bool random)
 // Kiku protects you from torment to a degree.
 bool player_kiku_res_torment()
 {
-    return in_good_standing(GOD_KIKUBAAQUDGHA, 3)
-           && !you.gift_timeout; // no protection during pain branding weapon
+    // no protection during pain branding weapon
+    return have_passive(passive_t::resist_torment)
+           && !(you_worship(GOD_KIKUBAAQUDGHA) && you.gift_timeout);
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.

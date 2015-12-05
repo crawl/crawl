@@ -1172,7 +1172,7 @@ static double _chance_miscast_prot()
 {
     double miscast_prot = 0;
 
-    if (in_good_standing(GOD_SIF_MUNA, 3))
+    if (have_passive(passive_t::miscast_protection))
         miscast_prot = (double) you.piety/piety_breakpoint(5);
 
     return min(1.0, miscast_prot);
