@@ -319,7 +319,7 @@ static void _tweak_randart(item_def &item)
         break;
 
     case ARTP_VAL_POS:
-     {
+    {
         mprf(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
         const int val = prompt_for_int("New value? ", true);
 
@@ -332,15 +332,15 @@ static void _tweak_randart(item_def &item)
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
         break;
-      }
+    }
     case ARTP_VAL_ANY:
-      {
+    {
         mprf(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
         const int val = prompt_for_int("New value? ", false);
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
         break;
-      }
+    }
     }
 }
 

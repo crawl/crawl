@@ -141,7 +141,8 @@ int SQL_DBM::init_schema()
     {
         for (sqlite_retry_iterator ri; ri;
              ri.check(ec(sqlite3_exec(db, "BEGIN;", nullptr, nullptr,
-                                      nullptr))));
+                                      nullptr))))
+        {}
     }
     return err;
 }
@@ -182,7 +183,8 @@ int SQL_DBM::try_insert(const string &key, const string &value)
 int SQL_DBM::insert(const string &key, const string &value)
 {
     for (sqlite_retry_iterator ri; ri;
-         ri.check(do_insert(key, value)));
+         ri.check(do_insert(key, value)))
+    {}
     return errc;
 }
 
@@ -251,7 +253,8 @@ string SQL_DBM::query(const string &key)
 {
     string result;
     for (sqlite_retry_iterator ri; ri;
-         ri.check(do_query(key, &result)));
+         ri.check(do_query(key, &result)))
+    {}
     return result;
 }
 

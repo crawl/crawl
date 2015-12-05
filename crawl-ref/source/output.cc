@@ -295,7 +295,7 @@ static const short HUD_VALUE_COLOUR = LIGHTGREY;
 class colour_bar
 {
     typedef unsigned short colour_t;
- public:
+public:
     colour_t m_default;
     colour_t m_change_pos;
     colour_t m_change_neg;
@@ -1749,8 +1749,8 @@ int update_monster_pane()
         // i_mons is incremented by _print_next_monster_desc
         if (i_print >= skip_lines && i_mons < (int) mons.size())
         {
-             int idx = crawl_state.mlist_targeting ? i_print - skip_lines : -1;
-             _print_next_monster_desc(mons, i_mons, full_info, idx);
+            int idx = crawl_state.mlist_targeting ? i_print - skip_lines : -1;
+            _print_next_monster_desc(mons, i_mons, full_info, idx);
         }
         else
             CPRINTF("%s", blank.c_str());
@@ -2381,8 +2381,8 @@ static vector<formatted_string> _get_overview_resistances(
     //XXX
     if (rpois == 3)
     {
-       rpois_string = replace_all(rpois_string, "+", "∞");
-       rpois_string = replace_all(rpois_string, "green", "lightgreen");
+        rpois_string = replace_all(rpois_string, "+", "∞");
+        rpois_string = replace_all(rpois_string, "green", "lightgreen");
     }
     out += rpois_string;
 

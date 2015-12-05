@@ -46,7 +46,7 @@ public:
 
     // Add relevant descriptions to the target status.
     virtual vector<string> get_monster_desc(const monster_info& mi);
- private:
+private:
     string prompt;
 
 public:

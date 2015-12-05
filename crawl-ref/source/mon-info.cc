@@ -1358,9 +1358,9 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
         colour_type = _MLC_NEUTRAL;
         break;
     case ATT_STRICT_NEUTRAL:
-         out << " (fellow slime)";
-         colour_type = _MLC_STRICT_NEUTRAL;
-         break;
+        out << " (fellow slime)";
+        colour_type = _MLC_STRICT_NEUTRAL;
+        break;
     case ATT_HOSTILE:
         // out << " (hostile)";
         switch (threat)

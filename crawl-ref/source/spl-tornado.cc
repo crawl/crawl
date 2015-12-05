@@ -172,17 +172,17 @@ static double _get_ang(int x, int y)
 {
     if (abs(x) > abs(y))
     {
-       if (x > 0)
-           return double(y)/double(x);
-       else
-           return 4 + double(y)/double(x);
+        if (x > 0)
+            return double(y)/double(x);
+        else
+            return 4 + double(y)/double(x);
     }
     else
     {
-       if (y > 0)
-           return 2 - double(x)/double(y);
-       else
-           return -2 - double(x)/double(y);
+        if (y > 0)
+            return 2 - double(x)/double(y);
+        else
+            return -2 - double(x)/double(y);
     }
 }
 

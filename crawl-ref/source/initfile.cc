@@ -2767,8 +2767,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     {
         if (plain)
         {
-           item_glyph_overrides.clear();
-           item_glyph_cache.clear();
+            item_glyph_overrides.clear();
+            item_glyph_cache.clear();
         }
 
         if (minus_equal)

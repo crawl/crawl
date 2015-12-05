@@ -1226,7 +1226,7 @@ static string _describe_ammo(const item_def &item)
             description += "It is tipped with a substance that causes a mindless "
                 "rage, making people attack friend and foe alike.";
             break;
-       case SPMSL_RETURNING:
+        case SPMSL_RETURNING:
             description += "A skilled user can throw it in such a way "
                 "that it will return to its owner.";
             break;
