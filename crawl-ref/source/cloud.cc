@@ -311,6 +311,7 @@ static int _spread_cloud(const cloud_struct &cloud)
 
         env.cloud[*ai] = cloud;
         env.cloud[*ai].pos = *ai;
+        env.cloud[*ai].decay = newdecay;
 
         extra_decay += 8;
     }
