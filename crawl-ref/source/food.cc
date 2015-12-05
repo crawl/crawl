@@ -317,7 +317,7 @@ bool food_change(bool initial)
                 }
                 break;
             case UFR_TOO_ALIVE:
-                if (you.duration[DUR_TRANSFORMATION] > 5)
+                if (you.duration[DUR_TRANSFORMATION] > 5 * BASELINE_DELAY)
                 {
                     print_stats();
                     mprf(MSGCH_WARN, "Your blood-filled body can't sustain your "
