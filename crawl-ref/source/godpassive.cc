@@ -72,6 +72,13 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     // Zin
     {
         { -1, passive_t::protect_from_harm, "GOD sometimes watches over you" },
+        { -1, passive_t::resist_mutation, "GOD can shield you from mutations" },
+        { -1, passive_t::resist_polymorph,
+              "GOD can protect you from unnatural transformations" },
+        { -1, passive_t::resist_hell_effects,
+              "GOD can protect you from effects of Hell" },
+        { -1, passive_t::warn_shapeshifter,
+              "GOD will warn you about shapeshifters" },
     },
 
     // TSO
@@ -88,7 +95,14 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     },
 
     // Kikubaaqudgha
-    { },
+    {
+        {  0, passive_t::deaths_door_hp_boost,
+              "can retain more of your health when standing in Death's Door" },
+        {  2, passive_t::miscast_protection_necromancy,
+              "GOD protects you from necromancy miscasts and mummy death curses"
+        },
+        {  4, passive_t::resist_torment, "GOD protects you from torment" },
+    },
 
     // Yredelemnul
     {
@@ -102,16 +116,27 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     { },
 
     // Okawaru
-    { },
+    {
+        // None
+    },
 
     // Makhleb
-    { },
+    {
+        { -1, passive_t::restore_hp, "gain health from killing" },
+    },
 
     // Sif Muna
-    { },
+    {
+        {  4, passive_t::miscast_protection, "GOD protects you from miscasts" },
+    },
 
     // Trog
-    { },
+    {
+        { -1, passive_t::abjuration_protection,
+              "GOD protects your allies from abjuration" },
+        {  0, passive_t::extend_berserk, "can maintain berserk longer and you "
+                                         "are less likely to pass out" },
+    },
 
     // Nemelex
     { },

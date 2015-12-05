@@ -851,7 +851,7 @@ static void _decrement_durations()
         {
             // Note the beauty of Trog!  They get an extra save that's at
             // the very least 20% and goes up to 100%.
-            if (in_good_standing(GOD_TROG)
+            if (have_passive(passive_t::extend_berserk)
                 && x_chance_in_y(you.piety, piety_breakpoint(5)))
             {
                 mpr("Trog's vigour flows through your veins.");

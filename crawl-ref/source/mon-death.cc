@@ -1842,14 +1842,16 @@ item_def* monster_die(monster* mons, killer_type killer,
     // Various sources of berserk extension on kills.
     if (killer == KILL_YOU && you.berserk())
     {
-        if (in_good_standing(GOD_TROG) && you.piety > random2(1000))
+        if (have_passive(passive_t::extend_berserk)
+            && you.piety > random2(1000))
         {
             const int bonus = (3 + random2avg(10, 2)) / 2;
 
             you.increase_duration(DUR_BERSERK, bonus);
 
-            mprf(MSGCH_GOD, GOD_TROG,
-                 "You feel the power of Trog in you as your rage grows.");
+            mprf(MSGCH_GOD, you.religion,
+                 "You feel the power of %s in you as your rage grows.",
+                 uppercase_first(god_name(you.religion)).c_str());
         }
         else if (player_equip_unrand(UNRAND_BLOODLUST) && coinflip())
         {
@@ -2096,7 +2098,7 @@ item_def* monster_die(monster* mons, killer_type killer,
             // Divine health and mana restoration doesn't happen when
             // killing born-friendly monsters.
             if (gives_player_xp
-                && (you_worship(GOD_MAKHLEB)
+                && (have_passive(passive_t::restore_hp)
                     || you_worship(GOD_VEHUMET)
                     || have_passive(passive_t::restore_hp_mp_vs_unholy)
                        && (mons->is_evil() || mons->is_unholy()))
@@ -2106,6 +2108,11 @@ item_def* monster_die(monster* mons, killer_type killer,
             {
                 int hp_heal = 0, mp_heal = 0;
 
+                if (have_passive(passive_t::restore_hp))
+                {
+                    hp_heal = mons->get_experience_level()
+                        + random2(mons->get_experience_level());
+                }
                 if (have_passive(passive_t::restore_hp_mp_vs_unholy))
                 {
                     hp_heal = random2(1 + 2 * mons->get_experience_level());
@@ -2114,15 +2121,11 @@ item_def* monster_die(monster* mons, killer_type killer,
 
                 switch (you.religion)
                 {
-                case GOD_MAKHLEB:
-                    hp_heal = mons->get_experience_level()
-                        + random2(mons->get_experience_level());
-                    break;
                 case GOD_VEHUMET:
                     mp_heal = 1 + random2(mons->get_experience_level() / 2);
                     break;
                 default:
-                    die("bad kill-on-healing god!");
+                    break;
                 }
 
 #if TAG_MAJOR_VERSION == 34

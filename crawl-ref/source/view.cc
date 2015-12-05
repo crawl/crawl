@@ -320,8 +320,8 @@ void update_monsters_in_view()
         }
 
         bool warning = false;
-        string warning_msg = you_worship(GOD_ZIN) ? "Zin warns you:"
-                                                  : "Ashenzari warns you:";
+        string warning_msg = uppercase_first(god_name(you.religion))
+                             + " warns you:";
         warning_msg += " ";
         for (const monster* mon : monsters)
         {

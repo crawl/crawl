@@ -1256,7 +1256,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         }
 
         // Zin's protection.
-        if (you_worship(GOD_ZIN)
+        if (have_passive(passive_t::resist_mutation)
             && (x_chance_in_y(you.piety, MAX_PIETY)
                 || x_chance_in_y(you.piety, MAX_PIETY + 22)))
         {

@@ -1481,7 +1481,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         bool zin_id = false;
         string god_warning;
 
-        if (you_worship(GOD_ZIN)
+        if (have_passive(passive_t::warn_shapeshifter)
             && mon->is_shapeshifter()
             && !(mon->flags & MF_KNOWN_SHIFTER))
         {
@@ -1489,7 +1489,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             zin_id = true;
             mon->props["zin_id"] = true;
             discover_shifter(mon);
-            god_warning = "Zin warns you: "
+            god_warning = uppercase_first(god_name(you.religion))
+                          + " warns you: "
                           + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE))
                           + " is a foul ";
             if (mon->has_ench(ENCH_GLOWING_SHAPESHIFTER))
@@ -1507,7 +1508,10 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         if (!mweap.empty())
         {
             if (ash_id)
-                god_warning = "Ashenzari warns you:";
+            {
+                god_warning = uppercase_first(god_name(you.religion))
+                              + " warns you:";
+            }
 
             (ash_id ? god_warning : text) +=
                 " " + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE)) + " is"
