@@ -1096,6 +1096,12 @@ void dec_penance(god_type god, int val)
             else if (god == GOD_PAKELLAS)
                 pakellas_id_device_charges();
         }
+        else if (god == GOD_PAKELLAS)
+        {
+            // Penance just ended w/o worshipping Pakellas;
+            // notify the player that MP regeneration will start again.
+            mprf(MSGCH_GOD, god, "You begin regenerating magic.");
+        }
     }
     else if (god == GOD_NEMELEX_XOBEH && you.penance[god] > 100)
     { // Nemelex's penance works actively only until 100
@@ -2874,10 +2880,11 @@ void excommunication(bool voluntary, god_type new_god, bool immediate)
         break;
 
     case GOD_PAKELLAS:
+        simple_god_message(" continues to block your magic from regenerating.",
+                           old_god);
         if (you.duration[DUR_DEVICE_SURGE])
             you.duration[DUR_DEVICE_SURGE] = 0;
         _set_penance(old_god, 25);
-        mprf(MSGCH_GOD, old_god, "You begin regenerating magic.");
         break;
 
     case GOD_CHEIBRIADOS:
