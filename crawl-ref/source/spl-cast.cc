@@ -618,7 +618,6 @@ static bool _can_cast()
         && you.hunger_state <= HS_STARVING)
     {
         canned_msg(MSG_NO_ENERGY);
-        more();
         return false;
     }
 

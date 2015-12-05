@@ -1095,6 +1095,6 @@ void wizard_join_religion()
     {
         if (god == GOD_GOZAG)
             you.gold = max(you.gold, gozag_service_fee());
-        join_religion(god, true);
+        join_religion(god);
     }
 }

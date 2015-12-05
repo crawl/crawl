@@ -460,7 +460,7 @@ bool chardump_parser::_check_stats2(const vector<string> &tokens)
             {
                 if (god == GOD_GOZAG)
                     you.gold += gozag_service_fee();
-                join_religion(god, true);
+                join_religion(god);
             }
 
             string piety = tokens[k+2];
