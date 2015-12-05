@@ -306,11 +306,9 @@ bool food_change(bool initial)
                 you.duration[DUR_BERSERK] = 1;
             }
 
-            player_alive_t transform_state = lifeless_prevents_form(you.form);
-
-            switch (transform_state)
+            switch (lifeless_prevents_form())
             {
-            case PA_THIRSTY:
+            case UFR_TOO_DEAD:
                 if (you.duration[DUR_TRANSFORMATION] > 2 * BASELINE_DELAY)
                 {
                     mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
@@ -318,7 +316,7 @@ bool food_change(bool initial)
                     you.set_duration(DUR_TRANSFORMATION, 2);
                 }
                 break;
-            case PA_FULL:
+            case UFR_TOO_ALIVE:
                 if (you.duration[DUR_TRANSFORMATION] > 5)
                 {
                     print_stats();
@@ -329,7 +327,7 @@ bool food_change(bool initial)
                     you.set_duration(DUR_TRANSFORMATION, 5);
                 }
                 break;
-            default:
+            case UFR_GOOD:
                 if (newstate == HS_ENGORGED && is_vampire_feeding()) // Alive
                 {
                     print_stats();
