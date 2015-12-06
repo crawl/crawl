@@ -5080,9 +5080,10 @@ bool bolt::ignores_monster(const monster* mon) const
         && !pierce && !is_explosion
         && !is_enchantment()
         && target != mon->pos()
-        && name != "sticky flame"
-        && name != "splash of liquid fire"
-        && name != "lightning arc")
+        && origin_spell != SPELL_STICKY_FLAME
+        && origin_spell != SPELL_STICKY_FLAME_RANGE
+        && origin_spell != SPELL_STICKY_FLAME_SPLASH
+        && origin_spell != SPELL_CHAIN_LIGHTNING)
     {
         return true;
     }
@@ -6581,7 +6582,7 @@ bool shoot_through_monster(const bolt& beam, const monster* victim)
            || (originator->is_player()
                && testbits(victim->flags, MF_DEMONIC_GUARDIAN))
            && !beam.is_enchantment()
-           && beam.name != "lightning arc"
+           && beam.origin_spell != SPELL_CHAIN_LIGHTNING
            && (mons_atts_aligned(victim->attitude, origin_attitude)
                || victim->neutral());
 }
