@@ -4990,7 +4990,7 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_SHIELDS:        ch = TILEG_SHIELDS_ON; break;
     case SK_UNARMED_COMBAT:
         {
-            string hand = you.hand_name(false).c_str();
+            const string hand = you.hand_name(false).c_str();
             if (hand == "hand")
                 ch = TILEG_UNARMED_COMBAT_ON;
             else if (hand == "paw")
@@ -5006,7 +5006,9 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_HEXES:          ch = TILEG_HEXES_ON; break;
     case SK_CHARMS:         ch = TILEG_CHARMS_ON; break;
     case SK_SUMMONINGS:     ch = TILEG_SUMMONINGS_ON; break;
-    case SK_NECROMANCY:     ch = TILEG_NECROMANCY_ON; break;
+    case SK_NECROMANCY:
+        ch = you.religion == GOD_KIKUBAAQUDGHA ? TILEG_NECROMANCY_K_ON
+                                               : TILEG_NECROMANCY_ON; break;
     case SK_TRANSLOCATIONS: ch = TILEG_TRANSLOCATIONS_ON; break;
     case SK_TRANSMUTATIONS: ch = TILEG_TRANSMUTATIONS_ON; break;
     case SK_FIRE_MAGIC:     ch = TILEG_FIRE_MAGIC_ON; break;
@@ -5014,8 +5016,55 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_AIR_MAGIC:      ch = TILEG_AIR_MAGIC_ON; break;
     case SK_EARTH_MAGIC:    ch = TILEG_EARTH_MAGIC_ON; break;
     case SK_POISON_MAGIC:   ch = TILEG_POISON_MAGIC_ON; break;
-    case SK_INVOCATIONS:    ch = TILEG_INVOCATIONS_ON; break;
-    case SK_EVOCATIONS:     ch = TILEG_EVOCATIONS_ON; break;
+    case SK_EVOCATIONS:
+        {
+            switch (you.religion)
+            {
+            case GOD_NEMELEX_XOBEH:
+                ch = TILEG_EVOCATIONS_N_ON; break;
+            case GOD_PAKELLAS:
+                ch = TILEG_EVOCATIONS_P_ON; break;
+            default:
+                ch = TILEG_EVOCATIONS_ON;
+            }
+        }
+        break;
+    case SK_INVOCATIONS:
+        {
+            switch (you.religion)
+            {
+            // Gods who use invo get a unique tile.
+            case GOD_SHINING_ONE:
+                ch = TILEG_INVOCATIONS_1_ON; break;
+            case GOD_BEOGH:
+                ch = TILEG_INVOCATIONS_B_ON; break;
+            case GOD_CHEIBRIADOS:
+                ch = TILEG_INVOCATIONS_C_ON; break;
+            case GOD_DITHMENOS:
+                ch = TILEG_INVOCATIONS_D_ON; break;
+            case GOD_ELYVILON:
+                ch = TILEG_INVOCATIONS_E_ON; break;
+            case GOD_FEDHAS:
+                ch = TILEG_INVOCATIONS_F_ON; break;
+            case GOD_LUGONU:
+                ch = TILEG_INVOCATIONS_L_ON; break;
+            case GOD_MAKHLEB:
+                ch = TILEG_INVOCATIONS_M_ON; break;
+            case GOD_OKAWARU:
+                ch = TILEG_INVOCATIONS_O_ON; break;
+            case GOD_QAZLAL:
+                ch = TILEG_INVOCATIONS_Q_ON; break;
+            case GOD_SIF_MUNA:
+                ch = TILEG_INVOCATIONS_S_ON; break;
+            case GOD_YREDELEMNUL:
+                ch = TILEG_INVOCATIONS_Y_ON; break;
+            case GOD_ZIN:
+                ch = TILEG_INVOCATIONS_Z_ON; break;
+            default:
+                ch = TILEG_INVOCATIONS_ON;
+            }
+        }
+        break;
     default:                return TILEG_TODO;
     }
 
