@@ -809,15 +809,13 @@ static bool _check_tukima_validity(const actor *target)
 static void _animate_weapon(int pow, actor* target)
 {
     bool target_is_player = target == &you;
-    item_def* wpn = target->weapon();
+    item_def * const wpn = target->weapon();
+    ASSERT(wpn);
     if (target_is_player)
     {
         // Clear temp branding so we don't change the brand permanently.
         if (you.duration[DUR_WEAPON_BRAND])
-        {
-            ASSERT(you.weapon());
             end_weapon_brand(*wpn);
-        }
 
         // Mark weapon as "thrown", so we'll autopickup it later.
         wpn->flags |= ISFLAG_THROWN;
@@ -838,7 +836,7 @@ static void _animate_weapon(int pow, actor* target)
     mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
 
-    monster *mons = create_monster(mg);
+    monster * const mons = create_monster(mg);
 
     if (!mons)
     {
@@ -862,7 +860,7 @@ static void _animate_weapon(int pow, actor* target)
         unwield_item();
     else
     {
-        monster* montarget = (monster*)target;
+        monster * const montarget = target->as_monster();
         const int primary_weap = montarget->inv[MSLOT_WEAPON];
         const mon_inv_type wp_slot = (primary_weap != NON_ITEM
                                       && &mitm[primary_weap] == wpn) ?
