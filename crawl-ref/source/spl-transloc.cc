@@ -953,8 +953,8 @@ int gravitas_range(int pow, int strength)
 
 #define GRAVITY "by gravitational forces"
 
-void attract_actor(const actor* agent, actor* victim, const coord_def pos,
-                   int pow, int strength)
+static void _attract_actor(const actor* agent, actor* victim,
+                           const coord_def pos, int pow, int strength)
 {
     ASSERT(victim); // XXX: change to actor &victim
 
@@ -1018,7 +1018,7 @@ bool fatal_attraction(const coord_def& pos, actor *agent, int pow)
             continue;
 
         affected = true;
-        attract_actor(agent, *ai, pos, pow, strength);
+        _attract_actor(agent, *ai, pos, pow, strength);
     }
 
     return affected;
