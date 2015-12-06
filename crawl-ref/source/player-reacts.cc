@@ -83,7 +83,6 @@
 #include "mon-act.h"
 #include "mon-cast.h"
 #include "mon-death.h"
-#include "mon-transit.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "options.h"
@@ -107,7 +106,6 @@
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
-#include "spl-wpnench.h"
 #include "stairs.h"
 #include "startup.h"
 #include "stash.h"
@@ -482,9 +480,13 @@ static void _handle_recitation(int step)
  */
 static void _decrement_simple_duration(duration_type dur, int delay)
 {
-    _decrement_a_duration(dur, delay, duration_end_message(dur),
-                          duration_mid_offset(dur), duration_mid_message(dur),
-                          duration_mid_chan(dur));
+    if(_decrement_a_duration(dur, delay, duration_end_message(dur),
+                             duration_mid_offset(dur),
+                             duration_mid_message(dur),
+                             duration_mid_chan(dur)))
+    {
+        duration_end_effect(dur);
+    }
 }
 
 
@@ -520,14 +522,6 @@ static void _decrement_durations()
         you.redraw_armour_class = true;
     }
 
-    if (you.duration[DUR_DEMONIC_GUARDIAN] > 0)
-    {
-        if (delay > you.duration[DUR_DEMONIC_GUARDIAN])
-            you.duration[DUR_DEMONIC_GUARDIAN] = 0;
-        else
-            you.duration[DUR_DEMONIC_GUARDIAN] -= delay;
-    }
-
     if (you.duration[DUR_LIQUID_FLAMES])
         dec_napalm_player(delay);
 
@@ -550,13 +544,6 @@ static void _decrement_durations()
     if (you.duration[DUR_LIQUEFYING])
         invalidate_agrid();
 
-    if (_decrement_a_duration(DUR_TROGS_HAND, delay,
-                              nullptr, coinflip(),
-                              "You feel the effects of Trog's Hand fading."))
-    {
-        trog_remove_trogs_hand();
-    }
-
     if (you.duration[DUR_DIVINE_SHIELD] > 0)
     {
         if (you.duration[DUR_DIVINE_SHIELD] > 1)
@@ -577,19 +564,6 @@ static void _decrement_durations()
                 you.duration[DUR_DIVINE_SHIELD] = 0;
                 mprf(MSGCH_DURATION, "Your divine shield fades away.");
             }
-        }
-    }
-
-    //jmf: More flexible weapon branding code.
-    if (you.duration[DUR_WEAPON_BRAND] > 0)
-    {
-        you.duration[DUR_WEAPON_BRAND] -= delay;
-
-        if (you.duration[DUR_WEAPON_BRAND] <= 0)
-        {
-            you.duration[DUR_WEAPON_BRAND] = 1;
-            ASSERT(you.weapon());
-            end_weapon_brand(*you.weapon(), true);
         }
     }
 
@@ -634,16 +608,6 @@ static void _decrement_durations()
         }
     }
 
-    if (_decrement_a_duration(DUR_PHASE_SHIFT, delay,
-                              "You are firmly grounded in the material plane once more.",
-                              coinflip(),
-                              "You feel closer to the material plane.")
-        || _decrement_a_duration(DUR_VERTIGO, delay,
-                              "The world stops spinning."))
-    {
-        you.redraw_evasion = true;
-    }
-
     // Handle Powered By Death strength and duration
     int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
     if (pbd_str > 1)
@@ -667,102 +631,13 @@ static void _decrement_durations()
         }
     }
 
-    if (_decrement_a_duration(DUR_CONDENSATION_SHIELD, delay,
-                              "Your icy shield evaporates.",
-                              coinflip(),
-                              "Your icy shield starts to melt."))
-    {
-        if (you.props.exists(CONDENSATION_SHIELD_KEY))
-            you.props.erase(CONDENSATION_SHIELD_KEY);
-        you.redraw_armour_class = true;
-    }
-
-    if (_decrement_a_duration(DUR_MAGIC_SHIELD, delay,
-                              "Your magical shield disappears."))
-    {
-        you.redraw_armour_class = true;
-    }
-
-    if (_decrement_a_duration(DUR_STONESKIN, delay, "Your skin feels tender."))
-    {
-        if (you.props.exists(STONESKIN_KEY))
-            you.props.erase(STONESKIN_KEY);
-        you.redraw_armour_class = true;
-    }
-
-    if (_decrement_a_duration(DUR_TELEPORT, delay))
-    {
-        you_teleport_now();
-        untag_followers();
-    }
-
-    if (_decrement_a_duration(DUR_DEATH_CHANNEL, delay,
-                              "Your unholy channel expires.", coinflip(),
-                              "Your unholy channel is weakening."))
-    {
-        you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
-    }
-
-    if (_decrement_a_duration(DUR_INVIS, delay, nullptr,
-                              coinflip(), "You flicker for a moment."))
-    {
-        if (you.invisible())
-            mprf(MSGCH_DURATION, "You feel more conspicuous.");
-        else
-            mprf(MSGCH_DURATION, "You flicker back into view.");
-        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
-    }
-
     dec_ambrosia_player(delay);
-    if (_decrement_a_duration(DUR_QUAD_DAMAGE, delay, nullptr, 0,
-                              "Quad Damage is wearing off."))
-    {
-        invalidate_agrid(true);
-    }
-    if (_decrement_a_duration(DUR_HEROISM, delay,
-                              "You feel like a meek peon again."))
-    {
-        you.redraw_evasion      = true;
-        you.redraw_armour_class = true;
-    }
-
-    _decrement_a_duration(DUR_FINESSE, delay,
-                          you.hands_act("slow", "down.").c_str());
-
-    _decrement_a_duration(DUR_CONFUSING_TOUCH, delay,
-                          you.hands_act("stop", "glowing.").c_str());
-
-    if (_decrement_a_duration(DUR_MESMERISED, delay,
-                              "You break out of your daze.",
-                              0, nullptr, MSGCH_RECOVERY))
-    {
-        you.clear_beholders();
-    }
-
-    if (_decrement_a_duration(DUR_AFRAID, delay,
-                              "Your fear fades away.",
-                              0, nullptr, MSGCH_RECOVERY))
-    {
-        you.clear_fearmongers();
-    }
-
-    _decrement_a_duration(DUR_NO_POTIONS, delay,
-                          you_foodless(true) ? nullptr
-                                             : "You can drink potions again.",
-                          0, nullptr, MSGCH_RECOVERY);
-
     dec_slow_player(delay);
     dec_exhaust_player(delay);
     dec_haste_player(delay);
 
     if (you.duration[DUR_LIQUEFYING] && !you.stand_on_solid_ground())
         you.duration[DUR_LIQUEFYING] = 1;
-
-    if (_decrement_a_duration(DUR_LIQUEFYING, delay,
-                              "The ground is no longer liquid beneath you."))
-    {
-        invalidate_agrid();
-    }
 
     for (int i = 0; i < NUM_STATS; ++i)
     {
@@ -891,27 +766,17 @@ static void _decrement_durations()
     }
 
     if (you.duration[DUR_DISJUNCTION])
-    {
         disjunction();
-        _decrement_a_duration(DUR_DISJUNCTION, delay,
-                              "The translocation energy dissipates.");
-        if (!you.duration[DUR_DISJUNCTION])
-            invalidate_agrid(true);
-    }
 
-    if (_decrement_a_duration(DUR_TORNADO_COOLDOWN, delay,
-                              "The winds around you calm down."))
-    {
-        remove_tornado_clouds(MID_PLAYER);
-    }
     // Should expire before flight.
     if (you.duration[DUR_TORNADO])
     {
         tornado_damage(&you, min(delay, you.duration[DUR_TORNADO]));
-        _decrement_a_duration(DUR_TORNADO, delay,
-                              "The winds around you start to calm down.");
-        if (!you.duration[DUR_TORNADO])
-            you.duration[DUR_TORNADO_COOLDOWN] = random_range(25, 35);
+        if (_decrement_a_duration(DUR_TORNADO, delay,
+                                  "The winds around you start to calm down."))
+        {
+            you.duration[DUR_TORNADO_COOLDOWN] = random_range(35, 45);
+        }
     }
 
     if (you.duration[DUR_FLIGHT])
@@ -951,56 +816,19 @@ static void _decrement_durations()
         }
     }
 
-    if (you.duration[DUR_DEATHS_DOOR])
+    if (you.duration[DUR_DEATHS_DOOR] && you.hp > allowed_deaths_door_hp())
     {
-        if (you.hp > allowed_deaths_door_hp())
-        {
-            set_hp(allowed_deaths_door_hp());
-            you.redraw_hit_points = true;
-        }
-
-        if (_decrement_a_duration(DUR_DEATHS_DOOR, delay,
-                                  "Your life is in your own hands again!",
-                                  random2(6),
-                                  "Your time is quickly running out!"))
-        {
-            you.increase_duration(DUR_EXHAUSTED, roll_dice(1,3));
-        }
+        set_hp(allowed_deaths_door_hp());
+        you.redraw_hit_points = true;
     }
-
-    if (_decrement_a_duration(DUR_DIVINE_STAMINA, delay))
-        zin_remove_divine_stamina();
-
-    if (_decrement_a_duration(DUR_DIVINE_VIGOUR, delay))
-        elyvilon_remove_divine_vigour();
-
     // XXX: this should probably be changed to be by aut rather than turns vvv
     _decrement_a_duration(DUR_COLOUR_SMOKE_TRAIL, 1);
 
-    if (_decrement_a_duration(DUR_SCRYING, delay,
-                              "Your astral sight fades away."))
+    if (you.duration[DUR_DARKNESS] && you.haloed())
     {
-        you.xray_vision = false;
-    }
-
-    if (_decrement_a_duration(DUR_DARKNESS, delay,
-                              "The ambient light returns to normal.")
-        || (you.duration[DUR_DARKNESS] && you.haloed()))
-    {
-        if (you.duration[DUR_DARKNESS])
-        {
-            you.duration[DUR_DARKNESS] = 0;
-            mpr("The divine light dispels your darkness!");
-        }
+        you.duration[DUR_DARKNESS] = 0;
+        mpr("The divine light dispels your darkness!");
         update_vision_range();
-    }
-
-    if (_decrement_a_duration(DUR_CORROSION, delay,
-                          "You are no longer corroded."))
-    {
-        you.props["corrosion_amount"] = 0;
-        you.redraw_armour_class = true;
-        you.wield_change = true;
     }
 
     if (!you.duration[DUR_SAP_MAGIC])
@@ -1035,11 +863,9 @@ static void _decrement_durations()
 
     if (you.duration[DUR_TOXIC_RADIANCE])
     {
-        int ticks = (you.duration[DUR_TOXIC_RADIANCE] / 10)
-        - ((you.duration[DUR_TOXIC_RADIANCE] - delay) / 10);
+        const int ticks = (you.duration[DUR_TOXIC_RADIANCE] / 10)
+                          - ((you.duration[DUR_TOXIC_RADIANCE] - delay) / 10);
         toxic_radiance_effect(&you, ticks);
-        _decrement_a_duration(DUR_TOXIC_RADIANCE, delay,
-                              "Your toxic aura wanes.");
     }
 
     if (you.duration[DUR_RECITE] && _check_recite())
@@ -1059,47 +885,14 @@ static void _decrement_durations()
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);
 
-    if (_decrement_a_duration(DUR_PORTAL_PROJECTILE, delay,
-                              "You are no longer teleporting projectiles to their destination."))
-    {
-        you.attribute[ATTR_PORTAL_PROJECTILE] = 0;
-    }
-
     if (you.duration[DUR_DRAGON_CALL])
-    {
         do_dragon_call(delay);
-        if (_decrement_a_duration(DUR_DRAGON_CALL, delay,
-                                  "The roar of the dragon horde subsides."))
-        {
-            you.duration[DUR_DRAGON_CALL_COOLDOWN] = random_range(160, 260);
-        }
-
-    }
 
     if (you.duration[DUR_ABJURATION_AURA])
         do_aura_of_abjuration(delay);
 
-    if (_decrement_a_duration(DUR_QAZLAL_AC, delay,
-                              "You feel less protected from physical attacks.",
-                              coinflip(),
-                              "Your protection from physical attacks is fading."))
-    {
-        you.redraw_armour_class = true;
-    }
-
     if (you.duration[DUR_DOOM_HOWL])
-    {
         doom_howl(min(delay, you.duration[DUR_DOOM_HOWL]));
-        if (_decrement_a_duration(DUR_DOOM_HOWL, delay,
-                                  "The infernal howling subsides."))
-        {
-            you.props.erase(NEXT_DOOM_HOUND_KEY);
-            you.duration[DUR_DOOM_HOWL_IMMUNITY] = random_range(30, 70);
-        }
-    }
-
-    if (_decrement_a_duration(DUR_GOZAG_GOLD_AURA, delay))
-        you.props["gozag_gold_aura_amount"] = 0;
 
     dec_elixir_player(delay);
     you.maybe_degrade_bone_armour(1, delay);
@@ -1107,7 +900,7 @@ static void _decrement_durations()
     if (!env.sunlight.empty())
         process_sunlights();
 
-    // these should be after decr_ambrosia, transforms, etc.
+    // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)
         if (duration_decrements_normally((duration_type) i))
             _decrement_simple_duration((duration_type) i, delay);
