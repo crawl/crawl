@@ -259,6 +259,7 @@ public:
     {
         PHYSICAL,
         PLACEHOLDER,
+        MAPPED,
     };
 
 public:
@@ -284,7 +285,7 @@ public:
 
     string describe() const;
 
-    bool can_travel() const { return type == PHYSICAL; }
+    bool can_travel() const { return type != PLACEHOLDER; }
 };
 
 // Information on a level that interlevel travel needs.
