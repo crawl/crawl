@@ -320,8 +320,8 @@ static bool _stop_because_god_hates_target_prompt(monster* mon,
     // This is just a hasty stub for the one case I'm aware of right now.
     if (spell == SPELL_TUKIMAS_DANCE)
     {
-        const item_def* first = mon->weapon(0);
-        const item_def* second = mon->weapon(1);
+        const item_def * const first = mon->weapon(0);
+        const item_def * const second = mon->weapon(1);
         bool prompt = first && god_hates_brand(get_weapon_brand(*first))
                       || second && god_hates_brand(get_weapon_brand(*second));
         if (prompt
