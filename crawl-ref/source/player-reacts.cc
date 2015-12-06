@@ -112,6 +112,7 @@
 #include "startup.h"
 #include "stash.h"
 #include "state.h"
+#include "status.h"
 #include "stringutil.h"
 #include "tags.h"
 #include "target.h"
@@ -192,7 +193,7 @@ static bool _decrement_a_duration(duration_type dur, int delay,
     if (you.duration[dur] <= 0)
     {
         you.duration[dur] = 0;
-        if (endmsg)
+        if (endmsg && *endmsg != '\0')
             mprf(chan, "%s", endmsg);
         return true;
     }
@@ -472,16 +473,28 @@ static void _handle_recitation(int step)
 }
 
 
-//  Perhaps we should write functions like: update_liquid_flames(), etc.
-//  Even better, we could have a vector of callback functions (or
-//  objects) which get installed at some point.
+/**
+ * Take a 'simple' duration, decrement it, and print messages as appropriate
+ * when it hits 50% and 0% remaining.
+ *
+ * @param dur       The duration in question.
+ * @param delay     How much to decrement the duration by.
+ */
+static void _decrement_simple_duration(duration_type dur, int delay)
+{
+    _decrement_a_duration(dur, delay, duration_end_message(dur),
+                          duration_mid_offset(dur), duration_mid_message(dur),
+                          duration_mid_chan(dur));
+}
+
+
 
 /**
  * Decrement player durations based on how long the player's turn lasted in aut.
  */
 static void _decrement_durations()
 {
-    int delay = you.time_taken;
+    const int delay = you.time_taken;
 
     if (you.gourmand())
     {
@@ -537,21 +550,12 @@ static void _decrement_durations()
     if (you.duration[DUR_LIQUEFYING])
         invalidate_agrid();
 
-    _decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns.");
-
     if (_decrement_a_duration(DUR_TROGS_HAND, delay,
                               nullptr, coinflip(),
                               "You feel the effects of Trog's Hand fading."))
     {
         trog_remove_trogs_hand();
     }
-
-    _decrement_a_duration(DUR_REGENERATION, delay,
-                          "Your skin stops crawling.",
-                          coinflip(),
-                          "Your skin is crawling a little less now.");
-
-    _decrement_a_duration(DUR_VEHUMET_GIFT, delay);
 
     if (you.duration[DUR_DIVINE_SHIELD] > 0)
     {
@@ -609,11 +613,6 @@ static void _decrement_durations()
         }
     }
 
-    // Must come after transformation duration.
-    _decrement_a_duration(DUR_BREATH_WEAPON, delay,
-                          "You have got your breath back.", 0, nullptr,
-                          MSGCH_RECOVERY);
-
     if (you.attribute[ATTR_SWIFTNESS] >= 0)
     {
         if (_decrement_a_duration(DUR_SWIFTNESS, delay,
@@ -634,10 +633,6 @@ static void _decrement_durations()
             you.attribute[ATTR_SWIFTNESS] = 0;
         }
     }
-
-    _decrement_a_duration(DUR_RESISTANCE, delay,
-                          "Your resistance to elements expires.", coinflip(),
-                          "You start to feel less resistant.");
 
     if (_decrement_a_duration(DUR_PHASE_SHIFT, delay,
                               "You are firmly grounded in the material plane once more.",
@@ -671,8 +666,6 @@ static void _decrement_durations()
             you.props[POWERED_BY_DEATH_KEY] = 0;
         }
     }
-
-    _decrement_a_duration(DUR_TELEPATHY, delay, "You feel less empathic.");
 
     if (_decrement_a_duration(DUR_CONDENSATION_SHIELD, delay,
                               "Your icy shield evaporates.",
@@ -710,8 +703,6 @@ static void _decrement_durations()
         you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
     }
 
-    _decrement_a_duration(DUR_STEALTH, delay, "You feel less stealthy.");
-
     if (_decrement_a_duration(DUR_INVIS, delay, nullptr,
                               coinflip(), "You flicker for a moment."))
     {
@@ -722,25 +713,12 @@ static void _decrement_durations()
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
     }
 
-    // Decrement ambrosia before confusion, otherwise confusion ending
-    // will cancel ambrosia early. Might be a bad coupling, but ambrosia
-    // needs to use DUR_CONF otherwise it won't behave right if a player
-    // gets confused after eating ambrosia.
     dec_ambrosia_player(delay);
-    _decrement_a_duration(DUR_CONF, delay, "You feel less confused.");
-    _decrement_a_duration(DUR_LOWERED_MR, delay, "You feel less vulnerable to hostile enchantments.");
-    _decrement_a_duration(DUR_SLIMIFY, delay, "You feel less slimy.",
-                          coinflip(), "Your slime is starting to congeal.");
-    _decrement_a_duration(DUR_DEVICE_SURGE, delay,
-                          "Your device surge dissipates.",
-                          coinflip(), "Your device surge is dissipating.");
     if (_decrement_a_duration(DUR_QUAD_DAMAGE, delay, nullptr, 0,
                               "Quad Damage is wearing off."))
     {
         invalidate_agrid(true);
     }
-    _decrement_a_duration(DUR_MIRROR_DAMAGE, delay,
-                          "Your dark mirror aura disappears.");
     if (_decrement_a_duration(DUR_HEROISM, delay,
                               "You feel like a meek peon again."))
     {
@@ -754,17 +732,12 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_CONFUSING_TOUCH, delay,
                           you.hands_act("stop", "glowing.").c_str());
 
-    _decrement_a_duration(DUR_FORESTED, delay,
-                          "Space becomes stable.");
-
     if (_decrement_a_duration(DUR_MESMERISED, delay,
                               "You break out of your daze.",
                               0, nullptr, MSGCH_RECOVERY))
     {
         you.clear_beholders();
     }
-
-    _decrement_a_duration(DUR_MESMERISE_IMMUNE, delay);
 
     if (_decrement_a_duration(DUR_AFRAID, delay,
                               "Your fear fades away.",
@@ -773,17 +746,9 @@ static void _decrement_durations()
         you.clear_fearmongers();
     }
 
-    _decrement_a_duration(DUR_FROZEN, delay,
-                          "The ice encasing you melts away.",
-                          0, nullptr, MSGCH_RECOVERY);
-
     _decrement_a_duration(DUR_NO_POTIONS, delay,
                           you_foodless(true) ? nullptr
                                              : "You can drink potions again.",
-                          0, nullptr, MSGCH_RECOVERY);
-
-    _decrement_a_duration(DUR_NO_SCROLLS, delay,
-                          "You can read scrolls again.",
                           0, nullptr, MSGCH_RECOVERY);
 
     dec_slow_player(delay);
@@ -1009,9 +974,7 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_DIVINE_VIGOUR, delay))
         elyvilon_remove_divine_vigour();
 
-    _decrement_a_duration(DUR_REPEL_STAIRS_MOVE, delay);
-    _decrement_a_duration(DUR_REPEL_STAIRS_CLIMB, delay);
-
+    // XXX: this should probably be changed to be by aut rather than turns vvv
     _decrement_a_duration(DUR_COLOUR_SMOKE_TRAIL, 1);
 
     if (_decrement_a_duration(DUR_SCRYING, delay,
@@ -1019,9 +982,6 @@ static void _decrement_durations()
     {
         you.xray_vision = false;
     }
-
-    _decrement_a_duration(DUR_LIFESAVING, delay,
-                          "Your divine protection fades away.");
 
     if (_decrement_a_duration(DUR_DARKNESS, delay,
                               "The ambient light returns to normal.")
@@ -1034,38 +994,6 @@ static void _decrement_durations()
         }
         update_vision_range();
     }
-
-    _decrement_a_duration(DUR_SHROUD_OF_GOLUBRIA, delay,
-                          "Your shroud unravels.",
-                          0,
-                          "Your shroud begins to fray at the edges.");
-
-    _decrement_a_duration(DUR_INFUSION, delay,
-                          "You are no longer magically infusing your attacks.",
-                          0,
-                          "Your magical infusion is running out.");
-
-    _decrement_a_duration(DUR_SONG_OF_SLAYING, delay,
-                          "Your song has ended.",
-                          0,
-                          "Your song is almost over.");
-
-    _decrement_a_duration(DUR_SENTINEL_MARK, delay,
-                          "The sentinel's mark upon you fades away.");
-
-    _decrement_a_duration(DUR_WEAK, delay,
-                          "Your attacks no longer feel as feeble.");
-
-    _decrement_a_duration(DUR_DIMENSION_ANCHOR, delay,
-                          "You are no longer firmly anchored in space.");
-
-    _decrement_a_duration(DUR_SICKENING, delay);
-
-    _decrement_a_duration(DUR_SAP_MAGIC, delay,
-                          "Your magic seems less tainted.");
-
-    _decrement_a_duration(DUR_CLEAVE, delay,
-                          "Your cleaving frenzy subsides.");
 
     if (_decrement_a_duration(DUR_CORROSION, delay,
                           "You are no longer corroded."))
@@ -1081,10 +1009,6 @@ static void _decrement_durations()
                               "You feel more in control of your magic.");
     }
 
-    _decrement_a_duration(DUR_ANTIMAGIC, delay,
-                          "You regain control over your magic.");
-
-    _decrement_a_duration(DUR_WATER_HOLD_IMMUNITY, delay);
     if (you.duration[DUR_WATER_HOLD])
         handle_player_drowning(delay);
 
@@ -1135,22 +1059,11 @@ static void _decrement_durations()
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);
 
-    _decrement_a_duration(DUR_SLEEP_IMMUNITY, delay);
-
-    _decrement_a_duration(DUR_FIRE_VULN, delay,
-                          "You feel less vulnerable to fire.");
-
-    _decrement_a_duration(DUR_POISON_VULN, delay,
-                          "You feel less vulnerable to poison.");
-
     if (_decrement_a_duration(DUR_PORTAL_PROJECTILE, delay,
                               "You are no longer teleporting projectiles to their destination."))
     {
         you.attribute[ATTR_PORTAL_PROJECTILE] = 0;
     }
-
-    _decrement_a_duration(DUR_DRAGON_CALL_COOLDOWN, delay,
-                          "You can once more reach out to the dragon horde.");
 
     if (you.duration[DUR_DRAGON_CALL])
     {
@@ -1158,28 +1071,14 @@ static void _decrement_durations()
         if (_decrement_a_duration(DUR_DRAGON_CALL, delay,
                                   "The roar of the dragon horde subsides."))
         {
-            you.duration[DUR_DRAGON_CALL_COOLDOWN] = random_range(150, 250);
+            you.duration[DUR_DRAGON_CALL_COOLDOWN] = random_range(160, 260);
         }
 
     }
 
     if (you.duration[DUR_ABJURATION_AURA])
-    {
         do_aura_of_abjuration(delay);
-        _decrement_a_duration(DUR_ABJURATION_AURA, delay,
-                              "Your aura of abjuration expires.");
-    }
 
-    _decrement_a_duration(DUR_QAZLAL_FIRE_RES, delay,
-                          "You feel less protected from fire.",
-                          coinflip(), "Your protection from fire is fading.");
-    _decrement_a_duration(DUR_QAZLAL_COLD_RES, delay,
-                          "You feel less protected from cold.",
-                          coinflip(), "Your protection from cold is fading.");
-    _decrement_a_duration(DUR_QAZLAL_ELEC_RES, delay,
-                          "You feel less protected from electricity.",
-                          coinflip(),
-                          "Your protection from electricity is fading.");
     if (_decrement_a_duration(DUR_QAZLAL_AC, delay,
                               "You feel less protected from physical attacks.",
                               coinflip(),
@@ -1197,8 +1096,7 @@ static void _decrement_durations()
             you.props.erase(NEXT_DOOM_HOUND_KEY);
             you.duration[DUR_DOOM_HOWL_IMMUNITY] = random_range(30, 70);
         }
-    } else
-        _decrement_a_duration(DUR_DOOM_HOWL_IMMUNITY, delay);
+    }
 
     if (_decrement_a_duration(DUR_GOZAG_GOLD_AURA, delay))
         you.props["gozag_gold_aura_amount"] = 0;
@@ -1208,6 +1106,11 @@ static void _decrement_durations()
 
     if (!env.sunlight.empty())
         process_sunlights();
+
+    // these should be after decr_ambrosia, transforms, etc.
+    for (int i = 0; i < NUM_DURATIONS; ++i)
+        if (duration_decrements_normally((duration_type) i))
+            _decrement_simple_duration((duration_type) i, delay);
 }
 
 
