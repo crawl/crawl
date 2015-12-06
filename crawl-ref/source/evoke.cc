@@ -2399,8 +2399,9 @@ bool evoke_item(int slot, bool check_range)
             mpr("Your reserves of magic are already full.");
             return false;
         }
-        else if (x_chance_in_y(player_adjust_evoc_power(
-                                   you.skill(SK_EVOCATIONS, 100) + 1100),
+        else if (x_chance_in_y(apply_enhancement(
+                                   you.skill(SK_EVOCATIONS, 100) + 1100,
+                                   you.spec_evoke()),
                                4000))
         {
             mpr("You channel some magical energy.");
