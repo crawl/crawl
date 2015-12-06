@@ -1,8 +1,6 @@
 #include "AppHdr.h"
 
 #include "status.h"
-#include "random.h" // for midpoint_msg.offset() in duration-data
-#include "duration-data.h"
 
 #include "areas.h"
 #include "branch.h"
@@ -12,15 +10,21 @@
 #include "food.h"
 #include "godabil.h"
 #include "itemprop.h"
+#include "mon-transit.h" // untag_followers() in duration-data
 #include "mutation.h"
 #include "options.h"
 #include "player-stats.h"
+#include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
+#include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
 #include "spl-transloc.h"
+#include "spl-wpnench.h" // for _end_weapon_brand() in duration-data
 #include "stringutil.h"
 #include "throw.h"
 #include "transform.h"
 #include "traps.h"
+
+#include "duration-data.h"
 
 static int duration_index[NUM_DURATIONS];
 
@@ -1003,7 +1007,7 @@ static void _describe_invisible(status_info* inf)
  */
 bool duration_decrements_normally(duration_type dur)
 {
-    return _lookup_duration(dur)->decr.end_msg != nullptr;
+    return _lookup_duration(dur)->decr.end.msg != nullptr;
 }
 
 /**
@@ -1014,7 +1018,7 @@ bool duration_decrements_normally(duration_type dur)
  */
 const char *duration_end_message(duration_type dur)
 {
-    return _lookup_duration(dur)->decr.end_msg;
+    return _lookup_duration(dur)->decr.end.msg;
 }
 
 /**
@@ -1050,4 +1054,15 @@ msg_channel_type duration_mid_chan(duration_type dur)
 {
     return _lookup_duration(dur)->decr.recovery ? MSGCH_RECOVERY
                                                 : MSGCH_DURATION;
+}
+
+/**
+ * If a duration has some special effect when ending, trigger it.
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ */
+void duration_end_effect(duration_type dur)
+{
+    if (_lookup_duration(dur)->decr.end.on_end)
+        _lookup_duration(dur)->decr.end.on_end();
 }
