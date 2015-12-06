@@ -324,7 +324,7 @@ static bool _stop_because_god_hates_target_prompt(monster* mon, spell_type spell
                       || second && god_hates_brand(get_weapon_brand(*second));
         if (prompt
             && !yesno("Animating this weapon would put you into penance. "
-            " Really cast this spell?", false, 'n'))
+            "Really cast this spell?", false, 'n'))
         {
             return true;
         }
