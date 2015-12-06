@@ -822,7 +822,6 @@ static void _animate_weapon(int pow, actor* target)
         // Mark weapon as "thrown", so we'll autopickup it later.
         wpn->flags |= ISFLAG_THROWN;
     }
-    item_def cp = *wpn;
     // If sac love, the weapon will go after you, not the target.
     const bool sac_love = player_mutation_level(MUT_NO_LOVE);
     // Self-casting haunts yourself! MUT_NO_LOVE overrides force friendly.
@@ -836,7 +835,7 @@ static void _animate_weapon(int pow, actor* target)
                  target->pos(),
                  (target_is_player || sac_love) ? MHITYOU : target->mindex(),
                  sac_love ? 0 : MG_FORCE_BEH);
-    mg.props[TUKIMA_WEAPON] = cp;
+    mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
 
     monster *mons = create_monster(mg);
@@ -3209,8 +3208,6 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
 
     fail_check();
 
-    item_def cp = *wpn;
-
     // Remove any existing spectral weapons. Only one should be alive at any
     // given time.
     monster *old_mons = find_spectral_weapon(agent);
@@ -3228,7 +3225,7 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
 
     int skill_with_weapon = agent->skill(item_attack_skill(*wpn), 10, false);
 
-    mg.props[TUKIMA_WEAPON] = cp;
+    mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
     mg.props[TUKIMA_SKILL] = skill_with_weapon;
 
