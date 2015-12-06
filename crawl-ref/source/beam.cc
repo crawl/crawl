@@ -325,7 +325,7 @@ static bool _stop_because_god_hates_target_prompt(monster* mon,
         bool prompt = first && god_hates_brand(get_weapon_brand(*first))
                       || second && god_hates_brand(get_weapon_brand(*second));
         if (prompt
-            && !yesno("Animating this weapon would put you into penance. "
+            && !yesno("Animating this weapon would place you under penance. "
             "Really cast this spell?", false, 'n'))
         {
             return true;
@@ -335,7 +335,7 @@ static bool _stop_because_god_hates_target_prompt(monster* mon,
     if (you_worship(GOD_SHINING_ONE)
         && (flavour == BEAM_POISON || flavour == BEAM_POISON_ARROW)
         && mon->res_poison() < 3
-        && !yesno("Poisoning this monster would put you into penance. "
+        && !yesno("Poisoning this monster would place you under penance. "
                   "Continue anyway?", false, 'n'))
     {
         return true;
