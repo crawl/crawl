@@ -139,11 +139,20 @@ function ch_stash_search_annotate_item(it)
   end
   annot = annot .. it.class(true) .. "}"
 
-  if annot:find("rC+", 1, true) then
-      annot = annot .. " {resist cold} {cold resistance}"
-  end
-  if annot:find("rF+", 1, true) then
-      annot = annot .. " {resist fire} {fire resistance}"
+  local resistances = {
+    ["MR+"] = "magic",
+    ["rC+"] = "cold",
+    ["rCorr"] = "corrosion",
+    ["rElec"] = "electricity",
+    ["rF+"] = "fire",
+    ["rMut"] = "mutation",
+    ["rN+"] = "negative energy",
+    ["rPois"] = "poison"
+  }
+  for inscription,res in pairs(resistances) do
+    if annot:find(inscription, 1, true) then
+      annot = annot .. " {resist " .. res .. "} {" .. res .. " resistance}"
+    end
   end
 
   return annot
