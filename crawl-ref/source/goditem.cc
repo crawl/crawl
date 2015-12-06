@@ -497,8 +497,10 @@ bool is_corpse_violating_spell(spell_type spell)
 bool is_evil_spell(spell_type spell)
 {
     const spschools_type disciplines = get_spell_disciplines(spell);
+    unsigned int flags = get_spell_flags(spell);
 
-    return bool(disciplines & SPTYP_NECROMANCY);
+    return bool(disciplines & SPTYP_NECROMANCY)
+           && !bool(flags & SPFLAG_NOT_EVIL);
 }
 
 bool is_unclean_spell(spell_type spell)
