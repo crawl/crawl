@@ -3461,7 +3461,7 @@ void LevelInfo::correct_stair_list(const vector<coord_def> &s)
     // First we kill any stairs in 'stairs' that aren't there in 's'.
     for (int i = ((int) stairs.size()) - 1; i >= 0; --i)
     {
-        if (stairs[i].type != stair_info::PHYSICAL)
+        if (stairs[i].type == stair_info::PLACEHOLDER)
             continue;
 
         bool found = false;
@@ -3504,6 +3504,8 @@ void LevelInfo::correct_stair_list(const vector<coord_def> &s)
             {
                 si.destination = travel_hell_entry;
             }
+            if (!env.map_knowledge(pos).seen())
+                si.type = stair_info::MAPPED;
 
             // We don't know where on the next level these stairs go to, but
             // that can't be helped. That information will have to be filled
@@ -3511,7 +3513,7 @@ void LevelInfo::correct_stair_list(const vector<coord_def> &s)
             stairs.push_back(si);
         }
         else
-            stairs[found].type = stair_info::PHYSICAL;
+            stairs[found].type = env.map_knowledge(pos).seen() ? stair_info::PHYSICAL : stair_info::MAPPED;
     }
 
     resize_stair_distances();
@@ -3651,6 +3653,8 @@ void LevelInfo::fixup()
 
 void TravelCache::update_stone_stair(const coord_def &c)
 {
+    if (!env.map_knowledge(c).seen())
+        return;
     LevelInfo *li = find_level_info(level_id::current());
     if (!li)
         return;
@@ -3671,6 +3675,8 @@ void TravelCache::update_stone_stair(const coord_def &c)
     {
         if (li2->stairs[i].grid == feat2)
         {
+            if (li2->stairs[i].type == stair_info::MAPPED)
+                return;
             // If we haven't added these stairs to our LevelInfo yet, do so
             // before trying to update them.
             if (!si)
