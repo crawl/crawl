@@ -66,8 +66,6 @@ function ch_stash_search_annotate_item(it)
         annot = annot .. " rC+ rF-"
       elseif it.ego_type_terse == "Fire" then
         annot = annot .. " rF+ rC-"
-      elseif it.ego_type_terse == "Ward" then
-        annot = annot .. " rN+"
       elseif it.ego_type_terse == "Str" or it.ego_type_terse == "Int"
          or it.ego_type_terse == "Dex" or it.ego_type_terse == "Slay"
          or it.ego_type_terse == "EV" or it.ego_type_terse == "AC" then
