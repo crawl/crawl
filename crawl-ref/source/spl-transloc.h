@@ -26,8 +26,6 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail);
 spret_type cast_dispersal(int pow, bool fail = false);
 
 int gravitas_range(int pow, int strength = 1);
-void attract_actor(const actor* agent, actor* victim, const coord_def pos,
-                   int pow, int strength);
 bool fatal_attraction(const coord_def& pos, actor *agent, int pow);
 spret_type cast_gravitas(int pow, const coord_def& where, bool fail);
 #endif
