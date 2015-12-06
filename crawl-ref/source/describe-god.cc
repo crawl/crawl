@@ -551,6 +551,10 @@ static string _get_god_misc_info(god_type which_god)
         case GOD_GOZAG:
             return _describe_branch_bribability();
 
+        case GOD_PAKELLAS:
+            return "The power of Pakellas' abilities is governed by "
+                   "Evocations skill instead of Invocations.";
+
         default:
             return "";
     }
