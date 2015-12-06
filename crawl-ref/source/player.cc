@@ -3228,7 +3228,7 @@ int check_stealth()
     if (you.umbra())
     {
         int umbra_mul = 1, umbra_div = 1;
-        if (have_passive(passive_t::umbra) || you_worship(GOD_YREDELEMNUL))
+        if (you.nightvision())
         {
             umbra_mul = you.piety + MAX_PIETY;
             umbra_div = MAX_PIETY;
