@@ -318,11 +318,11 @@ static bool _stop_because_god_hates_target_prompt(monster* mon, spell_type spell
     // This is just a hasty stub for the one case I'm aware of right now.
     if (spell == SPELL_TUKIMAS_DANCE)
     {
-        item_def* wpn = mon->weapon();
-        brand_type brand = !is_range_weapon(*wpn) ?
-            static_cast<brand_type>(get_weapon_brand(*wpn))
-                                    : SPWPN_NORMAL;
-        if (god_hates_brand(brand)
+        const item_def* first = mon->weapon(0);
+        const item_def* second = mon->weapon(1);
+        bool prompt = first && god_hates_brand(get_weapon_brand(*first))
+                      || second && god_hates_brand(get_weapon_brand(*second));
+        if (prompt
             && !yesno("Animating this weapon would put you into penance. "
             " Really cast this spell?", false, 'n'))
         {
