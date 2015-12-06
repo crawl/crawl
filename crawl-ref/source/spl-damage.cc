@@ -2683,9 +2683,7 @@ static bool _dazzle_can_hit(const actor *act)
         testbeam.thrower = KILL_YOU;
         zappy(ZAP_DAZZLING_SPRAY, 100, testbeam);
 
-        return !mons_is_avatar(mons->type)
-               && mons_species(mons->type) != MONS_BUSH
-               && !shoot_through_monster(testbeam, mons);
+        return testbeam.ignores_monster(mons);
     }
     else
         return false;
