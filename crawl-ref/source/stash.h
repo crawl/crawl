@@ -98,7 +98,6 @@ public:
             const;
 
     string description() const;
-    vector<item_def> inventory() const;
 
     void save(writer&) const;
     void load(reader&);

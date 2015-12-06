@@ -974,14 +974,6 @@ bool ShopInfo::matches_search(const string &prefix,
     return !results.empty();
 }
 
-vector<item_def> ShopInfo::inventory() const
-{
-    vector<item_def> ret;
-    for (const shop_item &item : items)
-        ret.push_back(item.item);
-    return ret;
-}
-
 void ShopInfo::write(FILE *f, bool identify) const
 {
     no_notes nx;
