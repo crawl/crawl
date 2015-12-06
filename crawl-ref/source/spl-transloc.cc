@@ -989,6 +989,8 @@ static void _attract_actor(const actor* agent, actor* victim,
                 victim->collide(newpos, agent, pow);
             break;
         }
+        else if (!victim->is_habitable(newpos))
+            break;
         else
             victim->move_to_pos(newpos, false);
 
