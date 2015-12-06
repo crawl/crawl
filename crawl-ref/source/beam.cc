@@ -313,7 +313,9 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
 
 // Returns true if the player wants / needs to abort based on god displeasure
 // with targeting this target with this spell. Returns false otherwise.
-static bool _stop_because_god_hates_target_prompt(monster* mon, spell_type spell)
+static bool _stop_because_god_hates_target_prompt(monster* mon,
+                                                  spell_type spell,
+                                                  beam_type flavour)
 {
     // This is just a hasty stub for the one case I'm aware of right now.
     if (spell == SPELL_TUKIMAS_DANCE)
@@ -328,6 +330,15 @@ static bool _stop_because_god_hates_target_prompt(monster* mon, spell_type spell
         {
             return true;
         }
+    }
+
+    if (you_worship(GOD_SHINING_ONE)
+        && (flavour == BEAM_POISON || flavour == BEAM_POISON_ARROW)
+        && mon->res_poison() < 3
+        && !yesno("Poisoning this monster would put you into penance. "
+                  "Continue anyway?", false, 'n'))
+    {
+        return true;
     }
     return false;
 }
@@ -4234,7 +4245,7 @@ void bolt::handle_stop_attack_prompt(monster* mon)
     bool prompted = false;
 
     if (stop_attack_prompt(mon, true, target, &prompted)
-        || _stop_because_god_hates_target_prompt(mon, origin_spell))
+        || _stop_because_god_hates_target_prompt(mon, origin_spell, flavour))
     {
         beam_cancelled = true;
         finish_beam();
