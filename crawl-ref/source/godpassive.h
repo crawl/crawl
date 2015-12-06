@@ -151,7 +151,7 @@ enum class passive_t
     deaths_door_hp_boost,
 
     /// Protection against miscasts. Piety dependant.
-    miscast_protection
+    miscast_protection,
 
     /// Protection against necromancy miscasts and mummy death curses.
     miscast_protection_necromancy,
