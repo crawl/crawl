@@ -45,6 +45,8 @@ enum spflag_type
     SPFLAG_MR_CHECK            = 0x8000000,      // spell that checks monster MR
     SPFLAG_MONS_ABJURE        = 0x10000000,      // monsters can cast abjuration
                                                  // instead of this spell
+    SPFLAG_NOT_EVIL           = 0x20000000,      // not considered evil by the
+                                                 // good gods
 };
 
 enum spret_type
