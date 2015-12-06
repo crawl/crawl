@@ -139,10 +139,10 @@ function ch_stash_search_annotate_item(it)
   end
   annot = annot .. it.class(true) .. "}"
 
-  if annot:find("rC+", 0, true) then
+  if annot:find("rC+", 1, true) then
       annot = annot .. " {resist cold} {cold resistance}"
   end
-  if annot:find("rF+", 0, true) then
+  if annot:find("rF+", 1, true) then
       annot = annot .. " {resist fire} {fire resistance}"
   end
 
