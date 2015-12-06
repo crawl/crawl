@@ -801,7 +801,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         if (!yesno(god_loathes_spell(spell, you.religion) ?
             "<lightred>Casting this spell will cause instant excommunication!"
                 "</lightred> Really cast?" :
-            "Casting this spell will put you into penance. Really cast?",
+            "Casting this spell will place you under penance. Really cast?",
             true, 'n'))
         {
             canned_msg(MSG_OK);
