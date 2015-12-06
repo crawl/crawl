@@ -2335,6 +2335,7 @@ bool drop_item(int item_dropped, int quant_drop)
             mpr("You will have to take that off first.");
         else if (remove_ring(item_dropped, true))
         {
+            // The delay handles the case where the item disappeared.
             start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
             // We didn't actually succeed yet, but remove_ring took time,
             // so return true anyway.
@@ -2364,6 +2365,7 @@ bool drop_item(int item_dropped, int quant_drop)
                 // If we take off the item, cue up the item being dropped
                 if (takeoff_armour(item_dropped))
                 {
+                    // The delay handles the case where the item disappeared.
                     start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
                     // We didn't actually succeed yet, but takeoff_armour
                     // took a turn to start up, so return true anyway.
@@ -2383,7 +2385,13 @@ bool drop_item(int item_dropped, int quant_drop)
     {
         if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, true, true, false))
             return false;
+        // May have been destroyed by removal. Returning true because we took
+        // time to swap away.
+        else if (!you.inv[item_dropped].defined())
+            return true;
     }
+
+    ASSERT(you.inv[item_dropped].defined());
 
     if (!copy_item_to_grid(you.inv[item_dropped],
                             you.pos(), quant_drop, true, true))
