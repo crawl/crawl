@@ -387,7 +387,8 @@ void update_monsters_in_view()
             vector<monster *> mons;
             for (monster *mon : monsters)
             {
-                if (mon->wont_attack()
+                if (!mon->see_cell(you.pos()) // xray_vision
+                    || mon->wont_attack()
                     || mon->is_stationary()
                     || mons_is_object(mon->type)
                     || mons_is_tentacle_or_tentacle_segment(mon->type))
