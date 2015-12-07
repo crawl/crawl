@@ -84,26 +84,51 @@
 // mostly flavour.
 static const spell_type _xom_nontension_spells[] =
 {
-    SPELL_SUMMON_BUTTERFLIES, SPELL_BEASTLY_APPENDAGE,
-    SPELL_SPIDER_FORM, SPELL_STATUE_FORM, SPELL_ICE_FORM, SPELL_DRAGON_FORM,
+    SPELL_SUMMON_BUTTERFLIES,
+    SPELL_SPIDER_FORM,
+    SPELL_ICE_FORM,
+    SPELL_STATUE_FORM,
+    SPELL_HYDRA_FORM,
+    SPELL_DRAGON_FORM,
     SPELL_NECROMUTATION
 };
 
 // Spells to be cast at tension > 0, i.e. usually in battle situations.
+// Spells later in the list require higher severity to have a chance of being
+// selected.
 static const spell_type _xom_tension_spells[] =
 {
-    SPELL_BLINK, SPELL_CONFUSING_TOUCH, SPELL_CAUSE_FEAR, SPELL_ENGLACIATION,
-    SPELL_DISPERSAL, SPELL_STONESKIN, SPELL_RING_OF_FLAMES, SPELL_DISCORD,
-    SPELL_OLGREBS_TOXIC_RADIANCE, SPELL_EXCRUCIATING_WOUNDS,
-    SPELL_WARP_BRAND, SPELL_SUMMON_BUTTERFLIES,
-    SPELL_SUMMON_SMALL_MAMMAL, SPELL_SUMMON_SWARM,
-    SPELL_BEASTLY_APPENDAGE, SPELL_SPIDER_FORM, SPELL_STATUE_FORM,
-    SPELL_ICE_FORM, SPELL_DRAGON_FORM, SPELL_HYDRA_FORM,
-    SPELL_SHADOW_CREATURES, SPELL_SUMMON_HORRIBLE_THINGS,
-    SPELL_CALL_CANINE_FAMILIAR, SPELL_SUMMON_ICE_BEAST,
-    SPELL_MONSTROUS_MENAGERIE, SPELL_CONJURE_BALL_LIGHTNING,
-    SPELL_SUMMON_HYDRA, SPELL_SUMMON_DRAGON,
-    SPELL_DEATH_CHANNEL, SPELL_NECROMUTATION, SPELL_CHAIN_OF_CHAOS
+    SPELL_SUMMON_BUTTERFLIES,
+    SPELL_SUMMON_SMALL_MAMMAL,
+    SPELL_CONFUSING_TOUCH,
+    SPELL_CALL_CANINE_FAMILIAR,
+    SPELL_SPIDER_FORM,
+    SPELL_OLGREBS_TOXIC_RADIANCE,
+    SPELL_SUMMON_ICE_BEAST,
+    SPELL_LEDAS_LIQUEFACTION,
+    SPELL_CAUSE_FEAR,
+    SPELL_ICE_FORM,
+    SPELL_RING_OF_FLAMES,
+    SPELL_SUMMON_SWARM,
+    SPELL_SHADOW_CREATURES,
+    SPELL_EXCRUCIATING_WOUNDS,
+    SPELL_WARP_BRAND,
+    SPELL_SUMMON_MANA_VIPER,
+    SPELL_STATUE_FORM,
+    SPELL_HYDRA_FORM,
+    SPELL_DISPERSAL,
+    SPELL_ENGLACIATION,
+    SPELL_DEATH_CHANNEL,
+    SPELL_SUMMON_HYDRA,
+    SPELL_MONSTROUS_MENAGERIE,
+    SPELL_DISCORD,
+    SPELL_DISJUNCTION,
+    SPELL_CONJURE_BALL_LIGHTNING,
+    SPELL_DRAGON_FORM,
+    SPELL_SUMMON_HORRIBLE_THINGS,
+    SPELL_SUMMON_DRAGON,
+    SPELL_NECROMUTATION,
+    SPELL_CHAIN_OF_CHAOS
 };
 
 static const char *_xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
@@ -562,11 +587,6 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
     // Don't attempt to cast spells that will do nothing, or that the player
     // cannot memorise/cast.
     if (spell_is_useless(spell, true, true))
-        return XOM_DID_NOTHING;
-
-    // Don't attempt to teleport the player if the teleportation will
-    // fail.
-    if (!_teleportation_check(spell))
         return XOM_DID_NOTHING;
 
     // Don't attempt to transform the player if the transformation will
