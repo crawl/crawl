@@ -480,7 +480,7 @@ static void _handle_recitation(int step)
  */
 static void _decrement_simple_duration(duration_type dur, int delay)
 {
-    if(_decrement_a_duration(dur, delay, duration_end_message(dur),
+    if (_decrement_a_duration(dur, delay, duration_end_message(dur),
                              duration_mid_offset(dur),
                              duration_mid_message(dur),
                              duration_mid_chan(dur)))
@@ -797,25 +797,6 @@ static void _decrement_durations()
         }
     }
 
-    if (you.species == SP_GHOUL)
-    {
-        int resilience = 400;
-
-        if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
-            resilience = resilience * 3 / 2;
-
-        // Faster rotting when hungry.
-        if (you.hunger_state < HS_SATIATED)
-            resilience >>= HS_SATIATED - you.hunger_state;
-
-        if (one_chance_in(resilience))
-        {
-            dprf("rot rate: 1/%d", resilience);
-            mprf(MSGCH_WARN, "You feel your flesh rotting away.");
-            rot_hp(1);
-        }
-    }
-
     if (you.duration[DUR_DEATHS_DOOR] && you.hp > allowed_deaths_door_hp())
     {
         set_hp(allowed_deaths_door_hp());
@@ -928,6 +909,27 @@ static void _check_equipment_conducts()
     }
 }
 
+/**
+ * Handles player ghoul rotting over time.
+ */
+static void _rot_ghoul_players()
+{
+    if (you.species != SP_GHOUL)
+        return;
+
+    int resilience = in_good_standing(GOD_CHEIBRIADOS, 0) ? 600 : 400;
+
+    // Faster rotting when hungry.
+    if (you.hunger_state < HS_SATIATED)
+        resilience >>= HS_SATIATED - you.hunger_state;
+
+    if (one_chance_in(resilience))
+    {
+        dprf("rot rate: 1/%d", resilience);
+        mprf(MSGCH_WARN, "You feel your flesh rotting away.");
+        rot_hp(1);
+    }
+}
 
 // cjo: Handles player hp and mp regeneration. If the counter
 // you.hit_points_regeneration is over 100, a loop restores 1 hp and decreases
@@ -1064,6 +1066,7 @@ void player_reacts()
     handle_starvation();
 
     _decrement_durations();
+    _rot_ghoul_players();
 
     // Translocations and possibly other duration decrements can
     // escape a player from beholders and fearmongers. These should
