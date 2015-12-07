@@ -650,39 +650,12 @@ static void _decrement_durations()
         }
     }
 
-    if (_decrement_a_duration(DUR_FORTITUDE, delay,
-                              "Your fortitude fades away."))
-    {
-        notify_stat_change(STAT_STR, -10, true);
-    }
-
-
-    if (_decrement_a_duration(DUR_MIGHT, delay,
-                              "You feel a little less mighty now."))
-    {
-        notify_stat_change(STAT_STR, -5, true);
-    }
-
-    if (_decrement_a_duration(DUR_AGILITY, delay,
-                              "You feel a little less agile now."))
-    {
-        notify_stat_change(STAT_DEX, -5, true);
-    }
-
-    if (_decrement_a_duration(DUR_BRILLIANCE, delay,
-                              "You feel a little less clever now."))
-    {
-        notify_stat_change(STAT_INT, -5, true);
-    }
 
     if (you.duration[DUR_BERSERK]
         && you.hunger + 100 <= HUNGER_STARVING + BERSERK_NUTRITION)
     {
         you.duration[DUR_BERSERK] = 1; // end
     }
-
-    if (_decrement_a_duration(DUR_CORONA, delay) && !you.backlit())
-        mprf(MSGCH_DURATION, "You are no longer glowing.");
 
     // Leak piety from the piety pool into actual piety.
     // Note that changes of religious status without corresponding actions
@@ -790,10 +763,10 @@ static void _decrement_durations()
     if (you.duration[DUR_RECITE] && _check_recite())
     {
         const int old_recite =
-        (you.duration[DUR_RECITE] + BASELINE_DELAY - 1) / BASELINE_DELAY;
+            (you.duration[DUR_RECITE] + BASELINE_DELAY - 1) / BASELINE_DELAY;
         _decrement_a_duration(DUR_RECITE, delay);
         const int new_recite =
-        (you.duration[DUR_RECITE] + BASELINE_DELAY - 1) / BASELINE_DELAY;
+            (you.duration[DUR_RECITE] + BASELINE_DELAY - 1) / BASELINE_DELAY;
         if (old_recite != new_recite)
             _handle_recitation(new_recite);
     }
