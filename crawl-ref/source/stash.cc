@@ -928,6 +928,25 @@ bool ShopInfo::matches_search(const string &prefix,
 
     no_notes nx;
 
+    string shoptitle = name;
+    if (!visited && items.empty())
+        shoptitle += "*";
+    shoptitle += " " + prefix + " {shop}";
+
+    pattern_match shoptitle_match(search.match_location(name));
+    if (!shoptitle_match)
+        shoptitle_match = search.match_location(shoptitle);
+    if (shoptitle_match)
+    {
+        stash_search_result res;
+        res.match = shoptitle_match;
+        res.shop = this;
+        res.pos.pos = pos;
+        results.push_back(res);
+        // If the shop itself matches, don't show the items.
+        return true;
+    }
+
     for (const shop_item &item : items)
     {
         const string sname = shop_item_name(item);
@@ -944,31 +963,10 @@ bool ShopInfo::matches_search(const string &prefix,
             stash_search_result res;
             res.match = itemname_match;
             res.item = item.item;
+            res.shop = this;
+            res.pos.pos = pos;
             results.push_back(res);
         }
-    }
-
-    if (results.empty())
-    {
-        string shoptitle = name;
-        if (!visited && items.empty())
-            shoptitle += "*";
-        shoptitle +=  " " + prefix + " {shop}";
-        pattern_match shoptitle_match(search.match_location(name));
-        if (!shoptitle_match)
-            shoptitle_match = search.match_location(shoptitle);
-        if (shoptitle_match)
-        {
-            stash_search_result res;
-            res.match = shoptitle_match;
-            results.push_back(res);
-        }
-    }
-
-    for (auto &res : results)
-    {
-        res.shop = this;
-        res.pos.pos = pos;
     }
 
     return !results.empty();
