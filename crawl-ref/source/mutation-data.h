@@ -2044,7 +2044,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_PHYSICAL_VULNERABILITY, 0, 3, mutflag::BAD, false,
-  "vulnerability to harm",
+  "reduced AC",
 
   {"You take slightly more damage. (-3 AC)",
     "You take more damage. (-6 AC)",
@@ -2060,7 +2060,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_SLOW_REFLEXES, 0, 3, mutflag::BAD, false,
-  "slow reflexes",
+  "reduced EV",
 
   {"You have somewhat slow reflexes. (-3 EV)",
     "You have slow reflexes. (-6 EV)",
