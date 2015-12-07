@@ -119,10 +119,6 @@ public:
         unsigned price;
     };
 
-    // Attempts to guess if the item came from the shop, and if so returns the
-    // corresponding shop_item_name:
-    string get_shop_item_name(const item_def&) const;
-
     bool is_at(coord_def other) const { return pos == other; }
 
 private:
