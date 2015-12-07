@@ -37,7 +37,6 @@ InventoryRegion::InventoryRegion(const TileRegionInit &init) : GridRegion(init)
 
 void InventoryRegion::pack_buffers()
 {
-    // Pack base separately, as it comes from a different texture...
     unsigned int i = 0 + (m_grid_page*mx*my - m_grid_page*2); // this has to match the logic in cursor_index()
     for (int y = 0; y < my; y++)
     {
@@ -48,14 +47,6 @@ void InventoryRegion::pack_buffers()
 
             InventoryTile &item = m_items[i++];
 
-            if ((y==my-1 && x==mx-1 && item.tile)
-                || (y==0 && x==0 && m_grid_page>0))
-            {
-                // draw a background for paging tiles
-                m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
-                continue;
-            }
-
             if (item.flag & TILEI_FLAG_FLOOR)
             {
                 if (i >= (unsigned int) mx * my * (m_grid_page+1) && item.tile)
@@ -65,8 +56,6 @@ void InventoryRegion::pack_buffers()
                 tileidx_t t = env.tile_default.floor + m_flavour[i] % num_floor;
                 m_buf.add_dngn_tile(t, x, y);
             }
-            else
-                m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
         }
     }
 

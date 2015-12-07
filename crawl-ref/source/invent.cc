@@ -493,7 +493,6 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
         else if (item_known_cursed(*item))
             tileset.emplace_back(TILE_ITEM_SLOT_CURSED, TEX_DEFAULT);
 
-        tileset.emplace_back(TILE_ITEM_SLOT, TEX_FEAT);
         tileidx_t base_item = tileidx_known_base_item(idx);
         if (base_item)
             tileset.emplace_back(base_item, TEX_DEFAULT);
@@ -509,9 +508,7 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
             ? item->holding_monster()->pos()
             : item->pos;
         tileidx_t ch = 0;
-        if (!show_background || c.x == 0)
-            tileset.emplace_back(TILE_ITEM_SLOT, TEX_FEAT); // Store items.
-        else if (c != coord_def())
+        if (c != coord_def())
         {
             ch = tileidx_feature(c);
             if (ch == TILE_FLOOR_NORMAL)
