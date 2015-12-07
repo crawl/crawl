@@ -51,10 +51,8 @@ public:
     // verify the stash).
     bool unverified() const;
 
-    bool matches_search(const string &prefix,
-                        const base_pattern &search,
-                        vector<stash_search_result> &results)
-            const;
+    vector<stash_search_result> matches_search(
+        const string &prefix, const base_pattern &search) const;
 
     void write(FILE *f, coord_def refpos, string place = "",
                bool identify = false) const;
@@ -92,10 +90,8 @@ class ShopInfo
 public:
     ShopInfo(coord_def pos_);
 
-    bool matches_search(const string &prefix,
-                        const base_pattern &search,
-                        vector<stash_search_result> &results)
-            const;
+    vector<stash_search_result> matches_search(
+        const string &prefix, const base_pattern &search) const;
 
     string description() const;
 
