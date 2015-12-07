@@ -2610,6 +2610,8 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
     bolt center_beam = base_beam;
     center_beam.hit = AUTOMATIC_HIT;
     center_beam.fire();
+    if (center_beam.path_taken.empty())
+        center_beam.path_taken.push_back(center_beam.source);
     center_beam.target = center_beam.path_taken.back();
     center_beam.hit = 1;
     center_beam.fire();
@@ -2645,6 +2647,8 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
             testbeam.target = *di;
             testbeam.hit = AUTOMATIC_HIT;
             testbeam.fire();
+            if (testbeam.path_taken.empty())
+                testbeam.path_taken.push_back(testbeam.source);
             bool duplicate = false;
 
             for (const bolt &beam : beams)
