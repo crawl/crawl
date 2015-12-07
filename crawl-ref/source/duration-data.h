@@ -25,6 +25,11 @@ static void _end_corrosion()
     you.wield_change = true;
 }
 
+static void _redraw_armour()
+{
+    you.redraw_armour_class = true;
+}
+
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -121,7 +126,10 @@ static const duration_def duration_data[] =
     { DUR_AGILITY,
       LIGHTBLUE, "Agi",
       "agile", "agility",
-      "You are agile.", D_DISPELLABLE},
+      "You are agile.", D_DISPELLABLE,
+      {{ "You feel a little less agile now.", []() {
+          notify_stat_change(STAT_DEX, -5, true);
+      }}}},
     { DUR_ANTIMAGIC,
       RED, "-Mag",
       "antimagic", "",
@@ -140,7 +148,10 @@ static const duration_def duration_data[] =
     { DUR_BRILLIANCE,
       LIGHTBLUE, "Brill",
       "brilliant", "brilliance",
-      "You are brilliant.", D_DISPELLABLE},
+      "You are brilliant.", D_DISPELLABLE,
+      {{ "You feel a little less clever now.", []() {
+          notify_stat_change(STAT_INT, -5, true);
+      }}}},
     { DUR_CONF,
       RED, "Conf",
       "confused", "conf",
@@ -157,7 +168,11 @@ static const duration_def duration_data[] =
     { DUR_CORONA,
       YELLOW, "Corona",
       "", "corona",
-      "", D_DISPELLABLE},
+      "", D_DISPELLABLE,
+      {{ "", []() {
+          if (!you.backlit())
+              mprf(MSGCH_DURATION, "You are no longer glowing.");
+      }}}},
     { DUR_DEATH_CHANNEL,
       MAGENTA, "DChan",
       "death channel", "",
@@ -200,13 +215,14 @@ static const duration_def duration_data[] =
       0, "",
       "shielded", "magic shield",
       "", D_DISPELLABLE,
-      {{ "Your magical shield disappears.", [](){
-          you.redraw_armour_class = true;
-      }}}},
+      {{ "Your magical shield disappears.", _redraw_armour }}},
     { DUR_MIGHT,
       LIGHTBLUE, "Might",
       "mighty", "might",
-      "You are mighty.", D_DISPELLABLE},
+      "You are mighty.", D_DISPELLABLE,
+      {{ "You feel a little less mighty now.", []() {
+          notify_stat_change(STAT_STR, -5, true);
+      }}}},
     { DUR_PARALYSIS,
       RED, "Para",
       "paralysed", "paralysis",
@@ -490,9 +506,8 @@ static const duration_def duration_data[] =
       LIGHTBLUE, "",
       "protected from physical damage", "qazlal ac",
       "Qazlal is protecting you from physical damage.", D_NO_FLAGS,
-      {{ "You feel less protected from physical attacks.", []() {
-          you.redraw_armour_class = true;
-      }}, { "Your protection from physical attacks is fading." , 1 }}},
+      {{ "You feel less protected from physical attacks.",  _redraw_armour },
+         { "Your protection from physical attacks is fading." , 1 }}},
     { DUR_CORROSION,
       RED, "Corr",
       "corroded equipment", "corrosion",
@@ -501,7 +516,10 @@ static const duration_def duration_data[] =
     { DUR_FORTITUDE,
       LIGHTBLUE, "Fort",
       "immense fortitude", "",
-      "You have immense fortitude and shrug off injury.", D_DISPELLABLE},
+      "You have immense fortitude and shrug off injury.", D_DISPELLABLE,
+      {{ "Your fortitude fades away.", []() {
+          notify_stat_change(STAT_STR, -10, true);
+      }}}},
     { DUR_HORROR,
       RED, "Horr",
       "horrified", "",
@@ -575,7 +593,8 @@ static const duration_def duration_data[] =
     { DUR_REPEL_STAIRS_CLIMB, 0, "", "", "repel stairs climb", "", D_NO_FLAGS, {{""}}},
     { DUR_COLOUR_SMOKE_TRAIL, 0, "", "", "coloured smoke trail", "", D_NO_FLAGS},
     { DUR_TIME_STEP, 0, "", "", "time step", "", D_NO_FLAGS},
-    { DUR_ICEMAIL_DEPLETED, 0, "", "", "icemail depleted", "", D_NO_FLAGS},
+    { DUR_ICEMAIL_DEPLETED, 0, "", "", "icemail depleted", "", D_NO_FLAGS,
+      {{ "Your icy envelope is restored.", _redraw_armour }}},
     { DUR_PARALYSIS_IMMUNITY, 0, "", "", "paralysis immunity", "", D_NO_FLAGS},
     { DUR_VEHUMET_GIFT, 0, "", "", "vehumet gift", "", D_NO_FLAGS, {{""}}},
     { DUR_SICKENING, 0, "", "", "sickening", "", D_DISPELLABLE, {{""}}},
