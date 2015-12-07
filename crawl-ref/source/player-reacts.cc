@@ -509,19 +509,6 @@ static void _decrement_durations()
     else
         you.duration[DUR_GOURMAND] = 0;
 
-    if (you.duration[DUR_ICEMAIL_DEPLETED] > 0)
-    {
-        if (delay > you.duration[DUR_ICEMAIL_DEPLETED])
-            you.duration[DUR_ICEMAIL_DEPLETED] = 0;
-        else
-            you.duration[DUR_ICEMAIL_DEPLETED] -= delay;
-
-        if (!you.duration[DUR_ICEMAIL_DEPLETED])
-            mprf(MSGCH_DURATION, "Your icy envelope is restored.");
-
-        you.redraw_armour_class = true;
-    }
-
     if (you.duration[DUR_LIQUID_FLAMES])
         dec_napalm_player(delay);
 
