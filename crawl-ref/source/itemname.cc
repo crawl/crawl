@@ -2730,9 +2730,15 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
     if (entry->item->base_type == OBJ_RUNES)
     {
         auto rune = static_cast<rune_type>(entry->item->sub_type);
+        colour_t colour;
+        // Make Gloorx's rune more distinguishable from uncollected runes.
+        if (you.runes[rune])
+            colour = (rune == RUNE_GLOORX_VLOQ) ? LIGHTGREY : rune_colour(rune);
+        else
+            colour = DARKGREY;
+
         string text = "<";
-        text += you.runes[rune] ? colour_to_str(rune_colour(rune))
-                                : string("darkgrey");
+        text += colour_to_str(colour);
         text += ">";
         text += rune_type_name(rune);
         text += " rune of Zot";
@@ -2743,8 +2749,7 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
             text += ")";
         }
         text += "</";
-        text += you.runes[rune] ? colour_to_str(rune_colour(rune))
-                                : string("darkgrey");
+        text += colour_to_str(colour);
         text += ">";
         entry->text = text;
         // Use the generic tile for rune that haven't been gotten yet, to make
