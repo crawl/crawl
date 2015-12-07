@@ -1809,23 +1809,6 @@ bool StashSearchMenu::process_key(int key)
     return Menu::process_key(key);
 }
 
-string ShopInfo::get_shop_item_name(const item_def& search_item) const
-{
-    // Rely on items_similar, rnd, quantity to see if the item_def object is in
-    // the shop (extremely unlikely to be cheated and only consequence would be a
-    // wrong name showing up in the stash search):
-    for (const shop_item &item : items)
-    {
-        if (items_similar(item.item, search_item)
-            && item.item.rnd == search_item.rnd
-            && item.item.quantity == search_item.quantity)
-        {
-            return shop_item_name(item);
-        }
-    }
-    return "";
-}
-
 static void _stash_filter_useless(const vector<stash_search_result> &in,
                                   vector<stash_search_result> &out)
 {
