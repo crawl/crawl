@@ -676,71 +676,9 @@ static void _decrement_durations()
     }
 
     if (you.duration[DUR_BERSERK]
-        && (_decrement_a_duration(DUR_BERSERK, delay)
-            || you.hunger + 100 <= HUNGER_STARVING + BERSERK_NUTRITION))
+        && you.hunger + 100 <= HUNGER_STARVING + BERSERK_NUTRITION)
     {
-        mpr("You are no longer berserk.");
-        you.duration[DUR_BERSERK] = 0;
-
-        // Sometimes berserk leaves us physically drained.
-        //
-        // Chance of passing out:
-        //     - mutation gives a large plus in order to try and
-        //       avoid the mutation being a "death sentence" to
-        //       certain characters.
-
-        if (you.berserk_penalty != NO_BERSERK_PENALTY
-            && one_chance_in(10 + player_mutation_level(MUT_BERSERK) * 25))
-        {
-            // Note the beauty of Trog!  They get an extra save that's at
-            // the very least 20% and goes up to 100%.
-            if (in_good_standing(GOD_TROG)
-                && x_chance_in_y(you.piety, piety_breakpoint(5)))
-            {
-                mpr("Trog's vigour flows through your veins.");
-            }
-            else
-            {
-                mprf(MSGCH_WARN, "You pass out from exhaustion.");
-                you.increase_duration(DUR_PARALYSIS, roll_dice(1,4));
-                you.stop_constricting_all();
-            }
-        }
-
-        if (!you.duration[DUR_PARALYSIS] && !you.petrified())
-            mprf(MSGCH_WARN, "You are exhausted.");
-
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_LAVA_ORC)
-            mpr("You feel less hot-headed.");
-#endif
-
-        // This resets from an actual penalty or from NO_BERSERK_PENALTY.
-        you.berserk_penalty = 0;
-
-        int dur = 12 + roll_dice(2, 12);
-        // For consistency with slow give exhaustion 2 times the nominal
-        // duration.
-        you.increase_duration(DUR_EXHAUSTED, dur * 2);
-
-        notify_stat_change(STAT_STR, -5, true);
-
-        // Don't trigger too many hints mode messages.
-        const bool hints_slow = Hints.hints_events[HINT_YOU_ENCHANTED];
-        Hints.hints_events[HINT_YOU_ENCHANTED] = false;
-
-        slow_player(dur);
-
-        make_hungry(BERSERK_NUTRITION, true);
-        you.hunger = max(HUNGER_STARVING - 100, you.hunger);
-
-        // 1KB: No berserk healing.
-        set_hp((you.hp + 1) * 2 / 3);
-        calc_hp();
-
-        learned_something_new(HINT_POSTBERSERK);
-        Hints.hints_events[HINT_YOU_ENCHANTED] = hints_slow;
-        you.redraw_quiver = true; // Can throw again.
+        you.duration[DUR_BERSERK] = 1; // end
     }
 
     if (_decrement_a_duration(DUR_CORONA, delay) && !you.backlit())
