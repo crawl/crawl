@@ -380,8 +380,7 @@ void apply_control_winds(const monster* mon)
         {
             wind_beam.target = cl->pos;
             wind_beam.fire();
-            for (size_t j = 0; !wind_beam.path_taken.empty()
-                               && j < wind_beam.path_taken.size() - 1; ++j)
+            for (unsigned int j = 0; j < wind_beam.path_taken.size() - 1; ++j)
             {
                 if (env.cgrid(wind_beam.path_taken[j]) == cloud_list[i])
                 {
