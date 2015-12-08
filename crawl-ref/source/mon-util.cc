@@ -2633,7 +2633,7 @@ void define_monster(monster* mons)
     const monsterentry *m     = get_monster_data(mcls);
     int col                   = mons_class_colour(mcls);
     int hd                    = mons_class_hit_dice(mcls);
-    int hp = 0, hp_max;
+    int hp = 0;
 
     mons->mname.clear();
 
@@ -2739,8 +2739,8 @@ void define_monster(monster* mons)
 
     // Some calculations.
     if (hp == 0)
-        hp     = hit_points(hd, m->hpdice[1], m->hpdice[2]);
-    hp_max = hp;
+        hp = hit_points(hd, m->hpdice[1], m->hpdice[2]);
+    const int hp_max = hp;
 
     // So let it be written, so let it be done.
     mons->set_hit_dice(hd);
@@ -2818,6 +2818,11 @@ void define_monster(monster* mons)
     }
 
     mons->calc_speed();
+
+    // When all is said and done, this monster had better have some hit
+    // points, or it will be dead on arrival
+    ASSERT(mons->hit_points > 0);
+    ASSERT(mons->max_hit_points > 0);
 }
 
 static const char *ugly_colour_names[] =
