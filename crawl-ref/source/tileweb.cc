@@ -512,6 +512,19 @@ void TilesFramework::close_all_menus()
         pop_menu();
 }
 
+static void _send_text_cursor(bool enabled)
+{
+    tiles.send_message("{\"msg\":\"text_cursor\",\"enabled\":%s}",
+                       enabled ? "true" : "false");
+}
+
+void TilesFramework::set_text_cursor(bool enabled)
+{
+    if (m_text_cursor == enabled) return;
+
+    m_text_cursor = enabled;
+}
+
 static void _send_ui_state(WebtilesUIState state)
 {
     tiles.json_open_object();
@@ -1565,6 +1578,8 @@ void TilesFramework::_send_everything()
     _send_version();
     _send_options();
 
+    _send_text_cursor(m_text_cursor);
+
     // UI State
     _send_ui_state(m_ui_state);
     m_last_ui_state = m_ui_state;
@@ -1663,6 +1678,12 @@ void TilesFramework::redraw()
             m_mcache_ref_done = false;
         }
         return;
+    }
+
+    if (m_last_text_cursor != m_text_cursor)
+    {
+        _send_text_cursor(m_text_cursor);
+        m_last_text_cursor = m_text_cursor;
     }
 
     if (m_last_ui_state != m_ui_state)

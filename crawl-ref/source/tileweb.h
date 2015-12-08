@@ -195,6 +195,7 @@ public:
 
     void clear_crt_menu() { m_text_menu.clear(); }
 
+    void set_text_cursor(bool enabled);
     void set_ui_state(WebtilesUIState state);
     WebtilesUIState get_ui_state() { return m_ui_state; }
 
@@ -267,6 +268,8 @@ protected:
 
     coord_def m_cursor[CURSOR_MAX];
     coord_def m_last_clicked_grid;
+    bool m_text_cursor;
+    bool m_last_text_cursor;
 
     bool m_has_overlays;
 

@@ -575,14 +575,10 @@ void clrscr()
 
 void set_cursor_enabled(bool enabled)
 {
-#ifdef USE_TILE_WEB
-    if (cursor_is_enabled != enabled)
-    {
-        tiles.send_message("{\"msg\":\"text_cursor\",\"enabled\":%s}",
-                           enabled ? "true" : "false");
-    }
-#endif
     curs_set(cursor_is_enabled = enabled);
+#ifdef USE_TILE_WEB
+    tiles.set_text_cursor(enabled);
+#endif
 }
 
 bool is_cursor_enabled()
