@@ -51,10 +51,8 @@ public:
     // verify the stash).
     bool unverified() const;
 
-    bool matches_search(const string &prefix,
-                        const base_pattern &search,
-                        vector<stash_search_result> &results)
-            const;
+    vector<stash_search_result> matches_search(
+        const string &prefix, const base_pattern &search) const;
 
     void write(FILE *f, coord_def refpos, string place = "",
                bool identify = false) const;
@@ -92,13 +90,10 @@ class ShopInfo
 public:
     ShopInfo(coord_def pos_);
 
-    bool matches_search(const string &prefix,
-                        const base_pattern &search,
-                        vector<stash_search_result> &results)
-            const;
+    vector<stash_search_result> matches_search(
+        const string &prefix, const base_pattern &search) const;
 
     string description() const;
-    vector<item_def> inventory() const;
 
     void save(writer&) const;
     void load(reader&);
@@ -119,10 +114,6 @@ public:
         item_def item;
         unsigned price;
     };
-
-    // Attempts to guess if the item came from the shop, and if so returns the
-    // corresponding shop_item_name:
-    string get_shop_item_name(const item_def&) const;
 
     bool is_at(coord_def other) const { return pos == other; }
 
@@ -249,12 +240,11 @@ public:
     bool  is_current() const;
 
     void  remove_shop(const coord_def& c);
- private:
+private:
     void _update_corpses(int rot_time);
     void _update_identification();
     void _waypoint_search(int n, vector<stash_search_result> &results) const;
 
- private:
     typedef map<coord_def, Stash> stashes_t;
     typedef vector<ShopInfo> shops_t;
 
@@ -346,9 +336,9 @@ public:
     unsigned         price();
 
 private:
-          level_id  m_place;
+    level_id        m_place;
     const item_def* m_item;
-          unsigned  m_price;
+    unsigned        m_price;
     const ShopInfo* m_shop;
 
     StashTracker::stash_levels_t::const_iterator m_stash_level_it;

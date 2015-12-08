@@ -36,6 +36,7 @@
 #include "stepdown.h"
 #include "stringutil.h"
 #include "travel.h"
+#include "transform.h"
 #include "xom.h"
 
 static void _eat_chunk(item_def& food);
@@ -298,36 +299,40 @@ bool food_change(bool initial)
 
         if (you.species == SP_VAMPIRE)
         {
-            if (newstate <= HS_SATIATED)
+            if (you.duration[DUR_BERSERK] > 1 && newstate <= HS_HUNGRY)
             {
-                if (you.duration[DUR_BERSERK] > 1 && newstate <= HS_HUNGRY)
-                {
-                    mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
-                                         "your rage any longer.");
-                    you.duration[DUR_BERSERK] = 1;
-                }
-                if (you.form != TRAN_NONE && you.form != TRAN_BAT
-                    && you.duration[DUR_TRANSFORMATION] > 2 * BASELINE_DELAY)
+                mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
+                                     "your rage any longer.");
+                you.duration[DUR_BERSERK] = 1;
+            }
+
+            switch (lifeless_prevents_form())
+            {
+            case UFR_TOO_DEAD:
+                if (you.duration[DUR_TRANSFORMATION] > 2 * BASELINE_DELAY)
                 {
                     mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
                                          "your transformation much longer.");
                     you.set_duration(DUR_TRANSFORMATION, 2);
                 }
-            }
-            else if (you.form == TRAN_BAT
-                     && you.duration[DUR_TRANSFORMATION] > 5)
-            {
-                print_stats();
-                mprf(MSGCH_WARN, "Your blood-filled body can't sustain your "
-                                 "transformation much longer.");
+                break;
+            case UFR_TOO_ALIVE:
+                if (you.duration[DUR_TRANSFORMATION] > 5 * BASELINE_DELAY)
+                {
+                    print_stats();
+                    mprf(MSGCH_WARN, "Your blood-filled body can't sustain your "
+                                     "transformation much longer.");
 
-                // Give more time because suddenly stopping flying can be fatal.
-                you.set_duration(DUR_TRANSFORMATION, 5);
-            }
-            else if (newstate == HS_ENGORGED && is_vampire_feeding()) // Alive
-            {
-                print_stats();
-                mpr("You can't stomach any more blood right now.");
+                    // Give more time because suddenly stopping flying can be fatal.
+                    you.set_duration(DUR_TRANSFORMATION, 5);
+                }
+                break;
+            case UFR_GOOD:
+                if (newstate == HS_ENGORGED && is_vampire_feeding()) // Alive
+                {
+                    print_stats();
+                    mpr("You can't stomach any more blood right now.");
+                }
             }
         }
 

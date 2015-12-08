@@ -1072,8 +1072,8 @@ bool targetter_shadow_step::set_aim(coord_def a)
 // Determine the set of valid landing sites
 void targetter_shadow_step::set_additional_sites(coord_def a)
 {
-     get_additional_sites(a);
-     additional_sites = temp_sites;
+    get_additional_sites(a);
+    additional_sites = temp_sites;
 }
 
 // Determine the set of valid landing sites for the target, putting the results

@@ -332,8 +332,8 @@ void practise(exer_type ex, int param1)
         break;
 
     case EX_MONSTER_MAY_HIT:
-         _check_train_dodging(1);
-         break;
+        _check_train_dodging(1);
+        break;
 
     case EX_WILL_LAUNCH:
         sk = static_cast<skill_type>(param1);

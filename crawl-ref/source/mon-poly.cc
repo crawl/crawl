@@ -15,6 +15,7 @@
 #include "dungeon.h"
 #include "exclude.h"
 #include "fineff.h"
+#include "godabil.h" // BEOGH_*_GIFT_KEY
 #include "godconduct.h"
 #include "hints.h"
 #include "itemprop.h"
@@ -401,6 +402,11 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     mons->speed_increment = 67 + random2(6);
 
+    // If a Beogh follower is polymorphed (dropping equipment), then
+    // polymorphed back into an orc, allow gifting again.
+    mons->props.erase(BEOGH_WPN_GIFT_KEY);
+    mons->props.erase(BEOGH_ARM_GIFT_KEY);
+    mons->props.erase(BEOGH_SH_GIFT_KEY);
     monster_drop_things(mons);
 
     // If new monster is visible to player, then we've seen it.

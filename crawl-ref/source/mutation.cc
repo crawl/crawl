@@ -1125,8 +1125,11 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     // We can't use is_useless_skill() here, since species that can still wear
     // body armour can sacrifice armour skill with Ru.
-    if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL && mutat == MUT_DEFORMED)
+    if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL
+        && (mutat == MUT_DEFORMED || mutat == MUT_STURDY_FRAME))
+    {
         return true;
+    }
 
     equipment_type eq_type = EQ_NONE;
 

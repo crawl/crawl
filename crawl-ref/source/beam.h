@@ -249,7 +249,6 @@ private:
     void affect_ground();
     void affect_place_clouds();
     void affect_place_explosion_clouds();
-    bool hit_wall();
     int range_used(bool leg_only = false) const;
     void finish_beam();
 

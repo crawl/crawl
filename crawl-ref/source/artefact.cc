@@ -421,7 +421,6 @@ struct jewellery_fake_artp
 static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { AMU_RAGE, { { ARTP_BERSERK, 1 } } },
     { AMU_REGENERATION, { { ARTP_REGENERATION, 1 } } },
-    { AMU_DISMISSAL, { { ARTP_CONTAM, 1 } } },
 
     { RING_INVISIBILITY, { { ARTP_INVISIBLE, 1 } } },
     { RING_MAGICAL_POWER, { { ARTP_MAGICAL_POWER, 9 } } },
@@ -638,8 +637,6 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_MAGICAL_POWER:
             return item_class != OBJ_WEAPONS
                    || get_weapon_brand(item) != SPWPN_ANTIMAGIC;
-        case ARTP_CONTAM:
-            return !item.is_type(OBJ_JEWELLERY, AMU_DISMISSAL);
             // not quite as interesting on armour, since you swap it less
         case ARTP_FRAGILE:
             return item_class != OBJ_ARMOUR;
@@ -1150,7 +1147,7 @@ static string _get_artefact_type(const item_def &item, bool appear = false)
             return "amulet";
         else
             return "ring";
-     default:
+    default:
         return "artefact";
     }
 }

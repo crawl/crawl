@@ -1,7 +1,6 @@
 #include "AppHdr.h"
 
 #include "status.h"
-#include "duration-data.h"
 
 #include "areas.h"
 #include "branch.h"
@@ -11,15 +10,21 @@
 #include "food.h"
 #include "godabil.h"
 #include "itemprop.h"
+#include "mon-transit.h" // untag_followers() in duration-data
 #include "mutation.h"
 #include "options.h"
 #include "player-stats.h"
+#include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
+#include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
 #include "spl-transloc.h"
+#include "spl-wpnench.h" // for _end_weapon_brand() in duration-data
 #include "stringutil.h"
 #include "throw.h"
 #include "transform.h"
 #include "traps.h"
+
+#include "duration-data.h"
 
 static int duration_index[NUM_DURATIONS];
 
@@ -992,4 +997,72 @@ static void _describe_invisible(status_info* inf)
     _mark_expiring(inf, dur_expiring(you.form == TRAN_SHADOW
                                      ? DUR_TRANSFORMATION
                                      : DUR_INVIS));
+}
+
+/**
+ * Does a given duration tick down simply over time?
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @return      Whether the duration's end_msg is non-null.
+ */
+bool duration_decrements_normally(duration_type dur)
+{
+    return _lookup_duration(dur)->decr.end.msg != nullptr;
+}
+
+/**
+ * What message should a given duration print when it expires, if any?
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @return      A message to print for the duration when it ends.
+ */
+const char *duration_end_message(duration_type dur)
+{
+    return _lookup_duration(dur)->decr.end.msg;
+}
+
+/**
+ * What message should a given duration print when it reaches 50%, if any?
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @return      A message to print for the duration when it hits 50%.
+ */
+const char *duration_mid_message(duration_type dur)
+{
+    return _lookup_duration(dur)->decr.mid_msg.msg;
+}
+
+/**
+ * How much should the duration be decreased by when it hits 50% (to fuzz the
+ * remaining time), if at all?
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @return      A random value to reduce the remaining duration by; may be 0.
+ */
+int duration_mid_offset(duration_type dur)
+{
+    return _lookup_duration(dur)->decr.mid_msg.offset();
+}
+
+/**
+ * What channel should the duration messages be printed in?
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @return      The appropriate message channel, e.g. MSGCH_RECOVERY.
+ */
+msg_channel_type duration_mid_chan(duration_type dur)
+{
+    return _lookup_duration(dur)->decr.recovery ? MSGCH_RECOVERY
+                                                : MSGCH_DURATION;
+}
+
+/**
+ * If a duration has some special effect when ending, trigger it.
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ */
+void duration_end_effect(duration_type dur)
+{
+    if (_lookup_duration(dur)->decr.end.on_end)
+        _lookup_duration(dur)->decr.end.on_end();
 }

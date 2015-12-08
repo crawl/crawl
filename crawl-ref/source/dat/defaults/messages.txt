@@ -83,9 +83,14 @@ msc += $boring:lunges up near
 force_more_message += You have reached level
 force_more_message += Your scales start
 force_more_message += You fall through a shaft
+force_more_message += You fall into the
 force_more_message += Marking area around .* as unsafe
-force_more_message += .*breaks free of your control
-force_more_message += .*doesn't seem very happy
+force_more_message += breaks free of your control
+force_more_message += doesn't seem very happy
+force_more_message += You rejoin the land of the living
+force_more_message += You cannot cast spells when silenced
+force_more_message += You don't have the energy to cast that spell
+force_more_message += This is a scroll of acquirement
 
 ## Reduce chance of drowning because flight or form runs out:
 force_more_message += Careful!
@@ -100,6 +105,16 @@ force_more_message += sound of rushing water
 force_more_message += oppressive heat about you
 force_more_message += crackle of arcane power
 
+# Religion
+force_more_message += press .* to convert to Beogh
+force_more_message += welcomes you( back)?!
+force_more_message += You have lost your religion
+
+# Banishment
+force_more_message += You are cast into the Abyss
+force_more_message += You are cast deeper into the Abyss
+force_more_message += The Abyss bends around you
+
 # Abyss exits and rune
 force_more_message += Found a gateway leading out of the Abyss
 force_more_message += Found .* abyssal rune of Zot
@@ -107,5 +122,36 @@ force_more_message += Found .* abyssal rune of Zot
 # Generally exciting things that are somewhat automated
 force_more_message += You pick up the .* rune and feel its power
 
-# First chance of Beogh conversion
-force_more_message += press .* to convert to Beogh
+# Rune unlock
+force_more_message += The lock glows eerily
+force_more_message += Heavy smoke blows from the lock
+force_more_message += The gate opens wide
+force_more_message += With a loud hiss the gate opens wide
+
+# God gifts
+force_more_message += grants you a gift
+force_more_message += offers you knowledge of
+force_more_message += believes you are ready to make a new sacrifice
+
+# Show passwall message while still in the starting position
+force_more_message += You finish merging with the rock
+
+# Pause before showing a menu that hides the message
+force_more_message += You bow before the missionary of Beogh
+force_more_message += You .* the altar of
+force_more_message += will bless one of your weapons
+force_more_message += will bloody your weapon with pain
+force_more_message += will brand one of your weapons
+force_more_message += will supercharge a wand or rod
+force_more_message += It is a scroll of amnesia
+force_more_message += It is a scroll of brand weapon
+force_more_message += It is a scroll of enchant armour
+force_more_message += It is a scroll of enchant weapon
+force_more_message += It is a scroll of identify
+force_more_message += It is a scroll of recharging
+force_more_message += You feel more experienced
+force_more_message += A flood of memories washes over you
+force_more_message += There's only one card left
+force_more_message += The deck only has .* cards
+force_more_message += The deck has exactly five cards
+force_more_message += You draw the first five cards

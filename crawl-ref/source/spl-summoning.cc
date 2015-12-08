@@ -599,6 +599,7 @@ void doom_howl(int time)
             mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
                                        INFINITE_DURATION));
             mons->behaviour = BEH_SEEK;
+            mons->flags |= MF_NO_REWARD | MF_HARD_RESET;
             check_place_cloud(CLOUD_BLACK_SMOKE, mons->pos(),
                               random_range(1,2), mons);
         }
@@ -879,20 +880,17 @@ static bool _check_tukima_validity(const actor *target)
 static void _animate_weapon(int pow, actor* target)
 {
     bool target_is_player = target == &you;
-    item_def* wpn = target->weapon();
+    item_def * const wpn = target->weapon();
+    ASSERT(wpn);
     if (target_is_player)
     {
         // Clear temp branding so we don't change the brand permanently.
         if (you.duration[DUR_WEAPON_BRAND])
-        {
-            ASSERT(you.weapon());
             end_weapon_brand(*wpn);
-        }
 
         // Mark weapon as "thrown", so we'll autopickup it later.
         wpn->flags |= ISFLAG_THROWN;
     }
-    item_def cp = *wpn;
     // If sac love, the weapon will go after you, not the target.
     const bool sac_love = player_mutation_level(MUT_NO_LOVE);
     // Self-casting haunts yourself! MUT_NO_LOVE overrides force friendly.
@@ -906,10 +904,10 @@ static void _animate_weapon(int pow, actor* target)
                  target->pos(),
                  (target_is_player || sac_love) ? MHITYOU : target->mindex(),
                  sac_love ? 0 : MG_FORCE_BEH);
-    mg.props[TUKIMA_WEAPON] = cp;
+    mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
 
-    monster *mons = create_monster(mg);
+    monster * const mons = create_monster(mg);
 
     if (!mons)
     {
@@ -933,7 +931,7 @@ static void _animate_weapon(int pow, actor* target)
         unwield_item();
     else
     {
-        monster* montarget = (monster*)target;
+        monster * const montarget = target->as_monster();
         const int primary_weap = montarget->inv[MSLOT_WEAPON];
         const mon_inv_type wp_slot = (primary_weap != NON_ITEM
                                       && &mitm[primary_weap] == wpn) ?
@@ -1516,13 +1514,13 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
         // of trees on unoccupied floor (such that they do not break connectivity)
         for (distance_iterator di(caster->pos(), false, true, LOS_RADIUS); di; ++di)
         {
-           if ((grd(*di) == DNGN_ROCK_WALL && x_chance_in_y(pow, 150))
-               || ((grd(*di) == DNGN_FLOOR && x_chance_in_y(pow, 1250)
-                    && !actor_at(*di) && !plant_forbidden_at(*di, true))))
-           {
+            if ((grd(*di) == DNGN_ROCK_WALL && x_chance_in_y(pow, 150))
+                    || ((grd(*di) == DNGN_FLOOR && x_chance_in_y(pow, 1250)
+                         && !actor_at(*di) && !plant_forbidden_at(*di, true))))
+            {
                 temp_change_terrain(*di, DNGN_TREE, duration,
-                                    TERRAIN_CHANGE_FORESTED);
-           }
+                        TERRAIN_CHANGE_FORESTED);
+            }
         }
 
         // Maybe make a pond
@@ -3278,8 +3276,6 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
 
     fail_check();
 
-    item_def cp = *wpn;
-
     // Remove any existing spectral weapons. Only one should be alive at any
     // given time.
     monster *old_mons = find_spectral_weapon(agent);
@@ -3297,7 +3293,7 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
 
     int skill_with_weapon = agent->skill(item_attack_skill(*wpn), 10, false);
 
-    mg.props[TUKIMA_WEAPON] = cp;
+    mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
     mg.props[TUKIMA_SKILL] = skill_with_weapon;
 

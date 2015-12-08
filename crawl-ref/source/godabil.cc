@@ -5843,7 +5843,7 @@ void ru_offer_new_sacrifices()
     }
 
     simple_god_message(" believes you are ready to make a new sacrifice.");
-    more();
+    // included in default force_more_message
 }
 
 static const char* _describe_sacrifice_piety_gain(int piety_gain)

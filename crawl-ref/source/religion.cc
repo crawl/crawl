@@ -1471,7 +1471,7 @@ static bool _give_nemelex_gift(bool forced = false)
             deck.flags |= ISFLAG_KNOW_TYPE;
 
             simple_god_message(" grants you a gift!");
-            more();
+            // included in default force_more_message
             canned_msg(MSG_SOMETHING_APPEARS);
 
             _inc_gift_timeout(5 + random2avg(9, 2));
@@ -1513,7 +1513,7 @@ static bool _give_pakellas_gift()
     if (acquirement(gift_type, you.religion))
     {
         simple_god_message(" grants you a gift!");
-        more();
+        // included in default force_more_message
 
         if (you.num_total_gifts[GOD_PAKELLAS] > 0)
             _inc_gift_timeout(150 + random2avg(29, 2));
@@ -1839,7 +1839,7 @@ bool do_god_gift(bool forced)
             if (success)
             {
                 simple_god_message(" grants you a gift!");
-                more();
+                // included in default force_more_message
 
                 if (gift_type == OBJ_MISSILES)
                     _inc_gift_timeout(4 + roll_dice(2, 4));
@@ -1955,7 +1955,7 @@ bool do_god_gift(bool forced)
             if (success)
             {
                 simple_god_message(" grants you a gift!");
-                more();
+                // included in default force_more_message
 
                 you.num_current_gifts[you.religion]++;
                 you.num_total_gifts[you.religion]++;
@@ -2010,7 +2010,7 @@ bool do_god_gift(bool forced)
                     you.num_total_gifts[you.religion]++;
 
                     simple_god_message(prompt.c_str());
-                    more();
+                    // included in default force_more_message
 
                     success = true;
                 }
@@ -2594,7 +2594,7 @@ static string _god_hates_your_god_reaction(god_type god, god_type your_god)
     return "";
 }
 
-void excommunication(bool voluntary, god_type new_god, bool immediate)
+void excommunication(bool voluntary, god_type new_god)
 {
     const god_type old_god = you.religion;
     ASSERT(old_god != new_god);
@@ -2640,8 +2640,7 @@ void excommunication(bool voluntary, god_type new_god, bool immediate)
     you.redraw_quiver = true;
 
     mpr("You have lost your religion!");
-    if (!immediate)
-        more();
+    // included in default force_more_message
 
     if (old_god == GOD_BEOGH)
     {
@@ -3308,7 +3307,7 @@ void set_god_ability_slots()
     }
 }
 
-void join_religion(god_type which_god, bool immediate)
+void join_religion(god_type which_god)
 {
     ASSERT(which_god != GOD_NO_GOD);
     ASSERT(which_god != GOD_ECUMENICAL);
@@ -3322,7 +3321,7 @@ void join_religion(god_type which_god, bool immediate)
 
     // Leave your prior religion first.
     if (!you_worship(GOD_NO_GOD))
-        excommunication(true, which_god, immediate);
+        excommunication(true, which_god);
 
     // Welcome to the fold!
     you.religion = static_cast<god_type>(which_god);
@@ -3371,8 +3370,7 @@ void join_religion(god_type which_god, bool immediate)
     simple_god_message(
         make_stringf(" welcomes you%s!",
                      you.worshipped[which_god] ? " back" : "").c_str());
-    if (!immediate)
-        more();
+    // included in default force_more_message
     if (crawl_state.game_is_tutorial())
     {
         // Tutorial needs berserk usable.
@@ -3642,7 +3640,7 @@ void god_pitch(god_type which_god)
              get_form()->player_prayer_action().c_str(),
              god_name(which_god).c_str());
     }
-    more();
+    // these are included in default force_more_message
 
     const int fee = (which_god == GOD_GOZAG) ? gozag_service_fee() : 0;
 

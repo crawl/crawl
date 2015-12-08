@@ -550,12 +550,12 @@ string Stash::feature_description() const
     return feat_desc;
 }
 
-bool Stash::matches_search(const string &prefix,
-                           const base_pattern &search,
-                           vector<stash_search_result> &results) const
+vector<stash_search_result> Stash::matches_search(
+    const string &prefix, const base_pattern &search) const
 {
+    vector<stash_search_result> results;
     if (empty())
-        return false;
+        return results;
 
     for (const item_def &item : items)
     {
@@ -593,7 +593,7 @@ bool Stash::matches_search(const string &prefix,
     for (auto &res : results)
         res.pos.pos = pos;
 
-    return !results.empty();
+    return results;
 }
 
 void Stash::_update_corpses(int rot_time)
@@ -919,14 +919,33 @@ string ShopInfo::description() const
     return name;
 }
 
-bool ShopInfo::matches_search(const string &prefix,
-                              const base_pattern &search,
-                              vector<stash_search_result> &results) const
+vector<stash_search_result> ShopInfo::matches_search(
+    const string &prefix, const base_pattern &search) const
 {
+    vector<stash_search_result> results;
     if (items.empty() && visited)
-        return false;
+        return results;
 
     no_notes nx;
+
+    string shoptitle = name;
+    if (!visited && items.empty())
+        shoptitle += "*";
+    shoptitle += " " + prefix + " {shop}";
+
+    pattern_match shoptitle_match(search.match_location(name));
+    if (!shoptitle_match)
+        shoptitle_match = search.match_location(shoptitle);
+    if (shoptitle_match)
+    {
+        stash_search_result res;
+        res.match = shoptitle_match;
+        res.shop = this;
+        res.pos.pos = pos;
+        results.push_back(res);
+        // If the shop itself matches, don't show the items.
+        return results;
+    }
 
     for (const shop_item &item : items)
     {
@@ -944,42 +963,13 @@ bool ShopInfo::matches_search(const string &prefix,
             stash_search_result res;
             res.match = itemname_match;
             res.item = item.item;
+            res.shop = this;
+            res.pos.pos = pos;
             results.push_back(res);
         }
     }
 
-    if (results.empty())
-    {
-        string shoptitle = name;
-        if (!visited && items.empty())
-            shoptitle += "*";
-        shoptitle +=  " " + prefix + " {shop}";
-        pattern_match shoptitle_match(search.match_location(name));
-        if (!shoptitle_match)
-            shoptitle_match = search.match_location(shoptitle);
-        if (shoptitle_match)
-        {
-            stash_search_result res;
-            res.match = shoptitle_match;
-            results.push_back(res);
-        }
-    }
-
-    for (auto &res : results)
-    {
-        res.shop = this;
-        res.pos.pos = pos;
-    }
-
-    return !results.empty();
-}
-
-vector<item_def> ShopInfo::inventory() const
-{
-    vector<item_def> ret;
-    for (const shop_item &item : items)
-        ret.push_back(item.item);
-    return ret;
+    return results;
 }
 
 void ShopInfo::write(FILE *f, bool identify) const
@@ -1206,8 +1196,8 @@ void LevelStashes::_waypoint_search(
     const Stash* stash = find_stash(waypoint.pos);
     if (!stash)
         return;
-    vector<stash_search_result> new_results;
-    stash->matches_search("", text_pattern(".*"), new_results);
+    vector<stash_search_result> new_results =
+        stash->matches_search("", text_pattern(".*"));
     for (auto &res : new_results)
     {
         res.pos.id = m_place;
@@ -1237,8 +1227,8 @@ void LevelStashes::get_matching_stashes(
 
     for (const auto &entry : m_stashes)
     {
-        vector<stash_search_result> new_results;
-        entry.second.matches_search(lplace, search, new_results);
+        vector<stash_search_result> new_results =
+            entry.second.matches_search(lplace, search);
         for (auto &res : new_results)
         {
             res.pos.id = m_place;
@@ -1248,8 +1238,8 @@ void LevelStashes::get_matching_stashes(
 
     for (const ShopInfo &shop : m_shops)
     {
-        vector<stash_search_result> new_results;
-        shop.matches_search(lplace, search, new_results);
+        vector<stash_search_result> new_results =
+            shop.matches_search(lplace, search);
         for (auto &res : new_results)
         {
             res.pos.id = m_place;
@@ -1576,9 +1566,9 @@ static bool _compare_by_name(const stash_search_result& lhs,
         return false;
 }
 
-static void _inventory_search(const base_pattern &search,
-                              vector<stash_search_result> &results)
+static vector<stash_search_result> _inventory_search(const base_pattern &search)
 {
+    vector<stash_search_result> results;
     for (const item_def &item : you.inv)
     {
         if (!item.defined())
@@ -1604,6 +1594,8 @@ static void _inventory_search(const base_pattern &search,
             results.push_back(res);
         }
     }
+
+    return results;
 }
 
 void StashTracker::search_stashes()
@@ -1681,8 +1673,6 @@ void StashTracker::search_stashes()
         search = &ptpat;
     }
 
-    vector<stash_search_result> results;
-
     if (!search->valid() && csearch != "*")
     {
         mprf(MSGCH_PLAIN, "Your search expression is invalid.");
@@ -1691,8 +1681,9 @@ void StashTracker::search_stashes()
 
     lastsearch = csearch_literal;
 
+    vector<stash_search_result> results;
     if (!curr_lev)
-        _inventory_search(*search, results);
+        results = _inventory_search(*search);
     get_matching_stashes(*search, results, curr_lev);
 
     if (results.empty())
@@ -1817,23 +1808,6 @@ bool StashSearchMenu::process_key(int key)
     }
 
     return Menu::process_key(key);
-}
-
-string ShopInfo::get_shop_item_name(const item_def& search_item) const
-{
-    // Rely on items_similar, rnd, quantity to see if the item_def object is in
-    // the shop (extremely unlikely to be cheated and only consequence would be a
-    // wrong name showing up in the stash search):
-    for (const shop_item &item : items)
-    {
-        if (items_similar(item.item, search_item)
-            && item.item.rnd == search_item.rnd
-            && item.item.quantity == search_item.quantity)
-        {
-            return shop_item_name(item);
-        }
-    }
-    return "";
 }
 
 static void _stash_filter_useless(const vector<stash_search_result> &in,

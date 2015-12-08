@@ -2652,7 +2652,7 @@ void read_scroll(int item_slot)
 
     case SCR_ACQUIREMENT:
         mpr("This is a scroll of acquirement!");
-        more();
+        // included in default force_more_message
         // Identify it early in case the player checks the '\' screen.
         set_ident_type(scroll, true);
         run_uncancel(UNC_ACQUIREMENT, AQ_SCROLL);
@@ -2747,8 +2747,7 @@ void read_scroll(int item_slot)
         {
             mpr(pre_succ_msg);
             mpr("It is a scroll of enchant weapon.");
-            // Pause to display the message before jumping to the weapon list.
-            more();
+            // included in default force_more_message (to show it before menu)
         }
 
         cancel_scroll = !_handle_enchant_weapon(alreadyknown, pre_succ_msg);
@@ -2759,8 +2758,7 @@ void read_scroll(int item_slot)
         {
             mpr(pre_succ_msg);
             mpr("It is a scroll of brand weapon.");
-            // Pause to display the message before jumping to the weapon list.
-            more();
+            // included in default force_more_message (to show it before menu)
         }
 
         cancel_scroll = !_handle_brand_weapon(alreadyknown, pre_succ_msg);
@@ -2771,7 +2769,7 @@ void read_scroll(int item_slot)
         {
             mpr(pre_succ_msg);
             mpr("It is a scroll of identify.");
-            more();
+            // included in default force_more_message (to show it before menu)
             // Do this here so it doesn't turn up in the ID menu.
             set_ident_type(scroll, true);
         }
@@ -2783,7 +2781,7 @@ void read_scroll(int item_slot)
         {
             mpr(pre_succ_msg);
             mpr("It is a scroll of recharging.");
-            more();
+            // included in default force_more_message (to show it before menu)
         }
         cancel_scroll = (recharge_wand(alreadyknown, pre_succ_msg) == -1);
         break;
@@ -2793,7 +2791,7 @@ void read_scroll(int item_slot)
         {
             mpr(pre_succ_msg);
             mpr("It is a scroll of enchant armour.");
-            more();
+            // included in default force_more_message (to show it before menu)
         }
         cancel_scroll =
             (_handle_enchant_armour(alreadyknown, pre_succ_msg) == -1);
@@ -2828,7 +2826,11 @@ void read_scroll(int item_slot)
 
     case SCR_AMNESIA:
         if (!alreadyknown)
+        {
             mpr(pre_succ_msg);
+            mpr("It is a scroll of amnesia.");
+            // included in default force_more_message (to show it before menu)
+        }
         if (you.spell_no == 0)
             mpr("You feel forgetful for a moment.");
         else if (!alreadyknown)
@@ -2862,7 +2864,8 @@ void read_scroll(int item_slot)
         && which_scroll != SCR_ENCHANT_WEAPON
         && which_scroll != SCR_IDENTIFY
         && which_scroll != SCR_ENCHANT_ARMOUR
-        && which_scroll != SCR_RECHARGING)
+        && which_scroll != SCR_RECHARGING
+        && which_scroll != SCR_AMNESIA)
     {
         mprf("It %s a %s.",
              you.inv[item_slot].quantity < prev_quantity ? "was" : "is",

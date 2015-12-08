@@ -579,7 +579,8 @@ protected:
     bool jump_to(int linenum);
 
 #ifdef USE_TILE_WEB
-    virtual void webtiles_write_item(int index, const MenuEntry* me) const;
+    virtual void webtiles_write_item(int index,
+                                     const MenuEntry* me) const override;
 #endif
 };
 

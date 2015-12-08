@@ -313,21 +313,32 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
 
 // Returns true if the player wants / needs to abort based on god displeasure
 // with targeting this target with this spell. Returns false otherwise.
-static bool _stop_because_god_hates_target_prompt(monster* mon, spell_type spell)
+static bool _stop_because_god_hates_target_prompt(monster* mon,
+                                                  spell_type spell,
+                                                  beam_type flavour)
 {
     // This is just a hasty stub for the one case I'm aware of right now.
     if (spell == SPELL_TUKIMAS_DANCE)
     {
-        item_def* wpn = mon->weapon();
-        brand_type brand = !is_range_weapon(*wpn) ?
-            static_cast<brand_type>(get_weapon_brand(*wpn))
-                                    : SPWPN_NORMAL;
-        if (god_hates_brand(brand)
-            && !yesno("Animating this weapon would put you into penance. "
-            " Really cast this spell?", false, 'n'))
+        const item_def * const first = mon->weapon(0);
+        const item_def * const second = mon->weapon(1);
+        bool prompt = first && god_hates_brand(get_weapon_brand(*first))
+                      || second && god_hates_brand(get_weapon_brand(*second));
+        if (prompt
+            && !yesno("Animating this weapon would place you under penance. "
+            "Really cast this spell?", false, 'n'))
         {
             return true;
         }
+    }
+
+    if (you_worship(GOD_SHINING_ONE)
+        && (flavour == BEAM_POISON || flavour == BEAM_POISON_ARROW)
+        && mon->res_poison() < 3
+        && !yesno("Poisoning this monster would place you under penance. "
+                  "Continue anyway?", false, 'n'))
+    {
+        return true;
     }
     return false;
 }
@@ -762,6 +773,7 @@ void bolt::draw(const coord_def& p)
 // the feature.
 void bolt::bounce()
 {
+    ASSERT(cell_is_solid(ray.pos()));
     // Don't bounce player tracers off unknown cells, or cells that we
     // incorrectly thought were non-bouncy.
     if (is_tracer && agent() == &you)
@@ -1089,82 +1101,6 @@ bool bolt::need_regress() const
            || origin_spell == SPELL_PRIMAL_WAVE;
 }
 
-// Returns true if the beam ended due to hitting the wall.
-bool bolt::hit_wall()
-{
-    const dungeon_feature_type feat = grd(pos());
-
-#ifdef ASSERTS
-    if (!feat_is_solid(feat))
-        die("beam::hit_wall yet not solid: %s", dungeon_feature_name(feat));
-#endif
-
-    if (is_tracer && !is_targeting && YOU_KILL(thrower)
-        && in_bounds(target) && !passed_target && pos() != target
-        && pos() != source && foe_info.count == 0
-        && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
-        && bounces == 0 && reflections == 0 && you.see_cell(target)
-        && !cell_is_solid(target))
-    {
-        // Okay, with all those tests passed, this is probably an instance
-        // of the player manually targeting something whose line of fire
-        // is blocked, even though its line of sight isn't blocked. Give
-        // a warning about this fact.
-        string prompt = "Your line of fire to ";
-        const monster* mon = monster_at(target);
-
-        if (mon && mon->observable())
-            prompt += mon->name(DESC_THE);
-        else
-        {
-            prompt += "the targeted "
-                    + feature_description_at(target, false, DESC_PLAIN, false);
-        }
-
-        prompt += " is blocked by "
-                + feature_description_at(pos(), false, DESC_A, false);
-
-        prompt += ". Continue anyway?";
-
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            beam_cancelled = true;
-            finish_beam();
-            return false;
-        }
-
-        // Well, we warned them.
-    }
-
-    if (in_bounds(pos()) && can_affect_wall(feat))
-        affect_wall();
-    else if (is_bouncy(feat) && !in_explosion_phase)
-        bounce();
-    else
-    {
-        // Regress for explosions: blow up in an open grid (if regressing
-        // makes any sense). Also regress when dropping items.
-        if (pos() != source && need_regress())
-        {
-            do
-            {
-                ray.regress();
-            }
-            while (ray.pos() != source && cell_is_solid(ray.pos()));
-
-            // target is where the explosion is centered, so update it.
-            if (is_explosion && !is_tracer)
-                target = ray.pos();
-        }
-        finish_beam();
-
-        return true;
-    }
-
-    return false;
-}
-
 void bolt::affect_cell()
 {
     // Shooting through clouds affects accuracy.
@@ -1173,17 +1109,9 @@ void bolt::affect_cell()
 
     fake_flavour();
 
-    const coord_def old_pos = pos();
-    const bool was_solid = cell_is_solid(pos());
-
-    // Note that this can change the ray position and the solidity
-    // of the wall.
-    if (was_solid && hit_wall())
-    {
-        // Beam ended due to hitting wall, so don't hit the player
-        // or monster with the regressed beam.
-        return;
-    }
+    // Note that this can change the solidity of the wall.
+    if (cell_is_solid(pos()))
+        affect_wall();
 
     // If the player can ever walk through walls, this will need
     // special-casing too.
@@ -1195,11 +1123,9 @@ void bolt::affect_cell()
             finish_beam();
     }
 
-    // We don't want to hit a monster in a wall square twice. Also,
-    // stop single target beams from affecting a monster if they already
+    // Stop single target beams from affecting a monster if they already
     // affected the player on this square. -cao
-    const bool still_wall = (was_solid && old_pos == pos());
-    if ((!hit_player || pierce || is_explosion) && !still_wall)
+    if (!hit_player || pierce || is_explosion)
     {
         monster *m = monster_at(pos());
         if (m && can_affect_actor(m))
@@ -1261,6 +1187,10 @@ void bolt::fire()
     else
         do_fire();
 
+    //XXX: suspect, but code relies on path_taken being non-empty
+    if (path_taken.empty())
+        path_taken.push_back(source);
+
     if (special_explosion != nullptr)
     {
         seen           = seen  || special_explosion->seen;
@@ -1304,6 +1234,7 @@ void bolt::do_fire()
         ray.advance();
     }
 
+    // Note: nothing but this loop should be changing the ray.
     while (map_bounds(pos()))
     {
         if (range_used() > range)
@@ -1314,10 +1245,74 @@ void bolt::do_fire()
             break;
         }
 
-        if (!affects_nothing)
-            affect_cell();
+        const dungeon_feature_type feat = grd(pos());
+
+        if (feat_is_solid(feat) && is_tracer && !is_targeting
+            && YOU_KILL(thrower) && in_bounds(target) && !passed_target
+            && pos() != target && pos() != source && foe_info.count == 0
+            && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
+            && bounces == 0 && reflections == 0 && you.see_cell(target)
+            && !cell_is_solid(target))
+        {
+            // Okay, with all those tests passed, this is probably an instance
+            // of the player manually targeting something whose line of fire
+            // is blocked, even though its line of sight isn't blocked. Give
+            // a warning about this fact.
+            string prompt = "Your line of fire to ";
+            const monster* mon = monster_at(target);
+
+            if (mon && mon->observable())
+                prompt += mon->name(DESC_THE);
+            else
+            {
+                prompt += "the targeted "
+                        + feature_description_at(target, false, DESC_PLAIN, false);
+            }
+
+            prompt += " is blocked by "
+                    + feature_description_at(pos(), false, DESC_A, false);
+
+            prompt += ". Continue anyway?";
+
+            if (!yesno(prompt.c_str(), false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                beam_cancelled = true;
+                finish_beam();
+                return;
+            }
+
+            // Well, we warned them.
+        }
+
+        if (feat_is_solid(feat) && !can_affect_wall(feat))
+        {
+            if (is_bouncy(feat))
+                bounce();
+            else
+            {
+                // Regress for explosions: blow up in an open grid (if regressing
+                // makes any sense). Also regress when dropping items.
+                if (pos() != source && need_regress())
+                {
+                    do
+                    {
+                        ray.regress();
+                    }
+                    while (ray.pos() != source && cell_is_solid(ray.pos()));
+
+                    // target is where the explosion is centered, so update it.
+                    if (is_explosion && !is_tracer)
+                        target = ray.pos();
+                }
+                break;
+            }
+        }
 
         path_taken.push_back(pos());
+
+        if (!affects_nothing)
+            affect_cell();
 
         if (range_used() > range)
             break;
@@ -1364,6 +1359,7 @@ void bolt::do_fire()
         }
 
         noise_generated = false;
+
         ray.advance();
     }
 
@@ -4253,7 +4249,7 @@ void bolt::handle_stop_attack_prompt(monster* mon)
     bool prompted = false;
 
     if (stop_attack_prompt(mon, true, target, &prompted)
-        || _stop_because_god_hates_target_prompt(mon, origin_spell))
+        || _stop_because_god_hates_target_prompt(mon, origin_spell, flavour))
     {
         beam_cancelled = true;
         finish_beam();
@@ -5115,9 +5111,10 @@ bool bolt::ignores_monster(const monster* mon) const
         && !pierce && !is_explosion
         && !is_enchantment()
         && target != mon->pos()
-        && name != "sticky flame"
-        && name != "splash of liquid fire"
-        && name != "lightning arc")
+        && origin_spell != SPELL_STICKY_FLAME
+        && origin_spell != SPELL_STICKY_FLAME_RANGE
+        && origin_spell != SPELL_STICKY_FLAME_SPLASH
+        && origin_spell != SPELL_CHAIN_LIGHTNING)
     {
         return true;
     }
@@ -5612,6 +5609,12 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                       MONS_HELL_HOG : mon->holiness() == MH_HOLY ?
                       MONS_HOLY_SWINE : MONS_HOG))
         {
+            // If the monster was a Beogh follower with gifted equipment,
+            // it just dropped that equipment. Allow re-gifting once it
+            // converts back.
+            orig_mon.props.erase(BEOGH_WPN_GIFT_KEY);
+            orig_mon.props.erase(BEOGH_ARM_GIFT_KEY);
+            orig_mon.props.erase(BEOGH_SH_GIFT_KEY);
             obvious_effect = true;
 
             // Don't restore items to monster if it reverts.
@@ -6626,7 +6629,7 @@ bool shoot_through_monster(const bolt& beam, const monster* victim)
            || (originator->is_player()
                && testbits(victim->flags, MF_DEMONIC_GUARDIAN))
            && !beam.is_enchantment()
-           && beam.name != "lightning arc"
+           && beam.origin_spell != SPELL_CHAIN_LIGHTNING
            && (mons_atts_aligned(victim->attitude, origin_attitude)
                || victim->neutral());
 }

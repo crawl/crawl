@@ -987,7 +987,7 @@ bool deck_stack()
         mprf("You draw the first five cards out of %d and discard the rest.",
              num_cards);
     }
-    more();
+    // these are included in default force_more_message to show them before menu
 
     run_uncancel(UNC_STACK_FIVE, slot);
     return true;
@@ -2318,10 +2318,10 @@ static void _elements_card(int power, deck_rarity_type rarity)
     const int power_level = _get_power_level(power, rarity);
     const monster_type element_list[][3] =
     {
-       {MONS_RAIJU, MONS_WIND_DRAKE, MONS_SHOCK_SERPENT},
-       {MONS_BASILISK, MONS_BOULDER_BEETLE, MONS_IRON_GOLEM},
-       {MONS_MOTTLED_DRAGON, MONS_MOLTEN_GARGOYLE, MONS_FIRE_DRAGON},
-       {MONS_ICE_BEAST, MONS_POLAR_BEAR, MONS_ICE_DRAGON}
+        {MONS_RAIJU, MONS_WIND_DRAKE, MONS_SHOCK_SERPENT},
+        {MONS_BASILISK, MONS_BOULDER_BEETLE, MONS_IRON_GOLEM},
+        {MONS_MOTTLED_DRAGON, MONS_MOLTEN_GARGOYLE, MONS_FIRE_DRAGON},
+        {MONS_ICE_BEAST, MONS_POLAR_BEAR, MONS_ICE_DRAGON}
     };
 
     int start = random2(ARRAYSZ(element_list));
@@ -2688,7 +2688,7 @@ static void _cloud_card(int power, deck_rarity_type rarity)
 
             case 1: cloudy = (you_worship(GOD_DITHMENOS) || coinflip())
                               ? CLOUD_COLD : CLOUD_FIRE;
-                     break;
+                    break;
 
             case 2: cloudy = (is_good_god(you.religion) || coinflip())
                               ? CLOUD_ACID: CLOUD_MIASMA;
@@ -2814,7 +2814,7 @@ static void _illusion_card(int power, deck_rarity_type rarity)
 
     mons_summon_illusion_from(mon, (actor *)&you, SPELL_NO_SPELL, power_level);
     mon->reset();
- }
+}
 
 static void _degeneration_card(int power, deck_rarity_type rarity)
 {

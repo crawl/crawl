@@ -2,6 +2,34 @@
  * Status defaults for durations.
  */
 
+static void _end_weapon_brand()
+{
+    you.duration[DUR_WEAPON_BRAND] = 1;
+    ASSERT(you.weapon());
+    end_weapon_brand(*you.weapon(), true);
+}
+
+static void _end_invis()
+{
+    if (you.invisible())
+        mprf(MSGCH_DURATION, "You feel more conspicuous.");
+    else
+        mprf(MSGCH_DURATION, "You flicker back into view.");
+    you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
+}
+
+static void _end_corrosion()
+{
+    you.props["corrosion_amount"] = 0;
+    you.redraw_armour_class = true;
+    you.wield_change = true;
+}
+
+static void _redraw_armour()
+{
+    you.redraw_armour_class = true;
+}
+
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -12,6 +40,40 @@ enum duration_flags : uint32_t
 
     // Whether !cancellation (and the like) end the duration.
     D_DISPELLABLE = 1<< 1,
+};
+
+/// A description of the message printed when a duration hits 50% remaining.
+struct midpoint_msg
+{
+    /// What message should be printed when the duration reaches 50%?
+    const char* msg;
+    int max_offset; ///< What's the maximum value that the duration may be
+                    ///< reduced by after the message prints?
+
+    /// Randomly, much should the duration actually be reduced by?
+    int offset() const {
+        return max_offset ? random2(max_offset+1) : 0;
+    }
+};
+
+/// What happens when a duration ends?
+struct end_effect
+{
+    /// A message for when the duration ends. Implies the duration ticks down.
+    const char* msg;
+    /// An effect that triggers when the duration ends.
+    void (*on_end)();
+};
+
+/// Does the duration decrease simply over time? If so, what happens?
+struct decrement_rules
+{
+    /// What happens when the duration ends?
+    end_effect end;
+    /// What happens when a duration hits 50% remaining.
+    midpoint_msg mid_msg;
+    /// Should the message be MSGCH_RECOVERY instead of MSGCH_DURATION?
+    bool recovery;
 };
 
 struct duration_def
@@ -26,6 +88,9 @@ struct duration_def
     const char *long_text;  ///< Text for the @ message.
 
     uint32_t flags;       ///< A bitfield for various flags a duration can have.
+
+    /// Does the duration decrease simply over time? If so, what happens?
+    decrement_rules decr;
 
     /// Return the name of the duration (name_text or short_text). */
     const char *name() const
@@ -61,47 +126,70 @@ static const duration_def duration_data[] =
     { DUR_AGILITY,
       LIGHTBLUE, "Agi",
       "agile", "agility",
-      "You are agile.", D_DISPELLABLE},
+      "You are agile.", D_DISPELLABLE,
+      {{ "You feel a little less agile now.", []() {
+          notify_stat_change(STAT_DEX, -5, true);
+      }}}},
     { DUR_ANTIMAGIC,
       RED, "-Mag",
       "antimagic", "",
-      "You have trouble accessing your magic.", D_DISPELLABLE | D_EXPIRES},
+      "You have trouble accessing your magic.", D_DISPELLABLE | D_EXPIRES,
+      {{ "You regain control over your magic." }}},
     { DUR_BERSERK,
       BLUE, "Berserk",
       "berserking", "berserker",
-      "You are possessed by a berserker rage.", D_EXPIRES},
+      "You are possessed by a berserker rage.", D_EXPIRES,
+      {{ "You are no longer berserk.", player_end_berserk }}},
     { DUR_BREATH_WEAPON,
       YELLOW, "Breath",
       "short of breath", "breath weapon",
-      "You are short of breath.", D_NO_FLAGS},
+      "You are short of breath.", D_NO_FLAGS,
+      { { "You have got your breath back." }, {}, true }},
     { DUR_BRILLIANCE,
       LIGHTBLUE, "Brill",
       "brilliant", "brilliance",
-      "You are brilliant.", D_DISPELLABLE},
+      "You are brilliant.", D_DISPELLABLE,
+      {{ "You feel a little less clever now.", []() {
+          notify_stat_change(STAT_INT, -5, true);
+      }}}},
     { DUR_CONF,
       RED, "Conf",
       "confused", "conf",
-      "You are confused.", D_DISPELLABLE},
+      "You are confused.", D_DISPELLABLE,
+      {{ "You feel less confused." }}},
     { DUR_CONFUSING_TOUCH,
       BLUE, "Touch",
       "confusing touch", "",
-      "" , D_DISPELLABLE | D_EXPIRES},
+      "" , D_DISPELLABLE | D_EXPIRES,
+      {{ "", []() {
+          mprf(MSGCH_DURATION, "%s",
+               you.hands_act("stop", "glowing.").c_str());
+      }}}},
     { DUR_CORONA,
       YELLOW, "Corona",
       "", "corona",
-      "", D_DISPELLABLE},
+      "", D_DISPELLABLE,
+      {{ "", []() {
+          if (!you.backlit())
+              mprf(MSGCH_DURATION, "You are no longer glowing.");
+      }}}},
     { DUR_DEATH_CHANNEL,
       MAGENTA, "DChan",
       "death channel", "",
-      "You are channeling the dead.", D_DISPELLABLE | D_EXPIRES},
+      "You are channeling the dead.", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your unholy channel expires.", []() {
+          you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
+      }}, { "Your unholy channel is weakening.", 1 }}},
     { DUR_DIVINE_STAMINA,
       WHITE, "Vit",
       "vitalised", "divine stamina",
-      "You are divinely vitalised.", D_EXPIRES},
+      "You are divinely vitalised.", D_EXPIRES,
+      {{ "", zin_remove_divine_stamina }}},
     { DUR_DIVINE_VIGOUR,
       0, "",
       "divinely vigorous", "divine vigour",
-      "You are imbued with divine vigour.", D_NO_FLAGS},
+      "You are imbued with divine vigour.", D_NO_FLAGS,
+      {{ "", elyvilon_remove_divine_vigour }}},
     { DUR_EXHAUSTED,
       YELLOW, "Exh",
       "exhausted", "",
@@ -121,15 +209,20 @@ static const duration_def duration_data[] =
     { DUR_LOWERED_MR,
       RED, "-MR",
       "vulnerable", "lowered mr",
-      "", D_NO_FLAGS},
+      "", D_NO_FLAGS,
+      {{ "You feel less vulnerable to hostile enchantments." }}},
     { DUR_MAGIC_SHIELD,
       0, "",
       "shielded", "magic shield",
-      "", D_DISPELLABLE},
+      "", D_DISPELLABLE,
+      {{ "Your magical shield disappears.", _redraw_armour }}},
     { DUR_MIGHT,
       LIGHTBLUE, "Might",
       "mighty", "might",
-      "You are mighty.", D_DISPELLABLE},
+      "You are mighty.", D_DISPELLABLE,
+      {{ "You feel a little less mighty now.", []() {
+          notify_stat_change(STAT_STR, -5, true);
+      }}}},
     { DUR_PARALYSIS,
       RED, "Para",
       "paralysed", "paralysis",
@@ -145,11 +238,15 @@ static const duration_def duration_data[] =
     { DUR_RESISTANCE,
       BLUE, "Resist",
       "resistant", "resistance",
-      "You resist elements.", D_DISPELLABLE | D_EXPIRES},
+      "You resist elements.", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your resistance to elements expires." },
+          { "You start to feel less resistant.", 1}}},
     { DUR_SLIMIFY,
       GREEN, "Slime",
       "slimy", "slimify",
-      "", D_EXPIRES},
+      "", D_EXPIRES,
+      {{ "You feel less slimy."},
+        { "Your slime is starting to congeal.", 1 }}},
     { DUR_SLEEP,
       0, "",
       "sleeping", "sleep",
@@ -157,7 +254,11 @@ static const duration_def duration_data[] =
     { DUR_STONESKIN,
       0, "",
       "stone skin", "stoneskin",
-      "Your skin is tough as stone.", D_DISPELLABLE},
+      "Your skin is tough as stone.", D_DISPELLABLE,
+      {{ "Your skin feels tender.", [](){
+          you.props.erase(STONESKIN_KEY);
+          you.redraw_armour_class = true;
+      }}}},
     { DUR_SWIFTNESS,
       BLUE, "Swift",
       "swift", "swiftness",
@@ -165,43 +266,64 @@ static const duration_def duration_data[] =
     { DUR_TELEPATHY,
       LIGHTBLUE, "Emp",
       "empathic", "telepathy",
-      "", D_NO_FLAGS},
+      "", D_NO_FLAGS,
+      {{ "You feel less empathic." }}},
     { DUR_TELEPORT,
       LIGHTBLUE, "Tele",
       "about to teleport", "teleport",
-      "You are about to teleport.", D_DISPELLABLE /*but special-cased*/},
+      "You are about to teleport.", D_DISPELLABLE /*but special-cased*/,
+      {{ "", []() {
+          you_teleport_now();
+          untag_followers();
+      }}}},
     { DUR_DEATHS_DOOR,
       LIGHTGREY, "DDoor",
       "death's door", "deaths door",
-      "", D_EXPIRES},
+      "", D_EXPIRES,
+      {{ "Your life is in your own hands again!", []() {
+            you.increase_duration(DUR_EXHAUSTED, roll_dice(1,3));
+      }}, { "Your time is quickly running out!", 5 }}},
     { DUR_PHASE_SHIFT,
       0, "",
       "phasing", "phase shift",
-      "You are out of phase with the material plane.", D_DISPELLABLE | D_EXPIRES},
+      "You are out of phase with the material plane.", D_DISPELLABLE | D_EXPIRES,
+        {{ "You are firmly grounded in the material plane once more.", []() {
+            you.redraw_evasion = true;
+        }}, { "You feel closer to the material plane.", 1 }}},
     { DUR_QUAD_DAMAGE,
       BLUE, "Quad",
       "quad damage", "",
-      "", D_EXPIRES},
+      "", D_EXPIRES,
+      {{ "", []() { invalidate_agrid(true); }},
+        { "Quad Damage is wearing off." }}},
     { DUR_SILENCE,
       MAGENTA, "Sil",
       "silence", "",
-      "You radiate silence.", D_DISPELLABLE | D_EXPIRES},
+      "You radiate silence.", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your hearing returns." }}},
     { DUR_STEALTH,
       BLUE, "Stealth",
       "especially stealthy", "stealth",
-      "", D_DISPELLABLE},
+      "", D_DISPELLABLE,
+      {{ "You feel less stealthy." }}},
     { DUR_AFRAID,
       RED, "Fear",
       "afraid", "",
-      "You are terrified.", D_DISPELLABLE | D_EXPIRES},
+      "You are terrified.", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your fear fades away.", []() { you.clear_fearmongers(); }},
+        {}, true }},
     { DUR_MIRROR_DAMAGE,
       WHITE, "Mirror",
       "injury mirror", "mirror damage",
-      "You mirror injuries.", D_NO_FLAGS},
+      "You mirror injuries.", D_NO_FLAGS,
+      {{ "Your dark mirror aura disappears." }}},
     { DUR_SCRYING,
       WHITE, "Scry",
       "scrying", "",
-      "Your astral vision lets you see through walls.", D_NO_FLAGS},
+      "Your astral vision lets you see through walls.", D_NO_FLAGS,
+      {{ "Your astral sight fades away.", []() {
+          you.xray_vision = false;
+      }}}},
     { DUR_TORNADO,
       LIGHTGREY, "Tornado",
       "tornado", "",
@@ -209,47 +331,72 @@ static const duration_def duration_data[] =
     { DUR_LIQUEFYING,
       LIGHTBLUE, "Liquid",
       "liquefying", "",
-      "The ground has become liquefied beneath your feet.", D_DISPELLABLE},
+      "The ground has become liquefied beneath your feet.", D_DISPELLABLE,
+      {{ "The ground is no longer liquid beneath you.", []() {
+          invalidate_agrid(false);
+      }}}},
     { DUR_HEROISM,
       LIGHTBLUE, "Hero",
       "heroism", "",
-      "You possess the skills of a mighty hero.", D_NO_FLAGS},
+      "You possess the skills of a mighty hero.", D_NO_FLAGS,
+      {{ "You feel like a meek peon again.", []() {
+          you.redraw_evasion      = true;
+          you.redraw_armour_class = true;
+      }}}},
     { DUR_FINESSE,
       LIGHTBLUE, "Finesse",
       "finesse", "",
-      "Your blows are lightning fast.", D_NO_FLAGS},
+      "Your blows are lightning fast.", D_NO_FLAGS,
+      {{ "", []() {
+          mprf(MSGCH_DURATION, "%s", you.hands_act("slow", "down.").c_str());
+      }}}},
     { DUR_LIFESAVING,
       LIGHTGREY, "Prot",
       "protection", "lifesaving",
-      "You are calling for your life to be saved.", D_EXPIRES},
+      "You are calling for your life to be saved.", D_EXPIRES,
+      {{ "Your divine protection fades away." }}},
     { DUR_DARKNESS,
       BLUE, "Dark",
       "darkness", "",
-      "You emit darkness.", D_DISPELLABLE | D_EXPIRES},
+      "You emit darkness.", D_DISPELLABLE | D_EXPIRES,
+      {{ "The ambient light returns to normal.", update_vision_range }}},
     { DUR_SHROUD_OF_GOLUBRIA,
       BLUE, "Shroud",
       "shrouded", "",
-      "You are protected by a distorting shroud.", D_DISPELLABLE | D_EXPIRES},
+      "You are protected by a distorting shroud.", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your shroud unravels." },
+        { "Your shroud begins to fray at the edges." }}},
     { DUR_TORNADO_COOLDOWN,
       YELLOW, "Tornado",
       "", "tornado cooldown",
-      "", D_NO_FLAGS},
+      "", D_NO_FLAGS,
+      {{ "The winds around you calm down.", []() {
+          remove_tornado_clouds(MID_PLAYER);
+      }}}},
     { DUR_DISJUNCTION,
       BLUE, "Disjoin",
       "disjoining", "disjunction",
-      "You are disjoining your surroundings.", D_DISPELLABLE | D_EXPIRES},
+      "You are disjoining your surroundings.", D_DISPELLABLE | D_EXPIRES,
+      {{ "The translocation energy dissipates.", []() {
+            invalidate_agrid(true);
+      }}}},
     { DUR_SENTINEL_MARK,
       LIGHTRED, "Mark",
       "marked", "sentinel's mark",
-      "A sentinel's mark is revealing your location to enemies.", D_DISPELLABLE | D_EXPIRES},
+      "A sentinel's mark is revealing your location to enemies.", D_DISPELLABLE | D_EXPIRES,
+      {{ "The sentinel's mark upon you fades away." }}},
     { DUR_INFUSION,
       BLUE, "Infus",
       "infused", "",
-      "Your attacks are magically infused.", D_DISPELLABLE | D_EXPIRES},
+      "Your attacks are magically infused.", D_DISPELLABLE | D_EXPIRES,
+      {{ "You are no longer magically infusing your attacks." },
+        { "Your magical infusion is running out." }}},
     { DUR_SONG_OF_SLAYING,
       BLUE, "Slay",
       "singing", "song of slaying",
-      "Your melee attacks are strengthened by your song.", D_DISPELLABLE | D_EXPIRES},
+      "Your melee attacks are strengthened by your song.", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your song has ended." },
+        { "Your song is almost over." }}},
     { DUR_FLAYED,
       RED, "Flay",
       "flayed", "",
@@ -257,15 +404,18 @@ static const duration_def duration_data[] =
     { DUR_WEAK,
       RED, "Weak",
       "weakened", "weak",
-      "Your attacks are enfeebled.", D_DISPELLABLE},
+      "Your attacks are enfeebled.", D_DISPELLABLE,
+      {{ "Your attacks no longer feel as feeble." }}},
     { DUR_DIMENSION_ANCHOR,
       RED, "-Tele",
       "cannot translocate", "dimension anchor",
-      "You are firmly anchored to this plane.", D_DISPELLABLE},
+      "You are firmly anchored to this plane.", D_DISPELLABLE,
+      {{ "You are no longer firmly anchored in space." }}},
     { DUR_TOXIC_RADIANCE,
       MAGENTA, "Toxic",
       "radiating poison", "toxic radiance",
-      "You are radiating toxic energy.", D_DISPELLABLE},
+      "You are radiating toxic energy.", D_DISPELLABLE,
+      {{ "Your toxic aura wanes." }}},
     { DUR_RECITE,
       WHITE, "Recite",
       "reciting", "",
@@ -277,7 +427,8 @@ static const duration_def duration_data[] =
     { DUR_FIRE_VULN,
       RED, "-rF",
       "fire vulnerable", "fire vulnerability",
-      "You are more vulnerable to fire.", D_DISPELLABLE},
+      "You are more vulnerable to fire.", D_DISPELLABLE,
+      {{ "You feel less vulnerable to fire." }}},
     { DUR_BARBS,
       RED, "Barbs",
       "manticore barbs", "",
@@ -285,63 +436,90 @@ static const duration_def duration_data[] =
     { DUR_POISON_VULN,
       RED, "-rP",
       "poison vulnerable", "poison vulnerability",
-      "You are more vulnerable to poison.", D_DISPELLABLE},
+      "You are more vulnerable to poison.", D_DISPELLABLE,
+      {{ "You feel less vulnerable to poison." }}},
     { DUR_FROZEN,
       RED, "Frozen",
       "frozen", "",
-      "You are partly encased in ice.", D_NO_FLAGS},
+      "You are partly encased in ice.", D_NO_FLAGS,
+      {{ "The ice encasing you melts away." }, {}, true }},
     { DUR_SAP_MAGIC,
       RED, "Sap",
       "sap magic", "",
-      "Casting spells hinders your spell success.", D_DISPELLABLE},
+      "Casting spells hinders your spell success.", D_DISPELLABLE,
+      {{ "Your magic seems less tainted." }}},
     { DUR_PORTAL_PROJECTILE,
       LIGHTBLUE, "PProj",
       "portal projectile", "",
-      "You are teleporting projectiles to their destination.", D_DISPELLABLE},
+      "You are teleporting projectiles to their destination.", D_DISPELLABLE,
+      {{ "You are no longer teleporting projectiles to their destination.",
+         []() { you.attribute[ATTR_PORTAL_PROJECTILE] = 0; }}}},
     { DUR_FORESTED,
       GREEN, "Forest",
       "", "forested",
-      "", D_NO_FLAGS},
+      "", D_NO_FLAGS,
+      {{ "Space becomes stable." }}},
     { DUR_DRAGON_CALL,
       WHITE, "Dragoncall",
       "dragon's call", "dragon call",
-      "You are beckoning forth a horde of dragons.", D_NO_FLAGS},
+      "You are beckoning forth a horde of dragons.", D_NO_FLAGS,
+      {{ "The roar of the dragon horde subsides.", []() {
+          you.duration[DUR_DRAGON_CALL_COOLDOWN] = random_range(160, 260);
+      }}}},
     { DUR_DRAGON_CALL_COOLDOWN,
       YELLOW, "Dragoncall",
       "", "dragon call cooldown",
-      "", D_NO_FLAGS},
+      "", D_NO_FLAGS,
+      {{ "You can once more reach out to the dragon horde." }}},
     { DUR_ABJURATION_AURA,
       BLUE, "Abj",
       "aura of abjuration", "",
-      "You are abjuring all hostile summons around you.", D_DISPELLABLE},
+      "You are abjuring all hostile summons around you.", D_DISPELLABLE,
+      {{ "Your aura of abjuration expires." }}},
     { DUR_NO_POTIONS,
       RED, "-Potion",
       "no potions", "",
-      "You cannot drink potions.", D_NO_FLAGS},
+      "You cannot drink potions.", D_NO_FLAGS,
+      {{ "", []() {
+          if (!you_foodless(true))
+              mprf(MSGCH_RECOVERY, "You can drink potions again.");
+      }}}},
     { DUR_QAZLAL_FIRE_RES,
       LIGHTBLUE, "rF+",
       "protected from fire", "qazlal fire resistance",
-      "Qazlal is protecting you from fire.", D_NO_FLAGS},
+      "Qazlal is protecting you from fire.", D_NO_FLAGS,
+      {{ "You feel less protected from fire." },
+        { "Your protection from fire is fading.", 1}}},
     { DUR_QAZLAL_COLD_RES,
       LIGHTBLUE, "rC+",
       "protected from cold", "qazlal cold resistance",
-      "Qazlal is protecting you from cold.", D_NO_FLAGS},
+      "Qazlal is protecting you from cold.", D_NO_FLAGS,
+      {{ "You feel less protected from cold." },
+        { "Your protection from cold is fading.", 1}}},
     { DUR_QAZLAL_ELEC_RES,
       LIGHTBLUE, "rElec+",
       "protected from electricity", "qazlal elec resistance",
-      "Qazlal is protecting you from electricity.", D_NO_FLAGS},
+      "Qazlal is protecting you from electricity.", D_NO_FLAGS,
+      {{ "You feel less protected from electricity." },
+        { "Your protection from electricity is fading.", 1}}},
     { DUR_QAZLAL_AC,
       LIGHTBLUE, "",
       "protected from physical damage", "qazlal ac",
-      "Qazlal is protecting you from physical damage.", D_NO_FLAGS},
+      "Qazlal is protecting you from physical damage.", D_NO_FLAGS,
+      {{ "You feel less protected from physical attacks.",  _redraw_armour },
+         { "Your protection from physical attacks is fading." , 1 }}},
     { DUR_CORROSION,
       RED, "Corr",
       "corroded equipment", "corrosion",
-      "Your equipment is corroded.", D_NO_FLAGS},
+      "Your equipment is corroded.", D_NO_FLAGS,
+      {{ "You are no longer corroded.", _end_corrosion }}},
     { DUR_FORTITUDE,
       LIGHTBLUE, "Fort",
       "immense fortitude", "",
-      "You have immense fortitude and shrug off injury.", D_DISPELLABLE},
+      "You have immense fortitude and shrug off injury.", D_DISPELLABLE,
+      {{ "Your fortitude fades away.", []() {
+          notify_stat_change(STAT_STR, -10, true);
+      }}}},
     { DUR_HORROR,
       RED, "Horr",
       "horrified", "",
@@ -349,11 +527,16 @@ static const duration_def duration_data[] =
     { DUR_NO_SCROLLS,
       RED, "-Scroll",
       "no scrolls", "",
-      "You cannot read scrolls.", D_NO_FLAGS},
+      "You cannot read scrolls.", D_NO_FLAGS,
+      {{ "You can read scrolls again." }, {}, true }},
     { DUR_CONDENSATION_SHIELD,
       0, "",
       "icy shield", "",
-      "You are shielded by a disc of ice.", D_DISPELLABLE},
+      "You are shielded by a disc of ice.", D_DISPELLABLE,
+      {{ "Your icy shield evaporates.", [](){
+         you.props.erase(CONDENSATION_SHIELD_KEY);
+         you.redraw_armour_class = true;
+      }}, { "Your icy shield starts to melt.", 1 }}},
     { DUR_DIVINE_SHIELD,
       0, "",
       "divine shield", "",
@@ -361,53 +544,75 @@ static const duration_def duration_data[] =
     { DUR_CLEAVE,
       LIGHTBLUE, "Cleave",
       "cleaving", "cleave",
-      "You are cleaving through your foes.", D_DISPELLABLE },
+      "You are cleaving through your foes.", D_DISPELLABLE,
+      {{ "Your cleaving frenzy subsides." }}},
     { DUR_AMBROSIA, GREEN, "Ambros", "", "ambrosia",
       "You are regenerating under the effects of ambrosia.", D_DISPELLABLE },
     { DUR_DEVICE_SURGE, WHITE, "Surge", "device surging", "device surge",
-      "You have readied a device surge.", D_EXPIRES},
+      "You have readied a device surge.", D_EXPIRES,
+      {{ "Your device surge dissipates." },
+        { "Your device surge is dissipating.", 1 }}},
     { DUR_DOOM_HOWL,
-        RED, "Howl",
-        "doom howling", "howl",
-        "A terrible howling echoes in your mind.", D_DISPELLABLE },
+      RED, "Howl",
+      "doom howling", "howl",
+      "A terrible howling echoes in your mind.", D_DISPELLABLE,
+      {{ "The infernal howling subsides.", []() {
+          you.props.erase(NEXT_DOOM_HOUND_KEY);
+          you.duration[DUR_DOOM_HOWL_IMMUNITY] = random_range(30, 70);
+      }}}},
+    { DUR_VERTIGO, YELLOW, "Vertigo", "", "vertigo",
+      "Vertigo is making it harder to attack, cast, and dodge.", D_NO_FLAGS,
+      {{ "The world stops spinning.", []() {
+          you.redraw_evasion = true;
+      }}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
 
-    { DUR_INVIS, 0, "", "", "invis", "", D_DISPELLABLE},
+    { DUR_INVIS, 0, "", "", "invis", "", D_DISPELLABLE,
+        {{ "", _end_invis }, { "You flicker for a moment.", 1 }}},
     { DUR_SLOW, 0, "", "", "slow", "", D_DISPELLABLE},
-    { DUR_MESMERISED, 0, "", "", "mesmerised", "", D_DISPELLABLE},
-    { DUR_MESMERISE_IMMUNE, 0, "", "", "mesmerisation immunity", "" },
+    { DUR_MESMERISED, 0, "", "", "mesmerised", "", D_DISPELLABLE,
+      {{ "You break out of your daze.", []() { you.clear_beholders(); }},
+         {}, true }},
+    { DUR_MESMERISE_IMMUNE, 0, "", "", "mesmerisation immunity", "", D_NO_FLAGS, {{""}} },
     { DUR_HASTE, 0, "", "", "haste", "", D_DISPELLABLE},
     { DUR_FLIGHT, 0, "", "", "flight", "", D_DISPELLABLE /*but special-cased*/},
     { DUR_POISONING, 0, "", "", "poisoning", "", D_NO_FLAGS},
     { DUR_PIETY_POOL, 0, "", "", "piety pool", "", D_NO_FLAGS},
-    { DUR_REGENERATION, 0, "", "", "regeneration", "", D_DISPELLABLE},
+    { DUR_REGENERATION, 0, "", "", "regeneration", "", D_DISPELLABLE,
+      {{ "Your skin stops crawling." },
+          { "Your skin is crawling a little less now.", 1}}},
     { DUR_TRANSFORMATION, 0, "", "", "transformation", "", D_DISPELLABLE /*but special-cased*/},
-    { DUR_WEAPON_BRAND, 0, "", "", "weapon brand", "", D_DISPELLABLE},
-    { DUR_DEMONIC_GUARDIAN, 0, "", "", "demonic guardian", "", D_NO_FLAGS},
+    { DUR_WEAPON_BRAND, 0, "", "", "weapon brand", "", D_DISPELLABLE,
+      {{ "", _end_weapon_brand }}},
+    { DUR_DEMONIC_GUARDIAN, 0, "", "", "demonic guardian", "", D_NO_FLAGS, {{""}}},
     { DUR_POWERED_BY_DEATH, 0, "", "", "pbd", "", D_NO_FLAGS},
     { DUR_GOURMAND, 0, "", "", "gourmand", "", D_NO_FLAGS},
-    { DUR_REPEL_STAIRS_MOVE, 0, "", "", "repel stairs move", "", D_NO_FLAGS},
-    { DUR_REPEL_STAIRS_CLIMB, 0, "", "", "repel stairs climb", "", D_NO_FLAGS},
+        { DUR_REPEL_STAIRS_MOVE, 0, "", "", "repel stairs move", "", D_NO_FLAGS, {{""}}},
+    { DUR_REPEL_STAIRS_CLIMB, 0, "", "", "repel stairs climb", "", D_NO_FLAGS, {{""}}},
     { DUR_COLOUR_SMOKE_TRAIL, 0, "", "", "coloured smoke trail", "", D_NO_FLAGS},
     { DUR_TIME_STEP, 0, "", "", "time step", "", D_NO_FLAGS},
-    { DUR_ICEMAIL_DEPLETED, 0, "", "", "icemail depleted", "", D_NO_FLAGS},
+    { DUR_ICEMAIL_DEPLETED, 0, "", "", "icemail depleted", "", D_NO_FLAGS,
+      {{ "Your icy envelope is restored.", _redraw_armour }}},
     { DUR_PARALYSIS_IMMUNITY, 0, "", "", "paralysis immunity", "", D_NO_FLAGS},
-    { DUR_VEHUMET_GIFT, 0, "", "", "vehumet gift", "", D_NO_FLAGS},
-    { DUR_SICKENING, 0, "", "", "sickening", "", D_DISPELLABLE},
+    { DUR_VEHUMET_GIFT, 0, "", "", "vehumet gift", "", D_NO_FLAGS, {{""}}},
+    { DUR_SICKENING, 0, "", "", "sickening", "", D_DISPELLABLE, {{""}}},
     { DUR_WATER_HOLD, 0, "", "", "drowning", "", D_NO_FLAGS},
-    { DUR_WATER_HOLD_IMMUNITY, 0, "", "", "drowning immunity", "", D_NO_FLAGS},
-    { DUR_SLEEP_IMMUNITY, 0, "", "", "sleep immunity", "", D_NO_FLAGS},
+    { DUR_WATER_HOLD_IMMUNITY, 0, "", "", "drowning immunity", "", D_NO_FLAGS, {{""}}},
+    { DUR_SLEEP_IMMUNITY, 0, "", "", "sleep immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_ELIXIR_HEALTH, 0, "", "", "elixir health", "", D_DISPELLABLE},
     { DUR_ELIXIR_MAGIC, 0, "", "", "elixir magic", "", D_DISPELLABLE},
-    { DUR_TROGS_HAND, 0, "", "", "trogs hand", "", D_NO_FLAGS},
+    { DUR_TROGS_HAND, 0, "", "", "trogs hand", "", D_NO_FLAGS,
+        {{"", trog_remove_trogs_hand},
+          {"You feel the effects of Trog's Hand fading.", 1}}},
     { DUR_MAGIC_SAPPED, 0, "", "", "magic sapped", "", D_DISPELLABLE},
-    { DUR_GOZAG_GOLD_AURA, 0, "", "", "gold aura", "", D_NO_FLAGS },
+    { DUR_GOZAG_GOLD_AURA, 0, "", "", "gold aura", "", D_NO_FLAGS,
+        {{ "", []() { you.props["gozag_gold_aura_amount"] = 0; }}}},
     { DUR_COLLAPSE, 0, "", "", "collapse", "", D_NO_FLAGS },
     { DUR_BRAINLESS, 0, "", "", "brainless", "", D_NO_FLAGS },
     { DUR_CLUMSY, 0, "", "", "clumsy", "", D_NO_FLAGS },
-    { DUR_DOOM_HOWL_IMMUNITY, 0, "", "", "howl immunity", "", D_NO_FLAGS },
+    { DUR_DOOM_HOWL_IMMUNITY, 0, "", "", "howl immunity", "", D_NO_FLAGS, {{""}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

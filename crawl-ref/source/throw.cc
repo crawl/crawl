@@ -638,11 +638,11 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         level = 3;
         msg   = "You hear a loud whirring sound.";
         break;
-     case WPN_SHORTBOW:
+    case WPN_SHORTBOW:
         level = 5;
         msg   = "You hear a twanging sound.";
         break;
-     case WPN_LONGBOW:
+    case WPN_LONGBOW:
         level = 6;
         msg   = "You hear a loud twanging sound.";
         break;
@@ -650,7 +650,7 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         level = 2;
         msg   = "You hear a quiet thunk.";
         break;
-     case WPN_ARBALEST:
+    case WPN_ARBALEST:
         level = 7;
         msg   = "You hear a thunk.";
         break;

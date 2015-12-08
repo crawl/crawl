@@ -1009,8 +1009,8 @@ ancient_champion MONS_ANCIENT_CHAMPION
 curse_skull MONS_CURSE_SKULL
 %rim 0
 curse_toe MONS_CURSE_TOE
-%rim 1
 flying_skull MONS_FLYING_SKULL
+%rim 1
 crawling_corpse MONS_CRAWLING_CORPSE
 macabre_mass MONS_MACABRE_MASS
 %sdir mon/unique

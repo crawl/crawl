@@ -26,7 +26,7 @@ enum ammo_t
 class player_quiver
 {
     friend class preserve_quiver_slots;
- public:
+public:
     player_quiver();
 
     // Queries from engine -- don't affect state
@@ -46,7 +46,7 @@ class player_quiver
     void save(writer&) const;
     void load(reader&);
 
- private:
+private:
     void _get_fire_order(vector<int>&,
                          bool ignore_inscription_etc,
                          const item_def* launcher,
@@ -73,7 +73,7 @@ public:
     preserve_quiver_slots();
     ~preserve_quiver_slots();
 
- private:
+private:
     int m_last_used_of_type[NUM_AMMO];
 };
 

@@ -384,6 +384,8 @@ int raw_spell_fail(spell_type spell)
 
     chance2 += you.duration[DUR_MAGIC_SAPPED] / BASELINE_DELAY;
 
+    chance2 += you.duration[DUR_VERTIGO] ? 7 : 0;
+
     // Apply the effects of Vehumet and items of wizardry.
     chance2 = _apply_spellcasting_success_boosts(spell, chance2);
 
@@ -610,7 +612,7 @@ static bool _can_cast()
     if (silenced(you.pos()))
     {
         mpr("You cannot cast spells when silenced!");
-        more();
+        // included in default force_more_message
         return false;
     }
 
@@ -618,7 +620,6 @@ static bool _can_cast()
         && you.hunger_state <= HS_STARVING)
     {
         canned_msg(MSG_NO_ENERGY);
-        more();
         return false;
     }
 
@@ -800,7 +801,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         if (!yesno(god_loathes_spell(spell, you.religion) ?
             "<lightred>Casting this spell will cause instant excommunication!"
                 "</lightred> Really cast?" :
-            "Casting this spell will put you into penance. Really cast?",
+            "Casting this spell will place you under penance. Really cast?",
             true, 'n'))
         {
             canned_msg(MSG_OK);

@@ -2381,7 +2381,7 @@ static void _check_banished()
             mprf(MSGCH_BANISHMENT, "You are cast deeper into the Abyss!");
         else
             mprf(MSGCH_BANISHMENT, "The Abyss bends around you!");
-        more();
+        // these are included in default force_more_message
         banished(you.banished_by, you.banished_power);
     }
 }

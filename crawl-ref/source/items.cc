@@ -2315,8 +2315,10 @@ bool multiple_items_at(const coord_def& where)
  */
 bool drop_item(int item_dropped, int quant_drop)
 {
-    if (quant_drop < 0 || quant_drop > you.inv[item_dropped].quantity)
-        quant_drop = you.inv[item_dropped].quantity;
+    item_def &item = you.inv[item_dropped];
+
+    if (quant_drop < 0 || quant_drop > item.quantity)
+        quant_drop = item.quantity;
 
     if (item_dropped == you.equip[EQ_LEFT_RING]
      || item_dropped == you.equip[EQ_RIGHT_RING]
@@ -2335,6 +2337,7 @@ bool drop_item(int item_dropped, int quant_drop)
             mpr("You will have to take that off first.");
         else if (remove_ring(item_dropped, true))
         {
+            // The delay handles the case where the item disappeared.
             start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
             // We didn't actually succeed yet, but remove_ring took time,
             // so return true anyway.
@@ -2345,10 +2348,9 @@ bool drop_item(int item_dropped, int quant_drop)
     }
 
     if (item_dropped == you.equip[EQ_WEAPON]
-        && you.inv[item_dropped].base_type == OBJ_WEAPONS
-        && you.inv[item_dropped].cursed())
+        && item.base_type == OBJ_WEAPONS && item.cursed())
     {
-        mprf("%s is stuck to you!", you.inv[item_dropped].name(DESC_THE).c_str());
+        mprf("%s is stuck to you!", item.name(DESC_THE).c_str());
         return false;
     }
 
@@ -2358,12 +2360,12 @@ bool drop_item(int item_dropped, int quant_drop)
         {
             if (!Options.easy_unequip)
                 mpr("You will have to take that off first.");
-            else if (check_warning_inscriptions(you.inv[item_dropped],
-                                                OPER_TAKEOFF))
+            else if (check_warning_inscriptions(item, OPER_TAKEOFF))
             {
                 // If we take off the item, cue up the item being dropped
                 if (takeoff_armour(item_dropped))
                 {
+                    // The delay handles the case where the item disappeared.
                     start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
                     // We didn't actually succeed yet, but takeoff_armour
                     // took a turn to start up, so return true anyway.
@@ -2378,37 +2380,37 @@ bool drop_item(int item_dropped, int quant_drop)
     //
     // Unwield needs to be done before copy in order to clear things
     // like temporary brands. -- bwr
-    if (item_dropped == you.equip[EQ_WEAPON]
-        && quant_drop >= you.inv[item_dropped].quantity)
+    if (item_dropped == you.equip[EQ_WEAPON] && quant_drop >= item.quantity)
     {
         if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, true, true, false))
             return false;
+        // May have been destroyed by removal. Returning true because we took
+        // time to swap away.
+        else if (!item.defined())
+            return true;
     }
 
-    if (!copy_item_to_grid(you.inv[item_dropped],
-                            you.pos(), quant_drop, true, true))
+    ASSERT(item.defined());
+
+    if (!copy_item_to_grid(item, you.pos(), quant_drop, true, true))
     {
         mpr("Too many items on this level, not dropping the item.");
         return false;
     }
 
-    mprf("You drop %s.",
-         quant_name(you.inv[item_dropped], quant_drop, DESC_A).c_str());
+    mprf("You drop %s.", quant_name(item, quant_drop, DESC_A).c_str());
 
     // If you drop an item in as a merfolk, it is below the water line and
     // makes no noise falling.
     if (silenced(you.pos()) || you.swimming())
         feat_splash_noise(grd(you.pos()));
 
-    if (you.inv[item_dropped].quantity != quant_drop)
+    // XP evoker has been handled in copy_item_to_grid
+    if (item.quantity != quant_drop && is_perishable_stack(item))
     {
-        if (is_perishable_stack(you.inv[item_dropped]))
-        {
-            // Oldest potions have been dropped.
-            for (int i = 0; i < quant_drop; i++)
-                remove_oldest_perishable_item(you.inv[item_dropped]);
-        }
-        // XP evoker has been handled in copy_item_to_grid
+        // Oldest potions have been dropped.
+        for (int i = 0; i < quant_drop; i++)
+            remove_oldest_perishable_item(item);
     }
 
     dec_inv_item_quantity(item_dropped, quant_drop);

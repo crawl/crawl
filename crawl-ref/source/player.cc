@@ -1100,7 +1100,8 @@ static int _player_bonus_regen()
     }
 
     // Jewellery.
-    rr += REGEN_PIP * you.wearing(EQ_AMULET, AMU_REGENERATION);
+    if (you.props[REGEN_AMULET_ACTIVE].get_int() == 1)
+        rr += REGEN_PIP * you.wearing(EQ_AMULET, AMU_REGENERATION);
 
     // Artefacts
     rr += REGEN_PIP * you.scan_artefacts(ARTP_REGENERATION);
@@ -1199,6 +1200,25 @@ int player_regen()
         rr += 100;
 
     return rr;
+}
+
+// Amulet of regeneration needs to be worn while at full health before it begins
+// to function.
+void update_regen_amulet_attunement()
+{
+    if (you.wearing(EQ_AMULET, AMU_REGENERATION)
+        && player_mutation_level(MUT_SLOW_REGENERATION) < 3)
+    {
+        if (you.hp == you.hp_max
+            && you.props[REGEN_AMULET_ACTIVE].get_int() == 0)
+        {
+            you.props[REGEN_AMULET_ACTIVE] = 1;
+            mpr("Your amulet attunes itself to your body and you begin to "
+                "regenerate more quickly.");
+        }
+    }
+    else
+        you.props[REGEN_AMULET_ACTIVE] = 0;
 }
 
 int player_hunger_rate(bool temp)
@@ -2184,7 +2204,7 @@ static int _player_adjusted_evasion_penalty(const int scale)
     }
 
     return piece_armour_evasion_penalty * scale / 10 +
-           you.adjusted_body_armour_penalty(scale) ;
+           you.adjusted_body_armour_penalty(scale);
 }
 
 // EV bonuses that work even when helpless.
@@ -2316,11 +2336,14 @@ static int _player_evasion(ev_ignore_type evit)
     const int scale = 100;
     const int size_base_ev = (10 + size_factor) * scale;
 
+    const int vertigo_penalty = you.duration[DUR_VERTIGO] ? 5 * scale : 0;
+
     const int prestepdown_evasion =
         size_base_ev
         + _player_armour_adjusted_dodge_bonus(scale)
         - _player_adjusted_evasion_penalty(scale)
-        - you.adjusted_shield_penalty(scale);
+        - you.adjusted_shield_penalty(scale)
+        - vertigo_penalty;
 
     const int poststepdown_evasion =
         stepdown_value(prestepdown_evasion, 20*scale, 30*scale, 60*scale, -1);
@@ -4489,10 +4512,10 @@ void handle_player_poison(int delay)
     // so is damage shaving.
     if (you.species == SP_DEEP_DWARF && you.duration[DUR_POISONING] - decrease < 25000)
     {
-       dmg = (you.duration[DUR_POISONING] / 1000)
-              - (25000 / 1000);
-       if (dmg < 0)
-           dmg = 0;
+        dmg = (you.duration[DUR_POISONING] / 1000)
+            - (25000 / 1000);
+        if (dmg < 0)
+            dmg = 0;
     }
 
     msg_channel_type channel = MSGCH_PLAIN;
@@ -8357,7 +8380,7 @@ void player_close_door(coord_def doorpos)
             }
 
             noisy(15, you.pos());
-         }
+        }
     }
     else if (one_chance_in(skill) && !silenced(you.pos()))
     {
@@ -8412,10 +8435,10 @@ void player_close_door(coord_def doorpos)
         }
         if (is_excluded(dc))
             excludes.push_back(dc);
-     }
+    }
 
-     update_exclusion_los(excludes);
-     you.turn_is_over = true;
+    update_exclusion_los(excludes);
+    you.turn_is_over = true;
 }
 
 /**
@@ -8480,9 +8503,10 @@ string player::hands_act(const string &plural_verb,
  * at BONE_ARMOUR_HIT_RATIO = 50, that's 10% at one corpse, 30% at five,
  * 90% at ten...
  *
- * @param       A multiplier to base chance. Used for BONE_ARMOUR_HIT_RATIO.
+ * @param mult    A multiplier to base chance. Used for BONE_ARMOUR_HIT_RATIO.
+ * @param trials  The number of times to potentially shed armour.
  */
-void player::maybe_degrade_bone_armour(int mult)
+void player::maybe_degrade_bone_armour(int mult, int trials)
 {
     if (attribute[ATTR_BONE_ARMOUR] <= 0)
         return;
@@ -8491,21 +8515,21 @@ void player::maybe_degrade_bone_armour(int mult)
     int denom = base_denom;
     for (int i = 1; i < attribute[ATTR_BONE_ARMOUR]; ++i)
         denom = div_rand_round(denom * 4, 5);
-    denom = div_rand_round(denom, mult);
 
-    const bool degrade_armour = one_chance_in(denom);
-    dprf("degraded armour? (%d armour, 1/%d): %d", attribute[ATTR_BONE_ARMOUR],
-         denom, degrade_armour);
-    if (!degrade_armour)
+    const int degraded_armour = binomial(trials, mult, denom);
+    dprf("degraded armour? (%d armour, %d/%d in %d trials): %d",
+         attribute[ATTR_BONE_ARMOUR], mult, denom, trials, degraded_armour);
+    if (degraded_armour <= 0)
         return;
 
     you.attribute[ATTR_BONE_ARMOUR]
-        = max(0, you.attribute[ATTR_BONE_ARMOUR] - 1);
+        = max(0, you.attribute[ATTR_BONE_ARMOUR] - degraded_armour);
 
-    if (you.attribute[ATTR_BONE_ARMOUR])
-        mpr("A chunk of your corpse armour falls away.");
-    else
+    if (!you.attribute[ATTR_BONE_ARMOUR])
         mpr("The last of your corpse armour falls away.");
+    else
+        for (int i = 0; i < degraded_armour; ++i)
+            mpr("A chunk of your corpse armour falls away.");
 
     redraw_armour_class = true;
 }
@@ -8518,4 +8542,70 @@ int player::inaccuracy() const
     if (player_mutation_level(MUT_MISSING_EYE))
         degree++;
     return degree;
+}
+
+/**
+ * Handle effects that occur after the player character stops berserking.
+ */
+void player_end_berserk()
+{
+    // Sometimes berserk leaves us physically drained.
+    //
+    // Chance of passing out:
+    //     - mutation gives a large plus in order to try and
+    //       avoid the mutation being a "death sentence" to
+    //       certain characters.
+
+    if (you.berserk_penalty != NO_BERSERK_PENALTY
+        && one_chance_in(10 + player_mutation_level(MUT_BERSERK) * 25))
+    {
+        // Note the beauty of Trog!  They get an extra save that's at
+        // the very least 20% and goes up to 100%.
+        if (in_good_standing(GOD_TROG)
+            && x_chance_in_y(you.piety, piety_breakpoint(5)))
+        {
+            mpr("Trog's vigour flows through your veins.");
+        }
+        else
+        {
+            mprf(MSGCH_WARN, "You pass out from exhaustion.");
+            you.increase_duration(DUR_PARALYSIS, roll_dice(1,4));
+            you.stop_constricting_all();
+        }
+    }
+
+    if (!you.duration[DUR_PARALYSIS] && !you.petrified())
+        mprf(MSGCH_WARN, "You are exhausted.");
+
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_LAVA_ORC)
+        mpr("You feel less hot-headed.");
+#endif
+
+    // This resets from an actual penalty or from NO_BERSERK_PENALTY.
+    you.berserk_penalty = 0;
+
+    const int dur = 12 + roll_dice(2, 12);
+    // For consistency with slow give exhaustion 2 times the nominal
+    // duration.
+    you.increase_duration(DUR_EXHAUSTED, dur * 2);
+
+    notify_stat_change(STAT_STR, -5, true);
+
+    // Don't trigger too many hints mode messages.
+    const bool hints_slow = Hints.hints_events[HINT_YOU_ENCHANTED];
+    Hints.hints_events[HINT_YOU_ENCHANTED] = false;
+
+    slow_player(dur);
+
+    make_hungry(BERSERK_NUTRITION, true);
+    you.hunger = max(HUNGER_STARVING - 100, you.hunger);
+
+    // 1KB: No berserk healing.
+    set_hp((you.hp + 1) * 2 / 3);
+    calc_hp();
+
+    learned_something_new(HINT_POSTBERSERK);
+    Hints.hints_events[HINT_YOU_ENCHANTED] = hints_slow;
+    you.redraw_quiver = true; // Can throw again.
 }
