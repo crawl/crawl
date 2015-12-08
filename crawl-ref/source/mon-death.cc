@@ -2734,7 +2734,7 @@ item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
     monster mon;
     mon.type = mc;
     mon.moveto(daddy->pos());
-    define_monster(&mon);
+    define_monster(&mon); // assumes mc is not a zombie
     mon.flags = daddy->flags;
 
     // Need to copy ENCH_ABJ etc. or we could get real XP/meat from a summon.

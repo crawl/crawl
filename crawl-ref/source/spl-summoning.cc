@@ -1289,7 +1289,10 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
                 // Save the enchantments, particularly ENCH_SUMMON etc.
                 mon_enchant_list ench = mons->enchantments;
                 FixedBitVector<NUM_ENCHANTMENTS> cache = mons->ench_cache;
-                define_monster(mons);
+                if (mons_class_is_zombified(mons->type))
+                    define_zombie(mons, mons->base_monster, mons->type);
+                else
+                    define_monster(mons);
                 mons->enchantments = ench;
                 mons->ench_cache = cache;
             }
