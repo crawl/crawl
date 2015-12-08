@@ -778,7 +778,7 @@ static void _place_player_corpse(bool explode)
 
     monster dummy;
     dummy.type = player_mons(false);
-    define_monster(&dummy);
+    define_monster(&dummy); // assumes player_mons is not a zombie
     dummy.position = you.pos();
     dummy.props["always_corpse"] = true;
     dummy.mname = you.your_name;

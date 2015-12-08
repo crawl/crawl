@@ -2629,6 +2629,8 @@ bool init_abomination(monster* mon, int hd)
 void define_monster(monster* mons)
 {
     monster_type mcls         = mons->type;
+    ASSERT(!mons_class_is_zombified(mcls)); // should have called define_zombie
+
     monster_type monbase      = mons->base_monster;
     const monsterentry *m     = get_monster_data(mcls);
     int col                   = mons_class_colour(mcls);

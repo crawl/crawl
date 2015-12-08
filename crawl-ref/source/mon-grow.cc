@@ -120,7 +120,7 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
     dummy.type         = after;
     dummy.base_monster = base_monster;
     dummy.number       = number;
-    define_monster(&dummy);
+    define_monster(&dummy); // assumes after is not a zombie
 
     colour = dummy.colour;
     speed  = dummy.speed;
