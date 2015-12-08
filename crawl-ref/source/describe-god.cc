@@ -104,7 +104,7 @@ static string _describe_favour(god_type which_god)
 // The various titles granted by the god of your choice. Note that Xom
 // doesn't use piety the same way as the other gods, so these are just
 // placeholders.
-static const char *divine_title[NUM_GODS][8] =
+static const char *divine_title[][8] =
 {
     // No god.
     {"Buglet",             "Firebug",               "Bogeybug",                 "Bugger",
@@ -202,6 +202,7 @@ static const char *divine_title[NUM_GODS][8] =
     {"Reactionary",       "Apprentice",             "Inquisitive",              "Experimenter",
         "Inventor",           "Pioneer",               "Brilliant",                "Grand Gadgeteer"},
 };
+COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 
 string god_title(god_type which_god, species_type which_species, int piety)
 {
