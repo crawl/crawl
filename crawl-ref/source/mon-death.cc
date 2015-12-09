@@ -967,11 +967,6 @@ static bool _ballisto_at(const coord_def & target)
            && mons->alive();
 }
 
-static bool _player_at(const coord_def & target)
-{
-    return you.pos() == target;
-}
-
 static bool _mold_connected(const coord_def & target)
 {
     return is_moldy(target) || _ballisto_at(target);
@@ -1001,7 +996,6 @@ static void _activate_ballistomycetes(monster* mons, const coord_def& origin,
     int non_activable_count = 0;
     int ballisto_count = 0;
 
-    bool any_friendly = mons->attitude == ATT_FRIENDLY;
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->mindex() != mons->mindex() && mi->alive())
@@ -1013,9 +1007,6 @@ static void _activate_ballistomycetes(monster* mons, const coord_def& origin,
             {
                 non_activable_count++;
             }
-
-            if (mi->attitude == ATT_FRIENDLY)
-                any_friendly = true;
         }
     }
 
