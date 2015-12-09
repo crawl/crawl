@@ -1002,7 +1002,6 @@ static void _activate_ballistomycetes(monster* mons, const coord_def& origin,
     int ballisto_count = 0;
 
     bool any_friendly = mons->attitude == ATT_FRIENDLY;
-    bool fedhas_mode  = false;
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->mindex() != mons->mindex() && mi->alive())
@@ -1027,30 +1026,12 @@ static void _activate_ballistomycetes(monster* mons, const coord_def& origin,
     set<position_node> visited;
     vector<set<position_node>::iterator > candidates;
 
-    if (you_worship(GOD_FEDHAS))
-    {
-        if (non_activable_count == 0
-            && ballisto_count == 0
-            && any_friendly
-            && mons->type == MONS_BALLISTOMYCETE)
-        {
-            mpr("Your fungal colony was destroyed.");
-            dock_piety(5, 0);
-        }
-
-        fedhas_mode = true;
-        activation_count = 1;
-        exhaustive = false;
-        valid_target = _player_at;
-    }
-
     _search_dungeon(origin, valid_target, connecting_square, visited,
                     candidates, exhaustive);
 
     if (candidates.empty())
     {
-        if (!fedhas_mode
-            && non_activable_count == 0
+        if (non_activable_count == 0
             && ballisto_count == 0
             && mons->attitude == ATT_HOSTILE)
         {
@@ -1083,7 +1064,7 @@ static void _activate_ballistomycetes(monster* mons, const coord_def& origin,
 
         // This may be the players position, in which case we don't
         // have to mess with spore production on anything
-        if (spawner && !fedhas_mode)
+        if (spawner)
         {
             spawner->ballisto_activity++;
 
@@ -2076,7 +2057,8 @@ item_def* monster_die(monster* mons, killer_type killer,
                 if (!gives_player_xp
                     && mons_class_gives_xp(mons->type)
                     && !summoned
-                    && !fake_abjure)
+                    && !fake_abjure
+                    && !mons->friendly())
                 {
                     mpr("That felt strangely unrewarding.");
                 }
@@ -2181,8 +2163,8 @@ item_def* monster_die(monster* mons, killer_type killer,
 
             _fire_kill_conducts(*mons, killer, killer_index, gives_player_xp);
 
-            // No piety loss for friends killed by other monsters.
-            // XXX: ^ this comment seems inverted...?
+            // Kill conducts do not assess piety loss for friends
+            // killed by other monsters.
             if (mons->friendly())
             {
                 const bool sentient = mons_class_intel(mons->type) >= I_HUMAN;
