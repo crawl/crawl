@@ -2041,14 +2041,14 @@ item_def* monster_die(monster* mons, killer_type killer,
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
                          mons->name(DESC_THE).c_str(),
                          exploded                        ? "blown up" :
-                         wounded_damaged(targ_holy)     ? "destroyed"
+                         wounded_damaged(targ_holy)      ? "destroyed"
                                                          : "killed");
                 }
                 else
                 {
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
                          exploded                        ? "blow up" :
-                         wounded_damaged(targ_holy)     ? "destroy"
+                         wounded_damaged(targ_holy)      ? "destroy"
                                                          : "kill",
                          mons->name(DESC_THE).c_str());
                 }
@@ -2235,7 +2235,7 @@ item_def* monster_die(monster* mons, killer_type killer,
                 {
                     const char* msg =
                         exploded                     ? " is blown up!" :
-                        wounded_damaged(targ_holy)  ? " is destroyed!"
+                        wounded_damaged(targ_holy)   ? " is destroyed!"
                                                      : " dies!";
                     simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
                                            MDAM_DEAD);
