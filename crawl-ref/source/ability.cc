@@ -807,13 +807,6 @@ talent get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_BREATHE_FIRE:
-        failure = ((you.species == SP_RED_DRACONIAN) ? 30 : 50)
-                        - 10 * player_mutation_level(MUT_BREATHE_FLAMES)
-                        - you.experience_level;
-
-        if (you.form == TRAN_DRAGON)
-            failure -= 20;
-        break;
     case ABIL_BREATHE_FROST:
     case ABIL_BREATHE_POISON:
     case ABIL_SPIT_ACID:
@@ -1917,8 +1910,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         {
         case ABIL_BREATHE_FIRE:
         {
-            power = you.experience_level
-                    + player_mutation_level(MUT_BREATHE_FLAMES) * 4;
+            power = you.experience_level;
 
             if (you.form == TRAN_DRAGON)
                 power += 12;
@@ -3387,10 +3379,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     //jmf: Check for breath weapons - they're exclusive of each other, I hope!
     //     Make better ones come first.
-    if (you.species != SP_RED_DRACONIAN &&
-        ((you.form == TRAN_DRAGON
+    if (you.species != SP_RED_DRACONIAN && you.form == TRAN_DRAGON
          && dragon_form_dragon_type() == MONS_FIRE_DRAGON)
-         || player_mutation_level(MUT_BREATHE_FLAMES)))
     {
         _add_talent(talents, ABIL_BREATHE_FIRE, check_confused);
     }
