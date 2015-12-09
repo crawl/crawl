@@ -141,7 +141,6 @@ static const int conflict[][3] =
     { MUT_REGENERATION,        MUT_SLOW_REGENERATION,      1},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
     { MUT_FAST,                MUT_SLOW,                   1},
-    { MUT_BREATHE_FLAMES,      MUT_SPIT_POISON,           -1},
     { MUT_FANGS,               MUT_BEAK,                  -1},
     { MUT_ANTENNAE,            MUT_HORNS,                 -1},
     { MUT_HOOVES,              MUT_TALONS,                -1},
@@ -1054,13 +1053,9 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Draconians already get breath weapons.
-    if (species_is_draconian(you.species)
-        && (mutat == MUT_BREATHE_FLAMES
-            || mutat == MUT_SPIT_POISON))
-    {
+    // Only nagas can get upgraded poison spit.
+    if (you.species != SP_NAGA && mutat == MUT_SPIT_POISON)
         return true;
-    }
 
     // Only Draconians (and gargoyles) can get wings.
     if (!species_is_draconian(you.species) && you.species != SP_GARGOYLE

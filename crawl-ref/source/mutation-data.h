@@ -460,7 +460,8 @@ static const mutation_def mut_data[] =
    "poisonous spittle",
 },
 
-{ MUT_BREATHE_FLAMES, 4, 3, mutflag::GOOD, false,
+#if TAG_MAJOR_VERSION == 34
+{ MUT_BREATHE_FLAMES, 0, 3, mutflag::GOOD, false,
   "breathe flames",
 
   {"You can breathe flames.",
@@ -477,7 +478,7 @@ static const mutation_def mut_data[] =
 
    "fiery breath",
 },
-#if TAG_MAJOR_VERSION == 34
+
 { MUT_JUMP, 0, 3, mutflag::GOOD, false,
   "jump",
 
