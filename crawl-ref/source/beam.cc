@@ -4501,7 +4501,13 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
         // Don't immediately turn insane monsters hostile.
         if (m_brand != SPMSL_FRENZY)
+        {
             behaviour_event(mon, ME_ANNOY, agent());
+            // behaviour_event can make a monster leave the level or vanish.
+            if (!mon->alive())
+                return;
+        }
+
 
         // Don't allow needles of sleeping to awaken monsters.
         if (m_brand == SPMSL_SLEEP && was_asleep && !mon->asleep())
