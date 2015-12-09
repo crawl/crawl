@@ -3041,8 +3041,8 @@ bool monster::confused() const
 
 bool _you_responsible_for_ench(mon_enchant me)
 {
-    return me.who == KC_YOU || me.who == KC_FRIENDLY
-        && !crawl_state.game_is_arena();
+    return me.who == KC_YOU
+        || me.who == KC_FRIENDLY && !crawl_state.game_is_arena();
 }
 
 bool monster::confused_by_you() const
