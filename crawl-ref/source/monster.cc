@@ -3039,7 +3039,7 @@ bool monster::confused() const
     return mons_is_confused(this);
 }
 
-bool _you_responsible_for_ench(mon_enchant me)
+static bool _you_responsible_for_ench(mon_enchant me)
 {
     return me.who == KC_YOU
         || me.who == KC_FRIENDLY && !crawl_state.game_is_arena();
