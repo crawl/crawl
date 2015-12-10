@@ -1,3 +1,9 @@
+crawl (2:0.17.1-1) UNRELEASED; urgency=low
+
+  * New upstream release.
+
+ -- gammafunk <gammafunk@gmail.com>  Thu, 10 Dec 2015 05:09:43 -0600
+
 crawl (2:0.17.0-1) UNRELEASED; urgency=low
 
   * New upstream release.

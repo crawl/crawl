@@ -1,3 +1,19 @@
+Stone Soup 0.17.1 (20151210)
+----------------------------
+* Fix insect monsters never berserking. This bug prevented queen bees from
+  berserking their hive bees and moths of wrath berserking insects in Spider.
+* Prevent the Gell's Gravitas spell from moving monsters into deep water or
+  lava.
+* Fix resting to stop properly when MP don't regenerate.
+* Properly warn when a beam might poison a monster while worshiping the Shining
+  One.
+* Put hunter's swords in slot 'a' or 'b' at game start to allow easier
+  switching between ranged and melee weapons.
+* Put EE starting stones on the 'b' slot.
+* Update the manual for 0.17.
+* Many other bug fixes for game crashes, to vaults, and to in-game text.
+
+
 Stone Soup 0.17 (20151106)
 --------------------------
 
