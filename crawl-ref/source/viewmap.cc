@@ -126,7 +126,7 @@ static ucs_t _get_magicmap_char(dungeon_feature_type feat)
 }
 #endif
 
-bool _is_player_defined_feature(ucs_t feature)
+static bool _is_player_defined_feature(ucs_t feature)
 {
     return feature == 'E' || feature == 'F' || feature == 'W';
 }
