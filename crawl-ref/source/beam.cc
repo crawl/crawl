@@ -1187,10 +1187,6 @@ void bolt::fire()
     else
         do_fire();
 
-    //XXX: suspect, but code relies on path_taken being non-empty
-    if (path_taken.empty())
-        path_taken.push_back(source);
-
     if (special_explosion != nullptr)
     {
         seen           = seen  || special_explosion->seen;
