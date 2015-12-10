@@ -189,9 +189,6 @@ gravestone_writing1
 gravestone_writing2
 gravestone_ornate DNGN_GRAVESTONE_ORNATE
 
-## strange machine for Tukima's Wizlab
-machine_tukima DNGN_MACHINE_TUKIMA
-
 ## an icy teleporter
 teleporter_ice_cave DNGN_TELEPORTER_ICE_CAVE
 
