@@ -88,7 +88,7 @@ High Scores
 Pressing 'enter' immediately after typing your name will select standard Dungeon
 Crawl mode, and you will be prompted to select a species and background. Names
 are unique; entering a name from the saved game list will continue that saved
-game. If you select a game mode instead of entering a name, you may eventually
+game. If you select a game mode instead of entering a name, you will eventually
 be prompted to enter a name.
 
 You can choose species and background in either order or randomise any
