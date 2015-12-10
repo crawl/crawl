@@ -773,7 +773,6 @@ void bolt::draw(const coord_def& p)
 // the feature.
 void bolt::bounce()
 {
-    ASSERT(cell_is_solid(ray.pos()));
     // Don't bounce player tracers off unknown cells, or cells that we
     // incorrectly thought were non-bouncy.
     if (is_tracer && agent() == &you)
@@ -1101,6 +1100,82 @@ bool bolt::need_regress() const
            || origin_spell == SPELL_PRIMAL_WAVE;
 }
 
+// Returns true if the beam ended due to hitting the wall.
+bool bolt::hit_wall()
+{
+    const dungeon_feature_type feat = grd(pos());
+
+#ifdef ASSERTS
+    if (!feat_is_solid(feat))
+        die("beam::hit_wall yet not solid: %s", dungeon_feature_name(feat));
+#endif
+
+    if (is_tracer && !is_targeting && YOU_KILL(thrower)
+        && in_bounds(target) && !passed_target && pos() != target
+        && pos() != source && foe_info.count == 0
+        && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
+        && bounces == 0 && reflections == 0 && you.see_cell(target)
+        && !cell_is_solid(target))
+    {
+        // Okay, with all those tests passed, this is probably an instance
+        // of the player manually targeting something whose line of fire
+        // is blocked, even though its line of sight isn't blocked. Give
+        // a warning about this fact.
+        string prompt = "Your line of fire to ";
+        const monster* mon = monster_at(target);
+
+        if (mon && mon->observable())
+            prompt += mon->name(DESC_THE);
+        else
+        {
+            prompt += "the targeted "
+                    + feature_description_at(target, false, DESC_PLAIN, false);
+        }
+
+        prompt += " is blocked by "
+                + feature_description_at(pos(), false, DESC_A, false);
+
+        prompt += ". Continue anyway?";
+
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            beam_cancelled = true;
+            finish_beam();
+            return false;
+        }
+
+        // Well, we warned them.
+    }
+
+    if (in_bounds(pos()) && can_affect_wall(feat))
+        affect_wall();
+    else if (is_bouncy(feat) && !in_explosion_phase)
+        bounce();
+    else
+    {
+        // Regress for explosions: blow up in an open grid (if regressing
+        // makes any sense). Also regress when dropping items.
+        if (pos() != source && need_regress())
+        {
+            do
+            {
+                ray.regress();
+            }
+            while (ray.pos() != source && cell_is_solid(ray.pos()));
+
+            // target is where the explosion is centered, so update it.
+            if (is_explosion && !is_tracer)
+                target = ray.pos();
+        }
+        finish_beam();
+
+        return true;
+    }
+
+    return false;
+}
+
 void bolt::affect_cell()
 {
     // Shooting through clouds affects accuracy.
@@ -1109,9 +1184,17 @@ void bolt::affect_cell()
 
     fake_flavour();
 
-    // Note that this can change the solidity of the wall.
-    if (cell_is_solid(pos()))
-        affect_wall();
+    const coord_def old_pos = pos();
+    const bool was_solid = cell_is_solid(pos());
+
+    // Note that this can change the ray position and the solidity
+    // of the wall.
+    if (was_solid && hit_wall())
+    {
+        // Beam ended due to hitting wall, so don't hit the player
+        // or monster with the regressed beam.
+        return;
+    }
 
     // If the player can ever walk through walls, this will need
     // special-casing too.
@@ -1123,9 +1206,11 @@ void bolt::affect_cell()
             finish_beam();
     }
 
-    // Stop single target beams from affecting a monster if they already
+    // We don't want to hit a monster in a wall square twice. Also,
+    // stop single target beams from affecting a monster if they already
     // affected the player on this square. -cao
-    if (!hit_player || pierce || is_explosion)
+    const bool still_wall = (was_solid && old_pos == pos());
+    if ((!hit_player || pierce || is_explosion) && !still_wall)
     {
         monster *m = monster_at(pos());
         if (m && can_affect_actor(m))
@@ -1230,7 +1315,6 @@ void bolt::do_fire()
         ray.advance();
     }
 
-    // Note: nothing but this loop should be changing the ray.
     while (map_bounds(pos()))
     {
         if (range_used() > range)
@@ -1241,75 +1325,11 @@ void bolt::do_fire()
             break;
         }
 
-        const dungeon_feature_type feat = grd(pos());
-
-        if (feat_is_solid(feat) && is_tracer && !is_targeting
-            && YOU_KILL(thrower) && in_bounds(target) && !passed_target
-            && pos() != target && pos() != source && foe_info.count == 0
-            && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
-            && bounces == 0 && reflections == 0 && you.see_cell(target)
-            && !cell_is_solid(target))
-        {
-            // Okay, with all those tests passed, this is probably an instance
-            // of the player manually targeting something whose line of fire
-            // is blocked, even though its line of sight isn't blocked. Give
-            // a warning about this fact.
-            string prompt = "Your line of fire to ";
-            const monster* mon = monster_at(target);
-
-            if (mon && mon->observable())
-                prompt += mon->name(DESC_THE);
-            else
-            {
-                prompt += "the targeted "
-                        + feature_description_at(target, false, DESC_PLAIN, false);
-            }
-
-            prompt += " is blocked by "
-                    + feature_description_at(pos(), false, DESC_A, false);
-
-            prompt += ". Continue anyway?";
-
-            if (!yesno(prompt.c_str(), false, 'n'))
-            {
-                canned_msg(MSG_OK);
-                beam_cancelled = true;
-                finish_beam();
-                return;
-            }
-
-            // Well, we warned them.
-        }
-
-        if (feat_is_solid(feat) && !can_affect_wall(feat))
-        {
-            if (is_bouncy(feat))
-                bounce();
-            else
-            {
-                // Regress for explosions: blow up in an open grid (if regressing
-                // makes any sense). Also regress when dropping items.
-                if (pos() != source && need_regress())
-                {
-                    do
-                    {
-                        ray.regress();
-                    }
-                    while (ray.pos() != source && cell_is_solid(ray.pos()));
-
-                    // target is where the explosion is centered, so update it.
-                    if (is_explosion && !is_tracer)
-                        target = ray.pos();
-                }
-                break;
-            }
-        }
+        if (!affects_nothing)
+            affect_cell();
 
         if (path_taken.empty() || pos() != path_taken.back())
             path_taken.push_back(pos());
-
-        if (!affects_nothing)
-            affect_cell();
 
         if (range_used() > range)
             break;
@@ -1356,7 +1376,6 @@ void bolt::do_fire()
         }
 
         noise_generated = false;
-
         ray.advance();
     }
 
