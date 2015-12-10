@@ -1117,7 +1117,7 @@ static void _equip_amulet_of_regeneration()
     else if (you.hp == you.hp_max)
     {
         you.props[REGEN_AMULET_ACTIVE] = 1;
-        mpr("The amulet throbs as it attunes itself to your healthy body.");
+        mpr("The amulet throbs as it attunes itself to your uninjured body.");
     }
     else
     {
