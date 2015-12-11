@@ -2974,7 +2974,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                      den / 3);
 
         if (recharge_wand(true, "", num, den) <= 0)
+        {
+            canned_msg(MSG_OK);
             return SPRET_ABORT;
+        }
 
         dec_mp(mp_to_use);
 
