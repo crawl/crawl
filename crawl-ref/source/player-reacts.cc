@@ -860,6 +860,8 @@ static void _regenerate_hp_and_mp(int delay)
         you.hit_points_regeneration -= 100;
     }
 
+    update_regen_amulet_attunement();
+
     ASSERT_RANGE(you.hit_points_regeneration, 0, 100);
 
     if (!player_regenerates_mp())
@@ -881,8 +883,6 @@ static void _regenerate_hp_and_mp(int delay)
     }
 
     ASSERT_RANGE(you.magic_points_regeneration, 0, 100);
-
-    update_regen_amulet_attunement();
 }
 
 void player_reacts()
