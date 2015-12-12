@@ -106,6 +106,9 @@ item_def* newgame_make_item(object_class_type base,
     int slot;
     for (slot = 0; slot < ENDOFPACK; ++slot)
     {
+        if (base == OBJ_FOOD && slot == letter_to_index('e'))
+            continue;
+
         item_def& item = you.inv[slot];
         if (!item.defined())
             break;
