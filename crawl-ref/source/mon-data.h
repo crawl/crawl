@@ -852,6 +852,18 @@ static monsterentry mondata[] =
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
 
+{
+    MONS_DEEP_ELF_ELEMENTALIST, 'e', ETC_FLASH, "deep elf elementalist",
+    M_WARM_BLOOD | M_SEE_INVIS | M_SPEAKS,
+    MR_NO_FLAGS,
+    17, MONS_ELF, MONS_ELF, MH_NATURAL, 120,
+    { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 14, 3, 3 },
+    0, 13, MST_DEEP_ELF_ELEMENTALIST, CE_CLEAN, S_SHOUT,
+    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
+},
+
 // Mobile plants and fungi ('f')
 {
     MONS_WANDERING_MUSHROOM, 'f', BROWN, "wandering mushroom",

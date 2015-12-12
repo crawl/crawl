@@ -2850,6 +2850,9 @@ enum monster_type                      // menv[].type
     MONS_DEEP_ELF_ANNIHILATOR,
     MONS_DEEP_ELF_SORCERER,
     MONS_DEEP_ELF_DEATH_MAGE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_DEEP_ELF_ELEMENTALIST,
+#endif
     MONS_DEEP_ELF_BLADEMASTER,
     MONS_DEEP_ELF_MASTER_ARCHER,
     MONS_SPRIGGAN,
@@ -3459,6 +3462,7 @@ enum monster_type                      // menv[].type
     MONS_JUGGERNAUT,
     MONS_SPARK_WASP,
     MONS_DOOM_HOUND,
+    MONS_DEEP_ELF_ELEMENTALIST,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

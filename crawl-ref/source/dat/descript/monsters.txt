@@ -870,6 +870,8 @@ demonic forces and the creatures of the Abyss.
 deep elf elementalist
 
 The primal forces of the universe dance at this demented wizard's fingertips.
+They are renowned for the ability to dig out and pin down even the most
+elusive foes with powerful, unavoidable magic.
 %%%%
 deep elf fighter
 
