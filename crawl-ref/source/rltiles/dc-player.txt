@@ -75,6 +75,8 @@ djinni_f DJINNI
 djinni_m
 %rim 1
 formicid FORMICID
+lacertilian_f LACERTILIAN
+lacertilian_m
 vine_stalker_f VINE_STALKER
 vine_stalker_m
 
