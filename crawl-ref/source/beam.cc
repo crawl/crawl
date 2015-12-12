@@ -3183,7 +3183,7 @@ bool bolt::is_reflectable(const item_def *it) const
     if (range_used() > range)
         return false;
 
-    return it && is_shield(*it) && shield_reflects(*it);
+    return (it && is_shield(*it) && shield_reflects(*it)) || you.reflection();
 }
 
 bool bolt::is_big_cloud() const
@@ -3340,16 +3340,19 @@ bool bolt::misses_player()
         {
             bool penet = false;
 
-            if (is_reflectable(you.shield()) || you.reflection())
+            if (is_reflectable(you.shield()))
             {
-                if (is_reflectable(you.shield()))
+                if (is_shield(*you.shield()) && shield_reflects(*you.shield()))
                 {
                     mprf("Your %s reflects the %s!",
-                          you.shield()->name(DESC_PLAIN).c_str(),
-                          name.c_str());
+                            you.shield()->name(DESC_PLAIN).c_str(),
+                            name.c_str());
                 }
-                mprf("The %s reflects off an invisible shield around you!",
-                          name.c_str());
+                else
+                {
+                    mprf("The %s reflects off an invisible shield around you!",
+                            name.c_str());
+                }
                 reflect();
             }
             else if (pierces_shields())
@@ -4736,11 +4739,11 @@ bool bolt::attempt_block(monster* mon)
         {
             rc = true;
             item_def *shield = mon->mslot_item(MSLOT_SHIELD);
-            if (is_reflectable(shield) || you.reflection())
+            if (is_reflectable(shield))
             {
                 if (mon->observable())
                 {
-                    if (is_reflectable(shield))
+                    if (is_shield(*shield) && shield_reflects(*shield))
                     {
                         mprf("%s reflects the %s off %s %s!",
                              mon->name(DESC_THE).c_str(),
