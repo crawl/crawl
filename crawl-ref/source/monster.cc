@@ -3167,7 +3167,7 @@ bool monster::shielded() const
 {
     return shield() || has_ench(ENCH_CONDENSATION_SHIELD)
                     || has_ench(ENCH_BONE_ARMOUR)
-                    || reflection();
+                    || wearing(EQ_AMULET_PLUS, AMU_REFLECTION) > 0;
 }
 
 int monster::shield_bonus() const
