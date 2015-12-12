@@ -2532,9 +2532,8 @@ void forget_map(bool rot)
 
 static void _remove_temp_mutation()
 {
-    int num_remove = min(you.attribute[ATTR_TEMP_MUTATIONS],
-        max(you.attribute[ATTR_TEMP_MUTATIONS] * 5 / 12 - random2(3),
-        1 + random2(3)));
+    // Usually 1, very occasionally 3
+    int num_remove = 1 + binomial(2, 1, 3);
 
     if (num_remove >= you.attribute[ATTR_TEMP_MUTATIONS])
         mprf(MSGCH_DURATION, "You feel the corruption within you wane completely.");

@@ -2257,7 +2257,7 @@ bool temp_mutate(mutation_type which_mut, const string &reason)
 
 int temp_mutation_roll()
 {
-    return min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
+    return min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 9;
 }
 
 /**
