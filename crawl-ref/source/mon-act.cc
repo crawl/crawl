@@ -2123,7 +2123,10 @@ void handle_monster_move(monster* mons)
             // Lost souls can flicker away at any time they're isolated
             || mons->type == MONS_LOST_SOUL
             // Let monsters who have Dig use it off-screen.
-            || mons->has_spell(SPELL_DIG))
+            || mons->has_spell(SPELL_DIG)
+            // Let monsters who have Awaken Earth use it off-screen.
+            || mons->has_spell(SPELL_AWAKEN_EARTH)
+            )
         {
             // [ds] Special abilities shouldn't overwhelm
             // spellcasting in monsters that have both. This aims

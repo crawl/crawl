@@ -3669,6 +3669,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_AWAKEN_EARTH, "Awaken Earth",
+    SPTYP_SUMMONING | SPTYP_EARTH,
+    SPFLAG_MONSTER | SPFLAG_GRID,
+    7,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    4, 0,
+    nullptr,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,
