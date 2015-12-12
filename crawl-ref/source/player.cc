@@ -5689,7 +5689,7 @@ bool player::shielded() const
            || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
            || qazlal_sh_boost() > 0
            || attribute[ATTR_BONE_ARMOUR] > 0
-           || you.wearing(EQ_AMULET, AMU_REFLECTION)
+           || you.wearing(EQ_AMULET_PLUS, AMU_REFLECTION) > 0
            || you.scan_artefacts(ARTP_SHIELDING);
 }
 
