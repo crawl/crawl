@@ -1670,7 +1670,7 @@ item_def* monster_die(monster* mons, const actor *killer, bool silent,
  * @param killer_index The mindex of the killer (TODO: always use an actor*)
  * @param silent whether to print any messages about the death
  * @param wizard various switches
- * @param fake ???
+ * @param fake   The death of the mount of a mounted monster (spriggan rider).
  * @returns a pointer to the created corpse, possibly null
  */
 item_def* monster_die(monster* mons, killer_type killer,
