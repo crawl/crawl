@@ -197,16 +197,22 @@ random_var operator*(const random_var& x, int d)
 
 random_var div_rand_round(const random_var& x, int d)
 {
-    const int start = x.min() / d;
-    const int end = (x.max() + d - 1) / d + 1;
+    // The rest is much simpler if we can assume d is positive.
+    if (d < 0)
+        return ::negate(div_rand_round(x, -d));
+    ASSERT(d != 0);
+
+    // Round start down and end up, not both towards zero.
+    const int start = (x.min() - (x.min() < 0 ? d - 1 : 0)) / d;
+    const int end   = (x.max() + (x.max() > 0 ? d - 1 : 0)) / d + 1;
     vector<int> weights(end - start, 0);
 
     for (int v = x.min(); v <= x.max(); ++v)
     {
-        int rem = v % d;
+        const int rem = abs(v % d);
         weights[v / d - start] += x.weight(v) * (d - rem);
-        if (rem > 0)
-            weights[v / d + 1 - start] += x.weight(v) * rem;
+        if (rem != 0) // guarantees sgn(v) != 0 too
+            weights[v / d + sgn(v) - start] += x.weight(v) * rem;
     }
 
     return random_var(start, end, weights);
