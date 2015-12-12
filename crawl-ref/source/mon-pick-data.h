@@ -182,6 +182,7 @@ static const pop_entry pop_elf[] =
   {  1,  7,   40, SEMI, MONS_DEEP_ELF_ANNIHILATOR },
   {  1,  8,   65, SEMI, MONS_DEEP_ELF_DEMONOLOGIST },
   {  1,  7,   40, SEMI, MONS_DEEP_ELF_HIGH_PRIEST },
+  {  1,  8,   65, SEMI, MONS_DEEP_ELF_ELEMENTALIST },
   {  0,  7,   45, SEMI, MONS_DEEP_ELF_DEATH_MAGE },
   {  6,  7,   10, RISE, MONS_DEEP_ELF_BLADEMASTER },
   {  6,  7,   10, RISE, MONS_DEEP_ELF_MASTER_ARCHER },
@@ -440,6 +441,7 @@ static const pop_entry pop_vaults[] =
   { 11, 12,   16, FLAT, MONS_DEEP_ELF_ANNIHILATOR },
   { 11, 12,   16, FLAT, MONS_DEEP_ELF_SORCERER },
   { 11, 12,   16, FLAT, MONS_DEEP_ELF_DEATH_MAGE },
+  { 11, 12,   16, FLAT, MONS_DEEP_ELF_ELEMENTALIST },
   { 12, 12,   16, FLAT, MONS_ANCIENT_LICH },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -809,6 +811,7 @@ static const pop_entry pop_abyss[] =
   {  1,  5,    4, FLAT, MONS_DEEP_ELF_MAGE },
   {  1,  5,    8, FLAT, MONS_DEEP_ELF_SORCERER },
   {  1,  5,    5, FLAT, MONS_DEEP_ELF_DEMONOLOGIST },
+  {  1,  5,    8, FLAT, MONS_DEEP_ELF_ELEMENTALIST },
   {  1,  5,   29, FLAT, MONS_BLINK_FROG },
   {  1,  5,    4, FALL, MONS_BASILISK },
   {  1,  5,    8, FLAT, MONS_MANA_VIPER },
@@ -1060,6 +1063,7 @@ static const pop_entry pop_depths[] =
   {  4, 14,   25, RISE, MONS_DEEP_ELF_ANNIHILATOR },
   {  4, 14,   25, RISE, MONS_DEEP_ELF_SORCERER },
   {  4, 14,   25, RISE, MONS_DEEP_ELF_DEATH_MAGE },
+  {  4, 14,   25, RISE, MONS_DEEP_ELF_ELEMENTALIST },
   {  5, 14,   50, FLAT, MONS_JUGGERNAUT },
   {  6, 14,   50, FLAT, MONS_TITAN },
   {  6, 14,   50, FLAT, MONS_CAUSTIC_SHRIKE },

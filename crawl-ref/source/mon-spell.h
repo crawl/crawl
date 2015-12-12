@@ -2059,4 +2059,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_DOOM_HOWL, 30, MON_SPELL_NATURAL },
       }
     },
+
+    {  MST_DEEP_ELF_ELEMENTALIST,
+      {
+       { SPELL_AWAKEN_EARTH, 44, MON_SPELL_WIZARD },
+       { SPELL_FIREBALL, 11, MON_SPELL_WIZARD },
+       { SPELL_FREEZING_CLOUD, 11, MON_SPELL_WIZARD },
+       { SPELL_REPEL_MISSILES, 11, MON_SPELL_WIZARD },
+       { SPELL_HASTE, 11, MON_SPELL_WIZARD },
+      }
+    },
 };

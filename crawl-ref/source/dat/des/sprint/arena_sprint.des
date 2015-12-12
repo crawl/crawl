@@ -723,9 +723,7 @@ function arena_sprint_init_boss_table()
         bs[3] = {"place:Elf w:300 / deep elf sorcerer / deep elf blademaster / " ..
                  "deep elf master archer / deep elf annihilator / deep elf high priest",
                  "fannar hp:400 hd:14 / " ..
-                 "col:flash deep elf sorcerer hp:400 " ..
-                    "name:deep_elf_elementalist n_rpl n_des n_noc tile:mons_deep_elf_elementalist " ..
-                    "spells:iron_shot.10.wizard;summon_air_elementals.10.wizard;sticky_flame_range.10.wizard;summon_water_elementals.10.wizard;haste.10.wizard;blink.10.wizard " ..
+                 "deep elf elementalist hp:400 " ..
                     "; robe ego:fire_resistance | " ..
                     "robe ego:cold_resistance | " ..
                     "robe ego:resistance . dagger ego:freezing | " ..

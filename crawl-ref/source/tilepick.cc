@@ -1133,6 +1133,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_DEEP_ELF_SORCERER;
     case MONS_DEEP_ELF_DEATH_MAGE:
         return TILEP_MONS_DEEP_ELF_DEATH_MAGE;
+    case MONS_DEEP_ELF_ELEMENTALIST:
+        return TILEP_MONS_DEEP_ELF_ELEMENTALIST;
     case MONS_DEEP_ELF_BLADEMASTER:
         return TILEP_MONS_DEEP_ELF_BLADEMASTER;
     case MONS_DEEP_ELF_MASTER_ARCHER:
@@ -3504,6 +3506,7 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_SORCERER:
     case MONS_DEEP_ELF_DEATH_MAGE:
+    case MONS_DEEP_ELF_ELEMENTALIST:
         return TILE_CORPSE_ELF;
 
     // goblins ('g')
