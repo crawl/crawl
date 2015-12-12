@@ -72,7 +72,7 @@ end
 # simple entrance
 NAME:   tomb_entry_simple_bobbens
 ORIENT: float
-TAGS:   tomb_entry no_monster_gen no_item_gen
+TAGS:   tomb_entry no_monster_gen no_item_gen transparent
 MONS:   guardian mummy
 MONS:   sphinx
 # crawl will rotate for the rest of possibilities
@@ -95,7 +95,7 @@ ENDMAP
 # small pyramid leading to the bigger one
 NAME:   tomb_entry_pyramid_bobbens
 ORIENT: float
-TAGS:   tomb_entry no_monster_gen
+TAGS:   tomb_entry no_monster_gen transparent
 MONS:   sphinx
 MONS:   w:1 mummy / w:9 guardian mummy
 MONS:   mummy priest
@@ -135,7 +135,7 @@ ENDMAP
 # sphere entry
 NAME:   tomb_entry_sphere_bobbens
 ORIENT: float
-TAGS:   tomb_entry no_monster_gen no_rotate
+TAGS:   tomb_entry no_monster_gen no_rotate transparent
 MONS:   w:1 mummy / w:9 guardian mummy
 MONS:   sphinx
 MONS:   mummy priest
@@ -164,7 +164,7 @@ ENDMAP
 # forgotten tomb entrance
 NAME:   tomb_entry_forgotten_bobbens
 ORIENT: float
-TAGS:   tomb_entry no_monster_gen
+TAGS:   tomb_entry no_monster_gen transparent
 KFEAT:  f = .
 # "withered plant" instead of "plant"
 KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective              \
@@ -187,7 +187,7 @@ ENDMAP
 ##############################################################################
 # she sells tomb entry shells by the sea shore
 NAME:   tomb_entry_shell_bobbens
-TAGS:   tomb_entry no_monster_gen no_item_gen no_rotate
+TAGS:   tomb_entry no_monster_gen no_item_gen no_rotate transparent
 MONS:   guardian mummy
 MONS:   mummy priest
 KFEAT:  O = enter_tomb
