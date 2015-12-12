@@ -2063,7 +2063,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_HELLFIRE:
         fail_check();
         if (your_spells(SPELL_HELLFIRE,
-                        you.experience_level * 10, false) == SPRET_ABORT)
+                        you.experience_level * 10,
+                        false, false, true) == SPRET_ABORT)
         {
             return SPRET_ABORT;
         }
@@ -2678,7 +2679,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         if (your_spells(SPELL_SMITING,
                         player_adjust_invoc_power(
                             12 + skill_bump(SK_INVOCATIONS, 6)),
-                        false) == SPRET_ABORT)
+                        false, false, true) == SPRET_ABORT)
         {
             return SPRET_ABORT;
         }

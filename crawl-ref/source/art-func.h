@@ -215,7 +215,7 @@ static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
     *did_work = true;
     int power = you.skill(SK_EVOCATIONS, 8);
 
-    if (your_spells(SPELL_HELLFIRE, power, false) == SPRET_ABORT)
+    if (your_spells(SPELL_HELLFIRE, power, false, false, true) == SPRET_ABORT)
     {
         *unevokable = true;
         return false;
@@ -282,14 +282,15 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
     int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
 
     // Allow aborting (for example if friendlies are nearby).
-    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false) == SPRET_ABORT)
+    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power,
+                    false, false, true) == SPRET_ABORT)
     {
         *unevokable = true;
         return false;
     }
 
     if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2000))
-        your_spells(SPELL_VENOM_BOLT, power, false);
+        your_spells(SPELL_VENOM_BOLT, power, false, false, true);
 
     dec_mp(4);
     make_hungry(50, false, true);
