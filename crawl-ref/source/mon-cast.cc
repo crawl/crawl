@@ -85,6 +85,7 @@ static int  _mons_control_undead(monster* mons, bool actual = true);
 static coord_def _mons_fragment_target(monster *mons);
 static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe);
 static coord_def _mons_prism_pos(monster* mon, actor* foe);
+static coord_def _mons_awaken_earth_target(monster& mon);
 static bool _mons_consider_tentacle_throwing(const monster &mons);
 static bool _tentacle_toss(const monster &thrower, actor &victim, int pow);
 static void _maybe_throw_ally(const monster &mons);
@@ -92,6 +93,7 @@ static int _throw_site_score(const monster &thrower, const actor &victim,
                              const coord_def &site);
 static void _siren_sing(monster* mons, bool avatar);
 static void _doom_howl(monster &mon);
+static void _mons_awaken_earth(monster &mon, const coord_def &target);
 static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot);
 
 void init_mons_spells()
@@ -1053,6 +1055,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_CONJURE_FLAME:         // ditto
     case SPELL_FULMINANT_PRISM:       // ditto
     case SPELL_SCATTERSHOT:           // ditto
+    case SPELL_AWAKEN_EARTH:          // ditto
         beam.flavour  = BEAM_DEVASTATION;
         beam.pierce   = true;
         // Doesn't take distance into account, but this is just a tracer so
@@ -1566,6 +1569,11 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         else if (spell_cast == SPELL_FULMINANT_PRISM)
         {
             pbolt.target = _mons_prism_pos(mons, mons->get_foe());
+            pbolt.aimed_at_spot = true; // ditto
+        }
+        else if (spell_cast == SPELL_AWAKEN_EARTH)
+        {
+            pbolt.target = _mons_awaken_earth_target(*mons);
             pbolt.aimed_at_spot = true; // ditto
         }
      }
@@ -3182,6 +3190,81 @@ static coord_def _mons_prism_pos(monster* mon, actor* foe)
     return target;
 }
 
+/**
+ * Is this a feature that we can Awaken?
+ *
+ * @param   feat The feature type.
+ * @returns If the feature is a valid feature that we can Awaken Earth on.
+ */
+static bool _feat_is_awakenable(dungeon_feature_type feat)
+{
+    return feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL;
+}
+
+/**
+ * Pick a target for Awaken Earth.
+ *
+ *  @param  mon       The monster casting
+ *  @return The target square - out of bounds if no target was found.
+ */
+static coord_def _mons_awaken_earth_target(monster &mon)
+{
+    coord_def pos = mon.target;
+
+    // First up, see if we can see our target, and if they're in a good spot
+    // to pick on them. If so, do that.
+    if (in_bounds(pos) && mon.see_cell(pos)
+        && count_neighbours_with_func(pos, &_feat_is_awakenable) > 0)
+    {
+        return pos;
+    }
+
+    // Either we can't see our target, or they're not adjacent to walls.
+    // Step back towards the caster from the target, and see if we can find
+    // a better wall for this.
+    const coord_def start_pos = mon.pos();
+
+    ray_def ray;
+    fallback_ray(pos, start_pos, ray); // straight line from them to mon
+
+    // XXX: make this use coord_def when we have a hash<> for it
+    unordered_set<int> candidates;
+
+    // Candidates: everything on or adjacent to a straight line to the target.
+    // Strongly prefer cells where we can get lots of elementals.
+    while (in_bounds(pos) && pos != start_pos)
+    {
+        for (adjacent_iterator ai(pos, false); ai; ++ai)
+        {
+            if (!mon.see_cell(pos))
+                continue;
+            candidates.insert(ai->y * GYM + ai->x);
+        }
+
+        ray.advance();
+        pos = ray.pos();
+    }
+
+    vector<coord_weight> targets;
+    for (auto candidate : candidates)
+    {
+        coord_def target(candidate % GYM, candidate / GYM);
+        int neighbours = count_neighbours_with_func(target,
+                                                    &_feat_is_awakenable);
+
+        // We can target solid cells, which themselves will awaken, so count
+        // those as well.
+        if (_feat_is_awakenable(grd(target)))
+            neighbours++;
+
+        if (neighbours > 0)
+            targets.emplace_back(target, neighbours * neighbours);
+    }
+
+    coord_def* choice = random_choose_weighted(targets);
+    return choice ? *choice : coord_def(0, 0);
+}
+
 bool scattershot_tracer(monster *caster, int pow, coord_def aim)
 {
     targetter_shotgun hitfunc(caster, shotgun_beam_count(pow),
@@ -3551,7 +3634,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
             if ((spell_cast == SPELL_LRD
                  || spell_cast == SPELL_CONJURE_FLAME
-                 || spell_cast == SPELL_FULMINANT_PRISM)
+                 || spell_cast == SPELL_FULMINANT_PRISM
+                 || spell_cast == SPELL_AWAKEN_EARTH)
                 && !in_bounds(beem.target))
             {
                 spell_cast = SPELL_NO_SPELL;
@@ -4936,7 +5020,6 @@ static bool _spell_charged(monster *mons, int count)
     mons->del_ench(ENCH_SPELL_CHARGED);
     return true;
 }
-
 
 /**
  *  Make this monster cast a spell
@@ -6526,6 +6609,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_DOOM_HOWL:
         _doom_howl(*mons);
         break;
+
+    case SPELL_AWAKEN_EARTH:
+        _mons_awaken_earth(*mons, pbolt.target);
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -7435,6 +7522,64 @@ static void _doom_howl(monster &mon)
          mon.name(DESC_THE).c_str(),
          silenced(mon.pos()) ? "silent" : "terrible");
     you.duration[DUR_DOOM_HOWL] = random_range(120, 180);
+}
+
+/**
+ * Have a monster cast Awaken Earth.
+ *
+ * @param mon    The monster casting the spell.
+ * @param target The target cell.
+ */
+static void _mons_awaken_earth(monster &mon, const coord_def &target)
+{
+    if (!in_bounds(target))
+    {
+        if (you.can_see(mon))
+            canned_msg(MSG_NOTHING_HAPPENS);
+        return;
+    }
+
+    bool seen = false;
+    int count = 0;
+    const int max = 1 + (mon.spell_hd(SPELL_AWAKEN_EARTH) > 15)
+                      + random2(mon.spell_hd(SPELL_AWAKEN_EARTH) / 7 + 1);
+
+    for (fair_adjacent_iterator ai(target, false); ai; ++ai)
+    {
+        if (!_feat_is_awakenable(grd(*ai))
+            || env.markers.property_at(*ai, MAT_ANY, "veto_disintegrate")
+               == "veto")
+        {
+            continue;
+        }
+
+        destroy_wall(*ai);
+        if (you.see_cell(*ai))
+            seen = true;
+
+        if (create_monster(mgen_data(
+                MONS_EARTH_ELEMENTAL, SAME_ATTITUDE((&mon)), &mon,
+                2, SPELL_AWAKEN_EARTH, *ai, mon.foe, 0, mon.god)))
+        {
+            count++;
+        }
+
+        if (count >= max)
+            break;
+    }
+
+    if (seen)
+    {
+        noisy(20, target);
+        mprf("Some walls %s!",
+             count > 0 ? "begin to move on their own"
+                       : "crumble away");
+    }
+    else
+        noisy(20, target, "You hear rumbling.");
+
+    if (!seen && !count && you.can_see(mon))
+        canned_msg(MSG_NOTHING_HAPPENS);
 }
 
 /**
