@@ -878,31 +878,17 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
         break;
 
     case EQ_AMULET:
+    case EQ_AMULET_PLUS:
         if ((item = slot_item(static_cast<equipment_type>(EQ_AMULET)))
             && item->sub_type == sub_type
             && (calc_unid
                 || item_type_known(*item)))
         {
-            ret += item->plus;
+            ret += (slot == EQ_AMULET_PLUS ? item->plus : 1);
         }
         break;
 
     case EQ_RINGS:
-        for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; slots++)
-        {
-            if (slots == EQ_AMULET)
-                continue;
-
-            if ((item = slot_item(static_cast<equipment_type>(slots)))
-                && item->sub_type == sub_type
-                && (calc_unid
-                    || item_type_known(*item)))
-            {
-                ret++;
-            }
-        }
-        break;
-
     case EQ_RINGS_PLUS:
         for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; slots++)
         {
@@ -914,7 +900,7 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
                 && (calc_unid
                     || item_type_known(*item)))
             {
-                ret += item->plus;
+                ret += (slot == EQ_RINGS_PLUS ? item->plus : 1);
             }
         }
         break;
@@ -2461,7 +2447,7 @@ int player_shield_class()
     shield += qazlal_sh_boost() * 100;
     shield += tso_sh_boost() * 100;
     shield += _bone_armour_bonus() * 2;
-    shield += you.wearing(EQ_AMULET, AMU_REFLECTION) * 200;
+    shield += you.wearing(EQ_AMULET_PLUS, AMU_REFLECTION) * 200;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
 
     return (shield + 50) / 100;
