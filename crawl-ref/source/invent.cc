@@ -1564,7 +1564,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         && !(you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
         && !you_worship(GOD_GOZAG)
         && !you_worship(GOD_NO_GOD)
-        && !you_worship(GOD_XOM))
+        && !you_worship(GOD_XOM)
+        && !you.species == SP_LACERTILIAN)
     {
         return true;
     }

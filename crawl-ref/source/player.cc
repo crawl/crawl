@@ -3637,6 +3637,14 @@ bool player::stasis(bool calc_unid, bool items) const
     return species == SP_FORMICID;
 }
 
+bool player::faith(bool calc_unid, bool items) const
+{
+    if (species == SP_LACERTILIAN)
+        return true;
+
+    return actor::faith(calc_unid, items);
+}
+
 unsigned int exp_needed(int lev, int exp_apt)
 {
     unsigned int level = 0;
@@ -6977,6 +6985,7 @@ int player::has_tail(bool allow_tran) const
 
     // XXX: Do merfolk in water belong under allow_tran?
     if (species_is_draconian(species)
+        || you.species == SP_LACERTILIAN
         || fishtail
         || player_mutation_level(MUT_STINGER, allow_tran))
     {
