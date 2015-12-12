@@ -2322,6 +2322,12 @@ bool evoke_item(int slot, bool check_range)
     {
         ASSERT(item_is_equipped(item));
 
+        if (you.confused())
+        {
+            canned_msg(MSG_TOO_CONFUSED);
+            return false;
+        }
+
         bool qret = entry->evoke_func(&item, &pract, &did_work, &unevokable);
 
         if (!unevokable)

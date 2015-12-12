@@ -1048,7 +1048,8 @@ static spret_type _do_cast(spell_type spell, int powc,
 
 static bool _spellcasting_aborted(spell_type spell,
                                   bool wiz_cast,
-                                  bool evoked)
+                                  bool evoked,
+                                  bool fake_spell)
 {
     string msg;
 
@@ -1057,11 +1058,11 @@ static bool _spellcasting_aborted(spell_type spell,
         // isn't evoked but still doesn't use the spell's MP. your_spells,
         // this function, and spell_uselessness_reason should take a flag
         // indicating whether MP should be checked (or should never check).
-        const int rest_mp = evoked ? 0 : spell_mana(spell);
+        const int rest_mp = (evoked || fake_spell) ? 0 : spell_mana(spell);
 
         // Temporarily restore MP so that we're not uncastable for lack of MP.
         unwind_var<int> fake_mp(you.magic_points, you.magic_points + rest_mp);
-        msg = spell_uselessness_reason(spell, true, true, evoked);
+        msg = spell_uselessness_reason(spell, true, true, evoked, fake_spell);
     }
 
     bool uncastable = !wiz_cast && msg != "";
@@ -1264,12 +1265,14 @@ vector<string> desc_success_chance(const monster_info& mi, int pow)
  * @param powc          Spellpower.
  * @param allow_fail    Whether spell-fail chance applies.
  * @param evoked        Whether the spell comes from a rod.
+ * @param fake_spell    Whether the spell was some other kind of fake spell
+ *                      (such as an innate or divine ability).
  * @return SPRET_SUCCESS if spell is successfully cast for purposes of
  * exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player cancelled
  * the casting.
  **/
 spret_type your_spells(spell_type spell, int powc,
-                       bool allow_fail, bool evoked)
+                       bool allow_fail, bool evoked, bool fake_spell)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1282,7 +1285,7 @@ spret_type your_spells(spell_type spell, int powc,
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch.
-    if (_spellcasting_aborted(spell, wiz_cast, evoked))
+    if (_spellcasting_aborted(spell, wiz_cast, evoked, fake_spell))
         return SPRET_ABORT;
 
     const unsigned int flags = get_spell_flags(spell);

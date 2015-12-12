@@ -76,10 +76,6 @@
 #    define DEBUG_GIFTS
 #endif
 
-// Which spells?  First I copied all spells from your_spells(), and then
-// I filtered some out, especially conjurations. Then I sorted them in
-// roughly ascending order of power.
-
 // Spells to be cast at tension 0 (no or only low-level monsters around),
 // mostly flavour.
 static const spell_type _xom_nontension_spells[] =
@@ -586,7 +582,7 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
 
     // Don't attempt to cast spells that will do nothing, or that the player
     // cannot memorise/cast.
-    if (spell_is_useless(spell, true, true))
+    if (spell_is_useless(spell, true, true, false, true))
         return XOM_DID_NOTHING;
 
     // Don't attempt to transform the player if the transformation will
@@ -611,7 +607,7 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
     const string note = make_stringf("cast spell '%s'", spell_title(spell));
     take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, note), true);
 
-    your_spells(spell, sever, false);
+    your_spells(spell, sever, false, false, true);
     return result;
 }
 

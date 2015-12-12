@@ -1053,50 +1053,62 @@ bool spell_is_form(spell_type spell)
  * This function attempts to determine if a given spell is useless to the
  * player.
  *
- * @param spell     The spell in question.
- * @param temp      Include checks for volatile or temporary states
- *                  (status effects, mana, gods, items, etc.)
- * @param prevent   Whether to only check for effects which prevent casting,
- *                  rather than just ones that make it unproductive.
- * @param evoked    Is the spell being evoked from an item? (E.g., a rod)
- * @return          Whether the given spell has no chance of being useful.
+ * @param spell      The spell in question.
+ * @param temp       Include checks for volatile or temporary states
+ *                   (status effects, mana, gods, items, etc.)
+ * @param prevent    Whether to only check for effects which prevent casting,
+ *                   rather than just ones that make it unproductive.
+ * @param evoked     Is the spell being evoked from an item? (E.g., a rod)
+ * @param fake_spell Is the spell some other kind of fake spell (such as an
+                     innate or divine ability)?
+ * @return           Whether the given spell has no chance of being useful.
  */
-bool spell_is_useless(spell_type spell, bool temp, bool prevent, bool evoked)
+bool spell_is_useless(spell_type spell, bool temp, bool prevent, bool evoked,
+                      bool fake_spell)
 {
-    return spell_uselessness_reason(spell, temp, prevent, evoked) != "";
+    return spell_uselessness_reason(spell, temp, prevent,
+                                    evoked, fake_spell) != "";
 }
 
 /**
  * This function gives the reason that a spell is currently useless to the
  * player, if it is.
  *
- * @param spell     The spell in question.
- * @param temp      Include checks for volatile or temporary states
- *                  (status effects, mana, gods, items, etc.)
- * @param prevent   Whether to only check for effects which prevent casting,
- *                  rather than just ones that make it unproductive.
- * @param evoked    Is the spell being evoked from an item? (E.g., a rod)
- * @return          The reason a spell is useless to the player, if it is;
- *                  "" otherwise. The string should be a full clause, but
- *                  begin with a lowercase letter so callers can put it in
- *                  the middle of a sentence.
+ * @param spell      The spell in question.
+ * @param temp       Include checks for volatile or temporary states
+ *                   (status effects, mana, gods, items, etc.)
+ * @param prevent    Whether to only check for effects which prevent casting,
+ *                   rather than just ones that make it unproductive.
+ * @param evoked     Is the spell being evoked from an item? (E.g., a rod)
+ * @param fake_spell Is the spell some other kind of fake spell (such as an
+                     innate or divine ability)?
+ * @return           The reason a spell is useless to the player, if it is;
+ *                   "" otherwise. The string should be a full clause, but
+ *                   begin with a lowercase letter so callers can put it in
+ *                   the middle of a sentence.
  */
 string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
-                                bool evoked)
+                                bool evoked, bool fake_spell)
 {
     if (temp)
     {
-        if (you.duration[DUR_CONF] > 0)
+        if (!fake_spell && you.duration[DUR_CONF] > 0)
             return "you're too confused.";
-        if (!enough_mp(spell_mana(spell), true, false) && !evoked)
+        if (!enough_mp(spell_mana(spell), true, false)
+            && !evoked && !fake_spell)
+        {
             return "you don't have enough magic.";
+        }
         if (!prevent && spell_no_hostile_in_range(spell))
             return "you can't see any valid targets.";
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
-    if (!evoked && cannot_use_schools(get_spell_disciplines(spell)))
+    if (!fake_spell && !evoked
+        && cannot_use_schools(get_spell_disciplines(spell)))
+    {
         return "you cannot use spells of this school.";
+    }
 
 
 #if TAG_MAJOR_VERSION == 34
