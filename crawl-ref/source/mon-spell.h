@@ -523,7 +523,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SHINING_EYE,
       {
-       { SPELL_LESSER_MALMUTATE, 57, MON_SPELL_MAGICAL },
+       { SPELL_LESSER_MALMUTATE, 100, MON_SPELL_MAGICAL },
       }
     },
 
