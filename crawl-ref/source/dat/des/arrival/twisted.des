@@ -906,7 +906,6 @@ ENDMAP
 NAME: nicolae_arrival_memento_mori
 TAGS: arrival no_monster_gen no_trap_gen
 ORIENT: float
-WEIGHT: 999999
 SUBST: n = nN
 KPROP: u = no_tele_into
 KPROP: Nu = bloody
