@@ -35,6 +35,7 @@
 #include "files.h"
 #include "fineff.h"
 #include "godabil.h"
+#include "godconduct.h"
 #include "godpassive.h"
 #include "hints.h"
 #include "hiscores.h"
@@ -584,7 +585,7 @@ static void _maybe_ru_retribution(int dam, mid_t death_source)
     }
 }
 
-static void _maybe_spawn_monsters(int dam, const char* aux,
+static void _maybe_spawn_monsters(int dam, const bool is_torment,
                                   kill_method_type death_type,
                                   mid_t death_source)
 {
@@ -595,11 +596,8 @@ static void _maybe_spawn_monsters(int dam, const char* aux,
         return;
 
     // Exclude torment damage. Ugh.
-    if (aux && (strstr(aux, "torment") || strstr(aux, "Torment")
-                || strstr(aux, "exploding lurking horror")))
-    {
+    if (is_torment)
         return;
-    }
 
     monster_type mon;
     int how_many = 0;
@@ -804,6 +802,30 @@ static void _wizard_restore_life()
 }
 #endif
 
+static int _apply_extra_harm(int dam, mid_t source)
+{
+    bool do_extra_harm = you.extra_harm();
+
+    if (!do_extra_harm)
+    {
+        monster* damager = monster_by_mid(source);
+        // Don't check for monster amulet if there source isn't a monster
+        if (!damager)
+            return dam;
+        else
+            do_extra_harm = damager->extra_harm();
+    }
+
+    if (do_extra_harm)
+    {
+        if (you.extra_harm())
+            did_god_conduct(DID_UNHOLY, 1); // The amulet is unholy.
+        return dam * 5 / 4;
+    }
+
+    return dam;
+}
+
 void reset_damage_counters()
 {
     you.turn_damage = 0;
@@ -866,6 +888,15 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         return;
 
     int drain_amount = 0;
+
+    const bool is_torment = (aux && (strstr(aux, "torment")
+                || strstr(aux, "Torment")
+                || strstr(aux, "exploding lurking horror")));
+
+    // Multiply damage if amulet of harm is in play. Doesn't apply to torment
+    // or poison-over-time damage or drowning.
+    if (!is_torment && dam != INSTANT_DEATH && death_type != KILLED_BY_POISON)
+        dam = _apply_extra_harm (dam, source);
 
     if (can_shave_damage() && dam != INSTANT_DEATH
         && death_type != KILLED_BY_POISON)
@@ -1012,7 +1043,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _deteriorate(dam);
             _yred_mirrors_injury(dam, source);
             _maybe_ru_retribution(dam, source);
-            _maybe_spawn_monsters(dam, aux, death_type, source);
+            _maybe_spawn_monsters(dam, is_torment, death_type, source);
             _maybe_fog(dam);
             _powered_by_pain(dam);
             if (death_type != KILLED_BY_POISON)

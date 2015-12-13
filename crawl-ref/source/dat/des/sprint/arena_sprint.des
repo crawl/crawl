@@ -1101,7 +1101,7 @@ KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15
             potion of blood q:5 | potion of blood q:5 | ring of poison resistance |\
             ring of protection from fire | ring of protection from cold |\
             ring of protection from magic | amulet of regeneration |\
-            amulet of the gourmand | amulet of clarity | amulet of reflection |\
+            amulet of the gourmand | amulet of harm | amulet of reflection |\
             ring of see invisible
 SUBST:  b : cb
 TILE:   c = wall_marble

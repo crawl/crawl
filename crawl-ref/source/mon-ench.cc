@@ -1609,7 +1609,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             dprf("%s takes poison damage: %d (degree %d)",
                  name(DESC_THE).c_str(), dam, me.degree);
 
-            hurt(me.agent(), dam, BEAM_POISON);
+            hurt(me.agent(), dam, BEAM_POISON, KILLED_BY_POISON);
         }
 
         decay_enchantment(en, true);

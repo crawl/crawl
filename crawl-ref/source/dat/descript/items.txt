@@ -6,11 +6,6 @@ Translocations spells in existence. It is notoriously difficult to track down
 and understand, as copies of the book and their contents have a tendency to
 shift between planes at a moment's notice.
 %%%%
-amulet of clarity
-
-This amulet protects its wearer from some forms of mental confusion, including
-being berserked against one's will.
-%%%%
 amulet of dismissal
 
 This amulet generates a field of translocational energy that will one in ten
@@ -29,6 +24,13 @@ amulet of guardian spirit
 
 This amulet contains a protective spirit which will cause any damage taken to
 be divided between the wearer's reserves of health and magic.
+%%%%
+amulet of harm
+
+This unholy amulet contains a vicious spirit that increases damage dealt
+to and by its wearer by one fourth. The spirit wants only to spread harm, and
+will punish anyone who removes it by ripping away a piece of their spirit or
+animating force, draining them.
 %%%%
 amulet of inaccuracy
 

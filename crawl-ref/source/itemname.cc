@@ -754,7 +754,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_TELEPORT_CONTROL:      return "teleport control";
 #endif
         case AMU_RAGE:              return "rage";
-        case AMU_CLARITY:           return "clarity";
+        case AMU_HARM:              return "harm";
         case AMU_DISMISSAL:         return "dismissal";
         case AMU_RESIST_CORROSION:  return "resist corrosion";
         case AMU_THE_GOURMAND:      return "gourmand";
@@ -3690,9 +3690,6 @@ bool is_useless_item(const item_def &item, bool temp)
                        || temp && you.hunger_state <= HS_SATIATED)
                    || you.species == SP_FORMICID
                    || player_mutation_level(MUT_NO_ARTIFICE);
-
-        case AMU_CLARITY:
-            return you.clarity(false, false);
 
         case AMU_RESIST_CORROSION:
             return you.res_corr(false, false);

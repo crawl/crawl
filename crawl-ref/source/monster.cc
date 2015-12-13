@@ -947,14 +947,6 @@ void monster::equip_jewellery(item_def &item, bool msg)
                            item.name(DESC_A) + ".";
         simple_monster_message(this, str.c_str());
     }
-
-    if (item.sub_type == AMU_CLARITY)
-    {
-        if (has_ench(ENCH_CONFUSION))
-            del_ench(ENCH_CONFUSION);
-        if (has_ench(ENCH_BERSERK))
-            del_ench(ENCH_BERSERK);
-    }
 }
 
 void monster::equip(item_def &item, bool msg)
@@ -4471,7 +4463,7 @@ void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
 }
 
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
-                   kill_method_type /*kill_type*/, string /*source*/,
+                   kill_method_type kill_type, string /*source*/,
                    string /*aux*/, bool cleanup_dead, bool attacker_effects)
 {
     if (mons_is_projectile(type)
@@ -4526,6 +4518,18 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         else if (amount <= 0 && hit_points <= max_hit_points)
             return 0;
 
+        // Apply damage multipliers for amulet of harm
+        if ((extra_harm() || (agent && agent->extra_harm()))
+             && flavour != BEAM_TORMENT_DAMAGE
+             && amount != INSTANT_DEATH
+             && kill_type != KILLED_BY_POISON)
+        {
+            if (agent && agent->is_player() && you.extra_harm())
+                did_god_conduct(DID_UNHOLY, 1); // The amulet is unholy.
+            amount = amount * 5 / 4;
+        }
+
+        // Apply damage multipliers for quad damage
         if (attacker_effects && agent && agent->is_player()
             && you.duration[DUR_QUAD_DAMAGE]
             && flavour != BEAM_TORMENT_DAMAGE)
@@ -6656,13 +6660,6 @@ bool monster::check_clarity(bool silent) const
 {
     if (!clarity())
         return false;
-
-    if (!silent && you.can_see(*this) && !mons_is_lurking(this))
-    {
-        simple_monster_message(this, " seems unimpeded by the mental distress.");
-        id_if_worn(MSLOT_JEWELLERY, OBJ_JEWELLERY, AMU_CLARITY);
-        // TODO: identify the randart property?
-    }
 
     return true;
 }

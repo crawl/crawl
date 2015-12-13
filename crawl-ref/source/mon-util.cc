@@ -3745,7 +3745,7 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
 //
 // Note that this only current checks for inherent obvious immunity (ie: sleep
 // immunity from being undead) and not immunity that might be granted by gear
-// (such as an amulet of clarity or stasis)
+// (such as clarity or stasis)
 bool mons_has_incapacitating_spell(const monster* mon, const actor* foe)
 {
     for (const mon_spell_slot &slot : mon->spells)
