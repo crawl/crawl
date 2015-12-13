@@ -465,13 +465,14 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
         break;
 
     case EQ_AMULET:
+    case EQ_AMULET_PLUS:
     case EQ_RINGS:
     case EQ_RINGS_PLUS:
         item = mslot_item(MSLOT_JEWELLERY);
         if (item && item->is_type(OBJ_JEWELLERY, sub_type)
             && (calc_unid || item_type_known(*item)))
         {
-            if (slot == EQ_RINGS_PLUS)
+            if (slot == EQ_RINGS_PLUS || slot == EQ_AMULET_PLUS)
                 ret += item->plus;
             else
                 ret++;
