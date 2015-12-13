@@ -82,6 +82,8 @@ Items
 * The robe of vines is now +2, Regen+7.
 * The Majin-Bo now speaks occasionally.
 * The amulet of Cekugob is now an amulet of dismissal.
+* The brooch of Shielding is now a +8 amulet of reflection with no AC or EV
+  bonus.
 * Wearing an amulet of regeneration has no effect until the next time you are
   at full health.
 * A new property can now generate on random artefacts: Fragile, which destroys
