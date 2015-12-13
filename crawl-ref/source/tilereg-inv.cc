@@ -56,6 +56,8 @@ void InventoryRegion::pack_buffers()
                 tileidx_t t = env.tile_default.floor + m_flavour[i] % num_floor;
                 m_buf.add_dngn_tile(t, x, y);
             }
+            else
+                m_buf.add_main_tile(TILE_ITEM_SLOT, x, y);
         }
     }
 
