@@ -1,4 +1,4 @@
-Stone Soup 0.18 (up to 0.18-a0-768-gdcbc33c)
+Stone Soup 0.18 (up to 0.18-a0-780-gd1db97e)
 --------------------------------------------
 
 Highlights
@@ -101,8 +101,16 @@ Monsters
     throw you into the pack of giants they lead.
   - Doom hounds, demonic canines lurking in Tartarus who can howl to summon a
     pack of their brethren.
+  - Deep elf archers, who have attained a notable level of skill in both
+    archery and hexes.
+  - Deep elf elementalists, with mastery of all of the elemental schools and
+    the noted ability to turn rock into earth elementals to dig out entrenched
+    foes.
 * All enemies, including uniques, now have (at least slightly) randomised HP.
-* Mnoleg gains Random Bolt and Dig.
+* Chaos champions lose Chaotic Mirror and instead gain Call of Chaos, an
+  ability which applies (usually) positive status effects to allies in its
+  line of sight.
+* Mnoleg gains Call of Chaos (as above), Random Bolt, and Dig.
 * Gloorx Vloq gains Summon Executioners and Black Mark.
 * Juggernauts now have two less damaging attacks instead of one powerful
   attack.
@@ -133,7 +141,7 @@ Monsters
   - Salamander firebrands.
   - Blue devils.
   - Brain worms.
-  - Deep elf conjurers, priests, and summoners.
+  - Deep elf fighters, conjurers, priests, and summoners.
 
 Spells
 ------
