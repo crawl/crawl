@@ -29,9 +29,9 @@
     - name: if an empty string, name generated automagically (see moname)
     - genus: base monster "type" for a classed monsters (i.e. jackal as hound)
     - species: corpse type of monster (i.e. orc for orc wizard)
-    - holiness:
+    - holiness: a bitwise OR of one or more of:
        MH_HOLY       - irritates some gods when killed, immunity from
-                        holy wrath weapons
+                        holy wrath weapons. Includes good priests.
        MH_NATURAL    - baseline monster type
        MH_UNDEAD     - immunity from draining, pain, torment; resistance
                         to poison; extra damage from holy wrath;
@@ -40,6 +40,10 @@
                         *no* automatic hellfire resistance
        MH_NONLIVING  - golems and other constructs
        MH_PLANT      - plants
+
+      along with optional flags that affect some god conducts and abilities:
+       MH_EVIL       - inherently evil (and not MH_UNDEAD)
+       MH_UNHOLY     - inherently unholy (and not MH_DEMONIC)
 
    exp_mod: multiplies xp value after most other calculations.
             see exper_value() in mon-util.cc
