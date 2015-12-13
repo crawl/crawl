@@ -2552,6 +2552,9 @@ enum monster_type                      // menv[].type
 #endif
     MONS_ALLIGATOR,
     MONS_CROCODILE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_LACERTILIAN,
+#endif
     MONS_HYDRA,
     MONS_SHEEP,
     MONS_YAK,
@@ -3459,6 +3462,7 @@ enum monster_type                      // menv[].type
     MONS_JUGGERNAUT,
     MONS_SPARK_WASP,
     MONS_DOOM_HOUND,
+    MONS_LACERTILIAN,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4151,6 +4155,7 @@ enum species_type
     SP_GARGOYLE,
     SP_FORMICID,
     SP_VINE_STALKER,
+    SP_LACERTILIAN,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

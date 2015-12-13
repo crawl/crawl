@@ -1087,7 +1087,8 @@ static void _remove_amulet_of_faith(item_def &item)
     }
     else if (!you_worship(GOD_NO_GOD)
              && !you_worship(GOD_XOM)
-             && !you_worship(GOD_GOZAG))
+             && !you_worship(GOD_GOZAG)
+             && you.species != SP_LACERTILIAN)
     {
         simple_god_message(" seems less interested in you.");
 
@@ -1186,7 +1187,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_FAITH:
-        if (you.species == SP_DEMIGOD)
+        if (you.species == SP_DEMIGOD
+            || you.species == SP_LACERTILIAN)
             mpr("You feel a surge of self-confidence.");
         else if (you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
         {

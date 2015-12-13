@@ -634,6 +634,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_FORMICID;
     case SP_VINE_STALKER:
         return TILEP_BASE_VINE_STALKER;
+    case SP_LACERTILIAN:
+        return TILEP_BASE_LACERTILIAN;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -761,6 +763,9 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             beard = TILEP_BEARD_MEDIUM_GREEN;
             break;
         case SP_FORMICID:
+            hair = 0;
+            break;
+        case SP_LACERTILIAN:
             hair = 0;
             break;
 #if TAG_MAJOR_VERSION == 34

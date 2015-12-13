@@ -67,6 +67,11 @@ Human
 
 Humans are mundane and average.
 %%%%
+Lacertilian
+
+Reptilian humanoids famed for their devotion to the gods. They gain piety
+quickly, and can change religions without incurring divine wrath.
+%%%%
 Tengu
 
 Tengu are bird-people who love to fight, both with weapons and spells. They are

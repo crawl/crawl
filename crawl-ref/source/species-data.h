@@ -498,6 +498,28 @@ static const map<species_type, species_def> species_data =
     { SK_SHORT_BLADES, SK_STAVES, SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_LACERTILIAN, {
+    "La",
+    "Lacertilian", nullptr, nullptr,
+    SPF_NO_HAIR,
+    -1, -1, -1,
+    16, 3,
+    MONS_LACERTILIAN,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    7, 8, 10, // 25
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
+    { { MUT_SLIMY_GREEN_SCALES, 2, 1 }, { MUT_CAMOUFLAGE, 1, 1 },
+      { MUT_COLD_BLOODED, 1, 1 }, { MUT_CAMOUFLAGE, 1, 7 },
+      { MUT_CAMOUFLAGE, 1, 21 }, },
+    { "You have a strong connection with the divine.",
+      "You may change religions without incurring divine wrath." },
+    { "faith", "no wrath for changing religions" },
+    { JOB_MONK, JOB_ASSASSIN, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT,
+      JOB_TRANSMUTER, JOB_ENCHANTER },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_MERFOLK, {
     "Mf",
     "Merfolk", "Merfolkian", nullptr,
