@@ -1074,27 +1074,18 @@ int main(int argc, char* argv[])
 
         printf("%s", monsterattacks.c_str());
 
-        switch (me->holiness)
-        {
-        case MH_HOLY:
-            mons_flag(monsterflags, colour(YELLOW, "holy"));
-            break;
-        case MH_UNDEAD:
-            mons_flag(monsterflags, colour(BROWN, "undead"));
-            break;
-        case MH_DEMONIC:
-            mons_flag(monsterflags, colour(RED, "demonic"));
-            break;
-        case MH_NONLIVING:
-            mons_flag(monsterflags, colour(LIGHTCYAN, "non-living"));
-            break;
-        case MH_PLANT:
-            mons_flag(monsterflags, colour(GREEN, "plant"));
-            break;
-        case MH_NATURAL:
-        default:
-            break;
-        }
+        mons_check_flag((bool)(me->holiness & MH_NATURAL)
+                        && (bool)(me->holiness & ~MH_NATURAL),
+                        monsterflags, "natural");
+        mons_check_flag(mon.is_holy(), monsterflags, colour(YELLOW, "holy"));
+        mons_check_flag((bool)(me->holiness & MH_UNDEAD),
+                        monsterflags, colour(BROWN, "undead"));
+        mons_check_flag((bool)(me->holiness & MH_DEMONIC),
+                        monsterflags, colour(RED, "demonic"));
+        mons_check_flag((bool)(me->holiness & MH_NONLIVING),
+                        monsterflags, colour(LIGHTCYAN, "non-living"));
+        mons_check_flag(mons_is_plant(&mon), monsterflags,
+                        colour(GREEN, "plant"));
 
         switch (me->gmon_use)
         {
@@ -1136,6 +1127,7 @@ int main(int argc, char* argv[])
                         "amphibious");
 
         mons_check_flag(mon.is_evil(), monsterflags, "evil");
+        mons_check_flag(mon.is_unholy(), monsterflags, "unholy");
         mons_check_flag(mon.is_actual_spellcaster(), monsterflags,
                         "spellcaster");
         mons_check_flag(bool(me->bitfields & M_COLD_BLOOD), monsterflags,
