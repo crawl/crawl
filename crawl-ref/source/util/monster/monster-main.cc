@@ -479,11 +479,10 @@ static string construct_spells(const set<string>& spell_lists,
     map<string, string> merged_damages;
     for (const auto& entry : damages)
     {
-        string dam = merged_damages[entry.first];
+        string &dam = merged_damages[entry.first];
         if (!dam.empty())
             dam += " / ";
         dam += entry.second;
-        merged_damages[entry.first] = dam;
     }
 
     for (const auto& entry : merged_damages)
