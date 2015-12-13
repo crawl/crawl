@@ -249,7 +249,7 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
                 "naga mage / naga ritualist w:5 / salamander mystic w:5 / " ..
                 "greater naga / tengu conjurer / tengu reaver / " ..
                 "spriggan air mage w:5 / merfolk aquamancer w:5 / " ..
-                "deep elf conjurer / deep elf annihilator / " ..
+                "deep elf annihilator / " ..
                 "deep elf sorcerer / draconian scorcher w:5 / " ..
                 "draconian knight w:5 / draconian annihilator w:5 / " ..
                 "lich w:3 / ancient lich w:2 / blood saint", { weight = 2 }))
