@@ -3358,14 +3358,11 @@ bool bolt::misses_player()
             }
             else if (pierces_shields())
             {
-                if (is_reflectable(shield))
-                {
-                    penet = true;
-                    mprf("The %s pierces through your %s!",
-                          name.c_str(),
-                          shield ? shield->name(DESC_PLAIN).c_str()
-                                 : "shielding");
-                }
+                penet = true;
+                mprf("The %s pierces through your %s!",
+                      name.c_str(),
+                      shield ? shield->name(DESC_PLAIN).c_str()
+                             : "shielding");
             }
             else
             {
