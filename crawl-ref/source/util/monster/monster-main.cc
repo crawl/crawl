@@ -81,7 +81,8 @@ static string colour(int colour, string text, bool bg = false)
     {
         if (!colour)
             return text;
-        return make_stringf("\\e[0;%d%d%sm%s\\e[0m", bg ? 4 : 3, bgr[colour & 7],
+        return make_stringf("\033[0;%d%d%sm%s\033[0m", bg ? 4 : 3,
+                            bgr[colour & 7],
                             (!bg && (colour & 8)) ? ";1" : "", text.c_str());
     }
 
