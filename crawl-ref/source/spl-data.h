@@ -3033,10 +3033,10 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CHAOTIC_MIRROR, "Chaotic Mirror",
-    SPTYP_NONE,
-    SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
-    4,
+    SPELL_CALL_OF_CHAOS, "Call of Chaos",
+    SPTYP_CHARMS,
+    SPFLAG_AREA | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
+    7,
     200,
     LOS_RADIUS, LOS_RADIUS,
     6, 0,

@@ -3645,7 +3645,6 @@ static bool _ms_los_spell(spell_type monspell)
         || monspell == SPELL_AIRSTRIKE
         || monspell == SPELL_HAUNT
         || monspell == SPELL_SUMMON_SPECTRAL_ORCS
-        || monspell == SPELL_CHAOTIC_MIRROR
         || spell_typematch(monspell, SPTYP_SUMMONING))
     {
         return true;
@@ -3662,8 +3661,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     if (attack_only
         && (monspell == SPELL_SMITING
             || monspell == SPELL_AIRSTRIKE
-            || monspell == SPELL_PORTAL_PROJECTILE
-            || monspell == SPELL_CHAOTIC_MIRROR))
+            || monspell == SPELL_PORTAL_PROJECTILE))
     {
         return true;
     }
@@ -3932,7 +3930,6 @@ static const spell_type smitey_spells[] = {
     SPELL_SHATTER,
     SPELL_TORNADO,          // dubious
     SPELL_GLACIATE,         // dubious
-    SPELL_CHAOTIC_MIRROR,
     SPELL_OZOCUBUS_REFRIGERATION,
     SPELL_MASS_CONFUSION,
     SPELL_ENTROPIC_WEAVE,

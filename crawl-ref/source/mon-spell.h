@@ -891,6 +891,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_EYEBALLS, 13, MON_SPELL_DEMONIC },
        { SPELL_MALIGN_GATEWAY, 27, MON_SPELL_DEMONIC },
        { SPELL_SUMMON_HORRIBLE_THINGS, 27, MON_SPELL_DEMONIC },
+       { SPELL_CALL_OF_CHAOS, 27, MON_SPELL_DEMONIC },
       }
     },
 
@@ -1635,8 +1636,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DEMONSPAWN_CHAOS_CHAMPION,
       {
-       { SPELL_RANDOM_BOLT, 16, MON_SPELL_PRIEST },
-       { SPELL_CHAOTIC_MIRROR, 16, MON_SPELL_PRIEST },
+       { SPELL_RANDOM_BOLT, 32, MON_SPELL_PRIEST },
+       { SPELL_CALL_OF_CHAOS, 32, MON_SPELL_PRIEST },
       }
     },
 

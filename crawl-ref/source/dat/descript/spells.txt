@@ -202,6 +202,11 @@ Summons a necromantic spectre. These lost souls can enter the bodies of more
 powerful undead to bring them back from brink of demise, or turn dying living
 creatures into spectral versions of themselves.
 %%%%
+Call of Chaos spell
+
+Calls upon the powers of Chaos to empower nearby allies. The effects vary
+wildly and are usually, but not always, positive.
+%%%%
 Call Tide spell
 
 Allows the caster to affect the tidal phase of all water within a large
@@ -232,10 +237,6 @@ sufficiently close to the caster. Its damage partially bypasses armour.
 Chaos Breath spell
 
 Exhales a large cloud of fumes filled with the very essence of chaos.
-%%%%
-Chaotic Mirror spell
-
-Mirrors a wild and unpredictable effect onto both the target and the caster.
 %%%%
 Chilling Breath spell
 

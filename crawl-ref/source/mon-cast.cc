@@ -1499,7 +1499,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BRAIN_FEED:
     case SPELL_SMITING:
     case SPELL_HOLY_FLAMES:
-    case SPELL_CHAOTIC_MIRROR:
+    case SPELL_CALL_OF_CHAOS:
     case SPELL_AIRSTRIKE:
     case SPELL_WATERSTRIKE:
     case SPELL_FLAY:
@@ -1919,6 +1919,81 @@ static bool _battle_cry(const monster& chief, bool check_only = false)
 
     if (!seen_affected.empty())
         _print_battlecry_announcement(chief, seen_affected);
+
+    return true;
+}
+
+/**
+ * Call upon the powers of chaos, applying mostly positive effects to nearby
+ * allies!
+ *
+ * @param mons          The monster carrying out the call of chaos.
+ * @param check_only    Whether to perform a 'dry run', only checking whether
+ *                      any monsters are potentially affected.
+ * @return              Whether any monsters are (or would be) affected.
+ */
+static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
+{
+    const actor *foe = mon.get_foe();
+
+    if (!foe
+        || foe->is_player() && mon.friendly()
+        || !mon.can_see(*foe))
+    {
+        return false;
+    }
+
+    int affected = 0;
+
+    vector<monster* > seen_affected;
+    for (monster_near_iterator mi(&mon, LOS_NO_TRANS); mi; ++mi)
+    {
+        const monster *mons = *mi;
+        // can't buff yourself
+        if (mons == &mon)
+            continue;
+
+        // only buff allies
+        if (!mons_aligned(&mon, mons))
+            continue;
+
+        if (check_only)
+            return true; // just need to check
+
+        if (mi->asleep())
+            behaviour_event(*mi, ME_DISTURB, 0, mon.pos());
+
+        beam_type flavour = random_choose_weighted(150, BEAM_HASTE,
+                                                   150, BEAM_MIGHT,
+                                                   150, BEAM_BERSERK,
+                                                   150, BEAM_AGILITY,
+                                                   150, BEAM_RESISTANCE,
+                                                   150, BEAM_BLINK_CLOSE,
+                                                    75, BEAM_BLINK,
+                                                    10, BEAM_SLOW,
+                                                    10, BEAM_PARALYSIS,
+                                                    10, BEAM_CONFUSION,
+                                                    10, BEAM_DISINTEGRATION,
+                                                    10, BEAM_PETRIFY,
+                                                    10, BEAM_SLEEP,
+                                                    10, BEAM_VULNERABILITY,
+                                                    10, BEAM_UNRAVELLED_MAGIC,
+                                                     2, BEAM_ENSNARE,
+                                                     0);
+
+        enchant_actor_with_flavour(*mi,
+                                   flavour == BEAM_BLINK_CLOSE
+                                   ? foe
+                                   : &mon,
+                                   flavour);
+
+        affected++;
+        if (you.can_see(**mi))
+            seen_affected.push_back(*mi);
+    }
+
+    if (affected == 0)
+        return false;
 
     return true;
 }
@@ -5190,30 +5265,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
-    case SPELL_CHAOTIC_MIRROR:
-        //XXX: should this be in mons_spell_beam?
-        if (x_chance_in_y(4, 10))
-        {
-            pbolt.name                  = "reflection of chaos";
-            pbolt.source_id             = mons->mid;
-            pbolt.aux_source            = "chaotic mirror";
-            pbolt.hit                   = AUTOMATIC_HIT;
-            pbolt.pierce                = true;
-            pbolt.ench_power            = MAG_IMMUNE;
-            pbolt.real_flavour          = BEAM_CHAOTIC_REFLECTION;
-            pbolt.fake_flavour();
-            pbolt.real_flavour          = pbolt.flavour;
-            pbolt.damage                = dice_def(1, 6);
-            pbolt.use_target_as_pos     = true;
-            pbolt.source = pbolt.target = foe->pos();
-            pbolt.affect_actor(foe);
-            pbolt.source = pbolt.target = mons->pos();
-            pbolt.affect_actor(mons);
-        }
-        else if (you.can_see(*foe))
-            canned_msg(MSG_NOTHING_HAPPENS);
-        return;
-
     case SPELL_HOLY_FLAMES:
         holy_flames(mons, foe);
         return;
@@ -6614,6 +6665,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_AWAKEN_EARTH:
         _mons_awaken_earth(*mons, pbolt.target);
         return;
+
+    case SPELL_CALL_OF_CHAOS:
+        _mons_call_of_chaos(*mons);
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -7941,7 +7996,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SUMMON_SPECTRAL_ORCS:
     case SPELL_SMITING:
     case SPELL_HOLY_FLAMES:
-    case SPELL_CHAOTIC_MIRROR:
     case SPELL_AIRSTRIKE:
     case SPELL_SUMMON_MUSHROOMS:
     case SPELL_ENTROPIC_WEAVE:
@@ -8202,6 +8256,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_DOOM_HOWL:
         return !foe || !foe->is_player() || you.duration[DUR_DOOM_HOWL]
                 || you.duration[DUR_DOOM_HOWL_IMMUNITY];
+
+    case SPELL_CALL_OF_CHAOS:
+        return !_mons_call_of_chaos(*mon, true);
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:

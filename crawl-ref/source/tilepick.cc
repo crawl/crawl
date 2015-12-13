@@ -4868,11 +4868,11 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_BLINK_RANGE:              return TILEG_BLINK_RANGE;
     case SPELL_BRAIN_FEED:               return TILEG_BRAIN_FEED;
     case SPELL_CALL_LOST_SOUL:           return TILEG_CALL_LOST_SOUL;
+    case SPELL_CALL_OF_CHAOS:            return TILEG_CALL_OF_CHAOS;
     case SPELL_CALL_TIDE:                return TILEG_CALL_TIDE;
     case SPELL_CANTRIP:                  return TILEG_CANTRIP;
     case SPELL_CHAIN_OF_CHAOS:           return TILEG_CHAIN_OF_CHAOS;
     case SPELL_CHAOS_BREATH:             return TILEG_CHAOS_BREATH;
-    case SPELL_CHAOTIC_MIRROR:           return TILEG_CHAOTIC_MIRROR;
     case SPELL_CHILLING_BREATH:
     case SPELL_COLD_BREATH:              return TILEG_COLD_BREATH;
     case SPELL_CONTROL_WINDS:            return TILEG_CONTROL_WINDS;
