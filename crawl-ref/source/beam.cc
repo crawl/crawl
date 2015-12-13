@@ -3340,12 +3340,13 @@ bool bolt::misses_player()
         {
             bool penet = false;
 
-            if (is_reflectable(you.shield()))
+            const item_def *shield = you.shield();
+            if (is_reflectable(shield))
             {
-                if (is_shield(*you.shield()) && shield_reflects(*you.shield()))
+                if (shield && is_shield(*shield) && shield_reflects(*shield))
                 {
                     mprf("Your %s reflects the %s!",
-                            you.shield()->name(DESC_PLAIN).c_str(),
+                            shield->name(DESC_PLAIN).c_str(),
                             name.c_str());
                 }
                 else
@@ -3357,13 +3358,13 @@ bool bolt::misses_player()
             }
             else if (pierces_shields())
             {
-                if (is_reflectable(you.shield()))
+                if (is_reflectable(shield))
                 {
                     penet = true;
                     mprf("The %s pierces through your %s!",
                           name.c_str(),
-                          you.shield() ? you.shield()->name(DESC_PLAIN).c_str()
-                                       : "shielding");
+                          shield ? shield->name(DESC_PLAIN).c_str()
+                                 : "shielding");
                 }
             }
             else
@@ -4743,7 +4744,8 @@ bool bolt::attempt_block(monster* mon)
             {
                 if (mon->observable())
                 {
-                    if (is_shield(*shield) && shield_reflects(*shield))
+                    if (shield && is_shield(*shield)
+                        && shield_reflects(*shield))
                     {
                         mprf("%s reflects the %s off %s %s!",
                              mon->name(DESC_THE).c_str(),
