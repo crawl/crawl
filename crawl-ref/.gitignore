@@ -205,3 +205,8 @@ icon.png
 /source/android-project/gen
 /source/android-project/libs
 /source/android-project/obj
+
+# generated files for monster
+/source/util/monster/monster
+/source/util/monster/vault_monster_data.h
+/source/util/monster/*.d
