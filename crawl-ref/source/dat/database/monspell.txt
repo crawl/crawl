@@ -188,6 +188,14 @@ Chant Fire Storm cast
 Chant Word of Entropy cast
 
 @The_monster@ begins to chant a word of entropy!
+%%%%
+Call of Chaos cast
+
+@The_monster@ calls on the powers of chaos!
+%%%%
+unseen Call of Chaos cast
+
+@The_something@ calls on the powers of chaos!
 #################################################
 # These have special hard-coded messaging.
 #################################################

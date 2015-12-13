@@ -196,13 +196,13 @@ error BLINKBOLT
 brain_feed BRAIN_FEED
 %sdir misc
 error CALL_LOST_SOUL
+error CALL_OF_CHAOS
 error CALL_TIDE
 %sdir gui/spells/monster
 cantrip CANTRIP
 %sdir misc
 error CHAIN_OF_CHAOS
 error CHAOS_BREATH
-error CHAOTIC_MIRROR
 %sdir gui/spells/monster
 cold_breath COLD_BREATH
 %sdir misc
