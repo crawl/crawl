@@ -456,7 +456,8 @@ static void record_spell_set(monster* mp, set<string>& spell_lists,
                 if (!damage.empty()
                     && none_of(range.first, range.second, [&](const pair<string,string>& entry){ return entry.first == spell_name && entry.second == damage; }))
                 {
-                    damages.emplace(spell_name, damage);
+                    // TODO: use emplace once we drop g++ 4.7 support
+                    damages.insert(make_pair(spell_name, damage));
                 }
             }
         }
