@@ -7,7 +7,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
 
     var layout_parameters = null, ui_state, input_mode;
     var stat_width = 42;
-    var msg_height = 6;
+    var msg_height;
     var show_diameter = 17;
 
     function init()
@@ -157,14 +157,26 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
         }
     }
 
+    function handle_set_layout(data)
+    {
+        if (data.message_pane.height)
+        {
+            msg_height = data.message_pane.height
+                         + (data.message_pane.small_more ? 0 : -1);
+        }
+
+        if (layout_parameters == null)
+            layout({});
+        else
+        {
+            var params = $.extend({}, layout_parameters);
+            layout(params, true);
+        }
+    }
+
     function handle_set_ui_state(data)
     {
         set_ui_state(data.state);
-
-        if (layout_parameters == null)
-        {
-            layout({});
-        }
     }
 
     function set_input_mode(mode)
@@ -214,6 +226,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
     comm.register_handlers({
         "delay": handle_delay,
         "version": handle_version,
+        "layout": handle_set_layout,
         "ui_state": handle_set_ui_state,
         "input_mode": handle_set_input_mode,
     });

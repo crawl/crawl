@@ -128,6 +128,7 @@ bool TilesFramework::initialise()
     _send_version();
     send_exit_reason("unknown");
     _send_options();
+    _send_layout();
 
     m_cursor[CURSOR_MOUSE] = NO_CURSOR;
     m_cursor[CURSOR_TUTORIAL] = NO_CURSOR;
@@ -462,6 +463,18 @@ void TilesFramework::_send_options()
     Options.write_webtiles_options("options");
     json_close_object();
     finish_message();
+}
+
+void TilesFramework::_send_layout()
+{
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "layout");
+    tiles.json_open_object("message_pane");
+    tiles.json_write_int("height", crawl_view.msgsz.y);
+    tiles.json_write_bool("small_more", Options.small_more);
+    tiles.json_close_object();
+    tiles.json_close_object();
+    tiles.finish_message();
 }
 
 void TilesFramework::push_menu(Menu* m)
@@ -1577,6 +1590,7 @@ void TilesFramework::_send_everything()
 {
     _send_version();
     _send_options();
+    _send_layout();
 
     _send_text_cursor(m_text_cursor);
 
@@ -1635,6 +1649,11 @@ void TilesFramework::clrscr()
     set_need_redraw();
 }
 
+void TilesFramework::layout_reset()
+{
+    m_layout_reset = true;
+}
+
 void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 {
     m_print_x = x - 1;
@@ -1678,6 +1697,12 @@ void TilesFramework::redraw()
             m_mcache_ref_done = false;
         }
         return;
+    }
+
+    if (m_layout_reset)
+    {
+        _send_layout();
+        m_layout_reset = false;
     }
 
     if (m_last_text_cursor != m_text_cursor)
