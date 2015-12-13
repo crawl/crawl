@@ -230,8 +230,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "zombie / skeleton / wight w:5 / necrophage / phantom w:5",
                 "worker ant / soldier ant w:2 / queen ant w:1 / killer bee w:2",
                 "ooze / w:5 jelly",
-                "giant cockroach w:20 / spider / worm",
-                "giant spore hd:3"
+                "giant cockroach w:20 / scorpion / worm"
             }
         elseif round <= 5 then
             mon_set = {
@@ -248,8 +247,8 @@ function arena_sprint_get_monster_set(round, boss)
                     w:1 harpy / w:5 cyclops / w:1 snapping turtle",
                 "w:5 bog body / w:5 giant leech / insubstantial wisp / w:5 swamp drake /\
                     giant frog / w:2 spiny frog / w:2 hydra / w:2 vampire mosquito",
-                "w:30 spider / w:2 boulder beetle / w:2 jumping spider /\
-                    scorpion / w:2 tarantella / w:1 wolf spider",
+                "w:20 scorpion / w:2 boulder beetle / w:12 jumping spider /\
+                    w:5 tarantella / w:5 redback / w:1 wolf spider",
                 "w:15 adder / ball python / water moccasin / naga / w:2 black mamba /\
                     w:1 naga mage / w:1 naga warrior",
                 "jelly / w:5 ooze / giant eyeball / w:2 shining eye",
@@ -274,7 +273,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "giant frog w:20 / blink frog w:6 / spiny frog w:6 / prince ribbit w:2",
                 "gnoll / gnoll shaman / gnoll sergeant / hound / wolf",
                 -- Gimmicks
-                "neqoxec", "giant spore hd:3", "orc priest", "vampire bat",
+                "neqoxec", "orc priest", "vampire bat",
                 "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame"
              }
         elseif round <= 10 then
@@ -321,7 +320,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "shapeshifter hd:7",
                 "polar bear",
                 -- Gimmicks
-                "neqoxec", "giant spore hd:3", "deep elf mage always_corpse",
+                "neqoxec", "deep elf mage always_corpse",
                 "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame",
                 "dwarf name:drunken n_adj n_des n_noc perm_ench:confusion",
                 "hungry ghost"
@@ -368,7 +367,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "necrophage / ghoul / bog body",
                 "shapeshifter",
                 -- Gimmicks
-                "neqoxec", "giant spore hd:3", "deep elf mage always_corpse",
+                "neqoxec", "deep elf mage always_corpse",
                 "moth of wrath / w:20 hill giant", "ball lightning",
                 "boulder beetle", "orb spider", "redback / sea snake w:3",
                 "hungry ghost / w:5 harpy", "shining eye"
@@ -434,7 +433,7 @@ function arena_sprint_get_monster_set(round, boss)
                     great orb of eyes / eye of draining / w:5 ophan",
                 "vampire / vampire knight / vampire mage / w:1 jory",
                 -- Gimmicks
-                "neqoxec", "giant spore hd:3", "smoke demon", "catoblepas",
+                "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 stone giant", "ball lightning",
                 "boulder beetle", "orb spider",
                 "hungry ghost / harpy", "shining eye", "tormentor",
@@ -501,7 +500,7 @@ function arena_sprint_get_monster_set(round, boss)
                     hell hound / hellephant / hellwing / w:2 nellie",
                 "profane servitor w:20 / angel / daeva / cherub / seraph w:5",
                 -- Gimmicks
-                "neqoxec", "giant spore hd:3", "smoke demon", "catoblepas",
+                "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
                 "boulder beetle",
                 "shining eye", "tormentor", "tentacled monstrosity",
@@ -569,7 +568,7 @@ function arena_sprint_get_monster_set(round, boss)
                     hell hound / hellephant / hellwing / w:2 nellie",
                 "profane servitor w:25 / angel / daeva / cherub / seraph",
                 -- Gimmicks
-                "neqoxec", "giant spore hd:3", "smoke demon", "catoblepas",
+                "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
                 "boulder beetle",
                 "shining eye", "tormentor",
@@ -640,7 +639,7 @@ function arena_sprint_get_monster_set(round, boss)
                     hell hound / hellephant / w:2 nellie",
                 "profane servitor w:25 / angel w:5 / daeva / cherub w:5 / seraph w:15",
                 -- Gimmicks
-                "neqoxec", "giant spore hd:3", "smoke demon", "catoblepas",
+                "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
                 "boulder beetle",
                 "shining eye", "tormentor",
