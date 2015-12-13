@@ -218,7 +218,7 @@ private:
     bool has_saving_throw() const;
     bool is_harmless(const monster* mon) const;
     bool harmless_to_player() const;
-    bool is_reflectable(const item_def *item) const;
+    bool is_reflectable(const actor &whom) const;
     bool nasty_to(const monster* mon) const;
     bool nice_to(const monster* mon) const;
     bool found_player() const;

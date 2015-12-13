@@ -3178,12 +3178,13 @@ bool bolt::harmless_to_player() const
     }
 }
 
-bool bolt::is_reflectable(const item_def *it) const
+bool bolt::is_reflectable(const actor &whom) const
 {
     if (range_used() > range)
         return false;
 
-    return (it && is_shield(*it) && shield_reflects(*it)) || you.reflection();
+    const item_def *it = whom.shield();
+    return (it && is_shield(*it) && shield_reflects(*it)) || whom.reflection();
 }
 
 bool bolt::is_big_cloud() const
@@ -3341,7 +3342,7 @@ bool bolt::misses_player()
             bool penet = false;
 
             const item_def *shield = you.shield();
-            if (is_reflectable(shield))
+            if (is_reflectable(you))
             {
                 if (shield && is_shield(*shield) && shield_reflects(*shield))
                 {
@@ -4737,7 +4738,7 @@ bool bolt::attempt_block(monster* mon)
         {
             rc = true;
             item_def *shield = mon->mslot_item(MSLOT_SHIELD);
-            if (is_reflectable(shield))
+            if (is_reflectable(*mon))
             {
                 if (mon->observable())
                 {
