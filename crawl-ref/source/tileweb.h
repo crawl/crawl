@@ -95,6 +95,7 @@ public:
     int getch_ck();
     void resize();
     void clrscr();
+    void layout_reset();
 
     void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
 
@@ -238,6 +239,7 @@ protected:
 
     unsigned int m_last_tick_redraw;
     bool m_need_redraw;
+    bool m_layout_reset;
 
     coord_def m_origin;
 
@@ -288,6 +290,7 @@ protected:
 
     void _send_version();
     void _send_options();
+    void _send_layout();
 
     void _send_everything();
 

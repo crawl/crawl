@@ -26,24 +26,10 @@
 #define HUD_MIN_GUTTER 2
 #define HUD_MAX_GUTTER 4
 
-// HACK: hardcoded message window height for webtiles
-// needs to fit into 24 lines!
-#define WEBTILES_MSG_MIN_HEIGHT 6
-
 // Helper for layouts. Tries to increment lvalue without overflowing it.
 static void _increment(int& lvalue, int delta, int max_value)
 {
     lvalue = min(lvalue+delta, max_value);
-}
-
-static int _msg_min_height()
-{
-#ifdef USE_TILE_WEB
-    if (tiles.is_controlled_from_web())
-        return WEBTILES_MSG_MIN_HEIGHT;
-    else
-#endif
-        return Options.msg_min_height;
 }
 
 class _layout
@@ -53,7 +39,7 @@ public:
         termp(1,1),    termsz(termsz_),
         viewp(-1,-1),  viewsz(VIEW_MIN_WIDTH, VIEW_MIN_HEIGHT),
         hudp(-1,-1),   hudsz(hudsz_),
-        msgp(-1,-1),   msgsz(0, _msg_min_height()),
+        msgp(-1,-1),   msgsz(0, Options.msg_min_height),
         mlistp(-1,-1), mlistsz(MLIST_MIN_WIDTH, 0),
         hud_gutter(HUD_MIN_GUTTER),
         valid(false) {}
@@ -425,6 +411,9 @@ void crawl_view_geometry::init_geometry()
 #ifdef USE_TILE_LOCAL
     // libgui may redefine these based on its own settings.
     gui_init_view_params(*this);
+#endif
+#ifdef USE_TILE_WEB
+    tiles.layout_reset();
 #endif
 
 #ifdef USE_TILE
