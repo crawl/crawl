@@ -3680,7 +3680,7 @@ bool monster::is_unholy(bool check_spells) const
 
 bool monster::is_evil(bool check_spells) const
 {
-    return bool(holiness() & MH_EVIL);
+    return bool(holiness() & (MH_UNDEAD | MH_EVIL));
 }
 
 /** Is the monster considered unclean by Zin?

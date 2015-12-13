@@ -6197,7 +6197,7 @@ bool player::is_holy(bool check_spells) const
 
 bool player::is_unholy(bool check_spells) const
 {
-    return bool(holiness() & MH_UNHOLY);
+    return bool(holiness() & (MH_DEMONIC | MH_UNHOLY));
 }
 
 bool player::is_evil(bool check_spells) const
