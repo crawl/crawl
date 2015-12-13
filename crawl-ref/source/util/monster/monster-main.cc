@@ -476,7 +476,7 @@ static string construct_spells(const set<string>& spell_lists,
         ret += spell_list;
     }
     map<string, string> merged_damages;
-    for (const auto& entry : merged_damages)
+    for (const auto& entry : damages)
     {
         string dam = merged_damages[entry.first];
         if (!dam.empty())
