@@ -34,7 +34,7 @@ if (!$ENV{TILES}) {
     if ($ENV{FULLDEBUG}) {
         try("make test");
     }
-    else {
+    elsif (!$ENV{MONSTER}) {
         try("make nondebugtest");
     }
 }
