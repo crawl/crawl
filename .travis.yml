@@ -1,9 +1,25 @@
+sudo: false
 language: cpp
 compiler:
     - clang
     - gcc
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - libstdc++6-4.7
+            - g++-4.7
+            - gdb
+            - libegl1-mesa-dev
+            - libasound2-dev
+            - libxss-dev
+            - liblua5.1-0-dev
+            - liblua5.1-0-dbg
+            - libsdl2-dev
+            - libsdl2-image-dev
+            - libsdl2-mixer-dev
 before_install:
-    - perl .travis/apt.pl
     - if [ "$CXX" = "g++" ]; then export CXX="g++-4.7" CC="gcc-4.7"; fi
 env:
     - NOTHING=1
