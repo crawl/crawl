@@ -17,7 +17,13 @@ $ENV{TRAVIS} = 1;
 $ENV{FORCE_CC} = $ENV{CC};
 $ENV{FORCE_CXX} = $ENV{CXX};
 
-if ($ENV{FULLDEBUG}) {
+if ($ENV{MONSTER}) {
+    try("make -j2 monster");
+    # pick something more exciting here possibly?
+    # or use a variety to touch all the code paths?
+    try("util/monster/monster Orb Guardian");
+}
+elsif ($ENV{FULLDEBUG}) {
     try("make -j2 debug");
 }
 else {
