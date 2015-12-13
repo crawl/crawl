@@ -905,6 +905,8 @@ ENDMAP
 
 NAME: nicolae_arrival_memento_mori
 TAGS: arrival no_monster_gen no_trap_gen
+ORIENT: float
+WEIGHT: 999999
 SUBST: n = nN
 KPROP: u = no_tele_into
 KPROP: Nu = bloody
@@ -912,6 +914,7 @@ SUBST: N = n, u = uU
 KMASK: uU = no_item_gen
 : local yourcorpse = ""
 : local yourskel = ""
+: local yourname = string.gsub(you.name(), " ", "_")
 : -- The corpseless. Before the game starts, you.monster() is "program bug".
 : if (not crawl.game_started()) or you.race() == "Vampire"
 :     or you.race() == "Mummy" or you.race() == "Ghoul"
@@ -919,11 +922,11 @@ KMASK: uU = no_item_gen
 :   yourcorpse = "human corpse"
 :   yourskel = "human skeleton"
 : elseif you.race() == "Formicid" or you.race() == "Octopode" then
-:   yourcorpse = you.monster() .. " name:" .. you.name() .. " corpse"
-:   yourskel = you.monster() .. " name:" .. you.name() .. " corpse"
+:   yourcorpse = you.monster() .. " name:" .. yourname .. " corpse"
+:   yourskel = you.monster() .. " name:" .. yourname .. " corpse"
 : else
-:   yourcorpse = you.monster() .. " name:" .. you.name() .. " corpse"
-:   yourskel = you.monster() .. " name:" .. you.name() .. " skeleton"
+:   yourcorpse = you.monster() .. " name:" .. yourname .. " corpse"
+:   yourskel = you.monster() .. " name:" .. yourname .. " skeleton"
 : end
 : dgn.delayed_decay(_G, 'u', yourcorpse )
 : dgn.delayed_decay(_G, 'U', yourskel )
