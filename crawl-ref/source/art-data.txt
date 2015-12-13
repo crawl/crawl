@@ -922,11 +922,12 @@ LIFE:    2
 BOOL:    elec, poison, notelep
 
 NAME:    amulet of the Four Winds
-OBJ:     OBJ_JEWELLERY/AMU_CLARITY
+OBJ:     OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:  ETC_POISON
 TILE:    urand_four_winds
 LIFE:    1
 MAGIC:   3
+BOOL:    clarity
 
 NAME:    necklace of Bloodlust
 OBJ:     OBJ_JEWELLERY/AMU_RAGE

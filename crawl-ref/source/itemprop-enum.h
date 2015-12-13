@@ -190,7 +190,7 @@ enum jewellery_type
 
     AMU_RAGE = 35,
     AMU_FIRST_AMULET = AMU_RAGE,
-    AMU_CLARITY,
+    AMU_HARM,
     AMU_DISMISSAL,
     AMU_RESIST_CORROSION,
     AMU_THE_GOURMAND,

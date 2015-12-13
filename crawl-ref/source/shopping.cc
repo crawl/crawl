@@ -1728,6 +1728,7 @@ unsigned int item_value(item_def item, bool ident)
                 case AMU_GUARDIAN_SPIRIT:
                 case AMU_THE_GOURMAND:
                 case AMU_DISMISSAL:
+                case AMU_HARM:
                     valued += 300;
                     break;
 
@@ -1743,7 +1744,6 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_MAGICAL_POWER:
                 case RING_LIFE_PROTECTION:
                 case RING_POISON_RESISTANCE:
-                case AMU_CLARITY:
                 case AMU_RESIST_CORROSION:
                     valued += 200;
                     break;

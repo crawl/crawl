@@ -1103,6 +1103,16 @@ static void _remove_amulet_of_faith(item_def &item)
     }
 }
 
+static void _remove_amulet_of_harm()
+{
+    if (you.undead_state() == US_ALIVE)
+        mpr("The amulet rips away your lifeforce as you remove it!");
+    else
+        mpr("The amulet rips away your animating force as you remove it!");
+
+    drain_player(100, false, true);
+}
+
 static void _equip_amulet_of_dismissal()
 {
     mprf(MSGCH_DURATION, "The world spins around you as a field of "
@@ -1350,6 +1360,11 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case AMU_FAITH:
         if (!meld)
             _remove_amulet_of_faith(item);
+        break;
+
+    case AMU_HARM:
+        if (!meld)
+            _remove_amulet_of_harm();
         break;
 
     case AMU_GUARDIAN_SPIRIT:

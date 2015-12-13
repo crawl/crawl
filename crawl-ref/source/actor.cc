@@ -256,8 +256,7 @@ bool actor::angry(bool calc_unid, bool items) const
 
 bool actor::clarity(bool calc_unid, bool items) const
 {
-    return items && (wearing(EQ_AMULET, AMU_CLARITY, calc_unid)
-                     || scan_artefacts(ARTP_CLARITY, calc_unid));
+    return items && scan_artefacts(ARTP_CLARITY, calc_unid);
 }
 
 bool actor::faith(bool calc_unid, bool items) const
@@ -310,6 +309,11 @@ bool actor::no_cast(bool calc_unid, bool items) const
 bool actor::reflection(bool calc_unid, bool items) const
 {
     return items && wearing(EQ_AMULET, AMU_REFLECTION, calc_unid);
+}
+
+bool actor::extra_harm(bool calc_unid, bool items) const
+{
+    return items && wearing(EQ_AMULET, AMU_HARM, calc_unid);
 }
 
 bool actor::rmut_from_item(bool calc_unid) const

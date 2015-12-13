@@ -633,8 +633,6 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_BLINK:
             return !extant_props[ARTP_PREVENT_TELEPORTATION];
             // no contradictory props
-        case ARTP_CONFUSE:
-            return !item.is_type(OBJ_JEWELLERY, AMU_CLARITY);
         case ARTP_MAGICAL_POWER:
             return item_class != OBJ_WEAPONS
                    || get_weapon_brand(item) != SPWPN_ANTIMAGIC;
@@ -1522,6 +1520,10 @@ static bool _randart_is_redundant(const item_def &item,
 
     case AMU_REFLECTION:
         provides = ARTP_SHIELDING;
+        break;
+
+    case AMU_HARM:
+        provides = ARTP_DRAIN;
         break;
     }
 
