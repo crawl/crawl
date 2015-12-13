@@ -2268,8 +2268,12 @@ static void _gain_piety_point()
         // no longer have a piety cost for getting them.
         // Jiyva is an exception because there's usually a time-out and
         // the gifts aren't that precious.
+        // Pakellas is an exception because the gift timeout is exceptionally
+        // long and causes extremely slow piety gain above 4* if this isn't
+        // here.
         if (!one_chance_in(4) && !you_worship(GOD_JIYVA)
-            && !you_worship(GOD_NEMELEX_XOBEH))
+            && !you_worship(GOD_NEMELEX_XOBEH)
+            && !you_worship(GOD_PAKELLAS))
         {
 #ifdef DEBUG_PIETY
             mprf(MSGCH_DIAGNOSTICS, "Piety slowdown due to gift timeout.");
