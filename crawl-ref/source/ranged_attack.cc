@@ -184,7 +184,8 @@ bool ranged_attack::handle_phase_blocked()
         verb = "reflect";
         if (defender->observable())
         {
-            if (reflected_by_shield) {
+            if (reflected_by_shield)
+            {
                 punctuation = " off " + defender->pronoun(PRONOUN_POSSESSIVE)
                               + " " + defender_shield->name(DESC_PLAIN).c_str()
                               + "!";
