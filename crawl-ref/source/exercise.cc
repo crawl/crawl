@@ -24,7 +24,6 @@ skill_type abil_skill(ability_type abil)
     case ABIL_EVOKE_TURN_INVISIBLE:
     case ABIL_EVOKE_FLIGHT:
     case ABIL_EVOKE_FOG:
-    case ABIL_EVOKE_TELEPORT_CONTROL:
         return SK_EVOCATIONS;
 
     case ABIL_NEMELEX_TRIPLE_DRAW:
@@ -34,8 +33,7 @@ skill_type abil_skill(ability_type abil)
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-    case ABIL_ELYVILON_LESSER_HEALING_SELF:
-    case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
+    case ABIL_ELYVILON_LESSER_HEALING:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
     case ABIL_ZIN_RECITE:
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
@@ -52,14 +50,13 @@ skill_type abil_skill(ability_type abil)
     case ABIL_FEDHAS_SPAWN_SPORES:
     case ABIL_FEDHAS_EVOLUTION:
     case ABIL_CHEIBRIADOS_TIME_BEND:
-    case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD: // Placeholder.
     case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_YRED_DRAIN_LIFE:
     case ABIL_ZIN_IMPRISON:
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
-    case ABIL_ELYVILON_GREATER_HEALING_SELF:
-    case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
+    case ABIL_ELYVILON_GREATER_HEALING:
+    case ABIL_ELYVILON_HEAL_OTHER:
     case ABIL_LUGONU_BANISH:
     case ABIL_TSO_CLEANSING_FLAME:
     case ABIL_OKAWARU_FINESSE:
@@ -99,7 +96,6 @@ static int _abil_degree(ability_type abil)
     case ABIL_EVOKE_TURN_INVISIBLE:
     case ABIL_EVOKE_FLIGHT:
     case ABIL_EVOKE_FOG:
-    case ABIL_EVOKE_TELEPORT_CONTROL:
         return 1;
 
     case ABIL_NEMELEX_TRIPLE_DRAW:
@@ -111,8 +107,7 @@ static int _abil_degree(ability_type abil)
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-    case ABIL_ELYVILON_LESSER_HEALING_SELF:
-    case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
+    case ABIL_ELYVILON_LESSER_HEALING:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         return 1;
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
@@ -144,8 +139,8 @@ static int _abil_degree(ability_type abil)
 
     case ABIL_ZIN_IMPRISON:
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
-    case ABIL_ELYVILON_GREATER_HEALING_SELF:
-    case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
+    case ABIL_ELYVILON_GREATER_HEALING:
+    case ABIL_ELYVILON_HEAL_OTHER:
     case ABIL_LUGONU_BANISH:
     case ABIL_CHEIBRIADOS_DISTORTION:
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
@@ -203,9 +198,8 @@ static void _exercise_spell(spell_type spell, bool success)
     // stay in the queue for a shorter time.
     bool conj = false;
     vector<skill_type> disc;
-    for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
+    for (const auto bit : spschools_type::range())
     {
-        auto bit = static_cast<spschool_flag_type>(1 << ndx);
         if (!spell_typematch(spell, bit))
             continue;
 

@@ -124,7 +124,7 @@ void OGLStateManager::set(const GLState& state)
 
             // [enne] This should *not* be necessary, but the Linux OpenGL
             // driver that I'm using sets this to the last colour of the
-            // colour array.  So, we need to unset it here.
+            // colour array. So, we need to unset it here.
             glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
             glDebug("glColor4f(1.0f, 1.0f, 1.0f, 1.0f)");
         }
@@ -375,7 +375,7 @@ void OGLStateManager::fixup_gl_state()
 
         // [enne] This should *not* be necessary, but the Linux OpenGL
         // driver that I'm using sets this to the last colour of the
-        // colour array.  So, we need to unset it here.
+        // colour array. So, we need to unset it here.
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         glDebug("glColor4f(1.0f, 1.0f, 1.0f, 1.0f)");
     }

@@ -38,8 +38,6 @@ XPStyle on
 Section ""
   SetOutPath $INSTDIR
   File /r /x "*~" "build-win\*"
-  File ..\README.txt
-  File ..\README.pdf
   File /oname=LICENCE.txt ..\licence.txt
 
   # clean after previous versions; crawl-console.exe used to be named crawl.exe
@@ -76,8 +74,6 @@ Section "Uninstall"
   Delete $INSTDIR\crawl-tiles.exe
   Delete $INSTDIR\crawl-console.exe
   Delete $INSTDIR\version.txt
-  Delete $INSTDIR\README.txt
-  Delete $INSTDIR\README.pdf
   Delete $INSTDIR\CREDITS.txt
   Delete $INSTDIR\LICENCE.txt
   RMDir /r $INSTDIR\dat

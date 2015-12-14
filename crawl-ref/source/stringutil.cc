@@ -8,7 +8,9 @@
 #include "stringutil.h"
 
 #include <cwctype>
+#include <sstream>
 
+#include "libutil.h"
 #include "random.h"
 #include "unicode.h"
 
@@ -67,7 +69,7 @@ string uppercase_string(string s)
 
 // Warning: this (and uppercase_first()) relies on no libc (glibc, BSD libc,
 // MSVC crt) supporting letters that expand or contract, like German ß (-> SS)
-// upon capitalization / lowercasing.  This is mostly a fault of the API --
+// upon capitalization / lowercasing. This is mostly a fault of the API --
 // there's no way to return two characters in one code point.
 // Also, all characters must have the same length in bytes before and after
 // lowercasing, all platforms currently have this property.
@@ -99,7 +101,7 @@ string uppercase_first(string s)
     return s;
 }
 
-int ends_with(const string &s, const char *suffixes[])
+int ends_with(const string &s, const char * const suffixes[])
 {
     if (!suffixes)
         return 0;
@@ -318,6 +320,44 @@ string maybe_capitalise_substring(string s)
     return s;
 }
 
+/**
+ * Make @-replacements on the given text.
+ *
+ * @param text         the string to be processed
+ * @param replacements contains information on what replacements are to be made.
+ * @returns a string with substitutions based on the arguments. For example, if
+ *          given "baz@foo@" and { "foo", "bar" } then this returns "bazbar".
+ *          If a string not in replacements is found between @ signs, then the
+ *          original, unedited string is returned.
+ */
+string replace_keys(const string &text, const map<string, string>& replacements)
+{
+    string::size_type at = 0, last = 0;
+    ostringstream res;
+    while ((at = text.find('@', last)) != string::npos)
+    {
+        res << text.substr(last, at - last);
+        const string::size_type end = text.find('@', at + 1);
+        if (end == string::npos)
+            break;
+
+        const string key = text.substr(at + 1, end - at - 1);
+        const string* value = map_find(replacements, key);
+
+        if (!value)
+            return text;
+
+        res << *value;
+
+        last = end + 1;
+    }
+    if (!last)
+        return text;
+
+    res << text.substr(last);
+    return res.str();
+}
+
 // For each set of [phrase|term|word] contained in the string, replace the set with a random subphrase.
 // NOTE: Doesn't work for nested patterns!
 string maybe_pick_random_substring(string s)
@@ -419,7 +459,7 @@ string make_time_string(time_t abs_time, bool terse)
     string buff;
     if (days > 0)
     {
-        buff += make_stringf("%d%s ", days, terse ? ","
+        buff += make_stringf("%d %s ", days, terse ? ","
                              : days > 1 ? "days" : "day");
     }
     return buff + make_stringf("%02d:%02d:%02d", hours, mins, secs);

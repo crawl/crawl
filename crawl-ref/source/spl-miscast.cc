@@ -43,7 +43,7 @@
 #include "xom.h"
 
 // This determines how likely it is that more powerful wild magic
-// effects will occur.  Set to 100 for the old probabilities (although
+// effects will occur. Set to 100 for the old probabilities (although
 // the individual effects have been made much nastier since then).
 #define WILD_MAGIC_NASTINESS 150
 
@@ -58,7 +58,7 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source,
     target(_target), act_source(_act_source),
     special_source(_source), cause(_cause), spell(_spell),
     school(SPTYP_NONE), pow(_pow), fail(_fail), level(-1),
-    kt(KILL_NONE), nothing_happens_when(_nothing_happens),
+    nothing_happens_when(_nothing_happens),
     lethality_margin(_lethality_margin), hand_str(_hand_str),
     can_plural_hand(_can_plural)
 {
@@ -78,7 +78,7 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
     target(_target), act_source(_act_source),
     special_source(_source), cause(_cause),
     spell(SPELL_NO_SPELL), school(_school), pow(-1), fail(-1), level(_level),
-    kt(KILL_NONE), nothing_happens_when(_nothing_happens),
+    nothing_happens_when(_nothing_happens),
     lethality_margin(_lethality_margin), hand_str(_hand_str),
     can_plural_hand(_can_plural)
 {
@@ -100,7 +100,7 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
     target(_target), act_source(_act_source),
     special_source(_source), cause(_cause),
     spell(SPELL_NO_SPELL), school(_school), pow(_pow), fail(_fail), level(-1),
-    kt(KILL_NONE), nothing_happens_when(_nothing_happens),
+    nothing_happens_when(_nothing_happens),
     lethality_margin(_lethality_margin), hand_str(_hand_str),
     can_plural_hand(_can_plural)
 {
@@ -134,7 +134,7 @@ void MiscastEffect::init()
     source_known = target_known = false;
 
     if (target->is_monster())
-        target_known = you.can_see(target);
+        target_known = you.can_see(*target);
     else
         target_known = true;
 
@@ -153,7 +153,7 @@ void MiscastEffect::init()
         else
             kt = KILL_MON_MISSILE;
 
-        source_known = you.can_see(act_source);
+        source_known = you.can_see(*act_source);
 
         if (target_known && special_source == MUMMY_MISCAST)
             source_known = true;
@@ -244,22 +244,18 @@ void MiscastEffect::do_miscast()
 
     if (spell != SPELL_NO_SPELL)
     {
-        vector<int> school_list;
-        for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
-            if (spell_typematch(spell, static_cast<spschool_flag_type>(1 << i)))
-                school_list.push_back(i);
+        vector<spschool_flag_type> school_list;
+        for (const auto bit : spschools_type::range())
+            if (spell_typematch(spell, bit))
+                school_list.push_back(bit);
 
-        unsigned int _school = school_list[random2(school_list.size())];
-        sp_type = static_cast<spschool_flag_type>(1 << _school);
+        sp_type = school_list[random2(school_list.size())];
     }
     else
     {
         sp_type = school;
         if (sp_type == SPTYP_RANDOM)
-        {
-            int exp = (random2(SPTYP_LAST_EXPONENT));
-            sp_type = (spschool_flag_type) (1 << exp);
-        }
+            sp_type = spschools_type::exponent(random2(SPTYP_LAST_EXPONENT + 1));
     }
 
     if (level != -1)
@@ -374,7 +370,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
     }
     else
     {
-        if (you.can_see(target))
+        if (you.can_see(*target))
             msg = mon_msg_seen;
         else
         {
@@ -430,11 +426,8 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
 
     if (msg_ch == MSGCH_SOUND)
     {
-        // Those monsters of normal or greater intelligence will realize that they
-        // were the source of the sound.
-        mid_t src = target->is_player() ? MID_PLAYER
-                    : mons_intel(target->as_monster()) >= I_NORMAL ? target->mid
-                    : MID_NOBODY;
+        // XXX: can this just be target->mid?
+        mid_t src = target->is_player() ? MID_PLAYER : target->mid;
         noisy(sound_loudness, target->pos(), src);
     }
 }
@@ -485,7 +478,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
         else
             method = KILLED_BY_SOMETHING;
 
-        bool see_source = act_source && you.can_see(act_source);
+        bool see_source = act_source && you.can_see(*act_source);
         ouch(dam, method, act_source ? act_source->mid : MID_NOBODY,
              cause.c_str(), see_source,
              act_source ? act_source->name(DESC_A, true).c_str() : nullptr);
@@ -528,11 +521,6 @@ bool MiscastEffect::_big_cloud(cloud_type cl_type, int cloud_pow, int size,
     return true;
 }
 
-bool MiscastEffect::_lose_stat(stat_type which_stat, int8_t stat_loss)
-{
-    return lose_stat(which_stat, stat_loss, false, cause);
-}
-
 bool MiscastEffect::_paralyse(int dur)
 {
     if (special_source != HELL_EFFECT_MISCAST)
@@ -563,7 +551,7 @@ bool MiscastEffect::_send_to_abyss()
     {
         return _malign_gateway(); // attempt to degrade to malign gateway
     }
-    target->banish(act_source, cause);
+    target->banish(act_source, cause, target->get_experience_level());
     return true;
 }
 
@@ -694,14 +682,8 @@ static bool _has_hair(actor* target)
     if (target->is_monster())
         return false;
 
-    return !form_changed_physiology() && you.species != SP_GHOUL
-           && you.species != SP_OCTOPODE
-           && you.species != SP_TENGU && !player_genus(GENPC_DRACONIAN)
-           && you.species != SP_GARGOYLE
-#if TAG_MAJOR_VERSION == 34
-           && you.species != SP_LAVA_ORC
-#endif
-           ;
+    return !form_changed_physiology()
+           && (species_has_hair(you.species) || you.species == SP_MUMMY);
 }
 
 static string _hair_str(actor* target, bool &plural)
@@ -1030,8 +1012,8 @@ void MiscastEffect::_hexes(int severity)
                 reroll = false;
                 break;
             }
-        break;
         }
+        break;
     }
 }
 
@@ -1175,7 +1157,7 @@ void MiscastEffect::_charms(int severity)
                 }
                 else if (target->is_monster())
                 {
-                    debuff_monster(target->as_monster());
+                    debuff_monster(*target->as_monster());
                     enchant_actor_with_flavour(target->as_monster(), nullptr,
                                                BEAM_DRAIN_MAGIC, 50 + random2avg(51, 2));
                 }
@@ -1265,7 +1247,7 @@ void MiscastEffect::_translocation(int severity)
             mon_msg_seen   = "Space bends around @the_monster@!";
             mon_msg_unseen = "A piece of empty space twists and distorts.";
             if (_ouch(4 + random2avg(7, 2)) && target->alive() && !target->no_tele())
-                target->blink(false);
+                target->blink();
             break;
         case 5:
             if (_create_monster(MONS_SPATIAL_VORTEX, 3))
@@ -1303,7 +1285,7 @@ void MiscastEffect::_translocation(int severity)
                     if (one_chance_in(3))
                         target->teleport(true);
                     else
-                        target->blink(false);
+                        target->blink();
                 }
                 if (target->alive())
                     target->confuse(act_source, 5 + random2(3));
@@ -1629,7 +1611,7 @@ void MiscastEffect::_divination_you(int severity)
         switch (random2(2))
         {
         case 0:
-            if (_lose_stat(STAT_INT, 1 + random2(3)))
+            if (lose_stat(STAT_INT, 1 + random2(3)))
             {
                 if (you.undead_state())
                     mpr("You suddenly recall your previous life!");
@@ -1672,7 +1654,7 @@ void MiscastEffect::_divination_you(int severity)
             }
             break;
         case 1:
-            if (_lose_stat(STAT_INT, 3 + random2(3)))
+            if (lose_stat(STAT_INT, 3 + random2(3)))
             {
                 if (you.undead_state())
                     mpr("You suddenly recall your previous life!");
@@ -1852,10 +1834,15 @@ void MiscastEffect::_necromancy(int severity)
         case 2:
             if (!target->res_rotting())
             {
-                if (you.can_smell())
-                    all_msg = "You begin to rot!";
+                you_msg      = "You begin to rot!";
+                mon_msg_seen = "@The_monster@ begins to rot!";
 
-                target->rot(act_source, 1, 0, true);
+                // Must produce the message before rotting, because that
+                // might kill a target monster, and do_msg does not like
+                // dead monsters. FIXME: We should avoid_lethal here!
+                if (!did_msg)
+                    do_msg();
+                target->rot(act_source, 1, true);
             }
             else if (you.species == SP_MUMMY)
             {
@@ -1935,11 +1922,11 @@ void MiscastEffect::_necromancy(int severity)
                 do_msg();
             }
             else
-                torment(nullptr, TORMENT_MISCAST, target->pos());
+                torment_cell(target->pos(), nullptr, TORMENT_MISCAST);
             break;
 
         case 1:
-            target->rot(act_source, random2avg(7, 2) + 1);
+            target->rot(act_source, 2 + random2(2));
             break;
 
         case 2:
@@ -1975,7 +1962,7 @@ void MiscastEffect::_necromancy(int severity)
                 break;
 
         case 5:
-            _lose_stat(STAT_RANDOM, 1 + random2avg(7, 2));
+            lose_stat(STAT_RANDOM, 1 + random2avg(7, 2));
             break;
         }
         break;
@@ -2068,16 +2055,16 @@ void MiscastEffect::_transmutation(int severity)
             // piety, perma-allies-on-hostiles-somehow, etc)
             bool success = false;
             for (int i = 2 + random2(3); i > 0; --i)
-                success |= _create_monster(MONS_GIANT_MITE, 0, true);
+                success |= _create_monster(MONS_GIANT_COCKROACH, 0, true);
 
             if (success)
             {
                 you_msg        = "Shape-changing energy floods out "
-                                 "from your body and enlargens the floor mites!";
+                                 "from your body and enlargens the floor bugs!";
                 mon_msg_seen   = "Shape-changing energy floods out "
-                                 "from @the_monster@ and enlargens the floor mites!";
+                                 "from @the_monster@ and enlargens the floor bugs!";
                 mon_msg_unseen = "Shape-changing energy pours out "
-                                 "from thin air and enlargens the floor mites!";
+                                 "from thin air and enlargens the floor bugs!";
             }
             do_msg();
             break;
@@ -2446,8 +2433,8 @@ void MiscastEffect::_ice(int severity)
         switch (random2(2))
         {
         case 0:
-            mpr("You feel extremely cold.");
-            // Monster messages needed.
+            you_msg = "You feel extremely cold.";
+            mon_msg_seen = "@The_monster@ shivers.";
             break;
         case 1:
             you_msg      = "You are covered in a thin layer of ice.";
@@ -2469,8 +2456,7 @@ void MiscastEffect::_ice(int severity)
         switch (random2(2))
         {
         case 0:
-            you_msg = "Heat is drained from your body, "
-                      "and your mouth freezes shut!";
+            you_msg = "Heat is drained from your body!";
             mon_msg = "Heat is drained from @the_monster@.";
             if (_ouch(5 + random2(6) + random2(7), BEAM_COLD) && target->alive())
                 target->expose_to_element(BEAM_COLD, 4);
@@ -2519,8 +2505,8 @@ void MiscastEffect::_ice(int severity)
 
             break;
         case 1:
-            you_msg        = "Freezing gasses pour from your @hands@!";
-            mon_msg_seen   = "Freezing gasses pour from @the_monster@'s "
+            you_msg        = "Freezing gases pour from your @hands@!";
+            mon_msg_seen   = "Freezing gases pour from @the_monster@'s "
                              "@hands@!";
 
             _big_cloud(CLOUD_COLD, 20, 8 + random2(4));
@@ -2818,10 +2804,10 @@ void MiscastEffect::_air(int severity)
             _ouch(4 + random2avg(9, 2), BEAM_ELECTRICITY);
             break;
         case 1:
-            you_msg        = "Noxious gasses pour from your @hands@!";
-            mon_msg_seen   = "Noxious gasses pour from @the_monster@'s "
+            you_msg        = "Noxious gases pour from your @hands@!";
+            mon_msg_seen   = "Noxious gases pour from @the_monster@'s "
                              "@hands@!";
-            mon_msg_unseen = "Noxious gasses appear from out of thin air!";
+            mon_msg_unseen = "Noxious gases appear from out of thin air!";
 
             _big_cloud(CLOUD_MEPHITIC, 20, 9 + random2(4));
             break;
@@ -2856,10 +2842,10 @@ void MiscastEffect::_air(int severity)
             _explosion();
             break;
         case 1:
-            you_msg        = "Venomous gasses pour from your @hands@!";
-            mon_msg_seen   = "Venomous gasses pour from @the_monster@'s "
+            you_msg        = "Venomous gases pour from your @hands@!";
+            mon_msg_seen   = "Venomous gases pour from @the_monster@'s "
                              "@hands@!";
-            mon_msg_unseen = "Venomous gasses pour forth from the thin air!";
+            mon_msg_unseen = "Venomous gases pour forth from the thin air!";
 
             _big_cloud(CLOUD_POISON, 20, 8 + random2(5));
             break;
@@ -2960,10 +2946,10 @@ void MiscastEffect::_poison(int severity)
         case 1:
             if (cell_is_solid(target->pos()))
                 break;
-            you_msg        = "Noxious gasses pour from your @hands@!";
-            mon_msg_seen   = "Noxious gasses pour from @the_monster@'s "
+            you_msg        = "Noxious gases pour from your @hands@!";
+            mon_msg_seen   = "Noxious gases pour from @the_monster@'s "
                              "@hands@!";
-            mon_msg_unseen = "Noxious gasses pour forth from the thin air!";
+            mon_msg_unseen = "Noxious gases pour forth from the thin air!";
             place_cloud(CLOUD_MEPHITIC, target->pos(), 2 + random2(4),
                         act_source);
             break;
@@ -2984,10 +2970,10 @@ void MiscastEffect::_poison(int severity)
             break;
 
         case 1:
-            you_msg        = "Noxious gasses pour from your @hands@!";
-            mon_msg_seen   = "Noxious gasses pour from @the_monster@'s "
+            you_msg        = "Noxious gases pour from your @hands@!";
+            mon_msg_seen   = "Noxious gases pour from @the_monster@'s "
                              "@hands@!";
-            mon_msg_unseen = "Noxious gasses pour forth from the thin air!";
+            mon_msg_unseen = "Noxious gases pour forth from the thin air!";
 
             _big_cloud(CLOUD_MEPHITIC, 20, 8 + random2(5));
             break;
@@ -3031,10 +3017,10 @@ void MiscastEffect::_poison(int severity)
             do_msg();
             break;
         case 1:
-            you_msg        = "Venomous gasses pour from your @hands@!";
-            mon_msg_seen   = "Venomous gasses pour from @the_monster@'s "
+            you_msg        = "Venomous gases pour from your @hands@!";
+            mon_msg_seen   = "Venomous gases pour from @the_monster@'s "
                              "@hands@!";
-            mon_msg_unseen = "Venomous gasses pour forth from the thin air!";
+            mon_msg_unseen = "Venomous gases pour forth from the thin air!";
 
             _big_cloud(CLOUD_POISON, 20, 7 + random2(7));
             break;
@@ -3042,7 +3028,7 @@ void MiscastEffect::_poison(int severity)
             if (player_res_poison() > 0)
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
-                _lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
+                lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
             break;
         }
         break;
@@ -3186,7 +3172,7 @@ void MiscastEffect::_zot()
             target->petrify(act_source);
             break;
         case 2:
-            target->rot(act_source, 0, 3 + random2(3));
+            target->rot(act_source, 3 + random2(3));
             break;
         case 3:
             if (!_send_to_abyss())
@@ -3227,7 +3213,7 @@ void MiscastEffect::_zot()
                         if (one_chance_in(3))
                             target->teleport(true);
                         else
-                            target->blink(false);
+                            target->blink();
                     }
                 }
             }
@@ -3254,20 +3240,18 @@ void MiscastEffect::_zot()
         case 10:
         {
             vector<string> wands;
-            for (int i = 0; i < ENDOFPACK; ++i)
+            for (auto &wand : you.inv)
             {
-                if (!you.inv[i].defined())
+                if (!wand.defined() || wand.base_type != OBJ_WANDS)
                     continue;
 
-                if (you.inv[i].base_type == OBJ_WANDS)
+                const int charges = wand.plus;
+                if (charges > 0 && coinflip())
                 {
-                    const int charges = you.inv[i].plus;
-                    if (charges > 0 && coinflip())
-                    {
-                        you.inv[i].plus -= min(1 + random2(wand_charge_value(you.inv[i].sub_type)), charges);
-                        // Display new number of charges when messaging.
-                        wands.push_back(you.inv[i].name(DESC_PLAIN));
-                    }
+                    const int charge_val = wand_charge_value(wand.sub_type);
+                    wand.plus -= min(1 + random2(charge_val), charges);
+                    // Display new number of charges when messaging.
+                    wands.push_back(wand.name(DESC_PLAIN));
                 }
             }
             if (!wands.empty())
@@ -3277,7 +3261,7 @@ void MiscastEffect::_zot()
             break;
         }
         case 11:
-            _lose_stat(STAT_RANDOM, 1 + random2avg((coinflip() ? 7 : 4), 2));
+            lose_stat(STAT_RANDOM, 1 + random2avg((coinflip() ? 7 : 4), 2));
             break;
         case 12:
             mpr("An unnatural silence engulfs you.");

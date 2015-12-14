@@ -1,8 +1,8 @@
 -- Check bouncing of lightning bolts around in a box with ragged
--- edges.  If there's anything wrong the C/C++ code will assert.
+-- edges. If there's anything wrong the C/C++ code will assert.
 
 local checks = 0
-local iters  = 10
+local iters  = 5
 local range  = 1000
 
 local function test_bounce_iter(map)

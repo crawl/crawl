@@ -527,9 +527,9 @@ int get_taskbar_size()
     if (taskbar && GetWindowRect(taskbar, &rect))
     {
         if (tpos & TASKBAR_H)
-                size = rect.bottom - rect.top;
+            size = rect.bottom - rect.top;
         else if (tpos & TASKBAR_V)
-                size = rect.right - rect.left;
+            size = rect.right - rect.left;
         else
             return 0;
 

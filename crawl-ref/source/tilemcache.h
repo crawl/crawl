@@ -12,11 +12,11 @@
 struct dolls_data;
 
 // The monster cache is designed to hold extra information about monsters that
-// can't be contained in a single tile.  This is usually for equipment,
+// can't be contained in a single tile. This is usually for equipment,
 // doll parts, or demon parts.
 //
 // Monster cache entries for monsters that are out of sight are ref-counted
-// that they can be drawn even if that monster no longer exists.  When no
+// that they can be drawn even if that monster no longer exists. When no
 // out-of-sight tiles refer to them, they can be deleted.
 
 class tile_draw_info

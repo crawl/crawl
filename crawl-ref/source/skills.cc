@@ -27,21 +27,13 @@
 #include "misc.h"
 #include "notes.h"
 #include "output.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "skill_menu.h"
 #include "sprint.h"
 #include "state.h"
 #include "stringutil.h"
 #include "unwind.h"
-
-typedef function<string ()> string_fn;
-typedef map<string, string_fn> skill_op_map;
-
-static skill_op_map Skill_Op_Map;
-
-// The species for which the skill title is being worked out.
-static species_type Skill_Species = SP_UNKNOWN;
 
 // MAX_COST_LIMIT is the maximum XP amount it will cost to raise a skill
 //                by 10 skill points (ie one standard practice).
@@ -58,36 +50,14 @@ static species_type Skill_Species = SP_UNKNOWN;
 static int _train(skill_type exsk, int &max_exp, bool simu = false);
 static void _train_skills(int exp, const int cost, const bool simu);
 
-class skill_title_key_t
-{
-public:
-    skill_title_key_t(const char *k, string_fn o) : key(k), op(o)
-    {
-        Skill_Op_Map[k] = o;
-    }
-
-    static string get(const string &_key)
-    {
-        return lookup(Skill_Op_Map, _key, [] () { return string(); })();
-    }
-private:
-    const char *key;
-    string_fn op;
-};
-
-typedef skill_title_key_t stk;
-
 // Basic goals for titles:
 // The higher titles must come last.
 // Referring to the skill itself is fine ("Transmuter") but not impressive.
 // No overlaps, high diversity.
 
-// Replace @Adj@ with uppercase adjective form, @genus@ with lowercase genus,
-// @Genus@ with uppercase genus, and %s with special cases defined below,
-// including but not limited to species.
-
-// NOTE:  Even though %s could be used with most of these, remember that
-// the character's race will be listed on the next line.  It's only really
+// See the map "replacements" below for what @Genus@, @Adj@, etc. do.
+// NOTE: Even though @foo@ could be used with most of these, remember that
+// the character's race will be listed on the next line. It's only really
 // intended for cases where things might be really awkward without it. -- bwr
 
 // NOTE: If a skill name is changed, remember to also adapt the database entry.
@@ -115,7 +85,7 @@ static const char *skill_titles[NUM_SKILLS][6] =
 #if TAG_MAJOR_VERSION == 34
     {"Traps",          "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master"},
 #endif
-    // STR based fighters, for DEX/martial arts titles see below.  Felids get their own category, too.
+    // STR based fighters, for DEX/martial arts titles see below. Felids get their own category, too.
     {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
 
     {"Spellcasting",   "Magician",      "Thaumaturge",     "Eclecticist",     "Sorcerer",       "Archmage"},
@@ -177,6 +147,8 @@ unsigned int skill_cost_needed(int level)
     return (exp_needed(level, 1) * 13) / 10;
 }
 
+static const int MAX_SKILL_COST_LEVEL = 27;
+
 // skill_cost_level makes skills more expensive for more experienced characters
 int calc_skill_cost(int skill_cost_level)
 {
@@ -186,9 +158,35 @@ int calc_skill_cost(int skill_cost_level)
                          145, 170, 190, 212, 225,  // 16-20
                          240, 255, 260, 265, 265,  // 21-25
                          265, 265 };
+    COMPILE_CHECK(ARRAYSZ(cost) == MAX_SKILL_COST_LEVEL);
 
-    ASSERT_RANGE(skill_cost_level, 1, 27 + 1);
+    ASSERT_RANGE(skill_cost_level, 1, MAX_SKILL_COST_LEVEL + 1);
     return cost[skill_cost_level - 1];
+}
+
+/**
+ * The baseline skill cost for the 'cost' interface on the m screen.
+ *
+ * @returns the XP needed to go from level 0 to level 1 with +0 apt.
+ */
+int skill_cost_baseline()
+{
+    return skill_exp_needed(1, SK_FIGHTING, SP_HUMAN)
+           - skill_exp_needed(0, SK_FIGHTING, SP_HUMAN);
+}
+
+/**
+ * The skill cost to increase the given skill from its current level by one.
+ *
+ * @param sk the skill to check the player's level of
+ * @returns the XP needed to increase from floor(level) to ceiling(level)
+ */
+int one_level_cost(skill_type sk)
+{
+    if (you.skills[sk] >= MAX_SKILL_LEVEL)
+        return 0;
+    return skill_exp_needed(you.skills[sk] + 1, sk)
+           - skill_exp_needed(you.skills[sk], sk);
 }
 
 // Characters are actually granted skill points, not skill levels.
@@ -208,9 +206,10 @@ void reassess_starting_skills()
             skill_exp_needed(you.skills[sk], sk, SP_HUMAN) + 1 : 0;
 
         if (sk == SK_DODGING && you.skills[SK_ARMOUR]
-            && (is_useless_skill(SK_ARMOUR) || !you_can_wear(EQ_BODY_ARMOUR)))
+            && (is_useless_skill(SK_ARMOUR)
+                || you_can_wear(EQ_BODY_ARMOUR) != MB_TRUE))
         {
-            // No one who can't wear mundane heavy armour shouldn't start with
+            // No one who can't wear mundane heavy armour should start with
             // the Armour skill -- D:1 dragon armour is too unlikely.
             you.skill_points[sk] += skill_exp_needed(you.skills[SK_ARMOUR],
                 SK_ARMOUR, SP_HUMAN) + 1;
@@ -261,18 +260,24 @@ static void _change_skill_level(skill_type exsk, int n)
     else
         take_note(Note(NOTE_LOSE_SKILL, exsk, you.skills[exsk]));
 
-    if (you.skills[exsk] == 27)
+    // are you drained/crosstrained/ash'd in the relevant skill?
+    const bool specify_base = you.skill(exsk, 1) != you.skill(exsk, 1, true);
+    if (you.skills[exsk] == MAX_SKILL_LEVEL)
         mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
     else if (abs(n) == 1 && you.num_turns)
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill %s to level %d!",
+        mprf(MSGCH_INTRINSIC_GAIN, "Your %s%s skill %s to level %d!",
+             specify_base ? "base " : "",
              skill_name(exsk), (n > 0) ? "increases" : "decreases",
              you.skills[exsk]);
     }
     else if (you.num_turns)
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill %s %d levels and is now at "
-             "level %d!", skill_name(exsk), (n > 0) ? "gained" : "lost",
+        mprf(MSGCH_INTRINSIC_GAIN, "Your %s%s skill %s %d levels and is now "
+             "at level %d!",
+             specify_base ? "base " : "",
+             skill_name(exsk),
+             (n > 0) ? "gained" : "lost",
              abs(n), you.skills[exsk]);
     }
 
@@ -282,7 +287,7 @@ static void _change_skill_level(skill_type exsk, int n)
     if (n > 0 && you.num_turns)
         learned_something_new(HINT_SKILL_RAISE);
 
-    if (you.skills[exsk] - n == 27)
+    if (you.skills[exsk] - n == MAX_SKILL_LEVEL)
     {
         you.train[exsk] = 1;
         need_reset = true;
@@ -346,7 +351,7 @@ void check_skill_level_change(skill_type sk, bool do_level_up)
     int new_level = you.skills[sk];
     while (1)
     {
-        if (new_level < 27
+        if (new_level < MAX_SKILL_LEVEL
             && you.skill_points[sk] >= skill_exp_needed(new_level + 1, sk))
         {
             ++new_level;
@@ -400,14 +405,14 @@ static void _erase_from_stop_train(const skill_set &can_train)
  */
 static void _check_inventory_skills()
 {
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (const auto &item : you.inv)
     {
         // Exit early if there's no more skill to check.
         if (you.stop_train.empty())
             return;
 
         skill_set skills;
-        if (!you.inv[i].defined() || !item_skills(you.inv[i], skills))
+        if (!item.defined() || !item_skills(item, skills))
             continue;
 
         _erase_from_stop_train(skills);
@@ -433,7 +438,7 @@ static void _check_spell_skills()
 
 static void _check_abil_skills()
 {
-    for (ability_type abil : get_god_abilities(true, true))
+    for (ability_type abil : get_god_abilities())
     {
         // Exit early if there's no more skill to check.
         if (you.stop_train.empty())
@@ -671,7 +676,7 @@ bool check_selected_skills()
         if (skill_trained(sk))
             return false;
         if (is_useless_skill(sk) || is_harmful_skill(sk)
-            || you.skill_points[sk] >= skill_exp_needed(27, sk))
+            || you.skill_points[sk] >= skill_exp_needed(MAX_SKILL_LEVEL, sk))
         {
             continue;
         }
@@ -767,7 +772,7 @@ void reset_training()
 
 void exercise(skill_type exsk, int deg)
 {
-    if (you.skills[exsk] >= 27)
+    if (you.skills[exsk] >= MAX_SKILL_LEVEL)
         return;
 
     dprf(DIAG_SKILLS, "Exercise %s by %d.", skill_name(exsk), deg);
@@ -792,7 +797,7 @@ void exercise(skill_type exsk, int deg)
 static bool _level_up_check(skill_type sk, bool simu)
 {
     // Don't train past level 27.
-    if (you.skill_points[sk] >= skill_exp_needed(27, sk))
+    if (you.skill_points[sk] >= skill_exp_needed(MAX_SKILL_LEVEL, sk))
     {
         you.training[sk] = 0;
         if (!simu)
@@ -818,7 +823,7 @@ void train_skills(bool simu)
     {
         cost = calc_skill_cost(you.skill_cost_level);
         exp = you.exp_available;
-        if (you.skill_cost_level == 27)
+        if (you.skill_cost_level == MAX_SKILL_COST_LEVEL)
             _train_skills(exp, cost, simu);
         else
         {
@@ -974,7 +979,7 @@ bool skill_trained(int i)
 
 void check_skill_cost_change()
 {
-    while (you.skill_cost_level < 27
+    while (you.skill_cost_level < MAX_SKILL_COST_LEVEL
            && you.total_experience >= skill_cost_needed(you.skill_cost_level + 1))
     {
         ++you.skill_cost_level;
@@ -1055,9 +1060,9 @@ void set_skill_level(skill_type skill, double amount)
     you.ct_skill_points[skill] = 0;
     you.skills[skill] = level;
 
-    if (level >= 27)
+    if (level >= MAX_SKILL_LEVEL)
     {
-        level = 27;
+        level = MAX_SKILL_LEVEL;
         fractional = 0;
     }
 
@@ -1119,7 +1124,7 @@ void set_skill_level(skill_type skill, double amount)
 
 int get_skill_progress(skill_type sk, int level, int points, int scale)
 {
-    if (level >= 27)
+    if (level >= MAX_SKILL_LEVEL)
         return 0;
 
     const int needed = skill_exp_needed(level + 1, sk);
@@ -1160,105 +1165,20 @@ skill_type str_to_skill(const string &skill)
     return SK_FIGHTING;
 }
 
-static string _stk_adj_cap()
+static string _stk_weight(species_type species)
 {
-    return species_name(Skill_Species, false, true);
-}
-
-static string _stk_genus_cap()
-{
-    return species_name(Skill_Species, true, false);
-}
-
-static string _stk_genus_nocap()
-{
-    string s = _stk_genus_cap();
-    return lowercase(s);
-}
-
-static string _stk_genus_short_cap()
-{
-    return Skill_Species == SP_DEMIGOD ? "God" :
-           _stk_genus_cap();
-}
-
-static string _stk_walker()
-{
-    return species_walking_verb(Skill_Species) + "er";
-}
-
-static string _stk_weight()
-{
-    switch (Skill_Species)
-    {
-    case SP_OGRE:
-    case SP_TROLL:
+    if (species_size(species) == SIZE_LARGE)
         return "Heavy";
-
-    case SP_NAGA:
-    case SP_CENTAUR:
+    else if (species_size(species, PSIZE_BODY) == SIZE_LARGE)
         return "Cruiser";
-
-    default:
-        return "Middle";
-
-    case SP_HIGH_ELF:
-    case SP_DEEP_ELF:
-    case SP_SLUDGE_ELF:
-    case SP_TENGU:
-        return "Light";
-
-    case SP_HALFLING:
-    case SP_KOBOLD:
+    else if (species_size(species) == SIZE_SMALL || species == SP_TENGU)
         return "Feather";
-
-    case SP_SPRIGGAN:
+    else if (species_size(species) == SIZE_LITTLE)
         return "Fly";
-
-    case SP_FELID:
-        return "Bacteria"; // not used
-    }
-}
-
-static skill_title_key_t _skill_title_keys[] =
-{
-    stk("Adj", _stk_adj_cap),
-    stk("Genus", _stk_genus_cap),
-    stk("genus", _stk_genus_nocap),
-    stk("Genus_Short", _stk_genus_short_cap),
-    stk("Walker", _stk_walker),
-    stk("Weight", _stk_weight),
-};
-
-static string _replace_skill_keys(const string &text)
-{
-    // The container array is unused, we rely on side effects of constructors
-    // of individual items.  Yay.
-    UNUSED(_skill_title_keys);
-
-    string::size_type at = 0, last = 0;
-    ostringstream res;
-    while ((at = text.find('@', last)) != string::npos)
-    {
-        res << text.substr(last, at - last);
-        const string::size_type end = text.find('@', at + 1);
-        if (end == string::npos)
-            break;
-
-        const string key = text.substr(at + 1, end - at - 1);
-        const string value = stk::get(key);
-
-        ASSERT(!value.empty());
-
-        res << value;
-
-        last = end + 1;
-    }
-    if (!last)
-        return text;
-
-    res << text.substr(last);
-    return res.str();
+    else if (species_is_elven(species))
+        return "Light";
+    else
+        return "Middle";
 }
 
 unsigned get_skill_rank(unsigned skill_lev)
@@ -1276,34 +1196,20 @@ unsigned get_skill_rank(unsigned skill_lev)
  *
  * @param best_skill    The skill used to determine the title.
  * @param skill_rank    The player's rank in the given skill.
- * @param species_      The player's species_type.
- * @param str           The player's strength.
- * @param dex           The player's dex.
- * @param god_          The god_type of the god the player follows.
+ * @param species       The player's species.
+ * @param dex_better    Whether the player's dexterity is higher than strength.
+ * @param god           The god_type of the god the player follows.
  * @param piety         The player's piety with the given god.
  * @return              An appropriate and/or humorous title.
  */
 string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
-                           int species_, int str, int dex, int god_, int piety)
+                           species_type species, bool dex_better,
+                           god_type god, int piety)
 {
 
     // paranoia
     if (is_invalid_skill(best_skill))
         return "Adventurer";
-
-    if (str == -1)
-        str = you.base_stats[STAT_STR];
-
-    if (dex == -1)
-        dex = you.base_stats[STAT_DEX];
-
-    const species_type species = species_ != -1 ?
-                                 static_cast<species_type>(species_) :
-                                 you.species;
-
-    const god_type god = god_ != -1 ?
-                         static_cast<god_type>(god_) :
-                         you.religion;
 
     // Increment rank by one to "skip" skill name in array {dlb}:
     ++skill_rank;
@@ -1312,24 +1218,32 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 
     if (best_skill < NUM_SKILLS)
     {
-        // Note that ghosts default to (dex == str) and god == no_god, due
-        // to a current lack of that information... the god case is probably
-        // suitable for most cases (TSO/Zin/Ely at the very least). -- bwr
         switch (best_skill)
         {
+        case SK_SUMMONINGS:
+            // don't call good disciples hellbinders or demonologists
+            if (is_good_god(god))
+            {
+                if (skill_rank == 4)
+                    result = "Worldbinder";
+                else if (skill_rank == 5)
+                    result = "Planerender";
+            }
+            break;
+
         case SK_UNARMED_COMBAT:
             if (species == SP_FELID)
             {
                 result = claw_and_tooth_titles[skill_rank];
                 break;
             }
-            result = (dex >= str) ? martial_arts_titles[skill_rank]
-                                  : skill_titles[best_skill][skill_rank];
+            result = dex_better ? martial_arts_titles[skill_rank]
+                                : skill_titles[best_skill][skill_rank];
 
             break;
 
         case SK_SHORT_BLADES:
-            if (player_genus(GENPC_ELVEN, species) && skill_rank == 5)
+            if (species_is_elven(species) && skill_rank == 5)
             {
                 result = "Blademaster";
                 break;
@@ -1337,12 +1251,19 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_INVOCATIONS:
-            if (god != GOD_NO_GOD)
+            if (species == SP_DEMONSPAWN
+                && skill_rank == 5
+                && is_evil_god(god))
+            {
+                result = "Blood Saint";
+                break;
+            }
+            else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             break;
 
         case SK_BOWS:
-            if (player_genus(GENPC_ELVEN, species) && skill_rank == 5)
+            if (species_is_elven(species) && skill_rank == 5)
             {
                 result = "Master Archer";
                 break;
@@ -1373,13 +1294,18 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             result = skill_titles[best_skill][skill_rank];
     }
 
+    const map<string, string> replacements =
     {
-        unwind_var<species_type> sp(Skill_Species, species);
-        result = _replace_skill_keys(result);
-    }
+        { "Adj", species_name(species, SPNAME_ADJ) },
+        { "Genus", species_name(species, SPNAME_GENUS) },
+        { "genus", lowercase_string(species_name(species, SPNAME_GENUS)) },
+        { "Genus_Short", species == SP_DEMIGOD ? "God" :
+                           species_name(species, SPNAME_GENUS) },
+        { "Walker", species_walking_verb(species) + "er" },
+        { "Weight", _stk_weight(species) },
+    };
 
-    return result.empty() ? string("Invalid Title")
-                          : result;
+    return replace_keys(result, replacements);
 }
 
 /** What is the player's current title.
@@ -1505,7 +1431,7 @@ bool is_useless_skill(skill_type skill)
         return true;
     }
 
-    return species_apt(skill) == -99;
+    return species_apt(skill) == UNUSABLE_SKILL;
 }
 
 bool is_harmful_skill(skill_type skill)
@@ -1517,7 +1443,7 @@ bool all_skills_maxed(bool inc_harmful)
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
-        if (you.skills[i] < 27 && you.can_train[i]
+        if (you.skills[i] < MAX_SKILL_LEVEL && you.can_train[i]
             && !is_useless_skill((skill_type) i)
             && (inc_harmful || !is_harmful_skill((skill_type) i)))
         {
@@ -1552,8 +1478,7 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
                           15750, 17700, 19800, 22050, 24450, // 21-25
                           27000, 29750 };
 
-    ASSERT_RANGE(lev, 0, 27 + 1);
-
+    ASSERT_RANGE(lev, 0, MAX_SKILL_LEVEL + 1);
     return exp[lev] * species_apt_factor(sk, sp);
 }
 
@@ -1575,7 +1500,8 @@ int species_apt(skill_type skill, species_type species)
         spec_skills_initialised = true;
     }
 
-    return _spec_skills[species][skill];
+    return max(UNUSABLE_SKILL, _spec_skills[species][skill]
+                               - player_mutation_level(MUT_UNSKILLED));
 }
 
 float species_apt_factor(skill_type sk, species_type sp)
@@ -1687,7 +1613,7 @@ int skill_transfer_amount(skill_type sk)
 {
     ASSERT(!is_invalid_skill(sk));
     if (you.skill_points[sk] < 1000)
-        return you.skill_points[sk] - skill_exp_needed(1, sk);
+        return you.skill_points[sk];
     else
         return max<int>(1000, you.skill_points[sk] / 2);
 }
@@ -1757,7 +1683,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         if (fsk != tsk)
         {
             change_skill_points(tsk, skp_gained, false);
-            if (you.skills[tsk] == 27)
+            if (you.skills[tsk] == MAX_SKILL_LEVEL)
                 break;
         }
     }
@@ -1794,8 +1720,11 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
                  skill_name(fsk), you.ct_skill_points[fsk]);
         }
 
-        if (you.transfer_skill_points == 0 || you.skills[tsk] == 27)
+        if (you.transfer_skill_points == 0
+            || you.skills[tsk] == MAX_SKILL_LEVEL)
+        {
             ashenzari_end_transfer(true);
+        }
         else
         {
             dprf(DIAG_SKILLS, "%d skill points left to transfer",
@@ -1841,7 +1770,7 @@ void skill_state::restore_levels()
 void skill_state::restore_training()
 {
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-        if (you.skills[sk] < 27)
+        if (you.skills[sk] < MAX_SKILL_LEVEL)
             you.train[sk] = train[sk];
 
     you.can_train                   = can_train;
@@ -1857,7 +1786,7 @@ void fixup_skills()
         if (is_useless_skill(sk))
             you.skill_points[sk] = 0;
         you.skill_points[sk] = min(you.skill_points[sk],
-                                   skill_exp_needed(27, sk));
+                                   skill_exp_needed(MAX_SKILL_LEVEL, sk));
         check_skill_level_change(sk);
     }
     init_can_train();

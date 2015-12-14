@@ -33,6 +33,7 @@ zombie_griffon MONS_ZOMBIE_GRIFFON
 zombie_quadruped_winged MONS_ZOMBIE_QUADRUPED_WINGED
 zombie_harpy MONS_ZOMBIE_HARPY
 zombie_octopode MONS_ZOMBIE_OCTOPODE
+zombie_juggernaut MONS_ZOMBIE_JUGGERNAUT
 %rim 0
 zombie_ugly_thing MONS_ZOMBIE_UGLY_THING
 zombie_turtle MONS_ZOMBIE_TURTLE

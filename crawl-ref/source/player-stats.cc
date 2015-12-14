@@ -30,10 +30,6 @@
 #endif
 #include "transform.h"
 
-// Don't make this larger than 255 without changing the type of you.stat_zero
-// in player.h as well as the associated marshalling code in tags.cc
-const int STATZERO_TURN_CAP = 200;
-
 int player::stat(stat_type s, bool nonneg) const
 {
     const int val = max_stat(s) - stat_loss[s];
@@ -57,9 +53,19 @@ int player::dex(bool nonneg) const
 
 static int _stat_modifier(stat_type stat, bool innate_only);
 
-int player::max_stat(stat_type s) const
+/**
+ * What's the player's current maximum for a stat, before ability damage is
+ * applied?
+ *
+ * @param s     The stat in question (e.g. STAT_STR).
+ * @param base  Whether to disregard stat modifiers other than those from
+ *              mutations.
+ * @return      The player's maximum for the given stat; capped at
+ *              MAX_STAT_VALUE.
+ */
+int player::max_stat(stat_type s, bool base) const
 {
-    return min(base_stats[s] + _stat_modifier(s, false), 72);
+    return min(base_stats[s] + _stat_modifier(s, base), MAX_STAT_VALUE);
 }
 
 int player::max_strength() const
@@ -78,14 +84,13 @@ int player::max_dex() const
 }
 
 // Base stat including innate mutations (which base_stats does not)
-static int _base_stat(stat_type s)
+int innate_stat(stat_type s)
 {
-    return min(you.base_stats[s] + _stat_modifier(s, true), 72);
+    return you.max_stat(s, true);
 }
 
 
-static void _handle_stat_change(stat_type stat, bool see_source = true);
-static void _handle_stat_change(bool see_source = true);
+static void _handle_stat_change(stat_type stat);
 
 /**
  * Handle manual, permanent character stat increases. (Usually from every third
@@ -115,14 +120,14 @@ bool attribute_increase()
 #else
     mprf(MSGCH_INTRINSIC_GAIN, "Your experience leads to an increase in your attributes!");
     learned_something_new(HINT_CHOOSE_STAT);
-    if (_base_stat(STAT_STR) != you.strength()
-        || _base_stat(STAT_INT) != you.intel()
-        || _base_stat(STAT_DEX) != you.dex())
+    if (innate_stat(STAT_STR) != you.strength()
+        || innate_stat(STAT_INT) != you.intel()
+        || innate_stat(STAT_DEX) != you.dex())
     {
         mprf(MSGCH_PROMPT, "Your base attributes are Str %d, Int %d, Dex %d.",
-             _base_stat(STAT_STR),
-             _base_stat(STAT_INT),
-             _base_stat(STAT_DEX));
+             innate_stat(STAT_STR),
+             innate_stat(STAT_INT),
+             innate_stat(STAT_DEX));
     }
     mprf(MSGCH_PROMPT, "Increase (S)trength, (I)ntelligence, or (D)exterity? ");
 #endif
@@ -166,19 +171,19 @@ bool attribute_increase()
         case 's':
         case 'S':
             for (int i = 0; i < statgain; i++)
-                modify_stat(STAT_STR, 1, false, "level gain");
+                modify_stat(STAT_STR, 1, false);
             return true;
 
         case 'i':
         case 'I':
             for (int i = 0; i < statgain; i++)
-                modify_stat(STAT_INT, 1, false, "level gain");
+                modify_stat(STAT_INT, 1, false);
             return true;
 
         case 'd':
         case 'D':
             for (int i = 0; i < statgain; i++)
-                modify_stat(STAT_DEX, 1, false, "level gain");
+                modify_stat(STAT_DEX, 1, false);
             return true;
 #ifdef TOUCH_UI
         default:
@@ -229,25 +234,23 @@ void jiyva_stat_action()
             else
                 other_weights += weight;
         }
+        // We give pure Int weighting if the player is sufficiently
+        // focused on magic skills.
+        other_weights = max(other_weights - magic_weights / 2, 0);
 
-        // Heavy armour weights towards strength, Dodging skill towards
-        // dexterity.  EVP 15 (chain) is enough to weight towards pure Str in
-        // the absence of dodging skill, but 15 dodging will will push that
-        // back to pure Dex.
-        int str_weight = (10 * evp - you.skill(SK_DODGING, 10)) / 15;
-        // Clip weight between 0 (pure dex) and 10 (pure strength).
-        str_weight = min(10, max(0, str_weight));
-
-        // If you are in really heavy armour, then you already are getting a
-        // lot of Str and more won't help much, so weight magic more.
-        other_weights = max(other_weights - (evp >= 15 ? 4 : 1)
-                            * magic_weights / 2, 0);
+        // Now scale appropriately and apply the Int weighting
         magic_weights = div_rand_round(remaining * magic_weights,
                                        magic_weights + other_weights);
         other_weights = remaining - magic_weights;
         target_stat[1] += magic_weights;
 
-        const int str_adj = div_rand_round(other_weights * str_weight, 10);
+        // Heavy armour weights towards Str, Dodging skill towards Dex.
+        int str_weight = 10 * evp;
+        int dex_weight = 10 + you.skill(SK_DODGING, 10);
+
+        // Now apply the Str and Dex weighting.
+        const int str_adj = div_rand_round(other_weights * str_weight,
+                                           str_weight + dex_weight);
         target_stat[0] += str_adj;
         target_stat[2] += (other_weights - str_adj);
     }
@@ -264,7 +267,7 @@ void jiyva_stat_action()
         {
             if (x != y && cur_stat[y] > 1
                 && target_stat[x] - cur_stat[x] > target_stat[y] - cur_stat[y]
-                && cur_stat[x] < 72)
+                && cur_stat[x] < MAX_STAT_VALUE)
             {
                 choices++;
                 if (one_chance_in(choices))
@@ -282,21 +285,6 @@ void jiyva_stat_action()
     }
 }
 
-static kill_method_type _statloss_killtype(stat_type stat)
-{
-    switch (stat)
-    {
-    case STAT_STR:
-        return KILLED_BY_WEAKNESS;
-    case STAT_INT:
-        return KILLED_BY_STUPIDITY;
-    case STAT_DEX:
-        return KILLED_BY_CLUMSINESS;
-    default:
-        die("unknown stat");
-    }
-}
-
 static const char* descs[NUM_STATS][NUM_STAT_DESCS] =
 {
     { "strength", "weakened", "weaker", "stronger" },
@@ -309,8 +297,7 @@ const char* stat_desc(stat_type stat, stat_desc_type desc)
     return descs[stat][desc];
 }
 
-void modify_stat(stat_type which_stat, int amount, bool suppress_msg,
-                 bool see_source)
+void modify_stat(stat_type which_stat, int amount, bool suppress_msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -334,11 +321,10 @@ void modify_stat(stat_type which_stat, int amount, bool suppress_msg,
 
     you.base_stats[which_stat] += amount;
 
-    _handle_stat_change(which_stat, see_source);
+    _handle_stat_change(which_stat);
 }
 
-void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
-                        bool see_source)
+void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -360,12 +346,13 @@ void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
              stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
     }
 
-    _handle_stat_change(which_stat, see_source);
+    _handle_stat_change(which_stat);
 }
 
 void notify_stat_change()
 {
-    _handle_stat_change();
+    for (int i = 0; i < NUM_STATS; ++i)
+        _handle_stat_change(static_cast<stat_type>(i));
 }
 
 static int _mut_level(mutation_type mut, bool innate)
@@ -513,13 +500,20 @@ static string _stat_name(stat_type stat)
     }
 }
 
-bool lose_stat(stat_type which_stat, int stat_loss, bool force,
-               const char *cause, bool see_source)
+int stat_loss_roll()
+{
+    const int loss = 30 + random2(30);
+    dprf("Stat loss points: %d", loss);
+
+    return loss;
+}
+
+bool lose_stat(stat_type which_stat, int stat_loss, bool force)
 {
     if (which_stat == STAT_RANDOM)
         which_stat = static_cast<stat_type>(random2(NUM_STATS));
 
-    // scale modifier by player_sust_abil() - right-shift
+    // scale modifier by player_sust_attr() - right-shift
     // permissible because stat_loss is unsigned: {dlb}
     if (!force)
     {
@@ -530,13 +524,13 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
             return false;
         }
 
-        int sust = player_sust_abil();
+        int sust = player_sust_attr();
         stat_loss >>= sust;
     }
 
     mprf(stat_loss > 0 ? MSGCH_WARN : MSGCH_PLAIN,
          "You feel %s%s%s.",
-         stat_loss > 0 && player_sust_abil(false) ? "somewhat " : "",
+         stat_loss > 0 && player_sust_attr(false) ? "somewhat " : "",
          stat_desc(which_stat, SD_LOSS),
          stat_loss > 0 ? "" : " for a moment");
 
@@ -544,41 +538,16 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
     {
         you.stat_loss[which_stat] = min<int>(100,
                                         you.stat_loss[which_stat] + stat_loss);
-        if (you.stat_zero[which_stat])
-        {
-            mprf(MSGCH_DANGER, "You convulse from lack of %s!", stat_desc(which_stat, SD_NAME));
-            ouch(5 + random2(you.hp_max / 10), _statloss_killtype(which_stat), MID_NOBODY, cause);
-        }
-        _handle_stat_change(which_stat, see_source);
+        if (!you.attribute[ATTR_STAT_LOSS_XP])
+            you.attribute[ATTR_STAT_LOSS_XP] = stat_loss_roll();
+        _handle_stat_change(which_stat);
         return true;
     }
     else
         return false;
 }
-bool lose_stat(stat_type which_stat, int stat_loss, bool force,
-               const string cause, bool see_source)
-{
-    return lose_stat(which_stat, stat_loss, force, cause.c_str(), see_source);
-}
 
-bool lose_stat(stat_type which_stat, int stat_loss,
-               const monster* cause, bool force)
-{
-    if (cause == nullptr || invalid_monster(cause))
-        return lose_stat(which_stat, stat_loss, force, nullptr, true);
-
-    bool   vis  = you.can_see(cause);
-    string name = cause->name(DESC_A, true);
-
-    if (cause->has_ench(ENCH_SHAPESHIFTER))
-        name += " (shapeshifter)";
-    else if (cause->has_ench(ENCH_GLOWING_SHAPESHIFTER))
-        name += " (glowing shapeshifter)";
-
-    return lose_stat(which_stat, stat_loss, force, name, vis);
-}
-
-static stat_type _random_lost_stat()
+stat_type random_lost_stat()
 {
     stat_type choice = NUM_STATS;
     int found = 0;
@@ -594,7 +563,7 @@ static stat_type _random_lost_stat()
 
 // Restore the stat in which_stat by the amount in stat_gain, displaying
 // a message if suppress_msg is false, and doing so in the recovery
-// channel if recovery is true.  If stat_gain is 0, restore the stat
+// channel if recovery is true. If stat_gain is 0, restore the stat
 // completely.
 bool restore_stat(stat_type which_stat, int stat_gain,
                   bool suppress_msg, bool recovery)
@@ -612,7 +581,7 @@ bool restore_stat(stat_type which_stat, int stat_gain,
     }
 
     if (which_stat == STAT_RANDOM)
-        which_stat = _random_lost_stat();
+        which_stat = random_lost_stat();
 
     if (which_stat >= NUM_STATS || you.stat_loss[which_stat] == 0)
         return false;
@@ -628,6 +597,11 @@ bool restore_stat(stat_type which_stat, int stat_gain,
         stat_gain = you.stat_loss[which_stat];
 
     you.stat_loss[which_stat] -= stat_gain;
+
+    // If we're fully recovered, clear out stat loss recovery timer.
+    if (random_lost_stat() == NUM_STATS)
+        you.attribute[ATTR_STAT_LOSS_XP] = 0;
+
     _handle_stat_change(which_stat);
     return true;
 }
@@ -635,18 +609,18 @@ bool restore_stat(stat_type which_stat, int stat_gain,
 static void _normalize_stat(stat_type stat)
 {
     ASSERT(you.stat_loss[stat] >= 0);
-    // XXX: this doesn't prevent effective stats over 72.
-    you.base_stats[stat] = min<int8_t>(you.base_stats[stat], 72);
+    you.base_stats[stat] = min<int8_t>(you.base_stats[stat], MAX_STAT_VALUE);
 }
 
-static void _handle_stat_change(stat_type stat, bool see_source)
+static void _handle_stat_change(stat_type stat)
 {
     ASSERT_RANGE(stat, 0, NUM_STATS);
 
-    if (you.stat(stat) <= 0 && you.stat_zero[stat] == 0)
+    if (you.stat(stat) <= 0 && !you.duration[stat_zero_duration(stat)])
     {
-        // Turns required for recovery once the stat is restored, randomised slightly.
-        you.stat_zero[stat] = 10 + random2(10);
+        // Time required for recovery once the stat is restored, randomised slightly.
+        you.duration[stat_zero_duration(stat)] =
+            (20 + random2(20)) * BASELINE_DELAY;
         mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
         take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Lost %s.",
             stat_desc(stat, SD_NAME)).c_str()), true);
@@ -677,33 +651,26 @@ static void _handle_stat_change(stat_type stat, bool see_source)
     }
 }
 
-static void _handle_stat_change(bool see_source)
+duration_type stat_zero_duration(stat_type stat)
 {
-    for (int i = 0; i < NUM_STATS; ++i)
-        _handle_stat_change(static_cast<stat_type>(i), see_source);
+    switch (stat)
+    {
+    case STAT_STR:
+        return DUR_COLLAPSE;
+    case STAT_INT:
+        return DUR_BRAINLESS;
+    case STAT_DEX:
+        return DUR_CLUMSY;
+    default:
+        die("invalid stat");
+    }
 }
 
-// Called once per turn.
-void update_stat_zero()
+bool have_stat_zero()
 {
     for (int i = 0; i < NUM_STATS; ++i)
-    {
-        stat_type s = static_cast<stat_type>(i);
-        if (you.stat(s) <= 0)
-        {
-            if (you.stat_zero[s] < STATZERO_TURN_CAP)
-                you.stat_zero[s]++;
-        }
-        else if (you.stat_zero[s])
-        {
-            you.stat_zero[s]--;
-            if (you.stat_zero[s] == 0)
-            {
-                mprf("Your %s has recovered.", stat_desc(s, SD_NAME));
-                you.redraw_stats[s] = true;
-            }
-        }
-        else // no stat penalty at all
-            continue;
-    }
+        if (you.duration[stat_zero_duration(static_cast<stat_type> (i))])
+            return true;
+
+    return false;
 }

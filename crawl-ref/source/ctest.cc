@@ -27,6 +27,8 @@
 #include "end.h"
 #include "errors.h"
 #include "files.h"
+#include "itemname.h"
+#include "jobs.h"
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
@@ -35,7 +37,6 @@
 #include "ng-init.h"
 #include "state.h"
 #include "stringutil.h"
-#include "zotdef.h"
 
 static const string test_dir = "test";
 static const string script_dir = "scripts";
@@ -107,10 +108,8 @@ static bool _is_test_selected(const string &testname)
 
     if (crawl_state.tests_selected.empty() && !starts_with(testname, "big/"))
         return true;
-    for (int i = 0, size = crawl_state.tests_selected.size();
-         i < size; ++i)
+    for (const string& phrase : crawl_state.tests_selected)
     {
-        const string &phrase(crawl_state.tests_selected[i]);
         if (testname == phrase || testname == phrase + ".lua")
             return true;
     }
@@ -177,18 +176,21 @@ void run_tests()
     _init_test_bindings();
 
     _run_test("makeitem", makeitem_tests);
-    _run_test("zotdef_wave", debug_waves);
     _run_test("mon-pick", debug_monpick);
     _run_test("mon-data", debug_mondata);
     _run_test("mon-spell", debug_monspells);
     _run_test("coordit", coordit_tests);
+    _run_test("makename", make_name_tests);
+    _run_test("job-data", debug_jobdata);
 
-    // Get a list of Lua files in test. Order of execution of
-    // tests should be irrelevant.
+    // Get a list of Lua files in test.
     {
-        const vector<string> tests(
-            get_dir_files_recursive(crawl_state.script? script_dir : test_dir,
-                              ".lua"));
+        const string &dir = crawl_state.script ? script_dir : test_dir;
+        vector<string> tests = get_dir_files_recursive(dir, ".lua");
+
+        // Make the order consistent from one run to the next, for
+        // reproducibility.
+        sort(begin(tests), end(tests));
 
         for_each(tests.begin(), tests.end(), run_test);
 
@@ -205,12 +207,9 @@ void run_tests()
     if (crawl_state.test_list)
         end(0);
     cio_cleanup();
-    for (int i = 0, size = failures.size(); i < size; ++i)
-    {
-        const file_error &fe(failures[i]);
-        fprintf(stderr, "%s error: %s\n",
-                activity, fe.second.c_str());
-    }
+    for (const file_error &fe : failures)
+        fprintf(stderr, "%s error: %s\n", activity, fe.second.c_str());
+
     const int code = failures.empty() ? 0 : 1;
     end(code, false, "%d %ss, %d succeeded, %d failed",
         ntests, activity, nsuccess, (int)failures.size());

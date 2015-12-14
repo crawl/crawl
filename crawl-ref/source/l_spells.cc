@@ -67,7 +67,7 @@ LUAFN(l_spells_min_range)
 LUAFN(l_spells_fail)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    PLUARET(number, failure_rate_to_int(spell_fail(spell)));
+    PLUARET(number, failure_rate_to_int(raw_spell_fail(spell)));
 }
 LUAFN(l_spells_fail_severity)
 {

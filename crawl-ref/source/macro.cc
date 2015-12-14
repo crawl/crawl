@@ -635,8 +635,8 @@ int macro_buf_get()
     if (expanded_keys_left > 0)
         expanded_keys_left--;
 
-    for (int i = 0, size_i = recorders.size(); i < size_i; i++)
-        recorders[i]->add_key(key);
+    for (key_recorder *recorder : recorders)
+        recorder->add_key(key);
 
     return key;
 }
@@ -785,7 +785,7 @@ int getch_with_command_macros()
 }
 
 /*
- * Flush the buffer.  Later we'll probably want to give the player options
+ * Flush the buffer. Later we'll probably want to give the player options
  * as to when this happens (ex. always before command input, casting failed).
  */
 void flush_input_buffer(int reason)
@@ -1064,6 +1064,77 @@ static void _read_macros_from(const char* filename)
             macro_add((keymap ? Keymaps[keymc] : Macros), key, action);
         }
     }
+}
+
+/*
+ * Based on _read_macros_from(), reads macros or keymaps from rc files.
+ *
+ * @param field The orig_field (not lowercased) of the macro option (the
+ * bit after "macros +=")
+ *
+ * @return The string of any errors which occurred, or "" if no error.
+ * %s is the field argument.
+ */
+
+string read_rc_file_macro(const string& field)
+{
+    const int first_space = field.find(' ');
+
+    if (first_space < 0)
+        return "Cannot parse marcos += %s , there is only one argument";
+
+    // Start by deciding what context the macro/keymap is in
+    const string context = field.substr(0, first_space);
+
+    bool keymap = false;
+    KeymapContext keymc = KMC_DEFAULT;
+
+    if (context == "K")
+    {
+        keymap = true;
+        keymc  = KMC_DEFAULT;
+    }
+    else if (context.length() >= 2 && context[0] == 'K')
+    {
+        const KeymapContext ctx =
+              KeymapContext(KMC_DEFAULT + context[1] - '0');
+
+        if (ctx >= KMC_DEFAULT && ctx < KMC_CONTEXT_COUNT)
+        {
+            keymap = true;
+            keymc  = ctx;
+        }
+    }
+    else if (context == "M")
+        keymap = false;
+    else
+        return "'" + context
+                   + "' is not a valid macro or keymap context (macros += %s)";
+
+    // Now grab the key and action to be performed
+    const string key_and_action = field.substr((first_space + 1));
+
+    const int second_space = key_and_action.find(' ');
+
+    if (second_space < 0)
+        return "Cannot parse marcos += %s , there are only two arguments";
+
+    const string macro_key_string = key_and_action.substr(0, second_space);
+    const string action_string = key_and_action.substr((second_space + 1));
+
+
+    keyseq key = parse_keyseq(macro_key_string);
+
+    keyseq action = parse_keyseq(action_string);
+
+    macro_add((keymap ? Keymaps[keymc] : Macros), key, action);
+
+    // If we didn't save here, macros in rc files would be saved iff you also
+    // changed another macro with cntrl-D and saved at the exit prompt.
+    // Consistent behavior works better.
+    macro_save();
+
+    return "";
 }
 
 void macro_init()
@@ -1366,28 +1437,28 @@ string command_to_string(command_type cmd, bool tutorial)
     if (!desc.empty())
         return desc;
 
+    string result;
     if (key >= 32 && key < 256)
     {
         if (tutorial && key >= 'A' && key <= 'Z')
-            snprintf(info, INFO_SIZE, "uppercase %c", (char) key);
+            result = make_stringf("uppercase %c", (char) key);
         else
-            snprintf(info, INFO_SIZE, "%c", (char) key);
+            result = string(1, (char) key);
     }
     else if (key > 1000 && key <= 1009)
     {
         const int numpad = (key - 1000);
-        snprintf(info, INFO_SIZE, "Numpad %d", numpad);
+        result = make_stringf("Numpad %d", numpad);
     }
     else
     {
         const int ch = key + 'A' - 1;
         if (ch >= 'A' && ch <= 'Z')
-            snprintf(info, INFO_SIZE, "Ctrl-%c", (char) ch);
+            result = make_stringf("Ctrl-%c", (char) ch);
         else
-            snprintf(info, INFO_SIZE, "%d", key);
+            result = to_string(key);
     }
 
-    string result = info;
     return result;
 }
 
@@ -1449,9 +1520,7 @@ static void _list_all_commands(string &commands)
         if (_context_for_command(cmd) != KMC_DEFAULT)
             continue;
 
-        snprintf(info, INFO_SIZE, "%s: %s\n",
-                 command_name.c_str(), command_to_string(cmd).c_str());
-        commands += info;
+        commands += command_name + ": " + command_to_string(cmd) + "\n";
     }
     commands += "\n";
 }

@@ -6,7 +6,7 @@
 #ifndef DBGDGN_H
 #define DBGDGN_H
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
 
 class map_def;
 void mapstat_report_map_try(const map_def &map);

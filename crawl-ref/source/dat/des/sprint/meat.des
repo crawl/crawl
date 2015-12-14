@@ -84,8 +84,8 @@
     "hell beast hp:1000 hd:40 name:meat_beast n_rpl n_des n_spe " ..
     "col:red generate_awake perm_ench:haste"
 
-  local lost_soul =
-    "phantom hp:500 hd:50 name:lost_soul dbname:meat_lost_soul n_rpl n_des n_spe " ..
+  local wretched_soul =
+    "phantom hp:500 hd:50 name:wretched_soul n_rpl n_des n_spe " ..
     "never_corpse col:red generate_awake " ..
     "spells:bolt_of_draining.50.natural;dispel_undead.50.natural " ..
     "perm_ench:invis"
@@ -216,6 +216,7 @@
   end
 
   function blood_spawns(data, triggerable, triggerer, marker, ev)
+    local phase
     if triggerer.type == "turn" then
 
     data.spawn_count = data.spawn_count + 1
@@ -240,7 +241,7 @@
       "" .. dread .. " / " .. meat_beast .. " / " .. meat_berserker .. " w:5"
     elseif data.spawn_count < 90 then  -- turns 74 - 89
       phase =
-      "" .. lost_soul .. " / " .. meat_hydra .. " w:5 / " .. meat_beast .. " w:5"
+      "" .. wretched_soul .. " / " .. meat_hydra .. " w:5 / " .. meat_beast .. " w:5"
     elseif data.spawn_count < 105 then  -- turns 90 - 104
       phase =
       "" .. observer .. " / " .. tyrant .. " w:5 / " .. accursed .. " w:5"
@@ -255,17 +256,17 @@
       "" .. meat_berserker .. " / " .. destroyer .. " / " .. meat_beast .. " / "
       .. fleshlord .. " / " .. dread .. " / " .. meat_hydra .. " / "
       .. observer .. " / " .. plague .. " / " .. sculptor .. " / "
-      .. lost_soul .. ""
+      .. wretched_soul .. ""
     elseif data.spawn_count < 210 then  -- turns 170 - 209
       phase =
       "" .. fleshlord .. " / " .. dread .. " / " .. meat_hydra .. " / "
       .. observer .. " / " .. plague .. " / "
-      .. lost_soul .. ""
+      .. wretched_soul .. ""
     elseif data.spawn_count < 265 then  -- turns 210 - 264
       phase =
       "" .. fleshlord .. " / " .. dread .. " / " .. meat_hydra .. " / "
       .. observer .. " / " .. plague .. " / "
-      .. lost_soul .. " / " .. vile .. " w:25"
+      .. wretched_soul .. " / " .. vile .. " w:25"
     elseif data.spawn_count >= 265 then  -- turns 265 on
       phase =
       "" .. vile .. ""
@@ -327,6 +328,7 @@ ORIENT:    encompass
 DESC:      Sprint VIII: "Arena of Blood"
 ORDER:     8
 KFEAT:     { = {
+KFEAT:     J = x
 LROCKCOL:  red
 LFLOORCOL: red
 NSUBST:    ' = 1:& / *:.

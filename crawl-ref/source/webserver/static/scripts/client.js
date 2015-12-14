@@ -110,6 +110,23 @@ function (exports, $, React, comm, user, LobbyRoot, Loader, Scores, pubsub) {
 
     function do_url_action()
     {
+        if ($("#stale_processes_message").is(":visible"))
+        {
+            e.preventDefault();
+            send_message("stop_stale_process_purge");
+            hide_dialog();
+            return;
+        }
+        if ($("#force_terminate").is(":visible"))
+        {
+            e.preventDefault();
+            if (e.which == "y".charCodeAt(0))
+                force_terminate_yes();
+            else
+                force_terminate_no();
+            return;
+        }
+
         var play = location.pathname.match(/^\/play\/(.+)/);
         if (play)
         {

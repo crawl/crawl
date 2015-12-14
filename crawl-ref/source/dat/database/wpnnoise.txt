@@ -10,6 +10,7 @@
 
 # Contents:
 # - Shield of the Gong
+# - Frostbite
 # - Noisy randarts
 # - The Singing Sword
 
@@ -37,6 +38,28 @@ BONNNG!
 
 # scraping hit
 SHROANNG!
+
+###############################################################################
+###############################################################################
+#
+# The FROZEN AXE "FROSTBITE" imitates loud noises from cold environments.
+#
+###############################################################################
+###############################################################################
+
+%%%%
+frozen axe "frostbite"
+
+You hear the [roaring|howling|raging|gusting] winds of a [blizzard|squall|snowstorm].
+
+w:5
+You hear ice [creaking|groaning|grinding|cracking].
+
+w:1
+You hear shards of ice [tinkling|chiming].
+
+w:1
+You hear the [rumble|boom|crash] of [a glacier calving|icebergs colliding].
 
 ###############################################################################
 ###############################################################################
@@ -803,16 +826,21 @@ w:1
 
 @The_weapon@ sings out, "Sing loudly and carry a big sword!"
 
+@The_weapon@ ponders the difference in lifespan between man and sword.
+
 w:1
 @The_weapon@ says, "All work and no play makes @player_name@ a dull boy!"
 
 # Blue Oyster Cult "Black Blade"
-@The_weapon@ says, "I wish I'd pick another to be my killing tool."
+@The_weapon@ says, "I wish I'd pick another to be my killing [tool|fool]."
 
 @The_weapon@ hoarsely says, "Need a drink... quick! Stab something."
 
 w:1
 @The_weapon@ says, "You haven't happened to see my sheath laying around anywhere? I feel so exposed."
+
+w:1
+@The_weapon@ complains, "Oh, are your palms wet and greasy. But I allow you to wield me for a while."
 
 ############ speaking, low tension ############
 %%%%
@@ -1750,3 +1778,55 @@ erotic
 
 w:1
 moving
+###############################################################################
+###############################################################################
+#
+# The MAJIN-BO likes to encourage its user.
+#
+###############################################################################
+###############################################################################
+%%%%
+majin-bo greeting
+
+Well, hello there.
+
+Aren't you a tasty little thing?
+
+We're going to have a lot of fun together.
+
+Let's make your enemies cower, shall we?
+
+w:1
+You scratch my back, I'll scratch yours... and I'm one HELL of a backscratcher.
+%%%%
+majin-bo cast
+
+That's more like it.
+
+This should be good.
+
+Let me show you the power of Hell.
+
+Embrace the darkness.
+
+Isn't this worth a little damnation?
+
+I'll handle this.
+
+Now here's how it's done.
+
+Your soul is simply delicious.
+
+Has anyone ever told you how good your soul tastes?
+%%%%
+majin-bo cast weak
+
+You're beginning to bore me.
+
+My talents are wasted here.
+
+Why bother with such petty cantrips?
+
+A demon of Hell at your fingers, and you cast that...
+
+Now, try casting something FUN.

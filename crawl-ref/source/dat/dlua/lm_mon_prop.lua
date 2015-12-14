@@ -39,7 +39,7 @@ function MonPropsMarker:activate(marker)
   end
 
   -- NOTE: do *not* call dgn.remove_marker() right now; removing a marker
-  -- while it's being activated causes memory problems.  We'll be
+  -- while it's being activated causes memory problems. We'll be
   -- removed after activation is done with the "post_activate_remove"
   -- property.
   self.want_remove = true

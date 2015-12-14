@@ -61,6 +61,18 @@ void WindowManager::shutdown()
 #endif
 }
 
+static unsigned char _kmod_to_mod(int modifier)
+{
+    unsigned char mod = 0;
+    if (modifier & KMOD_SHIFT)
+        mod |= MOD_SHIFT;
+    if (modifier & KMOD_CTRL)
+        mod |= MOD_CTRL;
+    if (modifier & KMOD_LALT)
+        mod |= MOD_ALT;
+    return mod;
+}
+
 static unsigned char _get_modifiers(SDL_Keysym &keysym)
 {
     switch (keysym.sym)
@@ -78,7 +90,7 @@ static unsigned char _get_modifiers(SDL_Keysym &keysym)
         return MOD_ALT;
         break;
     default:
-        return keysym.mod;
+        return _kmod_to_mod(keysym.mod);
     }
 }
 
@@ -109,7 +121,7 @@ static void _translate_window_event(const SDL_WindowEvent &sdl_event,
     }
 }
 
-// Suppress the SDL_TEXTINPUT event from this keypress.  XXX: hacks
+// Suppress the SDL_TEXTINPUT event from this keypress. XXX: hacks
 static void _suppress_textinput()
 {
     if (SDL_IsTextInputActive())
@@ -121,20 +133,22 @@ static void _suppress_textinput()
 
 static int _translate_keysym(SDL_Keysym &keysym)
 {
-    // This function returns the key that was hit.  Returning zero implies that
+    // This function returns the key that was hit. Returning zero implies that
     // the keypress (e.g. hitting shift on its own) should be eaten and not
     // handled.
 
     const int shift_offset = CK_SHIFT_UP - CK_UP;
     const int ctrl_offset  = CK_CTRL_UP - CK_UP;
 
-    int mod = 0;
-    if (keysym.mod & KMOD_SHIFT)
-        mod |= MOD_SHIFT;
-    if (keysym.mod & KMOD_CTRL)
-        mod |= MOD_CTRL;
-    if (keysym.mod & KMOD_LALT)
-        mod |= MOD_ALT;
+    const int mod = _get_modifiers(keysym);
+
+#ifdef TARGET_OS_WINDOWS
+    // AltGr looks like right alt + left ctrl on Windows. Let the input
+    // method geneate a TextInput event rather than trying to handle it
+    // as a KeyDown.
+    if (testbits(keysym.mod, KMOD_RALT | KMOD_LCTRL))
+        return 0;
+#endif
 
     // This is arbitrary, but here's the current mappings.
     // 0-256: ASCII, Crawl arrow keys
@@ -368,22 +382,6 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
     glDebug("SDL_GL_BLUE_SIZE 8");
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
     glDebug("SDL_GL_ALPHA_SIZE 8");
-
-#if !SDL_VERSION_ATLEAST(2,0,0)
-    if (Options.tile_key_repeat_delay > 0)
-    {
-        const int repdelay    = Options.tile_key_repeat_delay;
-        const int interval = SDL_DEFAULT_REPEAT_INTERVAL;
-        if (SDL_EnableKeyRepeat(repdelay, interval) != 0)
-#ifdef __ANDROID__
-            __android_log_print(ANDROID_LOG_INFO, "Crawl",
-                                "Failed to set key repeat mode: %s",
-                                SDL_GetError());
-#else
-            printf("Failed to set key repeat mode: %s\n", SDL_GetError());
-#endif
-    }
-#endif
 
     SDL_SetHint(SDL_HINT_VIDEO_HIGHDPI_DISABLED, "0");
 
@@ -653,6 +651,8 @@ int SDLWrapper::wait_event(wm_event *event)
         _translate_window_event(sdlevent.window, *event);
         break;
     case SDL_KEYDOWN:
+        if (Options.tile_key_repeat_delay <= 0 && sdlevent.key.repeat != 0)
+            return 0;
         event->type = WME_KEYDOWN;
         event->key.state = sdlevent.key.state;
         event->key.keysym.scancode = sdlevent.key.keysym.scancode;

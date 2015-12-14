@@ -3,9 +3,13 @@
 
 struct trap_def
 {
+    /// The position of the trap on the map
     coord_def pos;
+    /// The type of trap
     trap_type type;
+    /// The amount of ammo remaining (also used for a horrible shadow trap hack)
     short     ammo_qty;
+    /// How difficult the trap is to detect
     uint8_t   skill_rnd;
 
     dungeon_feature_type category() const;
@@ -13,7 +17,6 @@ struct trap_def
     bool is_known(const actor* act = 0) const;
     bool is_safe(actor* act = 0) const;
     void trigger(actor& triggerer, bool flat_footed = false);
-    void disarm();
     void destroy(bool known = false);
     void hide();
     void reveal();
@@ -28,8 +31,6 @@ private:
     void shoot_ammo(actor& act, bool was_known);
     item_def generate_trap_item();
     int shot_damage(actor& act);
-    void trigger_shadow_trap(const actor &triggerer);
-    bool weave_shadow(const actor &triggerer);
 };
 
 #endif

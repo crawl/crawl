@@ -38,11 +38,13 @@
 #include "godwrath.h"
 #include "hints.h"
 #include "libutil.h"
+#include "macro.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-poly.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "options.h"
@@ -51,6 +53,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
+#include "show.h"
 #include "showsymb.h"
 #include "state.h"
 #include "stringutil.h"
@@ -71,7 +74,8 @@
 
 //#define DEBUG_PANE_BOUNDS
 
-static bool _show_terrain = false;
+static layers_type _layers = LAYERS_ALL;
+static layers_type _layers_saved = LAYERS_NONE;
 
 crawl_view_geometry crawl_view;
 
@@ -89,12 +93,8 @@ bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf)
     else
         aid.context = SC_NEWLY_SEEN;
 
-    if (!mons_is_safe(mons)
-        && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
-           || mons->type == MONS_BALLISTOMYCETE && mons->ballisto_activity)
-    {
+    if (!mons_is_safe(mons))
         return interrupt_activity(AI_SEE_MONSTER, aid, msgs_buf);
-    }
 
     seen_monster(mons);
 
@@ -112,7 +112,7 @@ void flush_comes_into_view()
     monster* mon = crawl_state.which_mon_acting();
 
     if (!mon || !mon->alive() || (mon->flags & MF_WAS_IN_VIEW)
-        || !you.can_see(mon))
+        || !you.can_see(*mon))
     {
         return;
     }
@@ -120,7 +120,7 @@ void flush_comes_into_view()
     handle_seen_interrupt(mon);
 }
 
-void seen_monsters_react()
+void seen_monsters_react(int stealth)
 {
     if (you.duration[DUR_TIME_STEP] || crawl_state.game_is_arena())
         return;
@@ -128,12 +128,7 @@ void seen_monsters_react()
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if ((mi->asleep() || mons_is_wandering(*mi))
-            && check_awaken(*mi)
-#ifdef EUCLIDEAN
-               || you.prev_move.abs() == 2 && x_chance_in_y(2, 5)
-                  && check_awaken(*mi)
-#endif
-           )
+            && check_awaken(*mi, stealth))
         {
             behaviour_event(*mi, ME_ALERT, &you, you.pos(), false);
 
@@ -151,24 +146,27 @@ void seen_monsters_react()
         gozag_check_bribe(*mi);
         slime_convert(*mi);
 
-        // Trigger Duvessa & Dowan upgrades
-        if (mi->props.exists(ELVEN_ENERGIZE_KEY))
+        if (!mi->has_ench(ENCH_INSANE))
         {
-            mi->props.erase(ELVEN_ENERGIZE_KEY);
-            elven_twin_energize(*mi);
-        }
+            // Trigger Duvessa & Dowan upgrades
+            if (mi->props.exists(ELVEN_ENERGIZE_KEY))
+            {
+                mi->props.erase(ELVEN_ENERGIZE_KEY);
+                elven_twin_energize(*mi);
+            }
 #if TAG_MAJOR_VERSION == 34
-        else if (mi->props.exists(OLD_DUVESSA_ENERGIZE_KEY))
-        {
-            mi->props.erase(OLD_DUVESSA_ENERGIZE_KEY);
-            elven_twin_energize(*mi);
-        }
-        else if (mi->props.exists(OLD_DOWAN_ENERGIZE_KEY))
-        {
-            mi->props.erase(OLD_DOWAN_ENERGIZE_KEY);
-            elven_twin_energize(*mi);
-        }
+            else if (mi->props.exists(OLD_DUVESSA_ENERGIZE_KEY))
+            {
+                mi->props.erase(OLD_DUVESSA_ENERGIZE_KEY);
+                elven_twin_energize(*mi);
+            }
+            else if (mi->props.exists(OLD_DOWAN_ENERGIZE_KEY))
+            {
+                mi->props.erase(OLD_DOWAN_ENERGIZE_KEY);
+                elven_twin_energize(*mi);
+            }
 #endif
+        }
     }
 }
 
@@ -189,7 +187,7 @@ static string _desc_mons_type_map(map<monster_type, int> types)
         if (entry.second > 1)
         {
             name = make_stringf("%d %s", entry.second,
-                                pluralise(name).c_str());
+                                pluralise_monster(name).c_str());
         }
 
         message += name;
@@ -389,12 +387,17 @@ void update_monsters_in_view()
             vector<monster *> mons;
             for (monster *mon : monsters)
             {
-                if (mon->wont_attack())
+                if (mon->wont_attack()
+                    || mon->is_stationary()
+                    || mons_is_object(mon->type)
+                    || mons_is_tentacle_or_tentacle_segment(mon->type))
+                {
                     continue;
+                }
 
-                int bribability = gozag_type_bribable(mon->type, true);
-                if (bribability
-                    && x_chance_in_y(bribability, GOZAG_MAX_BRIBABILITY))
+                if (coinflip()
+                    && mon->get_experience_level() >=
+                       random2(you.experience_level))
                 {
                     mon_count.add(mon);
                     mons.push_back(mon);
@@ -409,8 +412,6 @@ void update_monsters_in_view()
                 mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
                 for (monster *mon : mons)
                     gozag_incite(mon);
-
-                dec_penance(GOD_GOZAG, mons.size());
             }
         }
     }
@@ -420,7 +421,7 @@ void update_monsters_in_view()
     // To approximate this, if the number of hostile monsters in view
     // is greater than it ever was for this particular trip to the
     // Abyss, Xom is stimulated in proportion to the number of
-    // hostile monsters.  Thus if the entourage doesn't grow, then
+    // hostile monsters. Thus if the entourage doesn't grow, then
     // Xom becomes bored.
     if (player_in_branch(BRANCH_ABYSS)
         && you.attribute[ATTR_ABYSS_ENTOURAGE] < num_hostile)
@@ -443,21 +444,21 @@ void mark_mon_equipment_seen(const monster *mons)
 
         item.flags |= ISFLAG_SEEN;
 
-        // ID brands of non-randart weapons held by enemies.
-        if (is_artefact(item))
-            continue;
-
+        // ID brands of weapons held by enemies.
         if (slot == MSLOT_WEAPON
             || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(mons))
         {
-            item.flags |= ISFLAG_KNOW_TYPE;
+            if (is_artefact(item))
+                artefact_learn_prop(item, ARTP_BRAND);
+            else
+                item.flags |= ISFLAG_KNOW_TYPE;
         }
     }
 }
 
 
 // We logically associate a difficulty parameter with each tile on each level,
-// to make deterministic magic mapping work.  This function returns the
+// to make deterministic magic mapping work. This function returns the
 // difficulty parameters for each tile on the current level, whose difficulty
 // is less than a certain amount.
 //
@@ -505,7 +506,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     if (!in_bounds(pos))
         pos = you.pos();
 
-    if (!force && testbits(env.level_flags, LFLAG_NO_MAP))
+    if (!force && !is_map_persistent())
     {
         if (!suppress_msg)
             canned_msg(MSG_DISORIENTED);
@@ -519,8 +520,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         map_radius = 5;
 
     // now gradually weaker with distance:
-    const int pfar     = dist_range(map_radius * 7 / 10);
-    const int very_far = dist_range(map_radius * 9 / 10);
+    const int pfar     = map_radius * 7 / 10;
+    const int very_far = map_radius * 9 / 10;
 
     bool did_map = false;
     int  num_altars        = 0;
@@ -529,14 +530,14 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     const FixedArray<uint8_t, GXM, GYM>& difficulty =
         _tile_difficulties(!deterministic);
 
-    for (radius_iterator ri(pos, map_radius, C_ROUND);
+    for (radius_iterator ri(pos, map_radius, C_SQUARE);
          ri; ++ri)
     {
         if (!wizard_map)
         {
             int threshold = proportion;
 
-            const int dist = distance2(you.pos(), *ri);
+            const int dist = grid_distance(you.pos(), *ri);
 
             if (dist > very_far)
                 threshold = threshold / 3;
@@ -549,8 +550,19 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         if (env.map_knowledge(*ri).changed())
         {
-            env.map_knowledge(*ri).clear();
-            env.map_seen.set(*ri, false);
+            // If the player has already seen the square, update map
+            // knowledge with the new terrain. Otherwise clear what we had
+            // before.
+            if (env.map_knowledge(*ri).seen())
+            {
+                dungeon_feature_type newfeat = grd(*ri);
+                if (newfeat == DNGN_UNDISCOVERED_TRAP)
+                    newfeat = DNGN_FLOOR;
+                trap_type tr = feat_is_trap(newfeat) ? get_trap_type(*ri) : TRAP_UNASSIGNED;
+                env.map_knowledge(*ri).set_feature(newfeat, env.grid_colours(*ri), tr);
+            }
+            else
+                env.map_knowledge(*ri).clear();
         }
 
         if (!wizard_map && (env.map_knowledge(*ri).seen() || env.map_knowledge(*ri).mapped()))
@@ -600,6 +612,9 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             else
             {
                 set_terrain_mapped(*ri);
+
+                if (get_cell_map_feature(env.map_knowledge(*ri)) == MF_STAIR_BRANCH)
+                    seen_notable_thing(feat, *ri);
 
                 if (get_feature_dchar(feat) == DCHAR_ALTAR)
                     num_altars++;
@@ -696,8 +711,8 @@ bool mon_enemies_around(const monster* mons)
     }
 }
 
-// Returns a string containing a representation of the map.  Leading and
-// trailing spaces are trimmed from each line.  Leading and trailing empty
+// Returns a string containing a representation of the map. Leading and
+// trailing spaces are trimmed from each line. Leading and trailing empty
 // lines are also snipped.
 string screenshot()
 {
@@ -750,14 +765,7 @@ string screenshot()
 
 int viewmap_flash_colour()
 {
-    if (_show_terrain)
-        return BLACK;
-    else if (you.attribute[ATTR_SHADOWS])
-        return LIGHTGREY;
-    else if (you.berserk())
-        return RED;
-
-    return BLACK;
+    return _layers & LAYERS_ALL && you.berserk() ? RED : BLACK;
 }
 
 // Updates one square of the view area. Should only be called for square
@@ -806,7 +814,8 @@ void view_update_at(const coord_def &pos)
 void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay)
 {
-    if ((Options.use_animations & UA_PLAYER) && you.can_see(mon))
+    ASSERT(mon); // XXX: change to const monster &mon
+    if ((Options.use_animations & UA_PLAYER) && you.can_see(*mon))
     {
         colour_t old_flash_colour = you.flash_colour;
         coord_def c(mon->pos());
@@ -888,18 +897,19 @@ static void _debug_pane_bounds()
 #endif
 }
 
-enum update_flags
+enum class update_flag
 {
-    UF_AFFECT_EXCLUDES = (1 << 0),
-    UF_ADDED_EXCLUDE   = (1 << 1),
+    AFFECT_EXCLUDES = (1 << 0),
+    ADDED_EXCLUDE   = (1 << 1),
 };
+DEF_BITFIELD(update_flags, update_flag);
 
 // Do various updates when the player sees a cell. Returns whether
 // exclusion LOS might have been affected.
-static int player_view_update_at(const coord_def &gc)
+static update_flags player_view_update_at(const coord_def &gc)
 {
     maybe_remove_autoexclusion(gc);
-    int ret = 0;
+    update_flags ret;
 
     // Set excludes in a radius of 1 around harmful clouds genereated
     // by neither monsters nor the player.
@@ -924,7 +934,7 @@ static int player_view_update_at(const coord_def &gc)
             bool was_exclusion = is_exclude_root(gc);
             set_exclude(gc, size, false, false, true);
             if (!did_exclude && !was_exclusion)
-                ret |= UF_ADDED_EXCLUDE;
+                ret |= update_flag::ADDED_EXCLUDE;
         }
     }
 
@@ -933,7 +943,7 @@ static int player_view_update_at(const coord_def &gc)
         hints_observe_cell(gc);
 
     if (env.map_knowledge(gc).changed() || !env.map_knowledge(gc).seen())
-        ret |= UF_AFFECT_EXCLUDES;
+        ret |= update_flag::AFFECT_EXCLUDES;
 
     set_terrain_visible(gc);
 
@@ -976,10 +986,10 @@ static void player_view_update()
 
     for (radius_iterator ri(you.pos(), you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
-        int flags = player_view_update_at(*ri);
-        if (flags & UF_AFFECT_EXCLUDES)
+        update_flags flags = player_view_update_at(*ri);
+        if (flags & update_flag::AFFECT_EXCLUDES)
             update_excludes.push_back(*ri);
-        if (flags & UF_ADDED_EXCLUDE)
+        if (flags & update_flag::ADDED_EXCLUDE)
             need_update = true;
     }
     // Update exclusion LOS for possibly affected excludes.
@@ -1065,12 +1075,12 @@ class shake_viewport_animation: public animation
 public:
     shake_viewport_animation() { frames = 5; frame_delay = 40; }
 
-    void init_frame(int frame)
+    void init_frame(int frame) override
     {
         offset = coord_def(random2(3) - 1, random2(3) - 1);
     }
 
-    coord_def cell_cb(const coord_def &pos, int &colour)
+    coord_def cell_cb(const coord_def &pos, int &colour) override
     {
         return pos + offset;
     }
@@ -1083,12 +1093,12 @@ class checkerboard_animation: public animation
 {
 public:
     checkerboard_animation() { frame_delay = 100; frames = 5; }
-    void init_frame(int frame)
+    void init_frame(int frame) override
     {
         current_frame = frame;
     }
 
-    coord_def cell_cb(const coord_def &pos, int &colour)
+    coord_def cell_cb(const coord_def &pos, int &colour) override
     {
         if (current_frame % 2 == (pos.x + pos.y) % 2 && pos != you.pos())
             return coord_def(-1, -1);
@@ -1104,7 +1114,7 @@ class banish_animation: public animation
 public:
     banish_animation(): remaining(false) { }
 
-    void init_frame(int frame)
+    void init_frame(int frame) override
     {
         current_frame = frame;
 
@@ -1123,7 +1133,7 @@ public:
         remaining = false;
     }
 
-    coord_def cell_cb(const coord_def &pos, int &colour)
+    coord_def cell_cb(const coord_def &pos, int &colour) override
     {
         if (pos == you.pos())
             return pos;
@@ -1152,12 +1162,12 @@ public:
 class slideout_animation: public animation
 {
 public:
-    void init_frame(int frame)
+    void init_frame(int frame) override
     {
         current_frame = frame;
     }
 
-    coord_def cell_cb(const coord_def &pos, int &colour)
+    coord_def cell_cb(const coord_def &pos, int &colour) override
     {
         coord_def ret;
         if (pos.y % 2)
@@ -1179,7 +1189,7 @@ public:
 class orb_animation: public animation
 {
 public:
-    void init_frame(int frame)
+    void init_frame(int frame) override
     {
         current_frame = frame;
         range = current_frame > 5
@@ -1188,7 +1198,7 @@ public:
         frame_delay = 3 * (6 - range) * (6 - range);
     }
 
-    coord_def cell_cb(const coord_def &pos, int &colour)
+    coord_def cell_cb(const coord_def &pos, int &colour) override
     {
         const coord_def diff = pos - you.pos();
         const int dist = diff.x * diff.x * 4 / 9 + diff.y * diff.y;
@@ -1248,17 +1258,17 @@ void run_animation(animation_type anim, use_animation_type type, bool cleanup)
     }
 }
 
-//---------------------------------------------------------------
-//
-// Draws the main window using the character set returned
-// by get_show_glyph().
-//
-// If show_updates is set, env.show and dependent structures
-// are updated. Should be set if anything in view has changed.
-//
-// If tiles_only is set, only the tile view will be updated. This
-// is only relevant for Webtiles.
-//---------------------------------------------------------------
+/**
+ * Draws the main window using the character set returned
+ * by get_show_glyph().
+ *
+ * @param show_updates if true, env.show and dependent structures
+ *                     are updated. Should be set if anything in
+ *                     view has changed.
+ * @param tiles_only if true, only the tile view will be updated. This
+ *                   is only relevant for Webtiles.
+ * @param a[in] the animation to be showing, if any.
+ */
 void viewwindow(bool show_updates, bool tiles_only, animation *a)
 {
     // The player could be at (0,0) if we are called during level-gen; this can
@@ -1284,7 +1294,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
         mcache.clear_nonref();
 #endif
 
-    if (show_updates || _show_terrain)
+    if (show_updates || _layers != LAYERS_ALL)
     {
         if (!is_map_persistent())
             ash_detect_portals(false);
@@ -1295,7 +1305,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
         tiles.clear_overlays();
 #endif
 
-        show_init(_show_terrain);
+        show_init(_layers);
     }
 
     if (show_updates)
@@ -1307,7 +1317,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
     if (run_dont_draw || you.asleep())
     {
         // Reset env.show if we munged it.
-        if (_show_terrain)
+        if (_layers != LAYERS_ALL)
             show_init();
         return;
     }
@@ -1359,7 +1369,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
     you.flash_where = 0;
 
     // Reset env.show if we munged it.
-    if (_show_terrain)
+    if (_layers != LAYERS_ALL)
         show_init();
 
     _debug_pane_bounds();
@@ -1377,7 +1387,8 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         _draw_out_of_bounds(cell);
     else if (!crawl_view.in_los_bounds_g(gc))
         _draw_outside_los(cell, gc);
-    else if (gc == you.pos() && you.on_current_level && !_show_terrain
+    else if (gc == you.pos() && you.on_current_level
+             && _layers & LAYER_PLAYER
              && !crawl_state.game_is_arena()
              && !crawl_state.arena_suspended)
     {
@@ -1455,20 +1466,118 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 
     tile_apply_properties(gc, cell->tile);
 #endif
+#ifndef USE_TILE_LOCAL
+    if ((_layers != LAYERS_ALL || Options.always_show_exclusions)
+        && you.on_current_level
+        && map_bounds(gc)
+        && (_layers == LAYERS_NONE
+            || gc != you.pos()
+               && (env.map_knowledge(gc).monster() == MONS_NO_MONSTER
+                   || !you.see_cell(gc)))
+        && travel_colour_override(gc))
+    {
+        if (is_exclude_root(gc))
+            cell->colour = Options.tc_excluded;
+        else if (is_excluded(gc))
+            cell->colour = Options.tc_exclude_circle;
+    }
+#endif
+}
+
+// Hide view layers. The player can toggle certain layers back on
+// and the resulting configuration will be remembered for the
+// remainder of the game session.
+// Pressing | again will return to normal view. Leaving the prompt
+// by any other means will give back control of the keys, but the
+// view will remain in its altered state until the | key is pressed
+// again or the player performs an action.
+static void _config_layers_menu()
+{
+    bool exit = false;
+
+    _layers = _layers_saved;
+    crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+    crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
+
+    msgwin_set_temporary(true);
+    while (!exit)
+    {
+        viewwindow();
+        mprf(MSGCH_PROMPT, "Select layers to display:\n"
+                           "<%s>(m)onsters</%s>|"
+                           "<%s>(p)layer</%s>|"
+                           "<%s>(i)tems</%s>|"
+                           "<%s>(c)louds</%s>|"
+                           "<%s>monster (w)eapons</%s>|"
+                           "<%s>monster (h)ealth</%s>",
+           _layers & LAYER_MONSTERS        ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTERS        ? "lightgrey" : "darkgrey",
+           _layers & LAYER_PLAYER          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_PLAYER          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_ITEMS           ? "lightgrey" : "darkgrey",
+           _layers & LAYER_ITEMS           ? "lightgrey" : "darkgrey",
+           _layers & LAYER_CLOUDS          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_CLOUDS          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTER_WEAPONS ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTER_WEAPONS ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey"
+        );
+        mprf(MSGCH_PROMPT, "Press <w>%s</w> to return to normal view. "
+                           "Press any other key to exit.",
+                           command_to_string(CMD_SHOW_TERRAIN).c_str());
+
+        switch (get_ch())
+        {
+        case 'm': _layers_saved = _layers ^= LAYER_MONSTERS;        break;
+        case 'p': _layers_saved = _layers ^= LAYER_PLAYER;          break;
+        case 'i': _layers_saved = _layers ^= LAYER_ITEMS;           break;
+        case 'c': _layers_saved = _layers ^= LAYER_CLOUDS;          break;
+        case 'w': _layers_saved = _layers ^= LAYER_MONSTER_WEAPONS; break;
+        case 'h': _layers_saved = _layers ^= LAYER_MONSTER_HEALTH;  break;
+
+        // Remaining cases fall through to exit.
+        case '|':
+            _layers = LAYERS_ALL;
+            crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+            crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
+        default:
+            exit = true;
+            break;
+        }
+
+        crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+        crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
+
+        msgwin_clear_temporary();
+    }
+    msgwin_set_temporary(false);
+
+    canned_msg(MSG_OK);
+    if (_layers != LAYERS_ALL)
+    {
+        mprf(MSGCH_PLAIN, "Press <w>%s</w> or perform an action "
+                          "to restore all view layers.",
+                          command_to_string(CMD_SHOW_TERRAIN).c_str());
+    }
 }
 
 void toggle_show_terrain()
 {
-    _show_terrain = !_show_terrain;
-    if (_show_terrain)
-        mpr("Showing terrain only.");
+    if (_layers == LAYERS_ALL)
+        _config_layers_menu();
     else
-        mpr("Returning to normal view.");
+        reset_show_terrain();
 }
 
 void reset_show_terrain()
 {
-    _show_terrain = false;
+    if (_layers != LAYERS_ALL)
+        mprf(MSGCH_PROMPT, "Restoring view layers.");
+
+    _layers = LAYERS_ALL;
+    crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+    crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
 }
 
 ////////////////////////////////////////////////////////////////////////////

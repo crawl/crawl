@@ -24,6 +24,11 @@
 namespace std {}
 using namespace std;
 
+#ifndef SIZE_MAX
+# include <limits>
+# define SIZE_MAX (std::numeric_limits<std::size_t>::max())
+#endif
+
 // Define COMPILE_CHECK before including any of our headers, so even things
 // like externs.h can use it.  platform.h a few lines up is standalone, so
 // doesn't count.
@@ -88,7 +93,7 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 //
 #if defined(TARGET_OS_MACOSX) || defined(TARGET_OS_LINUX) || \
     defined(TARGET_OS_FREEBSD) || defined(TARGET_OS_NETBSD) || \
-    defined(TARGET_OS_OPENBSD) || defined(TARGET_COMPILER_CYGWIN) || \
+    defined(TARGET_OS_OPENBSD) || defined(TARGET_OS_CYGWIN) || \
     defined(TARGET_OS_SOLARIS) || defined(TARGET_OS_UNKNOWN)
     #ifndef UNIX
     #define UNIX
@@ -171,7 +176,7 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     // #define WINMM_PLAY_SOUNDS
 
     // Use Perl-compatible regular expressions. libpcre must be available and
-    // linked in.  Required in the absence of POSIX regexes.
+    // linked in. Required in the absence of POSIX regexes.
     #ifndef REGEX_PCRE
     #define REGEX_PCRE
     #endif
@@ -320,7 +325,7 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     // This function might slow things down quite a bit
     // on slow machines because it's going to go through
     // every item on the level and do string comparisons
-    // against the name.  Still, it is nice to know the
+    // against the name. Still, it is nice to know the
     // turn in which "bad" items appear.
     #define DEBUG_ITEM_SCAN
     #define DEBUG_MONS_SCAN
@@ -348,6 +353,7 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     #define DEBUG_TESTS
     #define DEBUG_MONSPEAK
     #define DEBUG_BLOOD_POTIONS
+    #define DEBUG_STATISTICS
 #endif
 
 // =========================================================================
@@ -381,7 +387,7 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 #define SCORE_FILE_ENTRIES      100
 #endif
 
-// Option to allow scoring of wizard characters.  Note that even if
+// Option to allow scoring of wizard characters. Note that even if
 // you define this option, wizard characters are still tagged as such
 // in the score file.
 // #define SCORE_WIZARD_CHARACTERS
@@ -447,13 +453,6 @@ static inline void UNUSED(const volatile T &)
                    __attribute__((format (CRAWL_PRINTF_FORMAT, x+1, x+2))
 #else
 # define PRINTF(x, dfmt) const char *format dfmt, ...
-#endif
-
-// Most libcs support %zu, but msvcrt does not.
-#if defined(TARGET_COMPILER_VC) || defined(TARGET_COMPILER_MINGW)
-#define PRIuSIZET "Iu"
-#else
-#define PRIuSIZET "zu"
 #endif
 
 // And now headers we want precompiled

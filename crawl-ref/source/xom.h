@@ -55,7 +55,6 @@ enum xom_event_type
     XOM_BAD_MISCAST_NASTY,
     XOM_BAD_STATLOSS,
     XOM_BAD_TELEPORT,
-    XOM_BAD_SWAP_WEAPONS,
     XOM_BAD_CHAOS_UPGRADE,
     XOM_BAD_MUTATION,
     XOM_BAD_POLYMORPH,
@@ -103,6 +102,7 @@ void xom_new_level_noise_or_stealth();
 void debug_xom_effects();
 #endif
 
+int xom_rearrange_pieces(int sever, bool debug = false);
 bool swap_monsters(monster* m1, monster* m2);
 bool move_stair(coord_def stair_pos, bool away, bool allow_under);
 

@@ -121,6 +121,7 @@
 #include "tiledef-dngn.h"
 #include "tilepick.h"
 #endif
+#include "timed_effects.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -223,8 +224,8 @@ static void _decrement_petrification(int delay)
         {
             dur = 0;
             // If we'd kill the player when active flight stops, this will
-            // need to pass the killer.  Unlike monsters, almost all flight is
-            // magical, inluding tengu, as there's no flapping of wings.  Should
+            // need to pass the killer. Unlike monsters, almost all flight is
+            // magical, inluding tengu, as there's no flapping of wings. Should
             // we be nasty to dragon and bat forms?  For now, let's not instakill
             // them even if it's inconsistent.
             you.fully_petrify(nullptr);
@@ -293,17 +294,17 @@ static void _maybe_melt_armour()
 static int _current_horror_level()
 {
     const coord_def& center = you.pos();
-    const int radius = 8;
+    const int radius = LOS_RADIUS;
     int horror_level = 0;
 
-    for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
+    for (radius_iterator ri(center, radius, C_SQUARE); ri; ++ri)
     {
         const monster* const mon = monster_at(*ri);
 
         if (mon == nullptr
             || mons_aligned(mon, &you)
-            || mons_is_firewood(mon)
-            || !you.can_see(mon))
+            || !mons_is_threatening(mon)
+            || !you.can_see(*mon))
         {
             continue;
         }
@@ -411,7 +412,6 @@ void player_reacts_to_monsters()
                          (2 * BASELINE_DELAY), true);
     }
 
-    handle_starvation();
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
@@ -437,24 +437,14 @@ static bool _check_recite()
 }
 
 
-static int _zin_recite_to_monsters(coord_def where, int prayertype, int, actor *)
-{
-    ASSERT_RANGE(prayertype, 0, NUM_RECITE_TYPES);
-    return zin_recite_to_single_monster(where);
-}
-
-
 static void _handle_recitation(int step)
 {
     mprf("\"%s\"",
          zin_recite_text(you.attribute[ATTR_RECITE_SEED],
                          you.attribute[ATTR_RECITE_TYPE], step).c_str());
 
-    if (apply_area_visible(_zin_recite_to_monsters,
-                           you.attribute[ATTR_RECITE_TYPE], &you))
-    {
+    if (apply_area_visible(zin_recite_to_single_monster, you.pos()))
         viewwindow();
-    }
 
     // Recite trains more than once per use, because it has a
     // long timer in between uses and actually takes up multiple
@@ -659,8 +649,28 @@ static void _decrement_durations()
         you.redraw_evasion = true;
     }
 
-    _decrement_a_duration(DUR_POWERED_BY_DEATH, delay,
-                          "You feel less regenerative.");
+    // Handle Powered By Death strength and duration
+    int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
+    if (pbd_str > 1)
+    {
+        // Roll to decrement (on average) 1 per-10 aut.
+        const int decrement_rolls = div_rand_round(delay, 10);
+        const int dec = binomial(decrement_rolls, 1, 4);
+
+        // We don't want to accidentally terminate the effect after slow actions
+        pbd_str = max(pbd_str - dec, 1);
+        you.props[POWERED_BY_DEATH_KEY] = pbd_str;
+        if (dec > 0)
+            dprf("Decrementing Powered by Death strength to %d", pbd_str);
+    }
+    if (_decrement_a_duration(DUR_POWERED_BY_DEATH, delay))
+    {
+        if (pbd_str > 0)
+        {
+            mprf(MSGCH_DURATION, "You feel less regenerative.");
+            you.props[POWERED_BY_DEATH_KEY] = 0;
+        }
+    }
 
     _decrement_a_duration(DUR_TELEPATHY, delay, "You feel less empathic.");
 
@@ -689,13 +699,9 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_TELEPORT, delay))
     {
-        you_teleport_now(true);
+        you_teleport_now();
         untag_followers();
     }
-
-    _decrement_a_duration(DUR_CONTROL_TELEPORT, delay,
-                          "You feel uncertain.", coinflip(),
-                          "You start to feel a little uncertain.");
 
     if (_decrement_a_duration(DUR_DEATH_CHANNEL, delay,
                               "Your unholy channel expires.", coinflip(),
@@ -745,9 +751,6 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_CONFUSING_TOUCH, delay,
                           you.hands_act("stop", "glowing.").c_str());
 
-    _decrement_a_duration(DUR_SURE_BLADE, delay,
-                          "The bond with your blade fades away.");
-
     _decrement_a_duration(DUR_FORESTED, delay,
                           "Space becomes stable.");
 
@@ -791,6 +794,17 @@ static void _decrement_durations()
                               "The ground is no longer liquid beneath you."))
     {
         invalidate_agrid();
+    }
+
+    for (int i = 0; i < NUM_STATS; ++i)
+    {
+        stat_type s = static_cast<stat_type>(i);
+        if (you.stat(s) > 0
+            && _decrement_a_duration(stat_zero_duration(s), delay))
+        {
+            mprf(MSGCH_RECOVERY, "Your %s has recovered.", stat_desc(s, SD_NAME));
+            you.redraw_stats[s] = true;
+        }
     }
 
     if (_decrement_a_duration(DUR_FORTITUDE, delay,
@@ -950,28 +964,6 @@ static void _decrement_durations()
         }
     }
 
-    if (you.rotting > 0)
-    {
-        // XXX: Mummies have an ability (albeit an expensive one) that
-        // can fix rotted HPs now... it's probably impossible for them
-        // to even start rotting right now, but that could be changed. - bwr
-        // It's not normal biology, so Cheibriados won't help.
-        if (you.species == SP_MUMMY)
-            you.rotting = 0;
-        else if (x_chance_in_y(you.rotting, 20)
-                 && !you.duration[DUR_DEATHS_DOOR])
-        {
-            mprf(MSGCH_WARN, "You feel your flesh rotting away.");
-            rot_hp(1);
-            you.rotting--;
-        }
-    }
-
-    // ghoul rotting is special, but will deduct from you.rotting
-    // if it happens to be positive - because this is placed after
-    // the "normal" rotting check, rotting attacks can be somewhat
-    // more painful on ghouls - reversing order would make rotting
-    // attacks somewhat less painful, but that seems wrong-headed {dlb}:
     if (you.species == SP_GHOUL)
     {
         int resilience = 400;
@@ -988,8 +980,6 @@ static void _decrement_durations()
             dprf("rot rate: 1/%d", resilience);
             mprf(MSGCH_WARN, "You feel your flesh rotting away.");
             rot_hp(1);
-            if (you.rotting > 0)
-                you.rotting--;
         }
     }
 
@@ -1075,7 +1065,7 @@ static void _decrement_durations()
                           "Your cleaving frenzy subsides.");
 
     if (_decrement_a_duration(DUR_CORROSION, delay,
-                          "You repair your equipment."))
+                          "You are no longer corroded."))
     {
         you.props["corrosion_amount"] = 0;
         you.redraw_armour_class = true;
@@ -1150,9 +1140,6 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_POISON_VULN, delay,
                           "You feel less vulnerable to poison.");
 
-    _decrement_a_duration(DUR_NEGATIVE_VULN, delay,
-                          "You feel less vulnerable to negative energy.");
-
     if (_decrement_a_duration(DUR_PORTAL_PROJECTILE, delay,
                               "You are no longer teleporting projectiles to their destination."))
     {
@@ -1198,6 +1185,9 @@ static void _decrement_durations()
         you.redraw_armour_class = true;
     }
 
+    if (_decrement_a_duration(DUR_GOZAG_GOLD_AURA, delay))
+        you.props["gozag_gold_aura_amount"] = 0;
+
     dec_elixir_player(delay);
 
     for (int i = 0; i < delay; ++i)
@@ -1242,17 +1232,13 @@ static void _regenerate_hp_and_mp(int delay)
     if (crawl_state.disables[DIS_PLAYER_REGEN])
         return;
 
-    // XXX: using an int tmp to fix the fact that hit_points_regeneration
-    // is only an unsigned char and is thus likely to overflow. -- bwr
-    int tmp = you.hit_points_regeneration;
-
-    if (you.hp < you.hp_max && !you.duration[DUR_DEATHS_DOOR])
+    if (!you.duration[DUR_DEATHS_DOOR])
     {
         const int base_val = player_regen();
-        tmp += div_rand_round(base_val * delay, BASELINE_DELAY);
+        you.hit_points_regeneration += div_rand_round(base_val * delay, BASELINE_DELAY);
     }
 
-    while (tmp >= 100)
+    while (you.hit_points_regeneration >= 100)
     {
         // at low mp, "mana link" restores mp in place of hp
         if (you.mutation[MUT_MANA_LINK]
@@ -1262,20 +1248,15 @@ static void _regenerate_hp_and_mp(int delay)
         }
         else // standard hp regeneration
             inc_hp(1);
-        tmp -= 100;
+        you.hit_points_regeneration -= 100;
     }
 
-    ASSERT_RANGE(tmp, 0, 100);
-    you.hit_points_regeneration = tmp;
+    ASSERT_RANGE(you.hit_points_regeneration, 0, 100);
 
-    // XXX: Don't let DD use guardian spirit for free HP, since their
+    // Don't let DD use guardian spirit for free HP, since their
     // damage shaving is enough. (due, dpeg)
     if (you.spirit_shield() && you.species == SP_DEEP_DWARF)
         return;
-
-    // XXX: Doing the same as the above, although overflow isn't an
-    // issue with magic point regeneration, yet. -- bwr
-    tmp = you.magic_points_regeneration;
 
     if (you.magic_points < you.max_magic_points)
     {
@@ -1283,26 +1264,24 @@ static void _regenerate_hp_and_mp(int delay)
         int mp_regen_countup = div_rand_round(base_val * delay, BASELINE_DELAY);
         if (you.mutation[MUT_MANA_REGENERATION])
             mp_regen_countup *= 2;
-        tmp += mp_regen_countup;
+        you.magic_points_regeneration += mp_regen_countup;
     }
 
-    while (tmp >= 100)
+    while (you.magic_points_regeneration >= 100)
     {
         inc_mp(1);
-        tmp -= 100;
+        you.magic_points_regeneration -= 100;
     }
 
-    ASSERT_RANGE(tmp, 0, 100);
-    you.magic_points_regeneration = tmp;
+    ASSERT_RANGE(you.magic_points_regeneration, 0, 100);
 }
 
 void player_reacts()
 {
-    extern int stealth;             // defined in main.cc
-
     search_around();
 
-    stealth = check_stealth();
+    //XXX: does this _need_ to be calculated up here?
+    const int stealth = check_stealth();
 
 #ifdef DEBUG_STEALTH
     // Too annoying for regular diagnostics.
@@ -1344,16 +1323,11 @@ void player_reacts()
         const int teleportitis_level = player_teleport();
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
-        {
-            if (teleportitis_level >= 8)
-                you_teleport_now(false);
-            else
-                you_teleport_now(false, false, teleportitis_level * 5);
-        }
+            you_teleport_now(false, true);
         else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80)
                  && (!map_masked(you.pos(), MMT_VAULT) || one_chance_in(3)))
         {
-            you_teleport_now(false); // to new area of the Abyss
+            you_teleport_now(); // to new area of the Abyss
 
             // It's effectively a new level, make a checkpoint save so eventual
             // crashes lose less of the player's progress (and fresh new bad
@@ -1374,30 +1348,35 @@ void player_reacts()
     if (grd(you.pos()) == DNGN_LAVA)
         expose_player_to_element(BEAM_LAVA);
 
+    // Handle starvation before subtracting hunger for this turn (including
+    // hunger from the berserk duration) and before monsters react, so you
+    // always get a turn (though it may be a delay or macro!) between getting
+    // the Fainting light and actually fainting.
+    handle_starvation();
+
+    _decrement_durations();
+
+    // Translocations and possibly other duration decrements can
+    // escape a player from beholders and fearmongers. These should
+    // update after.
     you.update_beholders();
     you.update_fearmongers();
 
-    _decrement_durations();
     you.handle_constriction();
 
     // increment constriction durations
     you.accum_has_constricted();
 
-    int capped_time = you.time_taken;
-    if (you.walking && capped_time > BASELINE_DELAY)
-        capped_time = BASELINE_DELAY;
-
-    int food_use = player_hunger_rate();
-    food_use = div_rand_round(food_use * capped_time, BASELINE_DELAY);
-
+    const int food_use = div_rand_round(player_hunger_rate() * you.time_taken,
+                                        BASELINE_DELAY);
     if (food_use > 0 && you.hunger > 0)
         make_hungry(food_use, true);
 
-    _regenerate_hp_and_mp(capped_time);
+    _regenerate_hp_and_mp(you.time_taken);
 
-    dec_disease_player(capped_time);
+    dec_disease_player(you.time_taken);
     if (you.duration[DUR_POISONING])
-        handle_player_poison(capped_time);
+        handle_player_poison(you.time_taken);
 
     recharge_rods(you.time_taken, false);
 
@@ -1406,9 +1385,7 @@ void player_reacts()
         discover_mimic(*ai);
 
     // Player stealth check.
-    seen_monsters_react();
-
-    update_stat_zero();
+    seen_monsters_react(stealth);
 
     // XOM now ticks from here, to increase his reaction time to tension.
     if (you_worship(GOD_XOM))

@@ -177,7 +177,7 @@ Summonings deals with summoning creatures from another plane of reality to join
 your army or distract your foes. Increasing Summonings skill may have a number
 of effects depending on the spell, such as longer duration, more powerful
 allies, or lower chances of creating hostile creatures. Note that summoned
-beings don't leave corpses and don't give experience when killed, and their
+beings do not leave corpses and give no experience when killed, and their
 equipment is as ephemeral as they are.
 
 Being skilled in Summonings increases the success rate and spell power of
@@ -275,17 +275,18 @@ in these schools.
 %%%%
 Invocations
 
-Your Invocations skill affects the likelihood that an attempt to use a divine
-ability will be successful, and often the power of such abilities.
+Your Invocations skill affects the likelihood that an attempt to use divine
+abilities with certain gods will be successful, and often the power of such
+abilities.
 
 The Invocations skill also affects your magical reserves, but to a lesser
 degree than the Spellcasting skill, and only the highest contribution is used.
 %%%%
 Evocations
 
-Evocations is all about using magical items like wands, decks or other uncommon
-objects. The higher your skill, the more likely a positive outcome is when
-evoking items. High skill may also let you determine the amount of charges a
+Evocations skill affects your ability to use magical items like wands, rods,
+decks or other uncommon objects. High skill may increase the power or success
+rate of such items, and may also let you determine the amount of charges a
 zapped wand has left.
 
 The Evocations skill also affects your magical reserves, but to a lesser degree

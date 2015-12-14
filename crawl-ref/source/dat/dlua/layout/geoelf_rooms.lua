@@ -16,7 +16,7 @@ require("dlua/layout/geoelf_glyphs.lua")
 -- The room mirror states
 --
 -- Rooms can be mirrored in three directions, for a total of 8
---  possible combinations.  The D indicates mirroring diagonally
+--  possible combinations. The D indicates mirroring diagonally
 --  (i,e, swapping x and y).
 --
 
@@ -34,18 +34,18 @@ geoelf.rooms.mirror.DXY  = 7
 -- The room shapes
 --
 -- The passage requirements mean that square, diamond, and
---  cross rooms can only rarely be placed.  They get a high
---  weight so they still appear on the map.  This is especially
+--  cross rooms can only rarely be placed. They get a high
+--  weight so they still appear on the map. This is especially
 --  important for diamond, because it has to compete with the
 --  hexagon room shapes.
 --
 -- The direction for the triangle indicates which way the apex
---  points.  The base is on the opposite side
+--  points. The base is on the opposite side
 --
 -- The directions for the hexagons indicate which direction the
 --  flat sides face.
 --
--- Octagons always fit, so they get a low weight.  However,
+-- Octagons always fit, so they get a low weight. However,
 --  they still appear quite frequently because they serve as a
 --  de facto default room shape.
 --
@@ -255,7 +255,7 @@ geoelf.rooms.shape.MIRRORINGS =
 --         cause nil values next time the cell is analyzed
 --
 -- The array also has a size field, which is the maximum index
---  (positive or negative).  All elements in the square defined
+--  (positive or negative). All elements in the square defined
 --  by this value are set.
 --
 
@@ -478,7 +478,7 @@ end
 --
 -- Functions to draw rooms of specific shapes
 --
--- There are also supposrt functions to make fancy rooms.  These
+-- There are also supposrt functions to make fancy rooms. These
 --  are not subvaults because the layout may need to modify the
 --  rooms later.
 --
@@ -497,13 +497,13 @@ end
 --   -2 0 2
 --   x index
 --
--- The room is always a square centered on [0][0].  The room contents
+-- The room is always a square centered on [0][0]. The room contents
 --  are always bordered with ROOM_OUTLINE (including diagonals),
---  which is always bordered with ROOM_OUTLINE.  The extra space
+--  which is always bordered with ROOM_OUTLINE. The extra space
 --  is padded with UNCHANGED.
 --
--- No room actually uses the outside corners.  The square and
---  triangle would, but have been reduced in size.  In both
+-- No room actually uses the outside corners. The square and
+--  triangle would, but have been reduced in size. In both
 --  cases, this is desirable for other reasons.
 --
 

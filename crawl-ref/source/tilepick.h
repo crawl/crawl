@@ -37,7 +37,7 @@ tileidx_t tileidx_item(const item_info &item);
 tileidx_t tileidx_item_throw(const item_info &item, int dx, int dy);
 tileidx_t tileidx_known_base_item(tileidx_t label);
 
-tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance = false);
+tileidx_t tileidx_cloud(const cloud_info &cl);
 tileidx_t tileidx_bolt(const bolt &bolt);
 tileidx_t vary_bolt_tile(tileidx_t tile, int dist);
 tileidx_t tileidx_zap(int colour);
@@ -52,7 +52,7 @@ tileidx_t tileidx_corpse_brand(const item_def &item);
 
 tileidx_t tileidx_unseen_flag(const coord_def &gc);
 
-// Return the level of enchantment as an int.  None is 0, Randart is 4.
+// Return the level of enchantment as an int. None is 0, Randart is 4.
 int enchant_to_int(const item_def &item);
 // If tile has variations, select among them based upon the enchant of item.
 tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile,

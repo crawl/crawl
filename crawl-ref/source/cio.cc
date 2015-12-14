@@ -141,6 +141,42 @@ void nowrap_eol_cprintf(const char *s, ...)
     cprintf("%s", chop_string(buf, max(wrapcol + 1 - wherex(), 0), false).c_str());
 }
 
+static void wrapcprint_skipping(int skiplines, int wrapcol, const string &buf)
+{
+    ASSERT(skiplines >= 0);
+
+    const GotoRegion region = get_cursor_region();
+    const int max_y = cgetsize(region).y;
+
+    size_t linestart = 0;
+    size_t len = buf.length();
+
+    while (linestart < len)
+    {
+        const coord_def pos = cgetpos(region);
+
+        const int avail = wrapcol - pos.x + 1;
+        if (avail > 0)
+        {
+            const string line = chop_string(buf.c_str() + linestart, avail, false);
+            linestart += line.length();
+            if (skiplines == 0)
+                cprintf("%s", line.c_str());
+        }
+
+        // No room for more lines, quit now.
+        if (pos.y >= max_y)
+            break;
+        if (linestart < len)
+        {
+            // Only advance the cursor line if we printed something.
+            cgotoxy(1, pos.y + (skiplines ? 0 : 1), region);
+        }
+        if (skiplines)
+            --skiplines;
+    }
+}
+
 // cprintf that knows how to wrap down lines
 static void wrapcprintf(int wrapcol, const char *s, ...)
 {
@@ -148,23 +184,7 @@ static void wrapcprintf(int wrapcol, const char *s, ...)
     va_start(args, s);
     string buf = vmake_stringf(s, args);
     va_end(args);
-
-    const GotoRegion region = get_cursor_region();
-    const int max_y = cgetsize(region).y;
-    while (!buf.empty())
-    {
-        const coord_def pos = cgetpos(region);
-
-        const int avail = wrapcol - pos.x + 1;
-        if (avail > 0)
-            cprintf("%s", wordwrap_line(buf, avail).c_str());
-
-        // No room for more lines, quit now.
-        if (pos.y >= max_y)
-            break;
-        if (!buf.empty())
-            cgotoxy(1, pos.y + 1, region);
-    }
+    wrapcprint_skipping(0, wrapcol, buf);
 }
 
 int cancellable_get_line(char *buf, int len, input_history *mh,
@@ -283,6 +303,27 @@ void line_reader::cursorto(int ncx)
 {
     int x = (start.x + ncx - 1) % wrapcol + 1;
     int y = start.y + (start.x + ncx - 1) / wrapcol;
+
+    if (y < 1)
+    {
+        // Cursor would go above the visible area. "Scroll" backwards so that
+        // it goes on the top line, and redraw.
+        start.y += 1 - y;
+        const int skip = max(0, 1 - start.y);
+        // If the beginning of the buffer becomes visible, paint over
+        // the place where the prompt used to be. FIXME: It would be nice
+        // to remember and display the visible part of the prompt.
+        if (skip == 0)
+        {
+            cgotoxy(1, start.y + skip, region);
+            cprintf("%*s", start.x - 1, "");
+        }
+        else
+            cgotoxy(start.x, start.y + skip, region);
+        wrapcprint_skipping(skip, wrapcol, buffer);
+        y = 1;
+    }
+
     int diff = y - cgetsize(region).y;
     if (diff > 0)
     {
@@ -291,8 +332,11 @@ void line_reader::cursorto(int ncx)
         cscroll(diff, region);
         start.y -= diff;
         y -= diff;
-        cgotoxy(start.x, start.y, region);
-        wrapcprintf(wrapcol, "%s", buffer);
+
+        const int skip = max(0, 1 - start.y);
+
+        cgotoxy(start.x, start.y + skip, region);
+        wrapcprint_skipping(skip, wrapcol, buffer);
     }
     cgotoxy(x, y, region);
 }
@@ -444,7 +488,9 @@ void line_reader::backspace()
 
     cursorto(pos);
     buffer[length] = 0;
-    wrapcprintf(wrapcol, "%s ", cur);
+    // Two spaces in case we deleted a double-width character, or
+    // caused a double-width character to move back a line.
+    wrapcprintf(wrapcol, "%s  ", cur);
     cursorto(pos);
 }
 
@@ -526,13 +572,16 @@ int line_reader::process_key(int ch)
     CASE_ESCAPE
         return CK_ESCAPE;
     case CK_UP:
+    case CONTROL('P'):
     case CK_DOWN:
+    case CONTROL('N'):
     {
         if (!history)
             break;
 
-        const string *text = (ch == CK_UP) ? history->prev()
-                                           : history->next();
+        const string *text = (ch == CK_UP || ch == CONTROL('P'))
+                             ? history->prev()
+                             : history->next();
 
         if (text)
         {
@@ -573,18 +622,21 @@ int line_reader::process_key(int ch)
         break;
     }
     case CK_DELETE:
+    case CONTROL('D'):
         if (*cur)
         {
-            char *np = next_glyph(cur);
+            const char *np = next_glyph(cur);
             ASSERT(np);
-            char *c = cur;
-            while (*np)
-                *c++ = *np++;
-            length = np - buffer;
+            const size_t del_bytes = np - cur;
+            const size_t follow_bytes = (buffer + length) - np;
+            // Copy the NUL too.
+            memmove(cur, np, follow_bytes + 1);
+            length -= del_bytes;
 
             cursorto(pos);
-            buffer[length-1] = 0;
-            wrapcprintf(wrapcol, "%s ", cur);
+            // Two spaces in case we deleted a double-width character, or
+            // caused a double-width character to move back a line.
+            wrapcprintf(wrapcol, "%s  ", cur);
             cursorto(pos);
         }
         break;
@@ -602,6 +654,7 @@ int line_reader::process_key(int ch)
         break;
 
     case CK_LEFT:
+    case CONTROL('B'):
         if (char *np = prev_glyph(cur, buffer))
         {
             cur = np;
@@ -610,6 +663,7 @@ int line_reader::process_key(int ch)
         }
         break;
     case CK_RIGHT:
+    case CONTROL('F'):
         if (char *np = next_glyph(cur))
         {
             cur = np;

@@ -73,7 +73,7 @@ class ColumnLayout : public ProceduralLayout
         }
 
         ProceduralSample operator()(const coord_def &p,
-            const uint32_t offset = 0) const;
+            const uint32_t offset = 0) const override;
     private:
         int _col_width, _col_space, _row_width, _row_space;
 };
@@ -83,7 +83,7 @@ class DiamondLayout : public ProceduralLayout
     public:
         DiamondLayout(int _w, int _s) : w(_w) , s(_s) { }
         ProceduralSample operator()(const coord_def &p,
-            const uint32_t offset = 0) const;
+            const uint32_t offset = 0) const override;
     private:
         uint32_t w, s;
 };
@@ -97,7 +97,7 @@ class WorleyLayout : public ProceduralLayout
             const float _scale = 2.0) :
             seed(_seed), layouts(_layouts), scale(_scale) {}
         ProceduralSample operator()(const coord_def &p,
-            const uint32_t offset = 0) const;
+            const uint32_t offset = 0) const override;
     private:
         const uint32_t seed;
         const vector<const ProceduralLayout*> layouts;
@@ -116,7 +116,7 @@ class ChaosLayout : public ProceduralLayout
         ChaosLayout(uint32_t _seed, uint32_t _density = 450) :
             seed(_seed), baseDensity(_density) {}
         ProceduralSample operator()(const coord_def &p,
-            const uint32_t offset = 0) const;
+            const uint32_t offset = 0) const override;
     private:
         const uint32_t seed;
         const uint32_t baseDensity;
@@ -129,7 +129,7 @@ class RoilingChaosLayout : public ProceduralLayout
         RoilingChaosLayout(uint32_t _seed, uint32_t _density = 450) :
             seed(_seed), density(_density) {}
         ProceduralSample operator()(const coord_def &p,
-            const uint32_t offset = 0) const;
+            const uint32_t offset = 0) const override;
     private:
         const uint32_t seed;
         const uint32_t density;
@@ -141,7 +141,7 @@ class WastesLayout : public ProceduralLayout
     public:
         WastesLayout() { };
         ProceduralSample operator()(const coord_def &p,
-            const uint32_t offset = 0) const;
+            const uint32_t offset = 0) const override;
 };
 
 class RiverLayout : public ProceduralLayout
@@ -150,7 +150,7 @@ class RiverLayout : public ProceduralLayout
         RiverLayout(uint32_t _seed, const ProceduralLayout &_layout) :
             seed(_seed), layout(_layout) {}
         ProceduralSample operator()(const coord_def &p,
-            const uint32_t offset = 0) const;
+            const uint32_t offset = 0) const override;
     private:
         const uint32_t seed;
         const ProceduralLayout &layout;
@@ -162,7 +162,7 @@ class NewAbyssLayout : public ProceduralLayout
     public:
         NewAbyssLayout(uint32_t _seed) : seed(_seed) {}
         ProceduralSample operator()(const coord_def &p,
-            const uint32_t offset = 0) const;
+            const uint32_t offset = 0) const override;
     private:
         const uint32_t seed;
 };
@@ -175,7 +175,7 @@ class LevelLayout : public ProceduralLayout
         LevelLayout(level_id id, uint32_t _seed,
             const ProceduralLayout &_layout);
         ProceduralSample operator()(const coord_def &p,
-            const uint32_t offset = 0) const;
+            const uint32_t offset = 0) const override;
     private:
         feature_grid grid;
         uint32_t seed;
@@ -194,7 +194,7 @@ class ClampLayout : public ProceduralLayout
         ClampLayout(const ProceduralLayout &_layout, int _clamp, bool _bursty) :
             layout(_layout), clamp(_clamp), bursty(_bursty) {}
         ProceduralSample operator()(const coord_def &p,
-            const uint32_t offset = 0) const;
+            const uint32_t offset = 0) const override;
     private:
         const ProceduralLayout &layout;
         const int clamp;
@@ -208,7 +208,7 @@ class NoiseLayout : public ProceduralLayout
 {
     public:
         NoiseLayout() { };
-        ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
+        ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const override;
 
     protected:
         double _optimum_range(const double val, const double rstart, const double rend) const;
@@ -219,14 +219,14 @@ class ForestLayout : public NoiseLayout
 {
     public:
         ForestLayout() { };
-        ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
+        ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const override;
 };
 
 class UnderworldLayout : public NoiseLayout
 {
     public:
         UnderworldLayout() { };
-        ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
+        ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const override;
 };
 
 // ProceduralFunctions abstract a noise calculation for x,y,z coordinates (which could
@@ -235,6 +235,7 @@ class UnderworldLayout : public NoiseLayout
 class ProceduralFunction
 {
     public:
+        // Not virtual!
         double operator()(const coord_def &p, const uint32_t offset) const;
         double operator()(double x, double y, double z) const;
 };

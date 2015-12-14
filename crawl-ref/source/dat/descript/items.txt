@@ -34,8 +34,7 @@ This amulet enables its wearer to attempt to enter a state of berserk rage.
 %%%%
 amulet of regeneration
 
-This amulet greatly increases the recuperative powers of its wearer, but also
-considerably speeds their metabolism while doing so.
+This amulet greatly increases the recuperative powers of its wearer.
 %%%%
 amulet of resist corrosion
 
@@ -95,36 +94,6 @@ A large war axe with a formidable double-sided head.
 beef jerky
 
 A strip of preserved dead cow or bull.
-%%%%
-blessed double sword
-
-A magical weapon with two razor-sharp blades, enhanced by the Shining One's
-power.
-%%%%
-blessed triple sword
-
-A magical weapon with three great razor-sharp blades, enhanced by the Shining
-One's power.
-%%%%
-blessed falchion
-
-A long single-edged sword with a slightly curved blade. It has been enhanced by
-the Shining One's power.
-%%%%
-blessed great sword
-
-A sword with a very long, heavy blade and a long handle. It has been enhanced
-by the Shining One's power.
-%%%%
-blessed long sword
-
-A sword with a long, slashing blade. It has been enhanced by the Shining One's
-power.
-%%%%
-blessed scimitar
-
-A long sword with a wide, curved blade. It has been enhanced by the Shining
-One's power.
 %%%%
 blowgun
 
@@ -196,12 +165,6 @@ book of conjurations
 
 A book containing an introduction to the destructive magical arts of
 Conjurations. It shudders with barely-contained power when it is opened.
-%%%%
-book of control
-
-A book of magic spells for controlling minds, bodies, and even space. Those who
-browse it sometimes find it hard to take their minds off the sigils and runes
-inside.
 %%%%
 book of death
 
@@ -362,8 +325,9 @@ its parchment pages sometimes twitch and shudder on their own.
 box of beasts
 
 A box filled with the bizarre leftovers of a depraved wizard's magical
-experimentations. Opening it might set loose a friendly chimera: a mythical
-hybrid composed from the parts of three separate beasts.
+experimentations. Opening it might set loose a friendly mutant beast: bizarre
+creatures, each with their own combination of traits. Increased skill with
+Evocations will allow stronger beasts to be released.
 %%%%
 bread ration
 
@@ -406,13 +370,15 @@ dispute resolution.
 %%%%
 corpse
 
-A corpse. You can butcher it to produce edible meat chunks.
+A corpse. You can butcher it to produce chunks of meat.
 %%%%
 crystal ball of energy
 
-A magical device which can be used to restore one's reserves of magical energy,
-but the use of which carries the risk of draining all of those energies
-completely. It is more likely to fail when already low on magical energy.
+A magical device which can be used to restore magical energy, with its
+effectiveness increasing with Evocations skill. However, it may fail and drain
+all of those energies completely, or cause other negative mental effects. When
+used with low reserves of magic it becomes increasingly likely to deplete those
+reserves.
 %%%%
 crystal plate armour
 
@@ -451,7 +417,7 @@ A deck of magical cards, mainly dealing with various forms of escape.
 %%%%
 deck of oddities
 
-A deck of magical cards, which have the strangest tendency to get mixed in with
+A deck of magical cards that have the strangest tendency to get mixed in with
 other decks.
 %%%%
 deck of punishment
@@ -533,6 +499,12 @@ A collection of spells once used by the great swamp civilizations. Their towers
 have crumbled and decayed, but this book remains, pages flecked with peat
 and moss.
 %%%%
+figurine of a ziggurat
+
+A small figurine made of some strange material, shaped like a stepped pyramid.
+It's remarkably detailed - almost like a real, vast structure, shrunk somehow
+smaller than a human hand.
+%%%%
 fire dragon armour
 
 Armour made from the scales of a fire-breathing dragon. It provides great
@@ -607,10 +579,6 @@ halberd
 A polearm consisting of an axe blade topped with a spike, mounted on a long
 shaft.
 %%%%
-hammer
-
-A large hammer with a spiked head.
-%%%%
 hand axe
 
 A small axe.
@@ -651,6 +619,10 @@ ice dragon hide
 The scaly skin of a cold-breathing dragon. It can be fashioned into proper
 armour, but even in its raw form it provides great protection from the effects
 of cold while rendering its wearer susceptible to fire.
+%%%%
+inedible chunk of flesh
+
+<chunk of flesh>
 %%%%
 iron rod
 
@@ -694,8 +666,7 @@ A very large and very heavy stone. {{
    then
        return ""
    else
-       return "Exceptional strength is needed even to carry one, and " ..
-              "only large creatures are capable of throwing it."
+       return "Only large creatures are capable of throwing it."
    end
 }}
 %%%%
@@ -808,7 +779,7 @@ resistance to negative energies.
 pearl dragon hide
 
 The hide of a pearl dragon, covered in iridescent nacreous scales. In its raw
-form it does not provide much protection, beyond resistance to negative energy.
+form it does not provide much protection beyond resistance to negative energy.
 By magical means, however, it may be used to make excellent armour.
 %%%%
 phantom mirror
@@ -828,10 +799,6 @@ plate armour
 
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
 and greaves. It provides excellent protection.
-%%%%
-poisonous chunk of flesh
-
-<chunk of flesh>
 %%%%
 potion of agility
 
@@ -863,14 +830,8 @@ one who drinks it.
 %%%%
 potion of cancellation
 
-A potion which ends most magical effects, good or bad, affecting you.
-%%%%
-# if TAG_MAJOR_VERSION == 34
-potion of coagulated blood
-
-A potion containing the essence of life. Vampires find it... vital. The blood
-within won't be palatable for much longer.
-# endif
+A potion which ends most magical effects, good or bad, affecting you. It also
+reduces your level of magical contamination.
 %%%%
 potion of cure mutation
 
@@ -879,13 +840,8 @@ you.
 %%%%
 potion of curing
 
-A potion which heals some wounds, clears the mind and cures diseases. If it is
-used when one is at or near full health, it can also slightly repair rotting.
-%%%%
-potion of decay
-
-A vile and putrid cursed liquid which causes your flesh to decay before your
-very eyes.
+A potion which heals some wounds, clears the mind and cures poison and disease.
+It can also slightly repair rotting.
 %%%%
 potion of degeneration
 
@@ -902,8 +858,7 @@ A potion which confers great buoyancy on one who consumes it.
 potion of heal wounds
 
 A magical healing elixir which causes wounds to close and heal almost
-instantly. If it is used when one is at or near full health, it can also repair
-rotting.
+instantly. It can also repair rotting.
 %%%%
 potion of invisibility
 
@@ -932,31 +887,14 @@ potion of poison
 
 A nasty poisonous liquid.
 %%%%
-potion of porridge
-
-A filling potion of sludge, high in cereal fibre.
-%%%%
 potion of resistance
 
 A potion which grants you temporary resistance to a variety of harmful effects:
 fire, cold, electricity, poison, and acid.
 %%%%
-potion of restore abilities
-
-A potion which restores the abilities of one who drinks it. It may also be used
-to restore breath after using a breath weapon.
-%%%%
-potion of slowing
-
-A potion which slows your actions.
-%%%%
 potion of haste
 
 An enchanted beverage which speeds the actions of anyone who drinks it.
-%%%%
-putrefying chunk of flesh
-
-<chunk of flesh>
 %%%%
 quad damage
 
@@ -979,8 +917,8 @@ beyond its current form.
 quicksilver dragon hide
 
 The sinuous hide of a quicksilver dragon, covered in mercurial scales. In its
-raw form it does not provide much protection, but with magical means, it may
-be used to make excellent armour.
+raw form it does not provide much protection beyond resistance to hostile
+enchantments, but with magical means, it may be used to make excellent armour.
 %%%%
 quick blade
 
@@ -1044,10 +982,6 @@ ring of magical power
 
 This ring increases its wearer's reserves of magical power.
 %%%%
-ring of obsoleteness
-
-Sadly, this item seems to have been removed!
-%%%%
 ring of poison resistance
 
 This ring provides protection from the effects of poisons and venom.
@@ -1092,23 +1026,16 @@ ring of strength
 This ring increases or decreases the physical strength of its wearer, to a
 degree dependent on its power.
 %%%%
-ring of sustain abilities
+ring of sustain attributes
 
 This ring protects its wearer from the loss of their strength, dexterity and
 intelligence.
 %%%%
-ring of teleport control
-
-This ring can be evoked to allow its wearer to control the destination of a
-teleport or blink, although without perfect accuracy. Trying to teleport into a
-solid object will result in a random teleportation. Be wary that controlled
-translocations will contaminate the subject with residual magical energy, and
-that controlled teleports will take longer to trigger than uncontrolled ones.
-%%%%
 ring of teleportation
 
-This ring occasionally exerts its power to randomly translocate its wearer to
-another place, and can be deliberately activated for the same effect.
+This ring occasionally exerts its power to teleport its wearer into the
+vicinity of nearby monsters. It can also be deliberately evoked to randomly
+teleport the wearer.
 %%%%
 ring of wizardry
 
@@ -1196,12 +1123,9 @@ contaminated with magical energy.
 %%%%
 scroll of brand weapon
 
-This scroll enchants an unbranded weapon so as to make it far more effective
-at inflicting harm on its wielder's enemies. The scroll can also be used on a
-weapon that is already permanently branded to randomly select a new brand.
-
-Unlike temporary branding spells, this scroll causes no ill effects if the
-reader uses it to change the brand of a weapon of distortion.
+This scroll imbues a weapon with a random brand, such as flame, freezing, or
+venom. Any existing brand will be replaced. Blowguns and artefacts cannot be
+branded in this way.
 %%%%
 scroll of curse armour
 
@@ -1220,16 +1144,18 @@ scroll of enchant armour
 This scroll places an enchantment on a piece of armour. Body armour and
 bardings can be enchanted up to the same value as their base AC. Bucklers,
 shields and large shields can be enchanted up to +3, +5 or +8 respectively, and
-other armour can be enchanted up to +2. Magical artefacts cannot be enchanted
-at all.
+other armour can be enchanted up to +2. The scroll also removes any curse on the
+item. Magical artefacts cannot be enchanted at all, though a curse may be
+removed in this fashion.
 
 It can also be used to enchant the hides of certain exotic creatures.
 %%%%
 scroll of enchant weapon
 
 This scroll places an enchantment on a weapon chosen by the reader, increasing
-both accuracy and damage. Weapons can be enchanted up to +9. Magical artefacts
-cannot be enchanted at all.
+both accuracy and damage. Weapons can be enchanted up to +9. The scroll also
+removes any curse on the item. Magical artefacts cannot be enchanted at all,
+though a curse may be removed in this fashion.
 %%%%
 scroll of fear
 
@@ -1242,7 +1168,7 @@ This scroll surrounds the reader with a dense cloud of fog.
 scroll of holy word
 
 This scroll calls on the good gods to cause great damage to any nearby undead
-or demonic creature — possibly including you! It will briefly stun monsters
+or demonic creature — possibly including you! It will briefly daze monsters
 that are affected.
 %%%%
 scroll of identify
@@ -1403,9 +1329,7 @@ This staff provides an increased reservoir of magical power to its wielder.
 staff of summoning
 
 This staff increases the power of summonings cast by its wielder, and wards
-them from the attacks of summoned creatures. If the wielder is skilled in
-Evocations and Summonings, they can attempt to dismiss summoned creatures that
-they strike.
+them from the attacks of summoned creatures.
 %%%%
 staff of wizardry
 
@@ -1487,10 +1411,6 @@ tomahawk
 
 An small, axe-like item designed for throwing.
 %%%%
-tome of obsoleteness
-
-Sadly, this item has been removed.
-%%%%
 trident
 
 A fishing spear improved with a longer shaft and a three-pronged metal head.
@@ -1520,7 +1440,7 @@ may be turned into armour by magical means.
 troll leather armour
 
 Armour made from the stiff and knobbly skin of a common troll. It magically
-regenerates its wearer's flesh at a fairly slow rate (unless already a troll).
+regenerates its wearer's flesh.
 %%%%
 wand of cold
 
@@ -1618,6 +1538,12 @@ whip
 A long plaited strip of leather. Originally developed for use in disagreements
 with cattle, this simple weapon is now widely used to settle differences
 between all sorts of creatures.
+%%%%
+piece from Xom's chessboard
+
+A shimmering multi-coloured chesspiece belonging to Xom, god of chaos. Moving
+it in the presence of other creatures will invite Xom to take a turn in some
+cosmic game. A bad move may instead incur Xom's displeasure.
 %%%%
 young poisoner's handbook
 

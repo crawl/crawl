@@ -164,7 +164,7 @@ ENDMAP
 # This could probably use some randomization.
 NAME:    david_lair_generic
 TAGS:    lair_entry
-MONS:    crocodile / sheep, goliath beetle
+MONS:    crocodile / sheep, nothing
 MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
 MONS:    elephant
 SHUFFLE: 12
@@ -239,7 +239,7 @@ MONS:   plant, oklob plant / w:50 plant
 : elseif you.absdepth() >= 10 then
 MONS:   plant, oklob plant / w:150 plant
 : else
-MONS:   fungus, wandering mushroom / w:50 fungus
+MONS:   fungus, plant
 :end
 SUBST:  ? = 2.
 KFEAT:  O = enter_lair
@@ -255,31 +255,6 @@ MAP
 ....x...x....
 ..x.......x..
 ...xxxxxxx...
-ENDMAP
-
-##############################################################################
-# A boring Lair entry vault.
-#
-NAME: erik_lair_boring
-TAGS: lair_entry
-WEIGHT: 5
-MONS: generate_awake boring beetle, rat
-# Rats are boring.
-ORIENT: float
-SUBST: ? = c x $ '
-KFEAT: O = enter_lair
-NSUBST: 1 = 1:1 / * = 12.
-KPROP: '$ = no_rtele_into
-MAP
-xxxxxxxxx?xxxx
-xxxxxx?xxxx?xx
-?xx?xxxxxxx?xx
-xxxxxx111xxx.x
-?xxxxx1O1.x.?@
-xxx??x111x.x?x
-xxxxxxxx??xxxx
-x?xxxx?xxxxx?x
-xxxxxxxxx?xxxx
 ENDMAP
 
 ##############################################################################
@@ -664,7 +639,7 @@ TAGS:   no_monster_gen
 MONS:   ice dragon
 MONS:   w:9 white imp/w:1 nothing
 MONS:   white imp
-KPROP:  _` = no_rtele_into
+KPROP:  _` = no_tele_into
 SUBST:  ! = $:3 *:2
 SUBST:  ' = w:15 x:12 `:1
 SUBST:  ; = x:2 .:3
@@ -757,7 +732,7 @@ DEPTH:  Lair
 ORIENT: north
 MONS:   black mamba / spiny frog / wolf spider
 MONS:   basilisk / komodo dragon / wasp
-MONS:   giant mite / adder
+MONS:   adder
 MONS:   plant / fungus w:2 / bush w:1, bush
 SUBST:  4 = 444. 5:2, . = ...4 5:2
 SUBST:  1 = 1., 2 = 2., 3 = 3.
@@ -1669,7 +1644,7 @@ ENDMAP
 
 ## A den of bears.
 NAME:   gammafunk_lair_bear_cave
-DEPTH:  Lair:1-7
+DEPTH:  Lair, !Lair:$
 ORIENT: float
 TAGS:   patrolling no_monster_gen
 MONS:   black bear / polar bear
@@ -2004,7 +1979,7 @@ TAGS: transparent patrolling
 DEPTH: Lair
 MONS: plant / bush
 SUBST: t = t..
-KPROP: * = no_rtele_into
+KPROP: * = no_tele_into
 MAP
  tt@@@tt
 t.......t
@@ -2472,7 +2447,7 @@ KITEM:  U = superb_item
 KITEM:  Q = acquire any
 MARKER: S = lua:MonPropsMarker:new { anaconda_guard="anaconda_guard" }
 KFEAT:  o = granite_statue
-KPROP:  U = no_rtele_into
+KPROP:  U = no_tele_into
 {{
 function elephant_statue()
   return
@@ -2521,7 +2496,7 @@ PLACE:   Lair:$
 TAGS:    no_pool_fixup no_wall_fixup no_monster_gen no_rotate
 ORIENT:  southeast
 MONS:    hydra / fire drake / dire elephant
-MONS:    red devil / blue devil w:15 / orange demon w:15 / hell hound w:5
+MONS:    red devil / ice devil w:15 / orange demon w:15 / hell hound w:5
 MONS:    hellwing, sun demon, sixfirhy, smoke demon, hell beast
 KMONS:   8 = wizard
 # add no_pickup to acquire_any whenever that works; loot is too easily missed
@@ -2573,7 +2548,7 @@ PLACE:   Lair:$
 TAGS:    no_wall_fixup no_monster_gen no_rotate
 ORIENT:  southeast
 MONS:    plant
-MONS:    torpor snail, worm, brain worm
+MONS:    torpor snail, worm, worm / giant leech
 MONS:    giant leech, lindwurm, fire dragon / ice dragon
 KMONS:   8 = wasp
 SHUFFLE: ABC
@@ -2872,7 +2847,7 @@ KMONS:   0 = blink frog
 KMONS:   A = spiny frog
 KMONS:   B = black mamba
 # beetles/worms
-KMONS:   C = boring beetle
+KMONS:   C = giant leech
 KMONS:   D = torpor snail
 KMONS:   E = boulder beetle
 KMONS:   F = lindwurm
@@ -2988,7 +2963,7 @@ NAME:    hangedman_lair_tendril_chambers
 PLACE:   Lair:$
 ORIENT:  float
 MONS:    worker ant w:16 / adder w:24 / river rat w:2
-MONS:    water moccasin / spider w:6, wasp / wyvern w:6
+MONS:    water moccasin / wasp w:6, wasp / wyvern w:6
 MONS:    spiny frog, black mamba, hornet / redback w:5, wolf spider
 KMONS:   8 = guardian serpent
 KMONS:   f = fungus

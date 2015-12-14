@@ -81,7 +81,7 @@ void debug_dump_levgen()
     if (!env.level_vaults.empty())
     {
         mpr("Level vaults:");
-        for (const vault_placement* vault : env.level_vaults)
+        for (auto &vault : env.level_vaults)
         {
             string vault_name = vault->map.name.c_str();
             if (vault->map.subvault_places.size())
@@ -316,7 +316,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
     }
 
     fprintf(stderr, "attitude: %d, behaviour: %d, number: %d, flags: 0x%" PRIx64"\n",
-            mon->attitude, mon->behaviour, mon->number, mon->flags);
+            mon->attitude, mon->behaviour, mon->number, mon->flags.flags);
 
     fprintf(stderr, "colour: %d, foe_memory: %d, shield_blocks:%d, "
                   "experience: %u\n",

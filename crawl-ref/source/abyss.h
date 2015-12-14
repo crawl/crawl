@@ -10,6 +10,7 @@
 // plus a little extra so that the player won't be disoriented by taking a
 // step backward after an abyss shift.
 const int ABYSS_AREA_SHIFT_RADIUS = LOS_RADIUS + 2;
+const int ABYSSAL_RUNE_MIN_LEVEL = 3;
 extern const coord_def ABYSS_CENTRE;
 
 struct abyss_state
@@ -26,7 +27,7 @@ extern abyss_state abyssal_state;
 
 void abyss_morph();
 
-void banished(const string &who = "");
+void banished(const string &who = "", const int power = 0);
 void push_features_to_abyss();
 
 void generate_abyss();

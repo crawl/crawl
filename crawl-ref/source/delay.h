@@ -23,35 +23,39 @@ enum activity_interrupt_payload_type
 struct activity_interrupt_data
 {
     activity_interrupt_payload_type apt;
-    const void *data;
+    union
+    {
+        const char* string_data;
+        const int*  int_data;
+        const ait_hp_loss* ait_hp_loss_data;
+        monster* mons_data;
+        nullptr_t no_data;
+    };
+
     seen_context_type context;
 
     activity_interrupt_data()
-        : apt(AIP_NONE), data(nullptr), context(SC_NONE)
+        : apt(AIP_NONE), no_data(nullptr), context(SC_NONE)
     {
     }
     activity_interrupt_data(const int *i)
-        : apt(AIP_INT), data(i), context(SC_NONE)
+        : apt(AIP_INT), int_data(i), context(SC_NONE)
     {
     }
     activity_interrupt_data(const char *s)
-        : apt(AIP_STRING), data(s), context(SC_NONE)
+        : apt(AIP_STRING), string_data(s), context(SC_NONE)
     {
     }
     activity_interrupt_data(const string &s)
-        : apt(AIP_STRING), data(s.c_str()), context(SC_NONE)
+        : apt(AIP_STRING), string_data(s.c_str()), context(SC_NONE)
     {
     }
-    activity_interrupt_data(const monster* m, seen_context_type ctx = SC_NONE)
-        : apt(AIP_MONSTER), data(m), context(ctx)
+    activity_interrupt_data(monster* m, seen_context_type ctx = SC_NONE)
+        : apt(AIP_MONSTER), mons_data(m), context(ctx)
     {
     }
     activity_interrupt_data(const ait_hp_loss *ahl)
-        : apt(AIP_HP_LOSS), data(ahl), context(SC_NONE)
-    {
-    }
-    activity_interrupt_data(const activity_interrupt_data &a)
-        : apt(a.apt), data(a.data), context(a.context)
+        : apt(AIP_HP_LOSS), ait_hp_loss_data(ahl), context(SC_NONE)
     {
     }
 };
@@ -70,11 +74,12 @@ void stop_delay(bool stop_stair_travel = false, bool force_unsafe = false);
 bool you_are_delayed();
 delay_type current_delay_action();
 void handle_delay();
-void finish_last_delay();
 
 bool delay_is_run(delay_type delay);
 bool is_being_drained(const item_def &item);
+bool is_being_butchered(const item_def &item, bool just_first = true);
 bool is_vampire_feeding();
+bool is_butchering();
 bool player_stair_delay();
 bool already_learning_spell(int spell = -1);
 

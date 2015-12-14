@@ -1,0 +1,26 @@
+#! /usr/bin/perl -w
+
+# Check a gcc -M dependency file (provided on stdin or in ARGV) for
+# existence of all the prerequisites. If any is missing, exit with failure.
+
+use strict;
+
+undef $/;
+
+my $deps = <>;
+
+# Join lines
+$deps =~ s/\\\n/ /g;
+# Chomp newline and trailing space
+$deps =~ s/\s*$//;
+
+# Remove the target
+$deps =~ s/^[^:]*:\s*//;
+
+# Exit false if any dependency is missing
+for my $file (split /\s+/, $deps) {
+    -e $file or exit 1;
+}
+
+# All dependencies present, exit true.
+exit 0;

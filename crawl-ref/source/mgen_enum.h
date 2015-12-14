@@ -68,7 +68,6 @@ enum band_type
     BAND_ALLIGATOR,
     BAND_ELEPHANT,
     BAND_REDBACK,
-    BAND_SPIDER,
     BAND_JUMPING_SPIDER,
     BAND_TARANTELLA,
     BAND_POLYPHEMUS,
@@ -76,7 +75,6 @@ enum band_type
     BAND_DEATH_KNIGHT,
     BAND_JIANGSHI,
     BAND_FAUNS,
-    BAND_PAN,
     BAND_TENGU,
     BAND_SOJOBO,
     BAND_SPRIGGANS,
@@ -88,7 +86,6 @@ enum band_type
     BAND_PHANTASMAL_WARRIORS,
     BAND_THRASHING_HORRORS,
     BAND_RAIJU,
-    BAND_RAVENS,
     BAND_FAUN_PARTY,
     BAND_NAGA_ELITES,
     BAND_NAGA_RITUALIST,
@@ -114,7 +111,10 @@ enum band_type
     BAND_ANUBIS_GUARD,
     BAND_HOLIES,
     BAND_ROBIN,
+    BAND_SPARK_WASPS,
     BAND_RANDOM_SINGLE,
+    BAND_JOSEPHINE,
+    BAND_IRON_GIANT,
     NUM_BANDS                   // always last
 };
 
@@ -144,6 +144,7 @@ enum mgen_flag_type
     MG_DONT_COME    = 0x040, ///< suppress the "comes into view" spam
     MG_DONT_CAP     = 0x080, ///< don't automatically apply the summon cap to this monster
     MG_FORBID_BANDS = 0x100, ///< override MG_PERMIT_BANDS
+    MG_NO_OOD       = 0x200, ///< don't choose out-of-depth random monsters
 };
 
 #endif

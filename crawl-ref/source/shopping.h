@@ -11,6 +11,8 @@ int artefact_value(const item_def &item);
 // ident == true overrides the item ident level and gives the price
 // as if the item was fully id'd
 unsigned int item_value(item_def item, bool ident = false);
+// price of an item if it were being sold in a given shop
+int item_price(const item_def& item, const shop_struct& shop);
 // Return true if an item is classified as a worthless consumable.
 // Note that this does not take into account the player's condition:
 // curse scrolls are worthless for everyone, most potions aren't worthless
@@ -59,6 +61,7 @@ public:
 
     void item_type_identified(object_class_type base_type, int sub_type);
     unsigned int cull_identical_items(const item_def& item, int cost = -1);
+    void remove_dead_shops();
 
     void gold_changed(int old_amount, int new_amount);
 
@@ -96,6 +99,7 @@ private:
 
     static int       thing_cost(const CrawlHashTable& thing);
     static level_pos thing_pos(const CrawlHashTable& thing);
+    static string    describe_thing_pos(const CrawlHashTable& thing);
 
     static string name_thing(const CrawlHashTable& thing,
                              description_level_type descrip = DESC_PLAIN);
@@ -105,5 +109,9 @@ private:
 };
 
 extern ShoppingList shopping_list;
+
+#if TAG_MAJOR_VERSION == 34
+#define REMOVED_DEAD_SHOPS_KEY "removed_dead_shops"
+#endif
 
 #endif

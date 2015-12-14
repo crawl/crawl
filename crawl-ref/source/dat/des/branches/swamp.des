@@ -114,7 +114,7 @@ NAME:   minmay_swamp_entry_reptiles
 TAGS:   swamp_entry
 WEIGHT: 5
 MONS:   swamp drake / komodo dragon / hydra / swamp dragon
-MONS:   baby alligator / crocodile / iguana / giant newt
+MONS:   crocodile / iguana / giant newt
 KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
@@ -273,7 +273,7 @@ ENDMAP
 # Swamp's layout is chaotic and samey; fill it with decorative vaults.
 NAME:   swamp_ruins_default
 TAGS:   luniq_extradecor chance_extradecor allow_dup extra no_dump
-PLACE:  Swamp:1-4
+PLACE:  Swamp, !Swamp:$
 {{
   local n = 1
   hook("post_place", function()
@@ -283,7 +283,7 @@ PLACE:  Swamp:1-4
 
 NAME:   serial_swamp_ruin
 TAGS:   luniq_serial luniq_extradecor chance_extradecor extra
-PLACE:  Swamp:1-4
+PLACE:  Swamp, !Swamp:$
 WEIGHT: 2
 {{
   local n = 2 + crawl.random2(2)
@@ -294,7 +294,7 @@ WEIGHT: 2
 
 NAME:   swamp_other_decor
 TAGS:   luniq_extradecor chance_extradecor allow_dup extra no_dump
-PLACE:  Swamp:1-4
+PLACE:  Swamp, !Swamp:$
 WEIGHT: 8
 {{
   local n = 1
@@ -364,7 +364,7 @@ ENDMAP
 
 NAME: nicolae_swamp_stair_fork
 TAGS: extra decor
-DEPTH: Swamp:2-4
+DEPTH: Swamp:2-, !Swamp:$
 SHUFFLE: {}[]()
 SUBST: W = w., T = t.
 MAP
@@ -496,11 +496,11 @@ ENDMAP
 
 NAME: wheals_swamp_sinkhole
 TAGS: extra no_monster_gen decor
-DEPTH: Swamp, !Swamp:$
+DEPTH: Swamp:1-2
 WEIGHT: 5
 KFEAT: ^ = known shaft trap
 SUBST: u = Ww
-KPROP: wW^ = no_rtele_into
+KPROP: wW^ = no_tele_into
 MAP
 ttttttttt
 twwwwwwwt
@@ -894,7 +894,7 @@ ENDMAP
 
 NAME:    hangedman_swamp_phenomena
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = insubstantial wisp
 KMONS:   2 = ball lightning
 KMONS:   3 = lightning spire
@@ -916,7 +916,7 @@ ENDMAP
 
 NAME:    hangedman_swamp_wriggling
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   0 = swamp worm
 MONS:    giant leech, worm
 KFEAT:   0 = shallow_water
@@ -936,7 +936,7 @@ ENDMAP
 
 NAME:    hangedman_swamp_ravenous
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 MONS:    bog body
 MONS:    necrophage
 MONS:    ghoul
@@ -962,7 +962,7 @@ ENDMAP
 
 NAME:    hangedman_swamp_muck
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = slime creature / jelly
 KMONS:   2 = slime creature
 KMONS:   3 = brown very ugly thing
@@ -986,7 +986,7 @@ ENDMAP
 
 NAME:    hangedman_swamp_dais
 TAGS:    no_pool_fixup no_monster_gen no_item_gen patrolling
-DEPTH:   Swamp, Zot:1-4
+DEPTH:   Swamp, Zot, !Zot:$
 KITEM:   *| = % no_pickup w:2 / * no_pickup / | no_pickup
 KFEAT:   aA = stone_arch
 KFEAT:   B = shallow_water
@@ -1003,11 +1003,9 @@ KMONS:   a = death drake
 KMONS:   A = tentacled monstrosity / green death
 # No burning down the trees or making them look burnt.
 KMONS:   b = green draconian caller w:15 / yellow draconian caller w:1 / \
-             white draconian caller w:1 / grey draconian caller w:1 / \
-             pale draconian caller w:1 / purple draconian caller w:1
+             white draconian caller w:1 / purple draconian caller w:1
 KMONS:   B = green draconian zealot w:15 / yellow draconian zealot w:1 / \
-             white draconian zealot w:1 / grey draconian zealot w:1 / \
-             pale draconian zealot w:1 / purple draconian zealot w:1
+             white draconian zealot w:1 / purple draconian zealot w:1
 KMONS:   % = ugly thing / orange demon
 KMONS:   *d = swamp dragon w:8 / seven-headed hydra w:5 / eight-headed hydra w:5
 KMONS:   | = large abomination / tentacled monstrosity w:5
@@ -1042,7 +1040,7 @@ xxxB...twt...Wxxx
 ENDMAP
 
 NAME:    st_shrine_of_shade
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 MONS:    bog body w:20 / necrophage w:5 / ghoul w:5 / nothing w:25, shadow
 KMONS:   P = w:2 col:darkgrey plant name:withered name_adjective             \
            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
@@ -1065,7 +1063,7 @@ opccoo.ppccpo
 ENDMAP
 
 NAME:    st_swamp_mini
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = hydra
 KMONS:   2 = swamp dragon
 KFEAT:   12 = shallow_water
@@ -1081,7 +1079,7 @@ MAP
 ENDMAP
 
 NAME:    st_swamp_ruins_1
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = hydra
 KMONS:   2 = swamp dragon
 KMONS:   3 = swamp drake
@@ -1105,7 +1103,7 @@ C.cc.....cc.C
 ENDMAP
 
 NAME:    st_swamp_ruins_2
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = hydra
 KMONS:   2 = swamp dragon
 KMONS:   3 = swamp drake
@@ -1130,7 +1128,7 @@ MAP
 ENDMAP
 
 NAME:    st_swamp_ruins_3
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = hydra
 KMONS:   2 = swamp dragon
 KMONS:   3 = swamp drake
@@ -1151,7 +1149,7 @@ MAP
 ENDMAP
 
 NAME:    st_swamp_ruins_4
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = hydra
 KMONS:   2 = swamp dragon
 KMONS:   3 = swamp drake
@@ -1191,7 +1189,7 @@ SHUFFLE: +d / +d / d+
 SUBST: w = w t:10
 SUBST: d = c
 SUBST: c = ccx
-KPROP: w = no_rtele_into
+KPROP: w = no_tele_into
 MAP
     wwww
   wwwwwwww
@@ -1219,8 +1217,8 @@ NSUBST: : = 5:W / *:.
 SUBST: w = w:10 t:10
 KFEAT: K = shallow_water
 KITEM: K = potion of poison / potion of degeneration / \
-           potion of decay / potion of mutation
-KPROP: w = no_rtele_into
+           potion of mutation
+KPROP: w = no_tele_into
 MARKER: K = lua:fog_machine { cloud_type="black smoke", \
                               pow_min = 10, pow_max = 30, delay = 50, \
                               size = 1, walk_dist = 2, spread_rate = 25 }
@@ -1253,7 +1251,7 @@ KITEM: O = great sword good_item w:20 / \
            double sword good_item w:2 / \
            triple sword good_item w:1
 KFEAT: K = deep_water
-KPROP: wK = no_rtele_into
+KPROP: wK = no_tele_into
 {{
   local cf = TriggerableFunction:new{
       func="callback.grunt_lady_of_the_lake_trigger",
@@ -1308,11 +1306,7 @@ ENDMAP
 
 NAME: nicolae_swamp_necromancer_hut
 SUBST: q = tW., r = W., W = zWW
-# Necromancer gets the spell set without bolt of fire so he doesn't torch the place.
-MONS: necromancer spells:bolt_of_cold.15.wizard;\
-                         agony.15.wizard;\
-                         animate_dead.15.wizard;\
-                         simulacrum.15.wizard
+MONS: necromancer
 KMONS: z = crocodile zombie / swamp drake zombie / swamp worm zombie / \
         water moccasin zombie / swamp dragon zombie / \
         komodo dragon zombie / hornet zombie / alligator zombie / \
@@ -1335,13 +1329,12 @@ ENDMAP
 NAME: nicolae_swamp_alligator_family
 TAGS: layout_swamp
 NSUBST: T = 2:W / *:t
-KMONS: 1 = alligator
-KMONS: 2 = baby alligator
-KFEAT: 12@ = W
+KMONS: 1 = alligator / nothing w:5
+KFEAT: 1@ = W
 MAP
    tttt
   tt11tt
- tt2222tt
+ tt1WW1tt
 tTWWWWWWTt
 tWTTWWTTWt
  WWWTTWWW
@@ -1395,7 +1388,7 @@ ttT..TttTTTTT..Tt
 ENDMAP
 
 NAME: lightli_tree_ring
-KPROP: *w = no_rtele_into
+KPROP: *w = no_tele_into
 MAP
 tttttttttt
 tttttttttt
@@ -1437,7 +1430,7 @@ ENDMAP
 NAME: nicolae_swamp_hydra_murder_den
 TAGS: no_monster_gen
 : local heads = crawl.roll_dice(2, 3) + 7
-KPROP: ' = no_rtele_into
+KPROP: ' = no_tele_into
 SUBST: Z = T_
 NSUBST: ' = 1:h / 1:g / 2:c / 1:c' / 2:% / 2:%' / 5:p / 4:p' / *:'
 SUBST: ' = ....b
@@ -1493,7 +1486,7 @@ ENDMAP
 
 NAME:    cheibrodos_swamp_mausoleum
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
-DEPTH:   Swamp, !Swamp:$
+DEPTH:   Swamp:2-, !Swamp:$
 ORIENT:  south
 WEIGHT:  5
 MONS:    spectral hydra, spectral swamp dragon, death drake, necromancer
@@ -1506,7 +1499,7 @@ KMONS:   q = w:2 col:darkgrey plant name:withered name_adjective              \
               tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
               name_adjective tile:mons_withered_plant
 KFEAT:   67 = W
-KPROP:   ~ = no_rtele_into
+KPROP:   ~ = no_tele_into
 SUBST:   1 = 12, " = 6:15 W
 SHUFFLE: DE
 SUBST:   D = W, E = t, W = W:299 .:1, + = ++W, - = +, ~ = W
@@ -1571,7 +1564,7 @@ NAME:  cheibrodos_swamp_pet_leeches
 TAGS:  no_item_gen no_monster_gen
 DEPTH: Swamp, !Swamp:$
 MONS:  vampire ; potion of blood . long sword . robe, giant leech
-KPROP: e' = no_rtele_into
+KPROP: e' = no_tele_into
 KPROP: .21 = bloody / w:30 nothing
 KPROP: e = bloody
 : dgn.delayed_decay(_G, 'e', 'human corpse')
@@ -1726,6 +1719,140 @@ MAP
    .........
 ENDMAP
 
+# http://i.imgur.com/H7nvQFo.jpg
+NAME: nicolae_swamp_little_tower
+TAGS: decor no_pool_fixup
+NSUBST: X = - / x
+SUBST: T = t-, - = ....P, z = WWw, _ = __w
+KMONS: P = plant
+CLEAR: _
+MAP
+   ttt___
+  ttTwwww___
+  tTWwwwwwww___
+  tTWwwwwwwwwww___
+ tt.Wwwwzzzzzwwwzz
+ t.Tzwwzx---xzwwz.
+ .tzwwzx-xXx-xzzz.
+.Ttwwwz-xx-xx-zz-.
+@Ttwwwz-X---X-WW-@
+.Ttwwwz-xx-xx-zz-.
+ .tzwwzx-xXx-xzzz.
+ t.Tzwwzx---xzwwz.
+ tt.Wwwwzzzzzwwwzz
+  tTWwwwwwwwwww___
+  tTWwwwwwww___
+  ttTwwww___
+   ttt___
+ENDMAP
+
+NAME: nicolae_swamp_dense_foliage
+TAGS: decor transparent
+SUBST: _ = ._, - = t_, t = tttttt., . = ......W
+CLEAR: _
+MAP
+         -_-
+      -_-.t.---
+   -_-.t.ttt.t.-
+  -.t.ttt.t.t.t.-
+ -.ttt.t.t.t.ttt_
+ -t.t.t.t.ttt.t.-
+ -.t.t.ttt.t.t.t.-
+-.t.ttt.t.t.t.ttt_
+_ttt.t.t.t.ttt.t.-
+-.t.t.t.ttt.t.t.t.-
+ -.t.ttt.t.t.t.ttt_
+ _ttt.t.t.t.ttt.t.-
+ -.t.t.t.ttt.t.t.-
+  -.t.ttt.t.t.t.t-
+  _ttt.t.t.t.ttt.-
+  -.t.t.t.ttt.t.-
+   -.t.ttt.t.-_-
+    ---.t.-_-
+       -_-
+ENDMAP
+
+NAME: nicolae_swamp_very_dense_foliage
+TAGS: decor transparent
+SUBST: _ = ._, - = t_, t = tttttt., . = ......W
+CLEAR: _
+MAP
+       -_-
+      tt.----_
+   --tttt.--.-_-
+   -.ttttt..tt.-----
+   --.tt..ttttt.--.-
+   --.t.tt.ttttt..tt
+  --.t.tttt.tt..ttttt
+  _.tt.tttt.t.tt.tttt-
+ _-tttt.tt.t.tttt.tt._
+ -.ttttt..tt.tttt.t.--
+ --.tt..ttttt.tt.t.--
+ --.t.tt.ttttt..tt.--
+--.t.tttt.tt..ttttt.-
+_.tt.tttt.t.tt.ttttt_
+-tttt.tt.t.tttt.tt._
+ ttttt..tt.tttt.t.--
+  tt..ttttt.tt.t.--
+  -.--.ttttt..tt.--
+  -----.tt..ttttt.-
+      -_-.--.ttttt-
+        _----.tt
+            -_-
+ENDMAP
+
+NAME: nicolae_swamp_phyte_club
+DEPTH: Swamp:2-, !Swamp:$
+ORIENT: float
+TAGS: transparent no_monster_gen no_item_gen
+NSUBST: M = 1:M / 1:H / 2:hmm / 2:A / 1:f / *:., \
+        O = 1:O / 1:o / 1:Hh / 1:h^ / 1:b
+SUBST: T = t., Z = ttW, _ = t_, v = t--
+KMONS: Mm = shambling mangrove
+KMONS: F = fungus
+KMONS: Oo = oklob plant / oklob sapling w:2
+KMONS: Hh = thorn hunter
+KMONS: . = plant w:5 / fungus w:5 / nothing w:100
+KMONS: - = plant / fungus / nothing w:80
+KITEM: h^m = % / * w:5
+KITEM: o = * / | w:5
+KITEM: f = fruit
+KITEM: b = Fen Folio ident:type
+KFEAT: ^, = .
+CLEAR: _
+MAP
+              @
+              ,
+     _______tT,Tt_______
+    __tttttttT,Tttttttt__
+    _ttO--tttT,Tttt--Ott_
+    _t----v.ttFtt.v----t_
+    _t--v.....t.....v--t_
+    _t--.M..ZZZZZ..M.--t_
+    _tv...ZZ.....ZZ...vt_
+   ttt...Z.........Z...ttt
+@ TTTtt.Z....WWW....Z.ttTTT @
+ ,,,,,t.Z..WW...WW..Z.t,,,,,
+  TTTtFZ...W..M..W...ZFtTTT
+  _ttt.Z..W.MtttM.W..Z.ttt_
+ __t...Z..W..ttt..W..Z...t__
+ _ttv..Z..W..ttt..W..Z..vtt_
+__t--..Z...W.M.M.W...Z..--t__
+_tt--.M.Z..WW...WW..Z.M.--tt_
+_tO-v...Z....WWW....Z...v-Ot_
+_tt---...Z.........Z...---tt_
+__ttt-v...ZZ.....ZZ...v-ttt__
+ ___tttttF..ZZZZZ..Fttttt___
+   __ttT,t....M....t,Ttt__
+     tT,Ttt.......ttT,Tt
+     T,Tttt.v...v.tttT,T
+     ,Tt__tt--v--tt__tT,
+    @    __t-----t__    @
+          _tttOttt_
+          ___ttt___
+            _____
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #
@@ -1795,7 +1922,7 @@ SHUFFLE: Od, 123,  lLO4 / wWP5
 SUBST:   1 = 111., 2 = 2., 3 = 333.
 SUBST:   l = l `:2, L~ = ., ' = .t, " = tc
 SUBST:   - = WW.
-KPROP:   ` = no_rtele_into
+KPROP:   ` = no_tele_into
 : if crawl.one_chance_in(11) then
 SUBST:   6 = .:999 6:1, OP = &
 : end
@@ -2111,4 +2238,47 @@ c..f..c'G:::::G'C':::'C
 c%3...c'::'''::'C:::''C
 cc%..ccCC=C-C=CCCC:'''C
  cccccWWW'.@.'WWWCCCCC@
+ENDMAP
+
+###############################################################################
+# Another Basic swamp end, by johnstein
+# about 27 basic swamp enemies & 1/11 chance of L. Hydra
+NAME:    swamp_basic_johnstein
+PLACE:   Swamp:$
+ORIENT:  float
+WEIGHT:  20
+SUBST:   1 = 111''
+SUBST:   % = %'
+KMONS:   1 =  swamp dragon / swamp drake / hydra w:15 / bog body w:5
+SUBST:   ' = .....WWW, - = ..wwwWW, T = .wWtt, C = ccct
+KFEAT:   1 =  floor / floor / shallow_water
+KITEM:   O = decaying rune of Zot
+NSUBST:  O = 1:O / *:*
+: if crawl.one_chance_in(11) then
+     KMONS: O = the lernaean hydra
+: else
+     KMONS: O* = thorn hunter / shambling mangrove / spriggan berserker
+     KITEM: * = *
+: end
+MAP
+   tt  tt
+  ttttttttt @@@   tt  tt
+tttccccccttt'-'ttttttttt
+ttcc%O%Ccccc'-'ccccccccctt
+tccT1-1-Cccc1-1ccccC%O%cctt
+tcT1'1'1'ccc'-'cccC-1-1Tcctt
+tccT1-1-ccc-1T1-cc'1'1'1Tcct
+ttcC'-'ccc''TTT''cc-1-1Tcctt
+ tcC-1ccc1-ccccc-1cc'-'Ccctt
+ttcC-1cc'-cc%O%cc-'cc1-Ccctt
+ttc'-'c1-cc-1-1-cc-1c1-Ccct
+ttc-1Cc'-c'1'1'1'c-'c''-cctt
+ tc-''c1-cc-1-1-cc-1cC1-cct
+ttcC1'1'''cC'-'Cc-''c''-cttt
+ttccccC'''cC'-'Cc'''1'1cctt
+ ttttccC-1'1'T'1'1-CCccctt
+  ttttccC-1'TTT'1-Cccccttt
+    tttcccccccccccccttttt
+     ttttttttttttttttt t
+       tt   ttt ttt t
 ENDMAP

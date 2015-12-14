@@ -26,7 +26,7 @@ Terrain
  n - clear stone wall                              (DNGN_CLEAR_STONE_WALL)
  o - clear permanent rock wall - always undiggable (DNGN_CLEAR_PERMAROCK_WALL)
  v - metal wall - grounds electricity                    (DNGN_METAL_WALL)
- b - crystal wall - reflects cold and fire       (DNGN_GREEN_CRYSTAL_WALL)
+ b - crystal wall - reflects cold and fire              (DNGN_CRYSTAL_WALL)
  t - tree - combustible                                        (DNGN_TREE)
 
  . - floor                                                    (DNGN_FLOOR)
@@ -123,13 +123,13 @@ DESC:     readable name
           A map may optionally have a description. If provided, and if
           the character dies in the vault, the map description will be
           shown along with the place at end of game. This is normally used
-          only for special game types (Sprint, Zot Defence).
+          only for the Sprint game type.
 
           Map descriptions are also written to scores and logfile
           entries.
 
 ORDER:    <integer>
-          Used only for special game types (Sprint, Zot Defence, Tutorial).
+          Used only for special game types (Sprint, Tutorial).
           When the user is prompted to select a map, the available maps are
           sorted by the integer value (ascending). Maps without an ORDER:
           line follow those that have one. Maps with the same value of
@@ -324,7 +324,7 @@ PLACE:    Used to specify certain special levels. Existing special levels
 
 TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           TAGS: lines, or use \ for very long ones. Valid tags are:
-          * Any KPROP name ("no_rtele_into", "no_tide", etc.): applies the
+          * Any KPROP name ("no_tele_into", "no_tide", etc.): applies the
              property to every square of the vault. See KPROP: below.
           * "allow_dup": Vaults are normally used only once per game. If you
              have a vault that can be used more than once, use allow_dup to tell
@@ -405,7 +405,7 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "overwrite_floor_cell": Tells the dungeon builder that this vault
              intends to overwrite a single floor cell, possibly inside another
              vault, even if that vault does not have the "overwritable" tag.
-             This tag can only be applied to 1x1 vaults.  Don't use it casually.
+             This tag can only be applied to 1x1 vaults. Don't use it casually.
           * "layout": Makes the vault eligible for use as a level layout. Do
              not use this unless you know what you are doing.
           * "layout_foo": Indicates what sort of level layouts this vault is
@@ -450,18 +450,6 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              actual terrain of the vault affects its passability as seen by the
              dungeon builder. A disconnected region inside a transparent vault
              will cause a veto of the level (but see the "opaque" KMASK below).
-
-LFLAGS:   Persistent, changeable per-level flags which affect game behaviour;
-          should only be used for vaults with ORIENT encompass or with PLACE.
-          Causes a level's flags to be set when the level is first created.
-          These flags can later be altered using Lua markers; for examples,
-          look at the slime pit vault in slime.des, and the vaults in hell.des.
-
-          Valid flags are:
-          * no_tele_control - prevents the player from using teleport control
-          * not_mappable    - prevents the player from remembering where
-                              they've been (like in the Abyss)
-          * no_magic_map    - which prevents magic mapping from working.
 
 LFLOORCOL: blue
           LFLOORCOL: allows you to set the floor colour for the level the
@@ -580,8 +568,6 @@ ITEM:     (list of items, separated by comma)
             just tells that to acquirement and (TODO) troves.
           * "mimic:N" gives the item one chance in N of being turned into a
             mimic. The ":N" can also be omitted for a guaranteed mimic.
-          * "no_mimic" prevents the item from being randomly turned into a
-            mimic by the dungeon builder.
           * "no_pickup" prevents monsters from picking up the item, for vaults
             intending to have an impressive display of loot (although in most
             cases monsters should be allowed to pick up and use loot against
@@ -672,8 +658,8 @@ ITEM:     (list of items, separated by comma)
           * "slevels:max_levels" the total, combined level of spells to include
             in the book. "slevels:6" will use three level two spells, two level
             three spells, a level two and a level four spell, and so on.
-          * "spells:spell_1|spell_2" a list of spells to include in the book.
-            Spells must be separated by "|" without spaces. Within a spell name,
+          * "spells:spell_1&spell_2" a list of spells to include in the book.
+            Spells must be separated by "&" without spaces. Within a spell name,
             all of "_" will be replaced with " " and will be parsed as such.
             A book may contain at most 8 spells.
           * "title:title" will define the title of the book.
@@ -1254,12 +1240,17 @@ KFEAT:    G = C / needle trap / antique armour shop / altar_zin
 
           KFEAT: A = known needle trap
 
-          You can also place feature mimic using the same syntax as item
-          mimics (or prevent random placement of feature mimics). For
-          example this altar has one chance in 10 of being turned into an
-          altar mimic:
+          You can also place feature mimics using the same syntax as item
+          mimics. For example this altar has a 1 in 10 chance of being
+          turned into a mimic:
 
           KFEAT: C = C mimic:10
+
+          Some features (specifically shops and portal vault entries) may
+          be randomly turned into mimics by the dungeon builder. You can
+          prevent this with "no_mimic":
+
+          KFEAT: S = any shop no_mimic
 
           The placeholder used by KFEAT can be shared by KITEM and KMONS;
           see below. If the placeholder is shared, all defined Kxxxx
@@ -1427,18 +1418,12 @@ KPROP:    x = bloody
           * "no_cloud_gen": Prevents clouds from being generated over this
              feature (usually lava). Does not stop fog generators or clouds
              entering from nearby squares.
-          * "no_rtele_into": Prevents random teleport from choosing to use this
+          * "no_tele_into": Prevents teleportation from choosing to use this
              square. Also prevents this square from being the destination of
              a shaft or hatch. Use this tag to prevent nasty situations like
              the player ending up in a closet or an extremely dense monster
-             array (like a hellion island).
-          * "no_ctele_into": Prevents controlled teleportation into this square.
-             Will instead generate the message "A strong magical force throws
-             you back!".
-          * "no_tele_into": Combines the above no_rtele_into and no_ctele_into
-             in one flag, and disallows both random and controlled teleports.
-             Use this for vaults with loot where the player is not supposed to
-             get it by teleporting alone.
+             array (like a hellion island); or for vaults with loot where the
+             player is not supposed to get it by teleporting alone.
           * "no_submerge": Monsters will not submerge in this square.
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.
@@ -1453,7 +1438,7 @@ KPROP:    x = bloody
             vaults.
 
           Properties can also be used as tags to apply to the entire vault:
-            TAGS: no_rtele_into no_tide
+            TAGS: no_tele_into no_tide
 
 KITEM:    ? = potion of healing / potion of restore abilities
           KITEM: places the specified item at all occurrences of the

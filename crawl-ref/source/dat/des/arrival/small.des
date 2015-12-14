@@ -17,7 +17,7 @@ COLOUR: t = lightgreen
 FTILE:  `1t = floor_grass
 FTILE:  ' = floor_dirt
 FTILE:  -{V = floor_vault
-TILE:   c = wall_stone_brick
+TILE:   c = wall_stone_smooth
 MONS: bush
 SUBST: `'-: .
 MAP
@@ -138,7 +138,7 @@ ENDMAP
 ###############################################################################
 NAME:    evilmike_arrival_grusome_pit
 WEIGHT: 1
-TAGS:    arrival no_rotate no_item_gen
+TAGS:    arrival no_rotate
 ORIENT:  northwest
 # the exit will be placed elsewhere 25% of the time
 SUBST:   { = {:30 .
@@ -305,7 +305,7 @@ NAME:    minmay_arrival_jagged
 TAGS:    arrival no_monster_gen
 ORIENT:  float
 SUBST:   A = xx., B = x..
-KPROP:   A = no_rtele_into
+KPROP:   A = no_tele_into
 MAP
 xxxxxxxxxxxx
 x{AAAAAAAAAA
@@ -1356,7 +1356,7 @@ ENDMAP
 
 ############################################################
 NAME:   zaba_arrival_water
-TAGS:   arrival no_monster_gen no_item_gen no_rotate
+TAGS:   arrival no_monster_gen no_rotate
 ORIENT: float
 SUBST:  T = TV, ? = wW, > = >d
 ITEM:   stone
@@ -1590,7 +1590,7 @@ TAGS:    arrival no_monster_gen no_trap_gen
 MONS:    generate_awake jelly
 ITEM:    club
 ORIENT:  float
-KPROP:   1d> = no_rtele_into
+KPROP:   1d> = no_tele_into
 SHUFFLE: {[(
 SUBST:   [=., (=.
 SUBST:   v:vxx
@@ -1614,37 +1614,13 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Sounds of Crawl: the Drone.
-NAME:    dpeg_arrival_sounds_drone
-TAGS:    arrival no_monster_gen no_trap_gen
-MONS:    generate_awake boring beetle / boring beetle
-ORIENT:  float
-NSUBST:  . = 1={ / *:.
-NSUBST:  ' = 1:> / 7:x / *:.
-SUBST:   " = .
-MAP
-  ....ccccc...
-  ....c'''c...
-......c'''c.....
-......c'''c.....
-..ccccc'''ccccc.
-..c''''"""''''c.
-..c''''"1"''''c.
-..c''''"""''''c.
-..ccccc'''ccccc.
-......c'''c.....
-......c'''c.....
-  ....c'''c...
-  ....ccccc...
-ENDMAP
-
 ###############################################################################
 # Sounds of Crawl: the *ZOT*
 NAME:    evilmike_arrival_sounds_zot
 TAGS:    arrival no_monster_gen
 ORIENT:  float
 WEIGHT:  1
-KPROP:   >'Z1 = no_rtele_into
+KPROP:   >'Z1 = no_tele_into
 KFEAT:   Z = zot trap
 SHUFFLE: vXc
 NSUBST:  { = 1:{ / *:.
@@ -2391,7 +2367,7 @@ SHUFFLE: TTV
 WEIGHT:  5
 KMASK:   T = no_monster_gen
 KPROP:   wZ = no_submerge
-KPROP:   wZ = no_rtele_into
+KPROP:   wZ = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
 x.....................x
@@ -2414,7 +2390,7 @@ KMONS:  Z = electric eel
 KFEAT:  Z = w
 KMASK:  Z = no_monster_gen
 KPROP:  wZ = no_submerge
-KPROP:  wZ = no_rtele_into
+KPROP:  wZ = no_tele_into
 WEIGHT: 5
 MAP
 xxxxxxxxxxxxxxx
@@ -2434,11 +2410,12 @@ ENDMAP
 # Eye to eye with the dorky.
 NAME:    lordsloth_arrival_two_stooges
 ORIENT:  float
-TAGS:    arrival no_rotate no_monster_gen no_item_gen
+TAGS:    arrival no_rotate no_monster_gen
 SUBST:   ':l...' , '=l. , l:lllWw , n:nv , v:vvvc
 KMONS:   1 = orc / goblin / kobold
 KFEAT:   1 = .
-KPROP:   1 = no_rtele_into
+KPROP:   1 = no_tele_into
+KMASK:   1 = no_item_gen
 MAP
 .....................
 .....................
@@ -2496,7 +2473,7 @@ SHUFFLE: 16
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
 MONS:    rat / river rat / hell rat / quokka
 MONS:    worker ant / soldier ant / queen ant
-MONS:    brain worm / worm / giant leech
+MONS:    worm / giant leech
 MONS:    komodo dragon / iguana / basilisk
 MONS:    ettin / frost giant / hill giant / stone giant / fire giant
 : else
@@ -2504,7 +2481,7 @@ SHUFFLE: 1234567
 MONS:    giant gecko / iguana / giant newt / crocodile / komodo dragon
 MONS:    hog / jackal / wolf / hound
 MONS:    giant cockroach / worker ant / butterfly / killer bee /\
-         redback / giant mite
+         redback
 MONS:    swamp worm / lindwurm / worm
 MONS:    swamp drake / hydra / wyvern / fire drake
 MONS:    polar bear / black bear
@@ -2529,15 +2506,16 @@ ENDMAP
 # There's a large version (with WEIGHT 2) in the huge maps section.
 NAME:   minmay_arrival_arboretum_small
 WEIGHT: 8
-TAGS:   arrival no_monster_gen no_item_gen
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MONS:   plant / bush w:3, fungus col:any, fungus col:yellow, fungus col:red
 MONS:   fungus col:white, fungus col:magenta, fungus col:darkgrey
-KPROP:  ' = no_rtele_into
-SUBST:  ' = ...111t, 1:1112, 2=1111112, 2:234567
-FTILE:  .1234567t = floor_moss
-COLOUR: . = green
+KPROP:  ' = no_tele_into
+SUBST:  ' = DDD111t, 1:1112, 2=1111112, 2:234567
+FTILE:  D1234567t = floor_moss
+COLOUR: D = green
 SUBST:  " = .
+KMASK:  D1234567 = no_item_gen
 MAP
 xxxxxxxxxxxxxxxxx
 x'''''''''''''''x
@@ -2586,7 +2564,7 @@ ENDMAP
 NAME:   minmay_arrival_glassed_features
 TAGS:   arrival no_monster_gen
 ORIENT: float
-KPROP:  'I = no_rtele_into
+KPROP:  'I = no_tele_into
 SUBST:  I : G T I:4 A:1
 KFEAT:  A = enter_abyss
 MAP
@@ -2674,7 +2652,7 @@ NAME:    saegor_arrival_fortress
 TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
 MONS:    place:D:1 zombie
-KPROP:   W = no_rtele_into
+KPROP:   W = no_tele_into
 NSUBST:  { = 1:{ / 1:> / *:.
 MAP
 wwwwwwwwwcccccwwwwwwwww
@@ -2712,7 +2690,7 @@ NSUBST:  p = 2:+ / *:c
 COLOUR:  + : brown
 SUBST:   # = .. 1:1
 MONS:    plant
-KPROP:   w = no_rtele_into
+KPROP:   w = no_tele_into
 NSUBST:  { = 1:{ / *:.
 MAP
    xxx @@@ xxx
@@ -2737,7 +2715,7 @@ ENDMAP
 ##############################################################
 # Moated graveyard arrival (oiseaux)
 NAME:    moated_graveyard_arrival
-TAGS:    arrival no_monster_gen no_item_gen no_trap_gen no_pool_fixup no_rotate
+TAGS:    arrival no_monster_gen no_trap_gen no_pool_fixup no_rotate
 ORIENT:  float
 FTILE:   t{G = FLOOR_PEBBLE_BROWN
 TILE:    ' = FLOOR_PEBBLE_BROWN / FLOOR_PEBBLE_DARKGRAY
@@ -2949,7 +2927,7 @@ ENDMAP
 NAME:    sevenhm_arrival_forest_fort_small_6
 TAGS:    arrival
 ORIENT:  float
-KPROP:   zC = no_rtele_into
+KPROP:   zC = no_tele_into
 SUBST:   z : l:40 G , C : C:40 lG
 KMASK:   l = no_monster_gen
 SUBST:   R : +R
@@ -2980,7 +2958,7 @@ KITEM:  % = nothing / q:1 river rat chunk / w:5 river rat skeleton
 MARKER: # = lua:fog_machine { cloud_type = "foul pestilence", pow_max = 10, \
                               delay = 5, size = 5, excl_rad = 0 }
 KFEAT:  %# = W
-KPROP:  W#% = no_rtele_into
+KPROP:  W#% = no_tele_into
 MAP
  xxxxxxxxxx
 xxWWWWWWWWxx
@@ -3125,4 +3103,88 @@ c...........c
 c.....(.....c
 c...........c
 ccccccccccccc
+ENDMAP
+
+NAME: nicolae_arrival_washed_ashore
+ORIENT: northwest
+TAGS: arrival no_monster_gen no_pool_fixup
+SUBST: B = bb., S = bWW, Z = WWw
+COLOUR: b : brown
+FTILE: b{ = floor_sand
+KFEAT: O = open_sea
+KFEAT: b = .
+MAP
+OOOOOOOOOOOOOOOOOOOOOx
+Owwwwwwwwwwwwwwwwxxxxx
+OwwwwwwwwZZZZZZZZxx
+OwwwwwwZZZSSSSSSZxx
+OwwwwwZZSSSSSSSSSxx
+OwwwwZZSSSSSbbbbbxx
+OwwwZZSSSSbbbbbbxxx
+OwwZZSSSSbbbbbbbxxx
+OwwZSSSS{bbbbbbbxxx
+OwZZSSSbbbbbbbbbBxx
+OwZSSSbbbbbbbbbbBxx
+OwZSSSbbbbbbbbbbBxx
+OwZSSbbbbbbbbbbbBBx
+OwZSSbbbbbbbbbbbBBx
+OwZSSbbbbbbbbbbbBB@
+OwZSSbbbbbbbbbbbBB@
+OwZZSbxxxBBBBBBBBB@
+OxxxxxxxxxxxBBBBBB@
+Oxxxxxxxxxxxxx@@@@@
+Ox
+Ox
+xx
+ENDMAP
+
+##############################################################
+NAME:    minmay_arrival_shattered_statue
+TAGS:    arrival
+ORIENT:  float
+ITEM:    stone q:4 / stone q:2 / nothing
+ITEM:    stone q:3 w:5 / stone q:1 / nothing
+ITEM:    stone q:2 w:5 / stone q:1 w:5 / nothing
+ITEM:    stone q:1 w:5 / nothing
+ITEM:    stone q:1 w:1 / nothing w:20
+MAP
+   xxxxxxx
+  xx.....xx
+  x..h{h..x
+  xxhggghxx
+   xxx+xxx
+ xxxeeeeexxx
+xxgfedddefgxx
++hgfedGdefgh+
+xxgfedddefgxx
+ xxxeeeeexxx
+   xxxxxxx
+ENDMAP
+
+NAME:   mainiacjoe_arrival_reflecting_pool
+TAGS:   arrival no_monster_gen no_pool_fixup
+ORIENT: float
+SUBST:  G : G:30 T:20 t
+SUBST:  D : t:30 T:20 G
+SUBST:  w : w:30 W
+SUBST:  c : xcvb
+MAP
+   x@x
+   x.x
+  ccAcc
+ccc...ccc
+c...w...c
+c.G.w.G.c
+c...w...c
+c.D.w.D.c
+c...w...c
+c.G.w.G.c
+c...w...c
+c.D.w.D.c
+c...w...c
+c.G.w.G.c
+c...w...c
+ccc...ccc
+  cc{cc
+   ccc
 ENDMAP

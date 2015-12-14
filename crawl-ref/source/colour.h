@@ -60,7 +60,9 @@ enum element_type
     ETC_DITHMENOS,      // Dithmenos altar colours
     ETC_ELEMENTAL,      // Cycling elemental colours
     ETC_INCARNADINE,    // Draining clouds coloured like raw flesh
+#if TAG_MAJOR_VERSION == 34
     ETC_SHINING,        // shining gold (Gozag)
+#endif
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 
@@ -91,7 +93,7 @@ protected:
 };
 
 int str_to_colour(const string &str, int default_colour = -1,
-                  bool accept_number = true);
+                  bool accept_number = true, bool accept_elemental = true);
 const string colour_to_str(colour_t colour);
 #ifdef USE_TILE
 VColour str_to_tile_colour(string colour);
@@ -99,7 +101,6 @@ VColour str_to_tile_colour(string colour);
 
 void init_element_colours();
 void add_element_colour(element_colour_calc *colour);
-void clear_colours_on_exit();
 colour_t random_colour(bool ui_rand = false);
 colour_t random_uncommon_colour();
 bool is_low_colour(colour_t colour) IMMUTABLE;

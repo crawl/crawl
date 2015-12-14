@@ -15,6 +15,7 @@
 #include "food.h"
 #include "godabil.h"
 #include "godwrath.h"
+#include "item_use.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
@@ -22,6 +23,7 @@
 #include "mutation.h"
 #include "ng-setup.h"
 #include "output.h"
+#include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
 #include "skills.h"
@@ -102,8 +104,8 @@ species_type find_species_from_string(const string &species)
 
 void wizard_change_species_to(species_type sp)
 {
-    // Can't use magic cookies or placeholder species.
-    if (!is_valid_species(sp))
+    // Means find_species_from_string couldn't interpret right.
+    if (sp == SP_UNKNOWN)
     {
         mpr("That species isn't available.");
         return;
@@ -118,7 +120,7 @@ void wizard_change_species_to(species_type sp)
 
     species_type old_sp = you.species;
     you.species = sp;
-    you.species_name = species_name(sp);
+    you.chr_species_name = species_name(sp);
 
     // Change permanent mutations, but preserve non-permanent ones.
     uint8_t prev_muts[NUM_MUTATIONS];
@@ -136,6 +138,8 @@ void wizard_change_species_to(species_type sp)
         prev_muts[i] = you.mutation[i];
     }
     give_basic_mutations(sp);
+    for (int i = 2; i <= you.experience_level; ++i)
+        give_level_mutations(sp, i);
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         if (prev_muts[i] > you.innate_mutation[i])
@@ -144,43 +148,7 @@ void wizard_change_species_to(species_type sp)
             you.innate_mutation[i] -= prev_muts[i];
     }
 
-    switch (sp)
-    {
-    case SP_RED_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_HEAT_RESISTANCE, 1, "wizard race change");
-        break;
-
-    case SP_WHITE_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_COLD_RESISTANCE, 1, "wizard race change");
-        break;
-
-    case SP_GREEN_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_POISON_RESISTANCE, 1, "wizard race change");
-        if (you.experience_level >= 14)
-            perma_mutate(MUT_STINGER, 1, "wizard race change");
-        break;
-
-    case SP_YELLOW_DRACONIAN:
-        if (you.experience_level >= 14)
-            perma_mutate(MUT_ACIDIC_BITE, 1, "wizard race change");
-        break;
-
-    case SP_GREY_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_UNBREATHING, 1, "wizard race change");
-        break;
-
-    case SP_BLACK_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_SHOCK_RESISTANCE, 1, "wizard race change");
-        if (you.experience_level >= 14)
-            perma_mutate(MUT_BIG_WINGS, 1, "wizard race change");
-        break;
-
-    case SP_DEMONSPAWN:
+    if (sp == SP_DEMONSPAWN)
     {
         roll_demonspawn_mutations();
         for (int i = 0; i < int(you.demonic_traits.size()); ++i)
@@ -193,44 +161,26 @@ void wizard_change_species_to(species_type sp)
             ++you.mutation[m];
             ++you.innate_mutation[m];
         }
-        break;
-    }
-
-    case SP_DEEP_DWARF:
-        if (you.experience_level >= 9)
-            perma_mutate(MUT_PASSIVE_MAPPING, 1, "wizard race change");
-        if (you.experience_level >= 14)
-            perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1, "wizard race change");
-        if (you.experience_level >= 18)
-            perma_mutate(MUT_PASSIVE_MAPPING, 1, "wizard race change");
-        break;
-
-    case SP_FELID:
-        if (you.experience_level >= 6)
-            perma_mutate(MUT_SHAGGY_FUR, 1, "wizard race change");
-        if (you.experience_level >= 12)
-            perma_mutate(MUT_SHAGGY_FUR, 1, "wizard race change");
-        break;
-
-    default:
-        break;
     }
 
     if ((old_sp == SP_OCTOPODE) != (sp == SP_OCTOPODE))
     {
         _swap_equip(EQ_LEFT_RING, EQ_RING_ONE);
         _swap_equip(EQ_RIGHT_RING, EQ_RING_TWO);
-        // All species allow exactly one amulet.  When (and knowing you guys,
+        // All species allow exactly one amulet. When (and knowing you guys,
         // that's "when" not "if") ettins go in, you'll need handle the Macabre
         // Finger Necklace on neck 2 here.
     }
 
     // FIXME: this checks only for valid slots, not for suitability of the
-    // item in question.  This is enough to make assertions happy, though.
+    // item in question. This is enough to make assertions happy, though.
     for (int i = 0; i < NUM_EQUIP; ++i)
-        if (!you_can_wear(i, true) && you.equip[i] != -1)
+        if (you_can_wear(static_cast<equipment_type>(i)) == MB_FALSE
+            && you.equip[i] != -1)
         {
-            mprf("%s falls away.", you.inv[you.equip[i]].name(DESC_YOUR).c_str());
+            mprf("%s fall%s away.",
+                 you.inv[you.equip[i]].name(DESC_YOUR).c_str(),
+                 you.inv[you.equip[i]].quantity > 1 ? "" : "s");
             // Unwear items without the usual processing.
             you.equip[i] = -1;
             you.melded.set(i, false);
@@ -253,7 +203,7 @@ void wizard_change_species_to(species_type sp)
 void wizard_change_job_to(job_type job)
 {
     you.char_class = job;
-    you.class_name = get_job_name(job);
+    you.chr_class_name = get_job_name(job);
 }
 
 void wizard_change_species()
@@ -264,7 +214,10 @@ void wizard_change_species()
                     specs, sizeof(specs));
 
     if (specs[0] == '\0')
+    {
+        canned_msg(MSG_OK);
         return;
+    }
 
     species_type sp = find_species_from_string(specs);
 
@@ -330,7 +283,7 @@ void wizard_memorise_spec_spell()
         }
     }
 
-    if (!learn_spell(static_cast<spell_type>(spell)))
+    if (!learn_spell(static_cast<spell_type>(spell), true))
         crawl_state.cancel_cmd_repeat();
 }
 #endif
@@ -339,6 +292,7 @@ void wizard_heal(bool super_heal)
 {
     if (super_heal)
     {
+        mpr("Super healing.");
         // Clear more stuff.
         unrot_hp(9999);
         you.magic_contamination = 0;
@@ -350,10 +304,16 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_CORROSION] = 0;
         you.props["corrosion_amount"] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
+        while (delete_temp_mutation());
+        you.attribute[ATTR_TEMP_MUT_XP] = 0;
+        you.stat_loss.init(0);
+        you.attribute[ATTR_STAT_LOSS_XP] = 0;
+        you.redraw_stats = true;
     }
+    else
+        mpr("Healing.");
 
     // Clear most status ailments.
-    you.rotting = 0;
     you.disease = 0;
     you.duration[DUR_CONF]      = 0;
     you.duration[DUR_POISONING] = 0;
@@ -364,12 +324,17 @@ void wizard_heal(bool super_heal)
     you.redraw_hit_points = true;
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
+
+    for (int stat = 0; stat < NUM_STATS; stat++)
+        you.duration[stat_zero_duration(static_cast<stat_type> (stat))] = 0;
 }
 
 void wizard_set_hunger_state()
 {
-    string hunger_prompt =
-        "Set hunger state to s(T)arving, (N)ear starving, (H)ungry";
+    string hunger_prompt = "Set hunger state to ";
+    if (you.species != SP_VAMPIRE && you.species != SP_GHOUL)
+        hunger_prompt += "f(A)inting, ";
+    hunger_prompt += "s(T)arving, (N)ear starving, (H)ungry";
     if (you.species == SP_GHOUL)
         hunger_prompt += " or (S)atiated";
     else
@@ -383,7 +348,8 @@ void wizard_set_hunger_state()
     // Values taken from food.cc.
     switch (c)
     {
-    case 't': you.hunger = HUNGER_STARVING / 2;   break;
+    case 'a': you.hunger = HUNGER_FAINTING / 2; break;
+    case 't': you.hunger = (HUNGER_STARVING + HUNGER_FAINTING) / 2; break;
     case 'n': you.hunger = 1100;  break;
     case 'h': you.hunger = 2300;  break;
     case 's': you.hunger = 4900;  break;
@@ -480,8 +446,8 @@ void wizard_set_piety()
     if (you_worship(GOD_RU))
     {
         mprf("Current progress to next sacrifice: %d  Progress needed: %d",
-            you.props["ru_progress_to_next_sacrifice"].get_int(),
-            you.props["ru_sacrifice_delay"].get_int());
+            you.props[RU_SACRIFICE_PROGRESS_KEY].get_int(),
+            you.props[RU_SACRIFICE_DELAY_KEY].get_int());
     }
 
     mprf(MSGCH_PROMPT, "Enter new piety value (current = %d, Enter for 0): ",
@@ -496,11 +462,6 @@ void wizard_set_piety()
     wizard_set_piety_to(atoi(buf));
 }
 
-//---------------------------------------------------------------
-//
-// debug_add_skills
-//
-//---------------------------------------------------------------
 #ifdef WIZARD
 void wizard_exercise_skill()
 {
@@ -780,8 +741,11 @@ void wizard_set_stats()
 {
     char buf[80];
     mprf(MSGCH_PROMPT, "Enter values for Str, Int, Dex (space separated): ");
-    if (cancellable_get_line_autohist(buf, sizeof buf))
+    if (cancellable_get_line_autohist(buf, sizeof buf) || buf[0] == '\0')
+    {
+        canned_msg(MSG_OK);
         return;
+    }
 
     int sstr = you.strength(false),
         sdex = you.dex(false),
@@ -789,10 +753,12 @@ void wizard_set_stats()
 
     sscanf(buf, "%d %d %d", &sstr, &sint, &sdex);
 
+    mprf("Setting attributes (Str, Int, Dex) to: %i, %i, %i", sstr, sint, sdex);
     you.base_stats[STAT_STR] = debug_cap_stat(sstr);
     you.base_stats[STAT_INT] = debug_cap_stat(sint);
     you.base_stats[STAT_DEX] = debug_cap_stat(sdex);
     you.stat_loss.init(0);
+    you.attribute[ATTR_STAT_LOSS_XP] = 0;
     you.redraw_stats.init(true);
     you.redraw_evasion = true;
 }
@@ -966,7 +932,7 @@ void wizard_set_xl()
     }
 
     const int newxl = atoi(buf);
-    if (newxl < 1 || newxl > 27 || newxl == you.experience_level)
+    if (newxl < 1 || newxl > you.get_max_xl() || newxl == you.experience_level)
     {
         canned_msg(MSG_OK);
         return;
@@ -996,7 +962,6 @@ void wizard_get_god_gift()
     if (you_worship(GOD_RU))
     {
         ru_offer_new_sacrifices();
-        you.props["ru_progress_to_next_sacrifice"] = 0;
         return;
     }
 
@@ -1007,7 +972,24 @@ void wizard_get_god_gift()
 void wizard_toggle_xray_vision()
 {
     you.xray_vision = !you.xray_vision;
+    mprf("X-ray vision %s.", you.xray_vision ? "enabled" : "disabled");
     viewwindow(true);
+}
+
+void wizard_freeze_time()
+{
+    auto& props = you.props;
+    // this property is never false: either true or unset
+    if (props.exists(FREEZE_TIME_KEY))
+    {
+        props.erase(FREEZE_TIME_KEY);
+        mpr("You allow the flow of time to resume.");
+    }
+    else
+    {
+        props[FREEZE_TIME_KEY] = true;
+        mpr("You bring the flow of time to a stop.");
+    }
 }
 
 void wizard_god_wrath()
@@ -1026,11 +1008,17 @@ void wizard_god_wrath()
 
 void wizard_god_mollify()
 {
+    bool mollified = false;
     for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
     {
         if (player_under_penance((god_type) i))
+        {
             dec_penance((god_type) i, you.penance[i]);
+            mollified = true;
+        }
     }
+    if (!mollified)
+        mpr("You are not under penance.");
 }
 
 void wizard_transform()
@@ -1085,6 +1073,11 @@ void wizard_transform()
 
 void wizard_join_religion()
 {
+    if (you.species == SP_DEMIGOD)
+    {
+        mpr("Not even in wizmode may Demigods worship a god!");
+        return;
+    }
     god_type god = choose_god();
     if (god == NUM_GODS)
         mpr("That god doesn't seem to exist!");

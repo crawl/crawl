@@ -18,9 +18,10 @@
 // Add a monster to the list of fearmongers.
 bool player::add_fearmonger(const monster* mon)
 {
+    ASSERT(mon); // XXX: change to const monster &mon
     if (is_sanctuary(pos()))
     {
-        if (can_see(mon))
+        if (can_see(*mon))
         {
             mprf("%s's aura of fear is muted, and has no effect on you.",
                  mon->name(DESC_THE).c_str());

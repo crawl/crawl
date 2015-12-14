@@ -26,7 +26,6 @@ static bool _is_chunk(const item_def &item);
 static bool _item_needs_rot_check(const item_def &item);
 static int _get_initial_stack_longevity(const item_def &stack);
 
-static void _rot_floor_gold(item_def &it, int rot_time);
 static void _rot_corpse(item_def &it, int mitm_index, int rot_time);
 static int _rot_stack(item_def &it, int slot, bool in_inv);
 
@@ -179,24 +178,6 @@ static bool _item_needs_rot_check(const item_def &item)
 }
 
 /**
- * Decay Gozag-created gold auras.
- *
- * @param it        The stack of gold to decay the aura of.
- * @param rot_time  The length of time to decay the aura for.
- */
-static void _rot_floor_gold(item_def &it, int rot_time)
-{
-    const bool old_aura = it.freshness > 0;
-    it.freshness = max(0, it.freshness - rot_time);
-    if (old_aura && !it.freshness)
-    {
-        invalidate_agrid(true);
-        you.redraw_armour_class = true;
-        you.redraw_evasion = true;
-    }
-}
-
-/**
  * Rot a corpse or skeleton lying on the floor.
  *
  * @param it            The corpse or skeleton to rot.
@@ -209,7 +190,7 @@ static void _rot_corpse(item_def &it, int mitm_index, int rot_time)
     ASSERT(!it.props.exists(CORPSE_NEVER_DECAYS));
 
     it.freshness -= rot_time;
-    if (it.freshness > 0)
+    if (it.freshness > 0 || is_being_butchered(it))
         return;
 
     if (it.sub_type == CORPSE_SKELETON || !mons_skeleton(it.mon_type))
@@ -337,13 +318,6 @@ void rot_floor_items(int elapsedTime)
     for (int mitm_index = 0; mitm_index < MAX_ITEMS; ++mitm_index)
     {
         item_def &it = mitm[mitm_index];
-
-        // XXX move this somewhere more reasonable?
-        if (you_worship(GOD_GOZAG) && it.base_type == OBJ_GOLD)
-        {
-            _rot_floor_gold(it, rot_time);
-            continue;
-        }
 
         if (is_shop_item(it) || !_item_needs_rot_check(it))
             continue;

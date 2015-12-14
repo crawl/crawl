@@ -169,7 +169,7 @@ enum jewellery_type
     RING_LOUDNESS,
     RING_TELEPORTATION,
     RING_EVASION,
-    RING_SUSTAIN_ABILITIES,
+    RING_SUSTAIN_ATTRIBUTES,
     RING_STEALTH,
     RING_DEXTERITY,
     RING_INTELLIGENCE,
@@ -250,17 +250,21 @@ enum misc_item_type
     MISC_DECK_OF_CHANGES,
     MISC_DECK_OF_DEFENCE,
 
+#if TAG_MAJOR_VERSION == 34
     MISC_RUNE_OF_ZOT,
+#endif
 
     MISC_QUAD_DAMAGE, // Sprint only
 
     MISC_PHIAL_OF_FLOODS,
     MISC_SACK_OF_SPIDERS,
+    MISC_ZIGGURAT,
 
     MISC_PHANTOM_MIRROR,
 #if TAG_MAJOR_VERSION == 34
     MISC_DECK_OF_ODDITIES,
 #endif
+    MISC_XOMS_CHESSBOARD,
 
     NUM_MISCELLANY,
     MISC_DECK_UNKNOWN = NUM_MISCELLANY,
@@ -283,8 +287,8 @@ const vector<misc_item_type> misc_types =
     MISC_FAN_OF_GALES, MISC_LAMP_OF_FIRE, MISC_STONE_OF_TREMORS,
     MISC_LANTERN_OF_SHADOWS, MISC_HORN_OF_GERYON, MISC_BOX_OF_BEASTS,
     MISC_CRYSTAL_BALL_OF_ENERGY, MISC_DISC_OF_STORMS, MISC_PHIAL_OF_FLOODS,
-    MISC_RUNE_OF_ZOT, MISC_QUAD_DAMAGE, MISC_SACK_OF_SPIDERS,
-    MISC_PHANTOM_MIRROR,
+    MISC_QUAD_DAMAGE, MISC_SACK_OF_SPIDERS,
+    MISC_PHANTOM_MIRROR, MISC_XOMS_CHESSBOARD,
 #if TAG_MAJOR_VERSION == 34
     MISC_BOTTLED_EFREET, MISC_BUGGY_EBONY_CASKET,
 #endif
@@ -336,7 +340,7 @@ enum rune_type
     RUNE_GLOORX_VLOQ,
 
     RUNE_SPIDER,
-    RUNE_FOREST,
+    RUNE_FOREST, // unused
     NUM_RUNE_TYPES
 };
 
@@ -490,7 +494,9 @@ enum weapon_type
 {
     WPN_CLUB,
     WPN_WHIP,
+#if TAG_MAJOR_VERSION == 34
     WPN_HAMMER,
+#endif
     WPN_MACE,
     WPN_FLAIL,
     WPN_MORNINGSTAR,
@@ -603,7 +609,7 @@ enum weapon_property_type
 
 enum vorpal_damage_type
 {
-    // These are the types of damage a weapon can do.  You can set more
+    // These are the types of damage a weapon can do. You can set more
     // than one of these.
     DAM_BASH            = 0x0000,       // non-melee weapon blugeoning
     DAM_BLUDGEON        = 0x0001,       // crushing
@@ -612,7 +618,7 @@ enum vorpal_damage_type
     DAM_WHIP            = 0x0008,       // whip slashing
     DAM_MAX_TYPE        = DAM_WHIP,
 
-    // These are used for vorpal weapon descriptions.  You shouldn't set
+    // These are used for vorpal weapon descriptions. You shouldn't set
     // more than one of these.
     DVORP_NONE          = 0x0000,       // used for non-melee weapons
     DVORP_CRUSHING      = 0x1000,

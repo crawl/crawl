@@ -84,6 +84,7 @@ static TextDB AllDBs[] =
             "ability.txt",
             "cards.txt",
             "commands.txt",
+            "clouds.txt",
             nullptr),
 
     TextDB("gamestart", "descript/",
@@ -451,7 +452,7 @@ static vector<string> _database_find_bodies(DBM *database,
 // Internal DB utility functions
 static void _execute_embedded_lua(string &str)
 {
-    // Execute any lua code found between "{{" and "}}".  The lua code
+    // Execute any lua code found between "{{" and "}}". The lua code
     // is expected to return a string, with which the lua code and
     // braces will be replaced.
     string::size_type pos = str.find("{{");
@@ -648,7 +649,7 @@ static string _getWeightedString(TextDB &db, const string &key,
             return "";
     }
 
-    // Cons up a (C++) string to return.  The caller must release it.
+    // Cons up a (C++) string to return. The caller must release it.
     string str = string((const char *)result.dptr, result.dsize);
 
     return _chooseStrByWeight(str, fixed_weight);
@@ -889,7 +890,7 @@ string getFAQ_Answer(const string &question)
     string val = unwrap_desc(_query_database(FAQDB, key, false, true));
 
     // Remove blank lines between items on a bulleted list, for small
-    // terminals' sake.  Far easier to store them as separated paragraphs
+    // terminals' sake. Far easier to store them as separated paragraphs
     // in the source.
     // Also, use a nicer bullet as we're already here.
     val = replace_all(val, "\n\n*", "\n•");

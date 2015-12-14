@@ -14,11 +14,17 @@
 local ATT_HOSTILE = 0
 local ATT_NEUTRAL = 1
 
+local LOS_RADIUS = 7
+
 AUTOFIGHT_STOP = 30
+AUTOFIGHT_HUNGER_STOP = 0
+AUTOFIGHT_HUNGER_STOP_UNDEAD = false
 AUTOFIGHT_CAUGHT = false
 AUTOFIGHT_THROW = false
 AUTOFIGHT_THROW_NOMOVE = true
 AUTOFIGHT_FIRE_STOP = false
+AUTOFIGHT_WAIT = false
+AUTOFIGHT_PROMPT_RANGE = true
 AUTOMAGIC_ACTIVE = false
 
 local function delta_to_vi(dx, dy)
@@ -55,7 +61,7 @@ end
 
 local function have_reaching()
   local wp = items.equipped_at("weapon")
-  return wp and wp.reach_range == 8 and not wp.is_melded
+  return wp and wp.reach_range == 2 and not wp.is_melded
 end
 
 local function have_ranged()
@@ -200,8 +206,8 @@ local function get_target(no_move)
   bestx = 0
   besty = 0
   best_info = nil
-  for x = -8,8 do
-    for y = -8,8 do
+  for x = -LOS_RADIUS,LOS_RADIUS do
+    for y = -LOS_RADIUS,LOS_RADIUS do
       if is_candidate_for_attack(x, y) then
         new_info = get_monster_info(x, y, no_move)
         if (not best_info) or compare_monster_info(new_info, best_info) then
@@ -217,17 +223,17 @@ end
 
 local function attack_fire(x,y)
   move = 'fr' .. vector_move(x, y) .. 'f'
-  crawl.process_keys(move)
+  crawl.process_keys(move, true)
 end
 
 local function attack_fire_stop(x,y)
   move = 'fr' .. vector_move(x, y) .. '.'
-  crawl.process_keys(move)
+  crawl.process_keys(move, true)
 end
 
 local function attack_reach(x,y)
   move = 'vr' .. vector_move(x, y) .. '.'
-  crawl.process_keys(move)
+  crawl.process_keys(move, true)
 end
 
 local function attack_melee(x,y)
@@ -237,6 +243,14 @@ end
 
 local function set_stop_level(key, value, mode)
   AUTOFIGHT_STOP = tonumber(value)
+end
+
+local function set_hunger_stop_level(key, value, mode)
+  AUTOFIGHT_HUNGER_STOP = tonumber(value)
+end
+
+local function set_hunger_stop_undead(key, value, mode)
+  AUTOFIGHT_HUNGER_STOP_UNDEAD = string.lower(value) ~= "false"
 end
 
 local function set_af_caught(key, value, mode)
@@ -255,6 +269,14 @@ local function set_af_fire_stop(key, value, mode)
   AUTOFIGHT_FIRE_STOP = string.lower(value) ~= "false"
 end
 
+local function set_af_wait(key, value, mode)
+    AUTOFIGHT_WAIT = string.lower(value) ~= "false"
+end
+
+local function set_af_prompt_range(key, value, mode)
+    AUTOFIGHT_PROMPT_RANGE = string.lower(value) ~= "false"
+end
+
 function set_automagic(key, value, mode)
   AUTOMAGIC_ACTIVE = string.lower(value) ~= "false"
 end
@@ -264,11 +286,25 @@ function af_hp_is_low()
   return (100*hp <= AUTOFIGHT_STOP*mhp)
 end
 
+function af_food_is_low()
+  if you.race() == "Mummy" or you.transform() == "lich" then
+      return false
+  elseif (not AUTOFIGHT_HUNGER_STOP_UNDEAD)
+         and (you.race() == "Vampire" or you.race() == "Ghoul") then
+      return false
+  else
+      return (AUTOFIGHT_HUNGER_STOP ~= nil
+              and you.hunger() <= AUTOFIGHT_HUNGER_STOP)
+  end
+end
+
 function attack(allow_movement)
   local x, y, info = get_target(not allow_movement)
   local caught = you.caught()
   if af_hp_is_low() then
     crawl.mpr("You are too injured to fight recklessly!")
+  elseif af_food_is_low() then
+    crawl.mpr("You are too hungry to fight recklessly!")
   elseif you.confused() then
     crawl.mpr("You are too confused!")
   elseif caught then
@@ -278,7 +314,11 @@ function attack(allow_movement)
       crawl.mpr("You are " .. caught .. "!")
     end
   elseif info == nil then
-    crawl.mpr("No target in view!")
+    if AUTOFIGHT_WAIT and not allow_movement then
+      crawl.process_keys('s')
+    else
+      crawl.mpr("No target in view!")
+    end
   elseif info.attack_type == 3 then
     if AUTOFIGHT_FIRE_STOP then
       attack_fire_stop(x,y)
@@ -290,7 +330,11 @@ function attack(allow_movement)
   elseif info.attack_type == 1 then
     attack_reach(x,y)
   elseif allow_movement then
-    move_towards(x,y)
+    if not AUTOFIGHT_PROMPT_RANGE or crawl.weapon_check() then
+      move_towards(x,y)
+    end
+  elseif AUTOFIGHT_WAIT then
+    crawl.process_keys('s')
   else
     crawl.mpr("No target in range!")
   end
@@ -342,8 +386,12 @@ function toggle_autothrow()
 end
 
 chk_lua_option.autofight_stop = set_stop_level
+chk_lua_option.autofight_hunger_stop = set_hunger_stop_level
+chk_lua_option.autofight_hunger_stop_undead = set_hunger_stop_undead
 chk_lua_option.autofight_caught = set_af_caught
 chk_lua_option.autofight_throw = set_af_throw
 chk_lua_option.autofight_throw_nomove = set_af_throw_nomove
 chk_lua_option.autofight_fire_stop = set_af_fire_stop
+chk_lua_option.autofight_wait = set_af_wait
+chk_lua_option.autofight_prompt_range = set_af_prompt_range
 chk_lua_option.automagic_enable = set_automagic

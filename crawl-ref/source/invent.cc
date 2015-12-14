@@ -7,6 +7,7 @@
 
 #include "invent.h"
 
+#include <algorithm> // any_of
 #include <cctype>
 #include <cstdlib>
 #include <cstring>
@@ -185,46 +186,37 @@ string InvEntry::get_text(bool need_cursor) const
 
     tstr << ' ' << key;
 
-    if (need_cursor)
-        tstr << '[';
-    else
-        tstr << ' ';
+    if (!nosel || tag == "pickup")
+    {
+        if (need_cursor)
+            tstr << '[';
+        else
+            tstr << ' ';
 
-    if (nosel)
-        tstr << ' ';
-    else if (!selected_qty)
-        tstr << '-';
-    else if (selected_qty < quantity)
-        tstr << '#';
-    else
-        tstr << '+';
+        if (nosel)
+            tstr << ' ';
+        else if (!selected_qty)
+            tstr << '-';
+        else if (selected_qty < quantity)
+            tstr << '#';
+        else
+            tstr << '+';
 
-    if (need_cursor)
-        tstr << ']';
-    else
-        tstr << ' ';
-
+        if (need_cursor)
+            tstr << ']';
+        else
+            tstr << ' ';
+    }
     if (InvEntry::show_glyph)
         tstr << "(" << glyph_to_tagstr(get_item_glyph(item)) << ")" << " ";
 
-    unsigned max_chars_in_line = get_number_of_cols() - 2;
-    int colour_tag_adjustment = 0;
-    if (InvEntry::show_glyph)
-    {
-        // colour tags have to be taken into account for terminal width
-        // calculations on the ^x screen (monsters/items/features in LOS)
-        string colour_tag = colour_to_str(get_item_glyph(item).col);
-        colour_tag_adjustment = colour_tag.size() * 2 + 5;
-    }
+    tstr << text;
+    const string str = tstr.str();
 
-    const int excess = strwidth(tstr.str()) - colour_tag_adjustment
-                     + strwidth(text) - max_chars_in_line;
-    if (excess > 0)
-        tstr << chop_string(text, max(0, strwidth(text) - excess - 2)) << "..";
+    if (printed_width(str) > get_number_of_cols())
+        return chop_tagged_string(str, get_number_of_cols() - 2) + "..";
     else
-        tstr << text;
-
-    return tstr.str();
+        return str;
 }
 
 void get_class_hotkeys(const int type, vector<char> &glyphs)
@@ -250,7 +242,6 @@ void get_class_hotkeys(const int type, vector<char> &glyphs)
         glyphs.push_back('%');
         break;
     case OBJ_BOOKS:
-        glyphs.push_back('+');
         glyphs.push_back(':');
         break;
     case OBJ_SCROLLS:
@@ -319,18 +310,6 @@ InvMenu::InvMenu(int mflags)
     InvEntry::set_show_cursor(false);
 }
 
-// Returns vector of item_def pointers to each item_def in the given
-// vector. Note: make sure the original vector stays around for the lifetime
-// of the use of the item pointers, or mayhem results!
-vector<const item_def*>
-InvMenu::xlat_itemvect(const vector<item_def> &v)
-{
-    vector<const item_def*> xlatitems;
-    for (const item_def &item : v)
-        xlatitems.push_back(&item);
-    return xlatitems;
-}
-
 void InvMenu::set_type(menu_type t)
 {
     type = t;
@@ -358,27 +337,9 @@ string slot_description()
 
 void InvMenu::set_title(const string &s)
 {
-    string stitle = s;
-    if (stitle.empty())
-    {
-#ifdef USE_TILE_WEB
-        // Webtiles handles menus specially, so disable the crt
-        tiles_crt_control crt_enabled(false);
-#endif
-
-        // We're not printing anything yet, but this select the crt layer
-        // so that get_number_of_cols returns the appropriate value.
-        cgotoxy(1, 1);
-
-        stitle = "Inventory: " + slot_description();
-
-        string prompt = "(_ for help)";
-        stitle = stitle + string(max(0, get_number_of_cols() - strwidth(stitle)
-                                        - strwidth(prompt)),
-                                 ' ') + prompt;
-    }
-
-    set_title(new InvTitle(this, stitle, title_annotate));
+    set_title(new InvTitle(this, s.empty() ? "Inventory: " + slot_description()
+                                           : s,
+                           title_annotate));
 }
 
 static bool _has_melded_armour()
@@ -391,12 +352,11 @@ static bool _has_melded_armour()
 
 static bool _has_tran_unwearable_armour()
 {
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (const auto &item : you.inv)
     {
-        item_def &item(you.inv[i]);
-
         if (item.defined() && item.base_type == OBJ_ARMOUR
-            && !you_tran_can_wear(item))
+            && can_wear_armour(item, false, true)
+            && !can_wear_armour(item, false, false))
         {
             return true;
         }
@@ -406,10 +366,8 @@ static bool _has_tran_unwearable_armour()
 
 static bool _has_hand_evokable()
 {
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (const auto &item : you.inv)
     {
-        item_def &item(you.inv[i]);
-
         if (item.defined()
             && item_is_evokable(item, true, true, true, false, false)
             && !item_is_evokable(item, true, true, true, false, true))
@@ -437,6 +395,8 @@ string no_selectables_message(int item_selector)
     case OSEL_WIELD:
     case OBJ_WEAPONS:
         return "You aren't carrying any weapons.";
+    case OSEL_BLESSABLE_WEAPON:
+        return "You aren't carrying any weapons that can be blessed.";
     case OBJ_ARMOUR:
     {
         if (_has_melded_armour())
@@ -445,7 +405,7 @@ string no_selectables_message(int item_selector)
             return "You aren't carrying any armour you can wear in your "
                    "current form.";
         else
-            return "You aren't carrying any armour.";
+            return "You aren't carrying any wearable armour.";
     }
     case OSEL_UNIDENT:
         return "You don't have any unidentified items.";
@@ -475,8 +435,6 @@ string no_selectables_message(int item_selector)
             return "You aren't carrying any items that can be evoked without being wielded.";
         else
             return "You aren't carrying any items that can be evoked.";
-    case OSEL_FRUIT:
-        return "You aren't carrying any fruit.";
     case OSEL_CURSED_WORN:
         return "None of your equipped items are cursed.";
     case OSEL_UNCURSED_WORN_ARMOUR:
@@ -487,6 +445,8 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any weapons that can be branded.";
     case OSEL_ENCHANTABLE_WEAPON:
         return "You aren't carrying any weapons that can be enchanted.";
+    case OSEL_BEOGH_GIFT:
+        return "You aren't carrying anything you can give to a follower.";
     }
 
     return "You aren't carrying any such object.";
@@ -610,11 +570,6 @@ bool InvMenu::is_selectable(int index) const
     return Menu::is_selectable(index);
 }
 
-bool InvMenu::allow_easy_exit() const
-{
-    return type == MT_KNOW || Menu::allow_easy_exit();
-}
-
 template <const string &(InvEntry::*method)() const>
 static int compare_item_str(const InvEntry *a, const InvEntry *b)
 {
@@ -728,10 +683,8 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
       };
 
     list.clear();
-    vector<string> cmps = split_string(",", set);
-    for (int i = 0, size = cmps.size(); i < size; ++i)
+    for (string s : split_string(",", set))
     {
-        string s = cmps[i];
         if (s.empty())
             continue;
 
@@ -782,18 +735,29 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_BOOKS,
     OBJ_MISCELLANY,
     OBJ_FOOD,
-    // These two can't actually be in your inventory.
+    // These four can't actually be in your inventory.
     OBJ_CORPSES,
+    OBJ_RUNES,
     OBJ_ORBS,
     OBJ_GOLD);
+
+menu_letter InvMenu::load_items(const vector<item_def>& mitems,
+                                MenuEntry *(*procfn)(MenuEntry *me),
+                                menu_letter ckey, bool sort)
+{
+    vector<const item_def*> xlatitems;
+    for (const item_def &item : mitems)
+        xlatitems.push_back(&item);
+    return load_items(xlatitems, procfn, ckey, sort);
+}
 
 menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                                 MenuEntry *(*procfn)(MenuEntry *me),
                                 menu_letter ckey, bool sort)
 {
     FixedVector< int, NUM_OBJECT_CLASSES > inv_class(0);
-    for (int i = 0, count = mitems.size(); i < count; ++i)
-        inv_class[ mitems[i]->base_type ]++;
+    for (const item_def * const mitem : mitems)
+        inv_class[mitem->base_type]++;
 
     vector<InvEntry*> items_in_class;
     const menu_sort_condition *cond = nullptr;
@@ -806,40 +770,37 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         if (!inv_class[i])
             continue;
 
-        if (type != MT_RUNES)
+        string subtitle = item_class_name(i);
+
+        // Mention the class selection shortcuts.
+        if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
         {
-            string subtitle = item_class_name(i);
-
-            // Mention the class selection shortcuts.
-            if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
+            vector<char> glyphs;
+            get_class_hotkeys(i, glyphs);
+            if (!glyphs.empty())
             {
-                vector<char> glyphs;
-                get_class_hotkeys(i, glyphs);
-                if (!glyphs.empty())
-                {
-                    // longest string
-                    const string str = "Magical Staves ";
-                    subtitle += string(strwidth(str) - strwidth(subtitle),
-                                       ' ');
-                    subtitle += "(select all with <w>";
-                    for (char gly : glyphs)
-                         subtitle += gly;
-                    subtitle += "</w><blue>)";
-                }
+                // longest string
+                const string str = "Magical Staves ";
+                subtitle += string(strwidth(str) - strwidth(subtitle),
+                                   ' ');
+                subtitle += "(select all with <w>";
+                for (char gly : glyphs)
+                    subtitle += gly;
+                subtitle += "</w><blue>)";
             }
-
-            add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
         }
+        add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
+
         items_in_class.clear();
 
         InvEntry *forced_first = nullptr;
-        for (int j = 0, count = mitems.size(); j < count; ++j)
+        for (const item_def * const mitem : mitems)
         {
-            if (mitems[j]->base_type != i)
+            if (mitem->base_type != i)
                 continue;
 
-            InvEntry * const ie = new InvEntry(*mitems[j]);
-            if (mitems[j]->sub_type == get_max_subtype(mitems[j]->base_type))
+            InvEntry * const ie = new InvEntry(*mitem);
+            if (mitem->sub_type == get_max_subtype(mitem->base_type))
                 forced_first = ie;
             else
                 items_in_class.push_back(ie);
@@ -858,8 +819,10 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 else
                     ie->tag = "pickup";
             }
+            if (get_flags() & MF_NOSELECT)
+                ie->hotkeys.clear();
             // If there's no hotkey, provide one.
-            if (ie->hotkeys[0] == ' ')
+            else if (ie->hotkeys[0] == ' ')
             {
                 if (ie->tag == "nopickup")
                     ie->hotkeys.clear();
@@ -884,10 +847,10 @@ void InvMenu::do_preselect(InvEntry *ie)
     if (!pre_select || pre_select->empty())
         return;
 
-    for (int i = 0, size = pre_select->size(); i < size; ++i)
-        if (ie->item && ie->item == (*pre_select)[i].item)
+    for (const SelItem &presel : *pre_select)
+        if (ie->item && ie->item == presel.item)
         {
-            ie->selected_qty = (*pre_select)[i].quantity;
+            ie->selected_qty = presel.quantity;
             break;
         }
 }
@@ -895,82 +858,23 @@ void InvMenu::do_preselect(InvEntry *ie)
 vector<SelItem> InvMenu::get_selitems() const
 {
     vector<SelItem> selected_items;
-    for (int i = 0, count = sel.size(); i < count; ++i)
+    for (MenuEntry *me : sel)
     {
-        InvEntry *inv = dynamic_cast<InvEntry*>(sel[i]);
+        InvEntry *inv = dynamic_cast<InvEntry*>(me);
         selected_items.emplace_back(inv->hotkeys[0], inv->selected_qty,
                                     inv->item);
     }
     return selected_items;
 }
 
-bool InvMenu::process_key(int key)
+string InvMenu::help_key() const
 {
-    if (type == MT_KNOW)
-    {
-        bool resetting = (lastch == CONTROL('D'));
-        if (resetting)
-        {
-            //return the menu title to its previous text.
-            set_title(temp_title);
-            update_title();
-            num = -2;
-
-            // Disarm ^D here, because process_key doesn't always set lastch.
-            lastch = ' ';
-        }
-        else
-            num = -1;
-
-        switch (key)
-        {
-        case ',':
-            return true;
-        case '*':
-            if (!resetting)
-                break;
-        case '^':
-            key = ',';
-            break;
-
-        case '-':
-        case '\\':
-        case CK_ENTER:
-        CASE_ESCAPE
-            lastch = key;
-            return false;
-
-        case '_':
-            show_known_menu_help();
-#ifdef USE_TILE_WEB
-            webtiles_update_scroll_pos();
-#endif
-            draw_menu();
-            return true;
-
-        case CONTROL('D'):
-            // If we cannot select anything (e.g. on the unknown items
-            // page), ignore Ctrl-D.  Likewise if the last key was
-            // Ctrl-D (we have already disarmed Ctrl-D for the next
-            // keypress by resetting lastch).
-            if (flags & (MF_SINGLESELECT | MF_MULTISELECT) && !resetting)
-            {
-                lastch = CONTROL('D');
-                temp_title = title->text;
-                set_title("Select to reset item to default: ");
-                update_title();
-            }
-
-            return true;
-        }
-    }
-
-    return Menu::process_key(key);
+    return type == MT_DROP || type == MT_PICKUP ? "pick-up" : "";
 }
 
-unsigned char InvMenu::getkey() const
+int InvMenu::getkey() const
 {
-    unsigned char mkey = lastch;
+    auto mkey = lastch;
     if (type == MT_KNOW && (mkey == 0 || mkey == CK_ENTER))
         return mkey;
 
@@ -1018,6 +922,8 @@ const char *item_class_name(int type, bool terse)
         case OBJ_RODS:       return "Rods";
         case OBJ_ORBS:       return "Orbs of Power";
         case OBJ_MISCELLANY: return "Miscellaneous";
+        case OBJ_CORPSES:    return "Carrion";
+        case OBJ_RUNES:      return "Runes of Zot";
         }
     }
     return "";
@@ -1081,10 +987,7 @@ bool is_item_selected(const item_def &i, int selector)
     switch (selector)
     {
     case OBJ_ARMOUR:
-        return itype == OBJ_ARMOUR && you_tran_can_wear(i);
-
-    case OSEL_FRUIT:
-        return is_fruit(i);
+        return itype == OBJ_ARMOUR && can_wear_armour(i, false, false);
 
     case OSEL_WORN_ARMOUR:
         return itype == OBJ_ARMOUR && item_is_equipped(i);
@@ -1136,18 +1039,6 @@ bool is_item_selected(const item_def &i, int selector)
     case OSEL_DRAW_DECK:
         return is_deck(i);
 
-    case OSEL_EQUIP:
-    {
-        if (item_is_quivered(i))
-            return true;
-
-        for (int eq = 0; eq < NUM_EQUIP; eq++)
-            if (you.equip[eq] == i.link)
-                return true;
-
-        return false;
-    }
-
     case OSEL_CURSED_WORN:
         return i.cursed() && item_is_equipped(i)
                && (&i != you.weapon() || is_weapon(i));
@@ -1184,6 +1075,13 @@ bool is_item_selected(const item_def &i, int selector)
     case OSEL_BLESSABLE_WEAPON:
         return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);
 
+    case OSEL_BEOGH_GIFT:
+        return (i.base_type == OBJ_WEAPONS
+                || is_shield(i)
+                || i.base_type == OBJ_ARMOUR
+                   && get_armour_slot(i) == EQ_BODY_ARMOUR)
+                && !is_item_selected(i, OSEL_CURSED_WORN);
+
     default:
         return false;
     }
@@ -1192,13 +1090,13 @@ bool is_item_selected(const item_def &i, int selector)
 static void _get_inv_items_to_show(vector<const item_def*> &v,
                                    int selector, int excluded_slot)
 {
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (const auto &item : you.inv)
     {
-        if (you.inv[i].defined()
-            && you.inv[i].link != excluded_slot
-            && is_item_selected(you.inv[i], selector))
+        if (item.defined()
+            && item.link != excluded_slot
+            && is_item_selected(item, selector))
         {
-            v.push_back(&you.inv[i]);
+            v.push_back(&item);
         }
     }
 }
@@ -1214,17 +1112,12 @@ static void _get_inv_items_to_show(vector<const item_def*> &v,
  */
 bool any_items_of_type(int selector, int excluded_slot)
 {
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (you.inv[i].defined()
-            && you.inv[i].link != excluded_slot
-            && is_item_selected(you.inv[i], selector))
-        {
-            return true;
-        }
-    }
-
-    return false;
+    return any_of(begin(you.inv), end(you.inv),
+                  [=] (const item_def &item) -> bool
+                  {
+                      return item.defined() && item.link != excluded_slot
+                          && is_item_selected(item, selector);
+                  });
 }
 
 // Use title = nullptr for stock Inventory title
@@ -1262,16 +1155,16 @@ static unsigned char _invent_select(const char *title = nullptr,
     return menu.getkey();
 }
 
-unsigned char get_invent(int invent_type, bool redraw)
+void display_inventory()
 {
-    unsigned char select;
     int flags = MF_SINGLESELECT;
     if (you.dead || crawl_state.updating_scores)
         flags |= MF_EASY_EXIT;
 
     while (true)
     {
-        select = _invent_select(nullptr, MT_INVLIST, invent_type, -1, flags);
+        unsigned char select =
+            _invent_select(nullptr, MT_INVLIST, OSEL_ANY, -1, flags);
 
         if (isaalpha(select))
         {
@@ -1286,10 +1179,8 @@ unsigned char get_invent(int invent_type, bool redraw)
             break;
     }
 
-    if (redraw && !crawl_state.doing_prev_cmd_again)
+    if (!crawl_state.doing_prev_cmd_again)
         redraw_screen();
-
-    return select;
 }
 
 // Reads in digits for a count and apprends then to val, the
@@ -1640,7 +1531,7 @@ bool nasty_stasis(const item_def &item, operation_types oper)
     return (oper == OPER_PUTON
            && (item.is_type(OBJ_JEWELLERY, AMU_STASIS)
                && (you.duration[DUR_HASTE] || you.duration[DUR_SLOW]
-                   || you.duration[DUR_TELEPORT] || you.duration[DUR_FINESSE])))
+                   || you.duration[DUR_TELEPORT])))
             || (oper == OPER_PUTON || oper == OPER_WEAR
                 || oper == OPER_WIELD && !_is_wielded(item))
                 && (_is_known_no_tele_item(item) && you.duration[DUR_TELEPORT]);
@@ -1672,6 +1563,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (oper == OPER_REMOVE
         && item.is_type(OBJ_JEWELLERY, AMU_FAITH)
         && !(you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
+        && !you_worship(GOD_GOZAG)
         && !you_worship(GOD_NO_GOD)
         && !you_worship(GOD_XOM))
     {
@@ -1698,7 +1590,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         }
 
         if (get_weapon_brand(item) == SPWPN_VAMPIRISM
-            && you.undead_state() == US_ALIVE && !crawl_state.game_is_zotdef()
+            && you.undead_state() == US_ALIVE
             && !you_foodless()
             // Don't prompt if you aren't wielding it and you can't.
             && (you.hunger_state >= HS_FULL || _is_wielded(item)))
@@ -1706,14 +1598,31 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (is_artefact(item) && artefact_property(item, ARTP_MUTAGENIC))
+        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
+        {
+            if (_is_wielded(item) && you_worship(GOD_ZIN))
+                penance = true;
+            return true;
+        }
+
+        if (is_artefact(item) && artefact_property(item, ARTP_DRAIN))
             return true;
     }
 
     if (oper == OPER_PUTON || oper == OPER_WEAR || oper == OPER_TAKEOFF
         || oper == OPER_REMOVE)
     {
-        if (is_artefact(item) && artefact_property(item, ARTP_MUTAGENIC))
+        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
+        {
+            if ((oper == OPER_TAKEOFF || oper == OPER_REMOVE)
+                 && you_worship(GOD_ZIN))
+            {
+                penance = true;
+            }
+            return true;
+        }
+
+        if (is_artefact(item) && artefact_property(item, ARTP_DRAIN))
             return true;
     }
 
@@ -1788,10 +1697,12 @@ bool check_warning_inscriptions(const item_def& item,
                 return true;
         }
 
+        // XXX: duplicates a check in delay.cc:_finish_delay()
         string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
                                       : item.name(DESC_A));
-        if (nasty_stasis(item, oper))
+        if (nasty_stasis(item, oper)
+            && item_ident(item, ISFLAG_KNOW_TYPE))
         {
             prompt += string(" while ")
                       + (you.duration[DUR_TELEPORT] ? "about to teleport" :
@@ -2047,10 +1958,6 @@ bool item_is_wieldable(const item_def &item)
         return you.has_spell(SPELL_SANDBLAST);
     }
 
-    // Snakable missiles; weapons were already handled above.
-    if (item_is_snakable(item) && you.has_spell(SPELL_STICKS_TO_SNAKES))
-        return true;
-
     return false;
 }
 
@@ -2110,7 +2017,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         if ((!wielded || !reach) && !msg)
             return false;
 
-        if (reach && weapon_reach(item) > 2 && item_type_known(item))
+        if (reach && weapon_reach(item) > REACH_NONE && item_type_known(item))
         {
             if (!wielded)
             {
@@ -2156,7 +2063,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
 #if TAG_MAJOR_VERSION == 34
             && item.sub_type != MISC_BUGGY_EBONY_CASKET
 #endif
-            && item.sub_type != MISC_RUNE_OF_ZOT)
+            )
         {
             return true;
         }
@@ -2178,20 +2085,11 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
  */
 void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers)
 {
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (auto &item : you.inv)
     {
-        item_def& item(you.inv[i]);
         // can't charge non-evokers, or evokers that are full
-        if (!is_xp_evoker(item) || item.evoker_debt == 0)
+        if (!is_xp_evoker(item) || evoker_debt(item.sub_type) == 0)
             continue;
-
-        // Only recharge one of each type of evoker at a time.
-        // Prioritizes by which one is most nearly charged.
-        if (evokers[item.sub_type]
-            && evokers[item.sub_type]->evoker_debt <= item.evoker_debt)
-        {
-            continue;
-        }
 
         evokers[item.sub_type] = &item;
     }
@@ -2199,12 +2097,12 @@ void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers)
 
 void identify_inventory()
 {
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (auto &item : you.inv)
     {
-        if (you.inv[i].defined())
+        if (item.defined())
         {
-            set_ident_type(you.inv[i], ID_KNOWN_TYPE);
-            set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
+            set_ident_type(item, true);
+            set_ident_flags(item, ISFLAG_IDENT_MASK);
         }
     }
 }

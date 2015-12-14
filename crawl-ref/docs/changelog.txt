@@ -1,13 +1,467 @@
-Stone Soup 0.16 (up to 0.16-a0-3649-ge23cfc4)
+Stone Soup 0.18 (up to 0.18-a0-346-ga0a4001)
+--------------------------------------------
+
+Branches, Environment
+---------------------
+* The enemies in the Elven Halls ending vault are now less likely to be lured
+  out of the vault.
+* Ziggurat portals no longer appear in Pan.
+
+Character
+---------
+* A new mutation: Sturdy Frame, reducing base ER by 2/4/6 and thus making
+  heavy armour easier to wear. Can be a demonspawn mutation.
+* The player no longer takes an accuracy penalty for fighting while invisible
+  but without SInv (also true of monsters).
+* Formicids now have 0 Throwing aptitude (was -2).
+* Taking a known shaft now has a 2/3 chance of shafting one floor and 1/3 of
+  two floors.
+
+Gods
+----
+* Xom now chaos brands more weapon gifts, and can chaos brand ranged weapons
+  again.
+* Finesse is no longer blocked by stasis.
+* Jiyva altars in Dungeon no longer appear as early in Dungeon.
+* Cheibriados now blocks chaos effects from hasting the player.
+* Piety given for a Ru sacrifice is more explicitly stated.
+
+Items
+-----
+* New items:
+  - The +8 frozen axe "Frostbite" {freezing cloud, *Noise +Fly rC+}, an
+    executioner's axe with a chance of placing freezing clouds on enemies it
+    strikes.
+  - The +12 armour of Talos {ponderous, rF+}, a troll/ogre-sized suit of
+    plate mail.
+  - A figurine of a ziggurat - evoke to create a ziggurat portal. Appears on
+    Zig:27 of all ziggurats and in the Tomb:3 loot.
+  - Pieces from Xom's chessboard - evoke to randomly swap the positions of
+    you and all enemies and LOS, or (on failure) to trigger a Xom effect.
+* The robe of vines is now +2, Regen+7.
+* Amulets of stasis do not generate sound when blocking an effect.
+* The Majin-Bo now speaks occasionally.
+
+Monsters
+--------
+* New monsters:
+  - Spark wasps, lethally electric swarming insects that appear singularly in
+    Spider and in packs in Depths.
+  - Iron giants, with all the resilience that iron implies and the ability to
+    throw you into the pack of giants they lead.
+* Mnoleg gains Random Bolt and Dig.
+* Gloorx Vloq gains Summon Executioners and Black Mark.
+* Juggernauts now have two less damaging attacks instead of one powerful
+  attack.
+* Jellies and death oozes cannot be blinded.
+* Jumping spiders and mana vipers can be blinded.
+* Jumping spiders cannot see invisible.
+* Giant eyeballs and golden eyes can now see invisible.
+* Monsters no longer lose rod power by wearing a shield.
+* Salamander stormcallers' chant does not need to be continuous; they now
+  only need to try to cast Fire Storm at their target three times for it to
+  trigger.
+* Entropy weavers' corrosion is now instant and smite-targeted, but only
+  applies one level of corrosion.
+* Ice devils are now tier 4 demons, with lowered HD to match.
+* Hellwings now have the swoop attack formerly possessed by blue devils.
+* Orange demons have their attacks split - they now have a reaching poison
+  sting and a melee-only weakness attack.
+* Salamander mystics lose Localised Ignite Poison.
+* Natasha, deep elf knights, and salamander stormcallers can no longer cast
+  Conjure Flame.
+* Spectral mist can no longer summon completely random spectral enemies.
+* Banishment from powerful monsters can now send you deeper into the Abyss
+  than Abyss:1.
+* Removed monsters:
+  - Octopode crushers.
+  - (Plain) spiders.
+  - Salamander firebrands.
+  - Blue devils.
+  - Brain worms.
+
+Spells
+------
+* New spell: Yara's Violent Unravelling (L5 Hexes/Transumations); dispels
+  all cancellable effects on the target and - if any were dispelled - causes
+  a radius 1 explosion with damage proportional to the number of dispelled
+  effects.
+* Sticks to Snakes now caps its maximum spell power at 100.
+
+Interface
+---------
+* Earth elementalists now have their stones start on b.
+* Characters starting with a primary ranged weapon now have their melee weapon
+  on b by default.
+* An option is added to the butchering prompt to allow butchering only
+  (e)dible corpses.
+
+Stone Soup 0.17 (20151106)
+--------------------------
+
+Highlights
+----------
+* Square line of sight.
+* Shorter Lair rune branches.
+* New rune vaults for many branches.
+
+Branches, Environment
+---------------------
+* Snake, Shoals, Swamp and Spider are now all 4 levels long, down from 5.
+* Levels no longer have -cTele.
+* Shadow Traps have been removed.
+* Slime wall damage no longer varies by depth.
+* AC now applies before resists for cloud damage.
+* Ghostly flame clouds have been renamed to spectral mist clouds.
+* Troves no longer ask for items that the player character's species cannot
+  use.
+* Pandemonium now spawns primarily tier 3 and above demons.
+* New altar type: 'ecumenical altars', which allow the player to worship a
+  random god.
+* New WizLab: Lehudib's Moon Base, where the player can fight the legendary
+  Moon Troll.
+* Tukima's Studio and Eringya's Formal Garden WizLabs have been removed.
+
+Character
+---------
+* All races have had their evocations aptitudes reduced by one point.
+* MP scaling has been reworked & simplified; MP aptitudes have been adjusted.
+* Heavy armour no longer penalizes unarmed combat & throwing speeds.
+* Rot is now healed first, instead of last; effectively, rotting reduces the
+  effectiveness of healing until cured. The Rot status is also gone, with rot
+  taking place immediately.
+* Stat loss is no longer regenerated over time; instead, it's restored by XP.
+* The deterioration mutation is now only 2 levels, and has a chance of causing
+  stat loss whenever the player takes damage, rather than over time.
+* Being at 0 in a stat no longer causes direct damage to the player.
+* Undead stat gain: Mummies get one of Str, Int, or Dex every 5 levels, and
+  Vampires get either Int or Dex every 5 levels.
+* Vampires can now drink from anything that has blood, regardless of their
+  chunk type.
+* Headbutt aux attacks no longer apply a small stun and the hooves aux kicks no
+  longer bypass AC.
+* Unarmed attacks no longer have a speed penalty when attacking with a shield.
+* Cleaving attacks now function even under confusion.
+* Control-attacking & manipulating doors are no longer permitted under
+  confusion.
+* Confusion will never cause characters to stumble into deep water/lava.
+* Corrosion can affect characters not using weapons or armour, and applies -4
+  to both armour and slaying (instead of -5/-3).
+* Multi-turn actions, other than climbing/descending stairs, no longer reduce
+  EV by 5 for their duration.
+* Poison-immune characters (e.g. gargoyles, mummies) no longer take poison
+  damage.
+* Draconian Fighters no longer start with extra equipment.
+* Teleportitis only triggers when it would land the player in LOS of
+  enemies. It triggers slightly more frequently as a result, but no longer
+  triggers in Labyrinths or the Abyss.
+* The 'spiny' mutation is now dramatically stronger.
+* Powered by Death is now triggered by kills, instead of corpses.
+* Black Mark no longer gives vampirism; its other effects are now stronger.
+* Clawed attacks no longer have bleeding-over-time damage effects.
+* There's now a distinct hunger state of Fainting and appropriate warning
+  messages for when the player is so low on nutrition that they might become
+  paralyzed.
+* The Breathe Flames and Spit Poison mutations are now mutually exclusive.
+* Demonspawn can shoot through their own demonic guardians.
+* Ability scores now cap at 125, up from 72.
+* Some species now have lower Throwing aptitudes:
+  - Centaur, Halfling, and Kobold go from +3 to +1;
+  - Ogre, Spriggan, Tengu, High Elf, and Deep Elf go from +1 to 0;
+  - Hill Orc and Gargoyle go from 0 to -1.
+
+Geometry
+--------
+* All range-based mechanics now treat diagonals identically to orthogonal
+  directions. Line of sight, spell range, and other effects are now visually
+  'square'. Many of those, including line of sight, are now slightly shorter.
+
+Gods
+----
+* Gozag:
+  - The fee for entry has been reduced, especially early on.
+  - Gold distraction is now an effect centered on the player that's refreshed
+    whenever they find (make) new corpse-gold, rather than being centered on
+    the gold piles themselves.
+  - The cost of Potion Petition is more variable and higher initially, but no
+    longer increases with use.
+  - Friendly bribed allies are now permanently allied, but restricted to the
+    branch from which they came.
+  - Corpseless monsters now drop gold.
+  - Gold that lands in deep water/lava teleports into the player's pockets.
+  - Amulets of faith no longer have any effect.
+  - Bribes now work on any intelligent monster in the branch, with bribe
+    susceptibility based on HD and a scaling factor by branch. Unique Hell or
+    Pan lords can't be bribed.
+  - Bribes now trigger on monsters coming into view, rather than on level
+    entry.
+  - Call Merchant now always places shops at the player's location.
+* Ru:
+  - New sacrifice: Sacrifice Eye, similar to the effect of amulets of
+    inaccuracy (and stacking with the amulet).
+  - New sacrifice: Sacrifice Resistance, providing rC- rF-.
+* Beogh's smite damage now scales better with invocations.
+* Okawaru's Finesse no longer gives contamination.
+* Lugonu and Trog no longer accept corpse sacrifices.
+* The Shining One no longer blesses allies' weapons and armour; the Summon
+  Divine Warrior ability is now slightly cheaper.
+* Cheibriados' slouch damage is now based on monster movement speed.
+* Ashenzari now gives the Scrying ability at 1* piety, boosts skills at 2*, and
+  grants SInv at 3*.
+* Zin's Vitalization no longer provides nutrition, and now has a small MP cost.
+* Jiyva's Slime Prayer now lasts longer and has a small MP cost.
+* Sif no longer requires worshippers to know spells.
+* The player now no longer needs an altar to use the following abilities, which
+  are accessible from the ability menu: Zin's Donate Gold, Kiku's Bless Weapon
+  and Gift Necronomicon, Lugonu's Bless Weapon, and The Shining One's Bless
+  Weapon.
+* Gods no longer protect worshippers from Beogh smiting or TSO cleansing
+  flame.
+* Qazlal's wrath now causes noise 50% of the time before other possible
+  actions, and can no longer inflict Deformed Body.
+* Notes are now generated whenever you reach a piety rank for a god for the
+  first time, instead of on abilities being gained.
+
+Items
+-----
+* New items:
+  - Maxwell's Etheric Cage, a helmet giving rElec, +4 MP and a large boost to
+    MP regen, at the cost of causing intermittent light contamination.
+  - the Robe of Vines, a +5 robe with massive regeneration but which renders
+    the wearer unable to heal by external means.
+  - Kryia's mail coat, +7 scale mail which amplifies the effect of healing
+    items (and grants rC+ to boot).
+* Poisonous chunks and rot chunks have been merged into 'inedible' chunks,
+  which are only edible by ghouls. Some monsters have had their meat cleaned.
+* Unrandart changes:
+  - The Cloak of Starlight is now +2 and gives Stlth--.
+  - The fencer's gloves now give a bonus to Short and Long Blades skills.
+  - The Sceptre of Torment is now a staff.
+* The box of beasts now produces a new type of variable creature, 'mutant
+  beasts', instead of chimeras.
+* The Orb of Zot now turns all controlled blinks into uncontrolled blinks while
+  carried.
+* Warding now applies to ranged attacks.
+* Troll leather armour now provides regeneration to trolls.
+* Staves of summoning no longer have a chance of abjuring on hit.
+* Staves of power now give a flat +15 mp, rather than scaling with your MP; they
+  no longer store MP when swapping.
+* For the player and for monsters, curare needles no longer have an effect that
+  prevents the use of abilities relying on breath.
+* Scrolls of Holy Word now apply the Daze status effect instead of stunning
+  enemies.
+* "Sustain abilities" has been renamed to "sustain attributes".
+* The Storm card no longer summons twisters.
+* The Placid Magic card is no more.
+* The Sack of Spiders makes more appropriate types of spiders at lower and
+  higher levels of Evocations and fewer orb spiders overall.
+* The Rod of Clouds makes acid clouds more often and storm clouds less often.
+* Removed items:
+  - The Cloak of Flash.
+  - Potions of decay.
+  - Potions of restore abilities.
+  - Rings of teleport control.
+  - The Book of Control.
+  - Hammers.
+
+Monsters
+--------
+* New monsters:
+  - Salamander stormcallers, appearing in the late Dungeon and the Vaults. They
+    chant for a few turns before calling down a Fire Storm on their victims.
+  - Entropy weavers, appearing in Spider, Vaults, and Depths. They chant for a
+    few turns before corroding their victims' equipment terribly.
+  - Juggernauts, terrifying giants that lurk in Depths. They move quickly and
+    deliver fantastically punishing blows, but must rest after each attack.
+* Death cobs have been greatly strengthened and their attacks increase your
+  hunger, even when guarded by AC.
+* Hungry ghosts' hungering effect now apply even when their attack damage is
+  reduced by AC.
+* XP and placement for many uniques has been adjusted; in general, uniques have
+  been removed from depths at which they're no longer threatening, and their XP
+  has increased considerably.
+* Jellies no longer eat items the player has seen.
+* Monsters will now pick up all scrolls & potions, not just ones they use.
+* Poison now has a 1/3 chance of affecting rPois+ monsters (up from 0/3).
+* All nonliving monsters now have rPois+++.
+* rElec++ has been removed; monsters that previously had it now either have
+  rElec+ or full immunity.
+* Non-magic-immune monsters are now always confuseable.
+* Unrelated monsters can now swap with each other.
+* Ghouls no longer cause rot with their attacks.
+* Monsters no longer eat corpses.
+* Revenants no longer ignore silence.
+* Phantasmal warriors' attacks no longer pierce shields & armour.
+* Death knights now have agony & haunt in addition to pain mirror.
+* Worms are less vulnerable to some forms of kiting, having more regen in
+  exchange for less max hp.
+* Air elementals can no longer 'submerge' in air.
+* Fire elementals no longer fly (though they can still cross lava). They can
+  now enter shallow water.
+* Queen ants are now faster.
+* Liches and Ancient Liches can no longer cast Shadow Creatures.
+* Many monsters have lost the 'teleport self' spell: (ancient) liches, wizards,
+  giant orange brains, hellwings, smoke demons, ogre magi, Mara, and Boris.
+* Various 'high-intelligence' monsters no longer have immunity to drowning
+  while confused.
+* Basic mummies no longer have death curses.
+* Alligators now come in pairs.
+* Jorgrun is no longer a deep dwarf, and now regenerates normally.
+* Deep dwarf ghosts now regenerate normally.
+* Hell beasts no longer have randomized speeds.
+* Salamander mystics, firebrands, and stormcallers now all have normal land
+  move speed and fast swimming speed.
+* Polyphemus can throw his yaks at the player.
+* Blocks of ice are now susceptible to LRD and Shatter.
+* Demonspawn warmongers now have Haste Other instead of Grand Avatar, and can
+  spawn with a shield.
+* Demonspawn blood saints no longer have ephemeral infusion, and no longer
+   damage themselves when casting Legendary Destruction.
+* Orange crystal statues now have Shadow Creatures and both they and obsidian
+  statues are faster at casting their spells.
+* Monsters can no longer have the Inner Flame spell.
+* Hellwings no longer have the Teleport Other spell.
+* Monsters can no longer have Animate Dead nor Simulacrum spells.
+* Monsters that worship Dith or Yred (including allies of the player) are
+  immune to the umbra accuracy reduction.
+* Monsters can no longer have a flee ability (polar bears, black bears, and
+  krakens).
+* Derived undead (skeletons, zombies, spectres, and simulacra) now do 80% of the
+  damage of the base monster and inherit the energy use pattern of the base
+  monster.
+* Derived undead created by spells or items are temporary, falling apart after
+  some time. Yredelemnul still creates permanent undead.
+* Removed monsters:
+  - Unborn.
+  - Ravens.
+  - Giant mites.
+  - Baby alligators.
+  - Boring beetles.
+  - Goliath beetles.
+  - Wandering mushrooms only generate through Fedhas or the monster Summon
+    Mushrooms spell.
+
+Spells
+------
+* Enslavement is replaced by Tukima's Dance in the Enchanter starting book, and
+  by Gell's Gravitas in the Arcane Marksman starting book. Tukima's Dance no
+  longer appears in the Book of Enchantments.
+* Animate Skeleton and Animate Dead now create temporary undead that expire
+  after some time.
+* Ignite Poison is now level 3 Fire/Poison/Transmutations; it no longer ignites
+  items or poisonous creatures, only poisoned creatures and clouds, but does
+  dramatically more damage to the former, especially at low power.
+* Gell's Gravitas is now level 3 and smite-targeted; it can now target empty
+  space, but no longer confuses monsters.
+* Summon Guardian Golem is now level 3.
+* Aura of Abjuration is now level 5, and has been moved from the Grand Grimoire
+  to the book of Summonings.
+* Monstrous Menagerie has been moved from the books of Summonings and Beasts to
+  the Grand Grimoire.
+* Summon Mana Viper has been moved from the book of Hinderance to the book of
+  Summonings.
+* Sticks to Snakes no longer requires wielding arrows.
+* Apporting the Orb of Zot now causes the orb run to begin.
+* Cigotuvi's Embrace is now stronger with small numbers of corpses, and
+  considerably weaker with huge numbers.
+* Freeze no longer has a stun effect.
+* Death's Door sets player exhaustion when canceled with Borgnjor's
+  Revivification.
+* Ozocubu's Armour and Stoneskin no longer give additional bonuses to Ice Form
+  and Statue Form, respectively.
+* Casting Malign Gateway no longer drains player Int.
+* Casting Haunt no longer cause sickness.
+* High level spellbooks no longer restrict learning from them based on skill
+  levels.
+* Corpse Rot now affects all corpses in LOS.
+* Darkness is now level 6.
+* Controlled Blink is now level 8.
+* Removed spells:
+  - Abjuration.
+  - Control Teleport.
+  - Enslavement.
+  - Flight.
+  - Sure Blade.
+  - Singularity.
+
+Interface
+---------
+* The level map viewer (X) now allows you to examine monsters, items & features
+  (with 'v'), just as the normal examine mode does.
+* The inventory descriptions for weapons & shields now shows the skill required
+  to reach minimum attack delay / remove attack delay penalty, respectively.
+* The rune menu now shows you all runes and their locations before they are
+  found, including the Orb of Zot.
+* New ability_slot option, which allows you to specify default letters for
+  abilities.
+* The 'a'bility command shows the menu by default; to get the old behaviour,
+  use the option "ability_menu = false".
+* The auto_eat_chunks option is now true by default, so hungry characters eat
+  chunks while resting, travelling, and exploring.
+* Allow searching for jewellery, dragon armour/hides and magical staves using
+  abbreviations for their granted properties.
+
+Technical
+---------
+* Compilation under Cygwin is now supported.
+
+Stone Soup 0.16.2 (20150811)
+--------------------------------------------
+* Give FeEE players stones at game start.
+* Display base attributes in the '@' display.
+* No longer revoke Zin's sanctuary when a confused ally attacks you, and allow
+  confused allies in your sanctuary to get away with attacking hostiles.
+* Ranged and confused player attacks as well as the Tornado, Static Discharge,
+  and Singularity spells now all break sanctuary.
+* Fix a bug where players who lose the big wings mutation while flying with no
+  other source of flight would continue to fly. They now stop flying and get an
+  emergency flight evocation if wearing a ring of flight.
+* Fix a bug where a player with the confused status could cancel accidental
+  attacks when wielding a weapon inscribed with "!a".
+* Fix a bug where monsters with phase shift got 8 more EV than intended.
+* Fix a bug where players could take a shaft and land in inescapable areas.
+* Have Dithmenos' spell-shadowing attack use the same targeting as the player
+  attack that triggered it to avoid it doing things like hitting allies.
+* Fix a mouse bug in the Tiles version where Ctrl and Alt modifiers would be
+  set when clicking despite those keys not being pressed.
+* Fix the Tiles version failing to run on OS X.
+* In the Objstat debug mode for counting items and monsters, the output format
+  has been streamlined to generate one file per table with data from all levels
+  in each table.
+* Fix a bug in Objstat where items in shops weren't counted.
+* Other minor bugfixes, and cleanups to in-game descriptions and help text.
+
+Stone Soup 0.16.1 (20150322)
+--------------------------------------------
+* Major bugfix release. Because of the first two bugfixes listed below, it's
+  strongly recommended that all 0.16.0 users upgrade to this version.
+* Fix a bug where all player melee damage was effectively doubled. This only
+  affected player melee damage, not player ranged or spells, or monster damage
+  at all.
+* Fix a bug in sprint where controlled blink was blocked as if from the stasis
+  effect.
+* Artefacts with the Contam property are no longer marked as chaotic and hence
+  hated by Zin, since Zin wouldn't give penance for using e.g. weapons with
+  this property anyhow. There's now a warning under Zin when Contam items are
+  removed, since this does incur penance.
+* Monsters no longer avoid walking on shadow traps.
+* Fix the build for the Android port of DCSS.
+* Other minor bugfixes.
+
+Stone Soup 0.16 (20150311)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
+* Zot Defense has been removed.
 
 Branches, environment
 ---------------------
+* The tides in Shoals now only shift between shallow water & land; deep water
+  is neither created nor destroyed. The tides move 15 times faster than before.
 * Ziggurats now only require two runes to enter, down from three.
 * Every time a player clears a ziggurat (exits from the top floor, Zig:27), all
   subsequent ziggurats become significantly harder.
 * A Hall of Blades area (not branch) is now guaranteed on Elf:2.
+* Abyssal stairs can now appear in the Abyssal Knight starting abyss.
 * Clouds of draining now require rN+++ for immunity, up from rN+.
 * Clouds of miasma now apply the 'Rot' status, rather than causing rotting
   directly.
@@ -25,7 +479,7 @@ Character
   weapon choice.
 * Ghouls now gain as much healing from normal chunks as they previously got
   from rotting flesh, and always cure a point of rot when eating a chunk.
-* Vampires now bottle blood with 'c', which they can now do from first level.
+* Vampires now bottle blood with 'c', and can do so from the first level.
 * Butchering/bottling now only takes a single turn.
 * Wanderers now receive a randart spellbook instead of starting with a Level 1
   spell memorized.
@@ -36,7 +490,8 @@ Character
 * Worshippers of Kikubaaqudgha and Nemelex Xobeh will now have titles unique
   to those gods displayed when their highest skill is Necromancy or Evocations
   (respectively).
-* Removed Death Knight background.
+* Gargoyles can no longer cast Statue Form.
+* Removed Death Knight and Healer backgrounds.
 
 Monsters
 --------
@@ -64,16 +519,16 @@ Monsters
   - Elemental wellsprings, appearing in Cocytus. They fire powerful waves of
     water which produce hostile water elementals - but deplete their own
     'health' in the process.
-  - Bennu, the divine phoenix, appearing in Tomb. Attacks with fire, draining,
-    and holy; when killed, explodes into ghostly flame and instantly returns
-    to life (once).
-  - Ushabti, funerary statues, appearing in Tomb. They breathe a mix of miasma
-    and draining clouds, and rumble deeply to alert far-away foes.
+  - Bennu, the divine phoenix, appearing in Tomb. Attacks with draining and
+    holy; when killed, explodes into ghostly flame and instantly returns to
+    life (once).
+  - Ushabti, funerary statues, appearing in Tomb. They exhale long lines of
+    draining clouds, and rumble deeply to alert far-away foes.
   - Anubis guards, living fanatics appearing in Tomb. They're conditioned to
-    be immune to torment, and breathe draining, control undead, dispel undead,
-    and howl to alert other guards.
+    be immune to torment, and breathe draining, dispel undead, and howl to
+    alert other guards.
   - Death scarabs, swarming insects appearing in Tomb. They trail miasma and
-    bite to drain life, speed, and skill. Their bite can also apply rN-.
+    have a vampiric bite that also drains speed.
 * Renamed monsters:
   - Silver statues -> obsidian statues.
   - Green rats -> river rats.
@@ -82,6 +537,8 @@ Monsters
   - Red wasps -> hornets.
   - Mermaids -> sirens.
   - Sirens -> merfolk avatars.
+  - Meatsprint lost souls -> wretched souls.
+* The Royal Jelly now leaks a large number of jellies when polymorphed.
 * Ghost crabs have been moved from Crypt to Swamp.
 * The "misshapen and mutated" status (from Malmutate and the new Irradiate
   spell) is now temporary, but more significant.
@@ -95,17 +552,22 @@ Monsters
   been tweaked.
 * Sense invisibility has been simplified; monsters that had it now have see
   invisible + blindness immunity instead.
+* Item-eating monsters such as jellies no longer eat items you have seen,
+  except for followers of Jiyva.
 * Magic immunity no longer confers confusion immunity to monsters.
+* Many monsters are no longer magic immune: notably, most plant enemies, eyes,
+  mummies, and angels.
 * Polymorphed monsters now return to their original shapes in death.
 * Liches (and ancient liches) now choose their spells randomly from a large
   set of possible spells, instead of having fixed spellbooks.
+* All non-permanent summoned monsters are now unable to use stairs.
 
 Spells
 ------
 * New spells:
   - Singularity (L9 Translocation), which summons a singularity & sucks in all
     nearby enemies, severely damaging them in the process.
-  - Gell's Gravitas (L6 Hexes/Translocation), which pulls nearby creatures
+  - Gell's Gravitas (L5 Hexes/Translocation), which pulls nearby creatures
     toward the target, causing damage if they collide & occasionally confusing
     them.
   - Hydra Form (L6 Transmutation), a short-duration form that attacks all
@@ -118,10 +580,9 @@ Spells
 * Force Lance is now L4 Translocation/Conjuration, and is more accurate and
   better at knocking enemies back.
 * Ice, Dragon, Tree and Fungus forms no longer meld octopode rings.
-* Dragon Form now provides a spell power & success chance enhancer for Dragon's
-  Call.
 * Spell miscast effects have been hugely revamped.
-* Twisted Resurrection has been removed.
+* Monstrous Menagerie has had its summon cap reduced by one.
+* Twisted Resurrection and Forceful Dismissal have been removed.
 
 Items
 -----
@@ -162,14 +623,21 @@ Items
   - The Hat of the Alchemist is now -2 (rElec rPois rF rC rN MR rMut rCorr).
   - Maxwell's Patent Armour now gives rCorr rElec instead of rF+ rC+.
   - The arbalest Hellfire has had its explosion damage roughly doubled.
+  - The dark maul has had both its base damage & enchantment increased.
 * All food other than rations, chunks, and royal jellies now takes one turn
   to eat.
 * Potions of blood no longer give nutrition for non-vampires.
 * All short blades now do piercing damage.
 * Weapons other than short blades & felid claws are all now equally good at
   stabbing.
-* Elemental evocables now stack.
+* Light armour now has a small spellcast success penalty.
+* Elemental evocables now charge & discharge on a type-by-type basis, rather
+  than individually for each item.
 * The Box of Beasts and Rod of Shadows are now considerably stronger.
+* The lantern of shadows now drains MP while in use, and ceases to function
+  once its wielder runs dry.
+* Steel ammo no longer has a decreased mulch rate.
+* Large rocks no longer have randomized range.
 * Renamed items:
   - Cutlasses are now rapiers.
   - Bastard swords are now double swords.
@@ -180,7 +648,10 @@ Items
   - Potions of confusion, porridge and coagulated blood.
   - Blessed Blades.
   - Rods of Striking.
+  - Tomes of Destruction.
   - The book of Wizardry.
+  - The Spear of the Botono.
+  - The blowgun of the Assassin.
 
 
 Cards
@@ -193,9 +664,11 @@ Cards
   - Rangers, which summons two or three ranged-missile users.
   - Placid Magic, which removes all status effects and applies heavy antimagic
     to all creatures in sight, including the user.
+  - Water, which creates temporary pools of shallow water & summoned elemental
+    allies.
 * Revamped destruction cards:
-  - Storm has replaced rain and swiftness with summoning air elementals,
-    an elemental wellspring, or thunder clouds alongside a wind blast.
+  - Storm has replaced rain and swiftness with summoning air elementals, or
+    thunder clouds alongside a wind blast.
   - Pain has lost Torment and can now summon a flayed ghost to instantly apply
     its flaying effect to living targets.
   - Venom has lost Sting for earlier Venom Bolts and Poison Arrows, but at low
@@ -223,13 +696,14 @@ Cards
   - Dance has replaced its short swords with quarterstaves and its dire flails
     with executioner's axes. It also has a chance of summoning a randart.
   - Foxfire has lost butterflies and gained ravens.
-  - Repulsiveness can now summon both an ugly thing and a very ugly thing.
+  - Repulsiveness can now summon both an ugly thing and a very ugly thing, and
+    always summons at least one friendly ugly thing if any hostiles are made.
 * Revamped emergency cards:
   - Cloud surrounds all hostile monsters with varying types of clouds,
     instead of randomly scattering clouds in all valid places in sight.
   - Shaft now randomly places shafts under other monsters as well.
   - Tomb can now raise rock walls on stone stairs and deep water.
-  - Velocity will always apply a overall-positive effect (with allies present).
+  - Velocity will always apply an overall-positive effect (with allies present).
   - Banshee now drains victims, in addition to causing fear.
   - Solitude can now cause Disjunction at high power.
 * Wild Magic now affects enemies instead of the player, and restores magic for
@@ -249,12 +723,11 @@ Gods
   - Does not have piety.
   - Defeated enemies turn to gold; these gold piles distract nearby
     creatures, causing them to sometimes not act.
-  - Potion Petition: purchase one set of potion effects.
+  - Potion Petition: purchase one set of potion effects. The first use is free.
   - Call Merchant: fund a merchant to set up shop somewhere near to areas
     of the dungeon you have explored.
   - Bribe Branch: send money to the inhabitants of a branch to turn them
     temporarily neutral or incite them to join you.
-  - Duplication: one non-artefact item can be duplicated at an altar.
 * New god: Ru the Awakened. Ru is a temple god, with an altar either in
   Temple or on D:2-9.
   - Periodically offers the player a choice of three permanent sacrifices in
@@ -269,7 +742,6 @@ Gods
         destination. Inflicts medium exhaustion.
   - 5*: Apocalypse: Deals very high damage to all monsters in LOS and inflicts
         statuses. Inflicts heavy drain and exhaustion.
-  - Ru's abilities can be used while silenced.
 * All gods now treat followers' kills the same as the player's, for purposes of
   piety gain.
 * Makhleb and Okawaru no longer support corpse sacrifice.
@@ -279,10 +751,20 @@ Gods
   - Draw One and Peek at Two are no more.
   - Cards have been changed thoroughly over once more.
   - Nemelex now grants destruction decks again.
+* While following TSO, enemies will no longer be distracted by your allies.
 * TSO's Divine Shield no longer benefits from Shields skill.
 * Zin:
-   - Hell effect protection halved; now capping out at 50%, down from 100%.
-   - Recite now more effective at very low Invocations.
+ - Hell effect protection halved; now capping out at 50%, down from 100%.
+ - Recite now more effective at very low Invocations.
+* Elyvilon:
+  - Followers can no longer pacify monsters by zapping wands of Heal Wounds.
+  - Piety gain is now solely from exploration.
+  - Abilities have been reworked:
+    - 1*: Lesser Self-Healing (now called 'Lesser Healing')
+    - 2*: Greater Heal Other (now called 'Heal Other')
+    - 3*: Purification
+    - 4*: Greater Self-Healing (now called 'Greater Healing')
+    - 5*: Divine Vigour
 * Gods that hated eating various types of creature (Beogh and the good gods)
   now hate butchering those types of creatures. Penalties for violating these
   conducts have been raised significantly.
@@ -485,7 +967,7 @@ Items
     a starting weapon; the basic crossbow has been renamed to an 'arbalest';
     and a new, rare 'triple crossbow' type has been added.
   - (Plain) bows have been renamed to shortbows.
-* Weapon enchantment & slaying bonsues have been merged into a single number,
+* Weapon enchantment & slaying bonuses have been merged into a single number,
   giving both +accuracy & +damage. Scrolls of enchant weapon I, II, and III
   have all been merged into a new "enchant weapon" scroll. The scrolls are
   rarer, but always succeed.
@@ -815,7 +1297,7 @@ Monsters
     - Rakshasas gain a monster spell "Phantom Mirror", which summons
       a clone of a nearby allied monster with half the hit points, with
       a 50% chance of swapping the clone for the original; this replaces
-      their previous self-cloning abilities.  They can now also cast
+      their previous self-cloning abilities. They can now also cast
       Iskenderun's Mystic Blast and will summon two clones of themselves
       at 50% HP as a one-time effect.
     - Giant orange brains get Mass Confusion instead of Confusion.

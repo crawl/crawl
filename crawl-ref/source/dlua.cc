@@ -258,7 +258,7 @@ string dlua_chunk::rewrite_chunk_prefix(const string &line, bool skip_body) cons
     {
         const string line_num = s.substr(lns, pe - lns);
         const int lnum = atoi(line_num.c_str());
-        const string newlnum = make_stringf("%d", lnum + first - 1);
+        const string newlnum = to_string(lnum + first - 1);
         s = s.substr(0, lns) + newlnum + s.substr(pe);
         pe = lns + newlnum.length();
     }

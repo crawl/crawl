@@ -13,7 +13,6 @@
 --               scroll, jewellery, potion, book, magical staff, orb, misc,
 --               <armourtype> armour
 -- { <ego> } - short item ego description: rC+, rPois, SInv, freeze etc.
--- {stick} for items suitable for "sticks to snakes"
 -- {god gift} for god gifts
 -- {fruit} for fruit
 --
@@ -29,6 +28,10 @@ function ch_stash_search_annotate_item(it)
     annot = annot .. "{dropped} "
   end
 
+  if it.ininventory then
+    annot = annot .. "{inventory} "
+  end
+
   if it.is_throwable then
     annot = annot .. "{throwable} "
   end
@@ -37,10 +40,6 @@ function ch_stash_search_annotate_item(it)
     annot = annot .. "{artefact} {artifact} "
   elseif it.branded then
     annot = annot .. "{ego} {branded} "
-  end
-
-  if it.snakable then
-    annot = annot .. "{stick} "
   end
 
   if it.god_gift then
@@ -57,7 +56,66 @@ function ch_stash_search_annotate_item(it)
   end
 
   if it.ego_type_terse ~= "" and it.ego_type_terse ~= "unknown" then
+    if it.class(true) == "jewellery" then
+      annot = annot .. "{" .. it.ego_type_terse
+      if it.ego_type_terse == "Ice" then
+        annot = annot .. " rC+ rF-"
+      elseif it.ego_type_terse == "Fire" then
+        annot = annot .. " rF+ rC-"
+      elseif it.ego_type_terse == "Ward" then
+        annot = annot .. " rN+"
+      elseif it.ego_type_terse == "Str" or it.ego_type_terse == "Int"
+         or it.ego_type_terse == "Dex" or it.ego_type_terse == "Slay"
+         or it.ego_type_terse == "EV" or it.ego_type_terse == "AC" then
+        if it.plus == nil then
+          annot = annot .. "+"
+        elseif it.plus < 0 then
+          annot = annot .. "-" .. it.plus
+        else
+          annot = annot .. "+" .. it.plus
+        end
+      end
+      annot = annot .. "} "
+    else
       annot = annot .. "{" .. it.ego_type_terse .. "} "
+    end
+  end
+
+  if it.class(true) == "magical staff" and not it.artefact then
+    local props = {
+      ["air"] = "rElec",
+      ["cold"] = "rC+",
+      ["death"] = "rN+",
+      ["energy"] = "channel",
+      ["fire"] = "rF+",
+      ["poison"] = "rPois",
+      ["power"] = "MP+",
+      ["summoning"] = "Ward",
+      ["wizardry"] = "Wiz"
+    }
+    if props[it.subtype()] then
+      annot = annot .. "{" .. props[it.subtype()] .. "} "
+    end
+  end
+
+  if it.class(true) == "armour" and not it.artefact then
+    local props = {
+      ["troll"] = "Regen+",
+      ["steam"] = "rSteam",
+      ["mottled"] = "rNapalm",
+      ["quicksilver"] = "MR+",
+      ["swamp"] = "rPois",
+      ["fire"] = "rF++ rC-",
+      ["ice"] = "rC++ rF-",
+      ["pearl"] = "rN+",
+      ["storm"] = "rElec",
+      ["shadow"] = "Stlth++++",
+      ["gold"] = "rF+ rC+ rPois"
+    }
+    local t = it.name("base"):match("%w+")
+    if props[t] then
+      annot = annot .. "{" .. props[t] .. "} "
+    end
   end
 
   if it.class(true) == "potion" and it.is_preferred_food then
@@ -76,6 +134,13 @@ function ch_stash_search_annotate_item(it)
       annot = annot .. "{"
   end
   annot = annot .. it.class(true) .. "}"
+
+  if annot:find("rC+") then
+      annot = annot .. " {resist cold} {cold resistance}"
+  end
+  if annot:find("rF+") then
+      annot = annot .. " {resist fire} {fire resistance}"
+  end
 
   return annot
 end

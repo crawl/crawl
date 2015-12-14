@@ -30,7 +30,7 @@
 // needs to fit into 24 lines!
 #define WEBTILES_MSG_MIN_HEIGHT 6
 
-// Helper for layouts.  Tries to increment lvalue without overflowing it.
+// Helper for layouts. Tries to increment lvalue without overflowing it.
 static void _increment(int& lvalue, int delta, int max_value)
 {
     lvalue = min(lvalue+delta, max_value);
@@ -181,8 +181,8 @@ public:
     { valid = _init(); }
     bool _init()
     {
-        // Don't let the mlist column steal all the width.  Up front,
-        // take some for the view.  If it makes the layout fail, that's fine.
+        // Don't let the mlist column steal all the width. Up front,
+        // take some for the view. If it makes the layout fail, that's fine.
         _increment(viewsz.x, MLIST_MIN_WIDTH/2, Options.view_max_width);
 
         // x: View and mlist share leftover; then hud gutter.
@@ -376,7 +376,7 @@ void crawl_view_geometry::init_geometry()
 {
     termsz = coord_def(get_number_of_cols(), get_number_of_lines());
     hudsz  = coord_def(HUD_WIDTH,
-                       HUD_HEIGHT + crawl_state.game_is_zotdef()
+                       HUD_HEIGHT
 #if TAG_MAJOR_VERSION == 34
                                   + ((you.species == SP_LAVA_ORC) ? 1 : 0)
 #endif

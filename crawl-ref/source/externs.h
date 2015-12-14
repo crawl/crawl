@@ -57,17 +57,7 @@ protected:
     tileidx_t m_tile;
 };
 
-#define INFO_SIZE       200          // size of message buffers
-#define ITEMNAME_SIZE   200          // size of item names/shop names/etc
-#define HIGHSCORE_SIZE  800          // <= 10 Lines for long format scores
-
-extern char info[INFO_SIZE];         // defined in main.cc {dlb}
-
-#define kNameLen        30
-const int kFileNameLen = 250;
-
-// Used only to bound the init file name length
-const int kPathLen = 256;
+#define MAX_NAME_LENGTH 30
 
 // This value is used to mark that the current berserk is free from
 // penalty (used for Xom's special berserk).
@@ -80,12 +70,10 @@ typedef FixedBitArray<GXM, GYM> map_bitmask;
 struct item_def;
 struct coord_def;
 class level_id;
-class player_quiver;
 class map_marker;
 class actor;
 class player;
 class monster;
-class KillMaster;
 class ghost_demon;
 
 typedef pair<coord_def, int> coord_weight;
@@ -94,8 +82,6 @@ template <typename Z> static inline Z sgn(Z x)
 {
     return x < 0 ? -1 : (x > 0 ? 1 : 0);
 }
-
-static inline int dist_range(int x) { return x*x + 1; }
 
 struct coord_def
 {
@@ -250,9 +236,6 @@ struct coord_def
     {
         return xi == x && yi == y;
     }
-
-    int range() const;
-    int range(const coord_def other) const;
 };
 
 extern const coord_def INVALID_COORD;
@@ -271,7 +254,7 @@ struct run_check_dir
  *
  * An mid_t is a persistent (across levels and across save/restore)
  * and unique (within a given game) identifier for a monster, player,
- * or fake actor.  The value 0 indicates "no actor", and any value
+ * or fake actor. The value 0 indicates "no actor", and any value
  * greater than or equal to MID_FIRST_NON_MONSTER indicates an actor
  * other than a monster.
  *
@@ -374,10 +357,6 @@ struct delay_queue_item
     int         parm2;
     int         parm3;
     bool        started;
-#if TAG_MAJOR_VERSION == 34
-    int         trits[6];
-#endif
-    size_t      len;
 };
 
 // Identifies a level. Should never include virtual methods or
@@ -512,7 +491,7 @@ struct level_pos
 class monster;
 
 // We are not 64 bits clean here yet since many places still pass (or store!)
-// it as 32 bits or, worse, longs.  I considered setting this as uint32_t,
+// it as 32 bits or, worse, longs. I considered setting this as uint32_t,
 // however, since free bits are exhausted, it's very likely we'll have to
 // extend this in the future, so this should be easier than undoing the change.
 typedef uint32_t iflags_t;
@@ -524,24 +503,23 @@ struct item_def
 #pragma pack(push,2)
     union
     {
+        // These must all be the same size!
         short plus;                 ///< + to hit/dam (weapons, rods)
         monster_type mon_type:16;   ///< corpse/chunk monster type
         skill_type skill:16;        ///< the skill provided by a manual
         short charges;              ///< # of charges held by a wand, etc
                                     // for rods, is charge * ROD_CHARGE_MULT
         short initial_cards;        ///< the # of cards a deck *started* with
-        short rune_enum;            ///< rune_type; enum for runes of zot
         short net_durability;       ///< damage dealt to a net
-        short book_param;           ///< level of spells in a monolevel book
     };
     union
     {
+        // These must all be the same size!
         short plus2;        ///< legacy/generic name for this union
-        short evoker_debt;  ///< xp~ required for evoker to finish recharging
         short used_count;   ///< the # of known times it was used (decks, wands)
                             // for wands, may hold negative ZAPCOUNT knowledge
                             // info (e.g. "recharged", "empty", "unknown")
-        bool net_placed;    ///< is this throwing net trapping something?
+        short net_placed;   ///< is this throwing net trapping something?
         short skill_points; ///< # of skill points a manual gives
         short charge_cap;   ///< max charges stored by a rod * ROD_CHARGE_MULT
         short stash_freshness; ///< where stash.cc stores corpse freshness
@@ -549,6 +527,7 @@ struct item_def
 #pragma pack(pop)
     union
     {
+        // These must all be the same size!
         int special;        ///< special stuff
         deck_rarity_type deck_rarity;    ///< plain, ornate, legendary
         int rod_plus;           ///< rate at which a rod recharges; +slay
@@ -627,9 +606,9 @@ public:
     /**
      * Sets this item as being held by a given monster.
      *
-     * @param midx The mindex of the monster.
+     * @param mon The monster. Must be in menv!
      */
-    void set_holding_monster(int midx);
+    void set_holding_monster(const monster& mon);
 
     /**
      * Get the monster holding this item.
@@ -686,6 +665,8 @@ public:
     int runmode;
     int mp;
     int hp;
+    bool notified_mp_full;
+    bool notified_hp_full;
     coord_def pos;
     int travel_speed;
 
@@ -729,11 +710,60 @@ private:
 
 typedef vector<delay_queue_item> delay_queue_type;
 
+enum mon_spell_slot_flag
+{
+    MON_SPELL_NO_FLAGS  = 0,
+    MON_SPELL_EMERGENCY = 1 << 0, // only use this spell slot in emergencies
+    MON_SPELL_NATURAL   = 1 << 1, // physiological, not really a spell
+    MON_SPELL_MAGICAL   = 1 << 2, // a generic magical ability
+    MON_SPELL_DEMONIC   = 1 << 3, // demonic
+    MON_SPELL_WIZARD    = 1 << 4, // a real spell, affected by AM and silence
+    MON_SPELL_PRIEST    = 1 << 5,
+
+    MON_SPELL_FIRST_CATEGORY = MON_SPELL_NATURAL,
+    MON_SPELL_LAST_CATEGORY  = MON_SPELL_PRIEST,
+
+    MON_SPELL_TYPE_MASK = MON_SPELL_NATURAL | MON_SPELL_MAGICAL
+                             | MON_SPELL_DEMONIC | MON_SPELL_WIZARD
+                             | MON_SPELL_PRIEST,
+    MON_SPELL_INNATE_MASK = MON_SPELL_NATURAL | MON_SPELL_MAGICAL
+                             | MON_SPELL_DEMONIC,
+    MON_SPELL_ANTIMAGIC_MASK = MON_SPELL_MAGICAL | MON_SPELL_DEMONIC
+                             | MON_SPELL_WIZARD,
+
+    MON_SPELL_BREATH    = 1 << 6, // sets a breath timer, requires it to be 0
+    MON_SPELL_NO_SILENT = 1 << 7, // can't be used while silenced/mute/etc.
+
+    MON_SPELL_SILENCE_MASK = MON_SPELL_WIZARD | MON_SPELL_PRIEST
+                             | MON_SPELL_NO_SILENT,
+
+    MON_SPELL_INSTANT   = 1 << 8, // allows another action on the same turn
+    MON_SPELL_NOISY     = 1 << 9, // makes noise despite being innate
+
+    MON_SPELL_LAST_FLAG = MON_SPELL_NOISY,
+};
+DEF_BITFIELD(mon_spell_slot_flags, mon_spell_slot_flag, 9);
+const int MON_SPELL_LAST_EXPONENT = mon_spell_slot_flags::last_exponent;
+COMPILE_CHECK(mon_spell_slot_flags::exponent(MON_SPELL_LAST_EXPONENT)
+              == MON_SPELL_LAST_FLAG);
+
 struct mon_spell_slot
 {
+    // Allow implicit conversion (and thus copy-initialization) from a
+    // three-element initializer list, but not from a smaller list or
+    // from a plain spell_type.
+    constexpr mon_spell_slot(spell_type spell_, uint8_t freq_,
+                             mon_spell_slot_flags flags_)
+        : spell(spell_), freq(freq_), flags(flags_)
+    { }
+    explicit constexpr mon_spell_slot(spell_type spell_ = SPELL_NO_SPELL,
+                                      uint8_t freq_ = 0)
+        : mon_spell_slot(spell_, freq_, MON_SPELL_NO_FLAGS)
+    { }
+
     spell_type spell;
     uint8_t freq;
-    unsigned short flags;
+    mon_spell_slot_flags flags;
 };
 
 typedef vector<mon_spell_slot> monster_spells;
@@ -833,6 +863,6 @@ struct cglyph_t
     }
 };
 
-typedef FixedArray<item_type_id_state_type, NUM_OBJECT_CLASSES, MAX_SUBTYPES> id_arr;
+typedef FixedArray<bool, NUM_OBJECT_CLASSES, MAX_SUBTYPES> id_arr;
 
 #endif // EXTERNS_H

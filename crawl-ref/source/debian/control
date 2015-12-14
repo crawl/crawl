@@ -1,0 +1,66 @@
+Source: crawl
+Section: games
+Priority: optional
+Maintainer: the DCSS Development Team <crawl-ref-discuss@lists.sourceforge.net>
+Uploaders: the DCSS Development Team <crawl-ref-discuss@lists.sourceforge.net>
+Standards-Version: 3.9.5
+Build-Depends: debhelper (>= 7), libncursesw5-dev, bison, flex, liblua5.1-0-dev,
+	pkg-config, libsdl2-image-dev, libsdl2-dev, libsqlite3-dev,
+	libfreetype6-dev, advancecomp, libpng-dev
+Homepage: http://crawl.develz.org/
+
+Package: crawl-common
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: crawl | crawl-tiles
+Description: Dungeon Crawl, a text-based roguelike game (data files)
+ Crawl is a fun game in the grand tradition of games like Rogue, Hack, and
+ Moria. Your objective is to travel deep into a subterranean cave complex and
+ retrieve the Orb of Zot, which is guarded by many horrible and hideous
+ creatures.
+ .
+ These are the data and support files.
+ .
+ This is the Stone Soup version of Dungeon Crawl.
+
+Package: crawl
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, crawl-common (= ${source:Version})
+Description: Dungeon Crawl, a text-based roguelike game
+ Crawl is a fun game in the grand tradition of games like Rogue, Hack, and
+ Moria. Your objective is to travel deep into a subterranean cave complex and
+ retrieve the Orb of Zot, which is guarded by many horrible and hideous
+ creatures.
+ .
+ This is the console version, for tiles, use crawl-tiles instead.
+ .
+ This is the Stone Soup version of Dungeon Crawl.
+
+Package: crawl-tiles-data
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, crawl-common (= ${source:Version})
+Conflicts: crawl-tiles (<< 2:0.11.1-1)
+Replaces: crawl-tiles (<< 2:0.11.1-1)
+Recommends: crawl-tiles
+Description: Dungeon Crawl, a text-based roguelike game (tile data files)
+ Crawl is a fun game in the grand tradition of games like Rogue, Hack, and
+ Moria. Your objective is to travel deep into a subterranean cave complex and
+ retrieve the Orb of Zot, which is guarded by many horrible and hideous
+ creatures.
+ .
+ These are the tile graphics.
+ .
+ This is the Stone Soup version of Dungeon Crawl.Package: crawl-tiles
+
+Package: crawl-tiles
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, crawl-common (= ${source:Version}), crawl-tiles-data (= ${source:Version}), fonts-dejavu-core
+Description: Dungeon Crawl, a roguelike game, tiles version
+ Crawl is a fun game in the grand tradition of games like Rogue, Hack, and
+ Moria. Your objective is to travel deep into a subterranean cave complex and
+ retrieve the Orb of Zot, which is guarded by many horrible and hideous
+ creatures.
+ .
+ This is the graphical (tiles) version.
+ .
+ This is the Stone Soup version of Dungeon Crawl.

@@ -58,19 +58,19 @@ typedef MenuEntry* (*menu_entry_generator)(char letter, const string &str,
 typedef function<int (const string &, const string &, string)> key_describer;
 
 /// A set of optional functionality for lookup types.
-enum lookup_type_flag
+enum class lookup_type
 {
-    LTYPF_NONE            = 0,
+    NONE            = 0,
     /// append the 'type' to the db lookup (e.g. "<input> spell")
-    LTYPF_DB_SUFFIX       = 1<<0,
+    DB_SUFFIX       = 1<<0,
     /// whether the sorting functionality should be turned off
-    LTYPF_DISABLE_SORT    = 1<<1,
+    DISABLE_SORT    = 1<<1,
     /// whether the display menu for this supports tiles
-    LTYPF_SUPPORT_TILES   = 1<<2,
+    SUPPORT_TILES   = 1<<2,
     /// whether the display menu for this has toggleable sorting
-    LTYPF_TOGGLEABLE_SORT = 1<<3,
+    TOGGLEABLE_SORT = 1<<3,
 };
-DEF_BITFIELD(lookup_type_flags, lookup_type_flag);
+DEF_BITFIELD(lookup_type_flags, lookup_type);
 
 /// A description of a lookup that the player can do. (e.g. (M)onster data)
 class LookupType
@@ -119,7 +119,7 @@ public:
     /// a function returning 'true' if the search result corresponding to
     /// the corresponding search should be filtered out of the results
     db_find_filter filter_forbid;
-    /// A set of optional functionality; see lookup_type_flag for details
+    /// A set of optional functionality; see lookup_type for details
     lookup_type_flags flags;
 private:
     MenuEntry* make_menu_entry(char letter, string &key) const;
@@ -128,7 +128,10 @@ private:
     /**
      * Does this lookup type support toggling the sort order of results?
      */
-    bool toggleable_sort() const { return bool(flags & LTYPF_TOGGLEABLE_SORT); }
+    bool toggleable_sort() const
+    {
+        return bool(flags & lookup_type::TOGGLEABLE_SORT);
+    }
 
 private:
     /// Function that fetches a list of keys, without taking arguments.
@@ -739,7 +742,7 @@ string LookupType::prompt_string() const
  */
 string LookupType::suffix() const
 {
-    if (flags & LTYPF_DB_SUFFIX)
+    if (flags & lookup_type::DB_SUFFIX)
         return " " + type;
     return "";
 }
@@ -773,7 +776,7 @@ void LookupType::display_keys(vector<string> &key_list) const
     // For tiles builds use a tiles menu to display monsters.
     const bool text_only =
 #ifdef USE_TILE_LOCAL
-    !(flags & LTYPF_SUPPORT_TILES);
+    !(flags & lookup_type::SUPPORT_TILES);
 #else
     true;
 #endif
@@ -940,7 +943,7 @@ static int _describe_monster(const string &key, const string &suffix,
     ASSERT(mon_num != MONS_PROGRAM_BUG);
     // Don't attempt to get more information on ghost demon
     // monsters, as the ghost struct has not been initialised, which
-    // will cause a crash.  Similarly for zombified monsters, since
+    // will cause a crash. Similarly for zombified monsters, since
     // they require a base monster.
     if (mons_is_ghost_demon(mon_num) || mons_class_is_zombified(mon_num))
         return _describe_generic(key, suffix, footer);
@@ -1024,7 +1027,7 @@ static int _describe_cloud(const string &key, const string &suffix,
  */
 static int _describe_spell_item(const item_def &item)
 {
-    const string desc = get_item_description(item, true, false, true);
+    const string desc = get_item_description(item, true);
     formatted_string fdesc;
     fdesc.cprintf("%s", desc.c_str());
 
@@ -1054,20 +1057,14 @@ static int _describe_item(const string &key, const string &suffix,
     }
 
     string stats;
-    if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS))
-        append_weapon_stats(stats, item);
-    else if (get_item_by_name(&item, key.c_str(), OBJ_ARMOUR))
-        append_armour_stats(stats, item);
-    else if (get_item_by_name(&item, key.c_str(), OBJ_MISSILES))
-        append_missile_info(stats, item);
-    else if (get_item_by_name(&item, key.c_str(), OBJ_MISCELLANY))
+    if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS)
+        || get_item_by_name(&item, key.c_str(), OBJ_ARMOUR)
+        || get_item_by_name(&item, key.c_str(), OBJ_MISSILES)
+        || get_item_by_name(&item, key.c_str(), OBJ_MISCELLANY))
     {
-        if (is_deck(item))
-            stats += "\n" + deck_contents(item.sub_type);
+        // don't request description since _describe_key handles that
+        stats = get_item_description(item, true, false, true);
     }
-
-    if (!stats.empty())
-        stats += "\n";
 
     return _describe_key(key, suffix, footer, stats);
 }
@@ -1092,49 +1089,181 @@ static int _describe_god(const string &key, const string &/*suffix*/,
     return 0; // no exact matches for gods, so output doesn't matter
 }
 
+static string _branch_entry_runes(branch_type br)
+{
+    string desc;
+    const int num_runes = runes_for_branch(br);
+
+    if (num_runes > 0)
+    {
+        desc = make_stringf("\n\nThis %s can only be entered while carrying "
+                            "at least %d rune%s of Zot.",
+                            br == BRANCH_ZIGGURAT ? "portal" : "branch",
+                            num_runes, num_runes > 1 ? "s" : "");
+    }
+
+    return desc;
+}
+
+static string _branch_depth(branch_type br)
+{
+    string desc;
+    const int depth = branches[br].numlevels;
+
+    // Abyss depth is explained in the description.
+    if (depth > 1 && br != BRANCH_ABYSS)
+    {
+        desc = make_stringf("\n\nThis %s is %d levels deep.",
+                            br == BRANCH_ZIGGURAT ? "portal"
+                                                  : "branch",
+                            depth);
+    }
+
+    return desc;
+}
+
+static string _branch_location(branch_type br)
+{
+    string desc;
+    const branch_type parent = branches[br].parent_branch;
+    const int min = branches[br].mindepth;
+    const int max = branches[br].maxdepth;
+
+    // Ziggurat locations are explained in the description.
+    if (parent != NUM_BRANCHES && br != BRANCH_ZIGGURAT)
+    {
+        desc = "\n\nThe entrance to this branch can be found ";
+        if (min == max)
+        {
+            if (branches[parent].numlevels == 1)
+                desc += "in ";
+            else
+                desc += make_stringf("on level %d of ", min);
+        }
+        else
+            desc += make_stringf("between levels %d and %d of ", min, max);
+        desc += branches[parent].longname;
+        desc += ".";
+    }
+
+    return desc;
+}
+
+static string _branch_subbranches(branch_type br)
+{
+    string desc;
+    vector<string> subbranch_names;
+
+    for (branch_iterator it; it; ++it)
+        if (it->parent_branch == br && !branch_is_unfinished(it->id))
+            subbranch_names.push_back(it->longname);
+
+    // Lair's random branches are explained in the description.
+    if (!subbranch_names.empty() && br != BRANCH_LAIR)
+    {
+        desc += make_stringf("\n\nThis branch contains the entrance%s to %s.",
+                             subbranch_names.size() > 1 ? "s" : "",
+                             comma_separated_line(begin(subbranch_names),
+                                                  end(subbranch_names)).c_str());
+    }
+
+    return desc;
+}
+
+static string _branch_noise(branch_type br)
+{
+    string desc;
+    const int noise = branches[br].ambient_noise;
+    if (noise != 0)
+    {
+        desc = "\n\nThis branch is ";
+        if (noise > 0)
+        {
+            desc += make_stringf("filled with %snoise, and thus all sounds "
+                                 "travel %sless far.",
+                                 noise > 5 ? "deafening " : "",
+                                 noise > 5 ? "much " : "");
+        }
+        else
+        {
+            desc += make_stringf("%s, and thus all sounds travel %sfurther.",
+                                 noise < -5 ? "unnaturally silent"
+                                            : "very quiet",
+                                 noise < -5 ? "much " : "");
+        }
+    }
+
+    return desc;
+}
+
+/**
+ * Describe the branch with the given name.
+ *
+ * @param key       The name of the branch in question.
+ * @param suffix    A suffix to trim from the key when making the title.
+ * @param footer    A footer to append to the end of descriptions.
+ * @return          The keypress the user made to exit.
+ */
+static int _describe_branch(const string &key, const string &suffix,
+                            string footer)
+{
+    const string branch_name = key.substr(0, key.size() - suffix.size());
+    const branch_type branch = branch_by_shortname(branch_name);
+    ASSERT(branch != NUM_BRANCHES);
+
+    const string info  = _branch_noise(branch)
+                         + _branch_location(branch)
+                         + _branch_entry_runes(branch)
+                         + _branch_depth(branch)
+                         + _branch_subbranches(branch)
+                         + "\n\n"
+                         + branch_rune_desc(branch, false);
+
+    return _describe_key(key, suffix, footer, info);
+}
 
 /// All types of ?/ queries the player can enter.
 static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
                _get_monster_keys, nullptr, nullptr,
                _describe_monster,
-               LTYPF_SUPPORT_TILES | LTYPF_TOGGLEABLE_SORT),
+               lookup_type::SUPPORT_TILES | lookup_type::TOGGLEABLE_SORT),
     LookupType('S', "spell", nullptr, _spell_filter,
                nullptr, nullptr, _spell_menu_gen,
                _describe_spell,
-               LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
+               lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
     LookupType('K', "skill", nullptr, nullptr,
                nullptr, _get_skill_keys, _skill_menu_gen,
                _describe_generic,
-               LTYPF_SUPPORT_TILES),
+               lookup_type::SUPPORT_TILES),
     LookupType('A', "ability", nullptr, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
                _describe_generic,
-               LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
+               lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
     LookupType('C', "card", _recap_card_keys, _card_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_card,
-               LTYPF_DB_SUFFIX),
+               lookup_type::DB_SUFFIX),
     LookupType('I', "item", nullptr, _item_filter,
                item_name_list_for_glyph, nullptr, _simple_menu_gen,
                _describe_item,
-               LTYPF_NONE),
+               lookup_type::NONE),
     LookupType('F', "feature", _recap_feat_keys, _feature_filter,
                nullptr, nullptr, _feature_menu_gen,
                _describe_generic,
-               LTYPF_SUPPORT_TILES),
+               lookup_type::SUPPORT_TILES),
     LookupType('G', "god", nullptr, nullptr,
                nullptr, _get_god_keys, _god_menu_gen,
                _describe_god,
-               LTYPF_SUPPORT_TILES),
+               lookup_type::SUPPORT_TILES),
     LookupType('B', "branch", nullptr, nullptr,
                nullptr, _get_branch_keys, _simple_menu_gen,
-               _describe_generic,
-               LTYPF_DISABLE_SORT),
+               _describe_branch,
+               lookup_type::DISABLE_SORT),
     LookupType('L', "cloud", nullptr, nullptr,
                nullptr, _get_cloud_keys, _cloud_menu_gen,
                _describe_cloud,
-               LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
+               lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
 };
 
 /**
@@ -1229,8 +1358,8 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
                     "' to display.";
         }
 
-        return make_stringf("Too many matching %s (%" PRIuSIZET ") to display.",
-                            plur_type.c_str(), key_list.size());
+        return make_stringf("Too many matching %s (%d) to display.",
+                            plur_type.c_str(), (int) key_list.size());
     }
 
     // we're good!
@@ -1264,11 +1393,11 @@ static bool _find_description(string &response)
         return false;
 
     ASSERT(*lookup_type_ptr);
-    const LookupType lookup_type = **lookup_type_ptr;
+    const LookupType ltype = **lookup_type_ptr;
 
-    const bool want_regex = !(lookup_type.no_search());
+    const bool want_regex = !(ltype.no_search());
     const string regex = want_regex ?
-                         _prompt_for_regex(lookup_type, response) :
+                         _prompt_for_regex(ltype, response) :
                          "";
 
     if (!response.empty())
@@ -1283,30 +1412,30 @@ static bool _find_description(string &response)
 
 
     // Try to get an exact match first.
-    const bool exact_match = _exact_lookup_match(lookup_type, regex);
+    const bool exact_match = _exact_lookup_match(ltype, regex);
 
-    vector<string> key_list = lookup_type.matching_keys(regex);
+    vector<string> key_list = ltype.matching_keys(regex);
 
-    const bool by_symbol = lookup_type.supports_glyph_lookup()
+    const bool by_symbol = ltype.supports_glyph_lookup()
                            && regex.size() == 1;
-    const string type = lowercase_string(lookup_type.type);
+    const string type = lowercase_string(ltype.type);
     response = _keylist_invalid_reason(key_list, type, regex, by_symbol);
     if (!response.empty())
         return true;
 
     if (key_list.size() == 1)
     {
-        lookup_type.describe(key_list[0]);
+        ltype.describe(key_list[0]);
         return true;
     }
 
-    if (exact_match && lookup_type.describe(regex, true) != ' ')
+    if (exact_match && ltype.describe(regex, true) != ' ')
         return true;
 
-    if (!(lookup_type.flags & LTYPF_DISABLE_SORT))
+    if (!(ltype.flags & lookup_type::DISABLE_SORT))
         sort(key_list.begin(), key_list.end());
 
-    lookup_type.display_keys(key_list);
+    ltype.display_keys(key_list);
     return true;
 }
 

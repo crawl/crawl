@@ -290,10 +290,9 @@ namespace arena
         fact.clear();
         fact.desc = spec;
 
-        vector<string> monsters = split_string(",", spec);
-        for (int i = 0, size = monsters.size(); i < size; ++i)
+        for (const string &monster : split_string(",", spec))
         {
-            const string err = fact.members.add_mons(monsters[i], false);
+            const string err = fact.members.add_mons(monster, false);
             if (!err.empty())
                 throw err;
         }
@@ -1048,7 +1047,7 @@ bool arena_veto_random_monster(monster_type type)
         return true;
     if (!arena::allow_immobile && mons_class_is_stationary(type))
         return true;
-    if (!arena::allow_zero_xp && mons_class_flag(type, M_NO_EXP_GAIN))
+    if (!arena::allow_zero_xp && !mons_class_gives_xp(type))
         return true;
     if (!(mons_char(type) & !127) && arena::banned_glyphs[mons_char(type)])
         return true;
@@ -1137,7 +1136,7 @@ void arena_placed_monster(monster* mons)
     }
 
     if (arena::name_monsters && !mons->is_named())
-        mons->mname = make_name(random_int(), false);
+        mons->mname = make_name();
 
     if (summoned)
     {
@@ -1177,7 +1176,7 @@ void arena_split_monster(monster* split_from, monster* split_to)
 }
 
 void arena_monster_died(monster* mons, killer_type killer,
-                        int killer_index, bool silent, int corpse)
+                        int killer_index, bool silent, const item_def* corpse)
 {
     if (mons_is_tentacle_or_tentacle_segment(mons->type))
         ; // part of a monster, or a spell
@@ -1196,7 +1195,7 @@ void arena_monster_died(monster* mons, killer_type killer,
     {
         arena::faction_b.won = true;
     }
-    // Everyone is dead.  Is it a tie, or something else?
+    // Everyone is dead. Is it a tie, or something else?
     else if (arena::faction_a.active_members <= 0
              && arena::faction_b.active_members <= 0)
     {
@@ -1204,7 +1203,7 @@ void arena_monster_died(monster* mons, killer_type killer,
             mpr("Last arena monster was dismissed.");
         // If all monsters are dead, and the last one to die is a giant
         // spore or ball lightning, then that monster's faction is the
-        // winner, since self-destruction is their purpose.  But if a
+        // winner, since self-destruction is their purpose. But if a
         // trap causes the spore to explode, and that kills everything,
         // it's a tie, since it counts as the trap killing everyone.
         else if (mons_self_destructs(mons) && MON_KILL(killer))
@@ -1256,8 +1255,8 @@ void arena_monster_died(monster* mons, killer_type killer,
         }
     }
 
-    if (corpse != -1 && corpse != NON_ITEM)
-        arena::item_drop_times[corpse] = arena::turns;
+    if (corpse)
+        arena::item_drop_times[corpse->index()] = arena::turns;
 
     // Won't be dropping any items.
     if (mons->flags & MF_HARD_RESET)
@@ -1291,7 +1290,7 @@ static bool _sort_by_age(int a, int b)
 }
 
 // Culls the items which have been on the floor the longest, culling the
-// newest items last.  Items which a monster dropped voluntarily or
+// newest items last. Items which a monster dropped voluntarily or
 // because of being polymorphed, rather than because of dying, are
 // culled earlier than they should be, but it's not like we have to be
 // fair to the arena monsters.

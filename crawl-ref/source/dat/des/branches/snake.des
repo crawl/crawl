@@ -180,7 +180,7 @@ ORIENT: south
 MONS:   ball python w:3 / adder / water moccasin / nothing w:5
 MONS:   anaconda / nothing w:5
 SUBST:  w = wwW
-KPROP:  12 = no_rtele_into
+KPROP:  12 = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxx..@..xxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxxxxxxxx
 xx211xxxxxxxxxxxxxxwwwWWWWWwwwwxxxxxxxxxxxxxwwwWWWWwwxxxxxxxxxxx112xxx
@@ -280,7 +280,7 @@ ENDMAP
 NAME:   nicolae_sea_snake_s
 MONS:   naga mage, naga
 ORIENT: float
-DEPTH:  Snake:2-4
+DEPTH:  Snake:2-3
 TAGS:   no_monster_gen
 SHUFFLE: {[(
 SHUFFLE: (<
@@ -321,7 +321,7 @@ xxsssssxxxxxx
 ENDMAP
 
 NAME:   nicolae_cobra_stairs
-DEPTH:  Snake:3-4
+DEPTH:  Snake:2-3
 ORIENT: float
 TAGS:   no_pool_fixup patrolling
 SHUFFLE: }])
@@ -368,7 +368,7 @@ ENDMAP
 # The disgraced guardian serpent Aizul has been
 # demoted to watching the stairs.
 NAME:   nicolae_aizul_guard
-DEPTH:  Snake:2-4
+DEPTH:  Snake:2-3
 TAGS:   no_rotate no_hmirror no_vmirror
 ORIENT: float
 SHUFFLE: ]})>
@@ -417,7 +417,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_coiled_stairwell_down
-DEPTH:  Snake:1-4
+DEPTH:  Snake, !Snake:$
 TAGS:   uniq_coiled_stairwell
 SUBST:  } = }])>
 MAP
@@ -608,7 +608,7 @@ ENDMAP
 
 NAME:    hangedman_snake_sidewinding
 TAGS:    allow_dup
-DEPTH:   Snake:1-4, Zot:1-4
+DEPTH:   Snake, !Snake:$, Zot, !Zot:$
 : if you.in_branch("Zot") then
 KMONS:  A = base draconian / green draconian w:4
 KMONS:  B = swamp dragon w:5 / fire dragon / ice dragon / storm dragon w:5
@@ -929,13 +929,77 @@ aa...X...xx..Z..--...X...xx..Z..aa
      xxExxxxxxDxxxxxxxxCxxxxxxBxxxxxxx
 ENDMAP
 
+NAME: nicolae_snake_squiggles
+TAGS: transparent extra decor
+DEPTH: Snake
+NSUBST: A = x / ., B = x / ., C = x / ., D = x / ., E = x / ., F = x / ., \
+        G = x / ., H = x / ., I = x / ., J = x / ., K = x / ., L = x / ., \
+        M = x / ., N = x / ., O = x / ., P = x / ., Q = x / ., R = x / ., \
+        S = x / ., T = x / ., U = x / ., V = x / ., W = x / ., X = x / .
+MAP
+     .......
+    ..Xx.xA..
+   ..WxX.AxB..
+  ..VxW...BxC..
+ ..UxV.. ..CxD..
+..TxU..   ..DxE..
+.SxT..     ..ExF.
+.xS..       ..Fx.
+....         ....
+.xR..       ..Gx.
+.RxQ..     ..HxG.
+..QxP..   ..IxH..
+ ..PxO.. ..JxI..
+  ..OxN...KxJ..
+   ..NxM.LxK..
+    ..Mx.xL..
+     .......
+ENDMAP
+
+NAME: nicolae_large_snake_swirl
+TAGS: transparent
+DEPTH: Snake
+: if you.depth() == 1 then
+SUBST: s = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST: s = [{(
+: else
+SUBST: s = ]})[{(
+: end
+MAP
+xxxxxxxxxxx
+@.........xxx
+............xx
+.............xx
+..............x@......@x
+..............xx.......x
+...............x.......x
+...............x.......x
+.....xxxxx.....x......xx
+...xxx.........x......x
+..xx...........x......x
+.xx...........xx.....xx
+@x....xxxx....x......x
+xx...xx......xx.....xx
+x....x..s...xx.....xx
+x....xx...xxx.....xx
+x.....xxxxx......xx
+x...............xx
+x.............xxx
+xx.........xxxx
+ x.....xxxxx
+ xx......@
+  xx......
+   xxx...@
+     xxxxx
+ENDMAP
+
 ################################################################################
 # Snake endings
 ################################################################################
 
 ################################################################################
 # Snake Pit: the hunt
-# XXX: Fix occasional isolated doors embedded in rock.
 NAME:    snake_hunt
 PLACE:   Snake:$
 WEIGHT:  20
@@ -949,11 +1013,12 @@ MONS:    guardian serpent / nothing
 MONS:    naga warrior / naga sharpshooter w:5 / nothing w:15
 MONS:    naga mage w:40 / naga ritualist / naga sharpshooter / nothing w:60
 MONS:    greater naga / guardian serpent
-SHUFFLE: 'X / "Y
-SHUFFLE: 'X / 'X / AB, "Y / CD
-SUBST:   A=x, B=x, C=x, D=x
+SHUFFLE: 'Y / "Z
+SHUFFLE: 'Y / 'Y / AB, "Z / CD
+SUBST:   ABCD = x
 SUBST:   ' = .:250 1 2 3 4:15 5:5
 SUBST:   " = .:250 1 2 3 4:5  5:15
+SUBST:   Z = Y
 SUBST:   X=xc..++, Y=xc++
 SUBST:   T : T U V .:30 b
 SUBST:   _ : ....!x, ! = x .:2
@@ -977,7 +1042,7 @@ xxxxxxx''xxxx''''xxx..45554..xxx""""xxxx""xx
 xxxxxx''xxx''''''''xxx.666.xxx""""""""xxx""x
 xxxxxx'xxx''''''''''xxxcXcxxx""""""""""xxx"x
 xxxxxx''x''''''''''''xx.3.xx""""""""""""x""x
-xxxxxxx'Y'''''''''''''45354"""""""""""""Y"xx
+xxxxxxx'Y'''''''''''''45354"""""""""""""Z"xx
 xxxxxxxxxx''''''''''xx.....xx""""""""""xxxxx
 xxxxxxxxxxx''''''''xxxxx.xxxxx""""""""xxxxxx
 xxxxxxxxxxxxx''''xxxxxxx.xxxxxxx""""xxxxxxxx
@@ -1322,4 +1387,53 @@ x.1.3xxxxxxxxx
 x4.2........xx
 xx3..........x
  xxxxxxx..@..xx
+ENDMAP
+
+################################################################################
+
+NAME:   johnstein_snake_rune_scales
+PLACE:  Snake:$
+ORIENT: north
+MONS:   naga / nothing
+MONS:   naga warrior / naga sharpshooter w:5 / naga w:15 / nothing
+MONS:   naga mage w:20 / naga ritualist / naga sharpshooter / naga w:30 / \
+        nothing w:20
+MONS:   guardian serpent / salamander mystic w:5 / naga ritualist w:5 / \
+        nothing
+MONS:   greater naga w:30 / naga warrior w:5 / naga sharpshooter w:5
+MONS:   anaconda / black mamba / shock serpent w:5 / mana viper
+
+KMONS:  Z = Vashnia / greater naga, greater naga
+SUBST:  Z = ZZZ5
+
+NSUBST: 5 = 6:5 / *:55.
+NSUBST: 6 = 8:6 / *:.
+
+KITEM:  O = serpentine rune of Zot
+NSUBST: O = 1:O / *:%.
+MAP
+cccccccccccccccccccccccccccccccccccccccc
+c4cO..4.4...OccO...44...OccO...4.4..Oc4c
+c.cc..252...cccc..5225..cccc...252..cc.c
+c1.cc.131..cc..cc..33..cc..cc..131.cc.1c
+c...cc....cc....cc....cc....cc....cc...c
+cc...cc..cc......cc..cc......cc..cc...cc
+ cc.2.c..c.2.22.2.c..c.2.22.2.c..c.2.cc
+  cc.1.1....4554........4554....1.1.cc
+   cc.2..c.3.33.3..cc..3.33.3.c..2.cc
+    cc.1.cc.......cccc.......cc.1.cc
+     cc...cc.....cc44cc.....cc...cc
+      cc...cc...cc.Z5.cc...cc...cc
+       cc...c..cc.3333.cc..c...cc
+        cc.....c1.1..1.1c.....cc
+         cc..................cc
+          cc....c666666c....cc
+           cc...cc6666cc...cc
+            cc..3cc66cc3..cc
+             cc..2cccc2..cc
+              cc..1cc1..cc
+               cc.1111.cc
+                cc....cc
+                 cc++cc
+                 ..@@..
 ENDMAP

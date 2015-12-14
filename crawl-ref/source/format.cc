@@ -99,12 +99,12 @@ void formatted_string::parse_string_to_multiple(const string &s,
         }
     }
 
-    for (int i = 0, size = lines.size(); i < size; ++i)
+    for (const string &line : lines)
     {
         out.emplace_back();
         formatted_string& fs = out.back();
         fs.textcolour(colour_stack.back());
-        parse_string1(lines[i], fs, colour_stack, nullptr);
+        parse_string1(line, fs, colour_stack, nullptr);
         if (colour_stack.back() != colour_stack.front())
             fs.textcolour(colour_stack.front());
     }
@@ -545,38 +545,53 @@ int count_linebreaks(const formatted_string& fs)
     return count;
 }
 
-static int _tagged_string_printable_length(const string& s)
+/**
+ * How long are the <colour> tags in the string?
+ *
+ * This function assumes that every character making up the tag is one char
+ * long. This shouldn't break as long as nobody uses non-ASCII characters
+ * in the tag. It also can't handle nested tags, but that shouldn't be an issue.
+ *
+ * @param s the string with the tags.
+ * @return the length of the tags, including the angle brackets.
+ */
+int tagged_string_tag_length(const string& s)
 {
     int len = 0;
     bool in_tag = false;
-    int last_taglen = 0;
-    for (auto ch : s)
+    char prev_char = '\0';
+    for (char ch : s)
     {
         if (in_tag)
         {
-            if (ch == '<' && last_taglen == 1) // "<<" sequence
+            if (ch == '<' && prev_char == '<') // "<<" sequence
             {
-                in_tag = false;  // this is an escape for '<'
-                ++len;           // len wasn't incremented before
-            }
-            else if (ch == '>')  // tag close, still nothing printed
                 in_tag = false;
-            else                 // tag continues
-                ++last_taglen;
+                len--; // Correct for len being incremented last time
+            }
+            else if (ch == '>')
+                in_tag = false;
         }
-        else if (ch == '<')      // tag starts
-        {
+        else if (ch == '<')
             in_tag = true;
-            last_taglen = 1;
-        }
-        else                     // normal, printable character
-            ++len;
+
+        if (in_tag)
+            len++;
+        prev_char = ch;
     }
+
+    ASSERT(len >= 0);
     return len;
 }
 
-// Count the length of the tags in the string.
-int tagged_string_tag_length(const string& s)
+/**
+ * How long will this string be when printed?
+ *
+ * @param string str
+ * @return how much the user will see -- counting combining characters together,
+ *         not including <colour> tags, etc.
+ */
+int printed_width(const string& str)
 {
-    return s.size() - _tagged_string_printable_length(s);
+    return strwidth(str) - tagged_string_tag_length(str);
 }

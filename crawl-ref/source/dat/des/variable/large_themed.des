@@ -60,7 +60,11 @@ ENDMAP
 NAME:    statuecave_lemuel
 ORIENT:  northeast
 DEPTH:   D:7-, Lair, Crypt:1-4
-MONS:    ice statue / orange crystal statue
+: if you.in_branch("Crypt") then
+MONS:    orange crystal statue
+: else
+MONS:    ice statue / obsidian statue / orange crystal statue
+: end
 SHUFFLE: 1|/!*
 SUBST:   *:*$, ?:x., !:., '=w.
 ITEM:    ring of teleportation / ring of flight
@@ -169,16 +173,27 @@ ENDMAP
 # Steading of the Giant Chief
 #
 NAME:    giant_chief_lemuel
-DEPTH:   D:11-, Orc:3-
+DEPTH:   D:11-, Orc:3-, Depths:2-
 ORIENT:  north
+SHUFFLE: ae / bB / gG / dD
+SUBST:   ; = .'
+: if you.branch() == "Depths" then
+MONS:    patrolling iron giant, nothing, nothing
+MONS:    ettin, stone giant w:40 / fire giant / frost giant
+MONS:    ogre mage band / deep troll shaman band w:5 / \
+         deep troll earth mage band w:5
+MONS:    death yak / catoblepas w:2
+NSUBST:  6 = 2:6 / *:.
+KFEAT:   F = G
+SUBST:   c = v
+: else
 MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
 MONS:    hill giant, cyclops
 MONS:    w:50 ogre / w:5 ogre mage / two-headed ogre
 MONS:    wolf / warg
-SHUFFLE: ae / bB / gG / dD
-SUBST:   ; = .'
 SHUFFLE: 'F1/ww2
 SHUFFLE: w2/l3
+: end
 SUBST:   C = ?5
 SUBST:   a:. , e:. , b:x. , g:x. , d:x. , B:x. , G:x. , D:x. , ? = x.
 SUBST:   0 = 4 7 8:20 .:20
@@ -215,8 +230,8 @@ ENDMAP
 
 NAME:   minmay_smoke_and_mirrors
 ORIENT: northwest
-DEPTH:  D:12-, Depths
-MONS:   wizard / rakshasa / boggart / nothing
+DEPTH:  D:10-, Depths
+MONS:   wizard / boggart / nothing
 MARKER: F = lua:fog_machine { cloud_type="purple smoke", \
             pow_min = 5, pow_max = 15, delay_min = 10,   \
             delay_max = 50, size_min = 1, size_max = 5,  \
@@ -284,9 +299,10 @@ x.......................
 ENDMAP
 
 NAME:   minmay_ice_pillars
-TAGS:   no_rotate no_pool_fixup no_monster_gen
+TAGS:   no_rotate no_pool_fixup no_monster_gen no_tele_into
 ORIENT: north
-DEPTH:  Depths, !Depths:$
+DEPTH:  D:11-, !D:$
+WEIGHT: 5
 MONS:   ice beast / nothing w:3, ice statue, ice dragon / nothing
 SUBST:  y : y:48 w:1 W:1, Y : Y:48 W:1 .:1, y = wwW, Y = WW.
 MAP
@@ -669,7 +685,7 @@ ORIENT: southeast
 DEPTH:  D:8-, Orc
 MONS:   orc / orc wizard w:3 / orc priest w:2 / orc warrior w:2
 SUBST:  X = xxxZ
-KPROP:  Z = no_rtele_into
+KPROP:  Z = no_tele_into
 SUBST:  Z = .$
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx
@@ -822,7 +838,7 @@ TAGS:   no_rotate no_monster_gen no_item_gen
 DEPTH:  Depths, !Depths:$
 MONS:   flayed ghost w:5 / phantasmal warrior w:5 / phantom / shadow / shadow wraith
 MONS:   ghost moth, Jory, vampire knight
-MONS:   raven
+MONS:   vampire mosquito
 NSUBST: A = 3:v / *:+, B = 3:v / *:+
 NSUBST: C = 2:v / *:+, D = 2:v / *:+
 # Colouring
@@ -894,7 +910,7 @@ KFEAT:  ^ = permanent teleport trap
 KFEAT:  m = iron_grate
 KFEAT:  y = rock_wall
 KMASK:  y = no_wall_fixup
-KPROP:  -d|*$14567^ = no_rtele_into
+KPROP:  -d|*$14567^ = no_tele_into
 FTILE:  -mcyd|*$14567^! = FLOOR_PEBBLE_DARKGRAY
 FTILE:  .@+23 = FLOOR_HALL
 TILE:   c = DNGN_STONE_WALL_DARKGRAY
@@ -1275,65 +1291,8 @@ xccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 ###############################################################################
-NAME:    spider_temple_joshua
-DEPTH:   Depths, !Depths:$
-ORIENT:  north
-MONS:    naga mage / naga w:5 / naga skeleton w:2
-MONS:    wolf spider w:7 / giant mite w:3
-MONS:    oklob plant
-MONS:    jelly
-MONS:    trapdoor spider / wolf spider
-MONS:    guardian serpent
-MONS:    obsidian statue
-# Randomise wall type: in 50% of maps, you cannot dig to the stairs.
-SUBST:   x : xxxxxxvvvccb
-KFEAT:   = = closed_door
-COLOUR:  ' = red
-FTILE:   ' = floor_rough_red
-SUBST:   ' = .
-# With 25% chance, have lava and obsidian statue instead of water and oklobs:
-SUBST:   w : Ww.
-SUBST:   w = W.
-SHUFFLE: wU3 / wU3 / wU3 / l7L
-SUBST:   L = l
-# The legs are coloured and contain 10 spider monsters:
-COLOUR:  " : white / yellow / brown
-NSUBST:  " = 10:5 / *:"
-SUBST:   " = .
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxx"""""""xxxxxxxxxxxxxx""""""xxxxx
-xxxxx"xxxxxx"xxx..}...xxx"xxxxx"xxxxx
-xxxxx=xxxxxxx"xx...)..xx"xxxxxx=xxxxx
-xxxxx'xxxxxxxx"x..]...x"xxxxxxx'xxxxx
-xx"""""""xxxxxx=......=xxxxx"""""""xx
-x"xxxxxxx"xxwWxxxx+xxxxxW.x"xxxxxxx"x
-xx"xxxxxxx=..wWWw.1...wWW.=xxxxxxx"xx
-xxx"xxxxxxx.4WWW.2.2.WWWW.xxxxxxx"xxx
-xxxx"xxxxxx..wWWw.W3WWWWw.xxxxxx"xxxx
-xxxxx"xxxxx.1.wWWW3U3WWw2.xxxxx"xxxxx
-xxxxxx=xxxx2.1.wWWW3WWw12.xxxx=xxxxxx
-xxxxxx'xxxx.2.wWWWWWWw....xxxx'xxxxxx
-x"""""""""=x..WW....WW...x="""""""""x
-x"xxxxxxxxxxxxW...1...Wxxxxxxxxxxxx"x
-x"xxx""""""""+W.4...4.W+""""""""xxx"x
-x""='"xxxxxxxxxm.....mxxxxxxxxx"'=""x
-xxxxx"x........x+xxxxx........x"xxxxx
-....x"x........xWWWWWx........x"x....
-....x"x........xxxxxWx........x"x....
-....x"xx.......xxxWWWx.......xx"x....
-....xx"xx.....xxxx+xxxx.....xx"xx....
-.....xx"xx....x.......x....xx"xx.....
-......xx"xx...x..262..x...xx"xx......
-.......xx=xx..mx.....xm..xx=xx.......
-........xx'x...xm+++mx...x'xx........
-..................@..................
-ENDMAP
-
-
-###############################################################################
 NAME:    grunt_house_of_mirrors
-TAGS:    no_rtele_into
+TAGS:    no_tele_into
 DEPTH:   Depths, !Depths:$
 ORIENT:  north
 SHUFFLE: AB / BA / BB, CD / DC / DD, EF / FE / FF
@@ -1342,9 +1301,9 @@ SHUFFLE: MN / NM / NN, OP / PO / PP, QR / RQ / RR
 SUBST:   ACEGIKMOQ = b
 SUBST:   BDFHJLNPR = .
 {{
-  -- This is a list of monsters in D that have attacks that can bounce
-  -- off of green crystal walls (fire, cold, lightning), weighted by
-  -- their normal dungeon weight functions!
+  -- This is a list of monsters in D that have attacks that can bounce off of
+  -- crystal walls (fire, cold, lightning), weighted by their normal dungeon
+  -- weight functions!
   local function peak(depth, low, high, chance)
     if depth < low or depth > high then return 0 end
     local len = high - low + 2
@@ -1500,7 +1459,7 @@ MONS:   shadow demon / green death / blizzard demon / balrug / cacodemon / \
         hell beast / hellion / reaper / lorocyproca / tormentor
 NSUBST: . = 7:1 / 7:2
 FTILE:  .|#+G123- = floor_pebble_darkgray
-KPROP:  1Y = no_rtele_into
+KPROP:  1Y = no_tele_into
 KFEAT:  # = iron_grate
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1583,7 +1542,7 @@ NSUBST: . = 15:2 / *:.
 SUBST:  t = tp`
 NSUBST: ' = 5:C / 5:2
 : dgn.delayed_decay(_G, 'C', 'human corpse')
-KPROP:  ` = no_rtele_into
+KPROP:  ` = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxttttttttxxxxxxxxxxxx
@@ -1678,7 +1637,7 @@ WEIGHT: 5
 FTILE:  *|c.12${} = floor_infernal_blank
 TILE:   c = dngn_stone_dark
 SUBST:  *=*|
-MONS:   blue devil w:1 / hellwing w:3 / rust devil w:1 / orange demon w:1 /\
+MONS:   ice devil w:1 / hellwing w:3 / rust devil w:1 / orange demon w:1 /\
         red devil w:1 / demonic crawler / sixfirhy w:1
 MONS:   lesser demon, river rat / giant cockroach
 NSUBST: . = 6:3 / 6:! / 56:' / .

@@ -47,8 +47,6 @@ static void _clear_globals_on_exit()
 {
     clear_rays_on_exit();
     clear_zap_info_on_exit();
-    clear_colours_on_exit();
-    dgn_clear_vault_placements(env.level_vaults);
     destroy_abyss();
 }
 
@@ -201,6 +199,9 @@ static void _delete_files()
 
 NORETURN void screen_end_game(string text)
 {
+#ifdef USE_TILE_WEB
+    tiles.send_exit_reason("quit");
+#endif
     crawl_state.cancel_cmd_all();
     _delete_files();
 
@@ -219,9 +220,9 @@ NORETURN void screen_end_game(string text)
 
 NORETURN void end_game(scorefile_entry &se)
 {
-    for (int i = 0; i < ENDOFPACK; i++)
-        if (you.inv[i].defined() && item_type_unknown(you.inv[i]))
-            add_inscription(you.inv[i], "unknown");
+    for (auto &item : you.inv)
+        if (item.defined() && item_type_unknown(item))
+            add_inscription(item, "unknown");
 
     identify_inventory();
 
@@ -282,6 +283,19 @@ NORETURN void end_game(scorefile_entry &se)
                 }
                 break;
 
+            case GOD_BEOGH:
+               if (actor* killer = se.killer())
+               {
+                    if (killer->is_monster() && killer->deity() == GOD_BEOGH)
+                    {
+                        const string msg = " appreciates "
+                                           + killer->name(DESC_ITS)
+                                           + " killing of a heretic priest.";
+                        simple_god_message(msg.c_str());
+                    }
+               }
+               break;
+
             default:
                 break;
         }
@@ -292,6 +306,8 @@ NORETURN void end_game(scorefile_entry &se)
         if (crawl_state.game_is_hints())
             hints_death_screen();
     }
+    else
+        you.delay_queue.clear(); // don't lose ev for taking the exit...
 
     string fname = morgue_name(you.your_name, se.get_death_time());
     if (!dump_char(fname, true, true, &se))
@@ -308,9 +324,9 @@ NORETURN void end_game(scorefile_entry &se)
 
 #if defined(DGL_WHEREIS) || defined(USE_TILE_WEB)
     string reason = se.get_death_type() == KILLED_BY_QUITTING? "quit" :
-    se.get_death_type() == KILLED_BY_WINNING ? "won"  :
-    se.get_death_type() == KILLED_BY_LEAVING ? "bailed out"
-    : "dead";
+                    se.get_death_type() == KILLED_BY_WINNING ? "won"  :
+                    se.get_death_type() == KILLED_BY_LEAVING ? "bailed out" :
+                                                               "dead";
 #ifdef DGL_WHEREIS
     whereis_record(reason.c_str());
 #endif
@@ -320,8 +336,10 @@ NORETURN void end_game(scorefile_entry &se)
         more();
 
     if (!crawl_state.disables[DIS_CONFIRMATIONS])
-        get_invent(OSEL_ANY);
+        display_inventory();
     textcolour(LIGHTGREY);
+
+    clua.save_persist();
 
     // Prompt for saving macros.
     if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))

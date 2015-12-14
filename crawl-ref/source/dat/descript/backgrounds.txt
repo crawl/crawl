@@ -7,7 +7,7 @@ spread corruption and chaos.
 Air Elementalist
 
 Air Elementalists have learned the Shock spell. Later on, their book of Air
-provides them with flexibility to survive.
+provides them with the flexibility to survive.
 %%%%
 Arcane Marksman
 
@@ -21,8 +21,8 @@ tools.
 %%%%
 Assassin
 
-Assassins are all about stealth, ready to stab unaware opponents. Not just
-cloak and dagger, they carry nasty curare needles for their blowgun.
+Assassins carry a blowgun with poisoned needles, as well as a small number of
+nasty curare needles.
 %%%%
 Berserker
 
@@ -37,11 +37,6 @@ god's constantly changing moods.
 Conjurer
 
 Conjurers confront problems with damaging spells from the book of Conjurations.
-%%%%
-Death Knight
-
-Death Knights are melee fighters who command the undead in the name of
-Yredelemnul the Dark.
 %%%%
 Earth Elementalist
 
@@ -68,15 +63,10 @@ Gladiator
 Gladiators are ready for the arena with light armour, nets, and a weapon of
 their choice.
 %%%%
-Healer
-
-Healers are followers of Elyvilon, ready to heal themselves and others. Such
-healing will possibly pacify beasts and brutes, yielding experience.
-%%%%
 Hunter
 
-Hunters are able to attack with a ranged weapon of their choice, without
-relying on pesky magic.
+Hunters carry a ranged weapon of their choice, and are also equipped with light
+armour and a short sword.
 %%%%
 Ice Elementalist
 
@@ -105,13 +95,13 @@ Mammal from the start.
 %%%%
 Transmuter
 
-Transmuters shift their form to fight in a beast's shape. They can turn sticks
-into snakes as well.
+Transmuters start with the book of Changes. They can learn spells to shift
+their form, as well as to turn sticks into snakes.
 %%%%
 Venom Mage
 
-Venom Mages start with the Young Poisoner's Handbook and the Sting spell. They
-have an easy time early on.
+Venom Mages start with the Young Poisoner's Handbook and the Sting spell, and
+their poison magic is very effective against susceptible foes.
 %%%%
 Wanderer
 
@@ -125,5 +115,4 @@ learn spells from the book of Spatial Translocations.
 Wizard
 
 Wizards start with a book of Minor Magic, containing a wide range of spells.
-They have higher magical reserves than any other background.
 %%%%

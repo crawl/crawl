@@ -712,7 +712,7 @@ NSUBST: . = 6:0 / *:.
 SUBST:  0 = 00009, 8 = 889
 SUBST:  _ : x. , + : +==
 NSUBST: = = 1:+ / *=+x
-KPROP:  1 = no_rtele_into
+KPROP:  1 = no_tele_into
 MAP
     @@@
 xxxx+++xxxx
@@ -843,8 +843,8 @@ ENDMAP
 
 NAME: nicolae_vaults_statue_guard
 TAGS: vaults_hard vaults_orient_e
-MONS: obsidian statue / ice statue / orange crystal statue
-KPROP: % = no_rtele_into
+MONS: obsidian statue / orange crystal statue
+KPROP: % = no_tele_into
 SUBST: % = %%%*
 MAP
 xxxx......xx
@@ -942,7 +942,7 @@ ENDMAP
 NAME: nicolae_vaults_quartermaster
 TAGS: vaults_hard
 NSUBST: 0 = 1:9 / *:0
-KFEAT: % = alarm trap / . w:30
+KFEAT: % = known alarm trap / . w:30
 KITEM: % = any
 KMONS: 0 = 0 band
 MAP

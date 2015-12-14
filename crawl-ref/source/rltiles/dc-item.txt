@@ -1,4 +1,4 @@
-# A note on variations.  To create additional variations for weapons or armour,
+# A note on variations. To create additional variations for weapons or armour,
 # simply create 1-5 images, e.g.:
 #
 #    weapon_normal WEP_SOME_WEAPON
@@ -8,7 +8,7 @@
 #    weapon_randart
 #
 # If only the first linrune has a define on it, then the following images will be
-# considered as variations.  If you don't have five, images will be reused for
+# considered as variations. If you don't have five, images will be reused for
 # multiple types. See tilepick.cc for more details.
 
 ##### Artefacts (fixed and unrandart)
@@ -38,9 +38,6 @@ morningstar3
 eveningstar1 WPN_EVENINGSTAR
 eveningstar2
 eveningstar3
-hammer1 WPN_HAMMER
-hammer2
-hammer3
 bullwhip WPN_WHIP
 bullwhip2
 bullwhip3
@@ -377,8 +374,8 @@ animal_skin3
 
 troll_hide ARM_TROLL_HIDE
 troll_leather_armour ARM_TROLL_LEATHER_ARMOUR
-green_dragon_scales ARM_FIRE_DRAGON_HIDE
-green_dragon_scale_mail ARM_FIRE_DRAGON_ARMOUR
+red_dragon_scales ARM_FIRE_DRAGON_HIDE
+red_dragon_scale_mail ARM_FIRE_DRAGON_ARMOUR
 ice_dragon_hide ARM_ICE_DRAGON_HIDE
 ice_dragon_armour ARM_ICE_DRAGON_ARMOUR
 silver_dragon_scales ARM_STEAM_DRAGON_HIDE
@@ -581,17 +578,14 @@ bone4
 chunk FOOD_CHUNK
 chunk_rotten FOOD_CHUNK_ROTTEN
 %back chunk
-chunk_brands/i-poison FOOD_CHUNK_POISONED
 chunk_brands/i-mutation FOOD_CHUNK_MUTAGENIC
 chunk_brands/i-decay FOOD_CHUNK_ROTTING
 chunk_brands/i-forbidden FOOD_CHUNK_FORBIDDEN
 %back chunk_rotten
-chunk_brands/i-poison FOOD_CHUNK_ROTTEN_POISONED
 chunk_brands/i-mutation FOOD_CHUNK_ROTTEN_MUTAGENIC
 chunk_brands/i-decay FOOD_CHUNK_ROTTEN_ROTTING
 chunk_brands/i-forbidden FOOD_CHUNK_ROTTEN_FORBIDDEN
 %back none
-chunk_brands/i-poison FOOD_POISONED
 chunk_brands/i-mutation FOOD_MUTAGENIC
 chunk_brands/i-decay FOOD_ROTTING
 chunk_brands/i-forbidden FOOD_FORBIDDEN
@@ -724,7 +718,7 @@ i-invisibility RING_INVISIBILITY
 i-loudness RING_LOUDNESS
 i-teleport RING_TELEPORTATION
 i-evasion RING_EVASION
-i-s-abil RING_SUSTAIN_ABILITIES
+i-s-attr RING_SUSTAIN_ATTRIBUTES
 i-stealth RING_STEALTH
 i-dex RING_DEXTERITY
 i-int RING_INTELLIGENCE
@@ -735,6 +729,7 @@ i-life-protection RING_LIFE_PROTECTION
 i-r-magic RING_PROTECTION_FROM_MAGIC
 i-fire RING_FIRE
 i-ice RING_ICE
+# remove teleport control when TAG_MAJOR_VERSION > 34 and mark ice as last
 i-c-teleport RING_TELEPORT_CONTROL RING_ID_LAST
 %rim 1
 
@@ -836,14 +831,14 @@ i-ambrosia POT_AMBROSIA
 i-invisibility POT_INVISIBILITY
 i-porridge POT_PORRIDGE
 i-degeneration POT_DEGENERATION
-i-decay POT_DECAY
-# please remove when TAG_MAJOR_VERSION is bumped
+# please remove these 2 when TAG_MAJOR_VERSION is bumped
+i-decay POT_REMOVEME5
 i-confusion POT_REMOVE_ME
 i-experience POT_EXPERIENCE
 i-magic POT_MAGIC
-i-restore-abilities POT_RESTORE_ABILITIES
-# please remove when TAG_MAJOR_VERSION is bumped
-i-strong-poison POT_STRONG_POISON
+# remove these 2 when TAG_MAJOR_VERSION is bumped
+i-restore-abilities POT_REMOVEME6
+i-strong-poison POT_REMOVEME7
 i-berserk-rage POT_BERSERK_RAGE
 i-cure-mutation POT_CURE_MUTATION
 i-mutation POT_MUTATION
@@ -959,7 +954,7 @@ i-rod_inaccuracy ROD_INACCURACY
 # Remove when TAG_MAJOR_VERSION > 34
 i-rod_warding ROD_WARDING
 i-rod_shadows ROD_SHADOWS
-i-rod_striking ROD_STRIKING
+i-rod_iron ROD_IRON
 # Remove when TAG_MAJOR_VERSION > 34
 i-rod_venom ROD_VENOM ROD_ID_LAST
 %rim 1
@@ -989,6 +984,8 @@ misc_disc MISC_DISC_OF_STORMS
 %rim 0
 misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR
+misc_zigfig MISC_ZIGGURAT
+misc_chesspiece MISC_XOMS_CHESSBOARD
 misc_deck MISC_DECK
 %start
 %compose misc_deck
@@ -1106,29 +1103,29 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 misc_quad MISC_QUAD_DAMAGE
 %sdir item/misc/runes
 generic MISC_RUNE_OF_ZOT
-rune_tartarus MISC_RUNE_TARTARUS
-rune_cocytus MISC_RUNE_COCYTUS
-rune_dis MISC_RUNE_DIS
-rune_gehenna MISC_RUNE_GEHENNA
-rune_cerebov MISC_RUNE_CEREBOV
-rune_gloorx_vloq MISC_RUNE_GLOORX_VLOQ
-rune_mnoleg MISC_RUNE_MNOLEG
-rune_lom_lobon MISC_RUNE_LOM_LOBON
-rune_snake MISC_RUNE_SNAKE
-rune_swamp MISC_RUNE_SWAMP
-rune_shoals MISC_RUNE_SHOALS
-rune_spider MISC_RUNE_SPIDER
-rune_slime MISC_RUNE_SLIME
-rune_vaults MISC_RUNE_VAULTS
-rune_tomb MISC_RUNE_TOMB
-rune_abyss MISC_RUNE_ABYSS
-rune_demonic_1 MISC_RUNE_DEMONIC
+rune_tartarus RUNE_TARTARUS
+rune_cocytus RUNE_COCYTUS
+rune_dis RUNE_DIS
+rune_gehenna RUNE_GEHENNA
+rune_cerebov RUNE_CEREBOV
+rune_gloorx_vloq RUNE_GLOORX_VLOQ
+rune_mnoleg RUNE_MNOLEG
+rune_lom_lobon RUNE_LOM_LOBON
+rune_snake RUNE_SNAKE
+rune_swamp RUNE_SWAMP
+rune_shoals RUNE_SHOALS
+rune_spider RUNE_SPIDER
+rune_slime RUNE_SLIME
+rune_vaults RUNE_VAULTS
+rune_tomb RUNE_TOMB
+rune_abyss RUNE_ABYSS
+rune_demonic_1 RUNE_DEMONIC
 rune_demonic_2
 rune_demonic_3
 rune_demonic_4
 rune_demonic_5
 rune_demonic_6
-rune_elven MISC_RUNE_ELVEN
+rune_elven RUNE_ELVEN
 
 #OBJ_CORPSES
 #handled in dc-corpse.txt

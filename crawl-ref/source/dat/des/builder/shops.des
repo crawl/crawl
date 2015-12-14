@@ -91,7 +91,7 @@ T.T
 ENDMAP
 
 NAME:   shop_statue
-TAGS:   allow_dup extra shop no_rtele_into
+TAGS:   allow_dup extra shop no_tele_into
 KFEAT:  O = any shop
 MAP
 @G..O..G@
@@ -138,7 +138,7 @@ b.b
 ENDMAP
 
 NAME: nicolae_shop_statue_plus
-TAGS: allow_dup extra shop no_rtele_into
+TAGS: allow_dup extra shop no_tele_into
 KFEAT: O = any shop
 MAP
    @
@@ -276,6 +276,17 @@ cww.wwc
 ccc+ccc
 ENDMAP
 
+NAME: nicolae_shop_scaring_up_business
+TAGS: allow_dup extra shop
+WEIGHT: 1
+KFEAT: O = food shop
+KMONS: O = patrolling hungry ghost
+MAP
+...
+.O.
+...
+ENDMAP
+
 #####################################################
 # Custom venom shop Vault
 NAME:    guppyfry_shop_venom
@@ -306,7 +317,7 @@ ENDMAP
 NAME:    guppyfry_shop_earth
 TAGS:    no_monster_gen
 DEPTH:   D:11-, Depths
-KMONS:   1 = gargoyle / basilisk / boring beetle / earth elemental / cyclops w:4
+KMONS:   1 = gargoyle / basilisk / earth elemental / cyclops w:3
 KMONS:   2 = stone giant / catoblepas / deep troll earth mage / boulder beetle / \
              iron dragon w:4
 ITEM:    stone
@@ -360,12 +371,12 @@ DEPTH:  D:5-, Depths, Orc
 WEIGHT: 1
 TAGS:  no_hmirror no_vmirror
 KFEAT: S = general shop type:Off-Brand suffix:Ammunition count:7 ; \
-       tomahawk ego:flame | tomahawk ego:exploding | tomahawk ego:dispersal | \
-       tomahawk ego:frost | tomahawk ego:chaos | javelin ego:dispersal | \
-       javelin ego:exploding | javelin ego:chaos | arrow ego:silver | \
-       arrow ego:steel | arrow ego:exploding | arrow ego:penetration | \
-       arrow ego:chaos | bolt ego:exploding | bolt ego:dispersal | \
-       bolt ego:chaos | sling bullet ego:dispersal | sling bullet ego:chaos
+       tomahawk ego:flame | tomahawk ego:frost | tomahawk ego:chaos | \
+       javelin ego:dispersal | javelin ego:exploding | javelin ego:chaos | \
+       arrow ego:silver | arrow ego:steel | arrow ego:exploding | \
+       arrow ego:penetration | arrow ego:chaos | bolt ego:exploding | \
+       bolt ego:dispersal | bolt ego:chaos | \
+       sling bullet ego:dispersal | sling bullet ego:chaos
 MAP
 .......
 .lllll.
@@ -388,14 +399,17 @@ SUBST: G : YlG
 :   "type:Evil suffix:Emporium", "type:Profane suffix:Products",
 :   "type:Sacrilege suffix:Store", "type:Wicked suffix:Wares"})
 : kfeat("s = general shop " .. shopname .. " ; \
-:   potion of blood | any weapon ego:draining w:15 | any weapon ego:pain w:5 | \
-:   any weapon ego:vampirism w:5 | demon blade w:5 | \
-:   demon whip w:5 | demon trident w:5 | wand of draining | scroll of torment | \
-:   staff of death | \
+:   potion of blood | any weapon ego:draining w:15 | any weapon ego:pain | \
+:   any weapon ego:vampirism | any weapon ego:chaos w:1 | rod of clouds w:3 | \
+:   demon blade w:5 | demon trident w:5 | wand of random effects w:3 | \
+:   demon whip w:5 | wand of draining | scroll of torment | staff of death | \
 :   lantern of shadows w:5 | book of necromancy | book of death | \
 :   book of unlife | randbook disc:necromancy w:5 | necronomicon w:1 | \
-:   grand grimoire w:1 | scythe unrand:scythe_of_curses w:1 | \
-:   double sword unrand:sword_of_zonguldrok w:1 | mace unrand:sceptre_of_torment w:1")
+:   grand grimoire w:1 | mace unrand:sceptre_of_torment w:1 | \
+:   scythe unrand:scythe_of_curses w:1 | quarterstaff unrand:majin-bo w:1 | \
+:   centaur barding unrand:black_knights_horse_barding w:1 | \
+:   battleaxe unrand:obsidian_axe w:1 | arbalest unrand:hellfire w:1 | \
+:   double sword unrand:sword_of_zonguldrok w:1 | rod of destruction w:3")
 KFEAT: a = altar_kikubaaqudgha / altar_yredelemnul / altar_makhleb / \
            altar_beogh w:1 / altar_lugonu w:1
 MAP
@@ -412,13 +426,13 @@ DEPTH: D:6-, Depths
 TAGS: no_monster_gen no_trap_gen
 SHUFFLE: _s
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
-   potion of heal wounds | potion of curing | potion of restore abilities | \
-   wand of heal wounds | tomahawk ego:silver w:2 | javelin ego:silver w:2 | \
-   bolt ego:silver w:2 | any weapon ego:holy_wrath | scroll of holy word | \
+   potion of heal wounds | potion of curing | wand of heal wounds | \
+   tomahawk ego:silver w:2 | javelin ego:silver w:2 | bolt ego:silver w:2 |\
+   any weapon ego:holy_wrath | scroll of holy word |\
    sling bullet ego:silver w:2 | amulet of faith w:2 | potion of cure mutation | \
    ring of positive energy w:5 | any armour ego:positive_energy w:5
 KFEAT: _ = altar_the_shining_one / altar_zin / altar_elyvilon
-KPROP: 1 = no_rtele_into
+KPROP: 1 = no_tele_into
 MONS: angel
 MAP
 nnn
@@ -468,9 +482,11 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    wand of frost | wand of cold | wand of lightning | wand of magic darts | \
    staff of conjuration | lightning rod | rod of inaccuracy | \
    rod of destruction | iron rod | large rock ego:exploding | \
-   arrow ego:exploding | bolt ego:exploding | \
+   arrow ego:exploding | bolt ego:exploding | javelin ego:exploding | \
+   tomahawk ego:exploding | rod of ignition | fan of gales | disc of storms | \
+   lamp of fire | phial of floods | stone of tremors | rod of clouds | \
    sling bullet ego:exploding | scroll of immolation | book of flames | \
-   book of fire | book of air | manual of conjurations
+   book of fire | book of air | manual of conjurations | manual of evocations
 FTILE: ' = floor_rough_red
 COLOUR: ' = red
 MAP

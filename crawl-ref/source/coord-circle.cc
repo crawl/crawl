@@ -27,30 +27,30 @@ rectangle_iterator rect_def::iter() const
 }
 
 circle_def::circle_def()
-    : los_radius(true), check_bounds(false), origin(coord_def(0,0))
+    : global_los_radius(true), check_bounds(false), origin(coord_def(0,0))
 {
     // Set up bounding box and shape.
-    init(LOS_RADIUS, C_ROUND);
+    init(LOS_RADIUS, C_SQUARE);
 }
 
 circle_def::circle_def(const coord_def& origin_, const circle_def& bds)
-    : los_radius(bds.los_radius), check_bounds(true),
+    : global_los_radius(bds.global_los_radius), check_bounds(true),
       origin(origin_),
-      radius(bds.radius), radius_sq(bds.radius_sq)
+      radius(bds.radius), radius_sq(bds.radius_sq), is_square(bds.is_square)
 {
     // Set up bounding box.
     init_bbox();
 }
 
 circle_def::circle_def(int param, circle_type ctype)
-    : los_radius(false), check_bounds(false), origin(coord_def(0,0))
+    : global_los_radius(false), check_bounds(false), origin(coord_def(0,0))
 {
     init(param, ctype);
 }
 
 circle_def::circle_def(const coord_def &origin_, int param,
                        circle_type ctype)
-    : los_radius(false), check_bounds(true), origin(origin_)
+    : global_los_radius(false), check_bounds(true), origin(origin_)
 {
     init(param, ctype);
 }
@@ -70,7 +70,12 @@ void circle_def::init(int param, circle_type ctype)
     case C_POINTY:
         radius = param;
         radius_sq = radius * radius;
+        break;
+    case C_SQUARE:
+        radius = param;
+        break;
     }
+    is_square = (ctype == C_SQUARE);
     init_bbox();
 }
 
@@ -96,7 +101,14 @@ bool circle_def::contains(const coord_def &p) const
 {
     if (!bbox.contains(p))
         return false;
-
-    int r_sq = los_radius ? los_radius2 : radius_sq;
-    return (p - origin).abs() <= r_sq;
+    if (is_square)
+    {
+        int r = global_los_radius ? los_radius : radius;
+        return (p - origin).rdist() <= r;
+    }
+    else
+    {
+        int r_sq = global_los_radius ? los_radius * los_radius + 1 : radius_sq;
+        return (p - origin).abs() <= r_sq;
+    }
 }

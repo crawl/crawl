@@ -1,0 +1,4 @@
+?package(crawl-tiles):command="/usr/games/crawl-tiles" \
+        needs="X11" section="Games/Adventure" \
+        title="Dungeon Crawl (tiles)" hints="Roguelike,Dungeon" \
+        icon="/usr/share/pixmaps/crawl.xpm"

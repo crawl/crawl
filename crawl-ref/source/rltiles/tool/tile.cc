@@ -9,12 +9,12 @@
 
 #include <assert.h>
 
-tile::tile() : m_width(0), m_height(0), m_pixels(NULL), m_shrink(true)
+tile::tile() : m_width(0), m_height(0), m_pixels(nullptr), m_shrink(true)
 {
 }
 
 tile::tile(const tile &img, const char *enumnam, const char *parts) :
-           m_width(0), m_height(0), m_pixels(NULL)
+           m_width(0), m_height(0), m_pixels(nullptr)
 {
     copy(img);
 
@@ -35,7 +35,7 @@ tile::~tile()
 void tile::unload()
 {
     delete[] m_pixels;
-    m_pixels = NULL;
+    m_pixels = nullptr;
     m_width  = m_height = 0;
 }
 
@@ -99,7 +99,7 @@ void tile::resize(int new_width, int new_height)
     m_width  = new_width;
     m_height = new_height;
 
-    m_pixels = NULL;
+    m_pixels = nullptr;
 
     if (!m_width || !m_height)
         return;
@@ -266,8 +266,8 @@ void tile::corpsify(int corpse_width, int corpse_height,
         for (int x = 3; x < corpse_width; x++)
         {
             // Extend shadow if there are two real pixels along
-            // the diagonal.  Also, don't extend if the top or
-            // left pixel is not filled in.  This prevents lone
+            // the diagonal. Also, don't extend if the top or
+            // left pixel is not filled in. This prevents lone
             // shadow pixels only connected via diagonals.
 
             if (get_pixel(x-1,y-1) == tile_colour::black
@@ -393,13 +393,13 @@ bool tile::load(const string &new_filename)
     }
 
     png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
-                                                 NULL, NULL, NULL);
+                                                 nullptr, nullptr, nullptr);
     png_infop info_ptr = png_create_info_struct(png_ptr);
 
     // libpng error handling!
     if (setjmp(png_jmpbuf(png_ptr)))
     {
-        png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+        png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
         fclose(fp);
         return false;
     }
@@ -416,7 +416,7 @@ bool tile::load(const string &new_filename)
     png_uint_32 w, h;
 
     png_get_IHDR(png_ptr, info_ptr, &w, &h, &bit_depth, &color_type,
-                 NULL, NULL, NULL);
+                 nullptr, nullptr, nullptr);
 
     // enable various transformations to get 8-bit RGBA pixels
     if (color_type == PNG_COLOR_TYPE_PALETTE)
@@ -466,7 +466,7 @@ bool tile::load(const string &new_filename)
     png_read_image(png_ptr, row_pointers);
 
     fclose(fp);
-    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+    png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
 
     replace_colour(tile_colour::background, tile_colour::transparent);
 #else

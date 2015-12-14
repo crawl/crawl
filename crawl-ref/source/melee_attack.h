@@ -7,9 +7,6 @@
 #include "fight.h"
 #include "random-var.h"
 
-// Forward declaration of the struct
-struct mon_attack_def;
-
 enum unarmed_attack_type
 {
     UNAT_NO_ATTACK,                    //    0
@@ -24,21 +21,6 @@ enum unarmed_attack_type
     UNAT_TENTACLES,
     UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
     UNAT_LAST_ATTACK = UNAT_TENTACLES
-};
-
-class AuxAttackType
-{
-public:
-    AuxAttackType(int _damage, string _name) :
-    damage(_damage), name(_name) { };
-public:
-    virtual int get_damage() const { return damage; };
-    virtual int get_brand() const { return SPWPN_NORMAL; };
-    virtual string get_name() const { return name; };
-    virtual string get_verb() const { return get_name(); };
-protected:
-    const int damage;
-    const string name;
 };
 
 class melee_attack : public attack
@@ -62,34 +44,34 @@ public:
     bool attack();
 
     // To-hit is a function of attacker/defender, inherited from attack
-    int calc_to_hit(bool random = true);
+    int calc_to_hit(bool random = true) override;
 
     static void chaos_affect_actor(actor *victim);
 
 private:
     /* Attack phases */
-    bool handle_phase_attempted();
-    bool handle_phase_dodged();
-    bool handle_phase_hit();
-    bool handle_phase_damaged();
-    bool handle_phase_aux();
-    bool handle_phase_killed();
-    bool handle_phase_end();
+    bool handle_phase_attempted() override;
+    bool handle_phase_dodged() override;
+    bool handle_phase_hit() override;
+    bool handle_phase_damaged() override;
+    bool handle_phase_aux(); // specific to melee attacks
+    bool handle_phase_killed() override;
+    bool handle_phase_end() override;
 
     /* Combat Calculations */
-    bool using_weapon();
-    int weapon_damage();
-    int calc_mon_to_hit_base();
-    int apply_damage_modifiers(int damage, int damage_max, bool &half_ac);
-    int calc_damage();
+    bool using_weapon() override;
+    int weapon_damage() override;
+    int calc_mon_to_hit_base() override;
+    int apply_damage_modifiers(int damage, int damage_max) override;
+    int calc_damage() override;
 
     /* Attack effects */
     void check_autoberserk();
-    bool check_unrand_effects();
+    bool check_unrand_effects() override;
 
-    bool attack_ignores_shield(bool verbose);
+    bool attack_ignores_shield(bool verbose) override;
 
-    void rot_defender(int amount, int immediate = 0);
+    void rot_defender(int amount);
     void splash_defender_with_acid(int strength);
 
     bool consider_decapitation(int damage_done, int damage_type = -1);
@@ -112,17 +94,16 @@ private:
 
     /* Brand / Attack Effects */
     bool do_knockback(bool trample = true);
-    bool attack_warded_off();
 
     /* Output methods */
-    void set_attack_verb();
-    void announce_hit();
+    void set_attack_verb(int damage) override;
+    void announce_hit() override;
 
     /* Misc methods */
     void handle_noise(const coord_def & pos);
 private:
     // Monster-attack specific stuff
-    bool mons_attack_effects();
+    bool mons_attack_effects() override;
     void mons_apply_attack_flavour();
     string mons_attack_verb();
     string mons_attack_desc();
@@ -130,6 +111,7 @@ private:
     bool mons_do_poison();
     void mons_do_napalm();
     void mons_do_eyeball_confusion();
+    void mons_do_tendril_disarm();
     void apply_black_mark_effects();
 private:
     // Player-attack specific stuff
@@ -141,16 +123,16 @@ private:
     bool player_aux_apply(unarmed_attack_type atk);
 
     int  player_aux_stat_modify_damage(int damage);
-    int  player_apply_misc_modifiers(int damage);
-    int  player_apply_final_multipliers(int damage);
+    int  player_apply_misc_modifiers(int damage) override;
+    int  player_apply_final_multipliers(int damage) override;
 
-    void player_exercise_combat_skills();
+    void player_exercise_combat_skills() override;
     bool player_monattk_hit_effects();
     void attacker_sustain_passive_damage();
     int  staff_damage(skill_type skill);
     void apply_staff_damage();
-    void player_stab_check();
-    bool player_good_stab();
+    void player_stab_check() override;
+    bool player_good_stab() override;
     void player_announce_aux_hit();
     string player_why_missed();
     void player_warn_miss();
@@ -159,11 +141,9 @@ private:
 
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);
-    int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
-                                 bool vampiric = false);
+    int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK);
     bool _player_vampire_draws_blood(const monster* mon, const int damage,
-                                     bool needs_bite_msg = false,
-                                     int reduction = 1);
+                                     bool needs_bite_msg = false);
     bool _vamp_wants_blood_from_monster(const monster* mon);
 
     bool can_reach();

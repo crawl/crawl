@@ -1,5 +1,5 @@
 # The error variable in end() is stuff.cc never gets freed since
-# exit() is called before end() returns.  See above suppression for more
+# exit() is called before end() returns. See above suppression for more
 # notes
 {
    end_error_leak
@@ -24,7 +24,7 @@
 }
 
 # ncurses keep some structures even after endwin() to 1. make flipping back
-# faster, and 2. to allow some functions to work even then.  It's an O(1)
+# faster, and 2. to allow some functions to work even then. It's an O(1)
 # leak and thus harmless.
 {
    ncurses_alloc_once_leak
@@ -48,7 +48,7 @@
 }
 
 # glibc has an O(1) memory leak in getpwuid() that's harmless since the
-# memory is reused in subsequent calls.  Such kind of memory is supposed
+# memory is reused in subsequent calls. Such kind of memory is supposed
 # to be freed when ran under memory debuggers, but it currently isn't.
 # Bug entry: http://sourceware.org/bugzilla/show_bug.cgi?id=2314
 {
@@ -64,7 +64,7 @@
 }
 
 # Zlib examines the data past the end of the buffer by design to reduce
-# the number of boundary checks.  This doesn't have any external effects.
+# the number of boundary checks. This doesn't have any external effects.
 # http://www.zlib.net/zlib_faq.html#faq36
 # "Even though the code was correct, versions 1.2.4 and later was changed
 # to not stimulate these checkers."

@@ -255,7 +255,7 @@ static vector<char> _pool_fill_glyphs_from_table(lua_State *ls,
                                                  const char *name)
 {
     // We will go through the table and put each possible pool
-    //  fill glyph in a vector once for each weight.  This will
+    //  fill glyph in a vector once for each weight. This will
     //  make it easy to select random ones with the correct
     //  distribution when we need to.
     vector<char> fill_glyphs;
@@ -266,7 +266,7 @@ static vector<char> _pool_fill_glyphs_from_table(lua_State *ls,
     {
         // For some reason, LUA requires us to have a dummy
         //  value to remove from the stack whenever we do a
-        //  table lookup.  Here is the first one
+        //  table lookup. Here is the first one
         lua_pushnil(ls);
 
         // table is now at -2
@@ -1095,7 +1095,7 @@ LUAFN(dgn_make_round_box)
     //  We do not know for sure whether we want to actually draw
     //    anything until the end, so we will draw out tower onto
     //    our own separate array (actually a vector of vectors
-    //    so we can set the size at runtime).  Then, if
+    //    so we can set the size at runtime). Then, if
     //    everything goes well, we will copy it to the world with
     //    the appropriate glyphs.
     //
@@ -1166,7 +1166,7 @@ LUAFN(dgn_make_round_box)
                 {
                     //
                     //  Check for passable glyphs in real map
-                    //    and outside the tower.  The check
+                    //    and outside the tower. The check
                     //    order is:
                     //    -> in real map
                     //    -> passable
@@ -2025,7 +2025,7 @@ LUAFN(dgn_add_pools)
     //
     //  The basic ideas here is that we place a number of
     //    pool "seeds" on the map and spread them outward
-    //    randomly until they run into each other.  We never
+    //    randomly until they run into each other. We never
     //    fill in the last cell, so they never actually
     //    touch and we get paths between them.
     //
@@ -2039,7 +2039,7 @@ LUAFN(dgn_add_pools)
     //         closed value BORDER
     //
     //  In the end, we used the "closed" values to determine
-    //    which pool we are in.  The BORDER value indicates
+    //    which pool we are in. The BORDER value indicates
     //    a path between pools.
     //
 
@@ -2052,7 +2052,7 @@ LUAFN(dgn_add_pools)
     const int FORBIDDEN = 1000000;
 
     // Step 1: Make a 2D array to store which pool each cell is part of
-    //    -> We use nested vectors to store this.  We cannot use
+    //    -> We use nested vectors to store this. We cannot use
     //       a fixedarray because we don't know the size at
     //       compile time.
 

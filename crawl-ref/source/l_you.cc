@@ -5,6 +5,7 @@
 #include "ability.h"
 #include "abyss.h"
 #include "areas.h"
+#include "artefact.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cluautil.h"
@@ -85,21 +86,13 @@ function evil_god(god) */
 LUARET1(you_evil_god, boolean,
         lua_isstring(ls, 1) ? is_evil_god(str_to_god(lua_tostring(ls, 1)))
         : is_evil_god(you.religion))
-/*
---- Does this [player's] god like fresh corpses?
--- @param god defaults to you.god()
-function god_likes_fresh_corpses(god) */
-LUARET1(you_god_likes_fresh_corpses, boolean,
-        lua_isstring(ls, 1) ?
-        god_likes_fresh_corpses(str_to_god(lua_tostring(ls, 1))) :
-        god_likes_fresh_corpses(you.religion))
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_base_mp, number, get_real_mp(false))
 LUARET1(you_rot, number, player_rotted())
 LUARET1(you_poison_survival, number, poison_survival())
 LUARET1(you_corrosion, number, you.props["corrosion_amount"].get_int())
-LUARET1(you_hunger, number, you.hunger_state)
+LUARET1(you_hunger, number, you.hunger_state - 1)
 LUARET1(you_hunger_name, string, hunger_level())
 LUARET2(you_strength, number, you.strength(false), you.max_strength())
 LUARET2(you_intelligence, number, you.intel(false), you.max_intel())
@@ -120,7 +113,7 @@ LUARET1(you_res_fire, number, player_res_fire(false))
 LUARET1(you_res_cold, number, player_res_cold(false))
 LUARET1(you_res_draining, number, player_prot_life(false))
 LUARET1(you_res_shock, number, player_res_electricity(false))
-LUARET1(you_res_statdrain, boolean, player_sust_abil(false))
+LUARET1(you_res_statdrain, boolean, player_sust_attr(false))
 LUARET1(you_res_mutation, number, you.rmut_from_item(false) ? 1 : 0)
 LUARET1(you_see_invisible, boolean, you.can_see_invisible(false))
 // Returning a number so as not to break existing scripts.
@@ -128,7 +121,7 @@ LUARET1(you_spirit_shield, number, you.spirit_shield(false) ? 1 : 0)
 LUARET1(you_gourmand, boolean, you.gourmand(false))
 LUARET1(you_res_corr, boolean, you.res_corr(false))
 LUARET1(you_like_chunks, number, player_likes_chunks(true))
-LUARET1(you_flying, boolean, you.flight_mode())
+LUARET1(you_flying, boolean, you.airborne())
 LUARET1(you_transform, string, you.form ? transform_name() : "")
 LUARET1(you_berserk, boolean, you.berserk())
 LUARET1(you_confused, boolean, you.confused())
@@ -156,7 +149,6 @@ LUARET1(you_mighty, boolean, you.duration[DUR_MIGHT])
 LUARET1(you_agile, boolean, you.duration[DUR_AGILITY])
 LUARET1(you_brilliant, boolean, you.duration[DUR_BRILLIANCE])
 LUARET1(you_phase_shifted, boolean, you.duration[DUR_PHASE_SHIFT])
-LUARET1(you_rotting, boolean, you.rotting)
 LUARET1(you_silenced, boolean, silenced(you.pos()))
 LUARET1(you_sick, boolean, you.disease)
 LUARET1(you_contaminated, number, get_contamination_level())
@@ -190,14 +182,25 @@ LUARET1(you_see_cell_rel, boolean,
         you.see_cell(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
 LUARET1(you_see_cell_no_trans_rel, boolean,
         you.see_cell_no_trans(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
-LUARET1(you_piety_rank, number, piety_rank(you.piety) - 1)
+LUARET1(you_piety_rank, number, piety_rank())
 LUARET1(you_constricted, boolean, you.is_constricted())
 LUARET1(you_constricting, boolean, you.is_constricting())
+
+static int l_you_monster(lua_State *ls)
+{
+    const monster_type mons = player_species_to_mons_species(you.species);
+
+    string name = mons_type_name(mons, DESC_PLAIN);
+    lowercase(name);
+
+    lua_pushstring(ls, name.c_str());
+    return 1;
+}
 
 static int l_you_genus(lua_State *ls)
 {
     bool plural = lua_toboolean(ls, 1);
-    string genus = species_name(you.species, true);
+    string genus = species_name(you.species, SPNAME_GENUS);
     lowercase(genus);
     if (plural)
         genus = pluralise(genus);
@@ -327,12 +330,11 @@ static int l_you_abil_table(lua_State *ls)
     char buf[2];
     buf[1] = 0;
 
-    vector<talent> talents = your_talents(false);
-    for (int i = 0, size = talents.size(); i < size; ++i)
+    for (const talent &tal : your_talents(false))
     {
-        buf[0] = talents[i].hotkey;
+        buf[0] = tal.hotkey;
         lua_pushstring(ls, buf);
-        lua_pushstring(ls, ability_name(talents[i].which));
+        lua_pushstring(ls, ability_name(tal.which));
         lua_rawset(ls, -3);
     }
     return 1;
@@ -405,6 +407,22 @@ LUAFN(you_mutation)
             continue;
         if (!strcmp(mutname.c_str(), wizname))
             PLUARET(integer, you.mutation[i]);
+    }
+
+    string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
+    return luaL_argerror(ls, 1, err.c_str());
+}
+
+LUAFN(you_temp_mutation)
+{
+    string mutname = luaL_checkstring(ls, 1);
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        const char *wizname = mutation_name(static_cast<mutation_type>(i));
+        if (!wizname)
+            continue;
+        if (!strcmp(mutname.c_str(), wizname))
+            PLUARET(integer, you.temp_mutation[i]);
     }
 
     string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
@@ -500,6 +518,7 @@ static const struct luaL_reg you_clib[] =
     { "race"        , you_race },
     { "class"       , you_class },
     { "genus"       , l_you_genus },
+    { "monster"     , l_you_monster },
     { "wizard"      , you_wizard },
     { "god"         , you_god },
     { "gold"        , you_gold },
@@ -564,7 +583,6 @@ static const struct luaL_reg you_clib[] =
     { "mighty",       you_mighty },
     { "agile",        you_agile },
     { "brilliant",    you_brilliant },
-    { "rotting",      you_rotting },
     { "silenced",     you_silenced },
     { "sick",         you_sick },
     { "contaminated", you_contaminated },
@@ -577,7 +595,6 @@ static const struct luaL_reg you_clib[] =
     { "antimagic",    you_antimagic },
     { "status",       you_status },
 
-    { "god_likes_fresh_corpses",  you_god_likes_fresh_corpses },
     { "can_consume_corpses",      you_can_consume_corpses },
 
     { "stop_activity", you_stop_activity },
@@ -599,6 +616,7 @@ static const struct luaL_reg you_clib[] =
     { "see_cell_no_trans", you_see_cell_no_trans_rel },
 
     { "mutation",          you_mutation },
+    { "temp_mutation",     you_temp_mutation },
 
     { "num_runes",          you_num_runes },
     { "have_rune",          _you_have_rune },
@@ -658,7 +676,7 @@ LUAFN(you_teleport_to)
 
 LUAFN(you_random_teleport)
 {
-    you_teleport_now(false);
+    you_teleport_now();
     return 0;
 }
 
@@ -673,6 +691,21 @@ static int _you_uniques(lua_State *ls)
     }
 
     lua_pushboolean(ls, unique_found);
+    return 1;
+}
+
+static int _you_unrands(lua_State *ls)
+{
+    bool unrand_found = false;
+
+    if (lua_gettop(ls) >= 1 && lua_isstring(ls, 1))
+    {
+        int unrand_num = get_unrandart_num(lua_tostring(ls, 1));
+        if (unrand_num != SPWPN_NORMAL)
+            unrand_found = get_unique_item_status(unrand_num);
+    }
+
+    lua_pushboolean(ls, unrand_found);
     return 1;
 }
 
@@ -817,6 +850,7 @@ static const struct luaL_reg you_dlib[] =
 { "random_teleport",    you_random_teleport },
 { "teleport_to",        you_teleport_to },
 { "uniques",            _you_uniques },
+{ "unrands",            _you_unrands },
 { "die",                _you_die },
 { "piety",              _you_piety },
 { "dock_piety",         you_dock_piety },

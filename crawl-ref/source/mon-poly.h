@@ -12,7 +12,6 @@ bool feature_mimic_at(const coord_def &c);
 item_def* item_mimic_at(const coord_def &c);
 bool mimic_at(const coord_def &c);
 
-#define MONST_INTERESTING(x) (x->flags & MF_INTERESTING)
 #define ORIGINAL_TYPE_KEY "original_type"
 
 enum poly_power_type

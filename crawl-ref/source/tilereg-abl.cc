@@ -152,8 +152,8 @@ bool AbilityRegion::update_alt_text(string &alt)
 int AbilityRegion::get_max_slots()
 {
     return ABIL_MAX_INTRINSIC + (ABIL_MAX_EVOKE - ABIL_MIN_EVOKE) + 1
-           + MAX_GOD_ABILITIES + 1
-           + (ABIL_MAX_ZOTDEF - ABIL_MIN_ZOTDEF) + 1;
+           // for god abilities
+           + 6;
 }
 
 void AbilityRegion::pack_buffers()
@@ -211,7 +211,7 @@ static InventoryTile _tile_for_ability(ability_type ability)
     InventoryTile desc;
     desc.tile     = tileidx_ability(ability);
     desc.idx      = (int) ability;
-    desc.quantity = get_ability_def(ability).mp_cost;
+    desc.quantity = ability_mp_cost(ability);
 
     if (!check_ability_possible(ability, true, true))
         desc.flag |= TILEI_FLAG_INVALID;
@@ -233,25 +233,15 @@ void AbilityRegion::update()
     if (talents.empty())
         return;
 
-    vector<InventoryTile> m_zotdef;
     vector<InventoryTile> m_invoc;
 
     for (const auto &talent : talents)
     {
         if (talent.is_invocation)
             m_invoc.push_back(_tile_for_ability(talent.which));
-        else if (talent.is_zotdef)
-            m_zotdef.push_back(_tile_for_ability(talent.which));
         else
             m_items.push_back(_tile_for_ability(talent.which));
 
-        if (m_items.size() >= max_abilities)
-            return;
-    }
-
-    for (const auto &tile : m_zotdef)
-    {
-        m_items.push_back(tile);
         if (m_items.size() >= max_abilities)
             return;
     }

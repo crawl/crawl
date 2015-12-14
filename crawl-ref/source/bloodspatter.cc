@@ -16,7 +16,7 @@
 #include "shout.h"
 #include "terrain.h"
 
-static bool allow_bleeding_on_square(const coord_def& where)
+static bool _allow_bleeding_on_square(const coord_def& where)
 {
     // No bleeding onto sanctuary ground, please.
     // Also not necessary if already covered in blood.
@@ -43,7 +43,7 @@ static bool allow_bleeding_on_square(const coord_def& where)
 
 bool maybe_bloodify_square(const coord_def& where)
 {
-    if (!allow_bleeding_on_square(where))
+    if (!_allow_bleeding_on_square(where))
         return false;
 
     env.pgrid(where) |= FPROP_BLOODY;
@@ -114,10 +114,10 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
     if (amount < 1)
         return;
 
-    bool may_bleed = allow_bleeding_on_square(where);
+    bool may_bleed = _allow_bleeding_on_square(where);
 
     bool ignite_blood = player_mutation_level(MUT_IGNITE_BLOOD)
-    && you.see_cell(where);
+                        && you.see_cell(where);
 
     if (ignite_blood)
         amount *= 2;
@@ -212,7 +212,7 @@ static void _spatter_neighbours(const coord_def& where, int chance,
 {
     for (adjacent_iterator ai(where, false); ai; ++ai)
     {
-        if (!allow_bleeding_on_square(*ai))
+        if (!_allow_bleeding_on_square(*ai))
             continue;
 
         if (one_chance_in(chance))

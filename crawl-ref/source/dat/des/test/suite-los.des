@@ -15,15 +15,15 @@ NAME: los_empty
 ORIENT: float
 TAGS: debug_los
 MAP
-@........c
-.........c
+@.......cc
 ........cc
 ........cc
 ........cc
-.......ccc
-......cccc
-.....ccccc
-..cccccccc
+........cc
+........cc
+........cc
+........cc
+cccccccccc
 cccccccccc
 ENDMAP
 
@@ -31,15 +31,15 @@ NAME: los_edge
 ORIENT: float
 TAGS: debug_los
 MAP
-@.......xc
-.......xxc
+@......xcc
 .......xcc
 .......xcc
-......xxcc
-.....xxccc
-....xxcccc
-.xxxxccccc
-xxcccccccc
+.......xcc
+.......xcc
+.......xcc
+.......xcc
+xxxxxxxxcc
+cccccccccc
 cccccccccc
 ENDMAP
 
@@ -47,15 +47,15 @@ NAME: los_blocking_wall
 ORIENT: float
 TAGS: debug_los
 MAP
-@..xwwwwwc
-..xxwwwwwc
+@..xwwwwcc
+..xxwwwwcc
 .xxwwwwwcc
 xxwwwwwwcc
 wwwwwwwwcc
-wwwwwwwccc
-wwwwwwcccc
-wwwwwccccc
-wwcccccccc
+wwwwwwwwcc
+wwwwwwwwcc
+wwwwwwwwcc
+cccccccccc
 cccccccccc
 ENDMAP
 
@@ -64,7 +64,7 @@ ORIENT: float
 TAGS: debug_los
 MAP
 @xcccccccc
-x........c
+x.......cc
 cxxxxxxxcc
 cccccccccc
 cccccccccc
@@ -80,7 +80,7 @@ ORIENT: float
 TAGS: debug_los
 MAP
 @.xccccccc
-xx.......c
+xx......cc
 cccxxxxxcc
 cccccccccc
 cccccccccc
@@ -96,7 +96,7 @@ ORIENT: float
 TAGS: debug_los
 MAP
 @..xcccccc
-xxx......c
+xxx.....cc
 cccccxxxcc
 cccccccccc
 cccccccccc
@@ -112,7 +112,7 @@ ORIENT: float
 TAGS: debug_los
 MAP
 @...xccccc
-xxxx.....c
+xxxx....cc
 cccccccxcc
 cccccccccc
 cccccccccc
@@ -128,7 +128,7 @@ ORIENT: float
 TAGS: debug_los
 MAP
 @....xcccc
-xxxxx....c
+xxxxx...cc
 cccccccccc
 cccccccccc
 cccccccccc
@@ -144,7 +144,7 @@ ORIENT: float
 TAGS: debug_los
 MAP
 @.....xccc
-xxxxxx...c
+xxxxxx..cc
 cccccccccc
 cccccccccc
 cccccccccc
@@ -160,7 +160,7 @@ ORIENT: float
 TAGS: debug_los
 MAP
 @......xcc
-xxxxxxx..c
+xxxxxxx.cc
 cccccccccc
 cccccccccc
 cccccccccc
@@ -175,24 +175,8 @@ NAME: los_corner_8
 ORIENT: float
 TAGS: debug_los
 MAP
-@.......xc
-xxxxxxxx.c
-cccccccccc
-cccccccccc
-cccccccccc
-cccccccccc
-cccccccccc
-cccccccccc
-cccccccccc
-cccccccccc
-ENDMAP
-
-NAME: los_corner_9
-ORIENT: float
-TAGS: debug_los
-MAP
-@........c
-xxxxxxxxxw
+@.......cc
+xxxxxxxxcc
 cccccccccc
 cccccccccc
 cccccccccc
@@ -212,10 +196,10 @@ x.xccccccc
 c...cccccc
 c.....cccc
 c.......cc
-c......ccc
-c.....cccc
-c....ccccc
-c.cccccccc
+c.......cc
+c.......cc
+c.......cc
+cccccccccc
 cccccccccc
 ENDMAP
 
@@ -230,8 +214,8 @@ c..ccccccc
 c...cccccc
 c....ccccc
 c.....cccc
-c....ccccc
-c.cccccccc
+c......ccc
+cccccccccc
 cccccccccc
 ENDMAP
 
@@ -245,8 +229,8 @@ cx.xcccccc
 ccx.xccccc
 cccx.xcccc
 ccccx.xccc
-cccccxcccc
-cccccccccc
+cccccx.xcc
+ccccccx.cc
 cccccccccc
 cccccccccc
 ENDMAP
@@ -260,9 +244,9 @@ x.xccccccc
 cx..cccccc
 cc....cccc
 ccc.....cc
-ccc....ccc
-cccc..cccc
-cccc.ccccc
+ccc.....cc
+cccc....cc
+cccc....cc
 cccccccccc
 cccccccccc
 ENDMAP

@@ -250,7 +250,7 @@ ENDMAP
 # Tiered entry
 #
 NAME:   grunt_vaults_entry_tiered
-TAGS:   vaults_entry no_monster_gen no_rtele_into transparent
+TAGS:   vaults_entry no_monster_gen no_tele_into transparent
 MONS:   human w:29 / orc warrior w:1
 MONS:   necromancer / wizard / yaktaur w:2
 MONS:   vault guard w:29 / deep elf knight w:1
@@ -381,7 +381,7 @@ SUBST:    ABCD = .
 MONS: vault guard
 {{
   set_feature_name("metal_wall", "heavily etched metal wall")
-  set_feature_name("green_crystal_wall", "heavily etched wall of green crystal")
+  set_feature_name("crystal_wall", "heavily etched crystal wall")
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1854,23 +1854,23 @@ MAP
   xxxxxxxxxxxxxxxxxxxxxxx
  ........................
 x.xxx.................xxx.x
-x.x*xxxxxx...9...xxxxxx*x.x
-x.xx*$9..xxxx.xxxx..9$*xx.x
-x..x$.......x.x.......$x..x
+x.x*xxxxxxx.....xxxxxxx*x.x
+x.xx*$9...xx.9.xx...9$*xx.x
+x..x$.................$x..x
 x..x9...xxx..9..xxx...9x..x
-x..xx.x.xOxxxxxxxOx.x.xx..x
-x...x.x.xx..xxx..xx.x.x...x
-x...x.x.x..x.9.x..x.x.x...x
-x...x.x.x.x9*x*9x.x.x.x...x
-x....9x...x.xOx.x...x9....x
-x...x.x.x.x9*x*9x.x.x.x...x
-x...x.x.x..x.9.x..x.x.x...x
-x...x.x.xx..xxx..xx.x.x...x
-x..xx.x.xOxxxxxxxOx.x.xx..x
+x..xx...xOxxx.xxxOx...xx..x
+x...xx..xx..xxx..xx..xx...x
+x....x..x..x.9.x..x..x....x
+x.......x.x9*x*9x.x.......x
+x....9....x.xOx.x....9....x
+x.......x.x9*x*9x.x.......x
+x....x..x..x.9.x..x..x....x
+x...xx..xx..xxx..xx..xx...x
+x..xx...xOxxx.xxxOx...xx..x
 x..x9...xxx..9..xxx...9x..x
-x..x$.......x.x.......$x..x
-x.xx*$9..xxxx.xxxx..9$*xx.x
-x.x*xxxxxx...9...xxxxxx*x.x
+x..x$.................$x..x
+x.xx*$9...xx.9.xx...9$*xx.x
+x.x*xxxxxxx.....xxxxxxx*x.x
 x.xxx.................xxx.x
  .........................
   xxxxxxxxxxxxxxxxxxxxxxx
@@ -2697,25 +2697,25 @@ SUBST:  9 = 8 9 *:10
 MAP
   xxxxxxxxxxxxxxxxxxxxxxx
  ........................
-x.xxxxx.9.xxxxxxxxx.9.xxx.x
-x.xxxxxx...xxxxxxx...xxxx.x
-x..xxxxxx...xxxxx...xxxx..x
-x.9.xxxxxx...xxx...xxxx.9.x
-x.x..xxxxxx...xx..xxxx..x.x
-x.xx..xxxxxx*9999*xxx..xx.x
-x.xxx..xxxxxx$99$xxx..xxx.x
-x.xxx..xxxxxxx||xxxx..xxx.x
-x.xxx..xxxxxx9*9xxxxx..xx.x
+x........9.........9......x
+x..xxxxx...xxxxxxx...xxx..x
+x...xxxxx...xxxxx...xxx...x
+x.9..xxxxx...xxx...xxx..9.x
+x.....xxxxx...xx..xxx.....x
+x..x...xxxxx*9999*xx...x..x
+x..xx...xxxxx$99$xx...xx..x
+x..xxx...xxxxx||xxx...xx..x
+x...xx...xxxx9*9xxxx...x..x
 x......9*9$|9O99|$9*9.....x
-x.xxx..xxxxx9*9xxxxxx..xx.x
-x.xxx..xxx||||xxxxxx..xxx.x
-x.xx..xxx$99$xxxxxx..xxx9.x
-x.x..xx*999*xxxxxx..xxx...x
-x.9.xxx...xxxxxxx..xxx..x.x
-x..xxx...xxxxxxx..xxx..xx.x
-x.xxxx...xxxxxx..xxx..xxx.x
-x.xxxx...xxxxx..xxx..xxxx.x
-x.xxxx.9.xxxx.9.xx..xxxxx.x
+x...xx...xxx9*9xxxxx...x..x
+x..xx...xx||||xxxxx...xx..x
+x..x...xx$99$xxxxx...xxx..x
+x.....xx*99*xxxxx...xxx...x
+x.9..xx..9xxxxxx...xxx..9.x
+x...xx...xxxxxx...xxx.....x
+x..xxx...xxxxx...xxx...x..x
+x..xxx...xxxx...xxx...xx..x
+x......9............9.....x
  .........................
   xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

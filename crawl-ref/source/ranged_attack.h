@@ -15,42 +15,42 @@ public:
     ranged_attack(actor *attacker, actor *defender, item_def *projectile,
                   bool teleport, actor *blame = 0);
 
-    int calc_to_hit(bool random);
+    int calc_to_hit(bool random) override;
 
     // Applies attack damage and other effects.
     bool attack();
 
 private:
     /* Attack Phases */
-    bool handle_phase_attempted();
-    bool handle_phase_blocked();
-    bool handle_phase_dodged();
-    bool handle_phase_hit();
+    bool handle_phase_attempted() override;
+    bool handle_phase_blocked() override;
+    bool handle_phase_dodged() override;
+    bool handle_phase_hit() override;
 
     /* Combat Calculations */
-    bool using_weapon();
-    int weapon_damage();
-    int calc_base_unarmed_damage();
-    int calc_mon_to_hit_base();
-    int apply_damage_modifiers(int damage, int damage_max, bool &half_ac);
-    bool attack_ignores_shield(bool verbose);
-    bool apply_damage_brand(const char *what = nullptr);
+    bool using_weapon() override;
+    int weapon_damage() override;
+    int calc_base_unarmed_damage() override;
+    int calc_mon_to_hit_base() override;
+    int apply_damage_modifiers(int damage, int damage_max) override;
+    bool attack_ignores_shield(bool verbose) override;
+    bool apply_damage_brand(const char *what = nullptr) override;
     special_missile_type random_chaos_missile_brand();
     bool blowgun_check(special_missile_type type);
     int blowgun_duration_roll(special_missile_type type);
     bool apply_missile_brand();
 
     /* Weapon Effects */
-    bool check_unrand_effects();
+    bool check_unrand_effects() override;
 
     /* Attack Effects */
-    bool mons_attack_effects();
-    void player_stab_check();
-    bool player_good_stab();
+    bool mons_attack_effects() override;
+    void player_stab_check() override;
+    bool player_good_stab() override;
 
     /* Output */
-    void set_attack_verb();
-    void announce_hit();
+    void set_attack_verb(int damage) override;
+    void announce_hit() override;
 
 private:
     const item_def *projectile;

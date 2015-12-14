@@ -32,6 +32,7 @@
 #include "religion.h"
 #include "rot.h"
 #include "shout.h"
+#include "showsymb.h"
 #include "skills.h"
 #include "spl-summoning.h"
 #include "state.h"
@@ -47,13 +48,13 @@ static bool _fire_validate_item(int selected, string& err);
 
 bool item_is_quivered(const item_def &item)
 {
-    return in_inventory(item) && item.link == you.m_quiver->get_fire_item();
+    return in_inventory(item) && item.link == you.m_quiver.get_fire_item();
 }
 
 int get_next_fire_item(int current, int direction)
 {
     vector<int> fire_order;
-    you.m_quiver->get_fire_order(fire_order, true);
+    you.m_quiver.get_fire_order(fire_order, true);
 
     if (fire_order.empty())
         return -1;
@@ -80,16 +81,16 @@ public:
           selected_from_inventory(false),
           need_redraw(false)
     {
-        m_slot = you.m_quiver->get_fire_item(&m_noitem_reason);
+        m_slot = you.m_quiver.get_fire_item(&m_noitem_reason);
         set_prompt();
     }
 
     // targeting_behaviour API
-    virtual command_type get_command(int key = -1);
-    virtual bool should_redraw() const { return need_redraw; }
-    virtual void clear_redraw()        { need_redraw = false; }
-    virtual void update_top_prompt(string* p_top_prompt);
-    virtual vector<string> get_monster_desc(const monster_info& mi);
+    virtual command_type get_command(int key = -1) override;
+    virtual bool should_redraw() const override { return need_redraw; }
+    virtual void clear_redraw()        override { need_redraw = false; }
+    virtual void update_top_prompt(string* p_top_prompt) override;
+    virtual vector<string> get_monster_desc(const monster_info& mi) override;
 
 public:
     const item_def* active_item() const;
@@ -286,7 +287,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         return false;
     }
 
-    you.m_quiver->on_item_fired(*beh.active_item(), beh.chosen_ammo);
+    you.m_quiver.on_item_fired(*beh.active_item(), beh.chosen_ammo);
     you.redraw_quiver = true;
     slot = beh.m_slot;
 
@@ -379,28 +380,30 @@ bool fire_warn_if_impossible(bool silent)
 
 static bool _autoswitch_to_ranged()
 {
-    if (you.equip[EQ_WEAPON] != 0 && you.equip[EQ_WEAPON] != 1)
+    int item_slot;
+    if (you.equip[EQ_WEAPON] == letter_to_index('a'))
+        item_slot = letter_to_index('b');
+    else if (you.equip[EQ_WEAPON] == letter_to_index('b'))
+        item_slot = letter_to_index('a');
+    else
         return false;
 
-    int item_slot = you.equip[EQ_WEAPON] ^ 1;
     const item_def& launcher = you.inv[item_slot];
     if (!is_range_weapon(launcher))
         return false;
+    if (none_of(you.inv.begin(), you.inv.end(), [&launcher](const item_def& it)
+                { return it.launched_by(launcher);}))
+    {
+        return false;
+    }
 
-    FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
-    for (;iter!=you.inv.end(); ++iter)
-        if (iter->launched_by(launcher))
-        {
-            if (!wield_weapon(true, item_slot))
-                return false;
+    if (!wield_weapon(true, item_slot))
+        return false;
 
-            you.turn_is_over = true;
-            //XXX Hacky. Should use a delay instead.
-            macro_buf_add(command_to_key(CMD_FIRE));
-            return true;
-        }
-
-    return false;
+    you.turn_is_over = true;
+    //XXX Hacky. Should use a delay instead.
+    macro_buf_add(command_to_key(CMD_FIRE));
+    return true;
 }
 
 int get_ammo_to_shoot(int item, dist &target, bool teleport)
@@ -411,7 +414,7 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
         return -1;
     }
 
-    if (Options.auto_switch && you.m_quiver->get_fire_item() == -1
+    if (Options.auto_switch && you.m_quiver.get_fire_item() == -1
        && _autoswitch_to_ranged())
     {
         return -1;
@@ -430,7 +433,7 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
 }
 
 // Portal Projectile requires MP per shot.
-static bool _is_pproj_active()
+bool is_pproj_active()
 {
     return !you.confused() && you.duration[DUR_PORTAL_PROJECTILE]
            && enough_mp(1, true, false);
@@ -441,11 +444,14 @@ static bool _is_pproj_active()
 void fire_thing(int item)
 {
     dist target;
-    item = get_ammo_to_shoot(item, target, _is_pproj_active());
+    item = get_ammo_to_shoot(item, target, is_pproj_active());
     if (item == -1)
         return;
 
-    if (check_warning_inscriptions(you.inv[item], OPER_FIRE))
+    if (check_warning_inscriptions(you.inv[item], OPER_FIRE)
+        && (!you.weapon()
+            || is_launched(&you, you.weapon(), you.inv[item]) != LRET_LAUNCHED
+            || check_warning_inscriptions(*you.weapon(), OPER_FIRE)))
     {
         bolt beam;
         throw_it(beam, item, &target);
@@ -510,14 +516,13 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.glyph = dchar_glyph(zapsym);
     beam.was_missile = true;
 
-    item_def *launcher  = const_cast<actor*>(agent)->weapon(0);
+    item_def *launcher  = agent->weapon(0);
     if (launcher && !item.launched_by(*launcher))
         launcher = nullptr;
 
     if (agent->is_player())
     {
         beam.attitude      = ATT_FRIENDLY;
-        beam.smart_monster = true;
         beam.thrower       = KILL_YOU_MISSILE;
     }
     else
@@ -525,15 +530,15 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         const monster* mon = agent->as_monster();
 
         beam.attitude      = mons_attitude(mon);
-        beam.smart_monster = (mons_intel(mon) >= I_NORMAL);
         beam.thrower       = KILL_MON_MISSILE;
     }
 
-    beam.source_id = agent->mid;
+    beam.range        = you.current_vision;
+    beam.source_id    = agent->mid;
     beam.item         = &item;
     beam.effect_known = item_ident(item, ISFLAG_KNOW_TYPE);
     beam.source       = agent->pos();
-    beam.colour       = item.get_colour();
+    beam.colour       = get_item_glyph(&item).col;
     beam.flavour      = BEAM_MISSILE;
     beam.pierce       = false;
     beam.aux_source.clear();
@@ -600,6 +605,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
 static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
 {
+    ASSERT(act); // XXX: change to actor &act
     const item_def* launcher = act->weapon();
 
     if (launcher == nullptr || launcher->base_type != OBJ_WEAPONS)
@@ -651,13 +657,13 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
                  launcher->name(DESC_PLAIN).c_str());
         return;
     }
-    if (act->is_player() || you.can_see(act))
+    if (act->is_player() || you.can_see(*act))
         msg = nullptr;
 
     noisy(level, act->pos(), msg, act->mid);
 }
 
-// throw_it - currently handles player throwing only.  Monster
+// throw_it - currently handles player throwing only. Monster
 // throwing is handled in mon-act:_mons_throw()
 // Note: If teleport is true, assume that pbolt is already set up,
 // and teleport the projectile onto the square.
@@ -669,7 +675,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     dist thr;
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
-    const bool teleport = _is_pproj_active();
+    const bool teleport = is_pproj_active();
 
     if (you.confused())
     {
@@ -716,29 +722,9 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     // Did we know the ammo's brand before throwing it?
     const bool ammo_brand_known = item_type_known(thrown);
 
-    // Get the ammo/weapon type.  Convenience.
+    // Get the ammo/weapon type. Convenience.
     const object_class_type wepClass = thrown.base_type;
     const int               wepType  = thrown.sub_type;
-
-    // Determine range.
-    int max_range = INT_MAX;
-    int range = INT_MAX;
-
-    // are we properly throwing/shooting this thing?
-    if (projected != LRET_FUMBLED)
-    {
-        if (wepType == MI_LARGE_ROCK)
-        {
-            range     = random_range(5, 8) + random2(you.strength() / 5);
-            max_range = 7 + you.strength() / 5;
-        }
-    }
-
-    range = min(range, (int)you.current_vision);
-    max_range = min(max_range, (int)you.current_vision);
-
-    // For the tracer, use max_range. For the actual shot, use range.
-    pbolt.range = max_range;
 
     // Save the special explosion (exploding missiles) for later.
     // Need to clear this if unknown to avoid giving away the explosion.
@@ -761,13 +747,12 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
             // normal projectiles.
             monster *m = monster_at(thr.target);
             if (m)
-                cancelled = stop_attack_prompt(m, false, thr.target, false);
+                cancelled = stop_attack_prompt(m, false, thr.target);
         }
         else
         {
             // Set values absurdly high to make sure the tracer will
             // complain if we're attempting to fire through allies.
-            pbolt.hit    = AUTOMATIC_HIT;
             pbolt.damage = dice_def(1, 100);
 
             // Init tracer variables.
@@ -798,13 +783,12 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     pbolt.is_tracer = false;
 
     // Reset values.
-    pbolt.range = range;
     pbolt.special_explosion = expl;
 
     bool unwielded = false;
     if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
     {
-        if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false))
+        if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false))
             return false;
 
         unwielded = true;
@@ -813,19 +797,14 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     // Now start real firing!
     origin_set_unknown(item);
 
-    if (thrown.quantity > 1)
+    // bloodpots & chunks need special handling.
+    if (thrown.quantity > 1 && is_perishable_stack(item))
     {
-        // bloodpots & chunks need special handling.
-        if (is_perishable_stack(item) && thrown.quantity > 1)
-        {
-            // Initialise thrown item with oldest item in stack.
-            const int rot_timer = remove_oldest_perishable_item(thrown);
-            item.props.clear();
-            init_perishable_stack(item, rot_timer);
-        }
-
-        if (is_xp_evoker(item))
-            item.evoker_debt = remove_newest_xp_evoker(thrown);
+        // Initialise thrown item with oldest item in stack.
+        const int rot_timer = remove_oldest_perishable_item(thrown)
+                              - you.elapsed_time;
+        item.props.clear();
+        init_perishable_stack(item, rot_timer);
     }
 
     // Even though direction is allowed, we're throwing so we
@@ -876,7 +855,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
             did_return = true;
     }
 
-    you.time_taken = you.attack_delay(you.weapon(), &item);
+    you.time_taken = you.attack_delay(&item).roll();
 
     // Create message.
     mprf("You %s%s %s.",
@@ -985,7 +964,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         && thrown.base_type == OBJ_MISSILES
         && thrown.sub_type != MI_NEEDLE)
     {
-        dithmenos_shadow_throw(thr.target, item);
+        dithmenos_shadow_throw(thr, item);
     }
 
     return hit;
@@ -993,7 +972,6 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
 
 void setup_monster_throw_beam(monster* mons, bolt &beam)
 {
-    // FIXME we should use a sensible range here
     beam.range = you.current_vision;
     beam.source_id = mons->mid;
 
@@ -1024,28 +1002,20 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     if (!teleport)
     {
         const int energy = mons->action_energy(EUT_MISSILE);
-        const int delay = mons->attack_delay(weapon != NON_ITEM ? &mitm[weapon]
-                                                                : nullptr,
-                                             &mitm[msl]);
+        const int delay = mons->attack_delay(&mitm[msl]).roll();
         ASSERT(energy > 0);
         ASSERT(delay > 0);
         mons->speed_increment -= div_rand_round(energy * delay, 10);
     }
 
-    actor* victim = actor_at(beam.target);
-    const int old_hp = (victim) ? victim->stat_hp() : 0;
-
     // Dropping item copy, since the launched item might be different.
     item_def item = mitm[msl];
     item.quantity = 1;
 
-    // FIXME we should actually determine a sensible range here
-    beam.range         = you.current_vision;
-
     if (_setup_missile_beam(mons, beam, item, ammo_name, returning))
         return false;
 
-    beam.aimed_at_spot = returning;
+    beam.aimed_at_spot |= returning;
 
     const launch_retval projected =
         is_launched(mons, mons->mslot_item(MSLOT_WEAPON),
@@ -1069,7 +1039,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     }
 
     // Now, if a monster is, for some reason, throwing something really
-    // stupid, it will have baseHit of 0 and damage of 0.  Ah well.
+    // stupid, it will have baseHit of 0 and damage of 0. Ah well.
     string msg = mons->name(DESC_THE);
     if (teleport)
         msg += " magically";
@@ -1133,10 +1103,10 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
         // Only print a message if you can see the target or the thrower.
         // Otherwise we get "The weapon returns whence it came from!" regardless.
-        if (you.see_cell(beam.target) || you.can_see(mons))
+        if (you.see_cell(beam.target) || you.can_see(*mons))
         {
             msg::stream << "The weapon returns "
-                        << (you.can_see(mons)?
+                        << (you.can_see(*mons)?
                               ("to " + mons->name(DESC_THE))
                             : "from whence it came")
                         << "!" << endl;
@@ -1151,14 +1121,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
     if (beam.special_explosion != nullptr)
         delete beam.special_explosion;
-
-    if (mons->has_ench(ENCH_GRAND_AVATAR))
-    {
-        // We want this to be a ranged attack, like the spell mirroring,
-        // so any spell that fires a battlesphere will do here.
-        // XXX: make triggering of this less hacky
-        trigger_grand_avatar(mons, victim, SPELL_MAGIC_DART, old_hp);
-    }
 
     return true;
 }
@@ -1185,15 +1147,14 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
 
     switch (brand)
     {
-        case SPMSL_STEEL:
-            chance *= 10;
-            break;
         case SPMSL_FLAME:
         case SPMSL_FROST:
         case SPMSL_CURARE:
             chance /= 2;
             break;
     }
+
+    dprf("mulch chance: %d in %d", mult, chance);
 
     return x_chance_in_y(mult, chance);
 }

@@ -7,9 +7,11 @@
 
 #include "ranged_attack.h"
 
-#include "art-enum.h"
+#include "areas.h"
 #include "coord.h"
 #include "english.h"
+#include "env.h"
+#include "fprop.h"
 #include "godconduct.h"
 #include "itemprop.h"
 #include "message.h"
@@ -95,7 +97,7 @@ bool ranged_attack::attack()
         return true;
     }
 
-    const int ev = defender->melee_evasion(attacker);
+    const int ev = defender->evasion(EV_IGNORE_NONE, attacker);
     ev_margin = test_hit(to_hit, ev, !attacker->is_player());
     bool shield_blocked = attack_shield_blocked(false);
 
@@ -119,6 +121,12 @@ bool ranged_attack::attack()
     {
         if (ev_margin >= 0)
         {
+            if (attacker != defender && attack_warded_off())
+            {
+                handle_phase_end();
+                return false;
+            }
+
             if (!handle_phase_hit())
             {
                 if (!defender->alive())
@@ -131,7 +139,13 @@ bool ranged_attack::attack()
             handle_phase_dodged();
     }
 
-    // TODO: sanctuary
+    if (env.sanctuary_time > 0 && attack_occurred
+        && (is_sanctuary(attacker->pos()) || is_sanctuary(defender->pos()))
+        && (attacker->is_player() || attacker->as_monster()->friendly()
+                                     && !attacker->confused()))
+    {
+        remove_sanctuary(true);
+    }
 
     if (should_alert_defender)
         alert_defender();
@@ -200,7 +214,7 @@ bool ranged_attack::handle_phase_dodged()
 {
     did_hit = false;
 
-    const int ev = defender->melee_evasion(attacker);
+    const int ev = defender->evasion(EV_IGNORE_NONE, attacker);
 
     const int orig_ev_margin =
         test_hit(orig_to_hit, ev, !attacker->is_player());
@@ -225,8 +239,8 @@ bool ranged_attack::handle_phase_dodged()
         return true;
     }
 
-    const int ev_nophase = defender->melee_evasion(attacker,
-                                                   EV_IGNORE_PHASESHIFT);
+    const int ev_nophase = defender->evasion(EV_IGNORE_PHASESHIFT, attacker);
+
     if (ev_margin + (ev - ev_nophase) > 0)
     {
         if (needs_message && defender_visible)
@@ -264,14 +278,14 @@ bool ranged_attack::handle_phase_hit()
     if (projectile->is_type(OBJ_MISSILES, MI_NEEDLE))
     {
         int dur = blowgun_duration_roll(get_ammo_brand(*projectile));
-        set_attack_verb();
+        set_attack_verb(0);
         int stab = player_stab(dur);
         damage_done = dur + (stab - dur) / 10;
         announce_hit();
     }
     else if (projectile->is_type(OBJ_MISSILES, MI_THROWING_NET))
     {
-        set_attack_verb();
+        set_attack_verb(0);
         announce_hit();
         if (defender->is_player())
             player_caught_in_net();
@@ -369,8 +383,7 @@ int ranged_attack::calc_mon_to_hit_base()
     return 18 + attacker->get_hit_dice() * hd_mult / 6;
 }
 
-int ranged_attack::apply_damage_modifiers(int damage, int damage_max,
-                                          bool &half_ac)
+int ranged_attack::apply_damage_modifiers(int damage, int damage_max)
 {
     ASSERT(attacker->is_monster());
     if (attacker->as_monster()->is_archer())
@@ -378,7 +391,6 @@ int ranged_attack::apply_damage_modifiers(int damage, int damage_max,
         const int bonus = attacker->get_hit_dice() * 4 / 3;
         damage += random2avg(bonus, 2);
     }
-    half_ac = false;
     return damage;
 }
 
@@ -528,7 +540,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
     // Pretty much duplicated by the chaos effect note,
     // which will be much more informative.
     if (brand != SPMSL_CHAOS)
-        take_note(Note(NOTE_MESSAGE, 0, 0, brand_name.c_str()), true);
+        take_note(Note(NOTE_MESSAGE, 0, 0, brand_name), true);
 #endif
     return brand;
 }
@@ -733,7 +745,7 @@ bool ranged_attack::apply_missile_brand()
                                          no_sanct))
                 {
                     const coord_def from = attacker->pos();
-                    if (distance2(pos2, from) > distance2(pos, from))
+                    if (grid_distance(pos2, from) > grid_distance(pos, from))
                         pos = pos2;
 
                     if (defender->is_player())
@@ -815,16 +827,7 @@ bool ranged_attack::mons_attack_effects()
 void ranged_attack::player_stab_check()
 {
     if (player_good_stab())
-    {
         attack::player_stab_check();
-        // Sometimes the blowgun of the Assassin lets you stab an aware target.
-        if (!stab_attempt && is_unrandom_artefact(*weapon, UNRAND_BLOWGUN_ASSASSIN)
-            && one_chance_in(3))
-        {
-            stab_attempt = true;
-            stab_bonus = 1;
-        }
-    }
     else
     {
         stab_attempt = false;
@@ -838,7 +841,7 @@ bool ranged_attack::player_good_stab()
            && projectile->is_type(OBJ_MISSILES, MI_NEEDLE);
 }
 
-void ranged_attack::set_attack_verb()
+void ranged_attack::set_attack_verb(int/* damage*/)
 {
     attack_verb = attack_ignores_shield(false) ? "pierces through" : "hits";
 }

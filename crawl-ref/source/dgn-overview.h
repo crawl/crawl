@@ -20,9 +20,9 @@ void display_overview();
 bool unnotice_feature(const level_pos &pos);
 string overview_description_string(bool display);
 void enter_branch(branch_type branch, level_id from);
-void mark_offlevel_shop(level_id lid, shop_type type);
-void unmark_offlevel_shop(level_id lid);
 void mark_corrupted_level(level_id li);
+void seen_runed_door();
+void opened_runed_door();
 
 ///////////////////////////////////////////////////////////
 void set_level_exclusion_annotation(string str,
@@ -46,4 +46,5 @@ class writer;
 class reader;
 void marshallUniqueAnnotations(writer& outf);
 void unmarshallUniqueAnnotations(reader& inf);
+bool connected_branch_can_exist(branch_type br);
 #endif

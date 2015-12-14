@@ -1,0 +1,18 @@
+#!/bin/sh
+set -e
+
+# Everything here is clean-up from old versions that used to be setgid.
+
+OLDDIR=/var/games/crawl/saves
+DIR=/var/games/crawl
+
+# Drop the old db cache; the new one is in ~/.crawl/ for security reasons.
+rm -rf $OLDDIR/db
+rm -rf $OLDDIR/des
+rm -f $OLDDIR/*.prf
+
+# We keep old saves and bones for now, they're incompatible but the user may
+# decide to downgrade to complete a game in progress.
+rmdir $OLDDIR $DIR/morgue $DIR >/dev/null 2>/dev/null || true
+
+#DEBHELPER#

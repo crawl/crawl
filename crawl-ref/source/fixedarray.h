@@ -6,16 +6,12 @@
 #ifndef FIXARY_H
 #define FIXARY_H
 
+#include <algorithm>
+
 #include "fixedvector.h"
 
-// ==========================================================================
-//    class FixedArray
-// ==========================================================================
 template <class TYPE, int WIDTH, int HEIGHT> class FixedArray
 {
-//-----------------------------------
-//    Types
-//
 public:
     typedef TYPE            value_type;
     typedef TYPE&           reference;
@@ -30,9 +26,6 @@ public:
     // client code (if inlining is on there won't be a speed hit)
     typedef FixedVector<TYPE, HEIGHT> Column;
 
-//-----------------------------------
-//    Initialization/Destruction
-//
 public:
     ~FixedArray()                           {}
 
@@ -43,9 +36,6 @@ public:
         init(def);
     }
 
-//-----------------------------------
-//    API
-//
 public:
     // ----- Size -----
     bool empty() const { return WIDTH == 0 || HEIGHT == 0; }
@@ -60,20 +50,34 @@ public:
         return mData[index];
     }
 
-    template<class Indexer> TYPE& operator () (const Indexer &i)
+    template<class Indexer>
+    TYPE& operator () (const Indexer &i)
     {
         return mData[i.x][i.y];
     }
 
-    template<class Indexer> const TYPE& operator () (const Indexer &i) const
+    template<class First, class Second>
+    TYPE& operator () (const pair<First,Second> &p)
+    {
+        return mData[p.first][p.second];
+    }
+
+    template<class Indexer>
+    const TYPE& operator () (const Indexer &i) const
     {
         return mData[i.x][i.y];
+    }
+
+    template<class First, class Second>
+    const TYPE& operator () (const pair<First,Second> &p) const
+    {
+        return mData[p.first][p.second];
     }
 
     void init(const TYPE& def)
     {
-        for (int i = 0; i < WIDTH; ++i)
-            mData[i].init(def);
+        for (auto &col : mData)
+            col.init(def);
     }
 
 protected:
@@ -83,9 +87,6 @@ protected:
 // A fixed array centered around the origin.
 template <class TYPE, int RADIUS> class SquareArray
 {
-//-----------------------------------
-//    Types
-//
 public:
     typedef TYPE            value_type;
     typedef TYPE&           reference;
@@ -96,9 +97,6 @@ public:
     typedef unsigned long   size_type;
     typedef long            difference_type;
 
-//-----------------------------------
-//    Initialization/Destruction
-//
 public:
     ~SquareArray()                           {}
 
@@ -109,9 +107,6 @@ public:
         init(def);
     }
 
-//-----------------------------------
-//    API
-//
 public:
     // ----- Size -----
     bool empty() const { return data.empty(); }

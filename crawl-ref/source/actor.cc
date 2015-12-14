@@ -31,7 +31,7 @@ actor::~actor()
 
 bool actor::will_trigger_shaft() const
 {
-    return ground_level() && body_weight() > 0 && is_valid_shaft_level()
+    return is_valid_shaft_level()
            // let's pretend that they always make their saving roll
            && !(is_monster()
                 && mons_is_elven_twin(static_cast<const monster* >(this)));
@@ -40,12 +40,6 @@ bool actor::will_trigger_shaft() const
 level_id actor::shaft_dest(bool known = false) const
 {
     return generic_shaft_dest(pos(), known);
-}
-
-bool actor::airborne() const
-{
-    flight_type fly = flight_mode();
-    return fly == FL_LEVITATE || fly == FL_WINGED && !(cannot_move() || caught());
 }
 
 /**
@@ -134,11 +128,12 @@ int actor::check_res_magic(int power)
     // value because mrs = hd * 2 * 3 for most monsters, and the weak, low
     // level monsters have been adjusted so that the "3" is typically a 1.
     // There are some notable one hd monsters that shouldn't fall under this,
-    // so we do < 6, instead of <= 6...  or checking mons->hit_dice.  The
+    // so we do < 6, instead of <= 6...  or checking mons->hit_dice. The
     // goal here is to make the first level easier for these classes and give
     // them a better shot at getting to level two or three and spells that can
     // help them out (or building a level or two of their base skill so they
     // aren't resisted as often). - bwr
+    // If you change this, also change desc_success_chance() to match.
     if (is_monster() && mrs < 6 && coinflip())
         return -1;
 
@@ -218,30 +213,7 @@ void actor::shield_block_succeeded(actor *foe)
     }
 }
 
-int actor::body_weight(bool base) const
-{
-    switch (body_size(PSIZE_BODY, base))
-    {
-    case SIZE_TINY:
-        return 150;
-    case SIZE_LITTLE:
-        return 300;
-    case SIZE_SMALL:
-        return 425;
-    case SIZE_MEDIUM:
-        return 550;
-    case SIZE_LARGE:
-        return 1300;
-    case SIZE_BIG:
-        return 1500;
-    case SIZE_GIANT:
-        return 1800;
-    default:
-        die("invalid body weight");
-    }
-}
-
-bool actor::inaccuracy() const
+int actor::inaccuracy() const
 {
     return wearing(EQ_AMULET, AMU_INACCURACY);
 }
@@ -288,17 +260,9 @@ bool actor::clarity(bool calc_unid, bool items) const
                      || scan_artefacts(ARTP_CLARITY, calc_unid));
 }
 
-int actor::faith(bool calc_unid, bool items) const
+bool actor::faith(bool calc_unid, bool items) const
 {
-    int net_faith = 0;
-
-    if (items && wearing(EQ_AMULET, AMU_FAITH, calc_unid))
-        net_faith++;
-
-    if (is_player() && player_mutation_level(MUT_FORLORN))
-        net_faith--;
-
-    return net_faith;
+    return items && wearing(EQ_AMULET, AMU_FAITH, calc_unid);
 }
 
 bool actor::warding(bool calc_unid, bool items) const
@@ -421,7 +385,7 @@ bool actor_slime_wall_immune(const actor *act)
  */
 bool actor::is_wall_clinging() const
 {
-    return props.exists("clinging") && props["clinging"].get_bool();
+    return props.exists(CLING_KEY) && props[CLING_KEY].get_bool();
 }
 
 /**
@@ -455,13 +419,13 @@ bool actor::check_clinging(bool stepped, bool door)
                     && !airborne();
 
     if (can_cling_to_walls())
-        props["clinging"] = clinging;
-    else if (props.exists("clinging"))
-        props.erase("clinging");
+        props[CLING_KEY] = clinging;
+    else if (props.exists(CLING_KEY))
+        props.erase(CLING_KEY);
 
     if (!stepped && was_clinging && !clinging)
     {
-        if (you.can_see(this))
+        if (you.can_see(*this))
         {
             mprf("%s %s off the %s.", name(DESC_THE).c_str(),
                  conj_verb("fall").c_str(),
@@ -474,8 +438,8 @@ bool actor::check_clinging(bool stepped, bool door)
 
 void actor::clear_clinging()
 {
-    if (props.exists("clinging"))
-        props["clinging"] = false;
+    if (props.exists(CLING_KEY))
+        props[CLING_KEY] = false;
 }
 
 void actor::clear_constricted()
@@ -505,6 +469,9 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
                 pronoun(PRONOUN_POSSESSIVE).c_str(),
                 constrictee->name(DESC_THE).c_str());
     }
+
+    if (constrictee->is_player())
+        you.redraw_evasion = true;
 }
 
 void actor::stop_constricting(mid_t whom, bool intentional, bool quiet)
@@ -553,10 +520,15 @@ void actor::stop_being_constricted(bool quiet)
 
 void actor::clear_far_constrictions()
 {
+    clear_constrictions_far_from(pos());
+}
+
+void actor::clear_constrictions_far_from(const coord_def &where)
+{
     clear_far_engulf();
     actor* const constrictor = actor_by_mid(constricted_by);
 
-    if (!constrictor || !adjacent(pos(), constrictor->pos()))
+    if (!constrictor || !adjacent(where, constrictor->pos()))
         stop_being_constricted();
 
     if (!constricting)
@@ -566,7 +538,7 @@ void actor::clear_far_constrictions()
     for (const auto &entry : *constricting)
     {
         actor* const constrictee = actor_by_mid(entry.first);
-        if (!constrictee || !adjacent(pos(), constrictee->pos()))
+        if (!constrictee || !adjacent(where, constrictee->pos()))
             need_cleared.push_back(entry.first);
     }
 
@@ -584,6 +556,9 @@ void actor::start_constricting(actor &whom, int dur)
     (*constricting)[whom.mid] = dur;
     whom.constricted_by = mid;
     whom.held = constriction_damage() ? HELD_CONSTRICTED : HELD_MONSTER;
+
+    if (whom.is_player())
+        you.redraw_evasion = true;
 }
 
 int actor::num_constricting() const
@@ -612,9 +587,10 @@ void actor::accum_has_constricted()
 
 bool actor::can_constrict(actor* defender)
 {
+    ASSERT(defender); // XXX: change to actor &defender
     return (!is_constricting() || has_usable_tentacle())
            && !defender->is_constricted()
-           && can_see(defender)
+           && can_see(*defender)
            && !confused()
            && body_size(PSIZE_BODY) >= defender->body_size(PSIZE_BODY)
            && defender->res_constrict() < 3
@@ -672,7 +648,7 @@ void actor::handle_constriction()
 
         string exclamations;
         if (damage <= 0 && is_player()
-            && you.can_see(defender))
+            && you.can_see(*defender))
         {
             exclamations = ", but do no damage.";
         }
@@ -693,7 +669,7 @@ void actor::handle_constriction()
             }
         }
 
-        if (is_player() || you.can_see(this))
+        if (is_player() || you.can_see(*this))
         {
             mprf("%s %s %s%s%s",
                  (is_player() ? "You"
@@ -707,7 +683,7 @@ void actor::handle_constriction()
 #endif
                  exclamations.c_str());
         }
-        else if (you.can_see(defender) || defender->is_player())
+        else if (you.can_see(*defender) || defender->is_player())
         {
             mprf("%s %s constricted%s%s",
                  defender->name(DESC_THE).c_str(),
@@ -810,9 +786,7 @@ bool actor::torpor_slowed() const
         const monster *mons = *ri;
         if (mons && mons->type == MONS_TORPOR_SNAIL
             && !is_sanctuary(mons->pos())
-            && !mons_aligned(mons, this)
-            && !mons->has_ench(ENCH_CHARM) && mons->attitude == ATT_HOSTILE)
-            // friendly torpor snails are way too abusable otherwise :(
+            && !mons_aligned(mons, this))
         {
             return true;
         }
@@ -849,6 +823,9 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     ASSERT(this != other);
     ASSERT(alive());
 
+    if (is_insubstantial())
+        return;
+
     if (is_monster())
         behaviour_event(as_monster(), ME_WHACK, agent);
 
@@ -858,7 +835,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     {
         if (other->is_monster())
             behaviour_event(other->as_monster(), ME_WHACK, agent);
-        if (you.can_see(this) || you.can_see(other))
+        if (you.can_see(*this) || you.can_see(*other))
         {
             mprf("%s %s with %s!",
                  name(DESC_THE).c_str(),
@@ -878,7 +855,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         return;
     }
 
-    if (you.can_see(this))
+    if (you.can_see(*this))
     {
         if (!can_pass_through_feat(grd(newpos)))
         {

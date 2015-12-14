@@ -9,7 +9,7 @@ if sys.version_info[0] > 2:
 
 ## Copied from gdb.printing because, having an initial underscore,
 ## it's probably not a stable interface...
-# A helper class for printing enum types.  This class is instantiated
+# A helper class for printing enum types. This class is instantiated
 # with a list of enumerators to print a particular Value.
 class _EnumInstance:
     def __init__(self, enumerators, val):
@@ -151,7 +151,6 @@ class item_def_printer:
                 }.get(ty, 'int')
         yield g('special', special_type)
 
-        yield f('colour')
         yield f('rnd')
         yield f('quantity')
         yield g('flags', 'item_status_flag_type')

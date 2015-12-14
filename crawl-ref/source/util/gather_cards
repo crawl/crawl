@@ -5,9 +5,4 @@ open IN, "util/cpp_version decks.cc|" or die "Can't read decks.cc\n";
 $_ = <IN>;
 close IN;
 
-s/.*card_name\(card_type card\)\n{\n\s+switch(.*?)\n}\n.*/$1/s
-    or die "Can't find card_name() in decks.cc\n";
-
-@cards = map { /case CARD_[A-Z_]+:\s+return "([^"]+)";$/ ? ("$1") : () } split /\n/;
-
-print join("\n", sort @cards), "\n";
+print "$_\n" for /CARD_[A-Z_]+: *return "([^"]+)";/g;

@@ -14,8 +14,8 @@ enum distrib_type
     SEMI, // 50% chance at range ends, 100% in the middle
     PEAK, // 0% chance just outside range ends, 100% in the middle, range
           // ends typically get ~20% or more
-    UP,   // linearly from near-zero to 100%, increasing with depth
-    DOWN, // linearly from 100% at the start to near-zero
+    RISE, // linearly from near-zero to 100%, increasing with depth
+    FALL, // linearly from 100% at the start to near-zero
 };
 
 template <typename T>
@@ -106,10 +106,10 @@ int random_picker<T, max>::rarity_at(const random_pick_entry<T> *pop, int depth)
         return rar * (len - abs(pop->minr + pop->maxr - 2 * depth))
                    / len;
 
-    case UP:
+    case RISE:
         return rar * (depth - pop->minr + 1) / (len + 1);
 
-    case DOWN:
+    case FALL:
         return rar * (pop->maxr - depth + 1) / (len + 1);
     }
 

@@ -6,6 +6,7 @@ enum circle_type
     C_CIRCLE,      // circle specified by pre-squared radius
     C_POINTY,      // circle with square radius r*r
     C_ROUND,       // circle with square radius r*r+1
+    C_SQUARE,      // square with radius r
 };
 
 class rectangle_iterator;
@@ -30,12 +31,12 @@ public:
 /*
  * Circles of different shapes; see circle_type for these.
  *
- * radius/radius_sq don't have meaning when los_radius is set.
+ * radius/radius_sq don't have meaning when global_los_radius is set.
  */
 class circle_def
 {
     // Are we tracking global LOS radius?
-    bool los_radius;
+    bool global_los_radius;
 
     // Check against map bounds for containment?
     bool check_bounds;
@@ -45,6 +46,7 @@ class circle_def
     int radius;
     int radius_sq;
     rect_def bbox;
+    bool is_square;
 
 public:
     // Circle around (0,0) with radius that tracks global LOS radius.

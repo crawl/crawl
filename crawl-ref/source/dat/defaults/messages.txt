@@ -8,7 +8,7 @@ msc := message_colour
 #
 msc += $danger:drains you
 msc += $danger:feel drained
-msc += $danger:strangely unstable
+msc += $danger:strangely .*stable
 msc += $danger:curare-tipped.*hits you
 msc += $danger:Space warps.* around you
 msc += $danger:Space bends around you
@@ -27,9 +27,8 @@ msc += $danger:constricts you
 msc += $danger:you convulse
 msc += $danger:You feel a build-up of mutagenic energy
 msc += $danger:place you under penance
-
-msc += $item_dmg:acid corrodes
-msc += $item_dmg:rots? away
+msc += $danger:acid corrodes
+msc += $danger:rotting away
 
 # Less urgent, but still significant messages
 #
@@ -59,6 +58,8 @@ msc += $warning:crackle.*magical portal
 msc += lightcyan:LOW MAGIC WARNING
 msc += $warning:fails to return
 msc += $warning:no longer ripe
+msc += $warning:This .* contains the .* runes? of Zot.
+msc += $warning:They guard the .* runes? of Zot.
 
 # Unimportant messages and combat clutter
 #
@@ -76,7 +77,6 @@ msc += $boring:(prevent|prevents) you from hitting
 msc += $boring:nimbly evade
 msc += $boring:waved at by a branch
 msc += $boring:lunges up near
-msc += $boring:Your air elemental.*the air
 
 ## Messages so important to require a --more--
 
@@ -85,6 +85,7 @@ force_more_message += Your scales start
 force_more_message += You fall through a shaft
 force_more_message += Marking area around .* as unsafe
 force_more_message += .*breaks free of your control
+force_more_message += .*doesn't seem very happy
 
 ## Reduce chance of drowning because flight or form runs out:
 force_more_message += Careful!

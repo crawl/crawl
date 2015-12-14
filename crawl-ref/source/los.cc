@@ -107,15 +107,15 @@ void clear_rays_on_exit()
         delete blockrays(*qi);
 }
 
-// Pre-squared LOS radius.
-int los_radius2 = LOS_RADIUS_SQ;
+// LOS radius.
+int los_radius = LOS_RADIUS;
 
 static void _handle_los_change();
 
 void set_los_radius(int r)
 {
     ASSERT(r <= LOS_RADIUS);
-    los_radius2 = r * r + 1;
+    los_radius = r;
     invalidate_los();
     _handle_los_change();
 }
@@ -159,7 +159,7 @@ struct los_ray : public ray_def
                 break;
             }
             c = copy.pos();
-            if (c.abs() > LOS_RADIUS_SQ)
+            if (c.rdist() > LOS_RADIUS)
                 break;
             cs.push_back(c);
             ASSERT((c - old).rdist() == 1);
@@ -544,10 +544,10 @@ static bool _find_ray_se(const coord_def& target, ray_def& ray,
     ASSERT(target.x >= 0);
     ASSERT(target.y >= 0);
     ASSERT(!target.origin());
-    if (target.abs() > range * range + 1)
+    if (target.rdist() > range)
         return false;
 
-    ASSERT(target.abs() <= LOS_RADIUS_SQ);
+    ASSERT(target.rdist() <= LOS_RADIUS);
 
     // Ensure the precalculations have been done.
     raycast();
@@ -597,7 +597,7 @@ struct opacity_trans : public opacity_func
 
     CLONE(opacity_trans)
 
-    opacity_type operator()(const coord_def &l) const
+    opacity_type operator()(const coord_def &l) const override
     {
         return orig(transform(l));
     }
@@ -762,11 +762,11 @@ bool cell_see_cell_nocache(const coord_def& p1, const coord_def& p2)
 // Look up which cells the surviving rays have, and that's your LOS!
 // OPTIMIZATIONS:
 // WLOG, we can assume that we're in a specific quadrant - say the
-// first quadrant - and just mirror everything after that.  We can
+// first quadrant - and just mirror everything after that. We can
 // likely get away with a single octant, but we don't do that. (To
 // do...)
 // Rays are actually split by each cell they pass. So each "ray" only
-// identifies a single cell, and we can do logical ORs.  Once a cell
+// identifies a single cell, and we can do logical ORs. Once a cell
 // kills a cellray, it will kill all remaining cellrays of that ray.
 // Also, rays are checked to see if they are duplicates of each
 // other. If they are, they're eliminated.
@@ -842,12 +842,12 @@ struct los_param_funcs : public los_param
     {
     }
 
-    bool los_bounds(const coord_def& p) const
+    bool los_bounds(const coord_def& p) const override
     {
         return map_bounds(p + center) && bounds.contains(p);
     }
 
-    opacity_type opacity(const coord_def& p) const
+    opacity_type opacity(const coord_def& p) const override
     {
         return opc(p + center);
     }

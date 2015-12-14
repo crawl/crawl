@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\ability.cc" />
@@ -12,7 +12,6 @@
     <ClCompile Include="..\areas.cc" />
     <ClCompile Include="..\arena.cc" />
     <ClCompile Include="..\artefact.cc" />
-    <ClCompile Include="..\asg.cc" />
     <ClCompile Include="..\attack.cc" />
     <ClCompile Include="..\attitude-change.cc" />
     <ClCompile Include="..\beam.cc" />
@@ -35,6 +34,7 @@
     <ClCompile Include="..\database.cc" />
     <ClCompile Include="..\dbg-asrt.cc" />
     <ClCompile Include="..\dbg-maps.cc" />
+    <ClCompile Include="..\dbg-objstat.cc" />
     <ClCompile Include="..\dbg-scan.cc" />
     <ClCompile Include="..\dbg-util.cc" />
     <ClCompile Include="..\decks.cc" />
@@ -131,6 +131,7 @@
     <ClCompile Include="..\ng-wanderer.cc" />
     <ClCompile Include="..\orb.cc" />
     <ClCompile Include="..\package.cc" />
+    <ClCompile Include="..\pcg.cc" />
     <ClCompile Include="..\perlin.cc" />
     <ClCompile Include="..\place-info.cc" />
     <ClCompile Include="..\player-act.cc" />
@@ -188,6 +189,7 @@
     <ClCompile Include="..\output.cc" />
     <ClCompile Include="..\pattern.cc" />
     <ClCompile Include="..\place.cc" />
+    <ClCompile Include="..\playable.cc" />
     <ClCompile Include="..\player.cc" />
     <ClCompile Include="..\quiver.cc" />
     <ClCompile Include="..\random-var.cc" />
@@ -296,10 +298,8 @@
     <ClCompile Include="..\wiz-you.cc" />
     <ClCompile Include="..\worley.cc" />
     <ClCompile Include="..\xom.cc" />
-    <ClCompile Include="..\zotdef.cc" />
     <ClCompile Include="..\dgn-irregular-box.cc" />
     <ClCompile Include="..\json.cc" />
-    <ClCompile Include="..\mon-chimera.cc" />
     <ClCompile Include="..\spl-pick.cc" />
     <ClCompile Include="..\hash.cc" />
   </ItemGroup>
@@ -318,7 +318,6 @@
     <ClInclude Include="..\art-enum.h" />
     <ClInclude Include="..\art-func.h" />
     <ClInclude Include="..\artefact.h" />
-    <ClInclude Include="..\asg.h" />
     <ClInclude Include="..\attack.h" />
     <ClInclude Include="..\attitude-change.h" />
     <ClInclude Include="..\beam.h" />
@@ -346,6 +345,7 @@
     <ClInclude Include="..\database.h" />
     <ClInclude Include="..\dbg-crsh.h" />
     <ClInclude Include="..\dbg-maps.h" />
+    <ClInclude Include="..\dbg-objstat.h" />
     <ClInclude Include="..\dbg-scan.h" />
     <ClInclude Include="..\dbg-util.h" />
     <ClInclude Include="..\debug.h" />
@@ -416,6 +416,7 @@
     <ClInclude Include="..\items.h" />
     <ClInclude Include="..\jobs.h" />
     <ClInclude Include="..\json.h" />
+    <ClInclude Include="..\json-wrapper.h" />
     <ClInclude Include="..\kills.h" />
     <ClInclude Include="..\lang-fake.h" />
     <ClInclude Include="..\libconsole.h" />
@@ -434,6 +435,7 @@
     <ClInclude Include="..\mon-flags.h" />
     <ClInclude Include="..\mon-mst.h" />
     <ClInclude Include="..\mon-pick-data.h" />
+    <ClInclude Include="..\mutant-beast.h" />
     <ClInclude Include="..\mutation-data.h" />
     <ClInclude Include="..\newgame_def.h" />
     <ClInclude Include="..\ng-setup.h" />
@@ -502,13 +504,14 @@
     <ClInclude Include="..\ouch.h" />
     <ClInclude Include="..\output.h" />
     <ClInclude Include="..\pattern.h" />
+    <ClInclude Include="..\pcg.h" />
     <ClInclude Include="..\place.h" />
     <ClInclude Include="..\player.h" />
+    <ClInclude Include="..\playable.h" />
     <ClInclude Include="..\process_desc.h" />
     <ClInclude Include="..\props.h" />
     <ClInclude Include="..\quiver.h" />
     <ClInclude Include="..\random-var.h" />
-    <ClInclude Include="..\random-weight.h" />
     <ClInclude Include="..\random.h" />
     <ClInclude Include="..\ranged_attack.h" />
     <ClInclude Include="..\ray.h" />
@@ -627,12 +630,9 @@
     <ClInclude Include="..\worley.h" />
     <ClInclude Include="..\xom.h" />
     <ClInclude Include="..\zap-data.h" />
-    <ClInclude Include="..\zotdef.h" />
     <ClInclude Include="..\dgn-irregular-box.h" />
-    <ClInclude Include="..\mon-chimera.h" />
     <ClInclude Include="..\random-pick.h" />
     <ClInclude Include="..\spl-pick.h" />
-    <ClInclude Include="..\data-index.h" />
     <ClInclude Include="..\mon-book.h" />
   </ItemGroup>
 </Project>

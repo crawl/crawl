@@ -46,13 +46,14 @@ portal_note_map_type portal_notes;
 annotation_map_type level_annotations;
 annotation_map_type level_exclusions;
 annotation_map_type level_uniques;
+// FIXME: this should really be a multiset, in case you get multiple
+// ghosts with the same name, combo, and XL on the same level.
 set<monster_annotation> auto_unique_annotations;
 
 static void _seen_altar(god_type god, const coord_def& pos);
 static void _seen_staircase(const coord_def& pos);
 static void _seen_shop(const coord_def& pos);
 static void _seen_portal(dungeon_feature_type feat, const coord_def& pos);
-static void _seen_runed_door();
 
 static string _get_branches(bool display);
 static string _get_altars(bool display);
@@ -91,8 +92,6 @@ void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
         _seen_shop(pos);
     else if (feat_is_gate(which_thing)) // overinclusive
         _seen_portal(which_thing, pos);
-    else if (which_thing == DNGN_RUNED_DOOR)
-        _seen_runed_door();
 }
 
 bool move_notable_thing(const coord_def& orig, const coord_def& dest)
@@ -296,14 +295,8 @@ static string _get_unseen_branches()
             continue;
 
         const branch_type branch = it->id;
-
-        if (branch == BRANCH_SPIDER && stair_level.count(BRANCH_SNAKE)
-            || branch == BRANCH_SNAKE && stair_level.count(BRANCH_SPIDER)
-            || branch == BRANCH_SWAMP && stair_level.count(BRANCH_SHOALS)
-            || branch == BRANCH_SHOALS && stair_level.count(BRANCH_SWAMP))
-        {
+        if (!connected_branch_can_exist(branch))
             continue;
-        }
 
         if (branch == BRANCH_VESTIBULE || !is_connected_branch(branch))
             continue;
@@ -418,7 +411,7 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
             colour = "white";
         // Good gods don't inflict penance unless they hate your god.
         if (player_under_penance(god)
-            && (god == GOD_ASHENZARI || active_penance(god)))
+            && (xp_penance(god) || active_penance(god)))
         {
             // Active Nemelex penance starts at 101, not 1.
             colour = (you.penance[god] > (god == GOD_NEMELEX_XOBEH ? 110 : 10))
@@ -621,8 +614,10 @@ void display_overview()
     clrscr();
     string disp = overview_description_string(true);
     linebreak_string(disp, get_number_of_cols());
-    formatted_scroller(MF_EASY_EXIT | MF_ANYPRINTABLE | MF_NOSELECT,
-                       disp).show();
+    int flags = MF_ANYPRINTABLE | MF_NOSELECT;
+    if (Options.easy_exit_menu)
+        flags |= MF_EASY_EXIT;
+    formatted_scroller(flags, disp).show();
     redraw_screen();
 }
 
@@ -670,16 +665,57 @@ static void _seen_portal(dungeon_feature_type which_thing, const coord_def& pos)
     }
 }
 
-static void _seen_runed_door()
+#define SEEN_RUNED_DOOR_KEY "num_runed_doors"
+
+static void _update_runed_door_count(int old_num)
 {
     const level_id li = level_id::current();
+    const int new_num = env.properties[SEEN_RUNED_DOOR_KEY];
+    const string new_string = make_stringf("%d runed door%s", new_num,
+                                           new_num == 1 ? "" : "s");
+    const string old_string = make_stringf("%d runed door%s", old_num,
+                                           old_num == 1 ? "" : "s");
 
-    if (level_annotation_has("runed door", li))
+    //TODO: regexes
+    if (old_num > 0 && new_num > 0)
+    {
+       level_annotations[li] = replace_all(level_annotations[li],
+                                           old_string, new_string);
+    }
+    else if (old_num == 0)
+    {
+        if (!level_annotations[li].empty())
+            level_annotations[li] += ", ";
+        level_annotations[li] += new_string;
+    }
+    else if (new_num == 0)
+    {
+        level_annotations[li] = replace_all(level_annotations[li],
+                                            ", " + old_string, "");
+        level_annotations[li] = replace_all(level_annotations[li],
+                                            old_string, "");
+    }
+}
+
+void seen_runed_door()
+{
+    if (!env.properties.exists(SEEN_RUNED_DOOR_KEY))
+        env.properties[SEEN_RUNED_DOOR_KEY] = 0;
+
+    _update_runed_door_count(env.properties[SEEN_RUNED_DOOR_KEY].get_int()++);
+}
+
+void opened_runed_door()
+{
+#if TAG_MAJOR_VERSION > 34
+    ASSERT(env.properties.exists(SEEN_RUNED_DOOR_KEY));
+#endif
+
+    // Opening a runed door we haven't seen (because of door_vault, probably).
+    if (env.properties[SEEN_RUNED_DOOR_KEY].get_int() == 0)
         return;
 
-    if (!level_annotations[li].empty())
-        level_annotations[li] += ", ";
-    level_annotations[li] += "runed door";
+    _update_runed_door_count(env.properties[SEEN_RUNED_DOOR_KEY].get_int()--);
 }
 
 void enter_branch(branch_type branch, level_id from)
@@ -689,21 +725,6 @@ void enter_branch(branch_type branch, level_id from)
         stair_level[branch].clear();
         stair_level[branch].insert(from);
     }
-}
-
-// Mark a shop guaranteed on this level if we haven't been there yet.
-// Used by Gozag's call merchant ability.
-// Only one per level!
-void mark_offlevel_shop(level_id lid, shop_type type)
-{
-    ASSERT(!shops_present.count(level_pos(lid, coord_def())));
-    shops_present[level_pos(lid, coord_def())] = type;
-}
-
-void unmark_offlevel_shop(level_id lid)
-{
-    ASSERT(shops_present.count(level_pos(lid, coord_def())));
-    shops_present.erase(level_pos(lid, coord_def()));
 }
 
 // Add an annotation on a level if we corrupt with Lugonu's ability
@@ -766,6 +787,7 @@ void set_unique_annotation(monster* mons, const level_id level)
 {
     if (!mons_is_or_was_unique(*mons)
         && mons->type != MONS_PLAYER_GHOST
+        || testbits(mons->flags, MF_SPECTRALISED)
         || mons->props.exists("no_annotate")
             && mons->props["no_annotate"].get_bool())
 
@@ -785,7 +807,12 @@ void remove_unique_annotation(monster* mons)
     for (auto i = auto_unique_annotations.begin();
          i != auto_unique_annotations.end();)
     {
-        if (i->first == name)
+        // Only remove player ghosts from the current level: they can't
+        // change levels, but there may be a different ghost with the same
+        // unique_name elsewhere.
+        if ((mons->type != MONS_PLAYER_GHOST
+             || i->second == level_id::current())
+            && i->first == name)
         {
             affected_levels.insert(i->second);
             auto_unique_annotations.erase(i++);
@@ -943,4 +970,23 @@ void unmarshallUniqueAnnotations(reader& inf)
         level.load(inf);
         auto_unique_annotations.insert(make_pair(name, level));
     }
+}
+
+/**
+ * Can the player encounter the given connected branch, given their
+ * knowledge of which have been seen so far?
+ * @param br A connected branch.
+ * @returns True if the branch can exist, false otherwise.
+*/
+bool connected_branch_can_exist(branch_type br)
+{
+    if (br == BRANCH_SPIDER && stair_level.count(BRANCH_SNAKE)
+        || br == BRANCH_SNAKE && stair_level.count(BRANCH_SPIDER)
+        || br == BRANCH_SWAMP && stair_level.count(BRANCH_SHOALS)
+        || br == BRANCH_SHOALS && stair_level.count(BRANCH_SWAMP))
+    {
+        return false;
+    }
+
+    return true;
 }

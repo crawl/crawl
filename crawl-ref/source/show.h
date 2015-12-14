@@ -1,6 +1,8 @@
 #ifndef SHOW_H
 #define SHOW_H
 
+#include "enum.h"
+
 // same order as DCHAR_*
 enum show_item_type
 {
@@ -67,9 +69,23 @@ struct show_info
 
 class monster;
 
-void show_init(bool terrain_only = false);
+enum layer_type
+{
+    LAYERS_NONE           = 0,
+    LAYER_MONSTERS        = (1 << 0),
+    LAYER_PLAYER          = (1 << 1),
+    LAYER_ITEMS           = (1 << 2),
+    LAYER_CLOUDS          = (1 << 3),
+    LAYER_MONSTER_WEAPONS = (1 << 4),
+    LAYER_MONSTER_HEALTH  = (1 << 5),
+};
+DEF_BITFIELD(layers_type, layer_type, 5);
+static const layers_type LAYERS_ALL = LAYER_MONSTERS | LAYER_PLAYER
+                                    | LAYER_ITEMS | LAYER_CLOUDS;
+
+void show_init(layers_type layers = LAYERS_ALL);
 void update_item_at(const coord_def &gp, bool detected = false);
-void show_update_at(const coord_def &gp, bool terrain_only = false);
+void show_update_at(const coord_def &gp, layers_type layers = LAYERS_ALL);
 void show_update_emphasis();
 
 #endif

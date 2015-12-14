@@ -28,28 +28,22 @@
 
 struct bolt;
 
-int monster_die(monster* mons, const actor *killer, bool silent = false,
-                bool wizard = false, bool fake = false);
+item_def* monster_die(monster* mons, const actor *killer, bool silent = false,
+                      bool wizard = false, bool fake = false);
 
-int monster_die(monster* mons, killer_type killer,
-                int killer_index, bool silent = false, bool wizard = false,
-                bool fake = false);
+item_def* monster_die(monster* mons, killer_type killer,
+                      int killer_index, bool silent = false,
+                      bool wizard = false, bool fake = false);
 
-int mounted_kill(monster* daddy, monster_type mc, killer_type killer,
-                int killer_index);
+item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
+                       int killer_index);
 
-monster_type fill_out_corpse(const monster* mons,
-                             monster_type mtype,
-                             item_def& corpse,
-                             bool force_corpse = false);
+item_def* place_monster_corpse(const monster& mons, bool silent,
+                                                    bool force = false);
 
-void goldify_corpse(item_def &corpse);
-bool explode_corpse(item_def& corpse, const coord_def& where);
-
-int place_monster_corpse(const monster* mons, bool silent, bool force = false);
 void monster_cleanup(monster* mons);
 void setup_spore_explosion(bolt & beam, const monster& origin);
-void record_monster_defeat(monster* mons, killer_type killer);
+void record_monster_defeat(const monster* mons, killer_type killer);
 void unawaken_vines(const monster* mons, bool quiet);
 void fire_monster_death_event(monster* mons, killer_type killer, int i, bool polymorph);
 void heal_flayed_effect(actor* act, bool quiet = false, bool blood_only = false);
@@ -70,6 +64,7 @@ bool mons_is_mons_class(const monster* mons, monster_type type);
 void pikel_band_neutralise();
 
 bool mons_is_elven_twin(const monster* mons);
+monster* mons_find_elven_twin_of(const monster* mons);
 void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int killer_index);
 void elven_twin_energize(monster* mons);
 void elven_twins_pacify(monster* twin);
@@ -81,5 +76,4 @@ bool mons_felid_can_revive(const monster* mons);
 void mons_felid_revive(monster* mons);
 
 bool mons_bennu_can_revive(const monster* mons);
-void mons_bennu_revive(monster* mons);
 #endif

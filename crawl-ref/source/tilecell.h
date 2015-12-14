@@ -40,7 +40,6 @@ struct packed_cell
 #if TAG_MAJOR_VERSION == 34
     uint8_t heat_aura;
 #endif
-    uint8_t gold_aura;
 
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
@@ -50,11 +49,11 @@ struct packed_cell
                     glowing_mold(false), is_sanctuary(false), is_liquefied(false),
                     mangrove_water(false), orb_glow(0), blood_rotation(0),
                     old_blood(false), travel_trail(0), quad_glow(false),
-                    disjunct(false),
+                    disjunct(false)
 #if TAG_MAJOR_VERSION == 34
-                    heat_aura(false),
+                    , heat_aura(false)
 #endif
-                    gold_aura(0) {}
+                    {}
 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
                                         fg(c->fg), bg(c->bg), flv(c->flv),
@@ -72,11 +71,11 @@ struct packed_cell
                                         old_blood(c->old_blood),
                                         travel_trail(c->travel_trail),
                                         quad_glow(c->quad_glow),
-                                        disjunct(c->disjunct),
+                                        disjunct(c->disjunct)
 #if TAG_MAJOR_VERSION == 34
-                                        heat_aura(c->heat_aura),
+                                        , heat_aura(c->heat_aura)
 #endif
-                                        gold_aura(c->gold_aura) {}
+                                        {}
 
     void clear();
 };

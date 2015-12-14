@@ -20,7 +20,7 @@
 #define LETTERS UPPER LOWER
 
 // Any resemblance to the speech of a particular character from Rich Burlew's
-// work is entirely accidental.  Suggestion that this table has been produced
+// work is entirely accidental. Suggestion that this table has been produced
 // by transcribing the whole corpus of that character's speech and making it
 // produce the same output from regular English must be dismissed as a rumour.
 
@@ -320,7 +320,7 @@ static void _german(string &txt)
     ben a deterent to akurate speling.
     */
     for (int i = txt.length() - 2; i > 0; i--)
-        if (txt[i] == txt[i + 1])
+        if (isalpha(txt[i]) && txt[i] == txt[i + 1])
             txt.erase(i, 1);
     /*
     Also, al wil agre that the horibl mes of the silent "e" in the languag is
@@ -465,7 +465,7 @@ static bool _too_boring_to_butt(const string &token)
 {
     static const unordered_set<string> boring_words = {
         "a", "an", "the", // articles
-        "and", "or", "of", "on", "in", "if", "into", "with", // etc
+        "and", "or", "of", "at", "on", "in", "if", "into", "to", "with", // etc
         // , "but" <- this is actually very funny to replace.
     };
     return boring_words.count(token);
@@ -508,7 +508,7 @@ static string _replacement_butt(const string &token)
     }
     else if (lctok[size - 1] == 's')
         butt += plural; // Foos -> Butts, FOOS -> BUTTS
-    else if (size > 2 && lctok.substr(size - 2, 2) == "ly")
+    else if (size > 3 && lctok.substr(size - 2, 2) == "ly")
         butt += ly; // carefully -> butt-ly, THUNDEROUSLY -> BUTT-LY
 
     return butt;
@@ -518,8 +518,11 @@ static string _replacement_butt(const string &token)
  * Reference https://code.google.com/p/buttbot/ for vision statement & details.
  *
  * @param str[in,out]   The string to be improved.
+ * @param odds          The raw % chance for a given word to be buttified. Will
+ *                      Will be bounded between 0-100 (inclusive) if specified;
+ *                      -1 indicates that the default odds (5%) should be used.
  */
-static void _butt(string &str)
+static void _butt(string &str, int odds)
 {
     // iter along the string, tokenizing & potentially replacing as we go.
     for (size_t start = 0; start < str.size(); ++start)
@@ -529,9 +532,12 @@ static void _butt(string &str)
         if (end == start) // empty token (non-alpha index)
             continue;
 
+        const int real_odds = odds == -1 ? 5 : max(0, min(100, odds));
+
         const string token = str.substr(start, end - start);
         // butt sparingly.
-        if (!one_chance_in(20) || _too_boring_to_butt(lowercase_string(token)))
+        if (!x_chance_in_y(real_odds, 100)
+            || _too_boring_to_butt(lowercase_string(token)))
         {
             start = end; // will increment again, past the token-ending char
             continue;
@@ -552,7 +558,7 @@ void filter_lang(string &str)
     {
         const char* (*repl)[4];
 
-        switch (fake_lang)
+        switch (fake_lang.lang_id)
         {
             case FLANG_DWARVEN:
                 repl = dwarven;
@@ -572,7 +578,7 @@ void filter_lang(string &str)
                 _grunt(str); repl = grunt;
                 break;
             case FLANG_BUTT:
-                _butt(str);
+                _butt(str, fake_lang.value);
                 continue;
             default:
                 continue;

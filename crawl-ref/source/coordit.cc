@@ -177,10 +177,12 @@ radius_iterator::radius_iterator(const coord_def _center, int r,
     ASSERT(map_bounds(_center));
     switch (ctype)
     {
-    case C_CIRCLE: credit_y = r; break;
-    case C_POINTY: credit_y = r * r; break;
-    case C_ROUND:  credit_y = r * r + 1; break;
+    case C_CIRCLE: credit = r; break;
+    case C_POINTY: credit = r * r; break;
+    case C_ROUND:  credit = r * r + 1; break;
+    case C_SQUARE: credit = r; break;
     }
+    is_square = (ctype == C_SQUARE);
     ++(*this);
     if (_exclude_center)
         ++(*this);
@@ -194,7 +196,8 @@ radius_iterator::radius_iterator(const coord_def _center,
       los(_los)
 {
     ASSERT(map_bounds(_center));
-    credit_y = los_radius2;
+    credit = los_radius;
+    is_square = true;
     ++(*this);
     if (_exclude_center)
         ++(*this);
@@ -212,10 +215,12 @@ radius_iterator::radius_iterator(const coord_def _center,
     ASSERT(map_bounds(_center));
     switch (ctype)
     {
-    case C_CIRCLE: credit_y = r; break;
-    case C_POINTY: credit_y = r * r; break;
-    case C_ROUND:  credit_y = r * r + 1; break;
+    case C_CIRCLE: credit = r; break;
+    case C_POINTY: credit = r * r; break;
+    case C_ROUND:  credit = r * r + 1; break;
+    case C_SQUARE: credit = r; break;
     }
+    is_square = (ctype == C_SQUARE);
     ++(*this);
     if (_exclude_center)
         ++(*this);
@@ -251,14 +256,18 @@ void radius_iterator::operator++()
 {
     cobegin(RI_START);
 
+    base_cost = is_square ? 1 : -1;
+    inc_cost = is_square ? 0 : 2;
+
     y = 0;
-    cost_y = -1;
+    cost_y = base_cost;
+    credit_y = credit;
 
     do
     {
         x = 0;
-        cost_x = -1;
-        credit_x = credit_y;
+        cost_x = base_cost;
+        credit_x = (is_square ? credit : credit_y);
 
         do
         {
@@ -277,11 +286,11 @@ void radius_iterator::operator++()
                     ret_coord(-x, -y, RI_NW);
             }
             x++;
-            credit_x -= (cost_x += 2);
+            credit_x -= (cost_x += inc_cost);
         } while (credit_x >= 0);
 
         y++;
-        credit_y -= (cost_y += 2);
+        credit_y -= (cost_y += inc_cost);
     } while (credit_y >= 0);
 
     coend(RI_DONE);
@@ -377,7 +386,7 @@ bool distance_iterator::advance()
                 vcur->clear();
                 return false;
             }
-            threshold = (r+1) * (r+1) + 1;
+            threshold = r+1;
         }
 
         coord_def d = (*vcur)[icur];
@@ -412,7 +421,7 @@ void distance_iterator::push_neigh(coord_def d, int dx, int dy)
 {
     d.x += dx;
     d.y += dy;
-    ((d.abs() <= threshold) ? vnear : vfar)->push_back(d);
+    ((d.rdist() <= threshold) ? vnear : vfar)->push_back(d);
 }
 
 distance_iterator::operator bool() const
@@ -462,7 +471,7 @@ static void _test_ai(const coord_def c, bool exc, size_t expected)
 
         if (c == *ai && !exc)
             continue;
-        if ((c - *ai).range() != 1)
+        if ((c - *ai).rdist() != 1)
         {
             die("adjacent_iterator: %d,%d not adjacent to %d,%d",
                 ai->x, ai->y, c.x, c.y);
@@ -481,12 +490,12 @@ void coordit_tests()
     // bounding box of our playground
     #define BC   16
     #define BBOX 32
-    ASSERT(los_radius2 < sqr(BC - 2));
+    ASSERT(los_radius < BC - 2);
     coord_def center(BC, BC);
 
     FixedBitArray<BBOX, BBOX> seen;
 
-    for (int r = 0; r <= los_radius2; ++r)
+    for (int r = 0; r <= los_radius * los_radius + 1; ++r)
     {
         seen.reset();
 
@@ -524,7 +533,7 @@ void coordit_tests()
             die("distance_iterator: %d,%d seen twice", di->x, di->y);
         seen.set(*di);
 
-        int rc = (center - *di).range();
+        int rc = (center - *di).rdist();
         if (rc < rd)
             die("distance_iterator went backwards");
         rd = rc;
@@ -533,7 +542,7 @@ void coordit_tests()
     for (int x = 0; x < BBOX; x++)
         for (int y = 0; y < BBOX; y++)
         {
-            bool in = sqr(x - BC) + sqr(y - BC) <= dist_range(BC - 1);
+            bool in = max(abs(x - BC), abs(y - BC)) <= BC - 1;
             if (seen(coord_def(x, y)) != in)
             {
                 die("distance_iterator mismatch at %d,%d: %d != %d",

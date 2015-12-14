@@ -174,52 +174,6 @@ static int dgn_tags_remove(lua_State *ls)
     PLUARET(string, map->tags.c_str());
 }
 
-static const string level_flag_names[] =
-{"no_tele_control", "not_mappable", "no_magic_map", ""};
-
-static int dgn_lflags(lua_State *ls)
-{
-    MAP(ls, 1, map);
-
-    try
-    {
-        map->level_flags = map_flags::parse(level_flag_names,
-                                            luaL_checkstring(ls, 2));
-    }
-    catch (const string &error)
-    {
-        luaL_argerror(ls, 2, error.c_str());
-    }
-
-    return 0;
-}
-
-static int dgn_change_level_flags(lua_State *ls)
-{
-    map_flags flags;
-
-    try
-    {
-        flags = map_flags::parse(level_flag_names,
-                                 luaL_checkstring(ls, 1));
-    }
-    catch (const string &error)
-    {
-        luaL_argerror(ls, 2, error.c_str());
-        lua_pushboolean(ls, false);
-        return 1;
-    }
-
-    bool silent = lua_toboolean(ls, 2);
-
-    bool changed1 = set_level_flags(flags.flags_set, silent);
-    bool changed2 = unset_level_flags(flags.flags_unset, silent);
-
-    lua_pushboolean(ls, changed1 || changed2);
-
-    return 1;
-}
-
 static void _chance_magnitude_check(lua_State *ls, int which_par, int chance)
 {
     if (chance < 0 || chance > CHANCE_ROLL)
@@ -695,8 +649,8 @@ static int dgn_gly_points(lua_State *ls)
     MAP(ls, 1, map);
     vector<coord_def> cs = map->find_glyph(*luaL_checkstring(ls, 2));
 
-    for (int i = 0, size = cs.size(); i < size; ++i)
-        dlua_push_coordinates(ls, cs[i]);
+    for (coord_def c : cs)
+        dlua_push_coordinates(ls, c);
     return cs.size() * 2;
 }
 
@@ -996,7 +950,7 @@ static int lua_dgn_set_branch_epilogue(lua_State *ls)
     if (!branch_name)
         return 0;
 
-    branch_type br = str_to_branch(branch_name);
+    branch_type br = branch_by_abbrevname(branch_name);
     if (br == NUM_BRANCHES)
     {
         luaL_error(ls, make_stringf("unknown branch: '%s'.", branch_name).c_str());
@@ -1505,8 +1459,7 @@ LUAFN(dgn_with_map_anchors)
 
         map_anchor_points.clear();
 
-        int i;
-        for (i = 1; i < top; i += 2)
+        for (int i = 1; i < top; i += 2)
         {
             if (lua_isnumber(ls, i) && lua_isnumber(ls, i + 1))
             {
@@ -1584,8 +1537,7 @@ LUAFN(_dgn_place_map)
         if (dgn_place_map(map, check_collision, no_exits, where)
             && !env.level_vaults.empty())
         {
-            lua_pushlightuserdata(ls,
-                                  env.level_vaults[env.level_vaults.size() - 1]);
+            lua_pushlightuserdata(ls, env.level_vaults.back().get());
         }
         else
             lua_pushnil(ls);
@@ -1627,9 +1579,15 @@ static int _dgn_push_vault_placement(lua_State *ls, const vault_placement *vp)
     return dlua_push_object_type(ls, VAULT_PLACEMENT_METATABLE, *vp);
 }
 
+static int _dgn_push_vault_placement_uptr(lua_State *ls,
+                                          const unique_ptr<vault_placement> &vp)
+{
+    return _dgn_push_vault_placement(ls, vp.get());
+}
+
 LUAFN(_dgn_maps_used_here)
 {
-    return clua_gentable(ls, env.level_vaults, _dgn_push_vault_placement);
+    return clua_gentable(ls, env.level_vaults, _dgn_push_vault_placement_uptr);
 }
 
 LUAFN(_dgn_vault_at)
@@ -1846,7 +1804,6 @@ const struct luaL_reg dgn_dlib[] =
 { "tags",  dgn_tags },
 { "has_tag", dgn_has_tag },
 { "tags_remove", dgn_tags_remove },
-{ "lflags", dgn_lflags },
 { "chance", dgn_chance },
 { "depth_chance", dgn_depth_chance },
 { "weight", dgn_weight },
@@ -1891,7 +1848,6 @@ const struct luaL_reg dgn_dlib[] =
 { "remove_listener", dgn_remove_listener },
 { "remove_marker", dgn_remove_marker },
 { "num_matching_markers", dgn_num_matching_markers },
-{ "change_level_flags", dgn_change_level_flags },
 { "get_floor_colour", dgn_get_floor_colour },
 { "get_rock_colour",  dgn_get_rock_colour },
 { "change_floor_colour", dgn_change_floor_colour },

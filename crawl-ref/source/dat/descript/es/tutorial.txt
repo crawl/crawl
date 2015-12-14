@@ -178,7 +178,7 @@ recogidos de forma automática cuando pases por encima de ellos.
 tutorial3 scroll
 
 Muchos objetos no están identificados al encontrarlos. Una manera de averiguar
-para que sirven es usarlos.  Prueba a leer este pergamino con
+para que sirven es usarlos. Prueba a leer este pergamino con
 <input>$cmd[CMD_READ]</input><localtiles> o haciendo <input>clic con el
 ratón</input> sobre él en el panel de inventario.
 %%%%

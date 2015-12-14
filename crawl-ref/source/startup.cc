@@ -15,7 +15,7 @@
 #include "ctest.h"
 #include "database.h"
 #include "dbg-maps.h"
-#include "dbg-scan.h"
+#include "dbg-objstat.h"
 #include "dungeon.h"
 #include "end.h"
 #include "exclude.h"
@@ -97,9 +97,6 @@ static void _initialize()
     for (int i = 0; i < MAX_ITEMS; ++i)
         init_item(i);
 
-    // Empty messaging string.
-    info[0] = 0;
-
     reset_all_monsters();
     init_anon();
 
@@ -160,7 +157,7 @@ static void _initialize()
     if (Options.seed)
         seed_rng(Options.seed);
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
     if (crawl_state.map_stat_gen)
     {
         release_cli_signals();
@@ -226,7 +223,7 @@ static void _zap_los_monsters(bool items_also)
         // If we ever allow starting with a friendly monster,
         // we'll have to check here.
         monster* mon = monster_at(*ri);
-        if (mon == nullptr || mons_class_flag(mon->type, M_NO_EXP_GAIN))
+        if (mon == nullptr || !mons_is_threatening(mon))
             continue;
 
         dprf("Dismissing %s",
@@ -242,7 +239,9 @@ static void _zap_los_monsters(bool items_also)
 
 static void _post_init(bool newc)
 {
-    ASSERT(strwidth(you.your_name) <= kNameLen);
+    ASSERT(strwidth(you.your_name) <= MAX_NAME_LENGTH);
+
+    clua.load_persist();
 
     // Load macros
     macro_init();
@@ -262,7 +261,7 @@ static void _post_init(bool newc)
     run_map_local_preludes();
 
     // Abyssal Knights start out in the Abyss.
-    if (newc && you.char_direction == GDT_GAME_START)
+    if (newc && you.chapter == CHAPTER_POCKET_ABYSS)
         you.where_are_you = BRANCH_ABYSS;
     else if (newc)
         you.where_are_you = root_branch;
@@ -279,7 +278,7 @@ static void _post_init(bool newc)
                newc               ? LOAD_START_GAME : LOAD_RESTART_GAME,
                old_level);
 
-    if (newc && you.char_direction == GDT_GAME_START)
+    if (newc && you.chapter == CHAPTER_POCKET_ABYSS)
         generate_abyss();
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -343,15 +342,9 @@ static void _post_init(bool newc)
 
     if (newc) // start a new game
     {
-        // Mark items in inventory as of unknown origin.
-        origin_set_inventory(origin_set_unknown);
-
         // For a new game, wipe out monsters in LOS, and
         // for new hints mode games also the items.
         _zap_los_monsters(Hints.hints_events[HINT_SEEN_FIRST_OBJECT]);
-
-        if (crawl_state.game_is_zotdef())
-            fully_map_level();
     }
 
     // This just puts the view up for the first turn.
@@ -463,24 +456,6 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 
 #ifdef USE_TILE_LOCAL
     tmp = new TextTileItem();
-    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_ZOTDEF), TEX_GUI));
-#else
-    tmp = new TextItem();
-#endif
-    text = "Zot Defence";
-    tmp->set_text(text);
-    tmp->set_fg_colour(WHITE);
-    tmp->set_highlight_colour(WHITE);
-    tmp->set_id(GAME_TYPE_ZOTDEF);
-    // Scroller does not care about x-coordinates and only cares about
-    // item height obtained from max.y - min.y
-    tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Defend the Orb of Zot against waves of critters.");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-#ifdef USE_TILE_LOCAL
-    tmp = new TextTileItem();
     tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_INSTRUCTIONS), TEX_GUI));
 #else
     tmp = new TextItem();
@@ -489,7 +464,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
-    tmp->set_id('?');
+    tmp->set_id(GAME_TYPE_INSTRUCTIONS);
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
@@ -605,9 +580,12 @@ static const int NUM_MISC_LINES     = 5;
 /**
  * Saves game mode and player name to ng_choice.
  */
-static void _show_startup_menu(newgame_def* ng_choice,
+static void _show_startup_menu(newgame_def& ng_choice,
                                const newgame_def& defaults)
 {
+    // Initialise before the loop so that ? doesn't forget the typed name.
+    string input_string = defaults.name;
+
 again:
 #if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
     wm->show_keyboard();
@@ -728,8 +706,6 @@ again:
     // Draw legal info etc
     opening_screen();
 
-    string input_string = defaults.name;
-
     // If the game filled in a complete name, the user will
     // usually want to enter a new name instead of adding
     // to the current one.
@@ -777,15 +753,28 @@ again:
         if (keyn == CK_REDRAW)
             goto again;
 
-        if (key_is_escape(keyn))
+        if (key_is_escape(keyn) || keyn == CK_MOUSE_CMD)
         {
             // End the game
             end(0);
         }
         else if (keyn == '\t' && _game_defined(defaults))
         {
-            *ng_choice = defaults;
+            ng_choice = defaults;
             return;
+        }
+        else if (keyn == '?')
+        {
+            list_commands();
+
+            // If we had a save selected, reset type so that the save
+            // will continue to be selected when we restart the menu.
+            MenuItem *active = menu.get_active_item();
+            if (active && active->get_id() >= NUM_GAME_TYPE)
+                type = GAME_TYPE_UNSPECIFIED;
+
+            // restart because help messes up CRTRegion
+            goto again;
         }
 
         if (!menu.process_key(keyn))
@@ -801,7 +790,7 @@ again:
                     full_name = false;
                     input_string = "";
                 }
-                if (strwidth(input_string) < kNameLen)
+                if (strwidth(input_string) < MAX_NAME_LENGTH)
                 {
                     input_string += stringize_glyph(keyn);
                     changed_name = true;
@@ -852,7 +841,6 @@ again:
                 case GAME_TYPE_NORMAL:
                 case GAME_TYPE_TUTORIAL:
                 case GAME_TYPE_SPRINT:
-                case GAME_TYPE_ZOTDEF:
                 case GAME_TYPE_HINTS:
                     // If a game type is chosen, the user expects
                     // to start a new game. Just blanking the name
@@ -863,7 +851,7 @@ again:
                 case GAME_TYPE_HIGH_SCORES:
                     break;
 
-                case '?':
+                case GAME_TYPE_INSTRUCTIONS:
                     break;
 
                 default:
@@ -891,30 +879,31 @@ again:
         case GAME_TYPE_NORMAL:
         case GAME_TYPE_TUTORIAL:
         case GAME_TYPE_SPRINT:
-        case GAME_TYPE_ZOTDEF:
         case GAME_TYPE_HINTS:
             trim_string(input_string);
             if (is_good_name(input_string, true, false))
             {
-                ng_choice->type = static_cast<game_type>(id);
-                ng_choice->name = input_string;
+                ng_choice.type = static_cast<game_type>(id);
+                ng_choice.name = input_string;
                 return;
             }
             else
             {
                 // bad name
-                textcolour(RED);
                 cgotoxy(SCROLLER_MARGIN_X ,GAME_MODES_START_Y - 1);
                 clear_to_end_of_line();
+                textcolour(RED);
                 cprintf("That's a silly name");
+                // Don't make the next key re-enter the game.
+                menu.clear_selections();
             }
             continue;
 
         case GAME_TYPE_ARENA:
-            ng_choice->type = GAME_TYPE_ARENA;
+            ng_choice.type = GAME_TYPE_ARENA;
             return;
 
-        case '?':
+        case GAME_TYPE_INSTRUCTIONS:
             list_commands();
             // restart because help messes up CRTRegion
             goto again;
@@ -929,15 +918,15 @@ again:
             if (save_number < num_saves) // actual save
             {
                 // Save the savegame character name
-                ng_choice->name = chars.at(save_number).name;
-                ng_choice->type = chars.at(save_number).saved_game_type;
-                ng_choice->filename = chars.at(save_number).filename;
+                ng_choice.name = chars.at(save_number).name;
+                ng_choice.type = chars.at(save_number).saved_game_type;
+                ng_choice.filename = chars.at(save_number).filename;
             }
             else // "new game"
             {
-                ng_choice->name = "";
-                ng_choice->type = GAME_TYPE_NORMAL;
-                ng_choice->filename = ""; // ?
+                ng_choice.name = "";
+                ng_choice.type = GAME_TYPE_NORMAL;
+                ng_choice.filename = ""; // ?
             }
             return;
         }
@@ -945,10 +934,10 @@ again:
 }
 #endif
 
-static void _choose_arena_teams(newgame_def* choice,
+static void _choose_arena_teams(newgame_def& choice,
                                 const newgame_def& defaults)
 {
-    if (!choice->arena_teams.empty())
+    if (!choice.arena_teams.empty())
         return;
 
     clear_message_store();
@@ -969,9 +958,9 @@ static void _choose_arena_teams(newgame_def* choice,
     char buf[80];
     if (cancellable_get_line(buf, sizeof(buf)))
         game_ended();
-    choice->arena_teams = buf;
-    if (choice->arena_teams.empty())
-        choice->arena_teams = defaults.arena_teams;
+    choice.arena_teams = buf;
+    if (choice.arena_teams.empty())
+        choice.arena_teams = defaults.arena_teams;
 }
 
 bool startup_step()
@@ -1009,7 +998,7 @@ bool startup_step()
         crawl_state.last_type = GAME_TYPE_UNSPECIFIED;
         choice.name = defaults.name;
         if (choice.type == GAME_TYPE_TUTORIAL)
-            choose_tutorial_character(&choice);
+            choose_tutorial_character(choice);
     }
     // We could also check whether game type has been set here,
     // but it's probably not necessary to choose non-default game
@@ -1017,7 +1006,7 @@ bool startup_step()
     else if (!is_good_name(choice.name, false, false)
         && choice.type != GAME_TYPE_ARENA)
     {
-        _show_startup_menu(&choice, defaults);
+        _show_startup_menu(choice, defaults);
         // [ds] Must set game type here, or we won't be able to load
         // Sprint saves.
         crawl_state.type = choice.type;
@@ -1028,7 +1017,7 @@ bool startup_step()
     //       choose_game and setup_game
     if (choice.type == GAME_TYPE_ARENA)
     {
-        _choose_arena_teams(&choice, defaults);
+        _choose_arena_teams(choice, defaults);
         write_newgame_options_file(choice);
         run_arena(choice.arena_teams);
         end(0, false);
@@ -1036,11 +1025,12 @@ bool startup_step()
 
     bool newchar = false;
     newgame_def ng;
-    if (choice.filename.empty())
+    if (choice.filename.empty() && !choice.name.empty())
         choice.filename = get_save_filename(choice.name);
+
     if (save_exists(choice.filename) && restore_game(choice.filename))
         save_player_name();
-    else if (choose_game(&ng, &choice, defaults)
+    else if (choose_game(ng, choice, defaults)
              && restore_game(ng.filename))
     {
         save_player_name();

@@ -59,22 +59,16 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
         mpr("Your attempt to draw power from your own body fails.");
     else
     {
-        int food = 0;
         // Take at most 90% of currhp.
         const int minhp = max(div_rand_round(you.hp, 10), 1);
 
-        while (you.magic_points < you.max_magic_points && you.hp > minhp
-               && (you.undead_state() != US_SEMI_UNDEAD
-                   || you.hunger - food >= HUNGER_SATIATED))
+        while (you.magic_points < you.max_magic_points && you.hp > minhp)
         {
             fail_check();
             success = true;
 
             inc_mp(1);
             dec_hp(1, false);
-
-            if (you.undead_state() == US_SEMI_UNDEAD)
-                food += 15;
 
             for (int i = 0; i < (you.hp > minhp ? 3 : 0); ++i)
                 if (x_chance_in_y(6, pow))
@@ -87,8 +81,6 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
             mpr("You draw magical energy from your own body!");
         else
             mpr("Your attempt to draw power from your own body fails.");
-
-        make_hungry(food, false);
     }
 
     return success ? SPRET_SUCCESS : SPRET_ABORT;
@@ -184,7 +176,7 @@ void recall_orders(monster *mons)
 
     // Don't pursue distant enemies
     const actor *foe = mons->get_foe();
-    if (foe && !you.can_see(foe))
+    if (foe && !you.can_see(*foe))
         mons->foe = MHITYOU;
 }
 
@@ -343,11 +335,11 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
+static int _intoxicate_monsters(coord_def where, int pow)
 {
     monster* mons = monster_at(where);
     if (mons == nullptr
-        || mons_intel(mons) < I_NORMAL
+        || mons_intel(mons) < I_HUMAN
         || mons->holiness() != MH_NATURAL
         || mons->res_poison() > 0)
     {
@@ -372,14 +364,12 @@ spret_type cast_intoxicate(int pow, bool fail)
     if (x_chance_in_y(60 - pow/3, 100))
         confuse_player(3+random2(10 + (100 - pow) / 10));
 
-    if (one_chance_in(20)
-        && lose_stat(STAT_INT, 1 + random2(3), false,
-                      "casting intoxication"))
-    {
+    if (one_chance_in(20) && lose_stat(STAT_INT, 1 + random2(3)))
         mpr("Your head spins!");
-    }
 
-    apply_area_visible(_intoxicate_monsters, pow, &you);
+    apply_area_visible([pow] (coord_def where) {
+        return _intoxicate_monsters(where, pow);
+    }, you.pos());
     return SPRET_SUCCESS;
 }
 

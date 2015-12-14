@@ -22,15 +22,13 @@ You're doing great! Now, explore a bit until you reach the next blue square.
 tutorial1 diagonal
 
 :nowrap
-You can move diagonally with the <input>number pad</input> (try Numlock on/off) or the <input>vi keys</input>.
+You can move diagonally with the <input>number pad</input> (try Numlock on/off)<localtiles>,</localtiles> <console>or the </console><input>vi keys</input><console>.</console><localtiles>, or <input>mouse</input>.</localtiles>
 
-  Numpad:       <w>7 8 9</w>           vi-keys: <w>   $cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-                 \|/                         \|/
-                <w>4</w>-<w>.</w>-<w>6</w> <w>                      $cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-                 /|\                         /|\
-                <w>1 2 3</w> <w>                      $cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
-
-<localtiles>You can also move using <input>mouse clicks</input>.</localtiles>
+  Numpad:     <w>7 8 9</w>       vi-keys: <w>   $cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w><localtiles>    Mouse:     <w>click</w> on the floor</localtiles>
+               \|/                     \|/
+              <w>4</w>-<w>.</w>-<w>6</w> <w>                  $cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+               /|\                     /|\
+              <w>1 2 3</w> <w>                  $cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 %%%%
 tutorial1 shiftmove
 
@@ -60,7 +58,7 @@ tutorial1 autoexplore
 
 Exploring manually can get tedious after a while, so you might want to let that
 happen automatically. Try it by pressing <input>$cmd[CMD_EXPLORE]</input>
-<localtiles>, or by clicking on 'autoexplore', the first button in the comamnd
+<localtiles>, or by clicking on 'autoexplore', the first button in the command
 bar below the minimap.</localtiles>.
 %%%%
 tutorial1 exclusion
@@ -168,8 +166,8 @@ tutorial2 resting
 
 Very good! You can heal by resting with <input>$cmd[CMD_REST]</input>
 <localtiles>, or by clicking the 'rest' button in the command bar below the
-minimap</localtiles>. This will make you rest for up to 100 turns, but will be
-interrupted by important events, or when your health is fully restored.
+minimap</localtiles>. This will make you rest until your health is full, but
+will be interrupted by important events.
 %%%%
 tutorial2 chop_corpses
 
@@ -177,7 +175,8 @@ While standing on corpses, you can chop them into edible meat chunks with
 <input>$cmd[CMD_BUTCHER]</input><localtiles> or <input>Shift +
 mouseclick</input></localtiles>. When you're hungry, you can eat the resulting
 chunks with <input>$cmd[CMD_EAT]</input><localtiles> or
-<input>mouseclick</input></localtiles>.
+<input>mouseclick</input></localtiles>. If you grow hungry while autoexploring,
+you will automatically eat a chunk of meat if one is available.
 %%%%
 tutorial2 rest_and_chop_reminder
 
@@ -369,10 +368,19 @@ commands are also available in the clickable <w>command panel</w> to the right
 of the screen. </localtiles>Rereading old messages with
 <input>$cmd[CMD_REPLAY_MESSAGES]</input> is available as usual.
 %%%%
+tutorial3 trap
+
+Traps can have a variety of unpleasant effects, such as alerting monsters or
+teleporting you into danger. They will often be hidden until you discover them
+by stepping on them. If there's no way around, you'll have to trigger the trap
+and deal with the consequences.
+%%%%
 tutorial3 potion
 
-You can quaff one of these potions with <input>$cmd[CMD_QUAFF]</input>
-<localtiles> or with <input>mouseclick</input></localtiles>.
+Potions may provide vital healing or useful enchantments, but some have less
+desirable effects. You can quaff this potion with
+<input>$cmd[CMD_QUAFF]</input><localtiles> or with
+<input>mouseclick</input></localtiles> to discover what it does.
 %%%%
 tutorial3 artefact_armour
 
@@ -418,7 +426,7 @@ The amulet is useless; you may want to drop it with
 %%%%
 tutorial3 gold
 
-Gold can be spent in shops. It has no weight and cannot be dropped.
+Gold can be spent in shops. It takes no inventory space and cannot be dropped.
 %%%%
 tutorial3 shop
 
@@ -529,9 +537,10 @@ tutorial4 undead
 
 # TODO: This is more like hints mode stuff. Not sure if there's any harm though,
 #       and the mouse interface hint is good.
-Unlike most monsters, undead do not regenerate health and it is impossible to
-tell how wounded they are.<localtiles> Incidentally, you can also cast spells
-by pressing <input>Ctrl+leftclick</input> on the monster.</localtiles>
+Unlike most monsters, zombies and skeletons do not regenerate health and it is
+impossible to tell how wounded they are.<localtiles> Incidentally, you can also
+cast spells by pressing <input>Ctrl+leftclick</input> on the
+monster.</localtiles>
 %%%%
 tutorial4 spell_success
 
@@ -648,8 +657,8 @@ In this lesson you're going to learn about gods and how to use their powers.
 tutorial5 dungeon_overview
 
 Up ahead is an altar to Trog the Wrathful! Trog is just one of many gods. In a
-real game, you check <input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles> or
-<input>click the dungeon overmap button</input> in the command
+real game, you can check <input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles>
+or <input>click the dungeon overmap button</input> in the command
 panel</localtiles> for a list of all altars and other interesting features
 found so far.
 %%%%
@@ -678,11 +687,6 @@ tutorial5 piety_on_kill
 Some gods really like it if you kill monsters in their name. Let the slaughter
 begin!
 %%%%
-tutorial5 sacrificing
-
-Praying on corpses with <input>$cmd[CMD_PRAY]</input><localtiles> or via the
-<w>command panel</w></localtiles> will sacrifice them to Trog. Try it!
-%%%%
 tutorial5 burn_book
 
 Trog will like it if you burn that book (with
@@ -706,9 +710,8 @@ again.
 %%%%
 tutorial5 hunger
 
-You cannot berserk while very hungry, so you should always carry some food with
-you. This means that sometimes you'll have to decide between butchering a
-corpse or sacrificing it to Trog.
+Berserking also causes a large amount of hunger. You cannot berserk while very
+hungry, so you should always carry some food with you.
 %%%%
 tutorial5 berserk2
 

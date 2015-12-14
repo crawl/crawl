@@ -17,6 +17,7 @@
 #include "religion.h"
 #include "spl-transloc.h"
 #include "stringutil.h"
+#include "throw.h"
 #include "transform.h"
 #include "traps.h"
 
@@ -174,12 +175,7 @@ bool fill_status_info(int status, status_info* inf)
 
     case DUR_CORROSION:
         inf->light_text = make_stringf("Corr (%d)",
-                          (-3 * you.props["corrosion_amount"].get_int()));
-        break;
-
-    case DUR_CONTROL_TELEPORT:
-        if (!allow_control_teleport(true))
-            inf->light_colour = DARKGREY;
+                          (-4 * you.props["corrosion_amount"].get_int()));
         break;
 
     case DUR_NO_POTIONS:
@@ -315,12 +311,15 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case DUR_POWERED_BY_DEATH:
-        if (handle_pbd_corpses() > 0)
+    {
+        const int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
+        if (pbd_str > 0)
         {
             inf->light_colour = LIGHTMAGENTA;
-            inf->light_text   = "Regen+";
+            inf->light_text   = make_stringf("Regen (%d)", pbd_str);
         }
         break;
+    }
 
     case STATUS_MISSILES:
         _describe_missiles(inf);
@@ -338,22 +337,6 @@ bool fill_status_info(int status, status_info* inf)
             inf->short_text = "studying " + manual_skill_names(true);
             inf->long_text = "You are studying " + skills + ".";
         }
-        break;
-    }
-
-    case DUR_SURE_BLADE:
-    {
-        inf->light_colour = BLUE;
-        inf->light_text   = "SBlade";
-        inf->short_text   = "bonded with blade";
-        string desc;
-        if (you.duration[DUR_SURE_BLADE] > 15 * BASELINE_DELAY)
-            desc = "strong ";
-        else if (you.duration[DUR_SURE_BLADE] >  5 * BASELINE_DELAY)
-            desc = "";
-        else
-            desc = "weak";
-        inf->long_text = "You have a " + desc + "bond with your blade.";
         break;
     }
 
@@ -414,16 +397,9 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case DUR_SONG_OF_SLAYING:
-        inf->light_text = make_stringf("Slay (%u)",
-                                       you.props["song_of_slaying_bonus"].get_int());
-        break;
-
-    case STATUS_NO_CTELE:
-        if (!allow_control_teleport(true))
-        {
-            inf->light_colour = RED;
-            inf->light_text = "-cTele";
-        }
+        inf->light_text
+            = make_stringf("Slay (%u)",
+                           you.props[SONG_OF_SLAYING_KEY].get_int());
         break;
 
     case STATUS_BEOGH:
@@ -549,10 +525,12 @@ bool fill_status_info(int status, status_info* inf)
         vector<const char *> places;
         for (int i = 0; i < NUM_BRANCHES; i++)
         {
-            if (branch_bribe[i] > 0)
+            branch_type br = gozag_fixup_branch(static_cast<branch_type>(i));
+
+            if (branch_bribe[br] > 0)
             {
                 if (player_in_branch(static_cast<branch_type>(i)))
-                    bribe = branch_bribe[i];
+                    bribe = branch_bribe[br];
 
                 places.push_back(branches[static_cast<branch_type>(i)]
                                  .longname);
@@ -628,6 +606,31 @@ bool fill_status_info(int status, status_info* inf)
         break;
     }
 
+    case DUR_PORTAL_PROJECTILE:
+    {
+        if (!is_pproj_active())
+            inf->light_colour = DARKGREY;
+        break;
+    }
+
+    case DUR_INFUSION:
+    {
+        if (!enough_mp(1, true, false))
+            inf->light_colour = DARKGREY;
+        break;
+    }
+
+    case STATUS_ORB:
+    {
+        if (player_has_orb())
+        {
+            inf->light_colour = MAGENTA;
+            inf->light_text = "Orb";
+        }
+
+        break;
+    }
+
     default:
         if (!found)
         {
@@ -674,9 +677,14 @@ static void _describe_hunger(status_info* inf)
         inf->light_text   = (vamp ? "Near Bloodless" : "Near Starving");
         break;
     case HS_STARVING:
-        inf->light_colour = RED;
+        inf->light_colour = LIGHTRED;
         inf->light_text   = (vamp ? "Bloodless" : "Starving");
         inf->short_text   = (vamp ? "bloodless" : "starving");
+        break;
+    case HS_FAINTING:
+        inf->light_colour = RED;
+        inf->light_text   = (vamp ? "Bloodless" : "Fainting");
+        inf->short_text   = (vamp ? "bloodless" : "fainting");
         break;
     case HS_SATIATED: // no status light
     default:
@@ -722,8 +730,8 @@ static void _describe_regen(status_info* inf)
     const bool regen = (you.duration[DUR_REGENERATION] > 0
                         || you.duration[DUR_TROGS_HAND] > 0);
     const bool no_heal =
-            (you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING)
-            || (player_mutation_level(MUT_SLOW_HEALING) == 3);
+            (you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
+            || (player_mutation_level(MUT_SLOW_REGENERATION) == 3);
     // Does vampire hunger level affect regeneration rate significantly?
     const bool vampmod = !no_heal && !regen && you.species == SP_VAMPIRE
                          && you.hunger_state != HS_SATIATED;
@@ -785,27 +793,31 @@ static void _describe_poison(status_info* inf)
          (pois_perc > 65)   ? "seriously" :
          (pois_perc > 35)   ? "quite"
                             : "mildly";
-    inf->short_text   = adj + " poisoned";
-    inf->long_text    = "You are " + inf->short_text + make_stringf(" (%d -> %d).", you.hp, poison_survival());
+    inf->short_text   = adj + " poisoned"
+        + make_stringf(" (%d -> %d)", you.hp, poison_survival());
+    inf->long_text    = "You are " + inf->short_text + ".";
 }
 
 static void _describe_speed(status_info* inf)
 {
-    if (you.duration[DUR_SLOW] && you.duration[DUR_HASTE])
+    bool slow = you.duration[DUR_SLOW] || have_stat_zero();
+    bool fast = you.duration[DUR_HASTE];
+
+    if (slow && fast)
     {
         inf->light_colour = MAGENTA;
         inf->light_text   = "Fast+Slow";
         inf->short_text   = "hasted and slowed";
         inf->long_text = "You are under both slowing and hasting effects.";
     }
-    else if (you.duration[DUR_SLOW])
+    else if (slow)
     {
         inf->light_colour = RED;
         inf->light_text   = "Slow";
         inf->short_text   = "slowed";
         inf->long_text    = "You are slowed.";
     }
-    else if (you.duration[DUR_HASTE])
+    else if (fast)
     {
         inf->light_colour = _dur_colour(BLUE, dur_expiring(DUR_HASTE));
         inf->light_text   = "Fast";
@@ -834,32 +846,21 @@ static void _describe_airborne(status_info* inf)
 
 static void _describe_rotting(status_info* inf)
 {
-    if (you.rotting)
-    {
-        inf->light_colour = _bad_ench_colour(you.rotting, 5, 9);
-        inf->light_text   = "Rot";
-    }
-
-    if (you.rotting || you.species == SP_GHOUL)
+    if (you.species == SP_GHOUL)
     {
         inf->short_text = "rotting";
         inf->long_text = "Your flesh is rotting";
-        int rot = you.rotting;
-        if (you.species == SP_GHOUL)
-            rot += 1 + (1 << max(0, HS_SATIATED - you.hunger_state));
+        int rot = 1 + (1 << max(0, HS_SATIATED - you.hunger_state));
         if (rot > 15)
             inf->long_text += " before your eyes";
         else if (rot > 8)
             inf->long_text += " away quickly";
         else if (rot > 4)
             inf->long_text += " badly";
-        else if (you.species == SP_GHOUL)
-        {
-            if (rot > 2)
-                inf->long_text += " faster than usual";
-            else
-                inf->long_text += " at the usual pace";
-        }
+        else if (rot > 2)
+            inf->long_text += " faster than usual";
+        else
+            inf->long_text += " at the usual pace";
         inf->long_text += ".";
     }
 }
@@ -910,7 +911,7 @@ static const char* s0_names[NUM_STATS] = { "Collapse", "Brainless", "Clumsy", };
 
 static void _describe_stat_zero(status_info* inf, stat_type st)
 {
-    if (you.stat_zero[st])
+    if (you.duration[stat_zero_duration(st)])
     {
         inf->light_colour = you.stat(st) ? LIGHTRED : RED;
         inf->light_text   = s0_names[st];

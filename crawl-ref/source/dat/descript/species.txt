@@ -7,16 +7,16 @@ weaponry.
 Deep Dwarf
 
 Deep Dwarves live underground and cannot regenerate health naturally, but they
-are very resilient to damage and carry tools to heal.
+are very resilient to damage, and carry a wand of healing.
 %%%%
 Deep Elf
 
-The most magic-affine elf, but also the most fragile.
+Deep Elves have a strong affinity for all kinds of magic, but are very fragile.
 %%%%
 Demigod
 
-They will never follow a god, but Demigods make up for this with divine
-attributes and health.
+Demigods refuse to worship any god, but make up for this with divine attributes
+and high reserves of health and magic.
 %%%%
 Demonspawn
 
@@ -35,17 +35,18 @@ strong and they live in a state of permanent stasis.
 %%%%
 Felid
 
-These many-lived cats possess sentience, but are incapable of advanced item
-manipulation or the use of armour or weapons.
+Felids are many-lived cats possessing sentience. They are incapable of advanced
+item manipulation or the use of armour or weapons.
 %%%%
 Ghoul
 
-An undead, damned to rot eternally. They are always looking for meaty chunks to
-eat, hacking away with their claws.
+Ghouls are undead creatures, damned to rot eternally. They have sharp claws,
+and they feed on decaying flesh to sustain themselves.
 %%%%
 Gargoyle
 
 Made of living stone, Gargoyles have a preternatural affinity for the earth.
+They have low health, but their stone bodies are incredibly tough.
 %%%%
 Halfling
 
@@ -54,7 +55,8 @@ to mutagenic effects.
 %%%%
 High Elf
 
-Proud elves, who can cast spells as well as they can fight with the sword.
+High Elves are adept with blades and with many schools of magic, and have high
+attributes.
 %%%%
 Hill Orc
 
@@ -63,17 +65,16 @@ most, orcs are very proud and many of them feel superior.
 %%%%
 Human
 
-Mundane and average.
+Humans are mundane and average.
 %%%%
 Tengu
 
-Bird-people who love to fight, both with weapons and spells. They are quite
-fragile, but they learn to fly swiftly later on.
+Tengu are bird-people who love to fight, both with weapons and spells. They are
+quite fragile, but they learn to fly swiftly later on.
 %%%%
 Kobold
 
-Small, mischievous and a little fragile, but multi-talented. They can and will
-eat any meat.
+Kobolds are small, mischievous and a little fragile, but multi-talented.
 %%%%
 Merfolk
 
@@ -82,18 +83,18 @@ strong combatants, and adept at using magic to assist in battle.
 %%%%
 Minotaur
 
-A large muscular human with the head of a bull. They excel at all forms of
-close and ranged combat.
+Minotaurs are large muscular humans with bovine heads. They excel at all forms
+of close and ranged combat.
 %%%%
 Mummy
 
-An undead figure covered in bandages and embalming fluids, compelled to walk by
-an ancient curse.
+Compelled to walk by an ancient curse, Mummies are adept at Necromancy but
+learn other skills very slowly. They are unable to consume any food or potions.
 %%%%
 Naga
 
-A hybrid; human from the chest up, with a scaly, muscular torso trailing off
-like that of a snake. They move slowly but are naturally resilient.
+Nagas are hybrids; human from the chest up, with a scaly, muscular torso
+trailing off like that of a snake. They move slowly but are naturally resilient.
 %%%%
 Octopode
 
@@ -102,18 +103,18 @@ armour fits them.
 %%%%
 Ogre
 
-Large and strong, they're mostly seen as brutes. Ogres are very comfortable
+Large and strong, Ogres are mostly seen as brutes. They are very comfortable
 with the basics of magic, however.
 %%%%
 Spriggan
 
-Very small, very frail and very fast. Spriggans make highly competent stabbers
+Very small, very frail and very fast, Spriggans make highly competent stabbers
 and spellcasters.
 %%%%
 Troll
 
-Large brutes, ready to maim anything with their claws, never thinking twice.
-They're always hungry.
+Trolls are large brutes with powerful claws, always hungering for raw meat.
+They regenerate health rapidly.
 %%%%
 Vampire
 

@@ -440,7 +440,7 @@ bool feat_is_lava(dungeon_feature_type feat)
     return feat == DNGN_LAVA || feat == DNGN_LAVA_SEA;
 }
 
-static int _god_altars[][2] =
+static const pair<god_type, dungeon_feature_type> _god_altars[] =
 {
     { GOD_ZIN, DNGN_ALTAR_ZIN },
     { GOD_SHINING_ONE, DNGN_ALTAR_SHINING_ONE },
@@ -464,9 +464,10 @@ static int _god_altars[][2] =
     { GOD_GOZAG, DNGN_ALTAR_GOZAG },
     { GOD_QAZLAL, DNGN_ALTAR_QAZLAL },
     { GOD_RU, DNGN_ALTAR_RU },
+    { GOD_ECUMENICAL, DNGN_ALTAR_ECUMENICAL },
 };
 
-COMPILE_CHECK(ARRAYSZ(_god_altars) == NUM_GODS - 1);
+COMPILE_CHECK(ARRAYSZ(_god_altars) == NUM_GODS );
 
 /** Whose altar is this feature?
  *
@@ -475,9 +476,9 @@ COMPILE_CHECK(ARRAYSZ(_god_altars) == NUM_GODS - 1);
  */
 god_type feat_altar_god(dungeon_feature_type feat)
 {
-    for (const int (&altar)[2] : _god_altars)
-        if ((dungeon_feature_type) altar[1] == feat)
-            return (god_type) altar[0];
+    for (const auto &altar : _god_altars)
+        if (altar.second == feat)
+            return altar.first;
 
     return GOD_NO_GOD;
 }
@@ -489,9 +490,9 @@ god_type feat_altar_god(dungeon_feature_type feat)
  */
 dungeon_feature_type altar_for_god(god_type god)
 {
-    for (const int (&altar)[2] : _god_altars)
-        if ((god_type) altar[0] == god)
-            return (dungeon_feature_type) altar[1];
+    for (const auto &altar : _god_altars)
+        if (altar.first == god)
+            return altar.second;
 
     return DNGN_FLOOR;
 }
@@ -527,7 +528,7 @@ bool feat_is_metal(dungeon_feature_type feat)
     return feat == DNGN_METAL_WALL || feat == DNGN_GRATE;
 }
 
-/** XXX: not sure what this means
+/** Is this feature ambivalent about whether we're going up or down?
  */
 bool feat_is_bidirectional_portal(dungeon_feature_type feat)
 {
@@ -535,6 +536,7 @@ bool feat_is_bidirectional_portal(dungeon_feature_type feat)
            && feat_stair_direction(feat) != CMD_NO_CMD
            && feat != DNGN_ENTER_ZOT
            && feat != DNGN_EXIT_ZOT
+           && feat != DNGN_ENTER_VAULTS
            && feat != DNGN_EXIT_VAULTS
            && feat != DNGN_EXIT_HELL
            && feat != DNGN_ENTER_HELL;
@@ -594,21 +596,10 @@ bool feat_is_mimicable(dungeon_feature_type feat, bool strict)
         return true;
     }
 
-    // Don't risk trapping the player inside a portal vault.
-    if (feat_is_portal_exit(feat))
-        return false;
-
-    // There's only one branch exit.
-    if (feat_is_branch_exit(feat))
-        return false;
-
     if (feat == DNGN_ENTER_ZIGGURAT)
         return false;
 
-    if (feat_is_portal(feat) || feat_is_gate(feat))
-        return true;
-
-    if (feat_is_stone_stair(feat) || feat_is_branch_entrance(feat))
+    if (feat_is_portal_entrance(feat))
         return true;
 
     if (feat == DNGN_ENTER_SHOP)
@@ -690,7 +681,7 @@ coord_def get_random_stair()
     {
         const dungeon_feature_type feat = grd(*ri);
         if (feat_is_travelable_stair(feat) && !feat_is_escape_hatch(feat)
-            && (crawl_state.game_is_zotdef() || feat != DNGN_EXIT_DUNGEON)
+            && feat != DNGN_EXIT_DUNGEON
             && feat != DNGN_EXIT_HELL)
         {
             st.push_back(*ri);
@@ -763,10 +754,7 @@ void slime_wall_damage(actor* act, int delay)
     if (!walls)
         return;
 
-    const int depth = player_in_branch(BRANCH_SLIME) ? you.depth : 1;
-
-    // Up to 1d6 damage per wall per slot.
-    const int strength = div_rand_round(depth * walls * delay, BASELINE_DELAY);
+    const int strength = div_rand_round(3 * walls * delay, BASELINE_DELAY);
 
     if (act->is_player())
     {
@@ -787,7 +775,7 @@ void slime_wall_damage(actor* act, int delay)
 
         const int dam = resist_adjust_damage(mon, BEAM_ACID,
                                              roll_dice(2, strength));
-        if (dam > 0 && you.can_see(mon))
+        if (dam > 0 && you.can_see(*mon))
         {
             mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",
                   mon->name(DESC_THE).c_str());
@@ -796,41 +784,43 @@ void slime_wall_damage(actor* act, int delay)
     }
 }
 
-bool feat_destroys_item(dungeon_feature_type feat, const item_def &item,
-                        bool noisy)
+void feat_splash_noise(dungeon_feature_type feat)
 {
     switch (feat)
     {
     case DNGN_SHALLOW_WATER:
     case DNGN_DEEP_WATER:
-        if (noisy)
-            mprf(MSGCH_SOUND, "You hear a splash.");
-        return false;
+        mprf(MSGCH_SOUND, "You hear a splash.");
+        return;
 
     case DNGN_LAVA:
-        if (noisy)
-            mprf(MSGCH_SOUND, "You hear a sizzling splash.");
-        return true;
+        mprf(MSGCH_SOUND, "You hear a sizzling splash.");
+        return;
 
     default:
-        return false;
+        return;
     }
 }
 
-// For checking whether items would be inaccessible when they wouldn't technically be
-// destroyed - ignores Merfolk/Fedhas ability to access items in deep water.
-bool feat_virtually_destroys_item(dungeon_feature_type feat,
-                                  const item_def &item,  bool noisy)
+/** Does this feature destroy any items that fall into it?
+ */
+bool feat_destroys_items(dungeon_feature_type feat)
 {
-    const bool destroyed = feat_destroys_item(feat, item, noisy);
-    return destroyed || feat == DNGN_DEEP_WATER;
+    return feat == DNGN_LAVA;
+}
+
+/** Does this feature make items that fall into it permanently inaccessible?
+ */
+bool feat_eliminates_items(dungeon_feature_type feat)
+{
+    return feat_destroys_items(feat)
+           || feat == DNGN_DEEP_WATER && !species_likes_water(you.species);
 }
 
 static coord_def _dgn_find_nearest_square(
     const coord_def &pos,
-    void *thing,
-    bool (*acceptable)(const coord_def &, void *thing),
-    bool (*traversable)(const coord_def &) = nullptr)
+    function<bool (const coord_def &)> acceptable,
+    function<bool (const coord_def &)> traversable = nullptr)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
 
@@ -844,7 +834,7 @@ static coord_def _dgn_find_nearest_square(
         shuffle_array(points[iter]);
         for (const auto &p : points[iter])
         {
-            if (p != pos && acceptable(p, thing))
+            if (p != pos && acceptable(p))
                 return p;
 
             travel_point_distance[p.x][p.y] = 1;
@@ -872,11 +862,10 @@ static coord_def _dgn_find_nearest_square(
     return coord_def(0, 0); // Not found.
 }
 
-static bool _item_safe_square(const coord_def &pos, void *item)
+static bool _item_safe_square(const coord_def &pos)
 {
     const dungeon_feature_type feat = grd(pos);
-    return feat_is_traversable(feat)
-           && !feat_destroys_item(feat, *static_cast<item_def *>(item));
+    return feat_is_traversable(feat) && !feat_destroys_items(feat);
 }
 
 static bool _item_traversable_square(const coord_def &pos)
@@ -888,11 +877,11 @@ static bool _item_traversable_square(const coord_def &pos)
 static bool _dgn_shift_item(const coord_def &pos, item_def &item)
 {
     // First try to avoid pushing things through solid features...
-    coord_def np = _dgn_find_nearest_square(pos, &item, _item_safe_square,
+    coord_def np = _dgn_find_nearest_square(pos, _item_safe_square,
                                             _item_traversable_square);
     // ... but if we have to, so be it.
     if (!in_bounds(np) || np == pos)
-        np = _dgn_find_nearest_square(pos, &item, _item_safe_square);
+        np = _dgn_find_nearest_square(pos, _item_safe_square);
 
     if (in_bounds(np) && np != pos)
     {
@@ -903,10 +892,10 @@ static bool _dgn_shift_item(const coord_def &pos, item_def &item)
     return false;
 }
 
-static bool _is_feature_shift_target(const coord_def &pos, void*)
+static bool _is_feature_shift_target(const coord_def &pos)
 {
     return grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos)
-                && !actor_at(pos);
+           && !actor_at(pos);
 }
 
 // Moves everything at src to dst. This is not a swap operation: src will be
@@ -1037,7 +1026,7 @@ static bool _dgn_shift_feature(const coord_def &pos)
         return false;
 
     const coord_def dest =
-        _dgn_find_nearest_square(pos, nullptr, _is_feature_shift_target);
+        _dgn_find_nearest_square(pos, _is_feature_shift_target);
 
     dgn_move_entities_at(pos, dest, false, false, false);
     return true;
@@ -1053,7 +1042,7 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
         const int curr = item;
         item = mitm[item].link;
 
-        if (!feat_is_solid(feat) && !feat_destroys_item(feat, mitm[curr]))
+        if (!feat_is_solid(feat) && !feat_destroys_items(feat))
             continue;
 
         // Game-critical item.
@@ -1061,7 +1050,7 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
             _dgn_shift_item(pos, mitm[curr]);
         else
         {
-            feat_destroys_item(feat, mitm[curr], true);
+            feat_splash_noise(feat);
             item_was_destroyed(mitm[curr]);
             destroy_item(curr);
         }
@@ -1074,7 +1063,7 @@ static void _dgn_check_terrain_monsters(const coord_def &pos)
         m->apply_location_effects(pos);
 }
 
-// Clear blood or mold off of terrain that shouldn't have it.  Also clear
+// Clear blood or mold off of terrain that shouldn't have it. Also clear
 // of blood if a bloody wall has been dug out and replaced by a floor,
 // or if a bloody floor has been replaced by a wall.
 static void _dgn_check_terrain_covering(const coord_def &pos,
@@ -1117,7 +1106,7 @@ static void _dgn_check_terrain_player(const coord_def pos)
     if (you.can_pass_through(pos))
         move_player_to_grid(pos, false);
     else
-        you_teleport_now(true);
+        you_teleport_now();
 }
 
 void dungeon_terrain_changed(const coord_def &pos,
@@ -1181,7 +1170,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
         orig_actor = "you";
     else if (const monster* m = monster_at(orig_pos))
     {
-        if (you.can_see(m))
+        if (you.can_see(*m))
             orig_actor = m->name(DESC_THE);
     }
 
@@ -1189,7 +1178,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
         dest_actor = "you";
     else if (const monster* m = monster_at(dest_pos))
     {
-        if (you.can_see(m))
+        if (you.can_see(*m))
             dest_actor = m->name(DESC_THE);
     }
 
@@ -1837,19 +1826,18 @@ void set_terrain_changed(const coord_def p)
     else if (grd(p) == DNGN_OPEN_DOOR)
     {
         // Restore colour from door-change markers
-        vector<map_marker*> markers = env.markers.get_markers_at(p);
-        for (int i = 0, size = markers.size(); i < size; ++i)
+        for (map_marker *marker : env.markers.get_markers_at(p))
         {
-            if (markers[i]->get_type() == MAT_TERRAIN_CHANGE)
+            if (marker->get_type() == MAT_TERRAIN_CHANGE)
             {
-                map_terrain_change_marker* marker =
-                    dynamic_cast<map_terrain_change_marker*>(markers[i]);
+                map_terrain_change_marker* tmarker =
+                    dynamic_cast<map_terrain_change_marker*>(marker);
 
-                if (marker->change_type == TERRAIN_CHANGE_DOOR_SEAL
-                    && marker->colour != BLACK)
+                if (tmarker->change_type == TERRAIN_CHANGE_DOOR_SEAL
+                    && tmarker->colour != BLACK)
                 {
                     // Restore the unsealed colour.
-                    dgn_set_grid_colour_at(p, marker->colour);
+                    dgn_set_grid_colour_at(p, tmarker->colour);
                     break;
                 }
             }
@@ -1905,37 +1893,36 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                          terrain_change_type type, const monster* mon)
 {
     dungeon_feature_type old_feat = grd(pos);
-    vector<map_marker*> markers = env.markers.get_markers_at(pos);
-    for (int i = 0, size = markers.size(); i < size; ++i)
+    for (map_marker *marker : env.markers.get_markers_at(pos))
     {
-        if (markers[i]->get_type() == MAT_TERRAIN_CHANGE)
+        if (marker->get_type() == MAT_TERRAIN_CHANGE)
         {
-            map_terrain_change_marker* marker =
-                    dynamic_cast<map_terrain_change_marker*>(markers[i]);
+            map_terrain_change_marker* tmarker =
+                    dynamic_cast<map_terrain_change_marker*>(marker);
 
             // If change type matches, just modify old one; no need to add new one
-            if (marker->change_type == type)
+            if (tmarker->change_type == type)
             {
-                if (marker->new_feature == newfeat)
+                if (tmarker->new_feature == newfeat)
                 {
-                    if (marker->duration < dur)
+                    if (tmarker->duration < dur)
                     {
-                        marker->duration = dur;
+                        tmarker->duration = dur;
                         if (mon)
-                            marker->mon_num = mon->mid;
+                            tmarker->mon_num = mon->mid;
                     }
                 }
                 else
                 {
-                    marker->new_feature = newfeat;
-                    marker->duration = dur;
+                    tmarker->new_feature = newfeat;
+                    tmarker->duration = dur;
                     if (mon)
-                        marker->mon_num = mon->mid;
+                        tmarker->mon_num = mon->mid;
                 }
                 return;
             }
             else
-                old_feat = marker->old_feature;
+                old_feat = tmarker->old_feature;
         }
     }
 
@@ -1955,34 +1942,35 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
 
 static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
 {
-    vector<map_marker*> markers = env.markers.get_markers_at(pos);
-
     bool found_marker = false;
-    for (int i = 0, size = markers.size(); i < size; ++i)
+    for (map_marker *marker : env.markers.get_markers_at(pos))
     {
-        if (markers[i]->get_type() == MAT_TERRAIN_CHANGE)
+        if (marker->get_type() == MAT_TERRAIN_CHANGE)
         {
             found_marker = true;
-            map_terrain_change_marker* marker =
-                    dynamic_cast<map_terrain_change_marker*>(markers[i]);
+            map_terrain_change_marker* tmarker =
+                    dynamic_cast<map_terrain_change_marker*>(marker);
 
             // Don't revert sealed doors to normal doors if we're trying to
             // remove the door altogether
             // Same for destroyed trees
-            if ((marker->change_type == TERRAIN_CHANGE_DOOR_SEAL
-                || marker->change_type == TERRAIN_CHANGE_FORESTED)
+            if ((tmarker->change_type == TERRAIN_CHANGE_DOOR_SEAL
+                || tmarker->change_type == TERRAIN_CHANGE_FORESTED)
                 && newfeat == DNGN_FLOOR)
             {
-                env.markers.remove(marker);
+                env.markers.remove(tmarker);
             }
             else
             {
-                newfeat = marker->old_feature;
-                if (marker->new_feature == grd(pos))
-                    env.markers.remove(marker);
+                newfeat = tmarker->old_feature;
+                if (tmarker->new_feature == grd(pos))
+                    env.markers.remove(tmarker);
             }
         }
     }
+
+    if (grd(pos) == DNGN_RUNED_DOOR && newfeat != DNGN_RUNED_DOOR)
+        opened_runed_door();
 
     grd(pos) = newfeat;
     set_terrain_changed(pos);
@@ -1998,32 +1986,31 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
 
 bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
 {
-    vector<map_marker*> markers = env.markers.get_markers_at(pos);
     dungeon_feature_type newfeat = DNGN_UNSEEN;
     int colour = BLACK;
 
-    for (int i = 0, size = markers.size(); i < size; ++i)
+    for (map_marker *marker : env.markers.get_markers_at(pos))
     {
-        if (markers[i]->get_type() == MAT_TERRAIN_CHANGE)
+        if (marker->get_type() == MAT_TERRAIN_CHANGE)
         {
-            map_terrain_change_marker* marker =
-                    dynamic_cast<map_terrain_change_marker*>(markers[i]);
+            map_terrain_change_marker* tmarker =
+                    dynamic_cast<map_terrain_change_marker*>(marker);
 
-            if (marker->change_type == ctype)
+            if (tmarker->change_type == ctype)
             {
-                if (marker->colour != BLACK)
-                    colour = marker->colour;
+                if (tmarker->colour != BLACK)
+                    colour = tmarker->colour;
                 if (!newfeat)
-                    newfeat = marker->old_feature;
-                env.markers.remove(marker);
+                    newfeat = tmarker->old_feature;
+                env.markers.remove(tmarker);
             }
             else
             {
                 // If we had an old colour, give it to the other marker.
                 if (colour != BLACK)
-                    marker->colour = colour;
+                    tmarker->colour = colour;
                 colour = BLACK;
-                newfeat = marker->new_feature;
+                newfeat = tmarker->new_feature;
             }
         }
     }
@@ -2043,21 +2030,17 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
 
 bool is_temp_terrain(coord_def pos)
 {
-    vector<map_marker*> markers = env.markers.get_markers_at(pos);
-
-    for (int i = 0, size = markers.size(); i < size; ++i)
-    {
-        if (markers[i]->get_type() == MAT_TERRAIN_CHANGE)
+    for (map_marker *marker : env.markers.get_markers_at(pos))
+        if (marker->get_type() == MAT_TERRAIN_CHANGE)
             return true;
-    }
 
     return false;
 }
 
 bool plant_forbidden_at(const coord_def &p, bool connectivity_only)
 {
-    // ....  Prevent this arrangement by never placing a plant in a way that
-    // #P##  locally disconnects two adjacent cells.  We scan clockwise around
+    // .... Prevent this arrangement by never placing a plant in a way that
+    // #P##  locally disconnects two adjacent cells. We scan clockwise around
     // ##.#  p looking for maximal contiguous sequences of traversable cells.
     // #?##  If we find more than one (and they don't join up cyclically),
     //       reject the configuration so the plant doesn't disconnect floor.
@@ -2081,7 +2064,7 @@ bool plant_forbidden_at(const coord_def &p, bool connectivity_only)
                 first = i;
             else if (last >= 0 && next < 0)
             {
-                // Found a maybe-disconnected traversable cell.  This is only
+                // Found a maybe-disconnected traversable cell. This is only
                 // acceptable if it might connect up at the end.
                 if (first == 0)
                     next = i;
@@ -2098,7 +2081,7 @@ bool plant_forbidden_at(const coord_def &p, bool connectivity_only)
         }
     }
 
-    // ?#.  Forbid this arrangement when the ? squares are walls.
+    // ?#. Forbid this arrangement when the ? squares are walls.
     // #P#  If multiple plants conspire to do something similar, that's
     // ##?  fine: we just want to avoid the most common occurrences.
     //      This would be an info leak (that at least one ? is not a wall)

@@ -20,6 +20,7 @@ module "crawl"
 #include "dlua.h"
 #include "end.h"
 #include "english.h"
+#include "fight.h"
 #include "hints.h"
 #include "initfile.h"
 #include "itemname.h"
@@ -33,8 +34,10 @@ module "crawl"
 #include "prompt.h"
 #include "religion.h"
 #include "state.h"
+#include "state.h"
 #include "stringutil.h"
 #include "tutorial.h"
+#include "unwind.h"
 #include "version.h"
 #include "view.h"
 #include "worley.h"
@@ -187,7 +190,7 @@ static int crawl_enable_more(lua_State *ls)
 }
 
 /*
---- Wrapper for <code>cancellable_get_line()</code>.  Since that takes
+--- Wrapper for <code>cancellable_get_line()</code>. Since that takes
 -- a pre-allocated buffer, an arbitrary 500-character limit is
 -- currently imposed.
 -- @return Either a string if one is input, or nil if input is cancelled
@@ -282,8 +285,12 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
         if (!keys)
             return;
 
-        for (; *keys; ++keys)
-            macro_sendkeys_end_add_expanded(*keys);
+        ucs_t wc;
+        while (int len = utf8towc(&wc, keys))
+        {
+            macro_sendkeys_end_add_expanded(wc);
+            keys += len;
+        }
     }
     else if (lua_istable(ls, argi))
     {
@@ -372,6 +379,9 @@ static int crawl_process_keys(lua_State *ls)
         luaL_argerror(ls, 1, "First key is invalid command");
         return 0;
     }
+
+    unwind_bool gen(crawl_state.invisible_targeting,
+            lua_isboolean(ls, 2) && lua_toboolean(ls, 2));
 
     flush_input_buffer(FLUSH_BEFORE_COMMAND);
     for (int i = 1, len = strlen(keys); i < len; i++)
@@ -676,6 +686,7 @@ LUARET1(crawl_x_chance_in_y, boolean, x_chance_in_y(luaL_checkint(ls, 1),
 LUARET1(crawl_div_rand_round, number, div_rand_round(luaL_checkint(ls, 1),
                                                      luaL_checkint(ls, 2)))
 LUARET1(crawl_random_real, number, random_real())
+LUARET1(crawl_weapon_check, boolean, wielded_weapon_check(you.weapon()))
 
 // Get the full worley noise datum for a given point
 static int crawl_worley(lua_State *ls)
@@ -857,7 +868,7 @@ static int crawl_random_element(lua_State *ls)
         return 1;
     }
 
-    // Only the first arg does anything now.  Maybe this should
+    // Only the first arg does anything now. Maybe this should
     // select from a variable number of table args?
     lua_pop(ls, lua_gettop(ls) - 1);
 
@@ -1094,6 +1105,7 @@ static const struct luaL_reg crawl_clib[] =
     { "call_dlua",          crawl_call_dlua },
 #endif
     { "version",            crawl_version },
+    { "weapon_check",       crawl_weapon_check},
     { nullptr, nullptr },
 };
 
@@ -1169,23 +1181,8 @@ LUAFN(_crawl_millis)
 
 static string _crawl_make_name(lua_State *ls)
 {
-    // A quick wrapper around itemname:make_name. Seed is random_int().
-    // Possible parameters: all caps, max length, char start. By default
-    // these are false, -1, and 0 as per make_name.
-    bool all_caps = false;
-    int maxlen = -1;
-    char start = 0;
-    if (lua_gettop(ls) >= 1 && lua_isboolean(ls, 1))
-        all_caps = lua_toboolean(ls, 1);
-    if (lua_gettop(ls) >= 2 && lua_isnumber(ls, 2))
-        maxlen = luaL_checkint(ls, 2);
-    if (lua_gettop(ls) >= 3 && lua_isstring(ls, 3))
-    {
-        const char* s = luaL_checkstring(ls, 3);
-        if (s && *s)
-            start = *s;
-    }
-    return make_name(random_int(), all_caps, maxlen, start);
+    // A quick wrapper around itemname:make_name.
+    return make_name();
 }
 
 LUARET1(crawl_make_name, string, _crawl_make_name(ls).c_str())

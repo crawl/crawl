@@ -8,47 +8,49 @@
 #include "end.h"
 #include "files.h"
 #include "format.h"
+#include "itemname.h" // make_name
+#include "initfile.h"
 #include "libutil.h"
 #include "options.h"
 #include "stringutil.h"
 #include "unicode.h"
 #include "version.h"
 
-extern string init_file_error; // defined in main.cc
-
 // Eventually, this should be something more grand. {dlb}
 void opening_screen()
 {
     string msg =
     "<yellow>Hello, welcome to " CRAWL " " + string(Version::Long) + "!</yellow>\n"
-    "<brown>(c) Copyright 1997-2002 Linley Henzell, "
-    "2002-2014 Crawl DevTeam\n"
-    "Read the instructions for legal details."
-    "</brown> " ;
+    "<brown>(c) Copyright 1997-2002 Linley Henzell, 2002-2014 Crawl DevTeam\n"
+    "Read the instructions for legal details.</brown> ";
 
-    const bool init_found = init_file_error.empty();
 
-    if (!init_found)
-        msg += "<lightred>(No init file ";
-    else
-        msg += "<lightgrey>(Read options from ";
+    FileLineInput f(Options.filename.c_str());
 
-    if (init_found)
+    if (!f.error())
     {
+        msg += "<lightgrey>(Options read from ";
 #ifdef DGAMELAUNCH
         // For dgl installs, show only the last segment of the .crawlrc
         // file name so that we don't leak details of the directory
         // structure to (untrusted) users.
-        msg += get_base_filename(Options.filename);
+        msg += Options.basefilename;
 #else
         msg += Options.filename;
 #endif
-        msg += ".)";
+        msg += ".)</lightgrey>";
     }
     else
     {
-        msg += init_file_error;
-        msg += ", using defaults.)";
+        msg += "<lightred>(Options file ";
+        if (!Options.filename.empty())
+        {
+            msg += make_stringf("\"%s\" is not readable",
+                                Options.filename.c_str());
+        }
+        else
+            msg += "not found";
+        msg += "; using defaults.)</lightred>";
     }
 
     msg += "\n";
@@ -62,7 +64,7 @@ static void _show_name_prompt(int where)
     cgotoxy(1, where);
     textcolour(CYAN);
 
-    cprintf("\nWhat is your name today? ");
+    cprintf("\nWhat is your name today? (Leave blank for a random name) ");
 
     textcolour(LIGHTGREY);
 }
@@ -70,9 +72,10 @@ static void _show_name_prompt(int where)
 bool is_good_name(const string& name, bool blankOK, bool verbose)
 {
     // verification begins here {dlb}:
-    if (name.empty())
+    // Disallow names that would result in a save named just ".cs".
+    if (strip_filename_unsafe_chars(name).empty())
     {
-        if (blankOK)
+        if (blankOK && name.empty())
             return true;
 
         if (verbose)
@@ -86,7 +89,7 @@ bool is_good_name(const string& name, bool blankOK, bool verbose)
 static bool _read_player_name(string &name)
 {
     const int name_x = wherex(), name_y = wherey();
-    char buf[kNameLen + 1]; // FIXME: make line_reader handle widths
+    char buf[MAX_NAME_LENGTH + 1]; // FIXME: make line_reader handle widths
     // XXX: Prompt displays garbage otherwise, but don't really know why.
     //      Other places don't do this. --rob
     buf[0] = '\0';
@@ -113,8 +116,28 @@ static bool _read_player_name(string &name)
     }
 }
 
+/**
+ * Attempt to generate a random name for a character that doesn't collide with
+ * an existing save name.
+ *
+ * @return  A random name, or the empty string if no good name could be
+ *          generated after several tries.
+ */
+static string _random_name()
+{
+    for (int i = 0; i < 100; ++i)
+    {
+        const string name = make_name();
+        const string filename = get_save_filename(name);
+        if (!save_exists(filename))
+            return name;
+    }
+
+    return "";
+}
+
 // Reads a valid name from the player, writing it to ng.name.
-void enter_player_name(newgame_def *ng)
+void enter_player_name(newgame_def& ng)
 {
     int prompt_start = wherey();
 
@@ -124,11 +147,14 @@ void enter_player_name(newgame_def *ng)
         _show_name_prompt(prompt_start);
 
         // If the player wants out, we bail out.
-        if (!_read_player_name(ng->name))
+        if (!_read_player_name(ng.name))
             end(0);
-        trim_string(ng->name);
+        trim_string(ng.name);
+
+        if (ng.name.empty())
+            ng.name = _random_name();
     }
-    while (!is_good_name(ng->name, false, true));
+    while (!is_good_name(ng.name, false, true));
 }
 
 bool validate_player_name(const string &name, bool verbose)
@@ -146,7 +172,7 @@ bool validate_player_name(const string &name, bool verbose)
     }
 #endif
 
-    if (strwidth(name) > kNameLen)
+    if (strwidth(name) > MAX_NAME_LENGTH)
     {
         if (verbose)
             cprintf("\nThat name is too long.\n");
@@ -163,7 +189,7 @@ bool validate_player_name(const string &name, bool verbose)
             if (verbose)
             {
                 cprintf("\n"
-                        "Alpha-numerics, spaces, dashes, periods "
+                        "Alpha-numerics, spaces, hyphens, periods "
                         "and underscores only, please."
                         "\n");
             }

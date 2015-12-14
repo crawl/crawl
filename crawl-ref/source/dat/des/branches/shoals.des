@@ -31,8 +31,8 @@ function shoals_vault_is_mimic(e)
     return false
   end
 
-  local tag = unpack(params)
-  return tag ~= nil and string.find(tag, "mimic")
+  local tag, tag2 = unpack(params)
+  return tag2 ~= nil and string.find(tag2, "mimic")
 end
 
 -- When the kraken dies, the tides will control the water, so the items will
@@ -56,6 +56,13 @@ function shoals_atoll_place_items(data, triggerable, triggerer, marker, ev)
             dgn.create_item(point.x, point.y, "star_item")
         end
     end
+end
+
+function shoals_ice_setup(e)
+  e.subst("- = xxxW.")
+  e.rtile("x = wall_zot_cyan")
+  e.colour(".x@01eO| = white")
+  e.ftile(".x@+01eO| = floor_ice")
 end
 }}
 
@@ -292,54 +299,6 @@ MAP
   ...
 ENDMAP
 
-NAME:   shoals_atoll
-DEPTH:  Shoals
-KMONS:  1 = patrolling kraken
-KFEAT:  1 = deep_water
-KPROP:  1Wgw. = no_tide
-FHEIGHT: gw1 = 40
-MARKER: 1 = lua:MonPropsMarker:new {ancient_kraken="ancient_kraken"}
-MARKER: 1 = lua:portal_desc { water_marker = 1, tide_seed = 1 }
-MARKER: W = lua:portal_desc { water_marker = 1 }
-MARKER: w = lua:portal_desc { water_marker = 1 }
-MARKER: . = lua:portal_desc { water_marker = 1 }
-SUBST:  g = WWw, X = ccc., x = c
-{{
-local kraken_death_marker = TriggerableFunction:new {
-  func="shoals_atoll_kraken_death",
-  repeated=false,
-  props= {water_marker="1"} }
-
-kraken_death_marker:add_triggerer(DgnTriggerer:new {
-  type="monster_dies",
-  target="ancient_kraken" })
-
-lua_marker("*", kraken_death_marker)
-
-local place_items_marker = TriggerableFunction:new {
-  func="shoals_atoll_place_items",
-  repeated=false,
-  props= {water_marker="1"} }
-
-place_items_marker:add_triggerer(DgnTriggerer:new { type="entered_level" })
-lua_marker("1", place_items_marker)
-}}
-MAP
-     XXXXXXXX
-    XxxxxxxxxX
-   Xx...WWWGxxX
-  Xx.gggggW*GxX
- Xx.ggwwwggWWxX
-Xx.ggwwwwwggWxX
-Xx.ggww1wwgg.xX
-Xx.ggwwwwwgg.xX
-XW..ggwwwgg.xX
- WW..ggggg.xX
-  WW......xX
-   WWWWxxxX
-      XXXX
-ENDMAP
-
 NAME:   yaktaur_hedge
 DEPTH:  Shoals
 MONS:   bush
@@ -352,22 +311,6 @@ MAP
 .1.121.
 .1.111.
 .......
-ENDMAP
-
-NAME:   hangedman_shoal_octodias
-DEPTH:  Shoals
-KMONS:  1 = octopode crusher
-KFEAT:  1 = deep_water
-MAP
- xWxwxWx
-xwwwxwwwx
-WwxwwwxwW
-xwwwxwwwx
-wxwx1xwxw
-xwwwxwwwx
-WwxwwwxwW
-xwwwxwwwx
- xWxwxWx
 ENDMAP
 
 NAME:    hangedman_shoal_volcano
@@ -416,7 +359,7 @@ WWW..x..x..WWW
 ENDMAP
 
 NAME:    st_cyclops
-DEPTH:   Shoals:1-4
+DEPTH:   Shoals, !Shoals:$
 MONS:    cyclops, stone giant / frost giant
 KMONS:   P = plant
 KMONS:   f = fungus
@@ -438,7 +381,7 @@ pyxxpppyx.1.
 ENDMAP
 
 NAME:    st_shoals_ruin
-DEPTH:   Shoals:1-4
+DEPTH:   Shoals, !Shoals:$
 TAGS:    no_pool_fixup
 MONS:    cyclops, frost giant, stone giant
 KMONS:   P = plant
@@ -467,7 +410,7 @@ ppxxp..p.fppxxpp
 ENDMAP
 
 NAME:    st_sunken_huts
-DEPTH:   Shoals:1-4
+DEPTH:   Shoals, !Shoals:$
 KMONS:   1 = merfolk javelineer
 KMONS:   2 = merfolk impaler
 KMONS:   3 = merfolk aquamancer
@@ -496,7 +439,7 @@ Wwwww4wwwZwwZw5XwwxwwwwwwwW
 ENDMAP
 
 NAME:    st_sunken_temple
-DEPTH:   Shoals:1-4
+DEPTH:   Shoals, !Shoals:$
 TAGS:    no_pool_fixup
 KMONS:   1 = merfolk javelineer
 KMONS:   2 = merfolk impaler
@@ -596,7 +539,7 @@ DEPTH: Shoals
 TAGS: transparent no_pool_fixup water_ok no_trap_gen
 SUBST: b = .w, z = x.
 KPROP: w1. = no_tide
-KPROP: c = no_rtele_into
+KPROP: c = no_tele_into
 SUBST: c = xw
 KFEAT: 1 = w
 KMONS: 1 = kraken
@@ -654,10 +597,10 @@ xxxcxxxxxcxxxxW@Wxxxxcxxx
 ENDMAP
 
 NAME: nicolae_shoals_so_close
-DEPTH: Shoals:1-4
+DEPTH: Shoals, !Shoals:$
 TAGS: no_pool_fixup water_ok no_item_gen no_trap_gen no_monster_gen
 KPROP: YycfZ. = no_tide
-KPROP: ZYcf. = no_rtele_into
+KPROP: ZYcf. = no_tele_into
 KMONS: c = patrolling hungry ghost
 NSUBST: f = 1:g / 2:f / *:.
 KITEM: g = meat ration / bread ration / beef jerky
@@ -683,7 +626,7 @@ wwyyZY..Yyyffyyw
 ENDMAP
 
 NAME: nicolae_shoals_c_island
-DEPTH: Shoals:1-4
+DEPTH: Shoals, !Shoals:$
 TAGS: water_ok no_pool_fixup
 KPROP: .wW}xtC = no_tide
 SHUFFLE: }])
@@ -737,7 +680,7 @@ DEPTH: Shoals
 TAGS: patrolling no_monster_gen
 SUBST: w = f:4 w W
 KMONS: f = bat w:5 / griffon / harpy / hippogriff / \
-       kraken w:1 / raven w:5 / sea snake / sky beast w:1 / \
+       kraken w:1 / sea snake / sky beast w:1 / \
        snapping turtle / steam dragon w:1 / alligator w:5 / \
        alligator snapping turtle / anaconda w:1 / \
        water moccasin w:5 / electric eel w:1
@@ -814,7 +757,7 @@ xxxxxwwwwwwwxxxxxxxxx
 ENDMAP
 
 NAME: nicolae_shoals_flooded_hall
-DEPTH: Shoals:1-4
+DEPTH: Shoals, !Shoals:$
 SHUFFLE: }}]]))>
 KPROP: .123wqx = no_tide
 SUBST: . = ....W, w = wWW..., q = w, x = xxxc
@@ -840,7 +783,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_shoals_water_elemental_grotto
-DEPTH: Shoals:1-4
+DEPTH: Shoals, !Shoals:$
 TAGS: no_pool_fixup no_monster_gen no_trap_gen no_item_gen water_ok
 KPROP: .xrR-Ww = no_tide
 NSUBST: - = 1:] / *:-
@@ -983,7 +926,7 @@ ENDMAP
 
 NAME: wheals_shoals_ruined_temple
 TAGS: water_ok
-DEPTH: Shoals:1-4
+DEPTH: Shoals, !Shoals:$
 KPROP: c.GWuw1 = no_tide
 KMONS: 1 = kraken
 KFEAT: 1 = w
@@ -1005,23 +948,28 @@ NAME: cheibrodos_shoals_oceanic_diplomacy
 DEPTH: Shoals, !Shoals:$
 TAGS: water_ok no_item_gen no_monster_gen
 ORIENT: float
-MONS: merfolk
-KMONS: ' = merfolk impaler ; demon trident good_item | trident good_item . gold
-KMONS: " = octopode crusher ; shield good_item . hat good_item . gold
+SHUFFLE: 1Ww / 2DD
+MONS: merfolk, faun
+MONS: merfolk impaler ; demon trident good_item | trident good_item . gold
+MONS: satyr ; greatsling good_item . sling bullet good_item . gold / \
+      satyr ; longbow good_item . arrow good_item . gold
+COLOUR:   c = white
+COLOUR:   1234'D = cyan
+FTILE:    1234'D+WwG = floor_pebble_cyan
 MAP
       cccccccccccc
      ccGcGccccGcGcc
   .cccwWWWW11WWWWwccc.
-@.ccwwWWWW1..1WWWWwwcc.@
+@.ccwwWWWW1''1WWWWwwcc.@
 ..cwWWWWccc++cccWWWWwc..
-.c+WWWWcc......ccWWWW+c.
-.ccccccc........ccccccc.
-.ccccccG'......"Gcccccc.
-.ccccccc........ccccccc.
-.c+WWWWcc......ccWWWW+c.
-..cwWWWWccc++cccWWWWwc..
-@.ccwwWWWW1..1WWWWwwcc.@
-  .cccwWWWW11WWWWwccc.
+.c+WWWWcc''''''ccWWWW+c.
+.ccccccc''''''''ccccccc.
+.ccccccG3''''''4Gcccccc.
+.ccccccc''''''''ccccccc.
+.c+DDDDcc''''''ccDDDD+c.
+..cDDDDDccc++cccDDDDDc..
+@.ccDDDDDD2''2DDDDDDcc.@
+  .cccDDDDD22DDDDDccc.
      ccGcGccccGcGcc
       cccccccccccc
 ENDMAP
@@ -1048,6 +996,74 @@ MAP
     ..ccc...
 ENDMAP
 
+NAME: nicolae_shoals_island_circles
+DEPTH: Shoals
+ORIENT: float
+TAGS: decor transparent
+SHUFFLE: abc/xyz
+SUBST: Z = Ww, ab = ., c = sG, xy = xx., z = x
+: if you.depth() == 1 then
+SUBST: s = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST: s = [{(
+: else
+SUBST: s = ]})[{(
+: end
+MAP
+              wwwwwww
+             wwwZZZwww
+     wwwwwwwwwwZ...Zwww
+    wwwZZZwwwwZ.....Zww
+   wwZZ...ZZwZ...a...Zw
+  wwZ.......ZZ..aaa..Zwwwww
+  wwZ...a...WW...a...ZZZZwww
+  wZ...aba...ZZ.....WZ...Zww
+  wZ..abcba..ZwZ...ZW.....Zw
+  wZ...aba...ZwwZZZwZ..a..Zw
+  wwZ...a...ZwwwwwwwZ.....Zw
+  wwZ.......ZwwwwwwwwZ...Zww
+  wwwZW...ZZwwwwwwwwwwZZWWwww
+ wwwZZWZZZwwwwwwwwwwwwwwZ.Zww
+wwwZ...ZwwwwwwwwwwwwwwwZ...Zw
+wwZ.....ZwwwwwwwwwwwwwwwZ.Zww
+wZ...a...ZwwwwwwwwwwwwwwwWwww
+wZ..aaa..ZwwwwwwwwwwwwwwZWZw
+wZ...a...Zwwwwwwwwwwwww  @
+wwZ.....Zwwwwwwwwwwww
+wwwZ...WWZZwwwwwwwww
+ wwwZZZZ...Zwwwwwww
+  wwwwZ.....Zwwwwww
+     wZ..a..ZwZwww
+     wZ.....WZ.ZwZ
+     wwZ...ZW...WW@
+     wwwZZZwwZ.ZwZ
+      wwwwwwwwZwww
+            wwwww
+ENDMAP
+
+
+NAME: nicolae_shoals_loop_pool
+DEPTH: Shoals
+TAGS: transparent decor
+KPROP: w- = no_tide
+SUBST: Y = yZ, y = x___, Z = w.___, - = .
+CLEAR: _
+MAP
+ yxxxyyY
+yxx-----Y
+yx--www--YZZZ
+yx-wwwww-....@
+yx-wwwwwxxxxxxy
+yx-wwwww-----xxy
+yx--www--www--xy
+yxx-----wwwww-xy
+ yxxxxxxwwwww-xy
+  @....-wwwww-xy
+   ZZZY--www--xy
+       Y-----xxy
+        Yyyxxxy
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map; predrawn maps
@@ -1055,14 +1071,31 @@ ENDMAP
 ##############################################################################
 
 NAME: shoals_end_simple
+ORIENT: float
 PLACE: Shoals:$
 : shoals_finale_setup(_G, 'simple')
 
 # HangedMan's alternative Shoals ending
 NAME: shoals_end_hangedman
+ORIENT: float
 PLACE: Shoals:$
 WEIGHT: 8
 : shoals_finale_setup(_G, 'hangedman', crawl.random_range(5,6))
+
+# Grunt's icy Shoals ending
+NAME: shoals_end_grunt_ice
+ORIENT: float
+PLACE: Shoals:$
+WEIGHT: 8
+: shoals_finale_setup(_G, 'grunt_ice', crawl.random_range(5,6))
+
+# Grunt's garden Shoals ending
+# Weighted lower on account of being more open and potentially nasty.
+NAME: shoals_end_grunt_garden
+ORIENT: float
+PLACE: Shoals:$
+WEIGHT: 4
+: shoals_finale_setup(_G, 'grunt_garden', crawl.random_range(5,6))
 
 ################################################################################
 # Shoal huts.
@@ -1209,4 +1242,146 @@ xx3wxw..C.@
  xx2..DC.x.
   xx....x.
    xxxx@.
+ENDMAP
+
+################################################################################
+# Shoal icebergs (Grunt).
+
+NAME:   shoals_iceberg_rune
+TAGS:   shoal_rune_grunt_ice shoal_mimic_grunt_ice water_ok no_dump
+TAGS:   transparent allow_dup
+: if shoals_vault_is_mimic() then
+KITEM:  O = barnacled rune of Zot mimic
+: else
+KITEM:  O = barnacled rune of Zot
+: end
+KPROP:  O = no_tide
+NSUBST: A = 1:. / 1:x. / *:x
+NSUBST: 1 = 4:1 / 4:1.
+: if crawl.one_chance_in(3) then
+NSUBST: w = 1:K / *:w
+KMONS:  K = kraken simulacrum
+KFEAT:  K = deep_water
+: end
+MONS:   merfolk impaler ; trident ego:freezing good_item . robe w:7 / \
+        merfolk impaler ; demon trident ego:freezing good_item . robe w:1 / \
+        merfolk impaler w:2 / frost giant / \
+        merfolk javelineer / merfolk aquamancer
+: shoals_ice_setup(_G)
+MAP
+   .......
+  .-------.
+ ..xxxxxxx..
+.-xA.---.Ax-.
+.-x.10w01.x-.
+.-x-0x1x0-x-.
+.-x-w1O1w-x-.
+.-x-0x1x0-x-.
+.-x.10w01.x-.
+.-xA.---.Ax-.
+ ..xxxxxxx..
+  .-------.
+   .......
+ENDMAP
+
+# Shoal iceberg
+NAME:      shoals_iceberg
+TAGS:      shoal_hut_grunt_ice water_ok no_dump allow_dup transparent
+NSUBST:    A = 1:. / 1:x. / *:x
+NSUBST:    0 = 2:. / 2:0 / * = 0.
+: shoals_ice_setup(_G)
+MAP
+   .......
+  .-------.
+ ..xxxxxxx..
+.-xA.---.Ax-.
+.-x..0w0..x-.
+.-x-0x.x0-x-.
+.-x-w.|.w-x-.
+.-x-0x.x0-x-.
+.-x..0w0..x-.
+.-xA.---.Ax-.
+ ..xxxxxxx..
+  .-------.
+   .......
+ENDMAP
+
+# Ilsuiw's winter home.
+NAME:    shoals_ilsuiw_ice
+TAGS:    shoal_guardian
+KMONS:   e = Ilsuiw band, merfolk avatar
+MONS:    merfolk aquamancer / merfolk javelineer
+NSUBST:  1 = 2:1 / *:.
+NSUBST:  A = 1:. / 1:x. / *:x
+: shoals_ice_setup(_G)
+MAP
+   .......
+  ..-----..
+ ...xxxxx...
+...A.---.A...
+.-x..1w1..x-.
+.-x-1x.x1-x-.
+.-x-w.e.w-x-.
+.-x-1x.x1-x-.
+.-x..1w1..x-.
+...A.---.A...
+ ...xxxxx...
+  ..-----..
+   .......
+ENDMAP
+
+################################################################################
+# Shoal gardens (Grunt).
+# This theme doesn't have a guardian vault - Ilsuiw doesn't hang around in
+# gardens. If we get another satyr unique at some point, that would be a
+# good candidate for this.
+
+NAME:   shoals_garden_rune
+TAGS:   shoal_rune_grunt_garden shoal_mimic_grunt_garden water_ok no_dump
+TAGS:   allow_dup transparent
+: if shoals_vault_is_mimic() then
+KITEM:  O = barnacled rune of Zot mimic
+: else
+KITEM:  O = barnacled rune of Zot
+: end
+KPROP:  O = no_tide
+MONS:   satyr w:30 / merfolk impaler / merfolk javelineer / merfolk aquamancer
+MONS:   faun / 0
+MONS:   nothing w:20 / plant
+SUBST:  . = ..3
+NSUBST: 1 = 4:1 / 4:1. / 8:2 / 4:P / *:.
+SUBST:  P = .3
+MAP
+   .....
+ ...PPP...
+ .PPP1PPP.
+..P11111P..
+.PP11111PP.
+.P111O111P.
+.PP11111PP.
+..P11111P..
+ .PPP1PPP.
+ ...PPP...
+   .....
+ENDMAP
+
+NAME:   shoals_garden
+TAGS:   shoal_hut_grunt_garden water_ok no_dump allow_dup transparent
+MONS:   faun / 0
+MONS:   nothing w:20 / plant
+SUBST:  . = ..2
+NSUBST: 1 = 2:1 / 2:. / 4:1. / 8:2 / 4:P / *:.
+SUBST:  P = .2
+MAP
+   .....
+ ...PPP...
+ .PPP1PPP.
+..P11111P..
+.PP11111PP.
+.P111|111P.
+.PP11111PP.
+..P11111P..
+ .PPP1PPP.
+ ...PPP...
+   .....
 ENDMAP

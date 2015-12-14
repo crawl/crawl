@@ -20,7 +20,7 @@ shouldn't be global config options:
 * Always rebase when setting up a new branch:
       git config branch.autosetuprebase always
 
-* Don't translate line endings to the native format.  Necessary for
+* Don't translate line endings to the native format. Necessary for
   Visual Studio projects:
       git config core.autocrlf false
 

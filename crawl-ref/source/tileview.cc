@@ -8,6 +8,8 @@
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
+#include "domino.h"
+#include "domino_data.h"
 #include "dungeon.h"
 #include "env.h"
 #include "fprop.h"
@@ -15,6 +17,7 @@
 #include "kills.h"
 #include "mon-util.h"
 #include "options.h"
+#include "pcg.h"
 #include "player.h"
 #include "state.h"
 #include "terrain.h"
@@ -43,8 +46,8 @@ void tile_new_level(bool first_time, bool init_unseen)
             }
     }
 
-    // Fix up stair markers.  The travel information isn't hooked up
-    // until after we change levels.  So, look through all of the stairs
+    // Fix up stair markers. The travel information isn't hooked up
+    // until after we change levels. So, look through all of the stairs
     // on this level and check if they still need the stair flag.
     for (unsigned int x = 0; x < GXM; x++)
         for (unsigned int y = 0; y < GYM; y++)
@@ -294,15 +297,25 @@ void tile_clear_flavour()
 // set them to a random instance of the default floor and wall tileset.
 void tile_init_flavour()
 {
+    vector<unsigned int> output;
+    {
+        domino::DominoSet<domino::EdgeDomino> dominoes(domino::cohen_set, 8);
+        uint64_t seed[] = { get_uint64(RNG_UI), get_uint64(RNG_UI) };
+        PcgRNG rng(seed, ARRAYSZ(seed));
+        dominoes.Generate(X_WIDTH, Y_WIDTH, output, rng);
+    }
     for (rectangle_iterator ri(0); ri; ++ri)
-        tile_init_flavour(*ri);
+    {
+        unsigned int idx = ri->x + ri->y * GXM;
+        tile_init_flavour(*ri, output[idx]);
+    }
 }
 
 // 11111333333   55555555
 //   222222444444   6666666666
 static void _get_dungeon_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
 {
-    if (crawl_state.game_is_sprint() || crawl_state.game_is_zotdef() || crawl_state.game_is_arena())
+    if (crawl_state.game_is_sprint() || crawl_state.game_is_arena())
     {
         t.push_back(TILE_WALL_CATACOMBS);
         return;
@@ -336,21 +349,55 @@ static void _get_depths_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
         t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);  // ...and on Depths:$
 }
 
-tileidx_t pick_dngn_tile(tileidx_t idx, int value)
+static int _find_variants(tileidx_t idx, int variant, map<tileidx_t, int> &out)
 {
-    ASSERT_RANGE(idx, 0, TILE_DNGN_MAX);
     const int count = tile_dngn_count(idx);
     if (count == 1)
-        return idx;
+    {
+        out[idx] = 1;
+        return 1;
+    }
 
-    const int total = tile_dngn_probs(idx + count - 1);
-    const int rand  = value % total;
-
+    int total = 0;
+    int curr_prob = 0;
     for (int i = 0; i < count; ++i)
     {
-        tileidx_t curr = idx + i;
-        if (rand < tile_dngn_probs(curr))
-            return curr;
+        int last_prob = curr_prob;
+        curr_prob = tile_dngn_probs(idx + i);
+        if (tile_dngn_dominoes(idx + i) == variant)
+        {
+            int weight = curr_prob - last_prob;
+            total += weight;
+            out[idx + i] = weight;
+        }
+    }
+    if (out.empty())
+    {
+        out[idx] = tile_dngn_probs(idx);
+        for (int i = 1; i < count; ++i)
+        {
+            out[idx + i] = tile_dngn_probs(idx + i)
+                           - tile_dngn_probs(idx + i - 1);
+        }
+        return tile_dngn_probs(idx + count - 1);
+    }
+    return total;
+}
+
+tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
+{
+    ASSERT_RANGE(idx, 0, TILE_DNGN_MAX);
+    map<tileidx_t, int> choices;
+    int total = _find_variants(idx, domino, choices);
+    if (choices.size() == 1)
+        return choices.begin()->first;
+    int rand  = value % total;
+
+    for (const auto& elem : choices)
+    {
+        rand -= elem.second;
+        if (rand <= 0)
+            return elem.first;
     }
 
     return idx;
@@ -394,7 +441,7 @@ static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
            || door == feat;
 }
 
-void tile_init_flavour(const coord_def &gc)
+void tile_init_flavour(const coord_def &gc, const int domino)
 {
     if (!map_bounds(gc))
         return;
@@ -411,7 +458,7 @@ void tile_init_flavour(const coord_def &gc)
         int colour = env.grid_colours(gc);
         if (colour)
             floor_base = tile_dngn_coloured(floor_base, colour);
-        env.tile_flv(gc).floor = pick_dngn_tile(floor_base, rand1);
+        env.tile_flv(gc).floor = pick_dngn_tile(floor_base, rand1, domino);
     }
     else if (env.tile_flv(gc).floor != TILE_HALO_GRASS
              && env.tile_flv(gc).floor != TILE_HALO_GRASS2
@@ -542,7 +589,7 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
 
             // The special tiles contains part floor and part special, so
             // if there are adjacent floor or special tiles, we should
-            // do our best to "connect" them appropriately.  If there are
+            // do our best to "connect" them appropriately. If there are
             // are other tiles there (walls, doors, whatever...) then it
             // doesn't matter.
             bool l_nrm = (l_flr && !l_target);
@@ -685,7 +732,7 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
         }
     }
 
-    // Second pass for clean up.  The only bad part about the above
+    // Second pass for clean up. The only bad part about the above
     // algorithm is that it could turn a block of floor like this:
     //
     // N4NN
@@ -700,7 +747,7 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
     // 3-6, not important
     //
     // Generally the tiles don't fit with a north to the right or left
-    // of a south tile.  What we really want to do is to separate the
+    // of a south tile. What we really want to do is to separate the
     // two regions, by making 1 a SPECIAL_SE and 2 a SPECIAL_NW tile.
     for (int y = 0; y < GYM - 1; ++y)
         for (int x = 0; x < GXM - 1; ++x)
@@ -752,8 +799,13 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
     {
         bg = tileidx_feature(gc);
 
-        if (is_unknown_stair(gc) && (env.map_knowledge(gc).feat() != DNGN_ENTER_ZOT))
+        if (is_unknown_stair(gc)
+            && env.map_knowledge(gc).feat() != DNGN_ENTER_ZOT
+            && !(player_in_hell()
+                 && env.map_knowledge(gc).feat() == DNGN_ENTER_HELL))
+        {
             bg |= TILE_FLAG_NEW_STAIR;
+        }
     }
 
     return bg;
@@ -845,10 +897,12 @@ static void _tile_place_item_marker(const coord_def &gc, const item_def &item)
 static void _tile_place_invisible_monster(const coord_def &gc)
 {
     const coord_def ep = grid2show(gc);
+    const map_cell& cell = env.map_knowledge(gc);
 
     // Shallow water has its own modified tile for disturbances
     // see tileidx_feature
-    if (env.map_knowledge(gc).feat() != DNGN_SHALLOW_WATER)
+    // That tile is hidden by clouds though
+    if (cell.feat() != DNGN_SHALLOW_WATER || cell.cloud() != CLOUD_NONE)
     {
         if (you.see_cell(gc))
             env.tile_fg(ep) = TILE_UNSEEN_MONSTER;
@@ -900,7 +954,7 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     env.tile_fg(ep) = t;
 
     // Add name tags.
-    if (mons_class_flag(mon.type, M_NO_EXP_GAIN))
+    if (!mons_class_gives_xp(mon.type))
         return;
 
     const tag_pref pref = Options.tile_tag_pref;
@@ -908,7 +962,7 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
         return;
     else if (pref == TAGPREF_TUTORIAL)
     {
-        const int kills = you.kills->num_kills(mon);
+        const int kills = you.kills.num_kills(mon);
         const int limit  = 0;
 
         if (!mon.is_named() && kills > limit)
@@ -943,18 +997,13 @@ static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)
     if (cl.type == CLOUD_INK && player_in_branch(BRANCH_SHOALS))
         return;
 
-    bool disturbance = false;
-
-    if (env.map_knowledge(gc).invisible_monster())
-        disturbance = true;
-
     if (you.see_cell(gc))
     {
         const coord_def ep = grid2show(gc);
-        env.tile_cloud(ep) = tileidx_cloud(cl, disturbance);
+        env.tile_cloud(ep) = tileidx_cloud(cl);
     }
     else
-        env.tile_bk_cloud(gc) = tileidx_cloud(cl, disturbance);
+        env.tile_bk_cloud(gc) = tileidx_cloud(cl);
 }
 
 unsigned int num_tile_rays = 0;
@@ -970,9 +1019,9 @@ FixedVector<tile_ray, ENV_SHOW_DIAMETER * ENV_SHOW_DIAMETER> tile_ray_vec;
 
 void tile_place_ray(const coord_def &gc, aff_type in_range)
 {
-    // Record rays for later.  The curses version just applies
-    // rays directly to the screen.  The tiles version doesn't have
-    // (nor want) such direct access.  So, it batches up all of the
+    // Record rays for later. The curses version just applies
+    // rays directly to the screen. The tiles version doesn't have
+    // (nor want) such direct access. So, it batches up all of the
     // rays and applies them in viewwindow(...).
     ASSERT(num_tile_rays < tile_ray_vec.size() - 1);
     tile_ray_vec[num_tile_rays].in_range = in_range;
@@ -1110,8 +1159,7 @@ static bool _suppress_blood(tileidx_t bg_idx)
 }
 
 // Specifically for vault-overwritten doors. We have three "sets" of tiles that
-// can be dealt with. The tile sets should be 2, 3, 8 and 9 respectively. They
-// are:
+// can be dealt with. The tile sets should have size 2, 3, 8, or 9. They are:
 //  2. Closed, open.
 //  3. Runed, closed, open.
 //  8. Closed, open, gate left closed, gate middle closed, gate right closed,
@@ -1177,6 +1225,8 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             orig = TILE_WALL_LAB_STONE;
         else if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_WALL_LAB_METAL;
+        else if (orig == TILE_WALL_PERMAROCK)
+            orig = TILE_WALL_PERMAROCK_BROWN;
     }
     else if (player_in_branch(BRANCH_CRYPT))
     {
@@ -1225,7 +1275,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     else if (player_in_branch(BRANCH_BAILEY))
     {
         if (orig == TILE_DNGN_STONE_WALL)
-            orig = TILE_WALL_STONE_BRICK;
+            orig = TILE_WALL_STONE_SMOOTH;
     }
     else if (player_in_branch(BRANCH_OSSUARY))
     {
@@ -1247,17 +1297,19 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         *bg = flv.floor;
     else if (orig == TILE_WALL_NORMAL)
         *bg = flv.wall;
-    else if (orig == TILE_DNGN_STONE_WALL)
+    else if (orig == TILE_DNGN_STONE_WALL
+             || orig == TILE_DNGN_CRYSTAL_WALL
+             || orig == TILE_WALL_PERMAROCK
+             || orig == TILE_WALL_PERMAROCK_CLEAR)
     {
-        *bg = pick_dngn_tile(tile_dngn_coloured(orig,
-                                                env.grid_colours(gc)),
-                              flv.special);
+        *bg = pick_dngn_tile(tile_dngn_coloured(orig, env.grid_colours(gc)),
+                             flv.special);
     }
     else if (is_door_tile(orig))
     {
         tileidx_t override = flv.feat;
         /*
-          Was: secret doors.  Is it ever needed anymore?
+          Was: secret doors. Is it ever needed anymore?
          */
         if (is_door_tile(override))
         {
@@ -1326,7 +1378,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     else if (mc.flags & MAP_HALOED)
     {
         monster_info* mon = mc.monsterinfo();
-        if (mon && !mons_class_flag(mon->type, M_NO_EXP_GAIN))
+        if (mon && mons_class_gives_xp(mon->type))
         {
             cell.halo = HALO_MONSTER;
             print_blood = false;
@@ -1387,9 +1439,6 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     if (mc.flags & MAP_DISJUNCT)
         cell.disjunct = get_disjunct_phase(gc);
-
-    if (mc.flags & MAP_GOLDEN)
-        cell.gold_aura = 1 + random2(3);
 
     if (Options.show_travel_trail)
     {

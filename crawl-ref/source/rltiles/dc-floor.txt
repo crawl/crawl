@@ -800,20 +800,29 @@ labyrinth2
 labyrinth3
 
 %weight 10
-crypt0 FLOOR_CRYPT
-crypt1
-crypt2
-crypt3
-%weight 3
-crypt4
-crypt5
-crypt6
-crypt7
+%domino 0
+crypt_domino_1a FLOOR_CRYPT
 %weight 2
-crypt8
-crypt9
-crypt10
-crypt11
+crypt_domino_1b
+%weight 10
+%domino 1
+crypt_domino_2a
+%domino 2
+crypt_domino_3a
+%domino 3
+crypt_domino_4a
+%weight 2
+crypt_domino_4b
+%weight 10
+%domino 4
+crypt_domino_5a
+%domino 5
+crypt_domino_6a
+%domino 6
+crypt_domino_7a
+%domino 7
+crypt_domino_8a
+%domino 0
 
 iron0 FLOOR_IRON
 %weight 1

@@ -7,8 +7,7 @@ my @deps = qw(
 );
 
 if ($ENV{BUILD_ALL}) {
-    system("git submodule update --init --recursive") == 0
-        or die "Couldn't update submodules: $?";
+    retry(qw(git submodule update --init --recursive));
 
     push @deps, qw(
        libegl1-mesa-dev
@@ -29,4 +28,24 @@ else {
     ) if $ENV{TILES} || $ENV{WEBTILES};
 }
 
-exec "sudo apt-get install @deps";
+retry(qw(sudo apt-get install), @deps);
+
+sub retry {
+    my (@cmd) = @_;
+
+    my $tries = 5;
+    my $sleep = 5;
+
+    my $ret;
+    while ($tries--) {
+        print "Running '@cmd'\n";
+        $ret = system(@cmd);
+        return if $ret == 0;
+        print "'@cmd' failed ($ret), retrying in $sleep seconds...\n";
+        sleep $sleep;
+    }
+
+    print "Failed to run '@cmd' ($ret)\n";
+    # 1 if there was a signal or system() failed, otherwise the exit status.
+    exit($ret & 127 ? 1 : $ret >> 8);
+}

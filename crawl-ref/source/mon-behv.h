@@ -17,7 +17,6 @@ enum mon_event_type
     ME_WHACK,                           // physical attack
     ME_SCARE,                           // frighten monster
     ME_CORNERED,                        // cannot flee
-    ME_HURT,                            // lost some HP (by any mean)
 };
 
 struct level_exit
@@ -59,9 +58,5 @@ bool summon_can_attack(const monster* mons, const actor* targ);
 void shake_off_monsters(const actor* target);
 
 void set_nearest_monster_foe(monster* mon, bool near_player = false);
-
-// For Zotdef: the target position of MHITYOU monsters is
-// the orb.
-#define PLAYER_POS (crawl_state.game_is_zotdef() ? env.orb_pos : you.pos())
 
 #endif

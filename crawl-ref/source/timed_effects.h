@@ -25,27 +25,4 @@ void setup_environment_effects();
 void run_environment_effects();
 int speed_to_duration(int speed);
 
-enum timed_effect_type
-{
-    TIMER_CORPSES,
-    TIMER_HELL_EFFECTS,
-    TIMER_STAT_RECOVERY,
-    TIMER_CONTAM,
-    TIMER_DETERIORATION,
-    TIMER_GOD_EFFECTS,
-#if TAG_MAJOR_VERSION == 34
-    TIMER_SCREAM,
-#endif
-    TIMER_FOOD_ROT,
-    TIMER_PRACTICE,
-    TIMER_LABYRINTH,
-    TIMER_ABYSS_SPEED,
-    TIMER_JIYVA,
-    TIMER_EVOLUTION,
-#if TAG_MAJOR_VERSION == 34
-    TIMER_BRIBE_TIMEOUT,
-#endif
-    NUM_TIMERS,
-};
-
 #endif

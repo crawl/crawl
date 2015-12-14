@@ -21,12 +21,13 @@ two other ways:
  +5  exceptional aptitude
 
 There are three special values: HP, MP and Experience:
-- The HP and MP values indicate the percentages of hit points and magic
-  points that are gained per level, 100% being the Human standard.
+- The HP value indicates the percentage of hit points gained per level,
+  100% being the Human standard.
+- The MP value indicates a fixed additive modifier to magic points.
 - The Experience value indicates how much experience has to be earned in
   order to gain a new level. +1 is the Human standard, and all other
-  species (apart from Halfling and Kobold) are slower. These values use
-  the same scale as the skill aptitudes.
+  species (apart from Formicid, Halfling and Kobold) are slower. These
+  values use the same scale as the skill aptitudes.
 
 The abbreviations used for the skills are:
 

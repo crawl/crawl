@@ -203,9 +203,9 @@ package::~package()
 {
     dprintf("package: finalizing\n");
     ASSERT(!n_users || CrawlIsCrashing); // not merely aborted, there are
-        // live pointers to us.  With normal stack unwinding, destructors
+        // live pointers to us. With normal stack unwinding, destructors
         // will make sure this never happens and this assert is good for
-        // catching missing manual deletes.  The C++ exit handler is the
+        // catching missing manual deletes. The C++ exit handler is the
         // only place that can be legitimately call things in wrong order.
 
     if (rw && !aborted)
@@ -610,8 +610,8 @@ void package::trace_chunk(plen_t start)
 
 void package::abort()
 {
-    // Disable any further operations, allow a shutdown.  All errors past
-    // this point are ignored (assuming we already failed).  All writes since
+    // Disable any further operations, allow a shutdown. All errors past
+    // this point are ignored (assuming we already failed). All writes since
     // the last commit() are lost.
     aborted = true;
 }

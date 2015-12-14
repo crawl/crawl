@@ -20,19 +20,16 @@ bool is_player_spell(spell_type which_spell);
 
 void mark_had_book(const item_def &book);
 void mark_had_book(book_type booktype);
-void inscribe_book_highlevel(item_def &book);
 
-bool maybe_id_book(item_def &book, bool silent = false);
 void read_book(item_def &item);
 
 bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);
 bool learn_spell();
-bool learn_spell(spell_type spell);
+bool learn_spell(spell_type spell, bool wizard = false);
 bool forget_spell_from_book(spell_type spell, const item_def* book);
 
 string desc_cannot_memorise_reason(spell_type spell);
-bool player_can_memorise_from_spellbook(const item_def &book);
 
 spell_type spell_in_rod(rod_type rod);
 vector<spell_type> spellbook_template(book_type book);
@@ -43,8 +40,7 @@ bool has_spells_to_memorise(bool silent = true,
                             spell_type current_spell = SPELL_NO_SPELL);
 vector<spell_type> get_mem_spell_list(vector<int> &books);
 
-bool make_book_level_randart(item_def &book, int level = -1,
-                             string owner = "");
+bool make_book_level_randart(item_def &book, int level = -1);
 bool make_book_theme_randart(item_def &book,
                              spschool_flag_type disc1 = SPTYP_NONE,
                              spschool_flag_type disc2 = SPTYP_NONE,

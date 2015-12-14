@@ -458,19 +458,24 @@ Also, if you have any further suggestions, feel free to add them.
 8. Submitting your tiles
 ========================
 
-Please submit your new tiles as a new item in the Graphics category of our
-Mantis tracker (http://crawl.develz.org/mantis/bug_report_page.php), or send an
-email containing your tiles to one of the tiles developers
-(ennewalker, evktalo, jpeg).
+To submit new tiles, please add them as a new item in the Graphics category of
+our Mantis tracker (http://crawl.develz.org/mantis/bug_report_page.php), or
+contact one of our tiles developers (these currently include ontoclasm and
+roctavian).
+
+Please note that, unless you specify otherwise, tiles you submit to Crawl will
+be released under the CC0 license, which is similar to placing them in the
+public domain. See https://creativecommons.org/publicdomain/zero/1.0/ for more
+information.
 
 9. Reducing file size
 =====================
 
 (Committer only.)  When actually putting the tiles into version control,
-please minimize their file sizes.  Editors usually want to save quickly,
+please minimize their file sizes. Editors usually want to save quickly,
 often producing files 3-4 times as big as they could be without any loss of
-quality.  There are two separate steps, and there are two different programs
-which excel at them.  I found that the best effects can be obtained with
+quality. There are two separate steps, and there are two different programs
+which excel at them. I found that the best effects can be obtained with
 running them in sequence:
   optipng -o4 -i0 -fix image.png
   advpng -z4 image.png

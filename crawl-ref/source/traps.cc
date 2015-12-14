@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -36,7 +37,7 @@
 #include "mon-transit.h"
 #include "output.h"
 #include "prompt.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-miscast.h"
@@ -67,17 +68,6 @@ bool trap_def::type_has_ammo() const
         break;
     }
     return false;
-}
-
-// Used for when traps run out of ammo.
-void trap_def::disarm()
-{
-    if (type == TRAP_NET)
-    {
-        item_def trap_item = generate_trap_item();
-        copy_item_to_grid(trap_item, pos);
-    }
-    destroy();
 }
 
 void trap_def::destroy(bool known)
@@ -127,18 +117,12 @@ void trap_def::prepare_ammo(int charges)
         ammo_qty = 30 + random2(20);
         break;
     case TRAP_TELEPORT:
-        if (crawl_state.game_is_zotdef())
-            ammo_qty = 2 + random2(2);
-        else
-            ammo_qty = 1;
+        ammo_qty = 1;
         break;
     default:
         ammo_qty = 0;
         break;
     }
-    // Zot def: traps have 10x as much ammo
-    if (crawl_state.game_is_zotdef() && type != TRAP_GOLUBRIA)
-        ammo_qty *= 10;
 }
 
 void trap_def::reveal()
@@ -190,27 +174,17 @@ bool trap_def::is_known(const actor* act) const
             // Slightly different rules for shafts:
             // * Lower intelligence requirement for native monsters.
             // * Allied zombies won't fall through shafts. (No herding!)
-            // * Highly intelligent monsters never fall through shafts.
-            return intel >= I_HIGH
-                   || intel > I_PLANT && mons_is_native_in_branch(mons)
+            return intel > I_BRAINLESS && mons_is_native_in_branch(mons)
                    || player_knows && mons->wont_attack();
         }
         else
         {
-            if (intel < I_NORMAL)
+            if (intel < I_HUMAN)
                 return false;
             if (player_knows && mons->wont_attack())
                 return true;
 
-            // This should ultimately be removed, but only after monsters
-            // learn to make use of the trap being limited in ZotDef if
-            // there is no other way.  Golubria and Malign Gateway are a
-            // problem, too...
-            if (crawl_state.game_is_zotdef())
-                return false;
-
-            return mons_is_native_in_branch(mons)
-                   || intel >= I_HIGH && one_chance_in(3);
+            return mons_is_native_in_branch(mons);
         }
     }
     die("invalid actor type");
@@ -226,6 +200,11 @@ bool trap_def::is_safe(actor* act) const
     if (category() == DNGN_TRAP_WEB) // && act->is_web_immune()
         return true;
 
+#if TAG_MAJOR_VERSION == 34
+    if (type == TRAP_SHADOW_DORMANT || type == TRAP_SHADOW)
+        return true;
+#endif
+
     if (!act->is_player())
         return false;
 
@@ -240,25 +219,25 @@ bool trap_def::is_safe(actor* act) const
     if (!is_known(act))
         return false;
 
-    if (type == TRAP_GOLUBRIA || type == TRAP_SHAFT
-        || crawl_state.game_is_zotdef())
-    {
+    if (type == TRAP_GOLUBRIA || type == TRAP_SHAFT)
         return true;
-    }
 
-    if (Options.trapwalk_safe_hp)
-    {
-        if (type == TRAP_NEEDLE)
-            return you.hp > 15;
-        else if (type == TRAP_ARROW)
-            return you.hp > 35;
-        else if (type == TRAP_BOLT)
-            return you.hp > 45;
-        else if (type == TRAP_SPEAR)
-            return you.hp > 40;
-        else if (type == TRAP_BLADE)
-            return you.hp > 95;
-    }
+#ifdef CLUA_BINDINGS
+    // Let players specify traps as safe via lua.
+    if (clua.callbooleanfn(false, "c_trap_is_safe", "s", trap_name(type).c_str()))
+        return true;
+#endif
+
+    if (type == TRAP_NEEDLE)
+        return you.hp > 15;
+    else if (type == TRAP_ARROW)
+        return you.hp > 35;
+    else if (type == TRAP_BOLT)
+        return you.hp > 45;
+    else if (type == TRAP_SPEAR)
+        return you.hp > 40;
+    else if (type == TRAP_BLADE)
+        return you.hp > 95;
 
     return false;
 }
@@ -374,17 +353,11 @@ bool monster_caught_in_net(monster* mon, actor* agent)
 
     if (mon->is_insubstantial())
     {
-        if (you.can_see(mon))
+        if (you.can_see(*mon))
         {
             mprf("The net passes right through %s!",
                  mon->name(DESC_THE).c_str());
         }
-        return false;
-    }
-
-    if (mon->type == MONS_OOZE)
-    {
-        simple_monster_message(mon, " oozes right through the net!");
         return false;
     }
 
@@ -440,23 +413,14 @@ void check_net_will_hold_monster(monster* mons)
                 mpr("All of a sudden the net rips apart!");
         }
     }
-    else if (mons->is_insubstantial()
-             || mons->type == MONS_OOZE)
+    else if (mons->is_insubstantial())
     {
         const int net = get_trapping_net(mons->pos());
         if (net != NON_ITEM)
             free_stationary_net(net);
 
-        if (mons->is_insubstantial())
-        {
-            simple_monster_message(mons,
-                                   " drifts right through the net!");
-        }
-        else
-        {
-            simple_monster_message(mons,
-                                   " oozes right through the net!");
-        }
+        simple_monster_message(mons,
+                               " drifts right through the net!");
     }
     else
         mons->add_ench(ENCH_HELD);
@@ -468,8 +432,12 @@ static bool _player_caught_in_web()
         return false;
 
     you.attribute[ATTR_HELD] = 10;
+
+    you.redraw_armour_class = true;
+    you.redraw_evasion      = true;
+    you.redraw_quiver       = true;
+
     // No longer stop_running() and stop_delay().
-    redraw_screen(); // Account for changes in display.
     return true;
 }
 
@@ -498,71 +466,6 @@ static bool _find_other_passage_side(coord_def& to)
         return false;
     to = clear_passages[random2(choices)];
     return true;
-}
-
-/**
- * Spawn a single shadow creature or band from the current level. The creatures
- * are always hostile to the player.
- *
- * @param triggerer     The creature that set off the trap.
- * @return              Whether any monsters were successfully created.
- */
-bool trap_def::weave_shadow(const actor& triggerer)
-{
-    // forbid early packs
-    const bool bands_ok = env.absdepth0 > 3;
-    mgen_data mg = mgen_data::hostile_at(RANDOM_MOBILE_MONSTER,
-                                         "a shadow trap", // blame
-                                         you.see_cell(pos), // alerted?
-                                         5, // abj duration
-                                         MON_SUMM_SHADOW,
-                                         pos,
-                                         bands_ok ? 0 : MG_FORBID_BANDS);
-
-    monster *mons = create_monster(mg);
-    if (!mons)
-        return false;
-
-    const string triggerer_name = triggerer.is_player() ?
-                                        "the player character" :
-                                        triggerer.name(DESC_A, true);
-    mons_add_blame(mons, "triggered by " + triggerer_name);
-
-    return true;
-}
-
-/**
- * Trigger a shadow creature trap.
- *
- * Temporarily summons some number of shadow creatures/bands from the current
- * level. 3-5 creatures/bands, increasing with depth.
- *
- * @param triggerer     The creature that set off the trap.
- */
-void trap_def::trigger_shadow_trap(const actor& triggerer)
-{
-    if (triggerer.is_summoned())
-        return; // no summonsplosions
-
-    if (mons_is_tentacle_or_tentacle_segment(triggerer.type))
-        return; // no krakensplosions
-
-    if (!you.see_cell(pos))
-        return;
-
-    const int to_summon = 3 + div_rand_round(env.absdepth0, 16);
-    dprf ("summoning %d dudes from %d", to_summon, env.absdepth0);
-
-    bool summoned_any = false;
-    for (int i = 0; i < to_summon; ++i)
-    {
-        const bool successfully_summoned = weave_shadow(triggerer);
-        summoned_any = summoned_any || successfully_summoned;
-    }
-
-    mprf("Shadows whirl around %s...", triggerer.name(DESC_THE).c_str());
-    if (!summoned_any)
-        mpr("...but the shadows disperse without effect.");
 }
 
 // Returns a direction string from you.pos to the
@@ -595,13 +498,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     const bool you_trigger = triggerer.is_player();
     const bool in_sight = you.see_cell(pos);
 
-    // Zot def - player never sets off known traps
-    if (crawl_state.game_is_zotdef() && you_trigger && you_know)
-    {
-        mpr("You step safely past the trap.");
-        return;
-    }
-
     // If set, the trap will be removed at the end of the
     // triggering process.
     bool trap_destroyed = false, know_trap_destroyed = false;;
@@ -611,23 +507,12 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     // Smarter monsters and those native to the level will simply
     // side-step known shafts. Unless they are already looking for
     // an exit, of course.
-    if (type == TRAP_SHAFT && m)
+    if (type == TRAP_SHAFT
+        && m
+        && (!m->will_trigger_shaft()
+            || trig_knows && !mons_is_fleeing(m) && !m->pacified()))
     {
-        if (!m->will_trigger_shaft()
-            || trig_knows && !mons_is_fleeing(m) && !m->pacified())
-        {
-            // No message for flying monsters to avoid message spam.
-            if (you_know && triggerer.ground_level())
-                simple_monster_message(m, " carefully avoids the shaft.");
             return;
-        }
-    }
-
-    // Zot def - friendly monsters never set off known traps
-    if (crawl_state.game_is_zotdef() && m && m->friendly() && trig_knows)
-    {
-        simple_monster_message(m," carefully avoids a trap.");
-        return;
     }
 
     // Anything stepping onto a trap almost always reveals it.
@@ -683,16 +568,14 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 env.map_knowledge(pos).set_feature(DNGN_FLOOR);
                 mprf("%s disappears.", name(DESC_THE).c_str());
             }
-            disarm();
+            destroy();
         }
         if (!triggerer.no_tele(true, you_know || you_trigger))
             triggerer.teleport(true);
         break;
 
     case TRAP_ALARM:
-        // In ZotDef, alarm traps don't go away after use.
-        if (!crawl_state.game_is_zotdef())
-            trap_destroyed = true;
+        trap_destroyed = true;
 
         if (silenced(pos))
         {
@@ -721,11 +604,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // XXX: this is very goofy and probably should be replaced with
             // const mid_t source = triggerer.mid;
             mid_t source = !m ? MID_PLAYER :
-                            mons_intel(m) >= I_NORMAL ? m->mid : MID_NOBODY;
+                            mons_intel(m) >= I_HUMAN ? m->mid : MID_NOBODY;
 
             noisy(40, pos, msg.c_str(), source, NF_MESSAGE_IF_UNSEEN);
-            if (crawl_state.game_is_zotdef())
-                more();
         }
 
         if (you_trigger)
@@ -737,8 +618,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         {
             if (trig_knows && one_chance_in(3))
                 mpr("You avoid triggering a blade trap.");
-            else if (random2limit(player_evasion(), 40)
-                     + (random2(you.dex()) / 3) + (trig_knows ? 3 : 0) > 8)
+            else if (random2limit(you.evasion(), 40)
+                     + random2(6) + (trig_knows ? 3 : 0) > 8)
             {
                 mpr("A huge blade swings just past you!");
             }
@@ -796,14 +677,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 m->hurt(nullptr, damage_taken);
                 if (in_sight && m->alive())
                     print_wounds(m);
-
-                // zotdef: blade traps break eventually
-                if (crawl_state.game_is_zotdef() && one_chance_in(200))
-                {
-                    if (in_sight)
-                        mpr("The blade breaks!");
-                    disarm();
-                }
             }
         }
         break;
@@ -818,8 +691,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 item_def item = generate_trap_item();
                 copy_item_to_grid(item, triggerer.pos());
 
-                if (random2limit(player_evasion(), 40)
-                    + (random2(you.dex()) / 3) + (trig_knows ? 3 : 0) > 12)
+                if (random2limit(you.evasion(), 40)
+                    + random2(4) + (trig_knows ? 3 : 0) > 12)
                 {
                     mpr("A net drops to the ground!");
                 }
@@ -832,7 +705,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                             xom_is_stimulated(50);
 
                         // Mark the item as trapping; after this it's
-                        // safe to update the view
+                        // safe to update the view.
                         _mark_net_trapping(you.pos());
                     }
                 }
@@ -939,7 +812,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
                 if (_player_caught_in_web())
                 {
-                    check_monsters_sense(SENSE_WEB_VIBRATION, 100, you.pos());
+                    check_monsters_sense(SENSE_WEB_VIBRATION, 9, you.pos());
                     if (player_in_a_dangerous_place())
                         xom_is_stimulated(50);
                 }
@@ -973,7 +846,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 m->props[NEWLY_TRAPPED_KEY] = true;
 
                 // Alert monsters.
-                check_monsters_sense(SENSE_WEB_VIBRATION, 100, triggerer.position);
+                check_monsters_sense(SENSE_WEB_VIBRATION, 9, triggerer.position);
             }
         }
         break;
@@ -996,7 +869,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
             // The old code rehid the trap, but that's pure interface screw
             // in 99% of cases - a player can just watch who stepped where
-            // and mark the trap on an external paper map.  Not good.
+            // and mark the trap on an external paper map. Not good.
 
             actor* targ = nullptr;
             if (you.see_cell_no_trans(pos))
@@ -1052,9 +925,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         if (trig_knows)
             break;
 
-        // Depending on total (body + equipment) weight, give monsters
-        // and player a chance to escape a shaft.
-        if (x_chance_in_y(140, triggerer.body_weight()))
+        // A chance to escape.
+        if (one_chance_in(4))
             break;
 
         // Fire away!
@@ -1085,10 +957,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         dungeon_events.fire_position_event(DET_PRESSURE_PLATE, pos);
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case TRAP_SHADOW:
-        trigger_shadow_trap(triggerer);
-        break;
-
+    case TRAP_SHADOW_DORMANT:
+#endif
     default:
         break;
     }
@@ -1161,7 +1033,7 @@ int reveal_traps(const int range)
         if (!trap.active())
             continue;
 
-        if (distance2(you.pos(), trap.pos) < dist_range(range) && !trap.is_known())
+        if (grid_distance(you.pos(), trap.pos) < range && !trap.is_known())
         {
             traps_found++;
             trap.reveal();
@@ -1219,12 +1091,12 @@ void search_around()
     if (max_dist < 1)
         max_dist = 1;
 
-    for (radius_iterator ri(you.pos(), max_dist, C_ROUND, LOS_NO_TRANS); ri; ++ri)
+    for (radius_iterator ri(you.pos(), max_dist, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
         if (grd(*ri) != DNGN_UNDISCOVERED_TRAP)
             continue;
 
-        int dist = ri->range(you.pos());
+        int dist = ri->distance_from(you.pos());
 
         // Own square is not excluded; may be flying.
         // XXX: Currently, flying over a trap will always detect it.
@@ -1296,7 +1168,7 @@ static int damage_or_escape_net(int hold)
         damage++;
     if (x_chance_in_y(you.dex(), 12))
         escape++;
-    if (x_chance_in_y(player_evasion(), 20))
+    if (x_chance_in_y(you.evasion(), 20))
         escape++;
 
     // Dangerous monsters around you add urgency.
@@ -1574,7 +1446,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         else if (player_can_hear(pos) && you.see_cell(pos))
             mpr("You hear a soft click.");
 
-        disarm();
+        destroy();
         return;
     }
 
@@ -1586,12 +1458,12 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
         {
             mprf("You avoid triggering %s.", name(DESC_A).c_str());
-            return;         // no ammo generated either
+            return;
         }
     }
     else if (!force_hit && one_chance_in(5))
     {
-        if (was_known && you.see_cell(pos) && you.can_see(&act))
+        if (was_known && you.see_cell(pos) && you.can_see(act))
         {
             mprf("%s avoids triggering %s.", act.name(DESC_THE).c_str(),
                  name(DESC_A).c_str());
@@ -1608,10 +1480,10 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     const int con_block = random2(20 + act.shield_block_penalty());
     const int pro_block = act.shield_bonus();
     dprf("%s: hit %d EV %d, shield hit %d block %d", name(DESC_PLAIN).c_str(),
-         trap_hit, act.melee_evasion(0), con_block, pro_block);
+         trap_hit, act.evasion(), con_block, pro_block);
 
     // Determine whether projectile hits.
-    if (!force_hit && trap_hit < act.melee_evasion(nullptr))
+    if (!force_hit && trap_hit < act.evasion())
     {
         if (act.is_player())
         {
@@ -1631,7 +1503,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         string owner;
         if (act.is_player())
             owner = "your";
-        else if (you.can_see(&act))
+        else if (you.can_see(act))
             owner = apostrophise(act.name(DESC_THE));
         else // "its" sounds abysmal; animals don't use shields
             owner = "someone's";
@@ -1708,6 +1580,8 @@ dungeon_feature_type trap_category(trap_type type)
         return DNGN_PASSAGE_OF_GOLUBRIA;
     case TRAP_SHADOW:
         return DNGN_TRAP_SHADOW;
+    case TRAP_SHADOW_DORMANT:
+        return DNGN_TRAP_SHADOW_DORMANT;
 
     case TRAP_ARROW:
     case TRAP_SPEAR:
@@ -1731,8 +1605,7 @@ bool is_valid_shaft_level(bool known)
 {
     const level_id place = level_id::current();
     if (crawl_state.test
-        || crawl_state.game_is_sprint()
-        || crawl_state.game_is_zotdef())
+        || crawl_state.game_is_sprint())
     {
         return false;
     }
@@ -1740,15 +1613,13 @@ bool is_valid_shaft_level(bool known)
     if (!is_connected_branch(place))
         return false;
 
-    // Don't generate shafts in branches where teleport control
-    // is prevented.  Prevents player from going down levels without
-    // reaching stairs, and also keeps player from getting stuck
-    // on lower levels with the innability to use teleport control to
-    // get back up.
-    if (testbits(env.level_flags, LFLAG_NO_TELE_CONTROL))
-        return false;
-
     const Branch &branch = branches[place.branch];
+
+    if (env.turns_on_level == -1
+        && branch.branch_flags & BFLAG_NO_SHAFTS)
+    {
+        return false;
+    }
 
     // When generating levels, don't place an unknown shaft on the level
     // immediately above the bottom of a branch if that branch is
@@ -1779,11 +1650,8 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
 
     if (known)
     {
-        // Chances are 5/8s for 1 level, 2/8s for 2 levels, 1/8 for 3 levels
-        int s = random2(8) + 1;
-        if (s == 1)
-            lid.depth += 3;
-        else if (s <= 3)
+        // Chances are 2/3 for 1 level, 1/3 for 2 levels
+        if (one_chance_in(3))
             lid.depth += 2;
         else
             lid.depth += 1;
@@ -1929,18 +1797,53 @@ trap_type random_trap_for_place()
     const bool shaft_ok = is_valid_shaft_level();
     const bool tele_ok = !crawl_state.game_is_sprint();
     const bool alarm_ok = env.absdepth0 > 3;
-    const bool shadow_ok = env.absdepth0 > 1;
 
     const pair<trap_type, int> trap_weights[] =
     {
         { TRAP_TELEPORT, tele_ok  ? 2 : 0},
-        { TRAP_SHADOW,  shadow_ok ? 1 : 0 },
         { TRAP_SHAFT,   shaft_ok  ? 1 : 0},
         { TRAP_ALARM,   alarm_ok  ? 1 : 0},
     };
 
     const trap_type *trap = random_choose_weighted(trap_weights);
     return trap ? *trap : NUM_TRAPS;
+}
+
+/**
+ * Oldstyle trap algorithm, used for vaults. Very bad. Please remove ASAP.
+ */
+trap_type random_vault_trap()
+{
+    const int level_number = env.absdepth0;
+    trap_type type = TRAP_ARROW;
+
+    if ((random2(1 + level_number) > 1) && one_chance_in(4))
+        type = TRAP_NEEDLE;
+    if (random2(1 + level_number) > 3)
+        type = TRAP_SPEAR;
+
+    if (type == TRAP_ARROW && one_chance_in(15))
+        type = TRAP_NET;
+
+    if (random2(1 + level_number) > 7)
+        type = TRAP_BOLT;
+    if (random2(1 + level_number) > 14)
+        type = TRAP_BLADE;
+
+    if (random2(1 + level_number) > 14 && one_chance_in(3)
+        || (player_in_branch(BRANCH_ZOT) && coinflip()))
+    {
+        type = TRAP_ZOT;
+    }
+
+    if (one_chance_in(20) && is_valid_shaft_level())
+        type = TRAP_SHAFT;
+    if (one_chance_in(20) && !crawl_state.game_is_sprint())
+        type = TRAP_TELEPORT;
+    if (one_chance_in(40) && level_number > 3)
+        type = TRAP_ALARM;
+
+    return type;
 }
 
 int count_traps(trap_type ttyp)
@@ -1968,7 +1871,7 @@ void place_webs(int num)
 
         int tries;
         // this is hardly ever enough to place many webs, most of the time
-        // it will fail prematurely.  Which is fine.
+        // it will fail prematurely. Which is fine.
         for (tries = 0; tries < 200; ++tries)
         {
             ts.pos.x = random2(GXM);
@@ -2037,6 +1940,7 @@ bool maybe_destroy_web(actor *oaf)
 
 bool ensnare(actor *fly)
 {
+    ASSERT(fly); // XXX: change to actor &fly
     if (fly->is_web_immune())
         return false;
 
@@ -2050,7 +1954,7 @@ bool ensnare(actor *fly)
 
     if (fly->body_size() >= SIZE_GIANT)
     {
-        if (you.can_see(fly))
+        if (you.can_see(*fly))
             mprf("A web harmlessly splats on %s.", fly->name(DESC_THE).c_str());
         return false;
     }
@@ -2082,6 +1986,6 @@ bool ensnare(actor *fly)
     if (!fly->alive())
         return true;
 
-    check_monsters_sense(SENSE_WEB_VIBRATION, 100, fly->pos());
+    check_monsters_sense(SENSE_WEB_VIBRATION, 9, fly->pos());
     return true;
 }

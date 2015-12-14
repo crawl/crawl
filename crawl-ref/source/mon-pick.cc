@@ -39,49 +39,6 @@ int branch_ood_cap(branch_type branch)
     }
 }
 
-// NOTE: The lower the level the earlier a monster may appear.
-int mons_depth(monster_type mcls, branch_type branch)
-{
-    // legacy function, until ZotDef is ported
-    for (const pop_entry *pe = population[branch].pop; pe->value; pe++)
-        if (pe->value == mcls)
-        {
-            if (pe->distrib == UP)
-                return pe->maxr;
-            else if (pe->distrib == DOWN)
-                return pe->minr;
-            return (pe->minr + pe->maxr) / 2;
-        }
-
-    return DEPTH_NOWHERE;
-}
-
-// NOTE: Higher values returned means the monster is "more common".
-// A return value of zero means the monster will never appear. {dlb}
-// To be axed once ZotDef is ported.
-int mons_rarity(monster_type mcls, branch_type branch)
-{
-    for (const pop_entry *pe = population[branch].pop; pe->value; pe++)
-        if (pe->value == mcls)
-        {
-            // A rough and wrong conversion of new-style linear rarities to
-            // old quadratic ones, with some compensation for distribution
-            // shape (old code had rarities > 100, capped after subtracting
-            // the square of distance).
-            // The new data pretty accurately represents old state, but only
-            // if depth is known, and mons_rarity() doesn't receive it.
-            static int fudge[5] = { 25, 12, 0, 0, 0 };
-            int rare = pe->rarity;
-            if (rare < 500)
-                rare = isqrt_ceil(rare * 10);
-            else
-                rare = 100 - isqrt_ceil(10000 - rare * 10);
-            return rare + fudge[pe->distrib];
-        }
-
-    return 0;
-}
-
 // only Pan currently
 monster_type pick_monster_no_rarity(branch_type branch)
 {
@@ -250,32 +207,6 @@ static bool _not_skeletonable(monster_type mt)
 void debug_monpick()
 {
     string fails;
-
-    // Tests for the legacy interface; shouldn't ever happen.
-    for (branch_iterator it; it; ++it)
-    {
-        branch_type br = it->id;
-
-        for (monster_type m = MONS_0; m < NUM_MONSTERS; ++m)
-        {
-            int lev = mons_depth(m, br);
-            int rare = mons_rarity(m, br);
-
-            if (lev < DEPTH_NOWHERE && !rare)
-            {
-                fails += make_stringf("%s: no rarity for %s\n",
-                                      it->abbrevname,
-                                      mons_class_name(m));
-            }
-            if (rare && lev >= DEPTH_NOWHERE)
-            {
-                fails += make_stringf("%s: no depth for %s\n",
-                                      it->abbrevname,
-                                      mons_class_name(m));
-            }
-        }
-    }
-    // Legacy tests end.
 
     for (branch_iterator it; it; ++it)
     {

@@ -43,7 +43,7 @@ player_quiver::player_quiver()
 
 // Return:
 //   *slot_out filled in with the inv slot of the item we would like
-//   to fire by default.  If -1, the inv doesn't contain our desired
+//   to fire by default. If -1, the inv doesn't contain our desired
 //   item.
 //
 //   *item_out filled in with item we would like to fire by default.
@@ -158,7 +158,7 @@ void quiver_item(int slot)
     if (weapon && item.launched_by(*weapon))
         t = _get_weapon_ammo_type(weapon);
 
-    you.m_quiver->set_quiver(you.inv[slot], t);
+    you.m_quiver.set_quiver(you.inv[slot], t);
     mprf("Quivering %s for %s.", you.inv[slot].name(DESC_INVENTORY).c_str(),
          t == AMMO_THROW    ? "throwing" :
          t == AMMO_BLOWGUN  ? "blowguns" :
@@ -186,7 +186,7 @@ void choose_item_for_quiver()
     if (slot == PROMPT_GOT_SPECIAL)  // '-' or empty quiver
     {
         ammo_t t = _get_weapon_ammo_type(you.weapon());
-        you.m_quiver->empty_quiver(t);
+        you.m_quiver.empty_quiver(t);
 
         mprf("Reset %s quiver to default.",
              t == AMMO_THROW    ? "throwing" :
@@ -291,7 +291,7 @@ void player_quiver::on_inv_quantity_changed(int slot, int amt)
 {
     if (m_last_used_of_type[m_last_used_type].base_type == OBJ_UNASSIGNED)
     {
-        // Empty quiver.  Maybe we can fill it now?
+        // Empty quiver. Maybe we can fill it now?
         _maybe_fill_empty_slot();
         you.redraw_quiver = true;
     }
@@ -348,7 +348,7 @@ void player_quiver::_maybe_fill_empty_slot()
     if (unquiver_weapon && order.empty())
     {
         // Setting the quantity to zero will force the quiver to be empty,
-        // should nothing else be found.  We also set the base type to
+        // should nothing else be found. We also set the base type to
         // OBJ_UNASSIGNED so this is not an invalid object with a real type,
         // as that would trigger an assertion on saving.
         m_last_used_of_type[slot].base_type = OBJ_UNASSIGNED;
@@ -477,31 +477,25 @@ void player_quiver::load(reader& inf)
 
 preserve_quiver_slots::preserve_quiver_slots()
 {
-    if (!you.m_quiver)
-        return;
-
     COMPILE_CHECK(ARRAYSZ(m_last_used_of_type) ==
-                  ARRAYSZ(you.m_quiver->m_last_used_of_type));
+                  ARRAYSZ(you.m_quiver.m_last_used_of_type));
 
     for (unsigned int i = 0; i < ARRAYSZ(m_last_used_of_type); i++)
     {
         m_last_used_of_type[i] =
-            _get_pack_slot(you.m_quiver->m_last_used_of_type[i]);
+            _get_pack_slot(you.m_quiver.m_last_used_of_type[i]);
     }
 }
 
 preserve_quiver_slots::~preserve_quiver_slots()
 {
-    if (!you.m_quiver)
-        return;
-
     for (unsigned int i = 0; i < ARRAYSZ(m_last_used_of_type); i++)
     {
         const int slot = m_last_used_of_type[i];
         if (slot != -1)
         {
-            you.m_quiver->m_last_used_of_type[i] = you.inv[slot];
-            you.m_quiver->m_last_used_of_type[i].quantity = 1;
+            you.m_quiver.m_last_used_of_type[i] = you.inv[slot];
+            you.m_quiver.m_last_used_of_type[i].quantity = 1;
         }
     }
     you.redraw_quiver = true;

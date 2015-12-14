@@ -11,10 +11,12 @@
 #include "libutil.h"
 #include "l_libs.h"
 #include "misc.h" // erase_val
+#include "options.h"
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
 #include "unicode.h"
+#include "version.h"
 
 #define BUGGY_PCALL_ERROR  "667: Malformed response to guarded pcall."
 #define BUGGY_SCRIPT_ERROR "666: Killing badly-behaved Lua script."
@@ -45,6 +47,7 @@ static int  _clua_guarded_pcall(lua_State *);
 static int  _clua_require(lua_State *);
 static int  _clua_dofile(lua_State *);
 static int  _clua_loadfile(lua_State *);
+static string _get_persist_file();
 
 CLua::CLua(bool managed)
     : error(), managed_vm(managed), shutting_down(false),
@@ -63,8 +66,8 @@ CLua::~CLua()
     // themselves from the listener list when we notify them of a
     // shutdown.
     const vector<lua_shutdown_listener*> slisteners = shutdown_listeners;
-    for (int i = 0, size = slisteners.size(); i < size; ++i)
-        slisteners[i]->shutdown(*this);
+    for (lua_shutdown_listener *listener : slisteners)
+        listener->shutdown(*this);
     shutting_down = true;
     if (_state)
         lua_close(_state);
@@ -130,6 +133,53 @@ void CLua::save(writer &outf)
     string res;
     callfn("c_save", ">s", &res);
     outf.write(res.c_str(), res.size());
+}
+
+void CLua::save_persist()
+{
+    string persist;
+    // We load persist.lua immediately before calling c_save_persist so
+    // that we know that it hasn't been overwritten by a player version.
+    execfile("dlua/persist.lua", true, true);
+    callfn("c_save_persist", ">s", &persist);
+    if (Options.no_save)
+        return;
+
+    FILE *f;
+    const string persistfile = _get_persist_file();
+
+    // Don't create the file if there's no need to do so.
+    if (persist.empty() && !file_exists(persistfile))
+        return;
+
+    f = fopen_u(persistfile.c_str(), "w");
+    if (!f)
+    {
+        mprf(MSGCH_ERROR, "Couldn't open %s for writing!", persistfile.c_str());
+        return;
+    }
+
+    fprintf(f, "-- %s %s persistent clua file\n"
+               "-- WARNING: This file is entirely auto-generated.\n"
+            "\n",
+            OUTS(CRAWL), // ok, localizing the game name is not likely
+            OUTS(Version::Long)); // nor the version string
+    fprintf(f, "%s", persist.c_str());
+    fclose(f);
+}
+
+void CLua::load_persist()
+{
+    if (Options.no_save)
+        return;
+    string persistfile = _get_persist_file();
+    if (!file_exists(persistfile))
+        return;
+    FileLineInput f(persistfile.c_str());
+    string script;
+    while (!f.eof())
+        script += f.get_line() + "\n";
+    execstring(script.c_str());
 }
 
 int CLua::file_write(lua_State *ls)
@@ -568,26 +618,12 @@ maybe_bool CLua::callmaybefn(const char *fn, const char *params, ...)
     return callmaybefn(fn, params, args);
 }
 
-static bool _tobool(maybe_bool mb, bool def)
-{
-    switch (mb)
-    {
-    case MB_TRUE:
-        return true;
-    case MB_FALSE:
-        return false;
-    case MB_MAYBE:
-    default:
-        return def;
-    }
-}
-
 bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
 {
     va_list args;
     va_start(args, params);
     maybe_bool r = callmbooleanfn(fn, params, args);
-    return _tobool(r, def);
+    return tobool(r, def);
 }
 
 bool CLua::proc_returns(const char *par) const
@@ -753,6 +789,7 @@ void CLua::init_lua()
     {
         lua_register(_state, "pcall", _clua_guarded_pcall);
         execfile("dlua/userbase.lua", true, true);
+        execfile("dlua/persist.lua", true, true);
     }
 
     lua_pushboolean(_state, managed_vm);
@@ -1173,6 +1210,11 @@ static int _clua_dofile(lua_State *ls)
 string quote_lua_string(const string &s)
 {
     return replace_all_of(replace_all_of(s, "\\", "\\\\"), "\"", "\\\"");
+}
+
+static string _get_persist_file()
+{
+    return Options.filename + ".persist";
 }
 
 /////////////////////////////////////////////////////////////////////

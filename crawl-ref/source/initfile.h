@@ -18,7 +18,8 @@ string gametype_to_str(game_type type);
 
 job_type str_to_job(const string &str);
 
-string read_init_file(bool runscript = false);
+string find_crawlrc();
+void read_init_file(bool runscript = false);
 
 struct newgame_def;
 newgame_def read_startup_prefs();
@@ -84,12 +85,12 @@ class StringLineInput : public LineInput
 public:
     StringLineInput(const string &s) : str(s), pos(0) { }
 
-    bool eof()
+    bool eof() override
     {
         return pos >= str.length();
     }
 
-    string get_line()
+    string get_line() override
     {
         if (eof())
             return "";

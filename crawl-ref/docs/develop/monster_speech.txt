@@ -42,15 +42,15 @@ and restart the game to test your changes.
 
 
 Contents:
- A.  Monster speech probabilities
- B.  A simple example
- C.  Key lookup in detail
- D.  Values in detail
- E.  Testing your changes
- F.  Publishing your changes
+ A. Monster speech probabilities
+ B. A simple example
+ C. Key lookup in detail
+ D. Values in detail
+ E. Testing your changes
+ F. Publishing your changes
 
 
-A.  Monster speech probabilities
+A. Monster speech probabilities
 ================================
 
 Not all monsters are equally likely to speak. Rather, there are
@@ -97,7 +97,7 @@ run out. In that case the monster always speaks if the player can see
 the grid the monster is on (assuming that there's a speech entry defined
 for that occasion, of course).
 
-B.  A simple example
+B. A simple example
 ====================
 
 If you have a look at some of the speech files, you'll see that all
@@ -171,7 +171,7 @@ This is a special command; it prints no message. See below for more
 details on special commands.
 
 
-C.  Key lookup in detail
+C. Key lookup in detail
 ========================
 
 Key lookup is always case-insensitive. The game will make many
@@ -422,7 +422,7 @@ monster will say nothing in that circumstance.
 Special monster speech
 ----------------------
 
-Rarely, monster speech will also rely on hard-coded keys.  If such a
+Rarely, monster speech will also rely on hard-coded keys. If such a
 hard-coded key is changed or removed, the speech in question will simply
 not be printed.
 This may look odd in the game, but will have no other effect. Sometimes,
@@ -437,7 +437,7 @@ some local synonyms have been defined as well. Hopefully, the comments
 will explain what the different speech messages are used for.
 
 
-D.  Values in detail
+D. Values in detail
 ====================
 
 Spacing
@@ -628,7 +628,7 @@ to the player.
 If you want a message to be able to apply to a foe which is another
 monster in *addition* to the player, you can replace "@player" with
 "@foe" to have the variable filled out with a string appropriate for
-the foe being either the player or another monster.  If "@foe_name@"
+the foe being either the player or another monster. If "@foe_name@"
 is present then the message will only be used on monster foes which are
 named, and if "@foe_god@" or "@god_is@" is present then it will only be
 used on priestly monsters or god gift monsters.
@@ -642,7 +642,7 @@ replaced with "your" if directed at the player, or expanded like
 If you want to indicate which monster a message is directed at, you can
 put in "@to_foe@" or "@at_foe@" to fill in the foe name when the
 message is directed at a monster; when directed at the player the
-variable will be removed.  For example, with the message:
+variable will be removed. For example, with the message:
 
     @The_monster@ says @to_foe@, "Defend yourself!"
 
@@ -667,6 +667,10 @@ and when directed at the player will expand to:
 
     @The_monster@ asks, "Who are you?"
 
+The @at_foe@ and @to_foe@ tags (only) also allow specifying an alternative
+to be substituted when directed at the player:
+
+    @The_monster@ looks @at_foe/around@ nervously.
 
 Channels
 --------
@@ -818,7 +822,7 @@ Crawl looks up the noises a given monster can produce and looks for
 keys that match the string, i.e. __SHOUT, __BARK and so on.
 
 
-E.  Testing your changes
+E. Testing your changes
 ========================
 
 Get a version of Stone Soup that contains WIZARD mode. You can check
@@ -867,7 +871,7 @@ remove (or comment out) the DEBUG_MONSPEAK setting as trying to
 actually play that way would sure be annoying.
 
 
-F.  Publishing your changes
+F. Publishing your changes
 ===========================
 
 If you feel that your additions really add something to the game and

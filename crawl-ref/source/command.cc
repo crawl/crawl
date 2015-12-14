@@ -189,8 +189,9 @@ static void _print_version()
 void list_armour()
 {
     ostringstream estr;
-    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
+    for (int j = EQ_MIN_ARMOUR; j <= EQ_MAX_ARMOUR; j++)
     {
+        const equipment_type i = static_cast<equipment_type>(j);
         const int armour_id = you.equip[i];
         int       colour    = MSGCOL_BLACK;
 
@@ -209,20 +210,17 @@ void list_armour()
                                  : "unknown")
              << " : ";
 
-        if (!you_can_wear(i, true))
+        if (you_can_wear(i) == MB_FALSE)
             estr << "    (unavailable)";
-        else if (armour_id != -1 && !you_tran_can_wear(you.inv[armour_id])
-                 || !you_tran_can_wear(i))
-        {
+        else if (you_can_wear(i, true) == MB_FALSE)
             estr << "    (currently unavailable)";
-        }
         else if (armour_id != -1)
         {
             estr << you.inv[armour_id].name(DESC_INVENTORY);
             colour = menu_colour(estr.str(), item_prefix(you.inv[armour_id]),
                                  "equip");
         }
-        else if (!you_can_wear(i))
+        else if (you_can_wear(i) == MB_MAYBE)
             estr << "    (restricted)";
         else
             estr << "    none";
@@ -240,8 +238,9 @@ void list_jewellery()
     int cols = get_number_of_cols() - 1;
     bool split = you.species == SP_OCTOPODE && cols > 84;
 
-    for (int i = EQ_LEFT_RING; i < NUM_EQUIP; i++)
+    for (int j = EQ_LEFT_RING; j < NUM_EQUIP; j++)
     {
+        const equipment_type i = static_cast<equipment_type>(j);
         if (!you_can_wear(i))
             continue;
 
@@ -264,11 +263,8 @@ void list_jewellery()
                                        : "unknown";
 
         string item;
-        if (jewellery_id != -1 && !you_tran_can_wear(you.inv[jewellery_id])
-            || !you_tran_can_wear(i))
-        {
+        if (you_can_wear(i, true) == MB_FALSE)
             item = "    (currently unavailable)";
-        }
         else if (jewellery_id != -1)
         {
             item = you.inv[jewellery_id].name(DESC_INVENTORY);
@@ -297,18 +293,6 @@ void list_jewellery()
         else
             mprf(MSGCH_EQUIPMENT, "%s%s", jstr.c_str(), item.c_str());
     }
-}
-
-void toggle_viewport_monster_hp()
-{
-    crawl_state.viewport_monster_hp = !crawl_state.viewport_monster_hp;
-    viewwindow();
-}
-
-void toggle_viewport_weapons()
-{
-    crawl_state.viewport_weapons = !crawl_state.viewport_weapons;
-    viewwindow();
 }
 
 static bool _cmdhelp_textfilter(const string &tag)
@@ -442,7 +426,6 @@ struct help_file
 static help_file help_files[] =
 {
     { "crawl_manual.txt",  '*', true },
-    { "../README.txt",     '!', false },
     { "aptitudes.txt",     '%', false },
     { "quickstart.txt",    '^', false },
     { "macros_guide.txt",  '~', false },
@@ -580,7 +563,7 @@ class help_highlighter : public MenuHighlighter
 {
 public:
     help_highlighter(string = "");
-    int entry_colour(const MenuEntry *entry) const;
+    int entry_colour(const MenuEntry *entry) const override;
 private:
     text_pattern pattern;
     string get_species_key() const;
@@ -601,7 +584,7 @@ string help_highlighter::get_species_key() const
 {
     string result = species_name(you.species);
     // The table doesn't repeat the word "Draconian".
-    if (you.species != SP_BASE_DRACONIAN && player_genus(GENPC_DRACONIAN))
+    if (you.species != SP_BASE_DRACONIAN && species_is_draconian(you.species))
         strip_tag(result, "Draconian");
 
     result += "  ";
@@ -639,7 +622,6 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
             "aspect of Dungeon Crawl.\n"
 
             "<w>?</w>: List of commands\n"
-            "<w>!</w>: Read Me!\n"
             "<w>^</w>: Quickstart Guide\n"
             "<w>:</w>: Browse character notes\n"
             "<w>~</w>: Macros help\n"
@@ -728,32 +710,22 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
     return cmd_help.getkey();
 }
 
-static void _show_specific_help(const string &help)
+void show_specific_help(const string &key)
 {
-    vector<string> lines = split_string("\n", help, false, true);
+    const string help = getHelpString(key);
     vector<formatted_string> formatted_lines;
-    for (int i = 0, size = lines.size(); i < size; ++i)
+    for (const string &line : split_string("\n", help, false, true))
     {
         formatted_lines.push_back(
             formatted_string::parse_string(
-                lines[i], true, _cmdhelp_textfilter));
+                line, true, _cmdhelp_textfilter));
     }
     _show_keyhelp_menu(formatted_lines, false, Options.easy_exit_menu);
 }
 
 void show_levelmap_help()
 {
-    _show_specific_help(getHelpString("level-map"));
-}
-
-void show_pickup_menu_help()
-{
-    _show_specific_help(getHelpString("pick-up"));
-}
-
-void show_known_menu_help()
-{
-    _show_specific_help(getHelpString("known-menu"));
+    show_specific_help("level-map");
 }
 
 void show_targeting_help()
@@ -772,27 +744,27 @@ void show_targeting_help()
 }
 void show_interlevel_travel_branch_help()
 {
-    _show_specific_help(getHelpString("interlevel-travel.branch.prompt"));
+    show_specific_help("interlevel-travel.branch.prompt");
 }
 
 void show_interlevel_travel_depth_help()
 {
-    _show_specific_help(getHelpString("interlevel-travel.depth.prompt"));
+    show_specific_help("interlevel-travel.depth.prompt");
 }
 
 void show_stash_search_help()
 {
-    _show_specific_help(getHelpString("stash-search.prompt"));
+    show_specific_help("stash-search.prompt");
 }
 
 void show_butchering_help()
 {
-    _show_specific_help(getHelpString("butchering"));
+    show_specific_help("butchering");
 }
 
 void show_skill_menu_help()
 {
-    _show_specific_help(getHelpString("skill-menu"));
+    show_specific_help("skill-menu");
 }
 
 static void _add_command(column_composer &cols, const int column,
@@ -900,9 +872,10 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
     cols.add_formatted(
             0,
-            "    Health or Magic become full,\n"
-            "    something is detected, or after\n"
-            "    100 turns over (<w>numpad-5</w>)\n",
+            "    Health or Magic become full or\n"
+            "    something is detected. If Health\n"
+            "    and Magic are already full, stops\n"
+            "    when 100 turns over (<w>numpad-5</w>)\n",
             false, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
@@ -1030,7 +1003,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     _add_command(cols, 1, CMD_SAVE_GAME, "Save game and exit");
     _add_command(cols, 1, CMD_SAVE_GAME_NOW, "Save and exit without query");
-    _add_command(cols, 1, CMD_QUIT, "Suicide the current character");
+    _add_command(cols, 1, CMD_QUIT, "Abandon the current character");
     cols.add_formatted(1, "         and quit the game\n",
                        false, true, _cmdhelp_textfilter);
 
@@ -1072,11 +1045,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(1, "         in view\n",
                        false, true, _cmdhelp_textfilter);
     _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle terrain-only view");
-    if (!is_tiles())
-    {
-        _add_command(cols, 1, CMD_TOGGLE_VIEWPORT_MONSTER_HP, "colour monsters in view by HP");
-        _add_command(cols, 1, CMD_TOGGLE_VIEWPORT_WEAPONS, "show monster weapons");
-    }
     _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
     _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
     _add_command(cols, 1, CMD_TOGGLE_TRAVEL_SPEED, "set your travel speed to your");
@@ -1089,7 +1057,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
             true, true, _cmdhelp_textfilter);
 
     _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "show Inventory list", 2);
-    _add_command(cols, 1, CMD_LIST_EQUIPMENT, "show inventory of equipped items", 2);
     _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
     _add_command(cols, 1, CMD_FIRE, "Fire next appropriate item", 2);
     _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);
@@ -1134,13 +1101,16 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
                          CMD_DROP, 0);
     _add_command(cols, 1, CMD_DROP_LAST, "Drop the last item(s) you picked up", 2);
-    _add_command(cols, 1, CMD_BUTCHER, "Chop up a corpse", 2);
-
     {
-        string interact = (you.species == SP_VAMPIRE ? "Drain corpses on"
-                                                     : "Eat food from");
-        interact += " floor\n";
-        _add_command(cols, 1, CMD_EAT, interact, 2);
+        const bool vampire = you.species == SP_VAMPIRE;
+        string butcher = vampire ? "Bottle blood from"
+                                 : "Chop up";
+        _add_command(cols, 1, CMD_BUTCHER, butcher + " a corpse", 2);
+
+        string eat = vampire ? "Drain corpses on"
+                             : "Eat food from";
+        eat += " floor\n";
+        _add_command(cols, 1, CMD_EAT, eat, 2);
     }
 
     cols.add_formatted(
@@ -1202,9 +1172,10 @@ static void _add_formatted_hints_help(column_composer &cols)
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
     cols.add_formatted(
             0,
-            "    Health or Magic become full,\n"
-            "    something is detected, or after\n"
-            "    100 turns over (<w>numpad-5</w>)\n",
+            "    Health or Magic become full or\n"
+            "    something is detected. If Health\n"
+            "    and Magic are already full, stops\n"
+            "    when 100 turns over (<w>numpad-5</w>)\n",
             false, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
@@ -1368,7 +1339,6 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>^</w>      set piety to a value\n"
                        "<w>@</w>      set Str Int Dex\n"
                        "<w>#</w>      load character from a dump file\n"
-                       "<w>Ctrl-Z</w> gain lots of Zot Points\n"
                        "<w>&</w>      list all divine followers\n"
                        "<w>=</w>      show info about skill points\n"
                        "\n"
@@ -1416,6 +1386,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>w</w>      god mollification\n"
                        "<w>p</w>      polymorph into a form\n"
                        "<w>V</w>      toggle xray vision\n"
+                       "<w>E</w>      (un)freeze time\n"
                        "\n"
                        "<yellow>Monster related commands</yellow>\n"
                        "<w>D</w>      detect all monsters\n"

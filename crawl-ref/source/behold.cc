@@ -21,7 +21,7 @@ void player::add_beholder(const monster* mon, bool axe)
     {
         if (mons_is_siren_beholder(mon))
         {
-            if (can_see(mon))
+            if (can_see(*mon))
             {
                 mprf("%s's singing sounds muted, and has no effect on you.",
                      mon->name(DESC_THE).c_str());
@@ -31,7 +31,7 @@ void player::add_beholder(const monster* mon, bool axe)
         }
         else
         {
-            if (can_see(mon))
+            if (can_see(*mon))
                 mprf("%s's is no longer quite as mesmerising!", mon->name(DESC_THE).c_str());
             else
                 mpr("Your mesmeriser suddenly seems less interesting!");
@@ -144,7 +144,7 @@ static void _removed_beholder_msg(const monster* mon)
     {
         if (mons_is_siren_beholder(mon))
         {
-            if (you.can_see(mon))
+            if (you.can_see(*mon))
             {
                 mprf("%s's singing becomes strangely muted.",
                      mon->name(DESC_THE).c_str());
@@ -154,7 +154,7 @@ static void _removed_beholder_msg(const monster* mon)
         }
         else
         {
-            if (you.can_see(mon))
+            if (you.can_see(*mon))
                 mprf("%s's is no longer quite as mesmerising!", mon->name(DESC_THE).c_str());
             else
                 mpr("Your mesmeriser suddenly seems less interesting!");
@@ -163,7 +163,7 @@ static void _removed_beholder_msg(const monster* mon)
         return;
     }
 
-    if (you.can_see(mon))
+    if (you.can_see(*mon))
     {
         if (silenced(you.pos()) || silenced(mon->pos()))
         {

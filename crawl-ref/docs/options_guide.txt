@@ -47,15 +47,20 @@ The contents of this text are:
                 tc_excluded, tc_exclude_circle,
                 runrest_ignore_message, runrest_stop_message,
                 runrest_safe_poison, runrest_ignore_monster,
-                trapwalk_safe_hp, rest_wait_both, auto_exclude
+                rest_wait_both, rest_wait_percent, explore_auto_rest,
+                auto_exclude
 3-g     Command Enhancements.
                 auto_switch, travel_open_doors, easy_unequip, equip_unequip,
                 jewellery_prompt, easy_confirm, allow_self_target,
                 confirm_butcher, easy_eat_chunks, easy_quit_item_prompts,
-                easy_exit_menu, sort_menus, spell_slot, autofight_stop,
-                autofight_throw, autofight_throw_nomove, autofight_fire_stop,
-                autofight_caught, automagic_enable, automagic_slot,
-                automagic_fight, automagic_stop, fail_severity_to_confirm
+                easy_exit_menu, ability_menu, sort_menus, spell_slot,
+                item_slot, ability_slot, autofight_stop, autofight_hunger_stop,
+                autofight_hunger_stop_undead, autofight_throw,
+                autofight_throw_nomove, autofight_fire_stop, autofight_caught,
+                autofight_wait, autofight_prompt_range,
+                automagic_enable, automagic_slot, automagic_fight,
+                automagic_stop, fail_severity_to_confirm, easy_door,
+                warn_hatches, enable_recast_spell, confirm_action
 3-h     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -65,7 +70,8 @@ The contents of this text are:
                 mlist_targeting, msg_min_height, msg_max_height,
                 messages_at_top, skill_focus, msg_condense_repeats,
                 msg_condense_short, show_travel_trail, monster_list_colour,
-                view_delay, force_more_message, use_animations, cloud_status
+                view_delay, force_more_message, flash_screen_message,
+                use_animations, cloud_status
 3-i     Colours (messages and menus)
                 menu_colour, message_colour
 3-j     Missiles.
@@ -74,10 +80,10 @@ The contents of this text are:
                 plain, prompt, god, pray, duration, danger, food, warning,
                 recovery, talk, talk_visual, timed_portal, sound,
                 intrinsic_gain, mutation, monster_spell, monster_enchant,
-                friend_spell, friend_enchant, friend_action, monster_damage,
-                monster_target, banishment, rotten_meat, equipment, floor,
-                multiturn, examine, examine_filter, diagnostics, error,
-                tutorial, orb, hell_effect
+                monster_warning, friend_spell, friend_enchant, friend_action,
+                monster_damage, monster_target, banishment, rotten_meat,
+                equipment, floor, multiturn, examine, examine_filter,
+                diagnostic, error, tutorial, orb, hell_effect, dgl_message
 3-l     Inscriptions.
                 autoinscribe, show_god_gift
 3-m     Macro related Options.
@@ -123,7 +129,7 @@ The contents of this text are:
 5-a     All OS.
                 mouse_input, wiz_mode, explore_mode, char_set, colour,
                 display_char, feature, mon_glyph, item_glyph,
-                use_fake_player_cursor, show_player_species, fake_lang
+                use_fake_player_cursor, show_player_species, fake_lang, pizza
 
 5-b     DOS and Windows.
                 dos_use_background_intensity
@@ -364,7 +370,9 @@ restart_after_save = false
 
 default_manual_training = false
         When set to true, new characters will start with skill training
-        set to manual mode instead of automatic mode.
+        set to manual mode instead of automatic mode. This will also set the
+        [!] selection on the skill (m) menu to "cost" by default, instead of
+        "training".
 
 autopickup_starting_ammo = true
         When set, at game start, autopickup is forced on (as per the \
@@ -680,6 +688,14 @@ scroll_margin = 2
         An aliased option that sets both scroll_margin_x and
         scroll_margin_y.
 
+always_show_exclusions = true
+        If true, display travel exclusions and their exclusion radius in
+        the viewport. Exclusions are always visible on the level map
+        (access with X) regardless of the value of this option.
+        Exclusions are also visible in terrain-only mode (access with |).
+        This option has no effect in tiles builds, where exclusions are
+        always shown both in the viewport and on the level map.
+
 3-f     Travel and Exploration.
 -------------------------------
 
@@ -889,15 +905,19 @@ runrest_ignore_monster ^= <regex>:<distance>, <regex>:<distance>, ...
         and resting as long as the distance is at least 3. If a monster matches
         multiple expressions, its distance is compared with the first match.
 
-trapwalk_safe_hp = true
-        If set to false, mechanical traps will be considered safe for travel
-        at any HP. Otherwise, you will get a prompt when walking onto one and
-        autotravel will avoid them.
-
 rest_wait_both = false
         If rest_wait_both is set to true then resting will only stop
         when both HP and MP are fully restored, not when either one of
         them is restored.
+
+rest_wait_percent = 100
+        When resting, if your HP or MP is below this percentage of being full,
+        it will stop resting when this percent of maximum HP or MP is refilled.
+        Resting after this point will still rest up to 100%.
+
+explore_auto_rest = false
+        If true, auto-explore waits until your HP and MP are both at
+        rest_wait_percent before moving.
 
 auto_exclude += <monster name>, <monster name>, ...
         (List option)
@@ -911,10 +931,9 @@ auto_exclude += <monster name>, <monster name>, ...
 -----------------------------
 
 auto_switch = false
-        If you've got a melee weapon in slot a and a ranged weapon in
-        slot b (or the opposite), this option will allow you to
-        automatically switch to the appropriate weapon when firing or
-        attacking in melee.
+        This option will allow you to automatically switch to an appropriate
+        weapon when firing or attacking in melee, as long as the one you are
+        wielding and the one you switch to are both in slot 'a' or 'b'.
 
 travel_open_doors = true
         If this is set to false, autoexplore/travel will not open doors,
@@ -935,14 +954,19 @@ jewellery_prompt = false
         an item to remove, instead of skipping the prompt if only one item
         of jewellery is equipped.
 
+show_uncursed = true
+        Whether items that are known to be uncursed will contain "uncursed"
+        as part of their displayed name.
+
 easy_confirm = (none | safe | all)
         Make confirmation questions easier to answer:
            none = force capitals on Y/N questions
            safe = force only on dangerous questions (default)
             all = never force capitals
-        WARNING TO KEYPAD USERS: The number 7 is mapped to the letter
-        'y', which can result in accidentally answering yes to
-        questions.
+        WARNING TO PUTTY USERS: If your Putty configuration sets the
+        numeric keypad to "NetHack mode", the keypad '7' will be mapped
+        to the letter 'y', which can result in accidentally answering
+        yes to questions.
 
 allow_self_target = (yes | no | prompt)
         Allow targeting yourself with risky magic (e.g., the spell
@@ -966,9 +990,11 @@ easy_eat_chunks = false
         to eat, and eat it without prompting.
         You will always be prompted to eat harmful chunks.
 
-auto_eat_chunks = false
+auto_eat_chunks = true
         Setting this option to true will allow you to automatically eat a chunk
         if you get hungry while you are travelling, auto-exploring or resting.
+        Automatic eating is disabled whenever autopickup is disabled, whether
+        with ctrl-a or because of an invisible monster.
 
 easy_quit_item_prompts = true
         Setting this option to true allows the quitting of item listing
@@ -980,6 +1006,12 @@ easy_quit_item_prompts = true
 easy_exit_menu = false
         In multidrop (and pickup) menus, paging past the end will drop
         out of the menu if easy_exit_menu is true.
+
+ability_menu = true
+        Always show the full-screen 'a'bility menu. If false, 'a' prompts
+        in the message area, and the menu can be seen with '?' or '*'.
+
+        Setting this option to false has no effect in Android tiles builds.
 
 sort_menus = [menu:](true | false | auto:X)[:sort_order]
         Controls if and how items are sorted in inventory and pickup
@@ -1034,7 +1066,7 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
           (quantities, curse-status, etc.)
 
         * dbname:
-          Sorts based on an item's unqiue internal name which is linked
+          Sorts based on an item's unique internal name which is linked
           to its description. Items with the same description will be
           grouped together.
 
@@ -1108,12 +1140,16 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
 
 spell_slot ^= <regex>:<list of spell letters>
         (Ordered list option, one value per line)
-        When you memorise any spell that matches the regex, it will
-        assign itself to the first available letter in the list. (If
-        all letters in the list are occupied for each regex the spell
-        matches, it will use the default ordering abc...xyzABC..XYZ.)
-        If a spell matches multiple expressions, only the first is
-        considered.
+        When you memorise any spell that matches the regex, it will assign
+        itself to the first available letter in the list. A + in the list of
+        letters turns on "overwrite mode": all letters up to the next "-" are
+        considered available even if already assigned; in that case, any
+        spell already assigned to that slot, as long as it does not also
+        match the same <regex>, will be moved.
+
+        If all letters in the list are occupied for each regex the spell
+        matches, it will use the default ordering abc...xyzABC..XYZ. If a
+        spell matches multiple regexes, only the first is considered.
 
         Examples:
         * if you want Haste to be placed on H:
@@ -1121,28 +1157,67 @@ spell_slot ^= <regex>:<list of spell letters>
         * if you want Deflect Missiles to be placed on r normally or R if
           r is unavailable:
             spell_slot ^= Deflect:rR
+        * if you want the first "Bolt" spell to be placed on a, even if
+          there is already a non-bolt spell there:
+            spell_slot ^= Bolt:+a
         * if you want to change the default spell slot assignment
           to use capital letters: (place this after all other
           spell_slot lines):
             spell_slot += .*:ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
-item_slot ^= <regex>:<inventory letter>
+item_slot ^= <regex>:<inventory letters>
         (Ordered list option, one value per line)
-        Uses the same interface as spell_slot.
+        Uses the same interface as spell_slot, except that overwrite mode
+        is on by default; overwrite mode can be disabled with a - in the
+        list of letters.
+
         Additionally, the item_slot option is applied on an item when it is
         identified, so it can be moved to the right place even if it was
         picked up unidentified.
-        Also, item_slot will cause items to be moved to their designated spot
-        even if there already is an item there, unlike spell_slot. However, if
-        that item matches the regex as well, it will try the next inventory
-        letter the player specified, and see if that slot is empty or has an
-        item that doesn't match the regex.
+
+ability_slot ^= <regex>:<ability letters>
+        (Ordered list option, one value per line)
+        Uses the same interface as spell_slot, but applies to abilities
+        in the 'a' menu.
 
 autofight_stop = 30
         Autofight will not act if your HP is at or lower than this
         percentage of your max HP. For example, to remove this stop
         you would want:
             autofight_stop = 0
+
+autofight_hunger_stop = 0
+        Autofight will not act if your nutrition level is at or lower than
+        this value:
+
+          -1: Fainting
+           0: Starving (default)
+           1: Near Starving
+           2: Very Hungry
+           3: Satiated (no status light)
+           4: Full
+           5: Very Full
+           6: Engorged (never autofight)
+
+        By default, this option has no effect on undead players, but see
+        autofight_hunger_stop_undead below.
+
+        To disable this stop, set it to -2 or to any non-numeric value,
+        for example:
+            autofight_hunger_stop = never
+        or even:
+            autofight_hunger_stop =
+
+autofight_hunger_stop_undead = false
+        If true, autofight_hunger_stop applies to Vampires and Ghouls. It
+        never applies to Mummies or players in Lich form. To enable hunger
+        stops for Ghouls but not for Vampires, use conditional Lua:
+
+          : if you.race() == "Ghoul" then
+          autofight_hunger_stop_undead = true
+          : else
+          autofight_hunger_stop_undead = false
+          : end
 
 autofight_throw = false
         If your quiver contains a throwable item, autofight will throw it
@@ -1162,6 +1237,17 @@ autofight_fire_stop = false
 autofight_caught = false
         If true, autofight will attempt to escape webs or nets that are
         holding you, even if no enemies are in view.
+
+autofight_wait = false
+        If true, ===hit_closest_nomove while not in range of an enemy will
+        wait for a turn instead of aborting autofight.
+
+autofight_prompt_range = true
+        When wielding a weapon that would normally cause a prompt on attacking
+        (such as a weapon with a !a inscription, or one disliked by your god),
+        if this option is true then the prompt will be displayed when autofight
+        tries to walk towards an enemy, instead of only when actually trying
+        to attack.
 
 automagic_enable = false
         If true, the autofight function will resort to casting an assigned
@@ -1194,6 +1280,25 @@ fail_severity_to_confirm = 3
           1: yellow or higher
 
         If the value 0 or -1 is given, never prompt about miscasts.
+
+easy_door = true
+        When (O)pening or (C)losing doors, do not prompt for a direction
+        if there is only one adjacent door. This option does not affect
+        opening doors by walking into them.
+
+warn_hatches = false
+        Ask for confirmation before using a one-way escape hatch or shaft.
+
+enable_recast_spell = true
+        If enabled, allows recasting the previously cast spell by pressing
+        Enter or '.' at the spellcasting prompt.
+
+confirm_action += <regex>, <regex>, ...
+        (List option)
+        Casting a spell with a name matching any of the given regular
+        expressions will prompt before use. In the future, this option will
+        control the use of abilities, evocables, etc. but that functionality
+        has not been added yet.
 
 3-h     Messages and Display Enhancements.
 ------------------------------------------
@@ -1246,7 +1351,8 @@ clear_messages = false
 show_more = true
         Setting this option to false will cause the game not to prompt
         if more than a window-full of messages are output at once. This
-        option has no effect if clear_messages is set.
+        option has no effect if clear_messages is set. Additionally, it
+        has no effect on whether force_more_message triggers.
 
 small_more = false
         With small_more = false (default), the --more-- prompt is on a
@@ -1398,10 +1504,17 @@ use_animations -= beam, range, hp, monster_in_sight, pickup, monster, player,
 
 force_more_message += <regex>, <regex>
         (List option)
-        Any message that contains a regex specified here, will enforce a
-        -More- prompt, so it can be used to highlight really important
-        events.
+        Any message that contains a regex specified here will enforce a
+        --More-- prompt, so it can be used to highlight really important
+        events. This option ignores the show_more option.
         The syntax is identical to that of runrest_ignore_message (3-g).
+
+flash_screen_message += <regex>, <regex>
+        (List option)
+        Any message that contains a regex specified here will flash the
+        screen yellow, so it can be used to highlight very important events
+        indeed.
+        The syntax is identical to that of force_more_message.
 
 cloud_status = true
         Whether to show the "Cloud" status light; defaults to true, except if
@@ -1570,6 +1683,7 @@ CHANNEL_NAME can currently be one of these:
    mutation        = gain/lose mutations
    monster_spell   = messages about monsters gesturing or casting spells
    monster_enchant = messages pertaining to monster enchantments
+   monster_warning = monsters coming into view
    friend_spell    = as monster_spell, but only for friendly monsters
    friend_enchant  = as monster_enchant, but only for friendly monsters
    friend_action   = other actions by friendly monsters
@@ -1582,11 +1696,12 @@ CHANNEL_NAME can currently be one of these:
    multiturn       = indicates long actions (wearing armour, dissecting etc.)
    examine         = messages from examining your surroundings
    examine_filter  = boring messages from examining your surroundings
-   diagnostics     = debugging messages
+   diagnostic      = debugging messages
    error           = error messages
    tutorial        = messages from the tutorial
    orb             = messages about the Orb of Zot
    hell_effect     = messages about environmental effects of the Hells
+   dgl_message     = messages from watchers (online console games only)
 
 The channel options are
    mute      = show no messages from channel (dangerous, be careful!)
@@ -1635,6 +1750,30 @@ show_god_gift = unident|yes|no
 
 3-m     Macro related Options.
 ------------------------------
+macros += M \{9} za
+        This options adds a macro or keymap.
+
+        Each definition consists of exactly three arguments separated by
+        spaces. The first one describes whether it is a macro or a keymap:
+        "M" macro,
+        "K"  default context keymap,
+        "K1" level-map context keymap,
+        "K2" targeting context keymap
+        "K3" confirmation context keymap.
+
+        The second argument describes the trigger key and consists the
+        character or keycode of that key (for example 'a', 'A' or \{9} for the
+        A, Shift-A or Tab keys). The third argument describes the macro or
+        keymap action and consists the command sequence to be associated with
+        the second argument. (for example "zap" for zapping the spell in slot a
+        at the previous target).
+
+        If you have any macros/keymaps in your rc file, they will automatically
+        be saved to your macro.txt file on load, silently overriding any
+        macros/keymaps already saved to your macro.txt file.
+
+        This syntax is based on but not identical to the format used in the
+        macro.txt file.
 
 flush.failure = true
 flush.command = false
@@ -2005,7 +2144,9 @@ dump_order += monlist,kills,action_counts
         locations and names of all the vaults that have been generated
         in the game. This will only be included in the final dump
         which happens when you die, quit or win (or in ordinary dumps
-        while in wizard mode).
+        while in wizard mode). The "vaults" section is enabled by default
+        in trunk builds of Crawl (not releases or pre-release betas),
+        appearing between "kills" and "action_counts".
 
 dump_book_spells = true
         By default all randart spellbooks in inventory will have all their
@@ -2325,6 +2466,9 @@ item_glyph -= <regexp>
         Removing a rule with -= removes all rules using the exact regexp
         provided; do not specify a colour or glyph in that case.
 
+pizza = <topping name>
+        A comma-separated list of the player's preferred pizza toppings.
+
 use_fake_player_cursor = true
         Makes the main view highlight the player without using the
         terminal cursor. This means it won't flicker when the cursor
@@ -2339,9 +2483,10 @@ show_player_species = false
 fake_lang = <lang1>[,<lang2>[,...]]
         Set one or more fake languages, applied in the order provided (order
         does matter!) The same language can be set more than once, though it
-        may not end up making much sense...
+        may not end up making much sense... At most 3 fake langs can be set at
+        a time.
 
-        Options are: (dwarven|jagerkin|kraut|runes|wide|grunt|butt)
+        Options are: (dwarven|jagerkin|kraut|runes|wide|grunt|butt:<n>)
         Experiment to find out what they do!
 
 5-b     DOS and Windows.

@@ -136,8 +136,6 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
         else if (cell.flags & MAP_HOT)
             colour = ETC_FIRE;
 #endif
-        else if (cell.flags & MAP_GOLDEN)
-            colour = ETC_GOLD;
     }
 
     if (Options.show_travel_trail && travel_trail_index(loc) >= 0)
@@ -183,7 +181,7 @@ static int _get_mons_colour(const monster_info& mi)
 
     int col = mi.colour();
 
-    // We really shouldn't store unmodified colour.  This hack compares
+    // We really shouldn't store unmodified colour. This hack compares
     // effective type, but really, all redefinitions should work instantly,
     // rather than for newly spawned monsters only.
     monster_type stype = _show_mons_type(mi);
@@ -269,7 +267,7 @@ static cglyph_t _get_item_override(const item_def &item)
         {
             // You may have a rule that sets the glyph but not colour for
             // axes, then another that sets colour only for artefacts
-            // (useless items, etc).  Thus, apply only parts that apply.
+            // (useless items, etc). Thus, apply only parts that apply.
             if (ir.second.ch)
                 g.ch = ir.second.ch;
             if (ir.second.col)

@@ -2,14 +2,14 @@ A.   Unit tests
 ===============
 
 Crawl has a set of unit tests in the source/test/ directory, with each lua
-file being a separate unit test.  To use unit tests, you must compile Crawl
+file being a separate unit test. To use unit tests, you must compile Crawl
 either with the macro DEBUG_DIAGNOSTICS defined (the debug make target) or
 with both the macros DEBUG and DEBUG_TESTS defined (the wizard make target,
-plus -DDEBUG_TESTS).  You can then do
+plus -DDEBUG_TESTS). You can then do
 
     crawl -test
 
-to run the unit tests.  To run paricular unit tests, you can do
+to run the unit tests. To run paricular unit tests, you can do
 
     crawl -test foo
 
@@ -17,7 +17,7 @@ and that will run all unit tests which have "foo" in their file name.
 
 If you want to write your own unit tests, take a look at the files in
 source/test for examples.  test/los_maps.lua and test/bounce.lua have
-examples which use vaults (maps) which are located in test/des.  You
+examples which use vaults (maps) which are located in test/des. You
 might need to create new Lua functions in the source/l_*.cc files if none of
 the crawl.foo()/dgn.foo()/etc functions do what you need.
 
@@ -28,7 +28,7 @@ B.    Testing with the arena
 ============================
 
 Crawl's arena mode can be used to pit one set of monsters against another and
-watch them fight.  For example,
+watch them fight. For example,
 
     crawl -arena "3 rat v 2 kobold"
 
@@ -37,7 +37,7 @@ pits 3 rats against 2 kobolds.
 If you put "arena_dump_msgs = true" into your crawl init file, then most
 messages generated during the fight will be dumped to the file "arena.result".
 Also adding "arena_dump_msgs_all = true" will additionally cause messages to
-the diagnostics channel to be dumped.  Messages to some channels will be
+the diagnostics channel to be dumped. Messages to some channels will be
 prefixed with the channel name, to make grepping for results easier:
 
     MSGCH_ERROR is prefixed with "ERR:"
@@ -55,8 +55,8 @@ Using the arena to test problems with specific monsters is rather easy:
 
     crawl -arena "problem monster v problem monster"
 
-For specific ego items is not much harder.  Say you had a problem with chaos
-branded melee items.  You could do
+For specific ego items is not much harder. Say you had a problem with chaos
+branded melee items. You could do
 
     crawl -arena "10 vault guard; long sword ego:chaos v
                   10 vault guard; long sword ego:chaos"
@@ -91,7 +91,7 @@ you can catch any crashes for unknown issues.
     crawl -arena "10 random v 10 random"
 
 would pit two teams of random monsters against each other, appropriate for
-D:20.  To change the place chosen for choosing random monsters, you can use
+D:20. To change the place chosen for choosing random monsters, you can use
 "arena_place:"
 
     crawl -arena "arena_place:D:27 10 random v 10 random"
@@ -108,7 +108,7 @@ Creatures as well):
     crawl -arena "random_uniques 10 random v 10 random"
 
 You might find that certain random monsters overwhelm the arena run, like
-maybe jellies are eating so many corpses that they fill the whole arena.  You
+maybe jellies are eating so many corpses that they fill the whole arena. You
 can forbid monsters with certain glyphs from being randomly generated:
 
     crawl -arena "ban_glyphs:J 10 random v 10 random"
@@ -117,10 +117,10 @@ B.3  Getting the arena to run for a long time
 ==============================================
 
 By default the arena exits when all the monsters on one team die, ending the
-round.  You can specify that multiple rounds happen by adding "t:num", but
-that's limited to 99 rounds.  A way to make it so that the arena will run
+round. You can specify that multiple rounds happen by adding "t:num", but
+that's limited to 99 rounds. A way to make it so that the arena will run
 forever (or until you press ESC to exit it) is to add the "respawn" tag to the
-arena specification.  You can then leave Crawl running under a debugger
+arena specification. You can then leave Crawl running under a debugger
 waiting for a crash, or simply grep the arena.result file after it's run for
 long enough.
 
@@ -140,7 +140,7 @@ If you do
 
     crawl -arena "respawn 10 random v 10 random"
 
-then the monsters tend to clump up in the middle in a huge brawl.  A way to
+then the monsters tend to clump up in the middle in a huge brawl. A way to
 spread this out is by adding "move_respawns":
 
     crawl -arena "respawn move_respawns 10 random v 10 random"
@@ -152,7 +152,7 @@ Finally, if you're using non-unique random monsters, you can add
 "cycle_random" so that the random monsters are chosen by linearly cycling
 through the monsters that can possibly appear in the place chosen by
 "arena_place:", rather than being chosen with the weights appropriate for that
-place.  This will cause rare monsters to be generated a lot more often.
+place. This will cause rare monsters to be generated a lot more often.
 
 B.4  Speeding up the arena
 ==========================
@@ -163,18 +163,18 @@ You can do this on the command line with "delay:":
     crawl -arena "delay:0 random v random"
 
 This will cause there to be no delay between turns, or when animating beams or
-explosions.  You can also set the option "arena_delay" in your init file to
+explosions. You can also set the option "arena_delay" in your init file to
 have it apply to all arena runs.
 
 B.5  Changing the arena terrain
 ===============================
 
-You can change the terrain used in the arena with the "arena:" tag.  For
+You can change the terrain used in the arena with the "arena:" tag. For
 example:
 
     crawl -arena "arena:smoke random v random"
 
-will cause the monsters to fight in an arena which is filled with smoke.  The
-available alternate terrains are in source/dat/arena.des.  If an arena you
+will cause the monsters to fight in an arena which is filled with smoke. The
+available alternate terrains are in source/dat/arena.des. If an arena you
 want is tagged with "arena_foo" in the des file, then you put "arena:foo" on
 the command line.

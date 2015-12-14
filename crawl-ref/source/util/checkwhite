@@ -4,19 +4,30 @@ use Text::Tabs;
 use Getopt::Std;
 use strict;
 
-our ($opt_m, $opt_n, $opt_t);
-getopts('t:nm'); # this removes -t and -n from @ARGV;
-my $tabstop = $opt_t if ($opt_t);
+our ($opt_a, $opt_m, $opt_M, $opt_n, $opt_t);
+getopts('amMnt:'); # this removes -t and -n from @ARGV;
+my $top_level = $opt_a;
+my $modified_only = $opt_m || $opt_M;
+my $modified_cached = $opt_m && !$opt_M;
 my $dry_run = $opt_n;
-my $modified_only = $opt_m;
 my $any_bad = 0;
+# Imported from Text::Tabs, so use our, not my.
+our $tabstop = $opt_t if ($opt_t);
 
 my @files = @ARGV;
 unless (@files)
 {
+    if ($top_level)
+    {
+        my $tldir = `git rev-parse --show-toplevel`;
+        chomp $tldir;
+        chdir($tldir) or die "(-a) cannot chdir to $tldir: $!";
+    }
+
     if ($modified_only)
     {
-        open FLIST, "git diff-index -M --name-only --cached HEAD|"
+        my $cached = $modified_cached ? "--cached" : "";
+        open FLIST, "git diff-index -M --name-only $cached --relative HEAD|"
             or die "Can't run git diff-index";
     }
     else
@@ -34,7 +45,7 @@ for (@files)
     next if -l $_;
     -f $_ or (print(STDERR "Can't read $_\n"), next);
     next if /webserver\/static\/scripts\/contrib\//i;
-    next if /\.(png|gif|ttf|ico|icns|fig|tex|eps|pdf)$/i;
+    next if /\.(png|gif|xpm|ttf|ico|icns|fig|tex|eps|pdf|psd)$/i;
     next if /\.(sln|vim|pbxproj|vsprops|plist|csproj|config|cs)$/i;
     next if /\.(vcproj|vcproj\.user|vcxproj|vcxproj\.filters)$/i;
     next if m[(^|/)\.git(modules|attributes)$];
@@ -42,6 +53,7 @@ for (@files)
     next if !/\./ and !/util\//;
     my $tab = /Makefile/i;      # Allow tabs for makefiles.
     my $bom = /\.js$/;          # And BOM for these.
+    my $french = /\.des$/;      # these may need it for functionality
     $bom = 1 if /CREDITS/;
     undef local $/;
     open F, "<$_" or die "Can't open $_";
@@ -54,7 +66,7 @@ for (@files)
     {
         print "invalid UTF-8: $file\n";
         # We don't know the actual encoding, assume a Windows-using american/
-        # frenchman/german/finn.  Sorry, polacks and russkies.
+        # frenchman/german/finn. Sorry, polacks and russkies.
         Encode::from_to($_, "CP1252", "UTF-8");
     }
     $_.="\n", print "missing newline at eof: $file\n" unless /\n$/s or /^$/;
@@ -68,6 +80,7 @@ for (@files)
     print "BOM: $file\n" if !$bom && s/\xef\xbb\xbf//sg; # U+FFEF
     print "Control statement space: $file\n" if $file =~ /\.(cc|h|js)$/i
         && s/\b(if|while|for|switch|catch)\(/$1 (/sg;
+    print "French spacing fix: $file\n" if !$french && s/\. ( [[:upper:]])/.$1/sg;
 
     if ($_ ne $cont)
     {

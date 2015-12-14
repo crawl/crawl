@@ -28,7 +28,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/areas.cc \
     $(CRAWL_PATH)/arena.cc \
     $(CRAWL_PATH)/artefact.cc \
-    $(CRAWL_PATH)/asg.cc \
     $(CRAWL_PATH)/attack.cc \
     $(CRAWL_PATH)/attitude-change.cc \
     $(CRAWL_PATH)/beam.cc \
@@ -53,6 +52,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/database.cc \
     $(CRAWL_PATH)/dbg-asrt.cc \
     $(CRAWL_PATH)/dbg-maps.cc \
+    $(CRAWL_PATH)/dbg-objstat.cc \
     $(CRAWL_PATH)/dbg-scan.cc \
     $(CRAWL_PATH)/dbg-util.cc \
     $(CRAWL_PATH)/decks.cc \
@@ -73,6 +73,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/dgnevent.cc \
     $(CRAWL_PATH)/directn.cc \
     $(CRAWL_PATH)/dlua.cc \
+    $(CRAWL_PATH)/domino.cc \
     $(CRAWL_PATH)/dungeon.cc \
     $(CRAWL_PATH)/end.cc \
     $(CRAWL_PATH)/english.cc \
@@ -109,6 +110,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/itemprop.cc \
     $(CRAWL_PATH)/items.cc \
     $(CRAWL_PATH)/jobs.cc \
+    $(CRAWL_PATH)/json.cc \
     $(CRAWL_PATH)/kills.cc \
     $(CRAWL_PATH)/l_colour.cc \
     $(CRAWL_PATH)/l_crawl.cc \
@@ -162,7 +164,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/mon-act.cc \
     $(CRAWL_PATH)/mon-behv.cc \
     $(CRAWL_PATH)/mon-cast.cc \
-    $(CRAWL_PATH)/mon-chimera.cc \
     $(CRAWL_PATH)/mon-clone.cc \
     $(CRAWL_PATH)/mon-death.cc \
     $(CRAWL_PATH)/mon-ench.cc \
@@ -194,9 +195,11 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/output.cc \
     $(CRAWL_PATH)/package.cc \
     $(CRAWL_PATH)/pattern.cc \
+    $(CRAWL_PATH)/pcg.cc \
     $(CRAWL_PATH)/perlin.cc \
     $(CRAWL_PATH)/place-info.cc \
     $(CRAWL_PATH)/place.cc \
+    $(CRAWL_PATH)/playable.cc \
     $(CRAWL_PATH)/player-act.cc \
     $(CRAWL_PATH)/player-equip.cc \
     $(CRAWL_PATH)/player-reacts.cc \
@@ -270,7 +273,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/wiz-you.cc \
     $(CRAWL_PATH)/worley.cc \
     $(CRAWL_PATH)/xom.cc \
-    $(CRAWL_PATH)/zotdef.cc \
     $(CRAWL_PATH)/tilepick.cc \
     $(CRAWL_PATH)/tileview.cc \
     $(CRAWL_PATH)/tiledoll.cc \

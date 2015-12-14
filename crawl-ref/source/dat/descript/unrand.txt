@@ -1,7 +1,7 @@
 %%%%
 Singing Sword
 
-This enchanted weapon loves nothing more than to sing to its owner, whether
+An enchanted blade which loves nothing more than to sing to its owner, whether
 they want it to or not.
 %%%%
 Sulking Sword
@@ -14,8 +14,9 @@ Screaming Sword
 %%%%
 Wrath of Trog
 
-This was the favourite weapon of the old god Trog, before it was lost. It
-induces a bloodthirsty berserker rage in warriors who use it in battle.
+A bloodstained axe that was the favourite weapon of the old god Trog, before it
+was lost. It induces a bloodthirsty berserker rage in warriors who use it in
+battle.
 %%%%
 Mace of Variability
 
@@ -25,75 +26,78 @@ such a weapon, or why, but Xom is probably to blame somehow.
 %%%%
 Glaive of Prune
 
-This weapon is the creation of a mad god, and carries a curse which transforms
-anyone wielding it into a prune. Fortunately, the curse works very slowly, and
-one can use it briefly with no consequences worse than slightly purple skin and
-a few wrinkles.
+A purple glaive that was created by a mad god, and carries a curse which
+transforms anyone wielding it into a prune. Fortunately, the curse works very
+slowly, and one can use it briefly with no consequences worse than slightly
+purple skin and a few wrinkles.
 %%%%
 Sword of Power
 
-This sword rewards the powerful with power and the meek with weakness.
+A mighty sword which rewards the powerful with power and the meek with
+weakness.
 %%%%
 Staff of Olgreb
 
-This was the weapon wielded by the mighty wizard Olgreb, before he met his fate
-somewhere within these dungeons. It increases the power of its wielder's
-poison magic, and can be evoked to activate its own venomous spells. Its touch
-may poison even resistant creatures, and it grants protection from all venoms
-while wielded.
+A staff which was once wielded by the mighty wizard Olgreb. It increases the
+power of its wielder's poison magic, and can be evoked to activate its own
+venomous spells. Its touch may poison even resistant creatures, and it grants
+protection from all venoms while wielded.
 %%%%
 Staff of Wucad Mu
 
-This staff can be evoked to restore large amounts of magical energy, but with
-the risk of damaging the user's mind. Its power depends on the wielder's
-Evocations skill.
+A crystal staff overflowing with magical energies. It can be evoked to restore
+large amounts of magical energy, but with the risk of damaging the user's mind.
+Its power depends on the wielder's Evocations skill.
 %%%%
 Vampire's Tooth
 
-This ivory-like dagger looks like it could have been crafted from the tooth of
-some enormous predatory creature. It is lethally vampiric, and restores a
+An ivory-like dagger that looks like it could have been crafted from the tooth
+of some enormous predatory creature. It is lethally vampiric, and restores a
 greater portion of life to its user than other vampiric weapons.
 %%%%
 Scythe of Curses
 
-This weapon carries a terrible and highly irritating curse, which it busily
-inflicts on both the wielder and their enemies.
+A scythe surrounded by an ominous aura of dread. It carries a terrible and
+highly irritating curse, which it busily inflicts on both the wielder and their
+enemies.
 %%%%
 Sceptre of Torment
 
-This truly accursed weapon is an instrument of Hell.
+An accursed golden sceptre, created by some unknown hellish power. It
+frequently causes agonising pain in all those unfortunate enough to gaze upon
+it.
 %%%%
 Sword of Zonguldrok
 
-This dreadful weapon is used at the user's peril. Those slain in its presence
-are reanimated by its power and forced to fight on.
+A blade imbued with the essence of a legendary necromancer. Those slain in its
+presence are reanimated by its power and forced to fight on.
 %%%%
 Sword of Cerebov
 
-Eerie flames cover its twisted blade. Its demonic power burns away some of the
-defender's fire resistance.
+A twisted blade, covered in eerie flames. Its demonic power burns away some of
+the fire resistance of those it strikes.
 %%%%
 Staff of Dispater
 
-This legendary item can unleash the fires of Hell. All but Dispater will find
-the flames sear their own flesh, as well - but since when have such details
-stopped anyone in their quest for power?
+A legendary staff, granting the power to unleash the fires of Hell — although
+not without draining the wielder's vitality in the process.
 %%%%
 Sceptre of Asmodeus
 
-This sceptre carries some of the powers of the arch-fiend Asmodeus. Evoking it
-can summon fiery demons from their infernal home to do your bidding, although
-they will not remain enslaved for long.
+A bright ruby sceptre, carrying some of the powers of the arch-fiend Asmodeus.
+Evoking it can summon fiery demons from their infernal home to do your bidding,
+although they will not remain enslaved for long.
 %%%%
 faerie dragon armour
 
-Faerie dragons were once a breed of the same species as mottled dragons. Their
-vivid colours proved to be their bane, as they alerted potential prey. They are
-now extinct, and this prized relic is one of the last proofs they ever existed.
+An enchanted suit of armour created from the scales of a rare breed of dragon,
+now thought to be extinct. This prized relic is now one of the last proofs that
+the vividly coloured faerie dragons ever existed.
 %%%%
 demon blade "Bloodbane"
 
-This blade carries the bloody taint of an inhuman madman.
+A blade forged in Hell by the sacrifice of countless tortured souls. It
+inflicts the rage and suffering of those souls upon its wielder.
 %%%%
 scimitar of Flaming Death
 
@@ -102,14 +106,14 @@ covering opponents in magical flame.
 %%%%
 eveningstar "Brilliance"
 
-This eveningstar illuminates the dungeon's recesses, but its halo may alert
-enemies to your presence. Its light is hated by the undead, and reveals the
-machinations of those who would prefer to stay invisible.
+A brightly shining eveningstar. It illuminates the dungeon's recesses, but its
+halo may alert enemies to your presence. Its light is hated by the undead, and
+reveals the machinations of those who would prefer to stay invisible.
 %%%%
 demon blade "Leech"
 
-This weapon drives its owner's mind into a narrow purpose: gorging on drained
-life force. It is unerringly vampiric, draining life every time it strikes.
+An unerringly vampiric blade which gorges itself on drained life force every
+time it strikes.
 %%%%
 dagger of Chilly Death
 
@@ -138,14 +142,14 @@ sadly, none seem to be available here.
 %%%%
 giant club "Skullcrusher"
 
-This lovely cudgel can make any ogre overjoyed — be it at a bar brawl,
-genocide, or a mixture of both.
+A massive enchanted cudgel that augments the already considerable strength of
+anyone mighty enough to wield it.
 %%%%
 glaive of the Guard
 
-This weapon was commissioned several years ago by a wealthy queen fearful for
-the safety of her vast treasury. No foe, the smith promised, could defeat a
-guard wielding this weapon!
+A glaive commissioned several years ago by a wealthy queen fearful for the
+safety of her vast treasury. No foe, the smith promised, could defeat a guard
+wielding such a weapon!
 
 The glaive was stolen a few months later, along with the rest of the queen's
 treasury; the guard, it transpired, had been caught napping. Still, it should
@@ -153,27 +157,28 @@ serve more than adequately in the hands of a waking user.
 %%%%
 sword of Jihad
 
-A long sword made of one huge piece of crystal. Legend says it was the Shining
-One's gift to a worshipper. This blade is notorious for inducing bloodthirsty
-rage in both the wielder and all of his or her mortal followers.
+A sword made of one huge piece of crystal. Legend says it was the Shining One's
+gift to a worshipper. This blade is notorious for inducing bloodthirsty rage in
+both the wielder and all of his or her mortal followers.
 %%%%
 arbalest "Hellfire"
 
-A flaming crossbow, forged in the fires of the Hells. It imbues bolts it fires
-with the raw power of its namesake, irresistible by any mortal armour or
+A flaming crossbow, forged in the fires of Gehenna. It imbues the bolts it
+fires with the raw power of its namesake, irresistible by any mortal armour or
 fireproofing.
 %%%%
 sword of the Doom Knight
 
 An adamantine great sword. Its first wielder was a worshipper of Yredelemnul
-who eschewed the use of magic in combat, preferring to destroy his enemies with
-brute force. Unfortunately for him, not all of his opponents shared his
+who eschewed the use of magic in combat, preferring to destroy her enemies with
+brute force. Unfortunately for her, not all of her opponents shared her
 limitations.
 %%%%
 morningstar "Eos"
 
-The rosy fingers of the Dawn...
+A jewelled morningstar, glowing with the light of the dawn.
 %%%%
+# TAG_MAJOR_VERSION == 34
 spear of the Botono
 
 A dark and malign artefact. It increases the potency of hexes cast by anyone
@@ -181,8 +186,8 @@ unwise enough to risk wielding it.
 %%%%
 trident of the Octopus King
 
-This trident was stolen many years ago from the Octopus King's garden. Luckily,
-he seems to be in no hurry to get it back.
+A trident stolen many years ago from the Octopus King's garden. Luckily, he
+seems to be in no hurry to get it back.
 %%%%
 mithril axe "Arga"
 
@@ -190,9 +195,10 @@ A beautiful mithril axe, probably lost by some dwarven hero.
 %%%%
 Elemental Staff
 
-This powerful staff used to belong to the leader of the Guild of Five Elements.
-In addition to the protection it provides, those skilled in Evocations may
-use it to discharge powerful blasts of elemental energy with their strikes.
+A powerful staff which used to belong to the leader of the Guild of Five
+Elements. In addition to the protection it provides, those skilled in
+Evocations may discharge powerful blasts of elemental energy when striking with
+it.
 %%%%
 heavy crossbow "Sniper"
 
@@ -203,6 +209,7 @@ longbow "Piercer"
 
 An exceptionally large metal longbow.
 %%%%
+# TAG_MAJOR_VERSION == 34
 blowgun of the Assassin
 
 This blowgun seems to guide the needle to seek the most lethal point to hit
@@ -216,24 +223,22 @@ harder it will be to find a worthy opponent.
 %%%%
 Spriggan's Knife
 
-This dainty little knife was made by Spriggans, or for Spriggans, or possibly
-from Spriggans. Anyway, it's in some way associated with those fey folk.
+A dainty little knife which was made by Spriggans, or for Spriggans, or
+possibly from Spriggans. Anyway, it's in some way associated with those fey
+folk.
 %%%%
 plutonium sword
 
-A triple sword made of weird glowing metal. Anyone hit with it stands a good chance
-of enjoying a variety of exciting new medical conditions... if they survive
-the impact of the blade itself, that is.
+A triple sword made of weird glowing metal. It irradiates those it strikes,
+causing a range of unpredictable effects — if they survive the impact of the
+blade itself, that is.
 %%%%
 great mace "Undeadhunter"
 
-Legends say that, long ago, a lich lord experimented with creating sentient
-servants instead of mindless automatons. To ensure their loyalty, he made
-weapons specially designed to destroy the magic that holds undead together.
-
-Although the lich met his end long ago, his weapons, spreading disruption among
-the undead, found use long after his passing. Sadly, this mace might be the
-last one left.
+A weapon imbued with magic to disrupt and destroy the forces binding undead
+creatures together. Legends say that, long ago, a lich lord created many
+such weapons to ensure the loyalty of his undead servants. Sadly, this mace
+might be the last one left.
 %%%%
 whip "Snakebite"
 
@@ -253,7 +258,7 @@ other way around.
 %%%%
 captain's cutlass
 
-This infamous weapon was used by a vile pirate captain to slaughter countless
+An infamous weapon, once used by a vile pirate captain to slaughter countless
 innocents. He finally met his destiny when a kraken swallowed his ship, and the
 cutlass was thought to be lost with him.
 
@@ -262,7 +267,7 @@ before it relieves them of their lives.
 %%%%
 storm bow
 
-This longbow has the colour of dark rain clouds.
+A longbow with the colour of dark rain clouds.
 {{
     if you.can_smell() then
         return "It smells like a storm just past, or one about to begin."
@@ -271,22 +276,21 @@ This longbow has the colour of dark rain clouds.
 %%%%
 large shield of Ignorance
 
-This shield, unearthed from the remains of a ruined city, bears an inscription
+A shield unearthed from the remains of a ruined city. It bears an inscription
 written in an ancient language. Scholars and wise men laboured for countless
-hours to decipher it, poring through ancient tomes and hurling theses and
-counter-theses back and forth. In time, interest faded, and a grudging
-consenus translation was settled on:
+hours to decipher it, and in time, a translation was finally settled on:
 
 "With a shield like this, who needs to think?"
 %%%%
 robe of Augmentation
 
-"The clothes make the man."
+A silk robe, woven with enchantments to enhance the wearer's physical and
+mental abilities.
 %%%%
 cloak of the Thief
 
-It allows its wearer to excel in the arts of thievery, and can be evoked to
-release thick clouds of smoke for a hasty escape.
+A pitch-black cloak which allows its wearer to excel in the arts of thievery,
+and can be evoked to release thick clouds of smoke for a hasty escape.
 %%%%
 # TAG_MAJOR_VERSION == 34
 large shield "Bullseye"
@@ -299,22 +303,24 @@ A large crown of dull bronze, set with a dazzling array of gemstones.
 %%%%
 hat of the Bear Spirit
 
-Once owned by Ukta, a powerful ogre shaman, this fur hat houses the spirit of
+A fur hat once owned by Ukta, a powerful ogre shaman. It houses the spirit of
 an especially mighty bear.
 %%%%
 robe of Misfortune
 
 A splendid flowing robe of fur and silk.
 %%%%
+# TAG_MAJOR_VERSION == 34
 cloak of Flash
 
 A cloak that twitches and jerks without any intervention.
 %%%%
 boots of the Assassin
 
-Some soft boots, specially designed by the Assassin's Guild. They make the
-wearer more perceptive of potential victims, and grant the ability to find
-vulnerabilities when attacking unaware opponents.
+A pair of soft boots, specially designed by the Assassin's Guild, that allow
+the wearer to sense potential victims nearby. They also allow the wearer to
+easily find vulnerabilities when attacking unaware opponents, allowing
+effective stabbing attacks with any weapon.
 %%%%
 Lear's hauberk
 
@@ -335,8 +341,8 @@ A leather armour made of a salamander's skin.
 %%%%
 gauntlets of War
 
-These thick steel gauntlets were Okawaru's reward for a mighty warlord. The
-owner is destined to die in battle, but what a death it will be!
+A pair of thick steel gauntlets. They were Okawaru's reward for a mighty
+warlord. The owner is destined to die in battle, but what a death it will be!
 %%%%
 shield of Resistance
 
@@ -352,10 +358,10 @@ and wisdom, but...
 %%%%
 Maxwell's patent armour
 
-Created by the famous inventor, Maxwell's armour provides unparalleled
-protective qualities at a very affordable price. His unorthodox materials
-left the armour with certain shortcomings, but he's yet to have anyone come
-back for a refund.
+A suit of armour created by the famous inventor Maxwell, providing unparalleled
+protective qualities at a very affordable price. His unorthodox materials left
+it with certain shortcomings, but he's yet to have anyone come back for a
+refund.
 %%%%
 mask of the Dragon
 
@@ -370,22 +376,21 @@ of the Night to one of her followers.
 %%%%
 armour of the Dragon King
 
-A long time ago, a mighty golden dragon built a kingdom of fire and blood.
-Titans and lesser dragons struggled with him in vain — but as with all things,
-even he was eventually cast down and undone. Of his life and deeds, this is all
-that remains.
+A suit of armour created from the enchanted scales of a once-mighty king of
+dragons. In his time, titans and lesser dragons struggled with him in vain —
+but as with all things, even he was eventually cast down and undone. Of his
+life and deeds, this is all that remains.
 %%%%
 hat of the Alchemist
 
 A dirty hat. It bears signs of surviving many weird explosions, which suggests
 it may have means of protecting the head inside from the risks involved with
-alchemy experiments. And with the kind of protections granted by this hat, it's
-certain some prior head damage was a prerequisite for even thinking about such
-experiments.
+alchemy experiments.
 %%%%
 fencer's gloves
 
-A pair of gloves made of white silk.
+A pair of gloves made of white silk. They greatly enhance their wearer's
+skill with blades.
 %%%%
 cloak of Starlight
 
@@ -393,28 +398,26 @@ A phosphorescent cloak, woven of pure light beams.
 %%%%
 ratskin cloak
 
-An enchantress with a magic loom and way too much time on her hands stitched
-this cloak from the hides of hundreds of rats, most of them orange. It's a bit
-awkward to wear and looks rather foolish, but it provides excellent protection
-from rats of all kinds.
+A cloak stitched from the hides of hundreds of hell rats, by an enchantress
+with a magic loom and too much time on her hands. It provides excellent
+protection from rats of all kinds.
 %%%%
 shield of the gong
 
-This is a heavy bronze gong that can be worn as a shield. According to certain
-mystics, beating on such a gong can grant you spiritual protection.
-
-And this shield will surely be heard!
+A heavy bronze gong that can be worn as a shield. According to some mystics,
+beating on such a gong can grant the wearer spiritual protection.
 %%%%
 amulet of the Air
 
-This sky-blue amulet must have been given its many protective properties by a
-powerful air mage. It seems the one thing they lacked was a steady hand.
+A sky-blue amulet. It must have been given its many protective properties by a
+powerful air mage, although it seems the one thing they lacked was a steady
+hand.
 %%%%
 ring of Shadows
 
 A black ring that can make its wearer one with the shadows. It creates a dark
-umbra that surrounds the wearer and increases stealth greatly, and it makes you
-and your enemies alike harder to hit.
+umbra that surrounds the wearer and increases stealth greatly, and reduces the
+accuracy of all those within it.
 %%%%
 amulet of Cekugob
 
@@ -423,15 +426,13 @@ selection of powers.
 %%%%
 amulet of the Four Winds
 
-This pendant, made of purest jade, grants its wearer an immense mystic
-strength, sufficient to shrug off all but the most potent of hostile
-enchantments.
+A pendant made of purest jade. It grants its wearer an immense mystic strength,
+sufficient to shrug off all but the most potent of hostile enchantments.
 %%%%
 necklace of Bloodlust
 
-Only the crudest of brutes would wear a necklace like this one, made of
-bloodstained human and animal teeth, and something that appears to be a piece
-of spine.
+A necklace made of bloodstained human and animal teeth, and something that
+appears to be a piece of spine.
 %%%%
 ring of Shaolin
 
@@ -440,7 +441,8 @@ body, allowing for impressive feats of dexterity.
 %%%%
 ring of Robustness
 
-A plain steel ring.
+A plain steel ring that causes its wearer to become substantially more
+resilient.
 %%%%
 ring of the Mage
 
@@ -449,8 +451,9 @@ wearer.
 %%%%
 brooch of Shielding
 
-Back in the good old days, every adventurer had one of these handy devices.
-That, and a pony.
+A brooch with an intricate inlaid design, providing a range of magical
+protections. Back in the good old days, every adventurer had one of these handy
+devices. That, and a pony.
 %%%%
 robe of Clouds
 
@@ -458,54 +461,52 @@ A robe of a material as flimsy and insubstantial as the clouds.
 %%%%
 hat of Pondering
 
-The favorite hat of the slug wizard Gastronok, stained with reddish slime and
+The favourite hat of the slug wizard Gastronok, stained with reddish slime and
 enchanted to aid in his arcane pondering. It has been specially enchanted to
 protect against the effects of salt.
 %%%%
 obsidian axe
 
-This axe has had a curse placed on it by one of the lords of Pandemonium so
-that unsuspecting adventurers would unleash demons into this world. Beware, for
-this axe has ways of taking its wielder under its command...
+An axe with a powerful curse placed on it by one of the lords of Pandemonium,
+so that unsuspecting adventurers would unleash demons into this world. Beware,
+for it has ways of taking its wielder under its command...
 %%%%
 lightning scales
 
-These scales have been fashioned into armour for a naga's lower body. Faintly
+A set of scales fashioned into armour for a naga's lower body. Faintly
 crackling with electricity, they have been enchanted to allow their wearer to
 slither at almost a human's pace.
 %%%%
 Black Knight's horse barding
 
-This barding once protected the steed of the Black Knight during his reign of
-terror. It is a heavy coat, made not only of pitch-black steel, but inlaid
-with massive plates of black diamond. The weight of metal and stone slows the
-steed it protects. It offers more than protection against blows; the adamant
-bears an enchantment that makes its wearer partially undead.
+A heavy barding made from pitch-black steel and inlaid with plates of black
+diamond. It once protected the steed of the Black Knight during his reign of
+terror. Those who wear it become partially undead, gaining some of the benefits
+without the unfortunate downsides, although the great weight of metal and stone
+slows the wearer somewhat.
 %%%%
 amulet of Vitality
 
-This famed amulet greatly improves its wearer's health.
+A jewelled amulet famed for its powers of resilience and recuperation.
 %%%%
 autumn katana
 
-This exotic sword is a weapon for truly enlightened users.
+An exotic sword, enchanted to provide both mental and physical strength to the
+wielder.
 %%%%
 shillelagh "Devastator"
 
-This stick is loaded with more than just lead.
+A wooden cudgel, loaded with more than just lead.
 %%%%
 dragonskin cloak
 
-This opalescent cloak gleams with all dragon colours. It protects its wearer
-from elemental attacks of all kinds, although somewhat unreliably.
+An opalescent cloak gleaming with the colours of all kinds of dragons. It
+protects its wearer from most elemental attacks, although somewhat unreliably.
 %%%%
 ring of the Octopus King
 
-“A mermaid who fancied to sing,
- Roused lust in the Octopus King.
- Her squiggly suitor,
- Tried hard to woo her,
- But she couldn't wear all his rings.”
+One of the eight rings once worn by the Octopus King and now scattered across
+the land. Each has its own unique enchantment.
 %%%%
 Axe of Woe
 
@@ -515,16 +516,14 @@ guided by Makhleb.
 %%%%
 moon troll leather armour
 
-This armour was reportedly created by enchanting the hide of a now-extinct
-species of troll. Whether this armour is truly a remnant of the legendary
-unseen terrors of the wind, or merely an appropriation of the name to add
-mystique, is itself something of a mystery; its power of rapid regeneration at
-the occasional expense of the wearer's magic power, however, is hard to
-dispute.
+A suit of armour rumoured to have been created by enchanting the hide of a
+now-extinct species of troll. Whether the name rings true or is merely
+appropriated to add mystique is something of a mystery. The armour's innate
+powers of regeneration and magical protection, however, are hard to dispute.
 %%%%
 macabre finger necklace
 
-This dangling finger would look better with a ring on it.
+An ugly dangling finger on a string. It would look better with a ring on it.
 %%%%
 # TAG_MAJOR_VERSION == 34
 boots of the spider
@@ -533,16 +532,16 @@ A novel pair of boots invented by a suitor of Arachne.
 %%%%
 dark maul
 
-This large iron-shod maul is specialised for dealing massively powerful blows.
-Alas, such power comes at a price: the maul's head is so heavy it takes forever
-to lift it up for another swing.
+A large, iron-shod maul specialised for dealing massively powerful blows. Such
+power comes at a price: the maul's head is so heavy it takes a great length of
+time to lift it up for another swing.
 %%%%
 hat of the High Council
 
 A relic of some ancient wizarding war. Centuries later, it still crackles with
 effects from the residual hexes and magical energies it was once subjected to
 on a daily basis; spellcasters able to get a handle on its power, however, will
-find it enhances their spell power.
+find it enhances the power of their spells.
 %%%%
 arc blade
 
@@ -557,31 +556,70 @@ unpredictable magical effects on those it strikes.
 %%%%
 lajatang of Order
 
-Long ago Zin bestowed this gift upon a favoured worshipper. It became the
-most prized weapon of the many priests of Zin; after their order was destroyed,
-it fell into disuse and vanished from history.
+A silver-bladed lajatang, once bestowed upon a favoured worshipper of Zin. It
+became the most prized weapon of the many priests of Zin. After their order was
+destroyed, it fell into disuse and vanished from history.
 %%%%
 great mace "Firestarter"
 
-This weapon is imbued with potent fire magic, and fills those it strikes with
-inner flame.
+A huge mace imbued with potent fire magic. It fills those it strikes with
+inner flame, and offers protection against the resulting devastation.
 %%%%
 orange crystal plate armour
 
-Carved from transparent orange crystal, this armour provides remarkable
-protection for both mind and body. A skilled user can even channel psychic
-energies through the crystal itself. However, it's rather heavy...
+A suit of armour carved from transparent orange crystal. It provides remarkable
+protection for both mind and body. The wearer can even channel psychic energies
+through the crystal itself, enhancing their magical abilities. However, it's
+rather heavy...
 %%%%
 Majin-Bo
 
-The Majin-Bo is actually a mighty demon, tricked and trapped in this form long
+A staff inhabited by a mighty demon, tricked and trapped in this form long
 ago. To survive, she now offers tremendous arcane power at a small price: a
 tiny portion of the caster’s life essence, taken alongside the magic used every
-time its wielder casts a spell. Of course - the demon is more than happy to
-suck the life from others, as well.
+time its wielder casts a spell.
 %%%%
-quick blades "Gyre" and "Gimble"
+pair of quick blades "Gyre" and "Gimble"
 
 Two quick blades joined by a chain. Swinging one compels the wielder to swing
 the other, as if they have minds of their own.
+%%%%
+Maxwell's etheric cage
+
+A fine mesh cage designed to capture magical energy. Experimental notes suggest
+that research was abandoned when the cage began to capture magical
+contamination almost as effectively. Perhaps you could wear it on your head?
+%%%%
+# TAG_MAJOR_VERSION == 34
+crown of Eternal Torment
+
+A gold crown set with jet-black gems. It permanently afflicts its wearer with
+agonising pain, substantially reducing their resilience but rendering them
+immune to further torments.
+%%%%
+robe of vines
+
+A robe of woven, growing vines. The vines' rapid growth seems to be conveyed to
+the wearer, but they also prevent the wearer from being healed by potions and
+wands.
+%%%%
+Kryia's mail coat
+
+This armour is said to have been forged for Kryia in her old age. The queen
+continued to insist on leading her armies from the front even into old age, but
+as her aging body failed her, this coat helped to enhance the healing draughts
+that kept her alive.
+
+The wearer of this garment will have significantly increased healing from
+devices.
+%%%%
+frozen axe "Frostbite"
+
+This massive axe looks like it was carved from a glacier, or possibly calved
+from one. It leaves ice crystals in its wake as it swings through the air.
+%%%%
+armour of Talos
+
+A huge and weighty suit of bronze plate armour. Only one with a correspondingly
+huge body can wear it.
 %%%%

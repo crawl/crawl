@@ -10,14 +10,13 @@
 ### Entry vaults to ziggurats ##########################################
 #
 # There is one Ziggurat in Depths.
-# Otherwise, you need to search Pan, with 8% chance per level.
 
 default-depth: Depths
 
 # In case there is an encompass vault on the level.
 NAME:   ziggurat_fallback
 TAGS:   zig_entry
-KFEAT:  O = enter_ziggurat
+KFEAT:  O = enter_ziggurat no_mimic
 TAGS:   overwrite_floor_cell no_exits transparent
 WEIGHT: 1
 MAP
@@ -26,7 +25,7 @@ ENDMAP
 
 NAME:   enter_ziggurat_a
 TAGS:   zig_entry transparent
-KFEAT:  O = enter_ziggurat
+KFEAT:  O = enter_ziggurat no_mimic
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
 FTILE:  ; = floor_hall
@@ -45,7 +44,7 @@ ENDMAP
 NAME:    enter_ziggurat_b
 TAGS:    zig_entry transparent
 KMASK:   O = opaque
-KFEAT:   O = enter_ziggurat
+KFEAT:   O = enter_ziggurat no_mimic
 TAGS:    no_pool_fixup
 SHUFFLE: wW' / l;_
 COLOUR:  ; = red
@@ -67,12 +66,12 @@ ENDMAP
 
 NAME:    enter_ziggurat_c
 TAGS:    zig_entry no_trap_gen transparent
-KFEAT:   O = enter_ziggurat
+KFEAT:   O = enter_ziggurat no_mimic
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
-KPROP:   1Om = no_rtele_into
+KPROP:   1Om = no_tele_into
 SHUFFLE: 123x
 SUBST:   1=1___, 2=2_, x=_
 KMASK:   O123_ = opaque
@@ -92,12 +91,12 @@ ENDMAP
 
 NAME:    enter_ziggurat_d
 TAGS:    zig_entry no_trap_gen transparent
-KFEAT:   O = enter_ziggurat
+KFEAT:   O = enter_ziggurat no_mimic
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
-KPROP:   1On; = no_rtele_into
+KPROP:   1On; = no_tele_into
 SHUFFLE: 123x
 SUBST:   1=1___, 2=2_, x=_
 SUBST:   ;=_
@@ -118,7 +117,7 @@ ENDMAP
 
 NAME:   enter_ziggurat_e
 TAGS:   zig_entry transparent
-KFEAT:  O = enter_ziggurat
+KFEAT:  O = enter_ziggurat no_mimic
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
 FTILE:  ; = floor_hall
@@ -136,9 +135,9 @@ ENDMAP
 
 NAME:   enter_ziggurat_f
 TAGS:   zig_entry no_trap_gen transparent
-KFEAT:  O = enter_ziggurat
+KFEAT:  O = enter_ziggurat no_mimic
 MONS:   angel / nothing w:20
-KPROP:  1Om; = no_rtele_into
+KPROP:  1Om; = no_tele_into
 KFEAT:  ; = floor
 KMASK:  1O; = opaque
 MAP
@@ -152,104 +151,6 @@ MAP
    ..m..
     ...
 ENDMAP
-
-### Pan entry vaults to ziggurats #############################################
-#
-# These can occur more than once, so no luniq_zig here.
-
-default-depth: Pan
-
-NAME:   enter_ziggurat_pan_a
-TAGS:   chance_pan_zig extra allow_dup transparent
-CHANCE: 8%
-COLOUR: ; : cyan / lightblue
-COLOUR: ' = blue
-FTILE:  ; = floor_hall
-SUBST:  ' = .
-SUBST:  ; = .
-KFEAT:  O = enter_ziggurat
-MAP
-.......
-.;;;;;.
-.;''';.
-.;'O';.
-.;''';.
-.;;;;;.
-.......
-ENDMAP
-
-NAME:    enter_ziggurat_pan_b
-TAGS:    chance_pan_zig extra allow_dup no_pool_fixup transparent
-CHANCE:  8%
-SHUFFLE: wW' / l;_
-COLOUR:  ; = red
-COLOUR:  _ : blue / lightred
-COLOUR:  ' = cyan
-FTILE:   ' = floor_hall, _ = floor_hall, ; = floor_hall, O = floor_hall
-SUBST:   '=. , ;=. , _=.
-KFEAT:   O = enter_ziggurat
-KMASK:   O = opaque
-MAP
-   ..'..
-  ..'W'..
- ..'WwW'..
-..'WwwwW'..
-.'WwwOwwW'.
-..'WwwwW'..
- ..'WwW'..
-  ..'W'..
-   ..'..
-ENDMAP
-
-NAME:    enter_ziggurat_pan_c
-TAGS:    chance_pan_zig extra allow_dup transparent
-CHANCE:  8%
-MONS:    lich / ancient lich
-MONS:    angel / daeva
-MONS:    eye of draining / eye of devastation / giant eyeball / \
-         great orb of eyes / shining eye
-SHUFFLE: 123
-SUBST:   1=1, 2=22_
-KFEAT:   m = iron_grate
-KFEAT:   O = enter_ziggurat
-KFEAT:   _ = floor
-KMASK:   123O_ = opaque
-MAP
-    ...
-   ..m..
-  ..mmm..
- ..mm1mm..
-..mm1O1mm..
- ..mm1mm..
-  ..mmm..
-   ..m..
-    ...
-ENDMAP
-
-NAME:    enter_ziggurat_pan_d
-TAGS:    chance_pan_zig extra allow_dup transparent
-CHANCE:  8%
-MONS:    lich / ancient lich
-MONS:    angel / daeva
-MONS:    eye of draining / eye of devastation / giant eyeball / \
-         great orb of eyes / shining eye
-SHUFFLE: 123
-SUBST:   1=1__, 2=2_, 3=33_
-KFEAT:   n = iron_grate
-KFEAT:   O = enter_ziggurat
-KMASK:   123O_ = opaque
-MAP
-    ...
-   ..n..
-  .nnnnn.
- ..n111n..
-..nn1O1nn..
- ..n111n..
-  .nnnnn.
-   ..n..
-    ...
-ENDMAP
-
 
 default-depth: Zig
 
@@ -321,7 +222,7 @@ TAGS: ziggurat_pillar centered unrand no_exits
 MONS: ancient lich / shadow demon / curse skull / \
       ironbrand convoker / corrupter / deep elf demonologist
 MONS: eye of draining / eye of devastation / \
-      giant eyeball / ghost moth / black sun
+      giant eyeball / ghost moth / black sun / torpor snail
 MONS: plant
 : if you.depth() > 21 then
 SUBST: 3 = 12222
@@ -337,7 +238,7 @@ ENDMAP
 
 NAME: ziggurat_pillar_centre_monster
 TAGS: ziggurat_pillar centered no_dump unrand no_exits
-MONS: curse skull / ice statue / orange crystal statue / obsidian statue
+MONS: ice statue / orange crystal statue / obsidian statue
 MAP
 1
 ENDMAP
@@ -382,18 +283,6 @@ MAP
  x
 xxx
  x
-ENDMAP
-
-NAME: ziggurat_pillar_centre_k
-TAGS: ziggurat_pillar centered unrand no_exits
-MONS: boring beetle, boulder beetle, torpor snail, orb spider
-SUBST: 2 : 2:14 3:5 4:1
-MAP
-xxxxx
-xx2xx
-x212x
-xx2xx
-xxxxx
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_l

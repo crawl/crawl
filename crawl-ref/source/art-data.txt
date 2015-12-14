@@ -1,7 +1,7 @@
 # This file contains the definitions of undrandarts (and what used to be
 # fixed artefacts).  util/art-data.pl translates this file into
 # art-data.h, and also updates the enumeration and NUM_UNRANDARTS in
-# artefact.h.  C/C++ functions which give unrandarts non-standard
+# artefact.h. C/C++ functions which give unrandarts non-standard
 # behaviour are in art-func.h; util/art-data.pl scans art-func.h and
 # puts the function names found into art-data.h.
 #
@@ -21,7 +21,7 @@
 # Add new artefact definitions at the end of the file; doing so should cause
 # no problems with save-file compatibility, but for tile builds it will
 # cause a shift of remembered tiles (since each new unrandart needs its
-# own tiles).  Changing the order of the definitions will likely cause
+# own tiles). Changing the order of the definitions will likely cause
 # strange behaviour in games saved previous to the change, and deleting
 # definitions will break savefile compatibility.
 #
@@ -66,7 +66,7 @@
 # Explanation of unusual fields:
 
 # BOOL: Turn certain boolean properties of the artefact on, with the list
-# of properties separated by commas.  The list includes:
+# of properties separated by commas. The list includes:
 #
 # * berserk:  Lets wearer evoke berserking ability.
 # * blink:    Lets wearer evoke the blink ability.
@@ -80,10 +80,9 @@
 # * holy:     Is treated as a holy item.
 # * inv:      Lets wearer evoke invisibility ability.
 # * fly:      Lets wearer evoke flight ability.
-# * life:     Grants negative energy resistance.
 # * mutate:   Causes high magical contamination when unequipped.
 # * nogen:    Never randomly generated.
-# * noises:   Weapon makes noises.  Should  be given its own set of noises
+# * noises:   Weapon makes noises. Should be given its own set of noises
 #             by making an entry in dat/database/wpnnoise.txt, with the
 #             entry's key exactly the same as the weapon's name, but all
 #             lowercase.
@@ -95,14 +94,16 @@
 # * rmsl:     Passively repels missiles.
 # * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
+# * skip_ego: The item's ego is skipped in its inscription, to be replaced by
+#             an INSCRIP: entry.
 # * special:  Artefact is "special": can't be picked up by monsters,
 #             can't be affected by Tukima's Dance.
-# * sustab:   Provides sustain abilities.
+# * sustat:   Provides sustain attributes.
 # * tilerim:  Adds a black outline to the tile, see above section.
 # * unided:   Properties start unidentified.
 
 # ENUM: Forces the artefact's enumeration literal to something specific.
-# For example, "ENUM: FOO" gives the enumeration "UNRAND_FOO".  The
+# For example, "ENUM: FOO" gives the enumeration "UNRAND_FOO". The
 # default enumeration is determined as follows:
 #
 # 1) If there's a string between double quotes, use that.
@@ -113,7 +114,7 @@
 #    uppercase the whole thing, and add "UNRAND_" to the front.
 
 # OBJ: The enumerations of the base type and sub type of the artefact,
-# separated by a dash.  E.g., OBJ_WEAPONS/WPN_SWORD
+# separated by a dash. E.g., OBJ_WEAPONS/WPN_SWORD
 
 # PLUS: The pluses of the artefact.
 
@@ -136,6 +137,7 @@
 # EV:       Evasion modifier.
 # FIRE:     Fire resistance/vulnerability.
 # INT:      Intelligence modifier.
+# LIFE:     Negative energy resistance/vulnerability.
 # MAGIC:    Magic resistance/vulnerability.
 # MP:       Mana capacity modifier.
 # NAME:     Name of artefact when identified.
@@ -218,6 +220,7 @@ VALUE:   1000
 BOOL:    poison, no_upgrade
 
 NAME:    Staff of Wucad Mu
+INSCRIP: channel
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +9
 COLOUR:  ETC_MAGIC
@@ -247,7 +250,7 @@ CURSED:  3
 BOOL:    evil
 
 NAME:    Sceptre of Torment
-OBJ:     OBJ_WEAPONS/WPN_MACE
+OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +7
 COLOUR:  ETC_GOLD
 TILE:    spwpn_sceptre_of_torment
@@ -324,6 +327,7 @@ STEALTH: -1
 
 NAME:    scimitar of Flaming Death
 OBJ:     OBJ_WEAPONS/WPN_SCIMITAR
+INSCRIP: sticky flame,
 PLUS:    +6
 COLOUR:  ETC_FIRE
 TILE:    urand_flaming_death
@@ -331,7 +335,7 @@ TILE_EQ: flaming_death
 BRAND:   SPWPN_FLAMING
 FIRE:    2
 COLD:    -1
-BOOL:    poison
+BOOL:    poison, skip_ego
 MAGIC:   1
 
 NAME:    eveningstar "Brilliance"
@@ -343,7 +347,7 @@ TILE_EQ: mace_of_brilliance
 BRAND:   SPWPN_HOLY_WRATH
 AC:      5
 INT:     5
-BOOL:    life
+LIFE:    1
 
 NAME:    demon blade "Leech"
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
@@ -357,10 +361,11 @@ EV:      -2
 STR:     -2
 INT:     -2
 DEX:     -2
-BOOL:    life
+LIFE:     1
 
 NAME:    dagger of Chilly Death
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
+INSCRIP: flash freeze,
 PLUS:    +9
 COLOUR:  ETC_ICE
 TILE:    urand_chilly_death
@@ -369,7 +374,7 @@ BRAND:   SPWPN_FREEZING
 FIRE:    -1
 COLD:    2
 MAGIC:   1
-BOOL:    poison
+BOOL:    poison, skip_ego
 
 NAME:     dagger "Morg"
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
@@ -439,7 +444,7 @@ BRAND:    SPWPN_HOLY_WRATH
 EV:       3
 ANGRY:    3
 STEALTH:  -1
-BOOL:     life
+LIFE:     1
 
 NAME:    arbalest "Hellfire"
 INSCRIP: hellfire,
@@ -472,19 +477,22 @@ TILE_EQ: eos
 BRAND:   SPWPN_ELECTROCUTION
 BOOL:    elec, seeinv, notelep
 
+# TAG_MAJOR_VERSION == 34
 # Was "spear of Voo-Doo". In the African origin, there is a distinction
 # between voodoo and bo, the latter dealing with curses, witchcraft and
 # spells designed to do harm. Priests (or rather sorcerers) of bo are
 # called botono.
 NAME:     spear of the Botono
 OBJ:      OBJ_WEAPONS/WPN_SPEAR
+INSCRIP:  Hex
 PLUS:     +6
 COLOUR:   ETC_UNHOLY
 TILE:     urand_botono
 TILE_EQ:  botono
 BRAND:    SPWPN_REAPING
 HP:       -6
-BOOL:     poison, life
+LIFE:     1
+BOOL:     poison, nogen
 
 NAME:     trident of the Octopus King
 OBJ:      OBJ_WEAPONS/WPN_TRIDENT
@@ -520,6 +528,7 @@ BOOL:     elec
 
 NAME:     heavy crossbow "Sniper"
 OBJ:      OBJ_WEAPONS/WPN_TRIPLE_CROSSBOW
+TYPE:     heavy crossbow
 PLUS:     +15
 COLOUR:   ETC_DARK
 TILE:     urand_sniper
@@ -537,8 +546,10 @@ TILE_EQ: great_bow
 BRAND:   SPWPN_PENETRATION
 EV:      -2
 
+# TAG_MAJOR_VERSION == 34
 ENUM:    BLOWGUN_ASSASSIN
 NAME:    blowgun of the Assassin
+INSCRIP: stab,
 OBJ:     OBJ_WEAPONS/WPN_BLOWGUN
 PLUS:    +6
 COLOUR:  ETC_DEATH
@@ -578,7 +589,7 @@ PLUS:    +14
 COLOUR:  ETC_MUTAGENIC
 TILE:    urand_plutonium
 TILE_EQ: plutonium_sword
-BOOL:    mutate
+BOOL:    mutate, chaotic
 STEALTH: -1
 
 NAME:     great mace "Undeadhunter"
@@ -588,16 +599,17 @@ PLUS:     +7
 COLOUR:   LIGHTGREY
 TILE:     urand_undeadhunter
 TILE_EQ:  undeadhunter
-BOOL:     life
+LIFE:     1
 
 NAME:    whip "Snakebite"
 OBJ:     OBJ_WEAPONS/WPN_WHIP
+INSCRIP: curare,
 PLUS:    +8
 COLOUR:  DARKGREY
 TILE:    urand_snakebite
 TILE_EQ: snakebite
 BRAND:   SPWPN_VENOM
-BOOL:    poison
+BOOL:    poison, skip_ego
 
 # TAG_MAJOR_VERSION == 34
 NAME:     knife of Accuracy
@@ -610,7 +622,7 @@ TILE_EQ:  knife_of_accuracy
 BOOL:     tilerim, nogen
 
 # TAG_MAJOR_VERSION == 34
-# A play on the spell of the same name.  Colour taken from crystal walls.
+# A play on the spell of the same name. Colour taken from crystal walls.
 ENUM:     CRYSTAL_SPEAR
 NAME:     Lehudib's crystal spear
 OBJ:      OBJ_WEAPONS/WPN_SPEAR
@@ -624,6 +636,7 @@ BOOL:     nogen
 ENUM:     CAPTAIN
 NAME:     captain's cutlass
 OBJ:      OBJ_WEAPONS/WPN_CUTLASS
+INSCRIP:  disarm
 PLUS:     +5
 COLOUR:   DARKGREY
 TILE:     urand_cutlass
@@ -647,7 +660,7 @@ TILE_EQ: lshield_of_ignorance
 AC:      2
 EV:      2
 INT:     -6
-BOOL:    life
+LIFE:    1
 CURSED:  3
 
 NAME:    robe of Augmentation
@@ -696,8 +709,9 @@ COLOUR:   DARKGREY
 TILE:     urand_bear
 TILE_EQ:  bear
 BRAND:    SPARM_SPIRIT_SHIELD
-BOOL:     life, berserk
+BOOL:     berserk
 MAGIC:    2
+LIFE:     1
 
 NAME:     robe of Misfortune
 OBJ:      OBJ_ARMOUR/ARM_ROBE
@@ -713,6 +727,7 @@ CURSED:   1
 STEALTH:  -2
 BOOL:     nospell, rnd_tele, randapp, unided, mutate
 
+# TAG_MAJOR_VERSION == 34
 NAME:     cloak of Flash
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
 PLUS:     +3
@@ -720,11 +735,12 @@ COLOUR:   ETC_FLASH
 TILE:     urand_flash
 TILE_EQ:  red
 EV:       4
-BOOL:     fly
+BOOL:     fly, nogen
 
 ENUM:     BOOTS_ASSASSIN
 NAME:     boots of the Assassin
 OBJ:      OBJ_ARMOUR/ARM_BOOTS
+INSCRIP:  DetectMon Stab+
 PLUS:     +2
 COLOUR:   BROWN
 TILE:     urand_assassin
@@ -795,7 +811,7 @@ COLOUR:  LIGHTGREEN
 TILE:    urand_maxwell
 TILE_EQ: maxwell
 MAGIC:   1
-BOOL:    nospell, notelep, cursed, elec, rCorr
+BOOL:    nospell, notelep, elec, rCorr
 
 ENUM:    DRAGONMASK
 NAME:    mask of the Dragon
@@ -834,9 +850,12 @@ TILE_EQ: turban_purple
 FIRE:    1
 COLD:    1
 MAGIC:   1
-BOOL:    elec, poison, life, rMut, rCorr
+LIFE:    1
+BOOL:    elec, poison, rMut, rCorr
 
+ENUM:    FENCERS
 NAME:    fencer's gloves
+INSCRIP: LBl+4 SBl+4
 OBJ:     OBJ_ARMOUR/ARM_GLOVES
 PLUS:    +2
 COLOUR:  WHITE
@@ -844,16 +863,16 @@ TILE:    urand_fencer
 TILE_EQ: glove_white
 EV:      3
 DEX:     6
-SLAY:    2
 
 NAME:     cloak of Starlight
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
+PLUS:     +2
 COLOUR:   ETC_ICE
 TILE:     urand_starlight
 TILE_EQ:  white
 EV:       4
 COLD:     1
-STEALTH:  -1
+STEALTH:  -2
 BOOL:     elec
 
 NAME:     ratskin cloak
@@ -864,7 +883,8 @@ TILE:     urand_ratskin_cloak
 TILE_EQ:  ratskin
 INT:      -1
 DEX:      -1
-BOOL:     life, poison
+LIFE:     1
+BOOL:     poison
 
 NAME:     shield of the gong
 OBJ:      OBJ_ARMOUR/ARM_SHIELD
@@ -874,7 +894,8 @@ TILE:     urand_gong
 TILE_EQ:  shield_gong
 EV:       -5
 MAGIC:    1
-BOOL:     elec, life
+LIFE:     1
+BOOL:     elec
 
 NAME:    amulet of the Air
 OBJ:     OBJ_JEWELLERY/AMU_INACCURACY
@@ -888,7 +909,8 @@ INSCRIP: Umbra
 OBJ:     OBJ_JEWELLERY/RING_INVISIBILITY
 COLOUR:  ETC_DARK
 TILE:    urand_shadows
-BOOL:    life, seeinv
+LIFE:    1
+BOOL:    seeinv
 
 NAME:    amulet of Cekugob
 OBJ:     OBJ_JEWELLERY/AMU_WARDING
@@ -896,13 +918,14 @@ COLOUR:  ETC_SILVER
 TILE:    urand_cekugob
 AC:      1
 EV:      1
-BOOL:    elec, poison, life, notelep
+LIFE:    1
+BOOL:    elec, poison, notelep
 
 NAME:    amulet of the Four Winds
 OBJ:     OBJ_JEWELLERY/AMU_CLARITY
 COLOUR:  ETC_POISON
 TILE:    urand_four_winds
-BOOL:    life
+LIFE:    1
 MAGIC:   3
 
 NAME:    necklace of Bloodlust
@@ -972,7 +995,7 @@ TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
 CURSED:   1
 STR:      +3
-BOOL:     unholy, seeinv, fly, special
+BOOL:     unholy, seeinv, fly
 
 NAME:     lightning scales
 OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
@@ -991,7 +1014,8 @@ TILE:     urand_bk_barding
 TILE_EQ:  black_knight
 COLOUR:   ETC_UNHOLY
 BRAND:    SPARM_PONDEROUSNESS
-BOOL:     life, poison, evil
+LIFE:     1
+BOOL:     poison, evil
 
 NAME:     amulet of Vitality
 OBJ:      OBJ_JEWELLERY/AMU_REGENERATION
@@ -1013,6 +1037,7 @@ BOOL:     clarity
 BRAND:    SPWPN_VORPAL
 
 NAME:     shillelagh "Devastator"
+INSCRIP:  shatter
 OBJ:      OBJ_WEAPONS/WPN_CLUB
 TYPE:     shillelagh
 TILE:     urand_shillelagh
@@ -1091,9 +1116,9 @@ TYPE:     maul
 COLOUR:   LIGHTRED
 TILE:     urand_dark_maul
 TILE_EQ:  dark_maul
-PLUS:     +6
+PLUS:     +10
 BASE_ACC: +2
-BASE_DAM: +27
+BASE_DAM: +35
 BASE_DELAY: +13
 BRAND:    SPWPN_VORPAL
 
@@ -1138,6 +1163,7 @@ BOOL:    rMut
 
 ENUM:     FIRESTARTER
 NAME:     great mace "Firestarter"
+INSCRIP:  inner flame,
 OBJ:      OBJ_WEAPONS/WPN_GREAT_MACE
 COLOUR:   RED
 TILE:     urand_firestarter
@@ -1145,6 +1171,7 @@ TILE_EQ:  firestarter
 PLUS:     +7
 BRAND:    SPWPN_FLAMING
 FIRE:     2
+BOOL:     skip_ego
 
 NAME:     orange crystal plate armour
 OBJ:      OBJ_ARMOUR/ARM_CRYSTAL_PLATE_ARMOUR
@@ -1154,11 +1181,11 @@ TILE_EQ:  orange_crystal
 PLUS:     8
 INT:      3
 BRAND:    SPARM_ARCHMAGI
-BOOL:     clarity, sustab
+BOOL:     clarity, sustat
 
 ENUM:    MAJIN
 NAME:    Majin-Bo
-INSCRIP: Archmagi,
+INSCRIP: Archmagi
 OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:    +6
 COLOUR:  ETC_UNHOLY
@@ -1170,14 +1197,81 @@ BRAND:   SPWPN_VAMPIRISM
 BOOL:    unholy
 
 ENUM:    GYRE
-NAME:    quick blades "Gyre" and "Gimble"
+NAME:    pair of quick blades "Gyre" and "Gimble"
 OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
+TYPE:    pair of quick blades
 COLOUR:  ETC_ENCHANT
 TILE:    urand_gyre
 TILE_EQ: gyre
 PLUS:    5
 BRAND:   SPWPN_VORPAL
 DEX:     -3
+
+ENUM:    ETHERIC_CAGE
+NAME:    Maxwell's etheric cage
+OBJ:     OBJ_ARMOUR/ARM_HELMET
+COLOUR:  ETC_ELECTRICITY
+TILE:    urand_etheric_cage
+TILE_EQ: etheric_cage
+INSCRIP: RegenMP
+PLUS:    +0
+MP:      +4
+BOOL:    mutate, elec, chaotic
+
+# TAG_MAJOR_VERSION == 34
+ENUM:    ETERNAL_TORMENT
+NAME:    crown of Eternal Torment
+OBJ:     OBJ_ARMOUR/ARM_HAT
+PLUS:    +3
+COLOUR:  ETC_DARK
+TILE:    urand_eternal_torment
+TILE_EQ: eternal_torment
+INSCRIP: rTorment HP--
+LIFE:    3
+CURSED:  1
+BOOL:    evil, seeinv, nogen
+
+ENUM:    VINES
+NAME:    robe of vines
+OBJ:     OBJ_ARMOUR/ARM_ROBE
+PLUS:    +2
+COLOUR:  GREEN
+TILE:    urand_vines
+TILE_EQ: vines
+INSCRIP: NoDeviceHeal
+REGEN:   7
+
+ENUM:    KRYIAS
+NAME:    Kryia's mail coat
+OBJ:     OBJ_ARMOUR/ARM_SCALE_MAIL
+PLUS:    +7
+COLOUR:  LIGHTCYAN
+TILE:    urand_kryias
+TILE_EQ: kryias
+INSCRIP: DeviceHeal*2
+COLD:    1
+
+ENUM:    FROSTBITE
+NAME:    frozen axe "Frostbite"
+OBJ:     OBJ_WEAPONS/WPN_EXECUTIONERS_AXE
+INSCRIP: freezing cloud,
+PLUS:    +8
+COLOUR:  ETC_ICE
+TILE:    urand_frostbite
+TILE_EQ: frostbite
+BRAND:   SPWPN_FREEZING
+COLD:    1
+BOOL:    skip_ego, fly, noises
+
+ENUM:     TALOS
+NAME:     armour of Talos
+OBJ:      OBJ_ARMOUR/ARM_PLATE_ARMOUR
+PLUS:     +12
+TILE:     urand_talos
+TILE_EQ:  talos
+COLOUR:   ETC_FIRE
+BRAND:    SPARM_PONDEROUSNESS
+FIRE:     1
 
 # This entry must always be last.
 ENUM:   DUMMY2

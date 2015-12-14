@@ -93,8 +93,9 @@ void slime_wall_damage(actor* act, int delay);
 
 void get_door_description(int door_size, const char** adjective,
                           const char** noun);
-bool feat_destroys_item(dungeon_feature_type feat, const item_def &item, bool noisy = false);
-bool feat_virtually_destroys_item(dungeon_feature_type feat, const item_def &item, bool noisy = false);
+void feat_splash_noise(dungeon_feature_type feat);
+bool feat_destroys_items(dungeon_feature_type feat);
+bool feat_eliminates_items(dungeon_feature_type feat);
 
 // Terrain changed under 'pos', perform necessary effects.
 void dungeon_terrain_changed(const coord_def &pos,

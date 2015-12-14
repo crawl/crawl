@@ -119,7 +119,10 @@ sub check_desc_needed($@)
         err "$file: No description for $kind '$_'\n" unless $entries{$_};
         delete $keys{$_};
     }
-    err "$file: Unused description for $kind '$_'\n" for sort keys %keys;
+    for (sort keys %keys)
+    {
+        err "$file: Unused description for $kind '$_'\n" unless /^_/;
+    }
 }
 
 sub check_desc_links()
@@ -186,7 +189,7 @@ my @monspeak_at_at = at_at_replaces("mon-util.cc", "do_mon_str_replacements");
 my @gods = ("the Shining One", "Sif Muna","Nemelex Xobeh",
             qw(Zin Kikubaaqudgha Yredelemnul Xom Vehumet Gozag Qazlal
                Okawaru Makhleb Trog Elyvilon Lugonu Dithmenos
-               Beogh Jiyva Fedhas Cheibriados Ashenzari));
+               Beogh Jiyva Fedhas Cheibriados Ashenzari Ru));
 
 sub godspeak_keys()
 {
@@ -217,7 +220,7 @@ read_file("descript/commands");
 
 if (read_file("descript/gods"))
 {
-    check_desc_needed("god", map {($_, "$_ powers")} @gods);
+    check_desc_needed("god", map {($_, "$_ powers", "$_ wrath")} @gods);
 }
 
 if (read_file("descript/items"))

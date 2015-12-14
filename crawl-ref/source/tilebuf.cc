@@ -195,7 +195,7 @@ void ColouredTileBuffer::add(tileidx_t idx, int x, int y, int z,
     float lerp_s = (pos_sy - y);
     float lerp_e = (pos_ey - y);
 
-    // Need to calculate the alpha at the top and bottom.  As the quad
+    // Need to calculate the alpha at the top and bottom. As the quad
     // being drawn may not actually start on the grid boundary, we need
     // to figure out what alpha value its vertices should use.
     unsigned char alpha_s = _get_alpha(lerp_s, alpha_top, alpha_bottom);
@@ -276,7 +276,7 @@ void SubmergedTileBuffer::clear()
 
 // [enne] - GL_POINTS should probably be used here, but there's (apparently)
 // a bug in the OpenGL driver that I'm using and it doesn't respect
-// glPointSize unless GL_SMOOTH_POINTS is on.  GL_SMOOTH_POINTS is
+// glPointSize unless GL_SMOOTH_POINTS is on. GL_SMOOTH_POINTS is
 // *terrible* for performance if it has to fall back on software rendering,
 // so instead we'll just make quads.
 ShapeBuffer::ShapeBuffer() : VertBuffer(false, true)

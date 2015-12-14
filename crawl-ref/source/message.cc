@@ -327,19 +327,36 @@ class message_window
     // Place cursor at end of last non-empty line to handle prompts.
     // TODO: might get rid of this by clearing the whole window when writing,
     //       and then just writing the actual non-empty lines.
-    void place_cursor() const
+    void place_cursor()
     {
         // XXX: the screen may have resized since the last time we
-        //  called lines.resize().  We can't actually resize lines
-        //  here because this is a const method.  Consider only the
-        //  last height() lines if this has happened.
+        //  called lines.resize(). Consider only the last height()
+        //  lines if this has happened.
         const int diff = max(int(lines.size()) - height(), 0);
 
         int i;
-        for (i = lines.size() - 1; i >= diff && lines[i].width() == 0; --i);
-        if (i >= diff && (int) lines[i].width() < crawl_view.msgsz.x)
-            cgotoxy(lines[i].width() + 1, i - diff + 1, GOTO_MSG);
-        else if (i < diff)
+        for (i = lines.size() - 1; i >= diff && lines[i].width() == 0; --i)
+            ;
+        if (i >= diff)
+        {
+            // If there was room, put the cursor at the end of that line.
+            // Otherwise, put it at the beginning of the next line.
+            if ((int) lines[i].width() < crawl_view.msgsz.x)
+                cgotoxy(lines[i].width() + 1, i - diff + 1, GOTO_MSG);
+            else if (i - diff + 2 <= height())
+                cgotoxy(1, i - diff + 2, GOTO_MSG);
+            else
+            {
+                // Scroll to make room for the next line, then redraw.
+                scroll(1);
+                // Results in a recursive call to place_cursor!  But scroll()
+                // made lines[height()] empty, so that recursive call shouldn't
+                // hit this case again.
+                show();
+                return;
+            }
+        }
+        else
         {
             // If there were no lines, put the cursor at the upper left.
             cgotoxy(1, 1, GOTO_MSG);
@@ -470,7 +487,10 @@ public:
 
     void scroll(int n)
     {
-        ASSERT(next_line >= n);
+        // We might be asked to scroll off everything by the line reader.
+        if (next_line < n)
+            n = next_line;
+
         int i;
         for (i = 0; i < height() - n; ++i)
             lines[i] = lines[i + n];
@@ -482,16 +502,15 @@ public:
     }
 
     // write to screen (without refresh)
-    void show() const
+    void show()
     {
         // XXX: this should not be necessary as formatted_string should
         //      already do it
         textcolour(LIGHTGREY);
 
         // XXX: the screen may have resized since the last time we
-        //  called lines.resize().  We can't actually resize lines
-        //  here because this is a const method.  Display the last
-        //  height() lines if this has happened.
+        //  called lines.resize(). Consider only the last height()
+        //  lines if this has happened.
         const int diff = max(int(lines.size()) - height(), 0);
 
         for (size_t i = diff; i < lines.size(); ++i)
@@ -568,6 +587,7 @@ public:
         if (_pre_more())
             return;
 
+        print_stats();
         show();
         int last_row = crawl_view.msgsz.y;
         if (first_col_more())
@@ -741,9 +761,8 @@ public:
     }
 
 #ifdef USE_TILE_WEB
-    void send(int old_msgs = 0)
+    void send()
     {
-        unsent += old_msgs;
         if (unsent == 0 || (send_ignore_one && unsent == 1)) return;
 
         if (client_rollback > 0)
@@ -751,8 +770,6 @@ public:
             tiles.json_write_int("rollback", client_rollback);
             client_rollback = 0;
         }
-        if (old_msgs > 0)
-            tiles.json_write_int("old_msgs", old_msgs);
         tiles.json_open_array("messages");
         for (int i = -unsent; i < (send_ignore_one ? -1 : 0); ++i)
         {
@@ -791,7 +808,7 @@ void webtiles_send_last_messages(int n)
         tiles.json_write_bool("more", _more);
         _last_more = _more;
     }
-    buffer.send(n);
+    buffer.send();
     tiles.json_close_object(true);
     tiles.finish_message();
 }
@@ -1078,15 +1095,26 @@ void dprf(diag_type param, const char *format, ...)
 
 static bool _updating_view = false;
 
-static bool check_more(const string& line, msg_channel_type channel)
+static bool _check_option(const string& line, msg_channel_type channel,
+                          const vector<message_filter>& option)
 {
-    return any_of(begin(Options.force_more_message),
-                  end(Options.force_more_message),
+    return any_of(begin(option),
+                  end(option),
                   bind(mem_fn(&message_filter::is_filtered),
                        placeholders::_1, channel, line));
 }
 
-static bool check_join(const string& line, msg_channel_type channel)
+static bool _check_more(const string& line, msg_channel_type channel)
+{
+    return _check_option(line, channel, Options.force_more_message);
+}
+
+static bool _check_flash_screen(const string& line, msg_channel_type channel)
+{
+    return _check_option(line, channel, Options.flash_screen_message);
+}
+
+static bool _check_join(const string& line, msg_channel_type channel)
 {
     switch (channel)
     {
@@ -1098,7 +1126,7 @@ static bool check_join(const string& line, msg_channel_type channel)
     return true;
 }
 
-static void debug_channel_arena(msg_channel_type channel)
+static void _debug_channel_arena(msg_channel_type channel)
 {
     switch (channel)
     {
@@ -1197,7 +1225,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
         return;
 
     if (crawl_state.game_is_arena())
-        debug_channel_arena(channel);
+        _debug_channel_arena(channel);
 
 #ifdef DEBUG_FATAL
     if (channel == MSGCH_ERROR)
@@ -1236,8 +1264,9 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
         return;
     }
 
-    bool domore = check_more(text, channel);
-    bool join = !domore && !nojoin && check_join(text, channel);
+    bool domore = _check_more(text, channel);
+    bool do_flash_screen = _check_flash_screen(text, channel);
+    bool join = !domore && !nojoin && _check_join(text, channel);
 
     // Must do this before converting to formatted string and back;
     // that doesn't preserve close tags!
@@ -1265,6 +1294,8 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 
     if (domore)
         more(true);
+    if (do_flash_screen)
+        flash_view_delay(UA_ALWAYS_ON, YELLOW, 50);
 }
 
 static string show_prompt(string prompt)
@@ -1373,7 +1404,7 @@ static void mpr_check_patterns(const string& message,
 
         if (pat.matches(message))
         {
-            take_note(Note(NOTE_MESSAGE, channel, param, message.c_str()));
+            take_note(Note(NOTE_MESSAGE, channel, param, message));
             break;
         }
     }
@@ -1658,9 +1689,6 @@ void canned_msg(canned_message_type which_message)
         case MSG_ANIMATE_REMAINS:
             mpr("You attempt to give life to the dead...");
             break;
-        case MSG_DECK_EXHAUSTED:
-            mpr("The deck of cards disappears in a puff of smoke.");
-            break;
         case MSG_CANNOT_MOVE:
             mpr("You cannot move.");
             break;
@@ -1669,6 +1697,12 @@ void canned_msg(canned_message_type which_message)
             break;
         case MSG_GHOSTLY_OUTLINE:
             mpr("You see a ghostly outline there, and the spell fizzles.");
+            break;
+        case MSG_GAIN_HEALTH:
+            mpr("You feel better.");
+            break;
+        case MSG_GAIN_MAGIC:
+            mpr("You feel your power returning.");
             break;
     }
 }
@@ -1688,7 +1722,6 @@ bool simple_monster_message(const monster* mons, const char *event,
     {
         string msg = mons->name(descrip);
         msg += event;
-        msg = apostrophise_fixup(msg);
 
         if (channel == MSGCH_PLAIN && mons->wont_attack())
             channel = MSGCH_FRIEND_ACTION;
@@ -1704,7 +1737,6 @@ bool simple_monster_message(const monster* mons, const char *event,
 void simple_god_message(const char *event, god_type which_deity)
 {
     string msg = uppercase_first(god_name(which_deity)) + event;
-    msg = apostrophise_fixup(msg);
     god_speaks(which_deity, msg.c_str());
 }
 
@@ -1780,7 +1812,7 @@ void save_messages(writer& outf)
 
 void load_messages(reader& inf)
 {
-    unwind_var<bool> save_more(crawl_state.show_more_prompt, false);
+    unwind_bool save_more(crawl_state.show_more_prompt, false);
 
     int num = unmarshallInt(inf);
     for (int i = 0; i < num; ++i)

@@ -23,7 +23,7 @@
     {                                                                \
         luaL_argerror(ls, 1, "Invalid monster wrapper");             \
     } \
-    monster *name(___mw->mons)
+    monster *name(___mw ? ___mw->mons : nullptr)
 
 /////////////////////////////////////////////////////////////////////
 // Monster handling
@@ -204,28 +204,6 @@ MDEF(muse)
 {
     if (const monsterentry *me = mons->find_monsterentry())
         PLUARET(string, _monuse_to_str(me->gmon_use));
-    return 0;
-}
-
-static const char *_moneat_names[] =
-{
-    "nothing", "items", "corpses",
-#if TAG_MAJOR_VERSION == 34
-    "food",
-#endif
-    "doors"
-};
-
-static const char *_moneat_to_str(mon_itemeat_type etyp)
-{
-    COMPILE_CHECK(ARRAYSZ(_moneat_names) == NUM_MONEAT);
-    return _moneat_names[etyp];
-}
-
-MDEF(meat)
-{
-    if (const monsterentry *me = mons->find_monsterentry())
-        PLUARET(string, _moneat_to_str(me->gmon_eat));
     return 0;
 }
 
@@ -476,7 +454,7 @@ MDEFN(del_ench, do_del_ench)
 MDEF(you_can_see)
 {
     ASSERT_DLUA;
-    PLUARET(boolean, you.can_see(mons));
+    PLUARET(boolean, you.can_see(*mons));
 }
 
 static int l_mons_do_speak(lua_State *ls)
@@ -520,7 +498,6 @@ static MonsAccessor mons_attrs[] =
     { "hd"  , l_mons_hd   },
     { "beh" , l_mons_beh  },
     { "muse", l_mons_muse },
-    { "meat", l_mons_meat },
     { "hp"  , l_mons_hp   },
 
     { "targetx", l_mons_targetx },

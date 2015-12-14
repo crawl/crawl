@@ -13,7 +13,7 @@
 #include "spl-util.h"
 #include "terrain.h"
 
-int englaciate(coord_def where, int pow, int, actor *agent)
+int englaciate(coord_def where, int pow, actor *agent)
 {
     actor *victim = actor_at(where);
 
@@ -45,7 +45,7 @@ int englaciate(coord_def where, int pow, int, actor *agent)
         return 0;
     }
 
-    if ((!mons && player_genus(GENPC_DRACONIAN)) // res_cold() checked above
+    if ((!mons && player_mutation_level(MUT_COLD_BLOODED))
         || (mons && mons_class_flag(mons->type, M_COLD_BLOOD)))
     {
         duration *= 2;
@@ -61,7 +61,9 @@ spret_type cast_englaciation(int pow, bool fail)
 {
     fail_check();
     mpr("You radiate an aura of cold.");
-    apply_area_visible(englaciate, pow, &you);
+    apply_area_visible([pow] (coord_def where) {
+        return englaciate(where, pow, &you);
+    }, you.pos());
     return SPRET_SUCCESS;
 }
 
@@ -72,8 +74,8 @@ spret_type cast_englaciation(int pow, bool fail)
  */
 bool backlight_monster(monster* mons)
 {
-    // Already glowing, or shadowy.
-    if (mons->glows_naturally() || mons_class_flag(mons->type, M_SHADOW))
+    // Already glowing.
+    if (mons->glows_naturally())
         return false;
 
     const mon_enchant bklt = mons->get_ench(ENCH_CORONA);

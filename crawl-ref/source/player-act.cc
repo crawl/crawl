@@ -18,6 +18,7 @@
 #include "env.h"
 #include "fight.h"
 #include "food.h"
+#include "godabil.h" // RU_SAC_XP_LEVELS
 #include "godconduct.h"
 #include "goditem.h"
 #include "hints.h"
@@ -158,6 +159,11 @@ int player::get_experience_level() const
     return experience_level;
 }
 
+int player::get_max_xl() const
+{
+    return 27 - player_mutation_level(MUT_INEXPERIENCED) * RU_SAC_XP_LEVELS;
+}
+
 bool player::can_pass_through_feat(dungeon_feature_type grid) const
 {
     return !feat_is_solid(grid) && grid != DNGN_MALIGN_GATEWAY;
@@ -201,29 +207,6 @@ size_type player::body_size(size_part_type psize, bool base) const
     }
 }
 
-int player::body_weight(bool base) const
-{
-    int weight = actor::body_weight(base);
-
-    if (base)
-        return weight;
-
-    switch (form)
-    {
-    case TRAN_STATUE:
-        weight *= 2;
-        break;
-    case TRAN_LICH:
-    case TRAN_SHADOW:
-        weight /= 2;
-        break;
-    default:
-        break;
-    }
-
-    return weight;
-}
-
 int player::damage_type(int)
 {
     if (const item_def* wp = weapon())
@@ -261,108 +244,78 @@ brand_type player::damage_brand(int)
 
 
 /**
- * Return the delay caused by attacking with the provided weapon & projectile.
+ * Return the delay caused by attacking with your weapon and this projectile.
  *
- * @param weap          The weapon to be used; may be null.
- * @param projectile    The projectile to be fired/thrown; may be null.
- * @param random        Whether to randomize delay, or provide a fixed value
- *                      for display (the worst-case scenario).
- * @param scaled        Whether to apply special delay modifiers (finesse)
- * @param shield        Whether to apply shield penalties.
- * @return              The time taken by an attack with the given weapon &
- *                      projectile, in aut.
+ * @param projectile  The projectile to be fired/thrown, if any.
+ * @param rescale     Whether to re-scale the time to account for the fact that
+ *                    finesse doesn't stack with haste.
+ * @return            A random_var representing the range of possible values of
+ *                    attack delay. It can be casted to an int, in which case
+ *                    its value is determined by the appropriate rolls.
  */
-random_var player::attack_delay(const item_def *weap,
-                                const item_def *projectile, bool random,
-                                bool scaled, bool do_shield) const
+random_var player::attack_delay(const item_def *projectile, bool rescale) const
 {
-    random_var attk_delay = constant(15);
+    const item_def* weap = weapon();
+    random_var attk_delay(15);
     // a semi-arbitrary multiplier, to minimize loss of precision from integer
     // math.
     const int DELAY_SCALE = 20;
-    const int armour_penalty = adjusted_body_armour_penalty(DELAY_SCALE);
     const int base_shield_penalty = adjusted_shield_penalty(DELAY_SCALE);
 
-    bool check_weapon = (!projectile && !!weap)
-                        || projectile
-                            && (is_launched(this, weap, *projectile)
-                                != LRET_THROWN);
-
-    if (!check_weapon)
+    if (projectile && is_launched(this, weap, *projectile) == LRET_THROWN
+        || !weap)
     {
-        if (form_uses_xl())
-        {
-            attk_delay =
-                constant(10)
-                - div_rand_round(constant(you.experience_level * 10), 54);
-        }
-        else
-        {
-            // UC/throwing attacks are slowed by heavy armour (aevp)
-            attk_delay = max(10, 7 + div_rand_round(armour_penalty,
-                                                    DELAY_SCALE));
+        int sk = form_uses_xl() ? experience_level * 10 :
+                 projectile     ? skill(SK_THROWING, 10) :
+                                  skill(SK_UNARMED_COMBAT, 10);
+        attk_delay = random_var(10) - div_rand_round(random_var(sk), 27*2);
 
-            // ...and sped up by skill (min delay (10 - 270/54) = 5)
-            skill_type sk = projectile ? SK_THROWING : SK_UNARMED_COMBAT;
-            attk_delay -= div_rand_round(constant(you.skill(sk, 10)), 54);
-
-            // Bats are faster (for whatever good it does them).
-            if (you.form == TRAN_BAT && !projectile)
-                attk_delay = div_rand_round(attk_delay * constant(3), 5);
-        }
+        // Bats are faster (for whatever good it does them).
+        if (you.form == TRAN_BAT && !projectile)
+            attk_delay = div_rand_round(attk_delay * 3, 5);
     }
-    else
+    else if (weap &&
+             (projectile ? projectile->launched_by(*weap)
+                         : is_melee_weapon(*weap)))
     {
-        if (weap && is_weapon(*weap)
-            && (!projectile && !is_range_weapon(*weap)
-                || projectile
-                   && is_launched(this, weap, *projectile) == LRET_LAUNCHED))
-        {
-            const skill_type wpn_skill = item_attack_skill(*weap);
-            attk_delay = constant(property(*weap, PWPN_SPEED));
-            attk_delay -=
-                div_rand_round(constant(you.skill(wpn_skill, 10)),
-                               DELAY_SCALE);
+        const skill_type wpn_skill = item_attack_skill(*weap);
+        attk_delay = random_var(property(*weap, PWPN_SPEED));
+        attk_delay -= div_rand_round(random_var(you.skill(wpn_skill, 10)),
+                                     DELAY_SCALE);
 
-            // apply minimum to weapon skill modification
-            attk_delay = rv::max(attk_delay, weapon_min_delay(*weap));
+        if (get_weapon_brand(*weap) == SPWPN_SPEED)
+            attk_delay = div_rand_round(attk_delay * 2, 3);
 
-            if (weap->base_type == OBJ_WEAPONS
-                && get_weapon_brand(*weap) == SPWPN_SPEED)
-            {
-                attk_delay = div_rand_round(constant(2) * attk_delay, 3);
-            }
-        }
+        // apply minimum to weapon skill modification
+        attk_delay = rv::max(attk_delay, random_var(weapon_min_delay(*weap)));
     }
 
     // At the moment it never gets this low anyway.
-    attk_delay = rv::max(attk_delay, constant(3));
+    attk_delay = rv::max(attk_delay, random_var(3));
 
-    // Calculate this separately to avoid overflowing the weights in
-    // the random_var.
-    random_var shield_penalty = constant(0);
     if (base_shield_penalty)
     {
-        shield_penalty =
+        // Calculate this separately to avoid overflowing the weights in
+        // the random_var.
+        random_var shield_penalty =
             div_rand_round(rv::min(rv::roll_dice(1, base_shield_penalty),
                                    rv::roll_dice(1, base_shield_penalty)),
                            DELAY_SCALE);
+        attk_delay += shield_penalty;
     }
-    // Give unarmed shield-users a slight penalty always.
-    if (!weap && player_wearing_slot(EQ_SHIELD))
-        shield_penalty += rv::random2(2);
 
-    if (!do_shield)
-        shield_penalty = constant(0);
+    if (you.duration[DUR_FINESSE])
+    {
+        ASSERT(!you.duration[DUR_BERSERK]);
+        // Finesse shouldn't stack with Haste, so we make this attack take
+        // longer so when Haste speeds it up, only Finesse will apply.
+        if (you.duration[DUR_HASTE] && rescale)
+            attk_delay = haste_mul(attk_delay);
+        attk_delay = rv::max(random_var(2), div_rand_round(attk_delay, 2));
+    }
 
-    int final_delay = random ? attk_delay.roll() + shield_penalty.roll()
-                             : attk_delay.max() + shield_penalty.max();
-    // Stop here if we just want the unmodified value.
-    if (!scaled)
-        return final_delay;
-
-    const int scaling = finesse_adjust_delay(you.time_taken);
-    return max(2, div_rand_round(scaling * final_delay, 10));
+    // see comment on player.cc:player_speed
+    return div_rand_round(attk_delay * you.time_taken, 10);
 }
 
 // Returns the item in the given equipment slot, nullptr if the slot is empty.
@@ -410,7 +363,7 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
                             || hands_reqd(item) == HANDS_TWO;
 
     if (two_handed && (
-        (!ignore_shield && player_wearing_slot(EQ_SHIELD))
+        (!ignore_shield && shield())
         || player_mutation_level(MUT_MISSING_HAND)))
     {
         return false;
@@ -431,10 +384,9 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 bool player::could_wield(const item_def &item, bool ignore_brand,
                          bool ignore_transform, bool quiet) const
 {
-    const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
-
     // Only ogres and trolls can wield large rocks (for sandblast).
-    if (bsize < SIZE_LARGE && item.is_type(OBJ_MISSILES, MI_LARGE_ROCK))
+    if (!species_can_throw_large_rocks(you.species)
+        && item.is_type(OBJ_MISSILES, MI_LARGE_ROCK))
     {
         if (!quiet)
             mpr("That's too large and heavy for you to wield.");
@@ -460,6 +412,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         return false;
     }
 
+    const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
     // Small species wielding large weapons...
     if (!is_weapon_wieldable(item, bsize))
     {
@@ -640,7 +593,7 @@ string player::arm_name(bool plural, bool *can_plural) const
     string adj;
     string str = "arm";
 
-    if (player_genus(GENPC_DRACONIAN) || species == SP_NAGA)
+    if (species_is_draconian(you.species) || species == SP_NAGA)
         adj = "scaled";
     else if (species == SP_TENGU)
         adj = "feathered";
@@ -779,13 +732,8 @@ bool player::go_berserk(bool intentional, bool potion)
     if (!you.can_go_berserk(intentional, potion))
         return false;
 
-    if (stasis_blocks_effect(true,
-                             "%s thrums violently and saps your rage.",
-                             3,
-                             "%s vibrates violently and saps your rage."))
-    {
+    if (stasis_blocks_effect(true, "%s vibrates violently and saps your rage."))
         return false;
-    }
 
     if (crawl_state.game_is_hints())
         Hints.hints_berserk_counter++;
@@ -842,94 +790,49 @@ bool player::can_go_berserk() const
     return can_go_berserk(false);
 }
 
-bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
+bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
+                            string *reason) const
 {
+    COMPILE_CHECK(HUNGER_STARVING - 100 + BERSERK_NUTRITION < HUNGER_VERY_HUNGRY);
     const bool verbose = (intentional || potion) && !quiet;
+    string msg;
+    bool success = false;
 
     if (berserk())
-    {
-        if (verbose)
-            mpr("You're already berserk!");
-        // or else you won't notice -- no message here.
-        return false;
-    }
-
-    if (duration[DUR_EXHAUSTED])
-    {
-        if (verbose)
-            mpr("You're too exhausted to go berserk.");
-        // or else they won't notice -- no message here
-        return false;
-    }
-
-    if (duration[DUR_DEATHS_DOOR])
-    {
-        if (verbose)
-            mpr("Your body is effectively dead; that's not a shape for a blood rage.");
-        return false;
-    }
-
-    if (beheld() && !player_equip_unrand(UNRAND_DEMON_AXE))
-    {
-        if (verbose)
-            mpr("You are too mesmerised to rage.");
-        // or else they won't notice -- no message here
-        return false;
-    }
-
-    if (afraid())
-    {
-        if (verbose)
-            mpr("You are too terrified to rage.");
-
-        return false;
-    }
-
+        msg = "You're already berserk!";
+    else if (duration[DUR_EXHAUSTED])
+         msg = "You're too exhausted to go berserk.";
+    else if (duration[DUR_DEATHS_DOOR])
+        msg = "Your body is effectively dead and in no shape for a blood rage.";
+    else if (beheld() && !player_equip_unrand(UNRAND_DEMON_AXE))
+        msg = "You are too mesmerised to rage.";
+    else if (afraid())
+        msg = "You are too terrified to rage.";
 #if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-    {
-        if (verbose)
-            mpr("Only creatures of flesh and blood can berserk.");
-
-        return false;
-    }
-
+    else if (you.species == SP_DJINNI)
+        msg = "Only creatures of flesh and blood can berserk.";
 #endif
-    if (is_lifeless_undead())
+    else if (is_lifeless_undead())
+        msg = "You cannot raise a blood rage in your lifeless body.";
+    // Stasis for identified amulets; unided amulets will trigger when the
+    // player attempts to activate berserk.
+    else if (stasis(false))
+        msg = "You cannot go berserk while under stasis.";
+    else if (!intentional && !potion && clarity())
+        msg = "You're too calm and focused to rage.";
+    else if (hunger <= HUNGER_VERY_HUNGRY)
+        msg = "You're too hungry to go berserk.";
+    else
+        success = true;
+
+    if (!success)
     {
         if (verbose)
-            mpr("You cannot raise a blood rage in your lifeless body.");
-
-        return false;
+            mpr(msg);
+        if (reason)
+            *reason = msg;
     }
-
-    // Stasis, but only for identified amulets; unided amulets will
-    // trigger when the player attempts to activate berserk,
-    // auto-iding at that point, but also killing the berserk and
-    // wasting a turn.
-    if (stasis(false))
-    {
-        if (verbose)
-            mpr("You cannot go berserk while under stasis.");
-        return false;
-    }
-
-    if (!intentional && !potion && clarity())
-    {
-        if (verbose)
-            mpr("You're too calm and focused to rage.");
-        return false;
-    }
-
-    COMPILE_CHECK(HUNGER_STARVING - 100 + BERSERK_NUTRITION < HUNGER_VERY_HUNGRY);
-    if (hunger <= HUNGER_VERY_HUNGRY)
-    {
-        if (verbose)
-            mpr("You're too hungry to go berserk.");
-        return false;
-    }
-
-    return true;
+    return success;
 }
 
 bool player::berserk() const

@@ -166,7 +166,7 @@ Cocytus
 
 Cocytus est une étendue désertique sombre et gelée.
 
-Cocytus est profond de sept niveaux et contient la rune gelée.  Il peut être
+Cocytus est profond de sept niveaux et contient la rune gelée. Il peut être
 atteint depuis le Vestibule de l'Enfer.
 %%%%
 Tartarus

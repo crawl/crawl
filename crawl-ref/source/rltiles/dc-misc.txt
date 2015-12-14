@@ -95,6 +95,11 @@ searing_ray5
 
 hellfire BOLT_HELLFIRE
 
+irradiate0 BOLT_IRRADIATE
+irradiate1
+irradiate2
+irradiate3
+
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
 indicator_2
@@ -119,27 +124,17 @@ cloud_meph0 CLOUD_MEPHITIC_0
 cloud_meph1 CLOUD_MEPHITIC_1
 cloud_meph2 CLOUD_MEPHITIC_2
 cloud_black_smoke CLOUD_BLACK_SMOKE
-cloud_black_smoke_disturbance CLOUD_BLACK_SMOKE_DISTURBANCE
 cloud_blue_smoke CLOUD_BLUE_SMOKE
-cloud_blue_smoke_disturbance CLOUD_BLUE_SMOKE_DISTURBANCE
 cloud_grey_smoke CLOUD_GREY_SMOKE
-cloud_grey_smoke_disturbance CLOUD_GREY_SMOKE_DISTURBANCE
 cloud_yellow_smoke CLOUD_YELLOW_SMOKE
-cloud_yellow_smoke_disturbance CLOUD_YELLOW_SMOKE_DISTURBANCE
 
 %variation CLOUD_GREY_SMOKE white
 %lum 0 30
 %repeat CLOUD_GREY_SMOKE CLOUD_WHITE_SMOKE
 %resetcol
 
-%variation CLOUD_GREY_SMOKE_DISTURBANCE white
-%lum 0 30
-%repeat CLOUD_GREY_SMOKE_DISTURBANCE CLOUD_WHITE_SMOKE_DISTURBANCE
-%resetcol
-
 cloud_miasma CLOUD_MIASMA
 cloud_tloc_energy CLOUD_TLOC_ENERGY
-cloud_tloc_energy_disturbance CLOUD_TLOC_ENERGY_DISTURBANCE
 cloud_mutagenic_small1 CLOUD_MUTAGENIC_0
 cloud_mutagenic_small2
 cloud_mutagenic_medium1 CLOUD_MUTAGENIC_1
@@ -183,9 +178,9 @@ cloud_calc_dust3
 
 cloud_forest_fire CLOUD_FOREST_FIRE
 
-cloud_ghostly_flame0 CLOUD_GHOSTLY_FLAME_0
-cloud_ghostly_flame1 CLOUD_GHOSTLY_FLAME_1
-cloud_ghostly_flame2 CLOUD_GHOSTLY_FLAME_2
+cloud_spectral0 CLOUD_SPECTRAL_0
+cloud_spectral1 CLOUD_SPECTRAL_1
+cloud_spectral2 CLOUD_SPECTRAL_2
 
 cloud_acid0 CLOUD_ACID_0
 cloud_acid1 CLOUD_ACID_1

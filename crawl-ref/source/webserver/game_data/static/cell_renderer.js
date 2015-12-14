@@ -29,9 +29,15 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             elem.detach();
         }
 
-        healthy = $("#stats_hp_bar_full").css("background-color");
-        hp_spend = $("#stats_hp_bar_decrease").css("background-color");
-        magic = $("#stats_mp_bar_full").css("background-color");
+        // FIXME: CSS lookup doesn't work on Chrome after saving and loading a
+        // game, style information is missing for some reason.
+        // Use hard coded values instead.
+        healthy = "#8ae234";
+        hp_spend = "#a40000";
+        magic = "#729fcf";
+        // healthy = $("#stats_hp_bar_full").css("background-color");
+        // hp_spend = $("#stats_hp_bar_decrease").css("background-color");
+        // magic = $("#stats_mp_bar_full").css("background-color");
         magic_spend = "black";
     }
 
@@ -212,7 +218,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             // to an image while drawing; so to achieve the same
             // effect as in local tiles, it would probably be best
             // to pregenerate water tiles with the (inverse) alpha
-            // gradient built in.  This simply draws the lower
+            // gradient built in. This simply draws the lower
             // half with increased transparency; for now, it looks
             // good enough.
 
@@ -643,8 +649,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                     // TAG_MAJOR_VERSION == 34
                     if (cell.heat_aura)
                         this.draw_dngn(dngn.HEAT_AURA + cell.heat_aura - 1, x, y);
-                    if (cell.gold_aura)
-                        this.draw_dngn(dngn.GOLD_AURA + cell.gold_aura - 1, x, y);
                     if (cell.silenced)
                         this.draw_dngn(dngn.SILENCED, x, y);
                     if (cell.halo == enums.HALO_RANGE)
@@ -659,7 +663,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                         this.draw_dngn(dngn.DISJUNCT + cell.disjunct - 1, x, y);
 
                     // Apply the travel exclusion under the foreground if the cell is
-                    // visible.  It will be applied later if the cell is unseen.
+                    // visible. It will be applied later if the cell is unseen.
                     if (bg.EXCL_CTR)
                         this.draw_dngn(dngn.TRAVEL_EXCLUSION_CENTRE_BG, x, y);
                     else if (bg.TRAV_EXCL)
@@ -734,10 +738,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             {
                 this.render_glyph(x, y, map_cell, true);
             }
-
-            // gozag gold sparkles, only if there's no creature in tile
-            if (cell.gold_aura && fg_idx < main.MAIN_MAX)
-                this.draw_icon(icons.GOLD_SPARKLES + cell.gold_aura - 1, x, y);
 
             if (fg.NET)
                 this.draw_icon(icons.TRAP_NET, x, y);

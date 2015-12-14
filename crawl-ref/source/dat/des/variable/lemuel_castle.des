@@ -22,7 +22,7 @@ function castle_lemuel_subvault_setup(e)
          e.kfeat("~ = known alarm trap w:1 / floor")
          e.subst("X = c +:1")
          e.subst("8 = 89")
-         e.tile("c = wall_stone_brick")
+         e.tile("c = wall_stone_smooth")
          e.ftile(".~*XG|+$ = floor_cobble_blood")
          e.ftile("12348 = floor_cobble_blood")
          e.ftile("= = floor_cobble_blood")
@@ -71,15 +71,15 @@ function castle_lemuel_subvault_setup(e)
             e.subst("* = *$")
             e.subst("w : wl")
             e.nsubst("1 = 14:1 / *:.")
-            e.mons("red draconian / white draconian / green draconian / pale draconian /\
+            e.mons("red draconian / white draconian / green draconian / \
                     black draconian / purple draconian / nothing w:30")
-            e.mons("pale draconian monk / grey draconian annihilator / \
+            e.mons("mottled draconian monk / purple draconian annihilator / \
                     green draconian monk / golden dragon w:5")
             e.mons("red draconian scorcher / white draconian knight / \
                     purple draconian zealot / black draconian shifter")
             e.mons("lindwurm / wind drake w:5 / death drake w:5 / \
                     swamp drake / nothing w:5")
-            e.mons("red draconian / green draconian / white draconian / pale draconian /\
+            e.mons("red draconian / green draconian / white draconian / \
                     black draconian / purple draconian")
             e.mons("lindwurm / wind drake w:5 / death drake w:5 / \
                     swamp drake / nothing w:5")

@@ -24,7 +24,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-book.h"
@@ -130,7 +130,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                  || brand == SPWPN_REAPING
                  || brand == SPWPN_CHAOS
                  || is_demonic(item)
-                 || artefact_property(item, ARTP_CURSED) != 0))
+                 || artefact_property(item, ARTP_CURSE) != 0))
     {
         return false;
     }
@@ -148,7 +148,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     case GOD_ZIN:
         // Lawful god: no mutagenics.
-        if (artefact_property(item, ARTP_MUTAGENIC))
+        if (artefact_property(item, ARTP_CONTAM))
             return false;
         break;
 
@@ -186,7 +186,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (brand == SPWPN_PAIN) // Pain involves necromantic spell use.
             return false;
 
-        if (artefact_property(item, ARTP_MAGICAL_POWER))
+        if (artefact_property(item, ARTP_MAGICAL_POWER) > 0)
             return false;
         break;
 
@@ -241,8 +241,7 @@ string replace_name_parts(const string &name_in, const item_def& item)
 {
     string name = name_in;
 
-    god_type god_gift;
-    (void) origin_is_god_gift(item, &god_gift);
+    const god_type god_gift = origin_as_god_gift(item);
 
     // Don't allow "player's Death" type names for god gifts (except
     // for those from Xom).
@@ -270,7 +269,7 @@ string replace_name_parts(const string &name_in, const item_def& item)
     name = replace_all(name, "@player_name@", you.your_name);
 
     name = replace_all(name, "@player_species@",
-                 species_name(static_cast<species_type>(you.species), true));
+                 species_name(you.species, SPNAME_GENUS));
 
     if (name.find("@branch_name@", 0) != string::npos)
     {
@@ -293,19 +292,13 @@ string replace_name_parts(const string &name_in, const item_def& item)
         {
             do
             {
-                which_god = random_god(false); // Fedhas in ZotDef only
+                which_god = random_god();
             }
             while (!_god_fits_artefact(which_god, item, true));
         }
 
         name = replace_all(name, "@god_name@", god_name(which_god, false));
     }
-
-    // copied from apostrophise() (libutil.cc):
-    // The proper possessive for a word ending in an "s" is to
-    // put an apostrophe after the "s": "Chris" -> "Chris'",
-    // not "Chris" -> "Chris's".  Stupid English language...
-    name = replace_all(name, "s's", "s'");
 
     return name;
 }
@@ -411,7 +404,7 @@ static void _populate_armour_intrinsic_artps(const armour_type arm,
     proprt[ARTP_NEGATIVE_ENERGY] += armour_type_prop(arm, ARMF_RES_NEG);
     proprt[ARTP_POISON] += armour_type_prop(arm, ARMF_RES_POISON);
     proprt[ARTP_ELECTRICITY] += armour_type_prop(arm, ARMF_RES_ELEC);
-    proprt[ARTP_MAGIC] += armour_type_prop(arm, ARMF_RES_MAGIC);
+    proprt[ARTP_MAGIC_RESISTANCE] += armour_type_prop(arm, ARMF_RES_MAGIC);
     proprt[ARTP_STEALTH] += armour_type_prop(arm, ARMF_STEALTH);
     proprt[ARTP_REGENERATION] += armour_type_prop(arm, ARMF_REGENERATION);
 }
@@ -433,7 +426,7 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { RING_INVISIBILITY, { { ARTP_INVISIBLE, 1 } } },
     { RING_MAGICAL_POWER, { { ARTP_MAGICAL_POWER, 9 } } },
     { RING_FLIGHT, { { ARTP_FLY, 1 } } },
-    { RING_SEE_INVISIBLE, { { ARTP_EYESIGHT, 1 } } },
+    { RING_SEE_INVISIBLE, { { ARTP_SEE_INVISIBLE, 1 } } },
     { RING_STEALTH, { { ARTP_STEALTH, 1 } } },
     { RING_LOUDNESS, { { ARTP_STEALTH, -1 } } },
 
@@ -441,7 +434,7 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { RING_PROTECTION_FROM_COLD, { { ARTP_COLD, 1 } } },
     { RING_POISON_RESISTANCE, { { ARTP_POISON, 1 } } },
     { RING_LIFE_PROTECTION, { { ARTP_NEGATIVE_ENERGY, 1 } } },
-    { RING_PROTECTION_FROM_MAGIC, { { ARTP_MAGIC, 1 } } },
+    { RING_PROTECTION_FROM_MAGIC, { { ARTP_MAGIC_RESISTANCE, 1 } } },
 
     { RING_FIRE, { { ARTP_FIRE, 1 }, { ARTP_COLD, -1 } } },
     { RING_ICE, { { ARTP_COLD, 1 }, { ARTP_FIRE, -1 } } },
@@ -542,7 +535,7 @@ static void _add_randart_weapon_brand(const item_def &item,
         else if (item_attack_skill(item) == SK_CROSSBOWS)
         {
             // Penetration and electrocution are only allowed on
-            // crossbows.  This may change in future.
+            // crossbows. This may change in future.
             if (one_chance_in(5))
                 item_props[ARTP_BRAND] = SPWPN_ELECTROCUTION;
             else if (one_chance_in(5))
@@ -606,38 +599,45 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         return false; // don't duplicate intrinsic props
 
     const object_class_type item_class = item.base_type;
-    const int item_type = item.sub_type;
 
     switch (prop)
     {
         case ARTP_SLAYING:
             return item_class != OBJ_WEAPONS; // they already have slaying!
         case ARTP_POISON:
-        case ARTP_EYESIGHT:
+        case ARTP_SEE_INVISIBLE:
             return !item.is_type(OBJ_ARMOUR, ARM_NAGA_BARDING);
             // naga already have rPois & sInv!
+        case ARTP_CORRODE:
+            return !extant_props[ARTP_RCORR];
         case ARTP_RCORR:
+            return item_class == OBJ_ARMOUR && !extant_props[ARTP_CORRODE];
         case ARTP_REGENERATION:
+        case ARTP_PREVENT_SPELLCASTING:
             return item_class == OBJ_ARMOUR; // limit availability to armour
         case ARTP_BERSERK:
         case ARTP_ANGRY:
-        case ARTP_NOISES:
+        case ARTP_NOISE:
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
             // works poorly with ranged weapons
         case ARTP_CAUSE_TELEPORTATION:
-            return item_type != OBJ_WEAPONS
-                    && !crawl_state.game_is_sprint()
-                    && !extant_props[ARTP_PREVENT_TELEPORTATION];
+            return item_class != OBJ_WEAPONS
+                   && !crawl_state.game_is_sprint()
+                   && !extant_props[ARTP_PREVENT_TELEPORTATION];
             // no tele in sprint, and too annoying on weapons (swappable)
             // and obv we shouldn't generate contradictory props
         case ARTP_PREVENT_TELEPORTATION:
-            return !item.is_type(OBJ_JEWELLERY, RING_TELEPORT_CONTROL)
-                    && !extant_props[ARTP_BLINK]
-                    && !extant_props[ARTP_CAUSE_TELEPORTATION];
-            // no contradictory props/item types
+            return !extant_props[ARTP_BLINK]
+                   && !extant_props[ARTP_CAUSE_TELEPORTATION];
+            // no contradictory props
         case ARTP_BLINK:
             return !extant_props[ARTP_PREVENT_TELEPORTATION];
             // no contradictory props
+        case ARTP_CONFUSE:
+            return !item.is_type(OBJ_JEWELLERY, AMU_CLARITY);
+        case ARTP_MAGICAL_POWER:
+            return item_class != OBJ_WEAPONS
+                   || get_weapon_brand(item) != SPWPN_ANTIMAGIC;
         default:
             return true;
     }
@@ -654,22 +654,22 @@ struct artefact_prop_data
     int weight;
     /// Randomly generate a 'good' value; null if this prop is never good
     function<int ()> gen_good_value;
-    /// Randomly generate a 'bad' value; null if this prop is never good
+    /// Randomly generate a 'bad' value; null if this prop is never bad
     function<int ()> gen_bad_value;
+    /// The value beyond which the artp should not be repeatedly applied.
+    int max_dup;
+    /// The amount to increment the odds of a property being reapplied
+    int odds_inc;
 };
 
-
 /// Generate 'good' values for stat artps (e.g. ARTP_STRENGTH)
-static int _gen_good_stat_artp() {
-    // normally 2-4, max 6
-    return 2 + random2(3) + (one_chance_in(4) ? random2(3) : 0);
-}
+static int _gen_good_stat_artp() { return 1 + random2(3); }
 
 /// Generate 'bad' values for stat artps (e.g. ARTP_STRENGTH)
-static int _gen_bad_stat_artp() { return -_gen_good_stat_artp(); }
+static int _gen_bad_stat_artp() { return -2 - random2(4); }
 
 /// Generate 'good' values for resist-ish artps (e.g. ARTP_FIRE)
-static int _gen_good_res_artp() { return 1 + one_chance_in(5); }
+static int _gen_good_res_artp() { return 1; }
 
 /// Generate 'bad' values for resist-ish artps (e.g. ARTP_FIRE)
 static int _gen_bad_res_artp() { return -1; }
@@ -683,104 +683,96 @@ static int _gen_bad_hpmp_artp() { return -_gen_good_hpmp_artp(); }
 /// Generation info for artefact properties.
 static const artefact_prop_data artp_data[] =
 {
-    { "Brand", ARTP_VAL_POS, 0,
-        nullptr, nullptr }, // ARTP_BRAND,
-    { "AC", ARTP_VAL_ANY, 0,
-        nullptr, nullptr }, // ARTP_AC,
-    { "EV", ARTP_VAL_ANY, 0,
-        nullptr, nullptr }, // ARTP_EVASION,
-    { "Str", ARTP_VAL_ANY, 95,
-        _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_STRENGTH,
-    { "Int", ARTP_VAL_ANY, 95,
-        _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_INTELLIGENCE,
-    { "Dex", ARTP_VAL_ANY, 95,
-        _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_DEXTERITY,
-    { "rF", ARTP_VAL_ANY, 60,
-        _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_FIRE,
-    { "rC", ARTP_VAL_ANY, 60,
-        _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_COLD,
-    { "rElec", ARTP_VAL_BOOL, 50,
-        []() { return 1; }, nullptr }, // ARTP_ELECTRICITY,
-    { "rPois", ARTP_VAL_ANY, 50,
-        []() { return 1; }, _gen_bad_res_artp }, // ARTP_POISON,
-    { "rN", ARTP_VAL_ANY, 50,
-        _gen_good_res_artp,  _gen_bad_res_artp }, // ARTP_NEGATIVE_ENERGY,
-    { "MR", ARTP_VAL_ANY, 50,
-        _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_MAGIC,
-    { "SInv", ARTP_VAL_BOOL, 30,
-        []() { return 1; }, nullptr }, // ARTP_EYESIGHT,
-    { "+Inv", ARTP_VAL_BOOL, 15,
-        []() { return 1; }, nullptr }, // ARTP_INVISIBLE,
-    { "+Fly", ARTP_VAL_BOOL, 15,
-        []() { return 1; }, nullptr }, // ARTP_FLY,
+    { "Brand", ARTP_VAL_POS, 0, nullptr, nullptr, 0, 0 }, // ARTP_BRAND,
+    { "AC", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0}, // ARTP_AC,
+    { "EV", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_EVASION,
+    { "Str", ARTP_VAL_ANY, 100,     // ARTP_STRENGTH,
+        _gen_good_stat_artp, _gen_bad_stat_artp, 7, 1 },
+    { "Int", ARTP_VAL_ANY, 100,     // ARTP_INTELLIGENCE,
+        _gen_good_stat_artp, _gen_bad_stat_artp, 7, 1 },
+    { "Dex", ARTP_VAL_ANY, 100,     // ARTP_DEXTERITY,
+        _gen_good_stat_artp, _gen_bad_stat_artp, 7, 1 },
+    { "rF", ARTP_VAL_ANY, 60,       // ARTP_FIRE,
+        _gen_good_res_artp, _gen_bad_res_artp, 2, 4},
+    { "rC", ARTP_VAL_ANY, 60,       // ARTP_COLD,
+        _gen_good_res_artp, _gen_bad_res_artp, 2, 4 },
+    { "rElec", ARTP_VAL_BOOL, 55,   // ARTP_ELECTRICITY,
+        []() { return 1; }, nullptr, 0, 0  },
+    { "rPois", ARTP_VAL_BOOL, 55,   // ARTP_POISON,
+        []() { return 1; }, nullptr, 0, 0 },
+    { "rN", ARTP_VAL_ANY, 55,       // ARTP_NEGATIVE_ENERGY,
+        _gen_good_res_artp, nullptr, 2, 4 },
+    { "MR", ARTP_VAL_ANY, 50,       // ARTP_MAGIC_RESISTANCE,
+        _gen_good_res_artp, _gen_bad_res_artp, 2, 4 },
+    { "SInv", ARTP_VAL_BOOL, 30,    // ARTP_SEE_INVISIBLE,
+        []() { return 1; }, nullptr, 0, 0 },
+    { "+Inv", ARTP_VAL_BOOL, 15,    // ARTP_INVISIBLE,
+        []() { return 1; }, nullptr, 0, 0 },
+    { "+Fly", ARTP_VAL_BOOL, 15,    // ARTP_FLY,
+        []() { return 1; }, nullptr, 0, 0 },
 #if TAG_MAJOR_VERSION > 34
-    { "+Fog", ARTP_VAL_BOOL, 0,
-        nullptr, nullptr }, // ARTP_FOG,
+    { "+Fog", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_FOG,
 #endif
-    { "+Blink", ARTP_VAL_BOOL, 15,
-        []() { return 1; }, nullptr }, // ARTP_BLINK,
-    { "+Rage", ARTP_VAL_BOOL, 15,
-        []() { return 1; }, nullptr }, // ARTP_BERSERK,
-    { "Noisy", ARTP_VAL_POS, 20,
-        nullptr, []() { return 2; } }, // ARTP_NOISES,
-    { "-Cast", ARTP_VAL_BOOL, 20,
-        nullptr, []() { return 1; } }, // ARTP_PREVENT_SPELLCASTING,
-    { "*Tele", ARTP_VAL_POS, 20,
-        nullptr, []() { return 8; } }, // ARTP_CAUSE_TELEPORTATION,
-    { "-Tele", ARTP_VAL_BOOL, 20,
-        nullptr, []() { return 1; } }, // ARTP_PREVENT_TELEPORTATION,
-    { "*Rage", ARTP_VAL_POS, 20,
-        nullptr, []() { return 5; } }, // ARTP_ANGRY,
+    { "+Blink", ARTP_VAL_BOOL, 15,  // ARTP_BLINK,
+        []() { return 1; }, nullptr, 0, 0 },
+    { "+Rage", ARTP_VAL_BOOL, 15,   // ARTP_BERSERK,
+        []() { return 1; }, nullptr, 0, 0 },
+    { "*Noise", ARTP_VAL_POS, 25,    // ARTP_NOISE,
+        nullptr, []() { return 2; }, 0, 0 },
+    { "-Cast", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_SPELLCASTING,
+        nullptr, []() { return 1; }, 0, 0 },
+    { "*Tele", ARTP_VAL_BOOL,  0,   // ARTP_CAUSE_TELEPORTATION,
+        nullptr, []() { return 1; }, 0, 0 },
+    { "-Tele", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_TELEPORTATION,
+        nullptr, []() { return 1; }, 0, 0 },
+    { "*Rage", ARTP_VAL_POS, 25,    // ARTP_ANGRY,
+        nullptr, []() { return 5; }, 0, 0 },
 #if TAG_MAJOR_VERSION == 34
-    { "Hungry", ARTP_VAL_POS, 0,
-        nullptr, nullptr }, // ARTP_METABOLISM,
+    { "Hungry", ARTP_VAL_POS, 0, nullptr, nullptr, 0, 0 },// ARTP_METABOLISM,
 #endif
-    { "Contam", ARTP_VAL_POS, 20,
-        nullptr, []() { return 1; } }, // ARTP_MUTAGENIC,
+    { "*Contam", ARTP_VAL_POS, 20,   // ARTP_CONTAM
+        nullptr, []() { return 1; }, 0, 0 },
 #if TAG_MAJOR_VERSION == 34
-    { "Acc", ARTP_VAL_ANY, 0,
-        nullptr, nullptr }, // ARTP_ACCURACY,
+    { "Acc", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_ACCURACY,
 #endif
-    { "Slay", ARTP_VAL_ANY, 30,
-      []() { return 2 + random2(3) + random2(3); },
-      []() { return -(2 + random2(3) + random2(3)); } }, // ARTP_SLAYING,
-    { "Curse", ARTP_VAL_POS, 0,
-        nullptr, nullptr }, // ARTP_CURSED,
-    { "Stlth", ARTP_VAL_ANY, 40,
-        _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_STEALTH,
-    { "MP", ARTP_VAL_ANY, 30,
-        _gen_good_hpmp_artp, _gen_bad_hpmp_artp }, // ARTP_MAGICAL_POWER,
-    { "Delay", ARTP_VAL_ANY, 0,
-        nullptr, nullptr }, // ARTP_BASE_DELAY,
-    { "HP", ARTP_VAL_ANY, 30,
-        _gen_good_hpmp_artp, _gen_bad_hpmp_artp }, // ARTP_HP,
-    { "Clar", ARTP_VAL_BOOL, 0,
-        nullptr, nullptr }, // ARTP_CLARITY,
-    { "BAcc", ARTP_VAL_ANY, 0,
-        nullptr, nullptr }, // ARTP_BASE_ACC,
-    { "BDam", ARTP_VAL_ANY, 0,
-        nullptr, nullptr }, // ARTP_BASE_DAM,
-    { "RMsl", ARTP_VAL_BOOL, 0,
-        nullptr, nullptr }, // ARTP_RMSL,
+    { "Slay", ARTP_VAL_ANY, 30,     // ARTP_SLAYING,
+      []() { return 2 + random2(2); },
+      []() { return -(2 + random2(3) + random2(3)); }, 3, 2 },
+    { "*Curse", ARTP_VAL_POS, 0, nullptr, nullptr, 0 }, // ARTP_CURSE,
+    { "Stlth", ARTP_VAL_ANY, 40,    // ARTP_STEALTH,
+        _gen_good_res_artp, _gen_bad_res_artp, 0, 0 },
+    { "MP", ARTP_VAL_ANY, 30,       // ARTP_MAGICAL_POWER,
+        _gen_good_hpmp_artp, _gen_bad_hpmp_artp, 0, 0 },
+    { "Delay", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_BASE_DELAY,
+    { "HP", ARTP_VAL_ANY, 0,       // ARTP_HP,
+        _gen_good_hpmp_artp, _gen_bad_hpmp_artp, 0, 0 },
+    { "Clar", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_CLARITY,
+    { "BAcc", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 },  // ARTP_BASE_ACC,
+    { "BDam", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 },  // ARTP_BASE_DAM,
+    { "RMsl", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_RMSL,
 #if TAG_MAJOR_VERSION == 34
-    { "+Fog", ARTP_VAL_BOOL, 0,
-        nullptr, nullptr }, // ARTP_FOG,
+    { "+Fog", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_FOG,
 #endif
-    { "Regen", ARTP_VAL_POS, 30,
-        []() { return 1; }, nullptr }, // ARTP_REGENERATION,
-    { "SustAb", ARTP_VAL_BOOL, 0,
-        nullptr, nullptr }, // ARTP_SUSTAB,
-    { "nupgr", ARTP_VAL_BOOL, 0,
-        nullptr, nullptr }, // ARTP_NO_UPGRADE,
-    { "rCorr", ARTP_VAL_BOOL, 40,
-        []() { return 1; }, nullptr }, // ARTP_RCORR,
-    { "rMut", ARTP_VAL_BOOL, 0,
-        nullptr, nullptr }, // ARTP_RMUT,
-    { "+Twstr", ARTP_VAL_BOOL, 5,
-        []() { return 1; }, nullptr }, // ARTP_TWISTER,
+    { "Regen", ARTP_VAL_BOOL, 35,   // ARTP_REGENERATION,
+        []() { return 1; }, nullptr, 0, 0 },
+    { "SustAt", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_SUSTAT,
+    { "nupgr", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 },// ARTP_NO_UPGRADE,
+    { "rCorr", ARTP_VAL_BOOL, 40,   // ARTP_RCORR,
+        []() { return 1; }, nullptr, 0, 0 },
+    { "rMut", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_RMUT,
+#if TAG_MAJOR_VERSION == 34
+    { "+Twstr", ARTP_VAL_BOOL, 0,   // ARTP_TWISTER,
+        []() { return 1; }, nullptr, 0, 0 },
+#endif
+    { "*Corrode", ARTP_VAL_BOOL, 25, // ARTP_CORRODE,
+        nullptr, []() { return 1; }, 0, 0 },
+    { "*Drain", ARTP_VAL_BOOL, 25, // ARTP_DRAIN,
+        nullptr, []() { return 1; }, 0, 0 },
+    { "*Confuse", ARTP_VAL_BOOL, 25, // ARTP_CONFUSE,
+        nullptr, []() { return 1; }, 0, 0 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
-// weights sum to 1000.
+// weights sum to 1000
 
 
 /**
@@ -844,12 +836,25 @@ static void _get_randart_properties(const item_def &item,
 {
     const object_class_type item_class = item.base_type;
 
-    // number of good properties to assign -- avg 2.4, min 1.
-    int good = max(1, binomial(6, 40));
-
-    // number of bad properties to assign. Chance increases w/ number of good
-    // properties. Average is .18 bad per good, up to 1.08 for 6 good.
-    int bad = binomial(3, 8 * good);
+    // first figure out how good we want the artefact to be, range 1 to 7.
+    int quality = max(1, binomial(7, 30));
+    // then consider adding bad properties. the better the artefact, the more
+    // likely we add a bad property, up to a max of 2.
+    int bad = binomial(1 + div_rand_round(quality, 5), 30);
+    // we start by assuming we'll allow one good property per quality level
+    // and an additional one for each bad property.
+    int good = quality + bad;
+    // but we want avoid generating more then 4-ish properties properties or
+    // things get spammy. Extra "good" properties will be used to enhance
+    // properties only, not to add more distinct properties. There is still a
+    // small chance of >4 properties.
+    int max_properties = 4 + one_chance_in(20) + one_chance_in(40);
+    int enhance = 0;
+    if (good + bad > max_properties)
+    {
+        enhance = good + bad - max_properties;
+        good = 4 - bad;
+    }
 
     // initialize a vector of weighted artefact properties to pick from
     vector<pair<artefact_prop_type, int>> art_prop_weights;
@@ -884,8 +889,29 @@ static void _get_randart_properties(const item_def &item,
 
         if (gen_good)
         {
-            item_props[prop] = artp_data[prop].gen_good_value();
-            --good;
+            // potentially increment the value of the property more than once,
+            // using up a good property each time.
+            const int max = artp_data[prop].max_dup;
+            for (int i = 1;
+                 good > 0 && item_props[prop] <= max &&
+                    ((enhance > 0 && i > 1) || one_chance_in(i));
+                 i += artp_data[prop].odds_inc)
+            {
+                // Add one to the starting value for stat bonuses.
+                if ((prop == ARTP_STRENGTH
+                     || prop == ARTP_INTELLIGENCE
+                     || prop == ARTP_DEXTERITY)
+                    && item_props[prop] == 0)
+                {
+                   item_props[prop]++;
+                }
+
+                item_props[prop] += artp_data[prop].gen_good_value();
+                if (enhance > 0 && i > 1)
+                    --enhance;
+                else
+                    --good;
+            }
         }
         else if (can_gen_bad)
         {
@@ -904,62 +930,6 @@ static void _get_randart_properties(const item_def &item,
         ASSERT(new_end == old_end - 1);
         art_prop_weights.erase(new_end, old_end);
     }
-}
-
-static bool _redo_book(item_def &book)
-{
-    int num_spells  = 0;
-    int num_unknown = 0;
-
-    for (spell_type spell : spellbook_template(static_cast<book_type>(book.sub_type)))
-    {
-        num_spells++;
-        if (!you.seen_spell[spell])
-            num_unknown++;
-    }
-
-    if (num_spells <= 5 && num_unknown == 0)
-        return true;
-    else if (num_spells > 5 && num_unknown <= 1)
-        return true;
-
-    return false;
-}
-
-static bool _init_artefact_book(item_def &book)
-{
-    ASSERT(book.sub_type == BOOK_RANDART_LEVEL
-           || book.sub_type == BOOK_RANDART_THEME);
-    ASSERT(book.book_param != 0);
-
-    god_type god;
-    bool redo = (!origin_is_god_gift(book, &god) || god != GOD_XOM);
-
-    // plus contains a parameter to make_book_foo_randart(), which might get
-    // changed after the book has been made into a randart, so reset it on each
-    // iteration of the loop.
-    // XXX: ...is this really necessary...?
-    const int book_param = book.book_param;
-    bool book_good = false;
-    for (int i = 0; i < 4; i++)
-    {
-        book.book_param = book_param;
-
-        if (book.sub_type == BOOK_RANDART_LEVEL)
-            book_good = make_book_level_randart(book, book.book_param);
-        else
-            book_good = make_book_theme_randart(book);
-
-        if (!book_good)
-            continue;
-
-        if (redo && _redo_book(book))
-            continue;
-
-        break;
-    }
-
-    return book_good;
 }
 
 void setup_unrandart(item_def &item, bool creating)
@@ -993,8 +963,7 @@ static bool _init_artefact_properties(item_def &item)
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
         rap[i] = static_cast<short>(0);
 
-    if (item.base_type == OBJ_BOOKS)
-        return _init_artefact_book(item);
+    ASSERT(item.base_type != OBJ_BOOKS);
 
     artefact_properties_t prop;
     prop.init(0);
@@ -1002,7 +971,7 @@ static bool _init_artefact_properties(item_def &item)
 
     for (int i = 0; i < ART_PROPERTIES; i++)
     {
-        if (i == ARTP_CURSED && prop[i] < 0)
+        if (i == ARTP_CURSE && prop[i] < 0)
         {
             do_curse_item(item);
             continue;
@@ -1112,7 +1081,7 @@ static int _artefact_num_props(const artefact_properties_t &proprt)
 
     // Count all properties, but exclude self-cursing.
     for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
-        if (i != ARTP_CURSED && proprt[i] != 0)
+        if (i != ARTP_CURSE && proprt[i] != 0)
             num++;
 
     return num;
@@ -1280,7 +1249,7 @@ string make_artefact_name(const item_def &item, bool appearance)
     else
     {
         // construct a unique name
-        const string st_p = make_name(random_int(), false);
+        const string st_p = make_name();
         result += item_base_name(item);
 
         if (one_chance_in(3))
@@ -1304,16 +1273,31 @@ static const unrandart_entry *_seekunrandart(const item_def &item)
     return get_unrand_entry(item.special);
 }
 
+string get_artefact_base_name(const item_def &item, bool terse)
+{
+    string base_name = item_base_name(item);
+    const char* custom_type = _seekunrandart(item)->type_name;
+    if (custom_type)
+        base_name = custom_type;
+    if (terse)
+    {
+        base_name = replace_all(base_name, "executioner's axe", "exec axe");
+        base_name = replace_all(base_name, "giant spiked club", "g.spiked club");
+        base_name = replace_all(base_name, "triple crossbow", "triple xbow");
+    }
+    return base_name;
+}
+
 string get_artefact_name(const item_def &item, bool force_known)
 {
     ASSERT(is_artefact(item));
 
     if (item_type_known(item) || force_known)
     {
-        // print artefact's real name
+        // print artefact's real name, if that's set
         if (item.props.exists(ARTEFACT_NAME_KEY))
             return item.props[ARTEFACT_NAME_KEY].get_string();
-        // unrands don't use cached names
+        // other unrands don't use cached names
         if (is_unrandom_artefact(item))
             return _seekunrandart(item)->name;
         return make_artefact_name(item, false);
@@ -1402,10 +1386,13 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
 
 int get_unrandart_num(const char *name)
 {
+    string uname = name;
+    uname = replace_all(uname, " ", "_");
+    uname = replace_all(uname, "'", "");
+    lowercase(uname);
     string quoted = "\"";
-    quoted += name;
+    quoted += uname;
     quoted += "\"";
-    lowercase(quoted);
 
     for (unsigned int i = 0; i < ARRAYSZ(unranddata); ++i)
     {
@@ -1413,7 +1400,7 @@ int get_unrandart_num(const char *name)
         art = replace_all(art, " ", "_");
         art = replace_all(art, "'", "");
         lowercase(art);
-        if (art == name || art.find(quoted) != string::npos)
+        if (art == uname || art.find(quoted) != string::npos)
             return UNRAND_START + i;
     }
     return SPWPN_NORMAL;
@@ -1456,7 +1443,7 @@ static bool _randart_is_redundant(const item_def &item,
         break;
 
     case RING_SEE_INVISIBLE:
-        provides = ARTP_EYESIGHT;
+        provides = ARTP_SEE_INVISIBLE;
         break;
 
     case RING_INVISIBILITY:
@@ -1496,7 +1483,7 @@ static bool _randart_is_redundant(const item_def &item,
         break;
 
     case RING_PROTECTION_FROM_MAGIC:
-        provides = ARTP_MAGIC;
+        provides = ARTP_MAGIC_RESISTANCE;
         break;
 
     case AMU_RAGE:
@@ -1531,7 +1518,7 @@ static bool _randart_is_conflicting(const item_def &item,
     if (item.base_type == OBJ_WEAPONS
         && get_weapon_brand(item) == SPWPN_HOLY_WRATH
         && (is_demonic(item)
-            || proprt[ARTP_CURSED] != 0))
+            || proprt[ARTP_CURSE] != 0))
     {
         return true;
     }
@@ -1572,7 +1559,7 @@ static bool _randart_is_conflicting(const item_def &item,
         break;
 
     case AMU_RESIST_MUTATION:
-        conflicts = ARTP_MUTAGENIC;
+        conflicts = ARTP_CONTAM;
         break;
 
     case AMU_RAGE:
@@ -1646,19 +1633,9 @@ bool make_item_randart(item_def &item, bool force_mundane)
 {
     if (item.base_type != OBJ_WEAPONS
         && item.base_type != OBJ_ARMOUR
-        && item.base_type != OBJ_JEWELLERY
-        && item.base_type != OBJ_BOOKS)
+        && item.base_type != OBJ_JEWELLERY)
     {
         return false;
-    }
-
-    if (item.base_type == OBJ_BOOKS)
-    {
-        if (item.sub_type != BOOK_RANDART_LEVEL
-            && item.sub_type != BOOK_RANDART_THEME)
-        {
-            return false;
-        }
     }
 
     // This item already is a randart.
@@ -1676,8 +1653,7 @@ bool make_item_randart(item_def &item, bool force_mundane)
     _artefact_setup_prop_vectors(item);
     item.flags |= ISFLAG_RANDART;
 
-    god_type god_gift;
-    (void) origin_is_god_gift(item, &god_gift);
+    const god_type god_gift = origin_as_god_gift(item);
 
     int randart_tries = 500;
     do
@@ -1726,16 +1702,17 @@ static void _make_faerie_armour(item_def &item)
             continue;
         }
 
-        // -CAST makes no sense on someone called "the Enchantress",
-        // +TELE is not implemented for monsters yet.
-        if (artefact_property(doodad, ARTP_PREVENT_SPELLCASTING)
-            || artefact_property(doodad, ARTP_CAUSE_TELEPORTATION))
-        {
+        // -Cast makes no sense on someone called "the Enchantress".
+        if (artefact_property(doodad, ARTP_PREVENT_SPELLCASTING))
             continue;
-        }
 
         if (one_chance_in(20))
+        {
+            // Replace Confusing if present.
+            if (artefact_property(doodad, ARTP_CONFUSE))
+                artefact_set_property(doodad, ARTP_CONFUSE, 0);
             artefact_set_property(doodad, ARTP_CLARITY, 1);
+        }
         if (one_chance_in(20))
             artefact_set_property(doodad, ARTP_MAGICAL_POWER, 1 + random2(10));
         if (one_chance_in(20))
@@ -1750,13 +1727,15 @@ static void _make_faerie_armour(item_def &item)
         = item.props[ARTEFACT_APPEAR_KEY].get_string();
     doodad.props.erase(ARTEFACT_NAME_KEY);
     item.props = doodad.props;
-    item.plus = random2(6) + random2(6) - 2;
+
+    // On body armour, an enchantment of less than 0 is never viable.
+    item.plus = max(static_cast<int>(random2(6) + random2(6) - 2), random2(2));
 }
 
 static jewellery_type octoring_types[8] =
 {
     RING_SEE_INVISIBLE, RING_PROTECTION_FROM_FIRE, RING_PROTECTION_FROM_COLD,
-    RING_SUSTAIN_ABILITIES, RING_STEALTH, RING_WIZARDRY, RING_MAGICAL_POWER,
+    RING_SUSTAIN_ATTRIBUTES, RING_STEALTH, RING_WIZARDRY, RING_MAGICAL_POWER,
     RING_LIFE_PROTECTION
 };
 
@@ -1794,7 +1773,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     _artefact_setup_prop_vectors(item);
     _init_artefact_properties(item);
 
-    if (unrand->prpty[ARTP_CURSED] != 0)
+    if (unrand->prpty[ARTP_CURSE] != 0)
         do_curse_item(item);
 
     // get artefact appearance

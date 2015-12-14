@@ -54,12 +54,22 @@ MIRET1(number, base_type, base_type)
 MIRET1(number, number, number)
 MIRET1(boolean, has_known_ranged_attack, is(MB_RANGED_ATTACK))
 MIRET1(string, speed_description, speed_description().c_str())
+MIRET1(number, x_pos, pos.x - you.pos().x)
+MIRET1(number, y_pos, pos.y - you.pos().y)
 
 static int moninf_get_colour(lua_State *ls)
 {
     MONINF(ls, 1, mi);
     lua_pushnumber(ls, mi->colour());
     return 1;
+}
+
+static int moninf_get_pos(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    lua_pushnumber(ls, mi->pos.x - you.pos().x);
+    lua_pushnumber(ls, mi->pos.y - you.pos().y);
+    return 2;
 }
 
 #define MIRES1(field, resist) \
@@ -79,7 +89,7 @@ MIRES1(res_shock, MR_RES_ELEC)
 MIRES1(res_corr, MR_RES_ACID)
 
 // const char* here would save a tiny bit of memory, but every map
-// for an unique pair of types costs 35KB of code.  We have
+// for an unique pair of types costs 35KB of code. We have
 // map<string, int> elsewhere.
 static map<string, int> mi_flags;
 static void _init_mi_flags()
@@ -338,6 +348,9 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(res_draining),
     MIREG(res_shock),
     MIREG(res_corr),
+    MIREG(x_pos),
+    MIREG(y_pos),
+    MIREG(pos),
 
     { nullptr, nullptr }
 };

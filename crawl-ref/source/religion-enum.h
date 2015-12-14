@@ -18,4 +18,6 @@ enum nemelex_gift_types
 };
 #endif
 
+#define ACQUIRE_KEY "acquired" // acquirement source prop on acquired items
+
 #endif

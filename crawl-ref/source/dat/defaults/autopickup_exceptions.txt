@@ -6,7 +6,7 @@ ae := autopickup_exceptions
 ae = <rune of Zot
 
 # curare is always dangerous on the floor, so you may wish to always pick
-# it up.  Disabled by default.
+# it up. Disabled by default.
 # ae = <curare-tipped
 
 ### exclusions ###
@@ -33,6 +33,57 @@ ae += [^n]identified.*spellbook
 :         end
 : end)
 
+# Don't pick up misc items when duplication doesn't help.
+:add_autopickup_func(function (it, name)
+:  local itname = it.name(true) -- Not the name parameter, which includes prefixes.
+:  if string.find(itname, "lamp of fire")
+:  or string.find(itname, "phial of floods")
+:  or string.find(itname, "fan of gales")
+:  or string.find(itname, "stone of tremors")
+:  or string.find(itname, "disc of storms")
+:  or string.find(itname, "lantern of shadows")
+:  or string.find(itname, "crystal ball of energy") then
+:    for inv in iter.invent_iterator:new(items.inventory()) do
+:      if itname == inv.name() then
+:        return false
+:      end
+:    end
+:  end
+:  return
+:end)
+
+# If you've sacrificed a hand, don't pick up pointless duplicate rings
+:add_autopickup_func(function (it, name)
+:  local itsubtype = it.subtype()
+:  if you.mutation("missing a hand") == 1 and you.race() ~= "octopode"
+:  and it.class(true) == "jewellery"
+:  and (itsubtype == "ring of positive energy"
+:   or itsubtype == "ring of flight"
+:   or itsubtype == "ring of poison resistance"
+:   or itsubtype == "ring of sustain attributes"
+:   or itsubtype == "ring of wizardry"
+:   or itsubtype == "ring of stealth"
+:   or itsubtype == "ring of teleportation"
+:   or itsubtype == "ring of protection from fire"
+:   or itsubtype == "ring of protection from cold"
+:   or itsubtype == "ring of invisibility"
+:   or itsubtype == "ring of see invisible"
+:   or itsubtype == "ring of magical power"
+:   or itsubtype == "ring of ice"
+:   or itsubtype == "ring of fire") then
+:    for inv in iter.invent_iterator:new(items.inventory()) do
+:      if it.class(true) == inv.class(true)
+:      and itsubtype == inv.subtype() then
+:        return false
+:      end
+:    end
+:  end
+:  return
+:end)
+
+: add_autopickup_func(function (it, name)
+:   return it.stacks() or nil
+: end)
 
 # Excluding amulets as you only need one of each. (If you know the
 # subtype that means you already have one of it.) Also for some rings.
@@ -43,4 +94,4 @@ ae += amulet of (resist .*|clarity|rage|guardian spirit|faith|stasis)
 # the Abyss. Still, they're more in line with lanterns of shadow, so you can
 # pick up the second one by hand.
 ae += ring of (see invisible|flight|poison resistance|teleportation)
-ae += ring of (invisibility|teleport control|sustain abilities)
+ae += ring of (invisibility|sustain attributes)

@@ -77,7 +77,7 @@ static string __try_exact_string(const vector<string> &prefixes,
                 continue;
             religion = true;
         }
-        else if (str_to_branch(prefixes[i]) != NUM_BRANCHES)
+        else if (branch_by_abbrevname(prefixes[i]) != NUM_BRANCHES)
         {
             if (ignore_branch)
                 continue;
@@ -332,30 +332,53 @@ static string _get_speak_string(const vector<string> &prefixes,
     return msg;
 }
 
-// Returns true if the monster did speak, false otherwise.
-// Maybe monsters will speak!
+/**
+ * Rolls a chance for a monster to speak, and calls mons_speaks as necessary.
+ *
+ * @param mons The monster in question.
+ */
 void maybe_mons_speaks(monster* mons)
 {
-#define MON_SPEAK_CHANCE 21
+    // Very fast wandering/patrolling monsters might, in one monster turn,
+    // move into the player's LOS and then back out (or the player
+    // might move into their LOS and the monster move back out before
+    // the player's view has a chance to update) so prevent them
+    // from speaking.
+    if (mons->is_patrolling() || mons_is_wandering(mons))
+        return;
 
-    if (mons->is_patrolling() || mons_is_wandering(mons)
-        || mons->attitude == ATT_NEUTRAL)
+    // per ef44f8a14, this seems to be handled elsewhere?
+    if (mons->attitude == ATT_NEUTRAL)
+        return;
+
+    int chance = 21; // this is a very old number; no idea why it was chosen
+
+    // allies stick around longer, so should probably have longer to say
+    // their piece; no need for them to chatter as much.
+    if (mons->wont_attack())
+        chance *= 15;
+    else if (!mons_is_unique(mons->type)
+             && testbits(mons->flags, MF_BAND_MEMBER))
     {
-        // Very fast wandering/patrolling monsters might, in one monster turn,
-        // move into the player's LOS and then back out (or the player
-        // might move into their LOS and the monster move back out before
-        // the player's view has a chance to update) so prevent them
-        // from speaking.
-        ;
+        // Band members are a lot less likely to speak, since there's
+        // a lot of them. Except for uniques.
+        chance *= 10;
     }
-    else if ((mons_class_flag(mons->type, M_SPEAKS)
+
+    // Confused and fleeing monsters are more interesting.
+    if (mons_is_fleeing(mons))
+        chance /= 2;
+    if (mons->has_ench(ENCH_CONFUSION))
+        chance /= 2;
+
+    if ((mons_class_flag(mons->type, M_SPEAKS)
                     || !mons->mname.empty())
-                && one_chance_in(MON_SPEAK_CHANCE))
+                && one_chance_in(chance))
     {
         mons_speaks(mons);
     }
     else if ((mons->type == MONS_CRAZY_YIUF || mons->type == MONS_DONALD)
-        && one_chance_in(MON_SPEAK_CHANCE / 3))
+        && one_chance_in(7))
     {
         // Yiuf gets an extra chance to speak!
         // So does Donald.
@@ -366,23 +389,7 @@ void maybe_mons_speaks(monster* mons)
         // Non-humanoid-ish monsters have a low chance of speaking
         // without the M_SPEAKS flag, to give the dungeon some
         // atmosphere/flavour.
-        int chance = MON_SPEAK_CHANCE * 4;
-
-        // Band members are a lot less likely to speak, since there's
-        // a lot of them.  Except for uniques.
-        if (testbits(mons->flags, MF_BAND_MEMBER)
-            && !mons_is_unique(mons->type))
-        {
-            chance *= 10;
-        }
-
-        // However, confused and fleeing monsters are more interesting.
-        if (mons_is_fleeing(mons))
-            chance /= 2;
-        if (mons->has_ench(ENCH_CONFUSION))
-            chance /= 2;
-
-        if (one_chance_in(chance))
+        if (one_chance_in(chance * 4))
             mons_speaks(mons);
     }
     // Okay then, don't speak.
@@ -391,10 +398,15 @@ void maybe_mons_speaks(monster* mons)
 // Returns true if something is said.
 bool mons_speaks(monster* mons)
 {
+    ASSERT(mons); // XXX: change to monster &mons
     ASSERT(!invalid_monster_type(mons->type));
 
-    if (mons->asleep() || mons->cannot_act())
+    // Natasha's death lines aren't physical speech.
+    if ((mons->asleep() || mons->cannot_act() || mons->flags & MF_EXPLODE_KILL)
+        && !(mons->type == MONS_NATASHA && !mons->alive()))
+    {
         return false;
+    }
 
     // Monsters talk on death even if invisible/silenced/etc.
     int duration = 1;
@@ -403,12 +415,12 @@ bool mons_speaks(monster* mons)
         || (mons->is_summoned(&duration) && duration <= 0)
         || crawl_state.prev_cmd == CMD_LOOK_AROUND; // Wizard testing
 
-    const bool unseen   = !you.can_see(mons);
+    const bool unseen   = !you.can_see(*mons);
     const bool confused = mons->confused();
 
     if (!force_speak)
     {
-        // Invisible monster tries to remain unnoticed.  Unless they're
+        // Invisible monster tries to remain unnoticed. Unless they're
         // confused, since then they're too confused to realise they
         // should stay silent, but only if the player can see them, so as
         // to not have to deal with cases of speaking monsters which the
@@ -417,7 +429,7 @@ bool mons_speaks(monster* mons)
             return false;
 
         // Silenced monsters only "speak" 1/3 as often as non-silenced,
-        // unless they're normally silent (S_SILENT).  Use
+        // unless they're normally silent (S_SILENT). Use
         // get_monster_data(mons->type) to bypass mon_shouts()
         // replacing S_RANDOM with a random value.
         if (silenced(mons->pos()) || mons->has_ench(ENCH_MUTE)
@@ -515,7 +527,7 @@ bool mons_speaks(monster* mons)
     }
     else if (mons->type == MONS_PLAYER_GHOST)
     {
-        // Use the *ghost's* religion, to get speech about its god.  Only
+        // Use the *ghost's* religion, to get speech about its god. Only
         // sometimes, though, so we can get skill-based messages as well.
         if (coinflip())
             prefixes.push_back(god_name(mons->ghost->religion));
@@ -680,47 +692,10 @@ bool mons_speaks(monster* mons)
         return false;
     }
 
-    // Monster symbol didn't work, try monster shape.  Since we're
-    // dealing with just the monster shape, change the prefix to
-    // include info on if the monster's intelligence is at odds with
-    // its shape.
-    mon_body_shape shape = get_mon_shape(mons);
-    mon_intel_type intel = mons_intel(mons);
-    if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA
-        && intel < I_NORMAL)
-    {
+    if (mons_intel(mons) < I_HUMAN)
         prefixes.insert(prefixes.begin(), "stupid");
-    }
-    else if (shape >= MON_SHAPE_QUADRUPED && shape <= MON_SHAPE_FISH)
-    {
-        if (mons_base_char(mons->type) == 'w')
-        {
-            if (intel > I_REPTILE)
-                prefixes.insert(prefixes.begin(), "smart");
-            else if (intel < I_INSECT)
-                prefixes.insert(prefixes.begin(), "stupid");
-        }
-        else
-        {
-            if (intel > I_ANIMAL)
-                prefixes.insert(prefixes.begin(), "smart");
-            else if (intel < I_ANIMAL)
-                prefixes.insert(prefixes.begin(), "stupid");
-        }
-    }
-    else if (shape >= MON_SHAPE_INSECT && shape <= MON_SHAPE_SNAIL)
-    {
-        if (intel > I_REPTILE)
-            prefixes.insert(prefixes.begin(), "smart");
-        else if (intel < I_INSECT)
-            prefixes.insert(prefixes.begin(), "stupid");
-    }
-    else if (shape >= MON_SHAPE_PLANT && shape <= MON_SHAPE_BLOB
-             && intel > I_PLANT)
-    {
-        prefixes.insert(prefixes.begin(), "smart");
-    }
 
+    const mon_body_shape shape = get_mon_shape(mons);
     if (msg.empty() || msg == "__NEXT")
     {
         msg = _get_speak_string(prefixes, get_mon_shape_str(shape), mons,
@@ -745,17 +720,17 @@ bool mons_speaks(monster* mons)
         // one and then the other to see if we get any results.
         if (shape == MON_SHAPE_HUMANOID_WINGED_TAILED)
         {
-            shape = MON_SHAPE_HUMANOID_TAILED;
-            msg = _get_speak_string(prefixes, get_mon_shape_str(shape),
+            msg = _get_speak_string(prefixes,
+                                    get_mon_shape_str(MON_SHAPE_HUMANOID_TAILED),
                                     mons, no_player, no_foe, no_foe_name,
                                     no_god, unseen);
 
             // Only be silent if both tailed and winged return __NONE.
             if (msg.empty() || msg == "__NONE" || msg == "__NEXT")
             {
-                shape = MON_SHAPE_HUMANOID_WINGED;
                 string msg2;
-                msg2 = _get_speak_string(prefixes, get_mon_shape_str(shape),
+                msg2 = _get_speak_string(prefixes,
+                                         get_mon_shape_str(MON_SHAPE_HUMANOID_WINGED),
                                          mons, no_player, no_foe,
                                          no_foe_name, no_god, unseen);
 
@@ -772,11 +747,12 @@ bool mons_speaks(monster* mons)
 
                 msg = msg2;
             }
-        } // if (shape == MON_SHAPE_HUMANOID_WINGED_TAILED)
+        }
+
         if (msg.empty() || msg == "__NONE" || msg == "__NEXT")
         {
-            shape = MON_SHAPE_HUMANOID;
-            msg = _get_speak_string(prefixes, get_mon_shape_str(shape),
+            msg = _get_speak_string(prefixes,
+                                    get_mon_shape_str(MON_SHAPE_HUMANOID),
                                     mons, no_player, no_foe, no_foe_name,
                                     no_god, unseen);
         }
@@ -818,13 +794,11 @@ bool mons_speaks_msg(monster* mons, const string &msg,
     if (mons->has_ench(ENCH_MUTE))
         silence = true;
 
-    for (int i = 0, size = lines.size(); i < size; ++i)
+    for (string line : lines)
     {
-        string line = lines[i];
-
         // This function is a little bit of a problem for the message
         // channels since some of the messages it generates are "fake"
-        // warning to scare the player.  In order to accommodate this
+        // warning to scare the player. In order to accommodate this
         // intent, we're falsely categorizing various things in the
         // function as spells and danger warning... everything else
         // just goes into the talk channel -- bwr
@@ -850,11 +824,11 @@ bool mons_speaks_msg(monster* mons, const string &msg,
 
         if (line == "__MORE" && !silence)
             more();
-        else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(mons))
+        else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(*mons))
             noticed = old_noticed;
         else
         {
-            if (you.can_see(mons))
+            if (you.can_see(*mons))
                 handle_seen_interrupt(mons);
             mprf(msg_type, "%s", line.c_str());
         }

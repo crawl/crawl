@@ -45,7 +45,8 @@ enum run_mode_type
     RMODE_NOT_RUNNING    = 0,  // must remain equal to 0
     RMODE_CONTINUE,
     RMODE_START,
-    RMODE_REST_DURATION = 100,
+    RMODE_WAIT_DURATION = 100,
+    RMODE_REST_DURATION = 9999999, // just rest until fully healed
     RMODE_CONNECTIVITY,        // Pathfinding connectivity check, not running.
 };
 
@@ -102,8 +103,6 @@ bool branch_entered(branch_type branch);
 
 bool can_travel_to(const level_id &lid);
 bool can_travel_interlevel();
-
-bool travel_kill_monster(monster_type mons);
 
 enum translevel_prompt_flags
 {
@@ -594,7 +593,7 @@ extern TravelCache travel_cache;
 
 void do_interlevel_travel();
 
-// Travel from a mouse click.  Take one step if not safe.  Attack if adjacent.
+// Travel from a mouse click. Take one step if not safe. Attack if adjacent.
 // If force is true, then the player will attack empty squares/open doors.
 #ifdef USE_TILE
 int click_travel(const coord_def &gc, bool force);

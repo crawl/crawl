@@ -26,7 +26,7 @@ public:
 };
 
 #define CLONE(typename) \
-    typename* clone() const \
+    typename* clone() const override \
     { \
         return new typename(*this); \
     }
@@ -37,7 +37,7 @@ class opacity_default : public opacity_func
 public:
     CLONE(opacity_default)
 
-    opacity_type operator()(const coord_def& p) const;
+    opacity_type operator()(const coord_def& p) const override;
 };
 extern const opacity_default opc_default;
 
@@ -48,7 +48,7 @@ class opacity_fullyopaque : public opacity_func
 public:
     CLONE(opacity_fullyopaque)
 
-    opacity_type operator()(const coord_def& p) const;
+    opacity_type operator()(const coord_def& p) const override;
 };
 extern const opacity_fullyopaque opc_fullyopaque;
 
@@ -60,7 +60,7 @@ class opacity_no_trans : public opacity_func
 public:
     CLONE(opacity_no_trans)
 
-    opacity_type operator()(const coord_def& p) const;
+    opacity_type operator()(const coord_def& p) const override;
 };
 extern const opacity_no_trans opc_no_trans;
 
@@ -71,7 +71,7 @@ class opacity_immob : public opacity_func
 public:
     CLONE(opacity_immob)
 
-    opacity_type operator()(const coord_def& p) const;
+    opacity_type operator()(const coord_def& p) const override;
 };
 extern const opacity_immob opc_immob;
 
@@ -81,7 +81,7 @@ class opacity_solid : public opacity_func
 public:
     CLONE(opacity_solid)
 
-    opacity_type operator()(const coord_def& p) const;
+    opacity_type operator()(const coord_def& p) const override;
 };
 extern const opacity_solid opc_solid;
 
@@ -91,7 +91,7 @@ class opacity_solid_see : public opacity_func
 public:
     CLONE(opacity_solid_see)
 
-    opacity_type operator()(const coord_def& p) const;
+    opacity_type operator()(const coord_def& p) const override;
 };
 extern const opacity_solid_see opc_solid_see;
 
@@ -106,7 +106,7 @@ public:
 
     CLONE(opacity_monmove)
 
-    opacity_type operator()(const coord_def& p) const;
+    opacity_type operator()(const coord_def& p) const override;
 private:
     const monster& mon;
 };
@@ -118,7 +118,7 @@ class opacity_no_actor : public opacity_func
 public:
     CLONE(opacity_no_actor)
 
-    opacity_type operator()(const coord_def& p) const;
+    opacity_type operator()(const coord_def& p) const override;
 };
 extern const opacity_no_actor opc_no_actor;
 

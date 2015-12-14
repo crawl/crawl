@@ -416,7 +416,7 @@ crystal_plate3
 armour_mummy ARMOUR_MUMMY
 
 ##cloth_u_sail SAILOR
-dragonsc_green DRAGONSC_GREEN
+dragonsc_red DRAGONSC_RED
 dragonsc_white DRAGONSC_WHITE
 dragonsc_magenta DRAGONSC_MAGENTA
 dragonsc_quicksilver DRAGONSC_QUICKSILVER
@@ -426,7 +426,7 @@ dragonsc_blue DRAGONSC_BLUE
 dragonsc_shadow DRAGONSC_SHADOW
 dragonsc_gold DRAGONSC_GOLD
 dragonsc_pearl DRAGONSC_PEARL
-dragonarm_green DRAGONARM_GREEN
+dragonarm_red DRAGONARM_RED
 dragonarm_white DRAGONARM_WHITE
 dragonarm_magenta DRAGONARM_MAGENTA
 dragonarm_quicksilver DRAGONARM_QUICKSILVER
@@ -456,6 +456,9 @@ lears_hauberk LEARS_HAUBERK
 faerie_dragon_armour FAERIE_DRAGON_ARMOUR
 moon_troll_leather_armour MOON_TROLL_LEATHER_ARMOUR
 orange_crystal ORANGE_CRYSTAL
+vines VINES
+kryias KRYIAS
+talos TALOS
 %end_ctg
 
 ### Arms
@@ -540,6 +543,7 @@ axe_trog AXE_TROG
 arga ARGA
 demon_axe DEMON_AXE
 axe_of_woe AXE_OF_WOE
+frostbite FROSTBITE
 ## launchers
 blowgun_assassin BLOWGUN_ASSASSIN
 punk PUNK
@@ -617,10 +621,6 @@ large_mace LARGE_MACE
 black_whip BLACK_WHIP
 sacred_scourge SACRED_SCOURGE
 sacred_scourge_two SACRED_SCOURGE2
-hammer HAMMER
-hammer2
-hammer_one HAMMER1
-hammer_two HAMMER2
 flail_stick FLAIL_STICK
 flail_ball FLAIL
 flail_ball2
@@ -1079,6 +1079,7 @@ taiso_white
 ## Unrand caps and hats
 bear BEAR
 dyrovepreva DYROVEPREVA
+eternal_torment ETERNAL_TORMENT
 wizard_lightgreen WIZARD_LIGHTGREEN
 
 ## All helmets below (HELM_OFS and greater) hide hair.
@@ -1115,6 +1116,7 @@ helm_plume FHELM_PLUME
 mummy FHELM_MUMMY
 isildur FHELM_ISILDUR LAST_NORM
 art_dragonhelm ART_DRAGONHELM
+etheric_cage ETHERIC_CAGE
 
 healer FHELM_HEALER
 hood_gray HOOD_GRAY

@@ -53,31 +53,17 @@ struct scaling_cost
     operator bool () const { return value != 0; }
 };
 
-// Structure for representing an ability:
-struct ability_def
-{
-    ability_type        ability;
-    const char *        name;
-    unsigned int        mp_cost;        // magic cost of ability
-    scaling_cost        hp_cost;        // hit point cost of ability
-    unsigned int        food_cost;      // + rand2avg(food_cost, 2)
-    generic_cost        piety_cost;     // + random2((piety_cost + 1) / 2 + 1)
-    unsigned int        zp_cost;        // zot point cost of ability
-    unsigned int        flags;          // used for additional cost notices
-};
-
 struct talent
 {
     ability_type which;
     int hotkey;
     int fail;
     bool is_invocation;
-    bool is_zotdef;
 };
 
 int get_gold_cost(ability_type ability);
 const string make_cost_description(ability_type ability);
-const ability_def& get_ability_def(ability_type abil);
+unsigned int ability_mp_cost(ability_type abil);
 talent get_talent(ability_type ability, bool check_confused);
 const char* ability_name(ability_type ability);
 vector<const char*> get_ability_names();
@@ -94,9 +80,13 @@ vector<talent> your_talents(bool check_confused, bool include_unusable = false);
 bool string_matches_ability_name(const string& key);
 ability_type ability_by_name(const string &name);
 string print_abilities();
+ability_type fixup_ability(ability_type ability);
 
-void set_god_ability_slots();
-vector<ability_type> get_god_abilities(bool include_unusable = false,
-                                       bool ignore_piety = false);
+int find_ability_slot(ability_type abil, char firstletter = 'f');
+int auto_assign_ability_slot(int slot);
+vector<ability_type> get_god_abilities(bool ignore_silence = true,
+                                       bool ignore_piety = true,
+                                       bool ignore_penance = true);
+void swap_ability_slots(int index1, int index2, bool silent = false);
 
 #endif

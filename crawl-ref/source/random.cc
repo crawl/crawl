@@ -3,46 +3,51 @@
 #include "random.h"
 
 #include <cmath>
-#ifdef UNIX
-// for times()
-#include <sys/times.h>
-#endif
-// for getpid()
-#include <sys/types.h>
 #ifndef TARGET_COMPILER_VC
 # include <unistd.h>
 #else
 # include <process.h>
 #endif
 
-#include "asg.h"
+#include "pcg.h"
 #include "syscalls.h"
+
+static FixedVector<PcgRNG, NUM_RNGS> rngs;
+
+uint32_t get_uint32(int generator)
+{
+    return rngs[generator].get_uint32();
+}
+
+uint64_t get_uint64(int generator)
+{
+    return rngs[generator].get_uint64();
+}
+
+static void _seed_rng(uint64_t seed_array[], int seed_len)
+{
+    PcgRNG seeded(seed_array, seed_len);
+    // Use the just seeded RNG to initialize the rest.
+    for (PcgRNG& rng : rngs)
+    {
+        uint64_t key[2] = { seeded.get_uint64(), seeded.get_uint64() };
+        rng = PcgRNG(key, ARRAYSZ(key));
+    }
+}
 
 void seed_rng(uint32_t seed)
 {
-    uint32_t sarg[1] = { seed };
-    seed_asg(sarg, 1);
+    uint64_t sarg[1] = { seed };
+    _seed_rng(sarg, ARRAYSZ(sarg));
 }
 
 void seed_rng()
 {
-    /* Use a 160-bit wide seed */
-    uint32_t seed_key[5];
-    read_urandom((char*)(&seed_key), sizeof(seed_key));
-
-#ifdef UNIX
-    struct tms buf;
-    seed_key[0] += times(&buf);
-#endif
-    seed_key[1] += getpid();
-    seed_key[2] += time(nullptr);
-
-    seed_asg(seed_key, 5);
-}
-
-uint32_t random_int()
-{
-    return get_uint32();
+    /* Use a 128-bit wide seed */
+    uint64_t seed_key[2];
+    bool seeded = read_urandom((char*)(&seed_key), sizeof(seed_key));
+    ASSERT(seeded);
+    _seed_rng(seed_key, ARRAYSZ(seed_key));
 }
 
 // [low, high]
@@ -84,16 +89,12 @@ const char* random_choose_weighted(int weight, const char* first, ...)
     return chosen;
 }
 
-#ifndef UINT32_MAX
-#define UINT32_MAX ((uint32_t)(-1))
-#endif
-
 static int _random2(int max, int rng)
 {
     if (max <= 1)
         return 0;
 
-    uint32_t partn = UINT32_MAX / max;
+    uint32_t partn = PcgRNG::max() / max;
 
     while (true)
     {
@@ -108,13 +109,13 @@ static int _random2(int max, int rng)
 // [0, max)
 int random2(int max)
 {
-    return _random2(max, 0);
+    return _random2(max, RNG_GAMEPLAY);
 }
 
 // [0, max), separate RNG state
 int ui_random(int max)
 {
-    return _random2(max, 1);
+    return _random2(max, RNG_UI);
 }
 
 // [0, 1]
@@ -161,7 +162,7 @@ int roll_dice(int num, int size)
     int ret = 0;
 
     // If num <= 0 or size <= 0, then we'll just return the default
-    // value of zero.  This is good behaviour in that it will be
+    // value of zero. This is good behaviour in that it will be
     // appropriate for calculated values that might be passed in.
     if (num > 0 && size > 0)
     {
@@ -194,12 +195,7 @@ dice_def calc_dice(int num_dice, int max_damage)
         ret.size = 1;
     }
     else
-    {
-        // Divide the damage among the dice, and add one
-        // occasionally to make up for the fractions. -- bwr
-        ret.size  = max_damage / num_dice;
-        ret.size += x_chance_in_y(max_damage % num_dice, num_dice);
-    }
+        ret.size = div_rand_round(max_damage, num_dice);
 
     return ret;
 }
@@ -218,21 +214,6 @@ int div_rand_round(int num, int den)
 int div_round_up(int num, int den)
 {
     return num / den + (num % den != 0);
-}
-
-// [0, max)
-int bestroll(int max, int rolls)
-{
-    int best = 0;
-
-    for (int i = 0; i < rolls; i++)
-    {
-        int curr = random2(max);
-        if (curr > best)
-            best = curr;
-    }
-
-    return best;
 }
 
 // random2avg() returns same mean value as random2() but with a lower variance
@@ -267,13 +248,12 @@ int biased_random2(int max, int n)
 // [0, max]
 int random2limit(int max, int limit)
 {
-    int i;
     int sum = 0;
 
     if (max < 1)
         return 0;
 
-    for (i = 0; i < max; i++)
+    for (int i = 0; i < max; i++)
         if (random2(limit) >= i)
             sum++;
 
@@ -302,9 +282,22 @@ int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale)
 }
 
 // range [0, 1.0)
+// This uses a technique described by Saito and Matsumoto at
+// MCQMC'08. Given that the IEEE floating point numbers are
+// uniformly distributed over [1,2), we generate a number in
+// this range and then offset it onto the range [0,1). The
+// choice of bits (masking v. shifting) is arbitrary and
+// should be immaterial for high quality generators.
 double random_real()
 {
-    return get_uint32() / 4294967296.0;
+    static const uint64_t UPPER_BITS = 0x3FF0000000000000ULL;
+    static const uint64_t LOWER_MASK = 0x000FFFFFFFFFFFFFULL;
+    const uint64_t value = UPPER_BITS | (get_uint64() & LOWER_MASK);
+    double result;
+    // Portable memory transmutation. The union trick almost always
+    // works, but this is safer.
+    memcpy(&result, &value, sizeof(value));
+    return result - 1.0;
 }
 
 // Roll n_trials, return true if at least one succeeded.  n_trials might be
@@ -346,7 +339,7 @@ bool decimal_chance(double chance)
     return random_real() < chance;
 }
 
-// This is used when the front-end randomness is inconclusive.  There are
+// This is used when the front-end randomness is inconclusive. There are
 // never more than two possibilities, which simplifies things.
 bool defer_rand::x_chance_in_y_contd(int x, int y, int index)
 {

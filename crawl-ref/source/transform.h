@@ -77,6 +77,7 @@ protected:
     Form(transformation_type tran);
 public:
     bool slot_available(int slot) const;
+    bool can_wield() const { return slot_available(EQ_WEAPON); }
     virtual bool can_wear_item(const item_def& item) const;
 
     int get_duration(int pow) const;
@@ -142,6 +143,7 @@ public:
      */
     virtual brand_type get_uc_brand() const { return uc_brand; }
 
+    virtual bool can_offhand_punch() const { return can_wield(); }
     virtual string get_uc_attack_name(string default_name) const;
     virtual int get_ac_bonus() const;
 
@@ -180,7 +182,7 @@ public:
 
     /// can the player cast while in this form?
     const bool can_cast;
-    /// increase to spell fail rate (value is weird - see spell_fail())
+    /// increase to spell fail rate (value is weird - see raw_spell_fail())
     const int spellcasting_penalty;
 
     /// acc bonus when using UC in form
@@ -272,8 +274,6 @@ bool form_likes_lava(transformation_type form = you.form);
 bool form_changed_physiology(transformation_type form = you.form);
 bool form_can_bleed(transformation_type form = you.form);
 bool form_can_use_wand(transformation_type form = you.form);
-bool form_can_wear_item(const item_def& item,
-                        transformation_type form = you.form);
 // Does the form keep the benefits of resistance, scale, and aux mutations?
 bool form_keeps_mutations(transformation_type form = you.form);
 
@@ -283,7 +283,8 @@ bool feat_dangerous_for_form(transformation_type which_trans,
 bool check_form_stat_safety(transformation_type new_form);
 
 bool transform(int pow, transformation_type which_trans,
-               bool involuntary = false, bool just_check = false);
+               bool involuntary = false, bool just_check = false,
+               string *fail_reason = nullptr);
 
 // skip_move: don't make player re-enter current cell
 void untransform(bool skip_move = false);
@@ -294,7 +295,6 @@ void unmeld_one_equip(equipment_type eq);
 
 monster_type transform_mons();
 string blade_parts(bool terse = false);
-monster_type dragon_form_dragon_type();
 void set_hydra_form_heads(int heads);
 const char* transform_name(transformation_type form = you.form);
 

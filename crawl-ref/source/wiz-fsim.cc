@@ -19,6 +19,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
+#include "jobs.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
@@ -70,6 +71,9 @@ static skill_type _equipped_skill()
     if (iweap && iweap->base_type == OBJ_WEAPONS)
         return item_attack_skill(*iweap);
 
+    if (!iweap && you.m_quiver.get_fire_item() != -1)
+        return SK_THROWING;
+
     return SK_UNARMED_COMBAT;
 }
 
@@ -77,14 +81,14 @@ static string _equipped_weapon_name()
 {
     const int weapon = you.equip[EQ_WEAPON];
     const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
-    const int missile = you.m_quiver->get_fire_item();
+    const int missile = you.m_quiver.get_fire_item();
 
     if (iweap)
     {
         string item_buf = iweap->name(DESC_PLAIN);
         // If it's a ranged weapon, add the description of the missile
         if (is_range_weapon(*iweap) && missile < ENDOFPACK && missile >= 0)
-                item_buf += " with " + you.inv[missile].name(DESC_PLAIN);
+            item_buf += " with " + you.inv[missile].name(DESC_PLAIN);
         return "Wielding: " + item_buf;
     }
 
@@ -121,7 +125,7 @@ static void _write_matchup(FILE * o, monster &mon, bool defend, int iter_limit)
     fprintf(o, "%s: %s %s vs. %s (%d rounds) (%s)\n",
             defend ? "Defense" : "Attack",
             species_name(you.species).c_str(),
-            you.class_name.c_str(),
+            get_job_name(you.char_class),
             mon.name(DESC_PLAIN, true).c_str(),
             iter_limit,
             _time_string().c_str());
@@ -131,7 +135,7 @@ static void _write_you(FILE * o)
 {
     fprintf(o, "%s %s: XL %d   Str %d   Int %d   Dex %d\n",
             species_name(you.species).c_str(),
-            you.class_name.c_str(),
+            get_job_name(you.char_class),
             you.experience_level,
             you.strength(),
             you.intel(),
@@ -254,7 +258,7 @@ static monster* _init_fsim()
         {
             mon = clone_mons(monster_at(moves.target), true);
             if (mon)
-                mon->flags |= MF_HARD_RESET;
+                mon->flags |= MF_HARD_RESET | MF_NO_REWARD;
         }
     }
 
@@ -280,7 +284,7 @@ static monster* _init_fsim()
         mgen_data temp = mgen_data::hostile_at(mtype, "fightsim", false, 0, 0,
                                                you.pos(), MG_DONT_COME);
 
-        temp.extra_flags |= MF_HARD_RESET;
+        temp.extra_flags |= MF_HARD_RESET | MF_NO_REWARD;
         mon = create_monster(temp);
         if (!mon)
         {
@@ -334,7 +338,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
 
     const int weapon = you.equip[EQ_WEAPON];
     const item_def *iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
-    const int missile = you.m_quiver->get_fire_item();
+    const int missile = you.m_quiver.get_fire_item();
 
     // now make sure the player is ready
     you.exp_available = 0;
@@ -344,8 +348,10 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     // disable death and delay, but make sure that these values
     // get reset when the function call ends
     unwind_var<FixedBitVector<NUM_DISABLEMENTS> > disabilities(crawl_state.disables);
+    crawl_state.disables.set(DIS_CONFIRMATIONS);
     crawl_state.disables.set(DIS_DEATH);
     crawl_state.disables.set(DIS_DELAY);
+    crawl_state.disables.set(DIS_AFFLICTIONS);
 
     no_messages mx;
     const int hunger = you.hunger;
@@ -380,8 +386,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
                 attk.attack();
                 if (attk.ev_margin >= 0)
                     hits++;
-                you.time_taken = you.attack_delay(you.weapon(),
-                                                  &you.inv[missile]);
+                you.time_taken = you.attack_delay(&you.inv[missile]).roll();
             }
             else // otherwise, melee combat
             {
@@ -462,9 +467,8 @@ static string _init_scale(skill_map &scale, bool &xl_mode)
 {
     string ret;
 
-    for (int i = 0, size = Options.fsim_scale.size(); i < size; ++i)
+    for (string sk_str : Options.fsim_scale)
     {
-        string sk_str = lowercase_string(Options.fsim_scale[i]);
         if (sk_str == "xl")
         {
             xl_mode = true;
@@ -680,10 +684,10 @@ void wizard_fight_sim(bool double_scale)
     if (Options.fsim_kit.empty())
         fsim_proc(o, mon, defense);
     else
-        for (int i = 0, size = Options.fsim_kit.size(); i < size; ++i)
+        for (const string &kit : Options.fsim_kit)
         {
             string error;
-            if (_fsim_kit_equip(Options.fsim_kit[i], error))
+            if (_fsim_kit_equip(kit, error))
             {
                 _write_weapon(o);
                 fsim_proc(o, mon, defense);
@@ -691,7 +695,7 @@ void wizard_fight_sim(bool double_scale)
             }
             else
             {
-                mprf("Aborting sim on %s", Options.fsim_kit[i].c_str());
+                mprf("Aborting sim on %s", kit.c_str());
                 if (error != "")
                     mpr(error);
                 break;

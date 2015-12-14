@@ -15,8 +15,7 @@ enum corpse_effect_type
 {
     CE_NOCORPSE,
     CE_CLEAN,
-    CE_POISONOUS,
-    CE_ROT,
+    CE_NOXIOUS,
     CE_MUTAGEN,
 };
 
@@ -48,8 +47,12 @@ enum attack_type
     AT_SPLASH,
 #endif
     AT_POUNCE,
+#if TAG_MAJOR_VERSION == 34
     AT_REACH_STING,
     AT_LAST_REAL_ATTACK = AT_REACH_STING,
+#else
+    AT_LAST_REAL_ATTACK = AT_POUNCE,
+#endif
 
     AT_CHERUB,
 #if TAG_MAJOR_VERSION == 34
@@ -117,15 +120,18 @@ enum attack_flavour
 #if TAG_MAJOR_VERSION == 34
     AF_PLAGUE,
 #endif
-    AF_WEAKNESS_POISON,
+    AF_REACH_STING,
     AF_SHADOWSTAB,
     AF_DROWN,
+#if TAG_MAJOR_VERSION == 34
     AF_FIREBRAND,
+#endif
     AF_CORRODE,
     AF_SCARAB,
     AF_KITE,  // Hops backwards if attacking with a polearm.
     AF_SWOOP, // Swoops in to perform a melee attack if far away.
     AF_TRAMPLE, // Trampling effect.
+    AF_WEAKNESS,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -143,18 +149,16 @@ enum mon_summon_type
     MON_SUMM_AID,     // Divine aid
     MON_SUMM_SCROLL,  // Scroll of summoning
     MON_SUMM_SHADOW,  // Shadow trap
+    MON_SUMM_LANTERN, // Lantern of shadows
 };
 
 #include "mon-flags.h"
 
 enum mon_intel_type             // Must be in increasing intelligence order
 {
-    I_PLANT = 0,
-    I_INSECT,
-    I_REPTILE,
+    I_BRAINLESS = 0,
     I_ANIMAL,
-    I_NORMAL,
-    I_HIGH,
+    I_HUMAN,
 };
 
 enum habitat_type
@@ -180,19 +184,6 @@ enum mon_itemuse_type
     NUM_MONUSE
 };
 
-enum mon_itemeat_type
-{
-    MONEAT_NOTHING,
-    MONEAT_ITEMS,
-    MONEAT_CORPSES,
-#if TAG_MAJOR_VERSION == 34
-    MONEAT_FOOD,
-#endif
-    MONEAT_DOORS,
-
-    NUM_MONEAT
-};
-
 typedef uint32_t resists_t;
 #define mrd(res, lev) (resists_t)((res) * ((lev) & 7))
 
@@ -216,10 +207,11 @@ enum mon_resist_flags
 
     MR_RES_TORMENT       = 1 << 22,
     MR_RES_PETRIFY       = 1 << 23,
-    MR_RES_ASPHYX        = 1 << 24,
 #if TAG_MAJOR_VERSION == 34
+    MR_OLD_RES_ASPHYX    = 1 << 24,
     MR_OLD_RES_ACID      = 1 << 25,
 #else
+    // unused 1 << 24,
     // unused 1 << 25,
 #endif
     MR_RES_STICKY_FLAME  = 1 << 26,
@@ -239,6 +231,7 @@ enum shout_type
     S_SILENT,               // silent
     S_SHOUT,                // shout
     S_BARK,                 // bark
+    S_HOWL,                 // howl
     S_SHOUT2,               // shout twice (e.g. two-headed ogres)
     S_ROAR,                 // roar
     S_SCREAM,               // scream
@@ -252,7 +245,9 @@ enum shout_type
     S_GROWL,                // for bears
     S_HISS,                 // for snakes and lizards
     S_DEMON_TAUNT,          // for pandemonium lords
+#if TAG_MAJOR_VERSION == 34
     S_CAW,                  // for ravens
+#endif
     S_CHERUB,               // for cherubs
     S_RUMBLE,               // for ushabti
     NUM_SHOUTS,
@@ -282,6 +277,7 @@ enum zombie_size_type
  */
 enum mon_body_shape
 {
+    MON_SHAPE_BUGGY,
     MON_SHAPE_HUMANOID,
     MON_SHAPE_HUMANOID_WINGED,
     MON_SHAPE_HUMANOID_TAILED,

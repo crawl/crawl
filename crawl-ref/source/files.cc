@@ -52,7 +52,7 @@
 #include "macro.h"
 #include "mapmark.h"
 #include "message.h"
-#include "misc.h"
+#include "misc.h" // today_is_halloween()
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -72,6 +72,7 @@
  #include "tilepick-p.h"
 #endif
 #include "tileview.h"
+#include "timed_effects.h"
 #include "unwind.h"
 #include "version.h"
 #include "view.h"
@@ -134,7 +135,7 @@ static player_save_info _read_character_info(package *save)
     }
     catch (ext_fail_exception &E) {}
 
-    you.copy_from(backup);
+    you = backup;
 
     return fromfile;
 }
@@ -156,14 +157,12 @@ vector<string> get_dir_files_recursive(const string &dirname, const string &ext,
 {
     vector<string> files;
 
-    const vector<string> thisdirfiles = get_dir_files(dirname);
     const int next_recur_depth =
         recursion_depth == -1? -1 : recursion_depth - 1;
     const bool recur = recursion_depth == -1 || recursion_depth > 0;
 
-    for (int i = 0, size = thisdirfiles.size(); i < size; ++i)
+    for (const string &filename : get_dir_files(dirname))
     {
-        const string filename(thisdirfiles[i]);
         if (dir_exists(catpath(dirname, filename)))
         {
             if (include_directories
@@ -174,14 +173,14 @@ vector<string> get_dir_files_recursive(const string &dirname, const string &ext,
 
             if (recur)
             {
-                const vector<string> subdirfiles =
-                    get_dir_files_recursive(catpath(dirname, filename),
-                                            ext,
-                                            next_recur_depth);
                 // Each filename in a subdirectory has to be prefixed
                 // with the subdirectory name.
-                for (int j = 0, ssize = subdirfiles.size(); j < ssize; ++j)
-                    files.push_back(catpath(filename, subdirfiles[j]));
+                for (const string &subdirfile
+                        : get_dir_files_recursive(catpath(dirname, filename),
+                                                  ext, next_recur_depth))
+                {
+                    files.push_back(catpath(filename, subdirfile));
+                }
             }
         }
         else
@@ -669,7 +668,7 @@ static vector<player_save_info> _find_saved_characters()
 
     }
 
-    sort(chars.rbegin(), chars.rend());
+    sort(chars.begin(), chars.end());
 #endif // !DISABLE_SAVEGAME_LISTS
     return chars;
 }
@@ -708,10 +707,11 @@ string get_savedir_filename(const string &name)
     return _get_savefile_directory() + get_save_filename(name);
 }
 
+#define MAX_FILENAME_LENGTH 250
 string get_save_filename(const string &name)
 {
-    return chop_string(strip_filename_unsafe_chars(name), kFileNameLen, false)
-           + SAVE_SUFFIX;
+    return chop_string(strip_filename_unsafe_chars(name), MAX_FILENAME_LENGTH,
+                       false) + SAVE_SUFFIX;
 }
 
 string get_prefs_filename()
@@ -796,7 +796,7 @@ static int _get_dest_stair_type(branch_type old_branch,
         }
     }
 
-    if (feat_is_escape_hatch(stair_taken))
+    if (feat_is_escape_hatch(stair_taken) || stair_taken == DNGN_TRAP_SHAFT)
         return stair_taken;
 
     if (stair_taken == DNGN_ENTER_DIS
@@ -848,18 +848,6 @@ static void _place_player_on_stair(branch_type old_branch,
                                  static_cast<dungeon_feature_type>(stair_taken),
                                  find_first));
 
-    if (crawl_state.game_is_zotdef())
-    {
-        // For Zot Defence, look for a start point marker and hop
-        // there if available.
-        const coord_def pos(dgn_find_feature_marker(DNGN_STONE_STAIRS_UP_I));
-        if (in_bounds(pos))
-        {
-            you.moveto(pos);
-            return;
-        }
-    }
-
     you.moveto(dgn_find_nearby_stair(stair_type, dest_pos, find_first));
 }
 
@@ -901,7 +889,7 @@ static bool _grab_follower_at(const coord_def &pos)
 
     dprf("%s is following to %s.", fol->name(DESC_THE, true).c_str(),
          dest.describe().c_str());
-    bool could_see = you.can_see(fol);
+    bool could_see = you.can_see(*fol);
     fol->set_transit(dest);
     fol->destroy_inventory();
     monster_cleanup(fol);
@@ -994,9 +982,8 @@ static void _grab_followers()
         int place_set = 0;
         while (!places[place_set].empty())
         {
-            for (int i = 0, size = places[place_set].size(); i < size; ++i)
+            for (const coord_def p : places[place_set])
             {
-                const coord_def &p = places[place_set][i];
                 for (adjacent_iterator ai(p); ai; ++ai)
                 {
                     if (travel_point_distance[ai->x][ai->y])
@@ -1013,23 +1000,22 @@ static void _grab_followers()
     }
 
     // Clear flags of monsters that didn't follow.
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (auto &mons : menv)
     {
-        monster* mons = &menv[i];
-        if (!mons->alive())
+        if (!mons.alive())
             continue;
-        if (mons->type == MONS_BATTLESPHERE)
-            end_battlesphere(mons, false);
-        if (mons->type == MONS_SPECTRAL_WEAPON)
-            end_spectral_weapon(mons, false);
-        mons->flags &= ~MF_TAKING_STAIRS;
+        if (mons.type == MONS_BATTLESPHERE)
+            end_battlesphere(&mons, false);
+        if (mons.type == MONS_SPECTRAL_WEAPON)
+            end_spectral_weapon(&mons, false);
+        mons.flags &= ~MF_TAKING_STAIRS;
     }
 }
 
 static void _do_lost_monsters()
 {
     // Uniques can be considered wandering Pan just like you, so they're not
-    // gone forever.  The likes of Cerebov won't be generated elsewhere, but
+    // gone forever. The likes of Cerebov won't be generated elsewhere, but
     // there's no need to special-case that.
     if (player_in_branch(BRANCH_PANDEMONIUM))
         for (monster_iterator mi; mi; ++mi)
@@ -1041,19 +1027,9 @@ static void _do_lost_monsters()
 // followers won't be considered lost.
 static void _do_lost_items()
 {
-    for (int i = 0; i < MAX_ITEMS; i++)
-    {
-        item_def& item(mitm[i]);
-
-        if (!item.defined())
-            continue;
-
-        // Item is in player inventory, so it's not lost.
-        if (item.pos == coord_def(-1,-1))
-            continue;
-
-        item_was_lost(item);
-    }
+    for (const auto &item : mitm)
+        if (item.defined() && item.pos != ITEM_IN_INVENTORY)
+            item_was_lost(item);
 }
 
 /**
@@ -1118,26 +1094,6 @@ static bool _leave_level(dungeon_feature_type stair_taken,
     return popped;
 }
 
-/**
- * Warn the player that two ghost files have been loaded into the current
- * level, resulting in somewhere between two and twenty ghosts being present.
- *
- * Warnings may be more spooky than actually useful.
- *
- * @return  A message that will send shivers down players' spines, assuming
- *          they aren't in wisp form!
- */
-static const char* _double_ghost_spookmessage()
-{
-    static const char* spookmessages[] = {
-        "You are filled with an overwhelming sense of foreboding!",
-        "You feel a terrible frisson of fear!",
-        "You are flooded with an inexplicable sense of dread!",
-        "You feel that you have entered a very terrible place...",
-        "There is something very spooky about this place!"
-    };
-    return RANDOM_ELEMENT(spookmessages);
-}
 
 /**
  * Generate a new level.
@@ -1154,13 +1110,13 @@ static void _make_level(dungeon_feature_type stair_taken,
 
     env.turns_on_level = -1;
 
-    if (you.char_direction == GDT_GAME_START
+    if (you.chapter == CHAPTER_POCKET_ABYSS
         && player_in_branch(BRANCH_DUNGEON))
     {
         // If we're leaving the Abyss for the first time as a Chaos
         // Knight of Lugonu (who start out there), enable normal monster
         // generation.
-        you.char_direction = GDT_DESCENDING;
+        you.chapter = CHAPTER_ORB_HUNTING;
     }
 
     tile_init_default_flavour();
@@ -1177,26 +1133,13 @@ static void _make_level(dungeon_feature_type stair_taken,
     _clear_env_map();
     builder(true, stair_type);
 
-    const bool is_halloween = today_is_halloween();
-
     if (!crawl_state.game_is_tutorial()
-        && !crawl_state.game_is_zotdef()
         && !Options.seed
         && !player_in_branch(BRANCH_ABYSS)
         && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
-        && one_chance_in(is_halloween ? 2 : 3))
+        && one_chance_in(3))
     {
-        // are we loading more than one ghost? (or trying, anyway)
-        bool doubleghost = is_halloween && coinflip();
-        if (doubleghost)
-            doubleghost = load_ghost(true);
-
-        const bool delete_ghost = !is_halloween;
-        doubleghost = load_ghost(true, delete_ghost) && doubleghost;
-
-        // did we actually manage to load more than one ghost (file)?
-        if (doubleghost)
-            mpr(_double_ghost_spookmessage());
+        load_ghost(true);
     }
     env.turns_on_level = 0;
     // sanctuary
@@ -1254,6 +1197,11 @@ static void _place_player(dungeon_feature_type stair_taken,
     }
 }
 
+// Update the trackers after the player changed level.
+void trackers_init_new_level(bool transit)
+{
+    travel_init_new_level();
+}
 
 /**
  * Load the current level.
@@ -1544,6 +1492,22 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (you.position != env.old_player_pos)
        shake_off_monsters(you.as_player());
 
+#if TAG_MAJOR_VERSION == 34
+    if (make_changes && you.props.exists("zig-fixup")
+        && you.where_are_you == BRANCH_TOMB
+        && you.depth == brdepth[BRANCH_TOMB])
+    {
+        if (!just_created_level)
+        {
+            int obj = items(false, OBJ_MISCELLANY, MISC_ZIGGURAT, 0);
+            ASSERT(obj != NON_ITEM);
+            bool success = move_item_to_grid(&obj, you.pos(), true);
+            ASSERT(success);
+        }
+        you.props.erase("zig-fixup");
+    }
+#endif
+
     return just_created_level;
 }
 
@@ -1583,7 +1547,7 @@ static void _save_game_base()
 #endif
 
     /* kills */
-    SAVEFILE("kil", "kills", you.kills->save);
+    SAVEFILE("kil", "kills", you.kills.save);
 
     /* travel cache */
     SAVEFILE("tc", "travel_cache", travel_cache.save);
@@ -1612,6 +1576,8 @@ static void _save_game_base()
 // complain.
 static void _save_game_exit()
 {
+    clua.save_persist();
+
     // Prompt for saving macros.
     if (crawl_state.unsaved_macros
         && !crawl_state.seen_hups
@@ -1675,7 +1641,7 @@ void save_game(bool leave_game, const char *farewellmsg)
     if (Options.restart_after_game && Options.restart_after_save
         && !crawl_state.seen_hups)
     {
-        throw game_ended_condition();
+        throw game_ended_condition(true);
     }
 
     end(0, false, farewellmsg? "%s" : "See you soon, %s!",
@@ -1742,10 +1708,9 @@ static string _find_ghost_file()
  * Attempt to load one or more ghosts into the level.
  *
  * @param creating_level    Whether a level is currently being generated.
- * @param delete_file       Whether to delete the ghost file after loading it.
  * @return                  Whether ghosts were actually generated.
  */
-bool load_ghost(bool creating_level, bool delete_file)
+bool load_ghost(bool creating_level)
 {
     const bool wiz_cmd = (crawl_state.prev_cmd == CMD_WIZARD);
 
@@ -1806,11 +1771,8 @@ bool load_ghost(bool creating_level, bool delete_file)
     }
     inf.close();
 
-    if (delete_file)
-    {
-        // Remove bones file - ghosts are hardly permanent.
-        unlink(ghost_filename.c_str());
-    }
+    // Remove bones file - ghosts are hardly permanent.
+    unlink(ghost_filename.c_str());
 
     if (!debug_check_ghosts())
     {
@@ -1848,10 +1810,6 @@ bool load_ghost(bool creating_level, bool delete_file)
         mons->bind_melee_flags();
         if (mons->has_spells())
             mons->bind_spell_flags();
-        if (mons->ghost->species == SP_DEEP_DWARF)
-            mons->flags |= MF_NO_REGEN;
-        mark_interesting_monst(mons,
-                               attitude_creation_behavior(mons->attitude));
 
         ghosts.erase(ghosts.begin());
 #ifdef BONES_DIAGNOSTICS
@@ -1918,7 +1876,7 @@ static bool _restore_game(const string& filename)
     if (numcmp(you.prev_save_version.c_str(), Version::Long, 2) == -1
         && version_is_stable(you.prev_save_version.c_str()))
     {
-        if (!yesno("This game comes from a previous release of Crawl.  If you "
+        if (!yesno("This game comes from a previous release of Crawl. If you "
                    "load it now, you won't be able to go back. Continue?",
                    true, 'n'))
         {
@@ -1931,7 +1889,7 @@ static bool _restore_game(const string& filename)
 
     _restore_tagged_chunk(you.save, "you", TAG_YOU, "Save data is invalid.");
 
-    const int minorVersion = crawl_state.minorVersion;
+    const int minorVersion = crawl_state.minor_version;
 
     if (you.save->has_chunk(CHUNK("st", "stashes")))
     {
@@ -1953,7 +1911,7 @@ static bool _restore_game(const string& filename)
     if (you.save->has_chunk(CHUNK("kil", "kills")))
     {
         reader inf(you.save, CHUNK("kil", "kills"),minorVersion);
-        you.kills->load(inf);
+        you.kills.load(inf);
     }
 
     if (you.save->has_chunk(CHUNK("tc", "travel_cache")))
@@ -1996,7 +1954,7 @@ bool restore_game(const string& filename)
     {
         if (yesno(make_stringf(
                    "There exists a save by that name but it appears to be invalid.\n"
-                   "(Error: %s).  Do you want to delete it?", err.msg.c_str()).c_str(),
+                   "(Error: %s). Do you want to delete it?", err.msg.c_str()).c_str(),
                   true, 'n'))
         {
             if (you.save)
@@ -2219,7 +2177,7 @@ static bool _restore_tagged_chunk(package *save, const string name,
             end(-1, false, "\n%s %s\n", complaint, reason.c_str());
     }
 
-    crawl_state.minorVersion = inf.getMinorVersion();
+    crawl_state.minor_version = inf.getMinorVersion();
     try
     {
         tag_read(inf, tag);
@@ -2474,7 +2432,7 @@ FILE *fopen_replace(const char *name)
 {
     int fd;
 
-    // Stave off symlink attacks.  Races will be handled with O_EXCL.
+    // Stave off symlink attacks. Races will be handled with O_EXCL.
     unlink_u(name);
     fd = open_u(name, O_CREAT|O_EXCL|O_WRONLY, 0666);
     if (fd == -1)

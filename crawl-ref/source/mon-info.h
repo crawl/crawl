@@ -21,7 +21,9 @@ enum monster_info_flags
     MB_CONFUSED,
     MB_INVISIBLE,
     MB_POISONED,
+#if TAG_MAJOR_VERSION == 34
     MB_ROTTING,
+#endif
     MB_SUMMONED,
     MB_HALOED,
     MB_GLOWING,
@@ -45,7 +47,9 @@ enum monster_info_flags
     MB_SHAPESHIFTER,
     MB_CHAOTIC,
     MB_SUBMERGED,
+#if TAG_MAJOR_VERSION == 34
     MB_BLEEDING,
+#endif
     MB_DEFLECT_MSL,
 #if TAG_MAJOR_VERSION == 34
     MB_PREP_RESURRECT,
@@ -108,8 +112,8 @@ enum monster_info_flags
     MB_CONTROL_WINDS,
 #if TAG_MAJOR_VERSION == 34
     MB_WIND_AIDED,
-#endif
     MB_SUMMONED_NO_STAIRS, // Temp. summoned and capped monsters
+#endif
     MB_SUMMONED_CAPPED,    // Expiring due to summons cap
     MB_TOXIC_RADIANCE,
     MB_GRASPING_ROOTS,
@@ -130,11 +134,18 @@ enum monster_info_flags
     MB_LIGHTLY_DRAINED,
     MB_HEAVILY_DRAINED,
     MB_REPEL_MSL,
+#if TAG_MAJOR_VERSION == 34
     MB_NEGATIVE_VULN,
+#endif
     MB_CONDENSATION_SHIELD,
     MB_RESISTANCE,
     MB_HEXED,
     MB_BONE_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
+    MB_CHANT_FIRE_STORM,
+    MB_CHANT_WORD_OF_ENTROPY,
+#endif
+    MB_AIRBORNE,
     NUM_MB_FLAGS
 };
 
@@ -148,10 +159,11 @@ struct monster_info_base
     monster_type draco_type;
     union
     {
+        // These must all be the same size!
         unsigned number; ///< General purpose number variable
         int num_heads;   ///< # of hydra heads
         int slime_size;  ///< # of slimes in this one
-        bool is_active;  ///< Whether this ballisto is active or not
+        int is_active;   ///< Whether this ballisto is active or not
     };
     int _colour;
     mon_attitude_type attitude;
@@ -163,6 +175,7 @@ struct monster_info_base
     string quote;
     mon_holy_type holi;
     mon_intel_type mintel;
+    int hd;
     int ac;
     int ev;
     int base_ev;
@@ -170,7 +183,6 @@ struct monster_info_base
     mon_itemuse_type mitemuse;
     int mbase_speed;
     mon_energy_usage menergy;
-    flight_type fly;
     CrawlHashTable props;
     string constrictor_name;
     vector<string> constricting_name;
@@ -202,7 +214,7 @@ struct monster_info : public monster_info_base
     monster_info(const monster_info& mi)
     : monster_info_base(mi)
     {
-        u = mi.u;
+        i_ghost = mi.i_ghost;
         for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
         {
             if (mi.inv[i].get())
@@ -226,22 +238,19 @@ struct monster_info : public monster_info_base
     /* only real equipment is visible, miscellany is for mimic items */
     unique_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];
 
-    union
+    struct
     {
-        struct
-        {
-            species_type species;
-            job_type job;
-            god_type religion;
-            skill_type best_skill;
-            short best_skill_rank;
-            short xl_rank;
-            short damage;
-            short ac;
-            monster_type acting_part;
-            bool can_sinv;
-        } ghost;
-    } u;
+        species_type species;
+        job_type job;
+        god_type religion;
+        skill_type best_skill;
+        short best_skill_rank;
+        short xl_rank;
+        short damage;
+        short ac;
+        monster_type acting_part;
+        bool can_sinv;
+    } i_ghost;
 
     inline bool is(unsigned mbflag) const
     {
@@ -264,7 +273,6 @@ struct monster_info : public monster_info_base
     string common_name(description_level_type desc = DESC_PLAIN) const;
     string proper_name(description_level_type desc = DESC_PLAIN) const;
     string full_name(description_level_type desc = DESC_PLAIN, bool use_comma = false) const;
-    string chimera_part_names() const;
 
     vector<string> attributes() const;
 
@@ -299,6 +307,7 @@ struct monster_info : public monster_info_base
     }
 
     int randarts(artefact_prop_type ra_prop) const;
+    bool can_see_invisible() const;
     int res_magic() const;
 
     int base_speed() const
@@ -338,6 +347,9 @@ struct monster_info : public monster_info_base
     bool has_spells() const;
     unsigned colour(bool base_colour = false) const;
     void set_colour(int colour);
+
+    bool has_trivial_ench(enchant_type ench) const;
+    bool debuffable() const;
 
 protected:
     string _core_name() const;

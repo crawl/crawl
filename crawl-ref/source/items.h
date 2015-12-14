@@ -54,7 +54,7 @@ bool items_stack(const item_def &item1, const item_def &item2);
 void merge_item_stacks(const item_def &source, item_def &dest, int quant = -1);
 void get_gold(const item_def& item, int quant, bool quiet);
 
-item_def *find_floor_item(object_class_type cls, int sub_type);
+item_def *find_floor_item(object_class_type cls, int sub_type = -1);
 int item_on_floor(const item_def &item, const coord_def& where);
 
 void init_item(int item);
@@ -117,12 +117,11 @@ void origin_purchased(item_def &item);
 void origin_acquired(item_def &item, int agent);
 void origin_set_startequip(item_def &item);
 void origin_set_unknown(item_def &item);
-void origin_set_inventory(void (*oset)(item_def &item));
-bool origin_is_god_gift(const item_def& item, god_type *god = nullptr);
+god_type origin_as_god_gift(const item_def& item);
 bool origin_is_acquirement(const item_def& item,
                            item_source_type *type = nullptr);
 
-bool item_needs_autopickup(const item_def &);
+bool item_needs_autopickup(const item_def &, bool ignore_force = false);
 bool can_autopickup();
 
 bool need_to_autopickup();
@@ -147,12 +146,8 @@ bool get_item_by_name(item_def *item, const char* specs,
 
 void move_items(const coord_def r, const coord_def p);
 object_class_type get_random_item_mimic_type();
-object_class_type get_item_mimic_type();
-bool is_valid_mimic_item(const item_def &item);
 
 bool maybe_identify_base_type(item_def &item);
-// Returns the Orb's position on the ground, or origin()
-coord_def orb_position();
 int count_movable_items(int obj);
 
 // stack_iterator guarantees validity so long as you don't manually

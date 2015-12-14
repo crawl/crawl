@@ -80,7 +80,7 @@ for my $f (@files)
         # #if line. Comparison operator in $2, tag in $3
         ^\s* \# \s* if \s+ TAG_MAJOR_VERSION \s* (!=|==|>=|>|<=|<) \s* (\d+) \n
 
-        # body of #if in $4.  We don't handle #if TAG_MAJOR_VERSION blocks
+        # body of #if in $4. We don't handle #if TAG_MAJOR_VERSION blocks
         # that contain nested #ifs.
         ((?: (?! \s* \# \s* (?:if|elif|else|endif)) .* \n)+)
 

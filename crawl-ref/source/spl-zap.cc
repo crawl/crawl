@@ -5,7 +5,7 @@
 #include "beam.h"
 #include "stepdown.h"
 
-static int _spl_zaps[][2] =
+static pair<spell_type, zap_type> _spl_zaps[] =
 {
     { SPELL_MAGIC_DART, ZAP_MAGIC_DART },
     { SPELL_FORCE_LANCE, ZAP_FORCE_LANCE },
@@ -27,6 +27,8 @@ static int _spl_zaps[][2] =
     { SPELL_BOLT_OF_DRAINING, ZAP_BOLT_OF_DRAINING },
     { SPELL_LEHUDIBS_CRYSTAL_SPEAR, ZAP_LEHUDIBS_CRYSTAL_SPEAR },
     { SPELL_FIREBALL, ZAP_FIREBALL },
+    { SPELL_MEPHITIC_CLOUD, ZAP_MEPHITIC },
+    { SPELL_VIOLENT_UNRAVELLING, ZAP_UNRAVELLING },
     { SPELL_BOLT_OF_INACCURACY, ZAP_BOLT_OF_INACCURACY },
     { SPELL_DISPEL_UNDEAD, ZAP_DISPEL_UNDEAD },
     { SPELL_ISKENDERUNS_MYSTIC_BLAST, ZAP_ISKENDERUNS_MYSTIC_BLAST },
@@ -39,9 +41,9 @@ static int _spl_zaps[][2] =
     // of Asmodeus.
     { SPELL_HELLFIRE, ZAP_HELLFIRE },
     { SPELL_CORONA, ZAP_CORONA },
+    { SPELL_ENSLAVEMENT, ZAP_ENSLAVEMENT },
     { SPELL_SLOW, ZAP_SLOW },
     { SPELL_CONFUSE, ZAP_CONFUSE },
-    { SPELL_ENSLAVEMENT, ZAP_ENSLAVEMENT },
     { SPELL_HIBERNATION, ZAP_HIBERNATION },
     { SPELL_SLEEP, ZAP_SLEEP },
     { SPELL_PARALYSE, ZAP_PARALYSE },
@@ -56,7 +58,6 @@ static int _spl_zaps[][2] =
     { SPELL_CRYSTAL_BOLT, ZAP_CRYSTAL_BOLT },
     { SPELL_TUKIMAS_DANCE, ZAP_TUKIMAS_DANCE },
     { SPELL_CORROSIVE_BOLT, ZAP_CORROSIVE_BOLT },
-    { SPELL_GRAVITAS, ZAP_GRAVITAS },
     { SPELL_DEBUGGING_RAY, ZAP_DEBUGGING_RAY },
 
     // These are all for zap -> spell lookup.
@@ -69,6 +70,7 @@ static int _spl_zaps[][2] =
     { SPELL_STEAM_BALL, ZAP_BREATHE_STEAM },
     { SPELL_ORB_OF_ELECTRICITY, ZAP_ORB_OF_ELECTRICITY },
     { SPELL_CHILLING_BREATH, ZAP_BREATHE_FROST },
+    { SPELL_MINOR_HEALING, ZAP_HEAL_WOUNDS },
 };
 
 zap_type spell_to_zap(spell_type spell)
@@ -78,18 +80,18 @@ zap_type spell_to_zap(spell_type spell)
     if (spell == SPELL_DAZZLING_SPRAY)
         return NUM_ZAPS;
 
-    for (const int (&spzap)[2] : _spl_zaps)
-        if (spzap[0] == spell)
-            return (zap_type) spzap[1];
+    for (const auto &spzap : _spl_zaps)
+        if (spzap.first == spell)
+            return spzap.second;
 
     return NUM_ZAPS;
 }
 
 spell_type zap_to_spell(zap_type zap)
 {
-    for (const int (&spzap)[2] : _spl_zaps)
-        if (spzap[1] == zap)
-            return (spell_type) spzap[0];
+    for (const auto &spzap : _spl_zaps)
+        if (spzap.second == zap)
+            return spzap.first;
 
     return SPELL_NO_SPELL;
 }

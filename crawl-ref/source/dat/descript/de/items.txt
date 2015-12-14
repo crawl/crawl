@@ -586,7 +586,7 @@ ring of strength
 Dieser Ring vergrößert oder vermindert die physische Kraft seines Trägers einem
 Grad-Abhängigen auf seiner Macht.
 %%%%
-ring of sustain abilities
+ring of sustain attributes
 
 Dieser Ring schützt seinen Träger vor dem Verlust ihrer Kraft, Flinkheit und
 Intelligenz.

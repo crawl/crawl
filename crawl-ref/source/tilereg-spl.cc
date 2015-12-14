@@ -45,7 +45,7 @@ void SpellRegion::draw_tag()
         return;
 
     const spell_type spell = (spell_type) idx;
-    const string failure = failure_rate_to_string(spell_fail(spell));
+    const string failure = failure_rate_to_string(raw_spell_fail(spell));
     string desc = make_stringf("%d MP    %s    (%s)", spell_mana(spell),
                                spell_title(spell), failure.c_str());
     draw_desc(desc.c_str());
@@ -228,10 +228,9 @@ void SpellRegion::update()
         desc.idx      = (int) spell;
         desc.quantity = spell_mana(spell);
 
-        string temp;
         if ((spell == SPELL_BLINK || spell == SPELL_CONTROLLED_BLINK)
              && you.no_tele(false, false, true)
-            || spell_is_uncastable(spell, temp)
+            || spell_is_useless(spell, true, true)
             || spell_mana(spell) > you.magic_points)
         {
             desc.flag |= TILEI_FLAG_INVALID;

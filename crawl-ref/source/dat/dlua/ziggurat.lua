@@ -73,12 +73,6 @@ function ziggurat_build_level(e)
   local generate_awake = you.depth() > 4 + crawl.random2(21)
   zig().monster_hook = generate_awake and global_function("ziggurat_awaken_all")
 
-  -- Deeper levels may block controlled teleports.
-  -- Does never happen at depths 1-6; does always happen at depths 25-27.
-  if you.depth() > 6 + crawl.random2(19) then
-    dgn.change_level_flags("no_tele_control")
-  end
-
   if builder then
     return ziggurat_builder_map[builder](e)
   end
@@ -205,7 +199,7 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
                 "caustic shrike w:4", { weight = 5 }),
      with_props("place:Shoals:$ w:125 band / merfolk aquamancer / " ..
                 "water nymph w:5 / merfolk impaler w:5 / " ..
-                "merfolk javelineer / octopode crusher w:12", { weight = 5 }),
+                "merfolk javelineer", { weight = 5 }),
      "place:Spider:$ w:115 / ghost moth w:15 / hornet / " ..
                 "orb spider",
      "place:Crypt:$ 9 w:260 / curse skull w:5 / profane servitor w:5 / " ..
@@ -223,18 +217,21 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
      with_props("daeva / angel / cherub / pearl dragon / " ..
                 "ophan / apis", { weight = 2 }),
      with_props("hill giant / cyclops / stone giant / fire giant / " ..
-                "frost giant / ettin / titan", { weight = 2 }),
+                "frost giant / ettin / titan / juggernaut", { weight = 2 }),
      with_props("fire elemental / fire drake / hell hound / efreet / " ..
-                "fire dragon / fire giant / orb of fire", { weight = 2 }),
+                "salamander stormcaller / fire dragon / fire giant / " ..
+                "orb of fire w:12", { weight = 2 }),
      with_props("ice beast / ice dragon / frost giant / " ..
                 "ice devil / blizzard demon / ice fiend / simulacrum / " ..
                 "white draconian knight / shard shrike", { weight = 2 }),
      with_props("insubstantial wisp / air elemental / titan / raiju / " ..
                 "storm dragon / electric golem / spriggan air mage / " ..
                 "shock serpent", { weight = 2 }),
-     with_props("gargoyle / earth elemental / torpor snail / boulder beetle / " ..
-                "stone giant / iron dragon / crystal guardian / " ..
-                "war gargoyle / iron golem / hell sentinel", { weight = 2 }),
+     with_props("gargoyle / earth elemental / torpor snail / " ..
+                "boulder beetle / entropy weaver / stone giant / " ..
+                "iron dragon / crystal guardian / war gargoyle / " ..
+                "iron golem / iron giant / hell sentinel / " ..
+                "juggernaut / caustic shrike", { weight = 2 }),
      with_props("spectral thing / shadow wraith / eidolon w:4 / " ..
                 "shadow dragon / deep elf death mage w:6 / " ..
                 "death knight w:4 / revenant w:4 / profane servitor w:6 / " ..
@@ -334,15 +331,15 @@ local function mons_panlord_gen(x, y, nth)
 end
 
 mset_if(depth_ge(8), mons_panlord_gen)
-mset_if(depth_ge(14), with_props("place:Snake:$ w:14 / place:Swamp:$ w:14 / " ..
-                      "place:Shoals:$ w:14 / place:Spider:$ w:14 / " ..
-                      "greater naga w:12 / guardian serpent w:8 / hydra w:5 / " ..
-                      "swamp dragon w:5 / tentacled monstrosity / " ..
-                      "merfolk aquamancer w:6 / merfolk javelineer w:8 / " ..
-                      "alligator snapping turtle w:6 / " ..
-                      "octopode crusher / ghost moth w:8 / " ..
-                      "emperor scorpion w:8 / moth of wrath w:4",
-                      { weight = 5 }))
+mset_if(depth_ge(14),
+        with_props("place:Snake:$ w:14 / place:Swamp:$ w:14 / " ..
+                   "place:Shoals:$ w:14 / place:Spider:$ w:14 / " ..
+                   "greater naga w:12 / guardian serpent w:8 / " ..
+                   "hydra w:5 / swamp dragon w:5 / tentacled monstrosity / " ..
+                   "merfolk aquamancer w:6 / merfolk javelineer w:8 / " ..
+                   "alligator snapping turtle w:6 / ghost moth w:8 / " ..
+                   "emperor scorpion w:8 / moth of wrath w:4",
+                   { weight = 5 }))
 
 function ziggurat_monster_creators()
   return util.map(monster_creator_fn, mons_populations)
@@ -444,16 +441,15 @@ local function ziggurat_create_loot_at(c)
   end
 
   -- dgn.good_scrolls is a list of items with total weight 1000
-  local good_loot = dgn.item_spec("* no_pickup no_mimic w:6960 /" ..
-                                  "potion of restore abilities no_pickup no_mimic w:40 /" ..
+  local good_loot = dgn.item_spec("* no_pickup w:7000 /" ..
                                   dgn.good_scrolls)
-  local super_loot = dgn.item_spec("| no_pickup no_mimic w:7000 /" ..
-                                   "potion of experience no_pickup no_mimic w:190 /" ..
-                                   "potion of cure mutation no_pickup no_mimic w:190 /" ..
-                                   "potion of beneficial mutation no_pickup no_mimic w:40 /" ..
-                                   "royal jelly q:3 no_pickup no_mimic w:80 /" ..
-                                   "wand of heal wounds no_pickup no_mimic / " ..
-                                   "wand of hasting no_pickup no_mimic / " ..
+  local super_loot = dgn.item_spec("| no_pickup w:7000 /" ..
+                                   "potion of experience no_pickup w:190 q:1 /" ..
+                                   "potion of cure mutation no_pickup w:190 /" ..
+                                   "potion of beneficial mutation no_pickup w:40 q:1 /" ..
+                                   "royal jelly q:3 no_pickup w:80 /" ..
+                                   "wand of heal wounds no_pickup / " ..
+                                   "wand of hasting no_pickup / " ..
                                    dgn.good_scrolls)
 
   local loot_spots = find_free_space(nloot * 4)
@@ -634,6 +630,8 @@ local function ziggurat_stairs(entry, exit)
 
   if you.depth() < dgn.br_depth(you.branch()) then
     zigstair(exit.x, exit.y, "stone_stairs_down_i")
+  else
+    dgn.create_item(exit.x, exit.y, "figurine of a ziggurat")
   end
 
   zigstair(exit.x, exit.y + 1, "exit_ziggurat")

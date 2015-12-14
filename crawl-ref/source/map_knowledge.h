@@ -56,7 +56,6 @@ struct cloud_info
 #if TAG_MAJOR_VERSION == 34
 #define MAP_HOT           0x10000000
 #endif
-#define MAP_GOLDEN        0x20000000
 
 /*
  * A map_cell stores what the player knows about a cell.
@@ -118,7 +117,8 @@ struct map_cell
     // Clear prior to show update. Need to retain at least "seen" flag.
     void clear_data()
     {
-        const uint32_t f = flags & (MAP_SEEN_FLAG | MAP_INVISIBLE_UPDATE);
+        const uint32_t f = flags & (MAP_SEEN_FLAG | MAP_CHANGED_FLAG
+                                    | MAP_INVISIBLE_UPDATE);
         clear();
         flags = f;
     }

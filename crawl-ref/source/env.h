@@ -2,6 +2,7 @@
 #define ENV_H
 
 #include <set>
+#include <memory> // unique_ptr
 
 #include "map_knowledge.h"
 #include "monster.h"
@@ -13,7 +14,7 @@ typedef uint32_t terrain_property_t;
 typedef set<string> string_set;
 
 struct vault_placement;
-typedef vector<vault_placement*> vault_placement_refv;
+typedef vector<unique_ptr<vault_placement>> vault_placement_refv;
 
 typedef FixedArray< map_cell, GXM, GYM > MapKnowledge;
 
@@ -87,7 +88,7 @@ struct crawl_environment
 
     // Rate at which random monsters spawn, with lower numbers making
     // them spawn more often (5 or less causes one to spawn about every
-    // 5 turns).  Set to 0 to stop random generation.
+    // 5 turns). Set to 0 to stop random generation.
     int spawn_random_rate;
 
     // Time when level was saved (hence we write out you.elapsed_time
@@ -100,10 +101,6 @@ struct crawl_environment
     // Number of turns the player has spent on this level.
     int turns_on_level;
 
-    // Flags for things like preventing teleport control; see
-    // level_flag_type in enum.h
-    uint32_t level_flags;
-
     // Index into the delayed actions array.
     unsigned int dactions_done;
 
@@ -115,7 +112,7 @@ struct crawl_environment
     int absdepth0;
     vector<pair<coord_def, int> > sunlight;
 
-    //------------------------------------------------------------------------
+    // Remaining fields not marshalled:
 
     // Volatile level flags, not saved.
     uint32_t level_state;

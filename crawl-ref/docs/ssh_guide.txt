@@ -126,20 +126,25 @@ following initial display:
 
 ________________________________________________________________
 
- ## DGL source code available on ftp://ftp.alt.org/pub/dgamelaunch/or
- ## http://dev.triplehelix.org/?root=dgamelaunch (development version)
- ## ** Games on this server are recorded for in-progress viewing and playback!
- ##
- ## This crawl server hosted and maintained by Rachel Elizabeth Dillon;
- ## more information available at http://crawl.akrasiac.org/
+ Crawl server (North America) hosted and maintained by Rax E. Dillon.
+ ------------------------------------------------------------------------------
+ Server information: http://crawl.akrasiac.org
+ Webtiles:           http://webtiles.akrasiac.org/
+ Crawl information:  http://crawl.develz.org
+ ------------------------------------------------------------------------------
+ ** Games on this server are recorded for in-progress viewing and playback! **
+ ------------------------------------------------------------------------------
 
-   Not logged in.
+ Not logged in.
 
-   l) Login
-   r) Register new user
-   w) Watch games in progress
-   q) Quit
+ W) Watch games in progress
 
+ R) Register as new user
+ L) Login
+
+ Q) Quit
+
+ =>
 ________________________________________________________________
 
 

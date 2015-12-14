@@ -151,7 +151,7 @@ int fdatasync(int fd)
     if (!FlushFileBuffers(h))
     {
         /* Translate some Windows errors into rough approximations of Unix
-         * errors.  MSDN is useless as usual - in this case it doesn't
+         * errors. MSDN is useless as usual - in this case it doesn't
          * document the full range of errors.
          */
         switch (GetLastError())
@@ -171,6 +171,7 @@ int fdatasync(int fd)
 }
 # endif
 
+# ifndef CRAWL_HAVE_MKSTEMP
 int mkstemp(char *dummy)
 {
     HANDLE fh;
@@ -193,6 +194,7 @@ int mkstemp(char *dummy)
 
     die("can't create temporary file in %%TMPDIR%%");
 }
+# endif
 
 #else
 // non-Windows
@@ -207,9 +209,9 @@ int fdatasync(int fd)
     // but ignore flush requests.  fsync() should never return before the disk
     // claims the flush completed, but this is not the case on OS X.
     //
-    // Except, this is the case for internal drives only.  For "external" ones,
+    // Except, this is the case for internal drives only. For "external" ones,
     // F_FULLFSYNC is said to fail (at least on some versions of OS X), while
-    // fsync() actually works.  Thus, we need to try both.
+    // fsync() actually works. Thus, we need to try both.
     return fcntl(fd, F_FULLFSYNC, 0) && fsync(fd);
 #  else
     return fsync(fd);

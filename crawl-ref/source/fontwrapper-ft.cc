@@ -205,7 +205,9 @@ void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
 
     int advance = face->glyph->advance.x >> 6;
 
-    int bmp_width  = bmp->width;
+    // Was int prior to freetype 2.5.4, then became unsigned.
+    typedef decltype(bmp->width) ftint;
+    ftint bmp_width  = bmp->width;
     if (outl)
         bmp_width  += 2;
 
@@ -228,9 +230,9 @@ void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
         memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
         if (outl)
         {
-            const int charw = bmp->width;
-            for (int x = 0; x < bmp->width; x++)
-                for (int y = 0; y < bmp->rows; y++)
+            const ftint charw = bmp->width;
+            for (ftint x = 0; x < bmp->width; x++)
+                for (ftint y = 0; y < bmp->rows; y++)
                 {
                     unsigned int idx = offset_x+x+1 + (offset_y+y+1) * charsz.x;
                     idx *= 4;
@@ -255,8 +257,8 @@ void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
         }
         else
         {
-            for (int x = 0; x < bmp->width; x++)
-                for (int y = 0; y < bmp->rows; y++)
+            for (ftint x = 0; x < bmp->width; x++)
+                for (ftint y = 0; y < bmp->rows; y++)
                 {
                     unsigned int idx = offset_x + x + (offset_y + y) * charsz.x;
                     idx *= 4;
@@ -611,10 +613,9 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
                 ellipses = line_end - 2;
 
             size_t idx = &line[ellipses] - &base[0];
-            ret[idx] = '.';
-            ret[idx+1] = '.';
-
-            return ret.chop(idx + 2);
+            ret = ret.chop(idx);
+            ret += formatted_string("..");
+            return ret;
         }
         else
         {
@@ -652,7 +653,7 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
             cols += w;
         max_cols = max(cols, max_cols);
 
-        // NOTE: only newlines should be used for tool tips.  Don't use EOL.
+        // NOTE: only newlines should be used for tool tips. Don't use EOL.
         ASSERT(c != '\r');
 
         if (c == '\n')

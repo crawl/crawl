@@ -15,7 +15,7 @@ WEIGHT:  2
 SHUFFLE: {[(
 SUBST:   [( = .
 SUBST:   c : cx
-TILE:    c = wall_stone_brick
+TILE:    c = wall_stone_smooth
 FTILE:   . = floor_cobble_blood
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -106,7 +106,7 @@ ITEM:    stone, nothing, nothing
 ORIENT:  float
 SHUFFLE: ]def
 SUBST:   c : cx
-TILE:    c = wall_stone_brick
+TILE:    c = wall_stone_smooth
 TILE:    x = wall_pebble_lightgray
 KFEAT:   ' = floor
 FTILE:   '+]def{T = floor_cobble_blood
@@ -499,15 +499,16 @@ ENDMAP
 # The large aboretum
 NAME:   minmay_arrival_arboretum_large
 WEIGHT: 2
-TAGS:   arrival no_monster_gen no_item_gen
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MONS:   plant / bush w:3, fungus col:any, fungus col:yellow, fungus col:red
 MONS:   fungus col:white, fungus col:magenta, fungus col:darkgrey
-KPROP:  ' = no_rtele_into
-SUBST:  ' = ...111t, 1:1112, 2=1111112, 2:234567
-FTILE:  .1234567t = floor_moss
-COLOUR: . = green
+KPROP:  ' = no_tele_into
+SUBST:  ' = D111t, 1 : 1112, 2 = 1111112, 2 : 234567
+FTILE:  D1234567t = floor_moss
+COLOUR: D = green
 SUBST:  " = .
+KMASK:  D1234567 = no_item_gen
 MAP
 xxxxxxxxxxxxxxxxx
 x'''''''''''''''x
@@ -644,7 +645,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    roderic_lyre
-TAGS:    arrival no_monster_gen no_item_gen no_trap_gen no_rotate
+TAGS:    arrival no_monster_gen no_trap_gen no_rotate
 ORIENT:  float
 WEIGHT:  1
 SHUFFLE: EF
@@ -806,29 +807,29 @@ ENDMAP
 # Crop circle vaults (Roderic)
 # Season indicated by colouring. Something special for tiles wanted? --dpeg
 NAME:   roderic_crop_circles_arrival_small
-TAGS:   arrival  no_item_gen no_trap_gen
+TAGS:   arrival no_trap_gen
 ORIENT: float
 MONS:   col:green plant, col:brown plant
-SUBST:  '=111.
 COLOUR: . = brown
 : if crawl.one_chance_in(5) then
 SUBST:  1 = 2:100 1:20
 : else
 SUBST:  1 = 1:100 2:10
 : end
+KMASK:  ' = no_item_gen
 MAP
 11111111111111111
 111111..{..111111
 1111..11111..1111
-111.111...111.111
-111.11.111.11.111
-11.11.11.11.11.11
-11.1.11.1.11.1.11
-11.1.1.111.1.1.11
-11.1.11.1.11.1.11
-11.11.11.11.11.11
-111.11.111.11.111
-111.111...111.111
+111.111'''111.111
+111.11'111'11.111
+11.11'11'11'11.11
+11.1'11'1'11'1.11
+11.1'1'111'1'1.11
+11.1'11'1'11'1.11
+11.11'11'11'11.11
+111.11'111'11.111
+111.111'''111.111
 1111..11111..1111
 111111.....111111
 11111111@11111111
@@ -836,7 +837,7 @@ ENDMAP
 
 # This vault has over 400 monsters (as plants) -- can this be too many? --dpeg
 NAME:   roderic_crop_circles_arrival_large
-TAGS:   arrival no_item_gen no_trap_gen
+TAGS:   arrival no_trap_gen
 ORIENT: float
 WEIGHT: 1
 MONS:   col:green plant, col:brown plant
@@ -914,7 +915,7 @@ SUBST:  1 = 1:2 t:2 .:1
 MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                               pow_max = 100, delay = 1, size = 1, \
                               excl_rad = -1 }
-KPROP:  F1 = no_rtele_into
+KPROP:  F1 = no_tele_into
 MAP
          xxxxxxx
          x..{..x
@@ -941,7 +942,7 @@ ENDMAP
 
 NAME: nicolae_arrival_somewhat_less_tricky_arrival
 ORIENT: float
-TAGS: arrival no_item_gen no_monster_gen no_trap_gen
+TAGS: arrival no_monster_gen no_trap_gen
 SHUFFLE: GTt, ab, cd, ef, gh, ij, kl
 SUBST: acegik = ., bdfhjl = x
 MAP

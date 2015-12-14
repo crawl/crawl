@@ -2,6 +2,7 @@ struct sacrifice_def
 {
     ability_type  sacrifice;        // The ability that executes the sacrifice.
     mutation_type mutation;         // The mutation that will be inflicted.
+                                    // See also godabil.cc:sacrifice_vector_map.
     const char*   sacrifice_text;   // Format: "sacrifice your hand"
                                     // in case of variable sacrifices or sac
                                     // hand, this will be extended later
@@ -38,7 +39,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your ability to read while threatened",
   "sacrificed words",
 
-  28,
+  30,
   SK_NONE,
   nullptr,
   nullptr,
@@ -48,7 +49,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your ability to drink while threatened",
   "sacrificed drink",
 
-  28,
+  30,
   SK_NONE,
   nullptr,
   []() { return you.species != SP_MUMMY; },
@@ -98,7 +99,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your ability to be loved",
   "sacrificed love",
 
-  22,
+  25,
   SK_NONE,
   nullptr,
   nullptr,
@@ -128,7 +129,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your Dodging skill",
   "sacrificed dodging",
 
-  28,
+  30,
   SK_DODGING,
   nullptr,
   nullptr,
@@ -138,10 +139,10 @@ static const sacrifice_def sac_data[] =
   "sacrifice your Armour skill",
   "sacrificed armour",
 
-  28,
+  30,
   SK_ARMOUR,
   nullptr,
-  []() { return you_can_wear(EQ_BODY_ARMOUR); },
+  []() { return you_can_wear(EQ_BODY_ARMOUR) != MB_FALSE; },
 },
 
 { ABIL_RU_SACRIFICE_HAND, MUT_MISSING_HAND,
@@ -150,6 +151,46 @@ static const sacrifice_def sac_data[] =
 
   70,
   SK_SHIELDS,
+  nullptr,
+  nullptr,
+},
+
+{ ABIL_RU_SACRIFICE_EXPERIENCE, MUT_INEXPERIENCED,
+  "sacrifice your experiences",
+  "sacrificed experience",
+
+  30,
+  SK_NONE,
+  nullptr,
+  []() { return you.experience_level > RU_SAC_XP_LEVELS; }
+},
+
+{ ABIL_RU_SACRIFICE_SKILL, MUT_UNSKILLED,
+  "sacrifice your skill",
+  "sacrificed skill",
+
+  35,
+  SK_NONE,
+  nullptr,
+  nullptr,
+},
+
+{ ABIL_RU_SACRIFICE_EYE, MUT_MISSING_EYE,
+  "sacrifice an eye",
+  "sacrificed an eye",
+
+  20,
+  SK_NONE,
+  nullptr,
+  nullptr,
+},
+
+{ ABIL_RU_SACRIFICE_RESISTANCE, MUT_TEMPERATURE_SENSITIVITY,
+  "sacrifice your resistance to extreme temperatures",
+  "sacrificed resistance",
+
+  70,
+  SK_NONE,
   nullptr,
   nullptr,
 },

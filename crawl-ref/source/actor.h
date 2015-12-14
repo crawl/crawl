@@ -5,13 +5,16 @@
 #include "random-var.h"
 #include "ouch.h"
 
-enum ev_ignore_type
+#define CLING_KEY "clinging" // 'is creature clinging' property key
+
+enum ev_ignore_bit
 {
     EV_IGNORE_NONE       = 0,
     EV_IGNORE_HELPLESS   = 1<<0,
     EV_IGNORE_PHASESHIFT = 1<<1,
     EV_IGNORE_UNIDED     = 1<<2,
 };
+DEF_BITFIELD(ev_ignore_type, ev_ignore_bit);
 
 struct bolt;
 
@@ -59,7 +62,7 @@ public:
     virtual void set_position(const coord_def &c);
     const coord_def& pos() const { return position; }
 
-    virtual bool self_destructs() { return false; }
+    virtual void self_destruct() { }
 
     // Blink the actor to the destination. c should be a
     // valid target, though the method returns false
@@ -86,7 +89,6 @@ public:
 
     virtual size_type body_size(size_part_type psize = PSIZE_TORSO,
                                 bool base = false) const = 0;
-    virtual int       body_weight(bool base = false) const;
 
     virtual brand_type damage_brand(int which_attack = -1) = 0;
     virtual int       damage_type(int which_attack = -1) = 0;
@@ -95,11 +97,8 @@ public:
     {
         return weapon(0);
     }
-    virtual random_var attack_delay(const item_def *weapon,
-                                    const item_def *projectile = nullptr,
-                                    bool random = true, bool scaled = true,
-                                    bool shield = true)
-                                   const = 0;
+    virtual random_var attack_delay(const item_def *projectile = nullptr,
+                                    bool rescale = true) const = 0;
     virtual int has_claws(bool allow_tran = true) const = 0;
     virtual item_def *shield() const = 0;
     virtual item_def *slot_item(equipment_type eq,
@@ -176,7 +175,7 @@ public:
     virtual bool see_cell_no_trans(const coord_def &c) const;
 
     // Can the actor actually see the target?
-    virtual bool can_see(const actor *target) const;
+    virtual bool can_see(const actor &target) const;
 
     // Visibility as required by messaging. In usual play:
     //   Does the player know what's happening to the actor?
@@ -185,7 +184,6 @@ public:
     virtual bool is_icy() const = 0;
     virtual bool is_fiery() const = 0;
     virtual bool is_skeletal() const = 0;
-    virtual bool has_lifeforce() const = 0;
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate(bool temp = true) const = 0;
     virtual bool can_polymorph() const = 0;
@@ -194,8 +192,8 @@ public:
     virtual bool malmutate(const string &reason) = 0;
     virtual bool polymorph(int pow) = 0;
     virtual bool drain_exp(actor *agent, bool quiet = false, int pow = 15) = 0;
-    virtual bool rot(actor *agent, int amount, int immediate = 0,
-                     bool quiet = false) = 0;
+    virtual bool rot(actor *agent, int amount, bool quiet = false,
+                     bool no_cleanup = false) = 0;
     virtual int  hurt(const actor *attacker, int amount,
                       beam_type flavour = BEAM_MISSILE,
                       kill_method_type kill_type = KILLED_BY_MONSTER,
@@ -204,8 +202,8 @@ public:
                       bool cleanup_dead = true,
                       bool attacker_effects = true) = 0;
     virtual bool heal(int amount, bool max_too = false) = 0;
-    virtual void banish(actor *agent, const string &who = "") = 0;
-    virtual void blink(bool allow_partial_control = true) = 0;
+    virtual void banish(actor *agent, const string &who = "", const int power = 0) = 0;
+    virtual void blink() = 0;
     virtual void teleport(bool right_now = false,
                           bool wizard_tele = false) = 0;
     virtual bool poison(actor *attacker, int amount = 1, bool force = false) = 0;
@@ -220,11 +218,12 @@ public:
     virtual void weaken(actor *attacker, int pow) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool slow_cold_blood = true) = 0;
-    virtual void drain_stat(stat_type stat, int amount, actor* attacker) { }
+    virtual void drain_stat(stat_type stat, int amount) { }
     virtual void splash_with_acid(const actor* evildoer, int acid_strength = -1,
                                   bool allow_corrosion = true,
                                   const char* hurt_msg = nullptr) = 0;
-    virtual void corrode_equipment(const char* corrosion_source = "the acid") = 0;
+    virtual void corrode_equipment(const char* corrosion_source = "the acid",
+                                    int degree = 1) = 0;
 
     virtual bool can_hibernate(bool holi_only = false,
                                bool intrinsic_only = false) const;
@@ -253,8 +252,8 @@ public:
     virtual int gdr_perc() const = 0;
     int apply_ac(int damage, int max_damage = 0, ac_type ac_rule = AC_NORMAL,
                  int stab_bypass = 0) const;
-    virtual int melee_evasion(const actor *attacker,
-                              ev_ignore_type ign = EV_IGNORE_NONE) const = 0;
+    virtual int evasion(ev_ignore_type ign = EV_IGNORE_NONE,
+                        const actor *attacker = nullptr) const = 0;
     virtual bool shielded() const = 0;
     virtual int shield_bonus() const = 0;
     virtual int shield_block_penalty() const = 0;
@@ -290,7 +289,6 @@ public:
     virtual int res_elec() const = 0;
     virtual int res_poison(bool temp = true) const = 0;
     virtual int res_rotting(bool temp = true) const = 0;
-    virtual bool res_asphyx() const = 0;
     virtual int res_water_drowning() const = 0;
     virtual bool res_sticky_flame() const = 0;
     virtual int res_holy_energy(const actor *attacker) const = 0;
@@ -303,7 +301,7 @@ public:
     virtual int check_res_magic(int power);
     virtual bool no_tele(bool calc_unid = true, bool permit_id = true,
                          bool blink = false) const = 0;
-    virtual bool inaccuracy() const;
+    virtual int inaccuracy() const;
     virtual bool antimagic_susceptible() const = 0;
 
     virtual bool gourmand(bool calc_unid = true, bool items = true) const;
@@ -315,7 +313,7 @@ public:
     virtual bool run(bool calc_unid = true, bool items = true) const;
     virtual bool angry(bool calc_unid = true, bool items = true) const;
     virtual bool clarity(bool calc_unid = true, bool items = true) const;
-    virtual int faith(bool calc_unid = true, bool items = true) const;
+    virtual bool faith(bool calc_unid = true, bool items = true) const;
     virtual bool warding(bool calc_unid = true, bool items = true) const;
     virtual int archmagi(bool calc_unid = true, bool items = true) const;
     virtual bool no_cast(bool calc_unid = true, bool items = true) const;
@@ -328,7 +326,6 @@ public:
     virtual int evokable_flight(bool calc_unid = true) const;
     virtual int spirit_shield(bool calc_unid = true, bool items = true) const;
 
-    virtual flight_type flight_mode() const = 0;
     virtual bool is_wall_clinging() const;
     virtual bool is_banished() const = 0;
     virtual bool can_cling_to_walls() const = 0;
@@ -336,7 +333,7 @@ public:
     virtual bool check_clinging(bool stepped, bool door = false);
     virtual void clear_clinging();
     virtual bool is_web_immune() const = 0;
-    virtual bool airborne() const;
+    virtual bool airborne() const = 0;
     virtual bool ground_level() const;
     virtual bool stand_on_solid_ground() const;
 
@@ -361,18 +358,18 @@ public:
     // Being heated by a heat aura?
     virtual bool heated() const;
 #endif
-    // Squared halo radius.
-    virtual int halo_radius2() const = 0;
-    // Squared silence radius.
-    virtual int silence_radius2() const = 0;
-    // Squared liquefying radius
-    virtual int liquefying_radius2() const = 0;
-    virtual int umbra_radius2() const = 0;
+    // Halo radius.
+    virtual int halo_radius() const = 0;
+    // Silence radius.
+    virtual int silence_radius() const = 0;
+    // Liquefying radius.
+    virtual int liquefying_radius() const = 0;
+    virtual int umbra_radius() const = 0;
 #if TAG_MAJOR_VERSION == 34
-    virtual int heat_radius2() const = 0;
+    virtual int heat_radius() const = 0;
 #endif
 
-    virtual bool glows_naturally() const = 0;
+    virtual bool glows_naturally() const { return false; };
 
     virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;
@@ -428,6 +425,7 @@ public:
 
     bool can_constrict(actor* defender);
     void clear_far_constrictions();
+    void clear_constrictions_far_from(const coord_def &where);
     void accum_has_constricted();
     void handle_constriction();
     bool is_constricted() const;

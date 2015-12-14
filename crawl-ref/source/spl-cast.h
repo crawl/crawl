@@ -43,6 +43,8 @@ enum spflag_type
     SPFLAG_NO_GHOST            = 0x2000000,      // ghosts can't get this spell
     SPFLAG_CLOUD               = 0x4000000,      // makes a cloud
     SPFLAG_MR_CHECK            = 0x8000000,      // spell that checks monster MR
+    SPFLAG_MONS_ABJURE        = 0x10000000,      // monsters can cast abjuration
+                                                 // instead of this spell
 };
 
 enum spret_type
@@ -53,6 +55,19 @@ enum spret_type
     SPRET_NONE,                 // spell was not handled
 };
 
+#define IOOD_X "iood_x"
+#define IOOD_Y "iood_y"
+#define IOOD_VX "iood_vx"
+#define IOOD_VY "iood_vy"
+#define IOOD_KC "iood_kc"
+#define IOOD_POW "iood_pow"
+#define IOOD_CASTER "iood_caster"
+#define IOOD_REFLECTOR "iood_reflector"
+#define IOOD_DIST "iood_distance"
+#define IOOD_MID "iood_mid"
+#define IOOD_FLAWED "iood_flawed"
+#define IOOD_TPOS "iood_tpos"
+
 #define fail_check() if (fail) return SPRET_FAIL
 
 typedef bool (*spell_selector)(spell_type spell);
@@ -61,7 +76,7 @@ int list_spells(bool toggle_with_I = true, bool viewing = false,
                 bool allow_preselect = true,
                 const string &title = "Your Spells",
                 spell_selector selector = nullptr);
-int spell_fail(spell_type spell);
+int raw_spell_fail(spell_type spell);
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true,
                      bool rod = false);
@@ -72,7 +87,8 @@ bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
 void inspect_spells();
 void do_cast_spell_cmd(bool force);
 
-int hex_success_chance(const int mr, int powc, int scale);
+int hex_success_chance(const int mr, int powc, int scale,
+                       bool round_up = false);
 vector<string> desc_success_chance(const monster_info& mi, int pow);
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
     bool evoked = false);
@@ -94,8 +110,6 @@ string spell_schools_string(spell_type spell);
 string spell_hunger_string(spell_type spell, bool rod = false);
 string spell_noise_string(spell_type spell);
 
-bool spell_is_uncastable(spell_type spell, string &message, bool temp = true,
-                         bool evoked = false);
 void spell_skills(spell_type spell, set<skill_type> &skills);
 
 #endif

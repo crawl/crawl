@@ -25,11 +25,13 @@ enum spschool_flag_type
   SPTYP_POISON         = 1<<10,
   SPTYP_EARTH          = 1<<11,
   SPTYP_AIR            = 1<<12,
-  SPTYP_LAST_EXPONENT  = 12,
-  SPTYP_LAST_SCHOOL    = 1<<SPTYP_LAST_EXPONENT,
-  SPTYP_RANDOM         = 1<<(SPTYP_LAST_EXPONENT + 1),
+  SPTYP_LAST_SCHOOL    = SPTYP_AIR,
+  SPTYP_RANDOM         = SPTYP_LAST_SCHOOL << 1,
 };
-DEF_BITFIELD(spschools_type, spschool_flag_type);
+DEF_BITFIELD(spschools_type, spschool_flag_type, 12);
+const int SPTYP_LAST_EXPONENT = spschools_type::last_exponent;
+COMPILE_CHECK(spschools_type::exponent(SPTYP_LAST_EXPONENT)
+              == SPTYP_LAST_SCHOOL);
 
 struct bolt;
 class dist;
@@ -42,9 +44,6 @@ enum spell_highlight_colours
     COL_USELESS      = DARKGRAY,    // ability would have no useful effect
     COL_INAPPLICABLE = COL_USELESS, // ability cannot be meanifully applied (eg, no targets)
     COL_FORBIDDEN    = LIGHTRED,    // The player's god hates this ability
-
-    COL_EMPOWERED    = LIGHTGREEN,  // The ability is made stronger by the player's status
-    COL_FAVORED      = GREEN,       // the player's god likes this ability
 };
 
 bool is_valid_spell(spell_type spell);
@@ -84,8 +83,8 @@ spschools_type get_spell_disciplines(spell_type which_spell);
 bool disciplines_conflict(spschools_type disc1, spschools_type disc2);
 int count_bits(uint64_t bits);
 
-template <class E>
-int count_bits(enum_bitfield<E> bits)
+template <class E, int Exp>
+int count_bits(enum_bitfield<E, Exp> bits)
 {
     return count_bits(bits.flags);
 }
@@ -94,20 +93,19 @@ const char *spell_title(spell_type which_spell);
 const char* spelltype_short_name(spschool_flag_type which_spelltype);
 const char* spelltype_long_name(spschool_flag_type which_spelltype);
 
-typedef int cell_func(coord_def where, int pow, int aux, actor *agent);
-typedef int monster_func(monster* mon, int pow);
+typedef function<int (coord_def where)> cell_func;
+typedef function<int (monster* mon)> monster_func;
 typedef int cloud_func(coord_def where, int pow, int spreadrate,
                        cloud_type type, const actor* agent, int colour,
                        string name, string tile, int excl_rad);
 
-int apply_area_visible(cell_func cf, int power, actor *agent);
+int apply_area_visible(cell_func cf, const coord_def& where);
 
 int apply_monsters_around_square(monster_func mf, const coord_def& where,
-                                 int power, int radius = 1);
+                                 int radius = 1);
 
 int apply_random_around_square(cell_func cf, const coord_def& where,
-                               bool hole_in_middle, int power, int max_targs,
-                               actor *agent = nullptr);
+                               bool hole_in_middle, int max_targs);
 
 void apply_area_cloud(cloud_func func, const coord_def& where,
                       int pow, int number, cloud_type ctype,
@@ -134,8 +132,6 @@ spschool_flag_type skill2spell_type(skill_type spell_skill);
 
 skill_type arcane_mutation_to_skill(mutation_type mutation);
 bool cannot_use_schools(spschools_type schools);
-
-spell_type zap_type_to_spell(zap_type zap);
 
 bool spell_is_form(spell_type spell) PURE;
 

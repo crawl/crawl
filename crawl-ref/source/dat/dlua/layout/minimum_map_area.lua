@@ -30,7 +30,7 @@ minimum_map_area.SWAMP        = minimum_map_area.BASE_AREA
 --  map of the specified type.
 --
 -- Parameter(s):
---  -> e: A reference to the gobal enviroment.  Pass in _G
+--  -> e: A reference to the gobal enviroment. Pass in _G
 --  -> min_area: The minimum area for this map type
 --               Defaults to BASE_AREA
 --  -> floor: The glyphs to treat as floor glyphs

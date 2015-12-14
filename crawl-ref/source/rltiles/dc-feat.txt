@@ -65,7 +65,7 @@ mangrove2
 mangrove3
 
 ## doors
-%sdir dngn
+%sdir dngn/doors
 closed_door DNGN_CLOSED_DOOR
 gate_closed_left DNGN_GATE_CLOSED_LEFT
 gate_closed_middle DNGN_GATE_CLOSED_MIDDLE
@@ -114,7 +114,6 @@ vgate_open_down_crypt DNGN_VGATE_OPEN_DOWN_CRYPT
 ## Alternate doors for vaults, etc. Should be in the order listed above for
 ## doors which also provide gateways; otherwise detected, closed, open, or
 ## closed, open.
-%sdir dngn/gateways
 fleshy_orifice_closed DNGN_FLESHY_ORIFICE
 fleshy_orifice_open
 
@@ -177,7 +176,6 @@ crumbled_column_3
 crumbled_column_4
 crumbled_column_5
 crumbled_column_6
-granite_stump DNGN_GRANITE_STUMP
 
 # Statues in Dis
 statue_iron DNGN_STATUE_IRON
@@ -238,7 +236,6 @@ alarm DNGN_TRAP_ALARM
 shaft DNGN_TRAP_SHAFT
 teleport DNGN_TRAP_TELEPORT
 teleport_permanent DNGN_TRAP_TELEPORT_PERMANENT
-shadow DNGN_TRAP_SHADOW
 zot DNGN_TRAP_ZOT
 passage_of_golubria DNGN_TRAP_GOLUBRIA
 pressure_plate DNGN_TRAP_PLATE
@@ -385,7 +382,6 @@ wizlab_portal4
 wizlab_portal5
 wizlab_portal6
 wizlab_portal7
-wizlab_portal8
 wizlab_gone DNGN_PORTAL_WIZLAB_GONE
 ossuary_portal DNGN_PORTAL_OSSUARY
 ossuary_gone DNGN_PORTAL_OSSUARY_GONE
@@ -616,9 +612,6 @@ landing LANDING
 effect/heataura0 HEAT_AURA
 effect/heataura1
 effect/heataura2
-effect/goldaura0 GOLD_AURA
-effect/goldaura1
-effect/goldaura2
 ray RAY
 ray_out_of_range RAY_OUT_OF_RANGE
 travel_exclusion TRAVEL_EXCLUSION_BG

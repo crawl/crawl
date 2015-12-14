@@ -70,7 +70,7 @@ int is_pacifiable(const monster* mon)
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
-    if (mons_intel(mon) <= I_INSECT // no self-awareness
+    if (mons_intel(mon) <= I_BRAINLESS // no self-awareness
         || mons_is_tentacle_or_tentacle_segment(mon->type)) // body part
     {
         return -1;
@@ -112,7 +112,7 @@ static int _can_pacify_monster(const monster* mon, const int healed,
     if (healed < 1)
         return 0;
 
-    const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals
+    const int factor = (mons_intel(mon) < I_HUMAN)         ? 3 : // animals
                        (is_player_same_genus(mon->type))   ? 2   // same genus
                                                            : 1;  // other
 
@@ -149,7 +149,7 @@ static int _can_pacify_monster(const monster* mon, const int healed,
 
 static vector<string> _desc_mindless(const monster_info& mi)
 {
-    if (mi.intel() <= I_INSECT)
+    if (mi.intel() <= I_BRAINLESS)
         return { "mindless" };
     else
         return {};
@@ -204,97 +204,77 @@ static spret_type _healing_spell(int healed, int max_healed,
         return SPRET_FAIL;
     }
 
-    const int can_pacify  = _can_pacify_monster(mons, healed, max_healed);
-    const bool is_hostile = _mons_hostile(mons);
-
-    // Don't divinely heal a monster you can't pacify.
-    if (divine_ability && is_hostile
-        && you_worship(GOD_ELYVILON)
-        && can_pacify <= 0)
-    {
-        if (can_pacify == 0)
-        {
-            mprf("The light of Elyvilon fails to reach %s.",
-                 mons->name(DESC_THE).c_str());
-            return SPRET_FAIL;
-        }
-        else if (can_pacify == -3)
-        {
-            mprf("The light of Elyvilon almost touches upon %s.",
-                 mons->name(DESC_THE).c_str());
-            return SPRET_FAIL;
-        }
-        else if (can_pacify == -4)
-        {
-            mprf("%s is completely unfazed by your meager offer of peace.",
-                 mons->name(DESC_THE).c_str());
-            return SPRET_FAIL;
-        }
-        else
-        {
-            if (can_pacify == -2)
-            {
-                mprf("You cannot pacify this monster while %s is sleeping!",
-                     mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
-            }
-            else
-                mpr("You cannot pacify this monster!");
-            return SPRET_ABORT;
-        }
-    }
-
     bool did_something = false;
 
-    if (you_worship(GOD_ELYVILON)
-        && can_pacify == 1
-        && is_hostile)
+    if (divine_ability
+        && you_worship(GOD_ELYVILON)
+        && _mons_hostile(mons))
     {
-        did_something = true;
+        const int can_pacify  = _can_pacify_monster(mons, healed, max_healed);
 
-        const bool is_holy     = mons->is_holy();
-        const bool is_summoned = mons->is_summoned();
-
-        int pgain = 0;
-        if (!is_holy && !is_summoned && you.piety < MAX_PIETY)
+        // Don't divinely heal a monster you can't pacify.
+        if (can_pacify <= 0)
         {
-            pgain = random2(mons->max_hit_points / (2 + you.piety / 20));
-            if (!pgain) // Always give a 50% chance of gaining a little piety.
-                pgain = coinflip();
-        }
-
-        // The feedback no longer tells you if you gained any piety this time,
-        // it tells you merely the general rate.
-        if (random2(1 + pgain))
-            simple_god_message(" approves of your offer of peace.");
-        else
-            mpr("Elyvilon supports your offer of peace.");
-
-        if (is_holy)
-        {
-            string key = "pacification";
-
-            // Quadrupeds can't salute, etc.
-            mon_body_shape shape = get_mon_shape(mons);
-            if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA)
-                key += "_humanoid";
-
-            _print_holy_pacification_speech(key, mons, MSGCH_FRIEND_ENCHANT);
-
-            if (!one_chance_in(3)
-                && mons->can_speak()
-                && mons->type != MONS_MENNAS) // Mennas is mute and only has visual speech
+            if (can_pacify == 0)
             {
-                _print_holy_pacification_speech("speech", mons, MSGCH_TALK);
+                mprf("The light of Elyvilon fails to reach %s.",
+                     mons->name(DESC_THE).c_str());
+                return SPRET_FAIL;
+            }
+            else if (can_pacify == -3)
+            {
+                mprf("The light of Elyvilon almost touches upon %s.",
+                     mons->name(DESC_THE).c_str());
+                return SPRET_FAIL;
+            }
+            else if (can_pacify == -4)
+            {
+                mprf("%s is completely unfazed by your meager offer of peace.",
+                     mons->name(DESC_THE).c_str());
+                return SPRET_FAIL;
+            }
+            else
+            {
+                if (can_pacify == -2)
+                {
+                    mprf("You cannot pacify this monster while %s is sleeping!",
+                         mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
+                }
+                else
+                    mpr("You cannot pacify this monster!");
+                return SPRET_ABORT;
             }
         }
-        else
-            simple_monster_message(mons, " turns neutral.");
 
-        record_monster_defeat(mons, KILL_PACIFIED);
-        mons_pacify(mons, ATT_NEUTRAL);
+        if (can_pacify == 1)
+        {
+            did_something = true;
 
-        // Give a small piety return.
-        gain_piety(pgain);
+            if (mons->is_holy())
+            {
+                string key = "pacification";
+
+                // Quadrupeds can't salute, etc.
+                mon_body_shape shape = get_mon_shape(mons);
+                if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA)
+                    key += "_humanoid";
+
+                _print_holy_pacification_speech(key, mons,
+                                                MSGCH_FRIEND_ENCHANT);
+
+                if (!one_chance_in(3)
+                    && mons->can_speak()
+                    && mons->type != MONS_MENNAS) // Mennas is mute and only has visual speech
+                {
+                    _print_holy_pacification_speech("speech", mons, MSGCH_TALK);
+                }
+            }
+            else
+                simple_monster_message(mons, " turns neutral.");
+
+            record_monster_defeat(mons, KILL_PACIFIED);
+            mons_pacify(mons, ATT_NEUTRAL);
+        }
     }
 
     if (mons->heal(healed))
@@ -327,6 +307,66 @@ spret_type cast_healing(int pow, int max_pow, bool divine_ability,
                           divine_ability, where, not_self, mode);
 }
 
+/// Effects that occur when the player is debuffed.
+struct player_debuff_effects
+{
+    /// Attributes removed by a debuff.
+    vector<attribute_type> attributes;
+    /// Durations removed by a debuff.
+    vector<duration_type> durations;
+    /// Whether there's any contam to be removed by a debuff.
+    bool contam;
+};
+
+/**
+ * What dispellable effects currently exist on the player?
+ *
+ * @param[out] buffs   The dispellable effects that exist on the player.
+ *                     Assumed to be empty when passed in.
+ */
+static void _dispellable_player_buffs(player_debuff_effects &buffs)
+{
+    // attributes
+    static const attribute_type dispellable_attributes[] = {
+        ATTR_DELAYED_FIREBALL, ATTR_SWIFTNESS,
+        ATTR_REPEL_MISSILES, ATTR_DEFLECT_MISSILES,
+    };
+
+    for (auto attribute : dispellable_attributes)
+        if (you.attribute[attribute])
+            buffs.attributes.push_back(attribute);
+
+    // durations
+    for (unsigned int i = 0; i < NUM_DURATIONS; ++i)
+    {
+        const int dur = you.duration[i];
+        if (dur <= 0 || !duration_dispellable((duration_type) i))
+            continue;
+        if (i == DUR_TRANSFORMATION && you.form == TRAN_SHADOW)
+            continue;
+        buffs.durations.push_back((duration_type) i);
+        // this includes some buffs that won't be reduced in duration -
+        // anything already at 1 aut, or flight/transform while <= 11 aut
+        // that's probably not an actual problem
+    }
+
+    buffs.contam = get_contamination_level() > 0;
+}
+
+/**
+ * Does the player have any magical effects that can be removed (by debuff)?
+ *
+ * @return  Whether there are any effects to be dispelled.
+ */
+bool player_is_debuffable()
+{
+    player_debuff_effects buffs;
+    _dispellable_player_buffs(buffs);
+    return buffs.contam
+            || !buffs.durations.empty()
+            || !buffs.attributes.empty();
+}
+
 /**
  * Remove magical effects from the player.
  *
@@ -337,57 +377,44 @@ void debuff_player()
 {
     bool need_msg = false, danger = false;
 
-    if (you.attribute[ATTR_DELAYED_FIREBALL])
+    // find the list of debuffable effects currently active
+    player_debuff_effects buffs;
+    _dispellable_player_buffs(buffs);
+
+    for (auto attr : buffs.attributes)
     {
-        you.attribute[ATTR_DELAYED_FIREBALL] = 0;
-        mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
+        you.attribute[attr] = 0;
+        if (attr == ATTR_DELAYED_FIREBALL)
+            mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
+        else
+            need_msg = true;
     }
 
-    if (you.attribute[ATTR_REPEL_MISSILES])
+    for (auto duration : buffs.durations)
     {
-        you.attribute[ATTR_REPEL_MISSILES] = 0;
-        need_msg = true;
-    }
-
-    if (you.attribute[ATTR_DEFLECT_MISSILES])
-    {
-        you.attribute[ATTR_DEFLECT_MISSILES] = 0;
-        need_msg = true;
-    }
-
-    if (you.attribute[ATTR_SWIFTNESS] > 0)
-    {
-        you.attribute[ATTR_SWIFTNESS] = 0;
-        need_msg = true;
-    }
-
-    for (unsigned int i = 0; i < NUM_DURATIONS; ++i)
-    {
-        int& dur = you.duration[i];
-        if (duration_dispellable((duration_type) i) && dur > 0)
+        int &len = you.duration[duration];
+        if ((duration == DUR_FLIGHT || duration == DUR_TRANSFORMATION)
+            && len > 11)
         {
-            if ((i == DUR_FLIGHT || i == DUR_TRANSFORMATION) && dur > 11)
-            {
-                dur = 11;
-                need_msg = true;
-                danger = need_expiration_warning(you.pos());
-            }
-            else if (i == DUR_TELEPORT)
-            {
-                dur = 0;
-                mprf(MSGCH_DURATION, "You feel strangely stable.");
-            }
-            else if (i == DUR_PETRIFYING)
-            {
-                dur = 0;
-                mprf(MSGCH_DURATION, "You feel limber!");
-                you.redraw_evasion = true;
-            }
-            else if (dur > 1)
-            {
-                dur = 1;
-                need_msg = true;
-            }
+            len = 11;
+            need_msg = true;
+            danger = need_expiration_warning(you.pos());
+        }
+        else if (duration == DUR_TELEPORT)
+        {
+            len = 0;
+            mprf(MSGCH_DURATION, "You feel strangely stable.");
+        }
+        else if (duration == DUR_PETRIFYING)
+        {
+            len = 0;
+            mprf(MSGCH_DURATION, "You feel limber!");
+            you.redraw_evasion = true;
+        }
+        else if (len > 1)
+        {
+            len = 1;
+            need_msg = true;
         }
     }
 
@@ -398,68 +425,68 @@ void debuff_player()
              danger ? "Careful! " : "");
     }
 
+    const int old_contam_level = get_contamination_level();
     contaminate_player(-1 * (1000 + random2(4000)));
+    if (old_contam_level && old_contam_level == get_contamination_level())
+        mpr("You feel slightly less contaminated with magical energies.");
 }
 
-void debuff_monster(monster* mon)
+
+/**
+  * What dispellable effects currently exist on a given monster?
+  *
+  * @param[in] mon      The monster in question.
+  * @param[out] buffs   The dispellable effects that exist on that monster.
+  *                     Assumed to be empty when passed in.
+  */
+static void _dispellable_monster_buffs(const monster &mon,
+                                       vector<enchant_type> &buffs)
 {
-    // List of magical enchantments which will be dispelled.
-    static const enchant_type lost_enchantments[] =
-    {
-        ENCH_SLOW,
-        ENCH_HASTE,
-        ENCH_SWIFT,
-        ENCH_MIGHT,
-        ENCH_AGILE,
-        ENCH_FEAR,
-        ENCH_CONFUSION,
-        ENCH_INVIS,
-        ENCH_CORONA,
-        ENCH_CHARM,
-        ENCH_PARALYSIS,
-        ENCH_PETRIFYING,
-        ENCH_PETRIFIED,
-        ENCH_REGENERATION,
-        ENCH_STICKY_FLAME,
-        ENCH_TP,
-        ENCH_INNER_FLAME,
-        ENCH_OZOCUBUS_ARMOUR,
-        ENCH_INJURY_BOND,
-        ENCH_DIMENSION_ANCHOR,
-        ENCH_CONTROL_WINDS,
-        ENCH_TOXIC_RADIANCE,
-        ENCH_AGILE,
-        ENCH_EPHEMERAL_INFUSION,
-        ENCH_BLACK_MARK,
-        ENCH_SHROUD,
-        ENCH_SAP_MAGIC,
-        ENCH_REPEL_MISSILES,
-        ENCH_DEFLECT_MISSILES,
-        ENCH_CONDENSATION_SHIELD,
-        ENCH_RESISTANCE,
-        ENCH_HEXED,
-    };
-
-    bool dispelled = false;
-
     // Dispel all magical enchantments...
-    for (enchant_type ench : lost_enchantments)
+    for (enchant_type ench : dispellable_enchantments)
     {
-        // ...except for natural invisibility...
-        if (ench == ENCH_INVIS && mons_class_flag(mon->type, M_INVIS))
-            continue;
-        // ...permaconfusion...
-        if (ench == ENCH_CONFUSION && mons_class_flag(mon->type, M_CONFUSED))
-            continue;
-        // ...and regeneration from Trog.
-        if (ench == ENCH_REGENERATION && mon->has_ench(ENCH_RAISED_MR))
+        // except for permaconfusion.
+        if (ench == ENCH_CONFUSION && mons_class_flag(mon.type, M_CONFUSED))
             continue;
 
-        if (mon->del_ench(ench, true, true))
-            dispelled = true;
+        if (mon.has_ench(ench))
+            buffs.push_back(ench);
     }
-    if (dispelled)
-        simple_monster_message(mon, "'s magical effects unravel!");
+
+    // special-case invis, to avoid hitting naturally invis monsters.
+    if (mon.has_ench(ENCH_INVIS) && !mons_class_flag(mon.type, M_INVIS))
+        buffs.push_back(ENCH_INVIS);
+}
+
+
+/**
+ * Does a given monster have any buffs that can be removed?
+ *
+ * @param mon           The monster in question.
+ */
+bool monster_is_debuffable(const monster &mon)
+{
+    vector<enchant_type> buffs;
+    _dispellable_monster_buffs(mon, buffs);
+    return !buffs.empty();
+}
+
+/**
+ * Remove magical effects from a given monster.
+ *
+ * @param mon           The monster to be debuffed.
+ */
+void debuff_monster(monster &mon)
+{
+    vector<enchant_type> buffs;
+    _dispellable_monster_buffs(mon, buffs);
+    if (buffs.empty())
+        return;
+
+    for (enchant_type buff : buffs)
+        mon.del_ench(buff, true, true);
+
+    simple_monster_message(&mon, "'s magical effects unravel!");
 }
 
 int detect_traps(int pow)
@@ -477,20 +504,20 @@ int detect_items(int pow)
     int items_found = 0;
     int map_radius;
     if (pow >= 0)
-        map_radius = 8 + random2(8) + pow;
+        map_radius = 7 + random2(7) + pow;
     else
     {
         if (you_worship(GOD_ASHENZARI))
         {
-            map_radius = min(you.piety / 20, LOS_RADIUS);
+            map_radius = min(you.piety / 20 - 1, LOS_RADIUS);
             if (map_radius <= 0)
                 return 0;
         }
         else // MUT_JELLY_GROWTH
-            map_radius = 6;
+            map_radius = 5;
     }
 
-    for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
     {
         // Don't expose new dug out areas:
         // Note: assumptions are being made here about how
@@ -580,15 +607,14 @@ int detect_creatures(int pow, bool telepathic)
         _fuzz_detect_creatures(pow, &fuzz_radius, &fuzz_chance);
 
     int creatures_found = 0;
-    const int map_radius = 10 + random2(8) + pow;
+    const int map_radius = 9 + random2(7) + pow;
 
     // Clear the map so detect creatures is more useful and the detection
     // fuzz is harder to analyse by averaging.
     clear_map(false);
 
-    for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
     {
-        discover_mimic(*ri);
         if (monster* mon = monster_at(*ri))
         {
             // If you can see the monster, don't "detect" it elsewhere.
@@ -793,7 +819,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                     || !get_push_space(*ai, newpos, act, true, &veto_spots))
                 {
                     success = false;
-                    if (you.can_see(act))
+                    if (you.can_see(*act))
                         none_vis = false;
                     break;
                 }
@@ -929,12 +955,6 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
 bool entomb(int pow)
 {
-    // Zotdef - turned off
-    if (crawl_state.game_is_zotdef())
-    {
-        mpr("The dungeon rumbles ominously, and rocks fall from the ceiling!");
-        return false;
-    }
     if (_do_imprison(pow, you.pos(), false))
     {
         const int tomb_duration = BASELINE_DELAY * pow;
@@ -992,10 +1012,9 @@ bool cast_smiting(int pow, monster* mons)
 
     if (success)
     {
-        // Maxes out at around 40 damage at 27 Invocations, which is
-        // plenty in my book (the old max damage was around 70, which
-        // seems excessive).
-        mons->hurt(&you, 7 + (random2(pow) * 33 / 191));
+        // damage at 0 Invo ranges from 9-12 (avg 10), to 9-72 (avg 40) at 27.
+        int damage_increment = div_rand_round(pow, 8);
+        mons->hurt(&you, 6 + roll_dice(3, damage_increment));
         if (mons->alive())
             print_wounds(mons);
     }
@@ -1067,7 +1086,7 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
     if (attacker == mons)
         hploss = max(0, mons->hit_points / 2 - 1);
     else
-        hploss = roll_dice(3, 15) + (random2(pow) / 10);
+        hploss = roll_dice(3, 15) + (random2(pow) / 5);
 
     if (hploss)
     {
@@ -1080,7 +1099,7 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
 
     if (!hploss || !mons->alive())
         return;
-    // Holy word won't annoy or stun its user.
+    // Holy word won't annoy or daze its user.
     if (attacker != mons)
     {
         // Currently, holy word annoys the monsters it affects
@@ -1095,8 +1114,8 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
             behaviour_event(mons, ME_ANNOY, attacker);
         }
 
-        if (mons->speed_increment >= 25)
-            mons->speed_increment -= 20;
+        mons->add_ench(mon_enchant(ENCH_DAZED, 0, attacker,
+                                   (10 + random2(10)) * BASELINE_DELAY));
     }
 }
 
@@ -1127,9 +1146,6 @@ void torment_player(actor *attacker, torment_source_type taux)
         // Statue form is only partial petrification.
         if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
             hploss /= 2;
-
-        if (hploss == 0 && player_prot_life() < 0)
-            hploss = 1;
     }
 
     // Kiku protects you from torment to a degree.
@@ -1196,6 +1212,7 @@ void torment_player(actor *attacker, torment_source_type taux)
     case TORMENT_LURKING_HORROR:
         type = KILLED_BY_SPORE;
         aux = "an exploding lurking horror";
+        break;
 
     case TORMENT_MISCAST:
         aux = "by torment";
@@ -1207,8 +1224,7 @@ void torment_player(actor *attacker, torment_source_type taux)
     return;
 }
 
-static void _torment_stuff_at(coord_def where, actor *attacker,
-                       torment_source_type taux)
+void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
 {
     // Is the player in this cell?
     if (where == you.pos())
@@ -1222,16 +1238,13 @@ static void _torment_stuff_at(coord_def where, actor *attacker,
 
     int hploss = max(0, mons->hit_points * (50 - mons->res_negative_energy() * 5) / 100 - 1);
 
-    if (!hploss && mons->res_negative_energy() < 0)
-        hploss = 1;
-
     if (hploss)
     {
         simple_monster_message(mons, " convulses!");
 
         // Currently, torment doesn't annoy the monsters it affects
         // because it can't kill them, and because hostile monsters use
-        // it.  It does alert them, though.
+        // it. It does alert them, though.
         // XXX: attacker isn't passed through "int torment()".
         behaviour_event(mons, ME_ALERT, attacker);
     }
@@ -1242,7 +1255,7 @@ static void _torment_stuff_at(coord_def where, actor *attacker,
 void torment(actor *attacker, torment_source_type taux, const coord_def& where)
 {
     for (radius_iterator ri(where, LOS_NO_TRANS); ri; ++ri)
-        _torment_stuff_at(*ri, attacker, taux);
+        torment_cell(*ri, attacker, taux);
 }
 
 void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,

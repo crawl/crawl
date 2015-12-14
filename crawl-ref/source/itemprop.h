@@ -6,6 +6,8 @@
 #ifndef ITEMPROP_H
 #define ITEMPROP_H
 
+#include <set>
+
 #include "itemprop-enum.h"
 
 struct bolt;
@@ -39,6 +41,11 @@ enum armour_flag
     ARMF_VUL_FIRE           = ard(ARMF_RES_FIRE, -1),
     ARMF_VUL_COLD           = ard(ARMF_RES_COLD, -1),
 };
+
+/// Removed items that have item knowledge.
+extern const set<pair<object_class_type, int> > removed_items;
+/// Check for membership in removed_items.
+bool item_type_removed(object_class_type base, int subtype);
 
 // cursed:
 bool item_known_cursed(const item_def &item) PURE;
@@ -79,6 +86,7 @@ int armour_max_enchant(const item_def &item) PURE;
 bool armour_type_is_hide(int type, bool inc_made = false) PURE;
 bool armour_is_hide(const item_def &item, bool inc_made = false) PURE;
 bool armour_is_special(const item_def &item) PURE;
+int armour_acq_weight(const armour_type armour) PURE;
 
 equipment_type get_armour_slot(const item_def &item) PURE;
 equipment_type get_armour_slot(armour_type arm) IMMUTABLE;
@@ -91,8 +99,9 @@ armour_type armour_for_hide(armour_type hide_type) PURE;
 monster_type monster_for_hide(armour_type arm) PURE;
 bool  hide2armour(item_def &item);
 
-int   fit_armour_size(const item_def &item, size_type size) PURE;
-bool  check_armour_size(const item_def &item, size_type size) PURE;
+int fit_armour_size(const item_def &item, size_type size) PURE;
+bool check_armour_size(const item_def &item, size_type size) PURE;
+bool check_armour_size(armour_type sub_type, size_type size) PURE;
 
 bool item_is_rechargeable(const item_def &it, bool hide_charged = false) PURE;
 int wand_charge_value(int type) PURE;
@@ -141,6 +150,7 @@ int weapon_str_weight(const item_def &wpn) PURE;
 skill_type item_attack_skill(const item_def &item) PURE;
 skill_type item_attack_skill(object_class_type wclass, int wtype) IMMUTABLE;
 
+bool staff_uses_evocations(const item_def &item);
 bool item_skills(const item_def &item, set<skill_type> &skills);
 
 // launcher and ammo functions:
@@ -148,6 +158,7 @@ bool is_range_weapon(const item_def &item) PURE;
 missile_type fires_ammo_type(const item_def &item) PURE;
 const char *ammo_name(missile_type ammo) IMMUTABLE;
 const char *ammo_name(const item_def &bow) PURE;
+const char *ammo_name(const weapon_type bow) PURE;
 bool has_launcher(const item_def &ammo) PURE;
 bool is_throwable(const actor *actor, const item_def &wpn,
                   bool force = false) PURE;
@@ -163,18 +174,14 @@ int  ammo_type_damage(int missile_type) PURE;
 reach_type weapon_reach(const item_def &item) PURE;
 
 // Macguffins
-bool item_is_rune(const item_def &item,
-                  rune_type which_rune = NUM_RUNE_TYPES) PURE;
 bool item_is_unique_rune(const item_def &item) PURE;
 bool item_is_orb(const item_def &orb) PURE;
 bool item_is_horn_of_geryon(const item_def &item) PURE;
 bool item_is_spellbook(const item_def &item) PURE;
 
 bool is_xp_evoker(const item_def &item);
+int &evoker_debt(int evoker_type);
 bool evoker_is_charged(const item_def &item);
-int num_xp_evokers_inert(const item_def &item);
-int remove_newest_xp_evoker(item_def &stack, int quant = 1);
-int remove_oldest_xp_evoker(item_def &stack, int quant = 1);
 
 // ring functions:
 bool ring_has_pluses(const item_def &item) PURE;
@@ -212,6 +219,7 @@ int get_jewellery_res_magic(const item_def &ring, bool check_artp) PURE;
 bool get_jewellery_see_invisible(const item_def &ring, bool check_artp) PURE;
 
 int property(const item_def &item, int prop_type) PURE;
+int armour_prop(int armour, int prop_type) PURE;
 bool gives_ability(const item_def &item) PURE;
 bool gives_resistance(const item_def &item) PURE;
 bool is_item_jelly_edible(const item_def &item);
@@ -234,4 +242,7 @@ static inline bool is_weapon(const item_def &item)
 }
 
 void remove_whitespace(string &str);
+
+void auto_id_inventory();
+
 #endif

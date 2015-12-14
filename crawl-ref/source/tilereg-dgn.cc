@@ -4,6 +4,8 @@
 
 #include "tilereg-dgn.h"
 
+#include <algorithm> // any_of
+
 #include "cio.h"
 #include "cloud.h"
 #include "command.h"
@@ -26,7 +28,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "spl-cast.h"
-#include "spl-util.h"
+#include "spl-zap.h"
 #include "stash.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
@@ -456,7 +458,7 @@ static bool _is_appropriate_evokable(const item_def& item,
     if (item.sub_type == WAND_RANDOM_EFFECTS)
         return true;
 
-    spell_type spell = zap_type_to_spell(item.zap());
+    spell_type spell = zap_to_spell(item.zap());
     if (spell == SPELL_TELEPORT_OTHER && target->is_player())
         spell = SPELL_TELEPORT_SELF;
 
@@ -465,38 +467,21 @@ static bool _is_appropriate_evokable(const item_def& item,
 
 static bool _have_appropriate_evokable(const actor* target)
 {
-    // Felids cannot use wands.
-    if (you.species == SP_FELID)
-        return false;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def &item(you.inv[i]);
-
-        if (!item.defined())
-            continue;
-
-        if (_is_appropriate_evokable(item, target))
-            return true;
-    }
-
-    return false;
+    return any_of(begin(you.inv), end(you.inv),
+                  [target] (const item_def &item) -> bool
+                  {
+                      return item.defined()
+                          && _is_appropriate_evokable(item, target);
+                  });
 }
 
 static item_def* _get_evokable_item(const actor* target)
 {
     vector<const item_def*> list;
 
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def &item(you.inv[i]);
-
-        if (!item.defined())
-            continue;
-
-        if (_is_appropriate_evokable(item, target))
+    for (const auto &item : you.inv)
+        if (item.defined() && _is_appropriate_evokable(item, target))
             list.push_back(&item);
-    }
 
     ASSERT(!list.empty());
 
@@ -644,7 +629,7 @@ static bool _have_appropriate_spell(const actor* target)
 static bool _can_fire_item()
 {
     return you.species != SP_FELID
-           && you.m_quiver->get_fire_item() != -1;
+           && you.m_quiver.get_fire_item() != -1;
 }
 
 static bool _handle_distant_monster(monster* mon, unsigned char mod)
@@ -675,9 +660,9 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
     // Handle weapons of reaching.
     if (!mon->wont_attack() && you.see_cell_no_trans(mon->pos()))
     {
-        const int dist = (you.pos() - mon->pos()).abs();
+        const int dist = (you.pos() - mon->pos()).rdist();
 
-        if (dist > 2 && weapon && weapon_reach(*weapon) >= dist)
+        if (dist > 1 && weapon && weapon_reach(*weapon) >= dist)
         {
             macro_buf_add_cmd(CMD_EVOKE_WIELDED);
             _add_targeting_commands(mon->pos());
@@ -928,7 +913,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
 int tile_click_cell(const coord_def &gc, unsigned char mod)
 {
     monster* mon = monster_at(gc);
-    if (mon && you.can_see(mon))
+    if (mon && you.can_see(*mon))
     {
         if (_handle_distant_monster(mon, mod))
             return CK_MOUSE_CMD;
@@ -1121,7 +1106,7 @@ static void _add_tip(string &tip, string text)
 bool tile_dungeon_tip(const coord_def &gc, string &tip)
 {
     const int attack_dist = you.weapon() ?
-        weapon_reach(*you.weapon()) : 2;
+        weapon_reach(*you.weapon()) : 1;
 
     vector<command_type> cmd;
     tip = "";
@@ -1141,10 +1126,10 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
     else // non-player squares
     {
         const actor* target = actor_at(gc);
-        if (target && you.can_see(target))
+        if (target && you.can_see(*target))
         {
             has_monster = true;
-            if ((gc - you.pos()).abs() <= attack_dist)
+            if ((gc - you.pos()).rdist() <= attack_dist)
             {
                 if (!cell_is_solid(gc))
                 {
@@ -1161,7 +1146,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
 
             if (you.species != SP_FELID
                 && you.see_cell_no_trans(target->pos())
-                && you.m_quiver->get_fire_item() != -1)
+                && you.m_quiver.get_fire_item() != -1)
             {
                 _add_tip(tip, "[Shift + L-Click] Fire (%)");
                 cmd.push_back(CMD_FIRE);

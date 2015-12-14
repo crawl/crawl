@@ -45,6 +45,7 @@
 #include "tilereg-crt.h"
 #endif
 #include "travel.h"
+#include "unicode.h"
 #include "unwind.h"
 
 #define SHOPPING_LIST_COST_KEY "shopping_list_cost_key"
@@ -261,6 +262,11 @@ static int _shop_get_item_value(const item_def& item, int greed, bool id)
     return max(result, 1);
 }
 
+int item_price(const item_def& item, const shop_struct& shop)
+{
+    return _shop_get_item_value(item, shop.greed, shoptype_identifies_stock(shop.type));
+}
+
 // Comparator for sorting a permutation list according to the shop, the
 // original list of item IDs, and the current ordering mode.
 class ShopSorter
@@ -337,7 +343,7 @@ static void _shop_print_stock(const vector<bool>& selected,
         const char c = i + 'a';
 
         // Colour stock as follows:
-        //  * lightcyan, if on the shopping list.
+        //  * lightcyan, if on the shopping list and not selected.
         //  * lightred, if you can't buy all you selected.
         //  * lightgreen, if this item is purchasable along with your selections
         //  * red, if this item is not purchasable even by itself.
@@ -346,7 +352,7 @@ static void _shop_print_stock(const vector<bool>& selected,
 
         // Is this too complicated? (jpeg)
 
-        if (in_list[stock_pos])
+        if (in_list[stock_pos] && !selected[stock_pos])
             textcolour(LIGHTCYAN);
         else if (total_cost > you.gold && selected[stock_pos])
             textcolour(LIGHTRED);
@@ -360,7 +366,7 @@ static void _shop_print_stock(const vector<bool>& selected,
         else
             textcolour(YELLOW);
 
-        if (in_list[stock_pos])
+        if (in_list[stock_pos] && !selected[stock_pos])
             cprintf("%c $ ", c);
         else if (selected[stock_pos])
             cprintf("%c + ", c);
@@ -487,12 +493,17 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
         num_in_list  = 0;
         int num_selected = 0;
+        total_cost = 0;
         for (size_t i = 0; i < shop.stock.size(); i++)
         {
             if (in_list[i])
                 num_in_list++;
             if (selected[i])
+            {
+                total_cost += _shop_get_item_value(shop.stock[i],
+                                                   shop.greed, id_stock);
                 num_selected++;
+            }
         }
 
         clrscr();
@@ -545,27 +556,27 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             }
         }
 
+        string info;
         if (!total_cost)
         {
-            snprintf(info, INFO_SIZE, "You have %d gold piece%s.", you.gold,
-                     you.gold != 1 ? "s" : "");
-
+            info = make_stringf("You have %d gold piece%s.", you.gold,
+                                you.gold != 1 ? "s" : "");
             textcolour(YELLOW);
         }
         else if (total_cost > you.gold)
         {
-            snprintf(info, INFO_SIZE, "You have %d gold piece%s. "
+            info = make_stringf("You have %d gold piece%s. "
                            "You are short %d gold piece%s for the purchase.",
-                     you.gold,
-                     you.gold != 1 ? "s" : "",
-                     total_cost - you.gold,
-                     (total_cost - you.gold != 1) ? "s" : "");
+                           you.gold,
+                           you.gold != 1 ? "s" : "",
+                           total_cost - you.gold,
+                           (total_cost - you.gold != 1) ? "s" : "");
 
             textcolour(LIGHTRED);
         }
         else
         {
-            snprintf(info, INFO_SIZE, "You have %d gold piece%s. "
+            info = make_stringf("You have %d gold piece%s. "
                      "After the purchase, you will have %d gold piece%s.",
                      you.gold,
                      you.gold != 1 ? "s" : "",
@@ -575,19 +586,18 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             textcolour(YELLOW);
         }
 
-        _shop_print(info, 0);
+        _shop_print(info.c_str(), 0);
 
+        info = "";
         if (first)
         {
             first = false;
-            snprintf(info, INFO_SIZE, "%s What would you like to do? ",
-                      hello.c_str());
+            info = hello + " ";
         }
-        else
-            snprintf(info, INFO_SIZE, "What would you like to do? ");
+        info += "What would you like to do? ";
 
         textcolour(CYAN);
-        _shop_print(info, 1);
+        _shop_print(info.c_str(), 1);
 
         textcolour(LIGHTGREY);
 
@@ -658,10 +668,11 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                 continue;
             else
             {
-                snprintf(info, INFO_SIZE, "Purchase for %d gold? (y/n)",
-                         total_purchase);
+                const string prompt = make_stringf(
+                                          "Purchase for %d gold? (y/n)",
+                                          total_purchase);
 
-                if (_shop_yesno(info, 'n'))
+                if (_shop_yesno(prompt.c_str(), 'n'))
                 {
                     int num_items = 0, outside_items = 0, quant;
                     for (int i = to_buy.size() - 1; i >= 0; --i)
@@ -669,6 +680,13 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                         if (to_buy[i])
                         {
                             item_def& item = shop.stock[i];
+
+                            const int gp_value = _shop_get_item_value(item,
+                                                        shop.greed, id_stock);
+
+                            // Can happen if the price changes due to id status
+                            if (gp_value > you.gold)
+                                continue;
 
                             // Remove from shopping list if it's unique
                             // (i.e., if the shop has multiple scrolls of
@@ -680,9 +698,6 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                             {
                                 shopping_list.del_thing(item);
                             }
-
-                            const int gp_value = _shop_get_item_value(item,
-                                                        shop.greed, id_stock);
 
                             // Take a note of the purchase.
                             take_note(Note(NOTE_BUY_ITEM, gp_value, 0,
@@ -814,56 +829,32 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                     item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
                                    | ISFLAG_NOTED_GET);
                 }
-                describe_item(item, false, true);
+                describe_item(item);
                 if (id_stock)
                     item.flags = old_flags;
             }
             else
             {
-                const int gp_value = _shop_get_item_value(item, shop.greed,
-                                                          id_stock);
                 if (in_list[key])
                 {
+                    shopping_list.del_thing(item);
                     if (to_shoplist)
-                    {
-                        shopping_list.del_thing(item);
-                        in_list[key] = false;
                         selected[key] = false;
-                        continue;
-                    }
                     else
-                    {
-                        shopping_list.del_thing(item);
-                        in_list[key]  = false;
-                        // Will be toggled to true later
-                        selected[key] = false;
-                    }
+                        selected[key] = !selected[key];
                 }
                 else if (to_shoplist)
                 {
-                    in_list[key] = true;
-                    if (selected[key])
-                        total_cost -= gp_value;
                     selected[key] = false;
                     const int cost = _shop_get_item_value(item, shop.greed,
                                                           id_stock);
                     shopping_list.add_thing(item, cost);
-                    continue;
                 }
-
-                // Okay, we are now selecting an item normally, and it
-                // is not on the shopping list.
-                ASSERT(!in_list[key]);
-
-                selected[key] = !selected[key];
-                if (selected[key])
-                    total_cost += gp_value;
                 else
-                    total_cost -= gp_value;
-
-                ASSERT(total_cost >= 0);
+                    selected[key] = !selected[key];
             }
         }
+        ASSERT(total_cost >= 0);
     }
 
     if (you.last_pickup.empty())
@@ -902,7 +893,7 @@ static bool _purchase(shop_struct& shop, int index, int cost, bool id)
     {
         // Identify the item and its type.
         // This also takes the ID note if necessary.
-        set_ident_type(item, ID_KNOWN_TYPE);
+        set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
@@ -911,14 +902,15 @@ static bool _purchase(shop_struct& shop, int index, int cost, bool id)
         || !move_item_to_inv(item))
     {
         copy_item_to_grid(item, shop.pos);
+        return false;
     }
     return true;
 }
 
-// This probably still needs some work.  Rings used to be the only
+// This probably still needs some work. Rings used to be the only
 // artefacts which had a change in price, and that value corresponds
-// to returning 50 from this function.  Good artefacts will probably
-// be returning just over 30 right now.  Note that this isn't used
+// to returning 50 from this function. Good artefacts will probably
+// be returning just over 30 right now. Note that this isn't used
 // as a multiple, its used in the old ring way: 7 * ret is added to
 // the price of the artefact. -- bwr
 int artefact_value(const item_def &item)
@@ -948,9 +940,9 @@ int artefact_value(const item_def &item)
     else if (prop[ ARTP_COLD ] < 0)
         ret -= 10;
 
-    if (prop[ ARTP_MAGIC ] > 0)
-        ret += 4 + 4 * prop[ ARTP_MAGIC ];
-    else if (prop[ ARTP_MAGIC ] < 0)
+    if (prop[ ARTP_MAGIC_RESISTANCE ] > 0)
+        ret += 4 + 4 * prop[ ARTP_MAGIC_RESISTANCE ];
+    else if (prop[ ARTP_MAGIC_RESISTANCE ] < 0)
         ret -= 6;
 
     if (prop[ ARTP_NEGATIVE_ENERGY ] > 0)
@@ -978,7 +970,7 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_RMUT ])
         ret += 8;
 
-    if (prop[ ARTP_EYESIGHT ])
+    if (prop[ ARTP_SEE_INVISIBLE ])
         ret += 6;
 
     // abilities:
@@ -1000,7 +992,7 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_CAUSE_TELEPORTATION ])
         ret -= 3;
 
-    if (prop[ ARTP_NOISES ])
+    if (prop[ ARTP_NOISE ])
         ret -= 5;
 
     if (prop[ ARTP_PREVENT_TELEPORTATION ])
@@ -1009,7 +1001,16 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_PREVENT_SPELLCASTING ])
         ret -= 10;
 
-    if (prop[ ARTP_MUTAGENIC ])
+    if (prop[ ARTP_CONTAM ])
+        ret -= 8;
+
+    if (prop[ ARTP_CORRODE ])
+        ret -= 8;
+
+    if (prop[ ARTP_DRAIN ])
+        ret -= 8;
+
+    if (prop[ ARTP_CONFUSE ])
         ret -= 8;
 
     // extremely good
@@ -1066,7 +1067,6 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case WPN_BLOWGUN:
-        case WPN_HAMMER:
         case WPN_WHIP:
             valued += 25;
             break;
@@ -1150,6 +1150,7 @@ unsigned int item_value(item_def item, bool ident)
 
             case SPWPN_SPEED:
             case SPWPN_VAMPIRISM:
+            case SPWPN_ANTIMAGIC:
                 valued *= 30;
                 break;
 
@@ -1396,12 +1397,14 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_INVISIBILITY:
             case SPARM_MAGIC_RESISTANCE:
             case SPARM_PROTECTION:
+            case SPARM_ARCHERY:
                 valued += 50;
                 break;
 
             case SPARM_POSITIVE_ENERGY:
             case SPARM_POISON_RESISTANCE:
             case SPARM_REFLECTION:
+            case SPARM_SPIRIT_SHIELD:
                 valued += 20;
                 break;
 
@@ -1533,7 +1536,9 @@ unsigned int item_value(item_def item, bool ident)
 
             case POT_BERSERK_RAGE:
             case POT_HEAL_WOUNDS:
+#if TAG_MAJOR_VERSION == 34
             case POT_RESTORE_ABILITIES:
+#endif
                 valued += 50;
                 break;
 
@@ -1553,12 +1558,12 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 25;
                 break;
 
-            case POT_DECAY:
             case POT_DEGENERATION:
 #if TAG_MAJOR_VERSION == 34
             case POT_STRONG_POISON:
             case POT_PORRIDGE:
             case POT_SLOWING:
+            case POT_DECAY:
 #endif
             case POT_BLOOD:
             case POT_POISON:
@@ -1599,7 +1604,7 @@ unsigned int item_value(item_def item, bool ident)
         break;
 
     case OBJ_CORPSES:
-        valued = get_max_corpse_chunks(item.mon_type) * 5;
+        valued = max_corpse_chunks(item.mon_type) * 5;
 
     case OBJ_SCROLLS:
         if (!item_type_known(item))
@@ -1710,10 +1715,6 @@ unsigned int item_value(item_def item, bool ident)
             {
                 switch (item.sub_type)
                 {
-                case RING_TELEPORT_CONTROL:
-                    valued += 500;
-                    break;
-
                 case AMU_FAITH:
                 case AMU_RESIST_MUTATION:
                 case AMU_RAGE:
@@ -1744,7 +1745,7 @@ unsigned int item_value(item_def item, bool ident)
                     valued += 200;
                     break;
 
-                case RING_SUSTAIN_ABILITIES:
+                case RING_SUSTAIN_ATTRIBUTES:
                 case RING_STEALTH:
                 case RING_TELEPORTATION:
                 case RING_FLIGHT:
@@ -1786,11 +1787,8 @@ unsigned int item_value(item_def item, bool ident)
     case OBJ_MISCELLANY:
         switch (item.sub_type)
         {
-        case MISC_RUNE_OF_ZOT:  // upped from 1200 to encourage collecting
-            valued += 10000;
-            break;
-
         case MISC_HORN_OF_GERYON:
+        case MISC_ZIGGURAT:
             valued += 5000;
             break;
 
@@ -1877,6 +1875,10 @@ unsigned int item_value(item_def item, bool ident)
         valued = 250000;
         break;
 
+    case OBJ_RUNES:
+        valued = 10000;
+        break;
+
     default:
         break;
     }                           // end switch
@@ -1901,8 +1903,8 @@ bool is_worthless_consumable(const item_def &item)
 #if TAG_MAJOR_VERSION == 34
         case POT_BLOOD_COAGULATED:
         case POT_SLOWING:
-#endif
         case POT_DECAY:
+#endif
         case POT_DEGENERATION:
         case POT_POISON:
             return true;
@@ -2073,7 +2075,7 @@ string shop_name(const coord_def& where, bool add_stop)
             | (static_cast<uint32_t>(cshop->keeper_name[1]) << 8)
             | (static_cast<uint32_t>(cshop->keeper_name[1]) << 16);
 
-        sh_name += apostrophise(make_name(seed, false)) + " ";
+        sh_name += apostrophise(make_name(seed)) + " ";
     }
 
     if (!cshop->shop_type_name.empty())
@@ -2105,7 +2107,7 @@ bool shop_item_unknown(const item_def &item)
 {
     return item_type_has_ids(item.base_type)
            && item_type_known(item)
-           && get_ident_type(item) != ID_KNOWN_TYPE
+           && !get_ident_type(item)
            && !is_artefact(item);
 }
 
@@ -2299,7 +2301,8 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
             case MISC_DISC_OF_STORMS:
                 break;
             default:
-                return 0;
+                if (!is_xp_evoker(item))
+                    return 0;
         }
         break;
     default:
@@ -2348,7 +2351,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
             continue;
 
         // Don't prompt to remove rings with strictly better pluses
-        // than the new one.  Also, don't prompt to remove rings with
+        // than the new one. Also, don't prompt to remove rings with
         // known pluses when the new ring's pluses are unknown.
         if (item.base_type == OBJ_JEWELLERY)
         {
@@ -2453,6 +2456,16 @@ void ShoppingList::item_type_identified(object_class_type base_type,
     // Only restore the excursion at the very end.
     level_excursion le;
 
+#if TAG_MAJOR_VERSION == 34
+    // Handle removed Gozag shops from old saves. Only do this once:
+    // future Gozag abandonment will call remove_dead_shops itself.
+    if (!you.props.exists(REMOVED_DEAD_SHOPS_KEY))
+    {
+        remove_dead_shops();
+        you.props[REMOVED_DEAD_SHOPS_KEY] = true;
+    }
+#endif
+
     for (CrawlHashTable &thing : *list)
     {
         if (!thing_is_item(thing))
@@ -2474,6 +2487,30 @@ void ShoppingList::item_type_identified(object_class_type base_type,
         thing[SHOPPING_THING_COST_KEY] =
             _shop_get_item_value(item, shop->greed, false);
     }
+
+    // Prices could have changed.
+    refresh();
+}
+
+void ShoppingList::remove_dead_shops()
+{
+    // Only restore the excursion at the very end.
+    level_excursion le;
+
+    set<level_pos> shops_to_remove;
+
+    for (CrawlHashTable &thing : *list)
+    {
+        const level_pos place = thing_pos(thing);
+        le.go_to(place.id); // thereby running DACT_REMOVE_GOZAG_SHOPS
+        const shop_struct *shop = get_shop(place.pos);
+
+        if (!shop)
+            shops_to_remove.insert(place);
+    }
+
+    for (auto pos : shops_to_remove)
+        forget_pos(pos);
 
     // Prices could have changed.
     refresh();
@@ -2600,7 +2637,7 @@ void ShoppingListMenu::draw_title()
 
         cgotoxy(1, 1);
         formatted_string fs = formatted_string(title->colour);
-        fs.cprintf("%d %s%s, total cost %d gp",
+        fs.cprintf("%d %s%s, total %d gold",
                    title->quantity, title->text.c_str(),
                    title->quantity > 1? "s" : "",
                    total_cost);
@@ -2630,22 +2667,39 @@ void ShoppingListMenu::draw_title()
     }
 }
 
+/**
+ * Describe the location of a given shopping list entry.
+ *
+ * @param thing     A shopping list entry.
+ * @return          Something like [Orc:4], probably.
+ */
+string ShoppingList::describe_thing_pos(const CrawlHashTable &thing)
+{
+    return make_stringf("[%s]", thing_pos(thing).id.describe().c_str());
+}
+
 void ShoppingList::fill_out_menu(Menu& shopmenu)
 {
     menu_letter hotkey;
+    int longest = 0;
+    // How much space does the longest entry need for proper alignment?
+    for (const CrawlHashTable &thing : *list)
+        longest = max(longest, strwidth(describe_thing_pos(thing)));
+
     for (CrawlHashTable &thing : *list)
     {
-        level_pos      pos     = thing_pos(thing);
-        int            cost    = thing_cost(thing);
-        bool           unknown = false;
+        const int cost = thing_cost(thing);
+        const bool unknown = thing_is_item(thing)
+                             && shop_item_unknown(get_thing_item(thing));
 
-        if (thing_is_item(thing))
-            unknown = shop_item_unknown(get_thing_item(thing));
-
-        string etitle =
-            make_stringf("[%s] %s%s (%d gp)", pos.id.describe().c_str(),
-                         name_thing(thing, DESC_A).c_str(),
-                         unknown ? " (unknown)" : "", cost);
+        const string etitle =
+            make_stringf(
+                "%*s%5d gold  %s%s",
+                longest,
+                describe_thing_pos(thing).c_str(),
+                cost,
+                name_thing(thing, DESC_A).c_str(),
+                unknown ? " (unknown)" : "");
 
         MenuEntry *me = new MenuEntry(etitle, MEL_ITEM, 1, hotkey);
         me->data = &thing;
@@ -2746,12 +2800,12 @@ void ShoppingList::display()
             else // not an item, so we only stored a description.
             {
                 // HACK: Assume it's some kind of portal vault.
-                snprintf(info, INFO_SIZE,
-                         "%s with an entry fee of %d gold pieces.",
-                         describe_thing(*thing, DESC_A).c_str(),
-                         (int) thing_cost(*thing));
+                const string info = make_stringf(
+                             "%s with an entry fee of %d gold pieces.",
+                             describe_thing(*thing, DESC_A).c_str(),
+                             (int) thing_cost(*thing));
 
-                print_description(info);
+                print_description(info.c_str());
                 getchm();
             }
         }
@@ -2802,7 +2856,7 @@ void ShoppingList::refresh()
         you.props[SHOPPING_LIST_KEY].new_vector(SV_HASH, SFLAG_CONST_TYPE);
     list = &you.props[SHOPPING_LIST_KEY].get_vector();
 
-    sort(list->begin(), list->end(), _compare_shopping_things);
+    stable_sort(list->begin(), list->end(), _compare_shopping_things);
 
     min_unbuyable_cost = INT_MAX;
     min_unbuyable_idx  = -1;

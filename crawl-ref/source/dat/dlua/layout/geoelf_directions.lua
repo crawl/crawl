@@ -2,7 +2,7 @@
 -- geoelf_directions.lua:
 --
 -- Contains the direction constants used by the geoelf layout
---  generator.  Corridors are all in one of these directions,
+--  generator. Corridors are all in one of these directions,
 --  and a room can have at most one corridor leaving it per
 --  direction.
 ------------------------------------------------------------------------------
@@ -34,8 +34,8 @@ geoelf.directions.NE    = 7
 --
 -- There are two possible direction values that can describe
 --  each corridor, depending on which way along it you are
---  going.  To avoid redundancy, we declare one of each
---  direction pair to be forwards and one to be backwards.  We
+--  going. To avoid redundancy, we declare one of each
+--  direction pair to be forwards and one to be backwards. We
 --  will reverse the backwards corridors before drawing them.
 --
 -- We are using lookup arrays here instead of functions for
@@ -68,7 +68,7 @@ geoelf.directions.GET_REVERSE =
 --
 -- Moving along any straight directions involve repeatedly
 --  either increasing or decreasing the component of the
---  position.  This can be seen as either adding 1 or -1.
+--  position. This can be seen as either adding 1 or -1.
 --
 
 geoelf.directions.STEP_SIGN =

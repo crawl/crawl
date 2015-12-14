@@ -59,7 +59,8 @@ static void _adjust_item()
                                  -1,
                                  false,
                                  false);
-    if (to_slot == PROMPT_ABORT)
+    if (to_slot == PROMPT_ABORT
+        || from_slot == to_slot)
     {
         canned_msg(MSG_OK);
         return;
@@ -121,6 +122,12 @@ static void _adjust_spell()
     const int input_2 = keyin;
     const int index_2 = letter_to_index(keyin);
 
+    if (index_1 == index_2)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
     // swap references in the letter table:
     const int tmp = you.spell_letter_table[index_2];
     you.spell_letter_table[index_2] = you.spell_letter_table[index_1];
@@ -156,10 +163,11 @@ static void _adjust_ability()
         return;
     }
 
-    mprf_nocap("%c - %s", static_cast<char>(talents[selected].hotkey),
-               ability_name(talents[selected].which));
+    char old_key = static_cast<char>(talents[selected].hotkey);
 
-    const int index1 = letter_to_index(talents[selected].hotkey);
+    mprf_nocap("%c - %s", old_key, ability_name(talents[selected].which));
+
+    const int index1 = letter_to_index(old_key);
 
     mprf(MSGCH_PROMPT, "Adjust to which letter?");
 
@@ -171,36 +179,7 @@ static void _adjust_ability()
         return;
     }
 
-    const int index2 = letter_to_index(keyin);
-    if (index1 == index2)
-    {
-        mpr("That would be singularly pointless.");
-        return;
-    }
-
-    // See if we moved something out.
-    bool printed_message = false;
-    for (unsigned int i = 0; i < talents.size(); ++i)
-    {
-        if (talents[i].hotkey == keyin)
-        {
-            mprf("Swapping with: %c - %s", static_cast<char>(keyin),
-                 ability_name(talents[i].which));
-            printed_message = true;
-            break;
-        }
-    }
-
-    if (!printed_message)
-    {
-        mprf("Moving to: %c - %s", static_cast<char>(keyin),
-             ability_name(talents[selected].which));
-    }
-
-    // Swap references in the letter table.
-    ability_type tmp = you.ability_letter_table[index2];
-    you.ability_letter_table[index2] = you.ability_letter_table[index1];
-    you.ability_letter_table[index1] = tmp;
+    swap_ability_slots(index1, letter_to_index(keyin));
 }
 
 void swap_inv_slots(int from_slot, int to_slot, bool verbose)
@@ -237,12 +216,22 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
     if (to_slot == you.equip[EQ_WEAPON] || from_slot == you.equip[EQ_WEAPON])
     {
         you.wield_change = true;
-        you.m_quiver->on_weapon_changed();
+        you.m_quiver.on_weapon_changed();
     }
     else // just to make sure
         you.redraw_quiver = true;
 
-    // Remove the moved items from last_drop if they're there.
-    you.last_pickup.erase(to_slot);
-    you.last_pickup.erase(from_slot);
+    // Swap the moved items in last_pickup if they're there.
+    if (!you.last_pickup.empty())
+    {
+        auto &last_pickup = you.last_pickup;
+        int to_count = lookup(last_pickup, to_slot, 0);
+        int from_count = lookup(last_pickup, from_slot, 0);
+        last_pickup.erase(to_slot);
+        last_pickup.erase(from_slot);
+        if (from_count > 0)
+            last_pickup[to_slot] = from_count;
+        if (to_count > 0)
+            last_pickup[from_slot] = to_count;
+    }
 }

@@ -114,4 +114,80 @@ function callback.amethyst_srp_altar(data, triggerable, triggerer, marker, ev)
   crawl.mpr("Your surroundings suddenly seem different.")
 end
 
+-- Allow people with the ancient champion vault to still clear it.
+function callback.ancient_champions_mu_skele_death(data, triggerable,
+                                                    triggerer, marker, ev)
+  data.skele_number = data.skele_number + 1
+
+  -- Only 7 skeles!
+  if data.skele_number > 7 then
+    return
+  end
+
+  local function get_slave (slavenum)
+    local myslaves = dgn.find_marker_positions_by_prop("skele_slave", slavenum)
+    return myslaves[1]
+  end
+
+  local wall_pos = get_slave(data.skele_number)
+  if wall_pos == nil then
+    crawl.mpr("Couldn't find a slave!")
+  end
+
+  dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false, false, false)
+
+  if you.see_cell(wall_pos.x, wall_pos.y) then
+    crawl.mpr("As the champion is destroyed, a metal wall slides away!")
+  else
+    crawl.mpr("As the champion is destroyed, you hear a distant grinding noise.")
+  end
+end
+
+function tukima_machine (data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
+function wizlab_eringya_grow(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
+function callback.spiders_nest_cobweb_light(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
+function callback.spiders_nest_web_lair(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
+-- let this vault still function if it already exists
+function callback.beogh_warn_stepped(data, triggerable, triggerer, marker, ev)
+  local x, y = marker:pos()
+
+  if you.god() == "Beogh" or (you.race() == "Hill Orc" and you.god() == "No God") then
+     crawl.god_speaks("Beogh" , "Your presence is welcomed at the altar of Beogh.")
+     dgn.grid(x, y, "floor")
+  elseif you.race() == "Hill Orc" then
+     crawl.god_speaks("Beogh" , "The orc god booms: Stay away, heretic!")
+  else
+     crawl.god_speaks("Beogh" , "The orc god booms: Stay away, mortal!")
+  end
+end
+
+function callback.beogh_trap_stepped(data, triggerable, triggerer, marker, ev)
+  local x, y = marker:pos()
+-- This enacts the changes. First it checks to see if the player is a Beogh
+-- worshipper or a godless orc (a potential worshipper). If the player is one of
+-- these things nothing happens. Otherwise the trap is sprung.
+  if monster_step == true then
+    return
+  elseif you.god() == "Beogh" or (you.race() == "Hill Orc" and you.god() == "No God") then
+    dgn.grid(x, y, "floor")
+  else
+    crawl.god_speaks("Beogh", "Beogh's servants are called upon to defend the altar!")
+    for slave in iter.slave_iterator("bridge", 1) do
+      dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+    end
+    dgn.grid(x, y, "floor")
+  end
+end
 }}

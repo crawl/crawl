@@ -91,7 +91,7 @@ e.kitem("1 = superb_item ident:all w:590 / royal jelly q:3 w:2 /\
             potion of heal wounds ident:all q:2 w:2 / scroll of recharging ident:all w:1 /\
             scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
             potion of might ident:all w:2 / potion of agility w:2 ident:all /\
-            potion of haste q:2 ident:all w:2 / scroll of acquirement w:1 ident:all /\
+            potion of haste q:2 ident:all w:2 / scroll of acquirement q:1 w:1 ident:all /\
             scroll of enchant weapon ident:all q:4 w:2 /\
             scroll of enchant armour ident:all q:4 w:2 /\
             scroll of brand weapon ident:all")
@@ -126,8 +126,7 @@ function choose_mset_1(e)
                jackal / wolf w:5 / giant frog w:5")
 -- Spider
   elseif rnd < 39 then
-    e.kmons("1 = giant mite w:15 / scorpion w:15 / jumping spider w:5 /\
-               tarantella w:5")
+    e.kmons("1 = scorpion w:15 / jumping spider w:5 / tarantella w:5")
 -- Crypt
   elseif rnd < 49 then
     e.kmons("1 = zombie / skeleton / wight w:5 / necrophage / phantom")
@@ -217,8 +216,8 @@ function choose_mset_2(e)
                komodo dragon w:5 / basilisk w:5 / place:Lair:1 w:30")
 -- Spider
   elseif rnd < 34 then
-    e.kmons("1 = giant mite w:15 / scorpion w:15 / jumping spider w:5 /\
-               tarantella w:5 / wolf spider w:5 / redback w:5")
+    e.kmons("1 = scorpion w:15 / jumping spider w:5 / tarantella w:5 /\
+               wolf spider w:5 / redback w:5")
 -- Crypt
   elseif rnd < 44 then
     e.kmons("1 = zombie w:20 / skeleton w:20 / wight / necrophage / phantom")
@@ -245,7 +244,7 @@ function choose_mset_2(e)
 -- Ice
   elseif rnd < 86 then
     e.kmons("1 = ice beast / polar bear / white imp / simulacrum /\
-               freezing wraith / blue devil")
+               freezing wraith / ice devil")
 -- Air
   elseif rnd < 88 then
     e.kmons("1 = insubstantial wisp / air elemental / wind drake w:5")
@@ -554,7 +553,7 @@ local rnd = crawl.random2(142)
                Frederick / Geryon / Gloorx Vloq / Ignacio / Ilsuiw / Jory /\
                Khufu / Lom Lobon / Mara / Margery / Mennas / Mnoleg / Murray /\
                the Enchantress / the Lernaean hydra / the Serpent of Hell /\
-               the royal jelly / Tiamat / Xtahua / Nellie / Chuck / the iron giant")
+               the royal jelly / Tiamat / Xtahua / Nellie / Chuck")
 -- Holy
   else
     e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \
@@ -569,7 +568,6 @@ TAGS:   sprint no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmi
 DESC:   Sprint V: "Ziggurat Sprint"
 ORDER:  5
 ORIENT: encompass
-LFLAGS: no_tele_control
 : lfloorcol(util.random_from(
 :   {"red", "blue", "green", "magenta", "brown", "lightgrey", "darkgrey"} ))
 COLOUR:    x : lightred / lightblue / lightgreen / lightmagenta / yellow / darkgrey
@@ -761,7 +759,6 @@ KITEM:    K = potion of curing q:9 ident:all, \
               potion of experience q:1 ident:all, \
               potion of resistance q:4 ident:all, \
               potion of haste q:5 ident:all, \
-              potion of restore abilities q:2 ident:all, \
               potion of invisibility q:2 ident:all, \
               potion of brilliance q:2 ident:all
 KITEM:    L = scroll of blinking q:3 ident:all, \

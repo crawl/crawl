@@ -210,9 +210,6 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_SCYTHE:
         tile = TILEP_HAND1_SCYTHE;
         break;
-    case WPN_HAMMER:
-        tile = TILEP_HAND1_HAMMER;
-        break;
     case WPN_TRIDENT:
         tile = TILEP_HAND1_TRIDENT2;
         break;
@@ -316,7 +313,7 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_PLATE_ARMOUR:          tile = TILEP_BODY_PLATE; break;
     case ARM_CRYSTAL_PLATE_ARMOUR:  tile = TILEP_BODY_CRYSTAL_PLATE; break;
 
-    case ARM_FIRE_DRAGON_HIDE:      tile = TILEP_BODY_DRAGONSC_GREEN; break;
+    case ARM_FIRE_DRAGON_HIDE:      tile = TILEP_BODY_DRAGONSC_RED; break;
     case ARM_ICE_DRAGON_HIDE:       tile = TILEP_BODY_DRAGONSC_CYAN; break;
     case ARM_STEAM_DRAGON_HIDE:     tile = TILEP_BODY_DRAGONSC_WHITE; break;
     case ARM_MOTTLED_DRAGON_HIDE:   tile = TILEP_BODY_DRAGONSC_MAGENTA; break;
@@ -327,7 +324,7 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_SWAMP_DRAGON_HIDE:     tile = TILEP_BODY_DRAGONSC_BROWN; break;
     case ARM_PEARL_DRAGON_HIDE:     tile = TILEP_BODY_DRAGONSC_PEARL; break;
 
-    case ARM_FIRE_DRAGON_ARMOUR:    tile = TILEP_BODY_DRAGONARM_GREEN; break;
+    case ARM_FIRE_DRAGON_ARMOUR:    tile = TILEP_BODY_DRAGONARM_RED; break;
     case ARM_ICE_DRAGON_ARMOUR:     tile = TILEP_BODY_DRAGONARM_CYAN; break;
     case ARM_STEAM_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_WHITE; break;
     case ARM_MOTTLED_DRAGON_ARMOUR: tile = TILEP_BODY_DRAGONARM_MAGENTA; break;
@@ -874,7 +871,6 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_WHITE;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
-#endif
 
         case JOB_HEALER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_WHITE;
@@ -883,6 +879,7 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             parts[TILEP_PART_HELM]  = TILEP_HELM_FHELM_HEALER;
             break;
+#endif
 
         case JOB_NECROMANCER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BLACK;
@@ -1090,10 +1087,13 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_ARM] = TILEP_FLAG_HIDE;
     }
     if (is_player_tile(doll.parts[TILEP_PART_HELM], TILEP_HELM_HORNS_CAT)
-        && (!is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_FELID)
+        && (!is_player_tile(doll.parts[TILEP_PART_BASE],
+                            TILEP_BASE_FELID)
+            && (!is_player_tile(doll.parts[TILEP_PART_BASE],
+                                TILEP_TRAN_STATUE_FELID)
             // Every felid tile has its own horns.
             || doll.parts[TILEP_PART_BASE] - TILEP_BASE_FELID
-               != doll.parts[TILEP_PART_HELM] - TILEP_HELM_HORNS_CAT))
+               != doll.parts[TILEP_PART_HELM] - TILEP_HELM_HORNS_CAT)))
     {
         flag[TILEP_PART_ARM] = TILEP_FLAG_HIDE;
     }

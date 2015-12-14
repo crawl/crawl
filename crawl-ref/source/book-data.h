@@ -39,12 +39,12 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Summonings
-    SPELL_ABJURATION,
     SPELL_RECALL,
+    SPELL_AURA_OF_ABJURATION,
     SPELL_SHADOW_CREATURES,
     SPELL_SUMMON_DEMON,
     SPELL_SUMMON_FOREST,
-    SPELL_MONSTROUS_MENAGERIE,
+    SPELL_SUMMON_MANA_VIPER,
 },
 
 {   // Book of Fire
@@ -74,8 +74,8 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Enchantments
-    SPELL_TUKIMAS_DANCE,
     SPELL_CAUSE_FEAR,
+    SPELL_VIOLENT_UNRAVELLING,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
     SPELL_HASTE,
@@ -110,10 +110,10 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Hinderance
     SPELL_CONFUSING_TOUCH,
     SPELL_CONFUSE,
+    SPELL_GRAVITAS,
     SPELL_PETRIFY,
     SPELL_ENGLACIATION,
-    SPELL_SUMMON_MANA_VIPER,
-    SPELL_GRAVITAS,
+    SPELL_VIOLENT_UNRAVELLING,
 },
 
 {   // Book of Changes
@@ -178,24 +178,22 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Maledictions
     SPELL_CORONA,
-    SPELL_SURE_BLADE,
     SPELL_HIBERNATION,
     SPELL_CONFUSE,
+    SPELL_TUKIMAS_DANCE,
     SPELL_DAZZLING_SPRAY,
-    SPELL_ENSLAVEMENT,
 },
 
 {   // Book of Air
     SPELL_SHOCK,
     SPELL_SWIFTNESS,
     SPELL_REPEL_MISSILES,
-    SPELL_FLY,
     SPELL_DISCHARGE,
     SPELL_LIGHTNING_BOLT,
 },
 
 {   // Book of the Sky
-    SPELL_FLY,
+    SPELL_SUMMON_LIGHTNING_SPIRE,
     SPELL_AIRSTRIKE,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
@@ -205,12 +203,11 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of the Warp
     SPELL_RECALL,
-    SPELL_CONTROL_TELEPORT,
+    SPELL_GRAVITAS,
     SPELL_FORCE_LANCE,
     SPELL_PHASE_SHIFT,
     SPELL_WARP_BRAND,
     SPELL_SUMMON_FOREST,
-    SPELL_GRAVITAS,
 },
 
 {   // Book of Envenomations
@@ -229,15 +226,13 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SIMULACRUM,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Book of Control
-    SPELL_CONTROL_TELEPORT,
     SPELL_CONTROL_UNDEAD,
-    SPELL_ENSLAVEMENT,
     SPELL_ENGLACIATION,
     SPELL_MASS_CONFUSION,
 },
 
-#if TAG_MAJOR_VERSION == 34
 {   // Book of Battle (replacing Morphology)
     SPELL_INFUSION,
     SPELL_SHROUD_OF_GOLUBRIA,
@@ -266,8 +261,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 #if TAG_MAJOR_VERSION == 34
 {   // Book of Wizardry
-    SPELL_AGONY,
     SPELL_FORCE_LANCE,
+    SPELL_AGONY,
     SPELL_HASTE,
     SPELL_INVISIBILITY,
     SPELL_SPELLFORGED_SERVITOR,
@@ -301,23 +296,22 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Akashic Record
     SPELL_DISPERSAL,
-    SPELL_CONTROLLED_BLINK,
     SPELL_MALIGN_GATEWAY,
     SPELL_DISJUNCTION,
-    SPELL_SINGULARITY,
+    SPELL_CONTROLLED_BLINK,
 },
 
 {   // Book of Debilitation
     SPELL_CORONA,
     SPELL_SLOW,
+    SPELL_GRAVITAS,
     SPELL_INNER_FLAME,
-    SPELL_ENSLAVEMENT,
     SPELL_CAUSE_FEAR,
     SPELL_LEDAS_LIQUEFACTION,
 },
 
 {   // Book of the Dragon
-    SPELL_FLY,
+    SPELL_FLAME_TONGUE,
     SPELL_CAUSE_FEAR,
     SPELL_BOLT_OF_FIRE,
     SPELL_DRAGON_FORM,
@@ -329,25 +323,25 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_PASSWALL,
     SPELL_GOLUBRIAS_PASSAGE,
     SPELL_LRD,
-    SPELL_INVISIBILITY,
     SPELL_DARKNESS,
+    SPELL_INVISIBILITY,
 },
 
 {   // Book of Dreams
     SPELL_HIBERNATION,
-    SPELL_FLY,
     SPELL_PHASE_SHIFT,
     SPELL_SHADOW_CREATURES,
-    SPELL_MASS_CONFUSION,
+    SPELL_SILENCE,
     SPELL_DARKNESS,
+    SPELL_MASS_CONFUSION,
 },
 
 {   // Book of Alchemy
     SPELL_SUBLIMATION_OF_BLOOD,
+    SPELL_IGNITE_POISON,
     SPELL_INTOXICATE,
     SPELL_CONDENSATION_SHIELD,
     SPELL_PETRIFY,
-    SPELL_IGNITE_POISON,
     SPELL_IRRADIATE,
 },
 
@@ -356,7 +350,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_CALL_CANINE_FAMILIAR,
     SPELL_SUMMON_ICE_BEAST,
     SPELL_SUMMON_MANA_VIPER,
-    SPELL_MONSTROUS_MENAGERIE,
     SPELL_SUMMON_HYDRA,
 },
 
@@ -369,8 +362,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Grand Grimoire
-    SPELL_AURA_OF_ABJURATION,
-    SPELL_FORCEFUL_DISMISSAL,
+    SPELL_MONSTROUS_MENAGERIE,
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_MALIGN_GATEWAY,
     SPELL_SUMMON_HORRIBLE_THINGS,

@@ -156,8 +156,8 @@ public:
 
 public:
     // NOTE: All operators will assert if the value is of the wrong
-    // type for the operation.  If the value has no type yet, the
-    // operation will set it to the appropriate type.  If the value
+    // type for the operation. If the value has no type yet, the
+    // operation will set it to the appropriate type. If the value
     // has no type yet and the operation modifies the existing value
     // rather than replacing it (e.g., ++) the value will be set to a
     // default before the operation is done.
@@ -243,7 +243,7 @@ protected:
     friend class CrawlVector;
 };
 
-// By default a hash table's value data types are heterogeneous.  To
+// By default a hash table's value data types are heterogeneous. To
 // make it homogeneous (which causes dynamic type checking) you have
 // to give a type to the hash table constructor; once it's been
 // created its type (or lack of type) is immutable.
@@ -289,8 +289,8 @@ public:
 
     // NOTE: If get_value() or [] is given a key which doesn't exist
     // in the table, an unset/empty CrawlStoreValue will be created
-    // with that key and returned.  If it is not then given a value
-    // then the next call to assert_validity() will fail.  If the
+    // with that key and returned. If it is not then given a value
+    // then the next call to assert_validity() will fail. If the
     // hash table has a type (rather than being heterogeneous)
     // then trying to assign a different type to the CrawlStoreValue
     // will assert.

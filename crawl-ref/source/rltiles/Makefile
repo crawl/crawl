@@ -10,7 +10,7 @@ endif
 # Also, cross-compilation with no system libraries for host rather than target
 # is not supported.  If host=target, contribs are enough.
 
-CFLAGS := -O2 -g -Wall -Wextra -Wno-parentheses -Wno-unused-parameter
+CFLAGS := -O2 $(STDFLAG) -g -Wall -Wextra -Wno-parentheses -Wno-unused-parameter
 
 ifdef ANDROID
   CXXFLAGS :=
@@ -38,7 +38,7 @@ CFLAGS += -O0 -DDEBUG -ggdb
 endif
 
 ifneq (,$(findstring MINGW,$(uname_S)))
-LDFLAGS += -lgdi32 -lwinmm -lole32 -loleaut32 -limm32 -lshell32 -lversion -luuid 
+LDFLAGS += -lgdi32 -lwinmm -lole32 -loleaut32 -limm32 -lshell32 -lversion -luuid
 endif
 ifeq ($(uname_S),Darwin)
 LDFLAGS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL
@@ -73,10 +73,10 @@ JAVASCRIPT := $(INPUTS:%=tileinfo-%.js)
 
 ifneq ($(findstring $(MAKEFLAGS),s),s)
 ifndef V
-        QUIET_HOSTCXX  = @echo '   ' HOSTCXX $@;
-        QUIET_GEN      = @echo '   ' GEN $@;
-        QUIET_HOSTLINK = @echo '   ' HOSTLINK $@;
-        export V
+	QUIET_HOSTCXX  = @echo '   ' HOSTCXX $@;
+	QUIET_GEN      = @echo '   ' GEN $@;
+	QUIET_HOSTLINK = @echo '   ' HOSTLINK $@;
+	export V
 endif
 endif
 
@@ -106,16 +106,16 @@ TRACK_CFLAGS = $(subst ','\'',$(HOSTCXX) $(CFLAGS))           # (stray ' for hig
 .cflags: .force-cflags
 	@FLAGS='$(TRACK_CFLAGS)'; \
     if test x"$$FLAGS" != x"`cat .cflags 2>/dev/null`" ; then \
-        echo "    * rebuilding tilegen: new build flags or prefix"; \
-        echo "$$FLAGS" > .cflags; \
+	echo "    * rebuilding tilegen: new build flags or prefix"; \
+	echo "$$FLAGS" > .cflags; \
     fi
 
 .PHONY: .force-cflags
 
 ##########################################################################
-# Dependencies 
+# Dependencies
 
-gui.png tiledef-gui.h tileinfo-gui.js: dc-spells.txt dc-skills.txt dc-commands.txt dc-abilities.txt dc-invocations.txt dc-zotdef.txt
+gui.png tiledef-gui.h tileinfo-gui.js: dc-spells.txt dc-skills.txt dc-commands.txt dc-abilities.txt dc-invocations.txt
 main.png tiledef-main.h tileinfo-main.js: dc-item.txt dc-unrand.txt dc-corpse.txt dc-misc.txt
 player.png tiledef-player.h tileinfo-player.js: dc-mon.txt dc-tentacles.txt dc-zombie.txt dc-demon.txt
 

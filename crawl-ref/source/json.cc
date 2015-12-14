@@ -49,12 +49,12 @@ static char *json_strdup(const char *str)
 
 /* String buffer */
 
-typedef struct
+struct SB
 {
     char *cur;
     char *end;
     char *start;
-} SB;
+};
 
 static void sb_init(SB *sb)
 {
@@ -973,8 +973,8 @@ failed:
  * (spaces and quotes added for readability):
  *     '-'? (0 | [1-9][0-9]*) ('.' [0-9]+)? ([Ee] [+-]? [0-9]+)?
  *
- * However, some JSON parsers are more liberal.  For instance, PHP accepts
- * '.5' and '1.'.  JSON.parse accepts '+3'.
+ * However, some JSON parsers are more liberal. For instance, PHP accepts
+ * '.5' and '1.'. JSON.parse accepts '+3'.
  *
  * This function takes the strict approach.
  */

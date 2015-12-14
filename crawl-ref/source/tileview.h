@@ -17,7 +17,7 @@ class monster;
 struct tile_flavour;
 struct packed_cell;
 
-tileidx_t pick_dngn_tile(tileidx_t idx, int value);
+tileidx_t pick_dngn_tile(tileidx_t idx, int value, int variant = 0);
 
 // Initialize the flavour and the tile env when changing or creating levels.
 void tile_new_level(bool first_time, bool init_unseen);
@@ -39,7 +39,7 @@ void tile_clear_flavour();
 // Initialise types of walls and floors of the entire level using defaults.
 void tile_init_flavour();
 // Init the flavour of a single cell.
-void tile_init_flavour(const coord_def &gc);
+void tile_init_flavour(const coord_def &gc, const int domino = -1);
 // Draw a halo using 'tile' (which has 9 variations) around any features
 // that match target.
 void tile_floor_halo(dungeon_feature_type target, tileidx_t tile);

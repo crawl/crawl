@@ -521,6 +521,24 @@ cccI.....Iccc
    .......
 ENDMAP
 
+NAME:   kennysheep_orc_monster_closet_entryway
+TAGS:   orc_entry
+KFEAT:  O = enter_orcish_mines
+MONS:   gnoll / gnoll sergeant / orc warrior / orc w:15 /\
+                big kobold / ogre
+MONS:   troll
+MAP
+xxxxxxx
+xI121Ix
+x11111x
+x11O11x
+x11111x
+xI111Ix
+xxx+xxx
+@.....@
+xxxxxxx
+ENDMAP
+
 
 ############################################################################
 # (Mini)vaults specific to the Orcish Mines
@@ -942,11 +960,11 @@ NAME:   nicolae_orc_accident_1
 DEPTH:  Orc
 ORIENT: southeast
 TAGS:   uniq_orcaccident
-RTILE:  X = wall_stone_brick
+RTILE:  X = wall_stone_smooth
 COLOUR: X = lightgrey
 KITEM:  W = gold q:1 / gold q:2 / gold q:3 / nothing w:100
 KFEAT:  W = shallow_water
-KPROP:  e = no_rtele_into
+KPROP:  e = no_tele_into
 MONS:   patrolling orc warrior / patrolling orc knight w:2
 SUBST:  e = xx...
 MARKER: P = lua:fog_machine { cloud_type = "flame", \
@@ -975,11 +993,11 @@ NAME:   nicolae_orc_accident_2
 DEPTH:  Orc
 ORIENT: southeast
 TAGS:   uniq_orcaccident
-RTILE:  X = wall_stone_brick
+RTILE:  X = wall_stone_smooth
 COLOUR: X = lightgrey
 MONS:   patrolling orc warrior / patrolling orc knight w:2
 MONS:   patrolling orc priest
-KPROP:  e = no_rtele_into
+KPROP:  e = no_tele_into
 SUBST:  e = xx...
 SHUFFLE: AB
 SUBST:  A = @
@@ -1015,15 +1033,15 @@ NAME:   nicolae_orc_accident_3
 DEPTH:  Orc
 ORIENT: southwest
 TAGS:   uniq_orcaccident
-RTILE:  X = wall_stone_brick
+RTILE:  X = wall_stone_smooth
 COLOUR: X = lightgrey
-KPROP:  e2q = no_rtele_into
+KPROP:  e2q = no_tele_into
 SUBST:  e = xx...
 SUBST:  g = xm
 KFEAT:  m = iron_grate
 KFEAT:  q = web / floor
 MONS:   patrolling orc w:20 / patrolling orc warrior / patrolling orc knight w:2
-MONS:   tarantella / wolf spider / spider / redback
+MONS:   tarantella / wolf spider / redback
 MAP
 x@@@@@@@eeee
 x.......eeexxxx
@@ -1143,7 +1161,7 @@ ENDMAP
 NAME: nicolae_orc_bridge_out
 TAGS: extra decor no_pool_fixup
 DEPTH: Orc
-KPROP: L = no_rtele_into
+KPROP: L = no_tele_into
 SUBST: L = lll., X = xx., Z = llx, l : lw
 MAP
        xxxx
@@ -1289,8 +1307,8 @@ TAGS: extra decor no_item_gen
 DEPTH: Orc
 NSUBST: r = 1:H / 1:C / *:r
 SUBST: G = GGGI
-KITEM: H = hammer
-# There's no chisel item, so
+# Makeshift hammer and chisel
+KITEM: H = club
 KITEM: C = dagger
 KITEM: r = stone q:1 / nothing w:5
 MAP
@@ -1946,94 +1964,153 @@ ccc5.11.c1.cc77.766Pcc.c....5ccc
 ENDMAP
 
 ##################################################
+NAME:   kennysheep_orc_mage_school
+TAGS:   patrolling no_item_gen no_monster_gen
+PLACE:  Orc:$
+ORIENT: float
+MONS:   orc sorcerer / ogre mage w:2, orc wizard, orc / ogre w:3
+KMONS:  4 = Erolcha / ogre mage, ogre mage
+KMONS:  5 = Nergalle / orc sorcerer, orc sorcerer
+NSUBST: . = 8:1 / 16:2 / 8:3
+KFEAT:  A = distillery shop / scroll shop
+KFEAT:  B = book shop / gadget shop
+KFEAT:  C = antique weapon shop / antique armour shop
+NSUBST: Y = 1:A / 1:B / 1:C / 1:ABC / *:I
+KFEAT:  ' = floor
+KFEAT:  D = altar_beogh
+KFEAT:  E = altar_kikubaaqudgha
+KFEAT:  F = altar_vehumet
+KFEAT:  mn = rock_wall
+COLOUR: n = black
+TILE:   n = wall_hall_darkgray
+COLOUR: m = white
+TILE:   m = wall_hall_white
+MAP
+                     ccccccccc
+                   cccbbbbbbbccc  ccccc
+                 lccbbblllllbbbccccbbbcc
+                llclllllllllllllcclllbbcc
+               lllccllllllll...cc...llbbcc
+               llllcccI.lll....+..Immmlbbc
+               llccc.........I.c....Fmllbc
+              lllc.............+.....m.lbccccc
+              llcc..lll...lll..c.....I.lccbbbcccc
+    '''''     llcY.cbbbc..lccccc......4ccbbYbbbbcc
+  '''''''''   llcc..lll...lcbbbc......cclll.lllbbcc
+ '''''''''''  lllc........lclll......cc.......llbbcc
+''''''cc''cc'lcclccc......lc........cc.....I...llbbc
+''''''cc''cc'lcclllcccc...lcI...ll..c...I.l.l.I.llbc
+''''''''''''''llllllll....lc...cbl..c....ll.ll...lbcc
+'''''''''''''''''''.......lc...cbl..+...ll...ll..lbbc
+@'''''''''''''''''''...I..lcY..cbl..+..Il..D...I..Ybc
+'''''''''''''''''''.......lc...cbl..+...ll...ll..lbbc
+''''''''''''''llllllll....lc...cbl..c....ll.ll...lbcc
+''''''cc''cc'lcclllcccc...lcI...ll..c...I.l.l.I.llbc
+''''''cc''cc'lcclccc......lc........cc.....I...llbbc
+ '''''''''''  lllc........lclll......cc.......llbbcc
+  '''''''''   llcc..lll...lcbbbc......cclll.lllbbcc
+    '''''     llcY.cbbbc..lccccc......5ccbbYbbbbcc
+              llcc..lll...lll..c.....I.lccbbbcccc
+              lllc.............+.....n.lbccccc
+               llccc.........I.c....Enllbc
+               llllcccI.lll....+..Innnlbbc
+               lllccllllllll...cc...llbbcc
+                llclllllllllllllcclllbbcc
+                 lccbbblllllbbbccccbbbcc
+                   cccbbbbbbbccc  ccccc
+                     ccccccccc
+ENDMAP
+
+##################################################
 NAME:   pubby_orc_utopia
 ORIENT: encompass
 TAGS:   patrolling no_item_gen no_monster_gen
 PLACE:  Orc:$
-MONS:   orc warlord, orc knight, orc high priest, orc sorcerer
-MONS:   orc warrior, orc priest, orc wizard,      orc
-KFEAT:  A = any shop
-KFEAT:  B = altar_beogh
-KMONS:  C = Saint Roka band w:3 / orc warlord band, orc warlord band
-KMONS:  D = orc warrior band
-: if you.where() == dgn.level_name(dgn.br_entrance("Elf")) then
-KFEAT:  E = enter_elven_halls no_mimic
-: else
-KFEAT:  E = abandoned_shop w:5 / fountain_blue / floor w:30
-: end
-KMONS:  F = ogre w:8 / two-headed ogre w:4 / troll w:1 / nothing w:8
-KMONS:  G = orc w:8 / orc warrior w:1 / nothing w:1
-KITEM:  H = gold w:1 / nothing w:4
+SUBST:  $ = $:1 .:4
+MONS:   orc w:8 / orc warrior w:1 / nothing w:1
+MONS:   orc priest, orc warrior, orc warrior band
+MONS:   ogre w:8 / two-headed ogre w:4 / troll w:1 / warg w:1 / nothing w:8
+MONS:   orc knight, orc sorcerer
+KMONS:  D = orc high priest
+KMONS:  E = Saint Roka band w:1 / orc warlord band, orc warlord band
 KMONS:  P = plant / nothing
+NSUBST: u = 2:s / I
+KFEAT:  s = any shop
+KFEAT:  _ = altar_beogh
+: if you.where() == dgn.level_name(dgn.br_entrance("Elf")) then
+KFEAT:  p = enter_elven_halls
+: else
+KFEAT:  p = abandoned_shop w:5 / fountain_blue / floor w:30
+: end
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxDxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.E.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx4xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.p.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxHxxxxxxxxcccccxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxcc4|4ccxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.Hxxxxxxxcc4.7.4ccxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx0xH.xxxxxxxxc..7Y7..cxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxH...Hxxx.xxxxcc..7..ccxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxx0.H..xxxxx.xxxxccc.cccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx$xxxxxxxxcccccxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxcc7|7ccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.$xxxxxxxcc2...2ccxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx.x$.xxxxxxxxc...Y...cxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx$...$xxx.xxxxcc..4..ccxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx4.$..xxxxx.xxxxccc.cccxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxx..xxxxxxc+cxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx..F.xxxxxxxH...xxx..Hxx.xxxx0xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxFxx..xx......xxxxxxxxx..0xxH..xxxx..xxx.xxxxxxcccccxxxxxxxxxxxxx
-xxxx..x....x....H....xxxxxxH...x..xxxxH..x...xxxxxcc...ccxxxxxxxxxxxx
-xxx...xxxx.........G..xxxxx......xxxxx......xxxxxcc.....ccxxxxxxxxxxx
-xxxH...xx.H...x...GGG..xxxxx.H..Hxxxxxx..H.xxxxxcc.......ccxxxxxxxxxx
-xx....xxx.....x..G...G..xxxx.....xxxxx....xxxxxxc...3G3...cxxxxxxxxxx
-x.F.xx.xx.xx....GG.{.GG.xxxxxx...Hxxxx0.xxxxxxxxc..0GIG0..cxxccccccxx
-xxxx.......x.....G...G..xxxxxxH...xxx...x..xxxxxc...606...cxcc....ccx
-xxxx....H...xx.x..GGG..xxxxxxx..H...........xxxxcc.......cccc..GG..cc
-xxxxx....F...x.x...G..xxxvvvvxxx.....H.xxxx.xxxxxcc.....cccc..GGGG..c
-xxx..................xxxxv..vvvx...H.xxxxxxx.xxxxxcc...cccc..GG0AGG.c
-xx....H.......H.xx...xxxxv0.+.vxxx...xxxxxvvvvxxxxcc...ccc...GG30GG.c
-xx...F.....H....xxx...xxxv.%v.vvvvvv+vvvvvv..vvvxcc...ccc.....GGGG.cc
-xx.....H.........xx....xxvvvv.v%..vv.vv.%.v0.+.vxc....cc.......GG..cx
-xx....x.........F.xx...xxv..v.v..0vv.vv.0.v.%v.vcc...cc.....cc...cccx
-xx.0.x..x.0........xH...xv0%+.vv+vvv.vvv+vvvvv.vc....c.....cccccccxxx
-xxxxxx.0..x.......Hxx...xv..v..........v.......vc...cc.....cxxxxxxxxx
-xxx.x..xxxx..xx.....x...xvvvv...0vv+vv.v....vvvvc...c.....ccxxxxxxxxx
-xx....xxxxxxxxx.....xx..xv0.v0...vGG0v.v0...v..vc..cc.....ccccccxxxxx
-xxF..xxxxx...xx.H....x...v..+....v0*Gv....0.+0.v...c......cc...ccxxxx
-x....xxxx..G..xx.........v.0vvvv.vvvvv.vvvv.v.%v.........cc.....ccxxx
-xx..Fxxx..GGG..xx.....H..vvvv........0.v*Gv.vvvv........cc...I...ccxx
-xxx.xxx..G...G.....F.....5Ivv.vvvvD....v0G+.vvvv.I.6.I.6.I.......Icxx
-xx..x...GG.[.GG............+..v0*v..T..v.0v....=............CB....cxx
-xx.......G...G...........5Ivv.+GGv...D.vvvv.vvvv.I.6.I.6.I.......Icxx
-xx.x..x...GGG..xx...H....vvvv.v0Gv0.....0...vvvv........cc...I...ccxx
-xx..xxxx...G..xx.........v..v.vvvv.vvvvv.vvvv0.v.........cc.....ccxxx
-xxx.xxxxxx...xx..F.......v0.+......v0*Gv0...+..v...c......cc...ccxxxx
-xxFxxxxxxxxxxxx.......H..v.%vvvvvv.vGG0v....v.%vc..cc.....ccccccxxxxx
-xxxxxxxxxxxxxxx..H.......vvvvxxxxv.vv+vv..0.vvvvc...c.....ccxxxxxxxxx
-xxxxxxxxxxxxx.......x.....xxxx.xxv.............vc...cc.....cxxxxxxxxx
-xxxxxxxxx.x..H.....x......xxxxx..vvv.vvv+vvvvv.vc....c.....cccccccxxx
-xxxxxxxx.F........xx.....xxxx.....xv.vv0..v..v.vcc...cc.....cc...cccx
-xxxxxxxx.........xx.....xxxxx....xxv.vv...v..+.vxc....cc.......GG..cx
-xxxxxxFxx..H..F.xxx.....xxxx.xx....v+vvvvvv..vvvxcc...ccc.....GGGG.cc
-xxxxx..........xxx...x...x.xxxxxx.....xxxxvvvvxxxxcc...ccc...GG30GG.c
-xxxxx..........xx.....xx..x.x..........xx.xxxxxxxxcc...cccc..GG0AGG.c
-xxxxx.H.....H.xxx..G...xx.xx....H.......xx.xxxxxxcc.....cccc..GGGG..c
-xxxxxx.........x..GGG..xxxxx.........H.....Pxxxxcc.......cccc..GG..cc
-xxxxxxx..H.x..xx.G...G..xxx..H.............WWxxxc...606...cxcc....ccx
-xxxxxxxxxx...xxxGG.(.GG...xx...x.....0.txWWwxxxxc..0GIG0..cxxccccccxx
-xxxxxxxxxxx.xxx..G...G.....xxx......xxxxxxwwwxxxc...3G3...cxxxxxxxxxx
-xxxxxxxxxxxxxxx...GGG....H.xx.....H..xxxxxwwxxxxcc.......ccxxxxxxxxxx
-xxxxxxxxxxxxxxx..D.G.................Ptxxxxxwxxxxcc.....ccxxxxxxxxxxx
-xxxxxvvvvvxxx...xx....0.........H..t..0Wxxxxwwxxxxcc...ccxxxxxxxxxxxx
-xxxvvv$$$vxxxxxxxccccccc............0WWWxxwwwwwxxxxcccccxxxxxxxxxxxxx
-xvvv$$255vccccxxxc..0..c.........PtPWWWWwxwwwxwxxxxxxxxxxxxxxxxxxxxxx
-vv$$$$5GG+.+.cxxxc.0000c.......H.xxxWWwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxx
-xvvv$$255vcc.cxxxc.0U00+.H.......xxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxx
-xxxvvv$$$vxc.ccccc.000.c....H..xxxxxwwxwwwwxwwwxwwxxxxxxxxxxxxxxxxxxx
-xxxxxvvvvvxc.c...c....0c..xxx...xxxxxxwwwxxxwwwwwxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxc.c6.6ccc+cccccccccccccxxxxxwwwxwwwwwxxxxxxxxxxxxxxxxxxxxx
-xxxxxccccccc.+.B.+.........+.....cccccccwwwwwwwxxxxxxxxxxxxxxxxxxxxxx
-xxxxxllllG.ccc6.6c.cc+ccc+cc.....c.GWwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxx
-xlxxlllll..+.c...c.c000c000c.....+..WWwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxlllllllG.c.cc+cc.c000c0.0ccccccc.GWwwwxxxwwxxxxxxxxxxxxxxxxxxxxxxxx
-xllllccccccc.......cA..c.0Acxxxxccccccccxxxxwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx..5.xxxxxxx$...xxx..$xx.xxxx.xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx5xx..xx......xxxxxxxxx..5xx$..xxxx..xxx.xxxxxxcccccxxxxxxxxxxxxx
+xxxx..x....x....$....xxxxxx$...x..xxxx$..x...xxxxxcc...ccxxxxxxxxxxxx
+xxx...xxxx.........1..xxxxx......xxxxx......xxxxxcc.....ccxxxxxxxxxxx
+xxx$...xx.$...x...1.1..xxxxx.$..$xxxxxx..$.xxxxxcc.......ccxxxxxxxxxx
+xx....xxx.....x..1...1..xxxx.....xxxxx....xxxxxxc....2D...cxxxxxxxxxx
+x...xx.xx.xx....1..{..1.xxxxxx...$xxxx..xxxxxxxxc...3u2...cxxccccccxx
+xxxx.......x.....1...1..xxxxxx$...xxx...x..xxxxxc....4....cxcc....ccx
+xxxx....$...xx.x..1.1..xxxxxxx..$...........xxxxcc.......cccc......cc
+xxxxx........x.x...1..xxxvvvvxxx.....$.xxxx.xxxxxcc.....cccc....2D..c
+xxx..................xxxxv..vvvx...$.xxxxxxx.xxxxxcc...cccc....4u2..c
+xx....$.......$.xx...xxxxv0.+.vxxx...xxxxxvvvvxxxxcc...ccc......3...c
+xx...5.....$....xxx...xxxv.%v.vvvvvv+vvvvvv..vvvxcc...ccc..........cc
+xx.....$.........xx....xxvvvv.v%..vv.vv.%.v0.+.vxc....cc...........cx
+xx....x.........5.xx...xxv..v.v..0vv.vv.0.v.%v.vcc...cc.....cc...cccx
+xx...x..x..........x$...xv0%+.vv+vvv.vvv+vvvvv.vc....c.....cccccccxxx
+xxxxxx....x.......$xx...xv..v..........v.......vc.2.cc..2..cxxxxxxxxx
+xxx.x..xxxx..xx.....x...xvvvv....vv+vv.v....vvvvc...c.....ccxxxxxxxxx
+xx....xxxxxxxxx.....xx..xv..v0...v3..v.v1.1.v..vc..cc.....ccccccxxxxx
+xx5..xxxxx...xx.$....x...v..+....v.*0v......+..v...c......cc...ccxxxx
+x....xxxx..1..xx.........v..vvvv.vvvvv.vvvv.v.%v.........cc.....ccxxx
+xx..5xxx..1.1..xx.....$..vvvv..........v*0v.vvvv........cc...I...ccxx
+xxx.xxx..1...1.....5.....1Ivv.vvvv0....v3.+.vvvv.I...I...I.......Icxx
+xx..x...1..[..1............+..v3*v..T..v..v....+............E_....cxx
+xx.......1...1...........1Ivv.+.0v...0.vvvv.vvvv.I...I...I.......Icxx
+xx.x..x...1.1..xx...$....vvvv.v..v..........vvvv........cc...I...ccxx
+xx..xxxx...1..xx.........v..v.vvvv.vvvvv.vvvv0.v.........cc.....ccxxx
+xxx.xxxxxx...xx..5.......v0.+......v.*.v....+..v...c......cc...ccxxxx
+xx5xxxxxxxxxxxx.......$..v.%vvvvvv.v0.3v....v.%vc..cc.....ccccccxxxxx
+xxxxxxxxxxxxxxx..$.......vvvvxxxxv.vv+vv..1.vvvvc...c.....ccxxxxxxxxx
+xxxxxxxxxxxxx.......x.....xxxx.xxv.............vc.2.cc..2..cxxxxxxxxx
+xxxxxxxxx.x..$.....x......xxxxx..vvv.vvv+vvvvv.vc....c.....cccccccxxx
+xxxxxxxx.5........xx.....xxxx.....xv.vv0..v..v.vcc...cc.....cc...cccx
+xxxxxxxx.........xx.....xxxxx....xxv.vv...v..+.vxc....cc...........cx
+xxxxxx.xx..$..5.xxx.....xxxx.xx....v+vvvvvv..vvvxcc...ccc..........cc
+xxxxx..........xxx...x...x.xxxxxx.....xxxxvvvvxxxxcc...ccc......3...c
+xxxxx..........xx.....xx..x.x..........xx.xxxxxxxxcc...cccc....4u2..c
+xxxxx.$.....$.xxx..1...xx.xx....$.......xx.xxxxxxcc.....cccc....2D..c
+xxxxxx.........x..1.1..xxxxx......4..$.....Pxxxxcc.......cccc......cc
+xxxxxxx..$.x..xx.1...1..xxx..$.............WWxxxc....4....cxcc....ccx
+xxxxxxxxxx...xxx1..(..1...xx...x.......txWWwxxxxc...3u2...cxxccccccxx
+xxxxxxxxxxx.xxx..1...1.....xxx......xxxxxxwwwxxxc....2D...cxxxxxxxxxx
+xxxxxxxxxxxxxxx...1.1....$.xx.....$..xxxxxwwxxxxcc.......ccxxxxxxxxxx
+xxxxxxxxxxxxxxx....1.................Ptxxxxxwxxxxcc.....ccxxxxxxxxxxx
+xxxxxvvvvvxxx...xx..............$..t...Wxxxxwwxxxxcc...ccxxxxxxxxxxxx
+xxxvvv$$$vxxxxxxxccccccc.............WWWxxwwwwwxxxxcccccxxxxxxxxxxxxx
+xvvv$$650vccccxxxc.....c.........PtPWWWWwxwwwxwxxxxxxxxxxxxxxxxxxxxxx
+vv$$$$7..+.+.cxxxc..4..c.......$.xxxWWwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxx
+xvvv$$050vcc.cxxxc.0U..+.$.......xxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxx
+xxxvvv$$$vxc.ccccc..0..c....$..xxxxxwwxwwwwxwwwxwwxxxxxxxxxxxxxxxxxxx
+xxxxxvvvvvxc.c...c.....c..xxx...xxxxxxwwwxxxwwwwwxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxc.c2.0ccc+cccccccccccccxxxxxwwwxwwwwwxxxxxxxxxxxxxxxxxxxxx
+xxxxxccccccc.+._.+.........+.....cccccccwwwwwwwxxxxxxxxxxxxxxxxxxxxxx
+xxxxxllll0.ccc2.0c.cc+ccc+cc.....c.0Wwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxx
+xlxxlllll..+.c...c.c...c...c.....+..WWwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxlllllll0.c.cc+cc.c0.0c0.0ccccccc.0Wwwwxxxwwxxxxxxxxxxxxxxxxxxxxxxxx
+xllllccccccc.......cs6.c.6scxxxxccccccccxxxxwxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxcccccccccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

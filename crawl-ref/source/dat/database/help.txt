@@ -168,6 +168,7 @@ level-map
 <w>_</w>          : Cycle through altars.
 
 <h>Other</h>
+<w>v</w>          : Examine the last remembered state of the indicated tile.
 <w>!</w>          : Annotate level.
 <w>Ctrl-C</w>     : Clear item and monster memory.
 <w>Ctrl-F</w>     : Forget level map.
@@ -225,7 +226,7 @@ corpse on the ground by clicking the <w>left mouse button</w> while pressing
 %%%%
 skill-menu
 
-                               <h>Skill management</h>
+                        <h>Skill management</h>
 You gain experience for killing monsters (and very few other activities).
 This experience is used to train skills. The skill screen allows you to
 select which skills to train.
@@ -234,45 +235,42 @@ see "Training restrictions" below for details.
 
 By pressing its letter, you can cycle if and how a skill is trained:
 <darkgrey>- deselected</darkgrey>    Skill will not be trained.
-+ selected
++ selected      Skill will be trained.
 <w>* focused</w>       Skill will be weighted higher for training.
 
 Pressing a capital letter selects that skill and deselects all the others.
 This shortcut is useful when you want to train only one skill.
 
 Training can be done in two modes, which are toggled with the <w>/</w> key.
-* automatic:    Skills are weighted based on your use of them.
-* manual:       Experience is spread evenly across all activated skills.
+- automatic:    Skills are weighted based on your use of them.
+- manual:       Experience is spread evenly across all activated skills.
 
 How fast you train a skill is governed by the following factors:
-* aptitude: Shown <white>white</white> in the Apt column. Higher numbers mean that
-      less experience is needed to advance a skill. Depends on species.
-* cross-training: Proficiency in some skills carries over to related skills.
-      The enhancer bonus for crosstraining is indicated in <blue>blue</blue>.
-* magic penalties: It is harder to learn an elemental skill if you are
-      proficient in the opposing element (Air-Earth, Ice-Fire).
-      The aptitude penalty is indicated in <red>red</red>.
+- aptitude: Shown <white>white</white> in the Apt column. Higher numbers mean that less
+            experience is needed to advance a skill. Depends on species.
+- skill manuals: Rare books giving an aptitude bonus of <lightgreen>+4</lightgreen> in one skill.
 
 On top of that, there are some effects which directly modify a skill, for
-example draining or some god powers. Reduced skills are shown in <magenta>magenta</magenta>, and
-enhanced skills in <blue>blue</blue>.
-The training percentage (in <brown>brown</brown>) shows the relative
-amount of experience which will be used to train this skill.
+example draining, having trained a related skill (crosstraining), or certain
+god powers. Reduced skills are shown in <magenta>magenta</magenta>, and enhanced skills in <blue>blue</blue>.
+The training percentage (in <brown>brown</brown>) shows the relative amount of experience
+which will be used to train this skill.
 
 Apart from (de)selecting skills, you also have the following toggles:
-<w>/</w> :   Switch between automatic and manual training.
-<w>*</w> :   Shows all skills, even those you can't train yet.
-<w>?</w> :   Allows you to read the descriptions of skills.
-<w>_</w> :   Shows/hides skill modifiers, e.g. from god powers.
+<w>/</w> :  Switch between automatic and manual training modes.
+<w>*</w> :  Display all skills, even those you can't train yet.
+<w>?</w> :  Allows you to read the descriptions of skills.
+<w>_</w> :  Show or hide skill level modifications (drain, god powers, crosstraining).
+<w>!</w> :  Switch between displaying training percentage or skill cost.
 
-                               <h>Training restrictions</h>
+                        <h>Training restrictions</h>
 Fighting, Throwing, Armour, Dodging, Stealth, Unarmed Combat, and Spellcasting
 can always be trained. For the rest:
-* Weapon skills require carrying a weapon of the appropriate type.
-* Shields requires that you either be carrying a shield, or worship a deity
+- Weapon skills require carrying a weapon of the appropriate type.
+- Shields requires that you either be carrying a shield, or worship a deity
       who can offer one through divine means (The Shining One).
-* Evocations requires carrying an evocable item, or worshipping Nemelex.
-* Spell schools require knowing a spell of the school.
-* Necromancy can also be trained when worshipping Kikubaaqudgha.
-* Invocations requires worshipping a god whose abilities require it.
+- Evocations requires carrying an evocable item, or worshipping Nemelex Xobeh.
+- Spell schools require knowing a spell of the school.
+- Necromancy can also be trained when worshipping Kikubaaqudgha.
+- Invocations requires worshipping a god whose abilities require it.
 %%%%

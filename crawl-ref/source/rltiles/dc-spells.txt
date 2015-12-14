@@ -3,7 +3,6 @@ airstrike AIRSTRIKE
 chain_lightning CHAIN_LIGHTNING
 conjure_ball_lightning CONJURE_BALL_LIGHTNING
 deflect_missiles DEFLECT_MISSILES
-flight FLIGHT
 lightning_bolt LIGHTNING_BOLT
 repel_missiles REPEL_MISSILES
 shock SHOCK
@@ -43,17 +42,17 @@ confuse CONFUSE
 confusing_touch CONFUSING_TOUCH
 corona CORONA
 darkness DARKNESS
+discord DISCORD
 enslavement ENSLAVEMENT
 haste HASTE
+infusion INFUSION
 invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION
 slow SLOW
-sure_blade SURE_BLADE
-tukimas_dance TUKIMAS_DANCE
-infusion INFUSION
 song_of_slaying SONG_OF_SLAYING
 spectral_weapon SPECTRAL_WEAPON
-discord DISCORD
+tukimas_dance TUKIMAS_DANCE
+violent_unravelling VIOLENT_UNRAVELLING
 
 %sdir gui/spells/fire
 bolt_of_fire BOLT_OF_FIRE
@@ -118,7 +117,6 @@ sting STING
 venom_bolt VENOM_BOLT
 
 %sdir gui/spells/summoning
-abjuration ABJURATION
 mass_abjuration MASS_ABJURATION
 call_canine_familiar CALL_CANINE_FAMILIAR
 call_imp CALL_IMP
@@ -139,14 +137,12 @@ summon_guardian_golem SUMMON_GUARDIAN_GOLEM
 summon_forest SUMMON_FOREST
 monstrous_menagerie MONSTROUS_MENAGERIE
 summon_mana_viper SUMMON_MANA_VIPER
-forceful_dismissal FORCEFUL_DISMISSAL
 spellforged_servitor SPELLFORGED_SERVITOR
 
 %sdir gui/spells/translocation
 apportation APPORTATION
 blink BLINK
 controlled_blink CONTROLLED_BLINK
-controlled_teleport CONTROLLED_TELEPORT
 disjunction DISJUNCTION
 dispersal DISPERSAL
 passage_of_golubria PASSAGE_OF_GOLUBRIA
@@ -155,7 +151,6 @@ portal_projectile PORTAL_PROJECTILE
 teleport_other TELEPORT_OTHER
 warp_weapon WARP_WEAPON
 shroud_of_golubria SHROUD_OF_GOLUBRIA
-singularity SINGULARITY
 gravitas GRAVITAS
 
 %sdir gui/spells/transmutation
@@ -224,7 +219,6 @@ earth_elementals EARTH_ELEMENTALS
 %sdir misc
 error ENERGY_BOLT
 error ENSNARE
-error EPHEMERAL_INFUSION
 %sdir gui/spells/monster
 fake_mara_summon FAKE_MARA_SUMMON
 fake_rakshasa_summon FAKE_RAKSHASA_SUMMON
@@ -235,18 +229,13 @@ error FIRE_SUMMON
 error FLASH_FREEZE
 error FORCEFUL_INVITATION
 error GHOSTLY_FIREBALL
-error GHOSTLY_FLAMES
-error GRAND_AVATAR
+error SPECTRAL_CLOUD
 %sdir gui/spells/monster
 haste_other HASTE_OTHER
-%sdir misc
-error HASTE_PLANTS
-%sdir gui/spells/monster
 hellfire_burst HELLFIRE_BURST
 %sdir misc
 error HOLY_BREATH
 error HOLY_FLAMES
-error IGNITE_POISON_SINGLE
 error INJURY_BOND
 error INK_CLOUD
 error INVISIBILITY_OTHER
@@ -326,9 +315,9 @@ hellfire HELLFIRE
 # spells mimicking divine abilities
 %sdir gui/invocations
 beogh_smite SMITING
-elyvilon_lesser_healing HEAL_OTHER
-elyvilon_lesser_self_healing MINOR_HEALING
-elyvilon_greater_self_healing MAJOR_HEALING
+elyvilon_heal_other HEAL_OTHER
+elyvilon_lesser_healing MINOR_HEALING
+elyvilon_greater_healing MAJOR_HEALING
 makhleb_major_destruction MAJOR_DESTRUCTION
 lugonu_banish BANISHMENT
 trog_hand TROGS_HAND

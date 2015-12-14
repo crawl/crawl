@@ -189,11 +189,11 @@ static void _change_walls_from_centre(const dgn_region &region,
             const int distance =
                 rectangular? (c - centre).rdist() : (c - centre).abs();
 
-            for (int i = 0, size = ldist.size(); i < size; ++i)
+            for (const dist_feat &df : ldist)
             {
-                if (distance <= ldist[i].dist)
+                if (distance <= df.dist)
                 {
-                    grd(c) = ldist[i].feat;
+                    grd(c) = df.feat;
                     break;
                 }
             }
@@ -256,7 +256,7 @@ static void _place_extra_lab_minivaults()
 static bool _has_vault_in_radius(const coord_def &pos, int radius,
                                  unsigned mask)
 {
-    for (radius_iterator rad(pos, radius, C_ROUND); rad; ++rad)
+    for (radius_iterator rad(pos, radius, C_SQUARE); rad; ++rad)
     {
         if (!in_bounds(*rad))
             continue;
@@ -268,13 +268,13 @@ static bool _has_vault_in_radius(const coord_def &pos, int radius,
 }
 
 // Find an entry point that's:
-// * At least 28 squares away from the exit.
-// * At least 6 squares away from the nearest vault.
+// * At least 24 squares away from the exit.
+// * At least 5 squares away from the nearest vault.
 // * Floor (well, obviously).
 static coord_def _labyrinth_find_entry_point(const dgn_region &reg,
                                              const coord_def &end)
 {
-    const int min_distance = 28 * 28;
+    const int min_distance = 24;
     // Try many times.
     for (int i = 0; i < 2000; ++i)
     {
@@ -282,10 +282,10 @@ static coord_def _labyrinth_find_entry_point(const dgn_region &reg,
         if (grd(place) != DNGN_FLOOR)
             continue;
 
-        if ((place - end).abs() < min_distance)
+        if ((place - end).rdist() < min_distance)
             continue;
 
-        if (_has_vault_in_radius(place, 6, MMT_VAULT))
+        if (_has_vault_in_radius(place, 5, MMT_VAULT))
             continue;
 
         return place;
@@ -432,37 +432,32 @@ static bool _grid_has_wall_neighbours(const coord_def& pos,
     return false;
 }
 
-static void _vitrify_wall_neighbours(const coord_def& pos, bool first)
+static void _vitrify_wall_and_neighbours(const coord_def& pos, bool first)
 {
-    // This hinges on clear wall types having the same order as non-clear ones!
-    const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
+    if (grd(pos) == DNGN_ROCK_WALL)
+        grd(pos) = DNGN_CLEAR_ROCK_WALL;
+    else if (grd(pos) == DNGN_STONE_WALL)
+        grd(pos) = DNGN_CLEAR_STONE_WALL;
+    else
+        return;
 
-    for (orth_adjacent_iterator ni(pos); ni; ++ni)
+    if (you.wizard)
+        env.pgrid(pos) |= FPROP_HIGHLIGHT;
+
+    for (orth_adjacent_iterator ai(pos); ai; ++ai)
     {
-        const coord_def& p = *ni;
-        if (!in_bounds(p))
+        const coord_def& p = *ai;
+        if (!in_bounds(p) || map_masked(p, MMT_VAULT))
             continue;
 
-        // Don't vitrify vault grids
-        if (map_masked(p, MMT_VAULT))
-            continue;
-
-        if (grd(p) == DNGN_ROCK_WALL || grd(p) == DNGN_STONE_WALL)
+        // Always continue vitrification if there are adjacent
+        // walls other than continuing in the same direction.
+        // Otherwise, there's still a 40% chance of continuing.
+        // Also, always do more than one iteration.
+        if (first || x_chance_in_y(2,5)
+            || _grid_has_wall_neighbours(p, p + (p - pos)))
         {
-            grd(p) = static_cast<dungeon_feature_type>(grd(p) + clear_plus);
-#ifdef WIZARD
-            if (you.wizard)
-                env.pgrid(p) |= FPROP_HIGHLIGHT;
-#endif
-            // Always continue vitrification if there are adjacent
-            // walls other than continuing in the same direction.
-            // Otherwise, there's still a 40% chance of continuing.
-            // Also, always do more than one iteration.
-            if (first || x_chance_in_y(2,5)
-                || _grid_has_wall_neighbours(p, p + (p - pos)))
-            {
-                _vitrify_wall_neighbours(p, false);
-            }
+            _vitrify_wall_and_neighbours(p, false);
         }
     }
 }
@@ -475,24 +470,16 @@ static void _labyrinth_add_glass_walls(const dgn_region &region)
     if (one_chance_in(3)) // Potentially lots of glass.
         glass_num += random2(7);
 
-    // This hinges on clear wall types having the same order as non-clear ones!
-    const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
-
     coord_def pos;
-    while (0 < glass_num--)
+    for (int i = 0; i < glass_num; ++i)
     {
         if (!_find_random_nonmetal_wall(region, pos))
             break;
 
-        if (_has_vault_in_radius(pos, 6, MMT_VAULT))
+        if (_has_vault_in_radius(pos, 5, MMT_VAULT))
             continue;
 
-        grd(pos) = static_cast<dungeon_feature_type>(grd(pos) + clear_plus);
-#ifdef WIZARD
-        if (you.wizard)
-            env.pgrid(pos) |= FPROP_HIGHLIGHT;
-#endif
-        _vitrify_wall_neighbours(pos, true);
+        _vitrify_wall_and_neighbours(pos, true);
     }
 }
 
@@ -521,7 +508,7 @@ void dgn_build_labyrinth_level()
     }
     else
     {
-        const vault_placement &rplace = **(env.level_vaults.end() - 1);
+        const vault_placement &rplace = *env.level_vaults.back();
         if (rplace.map.has_tag("generate_loot"))
         {
             for (vault_place_iterator vi(rplace); vi; ++vi)

@@ -26,14 +26,14 @@
  * Defined FILE_ATTRIBUTE_DEVICE for MSVC 6.0.
  *
  * Aug 11, 2010, Toni Ronkko
- * Added d_type and d_namlen fields to dirent structure.  The former is
+ * Added d_type and d_namlen fields to dirent structure. The former is
  * especially useful for determining whether directory entry represents a
- * file or a directory.  For more information, see
+ * file or a directory. For more information, see
  * http://www.delorie.com/gnu/docs/glibc/libc_270.html
  *
  * Aug 11, 2010, Toni Ronkko
- * Improved conformance to the standards.  For example, errno is now set
- * properly on failure and assert() is never used.  Thanks to Peter Brockam
+ * Improved conformance to the standards. For example, errno is now set
+ * properly on failure and assert() is never used. Thanks to Peter Brockam
  * for suggestions.
  *
  * Aug 11, 2010, Toni Ronkko
@@ -45,13 +45,13 @@
  *
  * Jan 18, 2008, Toni Ronkko
  * Using FindFirstFileA and WIN32_FIND_DATAA to avoid converting string
- * between multi-byte and unicode representations.  This makes the
- * code simpler and also allows the code to be compiled under MingW.  Thanks
+ * between multi-byte and unicode representations. This makes the
+ * code simpler and also allows the code to be compiled under MingW. Thanks
  * to Azriel Fasten for the suggestion.
  *
  * Mar 4, 2007, Toni Ronkko
  * Bug fix: due to the strncpy_s() function this file only compiled in
- * Visual Studio 2005.  Using the new string functions only when the
+ * Visual Studio 2005. Using the new string functions only when the
  * compiler version allows.
  *
  * Nov  2, 2006, Toni Ronkko
@@ -61,12 +61,12 @@
  * removed rewinddir() as it had a bug.
  *
  * Aug 20, 2006, Toni Ronkko
- * Removed all remarks about MSVC 1.0, which is antiqued now.  Simplified
+ * Removed all remarks about MSVC 1.0, which is antiqued now. Simplified
  * comments by removing SGML tags.
  *
  * May 14 2002, Toni Ronkko
  * Embedded the function definitions directly to the header so that no
- * source modules need to be included in the Visual Studio project.  Removed
+ * source modules need to be included in the Visual Studio project. Removed
  * all the dependencies to other projects so that this very header can be
  * used independently.
  *
@@ -133,9 +133,9 @@
 #define DTTOIF(type) (type)
 
 /*
- * File type macros.  Note that block devices, sockets and links cannot be
+ * File type macros. Note that block devices, sockets and links cannot be
  * distinguished on Windows and the macros S_ISBLK, S_ISSOCK and S_ISLNK are
- * only defined for compatibility.  These macros should always return false
+ * only defined for compatibility. These macros should always return false
  * on Windows.
  */
 #define S_ISFIFO(mode) (((mode) & S_IFMT) == S_IFFIFO)
@@ -216,7 +216,7 @@ static DIR *opendir(const char *dirname)
       int error;
 
       /*
-       * Convert relative directory name to an absolute one.  This
+       * Convert relative directory name to an absolute one. This
        * allows rewinddir() to function correctly when the current working
        * directory is changed between opendir() and rewinddir().
        */
@@ -260,7 +260,7 @@ static DIR *opendir(const char *dirname)
 
 /*****************************************************************************
  * Read a directory entry, and return a pointer to a dirent structure
- * containing the name of the entry in d_name field.  Individual directory
+ * containing the name of the entry in d_name field. Individual directory
  * entries returned by this very function include regular files,
  * sub-directories, pseudo-directories "." and "..", but also volume labels,
  * hidden files and system files may be returned.
@@ -314,7 +314,7 @@ static struct dirent *readdir(DIR *dirp)
 
 
 /*****************************************************************************
- * Close directory stream opened by opendir() function.  Close of the
+ * Close directory stream opened by opendir() function. Close of the
  * directory stream invalidates the DIR structure as well as any previously
  * read directory entry.
  */
@@ -340,9 +340,9 @@ static int closedir(DIR *dirp)
 
 /*****************************************************************************
  * Resets the position of the directory stream to which dirp refers to the
- * beginning of the directory.  It also causes the directory stream to refer
+ * beginning of the directory. It also causes the directory stream to refer
  * to the current state of the corresponding directory, as a call to opendir()
- * would have done.  If dirp does not refer to a directory stream, the effect
+ * would have done. If dirp does not refer to a directory stream, the effect
  * is undefined.
  */
 static void rewinddir(DIR* dirp)

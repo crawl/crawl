@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug Tiles|Win32">
@@ -231,7 +231,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\areas.cc" />
     <ClCompile Include="..\arena.cc" />
     <ClCompile Include="..\artefact.cc" />
-    <ClCompile Include="..\asg.cc" />
     <ClCompile Include="..\attack.cc" />
     <ClCompile Include="..\attitude-change.cc" />
     <ClCompile Include="..\beam.cc" />
@@ -265,6 +264,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     </ClCompile>
     <ClCompile Include="..\dbg-asrt.cc" />
     <ClCompile Include="..\dbg-maps.cc" />
+    <ClCompile Include="..\dbg-objstat.cc" />
     <ClCompile Include="..\dbg-scan.cc" />
     <ClCompile Include="..\dbg-util.cc" />
     <ClCompile Include="..\decks.cc" />
@@ -324,12 +324,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\itemprop.cc" />
     <ClCompile Include="..\items.cc" />
     <ClCompile Include="..\jobs.cc" />
-    <ClCompile Include="..\json.cc">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\json.cc" />
     <ClCompile Include="..\kills.cc" />
     <ClCompile Include="..\lang-fake.cc" />
     <ClCompile Include="..\losglobal.cc" />
@@ -363,7 +358,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\lev-pand.cc" />
     <ClCompile Include="..\lookup_help.cc" />
     <ClCompile Include="..\melee_attack.cc" />
-    <ClCompile Include="..\mon-chimera.cc" />
     <ClCompile Include="..\mon-death.cc" />
     <ClCompile Include="..\mon-ench.cc" />
     <ClCompile Include="..\mon-stealth.cc" />
@@ -371,6 +365,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\ng-wanderer.cc" />
     <ClCompile Include="..\orb.cc" />
     <ClCompile Include="..\package.cc" />
+    <ClCompile Include="..\pcg.cc" />
     <ClCompile Include="..\perlin.cc" />
     <ClCompile Include="..\place-info.cc" />
     <ClCompile Include="..\player-act.cc" />
@@ -451,6 +446,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\output.cc" />
     <ClCompile Include="..\pattern.cc" />
     <ClCompile Include="..\place.cc" />
+    <ClCompile Include="..\playable.cc" />
     <ClCompile Include="..\player.cc" />
     <ClCompile Include="..\quiver.cc" />
     <ClCompile Include="..\random-var.cc" />
@@ -624,7 +620,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\art-enum.h" />
     <ClInclude Include="..\art-func.h" />
     <ClInclude Include="..\artefact.h" />
-    <ClInclude Include="..\asg.h" />
     <ClInclude Include="..\attack.h" />
     <ClInclude Include="..\attitude-change.h" />
     <ClInclude Include="..\beam.h" />
@@ -651,9 +646,9 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\crash.h" />
     <ClInclude Include="..\ctest.h" />
     <ClInclude Include="..\dactions.h" />
-    <ClInclude Include="..\data-index.h" />
     <ClInclude Include="..\database.h" />
     <ClInclude Include="..\dbg-maps.h" />
+    <ClInclude Include="..\dbg-objstat.h" />
     <ClInclude Include="..\dbg-scan.h" />
     <ClInclude Include="..\dbg-util.h" />
     <ClInclude Include="..\debug.h" />
@@ -726,6 +721,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\items.h" />
     <ClInclude Include="..\jobs.h" />
     <ClInclude Include="..\json.h" />
+    <ClInclude Include="..\json-wrapper.h" />
     <ClInclude Include="..\kills.h" />
     <ClInclude Include="..\lang-fake.h" />
     <ClInclude Include="..\libconsole.h" />
@@ -738,12 +734,12 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\matrix.h" />
     <ClInclude Include="..\melee_attack.h" />
     <ClInclude Include="..\mi-enum.h" />
-    <ClInclude Include="..\mon-chimera.h" />
     <ClInclude Include="..\mon-death.h" />
     <ClInclude Include="..\mon-ench.h" />
     <ClInclude Include="..\mon-flags.h" />
     <ClInclude Include="..\mon-mst.h" />
     <ClInclude Include="..\mon-pick-data.h" />
+    <ClInclude Include="..\mutant-beast.h" />
     <ClInclude Include="..\mutation-data.h" />
     <ClInclude Include="..\newgame_def.h" />
     <ClInclude Include="..\ng-setup.h" />
@@ -813,14 +809,15 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\ouch.h" />
     <ClInclude Include="..\output.h" />
     <ClInclude Include="..\pattern.h" />
+    <ClInclude Include="..\pcg.h" />
     <ClInclude Include="..\place.h" />
+    <ClInclude Include="..\playable.h" />
     <ClInclude Include="..\player.h" />
     <ClInclude Include="..\process_desc.h" />
     <ClInclude Include="..\props.h" />
     <ClInclude Include="..\quiver.h" />
     <ClInclude Include="..\random-pick.h" />
     <ClInclude Include="..\random-var.h" />
-    <ClInclude Include="..\random-weight.h" />
     <ClInclude Include="..\random.h" />
     <ClInclude Include="..\ranged_attack.h" />
     <ClInclude Include="..\ray.h" />

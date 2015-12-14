@@ -1,91 +1,85 @@
+# This rcfile is elliptic's DCSS bot "qw", the first (and thus far only) bot
+# to win DCSS with no human assistance. A substantial amount of code here was
+# contributed by elliott or borrowed from N78291's bot "xw", and many others
+# have contributed as well.
+
+# For brief instructions and the most up-to-date version of qw, see
+# https://github.com/elliptic/qw.
+
+## qw's settings:
+#
 # Set this to true when playing online.
 : DELAYED = false
-# Set this to 100 or so when playing online.
+# Delay per action in milliseconds.
+# Set this to at least 100 or so when playing online.
 : DELAY_TIME = 100
-# imposes the delay for Zot:5 at least
-: DELAYEDZOT = false
+# whether to start playing immediately when a new game is started
+# unfortunately this doesn't work if the game starts with a -more-
+: AUTO_START = true
+# experimental: do second lair rune branch before depths
+: EARLY_SECOND_RUNE = true
+# do non-water lair rune first, or pick randomly?
+: WATER_RUNE_SECOND = false
+# experimental: get abyssal rune
+: ABYSSAL_RUNE = false
+# not yet implemented: get slimy rune
+: SLIMY_RUNE = false
+# depth to attempt to dive in ziggurats (0 to turn off)
+# if turned on, this causes annoying throttling delays when played online
+# for some reason
+: ZIG_DIVE = 0
+# burn books with Trog, may theoretically cause navigation problems
+: BURN_BOOKS = true
+# tab just takes a single action (for testing)
+: SINGLE_STEP = false
+# panic (stop) at full inventory
+: FULL_INVENTORY_PANIC = false
 
-name = qw
-restart_after_game = false
+# qw can play any starting combo. These ones are recommended:
+combo = DDBe.handaxe, GrBe.handaxe, MiBe.handaxe
 
-# GrBe with hand axe is classic qw.
-species = Gr
-background = Be
-weapon = hand axe
+# DDGl is the recommended non-berserker start. It will worship whichever of
+# Makhleb and Trog it finds first.
+#combo = DDGl.waraxe
 
-# * don't try to sacrifice plague shambler corpses
+# For a mix of the above:
+#combo = DDBe.handaxe, DDGl.waraxe, GrBe.handaxe, GrBe.handaxe
+#combo += MiBe.handaxe, MiBe.handaxe
 
-# * don't unwield vamp as much
+# For random berserkers, use these combos:
+#combo = CeBe.handaxe, DDBe.handaxe, DEBe.handaxe, DrBe.handaxe, DsBe.handaxe
+#combo += FeBe.claws, FoBe.handaxe, GrBe.handaxe, GhBe.claws, HaBe.falchion
+#combo += HEBe.falchion, HOBe.handaxe, HuBe.handaxe, KoBe.mace, MfBe.spear
+#combo += MiBe.handaxe, MuBe.handaxe, NaBe.handaxe, OgBe.mace, OpBe.handaxe
+#combo += SpBe.shortsword, TeBe.handaxe, TrBe.claws, VSBe.handaxe, VpBe.handaxe
 
-# * do more waiting for monsters to come to melee range, like xw
-#   - might be able to use the thing that Grunt added to lua recently
+# For a totally random combo (with chosen weapon type), hyperqwcombo.rc can
+# be created using hyperqwcombogen.sh and used:
+#combo =
+#include += hyperqwcombo.rc
 
-# * handle shafting better
+## The accomplishments of qw:
+# online wins: DDBe GrBe MiBe
+# offline wins: DsBe HOBe HuBe MfBe NaBe TeBe VSBe
+# (offline) runes: CeBe DrBe FoBe KoBe TrBe VpBe
+# non-Be offline wins: DDAr DDAs DDCK DDFi DDGl DDMo DDNe DDSk DDSu DDTm DDWn DDWr
 
-# * plan_stuck_clear_exclusions is ugly, so disabled for now
-
-# * should look over the monster lists at some point for good removals
-#   or regex issues
-
-# * better hydra strats would still be good
-
-# * 8 starvation deaths in Depths (out of 172 games) is weird
-# * 16 DT deaths in Depths in those games...
-# * 10 to spriggans, 14 to giants
-
-# * failure to swap with BiA is the main reason it gets stuck now
-
-# * doesn't panic soon enough when surrounded?
-
-# * ctrl-f corpses while very hungry after teleport is sort of bad
-
-# * maybe generally be more careful about AF_FIRE/AF_COLD stuff?
-
-# * still slow when tons of monsters/plants are in sight
-
-# * maybe do second lair branch before depths?
-
-# * maybe teleport away if too many summons are in sight (or other conditions,
-#   like player illusion or triple mara)
-
-# * shoals mesm is scary because no berserk, but it seems to handle it okay
-# * also it doesn't list any merfolk on scary_monsters...
-# * maybe swap with BiA sometimes, or don't push past it
-# * Mara is terrifying
-# * tab shouldn't open runed doors
-# * be more careful about hitting jellies with good weapons at under +5
-# * Joseph more dangerous?
-# * evilmike suggested pre-buffing before entering v:5
-# * mute more messages (e.g. "Sorry, I don't know how to get there")
-# * improve orbrun more - use haste?
-# * enter lair immediately instead of waiting until clearing the level?
-
-# known issues:
-# major:
-# * it doesn't use haste
-# * enter ziggurats
-# * could use some optimization for non-Gr
-
-# minor:
-# * could enter and do labs I guess
-# * say more interesting things after pressing _
-# * should use holy word, might, cure mut
-# * can conceivably get burdened (less likely without hive)
-#   - qw-nostalgia.rc has something for this
-# * can also conceivably run out of slots (less likely)
-# * it could try going upstairs and down a different stairs when stuck
-# * it likes to leave Depths:5 early before finishing exploring, not sure why
-#   - I know why now, it happened online on V:4
-# * maybe should handle starving status better (eat something)
-# * armour upgrading code could be better
-# * brand valuation could be improved maybe
-# * enchant weapon/brand weapon read-IDing isn't optimal (needs crawl change?)
+#####################################
+# enum values :/
+: ENUM_MONS_PANDEMONIUM_LORD = 344
+: ATT_NEUTRAL = 1
+: ATT_HOSTILE = 0
+: LOS = 7
 
 #####################################
 # miscellaneous simple options
 
+name = qw
+restart_after_game = false
+
 view_delay = 0
-clear_messages = false
+use_animations =
+clear_messages = true
 travel_delay = -1
 explore_delay = -1
 travel_key_stop = false
@@ -94,20 +88,18 @@ autopickup_no_burden = false
 auto_exclude =
 hp_warning = 0
 show_more = false
-show_inventory_weights = true
 show_newturn_mark = false
 list_rotten = false
 force_more_message =
 show_travel_trail = false
 skill_focus = false
-autoinscribe += slaying:mikee
+autoinscribe += slay:mikee
 flush.failure = false
 char_set = ascii
 cset = cloud:xa4
 cset = item_orb:0
 use_fake_player_cursor = true
 equip_unequip = true
-trapwalk_safe_hp = false
 
 dump_order = header,hiscore,stats,misc,mutations,skills,spells,inventory
 dump_order += overview
@@ -117,11 +109,13 @@ note_hp_percent = 25
 note_skill_levels = 1,3,6,9,12,15,18,21,24,27
 note_all_spells = true
 
+fire_order = launcher, rock, javelin, tomahawk
+
 ####################################
 # not sure exactly how important or correct these settings are
 
 explore_stop =
-explore_stop += branches,portals,stairs,altars
+explore_stop += items,branches,portals,stairs,altars
 explore_stop += greedy_visited_item_stack,greedy_pickup_smart
 
 stop := runrest_stop_message
@@ -143,34 +137,47 @@ bindkey = [B] CMD_NO_CMD_DEFAULT
 bindkey = [.] CMD_NO_CMD_DEFAULT
 
 ####################################
+# Don't get interrupted!
+: chk_interrupt_activity["blurry vision"] = function (iname, cause, extra)
+:   return nil
+: end
+
+####################################
 # autopickup/drop_filter stuff, just used for scrolls/potions/wands
 
-autopickup = ?!/%
+autopickup = ?!/
 
 ae := autopickup_exceptions
 df := drop_filter
 ae =
 df =
+# keep: identify,teleportation,remove curse,enchant weapon,
+#       enchant armour,acquirement,recharging,holy word
 ae += scrolls? of (summoning|vulnerability|brand weapon)
 ae += scrolls? of (magic mapping|fog|fear|silence)
-ae += scrolls? of (blinking|holy word|amnesia)
+ae += scrolls? of (blinking|amnesia)
 ae += scrolls? of (curse armour|curse jewellery|curse weapon)
 ae += scrolls? of (immolation|noise|random uselessness|torment)
 df += scrolls? of (summoning|vulnerability|brand weapon)
 df += scrolls? of (magic mapping|fog|fear|silence)
-df += scrolls? of (blinking|holy word|amnesia)
+df += scrolls? of (blinking|amnesia)
 df += scrolls? of (curse armour|curse jewellery|curse weapon)
 df += scrolls? of (immolation|noise|random uselessness|torment)
+# keep: curing,heal wounds,haste,cancellation,resistance,experience,
+#       might,beneficial mutation,cure mutation,restore abilities
 ae += potions? of (brilliance|magic|berserk rage)
-ae += potions? of (flight|invisibility|blood|coagulated blood)
-ae += potions? of (agility|cure mutation|might)
-ae += potions? of (confusion|decay|degeneration|mutation|paralysis)
-ae += potions? of (poison|lignification|strong poison)
+ae += potions? of (flight|invisibility|agility)
+ae += potions? of (ambrosia|decay|degeneration|mutation)
+ae += potions? of (poison|lignification)
 df += potions? of (brilliance|magic|berserk rage)
-df += potions? of (flight|invisibility|blood|coagulated blood)
-df += potions? of (agility|cure mutation|might)
-df += potions? of (confusion|decay|degeneration|mutation|paralysis)
-df += potions? of (poison|lignification|strong poison)
+df += potions? of (flight|invisibility|agility)
+df += potions? of (ambrosia|decay|degeneration|mutation)
+df += potions? of (poison|lignification)
+: if you.race() ~= "Vampire" then
+ae += potions? of blood
+df += potions? of blood
+: end
+# keep: heal wounds,hasting,teleportation
 ae += wand of (random effects|slowing|magic darts|flame|frost|confusion)
 ae += wand of (enslavement|paralysis|invisibility|lightning|fireball)
 ae += wand of (cold|digging|disintegration|draining|fire|polymorph)
@@ -178,301 +185,13 @@ df += wand of (random effects|slowing|magic darts|flame|frost|confusion)
 df += wand of (enslavement|paralysis|invisibility|lightning|fireball)
 df += wand of (cold|digging|disintegration|draining|fire|polymorph)
 
-########################################
-# now the lua, beginning with autopickup code
+################################################################
+# now the lua, beginning with options to set while qw is running
 
 {
--- We assign a numerical value to all armour/weapon/jewellery, which
--- is used both for autopickup (so it has to work for unIDed items) and
--- for equipment selection. A negative value means we never want to use the
--- item.
-
-good_slots = {cloak="Cloak", helmet="Helmet",
-              gloves="Gloves", boots="Boots", body="Armour"}
-
-function armour_value(it, name, with_resists)
-  local value = 100
-  if it.artefact then
-    if it.fully_identified then
-      value = value + 100 -- random stuff is good on average
-    else
-      value = value + 400 -- it might be very good
-    end
-    if name:find("rF%+") then
-      if not with_resists or you.res_fire() < 2 then
-        value = value + 400 -- we like this a lot
-      end
-    end
-    if name:find("SInv") then
-      if not with_resists or not you.see_invisible() then
-        value = value + 400 -- we like this a lot
-      end
-    end
-    if name:find("%-Tele") then
-      return -1
-    end
-    if name:find("Pondering") or name:find("hauberk")
-       or name:find("lightning scales") then
-      return -1
-    end
-  elseif name:find("runed") or name:find("glowing") or name:find("dyed") or
-         name:find("embroidered") or name:find("shiny") then
-    value = value + 400 -- it might be very good
-  elseif it.fully_identified then
-    if name:find("fire resistance") then
-      if not with_resists or you.res_fire() < 2 then
-        value = value + 400 -- we like this a lot
-      end
-    end
-    if name:find("see invisible") then
-      if not with_resists or not you.see_invisible() then
-        value = value + 400 -- we like this a lot
-      end
-    end
-    if name:find("preservation") then
-      value = value + 250 -- and this
-    end
-    if name:find("ponderous") then
-      return -1
-    end
-    if name:find("archery") then
-      value = value - 100
-    end
-  end
-  if it.plus then
-    value = value + 50*it.plus
-  end
-  if name:find("barding") then
-    return -1
-  end
-  st, _ = it.subtype()
-  if good_slots[st] == "Helmet" and not name:find("helmet") then
-    value = value - 100
-  end
-  if good_slots[st] == "Armour" then
-    if name:find("hide") then
-      return -1
-    end
-    if name:find("robe") then
-      value = value + 200
-    elseif name:find("animal skin") then
-      value = value + 200
-    elseif name:find("troll leather") then
-      value = value + 400
-    elseif name:find("leather") then
-      value = value + 300
-    elseif name:find("ring mail") then
-      value = value + 500
-    elseif name:find("scale mail") then
-      value = value + 600
-    elseif name:find("chain mail") then
-      value = value + 800
-    elseif name:find("crystal plate") then
-      value = value + 1400
-    elseif name:find("plate") then
-      value = value + 1000
-    elseif name:find("storm dragon") then
-      value = value + 1000
-    elseif name:find("steam dragon") then
-      value = value + 500
-    elseif name:find("mottled dragon") then
-      value = value + 600
-    elseif name:find("swamp dragon") then
-      value = value + 700
-    elseif name:find("fire dragon") then
-      value = value + 800
-    elseif name:find("ice dragon") then
-      value = value + 600 -- less because rF-
-    elseif name:find("pearl dragon") then
-      value = value + 1000
-    elseif name:find("gold dragon") then
-      value = value + 1400 -- more because resists
-    end
-  end
-  return value
-end
-
-function weapon_value(it, name, with_resists)
-  if you.race() == "Troll" then
-    return -1
-  end
-  local value = 1000
-  if not name:find("axe") then
-    return -1
-  end
-  if name:find("distort") then
-    return -1
-  end
-  if name:find("%-Tele") then
-    return -1
-  end
-  if it.artefact and not it.fully_identified or
-     name:find("runed") or name:find("glowing") then
-    value = value + 500 -- it might be very good
-  end
-  if name:find("vamp") then
-    value = value + 500 -- this is what we want
-  elseif name:find("speed") then
-    value = value + 300 -- this is good too
-  elseif name:find("elec") then
-    value = value + 150 -- not bad
-  elseif name:find("flam") or name:find("freez") or
-         name:find("chop") or name:find("anti") then
-    value = value + 75
-  end
-  if it.plus then
-    value = value + 30*it.plus
-  end
-  if name:find("hand axe") then
-    value = value + 700
-  elseif name:find("war axe") then
-    value = value + 1000
-  elseif name:find("broad axe") then
-    value = value + 1300
-  elseif name:find("battleaxe") then
-    value = value + 1600
-  elseif name:find("executioner") then
-    value = value + 1550 -- requires too much skill
-  end
-  return value
-end
-
-function amulet_value(it, name, with_resists)
-  if it.artefact then return -1 end -- should parse inscription instead
-  if not name:find("amulet of") then return 100 end
-  if name:find("conservation") then
-    if with_resists and you.conservation() then
-      return -1
-    else
-      return 10
-    end
-  end
-  if name:find("resist corrosion") then
-    if with_resists and you.res_corr() then
-      return -1
-    else
-      return 9
-    end
-  end
-  if name:find("faith") then return 8 end
-  if name:find("resist mutation") then return 7 end
-  if name:find("clarity") then return 6 end
-  if name:find("guardian spirit") then return 5 end -- not enough MP
-  if name:find("warding") then return 4 end
-  if name:find("rage") then return 3 end
-  return -1
-end
-
-function ring_value(it, name, with_resists)
-  if it.artefact then return -1 end -- should parse inscription instead
-  if not name:find("ring of") then return 100 end
-  if it.plus and it.plus < 0 then return -1 end
-  local plus = 0
-  if it.plus then plus = plus + it.plus end
-  if not it.fully_identified then plus = 6 end
-  if name:find("see invisible") then
-    if with_resists and you.see_invisible() then
-      return -1
-    else
-      return 50
-    end
-  end
-  if name:find("protection from fire") then
-    if with_resists and you.res_fire() >= 2 then
-      return 16
-    else
-      return 49
-    end
-  end
-  if name:find("protection from cold") then
-    if with_resists and you.res_cold() >= 1 then
-      return 15
-    else
-      return 48
-    end
-  end
-  if name:find("slaying") then return 20 + plus end
-  if name:find("protection from magic") then return 14 end
-  if name:find("protection") then return 19 + plus end
-  if name:find("evasion") then return 18 + plus end
-  if name:find("positive energy") then return 13 end
-  if name:find("regeneration") then return 12 end
-  if name:find("strength") then return 7 + plus end
-  if name:find("dexterity") then return 4 + plus end
-  if name:find("sustenance") then return 3 end
-  if name:find("sustain abilities") then return 2 end
-  return -1
-end
-
-function equip_value(it, name, with_resists)
-  local class = it.class(true)
-  if class == "armour" then
-    return armour_value(it, name, with_resists)
-  elseif class == "weapon" then
-    return weapon_value(it, name, with_resists)
-  elseif class == "jewellery" then
-    if name:find("amulet") then
-      return amulet_value(it, name, with_resists)
-    else
-      return ring_value(it, name, with_resists)
-    end
-  end
-  return -1
-end
-
-function autopickup(it, name)
-  if name:find("of Zot") then
-    return true
-  end
-  if it.is_useless then
-    return false
-  end
-  local class = it.class(true)
-  old_value = 0
-  new_value = 0
-  ring = false
-  if class == "armour" then
-    st, _ = it.subtype()
-    if good_slots[st] == nil then
-      return false
-    end
-    it2 = items.equipped_at(good_slots[st])
-  elseif class == "weapon" then
-    it2 = items.equipped_at("Weapon")
-  elseif class == "jewellery" then
-    if name:find("amulet") then
-      it2 = items.equipped_at("Amulet")
-    else
-      it2 = items.equipped_at("Left Ring")
-      it3 = items.equipped_at("Right Ring")
-      ring = true
-    end
-  else
-    return false
-  end
-  new_value = equip_value(it, name)
-  if new_value < 0 then return false end
-  if it2 == nil or ring and it3 == nil then
-    return true
-  else
-    old_value = equip_value(it2, it2:name())
-    if ring then
-      old_value2 = equip_value(it3, it3:name())
-      if old_value > old_value2 then old_value = old_value2 end
-    end
-    return (new_value > old_value)
-  end
-end
-
-add_autopickup_func(autopickup)
-
---------------------------------------------
--- options that we switch on/off with the bot
-
 -- maybe should add more mutes for watchability
 
 function set_options()
-  --crawl.setopt("auto_list = false")
   crawl.setopt("confirm_butcher = always")
   crawl.setopt("pickup_mode = multi")
   crawl.setopt("message_colour += mute:Search for what")
@@ -488,7 +207,6 @@ function set_options()
 end
 
 function unset_options()
-  --crawl.setopt("auto_list = true")
   crawl.setopt("always_confirm_butcher = auto")
   crawl.setopt("pickup_mode = auto")
   crawl.setopt("message_colour -= mute:Search for what")
@@ -503,8 +221,787 @@ function unset_options()
   crawl.enable_more(true)
 end
 
------------------------------------------------
--- now we have actual non-option lua, beginning with some tables
+-------------------------------------
+-- equipment valuation and autopickup
+
+-- We assign a numerical value to all armour/weapon/jewellery, which
+-- is used both for autopickup (so it has to work for unIDed items) and
+-- for equipment selection. A negative value means we prefer an empty slot.
+
+-- The valuation functions either return a pair of numbers - minimum
+-- minimum and maximum potential value - or the current value. Here
+-- value should be viewed as utility relative to not wearing anything in
+-- that slot. For the current value calculation, we can specify an equipped
+-- item and try to simulate not wearing it (for resist values).
+
+-- We pick up an item if its max value is greater than our currently equipped
+-- item's min value. We swap to an item if it has a greater cur value.
+
+-- if cur, return the current value instead of minmax
+-- if it2, pretend we aren't equipping it2
+function equip_value(it, cur, it2)
+  if not it then
+    return 0,0
+  end
+  local class = it.class(true)
+  if class == "armour" then
+    return armour_value(it, cur, it2)
+  elseif class == "weapon" then
+    return weapon_value(it, cur, it2)
+  elseif class == "jewellery" then
+    if it.name():find("amulet") then
+      return amulet_value(it, cur, it2)
+    else
+      return ring_value(it, cur, it2)
+    end
+  end
+  return -1,-1
+end
+
+-- Returns the amount of an artprop granted by an item - not all artprops are
+-- currently handled here.
+function item_resist(str, it)
+  if not it then
+    return 0
+  end
+  if it.artefact and it.artprops and it.artprops[str] then
+    return it.artprops[str]
+  else
+    local name = it.name()
+    local ego = it.ego()
+    local subtype = it.subtype()
+    if str == "rF" then
+      if name:find("fire dragon") then
+        return 2
+      elseif ego == "fire resistance" or subtype == "ring of protection from fire"
+             or name:find("gold dragon") or subtype == "ring of fire" then
+        return 1
+      elseif name:find("ice dragon") or subtype == "ring of ice" then
+        return -1
+      else
+        return 0
+      end
+    elseif str == "rC" then
+      if name:find("ice dragon") then
+        return 2
+      elseif ego == "cold resistance" or subtype == "ring of protection from cold"
+             or name:find("gold dragon") or subtype == "ring of ice" then
+        return 1
+      elseif name:find("fire dragon") or subtype == "ring of fire" then
+        return -1
+      else
+        return 0
+      end
+    elseif str == "rElec" then
+      if name:find("storm dragon") then
+        return 1
+      else
+        return 0
+      end
+    elseif str == "rPois" then
+      if ego == "poison resistance" or subtype == "ring of poison resistance"
+         or name:find("swamp dragon") or name:find("gold dragon") then
+        return 1
+      else
+        return 0
+      end
+    elseif str == "rN" then
+      if ego == "positive energy" or subtype == "ring of positive energy"
+         or subtype == "amulet of warding"
+         or name:find("pearl dragon") then
+        return 1
+      else
+        return 0
+      end
+    elseif str == "MR" then
+      if ego == "magic resistance" or subtype == "ring of protection from magic"
+         or name:find("quicksilver dragon") then
+        return 1
+      else
+        return 0
+      end
+    elseif str == "rCorr" then
+      if subtype == "amulet of resist corrosion" then
+        return 1
+      else
+        return 0
+      end
+    elseif str == "SInv" then
+      if ego == "see invisible" or subtype == "ring of see invisible" then
+        return 1
+      else
+        return 0
+      end
+    elseif str == "Spirit" then
+      if ego == "spirit shield" or subtype == "amulet of guardian spirit" then
+        return 1
+      else
+        return 0
+      end
+    end
+  end
+  return 0
+end
+
+-- Returns the player's intrinsic level of an artprop string.
+function intrinsic_resist(str)
+  if str == "rF" then
+    return you.mutation("fire resistance")
+  elseif str == "rC" then
+    return you.mutation("cold resistance")
+  elseif str == "rElec" then
+    return you.mutation("electricity resistance")
+  elseif str == "rPois" then
+    if intrinsic_rpois() or (you.mutation("poison resistance") > 0) then
+      return 1
+    else
+      return 0
+    end
+  elseif str == "rN" then
+    return you.mutation("negative energy resistance")
+  elseif str == "MR" then
+    return you.mutation("magic resistance") + ((you.god() == "Trog") and 1 or 0)
+  elseif str == "rCorr" then
+    return 0
+  elseif str == "SInv" then
+    if intrinsic_sinv() or (you.mutation("see invisible") > 0) then
+      return 1
+    else
+      return 0
+    end
+  elseif str == "Spirit" then
+    return ((you.race() == "Vine Stalker") and 1 or 0)
+  end
+  return 0
+end
+
+-- Returns the current level of "resistance" to an artprop string. If an
+-- item is provided, assume the item is equipped and try to pretend that
+-- it is unequipped. Does not include some temporary effects.
+function player_resist(str, it)
+  local it_res = it and item_resist(str, it) or 0
+  local other_res = intrinsic_resist(str)
+  for it2 in inventory() do
+    if it2.equipped and slot(it2) ~= slot(it) then
+      other_res = other_res + item_resist(str, it2)
+    end
+  end
+  if str == "rF" or str == "rC" or str == "rN" or str == "MR" then
+    return other_res
+  else
+    return ((other_res > 0) and 1 or 0)
+  end
+end
+
+function equip_slot(it)
+  local class = it.class(true)
+  if class == "armour" then
+    return good_slots[it.subtype()]
+  elseif class == "weapon" then
+    return "Weapon"
+  elseif class == "jewellery" then
+    if it.name():find("amulet") then
+      return "Amulet"
+    else
+      return "Ring" -- not the actual slot name
+    end
+  end
+  return
+end
+
+-- The current utility of having a given amount of an artprop.
+function absolute_resist_value(str, n)
+  if n == 0 then
+    return 0
+  end
+  local val = 0
+  if str == "rF" or str == "rC" then
+    if n < 0 then
+      val = -150
+    elseif n == 1 then
+      val = 125
+    elseif n == 2 then
+      val = 200
+    elseif n >= 3 then
+      val = 250
+    end
+    if str == "rF" and zot_soon() then
+      val = val * 2
+    end
+    return val
+  elseif str == "rElec" then
+    return 75
+  elseif str == "rPois" then
+    return ((you.num_runes() < 2) and 225 or 75)
+  elseif str == "rN" then
+    return 25*n
+  elseif str == "MR" then
+    if n <= 2 then
+      return 75*n
+    else
+      return 200
+    end
+  elseif str == "rCorr" then
+    return (slime_soon() and 400 or 25)
+  elseif str == "SInv" then
+    return 200
+  elseif str == "Spirit" then
+    return ((you.race() == "Deep Dwarf") and -10000 or 75)
+  end
+  return 0
+end
+
+function max_resist_value(str, d)
+  if d <= 0 then
+    return 0
+  end
+  local val = 0
+  local ires = intrinsic_resist(str)
+  if str == "rF" or str == "rC" then
+    if d == 1 then
+      val = 150
+    elseif d == 2 then
+      val = 275
+    elseif d == 3 then
+      val = 350
+    end
+    if str == "rF" then
+      val = val * 2
+    end
+    return val
+  elseif str == "rElec" then
+    return ((ires < 1) and 75 or 0)
+  elseif str == "rPois" then
+    return ((ires < 1) and ((you.num_runes() < 2) and 225 or 75) or 0)
+  elseif str == "rN" then
+    return ((ires < 3) and 25*d or 0)
+  elseif str == "MR" then
+    return 75*d
+  elseif str == "rCorr" then
+    return (ires < 1 and (SLIMY_RUNE and 400 or 25) or 0)
+  elseif str == "SInv" then
+    return ((ires < 1) and 200 or 0)
+  elseif str == "Spirit" then
+    if ires > 0 then
+      return 0
+    elseif you.race() == "Deep Dwarf" then
+      return -10000
+    else
+      return 75
+    end
+  end
+  return 0
+end
+
+function min_resist_value(str, d)
+  if str == "Spirit" and you.race() == "Deep Dwarf" then
+    return -10000
+  end
+  if d >= 0 then
+    return 0
+  end
+  if str == "rF" then
+    return -300
+  elseif str == "rC" then
+    return -150
+  elseif str == "MR" then
+    return 75*d
+  end
+  return 0
+end
+
+function resist_value(str, it, cur, it2)
+  local d = item_resist(str, it)
+  if d == 0 then
+    return 0,0
+  end
+  if cur then
+    local c = player_resist(str, it2)
+    local diff = absolute_resist_value(str,c+d) - absolute_resist_value(str,c)
+    return diff,diff
+  else
+    return min_resist_value(str,d),max_resist_value(str,d)
+  end
+end
+
+function total_resist_value(it, cur, it2)
+  artproplist = { "rF", "rC", "rElec", "rPois", "rN", "MR", "rCorr", "SInv", "Spirit" }
+  local val1, val2 = 0,0,0
+  for _,str in ipairs(artproplist) do
+    local a,b = resist_value(str, it, cur, it2)
+    val1 = val1 + a
+    val2 = val2 + b
+  end
+  return val1,val2
+end
+
+function rune_goal()
+  return 3 + (ABYSSAL_RUNE and 1 or 0) + (SLIMY_RUNE and 1 or 0)
+end
+
+function zot_soon()
+  return you.where():find("Zot") or
+         (you.where():find("Depths") and you.num_runes() >= rune_goal()
+          and not you.have_orb())
+end
+
+function slime_soon()
+  return you.where():find("Slime") or
+         (SLIMY_RUNE and you.where():find("Lair") and you.num_runes() >= 3
+          and not you.have_rune("slimy"))
+end
+
+-- list of armour slots, this is used to normalize names for them and also
+-- to iterate over the slots
+good_slots = {cloak="Cloak", helmet="Helmet",
+              gloves="Gloves", boots="Boots", body="Armour", shield="Shield"}
+
+function armour_value(it, cur, it2)
+  local name = it.name()
+  local value = 0
+  local val1,val2 = total_resist_value(it, cur, it2)
+  local ego = it.ego()
+  if it.artefact then
+    if not it.fully_identified then -- could be good or bad
+      val2 = val2 + 400
+      val1 = val1 + (cur and 400 or -400)
+    end
+    ap = it.artprops
+    if ap and (ap["-Tele"] or ap["*Tele"]) and you.race() ~= "Formicid" then
+      return -1,-1
+    end
+    if ap and ap["*Rage"] and you.race() ~= "Mummy"
+       and you.race() ~= "Ghoul" and you.race() ~= "Formicid" then
+      return -1,-1
+    end
+    if name:find("Pondering") or name:find("hauberk") then
+      return -1,-1
+    end
+    if you.race() == "Deep Dwarf" and ap and ap["MP"] and ap["MP"] < 0 then
+      return -1,-1
+    end
+  elseif name:find("runed") or name:find("glowing") or name:find("dyed") or
+         name:find("embroidered") or name:find("shiny") then
+    val2 = val2 + 400
+    val1 = val1 + (cur and 400 or -200)
+  elseif ego then -- names in armour_ego_name()
+    if ego == "running" then
+      value = value + 25
+    elseif ego == "flying" and not intrinsic_flight() then
+      if not intrinsic_flight() then
+        value = value + 200
+      end
+    elseif ego == "ponderousness" then
+      return -1,-1
+    end
+  end
+
+  value = value + 100*it.ac
+  if it.plus then
+    value = value + 50*it.plus
+  end
+  st, _ = it.subtype()
+  if good_slots[st] == "Shield" then
+    if it.encumbrance == 1 then
+      if not want_buckler() then
+        return -1,-1
+      end
+    elseif not want_shield() then
+      return -1,-1
+    end
+  end
+  -- name always starts with {boots armour} here
+  -- ^ is no longer true I think?
+  if good_slots[st] == "Boots" then
+    if you.race() == "Centaur" then
+      if not (name:find("centaur barding")
+              or name:find("horse barding")) then
+        return -1,-1
+      end
+    elseif you.race() == "Naga" then
+      if not (name:find("naga barding")
+              or name:find("lightning scales")) then
+        return -1,-1
+      end
+    else
+      if name:find("barding") then
+        return -1,-1
+      end
+    end
+  end
+  if good_slots[st] == "Armour" then
+    evp = it.encumbrance
+    if intrinsic_dodgy() then
+      if evp > 7 then
+        return -1,-1
+      elseif evp >= 6 then
+        value = value - 250
+      elseif evp >= 3 then
+        value = value - 100
+      end
+    elseif intrinsic_heavy_dodgy() then
+      if evp >= 20 and intrinsic_heavy_dodgy() then
+        value = value - 200
+      end
+      if name:find("pearl dragon") then
+        value = value + 150
+      end
+    end
+    if name:find("hide") and not name:find("salamander hide") then
+      value = value + 100*it.ac - 50
+    end
+  end
+  return value+val1,value+val2
+end
+
+function weapon_value(it, cur, it2)
+  local name = it.name()
+  local value = 1000
+  if it.weap_skill ~= wskill() then
+    weap = items.equipped_at("Weapon")
+    if weap and weap.weap_skill == wskill() or wskill() == "Unarmed Combat"
+       or it.weap_skill == "Crossbows" or it.weap_skill == "Bows"
+       or it.weap_skill == "Slings" then
+      return -1,-1
+    end
+  end
+  if it.hands == 2 and want_buckler() then
+    return -1,-1
+  end
+  if it.artefact then
+    ap = it.artprops
+    if ap and (ap["-Tele"] or ap["*Tele"]) and you.race() ~= "Formicid" then
+      return -1,-1
+    end
+    if ap and ap["*Rage"] and you.race() ~= "Mummy"
+       and you.race() ~= "Ghoul" and you.race() ~= "Formicid" then
+      return -1,-1
+    end
+    if you.race() == "Deep Dwarf" and ap and ap["MP"] and ap["MP"] < 0 then
+      return -1,-1
+    end
+  end
+  local val1,val2 = total_resist_value(it, cur, it2)
+  if it.artefact and not it.fully_identified or
+     name:find("runed") or name:find("glowing") then
+    val2 = val2 + 500
+    val1 = val1 + (cur and 500 or -250)
+  end
+  local ego = it.ego()
+  if ego then -- names are mostly in weapon_brands_verbose[]
+    if ego == "distortion" then
+      return -1,-1
+    elseif ego == "holy wrath" then
+      if intrinsic_evil() then
+        return -1,-1
+      end
+    elseif ego == "vampirism" then
+      value = value + 500 -- this is what we want
+    elseif ego == "speed" then
+      value = value + 300 -- this is good too
+    elseif ego == "electrocution" then
+      value = value + 150 -- not bad
+    elseif ego == "flaming" or ego == "freezing" or ego == "draining"
+           or ego == "crushing" or ego == "slicing"
+           or ego == "piercing" or ego == "chopping" or ego == "slashing" then
+      value = value + 75
+    elseif ego == "antimagic" then
+      if you.race() == "Vine Stalker" then
+        value = value - 300
+      elseif you.race() ~= "Deep Dwarf" then
+        value = value + 75
+      end
+    end
+  end
+  if it.plus then
+    value = value + 30*it.plus
+  end
+  value = value + 150*it.damage
+  if it.delay > 17 then
+    value = value - 150*(it.delay - 17)
+  end
+  if it.weap_skill ~= wskill() then
+    value = value / 10
+    val1 = val1 / 10
+    val2 = val2 / 10
+  end
+  return value+val1,value+val2
+end
+
+function amulet_value(it, cur, it2)
+  local name = it.name()
+  local subtype = it.subtype()
+  local value = 0
+  if it.artefact then
+    ap = it.artprops
+    if ap and (ap["-Tele"] or ap["*Tele"]) and you.race() ~= "Formicid" then
+      return -1,-1
+    end
+    if ap and ap["*Rage"] and you.race() ~= "Mummy"
+       and you.race() ~= "Ghoul" and you.race() ~= "Formicid" then
+      return -1,-1
+    end
+    if you.race() == "Deep Dwarf" and ap and ap["MP"] and ap["MP"] < 0 then
+      return -1,-1
+    end
+    if name:find("macabre finger necklace") then
+      return -1,-1
+    end
+  end
+  if subtype == "amulet of faith" then
+    return 10000,10000 -- for now, so we never unequip this
+  end
+  if subtype == "amulet of stasis" then
+    return -1,-1
+  end
+  if it.artefact and not it.fully_identified or not (it.artefact or name:find("amulet of")) then
+    if cur then
+      return 5000,5000
+    else
+      return -1,10000
+    end
+  end
+  local val1,val2 = total_resist_value(it, cur, it2)
+  if subtype == "amulet of resist mutation"
+     or subtype == "amulet of clarity"
+     or subtype == "amulet of regeneration" and you.race() ~= "Deep Dwarf" then
+    value = value + 50
+  elseif subtype == "amulet of inaccuracy" then
+    value = value - 250
+  end
+  return value+val1,value+val2
+end
+
+function ring_value(it, cur, it2)
+  local name = it.name()
+  local subtype = it.subtype()
+  local value = 0
+  if it.artefact then
+    ap = it.artprops
+    if ap and (ap["-Tele"] or ap["*Tele"]) and you.race() ~= "Formicid" then
+      return -1,-1
+    end
+    if ap and ap["*Rage"] and you.race() ~= "Mummy"
+       and you.race() ~= "Ghoul" and you.race() ~= "Formicid" then
+      return -1,-1
+    end
+    if you.race() == "Deep Dwarf" and ap and ap["MP"] and ap["MP"] < 0 then
+      return -1,-1
+    end
+  end
+  if subtype == "ring of teleportation" and you.race() ~= "Formicid" then
+    return -1,-1
+  end
+  if it.artefact and not it.fully_identified or not (it.artefact or name:find("ring of")) then
+    if cur then
+      return 5000,5000
+    else
+      return -1,5000
+    end
+  end
+  if it.plus and it.plus < 0 then
+    return -1,-1
+  end
+  local val1,val2 = total_resist_value(it, cur, it2)
+  local plus = it.plus or 0
+  if not it.fully_identified then
+    plus = 6
+  end
+  if subtype == "ring of slaying" or subtype == "ring of protection"
+     or subtype == "ring of evasion" then
+    value = value + 50*plus
+    if not it.fully_identified and not cur then
+      val1 = val1 - 50*12
+    end
+  elseif subtype == "ring of strength" or subtype == "ring of dexterity" then
+    value = value + 20*plus
+    if not it.fully_identified and not cur then
+      val1 = val1 - 20*12
+    end
+  --elseif subtype == "ring of sustain abilities"
+  --       or subtype == "ring of stealth"
+  --       or subtype == "ring of magical power" then
+  --  value = value + 10
+  elseif subtype == "ring of loudness" then
+    value = value - 10
+  end
+  return value+val1,value+val2
+end
+
+function item_is_dominated(it)
+  local minv,maxv = equip_value(it)
+  if maxv <= 0 then
+    return true
+  end
+  local slotname = equip_slot(it)
+  local num_slots = 1
+  if slotname == "Ring" then
+    num_slots = max_rings()
+  end
+  for it2 in inventory() do
+    if equip_slot(it2) == slotname and slot(it2) ~= slot(it) then
+      local minv2,maxv2 = equip_value(it2)
+      if minv2 >= maxv then
+        num_slots = num_slots - 1
+        if num_slots == 0 then
+          return true
+        end
+      end
+      if minv == minv2 and maxv == maxv2 then
+        if slotname == "Ring" then
+          if not it.artefact and not it2.artefact then
+            sub = it.subtype()
+            sub2 = it2.subtype()
+            if sub == sub2 then
+              if sub == "ring of fire" or
+                 sub == "ring of ice" or
+                 sub == "ring of poison resistance" or
+                 sub == "ring of see invisible" or
+                 sub == "ring of sustain abilities" then
+                return true
+              end
+            end
+          end
+        elseif slotname == "Amulet" then
+          if not it.artefact and not it2.artefact and it.subtype() == it2.subtype() then
+            return true
+          end
+        elseif it.name() == it2.name() then
+          local name = it.name()
+          if not (name:find("runed") or name:find("glowing") or name:find("dyed") or
+                  name:find("embroidered") or name:find("shiny")) then
+            return true
+          end
+        end
+      end
+    end
+  end
+  return false
+end
+
+function should_drop(it)
+  return item_is_dominated(it)
+end
+
+-- assumes old_it is equipped
+function should_upgrade(it,old_it)
+  if not old_it then
+    return should_equip(it)
+  end
+  if not it.fully_identified and not should_drop(it) then
+    return true
+  end
+  return (equip_value(it,true,old_it) > equip_value(old_it,true,old_it))
+end
+
+-- assumes it is not equipped and an empty slot is available
+function should_equip(it)
+  return (equip_value(it,true) > 0)
+end
+
+-- assumes it is equipped
+function should_remove(it)
+  return (equip_value(it,true,it) <= 0)
+end
+
+function want_missile(it)
+  st = it.subtype()
+  return (st == "large rock" and (you.race() == "Troll" or you.race() == "Ogre") or st == "javelin" and you.xl() < 21 or st == "tomahawk" and you.xl() < 15)
+end
+
+function autopickup(it, name)
+  if name:find("of Zot") then
+    return true
+  end
+  if it.is_useless then
+    return false
+  end
+  local class = it.class(true)
+  old_value = 0
+  new_value = 0
+  ring = false
+  if class == "armour" or class == "weapon" or class == "jewellery" then
+    return not item_is_dominated(it)
+  elseif class == "food" then
+    return true
+  elseif class == "potion" or class == "scroll" or class == "wand" then
+    return
+  elseif class == "missile" then
+    return want_missile(it)
+  else
+    return false
+  end
+end
+
+clear_autopickup_funcs()
+add_autopickup_func(autopickup)
+
+-----------------------------
+-- some global variables:
+
+local dump_count = you.turns() + 100 - (you.turns() % 100)
+local skill_count = you.turns() - (you.turns() % 20)
+local danger
+local immediate_danger
+local where = you.where()
+local where_shafted_from = nil
+local expect_new_location
+local expect_portal
+
+local automatic = false
+
+local ignore_list = { }
+local failed_move = { }
+local invisi_count = 0
+local next_delay = 100
+
+local dd_hw_meter = 0
+
+local sigmund_dx = 0
+local sigmund_dy = 0
+local invisi_sigmund = false
+
+local sgd_timer = -200
+
+local stuck_turns = 0
+
+local stepped_on_lair = false
+local kill_plant_mode = false
+
+-- are these still necessary?
+local did_move = false
+local move_count = 0
+
+local did_move_towards_monster = 0
+local target_memory_x
+local target_memory_y
+
+local last_wait = 0
+local wait_count = 0
+local old_turn_count = you.turns()
+
+local travel_destination = nil
+
+local have_message = false
+local read_message = true
+
+local monster_array
+local enemy_list
+
+local upgrade_phase = false
+
+local tactical_step
+local tactical_reason
+
+local is_waiting
+
+local did_first_turn = false
+
+local stairdance_count = {}
+local v5_entry_turn
+
+------------------------------
+-- some tables with hardcoded data about branches/portals/monsters:
 
 -- branch data: code, full name, where name
 local branch_data = {
@@ -518,7 +1015,6 @@ local branch_data = {
   {"N", "the Spider Nest", "Spider"},
   --{"M", "the Slime Pits", "Slime"},
   {"V", "the Vaults", "Vaults"},
-  --{"B", "the Hall of Blades", "Blade"},
   --{"C", "the Crypt", "Crypt"},
   --{"W", "the Tomb", "Tomb"},
   {"D", "the Dungeon", "D:"},
@@ -539,12 +1035,12 @@ local portal_data = {
   --{"Lab", "labyrinth entrance", "labyrinth"},
 } -- hack
 
-------------------------------------------------------
--- now some tables of monsters, with XL cutoffs
+-- monster lists: XL cutoff (>= to ignore), monster name
+--   if name is "desc" then look for the pattern given in the third field
+--   inside the monster desc instead
 
 -- berserk these
 local scary_monsters = {
-  {3, "worm"},
   {3, "Terence"},
 
   {5, "gnoll"},
@@ -552,23 +1048,25 @@ local scary_monsters = {
   {5, "ice beast"},
   {5, "iguana"},
   {5, "Natasha"},
+  {5, "Robin"},
 
   {7, "orc wizard"},
   {7, "Grinder"},
-  {7, "Prince Ribbit"},
   {7, "Dowan"},
   {7, "Duvessa"},
   {7, "Menkaure"},
   {7, "Edmund"},
-  {7, "Blork"},
+  {7, "Blork the orc"},
   {7, "Eustachio"},
   {7, "gnoll sergeant"},
 
+  {10, "Prince Ribbit"},
   {10, "Pikel"},
   {10, "Crazy Yiuf"},
   {10, "Sigmund"},
   {10, "ogre"},
-  {10, "goliath beetle"},
+  {10, "two-headed ogre"},
+  {10, "decayed bog body"},
 
   {12, "orc priest"},
   {12, "orc warrior"},
@@ -584,7 +1082,6 @@ local scary_monsters = {
   {12, "Gastronok"},
   {12, "snapping turtle"},
   {12, "Urug"},
-  {12, "boring beetle"},
   {12, "Grum"},
   {12, "electric eel"},
   {12, "Nergalle"},
@@ -592,6 +1089,7 @@ local scary_monsters = {
   {12, "manticore"},
   {12, "guardian mummy"},
   {12, "Psyche"},
+  {12, "oklob sapling"},
 
   {13, "blink frog"},
 
@@ -601,7 +1099,7 @@ local scary_monsters = {
   {15, "catoblepas"},
   {15, "orc knight"},
   {15, "boulder beetle"},
-  {15, "shark"},
+  {15, "swamp worm"},
 
   {17, "fire dragon"},
   {17, "ice dragon"},
@@ -612,21 +1110,21 @@ local scary_monsters = {
   {17, "orc warlord"},
   {17, "dire elephant"},
   {17, "very large slime creature"},
-  {17, "spiny worm"},
   {17, "skeletal warrior"},
-  {17, "greater naga"},
-  {17, "naga sharpshooter"},
   {17, "Arachne"},
   {17, "deep troll"},
   {17, "thorn hunter"},
   {17, "sun demon"},
+  {17, "white ugly thing"},
+  {17, "white very ugly thing"},
 
   {20, "greater naga"},
   {20, "naga sharpshooter"},
+  {20, "emperor scorpion"},
   {20, "Wiglaf"},
   {20, "Rupert"},
   {20, "Aizul"},
-  {20, "hydra"},
+  {20, "desc", "hydra"},
   {20, "Azrael"},
   {20, "Frances"},
   {20, "Saint Roka"},
@@ -645,17 +1143,19 @@ local scary_monsters = {
   {20, "deep troll shaman"},
   {20, "Xtahua"},
   {20, "tengu reaver"},
+  {20, "ettin"},
+  {20, "Polyphemus"},
 
   {100, "deep elf annihilator"},
   {100, "deep elf sorcerer"},
-  {100, "Enchantress"},
+  {100, "the Enchantress"},
   {100, "Vashnia"},
   {100, "Sojobo"},
-  {100, "berserk"},
+  {100, "desc", "berserk[^e]"},
   {100, "Roxanne"},
   {100, "Norris"},
   {100, "Erolcha"},
-  {100, "statue"},
+  {100, "desc", "statue"},
   {100, "Nessos"},
   {100, "Sonja"},
   {100, "Louise"},
@@ -666,15 +1166,18 @@ local scary_monsters = {
   {100, "Mara"},
   {100, "boggart"},
   {100, "lich"},
-  {100, "'s ghost"},
-  {100, "' ghost"},
-  {100, "'s illusion"},
-  {100, "' illusion"},
-  {100, "oklob"},
+  {100, "ancient lich"},
+  {100, "desc", "'s ghost"},
+  {100, "desc", "' ghost"},
+  {100, "desc", "'s illusion"},
+  {100, "desc", "' illusion"},
+  {100, "oklob plant"},
   {100, "hellion"},
   {100, "tormentor"},
-  {100, "hell sentinel"},
-  {100, "fiend"},
+  {100, "Hell Sentinel"},
+  {100, "Ice Fiend"},
+  {100, "Shadow Fiend"},
+  {100, "Brimstone Fiend"},
   {100, "curse toe"},
   {100, "curse skull"},
   {100, "Tiamat"},
@@ -682,17 +1185,35 @@ local scary_monsters = {
   {100, "enormous slime creature"},
   {100, "titan"},
   {100, "orb of fire"},
+  {100, "caustic shrike"},
+  {100, "seraph"},
+} -- hack
+
+-- these scary monsters are slow, so wait to berserk until they are adjacent
+local scary_slow_monsters = {
+  {4, "worm"},
+  {10, "goliath beetle"},
+  {12, "boring beetle"},
+} -- hack
+
+-- BiA these even at low piety
+local bia_necessary_monsters = {
+  {15, "desc", "hydra"},
+  {20, "orb spider"},
+  {100, "desc", "statue"},
 } -- hack
 
 -- BiA these
 local bia_monsters = {
   {15, "Rupert"},
-  {15, "hydra"},
   {15, "Azrael"},
   {15, "fire dragon"},
   {15, "ice dragon"},
   {15, "Snorg"},
   {15, "death yak"},
+  {15, "red devil"},
+
+  {17, "desc", "hydra"},
 
   {20, "orc warlord"},
   {20, "Aizul"},
@@ -708,14 +1229,15 @@ local bia_monsters = {
   {20, "orb spider"},
   {20, "thorn hunter"},
   {20, "sun demon"},
+  {20, "Polyphemus"},
 
   {100, "deep troll shaman"},
   {100, "spriggan air mage"},
-  {100, "Enchantress"},
+  {100, "the Enchantress"},
   {100, "Sojobo"},
   {100, "Roxanne"},
   {100, "Erolcha"},
-  {100, "statue"},
+  {100, "desc", "statue"},
   {100, "Nessos"},
   {100, "Sonja"},
   {100, "Louise"},
@@ -726,13 +1248,18 @@ local bia_monsters = {
   {100, "Mara"},
   {100, "boggart"},
   {100, "lich"},
-  {100, "'s ghost"},
-  {100, "' ghost"},
-  {100, "oklob"},
-  {100, "hell sentinel"},
-  {100, "fiend"},
+  {100, "ancient lich"},
+  {100, "desc", "'s ghost"},
+  {100, "desc", "' ghost"},
+  {100, "oklob plant"},
+  {100, "Hell Sentinel"},
+  {100, "Ice Fiend"},
+  {100, "Brimstone Fiend"},
+  {100, "Shadow Fiend"},
   {100, "Tiamat"},
   {100, "orb of fire"},
+  {100, "caustic shrike"},
+  {100, "seraph"},
 } -- hack
 
 -- Trog's Hand these
@@ -740,7 +1267,7 @@ local hand_monsters = {
   {10, "Grinder"},
 
   {17, "orc sorcerer"},
-  {17, "^wizard"},
+  {17, "wizard"},
 
   {100, "ogre mage"},
   {100, "Rupert"},
@@ -749,6 +1276,7 @@ local hand_monsters = {
   {100, "Erolcha"},
   {100, "Louise"},
   {100, "lich"},
+  {100, "ancient lich"},
   {100, "Kirke"},
   {100, "golden eye"},
   {100, "deep elf sorcerer"},
@@ -756,323 +1284,193 @@ local hand_monsters = {
   {100, "sphinx"},
   {100, "great orb of eyes"},
   {100, "vault sentinel"},
-  {100, "Enchantress"},
+  {100, "the Enchantress"},
   {100, "satyr"},
   {100, "vampire knight"},
 } -- hack
 
 -- potion of resistance these
-local resistance_monsters = {
+local fire_resistance_monsters = {
   {100, "Margery"},
   {100, "orb of fire"},
   {100, "hellephant"},
   {100, "Xtahua"},
 } -- hack
 
------------------------------
--- some global variables:
+local cold_resistance_monsters = {
+  {100, "Ice Fiend"},
+} -- hack
 
-local skill_count = you.turns() - (you.turns() % 100)
-local danger
-local where = you.where()
-local expect_new_location
-local expect_portal
+local elec_resistance_monsters = {
+  {20, "storm dragon"},
+  {20, "desc", "black draconian"},
+  {100, "electric golem"},
+} -- hack
 
-local automatic = false
+local pois_resistance_monsters = {
+  {100, "swamp drake"},
+} -- hack
 
-local ignore_list = { }
-local failed_move = { }
-local invisi_count = 0
-local next_delay = 100
+-----------------------------------------
+-- player functions
 
-local sigmund_dx = 0
-local sigmund_dy = 0
-local invisi_sigmund = false
+-- "intrinsics" that shouldn't change over the course of the game:
 
-local stuck_turns = 0
-
-local stepped_on_lair = false
-local kill_plant_mode = false
-
--- are these still necessary?
-local did_move = false
-local move_count = 0
-local old_turn_count = you.turns()
-
--- commented out because this messes up loading them from saves
--- local branches_entered
--- local portals_found
-
-local travel_destination = nil
-
-local have_message = false
-local read_message = true
-
-local monster_array
-
-local upgrade_phase = false
-
--- a couple enums from crawl
-local ATT_NEUTRAL = 1
-local ATT_HOSTILE = 0
-
----------------------------------------
--- initialization and control
-
-function initialize()
-  automatic = true
-  where = you.where()
-  expect_new_location = false
-  if branches_entered == nil then
-    branches_entered = { "D" }
+function intrinsic_rpois()
+  local sp = you.race()
+  if sp == "Gargoyle" or sp == "Naga" or sp == "Ghoul" or sp == "Mummy" then
+    return true
   end
-  if portals_found == nil then
-    portals_found = { }
+  return false
+end
+
+function intrinsic_relec()
+  local sp = you.race()
+  if sp == "Gargoyle" then
+    return true
   end
-  set_options()
-  initialize_monster_array()
+  return false
 end
 
-function stop()
-  automatic = false
-  unset_options()
-  crawl.enable_more(true)
+function intrinsic_sinv()
+  local sp = you.race()
+  if sp == "Naga" or sp == "Felid" or sp == "Formicid" or sp == "Vampire" then
+    return true
+  end
+  return false
 end
 
-function start()
-  initialize()
-  ready()
+function intrinsic_flight() -- or swimming
+  local sp = you.race()
+  if sp == "Gargoyle" or sp == "Tengu" or sp == "Black Draconian" or
+     sp == "Merfolk" or sp == "Octopode" then
+    return true
+  end
+  return false
 end
 
-function panic(msg)
-  crawl.mpr("<lightred>" .. msg .. "</lightred>")
-  stop()
+function intrinsic_fumble()
+  local sp = you.race()
+  if sp == "Merfolk" or sp == "Octopode" or sp == "Grey Draconian" or
+     sp == "Centaur" or sp == "Naga" or sp == "Troll" or sp == "Ogre" then
+    return false
+  end
+  return true
 end
 
-function startstop()
-  if automatic then
-    stop()
+function intrinsic_evil()
+  local sp = you.race()
+  if sp == "Demonspawn" or sp == "Mummy" or sp == "Ghoul" or
+     sp == "Vampire" then
+    return true
+  end
+  return false
+end
+
+-- not exactly gourmand, but close enough
+function intrinsic_gourmand()
+  return (you.race() == "Kobold" or you.race() == "Troll"
+          or you.race() == "Felid")
+end
+
+-- these next few functions determine armour/dodging skilling
+function intrinsic_dodgy()
+  local sp = you.race()
+  return (sp == "Deep Elf" or sp:find("Draconian") or sp == "Felid"
+          or sp == "Halfling" or sp == "High Elf" or sp == "Kobold"
+          or sp == "Merfolk" or sp == "Ogre" or sp == "Octopode"
+          or sp == "Spriggan" or sp == "Troll")
+end
+
+function intrinsic_heavy_dodgy()
+  return (you.race() == "Minotaur" or you.race() == "Deep Dwarf")
+end
+
+function intrinsic_heavy()
+  return (not intrinsic_dodgy() and not intrinsic_heavy_dodgy())
+end
+
+function intrinsic_like_dex()
+  return (intrinsic_dodgy() or intrinsic_heavy_dodgy())
+end
+
+function want_buckler()
+  if you.race() == "Felid" then
+    return false
+  end
+  if wskill() == "Short Blades" or wskill() == "Unarmed Combat" then
+    return true
+  end
+  if you.race() == "Formicid" or you.race() == "Halfling"
+     or you.race() == "Kobold" then
+    return true
+  end
+  return false
+end
+
+function want_shield()
+  if not want_buckler() then
+    return false
+  end
+  return (you.race() == "Troll" or you.race() == "Formicid")
+end
+
+-- used for backgrounds who don't get to choose a weapon
+function weapon_choice()
+  sp = you.race()
+  if sp == "Felid" or sp == "Troll" or sp == "Ghoul" then
+    return "Unarmed Combat"
+  elseif sp == "Halfling" or sp == "High Elf" then
+    return "Long Blades"
+  elseif sp == "Ogre" or sp == "Kobold" then
+    return "Maces & Flails"
+  elseif sp == "Merfolk" then
+    return "Polearms"
+  elseif sp == "Spriggan" then
+    return "Short Blades"
   else
-    start()
+    return "Axes"
   end
 end
 
-function hit_closest()
-  startstop()
-end
-
-function ready()
-  if not automatic then
-    initialize()
+function wskill()
+  -- cache in case you unwield a weapon somehow
+  if c_persist.cached_wskill then
+    return c_persist.cached_wskill
   end
-  if you.turns() >= skill_count then
-    skill_count = skill_count+100
-    handle_skills()
-  end
-  if you.turns() > old_turn_count then
-    if did_move then
-      move_count = move_count + 1
-    else
-      move_count = 0
-    end
-    old_turn_count = you.turns()
-    did_move = false
-  end
-  if you.where() ~= where then
-    clear_ignores()
-    where = you.where()
-    if not expect_new_location then
-      say("Shafted?")
-    end
-    if cur_branch() and not util.contains(branches_entered, cur_branch()) then
-      say("Entered " .. cur_branch() .. ".")
-      table.insert(branches_entered, cur_branch())
-    end
-    if expect_portal and in_portal() then
-      say("Entered " .. where .. ".")
-    end
-    portals_found = { }
-  end
-  expect_new_location = false
-  expect_portal = false
-  check_messages()
-  if automatic then
-    crawl.flush_input()
-    crawl.more_autoclear(true)
-    update_monster_array()
-    danger = sense_danger(8)
-    sense_sigmund()
-    if have_message then
-      plan_message()
-    elseif you.where():find("Abyss") then
-      plan_abyss_move()
-    elseif you.have_orb() then
-      plan_orbrun_move()
-    else
-      plan_move()
-    end
-  end
-end
-
-function plan_message()
-  if read_message then
-    crawl.setopt("clear_messages = false")
-    magic("_")
-    read_message = false
+  weap = items.equipped_at("Weapon")
+  if weap and weap.weap_skill ~= "Short Blades" then
+    c_persist.cached_wskill = weap.weap_skill
   else
-    crawl.setopt("clear_messages = true")
-    magic(":qwqwqw\r")
-    read_message = true
-    have_message = false
-    crawl.delay(2500)
+    c_persist.cached_wskill = weapon_choice()
+  end
+  return c_persist.cached_wskill
+end
+
+function max_rings()
+  if you.race() == "Octopode" then
+    return 8
+  else
+    return 2
   end
 end
 
----------------------------------------------
--- general status-checking functions
+-- other player functions
 
 function hp_is_low(percentage)
   local hp, mhp = you.hp()
   return (100*hp <= percentage*mhp)
 end
 
-function sense_danger(r, no_ignored)
-  local x,y
-  for x = -r,r do
-    for y = -r,r do
-      if is_candidate_for_attack(x,y,no_ignored) then
-        return true
-      end
-    end
-  end
-  return false
+function meph_immune()
+  -- should also check clarity and unbreathing
+  return (you.res_poison() >= 1)
 end
 
-function sense_sigmund()
-  local x,y
-  for x = -8,8 do
-    for y = -8,8 do
-      m = monster_array[x][y]
-      if m and string.find(m:desc(), "Sigmund") then
-        sigmund_dx = x
-        sigmund_dy = y
-        return
-      end
-    end
-  end
-end
-
-function initialize_monster_array()
-  monster_array = {}
-  local x
-  for x = -8,8 do
-    monster_array[x] = {}
-  end
-end
-
-function update_monster_array()
-  local x,y
-  for x = -8,8 do
-    for y = -8,8 do
-      monster_array[x][y] = monster.get_monster_at(x, y)
-    end
-  end
-end
-
-function check_monsters(r, mlist)
-  local x,y
-  local xl = you.xl()
-  for x = -r,r do
-    for y = -r,r do
-      m = monster_array[x][y]
-      if m and (m:attitude() == 0) and
-          not contains_string_in(m:desc(), {"skeleton", "zombie",
-          "simulacrum", "spectral"}) then
-        desc = m:desc()
-        for _, value in ipairs(mlist) do
-          if xl < value[1] and string.find(desc, value[2]) then
-            return true
-          end
-        end
-      end
-    end
-  end
-  return false
-end
-
-function count_bia(r)
-  local x, y
-  local i = 0
-  for x = -r,r do
-    for y = -r,r do
-      m = monster_array[x][y]
-      if m and m:is_safe() and string.find(m:desc(),"berserk")
-       and contains_string_in(m:desc(), {"ogre","giant","bear","troll"}) then
-        i = i+1
-      end
-    end
-  end
-  return i
-end
-
-function on_corpses()
-  local fl = you.floor_items()
-  for it in iter.invent_iterator:new(fl) do
-    if string.find(it.name(), "corpse")
-        and not string.find(it.name(), "rotting")
-        and not string.find(it.name(), "plague") then
-      return true
-    end
-  end
-  return false
-end
-
-function on_dangerous_corpse()
-  local fl = you.floor_items()
-  for it in iter.invent_iterator:new(fl) do
-    if string.find(it.name(), "corpse") then
-      return food.dangerous(it)
-    end
-  end
-  return false
-end
-
-function bad_food(it)
-  return (food.dangerous(it) or string.find(it.name(), "rotting"))
-end
-
-function inventory()
-  return iter.invent_iterator:new(items.inventory())
-end
-
-function check_messages()
-  local recent_messages = crawl.messages(20)
-  local very_recent_messages = crawl.messages(5)
-  if very_recent_messages:find("Sigmund flickers and vanishes") then
-    invisi_sigmund = true
-  end
-  if very_recent_messages:find("Your surroundings suddenly seem different") then
-    invisi_sigmund = false
-  end
-  str1 = "Your pager goes off"
-  str2 = "qwqwqw"
-  if recent_messages:find(str1) then
-    a = recent_messages:reverse():find(str1:reverse())
-    b = recent_messages:reverse():find(str2:reverse())
-    if (not b) or a < b then
-      have_message = true
-    end
-  end
-  if in_portal() then
-    return false
-  end
-  if recent_messages:find("Found") then
-    for _, value in ipairs(portal_data) do
-      if recent_messages:find(value[2]) then
-        record_portal_found(value[1])
-      end
-    end
-  end
+function miasma_immune()
+  -- this isn't all the cases, I know
+  return (you.race() == "Gargoyle" or you.race() == "Vine Stalker"
+          or you.race() == "Ghoul" or you.race() == "Mummy")
 end
 
 function in_portal()
@@ -1084,17 +1482,12 @@ function in_portal()
   return false
 end
 
-function record_portal_found(por)
-  if not util.contains(portals_found, por) then
-    say("Found " .. por .. ".")
-    table.insert(portals_found, por)
+function get_feat_name(where_name)
+  for _, value in ipairs(portal_data) do
+    if where_name == value[1] then
+      return value[3]
+    end
   end
-end
-
-function can_swap(equip_slot)
-  local it = items.equipped_at(equip_slot)
-  if it and it.cursed then return false end
-  return true
 end
 
 function cur_branch()
@@ -1134,42 +1527,369 @@ function in_branch(br)
   return false
 end
 
-function find_item(cls,name)
-  if cls == "wand" then return find_wand(name) end
-  for it in inventory() do
-    if it.class(true) == cls and it.name():find(name) then
-      return items.index_to_letter(it.slot)
+function is_traversable(x,y)
+  local feat = view.feature_at(x,y)
+  return feat ~= "unseen" and travel.feature_traversable(feat)
+end
+
+function is_cornerish(x,y)
+  if is_traversable(x+1,y+1) or is_traversable(x+1,y-1)
+     or is_traversable(x-1,y+1) or is_traversable(x-1,y-1) then
+    return false
+  end
+  return ((is_traversable(x+1,y) or is_traversable(x-1,y))
+          and (is_traversable(x,y+1) or is_traversable(x,y-1)))
+end
+
+function is_solid(x,y)
+  local feat = view.feature_at(x,y)
+  return feat == "unseen" or travel.feature_solid(feat)
+end
+
+function dangerous_to_rest()
+  if danger then
+    return true
+  end
+  for x = -1,1 do
+    for y = -1,1 do
+      if view.feature_at(x,y) == "slimy_wall" then
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function transformed()
+  return (you.transform() ~= "")
+end
+
+function can_read()
+  if you.berserk() or you.confused() or you.silenced()
+     or you.status("engulfed (cannot breathe)") then
+    return false
+  end
+  return true
+end
+
+function can_drink()
+  if you.berserk() or you.race() == "Mummy" or you.transform() == "bat"
+     or you.transform() == "lich" then
+    return false
+  end
+  return true
+end
+
+function can_zap()
+  if you.berserk() or you.confused() or transformed() then
+    return false
+  end
+  local x = you.mutation("MP-powered wands")
+  if x > 0 then
+    local a,b = you.mp()
+    if a < 3*x then
+      return false
+    end
+  end
+  return true
+end
+
+function can_berserk()
+  return (not (you.berserk() or you.confused() or you.silenced() or
+          you.exhausted() or you.mesmerised() or
+          too_hungry_to_berserk() or
+          you.piety_rank() < 1 or
+          you.god() ~= "Trog" or
+          you.transform() == "tree" or
+          you.transform() == "wisp" or
+          you.transform() == "lich" or
+          you.status("afraid") or
+          you.race() == "Mummy" or you.race() == "Ghoul"
+          or you.race() == "Formicid"))
+end
+
+function can_hand()
+  return (not (you.berserk() or you.confused() or you.silenced() or
+          you.regenerating() or
+          you.hunger_name() == "starving" or you.piety_rank() < 2 or
+          you.god() ~= "Trog"))
+end
+
+function can_bia()
+  return (not (you.berserk() or you.confused() or you.silenced() or
+          you.hunger_name() == "starving" or you.piety_rank() < 4 or
+          you.god() ~= "Trog"))
+end
+
+function can_sgd()
+  local hp,mhp = you.hp()
+  return (not (you.berserk() or you.confused() or you.silenced() or
+          you.hunger_name() == "starving" or you.piety_rank() < 5 or
+          hp <= 10 or
+          you.god() ~= "Makhleb"))
+end
+
+function can_destruction()
+  local hp,mhp = you.hp()
+  return (not (you.berserk() or you.confused() or you.silenced() or
+          you.hunger_name() == "starving" or you.piety_rank() < 4 or
+          hp <= 6 or
+          you.god() ~= "Makhleb"))
+end
+
+function can_teleport()
+  return (not you.berserk() and not you.teleporting() and not you.anchored()
+          and not you.confused()
+          and you.transform() ~= "tree"
+          and you.race() ~= "Formicid")
+end
+
+function too_hungry_to_berserk()
+  if you.race() == "Vampire" then
+    return (you.hunger_name() ~= "almost alive"
+            and you.hunger_name() ~= "very full"
+            and you.hunger_name() ~= "full")
+  end
+  return (you.hunger_name() == "starving" or
+          you.hunger_name() == "near starving" or
+          you.hunger_name() == "very hungry")
+end
+
+function player_speed_num()
+  local num = 3
+  if you.god() == "Cheibriados" then
+    num = 1
+  elseif you.race() == "Spriggan" or you.race() == "Centaur" then
+    num = 4
+  elseif you.race() == "Naga" then
+    num = 2
+  end
+  if you.hasted() or you.berserk() then
+    num = num + 1
+  end
+  if you.slowed() then
+    num = num - 1
+  end
+  return num
+end
+
+-----------------------------------------
+-- monster functions
+
+function mon_speed_num(m)
+  local sdesc = m:speed_description()
+  local num
+  if sdesc == "extremely fast" then
+    num = 5
+  elseif sdesc == "very fast" then
+    num = 4
+  elseif sdesc == "fast" or sdesc == "normal" then
+    num = 3
+  elseif sdesc == "slow" then
+    num = 2
+  elseif sdesc == "very slow" then
+    num = 1
+  end
+  if m:status("fast") then
+    num = num + 1
+  end
+  if m:status("slow") then
+    num = num - 1
+  end
+  return num
+end
+
+function is_fast(m)
+  return (mon_speed_num(m) > player_speed_num())
+end
+
+function is_ranged(m)
+  if m:has_known_ranged_attack() then
+    return true
+  end
+  local name = m:name()
+  if name == "Maurice" or name == "crimson imp" or name == "boulder beetle" then
+    return true
+  end
+  return false
+end
+
+function sense_immediate_danger()
+  local e
+  for _,e in ipairs(enemy_list) do
+    if supdist(e.x,e.y) <= 2 then
+      return true
+    elseif supdist(e.x,e.y) <= 3 and e.m:reach_range() >= 2 then
+      return true
+    elseif is_ranged(e.m) then
+      return true
+    end
+  end
+  return false
+end
+
+function sense_danger(r, no_ignored)
+  local e
+  for _,e in ipairs(enemy_list) do
+    if supdist(e.x,e.y) <= r then
+      if (not no_ignored) or is_candidate_for_attack(e.x,e.y,no_ignored) then
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function sense_sigmund()
+  local e
+  for _,e in ipairs(enemy_list) do
+    if e.m:name() == "Sigmund" then
+      sigmund_dx = e.x
+      sigmund_dy = e.y
+      return
     end
   end
 end
 
-function find_wand(name)
-  for it in inventory() do
-    if it.class(true) == "wand" and it.name():find(name) and
-       not it.name():find("empty") and (it.plus == nil or it.plus > 0) then
-      return items.index_to_letter(it.slot)
+function initialize_monster_array()
+  monster_array = {}
+  local x
+  for x = -LOS,LOS do
+    monster_array[x] = {}
+  end
+end
+
+function update_monster_array()
+  local x,y
+  enemy_list = {}
+  --c_persist.mlist = {}
+  for x = -LOS,LOS do
+    for y = -LOS,LOS do
+      monster_array[x][y] = monster.get_monster_at(x, y)
+      if is_candidate_for_attack(x, y) then
+        entry = {}
+        entry.x = x
+        entry.y = y
+        entry.m = monster_array[x][y]
+        table.insert(enemy_list, entry)
+        --table.insert(c_persist.mlist, entry.m:name())
+      end
     end
   end
 end
 
-function have_reaching()
-  local wp = items.equipped_at("weapon")
-  return wp and wp.reach_range == 8 and not wp.is_melded
+function check_monsters(r, mlist)
+  local e
+  local xl = you.xl()
+  for _,e in ipairs(enemy_list) do
+    if supdist(e.x,e.y) <= r then
+      if not contains_string_in(e.m:name(), {"skeleton", "zombie",
+         "simulacrum", "spectral"}) then
+        local name = e.m:name()
+        local desc = e.m:desc()
+        for _, value in ipairs(mlist) do
+          if xl < value[1] and (value[2] == name or value[2] == "desc"
+                                and desc:find(value[3])) then
+            return true
+          end
+        end
+      end
+    end
+  end
+  return false
 end
 
+function count_bia(r)
+  if you.god() ~= "Trog" then
+    return 0
+  end
+  local x, y
+  local i = 0
+  for x = -r,r do
+    for y = -r,r do
+      m = monster_array[x][y]
+      if m and m:is_safe() and m:is("berserk")
+       and contains_string_in(m:name(), {"ogre","giant","bear","troll"}) then
+        i = i+1
+      end
+    end
+  end
+  return i
+end
+
+function count_sgd(r)
+  if you.god() ~= "Makhleb" then
+    return 0
+  end
+  local x, y
+  local i = 0
+  for x = -r,r do
+    for y = -r,r do
+      m = monster_array[x][y]
+      if m and m:is_safe()
+       and contains_string_in(m:name(), {"Executioner","green death","blizzard demon","balrug","cacodemon"}) then
+        i = i+1
+      end
+    end
+  end
+  return i
+end
+
+function count_hostile_sgd(r)
+  if you.god() ~= "Makhleb" then
+    return 0
+  end
+  local x, y
+  local i = 0
+  for x = -r,r do
+    for y = -r,r do
+      m = monster_array[x][y]
+      if m and not m:is_safe() and m:is("summoned")
+       and contains_string_in(m:name(), {"Executioner","green death","blizzard demon","balrug","cacodemon"}) then
+        i = i+1
+      end
+    end
+  end
+  return i
+end
+
+function count_big_slimes(r)
+  local x, y
+  local i = 0
+  for x = -r,r do
+    for y = -r,r do
+      m = monster_array[x][y]
+      if m and not m:is_safe()
+       and contains_string_in(m:name(), {"enormous slime creature","titanic slime creature"}) then
+        i = i+1
+      end
+    end
+  end
+  return i
+end
+
+function count_pan_lords(r)
+  local e
+  local i = 0
+  for _,e in ipairs(enemy_list) do
+    if e.m:type() == ENUM_MONS_PANDEMONIUM_LORD then
+      i = i+1
+    end
+  end
+  return i
+end
+
+-- should only be called for adjacent squares
 function monster_in_way(dx,dy)
   m = monster_array[dx][dy]
   return (m and (m:attitude() <= ATT_NEUTRAL and not kill_plant_mode or
-                 m:is_constricted() or m:is_caught()))
-end
-
-function try_move(dx, dy)
-  if view.is_safe_square(dx, dy) and not view.withheld(dx, dy) and
-     not monster_in_way(dx,dy) then
-    return delta_to_vi(dx, dy)
-  else
-    return nil
-  end
+                 m:attitude() > ATT_NEUTRAL and
+                 (m:is_constricted() or m:is_caught()
+                  or m:status("petrified")
+                  or m:status("paralysed")
+                  or view.feature_at(0,0) == "deep_water"
+                  or view.feature_at(0,0) == "lava"
+                  or view.feature_at(0,0) == "trap_zot")))
 end
 
 function tabbable_square(x,y)
@@ -1182,6 +1902,15 @@ function tabbable_square(x,y)
   return false
 end
 
+function try_move(dx, dy)
+  if view.is_safe_square(dx, dy) and not view.withheld(dx, dy) and
+     not monster_in_way(dx,dy) then
+    return delta_to_vi(dx, dy)
+  else
+    return nil
+  end
+end
+
 function will_tab(cx, cy, ex, ey)
   local dx = ex - cx
   local dy = ey - cy
@@ -1190,7 +1919,7 @@ function will_tab(cx, cy, ex, ey)
   end
   local function attempt_move(fx, fy)
     if fx == 0 and fy == 0 then return end
-    if abs(cx+fx) > 8 or abs(cy+fy) > 8 then return end
+    if supdist(cx+fx,cy+fy) > LOS then return end
     if tabbable_square(cx+fx, cy+fy) then
       return will_tab(cx+fx, cy+fy, ex, ey)
     end
@@ -1234,6 +1963,7 @@ function get_monster_info(dx, dy)
   else
     if -info.distance > 2 then info.attack_type = 0
     elseif -info.distance < 2 then info.attack_type = 2
+    elseif you.caught() or you.confused() then info.attack_type = 0
     else info.attack_type = view.can_reach(dx, dy) and 1 or 0 end
   end
   info.can_attack = (info.attack_type > 0) and 1 or 0
@@ -1259,6 +1989,9 @@ function compare_monster_info(m1, m2)
 end
 
 function is_candidate_for_attack(x, y, no_untabbable)
+  if supdist(x,y) > LOS then
+    return false
+  end
   m = monster_array[x][y]
   if not m or m:attitude() > ATT_NEUTRAL then
     return false
@@ -1283,41 +2016,342 @@ function is_candidate_for_attack(x, y, no_untabbable)
   return true
 end
 
+function count_ranged(cx, cy, r)
+  local e
+  local i = 0
+  for _,e in ipairs(enemy_list) do
+    local dist = supdist(cx-e.x,cy-e.y)
+    if dist > 1 and dist <= r then
+      if dist == 2 and (e.m:reach_range() >= 2 or is_fast(e.m))
+         or is_ranged(e.m) then
+        i = i+1
+      end
+    end
+  end
+  return i
+end
+
+function count_nearby(cx, cy, r)
+  local x, y
+  local i = 0
+  for x = -r,r do
+    for y = -r,r do
+      if supdist(x,y) > 0 and is_candidate_for_attack(cx+x, cy+y) then
+        i = i+1
+      end
+    end
+  end
+  return i
+end
+
+function count_slow_nearby(cx, cy, r)
+  local x, y
+  local i = 0
+  for x = -r,r do
+    for y = -r,r do
+      if supdist(x,y) > 0 and is_candidate_for_attack(cx+x, cy+y)
+         then
+        m = monster_array[cx+x][cy+y]
+        if mon_speed_num(m) < player_speed_num()
+           and not is_ranged(m) and m:reach_range() < 2 then
+          i = i+1
+        end
+      end
+    end
+  end
+  return i
+end
+
+function distance_to_enemy(cx, cy)
+  local dist = 10
+  local e
+  for _,e in ipairs(enemy_list) do
+    if supdist(cx-e.x,cy-e.y) < dist then
+      dist = supdist(cx-e.x,cy-e.y)
+    end
+  end
+  return dist
+end
+
+-----------------------------------------
+-- item functions
+
+function inventory()
+  return iter.invent_iterator:new(items.inventory())
+end
+
+function at_feet()
+  return iter.invent_iterator:new(you.floor_items())
+end
+
+function free_inventory_slots()
+  local slots = 52
+  for _ in inventory() do
+    slots = slots - 1
+  end
+  return slots
+end
+
+function slot(x)
+  if type(x) == "userdata" then
+    return x.slot
+  elseif type(x) == "string" then
+    return items.letter_to_index(x)
+  else
+    return x
+  end
+end
+
+function letter(x)
+  if type(x) == "userdata" then
+    return items.index_to_letter(x.slot)
+  elseif type(x) == "number" then
+    return items.index_to_letter(x)
+  else
+    return x
+  end
+end
+
+function item(x)
+  if type(x) == "number" then
+    return items.inslot(x)
+  elseif type(x) == "string" then
+    return items.inslot(items.letter_to_index(x))
+  else
+    return x
+  end
+end
+
+function ring_list()
+  rings = {}
+  if you.race() ~= "Octopode" then
+    if items.equipped_at("Left Ring") then
+      table.insert(rings, items.equipped_at("Left Ring"))
+    end
+    if items.equipped_at("Right Ring") then
+      table.insert(rings, items.equipped_at("Right Ring"))
+    end
+    return rings
+  end
+  for it in inventory() do
+    if it.equipped and it.class(true) == "jewellery" and it.name():find("ring")
+       then
+      table.insert(rings, it)
+    end
+  end
+  return rings
+end
+
+function empty_ring_slots()
+  return max_rings() - table.getn(ring_list())
+end
+
+function find_item(cls,name)
+  if cls == "wand" then return find_wand(name) end
+  for it in inventory() do
+    if it.class(true) == cls and it.name():find(name) then
+      return items.index_to_letter(it.slot)
+    end
+  end
+end
+
+function find_wand(name)
+  for it in inventory() do
+    if it.class(true) == "wand" and it.name():find(name) and
+       not it.name():find("empty") and (it.plus == nil or it.plus > 0) then
+      return items.index_to_letter(it.slot)
+    end
+  end
+end
+
+function count_item(cls,name)
+  f = find_item(cls, name)
+  if f then
+    return item(f).quantity
+  end
+  return 0
+end
+
+function have_reaching()
+  local wp = items.equipped_at("weapon")
+  return wp and wp.reach_range == 2 and not wp.is_melded
+end
+
+function target_shield_skill()
+  local shield = items.equipped_at("Shield")
+  if not shield then
+    return 0
+  end
+  local size = 5
+  if you.race() == "Kobold" or you.race() == "Halfling" then
+    size = 7
+  elseif you.race() == "Spriggan" then
+    size = 9
+  elseif you.race() == "Troll" or you.race() == "Ogre"
+         or you.race() == "Formicid" or you.race() == "Naga"
+         or you.race() == "Centaur" then
+    size = 3
+  end
+  return (shield.encumbrance * size)
+end
+
+function min_delay_skill()
+  weap = items.equipped_at("Weapon")
+  if not weap then
+    return 26
+  end
+  if weap.weap_skill == "Short Blades" and weap.delay == 12 then
+    return 14
+  end
+  local mindelay = math.floor(weap.delay / 2)
+  if mindelay > 7 then
+    mindelay = 7
+  end
+  return 2 * (weap.delay - mindelay)
+end
+
+function cleaving()
+  weap = items.equipped_at("Weapon")
+  if weap and weap.weap_skill == "Axes" then
+    return true
+  end
+  return false
+end
+
+function armour_ac()
+  arm = items.equipped_at("Armour")
+  if arm then
+    return arm.ac
+  else
+    return 0
+  end
+end
+
+function on_corpses()
+  for it in at_feet() do
+    if string.find(it.name(), "corpse") then
+      return true
+    end
+  end
+  return false
+end
+
+function on_bottleable_corpses()
+  for it in at_feet() do
+    if string.find(it.name(), "corpse")
+        and food.bottleable(it) then
+      return true
+    end
+  end
+  return false
+end
+
+function on_dangerous_corpse()
+  for it in at_feet() do
+    if string.find(it.name(), "corpse") then
+      return food.dangerous(it)
+    end
+  end
+  return false
+end
+
+function on_edible_corpse()
+  for it in at_feet() do
+    if string.find(it.name(), "corpse") then
+      return food.edible(it)
+    end
+  end
+  return false
+end
+
+function on_valuable_corpse()
+  if not intrinsic_dodgy() then
+    return false
+  end
+  for it in at_feet() do
+    if it.name() == "mottled dragon corpse" or
+       it.name() == "steam dragon corpse" then
+      return true
+    end
+  end
+  return false
+end
+
+function bad_food(it)
+  return food.dangerous(it)
+end
+
+function can_swap(equip_slot)
+  local it = items.equipped_at(equip_slot)
+  if it and it.cursed then
+    return false
+  end
+  if it and it.ego() == "flying" and
+     (view.feature_at(0,0) == "deep_water" or
+      view.feature_at(0,0) == "lava") then
+    return false
+  end
+  return true
+end
+
+-- plural form, e.g. "Scrolls"
+-- or invoke with item_class="name_callback" and provide callback for name
+function see_item(item_class, r, name_callback)
+  for x = -r,r do
+    for y = -r,r do
+      -- crawl.mpr("(" .. x .. ", " .. y .. "): " .. view.feature_at(x,y) .."\r")
+      local is = items.get_items_at(x, y)
+      if (is ~= nil) and (#is > 0) and (you.see_cell(x,y)) then
+        for ind,i in pairs(is) do
+          local iname = i.name()
+          if (i:class(true) == item_class) or ((item_class == "name_callback") and name_callback(iname)) then
+            return true
+          end
+        end
+      end
+    end
+  end
+  return false
+end
+
+-- Matches all unindentified books
+function is_spellbook(book_name)
+  return (book_name ~= nil) and (book_name:find("book") ~= nil)
+end
+
+function see_spellbooks_to_burn()
+  return see_item("name_callback", LOS, is_spellbook)
+         and not see_item("name_callback", 0, is_spellbook)
+end
+-----------------------------------------
+-- "plans" - functions that take actions, and logic to determine which actions
+--           to take.
+-- Every function that might take an action should return as follows:
+--   true if tried to do something
+--   false if didn't do anything
+--   nil if should be rerun (currently only used by cascades, be careful
+--                           of loops... this is poorly tested)
+
 function get_target()
-  local x, y, bestx, besty, best_info, new_info
+  local e, bestx, besty, best_info, new_info
   bestx = 0
   besty = 0
   best_info = nil
-  for x = -8, 8 do
-    for y = -8, 8 do
-      if not util.contains(failed_move, 20*x+y) then
-        if is_candidate_for_attack(x, y, true) then
-          new_info = get_monster_info(x, y)
-          if (not best_info) or
-             compare_monster_info(new_info, best_info) then
-            bestx = x
-            besty = y
-            best_info = new_info
-          end
+  for _,e in ipairs(enemy_list) do
+    if not util.contains(failed_move, 20*e.x+e.y) then
+      if is_candidate_for_attack(e.x, e.y, true) then
+        new_info = get_monster_info(e.x, e.y)
+        if (not best_info) or
+           compare_monster_info(new_info, best_info) then
+          bestx = e.x
+          besty = e.y
+          best_info = new_info
         end
       end
     end
   end
   return bestx, besty, best_info
 end
-
-function is_traversable(x,y)
-  local feat = view.feature_at(x,y)
-  return feat ~= "unseen" and travel.feature_traversable(feat)
-end
-
----------------------------------------------
--- plans (+ auxiliary functions)
--- plans should return: true if they tried to do something,
---                      false if they didn't do anything,
---                      nil if they should be rerun (only used currently by
---                       cascades, be careful of loops... this is
---                       poorly tested)
 
 function should_rest()
   if you.confused() or you.berserk() or transformed() then
@@ -1326,38 +2360,56 @@ function should_rest()
   if dangerous_to_rest() then
     return false
   end
-  return (hp_is_low(90) or you.slowed() or you.exhausted() or you.teleporting()
-                        or you.silencing())
-end
-
-function dangerous_to_rest()
-  if danger then
-    return true
-  end
-  for x = -1,1 do
-    for y = -1,1 do
-      if view.feature_at(x,y):find("slimy_wall") then
-        return true
-      end
-    end
-  end
-  return false
+  return (hp_is_low(90) and
+          (you.race() ~= "Deep Dwarf" and you.hunger_name() ~= "bloodless"
+           or you.regenerating())
+          or you.slowed() or you.exhausted() or you.teleporting()
+          or you.status("manticore barbs")
+          or you.silencing() or you.corrosion() > 0
+          or you.god() == "Makhleb" and you.turns() <= sgd_timer + 100)
 end
 
 function want_permafood()
-  return ((you.hunger_name() == "near starving" or
-           you.hunger_name() == "very hungry" and you.xl() >= 18) or
-           you.hunger_name() == "starving")
+  if you.race() == "Mummy" or you.transform() == "lich" then
+    return false
+  end
+  if you.race() == "Vampire" then
+    return (you.hunger_name() ~= "almost alive"
+            and you.hunger_name() ~= "very full"
+            and you.hunger_name() ~= "full")
+  end
+  if you.race() == "Spriggan" then
+    return (you.hunger_name() ~= "completely stuffed"
+           and you.hunger_name() ~= "very full")
+  end
+  return (you.hunger_name() == "near starving"
+          or you.hunger_name() == "very hungry"
+             and (where == "Snake:4" or where == "Spider:4"
+                  or where == "Swamp:4" or where == "Shoals:4"
+                  or you.xl() >= 18 or intrinsic_gourmand())
+          or you.hunger_name() == "starving")
 end
 
 function want_chunk()
+  if you.race() == "Spriggan" or you.race() == "Mummy"
+     or you.race() == "Vampire" or you.transform() == "lich" then
+    return false
+  end
+  if you.race() == "Ghoul" and you.rot() > 0 then
+    return true
+  end
+  if intrinsic_gourmand() and (you.hunger_name() == "not hungry"
+                               or you.hunger_name() == "full"
+                               or you.hunger_name() == "very full") then
+    return true
+  end
   return you.hunger_name() == "hungry" or
          you.hunger_name() == "very hungry" or want_permafood()
 end
 
 function rest()
  magic("s")
- next_delay = 10
+ next_delay = 5
 end
 
 function attack()
@@ -1383,52 +2435,96 @@ end
 
 function berserk()
   use_ability("Berserk")
-  --magic("aa")
 end
 
 function hand()
   use_ability("Trog's Hand")
-  --magic("ab")
 end
 
 function bia()
   use_ability("Brothers in Arms")
-  --magic("ac")
+end
+
+function sgd()
+  use_ability("Greater Servant of Makhleb")
+end
+
+-- Will fail if the book is in a non-fire cloud already.
+function burn_spellbooks()
+  use_ability("Burn Spellbooks")
 end
 
 function plan_bia()
   if can_bia() and want_to_bia() then
-    say("INVOKING BIA.")
     bia()
     return true
   end
   return false
 end
 
-function transformed()
-  return (you.transform() ~= "")
+function plan_sgd()
+  if can_sgd() and want_to_sgd() then
+    sgd()
+    return true
+  end
+  return false
 end
 
-function plan_resistance()
-  if not you.berserk() and not you.extra_resistant() and
-     not you.teleporting() and want_resistance() and not transformed() then
-    local c = find_item("potion","resistance")
-    if c then
-      say("DRINKING RESISTANCE.")
-      quaff_helper(c)
-      return true
+function plan_hydra_destruction()
+  if not can_destruction() then
+    return false
+  end
+  if count_sgd(4) > 0 then
+    return false
+  end
+  local x,y
+  for x = -5,5 do
+    for y = -5,5 do
+      m = monster_array[x][y]
+      if m and string.find(m:desc(), "hydra") then
+        say("INVOKING MAJOR DESTRUCTION")
+        for letter, abil in pairs(you.ability_table()) do
+          if abil == "Major Destruction" then
+            magic("a" .. letter .. "r" .. vector_move(x, y) .. "\r")
+            return true
+          end
+        end
+      end
     end
   end
   return false
 end
 
-function quaff_helper(c)
-  magic("q" .. c)
+function plan_resistance()
+  if not you.extra_resistant() and not you.teleporting()
+     and want_resistance() then
+    return drink_by_name("resistance")
+  end
+  return false
 end
 
 function plan_hand()
   if can_hand() and want_to_hand() and not you.teleporting() then
-    say("INVOKING TROG'S HAND.")
+    hand()
+    return true
+  end
+  return false
+end
+
+function dd_prefer_hand()
+  if you.god() ~= "Trog" then
+    return false
+  end
+  return (you.piety_rank() == 6 or you.base_mp() < 3)
+end
+
+function plan_dd_hand_for_healing()
+  if you.race() ~= "Deep Dwarf" then
+    return false
+  end
+  local hp,mhp = you.hp()
+  if mhp - hp >= 30 and can_hand() and
+     dd_prefer_hand() then
     hand()
     return true
   end
@@ -1438,7 +2534,6 @@ end
 function plan_abyss_hand()
   local hp,mhp = you.hp()
   if mhp - hp >= 30 and can_hand() then
-    say("INVOKING TROG'S HAND.")
     hand()
     return true
   end
@@ -1448,105 +2543,462 @@ end
 function plan_orbrun_hand()
   local hp,mhp = you.hp()
   if mhp - hp >= 30 and can_hand() then
-    say("INVOKING TROG'S HAND.")
     hand()
     return true
   end
   return false
 end
 
-function plan_heal_wounds()
-  if not you.berserk() and want_to_heal_wounds() then
-    return heal_wounds()
-  end
-  return false
-end
-
-function heal_wounds()
-  if transformed() or you.berserk() then
+function plan_dd_recharge_teleport()
+  if you.race() ~= "Deep Dwarf" then
     return false
   end
-  local c = find_item("potion","heal wounds")
-  if c then
-    say("DRINKING HEAL WOUNDS.")
-    quaff_helper(c)
-    return true
-  end
-  c = find_item("wand","heal wounds")
-  if c and not you.confused() then
-    say("ZAPPING HEAL WOUNDS.")
-    magic("V" .. c .. ".")
-    return true
-  end
-  return false
-end
-
-function plan_water_step()
-  if you.confused() or you.berserk() or you.flying() then
+  if you.berserk() or you.confused() or you.hunger_name() == "starving" then
     return false
   end
-  if not sense_danger(2) then
+  if count_item("scroll","teleportation") > 0 then
     return false
   end
-  if not view.feature_at(0,0):find("shallow_water") then
+  if immediate_danger and not want_to_teleport() then
     return false
   end
-  local x,y
-  for x = -1,1 do
-    for y = -1,1 do
-      if view.is_safe_square(x,y) and not view.withheld(x, y) and
-         (not view.feature_at(x,y):find("shallow_water")) and
-         not monster_in_way(x,y) then
-        for x2 = -1,1 do
-          for y2 = -1,1 do
-            m2 = monster_array[x+x2][y+y2]
-            if m2 and (m2:attitude() == 0) then
-              say("Stepping out of shallow water.")
-              magic(delta_to_vi(x,y))
-              return true
-            end
-          end
-        end
+  local wand_letter
+  for it in inventory() do
+    if it.class(true) == "wand" and it.name():find("teleportation") then
+      if (((not it.fully_identified) and not it.name():find("empty")) or
+          it.plus and it.plus > 0) then
+        return false
+      else
+        wand_letter = letter(it)
+      end
+    end
+  end
+  if not wand_letter then
+    return false
+  end
+  for it in inventory() do
+    if it.class(true) == "scroll" and can_read() and
+       it.name():find("recharging") then
+      oldname = item(wand_letter).name()
+      if read2(it, wand_letter) then
+        say("RECHARGING " .. oldname .. ".")
+        return true
+      end
+    end
+  end
+  local mp,mmp = you.mp()
+  if mp > 0 and you.base_mp() > 0 then
+    for letter, abil in pairs(you.ability_table()) do
+      if abil == "Device Recharging" then
+        say("MP-RECHARGING " .. item(wand_letter).name() .. ".")
+        -- swap slots in case ability fails
+        items.swap_slots(slot(wand_letter), slot('Y'))
+        magic("a" .. letter .. "Y")
+        return true
       end
     end
   end
   return false
 end
 
+function plan_dd_orbrun_recharge_hasting()
+  if you.race() ~= "Deep Dwarf" then
+    return false
+  end
+  if danger then
+    return false
+  end
+  if you.berserk() or you.confused() or you.hunger_name() == "starving" then
+    return false
+  end
+  if count_item("potion","haste") > 0 then
+    return false
+  end
+  local wand_letter
+  for it in inventory() do
+    if it.class(true) == "wand" and it.name():find("hasting") then
+      if (((not it.fully_identified) and not it.name():find("empty")) or
+          it.plus and it.plus > 0) then
+        return false
+      else
+        wand_letter = letter(it)
+      end
+    end
+  end
+  if not wand_letter then
+    return false
+  end
+  for it in inventory() do
+    if it.class(true) == "scroll" and can_read() and
+       it.name():find("recharging") then
+      oldname = item(wand_letter).name()
+      if read2(it, wand_letter) then
+        say("RECHARGING " .. oldname .. ".")
+        return true
+      end
+    end
+  end
+  local mp,mmp = you.mp()
+  if mp > 0 and you.base_mp() > 0 then
+    for letter, abil in pairs(you.ability_table()) do
+      if abil == "Device Recharging" then
+        say("MP-RECHARGING " .. item(wand_letter).name() .. ".")
+        -- swap slots in case ability fails
+        items.swap_slots(slot(wand_letter), slot('Y'))
+        magic("a" .. letter .. "Y")
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function plan_dd_recharge_heal_wounds()
+  if you.race() ~= "Deep Dwarf" then
+    return false
+  end
+  if you.berserk() or you.confused() or you.hunger_name() == "starving" then
+    return false
+  end
+  local charge_bound = immediate_danger and 1 or 3
+  local wand_letter
+  local wand_count = 0
+  for it in inventory() do
+    if it.class(true) == "wand" and it.name():find("heal wounds") then
+      if (((not it.fully_identified) and not it.name():find("empty")) or
+          it.plus and it.plus > charge_bound) then
+        wand_count = wand_count + 1
+      else
+        wand_letter = letter(it)
+      end
+    end
+  end
+  if immediate_danger and wand_count > 0 or not wand_letter then
+    return false
+  end
+  for it in inventory() do
+    if it.class(true) == "scroll" and can_read() and
+       it.name():find("recharging") then
+      oldname = item(wand_letter).name()
+      if read2(it, wand_letter) then
+        say("RECHARGING " .. oldname .. ".")
+        return true
+      end
+    end
+  end
+  local mp,mmp = you.mp()
+  if mp > 0 and you.base_mp() > 0 then
+    for letter, abil in pairs(you.ability_table()) do
+      if abil == "Device Recharging" then
+        say("MP-RECHARGING " .. item(wand_letter).name() .. ".")
+        -- swap slots in case ability fails
+        items.swap_slots(slot(wand_letter), slot('Y'))
+        magic("a" .. letter .. "Y")
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function plan_cure_bad_poison()
+  if not (danger or you.race() == "Deep Dwarf") then
+    return false
+  end
+  local hp, mhp = you.hp()
+  if you.poison_survival() <= hp - 60 then
+    if drink_by_name("curing") then
+      say("(to cure bad poison)")
+      return true
+    end
+  end
+  return false
+end
+
+function plan_heal_wounds()
+  if want_to_heal_wounds() then
+    return heal_wounds()
+  end
+  return false
+end
+
+function plan_orbrun_heal_wounds()
+  if want_to_orbrun_heal_wounds() then
+    return heal_wounds()
+  end
+  return false
+end
+
+function plan_orbrun_haste()
+  if want_to_orbrun_haste() then
+    return haste()
+  end
+  return false
+end
+
+function plan_orbrun_might()
+  if want_to_orbrun_might() then
+    return might()
+  end
+  return false
+end
+
+function heal_wounds()
+  if you.mutation("no device heal") >= 3 then
+    return false
+  end
+  if you.race() == "Deep Dwarf" then
+    if drink_by_name("heal wounds") then
+      dd_hw_meter = dd_hw_meter + 100
+      return true
+    end
+  end
+  if selfzap_by_name("heal wounds") then
+    dd_hw_meter = dd_hw_meter + 100
+    return true
+  end
+  if you.race() ~= "Deep Dwarf" then
+    if drink_by_name("heal wounds") then
+      dd_hw_meter = dd_hw_meter + 100
+      return true
+    end
+  end
+  return false
+end
+
+function haste()
+  if you.hasted() or you.race() == "Formicid" then
+    return false
+  end
+  if selfzap_by_name("hasting") then
+    return true
+  end
+  return drink_by_name("haste")
+end
+
+function might()
+  if you.mighty() then
+    return false
+  end
+  return drink_by_name("might")
+end
+
+function cloud_is_dangerous(cloud)
+  if cloud == "flame" or cloud == "fire" then
+    return (you.res_fire() < 1)
+  elseif cloud == "noxious fumes" then
+    return (not meph_immune())
+  elseif cloud == "freezing vapour" then
+    return (you.res_cold() < 1)
+  elseif cloud == "poison gas" then
+    return (you.res_poison() < 1)
+  elseif cloud == "calcifying dust" then
+    return (you.race() ~= "Gargoyle")
+  elseif cloud == "foul pestilence" then
+    return (not miasma_immune())
+  elseif cloud == "seething chaos" or cloud == "mutagenic fog" then
+    return true
+  end
+  return false
+end
+
+function assess_square(x,y)
+  a = {}
+  -- distance tu current square
+  a.supdist = supdist(x,y)
+  -- can we move there?
+  a.can_move = (a.supdist == 0) or not view.withheld(x,y)
+                                   and not monster_in_way(x,y)
+                                   and is_traversable(x,y)
+                                   and not is_solid(x,y)
+  if not a.can_move then
+    return a
+  end
+  cloud = view.cloud_at(x,y)
+  -- nonadjacent monsters who might be able to attack you (ranged/reaching/fast)
+  a.ranged = count_ranged(x,y,LOS)
+  -- adjacent monsters
+  a.adjacent = count_nearby(x,y,1)
+  -- corners - avoid these if not cleaving
+  a.cornerish = is_cornerish(x,y)
+  if have_reaching() then
+    -- slow adjacent nonranged monsters, for kiting
+    a.slow_adjacent = count_slow_nearby(x,y,1)
+  end
+  -- distance to nearest enemy
+  a.enemy_distance = distance_to_enemy(x,y)
+  -- will we fumble if we try to attack from this square?
+  a.fumble = (not you.flying() and view.feature_at(x,y) == "shallow_water"
+              and intrinsic_fumble())
+  -- will we be slow if we move into this square?
+  a.slow = (not you.flying() and view.feature_at(x,y) == "shallow_water"
+            and you.race() ~= "Merfolk" and you.race() ~= "Octopode")
+  -- is the square safe to step in? (checks traps+clouds)
+  a.safe = view.is_safe_square(x,y)
+  cloud = view.cloud_at(x,y)
+  -- would we want to move out of a cloud? note that we don't worry about
+  -- weak clouds if monsters are around
+  a.cloud_safe = (cloud == nil) or a.safe
+                 or danger and not cloud_is_dangerous(cloud)
+  return a
+end
+
+-- returns a string explaining why moving a1->a2 is preferable to not moving
+-- possibilities are:
+--   cloud       - stepping out of harmful cloud
+--   water       - stepping out of shallow water when it would cause fumbling
+--   reaching    - kiting slower monsters with reaching
+--   outnumbered - stepping away from a square adjacent to multiple monsters
+--                 (when not cleaving)
+function step_reason(a1,a2)
+  if not (a2.can_move and a2.safe and a2.supdist > 0) then
+    return false
+  elseif not a1.cloud_safe then
+    return "cloud"
+  elseif a2.fumble or a2.slow then
+    return false
+  elseif a1.fumble then
+    if a2.ranged > a1.ranged and a2.enemy_distance > a1.enemy_distance then
+      return false
+    else
+      return "water"
+    end
+  elseif have_reaching() and a1.slow_adjacent > 0 and a2.adjacent == 0
+         and a2.ranged == 0 then
+    return "reaching"
+  elseif cleaving() then
+    return false
+  elseif a1.adjacent == 1 then
+    return false
+  elseif a2.adjacent + a2.ranged <= a1.adjacent + a1.ranged - 2 then
+    return "outnumbered"
+  else
+    return false
+  end
+end
+
+-- determines whether moving a0->a2 is an improvement over a0->a1
+-- assumes that these two moves have already been determined to be better
+-- than not moving, with given reason
+function step_improvement(reason,a1,a2)
+  if reason == "water" and a2.enemy_distance < a1.enemy_distance then
+    return true
+  elseif reason == "water" and a2.enemy_distance > a1.enemy_distance then
+    return false
+  elseif a2.adjacent+a2.ranged < a1.adjacent+a1.ranged then
+    return true
+  elseif a2.adjacent+a2.ranged > a1.adjacent+a1.ranged then
+    return false
+  elseif cleaving() and a2.ranged < a1.ranged then
+    return true
+  elseif cleaving() and a2.ranged > a1.ranged then
+    return false
+  elseif a2.enemy_distance < a1.enemy_distance then
+    return true
+  elseif a2.enemy_distance > a1.enemy_distance then
+    return false
+  elseif a1.cornerish and not a2.cornerish then
+    return true
+  else
+    return false
+  end
+end
+
+-- this function always returns false because it doesn't actually take the
+-- tactical step, just chooses it
+function plan_choose_tactical_step()
+  tactical_step = nil
+  tactical_reason = "none"
+  if you.confused() or you.berserk() or you.constricted()
+     or you.transform() == "tree" or you.transform() == "fungus" then
+    return false
+  end
+  local a0 = assess_square(0,0)
+  if a0.cloud_safe and not (a0.fumble and sense_danger(3))
+     and (not have_reaching() or a0.slow_adjacent == 0)
+     and (a0.adjacent <= 1 or cleaving()) then
+    return false
+  end
+  local bestx,besty,bestreason
+  local besta = nil
+  local x,y
+  local a
+  local reason
+  for x = -1,1 do
+    for y = -1,1 do
+      if supdist(x,y) > 0 then
+        a = assess_square(x,y)
+        reason = step_reason(a0,a)
+        if reason then
+          if besta == nil or step_improvement(reason,besta,a) then
+            bestx = x
+            besty = y
+            besta = a
+            bestreason = reason
+          end
+        end
+      end
+    end
+  end
+  if besta then
+    tactical_step = delta_to_vi(bestx,besty)
+    tactical_reason = bestreason
+    --say("Stepping ~*~*~tactically~*~*~.")
+    --magic(delta_to_vi(bestx,besty) .. "Y")
+    --say("tactics: " .. delta_to_vi(bestx,besty))
+    --stop()
+    --return true
+  end
+  return false
+end
+
+function plan_cloud_step()
+  if tactical_reason == "cloud" then
+    say("Stepping ~*~*~tactically~*~*~ (" .. tactical_reason .. ").")
+    magic(tactical_step .. "Y")
+    return true
+  end
+  return false
+end
+
+function plan_water_step()
+  if tactical_reason == "water" then
+    say("Stepping ~*~*~tactically~*~*~ (" .. tactical_reason .. ").")
+    magic(tactical_step .. "Y")
+    return true
+  end
+  return false
+end
+
+function plan_other_step()
+  if tactical_reason ~= "none" then
+    say("Stepping ~*~*~tactically~*~*~ (" .. tactical_reason .. ").")
+    magic(tactical_step .. "Y")
+    return true
+  end
+  return false
+end
+
 function plan_berserk()
-  if can_berserk() and want_to_berserk() and not you.have_orb() then
-    say("INVOKING BERSERK.")
+  if can_berserk() and want_to_berserk() then
     berserk()
     return true
   end
   return false
 end
 
-function can_bia()
-  return (not (you.berserk() or you.confused() or you.silenced() or
-          you.hunger_name() == "starving" or you.piety_rank() < 4 or
-          you.god() ~= "Trog"))
-end
-
-function too_hungry_to_berserk()
-  return (you.hunger_name() == "starving" or
-          you.hunger_name() == "near starving" or
-          you.hunger_name() == "very hungry")
-end
-
-function can_berserk()
-  return (not (you.berserk() or you.confused() or you.silenced() or
-          you.exhausted() or you.mesmerised() or
-          too_hungry_to_berserk() or
-          you.piety_rank() < 1 or
-          you.god() ~= "Trog" or
-          you.transform() == "tree" or
-          you.transform() == "wisp"))
+function plan_burn_spellbooks()
+  if want_to_burn_spellbooks() then
+    burn_spellbooks()
+    return true
+  end
+  return false
 end
 
 function want_to_bia()
-  if (want_to_berserk() and not can_berserk()) or
-     check_monsters(8, bia_monsters) then
+  if check_monsters(LOS, bia_necessary_monsters) or you.piety_rank() > 4 and
+     ((want_to_berserk() and not can_berserk()) or
+     check_monsters(LOS, bia_monsters)) then
     if count_bia(4) == 0 and not you.teleporting() then
       return true
     end
@@ -1554,56 +3006,207 @@ function want_to_bia()
   return false
 end
 
+function want_to_sgd()
+  if you.skill("Invocations") >= 8 and
+     (check_monsters(LOS, bia_monsters) or hp_is_low(50) and immediate_danger) then
+    if count_sgd(4) == 0 and not you.teleporting() then
+      return true
+    end
+  end
+  return false
+end
+
+function dd_want_to_teleport()
+  --say("HW: " .. dd_hw_meter)
+  return ((immediate_danger and dd_hw_meter > 300
+           or immediate_danger and you.corrosion() >= 3
+           or you.god() ~= "Trog" and immediate_danger and hp_is_low(25)
+           or you.god() == "Trog" and (you.slowed() or too_hungry_to_berserk())
+              and want_to_berserk()
+              and not can_berserk())
+          and count_bia(4) == 0)
+end
+
 function want_to_teleport()
-  return ((you.slowed() or too_hungry_to_berserk()) and want_to_berserk()
-          and not can_berserk() and
-          count_bia(4) == 0)
+  if count_hostile_sgd(LOS) > 0 then
+    sgd_timer = you.turns()
+    return true
+  end
+  if you.xl() <= 17 and not can_berserk() and count_big_slimes(LOS) > 0 then
+    return true
+  end
+  if you.race() == "Deep Dwarf" then
+    return dd_want_to_teleport()
+  end
+  return ((immediate_danger and you.corrosion() >= 3
+           or you.god() ~= "Trog" and immediate_danger and hp_is_low(25)
+           or you.god() == "Trog" and (you.slowed() or too_hungry_to_berserk())
+              and want_to_berserk()
+              and not can_berserk())
+          and count_bia(4) == 0)
+end
+
+function want_to_orbrun_teleport()
+  return (hp_is_low(33) and sense_danger(2))
+end
+
+function want_to_orbrun_holy_word()
+  return (danger and want_to_orbrun_heal_wounds())
+end
+
+function dd_want_to_heal_wounds()
+  if (not danger) and (you.regenerating() or dd_prefer_hand()) then
+    return false
+  end
+  local hp,mhp = you.hp()
+  if immediate_danger then
+    return (hp_is_low(25) or (hp_is_low(50) and mhp - hp >= 30) or
+            (mhp - hp >= 20 and hp <= 20))
+  else
+    if dd_prefer_hand() and (not you.teleporting()) and not hp_is_low(66) then
+      return false
+    end
+    if you.god() == "Makhleb" and you.piety_rank() >= 1 and
+       not hp_is_low(66) then
+      return false
+    end
+    return (hp_is_low(25) or
+            (mhp - hp >= 30) or
+            (mhp - hp >= 20 and hp <= 20))
+  end
 end
 
 function want_to_heal_wounds()
+  if you.race() == "Deep Dwarf" then
+    return dd_want_to_heal_wounds()
+  end
   return (danger and hp_is_low(25))
 end
 
+function want_to_orbrun_heal_wounds()
+  if danger then
+    return (hp_is_low(25) or hp_is_low(50) and you.teleporting())
+  else
+    return (hp_is_low(50))
+  end
+end
+
+function want_to_orbrun_haste()
+  return ((count_pan_lords(LOS) > 0) or check_monsters(LOS, scary_monsters))
+end
+
+function want_to_orbrun_might()
+  return want_to_orbrun_haste()
+end
+
 function want_resistance()
-  return check_monsters(8, resistance_monsters) and you.res_fire() < 3
+  return (check_monsters(LOS, fire_resistance_monsters) and you.res_fire() < 3
+          or check_monsters(LOS, cold_resistance_monsters) and you.res_cold() < 3
+          or check_monsters(LOS, elec_resistance_monsters) and you.res_shock() < 1
+          or check_monsters(LOS, pois_resistance_monsters) and
+             you.res_poison() < 1)
 end
 
 function want_to_hand()
-  return check_monsters(8, hand_monsters)
+  return check_monsters(LOS, hand_monsters)
 end
 
 function want_to_berserk()
-  return (hp_is_low(50) and sense_danger(2) or
+  return (hp_is_low(50) and sense_danger(2) and
+          (you.race() ~= "Deep Dwarf" or dd_want_to_heal_wounds()) or
           check_monsters(2, scary_monsters) or
-        --  check_monsters(3, scary_monsters) and sense_danger(2) or
+          check_monsters(1, scary_slow_monsters) or
           (invisi_sigmund and not options.autopick_on))
 end
 
-function plan_zot_wait()
-  if (not danger) or (where ~= "Zot:5") or sense_danger(1) or
-     you.berserk() or you.have_orb() then
+function want_to_stay_in_abyss()
+  if ABYSSAL_RUNE and you.xl() > 20
+     and where:find("Abyss") and count_permafood() <= 5 then
+    say("Giving up on abyssal rune: low on food")
+    ABYSSAL_RUNE = false
+  end
+  return ABYSSAL_RUNE and you.xl() > 20
+         and not you.have_rune("abyssal") and you.have_rune("silver")
+         and count_permafood() > 5 and not hp_is_low(60)
+end
+
+function plan_wait_for_melee()
+  is_waiting = false
+  if sense_danger(1) or (have_reaching() and sense_danger(2))
+     or (not options.autopick_on) or
+     you.berserk() or you.have_orb() or count_bia(LOS) > 0 or count_sgd(LOS) > 0 or
+     not view.is_safe_square(0,0) or
+     view.feature_at(0,0) == "shallow_water" and not you.flying() or
+     where:find("Abyss") then
+    wait_count = 0
+    return false
+  end
+  if you.turns() >= last_wait + 10 then
+    wait_count = 0
+  end
+  if (not danger) or wait_count >= 10 then
+    return false
+  end
+  -- hack to make us wait when we enter v5 so we don't move off stairs
+  if v5_entry_turn and you.turns() <= v5_entry_turn + 2 then
+    is_waiting = true
     return false
   end
   count = 0
-  for x = -8,8 do
-    for y = -8,8 do
-      m = monster_array[x][y]
-      if m and not (m:name():find("Orb Guardian") or
-                    m:name():find("Killer Klown") or
-                    m:name():find("moth of wrath") or
-                    m:name():find("bone dragon") or
-                    m:name():find("tentacled monstrosity")) then
-        return false
-      end
-      if m and will_tab(0,0,x,y) then
-        count = count + 1
+  sleeping_count = 0
+  local e
+  for _,e in ipairs(enemy_list) do
+    if is_ranged(e.m) then
+      wait_count = 0
+      return false
+    end
+    if e.m:reach_range() >= 2 and supdist(e.x,e.y) <= 2 then
+      wait_count = 0
+      return false
+    end
+    if will_tab(0,0,e.x,e.y) and not
+       (e.m:name() == "wandering mushroom" or
+        e.m:name():find("ballistomycete") or
+        e.m:name():find("vortex") or
+        e.m:desc():find("fleeing")) then
+      count = count + 1
+      if e.m:desc():find("sleeping") then
+        sleeping_count = sleeping_count + 1
       end
     end
   end
   if count == 0 then
     return false
   end
-  -- say "Waiting for Orb Guardians."
+  -- say "Waiting for monsters to approach."
+  if sleeping_count == 0 then
+    wait_count = wait_count + 1
+  end
+  last_wait = you.turns()
+  if plan_cure_poison() then
+    return true
+  end
+  -- don't actually wait yet, because we might try to throw something
+  is_waiting = true
+  return false
+end
+
+function plan_wait_throw()
+  if not is_waiting then
+    return false
+  end
+  if items.fired_item() then
+    magic("ff") -- can fail for various reasons
+    return true
+  else
+    return false
+  end
+end
+
+function plan_wait_wait()
+  if not is_waiting then
+    return false
+  end
   magic("s")
   return true
 end
@@ -1644,7 +3247,8 @@ end
 
 function plan_orbrun_eat_permafood()
   if you.hunger_name() ~= "completely stuffed" and
-     you.hunger_name() ~= "very full" then
+     you.hunger_name() ~= "very full" and
+     you.hunger_name() ~= "almost alive" then
     if eat_permafood() then
       return true
     end
@@ -1661,7 +3265,17 @@ function plan_eat_anyway()
   return false
 end
 
+function drink_blood()
+  if drink_by_name("coagulated blood") then
+    return true
+  end
+  return drink_by_name("blood")
+end
+
 function eat_permafood()
+  if you.race() == "Vampire" then
+    return drink_blood()
+  end
   local l
   local max_prefer = 0
   local food_name
@@ -1671,8 +3285,6 @@ function eat_permafood()
       local prefer
       if name:find("ration") or name:find("royal") then
         prefer = 1
-      elseif name:find("honey") then
-        prefer = 2
       elseif name:find("chunk") then
         prefer = 0
       else
@@ -1692,6 +3304,16 @@ function eat_permafood()
     magic("ee")
     return true
   end
+end
+
+function count_permafood()
+  local s = 0
+  for it in inventory() do
+    if it.class(true) == "food" and not bad_food(it) and not food.ischunk(it) then
+      s = s + it.quantity
+    end
+  end
+  return s
 end
 
 function plan_rest()
@@ -1724,33 +3346,63 @@ function plan_abyss_rest()
 end
 
 function want_pray()
-  return (you.god() == "Trog")
-end
-
-function plan_handle_corpses()
-  if on_corpses() then
-    if want_pray() and (not want_chunk() or on_dangerous_corpse())
-        and not string.find(view.feature_at(0, 0), "altar")
-        and not you.silenced() then
-      pray()
-    else
-      chop()
-    end
-    return true
-  end
   return false
 end
 
-function plan_find_altar()
-  if you.god() == "Trog" then
+function want_to_burn_spellbooks()
+  return BURN_BOOKS and (you.god() == "Trog") and can_read() and see_spellbooks_to_burn()
+end
+
+function want_blood()
+  return (count_item("potion","of blood") < 10)
+end
+
+function vp_handle_corpses()
+  if want_blood() and on_bottleable_corpses() then
+    chop()
+  elseif want_permafood() and on_edible_corpse() and not on_dangerous_corpse() then
+    magic("eY")
+  elseif want_pray()
+         and not view.feature_at(0,0):find("altar")
+         and not you.silenced() and not on_valuable_corpse() then
+    pray()
+  else
+    chop()
+  end
+  return true
+end
+
+function plan_handle_corpses()
+  if not on_corpses() then
     return false
   end
-  magic(control('f') .. "@altar&&trog" .. "\ra\r")
+  if you.race() == "Vampire" then
+    return vp_handle_corpses()
+  end
+  if want_pray() and (not want_chunk() or on_dangerous_corpse())
+     and not string.find(view.feature_at(0, 0), "altar")
+     and not you.silenced() and not on_valuable_corpse() then
+    pray()
+  else
+    chop()
+  end
+  return true
+end
+
+function plan_find_altar()
+  if not want_altar() then
+    return false
+  end
+  if you.race() == "Deep Dwarf" then
+    magic(control('f') .. "@altar&&<<trog||makhleb>>" .. "\ra\r")
+  else
+    magic(control('f') .. "@altar&&trog" .. "\ra\r")
+  end
   return true
 end
 
 function plan_abandon_god()
-  if you.god() ~= "No God" and you.god() ~= "Trog" then
+  if you.god() ~= "No God" and you.god() ~= "Trog" and you.god() ~= "Makhleb" then
     magic("aXYY")
     return true
   end
@@ -1758,7 +3410,7 @@ function plan_abandon_god()
 end
 
 function plan_unwield_weapon()
-  if you.race() ~= "Troll" then
+  if wskill() ~= "Unarmed Combat" then
     return false
   end
   if not items.equipped_at("Weapon") then
@@ -1769,10 +3421,11 @@ function plan_unwield_weapon()
 end
 
 function plan_join_god()
-  if you.god() == "Trog" then
+  if not want_altar() then
     return false
   end
-  if string.find(view.feature_at(0, 0), "altar_trog") then
+  if view.feature_at(0, 0) == "altar_trog" or
+     you.race() == "Deep Dwarf" and view.feature_at(0, 0) == "altar_makhleb" then
     if you.silenced() then
       rest()
     else
@@ -1799,20 +3452,29 @@ function plan_drop_filtered_items()
   return true
 end
 
-function plan_quaff_id()
+function plan_drop_other_items()
   for it in inventory() do
-    if it.class(true) == "potion" and it.quantity > 1 and
-       not it.fully_identified then
-      l = items.index_to_letter(it.slot)
-      quaff_helper(l)
+    if it.class(true) == "missile" and not want_missile(it) then
+      say("DROPPING " .. it.name() .. ".")
+      magic("d" .. letter(it) .. "\r")
       return true
     end
   end
   return false
 end
 
+function plan_quaff_id()
+  for it in inventory() do
+    if it.class(true) == "potion" and it.quantity > 1 and
+       not it.fully_identified then
+      return drink(it)
+    end
+  end
+  return false
+end
+
 function plan_read_id()
-  if you.silenced() or you.confused() then
+  if not can_read() then
     return false
   end
   for it in inventory() do
@@ -1821,20 +3483,22 @@ function plan_read_id()
       items.swap_slots(it.slot, items.letter_to_index('Y'), false)
       weap = items.equipped_at("Weapon")
       scroll_letter = 'Y'
-      if weap and not weap:name():find("vamp") then
+      if weap and not weap.name():find("vamp") then
         scroll_letter = items.index_to_letter(weap.slot)
         items.swap_slots(weap.slot, items.letter_to_index('Y'), false)
       end
-      magic("r" .. scroll_letter .. ".Y" ..
-            string.char(27) .. "YB") -- hack
-      return true
+      if you.race() ~= "Felid" then
+        return read2(scroll_letter, ".Y" .. string.char(27) .. "YB")
+      else
+        return read2(scroll_letter, ".Y" .. string.char(27) .. "YF")
+      end
     end
   end
   return false
 end
 
 function plan_use_id_scrolls()
-  if you.silenced() or you.confused() then
+  if not can_read() then
     return false
   end
   local id_scroll
@@ -1850,139 +3514,188 @@ function plan_use_id_scrolls()
   local newslots = {[0] = 'B', [1] = 'N', [2] = 'Y'} -- harmless keys
   local count = 0
   for it in inventory() do
-    if it.class(true) == "jewellery" and not it.fully_identified
-       and count < 3 then
-      oldslots[count] = it.slot
-      count = count + 1
-    end
-  end
-  for it in inventory() do
     if it.class(true) == "wand" and not it.fully_identified and
        (it.name():find("empty") or it.name():find("teleportation") or
-        it.name():find("heal wounds") or it.name():find("hasting")) and
-       count < 3 then
-      oldslots[count] = it.slot
-      count = count + 1
+        it.name():find("heal wounds") and you.race() ~= "Vine Stalker" or
+        it.name():find("hasting")) then
+      oldname = it.name()
+      if read2(id_scroll, letter(it)) then
+        say("IDENTIFYING " .. oldname)
+        return true
+      end
     end
-  end
-  if count == 0 then
-    return false
   end
   for it in inventory() do
-    if it.class(true) == "potion" and not it.fully_identified and
-       count < 3 then
-      oldslots[count] = it.slot
-      count = count + 1
-    end
-  end
-  for i = 0,count-1 do
-    items.swap_slots(oldslots[i], items.letter_to_index(newslots[i]), false)
-    for j = i+1,count-1 do
-      if oldslots[j] == items.letter_to_index(newslots[i]) then
-        oldslots[j] = oldslots[i]
+    if it.class(true) == "jewellery" and not it.fully_identified then
+      oldname = it.name()
+      if read2(id_scroll, letter(it)) then
+        say("IDENTIFYING " .. oldname)
+        return true
       end
     end
   end
-  if count > 0 then
+  if id_scroll.quantity > 1 then
     for it in inventory() do
-      if it.class(true) == "scroll" and it.name():find("identify") then
-        id_scroll = it
+      if it.class(true) == "potion" and not it.fully_identified then
+        oldname = it.name()
+        if read2(id_scroll, letter(it)) then
+          say("IDENTIFYING " .. oldname)
+          return true
+        end
       end
     end
-    say("READING IDENTIFY.")
-    magic("r" .. items.index_to_letter(id_scroll.slot) .. "B N Y")
-    return true
   end
   return false
 end
 
+function body_armour_is_great(arm)
+  name = arm.name()
+  if intrinsic_dodgy() then
+    return (name:find("dragon"))
+  else
+    return (name:find("gold dragon") or name:find("crystal plate")
+            or name:find("plate armour of fire")
+            or name:find("pearl dragon") and intrinsic_heavy_dodgy())
+  end
+end
+
+function body_armour_is_good(arm)
+  if in_branch("Z") then
+    return true
+  end
+  name = arm.name()
+  if intrinsic_dodgy() then
+    return (name:find("of resistance") or name:find("of fire"))
+  else
+    return (name:find("pearl dragon") or name:find("plate"))
+  end
+end
+
 function plan_use_good_consumables()
   for it in inventory() do
-    if it.class(true) == "scroll" and not you.silenced() then
+    if it.class(true) == "scroll" and can_read() then
       if it.name():find("acquirement") then
-        say("READING ACQUIREMENT.")
-        magic("r" .. items.index_to_letter(it.slot) .. " b")
-        return true
+        if you.race() ~= "Felid" then
+          return read2(it, " b")
+        else
+          return read2(it, " f")
+        end
       elseif it.name():find("enchant weapon") then
         weapon = items.equipped_at("weapon")
         if weapon and not weapon.artefact and
            weapon.plus < 9 then
-          say("ENCHANTING WEAPON.")
-          magic("r" .. items.index_to_letter(it.slot) ..
-                       items.index_to_letter(weapon.slot))
-          return true
+          oldname = weapon.name()
+          if read2(it, letter(weapon)) then
+            say("ENCHANTING " .. oldname .. ".")
+            return true
+          end
         end
       elseif it.name():find("enchant armour") then
-        body = items.equipped_at("armour")
-        if body and not body.artefact and
-           (body.name():find("gold dragon") and body.plus < 12
-            or body.name():find("plate armour of fire") and body.plus < 10
-            or body.name():find("crystal plate")
-            and body.plus < 14) then
-          say("ENCHANTING BODY ARMOUR.")
-          magic("r" .. items.index_to_letter(it.slot)
-                    .. items.index_to_letter(body.slot))
-          return true
+        body = items.equipped_at("Armour")
+        ac = armour_ac()
+        if body and not body.artefact and body.plus < ac
+           and body_armour_is_great(body)
+           and not body.name():find("quicksilver dragon armour") then
+          oldname = body.name()
+          if read2(it, letter(body)) then
+            say("ENCHANTING " .. oldname .. ".")
+            return true
+          end
         end
         for _,slotname in pairs(good_slots) do
           if slotname ~= "Armour" then
             it2 = items.equipped_at(slotname)
             if it2 and not it2.artefact and it2.plus < 2 and it2.plus >= 0
                then
-              say("ENCHANTING " .. slotname .. ".")
-              say("ENCHANTING BODY ARMOUR.")
-              magic("r" .. items.index_to_letter(it.slot)
-                        .. items.index_to_letter(it2.slot))
-              return true
+              oldname = it2.name()
+              if read2(it, letter(it2)) then
+                say("ENCHANTING " .. oldname .. ".")
+                return true
+              end
+            end
+            if slotname == "Boots" and it2 and it2.name():find("barding")
+               and not it2.artefact and it2.plus < 4 and it2.plus >= 0 then
+              oldname = it2.name()
+              if read2(it, letter(it2)) then
+                say("ENCHANTING " .. oldname .. ".")
+                return true
+              end
             end
           end
         end
-        if body and not body.artefact and
-           (body.name():find("pearl dragon") or body.name():find("plate"))
-           and body.plus < 10 then
-          say("ENCHANTING BODY ARMOUR.")
-          magic("r" .. items.index_to_letter(it.slot)
-                    .. items.index_to_letter(body.slot))
-          return true
+        if body and not body.artefact and body.plus < ac
+           and body_armour_is_good(body)
+           and not body.name():find("quicksilver dragon armour") then
+          oldname = body.name()
+          if read2(it, letter(body)) then
+            say("ENCHANTING " .. oldname .. ".")
+            return true
+          end
         end
       elseif it.name():find("recharging") then
         for it2 in inventory() do
           if it2.class(true) == "wand" and
-             (it2.name():find("heal wounds") or
+             (it2.name():find("heal wounds") and you.race() ~= "Vine Stalker" or
+              -- it2.name():find("hasting") or
               it2.name():find("teleportation"))
-             and not (it2.name():find("recharged") or
-                      it2.plus and it2.plus > 6) then
-            say("RECHARGING WAND.")
-            magic("r" .. items.index_to_letter(it.slot)
-                      .. items.index_to_letter(it2.slot))
-            return true
+             and (it2.name():find("empty") or
+                  it2.plus and it2.plus < 4) then
+            oldname = it2.name()
+            if read2(it, letter(it2)) then
+              say("RECHARGING " .. oldname .. ".")
+              return true
+            end
           end
         end
       elseif it.name():find("remove curse") then
         for it2 in inventory() do
           if it2.cursed and it2.equipped then
-            say("READING REMOVE CURSE.")
-            magic("r" .. items.index_to_letter(it.slot))
-            return true
+            return read(it)
           end
         end
       end
     elseif it.class(true) == "potion" then
-      if it.name():find("beneficial") or it.name():find("experience") then
-        say("DRINKING " .. it.name() .. ".")
-        quaff_helper(items.index_to_letter(it.slot))
-        return true
+      if it.name():find("beneficial") and you.race() ~= "Ghoul"
+         or it.name():find("experience") then
+        return drink(it)
+      end
+      if it.name():find("cure mutation") then
+        if base_mutation("slow regeneration") > 0 and you.race() ~= "Deep Dwarf"
+           and you.race() ~= "Ghoul" or
+           base_mutation("dopey") > 1 or
+           intrinsic_like_dex() and base_mutation("clumsy") > 1 or
+           base_mutation("teleportitis") > 0 or
+           base_mutation("deformed body") > 0 and you.race() ~= "Naga"
+           and you.race() ~= "Centaur" or
+           base_mutation("berserk") > 0 or
+           base_mutation("deterioration") > 1 or
+           base_mutation("blurry vision") > 0 or
+           base_mutation("frail") > 0 or
+           base_mutation("forlorn") > 0 or
+           base_mutation("no device heal") > 0 and you.race() ~= "Vine Stalker" or
+           base_mutation("MP-powered wands") > 0
+           then
+          return drink(it)
+        end
       end
     end
   end
   return false
 end
 
+function base_mutation(str)
+  return you.mutation(str) - you.temp_mutation(str)
+end
+
 function plan_zap_id()
+  if not can_zap() then
+    return false
+  end
   for it in inventory() do
     if it.class(true) == "wand" and
        not (it.name():find("wand of") or it.name():find("empty")) then
       l = items.index_to_letter(it.slot)
+      say("ZAPPING " .. it.name() .. ".")
       magic("V" .. l .. "YY")
       return true
     end
@@ -1994,20 +3707,20 @@ function plan_wield_weapon()
   if items.equipped_at("Weapon") or you.berserk() or transformed() then
     return false
   end
-  if you.race() == "Troll" then
+  if wskill() == "Unarmed Combat" then
     return false
   end
   for it in inventory() do
     if it and it.class(true) == "weapon" then
-      if equip_value(it, it:name()) >= 0 and not it:name():find("vamp") then
+      if should_equip(it) and not it.name():find("vamp") then
         l = items.index_to_letter(it.slot)
-        say("Wielding weapon " .. it:name() .. ".")
+        say("Wielding weapon " .. it.name() .. ".")
         magic("w" .. l .. "YY")
-        return true
+        -- this might have a 0-turn fail because of unIDed vamp/holy
+        return nil
       end
     end
   end
-  say("Failed to find a weapon to wield.")
   return false
 end
 
@@ -2015,24 +3728,23 @@ function plan_upgrade_weapon()
   if you.race() == "Troll" then
     return false
   end
+  twohands = true
+  if items.equipped_at("Shield") and you.race() ~= "Formicid" then
+    twohands = false
+  end
   it_old = items.equipped_at("Weapon")
   swappable = can_swap("Weapon")
   for it in inventory() do
     if it and it.class(true) == "weapon" and not it.equipped then
       local equip = false
       local drop = false
-      local new_value = equip_value(it, it:name())
-      if new_value < 0 then
-        drop = true
-      elseif not it_old then
+      if should_upgrade(it,it_old) then
         equip = true
-      elseif new_value > equip_value(it_old, it_old:name()) then
-        equip = true
-      else
+      elseif should_drop(it) then
         drop = true
       end
-      if equip and swappable then
-        if it.name():find("vamp") and not
+      if equip and swappable and (twohands or it.hands < 2) then
+        if it.name():find("vamp") and you.race() ~= "Vampire" and not
            (you.hunger_name() == "full" or you.hunger_name() == "very full" or
             you.hunger_name() == "completely stuffed") then
           say("Eating in order to wield vampiric weapon.")
@@ -2041,18 +3753,34 @@ function plan_upgrade_weapon()
           end
         else
           l = items.index_to_letter(it.slot)
-          say("Upgrading to " .. it:name() .. " (value " .. new_value .. ").")
+          say("UPGRADING to " .. it.name() .. ".")
           magic("w" .. l .. "YY")
-          -- this might have a 0-turn fail because of vamp, so return nil
+          -- this might have a 0-turn fail because of unIDed vamp/holy
           return nil
         end
       end
       if drop then
         l = items.index_to_letter(it.slot)
-        say("Dropping " .. it:name() .. " (value " .. new_value .. ").")
+        say("DROPPING " .. it.name() .. ".")
         magic("d" .. l .. "\r")
         return true
       end
+    end
+  end
+  return false
+end
+
+function plan_remove_terrible_jewellery()
+  if you.berserk() or transformed() then
+    return false
+  end
+  for it in inventory() do
+    if it and it.equipped and it.class(true) == "jewellery"
+          and not it.cursed
+          and should_remove(it) then
+      say("REMOVING " .. it.name() .. ".")
+      magic("P" .. letter(it) .. "YY")
+      return true
     end
   end
   return false
@@ -2062,33 +3790,25 @@ function plan_upgrade_amulet()
   it_old = items.equipped_at("Amulet")
   swappable = can_swap("Amulet")
   for it in inventory() do
-    if it and it.class(true) == "jewellery" and it:name():find("amulet of") and
-       not it.equipped then
+    if it and it.class(true) == "jewellery" and it.name():find("amulet")
+          and (it.fully_identified or count_item("scroll", "remove curse") > 1)
+          and not it.equipped then
       local equip = false
       local drop = false
-      local new_value = equip_value(it, it:name())
-      local new_value_with_resists = equip_value(it, it:name(), true)
-      if new_value < 0 then
-        drop = true
-      elseif not it_old then
-        if new_value_with_resists >= 0 then
-          equip = true
-        end
-      elseif new_value_with_resists > equip_value(it_old, it_old:name()) then
+      if should_upgrade(it,it_old) then
         equip = true
-      elseif new_value <= equip_value(it_old, it_old:name()) then
+      elseif should_drop(it) then
         drop = true
       end
       if equip and swappable then
         l = items.index_to_letter(it.slot)
-        say("Upgrading to " .. it:name() .. " (value " ..
-            new_value_with_resists .. ").")
+        say("UPGRADING to " .. it.name() .. ".")
         magic("P" .. l .. "YY")
         return true
       end
       if drop then
         l = items.index_to_letter(it.slot)
-        say("Dropping " .. it:name() .. " (value " .. new_value .. ").")
+        say("DROPPING " .. it.name() .. ".")
         magic("d" .. l .. "\r")
         return true
       end
@@ -2098,37 +3818,32 @@ function plan_upgrade_amulet()
 end
 
 function plan_upgrade_rings()
-  it_old1 = items.equipped_at("Left Ring")
-  it_old2 = items.equipped_at("Right Ring")
-  swappable = can_swap("Left Ring")
+  local it_rings = ring_list()
+  local empty = (empty_ring_slots() > 0)
   for it in inventory() do
-    if it and it.class(true) == "jewellery" and it:name():find("ring of") and
-       it.fully_identified and not it.equipped then
+    if it and it.class(true) == "jewellery" and it.name():find("ring")
+          and (it.fully_identified or count_item("scroll", "remove curse") > 1)
+          and not it.equipped then
       local equip = false
       local drop = false
       local swap = nil
-      local new_value = equip_value(it, it:name())
-      local new_value_with_resists = equip_value(it, it:name(), true)
-      if new_value < 0 then
+      if should_drop(it) then
         drop = true
-      elseif (not it_old1 or not it_old2) then
-        if new_value_with_resists >= 0 then
+      elseif empty then
+        if should_equip(it) then
           equip = true
         end
-      elseif new_value_with_resists > equip_value(it_old1, it_old1:name()) then
-        equip = true
-        swap = it_old1.slot
-      elseif new_value_with_resists > equip_value(it_old2, it_old2:name()) then
-        equip = true
-        swap = it_old2.slot
-      elseif new_value <= equip_value(it_old1, it_old1:name()) and
-             new_value <= equip_value(it_old2, it_old2:name()) then
-        drop = true
+      else
+        for _, it_old in ipairs(it_rings) do
+          if not equip and not it_old.cursed and should_upgrade(it, it_old) then
+            equip = true
+            swap = it_old.slot
+          end
+        end
       end
-      if equip and swappable then
+      if equip then
         l = items.index_to_letter(it.slot)
-        say("Upgrading to " .. it:name() .. " (value " ..
-            new_value_with_resists .. ").")
+        say("UPGRADING to " .. it.name() .. ".")
         if swap then
           items.swap_slots(swap, items.letter_to_index('Y'), false)
           if l == 'Y' then
@@ -2140,7 +3855,7 @@ function plan_upgrade_rings()
       end
       if drop then
         l = items.index_to_letter(it.slot)
-        say("Dropping " .. it:name() .. " (value " .. new_value .. ").")
+        say("DROPPING " .. it.name() .. ".")
         magic("d" .. l .. "\r")
         return true
       end
@@ -2165,90 +3880,58 @@ function plan_upgrade_armour()
       local swappable
       it_old = items.equipped_at(good_slots[st])
       swappable = can_swap(good_slots[st])
-      local new_value = equip_value(it, it:name())
-      local new_value_with_resists = equip_value(it, it:name(), true)
-      if new_value < 0 then
-        drop = true
-      elseif not it_old then
-        if new_value_with_resists >= 0 then
-          equip = true
-        end
-      elseif new_value_with_resists > equip_value(it_old, it_old:name()) then
+      if should_upgrade(it,it_old) then
         equip = true
-      elseif new_value <= equip_value(it_old, it_old:name()) then
+      elseif should_drop(it) then
         drop = true
       end
-      if it:name():find("helmet") and (you.mutation("horns") > 0
+      if it.name():find("helmet") and (you.mutation("horns") > 0
          or you.mutation("beak") > 0 or you.mutation("antennae") > 0) then
         equip = false
         drop = true
       end
-      if it:name():find("boots") and you.mutation("talons") >= 3 then
+      if good_slots[st] == "Helmet" and
+         (you.mutation("horns") >= 3 or you.mutation("antennae") >= 3) then
+        equip = false
+        drop = true
+      end
+      if it.name():find("boots") and
+         (you.mutation("talons") >= 3 or you.mutation("hooves") >= 3) then
+        equip = false
+        drop = true
+      end
+      if it.name():find("boots") and you.race() == "Merfolk"
+         and (view.feature_at(0,0) == "shallow_water" or
+             view.feature_at(0,0) == "deep_water") then
+        equip = false
+        drop = false
+      end
+      if good_slots[st] == "Gloves" and you.mutation("claws") >= 3 then
         equip = false
         drop = true
       end
       if equip and swappable then
         l = items.index_to_letter(it.slot)
-        say("Upgrading to " .. it:name() .. " (value " ..
-            new_value_with_resists .. ").")
+        say("UPGRADING to " .. it.name() .. ".")
         magic("W" .. l .. "YN")
         upgrade_phase = true
         return true
       end
       if drop then
         l = items.index_to_letter(it.slot)
-        say("Dropping " .. it:name() .. " (value " .. new_value .. ").")
+        say("DROPPING " .. it.name() .. ".")
         magic("d" .. l .. "\r")
         return true
       end
     end
   end
-  return false
-end
-
-function plan_remove_redundant_jewels()
-  it = items.equipped_at("Amulet")
-  if it and (it:name():find("conservation") or
-             it:name():find("resist corrosion")) then
-    it2 = items.equipped_at("Cloak")
-    if it2 and it2:name():find("preservation") and can_swap("Amulet") then
-      say("Removing redundant " .. it:name() .. ".")
-      magic("P" .. items.index_to_letter(it.slot) .. "YY")
+  for it in inventory() do
+    if it and it.equipped and it.class(true) == "armour" and (not it.cursed)
+          and should_remove(it) then
+      l = items.index_to_letter(it.slot)
+      say("REMOVING " .. it.name() .. ".")
+      magic("T" .. l .. "YN")
       return true
-    end
-  end
-  it = items.equipped_at("Left Ring")
-  if it and it:name():find("see invisible") then
-    it2 = items.equipped_at("Helmet")
-    if it2 and it2:name():find("see invisible") and can_swap("Left Ring") then
-      say("Removing redundant " .. it:name() .. ".")
-      magic("P" .. items.index_to_letter(it.slot) .. "YY")
-      return true
-    end
-    for _,slotname in pairs(good_slots) do
-      it2 = items.equipped_at(slotname)
-      if it2 and it2:name():find("SInv") and can_swap("Left Ring") then
-        say("Removing redundant " .. it:name() .. ".")
-        magic("P" .. items.index_to_letter(it.slot) .. "YY")
-        return true
-      end
-    end
-  end
-  it = items.equipped_at("Right Ring")
-  if it and it:name():find("see invisible") then
-    it2 = items.equipped_at("Helmet")
-    if it2 and it2:name():find("see invisible") and can_swap("Right Ring") then
-      say("Removing redundant " .. it:name() .. ".")
-      magic("P" .. items.index_to_letter(it.slot) .. "YY")
-      return true
-    end
-    for _,slotname in pairs(good_slots) do
-      it2 = items.equipped_at(slotname)
-      if it2 and it2:name():find("SInv") and can_swap("Right Ring") then
-        say("Removing redundant " .. it:name() .. ".")
-        magic("P" .. items.index_to_letter(it.slot) .. "YY")
-        return true
-      end
     end
   end
   return false
@@ -2256,9 +3939,9 @@ end
 
 function plan_go_up()
   local feat = view.feature_at(0,0)
-  if feat:find("stone_stairs_up") or feat:find("escape_hatch_up")
-     or feat:find("exit_zot") or feat:find("exit_dungeon")
-     or feat:find("exit_depths") then
+  if feat:find("stone_stairs_up") or feat == "escape_hatch_up"
+     or feat == "exit_zot" or feat == "exit_dungeon"
+     or feat == "exit_depths" then
     expect_new_location = true
     magic("<")
     return true
@@ -2276,12 +3959,85 @@ function plan_go_down()
   return false
 end
 
+function ready_for_lair()
+  if you.god() ~= "Trog" and you.piety_rank() < 4 then
+    return false
+  end
+  return true
+end
+
+function want_to_stairdance_up()
+  local feat = view.feature_at(0,0)
+  if not (feat:find("stone_stairs_up") or
+          feat:find("exit_") and (feat == "exit_hell" or feat == "exit_vaults"
+          or feat == "exit_zot" or feat == "exit_slime_pits"
+          or feat == "exit_orcish_mines" or feat == "exit_lair"
+          or feat == "exit_crypt" or feat == "exit_snake_pit"
+          or feat == "exit_elven_halls" or feat == "exit_tomb"
+          or feat == "exit_swamp" or feat == "exit_shoals"
+          or feat == "exit_spider_nest" or feat == "exit_depths")) then
+    return false
+  end
+  local n = stairdance_count[where] or 0
+  if n > 10 then
+    return false
+  end
+  if you.caught() or you.mesmerised() or you.constricted() or you.berserk()
+     or you.rooted() or you.transform() == "tree" or you.transform() == "fungus"
+     or hp_is_low(33) or count_bia(3) > 0 or count_sgd(3) > 0 then
+    return false
+  end
+  local e
+  for _,e in ipairs(enemy_list) do
+    local dist = supdist(e.x,e.y)
+    if dist == 1 then
+      if e.m:stabbability() == 0 and can_use_stairs(e.m:name()) then
+        stairdance_count[where] = n + 1
+        return true
+      end
+    end
+  end
+  return false
+end
+
+-- adding some clua for this would be better
+function can_use_stairs(mname)
+  if mname:find("zombie") or mname:find("skeleton") or mname:find("spectral")
+     or mname:find("simulacrum") or mname:find("oklob")
+     or mname:find("statue") or mname:find("ballistomycete")
+     or mname == "burning bush" or mname == "lightning spire"
+     or mname:find("tentacle") or mname == "silent spectre"
+     or mname == "Geryon" or mname == "the royal jelly"
+     or mname:find("'s ghost") or mname:find("' ghost")
+     or mname == "swamp worm" or mname == "electric eel"
+     or mname == "kraken" or mname == "lava snake" then
+    return false
+  else
+    return true
+  end
+end
+
+function plan_stairdance_up()
+  if want_to_stairdance_up() then
+    expect_new_location = true
+    -- set travel_destination to the current location in case we
+    -- leave the branch while stairdancing
+    if not travel_destination then
+      travel_destination = cur_branch()
+    end
+    say("STAIRDANCE")
+    magic("<")
+    return true
+  end
+  return false
+end
+
 function plan_simple_go_down()
   if travel_destination then
     return false
   end
-  if found_branch("L") and not
-     util.contains(branches_entered, "L") then
+  if (found_branch("L") and ready_for_lair() or where == "D:11") and not
+     util.contains(c_persist.branches_entered, "L") then
     return false
   end
   if where == "Orc:3" then
@@ -2290,14 +4046,25 @@ function plan_simple_go_down()
   if where == "Vaults:4" and you.num_runes() < 2 then
     return false
   end
+  if in_branch("A") and you.have_rune("barnacled") then
+    return false
+  end
   expect_new_location = true
   magic("G>")
   return true
 end
 
+function want_altar()
+  return (you.god() ~= "Trog" and you.god() ~= "Makhleb" and you.race() ~= "Demigod")
+end
+
 function plan_go_to_temple()
-  if found_branch("T") and you.god() ~= "Trog" and not
-     util.contains(branches_entered, "T") and in_branch("D") then
+  local c = c_persist.plan_fail_count["try_go_to_temple"]
+  if c and c >= 10 then
+    return false
+  end
+  if found_branch("T") and want_altar() and not
+     util.contains(c_persist.branches_entered, "T") and in_branch("D") then
     expect_new_location = true
     magic("GTY")
     return true
@@ -2307,7 +4074,7 @@ end
 
 function plan_go_to_lair()
   if found_branch("L") and not
-     util.contains(branches_entered, "T") and in_branch("D") then
+     util.contains(c_persist.branches_entered, "T") and in_branch("D") then
     expect_new_location = true
     magic("GL\rY")
     return true
@@ -2317,12 +4084,12 @@ end
 
 function plan_enter_branch()
   local br
-  if found_branch("L") and not
-     util.contains(branches_entered, "L") and in_branch("D") then
+  if found_branch("L") and ready_for_lair() and not
+     util.contains(c_persist.branches_entered, "L") and in_branch("D") then
     br = "L"
-  elseif found_branch("O") and not
-         util.contains(branches_entered, "O") and in_branch("D") and
-         util.contains(branches_entered, "L") then
+  elseif found_branch("O") and you.god() == "Trog" and not
+         util.contains(c_persist.branches_entered, "O") and in_branch("D") and
+         util.contains(c_persist.branches_entered, "L") then
     br = "O"
   end
   if br then
@@ -2334,7 +4101,7 @@ function plan_enter_branch()
 end
 
 function plan_go_to_portal_entrance()
-  for _, por in ipairs(portals_found) do
+  for _, por in ipairs(c_persist.portals_found) do
     for _, val in ipairs(portal_data) do
       if val[1] == por then
         magic(control('f') .. "@" .. val[2] .. "\ra\r")
@@ -2346,6 +4113,9 @@ function plan_go_to_portal_entrance()
 end
 
 function plan_go_to_zig()
+  if ZIG_DIVE <= 0 then
+    return false
+  end
   if you.num_runes() < 3 then
     return false
   end
@@ -2361,24 +4131,37 @@ function plan_go_to_portal_exit()
   return false
 end
 
+function plan_go_to_abyss_portal()
+  if not where:find("Depths") or not want_to_stay_in_abyss() then
+    return false
+  else
+    expect_new_location = true
+    magic(control('f') .. "one-way gate to the infinite horrors of the Abyss" .. "\ra\r")
+    return true
+  end
+end
+
+function plan_go_to_abyss_downstairs()
+  if (where == "Abyss:1" or where == "Abyss:2") and want_to_stay_in_abyss() then
+    magic("X>\r")
+    return true
+  end
+  return false
+end
+
 function plan_go_to_abyss_exit()
   magic("X<\r")
   return true
 end
 
-function get_feat_name(where_name)
-  for _, value in ipairs(portal_data) do
-    if where_name == value[1] then
-      return value[3]
-    end
-  end
-end
-
 function plan_enter_zig()
+  if ZIG_DIVE <= 0 then
+    return false
+  end
   if you.num_runes() < 3 then
     return false
   end
-  if string.find(view.feature_at(0,0), "enter_ziggurat") then
+  if view.feature_at(0,0) == "enter_ziggurat" then
     expect_new_location = true
     magic(">")
     return true
@@ -2387,7 +4170,7 @@ function plan_enter_zig()
 end
 
 function plan_enter_portal()
-  for _, por in ipairs(portals_found) do
+  for _, por in ipairs(c_persist.portals_found) do
     if string.find(view.feature_at(0,0), "enter_" .. get_feat_name(por)) then
       expect_portal = true
       expect_new_location = true
@@ -2411,14 +4194,33 @@ function plan_exit_portal()
   return false
 end
 
+function plan_enter_abyss()
+  if view.feature_at(0,0) == "enter_abyss" and want_to_stay_in_abyss() then
+    expect_new_location = true
+    magic(">Y")
+    return true
+  end
+  return false
+end
+
+function plan_go_down_abyss()
+  if view.feature_at(0,0) == "abyssal_stair" and want_to_stay_in_abyss() then
+    expect_new_location = true
+    magic(">")
+    return true
+  end
+  return false
+end
+
 function plan_zig_leave_level()
   if not where:find("Zig") then
     return false
   end
-  if where:find("10") and string.find(view.feature_at(0,0), "exit_ziggurat")
-     then
-    magic("<Y")
-    return true
+  if where:find(tostring(ZIG_DIVE)) then
+    if view.feature_at(0,0) == "exit_ziggurat" then
+      magic("<Y")
+      return true
+    end
   elseif string.find(view.feature_at(0,0), "stone_stairs_down") then
     magic(">")
     return true
@@ -2427,7 +4229,7 @@ function plan_zig_leave_level()
 end
 
 function plan_exit_abyss()
-  if string.find(view.feature_at(0,0), "exit_abyss") then
+  if view.feature_at(0,0) == "exit_abyss" then
     expect_new_location = true
     magic("<")
     return true
@@ -2437,11 +4239,11 @@ end
 
 function plan_step_towards_lair()
   local x, y
-  if stepped_on_lair then
+  if stepped_on_lair or not found_branch("L") then
     return false
   end
-  for x = -8,8 do
-    for y = -8,8 do
+  for x = -LOS,LOS do
+    for y = -LOS,LOS do
       if view.feature_at(x,y) == "enter_lair"
          and you.see_cell_no_trans(x,y) then
         if x == 0 and y == 0 then
@@ -2474,16 +4276,17 @@ function plan_continue_travel()
 end
 
 function choose_lair_rune_branch()
-  --if crawl.random2(2) == 0 then
-    --branch_options = { "A", "P", "S", "N" }
-  --else
-    --branch_options = { "P", "A", "N", "S" }
-    --branch_options = { "N", "S", "P", "A" }
-  --end
-  branch_options = { "P", "N", "S", "A" }
+  if crawl.random2(2) == 0 then
+    branch_options = { "P", "N", "S", "A" }
+  else
+    branch_options = { "S", "A", "P", "N" }
+  end
+  if WATER_RUNE_SECOND then
+    branch_options = { "P", "N", "S", "A" }
+  end
   for _, branch_code in ipairs(branch_options) do
     if found_branch(branch_code) and
-       not util.contains(branches_entered, branch_code) then
+       not util.contains(c_persist.branches_entered, branch_code) then
       return branch_code
     end
   end
@@ -2492,7 +4295,7 @@ function choose_lair_rune_branch()
   --  i = 1 + crawl.random2(4)
   --  branch_code = branch_options[i]
   --  if found_branch(branch_code) and
-  --     not util.contains(branches_entered, branch_code) then
+  --     not util.contains(c_persist.branches_entered, branch_code) then
   --    return branch_code
   --  end
   --  tries = tries + 1
@@ -2501,34 +4304,44 @@ function choose_lair_rune_branch()
 end
 
 function plan_new_travel()
-  local back_to_D_places = { "Temple", "Lair:8", "Orc:3", "Orc:4", "Vaults:4"}
+  local back_to_D_places = { "Temple", "Orc:3", "Orc:4", "Vaults:4"}
   if util.contains(back_to_D_places, where) then
     travel_destination = "D"
   end
-  if where == "Snake:5" and you.have_rune("serpentine") then
+  if where == "D:11" then
+    travel_destination = "L"
+  end
+  if where == "Lair:8" then
+    if travel.find_deepest_explored("D") == 15 and you.num_runes() < 2 then
+      travel_destination = choose_lair_rune_branch()
+    else
+      travel_destination = "D"
+    end
+  end
+  if where == "Snake:4" and you.have_rune("serpentine") then
     travel_destination = "D"
   end
-  if where == "Swamp:5" and you.have_rune("decaying") then
+  if where == "Swamp:4" and you.have_rune("decaying") then
     travel_destination = "D"
   end
-  if where == "Spider:5" and you.have_rune("gossamer") then
+  if where == "Spider:4" and you.have_rune("gossamer") then
     travel_destination = "D"
   end
-  if where == "Shoals:5" and you.have_rune("barnacled") then
+  if where == "Shoals:4" and you.have_rune("barnacled") then
     travel_destination = "D"
   end
   if where == "Vaults:5" and you.have_rune("silver") then
     travel_destination = "D"
   end
   if where == "D:15" then
-    if you.num_runes() == 1 and not util.contains(branches_entered, "V")
-       or you.num_runes() == 2 then
+    if you.num_runes() == 1 and not util.contains(c_persist.branches_entered, "V")
+       or you.num_runes() == 2 and util.contains(c_persist.branches_entered, "U") then
       travel_destination = "V"
-    elseif you.num_runes() == 1 and not util.contains(branches_entered, "U")
+    elseif you.num_runes() >= 1 and not util.contains(c_persist.branches_entered, "U") and not (EARLY_SECOND_RUNE and you.num_runes() == 1)
            or you.num_runes() >= 3 then
       travel_destination = "U"
     else
-      travel_destination = choose_lair_rune_branch()
+      travel_destination = "L"
     end
   end
   if where == "Depths:5" then
@@ -2542,9 +4355,9 @@ function plan_new_travel()
 end
 
 function plan_fly()
-  if you.xl() >= 14 and not you.flying() then
+  if you.xl() >= 14 and intrinsic_flight() and not you.flying() then
     local a,b = you.mp()
-    if a >= 3 and not you.rooted() then
+    if a >= 3 and not you.rooted() and you.hunger_name() ~= "starving" then
       if use_ability("Fly") then
         say("FLYING.")
         return true
@@ -2559,11 +4372,17 @@ function plan_find_upstairs()
   return true
 end
 
+function plan_gd1()
+  expect_new_location = true
+  magic("GD1\rY")
+  return true
+end
+
 function plan_zig_go_to_stairs()
   if not where:find("Zig") then
     return false
   end
-  if where:find("10") then
+  if where:find(tostring(ZIG_DIVE)) then
     magic("X<\r")
   else
     magic("X>\r")
@@ -2574,7 +4393,7 @@ end
 function plan_find_downstairs()
   -- try to avoid branch entrances by going to a random > from them
   local feat = view.feature_at(0,0)
-  if feat:find("enter_") or feat:find("escape_hatch_down") then
+  if feat:find("enter_") or feat == "escape_hatch_down" then
     local i,j
     local c = "X"
     j = crawl.roll_dice(1,12)
@@ -2601,6 +4420,16 @@ function plan_stuck()
   -- panic("Stuck!")
 end
 
+function plan_unshaft()
+  if where_shafted_from and (where_shafted_from ~= you.where()) then
+    --say("Trying to unshaft to " .. where_shafted_from .. ".")
+    expect_new_location = true
+    magic("G<")
+    return true
+  end
+  return false
+end
+
 function plan_not_coded()
   panic("Need to code this!")
   return true
@@ -2618,6 +4447,7 @@ function random_step(reason)
   for i = -1,1 do
     for j = -1,1 do
       if not (i == 0 and j == 0) and is_traversable(i,j)
+                                 and not view.withheld(i,j)
          and not monster_in_way(i,j) then
         count = count + 1
         if crawl.one_chance_in(count) then
@@ -2687,7 +4517,9 @@ function plan_flail_at_invis()
     x = -1 + crawl.random2(3)
     y = -1 + crawl.random2(3)
     tries = tries + 1
-    if (x ~= 0 or y ~= 0) and is_traversable(x,y) then
+    if (x ~= 0 or y ~= 0) and is_traversable(x,y)
+       and view.feature_at(x,y) ~= "closed_door"
+       and view.feature_at(x,y) ~= "runed_door" then
       success = true
     end
   end
@@ -2700,12 +4532,12 @@ function plan_flail_at_invis()
 end
 
 function plan_cure_confusion()
-  if you.confused() and not you.berserk() and
-     (danger or not options.autopick_on) and not transformed() then
-    local c = find_item("potion","curing")
-    if c then
-      say("CURING CONFUSION.")
-      quaff_helper(c)
+  if you.confused() and (danger or not options.autopick_on) then
+    if view.cloud_at(0,0) == "noxious fumes" and not meph_immune() then
+      return false
+    end
+    if drink_by_name("curing") then
+      say("(to cure confusion)")
       return true
     end
   end
@@ -2713,20 +4545,12 @@ function plan_cure_confusion()
 end
 
 function plan_cure_statzero()
-  if you.berserk() or transformed() then
-    return false
-  end
   local str, mstr = you.strength()
   local int, mint = you.intelligence()
   local dex, mdex = you.dexterity()
   if str <= 0 and mstr > 0 or int <= 0 and mint > 0 or dex <= 0 and mdex > 0
      then
-    local c = find_item("potion","restore abilities")
-    if c then
-      say("DRINKING RESTORE ABILITIES.")
-      quaff_helper(c)
-      return true
-    end
+    return drink_by_name("restore abilities")
   end
   return false
 end
@@ -2740,13 +4564,8 @@ function plan_cure_bad_statdrain()
   local dex, mdex = you.dexterity()
   if str <= mstr - 3 or str <= 3 and str < mstr or
      int <= mint - 3 or int <= 3 and int < mint or
-     dex <= mint - 3 or dex <= 3 and dex < mdex then
-    local c = find_item("potion","restore abilities")
-    if c then
-      say("DRINKING RESTORE ABILITIES.")
-      quaff_helper(c)
-      return true
-    end
+     dex <= mdex - 3 or dex <= 3 and dex < mdex then
+    return drink_by_name("restore abilities")
   end
   return false
 end
@@ -2759,9 +4578,85 @@ function plan_teleport()
   return false
 end
 
-function plan_stuck_clear_exclusions()
+function plan_orbrun_teleport()
+  if can_teleport() and want_to_orbrun_teleport() then
+    return teleport()
+  end
+  return false
+end
+
+function plan_orbrun_holy_word()
+  if can_read() and want_to_orbrun_holy_word() then
+    return holy_word()
+  end
+  return false
+end
+
+function plan_swamp_clear_exclusions()
+  if where ~= "Swamp:4" then
+    return false
+  end
   magic("X" .. control('e'))
   return true
+end
+
+function plan_swamp_go_to_rune()
+  if where ~= "Swamp:4" or you.have_rune("decaying") then
+    return false
+  end
+  magic(control('f') .. "@decaying rune" .. "\ra\r")
+  return true
+end
+
+function plan_swamp_clouds_hack()
+  if where ~= "Swamp:4" then
+    return false
+  end
+  if you.have_rune("decaying") and can_teleport() and teleport() then
+    return true
+  end
+  local x,y
+  local bestx,besty
+  local dist
+  local bestdist = 11
+  for x = -1,1 do
+    for y = -1,1 do
+      if supdist(x,y) > 0 and view.is_safe_square(x,y)
+         and not view.withheld(x,y) and not monster_in_way(x,y) then
+        dist = 11
+        for x2 = -LOS,LOS do
+          for y2 = -LOS,LOS do
+            if (view.cloud_at(x2,y2) == "freezing vapour"
+                or view.cloud_at(x2,y2) == "foul pestilence")
+               and you.see_cell_no_trans(x2,y2) then
+              if supdist(x-x2,y-y2) < dist then
+                dist = supdist(x-x2,y-y2)
+              end
+            end
+          end
+        end
+        if dist < bestdist then
+          bestx = x
+          besty = y
+          bestdist = dist
+        end
+      end
+    end
+  end
+  if bestdist < 11 then
+    magic(delta_to_vi(bestx,besty) .. "Y")
+    return true
+  end
+  for x = -LOS,LOS do
+    for y = -LOS,LOS do
+      if (view.cloud_at(x,y) == "freezing vapour"
+          or view.cloud_at(x,y) == "foul pestilence")
+         and you.see_cell_no_trans(x,y) then
+        return random_step("Swamp:4")
+      end
+    end
+  end
+  return plan_stuck_teleport()
 end
 
 function plan_stuck_teleport()
@@ -2771,60 +4666,107 @@ function plan_stuck_teleport()
   return false
 end
 
-function can_teleport()
-  return (not you.berserk() and not you.teleporting() and not you.anchored()
-          and not you.confused() and you.transform() ~= "wisp"
-          and you.transform() ~= "tree"
-          and you.transform() ~= "porcupine")
+function read(c)
+  if not can_read() then
+    return false
+  end
+  say("READING " .. item(c).name() .. ".")
+  magic("r" .. letter(c))
+  return true
 end
 
-function teleport()
-  local c = find_item("scroll","teleportation")
-  if c and not you.silenced() and not you.confused() then
-    say("READING TELEPORTATION.")
-    magic("r" .. c)
-    return true
+function read2(c,etc)
+  if not can_read() then
+    return false
   end
-  c = find_item("wand","teleportation")
-  if c and not you.confused() then
-    say("ZAPPING TELEPORTATION.")
-    magic("V" .. c .. ".")
+  local int, mint = you.intelligence()
+  if int <= 0 then
+    -- failing to read a scroll due to intzero can make qw unhappy
+    return false
+  end
+  say("READING " .. item(c).name() .. ".")
+  magic("r" .. letter(c) .. etc)
+  return true
+end
+
+function drink(c)
+  if not can_drink() then
+    return false
+  end
+  say("DRINKING " .. item(c).name() .. ".")
+  magic("q" .. letter(c))
+  return true
+end
+
+function selfzap(c)
+  if not can_zap() then
+    return false
+  end
+  say("ZAPPING " .. item(c).name() .. ".")
+  magic("V" .. letter(c) .. ".")
+  return true
+end
+
+function read_by_name(name)
+  local c = find_item("scroll", name)
+  if (c and read(c)) then
     return true
   end
   return false
 end
 
-function plan_cure_poison_rotting()
-  local hp, mhp = you.hp()
-  local c
-  if you.berserk() or transformed() then
-    return false
+function drink_by_name(name)
+  local c = find_item("potion", name)
+  if (c and drink(c)) then
+    return true
   end
-  if (you.poisoned() and hp < 10) or you.rotting() then
-    c = find_item("potion","curing")
-    if c then
-      say("DRINKING CURING.")
-      quaff_helper(c)
+  return false
+end
+
+function selfzap_by_name(name)
+  local c = find_item("wand", name)
+  if (c and selfzap(c)) then
+    return true
+  end
+  return false
+end
+
+function teleport()
+  if selfzap_by_name("teleportation") then
+    dd_hw_meter = 0
+    return true
+  end
+  if read_by_name("teleportation") then
+    dd_hw_meter = 0
+    return true
+  end
+  return false
+end
+
+function holy_word()
+  return read_by_name("holy word")
+end
+
+function plan_cure_poison()
+  local hp, mhp = you.hp()
+  if you.poison_survival() <= 1 and you.poisoned()
+     or you.race() == "Deep Dwarf" and you.poison_survival() <= hp - 10 then
+    if drink_by_name("curing") then
+      say("(to cure poison)")
       return true
     end
   end
-  if (you.poisoned() and hp < 10) and can_hand() then
-    say("INVOKING TROG'S HAND.")
+  if you.poison_survival() <= 1 and you.poisoned() and can_hand() then
     hand()
     return true
   end
   return false
 end
 
-function can_hand()
-  return (not (you.berserk() or you.confused() or you.silenced() or
-          you.regenerating() or
-          you.hunger_name() == "starving" or you.piety_rank() < 2 or
-          you.god() ~= "Trog"))
-end
-
 function move_towards(dx, dy)
-  if you.transform() == "tree" or you.transform() == "fungus" then
+  if you.transform() == "tree" or you.transform() == "fungus"
+     or you.confused() and
+        (count_bia(1) > 0 or count_sgd(1) > 0) then
     magic("s")
     return true
   end
@@ -2857,12 +4799,32 @@ function move_towards(dx, dy)
     table.insert(failed_move, 20*dx+dy)
     return false
   else
-    if (abs(dx) > 1 or abs(dy) > 1) and not kill_plant_mode then
+    if (abs(dx) > 1 or abs(dy) > 1) and not kill_plant_mode
+       and view.feature_at(dx,dy) ~= "closed_door" then
       did_move = true
+      if monster_array[dx][dy] or did_move_towards_monster > 0 then
+        local move_x, move_y = vi_to_delta(move)
+        target_memory_x = dx - move_x
+        target_memory_y = dy - move_y
+        did_move_towards_monster = 2
+      end
     end
     magic(move .. "Y")
     return true
   end
+end
+
+function plan_continue_tab()
+  if did_move_towards_monster == 0 then
+    return false
+  end
+  if supdist(target_memory_x, target_memory_y) == 0 then
+    return false
+  end
+  if not options.autopick_on then
+    return false
+  end
+  return move_towards(target_memory_x, target_memory_y)
 end
 
 function add_ignore(dx,dy)
@@ -2874,7 +4836,7 @@ function add_ignore(dx,dy)
   if not util.contains(ignore_list, name) then
     table.insert(ignore_list, name)
     crawl.setopt("runrest_ignore_monster ^= " .. name .. ":1")
-    say("Ignoring " .. name .. ".")
+    --say("Ignoring " .. name .. ".")
   end
 end
 
@@ -2885,7 +4847,7 @@ function remove_ignore(dx,dy)
     if mname == name then
       table.remove(ignore_list, i)
       crawl.setopt("runrest_ignore_monster -= " .. name .. ":1")
-      say("Unignoring " .. name .. ".")
+      --say("Unignoring " .. name .. ".")
       return
     end
   end
@@ -2899,21 +4861,31 @@ function clear_ignores()
     for i = 1, size do
       mname = table.remove(ignore_list)
       crawl.setopt("runrest_ignore_monster -= " .. mname .. ":1")
-      say("Unignoring " .. mname .. ".")
+      --say("Unignoring " .. mname .. ".")
     end
   end
 end
 
+-- this gets stuck if netted, confused, etc
 function attack_reach(x, y)
   magic('vr' .. vector_move(x, y) .. '.')
 end
 
 function attack_melee(x, y)
-  if you.transform() == "tree" or you.transform() == "fungus" then
-    magic(control(delta_to_vi(x, y)) .. "Y")
-  else
-    magic(delta_to_vi(x, y) .. "Y")
+  if you.confused() then
+    if count_bia(1) > 0 or count_sgd(1) > 0 then
+      magic("s")
+      return
+    elseif you.transform() == "tree" then
+      magic(control(delta_to_vi(x, y)) .. "Y")
+      return
+    end
   end
+  if monster_array[x][y]:attitude() == ATT_NEUTRAL then
+    magic(control(delta_to_vi(x, y)))
+    return
+  end
+  magic(delta_to_vi(x, y) .. "Y")
 end
 
 function make_attack(x, y, info)
@@ -2925,17 +4897,80 @@ function make_attack(x, y, info)
   return true
 end
 
-function use_ability(name)
+function use_ability(name, extra)
   for letter, abil in pairs(you.ability_table()) do
     if abil == name then
-      magic("a" .. letter)
+      say("INVOKING " .. name .. ".")
+      magic("a" .. letter .. (extra or ""))
       return true
     end
   end
 end
 
----------------------------------------------
--- cascading plans: this is the bot's flowchart
+function note(x)
+  crawl.take_note(you.turns() .. " ||| " .. x)
+end
+
+function say(x)
+  crawl.mpr(you.turns() .. " ||| " .. x)
+  note(x)
+end
+
+-- these few functions are called directly from ready()
+
+function record_portal_found(por)
+  if not util.contains(c_persist.portals_found, por) then
+    say("Found " .. por .. ".")
+    table.insert(c_persist.portals_found, por)
+  end
+end
+
+function check_messages()
+  local recent_messages = crawl.messages(20)
+  local very_recent_messages = crawl.messages(5)
+  if very_recent_messages:find("Sigmund flickers and vanishes") then
+    invisi_sigmund = true
+  end
+  if very_recent_messages:find("Your surroundings suddenly seem different") then
+    invisi_sigmund = false
+  end
+  str1 = "Your pager goes off"
+  str2 = "qwqwqw"
+  if recent_messages:find(str1) then
+    a = recent_messages:reverse():find(str1:reverse())
+    b = recent_messages:reverse():find(str2:reverse())
+    if (not b) or a < b then
+      have_message = true
+    end
+  end
+  if in_portal() then
+    return false
+  end
+  if recent_messages:find("Found") then
+    for _, value in ipairs(portal_data) do
+      if recent_messages:find(value[2]) then
+        record_portal_found(value[1])
+      end
+    end
+  end
+end
+
+function plan_message()
+  if read_message then
+    crawl.setopt("clear_messages = false")
+    magic("_")
+    read_message = false
+  else
+    crawl.setopt("clear_messages = true")
+    magic(":qwqwqw\r")
+    read_message = true
+    have_message = false
+    crawl.delay(2500)
+  end
+end
+
+----------------------------------------
+-- cascading plans: this is the bot's flowchart for using the above plans
 
 function cascade(plans)
   local plan_turns = {}
@@ -2952,8 +4987,7 @@ function cascade(plans)
         plan_turns[plan] = you.turns()
         plan_result[plan] = result
         if result == nil or result == true then
-          if (DELAYED or DELAYEDZOT and where == "Zot:5") and
-             result == true then
+          if DELAYED and result == true then
             crawl.delay(next_delay)
           end
           next_delay = DELAY_TIME
@@ -2963,11 +4997,18 @@ function cascade(plans)
         if not plandata[2]:find("^try") then
           panic(plandata[2] .. " failed despite returning true.")
         end
+        if not c_persist.plan_fail_count[plandata[2]] then
+          c_persist.plan_fail_count[plandata[2]] = 0
+        end
+        c_persist.plan_fail_count[plandata[2]] = c_persist.plan_fail_count[plandata[2]] + 1
       end
     end
     return false
   end
 end
+
+-- any plan that might not know whether or not it successfully took an action
+-- (e.g. autoexplore) should prepend "try_" to its text
 
 plan_pre_explore = cascade {
   {plan_fly, "fly"},
@@ -2978,33 +5019,59 @@ plan_pre_explore = cascade {
 
 plan_pre_explore2 = cascade {
   {plan_disturbance_random_step, "disturbance_random_step"},
-  {plan_remove_redundant_jewels, "remove_redundant_jewels"},
   {plan_upgrade_armour, "upgrade_armour"},
   {plan_upgrade_amulet, "upgrade_amulet"},
   {plan_upgrade_rings, "upgrade_rings"},
   {plan_read_id, "read_id"},
   {plan_zap_id, "zap_id"},
-  {plan_use_id_scrolls, "use_id_scrolls"},
   {plan_quaff_id, "quaff_id"},
+  {plan_use_id_scrolls, "use_id_scrolls"},
   {plan_drop_filtered_items, "try_drop_filtered_items"},
+  {plan_drop_other_items, "drop_other_items"},
 } -- hack
 
 plan_emergency = cascade {
   {plan_cure_statzero, "cure_statzero"},
   {plan_cure_confusion, "cure_confusion"},
+  {plan_remove_terrible_jewellery, "remove_terrible_jewellery"},
   {plan_teleport, "teleport"},
+  {plan_dd_recharge_teleport, "dd_recharge_teleport"},
+  {plan_cure_bad_poison, "cure_bad_poison"},
   {plan_heal_wounds, "heal_wounds"},
+  {plan_choose_tactical_step, "choose_tactical_step"},
+  {plan_cloud_step, "cloud_step"},
   {plan_hand, "hand"},
   {plan_resistance, "resistance"},
   {plan_bia, "bia"},
+  {plan_sgd, "sgd"},
+  {plan_hydra_destruction, "try_hydra_destruction"},
+  {plan_dd_recharge_heal_wounds, "dd_recharge_heal_wounds"},
   {plan_wield_weapon, "wield_weapon"},
   {plan_water_step, "water_step"},
   {plan_berserk, "berserk"},
+  {plan_other_step, "other_step"},
+} -- hack
+
+plan_orbrun_emergency = cascade {
+  {plan_cure_statzero, "cure_statzero"},
+  {plan_cure_confusion, "cure_confusion"},
+  {plan_orbrun_teleport, "orbrun_teleport"},
+  {plan_dd_recharge_teleport, "dd_recharge_teleport"},
+  {plan_orbrun_holy_word, "orbrun_holy_word"},
+  {plan_orbrun_heal_wounds, "orbrun_heal_wounds"},
+  {plan_orbrun_haste, "orbrun_haste"},
+  {plan_dd_orbrun_recharge_hasting, "orbrun_dd_recharge_hasting"},
+  {plan_hand, "hand"},
+  {plan_resistance, "resistance"},
+  {plan_dd_recharge_heal_wounds, "dd_recharge_heal_wounds"},
+  {plan_wield_weapon, "wield_weapon"},
+  {plan_orbrun_might, "orbrun_might"},
 } -- hack
 
 plan_eatrest = cascade {
   {plan_eat_chunk, "eat_chunk"},
   {plan_eat_permafood, "eat_permafood"},
+  {plan_dd_hand_for_healing, "dd_hand_for_healing"},
   {plan_rest, "rest"},
   {plan_handle_corpses, "handle_corpses"},
   {plan_find_corpses, "try_find_corpses"},
@@ -3029,10 +5096,15 @@ plan_orbrun_eatrest = cascade {
 } -- hack
 
 plan_explore = cascade {
+  {plan_unshaft, "try_unshaft"},
   {plan_enter_zig, "enter_zig"},
   {plan_continue_travel, "try_continue_travel"},
   {plan_enter_portal, "enter_portal"},
   {plan_go_to_portal_entrance, "try_go_to_portal_entrance"},
+  {plan_enter_abyss, "enter_abyss"},
+  {plan_go_to_abyss_portal, "try_go_to_abyss_portal"},
+  {plan_go_down_abyss, "go_down_abyss"},
+  {plan_go_to_abyss_downstairs, "try_go_to_abyss_downstairs"},
   {plan_autoexplore, "try_autoexplore"},
 } -- hack
 
@@ -3048,33 +5120,40 @@ plan_explore2 = cascade {
 } -- hack
 
 plan_move = cascade {
+  {plan_stairdance_up, "plan_stairdance_up"},
   {plan_emergency, "emergency"},
-  {plan_zot_wait, "zot_wait"},
+  {plan_wait_for_melee, "wait_for_melee"},
+  {plan_wait_throw, "try_wait_throw"},
+  {plan_wait_wait, "wait_wait"},
   {plan_attack, "attack"},
-  {plan_cure_poison_rotting, "cure_poison_rotting"},
+  {plan_cure_poison, "cure_poison"},
   {plan_cure_bad_statdrain, "cure_bad_statdrain"},
   {plan_flail_at_invis, "try_flail_at_invis"},
+  {plan_burn_spellbooks, "try_burn_spellbooks"},
   {plan_eatrest, "eatrest"},
   {plan_pre_explore, "pre_explore"},
   {plan_step_towards_lair, "step_towards_lair"},
+  {plan_continue_tab, "continue_tab"},
   --{plan_abandon_god, "abandon_god"},
-  --{plan_unwield_weapon, "unwield_weapon"},
-  --{plan_join_god, "join_god"},
-  --{plan_find_altar, "try_find_altar"},
-  --{plan_go_to_temple, "try_go_to_temple"},
+  {plan_unwield_weapon, "unwield_weapon"},
+  {plan_join_god, "join_god"},
+  {plan_find_altar, "try_find_altar"},
+  {plan_go_to_temple, "try_go_to_temple"},
   --{plan_go_to_lair, "try_go_to_lair"},
   {plan_explore, "explore"},
   {plan_pre_explore2, "pre_explore2"},
   {plan_explore2, "explore2"},
-  --{plan_stuck_clear_exclusions, "try_stuck_clear_exclusions"},
+  {plan_swamp_clear_exclusions, "try_swamp_clear_exclusions"},
+  {plan_swamp_go_to_rune, "try_swamp_go_to_rune"},
+  {plan_swamp_clouds_hack, "swamp_clouds_hack"},
   {plan_stuck_teleport, "stuck_teleport"},
   {plan_stuck, "stuck"},
 } -- hack
 
 plan_orbrun_move = cascade {
-  {plan_emergency, "emergency"},
+  {plan_orbrun_emergency, "orbrun_emergency"},
   {plan_attack, "attack"},
-  {plan_cure_poison_rotting, "cure_poison_rotting"},
+  {plan_cure_poison, "cure_poison"},
   {plan_cure_bad_statdrain, "cure_bad_statdrain"},
   {plan_orbrun_eatrest, "orbrun_eatrest"},
   {plan_go_up, "go_up"},
@@ -3084,6 +5163,7 @@ plan_orbrun_move = cascade {
   --{plan_stuck_clear_exclusions, "try_stuck_clear_exclusions"},
   {plan_stuck_teleport, "stuck_teleport"},
   {plan_autoexplore, "try_autoexplore"},
+  {plan_gd1, "try_gd1"},
   {plan_stuck, "stuck"},
 } -- hack
 
@@ -3091,7 +5171,7 @@ plan_abyss_move = cascade {
   {plan_exit_abyss, "exit_abyss"},
   {plan_emergency, "emergency"},
   {plan_attack, "attack"},
-  {plan_cure_poison_rotting, "cure_poison_rotting"},
+  {plan_cure_poison, "cure_poison"},
   {plan_cure_bad_statdrain, "cure_bad_statdrain"},
   {plan_flail_at_invis, "try_flail_at_invis"},
   {plan_abyss_eatrest, "abyss_eatrest"},
@@ -3101,23 +5181,118 @@ plan_abyss_move = cascade {
   {plan_wait, "wait"},
 } -- hack
 
----------------------------------------------
--- "abstract" functions that have very little to do with playing crawl
+----------------------------------------
+-- skill selection
 
-function magic(command)
-  crawl.enable_more(false)
-  crawl.process_keys(command .. string.char(27) .. string.char(27) ..
-                     string.char(27))
+function choose_single_skill(sk)
+  you.train_skill(sk, 1)
+  skill_list = {"Fighting","Short Blades","Long Blades","Axes","Maces & Flails",
+                "Polearms","Staves","Unarmed Combat","Bows","Crossbows",
+                "Throwing","Slings","Armour","Dodging","Shields","Spellcasting",
+                "Conjurations","Hexes","Charms","Summonings","Necromancy",
+                "Translocations","Transmutations","Fire Magic","Ice Magic",
+                "Air Magic","Earth Magic","Poison Magic","Invocations",
+                "Evocations","Stealth"}
+  for i,sk2 in ipairs(skill_list) do
+    if sk ~= sk2 then
+      you.train_skill(sk2, 0)
+    end
+  end
 end
 
-function note(x)
-  crawl.take_note(you.turns() .. " ||| " .. x)
+function handle_skills()
+  local weapon_skill = wskill()
+  -- need to have at least one skill selected or bad things might happen
+  -- early xom characters might get their weapon removed at any point, so
+  -- always train fighting
+  if you.god() == "Xom" then
+    choose_single_skill("Fighting")
+    you.train_skill(weapon_skill, 1)
+  elseif you.can_train_skill(weapon_skill) then
+    choose_single_skill(weapon_skill)
+  else
+    choose_single_skill("Fighting")
+  end
+  local at_min_delay = (you.base_skill(weapon_skill) >= min_delay_skill())
+  local ac = armour_ac()
+  if you.base_skill("Shields") < target_shield_skill()
+     and (at_min_delay or you.base_skill(weapon_skill)
+                          >= 2*you.base_skill("Shields"))
+     and you.base_skill("Fighting") >= you.base_skill("Shields") then
+    you.train_skill("Shields", 1)
+  elseif intrinsic_heavy_dodgy() and at_min_delay and ac < 12
+     and you.base_skill("Armour") >= 12
+     and you.base_skill("Armour") >= you.base_skill("Dodging")
+     and you.base_skill("Fighting") >= you.base_skill("Dodging") then
+    you.train_skill("Dodging", 1)
+  elseif intrinsic_dodgy() and
+         (at_min_delay or you.base_skill(weapon_skill)
+                          >= 2*you.base_skill("Dodging"))
+         and you.base_skill("Fighting") >= you.base_skill("Dodging") then
+    you.train_skill("Dodging", 1)
+  elseif (at_min_delay or ac >= 8 and you.base_skill(weapon_skill)
+                                      >= 3*you.base_skill("Armour"))
+         and you.base_skill("Fighting") >= you.base_skill("Armour")
+         and not intrinsic_dodgy() then
+    you.train_skill("Armour", 1)
+  elseif at_min_delay or you.base_skill(weapon_skill)
+                         >= 2*you.base_skill("Fighting") then
+    you.train_skill("Fighting", 1)
+  end
+  if you.god() == "Makhleb" and you.piety_rank() >= 2 and you.base_skill("Invocations") < 12 then
+    you.train_skill("Invocations", 1)
+  end
+  -- logic for training skills for MP could be improved probably
+  if you.race() == "Deep Dwarf" and you.can_train_skill("Invocations") and
+      (you.base_skill("Invocations") < 4 or you.base_mp() < 5) then
+    you.train_skill("Invocations", 1)
+  end
+  if you.race() == "Deep Dwarf" and you.god() == "Trog"
+     and (you.base_skill("Evocations") < 4 or you.base_mp() < 5) then
+    you.train_skill("Evocations", 1)
+  end
+  if you.race() == "Vine Stalker" and you.base_skill("Evocations") < 12
+     and (at_min_delay or you.base_skill(weapon_skill)
+                          >= 3*you.base_skill("Evocations")) then
+    you.train_skill("Evocations", 1)
+  end
+  if at_min_delay
+     and you.base_skill(weapon_skill) >= 20
+     and (you.base_skill(weapon_skill) >= you.base_skill("Fighting")
+          or you.base_skill(weapon_skill) >= 26) then
+    you.train_skill(weapon_skill, 0)
+  end
+  -- make sure we don't run out of skills to train
+  if you.base_skill("Fighting") >= 26 then
+    if intrinsic_dodgy() then
+      you.train_skill("Armour", 1)
+    else
+      you.train_skill("Dodging", 1)
+    end
+  end
+  if (you.base_skill("Armour") >= 26 or you.race():find("Draconian")
+                                     or you.race() == "Felid"
+                                     or you.race() == "Octopode")
+     and you.base_skill("Dodging") >= 26 then
+    you.train_skill("Evocations", 1)
+  end
 end
 
-function say(x)
-  crawl.mpr(you.turns() .. " ||| " .. x)
-  note(x)
+function choose_stat_gain()
+  local str, mstr = you.strength()
+  if intrinsic_dodgy() or mstr >= 20 and intrinsic_heavy_dodgy() then
+    return "d"
+  else
+    return "s"
+  end
 end
+
+function auto_experience()
+  return true
+end
+
+-------------------------------------------
+-- a few utility functions
 
 function contains_string_in(name,t)
   for _, value in ipairs(t) do
@@ -3126,28 +5301,6 @@ function contains_string_in(name,t)
     end
   end
   return false
-end
-
-function handle_skills()
-  weapon_skill = "Axes"
-  if you.race() == "Troll" then
-    weapon_skill = "Unarmed Combat"
-  end
-  train_weapon = you.base_skill(weapon_skill) <= 27 and 1 or 0
-  train_fight_armour = you.base_skill(weapon_skill) >= 18 and 1 or 0
-  train_dodge = you.base_skill("Fighting") >= 26 and 1 or 0
-  you.train_skill(weapon_skill, train_weapon)
-  you.train_skill("Fighting", train_fight_armour)
-  you.train_skill("Armour", train_fight_armour)
-  you.train_skill("Dodging", train_dodge) -- this is just to not get stuck
-  you.train_skill("Throwing", 0)
-  you.train_skill("Spellcasting", 0)
-  you.train_skill("Charms", 0)
-  you.train_skill("Hexes", 0)
-  you.train_skill("Stealth", 0)
-  you.train_skill("Shields", 0)
-  you.train_skill("Short Blades", 0)
-  you.train_skill("Maces & Flails", 0)
 end
 
 function control(c)
@@ -3161,6 +5314,22 @@ function delta_to_vi(dx, dy)
     [1]  = { [-1] = 'u', [0] = 'l', [1] = 'n'},
   } -- hack
   return d2v[dx][dy]
+end
+
+function vi_to_delta(c)
+  local d2v = {
+    [-1] = { [-1] = 'y', [0] = 'h', [1] = 'b'},
+    [0]  = { [-1] = 'k',            [1] = 'j'},
+    [1]  = { [-1] = 'u', [0] = 'l', [1] = 'n'},
+  } -- hack
+  local x,y
+  for x = -1,1 do
+    for y = -1,1 do
+      if supdist(x,y) > 0 and d2v[x][y] == c then
+        return x,y
+      end
+    end
+  end
 end
 
 function sign(a)
@@ -3182,49 +5351,231 @@ function vector_move(dx, dy)
   return str
 end
 
-function supdist(dx, dy)
-  if abs(dx) <= abs(dy) then
-    return abs(dx)
+function max(x, y)
+  if x > y then
+    return x
   else
-    return abs(dy)
+    return y
   end
+end
+
+function supdist(dx, dy)
+  return max(abs(dx), abs(dy))
 end
 
 function adjacent(dx, dy)
   return abs(dx) <= 1 and abs(dy) <= 1
 end
 
-function choose_stat_gain()
-  return "s"
-end
+---------------------------------------------
+-- initialization/control/saving
 
-function auto_experience()
-  return true
-end
-
-function write_string_array(arr, aname)
-  local res = aname .. " = { "
-  for i, v in ipairs(arr) do
-    res = res .. '"' .. v .. '"' .. ", "
+function initialize()
+  if not did_first_turn and you.turns() == 0 then
+    did_first_turn = true
+    first_turn()
   end
-  return res .. "}\n"
+  automatic = true
+  where = you.where()
+  expect_new_location = false
+  if c_persist.branches_entered == nil then
+    c_persist.branches_entered = { "D" }
+  end
+  if c_persist.portals_found == nil then
+    c_persist.portals_found = { }
+  end
+  if c_persist.plan_fail_count == nil then
+    c_persist.plan_fail_count = { }
+  end
+  set_options()
+  initialize_monster_array()
 end
 
-function qw_save()
-  local res = ""
-  if branches_entered then
-    res = res .. write_string_array(branches_entered, "branches_entered")
-  end
-  if portals_found then
-    res = res .. write_string_array(portals_found, "portals_found")
-  end
-  return res
+function stop()
+  automatic = false
+  unset_options()
 end
 
-table.insert(chk_lua_save, qw_save)
+function start()
+  initialize()
+  ready()
+end
 
--- for testing random stuff
+function panic(msg)
+  crawl.mpr("<lightred>" .. msg .. "</lightred>")
+  stop()
+end
+
+function startstop()
+  if automatic then
+    stop()
+  else
+    start()
+  end
+end
+
+function hit_closest()
+  startstop()
+end
+
+function set_counter()
+  crawl.formatted_mpr("Set counter to what? ", "prompt")
+  local res = crawl.c_input_line()
+  c_persist.record.counter = tonumber(res)
+  note("counter set to " .. c_persist.record.counter)
+end
+
+function first_turn_persist()
+  if not c_persist.record then
+    c_persist.record = {}
+  end
+  if not c_persist.record.counter then
+    c_persist.record.counter = 1
+  else
+    c_persist.record.counter = c_persist.record.counter + 1
+  end
+  note("counter = " .. c_persist.record.counter)
+  --if not c_persist.mlist then
+  --  c_persist.mlist = {}
+  --end
+  --if not c_persist.record.mlist then
+  --  c_persist.record.mlist = {}
+  --end
+  --for _,mname in ipairs(c_persist.mlist) do
+  --  if not c_persist.record.mlist[mname] then
+  --    c_persist.record.mlist[mname] = 1
+  --  else
+  --    c_persist.record.mlist[mname] = c_persist.record.mlist[mname] + 1
+  --  end
+  --end
+  for key,_ in pairs(c_persist) do
+    if key ~= "record" then
+      c_persist[key] = nil
+    end
+  end
+end
+
+function first_turn()
+  first_turn_persist()
+  if AUTO_START then
+    initialize()
+  end
+end
+
+function ready()
+  if not did_first_turn and you.turns() == 0 then
+    did_first_turn = true
+    first_turn()
+  end
+  if you.turns() >= dump_count then
+    dump_count = dump_count+100
+    crawl.dump_char()
+  end
+  if you.turns() >= skill_count then
+    skill_count = skill_count+20
+    handle_skills()
+  end
+  local time_passed
+  if you.turns() > old_turn_count then
+    if did_move then
+      move_count = move_count + 1
+    else
+      move_count = 0
+    end
+    dd_hw_meter = math.floor(6*dd_hw_meter/7)
+    old_turn_count = you.turns()
+    did_move = false
+    if did_move_towards_monster > 0 then
+      did_move_towards_monster = did_move_towards_monster - 1
+    end
+    time_passed = true
+  else
+    time_passed = false
+  end
+  if you.where() ~= where then
+    clear_ignores()
+    if expect_new_location then
+      if where_shafted_from == you.where() then
+        say("Successfully unshafted to " .. you.where() .. ".")
+        where_shafted_from = nil
+      end
+    elseif automatic and not you.where():find("Abyss") then
+      say("Shafted from " .. where .. " to " .. you.where() .. ".")
+      if not where_shafted_from then
+        where_shafted_from = where
+      end
+    end
+    where = you.where()
+    if cur_branch() and not util.contains(c_persist.branches_entered, cur_branch()) then
+      say("Entered " .. cur_branch() .. ".")
+      table.insert(c_persist.branches_entered, cur_branch())
+    end
+    if expect_portal and in_portal() then
+      say("Entered " .. where .. ".")
+    end
+    c_persist.portals_found = { }
+    if where == "Vaults:5" and not v5_entry_turn then
+      v5_entry_turn = you.turns()
+    end
+  end
+  expect_new_location = false
+  expect_portal = false
+  check_messages()
+  if FULL_INVENTORY_PANIC and free_inventory_slots() == 0 then
+    panic("Inventory is full!")
+  end
+  if time_passed and SINGLE_STEP then
+    stop()
+  end
+  if automatic then
+    crawl.flush_input()
+    crawl.more_autoclear(true)
+    update_monster_array()
+    danger = sense_danger(LOS)
+    immediate_danger = sense_immediate_danger()
+    sense_sigmund()
+    if have_message then
+      plan_message()
+    elseif you.where():find("Abyss") and not want_to_stay_in_abyss() then
+      plan_abyss_move()
+    elseif you.have_orb() then
+      plan_orbrun_move()
+    else
+      plan_move()
+    end
+  end
+end
+
+function magic(command)
+  crawl.process_keys(command .. string.char(27) .. string.char(27) ..
+                     string.char(27))
+end
+
+
+
+--------------------------------
+-- a function to test various things conveniently
 function ttt()
-  say(view.feature_at(0,0))
+  --for it in inventory() do
+  --  crawl.mpr("name = " .. it.name() .. ", ego = " .. (it.ego() or "none") .. ", subtype = " .. (it.subtype() or "none") .. ", slot = " .. slot(it) .. ".")
+  --end
+  for it in at_feet() do
+    local val1,val2 = equip_value(it)
+    local val3,val4 = equip_value(it, true)
+    crawl.mpr("name = " .. it.name() .. ", ego = " .. (it.ego() or "none") .. it.ego_type .. ", subtype = " .. (it.subtype() or "none") .. ", slot = " .. (slot(it) or -1) .. ", values = " .. val1 .. " " .. val2 .. " " .. val3 .. " " .. val4 .. ".")
+  end
+end
+
+function c_trap_is_safe(trap)
+  return (trap ~= "permanent teleport")
+end
+
+function c_answer_prompt(prompt)
+  if prompt == "Die?" then
+    return false
+  end
+  if prompt:find("blurry vision") then
+    return true
+  end
 end
 }

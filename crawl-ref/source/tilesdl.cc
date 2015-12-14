@@ -389,7 +389,7 @@ bool TilesFramework::initialise()
     m_image = new ImageManager();
 
     // If the window size is less than the view height, the textures will
-    // have to be shrunk.  If this isn't the case, then don't create mipmaps,
+    // have to be shrunk. If this isn't the case, then don't create mipmaps,
     // as this appears to make things blurry on some users machines.
     bool need_mips = (m_windowsz.y < 32 * VIEW_MIN_HEIGHT);
     if (!m_image->load_textures(need_mips))
@@ -771,7 +771,7 @@ int TilesFramework::getch_ck()
                         continue;
 
                     // Stay within this input loop until the mouse moves
-                    // to a semantically different location.  Crawl doesn't
+                    // to a semantically different location. Crawl doesn't
                     // care about small mouse movements.
                     if (!need_redraw() && last_loc == m_cur_loc)
                         continue;
@@ -1314,18 +1314,15 @@ void TilesFramework::layout_statcol()
         m_statcol_bottom = m_region_tab->sy - m_tab_margin;
 
 #if TAG_MAJOR_VERSION == 34
-        // Lava orc temperature bar and zot points.
+        // Lava orc temperature bar
         if (you.species == SP_LAVA_ORC)
             ++crawl_view.hudsz.y;
 #endif
-        if (crawl_state.game_is_zotdef())
-            ++crawl_view.hudsz.y;
         m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
         m_statcol_top += m_region_stat->dy;
 
-        for (int i = 0, size = Options.tile_layout_priority.size(); i < size; ++i)
+        for (const string &str : Options.tile_layout_priority)
         {
-            string str = Options.tile_layout_priority[i];
             if (str == "inventory")
                 resize_inventory();
             else if (str == "minimap" || str == "map")
@@ -1525,7 +1522,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const string &tag,
 
 void TilesFramework::add_text_tag(text_tag_type type, const monster_info& mon)
 {
-    // HACK.  Large-tile monsters don't interact well with name tags.
+    // HACK. Large-tile monsters don't interact well with name tags.
     monster_type genus = mons_genus(mon.type);
     if (genus == MONS_PANDEMONIUM_LORD
         || genus == MONS_HELL_LORD

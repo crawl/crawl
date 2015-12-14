@@ -12,12 +12,12 @@
 class circle_def;
 struct ray_def;
 
-#define EPSILON_VALUE 0.00005
+#define EPSILON_VALUE 0.00001
 
 bool double_is_zero(const double x);
 
 void set_los_radius(int r);
-extern int los_radius2;
+extern int los_radius;
 
 // Default bounds that tracks global LOS radius.
 #define BDS_DEFAULT (circle_def())

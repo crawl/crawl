@@ -235,9 +235,7 @@ Menu::~Menu()
 
 void Menu::clear()
 {
-    for (int i = 0, count = items.size(); i < count; ++i)
-        delete items[i];
-    items.clear();
+    deleteAll(items);
     last_selected = -1;
 }
 
@@ -608,9 +606,12 @@ bool Menu::process_key(int keyin)
         break;
 
     case '_':
-        show_pickup_menu_help();
-        nav     = true;
-        repaint = true;
+        if (help_key() != "")
+        {
+            show_specific_help(help_key());
+            nav     = true;
+            repaint = true;
+        }
         break;
 
 #ifdef TOUCH_UI
@@ -793,9 +794,9 @@ void Menu::get_selected(vector<MenuEntry*> *selected) const
 {
     selected->clear();
 
-    for (int i = 0, count = items.size(); i < count; ++i)
-        if (items[i]->selected())
-            selected->push_back(items[i]);
+    for (MenuEntry *item : items)
+        if (item->selected())
+            selected->push_back(item);
 }
 
 void Menu::deselect_all(bool update_view)
@@ -1001,8 +1002,7 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         tileset.emplace_back(idx, TEX_PLAYER);
     }
 
-    // A fake monster might not have its ghost member set up properly,
-    // and mons_flies() looks at ghost.
+    // A fake monster might not have its ghost member set up properly.
     if (!fake && m->ground_level())
     {
         if (ch == TILE_DNGN_LAVA)
@@ -1113,7 +1113,7 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
     int flags[TILEP_PART_MAX];
     tilep_calc_flags(equip_doll, flags);
 
-    // For skirts, boots go under the leg armour.  For pants, they go over.
+    // For skirts, boots go under the leg armour. For pants, they go over.
     if (equip_doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
     {
         p_order[6] = TILEP_PART_BOOTS;
@@ -1167,8 +1167,8 @@ bool Menu::is_selectable(int item) const
         return true;
 
     string text = items[item]->get_filter_text();
-    for (int i = 0, count = select_filter.size(); i < count; ++i)
-        if (select_filter[i].matches(text))
+    for (const text_pattern &pat : select_filter)
+        if (pat.matches(text))
             return true;
 
     return false;
@@ -1249,12 +1249,12 @@ void Menu::select_index(int index, int qty)
 int Menu::get_entry_index(const MenuEntry *e) const
 {
     int index = 0;
-    for (unsigned int i = first_entry; i < items.size(); i++)
+    for (const auto &item : items)
     {
-        if (items[i] == e)
+        if (item == e)
             return index;
 
-        if (items[i]->quantity != 0)
+        if (item->quantity != 0)
             index++;
     }
 
@@ -1316,12 +1316,16 @@ void Menu::write_title()
     if (!first)
         ASSERT(title2);
 
-    formatted_string fs =
-        formatted_string(item_colour(-1, first ? title : title2));
-
+    auto col = item_colour(-1, first ? title : title2);
     string text = (first ? title->get_text() : title2->get_text());
 
-    fs.cprintf("%s", text.c_str());
+    formatted_string fs = formatted_string(col);
+
+    if (flags & MF_ALLOW_FORMATTING)
+        fs += formatted_string::parse_string(text);
+    else
+        fs.cprintf("%s", text.c_str());
+
     if (flags & MF_SHOW_PAGENUMBERS)
     {
         // The total number of pages is well defined, but the current
@@ -1962,7 +1966,10 @@ bool formatted_scroller::page_down()
 
 bool formatted_scroller::page_up()
 {
-    int old_first = first_entry;
+    if (items.empty())
+        return false;
+
+    const int old_first = first_entry;
 
     // If, when scrolling backward, we encounter a MEL_TITLE
     // somewhere in the newly displayed page, stop scrolling
@@ -2338,8 +2345,10 @@ int PrecisionMenu::handle_mouse(const MouseEvent &me)
             // something got clicked that needs to signal the menu to end
             return CK_MOUSE_CLICK;
         case MenuObject::INPUT_END_MENU_ABORT:
+            // XXX: For right-click we use CK_MOUSE_CMD to cancel out of the
+            // menu, but these mouse-button->key mappings are not very sane.
             clear_selections();
-            return CK_MOUSE_CLICK;
+            return CK_MOUSE_CMD;
         case MenuObject::INPUT_FOCUS_LOST:
             // The object lost its focus and is no longer the active one
             if (obj == m_active_object)
@@ -3018,7 +3027,7 @@ void SaveMenuItem::_pack_doll()
     int flags[TILEP_PART_MAX];
     tilep_calc_flags(m_save_doll, flags);
 
-    // For skirts, boots go under the leg armour.  For pants, they go over.
+    // For skirts, boots go under the leg armour. For pants, they go over.
     if (m_save_doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
     {
         p_order[6] = TILEP_PART_BOOTS;
@@ -3376,19 +3385,25 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
         }
         return INPUT_NO_ACTION;
     }
-    if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
+    InputReturnValue ret = INPUT_NO_ACTION;
+    if (me.event == MouseEvent::PRESS)
     {
-        if (find_item != nullptr)
+        if (me.button == MouseEvent::LEFT)
         {
-            select_item(find_item);
-            if (find_item->selected())
-                return MenuObject::INPUT_SELECTED;
-            else
-                return MenuObject::INPUT_DESELECTED;
+            if (find_item != nullptr)
+            {
+                select_item(find_item);
+                if (find_item->selected())
+                    ret = INPUT_SELECTED;
+                else
+                    ret = INPUT_DESELECTED;
+            }
         }
+        else if (me.button == MouseEvent::RIGHT)
+            ret = INPUT_END_MENU_ABORT;
     }
     // all the other Mouse Events are uninteresting and are ignored
-    return INPUT_NO_ACTION;
+    return ret;
 }
 #endif
 
@@ -3853,11 +3868,10 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
         {
             select_item(find_item);
             if (find_item->selected())
-                return MenuObject::INPUT_SELECTED;
+                return INPUT_SELECTED;
             else
-                return MenuObject::INPUT_DESELECTED;
+                return INPUT_DESELECTED;
         }
-#ifdef USE_TILE_LOCAL
         else
         {
             // handle clicking on the scrollbar (top half of region => scroll up)
@@ -3866,14 +3880,9 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
             else
                 return process_input(CK_UP);
         }
-#endif
     }
-    if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
-    {
-        // TODO
-        // pass mouse press event to objects, in case we pressed
-        // down on top of an item with such action
-    }
+    else if (me.event == MouseEvent::PRESS && me.button == MouseEvent::RIGHT)
+        return INPUT_END_MENU_ABORT;
     // all the other Mouse Events are uninteresting and are ignored
     return INPUT_NO_ACTION;
 }
@@ -4168,10 +4177,12 @@ MenuObject::InputReturnValue MenuDescriptor::process_input(int key)
 #ifdef USE_TILE_LOCAL
 MenuObject::InputReturnValue MenuDescriptor::handle_mouse(const MouseEvent &me)
 {
+    if (me.event == MouseEvent::PRESS && me.button == MouseEvent::RIGHT)
+        return INPUT_END_MENU_ABORT;
     // we have nothing interesting to do on mouse events because render()
-    // always checks if the active has changed
-    // override for things like tooltips
-    return MenuObject::INPUT_NO_ACTION;
+    // always checks if the active has changed override for things like
+    // tooltips
+    return INPUT_NO_ACTION;
 }
 #endif
 

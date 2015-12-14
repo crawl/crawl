@@ -354,7 +354,7 @@ static void _do_merge_masses(monster* initial_mass, monster* merge_to)
     merge_to->hit_points += initial_mass->hit_points;
 
     // Merge monster flags (mostly so that MF_CREATED_NEUTRAL, etc. are
-    // passed on if the merged slime subsequently splits.  Hopefully
+    // passed on if the merged slime subsequently splits. Hopefully
     // this won't do anything weird.
     merge_to->flags |= initial_mass->flags;
 
@@ -392,11 +392,11 @@ void starcursed_merge_fineff::fire()
 
     // If there was nothing adjacent to merge with, at least try to move toward
     // another starcursed mass
-    for (distance_iterator di(mon->pos(), true, true, 8); di; ++di)
+    for (distance_iterator di(mon->pos(), true, true, LOS_RADIUS); di; ++di)
     {
         monster* ally = monster_at(*di);
         if (ally && ally->alive() && ally->type == MONS_STARCURSED_MASS
-            && mon->can_see(ally))
+            && mon->can_see(*ally))
         {
             bool moved = false;
 
@@ -473,7 +473,7 @@ void shock_serpent_discharge_fineff::fire()
         }
     }
 
-    if (serpent && you.can_see(serpent))
+    if (serpent && you.can_see(*serpent))
     {
         mprf("%s electric aura discharges%s!", serpent->name(DESC_ITS).c_str(),
              power < 4 ? "" : " violently");
@@ -484,6 +484,9 @@ void shock_serpent_discharge_fineff::fire()
     // FIXME: should merge the messages.
     for (actor *act : targets)
     {
+        // May have died because of hurting an earlier monster (tentacles).
+        if (!act->alive())
+            continue;
         int amount = roll_dice(3, 4 + power * 3 / 2);
         amount = act->apply_ac(amount, 0, AC_HALF);
 
@@ -496,7 +499,7 @@ void shock_serpent_discharge_fineff::fire()
 
 void delayed_action_fineff::fire()
 {
-    if (final_msg)
+    if (final_msg != "")
         mpr(final_msg);
     add_daction(action);
 }
@@ -524,12 +527,28 @@ void rakshasa_clone_fineff::fire()
     cast_phantom_mirror(rakshasa, rakshasa, 50, SPELL_NO_SPELL);
     rakshasa->lose_energy(EUT_SPELL);
 
-    if (you.can_see(rakshasa))
+    if (you.can_see(*rakshasa))
     {
         mprf(MSGCH_MONSTER_SPELL,
              "The injured %s weaves a defensive illusion!",
              rakshasa->name(DESC_PLAIN).c_str());
     }
+}
+
+void bennu_revive_fineff::fire()
+{
+    // Bennu only resurrect once and immediately in the same spot,
+    // so this is rather abbreviated compared to felids.
+    // XXX: Maybe generalize felid_revives and merge the two anyway?
+
+    bool res_visible = you.see_cell(posn);
+
+
+    monster *newmons = create_monster(mgen_data(MONS_BENNU,
+                                                att, 0, 0, 0, posn, foe,
+                                                res_visible ? MG_DONT_COME : 0));
+    if (newmons)
+        newmons->props["bennu_revives"].get_byte() = revives + 1;
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

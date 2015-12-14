@@ -149,7 +149,7 @@ end
 function place_tiny_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=10, pow_max=6,
-                                   delay = 800, size = 80, spread_rate = 10,
+                                   delay = 800, size = 40, spread_rate = 10,
                                    listener = large_warning, excl_rad = -1 })
 end
 -- #
@@ -176,21 +176,23 @@ function make_fiery_weapon (e, weapon)
 end
 
 function setup_loot (e)
-    e.item(make_fiery_armour(e,  {"robe w:30", "animal skin w:30", "leather armour w:30",
-                                  "ring mail w:30", "scale mail w:20", "chain mail w:40",
-                                  "plate armour w:10", "pair of gloves w:5",
-                                  "helmet w:6", "pair of boots w:3", "hat w:4",
-                                  "shield w:1", "buckler w:3"}) ..
-                                  " / fire dragon armour w:5")
+    e.item(make_fiery_armour(e,  {"robe w:50", "leather armour w:50", "ring mail w:50",
+                                  "scale mail w:35", "chain mail w:35",
+                                  "plate armour w:15", "pair of gloves w:6", "helmet w:4",
+                                  "hat w:2", "pair of boots w:6", "cloak w:6",
+                                  "large shield w:1", "shield w:2", "buckler w:3"}) ..
+                                  " / fire dragon armour w:7")
     e.item([[potion of berserk rage w:22 / potion of might w:5 /
              potion of brilliance w:5 / potion of agility w:5 /
-             potion of experience w:1 / potion of resistance]])
-    e.item(make_fiery_weapon(e, {"demon whip w:2", "dire flail w:4", "rapier w:20",
-                                 "scimitar w:20", "demon blade w:2", "triple sword w:1",
-                                 "broad axe w:20", "battleaxe", "executioner's axe w:1",
-                                 "spear w:20", "trident w:20", "demon trident w:1",
-                                 "glaive w:1", "halberd", "lajatang",
-                                 "longbow w:5", "arbalest w:5"}))
+             potion of experience q:1 w:1 / potion of resistance]])
+    e.item(make_fiery_weapon(e, {"rapier w:20", "morningstar w:20", "eveningstar w:1",
+                                  "demon whip w:1", "dire flail w:7", "great mace w:3",
+                                  "scimitar w:20", "great sword", "demon blade w:1",
+                                  "triple sword w:1", "war axe w:8", "broad axe w:3",
+                                  "battleaxe:20", "executioner's axe w:1", "trident w:5",
+                                  "glaive", "halberd w:15", "demon trident w:1",
+                                  "bardiche w:1", "longbow w:5", "arbalest w:5",
+                                  "greatsling w:5", "quarterstaff", "lajatang w:1"}))
     e.item("any")
 end
 
@@ -1192,14 +1194,14 @@ TAGS:       no_item_gen no_monster_gen no_rotate
 :           volcano_setup(_G)
 ITEM:       fruit
 COLOUR:     m = blue
-MONS:       human ; hammer ego:flaming ident:type . robe ego:fire_resistance ident:type
+MONS:       human ; mace ego:flaming ident:type . robe ego:fire_resistance ident:type
 MONS:       toenail golem
 :           place_chained_volcano(_G)
 :           set_feature_name("clear_rock_wall", "glass window")
 KFEAT:      K = .
 MARKER:     K = lua:fog_machine ( { cloud_type = "rain", walk_dist=3, pow_max=2, \
                                     delay=300, size=3 } )
-KPROP:      lVK = no_rtele_into
+KPROP:      lVK = no_tele_into
 MAP
       xxxx                  vvvvvvvvvvvvv
    xxxxllxxx xxx            v...........v
@@ -1234,7 +1236,6 @@ NAME:       volcano_caves
 WEIGHT:     20
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate
-LFLAGS:     no_tele_control
 {{
 local collapse_marker = TriggerableFunction:new (
   {
@@ -1254,7 +1255,7 @@ collapse_marker:add_triggerer(DgnTriggerer:new {
 })
 
 }}
-KPROP:      RXZ12< = no_rtele_into
+KPROP:      RXZ12< = no_tele_into
 SUBST:      X = .
 SUBST:      ZY = c.
 SUBST:      R = defg$
@@ -1306,7 +1307,7 @@ NSUBST:     M = 3:1 / 2:2 / 3 = $def / *:.
 NSUBST:     N = 2:1 / 1:2 / 1 = $def / *:.
 SUBST:      . = .:99 ':1
 KFEAT:      ' = known alarm trap
-KPROP:      ` = no_rtele_into
+KPROP:      ` = no_tele_into
 :           fiery_guardians(_G, true, true)
 :           volcano_setup(_G)
 :           place_chained_volcano(_G)

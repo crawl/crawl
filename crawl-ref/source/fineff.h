@@ -40,9 +40,9 @@ protected:
 class mirror_damage_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void merge(const final_effect &a);
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void merge(const final_effect &a) override;
+    void fire() override;
 
     static void schedule(const actor *attack, const actor *defend, int dam)
     {
@@ -59,9 +59,9 @@ protected:
 class ru_retribution_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void merge(const final_effect &a);
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void merge(const final_effect &a) override;
+    void fire() override;
 
     static void schedule(const actor *attack, const actor *defend, int dam)
     {
@@ -78,8 +78,8 @@ protected:
 class trample_follow_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void fire() override;
 
     static void schedule(const actor *attack, const coord_def &pos)
     {
@@ -95,8 +95,8 @@ protected:
 class blink_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void fire() override;
 
     static void schedule(const actor *blinker)
     {
@@ -112,8 +112,8 @@ protected:
 class distortion_tele_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void fire() override;
 
     static void schedule(const actor *defend)
     {
@@ -129,9 +129,9 @@ protected:
 class trj_spawn_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void merge(const final_effect &a);
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void merge(const final_effect &a) override;
+    void fire() override;
 
     static void schedule(const actor *attack, const actor *defend,
                          const coord_def &pos, int dam)
@@ -150,9 +150,9 @@ protected:
 class blood_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void fire();
-    void merge(const final_effect &a);
+    bool mergeable(const final_effect &a) const override;
+    void fire() override;
+    void merge(const final_effect &a) override;
 
     static void schedule(const actor *defend, const coord_def &pos,
                          int blood_amount)
@@ -171,9 +171,9 @@ protected:
 class deferred_damage_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void merge(const final_effect &a);
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void merge(const final_effect &a) override;
+    void fire() override;
 
     static void schedule(const actor *attack, const actor *defend,
                          int dam, bool attacker_effects, bool fatal = true)
@@ -197,8 +197,8 @@ protected:
 class starcursed_merge_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void fire() override;
 
     static void schedule(const actor *merger)
     {
@@ -214,9 +214,9 @@ protected:
 class shock_serpent_discharge_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void merge(const final_effect &a);
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void merge(const final_effect &a) override;
+    void fire() override;
 
     static void schedule(const actor *serpent, coord_def pos, int pow)
     {
@@ -240,34 +240,34 @@ protected:
 class delayed_action_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    virtual void fire();
+    bool mergeable(const final_effect &a) const override;
+    virtual void fire() override;
 
-    static void schedule(daction_type action, const char *final_msg)
+    static void schedule(daction_type action, const string &final_msg)
     {
         final_effect::schedule(new delayed_action_fineff(action, final_msg));
     }
 protected:
-    delayed_action_fineff(daction_type _action, const char* _final_msg)
+    delayed_action_fineff(daction_type _action, const string &_final_msg)
         : final_effect(0, 0, coord_def()),
           action(_action), final_msg(_final_msg)
     {
     }
     daction_type action;
-    const char *final_msg;
+    string final_msg;
 };
 
 class kirke_death_fineff : public delayed_action_fineff
 {
 public:
-    void fire();
+    void fire() override;
 
-    static void schedule(const char *final_msg)
+    static void schedule(const string &final_msg)
     {
         final_effect::schedule(new kirke_death_fineff(final_msg));
     }
 protected:
-    kirke_death_fineff(const char *_final_msg)
+    kirke_death_fineff(const string & _final_msg)
         : delayed_action_fineff(DACT_KIRKE_HOGS, _final_msg)
     {
     }
@@ -276,8 +276,8 @@ protected:
 class rakshasa_clone_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void fire() override;
 
     static void schedule(const actor *defend, const coord_def &pos)
     {
@@ -290,6 +290,30 @@ protected:
     }
     int damage;
 };
+
+class bennu_revive_fineff : public final_effect
+{
+public:
+    // Each trigger is from the death of a different bennu---no merging.
+    bool mergeable(const final_effect &a) const override { return false; }
+    void fire() override;
+
+    static void schedule(coord_def pos, int revives, beh_type att,
+                         unsigned short foe)
+    {
+        final_effect::schedule(new bennu_revive_fineff(pos, revives, att, foe));
+    }
+protected:
+    bennu_revive_fineff(coord_def pos, int _revives, beh_type _att,
+                        unsigned short _foe)
+        : final_effect(0, 0, pos), revives(_revives), att(_att), foe(_foe)
+    {
+    }
+    int revives;
+    beh_type att;
+    unsigned short foe;
+};
+
 void fire_final_effects();
 
 #endif

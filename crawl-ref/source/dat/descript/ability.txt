@@ -1,4 +1,3 @@
-
 %%%%
 No ability ability
 
@@ -6,21 +5,21 @@ If you get this description, it is a bug.
 %%%%
 Spit Poison ability
 
-Spit poison at a targeted monster.
+Spits poison at a targeted creature.
 %%%%
 Blink ability
 
-Randomly translocate a short distance.
+Randomly translocates the user a short distance.
 %%%%
 Breathe Dispelling Energy ability
 
-Breathe a blast of power at a targeted monster, possibly removing some of its
-enchantments.
+Breathes a bolt of dispelling energy at a targeted creature, possibly removing
+some of its enchantments.
 %%%%
 Breathe Fire ability
 
 {{
-    local desc = "Breathe a blast of fire at a targeted monster"
+    local desc = "Breathes a blast of fire at a targeted creature"
 
     if you.race() == "Red Draconian" then
         desc = desc .. ", leaving a cloud of flames at the endpoint"
@@ -33,85 +32,78 @@ Breathe Fire ability
 %%%%
 Breathe Frost ability
 
-Breathe a blast of frost at a targeted monster.
+Breathes a blast of frost at a targeted creature.
 %%%%
 Breathe Poison Gas ability
 
-Breathe a blast of poison gas at a targeted monster.
+Breathes a blast of poison gas at a targeted creature.
 %%%%
 Breathe Lightning ability
 
-Release a great discharge of electricity causing an uncontrollable lightning
-storm.
+Releases a great discharge of electricity, causing an uncontrollable lightning
+storm. It partially bypasses armour.
 %%%%
 Breathe Sticky Flame ability
 
-Breathe a blast of sticky flame at a targeted monster. As the name suggests,
-sticky flame will stick around, so the monster may be covered in flames for
-several rounds until they eventually go out. It may splash on impact.
+Spits a glob of sticky flame at an adjacent creature, covering it in liquid
+fire for a short time. It may also splash onto other nearby creatures on
+impact.
 %%%%
 Breathe Steam ability
 
-Breathe a jet of steam at a targeted monster.
+Breathes a jet of steam at a targeted location, which will scald any creatures
+it hits and will also obscure vision.
 %%%%
 Breathe Noxious Fumes ability
 
-Breathe a blast of noxious fumes at a targeted monster.
+Breathes a blast of noxious fumes at a targeted creature.
 %%%%
 Bat Form ability
 
-Turn into a speedy vampire bat. In bat form, you can neither interact with
-items in any form (except picking them up or dropping them), nor cast spells.
-Note that Bat Form will decrease your current Strength while increasing your
-Dexterity. Thus, you won't be able to change form if your Strength is too low.
-%%%%
-Bottle Blood ability
-
-At experience level 6 and higher, Vampires can bottle the blood from non-rotten
-and blood-containing corpses they are standing on.
+Transforms you into a swift-moving vampire bat. The user becomes unable to
+drink potions or evoke wands, to open or close doors, or to cast spells.
 %%%%
 Spit Acid ability
 
-Spit acid at a targeted monster.
+Spits acid at a targeted creature.
 %%%%
-# Both for Fly I and II.
 Fly ability
 
-Start flying. During flight you can safely cross water and similar obstacles.
-Be warned, though, that flight may time out at inopportune moments and cause
-you to fall to your death.
+Starts flight. During flight you can safely cross water and similar obstacles.
+Be warned, though, that some forms of flight are temporary and may time out at
+an inopportune moment, causing you to fall to your death.
 %%%%
 Hellfire ability
 
-Blast your enemies with hellfire. This ball of unholy flames explodes on
+Blasts a targeted enemy with hellfire. This ball of unholy flames explodes on
 impact, and is not affected by any means of protection such as armour or
-resistances. However, certain creatures, usually fire-based, are immune to
-hellfire entirely.
+resistances. However, certain creatures, usually those able to create hellfire
+themselves, are immune to hellfire entirely.
 %%%%
 Release Delayed Fireball ability
 
-Instantly release a previously prepared (delayed) fireball without additional
+Instantly releases a previously prepared (delayed) fireball without additional
 cost in terms of magic or hunger.
 %%%%
 Stop Singing ability
 
-Stop singing your Song of Slaying.
+Stops singing your Song of Slaying.
 %%%%
 Self-Restoration ability
 
-At the permanent loss of one magic point restore your Strength, Dexterity and
-Intelligence, and heal any rotted health.
+Restores your Strength, Dexterity and Intelligence and heals any rotted health,
+at the permanent cost of one magic point.
 %%%%
 Device Recharging ability
 
-At the permanent loss of one magic point recharge a wand or rod.
+Recharges a wand or rod, at the permanent cost of one magic point.
 %%%%
 Dig ability
 
-Allows making tunnels through soft rock and rusted grates. Using this ability
-merely states your intent to dig; to actually tunnel you need to move into a
-wall. Doing so is a little slower than walking, creates some noise and causes
-hunger.
+Allows making tunnels through soft rock and rusted grates. Activating the
+ability has no cost and simply prepares you to start digging; once active,
+moving into a wall will start tunneling. Doing so makes some noise and causes
+hunger, and is a little slower than walking.
 %%%%
 Shaft Self ability
 
@@ -120,7 +112,7 @@ a shaft trap. It takes some time to dig the shaft.
 %%%%
 Evoke Teleportation ability
 
-Teleport yourself to a random location on the level.
+Teleports the user to a random location on the level.
 %%%%
 Evoke Blink ability
 
@@ -128,22 +120,16 @@ Evoke Blink ability
 %%%%
 Evoke Berserk Rage ability
 
-Go berserk. Going berserk greatly, if temporarily, increases your health and
-damage output in melee fights. It will time out quickly if you don't kill
-anything, but may be extended by multiple kills. While berserk, you cannot
-perform a number of actions such as, for example, (un)wield a weapon, quaff
-something, evoke wands or items, or cast spells. Such a rage is usually
-followed by deep exhaustion, a time during which you are slowed down, cannot
-berserk again, and occasionally even pass out.
+<Berserk ability>
 %%%%
 Evoke Invisibility ability
 
-Turn yourself invisible for a limited amount of time. Turning invisible
-increases your magical contamination and may eventually cause glowing.
+Turns the user invisible. Turning invisible causes magical contamination and
+may eventually cause glowing, nullifying the invisibility.
 %%%%
 Turn Visible ability
 
-Turn visible again.
+Turns visible again.
 %%%%
 Evoke Flight ability
 
@@ -151,372 +137,347 @@ Evoke Flight ability
 %%%%
 Stop Flying ability
 
-Stop flying.
+Stops flying.
 %%%%
 Evoke Fog ability
 
-Release a thick cloud of fog to obscure vision.
-%%%%
-Evoke Teleport Control ability
-
-Gain the ability to control your next translocation – either by selecting an
-approximate target for a teleport, or by selecting a direction for a blink. Be
-wary that controlled translocations will cause the subject to become
-contaminated with magical energy, and that controlled teleports will take
-longer to trigger than uncontrolled ones.
-%%%%
-Evoke Twister ability
-
-Summons a tornado nearby. The furious winds can harm friend and foe alike.
+Releases a thick cloud of fog to obscure vision.
 %%%%
 End Transformation ability
 
-Revert to your normal form, with a short delay.
+Reverts you to your normal form.
 %%%%
 # Zin
 Recite ability
 
-Preach to monsters about Zin's laws, which can lead to various results. The
-recitation will continue for a short while, but will be interrupted by actions
-such as spellcasting, reading scrolls or quaffing potions. There are four books
-you can preach from:
- • Book of Abominations: This book deals with the thing most abhorrent to Zin —
-chaos in all its forms. These recitations will invoke Zin's most powerful
-smiting.
- • Book of Ablutions: The impure are nearly as loathed by the Law-Giver.
-Recitations from this book will deal damage to such creatures.
- • Book of Apostates: Recitations from this book will sow confusion amongst
-intelligent creatures. Those who dare to worship a god other than Zin may be
-permanently deprived of means to spread their foul faith.
- • Book of Anathema: Demons and the undead are hated by Zin. This book gives
-you means to rebuke them.
+Preaches to nearby monsters about Zin's laws. The recitation will continue for
+a short while, but will be interrupted by actions such as spellcasting, reading
+scrolls, or quaffing potions.
+
+The recitation will have different effects depending on the target: the chaotic
+and unclean will be affected by powerful and damaging effects, undead and
+demons will be affected by weaker rebukes, and any other intelligent creatures
+will have confusion sown amongst them, with heretics and priests of gods other
+than Zin being punished much more strongly.
 %%%%
 Vitalisation ability
 
-Vitalise yourself, gaining divine stamina and sustenance from Zin. Divine
-stamina protects you from sickness, poisoning, petrification, confusion and
-rot, and temporarily boosts and sustains your Strength, Intelligence and
+Temporarily provides protection from poison, confusion, petrification, rotting
+and sickness, and increases and sustains your Strength, Intelligence and
 Dexterity.
 %%%%
 Imprison ability
 
-Temporarily imprison a monster in walls of silver. The duration of the prison
+Temporarily imprisons a monster in walls of silver. The duration of the prison
 is increased by Invocations skill.
 %%%%
 Sanctuary ability
 
-For a short duration gain safety in a divine refuge. While you are inside the
+Creates a divine refuge for a short duration. While you are inside the
 sanctuary, monsters will not attack you, but the protection will disappear at
 once should you breach the divine peace.
 %%%%
 Cure All Mutations ability
 
-Cure all your mutations — but only once.
+Cures all your mutations — but only once.
 %%%%
 # The Shining One
 Divine Shield ability
 
-The Shining One grants you a divine shield. Because it is held aloft by godly
+Grants a temporary divine shield. Because it is held aloft by the Shining One's
 power, it does not interfere with your equipment. The strength and duration
 of the shield are increased by Invocations skill.
 %%%%
 Cleansing Flame ability
 
-Invoke a huge blast of divine fury centered on you, severely damaging undead
-and demons. All other hostiles also take damage, if less so, whereas you and
-your allies are never affected.
+Invokes a huge blast of divine fury centered on the user, severely damaging
+undead and demons and dealing damage to all other hostile creatures. The user's
+allies are never affected.
 %%%%
 Summon Divine Warrior ability
 
-Summon an angel or daeva, powerful warriors against evil. They may be blessed
-by the Shining One to stay longer in this world.
+Summons a powerful warrior against evil, either an angel or a daeva. It may be
+blessed by the Shining One to stay longer in this world.
+%%%%
+Brand Weapon With Holy Wrath ability
+
+Permanently blesses a weapon of your choice with the holy wrath of the Shining
+One. Demon weapons will be converted into a more powerful sacred weapon. This
+blessing may only be used once, and it cannot be used on artefact weapons.
 %%%%
 # Kikubaaqudgha
 Receive Corpses ability
 
-Create one or more reanimatable monster corpses near yourself. The number and
+Creates one or more reanimatable monster corpses nearby. The number and
 freshness of these are dependent on Necromancy skill.
 %%%%
 Torment ability
 
-Sacrifice a cadaver to make everyone in sight, including you, experience all
-the pain that being suffered in its life. This will decimate the resilience of
-all those who can feel it.
+Sacrifices a cadaver to make all living creatures in sight experience all
+the pain that being suffered in its life. This damage is never directly lethal.
+Kikubaaqudgha may shield you from the effect, depending on your piety.
+%%%%
+Brand Weapon With Pain ability
 
-Kikubaaqudgha may choose to protect you from it... or may not.
+Permanently bloodies a weapon of your choice with the essence of pain
+itself. This blessing cannot be used on artefact weapons. You must choose
+between this gift or that of the Necronomicon, and either gift may only be
+received once.
+%%%%
+Receive Necronomicon ability
+
+Grants you the Necronomicon, a spellbook containing the most powerful and
+sinister secrets of Necromancy. You must choose between this gift or that of
+branding a weapon with pain, and either gift may only be received once.
 %%%%
 # Yredelemnul
 Animate Remains ability
 
-Reanimate a single corpse or skeleton as a follower. Note that zombies and
-skeletons cannot leave the level they were created on.
+Reanimates a single corpse or skeleton as a follower. Zombies and skeletons
+cannot leave the level they were created on.
 %%%%
 Recall Undead Slaves ability
 
-Recall your undead followers from anywhere in the dungeon to your immediate
+Recalls your undead followers from anywhere in the dungeon to your immediate
 surroundings.
 %%%%
 Injury Mirror ability
 
-Hurt attacking monsters by reflecting damage they do to you back at them,
-reducing piety depending on the amount of damage that is reflected.
+Reflects damage taken for a short duration, hurting attackers whenever any
+damage is taken and reducing piety depending on the amount of damage dealt.
 %%%%
 Animate Dead ability
 
-Reanimate all corpses and skeletons in your vicinity as followers. Note that
-zombies and skeletons cannot leave the level they were created on.
+Reanimates all corpses and skeletons in the vicinity as followers. Zombies and
+skeletons cannot leave the level they were created on.
 %%%%
 Drain Life ability
 
-Heal by draining the life force of the monsters surrounding you.
+Drains the life force of any nearby creatures, healing the user depending on
+the damage dealt.
 %%%%
 Enslave Soul ability
 
-Mark a living intelligent monster's soul as ripe for the taking. Once the
-marked monster dies, its soul will be yours.
+Marks a living intelligent monster's soul as ripe for the taking. Once the
+marked monster dies, its soul will be yours. Only a relatively uninjured
+monster can have its soul marked, and the duration of the mark is dependent
+on Invocations skill.
 
 The enslaved soul will retain the monster's faculties, equipment and abilities,
-as well as some of its innate healing. However, only a relatively uninjured
-monster can have its soul marked, and only one soul can be enslaved at a time.
-Furthermore, the duration of the mark is dependent on Invocations skill.
-
-Note that enslaved souls can follow you beyond the level they were created on.
-%%%%
-Animate Remains or Dead ability
-
-If you get this description, it is a bug.
+as well as some of its innate healing. However, only one soul can be enslaved
+at a time.
 %%%%
 # Okawaru
 Heroism ability
 
-Temporarily increase all of your combat skills, including the ability to sneak
-around.
+Temporarily increases all of your combat skills, both offensive and defensive.
 %%%%
 Finesse ability
 
-Greatly increase your combat speed, with no loss of accuracy. This unnatural
-effect causes small amounts of magic contamination, prolonged exposure to which
-may be bad for your health.
+Greatly increases your combat speed.
 %%%%
 # Makhleb
 Minor Destruction ability
 
-Shoot a random harmful blast at the targeted monster.
+Shoots a random harmful blast at the targeted creature.
 %%%%
 Lesser Servant of Makhleb ability
 
-Summon a minor demon. High Invocations skill reduces the chance of it being
-hostile.
+Summons a minor demon. Failing to use this ability correctly will turn the
+demon hostile.
 %%%%
 Major Destruction ability
 
-Shoot a random harmful beam or explosion at the targeted monster.
+Shoots a random harmful beam or explosion at the targeted creature.
 %%%%
 Greater Servant of Makhleb ability
 
-Summon a major demon. High Invocations skill reduces the chance of it being
-hostile.
+Summons a major demon. Failing to use this ability correctly will turn the
+demon hostile.
 %%%%
 # Sif Muna
 Channel Energy ability
 
-Replenish your magical reservoir by an amount depending on your Invocations
-skill.
+Replenishes your magical reservoir by an amount depending on Invocations skill.
 %%%%
 Forget Spell ability
 
-Forget any spell out of the ones you've currently memorised, so as to free
-memory to learn others.
+Removes a known spell from memory, so as to free memory to learn others.
 %%%%
 # Trog
 Burn Spellbooks ability
 
-Set all spellbooks within your field of vision on fire. The fire is fuelled by
+Sets all spellbooks within your field of vision on fire. The fire is fuelled by
 Trog's hatred, and it burns hotter than mere parchment would — which can be
-useful if you throw the book under someone's feet first. Obviously, Trog
-greatly appreciates using this ability.
+useful if you throw the book under someone's feet first. Trog greatly
+appreciates the burning of spellbooks.
 %%%%
 Berserk ability
 
-Go berserk. Going berserk greatly, if temporarily, increases your health and
-damage output in melee fights. It will time out quickly if you don't kill
-anything, but may be extended by multiple kills. While berserk, you cannot
-perform a number of actions such as, for example, (un)wield a weapon, quaff
-something, evoke wands or items, or cast spells. Such a rage is usually
-followed by deep exhaustion, a time during which you are slowed down, and
-cannot berserk again. Unlike other sources of rage, depending on your piety
-Trog may occasionally prevent you from passing out.
+Sends the user into a berserk rage. Going berserk temporarily increases health,
+speed, and damage dealt in melee. It will time out quickly outside of combat,
+but may be extended by multiple kills. While berserk, almost all actions other
+than movement and melee combat are prevented. Such a rage is followed by deep
+exhaustion, during which the user is slowed and cannot berserk again, and
+occasionally may even pass out.
 %%%%
 Trog's Hand ability
 
-Invoke a powerful regeneration ability which stacks with all other sources and
-even allows otherwise non-healing species to regenerate. While active, you will
-also be granted powerful protection from hostile enchantments.
+Invokes a powerful regeneration ability which stacks with all other sources and
+is effective even on those who would not otherwise be able to regenerate. While
+active, the user will also be granted significant protection from hostile
+enchantments.
 %%%%
 Brothers in Arms ability
 
-Summon huge angry allies to wreak havoc.
+Summons huge angry allies to wreak havoc.
 %%%%
 # Elyvilon
 Divine Protection ability
 
-Beseech Elyvilon to save your life. If you are mortally wounded, the Healer may
-undo the killing blow. Especially pious individuals may be certain of this
-help, but in that case, any actual intervention costs piety (as opposed to
-merely asking for intervention, which is always free).
-
-Beware: killing others while asking to be spared yourself is a major sin!
+Beseeches Elyvilon to save your life. If you are mortally wounded, the Healer
+may undo the killing blow. Especially pious individuals may be certain of this
+help, but in that case, any intervention costs piety (as opposed to merely
+asking for intervention, which is always free). Killing others while asking
+for divine protection will cause penance.
 %%%%
 Lesser Healing ability
 
-Depending on your Invocations skill, heal a creature other than you by a small
-amount. Using this ability on hostile monsters will try to make them neutral.
-This works best on animals, worse on humanoids of your species, still worse on
-other humanoids, and worst of all on demons and undead. Mindless creatures
-cannot be pacified, and no monster can be pacified while it is asleep. The
-chance for successful pacification depends on the healing power.
-
-Whether the pacification succeeds or not, the invested food and magic are lost.
-If it does succeed, the monster is healed and you gain half the monster's
-experience value and possibly some piety. Otherwise, the monster is unaffected
-and you gain nothing.
-
-You can also heal allies and neutral monsters.
-%%%%
-Lesser Self-Healing ability
-
-Depending on your Invocations skill, heal a small amount of health.
+Heals a small amount of health, depending on Invocations skill.
 %%%%
 Purification ability
 
-Purge your body of all bad effects such as sickness, poisoning, slowness,
-petrification, confusion and rot, and fully restore your Strength, Dexterity
-and Intelligence.
+Purges your body of negative effects such as poison, confusion, slowness,
+petrification, rotting, and sickness, and fully restores any lost Strength,
+Dexterity or Intelligence.
 %%%%
-Greater Healing ability
+Heal Other ability
 
-Depending on your Invocations skill, heal a creature other than you by a
-moderate amount. Using this ability on hostile monsters will try to make them
+Heals a creature other than yourself by a moderate amount, depending on
+Invocations skill. Using this ability on hostile monsters will try to turn them
 neutral. This works best on animals, worse on humanoids of your species, still
 worse on other humanoids, and worst of all on demons and undead. Mindless
-creatures cannot be pacified, and no monster can be pacified while it is
-asleep. The chance for successful pacification depends on the healing power, so
-it is significantly better than using Lesser Healing.
+creatures cannot be pacified, and no monster can be pacified while it is asleep.
 
 Whether the pacification succeeds or not, the invested food, piety and magic
 points are lost. If it does succeed, the monster is healed and you gain half
-the monster's experience value and possibly some piety. Otherwise, the monster
-is unaffected and you gain nothing.
-
-You can also heal allies and neutral monsters.
+the monster's experience value. Otherwise, the monster is unaffected and you
+gain nothing.
 %%%%
-Greater Self-Healing ability
+Greater Healing ability
 
-Depending on your Invocations skill, heal a moderate amount of health.
-Roughly, Greater Healing will allow you to heal three times the amount of
-Lesser Healing at a slightly higher total piety cost.
+Heals a moderate amount of health, depending on Invocations skill. Greater
+Healing will heal approximately three times as much as Lesser Healing, but at a
+slightly higher total piety cost.
 %%%%
 Divine Vigour ability
 
-Greatly increase your maximum health and magic points, depending on
-Invocations skill. Your current health and magic points will also be
-increased proportionally.
+Greatly increases your maximum health and magic points, depending on
+Invocations skill. Your current health and magic points will also be increased
+proportionally.
 %%%%
 # Lugonu
 Depart the Abyss ability
 
-Leave the Abyss to return to the place you came from.
+Transports you out of the Abyss, returning you to the location from which you
+entered it.
 %%%%
 Bend Space ability
 
-Bend the fabric of space around you, instantly translocating you a small
-distance, and possibly also translocating and damaging monsters in your
-vicinity. In warping the fabric of space, this ability ignores effects that
-would usually prevent translocations.
+Bends the fabric of space, instantly translocating the user a short distance,
+and possibly also translocating and damaging other adjacent creatures. In
+warping the fabric of space, this ability ignores effects that would usually
+prevent translocations.
 %%%%
 Banish ability
 
-Attempt to banish a creature into the Abyss.
+Attempts to banish a creature into the Abyss. If the attempt succeeds, you gain
+some piety and half the creature's experience value.
 %%%%
 Corrupt ability
 
-Corrupt the current level by unleashing Abyssal energies on it. This will cause
-the level to largely change appearance, and will gate in demons from the Abyss
-bent on causing destruction. This will not work on levels already corrupted or
-in the Abyss.
+Corrupts the current level by unleashing Abyssal energies on it. This will
+cause the area nearby to change appearance, and will gate in demons from the
+Abyss bent on causing destruction. This will not work on levels already
+corrupted or in the Abyss itself.
 %%%%
 Enter the Abyss ability
 
-Transfer yourself to Lugonu's realm instantly. The effort of even using the
+Transports you to Lugonu's realm instantly. The effort of even using the
 ability will leave your health and magic depleted.
+%%%%
+Brand Weapon With Distortion ability
+
+Permanently corrupts a weapon of your choice with a localized field of
+distortion. This blessing may only be used once, and it cannot be used on
+artefact weapons.
 %%%%
 # Nemelex Xobeh
 Triple Draw ability
 
-Draw three cards from any deck in your inventory, look at them, and decide
-which one to keep, discarding the other two.
+Draws three cards from any deck in your inventory, and allows you to choose one
+to keep, discarding the other two.
 %%%%
 Deal Four ability
 
-Deal four cards from any unmarked deck in the time it normally takes to draw a
+Deals four cards from any unmarked deck in the time it normally takes to draw a
 single card. The rest of the deck is lost. If the deck does not contain enough
 cards, Nemelex will give you one extra card, but you might not like it.
 %%%%
 Stack Five ability
 
-Draw five cards from any unmarked deck in your inventory, losing the rest of
-the deck. Look at the cards and sort them into any order you'd like.
-Subsequently, you can draw these cards in the order you chose.
+Shows you five cards from any unmarked deck in your inventory, losing the rest
+of the deck, and allows you to sort them into any order. Subsequently, you can
+draw these cards in the order you chose.
 %%%%
 # Beogh
 Smiting ability
 
-Smite an enemy within your field of vision. This doesn't require a direct path,
-just seeing the enemy is enough.
+Smites any targeted enemy within sight, with no direct line of fire required.
 %%%%
 Recall Orcish Followers ability
 
-Recall your orcish followers from anywhere in the dungeon to your immediate
+Recalls your orcish followers from anywhere in the dungeon to your immediate
 surroundings.
 %%%%
 Stop Recall ability
 
-Stop recalling your followers.
+Stops recalling your followers.
 %%%%
 Give Item to Named Follower ability
 
-Give a weapon or piece of armour to a named orcish follower. An orc can only
+Gives a weapon or piece of armour to a named orcish follower. An orc can only
 ever receive one of these gifts.
 %%%%
 # Fedhas
 Sunlight ability
 
-Call sunlight down over a small area of the dungeon. Monsters illuminated by
+Calls sunlight down over a small area of the dungeon. Monsters illuminated by
 the light will be easier to hit. Water affected by the sunlight will evaporate.
 In particular, deep water will become shallow water, and shallow water will dry
 up completely, revealing the dungeon floor.
 %%%%
 Growth ability
 
-Use fruit to grow a ring of plants around yourself. If a complete ring cannot
+Uses fruit to grow a ring of plants around yourself. If a complete ring cannot
 be formed (because you do not have enough fruit), plants will grow on squares
 adjacent to you that are close to monsters. The plants you create gain bonus
 health proportional to your Invocations skill.
 %%%%
 Rain ability
 
-Cause rain to fall around yourself, turning the dungeon floor into shallow
-water and shallow water into deep water. This is likely to allow plants and
-mushrooms to grow in areas not directly drenched.
+Causes rain to fall around you, turning the dungeon floor into shallow water
+and shallow water into deep water. This may also allow plants and mushrooms to
+grow in areas that are not directly drenched.
 %%%%
 Reproduction ability
 
-Create giant spores from corpses in your line of sight. The spores will
+Creates giant spores from corpses in your line of sight. The spores will
 explode, causing damage to you or your enemies.
 %%%%
 Evolution ability
 
-Turn plants and fungi into stronger species. Upgrading fungi requires piety,
+Turns plants and fungi into stronger species. Upgrading fungi requires piety,
 while upgrading plants requires fruit. Upgraded plants gain a bonus to attack
 accuracy proportional to the user's Invocations skill, and oklob plants are
 more likely to spit acid at higher Invocations.
@@ -524,103 +485,113 @@ more likely to spit acid at higher Invocations.
 # Cheibriados
 Bend Time ability
 
-Attempt to slow down everyone adjacent to you. High Invocations skill makes it
+Attempts to slow down everyone adjacent to you. High Invocations skill makes it
 harder to resist.
 %%%%
 Temporal Distortion ability
 
-Warp the flow of time around you, causing monsters to skip forwards in time
-relative to you.
+Warps the flow of time, causing monsters to skip forwards in time relative to
+you.
 %%%%
 Slouch ability
 
-Cause damage to everyone in sight who is moving faster than you, dealing more
+Causes damage to everyone in sight who is moving faster than you, dealing more
 damage with greater differences in speed.
 %%%%
 Step From Time ability
 
-Remove yourself from the flow of time. Things around you will happen at their
-usual busy pace, monsters will wander, perishable items will decay, plants will
-grow. After some time has passed, you will return in the same state as the very
+Removes you completely from the flow of time. Things around you will happen at
+their usual busy pace, and monsters will wander and may even forget about you.
+After some time has passed, you will return in the same state as the very
 second you departed.
 %%%%
 # Jiyva
 Request Jelly ability
 
-Create a neutral jelly that will wander the floor and digest items.
+Creates a neutral jelly that will wander the floor and digest items.
 %%%%
 Jelly Paralyse ability
 
-Call on any nearby jellies to cease their item consumption and pray to Jiyva
-for a short duration. This ability costs piety depending on the number of
-jellies that are affected.
+Calls on any nearby jellies to cease their item consumption and pray to Jiyva
+for a short duration, with a piety cost depending on the number of jellies that
+are affected.
 %%%%
 Slimify ability
 
-Coat a wielded weapon or your fists with slime, turning the next living or
+Coats a wielded weapon or your fists with slime, turning the next living or
 corporeal undead monster hit into a neutral slime.
 %%%%
 Cure Bad Mutation ability
 
-Remove a randomly selected bad mutation.
+Removes a randomly selected bad mutation.
 %%%%
 # Ashenzari
 Scrying ability
 
-Gain astral sight to see through walls. This is not enough to let you target
-spells and abilities, even those that work through glass.
+Provides astral sight, allowing you to see through walls.
 %%%%
 Transfer Knowledge ability
 
-Sacrifice part of one of your skills to improve another.
+Sacrifices part of one of your skills to improve another. The transfer will
+take place gradually as you gain experience.
 %%%%
 End Transfer Knowledge ability
 
-Abort an ongoing skill transfer.
+Aborts an ongoing skill transfer.
 %%%%
 # Dithmenos
 Shadow Step ability
 
-If a creature within your umbra is still enough for you to focus on its shadow,
-this ability allows you to step through that shadow to immediately be placed
-adjacent to that creature.
+Allows you to step into the shadow of any creature within your umbra, as long
+as they are immobile or asleep, landing adjacent to the target.
 %%%%
 Shadow Form ability
 
-This invocation transforms you into a swirling mass of dark shadows. While in
-this form, you are permanently invisible and are immune to poison, draining,
-torment, and hostile enchantments. All incoming damage will be halved, and you
-will bleed smoke on any incoming attack. However, your ability to deal damage
-in melee will be halved, your spellcasting power will be greatly hampered, and
-your skills will be further drained when taking damage.
+Transforms you into a swirling mass of dark shadows. While in this form, you
+are permanently invisible and are immune to poison, draining, torment, and
+hostile enchantments. All incoming damage will be halved, and you will bleed
+smoke on any incoming attack. However, your ability to deal damage in melee
+will be halved, your spellcasting power will be greatly hampered, and your
+skills will be further drained when taking damage.
 %%%%
 # Gozag
 Potion Petition ability
 
-Petition Gozag to sell you the effects of a set of potions. Gozag will offer
-three lists at a time, with varying prices. Prices will slowly increase as you
-purchase potions.
+Petitions Gozag to sell you the effects of a set of potions. Gozag will offer
+three lists at a time, with varying prices.
 %%%%
 Call Merchant ability
 
-Through Gozag, send funds to a merchant to help them set up shop in the
-dungeon. The shop may appear in an unvisited area of the dungeon, or near your
-location if there are no other appropriate locations for a store. The cost of
-funding a shop increases with the number of shops funded.
+Sends funds to a merchant to help them set up shop at your location. The cost of
+funding a shop increases with the number of shops funded.{{
+    if you.race() == "Mummy" then
+        return
+    end
 
-You will always have the option to fund a food shop, provided you are a race
-that requires food. Ghouls and vampires will find corpses and blood in their
-respective food shops.
+    local desc = " You will always have the option to fund a shop selling "
+
+    if you.race() == "Ghoul" then
+        desc = desc .. "carrion"
+    elseif you.race() == "Vampire" then
+        desc = desc .. "blood"
+    else
+        desc = desc .. "food"
+    end
+
+    desc = desc .. "."
+
+    return desc
+}}
 %%%%
 Bribe Branch ability
 
-Give 3000 gold to Gozag to spread throughout the inhabitants of the current
-branch, only possible if the branch has intelligent native monsters. Those
-native to a bribed branch will occasionally become uninterested in fighting you
-(with tougher inhabitants having an increasing chance of being bribed), and
-more rarely will join your ranks. Enemies' becoming less hostile will lower the
-remaining bribe fund; upon its exhaustion, bribed enemies will resume
-hostilities.
+Gives 3000 gold to Gozag to spread throughout the inhabitants of the current
+branch, only possible if the branch has intelligent inhabitants. Those monsters
+may then become uninterested in fighting you (with tougher inhabitants having
+an increasing chance of being bribed), and more rarely will join your ranks,
+though they will not leave their home branch. Enemies accepting a bribe will
+lower the remaining bribe fund; upon its exhaustion, bribed enemies will become
+indifferent if they have not become your allies.
 %%%%
 # Qazlal
 Upheaval ability
@@ -641,7 +612,7 @@ Blasts the entire area around you with powerful natural forces.
 # Ru
 Draw Out Power ability
 
-Tap into your inner power to restore health and magic, as well as freeing your
+Taps into your inner power to restore health and magic, as well as freeing your
 body and mind from external constraints, including nets, webs, constriction,
 petrification, slowness, and confusion. The amount of health and magic restored
 increases with piety.
@@ -650,7 +621,7 @@ Using this ability exhausts and slightly drains you.
 %%%%
 Power Leap ability
 
-Use the power that infuses you to perform an incredibly fast leap. On landing,
+Uses the power that infuses you to perform an incredibly fast leap. On landing,
 that power explodes outward, damaging all foes adjacent to you. The amount of
 damage done increases with your piety and experience level.
 
@@ -658,286 +629,126 @@ Using this ability exhausts you.
 %%%%
 Apocalypse ability
 
-You reveal Ru's truth to your enemies. All enemies in your line of sight are
+Reveals Ru's truth to your enemies. All enemies in your line of sight are
 dealt severe damage and may be rendered mute or paralyzed or slowed. The damage
-dealt by this power increases with your piety and experience level.
+dealt increases with your piety and experience level.
 
 Using this ability exhausts and severely drains you.
 %%%%
 Sacrifice Purity ability
 
-Adherents who choose to sacrifice their purity will be offered a single
-mutation. The mutation can be one of deterioration, deformed body, uncontrolled
-shouting, worse device healing, clumsiness, weakness or dopiness.
-
-If you make this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new powers as well.
-
-Sacrifices cannot be taken back.
+Sacrifices purity of body or mind, causing a single mutation. The mutation will
+be one of deterioration, deformed body, uncontrolled shouting, worse device
+healing, clumsiness, weakness or dopiness.
 %%%%
 Sacrifice Words ability
 
-Adherents who choose to sacrifice their words lose the ability to use magical
-scrolls while threatened.
-
-If you make this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new powers as well.
-
-Sacrifices cannot be taken back.
+Sacrifices the ability to use magical scrolls while threatened.
 %%%%
 Sacrifice Drink ability
 
-Adherents who choose to sacrifice drink lose the ability to drink potions while
-threatened.
-
-If you make this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new powers as well.
-
-Sacrifices cannot be taken back.
+Sacrifices the ability to drink potions while threatened.
 %%%%
 Sacrifice Essence ability
 
-Adherents who choose to sacrifice their essence will be given the choice to
-accept or deny a sacrifice. The sacrifice offered is one of the following:
-reduced magic pool, MR-, or increased spellcasting difficulty.
-
-If you make this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new powers as well.
-
-Sacrifices cannot be taken back.
+Sacrifices magical essence, causing a single mutation. The mutation will be one
+of reduced magic pool, MR-, or increased spellcasting difficulty.
 %%%%
 Sacrifice Health ability
 
-Adherents who choose to sacrifice their health will be given the choice to
-accept or deny a sacrifice. The sacrifice offered is one of the following:
-reduced health, penalties to Evasion, or penalties to AC.
-
-If you make this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new powers as well.
-
-Sacrifices cannot be taken back.
+Sacrifices physical health, causing a single mutation. The mutation will be one
+of reduced health, reduced Evasion, or reduced AC.
 %%%%
 Sacrifice Stealth ability
 
-Adherents who choose to sacrifice their stealth will always be noticed by foes
-and cannot have ranks in the Stealth skill.
-
-If you make this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new powers as well.
-
-Sacrifices cannot be taken back.
+Sacrifices stealth, causing you to always be noticed by foes and preventing
+you from having any ranks in the Stealth skill.
 %%%%
 Sacrifice Artifice ability
 
-Adherents who choose to sacrifice artifice may not evoke the latent power of
-magical objects and their Evocations skill is set to 0.
-
-If you make this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new powers as well.
-
-Sacrifices cannot be taken back.
+Sacrifices the ability to evoke any magical items, and prevents you from having
+any ranks in the Evocations skill.
 %%%%
 Sacrifice Love ability
 
-Adherents who choose to sacrifice love are despised by all. All creatures,
-even those summoned by the adherent, become hostile. Monsters that are spell
-residue and which do not act independently, such as orbs of destruction and
-spectral weapons, are the only things which can remain friendly.
-
-If you make this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new powers as well.
-
-Sacrifices cannot be taken back.
+Sacrifices love, causing all creatures to become hostile, even those created
+by you. Monsters that are spell residue and which do not act independently,
+such as orbs of destruction and spectral weapons, are the only things which can
+remain friendly.
 %%%%
 Sacrifice Courage ability
 
-Adherents who choose to sacrifice their courage become terrified of dangerous
-monsters. Such monsters fill them with horror, which reduces the adherents'
-ability to hit and damage monsters in combat, and the power of the adherents'
-spells.
-
-If you make this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new powers as well.
-
-Sacrifices cannot be taken back.
+Sacrifices courage, causing you to become terrified of dangerous monsters. Such
+monsters fill you with horror, which reduces the power of your spells and your
+ability to hit and damage monsters in combat.
 %%%%
 Sacrifice Arcana ability
 
-Adherents who choose to sacrifice their arcana lose the ability to use certain
-schools of magic. Any magic that includes a sacrificed school cannot be cast.
-Those magic skills cannot be trained.
-
-If you make this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new powers as well.
-
-Sacrifices cannot be taken back.
+Sacrifices arcana, causing you to lose the ability to use certain schools of
+magic and preventing you from having any ranks in those skills.
 %%%%
 Sacrifice Nimbleness ability
 
-Adherents who choose to sacrifice their nimbleness lose the ability to train
-the Dodging skill and have that skill set to 0. This sacrifice is worth more
-if you cannot train Armour.
-
-If you make this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new powers as well.
-
-Sacrifices cannot be taken back.
+Sacrifices nimbleness, preventing you from having any ranks in the Dodging
+skill. This sacrifice is worth more if you cannot train Armour.
 %%%%
 Sacrifice Durability ability
 
-Adherents who choose to sacrifice their durability lose the ability to train
-the Armour skill and have that skill set to 0. This sacrifice is worth more
-if you cannot train Dodging.
-
-If you make this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new powers as well.
-
-Sacrifices cannot be taken back.
+Sacrifices durability, preventing you from having any ranks in the Armour
+skill. This sacrifice is worth more if you cannot train Dodging.
 %%%%
 Sacrifice a Hand ability
 
-Adherents of every species who choose to sacrifice a hand lose the ability to
-use shields and can wear one fewer ring. Non-formicids also lose the ability
-to wield two-handed weapons.
+Sacrifices a hand, causing you to lose the ability to use shields{{
+    if you.race() ~= "Formicid" then
+        return " and two-handed weapons"
+    end
+}}, and to be able to wear one fewer ring.
+%%%%
+Sacrifice Experience ability
 
-If you make this sacrifice, your powers granted by Ru will become stronger in
-proportion to the value of the sacrifice, and you may gain new powers as well.
+Sacrifices some of your past experiences, causing you to lose two levels
+immediately and also to have the maximum level you can attain lowered by two.
+%%%%
+Sacrifice Skill ability
 
-Sacrifices cannot be taken back.
+Sacrifices your skills, causing you to have all of your skill aptitudes
+decreased by one. This will likely cause you to lose ranks in trained skills.
+%%%%
+Sacrifice an Eye ability
+
+Sacrifices an eye, causing you to have a much harder time hitting targets, as
+if wearing an amulet of inaccuracy.
+%%%%
+Sacrifice Resistance ability
+
+Sacrifices your resistance to extreme temperatures, causing you to become
+vulnerable to heat and cold.
 %%%%
 Reject Sacrifices ability
 
-Adherents who cannot bring themselves to make any offered sacrifice may reject
-the offers. Doing so means Ru will take more time evaluating the adherent's
-readiness for future sacrifices. Ru will not offer more sacrifices while there
-is an existing offer still extended.
+Rejects all offered sacrifices. Doing so means Ru will take more time
+evaluating your readiness for future sacrifices. Ru will not offer more
+sacrifices while there is an existing offer still extended.
 
 Each consecutive rejection increases the sacrifice timer significantly.
 Accepting a sacrifice will reset the timer to the standard length.
 %%%%
 Renounce Religion ability
 
-Renounce your faith. This will make your character leave your god (and usually
-anger said god).
+Renounces your faith. This will make you leave your god (and usually anger
+said god).
 %%%%
 Convert to Beogh ability
 
-Swear your fealty to Beogh, the god of cave orcs. This god demands that all
+Swears fealty to Beogh, the god of cave orcs. This god demands that all
 non-believers must die, but new believers must be spared and accepted into the
-fold. Beware, for orcs who haven't seen you convert may still be hostile until
-you've built your reputation!
+fold. Beware, for orcs who do not see you convert may still be hostile until
+you have built your reputation!
 
-All other gods hate Beogh, and don't take desertion lightly.
+All other gods hate Beogh, and do not take desertion lightly.
 %%%%
-# Zotdef
-Make oklob sapling ability
+Donate Gold ability
 
-Plant an oklob sapling with the ability to spit acid at the targeted location.
-%%%%
-Make arrow trap ability
-
-Create an arrow trap at the targeted location.
-%%%%
-Make plant ability
-
-Cause a plant to grow at the targeted location.
-%%%%
-Remove Curse ability
-
-Uncurse all of your equipment.
-%%%%
-Make burning bush ability
-
-Plant a burning bush with the ability to throw fire and see invisible monsters
-at the targeted location.
-%%%%
-Make altar ability
-
-Create an altar to a chosen god at your location.
-%%%%
-Make grenades ability
-
-Spawn a number of explosive giant spores around you.
-%%%%
-Make oklob plant ability
-
-Plant a fully grown oklob plant with the ability to spit acid at the targeted
-location.
-%%%%
-Make net trap ability
-
-Create a net trap at the targeted location.
-%%%%
-Make ice statue ability
-
-Construct a statue with various icy abilities at the targeted location.
-%%%%
-Make spear trap ability
-
-Create a spear trap at the targeted location.
-%%%%
-Make alarm trap ability
-
-Create an alarm trap to alert you to the presence of monsters at the targeted
-location.
-%%%%
-Make mushroom circle ability
-
-Grow a circle of fungi centred at the targeted location.
-%%%%
-Make bolt trap ability
-
-Create a bolt trap at the targeted location.
-%%%%
-Make crystal statue ability
-
-Construct a statue with the ability to confuse monsters at the targeted
-location.
-%%%%
-Make needle trap ability
-
-Create a poisonous needle trap at the targeted location.
-%%%%
-Zot-teleport ability
-
-Perform a controlled teleport.
-%%%%
-Make water ability
-
-Create a pool of shallow water at your location.
-%%%%
-Make lightning spire ability
-
-Construct a lightning spire with the ability to throw electricity at the
-targeted location.
-%%%%
-Make obsidian statue ability
-
-Construct a statue with the ability to summon friendly demons at the targeted
-location.
-%%%%
-Make bazaar ability
-
-Create a portal to a bazaar at your location.
-%%%%
-Acquire gold ability
-
-Acquire a large quantity of gold.
-%%%%
-Make oklob circle ability
-
-Grow a circle of oklob plants centred at the targeted location.
-%%%%
-Acquirement ability
-
-Acquire a chosen type of item.
-%%%%
-Make blade trap ability
-
-Create a blade trap at the targeted location.
-%%%%
-Make curse skull ability
-
-Construct a curse skull with the ability to summon the undead at the targeted
-location, at the cost of a necromantic backlash to yourself.
-%%%%
+Donates half of your gold to Zin, which will increase your piety over time. The
+overall increase is determined by the size of your donation.

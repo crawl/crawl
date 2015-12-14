@@ -32,21 +32,16 @@ void lessen_hunger(int statiated_amount, bool suppress_msg, int max = - 1);
 void set_hunger(int new_hunger_level, bool suppress_msg);
 
 bool is_bad_food(const item_def &food);
-bool is_poisonous(const item_def &food);
 bool is_mutagenic(const item_def &food);
-bool causes_rot(const item_def &food);
+bool is_noxious(const item_def &food);
 bool is_inedible(const item_def &item);
 bool is_preferred_food(const item_def &food);
 bool is_forbidden_food(const item_def &food);
-corpse_effect_type determine_chunk_effect(const item_def &carrion,
-                                          bool innate_only = false);
-corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype,
-                                          bool innate_only = false);
+corpse_effect_type determine_chunk_effect(const item_def &carrion);
+corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype);
 mon_intel_type corpse_intelligence(const item_def &corpse);
 
 bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger = true);
-
-bool carrion_is_poisonous(const item_def &food);
 
 bool eat_item(item_def &food);
 

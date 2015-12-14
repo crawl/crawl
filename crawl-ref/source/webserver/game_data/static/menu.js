@@ -173,7 +173,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         if (start >= menu.total_items || end < 0)
             return;
 
-        // Find out which indices are missing.  This assumes that all
+        // Find out which indices are missing. This assumes that all
         // missing items are in a continuous range, which is the case
         // as long as the only ways to jump farther than chunk_size are
         // home and end.
@@ -430,10 +430,12 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         var input = $("<input class='text pattern_select' type='text'>");
         title.append(input);
 
-        input.focus();
+        if (!client.is_watching || !client.is_watching())
+            input.focus();
 
         var restore = function () {
-            input.blur();
+            if (!client.is_watching || !client.is_watching())
+                input.blur();
             update_title();
         };
 

@@ -21,6 +21,12 @@ on crawl.
     More correctly interpret "auto func() -> decltype(foo)" as a declaration
     of "func", not of "decltype".
 
+-I override
+-I PURE
+-I IMMUTABLE
+
+    The same, for C++11 "override" and our function attribute macros.
+
 --extra=+q
 
     Allow searching for "player::rot", not just "rot".

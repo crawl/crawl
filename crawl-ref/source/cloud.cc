@@ -16,6 +16,7 @@
 #include "coordit.h"
 #include "dungeon.h"
 #include "godconduct.h"
+#include "libutil.h" // testbits
 #include "los.h"
 #include "mapmark.h"
 #include "melee_attack.h"
@@ -166,8 +167,8 @@ static const cloud_data clouds[] = {
     { "sparse dust",  nullptr,                  // terse, verbose name
       ETC_EARTH,                                // colour
     },
-    // CLOUD_GHOSTLY_FLAME,
-    { "ghostly flame", nullptr,                 // terse, verbose name
+    // CLOUD_SPECTRAL,
+    { "spectral mist", nullptr,                 // terse, verbose name
       ETC_ELECTRICITY,                          // colour
       BEAM_NONE,                                // beam_effect
       0, 25,                                    // base, expected random damage
@@ -319,9 +320,9 @@ static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
 
 static int _spread_cloud(const cloud_struct &cloud)
 {
-    const int spreadch = cloud.decay > 30? 80 :
-                         cloud.decay > 20? 50 :
-                                           30;
+    const int spreadch = cloud.decay > 30 ? 80 :
+                         cloud.decay > 20 ? 50 :
+                                            30;
     int extra_decay = 0;
     for (adjacent_iterator ai(cloud.pos); ai; ++ai)
     {
@@ -419,11 +420,53 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
     }
 }
 
-static void _dissipate_cloud(int cloudidx, int dissipate)
+/**
+ * How fast should a given cloud fade away this turn?
+ *
+ * @param cloud_idx     The cloud in question.
+ * @return              The rate at which the cloud's "decay" should decrease
+ *                      this turn.
+ */
+static int _cloud_dissipation_rate(const cloud_struct &cloud)
+{
+    int dissipate = you.time_taken;
+
+    // If a player-created cloud is out of LOS, it dissipates much faster.
+    if (cloud.source == MID_PLAYER && !you.see_cell_no_trans(cloud.pos))
+        dissipate *= 4;
+
+    switch (cloud.type)
+    {
+        // Fire clouds dissipate faster over water.
+        case CLOUD_FIRE:
+        case CLOUD_FOREST_FIRE:
+            if (feat_is_watery(grd(cloud.pos)))
+                return dissipate * 4;
+            break;
+        // rain and cold clouds dissipate faster over lava.
+        case CLOUD_COLD:
+        case CLOUD_RAIN:
+        case CLOUD_STORM:
+            if (grd(cloud.pos) == DNGN_LAVA)
+                return dissipate * 4;
+            break;
+        // Ink cloud shouldn't appear outside of water.
+        case CLOUD_INK:
+            if (!feat_is_watery(grd(cloud.pos)))
+                return dissipate * 40;
+            break;
+        default:
+            break;
+    }
+
+    return dissipate;
+}
+
+static void _dissipate_cloud(int cloudidx)
 {
     cloud_struct &cloud = env.cloud[cloudidx];
     // Apply calculated rate to the actual cloud.
-    cloud.decay -= dissipate;
+    cloud.decay -= _cloud_dissipation_rate(cloud);
 
     if (cloud.type == CLOUD_FOREST_FIRE)
         _spread_fire(cloud);
@@ -438,7 +481,7 @@ static void _dissipate_cloud(int cloudidx, int dissipate)
         delete_cloud(cloudidx);
 }
 
-static void _handle_ghostly_flame(const cloud_struct& cloud)
+static void _handle_spectral_cloud(const cloud_struct& cloud)
 {
     if (actor_at(cloud.pos) || !actor_by_mid(cloud.source))
         return;
@@ -464,23 +507,13 @@ static void _handle_ghostly_flame(const cloud_struct& cloud)
                                100, RANDOM_MONSTER,
                                0);
 
-    if (basetype == RANDOM_MONSTER && one_chance_in(4))
-    {
-        do
-        {
-            basetype = pick_random_zombie();
-        }
-        while (mons_class_flag(basetype, M_NO_GEN_DERIVED)
-               || !monster_habitable_grid(basetype, grd(cloud.pos)));
-    }
-
     monster* agent = monster_by_mid(cloud.source);
     create_monster(mgen_data(MONS_SPECTRAL_THING,
                              (cloud.whose == KC_OTHER ?
                                 BEH_HOSTILE :
                                 BEH_FRIENDLY),
                              actor_by_mid(cloud.source), 1,
-                             SPELL_GHOSTLY_FLAMES, cloud.pos,
+                             SPELL_SPECTRAL_CLOUD, cloud.pos,
                              (agent ? agent->foe : MHITYOU), MG_FORCE_PLACE,
                              GOD_NO_GOD, basetype));
 }
@@ -502,43 +535,23 @@ void manage_clouds()
         }
 #endif
 
-        int dissipate = you.time_taken;
-
-        // If a player-created cloud is out of LOS, it dissipates much faster.
-        if (cloud.source == MID_PLAYER && !you.see_cell_no_trans(cloud.pos))
-            dissipate *= 4;
-
-        // Fire clouds dissipate faster over water,
-        // rain and cold clouds dissipate faster over lava.
-        if (cloud.type == CLOUD_FIRE && grd(cloud.pos) == DNGN_DEEP_WATER)
-            dissipate *= 4;
-        else if (cloud.type == CLOUD_STORM)
+        // This was initially 40, but that was far too spammy.
+        if (cloud.type == CLOUD_STORM
+            && x_chance_in_y(you.time_taken, 400) && !actor_at(cloud.pos))
         {
-            // This was initially 40, but that was far too spammy.
-            if (x_chance_in_y(dissipate, 400) && !actor_at(cloud.pos))
-            {
-                bool you_see = you.see_cell(cloud.pos);
-                if (you_see && !you_worship(GOD_QAZLAL))
-                    mpr("Lightning arcs down from a storm cloud!");
-                noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT), cloud.pos,
-                      you_see || you_worship(GOD_QAZLAL) ? nullptr
-                      : "You hear a mighty clap of thunder!");
-            }
-            if (grd(cloud.pos) == DNGN_LAVA)
-                dissipate *= 4;
+            const bool you_see = you.see_cell(cloud.pos);
+            if (you_see && !you_worship(GOD_QAZLAL))
+                mpr("Lightning arcs down from a storm cloud!");
+            noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT), cloud.pos,
+                  you_see || you_worship(GOD_QAZLAL) ? nullptr
+                  : "You hear a mighty clap of thunder!");
         }
-        else if ((cloud.type == CLOUD_COLD || cloud.type == CLOUD_RAIN)
-                 && grd(cloud.pos) == DNGN_LAVA)
-            dissipate *= 4;
-        // Ink cloud doesn't appear outside of water.
-        else if (cloud.type == CLOUD_INK && !feat_is_watery(grd(cloud.pos)))
-            dissipate *= 40;
-        else if (cloud.type == CLOUD_GHOSTLY_FLAME)
-            _handle_ghostly_flame(cloud);
+        else if (cloud.type == CLOUD_SPECTRAL)
+            _handle_spectral_cloud(cloud);
 
         _cloud_interacts_with_terrain(cloud);
 
-        _dissipate_cloud(i, dissipate);
+        _dissipate_cloud(i);
     }
 }
 
@@ -561,8 +574,7 @@ static void _maybe_leave_water(const cloud_struct& c)
     if (grd(c.pos) == DNGN_FLOOR)
         feat = DNGN_SHALLOW_WATER;
     else if (grd(c.pos) == DNGN_SHALLOW_WATER && you.pos() != c.pos
-             && one_chance_in(3) && !crawl_state.game_is_zotdef()
-             && !crawl_state.game_is_sprint())
+             && one_chance_in(3) && !crawl_state.game_is_sprint())
     {
         // Don't drown the player!
         feat = DNGN_DEEP_WATER;
@@ -691,15 +703,6 @@ void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
 
     place_cloud(cl_type, p, lifetime, agent, spread_rate, colour, name, tile,
                 excl_rad);
-}
-
-static int _steam_cloud_damage(int decay)
-{
-    decay = min(decay, 60);
-    decay = max(decay, 10);
-
-    // Damage in range 3 - 16.
-    return (decay * 13 + 20) / 50;
 }
 
 static bool _is_weak_cloud(int cl)
@@ -919,9 +922,8 @@ static int _cloud_base_damage(const actor *act,
     case CLOUD_MIASMA:
         return _cloud_damage_calc(12, 3, 0, maximum_damage);
     case CLOUD_STEAM:
-        return _cloud_damage_calc(_steam_cloud_damage(cloud.decay), 2, 0,
-                                  maximum_damage);
-    case CLOUD_GHOSTLY_FLAME:
+        return _cloud_damage_calc(16, 2, 0, maximum_damage);
+    case CLOUD_SPECTRAL:
         return _cloud_damage_calc(15, 3, 4, maximum_damage);
     default:
         return 0;
@@ -943,8 +945,9 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     const bool player = act->is_player();
 
     if (!player
-        && you_worship(GOD_FEDHAS)
-        && fedhas_protects(act->as_monster())
+        && (you_worship(GOD_FEDHAS)
+            && fedhas_protects(act->as_monster())
+            || testbits(act->as_monster()->flags, MF_DEMONIC_GUARDIAN))
         && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
         && (act->as_monster()->friendly() || act->as_monster()->neutral()))
     {
@@ -984,14 +987,12 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     case CLOUD_POISON:
         return act->res_poison() > 0;
     case CLOUD_STEAM:
-        // Players get steam cloud immunity from any res steam, which is hardly
-        // fair, but this is what the old code did.
-        return player && act->res_steam() > 0;
+        return act->res_steam() > 0;
     case CLOUD_MIASMA:
         return act->res_rotting() > 0;
     case CLOUD_PETRIFY:
         return act->res_petrify();
-    case CLOUD_GHOSTLY_FLAME:
+    case CLOUD_SPECTRAL:
         return act->holiness() == MH_UNDEAD
                // Don't let these guys kill themselves.
                || act->type == MONS_GHOST_CRAB;
@@ -1022,8 +1023,6 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
         return act->res_fire();
-    case CLOUD_STEAM:
-        return act->res_steam();
     case CLOUD_HOLY_FLAMES:
         return act->res_holy_energy(cloud.agent());
     case CLOUD_COLD:
@@ -1051,10 +1050,12 @@ static bool _mephitic_cloud_roll(const monster* mons)
 
 // Applies cloud messages and side-effects and returns true if the
 // cloud had a side-effect. This function does not check for cloud immunity.
+// ... but it's only called if the actor isn't immune
 static bool _actor_apply_cloud_side_effects(actor *act,
                                             const cloud_struct &cloud,
                                             int final_damage)
 {
+    ASSERT(act); // XXX: change to actor &act
     const bool player = act->is_player();
     monster *mons = !player? act->as_monster() : nullptr;
     switch (cloud.type)
@@ -1063,7 +1064,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_STORM:
         if (act->is_fiery() && final_damage > 0)
         {
-            if (you.can_see(act))
+            if (you.can_see(*act))
             {
                 mprf("%s %s in the rain.",
                      act->name(DESC_THE).c_str(),
@@ -1103,8 +1104,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
             if (cloud.whose == KC_FRIENDLY)
                 beam.source_id = MID_ANON_FRIEND;
 
-            if (mons_class_is_confusable(mons->type)
-                && _mephitic_cloud_roll(mons))
+            if (_mephitic_cloud_roll(mons))
             {
                 beam.apply_enchantment_to_monster(mons);
                 return true;
@@ -1229,12 +1229,12 @@ static int _cloud_damage_output(const actor *actor,
                                 int base_damage,
                                 bool maximum_damage = false)
 {
-    const int resist_adjusted_damage =
-        resist_adjust_damage(actor, flavour, base_damage);
     if (maximum_damage)
-        return resist_adjusted_damage;
+        return resist_adjust_damage(actor, flavour, base_damage);
 
-    return max(0, resist_adjusted_damage - random2(actor->armour_class()));
+    int dam = actor->apply_ac(base_damage);
+    dam = resist_adjust_damage(actor, flavour, dam);
+    return max(0, dam);
 }
 
 /**
@@ -1261,7 +1261,7 @@ static int _actor_cloud_damage(const actor *act,
     case CLOUD_HOLY_FLAMES:
     case CLOUD_COLD:
     case CLOUD_STEAM:
-    case CLOUD_GHOSTLY_FLAME:
+    case CLOUD_SPECTRAL:
     case CLOUD_ACID:
     case CLOUD_NEGATIVE_ENERGY:
         final_damage =
@@ -1313,7 +1313,7 @@ static int _actor_cloud_damage(const actor *act,
 
         if (act->is_player())
             mpr("You are struck by lightning!");
-        else if (you.can_see(act))
+        else if (you.can_see(*act))
         {
             simple_monster_message(act->as_monster(),
                                    " is struck by lightning.");
@@ -1481,10 +1481,10 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
     case CLOUD_RAIN:
         // Fiery monsters dislike the rain.
         if (mons->is_fiery() && extra_careful)
-                return true;
+            return true;
 
         // We don't care about what's underneath the rain cloud if we can fly.
-        if (mons->flight_mode())
+        if (mons->airborne())
             return false;
 
         // These don't care about deep water.
@@ -1493,7 +1493,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
 
         // This position could become deep water, and they might drown.
         if (grd(cloud.pos) == DNGN_SHALLOW_WATER
-            && mons_intel(mons) > I_PLANT)
+            && mons_intel(mons) > I_BRAINLESS)
         {
             return true;
         }
@@ -1509,8 +1509,10 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         const int hp_threshold = clouds[cloud.type].expected_base_damage +
                                  random2avg(rand_dam, trials);
 
+        // intelligent monsters want a larger margin of safety
+        int safety_mult = (mons_intel(mons) > I_ANIMAL) ? 2 : 1;
         // dare we risk the damage?
-        const bool hp_ok = mons->hit_points >= hp_threshold;
+        const bool hp_ok = mons->hit_points > safety_mult * hp_threshold;
         // dare we risk the status effects?
         const bool sfx_ok = cloud.type != CLOUD_MEPHITIC
                             || x_chance_in_y(mons->get_hit_dice() - 1, 5);
@@ -1521,7 +1523,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
     }
 
     // Exceedingly dumb creatures will wander into harmful clouds.
-    if (mons_intel(mons) == I_PLANT && !extra_careful)
+    if (mons_intel(mons) == I_BRAINLESS && !extra_careful)
         return false;
 
     // If we get here, the cloud is potentially harmful.
@@ -1703,10 +1705,11 @@ string cloud_struct::cloud_name(const string &defname,
 void cloud_struct::announce_actor_engulfed(const actor *act,
                                            bool beneficial) const
 {
+    ASSERT(act); // XXX: change to const actor &act
     if (_cloud_is_cosmetic(type))
         return;
 
-    if (!you.can_see(act))
+    if (!you.can_see(*act))
         return;
 
     // Normal clouds. (Unmodified rain clouds have a different message.)
@@ -1812,9 +1815,9 @@ coord_def get_cloud_originator(const coord_def& pos)
 void remove_tornado_clouds(mid_t whose)
 {
     // Needed to clean up after the end of tornado cooldown, so we can again
-    // assume all "raging winds" clouds are harmful.  This is needed only
+    // assume all "raging winds" clouds are harmful. This is needed only
     // because map_knowledge doesn't preserve the knowledge about whom the
-    // cloud belongs to.  If this changes, please remove this function.  For
+    // cloud belongs to. If this changes, please remove this function. For
     // example, this approach doesn't work if we ever make Tornado a monster
     // spell (excluding immobile and mindless casters).
 
@@ -1868,11 +1871,10 @@ void run_cloud_spreaders(int dur)
     if (!dur)
         return;
 
-    vector<map_marker*> markers = env.markers.get_all(MAT_CLOUD_SPREADER);
-
-    for (int i = 0, size = markers.size(); i < size; ++i)
+    for (map_marker *marker : env.markers.get_all(MAT_CLOUD_SPREADER))
     {
-        map_cloud_spreader_marker *mark = dynamic_cast<map_cloud_spreader_marker*>(markers[i]);
+        map_cloud_spreader_marker * const mark
+            = dynamic_cast<map_cloud_spreader_marker*>(marker);
 
         mark->speed_increment += dur;
         int rad = min(mark->speed_increment / mark->speed, mark->max_rad - 1) + 1;

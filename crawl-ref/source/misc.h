@@ -10,11 +10,10 @@
 #include "target.h"
 
 #include <algorithm>
+#include <numeric> // iota
 #include <queue>
 
 extern const struct coord_def Compass[9];
-
-void trackers_init_new_level(bool transit);
 
 string weird_glowing_colour();
 
@@ -56,8 +55,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool check_landing_only = false);
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
-                        coord_def beam_target, bool autohit_first = false,
-                        bool *prompted = nullptr,
+                        coord_def beam_target, bool *prompted = nullptr,
                         coord_def attack_pos = coord_def(0, 0),
                         bool check_landing_only = false);
 
@@ -67,14 +65,9 @@ bool stop_attack_prompt(targetter &hitfunc, const char* verb,
 
 void swap_with_monster(monster *mon_to_swap);
 
-void auto_id_inventory();
-
 int apply_chunked_AC(int dam, int ac);
 
-void entered_malign_portal(actor* act);
-
 void handle_real_time(time_t t = time(0));
-string part_stack_string(const int num, const int total);
 unsigned int breakpoint_rank(int val, const int breakpoints[],
                              unsigned int num_breakpoints);
 
@@ -151,10 +144,10 @@ struct simple_connect
     int connect;
     int compass_idx[8];
 
-    simple_connect()
+    simple_connect(int cmode, cost_T &cf, est_T &ef)
+        : cost_function(cf), estimate_function(ef), connect(cmode)
     {
-        for (unsigned i=0; i<8; i++)
-            compass_idx[i] = i;
+        iota(begin(compass_idx), end(compass_idx), 0);
     }
 
     void operator()(const position_node & node,
@@ -273,11 +266,8 @@ void search_astar(const coord_def & start,
     if (connect_mode < 1 || connect_mode > 8)
         connect_mode = 8;
 
-    simple_connect<cost_T, est_T> connect;
-    connect.connect = connect_mode;
-    connect.cost_function = connection_cost;
-    connect.estimate_function = cost_estimate;
-
+    simple_connect<cost_T, est_T> connect(connect_mode, connection_cost,
+                                          cost_estimate);
     search_astar(start, valid_target, connect, visited, candidates);
 }
 
@@ -294,6 +284,8 @@ struct counted_monster_list
 };
 
 bool today_is_halloween();
+
+bool tobool(maybe_bool mb, bool def);
 
 /** Remove from a container all elements matching a predicate.
  *

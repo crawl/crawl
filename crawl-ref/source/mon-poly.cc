@@ -14,6 +14,7 @@
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "exclude.h"
+#include "fineff.h"
 #include "godconduct.h"
 #include "hints.h"
 #include "itemprop.h"
@@ -126,7 +127,9 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || mons_class_flag(new_mclass, M_CANT_SPAWN)  // no dummy monsters
         || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
-        || mons_class_flag(new_mclass, M_NO_EXP_GAIN) // not helpless
+        || !mons_class_gives_xp(new_mclass)           // no tentacle parts or
+                                                      // harmless things
+        || !mons_class_is_threatening(new_mclass)
         || new_mclass == MONS_PROGRAM_BUG
 
         // 'morph targets are _always_ "base" classes, not derived ones.
@@ -147,7 +150,6 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         // Other poly-unsuitable things.
         || mons_is_statue(new_mclass)
         || mons_is_projectile(new_mclass)
-        || mons_is_tentacle_or_tentacle_segment(new_mclass)
 
         // The spell on Prince Ribbit can't be broken so easily.
         || (new_mclass == MONS_HUMAN
@@ -192,11 +194,12 @@ static bool _jiyva_slime_target(monster_type targetc)
 
 void change_monster_type(monster* mons, monster_type targetc)
 {
-    bool could_see     = you.can_see(mons);
+    ASSERT(mons); // XXX: change to monster &mons
+    bool could_see     = you.can_see(*mons);
     bool slimified = _jiyva_slime_target(targetc);
 
     // Quietly remove the old monster's invisibility before transforming
-    // it.  If we don't do this, it'll stay invisible even after losing
+    // it. If we don't do this, it'll stay invisible even after losing
     // the invisibility enchantment below.
     mons->del_ench(ENCH_INVIS, false, false);
 
@@ -207,7 +210,7 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     // Even if the monster transforms from one type that can behold the
     // player into a different type which can also behold the player,
-    // the polymorph disrupts the beholding process.  Do this before
+    // the polymorph disrupts the beholding process. Do this before
     // changing mons->type, since unbeholding can only happen while
     // the monster is still a siren/merfolk avatar.
     you.remove_beholder(mons);
@@ -216,12 +219,21 @@ void change_monster_type(monster* mons, monster_type targetc)
     if (mons_is_tentacle_head(mons_base_type(mons)))
         destroy_tentacles(mons);
 
+    // trj spills out jellies when polied, as if he'd been hit for mhp.
+    if (mons->type == MONS_ROYAL_JELLY)
+    {
+        simple_monster_message(mons, "'s form twists and warps, and jellies "
+                               "spill out!");
+        trj_spawn_fineff::schedule(nullptr, mons, mons->pos(),
+                                   mons->hit_points);
+    }
+
     // Inform listeners that the original monster is gone.
     fire_monster_death_event(mons, KILL_MISC, NON_MONSTER, true);
 
     // the actual polymorphing:
-    uint64_t flags =
-        mons->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
+    auto flags =
+        mons->flags & ~(MF_SEEN | MF_ATT_CHANGE_ATTEMPT
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_SHIFTER
                            | MF_MELEE_MASK);
     flags |= MF_POLYMORPHED;
@@ -232,19 +244,19 @@ void change_monster_type(monster* mons, monster_type targetc)
         || mons->mname == "shaped Royal Jelly")
     {
         name   = "shaped Royal Jelly";
-        flags |= MF_INTERESTING | MF_NAME_SUFFIX;
+        flags |= MF_NAME_SUFFIX;
     }
     else if (mons->type == MONS_LERNAEAN_HYDRA
              || mons->mname == "shaped Lernaean hydra")
     {
         name   = "shaped Lernaean hydra";
-        flags |= MF_INTERESTING | MF_NAME_SUFFIX;
+        flags |= MF_NAME_SUFFIX;
     }
     else if (mons->mons_species() == MONS_SERPENT_OF_HELL
              || mons->mname == "shaped Serpent of Hell")
     {
         name   = "shaped Serpent of Hell";
-        flags |= MF_INTERESTING | MF_NAME_SUFFIX;
+        flags |= MF_NAME_SUFFIX;
     }
     else if (!mons->mname.empty())
     {
@@ -260,8 +272,6 @@ void change_monster_type(monster* mons, monster_type targetc)
     }
     else if (mons_is_unique(mons->type))
     {
-        flags |= MF_INTERESTING;
-
         name = mons->name(DESC_PLAIN, true);
 
         // "Blork the orc" and similar.
@@ -293,7 +303,10 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     if (!mons->props.exists(ORIGINAL_TYPE_KEY))
     {
-        mons->props[ORIGINAL_TYPE_KEY].get_int() = mons->type;
+        const monster_type type = mons_is_job(mons->type)
+                                ? draco_or_demonspawn_subspecies(mons)
+                                : mons->type;
+        mons->props[ORIGINAL_TYPE_KEY].get_int() = type;
         if (mons->mons_species() == MONS_HYDRA)
             mons->props["old_heads"].get_int() = mons->num_heads;
     }
@@ -313,7 +326,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     monster_spells spl    = mons->spells;
     const bool need_save_spells
             =  old_mon_unique && !slimified
-               && mons_class_intel(targetc) >= I_NORMAL
+               && mons_class_intel(targetc) >= I_HUMAN
                && (!mons->has_spells() || mons->is_actual_spellcaster());
 
     mons->number       = 0;
@@ -330,7 +343,6 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     mons->mname = name;
     mons->props["no_annotate"] = slimified && old_mon_unique;
-    mons->god   = god;
     mons->props.erase("dbname");
 
     mons->flags = flags;
@@ -351,6 +363,9 @@ void change_monster_type(monster* mons, monster_type targetc)
     {
         mons->spells = spl;
     }
+
+    // Make sure we have a god if we've been polymorphed into a priest.
+    mons->god = mons->is_priest() ? GOD_NAMELESS : god;
 
     mons->add_ench(abj);
     mons->add_ench(fabj);
@@ -388,11 +403,8 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     monster_drop_things(mons);
 
-    // New monster type might be interesting.
-    mark_interesting_monst(mons);
-
     // If new monster is visible to player, then we've seen it.
-    if (you.can_see(mons))
+    if (you.can_see(*mons))
     {
         seen_monster(mons);
         // If the player saw both the beginning and end results of a
@@ -405,9 +417,9 @@ void change_monster_type(monster* mons, monster_type targetc)
         check_net_will_hold_monster(mons);
 
     // Even if the new form can constrict, it might be with a different
-    // body part.  Likewise, the new form might be too large for its
-    // current constrictor.  Rather than trying to handle these as special
-    // cases, just stop the constriction entirely.  The usual message about
+    // body part. Likewise, the new form might be too large for its
+    // current constrictor. Rather than trying to handle these as special
+    // cases, just stop the constriction entirely. The usual message about
     // evaporating and reforming justifies this behaviour.
     mons->stop_constricting_all(false);
     mons->stop_being_constricted();
@@ -433,7 +445,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     int tries = 1000;
 
     // Used to be mons_power, but that just returns hit_dice
-    // for the monster class.  By using the current hit dice
+    // for the monster class. By using the current hit dice
     // the player gets the opportunity to use draining more
     // effectively against shapeshifters. - bwr
     source_power = mons->get_hit_dice();
@@ -472,8 +484,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                                                         target_power, relax)));
     }
 
-    bool could_see = you.can_see(mons);
-    bool need_note = (could_see && MONST_INTERESTING(mons));
+    bool could_see = you.can_see(*mons);
+    bool need_note = could_see && mons_is_notable(*mons);
     string old_name_a = mons->full_name(DESC_A);
     string old_name_the = mons->full_name(DESC_THE);
     monster_type oldc = mons->type;
@@ -502,7 +514,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     change_monster_type(mons, targetc);
 
-    bool can_see = you.can_see(mons);
+    bool can_see = you.can_see(*mons);
 
     // Messaging
     bool player_messaged = true;
@@ -536,13 +548,12 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     else
         player_messaged = false;
 
-    if (need_note || could_see && can_see && MONST_INTERESTING(mons))
+    if (need_note || could_see && can_see && mons_is_notable(*mons))
     {
         string new_name = can_see ? mons->full_name(DESC_A)
                                   : "something unseen";
 
-        take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a.c_str(),
-                       new_name.c_str()));
+        take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a, new_name));
 
         if (can_see)
             mons->flags |= MF_SEEN;
@@ -606,6 +617,7 @@ void slimify_monster(monster* mon, bool hostile)
         return;
     }
 
+    record_monster_defeat(mon, KILL_SLIMIFIED);
     remove_unique_annotation(mon);
 
     monster_polymorph(mon, target);
@@ -651,7 +663,7 @@ void seen_monster(monster* mons)
     if (crawl_state.game_is_hints())
         hints_monster_seen(*mons);
 
-    if (MONST_INTERESTING(mons))
+    if (mons_is_notable(*mons))
     {
         string name = mons->name(DESC_A, true);
         if (mons->type == MONS_PLAYER_GHOST)
@@ -659,16 +671,12 @@ void seen_monster(monster* mons)
             name += make_stringf(" (%s)",
                                  short_ghost_description(mons, true).c_str());
         }
-        take_note(Note(NOTE_SEEN_MONSTER, mons->type, 0, name.c_str()));
+        take_note(Note(NOTE_SEEN_MONSTER, mons->type, 0, name));
     }
 
     if (!(mons->flags & MF_TSO_SEEN))
     {
-        if (!mons->has_ench(ENCH_ABJ)
-            && !mons->has_ench(ENCH_FAKE_ABJURATION)
-            && !testbits(mons->flags, MF_NO_REWARD)
-            && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
-            && !crawl_state.game_is_arena())
+        if (mons_gives_xp(mons, &you) && !crawl_state.game_is_arena())
         {
             did_god_conduct(DID_SEE_MONSTER, mons->get_experience_level(),
                             true, mons);

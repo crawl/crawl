@@ -129,11 +129,6 @@ double random_var::expected() const
 
 //////////////////////////////////
 
-random_var constant(int n)
-{
-    return random_var(n);
-}
-
 random_var operator+(const random_var& x, const random_var& y)
 {
     const int start = x.min() + y.min();
@@ -246,8 +241,8 @@ random_var rv::min(const random_var& x, const random_var& y)
 random_var rv::roll_dice(int d, int n)
 {
     if (n <= 0)
-        return constant(0);
-    random_var x = constant(0);
+        return random_var(0);
+    random_var x(0);
     for (int i = 0; i < d; ++i)
         x += random_var(1, n+1);
     return x;
@@ -255,5 +250,5 @@ random_var rv::roll_dice(int d, int n)
 
 random_var rv::random2(int n)
 {
-    return random_var(0, max(n, 1));
+    return random_var(0, std::max(n, 1));
 }

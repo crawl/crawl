@@ -29,11 +29,7 @@ function abyss_entry(e, glyph)
   e.depth_chance("D:21-24", 3333)
   e.depth_chance("D:25",    10000)
   e.depth_chance("D:26-",   3333)
-  if you.where() == 'Depths:4' or you.where() == 'D:25' then
-    e.kfeat(glyph .. ' = enter_abyss no_mimic')
-  else
-    e.kfeat(glyph .. ' = enter_abyss')
-  end
+  e.kfeat(glyph .. ' = enter_abyss')
 end
 }}
 
@@ -111,7 +107,7 @@ NAME:    abyss_entry_glasseish
 TAGS:    nolayout_encompass transparent
 WEIGHT:  5
 : abyss_entry(_G, 'O')
-KPROP:   T = no_rtele_into
+KPROP:   T = no_tele_into
 SUBST:   T : T l 1 2 A X
 MONS:    tentacled starspawn / starcursed mass / wretched star
 MONS:    plant col:random name:demonic name_adjective tile:mons_demonic_plant
@@ -163,6 +159,34 @@ x.x.x.F.xxx
      ..xx
      .A.x
      ..xx
+ENDMAP
+
+NAME: nicolae_abyss_entry_one_way_or_another
+TAGS: nolayout_encompass patrolling
+: abyss_entry(_G, 'O')
+NSUBST: 1 = 1111111112 / .
+# All of these are guaranteed to have banishment in their spell sets.
+# One in ten chance they get a distortion weapon too.
+: local elfweapon = "long sword ego:distortion w:20 | short sword " ..
+:  "ego:distortion | rapier ego:distortion | dagger ego:distortion"
+: local louiseweapon = "long sword ego:distortion | short sword " ..
+:  "ego:distortion | battleaxe ego:distortion | hand axe ego:distortion | " ..
+:  "mace ego:distortion | dire flail ego:distortion | glaive ego:distortion w:2"
+KMONS: 1 = Louise, deep elf demonologist / deep elf sorcerer w:5
+: kmons( "2 = Louise ; " .. louiseweapon .. " , deep elf demonologist ; " ..
+: elfweapon .. " / deep elf sorcerer w:5 ; " .. elfweapon)
+MAP
+   ......
+  ..bbbb..
+ ..b....b..
+..b......b..
+.b..bb1..b...
+...b.1O1.b...
+...b..1bb..b.
+ ..b......b..
+  ..b....b..
+   ..bbbb..
+    ......
 ENDMAP
 
 ###############################################################################
@@ -285,7 +309,7 @@ MONS:   fire bat w:12 / bat simulacrum / spectral bat / vampire bat
 MONS:   vampire, vampire knight / vampire mage w:7
 MONS:   crimson imp w:12 / white imp / shadow imp / iron imp
 MONS:   kobold demonologist, deep elf summoner / orc sorcerer w:7
-MONS:   worker ant w:40 / goliath beetle w:20 / vampire mosquito
+MONS:   worker ant w:40 / wasp w:20 / vampire mosquito
 KMONS:  8 = demonic crawler
 KMONS:  9 = emperor scorpion
 KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
@@ -504,7 +528,7 @@ MAP
 ENDMAP
 
 NAME:    hangedman_abyss_batty_box
-MONS:    bat / fire bat / vampire bat, butterfly, raven
+MONS:    bat / fire bat / vampire bat, butterfly, wyvern
 MONS:    spatial vortex, wind drake, harpy, unseen horror
 KMONS:   8 = wind drake w:9 / harpy w:1
 KITEM:   8 = acquire any / any good_item / stone q:1 w:5
@@ -920,7 +944,7 @@ MONS:    thrashing horror / blink frog / ugly thing / \
          wretched star w:5 / air elemental / raiju / worldbinder
 MONS:    draconian shifter w:5 / shadow demon w:5 / lich / \
          profane servitor w:5 / lorocyproca / deep elf demonologist / \
-         deep elf sorcerer / unborn
+         deep elf sorcerer / death knight
 MONS:    bone dragon / tentacled starspawn / starcursed mass / \
          apocalypse crab / dancing weapon / tentacled monstrosity / \
          glowing shapeshifter
@@ -1029,7 +1053,7 @@ ENDMAP
 NAME:  abyss_rune_water_cross
 TAGS:  abyss_rune unrand patrolling
 MONS:  smoke demon, drowned soul
-KMONS: O = octopode crusher
+KMONS: O = merfolk impaler
 KITEM: O = abyssal rune of Zot
 KFEAT: O = shallow_water
 MAP
@@ -1215,7 +1239,7 @@ KMONS:  O = hellephant
 MONS:   elephant, dire elephant, hellephant
 KITEM:  O = abyssal rune of Zot
 SUBST:  l = .....llllx, L : llllX
-KPROP:  ' = no_rtele_into
+KPROP:  ' = no_tele_into
 NSUBST: ' = 2 = 322 / 9 = 221. / *:., X = 1:l / *:x
 SUBST:  x : cccvvx, x = cccvvx
 MAP
@@ -1400,7 +1424,7 @@ KMONS:   e = crystal guardian
 # Note: if anything in these two item sets becomes useful for more then a tiny
 # fraction of characters finding the abyssal rune, remove or replace them.
 KITEM:   24d = scroll of random uselessness w:15 q:1 / fruit q:1 w:5 / \
-         club w:5 / hammer w:5 / stone q:1 / needle q:1 ego:confusion / \
+         club w:5 / stone q:1 / needle q:1 ego:confusion / \
          mundane animal skin / mundane ring mail / gold q:1
 KITEM:   13e = wand of slowing / wand of confusion / wand of magic darts / \
          wand of flame w:5 / wand of frost w:5 / plain deck w:5 / \
@@ -1592,6 +1616,61 @@ cc..c..s..c..cc
   cccccbccccc
 ENDMAP
 
+NAME: nicolae_abyss_rune_left_handed
+TAGS: abyss_rune unrand no_monster_gen
+SUBST: 0 = 0.
+NSUBST: X = 1 / 2 / 3 / 123.., Q = 6 / 7 / 67...
+SHUFFLE: 12, 45
+MONS: ancient zyme, wretched star, starcursed mass, lurking horror, \
+      thrashing horror, tentacled starspawn, apocalypse crab
+KITEM: O = abyssal rune of zot
+KMONS: O = worldbinder
+MAP
+    ...
+   ..c....
+  ..cc0.c.
+ ..ccc.......
+..cccccccccc..
+..0ccc.4cc.cc..
+..cc.+cc+...nc.
+..c.5.cc..X..c.
+.ccc+ccc.XcX.c.
+.....Q.c..X..c.
+..Q....cn...nc.
+.....Q..ccOcc..
+.ccccc...ccc..0
+.ccc.ccccc.cc..
+.ccc...0....cc.
+............c0.
+           .cc.
+           ....
+ENDMAP
+
+NAME: nicolae_abyss_rune_containment_breach
+TAGS: abyss_rune unrand patrolling no_monster_gen no_item_gen no_trap_gen
+SUBST: n = nnnnnnc
+KITEM: O = abyssal rune of zot
+KMONS: Om = spatial maelstrom
+MAP
+.................
+.................
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnmmmnnnnn..
+..nnnnnmOmnnnnn..
+..nnnnnmmmnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+.................
+.................
+ENDMAP
+
 ###############################################################################
 # Abyss Exit Vaults
 # Note: Don't tag your abyss exit with allow_dup unless it's small and
@@ -1777,7 +1856,7 @@ ENDMAP
 NAME:  evilmike_abyss_exit_10
 TAGS:  abyss_exit
 SUBST: X = x.., x = xxxcv
-MONS:  brain worm / w:5 neqoxec
+MONS:  neqoxec
 : init_abyss_exit(_G, "O")
 MAP
 XXXXXXXXXXX

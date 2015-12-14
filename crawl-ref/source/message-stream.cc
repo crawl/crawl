@@ -12,6 +12,7 @@ namespace msg
     ostream stream(&msbuf);
     vector<ostream*> stream_ptrs;
     vector<mpr_stream_buf*> stream_buffers;
+    capitalisation cap(true), nocap(false);
 
     ostream& streams(msg_channel_type chan)
     {
@@ -41,12 +42,16 @@ namespace msg
     }
 
     setparam::setparam(int param)
-    {
-        m_param = param;
-    }
+        : m_param(param)
+    {}
+
+    capitalisation::capitalisation(bool capital)
+        : m_cap(capital)
+    {}
 
     mpr_stream_buf::mpr_stream_buf(msg_channel_type chan) :
-        internal_count(0), param(0), muted(false), channel(chan)
+        internal_count(0), param(0), muted(false), capitalise(true),
+        channel(chan)
     {}
 
     void mpr_stream_buf::set_param(int p)
@@ -59,6 +64,11 @@ namespace msg
         muted = m;
     }
 
+    void mpr_stream_buf::set_capitalise(bool c)
+    {
+        capitalise = c;
+    }
+
     // again, can be improved
     int mpr_stream_buf::overflow(int c)
     {
@@ -69,12 +79,17 @@ namespace msg
         {
             // null-terminate and print the string
             internal_buf[internal_count] = 0;
-            mprf(channel, param, "%s", internal_buf);
+            if (capitalise)
+                mprf(channel, param, "%s", internal_buf);
+            else
+                mprf_nocap(channel, param, "%s", internal_buf);
 
             internal_count = 0;
 
-            // reset to defaults (param changing isn't sticky)
+            // reset to defaults (param changing and capitalisation aren't
+            // sticky, but muting is).
             set_param(0);
+            set_capitalise(true);
         }
         else
             internal_buf[internal_count++] = c;
@@ -93,5 +108,12 @@ ostream& operator<<(ostream& os, const msg::setparam& sp)
 {
     msg::mpr_stream_buf* ps = dynamic_cast<msg::mpr_stream_buf*>(os.rdbuf());
     ps->set_param(sp.m_param);
+    return os;
+}
+
+ostream& operator<<(ostream& os, const msg::capitalisation& cap)
+{
+    msg::mpr_stream_buf* ps = dynamic_cast<msg::mpr_stream_buf*>(os.rdbuf());
+    ps->set_capitalise(cap.m_cap);
     return os;
 }

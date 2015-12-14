@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# This script lists tiles which are not even loaded by tiledefs.  This implies
+# This script lists tiles which are not even loaded by tiledefs. This implies
 # being unused, although the converse is not true: tiles not listed by this
 # script have an enum and are included in textures, but that enum might be
 # never referenced anywhere.

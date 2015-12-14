@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+# Work around dpkg failing to replace directiories with a symlink.
+DOC=/usr/share/doc/crawl
+if rmdir $DOC 2>/dev/null
+  then ln -sf /usr/share/doc/crawl-common $DOC
+fi
+
+#DEBHELPER#

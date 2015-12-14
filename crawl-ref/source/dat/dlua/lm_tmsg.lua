@@ -45,14 +45,10 @@ function TimedMessaging:init(tmarker, cm, verbose)
   end
 
   if not self.range_adjectives then
-    local function sqr(x)
-      return x * x
-    end
-
     self.range_adjectives = {
-      { sqr(30), '$F, a long way away' },
-      { sqr(15), 'distant' },
-      { sqr(7), '$F nearby' },
+      { 30, 'very distant' },
+      { 15, 'distant' },
+      { 7, '$F nearby' },
       { 0, '$F' }
     }
   end
@@ -119,11 +115,11 @@ function TimedMessaging:proc_ranges(ranges, dur, fn)
   end
 end
 
-function TimedMessaging:player_distance2(cm)
+function TimedMessaging:player_distance(cm)
   local cx, cy = cm:pos()
   local x, y = you.pos()
   local dx, dy = cx - x, cy - y
-  return dx * dx + dy * dy
+  return math.max(math.abs(dx), math.abs(dy))
 end
 
 function TimedMessaging:choose_range_adjective(distance)
@@ -135,7 +131,7 @@ function TimedMessaging:choose_range_adjective(distance)
 end
 
 function TimedMessaging:range_adjective(cm, thing)
-  local adj = self:choose_range_adjective(self:player_distance2(cm))
+  local adj = self:choose_range_adjective(self:player_distance(cm))
   if string.find(adj, '$F') then
     return util.expand_entity(self.noisemaker, adj)
   else

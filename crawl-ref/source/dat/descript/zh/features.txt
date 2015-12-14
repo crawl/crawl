@@ -384,7 +384,7 @@ A heavily etched metal wall
 但你还是可以看见上面的壁画描绘着从藏宝库中偷东西的人的悲惨下场。
 你感觉有点忐忑不安。
 %%%%
-A heavily etched wall of green crystal
+A heavily etched crystal wall
 
 这面绿水晶墙已经有些风化，
 但你还是可以看见上面的壁画描绘着从藏宝库中偷东西的人的悲惨下场。

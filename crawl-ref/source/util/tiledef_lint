@@ -10,7 +10,7 @@ sub check_defs($$$@)
     while (<IN>)
     {
         next unless /TILE${symbol}_($prefix[A-Z0-9_]+)/;
-        # multi-tile enums receive _1 _2 _3 automatically.  Could cause problems
+        # multi-tile enums receive _1 _2 _3 automatically. Could cause problems
         # if we get such a name written manually.
         next if $1 =~ /[0-9]$/;
         $defs{$1} = 1;

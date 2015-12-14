@@ -18,6 +18,7 @@
 #include "env.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -29,6 +30,7 @@
 #include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
+#include "spl-cast.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -443,7 +445,7 @@ string Form::player_prayer_action() const
     // Otherwise, if you're flying, use the generic flying action.
     // XXX: if we ever get a default-permaflying species again that wants to
     // have a separate verb, we'll want to check for that right here.
-    if (you.flight_mode())
+    if (you.airborne())
         return "hover solemnly before";
     // Otherwise, if you have a verb, use that...
     if (prayer_action != "")
@@ -464,7 +466,7 @@ public:
      * Get a string describing the form you're turning into. (If not the same
      * as the one used to describe this form in @.
      */
-    string get_transform_description() const { return "your old self."; }
+    string get_transform_description() const override { return "your old self."; }
 };
 
 class FormSpider : public Form
@@ -487,7 +489,7 @@ public:
     /**
      * Find the player's base unarmed damage in this form.
      */
-    int get_base_unarmed_damage() const
+    int get_base_unarmed_damage() const override
     {
         return 8 + div_rand_round(you.strength() + you.dex(), 3);
     }
@@ -495,7 +497,7 @@ public:
     /**
      * % screen description
      */
-    string get_long_name() const
+    string get_long_name() const override
     {
         return "blade " + blade_parts(true);
     }
@@ -503,7 +505,7 @@ public:
     /**
      * @ description
      */
-    string get_description(bool past_tense) const
+    string get_description(bool past_tense) const override
     {
         return make_stringf("You %s blades for %s.",
                             past_tense ? "had" : "have",
@@ -513,7 +515,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation_type previous_trans) const
+    string transform_message(transformation_type previous_trans) const override
     {
         const bool singular = player_mutation_level(MUT_MISSING_HAND);
 
@@ -526,7 +528,7 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const
+    string get_untransform_message() const override
     {
         const bool singular = player_mutation_level(MUT_MISSING_HAND);
 
@@ -536,10 +538,12 @@ public:
                             singular ? "its" : "their");
     }
 
+    bool can_offhand_punch() const override { return true; }
+
     /**
      * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
      */
-    string get_uc_attack_name(string default_name) const
+    string get_uc_attack_name(string default_name) const override
     {
         return "Blade " + blade_parts(true);
     }
@@ -556,7 +560,7 @@ public:
     /**
      * Find the player's base unarmed damage in this form.
      */
-    int get_base_unarmed_damage() const
+    int get_base_unarmed_damage() const override
     {
         return 6 + div_rand_round(you.strength(), 3);
     }
@@ -564,7 +568,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation_type previous_trans) const
+    string transform_message(transformation_type previous_trans) const override
     {
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
             return "You inwardly fear your resemblance to a lawn ornament.";
@@ -578,7 +582,7 @@ public:
      * Get a string describing the form you're turning into. (If not the same
      * as the one used to describe this form in @.
      */
-    string get_transform_description() const
+    string get_transform_description() const override
     {
         return "a living statue of rough stone.";
     }
@@ -586,7 +590,7 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const
+    string get_untransform_message() const override
     {
         // This only handles lava orcs going statue -> stoneskin.
         if (
@@ -610,7 +614,7 @@ public:
     /**
      * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
      */
-    string get_uc_attack_name(string default_name) const
+    string get_uc_attack_name(string default_name) const override
     {
         if (you.has_usable_claws(true))
             return "Stone claws";
@@ -633,7 +637,7 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const
+    string get_untransform_message() const override
     {
 #if TAG_MAJOR_VERSION == 34
         if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
@@ -646,7 +650,7 @@ public:
     /**
      * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
      */
-    string get_uc_attack_name(string default_name) const
+    string get_uc_attack_name(string default_name) const override
     {
         const bool singular = player_mutation_level(MUT_MISSING_HAND);
         return make_stringf("Ice fist%s", singular ? "" : "s");
@@ -668,7 +672,7 @@ public:
      *
      * @return  A monster type corresponding to the player in this form.
      */
-    monster_type get_equivalent_mons() const
+    monster_type get_equivalent_mons() const override
     {
         return dragon_form_dragon_type();
     }
@@ -677,9 +681,9 @@ public:
      * The AC bonus of the form, multiplied by 100 to match
      * player::armour_class().
      */
-    int get_ac_bonus() const
+    int get_ac_bonus() const override
     {
-        if (player_genus(GENPC_DRACONIAN))
+        if (species_is_draconian(you.species))
             return 1000;
         return Form::get_ac_bonus();
     }
@@ -687,15 +691,16 @@ public:
     /**
      * Find the player's base unarmed damage in this form.
      */
-    int get_base_unarmed_damage() const
+    int get_base_unarmed_damage() const override
     {
+        // You also get another 6 damage from claws.
         return 12 + div_rand_round(you.strength() * 2, 3);
     }
 
     /**
      * How many levels of resistance against fire does this form provide?
      */
-    int res_fire() const
+    int res_fire() const override
     {
         switch (dragon_form_dragon_type())
         {
@@ -711,7 +716,7 @@ public:
     /**
      * How many levels of resistance against cold does this form provide?
      */
-    int res_cold() const
+    int res_cold() const override
     {
         switch (dragon_form_dragon_type())
         {
@@ -723,6 +728,8 @@ public:
                 return 0;
         }
     }
+
+    bool can_offhand_punch() const override { return true; }
 };
 
 class FormLich : public Form
@@ -736,7 +743,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation_type previous_trans) const
+    string transform_message(transformation_type previous_trans) const override
     {
         return "Your body is suffused with negative energy!";
     }
@@ -744,7 +751,7 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const
+    string get_untransform_message() const override
     {
         if (you.undead_state() == US_ALIVE)
             return "You feel yourself come back to life.";
@@ -768,7 +775,7 @@ public:
      *
      * @return  A monster type corresponding to the player in this form.
      */
-    monster_type get_equivalent_mons() const
+    monster_type get_equivalent_mons() const override
     {
         return you.species == SP_VAMPIRE ? MONS_VAMPIRE_BAT : MONS_BAT;
     }
@@ -779,32 +786,20 @@ public:
      * @return  The stealth modifier for the given form. (0 = default to
      *          racial values.)
      */
-    int get_stealth_mod() const
+    int get_stealth_mod() const override
     {
-        // vampires handle bat stealth in racial code
-        return you.species == SP_VAMPIRE ? 0 : stealth_mod;
-    }
-
-    /**
-     * What brand type does this form attack with when unarmed?
-     */
-    brand_type get_uc_brand() const
-    {
-        // thematic but probably irrelevant
-        if (you.species == SP_VAMPIRE)
-            return SPWPN_VAMPIRISM;
-        return Form::get_uc_brand();
+        return you.species == SP_VAMPIRE ? 20 : stealth_mod;
     }
 
     /**
      * Find the player's base unarmed damage in this form.
      */
-    int get_base_unarmed_damage() const
+    int get_base_unarmed_damage() const override
     {
         return you.species == SP_VAMPIRE ? 2 : 1;
     }
 
-    string get_description(bool past_tense) const
+    string get_description(bool past_tense) const override
     {
         return make_stringf("You %s in %sbat-form.",
                             past_tense ? "were" : "are",
@@ -815,7 +810,7 @@ public:
      * Get a string describing the form you're turning into. (If not the same
      * as the one used to describe this form in @.
      */
-    string get_transform_description() const
+    string get_transform_description() const override
     {
         return make_stringf("a %sbat.",
                             you.species == SP_VAMPIRE ? "vampire " : "");
@@ -843,7 +838,7 @@ public:
         return inst;
     }
 
-    string get_description(bool past_tense) const
+    string get_description(bool past_tense) const override
     {
         if (you.attribute[ATTR_APPENDAGE] == MUT_TENTACLE_SPIKE)
         {
@@ -860,7 +855,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation_type previous_trans) const
+    string transform_message(transformation_type previous_trans) const override
     {
         // ATTR_APPENDAGE must be set earlier!
         switch (you.attribute[ATTR_APPENDAGE])
@@ -879,7 +874,7 @@ public:
     /**
      * Get a message for untransforming from this form. (Handled elsewhere.)
      */
-    string get_untransform_message() const { return ""; }
+    string get_untransform_message() const override { return ""; }
 };
 
 class FormTree : public Form
@@ -893,7 +888,7 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const { return "You feel less woody."; }
+    string get_untransform_message() const override { return "You feel less woody."; }
 };
 
 class FormPorcupine : public Form
@@ -946,7 +941,7 @@ public:
      * @return      Whether this form prevents the player from wearing the
      *              item. (Other things may also prevent it, of course)
      */
-    bool can_wear_item(const item_def& item) const
+    bool can_wear_item(const item_def& item) const override
     {
         if (is_helmet(item) && !is_hard_helmet(item))
             return true; // mushroom caps!
@@ -956,7 +951,7 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const { return "You stop sporulating."; }
+    string get_untransform_message() const override { return "You stop sporulating."; }
 };
 
 class FormShadow : public Form
@@ -970,7 +965,7 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const
+    string get_untransform_message() const override
     {
         if (you.invisible())
             return "You feel less shadowy.";
@@ -1000,15 +995,19 @@ public:
     /**
      * Get a string describing the form you're turning into.
      */
-    string get_transform_description() const
+    string get_transform_description() const override
     {
-        return make_stringf("a %d-headed hydra.", you.heads());
+        const auto heads = you.heads();
+        const string headstr = (heads < 11 ? number_in_words(heads)
+                                           : to_string(heads))
+                             + "-headed hydra.";
+        return article_a(headstr);
     }
 
     /**
      * @ description
      */
-    string get_description(bool past_tense) const
+    string get_description(bool past_tense) const override
     {
         return make_stringf("You %s %s",
                             past_tense ? "were" : "are",
@@ -1018,7 +1017,7 @@ public:
     /**
      * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
      */
-    string get_uc_attack_name(string default_name) const
+    string get_uc_attack_name(string default_name) const override
     {
         return make_stringf("Bite (x%d)", you.heads());
     }
@@ -1026,7 +1025,7 @@ public:
     /**
      * Find the player's base unarmed damage in this form.
      */
-    int get_base_unarmed_damage() const
+    int get_base_unarmed_damage() const override
     {
         // 3 damage per head for 1-10
         const int normal_heads_damage = min(you.heads(), 10) * 3;
@@ -1097,7 +1096,7 @@ const char* transform_name(transformation_type form)
 bool form_can_wield(transformation_type form)
 {
     ASSERT_RANGE(form, 0, NUM_TRANSFORMS);
-    return forms[form]->slot_available(EQ_WEAPON);
+    return forms[form]->can_wield();
 }
 
 /**
@@ -1110,19 +1109,6 @@ bool form_can_wear(transformation_type form)
 {
     ASSERT_RANGE(form, 0, NUM_TRANSFORMS);
     return (forms[form]->blocked_slots & EQF_WEAR) != EQF_WEAR;
-}
-
-/**
- * Can the player (W)ear or (P)ut on the given item when in the given form?
- *
- * @param form      The item in question.
- * @param form      The form in question.
- * @return          Whether the player can wear that item when in that form.
- */
-bool form_can_wear_item(const item_def& item, transformation_type form)
-{
-    ASSERT_RANGE(form, 0, NUM_TRANSFORMS);
-    return forms[form]->can_wear_item(item);
 }
 
 /**
@@ -1237,7 +1223,8 @@ _init_equipment_removal(transformation_type form)
         const item_def *pitem = you.slot_item(eq, true);
 
         if (pitem && (get_form(form)->blocked_slots & SLOTF(i)
-                      || !get_form(form)->can_wear_item(*pitem)))
+                      || (i != EQ_RING_AMULET
+                          && !get_form(form)->can_wear_item(*pitem))))
         {
             result.insert(eq);
         }
@@ -1298,40 +1285,6 @@ static void _remove_equipment(const set<equipment_type>& removed,
     }
 }
 
-// FIXME: merge this with you_can_wear(), can_wear_armour(), etc.
-static bool _mutations_prevent_wearing(const item_def& item)
-{
-    const equipment_type eqslot = get_armour_slot(item);
-
-    if (is_hard_helmet(item)
-        && (player_mutation_level(MUT_HORNS)
-            || player_mutation_level(MUT_ANTENNAE)
-            || player_mutation_level(MUT_BEAK)))
-    {
-        return true;
-    }
-
-    // Barding is excepted here.
-    if (item.sub_type == ARM_BOOTS
-        && (player_mutation_level(MUT_HOOVES) >= 3
-            || player_mutation_level(MUT_TALONS) >= 3))
-    {
-        return true;
-    }
-
-    if (eqslot == EQ_GLOVES && player_mutation_level(MUT_CLAWS) >= 3)
-        return true;
-
-    if (eqslot == EQ_HELMET
-        && (player_mutation_level(MUT_HORNS) == 3
-            || player_mutation_level(MUT_ANTENNAE) == 3))
-    {
-        return true;
-    }
-
-    return false;
-}
-
 static void _unmeld_equipment_type(equipment_type e)
 {
     item_def& item = you.inv[you.equip[e]];
@@ -1347,9 +1300,8 @@ static void _unmeld_equipment_type(equipment_type e)
     }
     else if (item.base_type != OBJ_JEWELLERY)
     {
-        // In case the player was mutated during the transformation,
-        // check whether the equipment is still wearable.
-        if (_mutations_prevent_wearing(item))
+        // This could happen if the player was mutated during the form.
+        if (!can_wear_armour(item, false, false))
             force_remove = true;
 
         // If you switched weapons during the transformation, make
@@ -1426,17 +1378,6 @@ monster_type transform_mons()
     return get_form()->get_equivalent_mons();
 }
 
-static bool _abort_or_fizzle(bool just_check)
-{
-    if (!just_check && you.turn_is_over)
-    {
-        canned_msg(MSG_SPELL_FIZZLES);
-        move_player_to_grid(you.pos(), false);
-        return true; // pay the necessary costs
-    }
-    return false; // SPRET_ABORT
-}
-
 string blade_parts(bool terse)
 {
     string str;
@@ -1452,32 +1393,6 @@ string blade_parts(bool terse)
         str = pluralise(str);
 
     return str;
-}
-
-monster_type dragon_form_dragon_type()
-{
-    switch (you.species)
-    {
-    case SP_WHITE_DRACONIAN:
-        return MONS_ICE_DRAGON;
-    case SP_GREEN_DRACONIAN:
-        return MONS_SWAMP_DRAGON;
-    case SP_YELLOW_DRACONIAN:
-        return MONS_GOLDEN_DRAGON;
-    case SP_GREY_DRACONIAN:
-        return MONS_IRON_DRAGON;
-    case SP_BLACK_DRACONIAN:
-        return MONS_STORM_DRAGON;
-    case SP_PURPLE_DRACONIAN:
-        return MONS_QUICKSILVER_DRAGON;
-    case SP_MOTTLED_DRACONIAN:
-        return MONS_MOTTLED_DRAGON;
-    case SP_PALE_DRACONIAN:
-        return MONS_STEAM_DRAGON;
-    case SP_RED_DRACONIAN:
-    default:
-        return MONS_FIRE_DRAGON;
-    }
 }
 
 // with a denominator of 10
@@ -1563,7 +1478,7 @@ static mutation_type appendages[] =
 
 static bool _slot_conflict(equipment_type eq)
 {
-    // Choose uncovered slots only.  Melding could make people re-cast
+    // Choose uncovered slots only. Melding could make people re-cast
     // until they get something that doesn't conflict with their randart
     // of überness.
     if (you.equip[eq] != -1)
@@ -1603,8 +1518,12 @@ static mutation_type _beastly_appendage()
 }
 
 static bool _transformation_is_safe(transformation_type which_trans,
-                                    dungeon_feature_type feat, bool quiet)
+                                    dungeon_feature_type feat, bool quiet,
+                                    string *fail_reason = nullptr)
 {
+    string msg;
+    bool is_safe = true;
+
     if (which_trans == TRAN_TREE)
     {
         const cloud_type cloud = cloud_type_at(you.pos());
@@ -1614,29 +1533,29 @@ static bool _transformation_is_safe(transformation_type which_trans,
             && cloud != CLOUD_POISON
             && is_damaging_cloud(cloud, false))
         {
-            if (!quiet)
-            {
-                mprf("You can't transform into a tree while standing in a cloud of %s.",
-                     cloud_type_name(cloud).c_str());
-            }
-            return false;
+            msg = make_stringf("You can't transform into a tree while standing "
+                               "in a cloud of %s.",
+                               cloud_type_name(cloud).c_str());
+            is_safe = false;
         }
     }
+
 #if TAG_MAJOR_VERSION == 34
-
     if (which_trans == TRAN_ICE_BEAST && you.species == SP_DJINNI)
-        return false; // melting is fatal...
+        is_safe = false; // melting is fatal...
 #endif
-
-    if (!feat_dangerous_for_form(which_trans, feat))
-        return true;
-
-    if (!quiet)
+    else if (feat_dangerous_for_form(which_trans, feat))
     {
-        mprf("You would %s in your new form.",
-             feat == DNGN_DEEP_WATER ? "drown" : "burn");
+        msg = make_stringf("You would %s in your new form.",
+                           feat == DNGN_DEEP_WATER ? "drown" : "burn");
+        is_safe = false;
     }
-    return false;
+
+    if (fail_reason)
+        *fail_reason = msg;
+    if (!is_safe && !quiet)
+        mpr(msg);
+    return is_safe;
 }
 
 /**
@@ -1658,7 +1577,7 @@ bool check_form_stat_safety(transformation_type new_form)
     if (!bad_str && !bad_dex)
         return true;
 
-    string prompt = make_stringf("%s will reduce your %s to zero.  Continue?",
+    string prompt = make_stringf("%s will reduce your %s to zero. Continue?",
                                  new_form == TRAN_NONE ? "Turning back"
                                                        : "Transforming",
                                  bad_str ? "strength" : "dexterity");
@@ -1709,15 +1628,72 @@ static void _print_head_change_message(int old_heads, int new_heads)
         mpr("A new head grows.");
 }
 
-// Transforms you into the specified form. If involuntary, checks for
-// inscription warnings are skipped, and the transformation fails silently
-// (if it fails). If just_check is true the transformation doesn't actually
-// happen, but the method returns whether it would be successful.
+/**
+ * Is the player alive enough to become the given form?
+ *
+ * All undead can enter shadow form; vampires also can enter batform, and, when
+ * full, other forms (excepting lichform).
+ *
+ * @param which_trans   The tranformation which the player is undergoing.
+ * @return              True if the player is not blocked from entering the
+ *                      given form by their undead race; false otherwise.
+ */
+static bool _player_alive_enough_for(transformation_type which_trans)
+{
+    if (!you.undead_state(false))
+        return true; // not undead!
+
+    if (which_trans == TRAN_NONE)
+        return true; // everything can become itself
+
+    if (which_trans == TRAN_SHADOW)
+        return true; // even the undead can use dith's shadow form
+
+    if (you.species != SP_VAMPIRE)
+        return false; // ghouls & mummies can't become anything else, though
+
+    if (which_trans == TRAN_LICH)
+        return false; // vampires can never lichform
+
+    if (which_trans == TRAN_BAT)
+        return you.hunger_state <= HS_SATIATED; // can batform on low blood
+
+    // other forms can only be entered when full or above.
+    return you.hunger_state > HS_SATIATED;
+
+}
+
+/**
+ * Attempts to transform the player into the specified form.
+ *
+ * If the player is already in that form, attempt to refresh its duration and
+ * power.
+ *
+ * @param pow               Thw power of the transformation (equivalent to
+ *                          spellpower of form spells)
+ * @param which_trans       The form which the player should become.
+ * @param involuntary       Checks for inscription warnings are skipped, and
+ *                          failure is silent.
+ * @param just_check        A dry run; just check to see whether the player
+ *                          *can* enter the given form, but don't actually
+ *                          transform them.
+ * @return                  If the player was transformed, or if they were
+ *                          already in the given form, returns true.
+ *                          Otherwise, false.
+ *                          If just_check is set, returns true if the player
+ *                          could enter the form (or is in it already) and
+ *                          false otherwise.
+ *                          N.b. that transform() can fail even when a
+ *                          just_check run returns true; e.g. when Zin decides
+ *                          to intervene. (That may be the only case.)
+ */
 bool transform(int pow, transformation_type which_trans, bool involuntary,
-               bool just_check)
+               bool just_check, string *fail_reason)
 {
     const transformation_type previous_trans = you.form;
-    const flight_type was_flying = you.flight_mode();
+    const bool was_flying = you.airborne();
+    bool success = true;
+    string msg;
 
     // Zin's protection.
     if (!just_check && you_worship(GOD_ZIN)
@@ -1732,22 +1708,33 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
     if (you.transform_uncancellable)
     {
-        if (!involuntary)
-            mpr("You are stuck in your current form!");
-        return false;
+        msg = "You are stuck in your current form!";
+        success = false;
+    }
+    else if (!_transformation_is_safe(which_trans, env.grid(you.pos()),
+                                      involuntary || fail_reason, &msg))
+    {
+        success =  false;
     }
 
-    if (!_transformation_is_safe(which_trans, env.grid(you.pos()),
-        involuntary))
+    if (!success)
     {
+        // Message is not printed if we're updating fail_reason.
+        if (fail_reason)
+            *fail_reason = msg;
+        else if (!involuntary)
+            mpr(msg);
         return false;
     }
 
     // This must occur before the untransform() and the undead_state() check.
     if (previous_trans == which_trans)
     {
+        if (just_check)
+            return true;
+
         // update power
-        if (!just_check && which_trans != TRAN_NONE)
+        if (which_trans != TRAN_NONE)
         {
             you.props[TRANSFORM_POW_KEY] = pow;
             you.redraw_armour_class = true;
@@ -1765,60 +1752,38 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         int dur = _transform_duration(which_trans, pow);
         if (you.duration[DUR_TRANSFORMATION] < dur * BASELINE_DELAY)
         {
-            if (just_check)
-                return true;
-
             mpr("You extend your transformation's duration.");
             you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
 
-            return true;
         }
-        else
-        {
-            if (!involuntary && which_trans != TRAN_NONE)
-                mpr("You fail to extend your transformation any further.");
-            return false;
-        }
+        else if (!involuntary && which_trans != TRAN_NONE)
+            mpr("You fail to extend your transformation any further.");
+
+        return true;
     }
 
-    // The actual transformation may still fail later (e.g. due to cursed
-    // equipment). Ideally, untransforming should cost a turn but nothing
-    // else (as does the "End Transformation" ability). As it is, you
-    // pay with mana and hunger if you already untransformed.
-    if (!just_check && previous_trans != TRAN_NONE)
-        untransform(true);
-
-    // Catch some conditions which prevent transformation.
-    if (you.undead_state()
-        && which_trans != TRAN_SHADOW
-        && (you.species != SP_VAMPIRE
-            || which_trans != TRAN_BAT && you.hunger_state <= HS_SATIATED
-            || which_trans == TRAN_LICH))
+    // the undead cannot enter most forms.
+    if (!_player_alive_enough_for(which_trans))
     {
-        if (!involuntary)
-            mpr("Your unliving flesh cannot be transformed in this way.");
-        return _abort_or_fizzle(just_check);
+        msg = "Your unliving flesh cannot be transformed in this way.";
+        success = false;
     }
-
-    if (which_trans == TRAN_LICH && you.duration[DUR_DEATHS_DOOR])
+    else if (which_trans == TRAN_LICH && you.duration[DUR_DEATHS_DOOR])
     {
-        if (!involuntary)
-        {
-            mpr("The transformation conflicts with an enchantment "
-                "already in effect.");
-        }
-        return _abort_or_fizzle(just_check);
+        msg = "You cannot become a lich while in Death's Door.";
+        success = false;
     }
-
 #if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
-        && (which_trans == TRAN_ICE_BEAST || which_trans == TRAN_STATUE))
+    else if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
+             && (which_trans == TRAN_ICE_BEAST || which_trans == TRAN_STATUE))
     {
-        if (!involuntary)
-            mpr("Your temperature is too high to benefit from that spell.");
-        return _abort_or_fizzle(just_check);
+        msg =  "Your temperature is too high to benefit from that spell.";
+        success = false;
     }
 #endif
+
+    if (!just_check && previous_trans != TRAN_NONE)
+        untransform(true);
 
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
@@ -1827,9 +1792,8 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         const mutation_type app = _beastly_appendage();
         if (app == NUM_MUTATIONS)
         {
-            if (!involuntary)
-                mpr("You have no appropriate body parts free.");
-            return false;
+            msg = "You have no appropriate body parts free.";
+            success = false; // XXX: VERY dubious, since an untransform occurred
         }
 
         if (!just_check)
@@ -1839,19 +1803,19 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         }
     }
 
-    if (!involuntary && just_check && !check_form_stat_safety(which_trans))
+    if (!success)
+    {
+        // Message is not printed if we're updating fail_reason.
+        if (fail_reason)
+            *fail_reason = msg;
+        else if (!involuntary)
+            mpr(msg);
         return false;
+    }
 
     // If we're just pretending return now.
     if (just_check)
         return true;
-
-    // Switching between forms takes a bit longer.
-    if (!involuntary && previous_trans != TRAN_NONE
-        && previous_trans != which_trans)
-    {
-        you.time_taken = div_rand_round(you.time_taken * 3, 2);
-    }
 
     // All checks done, transformation will take place now.
     you.redraw_quiver       = true;
@@ -1861,15 +1825,21 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     if (form_changed_physiology(which_trans))
         merfolk_stop_swimming();
 
-    // Most transformations conflict with stone skin.
-    if (form_changed_physiology(which_trans) && which_trans != TRAN_STATUE)
-        you.duration[DUR_STONESKIN] = 0;
-
     if (which_trans == TRAN_HYDRA)
         set_hydra_form_heads(div_rand_round(pow, 10));
 
     // Give the transformation message.
     mpr(get_form(which_trans)->transform_message(previous_trans));
+
+    // Most transformations conflict with stone skin.
+    if (form_changed_physiology(which_trans)
+        && which_trans != TRAN_STATUE
+        && you.duration[DUR_STONESKIN])
+    {
+        mprf("Your stony body turns to %s.",
+             get_form(which_trans)->flesh_equivalent.c_str());
+        you.duration[DUR_STONESKIN] = 0;
+    }
 
     // Update your status.
     you.form = which_trans;
@@ -1901,22 +1871,11 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     switch (which_trans)
     {
     case TRAN_STATUE:
-        if (you.duration[DUR_STONESKIN])
-            mpr("Your new body merges with your stone armour.");
-#if TAG_MAJOR_VERSION == 34
-        else if (you.species == SP_LAVA_ORC)
-            mpr("Your new body is particularly stony.");
-#endif
         if (you.duration[DUR_ICY_ARMOUR])
         {
             mprf(MSGCH_DURATION, "Your new body cracks your icy armour.");
             you.duration[DUR_ICY_ARMOUR] = 0;
         }
-        break;
-
-    case TRAN_ICE_BEAST:
-        if (you.duration[DUR_ICY_ARMOUR])
-            mpr("Your new body merges with your icy armour.");
         break;
 
     case TRAN_SPIDER:
@@ -1994,9 +1953,9 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         break;
     }
 
-    // Stop constricting if we can no longer constrict.  If any size-changing
+    // Stop constricting if we can no longer constrict. If any size-changing
     // transformations were to allow constriction, we would have to check
-    // relative sizes as well.  Likewise, if any transformations were to allow
+    // relative sizes as well. Likewise, if any transformations were to allow
     // normally non-constricting players to constrict, this would need to
     // be changed.
     if (!form_keeps_mutations(which_trans))
@@ -2035,7 +1994,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
        you.transform_uncancellable = true;
 
     // Re-check terrain now that be may no longer be swimming or flying.
-    if (was_flying && !you.flight_mode()
+    if (was_flying && !you.airborne()
                    || feat_is_water(grd(you.pos()))
                       && (which_trans == TRAN_BLADE_HANDS
                           || which_trans == TRAN_APPENDAGE)
@@ -2062,12 +2021,13 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
  */
 void untransform(bool skip_move)
 {
-    const flight_type old_flight = you.flight_mode();
+    const bool was_flying = you.airborne();
 
-    you.redraw_quiver       = true;
-    you.redraw_evasion      = true;
-    you.redraw_armour_class = true;
-    you.wield_change        = true;
+    you.redraw_quiver           = true;
+    you.redraw_evasion          = true;
+    you.redraw_armour_class     = true;
+    you.wield_change            = true;
+    you.received_weapon_warning = false;
     if (you.props.exists(TRANSFORM_POW_KEY))
         you.props.erase(TRANSFORM_POW_KEY);
     if (you.props.exists(HYDRA_FORM_HEADS_KEY))
@@ -2081,52 +2041,31 @@ void untransform(bool skip_move)
     set<equipment_type> melded = _init_equipment_removal(old_form);
 
     you.form = TRAN_NONE;
-    you.duration[DUR_TRANSFORMATION]   = 0;
+    you.duration[DUR_TRANSFORMATION] = 0;
     update_player_symbol();
 
-    switch (old_form)
+    if (old_form == TRAN_APPENDAGE)
     {
-    case TRAN_STATUE:
-        // Note: if the core goes down, the combined effect soon disappears,
-        // but the reverse isn't true. -- bwr
-        if (you.duration[DUR_STONESKIN])
-            you.duration[DUR_STONESKIN] = 1;
-        break;
+        int app = you.attribute[ATTR_APPENDAGE];
+        ASSERT(beastly_slot(app) != EQ_NONE);
+        const int levels = you.mutation[app];
+        // Preserve extra mutation levels acquired after transforming.
+        const int beast_levels = _beastly_appendage_level(app);
+        const int extra = max(0, levels - you.innate_mutation[app]
+                                        - beast_levels);
+        you.mutation[app] = you.innate_mutation[app] + extra;
+        you.attribute[ATTR_APPENDAGE] = 0;
 
-    case TRAN_ICE_BEAST:
-        // Note: if the core goes down, the combined effect soon disappears,
-        // but the reverse isn't true. -- bwr
-        if (you.duration[DUR_ICY_ARMOUR])
-            you.duration[DUR_ICY_ARMOUR] = 1;
-        break;
-
-    case TRAN_APPENDAGE:
+        // The mutation might have been removed already by a conflicting
+        // demonspawn innate mutation; no message then.
+        if (levels)
         {
-            int app = you.attribute[ATTR_APPENDAGE];
-            ASSERT(beastly_slot(app) != EQ_NONE);
-            const int levels = you.mutation[app];
-            // Preserve extra mutation levels acquired after transforming.
-            const int beast_levels = _beastly_appendage_level(app);
-            const int extra = max(0, levels - you.innate_mutation[app]
-                                            - beast_levels);
-            you.mutation[app] = you.innate_mutation[app] + extra;
-            you.attribute[ATTR_APPENDAGE] = 0;
-
-            // The mutation might have been removed already by a conflicting
-            // demonspawn innate mutation; no message then.
-            if (levels)
-            {
-                const char * const verb = you.mutation[app] ? "shrink"
-                                                            : "disappear";
-                mprf(MSGCH_DURATION, "Your %s %s%s.",
-                     mutation_name(static_cast<mutation_type>(app)), verb,
-                     app == MUT_TENTACLE_SPIKE ? "s" : "");
-            }
+            const char * const verb = you.mutation[app] ? "shrink"
+                                                        : "disappear";
+            mprf(MSGCH_DURATION, "Your %s %s%s.",
+                 mutation_name(static_cast<mutation_type>(app)), verb,
+                 app == MUT_TENTACLE_SPIKE ? "s" : "");
         }
-        break;
-
-    default:
-        break;
     }
 
     const string message = get_form(old_form)->get_untransform_message();
@@ -2145,7 +2084,7 @@ void untransform(bool skip_move)
     _unmeld_equipment(melded);
 
     // Re-check terrain now that be may no longer be swimming or flying.
-    if (!skip_move && (old_flight && !you.flight_mode()
+    if (!skip_move && (was_flying && !you.airborne()
                        || (feat_is_water(grd(you.pos()))
                            && (old_form == TRAN_ICE_BEAST
                                || you.species == SP_MERFOLK))))

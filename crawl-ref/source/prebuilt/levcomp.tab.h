@@ -72,30 +72,28 @@ extern int yydebug;
     EPILOGUE = 282,
     NSUBST = 283,
     WELCOME = 284,
-    LFLAGS = 285,
-    BFLAGS = 286,
-    LFLOORCOL = 287,
-    LROCKCOL = 288,
-    LFLOORTILE = 289,
-    LROCKTILE = 290,
-    FTILE = 291,
-    RTILE = 292,
-    TILE = 293,
-    SUBVAULT = 294,
-    FHEIGHT = 295,
-    DESC = 296,
-    ORDER = 297,
-    COMMA = 298,
-    COLON = 299,
-    PERC = 300,
-    DASH = 301,
-    CHARACTER = 302,
-    NUMBER = 303,
-    STRING = 304,
-    MAP_LINE = 305,
-    MONSTER_NAME = 306,
-    ITEM_INFO = 307,
-    LUA_LINE = 308
+    LFLOORCOL = 285,
+    LROCKCOL = 286,
+    LFLOORTILE = 287,
+    LROCKTILE = 288,
+    FTILE = 289,
+    RTILE = 290,
+    TILE = 291,
+    SUBVAULT = 292,
+    FHEIGHT = 293,
+    DESC = 294,
+    ORDER = 295,
+    COMMA = 296,
+    COLON = 297,
+    PERC = 298,
+    DASH = 299,
+    CHARACTER = 300,
+    NUMBER = 301,
+    STRING = 302,
+    MAP_LINE = 303,
+    MONSTER_NAME = 304,
+    ITEM_INFO = 305,
+    LUA_LINE = 306
   };
 #endif
 /* Tokens.  */
@@ -126,30 +124,28 @@ extern int yydebug;
 #define EPILOGUE 282
 #define NSUBST 283
 #define WELCOME 284
-#define LFLAGS 285
-#define BFLAGS 286
-#define LFLOORCOL 287
-#define LROCKCOL 288
-#define LFLOORTILE 289
-#define LROCKTILE 290
-#define FTILE 291
-#define RTILE 292
-#define TILE 293
-#define SUBVAULT 294
-#define FHEIGHT 295
-#define DESC 296
-#define ORDER 297
-#define COMMA 298
-#define COLON 299
-#define PERC 300
-#define DASH 301
-#define CHARACTER 302
-#define NUMBER 303
-#define STRING 304
-#define MAP_LINE 305
-#define MONSTER_NAME 306
-#define ITEM_INFO 307
-#define LUA_LINE 308
+#define LFLOORCOL 285
+#define LROCKCOL 286
+#define LFLOORTILE 287
+#define LROCKTILE 288
+#define FTILE 289
+#define RTILE 290
+#define TILE 291
+#define SUBVAULT 292
+#define FHEIGHT 293
+#define DESC 294
+#define ORDER 295
+#define COMMA 296
+#define COLON 297
+#define PERC 298
+#define DASH 299
+#define CHARACTER 300
+#define NUMBER 301
+#define STRING 302
+#define MAP_LINE 303
+#define MONSTER_NAME 304
+#define ITEM_INFO 305
+#define LUA_LINE 306
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -163,7 +159,7 @@ union YYSTYPE
     const char *text;
     map_chance_pair chance;
 
-#line 167 "levcomp.tab.h" /* yacc.c:1909  */
+#line 163 "levcomp.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

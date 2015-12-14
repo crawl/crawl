@@ -8,10 +8,10 @@
 
 #define MANGLED_CORPSE_KEY "mangled_corpse"
 
-bool butchery(int which_corpse = -1);
+void butchery(item_def* specific_corpse = nullptr);
+void finish_butchering(item_def& corpse, bool bottling);
 
 void maybe_drop_monster_hide(const item_def corpse);
-int get_max_corpse_chunks(monster_type mons_class);
 bool turn_corpse_into_skeleton(item_def &item);
 void turn_corpse_into_chunks(item_def &item, bool bloodspatter = true,
                              bool make_hide = true);

@@ -23,6 +23,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
+#include "item_use.h"
 #include "melee_attack.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -47,6 +48,35 @@
 #include "travel.h"
 
 /**
+ * Switch from a bad weapon to melee.
+ *
+ * This function assumes some weapon is being wielded.
+ * @return whether a swap did occur.
+ */
+static bool _autoswitch_to_melee()
+{
+    bool penance;
+    if (is_melee_weapon(*you.weapon())
+        && !needs_handle_warning(*you.weapon(), OPER_ATTACK, penance))
+    {
+        return false;
+    }
+
+    int item_slot;
+    if (you.equip[EQ_WEAPON] == letter_to_index('a'))
+        item_slot = letter_to_index('b');
+    else if (you.equip[EQ_WEAPON] == letter_to_index('b'))
+        item_slot = letter_to_index('a');
+    else
+        return false;
+
+    if (!is_melee_weapon(you.inv[item_slot]))
+        return false;
+
+    return wield_weapon(true, item_slot);
+}
+
+/**
  * Handle melee combat between attacker and defender.
  *
  * Works using the new fight rewrite. For a monster attacking, this method
@@ -65,7 +95,13 @@
  */
 bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 {
-    const int orig_hp = defender->stat_hp();
+    ASSERT(attacker); // XXX: change to actor &attacker
+    ASSERT(defender); // XXX: change to actor &defender
+
+    // A dead defender would result in us returning true without actually
+    // taking an action.
+    ASSERT(defender->alive());
+
     if (defender->is_player())
     {
         ASSERT(!crawl_state.game_is_arena());
@@ -99,18 +135,24 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             return false;
         }
 
+        if (Options.auto_switch
+            && you.weapon()
+            && _autoswitch_to_melee())
+        {
+            return true; // Is this right? We did take time, but we didn't melee
+        }
+
         melee_attack attk(&you, defender);
 
         if (simu)
             attk.simu = true;
 
         // We're trying to hit a monster, break out of travel/explore now.
-        if (!travel_kill_monster(defender->type))
-            interrupt_activity(AI_HIT_MONSTER, defender->as_monster());
+        interrupt_activity(AI_HIT_MONSTER, defender->as_monster());
 
         // Check if the player is fighting with something unsuitable,
         // or someone unsuitable.
-        if (you.can_see(defender)
+        if (you.can_see(*defender)
             && !wielded_weapon_check(attk.weapon))
         {
             you.turn_is_over = false;
@@ -148,11 +190,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     {
         // Pretend an attack happened,
         // so the weapon doesn't advance unecessarily.
-        return true;
-    }
-    else if (attacker->type == MONS_GRAND_AVATAR
-             && !grand_avatar_check_melee(attacker->as_monster(), defender))
-    {
         return true;
     }
 
@@ -249,10 +286,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
             if (found)
             {
-                const bool could_see = you.can_see(mons);
+                const bool could_see = you.can_see(*mons);
                 if (mons->move_to_pos(hopspot))
                 {
-                    if (could_see || you.can_see(mons))
+                    if (could_see || you.can_see(*mons))
                     {
                         mprf("%s hops backward while attacking.",
                              mons->name(DESC_THE, true).c_str());
@@ -281,13 +318,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     // A spectral weapon attacks whenever the player does
     if (!simu && attacker->props.exists("spectral_weapon"))
         trigger_spectral_weapon(attacker, defender);
-    else if (!simu
-             && attacker->is_monster()
-             && attacker->as_monster()->has_ench(ENCH_GRAND_AVATAR))
-    {
-        trigger_grand_avatar(attacker->as_monster(), defender, SPELL_NO_SPELL,
-                             orig_hp);
-    }
 
     return true;
 }
@@ -295,18 +325,21 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 stab_type find_stab_type(const actor *attacker,
                          const actor *defender)
 {
+    ASSERT(defender); // XXX: change to const actor &defender
     const monster* def = defender->as_monster();
     stab_type unchivalric = STAB_NO_STAB;
 
     // No stabbing monsters that cannot fight (e.g.  plants) or monsters
     // the attacker can't see (either due to invisibility or being behind
     // opaque clouds).
-    if (defender->cannot_fight() || (attacker && !attacker->can_see(defender)))
+    if (defender->cannot_fight() || (attacker && !attacker->can_see(*defender)))
         return unchivalric;
 
     // Distracted (but not batty); this only applies to players.
+    // Under TSO, monsters are never distracted by your allies.
     if (attacker && attacker->is_player()
-        && def && def->foe != MHITYOU && !mons_is_batty(def))
+        && def && def->foe != MHITYOU && !mons_is_batty(def)
+        && (!you_worship(GOD_SHINING_ONE) || def->foe == MHITNOT))
     {
         unchivalric = STAB_DISTRACTED;
     }
@@ -458,7 +491,12 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
 
     if (res > 0)
     {
-        const bool immune_at_3_res = is_mon || flavour == BEAM_NEG;
+        const bool immune_at_3_res = is_mon
+                                     || flavour == BEAM_NEG
+                                     || flavour == BEAM_POISON
+                                     // just the resistible part
+                                     || flavour == BEAM_POISON_ARROW;
+
         if (immune_at_3_res && res >= 3 || res > 3)
             resistible = 0;
         else
@@ -486,10 +524,20 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
 bool wielded_weapon_check(item_def *weapon, bool no_message)
 {
     bool penance = false;
+    if (you.received_weapon_warning
+        || (weapon
+            && !needs_handle_warning(*weapon, OPER_ATTACK, penance)
+            && is_melee_weapon(*weapon))
+        || you.confused())
+    {
+        return true;
+    }
+
+    // Don't pester the player if they're using UC or if they don't have any
+    // melee weapons yet.
     if (!weapon
-        || (!needs_handle_warning(*weapon, OPER_ATTACK, penance)
-             && is_melee_weapon(*weapon))
-        || you.received_weapon_warning)
+        && (you.skill(SK_UNARMED_COMBAT) > 0
+            || !any_of(you.inv.begin(), you.inv.end(), is_melee_weapon)))
     {
         return true;
     }
@@ -497,11 +545,18 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     if (no_message)
         return false;
 
-    string prompt  = "Really attack while wielding " + weapon->name(DESC_YOUR) + "?";
+    string prompt;
+    if (weapon)
+        prompt = "Really attack while wielding " + weapon->name(DESC_YOUR) + "?";
+    else
+        prompt = "Really attack barehanded?";
     if (penance)
         prompt += " This could place you under penance!";
 
     const bool result = yesno(prompt.c_str(), true, 'n');
+
+    if (!result)
+        canned_msg(MSG_OK);
 
     learned_something_new(HINT_WIELD_WEAPON); // for hints mode Rangers
 
@@ -512,12 +567,30 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     return result;
 }
 
-// Used by cleave to determine if multi-hit targets will be attacked.
-static bool _dont_harm(const actor* attacker, const actor* defender)
+/**
+ * Should the given attacker cleave into the given victim with an axe or axe-
+ * like weapon?
+ *
+ * @param attacker  The creature doing the cleaving.
+ * @param defender  The potential cleave-ee.
+ * @return          True if the defender is an enemy of the defender; false
+ *                  otherwise.
+ */
+static bool _dont_harm(const actor &attacker, const actor &defender)
 {
-    return mons_aligned(attacker, defender)
-           || attacker == &you && defender->wont_attack()
-           || defender == &you && attacker->wont_attack();
+    if (mons_aligned(&attacker, &defender))
+        return true;
+
+    if (defender.is_player())
+        return attacker.wont_attack();
+
+    if (attacker.is_player())
+    {
+        return defender.wont_attack()
+               || mons_attitude(defender.as_monster()) == ATT_NEUTRAL;
+    }
+
+    return false;
 }
 
 /**
@@ -529,28 +602,25 @@ static bool _dont_harm(const actor* attacker, const actor* defender)
  * @param targets[out]   A list to be populated with targets.
  * @param which_attack   The attack_number (default -1, which uses the default weapon).
  */
-void get_cleave_targets(const actor* attacker, const coord_def& def,
+void get_cleave_targets(const actor &attacker, const coord_def& def,
                         list<actor*> &targets, int which_attack)
 {
     // Prevent scanning invalid coordinates if the attacker dies partway through
     // a cleave (due to hitting explosive creatures, or perhaps other things)
-    if (!attacker->alive())
+    if (!attacker.alive())
         return;
 
     if (actor_at(def))
         targets.push_back(actor_at(def));
 
-    const item_def* weap = attacker->weapon(which_attack);
-    if (attacker->confused())
-        return;
+    const item_def* weap = attacker.weapon(which_attack);
 
-    if ((weap && item_attack_skill(*weap) == SK_AXES
-         || attacker->is_player()
-            && (you.form == TRAN_HYDRA && you.heads() > 1
-                || you.duration[DUR_CLEAVE]))
-        && !attacker->confused())
+    if (weap && item_attack_skill(*weap) == SK_AXES
+            || attacker.is_player()
+               && (you.form == TRAN_HYDRA && you.heads() > 1
+                   || you.duration[DUR_CLEAVE]))
     {
-        const coord_def atk = attacker->pos();
+        const coord_def atk = attacker.pos();
         coord_def atk_vector = def - atk;
         const int dir = coinflip() ? -1 : 1;
 
@@ -558,8 +628,8 @@ void get_cleave_targets(const actor* attacker, const coord_def& def,
         {
             atk_vector = rotate_adjacent(atk_vector, dir);
 
-            actor * target = actor_at(atk + atk_vector);
-            if (target && !_dont_harm(attacker, target))
+            actor *target = actor_at(atk + atk_vector);
+            if (target && !_dont_harm(attacker, *target))
                 targets.push_back(target);
         }
     }
@@ -584,16 +654,15 @@ void get_cleave_targets(const actor* attacker, const coord_def& def,
  * @param attack_number             ?
  * @param effective_attack_number   ?
  */
-void attack_cleave_targets(actor* attacker, list<actor*> &targets,
+void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            int attack_number, int effective_attack_number)
 {
-    ASSERT(attacker);
-    while (attacker->alive() && !targets.empty())
+    while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();
-        if (def && def->alive() && !_dont_harm(attacker, def))
+        if (def && def->alive() && !_dont_harm(attacker, *def))
         {
-            melee_attack attck(attacker, def, attack_number,
+            melee_attack attck(&attacker, def, attack_number,
                                ++effective_attack_number, true);
             attck.attack();
         }
@@ -601,7 +670,27 @@ void attack_cleave_targets(actor* attacker, list<actor*> &targets,
     }
 }
 
-int weapon_min_delay(const item_def &weapon)
+/**
+ * What skill is required to reach mindelay with a weapon? May be >27.
+ * @param weapon The weapon to be considered.
+ * @returns The level of the relevant skill you must reach.
+ */
+int weapon_min_delay_skill(const item_def &weapon)
+{
+    const int speed = property(weapon, PWPN_SPEED);
+    const int mindelay = weapon_min_delay(weapon, false);
+    return (speed - mindelay) * 2;
+}
+
+/**
+ * How fast will this weapon get from your skill training?
+ *
+ * @param weapon the weapon to be considered.
+ * @param check_speed whether to take it into account if the weapon has the
+ *                    speed brand.
+ * @return How many aut the fastest possible attack with this weapon would take.
+ */
+int weapon_min_delay(const item_def &weapon, bool check_speed)
 {
     const int base = property(weapon, PWPN_SPEED);
     int min_delay = base/2;
@@ -622,24 +711,17 @@ int weapon_min_delay(const item_def &weapon)
     // Round up the reduction from skill, so that min delay is rounded down.
     min_delay = max(min_delay, base - (MAX_SKILL_LEVEL + 1)/2);
 
+    if (check_speed && get_weapon_brand(weapon) == SPWPN_SPEED)
+    {
+        min_delay *= 2;
+        min_delay /= 3;
+    }
+
     // never go faster than speed 3 (ie 3.33 attacks per round)
     if (min_delay < 3)
         min_delay = 3;
 
     return min_delay;
-}
-
-int finesse_adjust_delay(int delay)
-{
-    if (you.duration[DUR_FINESSE])
-    {
-        ASSERT(!you.duration[DUR_BERSERK]);
-        // Need to undo haste by hand.
-        if (you.duration[DUR_HASTE])
-            delay = haste_mul(delay);
-        delay = div_rand_round(delay, 2);
-    }
-    return delay;
 }
 
 int mons_weapon_damage_rating(const item_def &launcher)

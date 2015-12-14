@@ -79,7 +79,8 @@ private:
     int level;
 
 private:
-    killer_type   kt;
+    // init() sets this to a proper value
+    killer_type kt = KILL_NONE;
 
     nothing_happens_when_type nothing_happens_when;
 
@@ -117,7 +118,6 @@ private:
     bool _explosion();
     bool _big_cloud(cloud_type cl_type, int cloud_pow, int size,
                     int spread_rate = -1);
-    bool _lose_stat(stat_type which_stat, int8_t stat_loss);
     bool _paralyse(int dur);
     bool _sleep(int dur);
     bool _create_monster(monster_type what, int abj_deg, bool alert = false);

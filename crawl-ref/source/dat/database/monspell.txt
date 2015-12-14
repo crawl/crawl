@@ -137,6 +137,10 @@ Orb of Destruction cast
 
 @The_monster@ launches a ball of destructive magic.
 %%%%
+unseen Orb of Destruction cast
+
+@The_something@ conjures a glowing orb.
+%%%%
 Sticky Flame cast
 
 @The_monster@ sprays @target@ with burning goo.
@@ -171,15 +175,34 @@ Druid's Call cast
 %%%%
 Legendary Destruction cast
 
-@The_monster@ offers @possessive@ life energy for powerful magic!
-%%%%
-Ephemeral Infusion cast
-
-@The_monster@ gestures around itself.
+@Major Destruction cast@
 %%%%
 Phantom Mirror cast
 
 @The_monster@ weaves an illusion.
+%%%%
+Chant Fire Storm cast
+
+@The_monster@ begins to chant a fire storm spell!
+%%%%
+Chant Word of Entropy cast
+
+@The_monster@ begins to chant a word of entropy!
+#################################################
+# These have special hard-coded messaging.
+#################################################
+%%%%
+Siren Song cast
+
+__NONE
+%%%%
+Avatar Song cast
+
+__NONE
+%%%%
+Seal Doors cast
+
+__NONE
 #####################################################
 # Individual innate spells (breathing and spitting).
 #####################################################
@@ -191,10 +214,6 @@ You hear a note loudly blown on a horn!
 Signal Horn cast
 
 @The_monster@ blows a loud note on a signal horn!
-%%%%
-Seal Doors cast
-
-@The_monster@ activates a sealing rune.
 %%%%
 Spit Acid cast
 
@@ -318,11 +337,15 @@ Gastronok cast targeted
 
 @The_monster@ casts a spell @at@ @target@.
 %%%%
-Dissolution cast
+Summon Eyeballs Dissolution cast
 
 @The_monster@ gurgles deeply, a call to fellow slimes.
 
 @The_monster@ says, "@My_God@ sees all!"
+%%%%
+Dissolution cast
+
+@The_monster@ gurgles deeply.
 %%%%
 Gastronok cast
 
@@ -398,10 +421,6 @@ VISUAL:@The_monster@ gestures frantically.
 ########################################################################
 # Individual monsters
 ########################################################################
-brain worm cast
-
-@The_monster@'s bulging head throbs.
-%%%%
 giant orange brain cast
 
 @The_monster@ pulsates.
@@ -559,13 +578,13 @@ Bolt of Draining anubis guard cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
-Ghostly Flames revenant cast
+Ghostly Fireball revenant cast
 
 @The_monster@ lashes out with ghostly flames.
 %%%%
-Ghostly Fireball revenant cast
+Spectral Cloud revenant cast
 
-@ghostly flames revenant cast@
+@The_monster@ conjures spectral mists around @target@.
 %%%%
 Dispel Undead revenant cast
 

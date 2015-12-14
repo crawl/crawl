@@ -19,15 +19,15 @@ enum object_selector
     OSEL_ANY                     =  -1,
     OSEL_WIELD                   =  -2,
     OSEL_UNIDENT                 =  -3,
-    OSEL_EQUIP                   =  -4,
+//  OSEL_EQUIP                   =  -4,
     OSEL_RECHARGE                =  -5,
     OSEL_ENCH_ARM                =  -6,
-//  OSEL_VAMP_EAT                =  -7,
+    OSEL_BEOGH_GIFT              =  -7,
     OSEL_DRAW_DECK               =  -8,
     OSEL_THROWABLE               =  -9,
     OSEL_EVOKABLE                = -10,
     OSEL_WORN_ARMOUR             = -11,
-    OSEL_FRUIT                   = -12,
+//  OSEL_FRUIT                   = -12,
     OSEL_CURSED_WORN             = -13,
     OSEL_UNCURSED_WORN_ARMOUR    = -14,
     OSEL_UNCURSED_WORN_JEWELLERY = -15,
@@ -65,7 +65,7 @@ class InvTitle : public MenuEntry
 public:
     InvTitle(Menu *mn, const string &title, invtitle_annotator tfn);
 
-    string get_text(const bool = false) const;
+    string get_text(const bool = false) const override;
 
 private:
     Menu *m;
@@ -91,7 +91,7 @@ public:
     const item_def *item;
 
     InvEntry(const item_def &i, bool show_bg = false);
-    string get_text(const bool need_cursor = false) const;
+    string get_text(const bool need_cursor = false) const override;
     void set_show_glyph(bool doshow);
     static void set_show_cursor(bool doshow);
 
@@ -105,17 +105,17 @@ public:
     bool         is_item_art() const;
     bool         is_item_equipped() const;
 
-    virtual int highlight_colour() const
+    virtual int highlight_colour() const override
     {
         return menu_colour(get_text(), item_prefix(*item), tag);
     }
 
-    virtual void select(int qty = -1);
+    virtual void select(int qty = -1) override;
 
-    virtual string get_filter_text() const;
+    virtual string get_filter_text() const override;
 
 #ifdef USE_TILE
-    virtual bool get_tiles(vector<tile_def>& tiles) const;
+    virtual bool get_tiles(vector<tile_def>& tiles) const override;
 #endif
 
 private:
@@ -128,7 +128,7 @@ public:
     InvMenu(int mflags = MF_MULTISELECT);
 
 public:
-    unsigned char getkey() const;
+    int getkey() const override;
 
     void set_preselect(const vector<SelItem> *pre);
     void set_type(menu_type t);
@@ -138,6 +138,7 @@ public:
     // effect.
     void set_title_annotator(invtitle_annotator fn);
 
+    // Not an override, but an overload. Not virtual!
     void set_title(MenuEntry *title, bool first = true);
     void set_title(const string &s);
 
@@ -145,6 +146,11 @@ public:
     // for each MenuEntry added.
     // NOTE: Does not set menu title, ever! You *must* set the title explicitly
     menu_letter load_items(const vector<const item_def*> &items,
+                           MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
+                           menu_letter ckey = 'a', bool sort = true);
+
+    // Make sure this menu does not outlive items, or mayhem will ensue!
+    menu_letter load_items(const vector<item_def>& items,
                            MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
                            menu_letter ckey = 'a', bool sort = true);
 
@@ -156,18 +162,13 @@ public:
 
     vector<SelItem> get_selitems() const;
 
-    // Returns vector of item_def pointers to each item_def in the given
-    // vector. Note: make sure the original vector stays around for the lifetime
-    // of the use of the item pointers, or mayhem results!
-    static vector<const item_def*> xlat_itemvect(const vector<item_def> &);
     const menu_sort_condition *find_menu_sort_condition() const;
     void sort_menu(vector<InvEntry*> &items, const menu_sort_condition *cond);
 
 protected:
-    bool process_key(int key);
     void do_preselect(InvEntry *ie);
-    virtual bool is_selectable(int index) const;
-    virtual bool allow_easy_exit() const;
+    virtual bool is_selectable(int index) const override;
+    virtual string help_key() const override;
 
 protected:
     menu_type type;
@@ -216,7 +217,7 @@ vector<SelItem> prompt_invent_items(
                         Menu::selitem_tfn fn = nullptr,
                         const vector<SelItem> *pre_select = nullptr);
 
-unsigned char get_invent(int invent_type, bool redraw = true);
+void display_inventory();
 
 bool in_inventory(const item_def &i);
 void identify_inventory();

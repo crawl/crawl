@@ -3,7 +3,9 @@
 #include "branch.h"
 #include "branch-data.h"
 
+#include "itemname.h"
 #include "player.h"
+#include "stringutil.h"
 #include "travel.h"
 
 FixedVector<level_id, NUM_BRANCHES> brentry;
@@ -138,13 +140,22 @@ bool is_connected_branch(level_id place)
     return is_connected_branch(place.branch);
 }
 
-branch_type str_to_branch(const string &branch, branch_type err)
+branch_type branch_by_abbrevname(const string &branch, branch_type err)
 {
     for (branch_iterator it; it; ++it)
         if (it->abbrevname && it->abbrevname == branch)
             return it->id;
 
     return err;
+}
+
+branch_type branch_by_shortname(const string &branch)
+{
+    for (branch_iterator it; it; ++it)
+        if (it->shortname && it->shortname == branch)
+            return it->id;
+
+    return NUM_BRANCHES;
 }
 
 int current_level_ambient_noise()
@@ -176,4 +187,52 @@ branch_type parent_branch(branch_type branch)
         return brentry[branch].branch;
     // If it's not in the game, use the default parent.
     return branches[branch].parent_branch;
+}
+
+int runes_for_branch(branch_type branch)
+{
+    switch (branch)
+    {
+    case BRANCH_VAULTS:   return VAULTS_ENTRY_RUNES;
+    case BRANCH_ZIGGURAT: return ZIG_ENTRY_RUNES;
+    case BRANCH_ZOT:      return ZOT_ENTRY_RUNES;
+    default:              return 0;
+    }
+}
+
+/**
+ * Write a description of the rune(s), if any, this branch contains.
+ *
+ * @param br             the branch in question
+ * @param remaining_only whether to only mention a rune if the player
+ *                       hasn't picked it up yet.
+ * @returns a string mentioning all applicable runes.
+ */
+string branch_rune_desc(branch_type br, bool remaining_only)
+{
+    string desc;
+    vector<string> rune_names;
+
+    for (rune_type rune : branches[br].runes)
+        if (!(remaining_only && you.runes[rune]))
+            rune_names.push_back(rune_type_name(rune));
+
+    if (!rune_names.empty())
+    {
+        desc = make_stringf("This branch contains the %s rune%s of Zot.",
+                            comma_separated_line(begin(rune_names),
+                                                 end(rune_names)).c_str(),
+                            rune_names.size() > 1 ? "s" : "");
+    }
+
+    return desc;
+}
+
+branch_type rune_location(rune_type rune)
+{
+    for (const auto& br : branches)
+        if (find(br.runes.begin(), br.runes.end(), rune) != br.runes.end())
+            return br.id;
+
+    return NUM_BRANCHES;
 }

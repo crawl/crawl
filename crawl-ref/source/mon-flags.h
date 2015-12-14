@@ -3,236 +3,276 @@
 
 #define BIT(x) ((uint64_t)1<<(x))
 
-// properties of the monster class (other than resists/vulnerabilities).
-// NOT using enum, since C++ doesn't guarantee support for 64-bit enum
-// constants.
-const uint64_t M_NO_FLAGS = 0;
+/// Properties of the monster class (other than resists/vulnerabilities).
+enum monclass_flag_type : uint64_t
+{
+    M_NO_FLAGS = 0,
 
-                                   //1<< 0;
+    /// monster eats items off the floor
+    M_EAT_ITEMS         = BIT(0),
 
-                                   //1<< 1;
+    /// monster crashes through doors rather than opening
+    M_CRASH_DOORS       = BIT(1),
 
-                                   //1<< 2;
+    /// monster flies all the time
+    M_FLIES             = BIT(2),
 
-// monster is skilled fighter
-const uint64_t M_FIGHTER           = 1<< 3;
+    /// monster is skilled fighter
+    M_FIGHTER           = BIT(3),
 
-// do not give (unique) a wand
-const uint64_t M_NO_WAND           = 1<< 4;
+    /// do not give (unique) a wand
+    M_NO_WAND           = BIT(4),
 
-// do not give a high tier wand
-const uint64_t M_NO_HT_WAND        = 1<< 5;
+    /// do not give a high tier wand
+    M_NO_HT_WAND        = BIT(5),
 
-// is created invis
-const uint64_t M_INVIS             = 1<< 6;
+    /// is created invis
+    M_INVIS             = BIT(6),
 
-// can see invis
-const uint64_t M_SEE_INVIS         = 1<< 7;
+    /// can see invis
+    M_SEE_INVIS         = BIT(7),
 
-// can't be blinded
-const uint64_t M_UNBLINDABLE       = 1<< 8;
+    /// can't be blinded
+    M_UNBLINDABLE       = BIT(8),
 
-// uses talking code
-const uint64_t M_SPEAKS            = 1<< 9;
+    /// uses talking code
+    M_SPEAKS            = BIT(9),
 
-// monster is perma-confused;
-const uint64_t M_CONFUSED          = 1<<10;
+    /// monster is perma-confused,
+    M_CONFUSED          = BIT(10),
 
-// monster is batty
-const uint64_t M_BATTY             = 1<<11;
+    /// monster is batty
+    M_BATTY             = BIT(11),
 
-// monster can split
-const uint64_t M_SPLITS            = 1<<12;
+    /// monster can split
+    M_SPLITS            = BIT(12),
 
-// monster glows with light
-const uint64_t M_GLOWS_LIGHT       = 1<<13;
+    /// monster glows with light
+    M_GLOWS             = BIT(13),
 
-// monster is stationary
-const uint64_t M_STATIONARY        = 1<<14;
+    /// monster is stationary
+    M_STATIONARY        = BIT(14),
 
-// monster can smell blood
-const uint64_t M_BLOOD_SCENT       = 1<<15;
+    /// monster can smell blood
+    M_BLOOD_SCENT       = BIT(15),
 
-// susceptible to cold; drainable by vampires
-const uint64_t M_COLD_BLOOD        = 1<<16;
+    /// susceptible to cold; drainable by vampires, splashes blood when hit
+    M_COLD_BLOOD        = BIT(16),
 
-// drainable by vampires, no other effect currently
-const uint64_t M_WARM_BLOOD        = 1<<17;
+    /// drainable by vampires, splashes blood when hit
+    M_WARM_BLOOD        = BIT(17),
 
-// monster glows with radiation
-const uint64_t M_GLOWS_RADIATION   = 1<<18;
+    /// uses the 'ghost demon' struct to track stats varying per individual monster
+    M_GHOST_DEMON       = BIT(18),
 
-// monster digs through rock
-const uint64_t M_BURROWS           = 1<<19;
+    /// monster digs through rock
+    M_BURROWS           = BIT(19),
 
-// monster can submerge
-const uint64_t M_SUBMERGES         = 1<<20;
+    /// monster can submerge
+    M_SUBMERGES         = BIT(20),
 
-// monster is a unique
-const uint64_t M_UNIQUE            = 1<<21;
+    /// monster is a unique
+    M_UNIQUE            = BIT(21),
 
-// Passive acid splash when hit.
-const uint64_t M_ACID_SPLASH       = 1<<22;
+    /// Passive acid splash when hit.
+    M_ACID_SPLASH       = BIT(22),
 
-// gets various archery boosts
-const uint64_t M_ARCHER            = 1<<23;
+    /// gets various archery boosts
+    M_ARCHER            = BIT(23),
 
-// is insubstantial
-const uint64_t M_INSUBSTANTIAL     = 1<<24;
+    /// is insubstantial
+    M_INSUBSTANTIAL     = BIT(24),
 
-// wields two weapons at once
-const uint64_t M_TWO_WEAPONS       = 1<<25;
+    /// wields two weapons at once
+    M_TWO_WEAPONS       = BIT(25),
 
-// has extra-fast regeneration
-const uint64_t M_FAST_REGEN        = 1<<26;
+    /// has extra-fast regeneration
+    M_FAST_REGEN        = BIT(26),
 
-// cannot regenerate
-const uint64_t M_NO_REGEN          = 1<<27;
+    /// cannot regenerate
+    M_NO_REGEN          = BIT(27),
 
-// uses male pronouns
-const uint64_t M_MALE              = 1<<28;
+    /// uses male pronouns
+    M_MALE              = BIT(28),
 
-// uses female pronouns
-const uint64_t M_FEMALE            = 1<<29;
+    /// uses female pronouns
+    M_FEMALE            = BIT(29),
 
-// boneless corpses
-const uint64_t M_NO_SKELETON       = 1<<30;
+    /// boneless corpses
+    M_NO_SKELETON       = BIT(30),
 
-// worth 0 xp
-const uint64_t M_NO_EXP_GAIN       = (uint64_t)1<<31;
+    /// worth 0 xp
+    M_NO_EXP_GAIN       = BIT(31),
 
-                                   //(uint64_t)1<<32;
+    /// can do damage when attacked in melee
+    M_SPINY             = BIT(32),
 
-// phase shift (EV bonus not included)
-const uint64_t M_PHASE_SHIFT       = (uint64_t)1<<33;
+    /// phase shift (EV bonus not included)
+    M_PHASE_SHIFT       = BIT(33),
 
-// not a valid polymorph target (but can be polymorphed)
-const uint64_t M_NO_POLY_TO        = (uint64_t)1<<34;
+    /// not a valid polymorph target (but can be polymorphed)
+    M_NO_POLY_TO        = BIT(34),
 
-                                   //(uint64_t)1<<35;
+                        //BIT(35),
 
-// always leaves a corpse
-const uint64_t M_ALWAYS_CORPSE     = (uint64_t)1<<36;
+    /// always leaves a corpse
+    M_ALWAYS_CORPSE     = BIT(36),
 
-// mostly doesn't try to melee
-const uint64_t M_DONT_MELEE        = (uint64_t)1<<37;
+    /// mostly doesn't try to melee
+    M_DONT_MELEE        = BIT(37),
 
-// is an artificial being
-const uint64_t M_ARTIFICIAL        = (uint64_t)1<<38;
+    /// is an artificial being
+    M_ARTIFICIAL        = BIT(38),
 
-// can survive without breathing; immune to asphyxiation and Mephitic Cloud
-const uint64_t M_UNBREATHING       = (uint64_t)1<<39;
+    /// can survive without breathing; immune to asphyxiation and Mephitic Cloud
+    M_UNBREATHING       = BIT(39),
 
-// not fully coded; causes a warning
-const uint64_t M_UNFINISHED        = (uint64_t)1<<40;
+    /// not fully coded; causes a warning
+    M_UNFINISHED        = BIT(40),
 
-const uint64_t M_HERD              = (uint64_t)1<<41;
+    M_HERD              = BIT(41),
 
-// can flee at low hp
-const uint64_t M_FLEES             = (uint64_t)1<<42;
+                       // BIT(42),
 
-// can sense vibrations in web traps
-const uint64_t M_WEB_SENSE         = (uint64_t)1<<43;
+    /// can sense vibrations in web traps
+    M_WEB_SENSE         = BIT(43),
 
-// tries to maintain LOS/2 range from its target
-const uint64_t M_MAINTAIN_RANGE    = (uint64_t)1<<44;
+    /// tries to maintain LOS/2 range from its target
+    M_MAINTAIN_RANGE    = BIT(44),
 
-// flesh is not usable for making zombies
-const uint64_t M_NO_ZOMBIE         = (uint64_t)1<<45;
+    /// flesh is not usable for making zombies
+    M_NO_ZOMBIE         = BIT(45),
 
-// cannot be placed by any means, even in the arena, etc.
-const uint64_t M_CANT_SPAWN        = (uint64_t)1<<46;
+    /// cannot be placed by any means, even in the arena, etc.
+    M_CANT_SPAWN        = BIT(46),
 
-// derived undead can't be randomly generated
-const uint64_t M_NO_GEN_DERIVED    = (uint64_t)1<<47;
+    /// derived undead can't be randomly generated
+    M_NO_GEN_DERIVED    = BIT(47),
 
-                                   //(uint64_t)1<<48;
+                        //BIT(48),
 
-// hybridized monster composed of other monster parts
-const uint64_t M_HYBRID            = (uint64_t)1<<49;
+    /// hybridized monster composed of other monster parts
+    M_HYBRID            = BIT(49),
 
-                                   //(uint64_t)1<<50;
+                        //BIT(50),
 
-// monster is a projectile (just OOD right now)
-const uint64_t M_PROJECTILE        = (uint64_t)1<<51;
+    /// monster is a projectile (just OOD right now)
+    M_PROJECTILE        = BIT(51),
 
-// monster is an "avatar" (no independent attacks, only support)
-const uint64_t M_AVATAR            = (uint64_t)1<<52;
+    /// monster is an "avatar" (no independent attacks, only support)
+    M_AVATAR            = BIT(52),
 
-// monster is shadowy and cannot be backlit (was M_GLOWS_LIGHT)
-const uint64_t M_SHADOW            = (uint64_t)1<<53;
+                        //BIT(53),
 
-// monster is a proxy for a charm/conjuration spell (ball lightning, etc.)
-const uint64_t M_CONJURED          = (uint64_t)1<<54;
+    /// monster is a proxy for a charm/conjuration spell (ball lightning, etc.)
+    M_CONJURED          = BIT(54),
 
-// Same for flags for actual monsters.
-typedef uint64_t monster_flag_type;
-const uint64_t MF_NO_REWARD          = BIT(0);  // no benefit from killing
-const uint64_t MF_JUST_SUMMONED      = BIT(1);  // monster skips next available action
-const uint64_t MF_TAKING_STAIRS      = BIT(2);  // is following player through stairs
-const uint64_t MF_INTERESTING        = BIT(3);  // Player finds monster interesting
+    /// monster will never harm the player
+    M_NO_THREAT         = BIT(55),
+};
+DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 
-const uint64_t MF_SEEN               = BIT(4);  // Player has already seen monster
-const uint64_t MF_KNOWN_SHIFTER      = BIT(5);  // A known shapeshifter.
-const uint64_t MF_BANISHED           = BIT(6);  // Monster that has been banished.
+/// Properties of specific monsters.
+enum monster_flag_type : uint64_t
+{
+    MF_NO_FLAGS           = 0,
+    /// no benefit from killing
+    MF_NO_REWARD          = BIT(0),
+    /// monster skips next available action
+    MF_JUST_SUMMONED      = BIT(1),
+    /// is following player through stairs
+    MF_TAKING_STAIRS      = BIT(2),
 
-const uint64_t MF_HARD_RESET         = BIT(7);  // Summoned, should not drop gear on reset
-const uint64_t MF_WAS_NEUTRAL        = BIT(8);  // mirror to CREATED_FRIENDLY for neutrals
-const uint64_t MF_ATT_CHANGE_ATTEMPT = BIT(9);  // Saw player and attitude changed (or
-                                     // not); currently used for holy beings
-                                     // (good god worshippers -> neutral)
-                                     // orcs (Beogh worshippers -> friendly),
-                                     // and slimes (Jiyva worshippers -> neutral)
-const uint64_t MF_WAS_IN_VIEW        = BIT(10); // Was in view during previous turn.
+    //                      BIT(3),
 
-const uint64_t MF_BAND_MEMBER        = BIT(11); // Created as a member of a band
-const uint64_t MF_GOT_HALF_XP        = BIT(12); // Player already got half xp value earlier
-const uint64_t MF_FAKE_UNDEAD        = BIT(13); // Consider this monster to have MH_UNDEAD
-                                     // holiness, regardless of its actual type
-const uint64_t MF_ENSLAVED_SOUL      = BIT(14); // An undead monster soul enslaved by
-                                     // Yredelemnul's power
+    /// Player has already seen monster
+    MF_SEEN               = BIT(4),
+    /// A known shapeshifter.
+    MF_KNOWN_SHIFTER      = BIT(5),
+    /// Monster that has been banished.
+    MF_BANISHED           = BIT(6),
 
-const uint64_t MF_NAME_SUFFIX        = BIT(15); // mname is a suffix.
-const uint64_t MF_NAME_ADJECTIVE     = BIT(16); // mname is an adjective.
-                                     // between it and the monster type name.
-const uint64_t MF_NAME_REPLACE       = MF_NAME_SUFFIX|MF_NAME_ADJECTIVE;
-                                     // mname entirely replaces normal monster
-                                     // name.
-const uint64_t MF_NAME_MASK          = MF_NAME_REPLACE;
-const uint64_t MF_GOD_GIFT           = BIT(17); // Is a god gift.
-const uint64_t MF_FLEEING_FROM_SANCTUARY = BIT(18); // Is running away from player sanctuary
-const uint64_t MF_EXPLODE_KILL       = BIT(19); // Is being killed with disintegration
+    /// Summoned, should not drop gear on reset
+    MF_HARD_RESET         = BIT(7),
+    /// mirror to CREATED_FRIENDLY for neutrals
+    MF_WAS_NEUTRAL        = BIT(8),
+    /// Saw player and attitude changed (or not); currently used for holy
+    /// beings (good god worshippers -> neutral) orcs (Beogh worshippers
+    /// -> friendly), and slimes (Jiyva worshippers -> neutral)
+    MF_ATT_CHANGE_ATTEMPT = BIT(9),
+    /// Was in view during previous turn.
+    MF_WAS_IN_VIEW        = BIT(10),
+
+    /// Created as a member of a band
+    MF_BAND_MEMBER        = BIT(11),
+    /// Player already got half xp value earlier
+    MF_GOT_HALF_XP        = BIT(12),
+    /// Consider this monster to have MH_UNDEAD holiness, regardless
+    /// of its actual type
+    MF_FAKE_UNDEAD        = BIT(13),
+    /// An undead monster soul enslaved by
+    /// Yredelemnul's power
+    MF_ENSLAVED_SOUL      = BIT(14),
+
+    /// mname is a suffix.
+    MF_NAME_SUFFIX        = BIT(15),
+    /// mname is an adjective (prefix).
+    MF_NAME_ADJECTIVE     = BIT(16),
+    /// mname entirely replaces normal monster name.
+    MF_NAME_REPLACE       = MF_NAME_SUFFIX|MF_NAME_ADJECTIVE,
+    MF_NAME_MASK          = MF_NAME_REPLACE,
+    /// Is a god gift.
+    MF_GOD_GIFT           = BIT(17),
+    /// Is running away from player sanctuary
+    MF_FLEEING_FROM_SANCTUARY = BIT(18),
+    /// Is being killed with disintegration
+    MF_EXPLODE_KILL       = BIT(19),
 
     // These are based on the flags in monster class, but can be set for
     // monsters that are not normally fighters (in vaults).
-const uint64_t MF_FIGHTER            = BIT(20); // Monster is skilled fighter.
-const uint64_t MF_TWO_WEAPONS        = BIT(21); // Monster wields two weapons.
-const uint64_t MF_ARCHER             = BIT(22); // Monster gets various archery boosts.
-const uint64_t MF_MELEE_MASK         = MF_FIGHTER|MF_TWO_WEAPONS|MF_ARCHER;
 
-                                     //BIT(23);
-                                     //BIT(24);
-                                     //BIT(25);
+    /// Monster is skilled fighter.
+    MF_FIGHTER            = BIT(20),
+    /// Monster wields two weapons.
+    MF_TWO_WEAPONS        = BIT(21),
+    /// Monster gets various archery boosts.
+    MF_ARCHER             = BIT(22),
+    MF_MELEE_MASK         = MF_FIGHTER|MF_TWO_WEAPONS|MF_ARCHER,
 
-const uint64_t MF_NO_REGEN           = BIT(26); // This monster cannot regenerate.
+                          //BIT(23),
+                          //BIT(24),
+                          //BIT(25),
 
-const uint64_t MF_NAME_DESCRIPTOR    = BIT(27); // mname should be treated with normal
-                                     // grammar, ie, prevent "You hit red rat"
-                                     // and other such constructs.
-const uint64_t MF_NAME_DEFINITE      = BIT(28); // give this monster the definite "the"
-                                     // article, instead of the indefinite "a"
-                                     // article.
-const uint64_t MF_SPECTRALISED       = BIT(29); // living monster revived by a lost soul
-const uint64_t MF_DEMONIC_GUARDIAN   = BIT(30); // is a demonic_guardian
-const uint64_t MF_NAME_SPECIES       = BIT(31); // mname should be used for corpses as well,
-const uint64_t MF_NAME_ZOMBIE        = BIT(32); // mname replaces zombies/skeletons, use
-                                     // only for already zombified monsters
-const uint64_t MF_SENSED             = BIT(33); // Player has been warned
-                                     // about this monster being nearby.
-const uint64_t MF_NAME_NOCORPSE      = BIT(34); // mname should not be used for corpses
-const uint64_t MF_SEEN_RANGED        = BIT(35); // known to have a ranged attack
+    /// This monster cannot regenerate.
+    MF_NO_REGEN           = BIT(26),
 
-const uint64_t MF_POLYMORPHED        = BIT(36); // this monster has been polymorphed.
-const uint64_t MF_JUST_SLEPT         = BIT(37); // just got hibernated/slept
-const uint64_t MF_TSO_SEEN           = BIT(38); // possibly got piety with TSO
+    /// mname should be treated with normal grammar, ie, prevent
+    /// "You hit red rat" and other such constructs.
+    MF_NAME_DESCRIPTOR    = BIT(27),
+    /// give this monster the definite "the" article, instead of the
+    /// indefinite "a" article.
+    MF_NAME_DEFINITE      = BIT(28),
+    /// living monster revived by a lost soul
+    MF_SPECTRALISED       = BIT(29),
+    /// is a demonic_guardian
+    MF_DEMONIC_GUARDIAN   = BIT(30),
+    /// mname should be used for corpses as well
+    MF_NAME_SPECIES       = BIT(31),
+    /// mname replaces "zombie" etc.; use only for already zombified monsters
+    MF_NAME_ZOMBIE        = BIT(32),
+    /// Player has been warned about this monster being nearby.
+    MF_SENSED             = BIT(33),
+    /// mname should not be used for corpses
+    MF_NAME_NOCORPSE      = BIT(34),
+    /// known to have a ranged attack
+    MF_SEEN_RANGED        = BIT(35),
+
+    /// this monster has been polymorphed.
+    MF_POLYMORPHED        = BIT(36),
+    /// just got hibernated/slept
+    MF_JUST_SLEPT         = BIT(37),
+    /// possibly got piety with TSO
+    MF_TSO_SEEN           = BIT(38),
+};
+DEF_BITFIELD(monster_flags_t, monster_flag_type);
 #endif

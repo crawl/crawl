@@ -23,7 +23,7 @@ private:
 /**
  * @class random_rectangle_iterator
  * Iterator over coordinates in a rectangular region in a
- * random order.  This interator does not favour any given
+ * random order. This interator does not favour any given
  * direction, but is slower than rectangle_iterator.
  *
  * When this iterator has returned all elements, it will just
@@ -76,7 +76,8 @@ public:
 
 private:
     enum costate { RI_DONE, RI_START, RI_SE, RI_NE, RI_SW, RI_NW };
-    int x, y, cost_x, cost_y, credit_x, credit_y;
+    int x, y, cost_x, cost_y, credit, credit_x, credit_y, base_cost, inc_cost;
+    bool is_square;
 
     costate state;
     coord_def center;

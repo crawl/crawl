@@ -53,7 +53,6 @@ recall RECALL
 drain DRAIN
 
 something_under SOMETHING_UNDER
-tried TRIED
 new_stair NEW_STAIR
 
 %sdir misc
@@ -121,7 +120,3 @@ travel_path_to5
 travel_path_to6
 travel_path_to7
 travel_path_to8
-
-gold_sparkles1 GOLD_SPARKLES
-gold_sparkles2
-gold_sparkles3

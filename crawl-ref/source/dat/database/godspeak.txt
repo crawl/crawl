@@ -126,10 +126,6 @@ Xom decides to rearrange the pieces.
 
 "This might be better!"
 %%%%
-Xom swap weapons
-
-@Xom rearrange the pieces@
-%%%%
 Xom teleportation journey
 
 "Whee!"

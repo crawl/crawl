@@ -8,10 +8,10 @@ function tomb_1_mummy_set(e)
 end
 
 function tomb_1_mummy_priest_set(e, chamber)
-  e.mons("mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30")
+  e.mons("mummy priest w:30 / revenant w:5 / lich w:5 / nothing w:30")
   if chamber then
     e.mons("greater mummy / ancient lich w:1 / nothing w:11")
-    e.mons("obsidian statue / orange crystal statue / ice statue")
+    e.mons("obsidian statue / orange crystal statue")
   else
     e.mons("greater mummy")
   end
@@ -22,7 +22,7 @@ function tomb_mummy_set(e)
 end
 
 function tomb_mummy_priest_set(e)
-  e.mons("mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1")
+  e.mons("mummy priest w:20 / lich w:2 / revenant w:2")
   e.mons("greater mummy / ancient lich w:1")
 end
 
@@ -376,7 +376,7 @@ SUBST:    ' = 2 .:100
 : tomb_guardian_set(_G, true)
 MONS:     greater mummy / nothing
 MONS:     sphinx / nothing
-MONS:     obsidian statue / orange crystal statue / ice statue
+MONS:     obsidian statue / orange crystal statue
 #
 : set_feature_name("granite_statue", "sarcophagus")
 MAP
@@ -836,11 +836,11 @@ MAP
 ..xxx.....2.......2.....xxx..
 .............................
 .............................
-........X...........X........
+........x...........x........
 .............................
 .....3........(........3.....
 .............................
-........X...........X........
+........x...........x........
 .............................
 .............................
 ..xxx.....2.......2.....xxx..
@@ -962,6 +962,8 @@ SUBST:    $ = *:2 |:1 $:17
 #
 KITEM:    $ = $ no_pickup
 KITEM:    * = * no_pickup
+NSUBST:   | = 1:d / *:|
+ITEM:     figurine of a ziggurat no_pickup
 KITEM:    | = | no_pickup
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

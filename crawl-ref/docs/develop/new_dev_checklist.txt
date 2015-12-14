@@ -1,6 +1,6 @@
 This is a checklist for when a new developer joins the team.
 
- * Commit rights: add their gitorious account to the dcss-developers group.
+ * Commit rights: add their github account to the dcss group.
  * Add them to .mailmap (in the repository root) and CREDITS.txt.
  * Upgrade their mantis account to developer.
  * Update https://crawl.develz.org/wiki/doku.php?id=dcss:admin:devteam
@@ -9,7 +9,7 @@ This is a checklist for when a new developer joins the team.
    They should first register with NickServ (/msg nickserv help register) to
    prevent others from using that nick.  /whois NICK  will show an "account"
    field if they are registered.
- * Upgrade their CAO, CDO, and CSZO accounts to administrator.  This lets
+ * Upgrade their CAO, CDO, and CSZO accounts to administrator. This lets
    them use wizmode, and on CAO and CSZO gives them access to save backups
    and the rebuild trigger:
      dgl admin add <username>

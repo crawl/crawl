@@ -1,0 +1,710 @@
+crawl (2:0.17.0-1) UNRELEASED; urgency=low
+
+  * New upstream release.
+
+ -- gammafunk <gammafunk@gmail.com>  Fri, 06 Nov 2015 06:04:45 -0600
+
+crawl (2:0.16.2-1) UNRELEASED; urgency=low
+
+  * Major bugfix release
+
+ -- gammafunk <gammafunk@gmail.com>  Tue, 11 Aug 2015 02:46:17 -0500
+
+crawl (2:0.16.1-1) UNRELEASED; urgency=low
+
+  * Major bugfix release
+
+ -- gammafunk <gammafunk@gmail.com>  Sun, 22 Mar 2015 21:55:31 -0500
+
+crawl (2:0.16.0-1) UNRELEASED; urgency=low
+
+  * New upstream release.
+
+ -- gammafunk <gammafunk@gmail.com>  Wed, 11 Mar 2015 22:44:40 -0500
+
+crawl (2:0.15.2-1) UNRELEASED; urgency=low
+
+  * New upstream release.
+
+ -- Steve Melenchuk <smelenchuk@gmail.com>  Sat, 18 Sep 2014 20:32:56 -0600
+
+crawl (2:0.15.1-1) UNRELEASED; urgency=low
+
+  * New upstream release.
+
+ -- Steve Melenchuk <smelenchuk@gmail.com>  Mon, 15 Sep 2014 17:25:10 -0600
+
+crawl (2:0.15.0-1) UNRELEASED; urgency=low
+
+  * New upstream release.
+
+ -- Steve Melenchuk <smelenchuk@gmail.com>  Wed, 27 Aug 2014 21:32:22 -0600
+
+crawl (2:0.14.2-1) UNRELEASED; urgency=low
+
+  * New upstream release.
+
+ -- Steve Melenchuk <smelenchuk@gmail.com>  Wed, 27 Aug 2014 19:57:07 -0600
+
+crawl (2:0.14.1-2) unstable; urgency=medium
+
+  * Look for fonts in /usr/share/fonts/truetype/dejavu/ instead of
+    ttf-dejavu/, and Depend strictly on fonts-dejavu-core. Closes: #753837
+
+ -- Guus Sliepen <guus@debian.org>  Wed, 23 Jul 2014 17:59:47 +0200
+
+crawl (2:0.14.1-1) unstable; urgency=medium
+
+  * New upstream release. Closes: #747156
+  * Remove source/contrib and source/webserver from the original tarball.
+  * Add a .desktop file for the non-tiles version, and provide an icon for
+    the menu files. Closes: #737850
+  * Bump Standards-Version.
+
+ -- Guus Sliepen <guus@debian.org>  Thu, 08 May 2014 16:18:06 +0200
+
+crawl (2:0.13.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Thu, 28 Nov 2013 12:05:56 +0100
+
+crawl (2:0.13.0-2) unstable; urgency=low
+
+  * Fix the tilesheets being out of sync between builds (including arch:all
+    parts vs arch:any). Closes: #729938
+  * Disable LTO on arm{el,hf}, due to binutils bug #712189.
+  * Depend on fonts-dejavu-core rather than ttf-dejavu, keeping the latter as
+    an alternative because of backports.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Tue, 19 Nov 2013 04:02:18 +0100
+
+crawl (2:0.13.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Removed source/contrib from upstream tarball.
+
+ -- Guus Sliepen <guus@debian.org>  Mon, 18 Nov 2013 14:42:24 +0100
+
+crawl (2:0.12.3-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@debian.org>  Mon, 30 Sep 2013 00:07:28 +0200
+
+crawl (2:0.12.2-1) unstable; urgency=low
+
+  * New upstream bugfix release
+  * Give up and drop LTO on rare architectures, ie, anything but *arm*,
+    *amd64*, *x32*, *i386*. There's apparently always an ICE on at least
+    one arch somewhere among gcc-4.6/4.7/4.8/clang on Debian or Ubuntu.
+  * Drop obsolete DM-Upload-Allowed.
+  * Properly query DEB_HOST_ARCH on new dpkg-dev.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Sat, 08 Jun 2013 04:34:41 +0200
+
+crawl (2:0.12.1-1) unstable; urgency=low
+
+  * New upstream bugfix release
+  * Autodetect LTO, to support backports.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Sun, 05 May 2013 12:20:44 +0200
+
+crawl (2:0.12.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Revert -Os, benchmarks show it greatly reduces speed even on cache
+    starved machines, and Crawl is too CPU hungry for small disk savings
+    to matter.
+  * Autodetect -fno-fat-lto-objects.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Thu, 02 May 2013 14:03:18 +0200
+
+crawl (2:0.11.2-2) experimental; urgency=low
+
+  * Don't use -fno-fat-lto-objects, the buildds do not support that yet.
+
+ -- Guus Sliepen <guus@debian.org>  Wed, 20 Feb 2013 14:27:41 +0100
+
+crawl (2:0.11.2-1) experimental; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@debian.org>  Wed, 20 Feb 2013 13:04:51 +0100
+
+crawl (2:0.11.1-2) experimental; urgency=low
+
+  * Enable link time optimization (LTO).
+
+ -- Guus Sliepen <guus@debian.org>  Wed, 05 Dec 2012 14:03:18 +0100
+
+crawl (2:0.11.1-1) experimental; urgency=low
+
+  * New upstream release. Closes: #693593
+  * Update debian/watch file to search for .xz compressed tarballs.
+  * Remove dont-redefine-fdatasync patch, it is no longer necessary.
+  * Move tile graphics to its own package, crawl-tiles-data.
+
+ -- Guus Sliepen <guus@debian.org>  Sun, 02 Dec 2012 00:15:02 +0100
+
+crawl (2:0.10.3-3) unstable; urgency=low
+
+  * Work around dpkg failing to replace a directory with a symlink.
+    Closes: #692947
+
+ -- Adam Borowski <kilobyte@angband.pl>  Thu, 15 Nov 2012 13:54:14 +0100
+
+crawl (2:0.10.3-2) unstable; urgency=low
+
+  * Never #define NEED_FAKE_FDATASYNC; all platforms supported by Debian
+    have a working fdatasync().
+
+ -- Guus Sliepen <guus@debian.org>  Wed, 20 Jun 2012 13:19:32 +0200
+
+crawl (2:0.10.3-1) unstable; urgency=low
+
+  * New upstream bugfix release.
+    * Includes a workaround for miscompilation (amd64) or FTBFS (certain
+      other architectures) on gcc-4.7, caused by
+      http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53330
+  * Fix CPPFLAGS set by dpkg-buildflags being ignored (-D_FORTIFY_SOURCE=2).
+  * Spam the hell out of build logs, overridable by DEB_BUILD_OPTIONS=terse.
+    Closes: #668987
+
+ -- Adam Borowski <kilobyte@angband.pl>  Thu, 14 Jun 2012 11:41:30 +0200
+
+crawl (2:0.10.2-2) unstable; urgency=low
+
+  * Build-Depend on libpng-dev.
+
+ -- Guus Sliepen <guus@debian.org>  Sat, 14 Apr 2012 18:21:54 +0200
+
+crawl (2:0.10.2-1) unstable; urgency=low
+
+  * New upstream bugfix release. Closes: #668321
+  * Tell the makefile to not strip instead of patching that out.
+  * Install the SVG icon as .svg rather than .png.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Thu, 12 Apr 2012 18:19:04 +0200
+
+crawl (2:0.10.0-2) unstable; urgency=low
+
+  * Fix link to .txt files in /usr/share/doc/crawl-common/. Closes: #660388
+  * Fix link to Stone Soup icon. Closes: #647464
+
+ -- Guus Sliepen <guus@debian.org>  Sun, 19 Feb 2012 19:27:10 +0100
+
+crawl (2:0.10.0-1) unstable; urgency=low
+
+  [ Adam Borowski ]
+  * New upstream release.
+  * Obey flags set by dpkg-buildflags.
+  * Work around breakage of quiltless workflows in dpkg 1.16.1.
+  * Correct a symlink to the 32x32 icon. Closes: #647464
+  * Install the SVG icon as well.
+  * Don't request wizmode, it is compiled in by default.
+
+  [ Guus Sliepen ]
+  * Don't let the upstream Makefile strip binaries.
+
+ -- Guus Sliepen <guus@debian.org>  Fri, 17 Feb 2012 21:17:51 +0100
+
+crawl (2:0.9.1-1) unstable; urgency=low
+
+  * New upstream bugfix release.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Mon, 05 Sep 2011 13:14:17 +0200
+
+crawl (2:0.9.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Drop debian/NEWS warning about save compatibility -- not only 0.8 saves
+    can be loaded in 0.9, but incompatible saves produce user-friendly
+    messages as well.
+  * Fix handling of {build,binary}-{arch,indep}.
+  * Support cross-compiling.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Fri, 12 Aug 2011 18:47:47 +0200
+
+crawl (2:0.8.1-1) unstable; urgency=low
+
+  * New upstream bugfix release.
+  * Restore the workaround for g++-4.4 bug on powerpc, backports need it.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Tue, 14 Jun 2011 22:50:57 +0200
+
+crawl (2:0.8.0-2) unstable; urgency=low
+
+  [Guus Sliepen]
+
+  * Merge Adam Borowski's work. Closes: #627600
+
+  [Adam Borowski]
+
+  * Drop any setgidness (no longer supported).
+  * Build-depend on advancecomp to reduce package size.
+  * Enable wizard mode, no setgid = no trouble.  Closes: #598484
+  * Relicensed to GPL2+.
+
+ -- Guus Sliepen <guus@debian.org>  Sun, 22 May 2011 16:37:05 +0200
+
+crawl (2:0.8.0-1) unstable; urgency=low
+
+  * New upstream release. Closes: #618850
+  * Use debian/watch file from Vincent Cheng.
+  * Don't move in-game documentation to /usr/share/doc/crawl-common.
+    Closes: #597724
+  * Bump Standards-Version.
+  * Use hardlinks to create the build-console and build-tiles directories.
+
+ -- Guus Sliepen <guus@debian.org>  Sat, 21 May 2011 21:04:53 +0200
+
+crawl (2:0.7.1-3) unstable; urgency=low
+
+  * Work around a g++-4.4 bug on powerpc by building with -O0 there.
+  * Fix uninstallability on fresh installs.
+  * Pick up upstream stable fixes up to 0.7.1-15-g73f6e1f (mostly crashes).
+
+ -- Adam Borowski <kilobyte@angband.pl>  Fri, 06 Aug 2010 02:29:30 +0200
+
+crawl (2:0.7.1-2) unstable; urgency=low
+
+  * Rebuild in a build environment without nvidia packages installed.
+    Closes: #591661, #591663
+  * Bump Standards-Version.
+
+ -- Guus Sliepen <guus@debian.org>  Thu, 05 Aug 2010 00:08:20 +0200
+
+crawl (2:0.7.1-1) unstable; urgency=low
+
+  * New upstream bugfix release. Closes: #590317
+
+ -- Adam Borowski <kilobyte@angband.pl>  Sun, 25 Jul 2010 00:30:47 +0200
+
+crawl (2:0.7.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Move the SAVEDIR to ~/.crawl, push the remnants of the shared dir one
+    level up.  This fixes the security issues while still keeping scores and
+    bones system wide.
+    The database cache is currently wastefully in ~/.crawl/, but until the
+    handling of read-only db is improved, that's better than letting the
+    first player to run Crawl after an upgrade mess everyone up.
+  * Pick a couple of fresh 0.7 fixes.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Sat, 24 Jul 2010 10:44:20 +0200
+
+crawl (2:0.6.1-1) unstable; urgency=low
+
+  * New upstream bugfix release.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Wed, 09 Jun 2010 15:07:16 +0200
+
+crawl (2:0.6.0-2) unstable; urgency=low
+
+  * Fix build failures on hppa, s390, kfreebsd-*.
+  * Properly set permissions on the score file on fresh installations.
+    Closes: #576552, #576618
+
+ -- Adam Borowski <kilobyte@angband.pl>  Tue, 06 Apr 2010 14:04:05 +0200
+
+crawl (2:0.6.0-1) unstable; urgency=low
+
+  * New upstream release.  Closes: #575626
+    * Better message on incompatible saves.  Closes: #498080
+  * Totally redone packaging.
+    * Use the upstream makefile to make sure all installed files are installed.
+      Closes: #527278
+  * Added tiles build, the packages are now crawl (console), crawl-tiles
+    and crawl-common.
+  * Make the scores and logfile owned by games:games instead of the first
+    player who plays a game.
+  * Delete all saves and logfiles when Crawl is purged.
+  * Delete 4.0 score files on upgrade.  Closes: #451597
+  * Use fonts from ttf-dejavu instead of shipping a redundant copy.
+  * Add a FreeDesktop menu entry.
+  * Update the homepage, it's now at http://crawl.develz.org
+  * Rebuilding with new ncurses fixes bright colors on xterm-256.
+    Closes: #439597
+
+ -- Adam Borowski <kilobyte@angband.pl>  Sun, 28 Mar 2010 14:35:18 +0200
+
+crawl (2:0.5.2-4) unstable; urgency=low
+
+  * Import patch from Pino Toscano fixing the check for MacOS/X, which caused
+    crawl to FTBFS on other Mach architectures like the Hurd. Closes: #558388
+
+ -- Guus Sliepen <guus@debian.org>  Sat, 28 Nov 2009 17:13:13 +0100
+
+crawl (2:0.5.2-3) unstable; urgency=low
+
+  * Build-Depend on liblua5.1-0-dev and pkg-config.
+
+ -- Guus Sliepen <guus@debian.org>  Fri, 27 Nov 2009 19:19:30 +0100
+
+crawl (2:0.5.2-2) unstable; urgency=low
+
+  * Quilt refresh patches to ensure the package can be unpacked without quilt.
+    Closes: #558195
+  * Remove unused patches that have been merged upstream.
+
+ -- Guus Sliepen <guus@debian.org>  Fri, 27 Nov 2009 17:57:50 +0100
+
+crawl (2:0.5.2-1) unstable; urgency=low
+
+  [ Guus Sliepen ]
+
+  * New upstream release. Closes: 523694
+  * Bump Standards-Version.
+  * Do not include docs/libpng-LICENSE.txt.
+  * Define SAVE_PACKAGE_TAR to save games as tar.gz instead of zip.
+    Closes: #497356
+
+  [ Trent W. Buck ]
+
+  * Adopt 3.0 (quilt) format.
+  * Add a watchfile. Closes: #523696
+  * Bump debhelper compatibility to 7 (from 4).
+  * Replace debian/rules boilerplate with dh(1).
+  * Replace upstream's makefile entirely (with debian/GNUmakefile).
+  * Adhere more strictly to the FHS:
+    * Global default configuration in /etc/crawl.
+    * Documentation in /usr/share/doc/crawl.
+    * Data (e.g. lua scripts) in /usr/share/games/crawl.
+    * Dead characters in /var/games/crawl/morgue.
+    * Living characters in /var/games/crawl/saves.
+  * Purge upstream's convenience copies of libraries, to enure they can't
+    accidentally be used during compilation. Closes: #505692
+  * Move much manual debian/rules messing about into declarative
+    debian/crawl.foo files.  One bad side effect: examples/crawlrc becomes
+    examples/init.txt.  Sorry about that.
+  * Appease lintian:
+    * debhelper-but-no-misc-depends;
+    * extra-license-file;
+    * spelling-error-in-binary: persistant.
+  * Add a watch file for uscan(1).
+  * Drop Debian.README; it should be clear to everyone by now that DCSS is
+    the actively developed Crawl codebase.
+
+ -- Guus Sliepen <guus@debian.org>  Thu, 26 Nov 2009 19:09:09 +0000
+
+crawl (2:0.4.4-1) unstable; urgency=low
+
+  * New upstream release. Closes: #509209
+    - Fixes speed of skill training. Closes: #508127
+  * Add missing documentation to /usr/share/doc/crawl/. Closes: #509206
+  * Apply patch from Martin Michlmayr fixing compilation with GCC 4.4.
+    Closes: #505692
+  * Do not try to autodetect UTF-8 support based on locale information,
+    just assume it will work on a Debian system. Closes: #467255
+
+ -- Guus Sliepen <guus@debian.org>  Mon, 29 Dec 2008 17:17:45 +0100
+
+crawl (2:0.4.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@debian.org>  Mon, 21 Jul 2008 12:27:12 +0200
+
+crawl (2:0.3.4-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@debian.org>  Tue, 05 Feb 2008 14:28:44 +0100
+
+crawl (2:0.3.3-2) unstable; urgency=low
+
+  * Move documentation to /usr/share/games/crawl/ so the in-game help system
+    can find it. Closes: #455480
+  * Fix build failure with GCC 4.3. Closes: #456088
+
+ -- Guus Sliepen <guus@debian.org>  Sat, 15 Dec 2007 00:06:00 +0100
+
+crawl (2:0.3.3-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@debian.org>  Fri, 07 Dec 2007 17:18:04 +0100
+
+crawl (2:0.3.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * Enable Unicode support. Closes: #451028
+  * Use nl_langinfo() to detect Unicode support.
+
+ -- Guus Sliepen <guus@debian.org>  Mon, 19 Nov 2007 12:46:39 +0100
+
+crawl (2:0.3.1-1) unstable; urgency=low
+
+  * New upstream release.
+    - Enables lua bindings. Closes: #447588
+  * Don't link with built-in liblua implementation.
+
+ -- Guus Sliepen <guus@debian.org>  Thu, 08 Nov 2007 15:19:34 +0100
+
+crawl (2:0.2.7-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@debian.org>  Tue, 12 Jun 2007 15:46:25 +0200
+
+crawl (2:0.2.6-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@debian.org>  Fri, 08 Jun 2007 09:24:09 +0200
+
+crawl (2:0.2.5-1) unstable; urgency=low
+
+  * New upstream release.
+  * Save morgue files in /var/games/crawl by default.
+
+ -- Guus Sliepen <guus@debian.org>  Mon, 14 May 2007 17:30:31 +0200
+
+crawl (2:0.2.4-2) unstable; urgency=low
+
+  * Remove superfluous semicolon which GCC 4.3 doesn't like. Closes: #421212
+
+ -- Guus Sliepen <guus@debian.org>  Sat, 28 Apr 2007 10:22:36 +0200
+
+crawl (2:0.2.4-1) unstable; urgency=low
+
+  * Switch to a new upstream: http://crawl-ref.sourceforge.net/.
+    The old upstream has shown no activity for the last few years, and the
+    Yahoo group crawl-dev only shows spam messages.
+
+ -- Guus Sliepen <guus@debian.org>  Mon, 16 Apr 2007 10:44:42 +0200
+
+crawl (1:4.0.0beta26-9) unstable; urgency=low
+
+  * Add missing #includes necessary for the stricter header dependencies in
+    GCC 4.3 and onwards. Patch from Martin Michlmayr. Closes: #417134
+  * Fix two cases of dereferencing type-punned pointer.
+
+ -- Guus Sliepen <guus@debian.org>  Mon, 02 Apr 2007 16:26:03 +0200
+
+crawl (1:4.0.0beta26-8) unstable; urgency=low
+
+  * Reset terminal attributes after shutting down curses. Closes: #369203
+  * Correct CVE reference in previous changelog entry. Closes: #350349
+
+ -- Guus Sliepen <guus@debian.org>  Sun, 28 May 2006 15:22:13 +0200
+
+crawl (1:4.0.0beta26-7) unstable; urgency=high
+
+  * Fix insecure execution of external commands. See DSA 949-1. [CVE-2006-0045]
+
+ -- Guus Sliepen <guus@debian.org>  Fri, 20 Jan 2006 17:15:01 +0100
+
+crawl (1:4.0.0beta26-6) unstable; urgency=low
+
+  * Fix possible uninitialised string when casting Blade Hands spell. Thanks
+    to Ilya Kasnacheev for noticing.  Closes: #325706
+  * Apply patch from Kalle Olavi Niemitalo to fix uncursing of Enchant Armor
+    spell. Closes: #321082
+
+ -- Guus Sliepen <guus@debian.org>  Mon, 17 Oct 2005 13:00:58 +0200
+
+crawl (1:4.0.0beta26-5) unstable; urgency=low
+
+  * Recompile needed for C++ ABI change.
+  * Remove unnecessary CFLAGS.
+  * Don't build-depend on g++ anymore.
+  * Apply patch from Kalle Olavi Niemitalo to fix a possible infinite loop.
+    Closes: #314754
+  * Apply patch from Stephen Rueger to fix lines starting with an apostrophe
+    in the manpage. Closes: #301764
+  * Apply patch from Sami Liedes to prevent segfault when using the -scores
+    option. Closes: #227803
+
+ -- Guus Sliepen <guus@debian.org>  Fri, 22 Jul 2005 13:09:33 +0200
+
+crawl (1:4.0.0beta26-4) unstable; urgency=low
+
+  * Fix potential local security hole due to improper use of environmental
+    variable which may allow local GID(games) compromise. See DSA-432.
+
+ -- Guus Sliepen <guus@debian.org>  Sun,  1 Feb 2004 18:08:51 +0100
+
+crawl (1:4.0.0beta26-3) unstable; urgency=low
+
+  * Fix map viewing bug on large terminals. Closes: #207059
+
+ -- Guus Sliepen <guus@debian.org>  Mon, 25 Aug 2003 15:23:10 +0200
+
+crawl (1:4.0.0beta26-2) unstable; urgency=low
+
+  * Remove braces around strings. Closes: #195147
+
+ -- Guus Sliepen <guus@debian.org>  Thu, 29 May 2003 15:28:47 +0200
+
+crawl (1:4.0.0beta26-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@debian.org>  Tue, 25 Mar 2003 21:48:16 +0100
+
+crawl (1:4.0.0beta25-1) unstable; urgency=low
+
+  * New upstream release.
+  * Spelling fixes from D. Brodale.
+
+ -- Guus Sliepen <guus@debian.org>  Fri,  7 Mar 2003 13:51:39 +0100
+
+crawl (1:4.0.0beta24-6) unstable; urgency=low
+
+  * Make init.txt available as example crawlrc. Closes: #162707
+  * Fix monster->monster poisoning. Closes: #162621
+  * Spelling fixes. Closes: #162620
+
+ -- Guus Sliepen <guus@debian.org>  Sat, 23 Nov 2002 19:34:14 +0100
+
+crawl (1:4.0.0beta24-5) unstable; urgency=low
+
+  * Apply fixed patch from Daniel Burrows. Closes: #156698
+  * All character titles should be nouns. Closes: #160166 
+
+ -- Guus Sliepen <guus@debian.org>  Sun, 22 Sep 2002 17:20:48 +0200
+
+crawl (1:4.0.0beta24-4) unstable; urgency=low
+
+  * Apply item description patch from Daniel Burrows. Closes: #156698
+  * Stop possible infinite loop in monster_polymorph(). Closes: #159013
+
+ -- Guus Sliepen <guus@debian.org>  Wed,  4 Sep 2002 11:20:46 +0200
+
+crawl (1:4.0.0beta24-3) unstable; urgency=low
+
+  * Add URL and upstream maintainers to debian/copyright. Closes: #154182
+  * Wait for key after displaying high score list. Closes: #156846
+
+ -- Guus Sliepen <guus@debian.org>  Sat, 17 Aug 2002 21:06:10 +0200
+
+crawl (1:4.0.0beta24-2) unstable; urgency=low
+
+  * Compile with -fsigned-char. Closes: #153931
+
+ -- Guus Sliepen <guus@debian.org>  Wed, 24 Jul 2002 18:46:57 +0200
+
+crawl (1:4.0.0beta24-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Mon, 10 Jun 2002 14:34:43 +0200
+
+crawl (1:4.0.0beta23-2) unstable; urgency=low
+
+  * Added menu hints.
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Tue,  9 Apr 2002 21:42:20 +0200
+
+crawl (1:4.0.0beta23-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Sun, 17 Mar 2002 15:53:08 +0100
+
+crawl (1:4.0.0beta22-1) unstable; urgency=low
+
+  * New upstream release.
+  * Fixed checks for resistance against poison and electricity.
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Fri, 21 Dec 2001 18:32:29 +0100
+
+crawl (1:4.0.0beta20-3) unstable; urgency=low
+
+  * Added entry for Debian's menu system.
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Wed, 12 Dec 2001 23:21:42 +0100
+
+crawl (1:4.0.0beta20-2) unstable; urgency=low
+
+  * Change group of morgue.txt to that of the user. Closes: #119933
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Sat, 17 Nov 2001 13:58:34 +0100
+
+crawl (1:4.0.0beta20-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Fri, 10 Aug 2001 22:00:12 +0200
+
+crawl (1:4.0.0beta19-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Fri, 10 Aug 2001 22:00:12 +0200
+
+crawl (1:4.0.0beta18-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Sun,  5 Aug 2001 12:43:16 +0200
+
+crawl (1:4.0.0beta17-2) unstable; urgency=low
+
+  * Correct build dependencies. Closes: #104840
+  * ISO-14882 compliance.
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Sat, 14 Jul 2001 14:19:50 +0200
+
+crawl (1:4.0.0beta17-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Fri,  1 Jun 2001 19:57:38 +0200
+
+crawl (1:4.0.0beta16-1) unstable; urgency=low
+
+  * New upstream release. Closes: #95685
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Fri, 11 May 2001 12:28:14 +0200
+
+crawl (1:4.0.0beta15-1) unstable; urgency=low
+
+  * New upstream release.
+  * New version numbering scheme.
+  * Documented running/open prefix commands. Closes: #94925
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Sat, 28 Apr 2001 13:36:31 +0200
+
+crawl (20010419-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Sat, 21 Apr 2001 18:49:42 +0200
+
+crawl (20010409-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Tue, 10 Apr 2001 10:29:51 +0200
+
+crawl (20010402-1) unstable; urgency=low
+
+  * New upstream release.
+  * Minor spelling fixes.
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Mon,  2 Apr 2001 21:35:59 +0200
+
+crawl (20010321-2) unstable; urgency=low
+
+  * Fixed character dump segfault bug. Closes: #92315
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Sat, 31 Mar 2001 20:20:57 +0200
+
+crawl (20010321-1) unstable; urgency=low
+
+  * New upstream release. Closes: #91344
+  * Fixed -plain option. Closes: #90986
+  * Enabled MULTIUSER option so that savegames/scores are global.
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Mon, 26 Mar 2001 23:32:20 +0200
+
+crawl (20010306-1) unstable; urgency=low
+
+  * Initial Release. Closes: #89154
+  * Adjusted alternate character set handling to allow crawl to be played in
+    xterms, provided that a VGA font is used.
+
+ -- Guus Sliepen <guus@sliepen.warande.net>  Sat, 10 Mar 2001 17:40:09 +0100

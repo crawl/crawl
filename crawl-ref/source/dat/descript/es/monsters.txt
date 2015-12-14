@@ -22,7 +22,7 @@ Aizul
 En una ocasión fue la principal serpiente guardiana de un legendario tesoro,
 pero cayó en desgracia al saquear unos ladrones el tesoro mientras que dormía.
 Ahora se desliza por el calabozo buscando venganza contra cualquier aspirante a
-saqueador.  Es un consumado hechicero, pero en el combate cuerpo a cuerpo no es
+saqueador. Es un consumado hechicero, pero en el combate cuerpo a cuerpo no es
 más peligroso que otros de su misma especie.
 %%%%
 Asmodeus
@@ -387,7 +387,7 @@ aplastarla con sus enormes fauces.
 %%%%
 alligator snapping turtle
 
-Una tortuga mordedora particularmente grande y desagradable.  Al igual que su
+Una tortuga mordedora particularmente grande y desagradable. Al igual que su
 parentela de menor tamaño, es capaz de alcanzarte y morderte desde cierta
 distancia, y se esconderá en su caparazón cuando se vea amenazada.
 %%%%
@@ -417,12 +417,6 @@ certeza se volverá contra vosotros!
 azure jelly
 
 Una masa de citoplasma azulado y extremadamente frío, envuelta en escarcha.
-%%%%
-baby alligator
-
-Un joven caimán. Aunque aún no tiene poderosas mandíbulas, ni la fuerza
-suficiente para imprimir un ráfaga de velocidad, es más ligero que un adulto y
-sus dientes de leche son muy agudos.
 %%%%
 ball lightning
 

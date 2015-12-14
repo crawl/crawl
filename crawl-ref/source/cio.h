@@ -60,7 +60,7 @@ int cancellable_get_line(char *buf,
                          const string &fill = "",
                          const string &tag = "");
 
-// Do not use this templated function directly.  Use the macro below instead.
+// Do not use this templated function directly. Use the macro below instead.
 template<int> static int cancellable_get_line_autohist_temp(char *buf, int len)
 {
     static input_history hist(10);

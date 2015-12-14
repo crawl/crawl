@@ -6,7 +6,6 @@
 #include "spl-util.h"
 
 bool is_holy_item(const item_def& item);
-bool is_potentially_unholy_item(const item_def& item);
 bool is_unholy_item(const item_def& item);
 bool is_potentially_evil_item(const item_def& item);
 bool is_corpse_violating_item(const item_def& item);
@@ -23,7 +22,6 @@ bool is_unclean_spell(spell_type spell);
 bool is_chaotic_spell(spell_type spell);
 bool is_hasty_spell(spell_type spell);
 bool is_fiery_spell(spell_type spell);
-conduct_type good_god_hates_item_handling(const item_def &item);
 conduct_type god_hates_item_handling(const item_def &item);
 bool god_hates_item(const item_def &item);
 

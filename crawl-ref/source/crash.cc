@@ -67,6 +67,17 @@ template <typename TO, typename FROM> TO nasty_cast(FROM f)
 
 #endif // BACKTRACE_SUPPORTED
 
+// Support Yama LSM ptrace restrictions
+#ifdef TARGET_OS_LINUX
+#   include <sys/prctl.h>
+#   ifndef PR_SET_PTRACER
+#       define PR_SET_PTRACER 0x59616d61
+#   endif
+#   ifndef PR_SET_PTRACER_ANY
+#       define PR_SET_PTRACER_ANY ((unsigned long)-1)
+#   endif
+#endif
+
 #include "files.h"
 #include "initfile.h"
 #include "options.h"
@@ -136,11 +147,11 @@ void crash_signal_handler(int sig_num)
     _crash_signal            = sig_num;
     crawl_state.game_crashed = true;
 
-    // During a crash, we may be in an inconsistent state (duh).  Doing a number
+    // During a crash, we may be in an inconsistent state (duh). Doing a number
     // of things can cause a lock up, especially calling non-reentrant functions
     // like malloc() and friends, used by C++ basics like std::string
     // internally.
-    // There's no reliable way to ensure such things won't happen.  A pragmatic
+    // There's no reliable way to ensure such things won't happen. A pragmatic
     // solution is to abort the crash dump.
     alarm(120);
 
@@ -159,7 +170,7 @@ void crash_signal_handler(int sig_num)
     /* Infinite loop protection.
 
        Not tickling the watchdog for 60 seconds of user CPU time (not wall
-       time!) means something is terribly wrong.  Even worst hogs like
+       time!) means something is terribly wrong. Even worst hogs like
        pre-0.6 god renouncement or current Time Step in the Abyss don't take
        more than several seconds.
 
@@ -169,9 +180,9 @@ void crash_signal_handler(int sig_num)
        It's likely to die horribly -- it's one of signals that is often
        received while in non-signal safe functions, especially malloc()
        which _will_ fuck the process up (remember, C++ can't blink without
-       malloc()ing something).  In such cases, alarm() above will kill us.
+       malloc()ing something). In such cases, alarm() above will kill us.
        That's nasty and random, but at least should give us backtraces most
-       of the time, and avoid dragging down the servers.  And even if for
+       of the time, and avoid dragging down the servers. And even if for
        some odd reason SIGALRM won't kill us, the worst that can happen is
        wasting 100% CPU which is precisely what happens right now.
     */
@@ -335,7 +346,7 @@ void write_stack_trace(FILE* file, int ignore_count)
 #else // TARGET_OS_MACOSX
         bt += symbols[i];
         int status;
-        // Extract the identifier from symbols[i].  It's inside of parens.
+        // Extract the identifier from symbols[i]. It's inside of parens.
         char *firstparen = ::strchr(symbols[i], '(');
         char *lastparen = ::strchr(symbols[i], '+');
         if (firstparen != 0 && lastparen != 0 && firstparen < lastparen)
@@ -376,6 +387,9 @@ void call_gdb(FILE *file)
     char attach_cmd[20] = {};
     snprintf(attach_cmd, sizeof(attach_cmd), "attach %d", getpid());
 
+#ifdef TARGET_OS_LINUX
+    prctl(PR_SET_PTRACER, PR_SET_PTRACER_ANY, 0, 0, 0);
+#endif
     switch (int gdb = fork())
     {
     case -1:
@@ -411,7 +425,7 @@ void call_gdb(FILE *file)
 void disable_other_crashes()
 {
     // If one thread calls end() without going through a crash (a handled
-    // fatal error), no one else should be allowed to crash.  We're already
+    // fatal error), no one else should be allowed to crash. We're already
     // going down so blocking the other thread is ok.
 #ifdef USE_UNIX_SIGNALS
     mutex_lock(crash_mutex);

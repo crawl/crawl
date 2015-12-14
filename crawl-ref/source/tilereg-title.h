@@ -10,16 +10,16 @@ class TitleRegion : public ControlRegion
 public:
     TitleRegion(int width, int height, FontWrapper *font);
 
-    virtual void render();
-    virtual void clear() {};
-    virtual void run();
+    virtual void render() override;
+    virtual void clear() override {};
+    virtual void run() override;
 
-    virtual int handle_mouse(MouseEvent &event) { return 0; }
+    virtual int handle_mouse(MouseEvent &event) override { return 0; }
 
     void update_message(string message);
 
 protected:
-    virtual void on_resize() {}
+    virtual void on_resize() override {}
 
     GenericTexture m_img;
     VertBuffer m_buf;

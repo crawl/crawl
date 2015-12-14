@@ -4,7 +4,7 @@
 #    options_guide.txt
 # in your /docs directory. If you can't find it, the file is also available
 # online at:
-# https://gitorious.org/crawl/crawl/source/HEAD:crawl-ref/docs/options_guide.txt
+# https://github.com/crawl/crawl/blob/master/crawl-ref/docs/options_guide.txt
 #
 # Crawl uses the first file of the following list as its option file:
 #  * init.txt in the -rcdir directory (if specified)
@@ -16,7 +16,7 @@
 #  * settings/init.txt (in the Crawl directory)
 
 ##### Some basic explanation of option syntax #######################
-# Lines beginning with '#' are comments.  The basic syntax is:
+# Lines beginning with '#' are comments. The basic syntax is:
 #
 # field = value         or      field.subfield = value
 #

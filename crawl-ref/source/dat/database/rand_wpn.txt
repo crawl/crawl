@@ -118,6 +118,10 @@ Plunder
 
 Ravage
 
+Iconoclasm
+
+Regicide
+
 # Lemuel's Suggestions
 the Warrior
 
@@ -218,8 +222,6 @@ Extinguishment
 
 # pain and misery
 Infinite Pain
-
-Eternal Torment
 
 Dismemberment
 
@@ -344,6 +346,8 @@ Forgiveness
 Trial by Ordeal
 
 Blind Justice
+
+Judgement
 %%%%
 _diviner_name_
 
@@ -398,6 +402,8 @@ Priest
 Madman
 
 Scavenger
+
+Pariah
 
 w:15
 @_diviner_name_@
@@ -520,12 +526,10 @@ Toadstool
 
 Puffball
 
-Slime-mold
+Slime-mould
 %%%%
 # undead and evil beings
 _evil_stuff_
-
-Curses
 
 Hell's Wrath
 
@@ -681,6 +685,8 @@ Revolt
 Tumult
 
 Upheaval
+
+Incongruity
 %%%%
 _balance_or_order_
 
@@ -719,8 +725,6 @@ Circularity
 Linearity
 
 Law
-
-Order
 
 Accord
 

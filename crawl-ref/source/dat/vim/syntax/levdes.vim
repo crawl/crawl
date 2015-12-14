@@ -8,7 +8,7 @@
 " How to use this:
 " * Put levdes.vim (this file) under ~/.vim/syntax (or similar directory for
 "   your system - usually C:\Program Files\Vim\vimfiles\syntax on Windows).
-" * In your .vimrc, add this line:
+" * In your .vimrc, or in a new file ~/.vim/ftdetect/levdes.vim, add this line:
 "     au BufRead,BufNewFile *.des set syntax=levdes
 " Thereafter, any .des files you edit in (g)vim will use syntax highlighting.
 
@@ -63,7 +63,7 @@ syn match desGod contained /sif_muna\|trog\|vehumet\|xom\|yredelemnul\|zin/
 syn match desGod contained /the_shining_one/
 
 syn keyword desDeclarator ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: WEIGHT:
-syn keyword desDeclarator ITEM: KFEAT: KMONS: KITEM: KMASK: KPROP: MARKER: WELCOME: LFLAGS: BFLAGS:
+syn keyword desDeclarator ITEM: KFEAT: KMONS: KITEM: KMASK: KPROP: MARKER: WELCOME:
 syn keyword desDeclarator LFLOORTILE: LROCKTILE: FTILE: RTILE: TILE: SUBVAULT: FHEIGHT: DESC: ORDER:
 
 " keywords
@@ -106,9 +106,6 @@ syn keyword desOrientation water_ok overwrite_floor_cell replace_portal
 " V vault building (mostly dlua/v_layouts and v_rooms)
 syn keyword desOrientation vaults_room vaults_empty vaults_hard no_windows preserve_wall
 
-" LFLAGS (in l_dgn.cc)
-syn keyword desOrientation no_tele_control not_mappable no_magic_map
-
 " ITEM | KITEM (in mapdef.cc, without `random`)
 syn keyword desOrientation randbook any good_item star_item superb_item gold nothing
 syn keyword desOrientation acquire mundane damaged cursed randart not_cursed useful unobtainable
@@ -121,7 +118,7 @@ syn keyword desOrientation fix_slot priest_spells actual_spells god_gift
 syn keyword desOrientation generate_awake patrolling band
 syn keyword desOrientation hostile friendly good_neutral fellow_slime strict_neutral neutral
 "Note: `spectre` removed: mis-catches `silent spectre` but was unused as modifier (`spectral` exists)
-syn keyword desOrientation zombie skeleton simulacrum spectral chimera
+syn keyword desOrientation zombie skeleton simulacrum spectral
 syn keyword desOrientation seen always_corpse never_corpse
 syn keyword desOrientation base nonbase
 syn keyword desOrientation n_suf        n_adj           n_rpl         n_the
@@ -153,9 +150,9 @@ syn keyword desOrientation overwritable
 syn keyword desOrientation vault no_item_gen no_monster_gen no_pool_fixup no_wall_fixup opaque no_trap_gen
 
 " KPROP
-syn keyword desOrientation bloody highlight mold no_cloud_gen no_rtele_into no_ctele_into no_tele_into no_submerge no_tide no_jiyva
+syn keyword desOrientation bloody highlight mold no_cloud_gen no_tele_into no_submerge no_tide no_jiyva
 
-syn match desComment "^\s*#.*$"
+syn match desComment "^\s*#.*$&"
 
 "Note: `;` and `|` are necessary due to monster/randbook `spells:`,
 " `.` can be an empty spell slot and `'` is contained in certain spell names,

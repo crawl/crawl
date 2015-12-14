@@ -104,7 +104,9 @@ function ($, comm, enums, map_knowledge, messages, options) {
 
     function index_to_letter(index)
     {
-        if (index < 26)
+        if (index === -1)
+            return "-"
+        else if (index < 26)
             return String.fromCharCode("a".charCodeAt(0) + index);
         else
             return String.fromCharCode("A".charCodeAt(0) + index - 26);
@@ -114,7 +116,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
     {
         var item = player.inv[index];
         var elem = $("<span>");
-        elem.text(index_to_letter(index) + ") " + item.name);
+        elem.text(item.name);
         if (item.col != -1 && item.col != null)
             elem.addClass("fg" + item.col);
         return elem;
@@ -127,7 +129,8 @@ function ($, comm, enums, map_knowledge, messages, options) {
         if (wielded == -1)
         {
             elem = $("<span>");
-            elem.text("-) " + player.unarmed_attack);
+            elem.text(player.unarmed_attack);
+            elem.addClass("fg" + player.unarmed_attack_colour);
         }
         else
             elem = inventory_item_desc(wielded);
@@ -140,8 +143,15 @@ function ($, comm, enums, map_knowledge, messages, options) {
 
     function quiver()
     {
-        if (player.quiver_item == -1)
-            return "-) Nothing quivered";
+        if (!player.quiver_available)
+        {
+            var elem = $("<span>");
+            elem.text("Quiver unavailable");
+            elem.addClass("fg8");
+            return elem;
+        }
+        else if (player.quiver_item == -1)
+            return "Nothing quivered";
         else
             return inventory_item_desc(player.quiver_item);
     }
@@ -332,14 +342,6 @@ function ($, comm, enums, map_knowledge, messages, options) {
         for (var i = 0; i < simple_stats.length; ++i)
             $("#stats_" + simple_stats[i]).text(player[simple_stats[i]]);
 
-        if (player.zp !== null)
-        {
-            $(".stats_zot_defense").show();
-            $("#stats_zp").text(player.zp);
-        }
-        else
-            $(".stats_zot_defense").hide();
-
         if (player.real_hp_max != player.hp_max)
             $("#stats_real_hp_max").text("(" + player.real_hp_max + ")");
         else
@@ -391,7 +393,11 @@ function ($, comm, enums, map_knowledge, messages, options) {
         }
         $("#stats_status_lights").html(status);
 
+        $("#stats_weapon_letter").text(
+            index_to_letter(player.equip[enums.equip.WEAPON]) + ")");
         $("#stats_weapon").html(wielded_weapon());
+        $("#stats_quiver_letter").text(
+            index_to_letter(player.quiver_item) + ")");
         $("#stats_quiver").html(quiver());
     }
 
@@ -462,7 +468,6 @@ function ($, comm, enums, map_knowledge, messages, options) {
                 mp: 0, mp_max: 0,
                 ac: 0, ev: 0, sh: 0,
                 xl: 0, progress: 0,
-                zp: null,
                 time: 0, time_delta: 0,
                 gold: 0,
                 str: 0, int: 0, dex: 0,

@@ -7,6 +7,7 @@
 
 #include "prompt.h"
 
+#include "clua.h"
 #include "delay.h"
 #include "libutil.h"
 #include "macro.h"
@@ -53,6 +54,13 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
     bool message = (region == GOTO_MSG);
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
         interrupt_activity(AI_FORCE_INTERRUPT);
+
+    // Allow players to answer prompts via clua.
+    maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str);
+    if (res == MB_TRUE)
+        return true;
+    if (res == MB_FALSE)
+        return false;
 
     string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 
@@ -122,7 +130,8 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             return true;
         else if (!noprompt)
         {
-            bool upper = (!safe && crawl_state.game_is_hints_tutorial());
+            bool upper = !safe && (tmp == 'n' || tmp == 'y'
+                                   || crawl_state.game_is_hints_tutorial());
             const string pr = make_stringf("%s[Y]es or [N]o only, please.",
                                            upper ? "Uppercase " : "");
 #ifdef TOUCH_UI
@@ -131,7 +140,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             if (message)
                 mpr(pr);
             else
-                cprintf("\n%s\n", pr.c_str());
+                cprintf("%s\n", pr.c_str());
 #endif
         }
     }
@@ -238,7 +247,8 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
                 return 2;
             else
             {
-                bool upper = (!safe && crawl_state.game_is_hints_tutorial());
+                bool upper = !safe && (tmp == 'n' || tmp == 'y' || tmp == 'a'
+                                       || crawl_state.game_is_hints_tutorial());
                 mprf("Choose %s[Y]es%s, [N]o, [Q]uit, or [A]ll!",
                      upper ? "uppercase " : "",
                      _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
@@ -246,7 +256,8 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
         }
         else
         {
-            bool upper = (!safe && crawl_state.game_is_hints_tutorial());
+            bool upper = !safe && (tmp == 'n' || tmp == 'y'
+                                   || crawl_state.game_is_hints_tutorial());
             mprf("%s[Y]es%s, [N]o or [Q]uit only, please.",
                  upper ? "Uppercase " : "",
                  _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
@@ -254,13 +265,14 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
     }
 }
 
-//---------------------------------------------------------------
-//
-// prompt_for_quantity
-//
-// Returns -1 if ; or enter is pressed (pickup all).
-// Else, returns quantity.
-//---------------------------------------------------------------
+/**
+ * Prompt the user for a quantity of things.
+ *
+ * @param prompt the message to be used before the prompt.
+ * @return -1 if <enter> or ';' are pressed (meaning all);
+ *         0 if the user escaped;
+ *         the number chosen otherwise.
+ */
 int prompt_for_quantity(const char *prompt)
 {
     msgwin_prompt(prompt);
@@ -275,14 +287,14 @@ int prompt_for_quantity(const char *prompt)
     return prompt_for_int("", false);
 }
 
-//---------------------------------------------------------------
-//
-// prompt_for_int
-//
-// If nonneg, then it returns a non-negative number or -1 on fail
-// If !nonneg, then it returns an integer, and 0 on fail
-//
-//---------------------------------------------------------------
+/**
+ * Returns an integer, with a failure state.
+ *
+ * @param prompt the message to be used before the prompt.
+ * @param nonneg if true, the failure sentinel is -1;
+ *               if false, the sentinel is 0.
+ * @return the chosen number, or the chosen sentinel value.
+ */
 int prompt_for_int(const char *prompt, bool nonneg)
 {
     char specs[80];

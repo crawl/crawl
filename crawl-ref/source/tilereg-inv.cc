@@ -121,9 +121,6 @@ void InventoryRegion::pack_buffers()
             if (item.special)
                 m_buf.add_main_tile(item.special, x, y, 0, 0);
 
-            if (item.flag & TILEI_FLAG_TRIED)
-                m_buf.add_icons_tile(TILEI_TRIED, x, y, 3, TILE_Y / 2);
-
             if (item.flag & TILEI_FLAG_INVALID)
                 m_buf.add_icons_tile(TILEI_MESH, x, y);
         }
@@ -506,12 +503,8 @@ bool InventoryRegion::update_tip_text(string& tip)
                 if (item_type_known(item) && item_is_spellbook(item)
                     && can_learn_spell(true))
                 {
-                    if (player_can_memorise_from_spellbook(item)
-                        || has_spells_to_memorise(true))
-                    {
-                        tmp += "Memorise (%)";
-                        cmd.push_back(CMD_MEMORISE_SPELL);
-                    }
+                    tmp += "Memorise (%)";
+                    cmd.push_back(CMD_MEMORISE_SPELL);
                     if (wielded)
                         _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                     break;
@@ -693,8 +686,6 @@ static void _fill_item_info(InventoryTile &desc, const item_info &item)
     desc.flag = 0;
     if (item.cursed())
         desc.flag |= TILEI_FLAG_CURSE;
-    if (item.flags & ISFLAG_TRIED)
-        desc.flag |= TILEI_FLAG_TRIED;
     if (item.pos.x != -1)
         desc.flag |= TILEI_FLAG_FLOOR;
 }

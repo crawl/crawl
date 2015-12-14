@@ -3,7 +3,6 @@
 $inedible     := darkgrey
 $forbidden    := red
 $preferred    := yellow
-$rot-inducing := lightred
 $mutagenic    := magenta
 $dangerous    := magenta
 $poisonous    := lightgreen
@@ -12,4 +11,3 @@ $poisonous    := lightgreen
 $danger   := lightred
 $warning  := yellow
 $boring   := darkgrey
-$item_dmg := $danger

@@ -79,7 +79,7 @@ body {
 .boosted_defense {
     color: #729fcf; /* lightblue */
 }
-#stats_weapon .corroded_weapon {
+#game #stats_weapon .corroded_weapon {
     color: #a40000; /* red */
 }
 
@@ -88,6 +88,7 @@ body {
     height: 100%;
 }
 
+/* Some of these values are also hard coded to cell_renderer.js */
 #stats_hp_bar {
     background-color: #555753; /* darkgray */
 }
@@ -115,6 +116,10 @@ body {
 }
 #stats_mp_bar_increase {
     background-color: #204a87; /* blue */
+}
+
+#stats[data-species="Felid"] #stats_quiver_line {
+    display: none;
 }
 
 /* Temperature bar, hidden normally */

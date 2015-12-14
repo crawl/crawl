@@ -86,10 +86,6 @@ static const duration_def duration_data[] =
       BLUE, "Touch",
       "confusing touch", "",
       "" , D_DISPELLABLE | D_EXPIRES},
-    { DUR_CONTROL_TELEPORT,
-      MAGENTA, "cTele",
-      "controlling teleports", "control teleport",
-      "You can control teleportations.", D_DISPELLABLE | D_EXPIRES},
     { DUR_CORONA,
       YELLOW, "Corona",
       "", "corona",
@@ -362,10 +358,6 @@ static const duration_def duration_data[] =
       0, "",
       "divine shield", "",
       "You are shielded by the power of the Shining One.", D_NO_FLAGS},
-    { DUR_NEGATIVE_VULN,
-      RED, "-rN",
-      "negative energy vulnerable", "negative energy vulnerability",
-      "You are more vulnerable to negative energy.", D_DISPELLABLE},
     { DUR_CLEAVE,
       LIGHTBLUE, "Cleave",
       "cleaving", "cleave",
@@ -383,7 +375,6 @@ static const duration_def duration_data[] =
     { DUR_HASTE, 0, "", "", "haste", "", D_DISPELLABLE},
     { DUR_FLIGHT, 0, "", "", "flight", "", D_DISPELLABLE /*but special-cased*/},
     { DUR_POISONING, 0, "", "", "poisoning", "", D_NO_FLAGS},
-    { DUR_SURE_BLADE, 0, "", "", "sure blade", "", D_DISPELLABLE},
     { DUR_PIETY_POOL, 0, "", "", "piety pool", "", D_NO_FLAGS},
     { DUR_REGENERATION, 0, "", "", "regeneration", "", D_DISPELLABLE},
     { DUR_TRANSFORMATION, 0, "", "", "transformation", "", D_DISPELLABLE /*but special-cased*/},
@@ -406,6 +397,10 @@ static const duration_def duration_data[] =
     { DUR_ELIXIR_MAGIC, 0, "", "", "elixir magic", "", D_DISPELLABLE},
     { DUR_TROGS_HAND, 0, "", "", "trogs hand", "", D_NO_FLAGS},
     { DUR_MAGIC_SAPPED, 0, "", "", "magic sapped", "", D_DISPELLABLE},
+    { DUR_GOZAG_GOLD_AURA, 0, "", "", "gold aura", "", D_NO_FLAGS },
+    { DUR_COLLAPSE, 0, "", "", "collapse", "", D_NO_FLAGS },
+    { DUR_BRAINLESS, 0, "", "", "brainless", "", D_NO_FLAGS },
+    { DUR_CLUMSY, 0, "", "", "clumsy", "", D_NO_FLAGS },
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
@@ -426,5 +421,8 @@ static const duration_def duration_data[] =
     { DUR_SONG_OF_SHIELDING, 0, "", "", "old song of shielding", "", D_NO_FLAGS},
     { DUR_ANTENNAE_EXTEND, 0, "", "", "old antennae extend", "", D_NO_FLAGS},
     { DUR_BUILDING_RAGE, 0, "", "", "old building rage", "", D_NO_FLAGS},
+    { DUR_NEGATIVE_VULN, 0, "", "", "old negative vuln", "", D_NO_FLAGS},
+    { DUR_SURE_BLADE, 0, "", "", "old sure blade", "", D_NO_FLAGS},
+    { DUR_CONTROL_TELEPORT, 0, "", "", "old control teleport", "", D_NO_FLAGS},
 #endif
 };

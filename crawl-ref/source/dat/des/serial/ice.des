@@ -11,8 +11,8 @@ function init_ice(e)
   e.weight('2')
   if you.in_branch("Coc") then
     e.kmons('.- = simulacrum w:30 / \
-                  ice fiend w:1 / blizzard demon w:5 / ice devil / \
-                  blue devil / white imp / ice beast w:20 / \
+                  ice fiend w:1 / blizzard demon w:5 / ice devil w:20 / \
+                  white imp / ice beast w:20 / \
                   ice dragon w:5 / ice dragon simulacrum w:5 / \
                   w:2000 nothing')
   else
@@ -184,7 +184,7 @@ ENDMAP
 
 NAME:   serial_ice_j
 TAGS:   luniq_serial_ice_big
-KPROP:  +-AwW = no_rtele_into
+KPROP:  +-AwW = no_tele_into
 SUBST:  w = wwW
 SUBST:  + = Ww.
 : init_ice(_G)

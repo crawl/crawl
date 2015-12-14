@@ -282,8 +282,6 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
             if (cell.heat_aura)
                 m_buf_feat.add(TILE_HEAT_AURA + cell.heat_aura - 1, x, y);
 #endif
-            if (cell.gold_aura)
-                m_buf_feat.add(TILE_GOLD_AURA + cell.gold_aura - 1, x, y);
             if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
             if (cell.halo == HALO_RANGE)
@@ -299,7 +297,7 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_DISJUNCT + cell.disjunct - 1, x, y);
 
             // Apply the travel exclusion under the foreground if the cell is
-            // visible.  It will be applied later if the cell is unseen.
+            // visible. It will be applied later if the cell is unseen.
             if (bg & TILE_FLAG_EXCL_CTR)
                 m_buf_feat.add(TILE_TRAVEL_EXCLUSION_CENTRE_BG, x, y);
             else if (bg & TILE_FLAG_TRAV_EXCL)
@@ -340,10 +338,6 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
             m_buf_main.add(fg_idx, x, y);
         }
     }
-
-    // gozag gold sparkles, only if there's no creature in tile (not ideal)
-    if (cell.gold_aura && fg_idx < TILE_MAIN_MAX)
-        m_buf_icons.add(TILEI_GOLD_SPARKLES + cell.gold_aura - 1, x, y);
 
     if (fg & TILE_FLAG_NET)
         m_buf_icons.add(TILEI_TRAP_NET, x, y);

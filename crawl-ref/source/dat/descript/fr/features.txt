@@ -447,7 +447,7 @@ A viscous altar of Jiyva
 Un autel visqueux et de forme inconstante, dédié à Jiyva. Vous n'êtes pas sûr
 de quoi il est fait, et vous n'avez pas vraiment envie de savoir.
 %%%%
-A wall of green crystal
+A crystal wall
 
 Ce mur est fait d'un cristal poli, imprégné de magie obscur. Cette magie permet
 de le consolider, et de lui faire réfléchir la chaleur et le froid.
@@ -768,7 +768,7 @@ A heavily etched metal wall
 Ce mur métallique est gravé de représentations détaillées de ce qui arrive à
 ceux qui essayent de piller les Chambres Fortes. Cela n'est pas très rassurant.
 %%%%
-A heavily etched wall of green crystal
+A heavily etched crystal wall
 
 Ce mur en cristal vert est gravé de représentation détaillées de ce qui arrive
 à ceux qui essayent de piller les Chambres Fortes. Cela n'est pas très

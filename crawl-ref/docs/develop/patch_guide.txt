@@ -26,7 +26,7 @@ Main steps
     text files.
 
 1.) Make a local clone of the source code:
-    git clone git://gitorious.org/crawl/crawl.git
+    git clone https://github.com/crawl/crawl.git
 
 2.) Compile the code. To do this you might have to install a compiler and/or
     additional libraries. See INSTALL.txt for details. If you have any

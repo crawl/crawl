@@ -400,12 +400,20 @@ void fill_doll_equipment(dolls_data &result)
             result.parts[TILEP_PART_HELM] = tilep_equ_helm(you.inv[item]);
         else if (player_mutation_level(MUT_HORNS) > 0)
         {
-            if (you.species == SP_FELID
-                && is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID))
+            if (you.species == SP_FELID)
             {
-                // Felid horns are offset by the tile variant.
-                result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_CAT
-                    + result.parts[TILEP_PART_BASE] - TILEP_BASE_FELID;
+                if (is_player_tile(result.parts[TILEP_PART_BASE],
+                                  TILEP_BASE_FELID))
+                {
+                    // Felid horns are offset by the tile variant.
+                    result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_CAT
+                        + result.parts[TILEP_PART_BASE] - TILEP_BASE_FELID;
+                }
+                else if (is_player_tile(result.parts[TILEP_PART_BASE],
+                                  TILEP_TRAN_STATUE_FELID))
+                {
+                    result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_CAT;
+                }
             }
             else
                 switch (player_mutation_level(MUT_HORNS))
@@ -465,7 +473,7 @@ void fill_doll_equipment(dolls_data &result)
             (you.duration[DUR_LIQUID_FLAMES] ? TILEP_ENCH_STICKY_FLAME : 0);
     }
     // Draconian head/wings.
-    if (player_genus(GENPC_DRACONIAN))
+    if (species_is_draconian(you.species))
     {
         tileidx_t base = 0;
         tileidx_t head = 0;
@@ -530,7 +538,7 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
     int flags[TILEP_PART_MAX];
     tilep_calc_flags(doll, flags);
 
-    // For skirts, boots go under the leg armour.  For pants, they go over.
+    // For skirts, boots go under the leg armour. For pants, they go over.
     if (doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
     {
         p_order[7] = TILEP_PART_BOOTS;
@@ -589,7 +597,7 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
     // This is drawn in reverse order because this could be a ghost
     // or being drawn in water, in which case we want the top-most part
     // to blend with the background underneath and not with the parts
-    // underneath.  Parts drawn afterwards will not obscure parts drawn
+    // underneath. Parts drawn afterwards will not obscure parts drawn
     // previously, because "i" is passed as the depth below.
     for (int i = TILEP_PART_MAX - 1; i >= 0; --i)
     {
@@ -613,9 +621,9 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
              || p == TILEP_PART_HAND2 && you.slot_item(EQ_SHIELD))
             && dind < draw_info_count - 1)
         {
-                ofs_x = dinfo[draw_info_count - dind - 1].ofs_x;
-                ofs_y = dinfo[draw_info_count - dind - 1].ofs_y;
-                ++dind;
+            ofs_x = dinfo[draw_info_count - dind - 1].ofs_x;
+            ofs_y = dinfo[draw_info_count - dind - 1].ofs_y;
+            ++dind;
         }
         buf.add(doll.parts[p], x, y, i, submerged, ghost, ofs_x, ofs_y, ymax);
     }

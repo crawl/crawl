@@ -78,8 +78,8 @@ geoelf.glyphs.ALL_FLOORLIKE   = geoelf.glyphs.FLOOR ..
 ----------------
 --
 -- These are glyph substitution arrays used by the room-drawing
---  functions.  Any glyph drawn that is not in the array will
---  turn into a "nil" when a substitution is made.  This will
+--  functions. Any glyph drawn that is not in the array will
+--  turn into a "nil" when a substitution is made. This will
 --  generate an error when the LUA code runs that says something
 --  like:
 --    /crawl-ref/source/dat/des/builder/layout_geoelf.des:132:

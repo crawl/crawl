@@ -6,6 +6,7 @@
 #ifndef BEAM_H
 #define BEAM_H
 
+#include "options.h"
 #include "random.h"
 #include "ray.h"
 #include "spl-cast.h"
@@ -44,104 +45,107 @@ struct tracer_info
 struct bolt
 {
     // INPUT parameters set by caller
-    spell_type  origin_spell;          // may be SPELL_NO_SPELL for non-spell
-                                       // beams.
-    int         range;
-    unsigned    glyph;                 // missile gfx
-    colour_t    colour;
-    beam_type   flavour;
-    beam_type   real_flavour;          // for random and chaos beams this
-                                       // will remain the same while flavour
-                                       // changes
-    bool        drop_item;             // should drop an item when done
-    item_def*   item;                  // item to drop
-    coord_def   source;                // beam origin
-    coord_def   target;                // intended target
-    dice_def    damage;
-    int         ench_power, hit;
-    killer_type thrower;               // what kind of thing threw this?
-    int         ex_size;               // explosion radius (0==none)
+    spell_type  origin_spell = SPELL_NO_SPELL; // may remain SPELL_NO_SPELL for
+                                               // non-spell beams.
+    int         range = -2;
+    ucs_t       glyph = '*';           // missile gfx
+    colour_t    colour = BLACK;
+    beam_type   flavour = BEAM_MAGIC;
+    beam_type   real_flavour = BEAM_MAGIC; // for random and chaos beams this
+                                           // will remain the same while flavour
+                                           // changes
+    bool        drop_item = false;     // should drop an item when done
+    item_def*   item = nullptr;        // item to drop
+    coord_def   source = {0,0};           // beam origin
+    coord_def   target = {0,0};           // intended target
+    dice_def    damage = dice_def(0,0);
+    int         ench_power = 0, hit = 0;
+    killer_type thrower = KILL_MISC;   // what kind of thing threw this?
+    int         ex_size = 0;           // explosion radius (0==none)
 
-    mid_t       source_id;             // The mid of the source (MID_NOBODY
-                                       // if not coming from a player or a
-                                       // monster).
-    string      source_name;           // The name of the source, if it
-                                       // should be different from
-                                       // actor->name(), or the actor dies
-                                       // prematurely.
-    string      name;
-    string      short_name;
-    string      hit_verb;              // The verb to use when this beam hits
-                                       // something.  If not set, will use
-                                       // "engulfs" if an explosion or cloud
-                                       // and "hits" otherwise.
-    int         loudness;              // Noise level on hitting or exploding.
-    string      noise_msg;             // Message to give player if the hit
-                                       // or explosion isn't in view.
-    bool        pierce;                // Can the beam pass through a target and
-                                       // hit another target behind the first?
-    bool        is_explosion;
-    bool        aimed_at_spot;         // aimed at (x, y), should not cross
-    string      aux_source;            // source of KILL_MISC beams
+    mid_t       source_id = MID_NOBODY;// The mid of the source (remains
+                                       // MID_NOBODY if not coming from a player
+                                       // or a monster).
+    string source_name = "";      // The name of the source, should it
+                                  // be different from agent->name(),
+                                  // or if the actor dies prematurely.
+    string name = "";
+    string short_name = "";
+    string hit_verb = "";         // The verb to use when this beam hits
+                                  // something. If not set, will use
+                                  // "engulfs" if an explosion or cloud
+                                  // and "hits" otherwise.
+    int    loudness = 0;          // Noise level on hitting or exploding.
+    string hit_noise_msg = "";    // Message to give player for each hit
+                                  // monster that isn't in view.
+    string explode_noise_msg = "";  // Message to give player if the explosion
+                                    // isn't in view.
+    bool   pierce = false;        // Can the beam pass through a target and
+                                  // hit another target behind the first?
+    bool   is_explosion = false;
+    bool   aimed_at_spot = false; // aimed at (x, y), should not cross
+    string aux_source = "";       // source of KILL_MISC beams
 
-    bool        affects_nothing;       // should not hit monsters or features
-    bool        affects_items;         // hits items on ground/inventory
+    bool   affects_nothing = false; // should not hit monsters or features
+    bool   affects_items = true;    // hits items on ground/inventory
 
-    bool        effect_known;          // did we _know_ this would happen?
-    bool        effect_wanton;         // could we have guessed it would happen?
+    bool   effect_known = true;   // did we _know_ this would happen?
+    bool   effect_wanton = false; // could we have guessed it would happen?
 
-    int         draw_delay;            // delay used when drawing beam.
-    int         explode_delay;         // delay when drawing explosions.
+    int    draw_delay = 15;       // delay used when drawing beam.
+    int    explode_delay = 50;    // delay when drawing explosions.
 
-    bolt*       special_explosion;     // For exploding with a different
-                                       // flavour/damage/etc than the beam
-                                       // itself.
-    bool        was_missile;           // For determining if this was SPMSL_FLAME / FROST etc
-                                       // this is required in order to change mulch rate on these types
-    bool        animate;               // Do we draw animations?
-    ac_type     ac_rule;               // How does defender's AC affect damage.
+    bolt*  special_explosion = nullptr; // For exploding with a different
+                                        // flavour/damage/etc than the beam
+                                        // itself.
+    bool   was_missile = false;   // For determining if this was SPMSL_FLAME /
+                                  // FROST etc so that we can change mulch rate
+    bool   evoked = false;        // Was this beam evoked from a wand?
+
+    // Do we draw animations?
+    bool   animate = bool(Options.use_animations & UA_BEAM);
+    ac_type ac_rule = AC_NORMAL;   // How defender's AC affects damage.
 #ifdef DEBUG_DIAGNOSTICS
-    bool        quiet_debug;           // Disable any debug spam.
+    bool   quiet_debug = false;    // Disable any debug spam.
 #endif
 
     // OUTPUT parameters (tracing, ID)
-    bool        obvious_effect;        // did an 'obvious' effect happen?
+    bool obvious_effect = false; // did an 'obvious' effect happen?
 
-    bool        seen;                  // Has player seen the beam?
-    bool        heard;                 // Has the player heard the beam?
+    bool seen = false;          // Has player seen the beam?
+    bool heard = false;         // Has the player heard the beam?
 
-    vector<coord_def> path_taken;      // Path beam took.
+    vector<coord_def> path_taken = {}; // Path beam took.
 
     // INTERNAL use - should not usually be set outside of beam.cc
-    int         extra_range_used;
-    bool        is_tracer;       // is this a tracer?
-    bool        is_targeting;    // . . . in particular, a targeting tracer?
-    bool        aimed_at_feet;   // this was aimed at self!
-    bool        msg_generated;   // an appropriate msg was already mpr'd
-    bool        noise_generated; // a noise has already been generated at this pos
-    bool        passed_target;   // Beam progressed beyond target.
-    bool     in_explosion_phase; // explosion phase (as opposed to beam phase)
-    bool        smart_monster;   // tracer firer can guess at other mons. resists?
-    mon_attitude_type attitude;  // attitude of whoever fired tracer
-    int         foe_ratio;       // 100* foe ratio (see mons_should_fire())
+    int  extra_range_used = false;
+    bool is_tracer = false;       // is this a tracer?
+    bool is_targeting = false;    // . . . in particular, a targeting tracer?
+    bool aimed_at_feet = false;   // this was aimed at self!
+    bool msg_generated = false;   // an appropriate msg was already mpr'd
+    bool noise_generated = false; // a noise has already been generated at this pos
+    bool passed_target = false;   // Beam progressed beyond target.
+    bool in_explosion_phase = false; // explosion phase (as opposed to beam phase)
+    mon_attitude_type attitude = ATT_HOSTILE; // attitude of whoever fired tracer
+    int foe_ratio = 0;   // 100* foe ratio (see mons_should_fire())
     map<mid_t, int> hit_count;   // how many times targets were affected
 
     tracer_info foe_info;
     tracer_info friend_info;
 
-    bool        chose_ray;       // do we want a specific ray?
-    bool        beam_cancelled;  // stop_attack_prompt() returned true
-    bool        dont_stop_player; // player answered self target prompt with 'y'
+    bool chose_ray = false;       // do we want a specific ray?
+    bool beam_cancelled = false;  // stop_attack_prompt() returned true
+    bool dont_stop_player = false; // player answered self target prompt with 'y'
 
-    int         bounces;         // # times beam bounced off walls
-    coord_def   bounce_pos;      // position of latest wall bounce,
-                                 // reset if a reflection happens
+    int       bounces = 0;        // # times beam bounced off walls
+    coord_def bounce_pos = {0,0}; // position of latest wall bounce,
+                                  // reset if a reflection happens
 
-    int         reflections;     // # times beam reflected off shields
-    mid_t       reflector;       // latest thing to reflect beam
+    int   reflections = 0;        // # times beam reflected off shields
+    mid_t reflector = MID_NOBODY; // latest thing to reflect beam
 
-    bool        use_target_as_pos; // pos() should return ::target()
-    bool        auto_hit;
+    bool use_target_as_pos = false; // pos() should return ::target()
+    bool auto_hit = false;
 
     ray_def     ray;             // shoot on this specific ray
 
@@ -150,15 +154,13 @@ struct bolt
 #endif
 
 private:
-    bool can_see_invis;
-    bool nightvision;
+    bool can_see_invis = false;
+    bool nightvision = false;
 
 public:
-    bolt();
-
     bool is_enchantment() const; // no block/dodge, use magic resist
     void set_target(const dist &targ);
-    void set_agent(actor *agent);
+    void set_agent(const actor *agent);
     void setup_retrace();
 
     // Returns YOU_KILL or MON_KILL, depending on the source of the beam.
@@ -337,4 +339,6 @@ void zappy(zap_type z_type, int power, bolt &pbolt);
 void bolt_parent_init(const bolt &parent, bolt &child);
 
 int explosion_noise(int rad);
+
+bool shoot_through_monster(const bolt& beam, const monster* victim);
 #endif

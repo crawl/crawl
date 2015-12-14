@@ -30,6 +30,7 @@ enum unrand_flag_type
     UNRAND_FLAG_NOGEN            = 0x80,
     UNRAND_FLAG_RANDAPP          =0x100,
     UNRAND_FLAG_UNIDED           =0x200,
+    UNRAND_FLAG_SKIP_EGO         =0x400,
     // Please make sure it fits in unrandart_entry.flags (currently 16 bits).
 };
 
@@ -83,6 +84,7 @@ unique_item_status_type get_unique_item_status(int unrand_index);
 void set_unique_item_status(const item_def& item,
                             unique_item_status_type status);
 
+string get_artefact_base_name(const item_def &item, bool terse = false);
 string get_artefact_name(const item_def &item, bool force_known = false);
 
 void set_artefact_name(item_def &item, const string &name);

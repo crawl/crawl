@@ -1,0 +1,237 @@
+# A shop (or perhaps really a series of shops) that sells items whose names all
+# start with the same letter. For alphabetizing purposes, any initial class
+# description such as "amulet/book/manual/pair/potion/ring/rod/scroll/staff/
+# wand of (the)" was ignored so the shops would have more variety between them.
+# Various items, such as carrion, hides, blessed weapons, and nonphysical decks,
+# aren't listed. Letters with less than five items don't get shops. Code exists
+# for shopless letters anyway, so there's less code editing needed if they get
+# new items at some point in the future.
+
+{{
+   function ownername(s)
+     -- The string.lower and .gsub calls are to crunch names with spaces down
+     -- into a single word. Otherwise it messes up the "KFEAT" shop line.
+     local name = s .. string.sub(string.lower(crawl.make_name()), 2)
+     return string.gsub( name, " ", "" )
+   end
+
+   function shopname(s)
+      -- Shop letters that have too few item types to generate still get names
+      -- on the off chance they do get five items someday.
+      -- X and Z are really hard letters to make shop names with, so it's
+      -- a good thing they'll probably be unused for a while.
+      local n
+      if     s == "A" then n = " type:Alliterative suffix:Accessories "
+      elseif s == "B" then n = " type:Bounteous suffix:Boutique "
+      elseif s == "C" then n = " type:Commerce suffix:Corner "
+      elseif s == "D" then n = " type:Desiderata suffix:Depot "
+      elseif s == "E" then n = " type:Eclectic suffix:Emporium "
+      elseif s == "F" then n = " type:Fabulous suffix:Fripperies "
+      elseif s == "G" then n = " type:Goods suffix:Gallery "
+      elseif s == "H" then n = " type:Humungous suffix:Hoard "
+      elseif s == "I" then n = " type:Incredible suffix:Inventory "
+      elseif s == "J" then n = " type:Jolly suffix:Junkyard "
+      elseif s == "K" then n = " type:Killer suffix:Kiosk "
+      elseif s == "L" then n = " type:Luxury suffix:Loot "
+      elseif s == "M" then n = " type:Merry suffix:Market "
+      elseif s == "N" then n = " type:Needful suffix:Niceties "
+      elseif s == "O" then n = " type:Offbeat suffix:Offerings "
+      elseif s == "P" then n = " type:Practical suffix:Paraphernalia "
+      elseif s == "Q" then n = " type:Quotidian suffix:Quintessences "
+      elseif s == "R" then n = " type:Retail suffix:Resort "
+      elseif s == "S" then n = " type:Superlative suffix:Supplies "
+      elseif s == "T" then n = " type:Tempting suffix:Trifles "
+      elseif s == "U" then n = " type:Unparalleled suffix:Utilities "
+      elseif s == "V" then n = " type:Vending suffix:Venue "
+      elseif s == "W" then n = " type:Whimsical suffix:Warehouse "
+      elseif s == "X" then n = " type:Xenial suffix:Xenodochy "
+      elseif s == "Y" then n = " type:Yearning suffix:Yield "
+      elseif s == "Z" then n = " type:Zaibatsu suffix:Zone "
+      end
+      return n
+   end
+
+   function shopcontents(s)
+      local i
+      if s == "A" then i = "akashic record | arbalest | book of alchemy | " ..
+       "book of air | manual of air magic | book of annihilations | arrow | " ..
+       "potion of agility | potion of ambrosia | scroll of acquirement q:1 | " ..
+       "scroll of amnesia | staff of air | manual of axes | manual of armour"
+
+      elseif s == "B" then i = "bardiche | battleaxe | beef jerky | " ..
+       "bolt | book of battle | book of beasts | book of burglary | " ..
+       "box of beasts | bread ration | broad axe | pair of boots | " ..
+       "potion of beneficial mutation q:1 | potion of berserk rage | blowgun | " ..
+       "potion of blood | potion of brilliance | scroll of blinking | " ..
+       "scroll of brand weapon | manual of bows | buckler"
+
+      elseif s == "C" then i = "amulet of clarity | book of callings | " ..
+       "book of cantrips | book of changes | book of conjurations | " ..
+       "centaur barding | chain mail | club | crystal ball of energy | " ..
+       "crystal plate armour | rod of clouds | wand of cold | " ..
+       "potion of cancellation | potion of cure mutation | " ..
+       "book of clouds | cloak | staff of cold | wand of confusion | " ..
+       "staff of conjuration | deck of changes | manual of crossbows | " ..
+       "manual of conjurations | manual of charms | potion of curing "
+
+      elseif s == "D" then i = "book of death | book of debilitation | " ..
+       "book of dreams | book of the dragon | dagger | deck of defence | " ..
+       "deck of destruction | demon blade | demon trident | demon whip | " ..
+       "dire flail | disc of storms | double sword | " ..
+       "potion of degeneration | ring of dexterity | rod of destruction | " ..
+       "staff of death | wand of digging | wand of disintegration | " ..
+       "wand of draining | manual of dodging"
+
+      elseif s == "E" then i = "book of enchantments | executioner's axe | " ..
+       "staff of earth | deck of escape | eveningstar | ring of evasion | " ..
+       "potion of experience q:1 | scroll of enchant armour | staff of energy | " ..
+       "wand of enslavement | book of envenomations | book of the earth | " ..
+       "scroll of enchant weapon | manual of earth magic | manual of evocations"
+
+      elseif s == "F" then i = "book of fire | book of flames | flail | " ..
+       "book of frost | falchion | fan of gales | fire dragon armour | " ..
+       "wand of fire | potion of flight | ring of fire | scroll of fear | " ..
+       "fen folio | ring of flight | scroll of fog | staff of fire | " ..
+       "wand of fireball | fruit | wand of flame | wand of frost | " ..
+       "manual of fighting | amulet of faith | manual of fire magic"
+
+      elseif s == "G" then i = "amulet of guardian spirit | giant club | " ..
+       "giant spiked club | amulet of the gourmand | book of geomancy | " ..
+       "glaive | gold dragon armour | grand grimoire | great mace | " ..
+       "greatsling | great sword | pair of gloves"
+
+      elseif s == "H" then i = "book of hinderance | halberd | " ..
+       "hand axe | hand crossbow | hunting sling | wand of hasting | " ..
+       "potion of heal wounds | potion of haste | scroll of holy word | " ..
+       "wand of heal wounds | manual of hexes | hat | helmet"
+
+      elseif s == "I" then i = "amulet of inaccuracy | ring of ice | " ..
+       "scroll of immolation | ice dragon armour | book of ice | iron rod | " ..
+       "rod of ignition | potion of invisibility | ring of intelligence | " ..
+       "ring of invisibility | scroll of identify | wand of invisibility | " ..
+       "rod of inaccuracy | manual of ice magic | manual of invocations "
+
+      elseif s == "J" then i = "javelin"
+
+      elseif s == "K" then i = "any"
+
+      elseif s == "L" then i = "lamp of fire | lantern of shadows | " ..
+       "large rock | large shield | leather armour | lightning rod | " ..
+       "long sword | potion of lignification | ring of loudness | " ..
+       "wand of lightning | manual of long blades | lajatang | longbow "
+
+      elseif s == "M" then i = "manual of maces & flails | meat ration | " ..
+       "book of minor magic | morningstar | mottled dragon armour | mace | " ..
+       "potion of magic | ring of magical power | potion of mutation | " ..
+       "potion of might | scroll of magic mapping | wand of magic darts | " ..
+       "book of maledictions"
+
+      elseif s == "N" then i = "book of necromancy | naga barding | " ..
+       "necronomicon | needle | scroll of noise | manual of necromancy"
+
+      elseif s == "O" then i = "any"
+
+      elseif s == "P" then i = "book of party tricks | book of power | " ..
+       "pearl dragon armour | phantom mirror | phial of floods | " ..
+       "plate armour | potion of poison | ring of poison resistance | " ..
+       "wand of polymorph | ring of positive energy | ring of protection | " ..
+       "manual of poison magic | staff of power | wand of paralysis | " ..
+       "ring of protection from fire | ring of protection from magic | " ..
+       "staff of poison | ring of protection from cold | " ..
+       "manual of polearms | slice of pizza"
+
+      elseif s == "Q" then i = "quarterstaff | quicksilver dragon armour | " ..
+       "quick blade"
+
+      elseif s == "R" then i = "amulet of rage | amulet of regeneration | " ..
+       "rapier | amulet of resist corrosion | amulet of resist mutation | " ..
+       "royal jelly | potion of resistance | scroll of recharging | robe | " ..
+       "ring mail | scroll of random uselessness | scroll of remove curse | " ..
+       "wand of random effects"
+
+      elseif s == "S" then i = "scimitar | amulet of stasis | short sword | " ..
+       "sling bullet | scale mail | book of summonings | book of the sky | " ..
+       "deck of summoning | potion of slowing | ring of see invisible | " ..
+       "ring of slaying | spear | ring of stealth | ring of strength | " ..
+       "rod of shadows | rod of the swarm | ring of sustain attributes | " ..
+       "sack of spiders | scroll of summoning | scythe | " ..
+       "book of spatial translocations | scroll of silence | shield | " ..
+       "shortbow | stone of tremors | wand of slowing | manual of staves | " ..
+       "steam dragon armour | shadow dragon armour | storm dragon armour | " ..
+       "swamp dragon armour | manual of short blades | staff of summoning | " ..
+       "manual of slings | manual of shields | manual of spellcasting | " ..
+       "manual of summonings | manual of stealth | stone "
+
+      elseif s == "T" then i = "book of the tempests | scroll of torment | " ..
+       "book of transfigurations | ring of teleportation | " ..
+       "scroll of teleportation | triple sword | triple crossbow | " ..
+       "troll leather armour | manual of throwing | " ..
+       "wand of teleportation | manual of translocations | " ..
+       "manual of transmutations | tomahawk | trident | throwing net "
+
+      elseif s == "U" then i = "book of unlife | manual of unarmed combat"
+
+      elseif s == "V" then i = "scroll of vulnerability"
+
+      elseif s == "W" then i = "ring of wizardry | book of the warp | " ..
+       "deck of war | deck of wonders | whip | amulet of warding | " ..
+       "staff of wizardry | war axe"
+
+      elseif s == "X" then i = "any"
+
+      elseif s == "Y" then i = "young poisoner's handbook"
+
+      elseif s == "Z" then i = "any"
+
+      else i = "any"
+
+      end
+
+      return i
+   end
+
+   -- Automatically determine which letters have sufficient variety for a shop,
+   -- and then pick one.
+   function pickletter()
+      local alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      for i=1, string.len(alphabet) do
+         local checkletter = string.sub(alphabet, i, i)
+         local _, itemcount = string.gsub(shopcontents(checkletter), "|", "|")
+         itemcount = itemcount + 1
+         if itemcount < 5 then
+            alphabet = string.gsub( alphabet, checkletter, "-" )
+         end
+      end
+      local options = string.gsub( alphabet, "-", "" )
+      local number = crawl.random2(string.len(options)) + 1
+      local letter = string.sub(options, number, number)
+      return letter
+   end
+}}
+
+NAME: nicolae_alphabet_shops
+TAGS: transparent allow_dup
+DEPTH: D:4-, Depths, Orc, Elf, Snake, Shoals
+WEIGHT: 5
+## We allow shop lists with no fewer than 5 item types, and place 8-15
+## items or place itemcount items, whichever is less, where itemcount is
+## the number of item types.
+{{
+local letter = pickletter()
+local _, itemcount = string.gsub(shopcontents(letter), "|", "|")
+itemcount = itemcount + 1;
+maxcount = math.min(15, itemcount + 2)
+-- random2 returns 0 for values <= 1
+local shopcount = 8 + crawl.random2(maxcount - 7)
+shopcount = math.min(itemcount, shopcount)
+tags("uniq_alphashops_" .. letter)
+kfeat("s = general shop name:" .. ownername(letter) .. shopname(letter) ..
+      " count:" .. shopcount .. " ; " .. shopcontents(letter))
+}}
+MAP
+ ...
+.....
+..s..
+.....
+ ...
+ENDMAP

@@ -75,7 +75,9 @@ enum hints_event_type
     HINT_GAINED_RANGED_SKILL,
     HINT_CHOOSE_STAT,
     HINT_MAKE_CHUNKS,
+#if TAG_MAJOR_VERSION == 34
     HINT_OFFER_CORPSE,
+#endif
     HINT_NEW_ABILITY_GOD,
     HINT_NEW_ABILITY_MUT,
     HINT_NEW_ABILITY_ITEM,
@@ -92,8 +94,8 @@ enum hints_event_type
     HINT_YOU_ENCHANTED,
 #if TAG_MAJOR_VERSION == 34
     HINT_CONTAMINATED_CHUNK,
-#endif
     HINT_YOU_SICK,
+#endif
     HINT_YOU_POISON,
     HINT_YOU_ROTTING,
     HINT_YOU_CURSED,
@@ -149,7 +151,7 @@ enum hints_event_type
 struct newgame_def;
 void init_hints();
 void tutorial_init_hints();
-void pick_hints(newgame_def* choice);
+void pick_hints(newgame_def& choice);
 void hints_load_game();
 
 void hints_starting_screen();
@@ -158,7 +160,7 @@ void print_hint(string key, const string arg1 = "", const string arg2 = "");
 void hints_death_screen();
 void hints_finished();
 
-void hints_dissection_reminder(bool healthy);
+void hints_dissection_reminder();
 void hints_healing_check();
 
 void taken_new_item(object_class_type item_type);

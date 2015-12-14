@@ -2,7 +2,6 @@
 #define SPL_SUMMONING_H
 
 #include "beam.h"
-#include "data-index.h"
 #include "enum.h"
 #include "itemprop-enum.h"
 #include "spl-cast.h"
@@ -19,18 +18,16 @@
 #define SW_TARGET_MID "sw_target_mid"
 #define SW_READIED "sw_readied"
 #define SW_TRACKING "sw_tracking"
-#define GA_TARGET_MID "ga_target_mid"
-#define GA_MELEE "ga_melee"
-#define GA_SPELL "ga_spell"
 
 spret_type cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD,
                                    bool fail = false);
 spret_type cast_summon_small_mammal(int pow, god_type god, bool fail);
 
-bool item_is_snakable(const item_def& item);
 spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail);
 
+monster_type pick_swarmer();
 spret_type cast_summon_swarm(int pow, god_type god, bool fail);
+
 spret_type cast_call_canine_familiar(int pow, god_type god, bool fail);
 spret_type cast_summon_ice_beast(int pow, god_type god, bool fail);
 spret_type cast_monstrous_menagerie(actor* caster, int pow, god_type god,
@@ -44,14 +41,14 @@ bool summon_berserker(int pow, actor *caster,
                       monster_type override_mons = MONS_PROGRAM_BUG);
 bool summon_holy_warrior(int pow, bool punish);
 
-bool tukima_affects(const monster *mon);
-void cast_tukimas_dance(int pow, actor *target, bool force_friendly = false);
+bool tukima_affects(const actor &target);
+void cast_tukimas_dance(int pow, actor *target);
 spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail);
 spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type god, bool fail);
 
 spret_type cast_call_imp(int pow, god_type god, bool fail);
 bool summon_demon_type(monster_type mon, int pow, god_type god = GOD_NO_GOD,
-                       int spell = 0);
+                       int spell = 0, bool friendly = true);
 spret_type cast_summon_demon(int pow, god_type god = GOD_NO_GOD,
                              bool fail = false);
 spret_type cast_summon_greater_demon(int pow, god_type god, bool fail);
@@ -73,8 +70,6 @@ void do_dragon_call(int time);
 void init_servitor(monster* servitor, actor* caster);
 spret_type cast_spellforged_servitor(int pow, god_type god, bool fail);
 
-spret_type cast_forceful_dismissal(int pow, bool fail);
-
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, unsigned short hitting,
                     actor *as = nullptr, string nas = "",
@@ -94,9 +89,9 @@ bool monster_simulacrum(monster *caster, bool actual);
 bool twisted_resurrection(actor *caster, int pow, beh_type beha,
                           unsigned short foe, god_type god, bool actual = true);
 
+monster_type pick_random_wraith();
 spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail);
 
-spret_type cast_abjuration(int pow, const coord_def& where, bool fail = false);
 spret_type cast_aura_of_abjuration(int pow, bool fail = false);
 void do_aura_of_abjuration(int delay);
 
@@ -120,38 +115,10 @@ bool trigger_spectral_weapon(actor* agent, const actor* target);
 bool confirm_attack_spectral_weapon(monster* mons, const actor *defender);
 void reset_spectral_weapon(monster* mons);
 
-void grand_avatar_reset(monster* mons);
-bool grand_avatar_check_melee(monster* mons, actor* target);
-void end_grand_avatar(monster* mons, bool killed);
-void trigger_grand_avatar(monster* mons, const actor* victim, spell_type spell,
-                          const int old_hp);
-
 void summoned_monster(const monster* mons, const actor* caster,
                       spell_type spell);
 bool summons_are_capped(spell_type spell);
 int summons_limit(spell_type spell);
 int count_summons(const actor *summoner, spell_type spell);
-void summon_twister(int power_level);
-
-struct summons_desc // : public data_index_entry<spell_type>
-{
-    // XXX: Assumes that all summons types from each spell are equal,
-    // this is probably fine for now, but will need thought if a spell
-    // needs to have two separate caps
-    spell_type which;
-    int type_cap;               // Maximum number for this type
-    int timeout;                // Timeout length for replaced summons
-};
-
-class summons_index : public data_index<spell_type, summons_desc, NUM_SPELLS>
-{
-public:
-    summons_index(const summons_desc* _pop)
-        : data_index<spell_type, summons_desc, NUM_SPELLS>(_pop)
-    {};
-
-protected:
-    spell_type map(const summons_desc* val);
-};
 
 #endif

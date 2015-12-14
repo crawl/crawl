@@ -54,9 +54,9 @@
   My changes (1KB):
 
   * the cell pulled is always taken from the top 125 entries rather than
-    from cube_root(store size).  This doesn't seem to make a large
+    from cube_root(store size). This doesn't seem to make a large
     difference compared to just bumping the number, but I might have not
-    looked well enough.  This makes it simple to customize this number
+    looked well enough. This makes it simple to customize this number
     ("top"), but that can be easily done other ways.
 
   * order of adding neighbours to the store is always randomized, otherwise
@@ -67,7 +67,7 @@
     instead of shuffling the top cell into the removed one's place. This
     makes theoretical analysis of the algorithm simpler and makes
     meandering slightly more pronounced, at the cost of performance and
-    some randomness.  I guess that's a bad idea after all...
+    some randomness. I guess that's a bad idea after all...
 */
 
 typedef deque<coord_def> store_type;

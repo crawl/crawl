@@ -3,7 +3,7 @@
 # alias ev=~/crawl/crawl-ref/source/util/edit_vault
 #
 # You need to define $EDITOR as well; on Debian there's some weak-ass
-# autodetection but that's unlikely to match _your_ preferences.  And it
+# autodetection but that's unlikely to match _your_ preferences. And it
 # may start something as vile as vi.
 
 

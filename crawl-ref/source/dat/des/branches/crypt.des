@@ -91,8 +91,8 @@ function crypt_loot_plus(e)
           "demon blade unrand:bloodbane / demon blade unrand:leech / " ..
           "double sword unrand:sword_of_zonguldrok / " ..
           "scythe unrand:finisher / scythe unrand:scythe_of_curses / " ..
-          "spear unrand:spear_of_the_botono / quarterstaff unrand:majin-bo / " ..
-          "mace unrand:sceptre_of_torment / great mace unrand:undeadhunter")
+          "quarterstaff unrand:majin-bo / mace unrand:sceptre_of_torment / " ..
+          "great mace unrand:undeadhunter")
   e.kitem("i = necronomicon / " .. book .. "necromutation / " ..
           book .. "death's_door / " .. book .. "haunt / " ..
           book .. "borgnjor's_revivification")
@@ -102,30 +102,9 @@ function crypt_loot_plus(e)
           "staff of death / staff of power / staff of wizardry / " ..
           "any magical staff w:5")
   e.subst("d = d:20 ef g:20")
-  e.subst("h = hij")
+  e.subst("h = h:5 ij")
 end
 }}
-
-
-NAME: crypt_curse_skull
-TAGS: allow_dup luniq extra
-DEPTH: Crypt
-CHANCE: 3333
-KMONS: 1 = curse skull
-KITEM: 1 = *, %, % / $, % / nothing, % / nothing
-MAP
-1
-ENDMAP
-
-NAME: crypt_curse_skull_rare
-TAGS: allow_dup luniq extra
-DEPTH: Crypt
-CHANCE: 1429
-KMONS: 1 = curse skull
-KITEM: 1 = *, %, % / $, % / nothing, % / nothing
-MAP
-1
-ENDMAP
 
 ##############################################################################
 # Crypt entry vaults
@@ -342,7 +321,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    blue_anna_dwarven_crypt
-MONS:    death knight / unborn w:5
+MONS:    death knight
 MONS:    shadow wraith / wraith / wight w:5
 : crypt_entry(_G)
 MAP
@@ -437,7 +416,7 @@ SUBST:  HI = G
                                 veto_shatter="veto"})
   set_feature_name("granite_statue", "sarcophagus")
 }}
-KFEAT:  G = granite_statue no_mimic
+KFEAT:  G = granite_statue
 SUBST:  J = V
 SUBST:  C = c
 MAP
@@ -1052,10 +1031,10 @@ NSUBST:  2 = 3:2 / *:3
 FTILE:   _567$*|+ = floor_tomb
 TILE:    t = dngn_tree_dead
 MONS:    flayed ghost / phantasmal warrior
-MONS:    vampire mage / vampire knight / death knight
+MONS:    vampire mage / vampire knight
 MONS:    jiangshi / eidolon / shadow wraith / freezing wraith
 MONS:    ancient champion / w:20 ghoul
-MONS:    w:20 unborn / w:20 bone dragon / revenant
+MONS:    w:20 death knight / w:20 bone dragon / revenant
 MONS:    profane servitor
 KFEAT:   7 = altar_yredelemnul
 KFEAT:   O = granite_statue
@@ -1102,7 +1081,7 @@ MONS:    necromancer / vampire w:6 / soul eater w:2
 MONS:    vampire mage / deep elf death mage, lich / reaper w:2
 MONS:    shadow wraith / phantasmal warrior / ghost crab w:4
 KMONS:   8 = eidolon / flayed ghost
-KMONS:   9 = revenant / unborn
+KMONS:   9 = revenant
 KMONS:   A = guardian mummy w:7 / ushabti w:3 / \
              skeleton w:8 / flying skull band w:6
 KMONS:   B = ancient champion
@@ -1206,6 +1185,78 @@ cc.4.cAc...cV...
           cccc
 ENDMAP
 
+NAME: nicolae_crypt_statuary_hall
+DEPTH: Crypt, !Crypt:1, !Crypt:$
+TAGS: decor transparent
+SHUFFLE: {[(, }])
+MAP
+      x@x
+      x.x
+      x.x
+   xxxx.xxxx
+   x..G.G..x
+   x..x.x..x
+xxxx..G.G..xxxx
+@....{x.x}....@
+xxxx..G.G..xxxx
+   x..x.x..x
+   x..G.G..x
+   xxxx.xxxx
+      x.x
+      x.x
+      x@x
+ENDMAP
+
+
+NAME: nicolae_crypt_cryptocurrency
+DEPTH: Crypt
+TAGS: extra decor no_item_gen no_trap_gen no_monster_gen
+KPROP: $-c = no_tele_into
+KMASK: .@ = !opaque
+KITEM: $ = $ / $ good_item w:3
+KFEAT: m = iron_grate
+MAP
+xxxxxxxxx
+xxxcccxxx@
+xxcc$ccxx.x
+xcc---ccx.x
+xc$-c--m..x
+xcc---ccx.x
+xxcc$ccxx.x
+xxxcccxxx@
+xxxxxxxxx
+ENDMAP
+
+
+NAME: nicolae_crypt_little_mausoleum
+DEPTH: Crypt
+TAGS: transparent allow_dup
+SHUFFLE: ab/ab/ab/ab/ba
+SUBST: b = ., G : G:60 xV0 .:5 t:2 P:2, a = sGVe0 _:5 $:5 %:5
+: if you.depth() == 1 then
+SUBST: s = ]})>
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST: s = [{(<
+: else
+SUBST: s = ]})>[{(<
+: end
+KFEAT: _ = altar_kikubaaqudgha w:15 / altar_yredelemnul w:15 / \
+           altar_dithmenos w:5 / altar_the_shining_one w:1
+KMONS: 0 = zombie / skeleton
+KMONS: P = w:2 col:darkgrey plant name:withered name_adjective \
+           tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
+           name_adjective tile:mons_withered_plant
+: dgn.delayed_decay(_G, 'e', 'human skeleton / orc skeleton / elf skeleton')
+TILE: t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+MAP
+xxxxx
+xbabx
+x...x
+xx.xx
+Gx+xG
+.....
+ENDMAP
 
 ##############################################################################
 # Crypt ends
@@ -1256,7 +1307,7 @@ KMONS:  7 = vampire / skeletal warrior / w:15 zombie / wraith / w:5 nothing
 # ghost layout
 : elseif brnd > 0 then
 MONS:   curse skull
-MONS:   revenant / unborn w:1
+MONS:   revenant
 MONS:   lich
 MONS:   eidolon / flayed ghost
 MONS:   phantasmal warrior / shadow wraith w:6
@@ -1347,7 +1398,7 @@ KMONS:  z = skeletal warrior
 KMONS:  N = necromancer
 KMONS:  H = hell knight
 KMONS:  M = zombie / skeleton / w:5 necrophage
-KMONS:  h = titan zombie / fire dragon zombie / golden dragon zombie / ghoul
+KMONS:  Q = titan zombie / fire dragon zombie / golden dragon zombie / ghoul
 KMONS:  0 = lost soul / nothing
 # red metal walls
 COLOUR: = = red
@@ -1383,9 +1434,9 @@ vwwwwwwwwwwwwwwv.........r//||//r.........vAAAAAAwwwwwwwwv
 vwwwwwwvvvv?vvvv......rr=rr*/O*rr=rr......v?v?v?v?vwwwwwwv
 vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
 vwwwwww?....H..v.....rrrrOr$$$$rOrrrr.....v.......?wwwwwwv
-vwwwwwwv....H..+........rrr$$$$rrr........+.h..H..vwwwwwwv
+vwwwwwwv....H..+........rrr$$$$rrr........+.Q..H..vwwwwwwv
 vwwwwww?....H..v......L...r$$$$r...L......v....H..?wwwwwwv
-vwwwwwwv.h.vvvvv...rrr....rr++rr....rrr...v....H..vwwwwwwv
+vwwwwwwv.Q.vvvvv...rrr....rr++rr....rrr...v....H..vwwwwwwv
 vwwwwww?...v...vv....rr.rrrU..Urrr.rr....vvv+v....?wwwwwwv
 vwwwwwwv...v.X..vv....rrr........rrr....vv...vvvvvvwwwwwwv
 vwwwwwwv...+.....vv....r.U..BC..U.r....vvvv.....+Mvwwwwwwv
@@ -1548,7 +1599,6 @@ KMONS:  t = w:20 hell knight / smoke demon / red devil
 KMONS:  X = w:1 curse skull / w:19 hell knight
 : end
 ####### Randomisation of doors
-SUBST:  K : Kvvv
 NSUBST: K = 1:+ / *:v
 NSUBST: ' = 1:+ / *:v
 NSUBST: " = 1:+ / *:v
@@ -1666,9 +1716,9 @@ KFEAT:  m = iron_grate
 KFEAT:  > = enter_tomb
 MONS:   w:3 patrolling lich / w:1 patrolling revenant
 MONS:   patrolling zombie / nothing
-MONS:   spider / jumping spider / wolf spider / redback / w:25 nothing
+MONS:   jumping spider / wolf spider / redback / w:19 nothing
 MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 nothing
-MONS:   raven skeleton / w:30 nothing
+MONS:   wyvern skeleton / w:30 nothing
 MONS:   w:2 ushabti / w:3 guardian mummy / w:2 mummy
 MONS:   w:5 patrolling mummy priest / w:1 patrolling greater mummy
 KMONS:  z = patrolling curse skull
@@ -1677,13 +1727,13 @@ SHUFFLE: 9H
 # Temple of yred
 KFEAT: _ = altar_yredelemnul
 KMONS:  9 = patrolling profane servitor
-KMONS:  H = w:20 patrolling unborn / patrolling profane servitor
+KMONS:  H = w:20 patrolling death knight / patrolling profane servitor
 KMONS:  0 = patrolling ghoul
 KMONS:  A = patrolling death knight
 KMONS:  B = skeletal warrior
 KMONS:  C = necrophage
 KMONS:  E = phantasmal warrior / w:4 flayed ghost / w:1 phantom / w:1 shadow / nothing
-KMONS:  F = patrolling bone dragon / patrolling unborn
+KMONS:  F = patrolling bone dragon
 : else
 # Temple of kiku - more necromancers, more demonic (kiku's description refers to
 # him/her/it being demonic). Not as much undead in this set.
@@ -1828,7 +1878,7 @@ KMONS:  6 = generate_awake vampire mage
 : elseif brnd > 2 then
 MONS:   patrolling freezing wraith / patrolling spectral thing w:8
 MONS:   revenant
-MONS:   eidolon / unborn w:6
+MONS:   eidolon
 MONS:   flayed ghost / phantasmal warrior
 MONS:   spectral thing / simulacrum / shadow w:5 / wraith w:5 / shadow wraith / \
         spectral storm dragon w:5 / spectral ice dragon w:5 / \
@@ -1910,7 +1960,7 @@ KMONS:   5 = necromancer
 KMONS:   6 = simulacrum / spectral thing / zombie w:5 / skeleton w:5 / \
              hell knight w:5
 KMONS:   7 = death knight
-KMONS:   8 = death cob / skeletal warrior
+KMONS:   8 = vampire knight w:5 / skeletal warrior
 KMONS:   9 = ancient champion
 KMONS:   0 = skeletal warrior
 
@@ -1920,7 +1970,7 @@ KMONS:   C = revenant
 KMONS:   BD = freezing wraith / shadow wraith / wraith
 KMONS:   E = deep elf death mage
 KMONS:   F = lost soul / small abomination / large abomination w:2
-KMONS:   H = unborn
+KMONS:   H = death knight
 KMONS:   I = death knight w:5 / nothing
 KMONS:   J = profane servitor
 KMONS:   L = bone dragon

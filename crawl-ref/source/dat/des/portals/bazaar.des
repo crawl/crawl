@@ -98,7 +98,7 @@ default-depth: D:11-, Depths, Orc:$, Elf, Snake, Shoals, Vaults:1-4
 # and resides in des/builder/shops.des.
 
 NAME:   bzr_entry_dummy
-TAGS:   transparent zotdef_bazaar allow_dup
+TAGS:   transparent allow_dup
 veto {{ return you.is_level_on_stack("Bazaar") }}
 : place_bazaar_portal(_G)
 MAP
@@ -199,7 +199,7 @@ ENDMAP
 
 # Bazaar entry with statue (Lemuel)
 NAME:   statue_bzr
-KPROP:  O = no_rtele_into
+KPROP:  O = no_tele_into
 SUBST:  G = G111
 MONS:   orange crystal statue / obsidian statue / ice statue
 : place_bazaar_portal(_G, true)
@@ -218,9 +218,9 @@ MARKER: W = lua:fog_machine { cloud_type = "freezing vapour", \
 : place_bazaar_portal(_G)
 MAP
   W
- www
-WwOwW
- www
+ WWW
+WWOWW
+ WWW
   W
 ENDMAP
 
@@ -267,7 +267,7 @@ COLOUR:  . = magenta
 FTILE:   b.O = floor_crystal_squares
 RTILE:   b = dngn_crystal_lightmagenta
 : place_bazaar_portal(_G)
-: set_feature_name("green_crystal_wall", "wall of crystal")
+: set_feature_name("crystal_wall", "wall of crystal")
 MAP
 bb@bb
 b...b
@@ -767,8 +767,8 @@ WEIGHT:  5
 ORIENT:  encompass
 KFEAT:   A = gadget shop
 KFEAT:   B = distillery shop
-ITEM:    any wand, ring of flight
-SHUFFLE: leAB/wdBA
+ITEM:    ring of flight ident:type
+SHUFFLE: lAB/wBA
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
 : lfloorcol(colour)
@@ -801,7 +801,7 @@ x..............lll..............x
 xxxxx.......................xxxxx
 x...x.......................x...x
 x.B.+.......................+.B.x
-x...x..........<e>..........x...x
+x...x..........<d>..........x...x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -1714,13 +1714,13 @@ xxxxxxxx'''...'''xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   bazaar_minmay_oklob
+NAME:   bazaar_minmay_noklob
 TAGS:   no_rotate
 WEIGHT: 1
 ORIENT: encompass
 KFEAT:  ! = any shop
-SUBST:  . = 2 .:200, ' = ., 3 = 2.
-MONS:   oklob plant, plant
+SUBST:  . = 1 .:200, ' = ., 2 = 1.
+MONS:   plant
 :       bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1732,14 +1732,14 @@ xxx'<''+.....'.....+''>'xxx
 xxx'''xxx....'....xxx'''xxx
 xxxxxxxxx....'....xxxxxxxxx
 xxxxxxxxx....'....xxxxxxxxx
-xxxxxxxxt....'....txxxxxxxx
-xxxxx222t....'....t222xxxxx
-xxxx1222t....'....t2221xxxx
-xxxxx222t....'....t222xxxxx
-xxxxxxxxt....'....txxxxxxxx
+xxxxxxxxx....'....xxxxxxxxx
+xxxxxxxxx....'....xxxxxxxxx
+xxxxxxxxx....'....xxxxxxxxx
+xxxxxxxxx....'....xxxxxxxxx
+xxxxxxxxx....'....xxxxxxxxx
 xxxxxxxxx....'....xxxxxxxxx
 xxx'''xxx....'....xxx'''xxx
-xxx'!''+3....'....3+''!'xxx
+xxx'!''+2....'....2+''!'xxx
 xxx'''xxx....'....xxx'''xxx
 xxxxxxxxx....'....xxxxxxxxx
 xxxxxxxxx.!..>..!.xxxxxxxxx

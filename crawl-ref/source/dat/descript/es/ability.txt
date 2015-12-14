@@ -121,14 +121,6 @@ Evoke Fog ability
 
 Expulsa una densa nube de humo para dificultar la visión.
 %%%%
-Evoke Teleport Control ability
-
-Obtienes la habilidad de controlar tu siguiente translocación - o bien
-seleccionas un objetivo próximo para teleportarte, o seleccionando una
-dirección para el salto. Ten en cuenta que controlar translocaciones causará
-que el sujeto quede contaminado con energía mágica y las teleportaciones
-controladas llevan más tiempo que las que no se controlan
-%%%%
 End Transformation ability
 
 Recuperas tu forma normal, tras un leve retardo.

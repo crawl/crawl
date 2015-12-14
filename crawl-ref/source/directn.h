@@ -120,6 +120,7 @@ public:
 
 private:
     bool targets_objects() const;
+    bool targets_enemies() const;
     bool choose_compass();      // Used when we only need to choose a direction
 
     bool do_main_loop();
@@ -301,13 +302,13 @@ string get_monster_equipment_desc(const monster_info& mi,
 
 string feature_description_at(const coord_def& where, bool covering = false,
                               description_level_type dtype = DESC_A,
-                              bool add_stop = true, bool base_desc = false);
+                              bool add_stop = true);
 string raw_feature_description(const coord_def& where);
 string feature_description(dungeon_feature_type grid,
                            trap_type trap = NUM_TRAPS,
                            const string & cover_desc = "",
                            description_level_type dtype = DESC_A,
-                           bool add_stop = true, bool base_desc = false);
+                           bool add_stop = true);
 
 vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 

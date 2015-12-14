@@ -26,8 +26,8 @@
 #include "misc.h"
 #include "notes.h"
 #include "options.h"
+#include "random.h"
 #include "religion.h"
-#include "random-weight.h"
 #include "shopping.h"
 #include "skills.h"
 #include "stringutil.h"
@@ -39,18 +39,27 @@ static iflags_t _full_ident_mask(const item_def& item);
 // XXX: Name strings in most of the following are currently unused!
 struct armour_def
 {
+    /// The armour_type enum of this armour type.
     armour_type         id;
+    /// The name of the armour. (E.g. "robe".)
     const char         *name;
+    /// The base AC value provided by the armour, before skill & enchant.
     int                 ac;
+    /// The base EV penalty of the armour; used for EV, stealth, spell %, &c.
     int                 ev;
 
+    /// The slot the armour is equipped into; e.g. EQ_BOOTS.
     equipment_type      slot;
+    /// The smallest size creature the armour will fit.
     size_type           fit_min;
+    /// The largest size creature the armour will fit.
     size_type           fit_max;
     /// Whether this armour is mundane or inherently 'special', for acq.
-    bool                mundane;
+    bool                mundane; // (special armour doesn't need egos etc)
     /// The resists, vulns, &c that this armour type gives when worn.
     armflags_t          flags;
+    /// Used in body armour 'acquirement' code; higher = generated more.
+    int                 acquire_weight;
 };
 
 // Note: the Little-Giant range is used to make armours which are very
@@ -60,44 +69,44 @@ static int Armour_index[NUM_ARMOURS];
 static const armour_def Armour_prop[] =
 {
     { ARM_ANIMAL_SKIN,          "animal skin",            2,   0,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true, ARMF_NO_FLAGS, 333 },
     { ARM_ROBE,                 "robe",                   2,   0,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_BIG, true },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_BIG, true, ARMF_NO_FLAGS, 1000 },
     { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -40,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
 
     { ARM_RING_MAIL,            "ring mail",              5,  -70,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
     { ARM_SCALE_MAIL,           "scale mail",             6, -100,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
     { ARM_CHAIN_MAIL,           "chain mail",             8, -150,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -180,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true },
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
     { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -230,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false },
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false, ARMF_NO_FLAGS, 500 },
 
-#define HIDE_ARMOUR(aenum, aname, aac, aevp, henum, hname, res) \
-    { henum, hname, (aac)/2, aevp,                              \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res },    \
-    { aenum, aname, aac, aevp,                                  \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res }
+#define HIDE_ARMOUR(aenum, aname, aac, aevp, henum, hname, res, weight) \
+    { henum, hname, (aac)/2, aevp,                                      \
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 0 },         \
+    { aenum, aname, aac, aevp,                                          \
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, weight }
 
 #define DRAGON_ARMOUR(id, name, ac, evp, res) \
     HIDE_ARMOUR(ARM_ ## id ## _DRAGON_ARMOUR, name " dragon armour", ac, evp, \
-                ARM_ ## id ## _DRAGON_HIDE, name " dragon hide", res)
+                ARM_ ## id ## _DRAGON_HIDE, name " dragon hide", res, 25)
 
     HIDE_ARMOUR(
       ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",   4,  -40,
       ARM_TROLL_HIDE,           "troll hide",
-        ARMF_REGENERATION
+        ARMF_REGENERATION, 50
     ),
 
     DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,
         ARMF_RES_STEAM),
     DRAGON_ARMOUR(MOTTLED,     "mottled",                 6,  -50,
         ARMF_RES_STICKY_FLAME),
-    DRAGON_ARMOUR(QUICKSILVER, "quicksilver",            10,  -70,
+    DRAGON_ARMOUR(QUICKSILVER, "quicksilver",             9,  -70,
         ARMF_RES_MAGIC),
     DRAGON_ARMOUR(SWAMP,       "swamp",                   7,  -70,
         ARMF_RES_POISON),
@@ -131,7 +140,7 @@ static const armour_def Armour_prop[] =
 #endif
 
     { ARM_HAT,                  "hat",                    0,   0,
-        EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE, true },
+        EQ_HELMET,      SIZE_TINY, SIZE_LARGE, true },
 
     // Note that barding size is compared against torso so it currently
     // needs to fit medium, but that doesn't matter as much as race
@@ -322,9 +331,11 @@ static const weapon_def Weapon_prop[] =
             { SPWPN_DISTORTION,     2 },
             { SPWPN_ANTIMAGIC,      1 },
         }},
+#if TAG_MAJOR_VERSION == 34
     { WPN_HAMMER,            "hammer",              7,  3, 13,  7,
         SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 0, 0, M_AND_F_BRANDS },
+#endif
     { WPN_MACE,              "mace",                8,  3, 14,  8,
         SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 9, 10, M_AND_F_BRANDS },
@@ -375,10 +386,10 @@ static const weapon_def Weapon_prop[] =
     { WPN_GREAT_MACE,        "great mace",         17, -4, 17,  9,
         SK_MACES_FLAILS, SIZE_MEDIUM,  SIZE_BIG,    MI_NONE,
         DAMV_CRUSHING, 3, 10, M_AND_F_BRANDS },
-    { WPN_GIANT_CLUB,        "giant club",         20, -6, 17, 10,
+    { WPN_GIANT_CLUB,        "giant club",         20, -6, 16, 10,
         SK_MACES_FLAILS, SIZE_LARGE, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CRUSHING, 1, 10, {} },
-    { WPN_GIANT_SPIKED_CLUB, "giant spiked club",  22, -7, 18, 10,
+    { WPN_GIANT_SPIKED_CLUB, "giant spiked club",  22, -7, 19, 10,
         SK_MACES_FLAILS, SIZE_LARGE, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CRUSHING | DAM_PIERCE, 1, 10, {} },
 
@@ -597,7 +608,7 @@ static const missile_def Missile_prop[] =
     { MI_STONE,         "stone",         2, 8,  true  },
     { MI_ARROW,         "arrow",         0, 8,  false },
     { MI_BOLT,          "bolt",          0, 8,  false },
-    { MI_LARGE_ROCK,    "large rock",   20, 30, true  },
+    { MI_LARGE_ROCK,    "large rock",   20, 25, true  },
     { MI_SLING_BULLET,  "sling bullet",  4, 8,  false },
     { MI_JAVELIN,       "javelin",      10, 20, true  },
     { MI_THROWING_NET,  "throwing net",  0, 0,  true  },
@@ -659,19 +670,54 @@ void init_properties()
     COMPILE_CHECK(NUM_MISSILES == ARRAYSZ(Missile_prop));
     COMPILE_CHECK(NUM_FOODS    == ARRAYSZ(Food_prop));
 
-    int i;
-
-    for (i = 0; i < NUM_ARMOURS; i++)
+    for (int i = 0; i < NUM_ARMOURS; i++)
         Armour_index[ Armour_prop[i].id ] = i;
 
-    for (i = 0; i < NUM_WEAPONS; i++)
+    for (int i = 0; i < NUM_WEAPONS; i++)
         Weapon_index[ Weapon_prop[i].id ] = i;
 
-    for (i = 0; i < NUM_MISSILES; i++)
+    for (int i = 0; i < NUM_MISSILES; i++)
         Missile_index[ Missile_prop[i].id ] = i;
 
-    for (i = 0; i < NUM_FOODS; i++)
+    for (int i = 0; i < NUM_FOODS; i++)
         Food_index[ Food_prop[i].id ] = i;
+}
+
+const set<pair<object_class_type, int> > removed_items =
+{
+#if TAG_MAJOR_VERSION == 34
+    { OBJ_JEWELLERY, AMU_CONTROLLED_FLIGHT },
+    { OBJ_JEWELLERY, AMU_CONSERVATION },
+    { OBJ_JEWELLERY, RING_REGENERATION },
+    { OBJ_JEWELLERY, RING_TELEPORT_CONTROL },
+    { OBJ_STAVES,    STAFF_ENCHANTMENT },
+    { OBJ_STAVES,    STAFF_CHANNELING },
+    { OBJ_POTIONS,   POT_GAIN_STRENGTH },
+    { OBJ_POTIONS,   POT_GAIN_DEXTERITY },
+    { OBJ_POTIONS,   POT_GAIN_INTELLIGENCE },
+    { OBJ_POTIONS,   POT_WATER },
+    { OBJ_POTIONS,   POT_STRONG_POISON },
+    { OBJ_POTIONS,   POT_BLOOD_COAGULATED },
+    { OBJ_POTIONS,   POT_PORRIDGE },
+    { OBJ_POTIONS,   POT_SLOWING },
+    { OBJ_POTIONS,   POT_DECAY },
+    { OBJ_POTIONS,   POT_RESTORE_ABILITIES },
+    { OBJ_BOOKS,     BOOK_WIZARDRY },
+    { OBJ_BOOKS,     BOOK_CONTROL },
+    { OBJ_BOOKS,     BOOK_BUGGY_DESTRUCTION },
+    { OBJ_RODS,      ROD_VENOM },
+    { OBJ_RODS,      ROD_WARDING },
+    { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
+    { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
+#endif
+    // Outside the #if because we probably won't remove these.
+    { OBJ_RUNES,     RUNE_ELF },
+    { OBJ_RUNES,     RUNE_FOREST },
+};
+
+bool item_type_removed(object_class_type base, int subtype)
+{
+    return removed_items.count({ base, subtype }) != 0;
 }
 
 // Some convenient functions to hide the bit operations and create
@@ -699,22 +745,22 @@ bool curse_an_item(bool ignore_holy_wrath)
     }
 
     int count = 0;
-    int item  = ENDOFPACK;
+    item_def *found = nullptr;
 
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (auto &item : you.inv)
     {
-        if (!you.inv[i].defined())
+        if (!item.defined())
             continue;
 
-        if (is_weapon(you.inv[i])
-            || you.inv[i].base_type == OBJ_ARMOUR
-            || you.inv[i].base_type == OBJ_JEWELLERY)
+        if (is_weapon(item)
+            || item.base_type == OBJ_ARMOUR
+            || item.base_type == OBJ_JEWELLERY)
         {
-            if (you.inv[i].cursed())
+            if (item.cursed())
                 continue;
 
-            if (ignore_holy_wrath && you.inv[i].base_type == OBJ_WEAPONS
-                && get_weapon_brand(you.inv[i]) == SPWPN_HOLY_WRATH)
+            if (ignore_holy_wrath && item.base_type == OBJ_WEAPONS
+                && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
             {
                 continue;
             }
@@ -722,17 +768,24 @@ bool curse_an_item(bool ignore_holy_wrath)
             // Item is valid for cursing, so we'll give it a chance.
             count++;
             if (one_chance_in(count))
-                item = i;
+                found = &item;
         }
     }
 
     // Any item to curse?
-    if (item == ENDOFPACK)
+    if (!found)
         return false;
 
-    do_curse_item(you.inv[item], false);
+    do_curse_item(*found, false);
 
     return true;
+}
+
+void auto_id_inventory()
+{
+    for (auto &item : you.inv)
+        if (item.defined())
+            god_id_item(item, false);
 }
 
 void do_curse_item(item_def &item, bool quiet)
@@ -790,15 +843,7 @@ void do_curse_item(item_def &item, bool quiet)
         {
             amusement *= 2;
 
-            // Cursed cloaks prevent you from removing body armour,
-            // gloves from switching rings.
-            if (item.base_type == OBJ_ARMOUR
-                && (get_armour_slot(item) == EQ_CLOAK
-                    || get_armour_slot(item) == EQ_GLOVES))
-            {
-                amusement *= 2;
-            }
-            else if (you.equip[EQ_WEAPON] == item.link)
+            if (you.equip[EQ_WEAPON] == item.link)
             {
                 // Redraw the weapon.
                 you.wield_change = true;
@@ -911,7 +956,7 @@ static bool _is_affordable(const item_def &item)
     if (item.flags & ISFLAG_UNOBTAINABLE)
         return false;
 
-    // On the ground or a monster has it.  Violence is the answer.
+    // On the ground or a monster has it. Violence is the answer.
     return true;
 }
 
@@ -941,12 +986,12 @@ void set_ident_flags(item_def &item, iflags_t flags)
     if (fully_identified(item))
     {
         if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID)
-            && get_ident_type(item) != ID_KNOWN_TYPE
+            && !get_ident_type(item)
             && is_interesting_item(item))
         {
             // Make a note of it.
-            take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A).c_str(),
-                           origin_desc(item).c_str()));
+            take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A),
+                           origin_desc(item)));
 
             // Sometimes (e.g. shops) you can ID an item before you get it;
             // don't note twice in those cases.
@@ -984,6 +1029,7 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_CORPSES:
     case OBJ_MISSILES:
     case OBJ_ORBS:
+    case OBJ_RUNES:
         flagset = 0;
         break;
     case OBJ_BOOKS:
@@ -1360,6 +1406,19 @@ bool armour_is_special(const item_def &item)
     return !Armour_prop[ Armour_index[item.sub_type] ].mundane;
 }
 
+/**
+ * What weight does this armour type have for acquirement? (Higher = appears
+ * more often.)
+ *
+ * @param arm   The armour item in question.
+ * @return      The base weight the armour should have in acquirement, before
+ *              skills & other effects are factored in.
+ */
+int armour_acq_weight(const armour_type armour)
+{
+    return Armour_prop[ Armour_index[armour] ].acquire_weight;
+}
+
 equipment_type get_armour_slot(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
@@ -1384,28 +1443,75 @@ bool jewellery_is_amulet(int sub_type)
     return sub_type >= AMU_FIRST_AMULET;
 }
 
-// Returns number of sizes off (0 if fitting).
-int fit_armour_size(const item_def &item, size_type size)
+/**
+ * How many size categories away is the given type of armour from fitting a
+ * creature of the given size - and in what direction?
+ *
+ * @param sub_type  The type of armour in question.
+ * @param size      The size of the creature in question.
+ * @return          The difference between the size of the creature and the
+ *                  closest size of creature that might wear the armour.
+ *                  Negative if the creature is too small.
+ *                  Positive if the creature is too large.
+ *                  0 if the creature is just right.
+ */
+static int _fit_armour_size(armour_type sub_type, size_type size)
 {
-    ASSERT(item.base_type == OBJ_ARMOUR);
-
-    const size_type min = Armour_prop[ Armour_index[item.sub_type] ].fit_min;
-    const size_type max = Armour_prop[ Armour_index[item.sub_type] ].fit_max;
+    const size_type min = Armour_prop[ Armour_index[sub_type] ].fit_min;
+    const size_type max = Armour_prop[ Armour_index[sub_type] ].fit_max;
 
     if (size < min)
-        return min - size;    // -'ve means levels too small
+        return min - size;    // negative means levels too small
     else if (size > max)
-        return max - size;    // +'ve means levels too large
+        return max - size;    // positive means levels too large
 
     return 0;
 }
 
-// Returns true if armour fits size (shape needs additional verification).
+/**
+ * How many size categories away is the given armour from fitting a creature of
+ * the given size - and in what direction?
+ *
+ * @param item      The armour in question.
+ * @param size      The size of the creature in question.
+ * @return          The difference between the size of the creature and the
+ *                  closest size of creature that might wear the armour.
+ *                  Negative if the creature is too small.
+ *                  Positive if the creature is too large.
+ *                  0 if the creature is just right.
+ */
+int fit_armour_size(const item_def &item, size_type size)
+{
+    ASSERT(item.base_type == OBJ_ARMOUR);
+    return _fit_armour_size(static_cast<armour_type>(item.sub_type), size);
+}
+
+/**
+ * Does the given type of armour fit a creature of the given size?
+ *
+ * @param sub_type  The type of armour in question.
+ * @param size      The size of the creature that might wear the armour.
+ * @return          Whether the armour fits based on size. (It might still not
+ *                  fit for other reasons, e.g. mutations...)
+ */
+bool check_armour_size(armour_type sub_type, size_type size)
+{
+    return _fit_armour_size(sub_type, size) == 0;
+}
+
+/**
+ * Does the given armour fit a creature of the given size?
+ *
+ * @param item      The armour in question.
+ * @param size      The size of the creature that might wear the armour.
+ * @return          Whether the armour fits based on size. (It might still not
+ *                  fit for other reasons, e.g. mutations...)
+ */
 bool check_armour_size(const item_def &item, size_type size)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
 
-    return fit_armour_size(item, size) == 0;
+    return check_armour_size(static_cast<armour_type>(item.sub_type), size);
 }
 
 // Returns whether a wand or rod can be charged.
@@ -1449,16 +1555,14 @@ int wand_charge_value(int type)
     switch (type)
     {
     case WAND_INVISIBILITY:
-    case WAND_FIREBALL:
     case WAND_TELEPORTATION:
     case WAND_HEAL_WOUNDS:
     case WAND_HASTING:
         return 3;
 
+    case WAND_FIREBALL:
     case WAND_LIGHTNING:
     case WAND_DRAINING:
-        return 4;
-
     case WAND_FIRE:
     case WAND_COLD:
         return 5;
@@ -1852,10 +1956,13 @@ skill_type item_attack_skill(object_class_type wclass, int wtype)
 }
 
 // True if item is a staff that deals extra damage based on Evocations skill.
-static bool _staff_uses_evocations(const item_def &item)
+bool staff_uses_evocations(const item_def &item)
 {
-    if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF))
+    if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)
+        || is_unrandom_artefact(item, UNRAND_OLGREB))
+    {
         return true;
+    }
 
     if (!item_type_known(item) || item.base_type != OBJ_STAVES)
         return false;
@@ -1866,7 +1973,6 @@ static bool _staff_uses_evocations(const item_def &item)
     case STAFF_COLD:
     case STAFF_POISON:
     case STAFF_DEATH:
-    case STAFF_SUMMONING:
     case STAFF_AIR:
     case STAFF_EARTH:
         return true;
@@ -1886,7 +1992,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
 
     // Jewellery with evokable abilities, wands and similar unwielded
     // evokers allow training.
-    if (item_is_evokable(item, false, false, false, false, true)
+    if (item_is_evokable(item, false, false, true, false, true)
         || item.base_type == OBJ_JEWELLERY && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
@@ -1909,7 +2015,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         return !skills.empty();
 
     if (item_is_evokable(item, false, false, false, false, false)
-        || _staff_uses_evocations(item)
+        || staff_uses_evocations(item)
         || item.base_type == OBJ_WEAPONS && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
@@ -1969,6 +2075,13 @@ const char *ammo_name(const item_def &bow)
 {
     ASSERT(is_range_weapon(bow));
     return ammo_name(fires_ammo_type(bow));
+}
+
+const char *ammo_name(const weapon_type bow)
+{
+    missile_type mi = Weapon_prop[Weapon_index[bow]].ammo;
+    ASSERT(mi != MI_NONE);
+    return ammo_name(mi);
 }
 
 // Returns true if item has an associated launcher.
@@ -2083,17 +2196,11 @@ reach_type weapon_reach(const item_def &item)
 //
 // Macguffins
 //
-bool item_is_rune(const item_def &item, rune_type which_rune)
-{
-    return item.is_type(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT)
-           && (which_rune == NUM_RUNE_TYPES || item.plus == which_rune);
-}
-
 bool item_is_unique_rune(const item_def &item)
 {
-    return item_is_rune(item)
-           && item.plus != RUNE_DEMONIC
-           && item.plus != RUNE_ABYSSAL;
+    return item.base_type == OBJ_RUNES
+           && item.sub_type != RUNE_DEMONIC
+           && item.sub_type != RUNE_ABYSSAL;
 }
 
 bool item_is_orb(const item_def &item)
@@ -2368,7 +2475,7 @@ int get_armour_res_magic(const item_def &arm, bool check_artp)
         res += MR_PIP;
 
     if (check_artp && is_artefact(arm))
-        res += MR_PIP * artefact_property(arm, ARTP_MAGIC);
+        res += MR_PIP * artefact_property(arm, ARTP_MAGIC_RESISTANCE);
 
     return res;
 }
@@ -2382,7 +2489,7 @@ bool get_armour_see_invisible(const item_def &arm, bool check_artp)
         return true;
 
     if (check_artp && is_artefact(arm))
-        return artefact_property(arm, ARTP_EYESIGHT);
+        return artefact_property(arm, ARTP_SEE_INVISIBLE);
 
     return false;
 }
@@ -2484,6 +2591,9 @@ int get_jewellery_life_protection(const item_def &ring, bool check_artp)
     if (ring.sub_type == RING_LIFE_PROTECTION)
         res += 1;
 
+    if (ring.sub_type == AMU_WARDING)
+        res += 1;
+
     if (check_artp && is_artefact(ring))
         res += artefact_property(ring, ARTP_NEGATIVE_ENERGY);
 
@@ -2500,7 +2610,7 @@ int get_jewellery_res_magic(const item_def &ring, bool check_artp)
         res += 40;
 
     if (check_artp && is_artefact(ring))
-        res += 40 * artefact_property(ring, ARTP_MAGIC);
+        res += 40 * artefact_property(ring, ARTP_MAGIC_RESISTANCE);
 
     return res;
 }
@@ -2513,7 +2623,7 @@ bool get_jewellery_see_invisible(const item_def &ring, bool check_artp)
         return true;
 
     if (check_artp && is_artefact(ring))
-        return artefact_property(ring, ARTP_EYESIGHT);
+        return artefact_property(ring, ARTP_SEE_INVISIBLE);
 
     return false;
 }
@@ -2525,11 +2635,7 @@ int property(const item_def &item, int prop_type)
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
-        if (prop_type == PARM_AC)
-            return Armour_prop[ Armour_index[item.sub_type] ].ac;
-        else if (prop_type == PARM_EVASION)
-            return Armour_prop[ Armour_index[item.sub_type] ].ev;
-        break;
+        return armour_prop(item.sub_type, prop_type);
 
     case OBJ_WEAPONS:
         if (is_unrandom_artefact(item))
@@ -2581,6 +2687,28 @@ int property(const item_def &item, int prop_type)
     return 0;
 }
 
+/**
+ * Find a given property of a given armour_type.
+ *
+ * @param armour        The armour_type in question (e.g. ARM_ROBE)
+ * @param prop_type     The property being requested (e.g. PARM_AC)
+ * @return              The property value, if the prop_type is valid.
+ *                      Otherwise, 0 (!?)
+ *                      ^ hopefully never comes up...
+ */
+int armour_prop(int armour, int prop_type)
+{
+    switch (prop_type)
+    {
+        case PARM_AC:
+            return Armour_prop[ Armour_index[armour] ].ac;
+        case PARM_EVASION:
+            return Armour_prop[ Armour_index[armour] ].ev;
+        default:
+            return 0; // !?
+    }
+}
+
 // Returns true if item is evokable.
 bool gives_ability(const item_def &item)
 {
@@ -2595,7 +2723,6 @@ bool gives_ability(const item_def &item)
         if (item.sub_type == RING_TELEPORTATION
             || item.sub_type == RING_FLIGHT
             || item.sub_type == RING_INVISIBILITY
-            || item.sub_type == RING_TELEPORT_CONTROL
             || item.sub_type == AMU_RAGE)
         {
             return true;
@@ -2645,12 +2772,15 @@ bool gives_resistance(const item_def &item)
     case OBJ_JEWELLERY:
         if (!jewellery_is_amulet(item))
         {
-            if (item.sub_type >= RING_PROTECTION_FROM_FIRE
-                   && item.sub_type <= RING_PROTECTION_FROM_COLD
+            if (item.sub_type == RING_PROTECTION_FROM_FIRE
+                || item.sub_type == RING_POISON_RESISTANCE
+                || item.sub_type == RING_PROTECTION_FROM_COLD
                 || item.sub_type == RING_SEE_INVISIBLE
-                || item.sub_type >= RING_LIFE_PROTECTION
-                   && item.sub_type <= RING_TELEPORT_CONTROL
-                || item.sub_type == RING_SUSTAIN_ABILITIES)
+                || item.sub_type == RING_SUSTAIN_ATTRIBUTES
+                || item.sub_type == RING_LIFE_PROTECTION
+                || item.sub_type == RING_PROTECTION_FROM_MAGIC
+                || item.sub_type == RING_FIRE
+                || item.sub_type == RING_ICE)
             {
                 return true;
             }
@@ -2693,7 +2823,7 @@ bool gives_resistance(const item_def &item)
     // Check for randart resistances.
     for (int rap = ARTP_FIRE; rap <= ARTP_BERSERK; rap++)
     {
-        if (rap == ARTP_MAGIC || rap >= ARTP_INVISIBLE)
+        if (rap == ARTP_MAGIC_RESISTANCE || rap >= ARTP_INVISIBLE)
             continue;
 
         if (artefact_property(item, static_cast<artefact_prop_type>(rap)))
@@ -2705,8 +2835,12 @@ bool gives_resistance(const item_def &item)
 
 bool is_item_jelly_edible(const item_def &item)
 {
-    // Don't eat artefacts.
-    if (is_artefact(item))
+    // Don't eat items that the player has seen.
+    if (item.flags & ISFLAG_SEEN && !you_worship(GOD_JIYVA))
+        return false;
+
+    // Don't eat artefacts or the horn of Geryon.
+    if (is_artefact(item) || item_is_horn_of_geryon(item))
         return false;
 
     // Don't eat mimics.
@@ -2722,13 +2856,8 @@ bool is_item_jelly_edible(const item_def &item)
     }
 
     // Don't eat special game items.
-    if (item.base_type == OBJ_ORBS
-        || (item.base_type == OBJ_MISCELLANY
-            && (item.sub_type == MISC_RUNE_OF_ZOT
-                || item.sub_type == MISC_HORN_OF_GERYON)))
-    {
+    if (item_is_orb(item) || item.base_type == OBJ_RUNES)
         return false;
-    }
 
     return true;
 }
@@ -2867,92 +2996,65 @@ void seen_item(const item_def &item)
         }
     }
 
-    // major hack.  Deconstify should be safe here, but it's still repulsive.
-    ((item_def*)&item)->flags |= ISFLAG_SEEN;
+    // major hack. Deconstify should be safe here, but it's still repulsive.
+    const_cast<item_def &>(item).flags |= ISFLAG_SEEN;
     if (you_worship(GOD_ASHENZARI))
-        ((item_def*)&item)->flags |= ISFLAG_KNOW_CURSE;
+        const_cast<item_def &>(item).flags |= ISFLAG_KNOW_CURSE;
     if (item.base_type == OBJ_GOLD && !item.plus)
-        ((item_def*)&item)->plus = (you_worship(GOD_ZIN)) ? 2 : 1;
+        const_cast<item_def &>(item).plus = (you_worship(GOD_ZIN)) ? 2 : 1;
 
     if (item_type_has_ids(item.base_type) && !is_artefact(item)
         && item_ident(item, ISFLAG_KNOW_TYPE)
-        && you.type_ids[item.base_type][item.sub_type] != ID_KNOWN_TYPE)
+        && !you.type_ids[item.base_type][item.sub_type])
     {
         // Can't cull shop items here -- when called from view, we shouldn't
-        // access the UI.  Old ziggurat prompts are a very minor case of what
+        // access the UI. Old ziggurat prompts are a very minor case of what
         // could go wrong.
-        set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
+        set_ident_type(item.base_type, item.sub_type, true);
     }
 }
 
+/// Map of xp evokers to you.props[] xp debt keys.
+static const map<int, const char*> debt_map = {
+    { MISC_FAN_OF_GALES,        "fan_debt" },
+    { MISC_LAMP_OF_FIRE,        "lamp_debt" },
+    { MISC_STONE_OF_TREMORS,    "stone_debt" },
+    { MISC_PHIAL_OF_FLOODS,     "phial_debt" },
+    { MISC_HORN_OF_GERYON,      "horn_debt" },
+};
+
+/**
+ * Is the given item an xp-charged evocable? (That is, one that recharges as
+ * the player gains xp.)
+ *
+ * @param item      The item in question.
+ * @return          Whether the given item is an xp evocable. (One of the
+ *                  elemental evocables or the Horn of Geryon.)
+ */
 bool is_xp_evoker(const item_def &item)
 {
     return item.base_type == OBJ_MISCELLANY
-           && (item.sub_type == MISC_LAMP_OF_FIRE
-               || item.sub_type == MISC_STONE_OF_TREMORS
-               || item.sub_type == MISC_FAN_OF_GALES
-               || item.sub_type == MISC_PHIAL_OF_FLOODS
-               || item.sub_type == MISC_HORN_OF_GERYON);
+           && map_find(debt_map, item.sub_type);
+}
+
+/**
+ * Return the xp debt corresponding to the given type of evoker.
+ * Asserts that the given evoker type actually corresponds to an xp evoker.
+ *
+ * @param evoker_type       The misc_item_type of the evoker in question.
+ * @return                  The level of xp debt the given evoker type has
+ *                          before it can be used again.
+ */
+int &evoker_debt(int evoker_type)
+{
+    const char* const *prop_name = map_find(debt_map, evoker_type);
+    ASSERT(prop_name);
+    return you.props[*prop_name].get_int();
 }
 
 bool evoker_is_charged(const item_def &item)
 {
-    return num_xp_evokers_inert(item) < item.quantity;
-}
-
-int num_xp_evokers_inert(const item_def &item)
-{
-    return (item.evoker_debt + XP_EVOKE_DEBT - 1) / XP_EVOKE_DEBT;
-}
-
-// XXX: this doesn't seem like the best place to put these two functions.
-/**
- * Remove the most recently used XP evoker from a stack of items.
- * (That is, first remove all of the inert evokers, and only then remove
- * charged ones as necessary.)
- *
- * @param   stack The stack of items.
- * @param   quant The number of evokers we are pulling.
- * @returns The evoker debt of the items we are pulling out of the pile.
- */
-int remove_newest_xp_evoker(item_def &stack, int quant)
-{
-    const int new_stack_debt = min<int>(stack.evoker_debt,
-                                        quant * XP_EVOKE_DEBT);
-    stack.evoker_debt -= new_stack_debt;
-    return new_stack_debt;
-}
-
-/**
- * Remove the least recently used XP evoker from a stack of items.
- * (That is, first remove all of the charged evokers, and only then remove
- * inert ones as necessary.)
- *
- * @param   stack The stack of items.
- * @param   quant The number of evokers we are pulling.
- * @returns The evoker debt of the items we are pulling out of the pile.
- */
-int remove_oldest_xp_evoker(item_def &stack, int quant)
-{
-    // how many items will be left in the old stack?
-    const int old_stack_remaining = stack.quantity - quant;
-    // how many inert evokers do we need to take?
-    int num_inert = num_xp_evokers_inert(stack) - old_stack_remaining;
-    if (num_inert <= 0)
-        return 0;
-
-    int new_stack_debt = 0;
-    // first, take a partially-recharged inert evoker, if there is one
-    if (stack.evoker_debt % XP_EVOKE_DEBT > 0)
-    {
-        new_stack_debt = stack.evoker_debt % XP_EVOKE_DEBT;
-        stack.evoker_debt -= new_stack_debt;
-        num_inert -= 1;
-    }
-    // then take as many fully inert evokers as is necessary.
-    stack.evoker_debt -= XP_EVOKE_DEBT * num_inert;
-    new_stack_debt += XP_EVOKE_DEBT * num_inert;
-    return new_stack_debt;
+    return evoker_debt(item.sub_type) == 0;
 }
 
 
@@ -2975,14 +3077,7 @@ static inline int _get_armour_flag(armflags_t all, armour_flag res)
  */
 static armflags_t _armour_type_flags(const uint8_t arm)
 {
-    // Ugly hack
-    if (you.species == SP_TROLL && (arm == ARM_TROLL_HIDE
-                                    || arm ==  ARM_TROLL_LEATHER_ARMOUR))
-    {
-        return ARMF_NO_FLAGS;
-    }
-    else
-        return Armour_prop[ Armour_index[arm] ].flags;
+    return Armour_prop[ Armour_index[arm] ].flags;
 }
 
 /**

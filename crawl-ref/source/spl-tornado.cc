@@ -5,14 +5,17 @@
 #include <cfloat>
 #include <cmath>
 
+#include "areas.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
 #include "fineff.h"
+#include "fprop.h"
 #include "godconduct.h"
 #include "libutil.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-behv.h"
 #include "mon-tentacle.h"
 #include "ouch.h"
@@ -65,7 +68,7 @@ int WindSystem::visit(coord_def c, int d, coord_def parent)
 
     for (adjacent_iterator ai(c); ai; ++ai)
     {
-        if ((*ai - org).abs() > dist_range(TORNADO_RADIUS) || _airtight(*ai))
+        if ((*ai - org).rdist() > TORNADO_RADIUS || _airtight(*ai))
             continue;
         if (depth(*ai - org) == -1)
         {
@@ -113,7 +116,7 @@ static void _set_tornado_durations(int powc)
 spret_type cast_tornado(int powc, bool fail)
 {
     bool friendlies = false;
-    for (radius_iterator ri(you.pos(), TORNADO_RADIUS, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(you.pos(), TORNADO_RADIUS, C_SQUARE); ri; ++ri)
     {
         const monster_info* m = env.map_knowledge(*ri).monsterinfo();
         if (!m)
@@ -165,6 +168,24 @@ static bool _mons_is_unmovable(const monster *mons)
     return false;
 }
 
+static double _get_ang(int x, int y)
+{
+    if (abs(x) > abs(y))
+    {
+       if (x > 0)
+           return double(y)/double(x);
+       else
+           return 4 + double(y)/double(x);
+    }
+    else
+    {
+       if (y > 0)
+           return 2 - double(x)/double(y);
+       else
+           return -2 - double(x)/double(y);
+    }
+}
+
 static coord_def _rotate(coord_def org, coord_def from,
                          vector<coord_def> &avail, int rdur)
 {
@@ -174,18 +195,16 @@ static coord_def _rotate(coord_def org, coord_def from,
     coord_def best = from;
     double hiscore = DBL_MAX;
 
-    double dist0 = sqrt((from - org).abs());
-    double ang0 = atan2(from.x - org.x, from.y - org.y) + rdur * 0.01;
-    if (ang0 > PI)
-        ang0 -= 2 * PI;
+    double dist0 = (from - org).rdist();
+    double ang0 = _get_ang(from.x - org.x, from.y - org.y) - rdur * 0.01 * 4 / 3;
     for (coord_def pos : avail)
     {
-        double dist = sqrt((pos - org).abs());
+        double dist = (pos - org).rdist();
         double distdiff = fabs(dist - dist0);
-        double ang = atan2(pos.x - org.x, pos.y - org.y);
-        double angdiff = min(fabs(ang - ang0), fabs(ang - ang0 + 2 * PI));
+        double ang = _get_ang(pos.x - org.x, pos.y - org.y);
+        double angdiff = min(fabs(ang - ang0), fabs(ang - ang0 - 8));
 
-        double score = distdiff + angdiff * 2;
+        double score = distdiff + angdiff * 3 / 2;
         if (score < hiscore)
             best = pos, hiscore = score;
     }
@@ -221,7 +240,7 @@ static int _age_needed(int r)
         return 0;
     if (r > TORNADO_RADIUS)
         return INT_MAX;
-    return sqr(r) * 5 / 4;
+    return sqr(r) * 7 / 5;
 }
 
 void tornado_damage(actor *caster, int dur)
@@ -243,7 +262,6 @@ void tornado_damage(actor *caster, int dur)
     int age = _tornado_age(caster);
     ASSERT(age >= 0);
 
-    vector<actor*>        move_act;   // victims to move
     vector<coord_def>     move_avail; // legal destinations
     map<mid_t, coord_def> move_dest;  // chosen destination
     int rdurs[TORNADO_RADIUS+1];           // durations at radii
@@ -310,7 +328,7 @@ void tornado_damage(actor *caster, int dur)
                     // or standing on a submerged air elemental, there are
                     // no free spots, and a monster tornado rotates you.
                     // Plants don't get uprooted, so the logic would be
-                    // really complex.  Let's not go there.
+                    // really complex. Let's not go there.
                     continue;
                 }
                 if (victim->is_player() && get_form()->forbids_flight())
@@ -356,11 +374,18 @@ void tornado_damage(actor *caster, int dur)
                         dprf("damage done: %d", dmg);
                         victim->hurt(caster, dmg, BEAM_AIR, KILLED_BY_BEAM,
                                      "", "tornado");
+
+                        if (caster->is_player()
+                            && (is_sanctuary(you.pos())
+                                || is_sanctuary(victim->pos())))
+                        {
+                            remove_sanctuary(true);
+                        }
                     }
                 }
 
                 if (victim->alive() && !leda && dur > 0)
-                    move_act.push_back(victim);
+                    move_dest[victim->mid] = victim->pos();
             }
 
             if (cell_is_solid(*dam_i))
@@ -386,11 +411,10 @@ void tornado_damage(actor *caster, int dur)
         return;
 
     // Gather actors who are to be moved.
-    for (actor *act : move_act)
-        if (act->alive()) // shouldn't ever change...
+    for (auto &entry : move_dest)
+        if (actor* act = actor_by_mid(entry.first)) // should still be alive...
         {
-            // Record the old position.
-            move_dest[act->mid] = act->pos();
+            ASSERT(entry.second == act->pos());
 
             // Temporarily move to (0,0) to allow permutations.
             if (mgrd(act->pos()) == act->mindex())
@@ -400,31 +424,23 @@ void tornado_damage(actor *caster, int dur)
 
     // Need to check available positions again, as the damage call could
     // have spawned something new (like Royal Jelly spawns).
-    for (int i = move_avail.size() - 1; i >= 0; i--)
-        if (actor_at(move_avail[i]))
-            erase_any(move_avail, i);
+    erase_if(move_avail, actor_at);
 
     // Calculate destinations.
-    for (actor *act : move_act)
+    for (auto &entry : move_dest)
     {
-        coord_def pos = move_dest[act->mid];
-        int r = pos.range(org);
-        coord_def dest = _rotate(org, pos, move_avail, rdurs[r]);
-        for (unsigned int j = 0; j < move_avail.size(); j++)
-            if (move_avail[j] == dest)
-            {
-                // Only one monster per destination.
-                erase_any(move_avail, j);
-                break;
-            }
-        move_dest[act->mid] = dest;
+        const int r = entry.second.distance_from(org);
+        coord_def dest = _rotate(org, entry.second, move_avail, rdurs[r]);
+        // Only one monster per destination.
+        erase_if(move_avail, [&dest](const coord_def& p) { return p == dest; });
+        entry.second = dest;
     }
 
     // Actually move actors into place.
-    for (actor *act : move_act)
-        if (act->alive())
+    for (auto &entry : move_dest)
+        if (actor* act = actor_by_mid(entry.first)) // should still be alive...
         {
-            coord_def newpos = move_dest[act->mid];
+            const coord_def newpos = entry.second;
             ASSERT(!actor_at(newpos));
             act->move_to_pos(newpos);
             ASSERT(act->pos() == newpos);
@@ -446,7 +462,7 @@ void cancel_tornado(bool tloc)
         {
             // it'd be better to abort flight instantly, but let's first
             // make damn sure all ways of translocating are prevented from
-            // landing you in water.  Insta-kill due to an arrow of dispersal
+            // landing you in water. Insta-kill due to an arrow of dispersal
             // is not nice.
             you.duration[DUR_FLIGHT] = min(20,
                 you.duration[DUR_FLIGHT]);
@@ -472,13 +488,9 @@ void tornado_move(const coord_def &p)
         return;
 
     int age = _tornado_age(&you);
-    int dist2 = (you.pos() - p).abs();
-    if (dist2 <= 2)
+    int dist = (you.pos() - p).rdist();
+    if (dist <= 1)
         return;
-
-    int dist = 0;
-    while (dist * dist + 1 < dist2)
-        dist++;
 
     if (!you.duration[DUR_TORNADO])
     {

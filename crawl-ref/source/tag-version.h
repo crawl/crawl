@@ -10,7 +10,7 @@
 
 // Let CDO updaters know if the syntax changes.
 // Really, really, REALLY _never_ ever bump this and clean up old #ifdefs
-// in a single commit, please.  Making clean-up and actual code changes,
+// in a single commit, please. Making clean-up and actual code changes,
 // especially of this size, separated is vital for sanity.
 #ifndef TAG_MAJOR_VERSION
 #define TAG_MAJOR_VERSION 34
@@ -147,6 +147,38 @@ enum tag_minor_version
     TAG_MINOR_FIX_8_BIT_VEC_MAX,   // Fix up bad CrawlVector max size
     TAG_MINOR_TRACK_BANISHER,      // Persist the name of the last thing that banished the player
     TAG_MINOR_SHOALS_LITE,         // Remove deep water from old Shoals
+    TAG_MINOR_FIX_EXPLORE_MODE,    // Fix char selection screen on old versions
+    TAG_MINOR_UNSTACKABLE_EVOKERS, // XP evokers no longer stack
+    TAG_MINOR_NO_NEGATIVE_VULN,    // Remove negative energy vulnerability
+    TAG_MINOR_MAX_XL,              // Store max XL instead of hardcoding it
+    TAG_MINOR_NO_RPOIS_MINUS,      // Remove rPois- artefacts
+    TAG_MINOR_XP_PENANCE,          // Let gods other than Ash use xp penance
+    TAG_MINOR_SPIT_POISON,         // Give Nagas MUT_SPIT_POISON
+    TAG_MINOR_REAL_MUTS,           // Give some species proper mutations
+    TAG_MINOR_NO_FORLORN,          // Remove Forlorn mutation
+    TAG_MINOR_MP_WANDS,            // Make MP wands a single-level mutation
+    TAG_MINOR_TELEPORTITIS,        // Rescale teleportitis on artefacts
+    TAG_MINOR_ROTTING,             // Remove rot-over-time
+    TAG_MINOR_STAT_ZERO_DURATION,  // Stat zero uses a duration
+    TAG_MINOR_INT_REGEN,           // hp/mp regen are ints
+    TAG_MINOR_NAGA_METABOLISM,     // nagas have slow metabolism
+    TAG_MINOR_BOOL_FLIGHT,         // flight is just a bool
+    TAG_MINOR_STAT_LOSS_XP,        // Stat loss recovers with XP
+    TAG_MINOR_DETERIORATION,       // 2-level deterioration mutation
+    TAG_MINOR_RU_DELAY_STACKING,   // Let Ru delay timers stack again
+    TAG_MINOR_NO_TWISTER,          // Remove ARTP_TWISTER
+    TAG_MINOR_NO_ZOTDEF,           // remove zotdef, along with zot_points and zotdef_wave_name
+    TAG_MINOR_SAVED_PIETY,         // allowed good-god piety to survive through an atheist period
+    TAG_MINOR_GHOST_SINV,          // marshall ghost_demon sinv
+    TAG_MINOR_ID_STATES,           // turn item_type_id_state_type into a bool
+    TAG_MINOR_MON_HD_INFO,         // store player-known monster HD info
+    TAG_MINOR_NO_LEVEL_FLAGS,      // remove a field of env
+    TAG_MINOR_EXORCISE,            // liches, a. liches, & spellforged servitors are no longer ghost_demons
+    TAG_MINOR_BLINK_MUT,           // 1-level blink mutation
+    TAG_MINOR_RUNE_TYPE,           // runes became a base type
+    TAG_MINOR_ZIGFIGS,             // let characters from before ziggurat changes continue zigging
+    TAG_MINOR_RU_PIETY_CONSISTENCY,// make Ru piety constant once determined.
+    TAG_MINOR_SAC_PIETY_LEN,       // marshall length with sacrifice piety
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

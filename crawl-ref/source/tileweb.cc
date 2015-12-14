@@ -21,6 +21,7 @@
 #include "files.h"
 #include "itemname.h"
 #include "json.h"
+#include "json-wrapper.h"
 #include "lang-fake.h"
 #include "libutil.h"
 #include "map_knowledge.h"
@@ -34,6 +35,7 @@
 #include "skills.h"
 #include "state.h"
 #include "stringutil.h"
+#include "throw.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
 #include "tiledef-icons.h"
@@ -43,6 +45,7 @@
 #include "tilepick.h"
 #include "tilepick-p.h"
 #include "tileview.h"
+#include "transform.h"
 #include "travel.h"
 #include "unicode.h"
 #include "unwind.h"
@@ -58,34 +61,6 @@ static unsigned int get_milliseconds()
 
     return ((unsigned int) tv.tv_sec) * 1000 + tv.tv_usec / 1000;
 }
-
-// Helper for json.h
-struct JsonWrapper
-{
-    JsonWrapper(JsonNode* n) : node(n)
-    { }
-
-    ~JsonWrapper()
-    {
-        if (node)
-            json_delete(node);
-    }
-
-    JsonNode* operator->()
-    {
-        return node;
-    }
-
-    void check(JsonTag tag)
-    {
-        if (!node || node->tag != tag)
-            throw malformed;
-    }
-
-    JsonNode* node;
-
-    static class MalformedException { } malformed;
-};
 
 TilesFramework tiles;
 
@@ -240,6 +215,7 @@ void TilesFramework::finish_message()
         fragment_start += fragment_size;
     }
     m_msg_buf.clear();
+    m_need_flush = true;
 }
 
 void TilesFramework::send_message(const char *format, ...)
@@ -266,7 +242,11 @@ void TilesFramework::send_message(const char *format, ...)
 
 void TilesFramework::flush_messages()
 {
-    send_message("*{\"msg\":\"flush_messages\"}");
+    if (m_need_flush)
+    {
+        send_message("*{\"msg\":\"flush_messages\"}");
+        m_need_flush = false;
+    }
 }
 
 void TilesFramework::_await_connection()
@@ -652,7 +632,7 @@ player_info::player_info()
 }
 
 /**
- * Send the player properties to the webserver.  Any player properties that
+ * Send the player properties to the webserver. Any player properties that
  * must be available to the WebTiles client must be sent here through an
  * _update_* function call of the correct data type.
  * @param force_full  If true, all properties will be updated in the json
@@ -682,7 +662,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.under_penance, (bool) player_under_penance(), "penance");
     uint8_t prank = 0;
     if (!you_worship(GOD_NO_GOD))
-        prank = max(0, piety_rank() - 1);
+        prank = max(0, piety_rank());
     else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
              && !had_gods())
     {
@@ -732,7 +712,7 @@ void TilesFramework::_send_player(bool force_full)
 #endif
 
     _update_int(force_full, c.armour_class, you.armour_class(), "ac");
-    _update_int(force_full, c.evasion, player_evasion(), "ev");
+    _update_int(force_full, c.evasion, you.evasion(), "ev");
     _update_int(force_full, c.shield_class, player_displayed_shield_class(),
                 "sh");
 
@@ -753,8 +733,6 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.exp_progress, (int8_t) get_exp_progress(), "progress");
     _update_int(force_full, c.gold, you.gold, "gold");
 
-    if (crawl_state.game_is_zotdef())
-        _update_int(force_full, c.zot_points, you.zot_points, "zp");
     if (you.running == 0) // Don't update during running/resting
     {
         _update_int(force_full, c.elapsed_time, you.elapsed_time, "time");
@@ -811,7 +789,7 @@ void TilesFramework::_send_player(bool force_full)
     json_open_object("inv");
     for (unsigned int i = 0; i < ENDOFPACK; ++i)
     {
-        json_open_object(make_stringf("%d", i));
+        json_open_object(to_string(i));
         _send_item(c.inv[i], get_item_info(you.inv[i]), force_full);
         json_close_object(true);
     }
@@ -821,15 +799,19 @@ void TilesFramework::_send_player(bool force_full)
     for (unsigned int i = 0; i < NUM_EQUIP; ++i)
     {
         const int8_t equip = !you.melded[i] ? you.equip[i] : -1;
-        _update_int(force_full, c.equip[i], equip, make_stringf("%d", i));
+        _update_int(force_full, c.equip[i], equip, to_string(i));
     }
     json_close_object(true);
 
     _update_int(force_full, c.quiver_item,
-                (int8_t) you.m_quiver->get_fire_item(), "quiver_item");
+                (int8_t) you.m_quiver.get_fire_item(), "quiver_item");
 
     _update_string(force_full, c.unarmed_attack,
                    you.unarmed_attack_name(), "unarmed_attack");
+    _update_int(force_full, c.unarmed_attack_colour,
+                (uint8_t) get_form()->uc_colour, "unarmed_attack_colour");
+    _update_int(force_full, c.quiver_available, !fire_warn_if_impossible(true),
+                "quiver_available");
 
     json_close_object(true);
 
@@ -937,7 +919,7 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
     int flags[TILEP_PART_MAX];
     tilep_calc_flags(doll, flags);
 
-    // For skirts, boots go under the leg armour.  For pants, they go over.
+    // For skirts, boots go under the leg armour. For pants, they go over.
     if (doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
     {
         p_order[7] = TILEP_PART_BOOTS;
@@ -949,7 +931,8 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
                                         TILEP_BASE_NAGA);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED
+        || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_LIGHTNING_SCALES)
     {
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
@@ -958,7 +941,8 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
                                         TILEP_BASE_CENTAUR);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
+        || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_BLACK_KNIGHT)
     {
         flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
@@ -1178,9 +1162,6 @@ void TilesFramework::_send_cell(const coord_def &gc,
             json_write_int("heat_aura", next_pc.heat_aura);
 #endif
 
-        if (next_pc.gold_aura != current_pc.gold_aura)
-            json_write_int("gold_aura", next_pc.gold_aura);
-
         if (_needs_flavour(next_pc) &&
             (next_pc.flv.floor != current_pc.flv.floor
              || next_pc.flv.special != current_pc.flv.special
@@ -1205,6 +1186,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
                 {
                     json_write_comma();
                     write_message("\"doll\":[[%d,%d]]", TILEP_MONS_UNKNOWN, TILE_Y);
+                    json_write_null("mcache");
                 }
             }
         }
@@ -1241,7 +1223,11 @@ void TilesFramework::_send_cell(const coord_def &gc,
                     mcache_entry *entry = mcache.get(mcache_idx);
                     if (entry)
                         _send_mcache(entry, in_water, false);
+                    else
+                        json_write_null("mcache");
                 }
+                else
+                    json_write_null("mcache");
             }
         }
         else if (fg_idx >= TILE_MAIN_MAX)
@@ -1250,6 +1236,16 @@ void TilesFramework::_send_cell(const coord_def &gc,
             {
                 json_write_comma();
                 write_message("\"doll\":[[%u,%d]]", (unsigned int) fg_idx, TILE_Y);
+                json_write_null("mcache");
+            }
+        }
+        else
+        {
+            if (fg_changed)
+            {
+                json_write_comma();
+                json_write_null("doll");
+                json_write_null("mcache");
             }
         }
 
@@ -1472,7 +1468,7 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
         // TODO: get this information to the client in another way
         json_open_object("typedata");
         json_write_int("avghp", mons_avg_hp(m->type));
-        if (mons_class_flag(m->type, M_NO_EXP_GAIN))
+        if (!mons_class_gives_xp(m->type))
             json_write_bool("no_exp", true);
         json_close_object();
     }
@@ -1575,13 +1571,15 @@ void TilesFramework::_send_everything()
 
     send_message("{\"msg\":\"flash\",\"col\":%d}", m_current_flash_colour);
 
-    _send_map(true);
-
     _send_cursor(CURSOR_MOUSE);
     _send_cursor(CURSOR_TUTORIAL);
 
      // Player
     _send_player(true);
+
+    // Map is sent after player, otherwise HP/MP bar can be left behind in the
+    // old location if the player has moved
+    _send_map(true);
 
     // Menus
     json_open_object();

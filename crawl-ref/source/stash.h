@@ -24,6 +24,8 @@ public:
     Stash(int xp = -1, int yp = -1);
     Stash(const Stash &other) { *this = other; };
 
+    static bool is_boring_feature(dungeon_feature_type feat);
+
     static string stash_item_name(const item_def &item);
     void update();
     bool unmark_trapping_nets();
@@ -35,7 +37,7 @@ public:
     vector<item_def> get_items() const;
 
     bool show_menu(const level_pos &place, bool can_travel,
-                   const vector<item_def>* matching_items = nullptr) const;
+                   const vector<item_def>& matching_items) const;
 
     // Returns true if this Stash contains items that are eligible for
     // autopickup.
@@ -185,16 +187,19 @@ struct stash_search_result
     // The items that matched the search, if any.
     vector<item_def> matching_items;
 
+    // Whether the found items are in the player's inventory.
+    bool in_inventory;
+
     stash_search_result() : pos(), player_distance(0), matches(0),
                             count(0), match(), stash(nullptr), shop(nullptr),
-                            matching_items()
+                            matching_items(), in_inventory(false)
     {
     }
 
     stash_search_result(const stash_search_result &o)
         : pos(o.pos), player_distance(o.player_distance), matches(o.matches),
           count(o.count), match(o.match), stash(o.stash), shop(o.shop),
-          matching_items(o.matching_items)
+          matching_items(o.matching_items), in_inventory(o.in_inventory)
     {
     }
 
@@ -208,6 +213,7 @@ struct stash_search_result
         stash = o.stash;
         shop = o.shop;
         matching_items = o.matching_items;
+        in_inventory = o.in_inventory;
         return *this;
     }
 
@@ -416,6 +422,5 @@ string stash_annotate_item(const char *s, const item_def *item,
 
 #define STASH_LUA_SEARCH_ANNOTATE "ch_stash_search_annotate_item"
 #define STASH_LUA_DUMP_ANNOTATE   "ch_stash_dump_annotate_item"
-#define STASH_LUA_VIEW_ANNOTATE   "ch_stash_view_annotate_item"
 
 #endif

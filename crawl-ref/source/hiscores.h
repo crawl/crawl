@@ -58,10 +58,12 @@ private:
     string      raw_line;
 
     string      version;
+    string      save_rcs_version;
+    string      save_tag_version;
     uint8_t     tiles;
     int         points;
     string      name;
-    species_type race;
+    int         race;               // species_type + legacy values
     int         job;                // job_type + legacy values
     string      race_class_name;    // overrides race & cls if non-empty.
     uint8_t     lvl;                // player level.
@@ -167,6 +169,7 @@ public:
     int    get_score() const      { return points; }
     int    get_death_type() const { return death_type; }
     time_t get_death_time() const { return death_time; }
+    actor* killer() const; // Obviously does not work across games.
     xlog_fields get_fields() const;
 
     void set_base_xlog_fields() const;

@@ -636,20 +636,10 @@ brick_gray1
 brick_gray2
 brick_gray3
 
-%weight 2
-stone_brick1 WALL_STONE_BRICK
-stone_brick2
-stone_brick3
-stone_brick4
-stone_brick5
-stone_brick6
-stone_brick7
-stone_brick8
-stone_brick9
-stone_brick10
-%weight 1
-stone_brick11
-stone_brick12
+stone_smooth0 WALL_STONE_SMOOTH
+stone_smooth1
+stone_smooth2
+stone_smooth3
 
 %weight 5
 marble_wall1 WALL_MARBLE
@@ -680,13 +670,19 @@ sandstone_wall7
 sandstone_wall8
 sandstone_wall9
 
-volcanic_wall0 WALL_VOLCANIC
+volcanic_wall0 WALL_VOLCANIC WALL_VOLCANIC_RED
 volcanic_wall1
 volcanic_wall2
 volcanic_wall3
 volcanic_wall4
 volcanic_wall5
 volcanic_wall6
+
+%variation WALL_VOLCANIC blue
+%hue 0 240
+%lum -10 240
+%repeat WALL_VOLCANIC WALL_VOLCANIC_BLUE
+%resetcol
 
 %weight 5
 crystal_wall00 WALL_CRYSTAL_SQUARES
@@ -706,10 +702,6 @@ crystal_wall05
 crystal_wall07
 crystal_wall09
 crystal_wall11
-%weight 3
-crystal_wall12
-%weight 1
-crystal_wall13
 
 %weight 10
 snake0 WALL_SNAKE
@@ -1419,7 +1411,7 @@ iron2-4
 
 dngn/grate DNGN_GRATE
 
-crystal_wall_green DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
+crystal_wall_green DNGN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
 
 %variation DNGN_CRYSTAL blue
 crystal_wall_blue DNGN_CRYSTAL_BLUE
@@ -1560,6 +1552,165 @@ bars_red08
 %lum 0 30
 %repeat WALL_BARS WALL_BARS_WHITE
 %resetcol
+
+permarock_red0 WALL_PERMAROCK WALL_PERMAROCK_RED
+
+%variation WALL_PERMAROCK blue
+%hue 0 240
+%repeat WALL_PERMAROCK WALL_PERMAROCK_BLUE
+%resetcol
+
+%variation WALL_PERMAROCK green
+%hue 0 140
+%repeat WALL_PERMAROCK WALL_PERMAROCK_GREEN
+%resetcol
+
+%variation WALL_PERMAROCK cyan
+%hue 0 180
+%repeat WALL_PERMAROCK WALL_PERMAROCK_CYAN
+%resetcol
+
+%variation WALL_PERMAROCK magenta
+%hue 0 270
+%repeat WALL_PERMAROCK WALL_PERMAROCK_MAGENTA
+%resetcol
+
+%variation WALL_PERMAROCK brown
+%hue 0 30
+%repeat WALL_PERMAROCK WALL_PERMAROCK_BROWN
+%resetcol
+
+%variation WALL_PERMAROCK lightgray
+%desat 0
+%lum 0 -10
+%repeat WALL_PERMAROCK WALL_PERMAROCK_LIGHTGRAY
+%resetcol
+
+%variation WALL_PERMAROCK darkgray
+%desat 0
+%lum 0 -30
+%repeat WALL_PERMAROCK WALL_PERMAROCK_DARKGRAY
+%resetcol
+
+%variation WALL_PERMAROCK lightblue
+%hue 0 210
+%lum 0 5
+%repeat WALL_PERMAROCK WALL_PERMAROCK_LIGHTBLUE
+%resetcol
+
+%variation WALL_PERMAROCK lightgreen
+%hue 0 110
+%repeat WALL_PERMAROCK WALL_PERMAROCK_LIGHTGREEN
+%resetcol
+
+%variation WALL_PERMAROCK lightcyan
+%hue 0 180
+%repeat WALL_PERMAROCK WALL_PERMAROCK_LIGHTCYAN
+%resetcol
+
+%variation WALL_PERMAROCK lightred
+%hue 0 0
+%lum 0 10
+%repeat WALL_PERMAROCK WALL_PERMAROCK_LIGHTRED
+%resetcol
+
+%variation WALL_PERMAROCK lightmagenta
+%hue 0 290
+%lum 0 5
+%repeat WALL_PERMAROCK WALL_PERMAROCK_LIGHTMAGENTA
+%resetcol
+
+%variation WALL_PERMAROCK yellow
+%hue 0 50
+%lum 0 5
+%repeat WALL_PERMAROCK WALL_PERMAROCK_YELLOW
+%resetcol
+
+%variation WALL_PERMAROCK white
+%desat 0
+%lum 0 30
+%repeat WALL_PERMAROCK WALL_PERMAROCK_WHITE
+%resetcol
+
+%hue 0 180
+permarock_clear_red0 WALL_PERMAROCK_CLEAR WALL_PERMAROCK_CLEAR_CYAN
+%resetcol
+
+%variation WALL_PERMAROCK_CLEAR red
+permarock_clear_red0 WALL_PERMAROCK_CLEAR_RED
+
+%variation WALL_PERMAROCK_CLEAR blue
+%hue 0 240
+%repeat WALL_PERMAROCK_CLEAR_RED WALL_PERMAROCK_CLEAR_BLUE
+%resetcol
+
+%variation WALL_PERMAROCK_CLEAR green
+%hue 0 140
+%repeat WALL_PERMAROCK_CLEAR_RED WALL_PERMAROCK_CLEAR_GREEN
+%resetcol
+
+%variation WALL_PERMAROCK_CLEAR magenta
+%hue 0 270
+%repeat WALL_PERMAROCK_CLEAR_RED WALL_PERMAROCK_CLEAR_MAGENTA
+%resetcol
+
+%variation WALL_PERMAROCK_CLEAR brown
+%hue 0 30
+%repeat WALL_PERMAROCK_CLEAR_RED WALL_PERMAROCK_CLEAR_BROWN
+%resetcol
+
+%variation WALL_PERMAROCK_CLEAR lightgray
+%desat 0
+%lum 0 -10
+%repeat WALL_PERMAROCK_CLEAR_RED WALL_PERMAROCK_CLEAR_LIGHTGRAY
+%resetcol
+
+%variation WALL_PERMAROCK_CLEAR darkgray
+%desat 0
+%lum 0 -40
+%repeat WALL_PERMAROCK_CLEAR_RED WALL_PERMAROCK_CLEAR_DARKGRAY
+%resetcol
+
+%variation WALL_PERMAROCK_CLEAR lightblue
+%hue 0 210
+%lum 0 5
+%repeat WALL_PERMAROCK_CLEAR_RED WALL_PERMAROCK_CLEAR_LIGHTBLUE
+%resetcol
+
+%variation WALL_PERMAROCK_CLEAR lightgreen
+%hue 0 110
+%repeat WALL_PERMAROCK_CLEAR_RED WALL_PERMAROCK_CLEAR_LIGHTGREEN
+%resetcol
+
+%variation WALL_PERMAROCK_CLEAR lightcyan
+%hue 0 180
+%repeat WALL_PERMAROCK_CLEAR_RED WALL_PERMAROCK_CLEAR_LIGHTCYAN
+%resetcol
+
+%variation WALL_PERMAROCK_CLEAR lightred
+%hue 0 0
+%lum 0 10
+%repeat WALL_PERMAROCK_CLEAR_RED WALL_PERMAROCK_CLEAR_LIGHTRED
+%resetcol
+
+%variation WALL_PERMAROCK_CLEAR lightmagenta
+%hue 0 290
+%lum 0 5
+%repeat WALL_PERMAROCK_CLEAR_RED WALL_PERMAROCK_CLEAR_LIGHTMAGENTA
+%resetcol
+
+%variation WALL_PERMAROCK_CLEAR yellow
+%hue 0 50
+%lum 0 5
+%repeat WALL_PERMAROCK_CLEAR_RED WALL_PERMAROCK_CLEAR_YELLOW
+%resetcol
+
+%variation WALL_PERMAROCK_CLEAR white
+%desat 0
+%lum 0 30
+%repeat WALL_PERMAROCK_CLEAR_RED WALL_PERMAROCK_CLEAR_WHITE
+%resetcol
+
 
 %rim 0
 %shrink 0

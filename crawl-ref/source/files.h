@@ -63,6 +63,8 @@ vector<string> get_title_files();
 
 class level_id;
 
+void trackers_init_new_level(bool transit);
+
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level);
 void delete_level(const level_id &level);
@@ -93,7 +95,7 @@ public:
 };
 
 void save_ghost(bool force = false);
-bool load_ghost(bool creating_level, bool delete_file = true);
+bool load_ghost(bool creating_level);
 
 FILE *lk_open(const char *mode, const string &file);
 FILE *lk_open_exclusive(const string &file);

@@ -211,7 +211,7 @@ public:
     MonsterMenuEntry(const string &str, const monster_info* mon, int hotkey);
 
 #ifdef USE_TILE
-    virtual bool get_tiles(vector<tile_def>& tileset) const;
+    virtual bool get_tiles(vector<tile_def>& tileset) const override;
 #endif
 };
 
@@ -221,7 +221,7 @@ class PlayerMenuEntry : public MenuEntry
 public:
     PlayerMenuEntry(const string &str);
 
-    virtual bool get_tiles(vector<tile_def>& tileset) const;
+    virtual bool get_tiles(vector<tile_def>& tileset) const override;
 };
 #endif
 
@@ -236,7 +236,7 @@ public:
                      int hotkey);
 
 #ifdef USE_TILE
-    virtual bool get_tiles(vector<tile_def>& tileset) const;
+    virtual bool get_tiles(vector<tile_def>& tileset) const override;
 #endif
 };
 
@@ -249,21 +249,21 @@ public:
 
 enum MenuFlag
 {
-    MF_NOSELECT         = 0x0000,   ///< No selection is permitted
-    MF_SINGLESELECT     = 0x0001,   ///< Select just one item
-    MF_MULTISELECT      = 0x0002,   ///< Select multiple items
-    MF_NO_SELECT_QTY    = 0x0004,   ///< Disallow partial selections
-    MF_ANYPRINTABLE     = 0x0008,   ///< Any printable character is valid, and
+    MF_NOSELECT         = 0x0001,   ///< No selection is permitted
+    MF_SINGLESELECT     = 0x0002,   ///< Select just one item
+    MF_MULTISELECT      = 0x0004,   ///< Select multiple items
+    MF_NO_SELECT_QTY    = 0x0008,   ///< Disallow partial selections
+    MF_ANYPRINTABLE     = 0x0010,   ///< Any printable character is valid, and
                                     ///< closes the menu.
-    MF_SELECT_BY_PAGE   = 0x0010,   ///< Allow selections to occur only on
+    MF_SELECT_BY_PAGE   = 0x0020,   ///< Allow selections to occur only on
                                     ///< currently-visible page.
-    MF_ALWAYS_SHOW_MORE = 0x0020,   ///< Always show the -more- footer
-    MF_NOWRAP           = 0x0040,   ///< Paging past the end will not wrap back.
-    MF_ALLOW_FILTER     = 0x0080,   ///< Control-F will ask for regex and
+    MF_ALWAYS_SHOW_MORE = 0x0040,   ///< Always show the -more- footer
+    MF_NOWRAP           = 0x0080,   ///< Paging past the end will not wrap back.
+    MF_ALLOW_FILTER     = 0x0100,   ///< Control-F will ask for regex and
                                     ///< select the appropriate items.
-    MF_ALLOW_FORMATTING = 0x0100,   ///< Parse index for formatted-string
-    MF_SHOW_PAGENUMBERS = 0x0200,   ///< Show "(page X of Y)" when appropriate
-    MF_TOGGLE_ACTION    = 0x0400,   ///< ToggleableMenu toggles action as well
+    MF_ALLOW_FORMATTING = 0x0200,   ///< Parse index for formatted-string
+    MF_SHOW_PAGENUMBERS = 0x0400,   ///< Show "(page X of Y)" when appropriate
+    MF_TOGGLE_ACTION    = 0x0800,   ///< ToggleableMenu toggles action as well
     MF_EASY_EXIT        = 0x1000,   ///< Exit when scrolling off the end
     MF_START_AT_END     = 0x2000,   ///< Scroll to end of list
     MF_PRESELECTED      = 0x4000,   ///< Has a preselected entry.
@@ -287,10 +287,10 @@ class MenuDisplayText : public MenuDisplay
 {
 public:
     MenuDisplayText(Menu *menu);
-    virtual void draw_stock_item(int index, const MenuEntry *me);
-    virtual void draw_more();
-    virtual void set_offset(int lines) { m_starty = lines; }
-    virtual void set_num_columns(int columns) {}
+    virtual void draw_stock_item(int index, const MenuEntry *me) override;
+    virtual void draw_more() override;
+    virtual void set_offset(int lines) override { m_starty = lines; }
+    virtual void set_num_columns(int columns) override {}
 protected:
     int m_starty;
 };
@@ -299,10 +299,10 @@ class MenuDisplayTile : public MenuDisplay
 {
 public:
     MenuDisplayTile(Menu *menu);
-    virtual void draw_stock_item(int index, const MenuEntry *me);
-    virtual void set_offset(int lines);
-    virtual void draw_more();
-    virtual void set_num_columns(int columns);
+    virtual void draw_stock_item(int index, const MenuEntry *me) override;
+    virtual void set_offset(int lines) override;
+    virtual void draw_more() override;
+    virtual void set_num_columns(int columns) override;
 };
 
 ///////////////////////////////////////////////////////////////////////
@@ -347,6 +347,10 @@ public:
     void set_highlighter(MenuHighlighter *h);
     void set_title(MenuEntry *e, bool first = true);
     void add_entry(MenuEntry *entry);
+    void add_entry(unique_ptr<MenuEntry> entry)
+    {
+        add_entry(entry.release());
+    }
     void get_selected(vector<MenuEntry*> *sel) const;
     virtual int get_cursor() const;
 
@@ -358,7 +362,7 @@ public:
         select_filter = filter;
     }
 
-    int getkey() const { return lastch; }
+    virtual int getkey() const { return lastch; }
 
     void reset();
     virtual vector<MenuEntry *> show(bool reuse_selections = false);
@@ -483,6 +487,8 @@ protected:
     virtual bool process_key(int keyin);
 
     virtual bool allow_easy_exit() const;
+
+    virtual string help_key() const { return ""; }
 };
 
 /// Allows toggling by specific keys.
@@ -493,7 +499,7 @@ public:
         : Menu(_flags, "", text_only) {}
     void add_toggle_key(int newkey) { toggle_keys.push_back(newkey); }
 protected:
-    virtual int pre_process(int key);
+    virtual int pre_process(int key) override;
 
     vector<int> toggle_keys;
 };
@@ -559,17 +565,17 @@ public:
     virtual void add_text(const string& s, bool new_line = false,
                           int wrap_col = 0);
     virtual bool jump_to_hotkey(int keyin);
-    virtual vector<MenuEntry *> show(bool reuse_selections = false);
+    virtual vector<MenuEntry *> show(bool reuse_selections = false) override;
     int get_lastch() { return lastch; }
     virtual ~formatted_scroller();
 protected:
-    virtual bool page_down();
-    virtual bool line_down();
-    virtual bool page_up();
-    virtual bool line_up();
+    virtual bool page_down() override;
+    virtual bool line_down() override;
+    virtual bool page_up() override;
+    virtual bool line_up() override;
 
-    virtual void draw_index_item(int index, const MenuEntry* me) const;
-    virtual bool process_key(int keyin);
+    virtual void draw_index_item(int index, const MenuEntry* me) const override;
+    virtual bool process_key(int keyin) override;
     bool jump_to(int linenum);
 
 #ifdef USE_TILE_WEB
@@ -678,11 +684,11 @@ public:
     TextItem();
     virtual ~TextItem();
 
-    virtual void set_bounds(const coord_def& min_coord, const coord_def& max_coord);
+    virtual void set_bounds(const coord_def& min_coord, const coord_def& max_coord) override;
     virtual void set_bounds_no_multiply(const coord_def& min_coord,
-                                        const coord_def& max_coord);
+                                        const coord_def& max_coord) override;
 
-    virtual void render();
+    virtual void render() override;
 
     void set_text(const string& text);
     const string& get_text() const;
@@ -706,8 +712,8 @@ class NoSelectTextItem : public TextItem
 public:
     NoSelectTextItem();
     virtual ~NoSelectTextItem();
-    virtual bool selected() const;
-    virtual bool can_be_highlighted() const;
+    virtual bool selected() const override;
+    virtual bool can_be_highlighted() const override;
 };
 
 /**
@@ -718,7 +724,7 @@ public:
 class FormattedTextItem : public TextItem
 {
 public:
-    virtual void render();
+    virtual void render() override;
 };
 
 /**
@@ -731,8 +737,8 @@ public:
     TextTileItem();
     virtual ~TextTileItem();
 
-    virtual void set_bounds(const coord_def& min_coord, const coord_def& max_coord);
-    virtual void render();
+    virtual void set_bounds(const coord_def& min_coord, const coord_def& max_coord) override;
+    virtual void render() override;
 
     virtual void add_tile(tile_def tile);
     void clear_tile() { m_tiles.clear(); };
@@ -754,7 +760,7 @@ public:
     SaveMenuItem();
     virtual ~SaveMenuItem();
 
-    virtual void render();
+    virtual void render() override;
 
     void set_doll(dolls_data doll);
 
@@ -769,7 +775,7 @@ class PrecisionMenu;
 /**
  * Abstract base class interface for all attachable objects.
  * Objects are generally containers that hold MenuItems, however special
- * objects are also possible, for instance MenuDescriptor, MenuButton.
+ * objects are also possible, for instance MenuDescriptor.
  * All objects should have an unique string name, although the uniqueness
  * is not enforced or checked right now.
  */
@@ -871,28 +877,28 @@ public:
     MenuFreeform();
     virtual ~MenuFreeform();
 
-    virtual InputReturnValue process_input(int key);
+    virtual InputReturnValue process_input(int key) override;
 #ifdef USE_TILE_LOCAL
-    virtual InputReturnValue handle_mouse(const MouseEvent& me);
+    virtual InputReturnValue handle_mouse(const MouseEvent& me) override;
 #endif
-    virtual void render();
-    virtual MenuItem* get_active_item();
-    virtual void set_active_item(int ID);
-    virtual void set_active_item(MenuItem* item);
-    virtual void activate_first_item();
-    virtual void activate_last_item();
+    virtual void render() override;
+    virtual MenuItem* get_active_item() override;
+    virtual void set_active_item(int ID) override;
+    virtual void set_active_item(MenuItem* item) override;
+    virtual void activate_first_item() override;
+    virtual void activate_last_item() override;
     void set_default_item(MenuItem* item);
     void activate_default_item();
 
-    virtual bool select_item(int index);
-    virtual bool select_item(MenuItem* item);
-    virtual bool attach_item(MenuItem* item);
+    virtual bool select_item(int index) override;
+    virtual bool select_item(MenuItem* item) override;
+    virtual bool attach_item(MenuItem* item) override;
 
 protected:
-    virtual void _place_items();
+    virtual void _place_items() override;
     virtual void _set_active_item_by_index(int index);
-    virtual MenuItem* _find_item_by_direction(const MenuItem* start,
-                                              MenuObject::Direction dir);
+    virtual MenuItem* _find_item_by_direction(
+            const MenuItem* start, MenuObject::Direction dir) override;
 
     // cursor position
     MenuItem* m_active_item;
@@ -911,27 +917,30 @@ public:
     MenuScroller();
     virtual ~MenuScroller();
 
-    virtual InputReturnValue process_input(int key);
+    virtual InputReturnValue process_input(int key) override;
 #ifdef USE_TILE_LOCAL
-    virtual InputReturnValue handle_mouse(const MouseEvent& me);
+    virtual InputReturnValue handle_mouse(const MouseEvent& me) override;
 #endif
-    virtual void render();
-    virtual MenuItem* get_active_item();
-    virtual void set_active_item(int ID);
-    virtual void set_active_item(MenuItem* item);
-    virtual void activate_first_item();
-    virtual void activate_last_item();
+    virtual void render() override;
+    virtual MenuItem* get_active_item() override;
+    virtual void set_active_item(int ID) override;
+    virtual void set_active_item(MenuItem* item) override;
+    virtual void activate_first_item() override;
+    virtual void activate_last_item() override;
 
-    virtual bool select_item(int index);
-    virtual bool select_item(MenuItem* item);
-    virtual bool attach_item(MenuItem* item);
+    virtual bool select_item(int index) override;
+    virtual bool select_item(MenuItem* item) override;
+    virtual bool attach_item(MenuItem* item) override;
 protected:
-    virtual void _place_items();
+    virtual void _place_items() override;
     virtual void _set_active_item_by_index(int index);
     virtual MenuItem* _find_item_by_direction(int start_index,
                                               MenuObject::Direction dir);
-    virtual MenuItem* _find_item_by_direction(const MenuItem* start,
-                                              MenuObject::Direction dir) { return nullptr; }
+    virtual MenuItem* _find_item_by_direction(
+            const MenuItem* start, MenuObject::Direction dir) override
+    {
+        return nullptr;
+    }
 
     int m_topmost_visible;
     int m_currently_active;
@@ -956,35 +965,44 @@ public:
     void init(const coord_def& min_coord, const coord_def& max_coord,
               const string& name);
 
-    virtual InputReturnValue process_input(int key);
+    virtual InputReturnValue process_input(int key) override;
 #ifdef USE_TILE_LOCAL
-    virtual InputReturnValue handle_mouse(const MouseEvent& me);
+    virtual InputReturnValue handle_mouse(const MouseEvent& me) override;
 #endif
-    virtual void render();
+    virtual void render() override;
 
     // these are not used, clear them
-    virtual vector<MenuItem*> get_selected_items();
-    virtual MenuItem* get_active_item() { return nullptr; }
-    virtual bool attach_item(MenuItem* item) { return false; }
-    virtual void set_active_item(int index) {}
-    virtual void set_active_item(MenuItem* item) {}
-    virtual void activate_first_item() {}
-    virtual void activate_last_item() {}
+    virtual vector<MenuItem*> get_selected_items() override;
+    virtual MenuItem* get_active_item() override { return nullptr; }
+    virtual bool attach_item(MenuItem* item) override { return false; }
+    virtual void set_active_item(int index) override {}
+    virtual void set_active_item(MenuItem* item) override {}
+    virtual void activate_first_item() override {}
+    virtual void activate_last_item() override {}
 
-    virtual bool select_item(int index) { return false; }
-    virtual bool select_item(MenuItem* item) { return false;}
-    virtual MenuItem* select_item_by_hotkey(int key) { return nullptr; }
-    virtual void clear_selections() {}
+    virtual bool select_item(int index) override { return false; }
+    virtual bool select_item(MenuItem* item) override { return false;}
+    virtual MenuItem* select_item_by_hotkey(int key) override
+    {
+        return nullptr;
+    }
+    virtual void clear_selections() override {}
 
     // Do not allow focus
-    virtual void allow_focus(bool toggle) {}
-    virtual bool can_be_focused() { return false; }
+    virtual void allow_focus(bool toggle) override {}
+    virtual bool can_be_focused() override { return false; }
 
 protected:
-    virtual void _place_items();
-    virtual MenuItem* _find_item_by_mouse_coords(const coord_def& pos) { return nullptr; }
-    virtual MenuItem* _find_item_by_direction(const MenuItem* start,
-                                              MenuObject::Direction dir) { return nullptr; }
+    virtual void _place_items() override;
+    virtual MenuItem* _find_item_by_mouse_coords(const coord_def& pos) override
+    {
+        return nullptr;
+    }
+    virtual MenuItem* _find_item_by_direction(
+            const MenuItem* start, MenuObject::Direction dir) override
+    {
+        return nullptr;
+    }
 
     // Used to pull out currently active item
     PrecisionMenu* m_parent;
@@ -1003,11 +1021,11 @@ public:
     virtual ~MenuTooltip();
 
 #ifdef USE_TILE_LOCAL
-    virtual InputReturnValue handle_mouse(const MouseEvent& me);
+    virtual InputReturnValue handle_mouse(const MouseEvent& me) override;
 #endif
-    virtual void render();
+    virtual void render() override;
 protected:
-    virtual void _place_items();
+    virtual void _place_items() override;
 
 #ifdef USE_TILE_LOCAL
     ShapeBuffer m_background;
@@ -1027,35 +1045,44 @@ public:
     BoxMenuHighlighter(PrecisionMenu* parent);
     virtual ~BoxMenuHighlighter();
 
-    virtual InputReturnValue process_input(int key);
+    virtual InputReturnValue process_input(int key) override;
 #ifdef USE_TILE_LOCAL
-    virtual InputReturnValue handle_mouse(const MouseEvent& me);
+    virtual InputReturnValue handle_mouse(const MouseEvent& me) override;
 #endif
-    virtual void render();
+    virtual void render() override;
 
     // these are not used, clear them
-    virtual vector<MenuItem*> get_selected_items();
-    virtual MenuItem* get_active_item() { return nullptr; }
-    virtual bool attach_item(MenuItem* item) { return false; }
-    virtual void set_active_item(int index) {}
-    virtual void set_active_item(MenuItem* item) {}
-    virtual void activate_first_item() {}
-    virtual void activate_last_item() {}
+    virtual vector<MenuItem*> get_selected_items() override;
+    virtual MenuItem* get_active_item() override { return nullptr; }
+    virtual bool attach_item(MenuItem* item) override { return false; }
+    virtual void set_active_item(int index) override {}
+    virtual void set_active_item(MenuItem* item) override {}
+    virtual void activate_first_item() override {}
+    virtual void activate_last_item() override {}
 
-    virtual bool select_item(int index) { return false; }
-    virtual bool select_item(MenuItem* item) { return false;}
-    virtual MenuItem* select_item_by_hotkey(int key) { return nullptr; }
-    virtual void clear_selections() {}
+    virtual bool select_item(int index) override { return false; }
+    virtual bool select_item(MenuItem* item) override { return false;}
+    virtual MenuItem* select_item_by_hotkey(int key) override
+    {
+        return nullptr;
+    }
+    virtual void clear_selections() override {}
 
     // Do not allow focus
-    virtual void allow_focus(bool toggle) {}
-    virtual bool can_be_focused() { return false; }
+    virtual void allow_focus(bool toggle) override {}
+    virtual bool can_be_focused() override { return false; }
 
 protected:
-    virtual void _place_items();
-    virtual MenuItem* _find_item_by_mouse_coords(const coord_def& pos) { return nullptr; }
-    virtual MenuItem* _find_item_by_direction(const MenuItem* start,
-                                              MenuObject::Direction dir) { return nullptr; }
+    virtual void _place_items() override;
+    virtual MenuItem* _find_item_by_mouse_coords(const coord_def& pos) override
+    {
+        return nullptr;
+    }
+    virtual MenuItem* _find_item_by_direction(
+            const MenuItem* start, MenuObject::Direction dir) override
+    {
+        return nullptr;
+    }
 
     // Used to pull out currently active item
     PrecisionMenu* m_parent;
@@ -1074,9 +1101,9 @@ public:
     BlackWhiteHighlighter(PrecisionMenu* parent);
     virtual ~BlackWhiteHighlighter();
 
-    virtual void render();
+    virtual void render() override;
 protected:
-    virtual void _place_items();
+    virtual void _place_items() override;
 
 #ifdef USE_TILE_LOCAL
     // Tiles does not seem to support background colors
@@ -1084,17 +1111,6 @@ protected:
 #endif
     COLOURS m_old_bg_colour;
     COLOURS m_old_fg_colour;
-};
-
-/**
- * Base operations for a button to work.
- * TODO: implement
- */
-class MenuButton : public MenuObject
-{
-public:
-
-protected:
 };
 
 /**

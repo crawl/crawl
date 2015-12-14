@@ -163,8 +163,6 @@ _time_name_
 
 Day
 
-Night
-
 Midnight
 
 Twilight
@@ -206,6 +204,8 @@ the Present
 the Morning
 
 the Evening
+
+the Equinox
 %%%%
 _sky_colour_name_
 
@@ -238,8 +238,6 @@ the Shining Light
 Sunlight
 
 Starshine
-
-the Clouds
 
 the Sky
 

@@ -23,7 +23,8 @@ tile_list_processor::tile_list_processor() :
     m_variation_idx(-1),
     m_variation_col(-1),
     m_weight(1),
-    m_alpha(0.0)
+    m_alpha(0.0),
+    m_domino(0)
 {
 }
 
@@ -269,7 +270,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
     vector<char *> m_args;
     m_args.push_back(arg);
 
-    while (char *extra = strtok(NULL, delim))
+    while (char *extra = strtok(nullptr, delim))
     {
         eat_whitespace(extra);
         if (!*extra)
@@ -419,10 +420,10 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                             list_file, line, arg, back->filename().c_str());
                     return false;
                 }
-                add_image(img, m_args.size() > 1 ? m_args[1] : NULL);
+                add_image(img, m_args.size() > 1 ? m_args[1] : nullptr);
             }
             else
-                add_image(m_compose, m_args.size() > 1 ? m_args[1] : NULL);
+                add_image(m_compose, m_args.size() > 1 ? m_args[1] : nullptr);
 
             m_compose.unload();
             m_composing = false;
@@ -537,6 +538,11 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             }
 
             m_weight = tmp;
+        }
+        else if (strcmp(arg, "domino") == 0)
+        {
+            CHECK_ARG(1);
+            m_domino = atoi(m_args[1]);
         }
         else if (strcmp(arg, "shrink") == 0)
         {
@@ -694,7 +700,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 recolour(img);
                 m_weight = m_page.m_probs[idx + i] - old_w;
                 old_w    = m_page.m_probs[idx + i];
-                add_image(img, (i == 0 && m_args[2]) ? m_args[2] : NULL);
+                add_image(img, (i == 0 && m_args[2]) ? m_args[2] : nullptr);
             }
 
             if (m_args.size() > 2)
@@ -781,7 +787,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             img.add_rim(tile_colour::black);
 
         // Push tile onto tile page.
-        add_image(img, m_args.size() > 1 ? m_args[1] : NULL);
+        add_image(img, m_args.size() > 1 ? m_args[1] : nullptr);
 
         for (unsigned int i = 2; i < m_args.size(); ++i)
         {
@@ -813,6 +819,7 @@ void tile_list_processor::add_image(tile &img, const char *enumname)
     m_page.m_base_tiles.push_back(m_last_enum);
 
     m_page.m_probs.push_back(weight);
+    m_page.m_domino.push_back(m_domino);
 
     if (!m_categories.empty())
         m_ctg_counts[m_categories.size()-1]++;
@@ -931,7 +938,7 @@ bool tile_list_processor::write_data(bool image, bool code)
     if (!code)
         return true;
 
-    int *part_min = NULL;
+    int *part_min = nullptr;
 
     // Write "tiledef-%name.h"
     {
@@ -1057,6 +1064,8 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp, "tileidx_t tile_%s_basetile(tileidx_t idx);\n", lcname.c_str());
         fprintf(fp, "int tile_%s_probs(tileidx_t idx);\n",
                 lcname.c_str());
+        fprintf(fp, "int tile_%s_dominoes(tileidx_t idx);\n",
+                lcname.c_str());
         fprintf(fp, "const char *tile_%s_name(tileidx_t idx);\n",
             lcname.c_str());
         fprintf(fp, "tile_info &tile_%s_info(tileidx_t idx);\n",
@@ -1144,6 +1153,20 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp, "    ASSERT_RANGE(idx, %s, %s);\n",
                 m_start_value.c_str(), max.c_str());
         fprintf(fp, "    return _tile_%s_probs[idx - %s];\n",
+                lcname.c_str(), m_start_value.c_str());
+        fprintf(fp, "}\n\n");
+
+        fprintf(fp, "static int _tile_%s_dominoes[%s - %s] =\n{\n",
+                lcname.c_str(), max.c_str(), m_start_value.c_str());
+        for (unsigned int i = 0; i < m_page.m_domino.size(); i++)
+            fprintf(fp, "    %d,\n", m_page.m_domino[i]);
+        fprintf(fp, "};\n\n");
+
+        fprintf(fp, "int tile_%s_dominoes(tileidx_t idx)\n{\n",
+                    lcname.c_str());
+        fprintf(fp, "    ASSERT_RANGE(idx, %s, %s);\n",
+                m_start_value.c_str(), max.c_str());
+        fprintf(fp, "    return _tile_%s_dominoes[idx - %s];\n",
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
@@ -1369,6 +1392,11 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp, "int tile_%s_probs(tileidx_t idx)\n{\n",
                     lcname.c_str());
         add_abstracts(fp, "return (tile_%s_probs(idx));", lc_enum, uc_max_enum);
+        fprintf(fp, "}\n\n");
+
+        fprintf(fp, "int tile_%s_dominoes(tileidx_t idx)\n{\n",
+                    lcname.c_str());
+        add_abstracts(fp, "return (tile_%s_dominoes(idx));", lc_enum, uc_max_enum);
         fprintf(fp, "}\n\n");
 
         fprintf(fp, "const char *tile_%s_name(tileidx_t idx)\n{\n",

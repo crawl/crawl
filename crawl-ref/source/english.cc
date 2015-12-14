@@ -25,10 +25,10 @@ bool is_vowel(const ucs_t chr)
     return low == 'a' || low == 'e' || low == 'i' || low == 'o' || low == 'u';
 }
 
-// Pluralises a monster or item name.  This'll need to be updated for
+// Pluralises a monster or item name. This'll need to be updated for
 // correctness whenever new monsters/items are added.
 string pluralise(const string &name, const char * const qualifiers[],
-                 const char *no_qualifier[])
+                 const char * const no_qualifier[])
 {
     string::size_type pos;
 
@@ -116,8 +116,7 @@ string pluralise(const string &name, const char * const qualifiers[],
              || ends_with(name, "folk")     || ends_with(name, "spawn")
              || ends_with(name, "tengu")    || ends_with(name, "sheep")
              || ends_with(name, "swine")    || ends_with(name, "efreet")
-             || ends_with(name, "jiangshi") || ends_with(name, "unborn")
-             || ends_with(name, "raiju")    )
+             || ends_with(name, "jiangshi") || ends_with(name, "raiju"))
     {
         return name;
     }
@@ -156,6 +155,21 @@ string pluralise(const string &name, const char * const qualifiers[],
     return name + "s";
 }
 
+// For monster names ending with these suffixes, we pluralise directly without
+// attempting to use the "of" rule. For instance:
+//
+//      moth of wrath           => moths of wrath but
+//      moth of wrath zombie    => moth of wrath zombies.
+static const char * const _monster_suffixes[] =
+{
+    "zombie", "skeleton", "simulacrum", nullptr
+};
+
+string pluralise_monster(const string &name)
+{
+    return pluralise(name, standard_plural_qualifiers, _monster_suffixes);
+}
+
 string apostrophise(const string &name)
 {
     if (name.empty())
@@ -182,17 +196,12 @@ string apostrophise(const string &name)
     if (name == "yourself")
         return "your own";
 
-    const char lastc = name[name.length() - 1];
-    return name + (lastc == 's' ? "'" : "'s");
-}
+    // We're going with the assumption that we're finding the possessive of
+    // singular nouns ending in 's' more often than that of plural nouns.
+    // No matter what, we're going to get some cases wrong.
 
-string apostrophise_fixup(const string &msg)
-{
-    if (msg.empty())
-        return msg;
-
-    // XXX: This is rather hackish.
-    return replace_all(msg, "s's", "s'");
+    // const char lastc = name[name.length() - 1];
+    return name + /*(lastc == 's' ? "'" :*/ "'s" /*)*/;
 }
 
 /**
@@ -324,7 +333,7 @@ string number_in_words(unsigned num)
 
 static string _number_to_string(unsigned number, bool in_words)
 {
-    return in_words? number_in_words(number) : make_stringf("%u", number);
+    return in_words ? number_in_words(number) : to_string(number);
 }
 
 // Naively prefix A/an to a noun.
@@ -339,9 +348,17 @@ string article_a(const string &name, bool lowercase)
     {
         case 'a': case 'e': case 'i': case 'o': case 'u':
         case 'A': case 'E': case 'I': case 'O': case 'U':
-            // XXX: Hack
+            // XXX: Hack for hydras.
             if (starts_with(name, "one-"))
                 return a + name;
+            return an + name;
+        case '1':
+            // XXX: Hack^2 for hydras.
+            if (starts_with(name, "11-") || starts_with(name, "18-"))
+                return an + name;
+            return a + name;
+        case '8':
+            // Eighty, eight hundred, eight thousand, ...
             return an + name;
         default:
             return a + name;

@@ -9,7 +9,6 @@
 #include "player.h"
 
 const int MAX_SKILL_ORDER = 100;
-
 struct skill_state
 {
     FixedBitVector<NUM_SKILLS>            can_train;
@@ -35,6 +34,9 @@ struct skill_state
 typedef set<skill_type> skill_set;
 
 string skill_names(const skill_set &skills);
+
+int skill_cost_baseline();
+int one_level_cost(skill_type sk);
 
 unsigned int skill_cost_needed(int level);
 int calc_skill_cost(int skill_cost_level);
@@ -70,7 +72,9 @@ skill_type str_to_skill(const string &skill);
 string skill_title_by_rank(
     skill_type best_skill, uint8_t skill_rank,
     // these used for ghosts and hiscores:
-    int species = -1, int str = -1, int dex = -1, int god = -1,
+    species_type species = you.species,
+    bool dex_better = you.base_stats[STAT_DEX] >= you.base_stats[STAT_STR],
+    god_type god = you.religion,
     int piety = you.piety);
 unsigned get_skill_rank(unsigned skill_lev);
 

@@ -113,7 +113,7 @@ TAGS:   transparent no_monster_gen no_rotate decor
 : else
 TAGS:   transparent no_monster_gen no_pool_fixup no_rotate decor
 : end
-KPROP:  C = no_rtele_into
+KPROP:  C = no_tele_into
 : interest_check(_G)
 MAP
    .........
@@ -175,12 +175,16 @@ ENDMAP
 
 NAME:  lemuel_statue_altar
 TAGS:  transparent decor
-DEPTH: D:2-, Orc, Depths, Vaults, Elf, Crypt, Forest
+DEPTH: D:2-, Orc, Depths, Vaults, Elf, Crypt
 : if you.absdepth() < 10 then
 SUBST: F = G
 : end
 SUBST: F = G:99 F:1
+: if you.in_branch("D") or you.in_branch("Orc") then
 KMONS: F = orange crystal statue / obsidian statue / ice statue
+: else
+KMONS: F = orange crystal statue
+: end
 : interest_check(_G)
 KMASK: _>C = opaque
 MAP
@@ -250,7 +254,7 @@ KFEAT:  n = iron_grate
 MONS:  patrolling Angel
 : end
 KFEAT: _ = altar_elyvilon / altar_zin / altar_the_shining_one
-KPROP: >"1_ = no_rtele_into
+KPROP: >"1_ = no_tele_into
 SUBST: " = .
 MAP
    .....
@@ -281,8 +285,8 @@ ENDMAP
 NAME:  lemuel_hellish_altar
 DEPTH: D:8-, Crypt, Geh
 TAGS:  no_monster_gen
-MONS:  rust devil/orange demon
-MONS:  hell beast/red devil
+MONS:  rust devil / orange demon
+MONS:  hell beast / red devil
 MONS:  iron imp
 MONS:  hellion
 SUBST: 2 = 23
@@ -295,7 +299,7 @@ SUBST: L = l.
 SUBST: _ = _ P:1
 KFEAT: _ = altar_lugonu/altar_yredelemnul/altar_kikubaaqudgha/altar_makhleb
 KFEAT: P = enter_abyss
-KPROP: 1234_ = no_rtele_into
+KPROP: 1234_ = no_tele_into
 MAP
 ....LLLLL.....
 ..LlllllllL...
@@ -376,20 +380,50 @@ ENDMAP
 ### Altars to Jiyva ##########################################################
 
 NAME:   jiyva_altar_1
-DEPTH:  D:4-
+DEPTH:  D:8-
 KFEAT:  _ = altar_jiyva
-: if you.depth() < 6 then
-NSUBST: 1 = 1:1 / *:2
-: elseif you.depth() < 9 then
-NSUBST: 1 = 2:1 / *:2
-: elseif you.depth() < 13 then
+: if you.depth() > 9 then
 NSUBST: 1 = 3:1 / *:2
+: elseif you.depth() > 11 then
+NSUBST: 1 = 2:1 / *:2
+: elseif you.depth() > 13 then
+NSUBST: 1 = 1:1 / *:2
 : end
-MONS:  jelly, ooze
+MONS:  jelly, slime creature
 MAP
 .....
 ..1..
 .1_1.
 ..1..
 .....
+ENDMAP
+
+### Ecumenical altars ########################################################
+
+NAME:   ecumenical_altar_1
+DEPTH:  D:2-3
+TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
+KFEAT:  _ = altar_ecumenical
+CHANCE: 50 : 10%
+MAP
+.....
+..x..
+.x_x.
+..x..
+.....
+ENDMAP
+
+NAME: ecumenical_altar_2
+DEPTH: D:2-3
+TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
+KFEAT:  _ = altar_ecumenical
+CHANCE: 50 : 10%
+MAP
+.......
+...G...
+..G.G..
+.G._.G.
+..G.G..
+...G...
+.......
 ENDMAP

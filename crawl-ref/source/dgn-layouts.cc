@@ -153,15 +153,13 @@ void dgn_build_bigger_room_level()
 // A more chaotic version of city level.
 void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
 {
-        // TODO: Attach this information to the vault name string
-        //       instead of the build method string.
+    // TODO: Attach this information to the vault name string
+    //       instead of the build method string.
     env.level_build_method += make_stringf(" [%s]",
         force_wall == NUM_FEATURES ? "any" : dungeon_feature_name(force_wall));
 
     int number_boxes = 5000;
     dungeon_feature_type drawing = DNGN_ROCK_WALL;
-    uint8_t b1x, b1y, b2x, b2y;
-    int i;
 
     number_boxes = random_choose_weighted(32, 4000,
                                           24, 3000,
@@ -182,7 +180,8 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
                      DNGN_FLOOR, MMT_VAULT);
 
     // replace_area can also be used to fill in:
-    for (i = 0; i < number_boxes; i++)
+    uint8_t b1x, b1y, b2x, b2y;
+    for (int i = 0; i < number_boxes; i++)
     {
         int room_width = 3 + random2(7) + random2(5);
         int room_height = 3 + random2(7) + random2(5);
@@ -427,8 +426,8 @@ static void _builder_extras(int level_number)
 static bool _octa_room(dgn_region& region, int oblique_max,
                        dungeon_feature_type type_floor)
 {
-        // TODO: Attach this information to the vault name string
-        //       instead of the build method string.
+    // TODO: Attach this information to the vault name string
+    //       instead of the build method string.
     env.level_build_method += make_stringf(" octa_room [oblique %d, %s]", oblique_max,
                                            dungeon_feature_name(type_floor));
 
@@ -1085,22 +1084,19 @@ static bool _may_overwrite_pos(coord_def c)
 
 static void _build_river(dungeon_feature_type river_type) //mv
 {
-    int i,j;
-    int y, width;
-
     if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_TOMB))
         return;
 
-        // TODO: Attach this information to the vault name string
-        //       instead of the build method string.
+    // TODO: Attach this information to the vault name string
+    //       instead of the build method string.
     env.level_build_method += make_stringf(" river [%s]",
                                            dungeon_feature_name(river_type));
 
     // Made rivers less wide... min width five rivers were too annoying. -- bwr
-    width = 3 + random2(4);
-    y = 10 - width + random2avg(GYM-10, 3);
+    int width = 3 + random2(4);
+    int y = 10 - width + random2avg(GYM-10, 3);
 
-    for (i = 5; i < (GXM - 5); i++)
+    for (int i = 5; i < (GXM - 5); i++)
     {
         if (one_chance_in(3))   y++;
         if (one_chance_in(3))   y--;
@@ -1110,7 +1106,7 @@ static void _build_river(dungeon_feature_type river_type) //mv
         if (width < 2) width = 2;
         if (width > 6) width = 6;
 
-        for (j = y; j < y+width ; j++)
+        for (int j = y; j < y+width ; j++)
             if (j >= 5 && j <= GYM - 5)
             {
                 // Note that vaults might have been created in this area!

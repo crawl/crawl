@@ -6,6 +6,8 @@
 #ifndef ITEMNAME_H
 #define ITEMNAME_H
 
+#include "random.h"
+
 #define CORPSE_NAME_KEY      "corpse_name_key"
 #define CORPSE_NAME_TYPE_KEY "corpse_name_type_key"
 
@@ -92,6 +94,14 @@ enum mbn_type
     MBN_BRAND, // plain brand name
 };
 
+/// What kind of special behaviour should make_name use?
+enum makename_type
+{
+    MNAME_DEFAULT, /// No special behaviour.
+    MNAME_SCROLL, /// Allcaps, longer.
+    MNAME_JIYVA, /// No spaces, starts with J, Plog -> Jiyva
+};
+
 void check_item_knowledge(bool unknown_items = false);
 void display_runes();
 
@@ -101,7 +111,6 @@ string quant_name(const item_def &item, int quant,
 bool item_type_known(const item_def &item);
 bool item_type_unknown(const item_def &item);
 bool item_type_known(const object_class_type base_type, const int sub_type);
-bool item_type_tried(const item_def &item);
 
 bool is_interesting_item(const item_def& item);
 bool is_emergency_item(const item_def& item);
@@ -110,7 +119,9 @@ bool is_bad_item(const item_def &item, bool temp = false);
 bool is_dangerous_item(const item_def& item, bool temp = false);
 bool is_useless_item(const item_def &item, bool temp = false);
 
-string make_name(uint32_t seed, bool all_caps, int maxlen = -1, char start = 0);
+string make_name(uint32_t seed = get_uint32(),
+                 makename_type name_type = MNAME_DEFAULT);
+void make_name_tests();
 
 const char* brand_type_name(int brand, bool terse) PURE;
 const char* weapon_brand_name(const item_def& item, bool terse, int override_brand = 0) PURE;
@@ -118,15 +129,11 @@ const char* armour_ego_name(const item_def& item, bool terse);
 const char* missile_brand_name(const item_def& item, mbn_type t);
 
 bool item_type_has_ids(object_class_type base_type);
-item_type_id_state_type get_ident_type(const item_def &item);
-item_type_id_state_type get_ident_type(object_class_type basetype,
-                                       int subtype);
-bool set_ident_type(item_def &item, item_type_id_state_type setting,
-                     bool force = false);
-bool set_ident_type(object_class_type basetype, int subtype,
-                     item_type_id_state_type setting, bool force = false);
+bool get_ident_type(const item_def &item);
+bool get_ident_type(object_class_type basetype, int subtype);
+bool set_ident_type(item_def &item, bool identify);
+bool set_ident_type(object_class_type basetype, int subtype, bool identify);
 void pack_item_identify_message(int base_type, int sub_type);
-void identify_healing_pots();
 
 string item_prefix(const item_def &item, bool temp = true);
 string get_menu_colour_prefix_tags(const item_def &item,
@@ -151,5 +158,5 @@ string ego_type_string(const item_def &item, bool terse = false, int override_br
 string ghost_brand_name(int brand);
 
 const char* potion_type_name(int potiontype);  //used in xom.cc
-const char* jewellery_effect_name(int jeweltype) PURE; //used in l_item.cc
+const char* jewellery_effect_name(int jeweltype, bool terse = false) PURE; //used in l_item.cc
 #endif

@@ -58,7 +58,7 @@ class dgn_veto_exception : public exception
 public:
     dgn_veto_exception(const string& _msg) : msg(_msg) { }
     ~dgn_veto_exception() throw () { }
-    const char *what() const throw ()
+    const char *what() const throw () override
     {
         return msg.c_str();
     }
@@ -193,7 +193,7 @@ void write_level_connectivity(writer &th);
 bool builder(bool enable_random_maps = true,
              dungeon_feature_type dest_stairs_type = NUM_FEATURES);
 
-void dgn_clear_vault_placements(vault_placement_refv &vps);
+void dgn_clear_vault_placements();
 void dgn_erase_unused_vault_placements();
 void dgn_flush_map_memory();
 
@@ -245,9 +245,6 @@ int dgn_place_item(const item_spec &spec,
 class item_list;
 void dgn_place_multiple_items(item_list &list,
                               const coord_def& where);
-
-bool set_level_flags(uint32_t flags, bool silent = false);
-bool unset_level_flags(uint32_t flags, bool silent = false);
 
 void dgn_set_branch_epilogue(branch_type br, string callback_name);
 
