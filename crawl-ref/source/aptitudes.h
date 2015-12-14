@@ -1501,11 +1501,11 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_LACERTILIAN,    SK_DODGING,          0),
     APT(SP_LACERTILIAN,    SK_STEALTH,          3),
 #if TAG_MAJOR_VERSION == 34
-    APT(SP_LACERTILIAN,    SK_STABBING,       -99),
+    APT(SP_LACERTILIAN,    SK_STABBING,      UNUSABLE_SKILL),
 #endif
     APT(SP_LACERTILIAN,    SK_SHIELDS,          0),
 #if TAG_MAJOR_VERSION == 34
-    APT(SP_LACERTILIAN,    SK_TRAPS,          -99),
+    APT(SP_LACERTILIAN,    SK_TRAPS,         UNUSABLE_SKILL),
 #endif
     APT(SP_LACERTILIAN,    SK_UNARMED_COMBAT,  -1),
     APT(SP_LACERTILIAN,    SK_SPELLCASTING,    -4),
@@ -1522,7 +1522,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_LACERTILIAN,    SK_EARTH_MAGIC,     -2),
     APT(SP_LACERTILIAN,    SK_POISON_MAGIC,    -2),
     APT(SP_LACERTILIAN,    SK_INVOCATIONS,      3),
-    APT(SP_LACERTILIAN,    SK_EVOCATIONS,       1),
+    APT(SP_LACERTILIAN,    SK_EVOCATIONS,       0),
 };
 
 #endif
