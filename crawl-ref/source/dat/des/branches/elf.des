@@ -32,7 +32,6 @@ end
 
 -- The standard Elf:$ monster set
 function elf_monsters(e)
-  e.tags("patrolling")
   e.mons("deep elf high priest")
   e.mons("deep elf demonologist / deep elf elementalist w:3")
   e.mons("deep elf annihilator / deep elf elementalist w:3")
