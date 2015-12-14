@@ -627,6 +627,7 @@ void do_crash_dump()
 
     if (!crawl_state.test && !_assert_msg.empty())
         fprintf(stderr, "\n%s", _assert_msg.c_str());
+    // This message is parsed by the WebTiles server.
     fprintf(stderr,
             "\n\nWe crashed! This is likely due to a bug in Crawl. "
             "Please submit a bug report at https://crawl.develz.org/mantis/ "

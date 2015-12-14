@@ -3,6 +3,7 @@ import subprocess
 import datetime, time
 import hashlib
 import logging
+import re
 
 import config
 
@@ -666,15 +667,23 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.exit_reason = "crash"
             if line.rfind(":") != -1:
                 self.exit_message = line[line.rfind(":") + 1:].strip()
-        elif line.startswith("Writing crash info to"):
+        elif line.startswith("We crashed!"):
             self.exit_reason = "crash"
-            url = None
-            if line.rfind("/") != -1:
-                url = line[line.rfind("/") + 1:].strip()
-            elif line.rfind(" ") != -1:
-                url = line[line.rfind(" ") + 1:].strip()
-            if url != None:
-                self.exit_dump_url = self.game_params["morgue_url"].replace("%n", self.username) + os.path.splitext(url)[0]
+            if self.game_params["morgue_url"] != None:
+                match = re.search("\(([^)]+)\)", line)
+                if match != None:
+                    self.exit_dump_url = self.game_params["morgue_url"].replace("%n", self.username)
+                    self.exit_dump_url += os.path.splitext(os.path.basename(match.group(1)))[0]
+        elif line.startswith("Writing crash info to"): # before 0.15-b1-84-gded71f8
+            self.exit_reason = "crash"
+            if self.game_params["morgue_url"] != None:
+                url = None
+                if line.rfind("/") != -1:
+                    url = line[line.rfind("/") + 1:].strip()
+                elif line.rfind(" ") != -1:
+                    url = line[line.rfind(" ") + 1:].strip()
+                if url != None:
+                    self.exit_dump_url = self.game_params["morgue_url"].replace("%n", self.username) + os.path.splitext(url)[0]
 
     def _on_socket_message(self, msg):
         # stdout data is only used for compatibility to wrapper
