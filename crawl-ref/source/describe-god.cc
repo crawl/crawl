@@ -790,6 +790,7 @@ static void _describe_god_powers(god_type which_god)
 
     case GOD_DITHMENOS:
     {
+        have_any = true;
         const int umbra_size = you_worship(which_god) ? you.umbra_radius() : -1;
         if (umbra_size < 0)
             textcolour(DARKGREY);
