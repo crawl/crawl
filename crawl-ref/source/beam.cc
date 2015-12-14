@@ -1107,8 +1107,9 @@ void bolt::affect_cell()
         monster *m = monster_at(pos());
         if (m && can_affect_actor(m))
         {
+            const bool ignored = ignores_monster(m);
             affect_monster(m);
-            if ((hit == AUTOMATIC_HIT && !pierce && !ignores_monster(m))
+            if (hit == AUTOMATIC_HIT && !pierce && !ignored
                 // Assumes tracers will always have an agent!
                 && (!is_tracer || m->visible_to(agent())))
             {
