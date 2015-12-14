@@ -6,7 +6,7 @@ compiler:
 addons:
     apt:
         sources:
-            - debian-sid
+            - zoogie-sdl2-snapshots
             - ubuntu-toolchain-r-test
         packages:
             - g++-4.7
