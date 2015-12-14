@@ -6,6 +6,7 @@ compiler:
 addons:
     apt:
         sources:
+            - debian-sid
             - ubuntu-toolchain-r-test
         packages:
             - g++-4.7
@@ -15,6 +16,9 @@ addons:
             - libxss-dev
             - liblua5.1-0-dev
             - liblua5.1-0-dbg
+            - libsdl2-dev
+            - libsdl2-image-dev
+            - libsdl2-mixer-dev
 before_install:
     - if [ "$CXX" = "g++" ]; then export CXX="g++-4.7" CC="gcc-4.7"; fi
 env:
