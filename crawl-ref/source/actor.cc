@@ -614,7 +614,7 @@ void actor::accum_has_constricted()
         entry.second += you.time_taken;
 }
 
-bool actor::can_constrict(actor* defender)
+bool actor::can_constrict(const actor* defender) const
 {
     ASSERT(defender); // XXX: change to actor &defender
     return (!is_constricting() || has_usable_tentacle())

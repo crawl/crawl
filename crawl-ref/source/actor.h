@@ -427,7 +427,7 @@ public:
     void stop_constricting_all(bool intentional = false, bool quiet = false);
     void stop_being_constricted(bool quiet = false);
 
-    bool can_constrict(actor* defender);
+    bool can_constrict(const actor* defender) const;
     void clear_far_constrictions();
     void clear_constrictions_far_from(const coord_def &where);
     void accum_has_constricted();
