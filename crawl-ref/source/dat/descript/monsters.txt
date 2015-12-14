@@ -1,4 +1,4 @@
-%%%%
+﻿%%%%
 # Glyph-specific suffixes
 # Only for non-uniques nagas.
 __cap-N_suffix
@@ -1578,6 +1578,10 @@ kraken
 A gargantuan sea monster, capable of devouring entire ships. It embraces them
 with its tentacles and draws them into the depths. Fortunately, the tentacles
 are too big to embrace a small creature like you.
+%%%%
+lacertilian
+
+A lanky humanoid lizard with blue-green scales and large yellow eyes.
 %%%%
 large abomination
 
