@@ -722,7 +722,8 @@ static const char* scroll_type_name(int scrolltype)
  */
 const char* jewellery_effect_name(int jeweltype, bool terse)
 {
-    if (!terse) {
+    if (!terse)
+    {
         switch (static_cast<jewellery_type>(jeweltype))
         {
 #if TAG_MAJOR_VERSION == 34
@@ -770,7 +771,9 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case AMU_REGENERATION:      return "regeneration";
         default: return "buggy jewellery";
         }
-    } else {
+    }
+    else
+    {
         if (jewellery_base_ability_string(jeweltype)[0] != '\0')
             return jewellery_base_ability_string(jeweltype);
         switch (static_cast<jewellery_type>(jeweltype))
