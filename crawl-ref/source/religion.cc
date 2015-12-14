@@ -1300,6 +1300,18 @@ static void _set_penance(god_type god, int val, bool excommunicated = 0)
         // no penance for switching gods
         return;
     you.penance[god] = val;
+    if (excommunicated)
+    {
+        switch (god)
+        {
+        case GOD_CHEIBRIADOS:
+            simple_god_message(" continues to slow your movements.", god); break;
+        case GOD_PAKELLAS:
+            simple_god_message(" continues to block your magic from regenerating.", god);
+            break;
+        default: break;
+        }
+    }
 }
 
 static void _inc_gift_timeout(int val)
@@ -2891,15 +2903,12 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_PAKELLAS:
-        simple_god_message(" continues to block your magic from regenerating.",
-                           old_god);
         if (you.duration[DUR_DEVICE_SURGE])
             you.duration[DUR_DEVICE_SURGE] = 0;
         _set_penance(old_god, 25, 1);
         break;
 
     case GOD_CHEIBRIADOS:
-        simple_god_message(" continues to slow your movements.", old_god);
         _set_penance(old_god, 25, 1);
         redraw_screen();
         notify_stat_change();
