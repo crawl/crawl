@@ -86,8 +86,8 @@ static coord_def _mons_fragment_target(monster *mons);
 static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe);
 static coord_def _mons_prism_pos(monster* mon, actor* foe);
 static coord_def _mons_awaken_earth_target(monster& mon);
-static bool _mons_consider_tentacle_throwing(const monster &mons);
-static bool _tentacle_toss(const monster &thrower, actor &victim, int pow);
+static bool _mons_consider_throwing(const monster &mons);
+static bool _throw(const monster &thrower, actor &victim, int pow);
 static void _maybe_throw_ally(const monster &mons);
 static int _throw_site_score(const monster &thrower, const actor &victim,
                              const coord_def &site);
@@ -6525,7 +6525,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_THROW:
-        _mons_consider_tentacle_throwing(*mons);
+        _mons_consider_throwing(*mons);
         return;
 
     case SPELL_THROW_ALLY:
@@ -7302,44 +7302,44 @@ static void _maybe_throw_ally(const monster &mons)
 }
 
 /**
- * Find the best creature for the given monster to toss with its tentacles.
+ * Find the best creature for the given monster to toss.
  *
- * @param mons      The monster thinking about tentacle-throwing.
- * @return          The mid_t of the best victim for the monster to throw.
- *                  Could be player, another monster, or MID_NOBODY (none).
+ * @param mons      The monster thinking about throwing.
+ * @return          The victim for the monster to throw. Can be null.
  */
-static mid_t _get_tentacle_throw_victim(const monster &mons)
+static actor *_get_throw_victim(const monster &mons)
 {
-    mid_t throw_choice = MID_NOBODY;
-    int highest_dur = -1;
-
-    if (!mons.constricting)
-        return throw_choice;
-
-    for (auto &entry : *mons.constricting)
+    // Always throw the player first, if possible.
+    if (!mons.wont_attack() && adjacent(you.pos(), mons.pos())
+        && !(mons.is_constricted() && mons.constricted_by == MID_PLAYER)
+        && mons.can_constrict(&you))
     {
-        const actor* const victim = actor_by_mid(entry.first);
+        return &you;
+    }
+
+    for (fair_adjacent_iterator ai(mons.pos()); ai; ++ai)
+    {
+        actor* victim = actor_at(*ai);
         // Only throw real, living victims.
         if (!victim || !victim->alive())
             continue;
 
-        // Don't try to throw anything constricting you.
-        if (mons.is_constricted() &&  mons.constricted_by == entry.first)
+        // Don't throw allies.
+        if (mons_aligned(&mons, victim))
             continue;
 
-        // Always throw the player, if we can.
-        if (victim->is_player())
-            return entry.first;
+        // Don't try to throw anything constricting the thrower.
+        if (mons.is_constricted() && mons.constricted_by == victim->mid)
+            continue;
 
-        // otherwise throw whomever we've been constricting the longest.
-        if (entry.second > highest_dur)
-        {
-            throw_choice = entry.first;
-            highest_dur = entry.second;
-        }
+        // See if we *could* execute a grab attack, and if so, they're
+        // a valid target.
+        if (mons.can_constrict(victim))
+            return victim;
     }
 
-    return throw_choice;
+    // Nope.
+    return nullptr;
 }
 
 /**
@@ -7348,18 +7348,17 @@ static mid_t _get_tentacle_throw_victim(const monster &mons)
  * @param mons       The monster doing the throwing.
  * @return           Whether a throw attempt was made.
  */
-static bool _mons_consider_tentacle_throwing(const monster &mons)
+static bool _mons_consider_throwing(const monster &mons)
 {
-    const mid_t throw_choice = _get_tentacle_throw_victim(mons);
-    actor* victim = actor_by_mid(throw_choice);
+    actor *victim = _get_throw_victim(mons);
     if (!victim)
         return false;
 
-    return _tentacle_toss(mons, *victim, mons.get_hit_dice() * 4);
+    return _throw(mons, *victim, mons.get_hit_dice() * 4);
 }
 
 /**
- * Find the actual landing place for a tentacle toss.
+ * Find the actual landing place for a throw.
  *
  * @param thrower       The monster performing the toss.
  * @param victim        The actor being thrown.
@@ -7368,7 +7367,7 @@ static bool _mons_consider_tentacle_throwing(const monster &mons)
  *                      the victim's initial position and the intended
  *                      destination.
  */
-static coord_def _choose_tentacle_toss_dest(const monster &thrower,
+static coord_def _choose_throw_dest(const monster &thrower,
                                             const actor &victim,
                                             const coord_def &target_site)
 {
@@ -7399,14 +7398,14 @@ static coord_def _choose_tentacle_toss_dest(const monster &thrower,
 }
 
 /**
- * Actually perform a tentacle throw to the specified destination.
+ * Actually perform a throw to the specified destination.
  *
  * @param thrower       The monster doing the tossing.
  * @param victim        The tossee.
  * @param pow           The power of the throw; determines damage.
  * @param chosen_dest   The final destination of the victim.
  */
-static void _tentacle_toss_to(const monster &thrower, actor &victim,
+static void _throw_to(const monster &thrower, actor &victim,
                               int pow, const coord_def &chosen_dest)
 {
     ASSERT(in_bounds(chosen_dest));
@@ -7457,16 +7456,16 @@ static void _tentacle_toss_to(const monster &thrower, actor &victim,
  * @param pow      The throw power, which is the die size for damage.
  * @return         True if the victim was thrown, False otherwise.
  */
-static bool _tentacle_toss(const monster &thrower, actor &victim, int pow)
+static bool _throw(const monster &thrower, actor &victim, int pow)
 {
     const coord_def throw_target = _choose_throwing_target(thrower, victim,
                                                            _throw_site_score);
     if (throw_target.origin())
         return false;
 
-    const coord_def chosen_dest = _choose_tentacle_toss_dest(thrower, victim,
+    const coord_def chosen_dest = _choose_throw_dest(thrower, victim,
                                                              throw_target);
-    _tentacle_toss_to(thrower, victim, pow, chosen_dest);
+    _throw_to(thrower, victim, pow, chosen_dest);
     return true;
 }
 
@@ -8120,7 +8119,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return _mons_mass_confuse(mon, false) < 0;
 
     case SPELL_THROW:
-        return _get_tentacle_throw_victim(*mon) == MID_NOBODY;
+        return !_get_throw_victim(*mon);
 
     case SPELL_THROW_ALLY:
         return !_find_ally_to_throw(*mon);
