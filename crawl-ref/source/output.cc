@@ -25,6 +25,7 @@
 #include "godpassive.h"
 #include "initfile.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "jobs.h"
 #include "lang-fake.h"
 #include "libutil.h"
@@ -2361,8 +2362,8 @@ static string _resist_composer(
 static vector<formatted_string> _get_overview_resistances(
     vector<char> &equip_chars, bool calc_unid, int sw)
 {
-    // 3 columns, splits at columns 18, 33
-    column_composer cols(3, 18, 33);
+    // 3 columns, splits at columns 19, 33
+    column_composer cols(3, 19, 33);
     // First column, resist name is 7 chars
     int cwidth = 7;
     string out;
@@ -2394,7 +2395,11 @@ static vector<formatted_string> _get_overview_resistances(
 
     const int rmuta = (you.rmut_from_item(calc_unid)
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3);
-    out += _resist_composer("rMut", cwidth, rmuta) + "\n";
+    if (rmuta)
+        out += _resist_composer("rMut", cwidth, rmuta) + "\n";
+
+    const int rsust = player_sust_attr(calc_unid);
+    out += _resist_composer("SustAt", cwidth, rsust) + "\n";
 
     const int rmagi = player_res_magic(calc_unid) / MR_PIP;
     out += _resist_composer("MR", cwidth, rmagi, 5) + "\n";
@@ -2409,6 +2414,26 @@ static vector<formatted_string> _get_overview_resistances(
     const int rinvi = you.can_see_invisible(calc_unid);
     out += _resist_composer("SeeInvis", cwidth, rinvi) + "\n";
 
+    const int gourmand = you.gourmand(calc_unid);
+    out += _resist_composer("Gourm", cwidth, gourmand, 1) + "\n";
+
+    const int faith = you.faith(calc_unid);
+    out += _resist_composer("Faith", cwidth, faith) + "\n";
+
+    const int rspir = you.spirit_shield(calc_unid);
+    out += _resist_composer("Spirit", cwidth, rspir) + "\n";
+
+    const int rward = you.dismissal(calc_unid);
+    out += _resist_composer("Dismiss", cwidth, rward) + "\n";
+
+    const item_def *sh = you.shield();
+    const int reflect = you.reflection(calc_unid)
+                        || sh && shield_reflects(*sh);
+    out += _resist_composer("Reflect", cwidth, reflect) + "\n";
+
+    const int harm = you.extra_harm(calc_unid);
+    out += _resist_composer("Harm", cwidth, harm) + "\n";
+
     const int rclar = you.clarity(calc_unid);
     const int stasis = you.stasis(calc_unid);
     // TODO: what about different levels of anger/berserkitis?
@@ -2416,37 +2441,30 @@ static vector<formatted_string> _get_overview_resistances(
                              || player_mutation_level(MUT_BERSERK))
                             && !rclar && !stasis
                             && !you.is_lifeless_undead();
-    out += show_angry ? _resist_composer("Rnd*Rage", cwidth, 1, 1, false) + "\n"
-                      : _resist_composer("Clarity", cwidth, rclar) + "\n";
-
-    const int rsust = player_sust_attr(calc_unid);
-    out += _resist_composer("SustAt", cwidth, rsust) + "\n";
-
-    const int gourmand = you.gourmand(calc_unid);
-    out += _resist_composer("Gourm", cwidth, gourmand, 1) + "\n";
-
-    const int rspir = you.spirit_shield(calc_unid);
-    out += _resist_composer("Spirit", cwidth, rspir) + "\n";
-    const int rward = you.dismissal(calc_unid);
-    out += _resist_composer("Dismiss", cwidth, rward) + "\n";
+    if (show_angry || rclar)
+    {
+        out += show_angry ? _resist_composer("Rnd*Rage", cwidth, 1, 1, false)
+                            + "\n"
+                          : _resist_composer("Clarity", cwidth, rclar) + "\n";
+    }
 
     const int notele = you.no_tele(calc_unid);
     const int rrtel = !!player_teleport(calc_unid);
-    if (notele && !stasis)
-        out += _resist_composer("NoTele", cwidth, 1, 1, false) + "\n";
-    else if (rrtel && !stasis)
-        out += _resist_composer("Rnd*Tele", cwidth, 1, 1, false) + "\n";
-    else
-        out += _resist_composer("Stasis", cwidth, stasis) + "\n";
-    cols.add_formatted(1, out, false);
+    if (notele || rrtel || stasis)
+    {
+        if (notele && !stasis)
+            out += _resist_composer("NoTele", cwidth, 1, 1, false) + "\n";
+        else if (rrtel && !stasis)
+            out += _resist_composer("Rnd*Tele", cwidth, 1, 1, false) + "\n";
+        else
+            out += _resist_composer("Stasis", cwidth, stasis) + "\n";
+    }
 
     const int no_cast = you.no_cast(calc_unid);
     if (no_cast)
-    {
-        out.clear();
         out += _resist_composer("NoCast", cwidth, 1, 1, false);
-        cols.add_formatted(1, out, false);
-    }
+
+    cols.add_formatted(1, out, false);
 
     _print_overview_screen_equip(cols, equip_chars, sw);
 
