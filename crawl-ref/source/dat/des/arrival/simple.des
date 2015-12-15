@@ -1917,6 +1917,8 @@ ENDMAP
 NAME:    grunt_arrival_lava_bath
 ORIENT:  float
 TAGS:    arrival no_monster_gen
+KITEM:   % = %
+KFEAT:   % = >
 MAP
     .@...xxxxx
    ....G.ccccx
