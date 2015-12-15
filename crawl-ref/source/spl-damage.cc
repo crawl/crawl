@@ -2686,7 +2686,7 @@ static bool _dazzle_can_hit(const actor *act)
         testbeam.thrower = KILL_YOU;
         zappy(ZAP_DAZZLING_SPRAY, 100, testbeam);
 
-        return testbeam.ignores_monster(mons);
+        return !testbeam.ignores_monster(mons);
     }
     else
         return false;
