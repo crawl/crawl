@@ -1118,6 +1118,7 @@ static void _equip_amulet_of_dismissal()
     mprf(MSGCH_DURATION, "The world spins around you as a field of "
             "translocational energy flows through you!");
     you.increase_duration(DUR_VERTIGO, random2(4) + 3);
+    you.redraw_evasion = true;
 }
 
 static void _equip_amulet_of_regeneration()
