@@ -1837,7 +1837,7 @@ static bool _battle_cry(const monster& chief, bool check_only = false)
     // Only let loose a battlecry if you have a valid target.
     if (!foe
         || foe->is_player() && chief.friendly()
-        || !chief.can_see(*foe))
+        || !chief.see_cell_no_trans(foe->pos()))
     {
         return false;
     }
@@ -1938,7 +1938,7 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
 
     if (!foe
         || foe->is_player() && mon.friendly()
-        || !mon.can_see(*foe))
+        || !mon.see_cell_no_trans(foe->pos()))
     {
         return false;
     }
@@ -2530,15 +2530,18 @@ static bool _should_recall(monster* caller)
     int num = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mons_is_recallable(caller, *mi) && !caller->can_see(**mi))
+        if (mons_is_recallable(caller, *mi)
+            && !caller->see_cell_no_trans((*mi)->pos()))
+        {
             ++num;
+        }
     }
 
     // Since there are reinforcements we could recall, do we think we need them?
     if (num > 2)
     {
         int ally_hd = 0;
-        for (monster_iterator mi; mi; ++mi)
+        for (monster_near_iterator mi(caller->pos(), LOS_NO_TRANS); mi; ++mi)
         {
             if (*mi != caller && caller->can_see(**mi)
                 && mons_aligned(caller, *mi)
@@ -2576,8 +2579,8 @@ bool mons_word_of_recall(monster* mons, int recall_target)
             continue;
 
         // Don't recall things that are already close to us
-        if ((mons && mons->can_see(**mi))
-            || (!mons && you.can_see(**mi)))
+        if ((mons && mons->see_cell_no_trans((*mi)->pos()))
+            || (!mons && you.see_cell_no_trans((*mi)->pos())))
         {
             continue;
         }
@@ -4310,7 +4313,10 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
     const int pow = _ench_power(SPELL_CAUSE_FEAR, *mons);
 
-    if (mons->can_see(you) && !mons->wont_attack() && !you.afraid_of(mons))
+    if (mons->see_cell_no_trans(you.pos())
+        && mons->can_see(you)
+        && !mons->wont_attack()
+        && !you.afraid_of(mons))
     {
         if (!(you.holiness() & MH_NATURAL))
         {
@@ -4336,7 +4342,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
         }
     }
 
-    for (monster_near_iterator mi(mons->pos()); mi; ++mi)
+    for (monster_near_iterator mi(mons->pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (*mi == mons)
             continue;
@@ -4395,7 +4401,9 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 
     const int pow = _ench_power(SPELL_MASS_CONFUSION, *mons);
 
-    if (mons->can_see(you) && !mons->wont_attack())
+    if (mons->see_cell_no_trans(you.pos())
+        && mons->can_see(you)
+        && !mons->wont_attack())
     {
         retval = 0;
 
@@ -4412,7 +4420,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
         }
     }
 
-    for (monster_near_iterator mi(mons->pos()); mi; ++mi)
+    for (monster_near_iterator mi(mons->pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (*mi == mons)
             continue;
@@ -4453,7 +4461,9 @@ static int _mons_control_undead(monster* mons, bool actual)
 
     const int pow = _ench_power(SPELL_CONTROL_UNDEAD, *mons);
 
-    if (mons->can_see(you) && !mons->wont_attack()
+    if (mons->see_cell_no_trans(you.pos())
+        && mons->can_see(you)
+        && !mons->wont_attack()
         && you.holiness() & MH_UNDEAD)
     {
         retval = 0;
@@ -4475,8 +4485,7 @@ static int _mons_control_undead(monster* mons, bool actual)
                                               : ENCH_HEXED;
     enchant_type bad  = (mons->wont_attack()) ? ENCH_HEXED
                                               : ENCH_CHARM;
-
-    for (monster_near_iterator mi(mons->pos()); mi; ++mi)
+    for (monster_near_iterator mi(mons->pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (*mi == mons)
             continue;
@@ -6278,7 +6287,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_WIND_BLAST:
     {
-        if (foe && mons->can_see(*foe))
+        // Wind blast is stopped by FFT_SOLID features.
+        if (foe && cell_see_cell(mons->pos(), foe->pos(), LOS_SOLID))
         {
             simple_monster_message(mons, " summons a great blast of wind!");
             wind_blast(mons, splpow, foe->pos());
@@ -7893,7 +7903,10 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     // Mara shouldn't cast player ghost if he can't see the player
     case SPELL_SUMMON_ILLUSION:
-        return !foe || !mon->can_see(*foe) || !actor_is_illusion_cloneable(foe);
+        return !foe
+               || !mon->see_cell_no_trans(foe->pos())
+               || !mon->can_see(*foe)
+               || !actor_is_illusion_cloneable(foe);
 
     case SPELL_AWAKEN_FOREST:
         return mon->has_ench(ENCH_AWAKEN_FOREST)
@@ -7906,7 +7919,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return mon->holiness() & MH_UNDEAD
                || mon->has_ench(ENCH_DEATHS_DOOR)
                || mon->has_ench(ENCH_FATIGUE)
-               || !foe || !mon->can_see(*foe);
+               || !foe || !mon->see_cell_no_trans(foe->pos())
+               || !mon->can_see(*foe);
 
     case SPELL_OZOCUBUS_ARMOUR:
         return mon->is_insubstantial() || mon->has_ench(ENCH_OZOCUBUS_ARMOUR);
@@ -7941,7 +7955,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return !foe || foe->holiness() & MH_UNDEAD;
 
     case SPELL_BLINK_ALLIES_ENCIRCLE:
-        if (!foe || !mon->can_see(*foe))
+        if (!foe || !mon->see_cell_no_trans(foe->pos()) || !mon->can_see(*foe))
             return true;
 
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
@@ -8048,7 +8062,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return !foe;
 
     case SPELL_BLINK_ALLIES_AWAY:
-        if (!foe || !mon->can_see(*foe))
+        if (!foe || !mon->see_cell_no_trans(foe->pos()) && !mon->can_see(*foe))
             return true;
 
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
@@ -8243,7 +8257,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         if (!foe)
             return true;
 
-        for (actor_near_iterator ai(foe); ai; ++ai)
+        for (actor_near_iterator ai(foe, LOS_SOLID); ai; ++ai)
             if (*ai != mon && *ai != foe && !ai->is_stationary()
                 && mon->can_see(**ai))
             {
