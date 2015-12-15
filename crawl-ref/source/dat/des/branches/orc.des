@@ -1089,7 +1089,7 @@ NAME: nicolae_orc_tapped_out
 TAGS: no_item_gen no_trap_gen luniq_orc_cave
 DEPTH: Orc
 SUBST: X = 'xx, ' = .:5 d:4 ^:1
-: if you.depth() == 2 then
+: if you.depth() == dgn.br_depth(you.branch()) then
 SUBST: ^ = .:5 d:4
 : end
 KITEM: d = stone q:1 / large rock q:1 w:3 / gold q:1 w:3
