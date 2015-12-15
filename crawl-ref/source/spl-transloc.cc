@@ -1009,7 +1009,7 @@ static void _attract_actor(const actor* agent, actor* victim,
 bool fatal_attraction(const coord_def& pos, actor *agent, int pow)
 {
     bool affected = false;
-    for (actor_near_iterator ai(pos, LOS_NO_TRANS); ai; ++ai)
+    for (actor_near_iterator ai(pos, LOS_SOLID); ai; ++ai)
     {
         if (*ai == agent || ai->is_stationary() || ai->pos() == pos)
             continue;
