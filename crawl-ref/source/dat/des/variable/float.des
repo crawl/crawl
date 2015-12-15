@@ -1804,7 +1804,7 @@ KMONS:  6 = air elemental
 KMONS:  7 = fire vortex
 #
 : if you.in_branch("elf") then
-KMONS:  deep elf elementalist ; \
+KMONS:  Z = deep elf elementalist ; \
         robe ego:fire_resistance | \
         robe ego:cold_resistance | \
         robe ego:resistance . dagger ego:freezing | \
