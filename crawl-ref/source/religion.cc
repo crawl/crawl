@@ -43,6 +43,7 @@
 #include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
+#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -3197,7 +3198,7 @@ static void _god_welcome_handle_gear()
 {
     // Check for amulets of faith.
     item_def *amulet = you.slot_item(EQ_AMULET, false);
-    if (amulet && amulet->sub_type == AMU_FAITH)
+    if (amulet && amulet->sub_type == AMU_FAITH && !is_useless_item(*amulet))
     {
         mprf(MSGCH_GOD, "Your amulet flashes!");
         flash_view_delay(UA_PLAYER, god_colour(you.religion), 300);
