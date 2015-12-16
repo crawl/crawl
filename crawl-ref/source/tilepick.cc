@@ -1670,6 +1670,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return _mon_mod(TILEP_MONS_PLANT, tile_num_prop);
     case MONS_DEMONIC_PLANT:
         return TILEP_MONS_DEMONIC_PLANT;
+    case MONS_WITHERED_PLANT:
+        return TILEP_MONS_WITHERED_PLANT;
     case MONS_BUSH:
         return _mon_mod(TILEP_MONS_BUSH, tile_num_prop);
     case MONS_BURNING_BUSH:

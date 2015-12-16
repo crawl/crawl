@@ -1042,9 +1042,7 @@ ENDMAP
 NAME:    st_shrine_of_shade
 DEPTH:   Swamp, !Swamp:$
 MONS:    bog body w:20 / necrophage w:5 / ghoul w:5 / nothing w:25, shadow
-KMONS:   P = w:2 col:darkgrey plant name:withered name_adjective             \
-           tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
-           name_adjective tile:mons_withered_plant
+KMONS:   P = withered plant
 SUBST:   p = Pp, p = PP., o = P..
 MAP
    oo.oooo
@@ -1495,9 +1493,7 @@ MONS:    bog body w:8 / w:5 shadow / w:5 wraith / w:3 phantasmal warrior / \
 KMONS:   6 = bog body / spriggan zombie w:4 / troll zombie w:4
 KMONS:   7 = large abomination w:2 / swamp worm zombie / giant leech zombie / \
              alligator zombie w:6 / spiny frog zombie w:6
-KMONS:   q = w:2 col:darkgrey plant name:withered name_adjective              \
-              tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
-              name_adjective tile:mons_withered_plant
+KMONS:   q = withered plant
 KFEAT:   67 = W
 KPROP:   ~ = no_tele_into
 SUBST:   1 = 12, " = 6:15 W

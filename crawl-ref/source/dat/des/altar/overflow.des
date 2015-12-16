@@ -931,9 +931,7 @@ ENDMAP
 NAME:   kiku_gazebo_garden_becter
 TAGS:   temple_overflow_1 temple_overflow_kikubaaqudgha transparent
 DEPTH:  D:2-9
-KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective               \
-            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
-            name_adjective tile:mons_withered_plant
+KMONS:  f = withered plant
 KFEAT:  _ = altar_kikubaaqudgha
 SUBST:  ` = f....
 COLOUR: c = magenta
@@ -2453,9 +2451,7 @@ TAGS:   uniq_altar_yredelemnul temple_overflow_1 temple_overflow_yredelemnul
 TAGS:   transparent decor
 DEPTH:  D:2-
 KFEAT:  C = altar_yredelemnul
-KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective               \
-            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
-            name_adjective tile:mons_withered_plant
+KMONS:  f = withered plant
 : interest_check(_G)
 MAP
 .....
@@ -2920,8 +2916,7 @@ TAGS:  transparent
 KFEAT: A = altar_fedhas
 KFEAT: B = altar_kikubaaqudgha
 MONS:  plant / nothing
-MONS:  plant col:lightgrey name:withered n_adj tile:mons_withered_plant / \
-       nothing
+MONS:  withered plant / nothing
 MAP
 xxxxx
 x111xx@@

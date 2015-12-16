@@ -683,11 +683,10 @@ SUBST:   EFKGHL : d
 SUBST:   CDJ = 1112
 MONS:    generate_awake zombie place:D:6 /\
          w:5 generate_awake mummy
-MONS:    plant col:darkgrey name:withered n_adj tile:mons_withered_plant /\
+MONS:    w:15 withered plant /\
          bog body hd:3 \
          spells:throw_frost.18.wizard;slow.18.wizard \
          name:decayed n_adj n_noc /\
-         w:5 plant col:lightgrey name:withered n_adj tile:mons_withered_plant /\
          w:5 nothing
 ITEM:    any potion / any scroll / any jewellery w:1
 : ossuary_setup_features(_G)

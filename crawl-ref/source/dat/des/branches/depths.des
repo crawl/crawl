@@ -125,9 +125,7 @@ ENDMAP
 
 NAME: gammafunk_depths_entry_grave
 TAGS: patrolling
-KMONS: t = w:2 col:darkgrey plant name:withered name_adjective \
-            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
-            name_adjective tile:mons_withered_plant
+KMONS: t = withered plant
 MONS: place:Depths:1 skeleton / place:Depths:1 zombie w:20, necromancer
 MONS: skeletal warrior / guardian mummy w:2
 KMONS: O = vampire mage w:15 / flayed ghost / phantasmal warrior

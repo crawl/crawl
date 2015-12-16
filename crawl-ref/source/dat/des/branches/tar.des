@@ -103,9 +103,7 @@ end
 NAME:   lemuel_nasty_pond
 DEPTH:  Tar
 TAGS:   no_pool_fixup no_rotate
-MONS:   w:2 col:darkgrey plant name:withered name_adjective               \
-        tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
-        name_adjective tile:mons_withered_plant
+MONS:   withered plant
 MONS:   oklob plant, death ooze, necrophage, blizzard demon / green death
 SUBST:  W:w.
 SUBST:  Z:w.

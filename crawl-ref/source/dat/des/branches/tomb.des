@@ -166,10 +166,7 @@ NAME:   tomb_entry_forgotten_bobbens
 ORIENT: float
 TAGS:   tomb_entry no_monster_gen transparent
 KFEAT:  f = .
-# "withered plant" instead of "plant"
-KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective              \
-            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
-            name_adjective tile:mons_withered_plant
+KMONS:  f = withered plant
 SUBST:  p = f.
 KFEAT:  O = enter_tomb
 MAP
