@@ -1792,8 +1792,7 @@ SUBST:      o = 1, ' = llc, I = .KKKKK, up = .
 NSUBST:     g = 2:1 / ., h = 2:1 / ., i = 2:1 / ., j = 2:1 / .
 NSUBST:     k = 2:1 / ., q = 3:1 / ., r = 3:1 / ., s = 1:1 / .
 NSUBST:     " = 3:K / ., ` = 8:N / d / 4 / 233 / .
-KMONS:      MNO = col:random name:demonic name_adjective plant \
-                tile:mons_demonic_plant
+KMONS:      MNO = demonic plant
 MONS:       eye of devastation / stone giant / w:15 tentacled starspawn
 MONS:       w:20 giant orange brain / w:12 great orb of eyes / w:5 neqoxec \
             / w:3 golden eye band

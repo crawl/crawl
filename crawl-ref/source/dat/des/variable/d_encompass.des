@@ -122,7 +122,7 @@ DEPTH:   Depths:2-
 PLACE:   D:$, Depths:$
 WEIGHT:  1 (D:$), 2 (Depths:$), 10
 KMONS:   - = plant
-KMONS:   _ = plant col:random name:demonic name_adjective tile:mons_demonic_plant
+KMONS:   _ = demonic plant
 KMONS:   no = vault guard
 KMONS:   p = giant eyeball
 KMONS:   q : great orb of eyes w:7 / guardian serpent w:3

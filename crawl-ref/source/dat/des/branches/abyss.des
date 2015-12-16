@@ -110,7 +110,7 @@ WEIGHT:  5
 KPROP:   T = no_tele_into
 SUBST:   T : T l 1 2 A X
 MONS:    tentacled starspawn / starcursed mass / wretched star
-MONS:    plant col:random name:demonic name_adjective tile:mons_demonic_plant
+MONS:    demonic plant
 KFEAT:   X : stone_arch
 MAP
 nnn nnn
@@ -1703,7 +1703,7 @@ NAME:  evilmike_abyss_exit_plants
 TAGS:  abyss_exit
 SUBST: 1 = 112.
 SUBST: . = .:100 1
-MONS:  plant col:random name:demonic name_adjective tile:mons_demonic_plant
+MONS:  demonic plant
 MONS:  bush
 : init_abyss_exit(_G, "O")
 MAP

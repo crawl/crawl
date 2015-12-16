@@ -5936,8 +5936,7 @@ KFEAT:  C = altar_lugonu
 KFEAT:  ' = floor
 KFEAT:  ~ = floor
 MONS:   kobold demonologist
-KMONS:  P = plant col:magenta name:demonic name_adjective \
-        tile:mons_demonic_plant
+KMONS:  P = demonic plant
 KMONS:  p = plant
 NSUBST: p = 3=xcbtvmnw.' / 5:P
 NSUBST: . = 30=Pxcbtvmnw / 5:. / 50:'
