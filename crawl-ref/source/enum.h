@@ -2801,6 +2801,7 @@ enum monster_type                      // menv[].type
     MONS_VINE_STALKER,
     MONS_ANIMATED_TREE,
     MONS_DEMONIC_PLANT,
+    MONS_WITHERED_PLANT,
 #endif
     MONS_GIANT_SPORE,
     MONS_BALLISTOMYCETE,
@@ -3468,6 +3469,7 @@ enum monster_type                      // menv[].type
     MONS_DEEP_ELF_ELEMENTALIST,
     MONS_DEEP_ELF_ARCHER,
     MONS_DEMONIC_PLANT,
+    MONS_WITHERED_PLANT,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
