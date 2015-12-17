@@ -641,9 +641,7 @@ void zap_wand(int slot)
         {
             return;
         }
-        else if (wand.sub_type == WAND_HASTING
-                 && stasis_blocks_effect(false, "%s prevents hasting.",
-                                         "You cannot haste."))
+        else if (wand.sub_type == WAND_HASTING && check_stasis(NO_HASTE_MSG))
         {
             return;
         }

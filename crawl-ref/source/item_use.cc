@@ -2885,30 +2885,12 @@ void read_scroll(int item_slot)
 
 }
 
-bool stasis_blocks_effect(bool calc_unid,
-                          const char *msg,
-                          const char *formicid_msg)
+bool check_stasis(const char *msg)
 {
-    if (you.stasis(calc_unid))
-    {
-        if (msg)
-        {
-            // Override message for formicids
-            if (you.species == SP_FORMICID)
-            {
-                mpr(formicid_msg ? formicid_msg :
-                                   "Your stasis keeps you stable.");
-            }
-            else
-            {
-                const string name("Something");
-                const string message = make_stringf(msg, name.c_str());
-                mpr(message);
-            }
-        }
-        return true;
-    }
-    return false;
+    bool blocked = you.species == SP_FORMICID;
+    if (blocked)
+        mpr(msg);
+    return blocked;
 }
 
 #ifdef USE_TILE
