@@ -850,6 +850,8 @@ bool InventoryRegion::_is_prev_button(int idx)
 /**
  * How many items are we actually looking at (inv+floor), not counting fake
  * padding items inserted on the first page?
+ *
+ * Only valid for page 1.
  */
 int InventoryRegion::_real_item_count()
 {
@@ -864,7 +866,7 @@ int InventoryRegion::_real_item_count()
 bool InventoryRegion::_is_next_button(int idx)
 {
     // idx is an index in m_items as returned by cursor_index()
-    return idx == mx*my*(m_grid_page+1)-1
-           && _real_item_count() >= mx*my*(m_grid_page+1);
+    return idx == (mx*my - 2)*(m_grid_page+1) - 1 + 2
+            && _real_item_count() >= mx*my;
 }
 #endif
