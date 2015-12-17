@@ -1369,14 +1369,11 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
 
     if (num_discs == 0)
     {
-#ifdef DEBUG
-        mprf(MSGCH_ERROR, "No valid disciplines with which to make a themed "
-                          "randart spellbook.");
-#endif
-        // Only happens if !completely_random and the player already knows
-        // all available spells. We could simply re-allow all disciplines
-        // but the player isn't going to get any new spells, anyway, so just
-        // consider this acquirement failed. (jpeg)
+        dprf("No valid disciplines with which to make a themed randart "
+             "spellbook.");
+        // Should only happen if !completely_random and the player already knows
+        // all available spells. make_book_theme_randart may attempt to retry
+        // with completeley_random == true next.
         return false;
     }
 
