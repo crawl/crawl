@@ -752,8 +752,8 @@ void InventoryRegion::update()
     const int max_page = max(0, (total_items - 2)) / (mx*my - 2);
     m_grid_page = min(m_grid_page, max_page);
 
-    int remaining = mx*my*(m_grid_page+1) - m_items.size();
-    int empty_on_this_row = mx - m_items.size() % mx;
+    const int remaining = mx*my - m_items.size();
+    const int empty_on_this_row = mx - m_items.size() % mx;
 
     // If we're not on the last row...
     if ((int)m_items.size() < mx * (my-1))
@@ -762,7 +762,7 @@ void InventoryRegion::update()
         if (num_ground > remaining - empty_on_this_row)
         {
             // Fill out part of this row.
-            int fill = remaining - num_ground;
+            const int fill = remaining - num_ground;
             for (int i = 0; i < fill; ++i)
             {
                 InventoryTile desc;
