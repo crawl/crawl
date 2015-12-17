@@ -1400,11 +1400,7 @@ void SkillMenu::set_title()
         t = make_stringf(format, "source");
     else if (is_set(SKMF_RESKILL_TO))
         t = make_stringf(format, "destination");
-    else if (is_set(SKMF_EXPERIENCE_CARD) && is_set(SKMF_EXPERIENCE_POTION))
-        t = "You are more experienced. Select the skills to train.";
-    else if (is_set(SKMF_EXPERIENCE_CARD))
-        t = make_stringf(format, "drawn an Experience card");
-    else if (is_set(SKMF_EXPERIENCE_POTION))
+    else if (is_set(SKMF_EXPERIENCE))
         t = make_stringf(format, "quaffed a potion of experience");
 
     m_title->set_text(t);
