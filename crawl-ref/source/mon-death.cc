@@ -2594,8 +2594,11 @@ item_def* monster_die(monster* mons, killer_type killer,
         update_screen();
     }
 
-    _give_experience(player_xp, monster_xp, killer, killer_index, pet_kill,
-                     was_visible);
+    if (!mons_reset)
+    {
+        _give_experience(player_xp, monster_xp, killer, killer_index, pet_kill,
+                         was_visible);
+    }
     return corpse;
 }
 
