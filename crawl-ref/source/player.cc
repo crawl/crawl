@@ -4731,7 +4731,7 @@ bool slow_player(int turns)
     if (turns <= 0)
         return false;
 
-    if (stasis_blocks_effect(true, "%s rumbles."))
+    if (check_stasis())
         return false;
 
     // Doubling these values because moving while slowed takes twice the
@@ -4807,7 +4807,7 @@ bool haste_player(int turns, bool rageext)
     if (turns <= 0)
         return false;
 
-    if (stasis_blocks_effect(true, "%s makes your neck tingle."))
+    if (check_stasis())
         return false;
 
     // Cutting the nominal turns in half since hasted actions take half the
@@ -6451,13 +6451,11 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
     if (form == TRAN_TREE)
         problems.emplace_back("held in place by your roots");
 
-    const bool stasis_block = stasis_blocks_effect(calc_unid, nullptr);
     vector<item_def> notele_items;
-    if (has_notele_item(calc_unid, &notele_items) || stasis_block)
+    if (has_notele_item(calc_unid, &notele_items) || stasis())
     {
         vector<string> worn_notele;
         bool found_nonartefact = false;
-        bool found_stasis = false;
 
         for (const auto &item : notele_items)
         {
@@ -6485,7 +6483,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
                                                   worn_notele.end()).c_str()));
         }
 
-        if (stasis_block && !found_stasis)
+        if (stasis())
         {
             // Formicids are handled above, other sources
             // of stasis will display this message:
@@ -6814,7 +6812,7 @@ void player::paralyse(actor *who, int str, string source)
     ASSERT(!crawl_state.game_is_arena());
 
     // The shock is too mild to do damage.
-    if (stasis_blocks_effect(true, "%s gives you a mild electric shock."))
+    if (check_stasis())
         return;
 
     // The who check has an effect in a few cases, most notably making

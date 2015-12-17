@@ -732,7 +732,7 @@ bool player::go_berserk(bool intentional, bool potion)
     if (!you.can_go_berserk(intentional, potion))
         return false;
 
-    if (stasis_blocks_effect(true, "%s vibrates violently and saps your rage."))
+    if (check_stasis())
         return false;
 
     if (crawl_state.game_is_hints())
