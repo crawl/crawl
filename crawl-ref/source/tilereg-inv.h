@@ -25,6 +25,7 @@ protected:
 private:
     bool _is_next_button(int idx);
     bool _is_prev_button(int idx);
+    int _real_item_count();
 };
 
 #endif
