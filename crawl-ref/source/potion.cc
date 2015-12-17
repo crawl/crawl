@@ -15,6 +15,7 @@
 #include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "item_use.h"
 #include "message.h"
 #include "misc.h"
 #include "mutation.h"
@@ -282,7 +283,7 @@ public:
         if (you.stasis(false))
         {
             if (reason)
-                *reason = "This potion cannot work under stasis.";
+                *reason = NO_HASTE_MSG;
             return false;
         }
         return true;
