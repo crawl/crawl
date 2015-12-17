@@ -1517,12 +1517,7 @@ static bool _is_known_no_tele_item(const item_def &item)
         return false;
 
     bool known;
-    int val = artefact_property(item, ARTP_PREVENT_TELEPORTATION, known);
-
-    if (known && val)
-        return true;
-    else
-        return false;
+    return artefact_property(item, ARTP_PREVENT_TELEPORTATION, known) && known;
 }
 
 bool nasty_stasis(const item_def &item, operation_types oper)

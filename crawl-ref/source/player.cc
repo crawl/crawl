@@ -3622,10 +3622,8 @@ bool player::clarity(bool calc_unid, bool items) const
 
 bool player::gourmand(bool calc_unid, bool items) const
 {
-    if (player_mutation_level(MUT_GOURMAND) > 0)
-        return true;
-
-    return actor::gourmand(calc_unid, items);
+    return player_mutation_level(MUT_GOURMAND) > 0
+           || actor::gourmand(calc_unid, items);
 }
 
 int player::spec_evoke(bool calc_unid, bool items) const
@@ -3636,10 +3634,7 @@ int player::spec_evoke(bool calc_unid, bool items) const
 
 bool player::stasis(bool calc_unid, bool items) const
 {
-    if (species == SP_FORMICID)
-        return true;
-
-    return false;
+    return species == SP_FORMICID;
 }
 
 unsigned int exp_needed(int lev, int exp_apt)
