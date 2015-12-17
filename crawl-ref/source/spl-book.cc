@@ -1373,7 +1373,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
              "spellbook.");
         // Should only happen if !completely_random and the player already knows
         // all available spells. make_book_theme_randart may attempt to retry
-        // with completeley_random == true next.
+        // with completely_random == true next.
         return false;
     }
 
