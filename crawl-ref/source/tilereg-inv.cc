@@ -49,7 +49,7 @@ void InventoryRegion::pack_buffers()
 
             if (item.flag & TILEI_FLAG_FLOOR)
             {
-                if (i >= (unsigned int) mx * my * (m_grid_page+1) && item.tile)
+                if (i > (unsigned int) mx * my * (m_grid_page+1) && item.tile)
                     break;
 
                 int num_floor = tile_dngn_count(env.tile_default.floor);
@@ -71,7 +71,7 @@ void InventoryRegion::pack_buffers()
 
             InventoryTile &item = m_items[i++];
 
-            if (y==my-1 && x==mx-1 && item.tile)
+            if (_is_next_button(i-1))
             {
                 // continuation to next page icon
                 m_buf.add_main_tile(TILE_UNSEEN_ITEM, x, y);
@@ -125,7 +125,7 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
         return 0;
 
     // handle paging
-    if (m_cursor.x==(mx-1) && m_cursor.y==(my-1) && event.button==MouseEvent::LEFT)
+    if (_is_next_button(cursor_index()) && event.button==MouseEvent::LEFT)
     {
         // next page
         m_grid_page++;
@@ -840,9 +840,24 @@ bool InventoryRegion::_is_prev_button(int idx)
     return m_grid_page>0 && idx == mx*my*m_grid_page-2*m_grid_page;
 }
 
+/**
+ * How many items are we actually looking at (inv+floor), not counting fake
+ * padding items inserted on the first page?
+ */
+int InventoryRegion::_real_item_count()
+{
+    // xxx: this seems like a classic reduce()...
+    int total = 0;
+    for (auto desc : m_items)
+        if (desc.idx != -1)
+            ++total;
+    return total;
+}
+
 bool InventoryRegion::_is_next_button(int idx)
 {
     // idx is an index in m_items as returned by cursor_index()
-    return idx == mx*my*(m_grid_page+1)-1;
+    return idx == mx*my*(m_grid_page+1)-1
+           && _real_item_count() >= mx*my*(m_grid_page+1);
 }
 #endif
