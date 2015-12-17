@@ -2448,16 +2448,13 @@ static vector<formatted_string> _get_overview_resistances(
                           : _resist_composer("Clarity", cwidth, rclar) + "\n";
     }
 
-    const int notele = you.no_tele(calc_unid);
-    const int rrtel = !!player_teleport(calc_unid);
-    if (notele || rrtel || stasis)
+    // Fo don't need a reminder that they can't teleport
+    if (!you.stasis())
     {
-        if (notele && !stasis)
+        if (you.no_tele(calc_unid))
             out += _resist_composer("NoTele", cwidth, 1, 1, false) + "\n";
-        else if (rrtel && !stasis)
+        else if (player_teleport(calc_unid))
             out += _resist_composer("Rnd*Tele", cwidth, 1, 1, false) + "\n";
-        else
-            out += _resist_composer("Stasis", cwidth, stasis) + "\n";
     }
 
     const int no_cast = you.no_cast(calc_unid);
