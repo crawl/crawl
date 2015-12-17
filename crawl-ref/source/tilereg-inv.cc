@@ -745,6 +745,13 @@ void InventoryRegion::update()
         }
     } while (s);
 
+    // ensure we don't end up stuck on a later page.
+    const int total_items = m_items.size() + num_ground;
+    // can store mx*my items on first page, but lose 2 for each following page
+    // (next & prev buttons)
+    const int max_page = max(0, (total_items - 2)) / (mx*my - 2);
+    m_grid_page = min(m_grid_page, max_page);
+
     int remaining = mx*my*(m_grid_page+1) - m_items.size();
     int empty_on_this_row = mx - m_items.size() % mx;
 
