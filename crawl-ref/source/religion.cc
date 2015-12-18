@@ -3330,9 +3330,48 @@ static void _apply_monk_bonus()
         gain_piety(35, 1, false);
 }
 
-/// Setup basic god piety & gift_timeout setup for a new god.
+/// Transfer some piety from an old good god to a new one, if applicable.
+static void _transfer_good_god_piety()
+{
+    if (!is_good_god(you.religion))
+        return;
+
+    const god_type old_god = you.previous_good_god;
+    const uint8_t old_piety = you.saved_good_god_piety;
+
+    if (!is_good_god(old_god))
+        return;
+
+    if (you.religion != old_god)
+    {
+        static const map<god_type, const char*> farewell_messages = {
+            { GOD_ELYVILON, "aid the meek" },
+            { GOD_SHINING_ONE, "vanquish evil" },
+            { GOD_ZIN, "enforce order" },
+        };
+
+        // Some feedback that piety moved over.
+        simple_god_message(make_stringf(" says: Farewell. Go and %s with %s.",
+                                        lookup(farewell_messages, old_god,
+                                               "become a bug"),
+                                        god_name(you.religion).c_str()).c_str(),
+
+                           old_god);
+    }
+
+    // Give a piety bonus when switching between good gods, or back to the
+    // same good god.
+    if (old_piety > piety_breakpoint(0))
+        gain_piety(old_piety - piety_breakpoint(0), 2, false);
+}
+
+/// Handle basic god piety & related setup for a new-joined god.
 static void _set_initial_god_piety()
 {
+    // Currently, penance is just zeroed. This could be much more
+    // interesting.
+    you.penance[you.religion] = 0;
+
     switch (you.religion)
     {
     case GOD_XOM:
@@ -3346,6 +3385,8 @@ static void _set_initial_god_piety()
         you.piety_hysteresis = 0;
         you.gift_timeout = 0;
 
+        // I'd rather this be in on_join(), but then it overrides the
+        // monk bonus...
         you.props[RU_SACRIFICE_PROGRESS_KEY] = 0;
         // offer the first sacrifice faster than normal
     {
@@ -3371,6 +3412,7 @@ static void _set_initial_god_piety()
         gain_piety(30, 1, false);
 
     _apply_monk_bonus();
+    _transfer_good_god_piety();
 }
 
 /// Setup when joining the greedy magnates of Gozag.
@@ -3527,13 +3569,12 @@ void join_religion(god_type which_god)
 
     redraw_screen();
 
-    const god_type old_god = you.religion;
-    const int old_piety = you.piety;
+    static const god_type old_god = you.religion;
     if (you.previous_good_god == GOD_NO_GOD)
     {
         you.previous_good_god = old_god;
-        you.saved_good_god_piety = old_piety;
-        // doesn't matter if old god isn't actually a good god; we check later
+        you.saved_good_god_piety = you.piety;
+        // doesn't matter if old_god isn't actually a good god; we check later
         // and then wipe it at the end of the function regardless
     }
 
@@ -3569,10 +3610,6 @@ void join_religion(god_type which_god)
         mprf(MSGCH_MONSTER_ENCHANT, "Your unholy and evil allies forsake you.");
     }
 
-    // Currently, penance is just zeroed. This could be much more
-    // interesting.
-    you.penance[you.religion] = 0;
-
     const function<void ()> *join_effect = map_find(on_join, you.religion);
     if (join_effect != nullptr)
         (*join_effect)();
@@ -3580,44 +3617,6 @@ void join_religion(god_type which_god)
     // after join_effect() so that gozag's service fee is right for monks
     if (you.worshipped[you.religion] < 100)
         you.worshipped[you.religion]++;
-
-    if (is_good_god(you.religion))
-    {
-        uint8_t effective_old_piety = old_piety;
-        god_type effective_old_god = old_god;
-        if (you.previous_good_god != GOD_NO_GOD)
-        {
-            effective_old_god = you.previous_good_god;
-            effective_old_piety = you.saved_good_god_piety;
-        }
-        if (is_good_god(effective_old_god))
-        {
-            if (you.religion != effective_old_god)
-            {
-                // Some feedback that piety moved over.
-                switch (you.religion)
-                {
-                case GOD_ELYVILON:
-                    simple_god_message((" says: Farewell. Go and aid the meek with "
-                                       + god_name(you.religion) + ".").c_str(), effective_old_god);
-                    break;
-                case GOD_SHINING_ONE:
-                    simple_god_message((" says: Farewell. Go and vanquish evil with "
-                                       + god_name(you.religion) + ".").c_str(), effective_old_god);
-                    break;
-                case GOD_ZIN:
-                    simple_god_message((" says: Farewell. Go and enforce order with "
-                                       + god_name(you.religion) + ".").c_str(), effective_old_god);
-                    break;
-                default:
-                    mprf(MSGCH_ERROR, "Unknown good god.");
-                }
-            }
-            // Give a piety bonus when switching between good gods.
-            if (effective_old_piety > piety_breakpoint(0))
-                gain_piety(effective_old_piety - piety_breakpoint(0), 2, false);
-        }
-    }
 
     // Warn if a good god is starting wrath now.
     if (old_god != GOD_ELYVILON && you.penance[GOD_ELYVILON]
