@@ -642,9 +642,7 @@ void zap_wand(int slot)
             return;
         }
         else if (wand.sub_type == WAND_HASTING && check_stasis(NO_HASTE_MSG))
-        {
             return;
-        }
         else if (wand.sub_type == WAND_INVISIBILITY && !invis_allowed())
             return;
     }
