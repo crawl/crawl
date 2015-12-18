@@ -3365,6 +3365,54 @@ static void _transfer_good_god_piety()
         gain_piety(old_piety - piety_breakpoint(0), 2, false);
 }
 
+
+/**
+ * Give an appropriate message for the given good god to give in response to
+ * the player joining a god that brings down their wrath.
+ *
+ * @param good_god    The good god in question.
+ */
+static string _good_god_wrath_message(god_type good_god)
+{
+    switch (good_god)
+    {
+        case GOD_ELYVILON:
+            return "Your evil deeds will not go unpunished";
+        case GOD_SHINING_ONE:
+            return "You will pay for your evil ways, mortal";
+        case GOD_ZIN:
+            return make_stringf("You will suffer for embracing such %s",
+                                is_chaotic_god(you.religion) ? "chaos"
+                                                             : "evil");
+        default:
+            return "You will be buggily punished for this";
+    }
+}
+
+/**
+ * Check if joining the current god will cause wrath for any previously-
+ * worshipped good gods. If so, message & set penance timeouts.
+ *
+ * @param old_god    The previous god worshipped; may be GOD_NO_GOD.
+ */
+static void _check_good_god_wrath(god_type old_god)
+{
+    for (god_type good_god : { GOD_ELYVILON, GOD_SHINING_ONE, GOD_ZIN })
+    {
+        if (old_god == good_god || !you.penance[good_god]
+            || !god_hates_your_god(good_god, you.religion))
+        {
+            continue;
+        }
+
+        const string wrath_message
+            = make_stringf(" says: %s!",
+                           _good_god_wrath_message(good_god).c_str());
+        simple_god_message(wrath_message.c_str(), good_god);
+        set_penance_xp_timeout();
+    }
+}
+
 /// Handle basic god piety & related setup for a new-joined god.
 static void _set_initial_god_piety()
 {
@@ -3619,28 +3667,7 @@ void join_religion(god_type which_god)
         you.worshipped[you.religion]++;
 
     // Warn if a good god is starting wrath now.
-    if (old_god != GOD_ELYVILON && you.penance[GOD_ELYVILON]
-        && god_hates_your_god(GOD_ELYVILON, you.religion))
-    {
-        simple_god_message(" says: Your evil deeds will not go unpunished!",
-                           GOD_ELYVILON);
-        set_penance_xp_timeout();
-    }
-    if (old_god != GOD_SHINING_ONE && you.penance[GOD_SHINING_ONE]
-        && god_hates_your_god(GOD_SHINING_ONE, you.religion))
-    {
-        simple_god_message(" says: You will pay for your evil ways, mortal!",
-                           GOD_SHINING_ONE);
-        set_penance_xp_timeout();
-    }
-    if (old_god != GOD_ZIN && you.penance[GOD_ZIN]
-        && god_hates_your_god(GOD_ZIN, you.religion))
-    {
-        simple_god_message(make_stringf(" says: You will suffer for embracing such %s!",
-                                        is_chaotic_god(you.religion) ? "chaos" : "evil").c_str(),
-                           GOD_ZIN);
-        set_penance_xp_timeout();
-    }
+    _check_good_god_wrath(old_god);
 
     if (!you_worship(GOD_GOZAG))
         for (const auto& power : get_god_powers(you.religion))
