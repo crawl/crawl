@@ -3317,6 +3317,19 @@ void set_god_ability_slots()
     }
 }
 
+/// Check if the monk's joining bonus should be given. (Except Gozag's.)
+static void _apply_monk_bonus()
+{
+    if (you.char_class != JOB_MONK || had_gods() > 0)
+        return;
+
+    // monks get bonus piety for first god
+    if (you_worship(GOD_RU))
+        you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
+    else
+        gain_piety(35, 1, false);
+}
+
 /// Setup basic god piety & gift_timeout setup for a new god.
 static void _set_initial_god_piety()
 {
@@ -3356,6 +3369,8 @@ static void _set_initial_god_piety()
     // Tutorial needs berserk usable.
     if (crawl_state.game_is_tutorial())
         gain_piety(30, 1, false);
+
+    _apply_monk_bonus();
 }
 
 /// Setup when joining the greedy magnates of Gozag.
@@ -3529,8 +3544,6 @@ void join_religion(god_type which_god)
     // Welcome to the fold!
     you.religion = static_cast<god_type>(which_god);
 
-    _set_initial_god_piety();
-
     mark_milestone("god.worship", "became a worshipper of "
                    + god_name(you.religion) + ".");
     take_note(Note(NOTE_GET_GOD, you.religion));
@@ -3541,6 +3554,8 @@ void join_religion(god_type which_god)
 #ifdef DGL_WHEREIS
     whereis_record();
 #endif
+
+    _set_initial_god_piety();
 
     set_god_ability_slots();    // remove old god's slots, reserve new god's
     _god_welcome_handle_gear();
@@ -3557,16 +3572,6 @@ void join_religion(god_type which_god)
     // Currently, penance is just zeroed. This could be much more
     // interesting.
     you.penance[you.religion] = 0;
-
-    if (you.char_class == JOB_MONK && had_gods() == 0)
-    {
-        // monks get bonus piety for first god
-        if (you_worship(GOD_RU))
-            you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
-        else
-            gain_piety(35, 1, false);
-        // before join_effect() so that zin's tithe is lessened by piety
-    }
 
     const function<void ()> *join_effect = map_find(on_join, you.religion);
     if (join_effect != nullptr)
