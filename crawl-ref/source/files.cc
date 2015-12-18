@@ -52,7 +52,6 @@
 #include "macro.h"
 #include "mapmark.h"
 #include "message.h"
-#include "misc.h" // today_is_halloween()
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
