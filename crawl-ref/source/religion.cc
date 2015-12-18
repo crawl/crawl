@@ -3569,7 +3569,7 @@ void join_religion(god_type which_god)
 
     redraw_screen();
 
-    static const god_type old_god = you.religion;
+    const god_type old_god = you.religion;
     if (you.previous_good_god == GOD_NO_GOD)
     {
         you.previous_good_god = old_god;
