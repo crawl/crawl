@@ -3233,6 +3233,11 @@ static void _god_welcome_handle_gear()
                  item->name(DESC_YOUR, false, false, false).c_str());
         }
     }
+
+    // Refresh wielded/quivered weapons in case we have a new conduct
+    // on them.
+    you.wield_change = true;
+    you.redraw_quiver = true;
 }
 
 /* Make a CrawlStoreValue an empty vector with the requested item type.
@@ -3312,6 +3317,193 @@ void set_god_ability_slots()
     }
 }
 
+/// Setup basic god piety & gift_timeout setup for a new god.
+static void _set_initial_god_piety()
+{
+    switch (you.religion)
+    {
+    case GOD_XOM:
+        // Xom uses piety and gift_timeout differently.
+        you.piety = HALF_MAX_PIETY;
+        you.gift_timeout = random2(40) + random2(40);
+        break;
+
+    case GOD_RU:
+        you.piety = 10; // one moderate sacrifice should get you to *.
+        you.piety_hysteresis = 0;
+        you.gift_timeout = 0;
+
+        you.props[RU_SACRIFICE_PROGRESS_KEY] = 0;
+        // offer the first sacrifice faster than normal
+    {
+        int delay = 50;
+        if (crawl_state.game_is_sprint())
+            delay /= SPRINT_MULTIPLIER;
+        you.props[RU_SACRIFICE_DELAY_KEY] = delay;
+    }
+        you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
+        break;
+
+    default:
+        you.piety = 15; // to prevent near instant excommunication
+        if (you.piety_max[you.religion] < 15)
+            you.piety_max[you.religion] = 15;
+        you.piety_hysteresis = 0;
+        you.gift_timeout = 0;
+        break;
+    }
+
+    // Tutorial needs berserk usable.
+    if (crawl_state.game_is_tutorial())
+        gain_piety(30, 1, false);
+}
+
+/// Setup when joining the greedy magnates of Gozag.
+static void _join_gozag()
+{
+    // Handle the fee.
+    const int fee = gozag_service_fee();
+    if (fee > 0)
+    {
+        ASSERT(you.gold >= fee);
+        mprf(MSGCH_GOD, "You pay a service fee of %d gold.", fee);
+        you.gold -= fee;
+        you.attribute[ATTR_GOZAG_GOLD_USED] += fee;
+    }
+    else
+        simple_god_message(" waives the service fee.");
+
+    // Note relevant powers.
+    bool needs_redraw = false;
+    for (const auto& power : get_god_powers(you.religion))
+    {
+        if (power.abil == ABIL_GOZAG_POTION_PETITION
+            && !you.attribute[ATTR_GOZAG_FIRST_POTION])
+        {
+            simple_god_message(" offers you a free set of potion effects!");
+            needs_redraw = true;
+            continue;
+        }
+        if (you.gold >= get_gold_cost(power.abil))
+        {
+            power.display(true, "You have enough gold to %s.");
+            needs_redraw = true;
+        }
+    }
+
+    if (needs_redraw)
+    {
+#ifdef USE_TILE_LOCAL
+        tiles.layout_statcol();
+        redraw_screen();
+#else
+        ;
+#endif
+    }
+
+    // Move gold to top of piles.
+    add_daction(DACT_GOLD_ON_TOP);
+}
+
+/// Setup when joining the gelatinous groupies of Jiyva.
+static void _join_jiyva()
+{
+    // Complimentary jelly upon joining.
+    if (_has_jelly())
+        return;
+
+    mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, &you, 0, 0, you.pos(),
+                 MHITNOT, 0, GOD_JIYVA);
+
+    delayed_monster(mg);
+    simple_god_message(" grants you a jelly!");
+}
+
+/// Setup when joining the sacred cult of Ru.
+static void _join_ru()
+{
+    _make_empty_vec(you.props[AVAILABLE_SAC_KEY], SV_INT);
+    _make_empty_vec(you.props[HEALTH_SAC_KEY], SV_INT);
+    _make_empty_vec(you.props[ESSENCE_SAC_KEY], SV_INT);
+    _make_empty_vec(you.props[PURITY_SAC_KEY], SV_INT);
+    _make_empty_vec(you.props[ARCANA_SAC_KEY], SV_INT);
+}
+
+/// Setup for joining the furious barbarians of Trog.
+static void _join_trog()
+{
+    for (int sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+        if (you.skills[sk])
+            you.train[sk] = 0;
+
+    // When you start worshipping Trog, you make all non-hostile magic
+    // users hostile.
+    if (query_daction_counter(DACT_ALLY_SPELLCASTER))
+    {
+        add_daction(DACT_ALLY_SPELLCASTER);
+        mprf(MSGCH_MONSTER_ENCHANT, "Your magic-using allies forsake you.");
+    }
+}
+
+// Setup for joining the orderly ascetics of Zin.
+static void _join_zin()
+{
+    // When you start worshipping Zin, you make all non-hostile unclean and
+    // chaotic beings hostile.
+    if (query_daction_counter(DACT_ALLY_UNCLEAN_CHAOTIC))
+    {
+        add_daction(DACT_ALLY_UNCLEAN_CHAOTIC);
+        mprf(MSGCH_MONSTER_ENCHANT, "Your unclean and chaotic allies forsake you.");
+    }
+
+    // Need to pay St. Peters.
+    if (you.attribute[ATTR_DONATIONS] * 9 < you.gold)
+    {
+        item_def lucre;
+        lucre.base_type = OBJ_GOLD;
+        // If you worshipped Zin before, the already tithed for part is fine.
+        lucre.quantity = you.gold - you.attribute[ATTR_DONATIONS] * 9;
+        // Use the harsh acquirement pricing -- with a cap at +50 piety.
+        // We don't want you get max piety at start just because you're filthy
+        // rich. In that case, you have to donate again more... That the poor
+        // widow is not spared doesn't mean the rich can't be milked for more.
+        lucre.props[ACQUIRE_KEY] = 0;
+        you.gold -= zin_tithe(lucre, lucre.quantity, false, true);
+    }
+}
+
+/// What special things happen when you join a god?
+static const map<god_type, function<void ()>> on_join = {
+    { GOD_ASHENZARI, []() { ash_check_bondage(); }},
+    { GOD_BEOGH, []() { update_player_symbol(); }},
+    { GOD_CHEIBRIADOS, []() {
+        simple_god_message(" begins to support your attributes as your "
+                           "movement slows.");
+        notify_stat_change();
+    }},
+    { GOD_FEDHAS, []() {
+        mprf(MSGCH_MONSTER_ENCHANT, "The plants of the dungeon cease their "
+             "hostilities.");
+        if (env.forest_awoken_until)
+            for (monster_iterator mi; mi; ++mi)
+                mi->del_ench(ENCH_AWAKEN_FOREST);
+    }},
+    { GOD_GOZAG, []() { _join_gozag(); }},
+    { GOD_JIYVA, []() { _join_jiyva(); }},
+    { GOD_LUGONU, []() {
+        if (you.worshipped[GOD_LUGONU] == 0)
+            gain_piety(20, 1, false);  // allow instant access to first power
+    }},
+    { GOD_PAKELLAS, []() {
+        mprf(MSGCH_GOD, "You stop regenerating magic.");
+        mprf(MSGCH_GOD, "You can now gain magical power from killing.");
+        pakellas_id_device_charges();
+    }},
+    { GOD_RU, []() { _join_ru(); }},
+    { GOD_TROG, []() { _join_trog(); }},
+    { GOD_ZIN, []() { _join_zin(); }},
+};
+
 void join_religion(god_type which_god)
 {
     ASSERT(which_god != GOD_NO_GOD);
@@ -3322,7 +3514,13 @@ void join_religion(god_type which_god)
 
     const god_type old_god = you.religion;
     const int old_piety = you.piety;
-    const int fee = (which_god == GOD_GOZAG) ? gozag_service_fee() : 0;
+    if (you.previous_good_god == GOD_NO_GOD)
+    {
+        you.previous_good_god = old_god;
+        you.saved_good_god_piety = old_piety;
+        // doesn't matter if old god isn't actually a good god; we check later
+        // and then wipe it at the end of the function regardless
+    }
 
     // Leave your prior religion first.
     if (!you_worship(GOD_NO_GOD))
@@ -3331,98 +3529,24 @@ void join_religion(god_type which_god)
     // Welcome to the fold!
     you.religion = static_cast<god_type>(which_god);
 
-    if (you_worship(GOD_XOM))
-    {
-        // Xom uses piety and gift_timeout differently.
-        you.piety = HALF_MAX_PIETY;
-        you.gift_timeout = random2(40) + random2(40);
-    }
-    else if (you_worship(GOD_RU))
-    {
-        you.piety = 10; // one moderate sacrifice should get you to *.
-        you.piety_hysteresis = 0;
-        you.gift_timeout = 0;
-        _make_empty_vec(you.props[AVAILABLE_SAC_KEY], SV_INT);
-        _make_empty_vec(you.props[HEALTH_SAC_KEY], SV_INT);
-        _make_empty_vec(you.props[ESSENCE_SAC_KEY], SV_INT);
-        _make_empty_vec(you.props[PURITY_SAC_KEY], SV_INT);
-        _make_empty_vec(you.props[ARCANA_SAC_KEY], SV_INT);
-        you.props[RU_SACRIFICE_PROGRESS_KEY] = 0;
-        // offer the first sacrifice faster than normal;
-        int delay = 50;
-        if (crawl_state.game_is_sprint())
-          delay /= SPRINT_MULTIPLIER;
-        you.props[RU_SACRIFICE_DELAY_KEY] = delay;
-        you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
-    }
-    else
-    {
-        you.piety = 15; // to prevent near instant excommunication
-        if (you.piety_max[you.religion] < 15)
-            you.piety_max[you.religion] = 15;
-        you.piety_hysteresis = 0;
-        you.gift_timeout = 0;
-    }
-
-    set_god_ability_slots();    // remove old god's slots, reserve new god's
-#ifdef DGL_WHEREIS
-    whereis_record();
-#endif
+    _set_initial_god_piety();
 
     mark_milestone("god.worship", "became a worshipper of "
                    + god_name(you.religion) + ".");
-
+    take_note(Note(NOTE_GET_GOD, you.religion));
     simple_god_message(
         make_stringf(" welcomes you%s!",
                      you.worshipped[which_god] ? " back" : "").c_str());
     // included in default force_more_message
-    if (crawl_state.game_is_tutorial())
-    {
-        // Tutorial needs berserk usable.
-        gain_piety(30, 1, false);
-    }
+#ifdef DGL_WHEREIS
+    whereis_record();
+#endif
 
-    if (you_worship(GOD_BEOGH))
-    {
-        // The player's symbol depends on Beogh worship.
-        update_player_symbol();
-    }
-
+    set_god_ability_slots();    // remove old god's slots, reserve new god's
     _god_welcome_handle_gear();
-    ash_check_bondage();
-
-    // Chei worshippers start their stat gain immediately.
-    if (you_worship(GOD_CHEIBRIADOS))
-    {
-        simple_god_message(" begins to support your attributes as your "
-                           "movement slows.");
-        notify_stat_change();
-    }
-
-    // We disable all magical skills to avoid accidentally angering
-    // spell-casting gods.
-    if (god_hates_spellcasting(which_god))
-    {
-        for (int sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
-            if (you.skills[sk])
-                you.train[sk] = 0;
-    }
-
-    // Move gold to top of piles with Gozag.
-    if (you_worship(GOD_GOZAG))
-        add_daction(DACT_GOLD_ON_TOP);
-
-    // Allow training all divine ability skills immediately.
-    vector<ability_type> abilities = get_god_abilities();
-    for (ability_type abil : abilities)
-        you.start_train.insert(abil_skill(abil));
-    update_can_train();
 
     // When you start worshipping a good god, you make all non-hostile
-    // unholy and evil beings hostile; when you start worshipping Zin,
-    // you make all non-hostile unclean and chaotic beings hostile; and
-    // when you start worshipping Trog, you make all non-hostile magic
-    // users hostile.
+    // unholy and evil beings hostile.
     if (is_good_god(you.religion)
         && query_daction_counter(DACT_ALLY_UNHOLY_EVIL))
     {
@@ -3430,41 +3554,27 @@ void join_religion(god_type which_god)
         mprf(MSGCH_MONSTER_ENCHANT, "Your unholy and evil allies forsake you.");
     }
 
-    if (you_worship(GOD_ZIN)
-        && query_daction_counter(DACT_ALLY_UNCLEAN_CHAOTIC))
-    {
-        add_daction(DACT_ALLY_UNCLEAN_CHAOTIC);
-        mprf(MSGCH_MONSTER_ENCHANT, "Your unclean and chaotic allies forsake you.");
-    }
-    else if (god_hates_spellcasting(you.religion)
-             && query_daction_counter(DACT_ALLY_SPELLCASTER))
-    {
-        add_daction(DACT_ALLY_SPELLCASTER);
-        mprf(MSGCH_MONSTER_ENCHANT, "Your magic-using allies forsake you.");
-    }
-
-    if (you_worship(GOD_FEDHAS))
-    {
-        mprf(MSGCH_MONSTER_ENCHANT, "The plants of the dungeon cease their hostilities.");
-        if (env.forest_awoken_until)
-            for (monster_iterator mi; mi; ++mi)
-                mi->del_ench(ENCH_AWAKEN_FOREST);
-    }
-    else if (you_worship(GOD_PAKELLAS))
-    {
-        mprf(MSGCH_GOD, "You stop regenerating magic.");
-        mprf(MSGCH_GOD, "You can now gain magical power from killing.");
-        pakellas_id_device_charges();
-    }
-
-    if (you.worshipped[you.religion] < 100)
-        you.worshipped[you.religion]++;
-
-    take_note(Note(NOTE_GET_GOD, you.religion));
-
     // Currently, penance is just zeroed. This could be much more
     // interesting.
     you.penance[you.religion] = 0;
+
+    if (you.char_class == JOB_MONK && had_gods() == 0)
+    {
+        // monks get bonus piety for first god
+        if (you_worship(GOD_RU))
+            you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
+        else
+            gain_piety(35, 1, false);
+        // before join_effect() so that zin's tithe is lessened by piety
+    }
+
+    const function<void ()> *join_effect = map_find(on_join, you.religion);
+    if (join_effect != nullptr)
+        (*join_effect)();
+
+    // after join_effect() so that gozag's service fee is right for monks
+    if (you.worshipped[you.religion] < 100)
+        you.worshipped[you.religion]++;
 
     if (is_good_god(you.religion))
     {
@@ -3528,102 +3638,20 @@ void join_religion(god_type which_god)
         set_penance_xp_timeout();
     }
 
-    // Note that you.worshipped[] has already been incremented.
-    if (you.char_class == JOB_MONK && had_gods() <= 1)
-    {
-        // monks get bonus piety for first god
-        if (you_worship(GOD_RU))
-            you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
-        else
-            gain_piety(35, 1, false);
-    }
-
-    if (you_worship(GOD_LUGONU) && you.worshipped[GOD_LUGONU] == 1)
-        gain_piety(20, 1, false);  // allow instant access to first power
-
-    // Complimentary jelly upon joining.
-    if (you_worship(GOD_JIYVA))
-    {
-        if (!_has_jelly())
-        {
-            monster_type mon = MONS_JELLY;
-            mgen_data mg(mon, BEH_STRICT_NEUTRAL, &you, 0, 0, you.pos(),
-                         MHITNOT, 0, GOD_JIYVA);
-
-            delayed_monster(mg);
-            simple_god_message(" grants you a jelly!");
-        }
-    }
-
-    // Need to pay St. Peters.
-    if (you_worship(GOD_ZIN) && you.attribute[ATTR_DONATIONS] * 9 < you.gold)
-    {
-        item_def lucre;
-        lucre.base_type = OBJ_GOLD;
-        // If you worshipped Zin before, the already tithed for part is fine.
-        lucre.quantity = you.gold - you.attribute[ATTR_DONATIONS] * 9;
-        // Use the harsh acquirement pricing -- with a cap at +50 piety.
-        // We don't want you get max piety at start just because you're filthy
-        // rich. In that case, you have to donate again more... That the poor
-        // widow is not spared doesn't mean the rich can't be milked for more.
-        lucre.props[ACQUIRE_KEY] = 0;
-        you.gold -= zin_tithe(lucre, lucre.quantity, false, true);
-    }
-
-    if (you_worship(GOD_GOZAG))
-    {
-        bool needs_redraw = false;
-        if (fee > 0)
-        {
-            ASSERT(you.gold >= fee);
-            mprf(MSGCH_GOD, "You pay a service fee of %d gold.", fee);
-            you.gold -= fee;
-            you.attribute[ATTR_GOZAG_GOLD_USED] += fee;
-        }
-        else
-            simple_god_message(" waives the service fee.");
-
-        for (const auto& power : get_god_powers(you.religion))
-        {
-            if (power.abil == ABIL_GOZAG_POTION_PETITION
-                && !you.attribute[ATTR_GOZAG_FIRST_POTION])
-            {
-                simple_god_message(" offers you a free set of potion effects!");
-                needs_redraw = true;
-                continue;
-            }
-            if (you.gold >= get_gold_cost(power.abil))
-            {
-                power.display(true, "You have enough gold to %s.");
-                needs_redraw = true;
-            }
-        }
-
-        if (needs_redraw)
-        {
-#ifdef USE_TILE_LOCAL
-            tiles.layout_statcol();
-            redraw_screen();
-#else
-            ;
-#endif
-        }
-    }
-    else
-    {
+    if (!you_worship(GOD_GOZAG))
         for (const auto& power : get_god_powers(you.religion))
             if (power.rank <= 0)
                 power.display(true, "You can now %s.");
-    }
 
-    // now that you have a god, you can't have any saved piety for your previous god
+    // Allow training all divine ability skills immediately.
+    vector<ability_type> abilities = get_god_abilities();
+    for (ability_type abil : abilities)
+        you.start_train.insert(abil_skill(abil));
+    update_can_train();
+
+    // now that you have a god, you can't save any piety from your prev god
     you.previous_good_god = GOD_NO_GOD;
     you.saved_good_god_piety = 0;
-
-    // Refresh wielded/quivered weapons in case we have a new conduct
-    // on them.
-    you.wield_change = true;
-    you.redraw_quiver = true;
 
     you.redraw_title = true;
 
