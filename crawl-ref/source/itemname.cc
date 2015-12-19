@@ -1767,7 +1767,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         }
 
         if (know_pluses)
-            buff << " (" << charges << ")";
+            buff << " (" << charges << "/" << wand_max_charges(*this) << ")";
         else if (!dbname && with_inscription)
         {
             if (used_count == ZAPCOUNT_EMPTY)
