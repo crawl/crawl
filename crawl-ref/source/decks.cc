@@ -1815,8 +1815,10 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
         return;
     }
 
-    if (spell_direction(target, beam, DIR_NONE, TARG_HOSTILE,
-                        LOS_RADIUS, true, true, false, nullptr, prompt.c_str())
+    direction_chooser_args args;
+    args.mode = TARG_HOSTILE;
+    args.top_prompt = prompt;
+    if (spell_direction(target, beam, &args)
         && player_tracer(ZAP_DEBUGGING_RAY, power/6, beam))
     {
         if (you.confused())

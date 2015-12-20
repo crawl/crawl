@@ -35,6 +35,7 @@ COMPILE_CHECK(spschools_type::exponent(SPTYP_LAST_EXPONENT)
 
 struct bolt;
 class dist;
+struct direction_chooser_args;
 
 enum spell_highlight_colours
 {
@@ -115,17 +116,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
                       int excl_rad = -1);
 
 bool spell_direction(dist &spelld, bolt &pbolt,
-                      targeting_type restrict = DIR_NONE,
-                      targ_mode_type mode = TARG_HOSTILE,
-                      // pbolt.range if applicable, otherwise LOS_RADIUS
-                      int range = 0,
-                      bool needs_path = true, bool may_target_monster = true,
-                      bool may_target_self = false,
-                      const char *target_prefix = nullptr,
-                      const char *prompt = nullptr,
-                      bool cancel_at_self = false,
-                      targetter *hitfunc = nullptr,
-                      desc_filter get_desc_func = nullptr);
+                     direction_chooser_args *args = nullptr);
 
 skill_type spell_type2skill(spschool_flag_type spelltype);
 spschool_flag_type skill2spell_type(skill_type spell_skill);

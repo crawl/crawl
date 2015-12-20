@@ -155,17 +155,20 @@ static spret_type _healing_spell(int healed, int max_healed,
 {
     ASSERT(healed >= 1);
 
-    bolt beam;
     dist spd;
 
     if (where.origin())
     {
-        spd.isValid = spell_direction(spd, beam, DIR_TARGET,
-                                      mode != TARG_NUM_MODES ? mode :
-                                      you_worship(GOD_ELYVILON) ?
-                                            TARG_ANY : TARG_FRIEND,
-                                      LOS_RADIUS, false, true, true, "Heal",
-                                      nullptr, false, nullptr, _desc_mindless);
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.mode = mode != TARG_NUM_MODES ? mode :
+                 you_worship(GOD_ELYVILON) ? TARG_ANY :
+                                             TARG_FRIEND,
+        args.needs_path = false;
+        args.may_target_self = true;
+        args.target_prefix = "Heal";
+        args.get_desc_func = _desc_mindless;
+        direction(spd, args);
     }
     else
     {

@@ -4612,7 +4612,7 @@ enum targeting_type
     DIR_TARGET_OBJECT,  // targets items
     DIR_MOVABLE_OBJECT, // skips corpses
     DIR_SHADOW_STEP,    // a shadow step target
-    DIR_LEAP,           // power leap -- short-range cblink
+    DIR_LEAP,           // like DIR_TARGET, but the range is a hard limit
 };
 
 enum torment_source_type
