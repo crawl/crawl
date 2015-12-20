@@ -1353,12 +1353,18 @@ spret_type your_spells(spell_type spell, int powc,
         title += spell_title(spell);
         title += "</white>";
 
-        if (!spell_direction(spd, beam, dir, targ, range,
-                             needs_path, true, dont_cancel_me, prompt,
-                             title.c_str(),
-                             testbits(flags, SPFLAG_NOT_SELF),
-                             hitfunc,
-                             additional_desc))
+        direction_chooser_args args;
+        args.hitfunc = hitfunc;
+        args.restricts = dir;
+        args.mode = targ;
+        args.range = range;
+        args.needs_path = needs_path;
+        args.may_target_self = dont_cancel_me;
+        args.target_prefix = prompt;
+        args.top_prompt = title;
+        args.cancel_at_self = testbits(flags, SPFLAG_NOT_SELF);
+        args.get_desc_func = additional_desc;
+        if (!spell_direction(spd, beam, &args))
         {
             if (hitfunc)
                 delete hitfunc;

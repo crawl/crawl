@@ -1751,11 +1751,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     bolt beam;
     dist spd;
 
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.needs_path = false;
-    args.may_target_monster = false;
-
     // Note: the costs will not be applied until after this switch
     // statement... it's assumed that only failures have returned! - bwr
     switch (abil.ability)
@@ -1823,13 +1818,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         targetter_beam tgt(&you, beam.range, ZAP_FIREBALL, power, 1, 1);
 
-        if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, beam.range,
-                             true, true, false, nullptr,
-                             "Aiming: <white>Delayed Fireball</white>",
-                             false, &tgt))
-        {
+        direction_chooser_args args;
+        args.mode = TARG_HOSTILE;
+        args.top_prompt = "Aiming: <white>Delayed Fireball</white>";
+        args.hitfunc = &tgt;
+        if (!spell_direction(spd, beam, &args))
             return SPRET_ABORT;
-        }
 
         if (!zapping(ZAP_FIREBALL, power, beam, true, nullptr, false))
             return SPRET_ABORT;
@@ -1866,13 +1860,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     {
         targetter_splash hitfunc(&you);
         beam.range = 1;
-        if (!spell_direction(abild, beam,
-                             DIR_NONE, TARG_HOSTILE, 0, true, true, false,
-                             nullptr, nullptr, false,
-                             &hitfunc))
-        {
+        direction_chooser_args args;
+        args.mode = TARG_HOSTILE;
+        args.hitfunc = &hitfunc;
+        if (!spell_direction(abild, beam, &args))
             return SPRET_ABORT;
-        }
 
         if (stop_attack_prompt(hitfunc, "spit at", _sticky_flame_can_hit))
             return SPRET_ABORT;
@@ -2166,7 +2158,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_ZIN_IMPRISON:
     {
         beam.range = LOS_RADIUS;
-        if (!spell_direction(spd, beam, DIR_TARGET, TARG_HOSTILE, 0, false))
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.mode = TARG_HOSTILE;
+        args.needs_path = false;
+        if (!spell_direction(spd, beam, &args))
             return SPRET_ABORT;
 
         if (beam.target == you.pos())
@@ -2604,13 +2600,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         const int pow =
             player_adjust_invoc_power(16 + you.skill(SK_INVOCATIONS, 8));
 
-        if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, 0,
-                             true, true, false, nullptr, nullptr, false, nullptr,
-                             bind(desc_success_chance, placeholders::_1,
-                                  zap_ench_power(ZAP_BANISHMENT, pow))))
-        {
+        direction_chooser_args args;
+        args.mode = TARG_HOSTILE;
+        args.get_desc_func = bind(desc_success_chance, placeholders::_1,
+                                  zap_ench_power(ZAP_BANISHMENT, pow));
+        if (!spell_direction(spd, beam, &args))
             return SPRET_ABORT;
-        }
 
         if (beam.target == you.pos())
         {

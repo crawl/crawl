@@ -716,38 +716,29 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
     }
 }
 
-// Select a spell direction and fill dist and pbolt appropriately.
-// Return false if the user cancelled, true otherwise.
-// FIXME: this should accept a direction_chooser_args directly rather
-// than move the arguments into one.
-bool spell_direction(dist &spelld, bolt &pbolt,
-                      targeting_type restrict, targ_mode_type mode,
-                      int range,
-                      bool needs_path, bool may_target_monster,
-                      bool may_target_self, const char *target_prefix,
-                      const char* top_prompt, bool cancel_at_self,
-                      targetter *hitfunc, desc_filter get_desc_func)
+/**
+ * Select a spell target and fill dist and pbolt appropriately.
+ *
+ * @param[out] spelld    the output of the direction() call.
+ * @param[in, out] pbolt a beam; its range is used if none is set in args, and
+ *                       its source and target are set if the direction() call
+ *                       succeeds.
+ * @param[in] args       The arguments for the direction() call. May be null,
+ *                       which case a default is used.
+ * @return false if the user cancelled, true otherwise.
+ */
+bool spell_direction(dist &spelld, bolt &pbolt, direction_chooser_args *args)
 {
-    if (range < 1)
-        range = (pbolt.range < 1) ? you.current_vision : pbolt.range;
+    direction_chooser_args newargs;
+    // This should be before the overwrite, so callers can specify a different
+    // mode if they want.
+    newargs.mode = TARG_HOSTILE;
+    if (args)
+        newargs = *args;
+    if (newargs.range < 1)
+        newargs.range = (pbolt.range < 1) ? you.current_vision : pbolt.range;
 
-    direction_chooser_args args;
-    args.restricts = restrict;
-    args.mode = mode;
-    args.range = range;
-    args.just_looking = false;
-    args.needs_path = needs_path;
-    args.may_target_monster = may_target_monster;
-    args.may_target_self = may_target_self;
-    args.target_prefix = target_prefix;
-    if (top_prompt)
-        args.top_prompt = top_prompt;
-    args.behaviour = nullptr;
-    args.cancel_at_self = cancel_at_self;
-    args.hitfunc = hitfunc;
-    args.get_desc_func = get_desc_func;
-
-    direction(spelld, args);
+    direction(spelld, newargs);
 
     if (!spelld.isValid)
     {

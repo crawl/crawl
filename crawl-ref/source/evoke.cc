@@ -1476,9 +1476,12 @@ static bool _lamp_of_fire()
 
     const int pow =
         player_adjust_evoc_power(8 + you.skill_rdiv(SK_EVOCATIONS, 9, 4));
-    if (spell_direction(target, base_beam, DIR_TARGET, TARG_HOSTILE, 8,
-                        true, true, false, nullptr,
-                        "Aim the lamp in which direction?", true, nullptr))
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_HOSTILE;
+    args.top_prompt = "Aim the lamp in which direction?";
+    args.cancel_at_self = true;
+    if (spell_direction(target, base_beam, &args))
     {
         if (you.confused())
             target.confusion_fuzz();
@@ -1977,9 +1980,10 @@ static bool _phial_of_floods()
     beam.name = "flood of elemental water";
     beam.aimed_at_spot = true;
 
-    if (spell_direction(target, beam, DIR_NONE, TARG_HOSTILE,
-                        LOS_RADIUS, true, true, false, nullptr,
-                        "Aim the phial where?"))
+    direction_chooser_args args;
+    args.mode = TARG_HOSTILE;
+    args.top_prompt = "Aim the phial where?";
+    if (spell_direction(target, beam, &args))
     {
         if (you.confused())
         {
@@ -2099,13 +2103,14 @@ static spret_type _phantom_mirror()
     dist spd;
     targetter_smite tgt(&you, LOS_RADIUS, 0, 0);
 
-    if (!spell_direction(spd, beam, DIR_TARGET, TARG_ANY,
-                         LOS_RADIUS, false, true, false, nullptr,
-                         "Aiming: <white>Phantom Mirror</white>", true,
-                         &tgt))
-    {
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.needs_path = false;
+    args.cancel_at_self = true;
+    args.top_prompt = "Aiming: <white>Phantom Mirror</white>";
+    args.hitfunc = &tgt;
+    if (!spell_direction(spd, beam, &args))
         return SPRET_ABORT;
-    }
     victim = monster_at(beam.target);
     if (!victim || !you.can_see(*victim))
     {

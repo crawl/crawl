@@ -4914,13 +4914,14 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
     {
         dist spd;
         targetter_smite tgt(&you, LOS_RADIUS, 0, max_radius);
-        if (!spell_direction(spd, beam, DIR_TARGET, TARG_HOSTILE,
-                             LOS_RADIUS, false, true, false, nullptr,
-                             "Aiming: <white>Upheaval</white>", true,
-                             &tgt))
-        {
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.mode = TARG_HOSTILE;
+        args.needs_path = false;
+        args.top_prompt = "Aiming: <white>Upheaval</white>";
+        args.cancel_at_self = true;
+        if (!spell_direction(spd, beam, &args))
             return SPRET_ABORT;
-        }
         bolt tempbeam;
         tempbeam.source    = beam.target;
         tempbeam.target    = beam.target;
@@ -6334,19 +6335,23 @@ bool ru_power_leap()
     }
 
     // query for location:
-    int range = 3;
-    int explosion_size = 1;
     dist beam;
-    bolt fake_beam;
 
     while (1)
     {
-        targetter_smite tgt(&you, range, explosion_size, explosion_size);
-        if (!spell_direction(beam, fake_beam, DIR_LEAP, TARG_ANY,
-                             range, false, false, false, nullptr,
-                             "Aiming: <white>Power Leap</white>", true,
-                             &tgt)
-            && crawl_state.seen_hups)
+        direction_chooser_args args;
+        args.restricts = DIR_LEAP;
+        args.mode = TARG_ANY;
+        args.range = 3;
+        args.needs_path = false;
+        args.may_target_monster = false;
+        args.top_prompt = "Aiming: <white>Power Leap</white>";
+        args.cancel_at_self = true;
+        const int explosion_size = 1;
+        targetter_smite tgt(&you, args.range, explosion_size, explosion_size);
+        args.hitfunc = &tgt;
+        direction(beam, args);
+        if (crawl_state.seen_hups)
         {
             clear_messages();
             mpr("Cancelling leap due to HUP.");
