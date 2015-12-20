@@ -9,6 +9,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "directn.h"
 #include "env.h"
 #include "fineff.h"
 #include "fprop.h"
@@ -259,6 +260,9 @@ void tornado_damage(actor *caster, int dur)
     int noise = 0;
     WindSystem winds(org);
 
+    const coord_def old_player_pos = you.pos();
+    coord_def new_player_pos = old_player_pos;
+
     int age = _tornado_age(caster);
     ASSERT(age >= 0);
 
@@ -443,10 +447,24 @@ void tornado_damage(actor *caster, int dur)
             ASSERT(!actor_at(newpos));
             act->move_to_pos(newpos);
             ASSERT(act->pos() == newpos);
+
+            if (act->is_player())
+                new_player_pos = newpos;
         }
 
     if (caster->is_player())
         fire_final_effects();
+    else
+    {
+        if (new_player_pos != old_player_pos
+            && !need_expiration_warning(old_player_pos)
+            && need_expiration_warning(new_player_pos))
+        {
+            mprf(MSGCH_DANGER, "Careful! You are now flying above %s",
+                 feature_description_at(new_player_pos, false, DESC_PLAIN)
+                     .c_str());
+        }
+    }
 }
 
 void cancel_tornado(bool tloc)
