@@ -1031,7 +1031,7 @@ void set_random_slime_target(monster* mon)
         {
             item_def& item(*si);
 
-            if (is_item_jelly_edible(item))
+            if (item_is_jelly_edible(item))
             {
                 mon->target = *ri;
                 goto end;

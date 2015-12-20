@@ -83,7 +83,7 @@ void jiyva_eat_offlevel_items()
 
             for (stack_iterator si(p); si; ++si)
             {
-                if (!is_item_jelly_edible(*si) || one_chance_in(4))
+                if (!item_is_jelly_edible(*si) || one_chance_in(4))
                     continue;
 
                 if (one_chance_in(4))

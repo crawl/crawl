@@ -1952,7 +1952,7 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
         }
 
         item_def* wpn = &you.inv[item_slot];
-        if (!is_item_selected(*wpn, selector))
+        if (!item_is_selected(*wpn, selector))
         {
             mpr("Choose a valid weapon, or Esc to abort.");
             more();

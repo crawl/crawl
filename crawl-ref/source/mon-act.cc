@@ -2838,7 +2838,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
     for (stack_iterator si(mons->pos());
          si && eaten < max_eat && hps_changed < 50; ++si)
     {
-        if (!is_item_jelly_edible(*si))
+        if (!item_is_jelly_edible(*si))
             continue;
 
         dprf("%s eating %s", mons->name(DESC_PLAIN, true).c_str(),

@@ -1741,7 +1741,7 @@ bool beogh_gift_item()
     if (weapon && !mons->could_wield(gift)
         || body_armour && !check_armour_size(gift, mons->body_size())
         || shield && mons_weapon && mons->hands_reqd(*mons_weapon) == HANDS_TWO
-        || !is_item_selected(gift, OSEL_BEOGH_GIFT))
+        || !item_is_selected(gift, OSEL_BEOGH_GIFT))
     {
         mprf("You can't give that to %s.", mons->name(DESC_THE, false).c_str());
 

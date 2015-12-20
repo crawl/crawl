@@ -2839,7 +2839,7 @@ bool gives_resistance(const item_def &item)
     return false;
 }
 
-bool is_item_jelly_edible(const item_def &item)
+bool item_is_jelly_edible(const item_def &item)
 {
     if (item_is_stationary_net(item))
         return false;

@@ -100,11 +100,11 @@ public:
     const string &get_qualname() const;
     const string &get_fullname() const;
     const string &get_dbname() const;
-    bool         is_item_cursed() const;
-    bool         is_item_glowing() const;
-    bool         is_item_ego() const;
-    bool         is_item_art() const;
-    bool         is_item_equipped() const;
+    bool         is_cursed() const;
+    bool         is_glowing() const;
+    bool         is_ego() const;
+    bool         is_art() const;
+    bool         is_equipped() const;
 
     virtual int highlight_colour() const override
     {
@@ -181,7 +181,7 @@ protected:
 
 void get_class_hotkeys(const int type, vector<char> &glyphs);
 
-bool is_item_selected(const item_def &item, int selector);
+bool item_is_selected(const item_def &item, int selector);
 bool any_items_of_type(int type_expect, int excluded_slot = -1);
 string no_selectables_message(int item_selector);
 
