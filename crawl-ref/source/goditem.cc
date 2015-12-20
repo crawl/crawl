@@ -609,7 +609,7 @@ conduct_type god_hates_item_handling(const item_def &item)
         {
             return DID_SPELL_PRACTISE;
         }
-        // Only Trog cares about spellsbooks vs rods.
+        // Only Trog cares about spellbooks vs rods.
         if (item.base_type == OBJ_RODS)
             return DID_NOTHING;
         break;

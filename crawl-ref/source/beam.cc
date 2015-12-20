@@ -32,6 +32,7 @@
 #include "fight.h"
 #include "godabil.h"
 #include "godconduct.h"
+#include "goditem.h"
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
@@ -316,13 +317,12 @@ static bool _stop_because_god_hates_target_prompt(monster* mon,
                                                   spell_type spell,
                                                   beam_type flavour)
 {
-    // This is just a hasty stub for the one case I'm aware of right now.
     if (spell == SPELL_TUKIMAS_DANCE)
     {
         const item_def * const first = mon->weapon(0);
         const item_def * const second = mon->weapon(1);
-        bool prompt = first && god_hates_brand(get_weapon_brand(*first))
-                      || second && god_hates_brand(get_weapon_brand(*second));
+        bool prompt = first && god_hates_item(*first)
+                      || second && god_hates_item(*second);
         if (prompt
             && !yesno("Animating this weapon would place you under penance. "
             "Really cast this spell?", false, 'n'))
