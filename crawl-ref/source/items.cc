@@ -1481,8 +1481,6 @@ void merge_item_stacks(const item_def &source, item_def &dest, int quant)
 
     if (is_perishable_stack(source) && is_perishable_stack(dest))
         merge_perishable_stacks(source, dest, quant);
-    if (source.base_type == OBJ_GOLD) // Gozag
-        dest.special = max(source.special, dest.special);
 }
 
 static int _userdef_find_free_slot(const item_def &i)
@@ -4703,7 +4701,6 @@ item_info get_item_info(const item_def& item)
         }
         break;
     case OBJ_GOLD:
-        ii.special = item.special;
         ii.sub_type = item.sub_type;
         break;
     case OBJ_ORBS:
