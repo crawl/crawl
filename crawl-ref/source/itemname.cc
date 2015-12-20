@@ -344,8 +344,8 @@ static bool _missile_brand_is_postfix(special_missile_type brand)
 
 const char* missile_brand_name(const item_def &item, mbn_type t)
 {
-    special_missile_type brand;
-    brand = static_cast<special_missile_type>(item.special);
+    const special_missile_type brand
+        = static_cast<special_missile_type>(item.brand);
     switch (brand)
     {
     case SPMSL_FLAME:
@@ -2663,7 +2663,7 @@ void check_item_knowledge(bool unknown_items)
                 // Make chunks fresh, non-poisonous, etc.
                 if (ptmp->is_type(OBJ_FOOD, FOOD_CHUNK))
                 {
-                    ptmp->special = 100;
+                    ptmp->freshness = 100;
                     ptmp->mon_type = MONS_RAT;
                 }
 
@@ -4055,7 +4055,7 @@ void init_item_name_cache()
                 if (is_deck(item))
                 {
                     item.plus = 1;
-                    item.special = DECK_RARITY_COMMON;
+                    item.deck_rarity = DECK_RARITY_COMMON;
                     init_deck(item);
                 }
                 string name = item.name(plus || item.base_type == OBJ_RUNES ? DESC_PLAIN : DESC_DBNAME,

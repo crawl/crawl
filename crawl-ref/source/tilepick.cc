@@ -3147,7 +3147,7 @@ static tileidx_t _tileidx_weapon(const item_def &item)
 
 static tileidx_t _tileidx_missile_base(const item_def &item)
 {
-    int brand = item.special;
+    int brand = item.brand;
     // 0 indicates no ego at all
 
     switch (item.sub_type)
@@ -3979,7 +3979,7 @@ static tileidx_t _tileidx_misc(const item_def &item)
     if (is_deck(item, true))
     {
         tileidx_t ch = TILE_ERROR;
-        switch (item.special)
+        switch (item.deck_rarity)
         {
             case DECK_RARITY_LEGENDARY:
                 ch = TILE_MISC_DECK_LEGENDARY;
@@ -4287,7 +4287,7 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
                 ch = TILE_MI_STONE0;
                 break;
             case MI_SLING_BULLET:
-                switch (item.special)
+                switch (item.brand)
                 {
                 default:
                     ch = TILE_MI_SLING_BULLET0;

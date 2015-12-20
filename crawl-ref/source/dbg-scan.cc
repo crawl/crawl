@@ -212,9 +212,9 @@ void debug_item_scan()
         }
         else if (!is_artefact(mitm[i])
                  && (mitm[i].base_type == OBJ_WEAPONS
-                     && mitm[i].special >= NUM_SPECIAL_WEAPONS
+                        && mitm[i].brand >= NUM_SPECIAL_WEAPONS
                      || mitm[i].base_type == OBJ_ARMOUR
-                        && mitm[i].special >= NUM_SPECIAL_ARMOURS))
+                        && mitm[i].brand >= NUM_SPECIAL_ARMOURS))
         {
             _dump_item(name, i, mitm[i], "Bad special value:");
         }

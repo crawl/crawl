@@ -493,7 +493,7 @@ static bool _compare_by_freshness(const item_def *food1, const item_def *food2)
     if (is_bad_food(*food2) && !is_bad_food(*food1))
         return true;
 
-    return food1->special < food2->special;
+    return food1->freshness < food2->freshness;
 }
 
 #ifdef TOUCH_UI

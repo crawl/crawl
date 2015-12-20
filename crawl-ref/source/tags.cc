@@ -3378,7 +3378,7 @@ static void tag_read_you_items(reader &th)
             }
 #endif
 
-            const unrandart_entry *entry = get_unrand_entry(item->special);
+            const unrandart_entry *entry = get_unrand_entry(item->unrand_idx);
 
             if (entry->world_reacts_func)
                 you.unrand_reacts.set(i);
@@ -3982,7 +3982,7 @@ void unmarshallItem(reader &th, item_def &item)
         item.base_type = OBJ_MISSILES;
         item.sub_type = MI_TOMAHAWK;
         item.plus = item.plus2 = 0;
-        item.special = SPMSL_NORMAL;
+        item.brand = SPMSL_NORMAL;
     }
 
     if (th.getMinorVersion() < TAG_MINOR_REMOVE_ITEM_COLOUR)
@@ -4111,12 +4111,12 @@ void unmarshallItem(reader &th, item_def &item)
     }
 
     if (item.base_type == OBJ_WEAPONS
-        && (item.special == SPWPN_RETURNING
-            || item.special == SPWPN_REACHING
-            || item.special == SPWPN_ORC_SLAYING
-            || item.special == SPWPN_DRAGON_SLAYING))
+        && (item.brand == SPWPN_RETURNING
+            || item.brand == SPWPN_REACHING
+            || item.brand == SPWPN_ORC_SLAYING
+            || item.brand == SPWPN_DRAGON_SLAYING))
     {
-        item.special = SPWPN_NORMAL;
+        item.brand = SPWPN_NORMAL;
     }
 
     // Not putting these in a minor tag since it's possible for an old
@@ -4126,14 +4126,14 @@ void unmarshallItem(reader &th, item_def &item)
         if (is_artefact(item))
             artefact_set_property(item, ARTP_BRAND, SPWPN_FREEZING);
         else
-            item.special = SPWPN_FREEZING;
+            item.brand = SPWPN_FREEZING;
     }
     if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_FLAME)
     {
         if (is_artefact(item))
             artefact_set_property(item, ARTP_BRAND, SPWPN_FLAMING);
         else
-            item.special = SPWPN_FLAMING;
+            item.brand = SPWPN_FLAMING;
     }
 
     // Rescale old MR (range 35-99) to new discrete steps (40/80/120)

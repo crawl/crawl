@@ -206,7 +206,7 @@ void actor::shield_block_succeeded(actor *foe)
         && get_armour_slot(*sh) == EQ_SHIELD
         && is_artefact(*sh)
         && is_unrandom_artefact(*sh)
-        && (unrand_entry = get_unrand_entry(sh->special))
+        && (unrand_entry = get_unrand_entry(sh->unrand_idx))
         && unrand_entry->melee_effects)
     {
         unrand_entry->melee_effects(sh, this, foe, false, 0);

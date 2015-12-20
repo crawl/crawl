@@ -1524,7 +1524,7 @@ int acquirement_create_item(object_class_type class_wanted,
         {
             // Non-legendary decks aren't very useful for non-nemelexites
             // and nemelexites get plenty of lower-quality decks anyway.
-            acq_item.special = DECK_RARITY_LEGENDARY;
+            acq_item.deck_rarity = DECK_RARITY_LEGENDARY;
         }
 
         // Last check: don't acquire items your god hates.

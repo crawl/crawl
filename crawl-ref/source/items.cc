@@ -1412,7 +1412,7 @@ bool items_similar(const item_def &item1, const item_def &item2)
     }
 
     // Missiles with different egos shouldn't merge.
-    if (item1.base_type == OBJ_MISSILES && item1.special != item2.special)
+    if (item1.base_type == OBJ_MISSILES && item1.brand != item2.brand)
         return false;
 
     // Don't merge trapping nets with other nets.
@@ -2927,7 +2927,7 @@ static bool _interesting_explore_pickup(const item_def& item)
     case OBJ_MISSILES:
     case OBJ_ARMOUR:
         // Ego items.
-        if (item.special != 0)
+        if (item.brand != 0)
             return true;
         break;
 
@@ -4184,7 +4184,7 @@ static void _deck_from_specs(const char* _specs, item_def &item,
 
     const deck_rarity_type rarity =
         static_cast<deck_rarity_type>(DECK_RARITY_COMMON + rarity_val);
-    item.special = rarity;
+    item.deck_rarity = rarity;
 
     const int num_cards =
         create_for_real ? prompt_for_int("How many cards? ", false)
@@ -4366,7 +4366,7 @@ bool get_item_by_name(item_def *item, const char* specs,
 
             for (int i = SPWPN_NORMAL + 1; i < SPWPN_DEBUG_RANDART; ++i)
             {
-                item->special = i;
+                item->brand = i;
                 size_t pos = lowercase_string(item->name(DESC_PLAIN)).find(buf_lwr);
                 if (pos != string::npos)
                 {
@@ -4381,7 +4381,7 @@ bool get_item_by_name(item_def *item, const char* specs,
                 }
             }
 
-            item->special = special_wanted;
+            item->brand = special_wanted;
         }
         break;
     }
@@ -4544,7 +4544,7 @@ item_info get_item_info(const item_def& item)
             // Unrandart index
             // Since the appearance of unrandarts is fixed anyway, this
             // is not an information leak.
-            ii.special = item.special;
+            ii.unrand_idx = item.unrand_idx;
         }
         else
         {

@@ -725,7 +725,7 @@ static void _try_brand_switch(const int item_index)
     if (is_random_artefact(item))
         artefact_set_property(item, ARTP_BRAND, SPWPN_CHAOS);
     else
-        item.special = SPWPN_CHAOS;
+        item.brand = SPWPN_CHAOS;
 }
 
 static void _xom_make_item(object_class_type base, int subtype, int power)
@@ -1006,7 +1006,7 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
     }
     else
     {
-        item.special = brand;
+        item.brand = brand;
 
         if (seen)
             set_ident_flags(item, ISFLAG_KNOW_TYPE);

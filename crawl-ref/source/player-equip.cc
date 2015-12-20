@@ -211,7 +211,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     // artefact's properties before they're applied.
     if (is_unrandom_artefact(item))
     {
-        const unrandart_entry *entry = get_unrand_entry(item.special);
+        const unrandart_entry *entry = get_unrand_entry(item.unrand_idx);
 
         if (entry->equip_func)
             entry->equip_func(&item, show_msgs, unmeld);
@@ -344,7 +344,7 @@ static void _unequip_artefact_effect(item_def &item,
 
     if (is_unrandom_artefact(item))
     {
-        const unrandart_entry *entry = get_unrand_entry(item.special);
+        const unrandart_entry *entry = get_unrand_entry(item.unrand_idx);
 
         if (entry->unequip_func)
             entry->unequip_func(&item, show_msgs);
@@ -464,7 +464,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
-        special = item.special;
+        special = item.brand;
 
         if (artefact)
         {

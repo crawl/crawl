@@ -148,9 +148,9 @@ bool melee_attack::handle_phase_attempted()
         {
             if (weapon->base_type == OBJ_WEAPONS)
                 if (is_unrandom_artefact(*weapon)
-                    && get_unrand_entry(weapon->special)->type_name)
+                    && get_unrand_entry(weapon->unrand_idx)->type_name)
                 {
-                    count_action(CACT_MELEE, weapon->special);
+                    count_action(CACT_MELEE, weapon->unrand_idx);
                 }
                 else
                     count_action(CACT_MELEE, weapon->sub_type);
@@ -699,7 +699,7 @@ bool melee_attack::handle_phase_killed()
     // be called twice. Adding another entry for a single artefact would
     // be overkill, so here we call it by hand. check_unrand_effects()
     // avoided triggering Wyrmbane's death effect earlier in the attack.
-    if (unrand_entry && weapon && weapon->special == UNRAND_WYRMBANE)
+    if (unrand_entry && weapon && weapon->unrand_idx == UNRAND_WYRMBANE)
     {
         unrand_entry->melee_effects(weapon, attacker, defender,
                                                true, special_damage);
@@ -942,7 +942,7 @@ bool melee_attack::check_unrand_effects()
 
         // Don't trigger the Wyrmbane death effect yet; that is done in
         // handle_phase_killed().
-        if (weapon->special == UNRAND_WYRMBANE && died)
+        if (weapon->unrand_idx == UNRAND_WYRMBANE && died)
             return true;
 
         // Recent merge added damage_done to this method call

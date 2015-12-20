@@ -139,7 +139,7 @@ bool InvEntry::is_glowing() const
 bool InvEntry::is_ego() const
 {
     return item_ident(*item, ISFLAG_KNOW_TYPE) && !is_artefact(*item)
-           && item->special != 0
+           && item->brand != 0
            && (item->base_type == OBJ_WEAPONS
                || item->base_type == OBJ_MISSILES
                || item->base_type == OBJ_ARMOUR);
@@ -1996,7 +1996,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
 
     if (is_unrandom_artefact(item))
     {
-        const unrandart_entry* entry = get_unrand_entry(item.special);
+        const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
         if (entry->evoke_func && item_type_known(item))
         {

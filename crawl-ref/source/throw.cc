@@ -554,7 +554,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     ammo_name = item.name(DESC_PLAIN);
 
     const unrandart_entry* entry = launcher && is_unrandom_artefact(*launcher)
-        ? get_unrand_entry(launcher->special) : nullptr;
+        ? get_unrand_entry(launcher->unrand_idx) : nullptr;
 
     if (entry && entry->launch)
     {
@@ -832,9 +832,9 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         ASSERT(launcher);
         practise(EX_WILL_LAUNCH, item_attack_skill(*launcher));
         if (is_unrandom_artefact(*launcher)
-            && get_unrand_entry(launcher->special)->type_name)
+            && get_unrand_entry(launcher->unrand_idx)->type_name)
         {
-            count_action(CACT_FIRE, launcher->special);
+            count_action(CACT_FIRE, launcher->unrand_idx);
         }
         else
             count_action(CACT_FIRE, launcher->sub_type);

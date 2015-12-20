@@ -1489,7 +1489,7 @@ static void _recharge_rod(item_def &rod, int aut, bool in_inv)
     // -4 rods don't recharge at all.
     aut = min(aut, MAX_ROD_CHARGE * ROD_CHARGE_MULT * 10);
 
-    int rate = 4 + rod.special;
+    int rate = 4 + rod.rod_plus;
 
     rate *= 10 * aut;
     if (in_inv)

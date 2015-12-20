@@ -580,7 +580,7 @@ void wizard_make_object_randart()
             return;
         }
 
-        item.special = 0;
+        item.unrand_idx = 0;
         item.flags  &= ~ISFLAG_RANDART;
         item.props.clear();
     }
@@ -1219,7 +1219,7 @@ static void _debug_rap_stats(FILE *ostat)
 
     // Start off with a non-artefact item.
     item.flags  &= ~ISFLAG_ARTEFACT_MASK;
-    item.special = 0;
+    item.unrand_idx = 0;
     item.props.clear();
 
     if (!make_item_randart(item))
@@ -1261,7 +1261,7 @@ static void _debug_rap_stats(FILE *ostat)
         // Generate proprt once and hand it off to randart_is_bad(),
         // so that randart_is_bad() doesn't generate it a second time.
         item.flags  &= ~ISFLAG_ARTEFACT_MASK;
-        item.special = 0;
+        item.unrand_idx = 0;
         item.props.clear();
         make_item_randart(item);
         artefact_properties(item, proprt);

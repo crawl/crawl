@@ -3952,7 +3952,7 @@ void bolt::affect_player()
                 was_affected = true;
             }
         }
-        else if (item->special == SPMSL_CURARE)
+        else if (item->brand == SPMSL_CURARE)
         {
             if (x_chance_in_y(90 - 3 * you.armour_class(), 100))
             {
@@ -4529,7 +4529,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     // Handle missile effects.
     if (item && item->base_type == OBJ_MISSILES
-        && item->special == SPMSL_CURARE && ench_power == AUTOMATIC_HIT)
+        && item->brand == SPMSL_CURARE && ench_power == AUTOMATIC_HIT)
     {
         curare_actor(agent(), mon, 2, name, source_name);
     }

@@ -229,7 +229,7 @@ static vector<string> _randart_propnames(const item_def& item,
 
     const unrandart_entry *entry = nullptr;
     if (is_unrandom_artefact(item))
-        entry = get_unrand_entry(item.special);
+        entry = get_unrand_entry(item.unrand_idx);
 
     // For randart jewellery, note the base jewellery type if it's not
     // covered by artefact_desc_properties()
@@ -1155,7 +1155,7 @@ static string _describe_ammo(const item_def &item)
     const bool can_launch = has_launcher(item);
     const bool can_throw  = is_throwable(&you, item, true);
 
-    if (item.special && item_type_known(item))
+    if (item.brand && item_type_known(item))
     {
         description += "\n\n";
 
@@ -1169,7 +1169,7 @@ static string _describe_ammo(const item_def &item)
         if (can_launch)
             threw_or_fired += "fired";
 
-        switch (item.special)
+        switch (item.brand)
         {
         case SPMSL_FLAME:
             description += "It burns those it strikes, causing extra injury "
@@ -1881,7 +1881,7 @@ string get_item_description(const item_def &item, bool verbose,
                 else
                     description << "\nIts capacity can be increased no further.";
 
-                const int recharge_rate = item.special;
+                const int recharge_rate = item.rod_plus;
                 if (recharge_rate < max_recharge_rate)
                 {
                     description << "\nIts current recharge rate is "

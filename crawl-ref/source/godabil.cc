@@ -1968,7 +1968,7 @@ bool kiku_receive_corpses(int pow)
         int rottedness = 200 -
             (!one_chance_in(10) ? random2(200 - you.piety)
                                 : random2(100 + random2(75)));
-        corpse->special = rottedness;
+        corpse->freshness = rottedness;
     }
 
     if (corpses_created)
@@ -2336,7 +2336,7 @@ static int _spawn_corpse_mushrooms(item_def& corpse,
 
         if (res)
         {
-            corpse.special = 0;
+            corpse.freshness = 0;
 
             if (you.see_cell(corpse.pos))
                 mpr("A ring of toadstools grows before your very eyes.");

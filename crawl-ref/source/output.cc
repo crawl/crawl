@@ -877,7 +877,7 @@ static void _print_stats_wp(int y)
         if (you.duration[DUR_CORROSION])
         {
             if (wpn.base_type == OBJ_RODS)
-                wpn.special -= 4 * you.props["corrosion_amount"].get_int();
+                wpn.rod_plus -= 4 * you.props["corrosion_amount"].get_int();
             else
                 wpn.plus -= 4 * you.props["corrosion_amount"].get_int();
         }
