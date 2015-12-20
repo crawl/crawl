@@ -1746,7 +1746,6 @@ static bool _sticky_flame_can_hit(const actor *act)
  */
 static spret_type _do_ability(const ability_def& abil, bool fail)
 {
-    int power;
     dist abild;
     bolt beam;
     dist spd;
@@ -1813,7 +1812,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     {
         fail_check();
         // Note: Power level of ball calculated at release. - bwr
-        power = calc_spell_power(SPELL_DELAYED_FIREBALL, true);
+        int power = calc_spell_power(SPELL_DELAYED_FIREBALL, true);
         beam.range = spell_range(SPELL_FIREBALL, power);
 
         targetter_beam tgt(&you, beam.range, ZAP_FIREBALL, power, 1, 1);
@@ -1834,7 +1833,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     }
 
     case ABIL_SPIT_POISON:      // Spit poison mutation
-        power = you.experience_level
+    {
+        int power = you.experience_level
                 + player_mutation_level(MUT_SPIT_POISON) * 5;
         beam.range = 6;         // following Venom Bolt
 
@@ -1850,6 +1850,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             you.set_duration(DUR_BREATH_WEAPON, 3 + random2(5));
         }
         break;
+    }
 
     case ABIL_EVOKE_TELEPORTATION:    // ring of teleportation
         fail_check();
@@ -1902,7 +1903,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         {
         case ABIL_BREATHE_FIRE:
         {
-            power = you.experience_level;
+            int power = you.experience_level;
 
             if (you.form == TRAN_DRAGON)
                 power += 12;
@@ -2039,7 +2040,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         // low level Te
         else
         {
-            power = you.experience_level * 4;
+            int power = you.experience_level * 4;
             const int dur_change = 25 + random2(power) + random2(power);
 
             you.increase_duration(DUR_FLIGHT, dur_change, 100);
@@ -2193,7 +2194,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         fail_check();
 
-        power = player_adjust_invoc_power(
+        int power = player_adjust_invoc_power(
             3 + (roll_dice(5, you.skill(SK_INVOCATIONS, 5) + 12) / 26));
 
         if (!cast_imprison(power, mons, -GOD_ZIN))
@@ -2329,7 +2330,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_YRED_ENSLAVE_SOUL:
     {
         god_acting gdact;
-        power = player_adjust_invoc_power(you.skill(SK_INVOCATIONS, 4));
+        int power = player_adjust_invoc_power(you.skill(SK_INVOCATIONS, 4));
         beam.range = LOS_RADIUS;
 
         if (!spell_direction(spd, beam))
@@ -2405,19 +2406,20 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-        beam.range = 8;
+    {
+        beam.range = LOS_RADIUS;
 
         if (!spell_direction(spd, beam))
             return SPRET_ABORT;
 
-        power = player_adjust_invoc_power(
+        int power = player_adjust_invoc_power(
                     you.skill(SK_INVOCATIONS, 1)
                     + random2(1 + you.skill(SK_INVOCATIONS, 1))
                     + random2(1 + you.skill(SK_INVOCATIONS, 1)));
 
         // Since the actual beam is random, check with BEAM_MMISSILE and the
         // highest range possible.
-        if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, 8))
+        if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, LOS_RADIUS))
             return SPRET_ABORT;
 
         fail_check();
@@ -2432,6 +2434,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         case 4: zapping(ZAP_BREATHE_ACID, power/2, beam); break;
         }
         break;
+    }
 
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
         surge_power(you.spec_invoc(), "divine");
@@ -2443,19 +2446,20 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
+    {
         beam.range = 6;
 
         if (!spell_direction(spd, beam))
             return SPRET_ABORT;
 
-        power = player_adjust_invoc_power(
+        int power = player_adjust_invoc_power(
                     you.skill(SK_INVOCATIONS, 1)
                     + random2(1 + you.skill(SK_INVOCATIONS, 1))
                     + random2(1 + you.skill(SK_INVOCATIONS, 1)));
 
         // Since the actual beam is random, check with BEAM_MMISSILE and the
         // highest range possible.
-        if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, 8))
+        if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, LOS_RADIUS))
             return SPRET_ABORT;
 
         fail_check();
@@ -2472,6 +2476,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             zapping(ztype, power, beam);
         }
         break;
+    }
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
         surge_power(you.spec_invoc(), "divine");
