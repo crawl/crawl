@@ -121,12 +121,12 @@ const string &InvEntry::get_dbname() const
     return dbname;
 }
 
-bool InvEntry::is_item_cursed() const
+bool InvEntry::is_cursed() const
 {
     return item_ident(*item, ISFLAG_KNOW_CURSE) && item->cursed();
 }
 
-bool InvEntry::is_item_glowing() const
+bool InvEntry::is_glowing() const
 {
     return !item_ident(*item, ISFLAG_KNOW_TYPE)
            && (get_equip_desc(*item)
@@ -136,7 +136,7 @@ bool InvEntry::is_item_glowing() const
                        || item->base_type == OBJ_BOOKS)));
 }
 
-bool InvEntry::is_item_ego() const
+bool InvEntry::is_ego() const
 {
     return item_ident(*item, ISFLAG_KNOW_TYPE) && !is_artefact(*item)
            && item->special != 0
@@ -145,12 +145,12 @@ bool InvEntry::is_item_ego() const
                || item->base_type == OBJ_ARMOUR);
 }
 
-bool InvEntry::is_item_art() const
+bool InvEntry::is_art() const
 {
     return item_ident(*item, ISFLAG_KNOW_TYPE) && is_artefact(*item);
 }
 
-bool InvEntry::is_item_equipped() const
+bool InvEntry::is_equipped() const
 {
     if (item->link == -1 || item->pos.x != -1 || item->pos.y != -1)
         return false;
@@ -556,7 +556,7 @@ bool InvMenu::is_selectable(int index) const
     if (type == MT_DROP)
     {
         InvEntry *item = dynamic_cast<InvEntry*>(items[index]);
-        if (item->is_item_cursed() && item->is_item_equipped())
+        if (item->is_cursed() && item->is_equipped())
             return false;
 
         string text = item->get_text();
@@ -669,11 +669,11 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
           { "qualname",  compare_item_str<&InvEntry::get_qualname> },
           { "fullname",  compare_item_str<&InvEntry::get_fullname> },
           { "dbname",    compare_item_str<&InvEntry::get_dbname> },
-          { "curse",     compare_item<bool, &InvEntry::is_item_cursed> },
-          { "glowing",   compare_item_rev<bool, &InvEntry::is_item_glowing> },
-          { "ego",       compare_item_rev<bool, &InvEntry::is_item_ego> },
-          { "art",       compare_item_rev<bool, &InvEntry::is_item_art> },
-          { "equipped",  compare_item_rev<bool, &InvEntry::is_item_equipped> },
+          { "curse",     compare_item<bool, &InvEntry::is_cursed> },
+          { "glowing",   compare_item_rev<bool, &InvEntry::is_glowing> },
+          { "ego",       compare_item_rev<bool, &InvEntry::is_ego> },
+          { "art",       compare_item_rev<bool, &InvEntry::is_art> },
+          { "equipped",  compare_item_rev<bool, &InvEntry::is_equipped> },
           { "identified",compare_item_fn<bool, sort_item_identified> },
           { "charged",   compare_item_fn<bool, sort_item_charged>},
           { "qty",       compare_item_fn<int, sort_item_qty> },
@@ -973,7 +973,7 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
     return selected;
 }
 
-bool is_item_selected(const item_def &i, int selector)
+bool item_is_selected(const item_def &i, int selector)
 {
     const int itype = i.base_type;
     if (selector == OSEL_ANY || selector == itype
@@ -1079,7 +1079,7 @@ bool is_item_selected(const item_def &i, int selector)
                 || is_shield(i)
                 || i.base_type == OBJ_ARMOUR
                    && get_armour_slot(i) == EQ_BODY_ARMOUR)
-                && !is_item_selected(i, OSEL_CURSED_WORN);
+                && !item_is_selected(i, OSEL_CURSED_WORN);
 
     default:
         return false;
@@ -1093,7 +1093,7 @@ static void _get_inv_items_to_show(vector<const item_def*> &v,
     {
         if (item.defined()
             && item.link != excluded_slot
-            && is_item_selected(item, selector))
+            && item_is_selected(item, selector))
         {
             v.push_back(&item);
         }
@@ -1115,7 +1115,7 @@ bool any_items_of_type(int selector, int excluded_slot)
                   [=] (const item_def &item) -> bool
                   {
                       return item.defined() && item.link != excluded_slot
-                          && is_item_selected(item, selector);
+                          && item_is_selected(item, selector);
                   });
 }
 

@@ -222,7 +222,7 @@ int property(const item_def &item, int prop_type) PURE;
 int armour_prop(int armour, int prop_type) PURE;
 bool gives_ability(const item_def &item) PURE;
 bool gives_resistance(const item_def &item) PURE;
-bool is_item_jelly_edible(const item_def &item);
+bool item_is_jelly_edible(const item_def &item);
 equipment_type get_item_slot(object_class_type type, int sub_type) IMMUTABLE;
 equipment_type get_item_slot(const item_def &item) PURE;
 
