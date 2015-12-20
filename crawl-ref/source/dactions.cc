@@ -322,7 +322,7 @@ static void _apply_daction(daction_type act)
     case DACT_ROT_CORPSES:
         for (auto &item : mitm)
             if (item.is_type(OBJ_CORPSES, CORPSE_BODY))
-                item.special = 1; // thoroughly rotten
+                item.freshness = 1; // thoroughly rotten
         break;
     case DACT_GOLD_ON_TOP:
     {

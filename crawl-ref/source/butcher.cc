@@ -382,7 +382,7 @@ bool turn_corpse_into_skeleton(item_def &item)
         return false;
 
     item.sub_type = CORPSE_SKELETON;
-    item.special  = FRESHEST_CORPSE; // reset rotting counter
+    item.freshness = FRESHEST_CORPSE; // reset rotting counter
     item.rnd = 1 + random2(255); // not sure this is necessary, but...
     item.props.erase(FORCED_ITEM_COLOUR_KEY);
     return true;
@@ -424,7 +424,7 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
         clear_item_pickup_flags(item);
 
     // Initialise timer depending on corpse age
-    init_perishable_stack(item, item.special * ROT_TIME_FACTOR);
+    init_perishable_stack(item, item.freshness * ROT_TIME_FACTOR);
 
     // Happens after the corpse has been butchered.
     if (make_hide)
@@ -520,7 +520,7 @@ void turn_corpse_into_blood_potions(item_def &item)
 
     // Initialise timer depending on corpse age
     init_perishable_stack(item,
-                          item.special * ROT_TIME_FACTOR + FRESHEST_BLOOD);
+                          item.freshness * ROT_TIME_FACTOR + FRESHEST_BLOOD);
 
     // Happens after the blood has been bottled.
     maybe_drop_monster_hide(corpse);

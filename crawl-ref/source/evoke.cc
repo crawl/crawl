@@ -2310,7 +2310,7 @@ bool evoke_item(int slot, bool check_range)
     bool unevokable = false;
 
     const unrandart_entry *entry = is_unrandom_artefact(item)
-        ? get_unrand_entry(item.special) : nullptr;
+        ? get_unrand_entry(item.unrand_idx) : nullptr;
 
     you.attribute[ATTR_PAKELLAS_DEVICE_SURGE] = 0; // set later if needed
 
@@ -2327,7 +2327,7 @@ bool evoke_item(int slot, bool check_range)
         bool qret = entry->evoke_func(&item, &pract, &did_work, &unevokable);
 
         if (!unevokable)
-            count_action(CACT_EVOKE, item.special);
+            count_action(CACT_EVOKE, item.unrand_idx);
 
         // what even _is_ this return value?
         if (qret)

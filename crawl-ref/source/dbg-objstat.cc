@@ -388,7 +388,7 @@ static item_def _dummy_item(const item_type &item)
     if (item.base_type == ITEM_DECKS)
     {
         dummy_item.plus = 1;
-        dummy_item.special  = DECK_RARITY_COMMON;
+        dummy_item.deck_rarity = DECK_RARITY_COMMON;
         init_deck(dummy_item);
     }
     return dummy_item;
@@ -708,7 +708,7 @@ void objstat_record_item(const item_def &item)
     case ITEM_RODS:
         _record_item_stat(cur_lev, itype, "RodMana",
                              item.charge_cap / ROD_CHARGE_MULT);
-        _record_item_stat(cur_lev, itype, "RodRecharge", item.special);
+        _record_item_stat(cur_lev, itype, "RodRecharge", item.rod_plus);
         break;
     case ITEM_MISCELLANY:
         all_plus_f = "MiscPlus";
@@ -938,7 +938,7 @@ static string _brand_name(const item_type &item, int brand)
         brand_name = "none";
     else
     {
-        dummy_item.special = brand;
+        dummy_item.brand = brand;
         switch (item.base_type)
         {
         case ITEM_WEAPONS:

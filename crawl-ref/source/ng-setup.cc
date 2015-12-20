@@ -113,7 +113,8 @@ item_def* newgame_make_item(object_class_type base,
         if (!item.defined())
             break;
 
-        if (item.is_type(base, sub_type) && item.special == force_ego && is_stackable_item(item))
+        if (item.is_type(base, sub_type) && item.brand == force_ego
+            && is_stackable_item(item))
         {
             item.quantity += qty;
             return &item;
@@ -125,7 +126,7 @@ item_def* newgame_make_item(object_class_type base,
     item.sub_type  = sub_type;
     item.quantity  = qty;
     item.plus      = plus;
-    item.special   = force_ego;
+    item.brand     = force_ego;
 
     // If the character is restricted in wearing the requested armour,
     // hand out a replacement instead.

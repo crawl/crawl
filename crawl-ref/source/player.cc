@@ -748,7 +748,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     dummy.base_type = alternate.base_type = OBJ_ARMOUR;
     dummy.sub_type = alternate.sub_type = NUM_ARMOURS;
     // Make sure can_wear_armour doesn't think it's Lear's.
-    dummy.special = alternate.special = 0;
+    dummy.unrand_idx = alternate.unrand_idx = 0;
 
     switch (eq)
     {
@@ -1002,7 +1002,7 @@ bool player_equip_unrand(int unrand_index)
         if ((item = you.slot_item(slot))
             && item->base_type == OBJ_WEAPONS
             && is_unrandom_artefact(*item)
-            && item->special == unrand_index)
+            && item->unrand_idx == unrand_index)
         {
             return true;
         }
@@ -1016,7 +1016,7 @@ bool player_equip_unrand(int unrand_index)
 
             if ((item = you.slot_item(static_cast<equipment_type>(slots)))
                 && is_unrandom_artefact(*item)
-                && item->special == unrand_index)
+                && item->unrand_idx == unrand_index)
             {
                 return true;
             }
@@ -1038,7 +1038,7 @@ bool player_equip_unrand(int unrand_index)
         // Check a specific slot.
         if ((item = you.slot_item(slot))
             && is_unrandom_artefact(*item)
-            && item->special == unrand_index)
+            && item->unrand_idx == unrand_index)
         {
             return true;
         }

@@ -1034,7 +1034,7 @@ unsigned int item_value(item_def item, bool ident)
     if (is_unrandom_artefact(item)
         && item_ident(item, ISFLAG_KNOW_PROPERTIES))
     {
-        const unrandart_entry *entry = get_unrand_entry(item.special);
+        const unrandart_entry *entry = get_unrand_entry(item.unrand_idx);
         if (entry->value != 0)
             return entry->value;
     }
@@ -1813,7 +1813,7 @@ unsigned int item_value(item_def item, bool ident)
 
         default:
             if (is_deck(item))
-                valued += 80 + item.special * 60;
+                valued += 80 + item.deck_rarity * 60;
             else
                 valued += 200;
         }

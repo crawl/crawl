@@ -1457,7 +1457,7 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
 
     if (is_unrandom_artefact(weapon))
     {
-        switch (weapon.special)
+        switch (weapon.unrand_idx)
         {
         case UNRAND_ASMODEUS:
             return mons->type == MONS_ASMODEUS;

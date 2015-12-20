@@ -257,7 +257,7 @@ static int _find_ego_type(object_class_type type, const string &s)
     case OBJ_WEAPONS:
         for (int i = SPWPN_NORMAL; i < NUM_SPECIAL_WEAPONS; ++i)
         {
-            item.special = i;
+            item.brand = i;
             if (brand_name == weapon_brand_name(item, true))
                 return i;
         }
@@ -265,7 +265,7 @@ static int _find_ego_type(object_class_type type, const string &s)
     case OBJ_ARMOUR:
         for (int i = SPARM_NORMAL; i < NUM_SPECIAL_ARMOURS; ++i)
         {
-            item.special = i;
+            item.brand = i;
             if (brand_name == armour_ego_name(item, true))
                 return i;
         }
@@ -365,7 +365,7 @@ static item_def _item_from_string(string s)
         if (ret.base_type == OBJ_RODS)
             _set_rod_plusses(ret, s.substr(end));
         else
-            ret.special = _find_ego_type(ret.base_type, s.substr(end));
+            ret.brand = _find_ego_type(ret.base_type, s.substr(end));
 
         /* pluses for non-rod item_kinds are only valid for manuals and runes
          * so we can skip them here for now */

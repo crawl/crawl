@@ -510,7 +510,7 @@ struct item_def
     union
     {
         // These must all be the same size!
-        short plus;                 ///< + to hit/dam (weapons, rods)
+        short plus;                 ///< + to hit/dam (weapons)
         monster_type mon_type:16;   ///< corpse/chunk monster type
         skill_type skill:16;        ///< the skill provided by a manual
         short charges;              ///< # of charges held by a wand, etc
@@ -534,14 +534,15 @@ struct item_def
     union
     {
         // These must all be the same size!
-        int special;        ///< special stuff
+        int special;            ///< legacy/generic name
+        int unrand_idx;         ///< unrandart index (for get_unrand_entry)
         deck_rarity_type deck_rarity;    ///< plain, ornate, legendary
         int rod_plus;           ///< rate at which a rod recharges; +slay
         uint32_t subtype_rnd;   ///< appearance of un-ID'd items, by subtype.
                                 /// jewellery, scroll, staff, wand, potions
                                 // see comment in item_colour()
-        int brand;          ///< weapon and armour brands; also marks artefacts
-        int freshness;      ///< remaining time until a corpse rots
+        int brand;              ///< weapon and armour brands
+        int freshness;          ///< remaining time until a corpse rots
     };
     uint8_t        rnd;            ///< random number, used for tile choice,
                                    /// randart colours, and other per-item

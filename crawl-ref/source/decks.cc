@@ -3196,8 +3196,8 @@ void init_deck(item_def &item)
     ASSERT(is_deck(item));
     ASSERT_RANGE(item.initial_cards, 1, 128);
     ASSERT(!props.exists(CARD_KEY));
-    ASSERT(item.special >= DECK_RARITY_COMMON
-           && item.special <= DECK_RARITY_LEGENDARY);
+    ASSERT(item.deck_rarity >= DECK_RARITY_COMMON
+           && item.deck_rarity <= DECK_RARITY_LEGENDARY);
 
     const store_flags fl = SFLAG_CONST_TYPE;
 

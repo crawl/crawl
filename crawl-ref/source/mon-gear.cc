@@ -63,9 +63,9 @@ static void _give_monster_item(monster* mon, int thing,
         bool enchanted = mthing.plus;
         // The item could either lose or gain brand after being generated,
         // adjust the glowing flag.
-        if (!mthing.special && !enchanted)
+        if (!mthing.brand && !enchanted)
             set_equip_desc(mthing, 0);
-        else if (mthing.special && !get_equip_desc(mthing))
+        else if (mthing.brand && !get_equip_desc(mthing))
             set_equip_desc(mthing, ISFLAG_GLOWING);
     }
 
@@ -1047,14 +1047,14 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_GREAT_SWORD;
         item.flags    |= ISFLAG_KNOW_TYPE;
-        item.special   = SPWPN_FLAMING;
+        item.brand     = SPWPN_FLAMING;
         break;
 
     case MONS_FROST_GIANT:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_BATTLEAXE;
         item.flags    |= ISFLAG_KNOW_TYPE;
-        item.special   = SPWPN_FREEZING;
+        item.brand     = SPWPN_FREEZING;
         break;
 
     case MONS_ORC_WIZARD:
@@ -1490,7 +1490,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     // and subtype and create a new item. - bwr
     const int thing_created =
         ((force_item) ? get_mitm_slot() : items(false, xitc, xitt, level,
-                                                item.special));
+                                                item.brand));
 
     if (thing_created == NON_ITEM)
         return;
@@ -1592,7 +1592,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             if (ammo_brand != SPMSL_NORMAL
                 && (bow_brand == SPWPN_FLAMING || bow_brand == SPWPN_FREEZING))
             {
-                mitm[thing_created].special = SPMSL_NORMAL;
+                mitm[thing_created].brand = SPMSL_NORMAL;
             }
         }
 
@@ -1604,7 +1604,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                 break;
 
             case MONS_NESSOS:
-                mitm[thing_created].special = SPMSL_POISONED;
+                mitm[thing_created].brand = SPMSL_POISONED;
                 break;
 
             case MONS_JOSEPH:

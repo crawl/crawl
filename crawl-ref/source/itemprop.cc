@@ -1004,9 +1004,9 @@ void set_ident_flags(item_def &item, iflags_t flags)
         && _is_affordable(item))
     {
         if (item.base_type == OBJ_WEAPONS)
-            you.seen_weapon[item.sub_type] |= 1 << item.special;
+            you.seen_weapon[item.sub_type] |= 1 << item.brand;
         if (item.base_type == OBJ_ARMOUR)
-            you.seen_armour[item.sub_type] |= 1 << item.special;
+            you.seen_armour[item.sub_type] |= 1 << item.brand;
         if (item.base_type == OBJ_MISCELLANY)
             you.seen_misc.set(item.sub_type);
     }
@@ -1139,7 +1139,7 @@ bool set_item_ego_type(item_def &item, object_class_type item_type,
 {
     if (item.base_type == item_type && !is_artefact(item))
     {
-        item.special = ego_type;
+        item.brand = ego_type;
         return true;
     }
 

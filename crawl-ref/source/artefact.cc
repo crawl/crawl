@@ -344,7 +344,7 @@ bool is_random_artefact(const item_def &item)
 bool is_unrandom_artefact(const item_def &item, int which)
 {
     return item.flags & ISFLAG_UNRANDART
-           && (!which || which == item.special);
+           && (!which || which == item.unrand_idx);
 }
 
 bool is_special_unrandom_artefact(const item_def &item)
@@ -387,7 +387,7 @@ void set_unique_item_status(const item_def& item,
                             unique_item_status_type status)
 {
     if (item.flags & ISFLAG_UNRANDART)
-        _set_unique_item_status(item.special, status);
+        _set_unique_item_status(item.unrand_idx, status);
 }
 
 /**
@@ -1290,7 +1290,7 @@ string make_artefact_name(const item_def &item, bool appearance)
 
 static const unrandart_entry *_seekunrandart(const item_def &item)
 {
-    return get_unrand_entry(item.special);
+    return get_unrand_entry(item.unrand_idx);
 }
 
 string get_artefact_base_name(const item_def &item, bool terse)
@@ -1337,7 +1337,7 @@ void set_artefact_name(item_def &item, const string &name)
 
 int find_unrandart_index(const item_def& artefact)
 {
-    return artefact.special;
+    return artefact.unrand_idx;
 }
 
 const unrandart_entry* get_unrand_entry(int unrand_index)
@@ -1673,7 +1673,7 @@ bool make_item_randart(item_def &item, bool force_mundane)
         if (--randart_tries <= 0 || !_init_artefact_properties(item))
         {
             // Something went wrong that no amount of rerolling will fix.
-            item.special = 0;
+            item.unrand_idx = 0;
             item.props.erase(ARTEFACT_PROPS_KEY);
             item.props.erase(KNOWN_PROPS_KEY);
             item.flags &= ~ISFLAG_RANDART;
@@ -1776,7 +1776,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 {
     ASSERT_RANGE(unrand_index, UNRAND_START + 1, (UNRAND_START + NUM_UNRANDARTS));
 
-    item.special = unrand_index;
+    item.unrand_idx = unrand_index;
 
     const unrandart_entry *unrand = &unranddata[unrand_index - UNRAND_START];
 
@@ -1832,7 +1832,7 @@ void unrand_reacts()
         if (you.unrand_reacts[i])
         {
             item_def&        item  = you.inv[you.equip[i]];
-            const unrandart_entry* entry = get_unrand_entry(item.special);
+            const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
             entry->world_reacts_func(&item);
         }

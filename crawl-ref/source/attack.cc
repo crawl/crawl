@@ -194,7 +194,7 @@ int attack::calc_to_hit(bool random)
             else if (weapon->base_type == OBJ_RODS)
             {
                 mhit += property(*weapon, PWPN_HIT);
-                mhit += weapon->special;
+                mhit += weapon->rod_plus;
             }
         }
 
@@ -240,7 +240,7 @@ int attack::calc_to_hit(bool random)
         mhit += attacker->scan_artefacts(ARTP_SLAYING);
 
         if (using_weapon() && weapon->base_type == OBJ_RODS)
-            mhit += weapon->special;
+            mhit += weapon->rod_plus;
     }
 
     // Penalties for both players and monsters:
@@ -371,7 +371,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     {
         artefact_properties(*weapon, art_props);
         if (is_unrandom_artefact(*weapon))
-            unrand_entry = get_unrand_entry(weapon->special);
+            unrand_entry = get_unrand_entry(weapon->unrand_idx);
     }
 
     attacker_visible   = attacker->observable();
@@ -1256,7 +1256,7 @@ int attack::player_apply_misc_modifiers(int damage)
 int attack::get_weapon_plus()
 {
     if (weapon->base_type == OBJ_RODS)
-        return weapon->special;
+        return weapon->rod_plus;
     if (weapon->base_type == OBJ_STAVES || weapon->sub_type == WPN_BLOWGUN)
         return 0;
     return weapon->plus;

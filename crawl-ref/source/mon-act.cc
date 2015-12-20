@@ -434,7 +434,7 @@ static bool _mons_can_zap_dig(const monster* mons)
            && mons_itemuse(mons) >= MONUSE_STARTING_EQUIPMENT
            && mons->inv[MSLOT_WAND] != NON_ITEM
            && mitm[mons->inv[MSLOT_WAND]].is_type(OBJ_WANDS, WAND_DIGGING)
-           && mitm[mons->inv[MSLOT_WAND]].plus > 0;
+           && mitm[mons->inv[MSLOT_WAND]].charges > 0;
 }
 
 static void _set_mons_move_dir(const monster* mons,
@@ -1083,7 +1083,7 @@ static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
     }
 
     // charge expenditure {dlb}
-    wand.plus--;
+    wand.charges--;
     beem.is_tracer = false;
     beem.fire();
 
@@ -1122,7 +1122,7 @@ static void _rod_fired_pre(monster& mons)
 static bool _rod_fired_post(monster& mons, item_def &rod, bolt &beem,
                             int rate, bool was_visible)
 {
-    rod.plus -= rate;
+    rod.charges -= rate;
     dprf("rod charge: %d, %d", rod.charges, rod.charge_cap);
 
     if (was_visible)
@@ -1198,7 +1198,7 @@ static bool _handle_rod(monster &mons, bolt &beem)
     spell_type mzap = spell_in_rod(static_cast<rod_type>(rod->sub_type));
     int rate        = spell_difficulty(mzap) * ROD_CHARGE_MULT;
 
-    if (rod->plus < rate)
+    if (rod->charges < rate)
         return false;
 
     // XXX: There should be a better way to do this than hardcoding
@@ -1216,7 +1216,7 @@ static bool _handle_rod(monster &mons, bolt &beem)
         if (mons.props.exists("thunderbolt_last")
             && mons.props["thunderbolt_last"].get_int() + 1 == you.num_turns)
         {
-            rate = min(5 * ROD_CHARGE_MULT, (int)rod->plus);
+            rate = min(5 * ROD_CHARGE_MULT, (int)rod->charges);
             mons.props["thunderbolt_mana"].get_int() = rate;
         }
         break;
@@ -2403,9 +2403,8 @@ void monster::struggle_against_net()
         return;
     }
 
-    // The enchantment doubles as the durability of a net
-    // the more corroded it gets, the more easily it will break.
-    const int hold = mitm[net].plus; // This will usually be negative.
+    // The more corroded the net gets, the more easily it will break.
+    const int hold = mitm[net].net_durability; // This will usually be negative.
     const int mon_size = body_size(PSIZE_BODY);
 
     // Smaller monsters can escape more quickly.
@@ -2481,9 +2480,9 @@ void monster::struggle_against_net()
         if (speed != 0)
             damage = div_rand_round(damage * speed, 10);
 
-        mitm[net].plus -= damage;
+        mitm[net].net_durability -= damage;
 
-        if (mitm[net].plus < -7)
+        if (mitm[net].net_durability < -7)
         {
             if (mons_near(this))
             {

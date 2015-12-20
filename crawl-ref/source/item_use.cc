@@ -1044,7 +1044,7 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
     }
     else if (item.base_type == OBJ_ARMOUR && item_type_known(item))
     {
-        switch (item.special)
+        switch (item.brand)
         {
         case SPARM_STRENGTH:
             prop_str = 3;
@@ -1122,7 +1122,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
 
     const bool grants_flight =
          inf.is_type(OBJ_JEWELLERY, RING_FLIGHT)
-         || inf.base_type == OBJ_ARMOUR && inf.special == SPARM_FLYING
+         || inf.base_type == OBJ_ARMOUR && inf.brand == SPARM_FLYING
          || is_artefact(inf)
             && artefact_known_property(inf, ARTP_FLY);
 
