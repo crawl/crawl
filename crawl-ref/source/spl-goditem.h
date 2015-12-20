@@ -3,10 +3,8 @@
 
 #include "spl-cast.h"
 
-spret_type cast_healing(int pow, int max_pow, bool divine_ability = false,
-                        const coord_def& where = coord_def(0, 0),
-                        bool not_self = false,
-                        targ_mode_type mode = TARG_NUM_MODES);
+spret_type cast_healing(int pow, int max_pow, bool fail);
+bool heal_monster(monster& patient, int amount);
 
 /// List of monster enchantments which can be dispelled.
 const enchant_type dispellable_enchantments[] =

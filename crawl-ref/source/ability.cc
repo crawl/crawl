@@ -2534,23 +2534,29 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_ELYVILON_LESSER_HEALING:
+    case ABIL_ELYVILON_GREATER_HEALING:
     {
         fail_check();
         surge_power(you.spec_invoc(), "divine");
-        int pow = player_adjust_invoc_power(
-            3 + (you.skill_rdiv(SK_INVOCATIONS, 1, 6)));
+        int pow = 0;
+        if (abil.ability == ABIL_ELYVILON_LESSER_HEALING)
+        {
+            pow = player_adjust_invoc_power(
+                3 + (you.skill_rdiv(SK_INVOCATIONS, 1, 6)));
+        }
+        else
+        {
+            pow = player_adjust_invoc_power(
+                10 + (you.skill_rdiv(SK_INVOCATIONS, 1, 3)));
+        }
 #if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DJINNI)
             pow /= 2;
 #endif
-        if (cast_healing(pow,
-                         player_adjust_invoc_power(
-                             3 + (int) ceil(you.skill(SK_INVOCATIONS, 1) / 6.0)),
-                         true, you.pos(), false, TARG_NUM_MODES)
-                         == SPRET_ABORT)
-        {
-            return SPRET_ABORT;
-        }
+        pow = min(50, pow);
+        const int healed = pow + roll_dice(2, pow) - 2;
+        mpr("You are healed.");
+        inc_hp(healed);
         break;
     }
 
@@ -2559,27 +2565,16 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         elyvilon_purification();
         break;
 
-    case ABIL_ELYVILON_GREATER_HEALING:
     case ABIL_ELYVILON_HEAL_OTHER:
     {
-        fail_check();
-        const bool self = (abil.ability == ABIL_ELYVILON_GREATER_HEALING);
-
         int pow = player_adjust_invoc_power(
             10 + (you.skill_rdiv(SK_INVOCATIONS, 1, 3)));
-#if TAG_MAJOR_VERSION == 34
-        if (self && you.species == SP_DJINNI)
-            pow /= 2;
-#endif
-        if (cast_healing(pow,
-                         player_adjust_invoc_power(
-                             10 + (int) ceil(you.skill(SK_INVOCATIONS, 1) / 3.0)),
-                         true, self ? you.pos() : coord_def(0, 0), !self,
-                         self ? TARG_NUM_MODES : TARG_INJURED_FRIEND)
-                         == SPRET_ABORT)
-        {
+        pow = min(50, pow);
+        int max_pow = player_adjust_invoc_power(
+            10 + (int) ceil(you.skill(SK_INVOCATIONS, 1) / 3.0));
+        max_pow = min(50, max_pow);
+        if (cast_healing(pow, max_pow, fail) == SPRET_ABORT)
             return SPRET_ABORT;
-        }
         break;
     }
 
