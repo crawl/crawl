@@ -2511,10 +2511,6 @@ void monster::struggle_against_net()
         return;
     }
 
-    // Handled in handle_pickup().
-    if (mons_eats_items(this))
-        return;
-
     // The enchantment doubles as the durability of a net
     // the more corroded it gets, the more easily it will break.
     const int hold = mitm[net].plus; // This will usually be negative.
@@ -2944,7 +2940,6 @@ static bool _monster_eat_item(monster* mons, bool nearby)
     int hps_changed = 0;
     int max_eat = roll_dice(1, 10);
     int eaten = 0;
-    bool eaten_net = false;
     bool shown_msg = false;
     piety_gain_t gain = PIETY_NONE;
     int js = JS_NONE;
@@ -2967,13 +2962,6 @@ static bool _monster_eat_item(monster* mons, bool nearby)
 
             hps_changed += quant * 3;
             eaten += quant;
-
-            if (mons->caught() && item_is_stationary_net(*si))
-            {
-                // We don't want to mulch the net just yet.
-                mons->del_ench(ENCH_HELD, true, false);
-                eaten_net = true;
-            }
         }
         else
         {
@@ -3022,10 +3010,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
                                min(avg_hp * 4, mons->hit_points));
         mons->max_hit_points = max(mons->hit_points, mons->max_hit_points);
 
-        if (eaten_net)
-            simple_monster_message(mons, " devours the net!");
-        else
-            _jelly_divide(mons);
+        _jelly_divide(mons);
     }
 
     return eaten > 0;

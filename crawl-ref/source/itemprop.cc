@@ -2832,6 +2832,9 @@ bool gives_resistance(const item_def &item)
 
 bool is_item_jelly_edible(const item_def &item)
 {
+    if (item_is_stationary_net(item))
+        return false;
+
     // Don't eat items that the player has seen.
     if (item.flags & ISFLAG_SEEN && !you_worship(GOD_JIYVA))
         return false;
