@@ -86,7 +86,7 @@ void item_colour(item_def &item)
                                          // since it might be the only set bit
     }
 
-    if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
+    if (is_unrandom_artefact(item))
         return; // don't stomp on item.special!
 
     // initialize item appearance.
