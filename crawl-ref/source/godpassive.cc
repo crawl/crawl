@@ -670,14 +670,14 @@ int ash_skill_boost(skill_type sk, int scale)
     return min(level, 27 * scale);
 }
 
-int gozag_gold_in_los(actor *who)
+int gozag_gold_in_los(actor *whom)
 {
     if (!in_good_standing(GOD_GOZAG))
         return 0;
 
     int gold_count = 0;
 
-    for (radius_iterator ri(who->pos(), LOS_RADIUS, C_SQUARE, LOS_DEFAULT);
+    for (radius_iterator ri(whom->pos(), LOS_RADIUS, C_SQUARE, LOS_DEFAULT);
          ri; ++ri)
     {
         for (stack_iterator j(*ri); j; ++j)

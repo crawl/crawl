@@ -3985,6 +3985,10 @@ void unmarshallItem(reader &th, item_def &item)
         item.brand = SPMSL_NORMAL;
     }
 
+    // Strip vestiges of distracting gold.
+    if (item.base_type == OBJ_GOLD)
+        item.special = 0;
+
     if (th.getMinorVersion() < TAG_MINOR_REMOVE_ITEM_COLOUR)
         /* item.colour = */ unmarshallUByte(th);
 #endif

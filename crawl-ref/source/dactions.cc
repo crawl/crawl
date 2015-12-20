@@ -334,7 +334,6 @@ static void _apply_daction(daction_type act)
                 {
                     bool detected = false;
                     int dummy = j->index();
-                    j->special = 0;
                     unlink_item(dummy);
                     move_item_to_grid(&dummy, *ri, true);
                     if (!env.map_knowledge(*ri).item()

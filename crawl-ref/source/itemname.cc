@@ -3973,11 +3973,6 @@ string item_prefix(const item_def &item, bool temp)
             prefixes.push_back("spellbook");
         break;
 
-    case OBJ_GOLD:
-        if (item.special)
-            prefixes.push_back("distracting"); // better name for this?
-        break;
-
     default:
         break;
     }
