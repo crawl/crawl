@@ -149,48 +149,48 @@ static vector<string> _desc_mindless(const monster_info& mi)
         return {};
 }
 
-static spret_type _healing_spell(int healed, int max_healed,
-                                 bool divine_ability, const coord_def& where,
-                                 bool not_self, targ_mode_type mode)
+/**
+ * Heal a monster and print an appropriate message.
+ *
+ * Should only be called if the player is responsible!
+ * @param patient the monster to be healed
+ * @param amount  how many HP to restore
+ * @return whether the monster could be healed.
+ */
+bool heal_monster(monster& patient, int amount)
 {
+    if (!patient.heal(amount))
+        return false;
+
+    mprf("You heal %s.", patient.name(DESC_THE).c_str());
+
+    if (patient.hit_points == patient.max_hit_points)
+        simple_monster_message(&patient, " is completely healed.");
+    else
+        print_wounds(&patient);
+
+    return true;
+}
+
+spret_type cast_healing(int pow, int max_pow, bool fail)
+{
+    const int healed = pow + roll_dice(2, pow) - 2;
+    const int max_healed = (3 * max_pow) - 2;
     ASSERT(healed >= 1);
 
     dist spd;
 
-    if (where.origin())
-    {
-        direction_chooser_args args;
-        args.restricts = DIR_TARGET;
-        args.mode = mode != TARG_NUM_MODES ? mode :
-                 you_worship(GOD_ELYVILON) ? TARG_ANY :
-                                             TARG_FRIEND,
-        args.needs_path = false;
-        args.may_target_self = true;
-        args.target_prefix = "Heal";
-        args.get_desc_func = _desc_mindless;
-        direction(spd, args);
-    }
-    else
-    {
-        spd.target  = where;
-        spd.isValid = in_bounds(spd.target);
-    }
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_INJURED_FRIEND;
+    args.needs_path = false;
+    args.cancel_at_self = true;
+    args.target_prefix = "Heal";
+    args.get_desc_func = _desc_mindless;
+    direction(spd, args);
 
     if (!spd.isValid)
         return SPRET_ABORT;
-
-    if (spd.target == you.pos())
-    {
-        if (not_self)
-        {
-            mpr("You can only heal others!");
-            return SPRET_ABORT;
-        }
-
-        mpr("You are healed.");
-        inc_hp(healed);
-        return SPRET_SUCCESS;
-    }
 
     monster* mons = monster_at(spd.target);
     if (!mons)
@@ -203,48 +203,40 @@ static spret_type _healing_spell(int healed, int max_healed,
 
     bool did_something = false;
 
-    if (divine_ability
-        && you_worship(GOD_ELYVILON)
-        && _mons_hostile(mons))
+    if (_mons_hostile(mons))
     {
         const int can_pacify  = _can_pacify_monster(mons, healed, max_healed);
-
-        // Don't divinely heal a monster you can't pacify.
-        if (can_pacify <= 0)
+        if (can_pacify == -1)
         {
-            if (can_pacify == 0)
-            {
-                mprf("The light of Elyvilon fails to reach %s.",
-                     mons->name(DESC_THE).c_str());
-                return SPRET_FAIL;
-            }
-            else if (can_pacify == -3)
-            {
-                mprf("The light of Elyvilon almost touches upon %s.",
-                     mons->name(DESC_THE).c_str());
-                return SPRET_FAIL;
-            }
-            else if (can_pacify == -4)
-            {
-                mprf("%s is completely unfazed by your meager offer of peace.",
-                     mons->name(DESC_THE).c_str());
-                return SPRET_FAIL;
-            }
-            else
-            {
-                if (can_pacify == -2)
-                {
-                    mprf("You cannot pacify this monster while %s is sleeping!",
-                         mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
-                }
-                else
-                    mpr("You cannot pacify this monster!");
-                return SPRET_ABORT;
-            }
+            mpr("You cannot pacify this monster!");
+            return SPRET_ABORT;
         }
-
-        if (can_pacify == 1)
+        if (can_pacify == -2)
         {
+            mprf("You cannot pacify this monster while %s is sleeping!",
+                 mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
+            return SPRET_ABORT;
+        }
+        fail_check();
+
+        switch(can_pacify)
+        {
+        case 0:
+            mprf("The light of Elyvilon fails to reach %s.",
+                 mons->name(DESC_THE).c_str());
+            return SPRET_FAIL;
+
+        case -3:
+            mprf("The light of Elyvilon almost touches upon %s.",
+                 mons->name(DESC_THE).c_str());
+            return SPRET_FAIL;
+
+        case -4:
+            mprf("%s is completely unfazed by your meager offer of peace.",
+                 mons->name(DESC_THE).c_str());
+            return SPRET_FAIL;
+
+        case 1:
             did_something = true;
 
             if (mons->is_holy())
@@ -271,19 +263,16 @@ static spret_type _healing_spell(int healed, int max_healed,
 
             record_monster_defeat(mons, KILL_PACIFIED);
             mons_pacify(mons, ATT_NEUTRAL);
+            break;
+
+        default:
+            die("bad _can_pacify_monster return type %d", can_pacify);
         }
     }
 
-    if (mons->heal(healed))
-    {
+    fail_check();
+    if (heal_monster(*mons, healed))
         did_something = true;
-        mprf("You heal %s.", mons->name(DESC_THE).c_str());
-
-        if (mons->hit_points == mons->max_hit_points)
-            simple_monster_message(mons, " is completely healed.");
-        else
-            print_wounds(mons);
-    }
 
     if (!did_something)
     {
@@ -292,16 +281,6 @@ static spret_type _healing_spell(int healed, int max_healed,
     }
 
     return SPRET_SUCCESS;
-}
-
-spret_type cast_healing(int pow, int max_pow, bool divine_ability,
-                        const coord_def& where, bool not_self,
-                        targ_mode_type mode)
-{
-    pow = min(50, pow);
-    max_pow = min(50, max_pow);
-    return _healing_spell(pow + roll_dice(2, pow) - 2, (3 * max_pow) - 2,
-                          divine_ability, where, not_self, mode);
 }
 
 /// Effects that occur when the player is debuffed.
