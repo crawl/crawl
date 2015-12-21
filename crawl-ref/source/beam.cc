@@ -4320,7 +4320,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 void bolt::tracer_affect_monster(monster* mon)
 {
     // Ignore unseen monsters.
-    if (!agent() || !mon->visible_to(agent()))
+    if (!agent() || !agent()->can_see(*mon))
         return;
 
     if (flavour == BEAM_UNRAVELLING && monster_is_debuffable(*mon))
