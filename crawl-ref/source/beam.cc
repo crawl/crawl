@@ -1225,10 +1225,14 @@ void bolt::do_fire()
 
         const dungeon_feature_type feat = grd(pos());
 
-        if (feat_is_solid(feat) && is_tracer && !is_targeting
+        if ((feat_is_solid(feat)
+             && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
+             || !pierce && monster_at(pos()) && you.can_see(*monster_at(pos()))
+                        && !ignores_monster(monster_at(pos()))
+                        && mons_is_firewood(monster_at(pos())))
+            && is_tracer && !is_targeting
             && YOU_KILL(thrower) && in_bounds(target) && !passed_target
             && pos() != target && pos() != source && foe_info.count == 0
-            && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
             && bounces == 0 && reflections == 0 && you.see_cell(target)
             && !cell_is_solid(target))
         {
@@ -1248,7 +1252,9 @@ void bolt::do_fire()
             }
 
             prompt += " is blocked by "
-                    + feature_description_at(pos(), false, DESC_A, false);
+                    + (feat_is_solid(feat) ?
+                        feature_description_at(pos(), false, DESC_A, false) :
+                        monster_at(pos())->name(DESC_A));
 
             prompt += ". Continue anyway?";
 
