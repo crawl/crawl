@@ -1227,14 +1227,14 @@ void bolt::do_fire()
 
         if ((feat_is_solid(feat)
              && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
+             && !cell_is_solid(target)
              || !pierce && monster_at(pos()) && you.can_see(*monster_at(pos()))
                         && !ignores_monster(monster_at(pos()))
                         && mons_is_firewood(monster_at(pos())))
             && is_tracer && !is_targeting
             && YOU_KILL(thrower) && in_bounds(target) && !passed_target
             && pos() != target && pos() != source && foe_info.count == 0
-            && bounces == 0 && reflections == 0 && you.see_cell(target)
-            && !cell_is_solid(target))
+            && bounces == 0 && reflections == 0 && you.see_cell(target))
         {
             // Okay, with all those tests passed, this is probably an instance
             // of the player manually targeting something whose line of fire
