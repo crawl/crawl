@@ -7706,7 +7706,7 @@ bool need_expiration_warning(duration_type dur, dungeon_feature_type feat)
     if (dur == DUR_FLIGHT)
         return true;
     else if (dur == DUR_TRANSFORMATION
-             && (!you.airborne() || form_can_fly()))
+             && (form_can_swim() || form_can_fly()))
     {
         return true;
     }
