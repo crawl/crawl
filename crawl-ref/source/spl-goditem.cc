@@ -40,7 +40,7 @@ static void _print_holy_pacification_speech(const string &key,
                                             monster* mon,
                                             msg_channel_type channel)
 {
-    string full_key = "holy_being_";
+    string full_key = "holy_being_pacification";
     full_key += key;
 
     string msg = getSpeakString(full_key);
@@ -241,12 +241,12 @@ spret_type cast_healing(int pow, int max_pow, bool fail)
 
             if (mons->is_holy())
             {
-                string key = "pacification";
+                string key;
 
                 // Quadrupeds can't salute, etc.
                 mon_body_shape shape = get_mon_shape(mons);
                 if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA)
-                    key += "_humanoid";
+                    key = "_humanoid";
 
                 _print_holy_pacification_speech(key, mons,
                                                 MSGCH_FRIEND_ENCHANT);
@@ -255,7 +255,7 @@ spret_type cast_healing(int pow, int max_pow, bool fail)
                     && mons->can_speak()
                     && mons->type != MONS_MENNAS) // Mennas is mute and only has visual speech
                 {
-                    _print_holy_pacification_speech("speech", mons, MSGCH_TALK);
+                    _print_holy_pacification_speech("_speech", mons, MSGCH_TALK);
                 }
             }
             else
