@@ -29,8 +29,10 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     //                                     ÷
         ' ', '!', '#', '%', '+', ')', '*', 0xF7,       // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
-    //  ═       ║       ╔       ╗       ╚       ╝
-        0x2550, 0x2551, 0x2554, 0x2557, 0x255a, 0x255d,
+    //  ═       ║       ╔       ╗       ╚       ╝       ─       │
+        0x2550, 0x2551, 0x2554, 0x2557, 0x255a, 0x255d, 0x2500, 0x2502, '/',
+    //        ┌       ┐       └       ┘            Λ
+        '\\', 0x250C, 0x2510, 0x2514, 0x2518, 'V', 0x39B, '>', '<'
     },
     // CSET_ASCII
     {
@@ -40,7 +42,8 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         ':', '|', '|', '}', '%', '%', '$', '"', '0', '7', '^', // book .. teleporter
         ' ', '!', '#', '%', ':', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
-        '-', '|', '+', '+', '+', '+',
+        '-', '|', '+', '+', '+', '+', '-', '|', '/',
+        '\\', '*', '*', '*', '*', 'V', '^', '>', '<'
     }
 };
 
@@ -61,7 +64,9 @@ dungeon_char_type dchar_by_name(const string &name)
         "fired_trinket", "fired_scroll", "fired_debug", "fired_armour",
         "fired_missile", "explosion", "frame_horiz", "frame_vert",
         "frame_top_left", "frame_top_right", "frame_bottom_left",
-        "frame_bottom_right",
+        "frame_bottom_right", "draw_horiz", "draw_vert", "draw_slash", "draw_backslash",
+        "draw_top_left", "draw_top_right", "draw_bottom_left", "draw_bottom_right",
+        "draw_down", "draw_up", "draw_right", "draw_left",
     };
     COMPILE_CHECK(ARRAYSZ(dchar_names) == NUM_DCHAR_TYPES);
 

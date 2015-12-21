@@ -21,6 +21,9 @@
 #include "terrain.h"
 #include "travel.h"
 #include "viewchar.h"
+#include "mon-tentacle.h"
+#include "tilepick.h"
+#include "rltiles/tiledef-player.h"
 
 static unsigned short _cell_feat_show_colour(const map_cell& cell,
                                              const coord_def& loc,
@@ -390,6 +393,58 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
             g.ch = mons_char(mi->base_type);
         else
             g.ch = mons_char(stype);
+
+        if (mons_is_tentacle_segment(stype))
+        {
+            switch (tileidx_tentacle(*mi))
+            {
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW:
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SE:
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NW:
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NE:
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_S:
+                g.ch = dchar_glyph(DCHAR_DRAW_VERT);
+                break;
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NE:
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE:
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NW:
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SW:
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_W:
+                g.ch = dchar_glyph(DCHAR_DRAW_HORIZ);
+                break;
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SW:
+                g.ch = dchar_glyph(DCHAR_DRAW_SLASH);
+                break;
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SE:
+                g.ch = dchar_glyph(DCHAR_DRAW_BACKSLASH);
+                break;
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_N:
+                g.ch = dchar_glyph(DCHAR_DRAW_BL);
+                break;
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_S:
+                g.ch = dchar_glyph(DCHAR_DRAW_TL);
+                break;
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_W:
+                g.ch = dchar_glyph(DCHAR_DRAW_TR);
+                break;
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_W:
+                g.ch = dchar_glyph(DCHAR_DRAW_BR);
+                break;
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_NW:
+                g.ch = dchar_glyph(DCHAR_DRAW_DOWN);
+                break;
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE_SW:
+                g.ch = dchar_glyph(DCHAR_DRAW_UP);
+                break;
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SW:
+                g.ch = dchar_glyph(DCHAR_DRAW_RIGHT);
+                break;
+            case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SE:
+                g.ch = dchar_glyph(DCHAR_DRAW_LEFT);
+                break;
+            default: break;
+            }
+        }
 
         // If we want to show weapons, overwrite all of that.
         item_def* weapon = mi->inv[MSLOT_WEAPON].get();
