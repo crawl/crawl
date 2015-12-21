@@ -2000,18 +2000,17 @@ static bool _phial_of_floods()
     dist target;
     bolt beam;
 
-    zappy(ZAP_PRIMAL_WAVE,
-          player_adjust_evoc_power(25 + you.skill(SK_EVOCATIONS, 6)),
-          beam);
+    const int power =
+        player_adjust_evoc_power(25 + you.skill(SK_EVOCATIONS, 6));
+    zappy(ZAP_PRIMAL_WAVE, power, beam);
     beam.range = LOS_RADIUS;
-    beam.thrower = KILL_YOU;
-    beam.name = "flood of elemental water";
     beam.aimed_at_spot = true;
 
     direction_chooser_args args;
     args.mode = TARG_HOSTILE;
     args.top_prompt = "Aim the phial where?";
-    if (spell_direction(target, beam, &args))
+    if (spell_direction(target, beam, &args)
+        && player_tracer(ZAP_PRIMAL_WAVE, power, beam))
     {
         if (you.confused())
         {

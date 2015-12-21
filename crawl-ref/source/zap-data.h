@@ -185,9 +185,9 @@ static const zap_info zap_data[] =
     6
 },
 
-{
+{ // Used only by phial of floods
     ZAP_PRIMAL_WAVE,
-    "great wave of water",
+    "flood of elemental water",
     200,
     new calcdice_calculator<4, 14, 3, 5>,
     new tohit_calculator<10, 1, 25>,
