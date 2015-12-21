@@ -429,7 +429,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_FALCHION,              "falchion",               8,  2, 13,  3,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 7, 10, LBL_BRANDS }, // DAMV_CHOPPING...?
-    { WPN_LONG_SWORD,            "long sword",            10,  1, 14,  3,
+    { WPN_LONG_SWORD,            "long sword",            10,  1, 13,  3,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 7, 10, LBL_BRANDS },
     { WPN_SCIMITAR,              "scimitar",              12, -2, 14,  3,
