@@ -1021,17 +1021,10 @@ bool direction_chooser::move_is_ok() const
     return true;
 }
 
-// Assuming the target is in view, is line-of-fire
-// blocked, and by what?
-static bool _blocked_ray(const coord_def &where,
-                         dungeon_feature_type* feat = nullptr)
+// Assuming the target is in view, is line-of-fire blocked?
+static bool _blocked_ray(const coord_def &where)
 {
-    if (exists_ray(you.pos(), where, opc_solid_see))
-        return false;
-    if (feat == nullptr)
-        return true;
-    *feat = ray_blocker(you.pos(), where);
-    return true;
+    return !exists_ray(you.pos(), where, opc_solid_see);
 }
 
 #ifndef USE_TILE_LOCAL
