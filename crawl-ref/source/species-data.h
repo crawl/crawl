@@ -502,7 +502,7 @@ static const map<species_type, species_def> species_data =
     "La",
     "Lacertilian", nullptr, nullptr,
     SPF_NO_HAIR,
-    -1, -1, -1,
+    0, -1, -1,
     16, 3,
     MONS_LACERTILIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
