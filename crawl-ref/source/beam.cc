@@ -2616,7 +2616,8 @@ void bolt::affect_endpoint()
         return;
 
     case SPELL_SEARING_BREATH:
-        place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
+        if (!path_taken.empty())
+            place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
 
     default:
         break;
