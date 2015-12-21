@@ -507,7 +507,7 @@ int detect_items(int pow)
         if (pow != -1 && env.map_knowledge(*ri).changed())
             continue;
 
-        if (igrd(*ri) != NON_ITEM
+        if (you.visible_igrd(*ri) != NON_ITEM
             && !env.map_knowledge(*ri).item())
         {
             items_found++;
