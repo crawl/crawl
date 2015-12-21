@@ -21,6 +21,7 @@
 #include "message.h"
 #include "output.h"
 #include "religion.h"
+#include "showsymb.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "transform.h"
@@ -148,7 +149,7 @@ int harvest_corpses(const actor &harvester, bool dry_run)
                 bolt beam;
                 beam.source = *ri;
                 beam.target = harvester.pos();
-                beam.glyph = dchar_glyph(DCHAR_FIRED_CHUNK);
+                beam.glyph = get_item_glyph(&item).ch;
                 beam.colour = item.get_colour();
                 beam.range = LOS_RADIUS;
                 beam.aimed_at_spot = true;
