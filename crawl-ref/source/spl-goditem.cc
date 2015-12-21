@@ -224,7 +224,7 @@ spret_type cast_healing(int pow, int max_pow, bool fail)
         }
         fail_check();
 
-        switch(can_pacify)
+        switch (can_pacify)
         {
         case 0:
             mprf("The light of Elyvilon fails to reach %s.",

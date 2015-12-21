@@ -1866,6 +1866,34 @@ static bool _stone_of_tremors()
             rubble_pos.push_back(*di);
     }
 
+    class targetter_rubble : public targetter
+    {
+    public:
+        vector<coord_def>& rubble;
+
+        targetter_rubble(vector<coord_def>& _rubble) :
+            rubble(_rubble)
+        {
+            origin = you.pos();
+        }
+
+        virtual aff_type is_affected(coord_def loc) override
+        {
+            return find(begin(rubble), end(rubble), loc) != end(rubble)
+                    ? AFF_YES
+                    : AFF_NO;
+        }
+
+        bool valid_aim(coord_def a) override
+        {
+            return true;
+        }
+    };
+
+    targetter_rubble hitfunc(rubble_pos);
+    if (stop_attack_prompt(hitfunc, "attack"))
+        return false;
+
     if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
         pakellas_evoke_backfire(SPELL_EARTH_ELEMENTALS); // approx
     else if (!pakellas_device_surge())
