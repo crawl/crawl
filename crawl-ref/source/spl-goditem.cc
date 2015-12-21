@@ -191,6 +191,11 @@ spret_type cast_healing(int pow, int max_pow, bool fail)
 
     if (!spd.isValid)
         return SPRET_ABORT;
+    if (cell_is_solid(spd.target))
+    {
+        canned_msg(MSG_NOTHING_THERE);
+        return SPRET_ABORT;
+    }
 
     monster* mons = monster_at(spd.target);
     if (!mons)
