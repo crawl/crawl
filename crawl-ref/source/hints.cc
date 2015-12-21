@@ -981,7 +981,7 @@ void hints_first_item(const item_def &item)
 #endif
 
     print_hint("HINT_SEEN_FIRST_OBJECT",
-               glyph_to_tagstr(get_item_glyph(&item)));
+               glyph_to_tagstr(get_item_glyph(item)));
 }
 
 static string _describe_portal(const coord_def &gc)
@@ -1323,7 +1323,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             else
             {
                 text << "That <console>";
-                string glyph = glyph_to_tagstr(get_item_glyph(&mitm[i]));
+                string glyph = glyph_to_tagstr(get_item_glyph(mitm[i]));
                 const string::size_type found = glyph.find("%");
                 if (found != string::npos)
                     glyph.replace(found, 1, "percent");

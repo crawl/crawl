@@ -547,13 +547,13 @@ ucs_t get_item_symbol(show_item_type it)
     return get_feature_def(show_type(it)).symbol();
 }
 
-cglyph_t get_item_glyph(const item_def *item)
+cglyph_t get_item_glyph(const item_def& item)
 {
-    cglyph_t g = _get_item_override(*item);
+    cglyph_t g = _get_item_override(item);
     if (!g.ch)
-        g.ch = get_feature_def(show_type(*item)).symbol();
+        g.ch = get_feature_def(show_type(item)).symbol();
     if (!g.col)
-        g.col = item->get_colour();
+        g.col = item.get_colour();
     return g;
 }
 

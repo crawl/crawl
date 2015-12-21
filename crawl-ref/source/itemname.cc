@@ -4056,7 +4056,7 @@ void init_item_name_cache()
                 string name = item.name(plus || item.base_type == OBJ_RUNES ? DESC_PLAIN : DESC_DBNAME,
                                         true, true);
                 lowercase(name);
-                cglyph_t g = get_item_glyph(&item);
+                cglyph_t g = get_item_glyph(item);
 
                 if (base_type == OBJ_JEWELLERY && sub_type >= NUM_RINGS
                     && sub_type < AMU_FIRST_AMULET)
