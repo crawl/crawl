@@ -503,24 +503,7 @@ void throw_item_no_quiver()
 static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                                 string &ammo_name, bool &returning)
 {
-    dungeon_char_type zapsym = NUM_DCHAR_TYPES;
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:    zapsym = DCHAR_FIRED_WEAPON;  break;
-    case OBJ_MISSILES:   zapsym = DCHAR_FIRED_MISSILE; break;
-    case OBJ_ARMOUR:     zapsym = DCHAR_FIRED_ARMOUR;  break;
-    case OBJ_WANDS:      zapsym = DCHAR_FIRED_STICK;   break;
-    case OBJ_FOOD:       zapsym = DCHAR_FIRED_CHUNK;   break;
-    case OBJ_SCROLLS:    zapsym = DCHAR_FIRED_SCROLL;  break;
-    case OBJ_JEWELLERY:  zapsym = DCHAR_FIRED_TRINKET; break;
-    case OBJ_POTIONS:    zapsym = DCHAR_FIRED_FLASK;   break;
-    case OBJ_BOOKS:      zapsym = DCHAR_FIRED_BOOK;    break;
-    case OBJ_RODS:
-    case OBJ_STAVES:     zapsym = DCHAR_FIRED_STICK;   break;
-    default: break;
-    }
-
-    beam.glyph = dchar_glyph(zapsym);
+    beam.glyph = get_item_glyph(&item).ch;
     beam.was_missile = true;
 
     item_def *launcher  = agent->weapon(0);

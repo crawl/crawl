@@ -6,7 +6,7 @@
 #include "unicode.h"
 
 // For order and meaning of symbols, see dungeon_char_type in enum.h.
-static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
+static const ucs_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
 {
     // CSET_DEFAULT
     // It must be limited to stuff present both in CP437 and WGL4.
@@ -26,9 +26,8 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '0', 0x03C6, ')', '[', '/', '%', '?', '=', '!', '(',
     //                       †       ÷               §     ♣       ©
         ':', '|', '\\', '}', 0x2020, 0xF7, '$', '"', 0xA7, 0x2663, 0xA9,
-    //                                     ÷
-        ' ', '!', '#', '%', '+', ')', '*', 0xF7,       // space .. fired_burst
-        '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
+    //                 ÷
+        ' ', '#', '*', 0xF7, 'X', '`', '#',  // space .. explosion
     //  ═       ║       ╔       ╗       ╚       ╝       ─       │
         0x2550, 0x2551, 0x2554, 0x2557, 0x255a, 0x255d, 0x2500, 0x2502, '/',
     //        ┌       ┐       └       ┘            Λ
@@ -40,12 +39,14 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '#', '_', '\\', '}', '~', '8', '{', '{',       // grate .. item detect
         '{', '}', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
         ':', '|', '|', '}', '%', '%', '$', '"', '0', '7', '^', // book .. teleporter
-        ' ', '!', '#', '%', ':', ')', '*', '+',        // space .. fired_burst
-        '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
+        ' ', '#', '*', '+', 'X', '`', '#', // space .. explosion
         '-', '|', '+', '+', '+', '+', '-', '|', '/',
         '\\', '*', '*', '*', '*', 'V', '^', '>', '<'
     }
 };
+COMPILE_CHECK(ARRAYSZ(dchar_table) == NUM_CSET);
+COMPILE_CHECK(ARRAYSZ(dchar_table[0]) == NUM_DCHAR_TYPES);
+COMPILE_CHECK(ARRAYSZ(dchar_table[1]) == NUM_DCHAR_TYPES);
 
 dungeon_char_type dchar_by_name(const string &name)
 {
@@ -59,9 +60,7 @@ dungeon_char_type dchar_by_name(const string &name)
         "item_scroll", "item_ring", "item_potion", "item_missile", "item_book",
         "item_staff", "item_rod", "item_miscellany", "item_corpse", "item_skeleton",
         "item_gold", "item_amulet", "cloud", "tree", "teleporter",
-        "space", "fired_flask", "fired_bolt", "fired_chunk", "fired_book",
-        "fired_weapon", "fired_zap", "fired_burst", "fired_stick",
-        "fired_trinket", "fired_scroll", "fired_debug", "fired_armour",
+        "space", "fired_bolt", "fired_zap", "fired_burst", "fired_debug",
         "fired_missile", "explosion", "frame_horiz", "frame_vert",
         "frame_top_left", "frame_top_right", "frame_bottom_left",
         "frame_bottom_right", "draw_horiz", "draw_vert", "draw_slash", "draw_backslash",
