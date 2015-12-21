@@ -503,7 +503,9 @@ void throw_item_no_quiver()
 static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                                 string &ammo_name, bool &returning)
 {
-    beam.glyph = get_item_glyph(&item).ch;
+    const auto cglyph = get_item_glyph(item);
+    beam.glyph  = cglyph.ch;
+    beam.colour = cglyph.col;
     beam.was_missile = true;
 
     item_def *launcher  = agent->weapon(0);
@@ -528,7 +530,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.item         = &item;
     beam.effect_known = item_ident(item, ISFLAG_KNOW_TYPE);
     beam.source       = agent->pos();
-    beam.colour       = get_item_glyph(&item).col;
     beam.flavour      = BEAM_MISSILE;
     beam.pierce       = false;
     beam.aux_source.clear();
