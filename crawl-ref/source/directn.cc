@@ -2023,10 +2023,12 @@ bool direction_chooser::do_main_loop()
         if (just_looking)
             return true;
 
-        if (move_is_ok())
-            return true;
-        else
-            need_text_redraw = true;
+        if (!move_is_ok())
+        {
+            moves.isCancel = true;
+            moves.isValid = false;
+        }
+        return true;
     }
 
     // Redraw whatever is necessary.
