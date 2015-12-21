@@ -2430,7 +2430,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
         return false;
 
     // Monster in LOS but only via glass walls, so no direct path.
-    if (need_path && !you.see_cell_no_trans(where))
+    if (!you.see_cell_no_trans(where))
         return false;
 
     if (!_mons_is_valid_target(mon, mode, range))
@@ -2511,7 +2511,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
         return false;
 
     // Target in LOS but only via glass walls, so no direct path.
-    if (need_path && !you.see_cell_no_trans(where))
+    if (!you.see_cell_no_trans(where))
         return false;
 
     // Target is blocked by something
