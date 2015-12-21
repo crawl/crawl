@@ -6700,13 +6700,13 @@ VISUAL:@The_monster@ relaxes @possessive@ fighting stance.
 
 VISUAL:@The_monster@ salutes you.
 %%%%
-holy_being_speech
+holy_being_pacification_speech
 
-@The_monster@ shouts @at_foe@, "Continue thy quest, mortal!"
+@The_monster@ shouts at you, "Continue thy quest, mortal!"
 
-@The_monster@ says @to_foe@, "Forge ahead, servant of @foe_god@!"
+@The_monster@ says to you, "Forge ahead, servant of Elyvilon!"
 
-@The_monster@ says @to_foe@, "Carry on, mortal."
+@The_monster@ says to you, "Carry on, mortal."
 %%%%
 #############################################################
 # evil monsters may also have some choice things to say...
