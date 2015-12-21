@@ -287,7 +287,7 @@ static int _calc_player_experience(const monster* mons)
     if (!experience)
         return 0;
 
-    const bool already_got_half_xp = testbits(mons->flags, MF_GOT_HALF_XP);
+    const bool already_got_half_xp = testbits(mons->flags, MF_PACIFIED);
     const int half_xp = (experience + 1) / 2;
 
     if (!mons->damage_total)
@@ -302,7 +302,7 @@ static int _calc_player_experience(const monster* mons)
     ASSERT(mons->damage_friendly <= 2 * mons->damage_total);
 
     // Note: This doesn't happen currently since monsters with
-    //       MF_GOT_HALF_XP have always gone through pacification,
+    //       MF_PACIFIED have always gone through pacification,
     //       hence also have MF_WAS_NEUTRAL. [rob]
     if (already_got_half_xp)
     {

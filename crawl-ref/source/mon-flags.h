@@ -205,8 +205,8 @@ enum monster_flag_type : uint64_t
 
     /// Created as a member of a band
     MF_BAND_MEMBER        = BIT(11),
-    /// Player already got half xp value earlier
-    MF_GOT_HALF_XP        = BIT(12),
+    /// Monter has been pacified
+    MF_PACIFIED           = BIT(12),
     /// Consider this monster to have MH_UNDEAD holiness, regardless
     /// of its actual type
     MF_FAKE_UNDEAD        = BIT(13),

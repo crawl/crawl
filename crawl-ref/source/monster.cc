@@ -2912,7 +2912,7 @@ void monster::banish(actor *agent, const string &, const int)
         damage_total *= 2;
         damage_friendly *= 2;
         blame_damage(agent, hit_points);
-        // Note: we do not set MF_GOT_HALF_XP, the monster is usually not
+        // Note: we do not set MF_PACIFIED, the monster is usually not
         // distinguishable from others of the same kind in the Abyss.
 
         if (agent->is_player())
@@ -3149,7 +3149,7 @@ bool monster::wont_attack() const
 
 bool monster::pacified() const
 {
-    return attitude == ATT_NEUTRAL && testbits(flags, MF_GOT_HALF_XP);
+    return attitude == ATT_NEUTRAL && testbits(flags, MF_PACIFIED);
 }
 
 /**
