@@ -4954,6 +4954,7 @@ bool invis_allowed(bool quiet, string *fail_reason)
         {
             canned_msg(MSG_OK);
             success = false;
+            quiet = true; // since we just said something
         }
         msg += ".";
     }
