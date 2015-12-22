@@ -464,23 +464,22 @@ static void _update_monster(monster* mons)
     if (!you.turn_is_over)
         mons->went_unseen_this_turn = false;
 
+    // Being submerged is not the same as invisibility.
+    if (mons->submerged())
+        return;
+
     // Ripple effect?
     // Should match directn.cc's _mon_exposed
     if (grd(gp) == DNGN_SHALLOW_WATER
             && !mons->airborne()
             && !cloud_at(gp)
         || cloud_at(gp) && is_opaque_cloud(cloud_at(gp)->type)
-            && !mons->submerged()
             && !mons->is_insubstantial())
     {
         _mark_invisible_at(gp);
         mons->unseen_pos = gp;
         return;
     }
-
-    // Being submerged is not the same as invisibility.
-    if (mons->submerged())
-        return;
 
     int range = player_monster_detect_radius();
     if (mons->constricted_by == MID_PLAYER

@@ -484,7 +484,7 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
 static bool _mon_exposed_in_water(const monster* mon)
 {
     return grd(mon->pos()) == DNGN_SHALLOW_WATER && !mon->airborne()
-           && !cloud_at(mon->pos());
+           && !mon->submerged() && !cloud_at(mon->pos());
 }
 
 static bool _mon_exposed_in_cloud(const monster* mon)
