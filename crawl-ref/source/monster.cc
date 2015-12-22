@@ -250,8 +250,8 @@ bool monster::swimming() const
 
 bool monster::wants_submerge() const
 {
-    // Trapdoor spiders don't re-submerge randomly.
-    if (type == MONS_TRAPDOOR_SPIDER)
+    // Trapdoor spiders and swamp worms don't re-submerge randomly.
+    if (type == MONS_TRAPDOOR_SPIDER || type == MONS_SWAMP_WORM)
         return false;
 
     // Don't submerge if we just unsubmerged to shout.
