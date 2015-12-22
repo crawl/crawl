@@ -1636,7 +1636,10 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     case MONS_WORM:
         return TILEP_MONS_WORM;
     case MONS_SWAMP_WORM:
-        return TILEP_MONS_SWAMP_WORM;
+        if (in_water)
+            return TILEP_MONS_SWAMP_WORM_WATER;
+        else
+            return TILEP_MONS_SWAMP_WORM;
     case MONS_GIANT_LEECH:
         return TILEP_MONS_GIANT_LEECH;
     case MONS_TORPOR_SNAIL:
