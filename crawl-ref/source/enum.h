@@ -2487,6 +2487,7 @@ enum targ_mode_type
     TARG_HOSTILE_UNDEAD,    // For dispel undead
     TARG_BEOGH_GIFTABLE,    // For Beogh followers who can be given gifts
     TARG_DISPELLABLE,       // For hostiles that have dispellable enchs
+    TARG_MOVABLE_OBJECT,    // Movable objects only
     TARG_NUM_MODES
 };
 
@@ -4614,10 +4615,9 @@ enum stat_type
 
 enum targeting_type
 {
-    DIR_NONE,
+    DIR_NONE,           // smite or in a cardinal direction
     DIR_TARGET,         // smite targeting
     DIR_DIR,            // target in a cardinal direction only
-    DIR_MOVABLE_OBJECT, // items besides corpses
     DIR_SHADOW_STEP,    // a shadow step target
     DIR_LEAP,           // like DIR_TARGET, but the range is a hard limit
 };

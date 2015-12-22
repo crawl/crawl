@@ -118,7 +118,7 @@ LUAFN(l_spells_targ_obj)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     const unsigned int flags = get_spell_flags(spell);
-    PLUARET(boolean, flags & SPFLAG_TARG_OBJ);
+    PLUARET(boolean, flags & SPFLAG_OBJ);
 }
 
 LUAFN(l_spells_god_likes)

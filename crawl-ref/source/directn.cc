@@ -390,7 +390,6 @@ void direction_chooser::print_key_hints() const
             prompt += hint_string;
             break;
         case DIR_DIR:
-        case DIR_MOVABLE_OBJECT:
             break;
         }
     }
@@ -401,7 +400,7 @@ void direction_chooser::print_key_hints() const
 
 bool direction_chooser::targets_objects() const
 {
-    return restricts == DIR_MOVABLE_OBJECT;
+    return mode == TARG_MOVABLE_OBJECT;
 }
 
 /// Are we looking for enemies?
