@@ -90,7 +90,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CONJURE_FLAME, "Conjure Flame",
     SPTYP_CONJURATION | SPTYP_FIRE,
-    SPFLAG_GRID | SPFLAG_NOT_SELF,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF,
     3,
     100,
     3, 3,
@@ -280,7 +280,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FREEZING_CLOUD, "Freezing Cloud",
     SPTYP_CONJURATION | SPTYP_ICE | SPTYP_AIR,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER
         | SPFLAG_CLOUD,
     6,
     200,
@@ -473,7 +473,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_POISONOUS_CLOUD, "Poisonous Cloud",
     SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER
         | SPFLAG_CLOUD,
     6,
     200,
@@ -485,7 +485,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FIRE_STORM, "Fire Storm",
     SPTYP_CONJURATION | SPTYP_FIRE,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_NEEDS_TRACER,
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_NEEDS_TRACER,
     9,
     200,
     5, 5,
@@ -496,7 +496,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_HELLFIRE_BURST, "Hellfire Burst",
     SPTYP_CONJURATION | SPTYP_FIRE,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_UNHOLY | SPFLAG_NEEDS_TRACER,
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_UNHOLY | SPFLAG_NEEDS_TRACER,
     9,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -1526,7 +1526,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_LRD, "Lee's Rapid Deconstruction",
     SPTYP_EARTH,
-    SPFLAG_GRID,
+    SPFLAG_TARGET,
     5,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -1636,7 +1636,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_GOLUBRIAS_PASSAGE, "Passage of Golubria",
     SPTYP_TRANSLOCATION,
-    SPFLAG_GRID | SPFLAG_NEUTRAL | SPFLAG_ESCAPE | SPFLAG_SELFENCH,
+    SPFLAG_TARGET | SPFLAG_NEUTRAL | SPFLAG_ESCAPE | SPFLAG_SELFENCH,
     4,
     0,
     LOS_RADIUS, LOS_RADIUS,
@@ -1647,7 +1647,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FULMINANT_PRISM, "Fulminant Prism",
     SPTYP_CONJURATION | SPTYP_HEXES,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_NOT_SELF,
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_NOT_SELF,
     4,
     200,
     4, 4,
@@ -1659,7 +1659,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SINGULARITY, "Singularity",
     SPTYP_TRANSLOCATION,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_NOT_SELF | SPFLAG_MONSTER,
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_NOT_SELF | SPFLAG_MONSTER,
     9,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -1755,7 +1755,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_NOXIOUS_CLOUD, "Noxious Cloud",
     SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER
         | SPFLAG_CLOUD,
     5,
     200,
@@ -3138,7 +3138,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_LIGHTNING_SPIRE, "Summon Lightning Spire",
     SPTYP_SUMMONING | SPTYP_AIR,
-    SPFLAG_GRID | SPFLAG_NOT_SELF | SPFLAG_NEUTRAL,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEUTRAL,
     4,
     100,
     2, 2,
@@ -3215,7 +3215,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CLOUD_CONE, "Cloud Cone",
     SPTYP_CONJURATION | SPTYP_AIR,
-    SPFLAG_GRID | SPFLAG_NOT_SELF,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF,
     6,
     100,
     3, LOS_RADIUS,
@@ -3371,7 +3371,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FLAMING_CLOUD, "Flaming Cloud",
     SPTYP_CONJURATION | SPTYP_FIRE,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_MONSTER
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_MONSTER
         | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
     5,
     0,
@@ -3671,7 +3671,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_AWAKEN_EARTH, "Awaken Earth",
     SPTYP_SUMMONING | SPTYP_EARTH,
-    SPFLAG_MONSTER | SPFLAG_GRID,
+    SPFLAG_MONSTER | SPFLAG_TARGET,
     7,
     0,
     LOS_RADIUS, LOS_RADIUS,

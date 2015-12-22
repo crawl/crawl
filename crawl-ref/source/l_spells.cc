@@ -107,13 +107,6 @@ LUAFN(l_spells_target)
     PLUARET(boolean, flags & SPFLAG_TARGET);
 }
 
-LUAFN(l_spells_grid)
-{
-    spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    const unsigned int flags = get_spell_flags(spell);
-    PLUARET(boolean, flags & SPFLAG_GRID);
-}
-
 LUAFN(l_spells_dir)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
@@ -180,7 +173,6 @@ static const struct luaL_reg spells_clib[] =
     { "max_power"     , l_spells_max_power },
     { "dir_or_target" , l_spells_dir_or_target },
     { "target"        , l_spells_target },
-    { "grid"          , l_spells_grid },
     { "dir"           , l_spells_dir },
     { "targ_obj"      , l_spells_targ_obj },
     { "god_likes"     , l_spells_god_likes },

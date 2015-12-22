@@ -4617,8 +4617,7 @@ enum targeting_type
     DIR_NONE,
     DIR_TARGET,         // smite targeting
     DIR_DIR,            // target in a cardinal direction only
-    DIR_TARGET_OBJECT,  // targets items
-    DIR_MOVABLE_OBJECT, // skips corpses
+    DIR_MOVABLE_OBJECT, // items besides corpses
     DIR_SHADOW_STEP,    // a shadow step target
     DIR_LEAP,           // like DIR_TARGET, but the range is a hard limit
 };

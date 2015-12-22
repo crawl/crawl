@@ -1317,7 +1317,6 @@ spret_type your_spells(spell_type spell, int powc,
         targeting_type dir  =
             (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_MOVABLE_OBJECT :
              testbits(flags, SPFLAG_TARGET)   ? DIR_TARGET         :
-             testbits(flags, SPFLAG_GRID)     ? DIR_TARGET         :
              testbits(flags, SPFLAG_DIR)      ? DIR_DIR            :
                                                 DIR_NONE);
 
@@ -1325,8 +1324,7 @@ spret_type your_spells(spell_type spell, int powc,
         if (dir == DIR_DIR)
             mprf(MSGCH_PROMPT, "%s", prompt ? prompt : "Which direction?");
 
-        const bool needs_path = (!testbits(flags, SPFLAG_GRID)
-                                 && !testbits(flags, SPFLAG_TARGET));
+        const bool needs_path = !testbits(flags, SPFLAG_TARGET);
 
         const bool dont_cancel_me = (testbits(flags, SPFLAG_HELPFUL)
                                      || testbits(flags, SPFLAG_ALLOW_SELF));

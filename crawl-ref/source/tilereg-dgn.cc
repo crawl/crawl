@@ -393,10 +393,6 @@ static bool _is_appropriate_spell(spell_type spell, const actor* target)
     const unsigned int flags    = get_spell_flags(spell);
     const bool         targeted = flags & SPFLAG_TARGETING_MASK;
 
-    // We don't handle grid targeted spells yet.
-    if (flags & SPFLAG_GRID)
-        return false;
-
     // Most spells are blocked by transparent walls.
     if (targeted && !you.see_cell_no_trans(target->pos()))
     {

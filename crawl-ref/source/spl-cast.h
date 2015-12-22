@@ -13,11 +13,12 @@ enum spflag_type
     SPFLAG_NONE                 = 0x000000,
     SPFLAG_DIR_OR_TARGET        = 0x000001,      // use DIR_NONE targeting
     SPFLAG_TARGET               = 0x000002,      // use DIR_TARGET targeting
-    SPFLAG_GRID                 = 0x000004,      // use DIR_GRID targeting
+                                //0x000004,
     SPFLAG_DIR                  = 0x000008,      // use DIR_DIR targeting
     // TODO: we need a new targetting flag if we want to target corpses too.
     SPFLAG_TARG_OBJ             = 0x000010,      // use DIR_MOVABLE_OBJECT targ.
-    SPFLAG_TARGETING_MASK       = 0x00001f,      // used to test for targeting
+    SPFLAG_TARGETING_MASK       = SPFLAG_DIR_OR_TARGET | SPFLAG_TARGET
+                                   | SPFLAG_DIR | SPFLAG_TARG_OBJ, // used to test for targeting
     SPFLAG_HELPFUL              = 0x000020,      // TARG_FRIENDS used
     SPFLAG_NEUTRAL              = 0x000040,      // TARG_ANY used
     SPFLAG_NOT_SELF             = 0x000080,      // aborts on isMe
