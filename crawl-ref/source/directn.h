@@ -270,6 +270,13 @@ private:
     bool need_all_redraw;       // All of the above.
 
     bool show_items_once;       // Should we show items this time?
+#ifndef USE_TILE_LOCAL
+    void update_mlist(bool enable);
+
+    bool mlist_full_info;
+    vector<monster_info> mlist;
+#endif
+
     // Default behaviour, saved across instances.
     static targeting_behaviour stock_behaviour;
 };
