@@ -159,6 +159,7 @@ ghost_crab MONS_GHOST_CRAB
 %sdir mon/aquatic
 %rim 0
 swamp_worm MONS_SWAMP_WORM
+swamp_worm_water MONS_SWAMP_WORM_WATER
 %rim 1
 %sdir mon/animals
 worm MONS_WORM
