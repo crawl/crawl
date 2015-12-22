@@ -862,14 +862,14 @@ void direction_chooser::update_mlist(bool enable)
         mlist.clear();
         get_monster_info(mlist);
         auto last = unique(begin(mlist), end(mlist),
-                    [this](const monster_info& first,
-                                      const monster_info& second)
-                    {
-                        // If first ≮ second, and second ≮ first (since
-                        // it's sorted), then first == second.
-                        return !monster_info::less_than(first, second,
-                                                        mlist_full_info);
-                    });
+                           [this](const monster_info& first,
+                                  const monster_info& second)
+                           {
+                               // If first ≮ second, and second ≮ first (since
+                               // it's sorted), then first == second.
+                               return !monster_info::less_than(first, second,
+                                                               mlist_full_info);
+                           });
         mlist.erase(last, end(mlist));
     }
     else
