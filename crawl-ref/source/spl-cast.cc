@@ -1303,22 +1303,18 @@ spret_type your_spells(spell_type spell, int powc,
     // because of it). Hopefully, those will eventually be fixed. - bwr
     if (flags & SPFLAG_TARGETING_MASK)
     {
-        targ_mode_type targ =
-              (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_HOSTILE);
+        const targ_mode_type targ =
+              testbits(flags, SPFLAG_NEUTRAL)    ? TARG_ANY :
+              testbits(flags, SPFLAG_HELPFUL)    ? TARG_FRIEND :
+              testbits(flags, SPFLAG_OBJ)        ? TARG_MOVABLE_OBJECT :
+              spell == SPELL_DISPEL_UNDEAD       ? TARG_HOSTILE_UNDEAD :
+              spell == SPELL_VIOLENT_UNRAVELLING ? TARG_DISPELLABLE :
+                                                   TARG_HOSTILE;
 
-        if (testbits(flags, SPFLAG_NEUTRAL))
-            targ = TARG_ANY;
-
-        if (spell == SPELL_DISPEL_UNDEAD)
-            targ = TARG_HOSTILE_UNDEAD;
-        else if (spell == SPELL_VIOLENT_UNRAVELLING)
-            targ = TARG_DISPELLABLE;
-
-        targeting_type dir  =
-            (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_MOVABLE_OBJECT :
-             testbits(flags, SPFLAG_TARGET)   ? DIR_TARGET         :
-             testbits(flags, SPFLAG_DIR)      ? DIR_DIR            :
-                                                DIR_NONE);
+        const targeting_type dir =
+             testbits(flags, SPFLAG_TARGET) ? DIR_TARGET :
+             testbits(flags, SPFLAG_DIR)    ? DIR_DIR    :
+                                              DIR_NONE;
 
         const char *prompt = get_spell_target_prompt(spell);
         if (dir == DIR_DIR)

@@ -68,7 +68,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_APPORTATION, "Apportation",
     SPTYP_TRANSLOCATION,
-    SPFLAG_TARG_OBJ | SPFLAG_NOT_SELF,
+    SPFLAG_TARGET | SPFLAG_OBJ | SPFLAG_NOT_SELF,
     1,
     1000,
     LOS_RADIUS, LOS_RADIUS,
