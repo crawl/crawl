@@ -81,12 +81,6 @@ enum LOSSelect
     LS_NONE     = 0xFFFF,
 };
 
-enum target_obj_mode
-{
-    TARGOBJ_ANY,
-    TARGOBJ_MOVABLE,
-};
-
 #ifdef WIZARD
 static void _wizard_make_friendly(monster* m);
 #endif
@@ -396,7 +390,6 @@ void direction_chooser::print_key_hints() const
             prompt += hint_string;
             break;
         case DIR_DIR:
-        case DIR_TARGET_OBJECT:
         case DIR_MOVABLE_OBJECT:
             break;
         }
@@ -408,7 +401,7 @@ void direction_chooser::print_key_hints() const
 
 bool direction_chooser::targets_objects() const
 {
-    return restricts == DIR_TARGET_OBJECT || restricts == DIR_MOVABLE_OBJECT;
+    return restricts == DIR_MOVABLE_OBJECT;
 }
 
 /// Are we looking for enemies?
@@ -1114,9 +1107,7 @@ coord_def direction_chooser::find_default_target() const
     {
         // Try to find an object.
         success = _find_square_wrapper(result, 1, _find_object, needs_path,
-                                       restricts == DIR_MOVABLE_OBJECT
-                                           ? TARGOBJ_MOVABLE
-                                           : TARGOBJ_ANY,
+                                       mode,
                                        range, hitfunc, true, LS_FLIPVH);
     }
     else if ((mode != TARG_ANY && mode != TARG_FRIEND) || cancel_at_self)
@@ -1255,8 +1246,7 @@ bool direction_chooser::in_range(const coord_def& p) const
 void direction_chooser::object_cycle(int dir)
 {
     if (_find_square_wrapper(objfind_pos, dir, _find_object, needs_path,
-                             restricts == DIR_MOVABLE_OBJECT ? TARGOBJ_MOVABLE
-                                                             : TARGOBJ_ANY,
+                             mode,
                              range, hitfunc, true,
                              (dir > 0 ? LS_FLIPVH : LS_FLIPHV)))
     {
@@ -2547,7 +2537,7 @@ static bool _find_feature(const coord_def& where, int mode,
     return is_feature(mode, where);
 }
 
-static bool _find_object(const coord_def& where, int mode,
+static bool _find_object(const coord_def& where, int /*mode*/,
                          bool need_path, int range, targetter *hitfunc)
 {
     // Don't target out of range.
@@ -2560,7 +2550,7 @@ static bool _find_object(const coord_def& where, int mode,
     const item_def * const item = you.see_cell(where)
                                       ? top_item_at(where)
                                       : env.map_knowledge(where).item();
-    return item && !(mode == TARGOBJ_MOVABLE && item_is_stationary(*item));
+    return item && !item_is_stationary(*item);
 }
 
 static int _next_los(int dir, int los, bool wrap)
