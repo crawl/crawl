@@ -510,11 +510,10 @@ direction_chooser::direction_chooser(dist& moves_,
     just_looking(args.just_looking),
     needs_path(args.needs_path),
     may_target_monster(args.may_target_monster),
-    may_target_self(args.may_target_self),
+    self(args.self),
     target_prefix(args.target_prefix),
     top_prompt(args.top_prompt),
     behaviour(args.behaviour),
-    cancel_at_self(args.cancel_at_self),
     show_floor_desc(args.show_floor_desc),
     hitfunc(args.hitfunc),
     default_place(args.default_place)
@@ -970,15 +969,11 @@ bool direction_chooser::move_is_ok() const
 
         if (looking_at_you())
         {
-            // may_target_self == sometimes makes sense to target yourself,
-            // but should still give a prompt (SPFLAG_ALLOW_SELF)
-
-            // cancel_at_self == not allowed to target yourself
-            // (SPFLAG_NOT_SELF)
-
             if (!targets_objects() && targets_enemies())
             {
-                if (!may_target_self && (cancel_at_self || Options.allow_self_target == CONFIRM_CANCEL))
+                if (self == CONFIRM_CANCEL
+                    || self == CONFIRM_PROMPT
+                       && Options.allow_self_target == CONFIRM_CANCEL)
                 {
                     mprf(MSGCH_EXAMINE_FILTER, "That would be overly suicidal.");
                     return false;
@@ -987,7 +982,7 @@ bool direction_chooser::move_is_ok() const
                     return yesno("Really target yourself?", false, 'n');
             }
 
-            if (cancel_at_self)
+            if (self == CONFIRM_CANCEL)
             {
                 mprf(MSGCH_EXAMINE_FILTER, "Sorry, you can't target yourself.");
                 return false;
@@ -1098,8 +1093,11 @@ coord_def direction_chooser::find_default_target() const
                                        hitfunc,
                                        LS_FLIPVH);
     }
-    else if ((mode != TARG_ANY && mode != TARG_FRIEND) || cancel_at_self)
+    else if ((mode != TARG_ANY && mode != TARG_FRIEND)
+             || self == CONFIRM_CANCEL)
+    {
         success = find_default_monster_target(result);
+    }
 
     if (!success)
         result = you.pos();

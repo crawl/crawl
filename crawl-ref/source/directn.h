@@ -86,11 +86,10 @@ struct direction_chooser_args
     bool just_looking;
     bool needs_path;
     bool may_target_monster;
-    bool may_target_self;
+    confirm_prompt_type self;
     const char *target_prefix;
     string top_prompt;
     targeting_behaviour *behaviour;
-    bool cancel_at_self;
     bool show_floor_desc;
     desc_filter get_desc_func;
     coord_def default_place;
@@ -103,10 +102,9 @@ struct direction_chooser_args
         just_looking(false),
         needs_path(true),
         may_target_monster(true),
-        may_target_self(false),
+        self(CONFIRM_PROMPT),
         target_prefix(nullptr),
         behaviour(nullptr),
-        cancel_at_self(false),
         show_floor_desc(false),
         get_desc_func(nullptr),
         default_place(0, 0) {}
@@ -244,11 +242,10 @@ private:
     bool just_looking;
     bool needs_path;            // Determine a ray while we're at it?
     bool may_target_monster;
-    bool may_target_self;       // If true then player won't be prompted
+    confirm_prompt_type self;   // What do when aiming at yourself
     const char *target_prefix;  // A string displayed before describing target
     string top_prompt;          // Shown at the top of the message window
     targeting_behaviour *behaviour; // Can be nullptr for default
-    bool cancel_at_self;        // Disallow self-targeting?
     bool show_floor_desc;       // Describe the floor of the current target
     targetter *hitfunc;         // Determine what would be hit.
     coord_def default_place;    // Start somewhere other than you.pos()?
