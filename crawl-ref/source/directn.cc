@@ -978,8 +978,11 @@ bool direction_chooser::move_is_ok() const
                     mprf(MSGCH_EXAMINE_FILTER, "That would be overly suicidal.");
                     return false;
                 }
-                else if (Options.allow_self_target != CONFIRM_NONE)
+                else if (self != CONFIRM_NONE
+                         && Options.allow_self_target != CONFIRM_NONE)
+                {
                     return yesno("Really target yourself?", false, 'n');
+                }
             }
 
             if (self == CONFIRM_CANCEL)
