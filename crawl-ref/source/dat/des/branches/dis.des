@@ -1,7 +1,7 @@
 ##############################################################################
 # dis.des: Special maps for the Iron City of Dis.
 # Content: (mini)vaults particular to Dis, and/or first appearing in Dis
-#          (order: Dis, Geh, Coc, Tar)
+#          (order: Dis, Geh, Nor, Tar)
 ##############################################################################
 
 : require('dlua/vault.lua')

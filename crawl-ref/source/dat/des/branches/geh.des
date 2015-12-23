@@ -1,7 +1,7 @@
 ##############################################################################
 # geh.des: Special maps for Gehenna.
 # Content: (mini)vaults particular to Gehenna, and/or first appearing in
-#          Geh (order: Dis, Geh, Coc, Tar)
+#          Geh (order: Dis, Geh, Nor, Tar)
 ##############################################################################
 
 : require('dlua/vault.lua')
@@ -138,7 +138,7 @@ ENDMAP
 
 NAME:    hangedman_elemental_grid_stream
 TAGS:    transparent no_monster_gen no_pool_fixup patrolling allow_dup
-DEPTH:   Geh, Coc, Zot:1-4
+DEPTH:   Geh, Nor, Zot:1-4
 :  if you.in_branch("Geh") then
 KMONS:   1 = brimstone fiend w:9 / hell sentinel w:1
 KMONS:   2 = hellion / balrug
@@ -148,7 +148,7 @@ KMONS:   56 = skeletal warrior ; broad axe ego:flaming ident:type | \
 KMONS:   7 = hell knight
 SUBST:   w = l, W = .
 KPROP:   l = no_cloud_gen
-:  elseif you.in_branch("Coc") then
+:  elseif you.in_branch("Nor") then
 KMONS:   1 = ice fiend
 KMONS:   2 = blizzard demon
 KMONS:   34 = ice devil
@@ -190,13 +190,13 @@ ENDMAP
 
 NAME:    hangedman_elemental_corridor
 TAGS:    no_monster_gen no_pool_fixup allow_dup
-DEPTH:   Geh, Coc, Zot, !Geh:$, !Coc:$, !Zot:$, Abyss
+DEPTH:   Geh, Nor, Zot, !Geh:$, !Nor:$, !Zot:$, Abyss
 SHUFFLE: 123456, }] / }] / {[ / **
 :  if you.in_branch("Geh") then
 MONS:    brimstone fiend / balrug / hellion
 MONS:    sun demon / smoke demon / hell knight
 SUBST:   w = l, f = F, %* = ., 2 = 1, 3456 = 2
-:  elseif you.in_branch("Coc") then
+:  elseif you.in_branch("Nor") then
 MONS:    ice fiend / blizzard demon / shard shrike / \
          reaper ; scythe ego:freezing ident:type
 MONS:    eight-headed hydra simulacrum w:2 / \

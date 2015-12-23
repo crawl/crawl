@@ -334,7 +334,7 @@ function choose_mset_3(e)
     e.kfeat("1 = shallow_water")
 -- Cocytus
   elseif rnd < 54 then
-    e.kmons("1 = place:Coc:1")
+    e.kmons("1 = place:Nor:1")
 -- Gehenna
   elseif rnd < 59 then
     e.kmons("1 = place:Geh:1")
@@ -467,7 +467,7 @@ local rnd = crawl.random2(142)
     e.kfeat("1 = shallow_water")
 -- Cocytus
   elseif rnd < 57 then
-    e.kmons("1 = place:Coc:$ w:500 / ice fiend")
+    e.kmons("1 = place:Nor:$ w:500 / ice fiend")
 -- Gehenna
   elseif rnd < 62 then
     e.kmons("1 = place:Geh:$")
