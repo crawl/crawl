@@ -2714,7 +2714,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_FEDHAS_SPAWN_SPORES:
         fail_check();
-        ASSERT(fedhas_corpse_spores() > 0);
+        const int num = fedhas_corpse_spores();
+        ASSERT(num > 0);
         break;
 
     case ABIL_FEDHAS_EVOLUTION:
