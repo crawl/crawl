@@ -2573,9 +2573,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         int max_pow = player_adjust_invoc_power(
             10 + (int) ceil(you.skill(SK_INVOCATIONS, 1) / 3.0));
         max_pow = min(50, max_pow);
-        if (cast_healing(pow, max_pow, fail) == SPRET_ABORT)
-            return SPRET_ABORT;
-        break;
+        return cast_healing(pow, max_pow, fail);
     }
 
     case ABIL_ELYVILON_DIVINE_VIGOUR:

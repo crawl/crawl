@@ -203,7 +203,7 @@ spret_type cast_healing(int pow, int max_pow, bool fail)
         canned_msg(MSG_NOTHING_THERE);
         // This isn't a cancel, to avoid leaking invisible monster
         // locations.
-        return SPRET_FAIL;
+        return SPRET_SUCCESS;
     }
 
     bool did_something = false;
@@ -229,17 +229,17 @@ spret_type cast_healing(int pow, int max_pow, bool fail)
         case 0:
             mprf("The light of Elyvilon fails to reach %s.",
                  mons->name(DESC_THE).c_str());
-            return SPRET_FAIL;
+            return SPRET_SUCCESS;
 
         case -3:
             mprf("The light of Elyvilon almost touches upon %s.",
                  mons->name(DESC_THE).c_str());
-            return SPRET_FAIL;
+            return SPRET_SUCCESS;
 
         case -4:
             mprf("%s is completely unfazed by your meager offer of peace.",
                  mons->name(DESC_THE).c_str());
-            return SPRET_FAIL;
+            return SPRET_SUCCESS;
 
         case 1:
             did_something = true;
@@ -282,7 +282,7 @@ spret_type cast_healing(int pow, int max_pow, bool fail)
     if (!did_something)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_FAIL;
+        return SPRET_SUCCESS;
     }
 
     return SPRET_SUCCESS;
