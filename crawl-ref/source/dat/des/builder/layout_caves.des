@@ -417,7 +417,7 @@ ENDMAP
 #  of water, and appeared in Gehenna.
 #
 NAME:   layout_cocytus_water_paths
-DEPTH:  Coc
+DEPTH:  Nor
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
@@ -549,7 +549,7 @@ ENDMAP
 # layout_ice_bergs
 #
 NAME:   layout_ice_bergs
-DEPTH:  Coc
+DEPTH:  Nor
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
@@ -557,7 +557,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
 
-  -- There is precedent for requiring flight in Coc, so could have
+  -- There is precedent for requiring flight in Nor, so could have
   -- a chance that not all bergs will get connected up
   -- Disabled until it's implemented better
   local connect_up = true -- crawl.x_chance_in_y(5,6)

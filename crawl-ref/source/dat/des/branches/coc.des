@@ -1,14 +1,14 @@
 ##############################################################################
-# coc.des: Special maps for Cocytus.
-# Content: (mini)vaults particular to Cocytus, and/or first appearing in
-#          Coc (order: Dis, Geh, Coc, Tar)
+# coc.des: Special maps for North Pole.
+# Content: (mini)vaults particular to North Pole, and/or first appearing in
+#          Nor (order: Dis, Geh, Nor, Tar)
 ##############################################################################
 
 : require('dlua/vault.lua')
 
 {{
 function coc_setup(e)
-   e.place("Coc:7")
+   e.place("Nor:7")
    e.tags("no_rotate")
    e.kitem("$ = $ no_pickup")
    e.kmask('O = no_item_gen')
@@ -24,12 +24,12 @@ end
 }}
 
 ##############################################################################
-# Cocytus
+# North Pole
 ##############################################################################
 
 NAME:   grunt_cocytus_stairs_refrigerator
 TAGS:   transparent
-DEPTH:  Coc:1-6
+DEPTH:  Nor:1-6
 COLOUR: c = blue
 MONS:   Ice Fiend, blizzard demon, ice devil, white imp
 KMONS:  H = ice statue
@@ -52,7 +52,7 @@ xwww..3......
 ENDMAP
 
 NAME:    nicolae_coc_three_mouths
-DEPTH:   Coc, !Coc:$
+DEPTH:   Nor, !Nor:$
 TAGS:    transparent extra decor
 SUBST:   j = >}}, b = >]], c = >))
 SHUFFLE: )}]
@@ -83,7 +83,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_coc_ice_floe
-DEPTH:   Coc:2-, !Coc:$
+DEPTH:   Nor:2-, !Nor:$
 SHUFFLE: {[(, }]}
 NSUBST:  D = 1:1 / 2:2 / *:34
 KMONS:   1 = Ice Fiend
@@ -115,7 +115,7 @@ www....xx.D.xx....www
 ENDMAP
 
 NAME:    nicolae_coc_snowflakes_chance_in_hell
-DEPTH:   Coc, !Coc:$
+DEPTH:   Nor, !Nor:$
 ORIENT:  centre
 TAGS:    transparent extra decor
 SHUFFLE: abcdefghi, jklmno, ABCDEFGH
@@ -152,7 +152,7 @@ ENDMAP
 
 NAME:    nooodl_cocytus_jagged_cave
 ORIENT:  northwest
-DEPTH:   Coc, !Coc:$
+DEPTH:   Nor, !Nor:$
 TAGS:    extra decor
 SUBST:   < : AB
 NSUBST:  A = 1:{ / 1:} / *:.
@@ -190,7 +190,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxx@@xxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Antaeus; bottom of Cocytus.
+# Antaeus; bottom of North Pole.
 ##############################################################################
 
 NAME:    coc_dpeg
@@ -351,7 +351,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Antaeus (Cocytus) by Mu
+# Antaeus (North Pole) by Mu
 ##############################################################################
 
 NAME:    coc_mu
@@ -443,7 +443,7 @@ MAP
 ENDMAP
 
 ##############################################################################
-# Antaeus (Cocytus) by Grunt
+# Antaeus (North Pole) by Grunt
 ##############################################################################
 
 NAME:    coc_grunt
@@ -541,7 +541,7 @@ ccccccccccccccXXXXXXXXXXcccccccccXXXXXXXXXXXXXXcccccccccc
 ENDMAP
 
 ##############################################################################
-# Antaeus (Cocytus) by HangedMan
+# Antaeus (North Pole) by HangedMan
 ##############################################################################
 
 NAME:    coc_hangedman

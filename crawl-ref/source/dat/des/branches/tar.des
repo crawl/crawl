@@ -1,7 +1,7 @@
 ##############################################################################
 # tar.des: Special maps for Tartarus.
 # Content: (mini)vaults particular to Tartarus, and/or first appearing in
-#          Tar (order: Dis, Geh, Coc, Tar)
+#          Tar (order: Dis, Geh, Nor, Tar)
 ##############################################################################
 
 : require('dlua/vault.lua')

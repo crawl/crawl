@@ -91,8 +91,8 @@ death is exceedingly short.
 %%%%
 Hell
 
-The Vestibule of Hell is guarded by Geryon, along with various denizens of
-each of the hells themselves.
+The hallway to the four hells is guarded by Geryon. The Vestibule of Hell
+contains portals to Dis, Gehenna, the North Pole and Tartarus.
 
 Portals to the Vestibule of Hell are found abundantly in the Depths.
 %%%%
@@ -107,10 +107,17 @@ Gehenna
 Gehenna is a realm of flames, lava and hellfire. Those who linger will have
 fire and brimstone rained down upon them.
 %%%%
-Cocytus
+North Pole
 
+<<<<<<< HEAD
 Cocytus is a grim and frost-bitten wasteland. Intruders will find the biting
 winds and icy inhabitants of the wastes impeding their progress.
+=======
+The North Pole is a festive place, home to all the world's good cheer.
+
+The North Pole  is seven levels deep and contains the icy rune. It can be
+accessed via the Vestibule of Hell.
+>>>>>>> parent of 6e0f51b... Take down the decorations in Cocytus.
 %%%%
 Tartarus
 

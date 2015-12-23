@@ -1370,7 +1370,7 @@ KITEM: ! = potion of resistance ident:all q:3, potion of agility ident:all q:3, 
 COLOUR: #c = lightcyan
 KFEAT: # = closed_door
 MARKER: # = lua:props_marker({ \
-            door_description_suffix=" to the freezing wastes of Cocytus", \
+            door_description_suffix=" to the North Pole", \
             door_description_noun="gateway", \
          })
 MARKER: # = lua:restrict_door()

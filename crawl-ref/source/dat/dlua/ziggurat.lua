@@ -206,7 +206,7 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
                 "bone dragon / ancient lich / revenant",
      "place:Abyss:$ w:1990 / corrupter",
      with_props("place:Slime:$", { jelly_protect = true }),
-     with_props("place:Coc:$ w:460 / Ice Fiend / " ..
+     with_props("place:Nor:$ w:460 / Ice Fiend / " ..
                  "blizzard demon w:30", { weight = 5 }),
      with_props("place:Geh:$ w:460 / Brimstone Fiend / " ..
                  "balrug w:30", { weight = 5 }),

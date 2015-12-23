@@ -156,9 +156,9 @@ A gateway to the decaying netherworld of Tartarus
 
 A gateway leading to Tartarus.
 %%%%
-A gateway to the freezing wastes of Cocytus
+A gateway to the North Pole
 
-A gateway leading to Cocytus.
+This gateway leads to the North Pole.
 %%%%
 A gleaming silver wall
 

@@ -75,7 +75,7 @@ function ready()
                        "place:Swamp:$ / place:Shoals:$ / place:Snake:$ /" ..
                        "place:Spider:$ / place:Slime:$ / place:Vaults:$ /" ..
                        "place:Crypt / place:Tomb:$ /" ..
-                       "place:Hell w:5 / place:Coc:$ w:5 / place:Tar:$ w:5 /" ..
+                       "place:Hell w:5 / place:Nor:$ w:5 / place:Tar:$ w:5 /" ..
                        "place:Dis:$ w:5 / place:Geh:$ w:5 /" ..
                        "place:Zot:$ w:20 / place:Pan w:20')")
   end

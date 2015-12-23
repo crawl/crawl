@@ -1150,12 +1150,13 @@ Smiting spell
 
 <Smiting ability>
 %%%%
-Song of Slaying spell
+Song of Sleighing spell
 
-Recites ancient verses of battle. Each non-summoned enemy the caster slays in
-combat during this recitation temporarily enhances their melee and ranged
-skills. The bonus only lasts for the duration of the song; casting this spell
-while already singing will start a new song, not extend an existing one.
+This spell conjures ancient Christmas carols within the caster's mind, which
+the caster then recites — quite loudly! Each non-summoned enemy the caster
+slays in combat during this recitation temporarily enhances their melee &
+ranged skills. The bonus only lasts for the duration of the song; casting this
+spell while already singing will start a new song, not extend an existing one.
 %%%%
 Spawn Tentacles spell
 

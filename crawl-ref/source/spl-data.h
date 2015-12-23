@@ -2829,7 +2829,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SONG_OF_SLAYING, "Song of Slaying",
+    SPELL_SONG_OF_SLAYING, "Song of Sleighing",
     SPTYP_CHARMS,
     SPFLAG_BATTLE | SPFLAG_UTILITY,
     2,
