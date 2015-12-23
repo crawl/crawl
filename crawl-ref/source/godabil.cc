@@ -1707,7 +1707,7 @@ bool beogh_gift_item()
     args.range = LOS_RADIUS;
     args.needs_path = false;
     args.may_target_monster = true;
-    args.cancel_at_self = true;
+    args.self = CONFIRM_CANCEL;
     args.show_floor_desc = true;
     args.top_prompt = "Select a follower to give a gift to.";
 
@@ -3361,7 +3361,7 @@ spret_type fedhas_evolve_flora(bool fail)
     args.range = LOS_RADIUS;
     args.needs_path = false;
     args.may_target_monster = false;
-    args.cancel_at_self = true;
+    args.self = CONFIRM_CANCEL;
     args.show_floor_desc = true;
     args.top_prompt = "Select plant or fungus to evolve.";
     args.get_desc_func = _evolution_name;
@@ -4919,7 +4919,7 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
         args.mode = TARG_HOSTILE;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Upheaval</white>";
-        args.cancel_at_self = true;
+        args.self = CONFIRM_CANCEL;
         if (!spell_direction(spd, beam, &args))
             return SPRET_ABORT;
         bolt tempbeam;
@@ -6346,7 +6346,7 @@ bool ru_power_leap()
         args.needs_path = false;
         args.may_target_monster = false;
         args.top_prompt = "Aiming: <white>Power Leap</white>";
-        args.cancel_at_self = true;
+        args.self = CONFIRM_CANCEL;
         const int explosion_size = 1;
         targetter_smite tgt(&you, args.range, explosion_size, explosion_size);
         args.hitfunc = &tgt;

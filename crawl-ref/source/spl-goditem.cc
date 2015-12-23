@@ -184,7 +184,7 @@ spret_type cast_healing(int pow, int max_pow, bool fail)
     args.restricts = DIR_TARGET;
     args.mode = TARG_INJURED_FRIEND;
     args.needs_path = false;
-    args.cancel_at_self = true;
+    args.self = CONFIRM_CANCEL;
     args.target_prefix = "Heal";
     args.get_desc_func = _desc_mindless;
     direction(spd, args);

@@ -1322,9 +1322,6 @@ spret_type your_spells(spell_type spell, int powc,
 
         const bool needs_path = !testbits(flags, SPFLAG_TARGET);
 
-        const bool dont_cancel_me = (testbits(flags, SPFLAG_HELPFUL)
-                                     || testbits(flags, SPFLAG_ALLOW_SELF));
-
         const int range = calc_spell_range(spell, powc);
 
         targetter *hitfunc = _spell_targetter(spell, powc, range);
@@ -1353,10 +1350,15 @@ spret_type your_spells(spell_type spell, int powc,
         args.mode = targ;
         args.range = range;
         args.needs_path = needs_path;
-        args.may_target_self = dont_cancel_me;
         args.target_prefix = prompt;
         args.top_prompt = title;
-        args.cancel_at_self = testbits(flags, SPFLAG_NOT_SELF);
+        if (testbits(flags, SPFLAG_NOT_SELF))
+            args.self = CONFIRM_CANCEL;
+        if (testbits(flags, SPFLAG_HELPFUL)
+            || testbits(flags, SPFLAG_ALLOW_SELF))
+        {
+            args.self = CONFIRM_NONE;
+        }
         args.get_desc_func = additional_desc;
         if (!spell_direction(spd, beam, &args))
         {
