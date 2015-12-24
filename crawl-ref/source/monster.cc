@@ -6717,7 +6717,7 @@ bool monster::is_jumpy() const
 // Currently only used for Aura of Brilliance.
 int monster::spell_hd(spell_type spell) const
 {
-    return get_hit_dice() + has_ench(ENCH_EMPOWERED_SPELLS) ? 5 : 0;
+    return get_hit_dice() + (has_ench(ENCH_EMPOWERED_SPELLS) ? 5 : 0);
 }
 
 void monster::align_avatars(bool force_friendly)
