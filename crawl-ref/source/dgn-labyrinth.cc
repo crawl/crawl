@@ -125,47 +125,45 @@ static void _labyrinth_place_exit(const coord_def &end)
     grd(end) = DNGN_EXIT_LABYRINTH;
 }
 
-// Checks whether a given grid has at least one neighbour surrounded
-// entirely by non-floor.
-static bool _has_no_floor_neighbours(const coord_def &pos, bool recurse = false)
-{
-    for (adjacent_iterator ai(pos); ai; ++ai)
-    {
-        const coord_def& p = *ai;
-        if (!in_bounds(p))
-            return true;
-
-        if (recurse)
-        {
-            if (grd(p) == DNGN_FLOOR)
-                return false;
-        }
-        else if (_has_no_floor_neighbours(p, true))
-            return true;
-    }
-
-    return recurse;
-}
-
 // Change the borders of the labyrinth to another (undiggable) wall type.
 static void _change_labyrinth_border(const dgn_region &region,
                                      const dungeon_feature_type wall)
 {
     const coord_def &end = region.pos + region.size;
+    int leftmost = end.x, rightmost = region.pos.x,
+        upmost = end.y, downmost = region.pos.y;
     for (int y = region.pos.y-1; y <= end.y; ++y)
+    {
         for (int x = region.pos.x-1; x <= end.x; ++x)
         {
-            const coord_def c(x, y);
-            if (!in_bounds(c)) // paranoia
-                continue;
-
-            if (grd(c) == wall || !feat_is_wall(grd(c)))
-                continue;
-
-            // All border grids have neighbours without any access to floor.
-            if (_has_no_floor_neighbours(c))
-                grd[x][y] = wall;
+            if (!feat_is_solid(grd[x][y]))
+            {
+                if (x < leftmost)
+                    leftmost = x;
+                if (x > rightmost)
+                    rightmost = x;
+                if (y < upmost)
+                    upmost = y;
+                if (y > downmost)
+                    downmost = y;
+            }
         }
+    }
+
+    for (int y = region.pos.y-1; y <= end.y; ++y)
+    {
+        for (int x = region.pos.x-1; x <= end.x; ++x)
+        {
+            if (x < leftmost
+                || x > rightmost
+                || y < upmost
+                || y > downmost)
+            {
+                ASSERT(feat_is_solid(grd[x][y]));
+                grd[x][y] = wall;
+            }
+        }
+    }
 }
 
 static void _change_walls_from_centre(const dgn_region &region,
