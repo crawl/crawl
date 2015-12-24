@@ -27,14 +27,14 @@ static base_pattern &get_text_pattern(const string &s, bool checkcase)
         string pattern(s);
         if (s[0] == '/')
             pattern.erase(0, 1);
-        pattern_cache[s] = unique_ptr<base_pattern>(new text_pattern(pattern, !checkcase));
+        pattern_cache[s] = make_unique<text_pattern>(pattern, !checkcase);
     }
     else
     {
         string pattern(s);
         if (s[0] == '=')
             pattern.erase(0, 1);
-        pattern_cache[s] = unique_ptr<base_pattern>(new plaintext_pattern(pattern, !checkcase));
+        pattern_cache[s] = make_unique<plaintext_pattern>(pattern, !checkcase);
     }
     return *pattern_cache[s];
 }
