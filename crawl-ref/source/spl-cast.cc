@@ -1094,49 +1094,50 @@ static bool _spellcasting_aborted(spell_type spell,
     return uncastable;
 }
 
-static targetter* _spell_targetter(spell_type spell, int pow, int range)
+static unique_ptr<targetter> _spell_targetter(spell_type spell, int pow,
+                                              int range)
 {
     switch (spell)
     {
     case SPELL_FIREBALL:
-        return new targetter_beam(&you, range, ZAP_FIREBALL, pow, 1, 1);
+        return make_unique<targetter_beam>(&you, range, ZAP_FIREBALL, pow, 1, 1);
     case SPELL_HELLFIRE:
-        return new targetter_beam(&you, range, ZAP_HELLFIRE, pow, 1, 1);
+        return make_unique<targetter_beam>(&you, range, ZAP_HELLFIRE, pow, 1, 1);
     case SPELL_MEPHITIC_CLOUD:
-        return new targetter_beam(&you, range, ZAP_BREATHE_MEPHITIC, pow,
-                                  pow >= 100 ? 1 : 0, 1);
+        return make_unique<targetter_beam>(&you, range, ZAP_BREATHE_MEPHITIC, pow,
+                                           pow >= 100 ? 1 : 0, 1);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
-        return new targetter_imb(&you, pow, range);
+        return make_unique<targetter_imb>(&you, pow, range);
     case SPELL_FIRE_STORM:
-        return new targetter_smite(&you, range, 2, pow > 76 ? 3 : 2);
+        return make_unique<targetter_smite>(&you, range, 2, pow > 76 ? 3 : 2);
     case SPELL_FREEZING_CLOUD:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_HOLY_BREATH:
-        return new targetter_cloud(&you, range);
+        return make_unique<targetter_cloud>(&you, range);
     case SPELL_THUNDERBOLT:
-        return new targetter_thunderbolt(&you, range,
+        return make_unique<targetter_thunderbolt>(&you, range,
             (you.props.exists("thunderbolt_last")
              && you.props["thunderbolt_last"].get_int() + 1 == you.num_turns) ?
                 you.props["thunderbolt_aim"].get_coord() : coord_def());
     case SPELL_LRD:
-        return new targetter_fragment(&you, pow, range);
+        return make_unique<targetter_fragment>(&you, pow, range);
     case SPELL_FULMINANT_PRISM:
-        return new targetter_smite(&you, range, 0, 2);
+        return make_unique<targetter_smite>(&you, range, 0, 2);
     case SPELL_DAZZLING_SPRAY:
-        return new targetter_spray(&you, range, ZAP_DAZZLING_SPRAY);
+        return make_unique<targetter_spray>(&you, range, ZAP_DAZZLING_SPRAY);
     case SPELL_EXPLOSIVE_BOLT:
-        return new targetter_explosive_bolt(&you, pow, range);
+        return make_unique<targetter_explosive_bolt>(&you, pow, range);
     case SPELL_GLACIATE:
-        return new targetter_cone(&you, range);
+        return make_unique<targetter_cone>(&you, range);
     case SPELL_CLOUD_CONE:
-        return new targetter_shotgun(&you, CLOUD_CONE_BEAM_COUNT, range);
+        return make_unique<targetter_shotgun>(&you, CLOUD_CONE_BEAM_COUNT, range);
     case SPELL_SCATTERSHOT:
-        return new targetter_shotgun(&you, shotgun_beam_count(pow), range);
+        return make_unique<targetter_shotgun>(&you, shotgun_beam_count(pow), range);
     case SPELL_GRAVITAS:
-        return new targetter_smite(&you, range, gravitas_range(pow, 2),
-                                                gravitas_range(pow));
+        return make_unique<targetter_smite>(&you, range, gravitas_range(pow, 2),
+                                            gravitas_range(pow));
     case SPELL_VIOLENT_UNRAVELLING:
-        return new targetter_unravelling(&you, range, pow);
+        return make_unique<targetter_unravelling>(&you, range, pow);
     case SPELL_MAGIC_DART:
     case SPELL_FORCE_LANCE:
     case SPELL_SHOCK:
@@ -1167,11 +1168,11 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_DISPEL_UNDEAD:
     case SPELL_CRYSTAL_BOLT:
     case SPELL_TUKIMAS_DANCE:
-        return new targetter_beam(&you, range, spell_to_zap(spell), pow, 0, 0);
+        return make_unique<targetter_beam>(&you, range, spell_to_zap(spell), pow, 0, 0);
     case SPELL_RANDOM_BOLT:
-        return new targetter_beam(&you, range, ZAP_CRYSTAL_BOLT, pow, 0, 0);
+        return make_unique<targetter_beam>(&you, range, ZAP_CRYSTAL_BOLT, pow, 0, 0);
     default:
-        return 0;
+        return nullptr;
     }
 }
 
@@ -1324,7 +1325,7 @@ spret_type your_spells(spell_type spell, int powc,
 
         const int range = calc_spell_range(spell, powc);
 
-        targetter *hitfunc = _spell_targetter(spell, powc, range);
+        unique_ptr<targetter> hitfunc = _spell_targetter(spell, powc, range);
 
         // Add success chance to targetted spells checking monster MR
         const bool mr_check = testbits(flags, SPFLAG_MR_CHECK)
@@ -1345,7 +1346,7 @@ spret_type your_spells(spell_type spell, int powc,
         title += "</white>";
 
         direction_chooser_args args;
-        args.hitfunc = hitfunc;
+        args.hitfunc = hitfunc.get();
         args.restricts = dir;
         args.mode = targ;
         args.range = range;
@@ -1361,14 +1362,8 @@ spret_type your_spells(spell_type spell, int powc,
         }
         args.get_desc_func = additional_desc;
         if (!spell_direction(spd, beam, &args))
-        {
-            if (hitfunc)
-                delete hitfunc;
             return SPRET_ABORT;
-        }
 
-        if (hitfunc)
-            delete hitfunc;
         beam.range = range;
 
         if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe())
