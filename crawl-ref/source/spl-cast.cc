@@ -1282,8 +1282,6 @@ spret_type your_spells(spell_type spell, int powc,
               testbits(flags, SPFLAG_NEUTRAL)    ? TARG_ANY :
               testbits(flags, SPFLAG_HELPFUL)    ? TARG_FRIEND :
               testbits(flags, SPFLAG_OBJ)        ? TARG_MOVABLE_OBJECT :
-              spell == SPELL_DISPEL_UNDEAD       ? TARG_HOSTILE_UNDEAD :
-              spell == SPELL_VIOLENT_UNRAVELLING ? TARG_DISPELLABLE :
                                                    TARG_HOSTILE;
 
         const targeting_type dir =

@@ -402,8 +402,6 @@ bool direction_chooser::targets_enemies() const
     {
         case TARG_HOSTILE:
         case TARG_HOSTILE_SUBMERGED:
-        case TARG_HOSTILE_UNDEAD:
-        case TARG_DISPELLABLE:
             return true;
         default:
             return false;
@@ -2375,13 +2373,8 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
             && is_pacifiable(mon) >= 0;
     case TARG_EVOLVABLE_PLANTS:
         return mons_is_evolvable(mon);
-    case TARG_HOSTILE_UNDEAD:
-        return !mon->friendly() && mon->holiness() & MH_UNDEAD;
     case TARG_BEOGH_GIFTABLE:
         return beogh_can_gift_items_to(mon);
-    case TARG_DISPELLABLE:
-        return mons_attitude(mon) == ATT_HOSTILE
-            && monster_is_debuffable(*mon);
     case TARG_MOVABLE_OBJECT:
         return false;
     case TARG_NUM_MODES:
