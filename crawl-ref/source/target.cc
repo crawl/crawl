@@ -228,7 +228,9 @@ aff_type targetter_beam::is_affected(coord_def loc)
 
 bool targetter_beam::affects_monster(const monster& mon)
 {
-    return !beam.is_harmless(&mon) || beam.nice_to(&mon);
+    return !beam.is_harmless(&mon) || beam.nice_to(&mon)
+           && !(beam.has_saving_throw() && beam.flavour != BEAM_VIRULENCE
+                && mons_immune_magic(&mon));
 }
 
 targetter_unravelling::targetter_unravelling(const actor *act, int r, int pow)
