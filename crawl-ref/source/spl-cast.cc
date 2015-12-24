@@ -1138,42 +1138,16 @@ static unique_ptr<targetter> _spell_targetter(spell_type spell, int pow,
                                             gravitas_range(pow));
     case SPELL_VIOLENT_UNRAVELLING:
         return make_unique<targetter_unravelling>(&you, range, pow);
-    case SPELL_MAGIC_DART:
-    case SPELL_FORCE_LANCE:
-    case SPELL_SHOCK:
-    case SPELL_LIGHTNING_BOLT:
-    case SPELL_FLAME_TONGUE:
-    case SPELL_THROW_FLAME:
-    case SPELL_BOLT_OF_FIRE:
-    case SPELL_THROW_FROST:
-    case SPELL_THROW_ICICLE:
-    case SPELL_BOLT_OF_COLD:
-    case SPELL_STING:
-    case SPELL_VENOM_BOLT:
-    case SPELL_POISON_ARROW:
-    case SPELL_BOLT_OF_MAGMA:
-    case SPELL_IRON_SHOT:
-    case SPELL_STONE_ARROW:
-    case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
-    case SPELL_CORONA:
-    case SPELL_SLOW:
-    case SPELL_CONFUSE:
-    case SPELL_INNER_FLAME:
-    case SPELL_PAIN:
-    case SPELL_AGONY:
-    case SPELL_BOLT_OF_DRAINING:
-    case SPELL_HASTE:
-    case SPELL_PETRIFY:
-    case SPELL_POLYMORPH:
-    case SPELL_DISPEL_UNDEAD:
-    case SPELL_CRYSTAL_BOLT:
-    case SPELL_TUKIMAS_DANCE:
-        return make_unique<targetter_beam>(&you, range, spell_to_zap(spell), pow, 0, 0);
     case SPELL_RANDOM_BOLT:
         return make_unique<targetter_beam>(&you, range, ZAP_CRYSTAL_BOLT, pow, 0, 0);
     default:
-        return nullptr;
+        break;
     }
+
+    if (spell_to_zap(spell) != NUM_ZAPS)
+        return make_unique<targetter_beam>(&you, range, spell_to_zap(spell), pow, 0, 0);
+
+    return nullptr;
 }
 
 static double _chance_miscast_prot()
