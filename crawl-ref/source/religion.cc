@@ -4122,17 +4122,11 @@ void handle_god_time(int /*time_delta*/)
         case GOD_ELYVILON:
             if (one_chance_in(50))
                 lose_piety(1);
-            return;
+            break;
 
         case GOD_SIF_MUNA:
             if (one_chance_in(100))
                 lose_piety(1);
-            break;
-
-        case GOD_FEDHAS:
-        case GOD_CHEIBRIADOS:
-            // These gods do not lose piety  over time but we need a case here
-            // to avoid the error message below.
             break;
 
         case GOD_RU:
@@ -4152,6 +4146,9 @@ void handle_god_time(int /*time_delta*/)
 
             break;
 
+        case GOD_FEDHAS:
+        case GOD_CHEIBRIADOS:
+            // These gods do not lose piety over time.
         case GOD_GOZAG:
         case GOD_XOM:
             // Gods without normal piety do nothing each tick.
