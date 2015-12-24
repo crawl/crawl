@@ -51,7 +51,7 @@ void init_pandemonium()
                                                     5, MONS_SOUL_EATER,
                                                     5, MONS_DEMONIC_CRAWLER,
                                                     5, MONS_SUN_DEMON,
-                                                    5, MONS_NEQOXEC,
+                                                    2, MONS_NEQOXEC,
                                                     5, MONS_CHAOS_SPAWN,
                                                     1, MONS_SHADOW_DEMON,
                                                     1, MONS_LOROCYPROCA,
