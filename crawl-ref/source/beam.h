@@ -184,6 +184,9 @@ public:
     bool ignores_monster(const monster* mon) const;
     bool can_knockback(const actor *act = nullptr, int dam = -1) const;
     bool god_cares() const; // Will the god be unforgiving about this beam?
+    bool is_harmless(const monster* mon) const;
+    bool nasty_to(const monster* mon) const;
+    bool nice_to(const monster* mon) const;
 
     void draw(const coord_def& p);
     void drop_object();
@@ -216,11 +219,8 @@ private:
     bool is_bouncy(dungeon_feature_type feat) const;
     bool stop_at_target() const;
     bool has_saving_throw() const;
-    bool is_harmless(const monster* mon) const;
     bool harmless_to_player() const;
     bool is_reflectable(const actor &whom) const;
-    bool nasty_to(const monster* mon) const;
-    bool nice_to(const monster* mon) const;
     bool found_player() const;
     bool need_regress() const;
     bool is_big_cloud() const; // expands into big_cloud at endpoint

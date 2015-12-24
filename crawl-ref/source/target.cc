@@ -61,6 +61,11 @@ bool targetter::has_additional_sites(coord_def loc)
     return false;
 }
 
+bool targetter::affects_monster(const monster& mon)
+{
+    return true; //TODO: false
+}
+
 targetter_beam::targetter_beam(const actor *act, int r, zap_type zap,
                                int pow, int min_ex_rad, int max_ex_rad) :
                                min_expl_rad(min_ex_rad),
@@ -219,6 +224,11 @@ aff_type targetter_beam::is_affected(coord_def loc)
     return visit_count == 0 ? AFF_NO :
            visit_count == 1 ? AFF_YES :
                               AFF_MULTIPLE;
+}
+
+bool targetter_beam::affects_monster(const monster& mon)
+{
+    return !beam.is_harmless(&mon) || beam.nice_to(&mon);
 }
 
 targetter_unravelling::targetter_unravelling(const actor *act, int r, int pow)

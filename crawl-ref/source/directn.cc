@@ -89,7 +89,8 @@ static void _describe_cell(const coord_def& where, bool in_range = true);
 static bool _print_cloud_desc(const coord_def where);
 static bool _print_item_desc(const coord_def where);
 
-static bool _want_target_monster(const monster *mon, targ_mode_type mode);
+static bool _want_target_monster(const monster *mon, targ_mode_type mode,
+                                 targetter* hitfunc);
 static bool _find_monster(const coord_def& where, targ_mode_type mode,
                           bool need_path, int range, targetter *hitfunc);
 static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
@@ -1018,7 +1019,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     // First try to pick our previous target.
     const monster* mons_target = _get_current_target();
     if (mons_target != nullptr
-        && _want_target_monster(mons_target, mode)
+        && _want_target_monster(mons_target, mode, hitfunc)
         && in_range(mons_target->pos()))
     {
         success = true;
@@ -2265,8 +2266,7 @@ static void _describe_oos_square(const coord_def& where)
 static bool _mons_is_valid_target(const monster* mon, targ_mode_type mode,
                                   int range)
 {
-    // Monster types that you can't gain experience from don't count as
-    // monsters.
+    // Monsters that are no threat to you don't count as monsters.
     if (mode != TARG_EVOLVABLE_PLANTS
         && !mons_is_threatening(mon))
     {
@@ -2354,8 +2354,11 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
 }
 #endif
 
-static bool _want_target_monster(const monster *mon, targ_mode_type mode)
+static bool _want_target_monster(const monster *mon, targ_mode_type mode,
+                                 targetter* hitfunc)
 {
+    if (hitfunc && !hitfunc->affects_monster(*mon))
+        return false;
     switch (mode)
     {
     case TARG_ANY:
@@ -2434,7 +2437,7 @@ static bool _find_monster(const coord_def& where, targ_mode_type mode,
     if (need_path && _blocked_ray(mon->pos()))
         return false;
 
-    return _want_target_monster(mon, mode);
+    return _want_target_monster(mon, mode, hitfunc);
 }
 
 static bool _find_shadow_step_mons(const coord_def& where, targ_mode_type mode,
@@ -2504,7 +2507,7 @@ static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
             if (hitfunc->is_affected(mi->pos()) == aff
                 && _mons_is_valid_target(*mi, mode, range))
             {
-                    return _want_target_monster(*mi, mode);
+                    return _want_target_monster(*mi, mode, hitfunc);
             }
         }
     }
