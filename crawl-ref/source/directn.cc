@@ -2505,9 +2505,10 @@ static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
         for (monster_near_iterator mi(&you); mi; ++mi)
         {
             if (hitfunc->is_affected(mi->pos()) == aff
-                && _mons_is_valid_target(*mi, mode, range))
+                && _mons_is_valid_target(*mi, mode, range)
+                && _want_target_monster(*mi, mode, hitfunc))
             {
-                    return _want_target_monster(*mi, mode, hitfunc);
+                    return true;
             }
         }
     }
