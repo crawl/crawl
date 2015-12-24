@@ -359,7 +359,7 @@ public:
         if (!_travel_safe_grid.get())
         {
             did_compute = true;
-            unique_ptr<travel_safe_grid> tsgrid(new travel_safe_grid);
+            auto tsgrid = make_unique<travel_safe_grid>();
             travel_safe_grid &safegrid(*tsgrid);
             for (rectangle_iterator ri(1); ri; ++ri)
             {
