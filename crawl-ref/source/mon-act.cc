@@ -3162,11 +3162,6 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     if (target_grid == DNGN_OPEN_SEA || target_grid == DNGN_LAVA_SEA)
         return false;
 
-    // The kraken is so large it cannot enter shallow water.
-    // Its tentacles can, and will, though.
-    if (target_grid == DNGN_SHALLOW_WATER && mons_base_type(mons) == MONS_KRAKEN)
-        return false;
-
     if (mons_avoids_cloud(mons, targ))
         return false;
 
