@@ -4145,7 +4145,9 @@ void bolt::update_hurt_or_helped(monster* mon)
 void bolt::tracer_enchantment_affect_monster(monster* mon)
 {
     // Only count tracers as hitting creatures they could potentially affect
-    if (ench_flavour_affects_monster(flavour, mon, true))
+    if (ench_flavour_affects_monster(flavour, mon, true)
+        && !(has_saving_throw() && flavour != BEAM_VIRULENCE
+             && mons_immune_magic(mon)))
     {
         // Update friend or foe encountered.
         if (!mons_atts_aligned(attitude, mons_attitude(mon)))

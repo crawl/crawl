@@ -187,6 +187,7 @@ public:
     bool is_harmless(const monster* mon) const;
     bool nasty_to(const monster* mon) const;
     bool nice_to(const monster* mon) const;
+    bool has_saving_throw() const;
 
     void draw(const coord_def& p);
     void drop_object();
@@ -218,7 +219,6 @@ private:
     bool is_superhot() const;
     bool is_bouncy(dungeon_feature_type feat) const;
     bool stop_at_target() const;
-    bool has_saving_throw() const;
     bool harmless_to_player() const;
     bool is_reflectable(const actor &whom) const;
     bool found_player() const;
