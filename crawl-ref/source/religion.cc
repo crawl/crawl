@@ -4157,7 +4157,11 @@ void handle_god_time(int /*time_delta*/)
             // Gods without normal piety do nothing each tick.
             return;
 
-        default:
+        case GOD_NO_GOD:
+        case GOD_RANDOM:
+        case GOD_ECUMENICAL:
+        case GOD_NAMELESS:
+        case NUM_GODS:
             die("Bad god, no bishop!");
             return;
 
