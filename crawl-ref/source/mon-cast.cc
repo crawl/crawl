@@ -7651,6 +7651,7 @@ static void _doom_howl(monster &mon)
          mon.name(DESC_THE).c_str(),
          silenced(mon.pos()) ? "silent" : "terrible");
     you.duration[DUR_DOOM_HOWL] = random_range(120, 180);
+    mon.props[DOOM_HOUND_HOWLED_KEY] = true;
 }
 
 /**
@@ -8332,7 +8333,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_DOOM_HOWL:
         return !foe || !foe->is_player() || you.duration[DUR_DOOM_HOWL]
-                || you.duration[DUR_DOOM_HOWL_IMMUNITY];
+                || mon->props[DOOM_HOUND_HOWLED_KEY];
 
     case SPELL_CALL_OF_CHAOS:
         return !_mons_call_of_chaos(*mon, true);

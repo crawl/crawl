@@ -188,7 +188,8 @@ static bool _is_public_key(string key)
      || key == CUSTOM_SPELLS_KEY
      || key == ELVEN_IS_ENERGIZED_KEY
      || key == MUTANT_BEAST_FACETS
-     || key == MUTANT_BEAST_TIER)
+     || key == MUTANT_BEAST_TIER
+     || key == DOOM_HOUND_HOWLED_KEY)
     {
         return true;
     }
@@ -641,6 +642,9 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (m->submerged())
         mb.set(MB_SUBMERGED);
+
+    if (!m->props.exists(DOOM_HOUND_HOWLED_KEY))
+        mb.set(MB_READY_TO_HOWL);
 
     if (mons_is_pghost(type))
     {
@@ -1548,6 +1552,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("aura of brilliance");
     if (is(MB_EMPOWERED_SPELLS))
         v.emplace_back("spells empowered");
+    if (is(MB_READY_TO_HOWL))
+        v.emplace_back("ready to howl");
     return v;
 }
 

@@ -450,7 +450,8 @@ the warping of space.
 Doom Howl spell
 
 Unleashes a piercing howl that catches and echoes in victims' minds. While
-those echoes linger, more hounds will hear and track them to their source.
+those echoes linger, nightmarish creatures will hear and track them to their
+source.
 %%%%
 Dragon Form spell
 

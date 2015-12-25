@@ -558,7 +558,6 @@ static const duration_def duration_data[] =
       "A terrible howling echoes in your mind.", D_DISPELLABLE,
       {{ "The infernal howling subsides.", []() {
           you.props.erase(NEXT_DOOM_HOUND_KEY);
-          you.duration[DUR_DOOM_HOWL_IMMUNITY] = random_range(30, 70);
       }}}},
     { DUR_VERTIGO, YELLOW, "Vertigo", "", "vertigo",
       "Vertigo is making it harder to attack, cast, and dodge.", D_NO_FLAGS,
@@ -612,7 +611,6 @@ static const duration_def duration_data[] =
     { DUR_COLLAPSE, 0, "", "", "collapse", "", D_NO_FLAGS },
     { DUR_BRAINLESS, 0, "", "", "brainless", "", D_NO_FLAGS },
     { DUR_CLUMSY, 0, "", "", "clumsy", "", D_NO_FLAGS },
-    { DUR_DOOM_HOWL_IMMUNITY, 0, "", "", "howl immunity", "", D_NO_FLAGS, {{""}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
@@ -636,5 +634,6 @@ static const duration_def duration_data[] =
     { DUR_NEGATIVE_VULN, 0, "", "", "old negative vuln", "", D_NO_FLAGS},
     { DUR_SURE_BLADE, 0, "", "", "old sure blade", "", D_NO_FLAGS},
     { DUR_CONTROL_TELEPORT, 0, "", "", "old control teleport", "", D_NO_FLAGS},
+    { DUR_DOOM_HOWL_IMMUNITY, 0, "", "", "old howl immunity", "", D_NO_FLAGS, {{""}}},
 #endif
 };

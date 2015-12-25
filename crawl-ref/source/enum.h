@@ -1912,7 +1912,9 @@ enum duration_type
     DUR_CLUMSY,
     DUR_DEVICE_SURGE,
     DUR_DOOM_HOWL,
+#if TAG_MAJOR_VERSION == 34
     DUR_DOOM_HOWL_IMMUNITY,
+#endif
     DUR_VERTIGO,
     NUM_DURATIONS
 };
