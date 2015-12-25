@@ -893,9 +893,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 || strstr(aux, "Torment")
                 || strstr(aux, "exploding lurking horror")));
 
-    // Multiply damage if amulet of harm is in play. Doesn't apply to torment
-    // or poison-over-time damage or drowning.
-    if (!is_torment && dam != INSTANT_DEATH && death_type != KILLED_BY_POISON)
+    // Multiply damage if amulet of harm is in play
+    if (dam != INSTANT_DEATH)
         dam = _apply_extra_harm (dam, source);
 
     if (can_shave_damage() && dam != INSTANT_DEATH

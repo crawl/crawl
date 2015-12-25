@@ -4520,9 +4520,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         // Apply damage multipliers for amulet of harm
         if ((extra_harm() || (agent && agent->extra_harm()))
-             && flavour != BEAM_TORMENT_DAMAGE
-             && amount != INSTANT_DEATH
-             && kill_type != KILLED_BY_POISON)
+             && amount != INSTANT_DEATH)
         {
             if (agent && agent->is_player() && you.extra_harm())
                 did_god_conduct(DID_UNHOLY, 1); // The amulet is unholy.
