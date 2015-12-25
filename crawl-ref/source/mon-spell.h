@@ -1313,13 +1313,6 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_ANCIENT_CHAMPION_III,
       {
-       { SPELL_VENOM_BOLT, 21, MON_SPELL_WIZARD },
-       { SPELL_HAUNT, 21, MON_SPELL_WIZARD },
-      }
-    },
-
-    {  MST_ANCIENT_CHAMPION_IV,
-      {
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 21, MON_SPELL_WIZARD },
        { SPELL_SLOW, 21, MON_SPELL_WIZARD },
        { SPELL_HASTE, 21, MON_SPELL_WIZARD  },
