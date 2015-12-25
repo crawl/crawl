@@ -3256,8 +3256,11 @@ static monster_type _band_member(band_type band, int which,
             return MONS_VAULT_GUARD;
 
     case BAND_DEATH_KNIGHT:
-        if (which == 1 && x_chance_in_y(2, 3))
+        if (!player_in_branch(BRANCH_DUNGEON)
+            && which == 1 && x_chance_in_y(2, 3))
+        {
             return one_chance_in(3) ? MONS_GHOUL : MONS_FLAYED_GHOST;
+        }
         else
             return random_choose_weighted(5, MONS_WRAITH,
                                           6, MONS_FREEZING_WRAITH,
