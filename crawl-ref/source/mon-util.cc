@@ -2289,7 +2289,7 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
 
     case MONS_ANCIENT_CHAMPION:
         return { MST_ANCIENT_CHAMPION_I, MST_ANCIENT_CHAMPION_II,
-                 MST_ANCIENT_CHAMPION_III, MST_ANCIENT_CHAMPION_IV };
+                 MST_ANCIENT_CHAMPION_III };
 
     case MONS_TENGU_CONJURER:
         return { MST_TENGU_CONJURER_I, MST_TENGU_CONJURER_II,
