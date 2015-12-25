@@ -16,6 +16,9 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 
 #define FAKE_BLINK_KEY "fake_blink"
 
+/// has a given hound already used up its howl?
+#define DOOM_HOUND_HOWLED_KEY "doom_hound_howled"
+
 typedef map<enchant_type, mon_enchant> mon_enchant_list;
 
 struct monsterentry;

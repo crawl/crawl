@@ -552,45 +552,49 @@ void do_dragon_call(int time)
 void doom_howl(int time)
 {
     // TODO: pull hound-count generation into a helper function
-    int hounds = 0;
+    int howlcalled_count = 0;
     if (!you.props.exists(NEXT_DOOM_HOUND_KEY))
         you.props[NEXT_DOOM_HOUND_KEY] = random_range(30, 50);
-    // 1 hound every 3-5 turns
+    // 1 nasty beast every 3-5 turns
     while (time > 0)
     {
-        const int time_to_hound = you.props[NEXT_DOOM_HOUND_KEY].get_int();
-        if (time_to_hound <= time)
+        const int time_to_call = you.props[NEXT_DOOM_HOUND_KEY].get_int();
+        if (time_to_call <= time)
         {
             you.props[NEXT_DOOM_HOUND_KEY] = random_range(30, 50);
-            ++hounds;
+            ++howlcalled_count;
         }
         else
             you.props[NEXT_DOOM_HOUND_KEY].get_int() -= time;
-        time -= time_to_hound;
+        time -= time_to_call;
     }
 
-    if (!hounds)
+    if (!howlcalled_count)
         return;
 
     const actor *target = &you;
 
-    for (int i = 0; i < hounds; ++i)
+    for (int i = 0; i < howlcalled_count; ++i)
     {
+        const monster_type howlcalled = random_choose(
+                MONS_BONE_DRAGON, MONS_SHADOW_DRAGON, MONS_SHADOW_DEMON,
+                MONS_REAPER, MONS_TORMENTOR, MONS_SHADOW_FIEND
+        );
         vector<coord_def> spots;
         for (adjacent_iterator ai(target->pos()); ai; ++ai)
         {
-            if (monster_habitable_grid(MONS_DOOM_HOUND, grd(*ai))
+            if (monster_habitable_grid(howlcalled, grd(*ai))
                 && !actor_at(*ai))
             {
                 spots.push_back(*ai);
             }
         }
         if (spots.size() <= 0)
-            return;
+            continue;
 
         const coord_def pos = spots[random2(spots.size())];
 
-        monster *mons = create_monster(mgen_data(MONS_DOOM_HOUND, BEH_HOSTILE,
+        monster *mons = create_monster(mgen_data(howlcalled, BEH_HOSTILE,
                                                  NULL, 0, SPELL_NO_SPELL,
                                                  pos, target->mindex(),
                                                  MG_FORCE_BEH));
@@ -599,7 +603,6 @@ void doom_howl(int time)
             mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
                                        INFINITE_DURATION));
             mons->behaviour = BEH_SEEK;
-            mons->flags |= MF_NO_REWARD | MF_HARD_RESET;
             check_place_cloud(CLOUD_BLACK_SMOKE, mons->pos(),
                               random_range(1,2), mons);
         }

@@ -148,6 +148,7 @@ enum monster_info_flags
     MB_AIRBORNE,
     MB_BRILLIANCE_AURA,
     MB_EMPOWERED_SPELLS,
+    MB_READY_TO_HOWL,
     NUM_MB_FLAGS
 };
 

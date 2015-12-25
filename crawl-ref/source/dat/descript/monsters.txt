@@ -948,7 +948,9 @@ hide, powerful legs, and a memory to die for.
 doom hound
 
 A demon lapdog of the queen of Tartarus, bound to hunt her enemies. Though it
-may appear alone, it's unlikely to remain so for long.
+may appear alone, it's unlikely to remain so for long - it has the terrible
+power to set creatures of nightmare on their victims' trails, though it can
+only ever use this power exactly once.
 %%%%
 draconian
 
