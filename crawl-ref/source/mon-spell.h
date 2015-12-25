@@ -59,7 +59,6 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DEATH_KNIGHT,
       {
-       { SPELL_HAUNT, 10, MON_SPELL_PRIEST },
        { SPELL_AGONY, 15, MON_SPELL_PRIEST },
        { SPELL_INJURY_MIRROR, 20, MON_SPELL_PRIEST },
       }
