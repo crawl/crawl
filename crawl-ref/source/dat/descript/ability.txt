@@ -598,7 +598,7 @@ Device Surge ability
 Ready a device surge, which - on the next use of a magical device - triggers
 to convert some of your magical power to strengthen the effect of the device.
 The amount of magical power that can be used for a surge varies, but
-correlates with how devoted they are to Pakellas.
+correlates with how devoted a follower is to Pakellas.
 %%%%
 Quick Charge ability
 
