@@ -21,7 +21,7 @@ void opening_screen()
 {
     string msg =
     "<yellow>Hello, welcome to " CRAWL " " + string(Version::Long) + "!</yellow>\n"
-    "<brown>(c) Copyright 1997-2002 Linley Henzell, 2002-2014 Crawl DevTeam\n"
+    "<brown>(c) Copyright 1997-2002 Linley Henzell, 2002-2015 Crawl DevTeam\n"
     "Read the instructions for legal details.</brown> ";
 
 
