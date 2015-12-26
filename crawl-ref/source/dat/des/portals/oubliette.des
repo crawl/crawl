@@ -38,10 +38,11 @@
 #   3. Rarely, the ally is weak but has a scroll of summoning or a wand of
 #      enslavement (on the floor, in his prison).
 #
-# What kinds of allies (should be stronger than a typical player at that stage):
-#   1. A humanoid: big kobold; gnoll; type 4 demon. Centaur?
-#   2. An early unique: Sigmund; Crazy Yiuf etc.
-#   3. An animal (presumably stored for food or labour): yak; two sheep.
+# What kinds of allies 
+# (should be noticeably stronger than a typical player at that stage):
+#   1. A humanoid with good weapon: big kobold; gnoll; type 4 demon. Centaur?
+#   2. An early unique with good brand: Sigmund; Crazy Yiuf etc.
+#   3. Animals (presumably stored for food or labour): yaks.
 #   4. An undead (shut away by locals): strong zombie/skeleton; necrophage.
 #
 # The opposition:
@@ -142,17 +143,23 @@ end
     { weight = 10, type = 'unique' },
     { weight = 5,  type = 'animal' },
     { weight = 5,  type = 'undead' },
-    { weight = 1,  type = 'handover'}  -- the ally is weak, but gives you an item
+    { weight = 10000,  type = 'handover'}  -- the ally is weak, but gives you an item
   }
 
   ally_type = util.random_weighted_from("weight", ally_types).type
 
+  -- Sometimes we place another friendly monster at the prize section;
+  -- this "companion" is waiting for the original ally.
+  -- E.g. Dowan will always have Duvessa as companion, and vice versa.
+  -- But Sigmund will have companion Edmund only rarely.
   uniques_list = {
-    { weight = 100, unique = 'Sigmund', companion = 'Edmund', item = 'scythe' },
+    { weight = 20,  unique = 'Sigmund', companion = 'Edmund', item = 'scythe' },
+    { weight = 80,  unique = 'Sigmund',                       item = 'scythe' },
     { weight = 50,  unique = 'Dowan',   companion = 'Duvessa' },
     { weight = 50,  unique = 'Duvessa', companion = 'Dowan' },
     { weight = 10,  unique = 'Pikel' },
-    { weight = 1,   unique = 'Natasha', companion = 'Boris' }
+    { weight = 1,   unique = 'Natasha', companion = 'Boris' },
+    { weight = 10,  unique = 'Natasha'}
   }
 -- TODO: check if uniques have not been placed already
 
@@ -162,6 +169,7 @@ end
     { weight = 10, humanoid = 'gnoll ; halberd' }
   }
 
+  -- Animals can come in larger groups, specify number with "mob".
   animals_list = {
     { weight = 10, animal = 'yak',  mob = 2 },
     { weight = 10, animal = 'wolf', mob = 1 }
@@ -172,7 +180,7 @@ end
   }
 
   handover_list = {
-    { weight = 10, handover = 'kobold', item = 'wand of enslavement charges:6' }
+    { weight = 10, handover = 'kobold', item = 'wand of enslavement ident:all charges:12' }
   }
 
 if ally_type == "unique" then
