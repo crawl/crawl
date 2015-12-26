@@ -8333,7 +8333,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_DOOM_HOWL:
         return !foe || !foe->is_player() || you.duration[DUR_DOOM_HOWL]
-                || mon->props[DOOM_HOUND_HOWLED_KEY];
+                || mon->props[DOOM_HOUND_HOWLED_KEY]
+                || mon->is_summoned();
 
     case SPELL_CALL_OF_CHAOS:
         return !_mons_call_of_chaos(*mon, true);
