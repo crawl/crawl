@@ -4241,7 +4241,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         return false;
     }
     if (item.base_type == OBJ_WANDS && props.exists("charges"))
-        item.plus = props["charges"].get_int();
+        item.charges = props["charges"].get_int();
     if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR
          || item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_MISSILES)
         && props.exists("plus") && !is_unrandom_artefact(item))
