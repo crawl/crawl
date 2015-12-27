@@ -80,7 +80,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_VAMPIRE,
       {
-       { SPELL_VAMPIRIC_DRAINING, 28, MON_SPELL_WIZARD },
+       { SPELL_VAMPIRIC_DRAINING, 50, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 14, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 14, MON_SPELL_WIZARD },
       }
@@ -92,7 +92,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE, 12, MON_SPELL_WIZARD  },
        { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
-       { SPELL_VAMPIRIC_DRAINING, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+       { SPELL_VAMPIRIC_DRAINING, 50, MON_SPELL_WIZARD },
       }
     },
 
@@ -101,7 +101,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_DRAINING, 10, MON_SPELL_WIZARD },
        { SPELL_SUMMON_UNDEAD, 10, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 20, MON_SPELL_WIZARD },
-       { SPELL_VAMPIRIC_DRAINING, 10, MON_SPELL_WIZARD },
+       { SPELL_VAMPIRIC_DRAINING, 50, MON_SPELL_WIZARD },
       }
     },
 
@@ -1131,7 +1131,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 17, MON_SPELL_WIZARD },
        { SPELL_MESMERISE, 17, MON_SPELL_WIZARD },
        { SPELL_BLINK_CLOSE, 17, MON_SPELL_WIZARD },
-       { SPELL_VAMPIRIC_DRAINING, 17, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+       { SPELL_VAMPIRIC_DRAINING, 50, MON_SPELL_WIZARD },
       }
     },
 
