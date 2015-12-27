@@ -893,6 +893,7 @@ KFEAT:  EFw = deep_water
 KMASK:  Ww = no_monster_gen
 : serpent_of_hell_setup(_G)
 : tar_setup(_G)
+: set_border_fill_type("permarock_wall")
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
