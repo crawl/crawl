@@ -396,13 +396,14 @@ ITEM:   any good_item w:10 / nothing w:5
 : hard_axe_fighter(_G)
 #
 # Starting room flavour. You cannot actually get the axes.
-SUBST:  Y = XXo
-SUBST:  Z : XXo
-KMASK:  B = no_item_gen
-KPROP:  B = no_tele_into
-KITEM:  B = unobtainable good_item broad axe w:5 / unobtainable broad axe /\
-            unobtainable war axe / unobtainable good_item war axe w:5 /\
-            unobtainable good_item executioner's axe w:1
+SHUFFLE: BC/BC/oF
+SHUFFLE: DE/DE/oF
+SUBST:   B = X, C = X, D = X, E = X
+KMASK:   F = no_item_gen
+KPROP:   F = no_tele_into
+KITEM:   F = unobtainable good_item broad axe w:5 / unobtainable broad axe /\
+             unobtainable war axe / unobtainable good_item war axe w:5 /\
+             unobtainable good_item executioner's axe w:1
 #
 # Yes, I want everyone to wake up.
 KFEAT: ~ : known alarm trap / floor
@@ -416,10 +417,10 @@ KFEAT:  T = known permanent teleport trap
 : bailey_setup(_G)
 MAP
   XXXXXXXXX
-  XXXXBXXXX
-  XXXXYXXXX
+  XXXXEXXXX
+  XXXXDXXXX
   XXX.A.XXX
-  XBZ~~~ZBX
+  XCB~~~BCX
   XXX.<.XXX
 cccccc+cccccc
 ct1..w.w..1sc
