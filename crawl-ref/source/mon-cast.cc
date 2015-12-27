@@ -7820,8 +7820,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_VAMPIRIC_DRAINING:
         if (!foe
-            || mon->hit_points + 1 >= mon->max_hit_points
-            || !adjacent(mon->pos(), foe->pos()))
+            || !adjacent(mon->pos(), foe->pos())
+            || x_chance_in_y(mon->hit_points - (mon->max_hit_points / 3),
+                             mon->max_hit_points * 2 / 3))
         {
             return true;
         }
