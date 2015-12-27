@@ -1070,7 +1070,7 @@ DEPTH:   Crypt
 # Yred nearly-all-melee set, Kiku necro-casters set, ghosts set, tomb set.
 MONS:    minotaur zombie / ettin zombie / skeletal warrior w:20
 MONS:    death knight, bone dragon w:14 / profane servitor
-MONS:    necromancer / vampire w:6 / soul eater w:2
+MONS:    necromancer / vampire mage w:6 / soul eater w:2
 MONS:    vampire mage / deep elf death mage, lich / reaper w:2
 MONS:    shadow wraith / phantasmal warrior / ghost crab w:4
 KMONS:   8 = eidolon / flayed ghost
@@ -1293,8 +1293,8 @@ KMONS:  3 = vampire knight w:15 / \
             dancing weapon ; long sword ego:vampirism ident:type
 KMONS:  4 = vampire mage
 KMONS:  5 = skeletal warrior / phantasmal warrior
-KMONS:  6 = vampire w:15 / jiangshi
-KMONS:  7 = vampire / skeletal warrior / w:15 zombie / wraith / w:5 nothing
+KMONS:  6 = vampire knight w:15 / jiangshi
+KMONS:  7 = vampire knight / skeletal warrior / w:15 zombie / wraith / w:5 nothing
 # ghost layout
 : elseif brnd > 0 then
 MONS:   curse skull
@@ -1854,12 +1854,10 @@ MONS:   flying skull / skeleton
 MONS:   w:50 skeleton / wight
 MONS:   generate_awake bone dragon / generate_awake curse toe
 : elseif brnd > 6 then
-MONS:   patrolling vampire ; scimitar | great sword | battleaxe | \
-        war axe | broad axe . chain mail w:15 | plate armour w:1
+MONS:   patrolling vampire knight / patrolling vampire mage / \
+        patrolling vampire w:25
 KMONS:  2 = vampire knight / Jory w:15, vampire knight
-KMONS:  3 = dancing weapon ; long sword ego:vampirism / vampire knight w:1 / \
-            vampire ; scimitar | great sword | battleaxe | \
-            war axe | broad axe . chain mail w:15 | plate armour w:1
+KMONS:  3 = dancing weapon ; long sword ego:vampirism / vampire knight
 KMONS:  4 = phantasmal warrior / jiangshi
 KMONS:  5 = vampire / zombie / golden dragon zombie w:3 / storm dragon zombie w:3
 KMONS:  6 = generate_awake vampire mage
@@ -1974,8 +1972,8 @@ KMONS:   S = mummy priest
 KMONS:   T = guardian mummy
 : elseif crawl.one_chance_in(3) then
 KMONS:   R = Jory, vampire knight
-KMONS:   S = vampire mage
-KMONS:   T = vampire / jiangshi
+KMONS:   S = vampire knight / vampire mage
+KMONS:   T = vampire knight / jiangshi
 : elseif crawl.coinflip() then
 KMONS:   R = ancient lich
 KMONS:   S = flayed ghost
