@@ -321,6 +321,18 @@ static string mi_calc_chain_lightning_damage(monster* mons)
     return make_stringf("%d-%d", min, max);
 }
 
+static string mi_calc_vampiric_drain_damage(monster* mons)
+{
+    int pow = 12 * mons->get_experience_level();
+
+    // The current formula is 3 + random2avg(9, 2) + 1 + random2(pow) / 7.
+    // Min is 3 + 0 + 1 + (0 / 7) = 4.
+    // Max is 3 + 8 + 1 + (pow - 1) / 7 = 12 + (pow - 1) / 7.
+    int min = 4;
+    int max = 12 + (pow - 1) / 7;
+    return make_stringf("%d-%d", min, max);
+}
+
 static string mons_human_readable_spell_damage_string(monster* monster,
                                                            spell_type sp)
 {
@@ -339,6 +351,8 @@ static string mons_human_readable_spell_damage_string(monster* monster,
         spell_beam.damage = mi_calc_iood_damage(monster);
     if (sp == SPELL_CHAIN_LIGHTNING)
         return mi_calc_chain_lightning_damage(monster);
+    if (sp == SPELL_VAMPIRIC_DRAINING)
+        return mi_calc_vampiric_drain_damage(monster);
     if (spell_beam.damage.size && spell_beam.damage.num)
         return dice_def_string(spell_beam.damage);
     return "";
