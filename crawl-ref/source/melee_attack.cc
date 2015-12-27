@@ -740,8 +740,12 @@ bool melee_attack::handle_phase_end()
  */
 bool melee_attack::attack()
 {
-    if (!cleaving && !handle_phase_attempted())
-        return false;
+    if (!cleaving)
+    {
+        cleave_setup();
+        if (!handle_phase_attempted())
+            return false;
+    }
 
     if (attacker != defender && attacker->is_monster()
         && mons_self_destructs(attacker->as_monster()))
@@ -749,9 +753,6 @@ bool melee_attack::attack()
         attacker->self_destruct();
         return did_hit = perceived_attack = true;
     }
-
-    if (!cleaving)
-        cleave_setup();
 
     string saved_gyre_name;
     if (weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE))
