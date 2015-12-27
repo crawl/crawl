@@ -219,18 +219,18 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     string equip_tile = "";
 
     item_def item;
-    int type = mon->type;
+    monster_type type = mon->type;
 
     item.base_type = OBJ_UNASSIGNED;
 
-    if (mon->type == MONS_DANCING_WEAPON || merc)
+    if (type == MONS_DANCING_WEAPON || merc)
         level = ISPEC_GOOD_ITEM;
 
     // moved setting of quantity here to keep it in mind {dlb}
     item.quantity = 1;
 
     if (spectral_orcs)
-        type = mon->orc_type;
+        type = mon->base_monster;
 
     switch (type)
     {
@@ -676,12 +676,12 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_ORC_KNIGHT:
     case MONS_TENGU_WARRIOR:
         // Occasionally get crossbows, or a longbow for tengu and minotaurs.
-        if (!melee_only && mon->type != MONS_TENGU_REAVER
-            && mon->type != MONS_DRACONIAN_KNIGHT && one_chance_in(9))
+        if (!melee_only && type != MONS_TENGU_REAVER
+            && type != MONS_DRACONIAN_KNIGHT && one_chance_in(9))
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = ((mon->type == MONS_TENGU_WARRIOR
-                               || mon->type == MONS_MINOTAUR)
+            item.sub_type  = ((type == MONS_TENGU_WARRIOR
+                               || type == MONS_MINOTAUR)
                               && coinflip())
                              ? WPN_LONGBOW
                              : WPN_ARBALEST;
@@ -749,7 +749,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.sub_type  = one_chance_in(3) ? WPN_GIANT_SPIKED_CLUB
                                           : WPN_GIANT_CLUB;
 
-        if (one_chance_in(10) || mon->type == MONS_ETTIN)
+        if (one_chance_in(10) || type == MONS_ETTIN)
         {
             item.sub_type = one_chance_in(10) ? WPN_GREAT_MACE
                                               : WPN_DIRE_FLAIL;
@@ -842,7 +842,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_CENTAUR_WARRIOR:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_SHORTBOW;
-        if (mon->type == MONS_CENTAUR_WARRIOR && one_chance_in(3))
+        if (type == MONS_CENTAUR_WARRIOR && one_chance_in(3))
             item.sub_type = WPN_LONGBOW;
         break;
 
@@ -852,9 +852,9 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         if (!melee_only)
         {
-            item.sub_type = (mon->type == MONS_FAUN ? WPN_HUNTING_SLING :
-                                   one_chance_in(3) ? WPN_GREATSLING:
-                                                      WPN_LONGBOW);
+            item.sub_type = (type == MONS_FAUN ? WPN_HUNTING_SLING :
+                              one_chance_in(3) ? WPN_GREATSLING:
+                                                 WPN_LONGBOW);
         }
         else
         {
@@ -983,7 +983,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         force_item = true;
         item.base_type = OBJ_WEAPONS;
 
-        if (mon->type == MONS_MARGERY && one_chance_in(5))
+        if (type == MONS_MARGERY && one_chance_in(5))
         {
             item.sub_type = random_choose(WPN_DEMON_WHIP, WPN_DEMON_BLADE,
                                           WPN_DEMON_TRIDENT);
@@ -1096,7 +1096,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_DAGGER;
 
-        if (mon->type == MONS_PSYCHE)
+        if (type == MONS_PSYCHE)
         {
             force_item = true;
             set_item_ego_type(item, OBJ_WEAPONS,
@@ -1280,7 +1280,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                        WPN_DEMON_WHIP,
                                        WPN_FLAIL);
         level = ISPEC_GOOD_ITEM;
-        if (mon->type == MONS_THE_ENCHANTRESS && one_chance_in(6))
+        if (type == MONS_THE_ENCHANTRESS && one_chance_in(6))
         {
             force_item = true;
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_DISTORTION);
@@ -1474,7 +1474,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     if (item.base_type == OBJ_UNASSIGNED)
         return;
 
-    if (!force_item && mons_is_unique(mon->type))
+    if (!force_item && mons_is_unique(type))
     {
         if (x_chance_in_y(10 + mon->get_experience_level(), 100))
             level = ISPEC_GOOD_ITEM;
@@ -1951,10 +1951,10 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
     item.quantity  = 1;
 
     bool force_item = false;
-    int type = mon->type;
+    monster_type type = mon->type;
 
     if (spectral_orcs)
-        type = mon->orc_type;
+        type = mon->base_monster;
 
     switch (type)
     {
@@ -2170,10 +2170,10 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
     case MONS_CENTAUR_WARRIOR:
     case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
-        if (one_chance_in(mon->type == MONS_CENTAUR              ? 1000 :
-                            mon->type == MONS_CENTAUR_WARRIOR      ?  500 :
-                            mon->type == MONS_YAKTAUR              ?  300
-                         /* mon->type == MONS_YAKTAUR_CAPTAIN ? */ :  200))
+        if (one_chance_in(type == MONS_CENTAUR              ? 1000 :
+                          type == MONS_CENTAUR_WARRIOR      ?  500 :
+                          type == MONS_YAKTAUR              ?  300
+                       /* type == MONS_YAKTAUR_CAPTAIN ? */ :  200))
         {
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = ARM_CENTAUR_BARDING;
@@ -2188,16 +2188,16 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
     case MONS_NAGA_SHARPSHOOTER:
     case MONS_NAGA_WARRIOR:
     case MONS_GREATER_NAGA:
-        if (one_chance_in(mon->type == MONS_NAGA         ?  800 :
-                          mon->type == MONS_NAGA_WARRIOR ?  300 :
-                          mon->type == MONS_GREATER_NAGA ?  100
-                                                         :  200))
+        if (one_chance_in(type == MONS_NAGA         ?  800 :
+                          type == MONS_NAGA_WARRIOR ?  300 :
+                          type == MONS_GREATER_NAGA ?  100
+                                                    :  200))
         {
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = ARM_NAGA_BARDING;
         }
-        else if (mon->type == MONS_GREATER_NAGA
-                 || mon->type == MONS_NAGA_RITUALIST
+        else if (type == MONS_GREATER_NAGA
+                 || type == MONS_NAGA_RITUALIST
                  || one_chance_in(3))
         {
             item.base_type = OBJ_ARMOUR;
@@ -2412,7 +2412,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
         if (item.base_type == OBJ_UNASSIGNED)
         {
             item.base_type = OBJ_ARMOUR;
-            item.sub_type = mons_is_draconian(mon->type) ? ARM_CLOAK : ARM_ROBE;
+            item.sub_type = mons_is_draconian(type) ? ARM_CLOAK : ARM_ROBE;
         }
     }
 
@@ -2423,7 +2423,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
     const object_class_type xitc = item.base_type;
     const int xitt = item.sub_type;
 
-    if (!force_item && mons_is_unique(mon->type) && level != ISPEC_GOOD_ITEM)
+    if (!force_item && mons_is_unique(type) && level != ISPEC_GOOD_ITEM)
     {
         if (x_chance_in_y(9 + mon->get_experience_level(), 100))
             level = ISPEC_GOOD_ITEM;
