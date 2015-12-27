@@ -76,7 +76,6 @@ private:
 class InvEntry : public MenuEntry
 {
 private:
-    static bool show_prices;
     static bool show_glyph;
 
     mutable string basename;
