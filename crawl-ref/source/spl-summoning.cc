@@ -404,13 +404,13 @@ spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
     const int heads = max(4, min(random2(pow) / 6, maxheads));
 
     // Duration is always very short - just 1.
-    if (monster *hydra = create_monster(
-            mgen_data(MONS_HYDRA, BEH_COPY, caster,
-                      1, SPELL_SUMMON_HYDRA, caster->pos(),
-                      (caster->is_player()) ?
-                          MHITYOU : caster->as_monster()->foe,
-                      MG_AUTOFOE, (god == GOD_NO_GOD) ? caster->deity() : god,
-                      MONS_HYDRA, heads)))
+    mgen_data mg(MONS_HYDRA, BEH_COPY, caster,
+                 1, SPELL_SUMMON_HYDRA, caster->pos(),
+                 (caster->is_player()) ?
+                    MHITYOU : caster->as_monster()->foe,
+                 MG_AUTOFOE, (god == GOD_NO_GOD) ? caster->deity() : god);
+    mg.props[MGEN_NUM_HEADS] = heads;
+    if (monster *hydra = create_monster(mg))
     {
         if (you.see_cell(hydra->pos()))
             mprf("%s appears.", hydra->name(DESC_A).c_str());
@@ -1281,7 +1281,7 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
                       (scroll ? 2 : 1),
                       st, you.pos(), MHITYOU,
                       MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD, god,
-                      MONS_NO_MONSTER, 0, COLOUR_INHERIT, PROX_ANYWHERE, place),
+                      MONS_NO_MONSTER, COLOUR_INHERIT, PROX_ANYWHERE, place),
             false))
         {
             // In the rare cases that a specific spell set of a monster will
@@ -1776,12 +1776,6 @@ static void _display_undead_motions(int motions)
     }
 }
 
-static int _corpse_number(const item_def &item)
-{
-    return item.props.exists(MONSTER_NUMBER)
-           ? item.props[MONSTER_NUMBER].get_short(): 0;
-}
-
 static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
                            unsigned short hitting, actor *as, string nas,
                            god_type god, bool actual, bool force_beh,
@@ -1803,9 +1797,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (zombie_type == MONS_PRINCE_RIBBIT)
         zombie_type = MONS_HUMAN;
 
-    const int hd     = (item.props.exists(MONSTER_HIT_DICE)) ?
-                           item.props[MONSTER_HIT_DICE].get_short() : 0;
-    const int number = _corpse_number(item);
+    const int hd = (item.props.exists(MONSTER_HIT_DICE)) ?
+                    item.props[MONSTER_HIT_DICE].get_short() : 0;
 
     // Save the corpse name before because it can get destroyed if it is
     // being drained and the raising interrupts it.
@@ -1813,17 +1806,6 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     string name;
     if (is_named_corpse(item))
         name = get_corpse_name(item, &name_type);
-
-    // Headless hydras cannot be raised, sorry.
-    if (zombie_type == MONS_HYDRA && number == 0)
-    {
-        if (you.see_cell(pos))
-        {
-            mprf("The headless hydra %s sways and immediately collapses!",
-                 item.sub_type == CORPSE_BODY ? "corpse" : "skeleton");
-        }
-        return false;
-    }
 
     monster_type mon = item.sub_type == CORPSE_BODY ? MONS_ZOMBIE
                                                     : MONS_SKELETON;
@@ -1847,7 +1829,22 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     // the proper stats from it.
     mgen_data mg(mon, beha, as, 0, 0, pos, hitting,
                  MG_FORCE_BEH|MG_FORCE_PLACE|MG_AUTOFOE,
-                 god, monnum, number);
+                 god, monnum);
+
+    if (item.props.exists(CORPSE_HEADS))
+    {
+        // Headless hydras cannot be raised, sorry.
+        if (item.props[CORPSE_HEADS].get_short() == 0)
+        {
+            if (you.see_cell(pos))
+            {
+                mprf("The headless hydra %s sways and immediately collapses!",
+                     item.sub_type == CORPSE_BODY ? "corpse" : "skeleton");
+            }
+            return false;
+        }
+        mg.props[MGEN_NUM_HEADS] = item.props[CORPSE_HEADS].get_short();
+    }
 
     // No experience for monsters animated by god wrath or the Sword of
     // Zonguldrok.
@@ -2153,28 +2150,31 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     canned_msg(MSG_ANIMATE_REMAINS);
 
     item_def& corpse = mitm[co];
-    const int mon_number = _corpse_number(corpse);
     // How many simulacra can this particular monster give at maximum.
     int num_sim  = 1 + random2(max_corpse_chunks(corpse.mon_type));
     num_sim  = stepdown_value(num_sim, 4, 4, 12, 12);
 
     mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, &you, 0, SPELL_SIMULACRUM,
                  you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god,
-                 corpse.mon_type, mon_number);
+                 corpse.mon_type);
 
     // Can't create more than the max for the monster.
     int how_many = min(8, 4 + random2(pow) / 20);
     how_many = min<int>(how_many, num_sim);
 
-    // Avoid headless hydras. Unlike Animate Dead, still consume the flesh.
-    if (corpse.mon_type == MONS_HYDRA && mon_number == 0)
+    if (corpse.props.exists(CORPSE_HEADS))
     {
-        // No monster to conj_verb with :(
-        mprf("The headless hydra simulacr%s immediately collapse%s into snow!",
-             how_many == 1 ? "um" : "a", how_many == 1 ? "s" : "");
-        if (!turn_corpse_into_skeleton(corpse))
-            butcher_corpse(corpse, MB_FALSE, false);
-        return SPRET_SUCCESS;
+        // Avoid headless hydras. Unlike Animate Dead, still consume the flesh.
+        if (corpse.props[CORPSE_HEADS].get_short() == 0)
+        {
+            // No monster to conj_verb with :(
+            mprf("The headless hydra simulacr%s immediately collapse%s into snow!",
+                 how_many == 1 ? "um" : "a", how_many == 1 ? "s" : "");
+            if (!turn_corpse_into_skeleton(corpse))
+                butcher_corpse(corpse, MB_FALSE, false);
+            return SPRET_SUCCESS;
+        }
+        mg.props[MGEN_NUM_HEADS] = corpse.props[CORPSE_HEADS].get_short();
     }
 
     int count = 0;
@@ -2224,25 +2224,33 @@ bool monster_simulacrum(monster *mon, bool actual)
         // Search all the items on the ground for a corpse.
         for (stack_iterator si(*ri, true); si; ++si)
         {
-            // Safe on non-corpses.
-            const int mon_number = _corpse_number(*si);
-
             if (si->base_type != OBJ_CORPSES
                 || si->sub_type != CORPSE_BODY
-                || !mons_class_can_be_zombified(si->mon_type)
-                || si->mon_type == MONS_HYDRA && mon_number == 0)
+                || !mons_class_can_be_zombified(si->mon_type))
             {
                 continue;
+            }
+
+            mgen_data mg(MONS_SIMULACRUM, SAME_ATTITUDE(mon), mon, 0,
+                         SPELL_SIMULACRUM, *ri, mon->foe,
+                         MG_FORCE_BEH
+                         | (cast_visible ? MG_DONT_COME : 0),
+                         mon->god, si->mon_type);
+            if (si->props.exists(CORPSE_HEADS))
+            {
+                if (si->props[CORPSE_HEADS].get_short() == 0)
+                    continue;
+                else
+                    mg.props[MGEN_NUM_HEADS] = si->props[CORPSE_HEADS].get_short();
             }
 
             if (!actual)
                 return true;
 
-            int co = si->index();
             // Create half as many as the player version.
             int how_many = 1 + random2(
                                   div_rand_round(
-                                    max_corpse_chunks(mitm[co].mon_type), 2));
+                                    max_corpse_chunks(si->mon_type), 2));
             how_many  = stepdown_value(how_many, 2, 2, 6, 6);
             bool was_draining = is_being_drained(*si);
             bool was_butchering = is_being_butchered(*si);
@@ -2251,13 +2259,7 @@ bool monster_simulacrum(monster *mon, bool actual)
             {
                 // Use the original monster type as the zombified type here,
                 // to get the proper stats from it.
-                if (monster *sim = create_monster(
-                        mgen_data(MONS_SIMULACRUM, SAME_ATTITUDE(mon), mon, 0,
-                                  SPELL_SIMULACRUM, *ri, mon->foe,
-                                  MG_FORCE_BEH
-                                  | (cast_visible ? MG_DONT_COME : 0),
-                                  mon->god,
-                                  mitm[co].mon_type, mon_number)))
+                if (monster *sim = create_monster(mg))
                 {
                     was_successful = true;
                     player_angers_monster(sim);
@@ -2270,7 +2272,7 @@ bool monster_simulacrum(monster *mon, bool actual)
             if (was_successful)
             {
                 did_creation = true;
-                turn_corpse_into_skeleton(mitm[co]);
+                turn_corpse_into_skeleton(*si);
                 // Ignore quiet.
                 if (was_butchering || was_draining)
                 {

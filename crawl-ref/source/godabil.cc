@@ -2291,7 +2291,6 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
                    MG_FORCE_PLACE,
                    GOD_NO_GOD,
                    MONS_NO_MONSTER,
-                   0,
                    corpse.get_colour());
 
     float target_arc_len = 2 * sqrtf(2.0f);
@@ -2385,7 +2384,6 @@ static int _spawn_corpse_mushrooms(item_def& corpse,
                                   MG_FORCE_PLACE,
                                   GOD_NO_GOD,
                                   MONS_NO_MONSTER,
-                                  0,
                                   corpse.get_colour()),
                                   false);
 
@@ -2506,7 +2504,6 @@ int fedhas_fungal_bloom()
                                           MG_FORCE_PLACE,
                                           GOD_NO_GOD,
                                           MONS_NO_MONSTER,
-                                          0,
                                           colour),
                                           false))
                     {

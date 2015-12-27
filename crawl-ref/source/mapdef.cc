@@ -4061,16 +4061,20 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
 
             mspec.type    = nspec.type;
             mspec.monbase = nspec.monbase;
-            mspec.number  = nspec.number;
             if (nspec.colour > COLOUR_UNDEF && mspec.colour <= COLOUR_UNDEF)
                 mspec.colour = nspec.colour;
             if (nspec.hd != 0)
                 mspec.hd = nspec.hd;
-            if (nspec.props.exists(MUTANT_BEAST_FACETS))
-            {
-                mspec.props[MUTANT_BEAST_FACETS]
-                    = nspec.props[MUTANT_BEAST_FACETS];
+#define MAYBE_COPY(x) \
+            if (nspec.props.exists((x))) \
+            { \
+                mspec.props[(x)] \
+                    = nspec.props[(x)]; \
             }
+            MAYBE_COPY(MUTANT_BEAST_FACETS);
+            MAYBE_COPY(MGEN_BLOB_SIZE);
+            MAYBE_COPY(MGEN_NUM_HEADS);
+#undef MAYBE_COPY
         }
 
         if (!mspec.items.empty())
@@ -4192,7 +4196,8 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
                                              &dummy_feat, &place);
 
     spec.monbase = static_cast<monster_type>(base_monster.type);
-    spec.number = base_monster.number;
+    if (base_monster.props.exists(MGEN_NUM_HEADS))
+        spec.props[MGEN_NUM_HEADS] = base_monster.props[MGEN_NUM_HEADS];
 
     const int zombie_size = mons_zombie_size(spec.monbase);
     if (!zombie_size)
@@ -4245,7 +4250,9 @@ mons_spec mons_list::get_hydra_spec(const string &name) const
         nheads = 20;
     }
 
-    return mons_spec(MONS_HYDRA, MONS_NO_MONSTER, nheads);
+    mons_spec spec(MONS_HYDRA);
+    spec.props[MGEN_NUM_HEADS] = nheads;
+    return spec;
 }
 
 mons_spec mons_list::get_slime_spec(const string &name) const
@@ -4270,7 +4277,9 @@ mons_spec mons_list::get_slime_spec(const string &name) const
 #endif
     }
 
-    return mons_spec(MONS_SLIME_CREATURE, MONS_NO_MONSTER, slime_size);
+    mons_spec spec(MONS_SLIME_CREATURE);
+    spec.props[MGEN_BLOB_SIZE] = slime_size;
+    return spec;
 }
 
 // Handle draconians specified as:

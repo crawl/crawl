@@ -1423,8 +1423,12 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mg.mname != "")
         mon->mname = mg.mname;
 
-    if (mg.number != 0)
-        mon->number = mg.number;
+    if (mg.props.exists(MGEN_NUM_HEADS))
+        mon->num_heads = mg.props[MGEN_NUM_HEADS];
+    if (mg.props.exists(MGEN_BLOB_SIZE))
+        mon->blob_size = mg.props[MGEN_BLOB_SIZE];
+    if (mg.props.exists(MGEN_TENTACLE_CONNECT))
+        mon->tentacle_connect = mg.props[MGEN_TENTACLE_CONNECT].get_int();
 
     if (mg.hd != 0)
     {
@@ -1589,15 +1593,12 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->wield_melee_weapon(MB_FALSE);
     }
 
-    if (mg.cls == MONS_SLIME_CREATURE)
+    if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)
     {
-        if (mg.number > 1)
-        {
-            // Boost HP to what it would have been if it had grown this
-            // big by merging.
-            mon->hit_points     *= mg.number;
-            mon->max_hit_points *= mg.number;
-        }
+        // Boost HP to what it would have been if it had grown this
+        // big by merging.
+        mon->hit_points     *= mon->blob_size;
+        mon->max_hit_points *= mon->blob_size;
     }
 
     if (monster_can_submerge(mon, grd(fpos)) && !one_chance_in(5) && !summoned)

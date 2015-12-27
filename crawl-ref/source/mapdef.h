@@ -640,7 +640,6 @@ public:
     level_id place;
     monster_type monbase;     // Base monster for zombies and dracs.
     mon_attitude_type attitude;
-    int number;               // Head count for hydras, etc.
     int quantity;             // Number of monsters (usually 1).
     int genweight;
     bool generate_awake;
@@ -671,9 +670,8 @@ public:
     CrawlHashTable props;
 
     mons_spec(monster_type t = RANDOM_MONSTER,
-              monster_type base = MONS_NO_MONSTER,
-              int num = 0)
-        : type(t), place(), monbase(base), attitude(ATT_HOSTILE), number(num),
+              monster_type base = MONS_NO_MONSTER)
+        : type(t), place(), monbase(base), attitude(ATT_HOSTILE),
           quantity(1), genweight(10),
           generate_awake(false), patrolling(false), band(false),
           colour(COLOUR_INHERIT), god(GOD_NO_GOD), god_gift(false), hd(0),

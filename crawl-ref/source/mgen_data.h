@@ -13,6 +13,10 @@
 // Equal to weapon skill with a scale of 10
 #define TUKIMA_SKILL "tukima-skill"
 
+#define MGEN_NUM_HEADS "num_heads"
+#define MGEN_BLOB_SIZE "blob_size"
+#define MGEN_TENTACLE_CONNECT "tentacle_connect"
+
 // A structure with all the data needed to whip up a new monster.
 struct mgen_data
 {
@@ -61,13 +65,6 @@ struct mgen_data
     // is the base monster that the monster is based on - should be
     // set to MONS_NO_MONSTER when not used.
     monster_type    base_type;
-
-    // The number of hydra heads, the number of manticore attack volleys,
-    // or the number of merged slime creatures.
-    //
-    // Note: in older versions this field was used for both this and for
-    // base_type.
-    int             number;
 
     // The colour of the monster, or COLOUR_UNDEF for col:any
     int             colour;
@@ -125,7 +122,6 @@ struct mgen_data
               uint32_t genflags = 0,
               god_type which_god = GOD_NO_GOD,
               monster_type base = MONS_NO_MONSTER,
-              int monnumber = 0,
               int moncolour = COLOUR_INHERIT,
               proximity_type prox = PROX_ANYWHERE,
               level_id _place = level_id::current(),
@@ -137,7 +133,7 @@ struct mgen_data
 
         : cls(mt), behaviour(beh), summoner(sner), abjuration_duration(abj),
           summon_type(st), pos(p), foe(mfoe), flags(genflags), god(which_god),
-          base_type(base), number(monnumber), colour(moncolour),
+          base_type(base), colour(moncolour),
           proximity(prox), place(_place), hd(mhd), hp(mhp),
           extra_flags(extflags), mname(monname), non_actor_summoner(nas),
           initial_shifter(is)
@@ -188,7 +184,7 @@ struct mgen_data
     {
         return mgen_data(mt, BEH_HOSTILE, 0, abj, st, p,
                          alert ? MHITYOU : MHITNOT,
-                         genflags, ngod, base, 0, COLOUR_INHERIT,
+                         genflags, ngod, base, COLOUR_INHERIT,
                          PROX_ANYWHERE, level_id::current(), 0, 0, MF_NO_FLAGS,
                          "", nsummoner, RANDOM_MONSTER);
     }
