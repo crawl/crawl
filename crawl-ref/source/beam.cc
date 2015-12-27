@@ -2920,7 +2920,7 @@ void bolt::affect_place_explosion_clouds()
 
             actor* summ = agent();
             mgen_data mg(MONS_FIRE_VORTEX, att, summ, 1, SPELL_FIRE_STORM,
-                         p, MHITNOT, 0, god);
+                         p, MHITNOT, MG_NONE, god);
 
             // Spell-summoned monsters need to have a live summoner.
             if (summ == nullptr || !summ->alive())

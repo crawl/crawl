@@ -879,7 +879,7 @@ static void _jiyva_effects(int /*time_delta*/)
                    || testbits(env.pgrid(newpos), FPROP_NO_JIYVA));
 
             mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0, newpos,
-                         MHITNOT, 0, GOD_JIYVA);
+                         MHITNOT, MG_NONE, GOD_JIYVA);
             mg.non_actor_summoner = "Jiyva";
 
             if (create_monster(mg))

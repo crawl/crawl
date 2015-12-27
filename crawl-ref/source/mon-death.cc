@@ -1409,7 +1409,7 @@ static void _make_spectral_thing(monster* mons, bool quiet)
         // get the proper stats from it.
         mgen_data mg(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
                      0, SPELL_DEATH_CHANNEL, mons->pos(), MHITYOU,
-                     0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
+                     MG_NONE, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
                      mons->type);
         if (spectre_type == MONS_HYDRA)
         {

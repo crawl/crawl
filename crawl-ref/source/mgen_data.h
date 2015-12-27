@@ -53,8 +53,8 @@ struct mgen_data
     // just wandering around.
     unsigned short  foe;
 
-    // Generation flags from mgen_flag_type.
-    uint32_t        flags;
+    // Generation flags.
+    mgen_flags      flags;
 
     // What god the monster worships, if any. Used for monsters that
     // are god gifts, to indicate which god sent them, and by priest
@@ -114,12 +114,12 @@ struct mgen_data
 
     mgen_data(monster_type mt = RANDOM_MONSTER,
               beh_type beh = BEH_HOSTILE,
-              const actor* sner = 0,
+              const actor* sner = nullptr,
               int abj = 0,
               int st = 0,
               const coord_def &p = coord_def(-1, -1),
               unsigned short mfoe = MHITNOT,
-              uint32_t genflags = 0,
+              mgen_flags genflags = MG_NONE,
               god_type which_god = GOD_NO_GOD,
               monster_type base = MONS_NO_MONSTER,
               int moncolour = COLOUR_INHERIT,
@@ -154,8 +154,8 @@ struct mgen_data
         return (flags & (MG_PERMIT_BANDS|MG_FORBID_BANDS)) == MG_PERMIT_BANDS;
     }
 
-    bool force_place() const        { return flags & MG_FORCE_PLACE; }
-    bool needs_patrol_point() const { return flags & MG_PATROLLING; }
+    bool force_place() const        { return bool(flags & MG_FORCE_PLACE); }
+    bool needs_patrol_point() const { return bool(flags & MG_PATROLLING); }
 
     // Is there a valid position set on this struct that we want to use
     // when placing the monster?
@@ -165,7 +165,7 @@ struct mgen_data
 
     static mgen_data sleeper_at(monster_type what,
                                 const coord_def &where,
-                                unsigned genflags = 0)
+                                mgen_flags genflags = MG_NONE)
     {
         return mgen_data(what, BEH_SLEEP, 0, 0, MF_NO_FLAGS, where,
                          MHITNOT, genflags);
@@ -177,7 +177,7 @@ struct mgen_data
                                 int abj = 0,
                                 int st = 0,
                                 const coord_def &p = coord_def(-1, -1),
-                                uint32_t genflags = 0,
+                                mgen_flags genflags = MG_NONE,
                                 god_type ngod = GOD_NO_GOD,
                                 monster_type base = MONS_NO_MONSTER)
 

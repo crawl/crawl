@@ -1375,7 +1375,7 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
                                                    : 1;
 
     mgen_data mg(mon_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                 !force_hostile ? &you : 0, 0, 0, you.pos(), MHITYOU, 0,
+                 !force_hostile ? &you : 0, 0, 0, you.pos(), MHITYOU, MG_NONE,
                  GOD_YREDELEMNUL);
 
     if (force_hostile)
@@ -3518,7 +3518,7 @@ static void _join_jiyva()
         return;
 
     mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, &you, 0, 0, you.pos(),
-                 MHITNOT, 0, GOD_JIYVA);
+                 MHITNOT, MG_NONE, GOD_JIYVA);
 
     delayed_monster(mg);
     simple_god_message(" grants you a jelly!");

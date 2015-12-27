@@ -540,7 +540,7 @@ static void _beogh_blessing_reinforcements()
 
         delayed_monster(
                          mgen_data(follower_type, BEH_FRIENDLY, &you, 0, 0,
-                                   you.pos(), MHITYOU, 0, GOD_BEOGH),
+                                   you.pos(), MHITYOU, MG_NONE, GOD_BEOGH),
                          _beogh_reinf_callback);
     }
 }

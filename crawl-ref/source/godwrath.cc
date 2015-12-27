@@ -121,7 +121,7 @@ static bool _yred_random_zombified_hostile()
 
     mgen_data temp = mgen_data::hostile_at(skel ? MONS_SKELETON : MONS_ZOMBIE,
                                            _god_wrath_name(GOD_YREDELEMNUL),
-                                           true, 0, 0, you.pos(), 0,
+                                           true, 0, 0, you.pos(), MG_NONE,
                                            GOD_YREDELEMNUL, z_base);
 
     temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
@@ -166,7 +166,7 @@ static bool _okawaru_random_servant()
 
     mgen_data temp = mgen_data::hostile_at(mon_type,
                                            _god_wrath_name(GOD_OKAWARU),
-                                           true, 0, 0, you.pos(), 0,
+                                           true, 0, 0, you.pos(), MG_NONE,
                                            GOD_OKAWARU);
 
     // Don't send sheep into battle, but otherwise let bands in.
@@ -189,7 +189,7 @@ static bool _dithmenos_random_shadow(const int count, const int tier)
 
     mgen_data temp = mgen_data::hostile_at(mon_type,
                                            _god_wrath_name(GOD_DITHMENOS),
-                                           true, 0, 0, you.pos(), 0,
+                                           true, 0, 0, you.pos(), MG_NONE,
                                            GOD_DITHMENOS);
 
     temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
@@ -631,7 +631,7 @@ static bool _makhleb_summon_servant(monster_type servant)
 
     mgen_data temp = mgen_data::hostile_at(servant,
                                            _god_wrath_name(GOD_MAKHLEB),
-                                           true, 0, 0, you.pos(), 0,
+                                           true, 0, 0, you.pos(), MG_NONE,
                                            GOD_MAKHLEB);
 
     temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
@@ -927,7 +927,7 @@ static bool _beogh_retribution()
                 create_monster(
                     mgen_data::hostile_at(MONS_DANCING_WEAPON,
                         _god_wrath_name(god),
-                        true, 0, 0, you.pos(), 0, god)))
+                        true, 0, 0, you.pos(), MG_NONE, god)))
             {
                 ASSERT(mon->weapon() != nullptr);
                 item_def& wpn(*mon->weapon());
@@ -1145,7 +1145,7 @@ static void _lugonu_minion_retribution()
 
         mgen_data temp = mgen_data::hostile_at(to_summon,
                                                _god_wrath_name(god), true, 0,
-                                               0, you.pos(), 0, god);
+                                               0, you.pos(), MG_NONE, god);
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
         if (create_monster(temp, false))
@@ -1161,7 +1161,7 @@ static void _lugonu_minion_retribution()
 
         mgen_data temp = mgen_data::hostile_at(to_summon,
                                                _god_wrath_name(god), true, 0,
-                                               0, you.pos(), 0, god);
+                                               0, you.pos(), MG_NONE, god);
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
         if (create_monster(temp, false))
@@ -1378,7 +1378,7 @@ static void _jiyva_summon_slimes()
         mgen_data temp =
             mgen_data::hostile_at(static_cast<monster_type>(slime),
                                   _god_wrath_name(god),
-                                  true, 0, 0, you.pos(), 0, god);
+                                  true, 0, 0, you.pos(), MG_NONE, god);
 
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
@@ -1593,7 +1593,7 @@ static bool _dithmenos_retribution()
             if (create_monster(
                     mgen_data(
                         RANDOM_MOBILE_MONSTER, BEH_HOSTILE, 0,
-                        4, MON_SUMM_WRATH, you.pos(), MHITYOU, 0, god,
+                        4, MON_SUMM_WRATH, you.pos(), MHITYOU, MG_NONE, god,
                         MONS_NO_MONSTER, COLOUR_UNDEF, PROX_ANYWHERE,
                         level_id(BRANCH_DUNGEON,
                                  min(27, you.experience_level + 5)),
@@ -1632,7 +1632,7 @@ static void _qazlal_summon_elementals()
     mgen_data temp =
         mgen_data::hostile_at(MONS_NO_MONSTER,
                               _god_wrath_name(god),
-                              true, 0, 0, you.pos(), 0, god);
+                              true, 0, 0, you.pos(), MG_NONE, god);
 
     temp.hd = you.experience_level;
     temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);

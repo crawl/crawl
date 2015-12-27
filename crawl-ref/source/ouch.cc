@@ -627,7 +627,7 @@ static void _maybe_spawn_monsters(int dam, const bool is_torment,
         for (int i = 0; i < how_many; ++i)
         {
             mgen_data mg(mon, BEH_FRIENDLY, &you, 2, 0, you.pos(),
-                         damager->mindex(), 0, you.religion);
+                         damager->mindex(), MG_NONE, you.religion);
 
             if (create_monster(mg))
                 count_created++;

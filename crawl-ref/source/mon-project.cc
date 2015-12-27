@@ -49,9 +49,7 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
                 0,
                 SPELL_IOOD,
                 coord_def(),
-                mtarg,
-                0,
-                GOD_NO_GOD), true, true);
+                mtarg), true, true);
     if (!mon)
     {
         mprf(MSGCH_ERROR, "Failed to spawn projectile.");

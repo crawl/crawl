@@ -1011,8 +1011,7 @@ static bool _handle_scroll(monster& mons)
             {
                 create_monster(
                     mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE((&mons)), &mons,
-                              3, MON_SUMM_SCROLL, mons.pos(), mons.foe,
-                              0, GOD_NO_GOD));
+                              3, MON_SUMM_SCROLL, mons.pos(), mons.foe));
             }
         }
         break;
@@ -3889,7 +3888,7 @@ static bool _monster_move(monster* mons)
                     mgen_data(MONS_SPATIAL_VORTEX, SAME_ATTITUDE(mons), mons,
                           2, MON_SUMM_ANIMATE,
                           target, MHITNOT,
-                          0, GOD_LUGONU));
+                          MG_NONE, GOD_LUGONU));
             destroy_wall(target);
         }
     }

@@ -88,7 +88,7 @@ void shadow_lantern_effect()
                     14))
             {
                 create_monster(mgen_data(MONS_SHADOW, BEH_FRIENDLY, &you, 2,
-                               MON_SUMM_LANTERN, you.pos(), MHITNOT));
+                               MON_SUMM_LANTERN, you.pos()));
 
                 did_god_conduct(DID_NECROMANCY, 1);
             }
