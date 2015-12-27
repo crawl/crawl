@@ -4982,10 +4982,11 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast,
         if (type == MONS_NO_MONSTER)
             continue;
 
-        create_monster(
-            mgen_data(type, SAME_ATTITUDE(mons), mons,
-                      1, spell_cast, mons->pos(), mons->foe, 0, GOD_NO_GOD,
-                      MONS_NO_MONSTER, type == MONS_SLIME_CREATURE ? 5 : 0));
+        mgen_data mg(type, SAME_ATTITUDE(mons), mons,
+                     1, spell_cast, mons->pos(), mons->foe);
+        if (type == MONS_SLIME_CREATURE)
+            mg.props[MGEN_BLOB_SIZE] = 5;
+        create_monster(mg);
     }
 }
 
@@ -5557,7 +5558,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             create_monster(
                 mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE(mons), mons,
                           5, spell_cast, mons->pos(), mons->foe, 0, god,
-                          MONS_NO_MONSTER, 0, COLOUR_INHERIT, PROX_ANYWHERE,
+                          MONS_NO_MONSTER, COLOUR_INHERIT, PROX_ANYWHERE,
                           place));
         }
         return;

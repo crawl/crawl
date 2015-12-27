@@ -4588,7 +4588,6 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         break;
     }
     mg.base_type = mspec.monbase;
-    mg.number    = mspec.number;
     mg.colour    = mspec.colour;
 
     if (mspec.god != GOD_NO_GOD)

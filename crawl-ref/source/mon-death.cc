@@ -115,10 +115,11 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
     corpse.orig_monnum    = mtype;
 
     corpse.props[MONSTER_HIT_DICE] = short(mons.get_experience_level());
-    corpse.props[MONSTER_NUMBER]   = short(mons.number);
+    if (mons.mons_species() == MONS_HYDRA)
+        corpse.props[CORPSE_HEADS] = short(mons.heads());
     if (mons.props.exists("old_heads"))
-        corpse.props[MONSTER_NUMBER] = short(mons.props["old_heads"].get_int());
-    // XXX: Appears to be a safe conversion?
+        corpse.props[CORPSE_HEADS] = short(mons.props["old_heads"].get_int());
+    COMPILE_CHECK(sizeof(mid_t) == sizeof(int));
     corpse.props[MONSTER_MID]      = int(mons.mid);
 
     monster_info minfo(corpse_class);
@@ -1404,20 +1405,25 @@ static void _make_spectral_thing(monster* mons, bool quiet)
         else if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
             shapeshift = ENCH_GLOWING_SHAPESHIFTER;
 
-        // Headless hydras cannot be made spectral hydras, sorry.
-        if (spectre_type == MONS_HYDRA && mons->heads() == 0)
-        {
-            mpr("A glowing mist gathers momentarily, then fades.");
-            return;
-        }
-
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
-        if (monster *spectre = create_monster(
-                mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
-                    0, SPELL_DEATH_CHANNEL, mons->pos(), MHITYOU,
-                    0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
-                    mons->type, mons->number)))
+        mgen_data mg(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
+                     0, SPELL_DEATH_CHANNEL, mons->pos(), MHITYOU,
+                     0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
+                     mons->type);
+        if (spectre_type == MONS_HYDRA)
+        {
+            // Headless hydras cannot be made spectral hydras, sorry.
+            if (mons->heads() == 0)
+            {
+                mpr("A glowing mist gathers momentarily, then fades.");
+                return;
+            }
+            else
+                mg.props[MGEN_NUM_HEADS] = mons->heads();
+        }
+
+        if (monster *spectre = create_monster(mg))
         {
             if (!quiet)
                 mpr("A glowing mist starts to gather...");

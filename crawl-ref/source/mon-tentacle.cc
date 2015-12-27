@@ -217,11 +217,12 @@ static void _establish_connection(monster* tentacle,
     // No base monster case (demonic tentacles)
     if (!monster_at(last->pos))
     {
-        if (monster *connect = create_monster(
-            mgen_data(connector_type, SAME_ATTITUDE(head), head,
-                      0, 0, last->pos, head->foe,
-                      MG_FORCE_PLACE, head->god, MONS_NO_MONSTER, tentacle->mid,
-                      head->colour, PROX_CLOSE_TO_PLAYER)))
+        mgen_data mg(connector_type, SAME_ATTITUDE(head), head,
+                     0, 0, last->pos, head->foe,
+                     MG_FORCE_PLACE, head->god, MONS_NO_MONSTER,
+                     head->colour, PROX_CLOSE_TO_PLAYER);
+        mg.props[MGEN_TENTACLE_CONNECT] = int(tentacle->mid);
+        if (monster *connect = create_monster(mg))
         {
             connect->props["inwards"].get_int() = MID_NOBODY;
             connect->props["outwards"].get_int() = MID_NOBODY;
@@ -261,11 +262,12 @@ static void _establish_connection(monster* tentacle,
         }
 
          // place a connector
-        if (monster *connect = create_monster(
-            mgen_data(connector_type, SAME_ATTITUDE(head), head,
-                      0, 0, current->pos, head->foe,
-                      MG_FORCE_PLACE, head->god, MONS_NO_MONSTER, tentacle->mid,
-                      head->colour, PROX_CLOSE_TO_PLAYER)))
+        mgen_data mg(connector_type, SAME_ATTITUDE(head), head,
+                     0, 0, current->pos, head->foe,
+                     MG_FORCE_PLACE, head->god, MONS_NO_MONSTER,
+                     head->colour, PROX_CLOSE_TO_PLAYER);
+        mg.props[MGEN_TENTACLE_CONNECT] = int(tentacle->mid);
+        if (monster *connect = create_monster(mg))
         {
             connect->max_hit_points = tentacle->max_hit_points;
             connect->hit_points = tentacle->hit_points;
@@ -1257,12 +1259,12 @@ void mons_create_tentacles(monster* head)
 
     for (int i = 0 ; i < possible_count; ++i)
     {
-        if (monster *tentacle = create_monster(
-            mgen_data(tent_type, SAME_ATTITUDE(head), head,
-                        0, 0, adj_squares[i], head->foe,
-                        MG_FORCE_PLACE, head->god, MONS_NO_MONSTER,
-                        head->mid, head->colour,
-                        PROX_CLOSE_TO_PLAYER)))
+        mgen_data mg(tent_type, SAME_ATTITUDE(head), head,
+                     0, 0, adj_squares[i], head->foe,
+                     MG_FORCE_PLACE, head->god, MONS_NO_MONSTER,
+                     head->colour, PROX_CLOSE_TO_PLAYER);
+        mg.props[MGEN_TENTACLE_CONNECT] = int(head->mid);
+        if (monster *tentacle = create_monster(mg))
         {
             if (you.can_see(*tentacle))
                 visible_count++;

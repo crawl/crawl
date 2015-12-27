@@ -278,7 +278,7 @@ enum CHAR_ATTRIBUTES
 #define RANDOM_ELEMENT(x) (x[random2(ARRAYSZ(x))])
 
 const char * const MONSTER_HIT_DICE = "monster-hit-dice";
-const char * const MONSTER_NUMBER = "monster-number";
+const char * const CORPSE_HEADS = "monster-number";
 const char * const CORPSE_NEVER_DECAYS = "corpse-no-decay";
 const char * const MONSTER_MID = "monster-mid";
 
