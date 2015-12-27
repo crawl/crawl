@@ -1075,6 +1075,9 @@ void mprf_nojoin(const char *format, ...)
 #ifdef DEBUG_DIAGNOSTICS
 void dprf(const char *format, ...)
 {
+    if (Options.quiet_debug_messages[DIAG_NORMAL])
+        return;
+
     va_list argp;
     va_start(argp, format);
     do_message_print(MSGCH_DIAGNOSTICS, 0, false, false, format, argp);
