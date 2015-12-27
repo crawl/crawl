@@ -3282,8 +3282,6 @@ void mons_felid_revive(monster* mons)
                         ? mons->props["felid_revives"].get_byte() + 1
                         : 1;
 
-    const int hd = me->hpdice[0] - revives;
-
     monster *newmons =
         create_monster(
             mgen_data(type, (mons->has_ench(ENCH_CHARM) ? BEH_HOSTILE
