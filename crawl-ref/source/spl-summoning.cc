@@ -88,7 +88,7 @@ spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
                 mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY, &you,
                           3, SPELL_SUMMON_BUTTERFLIES,
                           you.pos(), MHITYOU,
-                          0, god)))
+                          MG_NONE, god)))
         {
             success = true;
         }
@@ -906,7 +906,7 @@ static void _animate_weapon(int pow, actor* target)
                  dur, SPELL_TUKIMAS_DANCE,
                  target->pos(),
                  (target_is_player || sac_love) ? MHITYOU : target->mindex(),
-                 sac_love ? 0 : MG_FORCE_BEH);
+                 sac_love ? MG_NONE : MG_FORCE_BEH);
     mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
 
@@ -982,7 +982,7 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
     const int how_many = min(5, 2 + pow / 100 + random2(pow / 50 + 1));
 
     mgen_data cbl(MONS_BALL_LIGHTNING, BEH_FRIENDLY, &you, 0,
-                  SPELL_CONJURE_BALL_LIGHTNING, you.pos(), MHITNOT, 0, god);
+                  SPELL_CONJURE_BALL_LIGHTNING, you.pos(), MHITNOT, MG_NONE, god);
     cbl.hd = 5 + div_rand_round(pow, 20);
 
     for (int i = 0; i < how_many; ++i)
@@ -2234,7 +2234,7 @@ bool monster_simulacrum(monster *mon, bool actual)
             mgen_data mg(MONS_SIMULACRUM, SAME_ATTITUDE(mon), mon, 0,
                          SPELL_SIMULACRUM, *ri, mon->foe,
                          MG_FORCE_BEH
-                         | (cast_visible ? MG_DONT_COME : 0),
+                         | (cast_visible ? MG_DONT_COME : MG_NONE),
                          mon->god, si->mon_type);
             if (si->props.exists(CORPSE_HEADS))
             {
@@ -2778,7 +2778,7 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
                       agent->is_player() ? BEH_FRIENDLY
                                          : SAME_ATTITUDE(agent->as_monster()),
                       agent, 0, SPELL_BATTLESPHERE, agent->pos(),
-                      agent->mindex(), 0, god);
+                      agent->mindex(), MG_NONE, god);
         mg.hd = 1 + div_rand_round(pow, 11);
         battlesphere = create_monster(mg);
 
@@ -3297,7 +3297,7 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
             dur, SPELL_SPECTRAL_WEAPON,
             agent->pos(),
             agent->mindex(),
-            0, god);
+            MG_NONE, god);
 
     int skill_with_weapon = agent->skill(item_attack_skill(*wpn), 10, false);
 

@@ -627,7 +627,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
     if (cause.empty())
         cause = get_default_cause(true);
     mgen_data data = mgen_data::hostile_at(what, cause, alert,
-                                           abj_deg, 0, target->pos(), 0, god);
+                                           abj_deg, 0, target->pos(), MG_NONE, god);
 
     if (special_source != HELL_EFFECT_MISCAST)
         data.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);

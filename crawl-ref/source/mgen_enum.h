@@ -132,8 +132,9 @@ enum proximity_type   // proximity to player to create monster
     PROX_NEAR_STAIRS,
 };
 
-enum mgen_flag_type
+enum mgen_flag
 {
+    MG_NONE         = 0x000,
     MG_PERMIT_BANDS = 0x001, ///< allow placing band members too
     MG_FORCE_PLACE  = 0x002,
     MG_FORCE_BEH    = 0x004,
@@ -145,5 +146,6 @@ enum mgen_flag_type
     MG_FORBID_BANDS = 0x100, ///< override MG_PERMIT_BANDS
     MG_NO_OOD       = 0x200, ///< don't choose out-of-depth random monsters
 };
+DEF_BITFIELD(mgen_flags, mgen_flag);
 
 #endif

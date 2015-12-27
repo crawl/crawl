@@ -1520,7 +1520,7 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
 
     mgen_data mg(MONS_DANCING_WEAPON, BEH_FRIENDLY, &you, dur,
                  SPELL_TUKIMAS_DANCE, mon->pos(), mon->mindex(),
-                 0, GOD_XOM);
+                 MG_NONE, GOD_XOM);
 
     mg.non_actor_summoner = "Xom";
 
@@ -3050,7 +3050,7 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
             if (create_monster(
                     mgen_data::hostile_at(
                         RANDOM_MOBILE_MONSTER, "Xom",
-                        true, 4, MON_SUMM_WRATH, you.pos(), 0,
+                        true, 4, MON_SUMM_WRATH, you.pos(), MG_NONE,
                         GOD_XOM)))
             {
                 num_summoned++;
@@ -3079,7 +3079,7 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
             if (create_monster(
                     mgen_data::hostile_at(
                         _xom_random_demon(sever), "Xom",
-                        true, 4, MON_SUMM_WRATH, you.pos(), 0,
+                        true, 4, MON_SUMM_WRATH, you.pos(), MG_NONE,
                         GOD_XOM)))
             {
                 num_summoned++;

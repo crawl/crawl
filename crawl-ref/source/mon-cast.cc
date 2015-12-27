@@ -3911,7 +3911,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             {
                 create_monster(
                     mgen_data(MONS_WATER_ELEMENTAL, SAME_ATTITUDE(mons), mons,
-                    3, spell_cast, mons->pos(), mons->foe, 0));
+                    3, spell_cast, mons->pos(), mons->foe));
             }
         }
     }
@@ -4070,7 +4070,7 @@ static void _do_high_level_summon(monster* mons, spell_type spell_cast,
         monster* summon = create_monster(
             mgen_data(which_mons, SAME_ATTITUDE(mons), mons,
                       duration, spell_cast, target ? *target : mons->pos(),
-                      mons->foe, 0, god));
+                      mons->foe, MG_NONE, god));
         if (summon && post_hook)
             post_hook(summon, target ? *target : mons->pos());
     }
@@ -4088,7 +4088,7 @@ static void _mons_summon_elemental(monster* mons,
     {
         create_monster(
             mgen_data(elemental, SAME_ATTITUDE(mons), mons,
-                      3, spell_cast, mons->pos(), mons->foe, 0, god));
+                      3, spell_cast, mons->pos(), mons->foe, MG_NONE, god));
     }
     return;
 }
@@ -4139,7 +4139,7 @@ static void _mons_cast_spectral_orcs(monster* mons)
         if (monster *orc = create_monster(
                   mgen_data(MONS_SPECTRAL_THING, SAME_ATTITUDE(mons), mons,
                           abj, SPELL_SUMMON_SPECTRAL_ORCS, fpos, mons->foe,
-                          0, mons->god, mon)))
+                          MG_NONE, mons->god, mon)))
         {
             // set which base type this orc is pretending to be for gear
             // purposes
@@ -5511,7 +5511,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                                                        : RANDOM_ELEMENT(rats));
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(mons), mons,
-                          5, spell_cast, mons->pos(), mons->foe, 0, god));
+                          5, spell_cast, mons->pos(), mons->foe, MG_NONE, god));
         }
         return;
 
@@ -5534,7 +5534,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             if (create_monster(
                     mgen_data(sum, SAME_ATTITUDE(mons), mons,
                               5, spell_cast, mons->pos(), mons->foe,
-                              0, god)))
+                              MG_NONE, god)))
             {
                 i++;
             }
@@ -5556,7 +5556,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             create_monster(
                 mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE(mons), mons,
-                          5, spell_cast, mons->pos(), mons->foe, 0, god,
+                          5, spell_cast, mons->pos(), mons->foe, MG_NONE, god,
                           MONS_NO_MONSTER, COLOUR_INHERIT, PROX_ANYWHERE,
                           place));
         }
@@ -5623,7 +5623,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             create_monster(
                 mgen_data(summon_any_demon(RANDOM_DEMON_COMMON, true),
                           SAME_ATTITUDE(mons), mons, duration, spell_cast,
-                          mons->pos(), mons->foe, 0, god));
+                          mons->pos(), mons->foe, MG_NONE, god));
         }
         return;
 
@@ -5658,7 +5658,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                         4, MONS_CRIMSON_IMP,
                         0),
                       SAME_ATTITUDE(mons), mons,
-                      duration, spell_cast, mons->pos(), mons->foe, 0,
+                      duration, spell_cast, mons->pos(), mons->foe, MG_NONE,
                       god));
         return;
 
@@ -5671,7 +5671,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             create_monster(
                 mgen_data(summon_any_demon(RANDOM_DEMON_LESSER, true),
                           SAME_ATTITUDE(mons), mons,
-                          duration, spell_cast, mons->pos(), mons->foe, 0,
+                          duration, spell_cast, mons->pos(), mons->foe, MG_NONE,
                           god));
         }
         return;
@@ -5690,7 +5690,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             create_monster(
                 mgen_data(MONS_UFETUBUS, SAME_ATTITUDE(mons), mons,
-                          duration, spell_cast, mons->pos(), mons->foe, 0,
+                          duration, spell_cast, mons->pos(), mons->foe, MG_NONE,
                           god));
         }
         return;
@@ -5698,13 +5698,13 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_SUMMON_HELL_BEAST:  // Geryon
         create_monster(
             mgen_data(MONS_HELL_BEAST, SAME_ATTITUDE(mons), mons,
-                      4, spell_cast, mons->pos(), mons->foe, 0, god));
+                      4, spell_cast, mons->pos(), mons->foe, MG_NONE, god));
         return;
 
     case SPELL_SUMMON_ICE_BEAST:
         create_monster(
             mgen_data(MONS_ICE_BEAST, SAME_ATTITUDE(mons), mons,
-                      5, spell_cast, mons->pos(), mons->foe, 0, god));
+                      5, spell_cast, mons->pos(), mons->foe, MG_NONE, god));
         return;
 
     case SPELL_SUMMON_MUSHROOMS:   // Summon a ring of icky crawling fungi.
@@ -5758,7 +5758,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             if (monster *ball = create_monster(
                     mgen_data(MONS_BALL_LIGHTNING, SAME_ATTITUDE(mons),
                               mons, 0, spell_cast, mons->pos(), mons->foe,
-                              0, god)))
+                              MG_NONE, god)))
             {
                 ball->add_ench(ENCH_SHORT_LIVED);
             }
@@ -5860,7 +5860,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             mgen_data(summon_any_demon(RANDOM_DEMON_GREATER, true),
                       SAME_ATTITUDE(mons), mons,
                       duration, spell_cast,
-                      mons->pos(), mons->foe, 0, god));
+                      mons->pos(), mons->foe, MG_NONE, god));
         return;
 
     // Journey -- Added in Summon Lizards and Draconians
@@ -5894,7 +5894,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                 create_monster(
                     mgen_data(type, SAME_ATTITUDE(mons), mons,
                               duration, spell_cast,
-                              mons->pos(), mons->foe, 0, god));
+                              mons->pos(), mons->foe, MG_NONE, god));
             }
         }
         return;
@@ -5952,7 +5952,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                              0),
                           SAME_ATTITUDE(mons),
                           mons, duration, spell_cast, mons->pos(),
-                          mons->foe, 0, god));
+                          mons->foe, MG_NONE, god));
         }
         return;
 
@@ -6169,7 +6169,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(mons), mons, duration,
-                          spell_cast, mons->pos(), mons->foe, 0, god));
+                          spell_cast, mons->pos(), mons->foe, MG_NONE, god));
         }
         return;
 
@@ -6180,7 +6180,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             create_monster(
                 mgen_data(MONS_BUTTERFLY, SAME_ATTITUDE(mons),
                           mons, duration, spell_cast, mons->pos(),
-                          mons->foe, 0, god));
+                          mons->foe, MG_NONE, god));
         }
         return;
 
@@ -6228,7 +6228,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(mons), mons, duration,
-                          spell_cast, mons->pos(), mons->foe, 0, god));
+                          spell_cast, mons->pos(), mons->foe, MG_NONE, god));
         }
         return;
 
@@ -6301,7 +6301,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_CALL_LOST_SOUL:
         create_monster(mgen_data(MONS_LOST_SOUL, SAME_ATTITUDE(mons),
                                  mons, 2, spell_cast, mons->pos(),
-                                 mons->foe, 0, god));
+                                 mons->foe, MG_NONE, god));
         return;
 
     case SPELL_BLINK_ALLIES_ENCIRCLE:
@@ -6544,7 +6544,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
         create_monster(mgen_data(MONS_MANA_VIPER, SAME_ATTITUDE(mons),
                                  mons, 2, spell_cast, mons->pos(),
-                                 mons->foe, 0, god));
+                                 mons->foe, MG_NONE, god));
         }
         return;
 
@@ -6556,7 +6556,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             create_monster(mgen_data(MONS_EMPEROR_SCORPION, SAME_ATTITUDE(mons),
                                      mons, 5, spell_cast, mons->pos(),
-                                     mons->foe, 0, god));
+                                     mons->foe, MG_NONE, god));
         }
         return;
     }
@@ -6580,7 +6580,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         monster* servitor = create_monster(
             mgen_data(MONS_SPELLFORGED_SERVITOR, SAME_ATTITUDE(mons),
-                      mons, 4, spell_cast, mons->pos(), mons->foe, 0, god));
+                      mons, 4, spell_cast, mons->pos(), mons->foe, MG_NONE, god));
         if (servitor)
             init_servitor(servitor, mons);
         else if (you.can_see(*mons))
@@ -6626,7 +6626,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             create_monster(mgen_data(MONS_DEATH_SCARAB, SAME_ATTITUDE(mons),
                                      mons, 2, spell_cast, mons->pos(),
-                                     mons->foe, 0, god));
+                                     mons->foe, MG_NONE, god));
         }
         return;
     }
@@ -6720,7 +6720,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             create_monster(
                 mgen_data(MONS_EXECUTIONER, SAME_ATTITUDE(mons), mons,
-                          duration, spell_cast, mons->pos(), mons->foe, 0,
+                          duration, spell_cast, mons->pos(), mons->foe, MG_NONE,
                           god));
         }
         return;
@@ -7689,7 +7689,7 @@ static void _mons_awaken_earth(monster &mon, const coord_def &target)
 
         if (create_monster(mgen_data(
                 MONS_EARTH_ELEMENTAL, SAME_ATTITUDE((&mon)), &mon,
-                2, SPELL_AWAKEN_EARTH, *ai, mon.foe, 0, mon.god)))
+                2, SPELL_AWAKEN_EARTH, *ai, mon.foe, MG_NONE, mon.god)))
         {
             count++;
         }

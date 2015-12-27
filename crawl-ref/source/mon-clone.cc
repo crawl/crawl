@@ -205,7 +205,7 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
 
         if (monster *clone = create_monster(
                 mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(mons), mons,
-                          abj, spell_cast, mons->pos(), mons->foe, 0)))
+                          abj, spell_cast, mons->pos(), mons->foe)))
         {
             if (card_power >= 0)
                 mpr("Suddenly you stand beside yourself.");

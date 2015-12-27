@@ -546,7 +546,7 @@ void bennu_revive_fineff::fire()
 
     monster *newmons = create_monster(mgen_data(MONS_BENNU,
                                                 attitude, 0, 0, 0, posn, foe,
-                                                res_visible ? MG_DONT_COME : 0));
+                                                res_visible ? MG_DONT_COME : MG_NONE));
     if (newmons)
         newmons->props["bennu_revives"].get_byte() = revives + 1;
 }
