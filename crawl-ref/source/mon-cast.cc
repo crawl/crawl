@@ -4148,7 +4148,6 @@ static void _mons_cast_spectral_orcs(monster* mons)
                 orc->mname = mons_type_name(mon, DESC_PLAIN);
                 orc->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
             }
-            orc->orc_type = mon;
 
             // give gear using the base type
             give_item(orc, env.absdepth0, true, true);

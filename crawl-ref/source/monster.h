@@ -72,7 +72,6 @@ public:
         int battlecharge;      ///< Charges of battlesphere
         int move_spurt;        ///< Sixfirhy/jiangshi/kraken black magic
         int swift_cooldown;    ///< When alligator last casted Swift
-        monster_type orc_type; ///< Orc type of Nergalle's spectral orc.
         mid_t tentacle_connect;///< mid of monster this tentacle is
                                //   connected to: for segments, this is the
                                //   tentacle; for tentacles, the head.
