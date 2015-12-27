@@ -3281,9 +3281,6 @@ void mons_felid_revive(monster* mons)
 
     monster_type type = mons_is_mons_class(mons, MONS_NATASHA) ? MONS_NATASHA
                                                                : mons->type;
-    monsterentry* me = get_monster_data(type);
-    ASSERT(me);
-
     const int revives = (mons->props.exists("felid_revives"))
                         ? mons->props["felid_revives"].get_byte() + 1
                         : 1;
