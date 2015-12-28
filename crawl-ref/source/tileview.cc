@@ -386,7 +386,7 @@ static int _find_variants(tileidx_t idx, int variant, map<tileidx_t, int> &out)
 
 tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
 {
-    ASSERT_RANGE(idx, 0, TILE_DNGN_MAX);
+    ASSERT_LESS(idx, TILE_DNGN_MAX);
     map<tileidx_t, int> choices;
     int total = _find_variants(idx, domino, choices);
     if (choices.size() == 1)
