@@ -6568,6 +6568,66 @@ bool pakellas_check_quick_charge(bool quiet)
     return true;
 }
 
+/**
+ * Calculate the effective power of a surged hex wand.
+ * Works by iterating over the possible rolls from random2avg().
+ * A much nicer way of computing this would be appreciated.
+ *
+ * @param   pow The base power.
+ * @returns     The effective spellpower of a hex wand.
+ */
+int pakellas_effective_hex_power(int pow)
+{
+    if (!you_worship(GOD_PAKELLAS) || !you.duration[DUR_DEVICE_SURGE])
+        return pow;
+
+    if (you.magic_points == 0)
+        return 0;
+
+    const int die_size = you.piety * 9 / piety_breakpoint(5);
+    const int max_roll = max(3, 2 * die_size);
+    vector<int> rolls(max_roll + 1, 0);
+
+    // i is the first random2(); j is the second random2()
+    int i = 0;
+    for (; i < die_size; i++)
+        for (int j = 0; j < die_size; j++)
+        {
+            // This should be the same as the formula in pakellas_device_surge()
+            int roll = min(you.magic_points,
+                              min(9,
+                                  max(3,
+                                      1 + (i + j) / 2)));
+            rolls[roll] = rolls[roll] + 1;
+        }
+
+    if (die_size == 0)
+        rolls[min(3, you.magic_points)] = 1;
+
+    int total_pow = 0;
+    int weight = 0;
+
+    for (i = 1; i <= max_roll; i++)
+    {
+        if (i > 9)
+            break;
+
+        int base_sev = i / 3;
+        int mod = i % 3;
+        int base_power = (base_sev == 0)
+            ? 0 // fizzle
+            : stepdown_spellpower(100*apply_enhancement(pow, base_sev));
+        weight += 3 * rolls[i];
+        total_pow +=
+            rolls[i] *
+            (base_power * (3 - mod)
+             + stepdown_spellpower(100*apply_enhancement(pow, base_sev+1))
+               * mod);
+    }
+    total_pow /= weight;
+    return total_pow;
+}
+
 bool pakellas_device_surge()
 {
     if (!you_worship(GOD_PAKELLAS) || !you.duration[DUR_DEVICE_SURGE])

@@ -1219,7 +1219,9 @@ vector<string> desc_success_chance(const monster_info& mi, int pow)
         descs.push_back("magic immune");
     else
     {
-        int success = hex_success_chance(mr, pow, 100);
+        int success = hex_success_chance(mr,
+                                         pakellas_effective_hex_power(pow),
+                                         100);
 
         // See comment in actor::check_res_magic; monster targets only.
         if (mr < 6)
