@@ -723,7 +723,7 @@ static void _describe_glow(status_info* inf)
         "very very heavily ", // this is silly but no one will ever see it
         "impossibly ",        // (likewise)
     };
-    ASSERT(cont >= 0);
+    ASSERT(signed_cont >= 0);
 
     const int adj_i = min((size_t) cont, ARRAYSZ(contam_adjectives) - 1);
     inf->short_text = contam_adjectives[adj_i] + "contaminated";

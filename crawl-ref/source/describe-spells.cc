@@ -163,7 +163,7 @@ static void _monster_spellbooks(const monster_info &mi,
             const size_t *s_i_ptr = map_find(serpent_indices, mi.type);
             ASSERT(s_i_ptr);
             const size_t serpent_index = *s_i_ptr;
-            ASSERT_RANGE(serpent_index, 0, ARRAYSZ(serpent_of_hell_breaths));
+            ASSERT_LESS(serpent_index, ARRAYSZ(serpent_of_hell_breaths));
 
             for (auto breath : serpent_of_hell_breaths[serpent_index])
                 output_book.spells.emplace_back(breath);
