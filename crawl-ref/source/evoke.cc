@@ -619,7 +619,8 @@ void zap_wand(int slot)
                              SPFLAG_MR_CHECK))
     {
         args.get_desc_func = bind(desc_success_chance, placeholders::_1,
-                                  zap_ench_power(type_zapped, power), true);
+                                  zap_ench_power(type_zapped, power), true,
+                                  hitfunc);
     }
     direction(zap_wand, args);
 

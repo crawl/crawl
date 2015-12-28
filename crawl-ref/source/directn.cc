@@ -2355,7 +2355,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
 static bool _want_target_monster(const monster *mon, targ_mode_type mode,
                                  targetter* hitfunc)
 {
-    if (hitfunc && !hitfunc->affects_monster(*mon))
+    if (hitfunc && !hitfunc->affects_monster(monster_info(mon)))
         return false;
     switch (mode)
     {

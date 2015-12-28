@@ -61,7 +61,7 @@ bool targetter::has_additional_sites(coord_def loc)
     return false;
 }
 
-bool targetter::affects_monster(const monster& mon)
+bool targetter::affects_monster(const monster_info& mon)
 {
     return true; //TODO: false
 }
@@ -226,11 +226,15 @@ aff_type targetter_beam::is_affected(coord_def loc)
                               AFF_MULTIPLE;
 }
 
-bool targetter_beam::affects_monster(const monster& mon)
+bool targetter_beam::affects_monster(const monster_info& mon)
 {
-    return !beam.is_harmless(&mon) || beam.nice_to(&mon)
+    //XXX: this is a disgusting hack that probably leaks information!
+    //     bolt::is_harmless (and transitively, bolt::nasty_to) should
+    //     take monster_infos instead.
+    const monster* m = monster_at(mon.pos);
+    return m && (!beam.is_harmless(m) || beam.nice_to(mon))
            && !(beam.has_saving_throw() && beam.flavour != BEAM_VIRULENCE
-                && mons_immune_magic(&mon));
+                && mon.res_magic() == MAG_IMMUNE);
 }
 
 targetter_unravelling::targetter_unravelling(const actor *act, int r, int pow)

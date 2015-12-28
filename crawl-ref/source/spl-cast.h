@@ -97,7 +97,9 @@ void do_cast_spell_cmd(bool force);
 
 int hex_success_chance(const int mr, int powc, int scale,
                        bool round_up = false);
-vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked);
+class targetter;
+vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
+                                   targetter* hitfunc);
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
     bool evoked = false, bool fake_spell = false);
 
