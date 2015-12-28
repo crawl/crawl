@@ -1179,7 +1179,8 @@ CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN)
 endif
 CFLAGS_L := $(CFOPTIMIZE_L) $(DEFINES_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L)
 ALL_CFLAGS := $(CFLAGS) $(CFLAGS_L)
-YACC_CFLAGS  := $(ALL_CFLAGS) -Wno-unused-function -Wno-sign-compare -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
+YACC_CFLAGS  := $(ALL_CFLAGS) -Wno-unused-function -Wno-sign-compare -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0 -Wno-null-conversion
+RLTILES_CFLAGS := $(ALL_CFLAGS) -Wno-tautological-compare
 
 
 DOC_BASE        := ../docs
@@ -1589,6 +1590,7 @@ endif
 $(OBJECTS:%.o=%.cc): $(CONTRIB_LIBS)
 
 $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
+$(TILEDEFOBJS): ALL_CFLAGS=$(RLTILES_CFLAGS)
 
 # The "|" designates "order-only" dependancies. See: (make) Prerequisite Types.
 #
