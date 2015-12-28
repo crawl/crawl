@@ -32,7 +32,7 @@ public:
 
     virtual aff_type is_affected(coord_def loc) = 0;
     virtual bool has_additional_sites(coord_def a);
-    virtual bool affects_monster(const monster& mon);
+    virtual bool affects_monster(const monster_info& mon);
 protected:
     bool anyone_there(coord_def loc);
 };
@@ -47,7 +47,7 @@ public:
     bool valid_aim(coord_def a) override;
     bool can_affect_outside_range() override;
     virtual aff_type is_affected(coord_def loc) override;
-    virtual bool affects_monster(const monster& mon) override;
+    virtual bool affects_monster(const monster_info& mon) override;
 protected:
     vector<coord_def> path_taken; // Path beam took.
     void set_explosion_aim(bolt tempbeam);

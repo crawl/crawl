@@ -1211,12 +1211,15 @@ int hex_success_chance(const int mr, int powc, int scale, bool round_up)
 }
 
 // Include success chance in targeter for spells checking monster MR.
-vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked)
+vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
+                                   targetter* hitfunc)
 {
     vector<string> descs;
     const int mr = mi.res_magic();
     if (mr == MAG_IMMUNE)
         descs.push_back("magic immune");
+    else if (hitfunc && !hitfunc->affects_monster(mi))
+        descs.push_back("not susceptible");
     else
     {
         int success = hex_success_chance(mr,
@@ -1314,7 +1317,7 @@ spret_type your_spells(spell_type spell, int powc,
             const int eff_pow = zap == NUM_ZAPS ? powc
                                                 : zap_ench_power(zap, powc);
             additional_desc = bind(desc_success_chance, placeholders::_1,
-                                   eff_pow, evoked);
+                                   eff_pow, evoked, hitfunc.get());
         }
 
         string title = "Aiming: <white>";

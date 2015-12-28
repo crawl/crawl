@@ -186,7 +186,7 @@ public:
     bool god_cares() const; // Will the god be unforgiving about this beam?
     bool is_harmless(const monster* mon) const;
     bool nasty_to(const monster* mon) const;
-    bool nice_to(const monster* mon) const;
+    bool nice_to(const monster_info& mi) const;
     bool has_saving_throw() const;
 
     void draw(const coord_def& p);

@@ -4115,7 +4115,7 @@ void bolt::update_hurt_or_helped(monster* mon)
     {
         if (nasty_to(mon))
             foe_info.hurt++;
-        else if (nice_to(mon))
+        else if (nice_to(monster_info(mon)))
         {
             foe_info.helped++;
             // Accidentally helped a foe.
@@ -4137,7 +4137,7 @@ void bolt::update_hurt_or_helped(monster* mon)
             if (!is_tracer && mon->mid == source_id)
                 xom_is_stimulated(100);
         }
-        else if (nice_to(mon))
+        else if (nice_to(monster_info(mon)))
             friend_info.helped++;
     }
 }
@@ -6285,7 +6285,7 @@ bool bolt::nasty_to(const monster* mon) const
         return false;
 
     // Positive effects.
-    if (nice_to(mon))
+    if (nice_to(monster_info(mon)))
         return false;
 
     // Co-aligned inner flame is fine.
@@ -6328,14 +6328,14 @@ bool bolt::nasty_to(const monster* mon) const
 // Return true if the bolt is considered nice by mon.
 // This is not the inverse of nasty_to(): the bolt needs to be
 // actively positive.
-bool bolt::nice_to(const monster* mon) const
+bool bolt::nice_to(const monster_info& mi) const
 {
     // Polymorphing a (very) ugly thing will mutate it into a different
     // (very) ugly thing.
     if (flavour == BEAM_POLYMORPH)
     {
-        return mon->type == MONS_UGLY_THING
-               || mon->type == MONS_VERY_UGLY_THING;
+        return mi.type == MONS_UGLY_THING
+               || mi.type == MONS_VERY_UGLY_THING;
     }
 
     if (flavour == BEAM_HASTE
@@ -6348,7 +6348,7 @@ bool bolt::nice_to(const monster* mon) const
         return true;
     }
 
-    if (flavour == BEAM_GHOSTLY_FLAME && mon->holiness() & MH_UNDEAD)
+    if (flavour == BEAM_GHOSTLY_FLAME && mi.holi & MH_UNDEAD)
         return true;
 
     return false;
