@@ -601,10 +601,9 @@ void zap_wand(int slot)
     }
     const bool randeff = wand.sub_type == WAND_RANDOM_EFFECTS;
 
-    const int power =
-        player_adjust_evoc_power(
-            (15 + you.skill(SK_EVOCATIONS, 5) / 2)
-            * (player_mutation_level(MUT_MP_WANDS) + 3) / 3);
+    int power =
+        (15 + you.skill(SK_EVOCATIONS, 5) / 2)
+        * (player_mutation_level(MUT_MP_WANDS) + 3) / 3;
     const int tracer_range = (alreadyknown && !randeff)
                            ? _wand_range(type_zapped) : _max_wand_range();
     const string zap_title =
@@ -727,6 +726,7 @@ void zap_wand(int slot)
             return;
         }
         surge_power(you.spec_evoke());
+        power = player_adjust_evoc_power(power);
     }
 
     // zapping() updates beam.
