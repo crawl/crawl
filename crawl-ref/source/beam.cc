@@ -6256,7 +6256,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
     }
 }
 
-// Returns true if the beam is harmful (ignoring monster
+// Returns true if the beam is harmful ((mostly) ignoring monster
 // resists) -- mon is given for 'special' cases where,
 // for example, "Heal" might actually hurt undead, or
 // "Holy Word" being ignored by holy monsters, etc.
@@ -6302,7 +6302,7 @@ bool bolt::nasty_to(const monster* mon) const
 
     // sleep
     if (flavour == BEAM_HIBERNATION)
-        return mon->can_hibernate(true);
+        return mon->can_hibernate();
 
     // dispel undead
     if (flavour == BEAM_DISPEL_UNDEAD)
