@@ -2601,7 +2601,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
         args.get_desc_func = bind(desc_success_chance, placeholders::_1,
-                                  zap_ench_power(ZAP_BANISHMENT, pow));
+                                  zap_ench_power(ZAP_BANISHMENT, pow), false);
         if (!spell_direction(spd, beam, &args))
             return SPRET_ABORT;
 
