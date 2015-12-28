@@ -42,10 +42,10 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Summonings
     SPELL_RECALL,
     SPELL_AURA_OF_ABJURATION,
-    SPELL_SHADOW_CREATURES,
     SPELL_SUMMON_DEMON,
     SPELL_SUMMON_FOREST,
     SPELL_SUMMON_MANA_VIPER,
+    SPELL_SHADOW_CREATURES,
 },
 
 {   // Book of Fire
@@ -331,10 +331,10 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Dreams
     SPELL_HIBERNATION,
     SPELL_PHASE_SHIFT,
-    SPELL_SHADOW_CREATURES,
     SPELL_SILENCE,
     SPELL_DARKNESS,
     SPELL_MASS_CONFUSION,
+    SPELL_SHADOW_CREATURES,
 },
 
 {   // Book of Alchemy
