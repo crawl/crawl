@@ -65,6 +65,14 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line,
         WARN_POP                                        \
     } while (false)
 
+#define ASSERT_LESS(x, xmax)                                                  \
+  do {                                                                        \
+    WARN_PUSH                                                                 \
+    IGNORE_ASSERT_WARNINGS                                                    \
+      if ((x) >= (xmax)) die("ASSERT failed: " #x " not less than " #xmax);   \
+    WARN_POP                                                                  \
+    } while (false)                                                           \
+
 #define ASSERT_RANGE(x, xmin, xmax)                                           \
     do {                                                                      \
         WARN_PUSH                                                             \
