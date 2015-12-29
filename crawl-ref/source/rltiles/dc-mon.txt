@@ -6,10 +6,6 @@ misc/error MONS_PROGRAM_BUG
 ### Larger tiles (32x48)
 %sdir mon/unique
 %rim 0
-
-# Antaeus is first because he has an even larger tile.
-antaeus MONS_ANTAEUS
-
 asmodeus MONS_ASMODEUS
 cerebov MONS_CEREBOV
 dispater MONS_DISPATER
@@ -17,6 +13,7 @@ ereshkigal MONS_ERESHKIGAL
 gloorx_vloq MONS_GLOORX_VLOQ
 lom_lobon MONS_LOM_LOBON
 mnoleg MONS_MNOLEG
+antaeus MONS_ANTAEUS
 lernaean_hydra01 MONS_LERNAEAN_HYDRA
 lernaean_hydra02
 lernaean_hydra03
@@ -36,10 +33,6 @@ serpent_of_hell-tar MONS_SERPENT_OF_HELL_TARTARUS
 seraph MONS_SERAPH
 %sdir mon/sprint
 unspeakable MONS_UNSPEAKABLE
-
-# Ice fiends have a slightly larger than normal tile right now.
-%sdir mon/demons
-ice_fiend MONS_ICE_FIEND
 
 ### Animals
 %sdir mon/animals
@@ -310,6 +303,7 @@ cacodemon MONS_CACODEMON
 executioner MONS_EXECUTIONER
 brimstone_fiend MONS_BRIMSTONE_FIEND
 green_death MONS_GREEN_DEATH
+ice_fiend MONS_ICE_FIEND
 hell_sentinel MONS_HELL_SENTINEL
 shadow_fiend MONS_SHADOW_FIEND
 %sdir mon/unique

@@ -473,7 +473,7 @@ function arena_sprint_get_monster_set(round, boss)
                     iron elemental / stone giant / iron giant",
                 "w:5 orb of fire / brimstone fiend / balrug / hellion /\
                     fire giant / sun demon / fire vortex",
-                "place:Nor:$ w:20 / ice fiend / blizzard demon / ice devil",
+                "place:Coc:$ w:20 / ice fiend / blizzard demon / ice devil",
                 "spriggan air mage / w:5 titan / w:5 electric golem / wind drake /\
                     air elemental / ball lightning / storm dragon",
                 "shadow fiend / reaper / shadow dragon / death drake /\
@@ -546,7 +546,7 @@ function arena_sprint_get_monster_set(round, boss)
                     iron elemental / stone giant / cacodemon",
                 "orb of fire / brimstone fiend / balrug / hellion /\
                     fire giant / sun demon",
-                "place:Nor:$ w:20 / ice fiend / blizzard demon / ice devil /\
+                "place:Coc:$ w:20 / ice fiend / blizzard demon / ice devil /\
                     white draconian",
                 "spriggan air mage / titan / electric golem / ball lightning /\
                     storm dragon",
@@ -748,7 +748,7 @@ function arena_sprint_init_boss_table()
     bs[6] = {"place:Dis:$", "dispater", "iron rune of zot"}
     bs[7] = {"place:Tar:$", "ereshkigal", "bone rune of zot"}
     bs[8] = {"place:Geh:$", "asmodeus", "obsidian rune of zot"}
-    bs[9] = {"place:Nor:$", "antaeus", "icy rune of zot"}
+    bs[9] = {"place:Coc:$", "antaeus", "icy rune of zot"}
     -- Pan sets are taken directly from pan.des
     bs[10] = {"small abomination / small abomination / large abomination / " ..
               "large abomination / neqoxec / neqoxec / cacodemon / " ..
