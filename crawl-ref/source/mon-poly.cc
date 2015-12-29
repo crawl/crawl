@@ -101,7 +101,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
 {
     const dungeon_feature_type current_tile = grd(mons->pos());
 
-    monster_type old_mclass = mons_base_type(mons);
+    monster_type old_mclass = mons->type;
 
     // Shapeshifters cannot polymorph into glowing shapeshifters or
     // vice versa.
@@ -141,10 +141,6 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || new_mclass == mons_species(old_mclass)
         // They act as separate polymorph classes on their own.
         || mons_class_is_zombified(new_mclass)
-        || mons_is_zombified(mons) && !mons_zombie_size(new_mclass)
-        // Currently unused (no zombie shapeshifters, no polymorph).
-        || mons->type == MONS_SKELETON && !mons_skeleton(new_mclass)
-        || mons->type == MONS_ZOMBIE && !mons_zombifiable(new_mclass)
 
         // These require manual setting of the ghost demon struct to
         // indicate their characteristics, which we currently aren't
@@ -336,7 +332,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->number       = 0;
 
     // Note: define_monster() will clear out all enchantments! - bwr
-    if (mons_is_zombified(mons))
+    if (!slimified && mons_is_zombified(mons))
         define_zombie(mons, targetc, mons->type);
     else
     {
