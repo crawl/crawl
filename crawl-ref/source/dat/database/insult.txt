@@ -392,8 +392,6 @@ mangled
 
 mewling
 
-naughty
-
 obnoxious
 
 odious
@@ -489,8 +487,6 @@ mooning
 
 painted
 
-present-wrapping
-
 lily-hearted
 
 dandy
@@ -510,8 +506,6 @@ shaky
 prissy
 
 underdone
-
-workshop chattel
 %%%%
 ##########################################################
 # adjective1, Felid special
@@ -702,8 +696,6 @@ nut-hook
 onion-eyed
 
 pigeon-egg
-
-red-nosed
 
 roguish
 
@@ -1017,8 +1009,6 @@ gnoll-tail
 
 gonus
 
-grinch
-
 gudgeon
 
 guttersnipe
@@ -1296,8 +1286,6 @@ creepsneak
 ##########################################################
 insult centaur noun
 
-cloven-toed
-
 crock
 
 donkey
@@ -1335,8 +1323,6 @@ brisket
 
 bull-brain
 
-cloven-toed
-
 cud-chewer
 
 calf-wit
@@ -1356,8 +1342,6 @@ meatloaf
 meatball
 
 mooer
-
-rare
 
 rump-roast
 

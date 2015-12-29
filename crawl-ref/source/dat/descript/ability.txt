@@ -87,7 +87,7 @@ cost in terms of magic or hunger.
 %%%%
 Stop Singing ability
 
-Stop singing your Sleighing Song.
+Stops singing your Song of Slaying.
 %%%%
 Self-Restoration ability
 

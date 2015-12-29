@@ -2310,7 +2310,7 @@ ENDMAP
 # Fire demons vs. ice demons
 NAME:   minmay_fire_ice_demons
 TAGS:   no_monster_gen
-DEPTH:  D:4-, Depths, Nor, Geh
+DEPTH:  D:4-, Depths, Coc, Geh
 : if you.absdepth() > 24 then
 MONS:   brimstone fiend
 MONS:   ice fiend
@@ -2344,7 +2344,7 @@ SUBST:  4 = .
 SUBST:  5 = .
 SUBST:  6 = .
 : end
-: if you.in_branch("Nor") or you.in_branch("Geh") then
+: if you.in_branch("Coc") or you.in_branch("Geh") then
 SUBST:  | = .
 : else
 SUBST:  > = .
@@ -2591,7 +2591,7 @@ ENDMAP
 # Another Ice Statue vault
 NAME:  ice2_lemuel
 TAGS:  no_pool_fixup no_monster_gen
-DEPTH: D:12-, Depths, !Depths:$, Lair, Nor, !Nor:$
+DEPTH: D:12-, Depths, !Depths:$, Lair, Coc, !Coc:$
 KMONS: 1 = ice statue
 KMONS: 2 = white imp / ice beast w:30 / polar bear / nothing w:50
 KMONS: 3 = ice devil / ice dragon / freezing wraith
@@ -2601,7 +2601,7 @@ KFEAT: 1 = >
 SUBST:  3 = 4, 2 = 223
 NSUBST: | = 1:1 / *:|
 : end
-: if you.in_branch("North Pole") then
+: if you.in_branch("Cocytus") then
 SUBST: | = .
 : else
 SUBST: | = ||****%%%%
@@ -3682,8 +3682,8 @@ ENDMAP
 NAME:    hangedman_feature_mirror
 TAGS:    transparent extra allow_dup no_monster_gen
 TAGS:    no_item_gen no_trap_gen no_pool_fixup patrolling
-DEPTH:   D, Depths, Orc, Elf, Crypt, Snake, Shoals, Geh, Nor, Dis, Tar, Zot
-WEIGHT:  10 (D), 1 (Geh, Nor, Dis, Tar, Zot), 4
+DEPTH:   D, Depths, Orc, Elf, Crypt, Snake, Shoals, Geh, Coc, Dis, Tar, Zot
+WEIGHT:  10 (D), 1 (Geh, Coc, Dis, Tar, Zot), 4
 KFEAT:   A = stone_arch
 KFEAT:   D = any shop
 KFEAT:   ^ : known teleport trap / known shaft trap
@@ -3701,7 +3701,7 @@ MARKER:  A = lua:props_marker { portal=1 }
 :    end
 : elseif you.in_branch("Orc") then
 SUBST:   G = I, t23 = 1:9 I:1
-: elseif you.in_branch("Geh") or you.in_branch("Nor")
+: elseif you.in_branch("Geh") or you.in_branch("Coc")
 : or you.in_branch("Dis") or you.in_branch("Tar") then
 SUBST:   DTV : Y:9 ^:1, t123 : G:9 ^:1, b : c
 : elseif you.in_branch("Crypt") then
@@ -5522,7 +5522,7 @@ ENDMAP
 # a real dedication here has to step it up a little.
 NAME:    hangedman_mysterious_dungeon_monster_house
 TAGS:    no_monster_gen no_item_gen no_trap_gen no_pool_fixup allow_dup luniq
-DEPTH:   Geh:2-, !Geh:$, Nor:2-, !Nor:$, Tar:2-, !Tar:$, Dis:2-, !Dis:$
+DEPTH:   Geh:2-, !Geh:$, Coc:2-, !Coc:$, Tar:2-, !Tar:$, Dis:2-, !Dis:$
 WEIGHT:  5
 # Specific allotment of monsters, terrain, and items for this small box.
 # Monsters are in three tiers: generic undead, specific fodder, bosses.
@@ -5549,8 +5549,8 @@ MARKER:  F = lua:fog_machine {cloud_type = "flame", \
 SUBST:   ~ = l
 FTILE:   F = floor_volcanic
 COLOUR:  F = lightred
-: elseif you.in_branch("Nor") then
-KMONS:   9 = ice devil / blue devil w:5 / ice dragon / simulacrum w:5 / \
+: elseif you.in_branch("Coc") then
+KMONS:   9 = ice devil w:15 / ice dragon / simulacrum w:5 / \
              skeletal warrior ; hunting sling ego:freezing ident:type . \
              mundane sling bullet . mace ego:freezing ident:type
 KMONS:   8 = blizzard demon / lich / shard shrike / \
@@ -6039,7 +6039,7 @@ ENDMAP
 NAME:   door_vault
 TAGS:   allow_dup
 WEIGHT: 1 (Vaults), 10
-DEPTH:  D:$, Depths, Elf, Vaults, Crypt, Dis, Geh, Tar, Nor, Zot
+DEPTH:  D:$, Depths, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { stop_explore="strange structure made of doors" }
 KFEAT:  X = +
@@ -6061,15 +6061,15 @@ KMONS:  8 = brimstone fiend / w:5 hell sentinel / hellion / balrug / \
 : elseif you.in_branch("Tar") then
 KMONS:  8 = w:15 shadow fiend / reaper / w:5 soul eater / shadow dragon / lich / \
             ancient lich / w:5 revenant / w:15 place:Tar
-: elseif you.in_branch("Nor") then
+: elseif you.in_branch("Coc") then
 KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \
-            w:5 simulacrum / place:Nor
+            w:5 simulacrum / place:Coc
 : elseif you.in_branch("Zot") then
 KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / killer klown / \
             death cob / w:5 curse toe / w:5 ancient lich
 : end
 : if you.in_branch("Geh") or you.in_branch("Tar")
-:  or you.in_branch("Nor") or you.in_branch("Dis") then
+:  or you.in_branch("Coc") or you.in_branch("Dis") then
 KFEAT:  9 = >
 : else
 KITEM:  9 = *
@@ -6259,9 +6259,9 @@ NAME: special_room
 TAGS: allow_dup luniq no_item_gen ruin_spider ruin_slime
 TAGS: no_monster_gen layout_rooms layout_corridors layout_passages
 TAGS: layout_narrow_caves layout_open_caves
-CHANCE: 0.5% (Slime), 1% (Geh, Nor, Dis, Tar), 2% (Orc, Spider), 3%
+CHANCE: 0.5% (Slime), 1% (Geh, Coc, Dis, Tar), 2% (Orc, Spider), 3%
 DEPTH: D:8-, Depths, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
-       Geh, !Geh:$, Nor, !Nor:$, Dis, !Dis:$, Geh, !Geh:$
+       Geh, !Geh:$, Coc, !Coc:$, Dis, !Dis:$, Geh, !Geh:$
 {{
     -- An incredibly ugly kludge to avoid duplicating the list of valid
     -- branches/depths (and causing mysterious errors if it's not up to date).

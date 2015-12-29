@@ -9,7 +9,7 @@ function init_ice(e)
   e.tags('mini_float')
   e.tags('transparent')
   e.weight('2')
-  if you.in_branch("Nor") then
+  if you.in_branch("Coc") then
     e.kmons('.- = simulacrum w:30 / \
                   ice fiend w:1 / blizzard demon w:5 / ice devil w:20 / \
                   white imp / ice beast w:20 / \
@@ -30,7 +30,7 @@ function init_ice(e)
   e.kfeat(".-! = floor")
 
   local cloud_type = "thin mist"
-  if you.in_branch("Nor") then
+  if you.in_branch("Coc") then
     cloud_type = "freezing vapour"
   end
   e.lua_marker("!", fog_machine { cloud_type = cloud_type, pow_max = 15,
@@ -40,9 +40,9 @@ end
 }}
 
 NAME:   serial_ice
-DEPTH:  D:8-, Nor
+DEPTH:  D:8-, Coc
 TAGS:   extra luniq_serial allow_dup nolayout_encompass
-CHANCE: 1% (D), 3% (Nor)
+CHANCE: 1% (D), 3% (Coc)
 {{
   local c = 4 + crawl.random2(3) * crawl.random2(4)
   local ice_cave = 0
