@@ -1107,7 +1107,7 @@ ShopInfo &LevelStashes::get_shop(const coord_def& c)
             return shop;
 
     ShopInfo si(c);
-    si.set_name(shop_name(c));
+    si.set_name(shop_name(*shop_at(c)));
     m_shops.push_back(si);
     return get_shop(c);
 }
