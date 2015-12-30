@@ -2043,7 +2043,7 @@ int mons_avg_hp(monster_type mc)
         && mons_species(mc) == MONS_DEMONSPAWN)
     {
         const monsterentry* mbase = get_monster_data(MONS_DEMONSPAWN);
-        return (mbase->avg_hp_10x * 3 + me->avg_hp_10x * 2) / 20;
+        return mbase->avg_hp_10x + me->avg_hp_10x;
     }
 
     return me->avg_hp_10x / 10;
@@ -2075,8 +2075,7 @@ int mons_max_hp(monster_type mc, monster_type mbase_type)
         const monsterentry* mbase =
             get_monster_data(mbase_type != MONS_NO_MONSTER ? mbase_type
                                                            : MONS_DEMONSPAWN);
-        return (mbase->avg_hp_10x * 3 + me->avg_hp_10x * 2)
-                * 133 / 2000;
+        return (mbase->avg_hp_10x + me->avg_hp_10x) * 133 / 1000;
     }
 
     return me->avg_hp_10x * 133 / 1000;
@@ -2874,11 +2873,7 @@ void define_monster(monster* mons)
                   : mons->base_monster;
 
         const monsterentry* mbase = get_monster_data(monbase);
-        // classed demonspawn have 50% more HD, so the base avg hp is also
-        // multiplied by 3/2 (legacy)
-        hp = hit_points(div_rand_round(mbase->avg_hp_10x * 3
-                                       + m->avg_hp_10x * 2,
-                                       2));
+        hp = hit_points(mbase->avg_hp_10x + m->avg_hp_10x);
     }
 
     if (col == COLOUR_UNDEF) // but never give out darkgrey to monsters
