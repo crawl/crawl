@@ -537,8 +537,8 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
     // dice and maximum hit points as they are.
     if (!only_mutate)
     {
-        xl = stats->hpdice[0];
-        max_hp = hit_points(xl, stats->hpdice[1], stats->hpdice[2]);
+        xl = stats->HD;
+        max_hp = hit_points(stats->avg_hp_10x);
     }
 
     const attack_type att_types[] =

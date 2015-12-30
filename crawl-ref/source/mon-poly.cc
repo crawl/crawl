@@ -501,7 +501,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
         {
             const monsterentry *me = get_monster_data(mc);
-            int delta = (int) me->hpdice[0] - mons->get_hit_dice();
+            const int delta = me->HD - mons->get_hit_dice();
             if (delta != 1)
                 continue;
             if (!_valid_morph(mons, mc))

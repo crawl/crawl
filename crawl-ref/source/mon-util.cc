@@ -1991,18 +1991,28 @@ bool mons_class_res_wind(monster_type mc)
     return get_resist(get_mons_class_resists(mc), MR_RES_WIND);
 }
 
-// This nice routine we keep in exactly the way it was.
-int hit_points(int hit_dice, int min_hp, int rand_hp)
+/**
+ * Given an average max HP value for a given monster type, what should a given
+ * monster have?
+ *
+ * @param avg_hp    The mean hp.
+ * @param scale     A scale that the input avg_hp are multiplied by.
+ * @return          A max HP value; no more than +-33% from the given average,
+ *                  and within about +-10% of the average 95% of the time.
+ *                  This value is not multiplied by the scale - it's an actual
+ *                  hp value, regardless of the scale on the input.
+ *                  If avg_hp is nonzero, always returns at least 1.
+ */
+int hit_points(int avg_hp, int scale)
 {
-    int hrolled = 0;
+    if (!avg_hp)
+        return 0;
 
-    for (int hroll = 0; hroll < hit_dice; ++hroll)
-    {
-        hrolled += random2(1 + rand_hp);
-        hrolled += min_hp;
-    }
-
-    return hrolled;
+    const int min_perc = 33;
+    const int hp_variance = div_rand_round(avg_hp * min_perc, 100);
+    const int min_hp = avg_hp - hp_variance;
+    const int hp = min_hp + random2avg(hp_variance * 2, 8);
+    return max(1, div_rand_round(hp, scale));
 }
 
 // This function returns the standard number of hit dice for a type of
@@ -2010,12 +2020,17 @@ int hit_points(int hit_dice, int min_hp, int rand_hp)
 int mons_class_hit_dice(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
-    return me ? me->hpdice[0] : 0;
+    return me ? me->HD : 0;
 }
 
+/**
+ * What's the average hp for a given type of monster?
+ *
+ * @param mc        The type of monster in question.
+ * @return          The average hp for that monster; rounds down.
+ */
 int mons_avg_hp(monster_type mc)
 {
-    // Currently, difficulty is defined as "average hp". Leaks too much info?
     const monsterentry* me = get_monster_data(mc);
 
     if (!me)
@@ -2028,14 +2043,43 @@ int mons_avg_hp(monster_type mc)
         && mons_species(mc) == MONS_DEMONSPAWN)
     {
         const monsterentry* mbase = get_monster_data(MONS_DEMONSPAWN);
-        return me->hpdice[0] *
-               (2 * (me->hpdice[1] + mbase->hpdice[1])
-                + me->hpdice[2] + mbase->hpdice[2])
-               / 2;
+        return (mbase->avg_hp_10x * 3 + me->avg_hp_10x * 2) / 20;
     }
 
-    // [ds] XXX: Use monster experience value as a better indicator of diff.?
-    return me->hpdice[0] * (2 * me->hpdice[1] + me->hpdice[2]) / 2;
+    return me->avg_hp_10x / 10;
+}
+
+/**
+ * What's the maximum hp for a given type of monster?
+ *
+ * @param mc        The type of monster in question.
+ * @param mbase     The type of the base monster, if applicable (for classed
+ *                  monsters).
+ * @return          The maximum hp for that monster; rounds down.
+ */
+int mons_max_hp(monster_type mc, monster_type mbase_type)
+{
+    const monsterentry* me = get_monster_data(mc);
+
+    if (!me)
+        return 0;
+
+    // TODO: merge the 133% with their use in hit_points()
+
+    // Hack for nonbase demonspawn: pretend it's a basic demonspawn with
+    // a job.
+    if (mons_is_demonspawn(mc)
+        && mc != MONS_DEMONSPAWN
+        && mons_species(mc) == MONS_DEMONSPAWN)
+    {
+        const monsterentry* mbase =
+            get_monster_data(mbase_type != MONS_NO_MONSTER ? mbase_type
+                                                           : MONS_DEMONSPAWN);
+        return (mbase->avg_hp_10x * 3 + me->avg_hp_10x * 2)
+                * 133 / 2000;
+    }
+
+    return me->avg_hp_10x * 133 / 1000;
 }
 
 int exper_value(const monster* mon, bool real)
@@ -2067,8 +2111,8 @@ int exper_value(const monster* mon, bool real)
         // this is hardly ever a leak. Only Pan lords are unknown in the
         // general.
         if (m->mc == MONS_PANDEMONIUM_LORD)
-            hd = m->hpdice[0];
-        maxhp = hd * m->hpdice[1] + (hd * (1 + m->hpdice[2])) / 2;
+            hd = m->HD;
+        maxhp = mons_max_hp(mc);
     }
 
     // Hacks to make merged slime creatures not worth so much exp. We
@@ -2716,7 +2760,7 @@ bool init_abomination(monster* mon, int hd)
     mon->set_hit_dice(min(max_hd, hd));
 
     const monsterentry *m = get_monster_data(mon->type);
-    int hp = hit_points(hd, m->hpdice[1], m->hpdice[2]);
+    const int hp = hit_points(div_rand_round(hd * m->avg_hp_10x, m->HD));
 
     mon->max_hit_points = hp;
     mon->hit_points     = hp;
@@ -2830,9 +2874,11 @@ void define_monster(monster* mons)
                   : mons->base_monster;
 
         const monsterentry* mbase = get_monster_data(monbase);
-        hp     = hit_points(hd,
-                            mbase->hpdice[1] + m->hpdice[1],
-                            mbase->hpdice[2] + m->hpdice[2]);
+        // classed demonspawn have 50% more HD, so the base avg hp is also
+        // multiplied by 3/2 (legacy)
+        hp = hit_points(div_rand_round(mbase->avg_hp_10x * 3
+                                       + m->avg_hp_10x * 2,
+                                       2));
     }
 
     if (col == COLOUR_UNDEF) // but never give out darkgrey to monsters
@@ -2840,7 +2886,7 @@ void define_monster(monster* mons)
 
     // Some calculations.
     if (hp == 0)
-        hp = hit_points(hd, m->hpdice[1], m->hpdice[2]);
+        hp = hit_points(m->avg_hp_10x);
     const int hp_max = hp;
 
     // So let it be written, so let it be done.
@@ -4892,7 +4938,7 @@ void debug_mondata()
 
         int MR = md->resist_magic;
         if (MR < 0)
-            MR = md->hpdice[0] * -MR * 4 / 3;
+            MR = md->HD * -MR * 4 / 3;
         if (md->resist_magic > 200 && md->resist_magic != MAG_IMMUNE)
             fails += make_stringf("%s has MR %d > 200\n", name, MR);
         if (get_resist(md->resists, MR_RES_POISON) == 2)
@@ -4904,8 +4950,10 @@ void debug_mondata()
         if (md->bitfields & M_CANT_SPAWN)
             continue;
 
-        if (!md->hpdice[0] && md->basechar != 'Z') // derived undead...
-            fails += make_stringf("%s has 0 HD: %d\n", name, md->hpdice[0]);
+        if (!md->HD && md->basechar != 'Z') // derived undead...
+            fails += make_stringf("%s has 0 HD: %d\n", name, md->HD);
+        if (md->avg_hp_10x <= 0 && md->basechar != 'Z')
+            fails += make_stringf("%s has <= 0 HP: %d", name, md->avg_hp_10x);
 
         if (md->basechar == ' ')
             fails += make_stringf("%s has an empty glyph\n", name);
