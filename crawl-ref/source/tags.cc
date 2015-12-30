@@ -2006,6 +2006,97 @@ static void unmarshall_level_vault_data(reader &th)
     unmarshall_level_vault_placements(th);
 }
 
+static void marshall_shop(writer &th, const shop_struct& shop)
+{
+    marshallByte(th, shop.type);
+    marshallByte(th, shop.keeper_name[0]);
+    marshallByte(th, shop.keeper_name[1]);
+    marshallByte(th, shop.keeper_name[2]);
+    marshallByte(th, shop.pos.x);
+    marshallByte(th, shop.pos.y);
+    marshallByte(th, shop.greed);
+    marshallByte(th, shop.level);
+    marshallString(th, shop.shop_name);
+    marshallString(th, shop.shop_type_name);
+    marshallString(th, shop.shop_suffix_name);
+    marshall_iterator(th, shop.stock.begin(), shop.stock.end(),
+                          bind(marshallItem, placeholders::_1, placeholders::_2, false));
+}
+
+static void unmarshall_shop(reader &th, shop_struct& shop)
+{
+    shop.type  = static_cast<shop_type>(unmarshallByte(th));
+#if TAG_MAJOR_VERSION == 34
+    if (shop.type == SHOP_UNASSIGNED)
+        return;
+    if (th.getMinorVersion() < TAG_MINOR_MISC_SHOP_CHANGE
+        && shop.type == NUM_SHOPS)
+    {
+        // This was SHOP_MISCELLANY, which is now part of SHOP_EVOKABLES.
+        shop.type = SHOP_EVOKABLES;
+    }
+#else
+    ASSERT(shop.type != SHOP_UNASSIGNED);
+#endif
+    shop.keeper_name[0] = unmarshallUByte(th);
+    shop.keeper_name[1] = unmarshallUByte(th);
+    shop.keeper_name[2] = unmarshallUByte(th);
+    shop.pos.x = unmarshallByte(th);
+    shop.pos.y = unmarshallByte(th);
+    shop.greed = unmarshallByte(th);
+    shop.level = unmarshallByte(th);
+    shop.shop_name = unmarshallString(th);
+    shop.shop_type_name = unmarshallString(th);
+    shop.shop_suffix_name = unmarshallString(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_SHOP_HACK)
+        shop.stock.clear();
+    else
+#endif
+    unmarshall_vector(th, shop.stock, [] (reader& r) -> item_def
+                                      {
+                                          item_def ret;
+                                          unmarshallItem(r, ret);
+                                          return ret;
+                                      });
+}
+
+void ShopInfo::save(writer& outf) const
+{
+    marshall_shop(outf, shop);
+}
+
+void ShopInfo::load(reader& inf)
+{
+#if TAG_MAJOR_VERSION == 34
+    if (inf.getMinorVersion() < TAG_MINOR_SHOPINFO)
+    {
+        shop.type = static_cast<shop_type>(unmarshallShort(inf));
+
+        shop.pos.x = unmarshallShort(inf);
+        shop.pos.x &= 0xFF;
+
+        shop.pos.y = unmarshallShort(inf);
+
+        int itemcount = unmarshallShort(inf);
+
+        // xref hack in shopping.cc:shop_name()
+        shop.shop_name = " ";
+        unmarshallString4(inf, shop.shop_type_name);
+        for (int i = 0; i < itemcount; ++i)
+        {
+            shop.stock.emplace_back();
+            unmarshallItem(inf, shop.stock.back());
+            int cost = unmarshallShort(inf);
+            shop.greed = cost * 10 / item_value(shop.stock.back(),
+                shoptype_identifies_stock(shop.type));
+        }
+    }
+    else
+#endif
+    unmarshall_shop(inf, shop);
+}
+
 static void tag_construct_lost_monsters(writer &th)
 {
     marshallMap(th, the_lost_ones, marshall_level_id,
@@ -3839,22 +3930,7 @@ static void tag_construct_level(writer &th)
     // how many shops?
     marshallShort(th, env.shop.size());
     for (const auto& entry : env.shop)
-    {
-        const shop_struct& shop = entry.second;
-        marshallByte(th, shop.type);
-        marshallByte(th, shop.keeper_name[0]);
-        marshallByte(th, shop.keeper_name[1]);
-        marshallByte(th, shop.keeper_name[2]);
-        marshallByte(th, shop.pos.x);
-        marshallByte(th, shop.pos.y);
-        marshallByte(th, shop.greed);
-        marshallByte(th, shop.level);
-        marshallString(th, shop.shop_name);
-        marshallString(th, shop.shop_type_name);
-        marshallString(th, shop.shop_suffix_name);
-        marshall_iterator(th, shop.stock.begin(), shop.stock.end(),
-                              bind(marshallItem, placeholders::_1, placeholders::_2, false));
-    }
+        marshall_shop(th, entry.second);
 
     CANARY;
 
@@ -5327,41 +5403,12 @@ static void tag_read_level(reader &th)
     shop_struct shop;
     for (int i = 0; i < num_shops; i++)
     {
-        shop.type  = static_cast<shop_type>(unmarshallByte(th));
-#if TAG_MAJOR_VERSION == 34
+        unmarshall_shop(th, shop);
         if (shop.type == SHOP_UNASSIGNED)
             continue;
-        shop.num = i;
-        if (th.getMinorVersion() < TAG_MINOR_MISC_SHOP_CHANGE
-            && shop.type == NUM_SHOPS)
-        {
-            // This was SHOP_MISCELLANY, which is now part of SHOP_EVOKABLES.
-            shop.type = SHOP_EVOKABLES;
-        }
-#else
-        ASSERT(shop.type != SHOP_UNASSIGNED);
-#endif
-        shop.keeper_name[0] = unmarshallUByte(th);
-        shop.keeper_name[1] = unmarshallUByte(th);
-        shop.keeper_name[2] = unmarshallUByte(th);
-        shop.pos.x = unmarshallByte(th);
-        shop.pos.y = unmarshallByte(th);
-        shop.greed = unmarshallByte(th);
-        shop.level = unmarshallByte(th);
-        shop.shop_name = unmarshallString(th);
-        shop.shop_type_name = unmarshallString(th);
-        shop.shop_suffix_name = unmarshallString(th);
 #if TAG_MAJOR_VERSION == 34
-        if (th.getMinorVersion() < TAG_MINOR_SHOP_HACK)
-            shop.stock.clear();
-        else
+        shop.num = i;
 #endif
-        unmarshall_vector(th, shop.stock, [] (reader& r) -> item_def
-                                          {
-                                              item_def ret;
-                                              unmarshallItem(r, ret);
-                                              return ret;
-                                          });
         env.shop[shop.pos] = shop;
     }
 

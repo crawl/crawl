@@ -18,7 +18,9 @@ int item_price(const item_def& item, const shop_struct& shop);
 // curse scrolls are worthless for everyone, most potions aren't worthless
 // for mummies, etcetera.
 bool is_worthless_consumable(const item_def &item);
+
 void shop();
+void shop(shop_struct& shop);
 
 shop_struct *shop_at(const coord_def& where);
 

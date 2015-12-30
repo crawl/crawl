@@ -1193,8 +1193,6 @@ static shopping_order operator++(shopping_order &x)
     return x;
 }
 
-// Have to declare it separately from definitions so a circular dependency with
-// ShopEntry is possible.
 class ShopMenu : public InvMenu
 {
     friend class ShopEntry;
@@ -1202,6 +1200,7 @@ class ShopMenu : public InvMenu
     shop_struct& shop;
     bool looking = false;
     shopping_order order = ORDER_DEFAULT;
+    bool long_distance;
 
     int selected_cost() const;
 
@@ -1218,7 +1217,7 @@ class ShopMenu : public InvMenu
 public:
     bool bought_something = false;
 
-    ShopMenu(shop_struct& _shop);
+    ShopMenu(shop_struct& _shop, bool _long_distance = false);
 };
 
 class ShopEntry : public InvEntry
@@ -1278,11 +1277,15 @@ public:
     }
 };
 
-ShopMenu::ShopMenu(shop_struct& _shop)
+ShopMenu::ShopMenu(shop_struct& _shop, bool _long_distance)
     : InvMenu(MF_MULTISELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
                | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING),
-      shop(_shop)
+      shop(_shop),
+      long_distance(_long_distance)
 {
+    if (long_distance)
+        looking = true;
+
     set_tag("shop");
 
     menu_letter ckey = 'a';
@@ -1321,16 +1324,20 @@ void ShopMenu::update_help()
         //               "/R-Click"
         "[<w>Esc</w>] exit          "
 #endif
-        "[<w>!</w>] %s items  [%s] %s\n"
-        "[<w>/</w>] sort (%s)%s  [<w>Enter</w>] make purchase  [%s] put item on shopping list",
+        "%s  [%s] %s\n"
+        "[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list",
         you.gold,
         you.gold == 1 ? "" : "s",
-        looking ? "<w>examine</w>|buy" : "examine|<w>buy</w>",
+        long_distance ? " " " "  "  " "       "  "          " :
+        looking ?       "[<w>!</w>] <w>examine</w>|buy items" :
+                        "[<w>!</w>] examine|<w>buy</w> items",
         _hyphenated_letters(item_count(), 'a').c_str(),
         looking ? "examine item" : "select item for purchase",
         shopping_order_names[order],
         // strwidth("default")
         string(7 - strwidth(shopping_order_names[order]), ' ').c_str(),
+        long_distance ? " " "     "  "               " :
+                        "[<w>Enter</w>] make purchase",
         _hyphenated_letters(item_count(), 'A').c_str())));
 }
 
@@ -1477,14 +1484,18 @@ bool ShopMenu::process_key(int keyin)
     {
     case '!':
     case '?':
-        looking = !looking;
-        update_help();
-        draw_menu();
+        if (!long_distance)
+        {
+            looking = !looking;
+            update_help();
+            draw_menu();
+        }
         return true;
     case ' ':
     case CK_MOUSE_CLICK:
     case CK_ENTER:
-        purchase_selected();
+        if (!long_distance)
+            purchase_selected();
         return true;
     case '$':
     {
@@ -1588,16 +1599,12 @@ void shop()
     ShopMenu menu(shop);
     menu.show();
 
-    bool any_on_list = false;
-    ShopInfo &si = StashTrack.get_shop(shop.pos);
-    si.reset();
-    for (const auto& item : shop.stock)
-    {
-        const int cost = item_price(item, shop);
-        si.add_item(item, cost);
-
-        any_on_list |= shopping_list.is_on_list(item);
-    }
+    StashTrack.get_shop(shop.pos) = ShopInfo(shop);
+    bool any_on_list = any_of(begin(shop.stock), end(shop.stock),
+                              [](const item_def& item)
+                              {
+                                  return shopping_list.is_on_list(item);
+                              });
 
     // If the shop is now empty, erase it from the overview.
     if (shop.stock.empty())
@@ -1607,6 +1614,11 @@ void shop()
         mprf("Thank you for shopping at %s!", shopname.c_str());
     if (any_on_list)
         mpr("You can access your shopping list by pressing '$'.");
+}
+
+void shop(shop_struct& shop)
+{
+    ShopMenu(shop, true).show();
 }
 
 void destroy_shop_at(coord_def p)
@@ -1686,6 +1698,11 @@ string shop_name(const shop_struct& shop)
 
     string sh_name = "";
 
+#if TAG_MAJOR_VERSION == 34
+    // xref ShopInfo::load
+    if (shop.shop_name == " ")
+        return shop.shop_type_name;
+#endif
     if (!shop.shop_name.empty())
         sh_name += apostrophise(shop.shop_name) + " ";
     else
@@ -1782,7 +1799,6 @@ void list_shop_types()
 ////////////////////////////////////////////////////////////////////////
 
 // TODO:
-//   * Let shopping list be modified from with the stash lister.
 //   * Warn if buying something not on the shopping list would put
 //     something on shopping list out of your reach.
 
