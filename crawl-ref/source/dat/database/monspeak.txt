@@ -825,12 +825,6 @@ VISUAL:@The_monster@ smiles happily.
 %%%%
 _friendly_humanoid_rare_
 
-@The_monster@ says, "I will never give you up."
-
-@The_monster@ says, "I will never let you down."
-
-@The_monster@ says, "I will never run around and desert you."
-
 VISUAL:@The_monster@ looks friendly.
 ## END friendly humanoid ##
 %%%%
