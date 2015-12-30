@@ -351,7 +351,7 @@ spret_type cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool f
                                 MG_AUTOFOE | MG_DONT_CAP, god);
 
     if (caster->is_player())
-        mdata.hd = get_monster_data(type)->hpdice[0] +  hd_bonus;
+        mdata.hd = get_monster_data(type)->HD +  hd_bonus;
 
     bool seen = false;
     bool first = true;
@@ -668,7 +668,7 @@ spret_type cast_summon_mana_viper(int pow, god_type god, bool fail)
     viper.hd = (5 + div_rand_round(pow, 12));
 
     // Don't scale hp at the same time as their antimagic power
-    viper.hp = hit_points(9, 3, 5);
+    viper.hp = hit_points(495); // avg 50
 
     if (create_monster(viper))
         mpr("A mana viper appears with a sibilant hiss.");

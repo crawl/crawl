@@ -92,11 +92,8 @@ static const monster_level_up *_monster_level_up_target(monster_type type,
         if (mlup.before == type)
         {
             const monsterentry *me = get_monster_data(mlup.after);
-            if (static_cast<int>(me->hpdice[0]) == hit_dice
-                && x_chance_in_y(mlup.chance, 1000))
-            {
+            if (me->HD == hit_dice && x_chance_in_y(mlup.chance, 1000))
                 return &mlup;
-            }
         }
     }
     return nullptr;
@@ -154,7 +151,7 @@ bool monster::level_up_change()
         base_monster = type;
         monster_type upgrade = resolve_monster_type(RANDOM_NONBASE_DRACONIAN,
                                                     type);
-        if (static_cast<int>(get_monster_data(upgrade)->hpdice[0]) == get_experience_level())
+        if (get_monster_data(upgrade)->HD == get_experience_level())
             upgrade_type(upgrade, false, true);
     }
     return false;

@@ -1432,7 +1432,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     if (mg.hd != 0)
     {
-        int bonus1 = 0, bonus2 = 0;
+        int bonus_hp = 0;
         if (mons_is_demonspawn(mg.cls)
             && mg.cls != MONS_DEMONSPAWN
             && mons_species(mg.cls) == MONS_DEMONSPAWN)
@@ -1440,14 +1440,14 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             // Nonbase demonspawn get bonuses from their base type.
             const monsterentry *mbase =
                 get_monster_data(draco_or_demonspawn_subspecies(mon));
-            bonus1 = mbase->hpdice[1];
-            bonus2 = mbase->hpdice[2];
+            bonus_hp = mbase->avg_hp_10x;
         }
         mon->set_hit_dice(mg.hd);
         // Re-roll HP.
-        int hp = hit_points(mg.hd, m_ent->hpdice[1] + bonus1,
-                                   m_ent->hpdice[2] + bonus2);
-        // But only for monsters with random HP.
+        const int base_avg_hp = m_ent->avg_hp_10x + bonus_hp;
+        const int new_avg_hp = div_rand_round(base_avg_hp * mg.hd, m_ent->HD);
+        const int hp = hit_points(new_avg_hp);
+        // But only for monsters with random HP. (XXX: should be everything?)
         if (hp > 0)
         {
             mon->max_hit_points = hp;
@@ -1937,20 +1937,20 @@ void roll_zombie_hp(monster* mon)
     switch (mon->type)
     {
     case MONS_ZOMBIE:
-        hp = hit_points(mon->get_hit_dice(), 6, 5);
+        hp = hit_points(mon->get_hit_dice() * 85);
         break;
 
     case MONS_SKELETON:
-        hp = hit_points(mon->get_hit_dice(), 5, 4);
+        hp = hit_points(mon->get_hit_dice() * 70);
         break;
 
     case MONS_SIMULACRUM:
         // Simulacra aren't tough, but you can create piles of them. - bwr
-        hp = hit_points(mon->get_hit_dice(), 1, 4);
+        hp = hit_points(mon->get_hit_dice() * 30);
         break;
 
     case MONS_SPECTRAL_THING:
-        hp = hit_points(mon->get_hit_dice(), 4, 4);
+        hp = hit_points(mon->get_hit_dice() * 60);
         break;
 
     default:

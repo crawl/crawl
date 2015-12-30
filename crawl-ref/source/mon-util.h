@@ -117,10 +117,7 @@ struct monsterentry
     monclass_flags_t bitfields;
     resists_t resists;
 
-    // [Obsolete] Experience used to be calculated like this:
-    // ((((max_hp / 7) + 1) * (mHD * mHD) + 1) * exp_mod) / 10
-    //     ^^^^^^ see below at hpdice
-    //   Note that this may make draining attacks less attractive (LRH)
+    // Multiplier for calculated monster XP value; see exper_value() for use.
     int8_t exp_mod;
 
     monster_type genus,         // "team" the monster plays for
@@ -133,13 +130,10 @@ struct monsterentry
     // max damage in a turn is total of these four?
     mon_attack_def attack[MAX_NUM_ATTACKS];
 
-    // hpdice[3]: [0]=HD [1]=min_hp [2]=rand_hp
-    // min hp = [0]*[1] & max hp = [0]*([1]+[2]))
-    // example: the Iron Golem, hpdice={15,7,4}
-    //      15*7 < hp < 15*(7+4),
-    //       105 < hp < 165
-    // hp will be around 135 each time.
-    unsigned       hpdice[3];
+    /// Similar to player level; used for misc purposes.
+    int HD;
+    /// Average hp; multiplied by 10 for precision.
+    int avg_hp_10x;
 
     int8_t AC; // armour class
     int8_t ev; // evasion
@@ -220,9 +214,10 @@ bool mons_is_job(monster_type mc);
 int mutant_beast_tier(int xl);
 
 int mons_avg_hp(monster_type mc);
+int mons_max_hp(monster_type mc, monster_type mbase_typeg = MONS_NO_MONSTER);
 int exper_value(const monster* mon, bool real = true);
 
-int hit_points(int hit_dice, int min_hp, int rand_hp);
+int hit_points(int avg_hp, int scale = 10);
 
 int mons_class_hit_dice(monster_type mc);
 

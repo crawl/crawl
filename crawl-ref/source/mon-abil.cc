@@ -328,7 +328,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
         if (merge_to->type == MONS_ABOMINATION_SMALL)
         {
             // Adding to an existing abomination.
-            const int hp_gain = hit_points(addhd, 2, 5);
+            const int hp_gain = hit_points(addhd * 45); // 4.5 avg hp/hd
             mhp = merge_to->max_hit_points + hp_gain;
             hp = merge_to->hit_points + hp_gain;
             hp += hp/10;
@@ -346,7 +346,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
         else
         {
             // Making a new abomination.
-            hp = mhp = hit_points(newhd, 2, 5);
+            hp = mhp = hit_points(newhd * 45); // 4.5 avg hp/hd
         }
     }
 
