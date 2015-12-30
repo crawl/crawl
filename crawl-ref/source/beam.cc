@@ -1048,14 +1048,15 @@ void bolt::affect_wall()
             finish_beam();
         return;
     }
-
-    if (flavour == BEAM_DIGGING)
-        digging_wall_effect();
-    else if (is_fiery() || flavour == BEAM_ELECTRICITY)
-        burn_wall_effect();
-    else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
-        destroy_wall_effect();
-
+    if (in_bounds(pos()))
+    {
+        if (flavour == BEAM_DIGGING)
+            digging_wall_effect();
+        else if (is_fiery() || flavour == BEAM_ELECTRICITY)
+            burn_wall_effect();
+        else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
+            destroy_wall_effect();
+    }
     if (cell_is_solid(pos()))
         finish_beam();
 }
