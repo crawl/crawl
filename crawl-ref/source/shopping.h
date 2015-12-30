@@ -24,7 +24,7 @@ shop_struct *shop_at(const coord_def& where);
 
 void destroy_shop_at(coord_def p);
 
-string shop_name(const coord_def& where, bool add_stop = false);
+string shop_name(const shop_struct& shop);
 string shop_type_name(shop_type type);
 
 bool shoptype_identifies_stock(shop_type type);
@@ -60,7 +60,7 @@ public:
     void del_things_from(const level_id &lid);
 
     void item_type_identified(object_class_type base_type, int sub_type);
-    unsigned int cull_identical_items(const item_def& item, int cost = -1);
+    bool cull_identical_items(const item_def& item, int cost = -1);
     void remove_dead_shops();
 
     void gold_changed(int old_amount, int new_amount);
