@@ -6133,9 +6133,8 @@ int player::evasion(ev_ignore_type evit, const actor* act) const
     return base_evasion - constrict_penalty - invis_penalty - stairs_penalty;
 }
 
-bool player::heal(int amount, bool max_too)
+bool player::heal(int amount)
 {
-    ASSERT(!max_too);
     ::inc_hp(amount);
     return true; /* TODO Check whether the player was healed. */
 }

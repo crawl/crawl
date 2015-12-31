@@ -3519,7 +3519,7 @@ static int _lugonu_warp_monster(monster* mon, int pow)
     {
         mprf("%s basks in the distortional energy.",
              mon->name(DESC_THE).c_str());
-        mon->heal(damage, false);
+        mon->heal(damage);
     }
     else
     {
