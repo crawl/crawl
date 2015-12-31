@@ -1336,7 +1336,7 @@ void ShopMenu::update_help()
 {
     set_more(formatted_string::parse_string(make_stringf(
         //You have 0 gold pieces.
-        //[Esc/R-Click] exit  [!] examine|buy items  [a-i] select item for purchase
+        //[Esc/R-Click] exit  [!] buy|examine items  [a-i] select item for purchase
         //[/] sort (default)  [Enter] make purchase  [A-I] put item on shopping list
         "<yellow>You have %d gold piece%s.</yellow>\n"
 #if defined(USE_TILE) && !defined(TOUCH_UI)
@@ -1350,8 +1350,8 @@ void ShopMenu::update_help()
         you.gold,
         you.gold == 1 ? "" : "s",
         long_distance ? " " " "  "  " "       "  "          " :
-        looking ?       "[<w>!</w>] <w>examine</w>|buy items" :
-                        "[<w>!</w>] examine|<w>buy</w> items",
+        looking ?       "[<w>!</w>] buy|<w>examine</w> items" :
+                        "[<w>!</w>] <w>buy</w>|examine items",
         _hyphenated_letters(item_count(), 'a').c_str(),
         looking ? "examine item" : "select item for purchase",
         shopping_order_names[order],
