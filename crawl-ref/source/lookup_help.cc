@@ -1048,14 +1048,6 @@ static int _describe_item(const string &key, const string &suffix,
                            string footer)
 {
     item_def item;
-    // spellbooks/rods are interactive & so require special handling
-    if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS)
-        || get_item_by_name(&item, key.c_str(), OBJ_RODS))
-    {
-        item_colour(item);
-        return _describe_spell_item(item);
-    }
-
     string stats;
     if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS)
         || get_item_by_name(&item, key.c_str(), OBJ_ARMOUR)
@@ -1064,6 +1056,13 @@ static int _describe_item(const string &key, const string &suffix,
     {
         // don't request description since _describe_key handles that
         stats = get_item_description(item, true, false, true);
+    }
+    // spellbooks/rods are interactive & so require special handling
+    else if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS)
+        || get_item_by_name(&item, key.c_str(), OBJ_RODS))
+    {
+        item_colour(item);
+        return _describe_spell_item(item);
     }
 
     return _describe_key(key, suffix, footer, stats);
