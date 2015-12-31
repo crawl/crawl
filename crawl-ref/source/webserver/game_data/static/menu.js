@@ -507,8 +507,9 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
             menu.items.length = menu.total_items;
             var container = $("ol");
             container.empty();
-            for (var i in menu.items)
-                container.append(menu.items[i].elem);
+            $.each(menu.items, function(i, item) {
+                container.append(item.elem);
+            });
         }
         update_title();
         $("#menu_more").html(util.formatted_string_to_html(menu.more));
