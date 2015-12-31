@@ -437,6 +437,23 @@ static void _recap_mon_keys(vector<string> &keys)
     }
 }
 
+/**
+ * Fixup spell names. (Correcting capitalization, mainly.)
+ *
+ * @param[in,out] keys      A lowercased list of spell names.
+ */
+static void _recap_spell_keys(vector<string> &keys)
+{
+    for (unsigned int i = 0, size = keys.size(); i < size; i++)
+    {
+        // first, strip " spell"
+        const string key_name = keys[i].substr(0, keys[i].length() - 6);
+        // then get the real name
+        keys[i] = make_stringf("%s spell",
+                               spell_title(spell_by_name(key_name)));
+    }
+}
+
 static void _recap_feat_keys(vector<string> &keys)
 {
     for (unsigned int i = 0, size = keys.size(); i < size; i++)
@@ -1227,7 +1244,7 @@ static const vector<LookupType> lookup_types = {
                _get_monster_keys, nullptr, nullptr,
                _describe_monster,
                lookup_type::SUPPORT_TILES | lookup_type::TOGGLEABLE_SORT),
-    LookupType('S', "spell", nullptr, _spell_filter,
+    LookupType('S', "spell", _recap_spell_keys, _spell_filter,
                nullptr, nullptr, _spell_menu_gen,
                _describe_spell,
                lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
