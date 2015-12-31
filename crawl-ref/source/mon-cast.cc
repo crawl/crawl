@@ -997,6 +997,17 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.pierce       = true;
         break;
 
+    case SPELL_ACID_CLOUD:
+        beam.name         = "blast of acidic fog";
+        beam.aux_source   = "blast of acidic breath";
+        beam.short_name   = "acidic fog";
+        beam.damage       = dice_def(1, 3 * mons->get_hit_dice() / 2);
+        beam.colour       = YELLOW;
+        beam.hit          = 30;
+        beam.flavour      = BEAM_ACID;
+        beam.pierce       = true;
+        break;
+
     case SPELL_THROW_BARBS:
         beam.name        = "volley of spikes";
         beam.aux_source  = "volley of spikes";

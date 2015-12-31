@@ -1792,6 +1792,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_ACID_CRAB,
+      {
+       { SPELL_ACID_CLOUD, 62, MON_SPELL_NATURAL },
+      }
+    },
+
     {  MST_APOCALYPSE_CRAB,
       {
        { SPELL_CHAOS_BREATH, 62, MON_SPELL_NATURAL },

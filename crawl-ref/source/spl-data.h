@@ -3741,6 +3741,18 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ACID_CLOUD, "Acid Cloud",
+    SPTYP_CONJURATION,
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_MONSTER
+        | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
+    5,
+    0,
+    5, 5,
+    5, 0,
+    nullptr,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

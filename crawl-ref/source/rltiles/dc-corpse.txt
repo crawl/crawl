@@ -78,6 +78,7 @@ snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
 fire_crab CORPSE_FIRE_CRAB
 ghost_crab CORPSE_GHOST_CRAB
+acid_crab CORPSE_ACID_CRAB
 %sdir mon/abyss
 apocalypse_crab CORPSE_APOCALYPSE_CRAB
 %sdir mon/animals

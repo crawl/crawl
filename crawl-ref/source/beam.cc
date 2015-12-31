@@ -2534,6 +2534,9 @@ cloud_type bolt::get_cloud_type() const
     if (origin_spell == SPELL_FLAMING_CLOUD)
         return CLOUD_FIRE;
 
+    if (origin_spell == SPELL_ACID_CLOUD)
+        return CLOUD_ACID;
+
     if (origin_spell == SPELL_CHAOS_BREATH)
         return CLOUD_CHAOS;
 
@@ -2886,6 +2889,9 @@ void bolt::affect_place_clouds()
 
     if (origin_spell == SPELL_FLAMING_CLOUD)
         place_cloud(CLOUD_FIRE, p, random2(4) + 2, agent());
+
+    if (origin_spell == SPELL_ACID_CLOUD)
+        place_cloud(CLOUD_ACID, p, random2(4) + 5, agent());
 
     // Fire/cold over water/lava
     if (feat == DNGN_LAVA && flavour == BEAM_COLD
