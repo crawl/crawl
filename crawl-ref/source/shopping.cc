@@ -1359,18 +1359,30 @@ void ShopMenu::purchase_selected()
     }
     if (selected.empty())
         return;
-    textcolour(channel_to_colour(MSGCH_PROMPT));
-    cgotoxy(1, y_offset + pagesize - 3);
+    const string col = colour_to_str(channel_to_colour(MSGCH_PROMPT));
+    update_help();
+    const formatted_string old_more = more;
     if (cost > you.gold)
     {
-        cprintf("You don't have enough money.");
+        more = formatted_string::parse_string(make_stringf(
+                   "<%s>You don't have enough money.</%s>\n",
+                   col.c_str(),
+                   col.c_str()));
+        more += old_more;
+        draw_menu();
         return;
     }
-    cprintf("Purchase items%s for %d gold? (y/N)",
-            buying_from_list ? " in shopping list" : "",
-            cost);
+    more = formatted_string::parse_string(make_stringf(
+               "<%s>Purchase items%s for %d gold? (y/N)</%s>\n",
+               col.c_str(),
+               buying_from_list ? " in shopping list" : "",
+               cost,
+               col.c_str()));
+    more += old_more;
+    draw_menu();
     if (!yesno(nullptr, true, 'n', false, false, true))
     {
+        more = old_more;
         draw_menu();
         return;
     }
@@ -1415,17 +1427,20 @@ void ShopMenu::purchase_selected()
     }
     for (size_t i = 0; i < items.size(); ++i)
         items[i]->hotkeys[0] = index_to_letter(i);
-    draw_menu();
 
     if (outside_items)
     {
-        textcolour(channel_to_colour(MSGCH_PROMPT));
-        cgotoxy(1, y_offset + pagesize - 3);
-        cprintf("I'll put %s outside for you.",
-                bought_indices.size() == 1             ? "it" :
-          (int) bought_indices.size() == outside_items ? "them"
-                                                       : "some of them");
+        more = formatted_string::parse_string(make_stringf(
+            "<%s>I'll put %s outside for you.</%s>\n",
+            col.c_str(),
+            bought_indices.size() == 1             ? "it" :
+      (int) bought_indices.size() == outside_items ? "them"
+                                                   : "some of them",
+            col.c_str()));
+        more += old_more;
     }
+
+    draw_menu();
 }
 
 void ShopMenu::cycle_order()
