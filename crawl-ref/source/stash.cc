@@ -43,7 +43,6 @@
 #include "traps.h"
 #include "travel.h"
 #include "unicode.h"
-#include "unwind.h"
 #include "viewmap.h"
 
 // Global
@@ -423,6 +422,109 @@ string Stash::stash_item_name(const item_def &item)
     return name;
 }
 
+class StashMenu : public InvMenu
+{
+public:
+    StashMenu() : InvMenu(MF_SINGLESELECT), can_travel(false)
+    {
+        set_type(MT_PICKUP);
+        set_tag("stash");       // override "inventory" tag
+    }
+public:
+    bool can_travel;
+protected:
+    void draw_title() override;
+    int title_height() const override;
+    bool process_key(int key) override;
+private:
+    formatted_string create_title_string(bool wrap = true) const;
+};
+
+void StashMenu::draw_title()
+{
+    if (title)
+    {
+        cgotoxy(1, 1);
+        create_title_string().display();
+
+#ifdef USE_TILE_WEB
+        webtiles_set_title(create_title_string(false));
+#endif
+    }
+}
+
+int StashMenu::title_height() const
+{
+    if (title)
+        return 1 + (create_title_string().width() - 1) / get_number_of_cols();
+    else
+        return 0;
+}
+
+formatted_string StashMenu::create_title_string(bool wrap) const
+{
+    formatted_string fs = formatted_string(title->colour);
+    fs.cprintf("%s", title->text.c_str());
+    if (title->quantity)
+    {
+        fs.cprintf(", %d item%s", title->quantity,
+                                  title->quantity == 1? "" : "s");
+    }
+    fs.cprintf(")");
+
+    vector<string> extra_parts;
+
+    string part = "[a-z: ";
+    part += string(menu_action == ACT_EXAMINE ? "examine" : "shopping");
+    part += "  ?/!: ";
+    part += string(menu_action == ACT_EXAMINE ? "shopping" : "examine");
+    part += "]";
+    extra_parts.push_back(part);
+
+    if (can_travel)
+        extra_parts.emplace_back("[ENTER: travel]");
+
+    int term_width = get_number_of_cols();
+    int remaining = term_width - fs.width();
+    unsigned int extra_idx = 0;
+    while (static_cast<int>(extra_parts[extra_idx].length()) + 2 <= remaining
+           || !wrap)
+    {
+        fs.cprintf("  %s", extra_parts[extra_idx].c_str());
+
+        remaining -= extra_parts[extra_idx].length() + 2;
+        extra_idx++;
+        if (extra_idx >= extra_parts.size())
+            break;
+    }
+    // XXX assuming only two rows are possible for now
+    if (extra_idx < extra_parts.size())
+    {
+        fs.cprintf("%s", string(remaining, ' ').c_str());
+
+        string second_line;
+        for (unsigned int i = extra_idx; i < extra_parts.size(); ++i)
+            second_line += string("  ") + extra_parts[i];
+
+        fs.cprintf("%s%s",
+                   string(term_width - second_line.length(), ' ').c_str(),
+                   second_line.c_str());
+    }
+
+    return fs;
+}
+
+bool StashMenu::process_key(int key)
+{
+    if (key == CK_ENTER)
+    {
+        // Travel activates.
+        lastch = 1;
+        return false;
+    }
+    return Menu::process_key(key);
+}
+
 string Stash::description() const
 {
     if (items.empty())
@@ -646,32 +748,44 @@ void Stash::load(reader& inf)
     }
 }
 
-ShopInfo::ShopInfo(const shop_struct& shop_)
-    : shop(shop_)
+ShopInfo::ShopInfo(coord_def pos_) : pos(pos_), name(), shoptype(-1),
+                                     visited(false), items()
 {
+    // Most of our initialization will be done externally; this class is really
+    // a mildly glorified struct.
+    const shop_struct *sh = shop_at(pos);
+    if (sh)
+        shoptype = sh->type;
 }
 
-string ShopInfo::shop_item_name(const item_def &it) const
+void ShopInfo::add_item(const item_def &sitem, unsigned price)
 {
-    return make_stringf("%s%s (%d gold)",
-                        Stash::stash_item_name(it).c_str(),
-                        shop_item_unknown(it) ? " (unknown)" : "",
-                        item_price(it, shop));
+    shop_item it;
+    it.item  = sitem;
+    it.price = price;
+    items.push_back(it);
 }
 
-string ShopInfo::shop_item_desc(const item_def &it) const
+string ShopInfo::shop_item_name(const shop_item &si) const
+{
+    return make_stringf("%s%s (%u gold)",
+                        Stash::stash_item_name(si.item).c_str(),
+                        shop_item_unknown(si.item) ? " (unknown)" : "",
+                        si.price);
+}
+
+string ShopInfo::shop_item_desc(const shop_item &si) const
 {
     string desc;
 
-    item_def& item(const_cast<item_def&>(it));
-    unwind_var<iflags_t>(item.flags);
+    const iflags_t oldflags = si.item.flags;
 
-    if (shoptype_identifies_stock(shop.type))
-        item.flags |= ISFLAG_IDENT_MASK;
+    if (shoptype_identifies_stock(static_cast<shop_type>(shoptype)))
+        const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
 
-    if (is_dumpable_artefact(item))
+    if (is_dumpable_artefact(si.item))
     {
-        desc = chardump_desc(item);
+        desc = chardump_desc(si.item);
         trim_string(desc);
 
         // Walk backwards and prepend indenting spaces to \n characters
@@ -680,31 +794,146 @@ string ShopInfo::shop_item_desc(const item_def &it) const
                 desc.insert(i + 1, " ");
     }
 
+    if (oldflags != si.item.flags)
+        const_cast<shop_item&>(si).item.flags = oldflags;
+
     return desc;
 }
 
-void ShopInfo::show_menu() const
+void ShopInfo::describe_shop_item(const shop_item &si) const
 {
-    if (!is_visited())
-        return;
-    // ShopMenu shouldn't actually modify the shop, since it only does so if
-    // you buy something.
-    ::shop(const_cast<shop_struct&>(shop));
+    const iflags_t oldflags = si.item.flags;
+
+    if (shoptype_identifies_stock(static_cast<shop_type>(shoptype)))
+    {
+        const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK
+            | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET;
+    }
+
+    item_def it = static_cast<item_def>(si.item);
+    describe_item(it);
+
+    if (oldflags != si.item.flags)
+        const_cast<shop_item&>(si).item.flags = oldflags;
+}
+
+class ShopItemEntry : public InvEntry
+{
+    bool on_list;
+
+public:
+    ShopItemEntry(const ShopInfo::shop_item &it,
+                  const string &item_name,
+                  menu_letter hotkey, bool _on_list) : InvEntry(it.item)
+    {
+        text = item_name;
+        hotkeys[0] = hotkey;
+        on_list = _on_list;
+    }
+
+    string get_text(const bool = false) const override
+    {
+        ASSERT(level == MEL_ITEM);
+        ASSERT(hotkeys.size());
+        char buf[300];
+        snprintf(buf, sizeof buf, " %c %c %s",
+                 hotkeys[0], on_list ? '$' : '-', text.c_str());
+        return string(buf);
+    }
+};
+
+void ShopInfo::fill_out_menu(StashMenu &menu, const level_pos &place) const
+{
+    menu.clear();
+
+    menu_letter hotkey;
+    for (const shop_item &item : items)
+    {
+        bool on_list = shopping_list.is_on_list(item.item, &place);
+        ShopItemEntry *me = new ShopItemEntry(item,
+                                              shop_item_name(item),
+                                              hotkey++, on_list);
+        menu.add_entry(me);
+    }
+}
+
+bool ShopInfo::show_menu(const level_pos &place,
+                         bool can_travel) const
+{
+    const string place_str = place.id.describe();
+
+    StashMenu menu;
+
+    MenuEntry *mtitle = new MenuEntry(name + " (" + place_str, MEL_TITLE);
+    menu.can_travel   = can_travel;
+    menu.action_cycle = Menu::CYCLE_TOGGLE;
+    menu.menu_action  = Menu::ACT_EXAMINE;
+    mtitle->quantity  = items.size();
+    menu.set_title(mtitle);
+
+    if (items.empty())
+    {
+        MenuEntry *me = new MenuEntry(
+                visited? "  (Shop is empty)" : "  (Shop contents are unknown)",
+                MEL_ITEM,
+                0,
+                0);
+        me->colour = DARKGREY;
+        menu.add_entry(me);
+    }
+    else
+        fill_out_menu(menu, place);
+
+    vector<MenuEntry*> sel;
+    while (true)
+    {
+        sel = menu.show();
+        if (menu.getkey() == 1) // See StashMenu::process_key
+            return true;
+
+        if (sel.size() != 1)
+            break;
+
+        const shop_item *item = static_cast<const shop_item *>(sel[0]->data);
+        if (menu.menu_action == Menu::ACT_EXAMINE)
+            describe_shop_item(*item);
+        else
+        {
+            if (shopping_list.is_on_list(item->item, &place))
+                shopping_list.del_thing(item->item, &place);
+            else
+                shopping_list.add_thing(item->item, item->price, &place);
+
+            // If the shop has identical items (like stacks of food in a
+            // food shop) then adding/removing one to the shopping list
+            // will have the same effect on the others, so the other
+            // identical items will need to be re-coloured.
+            fill_out_menu(menu, place);
+        }
+    }
+    return false;
+}
+
+string ShopInfo::description() const
+{
+    return name;
 }
 
 vector<stash_search_result> ShopInfo::matches_search(
     const string &prefix, const base_pattern &search) const
 {
     vector<stash_search_result> results;
+    if (items.empty() && visited)
+        return results;
 
     no_notes nx;
 
-    string shoptitle = shop_name(shop);
-    if (shop.stock.empty())
+    string shoptitle = name;
+    if (!visited && items.empty())
         shoptitle += "*";
     shoptitle += " " + prefix + " {shop}";
 
-    pattern_match shoptitle_match(search.match_location(shop_name(shop)));
+    pattern_match shoptitle_match(search.match_location(name));
     if (!shoptitle_match)
         shoptitle_match = search.match_location(shoptitle);
     if (shoptitle_match)
@@ -712,17 +941,17 @@ vector<stash_search_result> ShopInfo::matches_search(
         stash_search_result res;
         res.match = shoptitle_match;
         res.shop = this;
-        res.pos.pos = shop.pos;
+        res.pos.pos = pos;
         results.push_back(res);
         // If the shop itself matches, don't show the items.
         return results;
     }
 
-    for (const item_def &item : shop.stock)
+    for (const shop_item &item : items)
     {
         const string sname = shop_item_name(item);
         const string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
-                                                 &item, true);
+                                                 &item.item, true);
 
         pattern_match itemname_match(search.match_location(sname));
         if (!itemname_match)
@@ -733,9 +962,9 @@ vector<stash_search_result> ShopInfo::matches_search(
         {
             stash_search_result res;
             res.match = itemname_match;
-            res.item = item;
+            res.item = item.item;
             res.shop = this;
-            res.pos.pos = shop.pos;
+            res.pos.pos = pos;
             results.push_back(res);
         }
     }
@@ -746,13 +975,13 @@ vector<stash_search_result> ShopInfo::matches_search(
 void ShopInfo::write(FILE *f, bool identify) const
 {
     no_notes nx;
-    fprintf(f, "[Shop] %s\n", OUTS(shop_name(shop)));
-    if (!shop.stock.empty())
+    fprintf(f, "[Shop] %s\n", OUTS(name));
+    if (!items.empty())
     {
-        for (item_def item : shop.stock) // intentional copy
+        for (shop_item item : items)
         {
             if (identify)
-                _fully_identify_item(&item);
+                _fully_identify_item(&item.item);
 
             fprintf(f, "  %s\n", OUTS(shop_item_name(item)));
             string desc = shop_item_desc(item);
@@ -760,8 +989,85 @@ void ShopInfo::write(FILE *f, bool identify) const
                 fprintf(f, "    %s\n", OUTS(desc));
         }
     }
+    else if (visited)
+        fprintf(f, "  (Shop is empty)\n");
     else
         fprintf(f, "  (Shop contents are unknown)\n");
+}
+
+void ShopInfo::save(writer& outf) const
+{
+    marshallShort(outf, shoptype);
+
+    int mangledx = (short) pos.x;
+    if (!visited)
+        mangledx |= 1024;
+    marshallShort(outf, mangledx);
+    marshallShort(outf, (short) pos.y);
+
+    marshallShort(outf, (short) items.size());
+
+    marshallString4(outf, name);
+
+    for (const shop_item &item : items)
+    {
+        marshallItem(outf, item.item, true);
+        marshallShort(outf, (short) item.price);
+    }
+}
+
+void ShopInfo::load(reader& inf)
+{
+#if TAG_MAJOR_VERSION == 34
+    if (inf.getMinorVersion() == TAG_MINOR_SHOPINFO)
+    {
+        shoptype  = static_cast<shop_type>(unmarshallByte(inf));
+        ASSERT(shoptype != SHOP_UNASSIGNED);
+        unmarshallUByte(inf);
+        unmarshallUByte(inf);
+        unmarshallUByte(inf);
+        pos.x = unmarshallByte(inf);
+        pos.y = unmarshallByte(inf);
+        const int greed = unmarshallByte(inf);
+        unmarshallByte(inf);
+        name = unmarshallString(inf);
+        unmarshallString(inf);
+        unmarshallString(inf);
+        vector<item_def> stock;
+        unmarshall_vector(inf, stock, [] (reader& r) -> item_def
+                              {
+                                  item_def ret;
+                                  unmarshallItem(r, ret);
+                                  return ret;
+                              });
+        for (auto &item : stock)
+        {
+            shop_item sitem;
+            sitem.item = item;
+            const int ided = shoptype_identifies_stock((shop_type)shoptype);
+            sitem.price = greed * item_value(item, ided) / 10;
+        }
+        return;
+    }
+#endif
+    shoptype = unmarshallShort(inf);
+
+    pos.x = unmarshallShort(inf);
+    visited = !(pos.x & 1024);
+    pos.x &= 0xFF;
+
+    pos.y = unmarshallShort(inf);
+
+    int itemcount = unmarshallShort(inf);
+
+    unmarshallString4(inf, name);
+    for (int i = 0; i < itemcount; ++i)
+    {
+        shop_item item;
+        unmarshallItem(inf, item.item);
+        item.price = (unsigned) unmarshallShort(inf);
+        items.push_back(item);
+    }
 }
 
 LevelStashes::LevelStashes()
@@ -832,10 +1138,10 @@ ShopInfo &LevelStashes::get_shop(const coord_def& c)
         if (shop.is_at(c))
             return shop;
 
-    shop_struct shop = *shop_at(c);
-    shop.stock.clear(); // You can't see it from afar.
-    m_shops.emplace_back(shop);
-    return m_shops.back();
+    ShopInfo si(c);
+    si.set_name(shop_name(c));
+    m_shops.push_back(si);
+    return get_shop(c);
 }
 
 // Updates the stash at p. Returns true if there was a stash at p, false
@@ -1042,8 +1348,9 @@ void LevelStashes::load(reader& inf)
     int shopc = unmarshallShort(inf);
     for (int i = 0; i < shopc; ++i)
     {
-        m_shops.emplace_back();
-        m_shops.back().load(inf);
+        ShopInfo si{coord_def()};
+        si.load(inf);
+        m_shops.push_back(si);
     }
 }
 
@@ -1474,7 +1781,7 @@ class StashSearchMenu : public Menu
 {
 public:
     StashSearchMenu(const char* sort_style_,const char* filtered_)
-        : Menu(),
+        : Menu(), can_travel(true),
           request_toggle_sort_method(false),
           request_toggle_filter_useless(false),
           sort_style(sort_style_),
@@ -1482,6 +1789,7 @@ public:
     { }
 
 public:
+    bool can_travel;
     bool request_toggle_sort_method;
     bool request_toggle_filter_useless;
     const char* sort_style;
@@ -1576,6 +1884,7 @@ bool StashTracker::display_search_results(
     StashSearchMenu stashmenu(sort_by_dist ? "dist" : "name",
                               filter_useless ? "hide" : "show");
     stashmenu.set_tag("stash");
+    stashmenu.can_travel   = can_travel_interlevel();
     stashmenu.action_cycle = Menu::CYCLE_TOGGLE;
     stashmenu.menu_action  = default_execute ? Menu::ACT_EXECUTE : Menu::ACT_EXAMINE;
     string title = "match";
@@ -1659,7 +1968,18 @@ bool StashTracker::display_search_results(
             stash_search_result *res =
                 static_cast<stash_search_result *>(sel[0]->data);
 
-            res->show_menu();
+            bool dotravel = res->show_menu();
+
+            if (dotravel && can_travel_to(res->pos.id))
+            {
+                redraw_screen();
+                level_pos lp = res->pos;
+                if (show_map(lp, true, true, true))
+                {
+                    start_translevel_travel(lp);
+                    return false;
+                }
+            }
             continue;
         }
         break;
@@ -1761,18 +2081,18 @@ const ST_ItemIterator& ST_ItemIterator::operator ++ ()
         }
         m_shop = &(*m_shop_it);
 
-        if (m_shop_item_it != m_shop->shop.stock.end())
+        if (m_shop_item_it != m_shop->items.end())
         {
-            const item_def &item = *m_shop_item_it++;
-            m_item  = &item;
+            const ShopInfo::shop_item &item = *m_shop_item_it++;
+            m_item  = &(item.item);
             ASSERT(m_item->defined());
-            m_price = item_price(item, m_shop->shop);
+            m_price = item.price;
             return *this;
         }
 
         ++m_shop_it;
         if (m_shop_it != ls.m_shops.end())
-            m_shop_item_it = m_shop_it->shop.stock.begin();
+            m_shop_item_it = m_shop_it->items.begin();
 
         ++(*this);
     }
@@ -1828,14 +2148,14 @@ void ST_ItemIterator::new_level()
     {
         const ShopInfo &si = *m_shop_it;
 
-        m_shop_item_it = si.shop.stock.begin();
+        m_shop_item_it = si.items.begin();
 
-        if (m_item == nullptr && m_shop_item_it != si.shop.stock.end())
+        if (m_item == nullptr && m_shop_item_it != si.items.end())
         {
-            const item_def &item = *m_shop_item_it++;
-            m_item  = &item;
+            const ShopInfo::shop_item &item = *m_shop_item_it++;
+            m_item  = &(item.item);
             ASSERT(m_item->defined());
-            m_price = item_price(item, si.shop);
+            m_price = item.price;
             m_shop  = &si;
         }
     }
@@ -1848,13 +2168,16 @@ ST_ItemIterator ST_ItemIterator::operator ++ (int)
     return copy;
 }
 
-void stash_search_result::show_menu() const
+bool stash_search_result::show_menu() const
 {
     if (item.defined())
     {
         item_def it = item;
         describe_item(it);
+        return false;
     }
     else if (shop)
-        shop->show_menu();
+        return shop->show_menu(pos, can_travel_to(pos.id));
+    else
+        return false;
 }

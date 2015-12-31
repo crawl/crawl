@@ -4271,7 +4271,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
 {
     if (feat == DNGN_ENTER_SHOP && ES_shop)
     {
-        shops.emplace_back(shop_name(*shop_at(pos)), feat);
+        shops.emplace_back(shop_name(pos), feat);
         es_flags |= ES_SHOP;
     }
     else if (feat_is_stair(feat) && ES_stair)
