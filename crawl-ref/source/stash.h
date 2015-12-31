@@ -88,25 +88,50 @@ private:
 class ShopInfo
 {
 public:
-    ShopInfo(const shop_struct& shop_ = shop_struct());
+    ShopInfo(coord_def pos_);
 
     vector<stash_search_result> matches_search(
         const string &prefix, const base_pattern &search) const;
 
+    string description() const;
+
     void save(writer&) const;
     void load(reader&);
 
-    void write(FILE *f, bool identify = false) const;
-    void show_menu() const;
+    bool show_menu(const level_pos &place, bool can_travel) const;
+    bool is_visited() const { return items.size() || visited; }
 
-    bool is_at(coord_def other) const { return shop.pos == other; }
-    bool is_visited() const { return !shop.stock.empty(); }
+    void write(FILE *f, bool identify = false) const;
+
+    void reset() { items.clear(); visited = true; }
+    void set_name(const string& s) { name = s; }
+
+    void add_item(const item_def &item, unsigned price);
+
+    // Messy!
+    struct shop_item
+    {
+        item_def item;
+        unsigned price;
+    };
+
+    bool is_at(coord_def other) const { return pos == other; }
 
 private:
-    shop_struct shop;
+    coord_def pos;
+    string name;
 
-    string shop_item_name(const item_def &it) const;
-    string shop_item_desc(const item_def &it) const;
+    int shoptype;
+
+    // Set true if the player has visited this shop
+    bool visited;
+
+    vector<shop_item> items;
+
+    string shop_item_name(const shop_item &si) const;
+    string shop_item_desc(const shop_item &si) const;
+    void describe_shop_item(const shop_item &si) const;
+    void fill_out_menu(StashMenu &menu, const level_pos &place) const;
 
     friend class ST_ItemIterator;
 };
@@ -161,7 +186,7 @@ struct stash_search_result
         return player_distance < ssr.player_distance;
     }
 
-    void show_menu() const;
+    bool show_menu() const;
 };
 
 class LevelStashes
@@ -320,7 +345,8 @@ private:
     LevelStashes::stashes_t::const_iterator      m_stash_it;
     LevelStashes::shops_t::const_iterator        m_shop_it;
     vector<item_def>::const_iterator             m_stash_item_it;
-    vector<item_def>::const_iterator             m_shop_item_it;
+
+    vector<ShopInfo::shop_item>::const_iterator  m_shop_item_it;
 
 private:
     void new_level();

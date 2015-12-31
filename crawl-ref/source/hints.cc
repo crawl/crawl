@@ -1662,7 +1662,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_SHOP:
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
-        tiles.add_text_tag(TAG_TUTORIAL, shop_name(*shop_at(gc)), gc);
+        tiles.add_text_tag(TAG_TUTORIAL, shop_name(gc), gc);
 #else
         // Is a monster blocking the view?
         if (monster_at(gc))

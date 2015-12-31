@@ -152,7 +152,7 @@ bool InvEntry::is_art() const
 
 bool InvEntry::is_equipped() const
 {
-    if (item->link == -1 || item->pos != ITEM_IN_INVENTORY)
+    if (item->link == -1 || item->pos.x != -1 || item->pos.y != -1)
         return false;
 
     for (int i = 0; i < NUM_EQUIP; i++)

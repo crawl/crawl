@@ -125,7 +125,6 @@ void MenuDisplayText::draw_more()
 {
     cgotoxy(1, m_menu->get_y_offset() + m_menu->get_pagesize() -
             count_linebreaks(m_menu->get_more()));
-    textcolour(LIGHTGREY);
     m_menu->get_more().display();
 }
 
@@ -666,15 +665,18 @@ bool Menu::process_key(int keyin)
     if (!isadigit(keyin))
         num = -1;
 
-    if (nav && repaint || always_redraw())
+    if (nav)
     {
+        if (repaint)
+        {
 #ifdef USE_TILE_WEB
-        webtiles_update_scroll_pos();
+            webtiles_update_scroll_pos();
 #endif
-        draw_menu();
+            draw_menu();
+        }
+        else if (allow_easy_exit() && is_set(MF_EASY_EXIT))
+            return false;
     }
-    else if (nav && allow_easy_exit() && is_set(MF_EASY_EXIT))
-        return false;
     return true;
 }
 

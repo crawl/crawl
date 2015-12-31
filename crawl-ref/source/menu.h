@@ -489,7 +489,6 @@ protected:
     virtual bool allow_easy_exit() const;
 
     virtual string help_key() const { return ""; }
-    virtual bool always_redraw() const { return false; }
 };
 
 /// Allows toggling by specific keys.
