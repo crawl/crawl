@@ -1274,6 +1274,7 @@ public:
         : InvEntry(i),
           menu(m)
     {
+        show_background = false;
     }
 };
 

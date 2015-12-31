@@ -64,8 +64,8 @@ string InvTitle::get_text(const bool) const
                    : MenuEntry::get_text();
 }
 
-InvEntry::InvEntry(const item_def &i, bool show_bg)
-    : MenuEntry("", MEL_ITEM), show_background(show_bg), item(&i)
+InvEntry::InvEntry(const item_def &i)
+    : MenuEntry("", MEL_ITEM), item(&i)
 {
     data = const_cast<item_def *>(item);
 
@@ -508,7 +508,7 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
             ? item->holding_monster()->pos()
             : item->pos;
         tileidx_t ch = 0;
-        if (c != coord_def())
+        if (c != coord_def() && show_background)
         {
             ch = tileidx_feature(c);
             if (ch == TILE_FLOOR_NORMAL)
