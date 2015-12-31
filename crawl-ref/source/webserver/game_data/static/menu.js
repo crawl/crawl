@@ -501,6 +501,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         $.extend(menu, data);
 
         update_title();
+        $("#menu_more").html(util.formatted_string_to_html(menu.more));
 
         client.center_element($("#menu"));
     }
@@ -568,12 +569,10 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         var contents = $("#menu_contents");
         update_visible_indices();
         schedule_server_scroll();
-        if (menu.last_visible >= menu.items.length - 1)
+        if (menu.last_visible >= menu.items.length - 1
+            && !(menu.flags & enums.menu_flag.ALWAYS_SHOW_MORE))
         {
-            if (!(menu.flags & enums.menu_flag.ALWAYS_SHOW_MORE))
-            {
-                $("#menu_more").css("visibility", "hidden");
-            }
+            $("#menu_more").css("visibility", "hidden");
         }
         else
         {
