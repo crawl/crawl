@@ -1459,6 +1459,8 @@ void ShopMenu::purchase_selected()
             col.c_str()));
         more += old_more;
     }
+    else
+        update_help();
 
     draw_menu();
 }
