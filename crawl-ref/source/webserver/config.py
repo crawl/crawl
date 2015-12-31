@@ -158,4 +158,4 @@ player_url = None
 # Disable caching of static files which are not part of game data.
 no_cache = False
 # Automatically log in all users with the username given here.
-autologin = "wheals"
+autologin = None
