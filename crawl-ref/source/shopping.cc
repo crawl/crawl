@@ -1209,6 +1209,7 @@ class ShopMenu : public InvMenu
     void purchase_selected();
 
     virtual bool process_key(int keyin) override;
+    virtual void draw_menu() override;
     // Selecting one item may remove another from the shopping list, or change
     // the colour others need to have, so we can't be lazy with redrawing
     // elements.
@@ -1302,6 +1303,24 @@ ShopMenu::ShopMenu(shop_struct& _shop, bool _long_distance)
 
     set_title("Welcome to " + shop_name(shop) + "! What would you "
               "like to do?");
+}
+
+void ShopMenu::draw_menu()
+{
+    // Unlike other menus, selecting one item in the shopping menu may change
+    // other ones (because of the colour scheme). Keypresses also need to
+    // update the more, which is hijacked for use as help text.
+#ifdef USE_TILE_WEB
+    for (unsigned int i = 0; i < items.size(); ++i)
+        webtiles_update_item(i);
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "update_menu");
+    tiles.json_write_string("more", more.to_colour_string());
+    tiles.json_close_object();
+    tiles.finish_message();
+#endif
+
+    InvMenu::draw_menu();
 }
 
 int ShopMenu::selected_cost() const
