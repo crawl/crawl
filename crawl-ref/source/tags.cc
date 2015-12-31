@@ -2069,7 +2069,8 @@ void ShopInfo::save(writer& outf) const
 void ShopInfo::load(reader& inf)
 {
 #if TAG_MAJOR_VERSION == 34
-    if (inf.getMinorVersion() < TAG_MINOR_SHOPINFO)
+    if (inf.getMinorVersion() < TAG_MINOR_SHOPINFO
+        || inf.getMinorVersion() == TAG_MINOR_UNSHOPINFO)
     {
         shop.type = static_cast<shop_type>(unmarshallShort(inf));
 
