@@ -349,12 +349,12 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
 
 void Menu::do_menu()
 {
-    draw_menu();
-
 #ifdef USE_TILE_WEB
     tiles.push_menu(this);
     _webtiles_title_changed = false;
 #endif
+
+    draw_menu();
 
     alive = true;
     while (alive)
