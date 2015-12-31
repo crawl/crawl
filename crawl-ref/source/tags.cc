@@ -1468,33 +1468,33 @@ static void tag_construct_you(writer &th)
 
     // how many penances?
     marshallByte(th, NUM_GODS);
-    for (int i = 0; i < NUM_GODS; i++)
-        marshallByte(th, you.penance[i]);
+    for (god_iterator it; it; ++it)
+        marshallByte(th, you.penance[*it]);
 
     // which gods have been worshipped by this character?
-    for (int i = 0; i < NUM_GODS; i++)
-        marshallByte(th, you.worshipped[i]);
+    for (god_iterator it; it; ++it)
+        marshallByte(th, you.worshipped[*it]);
 
     // what is the extent of divine generosity?
-    for (int i = 0; i < NUM_GODS; i++)
-        marshallShort(th, you.num_current_gifts[i]);
-    for (int i = 0; i < NUM_GODS; i++)
-        marshallShort(th, you.num_total_gifts[i]);
-    for (int i = 0; i < NUM_GODS; i++)
-        marshallBoolean(th, you.one_time_ability_used[i]);
+    for (god_iterator it; it; ++it)
+        marshallShort(th, you.num_current_gifts[*it]);
+    for (god_iterator it; it; ++it)
+        marshallShort(th, you.num_total_gifts[*it]);
+    for (god_iterator it; it; ++it)
+        marshallBoolean(th, you.one_time_ability_used[*it]);
 
     // how much piety have you achieved at highest with each god?
-    for (int i = 0; i < NUM_GODS; i++)
-        marshallByte(th, you.piety_max[i]);
+    for (god_iterator it; it; ++it)
+        marshallByte(th, you.piety_max[*it]);
 
     marshallByte(th, you.gift_timeout);
     marshallUByte(th, you.saved_good_god_piety);
     marshallByte(th, you.previous_good_god);
 
-    for (int i = 0; i < NUM_GODS; i++)
-        marshallInt(th, you.exp_docked[i]);
-    for (int i = 0; i < NUM_GODS; i++)
-        marshallInt(th, you.exp_docked_total[i]);
+    for (god_iterator it; it; ++it)
+        marshallInt(th, you.exp_docked[*it]);
+    for (god_iterator it; it; ++it)
+        marshallInt(th, you.exp_docked_total[*it]);
 
     // elapsed time
     marshallInt(th, you.elapsed_time);
@@ -2979,19 +2979,19 @@ static void tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_XP_PENANCE)
     {
-        for (int i = 0; i < NUM_GODS; i++)
+        for (god_iterator it; it; ++it)
         {
-            if (i == GOD_ASHENZARI)
-                you.exp_docked[i] = unmarshallInt(th);
+            if (*it == GOD_ASHENZARI)
+                you.exp_docked[*it] = unmarshallInt(th);
             else
-                you.exp_docked[i] = 0;
+                you.exp_docked[*it] = 0;
         }
-        for (int i = 0; i < NUM_GODS; i++)
+        for (god_iterator it; it; ++it)
         {
-            if (i == GOD_ASHENZARI)
-                you.exp_docked_total[i] = unmarshallInt(th);
+            if (*it == GOD_ASHENZARI)
+                you.exp_docked_total[*it] = unmarshallInt(th);
             else
-                you.exp_docked_total[i] = 0;
+                you.exp_docked_total[*it] = 0;
         }
     }
     else

@@ -995,6 +995,42 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
     return text;
 }
 
+
+god_iterator::god_iterator() :
+    i(0) { } // might be ok to start with GOD_ZIN instead?
+
+god_iterator::operator bool() const
+{
+    return i < NUM_GODS;
+}
+
+const god_type god_iterator::operator*() const
+{
+    if (i < NUM_GODS)
+        return (god_type)i;
+    else
+        return GOD_NO_GOD;
+}
+
+const god_type god_iterator::operator->() const
+{
+    return **this;
+}
+
+god_iterator& god_iterator::operator++()
+{
+    ++i;
+    return *this;
+}
+
+god_iterator god_iterator::operator++(int)
+{
+    god_iterator copy = *this;
+    ++(*this);
+    return copy;
+}
+
+
 bool active_penance(god_type god)
 {
     // Ashenzari's penance isn't active; Nemelex's penance is only active
@@ -3838,8 +3874,8 @@ god_type choose_god(god_type def_god)
 int had_gods()
 {
     int count = 0;
-    for (int i = 0; i < NUM_GODS; i++)
-        count += you.worshipped[i];
+    for (god_iterator it; it; ++it)
+        count += you.worshipped[*it];
     return count;
 }
 
@@ -4680,12 +4716,9 @@ static bool _cmp_god_by_name(god_type god1, god_type god2)
 vector<god_type> temple_god_list()
 {
     vector<god_type> god_list;
-    for (int i = 0; i < NUM_GODS; i++)
-    {
-        god_type god = static_cast<god_type>(i);
-        if (_is_temple_god(god))
-            god_list.push_back(god);
-    }
+    for (god_iterator it; it; ++it)
+        if (_is_temple_god(*it))
+            god_list.push_back(*it);
     sort(god_list.begin(), god_list.end(), _cmp_god_by_name);
     return god_list;
 }
@@ -4695,12 +4728,9 @@ vector<god_type> temple_god_list()
 vector<god_type> nontemple_god_list()
 {
     vector<god_type> god_list;
-    for (int i = 0; i < NUM_GODS; i++)
-    {
-        god_type god = static_cast<god_type>(i);
-        if (_is_nontemple_god(god))
-            god_list.push_back(god);
-    }
+    for (god_iterator it; it; ++it)
+        if (_is_nontemple_god(*it))
+            god_list.push_back(*it);
     sort(god_list.begin(), god_list.end(), _cmp_god_by_name);
     return god_list;
 }
