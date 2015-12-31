@@ -1311,13 +1311,14 @@ void ShopMenu::draw_menu()
     // other ones (because of the colour scheme). Keypresses also need to
     // update the more, which is hijacked for use as help text.
 #ifdef USE_TILE_WEB
-    for (unsigned int i = 0; i < items.size(); ++i)
-        webtiles_update_item(i);
     tiles.json_open_object();
     tiles.json_write_string("msg", "update_menu");
     tiles.json_write_string("more", more.to_colour_string());
+    tiles.json_write_int("total_items", items.size());
     tiles.json_close_object();
     tiles.finish_message();
+    for (unsigned int i = 0; i < items.size(); ++i)
+        webtiles_update_item(i);
 #endif
 
     InvMenu::draw_menu();

@@ -500,6 +500,16 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
     {
         $.extend(menu, data);
 
+        if (menu.total_items < menu.items.length)
+        {
+            for (var i = menu.items.length; i >= menu.total_items; --i)
+                delete menu.items[i];
+            menu.items.length = menu.total_items;
+            var container = $("ol");
+            container.empty();
+            for (var i in menu.items)
+                container.append(menu.items[i].elem);
+        }
         update_title();
         $("#menu_more").html(util.formatted_string_to_html(menu.more));
 
