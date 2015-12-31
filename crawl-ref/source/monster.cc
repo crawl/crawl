@@ -3551,7 +3551,7 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
     return max(ev, 0);
 }
 
-bool monster::heal(int amount, bool max_too)
+bool monster::heal(int amount)
 {
     if (mons_is_statue(type))
         return false;
@@ -3564,7 +3564,7 @@ bool monster::heal(int amount, bool max_too)
 
     if (amount < 1)
         return false;
-    else if (!max_too && hit_points == max_hit_points)
+    else if (hit_points == max_hit_points)
         return false;
 
     hit_points += amount;
@@ -3572,19 +3572,7 @@ bool monster::heal(int amount, bool max_too)
     bool success = true;
 
     if (hit_points > max_hit_points)
-    {
-        if (max_too)
-        {
-            const int maxhp = mons_max_hp(type, base_monster);
-            // Limit HP growth.
-            if (random2(3 * maxhp) > 2 * max_hit_points)
-                max_hit_points = min(max_hit_points + 1, MAX_MONSTER_HP);
-            else
-                success = false;
-        }
-
         hit_points = max_hit_points;
-    }
 
     if (hit_points == max_hit_points)
     {
@@ -6128,7 +6116,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     {
         if (!alive()) // overcharging is deadly
             simple_monster_message(this, " explodes in a shower of sparks!");
-        else if (heal(damage*2, false))
+        else if (heal(damage*2))
             simple_monster_message(this, " seems to be charged up!");
         return;
     }

@@ -464,7 +464,7 @@ bool attack::distortion_affects_defender()
                                  defender->conj_verb("bask").c_str());
             }
 
-            defender->heal(1 + random2avg(7, 2), true); // heh heh
+            defender->heal(1 + random2avg(7, 2)); // heh heh
         }
         return false;
     }
