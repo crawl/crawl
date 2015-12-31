@@ -148,6 +148,21 @@ bool do_god_gift(bool forced = false);
 vector<god_type> temple_god_list();
 vector<god_type> nontemple_god_list();
 
+class god_iterator
+{
+public:
+    god_iterator();
+
+    operator bool() const;
+    const god_type operator*() const;
+    const god_type operator->() const;
+    god_iterator& operator++();
+    god_iterator operator++(int);
+
+protected:
+    int i;
+};
+
 struct god_power
 {
     // 1-6 means it unlocks at that many stars of piety;

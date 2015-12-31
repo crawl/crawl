@@ -2302,10 +2302,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         const int      old_piety = gc.y;
 
         god_type old_god = GOD_NO_GOD;
-        for (int i = 0; i < NUM_GODS; i++)
-            if (you.worshipped[i] > 0)
+        for (god_iterator it; it; ++it)
+            if (you.worshipped[*it] > 0)
             {
-                old_god = (god_type) i;
+                old_god = *it;
                 break;
             }
 

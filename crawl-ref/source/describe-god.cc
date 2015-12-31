@@ -427,9 +427,9 @@ static string _describe_god_wrath_causes(god_type which_god)
         return ""; // no wrath
     vector<god_type> evil_gods;
     vector<god_type> chaotic_gods;
-    for (int i = 0; i < NUM_GODS; i++)
+    for (god_iterator it; it; ++it)
     {
-        god_type god = (god_type)i;
+        const god_type god = *it;
         if (is_evil_god(god))
             evil_gods.push_back(god);
         else if (is_chaotic_god(god)) // intentionally not including evil!
