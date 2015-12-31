@@ -132,7 +132,8 @@ enum monclass_flag_type : uint64_t
 
     M_HERD              = BIT(41),
 
-                       // BIT(42),
+    // has a double-sized tile
+    M_TALL_TILE         = BIT(42),
 
     /// can sense vibrations in web traps
     M_WEB_SENSE         = BIT(43),
