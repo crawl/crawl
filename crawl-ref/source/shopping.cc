@@ -15,6 +15,7 @@
 #include "branch.h"
 #include "butcher.h"
 #include "cio.h"
+#include "colour.h"
 #include "decks.h"
 #include "describe.h"
 #include "dgn-overview.h"
@@ -48,212 +49,7 @@
 #include "unicode.h"
 #include "unwind.h"
 
-#define SHOPPING_LIST_COST_KEY "shopping_list_cost_key"
-
 ShoppingList shopping_list;
-
-static bool _in_shop_now = false;
-
-enum ordering_mode
-{
-    ORDER_MODE_DEFAULT,
-    ORDER_MODE_PRICE,
-    ORDER_MODE_ALPHABETICAL,
-    ORDER_MODE_TYPE,
-    NUM_ORDER_MODES
-};
-
-static ordering_mode operator++(ordering_mode &x)
-{
-    x = static_cast<ordering_mode>(x + 1);
-    if (x == NUM_ORDER_MODES)
-        x = ORDER_MODE_DEFAULT;
-    return x;
-}
-
-static ordering_mode shopping_order = ORDER_MODE_DEFAULT;
-
-static const char * const shopping_order_names[NUM_ORDER_MODES] =
-{
-    "default", "price", "name", "type"
-};
-
-static bool _purchase(shop_struct& shop, int item_got, int cost, bool id);
-
-static void _shop_print(const char *shoppy, int line)
-{
-    cgotoxy(1, line + 19, GOTO_CRT);
-    cprintf("%s", shoppy);
-    clear_to_end_of_line();
-}
-
-static void _shop_more()
-{
-    cgotoxy(65, 20, GOTO_CRT);
-    cprintf("-more-");
-    get_ch();
-}
-
-static bool _shop_yesno(const char* prompt, int safeanswer)
-{
-#ifdef TOUCH_UI
-    return yesno(prompt, true, safeanswer, false, false, false, nullptr,
-                 GOTO_CRT);
-#else
-    if (_in_shop_now)
-    {
-        textcolour(channel_to_colour(MSGCH_PROMPT));
-        _shop_print(prompt, 1);
-
-        return yesno(nullptr, true, safeanswer, false, false, true);
-    }
-    else
-        return yesno(prompt, true, safeanswer, false, false, false);
-#endif
-}
-
-static void _shop_mpr(const char* msg)
-{
-    if (_in_shop_now)
-    {
-        _shop_print(msg, 1);
-        _shop_more();
-    }
-    else
-        mpr(msg);
-}
-
-#ifdef USE_TILE_LOCAL
-static void _draw_shop_fs(const char hotkey, formatted_string &fs,
-                          MenuFreeform* freeform)
-{
-    TextItem* tmp = new TextItem();
-
-    tmp->set_fg_colour(LIGHTGRAY);
-    tmp->set_bg_colour(BLACK);
-    tmp->set_highlight_colour(WHITE);
-    tmp->set_text("");
-    tmp->set_bounds(coord_def(wherex(), wherey()),
-                    coord_def(wherex() + fs.tostring().size(), wherey() + 1));
-    tmp->add_hotkey(hotkey);
-    tmp->set_id(hotkey);
-    tmp->set_description_text(fs.tostring());
-    freeform->attach_item(tmp);
-    fs.display();
-    tmp->set_visible(true);
-}
-#else
-static void _draw_shop_fs(const char hotkey, formatted_string &fs,
-                          const bool freeform)
-{
-    fs.display();
-}
-#endif
-
-static string _hyphenated_letters(int how_many, char first)
-{
-    string s = "<w>";
-    s += first;
-    s += "</w>";
-    if (how_many > 1)
-    {
-        s += "-<w>";
-        s += first + how_many - 1;
-        s += "</w>";
-    }
-    return s;
-}
-
-static bool _can_shoplist(level_id lev = level_id::current())
-{
-    // TODO: temporary shoplists
-    return is_connected_branch(lev.branch);
-}
-
-static void _list_shop_keys(bool viewing, int total_stock
-#ifdef USE_TILE_LOCAL
-                            , MenuFreeform* freeform
-#endif
-                            )
-{
-    ASSERT(total_stock > 0);
-
-#ifndef USE_TILE_LOCAL
-    const bool freeform = false; // unused
-#endif
-
-    const int numlines = get_number_of_lines();
-    formatted_string fs;
-
-    // ///////// EXIT //////////
-    // set cursor [line 1]
-    cgotoxy(1, numlines - 1, GOTO_CRT);
-
-    fs = formatted_string::parse_string(
-#if defined(USE_TILE) && !defined(TOUCH_UI)
-            "[<w>Esc</w>/<w>R-Click</w>] exit"
-#else
-            //               "/R-Click"
-            "[<w>Esc</w>] exit        "
-#endif
-            );
-
-    // print menu item
-    _draw_shop_fs('x', fs, freeform);
-
-    // ///////// BUY/EXAMINE TOGGLE //////////
-    // strlen("[Esc/R-Click] exit") = 18
-    // set cursor [18 chars of text + 2 spaces + start at 1]
-    cgotoxy(21, numlines - 1, GOTO_CRT);
-
-    fs = formatted_string::parse_string(make_stringf(
-            "[<w>!</w>] %s items",
-            (viewing ? "<w>examine</w>|buy" : "examine|<w>buy</w>") ));
-
-    _draw_shop_fs('!', fs, freeform);
-
-    // ///////// SELECT ITEM TO BUY/EXAMINE //////////
-    // strlen("[!] examine|buy items") = 21
-    // set cursor [21 from above, + 21 chars + 5 whitespace]
-    cgotoxy(47, numlines - 1, GOTO_CRT);
-
-    // calculate and draw formatted text
-    string keys = _hyphenated_letters(total_stock, 'a');
-
-    keys = "[" + keys + "] select item "
-            + (viewing ? "to examine" : "for purchase");
-
-    fs = formatted_string::parse_string(keys.c_str());
-    fs.display();
-
-    // ///////// SORT MODE //////////
-    // strlen("[/] sort (default)") = 18
-    cgotoxy(1, numlines, GOTO_CRT);
-    ASSERT_RANGE(shopping_order, ORDER_MODE_DEFAULT, NUM_ORDER_MODES);
-    string sortmode = make_stringf("[<w>/</w>] sort (%s)",
-                                   shopping_order_names[shopping_order]);
-    fs = formatted_string::parse_string(sortmode.c_str());
-    _draw_shop_fs('/', fs, freeform);
-
-    // ///////// MAKE PURCHASE //////////
-    // set cursor [last line], align with 21 from line above
-    cgotoxy(21, numlines, GOTO_CRT);
-    fs = formatted_string::parse_string(
-            "[<w>Enter</w>"
-            "] make purchase");
-
-    _draw_shop_fs(' ', fs, freeform);
-
-    // ///////// PUT ITEM ON SHOPPING LIST //////////
-    // cursor at 47 to align with line above
-    cgotoxy(47, numlines, GOTO_CRT);
-
-    keys = _hyphenated_letters(total_stock, 'A');
-    keys = "[" + keys + "] put item on shopping list";
-
-    fs = formatted_string::parse_string(keys.c_str());
-    fs.display();
-}
 
 static int _shop_get_item_value(const item_def& item, int greed, bool id)
 {
@@ -265,644 +61,6 @@ static int _shop_get_item_value(const item_def& item, int greed, bool id)
 int item_price(const item_def& item, const shop_struct& shop)
 {
     return _shop_get_item_value(item, shop.greed, shoptype_identifies_stock(shop.type));
-}
-
-// Comparator for sorting a permutation list according to the shop, the
-// original list of item IDs, and the current ordering mode.
-class ShopSorter
-{
-public:
-    ShopSorter(const shop_struct &shop)
-        : stock(shop.stock), id(shoptype_identifies_stock(shop.type)),
-          greed(shop.greed)
-    {}
-
-    bool operator()(int a_index, int b_index) const
-    {
-        const item_def& a = stock[a_index];
-        const item_def& b = stock[b_index];
-
-        switch (shopping_order)
-        {
-        case ORDER_MODE_PRICE:
-            // Greed will affect all items equally (other than rounding
-            // error), so don't bother taking the shop's actual greed level.
-            return _shop_get_item_value(a, greed, id)
-                   < _shop_get_item_value(b, greed, id);
-        case ORDER_MODE_ALPHABETICAL:
-            return a.name(DESC_PLAIN, false, id)
-                   < b.name(DESC_PLAIN, false, id);
-        case ORDER_MODE_TYPE:
-            if (a.base_type == b.base_type)
-                return a.sub_type < b.sub_type;
-            else
-                return a.base_type < b.base_type;
-        case ORDER_MODE_DEFAULT:
-        default:
-            return a_index < b_index;
-        }
-    }
-private:
-    const vector<item_def>& stock;
-    const bool id;
-    const int greed;
-};
-
-// Index into shop.stock from the letters in the shopping menu.
-static vector<int> stock_order;
-
-static void _shop_print_stock(const vector<bool>& selected,
-                              const vector<bool>& in_list,
-                              const shop_struct& shop,
-                              int total_cost, bool viewing
-#ifdef USE_TILE_LOCAL
-                              , MenuFreeform* freeform
-#endif
-                              )
-{
-    ShopInfo &si  = StashTrack.get_shop(shop.pos);
-    const bool id = shoptype_identifies_stock(shop.type);
-#ifdef USE_TILE_LOCAL
-    TextItem* tmp = nullptr;
-#endif
-
-    stock_order.clear();
-    for (size_t i = 0; i < shop.stock.size(); ++i)
-        stock_order.push_back(i);
-    stable_sort(stock_order.begin(), stock_order.end(),
-                ShopSorter(shop));
-    ASSERT(shop.stock.size() == stock_order.size());
-    for (size_t i = 0; i < stock_order.size(); ++i)
-    {
-        const int stock_pos = stock_order[i];
-        const item_def& item = shop.stock[stock_pos];
-        const int gp_value = _shop_get_item_value(item, shop.greed, id);
-        const bool can_afford = (you.gold >= gp_value);
-
-        cgotoxy(1, i + 1, GOTO_CRT);
-        const char c = i + 'a';
-
-        // Colour stock as follows:
-        //  * lightcyan, if on the shopping list and not selected.
-        //  * lightred, if you can't buy all you selected.
-        //  * lightgreen, if this item is purchasable along with your selections
-        //  * red, if this item is not purchasable even by itself.
-        //  * yellow, if this item would be purchasable if you deselected
-        //            something else.
-
-        // Is this too complicated? (jpeg)
-
-        if (in_list[stock_pos] && !selected[stock_pos])
-            textcolour(LIGHTCYAN);
-        else if (total_cost > you.gold && selected[stock_pos])
-            textcolour(LIGHTRED);
-        else if (gp_value <= you.gold - total_cost
-                 || selected[stock_pos] && can_afford)
-        {
-            textcolour(LIGHTGREEN);
-        }
-        else if (!can_afford)
-            textcolour(RED);
-        else
-            textcolour(YELLOW);
-
-        if (in_list[stock_pos] && !selected[stock_pos])
-            cprintf("%c $ ", c);
-        else if (selected[stock_pos])
-            cprintf("%c + ", c);
-        else
-            cprintf("%c - ", c);
-
-        // Colour stock according to menu colours.
-        const string colprf = item_prefix(item);
-        const int col = menu_colour(item.name(DESC_A),
-                                    colprf, "shop");
-        textcolour(col != -1 ? col : LIGHTGREY);
-
-        string item_name = item.name(DESC_A, false, id);
-        if (shop_item_unknown(item))
-            item_name += " (unknown)";
-
-        cprintf("%4d gold   %s", gp_value, item_name.c_str());
-
-        si.add_item(item, gp_value);
-
-#ifdef USE_TILE_LOCAL
-        const int cols = get_number_of_cols();
-        tmp = new TextItem();
-        tmp->set_highlight_colour(WHITE);
-        tmp->set_text(""); // will print bounding box around formatted text
-        tmp->set_bounds(coord_def(1 ,wherey()), coord_def(cols+2, wherey() + 1));
-        tmp->add_hotkey(c);
-        tmp->set_id(c);
-        tmp->set_description_text(item_name);
-        freeform->attach_item(tmp);
-        tmp->set_visible(true);
-#endif
-    }
-    textcolour(LIGHTGREY);
-}
-
-static int _count_identical(const vector<item_def>& stock, const item_def& item)
-{
-    int count = 0;
-    for (const item_def& other : stock)
-        if (ShoppingList::items_are_same(item, other))
-            count++;
-
-    return count;
-}
-
-//  Rather than prompting for each individual item, shopping now works more
-//  like multi-pickup, in that pressing a letter only "selects" an item
-//  (changing the '-' next to its name to a '+'). Affordability is shown
-//  via colours that are updated every time the contents of your shopping
-//  cart change.
-//
-//  New, suggested shopping keys:
-//  * letter keys [a-t] (de)select item, as now
-//  * Enter buys (with prompt), as now
-//  * x exits (also Esc), as now
-//  * ! toggles examination mode (where letter keys view items)
-static bool _in_a_shop(shop_struct& shop, int &num_in_list)
-{
-    unwind_bool in_shop(_in_shop_now, true);
-    unwind_var<ordering_mode> default_order(shopping_order);
-
-    cursor_control coff(false);
-
-#ifdef USE_TILE_WEB
-    tiles_crt_control menu(CRT_MENU, "shop");
-#endif
-
-    clrscr();
-
-    const string hello = "Welcome to " + shop_name(shop.pos) + "!";
-    bool first = true;
-    int total_cost = 0;
-
-    vector<bool> selected;
-    vector<bool> in_list;
-
-    const bool id_stock         = shoptype_identifies_stock(shop.type);
-          bool bought_something = false;
-          bool viewing          = false;
-          bool first_iter       = true;
-
-    // Store last_pickup in case we need to restore it.
-    // Then clear it to fill with items picked up.
-    map<int,int> tmp_l_p = you.last_pickup;
-    you.last_pickup.clear();
-
-    while (true)
-    {
-#ifdef USE_TILE_LOCAL
-        PrecisionMenu menu;
-        menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
-        MenuFreeform* freeform = new MenuFreeform();
-        freeform->init(coord_def(1, 1),
-                       coord_def(get_number_of_cols(), get_number_of_lines() + 1),
-                       "freeform");
-        menu.attach_object(freeform);
-        menu.set_active_object(freeform);
-        BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
-        highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
-        menu.attach_object(highlighter);
-#endif
-        ASSERT(total_cost >= 0);
-
-        StashTrack.get_shop(shop.pos).reset();
-
-        in_list.clear();
-        in_list.resize(shop.stock.size(), false);
-        for (size_t i = 0; i < shop.stock.size(); i++)
-        {
-            const item_def& item = shop.stock[i];
-            in_list[i] = shopping_list.is_on_list(item);
-        }
-
-        // If items have been bought...
-        if (shop.stock.size() != selected.size())
-        {
-            total_cost = 0;
-            selected.clear();
-            selected.resize(shop.stock.size(), false);
-        }
-
-        num_in_list  = 0;
-        int num_selected = 0;
-        total_cost = 0;
-        for (size_t i = 0; i < shop.stock.size(); i++)
-        {
-            if (in_list[i])
-                num_in_list++;
-            if (selected[i])
-            {
-                total_cost += _shop_get_item_value(shop.stock[i],
-                                                   shop.greed, id_stock);
-                num_selected++;
-            }
-        }
-
-        clrscr();
-        if (shop.stock.empty())
-        {
-            _shop_print("I'm sorry, my shop is empty now.", 1);
-            _shop_more();
-            return bought_something;
-        }
-
-        _shop_print_stock(selected, in_list, shop, total_cost, viewing
-#ifdef USE_TILE_LOCAL
-                          , freeform
-#endif
-                          );
-        _list_shop_keys(viewing, shop.stock.size()
-#ifdef USE_TILE_LOCAL
-                        , freeform
-#endif
-                        );
-
-        // Cull shopping list after shop contents have been displayed, but
-        // only once.
-        if (first_iter)
-        {
-            first_iter = false;
-
-            unsigned int culled = 0;
-
-            for (size_t i = 0; i < shop.stock.size(); i++)
-            {
-                const item_def& item = shop.stock[i];
-                const int cost = _shop_get_item_value(item, shop.greed,
-                                                      id_stock);
-
-                unsigned int num = shopping_list.cull_identical_items(item,
-                                                                      cost);
-                if (num > 0)
-                {
-                    in_list[i] = true;
-                    num_in_list++;
-                }
-                culled += num;
-            }
-            if (culled > 0)
-            {
-                // Some shopping list items have been moved to this store,
-                // so refresh the display.
-                continue;
-            }
-        }
-
-        string info;
-        if (!total_cost)
-        {
-            info = make_stringf("You have %d gold piece%s.", you.gold,
-                                you.gold != 1 ? "s" : "");
-            textcolour(YELLOW);
-        }
-        else if (total_cost > you.gold)
-        {
-            info = make_stringf("You have %d gold piece%s. "
-                           "You are short %d gold piece%s for the purchase.",
-                           you.gold,
-                           you.gold != 1 ? "s" : "",
-                           total_cost - you.gold,
-                           (total_cost - you.gold != 1) ? "s" : "");
-
-            textcolour(LIGHTRED);
-        }
-        else
-        {
-            info = make_stringf("You have %d gold piece%s. "
-                     "After the purchase, you will have %d gold piece%s.",
-                     you.gold,
-                     you.gold != 1 ? "s" : "",
-                     you.gold - total_cost,
-                     (you.gold - total_cost != 1) ? "s" : "");
-
-            textcolour(YELLOW);
-        }
-
-        _shop_print(info.c_str(), 0);
-
-        info = "";
-        if (first)
-        {
-            first = false;
-            info = hello + " ";
-        }
-        info += "What would you like to do? ";
-
-        textcolour(CYAN);
-        _shop_print(info.c_str(), 1);
-
-        textcolour(LIGHTGREY);
-
-#ifdef USE_TILE_LOCAL
-        //draw menu over the top of the prompt text
-        tiles.get_crt()->attach_menu(&menu);
-        freeform->set_visible(true);
-        highlighter->set_visible(true);
-        menu.draw_menu();
-
-        int key = getch_ck();
-        if (key != CK_ENTER && menu.process_key(key))
-        {
-            vector<MenuItem*> selection = menu.get_selected_items();
-            if (selection.size() == 1)
-                key = (int) selection.at(0)->get_id();
-        }
-
-#else
-        mouse_control mc(MOUSE_MODE_PROMPT);
-        int key = getchm();
-#endif
-
-        if (toalower(key) == 'x' || key_is_escape(key) || key == CK_MOUSE_CMD)
-            break;
-#ifdef USE_TILE_LOCAL
-        else if (key == ' ' || key == CK_MOUSE_CLICK || key == CK_ENTER)
-#else
-        else if (key == '\r')
-#endif
-        {
-            vector<bool> to_buy;
-            int total_purchase = 0;
-
-            if (num_selected == 0 && num_in_list > 0)
-            {
-                if (_shop_yesno("Buy items on shopping list? (Y/n)", 'y'))
-                {
-                    to_buy = in_list;
-
-                    for (size_t i = 0; i < to_buy.size(); i++)
-                    {
-                        if (to_buy[i])
-                        {
-                            const item_def& item = shop.stock[i];
-
-                            total_purchase +=
-                                _shop_get_item_value(item, shop.greed,
-                                                     id_stock);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                to_buy         = selected;
-                total_purchase = total_cost;
-            }
-
-            // Do purchase.
-            if (total_purchase > you.gold)
-            {
-                _shop_print("I'm sorry, you don't seem to have enough money.",
-                            1);
-                _shop_more();
-            }
-            else if (!total_purchase) // Nothing selected.
-                continue;
-            else
-            {
-                const string prompt = make_stringf(
-                                          "Purchase for %d gold? (y/n)",
-                                          total_purchase);
-
-                if (_shop_yesno(prompt.c_str(), 'n'))
-                {
-                    int num_items = 0, outside_items = 0, quant;
-                    for (int i = to_buy.size() - 1; i >= 0; --i)
-                    {
-                        if (to_buy[i])
-                        {
-                            item_def& item = shop.stock[i];
-
-                            const int gp_value = _shop_get_item_value(item,
-                                                        shop.greed, id_stock);
-
-                            // Can happen if the price changes due to id status
-                            if (gp_value > you.gold)
-                                continue;
-
-                            // Remove from shopping list if it's unique
-                            // (i.e., if the shop has multiple scrolls of
-                            // identify, don't remove the other scrolls
-                            // from the shopping list if there's any
-                            // left).
-                            if (in_list[i]
-                                && _count_identical(shop.stock, item) == 1)
-                            {
-                                shopping_list.del_thing(item);
-                            }
-
-                            // Take a note of the purchase.
-                            take_note(Note(NOTE_BUY_ITEM, gp_value, 0,
-                                           item.name(DESC_A).c_str()));
-
-                            // But take no further similar notes.
-                            item.flags |= ISFLAG_NOTED_GET;
-
-                            if (fully_identified(item))
-                                item.flags |= ISFLAG_NOTED_ID;
-
-                            quant = item.quantity;
-                            num_items += quant;
-
-                            if (!_purchase(shop, i, gp_value, id_stock))
-                            {
-                                // The purchased item didn't fit into your
-                                // knapsack.
-                                outside_items += quant;
-                            }
-                        }
-                    }
-
-                    if (outside_items)
-                    {
-                        mprf("I'll put %s outside for you.",
-                              num_items == 1             ? "it" :
-                              num_items == outside_items ? "them"
-                                                         : "some of them");
-                    }
-                    bought_something = true;
-                }
-            }
-            //_shop_more();
-            continue;
-        }
-        else if (key == '/')
-            ++shopping_order;
-        else if (key == '!' || key == '?')
-        {
-            // Toggle between browsing and shopping.
-            viewing = !viewing;
-        }
-        else if (key == '$')
-        {
-            if (viewing || (num_selected == 0 && num_in_list == 0))
-            {
-                _shop_print("Huh?", 1);
-                _shop_more();
-                continue;
-            }
-
-            if (num_selected > 0)
-            {
-                // Move selected to shopping list.
-                for (size_t i = 0; i < shop.stock.size(); i++)
-                {
-                    const item_def &item = shop.stock[i];
-                    if (selected[i])
-                    {
-                        if (!shopping_list.is_on_list(item))
-                        {
-                            const int cost = _shop_get_item_value(item,
-                                        shop.greed, id_stock);
-                            shopping_list.add_thing(item, cost);
-                        }
-                        in_list[i]  = true;
-                        selected[i] = false;
-                    }
-                }
-                total_cost = 0;
-            }
-            else
-            {
-                // Move shopping list to selected.
-                for (size_t i = 0; i < shop.stock.size(); i++)
-                {
-                    const item_def &item = shop.stock[i];
-                    if (in_list[i])
-                    {
-                        in_list[i]  = false;
-                        selected[i] = true;
-
-                        total_cost += _shop_get_item_value(item, shop.greed,
-                                                           id_stock);
-
-                        if (shopping_list.is_on_list(item))
-                            shopping_list.del_thing(item);
-                    }
-                }
-            }
-        }
-        else if (!isaalpha(key))
-        {
-#ifdef TOUCH_UI
-            // do nothing: this should be arrow key presses and the like
-#else
-            _shop_print("Huh?", 1);
-            _shop_more();
-#endif
-        }
-        else
-        {
-            // Uppercase means toggle the item on the shopping list
-            // (unmarking for purchase if it was marked).
-            bool to_shoplist = isaupper(key);
-            key = toalower(key) - 'a';
-            if ((size_t) key >= shop.stock.size())
-            {
-                _shop_print("No such item.", 1);
-                _shop_more();
-                continue;
-            }
-            key = stock_order[key];
-
-            item_def& item = shop.stock[key];
-            if (viewing && !to_shoplist)
-            {
-                // A hack to make the description more useful.
-                // In theory, the user could kill the process at this
-                // point and end up with valid ID for the item.
-                // That's not very useful, though, because it doesn't set
-                // type-ID and once you can access the item (by buying it)
-                // you have its full ID anyway. Worst case, it won't get
-                // noted when you buy it.
-                const uint64_t old_flags = item.flags;
-                if (id_stock)
-                {
-                    item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
-                                   | ISFLAG_NOTED_GET);
-                }
-                describe_item(item);
-                if (id_stock)
-                    item.flags = old_flags;
-            }
-            else
-            {
-                if (in_list[key])
-                {
-                    shopping_list.del_thing(item);
-                    if (to_shoplist)
-                        selected[key] = false;
-                    else
-                        selected[key] = !selected[key];
-                }
-                else if (to_shoplist)
-                {
-                    selected[key] = false;
-                    const int cost = _shop_get_item_value(item, shop.greed,
-                                                          id_stock);
-                    shopping_list.add_thing(item, cost);
-                }
-                else
-                    selected[key] = !selected[key];
-            }
-        }
-        ASSERT(total_cost >= 0);
-    }
-
-    if (you.last_pickup.empty())
-        you.last_pickup = tmp_l_p;
-
-    return bought_something;
-}
-
-bool shoptype_identifies_stock(shop_type type)
-{
-    return type != SHOP_WEAPON_ANTIQUE
-           && type != SHOP_ARMOUR_ANTIQUE
-           && type != SHOP_GENERAL_ANTIQUE;
-}
-
-/** Buy an item from a shop!
- *
- *  @param shop  the shop to purchase from.
- *  @param index the index of the item to buy in shop.stock
- *  @param cost  the price of the item being payed
- *  @param id    whether to ID the item
- *  @returns whether true if it went in your inventory, false otherwise.
- */
-static bool _purchase(shop_struct& shop, int index, int cost, bool id)
-{
-    item_def item = shop.stock[index];
-    shop.stock.erase(shop.stock.begin() + index);
-
-    you.del_gold(cost);
-
-    you.attribute[ATTR_PURCHASES] += cost;
-
-    origin_purchased(item);
-
-    if (id)
-    {
-        // Identify the item and its type.
-        // This also takes the ID note if necessary.
-        set_ident_type(item, true);
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
-    }
-
-    // Shopkeepers will place goods you can't carry outside the shop.
-    if (item_is_stationary(item)
-        || !move_item_to_inv(item))
-    {
-        copy_item_to_grid(item, shop.pos);
-        return false;
-    }
-    return true;
 }
 
 // This probably still needs some work. Rings used to be the only
@@ -1932,6 +1090,484 @@ bool is_worthless_consumable(const item_def &item)
     }
 }
 
+static int _count_identical(const vector<item_def>& stock, const item_def& item)
+{
+    int count = 0;
+    for (const item_def& other : stock)
+        if (ShoppingList::items_are_same(item, other))
+            count++;
+
+    return count;
+}
+
+/** Buy an item from a shop!
+ *
+ *  @param shop  the shop to purchase from.
+ *  @param index the index of the item to buy in shop.stock
+ *  @returns true if it went in your inventory, false otherwise.
+ */
+static bool _purchase(shop_struct& shop, int index)
+{
+    item_def item = shop.stock[index]; // intentional copy
+    const int cost = item_price(item, shop);
+    shop.stock.erase(shop.stock.begin() + index);
+
+    // Remove from shopping list if it's unique
+    // (i.e., if the shop has multiple scrolls of
+    // identify, don't remove the other scrolls
+    // from the shopping list if there's any
+    // left).
+    if (shopping_list.is_on_list(item)
+        && _count_identical(shop.stock, item) == 0)
+    {
+        shopping_list.del_thing(item);
+    }
+
+    // Take a note of the purchase.
+    take_note(Note(NOTE_BUY_ITEM, cost, 0,
+                   item.name(DESC_A).c_str()));
+
+    // But take no further similar notes.
+    item.flags |= ISFLAG_NOTED_GET;
+
+    if (fully_identified(item))
+        item.flags |= ISFLAG_NOTED_ID;
+
+    you.del_gold(cost);
+
+    you.attribute[ATTR_PURCHASES] += cost;
+
+    origin_purchased(item);
+
+    if (shoptype_identifies_stock(shop.type))
+    {
+        // Identify the item and its type.
+        // This also takes the ID note if necessary.
+        set_ident_type(item, true);
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+    }
+
+    // Shopkeepers will place goods you can't carry outside the shop.
+    if (item_is_stationary(item)
+        || !move_item_to_inv(item))
+    {
+        copy_item_to_grid(item, shop.pos);
+        return false;
+    }
+    return true;
+}
+
+static string _hyphenated_letters(int how_many, char first)
+{
+    string s = "<w>";
+    s += first;
+    s += "</w>";
+    if (how_many > 1)
+    {
+        s += "-<w>";
+        s += first + how_many - 1;
+        s += "</w>";
+    }
+    return s;
+}
+
+enum shopping_order
+{
+    ORDER_DEFAULT,
+    ORDER_PRICE,
+    ORDER_ALPHABETICAL,
+    ORDER_TYPE,
+    NUM_ORDERS
+};
+
+static const char * const shopping_order_names[NUM_ORDERS] =
+{
+    "default", "price", "name", "type"
+};
+
+static shopping_order operator++(shopping_order &x)
+{
+    x = static_cast<shopping_order>(x + 1);
+    if (x == NUM_ORDERS)
+        x = ORDER_DEFAULT;
+    return x;
+}
+
+class ShopMenu : public InvMenu
+{
+    friend class ShopEntry;
+
+    shop_struct& shop;
+    bool looking = false;
+    shopping_order order = ORDER_DEFAULT;
+    bool long_distance;
+
+    int selected_cost() const;
+
+    void update_help();
+    void cycle_order();
+    void purchase_selected();
+
+    virtual bool process_key(int keyin) override;
+    // Selecting one item may remove another from the shopping list, or change
+    // the colour others need to have, so we can't be lazy with redrawing
+    // elements.
+    virtual bool always_redraw() const override { return true; }
+
+public:
+    bool bought_something = false;
+
+    ShopMenu(shop_struct& _shop, bool _long_distance = false);
+};
+
+class ShopEntry : public InvEntry
+{
+    ShopMenu& menu;
+
+    string get_text(bool need_cursor = false) const override
+    {
+        need_cursor = need_cursor && show_cursor;
+        const int cost = item_price(*item, menu.shop);
+        const int total_cost = menu.selected_cost();
+        const bool on_list = shopping_list.is_on_list(*item);
+        // Colour stock as follows:
+        //  * lightcyan, if on the shopping list and not selected.
+        //  * lightred, if you can't buy all you selected.
+        //  * lightgreen, if this item is purchasable along with your selections
+        //  * red, if this item is not purchasable even by itself.
+        //  * yellow, if this item would be purchasable if you deselected
+        //            something else.
+
+        // Is this too complicated? (jpeg)
+        const colour_t keycol =
+            !selected() && on_list              ? LIGHTCYAN :
+            selected() && total_cost > you.gold ? LIGHTRED  :
+            cost <= you.gold - total_cost       ? LIGHTGREEN :
+            cost > you.gold                     ? RED :
+                                                  YELLOW;
+        const string keystr = colour_to_str(keycol);
+        const string itemstr =
+            colour_to_str(menu_colour(text, item_prefix(*item), tag));
+        return make_stringf("<%s>%c%c%c%c</%s><%s>%4d gold   %s%s</%s>",
+                            keystr.c_str(),
+                            hotkeys[0],
+                            need_cursor ? '[' : ' ',
+                            selected() ? '+' : on_list ? '$' : '-',
+                            need_cursor ? ']' : ' ',
+                            keystr.c_str(),
+                            itemstr.c_str(),
+                            cost,
+                            text.c_str(),
+                            shop_item_unknown(*item) ? " (unknown)" : "",
+                            itemstr.c_str());
+    }
+
+    virtual void select(int qty = -1) override
+    {
+        if (shopping_list.is_on_list(*item) && qty != 0)
+            shopping_list.del_thing(*item);
+
+        InvEntry::select(qty);
+    }
+public:
+    ShopEntry(const item_def& i, ShopMenu& m)
+        : InvEntry(i),
+          menu(m)
+    {
+    }
+};
+
+ShopMenu::ShopMenu(shop_struct& _shop, bool _long_distance)
+    : InvMenu(MF_MULTISELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
+               | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING),
+      shop(_shop),
+      long_distance(_long_distance)
+{
+    if (long_distance)
+        looking = true;
+
+    set_tag("shop");
+
+    menu_letter ckey = 'a';
+    for (item_def& item : shop.stock)
+    {
+        auto newentry = make_unique<ShopEntry>(item, *this);
+        newentry->hotkeys.clear();
+        newentry->add_hotkey(ckey++);
+        add_entry(move(newentry));
+    }
+
+    update_help();
+
+    set_title("Welcome to " + shop_name(shop) + "! What would you "
+              "like to do?");
+}
+
+int ShopMenu::selected_cost() const
+{
+    int cost = 0;
+    for (auto item : selected_entries())
+        cost += item_price(*dynamic_cast<ShopEntry*>(item)->item, shop);
+    return cost;
+}
+
+void ShopMenu::update_help()
+{
+    set_more(formatted_string::parse_string(make_stringf(
+        //You have 0 gold pieces.
+        //[Esc/R-Click] exit  [!] examine|buy items  [a-i] select item for purchase
+        //[/] sort (default)  [Enter] make purchase  [A-I] put item on shopping list
+        "<yellow>You have %d gold piece%s.</yellow>\n"
+#if defined(USE_TILE) && !defined(TOUCH_UI)
+        "[<w>Esc</w>/<w>R-Click</w>] exit  "
+#else
+        //               "/R-Click"
+        "[<w>Esc</w>] exit          "
+#endif
+        "%s  [%s] %s\n"
+        "[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list",
+        you.gold,
+        you.gold == 1 ? "" : "s",
+        long_distance ? " " " "  "  " "       "  "          " :
+        looking ?       "[<w>!</w>] <w>examine</w>|buy items" :
+                        "[<w>!</w>] examine|<w>buy</w> items",
+        _hyphenated_letters(item_count(), 'a').c_str(),
+        looking ? "examine item" : "select item for purchase",
+        shopping_order_names[order],
+        // strwidth("default")
+        string(7 - strwidth(shopping_order_names[order]), ' ').c_str(),
+        long_distance ? " " "     "  "               " :
+                        "[<w>Enter</w>] make purchase",
+        _hyphenated_letters(item_count(), 'A').c_str())));
+}
+
+void ShopMenu::purchase_selected()
+{
+    bool buying_from_list = false;
+    vector<MenuEntry*> selected = selected_entries();
+    int cost = selected_cost();
+    if (selected.empty())
+    {
+        ASSERT(cost == 0);
+        buying_from_list = true;
+        for (auto item : items)
+            if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(item)->item))
+            {
+                selected.push_back(item);
+                cost += item_price(*dynamic_cast<ShopEntry*>(item)->item, shop);
+            }
+    }
+    if (selected.empty())
+        return;
+    textcolour(channel_to_colour(MSGCH_PROMPT));
+    cgotoxy(1, y_offset + pagesize - 3);
+    if (cost > you.gold)
+    {
+        cprintf("You don't have enough money.");
+        return;
+    }
+    cprintf("Purchase items%s for %d gold? (y/N)",
+            buying_from_list ? " in shopping list" : "",
+            cost);
+    if (!yesno(nullptr, true, 'n', false, false, true))
+    {
+        draw_menu();
+        return;
+    }
+    sort(begin(selected), end(selected),
+         [](MenuEntry* a, MenuEntry* b)
+         {
+             return a->data > b->data;
+         });
+    vector<int> bought_indices;
+    int outside_items = 0;
+    // Will iterate backwards through the shop (because of the earlier sort).
+    for (auto entry : selected)
+    {
+        const int i = static_cast<item_def*>(entry->data) - shop.stock.data();
+        item_def& item(shop.stock[i]);
+        // Can happen if the price changes due to id status
+        if (item_price(item, shop) > you.gold)
+            continue;
+        const int quant = item.quantity;
+
+        if (!_purchase(shop, i))
+        {
+            // The purchased item didn't fit into your
+            // knapsack.
+            outside_items += quant;
+        }
+
+        bought_indices.push_back(i);
+        bought_something = true;
+    }
+
+    for (int i = items.size() - 1; i >= 0; --i)
+    {
+        auto it = items.begin() + i;
+        if (find(begin(bought_indices), end(bought_indices),
+                 static_cast<item_def*>((*it)->data) - shop.stock.data())
+               != end(bought_indices))
+        {
+            delete *it;
+            items.erase(it);
+        }
+    }
+    for (size_t i = 0; i < items.size(); ++i)
+        items[i]->hotkeys[0] = index_to_letter(i);
+    draw_menu();
+
+    if (outside_items)
+    {
+        textcolour(channel_to_colour(MSGCH_PROMPT));
+        cgotoxy(1, y_offset + pagesize - 3);
+        cprintf("I'll put %s outside for you.",
+                bought_indices.size() == 1             ? "it" :
+          (int) bought_indices.size() == outside_items ? "them"
+                                                       : "some of them");
+    }
+}
+
+void ShopMenu::cycle_order()
+{
+    ++order;
+    switch (order)
+    {
+    case ORDER_DEFAULT:
+        sort(begin(items), end(items),
+             [](MenuEntry* a, MenuEntry* b)
+             {
+                 return a->data < b->data;
+             });
+        break;
+    case ORDER_PRICE:
+        sort(begin(items), end(items),
+             [this](MenuEntry* a, MenuEntry* b)
+             {
+                 return item_price(*dynamic_cast<ShopEntry*>(a)->item, shop)
+                        < item_price(*dynamic_cast<ShopEntry*>(b)->item, shop);
+             });
+        break;
+    case ORDER_ALPHABETICAL:
+        sort(begin(items), end(items),
+             [this](MenuEntry* a, MenuEntry* b) -> bool
+             {
+                 const bool id = shoptype_identifies_stock(shop.type);
+                 return dynamic_cast<ShopEntry*>(a)->item->name(DESC_PLAIN, false, id)
+                        < dynamic_cast<ShopEntry*>(a)->item->name(DESC_PLAIN, false, id);
+             });
+        break;
+    case ORDER_TYPE:
+        sort(begin(items), end(items),
+             [this](MenuEntry* a, MenuEntry* b) -> bool
+             {
+                 const auto ai = dynamic_cast<ShopEntry*>(a)->item;
+                 const auto bi = dynamic_cast<ShopEntry*>(b)->item;
+                 if (ai->base_type == bi->base_type)
+                     return ai->sub_type < bi->sub_type;
+                 else
+                     return ai->base_type < bi->base_type;
+             });
+        break;
+    case NUM_ORDERS:
+        die("invalid ordering");
+    }
+    for (size_t i = 0; i < items.size(); ++i)
+        items[i]->hotkeys[0] = index_to_letter(i);
+    update_help();
+    draw_menu();
+}
+
+bool ShopMenu::process_key(int keyin)
+{
+    switch (keyin)
+    {
+    case '!':
+    case '?':
+        if (!long_distance)
+        {
+            looking = !looking;
+            update_help();
+            draw_menu();
+        }
+        return true;
+    case ' ':
+    case CK_MOUSE_CLICK:
+    case CK_ENTER:
+        if (!long_distance)
+            purchase_selected();
+        return true;
+    case '$':
+    {
+        const vector<MenuEntry*> selected = selected_entries();
+        if (!selected.empty())
+        {
+            // Move selected to shopping list.
+            for (auto entry : selected)
+            {
+                const item_def& item = *dynamic_cast<ShopEntry*>(entry)->item;
+                entry->selected_qty = 0;
+                if (!shopping_list.is_on_list(item))
+                    shopping_list.add_thing(item, item_price(item, shop));
+            }
+        }
+        else
+            // Move shoplist to selection.
+            for (auto entry : items)
+                if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(entry)->item))
+                    entry->select(-2);
+        // Move shoplist to selection.
+        draw_menu();
+        return true;
+    }
+    case '/':
+        cycle_order();
+        return true;
+    default:
+        break;
+    }
+
+    if (keyin - 'a' >= 0 && keyin - 'a' < (int)items.size() && looking)
+    {
+        item_def& item(*const_cast<item_def*>(dynamic_cast<ShopEntry*>(
+            items[letter_to_index(keyin)])->item));
+        // A hack to make the description more useful.
+        // In theory, the user could kill the process at this
+        // point and end up with valid ID for the item.
+        // That's not very useful, though, because it doesn't set
+        // type-ID and once you can access the item (by buying it)
+        // you have its full ID anyway. Worst case, it won't get
+        // noted when you buy it.
+        {
+            unwind_var<iflags_t> old_flags(item.flags);
+            if (shoptype_identifies_stock(shop.type))
+            {
+                item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
+                               | ISFLAG_NOTED_GET);
+            }
+            describe_item(item);
+        }
+        draw_menu();
+        return true;
+    }
+    else if (keyin - 'A' >= 0 && keyin - 'A' < (int)items.size())
+    {
+        const auto index = letter_to_index(keyin) % 26;
+        auto entry = dynamic_cast<ShopEntry*>(items[index]);
+        entry->selected_qty = 0;
+        const item_def& item(*entry->item);
+        if (shopping_list.is_on_list(item))
+            shopping_list.del_thing(item);
+        else
+            shopping_list.add_thing(item, item_price(item, shop));
+        // not draw_item since other items may enter/leave shopping list
+        draw_menu();
+        return true;
+    }
+
+    return InvMenu::process_key(keyin);
+}
+
 void shop()
 {
     if (!shop_at(you.pos()))
@@ -1941,7 +1577,7 @@ void shop()
     }
 
     shop_struct& shop = *shop_at(you.pos());
-    const string shopname = shop_name(shop.pos);
+    const string shopname = shop_name(shop);
 
     // Quick out, if no inventory
     if (shop.stock.empty())
@@ -1951,20 +1587,38 @@ void shop()
         return;
     }
 
-    int num_in_list = 0;
-    const bool bought_something = _in_a_shop(shop, num_in_list);
+    bool culled = false;
+    for (const auto& item : shop.stock)
+    {
+        const int cost = item_price(item, shop);
+        culled |= shopping_list.cull_identical_items(item, cost);
+    }
+    if (culled)
+        more(); // make sure all messages appear before menu
+
+    ShopMenu menu(shop);
+    menu.show();
+
+    StashTrack.get_shop(shop.pos) = ShopInfo(shop);
+    bool any_on_list = any_of(begin(shop.stock), end(shop.stock),
+                              [](const item_def& item)
+                              {
+                                  return shopping_list.is_on_list(item);
+                              });
 
     // If the shop is now empty, erase it from the overview.
     if (shop.stock.empty())
         destroy_shop_at(you.pos());
-
     redraw_screen();
-
-    if (bought_something)
+    if (menu.bought_something)
         mprf("Thank you for shopping at %s!", shopname.c_str());
-
-    if (num_in_list > 0)
+    if (any_on_list)
         mpr("You can access your shopping list by pressing '$'.");
+}
+
+void shop(shop_struct& shop)
+{
+    ShopMenu(shop, true).show();
 }
 
 void destroy_shop_at(coord_def p)
@@ -2038,50 +1692,41 @@ static string _shop_type_suffix(shop_type type, const coord_def &where)
     return string(suffixnames[temp]);
 }
 
-string shop_name(const coord_def& where, bool add_stop)
+string shop_name(const shop_struct& shop)
 {
-    const shop_struct *cshop = shop_at(where);
-
-    // paranoia
-    ASSERT(grd(where) == DNGN_ENTER_SHOP);
-
-    if (!cshop)
-    {
-        mpr("Help! Non-existent shop.");
-        return "Buggy Shop";
-    }
-
-    const shop_type type = cshop->type;
+    const shop_type type = shop.type;
 
     string sh_name = "";
 
-    if (!cshop->shop_name.empty())
-        sh_name += apostrophise(cshop->shop_name) + " ";
+#if TAG_MAJOR_VERSION == 34
+    // xref ShopInfo::load
+    if (shop.shop_name == " ")
+        return shop.shop_type_name;
+#endif
+    if (!shop.shop_name.empty())
+        sh_name += apostrophise(shop.shop_name) + " ";
     else
     {
-        uint32_t seed = static_cast<uint32_t>(cshop->keeper_name[0])
-            | (static_cast<uint32_t>(cshop->keeper_name[1]) << 8)
-            | (static_cast<uint32_t>(cshop->keeper_name[1]) << 16);
+        uint32_t seed = static_cast<uint32_t>(shop.keeper_name[0])
+            | (static_cast<uint32_t>(shop.keeper_name[1]) << 8)
+            | (static_cast<uint32_t>(shop.keeper_name[1]) << 16);
 
         sh_name += apostrophise(make_name(seed)) + " ";
     }
 
-    if (!cshop->shop_type_name.empty())
-        sh_name += cshop->shop_type_name;
+    if (!shop.shop_type_name.empty())
+        sh_name += shop.shop_type_name;
     else
         sh_name += shop_type_name(type);
 
-    if (!cshop->shop_suffix_name.empty())
-        sh_name += " " + cshop->shop_suffix_name;
+    if (!shop.shop_suffix_name.empty())
+        sh_name += " " + shop.shop_suffix_name;
     else
     {
-        string sh_suffix = _shop_type_suffix(type, where);
+        string sh_suffix = _shop_type_suffix(type, shop.pos);
         if (!sh_suffix.empty())
             sh_name += " " + sh_suffix;
     }
-
-    if (add_stop)
-        sh_name += ".";
 
     return sh_name;
 }
@@ -2089,6 +1734,13 @@ string shop_name(const coord_def& where, bool add_stop)
 bool is_shop_item(const item_def &item)
 {
     return item.link == ITEM_IN_SHOP;
+}
+
+bool shoptype_identifies_stock(shop_type type)
+{
+    return type != SHOP_WEAPON_ANTIQUE
+           && type != SHOP_ARMOUR_ANTIQUE
+           && type != SHOP_GENERAL_ANTIQUE;
 }
 
 bool shop_item_unknown(const item_def &item)
@@ -2099,14 +1751,59 @@ bool shop_item_unknown(const item_def &item)
            && !is_artefact(item);
 }
 
+static const char *shop_types[] =
+{
+    "weapon",
+    "armour",
+    "antique weapon",
+    "antique armour",
+    "antiques",
+    "jewellery",
+    "gadget",
+    "book",
+    "food",
+    "distillery",
+    "scroll",
+    "general",
+};
+
+/** What shop type is this?
+ *
+ *  @param s the shop type, in a string.
+ *  @returns the corresponding enum, or SHOP_UNASSIGNED if none.
+ */
+shop_type str_to_shoptype(const string &s)
+{
+    if (s == "random" || s == "any")
+        return SHOP_RANDOM;
+
+    for (size_t i = 0; i < ARRAYSZ(shop_types); ++i)
+        if (s == shop_types[i])
+            return static_cast<shop_type>(i);
+
+    return SHOP_UNASSIGNED;
+}
+
+const char *shoptype_to_str(shop_type type)
+{
+    return shop_types[type];
+}
+
+void list_shop_types()
+{
+    mpr_nojoin(MSGCH_PLAIN, "Available shop types: ");
+    for (const char *type : shop_types)
+        mprf_nocap("%s", type);
+}
+
 ////////////////////////////////////////////////////////////////////////
 
 // TODO:
-//   * Let shopping list be modified from with the stash lister.
 //   * Warn if buying something not on the shopping list would put
 //     something on shopping list out of your reach.
 
 #define SHOPPING_LIST_KEY       "shopping_list_key"
+#define SHOPPING_LIST_COST_KEY  "shopping_list_cost_key"
 #define SHOPPING_THING_COST_KEY "cost_key"
 #define SHOPPING_THING_ITEM_KEY "item_key"
 #define SHOPPING_THING_DESC_KEY "desc_key"
@@ -2261,8 +1958,7 @@ bool ShoppingList::del_thing(string desc, const level_pos* _pos)
 //
 // * If you collected enough spellbooks that all the spells in a
 //   shopping list book are covered, then auto-remove it.
-unsigned int ShoppingList::cull_identical_items(const item_def& item,
-                                                int cost)
+bool ShoppingList::cull_identical_items(const item_def& item, int cost)
 {
     // Dead men can't update their shopping lists.
     if (!crawl_state.need_save)
@@ -2270,7 +1966,8 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
 
     // Can't put items in Bazaar shops in the shopping list, so
     // don't bother transferring shopping list items to Bazaar shops.
-    if (cost != -1 && !_can_shoplist())
+    // TODO: temporary shoplists
+    if (cost != -1 && !is_connected_branch(you.where_are_you))
         return 0;
 
     switch (item.base_type)
@@ -2384,7 +2081,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
                              "one? (Y/n)", list_cost,
                              describe_thing(thing).c_str());
 
-            if (_shop_yesno(prompt.c_str(), 'y'))
+            if (yesno(prompt.c_str(), true, 'y', false))
             {
                 add_item = true;
                 to_del.push_back(listed);
@@ -2403,24 +2100,19 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
             string prompt = make_stringf("Shopping-list: remove %s? (Y/n)",
                                          describe_thing(thing, DESC_A).c_str());
 
-            if (_shop_yesno(prompt.c_str(), 'y'))
+            if (yesno(prompt.c_str(), true, 'y', false))
             {
                 to_del.push_back(listed);
-                if (!_in_shop_now)
-                {
-                    mprf("Shopping-list: removing %s",
-                         describe_thing(thing, DESC_A).c_str());
-                }
+                mprf("Shopping-list: removing %s",
+                     describe_thing(thing, DESC_A).c_str());
             }
-            else if (!_in_shop_now)
+            else
                 canned_msg(MSG_OK);
         }
         else
         {
-            string str = make_stringf("Shopping-list: removing %s",
-                                      describe_thing(thing, DESC_A).c_str());
-
-            _shop_mpr(str.c_str());
+            mprf("Shopping-list: removing %s",
+                 describe_thing(thing, DESC_A).c_str());
             to_del.push_back(listed);
         }
     }
@@ -2987,49 +2679,4 @@ string ShoppingList::item_name_simple(const item_def& item, bool ident)
 {
     return item.name(DESC_PLAIN, false, ident, false, false,
                      ISFLAG_KNOW_CURSE);
-}
-
-static const char *shop_types[] =
-{
-    "weapon",
-    "armour",
-    "antique weapon",
-    "antique armour",
-    "antiques",
-    "jewellery",
-    "gadget",
-    "book",
-    "food",
-    "distillery",
-    "scroll",
-    "general",
-};
-
-/** What shop type is this?
- *
- *  @param s the shop type, in a string.
- *  @returns the corresponding enum, or SHOP_UNASSIGNED if none.
- */
-shop_type str_to_shoptype(const string &s)
-{
-    if (s == "random" || s == "any")
-        return SHOP_RANDOM;
-
-    for (size_t i = 0; i < ARRAYSZ(shop_types); ++i)
-        if (s == shop_types[i])
-            return static_cast<shop_type>(i);
-
-    return SHOP_UNASSIGNED;
-}
-
-const char *shoptype_to_str(shop_type type)
-{
-    return shop_types[type];
-}
-
-void list_shop_types()
-{
-    mpr_nojoin(MSGCH_PLAIN, "Available shop types: ");
-    for (const char *type : shop_types)
-        mprf_nocap("%s", type);
 }
