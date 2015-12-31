@@ -2043,7 +2043,7 @@ int mons_avg_hp(monster_type mc)
         && mons_species(mc) == MONS_DEMONSPAWN)
     {
         const monsterentry* mbase = get_monster_data(MONS_DEMONSPAWN);
-        return mbase->avg_hp_10x + me->avg_hp_10x;
+        return (mbase->avg_hp_10x + me->avg_hp_10x) / 10;
     }
 
     return me->avg_hp_10x / 10;
