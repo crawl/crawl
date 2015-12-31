@@ -1018,6 +1018,7 @@ static const pop_entry pop_depths[] =
   { -2,  4,  250, SEMI, MONS_RAKSHASA },
   { -2,  4,  100, SEMI, MONS_WIZARD },
   { -2,  4,  100, SEMI, MONS_NECROMANCER },
+  { -2,  6,   89, PEAK, MONS_ACID_CRAB },
   { -2, 10,  250, PEAK, MONS_FIRE_GIANT },
   { -2, 10,  260, PEAK, MONS_FROST_GIANT },
   { -2, 10,   70, PEAK, MONS_HELL_KNIGHT },
