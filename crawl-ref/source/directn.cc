@@ -692,7 +692,7 @@ void full_describe_view()
     {
         vector<InvEntry*> all_items;
         for (const item_def &item : list_items)
-            all_items.push_back(new InvEntry(item, true));
+            all_items.push_back(new InvEntry(item));
 
         const menu_sort_condition *cond = desc_menu.find_menu_sort_condition();
         desc_menu.sort_menu(all_items, cond);

@@ -85,12 +85,12 @@ private:
 protected:
     static bool show_cursor;
     // Should we show the floor tile, etc?
-    bool show_background;
+    bool show_background = true;
 
 public:
     const item_def *item;
 
-    InvEntry(const item_def &i, bool show_bg = false);
+    InvEntry(const item_def &i);
     string get_text(const bool need_cursor = false) const override;
     void set_show_glyph(bool doshow);
     static void set_show_cursor(bool doshow);
