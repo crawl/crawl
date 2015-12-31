@@ -3015,7 +3015,7 @@ string feature_description_at(const coord_def& where, bool covering,
         return thing_do_grammar(dtype, add_stop, false, "an abandoned shop");
 
     case DNGN_ENTER_SHOP:
-        return shop_name(where, add_stop);
+        return shop_name(*shop_at(where)) + (add_stop ? "." : "");
 
 #if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:

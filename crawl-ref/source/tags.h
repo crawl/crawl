@@ -162,15 +162,6 @@ static inline void unmarshallSigned(reader& th, T& v)
     v = (T)unmarshallSigned(th);
 }
 
-template<typename T, typename U>
-void unmarshall_vector(reader& th, vector<T>& vec, U T_unmarshall)
-{
-    vec.clear();
-    const int num_to_read = unmarshallInt(th);
-    for (int i = 0; i < num_to_read; ++i)
-        vec.push_back(T_unmarshall(th));
-}
-
 /* ***********************************************************************
  * Tag interface
  * *********************************************************************** */
