@@ -1158,14 +1158,14 @@ void dec_penance(god_type god, int val)
     // We only get this far if we just mollified a god.
     // If we just mollified a god, see if we have any angry gods left.
     // If we don't, clear the stored wrath / XP counter.
-    int i = GOD_NO_GOD;
-    for (; i < NUM_GODS; ++i)
+    god_iterator it;
+    for (; it; ++it)
     {
-        if (active_penance((god_type) i))
+        if (active_penance(*it))
             break;
     }
 
-    if (i != NUM_GODS)
+    if (it)
         return;
 
     you.attribute[ATTR_GOD_WRATH_COUNT] = 0;
@@ -2145,9 +2145,9 @@ god_type str_to_god(const string &_name, bool exact)
 
     int      num_partials = 0;
     god_type partial      = GOD_NO_GOD;
-    for (int i = 0; i < NUM_GODS; ++i)
+    for (god_iterator it; it; ++it)
     {
-        god_type    god  = static_cast<god_type>(i);
+        god_type god = *it;
         string name = lowercase_string(god_name(god, false));
 
         if (name == target)
@@ -3315,13 +3315,13 @@ void set_god_ability_slots()
     // Clear out other god invocations.
     for (ability_type& slot : you.ability_letter_table)
     {
-        for (size_t god = 0; god < NUM_GODS; ++god)
+        for (god_iterator it; it; ++it)
         {
             if (slot == ABIL_NON_ABILITY)
                 break;
-            if (god == you.religion)
+            if (*it == you.religion)
                 continue;
-            for (const god_power& power : god_powers[god])
+            for (const god_power& power : god_powers[*it])
                 if (slot == power.abil)
                     slot = ABIL_NON_ABILITY;
         }
@@ -4097,10 +4097,10 @@ void handle_god_time(int /*time_delta*/)
     {
         vector<god_type> angry_gods;
         // First count the number of gods to whom we owe penance.
-        for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+        for (god_iterator it; it; ++it)
         {
-            if (active_penance((god_type) i))
-                angry_gods.push_back((god_type) i);
+            if (active_penance(*it))
+                angry_gods.push_back(*it);
         }
         if (x_chance_in_y(angry_gods.size(), 20))
         {

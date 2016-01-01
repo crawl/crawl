@@ -1010,11 +1010,11 @@ void wizard_god_wrath()
 void wizard_god_mollify()
 {
     bool mollified = false;
-    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+    for (god_iterator it; it; ++it)
     {
-        if (player_under_penance((god_type) i))
+        if (player_under_penance(*it))
         {
-            dec_penance((god_type) i, you.penance[i]);
+            dec_penance(*it, you.penance[*it]);
             mollified = true;
         }
     }

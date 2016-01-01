@@ -2621,10 +2621,10 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         return;
 
     vector<god_type> xp_gods;
-    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+    for (god_iterator it; it; ++it)
     {
-        if (xp_penance((god_type) i))
-            xp_gods.push_back((god_type) i);
+        if (xp_penance(*it))
+            xp_gods.push_back(*it);
     }
 
     if (!xp_gods.empty())
@@ -2665,9 +2665,9 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         you.experience += exp_gained;
 
     you.attribute[ATTR_EVOL_XP] += exp_gained;
-    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+    for (god_iterator it; it; ++it)
     {
-        if (active_penance((god_type) i))
+        if (active_penance(*it))
         {
             you.attribute[ATTR_GOD_WRATH_XP] -= exp_gained;
             while (you.attribute[ATTR_GOD_WRATH_XP] < 0)
