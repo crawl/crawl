@@ -2906,13 +2906,13 @@ static void tag_read_you(reader &th)
     if (you.attribute[ATTR_GOD_WRATH_XP] != 0
         || you.attribute[ATTR_GOD_WRATH_COUNT] != 0)
     {
-        int i;
-        for (i = GOD_NO_GOD; i < NUM_GODS; ++i)
+        god_iterator it;
+        for (; it; ++it)
         {
-            if (player_under_penance((god_type) i))
+            if (player_under_penance(*it))
                 break;
         }
-        if (i == NUM_GODS)
+        if (!it)
         {
             you.attribute[ATTR_GOD_WRATH_XP] = 0;
             you.attribute[ATTR_GOD_WRATH_COUNT] = 0;
