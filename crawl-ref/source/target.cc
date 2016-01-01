@@ -233,7 +233,8 @@ bool targetter_beam::affects_monster(const monster_info& mon)
     //     take monster_infos instead.
     const monster* m = monster_at(mon.pos);
     return m && (!beam.is_harmless(m) || beam.nice_to(mon))
-           && !(beam.has_saving_throw() && beam.flavour != BEAM_VIRULENCE
+           && !(beam.is_enchantment() && beam.has_saving_throw()
+                && beam.flavour != BEAM_VIRULENCE
                 && mon.res_magic() == MAG_IMMUNE);
 }
 
