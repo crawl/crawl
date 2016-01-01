@@ -1965,6 +1965,9 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
         if (!mons_aligned(&mon, mons))
             continue;
 
+        if (mons_is_firewood(mons))
+            continue;
+
         if (check_only)
             return true; // just need to check
 
