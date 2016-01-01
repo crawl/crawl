@@ -306,7 +306,9 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Sif Muna
     { { 1, ABIL_SIF_MUNA_CHANNEL_ENERGY, "tap ambient magical fields" },
-      { 2, ABIL_SIF_MUNA_FORGET_SPELL, "freely open your mind to new spells",
+      { 2, "Sif Muna is reducing the nutrition costs of your magics.",
+           "Sif Muna no longer reduces the nutrition costs of your magics." },
+      { 3, ABIL_SIF_MUNA_FORGET_SPELL, "freely open your mind to new spells",
                                        "forget spells at will" },
       { 4, "Sif Muna is protecting you from the effects of miscast magic.",
            "Sif Muna no longer protects you from the effects of miscast magic." },
