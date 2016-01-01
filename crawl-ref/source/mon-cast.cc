@@ -7839,7 +7839,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         // [ds] How is dispel undead intended to interact with vampires?
         // Currently if the vampire's undead state returns MH_UNDEAD it
         // affects the player.
-        return !foe || foe->holiness() & MH_UNDEAD;
+        return !foe || !(foe->holiness() & MH_UNDEAD);
 
     case SPELL_CORONA:
         return !foe || foe->backlit() || foe->glows_naturally();
