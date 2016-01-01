@@ -99,15 +99,13 @@ const int GHOST_LIMIT = 27; // max number of ghost files per level
 
 static void _redraw_all()
 {
-    you.redraw_hit_points   = true;
-    you.redraw_magic_points = true;
+    you.redraw_hit_points    = true;
+    you.redraw_magic_points  = true;
     you.redraw_stats.init(true);
-    you.redraw_armour_class = true;
-    you.redraw_evasion      = true;
-    you.redraw_experience   = true;
-
-    you.redraw_status_flags =
-        REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
+    you.redraw_armour_class  = true;
+    you.redraw_evasion       = true;
+    you.redraw_experience    = true;
+    you.redraw_status_lights = true;
 }
 
 static bool is_save_file_name(const string &name)

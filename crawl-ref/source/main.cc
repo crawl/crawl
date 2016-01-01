@@ -2348,7 +2348,7 @@ static void _prep_input()
 
     textcolour(LIGHTGREY);
 
-    set_redraw_status(REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
+    you.redraw_status_lights = true;
     if (!player_stair_delay())
         print_stats();
 
