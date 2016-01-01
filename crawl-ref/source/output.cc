@@ -1260,7 +1260,7 @@ void print_stats()
     if (you.duration[DUR_POISONING])
     {
         you.redraw_hit_points = true;
-        you.redraw_status_flags |= REDRAW_POISONED;
+        you.redraw_status_lights = true;
     }
 
 #ifdef USE_TILE_LOCAL
@@ -1383,9 +1383,9 @@ void print_stats()
 
     you.redraw_quiver = false;
 
-    if (you.redraw_status_flags)
+    if (you.redraw_status_lights)
     {
-        you.redraw_status_flags = 0;
+        you.redraw_status_lights = false;
         _print_status_lights(11 + yhack);
     }
     textcolour(LIGHTGREY);
@@ -1481,11 +1481,6 @@ void draw_border()
     // Line 8 is exp pool, Level
 }
 
-void set_redraw_status(uint64_t flags)
-{
-    you.redraw_status_flags |= flags;
-}
-
 void redraw_screen()
 {
     if (!crawl_state.need_save)
@@ -1509,14 +1504,12 @@ void redraw_screen()
         you.redraw_temperature = true;
 #endif
     you.redraw_stats.init(true);
-    you.redraw_armour_class = true;
-    you.redraw_evasion      = true;
-    you.redraw_experience   = true;
-    you.wield_change        = true;
-    you.redraw_quiver       = true;
-
-    set_redraw_status(
-                      REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
+    you.redraw_armour_class  = true;
+    you.redraw_evasion       = true;
+    you.redraw_experience    = true;
+    you.wield_change         = true;
+    you.redraw_quiver        = true;
+    you.redraw_status_lights = true;
 
     print_stats();
 

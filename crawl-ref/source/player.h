@@ -364,7 +364,6 @@ public:
 
     bool wield_change;          // redraw weapon
     bool redraw_quiver;         // redraw quiver
-    uint64_t redraw_status_flags;
 
     bool redraw_title;
     bool redraw_hit_points;
@@ -376,6 +375,7 @@ public:
     bool redraw_experience;
     bool redraw_armour_class;
     bool redraw_evasion;
+    bool redraw_status_lights;
 
     colour_t flash_colour;
     targetter *flash_where;

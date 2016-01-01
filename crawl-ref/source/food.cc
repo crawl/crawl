@@ -73,10 +73,6 @@ void make_hungry(int hunger_amount, bool suppress_msg,
     if (hunger_amount == 0 && !suppress_msg)
         return;
 
-#ifdef DEBUG_DIAGNOSTICS
-    set_redraw_status(REDRAW_HUNGER);
-#endif
-
     you.hunger -= hunger_amount;
 
     if (you.hunger < 0)
@@ -292,7 +288,7 @@ bool food_change(bool initial)
             less_hungry = true;
 
         you.hunger_state = newstate;
-        set_redraw_status(REDRAW_HUNGER);
+        you.redraw_status_lights = true;
 
         if (newstate < HS_SATIATED)
             interrupt_activity(AI_HUNGRY);

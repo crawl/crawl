@@ -1910,7 +1910,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         }
 
         you.hunger_state = HS_SATIATED;  // no hunger effects while transformed
-        set_redraw_status(REDRAW_HUNGER);
+        you.redraw_status_lights = true;
         break;
 
     case TRAN_APPENDAGE:

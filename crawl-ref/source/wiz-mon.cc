@@ -1059,8 +1059,7 @@ static void _miscast_screen_update()
 {
     viewwindow();
 
-    you.redraw_status_flags =
-        REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
+    you.redraw_status_lights = true;
     print_stats();
 
 #ifndef USE_TILE_LOCAL

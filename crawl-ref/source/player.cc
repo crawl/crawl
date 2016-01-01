@@ -5345,19 +5345,19 @@ player::player()
     turn_is_over     = false;
     banished         = false;
 
-    wield_change     = false;
-    redraw_quiver    = false;
-    redraw_status_flags = 0;
-    redraw_hit_points   = false;
-    redraw_magic_points = false;
+    wield_change         = false;
+    redraw_quiver        = false;
+    redraw_status_lights = false;
+    redraw_hit_points    = false;
+    redraw_magic_points  = false;
 #if TAG_MAJOR_VERSION == 34
-    redraw_temperature  = false;
+    redraw_temperature   = false;
 #endif
     redraw_stats.init(false);
-    redraw_experience   = false;
-    redraw_armour_class = false;
-    redraw_evasion      = false;
-    redraw_title        = false;
+    redraw_experience    = false;
+    redraw_armour_class  = false;
+    redraw_evasion       = false;
+    redraw_title         = false;
 
     flash_colour        = BLACK;
     flash_where         = nullptr;
