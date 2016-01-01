@@ -16,6 +16,7 @@
 #include "database.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "godpassive.h"
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -275,14 +276,6 @@ NORETURN void end_game(scorefile_entry &se)
                 // No message if you're not undead and your corpse is lost.
                 break;
 
-            case GOD_GOZAG:
-                if (se.get_death_type() != KILLED_BY_DISINT
-                    && se.get_death_type() != KILLED_BY_LAVA)
-                {
-                    mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
-                }
-                break;
-
             case GOD_BEOGH:
                if (actor* killer = se.killer())
                {
@@ -297,6 +290,12 @@ NORETURN void end_game(scorefile_entry &se)
                break;
 
             default:
+                if (will_have_passive(passive_t::goldify_corpses)
+                    && se.get_death_type() != KILLED_BY_DISINT
+                    && se.get_death_type() != KILLED_BY_LAVA)
+                {
+                    mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
+                }
                 break;
         }
 

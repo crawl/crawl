@@ -158,6 +158,15 @@ enum class passive_t
 
     /// Chance to extend berserk duration and avoid paralysis, piety dependant.
     extend_berserk,
+
+    /// Gold aura that distracts enemies.
+    gold_aura,
+
+    /// Corpses turn to gold.
+    goldify_corpses,
+
+    /// You detect the presence of gold. Gold is moved on top in stacks.
+    detect_gold,
 };
 
 enum jiyva_slurp_results

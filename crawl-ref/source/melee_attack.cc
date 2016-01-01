@@ -582,7 +582,7 @@ static void _hydra_devour(monster &victim)
         static_cast<hunger_state_t>(HS_SATIATED + player_likes_chunks());
 
     // will eating this actually fill the player up?
-    const bool filling = !in_good_standing(GOD_GOZAG)
+    const bool filling = !have_passive(passive_t::goldify_corpses)
                           && player_mutation_level(MUT_HERBIVOROUS, false) < 3
                           && you.hunger_state <= max_hunger
                           && you.hunger_state < HS_ENGORGED;
