@@ -411,7 +411,7 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
     // Under Gozag, monsters turn into gold on death.
     // Temporary Tukima's Dance weapons stay as weapons (no free gold),
     // permanent dancing weapons turn to gold like other monsters.
-    bool goldify = in_good_standing(GOD_GOZAG)
+    bool goldify = have_passive(passive_t::goldify_corpses)
                    && mons_gives_xp(&mons, &you)
                    && !force;
 
@@ -1951,7 +1951,7 @@ item_def* monster_die(monster* mons, killer_type killer,
         {
             // Under Gozag, permanent dancing weapons get turned to gold.
             if (!summoned_it
-                && (!in_good_standing(GOD_GOZAG)
+                && (!have_passive(passive_t::goldify_corpses)
                     || mons->has_ench(ENCH_ABJ)))
             {
                 simple_monster_message(mons, " falls from the air.",

@@ -3333,7 +3333,7 @@ void join_religion(god_type which_god, bool immediate)
     }
 
     // Move gold to top of piles with Gozag.
-    if (you_worship(GOD_GOZAG))
+    if (have_passive(passive_t::detect_gold))
         add_daction(DACT_GOLD_ON_TOP);
 
     // Allow training all divine ability skills immediately.

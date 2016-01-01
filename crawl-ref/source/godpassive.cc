@@ -229,7 +229,11 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     },
 
     // Gozag
-    { },
+    {
+        { -1, passive_t::detect_gold, "detect gold" },
+        {  0, passive_t::goldify_corpses, "GOD turns all corpses to gold." },
+        {  0, passive_t::gold_aura, "have a gold aura" },
+    },
 
     // Qazlal
     { },
@@ -920,7 +924,7 @@ int ash_skill_boost(skill_type sk, int scale)
 
 int gozag_gold_in_los(actor *who)
 {
-    if (!in_good_standing(GOD_GOZAG))
+    if (!have_passive(passive_t::gold_aura))
         return 0;
 
     int gold_count = 0;

@@ -2011,7 +2011,7 @@ void clear_item_pickup_flags(item_def &item)
 // Move gold to the the top of a pile if following Gozag.
 static void _gozag_move_gold_to_top(const coord_def p)
 {
-    if (you_worship(GOD_GOZAG))
+    if (have_passive(passive_t::detect_gold))
     {
         for (int gold = igrd(p); gold != NON_ITEM;
              gold = mitm[gold].link)

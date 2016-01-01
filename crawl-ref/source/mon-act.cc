@@ -1936,7 +1936,7 @@ void handle_monster_move(monster* mons)
     }
 
     if (you.duration[DUR_GOZAG_GOLD_AURA]
-        && in_good_standing(GOD_GOZAG)
+        && have_passive(passive_t::gold_aura)
         && !mons->asleep()
         && !mons_is_conjured(mons->type)
         && !mons_is_tentacle_or_tentacle_segment(mons->type)
