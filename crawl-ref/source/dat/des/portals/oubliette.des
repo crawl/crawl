@@ -5,7 +5,7 @@
 #
 # About ally placement:
 #  - in the arrival subvault
-#  - with attributes att:friendly and no_staird
+#  - with attributes att:friendly and no_stairs
 #  - when placing uniques, make sure they don't exist yet
 #  - unless you know what you are doing, no items
 
@@ -13,7 +13,8 @@
 #  - killing the ally should give a new milestone ("You killed your friend
 #    Sigmund.")
 #  - needs a dungeon depth for monster spawning purposes (scroll of summoning)
-#  - portal/rock colours/tiles are preliminary
+#  - portal/rock colours are preliminary
+#  - no tiles
 #  - timer announcement messages need care!
 
 # Principal goal: a very early portal vault, like Sewer or Ossuary, which
@@ -75,7 +76,7 @@
 #     a scroll of summoning
 #   - ally is Pikel, opposition are humans
 #   - ally is Duwan (or Duvessa); the other twin is at the end of the map
-#   - ally is Natasha; who will free Boris
+#   - ally is Natasha; who will sometimes free Boris
 #
 # For later:
 #   - Could sometimes employ religion: e.g. the humanoids who have captured a
@@ -139,11 +140,11 @@ function oubliette_setup_features(e)
 end
  
   ally_types = {
-    { weight = 10, type = 'humanoid'},
+    { weight = 30000, type = 'humanoid'},
     { weight = 10, type = 'unique' },
     { weight = 5,  type = 'animal' },
     { weight = 5,  type = 'undead' },
-    { weight = 10000,  type = 'handover'}  -- the ally is weak, but gives you an item
+    { weight = 1,  type = 'handover'}  -- the ally is weak, but gives you an item
   }
 
   ally_type = util.random_weighted_from("weight", ally_types).type
@@ -153,8 +154,8 @@ end
   -- E.g. Dowan will always have Duvessa as companion, and vice versa.
   -- But Sigmund will have companion Edmund only rarely.
   uniques_list = {
-    { weight = 20,  unique = 'Sigmund', companion = 'Edmund', item = 'scythe' },
-    { weight = 80,  unique = 'Sigmund',                       item = 'scythe' },
+    { weight = 20,  unique = 'Sigmund', companion = 'Edmund', britem = 'scythe' },
+    { weight = 80,  unique = 'Sigmund',                       britem = 'scythe' },
     { weight = 50,  unique = 'Dowan',   companion = 'Duvessa' },
     { weight = 50,  unique = 'Duvessa', companion = 'Dowan' },
     { weight = 10,  unique = 'Pikel' },
@@ -164,25 +165,45 @@ end
 -- TODO: check if uniques have not been placed already
 
   humanoids_list = {
-    { weight = 10, humanoid = 'big kobold' },
-    { weight = 10, humanoid = 'orc priest' },
-    { weight = 10, humanoid = 'gnoll ; halberd' }
+    { weight = 10, humanoid = 'big kobold', britem = 'battle axe' },
+    { weight = 10, humanoid = 'orc priest', mob = 2 },
+    { weight = 10, humanoid = 'gnoll',      britem = 'halberd' }
   }
 
   -- Animals can come in larger groups, specify number with "mob".
   animals_list = {
-    { weight = 10, animal = 'yak',  mob = 2 },
-    { weight = 10, animal = 'wolf', mob = 1 }
+    { weight = 10, animal = 'yak',    mob = 1 },
+    { weight = 10, animal = 'wolf',   mob = 2 },
+    { weight = 10, animal = 'sheep',  mob = 3 }
   }  
 
   undead_list = {
-    { weight = 10, undead = 'troll zombie' }
+    { weight = 10, undead = 'troll zombie' },
+    { weight = 10, undead = 'wraith' },
+    { weight = 10, undead = 'iron imp',    mob = 3}
   }
 
   handover_list = {
-    { weight = 10, handover = 'kobold', item = 'wand of enslavement ident:all charges:12' }
+    { weight = 10, handover = 'kobold', item = 'wand of enslavement charges:12' }
   }
 
+  brands_list = {
+    { weight = 10, brand = freezing      },
+    { weight = 10, brand = venom         },
+    { weight = 10, brand = fire          },
+    { weight = 3,  brand = pain          },
+    { weight = 3,  brand = draining      },
+    { weight = 3,  brand = distortion    },
+    { weight = 1,  brand = electrocution }
+  }
+
+if britem ~= nil then
+  brand = util.random_weighted_from("weight", brands_list)
+  ego = " ego:" .. brand
+else
+  ego = ""
+end
+  
 if ally_type == "unique" then
    chosen = util.random_weighted_from("weight", uniques_list)
    ally = chosen.unique
@@ -208,14 +229,14 @@ function place_ally(e)
   -- A weak ally handing over an item to the player
   if handover_item ~= nil then
     e.nsubst("@ = 1:T / *:@")
-    e.kitem("T = " .. handover_item .. "ident:type")
+    e.kitem("T = " .. handover_item .. "ident:all")
   end
   -- Sometimes more than one ally
   if allies_number == nil then
     allies_number = 1
   end
   e.nsubst("@ = " .. allies_number .. ":@ / *:.")
-  e.kmons("@ = " .. ally .. " att:friendly no_stairs")
+  e.kmons("@ = " .. ally .. " att:friendly no_stairs" .. ego)
 end
 
   arrival_list = {
