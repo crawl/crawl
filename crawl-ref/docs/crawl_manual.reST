@@ -88,7 +88,7 @@ High Scores
 Pressing 'enter' immediately after typing your name will select standard Dungeon
 Crawl mode, and you will be prompted to select a species and background. Names
 are unique; entering a name from the saved game list will continue that saved
-game. If you select a game mode instead of entering a name, you may eventually
+game. If you select a game mode instead of entering a name, you will eventually
 be prompted to enter a name.
 
 You can choose species and background in either order or randomise any
@@ -2903,11 +2903,10 @@ Sick
   until cured (wait it out or quaff a potion of curing). Occasionally a primary
   attribute might drop.
 
-Rot
-  This is a very harmful, necromantic ailment. You will lose maximum hit points
-  over time. Only healing potions and wands (and certain abilities) restore
-  these, once lost. The rotting status itself is cured with potions of curing
-  or by waiting it out.
+Vertigo
+  Translocational magic is disorienting you and making you dizzy. It should
+  pass soon, but until then you will have difficulty attacking, dodging, and
+  casting spells.
 
 Corr
   Your equipment is covered with noxious acid! Both your effectiveness in
