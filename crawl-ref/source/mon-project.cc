@@ -599,7 +599,7 @@ move_again:
                 }
                 else // has reflection property not from shield
                 {
-                    mprf("The %s reflects off an invisible shield around you!",
+                    mprf("%s reflects off an invisible shield around you!",
                             mon.name(DESC_THE, true).c_str());
                 }
             }
