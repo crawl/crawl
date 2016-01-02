@@ -1348,7 +1348,7 @@ $(DOC_BASE)/FAQ.html: dat/database/FAQ.txt util/FAQ2html.pl
 
 rest:
 	wget -O - https://crawl.develz.org/wiki/doku.php?id=dcss:manual:rest \
-	| sed -f util/undoku.sed > $(DOC_BASE)/crawl_manual.reST
+	| sed -f util/undoku.sed | tr -d '\r' > $(DOC_BASE)/crawl_manual.reST
 
 $(DOC_BASE)/crawl_manual.txt: $(DOC_BASE)/crawl_manual.reST util/unrest.pl
 	$(QUIET_GEN)util/unrest.pl <$< >$@
