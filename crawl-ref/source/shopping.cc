@@ -1204,8 +1204,9 @@ class ShopMenu : public InvMenu
 
     int selected_cost() const;
 
+    void init_entries();
     void update_help();
-    void cycle_order();
+    void resort();
     void purchase_selected();
 
     virtual bool process_key(int keyin) override;
@@ -1290,6 +1291,16 @@ ShopMenu::ShopMenu(shop_struct& _shop, bool _long_distance)
 
     set_tag("shop");
 
+    init_entries();
+
+    update_help();
+
+    set_title("Welcome to " + shop_name(shop) + "! What would you "
+              "like to do?");
+}
+
+void ShopMenu::init_entries()
+{
     menu_letter ckey = 'a';
     for (item_def& item : shop.stock)
     {
@@ -1298,11 +1309,6 @@ ShopMenu::ShopMenu(shop_struct& _shop, bool _long_distance)
         newentry->add_hotkey(ckey++);
         add_entry(move(newentry));
     }
-
-    update_help();
-
-    set_title("Welcome to " + shop_name(shop) + "! What would you "
-              "like to do?");
 }
 
 void ShopMenu::draw_menu()
@@ -1415,6 +1421,8 @@ void ShopMenu::purchase_selected()
     vector<int> bought_indices;
     int outside_items = 0;
     // Will iterate backwards through the shop (because of the earlier sort).
+    // This means we can erase() from shop.stock (since it only invalidates
+    // pointers to later elements), but nothing else.
     for (auto entry : selected)
     {
         const int i = static_cast<item_def*>(entry->data) - shop.stock.data();
@@ -1435,19 +1443,11 @@ void ShopMenu::purchase_selected()
         bought_something = true;
     }
 
-    for (int i = items.size() - 1; i >= 0; --i)
-    {
-        auto it = items.begin() + i;
-        if (find(begin(bought_indices), end(bought_indices),
-                 static_cast<item_def*>((*it)->data) - shop.stock.data())
-               != end(bought_indices))
-        {
-            delete *it;
-            items.erase(it);
-        }
-    }
-    for (size_t i = 0; i < items.size(); ++i)
-        items[i]->hotkeys[0] = index_to_letter(i);
+    // Since the old ShopEntrys may now point to past the end of shop.stock (or
+    // just the wrong place in general) nuke the whole thing and start over.
+    deleteAll(items);
+    init_entries();
+    resort();
 
     if (outside_items)
     {
@@ -1466,9 +1466,9 @@ void ShopMenu::purchase_selected()
     draw_menu();
 }
 
-void ShopMenu::cycle_order()
+// Doesn't handle redrawing itself.
+void ShopMenu::resort()
 {
-    ++order;
     switch (order)
     {
     case ORDER_DEFAULT:
@@ -1512,8 +1512,6 @@ void ShopMenu::cycle_order()
     }
     for (size_t i = 0; i < items.size(); ++i)
         items[i]->hotkeys[0] = index_to_letter(i);
-    update_help();
-    draw_menu();
 }
 
 bool ShopMenu::process_key(int keyin)
@@ -1559,7 +1557,10 @@ bool ShopMenu::process_key(int keyin)
         return true;
     }
     case '/':
-        cycle_order();
+        ++order;
+        resort();
+        update_help();
+        draw_menu();
         return true;
     default:
         break;
