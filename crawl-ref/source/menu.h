@@ -436,6 +436,7 @@ protected:
     void webtiles_set_title(const formatted_string title);
     void webtiles_set_suffix(const formatted_string title);
 
+    void webtiles_write_tiles(const MenuEntry& me) const;
     void webtiles_update_item(int index) const;
     void webtiles_update_title() const;
     void webtiles_update_scroll_pos() const;
