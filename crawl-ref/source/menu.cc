@@ -1559,6 +1559,7 @@ void Menu::webtiles_update_item(int index) const
     int col = item_colour(index, me);
     if (col != MENU_ITEM_STOCK_COLOUR)
         tiles.json_write_int("colour", col);
+    webtiles_write_tiles(*me);
 
     tiles.json_close_object();
     tiles.json_close_array();
@@ -1592,6 +1593,30 @@ void Menu::webtiles_write_title() const
     tiles.json_write_string("text", _webtiles_title.to_colour_string());
     tiles.json_write_string("suffix", _webtiles_suffix.to_colour_string());
     tiles.json_close_object("title");
+}
+
+void Menu::webtiles_write_tiles(const MenuEntry& me) const
+{
+    vector<tile_def> t;
+    if (me.get_tiles(t) && !t.empty())
+    {
+        tiles.json_open_array("tiles");
+
+        for (const tile_def &tile : t)
+        {
+            tiles.json_open_object();
+
+            tiles.json_write_int("t", tile.tile);
+            tiles.json_write_int("tex", tile.tex);
+
+            if (tile.ymax != TILE_Y)
+                tiles.json_write_int("ymax", tile.ymax);
+
+            tiles.json_close_object();
+        }
+
+        tiles.json_close_array();
+    }
 }
 
 void Menu::webtiles_write_item(int index, const MenuEntry* me) const
@@ -1630,26 +1655,7 @@ void Menu::webtiles_write_item(int index, const MenuEntry* me) const
     if (me->preselected)
         tiles.json_write_int("preselected", me->preselected);
 
-    vector<tile_def> t;
-    if (me->get_tiles(t) && !t.empty())
-    {
-        tiles.json_open_array("tiles");
-
-        for (const tile_def &tile : t)
-        {
-            tiles.json_open_object();
-
-            tiles.json_write_int("t", tile.tile);
-            tiles.json_write_int("tex", tile.tex);
-
-            if (tile.ymax != TILE_Y)
-                tiles.json_write_int("ymax", tile.ymax);
-
-            tiles.json_close_object();
-        }
-
-        tiles.json_close_array();
-    }
+    webtiles_write_tiles(*me);
 
     tiles.json_close_object();
 }
