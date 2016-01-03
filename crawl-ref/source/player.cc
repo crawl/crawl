@@ -2761,6 +2761,41 @@ static void _felid_extra_life()
     }
 }
 
+static void _gain_and_note_hp_mp()
+{
+    const int old_hp = you.hp;
+    const int old_maxhp = you.hp_max;
+    const int old_mp = you.magic_points;
+    const int old_maxmp = you.max_magic_points;
+
+    // recalculate for game
+    calc_hp();
+    calc_mp();
+
+    set_hp(old_hp * you.hp_max / old_maxhp);
+    set_mp(old_maxmp > 0 ? old_mp * you.max_magic_points / old_maxmp
+           : you.max_magic_points);
+
+    // Get "real" values for note-taking, i.e. ignore Berserk,
+    // transformations or equipped items.
+    const int note_maxhp = get_real_hp(false, false);
+    const int note_maxmp = get_real_mp(false);
+
+    char buf[200];
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_DJINNI)
+        // Djinn don't HP/MP
+        sprintf(buf, "EP: %d/%d",
+                min(you.hp, note_maxhp + note_maxmp),
+                note_maxhp + note_maxmp);
+    else
+#endif
+        sprintf(buf, "HP: %d/%d MP: %d/%d",
+                min(you.hp, note_maxhp), note_maxhp,
+                min(you.magic_points, note_maxmp), note_maxmp);
+    take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
+}
+
 /**
  * Handle the effects from a player's change in XL.
  * @param aux                     A string describing the cause of the level
@@ -2797,6 +2832,8 @@ void level_change(bool skip_attribute_increase)
         // player of their level-up perks.
 
         const int new_exp = you.experience_level + 1;
+        // some species need to do this at a specific time; most just do it at the end
+        bool updated_maxhp = false;
 
         if (new_exp <= you.max_level)
         {
@@ -2910,6 +2947,11 @@ void level_change(bool skip_attribute_increase)
                         check_skill_level_change(sk);
                     }
 
+                    // needs to be done early here, so HP doesn't look rotted
+                    // when we redraw the screen
+                    _gain_and_note_hp_mp();
+                    updated_maxhp = true;
+
                     redraw_screen();
 
                     mprf(MSGCH_INTRINSIC_GAIN,
@@ -2984,38 +3026,8 @@ void level_change(bool skip_attribute_increase)
             mprf(MSGCH_INTRINSIC_GAIN, "Your scales feel tougher.");
             you.redraw_armour_class = true;
         }
-
-        const int old_hp = you.hp;
-        const int old_maxhp = you.hp_max;
-        const int old_mp = you.magic_points;
-        const int old_maxmp = you.max_magic_points;
-
-        // recalculate for game
-        calc_hp();
-        calc_mp();
-
-        set_hp(old_hp * you.hp_max / old_maxhp);
-        set_mp(old_maxmp > 0 ? old_mp * you.max_magic_points / old_maxmp
-               : you.max_magic_points);
-
-        // Get "real" values for note-taking, i.e. ignore Berserk,
-        // transformations or equipped items.
-        const int note_maxhp = get_real_hp(false, false);
-        const int note_maxmp = get_real_mp(false);
-
-        char buf[200];
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_DJINNI)
-            // Djinn don't HP/MP
-            sprintf(buf, "EP: %d/%d",
-                    min(you.hp, note_maxhp + note_maxmp),
-                    note_maxhp + note_maxmp);
-        else
-#endif
-            sprintf(buf, "HP: %d/%d MP: %d/%d",
-                    min(you.hp, note_maxhp), note_maxhp,
-                    min(you.magic_points, note_maxmp), note_maxmp);
-        take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
+        if (!updated_maxhp)
+            _gain_and_note_hp_mp();
 
         xom_is_stimulated(12);
 
