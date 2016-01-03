@@ -1371,12 +1371,16 @@ static void _fixup_branch_stairs()
     const bool top = you.depth == 1;
     const bool bottom = at_branch_bottom();
 
+    const dungeon_feature_type exit =
+        root ? DNGN_EXIT_DUNGEON
+             : branch.exit_stairs;
     const dungeon_feature_type escape =  root ? DNGN_EXIT_DUNGEON :
         branch.escape_feature == NUM_FEATURES ? DNGN_ESCAPE_HATCH_UP :
                                                 branch.escape_feature;
     const dungeon_feature_type up_hatch =
-        (top && !bottom) ? DNGN_ESCAPE_HATCH_DOWN :
-                           escape;
+        top &&  bottom ? exit :
+        top && !bottom ? DNGN_ESCAPE_HATCH_DOWN :
+                         escape;
 
 #ifdef DEBUG_DIAGNOSTICS
     int count = 0;
@@ -1385,9 +1389,6 @@ static void _fixup_branch_stairs()
     // Prefer stairs that are placed in vaults for picking an exit at
     // random.
     vector<coord_def> vault_stairs, normal_stairs;
-    const dungeon_feature_type exit =
-        root ? DNGN_EXIT_DUNGEON
-             : branch.exit_stairs;
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const bool vault = map_masked(*ri, MMT_VAULT);
