@@ -1354,23 +1354,17 @@ void fixup_misplaced_items()
 
 static void _fixup_branch_stairs()
 {
-    auto& branch = your_branch();
-    bool root = player_in_branch(root_branch);
-    dungeon_feature_type escape = branch.escape_feature;
-    if (root)
-        escape = DNGN_EXIT_DUNGEON;
-    else if (escape == NUM_FEATURES)
-        escape = DNGN_ESCAPE_HATCH_UP;
+    const auto& branch = your_branch();
+    const bool root = player_in_branch(root_branch);
+    const bool top = you.depth == 1;
+    const bool bottom = at_branch_bottom();
 
-    bool top = you.depth == 1;
-    bool bottom = at_branch_bottom();
-
-    dungeon_feature_type up_hatch = escape;
-    if (top && !bottom)
-        up_hatch = DNGN_ESCAPE_HATCH_DOWN;
-
-    // Top level of branch levels - replaces up stairs with stairs back to
-    // dungeon or wherever:
+    const dungeon_feature_type escape =  root ? DNGN_EXIT_DUNGEON :
+        branch.escape_feature == NUM_FEATURES ? DNGN_ESCAPE_HATCH_UP :
+                                                branch.escape_feature;
+    const dungeon_feature_type up_hatch =
+        (top && !bottom) ? DNGN_ESCAPE_HATCH_DOWN :
+                           escape;
 
 #ifdef DEBUG_DIAGNOSTICS
     int count = 0;
@@ -1379,12 +1373,12 @@ static void _fixup_branch_stairs()
     // Prefer stairs that are placed in vaults for picking an exit at
     // random.
     vector<coord_def> vault_stairs, normal_stairs;
-    dungeon_feature_type exit = branch.exit_stairs;
-    if (root)
-        exit = DNGN_EXIT_DUNGEON;
+    const dungeon_feature_type exit =
+        root ? DNGN_EXIT_DUNGEON
+             : branch.exit_stairs;
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        bool vault = map_masked(*ri, MMT_VAULT);
+        const bool vault = map_masked(*ri, MMT_VAULT);
         if (bottom && (feat_is_stone_stair_down(grd(*ri))
                        || grd(*ri) == DNGN_ESCAPE_HATCH_DOWN))
         {
