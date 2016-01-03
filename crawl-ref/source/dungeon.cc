@@ -1352,6 +1352,18 @@ void fixup_misplaced_items()
     }
 }
 
+/*
+ * At the top or bottom of a branch, adjust or remove illegal stairs:
+ *
+ * - non-vault escape hatches pointing outside the branch are removed
+ * - non-vault stone stairs down from X:$ are removed
+ * - stone stairs up from X:1 are replaced with branch exit feature
+ *   - if there is more than one such stair, an error is logged
+ * - vault-specified hatches or stairs are replaced with appropriate features
+ *   - hatches down from X:$ are pointed up instead, and vice versa on X:1
+ *   - for single-level branches, all hatches turn into the branch exit feature
+ *   - if the branch has an "escape feature", it is used instead of hatches up
+ */
 static void _fixup_branch_stairs()
 {
     const auto& branch = your_branch();
