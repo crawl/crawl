@@ -1392,16 +1392,17 @@ static void _fixup_branch_stairs()
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const bool vault = map_masked(*ri, MMT_VAULT);
+        const auto escape_replacement = vault ? up_hatch : DNGN_FLOOR;
         if (bottom && (feat_is_stone_stair_down(grd(*ri))
                        || grd(*ri) == DNGN_ESCAPE_HATCH_DOWN))
         {
-            _set_grd(*ri, vault ? escape : DNGN_FLOOR);
+            _set_grd(*ri, escape_replacement);
         }
 
         if (top)
         {
             if (grd(*ri) == DNGN_ESCAPE_HATCH_UP)
-                _set_grd(*ri, vault ? up_hatch : DNGN_FLOOR);
+                _set_grd(*ri, escape_replacement);
             else if (feat_is_stone_stair_up(grd(*ri)))
             {
 #ifdef DEBUG_DIAGNOSTICS
