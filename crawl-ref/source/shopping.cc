@@ -672,7 +672,6 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 500;
                 break;
 
-            case POT_CURE_MUTATION:
 #if TAG_MAJOR_VERSION == 34
             case POT_GAIN_DEXTERITY:
             case POT_GAIN_INTELLIGENCE:
@@ -680,6 +679,10 @@ unsigned int item_value(item_def item, bool ident)
 #endif
             case POT_BENEFICIAL_MUTATION:
                 valued += 350;
+                break;
+
+            case POT_CURE_MUTATION:
+                valued = 250;
                 break;
 
             case POT_RESISTANCE:
