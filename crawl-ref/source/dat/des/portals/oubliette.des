@@ -140,104 +140,119 @@ function oubliette_setup_features(e)
 end
  
   ally_types = {
-    { weight = 30000, type = 'humanoid'},
-    { weight = 10, type = 'unique' },
-    { weight = 5,  type = 'animal' },
-    { weight = 5,  type = 'undead' },
-    { weight = 1,  type = 'handover'}  -- the ally is weak, but gives you an item
+    { weight = 30, type = "humanoid" },
+    { weight = 10, type = "unique"   },
+    { weight = 5,  type = "animal"   },
+    { weight = 5,  type = "undead"   },
+    { weight = 1,  type = "handover" }  -- weak ally but gives you an item
   }
 
   ally_type = util.random_weighted_from("weight", ally_types).type
 
-  -- Sometimes we place another friendly monster at the prize section;
-  -- this "companion" is waiting for the original ally.
-  -- E.g. Dowan will always have Duvessa as companion, and vice versa.
-  -- But Sigmund will have companion Edmund only rarely.
-  uniques_list = {
-    { weight = 20,  unique = 'Sigmund', companion = 'Edmund', britem = 'scythe' },
-    { weight = 80,  unique = 'Sigmund',                       britem = 'scythe' },
-    { weight = 50,  unique = 'Dowan',   companion = 'Duvessa' },
-    { weight = 50,  unique = 'Duvessa', companion = 'Dowan' },
-    { weight = 10,  unique = 'Pikel' },
-    { weight = 1,   unique = 'Natasha', companion = 'Boris' },
-    { weight = 10,  unique = 'Natasha'}
-  }
--- TODO: check if uniques have not been placed already
+  -- The table below defines all possible allies. 
+  -- Every entry has to a weight (w) and a legimate monster (ally).
+  -- Some optional data:
+  --   companion: another friendly monster placed elsewhere in the map
+  --   mob: place more than one of this kind of ally
+  --   britem: give this item with a guaranteed random brand
 
-  humanoids_list = {
-    { weight = 10, humanoid = 'big kobold', britem = 'battle axe' },
-    { weight = 10, humanoid = 'orc priest', mob = 2 },
-    { weight = 10, humanoid = 'gnoll',      britem = 'halberd' }
-  }
-
-  -- Animals can come in larger groups, specify number with "mob".
-  animals_list = {
-    { weight = 10, animal = 'yak',    mob = 1 },
-    { weight = 10, animal = 'wolf',   mob = 2 },
-    { weight = 10, animal = 'sheep',  mob = 3 }
-  }  
-
-  undead_list = {
-    { weight = 10, undead = 'troll zombie' },
-    { weight = 10, undead = 'wraith' },
-    { weight = 10, undead = 'iron imp',    mob = 3}
-  }
-
-  handover_list = {
-    { weight = 10, handover = 'kobold', item = 'wand of enslavement charges:12' }
+  ally_table = {
+    unique = 
+    { 
+       { w = 20, ally = "Sigmund", companion = "Edmund", britem = "scythe" },
+       { w = 80, ally = "Sigmund",                       britem = "scythe" }, 
+       { w = 50, ally = "Dowan",   companion = "Duvessa"                   },
+       { w = 50, ally = "Duvessa", companion = "Dowan"                     },
+       { w = 10, ally = "Pikel"                                            },
+       { w = 1,  ally = "Natasha", companion = "Boris"                     },
+       { w = 10, ally = "Natasha"                                          }
+    },
+    animal = 
+    { 
+       { w = 10, ally = "yak",    mob = 1 },
+       { w = 10, ally = "wolf",   mob = 2 },
+       { w = 10, ally = "sheep",  mob = 3 } 
+    },
+    humanoid = 
+    {
+       { w = 10, ally = "big kobold", britem = "battle axe" },
+       { w = 10, ally = "orc priest", mob = 2 },
+       { w = 10, ally = "gnoll",      britem = "halberd" }
+    },
+    undead = 
+    {
+       { w = 10, ally = "troll zombie" },
+       { w = 10, ally = "wraith" },
+       { w = 10, ally = "iron imp",    mob = 3}
+    },
+    handover =
+    {
+       { w = 10, ally = "kobold", item = "wand of enslavement charges:12" }
+    }
   }
 
   brands_list = {
-    { weight = 10, brand = freezing      },
-    { weight = 10, brand = venom         },
-    { weight = 10, brand = fire          },
-    { weight = 3,  brand = pain          },
-    { weight = 3,  brand = draining      },
-    { weight = 3,  brand = distortion    },
-    { weight = 1,  brand = electrocution }
+    { weight = 10, brand = "freezing"      },
+    { weight = 10, brand = "venom"         },
+    { weight = 10, brand = "fire"          },
+    { weight = 3,  brand = "pain"          },
+    { weight = 3,  brand = "draining"      },
+    { weight = 3,  brand = "distortion"    },
+    { weight = 1,  brand = "electrocution" }
   }
 
-if britem ~= nil then
-  brand = util.random_weighted_from("weight", brands_list)
-  ego = " ego:" .. brand
-else
-  ego = ""
-end
+  if britem ~= nil then
+    brand = util.random_weighted_from("weight", brands_list)
+    bego = " ego:" .. brand
+  else
+    bego = ""
+  end
   
-if ally_type == "unique" then
-   chosen = util.random_weighted_from("weight", uniques_list)
-   ally = chosen.unique
-   companion = chosen.companion
-   allyitem = chosen.item
-elseif ally_type == "humanoid" then
-   chosen = util.random_weighted_from("weight", humanoids_list)
-   ally = chosen.humanoid
-elseif ally_type == "animal" then
-   chosen = util.random_weighted_from("weight", animals_list)   
-   ally = chosen.animal
-   allies_number = chosen.mob
-elseif ally_type == "undead" then
-   chosen = util.random_weighted_from("weight", undead_list)   
-   ally = chosen.undead
-elseif ally_type == "handover" then
-   chosen = util.random_weighted_from("weight", handover_list)   
-   ally = chosen.handover
-   handover_item = chosen.item
-end
 
 function place_ally(e)
-  -- A weak ally handing over an item to the player
-  if handover_item ~= nil then
-    e.nsubst("@ = 1:T / *:@")
-    e.kitem("T = " .. handover_item .. "ident:all")
-  end
-  -- Sometimes more than one ally
-  if allies_number == nil then
-    allies_number = 1
-  end
+   list = ally_table[ally_type]
+   chosen = util.random_weighted_from("w", list)
+   ally = chosen.ally
+
+   companion = chosen.companion
+   allyitem = chosen.item
+
+   -- Sometimes more than one ally
+   allies_number = chosen.mob
+   if allies_number == nil then
+     allies_number = 1
+   end
+
+   -- A weak ally handing over an item to the player
+   handover_item = chosen.item
+   if handover_item ~= nil then
+      e.nsubst("@ = 1:T / *:@")
+      e.kitem("T = " .. handover_item .. "ident:all")
+   end
+
   e.nsubst("@ = " .. allies_number .. ":@ / *:.")
-  e.kmons("@ = " .. ally .. " att:friendly no_stairs" .. ego)
+  e.kmons("@ = " .. ally .. " att:friendly no_stairs" .. bego)
 end
+
+
+  enemy_types = {
+    { weight = 10, type = 'orc'    },
+    { weight = 10, type = 'undead' },
+    { weight = 5,  type = 'animal' },
+    { weight = 3,  type = 'human'  }
+  }
+
+  minor_enemies_orc    = { mob = 5, { 'orc; nothing' } }
+  minor_enemies_undead = { mob = 3, { 'imp', 'iron imp' } }
+  minor_enemies_animal = { mob = 5, { 'hound' } }
+  minor_enemies_human  = { mob = 2, { 'human' } }
+
+  enemy_type = util.random_weighted_from("weight", enemy_types).type
+
+  if ally == "Pikel" then 
+    enemy_type = "human" -- always fighting his former Slaves
+  end
+
 
   arrival_list = {
     { weight = 10, type = "prison" },
@@ -252,6 +267,9 @@ if ally_type == "handover" then
   arrival_type = "prison"
 end
 
+
+function place_minor_enemies(e)
+
   enemy_list = {
     { weight = 10, enemy = 'kobold', mob = 5 },
     { weight = 10, enemy = 'human',  mob = 2 },
@@ -259,22 +277,24 @@ end
     { weight = 10, enemy = 'zombie', mob = 5 }
   }
 
-chosen = util.random_weighted_from("weight", enemy_list)
-enemy_type = chosen.enemy
-enemy_number = chosen.mob
-
-if ally == "Pikel" then 
-  enemy_type = "human" -- always fighting his former Slaves
-  enemy_number = 2
-end
-
-function place_minor_enemies(e)
+  chosen = util.random_weighted_from("weight", enemy_list)
+  enemy_type = chosen.enemy
+  enemy_number = chosen.mob
   e.nsubst("1 = " .. enemy_number .. " =1 / *:.")  
   if enemy_type == "zombie" then
     e.kmons("1 = hound zombie / gnoll zombie / wolf zombie w:5")
   else
     e.kmons("1 = " .. enemy_type)
   end
+end
+
+function place_boss(e)
+  if enemy_type == "zombie" then 
+     boss = "troll zombie / wyvern zombie / two-headed ogre zombie"
+  else
+     boss = "ogre"
+  end    
+  e.kmons("1 = " .. boss)
 end
 
 }}
@@ -285,7 +305,7 @@ end
 default-depth: D:2
 # TODO: Change to D:3-5 later on
 
-NAME:   portal_oubliette_entry_generic_LL
+ NAME:   portal_oubliette_entry_generic_LL
 : oubliette_portal(_G)
 MAP
 ...
@@ -298,7 +318,7 @@ ENDMAP
 # Each map is built out of several subvaults:
 #  - the arrival (containing stone arch, exit, and ally)
 #  - minor opposition
-#  - boss fight
+#  - boss fight (containing loot chamber)
 
 default-depth: Oubli
 
@@ -396,7 +416,7 @@ ENDMAP
 
 NAME:   oubliette_subvault_boss
 TAGS:   oubliette_subvault_boss
-MONS:   ogre
+: place_boss(_G)
 {{ 
  if companion ~= nil then
    nsubst("* = 1:X / *:*")
