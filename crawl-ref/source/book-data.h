@@ -1,3 +1,4 @@
+// This needs to be re-ordered when TAG_MAJOR_VERSION changes!
 static const vector<spell_type> spellbook_templates[] =
 {
 
@@ -376,3 +377,5 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 };
+
+COMPILE_CHECK(ARRAYSZ(spellbook_templates) == 1 + MAX_FIXED_BOOK);
