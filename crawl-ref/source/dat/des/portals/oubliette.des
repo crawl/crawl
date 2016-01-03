@@ -237,15 +237,11 @@ end
 
   enemy_types = {
     { weight = 10, type = 'orc'    },
-    { weight = 10, type = 'undead' },
+    { weight = 7,  type = 'zombie' },
+    { weight = 7,  type = 'demon'  },
     { weight = 5,  type = 'animal' },
     { weight = 3,  type = 'human'  }
   }
-
-  minor_enemies_orc    = { mob = 5, { 'orc; nothing' } }
-  minor_enemies_undead = { mob = 3, { 'imp', 'iron imp' } }
-  minor_enemies_animal = { mob = 5, { 'hound' } }
-  minor_enemies_human  = { mob = 2, { 'human' } }
 
   enemy_type = util.random_weighted_from("weight", enemy_types).type
 
@@ -253,6 +249,28 @@ end
     enemy_type = "human" -- always fighting his former Slaves
   end
 
+  enemy_table = {
+    orc =
+    { minor = { mob = 5, enemy = "orc; nothing" },
+      boss  = { "orc warrior; hand axe / ogre; nothing" } 
+    },
+    animal =
+    { minor = { mob = 5, enemy = "hound" },
+      boss  = { "yak", "crocodile", "blink frog" }
+    },
+    human = 
+    { minor = { mob = 2, enemy = "human; nothing" },
+      boss  = { "human; club" }
+    },
+    demon =
+    { minor = { mob = 3, enemy = "crimson imp / iron imp w:5" },
+      boss  = { "red devil / orange demon / rust devil / hellwing" }
+    },
+    zombie =
+    { minor = { mob = 5, enemy = "place:D:4 zombie" },
+      boss  = { "troll zombie / wyvern zombie / two-headed ogre zombie" }
+    }
+  }
 
   arrival_list = {
     { weight = 10, type = "prison" },
@@ -260,40 +278,22 @@ end
     { weight = 10, type = "free" }
   }
 
--- There are different types of arrival rooms.
--- Some types of ally force a particular type.
-arrival_type = util.random_weighted_from("weight", arrival_list).type
-if ally_type == "handover" then
-  arrival_type = "prison"
-end
-
+  -- There are different types of arrival rooms.
+  -- Some types of ally force a particular type.
+  arrival_type = util.random_weighted_from("weight", arrival_list).type
+  if ally_type == "handover" then
+    arrival_type = "prison"
+  end
 
 function place_minor_enemies(e)
-
-  enemy_list = {
-    { weight = 10, enemy = 'kobold', mob = 5 },
-    { weight = 10, enemy = 'human',  mob = 2 },
-    { weight = 10, enemy = 'orc',    mob = 5 },
-    { weight = 10, enemy = 'zombie', mob = 5 }
-  }
-
-  chosen = util.random_weighted_from("weight", enemy_list)
-  enemy_type = chosen.enemy
-  enemy_number = chosen.mob
-  e.nsubst("1 = " .. enemy_number .. " =1 / *:.")  
-  if enemy_type == "zombie" then
-    e.kmons("1 = hound zombie / gnoll zombie / wolf zombie w:5")
-  else
-    e.kmons("1 = " .. enemy_type)
-  end
+  enemy = enemy_table[enemy_type].minor.enemy
+  number = enemy_table[enemy_type].minor.mob
+  e.nsubst("1 = " .. number .. " =1 / *:.")  
+  e.kmons("1 = " .. enemy)
 end
 
 function place_boss(e)
-  if enemy_type == "zombie" then 
-     boss = "troll zombie / wyvern zombie / two-headed ogre zombie"
-  else
-     boss = "ogre"
-  end    
+  boss = util.random_from(enemy_table[enemy_type].boss)
   e.kmons("1 = " .. boss)
 end
 
