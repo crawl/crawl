@@ -161,7 +161,8 @@ end
     { 
        { w = 20, ally = "Sigmund", companion = "Edmund", britem = "scythe" },
        { w = 80, ally = "Sigmund",                       britem = "scythe" }, 
-       { w = 50, ally = "Dowan",   companion = "Duvessa"                   },
+       { w = 50, ally = "Dowan",   companion = "Duvessa", 
+                          allyitem = "randbook owner:Dowan numspells:3" },
        { w = 50, ally = "Duvessa", companion = "Dowan"                     },
        { w = 10, ally = "Pikel"                                            },
        { w = 1,  ally = "Natasha", companion = "Boris"                     },
@@ -297,6 +298,20 @@ function place_boss(e)
   e.kmons("1 = " .. boss)
 end
 
+-- This also places the companion if there is one.
+-- TODO: If ally is not friendly anymore, generate companion hostile.
+function place_loot(e) 
+  if companion ~= nil then
+    nsubst("* = 1:X / *:*")
+    kmons("X = " .. companion .. " att:friendly no_stairs")
+  end
+  if allyitem ~= nil then
+    nsubst("* = 1:Y / *:*")
+    local d = crawl.random2(7)
+    kitem("Y = " .. allyitem .. " plus:" .. d)
+  end
+end
+
 }}
 
 ############################################################
@@ -417,17 +432,7 @@ ENDMAP
 NAME:   oubliette_subvault_boss
 TAGS:   oubliette_subvault_boss
 : place_boss(_G)
-{{ 
- if companion ~= nil then
-   nsubst("* = 1:X / *:*")
-   kmons("X = " .. companion .. " att:friendly no_stairs")
- end
- if allyitem ~= nil then
-   nsubst("* = 1:Y / *:*")
-   local d = crawl.random2(7)
-   kitem("Y = " .. allyitem .. " plus:" .. d)
- end
-}}
+: place_loot(_G)
 MAP
 xxxxxxxx
  x...x*x
