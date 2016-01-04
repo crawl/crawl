@@ -864,7 +864,7 @@ static bool _trog_retribution()
             {
                 dec_penance(god, 3);
                 mprf(MSGCH_WARN, "You suddenly pass out!");
-                you.duration[DUR_PARALYSIS] = 2 + random2(6);
+                you.increase_duration(DUR_PARALYSIS, 2 + random2(6), 13);
             }
             break;
 
