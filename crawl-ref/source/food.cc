@@ -28,6 +28,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mutation.h"
+#include "notes.h"
 #include "options.h"
 #include "output.h"
 #include "religion.h"
@@ -1482,7 +1483,10 @@ void handle_starvation()
             mprf(MSGCH_FOOD, "You lose consciousness!");
             stop_running();
 
-            you.increase_duration(DUR_PARALYSIS, 5 + random2(8), 13);
+            int turns = 5 + random2(8);
+            if (!you.duration[DUR_PARALYSIS])
+                take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "fainting"));
+            you.increase_duration(DUR_PARALYSIS, turns, 13);
             if (you_worship(GOD_XOM))
                 xom_is_stimulated(get_tension() > 0 ? 200 : 100);
         }
