@@ -32,6 +32,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mutation.h"
+#include "notes.h"
 #include "player-stats.h"
 #include "random.h"
 #include "religion.h"
@@ -864,7 +865,9 @@ static bool _trog_retribution()
             {
                 dec_penance(god, 3);
                 mprf(MSGCH_WARN, "You suddenly pass out!");
-                you.increase_duration(DUR_PARALYSIS, 2 + random2(6), 13);
+                const int turns = 2 + random2(6);
+                take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "Trog"));
+                you.increase_duration(DUR_PARALYSIS, turns, 13);
             }
             break;
 
