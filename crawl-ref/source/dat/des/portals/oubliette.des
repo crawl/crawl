@@ -140,7 +140,7 @@ function oubliette_setup_features(e)
 end
  
   ally_types = {
-    { weight = 30, type = "humanoid" },
+    { weight = 20, type = "humanoid" },
     { weight = 10, type = "unique"   },
     { weight = 5,  type = "animal"   },
     { weight = 5,  type = "undead"   },
@@ -154,13 +154,14 @@ end
   -- Some optional data:
   --   companion: another friendly monster placed elsewhere in the map
   --   mob: place more than one of this kind of ally
-  --   britem: give this item with a guaranteed random brand
+  --   item: give this item with a guaranteed random brand
+  --   allyitem: an item found in the loot pile
 
   ally_table = {
     unique = 
     { 
-       { w = 20, ally = "Sigmund", companion = "Edmund", britem = "scythe" },
-       { w = 80, ally = "Sigmund",                       britem = "scythe" }, 
+       { w = 200, ally = "Sigmund", companion = "Edmund", item = "scythe" },
+       { w = 80, ally = "Sigmund",                       item = "scythe" }, 
        { w = 50, ally = "Dowan",   companion = "Duvessa", 
                           allyitem = "randbook owner:Dowan numspells:3" },
        { w = 50, ally = "Duvessa", companion = "Dowan"                     },
@@ -176,9 +177,9 @@ end
     },
     humanoid = 
     {
-       { w = 10, ally = "big kobold", britem = "battle axe" },
+       { w = 10, ally = "big kobold", item = "battleaxe" },
        { w = 10, ally = "orc priest", mob = 2 },
-       { w = 10, ally = "gnoll",      britem = "halberd" }
+       { w = 10, ally = "gnoll",      item = "halberd" }
     },
     undead = 
     {
@@ -188,7 +189,7 @@ end
     },
     handover =
     {
-       { w = 10, ally = "kobold", item = "wand of enslavement charges:12" }
+       { w = 10, ally = "kobold", hitem = "wand of enslavement charges:12" }
     }
   }
 
@@ -202,34 +203,37 @@ end
     { weight = 1,  brand = "electrocution" }
   }
 
+function place_ally(e)
+  local list = ally_table[ally_type]
+  local chosen = util.random_weighted_from("w", list)
+  
+  ally = chosen.ally
+  companion = chosen.companion
+  allyitem = chosen.allyitem
+
+  -- Some uniques are cool to have around, but not too strong. For those
+  -- we guarantee a brand on their weapon (if "item" in ally_table is set).
+  -- TODO: preserve armour items! des syntax is not good at this
+  local britem = chosen.item
   if britem ~= nil then
-    brand = util.random_weighted_from("weight", brands_list)
-    bego = " ego:" .. brand
+    local brand = util.random_weighted_from("weight", brands_list).brand
+    bego = " ; " .. britem .. " ego:" .. brand
   else
     bego = ""
   end
-  
 
-function place_ally(e)
-   list = ally_table[ally_type]
-   chosen = util.random_weighted_from("w", list)
-   ally = chosen.ally
+  -- Sometimes more than one ally
+  allies_number = chosen.mob
+  if allies_number == nil then
+    allies_number = 1
+  end
 
-   companion = chosen.companion
-   allyitem = chosen.item
-
-   -- Sometimes more than one ally
-   allies_number = chosen.mob
-   if allies_number == nil then
-     allies_number = 1
-   end
-
-   -- A weak ally handing over an item to the player
-   handover_item = chosen.item
-   if handover_item ~= nil then
-      e.nsubst("@ = 1:T / *:@")
-      e.kitem("T = " .. handover_item .. "ident:all")
-   end
+  -- A weak ally handing over an item to the player
+  handover_item = chosen.hitem
+  if handover_item ~= nil then
+    e.nsubst("@ = 1:T / *:@")
+    e.kitem("T = " .. handover_item .. "ident:all")
+  end
 
   e.nsubst("@ = " .. allies_number .. ":@ / *:.")
   e.kmons("@ = " .. ally .. " att:friendly no_stairs" .. bego)
@@ -265,7 +269,7 @@ end
     },
     demon =
     { minor = { mob = 3, enemy = "crimson imp / iron imp w:5" },
-      boss  = { "red devil / orange demon / rust devil / hellwing" }
+      boss  = { "red devil / orange demon / rust devil / hellwing" } -- hellwing perhaps too hard
     },
     zombie =
     { minor = { mob = 5, enemy = "place:D:4 zombie" },
@@ -298,18 +302,28 @@ function place_boss(e)
   e.kmons("1 = " .. boss)
 end
 
+  loot_consumable = { potion = { "curing", "heal wounds", "haste", "might", "agility", "brilliance" },
+                      scroll = { "blinking", "teleportation", "fog", "fear", "magic mapping" } }
+
 -- This also places the companion if there is one.
 -- TODO: If ally is not friendly anymore, generate companion hostile.
 function place_loot(e) 
   if companion ~= nil then
-    nsubst("* = 1:X / *:*")
-    kmons("X = " .. companion .. " att:friendly no_stairs")
+    e.nsubst("* = 1:X / *:*")
+    e.kmons("X = " .. companion .. " att:friendly no_stairs")
   end
   if allyitem ~= nil then
-    nsubst("* = 1:Y / *:*")
-    local d = crawl.random2(7)
-    kitem("Y = " .. allyitem .. " plus:" .. d)
+    e.nsubst("* = 1:Y / *:*")
+    local d = crawl.random2(7) -- this only matters for weapon/armour
+    e.kitem("Y = " .. allyitem .. " plus:" .. d)
   end
+  
+  -- place one good consumable item
+  contype = util.random_from({"potion", "scroll"})
+  conitem = util.random_from(loot_consumable[contype])
+  e.nsubst("* = 1:Z / *:*")
+  local q = 1 + crawl.random2(2)
+  e.kitem("Z = " .. contype .. " of " .. conitem .. " q:" .. q)
 end
 
 }}
