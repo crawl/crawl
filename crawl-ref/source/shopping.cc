@@ -1205,6 +1205,7 @@ class ShopMenu : public InvMenu
     bool looking = false;
     shopping_order order = ORDER_DEFAULT;
     level_pos pos;
+    bool can_purchase;
 
     int selected_cost() const;
 
@@ -1223,7 +1224,7 @@ class ShopMenu : public InvMenu
 public:
     bool bought_something = false;
 
-    ShopMenu(shop_struct& _shop, const level_pos& _pos = level_pos::current());
+    ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase);
 };
 
 class ShopEntry : public InvEntry
@@ -1284,13 +1285,14 @@ public:
     }
 };
 
-ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos)
+ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase)
     : InvMenu(MF_MULTISELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
                | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING),
       shop(_shop),
-      pos(_pos)
+      pos(_pos),
+      can_purchase(_can_purchase)
 {
-    if (pos != level_pos::current())
+    if (!can_purchase)
         looking = true;
 
     set_tag("shop");
@@ -1359,17 +1361,15 @@ void ShopMenu::update_help()
         "[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list",
         you.gold,
         you.gold == 1 ? "" : "s",
-        pos != level_pos::current() ?
-                  " " " "  "  " "       "  "          " :
-        looking ? "[<w>!</w>] buy|<w>examine</w> items" :
-                  "[<w>!</w>] <w>buy</w>|examine items",
+        !can_purchase ? " " " "  "  " "       "  "          " :
+        looking       ? "[<w>!</w>] buy|<w>examine</w> items" :
+                        "[<w>!</w>] <w>buy</w>|examine items",
         _hyphenated_letters(item_count(), 'a').c_str(),
         looking ? "examine item" : "select item for purchase",
         shopping_order_names[order],
         // strwidth("default")
         string(7 - strwidth(shopping_order_names[order]), ' ').c_str(),
-        pos != level_pos::current() ?
-                        " " "     "  "               " :
+        !can_purchase ? " " "     "  "               " :
                         "[<w>Enter</w>] make purchase",
         _hyphenated_letters(item_count(), 'A').c_str())));
 }
@@ -1526,7 +1526,7 @@ bool ShopMenu::process_key(int keyin)
     {
     case '!':
     case '?':
-        if (pos == level_pos::current())
+        if (can_purchase)
         {
             looking = !looking;
             update_help();
@@ -1536,7 +1536,7 @@ bool ShopMenu::process_key(int keyin)
     case ' ':
     case CK_MOUSE_CLICK:
     case CK_ENTER:
-        if (pos == level_pos::current())
+        if (can_purchase)
             purchase_selected();
         return true;
     case '$':
@@ -1641,7 +1641,7 @@ void shop()
     if (culled)
         more(); // make sure all messages appear before menu
 
-    ShopMenu menu(shop);
+    ShopMenu menu(shop, level_pos::current(), true);
     menu.show();
 
     StashTrack.get_shop(shop.pos) = ShopInfo(shop);
@@ -1664,7 +1664,7 @@ void shop()
 void shop(shop_struct& shop, const level_pos& pos)
 {
     ASSERT(shop.pos == pos.pos);
-    ShopMenu(shop, pos).show();
+    ShopMenu(shop, pos, false).show();
 }
 
 void destroy_shop_at(coord_def p)
