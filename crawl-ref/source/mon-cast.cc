@@ -2937,9 +2937,9 @@ static void _corrupting_pulse(monster *mons)
         if (!is_sanctuary(you.pos())
             && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID))
         {
-            int num_mutations = 2 + random2(3);
+            int num_mutations = one_chance_in(4) ? 2 : 1;
             for (int i = 0; i < num_mutations; ++i)
-                temp_mutate(RANDOM_BAD_MUTATION, "wretched star");
+                temp_mutate(RANDOM_CORRUPT_MUTATION, "wretched star");
         }
     }
 

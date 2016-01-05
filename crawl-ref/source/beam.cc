@@ -3738,7 +3738,7 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_CORRUPT_BODY:
         if (temp_mutate(RANDOM_CORRUPT_MUTATION, "corrupt body"))
         {
-            if (one_chance_in(5))
+            if (one_chance_in(4))
                 temp_mutate(RANDOM_CORRUPT_MUTATION, "corrupt body");
             mprf(MSGCH_WARN, "A corruption grows within you!");
         }

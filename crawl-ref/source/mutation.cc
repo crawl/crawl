@@ -76,11 +76,10 @@ enum class mutflag
     JIYVA   = 1 << 2, // jiyva-only muts
     QAZLAL  = 1 << 3, // qazlal wrath
     XOM     = 1 << 4, // xom being xom
-    CORRUPT = 1 << 5, // wretched stars
 
-    LAST    = CORRUPT
+    LAST    = XOM
 };
-DEF_BITFIELD(mutflags, mutflag, 5);
+DEF_BITFIELD(mutflags, mutflag, 4);
 COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::LAST);
 
 #include "mutation-data.h"
@@ -187,7 +186,6 @@ static int _mut_weight(const mutation_def &mut, mutflag use)
         case mutflag::JIYVA:
         case mutflag::QAZLAL:
         case mutflag::XOM:
-        case mutflag::CORRUPT:
             return 1;
         case mutflag::GOOD:
         case mutflag::BAD:
@@ -857,11 +855,6 @@ static mutation_type _get_random_xom_mutation()
     return mutat;
 }
 
-static mutation_type _get_random_corrupt_mutation()
-{
-    return _get_mut_with_use(mutflag::CORRUPT);
-}
-
 static mutation_type _get_random_qazlal_mutation()
 {
     return _get_mut_with_use(mutflag::QAZLAL);
@@ -879,6 +872,7 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
             mt = x_chance_in_y(3, 5) ? mutflag::GOOD : mutflag::BAD;
             break;
         case RANDOM_BAD_MUTATION:
+        case RANDOM_CORRUPT_MUTATION:
             mt = mutflag::BAD;
             break;
         case RANDOM_GOOD_MUTATION:
@@ -1311,6 +1305,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     case RANDOM_MUTATION:
     case RANDOM_GOOD_MUTATION:
     case RANDOM_BAD_MUTATION:
+    case RANDOM_CORRUPT_MUTATION:
         mutat = _get_random_mutation(which_mutation);
         break;
     case RANDOM_XOM_MUTATION:
@@ -1318,9 +1313,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         break;
     case RANDOM_SLIME_MUTATION:
         mutat = _get_random_slime_mutation();
-        break;
-    case RANDOM_CORRUPT_MUTATION:
-        mutat = _get_random_corrupt_mutation();
         break;
     case RANDOM_QAZLAL_MUTATION:
         mutat = _get_random_qazlal_mutation();
