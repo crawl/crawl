@@ -7450,16 +7450,18 @@ static coord_def _choose_throw_dest(const monster &thrower,
 {
     ray_def ray;
     vector<coord_weight> dests;
-    find_ray(victim.pos(), target_site, ray, opc_solid_see);
+    const bool found_ray
+        = find_ray(thrower.pos(), target_site, ray, opc_solid_see);
+    // Should have already been rejected by _choose_throwing_target.
+    ASSERT(found_ray);
     while (ray.advance())
     {
-        if (victim.pos().distance_from(ray.pos()) >= MIN_THROW_DIST
+        if (thrower.pos().distance_from(ray.pos()) >= MIN_THROW_DIST
             && !actor_at(ray.pos())
             && victim.is_habitable(ray.pos())
-            && thrower.see_cell(ray.pos())
-            && victim.see_cell(ray.pos()))
+            && thrower.see_cell(ray.pos()))
         {
-            const int dist = victim.pos().distance_from(ray.pos());
+            const int dist = thrower.pos().distance_from(ray.pos());
             const int weight = sqr(LOS_RADIUS - dist + 1);
             dests.emplace_back(ray.pos(), weight);
         }
