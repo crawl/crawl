@@ -807,12 +807,10 @@ bool targetter_thunderbolt::set_aim(coord_def a)
 
     // For consistency with beams, we need to
     _make_ray(ray, origin, aim);
-    bool hit = true;
-    while ((origin - (p = ray.pos())).rdist() <= range)
+    while ((origin - (p = ray.pos())).rdist() <= range
+           && map_bounds(p) && opc_solid_see(p) < OPC_OPAQUE)
     {
-        if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
-            hit = false;
-        if (hit && p != origin && zapped[p] <= 0)
+        if (p != origin && zapped[p] <= 0)
         {
             zapped[p] = AFF_YES;
             arc_length[origin.distance_from(p)]++;
@@ -824,12 +822,10 @@ bool targetter_thunderbolt::set_aim(coord_def a)
         return true;
 
     _make_ray(ray, origin, prev);
-    hit = true;
-    while ((origin - (p = ray.pos())).rdist() <= range)
+    while ((origin - (p = ray.pos())).rdist() <= range
+           && map_bounds(p) && opc_solid_see(p) < OPC_OPAQUE)
     {
-        if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
-            hit = false;
-        if (hit && p != origin && zapped[p] <= 0)
+        if (p != origin && zapped[p] <= 0)
         {
             zapped[p] = AFF_MAYBE; // fully affected, we just want to highlight cur
             arc_length[origin.distance_from(p)]++;
@@ -1335,12 +1331,10 @@ bool targetter_shotgun::set_aim(coord_def a)
     ray_def orig_ray;
     _make_ray(orig_ray, origin, a);
     coord_def p;
-    bool hit = false;
 
     const double spread_range = (double)(num_beams - 1) * PI / 40.0;
     for (size_t i = 0; i < num_beams; i++)
     {
-        hit = true;
         double spread = (num_beams == 1)
                         ? 0.0
                         : -(spread_range / 2.0)
@@ -1354,11 +1348,10 @@ bool targetter_shotgun::set_aim(coord_def a)
             -orig_ray.r.dir.x * sin(spread) + orig_ray.r.dir.y * cos(spread);
         ray_def tempray = rays[i];
         p = tempray.pos();
-        while ((origin - (p = tempray.pos())).rdist() <= range)
+        while ((origin - (p = tempray.pos())).rdist() <= range
+               && map_bounds(p) && opc_solid_see(p) < OPC_OPAQUE)
         {
-            if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
-                hit = false;
-            if (hit && p != origin)
+            if (p != origin)
                 zapped[p] = zapped[p] + 1;
             tempray.advance();
         }
