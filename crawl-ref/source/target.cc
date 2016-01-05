@@ -784,7 +784,7 @@ static void _make_ray(ray_def &ray, coord_def a, coord_def b)
     // Like beams, we need to allow picking the "better" ray if one is blocked
     // by a wall.
     if (!find_ray(a, b, ray, opc_solid_see))
-        ray = ray_def(geom::ray(a.x + 0.5, a.y + 0.5, b.x + 0.5, b.y + 0.5));
+        ray = ray_def(geom::ray(a.x + 0.5, a.y + 0.5, b.x - a.x, b.y - a.y));
 }
 
 static bool left_of(coord_def a, coord_def b)
@@ -1327,6 +1327,9 @@ bool targetter_shotgun::set_aim(coord_def a)
         aim = a;
     // ... but for UI consistency, players should be restricted to LOS.
     else if (!targetter::set_aim(a))
+        return false;
+
+    if (a == origin)
         return false;
 
     ray_def orig_ray;
