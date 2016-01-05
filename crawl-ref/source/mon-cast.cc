@@ -4474,7 +4474,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
                 mprf("You%s", you.resist_margin_phrase(res_magic).c_str());
             else
             {
-                you.confuse(mons, 2 + random2(5));
+                you.confuse(mons, 5 + random2(3));
                 retval = 1;
             }
         }
@@ -4508,7 +4508,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
         if (actual)
         {
             retval = 1;
-            mi->confuse(mons, 2 + random2(5));
+            mi->confuse(mons, 5 + random2(3));
         }
     }
 
@@ -5390,7 +5390,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             return;
         }
 
-        foe->confuse(mons, 2 + random2(3));
+        foe->confuse(mons, 5 + random2(3));
         return;
     }
 

@@ -3958,7 +3958,7 @@ void bolt::affect_player()
         && !(you.holiness() & MH_UNDEAD)
         && !you.is_unbreathing())
     {
-        confuse_player(3);
+        confuse_player(2 + random2(3));
     }
 
     if (flavour == BEAM_UNRAVELLED_MAGIC)
@@ -4086,7 +4086,7 @@ void bolt::affect_player()
              && !(you.holiness() & (MH_UNDEAD | MH_NONLIVING | MH_PLANT)))
     {
         if (x_chance_in_y(85 - you.experience_level * 3 , 100))
-            you.confuse(agent(), 4 + random2(4));
+            you.confuse(agent(), 5 + random2(3));
     }
 }
 
