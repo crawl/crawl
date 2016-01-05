@@ -97,7 +97,7 @@ public:
     void load(reader&);
 
     void write(FILE *f, bool identify = false) const;
-    void show_menu() const;
+    void show_menu(const level_pos& place) const;
 
     bool is_at(coord_def other) const { return shop.pos == other; }
     bool is_visited() const { return !shop.stock.empty(); }

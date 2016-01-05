@@ -1106,10 +1106,11 @@ static int _count_identical(const vector<item_def>& stock, const item_def& item)
 /** Buy an item from a shop!
  *
  *  @param shop  the shop to purchase from.
+ *  @param pos   where the shop is located
  *  @param index the index of the item to buy in shop.stock
  *  @returns true if it went in your inventory, false otherwise.
  */
-static bool _purchase(shop_struct& shop, int index)
+static bool _purchase(shop_struct& shop, const level_pos& pos, int index)
 {
     item_def item = shop.stock[index]; // intentional copy
     const int cost = item_price(item, shop);
@@ -1120,10 +1121,10 @@ static bool _purchase(shop_struct& shop, int index)
     // identify, don't remove the other scrolls
     // from the shopping list if there's any
     // left).
-    if (shopping_list.is_on_list(item)
+    if (shopping_list.is_on_list(item, &pos)
         && _count_identical(shop.stock, item) == 0)
     {
-        shopping_list.del_thing(item);
+        shopping_list.del_thing(item, &pos);
     }
 
     // Take a note of the purchase.
@@ -1203,7 +1204,7 @@ class ShopMenu : public InvMenu
     shop_struct& shop;
     bool looking = false;
     shopping_order order = ORDER_DEFAULT;
-    bool long_distance;
+    level_pos pos;
 
     int selected_cost() const;
 
@@ -1222,7 +1223,7 @@ class ShopMenu : public InvMenu
 public:
     bool bought_something = false;
 
-    ShopMenu(shop_struct& _shop, bool _long_distance = false);
+    ShopMenu(shop_struct& _shop, const level_pos& _pos = level_pos::current());
 };
 
 class ShopEntry : public InvEntry
@@ -1234,7 +1235,7 @@ class ShopEntry : public InvEntry
         need_cursor = need_cursor && show_cursor;
         const int cost = item_price(*item, menu.shop);
         const int total_cost = menu.selected_cost();
-        const bool on_list = shopping_list.is_on_list(*item);
+        const bool on_list = shopping_list.is_on_list(*item, &menu.pos);
         // Colour stock as follows:
         //  * lightcyan, if on the shopping list and not selected.
         //  * lightred, if you can't buy all you selected.
@@ -1269,8 +1270,8 @@ class ShopEntry : public InvEntry
 
     virtual void select(int qty = -1) override
     {
-        if (shopping_list.is_on_list(*item) && qty != 0)
-            shopping_list.del_thing(*item);
+        if (shopping_list.is_on_list(*item, &menu.pos) && qty != 0)
+            shopping_list.del_thing(*item, &menu.pos);
 
         InvEntry::select(qty);
     }
@@ -1283,13 +1284,13 @@ public:
     }
 };
 
-ShopMenu::ShopMenu(shop_struct& _shop, bool _long_distance)
+ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos)
     : InvMenu(MF_MULTISELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
                | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING),
       shop(_shop),
-      long_distance(_long_distance)
+      pos(_pos)
 {
-    if (long_distance)
+    if (pos != level_pos::current())
         looking = true;
 
     set_tag("shop");
@@ -1358,15 +1359,17 @@ void ShopMenu::update_help()
         "[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list",
         you.gold,
         you.gold == 1 ? "" : "s",
-        long_distance ? " " " "  "  " "       "  "          " :
-        looking ?       "[<w>!</w>] buy|<w>examine</w> items" :
-                        "[<w>!</w>] <w>buy</w>|examine items",
+        pos != level_pos::current() ?
+                  " " " "  "  " "       "  "          " :
+        looking ? "[<w>!</w>] buy|<w>examine</w> items" :
+                  "[<w>!</w>] <w>buy</w>|examine items",
         _hyphenated_letters(item_count(), 'a').c_str(),
         looking ? "examine item" : "select item for purchase",
         shopping_order_names[order],
         // strwidth("default")
         string(7 - strwidth(shopping_order_names[order]), ' ').c_str(),
-        long_distance ? " " "     "  "               " :
+        pos != level_pos::current() ?
+                        " " "     "  "               " :
                         "[<w>Enter</w>] make purchase",
         _hyphenated_letters(item_count(), 'A').c_str())));
 }
@@ -1381,7 +1384,7 @@ void ShopMenu::purchase_selected()
         ASSERT(cost == 0);
         buying_from_list = true;
         for (auto item : items)
-            if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(item)->item))
+            if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(item)->item, &pos))
             {
                 selected.push_back(item);
                 cost += item_price(*dynamic_cast<ShopEntry*>(item)->item, shop);
@@ -1435,7 +1438,7 @@ void ShopMenu::purchase_selected()
             continue;
         const int quant = item.quantity;
 
-        if (!_purchase(shop, i))
+        if (!_purchase(shop, pos, i))
         {
             // The purchased item didn't fit into your
             // knapsack.
@@ -1523,7 +1526,7 @@ bool ShopMenu::process_key(int keyin)
     {
     case '!':
     case '?':
-        if (!long_distance)
+        if (pos == level_pos::current())
         {
             looking = !looking;
             update_help();
@@ -1533,7 +1536,7 @@ bool ShopMenu::process_key(int keyin)
     case ' ':
     case CK_MOUSE_CLICK:
     case CK_ENTER:
-        if (!long_distance)
+        if (pos == level_pos::current())
             purchase_selected();
         return true;
     case '$':
@@ -1546,14 +1549,14 @@ bool ShopMenu::process_key(int keyin)
             {
                 const item_def& item = *dynamic_cast<ShopEntry*>(entry)->item;
                 entry->selected_qty = 0;
-                if (!shopping_list.is_on_list(item))
-                    shopping_list.add_thing(item, item_price(item, shop));
+                if (!shopping_list.is_on_list(item, &pos))
+                    shopping_list.add_thing(item, item_price(item, shop), &pos);
             }
         }
         else
             // Move shoplist to selection.
             for (auto entry : items)
-                if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(entry)->item))
+                if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(entry)->item, &pos))
                     entry->select(-2);
         // Move shoplist to selection.
         draw_menu();
@@ -1598,10 +1601,10 @@ bool ShopMenu::process_key(int keyin)
         auto entry = dynamic_cast<ShopEntry*>(items[index]);
         entry->selected_qty = 0;
         const item_def& item(*entry->item);
-        if (shopping_list.is_on_list(item))
-            shopping_list.del_thing(item);
+        if (shopping_list.is_on_list(item, &pos))
+            shopping_list.del_thing(item, &pos);
         else
-            shopping_list.add_thing(item, item_price(item, shop));
+            shopping_list.add_thing(item, item_price(item, shop), &pos);
         // not draw_item since other items may enter/leave shopping list
         draw_menu();
         return true;
@@ -1658,9 +1661,10 @@ void shop()
         mpr("You can access your shopping list by pressing '$'.");
 }
 
-void shop(shop_struct& shop)
+void shop(shop_struct& shop, const level_pos& pos)
 {
-    ShopMenu(shop, true).show();
+    ASSERT(shop.pos == pos.pos);
+    ShopMenu(shop, pos).show();
 }
 
 void destroy_shop_at(coord_def p)
