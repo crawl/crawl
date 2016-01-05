@@ -114,7 +114,7 @@ static void _round_to_corner(geom::ray *r)
     geom::vector v = 2.0 * r->start;
     v.x = round(v.x);
     v.y = round(v.y);
-    ASSERT((iround(v.x) + iround(v.y)) % 2 == 1);
+    ASSERT(abs(iround(v.x) + iround(v.y)) % 2 == 1);
     r->start = 0.5 * v;
 }
 
