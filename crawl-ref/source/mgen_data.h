@@ -9,9 +9,6 @@
 // a dancing weapon.
 #define TUKIMA_WEAPON "tukima-weapon"
 #define TUKIMA_POWER "tukima-power"
-// Technically only used for spectral weapon, not dancing weapons
-// Equal to weapon skill with a scale of 10
-#define TUKIMA_SKILL "tukima-skill"
 
 #define MGEN_NUM_HEADS "num_heads"
 #define MGEN_BLOB_SIZE "blob_size"

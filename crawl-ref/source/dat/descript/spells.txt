@@ -1171,11 +1171,10 @@ coalesce from the mist over time.
 Spectral Weapon spell
 
 Draws out the spirit within a wielded weapon to fight for the caster, with its
-power dependent on their skill with said weapon. It only attacks when the
-caster does, and its kills count as the caster's own. If the weapon is damaged,
-part of the injury will be echoed on the caster's body. Only one spectral
-weapon can be maintained at a time, and only while the original weapon remains
-wielded.
+strength increasing with power. It only attacks when the caster does, and its
+kills count as the caster's own. If the weapon is damaged, part of the injury
+will be echoed on the caster's body. Only one spectral weapon can be maintained
+at a time, and only while the original weapon remains wielded.
 
 Certain powerful named artefacts cannot be affected, and any abilities that
 require evocation skill to trigger will not be active.
