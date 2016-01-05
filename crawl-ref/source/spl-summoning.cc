@@ -3299,11 +3299,8 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
             agent->mindex(),
             MG_NONE, god);
 
-    int skill_with_weapon = agent->skill(item_attack_skill(*wpn), 10, false);
-
     mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
-    mg.props[TUKIMA_SKILL] = skill_with_weapon;
 
     monster *mons = create_monster(mg);
     if (!mons)

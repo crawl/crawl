@@ -1771,9 +1771,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             // They shouldn't ever be placed in a normal game.
             ghost.init_spectral_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
                                        mg.props.exists(TUKIMA_POWER) ?
-                                           mg.props[TUKIMA_POWER].get_int() : 100,
-                                       mg.props.exists(TUKIMA_SKILL) ?
-                                           mg.props[TUKIMA_SKILL].get_int() : 270);
+                                           mg.props[TUKIMA_POWER].get_int() : 100);
         }
         mon->set_ghost(ghost);
         mon->ghost_demon_init();
