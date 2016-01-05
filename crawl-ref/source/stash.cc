@@ -683,13 +683,13 @@ string ShopInfo::shop_item_desc(const item_def &it) const
     return desc;
 }
 
-void ShopInfo::show_menu() const
+void ShopInfo::show_menu(const level_pos& pos) const
 {
     if (!is_visited())
         return;
     // ShopMenu shouldn't actually modify the shop, since it only does so if
     // you buy something.
-    ::shop(const_cast<shop_struct&>(shop));
+    ::shop(const_cast<shop_struct&>(shop), pos);
 }
 
 vector<stash_search_result> ShopInfo::matches_search(
@@ -1856,5 +1856,5 @@ void stash_search_result::show_menu() const
         describe_item(it);
     }
     else if (shop)
-        shop->show_menu();
+        shop->show_menu(pos);
 }
