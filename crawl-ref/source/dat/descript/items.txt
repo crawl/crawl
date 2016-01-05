@@ -29,8 +29,7 @@ amulet of harm
 
 This unholy amulet contains a vicious spirit that increases damage dealt
 to and by its wearer by one fourth. The spirit wants only to spread harm, and
-will punish anyone who removes it by ripping away a piece of their spirit or
-animating force, draining them.
+will punish anyone who removes it by draining them.
 %%%%
 amulet of inaccuracy
 
