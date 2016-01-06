@@ -384,7 +384,7 @@ static const char* _jewellery_base_ability_description(int subtype)
     case AMU_DISMISSAL:
         return "It may teleport away creatures that harm you.";
     case AMU_MANA_REGENERATION:
-        return "It doubles your mana regeneration.";
+        return "It increases your mana regeneration.";
     case AMU_THE_GOURMAND:
         return "It allows you to eat raw meat even when not hungry.";
 #if TAG_MAJOR_VERSION == 34
