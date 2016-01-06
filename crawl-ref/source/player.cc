@@ -1217,6 +1217,25 @@ void update_regen_amulet_attunement()
         you.props[REGEN_AMULET_ACTIVE] = 0;
 }
 
+// Amulet of mana regeneration needs to be worn while at full mana before it begins
+// to function.
+void update_mana_regen_amulet_attunement()
+{
+    if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION)
+        && player_regenerates_mp())
+    {
+        if (you.magic_points == you.max_magic_points
+            && you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 0)
+        {
+            you.props[MANA_REGEN_AMULET_ACTIVE] = 1;
+            mpr("Your amulet attunes itself to your body and you begin to "
+                "regenerate mana more quickly.");
+        }
+    }
+    else
+        you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
+}
+
 int player_hunger_rate(bool temp)
 {
     int hunger = 3;

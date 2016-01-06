@@ -124,7 +124,7 @@
        "book of minor magic | morningstar | mottled dragon armour | mace | " ..
        "potion of magic | ring of magical power | potion of mutation | " ..
        "potion of might | scroll of magic mapping | wand of magic darts | " ..
-       "book of maledictions"
+       "book of maledictions | amulet of mana regeneration"
 
       elseif s == "N" then i = "book of necromancy | naga barding | " ..
        "necronomicon | needle | scroll of noise | manual of necromancy"
@@ -144,7 +144,7 @@
        "quick blade"
 
       elseif s == "R" then i = "amulet of rage | amulet of reflection | " ..
-       "amulet of regeneration | rapier | amulet of resist corrosion | " ..
+       "amulet of regeneration | rapier | ring of resist corrosion | " ..
        "royal jelly | potion of resistance | scroll of recharging | robe | " ..
        "ring mail | scroll of random uselessness | scroll of remove curse | " ..
        "wand of random effects"

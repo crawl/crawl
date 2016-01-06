@@ -860,9 +860,9 @@ static void _regenerate_hp_and_mp(int delay)
         you.hit_points_regeneration -= 100;
     }
 
-    update_regen_amulet_attunement();
-
     ASSERT_RANGE(you.hit_points_regeneration, 0, 100);
+
+    update_regen_amulet_attunement();
 
     if (!player_regenerates_mp())
         return;
@@ -871,8 +871,12 @@ static void _regenerate_hp_and_mp(int delay)
     {
         const int base_val = 7 + you.max_magic_points / 2;
         int mp_regen_countup = div_rand_round(base_val * delay, BASELINE_DELAY);
+
         if (you.mutation[MUT_MANA_REGENERATION])
             mp_regen_countup *= 2;
+        if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION))
+            mp_regen_countup += 20;
+
         you.magic_points_regeneration += mp_regen_countup;
     }
 
@@ -883,6 +887,8 @@ static void _regenerate_hp_and_mp(int delay)
     }
 
     ASSERT_RANGE(you.magic_points_regeneration, 0, 100);
+
+    update_mana_regen_amulet_attunement();
 }
 
 void player_reacts()

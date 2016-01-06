@@ -126,12 +126,13 @@ const char* jewellery_base_ability_string(int subtype)
     case RING_FIRE:               return "Fire";
     case RING_ICE:                return "Ice";
     case RING_TELEPORTATION:      return "+/*Tele";
+    case RING_RESIST_CORROSION:   return "rCorr";
 #if TAG_MAJOR_VERSION == 34
     case RING_TELEPORT_CONTROL:   return "+cTele";
 #endif
     case AMU_HARM:                return "Harm *Drain";
     case AMU_DISMISSAL:           return "Dismiss";
-    case AMU_RESIST_CORROSION:    return "rCorr";
+    case AMU_MANA_REGENERATION:   return "MPRegen";
     case AMU_THE_GOURMAND:        return "Gourm";
 #if TAG_MAJOR_VERSION == 34
     case AMU_CONSERVATION:        return "Cons";
@@ -382,8 +383,8 @@ static const char* _jewellery_base_ability_description(int subtype)
         return "It increases damage dealt and taken.";
     case AMU_DISMISSAL:
         return "It may teleport away creatures that harm you.";
-    case AMU_RESIST_CORROSION:
-        return "It protects you from acid and corrosion.";
+    case AMU_MANA_REGENERATION:
+        return "It doubles your mana regeneration.";
     case AMU_THE_GOURMAND:
         return "It allows you to eat raw meat even when not hungry.";
 #if TAG_MAJOR_VERSION == 34

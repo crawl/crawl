@@ -33,6 +33,7 @@
 #define SONG_OF_SLAYING_KEY "song_of_slaying_bonus"
 #define FORCE_MAPPABLE_KEY "force_mappable"
 #define REGEN_AMULET_ACTIVE "regen_amulet_active"
+#define MANA_REGEN_AMULET_ACTIVE "mana_regen_amulet_active"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -915,6 +916,7 @@ int player_prot_life(bool calc_unid = true, bool temp = true,
 
 int player_regen();
 void update_regen_amulet_attunement();
+void update_mana_regen_amulet_attunement();
 
 int player_res_cold(bool calc_unid = true, bool temp = true,
                     bool items = true);
