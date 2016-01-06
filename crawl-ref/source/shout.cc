@@ -133,17 +133,10 @@ void handle_monster_shouts(monster* mons, bool force)
     if (s_type == S_DEMON_TAUNT)
         s_type = mons_shouts(mons->type, true);
 
-    string message, suffix;
-
     // Tries to find an entry for "name seen" or "name unseen",
     // and if no such entry exists then looks simply for "name".
-    if (you.can_see(*mons))
-        suffix = " seen";
-    else
-        suffix = " unseen";
-
-    if (message.empty())
-        message = getShoutString(key, suffix);
+    const string suffix = you.can_see(*mons) ? " seen" : " unseen";
+    string message = getShoutString(key, suffix);
 
     if (message == "__DEFAULT" || message == "__NEXT")
         message = getShoutString(default_msg_key, suffix);
