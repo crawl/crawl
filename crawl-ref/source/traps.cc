@@ -1592,8 +1592,20 @@ dungeon_feature_type trap_category(trap_type type)
     }
 }
 
+/***
+ * Can a shaft be placed on the current level?
+ *
+ * @param known Whether the potential shaft will be known to the player
+ *              (default false). During level-generation, unknown shafts
+ *              are not permitted on certain levels; at any other time,
+ *              this argument is ignored.
+ * @returns true if such a shaft can be placed.
+ */
 bool is_valid_shaft_level(bool known)
 {
+    // Important: We are sometimes called before the level has been loaded
+    // or generated, so should not depend on properties of the level itself,
+    // but only on its level_id.
     const level_id place = level_id::current();
     if (crawl_state.test
         || crawl_state.game_is_sprint())
