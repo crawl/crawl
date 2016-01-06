@@ -43,6 +43,32 @@ static void _actor_apply_noise(actor *act,
                                const noise_t &noise,
                                int noise_travel_distance);
 
+/// By default, what databse lookup key corresponds to each shout type?
+static const map<shout_type, string> default_msg_keys = {
+    { S_SILENT,         "" },
+    { S_SHOUT,          "__SHOUT" },
+    { S_BARK,           "__BARK" },
+    { S_HOWL,           "__HOWL" },
+    { S_SHOUT2,         "__TWO_SHOUTS" },
+    { S_ROAR,           "__ROAR" },
+    { S_SCREAM,         "__SCREAM" },
+    { S_BELLOW,         "__BELLOW" },
+    { S_TRUMPET,        "__TRUMPET" },
+#if TAG_MAJOR_VERSION == 34
+    { S_CAW,            "__SCREECH" },
+#endif
+    { S_SCREECH,        "__SCREECH" },
+    { S_BUZZ,           "__BUZZ" },
+    { S_MOAN,           "__MOAN" },
+    { S_GURGLE,         "__GURGLE" },
+    { S_CROAK,          "__CROAK" },
+    { S_GROWL,          "__GROWL" },
+    { S_HISS,           "__HISS" },
+    { S_DEMON_TAUNT,    "__DEMON_TAUNT" },
+    { S_CHERUB,         "__CHERUB" },
+    { S_RUMBLE,         "__RUMBLE" },
+};
+
 void handle_monster_shouts(monster* mons, bool force)
 {
     if (!force && one_chance_in(5))
@@ -70,73 +96,7 @@ void handle_monster_shouts(monster* mons, bool force)
 
     mon_acting mact(mons);
 
-    string default_msg_key = "";
-
-    switch (s_type)
-    {
-    case S_SILENT:
-        // No default message.
-        break;
-    case S_SHOUT:
-        default_msg_key = "__SHOUT";
-        break;
-    case S_BARK:
-        default_msg_key = "__BARK";
-        break;
-    case S_HOWL:
-        default_msg_key = "__HOWL";
-        break;
-    case S_SHOUT2:
-        default_msg_key = "__TWO_SHOUTS";
-        break;
-    case S_ROAR:
-        default_msg_key = "__ROAR";
-        break;
-    case S_SCREAM:
-        default_msg_key = "__SCREAM";
-        break;
-    case S_BELLOW:
-        default_msg_key = "__BELLOW";
-        break;
-    case S_TRUMPET:
-        default_msg_key = "__TRUMPET";
-        break;
-#if TAG_MAJOR_VERSION == 34
-    case S_CAW:
-#endif
-    case S_SCREECH:
-        default_msg_key = "__SCREECH";
-        break;
-    case S_BUZZ:
-        default_msg_key = "__BUZZ";
-        break;
-    case S_MOAN:
-        default_msg_key = "__MOAN";
-        break;
-    case S_GURGLE:
-        default_msg_key = "__GURGLE";
-        break;
-    case S_CROAK:
-        default_msg_key = "__CROAK";
-        break;
-    case S_GROWL:
-        default_msg_key = "__GROWL";
-        break;
-    case S_HISS:
-        default_msg_key = "__HISS";
-        break;
-    case S_DEMON_TAUNT:
-        default_msg_key = "__DEMON_TAUNT";
-        break;
-    case S_CHERUB:
-        default_msg_key = "__CHERUB";
-        break;
-    case S_RUMBLE:
-        default_msg_key = "__RUMBLE";
-        break;
-    default:
-        default_msg_key = "__BUGGY"; // S_LOUD, S_VERY_SOFT, etc. (loudness)
-    }
+    string default_msg_key = lookup(default_msg_keys, s_type, "__BUGGY");
 
     // Now that we have the message key, get a random verb and noise level
     // for pandemonium lords.
