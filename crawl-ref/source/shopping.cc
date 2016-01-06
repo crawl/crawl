@@ -883,7 +883,6 @@ unsigned int item_value(item_def item, bool ident)
                     valued += 400;
                     break;
 
-                case RING_INVISIBILITY:
                 case RING_WIZARDRY:
                 case AMU_REGENERATION:
                 case AMU_GUARDIAN_SPIRIT:
@@ -906,6 +905,7 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_LIFE_PROTECTION:
                 case RING_POISON_RESISTANCE:
                 case AMU_RESIST_CORROSION:
+                case RING_RESIST_CORROSION:
                     valued += 200;
                     break;
 

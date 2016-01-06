@@ -584,7 +584,6 @@ NAME:     items_5
 TAGS:     items_5
 KITEM:    a = ring of slaying plus:2 ident:all not_cursed /\
           amulet of regeneration ident:all not_cursed /\
-          ring of invisibility ident:all not_cursed /\
           ring of protection plus:4 ident:all not_cursed /\
           ring of evasion plus:4 ident:all not_cursed /\
           ring of strength plus:6 ident:all not_cursed /\
@@ -803,7 +802,7 @@ KITEM:    a = amulet of faith randart not_cursed ident:all /\
     ring of see invisible randart ident:all not_cursed /\
     ring of poison resistance randart ident:all not_cursed /\
     ring of slaying plus:3 ident:all not_cursed /\
-    ring of invisibility randart ident:all not_cursed /\
+    ring of resist corrosion randart ident:all not_cursed /\
     ring of protection plus:3 randart ident:all not_cursed /\
     ring of evasion plus:3 randart ident:all not_cursed /\
     ring of strength plus:3 randart ident:all not_cursed /\

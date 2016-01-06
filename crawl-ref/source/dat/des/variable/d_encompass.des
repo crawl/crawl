@@ -160,8 +160,7 @@ KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 : end
 : kmons("s = " .. table.concat(kmonsters, " / "))
 KITEM:   ? = any ring randart w:390 / ring of loudness unrand:ring_of_the_octopus_king
-KITEM:   ! = ring of invisibility / ring of slaying / ring of wizardry / \
-             any good_item ring no_uniq w:75
+KITEM:   ! = ring of slaying / ring of wizardry / any good_item ring no_uniq w:75
 KITEM:   | = | / any good_item
 KFEAT:   ^ = known permanent teleport trap
 KFEAT:   ~ = teleport trap

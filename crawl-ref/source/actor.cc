@@ -226,6 +226,7 @@ bool actor::gourmand(bool calc_unid, bool items) const
 bool actor::res_corr(bool calc_unid, bool items) const
 {
     return items && (wearing(EQ_AMULET, AMU_RESIST_CORROSION, calc_unid)
+                     || wearing(EQ_RINGS, RING_RESIST_CORROSION, calc_unid)
                      || scan_artefacts(ARTP_RCORR, calc_unid));
 }
 
@@ -329,8 +330,7 @@ bool actor::evokable_berserk(bool calc_unid) const
 
 bool actor::evokable_invis(bool calc_unid) const
 {
-    return wearing(EQ_RINGS, RING_INVISIBILITY, calc_unid)
-           || wearing_ego(EQ_CLOAK, SPARM_INVISIBILITY, calc_unid)
+    return wearing_ego(EQ_CLOAK, SPARM_INVISIBILITY, calc_unid)
            || scan_artefacts(ARTP_INVISIBLE, calc_unid);
 }
 

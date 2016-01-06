@@ -1341,15 +1341,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         }
         break;
 
-    case RING_INVISIBILITY:
-        if (you.duration[DUR_INVIS]
-            && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
-            && !you.evokable_invis())
-        {
-            you.duration[DUR_INVIS] = 1;
-        }
-        break;
-
     case RING_MAGICAL_POWER:
         canned_msg(MSG_MANA_DECREASE);
         break;

@@ -2198,8 +2198,7 @@ jewellery_type get_random_ring_type()
 {
     const jewellery_type j = _get_raw_random_ring_type();
     // Adjusted distribution here. - bwr
-    if ((j == RING_INVISIBILITY
-           || j == AMU_REGENERATION
+    if ((j == AMU_REGENERATION
            || j == RING_SLAYING)
         && !one_chance_in(3))
     {
