@@ -742,6 +742,10 @@ void floor_transition(dungeon_feature_type how,
         }
     }
 
+    // Warn Formicids if they cannot shaft here
+    if (you.species == SP_FORMICID && !is_valid_shaft_level())
+        mpr("Beware, you cannot shaft yourself on this level.");
+
     const bool newlevel = load_level(how, LOAD_ENTER_LEVEL, old_level);
 
     if (newlevel)

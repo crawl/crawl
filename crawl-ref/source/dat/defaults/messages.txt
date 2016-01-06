@@ -60,6 +60,7 @@ msc += $warning:fails to return
 msc += $warning:no longer ripe
 msc += $warning:This .* contains the .* runes? of Zot.
 msc += $warning:They guard the .* runes? of Zot.
+msc += $warning:Beware, you cannot shaft yourself on this level.
 
 # Unimportant messages and combat clutter
 #
