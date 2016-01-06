@@ -69,6 +69,31 @@ static const map<shout_type, string> default_msg_keys = {
     { S_RUMBLE,         "__RUMBLE" },
 };
 
+/**
+ * What's the appropriate DB lookup key for a given monster's shouts?
+ *
+ * @param mons      The monster in question.
+ * @return          A name for the monster; e.g. "orc", "Kirke", "pandemonium
+ *                  lord", "Fire Elementalist player ghost".
+ */
+static string _shout_key(const monster &mons)
+{
+    // Pandemonium demons have random names, so use "pandemonium lord"
+    if (mons.type == MONS_PANDEMONIUM_LORD)
+        return "pandemonium lord";
+
+    // Search for player ghost shout by the ghost's job.
+    if (mons.type == MONS_PLAYER_GHOST)
+    {
+        const ghost_demon &ghost = *(mons.ghost);
+        const string ghost_job         = get_job_name(ghost.job);
+        return ghost_job + " player ghost";
+    }
+
+    // everything else just goes by name.
+    return mons_type_name(mons.type, DESC_PLAIN);
+}
+
 void handle_monster_shouts(monster* mons, bool force)
 {
     if (!force && one_chance_in(5))
@@ -96,7 +121,12 @@ void handle_monster_shouts(monster* mons, bool force)
 
     mon_acting mact(mons);
 
-    string default_msg_key = lookup(default_msg_keys, s_type, "__BUGGY");
+    // less specific, more specific.
+    const string default_msg_key
+        = mons->type == MONS_PLAYER_GHOST ?
+                 "player ghost" :
+                 lookup(default_msg_keys, s_type, "__BUGGY");
+    const string key = _shout_key(*mons);
 
     // Now that we have the message key, get a random verb and noise level
     // for pandemonium lords.
@@ -104,21 +134,6 @@ void handle_monster_shouts(monster* mons, bool force)
         s_type = mons_shouts(mons->type, true);
 
     string message, suffix;
-    string key = mons_type_name(mons->type, DESC_PLAIN);
-
-    // Pandemonium demons have random names, so use "pandemonium lord"
-    if (mons->type == MONS_PANDEMONIUM_LORD)
-        key = "pandemonium lord";
-    // Search for player ghost shout by the ghost's job.
-    else if (mons->type == MONS_PLAYER_GHOST)
-    {
-        const ghost_demon &ghost = *(mons->ghost);
-        string ghost_job         = get_job_name(ghost.job);
-
-        key = ghost_job + " player ghost";
-
-        default_msg_key = "player ghost";
-    }
 
     // Tries to find an entry for "name seen" or "name unseen",
     // and if no such entry exists then looks simply for "name".
