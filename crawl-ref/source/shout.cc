@@ -122,10 +122,6 @@ void handle_monster_shouts(monster* mons, bool force)
 
     // Tries to find an entry for "name seen" or "name unseen",
     // and if no such entry exists then looks simply for "name".
-    // We don't use "you.can_see(mons)" here since that would return
-    // false for submerged monsters, but submerged monsters will be forced
-    // to surface before they shout, thus removing that source of
-    // non-visibility.
     if (you.can_see(*mons))
         suffix = " seen";
     else
