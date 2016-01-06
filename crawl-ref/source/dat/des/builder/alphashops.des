@@ -108,7 +108,7 @@
       elseif s == "I" then i = "amulet of inaccuracy | ring of ice | " ..
        "scroll of immolation | ice dragon armour | book of ice | iron rod | " ..
        "rod of ignition | potion of invisibility | ring of intelligence | " ..
-       "ring of invisibility | scroll of identify | wand of invisibility | " ..
+       "scroll of identify | wand of invisibility | " ..
        "rod of inaccuracy | manual of ice magic | manual of invocations "
 
       elseif s == "J" then i = "javelin"

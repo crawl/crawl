@@ -423,7 +423,6 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { AMU_REGENERATION, { { ARTP_REGENERATION, 1 } } },
     { AMU_REFLECTION, { { ARTP_SHIELDING, 0 } } },
 
-    { RING_INVISIBILITY, { { ARTP_INVISIBLE, 1 } } },
     { RING_MAGICAL_POWER, { { ARTP_MAGICAL_POWER, 9 } } },
     { RING_FLIGHT, { { ARTP_FLY, 1 } } },
     { RING_SEE_INVISIBLE, { { ARTP_SEE_INVISIBLE, 1 } } },
@@ -1464,10 +1463,6 @@ static bool _randart_is_redundant(const item_def &item,
 
     case RING_SEE_INVISIBLE:
         provides = ARTP_SEE_INVISIBLE;
-        break;
-
-    case RING_INVISIBILITY:
-        provides = ARTP_INVISIBLE;
         break;
 
     case RING_STEALTH:

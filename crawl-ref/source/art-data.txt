@@ -906,11 +906,10 @@ BOOL:    elec, fly, rmsl
 
 NAME:    ring of Shadows
 INSCRIP: Umbra
-OBJ:     OBJ_JEWELLERY/RING_INVISIBILITY
+OBJ:     OBJ_JEWELLERY/RING_LIFE_PROTECTION
 COLOUR:  ETC_DARK
 TILE:    urand_shadows
-LIFE:    1
-BOOL:    seeinv
+BOOL:    seeinv, inv
 
 NAME:    amulet of Cekugob
 OBJ:     OBJ_JEWELLERY/AMU_DISMISSAL

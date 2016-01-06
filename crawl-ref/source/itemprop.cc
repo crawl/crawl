@@ -2728,7 +2728,6 @@ bool gives_ability(const item_def &item)
     case OBJ_JEWELLERY:
         if (item.sub_type == RING_TELEPORTATION
             || item.sub_type == RING_FLIGHT
-            || item.sub_type == RING_INVISIBILITY
             || item.sub_type == AMU_RAGE)
         {
             return true;

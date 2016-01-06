@@ -6041,10 +6041,6 @@ bool monster::can_evoke_jewellery(jewellery_type jtype) const
     {
         case RING_TELEPORTATION:
             return !has_ench(ENCH_TP);
-        case RING_INVISIBILITY:
-            // If there are any item using monsters that are permanently
-            // invisible, this might have to be restricted.
-            return true;
         case AMU_RAGE:
             return can_go_berserk();
         default:
@@ -6064,11 +6060,6 @@ bool monster::should_evoke_jewellery(jewellery_type jtype) const
         // this implies !berserk()
         return !has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
                && needs_berserk();
-    case RING_INVISIBILITY:
-        // We're being nice: friendlies won't go invisible if the player
-        // won't be able to see them.
-        return !has_ench(ENCH_INVIS)
-               && (you.can_see_invisible(false) || !friendly());
     default:
         break;
     }
@@ -6092,10 +6083,6 @@ bool monster::evoke_jewellery_effect(jewellery_type jtype)
     {
     case AMU_RAGE:
         enchant_actor_with_flavour(this, this, BEAM_BERSERK);
-        break;
-
-    case RING_INVISIBILITY:
-        enchant_actor_with_flavour(this, this, BEAM_INVISIBILITY);
         break;
 
     case RING_TELEPORTATION:

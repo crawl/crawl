@@ -968,10 +968,10 @@ ring of intelligence
 This ring increases or decreases the mental ability of its wearer, depending on
 the degree to which it has been enchanted.
 %%%%
-ring of invisibility
+ring of resist corrosion
 
-This powerful ring can be activated to hide its wearer from the view of others,
-but increases the speed of their metabolism greatly while doing so.
+This ring protects the wearer from acid damage and from corrosion caused by
+acids, although not infallibly so.
 %%%%
 ring of loudness
 

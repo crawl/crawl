@@ -369,7 +369,6 @@ function steel_vault_setup(e)
   e.kitem("b = any armour randart level:17 ident:all")
   e.kitem("c = ring of slaying plus:3 ident:all not_cursed /\
           amulet of regeneration ident:all not_cursed /\
-          ring of invisibility ident:all not_cursed /\
           ring of protection plus:6 ident:all not_cursed /\
           ring of evasion plus:6 ident:all not_cursed /\
           ring of strength plus:6 ident:all not_cursed /\

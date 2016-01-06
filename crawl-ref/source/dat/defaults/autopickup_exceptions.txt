@@ -66,7 +66,7 @@ ae += [^n]identified.*spellbook
 :   or itsubtype == "ring of teleportation"
 :   or itsubtype == "ring of protection from fire"
 :   or itsubtype == "ring of protection from cold"
-:   or itsubtype == "ring of invisibility"
+:   or itsubtype == "ring of resist corrosion"
 :   or itsubtype == "ring of see invisible"
 :   or itsubtype == "ring of magical power"
 :   or itsubtype == "ring of ice"

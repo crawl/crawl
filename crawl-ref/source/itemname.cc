@@ -736,7 +736,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_STRENGTH:              return "strength";
         case RING_SLAYING:               return "slaying";
         case RING_SEE_INVISIBLE:         return "see invisible";
-        case RING_INVISIBILITY:          return "invisibility";
+        case RING_RESIST_CORROSION:      return "resist corrosion";
         case RING_LOUDNESS:              return "loudness";
         case RING_TELEPORTATION:         return "teleportation";
         case RING_EVASION:               return "evasion";
@@ -788,7 +788,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_STRENGTH:              return "Str";
         case RING_SLAYING:               return "Slay";
         case RING_SEE_INVISIBLE:         return "sInv";
-        case RING_INVISIBILITY:          return "+Inv";
+        case RING_RESIST_CORROSION:      return "rCorr";
         case RING_LOUDNESS:              return "Stlth-";
         case RING_EVASION:               return "EV";
         case RING_STEALTH:               return "Stlth+";
@@ -3695,6 +3695,7 @@ bool is_useless_item(const item_def &item, bool temp)
                    || player_mutation_level(MUT_NO_ARTIFICE);
 
         case AMU_RESIST_CORROSION:
+        case RING_RESIST_CORROSION:
             return you.res_corr(false, false);
 
         case AMU_THE_GOURMAND:
@@ -3732,10 +3733,6 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_TELEPORTATION:
             return you.species == SP_FORMICID
                    || crawl_state.game_is_sprint()
-                   || player_mutation_level(MUT_NO_ARTIFICE);
-
-        case RING_INVISIBILITY:
-            return _invisibility_is_useless(temp)
                    || player_mutation_level(MUT_NO_ARTIFICE);
 
         case RING_FLIGHT:

@@ -2319,14 +2319,9 @@ ring of intelligence
 
 <ring>
 %%%%
-ring of invisibility
+ring of resist corrosion
 
-“With yells of delight the goblins rushed upon him. A pang of fear and loss,
-like an echo of Gollum's misery, smote Bilbo, and forgetting even to draw his
-sword he struck his hands into his pockets. And — there was the ring still, in
-his left pocket, and it slipped on his finger. The goblins stopped short. They
-could not see a sign of him. He had vanished.”
-    -J.R.R. Tolkien, _The Hobbit, or There and Back Again_. 1937.
+<ring>
 %%%%
 ring of magical power
 
