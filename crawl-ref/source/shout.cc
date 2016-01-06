@@ -143,7 +143,7 @@ void handle_monster_shouts(monster* mons, bool force)
     if (s_type == S_DEMON_TAUNT)
         s_type = mons_shouts(mons->type, true);
 
-    string msg, suffix;
+    string message, suffix;
     string key = mons_type_name(mons->type, DESC_PLAIN);
 
     // Pandemonium demons have random names, so use "pandemonium lord"
@@ -171,12 +171,12 @@ void handle_monster_shouts(monster* mons, bool force)
     else
         suffix = " unseen";
 
-    if (msg.empty())
-        msg = getShoutString(key, suffix);
+    if (message.empty())
+        message = getShoutString(key, suffix);
 
-    if (msg == "__DEFAULT" || msg == "__NEXT")
-        msg = getShoutString(default_msg_key, suffix);
-    else if (msg.empty())
+    if (message == "__DEFAULT" || message == "__NEXT")
+        message = getShoutString(default_msg_key, suffix);
+    else if (message.empty())
     {
         char mchar = mons_base_char(mons->type);
 
@@ -190,10 +190,10 @@ void handle_monster_shouts(monster* mons, bool force)
 
         glyph_key += mchar;
         glyph_key += "'";
-        msg = getShoutString(glyph_key, suffix);
+        message = getShoutString(glyph_key, suffix);
 
-        if (msg.empty() || msg == "__DEFAULT")
-            msg = getShoutString(default_msg_key, suffix);
+        if (message.empty() || message == "__DEFAULT")
+            message = getShoutString(default_msg_key, suffix);
     }
 
     if (default_msg_key == "__BUGGY")
@@ -201,9 +201,9 @@ void handle_monster_shouts(monster* mons, bool force)
         msg::streams(MSGCH_SOUND) << "You hear something buggy!"
                                   << endl;
     }
-    else if (s_type == S_SILENT && (msg.empty() || msg == "__NONE"))
+    else if (s_type == S_SILENT && (message.empty() || message == "__NONE"))
         ; // No "visual shout" defined for silent monster, do nothing.
-    else if (msg.empty()) // Still nothing found?
+    else if (message.empty()) // Still nothing found?
     {
         msg::streams(MSGCH_DIAGNOSTICS)
             << "No shout entry for default shout type '"
@@ -212,7 +212,7 @@ void handle_monster_shouts(monster* mons, bool force)
         msg::streams(MSGCH_SOUND) << "You hear something buggy!"
                                   << endl;
     }
-    else if (msg == "__NONE")
+    else if (message == "__NONE")
     {
         msg::streams(MSGCH_DIAGNOSTICS)
             << "__NONE returned as shout for non-silent monster '"
@@ -226,7 +226,7 @@ void handle_monster_shouts(monster* mons, bool force)
         if (s_type == S_SILENT)
             channel = MSGCH_TALK_VISUAL;
 
-        strip_channel_prefix(msg, channel);
+        strip_channel_prefix(message, channel);
 
         // Monster must come up from being submerged if it wants to shout.
         if (mons->submerged())
@@ -259,8 +259,8 @@ void handle_monster_shouts(monster* mons, bool force)
                 seen_monster(mons);
             }
 
-            msg = do_mon_str_replacements(msg, mons, s_type);
-            msg::streams(channel) << msg << endl;
+            message = do_mon_str_replacements(message, mons, s_type);
+            msg::streams(channel) << message << endl;
         }
     }
 
