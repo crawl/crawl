@@ -820,15 +820,15 @@ amulet of inaccuracy
 
 <amulet>
 %%%%
+amulet of mana regeneration
+
+<amulet>
+%%%%
 amulet of rage
 
 <amulet>
 %%%%
 amulet of regeneration
-
-<amulet>
-%%%%
-amulet of resist corrosion
 
 <amulet>
 %%%%

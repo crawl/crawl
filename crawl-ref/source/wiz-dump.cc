@@ -73,8 +73,6 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return AMU_HARM;
     if (s == "Dismiss")
         return AMU_DISMISSAL;
-    if (s == "rCorr")
-        return AMU_RESIST_CORROSION;
     if (s == "Gourm")
         return AMU_THE_GOURMAND;
     if (s == "Inacc")
@@ -86,6 +84,8 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
     if (s == "Reflect")
         return AMU_REFLECTION;
 
+    if (s == "rCorr")
+        return RING_RESIST_CORROSION;
     if (s == "Fire")
         return RING_FIRE;
     if (s == "Ice")

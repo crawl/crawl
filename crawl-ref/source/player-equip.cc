@@ -1138,6 +1138,23 @@ static void _equip_amulet_of_regeneration()
     }
 }
 
+static void _equip_amulet_of_mana_regeneration()
+{
+    if (!player_regenerates_mp())
+        mpr("The amulet feels cold and inert.");
+    else if (you.magic_points == you.max_magic_points)
+    {
+        you.props[MANA_REGEN_AMULET_ACTIVE] = 1;
+        mpr("The amulet hums as it attunes itself to your energized body.");
+    }
+    else
+    {
+        mpr("You sense that the amulet cannot attune itself to your exhausted"
+            " body.");
+        you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
+    }
+}
+
 static void _equip_jewellery_effect(item_def &item, bool unmeld,
                                     equipment_type slot)
 {
@@ -1228,6 +1245,11 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     case AMU_REGENERATION:
         if (!unmeld)
             _equip_amulet_of_regeneration();
+        break;
+
+    case AMU_MANA_REGENERATION:
+        if (!unmeld)
+            _equip_amulet_of_mana_regeneration();
         break;
 
     case AMU_GUARDIAN_SPIRIT:
