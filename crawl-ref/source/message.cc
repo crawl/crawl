@@ -62,40 +62,10 @@ static bool _ends_in_punctuation(const string& text)
     }
 }
 
-struct message_item
+struct message_particle
 {
-    msg_channel_type    channel;        // message channel
-    int                 param;          // param for channel (god, enchantment)
-    string              text;           // text of message (tagged string...)
-    int                 repeats;
-    int                 turn;
-    bool                join;           // may this message be joined with
-                                        // others?
-
-    message_item() : channel(NUM_MESSAGE_CHANNELS), param(0),
-                     text(""), repeats(0), turn(-1), join(true)
-    {
-    }
-
-    message_item(string msg, msg_channel_type chan, int par, bool jn)
-        : channel(chan), param(par), text(msg), repeats(1),
-          turn(you.num_turns)
-    {
-         // Don't join long messages.
-         join = jn && strwidth(pure_text()) < 40;
-    }
-
-    // Constructor for restored messages.
-    message_item(string msg, msg_channel_type chan, int par, int rep, int trn)
-        : channel(chan), param(par), text(msg), repeats(rep),
-          turn(trn), join(false)
-    {
-    }
-
-    operator bool() const
-    {
-        return repeats > 0;
-    }
+    string text;        /// text of message (tagged string...)
+    int repeats;        /// Number of times the message is in succession (x2)
 
     string pure_text() const
     {
@@ -119,55 +89,141 @@ struct message_item
         return pure_text() + rep;
     }
 
+    /**
+     * If this is followed by another message particle on the same line,
+     * should there be a semicolon between them?
+     */
+    bool needs_semicolon() const
+    {
+        return repeats <= 1 && !_ends_in_punctuation(pure_text());
+    }
+};
+
+struct message_line
+{
+    msg_channel_type    channel;        // message channel
+    int                 param;          // param for channel (god, enchantment)
+    vector<message_particle> messages;  // a set of possibly-repeated messages
+    int                 turn;
+    bool                join;          /// may we merge this message w/others?
+
+    message_line() : channel(NUM_MESSAGE_CHANNELS), param(0), turn(-1),
+                     join(true)
+    {
+    }
+
+    message_line(string msg, msg_channel_type chan, int par, bool jn)
+     : channel(chan), param(par), turn(you.num_turns)
+    {
+        messages = { { msg, 1 } };
+        // Don't join long messages.
+        join = jn && strwidth(last_msg().pure_text()) < 40;
+    }
+
+    // Constructor for restored messages.
+    message_line(string text, msg_channel_type chan, int par, int trn)
+     : channel(chan), param(par), messages({{ text, 1 }}), turn(trn),
+       join(false)
+    {
+    }
+
+    operator bool() const
+    {
+        return !messages.empty();
+    }
+
+    const message_particle& last_msg() const
+    {
+        return messages.back();
+    }
+
     // Tries to condense the argument into this message.
     // Either *this needs to be an empty item, or it must be the
     // same as the argument.
-    bool merge(const message_item& other)
+    bool merge(const message_line& other)
     {
         if (! *this)
         {
             *this = other;
             return true;
         }
+        if (!other)
+            return true;
 
+
+        if (crawl_state.game_is_arena())
+            return false; // dangerous for hacky code (looks at EOL for '!'...)
         if (!Options.msg_condense_repeats)
             return false;
-        if (other.channel == channel && other.param == param)
+        if (other.channel != channel || other.param != param)
+            return false;
+        if (other.messages.size() > 1)
         {
-            if (Options.msg_condense_repeats && other.text == text)
-            {
-                repeats += other.repeats;
-                return true;
-            }
-            else if (Options.msg_condense_short
-                     && turn == other.turn
-                     && repeats == 1 && other.repeats == 1
-                     && join && other.join
-                     && _ends_in_punctuation(pure_text())
-                        == _ends_in_punctuation(other.pure_text()))
-            {
-                // Note that join stays true.
-
-                string sep = "<lightgrey>";
-                int seplen = 1;
-                if (!_ends_in_punctuation(pure_text()))
-                {
-                    sep += ";";
-                    seplen++;
-                }
-                sep += " </lightgrey>";
-                if (strwidth(pure_text()) + seplen + strwidth(other.pure_text())
-                    > (int)msgwin_line_length())
-                {
-                    return false;
-                }
-
-                text += sep;
-                text += other.text;
-                return true;
-            }
+            return false; // not gonna try to handle this complexity
+                          // shouldn't come up...
         }
+
+        if (Options.msg_condense_repeats
+            && other.last_msg().text == last_msg().text)
+        {
+            messages.back().repeats += other.last_msg().repeats;
+            return true;
+        }
+        else if (Options.msg_condense_short
+                 && turn == other.turn
+                 && join && other.join)
+        {
+            // "; " or " "?
+            const int seplen = last_msg().needs_semicolon() ? 2 : 1;
+            const int total_len = pure_len() + seplen + other.pure_len();
+            if (total_len > (int)msgwin_line_length())
+                return false;
+
+            // merge in other's messages; they'll be delimited when printing.
+            messages.insert(messages.end(),
+                            other.messages.begin(), other.messages.end());
+            return true;
+        }
+
         return false;
+    }
+
+    /// What's the length of the actual combined text of the particles, not
+    /// including non-rendering text (<red> etc)?
+    int pure_len() const
+    {
+        // could we do this more functionally?
+        int len = 0;
+        for (auto &msg : messages)
+        {
+            if (len > 0) // not first msg
+                len += msg.needs_semicolon() ? 2 : 1; // " " vs "; "
+            len += strwidth(msg.pure_text_with_repeats());
+        }
+        return len;
+    }
+
+    /// The full string, with elements joined as appropriate.
+    string full_text() const
+    {
+        string text = "";
+        bool needs_semicolon = false;
+        for (auto &msg : messages)
+        {
+            if (!text.empty())
+            {
+                text += make_stringf("<lightgrey>%s </lightgrey>",
+                                     needs_semicolon ? ";" : "");
+            }
+            text += msg.with_repeats();
+            needs_semicolon = msg.needs_semicolon();
+        }
+        return text;
+    }
+
+    string pure_text_with_repeats() const
+    {
+        return formatted_string::parse_string(full_text()).tostring();
     }
 };
 
@@ -647,12 +703,12 @@ bool any_messages()
     return msgwin.any_messages();
 }
 
-typedef circ_vec<message_item, NUM_STORED_MESSAGES> store_t;
+typedef circ_vec<message_line, NUM_STORED_MESSAGES> store_t;
 
 class message_store
 {
     store_t msgs;
-    message_item prev_msg;
+    message_line prev_msg;
     bool last_of_turn;
     int temp; // number of temporary messages
 
@@ -669,7 +725,7 @@ public:
 #endif
     {}
 
-    void add(const message_item& msg)
+    void add(const message_line& msg)
     {
         if (msg.channel != MSGCH_PROMPT && prev_msg.merge(msg))
             return;
@@ -679,12 +735,7 @@ public:
             flush_prev();
     }
 
-    bool have_prev()
-    {
-        return prev_msg;
-    }
-
-    void store_msg(const message_item& msg)
+    void store_msg(const message_line& msg)
     {
         prefix_type p = P_NONE;
         msgs.push_back(msg);
@@ -697,7 +748,7 @@ public:
         // of space and have to display --more-- instead
         send_ignore_one = true;
 #endif
-        msgwin.add_item(msg.with_repeats(), p, _temporary);
+        msgwin.add_item(msg.full_text(), p, _temporary);
 #ifdef USE_TILE_WEB
         send_ignore_one = false;
 #endif
@@ -722,11 +773,11 @@ public:
     {
         if (!prev_msg)
             return;
-        message_item msg = prev_msg;
+        message_line msg = prev_msg;
         // Clear prev_msg before storing it, since
         // writing out to the message window might
         // in turn result in a recursive flush_prev.
-        prev_msg = message_item();
+        prev_msg = message_line();
 #ifdef USE_TILE_WEB
         unsent++;
 #endif
@@ -755,7 +806,7 @@ public:
     void clear()
     {
         msgs.clear();
-        prev_msg = message_item();
+        prev_msg = message_line();
         last_of_turn = false;
         temp = 0;
     }
@@ -773,13 +824,11 @@ public:
         tiles.json_open_array("messages");
         for (int i = -unsent; i < (send_ignore_one ? -1 : 0); ++i)
         {
-            message_item& msg = msgs[i];
+            message_line& msg = msgs[i];
             tiles.json_open_object();
-            tiles.json_write_string("text", msg.text);
+            tiles.json_write_string("text", msg.full_text());
             tiles.json_write_int("turn", msg.turn);
             tiles.json_write_int("channel", msg.channel);
-            if (msg.repeats > 1)
-                tiles.json_write_int("repeats", msg.repeats);
             tiles.json_close_object();
         }
         tiles.json_close_array();
@@ -1285,7 +1334,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
         fs.filter_lang();
     text = fs.to_colour_string();
 
-    message_item msg = message_item(text, channel, param, join);
+    message_line msg = message_line(text, channel, param, join);
     buffer.add(msg);
     _last_msg_turn = msg.turn;
 
@@ -1770,7 +1819,7 @@ string get_last_messages(int mcount, bool full)
     mcount = min(mcount, NUM_STORED_MESSAGES);
     for (int i = -1; mcount > 0; --i)
     {
-        const message_item msg = msgs[i];
+        const message_line msg = msgs[i];
         if (!msg)
             break;
         if (full || is_channel_dumpworthy(msg.channel))
@@ -1793,10 +1842,10 @@ void get_recent_messages(vector<string> &mess,
     int mcount = NUM_STORED_MESSAGES;
     for (int i = -1; mcount > 0; --i, --mcount)
     {
-        const message_item msg = msgs[i];
+        const message_line msg = msgs[i];
         if (!msg)
             break;
-        mess.push_back(msg.pure_text());
+        mess.push_back(msg.pure_text_with_repeats());
         chan.push_back(msg.channel);
     }
 }
@@ -1809,10 +1858,9 @@ void save_messages(writer& outf)
     marshallInt(outf, msgs.size());
     for (int i = 0; i < msgs.size(); ++i)
     {
-        marshallString4(outf, msgs[i].text);
+        marshallString4(outf, msgs[i].full_text());
         marshallInt(outf, msgs[i].channel);
         marshallInt(outf, msgs[i].param);
-        marshallInt(outf, msgs[i].repeats);
         marshallInt(outf, msgs[i].turn);
     }
 }
@@ -1829,10 +1877,13 @@ void load_messages(reader& inf)
 
         msg_channel_type channel = (msg_channel_type) unmarshallInt(inf);
         int           param      = unmarshallInt(inf);
-        int           repeats    = unmarshallInt(inf);
+#if TAG_MAJOR_VERSION == 34
+        if (inf.getMinorVersion() < TAG_MINOR_MESSAGE_REPEATS)
+                                   unmarshallInt(inf); // was 'repeats'
+#endif
         int           turn       = unmarshallInt(inf);
 
-        message_item msg(message_item(text, channel, param, repeats, turn));
+        message_line msg(message_line(text, channel, param, turn));
         if (msg)
             buffer.store_msg(msg);
     }
@@ -1850,7 +1901,7 @@ void replay_messages()
     for (int i = 0; i < msgs.size(); ++i)
         if (channel_message_history(msgs[i].channel))
         {
-            string text = msgs[i].with_repeats();
+            string text = msgs[i].full_text();
             linebreak_string(text, cgetsize(GOTO_CRT).x - 1);
             vector<formatted_string> parts;
             formatted_string::parse_string_to_multiple(text, parts);
