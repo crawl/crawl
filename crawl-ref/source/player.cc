@@ -6096,8 +6096,7 @@ int player::gdr_perc() const
     case TRAN_DRAGON:
         return 34; // base AC 8
     case TRAN_STATUE:
-        return species == SP_GARGOYLE ? 50
-                                      : 39; // like plate (AC 10)
+        return 39; // like plate (AC 10)
     case TRAN_TREE:
         return 48;
     default:
