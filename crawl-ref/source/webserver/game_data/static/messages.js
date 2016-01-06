@@ -67,14 +67,6 @@ function ($, comm, client, util, options) {
         prefix_glyph.html("&nbsp;");
         msg_elem.html(prefix_glyph);
         msg_elem.append(util.formatted_string_to_html(data.text));
-        if (data.repeats > 1)
-        {
-            var repeats = $("<span>");
-            repeats.addClass("repeats");
-            repeats.text("(" + data.repeats + "x)");
-            msg_elem.append(" ");
-            msg_elem.append(repeats);
-        }
         $("#messages_container").scrollTop($("#messages").height());
     }
 
