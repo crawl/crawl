@@ -85,13 +85,14 @@ ae += [^n]identified.*spellbook
 :   return it.stacks() or nil
 : end)
 
-# Excluding amulets as you only need one of each. (If you know the
-# subtype that means you already have one of it.) Also for some rings.
-# Some items may already be excluded as bad_item, e.g. inaccuracy.
-ae += amulet of (inaccuracy|the gourmand|regeneration|dismissal|harm)
-ae += amulet of (resist .*|clarity|rage|guardian spirit|faith|stasis)
-# Rings of teleportation are not redundant -- double *Tele is pretty good in
-# the Abyss. Still, they're more in line with lanterns of shadow, so you can
-# pick up the second one by hand.
+# Excluding amulets as you only need one of each. (If you know the subtype
+# that means you already have one of it.). Some items may already be excluded
+# as bad_item, e.g. inaccuracy.
+ae += amulet of (nothing|inaccuracy|the gourmand|regeneration|dismissal|harm)
+ae += amulet of (reflection|rage|guardian spirit|faith|mana regeneration)
+
+# Likewise for some rings. Rings of teleportation are not redundant: double
+# *Tele # is pretty good in the Abyss. Still, they're more in line with
+# lanterns of shadow, so you can pick up the second one by hand.
 ae += ring of (see invisible|flight|poison resistance|teleportation)
-ae += ring of (invisibility|sustain attributes)
+ae += ring of (sustain attributes|resist corrosion)
