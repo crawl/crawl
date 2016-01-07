@@ -1671,15 +1671,15 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             else if (Options.show_uncursed && !know_pluses)
                 buff << "uncursed ";
 
-            // if we know enough to know it has *something* ('shiny' etc),
-            // but we know it has no ego or curse, it must have a plus.
-            // if we don't know what the plus is, call it 'enchanted'.
-            if (know_ego && get_armour_ego_type(*this) == SPARM_NORMAL &&
-                !know_pluses && !is_artefact(*this) && get_equip_desc(*this))
-            {
-                buff << "enchanted ";
-            }
+        }
 
+        // If we know enough to know it has *something* ('shiny' etc),
+        // but we know it has no ego, it must have a plus. (or maybe a curse.)
+        // If we don't know what the plus is, call it 'enchanted'.
+        if (!terse && know_ego && get_armour_ego_type(*this) == SPARM_NORMAL &&
+            !know_pluses && !is_artefact(*this) && get_equip_desc(*this))
+        {
+            buff << "enchanted ";
         }
 
         // Don't list hides or QDA as +0.

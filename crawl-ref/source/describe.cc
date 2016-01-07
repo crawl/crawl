@@ -1317,7 +1317,10 @@ static string _describe_armour(const item_def &item, bool verbose)
     }
 
     const int ego = get_armour_ego_type(item);
-    if (ego != SPARM_NORMAL && item_type_known(item) && verbose)
+    const bool enchanted = get_equip_desc(item) && ego == SPARM_NORMAL
+                           && !item_ident(item, ISFLAG_KNOW_PLUSES);
+
+    if ((ego != SPARM_NORMAL || enchanted) && item_type_known(item) && verbose)
     {
         description += "\n\n";
 
@@ -1399,6 +1402,14 @@ static string _describe_armour(const item_def &item, bool verbose)
         case SPARM_SPIRIT_SHIELD:
             description += "It shields its wearer from harm at the cost "
                 "of magical power.";
+            break;
+
+        case SPARM_NORMAL:
+            ASSERT(enchanted);
+            description += "It has no special ego (it is not resistant to "
+                           "fire, etc), but is still enchanted in some way - "
+                           "positive or negative.";
+
             break;
 
         // This is only for gloves.
