@@ -581,6 +581,7 @@ funding a shop increases with the number of shops funded.{{
 
     return desc
 }}
+As with all merchants, those deeper in the dungeon tend to carry better wares.
 %%%%
 Bribe Branch ability
 
