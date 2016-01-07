@@ -127,6 +127,7 @@ function ($, map_knowledge, cr, dungeon_renderer, options, util) {
                 // Create a new row
                 var node = $("<span class='group'>\
                                 <canvas class='picture'></canvas>\
+                                <span class='health'></span>\
                                 <span class='name'></span>\
                               </span>");
                 $list.append(node);
@@ -136,6 +137,7 @@ function ($, map_knowledge, cr, dungeon_renderer, options, util) {
                     node: node,
                     canvas: canvas,
                     renderer: renderer,
+                    health_span: node.find(".health"),
                     name_span: node.find(".name"),
                     monsters: monsters,
                 };
@@ -175,7 +177,26 @@ function ($, map_knowledge, cr, dungeon_renderer, options, util) {
             }
 
             if (monsters.length == 1)
+            {
                 group.name_span.text(monsters[0].mon.name);
+                if (options.get("tile_display_mode") == "glyphs") {
+                    var map_cell = map_knowledge.get(monsters[0].loc.x, monsters[0].loc.y);
+                    var fg = map_cell.t.fg;
+                    var mdam = "uninjured";
+                    if (fg.MDAM_LIGHT)
+                      mdam = "lightly_damaged";
+                    else if (fg.MDAM_MOD)
+                      mdam = "moderately_damaged";
+                    else if (fg.MDAM_HEAVY)
+                      mdam = "heavily_damaged";
+                    else if (fg.MDAM_SEV)
+                      mdam = "severely_damaged";
+                    else if (fg.MDAM_ADEAD)
+                      mdam = "almost_dead";
+                    group.health_span.addClass(mdam).width(w).height(renderer.cell_height);
+                } else
+                    group.health_span.hide();
+            }
             else
                 group.name_span.text(monsters.length + " " + monsters[0].mon.plural);
 
