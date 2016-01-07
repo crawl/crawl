@@ -7188,6 +7188,15 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
 static const int MIN_THROW_DIST = 2;
 
+static bool _valid_throw_dest(const actor &thrower, const actor &victim,
+                              const coord_def pos)
+{
+    return thrower.pos().distance_from(pos) >= MIN_THROW_DIST
+           && !actor_at(pos)
+           && victim.is_habitable(pos)
+           && thrower.see_cell(pos);
+}
+
 /**
  * Choose a landing site for a monster that is throwing someone.
  *
@@ -7212,11 +7221,7 @@ static coord_def _choose_throwing_target(const monster &thrower,
     {
         ray_def ray;
         // Unusable landing sites.
-        if (victim.pos().distance_from(*di) < MIN_THROW_DIST
-            || actor_at(*di)
-            || !thrower.see_cell(*di)
-            || !victim.see_cell(*di)
-            || !victim.is_habitable(*di)
+        if (!_valid_throw_dest(thrower, victim, *di)
             || !find_ray(thrower.pos(), *di, ray, opc_solid_see))
         {
             continue;
@@ -7456,10 +7461,7 @@ static coord_def _choose_throw_dest(const monster &thrower,
     ASSERT(found_ray);
     while (ray.advance())
     {
-        if (thrower.pos().distance_from(ray.pos()) >= MIN_THROW_DIST
-            && !actor_at(ray.pos())
-            && victim.is_habitable(ray.pos())
-            && thrower.see_cell(ray.pos()))
+        if (_valid_throw_dest(thrower, victim, ray.pos()))
         {
             const int dist = thrower.pos().distance_from(ray.pos());
             const int weight = sqr(LOS_RADIUS - dist + 1);
