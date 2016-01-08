@@ -5410,12 +5410,14 @@ static int _make_delicious_corpse()
  * @param stocked[in,out]   An array mapping book types to the # in the shop.
  * @param spec              The specification of the shop.
  * @param shop              The shop.
+ * @param shop_level        The effective depth to use for the shop.
  */
 static void _stock_shop_item(int j, shop_type shop_type_,
                              int stocked[NUM_BOOKS],
-                             shop_spec &spec, shop_struct &shop)
+                             shop_spec &spec, shop_struct &shop,
+                             int shop_level)
 {
-    const int level_number = env.absdepth0;
+    const int level_number = shop_level ? shop_level : env.absdepth0;
     const int item_level = _choose_shop_item_level(shop_type_, level_number);
 
     int item_index; // index into mitm (global item array)
@@ -5513,14 +5515,16 @@ static void _stock_shop_item(int j, shop_type shop_type_,
  * @param where             The location to place the shop.
  * @param spec              The details of the shop.
  *                          Would be const if not for list method nonsense.
+ * @param shop_level        The effective depth to use for the shop.
+
  */
-void place_spec_shop(const coord_def& where, shop_spec &spec)
+void place_spec_shop(const coord_def& where, shop_spec &spec, int shop_level)
 {
     no_notes nx;
 
     shop_struct& shop = env.shop[where];
 
-    const int level_number = env.absdepth0;
+    const int level_number = shop_level ? shop_level : env.absdepth0;
 
     for (int j = 0; j < 3; j++)
         shop.keeper_name[j] = 1 + random2(200);
@@ -5544,7 +5548,7 @@ void place_spec_shop(const coord_def& where, shop_spec &spec)
 
     shop.stock.clear();
     for (int j = 0; j < num_items; j++)
-        _stock_shop_item(j, shop.type, stocked, spec, shop);
+        _stock_shop_item(j, shop.type, stocked, spec, shop, shop_level);
 }
 
 object_class_type item_in_shop(shop_type shop_type)
