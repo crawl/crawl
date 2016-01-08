@@ -45,6 +45,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-poly.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "potion.h"
 #include "prompt.h"
@@ -1997,10 +1998,7 @@ bool poison_monster(monster* mons, const actor *who, int levels,
     if (!mons->alive() || levels <= 0)
         return false;
 
-    const int res = mons->res_poison();
-    if (res >= 3)
-        return false;
-    if (!force && res >= 1 && x_chance_in_y(2, 3))
+    if (monster_resists_this_poison(mons, force))
         return false;
 
     const mon_enchant old_pois = mons->get_ench(ENCH_POISON);

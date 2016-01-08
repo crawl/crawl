@@ -15,10 +15,10 @@ meteorological fury. It is especially effective against flying enemies.
 %%%%
 Alistair's Intoxication spell
 
-Converts a small portion of the caster's brain matter into alcohol, confusing
-all intelligent humanoids within view (although poison-resistant creatures will
-suffer no negative effects). It is strongly focused on the caster, however, and
-so poison resistance will not protect them. It is frequently used as an
+Converts a small portion of the brain matter of those around you into alcohol,
+confusing all intelligent humanoids within view (although poison-resistant
+creatures may resist the effects). The caster may experience vertigo briefly
+as a result of making contact with other minds. It is frequently used as an
 icebreaker at wizard parties.
 %%%%
 Animate Dead spell

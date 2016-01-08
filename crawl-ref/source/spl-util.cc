@@ -1208,11 +1208,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're too dead to regenerate.";
         break;
 
-    case SPELL_INTOXICATE:
-        if (you.undead_state(temp) == US_UNDEAD)
-            return "your brain is too dead to use.";
-        break;
-
     case SPELL_PORTAL_PROJECTILE:
     case SPELL_WARP_BRAND:
     case SPELL_EXCRUCIATING_WOUNDS:

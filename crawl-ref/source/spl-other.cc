@@ -17,6 +17,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-place.h"
+#include "mon-util.h"
 #include "place.h"
 #include "player-stats.h"
 #include "potion.h"
@@ -341,7 +342,7 @@ static int _intoxicate_monsters(coord_def where, int pow)
     if (mons == nullptr
         || mons_intel(mons) < I_HUMAN
         || !(mons->holiness() & MH_NATURAL)
-        || mons->res_poison() > 0)
+        || monster_resists_this_poison(mons))
     {
         return 0;
     }
@@ -360,16 +361,21 @@ static int _intoxicate_monsters(coord_def where, int pow)
 spret_type cast_intoxicate(int pow, bool fail)
 {
     fail_check();
-    mpr("You radiate an intoxicating aura.");
-    if (x_chance_in_y(60 - pow/3, 100))
-        confuse_player(3+random2(10 + (100 - pow) / 10));
-
-    if (one_chance_in(20) && lose_stat(STAT_INT, 1 + random2(3)))
-        mpr("Your head spins!");
-
-    apply_area_visible([pow] (coord_def where) {
+    mpr("You attempt to transmute portions of your foes' brains into alcohol!");
+    int count = apply_area_visible([pow] (coord_def where) {
         return _intoxicate_monsters(where, pow);
     }, you.pos());
+    if (count > 0)
+    {
+        if (x_chance_in_y(60 - pow/3, 100))
+        {
+            mprf(MSGCH_DURATION, "The world spins around you as you touch the minds"
+                " around you!");
+            you.increase_duration(DUR_VERTIGO, 4 + random2(20 + (100 - pow) / 10));
+            you.redraw_evasion = true;
+        }
+    }
+
     return SPRET_SUCCESS;
 }
 

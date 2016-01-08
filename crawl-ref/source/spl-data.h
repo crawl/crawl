@@ -1503,7 +1503,7 @@ static const struct spell_desc spelldata[] =
     SPELL_INTOXICATE, "Alistair's Intoxication",
     SPTYP_TRANSMUTATION | SPTYP_POISON,
     SPFLAG_NONE,
-    4,
+    5,
     100,
     -1, -1,
     3, 0,

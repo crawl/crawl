@@ -396,6 +396,17 @@ int get_mons_resist(const monster* mon, mon_resist_flags res)
     return get_resist(get_mons_resists(mon), res);
 }
 
+// Returns true if the monster successfully resists this attempt to poison it.
+const bool monster_resists_this_poison(monster* mons, bool force)
+{
+    const int res = mons->res_poison();
+    if (res >= 3)
+        return true;
+    if (!force && res >= 1 && x_chance_in_y(2, 3))
+        return true;
+    return false;
+}
+
 monster* monster_at(const coord_def &pos)
 {
     if (!in_bounds(pos))
