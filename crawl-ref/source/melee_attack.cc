@@ -2105,6 +2105,10 @@ void melee_attack::attacker_sustain_passive_damage()
     if (attacker->res_acid() >= 3)
         return;
 
+    // Ignore splash damage for reach attacks.
+    if (!adjacent(attacker->position, defender->position))
+        return;
+
     const int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, 5);
 
     // Spectral weapons can't be corroded (but can take acid damage).
