@@ -835,7 +835,7 @@ ORIENT:  encompass
 WEIGHT:  5
 TAGS:    bailey_polearm no_rotate
 SHUFFLE: DF/EG
-SUBST:   D : d, E = 1.., F : 3, G : .
+SUBST:   D : d, E = 1.., F : 2, G : .
 NSUBST:  d = 3:d / *:$
 ITEM:    scroll of enchant armour q:2 / scroll of enchant weapon q:3 /\
          scroll of acquirement q:1 w:5 / scroll of silence q:3 /\
@@ -844,8 +844,8 @@ ITEM:    scroll of enchant armour q:2 / scroll of enchant weapon q:3 /\
          any good_item book w:30 /\
          book of annihilations w:1 / grand grimoire w:1 / necronomicon w:1
 MONS:    deep elf mage
-MONS:    deep elf mage / nothing
-MONS:    deep elf knight ; short sword . leather armour
+MONS:    deep elf knight ; short sword . leather armour /\
+         deep elf archer ; shortbow . arrow . leather armour
 : bailey_setup(_G)
 MAP
          ccccc
@@ -856,13 +856,13 @@ MAP
    cc..cc+cccccc..cc
  cccccc...ccc...cc+ccc
 ccEEcc.....c.....cc..cc
-c.EE.c..<..c..2..c....c
-c.EE.c.....c.2...c..F.c
+c.EE.c..<..c.....c....c
+c.EE.c.....c.1...c..F.c
 cc..ccc....c....ccc..cc
 ccc+ccccccc+ccccccc+ccc
 cc..ccc....c....ccc..cc
-c.G..c...2.c.2...c.DD.c
-c....c..2..c..2..c.DD.c
+c.G..c...1.c.1...c.DD.c
+c....c.....c.....c.DD.c
 cc..cc.....c.....ccDDcc
  ccc+cc...ccc...cccccc
    cc..ccccc+ccc..cc
