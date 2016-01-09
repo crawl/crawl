@@ -548,7 +548,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis)
                     if (!in_bounds(centre))
                         continue;
 
-                    if (grd(centre) == DNGN_ESCAPE_HATCH_UP)
+                    if (grd(centre) == DNGN_EXIT_LABYRINTH)
                     {
                         success = true;
                         break;
