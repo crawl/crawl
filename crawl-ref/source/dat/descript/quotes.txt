@@ -820,7 +820,7 @@ amulet of inaccuracy
 
 <amulet>
 %%%%
-amulet of mana regeneration
+amulet of magic regeneration
 
 <amulet>
 %%%%
