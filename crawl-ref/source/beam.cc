@@ -117,6 +117,12 @@ bool bolt::is_blockable() const
            && hit != AUTOMATIC_HIT && flavour != BEAM_VISUAL;
 }
 
+/// Can 'omnireflection' (from the Warlock's Mirror) potentially reflect this?
+bool bolt::is_omnireflectable() const
+{
+    return !is_explosion && flavour != BEAM_VISUAL;
+}
+
 void bolt::emit_message(const char* m)
 {
     const string message = m;
@@ -3285,9 +3291,6 @@ bool bolt::misses_player()
     if (flavour == BEAM_VISUAL)
         return true;
 
-    if (is_enchantment())
-        return false;
-
     const bool engulfs = is_explosion || is_big_cloud();
 
     if (is_explosion || aimed_at_feet || auto_hit)
@@ -3320,21 +3323,33 @@ bool bolt::misses_player()
 
     bool train_shields_more = false;
 
-    if (is_blockable()
+    if ((player_omnireflects() && is_omnireflectable()
+         || is_blockable())
         && you.shielded()
         && !aimed_at_feet
         && player_shield_class() > 0)
     {
         // We use the original to-hit here.
+        // (so that effects increasing dodge chance don't increase block...?)
         const int testhit = random2(hit * 130 / 100
                                     + you.shield_block_penalty());
 
         const int block = you.shield_bonus();
 
+        // 50% chance of blocking ench-type effects at 20 displayed sh
+        const bool omnireflected
+            = hit == AUTOMATIC_HIT
+              && x_chance_in_y(player_shield_class(),
+                               player_shield_class() + 40);
+
         dprf(DIAG_BEAM, "Beamshield: hit: %d, block %d", testhit, block);
-        if (testhit < block)
+        if (testhit < block || omnireflected)
         {
             bool penet = false;
+
+            const string refl_name = name.empty() && origin_spell ?
+                                     spell_title(origin_spell) :
+                                     name;
 
             const item_def *shield = you.shield();
             if (is_reflectable(you))
@@ -3343,12 +3358,12 @@ bool bolt::misses_player()
                 {
                     mprf("Your %s reflects the %s!",
                             shield->name(DESC_PLAIN).c_str(),
-                            name.c_str());
+                            refl_name.c_str());
                 }
                 else
                 {
                     mprf("The %s reflects off an invisible shield around you!",
-                            name.c_str());
+                            refl_name.c_str());
                 }
                 reflect();
             }
@@ -3356,7 +3371,7 @@ bool bolt::misses_player()
             {
                 penet = true;
                 mprf("The %s pierces through your %s!",
-                      name.c_str(),
+                      refl_name.c_str(),
                       shield ? shield->name(DESC_PLAIN).c_str()
                              : "shielding");
             }
@@ -3373,6 +3388,13 @@ bool bolt::misses_player()
 
         // Some training just for the "attempt".
         train_shields_more = true;
+    }
+
+    if (is_enchantment())
+    {
+        if (train_shields_more)
+            practise(EX_SHIELD_BEAM_FAIL);
+        return false;
     }
 
     if (!aimed_at_feet)
@@ -3878,6 +3900,9 @@ void bolt::affect_player()
         return;
     }
 
+    if (misses_player())
+        return;
+
     const bool engulfs = is_explosion || is_big_cloud();
 
     if (is_enchantment())
@@ -3902,9 +3927,6 @@ void bolt::affect_player()
     }
 
     msg_generated = true;
-
-    if (misses_player())
-        return;
 
     // FIXME: Lots of duplicated code here (compare handling of
     // monsters)

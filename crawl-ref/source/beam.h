@@ -215,6 +215,7 @@ private:
     int get_cloud_pow() const;
     int get_cloud_size(bool min = false, bool max = false) const;
     bool is_blockable() const;
+    bool is_omnireflectable() const;
     bool is_fiery() const;
     bool is_superhot() const;
     bool is_bouncy(dungeon_feature_type feat) const;

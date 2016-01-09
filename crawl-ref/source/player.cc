@@ -2484,6 +2484,17 @@ int player_displayed_shield_class()
 }
 
 /**
+ * Does the player have 'omnireflection' (the ability to reflect piercing
+ * effects and enchantments)?
+ *
+ * @return      Whether the player has the Warlock's Mirror equipped.
+ */
+bool player_omnireflects()
+{
+    return player_equip_unrand(UNRAND_WARLOCK_MIRROR);
+}
+
+/**
  * Does the player take halved ability damage?
  *
  * @param calc_unid     Whether to include properties of worn but unidentified
