@@ -628,3 +628,10 @@ armour of Talos
 A huge and weighty suit of bronze plate armour. Only one with a correspondingly
 huge body can wear it.
 %%%%
+warlock's mirror
+
+A handheld array of hexagonal mirrors, synthesized from a truly exotic
+substance and polished to a blinding sheen. A skilled user will find that it
+can reflect almost anything, even spells that pierce through lesser materials
+and hexes with no physical manifestation at all.
+%%%%
