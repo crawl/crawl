@@ -63,6 +63,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
               manual of Ice Magic w:5 / manual of Poison Magic w:5 /\
               any magical staff ident:type /\
               ring of wizardry ident:type",
+         Ukayaw="no",
          Vehumet="randbook owner:Lugonu spells:magic_dart numspells:1",
          Xom="manual of Invocations",
          Yredelemnul= "scroll of holy word ident:type q:2-4 /\

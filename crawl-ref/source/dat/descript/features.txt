@@ -183,6 +183,12 @@ A hole to the Spider Nest
 
 A passage leading to the Spider Nest.
 %%%%
+A hide-covered altar of Ukayaw
+
+An altar to Ukayaw the Reveler. The altar appears to be hollow and covered in a
+hide, giving it a resonant surface. Carvings on the side depict are grouped
+figures that could be dancing or loving or fighting.
+%%%%
 A labyrinth entrance
 
 A portal leading to a labyrinth.

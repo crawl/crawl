@@ -714,6 +714,7 @@ KFEAT:  t = altar_gozag
 KFEAT:  u = altar_qazlal
 KFEAT:  v = altar_ru
 KFEAT:  w = altar_pakellas
+KFEAT:  x = altar_ukayaw
 KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
               fire dragon armour mundane not_cursed ident:all plus:5, \
               ice dragon armour mundane not_cursed ident:all plus:5, \
@@ -813,7 +814,7 @@ c...D..M..P...n
 ^......L..O...^
 b...C..K..N...o
 ^...B.{.......^
-a.............p
+ax............p
 ^w^v^u^t^s^r^q^
 ENDMAP
 

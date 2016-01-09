@@ -228,6 +228,12 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " falls apart.",
         " is torn apart in a burst of bright light.",
     },
+    // Pakellas
+    {
+        " pulses once and is destroyed.",
+        " pulses twice and is destroyed.",
+        " pulses thrice and is destroyed.",
+    },
 };
 
 const vector<god_power> god_powers[NUM_GODS] =
@@ -2118,6 +2124,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_QAZLAL:        return "Qazlal";
     case GOD_RU:            return "Ru";
     case GOD_PAKELLAS:      return "Pakellas";
+    case GOD_UKAYAW:        return "Ukayaw";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -4243,6 +4250,7 @@ int god_colour(god_type god) // mv - added
         return LIGHTCYAN;
 
     case GOD_DITHMENOS:
+    case GOD_UKAYAW:
         return MAGENTA;
 
     case GOD_QAZLAL:
@@ -4338,6 +4346,9 @@ colour_t god_message_altar_colour(god_type god)
 
     case GOD_PAKELLAS:
         return random_choose(LIGHTMAGENTA, LIGHTGREEN, LIGHTCYAN);
+
+    case GOD_UKAYAW:
+        return random_choose(RED, MAGENTA);
 
     default:
         return YELLOW;

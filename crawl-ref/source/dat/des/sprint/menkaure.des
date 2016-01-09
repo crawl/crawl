@@ -234,10 +234,11 @@ KFEAT:  t = altar_gozag
 KFEAT:  u = altar_qazlal
 KFEAT:  v = altar_ru
 KFEAT:  w = altar_pakellas
+KFEAT:  x = altar_ukayaw
 MAP
 ..u.d...
 .t.g.h..
-..k.l.s.
+x.k.l.s.
 .w.o.p.v
 ..a.i.m.
 ...r.q.j

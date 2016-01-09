@@ -439,6 +439,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_RU;
     case DNGN_ALTAR_PAKELLAS:
         return TILE_DNGN_ALTAR_PAKELLAS;
+    case DNGN_ALTAR_UKAYAW:
+        return TILE_DNGN_ALTAR_UKAYAW;
     case DNGN_ALTAR_ECUMENICAL:
         return TILE_DNGN_UNKNOWN_ALTAR;
     case DNGN_FOUNTAIN_BLUE:

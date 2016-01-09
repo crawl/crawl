@@ -162,6 +162,15 @@ to see their spellbooks burn. In return, worshippers of Trog gain the ability
 to go berserk at will in combat, and will be granted gifts of powerful weapons.
 Followers are absolutely forbidden the use of spell magic.
 %%%%
+Ukayaw
+
+Ukayaw the Reveler is a god of ecstatic dance. On the surface, Ukayaw
+appreciates many forms of worship, but in the dungeon most worshippers stick to
+the dance of combat. Ukayaw appreciates the passion and rhythm of combat,
+rewarding followers for each strike they deliver and for the damage they deal
+their foes. The longer the dance continues, the greater powers Ukayaw offers.
+When the dance ends, Ukayaw quickly loses interest.
+%%%%
 Vehumet
 
 Vehumet is a god of the destructive powers of magic. Followers gain various
@@ -376,6 +385,17 @@ increasing resistance to hostile enchantments. Later, followers may call in
 powerful raging allies. Eventually, Trog will gift followers with weapons
 focused on damage.
 %%%%
+%%%%
+Ukayaw powers
+
+(placeholder)
+* Stomp: AOE light damage to build piety.
+** Partner pass?
+*** Haste
+****
+*****
+******
+%%%%
 Vehumet powers
 
 Worshippers of Vehumet will quickly be able to recover their magical energy
@@ -557,6 +577,10 @@ Trog's wrath at betrayers is incandescent. Offenders find themselves swarmed
 by berserkers - from packs of bears to, for the most powerful, mobs of giants
 and trolls. Their bodies decay, slow, and collapse - and sometimes, they're
 just blasted by Trog's fiery rage directly.
+%%%%
+Ukayaw wrath
+
+TBD.
 %%%%
 Vehumet wrath
 
