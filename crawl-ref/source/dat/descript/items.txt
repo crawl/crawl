@@ -844,10 +844,6 @@ potion of curing
 A potion which heals some wounds, clears the mind and cures poison and disease.
 It can also slightly repair rotting.
 %%%%
-potion of degeneration
-
-A noxious concoction which reduces strength, intelligence or dexterity.
-%%%%
 potion of experience
 
 A truly wonderful and very rare drink.

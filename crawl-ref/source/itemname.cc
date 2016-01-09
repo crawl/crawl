@@ -658,8 +658,8 @@ const char* potion_type_name(int potiontype)
     case POT_CANCELLATION:      return "cancellation";
     case POT_AMBROSIA:          return "ambrosia";
     case POT_INVISIBILITY:      return "invisibility";
-    case POT_DEGENERATION:      return "degeneration";
 #if TAG_MAJOR_VERSION == 34
+    case POT_DEGENERATION:      return "degeneration";
     case POT_DECAY:             return "decay";
 #endif
     case POT_EXPERIENCE:        return "experience";
@@ -3329,10 +3329,8 @@ bool is_bad_item(const item_def &item, bool temp)
 #if TAG_MAJOR_VERSION == 34
         case POT_SLOWING:
             return !you.stasis();
-#endif
         case POT_DEGENERATION:
             return true;
-#if TAG_MAJOR_VERSION == 34
         case POT_DECAY:
             return you.res_rotting(temp) <= 0;
         case POT_STRONG_POISON:

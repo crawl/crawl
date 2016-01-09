@@ -854,31 +854,6 @@ public:
     }
 };
 
-class PotionDegeneration : public PotionEffect
-{
-private:
-    PotionDegeneration() : PotionEffect(POT_DEGENERATION) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionDegeneration);
-public:
-    static const PotionDegeneration &instance()
-    {
-        static PotionDegeneration inst; return inst;
-    }
-
-    bool effect(bool=true, int=40, bool=true) const override
-    {
-        mpr("There was something very wrong with that liquid.");
-        return lose_stat(STAT_RANDOM, 1 + random2avg(4, 2));
-    }
-
-    bool quaff(bool was_known) const override
-    {
-        if (effect())
-            xom_is_stimulated( 50 / _xom_factor(was_known));
-        return true;
-    }
-};
-
 class PotionLignify : public PotionEffect
 {
 private:
@@ -1195,6 +1170,31 @@ public:
         if (!restore_stat(STAT_ALL, 0, false) && nothing_happens)
             mpr("You feel refreshed.");
         return nothing_happens;
+    }
+};
+
+class PotionDegeneration : public PotionEffect
+{
+private:
+    PotionDegeneration() : PotionEffect(POT_DEGENERATION) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionDegeneration);
+public:
+    static const PotionDegeneration &instance()
+    {
+        static PotionDegeneration inst; return inst;
+    }
+
+    bool effect(bool=true, int=40, bool=true) const override
+    {
+        mpr("There was something very wrong with that liquid.");
+        return lose_stat(STAT_RANDOM, 1 + random2avg(4, 2));
+    }
+
+    bool quaff(bool was_known) const override
+    {
+        if (effect())
+            xom_is_stimulated( 50 / _xom_factor(was_known));
+        return true;
     }
 };
 #endif

@@ -2915,7 +2915,7 @@ ENDMAP
 NAME:  minmay_bad_closet
 TAGS:  extra
 DEPTH: D:2-12
-ITEM:  scroll of immolation / potion of degeneration / potion of poison
+ITEM:  scroll of immolation / potion of poison w:20
 MAP
 xxxx
 xddx
