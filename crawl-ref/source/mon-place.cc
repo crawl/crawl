@@ -215,7 +215,6 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
         case HT_AMPHIBIOUS_LAVA:
             return feat == DNGN_LAVA;
         case HT_LAND:
-            // Lost souls.
             return feat == DNGN_FLOOR;
         default:
             return false;
