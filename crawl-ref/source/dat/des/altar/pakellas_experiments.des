@@ -20,15 +20,17 @@ function pakellas_experiment_message(is_beginning)
                 '"Ah, a very interesting result!"',
                 '"Hmm...that\'s not supposed to happen."'}
   end
-  return messages[crawl.random_range(1, #messages)]
+  crawl.god_speaks("Pakellas", "Pakellas says, " ..
+                     messages[crawl.random_range(1, #messages)])
 end
+
+local cloud_types = {"poison gas", "flame", "freezing vapour", "acidic fog",
+                     "mutagenic fog", "negative energy"}
 
 function cycle_cloud_type(self, fog_machine, triggerer, marker, ev)
   if fog_machine.enabled
      and triggerer.type == "turn"
      and triggerer.sub_type == "countdown" then
-    local cloud_types = {"poison gas", "flame", "freezing vapour", "acidic fog",
-                         "mutagenic fog", "negative energy"}
     local index = crawl.random_range(1, #cloud_types)
     fog_machine.cloud_type = cloud_types[index]
     self.subject_fog.cloud_type = cloud_types[index]
@@ -50,38 +52,34 @@ function callback.pakellas_cloud_experiment_begin(data, triggerable,
     return
   end
 
+  -- Make sure we can see the subject.
   local spos = dgn.find_marker_positions_by_prop("experiment", "subject")[1]
-  local cpos = dgn.find_marker_positions_by_prop("experiment", "chamber")[1]
-  if spos ~= nil and cpos ~= nil then
-    local _sx, _sy = spos:xy()
-    local _cx, _cy = cpos:xy()
-
-    if not you.see_cell(_sx, _sy) or not you.see_cell(_cx, _cy) then
+  if spos ~= nil then
+    if not you.see_cell(spos.x, spos.y) then
       return
     end
     data.fog_machines["chamber"].enabled = true
     data.triggered = true
-    crawl.god_speaks("Pakellas", "Pakellas says, " ..
-                                 pakellas_experiment_message(true))
+    pakellas_experiment_message(true)
   end
 end
 
 function callback.pakellas_cloud_experiment_end(data, triggerable, triggerer,
                                                 marker, ev)
   local pt = dgn.find_marker_positions_by_prop("experiment", "subject")
-  if #pt == 0 then
+  if pt == nil then
     return
   end
 
   if you.see_cell(pt[1].x, pt[1].y) then
-    crawl.god_speaks("Pakellas", "Pakellas says, " ..
-                                 pakellas_experiment_message())
+    pakellas_experiment_message()
   end
   data.fog_machines["chamber"].enabled = false
   data.fog_machines["chamber"].cloud_type = "magical condensation"
   data.fog_machines["subject"].cloud_type = "magical condensation"
 end
 
+-- Statue experiment functions.
 function callback.pakellas_statue_experiment_begin(data, triggerable, triggerer,
                                                    marker, ev)
   if data.turns ~= you.turns() then
@@ -97,27 +95,22 @@ function callback.pakellas_statue_experiment_begin(data, triggerable, triggerer,
     return
   end
 
+  local ocs_pos = dgn.find_marker_positions_by_prop("experiment", "ocs")
   local gate_pos = dgn.find_marker_positions_by_prop("experiment", "gate")
-  if gate_pos ~= nil then
-    see_all = true
-    for i, pos in ipairs(gate_pos) do
-       _x, _y = pos:xy()
-      if not you.see_cell(_x, _y) then
-        see_all = false
-        break
-      end
-    end
-    if not see_all then
-      return
-    end
-    for i, pos in ipairs(gate_pos) do
-       _x, _y = pos:xy()
-      dgn.terrain_changed(_x, _y, "floor", false, false, false)
-    end
-    data.triggered = true
-    crawl.god_speaks("Pakellas", "Pakellas says, " ..
-                                 pakellas_experiment_message(true))
+  if ocs_pos == nil or gate_pos == nil then
+    return
   end
+
+  -- Make sure we've at least seen the ocs.
+  if not you.see_cell(ocs_pos[1].x, ocs_pos[1].y) then
+    return
+  end
+
+  for i, pos in ipairs(gate_pos) do
+    dgn.terrain_changed(pos.x, pos.y, "floor", false, false, false)
+  end
+  data.triggered = true
+  pakellas_experiment_message(true)
 end
 
 function callback.pakellas_statue_experiment_end(data, triggerable, triggerer,
@@ -127,34 +120,21 @@ function callback.pakellas_statue_experiment_end(data, triggerable, triggerer,
   end
 
   local pt = dgn.find_marker_positions_by_prop("experiment", "altar")
-  if #pt == 0 then
+  if pt == nil then
     return
   end
 
   if you.see_cell(pt[1].x, pt[1].y) then
-    crawl.god_speaks("Pakellas", "Pakellas says, " ..
-                                 pakellas_experiment_message())
     data.triggered = true
+    pakellas_experiment_message()
   end
 end
 
-function cycle_cloud_type(self, fog_machine, triggerer, marker, ev)
-  if fog_machine.enabled
-     and triggerer.type == "turn"
-     and triggerer.sub_type == "countdown" then
-    local cloud_types = {"poison gas", "foul pestilence", "flame", "steam",
-                         "freezing vapour", "calcifying dust", "acidic fog",
-                         "mutagenic fog", "negative energy"}
-    local index = crawl.random2(#cloud_types - 1) + 1
-    fog_machine.cloud_type = cloud_types[index]
-    self.subject_fog.cloud_type = cloud_types[index]
-  end
-end
 }}
 
 NAME:    gammafunk_pakellas_cloud_experiment
 TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
-TAGS:    generate_awake
+TAGS:    generate_awake no_monster_gen no_trap_gen no_pool_fixup
 DEPTH:   D:2-
 KFEAT:   _ = altar_pakellas
 MONS:    hungry ghost / ugly thing / hydra / rakshasa spells:none ; nothing \
@@ -163,29 +143,27 @@ KFEAT:   p = clear_stone_wall
 TILE:    p = dngn_transparent_stone_green
 COLOUR:  p = lightgreen
 SUBST:   x : xcv, w : wWl
-KMASK:   -W1 = no_item_gen
-KMASK:   -W1 = no_trap_gen
-KMASK:   -wWl = no_monster_gen
-KPROP:   -wWl1 = no_tele_into
+KMASK:   -'1 = no_item_gen
+KPROP:   -'1 = no_tele_into
 MARKER:  1 = lua:portal_desc {experiment="subject"}
 MARKER:  1 = lua:MonPropsMarker:new{experiment="experiment"}
-MARKER:  - = lua:portal_desc {experiment="chamber"}
+MARKER:  ' = lua:portal_desc {experiment="chamber"}
 
 {{
   local subject_fog = fog_machine { cloud_type = "magical condensation",
-                                    pow_max = 3, delay = 30,
-                                    size = 3, walk_dist = 0, excl_rad = -1}
+                                    pow_max = 6, delay = 30, size = 3,
+                                    walk_dist =2, excl_rad = -1}
   lua_marker('1', subject_fog)
 
   local fog_listener = {}
   fog_listener.func = global_function("cycle_cloud_type")
   fog_listener.subject_fog = subject_fog
   local chamber_fog = fog_machine { cloud_type = "magical condensation",
-                                    pow_max = 3, delay = 30,
-                                    size = 3, walk_dist = 0, excl_rad = -1,
+                                    pow_max = 6, delay = 30, size = 1,
+                                    excl_rad = -1,
                                     listener = fog_listener }
   chamber_fog.enabled = false
-  lua_marker('-', chamber_fog)
+  lua_marker("'", chamber_fog)
 
   local tm = TriggerableFunction:new{
     func="callback.pakellas_cloud_experiment_begin",
@@ -205,14 +183,18 @@ MARKER:  - = lua:portal_desc {experiment="chamber"}
 
 }}
 MAP
-xxxxx+xxxxx
-xw.......wx
-xppp...pppx
-xp-p._.p1px
-xppp...pppx
-xbnbwwwbnbx
-xwnnnnnnnwx
-xxxxxxxxxxx
+xxxxxxxx
+xnnnn.wx
+xn--n..x
+xn1-n_.+
+xnnnn..x
+xp'pw.wx
+xp'ppppx
+xp''''px
+xpppp'px
+xb''''px
+xppppppx
+xxxxxxxx
 ENDMAP
 
 NAME:    gammafunk_pakellas_statue_experiment
@@ -236,6 +218,7 @@ COLOUR:  n = lightgreen
 SUBST:   x : xcv
 MARKER:  p = lua:portal_desc {experiment="gate"}
 MARKER:  _ = lua:portal_desc {experiment="altar"}
+MARKER:  1 = lua:portal_desc {experiment="ocs"}
 MARKER:  1 = lua:MonPropsMarker:new{ocs="ocs"}
 MARKER:  2 = lua:MonPropsMarker:new{subject="subject"}
 {{
