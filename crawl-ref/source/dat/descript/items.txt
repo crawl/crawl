@@ -36,11 +36,11 @@ amulet of inaccuracy
 This amulet makes its wearer less accurate in melee combat and when targeting
 monsters via ranged attacks or spells.
 %%%%
-amulet of mana regeneration
+amulet of magic regeneration
 
-This amulet substantially increases the wearer's normal rate of mana
+This amulet substantially increases the wearer's normal rate of magic
 regeneration. In order to function, it must first attune itself to the wearer's
-body at full mana.
+body with full reserves of magic.
 %%%%
 amulet of nothing
 

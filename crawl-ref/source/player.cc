@@ -1217,8 +1217,8 @@ void update_regen_amulet_attunement()
         you.props[REGEN_AMULET_ACTIVE] = 0;
 }
 
-// Amulet of mana regeneration needs to be worn while at full mana before it begins
-// to function.
+// Amulet of magic regeneration needs to be worn while at full magic before it
+// begins to function.
 void update_mana_regen_amulet_attunement()
 {
     if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION)
@@ -1229,7 +1229,7 @@ void update_mana_regen_amulet_attunement()
         {
             you.props[MANA_REGEN_AMULET_ACTIVE] = 1;
             mpr("Your amulet attunes itself to your body and you begin to "
-                "regenerate mana more quickly.");
+                "regenerate magic more quickly.");
         }
     }
     else

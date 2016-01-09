@@ -124,7 +124,7 @@
        "book of minor magic | morningstar | mottled dragon armour | mace | " ..
        "potion of magic | ring of magical power | potion of mutation | " ..
        "potion of might | scroll of magic mapping | wand of magic darts | " ..
-       "book of maledictions | amulet of mana regeneration"
+       "book of maledictions | amulet of magic regeneration"
 
       elseif s == "N" then i = "book of necromancy | naga barding | " ..
        "necronomicon | needle | scroll of noise | manual of necromancy"
