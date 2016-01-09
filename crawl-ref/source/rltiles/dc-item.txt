@@ -714,7 +714,7 @@ i-r-cold RING_PROTECTION_FROM_COLD
 i-str RING_STRENGTH
 i-slaying RING_SLAYING
 i-see-invis RING_SEE_INVISIBLE
-i-invisibility RING_INVISIBILITY
+i-r-corrosion RING_RESIST_CORROSION
 i-loudness RING_LOUDNESS
 i-teleport RING_TELEPORTATION
 i-evasion RING_EVASION
@@ -772,13 +772,13 @@ eye_green AMU_COL_LAST
 # remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-rage AMU_RAGE AMU_ID_FIRST
 i-harm AMU_HARM
-i-warding AMU_WARDING
-i-r-corrosion AMU_RESIST_CORROSION
+i-dismissal AMU_DISMISSAL
+i-m-regeneration AMU_MANA_REGENERATION
 i-gourmand AMU_THE_GOURMAND
 i-rage AMU_REMOVEME1
 i-rage AMU_REMOVEME2
 i-inaccuracy AMU_INACCURACY
-i-rage AMU_REMOVEME3
+i-rage AMU_NOTHING
 i-spirit AMU_GUARDIAN_SPIRIT
 i-faith AMU_FAITH
 i-reflection AMU_REFLECTION
