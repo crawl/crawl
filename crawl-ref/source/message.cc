@@ -171,7 +171,11 @@ struct message_line
         }
         else if (Options.msg_condense_short
                  && turn == other.turn
-                 && join && other.join)
+                 && join && other.join
+                 && _ends_in_punctuation(last_msg().pure_text())
+                  == _ends_in_punctuation(other.last_msg().pure_text()))
+            // punct check is a hack to avoid pickup messages merging with
+            // combat on the same turn - should find a nicer heuristic
         {
             // "; " or " "?
             const int seplen = last_msg().needs_semicolon() ? 2 : 1;
