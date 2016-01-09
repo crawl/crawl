@@ -706,7 +706,7 @@ snake
 %rim 0
 #### These must be in the same order as the enum in itemprop-enum.h!
 # Remove regeneration when TAG_MAJOR_VERSION > 34 (and mark protection as 1st)
-i-regeneration RING_REGENERATION RING_ID_FIRST
+i-protection RING_REGENERATION RING_ID_FIRST
 i-protection RING_PROTECTION
 i-r-fire RING_PROTECTION_FROM_FIRE
 i-r-poison RING_POISON_RESISTANCE
