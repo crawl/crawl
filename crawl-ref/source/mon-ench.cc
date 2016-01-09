@@ -773,23 +773,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 else
                     seen_context = SC_SURFACES;
             }
-            else if (!quiet)
-            {
-                msg_channel_type channel = MSGCH_PLAIN;
-                if (!seen_context)
-                {
-                    channel = MSGCH_WARN;
-                    seen_context = SC_JUST_SEEN;
-                }
-
-                if (type == MONS_LOST_SOUL)
-                {
-                    mprf(channel, "%s flickers into view.",
-                                  name(DESC_A).c_str());
-                }
-                else if (crawl_state.game_is_arena())
-                    mprf("%s surfaces.", name(DESC_A, true).c_str());
-            }
+            else if (!quiet && crawl_state.game_is_arena())
+                mprf("%s surfaces.", name(DESC_A, true).c_str());
         }
         else if (mons_near(this) && feat_is_watery(grd(pos())))
         {

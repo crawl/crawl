@@ -847,7 +847,6 @@ static bool _lost_soul_teleport(monster* mons)
         if (find_habitable_spot_near(candidate.first->pos(), mons_base_type(mons), 3, false, empty)
             && mons->move_to_pos(empty))
         {
-            mons->add_ench(ENCH_SUBMERGED);
             mons->behaviour = BEH_WANDER;
             mons->foe = MHITNOT;
             mons->props["band_leader"].get_int() = candidate.first->mid;
@@ -861,7 +860,7 @@ static bool _lost_soul_teleport(monster* mons)
     }
 
     // If we can't find anywhere useful to go, flicker away to stop the player
-    // being annoyed chasing after us
+    // being annoyed chasing after us.
     if (one_chance_in(3))
     {
         if (seen)
