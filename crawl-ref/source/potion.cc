@@ -661,7 +661,6 @@ public:
         if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED)
         {
             mpr("You feel slightly irritated.");
-            make_hungry(100, false);
             return false;
         }
 
