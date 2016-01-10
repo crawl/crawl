@@ -134,7 +134,7 @@ end
 
 NAME:    gammafunk_pakellas_cloud_experiment
 TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
-TAGS:    generate_awake no_monster_gen no_trap_gen no_pool_fixup
+TAGS:    generate_awake no_monster_gen no_trap_gen no_item_gen no_pool_fixup
 DEPTH:   D:2-
 KFEAT:   _ = altar_pakellas
 MONS:    hungry ghost / ugly thing / hydra / rakshasa spells:none ; nothing \
@@ -143,7 +143,6 @@ KFEAT:   p = clear_stone_wall
 TILE:    p = dngn_transparent_stone_green
 COLOUR:  p = lightgreen
 SUBST:   x : xcv, w : wWl
-KMASK:   -'1 = no_item_gen
 KPROP:   -'1 = no_tele_into
 MARKER:  1 = lua:portal_desc {experiment="subject"}
 MARKER:  1 = lua:MonPropsMarker:new{experiment="experiment"}
@@ -199,7 +198,7 @@ ENDMAP
 
 NAME:    gammafunk_pakellas_statue_experiment
 TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
-TAGS:    generate_awake no_pool_fixup
+TAGS:    generate_awake no_item_gen no_monster_gen no_trap_gen no_pool_fixup
 DEPTH:   D:2-
 KFEAT:   p = clear_stone_wall
 KFEAT:   _ = altar_pakellas
@@ -209,10 +208,7 @@ MONS:    iguana / jelly / hippogriff / crocodile / wasp / wyvern / yak / troll
 : else
 MONS:    wyvern / yak / troll / komodo dragon / ugly thing / hydra
 : end
-KMASK:   -12 = no_item_gen
-KMASK:   -12 = no_trap_gen
-KMASK:   -lw12 = no_monster_gen
-KPROP:   -lw12 = no_tele_into
+KPROP:   -lwp12 = no_tele_into
 TILE:    n = dngn_transparent_stone_green
 COLOUR:  n = lightgreen
 SUBST:   x : xcv
