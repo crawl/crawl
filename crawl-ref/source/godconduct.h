@@ -35,6 +35,7 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
                          bool known = true);
 void enable_attack_conducts(god_conduct_trigger conduct[3]);
 void disable_attack_conducts(god_conduct_trigger conduct[3]);
+void did_hurt_conduct(conduct_type thing_done, const monster &victim, int damage_done);
 
 void god_conduct_turn_start();
 

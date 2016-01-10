@@ -70,7 +70,7 @@ static const char *conducts[] =
     "Souled Friend Died", "Attack In Sanctuary",
     "Kill Artificial", "Destroy Spellbook",
     "Exploration", "Desecrate Holy Remains", "Seen Monster",
-    "Fire", "Kill Fiery", "Sacrificed Love", "Channel",
+    "Fire", "Kill Fiery", "Sacrificed Love", "Channel", "Hurt Foe",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -863,7 +863,12 @@ static like_map divine_likes[] =
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
     },
     // GOD_UKAYAW
-    like_map(),
+    {
+        { DID_HURT_FOE, { 1, 1, 0, nullptr, [] (int &piety, int &denom, const monster* /*victim*/)
+            {
+                denom = 1;
+            } } },
+    },
 };
 
 /**
@@ -988,6 +993,25 @@ void disable_attack_conducts(god_conduct_trigger conduct[3])
 {
     for (int i = 0; i < 3; ++i)
         conduct[i].enabled = false;
+}
+
+/**
+ * Handle god conducts triggered by hurting a monster.
+ *
+ * @param thing_done        The conduct in question.
+ * @param victim            The victim being harmed.
+ * @param damage_done       The amount of damage done.
+ */
+void did_hurt_conduct(conduct_type thing_done,
+                      const monster &victim,
+                      int damage_done)
+{
+    // If you do any damage, you get 3 piety
+    int piety_gain = 10;
+    // Get up to 3 additional piety based on the percentage of the victim's max
+    // hp you took away.
+    piety_gain += piety_gain * 100 * damage_done / victim.max_hit_points / 100;
+    did_god_conduct(thing_done, piety_gain, true, &victim);
 }
 
 /**

@@ -4540,6 +4540,11 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 flags |= MF_EXPLODE_KILL;
         }
 
+        // Hurt conducts
+        if (agent->is_player()) {
+            did_hurt_conduct(DID_HURT_FOE, *this, amount);
+        }
+
         // Allow the victim to exhibit passive damage behaviour (e.g.
         // the Royal Jelly).
         react_to_damage(agent, amount, flavour);
