@@ -79,7 +79,34 @@ function callback.pakellas_cloud_experiment_end(data, triggerable, triggerer,
   data.fog_machines["subject"].cloud_type = "magical condensation"
 end
 
--- Statue experiment functions.
+-- setup function used by both statue vaults.
+function pakellas_statue_experiment_setup(e)
+  local trig_start = TriggerableFunction:new{
+    func="callback.pakellas_statue_experiment_begin",
+    repeated=true,
+    data={turns=you.turns(), tc=0, triggered=false} }
+  trig_start:add_triggerer(DgnTriggerer:new{type="player_los"})
+  e.lua_marker('_', trig_start)
+
+  -- The 'end' callback occurs when either monster dies, but the triggers share
+  -- data so the callback will have an effect only once.
+  death_data = {triggered=false}
+  local trig_statue = TriggerableFunction:new{
+              func="callback.pakellas_statue_experiment_end", repeated=false,
+              data=death_data}
+  trig_statue:add_triggerer(DgnTriggerer:new{type="monster_dies",
+                                             target="statue"})
+  e.lua_marker('1', trig_statue)
+
+  local trig_subject = TriggerableFunction:new{
+              func="callback.pakellas_statue_experiment_end", repeated=false,
+              data=death_data}
+  trig_subject:add_triggerer(DgnTriggerer:new{type="monster_dies",
+                             target="subject"})
+  e.lua_marker('2', trig_subject)
+end
+
+-- Statue experiment callback functions.
 function callback.pakellas_statue_experiment_begin(data, triggerable, triggerer,
                                                    marker, ev)
   if data.turns ~= you.turns() then
@@ -95,14 +122,14 @@ function callback.pakellas_statue_experiment_begin(data, triggerable, triggerer,
     return
   end
 
-  local ocs_pos = dgn.find_marker_positions_by_prop("experiment", "ocs")
+  local statue_pos = dgn.find_marker_positions_by_prop("experiment", "statue")
   local gate_pos = dgn.find_marker_positions_by_prop("experiment", "gate")
-  if ocs_pos == nil or gate_pos == nil then
+  if statue_pos == nil or gate_pos == nil then
     return
   end
 
-  -- Make sure we've at least seen the ocs.
-  if not you.see_cell(ocs_pos[1].x, ocs_pos[1].y) then
+  -- Make sure we've at least seen the statue.
+  if not you.see_cell(statue_pos[1].x, statue_pos[1].y) then
     return
   end
 
@@ -214,34 +241,10 @@ COLOUR:  n = lightgreen
 SUBST:   x : xcv
 MARKER:  p = lua:portal_desc {experiment="gate"}
 MARKER:  _ = lua:portal_desc {experiment="altar"}
-MARKER:  1 = lua:portal_desc {experiment="ocs"}
-MARKER:  1 = lua:MonPropsMarker:new{ocs="ocs"}
+MARKER:  1 = lua:portal_desc {experiment="statue"}
+MARKER:  1 = lua:MonPropsMarker:new{statue="statue"}
 MARKER:  2 = lua:MonPropsMarker:new{subject="subject"}
-{{
-  local trig_start = TriggerableFunction:new{
-    func="callback.pakellas_statue_experiment_begin",
-    repeated=true,
-    data={turns=you.turns(), tc=0, triggered=false} }
-  trig_start:add_triggerer(DgnTriggerer:new{type="player_los"})
-  lua_marker('_', trig_start)
-
-  -- The 'end' callback occurs when either monster dies, but the triggers share
-  -- data so the callback will have an effect only once.
-  death_data = {triggered=false}
-  local trig_ocs = TriggerableFunction:new{
-              func="callback.pakellas_statue_experiment_end", repeated=false,
-              data=death_data}
-  trig_ocs:add_triggerer(DgnTriggerer:new{type="monster_dies",
-                                    target="ocs"})
-  lua_marker('1', trig_ocs)
-
-  local trig_subject = TriggerableFunction:new{
-              func="callback.pakellas_statue_experiment_end", repeated=false,
-              data=death_data}
-  trig_subject:add_triggerer(DgnTriggerer:new{type="monster_dies",
-                             target="subject"})
-  lua_marker('2', trig_subject)
-}}
+: pakellas_statue_experiment_setup(_G)
 MAP
 xxx+xxx
 xb...bx
@@ -251,6 +254,41 @@ xnl1lnx
 xn---nx
 xnpppnx
 xnw2-nx
+xnnnnnx
+xxxxxxx
+ENDMAP
+
+NAME:   gammafunk_pakellas_spire_experiment
+TAGS:   temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
+TAGS:   generate_awake no_monster_gen no_item_gen no_trap_gen no_pool_fixup
+DEPTH:  D:2-
+KFEAT:  p = clear_stone_wall
+KFEAT:  _ = altar_pakellas
+KMONS:  P = bush
+MONS:   lightning spire att:neutral
+MONS:   gargoyle ; nothing / deep elf knight ; nothing / manticore / cyclops \
+        / hydra / deep elf annihilator ; nothing / very ugly thing \
+        / fire dragon / ice dragon / boulder beetle / sphinx \
+        / tengu reaver ; nothing
+KPROP:  -wpP12 = no_tele_into
+TILE:   n = dngn_transparent_stone_green
+COLOUR: n = lightgreen
+SUBST:  x : xcv
+MARKER: p = lua:portal_desc {experiment="gate"}
+MARKER: _ = lua:portal_desc {experiment="altar"}
+MARKER: 1 = lua:portal_desc {experiment="statue"}
+MARKER: 1 = lua:MonPropsMarker:new{statue="statue"}
+MARKER: 2 = lua:MonPropsMarker:new{subject="subject"}
+: pakellas_statue_experiment_setup(_G)
+MAP
+xxx+xxx
+xb...bx
+xb._.bx
+xnnnnnx
+xnw1wnx
+xnPPPnx
+xnpppnx
+xn-2-nx
 xnnnnnx
 xxxxxxx
 ENDMAP
