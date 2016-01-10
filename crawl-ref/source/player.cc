@@ -4354,21 +4354,30 @@ void contaminate_player(int change, bool controlled, bool msg)
     }
 }
 
-bool confuse_player(int amount, bool quiet)
+/**
+ * Increase the player's confusion duration.
+ *
+ * @param amount   The number of turns to increase confusion duration by.
+ * @param quiet    Whether to suppress messaging on success/failure.
+ * @param force    Whether to ignore resistance (used only for intentional
+ *                 self-confusion, e.g. via ambrosia).
+ * @return         Whether confusion was successful.
+ */
+bool confuse_player(int amount, bool quiet, bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     if (amount <= 0)
         return false;
 
-    if (you.clarity())
+    if (!force && you.clarity())
     {
         if (!quiet)
             mpr("You feel momentarily confused.");
         return false;
     }
 
-    if (you.duration[DUR_DIVINE_STAMINA] > 0)
+    if (!force && you.duration[DUR_DIVINE_STAMINA] > 0)
     {
         if (!quiet)
             mpr("Your divine stamina protects you from confusion!");

@@ -468,30 +468,10 @@ public:
         static PotionAmbrosia inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const override
-    {
-        if (you.duration[DUR_DIVINE_STAMINA])
-        {
-            if (reason)
-            {
-                *reason = "Your divine stamina would prevent the potion's "
-                    "effects.";
-            }
-            return false;
-        }
-        else if (you.clarity())
-        {
-            if (reason)
-                *reason = "Your clarity would prevent the potion's effects.";
-            return false;
-        }
-        return true;
-    }
-
     bool effect(bool=true, int=40, bool=true) const override
     {
         const int ambrosia_turns = 3 + random2(8);
-        if (confuse_player(ambrosia_turns))
+        if (confuse_player(ambrosia_turns, false, true))
         {
             mprf("You feel%s invigorated.",
                  you.duration[DUR_AMBROSIA] ? " more" : "");
