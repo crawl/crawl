@@ -40,12 +40,30 @@ int ui_random(int max);
 
 /** Chooses one of the objects passed in at random (by value).
  *  @return One of the arguments.
+ *
+ *  @note All the arguments must be convertible to the type of the first.
  */
 template <typename T, typename... Ts>
 T random_choose(T first, Ts... rest)
 {
     const T elts[] = { first, rest... };
     return elts[random2(1 + sizeof...(rest))];
+}
+
+/** Chooses one of the objects passed in at random (by reference).
+ *
+ * @return A reference to one of the arguments.
+ *
+ * @note All the arguments must be of a type compatible with the type of the
+ *       first. Specifically, it must be possible to implicitly convert a
+ *       pointer to each argument into the same type as a pointer to the first
+ *       argument. So, for example, if the first argument is non-const, none
+ *       of the subsequent subsequent arguments may be const.
+ */
+template <typename T, typename... Ts>
+T& random_choose_ref(T& first, Ts&... rest)
+{
+    return *random_choose(&first, &rest...);
 }
 
 template <typename C>
