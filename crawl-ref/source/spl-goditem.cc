@@ -661,24 +661,16 @@ bool remove_curse(bool alreadyknown, const string &pre_msg)
 
     bool success = false;
 
-    // Only cursed *weapons* in hand count as cursed. - bwr
-    // Not you.weapon() because we want to handle melded weapons too.
-    item_def * const weapon = you.slot_item(EQ_WEAPON, true);
-    if (weapon && is_weapon(*weapon) && weapon->cursed())
-    {
-        // Also sets wield_change.
-        do_uncurse_item(*weapon);
-        success = true;
-    }
-
-    // Everything else uses the same paradigm - are we certain?
-    // What of artefact rings and amulets? {dlb}:
-    for (int i = EQ_WEAPON + 1; i < NUM_EQUIP; i++)
+    // Players can no longer wield armour and jewellery as weapons, so we do
+    // not need to check whether the EQ_WEAPON slot actually contains a weapon:
+    // only weapons (and rods and staves) are both wieldable and cursable.
+    for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
     {
         // Melded equipment can also get uncursed this way.
-        if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
+        item_def * const it = you.slot_item(equipment_type(i), true);
+        if (it && it->cursed())
         {
-            do_uncurse_item(you.inv[you.equip[i]]);
+            do_uncurse_item(*it);
             success = true;
         }
     }
