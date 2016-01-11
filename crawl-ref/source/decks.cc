@@ -1353,6 +1353,10 @@ static int _get_power_level(int power, deck_rarity_type rarity)
     switch (rarity)
     {
     case DECK_RARITY_COMMON:
+//give nemelex worshipers a small chance for an upgrade
+//approx 1/2 ORNATE chance (plain decks don't get the +150 power boost)
+        if (in_good_standing(GOD_NEMELEX_XOBEH) && (x_chance_in_y(power, 1000)))
+            ++power_level;
         break;
     case DECK_RARITY_LEGENDARY:
         if (x_chance_in_y(power, 500))
