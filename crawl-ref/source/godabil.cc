@@ -1512,7 +1512,6 @@ bool trog_burn_spellbooks()
     {
         cloud_struct* cloud = cloud_at(*ri);
         int count = 0;
-        int rarity = 0;
         for (stack_iterator si(*ri); si; ++si)
         {
             if (!item_is_spellbook(*si))
@@ -1542,11 +1541,6 @@ bool trog_burn_spellbooks()
             }
 
             totalpiety += 2;
-
-            // Rarity influences the duration of the pyre.
-            rarity += book_rarity(static_cast<book_type>(si->sub_type));
-
-            dprf("Burned spellbook rarity: %d", rarity);
             destroy_spellbook(*si);
             item_was_destroyed(*si);
             destroy_item(si.index());
@@ -1559,13 +1553,13 @@ bool trog_burn_spellbooks()
             {
                 // Reinforce the cloud.
                 mpr("The fire roars with new energy!");
-                const int extra_dur = count + random2(rarity / 2);
+                const int extra_dur = count + random2(6);
                 cloud->decay += extra_dur * 5;
                 cloud->set_whose(KC_YOU);
                 continue;
             }
 
-            const int duration = min(4 + count + random2(rarity/2), 23);
+            const int duration = min(4 + count + random2(6), 20);
             place_cloud(CLOUD_FIRE, *ri, duration, &you);
 
             mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
