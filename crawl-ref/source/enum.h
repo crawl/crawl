@@ -412,6 +412,9 @@ enum ability_type
     ABIL_PAKELLAS_QUICK_CHARGE,
     ABIL_PAKELLAS_SUPERCHARGE,
 
+    // Ukayaw
+    ABIL_UKAYAW_STOMP = 1240,
+
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
 

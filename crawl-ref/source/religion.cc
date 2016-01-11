@@ -448,6 +448,11 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 7, ABIL_PAKELLAS_SUPERCHARGE,
            "Pakellas will now supercharge a wand or rod... once.",
            "Pakellas is no longer ready to supercharge a wand or rod." },
+    },
+    // Ukayaw
+    {
+      { 1, ABIL_UKAYAW_STOMP,
+           "stomp with the beat" },
     }
 };
 

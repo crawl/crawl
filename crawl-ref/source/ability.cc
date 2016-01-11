@@ -439,6 +439,10 @@ static const ability_def Ability_List[] =
         0, 0, 100, 2, abflag::NONE },
     { ABIL_PAKELLAS_SUPERCHARGE, "Supercharge", 0, 0, 0, 0, abflag::NONE },
 
+    // Ukayaw
+    { ABIL_UKAYAW_STOMP, "Stomp",
+        4, 0, 100, generic_cost::fixed(20), abflag::NONE },
+
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, abflag::NONE },
     { ABIL_CONVERT_TO_BEOGH, "Convert to Beogh", 0, 0, 0, 0, abflag::NONE },
@@ -925,6 +929,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_RU_SACRIFICE_RESISTANCE:
     case ABIL_RU_REJECT_SACRIFICES:
     case ABIL_PAKELLAS_SUPERCHARGE:
+    case ABIL_UKAYAW_STOMP:
     case ABIL_STOP_RECALL:
     case ABIL_RENOUNCE_RELIGION:
     case ABIL_CONVERT_TO_BEOGH:
@@ -3038,6 +3043,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 #endif
         break;
     }
+
+    case ABIL_UKAYAW_STOMP:
+        fail_check();
+        if (!ukayaw_stomp())
+            return SPRET_ABORT;
+        break;
 
     case ABIL_RENOUNCE_RELIGION:
         fail_check();

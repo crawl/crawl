@@ -755,6 +755,14 @@ sacrifices while there is an existing offer still extended.
 Each consecutive rejection increases the sacrifice timer significantly.
 Accepting a sacrifice will reset the timer to the standard length.
 %%%%
+# Ukayaw
+Stomp ability
+
+The reveler stomps down in time with the rhythm of the dance, sending a
+shockwave through all adjacent creatures. The shockwave deals damages the
+creatures it passes through in proportion to the creature's maximum health and
+the reveler's Invocations skill.
+%%%%
 Renounce Religion ability
 
 Renounces your faith. This will make you leave your god (and usually anger

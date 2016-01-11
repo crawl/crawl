@@ -6465,7 +6465,7 @@ bool ru_power_leap()
     return return_val;
 }
 
-static int _apocalypseable(coord_def where)
+static int _cell_has_valid_target(coord_def where)
 {
     monster* mon = monster_at(where);
     if (mon == nullptr || mons_is_projectile(mon->type) || mon->friendly())
@@ -6475,7 +6475,7 @@ static int _apocalypseable(coord_def where)
 
 static int _apply_apocalypse(coord_def where)
 {
-    if (!_apocalypseable(where))
+    if (!_cell_has_valid_target(where))
         return 0;
     monster* mons = monster_at(where);
     ASSERT(mons);
@@ -6537,7 +6537,7 @@ static int _apply_apocalypse(coord_def where)
 
 bool ru_apocalypse()
 {
-    int count = apply_area_visible(_apocalypseable, you.pos());
+    int count = apply_area_visible(_cell_has_valid_target, you.pos());
     if (!count)
     {
         if (!yesno("There are no visible enemies. Unleash your apocalypse anyway?",
@@ -6648,5 +6648,29 @@ bool pakellas_device_surge()
         return false;
     }
 
+    return true;
+}
+
+static int _get_stomped(monster* mons)
+{
+    if (mons == nullptr)
+        return 0;
+
+    //damage scales with Invocations
+    int dmg = 1 + player_adjust_invoc_power(you.skill(SK_INVOCATIONS, 1))
+            * mons->max_hit_points / 100;
+
+    mons->hurt(&you, dmg, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
+
+    return 1;
+}
+
+bool ukayaw_stomp()
+{
+    mpr("You stomp with the beat, sending a shockwave through the revelers "
+            "around you!");
+    apply_monsters_around_square([] (monster* mons) {
+            return _get_stomped(mons);
+        }, you.pos());
     return true;
 }
