@@ -309,7 +309,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
     fail_check();
 
     // Below here, failing to cast yields information to the
-    // player, so we don't make the spell abort (return true).
+    // player, so we don't make the spell abort (return SPRET_SUCCESS).
     monster *mon = monster_at(dest);
     if (!in_bounds(dest))
         mpr("You sense an overwhelming volume of rock.");
