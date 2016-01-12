@@ -2967,6 +2967,29 @@ w:50
 @The_monster@ says, "I saw some tasty-looking corn earlier, but it tried to eat me. I hate that."
 
 %%%%
+orb Donald
+
+w:25
+@_generic_Donald_@
+
+@The_monster@ says, "Thanks for carrying the Orb of Power for me."
+
+@The_monster@ says, "Isn't that thing heavy? I could take a turn."
+
+@The_monster@ says, "Aren't you worried about radiation? You should put that down."
+
+@The_monster@ says, "What are you going to do with that Orb?"
+
+@The_monster@ says, "Don't you think the Orb of Power was down there for a reason?"
+
+@The_monster@ says, "I heard that the world ends if you bring it to the surface."
+
+@The_monster@ says, "Someone is going to come looking for that Orb."
+
+@The_monster@ says, "I'll kill you once you're done carrying the Orb."
+
+@The_monster@ says, "You have the Orb. Was it worth it?"
+
 ######################################################################## GODS #
 Zin Donald
 
