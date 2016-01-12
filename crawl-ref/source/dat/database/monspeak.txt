@@ -2986,7 +2986,7 @@ w:25
 
 @The_monster@ says, "Someone is going to come looking for that Orb."
 
-@The_monster@ says, "I'll kill you once you're done carrying the Orb."
+@The_monster@ says, "Are you sure that's the real Orb, and not some cheap imitation?"
 
 @The_monster@ says, "You have the Orb. Was it worth it?"
 
