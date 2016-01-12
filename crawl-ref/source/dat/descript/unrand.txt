@@ -599,19 +599,24 @@ immune to further torments.
 %%%%
 robe of vines
 
-A robe of woven, growing vines. The vines' rapid growth seems to be conveyed to
-the wearer, but they also prevent the wearer from being healed by potions and
-wands.
+A robe woven of living vines. The vines form a symbiotic relationship with
+their wearer, greatly increasing their regeneration, but preventing them from
+being healed by potions and wands.
 %%%%
 Kryia's mail coat
 
-This armour is said to have been forged for Kryia in her old age. The queen
-continued to insist on leading her armies from the front even into old age, but
-as her aging body failed her, this coat helped to enhance the healing draughts
-that kept her alive.
+This armour is said to have been forged for Queen Kryia in her old age. She
+continued to insist on leading her armies from the front even into her dotage,
+and as her aging body failed her, this coat helped to enhance the healing
+draughts that kept her alive.
 
-The wearer of this garment will have significantly increased healing from
-devices.
+{{
+    if you.race() == "Deep Dwarf" then
+        return "Sadly, it cannot assist deep dwarves' healing."
+    else
+        return "The wearer of this garment will have significantly increased healing from devices."
+    end
+}}
 %%%%
 frozen axe "Frostbite"
 
