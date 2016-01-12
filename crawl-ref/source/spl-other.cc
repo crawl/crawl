@@ -369,7 +369,7 @@ spret_type cast_intoxicate(int pow, bool fail)
     {
         if (x_chance_in_y(60 - pow/3, 100))
         {
-            mprf(MSGCH_DURATION, "The world spins around you!");
+            mprf(MSGCH_WARN, "The world spins around you!");
             you.increase_duration(DUR_VERTIGO, 4 + random2(20 + (100 - pow) / 10));
             you.redraw_evasion = true;
         }

@@ -1115,8 +1115,7 @@ static void _remove_amulet_of_harm()
 
 static void _equip_amulet_of_dismissal()
 {
-    mprf(MSGCH_DURATION, "The world spins around you as a field of "
-            "translocational energy flows through you!");
+    mprf(MSGCH_WARN, "The world spins around you!");
     you.increase_duration(DUR_VERTIGO, random2(4) + 3);
     you.redraw_evasion = true;
 }
