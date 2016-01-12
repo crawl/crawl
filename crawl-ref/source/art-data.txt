@@ -1273,6 +1273,15 @@ COLOUR:   ETC_FIRE
 BRAND:    SPARM_PONDEROUSNESS
 FIRE:     1
 
+ENUM:     PRESERVATION
+NAME:     cloak of Preservation
+OBJ:      OBJ_ARMOUR/ARM_CLOAK
+PLUS:     +0
+#TILE:     urand_thief
+TILE_EQ:  gray
+COLOUR:   LIGHTGREY
+BOOL:     rCorr
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

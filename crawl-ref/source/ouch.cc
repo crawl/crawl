@@ -57,6 +57,7 @@
 #include "output.h"
 #include "player.h"
 #include "player-stats.h"
+#include "player-equip.h"
 #include "potion.h"
 #include "prompt.h"
 #include "random.h"
@@ -835,7 +836,9 @@ void reset_damage_counters()
 
 bool can_shave_damage()
 {
-    return you.species == SP_DEEP_DWARF || you.duration[DUR_FORTITUDE];
+    return you.species == SP_DEEP_DWARF
+            || you.duration[DUR_FORTITUDE]
+            || player_equip_unrand(UNRAND_PRESERVATION);
 }
 
 int do_shave_damage(int dam)
@@ -850,6 +853,12 @@ int do_shave_damage(int dam)
 
     if (you.duration[DUR_FORTITUDE])
         dam -= random2(10);
+
+    if (player_equip_unrand(UNRAND_PRESERVATION)) {
+        if (one_chance_in(50))
+            mprf("The cloak of Preservation looks more tattered.");
+        dam -= random2(6);
+    }
 
     return dam;
 }
@@ -992,6 +1001,16 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         if (dam >= you.hp && you.hp_max > 0 && god_protects_from_harm())
         {
             simple_god_message(" protects you from harm!");
+            return;
+        }
+
+        if (dam >= you.hp && you.hp_max > 0 && one_chance_in(4)
+            && player_equip_unrand(UNRAND_PRESERVATION)) {
+            mprf(MSGCH_WARN, "The cloak of Preservation crumbles to dust!");
+            int cloak = you.equip[EQ_CLOAK];
+            set_unique_item_status(you.inv[cloak], UNIQ_NOT_EXISTS);
+            unequip_item(EQ_CLOAK, false);
+            dec_inv_item_quantity(cloak, 1);
             return;
         }
 

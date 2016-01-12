@@ -628,3 +628,7 @@ armour of Talos
 A huge and weighty suit of bronze plate armour. Only one with a correspondingly
 huge body can wear it.
 %%%%
+cloak of Preservation
+
+A tattered cloak. It absorbs some of the damage done to its wearer.
+%%%%
