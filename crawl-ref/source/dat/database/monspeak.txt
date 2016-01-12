@@ -2097,6 +2097,16 @@ VISUAL:@The_monster@ shuffles @possessive@ notes under @possessive@ cloak.
 
 VISUAL:@The_monster@ heaves a sigh in contemplation.
 %%%%
+orb Crazy Yiuf
+
+@The_monster@ says, "Wait for me!"
+
+@The_monster@ says, "You found it!"
+
+@The_monster@ says, "Get me out of this place."
+
+@The_monster@ says, "You came back for me."
+%%%%
 # Not quite so mad when he's confused.
 confused Crazy Yiuf
 
