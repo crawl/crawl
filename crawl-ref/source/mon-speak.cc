@@ -546,6 +546,10 @@ bool mons_speaks(monster* mons)
     // uniques and other monsters! Specifically, Donald.
     prefixes.emplace_back(branches[you.where_are_you].abbrevname);
 
+    // Include a prefix for the orb run.
+    if (player_has_orb())
+        prefixes.emplace_back("orb");
+
 #ifdef DEBUG_MONSPEAK
     {
         string prefix;
