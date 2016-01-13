@@ -2089,6 +2089,13 @@ Xom Crazy Yiuf
 # Robert Ingersoll
 @The_monster@ says, "The present is the child, and the necessary child, of all the past, and the mother of all the future."
 
+# Hume
+@The_monster@ says, "Reason is nothing but a wonderful and unintelligible
+instinct in our souls."
+
+# Kant
+@The_monster@ says, "It is extremely absurd to expect to be enlightened by reason, and yet to prescribe to it beforehand on which side it must incline."
+
 VISUAL:@The_monster@ considers dialectic materialism.
 
 VISUAL:@The_monster@ ponders an existential dilemma.
