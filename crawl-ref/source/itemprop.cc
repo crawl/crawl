@@ -2013,6 +2013,9 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         skills.insert(SK_EVOCATIONS);
     }
 
+    if (get_weapon_brand(item) == SPWPN_PAIN)
+        skills.insert(SK_NECROMANCY);
+
     skill_type sk = item_attack_skill(item);
     if (sk != SK_FIGHTING && sk != SK_THROWING)
         skills.insert(sk);
