@@ -75,6 +75,8 @@ void monster_drop_things(monster* mons,
                 if (mark_item_origins && mitm[item].defined())
                     origin_set_monster(mitm[item], mons);
 
+                mitm[item].props[DROPPER_MID_KEY] = mons->mid;
+
                 if (mitm[item].props.exists("autoinscribe"))
                 {
                     add_inscription(mitm[item],
