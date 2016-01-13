@@ -1226,7 +1226,7 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
     if (item_index == NON_ITEM)
         return true;
 
-    item_def* pitem = &mitm[item_index];
+    item_def& pitem = mitm[item_index];
 
     // Unequip equipped items before dropping them; unequip() prevents
     // cursed items from being removed.
@@ -1236,23 +1236,24 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
         || eslot == MSLOT_JEWELLERY
         || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(this))
     {
-        if (!unequip(*pitem, msg))
+        if (!unequip(pitem, msg))
             return false;
         was_unequipped = true;
     }
+    const bool was_wand = pitem.base_type == OBJ_WANDS;
 
-    if (pitem->flags & ISFLAG_SUMMONED)
+    if (pitem.flags & ISFLAG_SUMMONED)
     {
         if (msg)
         {
             mprf("%s %s as %s drops %s!",
-                 pitem->name(DESC_THE).c_str(),
-                 summoned_poof_msg(this, *pitem).c_str(),
+                 pitem.name(DESC_THE).c_str(),
+                 summoned_poof_msg(this, pitem).c_str(),
                  name(DESC_THE).c_str(),
-                 pitem->quantity > 1 ? "them" : "it");
+                 pitem.quantity > 1 ? "them" : "it");
         }
 
-        item_was_destroyed(*pitem);
+        item_was_destroyed(pitem);
         destroy_item(item_index);
     }
     else
@@ -1260,20 +1261,20 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
         if (msg)
         {
             mprf("%s drops %s.", name(DESC_THE).c_str(),
-                 pitem->name(DESC_A).c_str());
+                 pitem.name(DESC_A).c_str());
         }
 
         if (!move_item_to_grid(&item_index, pos(), swimming()))
         {
             // Re-equip item if we somehow failed to drop it.
             if (was_unequipped)
-                equip(*pitem, msg);
+                equip(pitem, msg);
 
             return false;
         }
     }
 
-    if (props.exists("wand_known") && msg && pitem->base_type == OBJ_WANDS)
+    if (props.exists("wand_known") && msg && was_wand)
         props.erase("wand_known");
 
     inv[eslot] = NON_ITEM;
