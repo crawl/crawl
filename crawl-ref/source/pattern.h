@@ -26,11 +26,6 @@ public:
         return text;
     }
 
-    void nohl()
-    {
-        start = end = (matched ? 0 : -1);
-    }
-
 private:
 
     pattern_match(bool _matched, const string &_text, int _start, int _end)

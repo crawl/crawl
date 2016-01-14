@@ -120,9 +120,9 @@ struct stash_search_result
     // is on.
     int player_distance;
 
-    // Match for this search result - usually the first matching item in the
-    // stash or the name of the shop.
-    pattern_match match;
+    // Text that describes this search result - usually the name of
+    // the first matching item in the stash or the name of the shop.
+    string match;
 
     // Item that was matched.
     item_def item;
@@ -133,8 +133,7 @@ struct stash_search_result
     // Whether the found items are in the player's inventory.
     bool in_inventory;
 
-    stash_search_result() : pos(), player_distance(0),
-                            match(pattern_match::failed()), item(),
+    stash_search_result() : pos(), player_distance(0), match(), item(),
                             shop(nullptr), in_inventory(false)
     {
     }
