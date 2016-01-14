@@ -2630,19 +2630,19 @@ void bolt::affect_endpoint()
         break;
 
     case SPELL_BLINKBOLT:
-        if (!agent() || !agent()->alive())
+    {
+        actor *act = agent(true); // use orig actor even when reflected
+        if (!act || !act->alive())
             return;
 
         for (vector<coord_def>::reverse_iterator citr = path_taken.rbegin();
              citr != path_taken.rend(); ++citr)
         {
-            if (agent()->is_habitable(*citr) &&
-                agent()->blink_to(*citr, false))
-            {
+            if (act->is_habitable(*citr) && act->blink_to(*citr, false))
                 return;
-            }
         }
         return;
+    }
 
     case SPELL_SEARING_BREATH:
         place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
