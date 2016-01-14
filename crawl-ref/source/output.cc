@@ -2537,7 +2537,7 @@ void print_overview_screen()
         }
 
         item_def& item = you.inv[letter_to_index(c)];
-        describe_item(item, true);
+        describe_item(item);
         // loop around for another go.
     }
 }

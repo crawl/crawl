@@ -198,7 +198,7 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
         }
         else // in inventory
         {
-            describe_item(you.inv[idx], true);
+            describe_item(you.inv[idx]);
             redraw_screen();
         }
         return CK_MOUSE_CMD;
