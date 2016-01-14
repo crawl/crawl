@@ -713,7 +713,7 @@ vector<stash_search_result> ShopInfo::matches_search(
         {
             stash_search_result res;
             res.match = sname;
-            res.item = item.item;
+            res.item = item;
             results.push_back(res);
         }
     }
@@ -1564,16 +1564,14 @@ bool StashTracker::display_search_results(
     for (stash_search_result &res : *results)
     {
         ostringstream matchtitle;
-        if (const uint8_t waypoint = travel_cache.is_waypoint(res.pos))
+        if (!res.in_inventory)
         {
-            if (!res.in_inventory)
+            if (const uint8_t waypoint = travel_cache.is_waypoint(res.pos))
                 matchtitle << "(" << waypoint << ") ";
+            matchtitle << "[" << res.pos.id.describe() << "] ";
         }
 
-        if (!res.in_inventory)
-            matchtitle << "[" << res.pos.id.describe() << "]";
-
-        matchtitle << " " << res.match;
+        matchtitle << res.match;
 
         MenuEntry *me = new MenuEntry(matchtitle.str(), MEL_ITEM, 1, hotkey);
         me->data = &res;
