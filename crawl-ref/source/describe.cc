@@ -2241,11 +2241,10 @@ static command_type _get_action(int key, vector<command_type> actions)
  * Print a list of actions to be performed on the item
  *
  * @param item the item to have actions done on
- * @param allow_inscribe whether to include inscribing in the list
  * @param do_prompt whether to actually print the prompt
  * @return whether to stay in the inventory menu afterwards
  */
-static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
+static bool _actions_prompt(item_def &item, bool do_prompt)
 {
 #ifdef USE_TILE_LOCAL
     PrecisionMenu menu;
@@ -2324,7 +2323,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
 
     actions.push_back(CMD_DROP);
 
-    if (allow_inscribe)
+    if (!crawl_state.game_is_tutorial())
         actions.push_back(CMD_INSCRIBE_ITEM);
 
     static bool act_str_init = true; // Does act_str needs to be initialised?
@@ -2484,11 +2483,9 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
  *  Describe any item in the game.
  *
  *  @param item the item to be described.
- *  @param allow_inscribe whether to include inscribing in the menu of actions.
- *         XXX: why wouldn't you want to allow inscribing?
  *  @return whether to stay in the inventory menu afterwards.
  */
-bool describe_item(item_def &item, bool allow_inscribe)
+bool describe_item(item_def &item)
 {
     if (!item.defined())
         return true;
@@ -2511,9 +2508,6 @@ bool describe_item(item_def &item, bool allow_inscribe)
         return !already_learning_spell() && item.is_valid();
     }
 
-    if (allow_inscribe && crawl_state.game_is_tutorial())
-        allow_inscribe = false;
-
     // Don't ask if we're dead.
     if (in_inventory(item) && crawl_state.prev_cmd != CMD_RESISTS_SCREEN
         && !(you.dead || crawl_state.updating_scores))
@@ -2522,7 +2516,7 @@ bool describe_item(item_def &item, bool allow_inscribe)
         const bool do_prompt = wherey() <= get_number_of_lines() - 2;
         if (do_prompt)
             cgotoxy(1, wherey() + 2);
-        return _actions_prompt(item, allow_inscribe, do_prompt);
+        return _actions_prompt(item, do_prompt);
     }
     else
         getchm();

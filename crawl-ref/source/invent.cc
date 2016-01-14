@@ -1170,7 +1170,7 @@ void display_inventory()
             const int invidx = letter_to_index(select);
             if (you.inv[invidx].defined())
             {
-                if (!describe_item(you.inv[invidx], true))
+                if (!describe_item(you.inv[invidx]))
                     break;
             }
         }
