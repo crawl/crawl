@@ -15,7 +15,6 @@
 #include "chardump.h"
 #include "clua.h"
 #include "cluautil.h"
-#include "colour.h"
 #include "command.h"
 #include "coordit.h"
 #include "describe.h"
@@ -459,15 +458,11 @@ vector<stash_search_result> Stash::matches_search(
     {
         const string s   = stash_item_name(item);
         const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
-        pattern_match match(search.match_location(s));
-        if (!match)
-            match = search.match_location(s + " " + prefix + " " + ann);
-        if (!match && is_dumpable_artefact(item))
-            match = search.match_location(s + " " + chardump_desc(item));
-        if (match)
+        if (search.matches(prefix + " " + ann + " " + s)
+            || is_dumpable_artefact(item) && search.matches(chardump_desc(item)))
         {
             stash_search_result res;
-            res.match = match;
+            res.match = s;
             res.item = item;
             results.push_back(res);
         }
@@ -476,15 +471,11 @@ vector<stash_search_result> Stash::matches_search(
     if (results.empty() && feat != DNGN_FLOOR)
     {
         const string fdesc = feature_description();
-        if (!fdesc.empty())
+        if (!fdesc.empty() && search.matches(fdesc))
         {
-            pattern_match feat_match(search.match_location(fdesc));
-            if (feat_match)
-            {
-                stash_search_result res;
-                res.match = feat_match;
-                results.push_back(res);
-            }
+            stash_search_result res;
+            res.match = fdesc;
+            results.push_back(res);
         }
     }
 
@@ -699,18 +690,11 @@ vector<stash_search_result> ShopInfo::matches_search(
 
     no_notes nx;
 
-    string shoptitle = shop_name(shop);
-    if (shop.stock.empty())
-        shoptitle += "*";
-    shoptitle += " " + prefix + " {shop}";
-
-    pattern_match shoptitle_match(search.match_location(shop_name(shop)));
-    if (!shoptitle_match)
-        shoptitle_match = search.match_location(shoptitle);
-    if (shoptitle_match)
+    const string shoptitle = shop_name(shop) + (shop.stock.empty() ? "*" : "");
+    if (search.matches(shoptitle + " " + prefix + " {shop}"))
     {
         stash_search_result res;
-        res.match = shoptitle_match;
+        res.match = shoptitle;
         res.shop = this;
         res.pos.pos = shop.pos;
         results.push_back(res);
@@ -724,18 +708,12 @@ vector<stash_search_result> ShopInfo::matches_search(
         const string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
                                                  &item, true);
 
-        pattern_match itemname_match(search.match_location(sname));
-        if (!itemname_match)
-            itemname_match = search.match_location(sname + " " + prefix + " " + ann);
-        if (!itemname_match)
-            itemname_match = search.match_location(sname + " " + shop_item_desc(item));
-        if (itemname_match)
+        if (search.matches(prefix + " " + ann + " " + sname)
+            || search.matches(shop_item_desc(item)))
         {
             stash_search_result res;
-            res.match = itemname_match;
-            res.item = item;
-            res.shop = this;
-            res.pos.pos = shop.pos;
+            res.match = sname;
+            res.item = item.item;
             results.push_back(res);
         }
     }
@@ -1264,10 +1242,10 @@ static bool _compare_by_distance(const stash_search_result& lhs,
             return lhs_dist < rhs_dist;
     }
 
-    if (lhs.match.matched_text() != rhs.match.matched_text())
+    if (lhs.match != rhs.match)
     {
         // Then by name.
-        return lhs.match.matched_text() < rhs.match.matched_text();
+        return lhs.match < rhs.match;
     }
     else
         return false;
@@ -1277,10 +1255,10 @@ static bool _compare_by_distance(const stash_search_result& lhs,
 static bool _compare_by_name(const stash_search_result& lhs,
                              const stash_search_result& rhs)
 {
-    if (lhs.match.matched_text() != rhs.match.matched_text())
+    if (lhs.match != rhs.match)
     {
         // Sort by name
-        return lhs.match.matched_text() < rhs.match.matched_text();
+        return lhs.match < rhs.match;
     }
     else if (lhs.player_distance != rhs.player_distance)
     {
@@ -1301,15 +1279,12 @@ static vector<stash_search_result> _inventory_search(const base_pattern &search)
 
         const string s   = Stash::stash_item_name(item);
         const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
-        pattern_match itemname_match(search.match_location(s));
-        if (!itemname_match)
-            itemname_match = search.match_location(s + " " + ann);
-        if (!itemname_match && is_dumpable_artefact(item))
-            itemname_match = search.match_location(s + " " + chardump_desc(item));
-        if (itemname_match)
+        if (search.matches(ann + " " + s)
+            || is_dumpable_artefact(item)
+               && search.matches(chardump_desc(item)))
         {
             stash_search_result res;
-            res.match = itemname_match;
+            res.match = s;
             res.item = item;
             // Needs to not be equal to ITEM_IN_INVENTORY so the describe
             // menu doesn't think it can manipulate the item.
@@ -1363,7 +1338,6 @@ void StashTracker::search_stashes()
     string csearch = csearch_literal;
 
     bool curr_lev = (csearch[0] == '@' || csearch == ".");
-    bool nohl = false;
     if (curr_lev)
     {
         csearch.erase(0, 1);
@@ -1385,8 +1359,6 @@ void StashTracker::search_stashes()
     {
         if (csearch[0] == '/')
             csearch.erase(0, 1);
-        if (csearch == "." || csearch == "..")
-            nohl = true;
         tpat = csearch;
         search = &tpat;
     }
@@ -1422,10 +1394,6 @@ void StashTracker::search_stashes()
         mprf(MSGCH_PLAIN, "Too many matches; use a more specific search.");
         return;
     }
-
-    if (nohl)
-        for (auto &res : results)
-            res.match.nohl();
 
     bool sort_by_dist = true;
     bool filter_useless = false;
@@ -1603,17 +1571,9 @@ bool StashTracker::display_search_results(
         }
 
         if (!res.in_inventory)
-            matchtitle << "[" << res.pos.id.describe() << "] ";
+            matchtitle << "[" << res.pos.id.describe() << "]";
 
-        string item_desc = res.match.annotate_string(colour_to_str(Options.search_highlight_colour));
-        item_desc = replace_all(item_desc, "\n", "  ");
-        // not replace_all because that would collapse "      " to "    "
-        // rather than "  "
-        size_t pos;
-        while ((pos = item_desc.find("   ")) != string::npos)
-            item_desc.erase(pos, 1);
-
-        matchtitle << item_desc;
+        matchtitle << " " << res.match;
 
         MenuEntry *me = new MenuEntry(matchtitle.str(), MEL_ITEM, 1, hotkey);
         me->data = &res;
