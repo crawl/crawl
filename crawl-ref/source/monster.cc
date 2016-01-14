@@ -1737,58 +1737,55 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
     if (!force && !wants_armour(item))
         return false;
 
+    const monster_type genus = mons_genus(mons_species(true));
+    const monster_type base_type = mons_is_zombified(this) ? base_monster
+                                                           : type;
     equipment_type eq = EQ_NONE;
 
     // HACK to allow nagas/centaurs to wear bardings. (jpeg)
     switch (item.sub_type)
     {
     case ARM_NAGA_BARDING:
-        if (mons_genus(type) == MONS_NAGA
-            || mons_genus(type) == MONS_SALAMANDER)
-        {
+        if (genus == MONS_NAGA || genus == MONS_SALAMANDER)
             eq = EQ_BODY_ARMOUR;
-        }
         break;
     case ARM_CENTAUR_BARDING:
-        if (mons_species(type) == MONS_CENTAUR
-            || mons_species(type) == MONS_YAKTAUR)
-        {
+        if (genus == MONS_CENTAUR || genus == MONS_YAKTAUR)
             eq = EQ_BODY_ARMOUR;
-        }
         break;
     // And another hack or two...
     case ARM_HAT:
-        if (type == MONS_GASTRONOK || mons_genus(type) == MONS_OCTOPODE)
+        if (base_type == MONS_GASTRONOK || genus == MONS_OCTOPODE)
             eq = EQ_BODY_ARMOUR;
         break;
     case ARM_CLOAK:
-        if (type == MONS_MAURICE
-            || type == MONS_NIKOLA
-            || type == MONS_CRAZY_YIUF
-            || mons_genus(type) == MONS_DRACONIAN)
+        if (base_type == MONS_MAURICE
+            || base_type == MONS_NIKOLA
+            || base_type == MONS_CRAZY_YIUF
+            || genus == MONS_DRACONIAN)
         {
             eq = EQ_BODY_ARMOUR;
         }
         break;
     case ARM_GLOVES:
-        if (type == MONS_NIKOLA)
+        if (base_type == MONS_NIKOLA)
             eq = EQ_SHIELD;
         break;
     case ARM_HELMET:
-        if (type == MONS_ROBIN)
+        if (base_type == MONS_ROBIN)
             eq = EQ_SHIELD;
         break;
     default:
         eq = get_armour_slot(item);
 
-        if (eq == EQ_BODY_ARMOUR && mons_genus(type) == MONS_DRACONIAN)
+        if (eq == EQ_BODY_ARMOUR && genus == MONS_DRACONIAN)
             return false;
 
-        if (eq != EQ_HELMET && type == MONS_GASTRONOK)
+        if (eq != EQ_HELMET && base_type == MONS_GASTRONOK)
             return false;
 
         if (eq != EQ_HELMET && eq != EQ_SHIELD
-            && mons_genus(type) == MONS_OCTOPODE)
+            && genus == MONS_OCTOPODE)
         {
             return false;
         }
