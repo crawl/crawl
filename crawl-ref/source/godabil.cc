@@ -6704,9 +6704,11 @@ bool ukayaw_partner_pass()
 
     while (1)
     {
-        targetter_monster_sequence tgt(&you, pow, range);
+        unique_ptr<targetter> hitfunc;
+        hitfunc = make_unique<targetter_monster_sequence>(&you, pow, range);
 
         direction_chooser_args args;
+        args.hitfunc = hitfunc.get();
         args.restricts = DIR_LEAP;
         args.mode = TARG_ANY;
         args.needs_path = false;
