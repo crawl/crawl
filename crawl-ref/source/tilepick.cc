@@ -5272,8 +5272,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Evoking items.
     case ABIL_EVOKE_BERSERK:
         return TILEG_ABILITY_EVOKE_BERSERK;
-    case ABIL_EVOKE_TELEPORTATION:
-        return TILEG_ABILITY_EVOKE_TELEPORT;
     case ABIL_EVOKE_BLINK:
         return TILEG_ABILITY_BLINK;
     case ABIL_EVOKE_TURN_INVISIBLE:

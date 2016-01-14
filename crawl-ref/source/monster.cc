@@ -6048,8 +6048,6 @@ bool monster::can_evoke_jewellery(jewellery_type jtype) const
 
     switch (jtype)
     {
-        case RING_TELEPORTATION:
-            return !has_ench(ENCH_TP);
         case AMU_RAGE:
             return can_go_berserk();
         default:
@@ -6063,8 +6061,6 @@ bool monster::should_evoke_jewellery(jewellery_type jtype) const
 {
     switch (jtype)
     {
-    case RING_TELEPORTATION:
-        return caught() || mons_is_fleeing(this) || pacified();
     case AMU_RAGE:
         // this implies !berserk()
         return !has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
@@ -6092,10 +6088,6 @@ bool monster::evoke_jewellery_effect(jewellery_type jtype)
     {
     case AMU_RAGE:
         enchant_actor_with_flavour(this, this, BEAM_BERSERK);
-        break;
-
-    case RING_TELEPORTATION:
-        teleport(false);
         break;
 
     default:

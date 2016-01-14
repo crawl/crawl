@@ -218,8 +218,6 @@ static const ability_def Ability_List[] =
     // you used a wand, potion, or miscast effect). I didn't see
     // any reason to label them as "Evoke" in the text, they don't
     // use or train Evocations (the others do).  -- bwr
-    { ABIL_EVOKE_TELEPORTATION, "Evoke Teleportation",
-      3, 0, 200, 0, abflag::NONE },
     { ABIL_EVOKE_BLINK, "Evoke Blink", 1, 0, 50, 0, abflag::NONE },
     { ABIL_RECHARGING, "Device Recharging", 1, 0, 0, 0, abflag::PERMANENT_MP },
 
@@ -864,7 +862,6 @@ talent get_talent(ability_type ability, bool check_confused)
 
         // begin item abilities - some possibly mutagenic {dlb}
     case ABIL_EVOKE_TURN_INVISIBLE:
-    case ABIL_EVOKE_TELEPORTATION:
         failure = 60 - you.skill(SK_EVOCATIONS, 2);
         break;
 
@@ -1851,11 +1848,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         break;
     }
-
-    case ABIL_EVOKE_TELEPORTATION:    // ring of teleportation
-        fail_check();
-        you_teleport();
-        break;
 
     case ABIL_BREATHE_STICKY_FLAME:
     {
@@ -3440,13 +3432,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             if (you.airborne() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
                 _add_talent(talents, ABIL_STOP_FLYING, check_confused);
         }
-    }
-
-    if (you.wearing(EQ_RINGS, RING_TELEPORTATION)
-        && !player_mutation_level(MUT_NO_ARTIFICE)
-        && !crawl_state.game_is_sprint())
-    {
-        _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
     }
 
     // Find hotkeys for the non-hotkeyed talents.

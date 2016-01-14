@@ -3352,7 +3352,8 @@ bool is_bad_item(const item_def &item, bool temp)
         case AMU_INACCURACY:
         case RING_LOUDNESS:
             return true;
-        case RING_EVASION:
+        case RING_TELEPORTATION:
+            return !(you.stasis() || crawl_state.game_is_sprint());
         case RING_PROTECTION:
         case RING_STRENGTH:
         case RING_DEXTERITY:
@@ -3711,8 +3712,8 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case AMU_FAITH:
             return (you.species == SP_DEMIGOD && !you.religion)
-                || you_worship(GOD_GOZAG)
-                || (you_worship(GOD_RU) && you.piety == piety_breakpoint(5));
+                    || you_worship(GOD_GOZAG)
+                    || (you_worship(GOD_RU) && you.piety == piety_breakpoint(5));
 
         case AMU_GUARDIAN_SPIRIT:
             return you.spirit_shield(false, false);
@@ -3736,9 +3737,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return you_worship(GOD_TROG);
 
         case RING_TELEPORTATION:
-            return you.species == SP_FORMICID
-                   || crawl_state.game_is_sprint()
-                   || player_mutation_level(MUT_NO_ARTIFICE);
+            return !is_bad_item(item, temp);
 
         case RING_FLIGHT:
             return you.permanent_flight()
