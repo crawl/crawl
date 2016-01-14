@@ -2531,15 +2531,14 @@ void print_overview_screen()
     {
         char c = _get_overview_screen_results();
         if (!c)
-        {
-            redraw_screen();
             break;
-        }
 
         item_def& item = you.inv[letter_to_index(c)];
-        describe_item(item);
+        if (!describe_item(item))
+            break;
         // loop around for another go.
     }
+    redraw_screen();
 }
 
 static const char* stealth_words[11] =
