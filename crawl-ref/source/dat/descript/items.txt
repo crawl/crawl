@@ -1031,7 +1031,7 @@ intelligence.
 ring of teleportation
 
 This ring occasionally exerts its power to teleport its wearer next to
-monsters. It can also be deliberately evoked to randomly teleport the wearer.
+monsters.
 %%%%
 ring of wizardry
 

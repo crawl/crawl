@@ -18,7 +18,6 @@ skill_type abil_skill(ability_type abil)
 {
     switch (abil)
     {
-    case ABIL_EVOKE_TELEPORTATION:
     case ABIL_EVOKE_BLINK:
     case ABIL_EVOKE_BERSERK:
     case ABIL_EVOKE_TURN_INVISIBLE:
@@ -91,7 +90,6 @@ static int _abil_degree(ability_type abil)
 {
     switch (abil)
     {
-    case ABIL_EVOKE_TELEPORTATION:
     case ABIL_EVOKE_BLINK:
     case ABIL_EVOKE_BERSERK:
     case ABIL_EVOKE_TURN_INVISIBLE:
