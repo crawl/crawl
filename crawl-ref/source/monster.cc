@@ -6176,7 +6176,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         return;
 
 
-    if (mons_species(type) == MONS_BUSH
+    if (mons_species() == MONS_BUSH
         && res_fire() < 0 && flavour == BEAM_FIRE
         && damage > 8 && x_chance_in_y(damage, 20))
     {
