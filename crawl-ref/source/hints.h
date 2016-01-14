@@ -176,7 +176,7 @@ string hints_skills_description_info();
 
 // Additional information for tutorial players.
 void check_item_hint(const item_def &item, unsigned int num_old_talents);
-void hints_describe_item(const item_def &item);
+string hints_describe_item(const item_def &item);
 void hints_inscription_info(string prompt);
 bool hints_pos_interesting(int x, int y);
 void hints_describe_pos(int x, int y);

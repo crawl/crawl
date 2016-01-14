@@ -1623,7 +1623,7 @@ void prompt_inscribe_item()
     if (prompt_failed(item_slot))
         return;
 
-    inscribe_item(you.inv[item_slot], true);
+    inscribe_item(you.inv[item_slot]);
 }
 
 static bool _check_blood_corpses_on_ground()

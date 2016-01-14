@@ -16,7 +16,6 @@
 #include "prompt.h"
 #include "spl-util.h"
 
-static void _adjust_item();
 static void _adjust_spell();
 static void _adjust_ability();
 
@@ -27,7 +26,7 @@ void adjust()
     const int keyin = toalower(get_ch());
 
     if (keyin == 'i')
-        _adjust_item();
+        adjust_item();
     else if (keyin == 's')
         _adjust_spell();
     else if (keyin == 'a')
@@ -38,27 +37,28 @@ void adjust()
         canned_msg(MSG_HUH);
 }
 
-static void _adjust_item()
+void adjust_item(int from_slot)
 {
-    int from_slot, to_slot;
-
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
         return;
     }
 
-    from_slot = prompt_invent_item("Adjust which item?", MT_INVLIST, -1);
-    if (prompt_failed(from_slot))
-        return;
+    if (from_slot == -1)
+    {
+        from_slot = prompt_invent_item("Adjust which item?", MT_INVLIST, -1);
+        if (prompt_failed(from_slot))
+            return;
 
-    mprf_nocap("%s", you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
+        mprf_nocap("%s", you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
+    }
 
-    to_slot = prompt_invent_item("Adjust to which letter? ",
-                                 MT_INVLIST,
-                                 -1,
-                                 false,
-                                 false);
+    const int to_slot = prompt_invent_item("Adjust to which letter? ",
+                                           MT_INVLIST,
+                                           -1,
+                                           false,
+                                           false);
     if (to_slot == PROMPT_ABORT
         || from_slot == to_slot)
     {

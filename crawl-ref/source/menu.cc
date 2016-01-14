@@ -2060,7 +2060,7 @@ bool formatted_scroller::process_key(int keyin)
     case CK_MOUSE_CMD:
     CASE_ESCAPE
         return false;
-    case ' ': case '+': case '=': case CK_PGDN: case '>': case '\'':
+    case ' ': case '+': case CK_PGDN: case '>': case '\'':
     case CK_MOUSE_B5:
     case CK_MOUSE_CLICK:
         repaint = page_down();
