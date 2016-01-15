@@ -2822,7 +2822,7 @@ static const struct spell_desc spelldata[] =
     SPTYP_CHARMS,
     SPFLAG_BATTLE | SPFLAG_UTILITY,
     1,
-    50,
+    25,
     -1, -1,
     1, 0,
     nullptr,
