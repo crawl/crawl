@@ -2334,10 +2334,12 @@ static bool _do_action(item_def &item, const vector<command_type>& actions, int 
 /**
  *  Describe any item in the game.
  *
- *  @param item the item to be described.
+ *  @param item       the item to be described.
+ *  @param fixup_desc a function (possibly null) to modify the
+ *                    description before it's displayed.
  *  @return whether to stay in the inventory menu afterwards.
  */
-bool describe_item(item_def &item)
+bool describe_item(item_def &item, function<void (string&)> fixup_desc)
 {
     if (!item.defined())
         return true;
@@ -2363,6 +2365,8 @@ bool describe_item(item_def &item)
     if (crawl_state.game_is_hints())
         desc += hints_describe_item(item);
 
+    if (fixup_desc)
+        fixup_desc(desc);
     // spellbooks & rods have their own UIs, so we don't currently support the
     // inscribe/drop/etc prompt UI for them.
     // ...it would be nice if we did, though.
