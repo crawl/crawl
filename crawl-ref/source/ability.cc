@@ -2802,6 +2802,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             mpr("You gain astral sight.");
         you.duration[DUR_SCRYING] = 100 + random2avg(you.piety * 2, 2);
         you.xray_vision = true;
+        viewwindow(true);
         break;
 
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
