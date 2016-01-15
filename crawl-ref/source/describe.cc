@@ -2026,9 +2026,8 @@ string get_item_description(const item_def &item, bool verbose,
         description << "\n" << origin_desc(item) << ".";
 
     // This information is obscure and differs per-item, so looking it up in
-    // a docs file you don't know to exist is tedious. On the other hand,
-    // it breaks the screen for people on very small terminals.
-    if (verbose && get_number_of_lines() >= 28)
+    // a docs file you don't know to exist is tedious.
+    if (verbose)
     {
         description << "\n\n" << "Stash search prefixes: "
                     << userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
