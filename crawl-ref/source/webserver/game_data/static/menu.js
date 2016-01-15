@@ -573,6 +573,8 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
             scroll_bottom_to_item(menu.last_visible, true);
         else
             scroll_to_item(menu.first_visible, true);
+        // scrolling might not call this, but still need to show/hide more
+        menu_scroll_handler();
     }
 
     function menu_scroll_handler()
@@ -717,7 +719,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
             $("#menu").css("font-family", family);
         }
 
-        client.center_element($("#menu"));
+        handle_size_change();
     });
 
     $(document).off("game_init.menu")
