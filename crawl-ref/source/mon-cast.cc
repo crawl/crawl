@@ -7519,7 +7519,7 @@ static void _throw_to(const monster &thrower, actor &victim,
             mprf("%s throws %s%s!",
                  (thrower_seen ? thrower_name.c_str() : "Something"),
                  (victim_was_seen ? victim_name.c_str() : "something"),
-                 (you.can_see(*vmon) ? "" : "out of view"));
+                 (you.can_see(*vmon) ? "" : " out of view"));
         }
     }
     victim.hurt(&thrower, dam, BEAM_MISSILE, KILLED_BY_BEING_THROWN, "", "",
