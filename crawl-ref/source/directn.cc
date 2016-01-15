@@ -561,7 +561,8 @@ void full_describe_view()
     vector<coord_def> list_features;
 
     // Grab all items known (or thought) to be in the stashes in view.
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+    for (radius_iterator ri(you.pos(),
+                            you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
         if (feat_stair_direction(grd(*ri)) != CMD_NO_CMD
             || feat_is_altar(grd(*ri)))
