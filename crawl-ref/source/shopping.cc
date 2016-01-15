@@ -1498,7 +1498,7 @@ void ShopMenu::resort()
              {
                  const bool id = shoptype_identifies_stock(shop.type);
                  return dynamic_cast<ShopEntry*>(a)->item->name(DESC_PLAIN, false, id)
-                        < dynamic_cast<ShopEntry*>(a)->item->name(DESC_PLAIN, false, id);
+                        < dynamic_cast<ShopEntry*>(b)->item->name(DESC_PLAIN, false, id);
              });
         break;
     case ORDER_TYPE:
