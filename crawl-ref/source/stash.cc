@@ -714,6 +714,7 @@ vector<stash_search_result> ShopInfo::matches_search(
             stash_search_result res;
             res.match = sname;
             res.item = item;
+            res.pos.pos = shop.pos;
             results.push_back(res);
         }
     }
