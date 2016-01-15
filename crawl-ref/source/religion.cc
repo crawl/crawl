@@ -2419,7 +2419,7 @@ static void _gain_piety_point()
 
     if (you_worship(GOD_BEOGH))
     {
-        // Every piety level change also affects AC from orcish gear.
+        // Every piety level change also affects AC.
         you.redraw_armour_class = true;
         // The player's symbol depends on Beogh piety.
         update_player_symbol();
