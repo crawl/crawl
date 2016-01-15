@@ -159,8 +159,6 @@ struct stash_search_result
     {
         return player_distance < ssr.player_distance;
     }
-
-    void show_menu() const;
 };
 
 class LevelStashes
@@ -281,7 +279,9 @@ private:
     bool display_search_results(vector<stash_search_result> &results,
                                 bool& sort_by_dist,
                                 bool& filter_useless,
-                                bool& default_execute);
+                                bool& default_execute,
+                                base_pattern* search,
+                                bool nohl);
     string stash_search_prompt();
 
 private:

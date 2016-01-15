@@ -1407,7 +1407,10 @@ void StashTracker::search_stashes()
         const bool again = display_search_results(results,
                                                   sort_by_dist,
                                                   filter_useless,
-                                                  default_execute);
+                                                  default_execute,
+                                                  search,
+                                                  csearch == "."
+                                                  || csearch == "..");
         if (!again)
             break;
     }
@@ -1521,7 +1524,9 @@ bool StashTracker::display_search_results(
     vector<stash_search_result> &results_in,
     bool& sort_by_dist,
     bool& filter_useless,
-    bool& default_execute)
+    bool& default_execute,
+    base_pattern* search,
+    bool nohl)
 {
     if (results_in.empty())
         return false;
@@ -1618,7 +1623,18 @@ bool StashTracker::display_search_results(
             stash_search_result *res =
                 static_cast<stash_search_result *>(sel[0]->data);
 
-            res->show_menu();
+            if (res->item.defined())
+            {
+                item_def it = res->item;
+                describe_item(it,
+                    [search, nohl](string& desc)
+                    {
+                        if (!nohl)
+                            desc = search->match_location(desc).annotate_string("lightcyan");
+                    });
+            }
+            else if (res->shop)
+                res->shop->show_menu(res->pos);
             continue;
         }
         break;
@@ -1805,15 +1821,4 @@ ST_ItemIterator ST_ItemIterator::operator ++ (int)
     const ST_ItemIterator copy = *this;
     ++(*this);
     return copy;
-}
-
-void stash_search_result::show_menu() const
-{
-    if (item.defined())
-    {
-        item_def it = item;
-        describe_item(it);
-    }
-    else if (shop)
-        shop->show_menu(pos);
 }
