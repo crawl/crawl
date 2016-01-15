@@ -3616,7 +3616,7 @@ static void _join_zin()
 /// What special things happen when you join a god?
 static const map<god_type, function<void ()>> on_join = {
     { GOD_ASHENZARI, []() { ash_check_bondage(); }},
-    { GOD_BEOGH, []() { update_player_symbol(); }},
+    { GOD_BEOGH, update_player_symbol },
     { GOD_CHEIBRIADOS, []() {
         simple_god_message(" begins to support your attributes as your "
                            "movement slows.");
@@ -3629,8 +3629,8 @@ static const map<god_type, function<void ()>> on_join = {
             for (monster_iterator mi; mi; ++mi)
                 mi->del_ench(ENCH_AWAKEN_FOREST);
     }},
-    { GOD_GOZAG, []() { _join_gozag(); }},
-    { GOD_JIYVA, []() { _join_jiyva(); }},
+    { GOD_GOZAG, _join_gozag },
+    { GOD_JIYVA, _join_jiyva },
     { GOD_LUGONU, []() {
         if (you.worshipped[GOD_LUGONU] == 0)
             gain_piety(20, 1, false);  // allow instant access to first power
@@ -3640,9 +3640,9 @@ static const map<god_type, function<void ()>> on_join = {
         mprf(MSGCH_GOD, "You can now gain magical power from killing.");
         pakellas_id_device_charges();
     }},
-    { GOD_RU, []() { _join_ru(); }},
-    { GOD_TROG, []() { _join_trog(); }},
-    { GOD_ZIN, []() { _join_zin(); }},
+    { GOD_RU, _join_ru },
+    { GOD_TROG, _join_trog },
+    { GOD_ZIN, _join_zin },
 };
 
 void join_religion(god_type which_god)
