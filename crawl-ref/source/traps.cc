@@ -507,7 +507,14 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         && (!m->will_trigger_shaft()
             || trig_knows && !mons_is_fleeing(m) && !m->pacified()))
     {
-            return;
+        return;
+    }
+
+    // Tentacles aren't real monsters, and shouldn't invoke magic traps.
+    if (m && mons_is_tentacle_or_tentacle_segment(m->type)
+        && category() != DNGN_TRAP_MECHANICAL)
+    {
+        return;
     }
 
     // Anything stepping onto a trap almost always reveals it.
