@@ -2371,8 +2371,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     // ...it would be nice if we did, though.
     if (item.has_spells())
     {
-        formatted_string fdesc;
-        fdesc.cprintf("%s", desc.c_str());
+        formatted_string fdesc(formatted_string::parse_string(desc));
         list_spellset(item_spellset(item), nullptr, &item, fdesc);
         // only continue the inventory loop if we didn't start memorizing a
         // spell & didn't destroy the item for amnesia.
