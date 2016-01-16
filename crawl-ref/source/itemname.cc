@@ -3354,6 +3354,7 @@ bool is_bad_item(const item_def &item, bool temp)
             return true;
         case RING_TELEPORTATION:
             return !(you.stasis() || crawl_state.game_is_sprint());
+        case RING_EVASION:
         case RING_PROTECTION:
         case RING_STRENGTH:
         case RING_DEXTERITY:
