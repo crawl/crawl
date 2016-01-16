@@ -1047,7 +1047,7 @@ by armour.
 Sap Magic spell
 
 Taints a targeted creature's ability to cast spells. Casting a spell while
-afflicted with this condition causes the target to lose control over their
+afflicted with this condition may cause the target to lose control over their
 magic, progressively hindering their chances of success as more spells are cast.
 %%%%
 Scattershot spell
