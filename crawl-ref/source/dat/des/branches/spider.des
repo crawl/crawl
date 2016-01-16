@@ -1669,7 +1669,6 @@ ENDMAP
 NAME: floodkiller_spider_rune_tomb
 PLACE: Spider:$
 TAGS: no_monster_gen
-WEIGHT: 5000
 ORIENT: south
 KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
 KFEAT: C = stone_wall
