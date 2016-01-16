@@ -181,7 +181,7 @@ function trove.get_trove_toll(e)
     return trove.get_toll_nopiety()
   else
     return trove.get_trove_toll_with_item(
-        trove.get_trove_item(e, 10000))
+        trove.get_trove_item(e, 1000))
   end
 end
 
@@ -194,7 +194,7 @@ function trove.get_toll_nopiety()
 end
 
 function trove.portal(e)
-    local toll = trove.get_trove_toll(e, 1000)
+    local toll = trove.get_trove_toll(e)
 
     local function stair ()
         return trove_marker  {
