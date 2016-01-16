@@ -2858,17 +2858,20 @@ void melee_attack::mons_apply_attack_flavour()
             defender->poison(attacker, dmg);
         }
 
-        int paralyse_roll = (damage_done > 4 ? 3 : 20);
-        if (attacker->type == MONS_WASP)
-            paralyse_roll += 3;
+        int paralyse_roll = attacker->type == MONS_HORNET ? 4 : 8;
 
-        const int flat_bonus  = attacker->type == MONS_HORNET ? 1 : 0;
         const bool strong_result = one_chance_in(paralyse_roll);
 
-        if (strong_result && defender->res_poison() <= 0)
-            defender->paralyse(attacker, flat_bonus + roll_dice(1, 3));
-        else if (strong_result || defender->res_poison() <= 0)
-            defender->slow_down(attacker, flat_bonus + roll_dice(1, 3));
+        if (strong_result
+            && !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
+        {
+            defender->paralyse(attacker, roll_dice(1, 3));
+        }
+        else if (strong_result
+                 || !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
+        {
+            defender->slow_down(attacker, roll_dice(1, 3));
+        }
 
         break;
     }
