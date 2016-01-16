@@ -1204,16 +1204,17 @@ Reading this scroll removes curses from the items you are using.
 %%%%
 scroll of silence
 
-This scroll eliminates all sound near the reader. This makes actions such as
-reading scrolls, casting spells or shouting impossible in the reader's
-vicinity. The oppressive, unnatural effect will greatly hamper any attempt to
-be stealthy.
+Eliminates all sound near the reader. This makes reading scrolls, casting
+spells, invoking divine abilities, or shouting impossible in the caster's
+vicinity. The scroll's oppressive, unnatural effect will greatly hamper
+stealth.
 
-Silence starts out with a radius depending on power, which will then shrink,
-eventually covering only the reader, before the effect times out. Some
-creatures, such as demons, cast magic without speaking and so will be
-unaffected, and those with innate magical abilities will also still be able to
-use them.
+Certain monsters have demonic or angelic abilities which can be activated
+without speaking, and innate magical or special abilities will also still be
+usable while silenced.
+
+The effect starts out with a large radius, which will then shrink, eventually
+covering only the reader, before it times out.
 %%%%
 scroll of summoning
 
