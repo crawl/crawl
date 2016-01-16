@@ -1299,9 +1299,19 @@ static string _describe_armour(const item_def &item, bool verbose)
         {
             const int evp = property(item, PARM_EVASION);
             description += "\n\nBase armour rating: "
-                        + to_string(property(item, PARM_AC))
-                        + "       Encumbrance rating: "
-                        + to_string(-evp / 10);
+                        + to_string(property(item, PARM_AC));
+            if (get_armour_slot(item) == EQ_BODY_ARMOUR)
+            {
+                description += "       Encumbrance rating: "
+                            + to_string(-evp / 10);
+            }
+            // Bardings reduce evasion by a fixed amount, and don't have any of
+            // the other effects of encumbrance.
+            else if (evp)
+            {
+                description += "       Evasion: "
+                            + to_string(evp / 30);
+            }
 
             // only display player-relevant info if the player exists
             if (crawl_state.need_save && get_armour_slot(item) == EQ_BODY_ARMOUR)
