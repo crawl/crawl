@@ -2475,7 +2475,7 @@ void melee_attack::mons_do_napalm()
     if (defender->res_sticky_flame())
         return;
 
-    if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
+    if (one_chance_in(3))
     {
         if (needs_message)
         {
@@ -2675,8 +2675,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ROT:
-        if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
-            rot_defender(damage_done > 5 ? 2 : 1);
+        if (one_chance_in(3))
+            rot_defender(1);
         break;
 
     case AF_FIRE:
@@ -2824,8 +2824,7 @@ void melee_attack::mons_apply_attack_flavour()
             }
         }
 
-        if (one_chance_in(10)
-            || (damage_done > 2 && one_chance_in(3)))
+        if (one_chance_in(3))
         {
             defender->confuse(attacker,
                               1 + random2(3+attacker->get_hit_dice()));
@@ -2833,7 +2832,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_DRAIN_XP:
-        if (one_chance_in(30) || (damage_done > 5 && coinflip()))
+        if (coinflip())
             drain_defender();
         break;
 
