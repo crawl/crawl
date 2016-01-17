@@ -698,8 +698,6 @@ vector<stash_search_result> ShopInfo::matches_search(
         res.shop = this;
         res.pos.pos = shop.pos;
         results.push_back(res);
-        // If the shop itself matches, don't show the items.
-        return results;
     }
 
     for (const item_def &item : shop.stock)
