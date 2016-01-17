@@ -1758,15 +1758,15 @@ ENDMAP
 NAME:   floodkiller_spider_rune_tomb
 PLACE:  Spider:$
 TAGS:   no_monster_gen
-ORIENT: south
-NSUBST: N = 4:. / *:c
+ORIENT: east
+NSUBST: N = 4:. / c
 TILE:   M = wall_tomb
 COLOUR: M = yellow
 KFEAT:  M = stone_wall
 KFEAT:  P = clear_rock_wall
 TILE:   c = wall_sandstone
 TILE:   P = dngn_sarcophagus_pedestal_left
-FTILE:  1234567+$O.EGHKNPS = floor_sandstone:20 / none
+FTILE:  23+$OEGHNPS. = floor_sandstone:20 / none
 ITEM:   gold w:40 / potion of ambrosia ident:type
 KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
 MONS:   death scarab
@@ -1777,52 +1777,42 @@ MONS:   jumping spider spectre w:20 / tarantella spectre w:20 \
         / tarantella zombie / redback zombie / hornet zombie w:5
 MONS:   jumping spider / tarantella / redback / wolf spider w:5 \
         / hornet w:5 / orb spider w:3 / spark wasp w:2
-MONS:   emperor scorpion
-MONS:   ghost moth
-MONS:   moth of wrath
-NSUBST: S = 8:1 / *:.
-NSUBST: H = 2:5 / 1:6 / 1:7 / *:K
-SUBST:  K = 2 5:4 6:2 7:2 E:20
-SUBST:  E = 3 4:30
+MONS:   emperor scorpion, ghost moth, moth of wrath
+NSUBST: S = 8:1 / ., H = 2:5 / 1:6 / 1:7 / K
+SUBST:  K = 2 5:4 6:2 7:2 E:20, E = 3 4:30
 : set_feature_name("clear_rock_wall", "sarcophagus")
 MAP
-         @@@@@@@@@@@@@@@
-         ...EWWWWWWWE...
-.............ccWWWWc.............
-.G..G..G..G.ccccWWccc.G..G..G..G.
-............ccccWWccc............
-.G..G..G..G..ccWWcccc.G..G..G..G.
-............cccWWccc.............
-xcccccccccccccWWWWccccccccccccccx
-xcWW.E..x...WWWWWWWW..ExE.WWW..cx
-xcWW.x.......WWWWWx......WWWW..cx
-xcWW.E.....Wx........x...WWWWx.cx
-xcxWW.....................WW...cx
-xc.WW.......E.EHE.E.......x....cx
-xc.WWx.ccccccccccccccccccc....Wcx
-xcEWWW.c......x........x.c.E.WWcx
-xc..WW.c.x..E..E..E......c..WWWcx
-xcE..WWc...H....H....H...cE.WxWcx
-xc...Wxc...MMM+++++MMM...c..WWWcx
-xc.H.WWc...MS.......SM..xc.H.WWcx
-xc.xWWWc...M.3.S.S.3.M...c..x.Wcx
-xc..WWWc...M.S3.S.3S.M...c....Wcx
-xc.EWWWc..xM23.S3S.32M...c..E..cx
-xc.WWW.c...MS..2.2..SMx..c.....cx
-xcHWW.xc...M.S.S.S.S.M...cW.x.Hcx
-xcEWW..c...MSMMMPMMMSM...cW...Ecx
-xcWxW..cx..MdSddOddSdM...cWW...cx
-xcWWW..c.HEMMMMMMMMMMMEH.cxW...cx
-xcWW...c..E...N...Nx..E..cWW...cx
-xcW.x..c.H.E..N...N..E.x.cWWW.xcx
-xc.....c.x...WN...N....H.cWWWW.cx
-xc....xc.E...WN...NWW.E..c.WWW.cx
-xc.....ccccccNNWWWNNcccccc.WxWWcx
-xc.H........WWWWWWWW........WWWcx
-xc.....xWWWWWWxWWWWWWWx.......Hcx
-xc..WWWWWWWWWWWWWWxWWWW........cx
-xcWWxWWW..E..WWW.E......E.....xcx
-xcWWWWE..H.x.E.......E.H..xE...cx
-xcccccccccccccccccccccccccccccccx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  .....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  .G.G.cccccccccccccccccccccccccccccccx
+  .....c.....WWWWWWWW..HE...x..WWH.x.cx
+  .....c..x...WWxWW..........WWWW....cx
+  .G.G.cWWW....WWW.x.E.x....WWWxW....cx
+  .....cWWWW..E...H......WWWWWWW....Ecx
+  .....cWWWWx...E......WWWxWWW......xcx
+  .G.G.c.WW..ccccccccccccccccccc.....cx
+  .....cE....c....x............c...E.cx
+@......cx....cx...........H.xH.c....Hcx
+@..G.G.cE....c........x...EE..Ec.xW..cx
+@......c..x..c..HMMMMMMMMMM.E..c.WW.Ecx
+@E.ccc.c.....c...MS..2S.SdM...Wc.WW..cx
+@WccccccW....c...M.3S3.SMSMx..WNWWW..cx
+@WWcccccWx..Ec.E.+..3...MdMNNNNNWWx..cx
+@WWWWccWWW...c...+.S.S2SMdM....WWWWE.cx
+@WWWWWWWWW..Ec..H+..S3..POM....WWWW..cx
+@WWccWWWWW..Hc.E.+.S.S2SMdM....WWWWW.cx
+@WcccccWWW..Ecx..+..3...MdMNNNNNWxWW.cx
+@WccccccWW...c...M.3S3.SMSM..WWNWWWWEcx
+@E.cc.ccW.x.Ec.E.MS..2S.SdM....cWWW..cx
+@......c..W..c..HMMMMMMMMMM.E..c.WW.xcx
+@..G.G.c.....c.......x....EE...c.WWE.cx
+@......c.....c.x..........H.HxEc.WW.Hcx
+  .....cx....c...........x.....c.WW..cx
+  .G.G.c.....ccccccccccccccccccc.xWW.cx
+  .....c........WxWWWW.x......x...WWEcx
+  .....cExE..xWWWWWWWWW...........WWWcx
+  .G.G.c...WWWWW...WWWWWWWW.x.....WxWcx
+  .....cWWWWWWW...Hx.EWWWxWW....H..WWcx
+  .....cWWWx..E.E......HEWWWW......WWcx
+  .G.G.cccccccccccccccccccccccccccccccx
+  .....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
