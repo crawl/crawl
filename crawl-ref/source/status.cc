@@ -498,7 +498,7 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case STATUS_MAGIC_SAPPED:
-        if (you.duration[DUR_MAGIC_SAPPED] > 50 * BASELINE_DELAY)
+        if (you.props[SAP_MAGIC_KEY].get_int() >= 3)
         {
             inf->light_colour = RED;
             inf->light_text   = "-Wiz";
@@ -506,7 +506,7 @@ bool fill_status_info(int status, status_info* inf)
             inf->long_text    = "Your control over your magic has "
                                 "been greatly sapped.";
         }
-        else if (you.duration[DUR_MAGIC_SAPPED] > 20 * BASELINE_DELAY)
+        else if (you.props[SAP_MAGIC_KEY].get_int() == 2)
         {
             inf->light_colour = LIGHTRED;
             inf->light_text   = "-Wiz";
@@ -514,7 +514,7 @@ bool fill_status_info(int status, status_info* inf)
             inf->long_text    = "Your control over your magic has "
                                 "been significantly sapped.";
         }
-        else if (you.duration[DUR_MAGIC_SAPPED])
+        else if (you.props[SAP_MAGIC_KEY].get_int() == 1)
         {
             inf->light_colour = YELLOW;
             inf->light_text   = "-Wiz";

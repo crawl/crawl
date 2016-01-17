@@ -1226,7 +1226,7 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
     if (item_index == NON_ITEM)
         return true;
 
-    item_def* pitem = &mitm[item_index];
+    item_def& pitem = mitm[item_index];
 
     // Unequip equipped items before dropping them; unequip() prevents
     // cursed items from being removed.
@@ -1236,23 +1236,24 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
         || eslot == MSLOT_JEWELLERY
         || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(this))
     {
-        if (!unequip(*pitem, msg))
+        if (!unequip(pitem, msg))
             return false;
         was_unequipped = true;
     }
+    const bool was_wand = pitem.base_type == OBJ_WANDS;
 
-    if (pitem->flags & ISFLAG_SUMMONED)
+    if (pitem.flags & ISFLAG_SUMMONED)
     {
         if (msg)
         {
             mprf("%s %s as %s drops %s!",
-                 pitem->name(DESC_THE).c_str(),
-                 summoned_poof_msg(this, *pitem).c_str(),
+                 pitem.name(DESC_THE).c_str(),
+                 summoned_poof_msg(this, pitem).c_str(),
                  name(DESC_THE).c_str(),
-                 pitem->quantity > 1 ? "them" : "it");
+                 pitem.quantity > 1 ? "them" : "it");
         }
 
-        item_was_destroyed(*pitem);
+        item_was_destroyed(pitem);
         destroy_item(item_index);
     }
     else
@@ -1260,20 +1261,21 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
         if (msg)
         {
             mprf("%s drops %s.", name(DESC_THE).c_str(),
-                 pitem->name(DESC_A).c_str());
+                 pitem.name(DESC_A).c_str());
         }
+        pitem.props[DROPPER_MID_KEY].get_int() = mid;
 
         if (!move_item_to_grid(&item_index, pos(), swimming()))
         {
             // Re-equip item if we somehow failed to drop it.
             if (was_unequipped)
-                equip(*pitem, msg);
+                equip(pitem, msg);
 
             return false;
         }
     }
 
-    if (props.exists("wand_known") && msg && pitem->base_type == OBJ_WANDS)
+    if (props.exists("wand_known") && msg && was_wand)
         props.erase("wand_known");
 
     inv[eslot] = NON_ITEM;
@@ -1735,58 +1737,55 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
     if (!force && !wants_armour(item))
         return false;
 
+    const monster_type genus = mons_genus(mons_species(true));
+    const monster_type base_type = mons_is_zombified(this) ? base_monster
+                                                           : type;
     equipment_type eq = EQ_NONE;
 
     // HACK to allow nagas/centaurs to wear bardings. (jpeg)
     switch (item.sub_type)
     {
     case ARM_NAGA_BARDING:
-        if (mons_genus(type) == MONS_NAGA
-            || mons_genus(type) == MONS_SALAMANDER)
-        {
+        if (genus == MONS_NAGA || genus == MONS_SALAMANDER)
             eq = EQ_BODY_ARMOUR;
-        }
         break;
     case ARM_CENTAUR_BARDING:
-        if (mons_species(type) == MONS_CENTAUR
-            || mons_species(type) == MONS_YAKTAUR)
-        {
+        if (genus == MONS_CENTAUR || genus == MONS_YAKTAUR)
             eq = EQ_BODY_ARMOUR;
-        }
         break;
     // And another hack or two...
     case ARM_HAT:
-        if (type == MONS_GASTRONOK || mons_genus(type) == MONS_OCTOPODE)
+        if (base_type == MONS_GASTRONOK || genus == MONS_OCTOPODE)
             eq = EQ_BODY_ARMOUR;
         break;
     case ARM_CLOAK:
-        if (type == MONS_MAURICE
-            || type == MONS_NIKOLA
-            || type == MONS_CRAZY_YIUF
-            || mons_genus(type) == MONS_DRACONIAN)
+        if (base_type == MONS_MAURICE
+            || base_type == MONS_NIKOLA
+            || base_type == MONS_CRAZY_YIUF
+            || genus == MONS_DRACONIAN)
         {
             eq = EQ_BODY_ARMOUR;
         }
         break;
     case ARM_GLOVES:
-        if (type == MONS_NIKOLA)
+        if (base_type == MONS_NIKOLA)
             eq = EQ_SHIELD;
         break;
     case ARM_HELMET:
-        if (type == MONS_ROBIN)
+        if (base_type == MONS_ROBIN)
             eq = EQ_SHIELD;
         break;
     default:
         eq = get_armour_slot(item);
 
-        if (eq == EQ_BODY_ARMOUR && mons_genus(type) == MONS_DRACONIAN)
+        if (eq == EQ_BODY_ARMOUR && genus == MONS_DRACONIAN)
             return false;
 
-        if (eq != EQ_HELMET && type == MONS_GASTRONOK)
+        if (eq != EQ_HELMET && base_type == MONS_GASTRONOK)
             return false;
 
         if (eq != EQ_HELMET && eq != EQ_SHIELD
-            && mons_genus(type) == MONS_OCTOPODE)
+            && genus == MONS_OCTOPODE)
         {
             return false;
         }
@@ -2125,14 +2124,24 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
         {
             return false;
         }
-
-        // There are fairly serious problems with monsters being able to pick
-        // up items you've seen, mostly in terms of tediously being able to
-        // move everything away from them.
-        if (testbits(item.flags, ISFLAG_SEEN))
+        // Keep neutral, charmed, and friendly monsters from
+        // picking up stuff.
+        if ((neutral()
+             || you_worship(GOD_JIYVA) && mons_is_slime(this)
+             || has_ench(ENCH_CHARM) || has_ench(ENCH_HEXED)
+             || friendly()
+        // Monsters being able to pick up items you've seen encourages
+        // tediously moving everything away from a place where they could use
+        // them.
+             || testbits(item.flags, ISFLAG_SEEN))
+        // ...but it's ok if it dropped the item itself.
+            && !(item.props.exists(DROPPER_MID_KEY)
+                 && item.props[DROPPER_MID_KEY].get_int() == (int)mid))
+        {
             return false;
+        }
 
-        if (!wandering)
+        if (!wandering && !wont_attack())
         {
             // These are not important enough for pickup when
             // seeking, fleeing etc.
@@ -5673,8 +5682,11 @@ bool monster::do_shaft()
         return false;
 
     // Tentacles are immune to shafting
-    if (mons_is_tentacle_or_tentacle_segment(type))
+    if (mons_is_tentacle_or_tentacle_segment(type)
+        || type == MONS_PLAYER_GHOST)
+    {
         return false;
+    }
 
     // Handle instances of do_shaft() being invoked magically when
     // the monster isn't standing over a shaft.
@@ -6036,8 +6048,6 @@ bool monster::can_evoke_jewellery(jewellery_type jtype) const
 
     switch (jtype)
     {
-        case RING_TELEPORTATION:
-            return !has_ench(ENCH_TP);
         case AMU_RAGE:
             return can_go_berserk();
         default:
@@ -6051,8 +6061,6 @@ bool monster::should_evoke_jewellery(jewellery_type jtype) const
 {
     switch (jtype)
     {
-    case RING_TELEPORTATION:
-        return caught() || mons_is_fleeing(this) || pacified();
     case AMU_RAGE:
         // this implies !berserk()
         return !has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
@@ -6080,10 +6088,6 @@ bool monster::evoke_jewellery_effect(jewellery_type jtype)
     {
     case AMU_RAGE:
         enchant_actor_with_flavour(this, this, BEAM_BERSERK);
-        break;
-
-    case RING_TELEPORTATION:
-        teleport(false);
         break;
 
     default:
@@ -6167,7 +6171,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         return;
 
 
-    if (mons_species(type) == MONS_BUSH
+    if (mons_species() == MONS_BUSH
         && res_fire() < 0 && flavour == BEAM_FIRE
         && damage > 8 && x_chance_in_y(damage, 20))
     {

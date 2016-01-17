@@ -1597,153 +1597,46 @@ static bool _animatable_remains(const item_def& item)
             || mons_skeleton(item.mon_type));
 }
 
-// Try to equip the skeleton/zombie with the objects it died with. This
-// excludes holy items, items which were dropped by the player onto the
-// corpse, and corpses which were picked up and moved by the player, so
-// the player can't equip their undead slaves with items of their
-// choice.
-//
-// The item selection logic has one problem: if a first monster without
-// any items dies and leaves a corpse, and then a second monster with
-// items dies on the same spot but doesn't leave a corpse, then the
-// undead can be equipped with the second monster's items if the second
-// monster is either of the same type as the first, or if the second
-// monster wasn't killed by the player or a player's pet.
-static void _equip_undead(const coord_def &a, int corps, monster *mon, monster_type monnum)
+/**
+ * Equip the dearly departed with its ex-possessions.
+ *
+ * This excludes holy items (not wieldable by the undead, and items which were
+ * dropped onto the square, so the player can't equip their undead slaves with
+ * items of their choice.
+ *
+ * @param a      where to pull items from
+ * @param corpse the corpse of the dead monster.
+ * @param mon    the zombie/skeleton/etc. being reequipped.
+ */
+static void _equip_undead(const coord_def &a, const item_def& corpse, monster *mon)
 {
-    if (mons_class_itemuse(monnum) < MONUSE_STARTING_EQUIPMENT)
+    if (!corpse.props.exists(MONSTER_MID))
         return;
-
-    // If the player picked up and dropped the corpse, then all its
-    // original equipment fell off.
-    if (mitm[corps].flags & ISFLAG_DROPPED)
-        return;
-
-    // A monster's corpse is last in the linked list after its items,
-    // so (for example) the first item after the second-to-last corpse
-    // is the first item belonging to the last corpse.
-    int objl      = igrd(a);
-    int first_obj = NON_ITEM;
-
-    while (objl != NON_ITEM && objl != corps)
+    for (stack_iterator si(a); si; ++si)
     {
-        item_def item(mitm[objl]);
-
-        if (item.base_type != OBJ_CORPSES && first_obj == NON_ITEM)
-            first_obj = objl;
-
-        objl = item.link;
-    }
-
-    // If the corpse was being drained when it was raised the item is
-    // already destroyed.
-    ASSERT(objl == corps || objl == NON_ITEM);
-
-    if (first_obj == NON_ITEM)
-        return;
-
-    // Iterate backwards over the list, since the items earlier in the
-    // linked list were dropped most recently and hence more likely to
-    // be items the monster didn't die with.
-    vector<int> item_list;
-    objl = first_obj;
-    while (objl != NON_ITEM && objl != corps)
-    {
-        item_list.push_back(objl);
-        objl = mitm[objl].link;
-    }
-
-    for (int i = item_list.size() - 1; i >= 0; --i)
-    {
-        objl = item_list[i];
-        item_def &item(mitm[objl]);
-
-        // Stop equipping monster if the item probably didn't originally
-        // belong to the monster.
-        if ((origin_known(item) && item.orig_monnum != monnum)
-            || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN))
-            || item.base_type == OBJ_CORPSES)
+        if (!si->props.exists(DROPPER_MID_KEY)
+            || si->props[DROPPER_MID_KEY].get_int()
+               != corpse.props[MONSTER_MID].get_int())
         {
-            return;
+            continue;
         }
 
         // Don't equip the undead with holy items.
-        if (is_holy_item(item))
+        if (is_holy_item(*si))
             continue;
 
-        mon_inv_type mslot;
-
-        switch (item.base_type)
+        // Stupid undead can't use most items.
+        if (si->base_type != OBJ_WEAPONS
+            && si->base_type != OBJ_STAVES
+            && si->base_type != OBJ_RODS
+            && si->base_type != OBJ_ARMOUR
+            || is_range_weapon(*si))
         {
-        case OBJ_WEAPONS:
-        case OBJ_STAVES:
-        case OBJ_RODS:
-        {
-            const bool weapon = mon->inv[MSLOT_WEAPON] != NON_ITEM;
-            const bool alt_weapon = mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM;
-
-            if ((weapon && !alt_weapon) || (!weapon && alt_weapon))
-                mslot = !weapon ? MSLOT_WEAPON : MSLOT_ALT_WEAPON;
-            else
-                mslot = MSLOT_WEAPON;
-
-            // Stupid undead can't use ranged weapons.
-            if (!is_range_weapon(item))
-                break;
-
             continue;
         }
-
-        case OBJ_ARMOUR:
-            mslot = equip_slot_to_mslot(get_armour_slot(item));
-
-            // A piece of armour which can't be worn indicates that this
-            // and further items weren't the equipment the monster died
-            // with.
-            if (mslot == NUM_MONSTER_SLOTS)
-                return;
-            break;
-
-        // Stupid undead can't use missiles.
-        case OBJ_MISSILES:
-            continue;
-
-        // Stupid undead can't use gold.
-        case OBJ_GOLD:
-            continue;
-
-        // Stupid undead can't use wands.
-        case OBJ_WANDS:
-            continue;
-
-        // Stupid undead can't use scrolls.
-        case OBJ_SCROLLS:
-            continue;
-
-        // Stupid undead can't use potions.
-        case OBJ_POTIONS:
-            continue;
-
-        // Stupid undead can't use jewellery.
-        case OBJ_JEWELLERY:
-            continue;
-
-        // Stupid undead can't use miscellaneous objects.
-        case OBJ_MISCELLANY:
-            continue;
-
-        default:
-            continue;
-        }
-
-        // Two different items going into the same slot indicate that
-        // this and further items weren't equipment the monster died
-        // with.
-        if (mon->inv[mslot] != NON_ITEM)
-            return;
 
         unwind_var<int> save_speedinc(mon->speed_increment);
-        mon->pickup_item(mitm[objl], false, true);
+        mon->pickup_item(*si, false, true);
     }
 }
 
@@ -1879,7 +1772,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     }
 
     // Re-equip the zombie.
-    _equip_undead(pos, corps, mons, monnum);
+    if (mons_class_itemuse(monnum) >= MONUSE_STARTING_EQUIPMENT)
+        _equip_undead(pos, item, mons);
 
     // Destroy the monster's corpse, as it's no longer needed.
     item_was_destroyed(item);

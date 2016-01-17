@@ -1240,9 +1240,7 @@ static const PotionEffect* potion_effects[] =
     &PotionInvisibility::instance(),
 #if TAG_MAJOR_VERSION == 34
     &PotionPorridge::instance(),
-#endif
     &PotionDegeneration::instance(),
-#if TAG_MAJOR_VERSION == 34
     &PotionDecay::instance(),
     &PotionWater::instance(),
 #endif

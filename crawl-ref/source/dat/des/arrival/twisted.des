@@ -173,15 +173,14 @@ KMONS: M = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
 KMONS: N = human zombie / elf zombie / orc zombie / naga zombie / ogre zombie / \
            centaur zombie / draconian zombie / minotaur zombie / troll zombie / \
            kobold zombie / mummy / spriggan zombie / merfolk zombie / \
-           dwarf zombie / felid zombie / octopode zombie / formicid zombie / \
-           vine stalker zombie
+           dwarf zombie / felid zombie / octopode zombie / formicid zombie
 # Player monsters, skeleton versions (octopodes and formicids drop out because
 # they have no skeletons):
 KMONS: O = human skeleton / elf skeleton / orc skeleton / naga skeleton / \
            centaur skeleton / draconian skeleton / ogre skeleton / \
            minotaur skeleton / troll skeleton / kobold skeleton / mummy / \
            spriggan skeleton / dwarf skeleton / merfolk skeleton / \
-           felid skeleton / vine stalker skeleton
+           felid skeleton
 # And now for something completely different (if any of these turn out to be
 # able to escape or project spells out of their cells, they should be removed):
 KMONS: Q = orb of fire / ice dragon / shadow dragon / iron dragon / \
@@ -917,7 +916,7 @@ KMASK: uU = no_item_gen
 : -- The corpseless. Before the game starts, you.monster() is "program bug".
 : if (not crawl.game_started()) or you.race() == "Vampire"
 :     or you.race() == "Mummy" or you.race() == "Ghoul"
-:     or you.race() == "Gargoyle" then
+:     or you.race() == "Gargoyle" or you.race() == "Vine Stalker" then
 :   yourcorpse = "human corpse"
 :   yourskel = "human skeleton"
 : elseif you.race() == "Formicid" or you.race() == "Octopode" then

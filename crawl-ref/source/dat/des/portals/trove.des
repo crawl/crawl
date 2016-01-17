@@ -134,7 +134,7 @@ function trove.get_trove_item(e, value, base_item)
       table.insert(pots, {base="potion", type="haste", quant=3+d(3)+d(2)})
     end
     if you.race() ~= "Ghoul" then
-      table.insert(pots, {base="potion", type="cure mutation", quant=2})
+      table.insert(pots, {base="potion", type="cure mutation", quant=1+d(3)})
     end
 
     for _, toll in ipairs(pots) do
@@ -181,7 +181,7 @@ function trove.get_trove_toll(e)
     return trove.get_toll_nopiety()
   else
     return trove.get_trove_toll_with_item(
-        trove.get_trove_item(e, 10000))
+        trove.get_trove_item(e, 1000))
   end
 end
 
@@ -194,7 +194,7 @@ function trove.get_toll_nopiety()
 end
 
 function trove.portal(e)
-    local toll = trove.get_trove_toll(e, 1000)
+    local toll = trove.get_trove_toll(e)
 
     local function stair ()
         return trove_marker  {

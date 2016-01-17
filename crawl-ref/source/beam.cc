@@ -2622,19 +2622,19 @@ void bolt::affect_endpoint()
         break;
 
     case SPELL_BLINKBOLT:
-        if (!agent() || !agent()->alive())
+    {
+        actor *act = agent(true); // use orig actor even when reflected
+        if (!act || !act->alive())
             return;
 
         for (vector<coord_def>::reverse_iterator citr = path_taken.rbegin();
              citr != path_taken.rend(); ++citr)
         {
-            if (agent()->is_habitable(*citr) &&
-                agent()->blink_to(*citr, false))
-            {
+            if (act->is_habitable(*citr) && act->blink_to(*citr, false))
                 return;
-            }
         }
         return;
+    }
 
     case SPELL_SEARING_BREATH:
         if (!path_taken.empty())
@@ -3297,7 +3297,7 @@ bool bolt::misses_player()
     {
         if (hit_verb.empty())
             hit_verb = engulfs ? "engulfs" : "hits";
-        if (flavour != BEAM_VISUAL)
+        if (flavour != BEAM_VISUAL && !is_enchantment())
             mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
         return false;
     }
@@ -5659,12 +5659,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                       MONS_HELL_HOG : mon->holiness() & MH_HOLY ?
                       MONS_HOLY_SWINE : MONS_HOG))
         {
-            // If the monster was a Beogh follower with gifted equipment,
-            // it just dropped that equipment. Allow re-gifting once it
-            // converts back.
-            orig_mon.props.erase(BEOGH_WPN_GIFT_KEY);
-            orig_mon.props.erase(BEOGH_ARM_GIFT_KEY);
-            orig_mon.props.erase(BEOGH_SH_GIFT_KEY);
             obvious_effect = true;
 
             // Don't restore items to monster if it reverts.

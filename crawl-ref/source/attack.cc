@@ -1735,8 +1735,7 @@ bool attack::apply_damage_brand(const char *what)
         // AF_CONFUSE.
         if (defender->is_player())
         {
-            if (one_chance_in(10)
-                || (damage_done > 2 && one_chance_in(3)))
+            if (one_chance_in(3))
             {
                 defender->confuse(attacker,
                                   1 + random2(3+attacker->get_hit_dice()));

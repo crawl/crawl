@@ -2633,6 +2633,13 @@ bool recruit_mercenary(int mid)
     }
 
     simple_monster_message(mon, " joins your ranks!");
+    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+    {
+        const int item = mon->inv[i];
+        if (item != NON_ITEM)
+            mitm[item].flags &= ~ISFLAG_SUMMONED;
+    }
+    mon->flags &= ~MF_HARD_RESET;
     mon->attitude = ATT_FRIENDLY;
     mons_att_changed(mon);
     take_note(Note(NOTE_MESSAGE, 0, 0, message), true);

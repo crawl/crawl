@@ -1992,24 +1992,10 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    if (igrd(mons->pos()) != NON_ITEM
-        && (mons_itemuse(mons) >= MONUSE_WEAPONS_ARMOUR
-            || mons_eats_items(mons)))
+    if (_handle_pickup(mons))
     {
-        // Keep neutral, charmed, summoned, and friendly monsters from
-        // picking up stuff.
-        if ((!mons->neutral() && !mons->has_ench(ENCH_CHARM)
-             && !mons->has_ench(ENCH_HEXED)
-             || (you_worship(GOD_JIYVA) && mons_is_slime(mons)))
-            && !mons->is_summoned() && !mons->is_perm_summoned()
-            && !mons->friendly())
-        {
-            if (_handle_pickup(mons))
-            {
-                DEBUG_ENERGY_USE("handle_pickup()");
-                return;
-            }
-        }
+        DEBUG_ENERGY_USE("handle_pickup()");
+        return;
     }
 
     // Lurking monsters only stop lurking if their target is right
@@ -2911,8 +2897,13 @@ static bool _monster_eat_item(monster* mons, bool nearby)
 
 static bool _handle_pickup(monster* mons)
 {
-    if (mons->asleep() || mons->submerged())
+    if (igrd(mons->pos()) == NON_ITEM
+        // Summoned monsters never pick anything up.
+        || mons->is_summoned() || mons->is_perm_summoned()
+        || mons->asleep() || mons->submerged())
+    {
         return false;
+    }
 
     // Flying over water doesn't let you pick up stuff. This is inexact, as
     // a merfolk could be flying, but that's currently impossible except for
@@ -2928,27 +2919,27 @@ static bool _handle_pickup(monster* mons)
     if (mons_eats_items(mons) && _monster_eat_item(mons, nearby))
         return false;
 
-    if (mons_itemuse(mons) >= MONUSE_WEAPONS_ARMOUR)
+    if (mons_itemuse(mons) < MONUSE_WEAPONS_ARMOUR)
+        return false;
+
+    // Note: Monsters only look at stuff near the top of stacks.
+    //
+    // XXX: Need to put in something so that monster picks up
+    // multiple items (e.g. ammunition) identical to those it's
+    // carrying.
+    //
+    // Monsters may now pick up up to two items in the same turn.
+    // (jpeg)
+    for (stack_iterator si(mons->pos()); si; ++si)
     {
-        // Note: Monsters only look at stuff near the top of stacks.
-        //
-        // XXX: Need to put in something so that monster picks up
-        // multiple items (e.g. ammunition) identical to those it's
-        // carrying.
-        //
-        // Monsters may now pick up up to two items in the same turn.
-        // (jpeg)
-        for (stack_iterator si(mons->pos()); si; ++si)
-        {
-            if (si->flags & ISFLAG_NO_PICKUP)
-                continue;
+        if (si->flags & ISFLAG_NO_PICKUP)
+            continue;
 
-            if (mons->pickup_item(*si, nearby, false))
-                count_pickup++;
+        if (mons->pickup_item(*si, nearby, false))
+            count_pickup++;
 
-            if (count_pickup > 1 || coinflip())
-                break;
-        }
+        if (count_pickup > 1 || coinflip())
+            break;
     }
 
     return count_pickup > 0;
