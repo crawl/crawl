@@ -1758,7 +1758,7 @@ ENDMAP
 NAME:   floodkiller_spider_rune_tomb
 PLACE:  Spider:$
 TAGS:   no_monster_gen
-ORIENT: south
+ORIENT: east
 NSUBST: N = 4:. / c
 TILE:   M = wall_tomb
 COLOUR: M = yellow
