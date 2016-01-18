@@ -105,8 +105,8 @@ As for specific differences, the most important are probably the following:
 
 * Resistances can be gained via mutations or items, never through eating.
 
-* Praying is mostly used to offer items or corpses to gods who'll accept
-  them. To make use of divine powers use the 'a'bility command.
+* Praying is used to worship a god at an altar or to offer corpses to gods
+  who'll accept them. To make use of divine powers use the 'a'bility command.
 
 * There are inevitable deaths, but new players can win without spoilers, if
   they learn from their mistakes. Very good players can win several consecutive
@@ -310,7 +310,7 @@ might also stumble upon artefacts which come in two varieties:
   special effects or unique abilities that are not available elsewhere.
 
 Neither of these types can be enchanted or branded, either temporarily or
-permanently, nor can they be corroded by acid.
+permanently.
 %%%%
 Q:interact
 
