@@ -268,8 +268,8 @@ static const ability_def Ability_List[] =
     { ABIL_YRED_ENSLAVE_SOUL, "Enslave Soul", 8, 0, 150, 4, abflag::NONE },
 
     // Okawaru
-    { ABIL_OKAWARU_HEROISM, "Heroism", 2, 0, 50, 2, abflag::NONE },
-    { ABIL_OKAWARU_FINESSE, "Finesse", 5, 0, 100, 4, abflag::NONE },
+    { ABIL_OKAWARU_HEROISM, "Heroism", 2, 0, 50, 1, abflag::NONE },
+    { ABIL_OKAWARU_FINESSE, "Finesse", 5, 0, 100, 3, abflag::NONE },
 
     // Makhleb
     { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction",
@@ -2370,8 +2370,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         you.increase_duration(DUR_HEROISM,
             player_adjust_invoc_power(
-                35 + random2(you.skill(SK_INVOCATIONS, 8))),
-            80);
+                10 + random2avg(you.skill(SK_INVOCATIONS, 6), 2)),
+            100);
         you.redraw_evasion      = true;
         you.redraw_armour_class = true;
         break;
@@ -2390,8 +2390,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         you.increase_duration(DUR_FINESSE,
             player_adjust_invoc_power(
-                40 + random2(you.skill(SK_INVOCATIONS, 8))),
-            80);
+                10 + random2avg(you.skill(SK_INVOCATIONS, 6), 2)),
+            100);
 
         did_god_conduct(DID_HASTY, 8); // Currently irrelevant.
         break;
