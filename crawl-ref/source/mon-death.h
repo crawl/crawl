@@ -16,6 +16,8 @@
 
 #define MONSTER_DIES_LUA_KEY "monster_dies_lua_key"
 
+#define ORC_CORPSE_KEY "orc_corpse"
+
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
                      || (x) == KILL_YOU_CONF)
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)
