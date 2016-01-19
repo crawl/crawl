@@ -7183,6 +7183,19 @@ beogh_converted_orc_speech_battle
 
 @Subjective@ yells, "Beogh is my god, I swear it!"
 %%%%
+# these are actually used even if the orc previously was allied
+beogh_converted_orc_resurrection
+
+@The_monster@ shouts, "You saved me!"
+
+@The_monster@ says, "You really are the Messiah."
+
+@The_monster@ thanks you for bringing @objective@ back to life.
+
+@The_monster@ says, "I knew I could rely on you."
+
+@The_monster@ says, "Now I can live to fight another day."
+%%%%
 ########################################################
 # Maybe use different speech if converted by a follower.
 ########################################################

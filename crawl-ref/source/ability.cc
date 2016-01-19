@@ -334,6 +334,8 @@ static const ability_def Ability_List[] =
       2, 0, 50, 0, abflag::NONE },
     { ABIL_BEOGH_GIFT_ITEM, "Give Item to Named Follower",
       0, 0, 0, 0, abflag::NONE },
+    { ABIL_BEOGH_RESURRECTION, "Resurrection",
+      0, 0, 0, generic_cost::fixed(35), abflag::NONE },
 
     // Jiyva
     { ABIL_JIYVA_CALL_JELLY, "Request Jelly", 2, 0, 20, 1, abflag::NONE },
@@ -907,6 +909,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ASHENZARI_CURSE:
     case ABIL_ASHENZARI_SCRYING:
     case ABIL_BEOGH_GIFT_ITEM:
+    case ABIL_BEOGH_RESURRECTION:
     case ABIL_JIYVA_CALL_JELLY:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_JIYVA_JELLY_PARALYSE:
@@ -2688,6 +2691,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_BEOGH_GIFT_ITEM:
         if (!beogh_gift_item())
+            return SPRET_ABORT;
+        break;
+
+    case ABIL_BEOGH_RESURRECTION:
+        if (!beogh_resurrect())
             return SPRET_ABORT;
         break;
 

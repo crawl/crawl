@@ -151,6 +151,9 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
         corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = 0;
     }
 
+    if (mons_genus(mons.type) == MONS_ORC)
+        corpse.props[ORC_CORPSE_KEY] = mons;
+
     return true;
 }
 
@@ -693,7 +696,8 @@ static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
         // Bias beaten-up-conversion towards the stronger orcs.
         && random2(mons.get_experience_level()) > 2)
     {
-        beogh_convert_orc(&mons, true, MON_KILL(killer));
+        beogh_convert_orc(&mons, MON_KILL(killer) ? conv_t::DEATHBED_FOLLOWER :
+                                                    conv_t::DEATHBED);
         return true;
     }
 
