@@ -698,6 +698,9 @@ vector<stash_search_result> ShopInfo::matches_search(
         res.shop = this;
         res.pos.pos = shop.pos;
         results.push_back(res);
+        // if the player is just searching for shops, don't show contents
+        if (search.matches("shop"))
+            return results;
     }
 
     for (const item_def &item : shop.stock)
