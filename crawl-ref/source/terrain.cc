@@ -1123,7 +1123,7 @@ void dungeon_terrain_changed(const coord_def &pos,
             seen_notable_thing(nfeat, pos);
 
         // Don't destroy a trap which was just placed.
-        if (feat_is_trap(nfeat))
+        if (!feat_is_trap(nfeat))
             destroy_trap(pos);
     }
 
