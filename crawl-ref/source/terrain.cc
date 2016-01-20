@@ -48,7 +48,7 @@
 #include "viewchar.h"
 #include "view.h"
 
-static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat);
+static bool _revert_terrain_to_floor(coord_def pos);
 
 actor* actor_at(const coord_def& c)
 {
@@ -1724,8 +1724,7 @@ void destroy_wall(const coord_def& p)
 
     remove_mold(p);
 
-    _revert_terrain_to(p, (player_in_branch(BRANCH_SWAMP) ? DNGN_SHALLOW_WATER
-                                                          : DNGN_FLOOR));
+    _revert_terrain_to_floor(p);
     env.level_map_mask(p) |= MMT_TURNED_TO_FLOOR;
 }
 
@@ -1950,8 +1949,17 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
     dungeon_terrain_changed(pos, newfeat, true, false, true);
 }
 
-static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
+/// What terrain type do destroyed feats become, in the current branch?
+static dungeon_feature_type _destroyed_feat_type()
 {
+    return player_in_branch(BRANCH_SWAMP) ?
+        DNGN_SHALLOW_WATER :
+        DNGN_FLOOR;
+}
+
+static bool _revert_terrain_to_floor(coord_def pos)
+{
+    dungeon_feature_type newfeat = _destroyed_feat_type();
     bool found_marker = false;
     for (map_marker *marker : env.markers.get_markers_at(pos))
     {
@@ -1966,7 +1974,7 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
             // Same for destroyed trees
             if ((tmarker->change_type == TERRAIN_CHANGE_DOOR_SEAL
                 || tmarker->change_type == TERRAIN_CHANGE_FORESTED)
-                && newfeat == DNGN_FLOOR)
+                && newfeat == _destroyed_feat_type())
             {
                 env.markers.remove(tmarker);
             }
