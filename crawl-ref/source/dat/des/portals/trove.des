@@ -61,7 +61,8 @@ function trove.get_trove_item(e, value, base_item)
     end
     local jwith_pluses = {"ring of protection", "ring of evasion",
                           "ring of strength", "ring of intelligence",
-                          "ring of dexterity", "ring of slaying"}
+                          "ring of dexterity", "ring of slaying",
+                          "amulet of reflection"}
     local bt = shop_item.base_type
     if bt == "armour" or bt == "weapon" or bt == "jewellery" or bt == "book" then
       if shop_item.identified() then
@@ -98,19 +99,20 @@ function trove.get_trove_item(e, value, base_item)
   -- currently 20% armour, 15% weapon, 50% consumable, 15% miscellaneous
   local prices = {
        {base="scroll", type="acquirement", quant=2},
-       {base="scroll", type="identify", quant=15+d(5)+d(5)},
+       {base="scroll", type="identify", quant=12+d(4)+d(4)+d(4)},
        {base="miscellaneous", type="rune of Zot", quant=3, name="slimy rune of Zot"},
        {base="miscellaneous", type="rune of Zot", quant=11, name="abyssal rune of Zot"},
        {base="miscellaneous", type="horn of Geryon"} }
 
   local wpn_arm = {
-       {base="armour", type="gold dragon armour", quant=1+d(3)},
-       {base="armour", type="storm dragon armour", quant=1+d(3)},
-       {base="armour", type="fire dragon armour", quant=2+d(3)},
-       {base="armour", type="ice dragon armour", quant=2+d(3)},
-       {base="weapon", type="demon whip", quant=3+d(3)},
-       {base="weapon", type="demon trident", quant=3+d(3)},
-       {base="weapon", type="demon blade", quant=3+d(3)} }
+       {base="armour", type="gold dragon armour", quant=1+d(2)},
+       {base="armour", type="storm dragon armour", quant=d(2)+d(2)},
+       {base="armour", type="shadow dragon armour", quant=d(2)+d(2)},
+       {base="armour", type="fire dragon armour", quant=d(3)+d(3)},
+       {base="armour", type="ice dragon armour", quant=d(3)+d(3)},
+       {base="weapon", type="demon whip", quant=2+d(3)+d(3)},
+       {base="weapon", type="demon trident", quant=2+d(3)+d(3)},
+       {base="weapon", type="demon blade", quant=2+d(3)+d(3)} }
 
   if you.race() ~= "Felid" then
     for _, toll in ipairs(wpn_arm) do
@@ -118,7 +120,10 @@ function trove.get_trove_item(e, value, base_item)
     end
   end
 
-  local pots = { }
+  local pots = {
+       {base="potion", type="resistance", quant=2+d(3)},
+       {base="potion", type="agility", quant=4+d(3)+d(2)},
+       {base="potion", type="experience", quant=1} }
 
   local heal_pots = {
        {base="potion", type="curing", quant=12+d(4)+d(4)},
@@ -131,10 +136,10 @@ function trove.get_trove_item(e, value, base_item)
       end
     end
     if you.race() ~= "Formicid" then
-      table.insert(pots, {base="potion", type="haste", quant=3+d(3)+d(2)})
+      table.insert(pots, {base="potion", type="haste", quant=4+d(3)+d(2)})
     end
     if you.race() ~= "Ghoul" then
-      table.insert(pots, {base="potion", type="cure mutation", quant=1+d(3)})
+      table.insert(pots, {base="potion", type="cure mutation", quant=1+d(4)})
     end
 
     for _, toll in ipairs(pots) do
@@ -143,16 +148,16 @@ function trove.get_trove_item(e, value, base_item)
   end
 
   if you.race() ~= "Vine Stalker" and you.mutation("inability to use devices") ~= 1 then
-    table.insert(prices, {base="wand", type="heal wounds", quant=7+d(2)})
+    table.insert(prices, {base="wand", type="heal wounds", quant=9})
   end
 
   local stasis_tolls = {
-       {base="scroll", type="blinking", quant=3+d(3)},
-       {base="scroll", type="teleportation", quant=10+d(3)+d(4)} }
+       {base="scroll", type="blinking", quant=2+d(3)+d(3)},
+       {base="scroll", type="teleportation", quant=10+d(4)+d(4)} }
 
   if you.race() ~= "Formicid" then
     if you.mutation("inability to use devices") ~= 1 then
-      table.insert(prices, {base="wand", type="hasting", quant=7+d(2)})
+      table.insert(prices, {base="wand", type="hasting", quant=9})
     end
     for _, toll in ipairs(stasis_tolls) do
       table.insert(prices, toll)
@@ -879,6 +884,35 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+# Misc items/evocations trove. 15 items.
+NAME:   trove_misc_throne_room
+COLOUR: x = blue
+COLOUR: ' = yellow
+SUBST:  d = dde
+KFEAT:  _ = altar_pakellas
+FTILE:  'T_ : floor_limestone
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen allow_dup
+ITEM:   acquire misc / any rod w:4
+ITEM:   acquire wand w:15 / any misc w:3 / acquire magical staff w:2
+ITEM:   scroll of recharging / scroll of recharging q:3 w:5
+: trove.setup_features(_G)
+MAP
+  xxxxx
+  xfffx
+ xxx+xxx
+ xdT_Tdx
+ xd'''dx
+ xd'''dx
+ xd'''dx
+ xd'''dx
+ xd'''dx
+xxxx+xxxx
+x.......x
+x<..A..<x
+xxxxxxxxx
 ENDMAP
 
 ###################################
