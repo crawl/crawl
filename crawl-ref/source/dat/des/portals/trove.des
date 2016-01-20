@@ -242,12 +242,16 @@ function trove.weapon_skills (e)
   local skill_total = 0
   local nonzero_skills = 0
   for _, skill in ipairs(weapon_skills) do
-    skill_total = skill_total + you.skill(skill)
-    if you.skill(skill) > 0 then
+    skill_total = skill_total + you.base_skill(skill)
+    if you.base_skill(skill) > 0 then
       nonzero_skills = nonzero_skills + 1
     end
   end
-  return skill_total / nonzero_skills
+  if nonzero_skills > 0 then
+    return skill_total / nonzero_skills
+  else
+    return 0
+  end
 end
 
 function trove.spell_skills (e)
@@ -255,12 +259,16 @@ function trove.spell_skills (e)
   local skill_total = 0
   local nonzero_skills = 0
   for _, skill in ipairs(spell_skills) do
-    skill_total = skill_total + you.skill(skill)
-    if you.skill(skill) > 0 then
+    skill_total = skill_total + you.base_skill(skill)
+    if you.base_skill(skill) > 0 then
       nonzero_skills = nonzero_skills + 1
     end
   end
-  return skill_total / nonzero_skills
+  if nonzero_skills > 0 then
+    return skill_total / nonzero_skills
+  else
+    return 0
+  end
 end
 }}
 
@@ -678,7 +686,7 @@ ENDMAP
 
 # A 'weapon shoppe', same template as the jewellery shop.
 NAME:   trove_weapon_1
-: if trove.weapon_skills() >= trove.spell_skills() and trove.weapon_skills() >= you.skill("Unarmed Combat") then
+: if trove.weapon_skills() >= trove.spell_skills() and trove.weapon_skills() >= you.base_skill("Unarmed Combat") then
 WEIGHT: 15
 : else
 WEIGHT: 5
@@ -707,7 +715,7 @@ ENDMAP
 
 # A simple treasure chamber.
 NAME:   trove_weapon_2
-: if trove.weapon_skills() >= trove.spell_skills() and trove.weapon_skills() >= you.skill("Unarmed Combat") then
+: if trove.weapon_skills() >= trove.spell_skills() and trove.weapon_skills() >= you.base_skill("Unarmed Combat") then
 WEIGHT: 15
 : else
 WEIGHT: 5
