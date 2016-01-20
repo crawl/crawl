@@ -1,4 +1,4 @@
-Stone Soup 0.18 (up to 0.18-a0-780-gd1db97e)
+Stone Soup 0.18 (up to 0.18-a0-1126-ga2d7f46)
 --------------------------------------------
 
 Highlights
@@ -26,6 +26,8 @@ Character
   two floors.
 * Breath abilities are no longer mutations and are now unique to draconians
   and nagas.
+* Weapons types no longer have distinct strength weightings. Instead to-hit is
+  determined by dex alone and to-dam by strength alone.
 
 Gods
 ----
@@ -61,6 +63,8 @@ Gods
 * Followers of Elyvilon can pacify insects (again).
 * Zin's Recite is now only interrupted if the player is silenced or
   incapacitated (or goes berserk).
+* Gozag's Call Merchant now bases the shop quality on the player's level
+  rather than on their location.
 
 Items
 -----
@@ -70,15 +74,23 @@ Items
     of vertigo (lowered accuracy, EV, and spell success) when first worn.
   - The amulet of reflection, which grants a few points of shielding that
     act as a shield of reflection.
-  - The +8 frozen axe "Frostbite" {freezing cloud, *Noise +Fly rC+}, an
-    executioner's axe with a chance of placing freezing clouds on enemies it
-    strikes.
-  - The +12 armour of Talos {ponderous, rF+}, a troll/ogre-sized suit of
-    plate mail.
+  - The amulet of harm, which increases damage dealt to and by the wearer by
+    25%.
+  - The amulet of mana regeneration, which increases the player MP regen rate
+    after a warmup period.
+  - The ring of resist corrosion, which has the same effect as the former
+    amulet.
   - A figurine of a ziggurat - evoke to create a ziggurat portal. Appears on
     Zig:27 of all ziggurats and in the Tomb:3 loot.
   - Pieces from Xom's chessboard - evoke to randomly swap the positions of
     you and all enemies and LOS, or (on failure) to trigger a Xom effect.
+  - Unrand: The +8 frozen axe "Frostbite" {freezing cloud, *Noise +Fly rC+}, an
+    executioner's axe with a chance of placing freezing clouds on enemies it
+    strikes.
+  - Unrand: The +12 armour of Talos {ponderous, rF+}, a troll/ogre-sized suit
+    of plate mail.
+  - Unrand: The +6 Warlock's Mirror {reflection}, a buckler that allows
+    reflection of piercing effects and enchantments, among other things.
 * The robe of vines is now +2, Regen+7.
 * The Majin-Bo now speaks occasionally.
 * The amulet of Cekugob is now an amulet of dismissal.
@@ -89,8 +101,14 @@ Items
 * A new property can now generate on random artefacts: Fragile, which destroys
   the item when it is removed.
 * Amulets of faith now grant a 25% bonus to piety, not a 33% bonus.
+* Potions of ambrosia now bypass clarity.
+* The evocable teleport property +Tele is removed. Rings of teleportation now
+  only have the *Tele teleportitis effect.
+* Potions of cure mutation are slightly more common.
 * Removed items:
-  - Amulets of resist mutation, stasis, and warding.
+  - Amulets of resist mutation, stasis, warding, and corrosion.
+  - Ring of invisibility.
+  - Potions of degeneration.
 
 Monsters
 --------
@@ -99,8 +117,8 @@ Monsters
     Spider and in packs in Depths.
   - Iron giants, with all the resilience that iron implies and the ability to
     throw you into the pack of giants they lead.
-  - Doom hounds, demonic canines lurking in Tartarus who can howl to summon a
-    pack of their brethren.
+  - Doom hounds, demonic canines lurking in Tartarus who can howl once to
+    create a pack of nasty creatures.
   - Deep elf archers, who have attained a notable level of skill in both
     archery and hexes.
   - Deep elf elementalists, with mastery of all of the elemental schools and
@@ -135,6 +153,30 @@ Monsters
   than Abyss:1.
 * Deep elf mages are now HD 9 and have new spell sets, including spells
   previously cast by deep elf conjurers and summoners.
+* The Sap Magic effect from demonspawn warmongers now has three fixed levels of
+  success rate penalty, rather than scaling continuously. Each spell cast while
+  under the Sap effect has a fixed chance to increase the penalty level. The
+  penalty now expires when the "Sap" status expires.
+* Death scarab attack effects no longer trigger when the attack deals no
+  damage.
+* Lost souls no longer hide from the player.
+* Demonspawn corruptor's Corrupt Body spell is now a single-target version of
+  the same spell used by wretched stars. These spells both now try to apply
+  multiple levels of a single random temporary mutation instead of giving many
+  different kinds.
+* Vampire monsters cast Vampiric Drain more frequently at lower HP, and
+  ordinary Vampires can generate a bit earlier in the Dungeon.
+* Ancient champions no longer have the Haunt spell.
+* Death knights no longer have Haunt and can generate in the late Dungeon.
+* Swamp worms are now amphibious and generate submerged, emerging to attack the
+  player and never resubmerging.
+* Wasp and hornet paralyse attacks no longer automatically downgrade due to
+  rPois, but instead have a chance of bypassing rPois to apply paralysis and
+  then a chance to apply slow if the first chance fails.
+* Deep elf high priests now have an Aura of Brilliance spell that affects all
+  allies in their view, making them cast spells more frequently and with more
+  spell power.
+* Natasha no longer becomes weaker upon revival.
 * Removed monsters:
   - Octopode crushers.
   - (Plain) spiders.
@@ -142,6 +184,7 @@ Monsters
   - Blue devils.
   - Brain worms.
   - Deep elf fighters, conjurers, priests, and summoners.
+  - Trapdoor spiders.
 
 Spells
 ------
@@ -149,6 +192,15 @@ Spells
   all cancellable effects on the target and, if any were dispelled, causes
   a damaging explosion of mutagenic energy around the victim.
 * Hydra Form now has a fixed number of heads.
+* The Infusion spell has a lower power cap, scaling more quickly to the same
+  damage bonus as before.
+* Spectral Weapon now bases the strength of the summoned weapon on spell power
+  instead of weapon skill.
+* Alistair's Intoxication is now level 5 and gives Vertigo status instead of
+  confusing the player or draining Int, and can sometimes affect rPois
+  monsters.
+* Monstrous Menagerie is now level 7.
+* Shadow creatures is now level 6.
 
 Interface
 ---------
