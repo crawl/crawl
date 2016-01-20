@@ -543,7 +543,7 @@ void do_dragon_call(int time)
 }
 
 /**
- * Handle the Doom Howl status effect, possibly summoning hostile doom hounds
+ * Handle the Doom Howl status effect, possibly summoning hostile nasties
  * around the player.
  *
  * @param time      The number of aut that the howling has been going on for
@@ -603,6 +603,7 @@ void doom_howl(int time)
             mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
                                        INFINITE_DURATION));
             mons->behaviour = BEH_SEEK;
+            mons_add_blame(mons, "called by a doom hound"); // assumption!
             check_place_cloud(CLOUD_BLACK_SMOKE, mons->pos(),
                               random_range(1,2), mons);
         }
