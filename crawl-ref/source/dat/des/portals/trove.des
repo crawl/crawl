@@ -61,7 +61,8 @@ function trove.get_trove_item(e, value, base_item)
     end
     local jwith_pluses = {"ring of protection", "ring of evasion",
                           "ring of strength", "ring of intelligence",
-                          "ring of dexterity", "ring of slaying"}
+                          "ring of dexterity", "ring of slaying",
+                          "amulet of reflection"}
     local bt = shop_item.base_type
     if bt == "armour" or bt == "weapon" or bt == "jewellery" or bt == "book" then
       if shop_item.identified() then
