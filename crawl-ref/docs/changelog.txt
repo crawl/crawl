@@ -74,7 +74,7 @@ Items
     act as a shield of reflection.
   - The amulet of harm, which increases damage dealt to and by the wearer by
     25%.
-  - The amulet of mana regeneration, which increases the player MP regen rate
+  - The amulet of magic regeneration, which increases the player MP regen rate
     after a warmup period.
   - The ring of resist corrosion, which has the same effect as the former
     amulet.
