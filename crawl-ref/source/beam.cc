@@ -915,7 +915,6 @@ static bool _destroy_wall_msg(dungeon_feature_type feat, const coord_def& p)
     case DNGN_GRANITE_STATUE:
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
-    case DNGN_SEALED_DOOR:
         if (see)
         {
             msg = (feature_description_at(p, false, DESC_THE, false)
@@ -1001,7 +1000,6 @@ void bolt::destroy_wall_effect()
 
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
-    case DNGN_SEALED_DOOR:
     {
         set<coord_def> doors;
         find_connected_identical(pos(), doors);
