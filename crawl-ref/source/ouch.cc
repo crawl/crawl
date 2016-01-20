@@ -856,7 +856,7 @@ int do_shave_damage(int dam)
 
     if (player_equip_unrand(UNRAND_PRESERVATION)) {
         if (one_chance_in(50))
-            mprf("The cloak of Preservation looks more tattered.");
+            mpr("The cloak of Preservation looks more tattered.");
         dam -= random2(6);
     }
 
@@ -1009,7 +1009,6 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             && player_equip_unrand(UNRAND_PRESERVATION)) {
             mprf(MSGCH_WARN, "The cloak of Preservation crumbles to dust!");
             int cloak = you.equip[EQ_CLOAK];
-            set_unique_item_status(you.inv[cloak], UNIQ_NOT_EXISTS);
             unequip_item(EQ_CLOAK, false);
             dec_inv_item_quantity(cloak, 1);
             return;

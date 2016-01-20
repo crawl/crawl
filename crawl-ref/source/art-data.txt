@@ -1278,7 +1278,7 @@ ENUM:     PRESERVATION
 NAME:     cloak of Preservation
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
 PLUS:     +0
-#TILE:     urand_thief
+#TILE:     urand_preservation
 TILE_EQ:  gray
 COLOUR:   LIGHTGREY
 BOOL:     rCorr
