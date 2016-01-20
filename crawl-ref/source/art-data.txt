@@ -1276,7 +1276,7 @@ FIRE:     1
 ENUM:     WARLOCK_MIRROR
 NAME:     warlock's mirror
 OBJ:      OBJ_ARMOUR/ARM_BUCKLER
-PLUS:     +6
+PLUS:     +3
 TILE:     urand_warlock
 TILE_EQ:  buckler_warlock
 COLOUR:   ETC_SILVER
