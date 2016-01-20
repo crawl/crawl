@@ -616,7 +616,9 @@ ENDMAP
 # A "library", geared towards scrolls and books (either spell or manual).
 NAME:   trove_library
 WEIGHT: 30
-veto {{ return crawl.game_started() and trove.spell_skills() < trove.weapon_skills() and not crawl.one_chance_in(6) }}
+veto {{ return crawl.game_started()
+          and trove.spell_skills() < trove.weapon_skills()
+          and not crawl.one_chance_in(6) }}
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup
 : trove.setup_features(_G)
@@ -689,7 +691,10 @@ ENDMAP
 # A 'weapon shoppe', same template as the jewellery shop.
 NAME:   trove_weapon_1
 WEIGHT: 15
-veto {{ return crawl.game_started() and trove.weapon_skills() < trove.spell_skills() and trove.weapon_skills() < you.base_skill("Unarmed Combat") and not crawl.one_chance_in(3) }}
+veto {{ return crawl.game_started()
+          and trove.weapon_skills() < trove.spell_skills()
+          and trove.weapon_skills() < you.base_skill("Unarmed Combat")
+          and not crawl.one_chance_in(3) }}
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: once again, 16 items.
@@ -715,7 +720,10 @@ ENDMAP
 # A simple treasure chamber.
 NAME:   trove_weapon_2
 WEIGHT: 15
-veto {{ return crawl.game_started() and trove.weapon_skills() < trove.spell_skills() and trove.weapon_skills() < you.base_skill("Unarmed Combat") and not crawl.one_chance_in(3) }}
+veto {{ return crawl.game_started()
+          and trove.weapon_skills() < trove.spell_skills()
+          and trove.weapon_skills() < you.base_skill("Unarmed Combat")
+          and not crawl.one_chance_in(3) }}
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: 15 items.
@@ -888,7 +896,10 @@ ENDMAP
 # Misc items/evocations trove. 15 items.
 NAME:   trove_misc_throne_room
 WEIGHT: 15
-veto {{ return crawl.game_started() and you.skill("Evocations") < 4 and not crawl.one_chance_in(3) or you.mutation("inability to use devices") == 1 }}
+veto {{ return crawl.game_started()
+            and you.skill("Evocations") < 4
+            and not crawl.one_chance_in(3)
+          or you.mutation("inability to use devices") == 1 }}
 COLOUR: x = blue
 COLOUR: ' = yellow
 SUBST:  d = dde
