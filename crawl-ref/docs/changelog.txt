@@ -7,8 +7,6 @@ Highlights
 
 Branches, Environment
 ---------------------
-* The enemies in the Elven Halls ending vault are now less likely to be lured
-  out of the vault.
 * Ziggurat portals no longer appear in Pan.
 * The Orcish Mines are now two levels, and only spawn plain orcs as part of
   bands; gold generation is doubled to account for the shorter branch.
@@ -70,8 +68,8 @@ Items
 -----
 * New items:
   - The amulet of dismissal, which has a chance of teleporting away enemies
-    that attack you in melee combat, though subjects the player to a few turns
-    of vertigo (lowered accuracy, EV, and spell success) when first worn.
+    that damage the player, but causes a few turns of vertigo (lowered
+    accuracy, EV, and spell success) when first worn.
   - The amulet of reflection, which grants a few points of shielding that
     act as a shield of reflection.
   - The amulet of harm, which increases damage dealt to and by the wearer by
@@ -89,7 +87,7 @@ Items
     strikes.
   - Unrand: The +12 armour of Talos {ponderous, rF+}, a troll/ogre-sized suit
     of plate mail.
-  - Unrand: The +6 Warlock's Mirror {reflection}, a buckler that allows
+  - Unrand: The +3 Warlock's Mirror {reflection}, a buckler that allows
     reflection of piercing effects and enchantments, among other things.
 * The robe of vines is now +2, Regen+7.
 * The Majin-Bo now speaks occasionally.
@@ -157,9 +155,6 @@ Monsters
   success rate penalty, rather than scaling continuously. Each spell cast while
   under the Sap effect has a fixed chance to increase the penalty level. The
   penalty now expires when the "Sap" status expires.
-* Death scarab attack effects no longer trigger when the attack deals no
-  damage.
-* Lost souls no longer hide from the player.
 * Demonspawn corruptor's Corrupt Body spell is now a single-target version of
   the same spell used by wretched stars. These spells both now try to apply
   multiple levels of a single random temporary mutation instead of giving many
