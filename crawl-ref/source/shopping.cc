@@ -1329,8 +1329,7 @@ void ShopMenu::draw_menu()
     tiles.json_write_int("total_items", items.size());
     tiles.json_close_object();
     tiles.finish_message();
-    for (unsigned int i = 0; i < items.size(); ++i)
-        webtiles_update_item(i);
+    webtiles_update_items(0, items.size() - 1);
 #endif
 
     InvMenu::draw_menu();
