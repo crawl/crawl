@@ -653,7 +653,7 @@ typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
  *             which recitation types the monster is affected by, if any:
  *             eligibility[RECITE_FOO] is nonzero if the monster is affected
  *             by RECITE_FOO. Only modified if the function returns 0 or 1.
- * @param quiet[in]     Whether to suppress messenging.
+ * @param quiet[in]     Whether to suppress messaging.
  * @return  -1 if the monster is already affected. The eligibility vector
  *          is unchanged.
  * @return  0 if the monster is otherwise ineligible for recite. The
@@ -5824,7 +5824,7 @@ void ru_offer_new_sacrifices()
         }
 
         // add it to the list of chosen sacrifices to offer, and remove it from
-        // the list of possiblities for the later sacrifices
+        // the list of possibilities for the later sacrifices
         available_sacrifices.push_back(chosen_sacrifice);
         you.sacrifice_piety[chosen_sacrifice] =
                                 get_sacrifice_piety(chosen_sacrifice, false);

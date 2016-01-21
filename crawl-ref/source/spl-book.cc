@@ -1602,7 +1602,7 @@ static string _maybe_gen_book_subject(string owner)
  * @param   owner       The name of the book's 'owner', if any.
  *                      (E.g., Xom, Cerebov, Boris...)
  *                      Prepended to the book's name (Foo's...); "Xom" has
- *                      futher effects.
+ *                      further effects.
  * @param   disc1       A spellschool (discipline) associated with the book.
  * @param   disc2       A spellschool (discipline) associated with the book.
  * @return              A book name. May contain placeholders (@foo@).

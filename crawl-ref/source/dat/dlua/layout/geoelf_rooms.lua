@@ -1257,7 +1257,7 @@ function geoelf.rooms.hexagon_glass_wall_SE_NW (room, radius)
 
   -- We don't actually need a door because the wall is diagonal
   -- If the door isn't in the middle, it will be removed due
-  --  to having insufficent walls around it
+  --  to having insufficient walls around it
   if (crawl.one_chance_in(3)) then
     room[0][0] = geoelf.glyphs.GLASS_DOOR
   else

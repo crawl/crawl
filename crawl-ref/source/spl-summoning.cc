@@ -1497,7 +1497,7 @@ static bool _water_adjacent(coord_def p)
  * @param fail   Did this spell miscast? If true, abort the cast.
  * @return       SPRET_ABORT if a summoning area couldn't be found,
  *               SPRET_FAIL if one could be found but we miscast, and
- *               SPRET_SUCCESS if the spell was succesfully cast.
+ *               SPRET_SUCCESS if the spell was successfully cast.
 */
 spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 {
@@ -2962,7 +2962,7 @@ bool fire_battlesphere(monster* mons)
         else
             beam.target = mons->props["firing_target"].get_coord();
 
-        // Sanity check: if we have somehow ended up targetting ourselves, bail
+        // Sanity check: if we have somehow ended up targeting ourselves, bail
         if (beam.target == mons->pos())
         {
             mprf(MSGCH_ERROR, "Battlesphere targeting itself? Fixing.");
@@ -3261,7 +3261,7 @@ bool trigger_spectral_weapon(actor* agent, const actor* target)
 {
     monster *spectral_weapon = find_spectral_weapon(agent);
 
-    // Don't try to attack with a nonexistant spectral weapon
+    // Don't try to attack with a nonexistent spectral weapon
     if (!spectral_weapon || !spectral_weapon->alive())
     {
         agent->props.erase("spectral_weapon");

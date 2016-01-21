@@ -2382,7 +2382,7 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
         break;
     // intentionally no default
     }
-    die("Unknown targetting mode!");
+    die("Unknown targeting mode!");
 }
 
 #ifdef CLUA_BINDINGS

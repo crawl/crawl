@@ -3398,7 +3398,7 @@ string hints_describe_item(const item_def &item)
             {
                 ostr << "A manual can greatly help you in training a skill. "
                         "As long as you are carrying it, the skill in "
-                        "question will be trained more effeciently and will "
+                        "question will be trained more efficiently and will "
                         "level up faster.";
                 cmd.push_back(CMD_READ);
             }

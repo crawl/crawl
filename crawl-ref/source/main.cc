@@ -3170,7 +3170,7 @@ static void _move_player(coord_def move)
     bool moving = true;         // used to prevent eventual movement (swap)
     bool swap = false;
 
-    int additional_time_taken = 0; // Extra time independant of movement speed
+    int additional_time_taken = 0; // Extra time independent of movement speed
 
     ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
            || you.wizmode_teleported_into_rock);

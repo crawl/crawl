@@ -1021,7 +1021,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 }
 
 /**
- * Return the number of plusses required for a type of armour to be noteable.
+ * Return the number of plusses required for a type of armour to be notable.
  * (From plus alone.)
  *
  * @param armour_type   The type of armour being considered.
