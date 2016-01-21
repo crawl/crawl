@@ -126,7 +126,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         }
         else
         {
-            for (var i = menu.first_present; i < menu.last_present; ++i)
+            for (var i = menu.first_present; i <= menu.last_present; ++i)
             {
                 var item = menu.items[i];
                 if (!item) continue;
