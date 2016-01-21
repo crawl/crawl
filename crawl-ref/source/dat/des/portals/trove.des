@@ -692,8 +692,8 @@ ENDMAP
 NAME:   trove_weapon_1
 WEIGHT: 15
 veto {{ return crawl.game_started()
-          and trove.weapon_skills() < trove.spell_skills()
-          and trove.weapon_skills() < you.base_skill("Unarmed Combat")
+          and (trove.weapon_skills() < trove.spell_skills()
+               or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
@@ -721,8 +721,8 @@ ENDMAP
 NAME:   trove_weapon_2
 WEIGHT: 15
 veto {{ return crawl.game_started()
-          and trove.weapon_skills() < trove.spell_skills()
-          and trove.weapon_skills() < you.base_skill("Unarmed Combat")
+          and (trove.weapon_skills() < trove.spell_skills()
+               or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
