@@ -179,7 +179,8 @@ function ($, map_knowledge, cr, dungeon_renderer, options, util) {
             if (monsters.length == 1)
             {
                 group.name_span.text(monsters[0].mon.name);
-                if (options.get("tile_display_mode") == "glyphs") {
+                if (options.get("tile_display_mode") == "glyphs")
+                {
                     var map_cell = map_knowledge.get(monsters[0].loc.x, monsters[0].loc.y);
                     var fg = map_cell.t.fg;
                     var mdam = "uninjured";
@@ -193,12 +194,16 @@ function ($, map_knowledge, cr, dungeon_renderer, options, util) {
                       mdam = "severely_damaged";
                     else if (fg.MDAM_ADEAD)
                       mdam = "almost_dead";
-                    group.health_span.addClass(mdam).width(w).height(renderer.cell_height);
-                } else
+                    group.health_span.removeClass().addClass(mdam + " health").width(w).height(renderer.cell_height).show();
+                }
+                else
                     group.health_span.hide();
             }
             else
+            {
                 group.name_span.text(monsters.length + " " + monsters[0].mon.plural);
+                group.health_span.hide();
+            }
 
             $.each(attitude_classes, function (i, cls) {
                 group.name_span.removeClass(cls);
