@@ -674,13 +674,14 @@ bool mons_class_is_stationary(monster_type mc)
 /**
  * Can killing this class of monster ever reward xp?
  *
- * This answers whether any agent could recieve XP for killing a monster of
+ * This answers whether any agent could receive XP for killing a monster of
  * this class. Monsters that fail this have M_NO_EXP_GAIN set.
  * @param mc       The monster type
  * @param indirect If true this will count monsters that are parts of a parent
- *                 monster as xp rewarding even the parts themselves don't
+ *                 monster as xp rewarding even if the parts themselves don't
  *                 reward xp (e.g. tentacles).
- * @returns True if killing a monster of this could reward xp, false otherwise.
+ * @returns True if killing a monster of this class could reward xp, false
+ * otherwise.
  */
 bool mons_class_gives_xp(monster_type mc, bool indirect)
 {
@@ -691,7 +692,7 @@ bool mons_class_gives_xp(monster_type mc, bool indirect)
 /**
  * Can killing this monster reward xp to the given actor?
  *
- * This answers whether the player or a monster could ever recieve XP for
+ * This answers whether the player or a monster could ever receive XP for
  * killing the monster, assuming an appropriate kill_type.
  * @param mon      The monster.
  * @param agent    The actor who would be responsible for the kill.
@@ -4346,7 +4347,7 @@ static string _replace_speech_tag(string msg, string from, const string &to)
     {
         // beginning of tag
         const size_t at_pos = msg.find('@', pos);
-        // begining of alternative
+        // beginning of alternative
         const size_t alt_pos = pos + from.size();
         // end of tag (one-past-the-end of alternative)
         const size_t alt_end = msg.find('@', alt_pos);

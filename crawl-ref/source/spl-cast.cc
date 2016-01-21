@@ -794,7 +794,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     // they don't have a certain effect. You may use Poison Arrow on those
     // immune, use Mephitic Cloud to shield yourself from other clouds, and
     // thus we don't prompt for them. It would be nice to prompt for them
-    // during the targetting phase, perhaps.
+    // during the targeting phase, perhaps.
     if (god_punishes_spell(spell, you.religion)
         && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
@@ -1308,7 +1308,7 @@ spret_type your_spells(spell_type spell, int powc,
 
         unique_ptr<targetter> hitfunc = _spell_targetter(spell, powc, range);
 
-        // Add success chance to targetted spells checking monster MR
+        // Add success chance to targeted spells checking monster MR
         const bool mr_check = testbits(flags, SPFLAG_MR_CHECK)
                               && testbits(flags, SPFLAG_DIR_OR_TARGET)
                               && !testbits(flags, SPFLAG_HELPFUL);

@@ -1,6 +1,7 @@
 # Okawaru's arena.
 # Originally by LexAckson; revised by Grunt.
 
+# Typo below
 {{
 function callback.oka_start_challange(data, triggerable, triggerer, marker, ev)
   -- Open the cages.

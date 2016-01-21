@@ -1305,7 +1305,7 @@ DEPS := $(ALL_OBJECTS:.o=.d)
 # gcc-snapshot vs clang, or x86_64-linux-gnu-gcc vs x86_64-w64-mingw32-g++).
 #
 # In such cases, the dependency forces a rebuild of that file. If the
-# dependency file referred to a non-existant header, as determined by
+# dependency file referred to a non-existent header, as determined by
 # util/good-depfile, then replace it with a rule that forces a rebuild.
 # That rebuild will overwrite the stopgap .d file with a good one for
 # the next build.

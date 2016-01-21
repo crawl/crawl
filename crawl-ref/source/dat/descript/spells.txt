@@ -1190,7 +1190,7 @@ of magics cannot be imbued in this fashion.
 Spider Form spell
 
 Transforms the caster into a venomous, spider-like creature. The caster becomes
-highly evasive and gains a poisonous bite, but gains vulnerablility to poison
+highly evasive and gains a poisonous bite, but gains vulnerability to poison
 and cannot evoke wands. It makes spellcasting slightly more difficult.
 %%%%
 Spit Acid spell

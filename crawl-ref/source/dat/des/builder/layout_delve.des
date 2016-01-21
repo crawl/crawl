@@ -139,7 +139,7 @@ TAGS:   no_rotate no_vmirror no_hmirror uniq_layout_twisted_delve
     -- choose random types for the branches
     --  -> we put all the branch types in a random order
     --     and use the first 4
-    --  -> this guarentees we only get one of each
+    --  -> this guarantees we only get one of each
     --
 
     local branch_type = {}

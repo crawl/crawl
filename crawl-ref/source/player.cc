@@ -5813,7 +5813,7 @@ void player::ablate_deflection()
 }
 
 /**
- * What's the base value of the penalties the player recieves from their
+ * What's the base value of the penalties the player receives from their
  * body armour?
  *
  * Used as the base for adjusted armour penalty calculations, as well as for
