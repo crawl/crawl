@@ -33,7 +33,7 @@
     Jan Anders Bremer (crawl.lantea.net)
     Rax E. Dillon (crawl.akrasiac.org)
     Wongi Hong (webzook.net / kr.dobrazupa.org)
-    Alex 'chequers' Jurkiewicz (crawl.project357.org)
+    Alex Jurkiewicz (crawl.project357.org)
     Aleksi Miikkael Luukkonen (crawl.lantea.net)
     Neil Moore (crawl.s-z.org)
     Marc H. Thoben (crawl.develz.org)
