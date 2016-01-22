@@ -730,19 +730,8 @@ enum mon_spell_slot_flag
     MON_SPELL_FIRST_CATEGORY = MON_SPELL_NATURAL,
     MON_SPELL_LAST_CATEGORY  = MON_SPELL_PRIEST,
 
-    MON_SPELL_TYPE_MASK = MON_SPELL_NATURAL | MON_SPELL_MAGICAL
-                             | MON_SPELL_DEMONIC | MON_SPELL_WIZARD
-                             | MON_SPELL_PRIEST,
-    MON_SPELL_INNATE_MASK = MON_SPELL_NATURAL | MON_SPELL_MAGICAL
-                             | MON_SPELL_DEMONIC,
-    MON_SPELL_ANTIMAGIC_MASK = MON_SPELL_MAGICAL | MON_SPELL_DEMONIC
-                             | MON_SPELL_WIZARD,
-
     MON_SPELL_BREATH      = 1 <<  6, // sets a breath timer, requires it to be 0
     MON_SPELL_NO_SILENT   = 1 <<  7, // can't be used while silenced/mute/etc.
-
-    MON_SPELL_SILENCE_MASK = MON_SPELL_WIZARD | MON_SPELL_PRIEST
-                             | MON_SPELL_NO_SILENT,
 
     MON_SPELL_INSTANT     = 1 <<  8, // allows another action on the same turn
     MON_SPELL_NOISY       = 1 <<  9, // makes noise despite being innate
@@ -756,6 +745,19 @@ DEF_BITFIELD(mon_spell_slot_flags, mon_spell_slot_flag, 11);
 const int MON_SPELL_LAST_EXPONENT = mon_spell_slot_flags::last_exponent;
 COMPILE_CHECK(mon_spell_slot_flags::exponent(MON_SPELL_LAST_EXPONENT)
               == MON_SPELL_LAST_FLAG);
+
+constexpr mon_spell_slot_flags MON_SPELL_TYPE_MASK
+    = MON_SPELL_NATURAL | MON_SPELL_MAGICAL | MON_SPELL_DEMONIC
+    | MON_SPELL_WIZARD  | MON_SPELL_PRIEST;
+
+constexpr mon_spell_slot_flags MON_SPELL_INNATE_MASK
+    = MON_SPELL_NATURAL | MON_SPELL_MAGICAL | MON_SPELL_DEMONIC;
+
+constexpr mon_spell_slot_flags MON_SPELL_ANTIMAGIC_MASK
+    = MON_SPELL_MAGICAL | MON_SPELL_DEMONIC | MON_SPELL_WIZARD;
+
+constexpr mon_spell_slot_flags MON_SPELL_SILENCE_MASK
+    = MON_SPELL_WIZARD  | MON_SPELL_PRIEST  | MON_SPELL_NO_SILENT;
 
 struct mon_spell_slot
 {

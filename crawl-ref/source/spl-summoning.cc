@@ -1696,7 +1696,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     // Save the corpse name before because it can get destroyed if it is
     // being drained and the raising interrupts it.
-    uint64_t name_type = 0;
+    monster_flags_t name_type;
     string name;
     if (is_named_corpse(item))
         name = get_corpse_name(item, &name_type);
@@ -1767,7 +1767,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     }
 
     if (!name.empty()
-        && (name_type == 0 || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE))
+        && (!name_type || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE))
     {
         name_zombie(mons, monnum, name);
     }
