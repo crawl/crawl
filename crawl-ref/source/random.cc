@@ -211,6 +211,12 @@ int div_rand_round(int num, int den)
         return num / den;
 }
 
+// Converts a double to an integer by randomly rounding.
+int rand_round(double x)
+{
+    return int(x) + decimal_chance(fmod(x, 1.0));
+}
+
 int div_round_up(int num, int den)
 {
     return num / den + (num % den != 0);
