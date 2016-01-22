@@ -1000,7 +1000,7 @@ static bool _knows_and_likes_magic()
  */
 static bool _acquire_manual(item_def &book)
 {
-    int weights[NUM_SKILLS];
+    int weights[NUM_SKILLS] = { 0 };
     int total_weights = 0;
 
     const bool knows_magic = _knows_and_likes_magic();
@@ -1010,10 +1010,7 @@ static bool _acquire_manual(item_def &book)
         int skl = you.skills[sk];
 
         if (skl == 27 || is_useless_skill(sk))
-        {
-            weights[sk] = 0;
             continue;
-        }
 
         int w = (skl < 12) ? skl + 3 : max(0, 25 - skl);
 
@@ -1037,7 +1034,7 @@ static bool _acquire_manual(item_def &book)
 
     book.sub_type = BOOK_MANUAL;
     book.skill = static_cast<skill_type>(
-                    choose_random_weighted(weights, weights + NUM_SKILLS));
+                    choose_random_weighted(weights, end(weights)));
     // Set number of bonus skill points.
     book.skill_points = random_range(2000, 3000);
     return true;
@@ -1063,30 +1060,24 @@ static bool _do_book_acquirement(item_def &book, int agent)
         int total_weights = 0;
 
         // Pick a random spellbook according to unknown spells contained.
-        int weights[MAX_FIXED_BOOK+1];
+        int weights[MAX_FIXED_BOOK + 1] = { 0 };
         for (int bk = 0; bk <= MAX_FIXED_BOOK; bk++)
         {
-            if (is_rare_book(static_cast<book_type>(bk))
-                && agent == GOD_SIF_MUNA)
+            const auto bkt = static_cast<book_type>(bk);
+
+            if (is_rare_book(bkt) && agent == GOD_SIF_MUNA
+                || item_type_removed(OBJ_BOOKS, bk))
             {
-                weights[bk] = 0;
                 continue;
             }
 
-            if (item_type_removed(OBJ_BOOKS, bk))
-            {
-                weights[bk] = 0;
-                continue;
-            }
-
-            weights[bk]    = _book_weight(static_cast<book_type>(bk));
+            weights[bk]    = _book_weight(bkt);
             total_weights += weights[bk];
         }
 
         if (total_weights > 0)
         {
-            book.sub_type = choose_random_weighted(weights,
-                                                   weights + ARRAYSZ(weights));
+            book.sub_type = choose_random_weighted(weights, end(weights));
             break;
         }
         // else intentional fall-through

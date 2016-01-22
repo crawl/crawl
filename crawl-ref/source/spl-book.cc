@@ -1377,9 +1377,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
         return false;
     }
 
-    int skill_weights[SPTYP_LAST_EXPONENT + 1];
-
-    memset(skill_weights, 0, (SPTYP_LAST_EXPONENT + 1) * sizeof(int));
+    int skill_weights[SPTYP_LAST_EXPONENT + 1] = { 0 };
 
     if (!completely_random)
     {
@@ -1409,9 +1407,9 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
     do
     {
         disc1 = ok_discs[choose_random_weighted(skill_weights,
-                                                skill_weights + num_discs)];
+                                                end(skill_weights))];
         disc2 = ok_discs[choose_random_weighted(skill_weights,
-                                                skill_weights + num_discs)];
+                                                end(skill_weights))];
     }
     while (disciplines_conflict(disc1, disc2));
 
@@ -1430,8 +1428,7 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
     ASSERT(num_spells > 0);
     ASSERT(max_levels > 0);
 
-    int spell_weights[NUM_SPELLS];
-    memset(spell_weights, 0, NUM_SPELLS * sizeof(int));
+    int spell_weights[NUM_SPELLS] = { 0 };
 
     if (completely_random)
     {
@@ -1501,7 +1498,7 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
 
         spell_type spell =
             (spell_type) choose_random_weighted(spell_weights,
-                                                spell_weights + NUM_SPELLS);
+                                                end(spell_weights));
         ASSERT(is_valid_spell(spell));
         ASSERT(spell_weights[spell] > 0);
 
