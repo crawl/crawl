@@ -5472,7 +5472,7 @@ bool mons_is_notable(const monster& mons)
         return false;
     if (mons_threat_level(&mons) == MTHRT_NASTY)
         return true;
-    const auto nm = Options.note_monsters;
+    const auto &nm = Options.note_monsters;
     // Don't waste time on moname() if user isn't using this option
     if (!nm.empty())
     {
