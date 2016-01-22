@@ -193,13 +193,9 @@ static void _give_ranged_weapon(weapon_type weapon, int plus)
     switch (weapon)
     {
     case WPN_SHORTBOW:
-        newgame_make_item(OBJ_WEAPONS, WPN_SHORTBOW, 1, plus);
-        break;
     case WPN_HAND_CROSSBOW:
-        newgame_make_item(OBJ_WEAPONS, WPN_HAND_CROSSBOW, 1, plus);
-        break;
     case WPN_HUNTING_SLING:
-        newgame_make_item(OBJ_WEAPONS, WPN_HUNTING_SLING, 1, plus);
+        newgame_make_item(OBJ_WEAPONS, weapon, 1, plus);
         break;
     default:
         break;
