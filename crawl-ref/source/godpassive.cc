@@ -934,7 +934,7 @@ static int _prepare_audience(coord_def where)
  */
 void ukayaw_prepares_audience()
 {
-    mpr(MSGCH_GOD, "Ukayaw prepares the audience for your solo!");
+    mprf(MSGCH_GOD, "Ukayaw prepares the audience for your solo!");
     apply_area_visible(_prepare_audience, you.pos());
 
     // Increment a delay timer to prevent players from spamming this ability
