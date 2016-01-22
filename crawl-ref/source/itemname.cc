@@ -2075,11 +2075,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "mangled ";
         }
 
-        uint64_t name_type, name_flags = 0;
+        monster_flags_t name_flags;
+        const string _name = get_corpse_name(*this, &name_flags);
+        const monster_flags_t name_type = name_flags & MF_NAME_MASK;
 
-        const string _name  = get_corpse_name(*this, &name_flags);
-        const bool   shaped = starts_with(_name, "shaped ");
-        name_type = (name_flags & MF_NAME_MASK);
+        const bool shaped = starts_with(_name, "shaped ");
 
         if (!_name.empty() && name_type == MF_NAME_ADJECTIVE)
             buff << _name << " ";
@@ -4104,7 +4104,7 @@ bool is_named_corpse(const item_def &corpse)
     return corpse.props.exists(CORPSE_NAME_KEY);
 }
 
-string get_corpse_name(const item_def &corpse, uint64_t *name_type)
+string get_corpse_name(const item_def &corpse, monster_flags_t *name_type)
 {
     ASSERT(corpse.base_type == OBJ_CORPSES);
 
@@ -4112,7 +4112,7 @@ string get_corpse_name(const item_def &corpse, uint64_t *name_type)
         return "";
 
     if (name_type != nullptr)
-        *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int64();
+        name_type->flags = corpse.props[CORPSE_NAME_TYPE_KEY].get_int64();
 
     return corpse.props[CORPSE_NAME_KEY].get_string();
 }
