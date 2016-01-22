@@ -196,6 +196,7 @@ public:
     int         autopickup_on;
     bool        autopickup_starting_ammo;
     bool        default_manual_training;
+    bool        default_show_all_skills;
 
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
     bool        show_game_turns; // Show game turns instead of player turns.

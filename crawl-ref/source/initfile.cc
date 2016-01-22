@@ -763,6 +763,7 @@ void game_options::reset_options()
     autopickup_on    = 1;
     autopickup_starting_ammo = true;
     default_manual_training = false;
+    default_show_all_skills = false;
 
     show_newturn_mark = true;
     show_game_turns = true;
@@ -2621,6 +2622,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             default_manual_training = false;
     }
+    else BOOL_OPTION(default_show_all_skills);
 #ifndef DGAMELAUNCH
     else BOOL_OPTION(restart_after_game);
     else BOOL_OPTION(restart_after_save);
