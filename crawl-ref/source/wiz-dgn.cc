@@ -24,6 +24,7 @@
 #include "place.h"
 #include "prompt.h"
 #include "religion.h"
+#include "spl-goditem.h" // detect_items
 #include "stairs.h"
 #include "state.h"
 #include "stringutil.h"
@@ -359,6 +360,7 @@ void wizard_map_level()
 
     mpr("Mapping level.");
     magic_mapping(1000, 100, true, true);
+    detect_items(1000);
 }
 
 bool debug_make_trap(const coord_def& pos)
