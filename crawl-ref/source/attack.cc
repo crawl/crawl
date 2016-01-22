@@ -613,7 +613,7 @@ void attack::chaos_affects_defender()
     int petrify_chance  = can_slow && can_petrify       ? 10 : 0;
 
     // NOTE: Must appear in exact same order as in chaos_type enumeration.
-    int probs[NUM_CHAOS_TYPES] =
+    int probs[] =
     {
         clone_chance,   // CHAOS_CLONE
         poly_chance,    // CHAOS_POLY
@@ -630,11 +630,12 @@ void attack::chaos_affects_defender()
         para_chance,    // CHAOS_PARALYSIS
         petrify_chance, // CHAOS_PETRIFY
     };
+    COMPILE_CHECK(ARRAYSZ(probs) == NUM_CHAOS_TYPES);
 
     bolt beam;
     beam.flavour = BEAM_NONE;
 
-    int choice = choose_random_weighted(probs, probs + NUM_CHAOS_TYPES);
+    int choice = choose_random_weighted(probs, end(probs));
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
     string chaos_effect = "CHAOS effect: ";
     switch (choice)
