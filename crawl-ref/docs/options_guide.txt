@@ -1451,7 +1451,7 @@ skill_focus = true
         and disabled. Setting the option to "toggle" adds a toggle to the skill
         screen to change the behaviour in-game.
 
-default_show_all_skills = true
+default_show_all_skills = false
         When set to true, the skill (m) menu defaults to showing all skills,
         even untrained and untrainable ones. As usual, '*' toggles back to
         trainable mode. This option does not affect hints and tutorial games.
