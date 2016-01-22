@@ -1945,6 +1945,18 @@ bool do_god_gift(bool forced)
             }
             break;
 
+        case GOD_UKAYAW:
+            if (you.piety == piety_breakpoint(2)
+                && you.props[UKAYAW_AUDIENCE_TIMER].get_int() == 0)
+            {
+                ukayaw_prepares_audience();
+                success = true;
+            }
+            else
+                success = false;
+
+            break;
+
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
         {

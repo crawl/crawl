@@ -388,6 +388,12 @@ static void _update_cowardice()
         mpr("You feel a twist of horror at the sight of this foe.");
 }
 
+static void _decrement_ukayaw_passive_timers(int time_taken)
+{
+    you.props[UKAYAW_AUDIENCE_TIMER] =
+            max(0, you.props[UKAYAW_AUDIENCE_TIMER].get_int() - time_taken);
+}
+
 /**
  * Player reactions after monster and cloud activities in the turn are finished.
  */
@@ -417,6 +423,7 @@ void player_reacts_to_monsters()
         you.awake();
     _maybe_melt_armour();
     _update_cowardice();
+    _decrement_ukayaw_passive_timers(you.time_taken);
 }
 
 static bool _check_recite()

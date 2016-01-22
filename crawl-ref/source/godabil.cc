@@ -6465,7 +6465,7 @@ bool ru_power_leap()
     return return_val;
 }
 
-static int _cell_has_valid_target(coord_def where)
+int cell_has_valid_target(coord_def where)
 {
     monster* mon = monster_at(where);
     if (mon == nullptr || mons_is_projectile(mon->type) || mon->friendly())
@@ -6475,7 +6475,7 @@ static int _cell_has_valid_target(coord_def where)
 
 static int _apply_apocalypse(coord_def where)
 {
-    if (!_cell_has_valid_target(where))
+    if (!cell_has_valid_target(where))
         return 0;
     monster* mons = monster_at(where);
     ASSERT(mons);
@@ -6537,7 +6537,7 @@ static int _apply_apocalypse(coord_def where)
 
 bool ru_apocalypse()
 {
-    int count = apply_area_visible(_cell_has_valid_target, you.pos());
+    int count = apply_area_visible(cell_has_valid_target, you.pos());
     if (!count)
     {
         if (!yesno("There are no visible enemies. Unleash your apocalypse anyway?",

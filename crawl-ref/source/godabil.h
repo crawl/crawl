@@ -23,6 +23,7 @@
 #define RU_SACRIFICE_PROGRESS_KEY "ru_progress_to_next_sacrifice"
 #define RU_SACRIFICE_DELAY_KEY "ru_sacrifice_delay"
 #define RU_SACRIFICE_PENALTY_KEY "ru_sacrifice_penalty"
+#define RU_SAC_XP_LEVELS 2
 
 const char * const GOZAG_POTIONS_KEY = "gozag_potions%d";
 const char * const GOZAG_PRICE_KEY = "gozag_price%d";
@@ -39,7 +40,7 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define GOZAG_MAX_BRIBABILITY 8
 #define GOZAG_MAX_POTIONS 3
 
-#define RU_SAC_XP_LEVELS 2
+#define UKAYAW_AUDIENCE_TIMER "ukayaw_audience_timer"
 
 struct bolt;
 class stack_iterator;
@@ -160,6 +161,7 @@ bool will_ru_retaliate();
 void ru_do_retribution(monster* mons, int damage);
 void ru_draw_out_power();
 bool ru_power_leap();
+int cell_has_valid_target(coord_def where);
 bool ru_apocalypse();
 
 bool pakellas_check_quick_charge(bool quiet);

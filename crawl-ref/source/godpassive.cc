@@ -13,6 +13,7 @@
 #include "files.h"
 #include "food.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "godprayer.h"
 #include "invent.h" // in_inventory
@@ -903,4 +904,40 @@ void pakellas_id_device_charges()
                    get_menu_colour_prefix_tags(you.inv[which_item],
                                                DESC_INVENTORY).c_str());
     }
+}
+
+/**
+ * Paralyze the monster in this cell, assuming one exists.
+ *
+ * Duration increases with invocations and experience level, and decreases
+ * with target HD. The actual duration is a randomly-rounded cube root of
+ * the total power, so that you need a lot of power to get more duration.
+ */
+static int _prepare_audience(coord_def where)
+{
+    if (!cell_has_valid_target(where))
+        return 0;
+    monster* mons = monster_at(where);
+    ASSERT(mons);
+
+    int power =  you.skill(SK_INVOCATIONS, 10) + you.experience_level
+                 - mons->get_hit_dice();
+    int duration = 10 + rand_round(cbrt(power) * 10);
+    mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, &you, duration));
+
+    return 1;
+}
+
+/**
+ * On hitting *** piety, all the monsters are paralysed by their appreciation
+ * for your dance.
+ */
+void ukayaw_prepares_audience()
+{
+    mpr(MSGCH_GOD, "Ukayaw prepares the audience for your solo!");
+    apply_area_visible(_prepare_audience, you.pos());
+
+    // Increment a delay timer to prevent players from spamming this ability
+    // via piety loss and gain. Timer is in AUT.
+    you.props[UKAYAW_AUDIENCE_TIMER] = 150;
 }
