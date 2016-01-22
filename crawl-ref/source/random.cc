@@ -212,8 +212,10 @@ int div_rand_round(int num, int den)
 }
 
 // Converts a double to an integer by randomly rounding.
+// Currently does not handle negative inputs.
 int rand_round(double x)
 {
+    ASSERT(x >= 0);
     return int(x) + decimal_chance(fmod(x, 1.0));
 }
 
