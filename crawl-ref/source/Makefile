@@ -111,10 +111,8 @@ CFWARN_L := -Wall -Wformat-security -Wundef
 
 DEFINES := $(EXTERNAL_DEFINES)
 
-ifdef ANDROID
-LDFLAGS := $(EXTERNAL_LDFLAGS) $(LDFLAGS)
-else
-LDFLAGS := $(EXTERNAL_LDFLAGS)
+ifndef ANDROID
+LDFLAGS :=
 endif
 
 #
@@ -1054,7 +1052,7 @@ ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) -x c++ - -o /dev/null -fuse-l
   LDFLAGS += -fuse-ld=gold
 endif
 
-LDFLAGS += $(CFOPTIMIZE) $(CFOPTIMIZE_L)
+LDFLAGS += $(CFOPTIMIZE) $(CFOPTIMIZE_L) $(EXTERNAL_LDFLAGS)
 
 ifdef REPORT
 CFOTHERS += -ftime-report
