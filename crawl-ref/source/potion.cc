@@ -1190,7 +1190,11 @@ public:
     bool effect(bool=true, int=40, bool=true) const override
     {
         mpr("There was something very wrong with that liquid.");
-        return lose_stat(STAT_RANDOM, 1 + random2avg(4, 2));
+        bool success = false;
+        for (int i = 0; i < NUM_STATS; ++i)
+            if (lose_stat(static_cast<stat_type>(i), 1 + random2(3)))
+                success = true;
+        return success;
     }
 
     bool quaff(bool was_known) const override
