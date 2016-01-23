@@ -2739,7 +2739,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     if (you.attribute[ATTR_STAT_LOSS_XP] > 0)
     {
         int loss = div_rand_round(exp_gained * 3 / 2,
-                                  calc_skill_cost(you.skill_cost_level));
+                       max(1, calc_skill_cost(you.skill_cost_level) - 3));
         you.attribute[ATTR_STAT_LOSS_XP] -= loss;
         dprf("Stat loss points: %d", you.attribute[ATTR_STAT_LOSS_XP]);
         if (you.attribute[ATTR_STAT_LOSS_XP] <= 0)
