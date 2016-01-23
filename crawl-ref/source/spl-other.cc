@@ -479,3 +479,19 @@ spret_type cast_darkness(int pow, bool fail)
 
     return SPRET_SUCCESS;
 }
+
+/**
+ * Cast Tomb of Glass, setting the duration and power for the effect on the
+ * player. (Does not directly create any walls.)
+ *
+ * @param pow       The power with which the spell is being cast.
+ * @param fail      Whether the player has miscast the spell.
+ */
+spret_type cast_tomb_of_glass(int pow, bool fail)
+{
+    dprf("fail: %d", fail);
+    fail_check();
+    you.duration[DUR_ENCYST] = 40;
+    you.props[TOMB_OF_GLASS_KEY] = pow;
+    return SPRET_SUCCESS;
+}

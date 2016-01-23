@@ -1461,6 +1461,18 @@ Entombs the caster within walls of rock. These walls will push away objects in
 their way, but their growth is obstructed by the presence of any creature. They
 are not permanent, and will expire after a period of time.
 %%%%
+Tomb of Glass spell
+
+Slowly entombs the caster within walls of glass. These walls appear over a
+short duration after the spell is cast. They will push away objects in their
+way, but their growth is obstructed by the presence of creatures, stairs, and
+shops. They are not permanent, and will expire after a period of time.
+
+This spell was first used by monks of an ancient order, when the time came
+for them to end their service. Wizards, however, believed it to have
+considerably more utility for the preservation of casters' lives, and modified
+it accordingly.
+%%%%
 Tornado spell
 
 Turns the air around the caster into a mighty vortex, doing tremendous damage

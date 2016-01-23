@@ -3691,6 +3691,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_TOMB_OF_GLASS, "Tomb of Glass",
+    SPTYP_EARTH,
+    SPFLAG_NONE,
+    5,
+    200,
+    -1, -1,
+    4, 0,
+    nullptr,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

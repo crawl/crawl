@@ -1080,7 +1080,10 @@ static bool _encyst_tile()
                 destroy_item(si->index());
     }
 
-    temp_change_terrain(to_encyst, DNGN_CLEAR_ROCK_WALL, 500 + random2(500),
+    const int pow = you.props[TOMB_OF_GLASS_KEY].get_int();
+    // pow +- 5 turns duration, min 10 (so 10-205 turns)
+    const int dur = max(10, pow + random_range(-5, 5)) * 10;
+    temp_change_terrain(to_encyst, DNGN_CLEAR_ROCK_WALL, dur,
                         TERRAIN_CHANGE_ENCYST);
     return true;
 }
@@ -1099,12 +1102,17 @@ void slow_entomb(int delay)
     // triggers whenever remaining dur hits % 10 aut remaining (30, 20, 10, 0)
     const int entombments = (old_dur+9)/10 - (you.duration[DUR_ENCYST]+9)/10;
     int successful_entombments = 0;
+
     for (int i = 0; i < entombments * 2; ++i)
         successful_entombments += _encyst_tile() ? 1 : 0;
+
     if (successful_entombments == 1)
         mpr("A wall rises near you!");
     else if (successful_entombments)
         mpr("Walls rise around you!");
+
+    if (!you.duration[DUR_ENCYST])
+        you.props.erase(TOMB_OF_GLASS_KEY);
 }
 
 bool cast_smiting(int pow, monster* mons)
