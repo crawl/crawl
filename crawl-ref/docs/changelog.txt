@@ -24,8 +24,9 @@ Character
   two floors.
 * Breath abilities are no longer mutations and are now unique to draconians
   and nagas.
-* Weapons types no longer have distinct strength weightings. Instead to-hit is
-  determined by dex alone and to-dam by strength alone.
+* Weapon types no longer have distinct strength weights. Instead of dex and str
+  both giving varying bonuses to damage, str now solely gives a bonus to-dam,
+  and dex now solely gives a bonus to accuracy.
 
 Gods
 ----
@@ -122,18 +123,11 @@ Monsters
   - Deep elf elementalists, with mastery of all of the elemental schools and
     the noted ability to turn rock into earth elementals to dig out entrenched
     foes.
-* All enemies, including uniques, now have (at least slightly) randomised HP.
 * Chaos champions lose Chaotic Mirror and instead gain Call of Chaos, an
   ability which applies (usually) positive status effects to allies in its
   line of sight.
 * Mnoleg gains Call of Chaos (as above), Random Bolt, and Dig.
 * Gloorx Vloq gains Summon Executioners and Black Mark.
-* Juggernauts now have two less damaging attacks instead of one powerful
-  attack.
-* Jellies and death oozes cannot be blinded.
-* Jumping spiders and mana vipers can be blinded.
-* Jumping spiders cannot see invisible.
-* Giant eyeballs and golden eyes can now see invisible.
 * Salamander stormcallers' chant does not need to be continuous; they now
   only need to try to cast Fire Storm at their target three times for it to
   trigger.
@@ -146,7 +140,6 @@ Monsters
 * Salamander mystics lose Localised Ignite Poison.
 * Natasha, deep elf knights, and salamander stormcallers can no longer cast
   Conjure Flame.
-* Spectral mist can no longer summon completely random spectral enemies.
 * Banishment from powerful monsters can now send you deeper into the Abyss
   than Abyss:1.
 * Deep elf mages are now HD 9 and have new spell sets, including spells
@@ -155,19 +148,13 @@ Monsters
   success rate penalty, rather than scaling continuously. Each spell cast while
   under the Sap effect has a fixed chance to increase the penalty level. The
   penalty now expires when the "Sap" status expires.
-* Demonspawn corruptor's Corrupt Body spell is now a single-target version of
+* Demonspawn corruptors' Corrupt Body spell is now a single-target version of
   the same spell used by wretched stars. These spells both now try to apply
   multiple levels of a single random temporary mutation instead of giving many
   different kinds.
-* Vampire monsters cast Vampiric Drain more frequently at lower HP, and
-  ordinary Vampires can generate a bit earlier in the Dungeon.
-* Ancient champions no longer have the Haunt spell.
-* Death knights no longer have Haunt and can generate in the late Dungeon.
+* Ancient champions and death knights no longer have the Haunt spell.
 * Swamp worms are now amphibious and generate submerged, emerging to attack the
   player and never resubmerging.
-* Wasp and hornet paralyse attacks no longer automatically downgrade due to
-  rPois, but instead have a chance of bypassing rPois to apply paralysis and
-  then a chance to apply slow if the first chance fails.
 * Deep elf high priests now have an Aura of Brilliance spell that affects all
   allies in their view, making them cast spells more frequently and with more
   spell power.
