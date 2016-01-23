@@ -291,7 +291,7 @@ static const ability_def Ability_List[] =
       0, 0, 10, 0, abflag::NONE },
     { ABIL_TROG_BERSERK, "Berserk", 0, 0, 200, 0, abflag::NONE },
     { ABIL_TROG_REGEN_MR, "Trog's Hand",
-      0, 0, 50, generic_cost::range(2, 3), abflag::NONE },
+      0, 0, 50, 2, abflag::NONE },
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
       0, 0, 100, generic_cost::range(5, 6), abflag::NONE },
 
@@ -314,7 +314,7 @@ static const ability_def Ability_List[] =
     { ABIL_LUGONU_BANISH, "Banish",
       4, 0, 200, generic_cost::range(3, 4), abflag::NONE },
     { ABIL_LUGONU_CORRUPT, "Corrupt",
-      7, scaling_cost::fixed(5), 500, generic_cost::range(10, 14), abflag::NONE },
+      7, scaling_cost::fixed(5), 500, 10, abflag::NONE },
     { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss",
       9, 0, 500, generic_cost::fixed(35), abflag::PAIN },
     { ABIL_LUGONU_BLESS_WEAPON, "Brand Weapon With Distortion", 0, 0, 0, 0,
@@ -357,7 +357,7 @@ static const ability_def Ability_List[] =
 
     // Ashenzari
     { ABIL_ASHENZARI_SCRYING, "Scrying",
-      4, 0, 50, generic_cost::range(2, 3), abflag::INSTANT },
+      4, 0, 50, 2, abflag::INSTANT },
     { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge",
       0, 0, 0, 10, abflag::NONE },
     { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge",
@@ -426,8 +426,7 @@ static const ability_def Ability_List[] =
     { ABIL_QAZLAL_UPHEAVAL, "Upheaval", 4, 0, 0, 3, abflag::NONE },
     { ABIL_QAZLAL_ELEMENTAL_FORCE, "Elemental Force",
       6, 0, 0, 6, abflag::NONE },
-    { ABIL_QAZLAL_DISASTER_AREA, "Disaster Area", 7, 0, 0,
-      generic_cost::range(10, 14), abflag::NONE },
+    { ABIL_QAZLAL_DISASTER_AREA, "Disaster Area", 7, 0, 0, 10, abflag::NONE },
 
     // Pakellas
     { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
