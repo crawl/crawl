@@ -95,7 +95,7 @@ struct message_particle
      */
     bool needs_semicolon() const
     {
-        return repeats <= 1 && !_ends_in_punctuation(pure_text());
+        return repeats > 1 || !_ends_in_punctuation(pure_text());
     }
 };
 
