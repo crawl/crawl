@@ -1424,7 +1424,7 @@ static void _generate_potion_item(item_def& item, int force_type,
             // total weight is 1065
             stype = random_choose_weighted(192, POT_CURING,
                                             95, POT_HEAL_WOUNDS,
-                                            72, POT_POISON,
+                                            72, POT_DEGENERATION,
                                             72, POT_LIGNIFY,
                                             72, POT_FLIGHT,
                                             66, POT_MIGHT,
@@ -1443,9 +1443,8 @@ static void _generate_potion_item(item_def& item, int force_type,
                                              2, POT_EXPERIENCE,
                                              0);
         }
-        while (stype == POT_POISON && item_level < 1
-               // Too dangerous on monsters early on
-               || stype == POT_BERSERK_RAGE && item_level < 2
+        while (// Too dangerous on monsters early on
+               stype == POT_BERSERK_RAGE && item_level < 2
                || (agent == GOD_XOM && _is_boring_item(OBJ_POTIONS, stype)
                    && --tries > 0));
 

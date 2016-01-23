@@ -651,12 +651,14 @@ const char* potion_type_name(int potiontype)
     case POT_SLOWING:           return "slowing";
 #endif
     case POT_FLIGHT:            return "flight";
+#if TAG_MAJOR_VERSION == 34
     case POT_POISON:            return "poison";
+#endif
     case POT_CANCELLATION:      return "cancellation";
     case POT_AMBROSIA:          return "ambrosia";
     case POT_INVISIBILITY:      return "invisibility";
-#if TAG_MAJOR_VERSION == 34
     case POT_DEGENERATION:      return "degeneration";
+#if TAG_MAJOR_VERSION == 34
     case POT_DECAY:             return "decay";
 #endif
     case POT_EXPERIENCE:        return "experience";
@@ -3330,16 +3332,18 @@ bool is_bad_item(const item_def &item, bool temp)
 #if TAG_MAJOR_VERSION == 34
         case POT_SLOWING:
             return !you.stasis();
+#endif
         case POT_DEGENERATION:
             return true;
+#if TAG_MAJOR_VERSION == 34
         case POT_DECAY:
             return you.res_rotting(temp) <= 0;
         case POT_STRONG_POISON:
-#endif
         case POT_POISON:
             // Poison is not that bad if you're poison resistant.
             return player_res_poison(false) <= 0
                    || !temp && you.species == SP_VAMPIRE;
+#endif
         default:
             return false;
         }
@@ -3651,11 +3655,9 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_DECAY:
             return you.res_rotting(temp) > 0;
         case POT_STRONG_POISON:
-#endif
         case POT_POISON:
             // If you're poison resistant, poison is only useless.
             return !is_bad_item(item, temp);
-#if TAG_MAJOR_VERSION == 34
         case POT_SLOWING:
             return you.species == SP_FORMICID;
 #endif

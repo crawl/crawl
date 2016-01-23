@@ -728,21 +728,9 @@ potion of mutation
 
 Une potion qui vous fait des choses vraiment étranges.
 %%%%
-potion of poison
-
-Un atroce liquide empoisonné.
-%%%%
-potion of porridge
-
-Une potion nourrissante et pâteuse, riches en fibres de céréales.
-%%%%
 potion of resistance
 
 Une potion qui vous donne une résistance temporaire aux éléments et au poison.
-%%%%
-potion of slowing
-
-Une potion qui ralentit vos actions.
 %%%%
 potion of haste
 

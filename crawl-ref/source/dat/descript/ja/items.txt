@@ -452,21 +452,9 @@ potion of mutation
 
 これは水薬だ。これはあなたに非常に奇妙な作用を及ぼす。
 %%%%
-potion of poison
-
-これは危険な毒物の液体だ。
-%%%%
-potion of porridge
-
-これは満腹をもたらす水薬だ。穀物繊維をたくさん含んだ粥だ。
-%%%%
 potion of resistance
 
 これは水薬だ。これはあなたに一時的な四大元素と毒の耐性を与える。
-%%%%
-potion of slowing
-
-これは水薬だ。これはあなたの動作を遅くする。
 %%%%
 quad damage
 

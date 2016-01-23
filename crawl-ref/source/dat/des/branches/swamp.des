@@ -1214,7 +1214,7 @@ MONS: hydra
 NSUBST: : = 5:W / *:.
 SUBST: w = w:10 t:10
 KFEAT: K = shallow_water
-KITEM: K = potion of poison w:20 / potion of mutation
+KITEM: K = potion of degeneration w:20 / potion of mutation
 KPROP: w = no_tele_into
 MARKER: K = lua:fog_machine { cloud_type="black smoke", \
                               pow_min = 10, pow_max = 30, delay = 50, \
