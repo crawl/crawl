@@ -897,7 +897,7 @@ ENDMAP
 NAME:   trove_misc_throne_room
 WEIGHT: 15
 veto {{ return crawl.game_started()
-          and (you.skill("Evocations") < 4 and not crawl.one_chance_in(3)
+          and (you.base_skill("Evocations") < 4 and not crawl.one_chance_in(3)
                or you.mutation("inability to use devices") == 1) }}
 COLOUR: x = blue
 COLOUR: ' = yellow
