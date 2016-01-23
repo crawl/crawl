@@ -54,6 +54,7 @@ bool curse_item(bool armour, const string &pre_msg = "");
 
 bool entomb(int pow);
 bool cast_imprison(int pow, monster* mons, int source);
+void slow_entomb(int delay);
 
 bool cast_smiting(int pow, monster* mons);
 

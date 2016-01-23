@@ -7,6 +7,7 @@
 
 #include "spl-goditem.h"
 
+#include "artefact.h" // is_artefact
 #include "cloud.h"
 #include "coordit.h"
 #include "database.h"
@@ -26,6 +27,7 @@
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
+#include "orb.h" // start_orb_run
 #include "religion.h"
 #include "spl-util.h"
 #include "state.h"
@@ -955,6 +957,157 @@ bool cast_imprison(int pow, monster* mons, int source)
     }
 
     return false;
+}
+
+/**
+ * Is the given tile already covered in temprock?
+ *
+ * @param p     The tile in question.
+ * @return      Whether the tile is already encysted.
+ */
+static bool _already_encysted(const coord_def &pos)
+{
+    for (map_marker *marker : env.markers.get_markers_at(pos))
+    {
+        if (marker->get_type() != MAT_TERRAIN_CHANGE)
+            continue;
+
+        map_terrain_change_marker* tmarker =
+            dynamic_cast<map_terrain_change_marker*>(marker);
+        return tmarker->change_type == TERRAIN_CHANGE_ENCYST;
+    }
+    return false;
+}
+
+/**
+ * Are any items that really should not be destroyed in this stack?
+ *
+ * Partially redundant with is_jelly_edible.
+ *
+ * @param pos     The location of the stack.
+ * @return        Whether there's anything in the stack that we shouldn't ever
+ *                destroy.
+ */
+static bool _precious_item_in_stack(const coord_def pos)
+{
+    for (stack_iterator si(pos); si; ++si)
+    {
+        const item_def &item = *si;
+        if (item.flags & ISFLAG_MIMIC
+            || item.is_critical()
+            || is_artefact(item)
+            || item_is_horn_of_geryon(item)
+            || item.base_type == OBJ_MISCELLANY
+                && item.sub_type == MISC_ZIGGURAT)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Attempt to select one tile adjacent to the player (which cannot already be
+ * temprock) and turn it into transparent temprock. Tiles containing shops,
+ * stairs or enemies may be selected, but will not be transformed. (Smoke
+ * will appear instead.)
+ *
+ * @return  Whether a wall was successfully placed.
+ */
+static bool _encyst_tile()
+{
+    // choose a valid adjacent tile. (not already temprock.)
+    int valid_candates = 0;
+    coord_def to_encyst;
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        if (!_already_encysted(*ai) && one_chance_in(++valid_candates))
+            to_encyst = *ai;
+
+    if (to_encyst.origin())
+        return false; // no good :(
+
+    if (actor_at(to_encyst))
+    {
+        // XXX: verbose - condense
+        mprf("A wall begins to rise below %s, but crumbles into dust.",
+             actor_at(to_encyst)->name(DESC_THE).c_str());
+        place_cloud(CLOUD_DUST_TRAIL, to_encyst, 2 + coinflip(), &you);
+        return false;
+    }
+
+    const dungeon_feature_type old_terr = grd(to_encyst);
+    if (feat_is_solid(old_terr)
+        || feat_is_travelable_stair(old_terr)
+        || old_terr == DNGN_ENTER_SHOP)
+    {
+        if (!feat_is_solid(old_terr))
+        {
+            // XXX: verbose - condense
+            mprf("A wall begins to rise above %s, but crumbles into dust.",
+                 get_feature_def(old_terr).name);
+            place_cloud(CLOUD_DUST_TRAIL, to_encyst, 2 + coinflip(), &you);
+        }
+        else
+            dprf("not changing '%s'", get_feature_def(old_terr).name);
+
+        return false;
+    }
+
+    // All items are moved aside or destroyed.
+    // Unless there's a mimic, or some very special item [e.g. runes] and we
+    // have no space to move it; then just make some dust.
+    if (igrd(to_encyst) != NON_ITEM)
+    {
+        const item_def &item = mitm[igrd(to_encyst)];
+        const bool is_mimic = item.flags & ISFLAG_MIMIC;
+        coord_def newpos;
+        if (!is_mimic && get_push_space(to_encyst, newpos, nullptr, true))
+        {
+            move_items(to_encyst, newpos);
+            // no bumping the orb to the stairs!
+            if (item.base_type == OBJ_ORBS)
+            {
+                start_orb_run(CHAPTER_ANGERED_PANDEMONIUM,
+                              "Now get to the Orb and get out of here!");
+            }
+        }
+        else if (_precious_item_in_stack(to_encyst))
+        {
+            mprf("A wall begins to rise below %s, but crumbles into dust.",
+                 item.name(DESC_THE).c_str());
+            place_cloud(CLOUD_DUST_TRAIL, to_encyst, 2 + coinflip(), &you);
+            return false;
+        }
+        else  // no room to move it, just destroy it
+            for (stack_iterator si(to_encyst); si; ++si)
+                destroy_item(si->index());
+    }
+
+    temp_change_terrain(to_encyst, DNGN_CLEAR_ROCK_WALL, 500 + random2(500),
+                        TERRAIN_CHANGE_ENCYST);
+    return true;
+}
+
+/**
+ * Slowly surround the player with temporary transparent rock; 2 tiles every
+ * 10 aut.
+ *
+ * @param delay   The amount of time this effect has proceeded for since the
+ *                player's last turn, in auts.
+ */
+void slow_entomb(int delay)
+{
+    const int old_dur = you.duration[DUR_ENCYST];
+    you.duration[DUR_ENCYST] -= min(you.duration[DUR_ENCYST], delay);
+    // triggers whenever remaining dur hits % 10 aut remaining (30, 20, 10, 0)
+    const int entombments = (old_dur+9)/10 - (you.duration[DUR_ENCYST]+9)/10;
+    int successful_entombments = 0;
+    for (int i = 0; i < entombments * 2; ++i)
+        successful_entombments += _encyst_tile() ? 1 : 0;
+    if (successful_entombments == 1)
+        mpr("A wall rises near you!");
+    else if (successful_entombments)
+        mpr("Walls rise around you!");
 }
 
 bool cast_smiting(int pow, monster* mons)

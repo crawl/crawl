@@ -773,6 +773,9 @@ static void _decrement_durations()
     if (!env.sunlight.empty())
         process_sunlights();
 
+    if (you.duration[DUR_ENCYST])
+        slow_entomb(delay);
+
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)
         if (duration_decrements_normally((duration_type) i))

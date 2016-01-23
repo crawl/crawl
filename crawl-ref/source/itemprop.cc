@@ -2853,7 +2853,7 @@ bool item_is_jelly_edible(const item_def &item)
     }
 
     // Don't eat special game items.
-    if (item_is_orb(item) || item.base_type == OBJ_RUNES)
+    if (item.is_critical())
         return false;
 
     return true;

@@ -566,6 +566,9 @@ static const duration_def duration_data[] =
       {{ "The world stops spinning.", []() {
           you.redraw_evasion = true;
       }}}},
+    { DUR_ENCYST, BLUE, "Encyst", "encystment", "encyst",
+        "You are being steadily surrounded by rock.", D_NO_FLAGS,
+    },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
