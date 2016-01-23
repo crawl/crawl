@@ -559,22 +559,10 @@ potion of mutation
 
 En drik, som gør overordentligt underlige ting ved dig.
 %%%%
-potion of poison
-
-En fæl, giftig væske.
-%%%%
-potion of porridge
-
-En mættende portion slim, som er fyldt med kornfiber.
-%%%%
 potion of resistance
 
 En trylledrik, som gør dig midlertidigt modstandsdygtig mod elementerne og
 gift.
-%%%%
-potion of slowing
-
-En drik, som forsinker dine handlinger.
 %%%%
 quad damage
 

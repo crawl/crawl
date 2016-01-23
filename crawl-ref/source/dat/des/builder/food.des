@@ -125,7 +125,7 @@ WEIGHT: 15
 TAGS:     uniq_second_food extra chance_second_food
 SUBVAULT: X : fruiting_plant
 SUBVAULT: W : fruiting_plant
-KITEM:    p =  potion of poison w:5 / potion of ambrosia w:1 / nothing
+KITEM:    p =  potion of degeneration w:5 / potion of ambrosia w:1 / nothing
 MONS:     big kobold ; wand of flame ident:type . short sword
 MAP
 XXXXX..WWWWW

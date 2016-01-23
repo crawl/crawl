@@ -411,6 +411,7 @@ public:
     }
 };
 
+#if TAG_MAJOR_VERSION == 34
 class PotionPoison : public PotionEffect
 {
 private:
@@ -437,6 +438,7 @@ public:
         return true;
     }
 };
+#endif
 
 class PotionCancellation : public PotionEffect
 {
@@ -1172,6 +1174,7 @@ public:
         return nothing_happens;
     }
 };
+#endif
 
 class PotionDegeneration : public PotionEffect
 {
@@ -1197,7 +1200,6 @@ public:
         return true;
     }
 };
-#endif
 
 // placeholder 'buggy' potion
 class PotionStale : public PotionEffect
@@ -1231,8 +1233,8 @@ static const PotionEffect* potion_effects[] =
     &PotionGainIntelligence::instance(),
 #endif
     &PotionFlight::instance(),
-    &PotionPoison::instance(),
 #if TAG_MAJOR_VERSION == 34
+    &PotionPoison::instance(),
     &PotionSlowing::instance(),
 #endif
     &PotionCancellation::instance(),
@@ -1240,7 +1242,9 @@ static const PotionEffect* potion_effects[] =
     &PotionInvisibility::instance(),
 #if TAG_MAJOR_VERSION == 34
     &PotionPorridge::instance(),
+#endif
     &PotionDegeneration::instance(),
+#if TAG_MAJOR_VERSION == 34
     &PotionDecay::instance(),
     &PotionWater::instance(),
 #endif

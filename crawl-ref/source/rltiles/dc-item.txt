@@ -825,14 +825,15 @@ i-gain-strength POT_REMOVEME2
 i-gain-dexterity POT_REMOVEME3
 i-gain-intelligence POT_REMOVEME4
 i-flight POT_FLIGHT
+# please remove POT_POISON when TAG_MAJOR_VERSION is bumped
 i-poison POT_POISON
 i-slowing POT_SLOWING
 i-cancel POT_CANCELLATION
 i-ambrosia POT_AMBROSIA
 i-invisibility POT_INVISIBILITY
 i-porridge POT_PORRIDGE
-# please remove these 3 when TAG_MAJOR_VERSION is bummped
 i-degeneration POT_DEGENERATION
+# please remove these 2 when TAG_MAJOR_VERSION is bumped
 i-decay POT_REMOVEME5
 i-confusion POT_REMOVE_ME
 i-experience POT_EXPERIENCE

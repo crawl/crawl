@@ -3878,8 +3878,8 @@ enum potion_type
     POT_GAIN_INTELLIGENCE,
 #endif
     POT_FLIGHT,
-    POT_POISON,
 #if TAG_MAJOR_VERSION == 34
+    POT_POISON,
     POT_SLOWING,
 #endif
     POT_CANCELLATION,
@@ -3887,7 +3887,9 @@ enum potion_type
     POT_INVISIBILITY,
 #if TAG_MAJOR_VERSION == 34
     POT_PORRIDGE,
+#endif
     POT_DEGENERATION,
+#if TAG_MAJOR_VERSION == 34
     POT_DECAY,
     POT_WATER,
 #endif

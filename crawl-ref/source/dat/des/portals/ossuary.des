@@ -503,12 +503,12 @@ MONS:    gnoll zombie / hobgoblin zombie / orc zombie / \
 ITEM:    scroll of random uselessness w:20 / scroll of immolation / \
          scroll of identify / scroll of remove curse / \
          potion of mutation w:5 / potion of ambrosia w:5 / \
-         potion of poison / potion of lignification / \
+         potion of degeneration / potion of lignification / \
          potion of flight / potion of curing w:15
 # and sometimes mostly useless ones
 ITEM:    scroll of noise / scroll of random uselessness w:20 / \
          scroll of immolation / potion of mutation w:5 / \
-         potion of poison w:40
+         potion of degeneration w:40
 # occasionally just use this
 ITEM:    any potion / any scroll w:5 / nothing
 SHUFFLE: hjkl

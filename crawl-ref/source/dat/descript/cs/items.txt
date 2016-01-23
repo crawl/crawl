@@ -182,14 +182,6 @@ potion of might
 
 Magický nápoj, výrazně zvyšující fyzickou sílu člověka, který jej vypije.
 %%%%
-potion of poison
-
-Hnusná jedovatá kapalina.
-%%%%
-potion of slowing
-
-Lektvar, který zpomaluje vaše akce.
-%%%%
 quarterstaff
 
 Robustni dreveni kul určenej k boji.
