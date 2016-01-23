@@ -859,9 +859,6 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                 move_items(*ai, newpos);
             }
 
-            // All clouds are destroyed.
-            delete_cloud(*ai);
-
             // All traps are destroyed.
             if (trap_def *ptrap = trap_at(*ai))
             {
