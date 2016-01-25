@@ -813,6 +813,7 @@ static void _move_monster(const coord_def& where, int idx1)
     direction_chooser_args args;
     args.needs_path = false;
     args.top_prompt = "Move monster to where?";
+    args.default_place = where;
     direction(moves, args);
 
     if (!moves.isValid || !in_bounds(moves.target))
