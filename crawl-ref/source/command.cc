@@ -313,7 +313,7 @@ static const char *targeting_help_1 =
     "<w>v</w> : describe monster under cursor\n"
     "<w>+</w> : cycle monsters forward (also <w>=</w>)\n"
     "<w>-</w> : cycle monsters backward\n"
-    "<w>*</w> : cycle objects forward\n"
+    "<w>*</w> : cycle objects forward (also <w>'</w>)\n"
     "<w>/</w> : cycle objects backward (also <w>;</w>)\n"
     "<w>^</w> : cycle through traps\n"
     "<w>_</w> : cycle through altars\n"
