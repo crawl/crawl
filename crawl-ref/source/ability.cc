@@ -247,7 +247,8 @@ static const ability_def Ability_List[] =
       5, 0, 100, 2, abflag::NONE },
     { ABIL_TSO_SUMMON_DIVINE_WARRIOR, "Summon Divine Warrior",
       8, 0, 150, 5, abflag::NONE },
-    { ABIL_TSO_BLESS_WEAPON, "Brand Weapon With Holy Wrath", 0, 0, 0, 0, abflag::NONE },
+    { ABIL_TSO_BLESS_WEAPON, "Brand Weapon With Holy Wrath", 0, 0, 0, 0,
+      abflag::NONE },
 
     // Kikubaaqudgha
     { ABIL_KIKU_RECEIVE_CORPSES, "Receive Corpses",
@@ -255,7 +256,8 @@ static const ability_def Ability_List[] =
     { ABIL_KIKU_TORMENT, "Torment", 4, 0, 0, 8, abflag::NONE },
     { ABIL_KIKU_GIFT_NECRONOMICON, "Receive Necronomicon", 0, 0, 0, 0,
       abflag::NONE },
-    { ABIL_KIKU_BLESS_WEAPON, "Brand Weapon With Pain", 0, 0, 0, 0, abflag::NONE },
+    { ABIL_KIKU_BLESS_WEAPON, "Brand Weapon With Pain", 0, 0, 0, 0,
+      abflag::PAIN },
 
     // Yredelemnul
     { ABIL_YRED_INJURY_MIRROR, "Injury Mirror", 0, 0, 0, 0, abflag::PIETY },
@@ -318,7 +320,7 @@ static const ability_def Ability_List[] =
     { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss",
       9, 0, 500, generic_cost::fixed(35), abflag::PAIN },
     { ABIL_LUGONU_BLESS_WEAPON, "Brand Weapon With Distortion", 0, 0, 0, 0,
-      abflag::PAIN },
+      abflag::NONE },
 
     // Nemelex
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw", 2, 0, 100, 2, abflag::NONE },
