@@ -759,11 +759,9 @@ static void _maybe_dismiss(mid_t source)
             // 10% chance to teleport away monsters that harm you
             if (!mon->no_tele() && one_chance_in(10))
             {
-                mprf("The translocation field surrounding you"
-                     " vibrates and %s disappears!",
-                     mon->name(DESC_THE).c_str());
-                place_cloud(CLOUD_TLOC_ENERGY, mon->pos(), 1 + random2(8), 0);
-                monster_teleport(mon, true, true);
+                item_def *amulet = you.slot_item(EQ_AMULET);
+                mprf("%s vibrates suddenly!", amulet->name(DESC_YOUR).c_str());
+                teleport_fineff::schedule(mon);
             }
         }
     }

@@ -529,7 +529,7 @@ bool attack::distortion_affects_defender()
         }
 
         if (choice == TELE_INSTANT)
-            distortion_tele_fineff::schedule(defender);
+            teleport_fineff::schedule(defender);
         else
             defender->teleport();
         break;

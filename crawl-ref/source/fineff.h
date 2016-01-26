@@ -109,7 +109,7 @@ protected:
     }
 };
 
-class distortion_tele_fineff : public final_effect
+class teleport_fineff : public final_effect
 {
 public:
     bool mergeable(const final_effect &a) const override;
@@ -117,10 +117,10 @@ public:
 
     static void schedule(const actor *defend)
     {
-        final_effect::schedule(new distortion_tele_fineff(defend));
+        final_effect::schedule(new teleport_fineff(defend));
     }
 protected:
-    distortion_tele_fineff(const actor *defend)
+    teleport_fineff(const actor *defend)
         : final_effect(0, defend, coord_def())
     {
     }

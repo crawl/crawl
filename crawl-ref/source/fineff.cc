@@ -73,10 +73,10 @@ bool blink_fineff::mergeable(const final_effect &fe) const
     return o && def == o->def;
 }
 
-bool distortion_tele_fineff::mergeable(const final_effect &fe) const
+bool teleport_fineff::mergeable(const final_effect &fe) const
 {
-    const distortion_tele_fineff *o =
-        dynamic_cast<const distortion_tele_fineff *>(&fe);
+    const teleport_fineff *o =
+        dynamic_cast<const teleport_fineff *>(&fe);
     return o && def == o->def;
 }
 
@@ -238,7 +238,7 @@ void blink_fineff::fire()
         defend->blink();
 }
 
-void distortion_tele_fineff::fire()
+void teleport_fineff::fire()
 {
     actor *defend = defender();
     if (defend && defend->alive() && !defend->no_tele(true, false))
