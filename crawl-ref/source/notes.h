@@ -69,6 +69,7 @@ struct Note
     void save(writer& outf) const;
     void load(reader& inf);
     string describe(bool when = true, bool where = true, bool what = true) const;
+    bool hidden() const;
     void check_milestone() const;
 
     NOTE_TYPES type;

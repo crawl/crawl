@@ -132,18 +132,11 @@ static bool _is_noteworthy(const Note& note)
         return false;
     }
 
-    // Skills are noteworthy if in the skill value list or if
-    // it's a new maximal skill (depending on options).
+    // Skills are always noteworthy in order to construct the skill_gains table
+    // in the chardump. The options to control display are used in
+    // Note::hidden().
     if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
-    {
-        if (Options.note_all_skill_levels
-            || note.second <= 27 && Options.note_skill_levels[note.second]
-            || Options.note_skill_max && _is_highest_skill(note.first))
-        {
-            return true;
-        }
-        return false;
-    }
+        return true;
 
     if (note.type == NOTE_DUNGEON_LEVEL_CHANGE)
         return _is_noteworthy_dlevel(note.place);
@@ -374,6 +367,18 @@ string Note::describe(bool when, bool where, bool what) const
             result << " the pandemonium lord";
     }
     return result.str();
+}
+
+bool Note::hidden() const
+{
+    // Hide skill gains that are not enabled by options.
+    if (type == NOTE_GAIN_SKILL || type == NOTE_LOSE_SKILL)
+    {
+        return !(Options.note_all_skill_levels
+                 || second <= 27 && Options.note_skill_levels[second]
+                 || Options.note_skill_max && _is_highest_skill(first));
+    }
+    return false;
 }
 
 void Note::check_milestone() const

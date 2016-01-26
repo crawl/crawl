@@ -196,6 +196,7 @@ Interface
   powers (per level of piety) being highlighted.
 * Many previously hardcoded forced mores are now optional and present in the
   default init.txt.
+* New character dump option: skill_gains, which shows when skills were gained.
 
 Stone Soup 0.17 (20151106)
 --------------------------
