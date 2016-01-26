@@ -1147,6 +1147,16 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
             z_tile = TILEP_MONS_ZOMBIE_DRAKE;
             break;
         }
+        else if (subtype == MONS_LERNAEAN_HYDRA && z_type == MONS_ZOMBIE)
+        {
+            // Step down the number of heads to get the appropriate tile:
+            // For the last five heads, use tiles 1-5, for greater amounts
+            // use the next tile for every 5 more heads.
+            z_tile = tileidx_mon_clamp(TILEP_MONS_LERNAEAN_HYDRA_ZOMBIE,
+                                       mon.number <= 5 ?
+                                       mon.number - 1 : 4 + (mon.number - 1)/5);
+            break;
+        }
         else if (mons_genus(subtype) == MONS_HYDRA)
         {
             z_tile = TILEP_MONS_ZOMBIE_HYDRA

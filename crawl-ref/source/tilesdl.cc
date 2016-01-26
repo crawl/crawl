@@ -1523,8 +1523,12 @@ void TilesFramework::add_text_tag(text_tag_type type, const string &tag,
 void TilesFramework::add_text_tag(text_tag_type type, const monster_info& mon)
 {
     // HACK. Large-tile monsters don't interact well with name tags.
-    if (mons_class_flag(mon.type, M_TALL_TILE) || mon.mb[MB_NO_NAME_TAG])
+    if (mons_class_flag(mon.type, M_TALL_TILE)
+        || mons_class_flag(mon.base_type, M_TALL_TILE)
+        || mon.mb[MB_NO_NAME_TAG])
+    {
         return;
+    }
 
     const coord_def &gc = mon.pos;
 
