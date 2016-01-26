@@ -131,8 +131,12 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
                                        OSEL_BLESSABLE_WEAPON, true, true,
                                        false);
+
     if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
+    {
+        canned_msg(MSG_OK);
         return false;
+    }
 
     item_def& wpn(you.inv[item_slot]);
     // Only TSO allows blessing ranged weapons.
