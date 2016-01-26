@@ -80,6 +80,7 @@ static void _sdump_overview(dump_params &);
 static void _sdump_hiscore(dump_params &);
 static void _sdump_monster_list(dump_params &);
 static void _sdump_vault_list(dump_params &);
+static void _sdump_skill_gains(dump_params &);
 static void _sdump_action_counts(dump_params &);
 static void _sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
@@ -137,6 +138,7 @@ static dump_section_handler dump_handlers[] =
     { "vaults",         _sdump_vault_list    },
     { "spell_usage",    _sdump_action_counts }, // compat
     { "action_counts",  _sdump_action_counts },
+    { "skill_gains",    _sdump_skill_gains   },
 
     // Conveniences for the .crawlrc artist.
     { "",               _sdump_newline       },
@@ -546,6 +548,8 @@ static void _sdump_notes(dump_params &par)
     text += "--------------------------------------------------------------\n";
     for (const Note &note : note_list)
     {
+        if (note.hidden())
+            continue;
         text += note.describe();
         text += "\n";
     }
@@ -1156,6 +1160,68 @@ static void _sdump_action_counts(dump_params &par)
     par.text += "\n";
 }
 
+static void _sdump_skill_gains(dump_params &par)
+{
+    typedef map<int, int> XlToSkillLevelMap;
+    map<skill_type, XlToSkillLevelMap> skill_gains;
+    vector<skill_type> skill_order;
+    int xl = 0;
+    int max_xl = 0;
+    for (const Note &note : note_list)
+    {
+        if (note.type == NOTE_XP_LEVEL_CHANGE)
+            xl = note.first;
+        else if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
+        {
+            skill_type skill = static_cast<skill_type>(note.first);
+            int skill_level = note.second;
+            if (skill_gains.find(skill) == skill_gains.end())
+                skill_order.push_back(skill);
+            skill_gains[skill][xl] = skill_level;
+            max_xl = max(max_xl, xl);
+        }
+    }
+
+    if (skill_order.empty())
+        return;
+
+    for (int i = 0; i < NUM_SKILLS; i++)
+    {
+        skill_type skill = static_cast<skill_type>(i);
+        if (you.skill(skill, 10, true) > 0
+            && skill_gains.find(skill) == skill_gains.end())
+        {
+            skill_order.push_back(skill);
+        }
+    }
+
+    par.text += "\nSkill      XL: |";
+    for (xl = 1; xl <= max_xl; xl++)
+        par.text += make_stringf(" %2d", xl);
+    par.text += " |\n";
+    par.text += "---------------+";
+    for (xl = 1; xl <= max_xl; xl++)
+        par.text += "---";
+    par.text += "-+-----\n";
+
+    for (skill_type skill : skill_order)
+    {
+        par.text += make_stringf("%-14s |", skill_name(skill));
+        const XlToSkillLevelMap &gains = skill_gains[skill];
+        for (xl = 1; xl <= max_xl; xl++)
+        {
+            auto it = gains.find(xl);
+            if (it != gains.end())
+                par.text += make_stringf(" %2d", it->second);
+            else
+                par.text += "   ";
+        }
+        par.text += make_stringf(" | %4.1f\n",
+                                 you.skill(skill, 10, true) * 0.1);
+    }
+    par.text += "\n";
+}
+
 static void _sdump_mutations(dump_params &par)
 {
     string &text(par.text);
@@ -1381,6 +1447,8 @@ void display_notes()
     scr.set_title(new MenuEntry("Turn   | Place    | Note"));
     for (const Note &note : note_list)
     {
+        if (note.hidden())
+            continue;
         string prefix = note.describe(true, true, false);
         string suffix = note.describe(false, false, true);
         if (suffix.empty())
