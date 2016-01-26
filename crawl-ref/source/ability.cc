@@ -2257,7 +2257,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_KIKU_BLESS_WEAPON:
         fail_check();
-        simple_god_message(" will bloody your weapon with pain.");
+        simple_god_message(" will bloody one of your weapons with pain.");
         // included in default force_more_message
         if (!bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED))
             return SPRET_ABORT;
