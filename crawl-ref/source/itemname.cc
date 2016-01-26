@@ -3727,6 +3727,9 @@ bool is_useless_item(const item_def &item, bool temp)
                    || temp && you.species == SP_VAMPIRE
                       && you.hunger_state <= HS_STARVING;
 
+        case AMU_MANA_REGENERATION:
+            return !you_worship(GOD_PAKELLAS);
+
         case RING_SEE_INVISIBLE:
             return you.can_see_invisible(false, false);
 
