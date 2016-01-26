@@ -5421,10 +5421,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_BANISH:
-        if (player_in_branch(BRANCH_ABYSS) && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
-            simple_monster_message(mon, " wobbles for a moment.");
-        else
-            mon->banish(agent());
+        mon->banish(agent());
         obvious_effect = true;
         return MON_AFFECTED;
 

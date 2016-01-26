@@ -511,13 +511,10 @@ bool attack::distortion_affects_defender()
             blink_fineff::schedule(defender);
         break;
     case BANISH:
-        if (!player_in_branch(BRANCH_ABYSS))
-        {
-            if (defender_visible)
-                    obvious_effect = true;
-            defender->banish(attacker, attacker->name(DESC_PLAIN, true),
-                             attacker->get_experience_level());
-        }
+        if (defender_visible)
+            obvious_effect = true;
+        defender->banish(attacker, attacker->name(DESC_PLAIN, true),
+                         attacker->get_experience_level());
         return true;
     case TELE_INSTANT:
     case TELE_DELAYED:

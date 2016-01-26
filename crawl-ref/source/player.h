@@ -627,7 +627,8 @@ public:
     bool malmutate(const string &reason) override;
     bool polymorph(int pow) override;
     void backlight();
-    void banish(actor* /*agent*/, const string &who = "", const int power = 0) override;
+    void banish(actor* /*agent*/, const string &who = "", const int power = 0,
+                bool force = false) override;
     void blink() override;
     void teleport(bool right_now = false,
                   bool wizard_tele = false) override;
