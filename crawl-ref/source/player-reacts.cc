@@ -844,9 +844,8 @@ static void _regenerate_hp_and_mp(int delay)
     while (you.hit_points_regeneration >= 100)
     {
         // at low mp, "mana link" restores mp in place of hp
-        if (you.mutation[MUT_MANA_LINK]
-            && !x_chance_in_y(you.magic_points, you.max_magic_points)
-            && !you_worship(GOD_PAKELLAS))
+        if (player_mutation_level(MUT_MANA_LINK)
+            && !x_chance_in_y(you.magic_points, you.max_magic_points))
         {
             inc_mp(1);
         }
@@ -867,7 +866,7 @@ static void _regenerate_hp_and_mp(int delay)
         const int base_val = 7 + you.max_magic_points / 2;
         int mp_regen_countup = div_rand_round(base_val * delay, BASELINE_DELAY);
 
-        if (you.mutation[MUT_MANA_REGENERATION])
+        if (player_mutation_level(MUT_MANA_REGENERATION))
             mp_regen_countup *= 2;
         if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION))
             mp_regen_countup += 20;
