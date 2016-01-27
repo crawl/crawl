@@ -2102,6 +2102,9 @@ void melee_attack::attacker_sustain_passive_damage()
     if (attacker->res_acid() >= 3)
         return;
 
+    if (!adjacent(attacker->pos(), defender->pos()))
+        return;
+
     const int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, 5);
 
     // Spectral weapons can't be corroded (but can take acid damage).
