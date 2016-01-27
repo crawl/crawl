@@ -544,7 +544,7 @@ static void _sdump_notes(dump_params &par)
     if (note_list.empty())
         return;
 
-    text += "\nNotes\nTurn   | Place    | Note\n";
+    text += "Notes\nTurn   | Place    | Note\n";
     text += "--------------------------------------------------------------\n";
     for (const Note &note : note_list)
     {
@@ -836,6 +836,7 @@ static void _sdump_spells(dump_params &par)
 static void _sdump_kills(dump_params &par)
 {
     par.text += you.kills.kill_info();
+    par.text += "\n";
 }
 
 static string _sdump_kills_place_info(PlaceInfo place_info, string name = "")
@@ -959,6 +960,7 @@ static void _sdump_vault_list(dump_params &par)
     {
         par.text += "Vault maps used:\n";
         par.text += dump_vault_maps();
+        par.text += "\n";
     }
 }
 
@@ -1106,7 +1108,7 @@ static void _sdump_action_counts(dump_params &par)
     if (max_lt)
         max_lt++;
 
-    par.text += make_stringf("\n%-24s", "Action");
+    par.text += make_stringf("%-24s", "Action");
     for (int lt = 0; lt < max_lt; lt++)
         par.text += make_stringf(" | %2d-%2d", lt * 3 + 1, lt * 3 + 3);
     par.text += make_stringf(" || %5s", "total");
@@ -1195,7 +1197,7 @@ static void _sdump_skill_gains(dump_params &par)
         }
     }
 
-    par.text += "\nSkill      XL: |";
+    par.text += "Skill      XL: |";
     for (xl = 1; xl <= max_xl; xl++)
         par.text += make_stringf(" %2d", xl);
     par.text += " |\n";
