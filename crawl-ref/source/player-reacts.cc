@@ -845,7 +845,8 @@ static void _regenerate_hp_and_mp(int delay)
     {
         // at low mp, "mana link" restores mp in place of hp
         if (you.mutation[MUT_MANA_LINK]
-            && !x_chance_in_y(you.magic_points, you.max_magic_points))
+            && !x_chance_in_y(you.magic_points, you.max_magic_points)
+            && !you_worship(GOD_PAKELLAS))
         {
             inc_mp(1);
         }
