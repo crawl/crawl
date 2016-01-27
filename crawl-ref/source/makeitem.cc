@@ -1281,24 +1281,37 @@ static monster_type _choose_random_monster_corpse()
     return MONS_RAT;          // if you can't find anything else...
 }
 
+/**
+ * Choose a random wand subtype for ordinary wand generation.
+ *
+ * Some wands [mostly more powerful ones] are less common than others.
+ *
+ * @return      A random wand_type.
+ */
 static int _random_wand_subtype()
 {
-    int rc = random2(NUM_WANDS);
-
-    // Adjusted distribution here -- bwr
-    // Wands used to be uniform (5.26% each)
-    //
-    // Now:
-    // hasting, heal wounds                                (1.11% each)
-    // invisibility, enslavement, fireball, teleportation  (3.74% each)
-    // others                                              (6.37% each)
-    if (rc == WAND_INVISIBILITY || rc == WAND_HASTING || rc == WAND_HEAL_WOUNDS
-        || (rc == WAND_INVISIBILITY || rc == WAND_ENSLAVEMENT
-            || rc == WAND_FIREBALL || rc == WAND_TELEPORTATION) && coinflip())
-    {
-        rc = random2(NUM_WANDS);
-    }
-    return rc;
+    // total weight 80 [historical]
+    return random_choose_weighted(5, WAND_FLAME,
+                                  5, WAND_FROST,
+                                  5, WAND_SLOWING,
+                                  5, WAND_MAGIC_DARTS,
+                                  5, WAND_PARALYSIS,
+                                  5, WAND_FIRE,
+                                  5, WAND_COLD,
+                                  5, WAND_CONFUSION,
+                                  5, WAND_DIGGING,
+                                  5, WAND_LIGHTNING,
+                                  5, WAND_POLYMORPH,
+                                  5, WAND_DRAINING,
+                                  5, WAND_RANDOM_EFFECTS,
+                                  5, WAND_DISINTEGRATION,
+                                  3, WAND_INVISIBILITY,
+                                  3, WAND_ENSLAVEMENT,
+                                  3, WAND_FIREBALL,
+                                  3, WAND_TELEPORTATION,
+                                  1, WAND_HASTING,
+                                  1, WAND_HEAL_WOUNDS,
+                                  0);
 }
 
 bool is_high_tier_wand(int type)
