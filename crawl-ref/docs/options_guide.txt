@@ -2139,9 +2139,9 @@ dump_message_count = 20
         The number of last messages to be displayed in character dump
         files.
 
-dump_order  = header,hiscore,stats,misc,notes,inventory,
+dump_order  = header,hiscore,stats,misc,inventory,
 dump_order += skills,spells,overview,mutations,messages,screenshot,
-dump_order += monlist,kills,skill_gains,action_counts
+dump_order += monlist,kills,notes,skill_gains,action_counts
         (Ordered list option)
         Controls the order of sections in the dump.
 
@@ -2157,7 +2157,7 @@ dump_order += monlist,kills,skill_gains,action_counts
         which happens when you die, quit or win (or in ordinary dumps
         while in wizard mode). The "vaults" section is enabled by default
         in trunk builds of Crawl (not releases or pre-release betas),
-        appearing between "kills" and "skill_gains".
+        appearing between "notes" and "skill_gains".
 
 dump_book_spells = true
         By default all randart spellbooks in inventory will have all their
