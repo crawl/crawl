@@ -369,7 +369,7 @@ bool melee_attack::handle_phase_hit()
             && mons_genus(defender->mons_species()) == MONS_ORC
             && !defender->is_summoned()
             && !defender->as_monster()->is_shapeshifter()
-            && mons_near(defender->as_monster()) && defender->asleep())
+            && you.see_cell(defender->pos()) && defender->asleep())
         {
             hit_woke_orc = true;
         }
