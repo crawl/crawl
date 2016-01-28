@@ -180,9 +180,8 @@ static void level_place_lost_monsters(m_transit_list &m)
         if (place_lost_monster(*mon))
         {
             // Now that the monster is onlevel, we can safely apply traps to it.
-            monster* new_mon = monster_by_mid(mon->mons.mid);
-            // old loc isn't really meaningful
-            if (new_mon != nullptr)
+            if (monster* new_mon = monster_by_mid(mon->mons.mid))
+                // old loc isn't really meaningful
                 new_mon->apply_location_effects(new_mon->pos());
             m.erase(mon);
         }
@@ -199,9 +198,8 @@ static void level_place_followers(m_transit_list &m)
             if (mon->mons.is_divine_companion())
                 move_companion_to(monster_by_mid(mon->mons.mid), level_id::current());
             // Now that the monster is onlevel, we can safely apply traps to it.
-            monster* new_mon = monster_by_mid(mon->mons.mid);
-            // old loc isn't really meaningful
-            if (new_mon != nullptr)
+            if (monster* new_mon = monster_by_mid(mon->mons.mid))
+                // old loc isn't really meaningful
                 new_mon->apply_location_effects(new_mon->pos());
             m.erase(mon);
         }
