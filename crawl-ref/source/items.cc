@@ -3237,26 +3237,25 @@ zap_type item_def::zap() const
 
     if (wand_sub_type == WAND_RANDOM_EFFECTS)
     {
-        while (wand_sub_type == WAND_RANDOM_EFFECTS
-               || wand_sub_type == WAND_HEAL_WOUNDS)
-        {
-            wand_sub_type = static_cast<wand_type>(random2(NUM_WANDS));
-        }
+        // old wand types
+        return random_choose(ZAP_THROW_FLAME, ZAP_SLOW, ZAP_HASTE,
+                             ZAP_PARALYSE, ZAP_CONFUSE,
+                             ZAP_FIREBALL, ZAP_TELEPORT_OTHER,
+                             ZAP_LIGHTNING_BOLT, ZAP_POLYMORPH,
+                             ZAP_ENSLAVEMENT, ZAP_BOLT_OF_DRAINING,
+                             ZAP_DISINTEGRATE, ZAP_DIG, ZAP_THROW_FROST,
+                             ZAP_MAGIC_DART, ZAP_INVISIBILITY,
+                             ZAP_BOLT_OF_COLD, ZAP_BOLT_OF_FIRE);
     }
 
     switch (wand_sub_type)
     {
     case WAND_FLAME:           result = ZAP_THROW_FLAME;     break;
-    case WAND_FROST:           result = ZAP_THROW_FROST;     break;
     case WAND_SLOWING:         result = ZAP_SLOW;            break;
     case WAND_HASTING:         result = ZAP_HASTE;           break;
-    case WAND_MAGIC_DARTS:     result = ZAP_MAGIC_DART;      break;
     case WAND_HEAL_WOUNDS:     result = ZAP_HEAL_WOUNDS;     break;
     case WAND_PARALYSIS:       result = ZAP_PARALYSE;        break;
-    case WAND_FIRE:            result = ZAP_BOLT_OF_FIRE;    break;
-    case WAND_COLD:            result = ZAP_BOLT_OF_COLD;    break;
     case WAND_CONFUSION:       result = ZAP_CONFUSE;         break;
-    case WAND_INVISIBILITY:    result = ZAP_INVISIBILITY;    break;
     case WAND_DIGGING:         result = ZAP_DIG;             break;
     case WAND_FIREBALL:        result = ZAP_FIREBALL;        break;
     case WAND_TELEPORTATION:   result = ZAP_TELEPORT_OTHER;  break;
@@ -3266,7 +3265,15 @@ zap_type item_def::zap() const
     case WAND_DRAINING:        result = ZAP_BOLT_OF_DRAINING; break;
     case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATE;    break;
     case WAND_RANDOM_EFFECTS:  /* impossible */
-    case NUM_WANDS: break;
+    case NUM_WANDS:
+#if TAG_MAJOR_VERSION == 34
+    case WAND_INVISIBILITY_REMOVED:
+    case WAND_MAGIC_DARTS_REMOVED:
+    case WAND_FIRE_REMOVED:
+    case WAND_COLD_REMOVED:
+    case WAND_FROST_REMOVED:
+#endif
+        break;
     }
     return result;
 }

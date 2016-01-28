@@ -1439,10 +1439,6 @@ troll leather armour
 Armour made from the stiff and knobbly skin of a common troll. It magically
 regenerates its wearer's flesh.
 %%%%
-wand of cold
-
-A magical device which throws great bolts of cold.
-%%%%
 wand of confusion
 
 A magical device which induces confusion and bewilderment in a target creature.
@@ -1465,10 +1461,6 @@ wand of enslavement
 
 A magical device which causes slavish obedience in a creature.
 %%%%
-wand of fire
-
-A magical device which throws great bolts of fire.
-%%%%
 wand of fireball
 
 A magical device which throws exploding blasts of flame.
@@ -1476,10 +1468,6 @@ A magical device which throws exploding blasts of flame.
 wand of flame
 
 A magical device which throws little puffs of flame.
-%%%%
-wand of frost
-
-A magical device which throws little puffs of frost.
 %%%%
 wand of hasting
 
@@ -1490,18 +1478,9 @@ wand of heal wounds
 
 A magical device which can heal a creature's wounds.
 %%%%
-wand of invisibility
-
-A magical device which hides a creature from the view of others.
-%%%%
 wand of lightning
 
 A magical device which throws great bolts of lightning.
-%%%%
-wand of magic darts
-
-A magical device which throws small bolts of destructive energy. They never
-miss.
 %%%%
 wand of paralysis
 

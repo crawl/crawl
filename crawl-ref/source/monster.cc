@@ -811,7 +811,6 @@ bool monster::likes_wand(const item_def &item) const
     ASSERT(item.base_type == OBJ_WANDS);
     switch (item.sub_type)
     {
-        case WAND_INVISIBILITY:
         case WAND_TELEPORTATION:
         case WAND_HEAL_WOUNDS:
         case WAND_HASTING:
@@ -821,7 +820,7 @@ bool monster::likes_wand(const item_def &item) const
             // assumptions:
             // bad wands are value 16, so won't be used past hd 4
             // mediocre wands are value 8; won't be used past hd 8
-            // fire and cold and so on are value 5, won't be used past hd 10
+            // other good wands are value 5, won't be used past hd 10
             // better implementations welcome
             return wand_charge_value(item.sub_type) + get_hit_dice() * 2 <= 24;
     }

@@ -467,12 +467,6 @@ static targetter *_wand_targetter(const item_def *wand)
         return new targetter_beam(&you, range, ZAP_LIGHTNING_BOLT, power, 0, 0);
     case WAND_FLAME:
         return new targetter_beam(&you, range, ZAP_THROW_FLAME, power, 0, 0);
-    case WAND_FIRE:
-        return new targetter_beam(&you, range, ZAP_BOLT_OF_FIRE, power, 0, 0);
-    case WAND_FROST:
-        return new targetter_beam(&you, range, ZAP_THROW_FROST, power, 0, 0);
-    case WAND_COLD:
-        return new targetter_beam(&you, range, ZAP_BOLT_OF_COLD, power, 0, 0);
     case WAND_DIGGING:
         return new targetter_beam(&you, range, ZAP_DIG, power, 0, 0);
     default:
@@ -550,7 +544,17 @@ void zap_wand(int slot)
         mpr("You can't zap that!");
         return;
     }
-
+#if TAG_MAJOR_VERSION == 34
+    if (wand.sub_type == WAND_INVISIBILITY_REMOVED
+        || wand.sub_type == WAND_MAGIC_DARTS_REMOVED
+        || wand.sub_type == WAND_FIRE_REMOVED
+        || wand.sub_type == WAND_COLD_REMOVED
+        || wand.sub_type == WAND_FROST_REMOVED)
+    {
+        mpr("Sorry, this wand was removed!");
+        return;
+    }
+#endif
     // If you happen to be wielding the wand, its display might change.
     if (you.equip[EQ_WEAPON] == item_slot)
         you.wield_change = true;
@@ -588,7 +592,6 @@ void zap_wand(int slot)
 
         case WAND_HEAL_WOUNDS:
         case WAND_HASTING:
-        case WAND_INVISIBILITY:
             targ_mode = TARG_FRIEND;
             break;
 
@@ -642,8 +645,6 @@ void zap_wand(int slot)
             return;
         }
         else if (wand.sub_type == WAND_HASTING && check_stasis(NO_HASTE_MSG))
-            return;
-        else if (wand.sub_type == WAND_INVISIBILITY && !invis_allowed())
             return;
     }
 

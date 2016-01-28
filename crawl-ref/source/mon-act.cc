@@ -1365,18 +1365,6 @@ static bool _handle_wand(monster& mons, bolt &beem)
         }
         return false;
 
-    case WAND_INVISIBILITY:
-        if (!mons.has_ench(ENCH_INVIS)
-            && !mons.has_ench(ENCH_SUBMERGED)
-            && !mons.glows_naturally()
-            && (!mons.friendly() || you.can_see_invisible(false)))
-        {
-            beem.target = mons.pos();
-            niceWand = true;
-            break;
-        }
-        return false;
-
     case WAND_TELEPORTATION:
         if (mons.hit_points <= mons.max_hit_points / 2
             || mons.caught())
