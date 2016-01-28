@@ -148,10 +148,10 @@ ENDMAP
 # Hellmouth 3 (Lemuel)
 NAME:   hellmouth_3
 ORIENT: float
-TAGS:   transparent
 MONS:   crimson imp / red devil / hellwing / hell hound
 MONS:   hellion / balrug / soul eater / smoke demon
 ITEM:   demon blade / demon whip / demon trident / nothing
+KMASK:  12Ad = opaque
 SUBST:  ? : . l ?:40, ?=l.
 : hell_entry_feature(_G, 'A')
 : hell_entry_tier(_G, "mid")
