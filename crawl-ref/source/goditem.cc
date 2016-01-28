@@ -442,12 +442,8 @@ bool is_fiery_item(const item_def& item)
         }
         break;
     case OBJ_WANDS:
-        if (item.sub_type == WAND_FLAME
-            || item.sub_type == WAND_FIRE
-            || item.sub_type == WAND_FIREBALL)
-        {
+        if (item.sub_type == WAND_FLAME || item.sub_type == WAND_FIREBALL)
             return true;
-        }
         break;
     case OBJ_SCROLLS:
         if (item.sub_type == SCR_IMMOLATION)

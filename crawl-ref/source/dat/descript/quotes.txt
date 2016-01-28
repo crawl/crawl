@@ -3208,10 +3208,6 @@ summon into life whatever form and mould he pleases.”
     -William Youatt, _Sheep: their breeds, management, and diseases; to which
      is added the Mountain Shepherd's Manual_, ch. III. 1837.
 %%%%
-wand of cold
-
-<wand>
-%%%%
 wand of confusion
 
 <wand>
@@ -3232,10 +3228,6 @@ wand of enslavement
 
 <Enslavement spell>
 %%%%
-wand of fire
-
-<wand>
-%%%%
 wand of fireball
 
 <wand>
@@ -3244,23 +3236,11 @@ wand of flame
 
 <wand>
 %%%%
-wand of frost
-
-<wand>
-%%%%
 wand of hasting
 
 <wand>
 %%%%
-wand of invisibility
-
-<wand>
-%%%%
 wand of lightning
-
-<wand>
-%%%%
-wand of magic darts
 
 <wand>
 %%%%

@@ -591,16 +591,11 @@ static const char* _wand_type_name(int wandtype)
     switch (static_cast<wand_type>(wandtype))
     {
     case WAND_FLAME:           return "flame";
-    case WAND_FROST:           return "frost";
     case WAND_SLOWING:         return "slowing";
     case WAND_HASTING:         return "hasting";
-    case WAND_MAGIC_DARTS:     return "magic darts";
     case WAND_HEAL_WOUNDS:     return "heal wounds";
     case WAND_PARALYSIS:       return "paralysis";
-    case WAND_FIRE:            return "fire";
-    case WAND_COLD:            return "cold";
     case WAND_CONFUSION:       return "confusion";
-    case WAND_INVISIBILITY:    return "invisibility";
     case WAND_DIGGING:         return "digging";
     case WAND_FIREBALL:        return "fireball";
     case WAND_TELEPORTATION:   return "teleportation";
@@ -610,6 +605,13 @@ static const char* _wand_type_name(int wandtype)
     case WAND_DRAINING:        return "draining";
     case WAND_RANDOM_EFFECTS:  return "random effects";
     case WAND_DISINTEGRATION:  return "disintegration";
+#if TAG_MAJOR_VERSION == 34
+    case WAND_INVISIBILITY_REMOVED:
+    case WAND_MAGIC_DARTS_REMOVED:
+    case WAND_FIRE_REMOVED:
+    case WAND_COLD_REMOVED:
+    case WAND_FROST_REMOVED:   return "removedness";
+#endif
     default:                   return "bugginess";
     }
 }
@@ -3575,13 +3577,6 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_WANDS:
         if (player_mutation_level(MUT_NO_ARTIFICE))
             return true;
-
-        if (item.sub_type == WAND_INVISIBILITY
-            && item_type_known(item)
-                && _invisibility_is_useless(temp))
-        {
-            return true;
-        }
 
         if (item.sub_type == WAND_ENSLAVEMENT
             && item_type_known(item)

@@ -478,11 +478,11 @@ MARKER: s = lua:fog_machine { cloud_type = "flame", \
 KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    book of conjurations | book of power | book of annihilations | \
    randbook disc:conjuration | book of the tempests | book of clouds | \
-   wand of fire | wand of fireball | wand of flame | wand of disintegration | \
-   wand of frost | wand of cold | wand of lightning | wand of magic darts | \
-   staff of conjuration | lightning rod | rod of inaccuracy | \
-   rod of destruction | iron rod | large rock ego:exploding | \
-   arrow ego:exploding | bolt ego:exploding | javelin ego:exploding | \
+   wand of fireball | wand of flame | wand of disintegration | \
+   wand of lightning | staff of conjuration | lightning rod | \
+   rod of inaccuracy | rod of destruction | iron rod | \
+   large rock ego:exploding | arrow ego:exploding | bolt ego:exploding | \
+   javelin ego:exploding | \
    tomahawk ego:exploding | rod of ignition | fan of gales | disc of storms | \
    lamp of fire | phial of floods | stone of tremors | rod of clouds | \
    sling bullet ego:exploding | scroll of immolation | book of flames | \
@@ -502,6 +502,7 @@ ENDMAP
 #####################################################
 # Contains only four items: an evocable item, a staff, a randbook, and a wand,
 # associated with one of each of the four elemental schools.
+# XXX: very dubious choice for cold wand
 NAME: nicolae_elemental_shop
 TAGS: no_monster_gen no_trap_gen no_item_gen no_pool_fixup
 DEPTH: D:4-, Depths
@@ -519,7 +520,7 @@ MARKER: a = lua:fog_machine { cloud_type = "thin mist", \
                      "staff of air","staff of earth"}
   local randbooks = {"randbook disc:fire","randbook disc:ice",
                      "randbook disc:air","randbook disc:earth"}
-  local wands     = {"wand of fire","wand of cold",
+  local wands     = {"wand of fireball","wand of draining",
                      "wand of lightning","wand of digging"}
   local choices   = {1, 2, 3, 4}
   local i, j, temp

@@ -614,15 +614,12 @@ unsigned int item_value(item_def item, bool ident)
                 good = true;
                 break;
 
-            case WAND_COLD:
-            case WAND_FIRE:
             case WAND_FIREBALL:
             case WAND_DIGGING:
                 valued += 80;
                 good = true;
                 break;
 
-            case WAND_INVISIBILITY:
             case WAND_DRAINING:
             case WAND_LIGHTNING:
             case WAND_DISINTEGRATION:
@@ -642,12 +639,10 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case WAND_FLAME:
-            case WAND_FROST:
             case WAND_RANDOM_EFFECTS:
                 valued += 10;
                 break;
 
-            case WAND_MAGIC_DARTS:
             default:
                 valued += 6;
                 break;

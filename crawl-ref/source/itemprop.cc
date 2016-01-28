@@ -708,6 +708,11 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_RODS,      ROD_WARDING },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
+    { OBJ_WANDS,     WAND_MAGIC_DARTS_REMOVED },
+    { OBJ_WANDS,     WAND_FROST_REMOVED },
+    { OBJ_WANDS,     WAND_FIRE_REMOVED },
+    { OBJ_WANDS,     WAND_COLD_REMOVED },
+    { OBJ_WANDS,     WAND_INVISIBILITY_REMOVED },
 #endif
     // Outside the #if because we probably won't remove these.
     { OBJ_RUNES,     RUNE_ELF },
@@ -1554,7 +1559,6 @@ int wand_charge_value(int type)
 {
     switch (type)
     {
-    case WAND_INVISIBILITY:
     case WAND_TELEPORTATION:
     case WAND_HEAL_WOUNDS:
     case WAND_HASTING:
@@ -1563,16 +1567,12 @@ int wand_charge_value(int type)
     case WAND_FIREBALL:
     case WAND_LIGHTNING:
     case WAND_DRAINING:
-    case WAND_FIRE:
-    case WAND_COLD:
         return 5;
 
     default:
         return 8;
 
     case WAND_FLAME:
-    case WAND_FROST:
-    case WAND_MAGIC_DARTS:
     case WAND_SLOWING:
     case WAND_CONFUSION:
     case WAND_RANDOM_EFFECTS:
@@ -1623,16 +1623,11 @@ bool is_offensive_wand(const item_def& item)
     // Monsters will use them on themselves.
     case WAND_HASTING:
     case WAND_HEAL_WOUNDS:
-    case WAND_INVISIBILITY:
         return false;
 
     case WAND_FLAME:
-    case WAND_FROST:
     case WAND_SLOWING:
-    case WAND_MAGIC_DARTS:
     case WAND_PARALYSIS:
-    case WAND_FIRE:
-    case WAND_COLD:
     case WAND_CONFUSION:
     case WAND_FIREBALL:
     case WAND_TELEPORTATION:
