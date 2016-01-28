@@ -1046,7 +1046,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         {
             mon->behaviour = BEH_WANDER;
 
-            if (mons_near(mon))
+            if (you.can_see(*mon))
                 remove_auto_exclude(mon, true);
         }
 
@@ -1093,7 +1093,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
         mon->foe = src_idx;
 
-        if (mon->asleep() && mons_near(mon))
+        if (mon->asleep() && you.can_see(*mon))
             remove_auto_exclude(mon, true);
 
         // If the monster can't reach its target and can't attack it
@@ -1174,7 +1174,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             break;
         }
 
-        if (mon->asleep() && mons_near(mon))
+        if (mon->asleep() && you.can_see(*mon))
             remove_auto_exclude(mon, true);
 
         // Will alert monster to <src> and turn them

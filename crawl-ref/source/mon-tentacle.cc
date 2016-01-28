@@ -1150,9 +1150,9 @@ static monster* _mons_get_parent_monster(monster* mons)
 
 // When given either a tentacle end or segment, kills the end and all segments
 // of that tentacle.
-int destroy_tentacle(monster* mons)
+bool destroy_tentacle(monster* mons)
 {
-    int seen = 0;
+    int num = 0;
 
     monster* head = mons_is_tentacle_segment(mons->type)
             ? _mons_get_parent_monster(mons) : mons;
@@ -1160,7 +1160,7 @@ int destroy_tentacle(monster* mons)
     //If we tried to find the head, but failed (probably because it is already
     //dead), cancel trying to kill this tentacle
     if (head == nullptr)
-        return 0;
+        return false;
 
     // Some issue with using monster_die leading to DEAD_MONSTER
     // or w/e. Using hurt seems to cause more problems though.
@@ -1168,8 +1168,7 @@ int destroy_tentacle(monster* mons)
     {
         if (mi->is_child_tentacle_of(head))
         {
-            if (mons_near(*mi))
-                seen++;
+            num++;
             //mi->hurt(*mi, INSTANT_DEATH);
             monster_die(*mi, KILL_MISC, NON_MONSTER, true);
         }
@@ -1177,32 +1176,31 @@ int destroy_tentacle(monster* mons)
 
     if (mons != head)
     {
-        if (mons_near(head))
-            seen++;
+        num++;
 
         monster_die(head, KILL_MISC, NON_MONSTER, true);
     }
 
-    return seen;
+    return num;
 }
 
-int destroy_tentacles(monster* head)
+bool destroy_tentacles(monster* head)
 {
-    int seen = 0;
+    int num = 0;
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->is_child_tentacle_of(head))
         {
             if (destroy_tentacle(*mi))
-                seen++;
+                num++;
             if (!mi->is_child_tentacle_segment())
             {
                 monster_die(mi->as_monster(), KILL_MISC, NON_MONSTER, true);
-                seen++;
+                num++;
             }
         }
     }
-    return seen;
+    return num;
 }
 
 static int _max_tentacles(const monster* mon)

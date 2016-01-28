@@ -599,7 +599,7 @@ int detect_creatures(int pow, bool telepathic)
         if (monster* mon = monster_at(*ri))
         {
             // If you can see the monster, don't "detect" it elsewhere.
-            if (!mons_near(mon) || !mon->visible_to(&you))
+            if (!you.can_see(*mon))
             {
                 creatures_found++;
                 _mark_detected_creature(*ri, mon, fuzz_chance, fuzz_radius);

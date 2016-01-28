@@ -4398,7 +4398,7 @@ void bolt::enchantment_affect_monster(monster* mon)
 
             if (in_good_standing(GOD_BEOGH, 2)
                 && mons_genus(mon->type) == MONS_ORC
-                && mon->asleep() && mons_near(mon))
+                && mon->asleep() && you.see_cell(mon->pos()))
             {
                 hit_woke_orc = true;
             }
@@ -4511,7 +4511,7 @@ static void _glaciate_freeze(monster* mon, killer_type englaciator,
 void bolt::monster_post_hit(monster* mon, int dmg)
 {
     // Suppress the message for scattershot.
-    if (YOU_KILL(thrower) && mons_near(mon)
+    if (YOU_KILL(thrower) && you.see_cell(mon->pos())
         && name != "burst of metal fragments")
     {
         print_wounds(mon);
@@ -4881,7 +4881,7 @@ void bolt::affect_monster(monster* mon)
         {
             if (hit_verb.empty())
                 hit_verb = engulfs ? "engulfs" : "hits";
-            if (mons_near(mon))
+            if (you.see_cell(mon->pos()))
             {
                 mprf("The %s %s %s.", name.c_str(), hit_verb.c_str(),
                      mon->name(DESC_THE).c_str());
@@ -5038,7 +5038,7 @@ void bolt::affect_monster(monster* mon)
         return;
 
     // The beam hit.
-    if (mons_near(mon))
+    if (you.see_cell(mon->pos()))
     {
         // Monsters are never currently helpless in ranged combat.
         if (hit_verb.empty())
@@ -5311,11 +5311,12 @@ bool enchant_monster_invisible(monster* mon, const string &how)
 {
     // Store the monster name before it becomes an "it". - bwr
     const string monster_name = mon->name(DESC_THE);
+    const bool could_see = you.can_see(*mon);
 
     if (mon->has_ench(ENCH_INVIS) || !mon->add_ench(ENCH_INVIS))
         return false;
 
-    if (mons_near(mon))
+    if (could_see)
     {
         const bool is_visible = mon->visible_to(&you);
 
@@ -5519,7 +5520,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             // currently from potion, hence voluntary
             mon->go_berserk(true);
             // can't return this from go_berserk, unfortunately
-            obvious_effect = mons_near(mon);
+            obvious_effect = you.can_see(*mon);
         }
         return MON_AFFECTED;
 

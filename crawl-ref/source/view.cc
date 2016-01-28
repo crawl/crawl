@@ -265,7 +265,7 @@ void update_monsters_in_view()
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mons_near(*mi))
+        if (you.see_cell(mi->pos()))
         {
             if (mi->attitude == ATT_HOSTILE)
                 num_hostile++;
@@ -678,15 +678,6 @@ void fully_map_level()
     }
 }
 
-// Is the given monster near (in LOS of) the player?
-bool mons_near(const monster* mons)
-{
-    ASSERT(mons);
-    if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
-        return true;
-    return you.see_cell(mons->pos());
-}
-
 bool mon_enemies_around(const monster* mons)
 {
     // If the monster has a foe, return true.
@@ -703,12 +694,12 @@ bool mon_enemies_around(const monster* mons)
     {
         // Additionally, if an ally is nearby and *you* have a foe,
         // consider it as the ally's enemy too.
-        return mons_near(mons) && there_are_monsters_nearby(true);
+        return you.can_see(*mons) && there_are_monsters_nearby(true);
     }
     else
     {
         // For hostile monster* you* are the main enemy.
-        return mons_near(mons);
+        return mons->can_see(you);
     }
 }
 

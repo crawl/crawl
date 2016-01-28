@@ -2202,7 +2202,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
     bool had_effect = false;
 
     // Friendly wardens are already excluded by _ms_waste_of_time()
-    if (!mons_near(warden) || warden->foe != MHITYOU)
+    if (warden->can_see(you) || warden->foe != MHITYOU)
         return false;
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE);
@@ -3873,7 +3873,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     if (spell_cast == SPELL_BLINK || spell_cast == SPELL_CONTROLLED_BLINK)
     {
         // Why only cast blink if nearby? {dlb}
-        if (mons_near(mons))
+        if (mons->can_see(you))
         {
             mons_cast_noise(mons, beem, spell_cast, flags);
             monster_blink(mons);
@@ -5150,7 +5150,7 @@ static bool _spell_charged(monster *mons, int count)
             mons->update_ench(ench);
         }
 
-        if (!mons_near(mons) || !you.can_see(*mons))
+        if (!you.can_see(*mons))
             return false;
         string msg =
             getSpeakString(make_stringf("%s charge",
@@ -5234,7 +5234,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     ASSERT(map_bounds(pbolt.target) || !(flags & SPFLAG_TARGETING_MASK));
 
     // Maybe cast abjuration instead of certain summoning spells.
-    if (mons_near(mons) && _mons_will_abjure(mons, spell_cast))
+    if (mons->can_see(you) && _mons_will_abjure(mons, spell_cast))
     {
         if (do_noise)
         {
@@ -5968,7 +5968,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         // Don't give any message if the monster isn't nearby.
         // (Otherwise you could get them from halfway across the level.)
-        if (!mons_near(mons))
+        if (!you.see_cell(mons->pos()))
             return;
 
         const bool friendly  = mons->friendly();

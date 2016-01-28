@@ -352,7 +352,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
 {
     ASSERT(!did_msg);
 
-    if (target->is_monster() && !mons_near(target->as_monster()))
+    if (!you.see_cell(target->pos()))
         return;
 
     did_msg = true;
