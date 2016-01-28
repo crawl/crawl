@@ -149,6 +149,7 @@ enum monster_info_flags
     MB_BRILLIANCE_AURA,
     MB_EMPOWERED_SPELLS,
     MB_READY_TO_HOWL,
+    MB_PAIN_BOND,
     NUM_MB_FLAGS
 };
 

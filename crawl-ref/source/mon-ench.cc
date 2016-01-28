@@ -2216,7 +2216,7 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "chanting_fire_storm", "chanting_word_of_entropy",
 #endif
-    "aura_of_brilliance", "empowered_spells",
+    "aura_of_brilliance", "empowered_spells", "pain_bond",
     "buggy",
 };
 

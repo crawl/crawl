@@ -2083,6 +2083,7 @@ enum enchant_type
 #endif
     ENCH_BRILLIANCE_AURA, // emanating a brilliance aura
     ENCH_EMPOWERED_SPELLS, // affected by above
+    ENCH_PAIN_BOND, // affected by above
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

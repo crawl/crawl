@@ -22,6 +22,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "message.h"
+#include "mon-util.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
@@ -920,6 +921,9 @@ static int _prepare_audience(coord_def where)
     monster* mons = monster_at(where);
     ASSERT(mons);
 
+    if (!has_emotions(mons))
+        return 0;
+
     int power =  you.skill(SK_INVOCATIONS, 10) + you.experience_level
                  - mons->get_hit_dice();
     int duration = 10 + rand_round(cbrt(power) * 10);
@@ -940,4 +944,38 @@ void ukayaw_prepares_audience()
     // Increment a delay timer to prevent players from spamming this ability
     // via piety loss and gain. Timer is in AUT.
     you.props[UKAYAW_AUDIENCE_TIMER] = 150;
+}
+
+/**
+ * Apply pain bond to the monster in this cell.
+ */
+static int _bond_audience(coord_def where)
+{
+    if (!cell_has_valid_target(where))
+        return 0;
+    monster* mons = monster_at(where);
+    ASSERT(mons);
+
+    if (!has_emotions(mons))
+        return 0;
+
+    int power = you.skill(SK_INVOCATIONS, 10) + you.experience_level
+                 - mons->get_hit_dice();
+    int duration = 10 + random2(power);
+    mons->add_ench(mon_enchant(ENCH_PAIN_BOND, 1, &you, duration));
+
+    return 1;
+}
+
+/**
+ * On hitting **** piety, all the monsters are pain bonded.
+ */
+void ukayaw_bonds_audience()
+{
+    mprf(MSGCH_GOD, "Ukayaw links your audience in an emotional bond!");
+    apply_area_visible(_bond_audience, you.pos());
+
+    // Increment a delay timer to prevent players from spamming this ability
+    // via piety loss and gain. Timer is in AUT.
+    you.props[UKAYAW_BOND_TIMER] = 150;
 }

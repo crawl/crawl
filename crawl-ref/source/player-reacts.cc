@@ -392,6 +392,8 @@ static void _decrement_ukayaw_passive_timers(int time_taken)
 {
     you.props[UKAYAW_AUDIENCE_TIMER] =
             max(0, you.props[UKAYAW_AUDIENCE_TIMER].get_int() - time_taken);
+    you.props[UKAYAW_BOND_TIMER] =
+            max(0, you.props[UKAYAW_BOND_TIMER].get_int() - time_taken);
 }
 
 /**

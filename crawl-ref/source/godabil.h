@@ -41,6 +41,7 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define GOZAG_MAX_POTIONS 3
 
 #define UKAYAW_AUDIENCE_TIMER "ukayaw_audience_timer"
+#define UKAYAW_BOND_TIMER "ukayaw_bond_timer"
 
 struct bolt;
 class stack_iterator;

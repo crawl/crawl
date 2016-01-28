@@ -1952,6 +1952,11 @@ bool do_god_gift(bool forced)
                 ukayaw_prepares_audience();
                 success = true;
             }
+            else if (you.piety == piety_breakpoint(3)
+                && you.props[UKAYAW_BOND_TIMER].get_int() == 0)
+            {
+                ukayaw_bonds_audience();
+            }
             else
                 success = false;
 

@@ -109,6 +109,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_RESISTANCE,      MB_RESISTANCE },
     { ENCH_HEXED,           MB_HEXED },
     { ENCH_BONE_ARMOUR,     MB_BONE_ARMOUR },
+    { ENCH_PAIN_BOND,       MB_PAIN_BOND },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -1557,6 +1558,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("spells empowered");
     if (is(MB_READY_TO_HOWL))
         v.emplace_back("ready to howl");
+    if (is(MB_PAIN_BOND))
+        v.emplace_back("sharing its pain");
     return v;
 }
 

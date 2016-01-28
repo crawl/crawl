@@ -48,4 +48,6 @@ bool does_ru_wanna_redirect(monster* mon);
 ru_interference get_ru_attack_interference_level();
 void pakellas_id_device_charges();
 void ukayaw_prepares_audience();
+void ukayaw_bonds_audience();
+
 #endif
