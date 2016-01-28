@@ -4979,14 +4979,8 @@ bool monster::find_place_to_live(bool near_player)
 
 void monster::destroy_inventory()
 {
-    for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
-    {
-        if (inv[j] != NON_ITEM)
-        {
-            destroy_item(inv[j]);
-            inv[j] = NON_ITEM;
-        }
-    }
+    for (mon_inv_iterator ii(*this); ii; ++ii)
+        destroy_item(ii->index());
 }
 
 bool monster::is_travelling() const

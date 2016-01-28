@@ -3735,18 +3735,15 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     }
 
     bool has_item = false;
-    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+    for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
-        if (mons.inv[i] != NON_ITEM)
+        if (!has_item)
         {
-            if (!has_item)
-            {
-                inf.body << "\n\nMonster Inventory:\n";
-                has_item = true;
-            }
-            inf.body << "    " << i << ": "
-                     << mitm[mons.inv[i]].name(DESC_A, false, true);
+            inf.body << "\n\nMonster Inventory:\n";
+            has_item = true;
         }
+        inf.body << "    " << ii.slot() << ": "
+                 << ii->name(DESC_A, false, true);
     }
 
     if (mons.props.exists("blame"))

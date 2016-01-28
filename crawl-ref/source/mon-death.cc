@@ -2803,25 +2803,17 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 // artefact or unrand artefact.
 static void _vanish_orig_eq(monster* mons)
 {
-    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+    for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
-        if (mons->inv[i] == NON_ITEM)
-            continue;
-
-        item_def &item(mitm[mons->inv[i]]);
-
-        if (!item.defined())
-            continue;
-
-        if (origin_known(item) || item.orig_monnum != 0
-            || !item.inscription.empty()
-            || is_unrandom_artefact(item)
-            || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN
+        if (origin_known(*ii) || ii->orig_monnum != 0
+            || !ii->inscription.empty()
+            || is_unrandom_artefact(*ii)
+            || (ii->flags & (ISFLAG_DROPPED | ISFLAG_THROWN
                               | ISFLAG_NOTED_GET)))
         {
             continue;
         }
-        item.flags |= ISFLAG_SUMMONED;
+        ii->flags |= ISFLAG_SUMMONED;
     }
 }
 
@@ -3294,14 +3286,11 @@ void mons_felid_revive(monster* mons)
 
     if (newmons)
     {
-        for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
-            if (mons->inv[i] != NON_ITEM)
-            {
-                int item = mons->inv[i];
-                give_specific_item(newmons, mitm[item]);
-                destroy_item(item);
-                mons->inv[i] = NON_ITEM;
-            }
+        for (mon_inv_iterator ii(*mons); ii; ++ii)
+        {
+            give_specific_item(newmons, *ii);
+            destroy_item(ii->index());
+        }
 
         newmons->props["felid_revives"].get_byte() = revives;
     }
