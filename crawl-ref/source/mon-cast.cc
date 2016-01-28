@@ -1310,6 +1310,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     if (beam.is_enchantment())
     {
+        beam.hit = AUTOMATIC_HIT;
         beam.glyph = 0;
         beam.name = "";
     }
