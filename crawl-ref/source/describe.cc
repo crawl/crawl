@@ -3735,7 +3735,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     }
 
     bool has_item = false;
-    for (mon_inv_iterator ii(*mons); ii; ++ii)
+    for (mon_inv_iterator ii(mons); ii; ++ii)
     {
         if (!has_item)
         {
