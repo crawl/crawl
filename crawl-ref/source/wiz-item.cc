@@ -686,17 +686,8 @@ void wizard_unidentify_pack()
     // (For use with the "give monster an item" wizard targeting
     // command.)
     for (monster_near_iterator mon(&you); mon; ++mon)
-    {
-        for (int j = 0; j < NUM_MONSTER_SLOTS; ++j)
-        {
-            if (mon->inv[j] == NON_ITEM)
-                continue;
-
-            item_def &item = mitm[mon->inv[j]];
-            if (item.defined())
-                _forget_item(item);
-        }
-    }
+        for (mon_inv_iterator ii(**mon); ii; ++ii)
+            _forget_item(*ii);
 }
 
 void wizard_list_items()

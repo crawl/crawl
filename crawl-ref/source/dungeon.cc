@@ -4416,14 +4416,11 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
     unwind_var<int> save_speedinc(mon->speed_increment);
 
     // Get rid of existing equipment.
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-        if (mon->inv[i] != NON_ITEM)
-        {
-            item_def &item(mitm[mon->inv[i]]);
-            mon->unequip(item, false, true);
-            destroy_item(mon->inv[i], true);
-            mon->inv[i] = NON_ITEM;
-        }
+    for (mon_inv_iterator ii(*mon); ii; ++ii)
+    {
+        mon->unequip(*ii, false, true);
+        destroy_item(ii->index(), true);
+    }
 
     item_list &list = mspec.items;
 

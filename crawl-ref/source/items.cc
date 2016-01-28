@@ -320,6 +320,49 @@ stack_iterator stack_iterator::operator++(int)
     return copy;
 }
 
+mon_inv_iterator::mon_inv_iterator(monster& _mon)
+    : mon(_mon)
+{
+    type = static_cast<mon_inv_type>(0);
+    if (mon.inv[type] == NON_ITEM)
+        ++*this;
+}
+
+mon_inv_iterator::operator bool() const
+{
+    return type < NUM_MONSTER_SLOTS;
+}
+
+item_def& mon_inv_iterator::operator*() const
+{
+    ASSERT(mon.inv[type] != NON_ITEM);
+    return mitm[mon.inv[type]];
+}
+
+item_def* mon_inv_iterator::operator->() const
+{
+    ASSERT(mon.inv[type] != NON_ITEM);
+    return &mitm[mon.inv[type]];
+}
+
+mon_inv_iterator& mon_inv_iterator::operator ++ ()
+{
+    do
+    {
+        type = static_cast<mon_inv_type>(type + 1);
+    }
+    while (*this && mon.inv[type] == NON_ITEM);
+
+    return *this;
+}
+
+mon_inv_iterator mon_inv_iterator::operator++(int)
+{
+    const mon_inv_iterator copy = *this;
+    ++(*this);
+    return copy;
+}
+
 /**
  * Reduce quantity of an inventory item, do cleanup if item goes away.
  * @return  True if stack of items no longer exists, false otherwise.
@@ -465,14 +508,15 @@ void unlink_item(int dest)
 
     if (mons != nullptr)
     {
-        for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+        for (mon_inv_iterator ii(*mons); ii; ++ii)
         {
-            if (mons->inv[i] == dest)
+            if (ii->index() == dest)
             {
-                mons->inv[i] = NON_ITEM;
+                item_def& item = *ii;
+                mons->inv[ii.slot()] = NON_ITEM;
 
-                mitm[dest].pos.reset();
-                mitm[dest].link = NON_ITEM;
+                item.pos.reset();
+                item.link = NON_ITEM;
                 return;
             }
         }

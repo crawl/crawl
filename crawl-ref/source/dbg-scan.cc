@@ -174,15 +174,18 @@ void debug_item_scan()
 
             // Let's check to see if it's an errant monster object:
             for (int j = 0; j < MAX_MONSTERS; ++j)
-                for (int k = 0; k < NUM_MONSTER_SLOTS; ++k)
+            {
+                monster& mons(menv[j]);
+                for (mon_inv_iterator ii(mons); ii; ++ii)
                 {
-                    if (menv[j].inv[k] == i)
+                    if (ii->index() == i)
                     {
                         mprf("Held by monster #%d: %s at (%d,%d)",
-                             j, menv[j].name(DESC_A, true).c_str(),
-                             menv[j].pos().x, menv[j].pos().y);
+                             j, mons.name(DESC_A, true).c_str(),
+                             mons.pos().x, mons.pos().y);
                     }
                 }
+            }
         }
 
         // Current bad items of interest:

@@ -22,6 +22,7 @@
 #include "fight.h"
 #include "fprop.h"
 #include "hints.h"
+#include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
@@ -2044,14 +2045,8 @@ void monster::mark_summoned(int longevity, bool mark_items, int summon_type, boo
         add_ench(mon_enchant(ENCH_SUMMON, summon_type, 0, INT_MAX));
 
     if (mark_items)
-    {
-        for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
-        {
-            const int item = inv[i];
-            if (item != NON_ITEM)
-                mitm[item].flags |= ISFLAG_SUMMONED;
-        }
-    }
+        for (mon_inv_iterator ii(*this); ii; ++ii)
+            ii->flags |= ISFLAG_SUMMONED;
 }
 
 bool monster::is_summoned(int* duration, int* summon_type) const
