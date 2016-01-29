@@ -588,7 +588,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
 
 static const char* _wand_type_name(int wandtype)
 {
-    switch (static_cast<wand_type>(wandtype))
+    switch (wandtype)
     {
     case WAND_FLAME:           return "flame";
     case WAND_SLOWING:         return "slowing";
@@ -605,14 +605,9 @@ static const char* _wand_type_name(int wandtype)
     case WAND_DRAINING:        return "draining";
     case WAND_RANDOM_EFFECTS:  return "random effects";
     case WAND_DISINTEGRATION:  return "disintegration";
-#if TAG_MAJOR_VERSION == 34
-    case WAND_INVISIBILITY_REMOVED:
-    case WAND_MAGIC_DARTS_REMOVED:
-    case WAND_FIRE_REMOVED:
-    case WAND_COLD_REMOVED:
-    case WAND_FROST_REMOVED:   return "removedness";
-#endif
-    default:                   return "bugginess";
+    default:                   return item_type_removed(OBJ_WANDS, wandtype)
+                                    ? "removedness"
+                                    : "bugginess";
     }
 }
 

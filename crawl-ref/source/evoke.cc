@@ -544,17 +544,11 @@ void zap_wand(int slot)
         mpr("You can't zap that!");
         return;
     }
-#if TAG_MAJOR_VERSION == 34
-    if (wand.sub_type == WAND_INVISIBILITY_REMOVED
-        || wand.sub_type == WAND_MAGIC_DARTS_REMOVED
-        || wand.sub_type == WAND_FIRE_REMOVED
-        || wand.sub_type == WAND_COLD_REMOVED
-        || wand.sub_type == WAND_FROST_REMOVED)
+    if (item_type_removed(wand.base_type, wand.sub_type))
     {
         mpr("Sorry, this wand was removed!");
         return;
     }
-#endif
     // If you happen to be wielding the wand, its display might change.
     if (you.equip[EQ_WEAPON] == item_slot)
         you.wield_change = true;
