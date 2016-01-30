@@ -388,13 +388,13 @@ focused on damage.
 %%%%
 Ukayaw powers
 
-(placeholder)
-* Stomp: AOE light damage to build piety.
-** Partner pass?
-*** Haste
-****
-*****
-******
+Ukayaw offers powers that help worshippers continue the dance. Worshippers can
+stomp to damage foes around them and to rapidly move through a line of creatures
+while confusing them. When a worshipper's dance reaches a certain point, Ukayaw
+will freeze all foes so that the dancer may take a solo. If the dance continues,
+Ukayaw will link the emotions of foes, forcing them to share their pain. If the
+dance continues, Ukayaw allows you to end it by melding with and then violently
+explode a foe, killing it instantly.
 %%%%
 Vehumet powers
 
