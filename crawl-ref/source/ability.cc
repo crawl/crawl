@@ -442,7 +442,7 @@ static const ability_def Ability_List[] =
     // Ukayaw
     { ABIL_UKAYAW_STOMP, "Stomp",
         4, 0, 100, generic_cost::fixed(20), abflag::NONE },
-    { ABIL_UKAYAW_PARTNER_PASS, "Partner Pass",
+    { ABIL_UKAYAW_LINE_PASS, "Line Pass",
         5, 0, 200, generic_cost::fixed(40), abflag::NONE},
     { ABIL_UKAYAW_GRAND_FINALE, "Grand Finale",
         10, 0, 500, generic_cost::fixed(110), abflag::NONE},
@@ -1004,7 +1004,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_LUGONU_BEND_SPACE:
     case ABIL_FEDHAS_PLANT_RING:
     case ABIL_QAZLAL_UPHEAVAL:
-    case ABIL_UKAYAW_PARTNER_PASS:
+    case ABIL_UKAYAW_LINE_PASS:
         invoc = true;
         failure = 40 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 5);
         break;
@@ -3061,9 +3061,9 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         break;
 
-    case ABIL_UKAYAW_PARTNER_PASS:
+    case ABIL_UKAYAW_LINE_PASS:
         fail_check();
-        if (!ukayaw_partner_pass())
+        if (!ukayaw_line_pass())
             return SPRET_ABORT;
         break;
 

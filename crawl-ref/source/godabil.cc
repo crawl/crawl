@@ -6675,13 +6675,13 @@ bool ukayaw_stomp()
     return true;
 }
 
-bool ukayaw_partner_pass()
+bool ukayaw_line_pass()
 {
     ASSERT(!crawl_state.game_is_arena());
 
     if (crawl_state.is_repeating_cmd())
     {
-        crawl_state.cant_cmd_repeat("You can't repeat partner pass.");
+        crawl_state.cant_cmd_repeat("You can't repeat line pass.");
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
         return false;
@@ -6690,17 +6690,17 @@ bool ukayaw_partner_pass()
     int range = 8;
     int pow = min(200, 50 + you.skill(SK_INVOCATIONS) * 6);
     dist beam;
-    bolt partner_pass;
-    partner_pass.thrower = KILL_YOU;
-    partner_pass.name = "partner pass";
-    partner_pass.source_name = "you";
-    partner_pass.source_id = MID_PLAYER;
-    partner_pass.flavour = BEAM_CONFUSION;
-    partner_pass.source = you.pos();
-    partner_pass.hit = AUTOMATIC_HIT;
-    partner_pass.range = range;
-    partner_pass.ench_power = pow;
-    partner_pass.pierce = true;
+    bolt line_pass;
+    line_pass.thrower = KILL_YOU;
+    line_pass.name = "line pass";
+    line_pass.source_name = "you";
+    line_pass.source_id = MID_PLAYER;
+    line_pass.flavour = BEAM_CONFUSION;
+    line_pass.source = you.pos();
+    line_pass.hit = AUTOMATIC_HIT;
+    line_pass.range = range;
+    line_pass.ench_power = pow;
+    line_pass.pierce = true;
 
     while (1)
     {
@@ -6712,13 +6712,13 @@ bool ukayaw_partner_pass()
         args.restricts = DIR_LEAP;
         args.mode = TARG_ANY;
         args.needs_path = false;
-        args.top_prompt = "Aiming: <white>Partner Pass</white>";
+        args.top_prompt = "Aiming: <white>Line Pass</white>";
         args.range = 8;
 
-        if (!spell_direction(beam, partner_pass, &args))
+        if (!spell_direction(beam, line_pass, &args))
         {
             clear_messages();
-            mpr("Cancelling partner pass due to HUP.");
+            mpr("Cancelling line pass due to HUP.");
             return false;
         }
 
@@ -6754,13 +6754,13 @@ bool ukayaw_partner_pass()
         if (grd(beam.target) == DNGN_OPEN_SEA)
         {
             clear_messages();
-            mpr("You can't partner pass into the sea!");
+            mpr("You can't line pass into the sea!");
             continue;
         }
         else if (grd(beam.target) == DNGN_LAVA_SEA)
         {
             clear_messages();
-            mpr("You can't partner pass into the sea of lava!");
+            mpr("You can't line pass into the sea of lava!");
             continue;
         }
         else if (cell_is_solid(beam.target))
@@ -6769,7 +6769,7 @@ bool ukayaw_partner_pass()
             mpr("You can't walk through walls!");
             continue;
         }
-        else if (!check_moveto(beam.target, "partner pass"))
+        else if (!check_moveto(beam.target, "line pass"))
         {
             // try again (messages handled by check_moveto)
         }
@@ -6795,7 +6795,7 @@ bool ukayaw_partner_pass()
                 "passing!");
     else
     {
-        partner_pass.fire();
+        line_pass.fire();
         you.stop_being_constricted(false);
         move_player_to_grid(beam.target, false);
     }

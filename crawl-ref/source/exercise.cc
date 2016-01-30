@@ -77,7 +77,7 @@ skill_type abil_skill(ability_type abil)
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
     case ABIL_QAZLAL_DISASTER_AREA:
     case ABIL_UKAYAW_STOMP:
-    case ABIL_UKAYAW_PARTNER_PASS:
+    case ABIL_UKAYAW_LINE_PASS:
     case ABIL_UKAYAW_GRAND_FINALE:
         return SK_INVOCATIONS;
 
