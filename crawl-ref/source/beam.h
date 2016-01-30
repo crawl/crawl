@@ -87,7 +87,6 @@ struct bolt
     string aux_source = "";       // source of KILL_MISC beams
 
     bool   affects_nothing = false; // should not hit monsters or features
-    bool   affects_items = true;    // hits items on ground/inventory
 
     bool   effect_known = true;   // did we _know_ this would happen?
     bool   effect_wanton = false; // could we have guessed it would happen?
