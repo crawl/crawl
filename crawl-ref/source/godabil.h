@@ -42,6 +42,7 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 #define UKAYAW_AUDIENCE_TIMER "ukayaw_audience_timer"
 #define UKAYAW_BOND_TIMER "ukayaw_bond_timer"
+#define UKAYAW_DID_CONDUCT_THIS_TURN "ukayaw_did_conduct_this_turn"
 
 struct bolt;
 class stack_iterator;

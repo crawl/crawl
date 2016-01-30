@@ -996,7 +996,8 @@ void disable_attack_conducts(god_conduct_trigger conduct[3])
 }
 
 /**
- * Handle god conducts triggered by hurting a monster.
+ * Handle god conducts triggered by hurting a monster. Currently set up to only
+ * account for Ukayaw's use pattern; if anyone else uses it, add a second case.
  *
  * @param thing_done        The conduct in question.
  * @param victim            The victim being harmed.
@@ -1008,10 +1009,14 @@ void did_hurt_conduct(conduct_type thing_done,
 {
     // If you do any damage, you get 3 piety
     int piety_gain = 5;
+
     // Get up to 3 additional piety based on the percentage of the victim's max
     // hp you took away.
     piety_gain += piety_gain * 100 * damage_done / victim.max_hit_points / 100;
     did_god_conduct(thing_done, piety_gain, true, &victim);
+
+    // Set this to avoid piety loss this turn.
+    you.props[UKAYAW_DID_CONDUCT_THIS_TURN] = true;
 }
 
 /**
