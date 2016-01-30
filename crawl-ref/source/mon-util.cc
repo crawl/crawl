@@ -5612,7 +5612,7 @@ void throw_monster_bits(const monster* mon)
 
         int damage = 1 + random2(mon->get_hit_dice());
 
-        mprf("%s is hit by a flying piece of %s",
+        mprf("%s is hit by a flying piece of %s!",
                 target->name(DESC_THE, false).c_str(),
                 mon->name(DESC_THE, false).c_str());
 
