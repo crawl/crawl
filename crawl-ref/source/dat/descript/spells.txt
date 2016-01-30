@@ -1431,7 +1431,7 @@ Teleports the caster to a random location.
 %%%%
 Throw spell
 
-Hurls a constricted foe a considerable distance, injuring them.
+Hurls an adjacent foe a considerable distance, injuring them.
 %%%%
 Throw Barbs spell
 
