@@ -1497,12 +1497,8 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_HEXED:
     case ENCH_BRILLIANCE_AURA:
     case ENCH_EMPOWERED_SPELLS:
-        decay_enchantment(en);
-        break;
-
     case ENCH_ANTIMAGIC:
-        if (!has_ench(ENCH_SAP_MAGIC))
-            decay_enchantment(en);
+        decay_enchantment(en);
         break;
 
     case ENCH_MIRROR_DAMAGE:
