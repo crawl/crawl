@@ -921,7 +921,7 @@ static int _prepare_audience(coord_def where)
     monster* mons = monster_at(where);
     ASSERT(mons);
 
-    if (!has_emotions(mons))
+    if (mons_intel(mons) < I_ANIMAL)
         return 0;
 
     int power =  you.skill(SK_INVOCATIONS, 10) + you.experience_level
@@ -956,7 +956,7 @@ static int _bond_audience(coord_def where)
     monster* mons = monster_at(where);
     ASSERT(mons);
 
-    if (!has_emotions(mons))
+    if (mons_intel(mons) < I_ANIMAL)
         return 0;
 
     int power = you.skill(SK_INVOCATIONS, 5) + you.experience_level

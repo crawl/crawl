@@ -5554,13 +5554,6 @@ void init_mutant_beast(monster &mons, short HD, vector<int> beast_facets,
     }
 }
 
-// Living non-plant creatures and intelligent creatures have emotions.
-bool has_emotions(const monster* mon)
-{
-    return mons_intel(mon) >= I_HUMAN ||
-            !(mon->holiness() & (MH_UNDEAD | MH_NONLIVING | MH_PLANT));
-}
-
 // Deal out damage to nearby pain-bonded monsters based on the distance between them.
 void radiate_pain_bond(const monster* mon, int damage){
     for (actor_near_iterator ai(mon->pos(), LOS_NO_TRANS); ai; ++ai)
@@ -5573,7 +5566,7 @@ void radiate_pain_bond(const monster* mon, int damage){
         if (mon == target) // no self-sharing
             continue;
 
-        if (!has_emotions(target))
+        if (mons_intel(target) < I_ANIMAL)
             continue;
 
         // Only other pain-bonded monsters are affected.

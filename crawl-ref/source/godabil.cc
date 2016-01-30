@@ -6852,7 +6852,7 @@ bool ukayaw_grand_finale()
             continue;
         }
 
-        if (!has_emotions(mons)) {
+        if (mons_intel(mons) < I_ANIMAL) {
             clear_messages();
             mpr("The target can't bond with you emotionally!");
             continue;
