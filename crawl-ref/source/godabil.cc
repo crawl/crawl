@@ -6812,7 +6812,7 @@ bool ukayaw_grand_finale()
 
     if (crawl_state.is_repeating_cmd())
     {
-        crawl_state.cant_cmd_repeat("You can't repeat power leap.");
+        crawl_state.cant_cmd_repeat("No encores!");
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
         return false;
