@@ -130,7 +130,7 @@ const char* jewellery_base_ability_string(int subtype)
 #endif
     case AMU_HARM:                return "Harm *Drain";
     case AMU_DISMISSAL:           return "Dismiss";
-    case AMU_MANA_REGENERATION:   return "MPRegen";
+    case AMU_MANA_REGENERATION:   return "RegenMP";
     case AMU_THE_GOURMAND:        return "Gourm";
 #if TAG_MAJOR_VERSION == 34
     case AMU_CONSERVATION:        return "Cons";
