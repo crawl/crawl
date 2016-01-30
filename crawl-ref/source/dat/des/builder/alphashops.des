@@ -151,7 +151,7 @@
 
       elseif s == "S" then i = "scimitar | short sword | " ..
        "sling bullet | scale mail | book of summonings | book of the sky | " ..
-       "deck of summoning | potion of slowing | ring of see invisible | " ..
+       "deck of summoning | ring of see invisible | " ..
        "ring of slaying | spear | ring of stealth | ring of strength | " ..
        "rod of shadows | rod of the swarm | ring of sustain attributes | " ..
        "sack of spiders | scroll of summoning | scythe | " ..
