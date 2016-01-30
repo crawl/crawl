@@ -388,12 +388,17 @@ static void _update_cowardice()
         mpr("You feel a twist of horror at the sight of this foe.");
 }
 
-static void _decrement_ukayaw_passive_timers(int time_taken)
+static void _handle_ukayaw_time(int time_taken)
 {
     you.props[UKAYAW_AUDIENCE_TIMER] =
             max(0, you.props[UKAYAW_AUDIENCE_TIMER].get_int() - time_taken);
     you.props[UKAYAW_BOND_TIMER] =
             max(0, you.props[UKAYAW_BOND_TIMER].get_int() - time_taken);
+
+    // Ukawyaw piety decays incredibly fast, but only to a baseline
+            // level
+    if (you.piety > piety_breakpoint(1))
+              lose_piety(div_rand_round(2 * time_taken, 10));
 }
 
 /**
@@ -425,7 +430,8 @@ void player_reacts_to_monsters()
         you.awake();
     _maybe_melt_armour();
     _update_cowardice();
-    _decrement_ukayaw_passive_timers(you.time_taken);
+    if (you_worship(GOD_UKAYAW))
+        _handle_ukayaw_time(you.time_taken);
 }
 
 static bool _check_recite()
