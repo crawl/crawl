@@ -4217,7 +4217,7 @@ void handle_god_time(int /*time_delta*/)
             // Ukawyaw piety decays incredibly fast, but only to a baseline
             // level
             if (you.piety > piety_breakpoint(1))
-              lose_piety(15);
+              lose_piety(30);
         case GOD_FEDHAS:
         case GOD_CHEIBRIADOS:
             // These gods do not lose piety over time.
