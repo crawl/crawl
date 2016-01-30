@@ -7415,6 +7415,10 @@ static actor *_get_throw_victim(const monster &mons)
         if (mons.is_constricted() && mons.constricted_by == victim->mid)
             continue;
 
+        // Don't throw statues or tentacles.
+        if (mons_class_is_stationary(victim->type))
+            continue;
+
         // See if we *could* execute a grab attack, and if so, they're
         // a valid target.
         if (mons.can_constrict(victim))
