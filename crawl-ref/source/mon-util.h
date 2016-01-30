@@ -515,4 +515,5 @@ void init_mutant_beast(monster &mon, short HD, vector<int> beast_facets,
                        set<int> avoid_facets);
 bool has_emotions(const monster* mon);
 void radiate_pain_bond(const monster* mon, int damage);
+void throw_monster_bits(const monster* mon);
 #endif
