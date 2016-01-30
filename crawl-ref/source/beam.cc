@@ -1743,7 +1743,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
     }
 
-    if (pbolt.affects_items && doFlavouredEffects)
+    if (doFlavouredEffects)
     {
         const int burn_power = (pbolt.is_explosion) ? 5 :
                                (pbolt.pierce)       ? 3
@@ -4077,7 +4077,7 @@ void bolt::affect_player()
 
     // Acid. (Apply this afterward, to avoid bad message ordering.)
     if (flavour == BEAM_ACID)
-        you.splash_with_acid(agent(), 5, affects_items);
+        you.splash_with_acid(agent(), 5, true);
 
     extra_range_used += range_used_on_hit();
 
