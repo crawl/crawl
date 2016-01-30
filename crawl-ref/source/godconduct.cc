@@ -1008,7 +1008,7 @@ void did_hurt_conduct(conduct_type thing_done,
                       int damage_done)
 {
     // If you do any damage, you get 3 piety
-    int piety_gain = 5;
+    int piety_gain = 4;
 
     // Get up to 3 additional piety based on the percentage of the victim's max
     // hp you took away.

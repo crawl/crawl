@@ -398,8 +398,11 @@ static void _handle_ukayaw_time(int time_taken)
     // Ukawyaw piety decays incredibly fast, but only to a baseline
     // level of *. Using Ukayaw abilities can still take you under *.
     if (you.props[UKAYAW_DID_CONDUCT_THIS_TURN].get_bool() == false
-            && you.piety > piety_breakpoint(0)) {
-        lose_piety(div_rand_round(3 * time_taken, 10));
+            && you.piety > piety_breakpoint(0))
+    {
+        int piety_lost = min(you.piety - piety_breakpoint(0),
+                div_rand_round(3 * time_taken, 10));
+        lose_piety(piety_lost);
     }
 
     // Every turn reset this to false after checking it.

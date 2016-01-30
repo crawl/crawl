@@ -943,7 +943,7 @@ void ukayaw_prepares_audience()
 
     // Increment a delay timer to prevent players from spamming this ability
     // via piety loss and gain. Timer is in AUT.
-    you.props[UKAYAW_AUDIENCE_TIMER] = 150;
+    you.props[UKAYAW_AUDIENCE_TIMER] = 300;
 }
 
 /**
@@ -959,9 +959,9 @@ static int _bond_audience(coord_def where)
     if (!has_emotions(mons))
         return 0;
 
-    int power = you.skill(SK_INVOCATIONS, 10) + you.experience_level
+    int power = you.skill(SK_INVOCATIONS, 5) + you.experience_level
                  - mons->get_hit_dice();
-    int duration = 10 + random2(power);
+    int duration = 1 + random2(power);
     mons->add_ench(mon_enchant(ENCH_PAIN_BOND, 1, &you, duration));
 
     return 1;
@@ -977,5 +977,5 @@ void ukayaw_bonds_audience()
 
     // Increment a delay timer to prevent players from spamming this ability
     // via piety loss and gain. Timer is in AUT.
-    you.props[UKAYAW_BOND_TIMER] = 150;
+    you.props[UKAYAW_BOND_TIMER] = 300;
 }
