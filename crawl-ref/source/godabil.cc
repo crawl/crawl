@@ -6894,7 +6894,7 @@ bool ukayaw_grand_finale()
     ASSERT(mons);
 
     // kill the target
-    mprf("The %s explodes violently!", mons->name(DESC_THE, false).c_str());
+    mprf("%s explodes violently!", mons->name(DESC_THE, false).c_str());
     mons->flags |= MF_EXPLODE_KILL;
     if (!mons->is_insubstantial())
         throw_monster_bits(mons); // have some fun while we're at it
