@@ -374,7 +374,7 @@ Xom brings you back to life.
 
 Xom smiles on you.
 
-"Toy, won't you die on me yet!"
+"Toy, don't you die on me yet!"
 
 w:1
 "One more [life|try|go]."
@@ -717,19 +717,7 @@ w:5
 Gozag says: Don't bother me unless you have something to purchase.
 
 w:5
-Gozag says: Only money gety you out of stagnation and depression.
-
-w:1
-Gozag says: Your prayer is important. Please continue to hold.
-
-w:1
-Gozag says: Please join the back of the queue.
-
-w:1
-Gozag says: This prayer may be monitored for quality assurance.
-
-w:1
-Gozag says: For potions, speak 1 now.
+Gozag says: Only money gets you out of stagnation and depression.
 
 w:1
 Gozag says: Let them eat cake!
