@@ -6852,9 +6852,17 @@ bool ukayaw_grand_finale()
             continue;
         }
 
-        if (mons_intel(mons) < I_ANIMAL) {
+        if (mons_intel(mons) < I_ANIMAL)
+        {
             clear_messages();
             mpr("The target can't bond with you emotionally!");
+            continue;
+        }
+
+        if (mons->has_ench(ENCH_DEATHS_DOOR))
+        {
+            clear_messages();
+            mpr("The target is shielded from death!");
             continue;
         }
 
@@ -6901,7 +6909,10 @@ bool ukayaw_grand_finale()
 
     monster_die(mons, KILL_YOU, NON_MONSTER, false);
 
-    move_player_to_grid(beam.target, false);
+    if (!mons->alive())
+        move_player_to_grid(beam.target, false);
+    else
+        mpr("You spring back to your original position.");
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
