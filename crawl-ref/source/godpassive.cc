@@ -955,7 +955,7 @@ static int _prepare_audience(coord_def where)
 void ukayaw_prepares_audience()
 {
     int count = apply_area_visible(_check_for_ukayaw_targets, you.pos());
-    if (count > 1)
+    if (count > 0)
     {
         mprf(MSGCH_GOD, "Ukayaw prepares the audience for your solo!");
         apply_area_visible(_prepare_audience, you.pos());
