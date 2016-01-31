@@ -6716,6 +6716,9 @@ bool ukayaw_line_pass()
         args.range = 8;
 
         if (!spell_direction(beam, line_pass, &args))
+            return SPRET_ABORT;
+
+        if (crawl_state.seen_hups)
         {
             clear_messages();
             mpr("Cancelling line pass due to HUP.");
