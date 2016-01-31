@@ -908,6 +908,22 @@ void pakellas_id_device_charges()
 }
 
 /**
+ * check if the monster in this cell exists and is a valid target for Ukayaw
+ */
+static int _check_for_ukayaw_targets(coord_def where)
+{
+    if (!cell_has_valid_target(where))
+        return 0;
+    monster* mons = monster_at(where);
+    ASSERT(mons);
+
+    if (mons_intel(mons) < I_ANIMAL)
+        return 0;
+
+    return 1;
+}
+
+/**
  * Paralyze the monster in this cell, assuming one exists.
  *
  * Duration increases with invocations and experience level, and decreases
@@ -938,12 +954,16 @@ static int _prepare_audience(coord_def where)
  */
 void ukayaw_prepares_audience()
 {
-    mprf(MSGCH_GOD, "Ukayaw prepares the audience for your solo!");
-    apply_area_visible(_prepare_audience, you.pos());
+    int count = apply_area_visible(_check_for_ukayaw_targets, you.pos());
+    if (count > 1)
+    {
+        mprf(MSGCH_GOD, "Ukayaw prepares the audience for your solo!");
+        apply_area_visible(_prepare_audience, you.pos());
 
-    // Increment a delay timer to prevent players from spamming this ability
-    // via piety loss and gain. Timer is in AUT.
-    you.props[UKAYAW_AUDIENCE_TIMER] = 200 + random2(101);
+        // Increment a delay timer to prevent players from spamming this ability
+        // via piety loss and gain. Timer is in AUT.
+        you.props[UKAYAW_AUDIENCE_TIMER] = 200 + random2(201);
+    }
 }
 
 /**
@@ -972,10 +992,15 @@ static int _bond_audience(coord_def where)
  */
 void ukayaw_bonds_audience()
 {
-    mprf(MSGCH_GOD, "Ukayaw links your audience in an emotional bond!");
-    apply_area_visible(_bond_audience, you.pos());
+    int count = apply_area_visible(_check_for_ukayaw_targets, you.pos());
+    if (count > 1)
+    {
+        mprf(MSGCH_GOD, "Ukayaw links your audience in an emotional bond!");
+        apply_area_visible(_bond_audience, you.pos());
 
-    // Increment a delay timer to prevent players from spamming this ability
-    // via piety loss and gain. Timer is in AUT.
-    you.props[UKAYAW_BOND_TIMER] = 200 + random2(101);
+        // Increment a delay timer to prevent players from spamming this ability
+        // via piety loss and gain. Timer is in AUT.
+        you.props[UKAYAW_BOND_TIMER] = 200 + random2(201);
+    }
+
 }
