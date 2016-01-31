@@ -799,6 +799,10 @@ string get_god_likes(god_type which_god, bool verbose)
         likes.emplace_back("you kill holy beings");
         break;
 
+    case GOD_UKAYAW:
+        likes.emplace_back("you hurt others");
+        break;
+
     default:
         break;
     }
@@ -822,6 +826,7 @@ string get_god_likes(god_type which_god, bool verbose)
         really_likes.emplace_back("you kill beings that bring fire to the "
                                   "dungeon");
         break;
+
     default:
         break;
     }
