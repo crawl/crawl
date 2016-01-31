@@ -940,8 +940,8 @@ static int _prepare_audience(coord_def where)
     if (mons_intel(mons) < I_ANIMAL)
         return 0;
 
-    int power =  you.skill(SK_INVOCATIONS, 1) + you.experience_level
-                 - mons->get_hit_dice();
+    int power =  max(1, you.skill(SK_INVOCATIONS, 1) + you.experience_level
+                 - mons->get_hit_dice());
     int duration = 10 + rand_round(cbrt(power) * 10);
     mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, &you, duration));
 
