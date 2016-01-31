@@ -4541,7 +4541,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         }
 
         // Hurt conducts
-        if (agent && agent->is_player())
+        if (agent && agent->is_player() && mons_gives_xp(this, agent))
             did_hurt_conduct(DID_HURT_FOE, *this, amount);
 
 
