@@ -6657,8 +6657,8 @@ static int _get_stomped(monster* mons)
         return 0;
 
     //damage scales with Invocations
-    int dmg = 1 + player_adjust_invoc_power(you.skill(SK_INVOCATIONS, 1))
-            * mons->hit_points / 100;
+    int dmg = 3 + player_adjust_invoc_power(you.skill(SK_INVOCATIONS, 1))
+            * mons->max_hit_points / 100;
 
     mons->hurt(&you, dmg, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
 
