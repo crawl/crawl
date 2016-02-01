@@ -192,7 +192,7 @@ Xom revert own banishment
 w:30
 "Kidding!"
 
-"On second thought, though..."
+"On second thoughts, though..."
 
 "No, I've changed my mind."
 
@@ -277,7 +277,7 @@ Xom vitrification
 
 You feel watched.
 
-Everything around seems to assume a strange transparency.
+Everything around you seems to assume a strange transparency.
 
 The walls suddenly lose part of their structure.
 
@@ -354,11 +354,11 @@ w:1
 %%%%
 Xom accidental homicide
 
-"Oops, I didn't mean to do *that*!"
+"Oops, I didn't mean to do that!"
 %%%%
 Xom weird death
 
-"How'd *that* happen? Weird."
+"How'd that happen? Weird."
 %%%%
 Xom resurrection
 
