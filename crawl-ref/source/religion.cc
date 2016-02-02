@@ -1952,16 +1952,20 @@ bool do_god_gift(bool forced)
             break;
 
         case GOD_UKAYAW:
+            // Ukayaw's triggered abilities trigger if you set the timer to -1.
+            // We do this so that we trigger at the end of the round instead of
+            // at the time we deal damage.
             if (you.piety == piety_breakpoint(2)
                 && you.props[UKAYAW_AUDIENCE_TIMER].get_int() == 0)
             {
-                ukayaw_prepares_audience();
+                you.props[UKAYAW_AUDIENCE_TIMER] = -1;
                 success = true;
             }
             else if (you.piety == piety_breakpoint(3)
                 && you.props[UKAYAW_BOND_TIMER].get_int() == 0)
             {
-                ukayaw_bonds_audience();
+                you.props[UKAYAW_BOND_TIMER] = -1;
+                success = true;
             }
             else
                 success = false;
