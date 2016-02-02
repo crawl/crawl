@@ -538,45 +538,6 @@ Beogh curses everyone not orcish, especially @player_genus_plural@.
 
 Beogh swears eternal hatred towards @player_god@.
 %%%%
-#################################################
-# The Shining One rants on killing a holy being #
-#################################################
-# an evil worshipper has killed a holy being
-the Shining One holy evil
-
-The Shining One thunders, "Cease your foul attacks on the divine!"
-
-The Shining One shouts, "That base death shall not go unavenged!"
-
-The Shining One shouts, "Your misdeeds are remembered unto the final battle!"
-
-The Shining One whispers, "The forces of light will burn you to a crisp."
-%%%%
-# a non-good worshipper or atheist has killed a holy being
-the Shining One holy other
-
-The Shining One says, "As holy lives are taken, so shall yours be."
-
-The Shining One warns, "Defile yourself no further with such kills."
-
-The Shining One demands, "It is time to choose between the fair and the foul."
-
-The Shining One says, "Martyrs are remembered forever."
-
-w:1
-The Shining One says, "An eye for an eye, a tooth for a tooth."
-%%%%
-##########################################
-# Elyvilon hates you killing her animals #
-##########################################
-Elyvilon holy
-
-Elyvilon hisses: "You foul beast! How dare you!"
-
-Elyvilon sadly asks: "How did it come to be that such cruelty exists?"
-
-Elyvilon whispers: "No one should ever harm others. Ever!"
-%%%%
 recite_closure
 
 "Amen!"
