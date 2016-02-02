@@ -927,8 +927,7 @@ static int _check_for_ukayaw_targets(coord_def where)
  * Paralyze the monster in this cell, assuming one exists.
  *
  * Duration increases with invocations and experience level, and decreases
- * with target HD. The actual duration is a randomly-rounded cube root of
- * the total power, so that you need a lot of power to get more duration.
+ * with target HD. The duration is pretty low, maxing out at 40 AUT.
  */
 static int _prepare_audience(coord_def where)
 {
@@ -940,9 +939,9 @@ static int _prepare_audience(coord_def where)
     if (mons_intel(mons) < I_ANIMAL)
         return 0;
 
-    int power =  max(1, you.skill(SK_INVOCATIONS, 1) + you.experience_level
-                 - mons->get_hit_dice());
-    int duration = 10 + rand_round(cbrt(power) * 10);
+    int power =  max(1, random2(1 + you.skill(SK_INVOCATIONS, 2))
+                 + you.experience_level - mons->get_hit_dice());
+    int duration = min(max(10, 5 + power), 40);
     mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, &you, duration));
 
     return 1;
@@ -981,7 +980,7 @@ static int _bond_audience(coord_def where)
 
     int power = you.skill(SK_INVOCATIONS, 5) + you.experience_level
                  - mons->get_hit_dice();
-    int duration = 1 + random2(power);
+    int duration = 10 + random2(power);
     mons->add_ench(mon_enchant(ENCH_PAIN_BOND, 1, &you, duration));
 
     return 1;
