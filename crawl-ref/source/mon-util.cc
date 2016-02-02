@@ -5578,7 +5578,7 @@ void radiate_pain_bond(const monster* mon, int damage){
         if (distance > 3)
             continue;
 
-        damage = max(0, div_rand_round(damage * (4 - distance), 4));
+        damage = max(0, div_rand_round(damage * (4 - distance), 5));
 
         if (damage > 0) {
             behaviour_event(target, ME_ANNOY, &you, you.pos());
