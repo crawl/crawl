@@ -1817,8 +1817,7 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
                                       MISC_SACK_OF_SPIDERS,
                                       MISC_CRYSTAL_BALL_OF_ENERGY,
                                       MISC_LANTERN_OF_SHADOWS,
-                                      MISC_PHANTOM_MIRROR,
-                                      MISC_XOMS_CHESSBOARD);
+                                      MISC_PHANTOM_MIRROR);
     }
 
     // set initial charges
