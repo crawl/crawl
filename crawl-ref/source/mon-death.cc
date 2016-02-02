@@ -625,7 +625,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
         if (!mon->friendly() || !one_chance_in(3))
             return false;
 
-        if (!mons_near(mons))
+        if (!you.see_cell(mons->pos()))
             return false;
     }
     else if (!YOU_KILL(killer))
@@ -651,7 +651,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 static bool _yred_enslave_soul(monster* mons, killer_type killer)
 {
     if (you_worship(GOD_YREDELEMNUL) && mons_enslaved_body_and_soul(mons)
-        && mons_near(mons) && killer != KILL_RESET
+        && you.see_cell(mons->pos()) && killer != KILL_RESET
         && killer != KILL_DISMISSED
         && killer != KILL_BANISHED)
     {
@@ -711,7 +711,7 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
     if (!in_good_standing(GOD_BEOGH, 2)
         || mons_genus(mons.type) != MONS_ORC
         || mons.is_summoned() || mons.is_shapeshifter()
-        || !mons_near(&mons) || mons_is_god_gift(&mons))
+        || !you.see_cell(mons.pos()) || mons_is_god_gift(&mons))
     {
         return false;
     }
@@ -1298,7 +1298,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     if (saw)
         viewwindow();
 
-    // FIXME: show_more == mons_near(mons)
+    // FIXME: show_more == you.see_cell(mons->pos())
     if (type == MONS_LURKING_HORROR)
     {
         targetter_los hitfunc(mons, LOS_SOLID);
@@ -1753,7 +1753,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     remove_unique_annotation(mons);
 
     // Clear auto exclusion now the monster is killed - if we know about it.
-    if (mons_near(mons) || wizard || mons_is_unique(mons->type))
+    if (you.see_cell(mons->pos()) || wizard || mons_is_unique(mons->type))
         remove_auto_exclude(mons);
 
           int  duration      = 0;
@@ -1999,8 +1999,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     }
 
     const bool death_message = !silent && !did_death_message
-                               && mons_near(mons)
-                               && mons->visible_to(&you);
+                               && you.can_see(*mons);
     const bool exploded {mons->flags & MF_EXPLODE_KILL};
     bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = mons->holiness();
@@ -2584,7 +2583,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     // can see the monster. There are several edge cases where a monster
     // is visible to the player but we still need to turn autopickup
     // back on, such as TSO's halo or sticky flame. (jpeg)
-    if (mons_near(mons) && mons->has_ench(ENCH_INVIS))
+    if (you.see_cell(mons->pos()) && mons->has_ench(ENCH_INVIS))
         autotoggle_autopickup(false);
 
     if (corpse && _reaping(mons))
@@ -2763,7 +2762,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 
     // Don't worry about invisibility. You should be able to see if
     // something has fallen into the lava.
-    if (mons_near(mons) && (oldpos == mons->pos() || grd(oldpos) != grid))
+    if (you.see_cell(mons->pos()) && (oldpos == mons->pos() || grd(oldpos) != grid))
     {
          mprf("%s falls into the %s!",
              mons->name(DESC_THE).c_str(),
@@ -2804,25 +2803,17 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 // artefact or unrand artefact.
 static void _vanish_orig_eq(monster* mons)
 {
-    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+    for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
-        if (mons->inv[i] == NON_ITEM)
-            continue;
-
-        item_def &item(mitm[mons->inv[i]]);
-
-        if (!item.defined())
-            continue;
-
-        if (origin_known(item) || item.orig_monnum != 0
-            || !item.inscription.empty()
-            || is_unrandom_artefact(item)
-            || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN
+        if (origin_known(*ii) || ii->orig_monnum != 0
+            || !ii->inscription.empty()
+            || is_unrandom_artefact(*ii)
+            || (ii->flags & (ISFLAG_DROPPED | ISFLAG_THROWN
                               | ISFLAG_NOTED_GET)))
         {
             continue;
         }
-        item.flags |= ISFLAG_SUMMONED;
+        ii->flags |= ISFLAG_SUMMONED;
     }
 }
 
@@ -3134,9 +3125,12 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     string key = mons->name(DESC_THE, true) + "_"
                  + twin->name(DESC_THE, true) + "_dies_";
 
-    if (mons_near(mons) && !mons->observable())
-        key += "invisible_";
-    else if (!mons_near(mons))
+    if (you.see_cell(mons->pos()))
+    {
+        if (!mons->visible_to(&you))
+            key += "invisible_";
+    }
+    else
         key += "distance_";
 
     bool i_killed = ((killer == KILL_MON || killer == KILL_MON_MISSILE)
@@ -3154,7 +3148,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     string death_message = getSpeakString(key);
 
     // Check if they can speak or not: they may have been polymorphed.
-    if (mons_near(mons) && !death_message.empty() && mons->can_speak())
+    if (you.see_cell(mons->pos()) && !death_message.empty() && mons->can_speak())
         mons_speaks_msg(mons, death_message, MSGCH_TALK, silenced(you.pos()));
     else if (mons->can_speak())
         mpr(death_message);
@@ -3174,7 +3168,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     }
 
     // Finally give them new energy
-    if (mons_near(mons) && !mons->has_ench(ENCH_INSANE))
+    if (mons->can_see(you) && !mons->has_ench(ENCH_INSANE))
         elven_twin_energize(mons);
     else
         mons->props[ELVEN_ENERGIZE_KEY] = true;
@@ -3214,8 +3208,7 @@ void elven_twins_pacify(monster* twin)
     if (mons->neutral())
         return;
 
-    if (mons_near(mons))
-        simple_monster_message(mons, " likewise turns neutral.");
+    simple_monster_message(mons, " likewise turns neutral.");
 
     record_monster_defeat(mons, KILL_PACIFIED);
     mons_pacify(mons, ATT_NEUTRAL);
@@ -3293,14 +3286,11 @@ void mons_felid_revive(monster* mons)
 
     if (newmons)
     {
-        for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
-            if (mons->inv[i] != NON_ITEM)
-            {
-                int item = mons->inv[i];
-                give_specific_item(newmons, mitm[item]);
-                destroy_item(item);
-                mons->inv[i] = NON_ITEM;
-            }
+        for (mon_inv_iterator ii(*mons); ii; ++ii)
+        {
+            give_specific_item(newmons, *ii);
+            destroy_item(ii->index());
+        }
 
         newmons->props["felid_revives"].get_byte() = revives;
     }

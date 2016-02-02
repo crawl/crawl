@@ -382,7 +382,8 @@ int raw_spell_fail(spell_type spell)
     if (player_equip_unrand(UNRAND_HIGH_COUNCIL))
         chance2 += 7;
 
-    chance2 += you.duration[DUR_MAGIC_SAPPED] / BASELINE_DELAY;
+    if (you.props.exists(SAP_MAGIC_KEY))
+        chance2 += you.props[SAP_MAGIC_KEY].get_int() * 12;
 
     chance2 += you.duration[DUR_VERTIGO] ? 7 : 0;
 
@@ -793,7 +794,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     // they don't have a certain effect. You may use Poison Arrow on those
     // immune, use Mephitic Cloud to shield yourself from other clouds, and
     // thus we don't prompt for them. It would be nice to prompt for them
-    // during the targetting phase, perhaps.
+    // during the targeting phase, perhaps.
     if (god_punishes_spell(spell, you.religion)
         && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
@@ -953,13 +954,14 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
 
     if (god == GOD_NO_GOD)
     {
-        if (you.duration[DUR_SAP_MAGIC] && real_spell)
+        if (you.duration[DUR_SAP_MAGIC]
+            && you.props[SAP_MAGIC_KEY].get_int() < 3
+            && real_spell && coinflip())
         {
             mprf(MSGCH_WARN, "Your control over your magic is sapped.");
-            you.increase_duration(DUR_MAGIC_SAPPED,
-                                  spell_difficulty(spell),
-                                  100);
+            you.props[SAP_MAGIC_KEY].get_int()++;
         }
+
         // Make some noise if it's actually the player casting.
         noisy(spell_noise(spell), you.pos());
 
@@ -1306,7 +1308,7 @@ spret_type your_spells(spell_type spell, int powc,
 
         unique_ptr<targetter> hitfunc = _spell_targetter(spell, powc, range);
 
-        // Add success chance to targetted spells checking monster MR
+        // Add success chance to targeted spells checking monster MR
         const bool mr_check = testbits(flags, SPFLAG_MR_CHECK)
                               && testbits(flags, SPFLAG_DIR_OR_TARGET)
                               && !testbits(flags, SPFLAG_HELPFUL);

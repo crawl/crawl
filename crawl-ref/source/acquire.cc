@@ -764,29 +764,25 @@ static int _tele_wand_weight(bool divine)
  */
 static int _acquirement_wand_subtype(bool divine, int & /*quantity*/)
 {
+    // basic total: 140
     vector<pair<wand_type, int>> weights = {
         // normally 25
         { WAND_HEAL_WOUNDS,     _hw_wand_weight(divine) },
         { WAND_HASTING,         _haste_wand_weight(divine) },
         // normally 15
         { WAND_TELEPORTATION,   _tele_wand_weight(divine) },
-        { WAND_FIRE,            8 },
-        { WAND_COLD,            8 },
-        { WAND_LIGHTNING,       8 },
-        { WAND_DRAINING,        8 },
-        { WAND_INVISIBILITY,    8 },
-        { WAND_FIREBALL,        8 },
-        { WAND_DIGGING,         5 },
+        { WAND_LIGHTNING,       16 },
+        { WAND_ACID,            16 },
+        { WAND_ICEBLAST,        16 },
         { WAND_DISINTEGRATION,  5 },
+        { WAND_DIGGING,         5 },
         { WAND_POLYMORPH,       5 },
         { WAND_ENSLAVEMENT,     player_mutation_level(MUT_NO_LOVE) ? 0 : 5 },
+        { WAND_RANDOM_EFFECTS,  3 },
         { WAND_FLAME,           1 },
-        { WAND_FROST,           1 },
         { WAND_CONFUSION,       1 },
         { WAND_PARALYSIS,       1 },
         { WAND_SLOWING,         1 },
-        { WAND_MAGIC_DARTS,     1 },
-        { WAND_RANDOM_EFFECTS,  1 },
     };
 
     // Unknown wands get a huge weight bonus.
@@ -901,6 +897,8 @@ static int _book_weight(book_type book)
         // Skip over spells already seen.
         if (you.seen_spell[stype])
             continue;
+        if (god_hates_spell(stype, you.religion))
+            continue;
 
         total_weight += _spell_weight(stype);
     }
@@ -1000,7 +998,7 @@ static bool _knows_and_likes_magic()
  */
 static bool _acquire_manual(item_def &book)
 {
-    int weights[NUM_SKILLS];
+    int weights[NUM_SKILLS] = { 0 };
     int total_weights = 0;
 
     const bool knows_magic = _knows_and_likes_magic();
@@ -1010,10 +1008,7 @@ static bool _acquire_manual(item_def &book)
         int skl = you.skills[sk];
 
         if (skl == 27 || is_useless_skill(sk))
-        {
-            weights[sk] = 0;
             continue;
-        }
 
         int w = (skl < 12) ? skl + 3 : max(0, 25 - skl);
 
@@ -1037,7 +1032,7 @@ static bool _acquire_manual(item_def &book)
 
     book.sub_type = BOOK_MANUAL;
     book.skill = static_cast<skill_type>(
-                    choose_random_weighted(weights, weights + NUM_SKILLS));
+                    choose_random_weighted(weights, end(weights)));
     // Set number of bonus skill points.
     book.skill_points = random_range(2000, 3000);
     return true;
@@ -1063,30 +1058,24 @@ static bool _do_book_acquirement(item_def &book, int agent)
         int total_weights = 0;
 
         // Pick a random spellbook according to unknown spells contained.
-        int weights[MAX_FIXED_BOOK+1];
+        int weights[MAX_FIXED_BOOK + 1] = { 0 };
         for (int bk = 0; bk <= MAX_FIXED_BOOK; bk++)
         {
-            if (is_rare_book(static_cast<book_type>(bk))
-                && agent == GOD_SIF_MUNA)
+            const auto bkt = static_cast<book_type>(bk);
+
+            if (is_rare_book(bkt) && agent == GOD_SIF_MUNA
+                || item_type_removed(OBJ_BOOKS, bk))
             {
-                weights[bk] = 0;
                 continue;
             }
 
-            if (item_type_removed(OBJ_BOOKS, bk))
-            {
-                weights[bk] = 0;
-                continue;
-            }
-
-            weights[bk]    = _book_weight(static_cast<book_type>(bk));
+            weights[bk]    = _book_weight(bkt);
             total_weights += weights[bk];
         }
 
         if (total_weights > 0)
         {
-            book.sub_type = choose_random_weighted(weights,
-                                                   weights + ARRAYSZ(weights));
+            book.sub_type = choose_random_weighted(weights, end(weights));
             break;
         }
         // else intentional fall-through

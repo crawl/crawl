@@ -116,6 +116,9 @@ Xom's power touches on you.
 Xom giggles.
 
 w:1
+"This scratches an itch."
+
+w:1
 "Running a series of toy crash tests now."
 %%%%
 Xom rearrange the pieces
@@ -125,6 +128,8 @@ Xom decides to rearrange the pieces.
 "First here, now there."
 
 "This might be better!"
+
+"This is how I like it!"
 %%%%
 Xom teleportation journey
 
@@ -187,7 +192,7 @@ Xom revert own banishment
 w:30
 "Kidding!"
 
-"On second thought, though..."
+"On second thoughts, though..."
 
 "No, I've changed my mind."
 
@@ -272,7 +277,7 @@ Xom vitrification
 
 You feel watched.
 
-Everything around seems to assume a strange transparency.
+Everything around you seems to assume a strange transparency.
 
 The walls suddenly lose part of their structure.
 
@@ -349,11 +354,11 @@ w:1
 %%%%
 Xom accidental homicide
 
-"Oops, I didn't mean to do *that*!"
+"Oops, I didn't mean to do that!"
 %%%%
 Xom weird death
 
-"How'd *that* happen? Weird."
+"How'd that happen? Weird."
 %%%%
 Xom resurrection
 
@@ -368,6 +373,11 @@ Xom's power revives you.
 Xom brings you back to life.
 
 Xom smiles on you.
+
+"Toy, don't you die on me yet!"
+
+w:1
+"One more [life|try|go]."
 %%%%
 Xom repel stairs
 
@@ -528,45 +538,6 @@ Beogh curses everyone not orcish, especially @player_genus_plural@.
 
 Beogh swears eternal hatred towards @player_god@.
 %%%%
-#################################################
-# The Shining One rants on killing a holy being #
-#################################################
-# an evil worshipper has killed a holy being
-the Shining One holy evil
-
-The Shining One thunders, "Cease your foul attacks on the divine!"
-
-The Shining One shouts, "That base death shall not go unavenged!"
-
-The Shining One shouts, "Your misdeeds are remembered unto the final battle!"
-
-The Shining One whispers, "The forces of light will burn you to a crisp."
-%%%%
-# a non-good worshipper or atheist has killed a holy being
-the Shining One holy other
-
-The Shining One says, "As holy lives are taken, so shall yours be."
-
-The Shining One warns, "Defile yourself no further with such kills."
-
-The Shining One demands, "It is time to choose between the fair and the foul."
-
-The Shining One says, "Martyrs are remembered forever."
-
-w:1
-The Shining One says, "An eye for an eye, a tooth for a tooth."
-%%%%
-##########################################
-# Elyvilon hates you killing her animals #
-##########################################
-Elyvilon holy
-
-Elyvilon hisses: "You foul beast! How dare you!"
-
-Elyvilon sadly asks: "How did it come to be that such cruelty exists?"
-
-Elyvilon whispers: "No one should ever harm others. Ever!"
-%%%%
 recite_closure
 
 "Amen!"
@@ -661,8 +632,6 @@ naughty
 ############################
 Gozag prayer
 
-Gozag says: Don't bother me unless you have something to purchase.
-
 Gozag says: Bring me some gold!
 
 Gozag says: Wasting time is wasting money!
@@ -675,14 +644,7 @@ Gozag says: A full purse beats having friends.
 
 Gozag says: The world belongs to the rich.
 
-w:4
-Gozag says: Eat the poor!
-
-w:3
-Gozag says: Kill the poor!
-
-w:3
-Gozag says: Defeat the poor!
+Gozag says: [Eat|Kill|Defeat] the poor!
 
 Gozag says: No better sound than the ting-a-ling of coins.
 
@@ -704,20 +666,25 @@ Gozag says: Money talks!
 
 Gozag says: Cash is king!
 
+Gozag says: I have no interest in the poor.
+
+w:5
+Gozag says: I guarantee the gold standard.
+
 w:5
 Gozag says: Gold! Gold! Gold!
 
-w:1
-Gozag says: Your prayer is important. Please continue to hold.
+w:5
+Gozag says: Don't bother me unless you have something to purchase.
+
+w:5
+Gozag says: Only money gets you out of stagnation and depression.
 
 w:1
-Gozag says: Please join the back of the queue.
+Gozag says: Let them eat cake!
 
 w:1
-Gozag says: This prayer may be monitored for quality assurance.
-
-w:1
-Gozag says: For potions, speak 1 now.
+Gozag says: I want my money back!
 %%%%
 ######################################
 # Welcome messages on game restoration

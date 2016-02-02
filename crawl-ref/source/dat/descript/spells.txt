@@ -674,6 +674,11 @@ instantly devoured, reinvigorating the caster in their reptilian rampage.
 The form's number of heads is fixed upon casting the spell, and increases with
 power.
 %%%%
+Iceblast spell
+
+Fires a large mass of ice, which explodes on impact. It affects even
+cold-resistant creatures somewhat, due to the strong impact and cutting edges.
+%%%%
 Ice Form spell
 
 Transforms the caster into a frozen ice-creature, light enough to float on
@@ -1047,7 +1052,7 @@ by armour.
 Sap Magic spell
 
 Taints a targeted creature's ability to cast spells. Casting a spell while
-afflicted with this condition causes the target to lose control over their
+afflicted with this condition may cause the target to lose control over their
 magic, progressively hindering their chances of success as more spells are cast.
 %%%%
 Scattershot spell
@@ -1117,12 +1122,13 @@ Generates a loud noise, alerting nearby enemies.
 %%%%
 Silence spell
 
-Eliminates all sound near the caster. This makes actions such as reading
-scrolls, casting spells or shouting impossible in the caster's vicinity. The
-spell's oppressive, unnatural effect will greatly hamper any attempt to be
-stealthy. Some creatures, such as demons, cast magic without speaking and so
-will be unaffected, and those with innate magical abilities will also still be
-able to use them.
+Eliminates all sound near the caster. This makes reading scrolls, casting
+spells, invoking divine abilities, or shouting impossible in the caster's
+vicinity. The spell's oppressive, unnatural effect will greatly hamper stealth.
+
+Certain monsters have demonic or angelic abilities which can be activated
+without speaking, and innate magical or special abilities will also still be
+usable while silenced.
 
 The effect starts out with a radius depending on power, which will then shrink,
 eventually covering only the caster, before it times out.
@@ -1189,7 +1195,7 @@ of magics cannot be imbued in this fashion.
 Spider Form spell
 
 Transforms the caster into a venomous, spider-like creature. The caster becomes
-highly evasive and gains a poisonous bite, but gains vulnerablility to poison
+highly evasive and gains a poisonous bite, but gains vulnerability to poison
 and cannot evoke wands. It makes spellcasting slightly more difficult.
 %%%%
 Spit Acid spell
@@ -1430,7 +1436,7 @@ Teleports the caster to a random location.
 %%%%
 Throw spell
 
-Hurls a constricted foe a considerable distance, injuring them.
+Hurls an adjacent foe a considerable distance, injuring them.
 %%%%
 Throw Barbs spell
 

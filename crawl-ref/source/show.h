@@ -80,8 +80,8 @@ enum layer_type
     LAYER_MONSTER_HEALTH  = (1 << 5),
 };
 DEF_BITFIELD(layers_type, layer_type, 5);
-static const layers_type LAYERS_ALL = LAYER_MONSTERS | LAYER_PLAYER
-                                    | LAYER_ITEMS | LAYER_CLOUDS;
+constexpr layers_type LAYERS_ALL = LAYER_MONSTERS | LAYER_PLAYER
+                                 | LAYER_ITEMS | LAYER_CLOUDS;
 
 void show_init(layers_type layers = LAYERS_ALL);
 void update_item_at(const coord_def &gp, bool detected = false);

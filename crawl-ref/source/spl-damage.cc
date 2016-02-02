@@ -487,6 +487,9 @@ static int _refrigerate_monster(actor* agent, monster* target, int pow, int avg,
 
         target->hurt(agent, hurted, BEAM_COLD);
 
+        if (target->alive() && you.can_see(*target))
+            print_wounds(target);
+
         if (agent && agent->is_player()
             && (is_sanctuary(you.pos()) || is_sanctuary(target->pos())))
         {
@@ -3030,7 +3033,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 spret_type cast_random_bolt(int pow, bolt& beam, bool fail)
 {
     // Need to use a 'generic' tracer regardless of the actual beam type,
-    // to account for the possibility of both bouncing and irresistable damage
+    // to account for the possibility of both bouncing and irresistible damage
     // (even though only one of these two ever occurs on the same bolt type).
     bolt tracer = beam;
     if (!player_tracer(ZAP_RANDOM_BOLT_TRACER, 200, tracer))

@@ -320,6 +320,49 @@ stack_iterator stack_iterator::operator++(int)
     return copy;
 }
 
+mon_inv_iterator::mon_inv_iterator(monster& _mon)
+    : mon(_mon)
+{
+    type = static_cast<mon_inv_type>(0);
+    if (mon.inv[type] == NON_ITEM)
+        ++*this;
+}
+
+mon_inv_iterator::operator bool() const
+{
+    return type < NUM_MONSTER_SLOTS;
+}
+
+item_def& mon_inv_iterator::operator*() const
+{
+    ASSERT(mon.inv[type] != NON_ITEM);
+    return mitm[mon.inv[type]];
+}
+
+item_def* mon_inv_iterator::operator->() const
+{
+    ASSERT(mon.inv[type] != NON_ITEM);
+    return &mitm[mon.inv[type]];
+}
+
+mon_inv_iterator& mon_inv_iterator::operator ++ ()
+{
+    do
+    {
+        type = static_cast<mon_inv_type>(type + 1);
+    }
+    while (*this && mon.inv[type] == NON_ITEM);
+
+    return *this;
+}
+
+mon_inv_iterator mon_inv_iterator::operator++(int)
+{
+    const mon_inv_iterator copy = *this;
+    ++(*this);
+    return copy;
+}
+
 /**
  * Reduce quantity of an inventory item, do cleanup if item goes away.
  * @return  True if stack of items no longer exists, false otherwise.
@@ -465,14 +508,15 @@ void unlink_item(int dest)
 
     if (mons != nullptr)
     {
-        for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+        for (mon_inv_iterator ii(*mons); ii; ++ii)
         {
-            if (mons->inv[i] == dest)
+            if (ii->index() == dest)
             {
-                mons->inv[i] = NON_ITEM;
+                item_def& item = *ii;
+                mons->inv[ii.slot()] = NON_ITEM;
 
-                mitm[dest].pos.reset();
-                mitm[dest].link = NON_ITEM;
+                item.pos.reset();
+                item.link = NON_ITEM;
                 return;
             }
         }
@@ -3193,36 +3237,43 @@ zap_type item_def::zap() const
 
     if (wand_sub_type == WAND_RANDOM_EFFECTS)
     {
-        while (wand_sub_type == WAND_RANDOM_EFFECTS
-               || wand_sub_type == WAND_HEAL_WOUNDS)
-        {
-            wand_sub_type = static_cast<wand_type>(random2(NUM_WANDS));
-        }
+        // old wand types
+        return random_choose(ZAP_THROW_FLAME, ZAP_SLOW, ZAP_HASTE,
+                             ZAP_PARALYSE, ZAP_CONFUSE,
+                             ZAP_FIREBALL, ZAP_TELEPORT_OTHER,
+                             ZAP_LIGHTNING_BOLT, ZAP_POLYMORPH,
+                             ZAP_ENSLAVEMENT, ZAP_BOLT_OF_DRAINING,
+                             ZAP_DISINTEGRATE, ZAP_DIG, ZAP_THROW_FROST,
+                             ZAP_MAGIC_DART, ZAP_INVISIBILITY,
+                             ZAP_BOLT_OF_COLD, ZAP_BOLT_OF_FIRE);
     }
 
     switch (wand_sub_type)
     {
     case WAND_FLAME:           result = ZAP_THROW_FLAME;     break;
-    case WAND_FROST:           result = ZAP_THROW_FROST;     break;
     case WAND_SLOWING:         result = ZAP_SLOW;            break;
     case WAND_HASTING:         result = ZAP_HASTE;           break;
-    case WAND_MAGIC_DARTS:     result = ZAP_MAGIC_DART;      break;
     case WAND_HEAL_WOUNDS:     result = ZAP_HEAL_WOUNDS;     break;
     case WAND_PARALYSIS:       result = ZAP_PARALYSE;        break;
-    case WAND_FIRE:            result = ZAP_BOLT_OF_FIRE;    break;
-    case WAND_COLD:            result = ZAP_BOLT_OF_COLD;    break;
     case WAND_CONFUSION:       result = ZAP_CONFUSE;         break;
-    case WAND_INVISIBILITY:    result = ZAP_INVISIBILITY;    break;
     case WAND_DIGGING:         result = ZAP_DIG;             break;
-    case WAND_FIREBALL:        result = ZAP_FIREBALL;        break;
+    case WAND_ICEBLAST:        result = ZAP_ICEBLAST;        break;
     case WAND_TELEPORTATION:   result = ZAP_TELEPORT_OTHER;  break;
     case WAND_LIGHTNING:       result = ZAP_LIGHTNING_BOLT;  break;
     case WAND_POLYMORPH:       result = ZAP_POLYMORPH;       break;
     case WAND_ENSLAVEMENT:     result = ZAP_ENSLAVEMENT;     break;
-    case WAND_DRAINING:        result = ZAP_BOLT_OF_DRAINING; break;
+    case WAND_ACID:            result = ZAP_CORROSIVE_BOLT;  break;
     case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATE;    break;
     case WAND_RANDOM_EFFECTS:  /* impossible */
-    case NUM_WANDS: break;
+    case NUM_WANDS:
+#if TAG_MAJOR_VERSION == 34
+    case WAND_INVISIBILITY_REMOVED:
+    case WAND_MAGIC_DARTS_REMOVED:
+    case WAND_FIRE_REMOVED:
+    case WAND_COLD_REMOVED:
+    case WAND_FROST_REMOVED:
+#endif
+        break;
     }
     return result;
 }

@@ -1021,7 +1021,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 }
 
 /**
- * Return the number of plusses required for a type of armour to be noteable.
+ * Return the number of plusses required for a type of armour to be notable.
  * (From plus alone.)
  *
  * @param armour_type   The type of armour being considered.
@@ -1281,35 +1281,53 @@ static monster_type _choose_random_monster_corpse()
     return MONS_RAT;          // if you can't find anything else...
 }
 
+/**
+ * Choose a random wand subtype for ordinary wand generation.
+ *
+ * Some wands [mostly more powerful ones] are less common than others.
+ * Attack wands are more common, mostly to preserve historical wand freqs.
+ *
+ * @return      A random wand_type.
+ */
 static int _random_wand_subtype()
 {
-    int rc = random2(NUM_WANDS);
-
-    // Adjusted distribution here -- bwr
-    // Wands used to be uniform (5.26% each)
-    //
-    // Now:
-    // hasting, heal wounds                                (1.11% each)
-    // invisibility, enslavement, fireball, teleportation  (3.74% each)
-    // others                                              (6.37% each)
-    if (rc == WAND_INVISIBILITY || rc == WAND_HASTING || rc == WAND_HEAL_WOUNDS
-        || (rc == WAND_INVISIBILITY || rc == WAND_ENSLAVEMENT
-            || rc == WAND_FIREBALL || rc == WAND_TELEPORTATION) && coinflip())
-    {
-        rc = random2(NUM_WANDS);
-    }
-    return rc;
+    // total weight 84 [historical]
+    return random_choose_weighted(10, WAND_FLAME,
+                                  10, WAND_LIGHTNING,
+                                  10, WAND_ICEBLAST,
+                                  6, WAND_SLOWING,
+                                  6, WAND_PARALYSIS,
+                                  6, WAND_CONFUSION,
+                                  6, WAND_POLYMORPH,
+                                  6, WAND_RANDOM_EFFECTS,
+                                  6, WAND_ACID,
+                                  5, WAND_DISINTEGRATION,
+                                  5, WAND_DIGGING,
+                                  3, WAND_ENSLAVEMENT,
+                                  3, WAND_TELEPORTATION,
+                                  1, WAND_HASTING,
+                                  1, WAND_HEAL_WOUNDS,
+                                  0);
 }
 
+/**
+ * Should wands of this type NOT spawn extremely early on? (At very low
+ * item_level, or in the hands of very low HD monsters?)
+ *
+ * @param type      The wand_type in question.
+ * @return          Whether it'd be excessively mean for this wand to be used
+ *                  against very early players.
+ */
 bool is_high_tier_wand(int type)
 {
     switch (type)
     {
+    case WAND_ENSLAVEMENT:
+    case WAND_CONFUSION:
     case WAND_PARALYSIS:
-    case WAND_FIRE:
-    case WAND_COLD:
     case WAND_LIGHTNING:
-    case WAND_DRAINING:
+    case WAND_ACID:
+    case WAND_ICEBLAST:
     case WAND_DISINTEGRATION:
         return true;
     default:
@@ -1855,7 +1873,7 @@ void squash_plusses(int item_slot)
  *
  * Various parameters determine whether the item can be an artifact, set the
  * item class (ex. weapon, wand), set the item subtype (ex.
- * hand axe, wand of fire), set the item ego (ex. of flaming, of running), set
+ * hand axe, wand of flame), set the item ego (ex. of flaming, of running), set
  * the rough power level of the item, and set the agent of the item (which
  * affects what artefacts can be generated, and also non-artefact items if the
  * agent is Xom). Item class, Item type, and Item ego can also be randomly

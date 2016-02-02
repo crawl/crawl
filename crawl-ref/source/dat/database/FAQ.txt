@@ -46,9 +46,15 @@ What exactly is the goal of this game?
 %%%%
 A:goal
 
-A: To survive and to win, obviously. For this you need to find the fabled Orb of Zot deep down in the dungeon and bring it back to the surface. To enter the realm of Zot, you'll first need to collect three runes to be found in various branches of the dungeon.
+A: To survive and to win, obviously. For this you need to find the fabled Orb
+of Zot deep down in the dungeon and bring it back to the surface. To enter the
+realm of Zot, you'll first need to collect three runes to be found in various
+branches of the dungeon.
 
-However, if you're new to the game, you really shouldn't worry about this. Just try to delve as deeply as possible and have fun exploring the many side branches in Crawl with various characters of different species, skill sets, and religions.
+However, if you're new to the game, you really shouldn't worry about this. Just
+try to delve as deeply as possible and have fun exploring the many side
+branches in Crawl with various characters of different species, skill sets, and
+religions.
 %%%%
 Q:userdir
 
@@ -56,11 +62,14 @@ I can't find my save files, morgue and character dumps. Where are they?
 %%%%
 A:userdir
 
-If you're playing locally (i.e. not on one of the servers), the chardump command will tell you where the morgue file is written, and this information is also displayed below the highscore at the end of a game.
+If you're playing locally (i.e. not on one of the servers), the chardump
+command will tell you where the morgue file is written, and this information is
+also displayed below the highscore at the end of a game.
 
 The saves/ directory can be found in the same directory as the morgue/ one.
 
-If you'd like to change either location, modify the morgue_dir and/or save_dir options in the init file.
+If you'd like to change either location, modify the morgue_dir and/or save_dir
+options in the init file.
 %%%%
 Q:drop
 
@@ -68,9 +77,14 @@ How can I drop/pick up only part of a stack?
 %%%%
 A:drop
 
-A: When choosing items to drop or pick up from a menu, you can select part of a stack by first entering a number (the desired amount), followed by the item slot. Stacks that are selected only in part are marked with '#' rather than '+'.
+A: When choosing items to drop or pick up from a menu, you can select part of a
+stack by first entering a number (the desired amount), followed by the item
+slot. Stacks that are selected only in part are marked with '#' rather than
+'+'.
 
-If you want to pick up part of a single-item stack, you can use the ';' command, which will prompt you for the quantity, but otherwise behaves the same as ','.
+If you want to pick up part of a single-item stack, you can use the ';'
+command, which will prompt you for the quantity, but otherwise behaves the same
+as ','.
 %%%%
 Q:roguelike difference
 
@@ -78,7 +92,8 @@ What are the biggest differences to other popular roguelike games?
 %%%%
 A:roguelike difference
 
-A: First, you might want to read the philosophy section in the manual ('?N') to read about general important principles in Stone Soup's game design.
+A: First, you might want to read the philosophy section in the manual ('?N') to
+read about general important principles in Stone Soup's game design.
 
 As for specific differences, the most important are probably the following:
 
@@ -90,11 +105,16 @@ As for specific differences, the most important are probably the following:
 
 * Resistances can be gained via mutations or items, never through eating.
 
-* Praying is mostly used to offer items or corpses to gods who'll accept them. To make use of divine powers use the 'a'bility command.
+* Praying is used to worship a god at an altar or to offer corpses to gods
+  who'll accept them. To make use of divine powers use the 'a'bility command.
 
-* There are inevitable deaths, but new players can win without spoilers, if they learn from their mistakes. Very good players can win several consecutive games.
+* There are inevitable deaths, but new players can win without spoilers, if
+  they learn from their mistakes. Very good players can win several consecutive
+  games.
 
-Also, our aim is to give Crawl a really smooth interface, so you should really read through the command list ('??') some time. The following commands are particularly convenient:
+Also, our aim is to give Crawl a really smooth interface, so you should really
+read through the command list ('??') some time. The following commands are
+particularly convenient:
 
 * 'o', for automatic exploration of an unknown level
 
@@ -112,13 +132,25 @@ How can I avoid dying all the time? Can you give me some playing tips?
 %%%%
 A:survival
 
-A: If you've got trouble even reaching the Temple, you might want to try a game or two in hints mode for some general playing hints.
+A: If you've got trouble even reaching the Temple, you might want to try a game
+or two in hints mode for some general playing hints.
 
-Also, there are easy playing combinations and more challenging ones (marked in dark grey on the selection screen). If you are new to Crawl, sticking to the easier ones is advisable. In general, treat each new monster you meet with utmost caution, try to choose the location where you fight monsters, and keep an eye on your health and magic.
+Also, there are easy playing combinations and more challenging ones (marked in
+dark grey on the selection screen). If you are new to Crawl, sticking to the
+easier ones is advisable. In general, treat each new monster you meet with
+utmost caution, try to choose the location where you fight monsters, and keep
+an eye on your health and magic.
 
-For specific hints dealing with a particular character, you can press '#' in-game to create a "character dump" in your morgue directory that you can then post e.g. in the Stone Soup forum (https://crawl.develz.org/tavern/), so other players can comment on your equipment, skills or spell selection. Please trim your dump by removing stuff unnecessary for this task (such as the extensive Vanquished list).
+For specific hints dealing with a particular character, you can press '#'
+in-game to create a "character dump" in your morgue directory that you can then
+post e.g. in the Stone Soup forum (https://crawl.develz.org/tavern/), so other
+players can comment on your equipment, skills or spell selection. Please trim
+your dump by removing stuff unnecessary for this task (such as the extensive
+Vanquished list).
 
-If you're playing online on one of the public servers, you can join the ##crawl channel of the freenode IRC, where you will find helpful souls who will even watch you and give hints.
+If you're playing online on one of the public servers, you can join the ##crawl
+channel of the freenode IRC, where you will find helpful souls who will even
+watch you and give hints.
 %%%%
 Q:downstairs
 
@@ -126,9 +158,15 @@ I can't find any downstairs. Am I missing something?
 %%%%
 A:downstairs
 
-A: They may be in a part of the level that is not reachable from the upstairs you came from. Try going up to the previous level and coming back down from there via a different set of stairs. Note that most levels feature three downstairs as well as three upstairs, not counting any escape hatches.
+A: They may be in a part of the level that is not reachable from the upstairs
+you came from. Try going up to the previous level and coming back down from
+there via a different set of stairs. Note that most levels feature three
+downstairs as well as three upstairs, not counting any escape hatches.
 
-Alternatively, if you are in one of the branches, you might also have reached its lowest level and have to turn around to explore another one. Check the dungeon overview ('Ctrl-O') to see how deep you've delved into a given branch, or the database ('?/b') for the number of levels for unseen branches.
+Alternatively, if you are in one of the branches, you might also have reached
+its lowest level and have to turn around to explore another one. Check the
+dungeon overview ('Ctrl-O') to see how deep you've delved into a given branch,
+or the database ('?/b') for the number of levels for unseen branches.
 %%%%
 Q:starving
 
@@ -136,9 +174,15 @@ My characters keep starving. What am I doing wrong?
 %%%%
 A:starving
 
-A: It's possible that you simply spend too much time on cleared levels where not enough monsters are generated to dine on. You might also be too choosy about what you eat; unless you are herbivorous, you should usually be eating monster chunks. If you worship a god who enjoys sacrifices, pay attention to your own hunger status instead of offering all corpses you come across.
+A: It's possible that you simply spend too much time on cleared levels where
+not enough monsters are generated to dine on. You might also be too choosy
+about what you eat; unless you are herbivorous, you should usually be eating
+monster chunks. If you worship a god who enjoys sacrifices, pay attention to
+your own hunger status instead of offering all corpses you come across.
 
-Also, casting (difficult) spells will make you hungry, but high Intelligence and Spellcasting will lessen this effect. If you press 'II', you can read about the hunger effects of your spells. Invocations likewise often have a Food cost.
+Also, casting (difficult) spells will make you hungry, but high Intelligence
+and Spellcasting will lessen this effect. If you press 'II', you can read about
+the hunger effects of your spells. Invocations likewise often have a Food cost.
 %%%%
 Q:labyrinth
 
@@ -148,13 +192,18 @@ A:labyrinth
 
 A: To escape a labyrinth, it can be useful to know a few things:
 
-* Each labyrinth consists of several layers of different wall types, ranging from rock in the outer border to metal in the centre part, at the very centre of which the exit is located. (Though the exit itself may be part of a vault that has non-metal walls.)
+* Each labyrinth consists of several layers of different wall types, ranging
+  from rock in the outer border to metal in the centre part, at the very centre
+  of which the exit is located. (Though the exit itself may be part of a vault
+  that has non-metal walls.)
 
-* Teleportation will never take you into or even near the metal region.
+* From time to time, the walls will rearrange themselves. Though they will
+  never close off the path to the exit, the path itself might change. In
+  particular, this means that the "left hand" rule is not entirely reliable.
 
-* From time to time, the walls will rearrange themselves. Though they will never close off the path to the exit, the path itself might change. In particular, this means that the "left hand" rule is not entirely reliable.
-
-Also, exit and loot are guarded by a brutish minotaur, who is very much alive. Don't let yourself get sidetracked by necromantic remnants of its ancestors.
+Also, exit and loot are guarded by a brutish minotaur, who is very much
+alive. Don't let yourself get sidetracked by necromantic remnants of its
+ancestors.
 %%%%
 Q:cheating
 
@@ -170,7 +219,13 @@ I've got two cool weapons. How can I tell which one is better?
 %%%%
 A:weapons
 
-A: "Better" depends on a number of factors, such as your weapon skills, whether it's one- or two-handed, the randart properties, the weapon brand, and the monsters you're about to face. In general, switching from a weapon type at which you are already highly skilled to another one that you have no skill in is a waste of time. The brands may greatly differ in damage output, but you can get a good idea by bashing a few comparatively harmless monsters with each and comparing the results.
+A: "Better" depends on a number of factors, such as your weapon skills, whether
+it's one- or two-handed, the randart properties, the weapon brand, and the
+monsters you're about to face. In general, switching from a weapon type at
+which you are already highly skilled to another one that you have no skill in
+is a waste of time. The brands may greatly differ in damage output, but you can
+get a good idea by bashing a few comparatively harmless monsters with each and
+comparing the results.
 
 The delay in swinging a weapon can be reduced by the corresponding weapon skill.
 %%%%
@@ -180,11 +235,18 @@ Which gods would you recommend to a beginning player?
 %%%%
 A:religion
 
-A: The most straightforward gods to play are probably Trog or Okawaru (for melee and ranged combat), Vehumet or Sif Muna (for spellcasting), and Yredelemnul (for undead allies). Also, while unreliable, Xom can be a lot of fun.
+A: The most straightforward gods to play are probably Trog or Okawaru (for
+melee and ranged combat), Vehumet or Sif Muna (for spellcasting), and
+Yredelemnul (for undead allies). Also, while unreliable, Xom can be a lot of
+fun.
 
-Whenever you encounter an altar, be sure to read the corresponding god's description (by 'p'raying on the altar) and take your time in deciding whether to pick this deity or not. As a follower, you can reread your god's description, now more detailed via the '!' toggle, on the '^' screen.
+Whenever you encounter an altar, be sure to read the corresponding god's
+description (by 'p'raying on the altar) and take your time in deciding whether
+to pick this deity or not. As a follower, you can reread your god's
+description, now more detailed via the '!' toggle, on the '^' screen.
 
-You're guaranteed to find altars to almost every god on the first nine levels of the main dungeon.
+You're guaranteed to find altars to almost every god on the first nine levels
+of the main dungeon.
 %%%%
 Q:ghosts
 
@@ -194,9 +256,16 @@ A:ghosts
 
 A: There isn't any such option, and we're not planning to add one, either.
 
-For a more constructive answer, once a ghost has been loaded onto a level, it won't be loaded again - unless you happen to die on that level, thus creating a bones file featuring more than one ghost. Keep in mind that you don't absolutely have to fight every monster you meet, and with ghosts it's even easier: they cannot leave the level they were created on.
+For a more constructive answer, once a ghost has been loaded onto a level, it
+won't be loaded again - unless you happen to die on that level, thus creating a
+bones file featuring more than one ghost. Keep in mind that you don't
+absolutely have to fight every monster you meet, and with ghosts it's even
+easier: they cannot leave the level they were created on.
 
-Alternatively, you could play a couple characters of strong species/background combinations for the sole purpose of busting those ghosts, e.g. Troll Berserkers. Or play online, where you'll mostly be killed by others' ghosts instead!
+Alternatively, you could play a couple characters of strong species/background
+combinations for the sole purpose of busting those ghosts, e.g. Troll
+Berserkers. Or play online, where you'll mostly be killed by others' ghosts
+instead!
 %%%%
 Q:abyss
 
@@ -204,7 +273,8 @@ I've somehow ended up in a place called "Abyss". How do I get out of here?
 %%%%
 A:abyss
 
-A: If you are in the Abyss for the first time, chances of getting out are slim. Still, here are a few general hints:
+A: If you are in the Abyss for the first time, chances of getting out are
+slim. Still, here are a few general hints:
 
 * You need to find a gateway leading out of the Abyss. These are rare!
 
@@ -212,11 +282,16 @@ A: If you are in the Abyss for the first time, chances of getting out are slim. 
 
 * If you have it, use defensive equipment (weapons of protection, etc.).
 
-* Use teleportation to end up in a completely new part of the Abyss. (But keep in mind that teleportation will take much longer to kick in than in the Dungeon...)
+* Use teleportation to end up in a completely new part of the Abyss. (But keep
+  in mind that teleportation will take much longer to kick in than in the
+  Dungeon...)
 
-* Consider switching your allegiance to Lugonu, the god of the Abyss. Upon conversion, you will be able to escape the Abyss immediately (but you may anger your previous god!).
+* Consider switching your allegiance to Lugonu, the god of the Abyss. Upon
+  conversion, you will be able to escape the Abyss immediately (but you may
+  anger your previous god!).
 
-* Descending deeper in the Abyss will increase the chance of finding an exit out, but also increase the danger you face.
+* Descending deeper in the Abyss will increase the chance of finding an exit
+  out, but also increase the danger you face.
 %%%%
 Q:randart
 
@@ -224,13 +299,18 @@ What do the terms "randart" and "unrandart" signify?
 %%%%
 A:randart
 
-A: Apart from the standard items you'll find lying around in the dungeon, you might also stumble upon artefacts which come in two varieties:
+A: Apart from the standard items you'll find lying around in the dungeon, you
+might also stumble upon artefacts which come in two varieties:
 
-* randart: a random artefact, usually a weapon, armour or jewellery, with random properties such as conferring resistances or abilities.
+* randart: a random artefact, usually a weapon, armour or jewellery, with
+  random properties such as conferring resistances or abilities.
 
-* unrandart: a rarer variety of artefact that is predefined instead of randomly generated. Most unrandarts are identified on sight, and some come with special effects or unique abilities that are not available elsewhere.
+* unrandart: a rarer variety of artefact that is predefined instead of randomly
+  generated. Most unrandarts are identified on sight, and some come with
+  special effects or unique abilities that are not available elsewhere.
 
-Neither of these types can be enchanted or branded, either temporarily or permanently, nor can they be corroded by acid.
+Neither of these types can be enchanted or branded, either temporarily or
+permanently.
 %%%%
 Q:interact
 
@@ -238,11 +318,16 @@ Is there a way for me to interact with other players?
 %%%%
 A:interact
 
-A: If you play online you can watch games in progress, other players can watch you while you play, and you can kill other players' ghosts. You can even send and receive messages.
+A: If you play online you can watch games in progress, other players can watch
+you while you play, and you can kill other players' ghosts. You can even send
+and receive messages.
 
-Check https://crawl.develz.org/wordpress/howto for an explanation about how to play online.
+Check https://crawl.develz.org/wordpress/howto for an explanation about how to
+play online.
 
-You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the Stone Soup forum (https://crawl.develz.org/tavern/), or in one of the other forums linked on the website.
+You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss
+in the Stone Soup forum (https://crawl.develz.org/tavern/), or in one of the
+other forums linked on the website.
 %%%%
 ##############################################
 # Questions about the development process.
@@ -253,9 +338,13 @@ When will development reach the "stable" version 1.0?
 %%%%
 A:version
 
-A: Actually, by now we consider Stone Soup to be reasonably stable for a game of such active development, so please don't get hung up about the 0.X versioning and give it a try.
+A: Actually, by now we consider Stone Soup to be reasonably stable for a game
+of such active development, so please don't get hung up about the 0.X
+versioning and give it a try.
 
-We've mostly kept the versioning for historic reasons and because it might cause undue confusion. We might decide to change that at some point, but maybe we won't.
+We've mostly kept the versioning for historic reasons and because it might
+cause undue confusion. We might decide to change that at some point, but maybe
+we won't.
 %%%%
 Q:beta
 
@@ -263,11 +352,18 @@ Is there a way for me to play the new version before it is released?
 %%%%
 A:beta
 
-A: There certainly is! You can play "trunk" (what will eventually become the next version) online on any of the online servers; https://crawl.develz.org also hosts Windows and Mac binaries you can download. Note that trunk may be buggy, and that very rarely a bug may invalidate your saved games. If that doesn't bother you, go ahead and play!
+A: There certainly is! You can play "trunk" (what will eventually become the
+next version) online on any of the online servers; https://crawl.develz.org
+also hosts Windows and Mac binaries you can download. Note that trunk may be
+buggy, and that very rarely a bug may invalidate your saved games. If that
+doesn't bother you, go ahead and play!
 
-Be sure to reports bugs on our bug tracker (https://crawl.develz.org/mantis/) and to leave some feedback/suggestions on the forums (https://crawl.develz.org/tavern/).
+Be sure to reports bugs on our bug tracker (https://crawl.develz.org/mantis/)
+and to leave some feedback/suggestions on the forums
+(https://crawl.develz.org/tavern/).
 
-When doing so, please mention the version (see '?v') you're currently playing, in case the bug's already been fixed or the feature already implemented.
+When doing so, please mention the version (see '?v') you're currently playing,
+in case the bug's already been fixed or the feature already implemented.
 %%%%
 Q:bug
 
@@ -275,7 +371,8 @@ The game keeps crashing. / I think I found a bug. What do I do?
 %%%%
 A:bug
 
-A: Please submit a bug report on Mantis (https://crawl.develz.org/mantis/), and give as much information as you can:
+A: Please submit a bug report on Mantis (https://crawl.develz.org/mantis/), and
+give as much information as you can:
 
 * What were you doing at the time?
 
@@ -286,9 +383,15 @@ A: Please submit a bug report on Mantis (https://crawl.develz.org/mantis/), and 
 
 * Console or tiles?
 
-For crashes or monsters/items/levels behaving oddly, we probably need a save file. If you're playing online console, you can create a copy of your save file for the developers to access by selecting the version you are playing and then pressing 'A' for Advanced options. Don't forget to include the server and your username in your bug report!
+For crashes or monsters/items/levels behaving oddly, we probably need a save
+file. If you're playing online console, you can create a copy of your save file
+for the developers to access by selecting the version you are playing and then
+pressing 'A' for Advanced options. Don't forget to include the server and your
+username in your bug report!
 
-Sometimes a screenshot can be helpful. If there are error messages, please write them down. Short of a save file, a guide on how to reproduce the crash (or bug) can be useful; you can use wizard mode for this.
+Sometimes a screenshot can be helpful. If there are error messages, please
+write them down. Short of a save file, a guide on how to reproduce the crash
+(or bug) can be useful; you can use wizard mode for this.
 
 Thanks in advance!
 %%%%
@@ -298,9 +401,15 @@ I've got a cool idea! What can I do with it?
 %%%%
 A:idea
 
-A: If you'd like your idea to get in, your surest bet is to put it in a place where a developer can see it. One good place is the official forum, at https://crawl.develz.org/tavern/. If it catches the interest of at least one coder, chances are it'll' make it into the game.
+A: If you'd like your idea to get in, your surest bet is to put it in a place
+where a developer can see it. One good place is the official forum, at
+https://crawl.develz.org/tavern/. If it catches the interest of at least one
+coder, chances are it'll' make it into the game.
 
-Note that your idea has a better chance of being accepted if you present the ramifications on gameplay. ("How does [adding/removing X] make the game better?") A suggestion for how to improve the interface may go in without much ado, but other suggestions will probably require to defend & justify them.
+Note that your idea has a better chance of being accepted if you present the
+ramifications on gameplay. ("How does [adding/removing X] make the game
+better?") A suggestion for how to improve the interface may go in without much
+ado, but other suggestions will probably require to defend & justify them.
 %%%%
 Q:help
 
@@ -308,7 +417,8 @@ I'd like to help improve the game. What can I do?
 %%%%
 A:help
 
-A: There are several areas where you can get creative and outside help is much appreciated. These are:
+A: There are several areas where you can get creative and outside help is much
+appreciated. These are:
 
 * maps/vaults (see dat/ directory, docs/develop/levels/introduction.txt)
 
@@ -318,8 +428,13 @@ A: There are several areas where you can get creative and outside help is much a
 
 * tiles (see source/rltiles/, docs/develop/tiles_creation.txt)
 
-Also, if you'd like to write a patch but don't know how to go about it, read patch_guide.txt in the docs/develop/ directory. Submit it and other new things on our Mantis tracker: https://crawl.develz.org/mantis/
-Keep in mind that without previous discussions, we may not be able to use the patch, or it might need heavy modification. It's possible that it won't be accepted, usually for one of three reasons:
+Also, if you'd like to write a patch but don't know how to go about it, read
+patch_guide.txt in the docs/develop/ directory. Submit it and other new things
+on our Mantis tracker: https://crawl.develz.org/mantis/
+
+Keep in mind that without previous discussions, we may not be able to use the
+patch, or it might need heavy modification. It's possible that it won't be
+accepted, usually for one of three reasons:
 
 * It doesn't fit into the Crawl world as we see it.
 
@@ -335,7 +450,9 @@ What did you change in the most recent version?
 %%%%
 A:changes
 
-A: The admittedly highly subjective highlights of the most recent major release are listed along with the version information under '?v'. For older releases' changes, check out changelog.txt in the docs/ directory.
+A: The admittedly highly subjective highlights of the most recent major release
+are listed along with the version information under '?v'. For older releases'
+changes, check out changelog.txt in the docs/ directory.
 %%%%
 Q:tiles lag
 
@@ -343,9 +460,16 @@ The Tiles version is awfully slow! How can I improve that?
 %%%%
 A:tiles lag
 
-A: Crawl renders its graphics using OpenGL and SDL. Because it uses OpenGL, it depends on a little bit of hardware acceleration to not run slowly. If your system is not set up to enable this, then Crawl will run quite poorly.
+A: Crawl renders its graphics using OpenGL and SDL. Because it uses OpenGL, it
+depends on a little bit of hardware acceleration to not run slowly. If your
+system is not set up to enable this, then Crawl will run quite poorly.
 
-On Windows, the default driver that ships with Windows is extremely slow. Make sure to update your graphics card driver to the latest one available. On Linux, you should be sure to enable DRI.
+On Windows, the default driver that ships with Windows is extremely slow. Make
+sure to update your graphics card driver to the latest one available. On Linux,
+you should be sure to enable DRI.
 
-In addition to these suggestions, you can also try to see whether tweaking some options will improve performance. See docs/tiles_help.txt for details. If things are still too laggy after all of that, you could try the non-graphical console version, or wait for a future version that does not depend on OpenGL.
+In addition to these suggestions, you can also try to see whether tweaking some
+options will improve performance. See docs/tiles_help.txt for details. If
+things are still too laggy after all of that, you could try the non-graphical
+console version, or wait for a future version that does not depend on OpenGL.
 %%%%

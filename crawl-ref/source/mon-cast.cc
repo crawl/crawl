@@ -1310,6 +1310,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     if (beam.is_enchantment())
     {
+        beam.hit = AUTOMATIC_HIT;
         beam.glyph = 0;
         beam.name = "";
     }
@@ -2201,7 +2202,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
     bool had_effect = false;
 
     // Friendly wardens are already excluded by _ms_waste_of_time()
-    if (!mons_near(warden) || warden->foe != MHITYOU)
+    if (warden->can_see(you) || warden->foe != MHITYOU)
         return false;
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE);
@@ -3872,7 +3873,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     if (spell_cast == SPELL_BLINK || spell_cast == SPELL_CONTROLLED_BLINK)
     {
         // Why only cast blink if nearby? {dlb}
-        if (mons_near(mons))
+        if (mons->can_see(you))
         {
             mons_cast_noise(mons, beem, spell_cast, flags);
             monster_blink(mons);
@@ -3900,10 +3901,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         if (flags & MON_SPELL_WIZARD && mons->has_ench(ENCH_SAP_MAGIC))
         {
             mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
-                                       mons->get_ench(ENCH_SAP_MAGIC)
-                                             .agent(),
-                                       BASELINE_DELAY
-                                       * spell_difficulty(spell_cast)));
+                                       mons->get_ench(ENCH_SAP_MAGIC).agent(),
+                                       6 * BASELINE_DELAY));
         }
         // Wellsprings "cast" from their own hp.
         if (spell_cast == SPELL_PRIMAL_WAVE
@@ -5149,7 +5148,7 @@ static bool _spell_charged(monster *mons, int count)
             mons->update_ench(ench);
         }
 
-        if (!mons_near(mons) || !you.can_see(*mons))
+        if (!you.can_see(*mons))
             return false;
         string msg =
             getSpeakString(make_stringf("%s charge",
@@ -5233,7 +5232,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     ASSERT(map_bounds(pbolt.target) || !(flags & SPFLAG_TARGETING_MASK));
 
     // Maybe cast abjuration instead of certain summoning spells.
-    if (mons_near(mons) && _mons_will_abjure(mons, spell_cast))
+    if (mons->can_see(you) && _mons_will_abjure(mons, spell_cast))
     {
         if (do_noise)
         {
@@ -5967,7 +5966,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         // Don't give any message if the monster isn't nearby.
         // (Otherwise you could get them from halfway across the level.)
-        if (!mons_near(mons))
+        if (!you.see_cell(mons->pos()))
             return;
 
         const bool friendly  = mons->friendly();
@@ -7414,6 +7413,10 @@ static actor *_get_throw_victim(const monster &mons)
         if (mons.is_constricted() && mons.constricted_by == victim->mid)
             continue;
 
+        // Don't throw statues or tentacles.
+        if (mons_class_is_stationary(victim->type))
+            continue;
+
         // See if we *could* execute a grab attack, and if so, they're
         // a valid target.
         if (mons.can_constrict(victim))
@@ -7519,7 +7522,7 @@ static void _throw_to(const monster &thrower, actor &victim,
             mprf("%s throws %s%s!",
                  (thrower_seen ? thrower_name.c_str() : "Something"),
                  (victim_was_seen ? victim_name.c_str() : "something"),
-                 (you.can_see(*vmon) ? "" : "out of view"));
+                 (you.can_see(*vmon) ? "" : " out of view"));
         }
     }
     victim.hurt(&thrower, dam, BEAM_MISSILE, KILLED_BY_BEING_THROWN, "", "",

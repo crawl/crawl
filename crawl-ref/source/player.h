@@ -34,6 +34,7 @@
 #define FORCE_MAPPABLE_KEY "force_mappable"
 #define REGEN_AMULET_ACTIVE "regen_amulet_active"
 #define MANA_REGEN_AMULET_ACTIVE "mana_regen_amulet_active"
+#define SAP_MAGIC_KEY "sap_magic_amount"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -626,7 +627,8 @@ public:
     bool malmutate(const string &reason) override;
     bool polymorph(int pow) override;
     void backlight();
-    void banish(actor* /*agent*/, const string &who = "", const int power = 0) override;
+    void banish(actor* /*agent*/, const string &who = "", const int power = 0,
+                bool force = false) override;
     void blink() override;
     void teleport(bool right_now = false,
                   bool wizard_tele = false) override;

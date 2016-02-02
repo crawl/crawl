@@ -915,7 +915,6 @@ static bool _destroy_wall_msg(dungeon_feature_type feat, const coord_def& p)
     case DNGN_GRANITE_STATUE:
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
-    case DNGN_SEALED_DOOR:
         if (see)
         {
             msg = (feature_description_at(p, false, DESC_THE, false)
@@ -1001,7 +1000,6 @@ void bolt::destroy_wall_effect()
 
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
-    case DNGN_SEALED_DOOR:
     {
         set<coord_def> doors;
         find_connected_identical(pos(), doors);
@@ -1745,7 +1743,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
     }
 
-    if (pbolt.affects_items && doFlavouredEffects)
+    if (doFlavouredEffects)
     {
         const int burn_power = (pbolt.is_explosion) ? 5 :
                                (pbolt.pierce)       ? 3
@@ -4079,7 +4077,7 @@ void bolt::affect_player()
 
     // Acid. (Apply this afterward, to avoid bad message ordering.)
     if (flavour == BEAM_ACID)
-        you.splash_with_acid(agent(), 5, affects_items);
+        you.splash_with_acid(agent(), 5, true);
 
     extra_range_used += range_used_on_hit();
 
@@ -4400,7 +4398,7 @@ void bolt::enchantment_affect_monster(monster* mon)
 
             if (in_good_standing(GOD_BEOGH, 2)
                 && mons_genus(mon->type) == MONS_ORC
-                && mon->asleep() && mons_near(mon))
+                && mon->asleep() && you.see_cell(mon->pos()))
             {
                 hit_woke_orc = true;
             }
@@ -4513,7 +4511,7 @@ static void _glaciate_freeze(monster* mon, killer_type englaciator,
 void bolt::monster_post_hit(monster* mon, int dmg)
 {
     // Suppress the message for scattershot.
-    if (YOU_KILL(thrower) && mons_near(mon)
+    if (YOU_KILL(thrower) && you.see_cell(mon->pos())
         && name != "burst of metal fragments")
     {
         print_wounds(mon);
@@ -4883,7 +4881,7 @@ void bolt::affect_monster(monster* mon)
         {
             if (hit_verb.empty())
                 hit_verb = engulfs ? "engulfs" : "hits";
-            if (mons_near(mon))
+            if (you.see_cell(mon->pos()))
             {
                 mprf("The %s %s %s.", name.c_str(), hit_verb.c_str(),
                      mon->name(DESC_THE).c_str());
@@ -5040,7 +5038,7 @@ void bolt::affect_monster(monster* mon)
         return;
 
     // The beam hit.
-    if (mons_near(mon))
+    if (you.see_cell(mon->pos()))
     {
         // Monsters are never currently helpless in ranged combat.
         if (hit_verb.empty())
@@ -5313,11 +5311,12 @@ bool enchant_monster_invisible(monster* mon, const string &how)
 {
     // Store the monster name before it becomes an "it". - bwr
     const string monster_name = mon->name(DESC_THE);
+    const bool could_see = you.can_see(*mon);
 
     if (mon->has_ench(ENCH_INVIS) || !mon->add_ench(ENCH_INVIS))
         return false;
 
-    if (mons_near(mon))
+    if (could_see)
     {
         const bool is_visible = mon->visible_to(&you);
 
@@ -5423,10 +5422,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_BANISH:
-        if (player_in_branch(BRANCH_ABYSS) && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
-            simple_monster_message(mon, " wobbles for a moment.");
-        else
-            mon->banish(agent());
+        mon->banish(agent());
         obvious_effect = true;
         return MON_AFFECTED;
 
@@ -5524,7 +5520,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             // currently from potion, hence voluntary
             mon->go_berserk(true);
             // can't return this from go_berserk, unfortunately
-            obvious_effect = mons_near(mon);
+            obvious_effect = you.can_see(*mon);
         }
         return MON_AFFECTED;
 
@@ -5923,6 +5919,10 @@ const map<spell_type, explosion_sfx> spell_explosions = {
     { SPELL_VIOLENT_UNRAVELLING, {
         "The enchantments explode!",
         "a sharp crackling", // radiation = geiger counter
+    } },
+    { SPELL_ICEBLAST, {
+        "The mass of ice explodes!",
+        "an explosion",
     } },
 };
 

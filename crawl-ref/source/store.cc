@@ -394,7 +394,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
     ASSERT(other.type != SV_NONE || type == SV_NONE);
 
     // NOTE: We don't bother checking SFLAG_CONST_VAL, since the
-    // asignment operator is used when swapping two elements.
+    // assignment operator is used when swapping two elements.
     if (!(flags & SFLAG_UNSET))
     {
         if (flags & SFLAG_CONST_TYPE)

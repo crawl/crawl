@@ -11,7 +11,6 @@
 #include "player.h" // check_stealth()
 #include "viewgeom.h"
 
-bool mons_near(const monster* mons);
 bool mon_enemies_around(const monster* mons);
 void seen_monsters_react(int stealth = check_stealth());
 

@@ -369,7 +369,7 @@ bool melee_attack::handle_phase_hit()
             && mons_genus(defender->mons_species()) == MONS_ORC
             && !defender->is_summoned()
             && !defender->as_monster()->is_shapeshifter()
-            && mons_near(defender->as_monster()) && defender->asleep())
+            && you.see_cell(defender->pos()) && defender->asleep())
         {
             hit_woke_orc = true;
         }
@@ -395,7 +395,7 @@ bool melee_attack::handle_phase_hit()
         {
             // infusion_power is set when the infusion spell is cast
             const int pow = you.props["infusion_power"].get_int();
-            const int dmg = 2 + div_rand_round(pow, 25);
+            const int dmg = 2 + div_rand_round(pow, 12);
             const int hurt = defender->apply_ac(dmg);
 
             dprf(DIAG_COMBAT, "Infusion: dmg = %d hurt = %d", dmg, hurt);
@@ -2102,6 +2102,9 @@ void melee_attack::attacker_sustain_passive_damage()
     if (attacker->res_acid() >= 3)
         return;
 
+    if (!adjacent(attacker->pos(), defender->pos()))
+        return;
+
     const int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, 5);
 
     // Spectral weapons can't be corroded (but can take acid damage).
@@ -2475,7 +2478,7 @@ void melee_attack::mons_do_napalm()
     if (defender->res_sticky_flame())
         return;
 
-    if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
+    if (one_chance_in(3))
     {
         if (needs_message)
         {
@@ -2675,8 +2678,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ROT:
-        if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
-            rot_defender(damage_done > 5 ? 2 : 1);
+        if (one_chance_in(3))
+            rot_defender(1);
         break;
 
     case AF_FIRE:
@@ -2824,8 +2827,7 @@ void melee_attack::mons_apply_attack_flavour()
             }
         }
 
-        if (one_chance_in(10)
-            || (damage_done > 2 && one_chance_in(3)))
+        if (one_chance_in(3))
         {
             defender->confuse(attacker,
                               1 + random2(3+attacker->get_hit_dice()));
@@ -2833,7 +2835,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_DRAIN_XP:
-        if (one_chance_in(30) || (damage_done > 5 && coinflip()))
+        if (coinflip())
             drain_defender();
         break;
 
@@ -2858,17 +2860,20 @@ void melee_attack::mons_apply_attack_flavour()
             defender->poison(attacker, dmg);
         }
 
-        int paralyse_roll = (damage_done > 4 ? 3 : 20);
-        if (attacker->type == MONS_WASP)
-            paralyse_roll += 3;
+        int paralyse_roll = attacker->type == MONS_HORNET ? 4 : 8;
 
-        const int flat_bonus  = attacker->type == MONS_HORNET ? 1 : 0;
         const bool strong_result = one_chance_in(paralyse_roll);
 
-        if (strong_result && defender->res_poison() <= 0)
-            defender->paralyse(attacker, flat_bonus + roll_dice(1, 3));
-        else if (strong_result || defender->res_poison() <= 0)
-            defender->slow_down(attacker, flat_bonus + roll_dice(1, 3));
+        if (strong_result
+            && !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
+        {
+            defender->paralyse(attacker, roll_dice(1, 3));
+        }
+        else if (strong_result
+                 || !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
+        {
+            defender->slow_down(attacker, roll_dice(1, 3));
+        }
 
         break;
     }

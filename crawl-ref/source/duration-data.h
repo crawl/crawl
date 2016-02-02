@@ -447,7 +447,9 @@ static const duration_def duration_data[] =
       RED, "Sap",
       "sap magic", "",
       "Casting spells hinders your spell success.", D_DISPELLABLE,
-      {{ "Your magic seems less tainted." }}},
+      {{ "Your magic seems less tainted.", []() {
+          you.props.erase(SAP_MAGIC_KEY);
+      }}}},
     { DUR_PORTAL_PROJECTILE,
       LIGHTBLUE, "PProj",
       "portal projectile", "",
@@ -605,8 +607,7 @@ static const duration_def duration_data[] =
     { DUR_TROGS_HAND, 0, "", "", "trogs hand", "", D_NO_FLAGS,
         {{"", trog_remove_trogs_hand},
           {"You feel the effects of Trog's Hand fading.", 1}}},
-    { DUR_MAGIC_SAPPED, 0, "", "", "magic sapped", "", D_DISPELLABLE},
-    { DUR_GOZAG_GOLD_AURA, 0, "", "", "gold aura", "", D_NO_FLAGS,
+    { DUR_GOZAG_GOLD_AURA, 0, "", "gold aura", "", "", D_NO_FLAGS,
         {{ "", []() { you.props["gozag_gold_aura_amount"] = 0; }}}},
     { DUR_COLLAPSE, 0, "", "", "collapse", "", D_NO_FLAGS },
     { DUR_BRAINLESS, 0, "", "", "brainless", "", D_NO_FLAGS },
@@ -614,6 +615,7 @@ static const duration_def duration_data[] =
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
+    { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},
     { DUR_REPEL_MISSILES, 0, "", "", "old repel missiles", "", D_NO_FLAGS},
     { DUR_DEFLECT_MISSILES, 0, "", "", "old deflect missiles", "", D_NO_FLAGS},
     { DUR_JELLY_PRAYER, 0, "", "", "old jelly prayer", "", D_NO_FLAGS},

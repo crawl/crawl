@@ -699,6 +699,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_POTIONS,   POT_PORRIDGE },
     { OBJ_POTIONS,   POT_SLOWING },
     { OBJ_POTIONS,   POT_DECAY },
+    { OBJ_POTIONS,   POT_DEGENERATION },
     { OBJ_POTIONS,   POT_RESTORE_ABILITIES },
     { OBJ_BOOKS,     BOOK_WIZARDRY },
     { OBJ_BOOKS,     BOOK_CONTROL },
@@ -707,6 +708,11 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_RODS,      ROD_WARDING },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
+    { OBJ_WANDS,     WAND_MAGIC_DARTS_REMOVED },
+    { OBJ_WANDS,     WAND_FROST_REMOVED },
+    { OBJ_WANDS,     WAND_FIRE_REMOVED },
+    { OBJ_WANDS,     WAND_COLD_REMOVED },
+    { OBJ_WANDS,     WAND_INVISIBILITY_REMOVED },
 #endif
     // Outside the #if because we probably won't remove these.
     { OBJ_RUNES,     RUNE_ELF },
@@ -1553,25 +1559,20 @@ int wand_charge_value(int type)
 {
     switch (type)
     {
-    case WAND_INVISIBILITY:
     case WAND_TELEPORTATION:
     case WAND_HEAL_WOUNDS:
     case WAND_HASTING:
         return 3;
 
-    case WAND_FIREBALL:
+    case WAND_ICEBLAST:
     case WAND_LIGHTNING:
-    case WAND_DRAINING:
-    case WAND_FIRE:
-    case WAND_COLD:
+    case WAND_ACID:
         return 5;
 
     default:
         return 8;
 
     case WAND_FLAME:
-    case WAND_FROST:
-    case WAND_MAGIC_DARTS:
     case WAND_SLOWING:
     case WAND_CONFUSION:
     case WAND_RANDOM_EFFECTS:
@@ -1610,6 +1611,14 @@ bool is_known_empty_wand(const item_def &item)
     return item_ident(item, ISFLAG_KNOW_PLUSES) && item.charges <= 0;
 }
 
+/**
+ * For purpose of Ashenzari's monster equipment identification & warning
+ * passive, what wands are a potential threat to the player in monsters'
+ * hands?
+ *
+ * @param item      The wand to be examined.
+ * @return          Whether the player should be warned about the given wand.
+ */
 bool is_offensive_wand(const item_def& item)
 {
     switch (item.sub_type)
@@ -1622,22 +1631,17 @@ bool is_offensive_wand(const item_def& item)
     // Monsters will use them on themselves.
     case WAND_HASTING:
     case WAND_HEAL_WOUNDS:
-    case WAND_INVISIBILITY:
         return false;
 
     case WAND_FLAME:
-    case WAND_FROST:
     case WAND_SLOWING:
-    case WAND_MAGIC_DARTS:
     case WAND_PARALYSIS:
-    case WAND_FIRE:
-    case WAND_COLD:
     case WAND_CONFUSION:
-    case WAND_FIREBALL:
+    case WAND_ICEBLAST:
     case WAND_TELEPORTATION:
     case WAND_LIGHTNING:
     case WAND_POLYMORPH:
-    case WAND_DRAINING:
+    case WAND_ACID:
     case WAND_DISINTEGRATION:
         return true;
     }
@@ -2710,8 +2714,7 @@ bool gives_ability(const item_def &item)
     case OBJ_WEAPONS:
         break;
     case OBJ_JEWELLERY:
-        if (item.sub_type == RING_TELEPORTATION
-            || item.sub_type == RING_FLIGHT
+        if (item.sub_type == RING_FLIGHT
             || item.sub_type == AMU_RAGE)
         {
             return true;

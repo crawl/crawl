@@ -614,16 +614,13 @@ unsigned int item_value(item_def item, bool ident)
                 good = true;
                 break;
 
-            case WAND_COLD:
-            case WAND_FIRE:
-            case WAND_FIREBALL:
+            case WAND_ACID:
             case WAND_DIGGING:
                 valued += 80;
                 good = true;
                 break;
 
-            case WAND_INVISIBILITY:
-            case WAND_DRAINING:
+            case WAND_ICEBLAST:
             case WAND_LIGHTNING:
             case WAND_DISINTEGRATION:
                 valued += 40;
@@ -642,12 +639,10 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case WAND_FLAME:
-            case WAND_FROST:
             case WAND_RANDOM_EFFECTS:
                 valued += 10;
                 break;
 
-            case WAND_MAGIC_DARTS:
             default:
                 valued += 6;
                 break;
@@ -911,7 +906,6 @@ unsigned int item_value(item_def item, bool ident)
 
                 case RING_SUSTAIN_ATTRIBUTES:
                 case RING_STEALTH:
-                case RING_TELEPORTATION:
                 case RING_FLIGHT:
                     valued += 175;
                     break;
@@ -921,6 +915,7 @@ unsigned int item_value(item_def item, bool ident)
                     break;
 
                 case RING_LOUDNESS:
+                case RING_TELEPORTATION:
                 case AMU_NOTHING:
                     valued += 75;
                     break;
@@ -1329,8 +1324,8 @@ void ShopMenu::draw_menu()
     tiles.json_write_int("total_items", items.size());
     tiles.json_close_object();
     tiles.finish_message();
-    for (unsigned int i = 0; i < items.size(); ++i)
-        webtiles_update_item(i);
+    if (items.size() > 0)
+        webtiles_update_items(0, items.size() - 1);
 #endif
 
     InvMenu::draw_menu();
@@ -1498,7 +1493,7 @@ void ShopMenu::resort()
              {
                  const bool id = shoptype_identifies_stock(shop.type);
                  return dynamic_cast<ShopEntry*>(a)->item->name(DESC_PLAIN, false, id)
-                        < dynamic_cast<ShopEntry*>(a)->item->name(DESC_PLAIN, false, id);
+                        < dynamic_cast<ShopEntry*>(b)->item->name(DESC_PLAIN, false, id);
              });
         break;
     case ORDER_TYPE:

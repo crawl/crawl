@@ -61,7 +61,8 @@ function trove.get_trove_item(e, value, base_item)
     end
     local jwith_pluses = {"ring of protection", "ring of evasion",
                           "ring of strength", "ring of intelligence",
-                          "ring of dexterity", "ring of slaying"}
+                          "ring of dexterity", "ring of slaying",
+                          "amulet of reflection"}
     local bt = shop_item.base_type
     if bt == "armour" or bt == "weapon" or bt == "jewellery" or bt == "book" then
       if shop_item.identified() then
@@ -98,27 +99,39 @@ function trove.get_trove_item(e, value, base_item)
   -- currently 20% armour, 15% weapon, 50% consumable, 15% miscellaneous
   local prices = {
        {base="scroll", type="acquirement", quant=2},
-       {base="scroll", type="identify", quant=15+d(5)+d(5)},
+       {base="scroll", type="identify", quant=12+d(4)+d(4)+d(4)},
        {base="miscellaneous", type="rune of Zot", quant=3, name="slimy rune of Zot"},
        {base="miscellaneous", type="rune of Zot", quant=11, name="abyssal rune of Zot"},
        {base="miscellaneous", type="horn of Geryon"} }
 
-  local wpn_arm = {
-       {base="armour", type="gold dragon armour", quant=1+d(3)},
-       {base="armour", type="storm dragon armour", quant=1+d(3)},
-       {base="armour", type="fire dragon armour", quant=2+d(3)},
-       {base="armour", type="ice dragon armour", quant=2+d(3)},
-       {base="weapon", type="demon whip", quant=3+d(3)},
-       {base="weapon", type="demon trident", quant=3+d(3)},
-       {base="weapon", type="demon blade", quant=3+d(3)} }
+  local wpn = {
+       {base="weapon", type="demon whip", quant=2+d(3)+d(3)},
+       {base="weapon", type="demon trident", quant=2+d(3)+d(3)},
+       {base="weapon", type="demon blade", quant=2+d(3)+d(3)} }
 
   if you.race() ~= "Felid" then
-    for _, toll in ipairs(wpn_arm) do
+    for _, toll in ipairs(wpn) do
       table.insert(prices, toll)
     end
   end
 
-  local pots = { }
+  local arm = {
+       {base="armour", type="gold dragon armour", quant=1+d(2)},
+       {base="armour", type="storm dragon armour", quant=d(2)+d(2)},
+       {base="armour", type="shadow dragon armour", quant=d(2)+d(2)},
+       {base="armour", type="fire dragon armour", quant=d(3)+d(3)},
+       {base="armour", type="ice dragon armour", quant=d(3)+d(3)} }
+
+  if you.race() ~= "Felid" and you.race() ~= "Octopode" then
+    for _, toll in ipairs(arm) do
+      table.insert(prices, toll)
+    end
+  end
+
+  local pots = {
+       {base="potion", type="resistance", quant=2+d(3)},
+       {base="potion", type="agility", quant=4+d(3)+d(2)},
+       {base="potion", type="experience", quant=1} }
 
   local heal_pots = {
        {base="potion", type="curing", quant=12+d(4)+d(4)},
@@ -131,10 +144,10 @@ function trove.get_trove_item(e, value, base_item)
       end
     end
     if you.race() ~= "Formicid" then
-      table.insert(pots, {base="potion", type="haste", quant=3+d(3)+d(2)})
+      table.insert(pots, {base="potion", type="haste", quant=4+d(3)+d(2)})
     end
     if you.race() ~= "Ghoul" then
-      table.insert(pots, {base="potion", type="cure mutation", quant=2})
+      table.insert(pots, {base="potion", type="cure mutation", quant=1+d(4)})
     end
 
     for _, toll in ipairs(pots) do
@@ -143,16 +156,16 @@ function trove.get_trove_item(e, value, base_item)
   end
 
   if you.race() ~= "Vine Stalker" and you.mutation("inability to use devices") ~= 1 then
-    table.insert(prices, {base="wand", type="heal wounds", quant=7+d(2)})
+    table.insert(prices, {base="wand", type="heal wounds", quant=9})
   end
 
   local stasis_tolls = {
-       {base="scroll", type="blinking", quant=3+d(3)},
-       {base="scroll", type="teleportation", quant=10+d(3)+d(4)} }
+       {base="scroll", type="blinking", quant=2+d(3)+d(3)},
+       {base="scroll", type="teleportation", quant=10+d(4)+d(4)} }
 
   if you.race() ~= "Formicid" then
     if you.mutation("inability to use devices") ~= 1 then
-      table.insert(prices, {base="wand", type="hasting", quant=7+d(2)})
+      table.insert(prices, {base="wand", type="hasting", quant=9})
     end
     for _, toll in ipairs(stasis_tolls) do
       table.insert(prices, toll)
@@ -181,7 +194,7 @@ function trove.get_trove_toll(e)
     return trove.get_toll_nopiety()
   else
     return trove.get_trove_toll_with_item(
-        trove.get_trove_item(e, 10000))
+        trove.get_trove_item(e, 1000))
   end
 end
 
@@ -194,7 +207,7 @@ function trove.get_toll_nopiety()
 end
 
 function trove.portal(e)
-    local toll = trove.get_trove_toll(e, 1000)
+    local toll = trove.get_trove_toll(e)
 
     local function stair ()
         return trove_marker  {
@@ -242,12 +255,16 @@ function trove.weapon_skills (e)
   local skill_total = 0
   local nonzero_skills = 0
   for _, skill in ipairs(weapon_skills) do
-    skill_total = skill_total + you.skill(skill)
-    if you.skill(skill) > 0 then
+    skill_total = skill_total + you.base_skill(skill)
+    if you.base_skill(skill) > 0 then
       nonzero_skills = nonzero_skills + 1
     end
   end
-  return skill_total / nonzero_skills
+  if nonzero_skills > 0 then
+    return skill_total / nonzero_skills
+  else
+    return 0
+  end
 end
 
 function trove.spell_skills (e)
@@ -255,12 +272,16 @@ function trove.spell_skills (e)
   local skill_total = 0
   local nonzero_skills = 0
   for _, skill in ipairs(spell_skills) do
-    skill_total = skill_total + you.skill(skill)
-    if you.skill(skill) > 0 then
+    skill_total = skill_total + you.base_skill(skill)
+    if you.base_skill(skill) > 0 then
       nonzero_skills = nonzero_skills + 1
     end
   end
-  return skill_total / nonzero_skills
+  if nonzero_skills > 0 then
+    return skill_total / nonzero_skills
+  else
+    return 0
+  end
 end
 }}
 
@@ -602,11 +623,10 @@ ENDMAP
 
 # A "library", geared towards scrolls and books (either spell or manual).
 NAME:   trove_library
-: if trove.spell_skills() >= trove.weapon_skills() then
 WEIGHT: 30
-: else
-WEIGHT: 5
-: end
+veto {{ return crawl.game_started()
+          and trove.spell_skills() < trove.weapon_skills()
+          and not crawl.one_chance_in(6) }}
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup
 : trove.setup_features(_G)
@@ -678,11 +698,11 @@ ENDMAP
 
 # A 'weapon shoppe', same template as the jewellery shop.
 NAME:   trove_weapon_1
-: if trove.weapon_skills() >= trove.spell_skills() and trove.weapon_skills() >= you.skill("Unarmed Combat") then
 WEIGHT: 15
-: else
-WEIGHT: 5
-: end
+veto {{ return crawl.game_started()
+          and (trove.weapon_skills() < trove.spell_skills()
+               or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
+          and not crawl.one_chance_in(3) }}
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: once again, 16 items.
@@ -707,11 +727,11 @@ ENDMAP
 
 # A simple treasure chamber.
 NAME:   trove_weapon_2
-: if trove.weapon_skills() >= trove.spell_skills() and trove.weapon_skills() >= you.skill("Unarmed Combat") then
 WEIGHT: 15
-: else
-WEIGHT: 5
-: end
+veto {{ return crawl.game_started()
+          and (trove.weapon_skills() < trove.spell_skills()
+               or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
+          and not crawl.one_chance_in(3) }}
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: 15 items.
@@ -879,6 +899,39 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+# Misc items/evocations trove. 15 items.
+NAME:   trove_misc_throne_room
+WEIGHT: 15
+veto {{ return crawl.game_started()
+          and (you.base_skill("Evocations") < 4 and not crawl.one_chance_in(3)
+               or you.mutation("inability to use devices") == 1) }}
+COLOUR: x = blue
+COLOUR: ' = yellow
+SUBST:  d = dde
+KFEAT:  _ = altar_pakellas
+FTILE:  'T_ : floor_limestone
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen allow_dup
+ITEM:   acquire misc / any rod w:4
+ITEM:   acquire wand w:15 / any misc w:3 / acquire magical staff w:2
+ITEM:   scroll of recharging / scroll of recharging q:3 w:5
+: trove.setup_features(_G)
+MAP
+  xxxxx
+  xfffx
+ xxx+xxx
+ xdT_Tdx
+ xd'''dx
+ xd'''dx
+ xd'''dx
+ xd'''dx
+ xd'''dx
+xxxx+xxxx
+x.......x
+x<..A..<x
+xxxxxxxxx
 ENDMAP
 
 ###################################

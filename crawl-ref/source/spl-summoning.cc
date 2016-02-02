@@ -543,7 +543,7 @@ void do_dragon_call(int time)
 }
 
 /**
- * Handle the Doom Howl status effect, possibly summoning hostile doom hounds
+ * Handle the Doom Howl status effect, possibly summoning hostile nasties
  * around the player.
  *
  * @param time      The number of aut that the howling has been going on for
@@ -603,6 +603,7 @@ void doom_howl(int time)
             mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
                                        INFINITE_DURATION));
             mons->behaviour = BEH_SEEK;
+            mons_add_blame(mons, "called by a doom hound"); // assumption!
             check_place_cloud(CLOUD_BLACK_SMOKE, mons->pos(),
                               random_range(1,2), mons);
         }
@@ -1496,7 +1497,7 @@ static bool _water_adjacent(coord_def p)
  * @param fail   Did this spell miscast? If true, abort the cast.
  * @return       SPRET_ABORT if a summoning area couldn't be found,
  *               SPRET_FAIL if one could be found but we miscast, and
- *               SPRET_SUCCESS if the spell was succesfully cast.
+ *               SPRET_SUCCESS if the spell was successfully cast.
 */
 spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 {
@@ -1695,7 +1696,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     // Save the corpse name before because it can get destroyed if it is
     // being drained and the raising interrupts it.
-    uint64_t name_type = 0;
+    monster_flags_t name_type;
     string name;
     if (is_named_corpse(item))
         name = get_corpse_name(item, &name_type);
@@ -1766,7 +1767,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     }
 
     if (!name.empty()
-        && (name_type == 0 || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE))
+        && (!name_type || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE))
     {
         name_zombie(mons, monnum, name);
     }
@@ -2961,7 +2962,7 @@ bool fire_battlesphere(monster* mons)
         else
             beam.target = mons->props["firing_target"].get_coord();
 
-        // Sanity check: if we have somehow ended up targetting ourselves, bail
+        // Sanity check: if we have somehow ended up targeting ourselves, bail
         if (beam.target == mons->pos())
         {
             mprf(MSGCH_ERROR, "Battlesphere targeting itself? Fixing.");
@@ -3260,7 +3261,7 @@ bool trigger_spectral_weapon(actor* agent, const actor* target)
 {
     monster *spectral_weapon = find_spectral_weapon(agent);
 
-    // Don't try to attack with a nonexistant spectral weapon
+    // Don't try to attack with a nonexistent spectral weapon
     if (!spectral_weapon || !spectral_weapon->alive())
     {
         agent->props.erase("spectral_weapon");

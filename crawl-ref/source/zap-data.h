@@ -1167,7 +1167,7 @@ static const zap_info zap_data[] =
     ZAP_CORROSIVE_BOLT,
     "bolt of acid",
     200,
-    new calcdice_calculator<1, 11, 3, 5>,
+    new calcdice_calculator<4, 11, 3, 5>,
     new tohit_calculator<10, 1, 25>,
     YELLOW,
     false,
@@ -1225,6 +1225,22 @@ static const zap_info zap_data[] =
     false,
     false,
     0 // dubious
+},
+
+{
+    ZAP_ICEBLAST,
+    "iceblast",
+    200,
+    new calcdice_calculator<3, 10, 1, 2>,
+    new tohit_calculator<40>,
+    WHITE,
+    false,
+    BEAM_ICE,
+    DCHAR_FIRED_MISSILE,
+    false,
+    false,
+    true,
+    0 // Noise comes from explosion
 },
 
 };

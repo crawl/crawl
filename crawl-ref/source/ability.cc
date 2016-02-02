@@ -218,8 +218,6 @@ static const ability_def Ability_List[] =
     // you used a wand, potion, or miscast effect). I didn't see
     // any reason to label them as "Evoke" in the text, they don't
     // use or train Evocations (the others do).  -- bwr
-    { ABIL_EVOKE_TELEPORTATION, "Evoke Teleportation",
-      3, 0, 200, 0, abflag::NONE },
     { ABIL_EVOKE_BLINK, "Evoke Blink", 1, 0, 50, 0, abflag::NONE },
     { ABIL_RECHARGING, "Device Recharging", 1, 0, 0, 0, abflag::PERMANENT_MP },
 
@@ -249,7 +247,8 @@ static const ability_def Ability_List[] =
       5, 0, 100, 2, abflag::NONE },
     { ABIL_TSO_SUMMON_DIVINE_WARRIOR, "Summon Divine Warrior",
       8, 0, 150, 5, abflag::NONE },
-    { ABIL_TSO_BLESS_WEAPON, "Brand Weapon With Holy Wrath", 0, 0, 0, 0, abflag::NONE },
+    { ABIL_TSO_BLESS_WEAPON, "Brand Weapon With Holy Wrath", 0, 0, 0, 0,
+      abflag::NONE },
 
     // Kikubaaqudgha
     { ABIL_KIKU_RECEIVE_CORPSES, "Receive Corpses",
@@ -257,7 +256,8 @@ static const ability_def Ability_List[] =
     { ABIL_KIKU_TORMENT, "Torment", 4, 0, 0, 8, abflag::NONE },
     { ABIL_KIKU_GIFT_NECRONOMICON, "Receive Necronomicon", 0, 0, 0, 0,
       abflag::NONE },
-    { ABIL_KIKU_BLESS_WEAPON, "Brand Weapon With Pain", 0, 0, 0, 0, abflag::NONE },
+    { ABIL_KIKU_BLESS_WEAPON, "Brand Weapon With Pain", 0, 0, 0, 0,
+      abflag::PAIN },
 
     // Yredelemnul
     { ABIL_YRED_INJURY_MIRROR, "Injury Mirror", 0, 0, 0, 0, abflag::PIETY },
@@ -270,8 +270,8 @@ static const ability_def Ability_List[] =
     { ABIL_YRED_ENSLAVE_SOUL, "Enslave Soul", 8, 0, 150, 4, abflag::NONE },
 
     // Okawaru
-    { ABIL_OKAWARU_HEROISM, "Heroism", 2, 0, 50, 2, abflag::NONE },
-    { ABIL_OKAWARU_FINESSE, "Finesse", 5, 0, 100, 4, abflag::NONE },
+    { ABIL_OKAWARU_HEROISM, "Heroism", 2, 0, 50, 1, abflag::NONE },
+    { ABIL_OKAWARU_FINESSE, "Finesse", 5, 0, 100, 3, abflag::NONE },
 
     // Makhleb
     { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction",
@@ -293,7 +293,7 @@ static const ability_def Ability_List[] =
       0, 0, 10, 0, abflag::NONE },
     { ABIL_TROG_BERSERK, "Berserk", 0, 0, 200, 0, abflag::NONE },
     { ABIL_TROG_REGEN_MR, "Trog's Hand",
-      0, 0, 50, generic_cost::range(2, 3), abflag::NONE },
+      0, 0, 50, 2, abflag::NONE },
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
       0, 0, 100, generic_cost::range(5, 6), abflag::NONE },
 
@@ -316,11 +316,11 @@ static const ability_def Ability_List[] =
     { ABIL_LUGONU_BANISH, "Banish",
       4, 0, 200, generic_cost::range(3, 4), abflag::NONE },
     { ABIL_LUGONU_CORRUPT, "Corrupt",
-      7, scaling_cost::fixed(5), 500, generic_cost::range(10, 14), abflag::NONE },
+      7, scaling_cost::fixed(5), 500, 10, abflag::NONE },
     { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss",
       9, 0, 500, generic_cost::fixed(35), abflag::PAIN },
     { ABIL_LUGONU_BLESS_WEAPON, "Brand Weapon With Distortion", 0, 0, 0, 0,
-      abflag::PAIN },
+      abflag::NONE },
 
     // Nemelex
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw", 2, 0, 100, 2, abflag::NONE },
@@ -359,7 +359,7 @@ static const ability_def Ability_List[] =
 
     // Ashenzari
     { ABIL_ASHENZARI_SCRYING, "Scrying",
-      4, 0, 50, generic_cost::range(2, 3), abflag::INSTANT },
+      4, 0, 50, 2, abflag::INSTANT },
     { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge",
       0, 0, 0, 10, abflag::NONE },
     { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge",
@@ -428,8 +428,7 @@ static const ability_def Ability_List[] =
     { ABIL_QAZLAL_UPHEAVAL, "Upheaval", 4, 0, 0, 3, abflag::NONE },
     { ABIL_QAZLAL_ELEMENTAL_FORCE, "Elemental Force",
       6, 0, 0, 6, abflag::NONE },
-    { ABIL_QAZLAL_DISASTER_AREA, "Disaster Area", 7, 0, 0,
-      generic_cost::range(10, 14), abflag::NONE },
+    { ABIL_QAZLAL_DISASTER_AREA, "Disaster Area", 7, 0, 0, 10, abflag::NONE },
 
     // Pakellas
     { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
@@ -864,7 +863,6 @@ talent get_talent(ability_type ability, bool check_confused)
 
         // begin item abilities - some possibly mutagenic {dlb}
     case ABIL_EVOKE_TURN_INVISIBLE:
-    case ABIL_EVOKE_TELEPORTATION:
         failure = 60 - you.skill(SK_EVOCATIONS, 2);
         break;
 
@@ -1852,11 +1850,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
-    case ABIL_EVOKE_TELEPORTATION:    // ring of teleportation
-        fail_check();
-        you_teleport();
-        break;
-
     case ABIL_BREATHE_STICKY_FLAME:
     {
         targetter_splash hitfunc(&you);
@@ -2264,7 +2257,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_KIKU_BLESS_WEAPON:
         fail_check();
-        simple_god_message(" will bloody your weapon with pain.");
+        simple_god_message(" will bloody one of your weapons with pain.");
         // included in default force_more_message
         if (!bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED))
             return SPRET_ABORT;
@@ -2379,8 +2372,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         you.increase_duration(DUR_HEROISM,
             player_adjust_invoc_power(
-                35 + random2(you.skill(SK_INVOCATIONS, 8))),
-            80);
+                10 + random2avg(you.skill(SK_INVOCATIONS, 6), 2)),
+            100);
         you.redraw_evasion      = true;
         you.redraw_armour_class = true;
         break;
@@ -2399,8 +2392,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         you.increase_duration(DUR_FINESSE,
             player_adjust_invoc_power(
-                40 + random2(you.skill(SK_INVOCATIONS, 8))),
-            80);
+                10 + random2avg(you.skill(SK_INVOCATIONS, 6), 2)),
+            100);
 
         did_god_conduct(DID_HASTY, 8); // Currently irrelevant.
         break;
@@ -2802,6 +2795,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             mpr("You gain astral sight.");
         you.duration[DUR_SCRYING] = 100 + random2avg(you.piety * 2, 2);
         you.xray_vision = true;
+        viewwindow(true);
         break;
 
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
@@ -3439,13 +3433,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             if (you.airborne() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
                 _add_talent(talents, ABIL_STOP_FLYING, check_confused);
         }
-    }
-
-    if (you.wearing(EQ_RINGS, RING_TELEPORTATION)
-        && !player_mutation_level(MUT_NO_ARTIFICE)
-        && !crawl_state.game_is_sprint())
-    {
-        _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
     }
 
     // Find hotkeys for the non-hotkeyed talents.

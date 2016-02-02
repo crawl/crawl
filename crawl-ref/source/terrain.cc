@@ -48,7 +48,7 @@
 #include "viewchar.h"
 #include "view.h"
 
-static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat);
+static bool _revert_terrain_to_floor(coord_def pos);
 
 actor* actor_at(const coord_def& c)
 {
@@ -119,9 +119,28 @@ bool feat_is_staircase(dungeon_feature_type feat)
            || feat == DNGN_ABYSSAL_STAIR;
 }
 
+/**
+ * Define a memoized function from dungeon_feature_type to bool.
+ * This macro should be followed by the non-memoized version of the
+ * function body: see feat_is_branch_entrance below for an example.
+ *
+ * @param funcname The name of the function to define.
+ * @param paramname The name under which the function's single parameter,
+ *        of type dungeon_feature_type, is visible in the function body.
+ */
+#define FEATFN_MEMOIZED(funcname, paramname) \
+    static bool _raw_ ## funcname (dungeon_feature_type); \
+    bool funcname (dungeon_feature_type feat) \
+    { \
+        static int cached[NUM_FEATURES+1] = { 0 }; \
+        if (!cached[feat]) cached[feat] = _raw_ ## funcname (feat) ? 1 : -1; \
+        return cached[feat] > 0; \
+    } \
+    static bool _raw_ ## funcname (dungeon_feature_type paramname)
+
 /** Is this feature a branch entrance that should show up on ^O?
  */
-bool feat_is_branch_entrance(dungeon_feature_type feat)
+FEATFN_MEMOIZED(feat_is_branch_entrance, feat)
 {
     if (feat == DNGN_ENTER_HELL)
         return false;
@@ -140,7 +159,7 @@ bool feat_is_branch_entrance(dungeon_feature_type feat)
 
 /** Counterpart to feat_is_branch_entrance.
  */
-bool feat_is_branch_exit(dungeon_feature_type feat)
+FEATFN_MEMOIZED(feat_is_branch_exit, feat)
 {
     if (feat == DNGN_ENTER_HELL || feat == DNGN_EXIT_HELL)
         return false;
@@ -159,7 +178,7 @@ bool feat_is_branch_exit(dungeon_feature_type feat)
 
 /** Is this feature an entrance to a portal branch?
  */
-bool feat_is_portal_entrance(dungeon_feature_type feat)
+FEATFN_MEMOIZED(feat_is_portal_entrance, feat)
 {
     // These are have different rules from normal connected branches, but they
     // also have different rules from "portal vaults," and are more similar to
@@ -185,7 +204,7 @@ bool feat_is_portal_entrance(dungeon_feature_type feat)
 
 /** Counterpart to feat_is_portal_entrance.
  */
-bool feat_is_portal_exit(dungeon_feature_type feat)
+FEATFN_MEMOIZED(feat_is_portal_exit, feat)
 {
     if (feat == DNGN_EXIT_ABYSS || feat == DNGN_EXIT_PANDEMONIUM)
         return false;
@@ -1123,7 +1142,7 @@ void dungeon_terrain_changed(const coord_def &pos,
             seen_notable_thing(nfeat, pos);
 
         // Don't destroy a trap which was just placed.
-        if (feat_is_trap(nfeat))
+        if (!feat_is_trap(nfeat))
             destroy_trap(pos);
     }
 
@@ -1724,8 +1743,7 @@ void destroy_wall(const coord_def& p)
 
     remove_mold(p);
 
-    _revert_terrain_to(p, (player_in_branch(BRANCH_SWAMP) ? DNGN_SHALLOW_WATER
-                                                          : DNGN_FLOOR));
+    _revert_terrain_to_floor(p);
     env.level_map_mask(p) |= MMT_TURNED_TO_FLOOR;
 }
 
@@ -1950,8 +1968,17 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
     dungeon_terrain_changed(pos, newfeat, true, false, true);
 }
 
-static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
+/// What terrain type do destroyed feats become, in the current branch?
+static dungeon_feature_type _destroyed_feat_type()
 {
+    return player_in_branch(BRANCH_SWAMP) ?
+        DNGN_SHALLOW_WATER :
+        DNGN_FLOOR;
+}
+
+static bool _revert_terrain_to_floor(coord_def pos)
+{
+    dungeon_feature_type newfeat = _destroyed_feat_type();
     bool found_marker = false;
     for (map_marker *marker : env.markers.get_markers_at(pos))
     {
@@ -1966,7 +1993,7 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
             // Same for destroyed trees
             if ((tmarker->change_type == TERRAIN_CHANGE_DOOR_SEAL
                 || tmarker->change_type == TERRAIN_CHANGE_FORESTED)
-                && newfeat == DNGN_FLOOR)
+                && newfeat == _destroyed_feat_type())
             {
                 env.markers.remove(tmarker);
             }

@@ -324,10 +324,13 @@ bool monster_caught_in_net(monster* mon, actor* agent)
 {
     if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
     {
-        if (mons_near(mon) && !mon->visible_to(&you))
-            mpr("The net bounces off something gigantic!");
-        else
-            simple_monster_message(mon, " is too large for the net to hold!");
+        if (you.see_cell(mon->pos()))
+        {
+            if (!mon->visible_to(&you))
+                mpr("The net bounces off something gigantic!");
+            else
+                simple_monster_message(mon, " is too large for the net to hold!");
+        }
         return false;
     }
 
@@ -358,10 +361,13 @@ bool monster_caught_in_net(monster* mon, actor* agent)
 
     if (!mon->caught() && mon->add_ench(ENCH_HELD))
     {
-        if (mons_near(mon) && !mon->visible_to(&you))
-            mpr("Something gets caught in the net!");
-        else
-            simple_monster_message(mon, " is caught in the net!");
+        if (you.see_cell(mon->pos()))
+        {
+            if (!mon->visible_to(&you))
+                mpr("Something gets caught in the net!");
+            else
+                simple_monster_message(mon, " is caught in the net!");
+        }
         return true;
     }
 
@@ -507,7 +513,14 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         && (!m->will_trigger_shaft()
             || trig_knows && !mons_is_fleeing(m) && !m->pacified()))
     {
-            return;
+        return;
+    }
+
+    // Tentacles aren't real monsters, and shouldn't invoke magic traps.
+    if (m && mons_is_tentacle_or_tentacle_segment(m->type)
+        && category() != DNGN_TRAP_MECHANICAL)
+    {
+        return;
     }
 
     // Anything stepping onto a trap almost always reveals it.

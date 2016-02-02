@@ -260,7 +260,9 @@ enum ability_type
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
     ABIL_MIN_EVOKE = ABIL_EVOKE_BERSERK,
+#if TAG_MAJOR_VERSION == 34
     ABIL_EVOKE_TELEPORTATION,
+#endif
     ABIL_EVOKE_BLINK,
     ABIL_EVOKE_TURN_INVISIBLE,
     ABIL_EVOKE_TURN_VISIBLE,
@@ -478,7 +480,7 @@ enum attribute_type
     ATTR_UNUSED2,              // was ATTR_FRUIT_FOUND
 #endif
     ATTR_FLIGHT_UNCANCELLABLE, // Potion of flight is in effect.
-    ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
+    ATTR_INVIS_UNCANCELLABLE,  // Spell/potion of invis is in effect.
     ATTR_PERM_FLIGHT,          // Tengu flight or boots of flying are on.
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
@@ -645,7 +647,7 @@ enum beam_type                  // bolt::flavour
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
     BEAM_BOUNCY_TRACER,           // Used for random bolt tracer (bounces as
-                                  // crystal bolt, but irresistable).
+                                  // crystal bolt, but irresistible).
 
     BEAM_TORMENT_DAMAGE,          // Pseudo-beam for damage flavour.
     BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,
@@ -4594,6 +4596,7 @@ enum spell_type
     SPELL_DOOM_HOWL,
     SPELL_AWAKEN_EARTH,
     SPELL_AURA_OF_BRILLIANCE,
+    SPELL_ICEBLAST,
     NUM_SPELLS
 };
 
@@ -4763,6 +4766,7 @@ enum zap_type
     ZAP_SCATTERSHOT,
     ZAP_MEPHITIC,
     ZAP_UNRAVELLING,
+    ZAP_ICEBLAST,
     NUM_ZAPS
 };
 

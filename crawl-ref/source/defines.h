@@ -234,7 +234,7 @@ typedef uint8_t colour_t;
 // value in the low byte.
 
 // This is used to signal curses (which has seven base colours) to
-// try to get a brighter version using recommisioned attribute flags.
+// try to get a brighter version using recommissioned attribute flags.
 #define COLFLAG_CURSES_BRIGHTEN          0x0080
 
 #define COLFLAG_FRIENDLY_MONSTER         0x0100

@@ -561,7 +561,8 @@ void full_describe_view()
     vector<coord_def> list_features;
 
     // Grab all items known (or thought) to be in the stashes in view.
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+    for (radius_iterator ri(you.pos(),
+                            you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
         if (feat_stair_direction(grd(*ri)) != CMD_NO_CMD
             || feat_is_altar(grd(*ri)))
@@ -1763,7 +1764,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         break;
 
     case CMD_TARGET_WIZARD_BANISH_MONSTER:
-        m->banish(&you);
+        m->banish(&you, "", 0, true);
         break;
 
     case CMD_TARGET_WIZARD_KILL_MONSTER:
@@ -2381,7 +2382,7 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
         break;
     // intentionally no default
     }
-    die("Unknown targetting mode!");
+    die("Unknown targeting mode!");
 }
 
 #ifdef CLUA_BINDINGS

@@ -799,18 +799,14 @@ static bool _advise_use_wand()
         switch (obj.sub_type)
         {
         case WAND_FLAME:
-        case WAND_FROST:
         case WAND_SLOWING:
-        case WAND_MAGIC_DARTS:
         case WAND_PARALYSIS:
-        case WAND_FIRE:
-        case WAND_COLD:
         case WAND_CONFUSION:
-        case WAND_FIREBALL:
+        case WAND_ICEBLAST:
         case WAND_TELEPORTATION:
         case WAND_LIGHTNING:
         case WAND_ENSLAVEMENT:
-        case WAND_DRAINING:
+        case WAND_ACID:
         case WAND_RANDOM_EFFECTS:
         case WAND_DISINTEGRATION:
             return true;
@@ -3009,12 +3005,7 @@ void check_item_hint(const item_def &item, unsigned int num_old_talents)
 
 // Explains the most important commands necessary to use an item, and mentions
 // special effects, etc.
-// NOTE: For identified artefacts don't give all this information!
-//       (The screen is likely to overflow.) Artefacts need special information
-//       if they are evokable or grant resistances.
-//       In any case, check whether we still have enough space for the
-//       inscription prompt and answer.
-void hints_describe_item(const item_def &item)
+string hints_describe_item(const item_def &item)
 {
     ostringstream ostr;
     ostr << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
@@ -3026,8 +3017,7 @@ void hints_describe_item(const item_def &item)
         {
             if (is_artefact(item) && item_type_known(item))
             {
-                if (gives_ability(item)
-                    && wherey() <= get_number_of_lines() - 5)
+                if (gives_ability(item))
                 {
                     // You can activate it.
                     ostr << "When wielded, some weapons (such as this one) "
@@ -3035,8 +3025,7 @@ void hints_describe_item(const item_def &item)
                     ostr << _hints_abilities(item);
                     break;
                 }
-                else if (gives_resistance(item)
-                         && wherey() <= get_number_of_lines() - 3)
+                else if (gives_resistance(item))
                 {
                     // It grants a resistance.
                     ostr << "\nThis weapon offers its wearer protection from "
@@ -3050,7 +3039,8 @@ void hints_describe_item(const item_def &item)
                     cmd.push_back(CMD_RESISTS_SCREEN);
                     break;
                 }
-                return;
+                else
+                    return "";
             }
 
             item_def *weap = you.slot_item(EQ_WEAPON, false);
@@ -3404,7 +3394,7 @@ void hints_describe_item(const item_def &item)
             {
                 ostr << "A manual can greatly help you in training a skill. "
                         "As long as you are carrying it, the skill in "
-                        "question will be trained more effeciently and will "
+                        "question will be trained more efficiently and will "
                         "level up faster.";
                 cmd.push_back(CMD_READ);
             }
@@ -3600,16 +3590,14 @@ void hints_describe_item(const item_def &item)
             break;
 
         default:
-            return;
+            return "";
     }
 
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
     string broken = ostr.str();
     if (!cmd.empty())
         insert_commands(broken, cmd);
-    linebreak_string(broken, _get_hints_cols());
-    cgotoxy(1, wherey() + 2);
-    display_tagged_block(broken);
+    return broken;
 }
 
 void hints_inscription_info(string prompt)

@@ -784,7 +784,7 @@ bool mons_speaks(monster* mons)
 bool mons_speaks_msg(monster* mons, const string &msg,
                      const msg_channel_type def_chan, bool silence)
 {
-    if (!mons_near(mons))
+    if (!you.see_cell(mons->pos()))
         return false;
 
     mon_acting mact(mons);

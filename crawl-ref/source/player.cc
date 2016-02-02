@@ -5650,7 +5650,8 @@ void player::god_conduct(conduct_type thing_done, int level)
     ::did_god_conduct(thing_done, level);
 }
 
-void player::banish(actor* /*agent*/, const string &who, const int power)
+void player::banish(actor* /*agent*/, const string &who, const int power,
+                    bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (brdepth[BRANCH_ABYSS] == -1)
@@ -5659,6 +5660,13 @@ void player::banish(actor* /*agent*/, const string &who, const int power)
     if (elapsed_time <= attribute[ATTR_BANISHMENT_IMMUNITY])
     {
         mpr("You resist the pull of the Abyss.");
+        return;
+    }
+
+    if (!force && player_in_branch(BRANCH_ABYSS)
+        && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
+    {
+        mpr("You wobble for a moment.");
         return;
     }
 
@@ -5813,7 +5821,7 @@ void player::ablate_deflection()
 }
 
 /**
- * What's the base value of the penalties the player recieves from their
+ * What's the base value of the penalties the player receives from their
  * body armour?
  *
  * Used as the base for adjusted armour penalty calculations, as well as for

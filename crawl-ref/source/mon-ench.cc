@@ -22,6 +22,7 @@
 #include "fight.h"
 #include "fprop.h"
 #include "hints.h"
+#include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
@@ -218,7 +219,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
         // Don't worry about invisibility. You should be able to see if
         // something has submerged.
-        if (!quiet && mons_near(this))
+        if (!quiet && you.see_cell(pos()))
         {
             if (seen_context == SC_SURFACES)
             {
@@ -287,7 +288,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         stop_constricting(MID_PLAYER, true);
         you.stop_constricting(mid, true);
 
-        if (invisible() && mons_near(this) && !you.can_see_invisible()
+        if (invisible() && you.see_cell(pos()) && !you.can_see_invisible()
             && !backlit() && !has_ench(ENCH_SUBMERGED))
         {
             if (!quiet)
@@ -593,7 +594,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         // Note: Invisible monsters are not forced to stay invisible, so
         // that they can properly have their invisibility removed just
         // before being polymorphed into a non-invisible monster.
-        if (mons_near(this) && !you.can_see_invisible() && !backlit()
+        if (you.see_cell(pos()) && !you.can_see_invisible() && !backlit()
             && !has_ench(ENCH_SUBMERGED)
             && !friendly() && !you.duration[DUR_TELEPATHY])
         {
@@ -609,7 +610,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_NEUTRAL_BRIBED:
     case ENCH_FRIENDLY_BRIBED:
     case ENCH_HEXED:
-        if (invisible() && mons_near(this) && !you.can_see_invisible()
+        if (invisible() && you.see_cell(pos()) && !you.can_see_invisible()
             && !backlit() && !has_ench(ENCH_SUBMERGED))
         {
             if (!quiet)
@@ -684,7 +685,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             if (visible_to(&you))
                 simple_monster_message(this, " stops glowing.");
-            else if (has_ench(ENCH_INVIS) && mons_near(this))
+            else if (has_ench(ENCH_INVIS) && you.see_cell(pos()))
             {
                 mprf("%s stops glowing and disappears.",
                      name(DESC_THE, true).c_str());
@@ -776,7 +777,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             else if (!quiet && crawl_state.game_is_arena())
                 mprf("%s surfaces.", name(DESC_A, true).c_str());
         }
-        else if (mons_near(this) && feat_is_watery(grd(pos())))
+        else if (you.see_cell(pos()) && feat_is_watery(grd(pos())))
         {
             mpr("Something invisible bursts forth from the water.");
             interrupt_activity(AI_FORCE_INTERRUPT);
@@ -1496,12 +1497,8 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_HEXED:
     case ENCH_BRILLIANCE_AURA:
     case ENCH_EMPOWERED_SPELLS:
-        decay_enchantment(en);
-        break;
-
     case ENCH_ANTIMAGIC:
-        if (!has_ench(ENCH_SAP_MAGIC))
-            decay_enchantment(en);
+        decay_enchantment(en);
         break;
 
     case ENCH_MIRROR_DAMAGE:
@@ -1604,7 +1601,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     {
         if (feat_is_watery(grd(pos())) && ground_level())
         {
-            if (mons_near(this) && visible_to(&you))
+            if (you.can_see(*this))
             {
                 mprf("The flames covering %s go out.",
                      name(DESC_THE, false).c_str());
@@ -2044,14 +2041,8 @@ void monster::mark_summoned(int longevity, bool mark_items, int summon_type, boo
         add_ench(mon_enchant(ENCH_SUMMON, summon_type, 0, INT_MAX));
 
     if (mark_items)
-    {
-        for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
-        {
-            const int item = inv[i];
-            if (item != NON_ITEM)
-                mitm[item].flags |= ISFLAG_SUMMONED;
-        }
-    }
+        for (mon_inv_iterator ii(*this); ii; ++ii)
+            ii->flags |= ISFLAG_SUMMONED;
 }
 
 bool monster::is_summoned(int* duration, int* summon_type) const

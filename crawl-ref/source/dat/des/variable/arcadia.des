@@ -2,7 +2,7 @@
 # The old Forest branch end vaults, adjusted for Depths placement.
 # Grouped here for a function use, thematic grouping, and easier reference.
 # Only one of these can place per Depths, and are mutually exclusive with
-# random Enchantress placement; they've also diluted with appropiate natives.
+# random Enchantress placement; they've also diluted with appropriate natives.
 
 {{
 function old_forest_ends(e)

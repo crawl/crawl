@@ -26,7 +26,7 @@
 #include "spl-util.h"
 
 static bool _is_bookrod_type(const item_def& item,
-                             bool (*suitable)(spell_type spell))
+                             bool (*matches)(spell_type spell))
 {
     if (!item.defined())
         return false;
@@ -40,24 +40,18 @@ static bool _is_bookrod_type(const item_def& item,
     }
 
     if (item.base_type == OBJ_RODS)
-        return suitable(spell_in_rod(static_cast<rod_type>(item.sub_type)));
+        return matches(spell_in_rod(static_cast<rod_type>(item.sub_type)));
 
     if (!item_is_spellbook(item))
         return false;
 
-    int total       = 0;
-    int total_liked = 0;
-
+    // Book matches only if all the spells match
     for (spell_type spell : spells_in_book(item))
     {
-        total++;
-        if (suitable(spell))
-            total_liked++;
+        if (!matches(spell))
+            return false;
     }
-
-    // If at least half of the available spells are suitable, the whole
-    // spellbook is, too.
-    return total_liked >= (total / 2) + 1;
+    return true;
 }
 
 bool is_holy_item(const item_def& item)
@@ -208,8 +202,6 @@ bool is_evil_item(const item_def& item)
                || item_brand == SPWPN_REAPING;
         }
         break;
-    case OBJ_WANDS:
-        return item.sub_type == WAND_DRAINING;
     case OBJ_POTIONS:
         return is_blood_potion(item);
     case OBJ_SCROLLS:
@@ -363,6 +355,9 @@ bool is_hasty_item(const item_def& item)
 
 bool is_poisoned_item(const item_def& item)
 {
+    if (is_unrandom_artefact(item, UNRAND_OLGREB))
+        return true;
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -442,12 +437,8 @@ bool is_fiery_item(const item_def& item)
         }
         break;
     case OBJ_WANDS:
-        if (item.sub_type == WAND_FLAME
-            || item.sub_type == WAND_FIRE
-            || item.sub_type == WAND_FIREBALL)
-        {
+        if (item.sub_type == WAND_FLAME)
             return true;
-        }
         break;
     case OBJ_SCROLLS:
         if (item.sub_type == SCR_IMMOLATION)

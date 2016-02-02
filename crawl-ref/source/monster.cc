@@ -15,6 +15,7 @@
 #include "art-enum.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
+#include "branch.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -810,7 +811,6 @@ bool monster::likes_wand(const item_def &item) const
     ASSERT(item.base_type == OBJ_WANDS);
     switch (item.sub_type)
     {
-        case WAND_INVISIBILITY:
         case WAND_TELEPORTATION:
         case WAND_HEAL_WOUNDS:
         case WAND_HASTING:
@@ -820,7 +820,7 @@ bool monster::likes_wand(const item_def &item) const
             // assumptions:
             // bad wands are value 16, so won't be used past hd 4
             // mediocre wands are value 8; won't be used past hd 8
-            // fire and cold and so on are value 5, won't be used past hd 10
+            // other good wands are value 5, won't be used past hd 10
             // better implementations welcome
             return wand_charge_value(item.sub_type) + get_hit_dice() * 2 <= 24;
     }
@@ -2906,12 +2906,20 @@ void monster::expose_to_element(beam_type flavour, int strength,
     }
 }
 
-void monster::banish(actor *agent, const string &, const int)
+void monster::banish(actor *agent, const string &, const int, bool force)
 {
     coord_def old_pos = pos();
 
     if (mons_is_projectile(type))
         return;
+
+    if (!force && player_in_branch(BRANCH_ABYSS)
+        && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
+    {
+        simple_monster_message(this, " wobbles for a moment.");
+        return;
+    }
+
     simple_monster_message(this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
     if (agent && mons_gives_xp(this, agent))
@@ -3430,7 +3438,7 @@ int monster::armour_class(bool calc_unid) const
 
     // corrosion hurts.
     if (has_ench(ENCH_CORROSION))
-        ac /= 2;
+        ac -= 8;
 
     return max(ac, 0);
 }
@@ -4790,7 +4798,7 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     // Friendlies will try not to be parted from you.
     if (intelligent_ally(this) && (trap.type == TRAP_TELEPORT
                                    || trap.type == TRAP_TELEPORT_PERMANENT)
-        && player_knows_trap && mons_near(this))
+        && player_knows_trap && can_see(you))
     {
         return false;
     }
@@ -4970,14 +4978,8 @@ bool monster::find_place_to_live(bool near_player)
 
 void monster::destroy_inventory()
 {
-    for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
-    {
-        if (inv[j] != NON_ITEM)
-        {
-            destroy_item(inv[j]);
-            inv[j] = NON_ITEM;
-        }
-    }
+    for (mon_inv_iterator ii(*this); ii; ++ii)
+        destroy_item(ii->index());
 }
 
 bool monster::is_travelling() const
@@ -5682,8 +5684,11 @@ bool monster::do_shaft()
         return false;
 
     // Tentacles are immune to shafting
-    if (mons_is_tentacle_or_tentacle_segment(type))
+    if (mons_is_tentacle_or_tentacle_segment(type)
+        || type == MONS_PLAYER_GHOST)
+    {
         return false;
+    }
 
     // Handle instances of do_shaft() being invoked magically when
     // the monster isn't standing over a shaft.
@@ -6045,8 +6050,6 @@ bool monster::can_evoke_jewellery(jewellery_type jtype) const
 
     switch (jtype)
     {
-        case RING_TELEPORTATION:
-            return !has_ench(ENCH_TP);
         case AMU_RAGE:
             return can_go_berserk();
         default:
@@ -6060,8 +6063,6 @@ bool monster::should_evoke_jewellery(jewellery_type jtype) const
 {
     switch (jtype)
     {
-    case RING_TELEPORTATION:
-        return caught() || mons_is_fleeing(this) || pacified();
     case AMU_RAGE:
         // this implies !berserk()
         return !has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
@@ -6089,10 +6090,6 @@ bool monster::evoke_jewellery_effect(jewellery_type jtype)
     {
     case AMU_RAGE:
         enchant_actor_with_flavour(this, this, BEAM_BERSERK);
-        break;
-
-    case RING_TELEPORTATION:
-        teleport(false);
         break;
 
     default:

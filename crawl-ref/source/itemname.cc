@@ -588,29 +588,26 @@ const char* armour_ego_name(const item_def& item, bool terse)
 
 static const char* _wand_type_name(int wandtype)
 {
-    switch (static_cast<wand_type>(wandtype))
+    switch (wandtype)
     {
     case WAND_FLAME:           return "flame";
-    case WAND_FROST:           return "frost";
     case WAND_SLOWING:         return "slowing";
     case WAND_HASTING:         return "hasting";
-    case WAND_MAGIC_DARTS:     return "magic darts";
     case WAND_HEAL_WOUNDS:     return "heal wounds";
     case WAND_PARALYSIS:       return "paralysis";
-    case WAND_FIRE:            return "fire";
-    case WAND_COLD:            return "cold";
     case WAND_CONFUSION:       return "confusion";
-    case WAND_INVISIBILITY:    return "invisibility";
     case WAND_DIGGING:         return "digging";
-    case WAND_FIREBALL:        return "fireball";
+    case WAND_ICEBLAST:        return "iceblast";
     case WAND_TELEPORTATION:   return "teleportation";
     case WAND_LIGHTNING:       return "lightning";
     case WAND_POLYMORPH:       return "polymorph";
     case WAND_ENSLAVEMENT:     return "enslavement";
-    case WAND_DRAINING:        return "draining";
+    case WAND_ACID:            return "acid";
     case WAND_RANDOM_EFFECTS:  return "random effects";
     case WAND_DISINTEGRATION:  return "disintegration";
-    default:                   return "bugginess";
+    default:                   return item_type_removed(OBJ_WANDS, wandtype)
+                                    ? "removedness"
+                                    : "bugginess";
     }
 }
 
@@ -2075,11 +2072,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "mangled ";
         }
 
-        uint64_t name_type, name_flags = 0;
+        monster_flags_t name_flags;
+        const string _name = get_corpse_name(*this, &name_flags);
+        const monster_flags_t name_type = name_flags & MF_NAME_MASK;
 
-        const string _name  = get_corpse_name(*this, &name_flags);
-        const bool   shaped = starts_with(_name, "shaped ");
-        name_type = (name_flags & MF_NAME_MASK);
+        const bool shaped = starts_with(_name, "shaped ");
 
         if (!_name.empty() && name_type == MF_NAME_ADJECTIVE)
             buff << _name << " ";
@@ -3352,6 +3349,8 @@ bool is_bad_item(const item_def &item, bool temp)
         case AMU_INACCURACY:
         case RING_LOUDNESS:
             return true;
+        case RING_TELEPORTATION:
+            return !(you.stasis() || crawl_state.game_is_sprint());
         case RING_EVASION:
         case RING_PROTECTION:
         case RING_STRENGTH:
@@ -3574,13 +3573,6 @@ bool is_useless_item(const item_def &item, bool temp)
         if (player_mutation_level(MUT_NO_ARTIFICE))
             return true;
 
-        if (item.sub_type == WAND_INVISIBILITY
-            && item_type_known(item)
-                && _invisibility_is_useless(temp))
-        {
-            return true;
-        }
-
         if (item.sub_type == WAND_ENSLAVEMENT
             && item_type_known(item)
             && player_mutation_level(MUT_NO_LOVE))
@@ -3711,8 +3703,8 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case AMU_FAITH:
             return (you.species == SP_DEMIGOD && !you.religion)
-                || you_worship(GOD_GOZAG)
-                || (you_worship(GOD_RU) && you.piety == piety_breakpoint(5));
+                    || you_worship(GOD_GOZAG)
+                    || (you_worship(GOD_RU) && you.piety == piety_breakpoint(5));
 
         case AMU_GUARDIAN_SPIRIT:
             return you.spirit_shield(false, false);
@@ -3725,6 +3717,9 @@ bool is_useless_item(const item_def &item, bool temp)
                    || temp && you.species == SP_VAMPIRE
                       && you.hunger_state <= HS_STARVING;
 
+        case AMU_MANA_REGENERATION:
+            return you_worship(GOD_PAKELLAS);
+
         case RING_SEE_INVISIBLE:
             return you.can_see_invisible(false, false);
 
@@ -3736,9 +3731,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return you_worship(GOD_TROG);
 
         case RING_TELEPORTATION:
-            return you.species == SP_FORMICID
-                   || crawl_state.game_is_sprint()
-                   || player_mutation_level(MUT_NO_ARTIFICE);
+            return !is_bad_item(item, temp);
 
         case RING_FLIGHT:
             return you.permanent_flight()
@@ -4104,7 +4097,7 @@ bool is_named_corpse(const item_def &corpse)
     return corpse.props.exists(CORPSE_NAME_KEY);
 }
 
-string get_corpse_name(const item_def &corpse, uint64_t *name_type)
+string get_corpse_name(const item_def &corpse, monster_flags_t *name_type)
 {
     ASSERT(corpse.base_type == OBJ_CORPSES);
 
@@ -4112,7 +4105,7 @@ string get_corpse_name(const item_def &corpse, uint64_t *name_type)
         return "";
 
     if (name_type != nullptr)
-        *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int64();
+        name_type->flags = corpse.props[CORPSE_NAME_TYPE_KEY].get_int64();
 
     return corpse.props[CORPSE_NAME_KEY].get_string();
 }
