@@ -79,8 +79,8 @@
        "book of dreams | book of the dragon | dagger | deck of defence | " ..
        "deck of destruction | demon blade | demon trident | demon whip | " ..
        "dire flail | disc of storms | double sword | " ..
-       "ring of dexterity | rod of destruction | manual of dodging" ..
-       "staff of death | wand of digging | wand of disintegration | "
+       "ring of dexterity | rod of destruction | manual of dodging | " ..
+       "staff of death | wand of digging | wand of disintegration"
 
       elseif s == "E" then i = "book of enchantments | executioner's axe | " ..
        "staff of earth | deck of escape | eveningstar | ring of evasion | " ..
