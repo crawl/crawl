@@ -897,6 +897,8 @@ static int _book_weight(book_type book)
         // Skip over spells already seen.
         if (you.seen_spell[stype])
             continue;
+        if (god_hates_spell(stype, you.religion))
+            continue;
 
         total_weight += _spell_weight(stype);
     }
