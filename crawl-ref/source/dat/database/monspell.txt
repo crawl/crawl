@@ -137,6 +137,10 @@ Orb of Destruction cast
 
 @The_monster@ launches a ball of destructive magic.
 %%%%
+unseen Orb of Destruction cast
+
+@The_something@ conjures a glowing orb.
+%%%%
 Sticky Flame cast
 
 @The_monster@ sprays @target@ with burning goo.
@@ -184,8 +188,16 @@ Chant Fire Storm cast
 Chant Word of Entropy cast
 
 @The_monster@ begins to chant a word of entropy!
+%%%%
+Call of Chaos cast
+
+@The_monster@ calls on the powers of chaos!
+%%%%
+unseen Call of Chaos cast
+
+@The_something@ calls on the powers of chaos!
 #################################################
-# The next two have special hard-coded messaging.
+# These have special hard-coded messaging.
 #################################################
 %%%%
 Siren Song cast
@@ -193,6 +205,10 @@ Siren Song cast
 __NONE
 %%%%
 Avatar Song cast
+
+__NONE
+%%%%
+Seal Doors cast
 
 __NONE
 #####################################################
@@ -206,10 +222,6 @@ You hear a note loudly blown on a horn!
 Signal Horn cast
 
 @The_monster@ blows a loud note on a signal horn!
-%%%%
-Seal Doors cast
-
-@The_monster@ activates a sealing rune.
 %%%%
 Spit Acid cast
 
@@ -417,10 +429,6 @@ VISUAL:@The_monster@ gestures frantically.
 ########################################################################
 # Individual monsters
 ########################################################################
-brain worm cast
-
-@The_monster@'s bulging head throbs.
-%%%%
 giant orange brain cast
 
 @The_monster@ pulsates.

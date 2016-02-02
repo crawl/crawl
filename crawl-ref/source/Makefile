@@ -81,7 +81,7 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
         distclean debug debug-lite profile package-source source \
-        build-windows package-windows rest docs greet api android FORCE
+        build-windows package-windows rest docs greet api android FORCE monster
 
 include Makefile.obj
 
@@ -111,10 +111,8 @@ CFWARN_L := -Wall -Wformat-security -Wundef
 
 DEFINES := $(EXTERNAL_DEFINES)
 
-ifdef ANDROID
-LDFLAGS := $(EXTERNAL_LDFLAGS) $(LDFLAGS)
-else
-LDFLAGS := $(EXTERNAL_LDFLAGS)
+ifndef ANDROID
+LDFLAGS :=
 endif
 
 #
@@ -594,9 +592,7 @@ ifdef LTO
       CFOPTIMIZE += -fno-fat-lto-objects
     endif
   else
-    # Clang uses a different syntax than gcc, using -O4 instead.  This means
-    # you can't select a different level of optimization to go with LTO.
-    CFOPTIMIZE := $(patsubst -O%,,$(CFOPTIMIZE)) -O4
+    CFOPTIMIZE += -flto
   endif
 endif
 
@@ -954,7 +950,7 @@ OUR_MONOSPACED_FONT=DejaVuSansMono.ttf
 ifdef PROPORTIONAL_FONT
   DEFINES += -DPROPORTIONAL_FONT=\"$(PROPORTIONAL_FONT)\"
   ifneq (,$(COPY_FONTS))
-    INSTALL_FONTS += $(PROPORTIONAL_FONT)
+    INSTALL_FONTS += "$(PROPORTIONAL_FONT)"
   endif
 else
   SYS_PROPORTIONAL_FONT = $(shell { name=$(OUR_PROPORTIONAL_FONT);\
@@ -968,18 +964,18 @@ else
       DEFINES += -DPROPORTIONAL_FONT=\"$(SYS_PROPORTIONAL_FONT)\"
     else
       DEFINES += -DPROPORTIONAL_FONT=\"$(FONTDIR)$(OUR_PROPORTIONAL_FONT)\"
-      INSTALL_FONTS += $(SYS_PROPORTIONAL_FONT)
+      INSTALL_FONTS += "$(SYS_PROPORTIONAL_FONT)"
     endif
   else
     DEFINES += -DPROPORTIONAL_FONT=\"$(FONTDIR)$(OUR_PROPORTIONAL_FONT)\"
-    INSTALL_FONTS += contrib/fonts/$(OUR_PROPORTIONAL_FONT)
+    INSTALL_FONTS += "contrib/fonts/$(OUR_PROPORTIONAL_FONT)"
   endif
 endif
 
 ifdef MONOSPACED_FONT
   DEFINES += -DMONOSPACED_FONT=\"$(MONOSPACED_FONT)\"
   ifneq (,$(COPY_FONTS))
-    INSTALL_FONTS += $(MONOSPACED_FONT)
+    INSTALL_FONTS += "$(MONOSPACED_FONT)"
   endif
 else
   SYS_MONOSPACED_FONT = $(shell { name=$(OUR_MONOSPACED_FONT);\
@@ -993,11 +989,11 @@ else
       DEFINES += -DMONOSPACED_FONT=\"$(SYS_MONOSPACED_FONT)\"
     else
       DEFINES += -DMONOSPACED_FONT=\"$(FONTDIR)$(OUR_MONOSPACED_FONT)\"
-      INSTALL_FONTS += $(SYS_MONOSPACED_FONT)
+      INSTALL_FONTS += "$(SYS_MONOSPACED_FONT)"
     endif
   else
     DEFINES += -DMONOSPACED_FONT=\"$(FONTDIR)$(OUR_MONOSPACED_FONT)\"
-    INSTALL_FONTS += contrib/fonts/$(OUR_MONOSPACED_FONT)
+    INSTALL_FONTS += "contrib/fonts/$(OUR_MONOSPACED_FONT)"
   endif
 endif
 
@@ -1056,7 +1052,7 @@ ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) -x c++ - -o /dev/null -fuse-l
   LDFLAGS += -fuse-ld=gold
 endif
 
-LDFLAGS += $(CFOPTIMIZE) $(CFOPTIMIZE_L)
+LDFLAGS += $(CFOPTIMIZE) $(CFOPTIMIZE_L) $(EXTERNAL_LDFLAGS)
 
 ifdef REPORT
 CFOTHERS += -ftime-report
@@ -1181,7 +1177,8 @@ CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN)
 endif
 CFLAGS_L := $(CFOPTIMIZE_L) $(DEFINES_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L)
 ALL_CFLAGS := $(CFLAGS) $(CFLAGS_L)
-YACC_CFLAGS  := $(ALL_CFLAGS) -Wno-unused-function -Wno-sign-compare -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
+YACC_CFLAGS  := $(ALL_CFLAGS) -Wno-unused-function -Wno-sign-compare -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0 -Wno-null-conversion
+RLTILES_CFLAGS := $(ALL_CFLAGS) -Wno-tautological-compare
 
 
 DOC_BASE        := ../docs
@@ -1250,6 +1247,11 @@ else
 webserver:
 endif
 
+ifeq (,$(filter monster,$(MAKECMDGOALS)))
+OBJECTS += main.o
+else
+OBJECTS += util/monster/monster-main.o
+endif
 
 # There might not have been any goals passed on the commandline, so...
 GOALS = $(or $(MAKECMDGOALS),$(.DEFAULT_GOAL))
@@ -1303,7 +1305,7 @@ DEPS := $(ALL_OBJECTS:.o=.d)
 # gcc-snapshot vs clang, or x86_64-linux-gnu-gcc vs x86_64-w64-mingw32-g++).
 #
 # In such cases, the dependency forces a rebuild of that file. If the
-# dependency file referred to a non-existant header, as determined by
+# dependency file referred to a non-existent header, as determined by
 # util/good-depfile, then replace it with a rule that forces a rebuild.
 # That rebuild will overwrite the stopgap .d file with a good one for
 # the next build.
@@ -1344,7 +1346,7 @@ $(DOC_BASE)/FAQ.html: dat/database/FAQ.txt util/FAQ2html.pl
 
 rest:
 	wget -O - https://crawl.develz.org/wiki/doku.php?id=dcss:manual:rest \
-	| sed -f util/undoku.sed > $(DOC_BASE)/crawl_manual.reST
+	| sed -f util/undoku.sed | tr -d '\r' > $(DOC_BASE)/crawl_manual.reST
 
 $(DOC_BASE)/crawl_manual.txt: $(DOC_BASE)/crawl_manual.reST util/unrest.pl
 	$(QUIET_GEN)util/unrest.pl <$< >$@
@@ -1443,7 +1445,6 @@ endif
 	$(COPY) ../docs/develop/levels/*.txt $(datadir_fp)/docs/develop/levels/
 	$(COPY) ../docs/license/*.txt $(datadir_fp)/docs/license/
 	$(COPY) ../CREDITS.txt $(datadir_fp)/docs/
-	util/columnise-credits.pl $(datadir_fp)/docs/CREDITS.txt
 	$(COPY) ../settings/* $(datadir_fp)/settings/
 ifeq ($(GAME),crawl.exe)
 	sed -i 's/$$/\r/' `find $(datadir_fp) -iname '*.txt' -o -iname '*.des'`
@@ -1496,7 +1497,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 endif
 
-clean: clean-rltiles clean-webserver clean-android
+clean: clean-rltiles clean-webserver clean-android clean-monster
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
@@ -1524,6 +1525,30 @@ distclean: clean clean-contrib clean-rltiles
 $(GAME): $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
 
+util/monster/vault_monster_data.h: dat/des util/gather_mons
+	util/gather_mons -v > $@
+
+util/monster/monster-main.o: util/monster/vault_monster_data.h
+
+util/monster/monster: $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
+	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) \
+	 -o $@ $(LIBS)
+
+monster: util/monster/monster
+
+test-monster: monster
+	util/monster/monster quasit
+
+clean-monster:
+	$(RM) util/monster/monster util/monster/vault_monster_data.h tile_info.txt
+
+install-monster: monster
+	util/gather_mons -t > tile_info.txt
+	strip -s util/monster/monster
+	cp util/monster/monster $(HOME)/bin/
+	if [ -f ~/source/announcements.log ]; then \
+	  echo 'Monster database of master branch on crawl.develz.org updated to: $(VERSION)' >>~/source/announcements.log;\
+	fi
 debug: all
 debug-lite: all
 profile: all
@@ -1563,6 +1588,7 @@ endif
 $(OBJECTS:%.o=%.cc): $(CONTRIB_LIBS)
 
 $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
+$(TILEDEFOBJS): ALL_CFLAGS=$(RLTILES_CFLAGS)
 
 # The "|" designates "order-only" dependancies. See: (make) Prerequisite Types.
 #
@@ -1693,7 +1719,6 @@ source: removeold prebuildyacc
 	  done
 	find build -name .gitignore -execdir rm -f '{}' +
 	git describe --tags $(MERGE_BASE) > $(BSRC)util/release_ver
-	util/columnise-credits.pl build/crawl-ref/CREDITS.txt
 	mv build/crawl-ref build/$(PKG_SRC_DIR)
 
 package-tarball-deps: source

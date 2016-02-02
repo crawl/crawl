@@ -27,7 +27,7 @@ extern abyss_state abyssal_state;
 
 void abyss_morph();
 
-void banished(const string &who = "");
+void banished(const string &who = "", const int power = 0);
 void push_features_to_abyss();
 
 void generate_abyss();

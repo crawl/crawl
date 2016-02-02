@@ -436,6 +436,8 @@ protected:
     void webtiles_set_title(const formatted_string title);
     void webtiles_set_suffix(const formatted_string title);
 
+    void webtiles_write_tiles(const MenuEntry& me) const;
+    void webtiles_update_items(int start, int end) const;
     void webtiles_update_item(int index) const;
     void webtiles_update_title() const;
     void webtiles_update_scroll_pos() const;
@@ -489,6 +491,7 @@ protected:
     virtual bool allow_easy_exit() const;
 
     virtual string help_key() const { return ""; }
+    virtual bool always_redraw() const { return false; }
 };
 
 /// Allows toggling by specific keys.
@@ -579,7 +582,8 @@ protected:
     bool jump_to(int linenum);
 
 #ifdef USE_TILE_WEB
-    virtual void webtiles_write_item(int index, const MenuEntry* me) const;
+    virtual void webtiles_write_item(int index,
+                                     const MenuEntry* me) const override;
 #endif
 };
 

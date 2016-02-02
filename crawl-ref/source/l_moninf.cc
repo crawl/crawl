@@ -45,7 +45,6 @@ void lua_push_moninf(lua_State *ls, monster_info *mi)
 MIRET1(number, damage_level, dam)
 MIRET1(boolean, is_safe, is(MB_SAFE))
 MIRET1(boolean, is_firewood, is(MB_FIREWOOD))
-MIRET1(number, holiness, holi)
 MIRET1(number, attitude, attitude)
 MIRET1(number, threat, threat)
 MIRET1(string, mname, mname.c_str())
@@ -87,6 +86,26 @@ MIRES1(res_cold, MR_RES_COLD)
 MIRES1(res_draining, MR_RES_NEG)
 MIRES1(res_shock, MR_RES_ELEC)
 MIRES1(res_corr, MR_RES_ACID)
+
+LUAFN(moninf_get_holiness)
+{
+    MONINF(ls, 1, mi);
+
+    string holi = luaL_checkstring(ls, 2);
+    lowercase(holi);
+    mon_holy_type arg = holiness_by_name(holi);
+    if (!holi.empty() && arg == MH_NONE)
+    {
+        luaL_argerror(ls, 2, (string("no such holiness: '")
+                              + holi + "'").c_str());
+        return 0;
+    }
+
+    if (!holi.empty())
+        PLUARET(boolean, bool(mi->holi & arg));
+    else
+        PLUARET(string, holiness_description(mi->holi).c_str());
+}
 
 // const char* here would save a tiny bit of memory, but every map
 // for an unique pair of types costs 35KB of code. We have
@@ -147,11 +166,8 @@ LUAFN(moninf_get_spells)
         const vector<spell_type> &unique_spells = books[i];
         vector<string> spell_titles;
 
-        for (size_t j = 0; j < unique_spells.size(); ++j)
-        {
-            const spell_type spell = unique_spells[j];
+        for (const spell_type spell : unique_spells)
             spell_titles.emplace_back(spell_title(spell));
-        }
 
         clua_stringtable(ls, spell_titles);
         lua_rawseti(ls, -2, i+1);

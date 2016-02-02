@@ -31,8 +31,8 @@ function shoals_vault_is_mimic(e)
     return false
   end
 
-  local tag = unpack(params)
-  return tag ~= nil and string.find(tag, "mimic")
+  local tag, tag2 = unpack(params)
+  return tag2 ~= nil and string.find(tag2, "mimic")
 end
 
 -- When the kraken dies, the tides will control the water, so the items will
@@ -311,22 +311,6 @@ MAP
 .1.121.
 .1.111.
 .......
-ENDMAP
-
-NAME:   hangedman_shoal_octodias
-DEPTH:  Shoals
-KMONS:  1 = octopode crusher
-KFEAT:  1 = deep_water
-MAP
- xWxwxWx
-xwwwxwwwx
-WwxwwwxwW
-xwwwxwwwx
-wxwx1xwxw
-xwwwxwwwx
-WwxwwwxwW
-xwwwxwwwx
- xWxwxWx
 ENDMAP
 
 NAME:    hangedman_shoal_volcano
@@ -1087,17 +1071,20 @@ ENDMAP
 ##############################################################################
 
 NAME: shoals_end_simple
+ORIENT: float
 PLACE: Shoals:$
 : shoals_finale_setup(_G, 'simple')
 
 # HangedMan's alternative Shoals ending
 NAME: shoals_end_hangedman
+ORIENT: float
 PLACE: Shoals:$
 WEIGHT: 8
 : shoals_finale_setup(_G, 'hangedman', crawl.random_range(5,6))
 
 # Grunt's icy Shoals ending
 NAME: shoals_end_grunt_ice
+ORIENT: float
 PLACE: Shoals:$
 WEIGHT: 8
 : shoals_finale_setup(_G, 'grunt_ice', crawl.random_range(5,6))
@@ -1105,6 +1092,7 @@ WEIGHT: 8
 # Grunt's garden Shoals ending
 # Weighted lower on account of being more open and potentially nasty.
 NAME: shoals_end_grunt_garden
+ORIENT: float
 PLACE: Shoals:$
 WEIGHT: 4
 : shoals_finale_setup(_G, 'grunt_garden', crawl.random_range(5,6))
@@ -1227,7 +1215,7 @@ xxW...DC.x@
   xxxxxx@.
 ENDMAP
 
-# Deliberately seperated from the styles of branch end;
+# Deliberately separated from the styles of branch end;
 # it's good randomization and balancing material.
 NAME:    shoals_ilsuiw_alternative
 TAGS:    shoal_guardian water_ok

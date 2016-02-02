@@ -463,7 +463,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
     end
   end
 
-  -- we want to fill flight-accessable areas with water and all
+  -- we want to fill flight-accessible areas with water and all
   --  closets with rock
   zonify.map_fill_zones(_G, 1, 'w')
   nsubst(". = 1:@ / *:.")

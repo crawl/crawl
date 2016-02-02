@@ -73,10 +73,10 @@ bool blink_fineff::mergeable(const final_effect &fe) const
     return o && def == o->def;
 }
 
-bool distortion_tele_fineff::mergeable(const final_effect &fe) const
+bool teleport_fineff::mergeable(const final_effect &fe) const
 {
-    const distortion_tele_fineff *o =
-        dynamic_cast<const distortion_tele_fineff *>(&fe);
+    const teleport_fineff *o =
+        dynamic_cast<const teleport_fineff *>(&fe);
     return o && def == o->def;
 }
 
@@ -238,7 +238,7 @@ void blink_fineff::fire()
         defend->blink();
 }
 
-void distortion_tele_fineff::fire()
+void teleport_fineff::fire()
 {
     actor *defend = defender();
     if (defend && defend->alive() && !defend->no_tele(true, false))
@@ -284,7 +284,7 @@ void trj_spawn_fineff::fire()
                               mgen_data(jelly, spawn_beh, trj, 0, 0, jpos,
                                         foe, MG_DONT_COME, GOD_JIYVA)))
         {
-            // Don't allow milking the royal jelly.
+            // Don't allow milking the Royal Jelly.
             mons->flags |= MF_NO_REWARD;
             spawned++;
         }
@@ -311,10 +311,10 @@ void trj_spawn_fineff::fire()
         }
     }
     else if (spawned == 1)
-        mpr("One of the royal jelly's fragments survives.");
+        mpr("One of the Royal Jelly's fragments survives.");
     else
     {
-        mprf("The dying royal jelly spits out %s more jellies.",
+        mprf("The dying Royal Jelly spits out %s more jellies.",
              number_in_words(spawned).c_str());
     }
 }
@@ -545,8 +545,8 @@ void bennu_revive_fineff::fire()
 
 
     monster *newmons = create_monster(mgen_data(MONS_BENNU,
-                                                att, 0, 0, 0, posn, foe,
-                                                res_visible ? MG_DONT_COME : 0));
+                                                attitude, 0, 0, 0, posn, foe,
+                                                res_visible ? MG_DONT_COME : MG_NONE));
     if (newmons)
         newmons->props["bennu_revives"].get_byte() = revives + 1;
 }

@@ -240,6 +240,13 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
     {
         if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
             descs.emplace_back("chaotic");
+        if (item->is_type(OBJ_MISSILES, MI_THROWING_NET)
+            && (mi.body_size() >= SIZE_GIANT
+                || mons_class_is_stationary(mi.type)
+                || mons_class_flag(mi.type, M_INSUBSTANTIAL)))
+        {
+            descs.emplace_back("immune to nets");
+        }
     }
     return descs;
 }
@@ -433,7 +440,7 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
 }
 
 // Portal Projectile requires MP per shot.
-static bool _is_pproj_active()
+bool is_pproj_active()
 {
     return !you.confused() && you.duration[DUR_PORTAL_PROJECTILE]
            && enough_mp(1, true, false);
@@ -444,7 +451,7 @@ static bool _is_pproj_active()
 void fire_thing(int item)
 {
     dist target;
-    item = get_ammo_to_shoot(item, target, _is_pproj_active());
+    item = get_ammo_to_shoot(item, target, is_pproj_active());
     if (item == -1)
         return;
 
@@ -496,24 +503,9 @@ void throw_item_no_quiver()
 static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                                 string &ammo_name, bool &returning)
 {
-    dungeon_char_type zapsym = NUM_DCHAR_TYPES;
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:    zapsym = DCHAR_FIRED_WEAPON;  break;
-    case OBJ_MISSILES:   zapsym = DCHAR_FIRED_MISSILE; break;
-    case OBJ_ARMOUR:     zapsym = DCHAR_FIRED_ARMOUR;  break;
-    case OBJ_WANDS:      zapsym = DCHAR_FIRED_STICK;   break;
-    case OBJ_FOOD:       zapsym = DCHAR_FIRED_CHUNK;   break;
-    case OBJ_SCROLLS:    zapsym = DCHAR_FIRED_SCROLL;  break;
-    case OBJ_JEWELLERY:  zapsym = DCHAR_FIRED_TRINKET; break;
-    case OBJ_POTIONS:    zapsym = DCHAR_FIRED_FLASK;   break;
-    case OBJ_BOOKS:      zapsym = DCHAR_FIRED_BOOK;    break;
-    case OBJ_RODS:
-    case OBJ_STAVES:     zapsym = DCHAR_FIRED_STICK;   break;
-    default: break;
-    }
-
-    beam.glyph = dchar_glyph(zapsym);
+    const auto cglyph = get_item_glyph(item);
+    beam.glyph  = cglyph.ch;
+    beam.colour = cglyph.col;
     beam.was_missile = true;
 
     item_def *launcher  = agent->weapon(0);
@@ -538,7 +530,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.item         = &item;
     beam.effect_known = item_ident(item, ISFLAG_KNOW_TYPE);
     beam.source       = agent->pos();
-    beam.colour       = get_item_glyph(&item).col;
     beam.flavour      = BEAM_MISSILE;
     beam.pierce       = false;
     beam.aux_source.clear();
@@ -547,7 +538,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     ammo_name = item.name(DESC_PLAIN);
 
     const unrandart_entry* entry = launcher && is_unrandom_artefact(*launcher)
-        ? get_unrand_entry(launcher->special) : nullptr;
+        ? get_unrand_entry(launcher->unrand_idx) : nullptr;
 
     if (entry && entry->launch)
     {
@@ -631,11 +622,11 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         level = 3;
         msg   = "You hear a loud whirring sound.";
         break;
-     case WPN_SHORTBOW:
+    case WPN_SHORTBOW:
         level = 5;
         msg   = "You hear a twanging sound.";
         break;
-     case WPN_LONGBOW:
+    case WPN_LONGBOW:
         level = 6;
         msg   = "You hear a loud twanging sound.";
         break;
@@ -643,7 +634,7 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         level = 2;
         msg   = "You hear a quiet thunk.";
         break;
-     case WPN_ARBALEST:
+    case WPN_ARBALEST:
         level = 7;
         msg   = "You hear a thunk.";
         break;
@@ -675,7 +666,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     dist thr;
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
-    const bool teleport = _is_pproj_active();
+    const bool teleport = is_pproj_active();
 
     if (you.confused())
     {
@@ -747,13 +738,12 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
             // normal projectiles.
             monster *m = monster_at(thr.target);
             if (m)
-                cancelled = stop_attack_prompt(m, false, thr.target, false);
+                cancelled = stop_attack_prompt(m, false, thr.target);
         }
         else
         {
             // Set values absurdly high to make sure the tracer will
             // complain if we're attempting to fire through allies.
-            pbolt.hit    = AUTOMATIC_HIT;
             pbolt.damage = dice_def(1, 100);
 
             // Init tracer variables.
@@ -802,7 +792,8 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     if (thrown.quantity > 1 && is_perishable_stack(item))
     {
         // Initialise thrown item with oldest item in stack.
-        const int rot_timer = remove_oldest_perishable_item(thrown);
+        const int rot_timer = remove_oldest_perishable_item(thrown)
+                              - you.elapsed_time;
         item.props.clear();
         init_perishable_stack(item, rot_timer);
     }
@@ -825,9 +816,9 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         ASSERT(launcher);
         practise(EX_WILL_LAUNCH, item_attack_skill(*launcher));
         if (is_unrandom_artefact(*launcher)
-            && get_unrand_entry(launcher->special)->type_name)
+            && get_unrand_entry(launcher->unrand_idx)->type_name)
         {
-            count_action(CACT_FIRE, launcher->special);
+            count_action(CACT_FIRE, launcher->unrand_idx);
         }
         else
             count_action(CACT_FIRE, launcher->sub_type);
@@ -855,7 +846,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
             did_return = true;
     }
 
-    you.time_taken = you.attack_delay(you.weapon(), &item);
+    you.time_taken = you.attack_delay(&item).roll();
 
     // Create message.
     mprf("You %s%s %s.",
@@ -1002,9 +993,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     if (!teleport)
     {
         const int energy = mons->action_energy(EUT_MISSILE);
-        const int delay = mons->attack_delay(weapon != NON_ITEM ? &mitm[weapon]
-                                                                : nullptr,
-                                             &mitm[msl]);
+        const int delay = mons->attack_delay(&mitm[msl]).roll();
         ASSERT(energy > 0);
         ASSERT(delay > 0);
         mons->speed_increment -= div_rand_round(energy * delay, 10);

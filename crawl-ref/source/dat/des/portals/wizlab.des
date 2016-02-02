@@ -736,7 +736,7 @@ KMONS:      * = lorocyproca / reaper / shadow demon / tormentor / hellion /\
 KMONS:      | = hell sentinel / brimstone fiend / shadow fiend /\
                 ice fiend / executioner
 :           set_random_mon_list(
-:               "smoke demon / ynoxinul / neqoxec / ice devil /" ..
+:               "smoke demon / ynoxinul / neqoxec / " ..
 :               "chaos spawn / soul eater / sun demon / " ..
 :               "lorocyproca / reaper / shadow demon / tormentor / hellion")
 :           else
@@ -889,7 +889,11 @@ KMONS:      & = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
 ITEM:       potion of mutation w:60 / potion of beneficial mutation q:1 / \
             potion of cure mutation
 ITEM:       potion of beneficial mutation q:1, potion of cure mutation
-ITEM:       amulet of resist mutation good_item
+: if you.unrands("hat of the alchemist") then
+ITEM:       any jewellery randart
+: else
+ITEM:       any jewellery randart / w:5 hat unrand:hat_of_the_alchemist
+: end
 ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi spells:cigotuvi's_embrace
 ITEM:       book of transfigurations / randbook disc:transmutation
 ITEM:       staff of death, scroll of summoning
@@ -1185,10 +1189,10 @@ TAGS:       no_rotate
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                 hd:20 hp:80 tile:mons_wucad_mu_statue \
-                spells:brain_feed.40.natural;\
-                       draining_gaze.40.natural;\
-                       mass_confusion.40.natural;\
-                       shadow_creatures.80.natural
+                spells:brain_feed.24.magical;\
+                       draining_gaze.24.magical;\
+                       mass_confusion.24.magical;\
+                       shadow_creatures.48.magical
 KITEM:      8 = staff of energy unrand:staff_of_wucad_mu
 COLOUR:     c = darkgrey
 COLOUR:     t = lightred / red w:3
@@ -1320,7 +1324,7 @@ ENDMAP
 NAME:    wizlab_golubria
 TAGS:    no_pool_fixup
 KMONS:   1 = spatial vortex w:7 / blink frog / insubstantial wisp w:3 / nothing w:5
-KMONS:   2 = deep elf summoner w:5 ; tomahawk ego:dispersal w:20 | tomahawk w:5 | nothing / \
+KMONS:   2 = deep elf mage w:5 ; tomahawk ego:dispersal w:20 | tomahawk w:5 | nothing / \
              rakshasa w:5 ; tomahawk ego:dispersal w:20 | tomahawk w:5 | nothing / \
              boggart ; tomahawk ego:dispersal w:20 | tomahawk w:5 | nothing /  \
              wizard ; tomahawk ego:dispersal w:20 | tomahawk w:5 | nothing
@@ -1335,14 +1339,14 @@ KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip ego:vorpal w:6 | dagger \
              spear ego:vorpal w:6 . tomahawk ego:dispersal . robe
 KMONS:   04 = large abomination w:15 / small abomination w:15 / unseen horror w:5 / \
               thrashing horror w:30 / skeleton w:30 / freezing wraith w:5 /  \
-              hellwing / chaos spawn w:5 / orange demon / blue devil /  \
+              hellwing / chaos spawn w:5 / orange demon / ice devil /  \
               hell hound / red devil w:5 / lesser demon w:25 / mana viper w:5 / \
               worldbinder w:30 / fire elemental w:5 / air elemental w:5
 KMONS:   95 = ynoxinul / smoke demon / sixfirhy / sun demon w:5 / efreet w:5 / \
               soul eater w:5 / hell knight w:5 / demonic crawler / raiju / \
               ancient zyme w:20 / lurking horror / tentacled starspawn w:30 / \
               wind drake w:5 / earth elemental w:5 / water elemental / \
-              ugly thing / base draconian / guardian serpent / brain worm / \
+              ugly thing / base draconian / guardian serpent / \
               eidolon w:5 / shadow wraith / anaconda skeleton w:5 / \
               great orb of eyes w:5 / giant orange brain
 KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w:5 / \
@@ -1428,7 +1432,7 @@ for i = 1, #teleporter_glyph do
     lua_marker(teleport_spot_glyph:sub(i,i), portal_desc { teleport_spot=i})
 end
 
-set_random_mon_list([[rakshasa w:15 / deep elf summoner w:15 / wizard w:15 / spatial vortex w:15 /
+set_random_mon_list([[rakshasa w:15 / deep elf mage w:15 / wizard w:15 / spatial vortex w:15 /
                     boggart / blink frog w:5 / shadow wraith w:5 / unseen horror /
                     raiju / ynoxinul / neqoxec / chaos spawn / giant orange brain /
                     large abomination w:15 / small abomination w:15 / skeleton w:20 /
@@ -1672,7 +1676,7 @@ MARKER:     h = lua:fog_machine { \
                 excl_rad = 0 }
 KMONS:      2 = lorocyproca w:1 / hell beast w:15 / reaper /\
             green death / soul eater w:20 / tormentor w:5
-KMONS:      3u = ice devil / red devil / orange demon / blue devil / \
+KMONS:      3u = ice devil / red devil / orange demon / \
             rust devil w:5 / ynoxinul / sun demon
 KMONS:      4 = kobold demonologist
 KMONS:      5 = deep elf demonologist
@@ -1685,14 +1689,14 @@ kmons     ("1 = patrolling Hellbinder dbname:Hellbinder name:" .. string.gsub(wi
 KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
 KITEM:      i = rod of shadows / ring of fire / ring of protection from fire /\
             scroll of torment / scroll of summoning / demon blade w:1 /\
-            demon whip w:1 / demon trident w:1 / gold / wand of fire /\
-            wand of draining / staff of summoning / any book w:30 / any good_item w:15
+            demon whip w:1 / demon trident w:1 / gold / wand of iceblast /\
+            wand of acid / staff of summoning / any book w:30 / any good_item w:15
 KITEM:      j = quarterstaff ego:vampirism ident:all unrand:majin-bo
 KITEM:      B = randbook disc:summoning
 NSUBST:     i = 2:B / 1:j / *:i
 SHUFFLE:    A<, 4d, 7f, 4d / 5e, 7f / 8g
 SUBST:      7 = 4, 8 = 5, df = 6, eg = 3
-:           set_random_mon_list([[lesser demon w:50 / red devil / blue devil / ]]
+:           set_random_mon_list([[lesser demon w:50 / red devil / ice devil / ]]
 :                            .. [[orange demon / ynoxinul / kobold demonologist / ]])
 :           wizlab_setup(_G)
 :           set_feature_name("stone_wall", "black wall")
@@ -1792,8 +1796,7 @@ SUBST:      o = 1, ' = llc, I = .KKKKK, up = .
 NSUBST:     g = 2:1 / ., h = 2:1 / ., i = 2:1 / ., j = 2:1 / .
 NSUBST:     k = 2:1 / ., q = 3:1 / ., r = 3:1 / ., s = 1:1 / .
 NSUBST:     " = 3:K / ., ` = 8:N / d / 4 / 233 / .
-KMONS:      MNO = col:random name:demonic name_adjective plant \
-                tile:mons_demonic_plant
+KMONS:      MNO = demonic plant
 MONS:       eye of devastation / stone giant / w:15 tentacled starspawn
 MONS:       w:20 giant orange brain / w:12 great orb of eyes / w:5 neqoxec \
             / w:3 golden eye band
@@ -1802,9 +1805,9 @@ MONS:       cacodemon
 MONS:       quicksilver dragon / war gargoyle / crystal guardian \
             / wretched star
 MONS:       orange crystal statue name:lunar_statue n_rpl n_des \
-              spells:brain_feed.40.natural;draining_gaze.40.natural;\
-                     lehudib's_crystal_spear.40.natural;\
-                     shadow_creatures.80.natural \
+              spells:brain_feed.24.magical;draining_gaze.24.magical;\
+                     lehudib's_crystal_spear.24.magical;\
+                     shadow_creatures.48.magical \
               col:lightmagenta tile:mons_zot_statue
 {{
 if you.unrands("moon troll leather armour") then

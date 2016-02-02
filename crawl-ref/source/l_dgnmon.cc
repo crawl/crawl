@@ -143,13 +143,6 @@ static int dgn_set_random_mon_list(lua_State *ls)
 
         mons.push_back(mon);
 
-        if (mon.number != 0)
-        {
-            mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : number for %s "
-                 "being discarded.",
-                 name.c_str());
-        }
-
         if (mon.colour != COLOUR_INHERIT)
         {
             mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : colour for "

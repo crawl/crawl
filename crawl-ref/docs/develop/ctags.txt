@@ -13,8 +13,10 @@ on crawl.
     Single-quote the regex in the shell, but not in .ctags.
 
 --regex-c++=/^ *DEF_BITFIELD *\( *([a-zA-Z0-9_:]*)/\1/t/
+--regex-c++=/^ *FEATFN_MEMOIZED *\( *([a-zA-Z0-9_:]*)/\1/f/
 
-    Treat the DEF_BITFIELD macro as a typedef.
+    Treat the DEF_BITFIELD macro as a typedef and FEATFN_MEMOIZED as a
+    function definition.
 
 -I decltype+
 

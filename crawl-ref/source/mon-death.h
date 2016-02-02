@@ -43,7 +43,7 @@ item_def* place_monster_corpse(const monster& mons, bool silent,
 
 void monster_cleanup(monster* mons);
 void setup_spore_explosion(bolt & beam, const monster& origin);
-void record_monster_defeat(monster* mons, killer_type killer);
+void record_monster_defeat(const monster* mons, killer_type killer);
 void unawaken_vines(const monster* mons, bool quiet);
 void fire_monster_death_event(monster* mons, killer_type killer, int i, bool polymorph);
 void heal_flayed_effect(actor* act, bool quiet = false, bool blood_only = false);

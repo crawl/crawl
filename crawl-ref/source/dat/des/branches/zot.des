@@ -971,16 +971,16 @@ KMONS:   F = shard shrike
 MARKER:  F = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 15, delay = 10, size = 2, \
               walk_dist = 0, spread_rate= 0 }
-ITEM:    wand of cold, staff of cold, book of frost, book of ice
+ITEM:    wand of iceblast, staff of cold, book of frost, book of ice
 SUBST:   w = l
 SUBST:   W = l..
 : else
 MONS:    fire giant, fire dragon
-KMONS:   F = salamander firebrand
+KMONS:   F = salamander stormcaller
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
               pow_max = 15, delay = 10, size = 2, walk_dist = 0, \
               spread_rate= 0 }
-ITEM:    wand of fire, staff of fire, book of flames, book of fire
+ITEM:    wand of lightning, staff of fire, book of flames, book of fire
 : end
 SUBST:   1 = 112.
 SUBST:   2 = 221.
@@ -1036,10 +1036,8 @@ NAME:   evilmike_crystal_ball_defense
 TAGS:   no_rotate no_monster_gen
 DEPTH:  Zot, !Zot:$
 ORIENT: float
-MONS:   w:4 oklob sapling / w:4 oklob plant / w:6 burning bush / \
-        w:6 lightning spire / nothing
-MONS:   ice statue / obsidian statue / orange crystal statue / \
-        curse skull / w:5 nothing
+MONS:   w:8 oklob plant / w:6 burning bush / w:6 lightning spire / nothing
+MONS:   obsidian statue / orange crystal statue / curse skull / w:5 nothing
 SUBST:  3 = 11.
 # Not quite the orb, but but close enough
 ITEM:   crystal ball of energy
@@ -1707,7 +1705,7 @@ TAGS:    no_monster_gen
 DEPTH:   Zot, !Zot:$
 KMONS:   A = red very ugly thing
 KMONS:   B = red draconian
-KMONS:   C = salamander firebrand / nonbase red draconian w:6
+KMONS:   C = salamander stormcaller / nonbase red draconian w:6
 KMONS:   D = cyan very ugly thing
 KMONS:   E = black draconian
 KMONS:   F = electric golem / nonbase black draconian w:6
@@ -2321,7 +2319,7 @@ MONS:    ugly thing w:15 / raiju / guardian serpent / harpy zombie / \
          base draconian perm_ench:shapeshifter / boggart / \
          orb spider w:5 / great orb of eyes w:5 / rakshasa w:5
 MONS:    very ugly thing w:20 / deep elf annihilator w:15 / \
-         deep elf death mage w:15 / balrug w:15 / octopode crusher / \
+         deep elf death mage w:15 / balrug w:15 / \
          quicksilver dragon / death knight / crystal guardian
 MONS:    curse skull w:15 / apocalypse crab / lorocyproca / acid blob
 MONS:    butterfly
@@ -2441,7 +2439,7 @@ SUBST:    F = .
 
 #monsters
 MONS:     patrolling Orb Guardian, Killer Klown, electric golem, orb of fire
-MONS:     ancient lich, orange crystal statue / obsidian statue / ice statue
+MONS:     ancient lich, orange crystal statue / w:20 obsidian statue
 SUBST:    8=8..., 5=5.
 SHUFFLE:  234
 SUBST:    ? = .:8 ?

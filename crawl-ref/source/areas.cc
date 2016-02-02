@@ -400,7 +400,7 @@ void create_sanctuary(const coord_def& center, int time)
         if (testbits(env.pgrid(pos), FPROP_BLOODY) && you.see_cell(pos))
             blood_count++;
 
-        if (trap_def* ptrap = find_trap(pos))
+        if (trap_def* ptrap = trap_at(pos))
         {
             if (!ptrap->is_known())
             {
@@ -463,7 +463,7 @@ void create_sanctuary(const coord_def& center, int time)
 
         if (!is_harmless_cloud(cloud_type_at(pos)))
         {
-            delete_cloud(env.cgrid(pos));
+            delete_cloud(pos);
             if (you.see_cell(pos))
                 cloud_count++;
         }
@@ -579,7 +579,7 @@ int monster::halo_radius() const
     if (weap && is_unrandom_artefact(*weap, UNRAND_BRILLIANCE))
         size = 3;
 
-    if (holiness() != MH_HOLY)
+    if (!(holiness() & MH_HOLY))
         return size;
     // The values here depend on 1. power, 2. sentience. Thus, high-ranked
     // sentient celestials have really big haloes, while holy animals get
@@ -729,7 +729,7 @@ int monster::umbra_radius() const
     if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
         return 3;
 
-    if (holiness() != MH_UNDEAD)
+    if (!(holiness() & MH_UNDEAD))
         return -1;
 
     switch (type)

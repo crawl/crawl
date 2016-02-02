@@ -141,9 +141,14 @@ enum monster_info_flags
     MB_RESISTANCE,
     MB_HEXED,
     MB_BONE_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     MB_CHANT_FIRE_STORM,
     MB_CHANT_WORD_OF_ENTROPY,
+#endif
     MB_AIRBORNE,
+    MB_BRILLIANCE_AURA,
+    MB_EMPOWERED_SPELLS,
+    MB_READY_TO_HOWL,
     NUM_MB_FLAGS
 };
 
@@ -210,9 +215,8 @@ struct monster_info : public monster_info_base
                           monster_type p_base_type = MONS_NO_MONSTER);
 
     monster_info(const monster_info& mi)
-    : monster_info_base(mi)
+    : monster_info_base(mi), i_ghost(mi.i_ghost)
     {
-        i_ghost = mi.i_ghost;
         for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
         {
             if (mi.inv[i].get())
@@ -345,6 +349,9 @@ struct monster_info : public monster_info_base
     bool has_spells() const;
     unsigned colour(bool base_colour = false) const;
     void set_colour(int colour);
+
+    bool has_trivial_ench(enchant_type ench) const;
+    bool debuffable() const;
 
 protected:
     string _core_name() const;

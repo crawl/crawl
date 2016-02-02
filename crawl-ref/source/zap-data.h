@@ -185,9 +185,9 @@ static const zap_info zap_data[] =
     6
 },
 
-{
+{ // Used only by phial of floods
     ZAP_PRIMAL_WAVE,
-    "great wave of water",
+    "flood of elemental water",
     200,
     new calcdice_calculator<4, 14, 3, 5>,
     new tohit_calculator<10, 1, 25>,
@@ -1167,7 +1167,7 @@ static const zap_info zap_data[] =
     ZAP_CORROSIVE_BOLT,
     "bolt of acid",
     200,
-    new calcdice_calculator<1, 11, 3, 5>,
+    new calcdice_calculator<4, 11, 3, 5>,
     new tohit_calculator<10, 1, 25>,
     YELLOW,
     false,
@@ -1209,6 +1209,38 @@ static const zap_info zap_data[] =
     false,
     false,
     6
+},
+
+{
+    ZAP_UNRAVELLING,
+    "unravelling",
+    200,
+    nullptr,
+    new tohit_calculator<0, 1, 1>,
+    ETC_MUTAGENIC,
+    true,
+    BEAM_UNRAVELLING,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    false,
+    0 // dubious
+},
+
+{
+    ZAP_ICEBLAST,
+    "iceblast",
+    200,
+    new calcdice_calculator<3, 10, 1, 2>,
+    new tohit_calculator<40>,
+    WHITE,
+    false,
+    BEAM_ICE,
+    DCHAR_FIRED_MISSILE,
+    false,
+    false,
+    true,
+    0 // Noise comes from explosion
 },
 
 };

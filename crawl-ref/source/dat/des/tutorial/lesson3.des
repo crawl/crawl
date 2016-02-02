@@ -19,6 +19,20 @@ function tutorial3.win()
     crawl.mark_game_won()
     return tutorial3.exit()
 end
+
+function callback.tutorial_trap(data, triggerable, triggerer, marker, ev)
+  crawl.mpr("You hear a click...")
+
+  if data.triggered == true then
+    crawl.mpr("Nothing continues to happen.")
+    return
+  end
+
+  data.triggered = true
+  crawl.mpr("Luckily, nothing happens.")
+  return
+end
+
 }}
 
 NAME:    tutorial_lesson3
@@ -90,12 +104,19 @@ NAME:    tutorial_lesson3_level2
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson3
 PLACE:   D:2
 ORIENT:  encompass
-KFEAT:   ^ = known alarm trap
+KFEAT:   ^ = known pressure plate trap
+{{
+ local tm = TriggerableFunction:new{func="callback.tutorial_trap",
+              repeated=true,
+              data={triggered=false} }
+ tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
+ lua_marker('^', tm)
+}}
 KFEAT:   AB = .
 COLOUR:  ABdefghi = lightblue
 FTILE:   ABdefghi = tutorial_pad
 RTILE:   c = wall_vines
-ITEM:    potion of cancellation q:1 ident:all
+ITEM:    potion of curing q:1
 ITEM:    cloak unrand:ratskin_cloak
 ITEM:    wand of flame charges:9 ident:all
 ITEM:    wand of digging charges:15 ident:all

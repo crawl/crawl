@@ -97,11 +97,8 @@ public:
     {
         return weapon(0);
     }
-    virtual random_var attack_delay(const item_def *weapon,
-                                    const item_def *projectile = nullptr,
-                                    bool random = true, bool scaled = true,
-                                    bool shield = true)
-                                   const = 0;
+    virtual random_var attack_delay(const item_def *projectile = nullptr,
+                                    bool rescale = true) const = 0;
     virtual int has_claws(bool allow_tran = true) const = 0;
     virtual item_def *shield() const = 0;
     virtual item_def *slot_item(equipment_type eq,
@@ -204,8 +201,9 @@ public:
                       string aux = "",
                       bool cleanup_dead = true,
                       bool attacker_effects = true) = 0;
-    virtual bool heal(int amount, bool max_too = false) = 0;
-    virtual void banish(actor *agent, const string &who = "") = 0;
+    virtual bool heal(int amount) = 0;
+    virtual void banish(actor *agent, const string &who = "",
+                        const int power = 0, bool force = false) = 0;
     virtual void blink() = 0;
     virtual void teleport(bool right_now = false,
                           bool wizard_tele = false) = 0;
@@ -317,9 +315,13 @@ public:
     virtual bool angry(bool calc_unid = true, bool items = true) const;
     virtual bool clarity(bool calc_unid = true, bool items = true) const;
     virtual bool faith(bool calc_unid = true, bool items = true) const;
-    virtual bool warding(bool calc_unid = true, bool items = true) const;
+    virtual bool dismissal(bool calc_unid = true, bool items = true) const;
     virtual int archmagi(bool calc_unid = true, bool items = true) const;
+    virtual int spec_evoke(bool calc_unid = true, bool items = true) const;
+    virtual int spec_invoc(bool calc_unid = true, bool items = true) const;
     virtual bool no_cast(bool calc_unid = true, bool items = true) const;
+    virtual bool reflection(bool calc_unid = true, bool items = true) const;
+    virtual bool extra_harm(bool calc_unid = true, bool items = true) const;
 
     virtual bool rmut_from_item(bool calc_unid = true) const;
     virtual bool evokable_berserk(bool calc_unid = true) const;
@@ -426,8 +428,9 @@ public:
     void stop_constricting_all(bool intentional = false, bool quiet = false);
     void stop_being_constricted(bool quiet = false);
 
-    bool can_constrict(actor* defender);
+    bool can_constrict(const actor* defender) const;
     void clear_far_constrictions();
+    void clear_constrictions_far_from(const coord_def &where);
     void accum_has_constricted();
     void handle_constriction();
     bool is_constricted() const;

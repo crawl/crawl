@@ -309,7 +309,7 @@ It is said that the Orb of Zot exists deep within this dungeon, but nobody has e
 %%%%
 welcome_spam Halloween
 
-They say the Orb is deep down, but nobody ever got it. Be careful! Halloween tonight.
+@welcome_spam@ Be careful! Halloween tonight.
 
 The monsters here aren't big trick-or-treat fans. If they won't give you the Orb of Zot, you'll have to take it.
 

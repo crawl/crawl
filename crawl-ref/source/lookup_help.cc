@@ -364,7 +364,7 @@ static vector<string> _get_skill_keys()
 
 static bool _monster_filter(string key, string body)
 {
-    monster_type mon_num = get_monster_by_name(key.c_str());
+    monster_type mon_num = get_monster_by_name(key);
     return mons_class_flag(mon_num, M_CANT_SPAWN)
            || mons_is_tentacle_segment(mon_num);
 }
@@ -434,6 +434,23 @@ static void _recap_mon_keys(vector<string> &keys)
     {
         monster_type type = get_monster_by_name(keys[i]);
         keys[i] = mons_type_name(type, DESC_PLAIN);
+    }
+}
+
+/**
+ * Fixup spell names. (Correcting capitalization, mainly.)
+ *
+ * @param[in,out] keys      A lowercased list of spell names.
+ */
+static void _recap_spell_keys(vector<string> &keys)
+{
+    for (unsigned int i = 0, size = keys.size(); i < size; i++)
+    {
+        // first, strip " spell"
+        const string key_name = keys[i].substr(0, keys[i].length() - 6);
+        // then get the real name
+        keys[i] = make_stringf("%s spell",
+                               spell_title(spell_by_name(key_name)));
     }
 }
 
@@ -1009,7 +1026,7 @@ static int _describe_cloud(const string &key, const string &suffix,
     const cloud_type cloud = cloud_name_to_type(cloud_name);
     ASSERT(cloud != NUM_CLOUD_TYPES);
 
-    const string extra_info = is_opaque_cloud_type(cloud) ?
+    const string extra_info = is_opaque_cloud(cloud) ?
         "\nThis cloud is opaque; one tile will not block vision, but "
         "multiple will."
         : "";
@@ -1048,14 +1065,6 @@ static int _describe_item(const string &key, const string &suffix,
                            string footer)
 {
     item_def item;
-    // spellbooks/rods are interactive & so require special handling
-    if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS)
-        || get_item_by_name(&item, key.c_str(), OBJ_RODS))
-    {
-        item_colour(item);
-        return _describe_spell_item(item);
-    }
-
     string stats;
     if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS)
         || get_item_by_name(&item, key.c_str(), OBJ_ARMOUR)
@@ -1064,6 +1073,13 @@ static int _describe_item(const string &key, const string &suffix,
     {
         // don't request description since _describe_key handles that
         stats = get_item_description(item, true, false, true);
+    }
+    // spellbooks/rods are interactive & so require special handling
+    else if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS)
+        || get_item_by_name(&item, key.c_str(), OBJ_RODS))
+    {
+        item_colour(item);
+        return _describe_spell_item(item);
     }
 
     return _describe_key(key, suffix, footer, stats);
@@ -1228,7 +1244,7 @@ static const vector<LookupType> lookup_types = {
                _get_monster_keys, nullptr, nullptr,
                _describe_monster,
                lookup_type::SUPPORT_TILES | lookup_type::TOGGLEABLE_SORT),
-    LookupType('S', "spell", nullptr, _spell_filter,
+    LookupType('S', "spell", _recap_spell_keys, _spell_filter,
                nullptr, nullptr, _spell_menu_gen,
                _describe_spell,
                lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),

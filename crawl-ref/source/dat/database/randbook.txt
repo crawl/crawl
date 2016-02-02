@@ -803,6 +803,7 @@ Gliding
 # potential previous owners of books
 # __NONE is parsed to the empty string
 # First, combinations.
+# (These MUST be in alphabetical order; "Earth Conjurations owner" won't work!)
 highlevel Conjuration Earth owner
 
 Dispater

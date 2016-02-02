@@ -16,31 +16,31 @@ function base_monster_setup(e)
            giant eyeball / hound / iguana / ogre / orc wizard band /\
            phantom / scorpion / skeleton / gnoll sergeant band /\
            centaur / jelly / water moccasin / ice beast / crimson imp /\
-           necrophage / quasit / zombie / sky beast / deep elf fighter /\
+           necrophage / quasit / zombie / sky beast / deep elf mage /\
            giant frog / mummy / orc warrior band / wight band /\
            hungry ghost / big kobold band /\
-           brain worm / warg / wolf / porcupine / black bear /\
+           warg / wolf / porcupine / black bear /\
            river rat / flying skull / iron imp /\
            white imp / ufetubus / fire bat")
   e.kmons("B = steam dragon / crocodile / hippogriff /\
            killer bee band / wasp / eye of draining / manticore /\
            wyvern / troll / two-headed ogre / yak band /\
            hill giant / komodo dragon / wraith / soldier ant / unseen horror /\
-           trapdoor spider / basilisk / cyclops band / efreet /\
+           basilisk / cyclops band / efreet /\
            mottled dragon / blink frog band / vampire mosquito band /\
            griffon / gargoyle / molten gargoyle /\
            kobold demonologist band / deep troll /\
-           deep elf fighter band / boulder beetle / hornet /\
+           deep elf mage / boulder beetle / hornet /\
            orc high priest band w:5 / orc sorcerer band w:5 / orc knight band /\
            flayed ghost / freezing wraith / shadow wraith / shadow /\
-           redback / phantasmal warrior / spiny frog / hell rat /\
+           redback w:20 / phantasmal warrior / spiny frog / hell rat /\
            black mamba / fire drake / hydra w:5 / polar bear / lindwurm /\
            elephant / death yak / wolf band / sheep band /\
            swamp drake / bog body / giant leech / swamp dragon w:3 /\
            merfolk band w:5 / siren w:3 / sea snake / snapping turtle /\
            tarantella / jumping spider / demonic crawler /\
            small abomination / guardian mummy / spriggan /\
-           orange demon / hellwing / smoke demon / ynoxinul / blue devil /\
+           orange demon / hellwing / smoke demon / ynoxinul / ice devil /\
            red devil / centaur band")
   e.kmons("C = eye of devastation / hydra / skeletal warrior band w:5 /\
            catoblepas / vampire / wandering mushroom /\
@@ -49,11 +49,11 @@ function base_monster_setup(e)
            simulacrum / ogre mage band w:5 /\
            wolf spider / yaktaur / air elemental / fire elemental /\
            water elemental / earth elemental / deep elf knight band w:5 /\
-           deep elf mage band w:3 / deep elf summoner band w:3 /\
+           deep elf mage band w:6 /\
            great orb of eyes / naga mage band w:5 / naga warrior band w:5 /\
            necromancer band w:5 / orc knight band w:5 /\
            harpy band w:5 / fire crab / redback band /\
-           wind drake / deep elf priest band w:3 / shapeshifter / zombie /\
+           wind drake / deep elf mage w:3 / shapeshifter / zombie /\
            skeleton / death knight / eidolon / elephant band w:5 /\
            death yak band w:5 / insubstantial wisp band w:5 / swamp dragon /\
            merfolk avatar / alligator snapping turtle / anaconda / greater naga /\
@@ -101,8 +101,7 @@ function base_monster_setup(e)
            bat / kobold / rat / giant gecko / gnoll /\
            hobgoblin / jackal band /  adder / quokka /\
            orc / worker ant / giant eyeball / skeleton /\
-           zombie / brain worm /\
-           river rat / ufetubus")
+           zombie / river rat / ufetubus")
   e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
            Edmund / Ijyb / Grinder / Pikel band / Purgy / Terence / Menkaure /\
            Prince Ribbit")
@@ -115,12 +114,12 @@ function base_monster_setup(e)
            Dissolution / Xtahua / the Lernaean hydra / Jory / Mennas / Mara")
   e.kmons("L = Khufu band / Tiamat band / Murray / Mnoleg / Gloorx Vloq /\
            Lom Lobon / Cerebov w:5 / Dispater / Asmodeus / Antaeus /\
-           Ereshkigal / Ignacio / Geryon / the royal jelly /\
+           Ereshkigal / Ignacio / Geryon / the Royal Jelly /\
            the Serpent of Hell")
   e.kmons("M = stone giant / hill giant / cyclops / frost giant /\
            fire giant / ettin / deep troll / iron troll")
   e.kmons("N = stone giant / titan / frost giant / fire giant / ettin")
-  e.kmons("O = deep elf mage / deep elf summoner / deep elf conjurer /\
+  e.kmons("O = deep elf mage w:30 /\
            deep elf annihilator / deep elf knight band / deep elf death mage /\
            deep elf high priest / deep elf knight / deep elf sorcerer /\
            deep elf demonologist /\
@@ -134,8 +133,8 @@ function base_monster_setup(e)
   e.kmons("R = greater mummy w:3 / mummy priest / lich / ancient lich /\
            ghoul band / skeletal warrior band / vampire knight /\
            vampire mage band")
-  e.kmons("S = orange demon / hellwing / smoke demon / ynoxinul / blue devil /\
-           red devil / sixfirhy / chaos spawn / ice devil / sun demon /\
+  e.kmons("S = orange demon / hellwing / smoke demon / ynoxinul /\
+           red devil / sixfirhy / chaos spawn / ice devil w:20 / sun demon /\
            rust devil / neqoxec band / green death w:5 / blizzard demon w:5 /\
            balrug w:5 / cacodemon w:5 / hell beast / reaper w:5 / soul eater /\
            lorocyproca")
@@ -370,7 +369,6 @@ function steel_vault_setup(e)
   e.kitem("b = any armour randart level:17 ident:all")
   e.kitem("c = ring of slaying plus:3 ident:all not_cursed /\
           amulet of regeneration ident:all not_cursed /\
-          ring of invisibility ident:all not_cursed /\
           ring of protection plus:6 ident:all not_cursed /\
           ring of evasion plus:6 ident:all not_cursed /\
           ring of strength plus:6 ident:all not_cursed /\
@@ -486,12 +484,11 @@ function coven_setup(e)
   e.kitem("a = any book good_item ident:all")
   e.kitem("b = amulet of faith randart not_cursed ident:all /\
           amulet of guardian spirit randart not_cursed ident:all /\
-          amulet of resist corrosion randart not_cursed ident:all /\
-          amulet of resist mutation randart not_cursed ident:all /\
+          amulet of magic regeneration randart not_cursed ident:all /\
           amulet of rage randart not_cursed ident:all /\
-          amulet of stasis randart not_cursed ident:all /\
+          amulet of reflection randart not_cursed ident:all /\
           amulet of the gourmand randart not_cursed ident:all /\
-          amulet of warding randart not_cursed ident:all /\
+          amulet of dismissal randart not_cursed ident:all /\
           amulet of regeneration randart ident:all not_cursed /\
           ring of slaying plus:5 randart ident:all not_cursed /\
           any jewellery randart level:27 not_cursed ident:all w:40")
@@ -1001,13 +998,14 @@ KFEAT:   s = altar_dithmenos
 KFEAT:   t = altar_gozag
 KFEAT:   u = altar_qazlal
 KFEAT:   v = altar_ru
+KFEAT:   w = altar_pakellas
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 MAP
 hopnlfjida
 gqrmksvebc
-.
+w
 u
 t
 ENDMAP

@@ -17,6 +17,7 @@
 #include "english.h"
 #include "env.h"
 #include "food.h"
+#include "godwrath.h"
 #include "item_use.h"
 #include "itemprop.h"
 #include "mapmark.h"
@@ -351,7 +352,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
 {
     ASSERT(!did_msg);
 
-    if (target->is_monster() && !mons_near(target->as_monster()))
+    if (!you.see_cell(target->pos()))
         return;
 
     did_msg = true;
@@ -546,12 +547,16 @@ bool MiscastEffect::_sleep(int dur)
 
 bool MiscastEffect::_send_to_abyss()
 {
-    if ((player_in_branch(BRANCH_ABYSS) && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
+    // The Abyss depth check is duplicated here (and the banishment forced if
+    // successful), in order to degrade to Malign Gateway in the Abyss instead
+    // of doing nothing.
+    if ((player_in_branch(BRANCH_ABYSS)
+         && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
         || special_source == HELL_EFFECT_MISCAST)
     {
-        return _malign_gateway(); // attempt to degrade to malign gateway
+        return _malign_gateway();
     }
-    target->banish(act_source, cause);
+    target->banish(act_source, cause, target->get_experience_level(), true);
     return true;
 }
 
@@ -626,7 +631,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
     if (cause.empty())
         cause = get_default_cause(true);
     mgen_data data = mgen_data::hostile_at(what, cause, alert,
-                                           abj_deg, 0, target->pos(), 0, god);
+                                           abj_deg, 0, target->pos(), MG_NONE, god);
 
     if (special_source != HELL_EFFECT_MISCAST)
         data.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
@@ -1157,7 +1162,7 @@ void MiscastEffect::_charms(int severity)
                 }
                 else if (target->is_monster())
                 {
-                    debuff_monster(target->as_monster());
+                    debuff_monster(*target->as_monster());
                     enchant_actor_with_flavour(target->as_monster(), nullptr,
                                                BEAM_DRAIN_MAGIC, 50 + random2avg(51, 2));
                 }
@@ -1630,7 +1635,7 @@ void MiscastEffect::_divination_you(int severity)
                     )
             {
                 drain_mp(3 + random2(10));
-                mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
+                canned_msg(MSG_MAGIC_DRAIN);
             }
             break;
         }
@@ -1650,7 +1655,7 @@ void MiscastEffect::_divination_you(int severity)
                     )
             {
                 drain_mp(5 + random2(20));
-                mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
+                canned_msg(MSG_MAGIC_DRAIN);
             }
             break;
         case 1:
@@ -1914,7 +1919,7 @@ void MiscastEffect::_necromancy(int severity)
         switch (random2(target->is_player() ? 6 : 5))
         {
         case 0:
-            if (target->holiness() == MH_UNDEAD)
+            if (target->holiness() & MH_UNDEAD)
             {
                 you_msg      = "Something just walked over your grave. No, "
                                "really!";
@@ -3234,32 +3239,13 @@ void MiscastEffect::_zot()
             if (you.magic_points > 0)
             {
                 dec_mp(10 + random2(21));
-                mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
+                canned_msg(MSG_MAGIC_DRAIN);
             }
             break;
         case 10:
-        {
-            vector<string> wands;
-            for (auto &wand : you.inv)
-            {
-                if (!wand.defined() || wand.base_type != OBJ_WANDS)
-                    continue;
-
-                const int charges = wand.plus;
-                if (charges > 0 && coinflip())
-                {
-                    const int charge_val = wand_charge_value(wand.sub_type);
-                    wand.plus -= min(1 + random2(charge_val), charges);
-                    // Display new number of charges when messaging.
-                    wands.push_back(wand.name(DESC_PLAIN));
-                }
-            }
-            if (!wands.empty())
-                mpr_comma_separated_list("Magical energy is drained from your ", wands);
-            else
+            if (!drain_wands())
                 do_msg(); // For canned_msg(MSG_NOTHING_HAPPENS)
             break;
-        }
         case 11:
             lose_stat(STAT_RANDOM, 1 + random2avg((coinflip() ? 7 : 4), 2));
             break;

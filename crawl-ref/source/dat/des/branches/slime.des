@@ -664,7 +664,7 @@ NAME:    slime_pit
 PLACE:   Slime:$
 ORIENT:  encompass
 TAGS:    no_rotate no_dump
-MONS:    the royal jelly
+MONS:    the Royal Jelly
 MONS:    acid blob
 MONS:    great orb of eyes / nothing
 SUBST:   ' : ' .:1,  ' : ' x:1,  ' = .x
@@ -679,7 +679,7 @@ KITEM:   * = star_item
 SHUFFLE: ([{
 
 {{
--- Attach function to the royal jelly itself. This will follow it wherever
+-- Attach function to the Royal Jelly itself. This will follow it wherever
 -- it goes, even through polymorphs, and set dgn.persist.royal_jelly_dead
 -- when it dies through means other than being banished.
 local function monster_die(monster, killer_type, killer_index, silent, wizard)

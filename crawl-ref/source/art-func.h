@@ -23,7 +23,6 @@
 #include "beam.h"          // For Lajatang of Order's silver damage
 #include "cloud.h"         // For storm bow's and robe of clouds' rain
 #include "english.h"       // For apostrophise
-#include "env.h"           // For storm bow env.cgrid
 #include "fight.h"
 #include "food.h"          // For evokes
 #include "ghost.h"         // For is_dragonkind ghost_demon datas
@@ -42,6 +41,8 @@
 
 // prop recording whether the singing sword has said hello yet
 #define SS_WELCOME_KEY "ss_welcome"
+// similarly, for the majin-bo
+#define MB_WELCOME_KEY "mb_welcome"
 
 /*******************
  * Helper functions.
@@ -214,7 +215,7 @@ static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
     *did_work = true;
     int power = you.skill(SK_EVOCATIONS, 8);
 
-    if (your_spells(SPELL_HELLFIRE, power, false) == SPRET_ABORT)
+    if (your_spells(SPELL_HELLFIRE, power, false, false, true) == SPRET_ABORT)
     {
         *unevokable = true;
         return false;
@@ -281,14 +282,15 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
     int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
 
     // Allow aborting (for example if friendlies are nearby).
-    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false) == SPRET_ABORT)
+    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power,
+                    false, false, true) == SPRET_ABORT)
     {
         *unevokable = true;
         return false;
     }
 
     if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2000))
-        your_spells(SPELL_VENOM_BOLT, power, false);
+        your_spells(SPELL_VENOM_BOLT, power, false, false, true);
 
     dec_mp(4);
     make_hungry(50, false, true);
@@ -480,6 +482,7 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
     if (one_chance_in(4))
     {
         _wucad_miscast(&you, random2(9), random2(70));
+        did_god_conduct(DID_CHANNEL, 10, true);
         return false;
     }
 
@@ -490,6 +493,8 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
 
     *pract    = 1;
     *did_work = true;
+
+    did_god_conduct(DID_CHANNEL, 10, true);
 
     return false;
 }
@@ -561,7 +566,7 @@ static void _STORM_BOW_world_reacts(item_def *item)
         return;
 
     for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID); ri; ++ri)
-        if (!cell_is_solid(*ri) && env.cgrid(*ri) == EMPTY_CLOUD && one_chance_in(5))
+        if (!cell_is_solid(*ri) && !cloud_at(*ri) && one_chance_in(5))
             place_cloud(CLOUD_RAIN, *ri, random2(20), &you, 3);
 }
 
@@ -592,11 +597,8 @@ static void _RCLOUDS_world_reacts(item_def *item)
         cloud = CLOUD_MIST;
 
     for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID); ri; ++ri)
-        if (!cell_is_solid(*ri) && env.cgrid(*ri) == EMPTY_CLOUD
-                && one_chance_in(20))
-        {
+        if (!cell_is_solid(*ri) && !cloud_at(*ri) && one_chance_in(20))
             place_cloud(cloud, *ri, random2(10), &you, 1);
-        }
 }
 
 static void _RCLOUDS_equip(item_def *item, bool *show_msgs, bool unmeld)
@@ -633,7 +635,7 @@ static monster* _find_nearest_possible_beholder()
         monster *mon = monster_at(*di);
         if (mon && you.can_see(*mon)
             && you.possible_beholder(mon)
-            && !mons_class_flag(mon->type, M_NO_EXP_GAIN))
+            && mons_is_threatening(mon))
         {
             return mon;
         }
@@ -781,7 +783,7 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
 static void _UNDEADHUNTER_melee_effects(item_def* item, actor* attacker,
                                         actor* defender, bool mondied, int dam)
 {
-    if (defender->holiness() == MH_UNDEAD && !one_chance_in(3)
+    if (defender->holiness() & MH_UNDEAD && !one_chance_in(3)
         && !mondied && dam)
     {
         mprf("%s %s blasted by disruptive energy!",
@@ -1211,8 +1213,19 @@ static void _FLAMING_DEATH_melee_effects(item_def* weapon, actor* attacker,
 
 static void _MAJIN_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    if (you.max_magic_points)
-        _equip_mpr(show_msgs, "You feel a darkness envelop your magic.");
+    if (!you.max_magic_points)
+        return;
+
+    const bool should_msg = !show_msgs || *show_msgs;
+    _equip_mpr(show_msgs, "You feel a darkness envelop your magic.");
+
+    if (!item->props.exists(MB_WELCOME_KEY) && should_msg)
+    {
+        const string msg = "A voice whispers, \"" +
+                           getSpeakString("majin-bo greeting") + "\"";
+        mprf(MSGCH_TALK, "%s", msg.c_str());
+        item->props[MB_WELCOME_KEY].get_bool() = true;
+    }
 }
 
 static void _MAJIN_unequip(item_def *item, bool *show_msgs)
@@ -1302,7 +1315,7 @@ static void _ETHERIC_CAGE_world_reacts(item_def *item)
     ASSERT(delay > 0);
 
     // coinflip() chance of 1 MP per turn.
-    if (!(you.spirit_shield() && you.species == SP_DEEP_DWARF))
+    if (player_regenerates_mp())
         inc_mp(binomial(div_rand_round(delay, BASELINE_DELAY), 1, 2));
     // It's more interesting to get a lump of contamination then to just add a
     // small amount every turn, plus there's a small chance of rapid buildup.
@@ -1361,6 +1374,21 @@ static void _KRYIAS_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _KRYIAS_unequip(item_def *item, bool *show_msgs)
 {
         _equip_mpr(show_msgs, "Your attunement to healing devices decreases.");
+}
+
+///////////////////////////////////////////////////
+
+static void _FROSTBITE_melee_effects(item_def* weapon, actor* attacker,
+                                    actor* defender, bool mondied, int dam)
+{
+    coord_def spot = defender->pos();
+    if (!mondied
+        && !cell_is_solid(spot)
+        && !cloud_at(spot)
+        && one_chance_in(5))
+    {
+         place_cloud(CLOUD_COLD, spot, random_range(3, 5), attacker, 0);
+    }
 }
 
 ///////////////////////////////////////////////////

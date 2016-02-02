@@ -931,9 +931,7 @@ ENDMAP
 NAME:   kiku_gazebo_garden_becter
 TAGS:   temple_overflow_1 temple_overflow_kikubaaqudgha transparent
 DEPTH:  D:2-9
-KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective               \
-            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
-            name_adjective tile:mons_withered_plant
+KMONS:  f = withered plant
 KFEAT:  _ = altar_kikubaaqudgha
 SUBST:  ` = f....
 COLOUR: c = magenta
@@ -1477,6 +1475,180 @@ MAP
 ......www.G.v
  .....w1w...v
       vvvvvvv
+ENDMAP
+
+### Pakellas overflow altars ###################################################
+NAME:   grunt_pakellas_salt
+DEPTH:  D:2-
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
+TAGS:   temple_overflow_pakellas uniq_altar_pakellas no_rotate no_hmirror
+TAGS:   no_vmirror
+KFEAT:  _ = altar_pakellas
+SUBST:  c : cvb
+: interest_check(_G)
+MAP
+  .....
+ ..ccc..
+..c...c..
+.ccc_ccc.
+..c...c..
+ ..ccc..
+  .....
+ENDMAP
+
+NAME:   grunt_pakellas_sulfur
+DEPTH:  D:2-
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
+TAGS:   temple_overflow_pakellas uniq_altar_pakellas no_rotate no_hmirror
+TAGS:   no_vmirror
+KFEAT:  _ = altar_pakellas
+SUBST:  c : cvb
+: interest_check(_G)
+MAP
+     ...
+    ..c..
+   ..c.c..
+  ..c...c..
+ ..c.._..c..
+..c.......c..
+.ccccccccccc.
+......l......
+   ...l...
+   .lllll.
+   ...l...
+     .l.
+     ...
+ENDMAP
+
+NAME:   grunt_pakellas_mercury
+DEPTH:  D:2-
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
+TAGS:   temple_overflow_pakellas uniq_altar_pakellas no_rotate no_hmirror
+TAGS:   no_vmirror
+KFEAT:  _ = altar_pakellas
+SUBST:  c : cvb
+: interest_check(_G)
+MAP
+ .....
+.c...c.
+.c...c.
+..ccc..
+.c...c.
+.c._.c.
+.c...c.
+..ccc..
+ ..c..
+ .ccc.
+ ..c..
+  ...
+ENDMAP
+
+NAME:   grunt_pakellas_basics
+DEPTH:  D:2-
+WEIGHT: 20
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
+TAGS:   no_rotate no_hmirror temple_overflow_pakellas uniq_altar_pakellas
+KFEAT:  _ = altar_pakellas
+SUBST:  d : c.
+SUBST:  c : cvb
+: interest_check(_G)
+MAP
+     ...
+    ..c..
+ ....c.c....
+..ddcdddcdd..
+ ..c.._..c..
+..c.......c..
+.ccccccccccc.
+.............
+ENDMAP
+
+# high evo !apt band takes down filthy low evo !apt brute
+# 25% chance of live kobold with wand; otherwise empty wand
+# 12.5% chance of troll corpse (early troll hide)
+NAME:    johnstein_pakellas_death_squad
+DEPTH:   D:3-
+TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
+KFEAT:   _ = altar_pakellas
+KPROP:   cvb' = bloody / nothing w:80
+NSUBST:  ' = 2:g / 1:G / 1:h / *:.
+SHUFFLE: cvb
+: interest_check(_G)
+{{
+  local  mon = crawl.random_element({
+    ['kobold']   = 1,
+    ['spriggan'] = 1,
+  })
+  local corpse = mon .. ' corpse'
+  local wands   = 'wand of flame charges:0 ident:pluses / ' ..
+                  'wand of confusion charges:0 ident:pluses / ' ..
+                  'wand of slowing charges:0 ident:pluses '
+
+  if (mon == 'kobold' and crawl.coinflip()) then
+    kmons("G = kobold; wand of flame | wand of confusion | wand of slowing")
+    dgn.delayed_decay_extra(_G, 'h', 'troll corpse / ogre corpse' )
+  else
+    dgn.delayed_decay_extra(_G, 'G', corpse, wands )
+    dgn.delayed_decay_extra(_G, 'h', 'ogre corpse' )
+  end
+
+  dgn.delayed_decay_extra(_G, 'g', corpse )
+}}
+: interest_check(_G)
+MAP
+.........
+.ccc+ccc.
+.c'''''c.
+.c'''''c.
+.+''_''+.
+.c'''''c.
+.c'''''c.
+.ccc+ccc.
+.........
+ENDMAP
+
+# dig wand with a single charge that could be used to get to P's altar
+NAME:    johnstein_pakellas_dig
+DEPTH:   D:2-
+TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
+KFEAT:   _ = altar_pakellas
+KITEM:   ' = wand of digging ident:all charges:1 / \
+             wand of disintegration ident:all charges:1 w:2
+: interest_check(_G)
+MAP
+.......
+.xxxxx.
+.xcccx.
+.xc_cx.
+.xcmcx.
+.x.'.x.
+.x...x.
+.xx+xx.
+.......
+ENDMAP
+
+# P altar with gadget shop
+# 90% basic wands (frost, confusion, slowing). ~150 to 250 gold
+# 10% any wand and will be expensive
+NAME:    johnstein_pakellas_shop
+DEPTH:   D:2-
+TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
+KFEAT:   _ = altar_pakellas
+KFEAT:   S = gadget shop name:Pakellas type:Prime suffix:Provisions \
+             greed:30 count:3 ;\
+             wand of flame charges:15 w:30 |\
+             wand of confusion charges:15 w:30 |\
+             wand of slowing charges:15 w:30 |\
+             any wand
+: interest_check(_G)
+MAP
+ .......
+.mxxxxxm.
+.xx.S.xx.
+.x.._..x.
+.xx...xx.
+ .xx+xx.
+ .......
 ENDMAP
 
 ### Qazlal overflow altars ####################################################
@@ -2111,9 +2283,9 @@ TAGS:  uniq_altar_vehumet temple_overflow_1 temple_overflow_vehumet
 TAGS:  transparent patrolling
 DEPTH: D:3-9
 KFEAT: _ = altar_vehumet
-MONS:  goblin; wand of flame | wand of frost | wand of magic darts /\
-       hobgoblin; wand of flame | wand of frost | wand of magic darts /\
-       kobold; wand of flame | wand of frost | wand of magic darts
+MONS:  goblin; wand of flame /\
+       hobgoblin; wand of flame /\
+       kobold; wand of flame
 MAP
 .......
 ...x...
@@ -2279,9 +2451,7 @@ TAGS:   uniq_altar_yredelemnul temple_overflow_1 temple_overflow_yredelemnul
 TAGS:   transparent decor
 DEPTH:  D:2-
 KFEAT:  C = altar_yredelemnul
-KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective               \
-            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
-            name_adjective tile:mons_withered_plant
+KMONS:  f = withered plant
 : interest_check(_G)
 MAP
 .....
@@ -2746,8 +2916,7 @@ TAGS:  transparent
 KFEAT: A = altar_fedhas
 KFEAT: B = altar_kikubaaqudgha
 MONS:  plant / nothing
-MONS:  plant col:lightgrey name:withered n_adj tile:mons_withered_plant / \
-       nothing
+MONS:  withered plant / nothing
 MAP
 xxxxx
 x111xx@@
@@ -2801,9 +2970,7 @@ TAGS:  temple_overflow_2 temple_overflow_makhleb temple_overflow_vehumet
 DEPTH: D:3-9
 KFEAT: A = altar_makhleb
 KFEAT: B = altar_vehumet
-MONS:  crimson imp ; wand of magic darts charges:1 | \
-                     wand of flame charges:1 | \
-                     wand of frost charges:1
+MONS:  crimson imp ; wand of flame charges:1
 MAP
  xxxxx
 xxA.Bxx

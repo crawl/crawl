@@ -70,7 +70,7 @@ static const char *conducts[] =
     "Souled Friend Died", "Attack In Sanctuary",
     "Kill Artificial", "Destroy Spellbook",
     "Exploration", "Desecrate Holy Remains", "Seen Monster",
-    "Fire", "Kill Fiery", "Sacrificed Love"
+    "Fire", "Kill Fiery", "Sacrificed Love", "Channel",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -268,7 +268,7 @@ static const dislike_response ELY_FRIEND_DEATH_RESPONSE = {
         // For everyone but Fedhas, plants are items not creatures,
         // and animated items are, well, items as well.
         return victim && !mons_is_object(victim->type)
-                      && victim->holiness() != MH_PLANT
+                      && !(victim->holiness() & MH_PLANT)
         // Converted allies (marked as TSOites) can be martyrs.
                       && victim->god == GOD_SHINING_ONE;
     }
@@ -459,6 +459,12 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_RU,
     peeve_map(),
+    // GOD_PAKELLAS
+    {
+        { DID_CHANNEL, {
+            1, 1,
+        } },
+    },
 };
 
 
@@ -538,21 +544,16 @@ struct like_response
  */
 static int _piety_bonus_for_holiness(mon_holy_type holiness)
 {
-    switch (holiness)
-    {
-        case MH_NATURAL:
-        case MH_PLANT:
-            return -6;
-        case MH_UNDEAD:
-            return -5;
-        case MH_DEMONIC:
-            return -4;
-        case MH_HOLY:
-        case MH_NONLIVING: // hi, yred
-            return -3;
-        default:
-            die("unknown holiness type; can't give a bonus");
-    }
+    if (holiness & (MH_NATURAL | MH_PLANT))
+        return -6;
+    else if (holiness & MH_UNDEAD)
+        return -5;
+    else if (holiness & MH_DEMONIC)
+        return -4;
+    else if (holiness & (MH_HOLY | MH_NONLIVING)) // hi, yred
+        return -3;
+    else
+        die("unknown holiness type; can't give a bonus");
 }
 
 /**
@@ -844,6 +845,20 @@ static like_map divine_likes[] =
                     you.props[RU_SACRIFICE_PROGRESS_KEY].get_int()++;
             }
         } },
+    },
+    // GOD_PAKELLAS,
+    {
+        { DID_KILL_LIVING, _on_kill(MH_NATURAL, false,
+                                  [](int &piety, int &denom,
+                                     const monster* victim)
+            {
+                piety *= 4;
+                denom *= 3;
+            }
+        ) },
+        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
     },
 };
 

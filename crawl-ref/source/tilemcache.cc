@@ -300,6 +300,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     switch (mon_tile)
     {
     // No shift necessary.
+    case TILEP_MONS_DEEP_ELF_ARCHER:
     case TILEP_MONS_DEEP_ELF_MASTER_ARCHER:
     case TILEP_MONS_DEEP_ELF_BLADEMASTER:
     case TILEP_MONS_CRIMSON_IMP:
@@ -321,7 +322,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_KOBOLD:
     case TILEP_MONS_OCTOPODE:
     case TILEP_MONS_ZOMBIE_OCTOPODE:
-    case TILEP_MONS_NAGA_RITUALIST:
     case TILEP_MONS_ANUBIS_GUARD:
         *ofs_x = 0;
         *ofs_y = 0;
@@ -335,8 +335,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_DEATH_MAGE:
     case TILEP_MONS_SPRIGGAN_DEFENDER:
     case TILEP_MONS_SPRIGGAN_BERSERKER:
-    case TILEP_MONS_MERFOLK:
-    case TILEP_MONS_MERFOLK_JAVELINEER:
         *ofs_x = -1;
         *ofs_y = 0;
         break;
@@ -351,7 +349,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_TIAMAT_6:
     case TILEP_MONS_TIAMAT_7:
     case TILEP_MONS_TIAMAT_8:
-    case TILEP_MONS_MERFOLK_IMPALER:
     case TILEP_MONS_TENGU:
     case TILEP_MONS_TENGU_CONJURER:
     case TILEP_MONS_TENGU_WARRIOR:
@@ -406,7 +403,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -1;
         break;
     case TILEP_MONS_SALAMANDER_MYSTIC:
-    case TILEP_MONS_SALAMANDER_FIREBRAND:
     case TILEP_MONS_SALAMANDER_STORMCALLER:
         *ofs_x = 0;
         *ofs_y = -2;
@@ -415,15 +411,18 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 0;
         *ofs_y = -3;
         break;
-    // Shift downwards.
-    case TILEP_MONS_DEEP_ELF_KNIGHT:
     case TILEP_MONS_NAGA:
-    case TILEP_MONS_GREATER_NAGA:
     case TILEP_MONS_NAGA_WARRIOR:
-    case TILEP_MONS_GUARDIAN_SERPENT:
     case TILEP_MONS_NAGA_MAGE:
+    case TILEP_MONS_NAGA_RITUALIST:
     case TILEP_MONS_NAGA_SHARPSHOOTER:
     case TILEP_MONS_VASHNIA:
+        *ofs_x = 0;
+        *ofs_y = -4;
+        break;
+    // Shift downwards.
+    case TILEP_MONS_DEEP_ELF_KNIGHT:
+    case TILEP_MONS_GUARDIAN_SERPENT:
     case TILEP_MONS_THE_ENCHANTRESS:
     case TILEP_MONS_DEEP_DWARF:
     case TILEP_MONS_RUST_DEVIL:
@@ -432,11 +431,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     case TILEP_MONS_BLORK_THE_ORC:
     case TILEP_MONS_BOGGART:
-    case TILEP_MONS_DEEP_ELF_FIGHTER:
     case TILEP_MONS_JORGRUN:
-    case TILEP_MONS_SIREN:
-    case TILEP_MONS_MERFOLK_AVATAR:
-    case TILEP_MONS_ILSUIW:
     case TILEP_MONS_DIMME:
     case TILEP_MONS_HALFLING:
         *ofs_x = 0;
@@ -444,14 +439,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     // Shift upwards and to the left.
     case TILEP_MONS_DEEP_ELF_MAGE:
-    case TILEP_MONS_DEEP_ELF_SUMMONER:
-    case TILEP_MONS_DEEP_ELF_CONJURER:
-    case TILEP_MONS_DEEP_ELF_PRIEST:
     case TILEP_MONS_DEEP_ELF_DEMONOLOGIST:
     case TILEP_MONS_DEEP_ELF_ANNIHILATOR:
     case TILEP_MONS_MINOTAUR:
     case TILEP_MONS_VAMPIRE:
-    case TILEP_MONS_MERFOLK_IMPALER_WATER:
         *ofs_x = -1;
         *ofs_y = -2;
         break;
@@ -480,7 +471,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -5;
         break;
     case TILEP_MONS_DEEP_ELF_ELEMENTALIST:
-    case TILEP_MONS_MERFOLK_AQUAMANCER:
     case TILEP_MONS_FORMICID:
         *ofs_x = -2;
         *ofs_y = -1;
@@ -489,11 +479,22 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -2;
         *ofs_y = -4;
         break;
+    case TILEP_MONS_GREATER_NAGA:
+        *ofs_x = -2;
+        *ofs_y = -5;
+        break;
     case TILEP_MONS_NIKOLA:
         *ofs_x = -4;
         *ofs_y = -3;
         break;
     case TILEP_MONS_ARACHNE_STAVELESS:
+    case TILEP_MONS_MERFOLK_WATER:
+    case TILEP_MONS_MERFOLK_AQUAMANCER_WATER:
+    case TILEP_MONS_MERFOLK_IMPALER_WATER:
+    case TILEP_MONS_MERFOLK_JAVELINEER_WATER:
+    case TILEP_MONS_SIREN_WATER:
+    case TILEP_MONS_MERFOLK_AVATAR_WATER:
+    case TILEP_MONS_ILSUIW_WATER:
         *ofs_x = -1;
         *ofs_y = -5;
         break;
@@ -509,9 +510,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_JESSICA:
     case TILEP_MONS_ANGEL:
     case TILEP_MONS_DAEVA:
-    case TILEP_MONS_MERFOLK_WATER:
-    case TILEP_MONS_MERFOLK_JAVELINEER_WATER:
-    case TILEP_MONS_MERFOLK_AQUAMANCER_WATER:
         *ofs_x = 1;
         *ofs_y = -1;
         break;
@@ -525,7 +523,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     case TILEP_MONS_MARGERY:
     case TILEP_MONS_FAUN:
-    case TILEP_MONS_OCTOPODE_CRUSHER:
         *ofs_x = 1;
         *ofs_y = -3;
         break;
@@ -548,6 +545,16 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_GHOST:
         *ofs_x = 3;
         *ofs_y = -4;
+        break;
+    case TILEP_MONS_MERFOLK:
+    case TILEP_MONS_MERFOLK_AQUAMANCER:
+    case TILEP_MONS_MERFOLK_IMPALER:
+    case TILEP_MONS_MERFOLK_JAVELINEER:
+    case TILEP_MONS_SIREN:
+    case TILEP_MONS_MERFOLK_AVATAR:
+    case TILEP_MONS_ILSUIW:
+        *ofs_x = 1;
+        *ofs_y = -5;
         break;
     case TILEP_MONS_FRANCES: // left-handed
         *ofs_x = 20;
@@ -575,6 +582,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_HILL_GIANT:
     case TILEP_MONS_FROST_GIANT:
     case TILEP_MONS_FIRE_GIANT:
+    case TILEP_MONS_IRON_GIANT:
         *ofs_x = -2;
         *ofs_y = 1;
         break;
@@ -735,15 +743,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -2;
         *ofs_y = -2;
         break;
-    case TILEP_MONS_ILSUIW_WATER:
-        *ofs_x = 3;
-        *ofs_y = 2;
-        break;
-    case TILEP_MONS_SIREN_WATER:
-    case TILEP_MONS_MERFOLK_AVATAR_WATER:
-        *ofs_x = 5;
-        *ofs_y = 2;
-        break;
     case TILEP_MONS_WRAITH:
         *ofs_x = -4;
         *ofs_y = -4;
@@ -788,12 +787,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_ORC_KNIGHT:
     case TILEP_MONS_ORC_WARLORD:
     case TILEP_MONS_KIRKE:
-    case TILEP_MONS_SIREN:
-    case TILEP_MONS_SIREN_WATER:
-    case TILEP_MONS_MERFOLK_AVATAR:
-    case TILEP_MONS_MERFOLK_AVATAR_WATER:
-    case TILEP_MONS_ILSUIW:
-    case TILEP_MONS_ILSUIW_WATER:
     case TILEP_MONS_DIMME:
         *ofs_x = 1;
         *ofs_y = 0;
@@ -817,7 +810,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_IRONBRAND_CONVOKER:
     case TILEP_MONS_IRONHEART_PRESERVER:
     case TILEP_MONS_VAULT_WARDEN:
-    case TILEP_MONS_DEEP_ELF_FIGHTER:
         *ofs_x = -2;
         *ofs_y = 1;
         break;
@@ -833,7 +825,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_FORMICID:
     case TILEP_MONS_VINE_STALKER:
     case TILEP_MONS_OCTOPODE:
-    case TILEP_MONS_OCTOPODE_CRUSHER:
     case TILEP_MONS_CHERUB:
     case TILEP_MONS_MENNAS:
         *ofs_x = 0;
@@ -857,9 +848,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_NAGA:
-    case TILEP_MONS_NAGA_MAGE:
-    case TILEP_MONS_NAGA_SHARPSHOOTER:
-    case TILEP_MONS_VASHNIA:
     case TILEP_MONS_NAGA_WARRIOR:
     case TILEP_MONS_GREATER_NAGA:
         *ofs_x = -3;
@@ -898,7 +886,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         *ofs_y = -1;
         break;
 
-    case TILEP_MONS_SALAMANDER_FIREBRAND:
     case TILEP_MONS_GNOLL_SERGEANT:
     case TILEP_MONS_FREDERICK:
         *ofs_x = 1;
@@ -913,6 +900,10 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_KOBOLD:
+        *ofs_x = 0;
+        *ofs_y = 3;
+        break;
+
     case TILEP_MONS_SONJA:
         *ofs_x = 3;
         *ofs_y = -10;
@@ -923,9 +914,27 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         *ofs_y = 0;
         break;
 
+    case TILEP_MONS_MERFOLK:
+    case TILEP_MONS_MERFOLK_AQUAMANCER:
+    case TILEP_MONS_MERFOLK_IMPALER:
+    case TILEP_MONS_MERFOLK_JAVELINEER:
+    case TILEP_MONS_SIREN:
+    case TILEP_MONS_MERFOLK_AVATAR:
+    case TILEP_MONS_ILSUIW:
     case TILEP_MONS_WRAITH:
-        *ofs_x = -4;
-        *ofs_y = -1;
+        *ofs_x = -3;
+        *ofs_y = -2;
+        break;
+
+    case TILEP_MONS_MERFOLK_WATER:
+    case TILEP_MONS_MERFOLK_AQUAMANCER_WATER:
+    case TILEP_MONS_MERFOLK_IMPALER_WATER:
+    case TILEP_MONS_MERFOLK_JAVELINEER_WATER:
+    case TILEP_MONS_SIREN_WATER:
+    case TILEP_MONS_MERFOLK_AVATAR_WATER:
+    case TILEP_MONS_ILSUIW_WATER:
+        *ofs_x = -5;
+        *ofs_y = -2;
         break;
 
     case TILEP_MONS_TROLL:
@@ -954,10 +963,8 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         *ofs_y = 5;
         break;
 
-    case TILEP_MONS_DEEP_ELF_SUMMONER:
     case TILEP_MONS_DEEP_ELF_DEMONOLOGIST:
     case TILEP_MONS_DEEP_ELF_MAGE:
-    case TILEP_MONS_DEEP_ELF_CONJURER:
         *ofs_x = 3;
         *ofs_y = -7;
         break;
@@ -1120,18 +1127,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_GHOST:
         *ofs_x = 2;
         *ofs_y = -2;
-        break;
-
-    case TILEP_MONS_MERFOLK_WATER:
-    case TILEP_MONS_MERFOLK_JAVELINEER_WATER:
-    case TILEP_MONS_MERFOLK_AQUAMANCER_WATER:
-        *ofs_x = 1;
-        *ofs_y = 3;
-        break;
-
-    case TILEP_MONS_MERFOLK_IMPALER_WATER:
-        *ofs_x = 0;
-        *ofs_y = 3;
         break;
 
     case TILEP_MONS_FRANCES: // left-handed - shield goes in right hand

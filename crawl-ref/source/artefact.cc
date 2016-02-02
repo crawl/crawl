@@ -24,7 +24,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-book.h"
@@ -241,8 +241,7 @@ string replace_name_parts(const string &name_in, const item_def& item)
 {
     string name = name_in;
 
-    god_type god_gift;
-    (void) origin_is_god_gift(item, &god_gift);
+    const god_type god_gift = origin_as_god_gift(item);
 
     // Don't allow "player's Death" type names for god gifts (except
     // for those from Xom).
@@ -345,7 +344,7 @@ bool is_random_artefact(const item_def &item)
 bool is_unrandom_artefact(const item_def &item, int which)
 {
     return item.flags & ISFLAG_UNRANDART
-           && (!which || which == item.special);
+           && (!which || which == item.unrand_idx);
 }
 
 bool is_special_unrandom_artefact(const item_def &item)
@@ -388,7 +387,7 @@ void set_unique_item_status(const item_def& item,
                             unique_item_status_type status)
 {
     if (item.flags & ISFLAG_UNRANDART)
-        _set_unique_item_status(item.special, status);
+        _set_unique_item_status(item.unrand_idx, status);
 }
 
 /**
@@ -421,10 +420,9 @@ struct jewellery_fake_artp
 
 static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { AMU_RAGE, { { ARTP_BERSERK, 1 } } },
-    { AMU_WARDING, { { ARTP_NEGATIVE_ENERGY, 1 } } },
     { AMU_REGENERATION, { { ARTP_REGENERATION, 1 } } },
+    { AMU_REFLECTION, { { ARTP_SHIELDING, 0 } } },
 
-    { RING_INVISIBILITY, { { ARTP_INVISIBLE, 1 } } },
     { RING_MAGICAL_POWER, { { ARTP_MAGICAL_POWER, 9 } } },
     { RING_FLIGHT, { { ARTP_FLY, 1 } } },
     { RING_SEE_INVISIBLE, { { ARTP_SEE_INVISIBLE, 1 } } },
@@ -634,11 +632,12 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_BLINK:
             return !extant_props[ARTP_PREVENT_TELEPORTATION];
             // no contradictory props
-        case ARTP_CONFUSE:
-            return !item.is_type(OBJ_JEWELLERY, AMU_CLARITY);
         case ARTP_MAGICAL_POWER:
             return item_class != OBJ_WEAPONS
                    || get_weapon_brand(item) != SPWPN_ANTIMAGIC;
+            // not quite as interesting on armour, since you swap it less
+        case ARTP_FRAGILE:
+            return item_class != OBJ_ARMOUR;
         default:
             return true;
     }
@@ -688,11 +687,11 @@ static const artefact_prop_data artp_data[] =
     { "AC", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0}, // ARTP_AC,
     { "EV", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_EVASION,
     { "Str", ARTP_VAL_ANY, 100,     // ARTP_STRENGTH,
-        _gen_good_stat_artp, _gen_bad_stat_artp, 9, 1 },
+        _gen_good_stat_artp, _gen_bad_stat_artp, 7, 1 },
     { "Int", ARTP_VAL_ANY, 100,     // ARTP_INTELLIGENCE,
-        _gen_good_stat_artp, _gen_bad_stat_artp, 9, 1 },
+        _gen_good_stat_artp, _gen_bad_stat_artp, 7, 1 },
     { "Dex", ARTP_VAL_ANY, 100,     // ARTP_DEXTERITY,
-        _gen_good_stat_artp, _gen_bad_stat_artp, 9, 1 },
+        _gen_good_stat_artp, _gen_bad_stat_artp, 7, 1 },
     { "rF", ARTP_VAL_ANY, 60,       // ARTP_FIRE,
         _gen_good_res_artp, _gen_bad_res_artp, 2, 4},
     { "rC", ARTP_VAL_ANY, 60,       // ARTP_COLD,
@@ -771,6 +770,9 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 1; }, 0, 0 },
     { "*Confuse", ARTP_VAL_BOOL, 25, // ARTP_CONFUSE,
         nullptr, []() { return 1; }, 0, 0 },
+    { "Fragile", ARTP_VAL_BOOL, 25, // ARTP_FRAGILE,
+        nullptr, []() { return 1; }, 0, 0 },
+    { "SH", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_SHIELDING,
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000
@@ -832,16 +834,39 @@ const char *artp_name(artefact_prop_type prop)
     return artp_data[prop].name;
 }
 
+/**
+ * Add a 'good' version of a given prop to the given set of item props.
+ *
+ * The property may already exist in the set; if so, increase its value.
+ *
+ * @param prop[in]              The prop to be added.
+ * @param item_props[out]       The list of item props to be added to.
+ */
+static void _add_good_randart_prop(artefact_prop_type prop,
+                                   artefact_properties_t &item_props)
+{
+    // Add one to the starting value for stat bonuses.
+    if ((prop == ARTP_STRENGTH
+         || prop == ARTP_INTELLIGENCE
+         || prop == ARTP_DEXTERITY)
+        && item_props[prop] == 0)
+    {
+        item_props[prop]++;
+    }
+
+    item_props[prop] += artp_data[prop].gen_good_value();
+}
+
 static void _get_randart_properties(const item_def &item,
                                     artefact_properties_t &item_props)
 {
     const object_class_type item_class = item.base_type;
 
     // first figure out how good we want the artefact to be, range 1 to 7.
-    int quality = max(1, binomial(7, 30));
+    const int quality = max(1, binomial(7, 30));
     // then consider adding bad properties. the better the artefact, the more
     // likely we add a bad property, up to a max of 2.
-    int bad = binomial(1 + div_rand_round(quality, 5), 30);
+    int bad = min(binomial(1 + div_rand_round(quality, 5), 30), 2);
     // we start by assuming we'll allow one good property per quality level
     // and an additional one for each bad property.
     int good = quality + bad;
@@ -849,12 +874,12 @@ static void _get_randart_properties(const item_def &item,
     // things get spammy. Extra "good" properties will be used to enhance
     // properties only, not to add more distinct properties. There is still a
     // small chance of >4 properties.
-    int max_properties = 4 + one_chance_in(20) + one_chance_in(40);
+    const int max_properties = 4 + one_chance_in(20) + one_chance_in(40);
     int enhance = 0;
     if (good + bad > max_properties)
     {
         enhance = good + bad - max_properties;
-        good = 4 - bad;
+        good = max_properties - bad;
     }
 
     // initialize a vector of weighted artefact properties to pick from
@@ -870,8 +895,9 @@ static void _get_randart_properties(const item_def &item,
     if (item_class == OBJ_WEAPONS)
         _add_randart_weapon_brand(item, item_props);
 
-    // randomly pick properties from the list, assign values and all that,
-    // then subtract them from the good/bad count as needed
+    // randomly pick properties from the list, choose an appropriate value,
+    // then subtract them from the good/bad/enhance count as needed
+    // the 'enhance' count is not guaranteed to be used.
     while (good > 0 || bad > 0)
     {
         const artefact_prop_type *prop_ptr
@@ -892,23 +918,15 @@ static void _get_randart_properties(const item_def &item,
         {
             // potentially increment the value of the property more than once,
             // using up a good property each time.
-            const int max = artp_data[prop].max_dup;
-            for (int i = 1;
-                 good > 0 && item_props[prop] <= max &&
-                    ((enhance > 0 && i > 1) || one_chance_in(i));
-                 i += artp_data[prop].odds_inc)
+            // always do so if there's any 'enhance' left, if possible.
+            for (int chance_denom = 1;
+                 item_props[prop] <= artp_data[prop].max_dup
+                    && (enhance > 0
+                        || good > 0 && one_chance_in(chance_denom));
+                 chance_denom += artp_data[prop].odds_inc)
             {
-                // Add one to the starting value for stat bonuses.
-                if ((prop == ARTP_STRENGTH
-                     || prop == ARTP_INTELLIGENCE
-                     || prop == ARTP_DEXTERITY)
-                    && item_props[prop] == 0)
-                {
-                   item_props[prop]++;
-                }
-
-                item_props[prop] += artp_data[prop].gen_good_value();
-                if (enhance > 0 && i > 1)
+                _add_good_randart_prop(prop, item_props);
+                if (enhance > 0 && chance_denom > 1)
                     --enhance;
                 else
                     --good;
@@ -931,62 +949,6 @@ static void _get_randart_properties(const item_def &item,
         ASSERT(new_end == old_end - 1);
         art_prop_weights.erase(new_end, old_end);
     }
-}
-
-static bool _redo_book(item_def &book)
-{
-    int num_spells  = 0;
-    int num_unknown = 0;
-
-    for (spell_type spell : spellbook_template(static_cast<book_type>(book.sub_type)))
-    {
-        num_spells++;
-        if (!you.seen_spell[spell])
-            num_unknown++;
-    }
-
-    if (num_spells <= 5 && num_unknown == 0)
-        return true;
-    else if (num_spells > 5 && num_unknown <= 1)
-        return true;
-
-    return false;
-}
-
-static bool _init_artefact_book(item_def &book)
-{
-    ASSERT(book.sub_type == BOOK_RANDART_LEVEL
-           || book.sub_type == BOOK_RANDART_THEME);
-    ASSERT(book.book_param != 0);
-
-    god_type god;
-    bool redo = (!origin_is_god_gift(book, &god) || god != GOD_XOM);
-
-    // plus contains a parameter to make_book_foo_randart(), which might get
-    // changed after the book has been made into a randart, so reset it on each
-    // iteration of the loop.
-    // XXX: ...is this really necessary...?
-    const int book_param = book.book_param;
-    bool book_good = false;
-    for (int i = 0; i < 4; i++)
-    {
-        book.book_param = book_param;
-
-        if (book.sub_type == BOOK_RANDART_LEVEL)
-            book_good = make_book_level_randart(book, book.book_param);
-        else
-            book_good = make_book_theme_randart(book);
-
-        if (!book_good)
-            continue;
-
-        if (redo && _redo_book(book))
-            continue;
-
-        break;
-    }
-
-    return book_good;
 }
 
 void setup_unrandart(item_def &item, bool creating)
@@ -1020,8 +982,7 @@ static bool _init_artefact_properties(item_def &item)
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
         rap[i] = static_cast<short>(0);
 
-    if (item.base_type == OBJ_BOOKS)
-        return _init_artefact_book(item);
+    ASSERT(item.base_type != OBJ_BOOKS);
 
     artefact_properties_t prop;
     prop.init(0);
@@ -1185,7 +1146,7 @@ static string _get_artefact_type(const item_def &item, bool appear = false)
             return "amulet";
         else
             return "ring";
-     default:
+    default:
         return "artefact";
     }
 }
@@ -1328,7 +1289,7 @@ string make_artefact_name(const item_def &item, bool appearance)
 
 static const unrandart_entry *_seekunrandart(const item_def &item)
 {
-    return get_unrand_entry(item.special);
+    return get_unrand_entry(item.unrand_idx);
 }
 
 string get_artefact_base_name(const item_def &item, bool terse)
@@ -1375,7 +1336,7 @@ void set_artefact_name(item_def &item, const string &name)
 
 int find_unrandart_index(const item_def& artefact)
 {
-    return artefact.special;
+    return artefact.unrand_idx;
 }
 
 const unrandart_entry* get_unrand_entry(int unrand_index)
@@ -1504,10 +1465,6 @@ static bool _randart_is_redundant(const item_def &item,
         provides = ARTP_SEE_INVISIBLE;
         break;
 
-    case RING_INVISIBILITY:
-        provides = ARTP_INVISIBLE;
-        break;
-
     case RING_STEALTH:
         provides = ARTP_STEALTH;
         break;
@@ -1552,12 +1509,16 @@ static bool _randart_is_redundant(const item_def &item,
         provides = ARTP_SLAYING;
         break;
 
-    case AMU_STASIS:
-        provides = ARTP_PREVENT_TELEPORTATION;
-        break;
-
     case AMU_REGENERATION:
         provides = ARTP_REGENERATION;
+        break;
+
+    case AMU_REFLECTION:
+        provides = ARTP_SHIELDING;
+        break;
+
+    case AMU_HARM:
+        provides = ARTP_DRAIN;
         break;
     }
 
@@ -1584,15 +1545,6 @@ static bool _randart_is_conflicting(const item_def &item,
     if (item.base_type != OBJ_JEWELLERY)
         return false;
 
-    if (item.sub_type == AMU_STASIS
-        && (proprt[ARTP_BLINK] != 0
-            || proprt[ARTP_CAUSE_TELEPORTATION] != 0
-            || proprt[ARTP_ANGRY] != 0
-            || proprt[ARTP_BERSERK] != 0))
-    {
-        return true;
-    }
-
     if (item.sub_type == RING_WIZARDRY && proprt[ARTP_INTELLIGENCE] < 0)
         return true;
 
@@ -1614,10 +1566,6 @@ static bool _randart_is_conflicting(const item_def &item,
     case RING_TELEPORTATION:
     case RING_TELEPORT_CONTROL:
         conflicts = ARTP_PREVENT_TELEPORTATION;
-        break;
-
-    case AMU_RESIST_MUTATION:
-        conflicts = ARTP_CONTAM;
         break;
 
     case AMU_RAGE:
@@ -1691,19 +1639,9 @@ bool make_item_randart(item_def &item, bool force_mundane)
 {
     if (item.base_type != OBJ_WEAPONS
         && item.base_type != OBJ_ARMOUR
-        && item.base_type != OBJ_JEWELLERY
-        && item.base_type != OBJ_BOOKS)
+        && item.base_type != OBJ_JEWELLERY)
     {
         return false;
-    }
-
-    if (item.base_type == OBJ_BOOKS)
-    {
-        if (item.sub_type != BOOK_RANDART_LEVEL
-            && item.sub_type != BOOK_RANDART_THEME)
-        {
-            return false;
-        }
     }
 
     // This item already is a randart.
@@ -1721,8 +1659,7 @@ bool make_item_randart(item_def &item, bool force_mundane)
     _artefact_setup_prop_vectors(item);
     item.flags |= ISFLAG_RANDART;
 
-    god_type god_gift;
-    (void) origin_is_god_gift(item, &god_gift);
+    const god_type god_gift = origin_as_god_gift(item);
 
     int randart_tries = 500;
     do
@@ -1731,7 +1668,7 @@ bool make_item_randart(item_def &item, bool force_mundane)
         if (--randart_tries <= 0 || !_init_artefact_properties(item))
         {
             // Something went wrong that no amount of rerolling will fix.
-            item.special = 0;
+            item.unrand_idx = 0;
             item.props.erase(ARTEFACT_PROPS_KEY);
             item.props.erase(KNOWN_PROPS_KEY);
             item.flags &= ~ISFLAG_RANDART;
@@ -1834,7 +1771,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 {
     ASSERT_RANGE(unrand_index, UNRAND_START + 1, (UNRAND_START + NUM_UNRANDARTS));
 
-    item.special = unrand_index;
+    item.unrand_idx = unrand_index;
 
     const unrandart_entry *unrand = &unranddata[unrand_index - UNRAND_START];
 
@@ -1890,7 +1827,7 @@ void unrand_reacts()
         if (you.unrand_reacts[i])
         {
             item_def&        item  = you.inv[you.equip[i]];
-            const unrandart_entry* entry = get_unrand_entry(item.special);
+            const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
             entry->world_reacts_func(&item);
         }

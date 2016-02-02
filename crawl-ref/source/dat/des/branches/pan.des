@@ -49,7 +49,7 @@ function pan_lord_setup(_G, name)
         Mnoleg = "large abomination w:200 / " ..
                  "neqoxec w:200 / chaos spawn w:200 / " ..
                  "cacodemon w:300 / tormentor / " ..
-                 "tentacled monstrosity w:5 / brain worm / " ..
+                 "tentacled monstrosity w:5 / " ..
                  "giant eyeball / golden eye band / eye of devastation / " ..
                  "eye of draining / shining eye / very ugly thing band / "..
                  "monstrous corrupter",
@@ -537,7 +537,7 @@ TAGS:      mnoleg uniq_mnoleg
 : pan_lord_setup(_G, 'Mnoleg')
 TILE:      c = dngn_stone_wall_yellow
 MONS:      patrolling Mnoleg
-MONS:      brain worm, ugly thing, large abomination, neqoxec
+MONS:      neqoxec, ugly thing, large abomination, neqoxec
 MONS:      very ugly thing, tormentor
 KMONS:     A = cacodemon
 KMONS:     B = tentacled monstrosity
@@ -596,7 +596,7 @@ MONS:       giant eyeball / golden eye / eye of devastation / \
             eye of draining / shining eye
 MONS:       w:3 large abomination / w:2 tentacled monstrosity
 MONS:       cacodemon
-MONS:       neqoxec / brain worm
+MONS:       neqoxec
 NSUBST:     C = 1:4 / *:N
 NSUBST:     N = 2:4 / *:5
 NSUBST:     M = 5:3 / 2=3. / *:.
@@ -1259,7 +1259,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 .llv...vvvvv...vlllll4lllllllll4lllllvll...llvvvvvl.
 .lvv..4.....2..vvvvvl.lvvvvvvvl.lvvvvvvl...lvvvllll.
 .lvvv....4....vvllvvv+vvvlllvvv+vvvllvvvv+vvvvll....
-.vllvv.......vvllllv$$$vlllllv$$$vllllvv$|$vvll.....
+.lllvv.......vvllllv$$$vlllllv$$$vllllvv$|$vvll.....
 @..llvvv+++vvvll..lv$$$vl...lv$|$vl..llv|O|vll.....@
 ....lvvl...lvvl...lv$$$vl...lv$$$vl...lv$|$vl.......
 ....llll...llll...lvvvvvl...lvvvvvl...lvvvvvl.......
@@ -2579,8 +2579,8 @@ KMONS:   O = ice statue
 KITEM:   O = demonic rune of Zot
 KMONS:   P = pandemonium lord
 KFEAT:   P = (
-MONS:    blizzard demon, ice devil / blue devil w:20
-: set_random_mon_list("blizzard demon / ice devil / blue devil")
+MONS:    blizzard demon, ice devil
+: set_random_mon_list("blizzard demon / ice devil")
 MAP
 ccccccccccccccccccc
 .WwcwW1.1O1.1WwcwW.
@@ -2772,7 +2772,7 @@ TILE:   D = dngn_disco_ball
 MARKER: D = lua:props_marker { veto_fragmentation="veto", \
                                veto_disintegrate="veto", \
                                veto_shatter="veto" }
-MONS:   col:random name:demonic name_adjective plant tile:mons_demonic_plant
+MONS:   demonic plant
 MONS:   red devil ; demon trident good_item ego:distortion ident:type
 MONS:   red devil ; lajatang good_item ego:distortion ident:type
 MONS:   red devil ; demon blade good_item ego:distortion ident:type

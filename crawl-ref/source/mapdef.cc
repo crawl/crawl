@@ -37,7 +37,7 @@
 #include "mon-place.h"
 #include "mutant-beast.h"
 #include "place.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "shopping.h"
 #include "spl-book.h"
@@ -153,7 +153,7 @@ string mapdef_split_key_item(const string &s, string *key, int *separator,
     return "";
 }
 
-int store_tilename_get_index(const string tilename)
+int store_tilename_get_index(const string& tilename)
 {
     if (tilename.empty())
         return 0;
@@ -161,7 +161,7 @@ int store_tilename_get_index(const string tilename)
     // Increase index by 1 to distinguish between first entry and none.
     unsigned int i;
     for (i = 0; i < env.tile_names.size(); ++i)
-        if (!strcmp(tilename.c_str(), env.tile_names[i].c_str()))
+        if (tilename == env.tile_names[i])
             return i+1;
 
 #ifdef DEBUG_TILE_NAMES
@@ -1052,8 +1052,7 @@ void map_lines::extend(int min_width, int min_height, char fill)
     // Extend overlay matrix as well.
     if (overlay.get())
     {
-        unique_ptr<overlay_matrix> new_overlay(
-            new overlay_matrix(width(), height()));
+        auto new_overlay = make_unique<overlay_matrix>(width(), height());
 
         for (int y = 0; y < old_height; ++y)
             for (int x = 0; x < old_width; ++x)
@@ -1563,8 +1562,7 @@ void map_lines::rotate(bool clockwise)
 
     if (overlay.get())
     {
-        unique_ptr<overlay_matrix> new_overlay(
-            new overlay_matrix(lines.size(), map_width));
+        auto new_overlay = make_unique<overlay_matrix>(lines.size(), map_width);
         for (int i = xs, y = 0; i != xe; i += xi, ++y)
             for (int j = ys, x = 0; j != ye; j += yi, ++x)
                 (*new_overlay)(x, y) = (*overlay)(i, j);
@@ -3327,7 +3325,7 @@ string map_def::subvault_from_tagstring(const string &sub)
     return "";
 }
 
-static void _register_subvault(const string name, const string spaced_tags)
+static void _register_subvault(const string &name, const string &spaced_tags)
 {
     if (spaced_tags.find(" allow_dup ") == string::npos
         || spaced_tags.find(" luniq ") != string::npos)
@@ -3336,7 +3334,7 @@ static void _register_subvault(const string name, const string spaced_tags)
     }
 
     for (const string &tag : split_string(" ", spaced_tags))
-        if (tag.find("uniq_") == 0 || tag.find("luniq_") == 0)
+        if (starts_with(tag, "uniq_") || starts_with(tag, "luniq_"))
             env.new_used_subvault_tags.insert(tag);
 }
 
@@ -3644,12 +3642,16 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                         cur_spells[i].flags |= MON_SPELL_PRIEST;
                     if (slot_vals[j] == "breath")
                         cur_spells[i].flags |= MON_SPELL_BREATH;
-                    if (slot_vals[j] == "no_silent")
+                    if (slot_vals[j] == "no silent")
                         cur_spells[i].flags |= MON_SPELL_NO_SILENT;
                     if (slot_vals[j] == "instant")
                         cur_spells[i].flags |= MON_SPELL_INSTANT;
                     if (slot_vals[j] == "noisy")
                         cur_spells[i].flags |= MON_SPELL_NOISY;
+                    if (slot_vals[j] == "short range")
+                        cur_spells[i].flags |= MON_SPELL_SHORT_RANGE;
+                    if (slot_vals[j] == "long range")
+                        cur_spells[i].flags |= MON_SPELL_LONG_RANGE;
                 }
                 if (!(cur_spells[i].flags & MON_SPELL_TYPE_MASK))
                 {
@@ -4059,16 +4061,20 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
 
             mspec.type    = nspec.type;
             mspec.monbase = nspec.monbase;
-            mspec.number  = nspec.number;
             if (nspec.colour > COLOUR_UNDEF && mspec.colour <= COLOUR_UNDEF)
                 mspec.colour = nspec.colour;
             if (nspec.hd != 0)
                 mspec.hd = nspec.hd;
-            if (nspec.props.exists(MUTANT_BEAST_FACETS))
-            {
-                mspec.props[MUTANT_BEAST_FACETS]
-                    = nspec.props[MUTANT_BEAST_FACETS];
+#define MAYBE_COPY(x) \
+            if (nspec.props.exists((x))) \
+            { \
+                mspec.props[(x)] \
+                    = nspec.props[(x)]; \
             }
+            MAYBE_COPY(MUTANT_BEAST_FACETS);
+            MAYBE_COPY(MGEN_BLOB_SIZE);
+            MAYBE_COPY(MGEN_NUM_HEADS);
+#undef MAYBE_COPY
         }
 
         if (!mspec.items.empty())
@@ -4161,11 +4167,10 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
     int mod = ends_with(s, zombie_types);
     if (!mod)
     {
-        const string spectre("spectral ");
-        if (s.find(spectre) == 0)
+        if (starts_with(s, "spectral "))
         {
             mod = ends_with(" spectre", zombie_types);
-            s = s.substr(spectre.length());
+            s = s.substr(9); // strlen("spectral ")
         }
         else
         {
@@ -4191,7 +4196,8 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
                                              &dummy_feat, &place);
 
     spec.monbase = static_cast<monster_type>(base_monster.type);
-    spec.number = base_monster.number;
+    if (base_monster.props.exists(MGEN_NUM_HEADS))
+        spec.props[MGEN_NUM_HEADS] = base_monster.props[MGEN_NUM_HEADS];
 
     const int zombie_size = mons_zombie_size(spec.monbase);
     if (!zombie_size)
@@ -4215,10 +4221,9 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
 
 mons_spec mons_list::get_hydra_spec(const string &name) const
 {
-    int    nheads = -1;
     string prefix = name.substr(0, name.find("-"));
 
-    nheads = atoi(prefix.c_str());
+    int nheads = atoi(prefix.c_str());
     if (nheads != 0)
         ;
     else if (prefix == "0")
@@ -4245,7 +4250,9 @@ mons_spec mons_list::get_hydra_spec(const string &name) const
         nheads = 20;
     }
 
-    return mons_spec(MONS_HYDRA, MONS_NO_MONSTER, nheads);
+    mons_spec spec(MONS_HYDRA);
+    spec.props[MGEN_NUM_HEADS] = nheads;
+    return spec;
 }
 
 mons_spec mons_list::get_slime_spec(const string &name) const
@@ -4270,7 +4277,9 @@ mons_spec mons_list::get_slime_spec(const string &name) const
 #endif
     }
 
-    return mons_spec(MONS_SLIME_CREATURE, MONS_NO_MONSTER, slime_size);
+    mons_spec spec(MONS_SLIME_CREATURE);
+    spec.props[MGEN_BLOB_SIZE] = slime_size;
+    return spec;
 }
 
 // Handle draconians specified as:
@@ -5437,9 +5446,9 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     }
 
     // Check for "any objclass"
-    if (s.find("any ") == 0)
+    if (starts_with(s, "any "))
         parse_random_by_class(s.substr(4), result);
-    else if (s.find("random ") == 0)
+    else if (starts_with(s, "random "))
         parse_random_by_class(s.substr(7), result);
     // Check for actual item names.
     else

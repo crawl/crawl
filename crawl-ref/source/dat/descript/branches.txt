@@ -168,9 +168,11 @@ and most skilled adventurers have met their ends in one. While a portal to
 safety will be present on every level, once left, a ziggurat cannot be
 re-entered.
 
-One ziggurat is guaranteed in the Depths, and further ones can be found
-in Pandemonium. Each time a ziggurat is conquered by exiting it from the final
-floor, subsequent ziggurats will become increasingly dangerous and lucrative.
+One ziggurat is guaranteed in the Depths. Tales tell of an magical item found
+at the bottom of each ziggurat, granting access to a new ziggurat in turn. Such
+an item is also said to be found at the bottom of the Tomb of the Ancients. Each
+time a zigguarat is conquered by exiting it from the final floor, subsequent
+ziggurats will become increasingly dangerous and lucrative.
 %%%%
 Labyrinth
 

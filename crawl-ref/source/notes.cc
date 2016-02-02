@@ -392,7 +392,7 @@ void Note::check_milestone() const
             ASSERT_RANGE(br, 0, NUM_BRANCHES);
             string branch = place.describe(true, false);
 
-            if (branch.find("The ") == 0)
+            if (starts_with(branch, "The "))
                 branch[0] = tolower(branch[0]);
 
             if (dep == 1)
@@ -404,7 +404,7 @@ void Note::check_milestone() const
                      || br == BRANCH_ZIGGURAT)
             {
                 string level = place.describe(true, true);
-                if (level.find("Level ") == 0)
+                if (starts_with(level, "Level "))
                     level[0] = tolower(level[0]);
 
                 mark_milestone(br == BRANCH_ZIGGURAT ? "zig" : "br.end",

@@ -68,7 +68,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_APPORTATION, "Apportation",
     SPTYP_TRANSLOCATION,
-    SPFLAG_TARG_OBJ | SPFLAG_NOT_SELF,
+    SPFLAG_TARGET | SPFLAG_OBJ | SPFLAG_NOT_SELF,
     1,
     1000,
     LOS_RADIUS, LOS_RADIUS,
@@ -90,7 +90,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CONJURE_FLAME, "Conjure Flame",
     SPTYP_CONJURATION | SPTYP_FIRE,
-    SPFLAG_GRID | SPFLAG_NOT_SELF,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF,
     3,
     100,
     3, 3,
@@ -280,7 +280,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FREEZING_CLOUD, "Freezing Cloud",
     SPTYP_CONJURATION | SPTYP_ICE | SPTYP_AIR,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER
         | SPFLAG_CLOUD,
     6,
     200,
@@ -392,7 +392,7 @@ static const struct spell_desc spelldata[] =
 
 // Used indirectly, by monsters abjuring via other summon spells.
 {
-    SPELL_ABJURATION, "abjuration",
+    SPELL_ABJURATION, "Abjuration",
     SPTYP_SUMMONING,
     SPFLAG_ESCAPE | SPFLAG_NEEDS_TRACER | SPFLAG_MONSTER,
     3,
@@ -473,7 +473,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_POISONOUS_CLOUD, "Poisonous Cloud",
     SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER
         | SPFLAG_CLOUD,
     6,
     200,
@@ -485,7 +485,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FIRE_STORM, "Fire Storm",
     SPTYP_CONJURATION | SPTYP_FIRE,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_NEEDS_TRACER,
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_NEEDS_TRACER,
     9,
     200,
     5, 5,
@@ -496,7 +496,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_HELLFIRE_BURST, "Hellfire Burst",
     SPTYP_CONJURATION | SPTYP_FIRE,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_UNHOLY | SPFLAG_NEEDS_TRACER,
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_UNHOLY | SPFLAG_NEEDS_TRACER,
     9,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -1280,7 +1280,7 @@ static const struct spell_desc spelldata[] =
     SPELL_SHADOW_CREATURES, "Shadow Creatures",
     SPTYP_SUMMONING,
     SPFLAG_MONS_ABJURE,
-    5,
+    6,
     0,
     -1, -1,
     4, 0,
@@ -1348,7 +1348,7 @@ static const struct spell_desc spelldata[] =
     SPTYP_TRANSMUTATION,
     SPFLAG_BATTLE | SPFLAG_NO_GHOST,
     2,
-    200,
+    100,
     -1, -1,
     2, 0,
     nullptr,
@@ -1503,7 +1503,7 @@ static const struct spell_desc spelldata[] =
     SPELL_INTOXICATE, "Alistair's Intoxication",
     SPTYP_TRANSMUTATION | SPTYP_POISON,
     SPFLAG_NONE,
-    4,
+    5,
     100,
     -1, -1,
     3, 0,
@@ -1526,7 +1526,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_LRD, "Lee's Rapid Deconstruction",
     SPTYP_EARTH,
-    SPFLAG_GRID,
+    SPFLAG_TARGET,
     5,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -1626,7 +1626,7 @@ static const struct spell_desc spelldata[] =
     SPELL_MONSTROUS_MENAGERIE, "Monstrous Menagerie",
     SPTYP_SUMMONING,
     SPFLAG_MONS_ABJURE,
-    6,
+    7,
     200,
     -1, -1,
     5, 0,
@@ -1636,7 +1636,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_GOLUBRIAS_PASSAGE, "Passage of Golubria",
     SPTYP_TRANSLOCATION,
-    SPFLAG_GRID | SPFLAG_NEUTRAL | SPFLAG_ESCAPE | SPFLAG_SELFENCH,
+    SPFLAG_TARGET | SPFLAG_NEUTRAL | SPFLAG_ESCAPE | SPFLAG_SELFENCH,
     4,
     0,
     LOS_RADIUS, LOS_RADIUS,
@@ -1647,7 +1647,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FULMINANT_PRISM, "Fulminant Prism",
     SPTYP_CONJURATION | SPTYP_HEXES,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_NOT_SELF,
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_NOT_SELF,
     4,
     200,
     4, 4,
@@ -1659,7 +1659,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SINGULARITY, "Singularity",
     SPTYP_TRANSLOCATION,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_NOT_SELF | SPFLAG_MONSTER,
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_NOT_SELF | SPFLAG_MONSTER,
     9,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -1681,9 +1681,9 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_MINOR_HEALING, "Minor Healing",
-    SPTYP_NONE,
+    SPTYP_NECROMANCY,
     SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER | SPFLAG_SELFENCH
-        | SPFLAG_EMERGENCY | SPFLAG_UTILITY,
+        | SPFLAG_EMERGENCY | SPFLAG_UTILITY | SPFLAG_NOT_EVIL,
     2,
     0,
     LOS_RADIUS, LOS_RADIUS,
@@ -1693,9 +1693,9 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_MAJOR_HEALING, "Major Healing",
-    SPTYP_NONE,
+    SPTYP_NECROMANCY,
     SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER | SPFLAG_SELFENCH
-        | SPFLAG_EMERGENCY | SPFLAG_UTILITY,
+        | SPFLAG_EMERGENCY | SPFLAG_UTILITY | SPFLAG_NOT_EVIL,
     6,
     0,
     LOS_RADIUS, LOS_RADIUS,
@@ -1755,7 +1755,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_NOXIOUS_CLOUD, "Noxious Cloud",
     SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER
         | SPFLAG_CLOUD,
     5,
     200,
@@ -2123,6 +2123,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_IRON_ELEMENTALS, "Summon Iron Elementals",
     SPTYP_SUMMONING,
@@ -2133,6 +2134,7 @@ static const struct spell_desc spelldata[] =
     4, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_SLEEP, "Sleep",
@@ -2353,9 +2355,9 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_HEAL_OTHER, "Heal Other",
-    SPTYP_NONE,
+    SPTYP_NECROMANCY,
     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_HELPFUL
-        | SPFLAG_NEEDS_TRACER | SPFLAG_UTILITY,
+        | SPFLAG_NEEDS_TRACER | SPFLAG_UTILITY | SPFLAG_NOT_EVIL,
     6,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -2820,7 +2822,7 @@ static const struct spell_desc spelldata[] =
     SPTYP_CHARMS,
     SPFLAG_BATTLE | SPFLAG_UTILITY,
     1,
-    50,
+    25,
     -1, -1,
     1, 0,
     nullptr,
@@ -2927,6 +2929,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_IGNITE_POISON_SINGLE, "Localized Ignite Poison",
     SPTYP_FIRE | SPTYP_TRANSMUTATION,
@@ -2937,6 +2940,7 @@ static const struct spell_desc spelldata[] =
     3, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_ORB_OF_ELECTRICITY, "Orb of Electricity",
@@ -3029,10 +3033,10 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CHAOTIC_MIRROR, "Chaotic Mirror",
-    SPTYP_NONE,
-    SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
-    4,
+    SPELL_CALL_OF_CHAOS, "Call of Chaos",
+    SPTYP_CHARMS,
+    SPFLAG_AREA | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
+    7,
     200,
     LOS_RADIUS, LOS_RADIUS,
     6, 0,
@@ -3134,7 +3138,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_LIGHTNING_SPIRE, "Summon Lightning Spire",
     SPTYP_SUMMONING | SPTYP_AIR,
-    SPFLAG_GRID | SPFLAG_NOT_SELF | SPFLAG_NEUTRAL,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEUTRAL,
     4,
     100,
     2, 2,
@@ -3211,7 +3215,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CLOUD_CONE, "Cloud Cone",
     SPTYP_CONJURATION | SPTYP_AIR,
-    SPFLAG_GRID | SPFLAG_NOT_SELF,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF,
     6,
     100,
     3, LOS_RADIUS,
@@ -3367,7 +3371,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FLAMING_CLOUD, "Flaming Cloud",
     SPTYP_CONJURATION | SPTYP_FIRE,
-    SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_MONSTER
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_MONSTER
         | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
     5,
     0,
@@ -3443,7 +3447,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_TENTACLE_THROW, "Tentacle Throw",
+    SPELL_THROW, "Throw",
     SPTYP_TRANSLOCATION,
     SPFLAG_MONSTER | SPFLAG_NOT_SELF,
     5,
@@ -3607,6 +3611,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_CHANT_FIRE_STORM, "Chant Fire Storm",
     SPTYP_CONJURATION | SPTYP_FIRE,
@@ -3617,15 +3622,82 @@ static const struct spell_desc spelldata[] =
     5, 0,
     nullptr,
 },
+#endif
 
 {
-    SPELL_CHANT_WORD_OF_ENTROPY, "Chant Word of Entropy",
+    SPELL_VIOLENT_UNRAVELLING, "Yara's Violent Unravelling",
+    SPTYP_HEXES | SPTYP_TRANSMUTATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER | SPFLAG_NO_GHOST | SPFLAG_CHAOTIC,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    nullptr,
+},
+
+{
+    SPELL_ENTROPIC_WEAVE, "Entropic Weave",
     SPTYP_HEXES,
     SPFLAG_UTILITY,
     5,
     200,
     -1, -1,
     3, 0,
+    nullptr,
+},
+
+{
+    SPELL_SUMMON_EXECUTIONERS, "Summon Executioners",
+    SPTYP_SUMMONING,
+    SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_SELFENCH | SPFLAG_MONS_ABJURE,
+    9,
+    200,
+    -1, -1,
+    6, 0,
+    nullptr,
+},
+
+{
+    SPELL_DOOM_HOWL, "Doom Howl",
+    SPTYP_TRANSLOCATION | SPTYP_HEXES,
+    SPFLAG_DIR_OR_TARGET,
+    3,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    15, 0,
+    nullptr,
+},
+
+{
+    SPELL_AWAKEN_EARTH, "Awaken Earth",
+    SPTYP_SUMMONING | SPTYP_EARTH,
+    SPFLAG_MONSTER | SPFLAG_TARGET,
+    7,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    4, 0,
+    nullptr,
+},
+
+{
+    SPELL_AURA_OF_BRILLIANCE, "Aura of Brilliance",
+    SPTYP_CHARMS,
+    SPFLAG_AREA | SPFLAG_MONSTER,
+    5,
+    200,
+    -1, -1,
+    5, 0,
+    nullptr,
+},
+
+{
+    SPELL_ICEBLAST, "Iceblast",
+    SPTYP_CONJURATION | SPTYP_ICE,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER,
+    5,
+    200,
+    5, 5,
+    5, 0,
     nullptr,
 },
 

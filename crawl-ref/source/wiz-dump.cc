@@ -69,25 +69,23 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
 
     if (s == "+Rage")
         return AMU_RAGE;
-    if (s == "Clar")
-        return AMU_CLARITY;
-    if (s == "Ward")
-        return AMU_WARDING;
-    if (s == "rCorr")
-        return AMU_RESIST_CORROSION;
+    if (s == "Harm")
+        return AMU_HARM;
+    if (s == "Dismiss")
+        return AMU_DISMISSAL;
     if (s == "Gourm")
         return AMU_THE_GOURMAND;
     if (s == "Inacc")
         return AMU_INACCURACY;
-    if (s == "rMut")
-        return AMU_RESIST_MUTATION;
     if (s == "Spirit")
         return AMU_GUARDIAN_SPIRIT;
     if (s == "Faith")
         return AMU_FAITH;
-    if (s == "Stasis")
-        return AMU_STASIS;
+    if (s == "Reflect")
+        return AMU_REFLECTION;
 
+    if (s == "rCorr")
+        return RING_RESIST_CORROSION;
     if (s == "Fire")
         return RING_FIRE;
     if (s == "Ice")
@@ -100,8 +98,6 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return RING_WIZARDRY;
     if (s == "SInv")
         return RING_SEE_INVISIBLE;
-    if (s == "+Inv")
-        return RING_INVISIBILITY;
     if (s == "Noisy")
         return RING_LOUDNESS;
     if (s == "+Fly")
@@ -259,7 +255,7 @@ static int _find_ego_type(object_class_type type, const string &s)
     case OBJ_WEAPONS:
         for (int i = SPWPN_NORMAL; i < NUM_SPECIAL_WEAPONS; ++i)
         {
-            item.special = i;
+            item.brand = i;
             if (brand_name == weapon_brand_name(item, true))
                 return i;
         }
@@ -267,7 +263,7 @@ static int _find_ego_type(object_class_type type, const string &s)
     case OBJ_ARMOUR:
         for (int i = SPARM_NORMAL; i < NUM_SPECIAL_ARMOURS; ++i)
         {
-            item.special = i;
+            item.brand = i;
             if (brand_name == armour_ego_name(item, true))
                 return i;
         }
@@ -277,6 +273,40 @@ static int _find_ego_type(object_class_type type, const string &s)
     }
 
     return 0;
+}
+
+/**
+ * Take a partially initialized rod and set its charge value, rate & max charge
+*  correctly.
+ *
+ * @param rod[in,out]   The rod in question. Its charge rate is expected to be
+ *                      incorrectly stored in the 'plus' field, and its
+ *                      current/max charge shouldn't yet be set.
+ * @param s             The remainder of the rod name after the main body;
+ *                      e.g. " (3/16) {foo}".
+ */
+static void _set_rod_plusses(item_def &rod, const string &s)
+{
+    // first, move the charge rate to the correct field
+    rod.rod_plus = rod.plus; // these are different fields. obviously!
+    // then grab the charge values from the input str.
+    const size_t open_paren = s.find("(");
+    const size_t slash = s.find("/");
+    const size_t close_paren = s.find(")");
+    if (open_paren == string::npos
+        || slash == string::npos
+        || close_paren == string::npos)
+    {
+        dprf("bad rod string '%s'!", s.c_str());
+        return;
+    }
+
+    // pray that the rest of the format is reasonable
+    // XXX: this would be much simpler as (\d+)/(\d+)...
+    rod.charges = atoi(s.substr(open_paren + 1, slash).c_str())
+                    * ROD_CHARGE_MULT;
+    rod.charge_cap = atoi(s.substr(slash + 1, close_paren).c_str())
+                    * ROD_CHARGE_MULT;
 }
 
 static item_def _item_from_string(string s)
@@ -291,6 +321,7 @@ static item_def _item_from_string(string s)
         if (space == string::npos)
             return ret;
 
+        // FIXME: assumes |plus| <= 9 (wrong for randarts)
         ret.plus = atoi(s.substr(1).c_str());
         if (s[0] == '-')
             ret.plus = -ret.plus;
@@ -329,10 +360,13 @@ static item_def _item_from_string(string s)
     {
         ret.base_type = parsed.base_type;
         ret.sub_type  = parsed.sub_type;
-        /* pluses for item_kinds are only valid for manuals and runes
-         * so we can skip them here for now */
+        if (ret.base_type == OBJ_RODS)
+            _set_rod_plusses(ret, s.substr(end));
+        else
+            ret.brand = _find_ego_type(ret.base_type, s.substr(end));
 
-        ret.special = _find_ego_type(ret.base_type, s.substr(end));
+        /* pluses for non-rod item_kinds are only valid for manuals and runes
+         * so we can skip them here for now */
     }
 
     ret.quantity = 1;
@@ -424,7 +458,7 @@ bool chardump_parser::_check_stats2(const vector<string> &tokens)
             {
                 if (god == GOD_GOZAG)
                     you.gold += gozag_service_fee();
-                join_religion(god, true);
+                join_religion(god);
             }
 
             string piety = tokens[k+2];

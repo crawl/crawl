@@ -49,8 +49,6 @@ const monster_type fixup_zombie_type(const monster_type cls,
  * *********************************************************************** */
 monster* place_monster(mgen_data mg, bool force_pos = false, bool dont_place = false);
 
-monster_type pick_random_zombie();
-
 /* ***********************************************************************
  * Returns a monster class type of a zombie for generation
  * on the player's current level.
@@ -94,9 +92,6 @@ monster_type summon_any_demon(monster_type dct, bool use_local_demons = false);
 monster_type summon_any_dragon(dragon_class_type dct);
 
 bool drac_colour_incompatible(int drac, int colour);
-
-void mark_interesting_monst(monster* mons,
-                            beh_type behaviour = BEH_SLEEP);
 
 bool monster_habitable_grid(const monster* mon,
                             dungeon_feature_type actual_grid);

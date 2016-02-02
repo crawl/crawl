@@ -36,11 +36,11 @@
 #include "view.h"
 #include "viewchar.h"
 
-static void _print_holy_pacification_speech(const string key,
+static void _print_holy_pacification_speech(const string &key,
                                             monster* mon,
                                             msg_channel_type channel)
 {
-    string full_key = "holy_being_";
+    string full_key = "holy_being_pacification";
     full_key += key;
 
     string msg = getSpeakString(full_key);
@@ -78,13 +78,8 @@ int is_pacifiable(const monster* mon)
 
     const mon_holy_type holiness = mon->holiness();
 
-    if (!mon->is_holy()
-        && holiness != MH_UNDEAD
-        && holiness != MH_DEMONIC
-        && holiness != MH_NATURAL)
-    {
+    if (!(holiness & (MH_HOLY | MH_UNDEAD | MH_DEMONIC | MH_NATURAL)))
         return -1;
-    }
 
     if (mon->is_stationary()) // not able to leave the level
         return -1;
@@ -112,18 +107,17 @@ static int _can_pacify_monster(const monster* mon, const int healed,
     if (healed < 1)
         return 0;
 
-    const int factor = (mons_intel(mon) < I_HUMAN)         ? 3 : // animals
-                       (is_player_same_genus(mon->type))   ? 2   // same genus
-                                                           : 1;  // other
+    const int factor = (mons_intel(mon) < I_HUMAN) ? 3  // animals
+                                                   : 1; // other
 
     int divisor = 3;
 
     const mon_holy_type holiness = mon->holiness();
     if (mon->is_holy())
         divisor--;
-    else if (holiness == MH_UNDEAD)
+    else if (holiness & MH_UNDEAD)
         divisor++;
-    else if (holiness == MH_DEMONIC)
+    else if (holiness & MH_DEMONIC)
         divisor += 2;
 
     if (mon->max_hit_points > factor * ((you.skill(SK_INVOCATIONS, max_healed)
@@ -155,44 +149,52 @@ static vector<string> _desc_mindless(const monster_info& mi)
         return {};
 }
 
-static spret_type _healing_spell(int healed, int max_healed,
-                                 bool divine_ability, const coord_def& where,
-                                 bool not_self, targ_mode_type mode)
+/**
+ * Heal a monster and print an appropriate message.
+ *
+ * Should only be called if the player is responsible!
+ * @param patient the monster to be healed
+ * @param amount  how many HP to restore
+ * @return whether the monster could be healed.
+ */
+bool heal_monster(monster& patient, int amount)
 {
+    if (!patient.heal(amount))
+        return false;
+
+    mprf("You heal %s.", patient.name(DESC_THE).c_str());
+
+    if (patient.hit_points == patient.max_hit_points)
+        simple_monster_message(&patient, " is completely healed.");
+    else
+        print_wounds(&patient);
+
+    return true;
+}
+
+spret_type cast_healing(int pow, int max_pow, bool fail)
+{
+    const int healed = pow + roll_dice(2, pow) - 2;
+    const int max_healed = (3 * max_pow) - 2;
     ASSERT(healed >= 1);
 
-    bolt beam;
     dist spd;
 
-    if (where.origin())
-    {
-        spd.isValid = spell_direction(spd, beam, DIR_TARGET,
-                                      mode != TARG_NUM_MODES ? mode :
-                                      you_worship(GOD_ELYVILON) ?
-                                            TARG_ANY : TARG_FRIEND,
-                                      LOS_RADIUS, false, true, true, "Heal",
-                                      nullptr, false, nullptr, _desc_mindless);
-    }
-    else
-    {
-        spd.target  = where;
-        spd.isValid = in_bounds(spd.target);
-    }
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_INJURED_FRIEND;
+    args.needs_path = false;
+    args.self = CONFIRM_CANCEL;
+    args.target_prefix = "Heal";
+    args.get_desc_func = _desc_mindless;
+    direction(spd, args);
 
     if (!spd.isValid)
         return SPRET_ABORT;
-
-    if (spd.target == you.pos())
+    if (cell_is_solid(spd.target))
     {
-        if (not_self)
-        {
-            mpr("You can only heal others!");
-            return SPRET_ABORT;
-        }
-
-        mpr("You are healed.");
-        inc_hp(healed);
-        return SPRET_SUCCESS;
+        canned_msg(MSG_NOTHING_THERE);
+        return SPRET_ABORT;
     }
 
     monster* mons = monster_at(spd.target);
@@ -201,63 +203,55 @@ static spret_type _healing_spell(int healed, int max_healed,
         canned_msg(MSG_NOTHING_THERE);
         // This isn't a cancel, to avoid leaking invisible monster
         // locations.
-        return SPRET_FAIL;
+        return SPRET_SUCCESS;
     }
 
     bool did_something = false;
 
-    if (divine_ability
-        && you_worship(GOD_ELYVILON)
-        && _mons_hostile(mons))
+    if (_mons_hostile(mons))
     {
         const int can_pacify  = _can_pacify_monster(mons, healed, max_healed);
-
-        // Don't divinely heal a monster you can't pacify.
-        if (can_pacify <= 0)
+        if (can_pacify == -1)
         {
-            if (can_pacify == 0)
-            {
-                mprf("The light of Elyvilon fails to reach %s.",
-                     mons->name(DESC_THE).c_str());
-                return SPRET_FAIL;
-            }
-            else if (can_pacify == -3)
-            {
-                mprf("The light of Elyvilon almost touches upon %s.",
-                     mons->name(DESC_THE).c_str());
-                return SPRET_FAIL;
-            }
-            else if (can_pacify == -4)
-            {
-                mprf("%s is completely unfazed by your meager offer of peace.",
-                     mons->name(DESC_THE).c_str());
-                return SPRET_FAIL;
-            }
-            else
-            {
-                if (can_pacify == -2)
-                {
-                    mprf("You cannot pacify this monster while %s is sleeping!",
-                         mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
-                }
-                else
-                    mpr("You cannot pacify this monster!");
-                return SPRET_ABORT;
-            }
+            mpr("You cannot pacify this monster!");
+            return SPRET_ABORT;
         }
-
-        if (can_pacify == 1)
+        if (can_pacify == -2)
         {
+            mprf("You cannot pacify this monster while %s is sleeping!",
+                 mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
+            return SPRET_ABORT;
+        }
+        fail_check();
+
+        switch (can_pacify)
+        {
+        case 0:
+            mprf("The light of Elyvilon fails to reach %s.",
+                 mons->name(DESC_THE).c_str());
+            return SPRET_SUCCESS;
+
+        case -3:
+            mprf("The light of Elyvilon almost touches upon %s.",
+                 mons->name(DESC_THE).c_str());
+            return SPRET_SUCCESS;
+
+        case -4:
+            mprf("%s is completely unfazed by your meager offer of peace.",
+                 mons->name(DESC_THE).c_str());
+            return SPRET_SUCCESS;
+
+        case 1:
             did_something = true;
 
             if (mons->is_holy())
             {
-                string key = "pacification";
+                string key;
 
                 // Quadrupeds can't salute, etc.
                 mon_body_shape shape = get_mon_shape(mons);
                 if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA)
-                    key += "_humanoid";
+                    key = "_humanoid";
 
                 _print_holy_pacification_speech(key, mons,
                                                 MSGCH_FRIEND_ENCHANT);
@@ -266,7 +260,7 @@ static spret_type _healing_spell(int healed, int max_healed,
                     && mons->can_speak()
                     && mons->type != MONS_MENNAS) // Mennas is mute and only has visual speech
                 {
-                    _print_holy_pacification_speech("speech", mons, MSGCH_TALK);
+                    _print_holy_pacification_speech("_speech", mons, MSGCH_TALK);
                 }
             }
             else
@@ -274,37 +268,84 @@ static spret_type _healing_spell(int healed, int max_healed,
 
             record_monster_defeat(mons, KILL_PACIFIED);
             mons_pacify(mons, ATT_NEUTRAL);
+            break;
+
+        default:
+            die("bad _can_pacify_monster return type %d", can_pacify);
         }
     }
 
-    if (mons->heal(healed))
-    {
+    fail_check();
+    if (heal_monster(*mons, healed))
         did_something = true;
-        mprf("You heal %s.", mons->name(DESC_THE).c_str());
-
-        if (mons->hit_points == mons->max_hit_points)
-            simple_monster_message(mons, " is completely healed.");
-        else
-            print_wounds(mons);
-    }
 
     if (!did_something)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_FAIL;
+        return SPRET_SUCCESS;
     }
 
     return SPRET_SUCCESS;
 }
 
-spret_type cast_healing(int pow, int max_pow, bool divine_ability,
-                        const coord_def& where, bool not_self,
-                        targ_mode_type mode)
+/// Effects that occur when the player is debuffed.
+struct player_debuff_effects
 {
-    pow = min(50, pow);
-    max_pow = min(50, max_pow);
-    return _healing_spell(pow + roll_dice(2, pow) - 2, (3 * max_pow) - 2,
-                          divine_ability, where, not_self, mode);
+    /// Attributes removed by a debuff.
+    vector<attribute_type> attributes;
+    /// Durations removed by a debuff.
+    vector<duration_type> durations;
+    /// Whether there's any contam to be removed by a debuff.
+    bool contam;
+};
+
+/**
+ * What dispellable effects currently exist on the player?
+ *
+ * @param[out] buffs   The dispellable effects that exist on the player.
+ *                     Assumed to be empty when passed in.
+ */
+static void _dispellable_player_buffs(player_debuff_effects &buffs)
+{
+    // attributes
+    static const attribute_type dispellable_attributes[] = {
+        ATTR_DELAYED_FIREBALL, ATTR_SWIFTNESS,
+        ATTR_REPEL_MISSILES, ATTR_DEFLECT_MISSILES,
+    };
+
+    for (auto attribute : dispellable_attributes)
+        if (you.attribute[attribute])
+            buffs.attributes.push_back(attribute);
+
+    // durations
+    for (unsigned int i = 0; i < NUM_DURATIONS; ++i)
+    {
+        const int dur = you.duration[i];
+        if (dur <= 0 || !duration_dispellable((duration_type) i))
+            continue;
+        if (i == DUR_TRANSFORMATION && you.form == TRAN_SHADOW)
+            continue;
+        buffs.durations.push_back((duration_type) i);
+        // this includes some buffs that won't be reduced in duration -
+        // anything already at 1 aut, or flight/transform while <= 11 aut
+        // that's probably not an actual problem
+    }
+
+    buffs.contam = get_contamination_level() > 0;
+}
+
+/**
+ * Does the player have any magical effects that can be removed (by debuff)?
+ *
+ * @return  Whether there are any effects to be dispelled.
+ */
+bool player_is_debuffable()
+{
+    player_debuff_effects buffs;
+    _dispellable_player_buffs(buffs);
+    return buffs.contam
+            || !buffs.durations.empty()
+            || !buffs.attributes.empty();
 }
 
 /**
@@ -317,59 +358,44 @@ void debuff_player()
 {
     bool need_msg = false, danger = false;
 
-    if (you.attribute[ATTR_DELAYED_FIREBALL])
+    // find the list of debuffable effects currently active
+    player_debuff_effects buffs;
+    _dispellable_player_buffs(buffs);
+
+    for (auto attr : buffs.attributes)
     {
-        you.attribute[ATTR_DELAYED_FIREBALL] = 0;
-        mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
+        you.attribute[attr] = 0;
+        if (attr == ATTR_DELAYED_FIREBALL)
+            mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
+        else
+            need_msg = true;
     }
 
-    if (you.attribute[ATTR_REPEL_MISSILES])
+    for (auto duration : buffs.durations)
     {
-        you.attribute[ATTR_REPEL_MISSILES] = 0;
-        need_msg = true;
-    }
-
-    if (you.attribute[ATTR_DEFLECT_MISSILES])
-    {
-        you.attribute[ATTR_DEFLECT_MISSILES] = 0;
-        need_msg = true;
-    }
-
-    if (you.attribute[ATTR_SWIFTNESS] > 0)
-    {
-        you.attribute[ATTR_SWIFTNESS] = 0;
-        need_msg = true;
-    }
-
-    for (unsigned int i = 0; i < NUM_DURATIONS; ++i)
-    {
-        int& dur = you.duration[i];
-        if (duration_dispellable((duration_type) i) && dur > 0)
+        int &len = you.duration[duration];
+        if ((duration == DUR_FLIGHT || duration == DUR_TRANSFORMATION)
+            && len > 11)
         {
-            if (i == DUR_TRANSFORMATION && you.form == TRAN_SHADOW)
-                continue;
-            else if ((i == DUR_FLIGHT || i == DUR_TRANSFORMATION) && dur > 11)
-            {
-                dur = 11;
-                need_msg = true;
-                danger = need_expiration_warning(you.pos());
-            }
-            else if (i == DUR_TELEPORT)
-            {
-                dur = 0;
-                mprf(MSGCH_DURATION, "You feel strangely stable.");
-            }
-            else if (i == DUR_PETRIFYING)
-            {
-                dur = 0;
-                mprf(MSGCH_DURATION, "You feel limber!");
-                you.redraw_evasion = true;
-            }
-            else if (dur > 1)
-            {
-                dur = 1;
-                need_msg = true;
-            }
+            len = 11;
+            need_msg = true;
+            danger = need_expiration_warning(you.pos());
+        }
+        else if (duration == DUR_TELEPORT)
+        {
+            len = 0;
+            mprf(MSGCH_DURATION, "You feel strangely stable.");
+        }
+        else if (duration == DUR_PETRIFYING)
+        {
+            len = 0;
+            mprf(MSGCH_DURATION, "You feel limber!");
+            you.redraw_evasion = true;
+        }
+        else if (len > 1)
+        {
+            len = 1;
+            need_msg = true;
         }
     }
 
@@ -386,64 +412,62 @@ void debuff_player()
         mpr("You feel slightly less contaminated with magical energies.");
 }
 
-void debuff_monster(monster* mon)
+
+/**
+  * What dispellable effects currently exist on a given monster?
+  *
+  * @param[in] mon      The monster in question.
+  * @param[out] buffs   The dispellable effects that exist on that monster.
+  *                     Assumed to be empty when passed in.
+  */
+static void _dispellable_monster_buffs(const monster &mon,
+                                       vector<enchant_type> &buffs)
 {
-    // List of magical enchantments which will be dispelled.
-    static const enchant_type lost_enchantments[] =
-    {
-        ENCH_SLOW,
-        ENCH_HASTE,
-        ENCH_SWIFT,
-        ENCH_MIGHT,
-        ENCH_AGILE,
-        ENCH_FEAR,
-        ENCH_CONFUSION,
-        ENCH_INVIS,
-        ENCH_CORONA,
-        ENCH_CHARM,
-        ENCH_PARALYSIS,
-        ENCH_PETRIFYING,
-        ENCH_PETRIFIED,
-        ENCH_REGENERATION,
-        ENCH_STICKY_FLAME,
-        ENCH_TP,
-        ENCH_INNER_FLAME,
-        ENCH_OZOCUBUS_ARMOUR,
-        ENCH_INJURY_BOND,
-        ENCH_DIMENSION_ANCHOR,
-        ENCH_CONTROL_WINDS,
-        ENCH_TOXIC_RADIANCE,
-        ENCH_AGILE,
-        ENCH_BLACK_MARK,
-        ENCH_SHROUD,
-        ENCH_SAP_MAGIC,
-        ENCH_REPEL_MISSILES,
-        ENCH_DEFLECT_MISSILES,
-        ENCH_CONDENSATION_SHIELD,
-        ENCH_RESISTANCE,
-        ENCH_HEXED,
-    };
-
-    bool dispelled = false;
-
     // Dispel all magical enchantments...
-    for (enchant_type ench : lost_enchantments)
+    for (enchant_type ench : dispellable_enchantments)
     {
-        // ...except for natural invisibility...
-        if (ench == ENCH_INVIS && mons_class_flag(mon->type, M_INVIS))
-            continue;
-        // ...permaconfusion...
-        if (ench == ENCH_CONFUSION && mons_class_flag(mon->type, M_CONFUSED))
-            continue;
-        // ...and regeneration from Trog.
-        if (ench == ENCH_REGENERATION && mon->has_ench(ENCH_RAISED_MR))
+        // except for permaconfusion.
+        if (ench == ENCH_CONFUSION && mons_class_flag(mon.type, M_CONFUSED))
             continue;
 
-        if (mon->del_ench(ench, true, true))
-            dispelled = true;
+        if (mon.has_ench(ench))
+            buffs.push_back(ench);
     }
-    if (dispelled)
-        simple_monster_message(mon, "'s magical effects unravel!");
+
+    // special-case invis, to avoid hitting naturally invis monsters.
+    if (mon.has_ench(ENCH_INVIS) && !mons_class_flag(mon.type, M_INVIS))
+        buffs.push_back(ENCH_INVIS);
+}
+
+
+/**
+ * Does a given monster have any buffs that can be removed?
+ *
+ * @param mon           The monster in question.
+ */
+bool monster_is_debuffable(const monster &mon)
+{
+    vector<enchant_type> buffs;
+    _dispellable_monster_buffs(mon, buffs);
+    return !buffs.empty();
+}
+
+/**
+ * Remove magical effects from a given monster.
+ *
+ * @param mon           The monster to be debuffed.
+ */
+void debuff_monster(monster &mon)
+{
+    vector<enchant_type> buffs;
+    _dispellable_monster_buffs(mon, buffs);
+    if (buffs.empty())
+        return;
+
+    for (enchant_type buff : buffs)
+        mon.del_ench(buff, true, true);
+
+    simple_monster_message(&mon, "'s magical effects unravel!");
 }
 
 int detect_traps(int pow)
@@ -483,7 +507,7 @@ int detect_items(int pow)
         if (pow != -1 && env.map_knowledge(*ri).changed())
             continue;
 
-        if (igrd(*ri) != NON_ITEM
+        if (you.visible_igrd(*ri) != NON_ITEM
             && !env.map_knowledge(*ri).item())
         {
             items_found++;
@@ -575,7 +599,7 @@ int detect_creatures(int pow, bool telepathic)
         if (monster* mon = monster_at(*ri))
         {
             // If you can see the monster, don't "detect" it elsewhere.
-            if (!mons_near(mon) || !mon->visible_to(&you))
+            if (!you.can_see(*mon))
             {
                 creatures_found++;
                 _mark_detected_creature(*ri, mon, fuzz_chance, fuzz_radius);
@@ -637,24 +661,16 @@ bool remove_curse(bool alreadyknown, const string &pre_msg)
 
     bool success = false;
 
-    // Only cursed *weapons* in hand count as cursed. - bwr
-    // Not you.weapon() because we want to handle melded weapons too.
-    item_def * const weapon = you.slot_item(EQ_WEAPON, true);
-    if (weapon && is_weapon(*weapon) && weapon->cursed())
-    {
-        // Also sets wield_change.
-        do_uncurse_item(*weapon);
-        success = true;
-    }
-
-    // Everything else uses the same paradigm - are we certain?
-    // What of artefact rings and amulets? {dlb}:
-    for (int i = EQ_WEAPON + 1; i < NUM_EQUIP; i++)
+    // Players can no longer wield armour and jewellery as weapons, so we do
+    // not need to check whether the EQ_WEAPON slot actually contains a weapon:
+    // only weapons (and rods and staves) are both wieldable and cursable.
+    for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
     {
         // Melded equipment can also get uncursed this way.
-        if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
+        item_def * const it = you.slot_item(equipment_type(i), true);
+        if (it && it->cursed())
         {
-            do_uncurse_item(you.inv[you.equip[i]]);
+            do_uncurse_item(*it);
             success = true;
         }
     }
@@ -843,12 +859,8 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                 move_items(*ai, newpos);
             }
 
-            // All clouds are destroyed.
-            if (env.cgrid(*ai) != EMPTY_CLOUD)
-                delete_cloud(env.cgrid(*ai));
-
             // All traps are destroyed.
-            if (trap_def *ptrap = find_trap(*ai))
+            if (trap_def *ptrap = trap_at(*ai))
             {
                 ptrap->destroy();
                 grd(*ai) = DNGN_FLOOR;
@@ -1235,7 +1247,7 @@ void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
         beam.thrower   = KILL_MISC;
         beam.source_id = MID_NOBODY;
     }
-    else if (attacker && attacker->is_player())
+    else if (attacker->is_player())
     {
         beam.thrower   = KILL_YOU;
         beam.source_id = MID_PLAYER;

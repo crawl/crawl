@@ -792,17 +792,6 @@ public:
     }
 
     /**
-     * What brand type does this form attack with when unarmed?
-     */
-    brand_type get_uc_brand() const override
-    {
-        // thematic but probably irrelevant
-        if (you.species == SP_VAMPIRE)
-            return SPWPN_VAMPIRISM;
-        return Form::get_uc_brand();
-    }
-
-    /**
      * Find the player's base unarmed damage in this form.
      */
     int get_base_unarmed_damage() const override
@@ -1439,7 +1428,7 @@ static bool _flying_in_new_form(transformation_type which_trans)
         //similar code to safe_to_remove from item_use.cc
         if (inf.is_type(OBJ_JEWELLERY, RING_FLIGHT))
             sources_removed++;
-        if (inf.base_type == OBJ_ARMOUR && inf.special == SPARM_FLYING)
+        if (inf.base_type == OBJ_ARMOUR && inf.brand == SPARM_FLYING)
             sources_removed++;
         if (is_artefact(inf) && artefact_known_property(inf, ARTP_FLY))
             sources_removed++;
@@ -1532,41 +1521,20 @@ static bool _transformation_is_safe(transformation_type which_trans,
                                     dungeon_feature_type feat, bool quiet,
                                     string *fail_reason = nullptr)
 {
-    string msg;
-    bool is_safe = true;
-
-    if (which_trans == TRAN_TREE)
-    {
-        const cloud_type cloud = cloud_type_at(you.pos());
-        if (cloud != CLOUD_NONE
-            // Tree form is immune to these two.
-            && cloud != CLOUD_MEPHITIC
-            && cloud != CLOUD_POISON
-            && is_damaging_cloud(cloud, false))
-        {
-            msg = make_stringf("You can't transform into a tree while standing "
-                               "in a cloud of %s.",
-                               cloud_type_name(cloud).c_str());
-            is_safe = false;
-        }
-    }
-
 #if TAG_MAJOR_VERSION == 34
     if (which_trans == TRAN_ICE_BEAST && you.species == SP_DJINNI)
-        is_safe = false; // melting is fatal...
+        return false; // melting is fatal...
 #endif
-    else if (feat_dangerous_for_form(which_trans, feat))
-    {
-        msg = make_stringf("You would %s in your new form.",
-                           feat == DNGN_DEEP_WATER ? "drown" : "burn");
-        is_safe = false;
-    }
+    if (!feat_dangerous_for_form(which_trans, feat))
+        return true;
 
+    const string msg = make_stringf("You would %s in your new form.",
+                                    feat == DNGN_DEEP_WATER ? "drown" : "burn");
     if (fail_reason)
         *fail_reason = msg;
-    if (!is_safe && !quiet)
+    if (!quiet)
         mpr(msg);
-    return is_safe;
+    return false;
 }
 
 /**
@@ -1645,33 +1613,35 @@ static void _print_head_change_message(int old_heads, int new_heads)
  * All undead can enter shadow form; vampires also can enter batform, and, when
  * full, other forms (excepting lichform).
  *
- * @param which_trans   The tranformation which the player is undergoing.
- * @return              True if the player is not blocked from entering the
- *                      given form by their undead race; false otherwise.
+ * @param which_trans   The tranformation which the player is undergoing
+ *                      (default you.form).
+ * @return              UFR_GOOD if the player is not blocked from entering the
+ *                      given form by their undead race; UFR_TOO_ALIVE if the
+ *                      player is too satiated as a vampire; UFR_TOO_DEAD if
+ *                      the player is too dead (or too thirsty as a vampire).
  */
-static bool _player_alive_enough_for(transformation_type which_trans)
+undead_form_reason lifeless_prevents_form(transformation_type which_trans)
 {
     if (!you.undead_state(false))
-        return true; // not undead!
+        return UFR_GOOD; // not undead!
 
     if (which_trans == TRAN_NONE)
-        return true; // everything can become itself
+        return UFR_GOOD; // everything can become itself
 
     if (which_trans == TRAN_SHADOW)
-        return true; // even the undead can use dith's shadow form
+        return UFR_GOOD; // even the undead can use dith's shadow form
 
     if (you.species != SP_VAMPIRE)
-        return false; // ghouls & mummies can't become anything else, though
+        return UFR_TOO_DEAD; // ghouls & mummies can't become anything else
 
     if (which_trans == TRAN_LICH)
-        return false; // vampires can never lichform
+        return UFR_TOO_DEAD; // vampires can never lichform
 
-    if (which_trans == TRAN_BAT)
-        return you.hunger_state <= HS_SATIATED; // can batform on low blood
+    if (which_trans == TRAN_BAT) // can batform on low blood
+        return you.hunger_state <= HS_SATIATED ? UFR_GOOD : UFR_TOO_ALIVE;
 
     // other forms can only be entered when full or above.
-    return you.hunger_state > HS_SATIATED;
-
+    return you.hunger_state > HS_SATIATED ? UFR_GOOD : UFR_TOO_DEAD;
 }
 
 /**
@@ -1774,7 +1744,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     }
 
     // the undead cannot enter most forms.
-    if (!_player_alive_enough_for(which_trans))
+    if (lifeless_prevents_form(which_trans) == UFR_TOO_DEAD)
     {
         msg = "Your unliving flesh cannot be transformed in this way.";
         success = false;
@@ -1892,7 +1862,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     case TRAN_SPIDER:
         if (you.attribute[ATTR_HELD])
         {
-            trap_def *trap = find_trap(you.pos());
+            trap_def *trap = trap_at(you.pos());
             if (trap && trap->type == TRAP_WEB)
             {
                 mpr("You disentangle yourself from the web.");
@@ -1914,7 +1884,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     case TRAN_DRAGON:
         if (you.attribute[ATTR_HELD])
         {
-            trap_def *trap = find_trap(you.pos());
+            trap_def *trap = trap_at(you.pos());
             if (trap && trap->type == TRAP_WEB)
             {
                 mpr("You shred the web into pieces!");
@@ -1940,7 +1910,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         }
 
         you.hunger_state = HS_SATIATED;  // no hunger effects while transformed
-        set_redraw_status(REDRAW_HUNGER);
+        you.redraw_status_lights = true;
         break;
 
     case TRAN_APPENDAGE:
@@ -1984,7 +1954,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
 
     // If we are no longer living, end an effect that afflicts only the living
-    if (you.duration[DUR_FLAYED] && you.holiness() != MH_NATURAL)
+    if (you.duration[DUR_FLAYED] && !(you.holiness() & MH_NATURAL))
     {
         // Heal a little extra if we gained max hp from this transformation
         if (form_hp_mod() != 10)

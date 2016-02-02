@@ -46,17 +46,10 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_NAGA_MAGE, MONS_GREATER_NAGA),
     monster_level_up(MONS_NAGA_WARRIOR, MONS_GREATER_NAGA),
 
-    monster_level_up(MONS_DEEP_ELF_FIGHTER, MONS_DEEP_ELF_KNIGHT),
-
-    // Deep elf magi can become either summoners or conjurers.
-    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_SUMMONER, 500),
-    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_CONJURER),
-
-    monster_level_up(MONS_DEEP_ELF_PRIEST, MONS_DEEP_ELF_HIGH_PRIEST),
-    monster_level_up(MONS_DEEP_ELF_CONJURER, MONS_DEEP_ELF_ANNIHILATOR),
-
-    monster_level_up(MONS_DEEP_ELF_SUMMONER, MONS_DEEP_ELF_DEMONOLOGIST, 500),
-    monster_level_up(MONS_DEEP_ELF_SUMMONER, MONS_DEEP_ELF_SORCERER),
+    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_DEATH_MAGE, 250),
+    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_DEMONOLOGIST, 333),
+    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_ANNIHILATOR, 500),
+    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_SORCERER),
 
     monster_level_up(MONS_GNOLL, MONS_GNOLL_SERGEANT),
 
@@ -99,11 +92,8 @@ static const monster_level_up *_monster_level_up_target(monster_type type,
         if (mlup.before == type)
         {
             const monsterentry *me = get_monster_data(mlup.after);
-            if (static_cast<int>(me->hpdice[0]) == hit_dice
-                && x_chance_in_y(mlup.chance, 1000))
-            {
+            if (me->HD == hit_dice && x_chance_in_y(mlup.chance, 1000))
                 return &mlup;
-            }
         }
     }
     return nullptr;
@@ -120,7 +110,7 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
     dummy.type         = after;
     dummy.base_monster = base_monster;
     dummy.number       = number;
-    define_monster(&dummy);
+    define_monster(&dummy); // assumes after is not a zombie
 
     colour = dummy.colour;
     speed  = dummy.speed;
@@ -161,7 +151,7 @@ bool monster::level_up_change()
         base_monster = type;
         monster_type upgrade = resolve_monster_type(RANDOM_NONBASE_DRACONIAN,
                                                     type);
-        if (static_cast<int>(get_monster_data(upgrade)->hpdice[0]) == get_experience_level())
+        if (get_monster_data(upgrade)->HD == get_experience_level())
             upgrade_type(upgrade, false, true);
     }
     return false;
@@ -216,7 +206,7 @@ bool monster::gain_exp(int exp, int max_levels_to_gain)
         return false;
 
     // Only natural monsters can level-up.
-    if (holiness() != MH_NATURAL)
+    if (!(holiness() & MH_NATURAL))
         return false;
 
     // Only monsters that you can gain XP from can level-up.

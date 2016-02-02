@@ -18,7 +18,6 @@ skill_type abil_skill(ability_type abil)
 {
     switch (abil)
     {
-    case ABIL_EVOKE_TELEPORTATION:
     case ABIL_EVOKE_BLINK:
     case ABIL_EVOKE_BERSERK:
     case ABIL_EVOKE_TURN_INVISIBLE:
@@ -29,6 +28,7 @@ skill_type abil_skill(ability_type abil)
     case ABIL_NEMELEX_TRIPLE_DRAW:
     case ABIL_NEMELEX_DEAL_FOUR:
     case ABIL_NEMELEX_STACK_FIVE:
+    case ABIL_PAKELLAS_DEVICE_SURGE:
         return SK_EVOCATIONS;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
@@ -90,7 +90,6 @@ static int _abil_degree(ability_type abil)
 {
     switch (abil)
     {
-    case ABIL_EVOKE_TELEPORTATION:
     case ABIL_EVOKE_BLINK:
     case ABIL_EVOKE_BERSERK:
     case ABIL_EVOKE_TURN_INVISIBLE:
@@ -331,8 +330,8 @@ void practise(exer_type ex, int param1)
         break;
 
     case EX_MONSTER_MAY_HIT:
-         _check_train_dodging(1);
-         break;
+        _check_train_dodging(1);
+        break;
 
     case EX_WILL_LAUNCH:
         sk = static_cast<skill_type>(param1);

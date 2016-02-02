@@ -284,6 +284,21 @@ Gcc'ccG
    @
 ENDMAP
 
+NAME: chequers_ossuary_entry_cave
+TAGS: transparent
+: ossuary_portal(_G)
+MAP
+xxxxxcccccccxxxxx
+xxxxcc'''''ccxxxx
+xxxxcG''O''Gcxxxx
+xxxxcc'''''ccxxxx
+xxxxxccc'cccxxxxx
+xxxxxxxc'cxxxxxxx
+xxxxxxxcAcxxxxxxx
+.................
+@@@@@@@@@@@@@@@@@
+ENDMAP
+
 #### The portal vaults ####################################
 
 # Reset default depth to prevent random generation of portal vaults.
@@ -488,12 +503,12 @@ MONS:    gnoll zombie / hobgoblin zombie / orc zombie / \
 ITEM:    scroll of random uselessness w:20 / scroll of immolation / \
          scroll of identify / scroll of remove curse / \
          potion of mutation w:5 / potion of ambrosia w:5 / \
-         potion of degeneration / potion of lignification / \
+         potion of poison / potion of lignification / \
          potion of flight / potion of curing w:15
 # and sometimes mostly useless ones
 ITEM:    scroll of noise / scroll of random uselessness w:20 / \
          scroll of immolation / potion of mutation w:5 / \
-         potion of poison w:30 / potion of degeneration
+         potion of poison w:40
 # occasionally just use this
 ITEM:    any potion / any scroll w:5 / nothing
 SHUFFLE: hjkl
@@ -668,11 +683,10 @@ SUBST:   EFKGHL : d
 SUBST:   CDJ = 1112
 MONS:    generate_awake zombie place:D:6 /\
          w:5 generate_awake mummy
-MONS:    plant col:darkgrey name:withered n_adj tile:mons_withered_plant /\
+MONS:    w:15 withered plant /\
          bog body hd:3 \
          spells:throw_frost.18.wizard;slow.18.wizard \
          name:decayed n_adj n_noc /\
-         w:5 plant col:lightgrey name:withered n_adj tile:mons_withered_plant /\
          w:5 nothing
 ITEM:    any potion / any scroll / any jewellery w:1
 : ossuary_setup_features(_G)

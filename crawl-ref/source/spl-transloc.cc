@@ -410,7 +410,7 @@ static bool _cell_vetoes_teleport(const coord_def cell, bool check_monsters = tr
         return true;
 
     // As do all clouds; this may change.
-    if (env.cgrid(cell) != EMPTY_CLOUD && !wizard_tele)
+    if (cloud_at(cell) && !wizard_tele)
         return true;
 
     if (cell_is_solid(cell))
@@ -528,38 +528,10 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis)
     }
     else
     {
+        if (player_in_branch(BRANCH_LABYRINTH) && teleportitis)
+            return false;
+
         coord_def newpos;
-
-        // If in a labyrinth, always teleport well away from the centre.
-        // (Check done for the straight line, no pathfinding involved.)
-        bool need_distance_check = false;
-        coord_def centre;
-        if (player_in_branch(BRANCH_LABYRINTH))
-        {
-            if (teleportitis)
-                return false;
-
-            bool success = false;
-            for (int xpos = 0; xpos < GXM; xpos++)
-            {
-                for (int ypos = 0; ypos < GYM; ypos++)
-                {
-                    centre = coord_def(xpos, ypos);
-                    if (!in_bounds(centre))
-                        continue;
-
-                    if (grd(centre) == DNGN_ESCAPE_HATCH_UP)
-                    {
-                        success = true;
-                        break;
-                    }
-                }
-                if (success)
-                    break;
-            }
-            need_distance_check = success;
-        }
-
         int tries = 500;
         do
         {
@@ -567,8 +539,6 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis)
         }
         while (--tries > 0
                && (_cell_vetoes_teleport(newpos)
-                   || need_distance_check && (newpos - centre).rdist()
-                                              <= 30
                    || testbits(env.pgrid(newpos), FPROP_NO_TELE_INTO)));
 
         // Running out of tries shouldn't happen; no message. Return false so
@@ -581,7 +551,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis)
         {
             int mons_near_target = 0;
             for (monster_near_iterator mi(newpos, LOS_NO_TRANS); mi; ++mi)
-                if (!mons_is_firewood(*mi) && mons_attitude(*mi) == ATT_HOSTILE)
+                if (mons_is_threatening(*mi) && mons_attitude(*mi) == ATT_HOSTILE)
                     mons_near_target++;
             if (!mons_near_target)
             {
@@ -861,13 +831,14 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
         randomized_where = where;
         randomized_where.x += random_range(-2, 2);
         randomized_where.y += random_range(-2, 2);
-    } while ((!in_bounds(randomized_where) ||
-             grd(randomized_where) != DNGN_FLOOR ||
-             monster_at(randomized_where) ||
-             !you.see_cell(randomized_where) ||
-             you.trans_wall_blocking(randomized_where) ||
-             randomized_where == you.pos()) &&
-            tries < 100);
+    }
+    while ((!in_bounds(randomized_where)
+            || grd(randomized_where) != DNGN_FLOOR
+            || monster_at(randomized_where)
+            || !you.see_cell(randomized_where)
+            || you.trans_wall_blocking(randomized_where)
+            || randomized_where == you.pos())
+           && tries < 100);
 
     do
     {
@@ -875,14 +846,14 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
         randomized_here = you.pos();
         randomized_here.x += random_range(-2, 2);
         randomized_here.y += random_range(-2, 2);
-    } while ((!in_bounds(randomized_here) ||
-             grd(randomized_here) != DNGN_FLOOR ||
-             monster_at(randomized_here) ||
-             !you.see_cell(randomized_here) ||
-             you.trans_wall_blocking(randomized_here) ||
-             randomized_here == you.pos() ||
-             randomized_here == randomized_where) &&
-            tries2 < 100);
+    }
+    while ((!in_bounds(randomized_here)
+            || grd(randomized_here) != DNGN_FLOOR
+            || monster_at(randomized_here)
+            || !you.see_cell(randomized_here)
+            || you.trans_wall_blocking(randomized_here)
+            || randomized_here == randomized_where)
+           && tries2 < 100);
 
     if (tries >= 100 || tries2 >= 100)
     {
@@ -890,7 +861,7 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
             mpr("You cannot create a passage on the other side of the transparent wall.");
         else
             // XXX: bleh, dumb message
-            mpr("Creating passages of Golubria requires sufficient empty space.");
+            mpr("Creating a passage of Golubria requires sufficient empty space.");
         return SPRET_ABORT;
     }
 
@@ -899,8 +870,8 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
     place_specific_trap(randomized_here, TRAP_GOLUBRIA);
     env.level_state |= LSTATE_GOLUBRIA;
 
-    trap_def *trap = find_trap(randomized_where);
-    trap_def *trap2 = find_trap(randomized_here);
+    trap_def *trap = trap_at(randomized_where);
+    trap_def *trap2 = trap_at(randomized_here);
     if (!trap || !trap2)
     {
         mpr("Something buggy happened.");
@@ -953,8 +924,8 @@ int gravitas_range(int pow, int strength)
 
 #define GRAVITY "by gravitational forces"
 
-void attract_actor(const actor* agent, actor* victim, const coord_def pos,
-                   int pow, int strength)
+static void _attract_actor(const actor* agent, actor* victim,
+                           const coord_def pos, int pow, int strength)
 {
     ASSERT(victim); // XXX: change to actor &victim
 
@@ -989,6 +960,8 @@ void attract_actor(const actor* agent, actor* victim, const coord_def pos,
                 victim->collide(newpos, agent, pow);
             break;
         }
+        else if (!victim->is_habitable(newpos))
+            break;
         else
             victim->move_to_pos(newpos, false);
 
@@ -1003,10 +976,10 @@ void attract_actor(const actor* agent, actor* victim, const coord_def pos,
     }
 }
 
-bool fatal_attraction(const coord_def& pos, actor *agent, int pow)
+bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
 {
     bool affected = false;
-    for (actor_near_iterator ai(pos, LOS_NO_TRANS); ai; ++ai)
+    for (actor_near_iterator ai(pos, LOS_SOLID); ai; ++ai)
     {
         if (*ai == agent || ai->is_stationary() || ai->pos() == pos)
             continue;
@@ -1018,7 +991,7 @@ bool fatal_attraction(const coord_def& pos, actor *agent, int pow)
             continue;
 
         affected = true;
-        attract_actor(agent, *ai, pos, pow, strength);
+        _attract_actor(agent, *ai, pos, pow, strength);
     }
 
     return affected;

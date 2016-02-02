@@ -294,11 +294,7 @@ uint8_t is_waypoint(const coord_def &p)
 
 static inline bool is_stash(const LevelStashes *ls, const coord_def& p)
 {
-    if (!ls)
-        return false;
-
-    const Stash *s = ls->find_stash(p);
-    return s && s->enabled;
+    return ls && ls->find_stash(p);
 }
 
 static bool _monster_blocks_travel(const monster_info *mons)
@@ -363,7 +359,7 @@ public:
         if (!_travel_safe_grid.get())
         {
             did_compute = true;
-            unique_ptr<travel_safe_grid> tsgrid(new travel_safe_grid);
+            auto tsgrid = make_unique<travel_safe_grid>();
             travel_safe_grid &safegrid(*tsgrid);
             for (rectangle_iterator ri(1); ri; ++ri)
             {
@@ -486,7 +482,7 @@ static bool _is_safe_move(const coord_def& c)
         //    should have been aborted already by the checks in view.cc.
     }
 
-    if (is_trap(c) && !find_trap(c)->is_safe())
+    if (is_trap(c) && !trap_at(c)->is_safe())
         return false;
 
     return _is_safe_cloud(c);
@@ -2989,12 +2985,12 @@ void start_explore(bool grab_items)
             }
         }
 
-         if ((corpse_on_pos
-              && (Options.auto_sacrifice == AS_YES
-                  || Options.auto_sacrifice == AS_BEFORE_EXPLORE)))
-         {
-             pray(false);
-         }
+        if ((corpse_on_pos
+                    && (Options.auto_sacrifice == AS_YES
+                        || Options.auto_sacrifice == AS_BEFORE_EXPLORE)))
+        {
+            pray(false);
+        }
 
     }
 
@@ -3142,7 +3138,7 @@ string level_id::describe(bool long_name, bool with_number) const
         if (long_name)
         {
             // decapitalise 'the'
-            if (result.find("The") == 0)
+            if (starts_with(result, "The"))
                 result[0] = 't';
             result = make_stringf("Level %d of %s",
                       depth, result.c_str());
@@ -3465,7 +3461,7 @@ void LevelInfo::correct_stair_list(const vector<coord_def> &s)
     // First we kill any stairs in 'stairs' that aren't there in 's'.
     for (int i = ((int) stairs.size()) - 1; i >= 0; --i)
     {
-        if (stairs[i].type != stair_info::PHYSICAL)
+        if (stairs[i].type == stair_info::PLACEHOLDER)
             continue;
 
         bool found = false;
@@ -3508,6 +3504,8 @@ void LevelInfo::correct_stair_list(const vector<coord_def> &s)
             {
                 si.destination = travel_hell_entry;
             }
+            if (!env.map_knowledge(pos).seen())
+                si.type = stair_info::MAPPED;
 
             // We don't know where on the next level these stairs go to, but
             // that can't be helped. That information will have to be filled
@@ -3515,7 +3513,7 @@ void LevelInfo::correct_stair_list(const vector<coord_def> &s)
             stairs.push_back(si);
         }
         else
-            stairs[found].type = stair_info::PHYSICAL;
+            stairs[found].type = env.map_knowledge(pos).seen() ? stair_info::PHYSICAL : stair_info::MAPPED;
     }
 
     resize_stair_distances();
@@ -3653,8 +3651,54 @@ void LevelInfo::fixup()
     }
 }
 
-bool TravelCache::know_stair(const coord_def &c) const
+void TravelCache::update_stone_stair(const coord_def &c)
 {
+    if (!env.map_knowledge(c).seen())
+        return;
+    LevelInfo *li = find_level_info(level_id::current());
+    if (!li)
+        return;
+    stair_info *si = li->get_stair(c);
+    // Don't bother proceeding further if we already know where the stair goes.
+    if (si && si->destination.is_valid())
+        return;
+    const dungeon_feature_type feat1 = grd(c);
+    ASSERT(feat_is_stone_stair(feat1));
+    // Compute the corresponding feature type on the other side of the stairs.
+    const dungeon_feature_type feat2 = (dungeon_feature_type)
+          (feat1 + (feat_is_stone_stair_up(feat1) ? 1 : -1)
+                   * (DNGN_STONE_STAIRS_DOWN_I - DNGN_STONE_STAIRS_UP_I));
+    LevelInfo *li2 = find_level_info(level_id::get_next_level_id(c));
+    if (!li2)
+        return;
+    for (int i = static_cast<int>(li2->stairs.size()) - 1; i >= 0; --i)
+    {
+        if (li2->stairs[i].grid == feat2)
+        {
+            if (li2->stairs[i].type == stair_info::MAPPED)
+                return;
+            // If we haven't added these stairs to our LevelInfo yet, do so
+            // before trying to update them.
+            if (!si)
+            {
+                stair_info si2;
+                si2.position = c;
+                si2.grid = grd(si2.position);
+                li->stairs.push_back(si2);
+            }
+            li->update_stair(c,level_pos(li2->id,li2->stairs[i].position));
+            // Add the other stair direction too so that X[]ing to the other
+            // level will be correct immediately.
+            li2->update_stair(li2->stairs[i].position,level_pos(li->id,c));
+            return;
+        }
+    }
+}
+
+bool TravelCache::know_stair(const coord_def &c)
+{
+    if (feat_is_stone_stair(grd(c)))
+        update_stone_stair(c);
     auto i = levels.find(level_id::current());
     return i == levels.end() ? false : i->second.know_stair(c);
 }
@@ -4227,7 +4271,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
 {
     if (feat == DNGN_ENTER_SHOP && ES_shop)
     {
-        shops.emplace_back(shop_name(pos), feat);
+        shops.emplace_back(shop_name(*shop_at(pos)), feat);
         es_flags |= ES_SHOP;
     }
     else if (feat_is_stair(feat) && ES_stair)
@@ -4271,7 +4315,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
                 desc = cleaned_feature_description(pos);
             runed_doors.emplace_back(desc, 1);
             es_flags |= ES_RUNED_DOOR;
-       }
+        }
     }
     else if (feat_is_altar(feat) && ES_altar)
     {
@@ -4590,7 +4634,8 @@ bool check_for_interesting_features()
     // discovered and contain an item, or have an interesting dungeon
     // feature, stop exploring.
     explore_discoveries discoveries;
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+    for (radius_iterator ri(you.pos(),
+                            you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
         const coord_def p(*ri);
 

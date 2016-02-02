@@ -716,38 +716,29 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
     }
 }
 
-// Select a spell direction and fill dist and pbolt appropriately.
-// Return false if the user cancelled, true otherwise.
-// FIXME: this should accept a direction_chooser_args directly rather
-// than move the arguments into one.
-bool spell_direction(dist &spelld, bolt &pbolt,
-                      targeting_type restrict, targ_mode_type mode,
-                      int range,
-                      bool needs_path, bool may_target_monster,
-                      bool may_target_self, const char *target_prefix,
-                      const char* top_prompt, bool cancel_at_self,
-                      targetter *hitfunc, desc_filter get_desc_func)
+/**
+ * Select a spell target and fill dist and pbolt appropriately.
+ *
+ * @param[out] spelld    the output of the direction() call.
+ * @param[in, out] pbolt a beam; its range is used if none is set in args, and
+ *                       its source and target are set if the direction() call
+ *                       succeeds.
+ * @param[in] args       The arguments for the direction() call. May be null,
+ *                       which case a default is used.
+ * @return false if the user cancelled, true otherwise.
+ */
+bool spell_direction(dist &spelld, bolt &pbolt, direction_chooser_args *args)
 {
-    if (range < 1)
-        range = (pbolt.range < 1) ? you.current_vision : pbolt.range;
+    direction_chooser_args newargs;
+    // This should be before the overwrite, so callers can specify a different
+    // mode if they want.
+    newargs.mode = TARG_HOSTILE;
+    if (args)
+        newargs = *args;
+    if (newargs.range < 1)
+        newargs.range = (pbolt.range < 1) ? you.current_vision : pbolt.range;
 
-    direction_chooser_args args;
-    args.restricts = restrict;
-    args.mode = mode;
-    args.range = range;
-    args.just_looking = false;
-    args.needs_path = needs_path;
-    args.may_target_monster = may_target_monster;
-    args.may_target_self = may_target_self;
-    args.target_prefix = target_prefix;
-    if (top_prompt)
-        args.top_prompt = top_prompt;
-    args.behaviour = nullptr;
-    args.cancel_at_self = cancel_at_self;
-    args.hitfunc = hitfunc;
-    args.get_desc_func = get_desc_func;
-
-    direction(spelld, args);
+    direction(spelld, newargs);
 
     if (!spelld.isValid)
     {
@@ -1001,6 +992,7 @@ int spell_effect_noise(spell_type spell)
     {
     case SPELL_MEPHITIC_CLOUD:
     case SPELL_FIREBALL:
+    case SPELL_VIOLENT_UNRAVELLING:
         expl_size = 1;
         break;
 
@@ -1052,50 +1044,62 @@ bool spell_is_form(spell_type spell)
  * This function attempts to determine if a given spell is useless to the
  * player.
  *
- * @param spell     The spell in question.
- * @param temp      Include checks for volatile or temporary states
- *                  (status effects, mana, gods, items, etc.)
- * @param prevent   Whether to only check for effects which prevent casting,
- *                  rather than just ones that make it unproductive.
- * @param evoked    Is the spell being evoked from an item? (E.g., a rod)
- * @return          Whether the given spell has no chance of being useful.
+ * @param spell      The spell in question.
+ * @param temp       Include checks for volatile or temporary states
+ *                   (status effects, mana, gods, items, etc.)
+ * @param prevent    Whether to only check for effects which prevent casting,
+ *                   rather than just ones that make it unproductive.
+ * @param evoked     Is the spell being evoked from an item? (E.g., a rod)
+ * @param fake_spell Is the spell some other kind of fake spell (such as an
+                     innate or divine ability)?
+ * @return           Whether the given spell has no chance of being useful.
  */
-bool spell_is_useless(spell_type spell, bool temp, bool prevent, bool evoked)
+bool spell_is_useless(spell_type spell, bool temp, bool prevent, bool evoked,
+                      bool fake_spell)
 {
-    return spell_uselessness_reason(spell, temp, prevent, evoked) != "";
+    return spell_uselessness_reason(spell, temp, prevent,
+                                    evoked, fake_spell) != "";
 }
 
 /**
  * This function gives the reason that a spell is currently useless to the
  * player, if it is.
  *
- * @param spell     The spell in question.
- * @param temp      Include checks for volatile or temporary states
- *                  (status effects, mana, gods, items, etc.)
- * @param prevent   Whether to only check for effects which prevent casting,
- *                  rather than just ones that make it unproductive.
- * @param evoked    Is the spell being evoked from an item? (E.g., a rod)
- * @return          The reason a spell is useless to the player, if it is;
- *                  "" otherwise. The string should be a full clause, but
- *                  begin with a lowercase letter so callers can put it in
- *                  the middle of a sentence.
+ * @param spell      The spell in question.
+ * @param temp       Include checks for volatile or temporary states
+ *                   (status effects, mana, gods, items, etc.)
+ * @param prevent    Whether to only check for effects which prevent casting,
+ *                   rather than just ones that make it unproductive.
+ * @param evoked     Is the spell being evoked from an item? (E.g., a rod)
+ * @param fake_spell Is the spell some other kind of fake spell (such as an
+                     innate or divine ability)?
+ * @return           The reason a spell is useless to the player, if it is;
+ *                   "" otherwise. The string should be a full clause, but
+ *                   begin with a lowercase letter so callers can put it in
+ *                   the middle of a sentence.
  */
 string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
-                                bool evoked)
+                                bool evoked, bool fake_spell)
 {
     if (temp)
     {
-        if (you.duration[DUR_CONF] > 0)
+        if (!fake_spell && you.duration[DUR_CONF] > 0)
             return "you're too confused.";
-        if (!enough_mp(spell_mana(spell), true, false) && !evoked)
+        if (!enough_mp(spell_mana(spell), true, false)
+            && !evoked && !fake_spell)
+        {
             return "you don't have enough magic.";
+        }
         if (!prevent && spell_no_hostile_in_range(spell))
             return "you can't see any valid targets.";
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
-    if (!evoked && cannot_use_schools(get_spell_disciplines(spell)))
+    if (!fake_spell && !evoked
+        && cannot_use_schools(get_spell_disciplines(spell)))
+    {
         return "you cannot use spells of this school.";
+    }
 
 
 #if TAG_MAJOR_VERSION == 34
@@ -1204,11 +1208,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're too dead to regenerate.";
         break;
 
-    case SPELL_INTOXICATE:
-        if (you.undead_state(temp) == US_UNDEAD)
-            return "your brain is too dead to use.";
-        break;
-
     case SPELL_PORTAL_PROJECTILE:
     case SPELL_WARP_BRAND:
     case SPELL_EXCRUCIATING_WOUNDS:
@@ -1281,26 +1280,32 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
                     " at a time.";
         }
         if (player_mutation_level(MUT_NO_LOVE))
-            return "you cannot coerce anything to answer your summons!";
+            return "you cannot coerce anything to answer your summons.";
         break;
 
     case SPELL_SUMMON_FOREST:
         if (temp && you.duration[DUR_FORESTED])
-            return "you can only summon one forest at a time!";
+            return "you can only summon one forest at a time.";
         if (player_mutation_level(MUT_NO_LOVE))
-            return "you cannot coerce anything to answer your summons!";
+            return "you cannot coerce anything to answer your summons.";
+        break;
+
+    case SPELL_ANIMATE_DEAD:
+    case SPELL_ANIMATE_SKELETON:
+    case SPELL_TWISTED_RESURRECTION:
+    case SPELL_CONTROL_UNDEAD:
+    case SPELL_DEATH_CHANNEL:
+    case SPELL_SIMULACRUM:
+        if (player_mutation_level(MUT_NO_LOVE))
+            return "you cannot coerce anything to obey you.";
         break;
 
     case SPELL_SUMMON_SMALL_MAMMAL:
     case SPELL_SUMMON_HORRIBLE_THINGS:
-    case SPELL_ANIMATE_DEAD:
-    case SPELL_ANIMATE_SKELETON:
     case SPELL_HAUNT:
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_CALL_IMP:
-    case SPELL_TWISTED_RESURRECTION:
     case SPELL_SUMMON_GREATER_DEMON:
-    case SPELL_DEATH_CHANNEL:
     case SPELL_SHADOW_CREATURES:
     case SPELL_CALL_CANINE_FAMILIAR:
     case SPELL_SUMMON_DRAGON:
@@ -1313,7 +1318,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_DRAGON_CALL:
     case SPELL_SUMMON_MANA_VIPER:
         if (player_mutation_level(MUT_NO_LOVE))
-            return "you cannot coerce anything to answer your summons!";
+            return "you cannot coerce anything to answer your summons.";
         break;
 
     default:
@@ -1382,7 +1387,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     {
         targetter_cloud tgt(&you, range);
         // Accept monsters that are in clouds for the hostiles-in-range check
-        // (not for actual targetting).
+        // (not for actual targeting).
         tgt.avoid_clouds = false;
         for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS);
              ri; ++ri)
@@ -1397,12 +1402,8 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
 
                 // Checks here are from get_dist_to_nearest_monster().
                 const monster* mons = monster_at(entry.first);
-                if (mons && !mons->wont_attack()
-                    && (mons_class_gives_xp(mons->type)
-                        || mons_is_active_ballisto(mons)))
-                {
+                if (mons && !mons->wont_attack() && mons_is_threatening(mons))
                     return false;
-                }
             }
         }
 

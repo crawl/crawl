@@ -43,6 +43,57 @@ static void _actor_apply_noise(actor *act,
                                const noise_t &noise,
                                int noise_travel_distance);
 
+/// By default, what databse lookup key corresponds to each shout type?
+static const map<shout_type, string> default_msg_keys = {
+    { S_SILENT,         "" },
+    { S_SHOUT,          "__SHOUT" },
+    { S_BARK,           "__BARK" },
+    { S_HOWL,           "__HOWL" },
+    { S_SHOUT2,         "__TWO_SHOUTS" },
+    { S_ROAR,           "__ROAR" },
+    { S_SCREAM,         "__SCREAM" },
+    { S_BELLOW,         "__BELLOW" },
+    { S_TRUMPET,        "__TRUMPET" },
+#if TAG_MAJOR_VERSION == 34
+    { S_CAW,            "__SCREECH" },
+#endif
+    { S_SCREECH,        "__SCREECH" },
+    { S_BUZZ,           "__BUZZ" },
+    { S_MOAN,           "__MOAN" },
+    { S_GURGLE,         "__GURGLE" },
+    { S_CROAK,          "__CROAK" },
+    { S_GROWL,          "__GROWL" },
+    { S_HISS,           "__HISS" },
+    { S_DEMON_TAUNT,    "__DEMON_TAUNT" },
+    { S_CHERUB,         "__CHERUB" },
+    { S_RUMBLE,         "__RUMBLE" },
+};
+
+/**
+ * What's the appropriate DB lookup key for a given monster's shouts?
+ *
+ * @param mons      The monster in question.
+ * @return          A name for the monster; e.g. "orc", "Kirke", "pandemonium
+ *                  lord", "Fire Elementalist player ghost".
+ */
+static string _shout_key(const monster &mons)
+{
+    // Pandemonium demons have random names, so use "pandemonium lord"
+    if (mons.type == MONS_PANDEMONIUM_LORD)
+        return "pandemonium lord";
+
+    // Search for player ghost shout by the ghost's job.
+    if (mons.type == MONS_PLAYER_GHOST)
+    {
+        const ghost_demon &ghost = *(mons.ghost);
+        const string ghost_job         = get_job_name(ghost.job);
+        return ghost_job + " player ghost";
+    }
+
+    // everything else just goes by name.
+    return mons_type_name(mons.type, DESC_PLAIN);
+}
+
 void handle_monster_shouts(monster* mons, bool force)
 {
     if (!force && one_chance_in(5))
@@ -70,113 +121,26 @@ void handle_monster_shouts(monster* mons, bool force)
 
     mon_acting mact(mons);
 
-    string default_msg_key = "";
-
-    switch (s_type)
-    {
-    case S_SILENT:
-        // No default message.
-        break;
-    case S_SHOUT:
-        default_msg_key = "__SHOUT";
-        break;
-    case S_BARK:
-        default_msg_key = "__BARK";
-        break;
-    case S_HOWL:
-        default_msg_key = "__HOWL";
-        break;
-    case S_SHOUT2:
-        default_msg_key = "__TWO_SHOUTS";
-        break;
-    case S_ROAR:
-        default_msg_key = "__ROAR";
-        break;
-    case S_SCREAM:
-        default_msg_key = "__SCREAM";
-        break;
-    case S_BELLOW:
-        default_msg_key = "__BELLOW";
-        break;
-    case S_TRUMPET:
-        default_msg_key = "__TRUMPET";
-        break;
-#if TAG_MAJOR_VERSION == 34
-    case S_CAW:
-#endif
-    case S_SCREECH:
-        default_msg_key = "__SCREECH";
-        break;
-    case S_BUZZ:
-        default_msg_key = "__BUZZ";
-        break;
-    case S_MOAN:
-        default_msg_key = "__MOAN";
-        break;
-    case S_GURGLE:
-        default_msg_key = "__GURGLE";
-        break;
-    case S_CROAK:
-        default_msg_key = "__CROAK";
-        break;
-    case S_GROWL:
-        default_msg_key = "__GROWL";
-        break;
-    case S_HISS:
-        default_msg_key = "__HISS";
-        break;
-    case S_DEMON_TAUNT:
-        default_msg_key = "__DEMON_TAUNT";
-        break;
-    case S_CHERUB:
-        default_msg_key = "__CHERUB";
-        break;
-    case S_RUMBLE:
-        default_msg_key = "__RUMBLE";
-        break;
-    default:
-        default_msg_key = "__BUGGY"; // S_LOUD, S_VERY_SOFT, etc. (loudness)
-    }
+    // less specific, more specific.
+    const string default_msg_key
+        = mons->type == MONS_PLAYER_GHOST ?
+                 "player ghost" :
+                 lookup(default_msg_keys, s_type, "__BUGGY");
+    const string key = _shout_key(*mons);
 
     // Now that we have the message key, get a random verb and noise level
     // for pandemonium lords.
     if (s_type == S_DEMON_TAUNT)
         s_type = mons_shouts(mons->type, true);
 
-    string msg, suffix;
-    string key = mons_type_name(mons->type, DESC_PLAIN);
-
-    // Pandemonium demons have random names, so use "pandemonium lord"
-    if (mons->type == MONS_PANDEMONIUM_LORD)
-        key = "pandemonium lord";
-    // Search for player ghost shout by the ghost's job.
-    else if (mons->type == MONS_PLAYER_GHOST)
-    {
-        const ghost_demon &ghost = *(mons->ghost);
-        string ghost_job         = get_job_name(ghost.job);
-
-        key = ghost_job + " player ghost";
-
-        default_msg_key = "player ghost";
-    }
-
     // Tries to find an entry for "name seen" or "name unseen",
     // and if no such entry exists then looks simply for "name".
-    // We don't use "you.can_see(mons)" here since that would return
-    // false for submerged monsters, but submerged monsters will be forced
-    // to surface before they shout, thus removing that source of
-    // non-visibility.
-    if (you.can_see(*mons))
-        suffix = " seen";
-    else
-        suffix = " unseen";
+    const string suffix = you.can_see(*mons) ? " seen" : " unseen";
+    string message = getShoutString(key, suffix);
 
-    if (msg.empty())
-        msg = getShoutString(key, suffix);
-
-    if (msg == "__DEFAULT" || msg == "__NEXT")
-        msg = getShoutString(default_msg_key, suffix);
-    else if (msg.empty())
+    if (message == "__DEFAULT" || message == "__NEXT")
+        message = getShoutString(default_msg_key, suffix);
+    else if (message.empty())
     {
         char mchar = mons_base_char(mons->type);
 
@@ -190,10 +154,10 @@ void handle_monster_shouts(monster* mons, bool force)
 
         glyph_key += mchar;
         glyph_key += "'";
-        msg = getShoutString(glyph_key, suffix);
+        message = getShoutString(glyph_key, suffix);
 
-        if (msg.empty() || msg == "__DEFAULT")
-            msg = getShoutString(default_msg_key, suffix);
+        if (message.empty() || message == "__DEFAULT")
+            message = getShoutString(default_msg_key, suffix);
     }
 
     if (default_msg_key == "__BUGGY")
@@ -201,9 +165,9 @@ void handle_monster_shouts(monster* mons, bool force)
         msg::streams(MSGCH_SOUND) << "You hear something buggy!"
                                   << endl;
     }
-    else if (s_type == S_SILENT && (msg.empty() || msg == "__NONE"))
+    else if (s_type == S_SILENT && (message.empty() || message == "__NONE"))
         ; // No "visual shout" defined for silent monster, do nothing.
-    else if (msg.empty()) // Still nothing found?
+    else if (message.empty()) // Still nothing found?
     {
         msg::streams(MSGCH_DIAGNOSTICS)
             << "No shout entry for default shout type '"
@@ -212,7 +176,7 @@ void handle_monster_shouts(monster* mons, bool force)
         msg::streams(MSGCH_SOUND) << "You hear something buggy!"
                                   << endl;
     }
-    else if (msg == "__NONE")
+    else if (message == "__NONE")
     {
         msg::streams(MSGCH_DIAGNOSTICS)
             << "__NONE returned as shout for non-silent monster '"
@@ -226,7 +190,7 @@ void handle_monster_shouts(monster* mons, bool force)
         if (s_type == S_SILENT)
             channel = MSGCH_TALK_VISUAL;
 
-        strip_channel_prefix(msg, channel);
+        strip_channel_prefix(message, channel);
 
         // Monster must come up from being submerged if it wants to shout.
         if (mons->submerged())
@@ -259,8 +223,8 @@ void handle_monster_shouts(monster* mons, bool force)
                 seen_monster(mons);
             }
 
-            msg = do_mon_str_replacements(msg, mons, s_type);
-            msg::streams(channel) << msg << endl;
+            message = do_mon_str_replacements(message, mons, s_type);
+            msg::streams(channel) << message << endl;
         }
     }
 
@@ -311,7 +275,7 @@ bool check_awaken(monster* mons, int stealth)
 
     if (mons->asleep())
     {
-        if (mons->holiness() == MH_NATURAL)
+        if (mons->holiness() & MH_NATURAL)
         {
             // Monster is "hibernating"... reduce chance of waking.
             if (mons->has_ench(ENCH_SLEEP_WARY))
@@ -594,7 +558,6 @@ void yell(const actor* mon)
              shout_verb.c_str(),
              you.berserk() ? " wildly" : " for attention");
         noisy(noise_level, you.pos());
-        zin_recite_interrupt();
         you.turn_is_over = true;
         return;
 
@@ -729,7 +692,6 @@ void yell(const actor* mon)
         return;
     }
 
-    zin_recite_interrupt();
     you.turn_is_over = true;
     you.pet_target = mons_targd;
     // Allow patrolling for "Stop fighting!" and "Wait here!"
@@ -1361,8 +1323,8 @@ static void _actor_apply_noise(actor *act,
         else if ((noise.noise_flags & NF_HUNTING_CRY)
                  && source
                  && (mons_genus(mons->type) == mons_genus(source->type)
-                     || mons->holiness() == MH_HOLY
-                        && source->holiness() == MH_HOLY))
+                     || mons->holiness() & MH_HOLY
+                        && source->holiness() & MH_HOLY))
         {
             // Hunting cries alert monsters of the same genus, or other
             // holy creatures if the source is holy.

@@ -39,11 +39,12 @@ int ash_detect_portals(bool all);
 monster_type ash_monster_tier(const monster *mon);
 int ash_skill_boost(skill_type sk, int scale);
 map<skill_type, int8_t> ash_get_boosted_skills(eq_type type);
-int gozag_gold_in_los(actor* who);
+int gozag_gold_in_los(actor* whom);
 int qazlal_sh_boost(int piety = you.piety);
 int tso_sh_boost();
 void qazlal_storm_clouds();
 void qazlal_element_adapt(beam_type flavour, int strength);
 bool does_ru_wanna_redirect(monster* mon);
 ru_interference get_ru_attack_interference_level();
+void pakellas_id_device_charges();
 #endif

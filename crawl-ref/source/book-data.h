@@ -1,3 +1,4 @@
+// This needs to be re-ordered when TAG_MAJOR_VERSION changes!
 static const vector<spell_type> spellbook_templates[] =
 {
 
@@ -41,10 +42,10 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Summonings
     SPELL_RECALL,
     SPELL_AURA_OF_ABJURATION,
-    SPELL_SHADOW_CREATURES,
     SPELL_SUMMON_DEMON,
     SPELL_SUMMON_FOREST,
     SPELL_SUMMON_MANA_VIPER,
+    SPELL_SHADOW_CREATURES,
 },
 
 {   // Book of Fire
@@ -75,6 +76,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Enchantments
     SPELL_CAUSE_FEAR,
+    SPELL_VIOLENT_UNRAVELLING,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
     SPELL_HASTE,
@@ -112,6 +114,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_GRAVITAS,
     SPELL_PETRIFY,
     SPELL_ENGLACIATION,
+    SPELL_VIOLENT_UNRAVELLING,
 },
 
 {   // Book of Changes
@@ -210,8 +213,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Envenomations
     SPELL_SPIDER_FORM,
-    SPELL_INTOXICATE,
     SPELL_OLGREBS_TOXIC_RADIANCE,
+    SPELL_INTOXICATE,
     SPELL_POISONOUS_CLOUD,
 },
 
@@ -328,18 +331,18 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Dreams
     SPELL_HIBERNATION,
     SPELL_PHASE_SHIFT,
-    SPELL_SHADOW_CREATURES,
     SPELL_SILENCE,
     SPELL_DARKNESS,
     SPELL_MASS_CONFUSION,
+    SPELL_SHADOW_CREATURES,
 },
 
 {   // Book of Alchemy
     SPELL_SUBLIMATION_OF_BLOOD,
     SPELL_IGNITE_POISON,
-    SPELL_INTOXICATE,
     SPELL_CONDENSATION_SHIELD,
     SPELL_PETRIFY,
+    SPELL_INTOXICATE,
     SPELL_IRRADIATE,
 },
 
@@ -374,3 +377,5 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 };
+
+COMPILE_CHECK(ARRAYSZ(spellbook_templates) == 1 + MAX_FIXED_BOOK);

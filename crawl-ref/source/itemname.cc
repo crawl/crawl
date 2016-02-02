@@ -80,7 +80,7 @@ string quant_name(const item_def &item, int quant,
 
 static const char* _interesting_origin(const item_def &item)
 {
-    if (origin_is_god_gift(item))
+    if (origin_as_god_gift(item) != GOD_NO_GOD)
         return "god gift";
 
     if (item.orig_monnum == MONS_DONALD && get_equip_desc(item)
@@ -344,8 +344,8 @@ static bool _missile_brand_is_postfix(special_missile_type brand)
 
 const char* missile_brand_name(const item_def &item, mbn_type t)
 {
-    special_missile_type brand;
-    brand = static_cast<special_missile_type>(item.special);
+    const special_missile_type brand
+        = static_cast<special_missile_type>(item.brand);
     switch (brand)
     {
     case SPMSL_FLAME:
@@ -455,7 +455,7 @@ static const char *weapon_brands_verbose[] =
 static const char* _vorpal_brand_name(const item_def &item, bool terse)
 {
     if (is_range_weapon(item))
-        return terse ? "velocity" : "velocity";
+        return "velocity";
 
     // Would be nice to implement this as an array (like other brands), but
     // mapping the DVORP flags to array entries seems very fragile.
@@ -588,29 +588,26 @@ const char* armour_ego_name(const item_def& item, bool terse)
 
 static const char* _wand_type_name(int wandtype)
 {
-    switch (static_cast<wand_type>(wandtype))
+    switch (wandtype)
     {
     case WAND_FLAME:           return "flame";
-    case WAND_FROST:           return "frost";
     case WAND_SLOWING:         return "slowing";
     case WAND_HASTING:         return "hasting";
-    case WAND_MAGIC_DARTS:     return "magic darts";
     case WAND_HEAL_WOUNDS:     return "heal wounds";
     case WAND_PARALYSIS:       return "paralysis";
-    case WAND_FIRE:            return "fire";
-    case WAND_COLD:            return "cold";
     case WAND_CONFUSION:       return "confusion";
-    case WAND_INVISIBILITY:    return "invisibility";
     case WAND_DIGGING:         return "digging";
-    case WAND_FIREBALL:        return "fireball";
+    case WAND_ICEBLAST:        return "iceblast";
     case WAND_TELEPORTATION:   return "teleportation";
     case WAND_LIGHTNING:       return "lightning";
     case WAND_POLYMORPH:       return "polymorph";
     case WAND_ENSLAVEMENT:     return "enslavement";
-    case WAND_DRAINING:        return "draining";
+    case WAND_ACID:            return "acid";
     case WAND_RANDOM_EFFECTS:  return "random effects";
     case WAND_DISINTEGRATION:  return "disintegration";
-    default:                   return "bugginess";
+    default:                   return item_type_removed(OBJ_WANDS, wandtype)
+                                    ? "removedness"
+                                    : "bugginess";
     }
 }
 
@@ -658,8 +655,8 @@ const char* potion_type_name(int potiontype)
     case POT_CANCELLATION:      return "cancellation";
     case POT_AMBROSIA:          return "ambrosia";
     case POT_INVISIBILITY:      return "invisibility";
-    case POT_DEGENERATION:      return "degeneration";
 #if TAG_MAJOR_VERSION == 34
+    case POT_DEGENERATION:      return "degeneration";
     case POT_DECAY:             return "decay";
 #endif
     case POT_EXPERIENCE:        return "experience";
@@ -722,7 +719,8 @@ static const char* scroll_type_name(int scrolltype)
  */
 const char* jewellery_effect_name(int jeweltype, bool terse)
 {
-    if (!terse) {
+    if (!terse)
+    {
         switch (static_cast<jewellery_type>(jeweltype))
         {
 #if TAG_MAJOR_VERSION == 34
@@ -735,7 +733,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_STRENGTH:              return "strength";
         case RING_SLAYING:               return "slaying";
         case RING_SEE_INVISIBLE:         return "see invisible";
-        case RING_INVISIBILITY:          return "invisibility";
+        case RING_RESIST_CORROSION:      return "resist corrosion";
         case RING_LOUDNESS:              return "loudness";
         case RING_TELEPORTATION:         return "teleportation";
         case RING_EVASION:               return "evasion";
@@ -754,23 +752,25 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_TELEPORT_CONTROL:      return "teleport control";
 #endif
         case AMU_RAGE:              return "rage";
-        case AMU_CLARITY:           return "clarity";
-        case AMU_WARDING:           return "warding";
-        case AMU_RESIST_CORROSION:  return "resist corrosion";
+        case AMU_HARM:              return "harm";
+        case AMU_DISMISSAL:         return "dismissal";
+        case AMU_MANA_REGENERATION: return "magic regeneration";
         case AMU_THE_GOURMAND:      return "gourmand";
 #if TAG_MAJOR_VERSION == 34
         case AMU_CONSERVATION:      return "conservation";
         case AMU_CONTROLLED_FLIGHT: return "controlled flight";
 #endif
         case AMU_INACCURACY:        return "inaccuracy";
-        case AMU_RESIST_MUTATION:   return "resist mutation";
+        case AMU_NOTHING:           return "nothing";
         case AMU_GUARDIAN_SPIRIT:   return "guardian spirit";
         case AMU_FAITH:             return "faith";
-        case AMU_STASIS:            return "stasis";
+        case AMU_REFLECTION:        return "reflection";
         case AMU_REGENERATION:      return "regeneration";
         default: return "buggy jewellery";
         }
-    } else {
+    }
+    else
+    {
         if (jewellery_base_ability_string(jeweltype)[0] != '\0')
             return jewellery_base_ability_string(jeweltype);
         switch (static_cast<jewellery_type>(jeweltype))
@@ -785,7 +785,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_STRENGTH:              return "Str";
         case RING_SLAYING:               return "Slay";
         case RING_SEE_INVISIBLE:         return "sInv";
-        case RING_INVISIBILITY:          return "+Inv";
+        case RING_RESIST_CORROSION:      return "rCorr";
         case RING_LOUDNESS:              return "Stlth-";
         case RING_EVASION:               return "EV";
         case RING_STEALTH:               return "Stlth+";
@@ -797,6 +797,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_PROTECTION_FROM_MAGIC: return "MR+";
         case AMU_RAGE:                   return "+Rage";
         case AMU_REGENERATION:           return "Regen";
+        case AMU_REFLECTION:             return "Reflect";
         default: return "buggy";
         }
     }
@@ -970,6 +971,8 @@ static string misc_type_name(int type, bool known)
     case MISC_PHIAL_OF_FLOODS:           return "phial of floods";
     case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
     case MISC_PHANTOM_MIRROR:            return "phantom mirror";
+    case MISC_ZIGGURAT:                  return "figurine of a ziggurat";
+    case MISC_XOMS_CHESSBOARD:           return "piece from Xom's chessboard";
 
     default:
         return "buggy miscellaneous item";
@@ -1664,6 +1667,16 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 buff << "cursed ";
             else if (Options.show_uncursed && !know_pluses)
                 buff << "uncursed ";
+
+        }
+
+        // If we know enough to know it has *something* ('shiny' etc),
+        // but we know it has no ego, it must have a plus. (or maybe a curse.)
+        // If we don't know what the plus is, call it 'enchanted'.
+        if (!terse && know_ego && get_armour_ego_type(*this) == SPARM_NORMAL &&
+            !know_pluses && !is_artefact(*this) && get_equip_desc(*this))
+        {
+            buff << "enchanted ";
         }
 
         // Don't list hides or QDA as +0.
@@ -1748,6 +1761,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             break;
         }
 
+        if (!dbname && props.exists(PAKELLAS_SUPERCHARGE_KEY))
+            buff << "supercharged ";
+
         if (know_type)
             buff << "wand of " << _wand_type_name(item_typ);
         else
@@ -1758,7 +1774,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         }
 
         if (know_pluses)
-            buff << " (" << charges << ")";
+            buff << " (" << charges << "/" << wand_max_charges(*this) << ")";
         else if (!dbname && with_inscription)
         {
             if (used_count == ZAPCOUNT_EMPTY)
@@ -1879,7 +1895,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 buff << "cursed ";
             else if (Options.show_uncursed && desc != DESC_PLAIN
                      && (!is_randart || !know_type)
-                     && (!ring_has_pluses(*this) || !know_pluses)
+                     && (!jewellery_has_pluses(*this) || !know_pluses)
                      // If the item is worn, its curse status is known,
                      // no need to belabour the obvious.
                      && get_equip_slot(this) == -1)
@@ -1896,7 +1912,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (know_type)
         {
-            if (know_pluses && ring_has_pluses(*this))
+            if (know_pluses && jewellery_has_pluses(*this))
                 buff << make_stringf("%+d ", plus);
 
             buff << jewellery_type_name(item_typ);
@@ -2056,11 +2072,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "mangled ";
         }
 
-        uint64_t name_type, name_flags = 0;
+        monster_flags_t name_flags;
+        const string _name = get_corpse_name(*this, &name_flags);
+        const monster_flags_t name_type = name_flags & MF_NAME_MASK;
 
-        const string _name  = get_corpse_name(*this, &name_flags);
-        const bool   shaped = starts_with(_name, "shaped ");
-        name_type = (name_flags & MF_NAME_MASK);
+        const bool shaped = starts_with(_name, "shaped ");
 
         if (!_name.empty() && name_type == MF_NAME_ADJECTIVE)
             buff << _name << " ";
@@ -2409,8 +2425,6 @@ public:
             case FOOD_ROYAL_JELLY:
                 name = "royal jellies";
                 break;
-                name = "other food";
-                break;
             }
         }
         else if (item->base_type == OBJ_MISCELLANY)
@@ -2466,15 +2480,16 @@ public:
 
     virtual void select(int qty) override
     {
+        // Toggle  grey -> - -> + -> grey  if we autopickup the item by
+        // default, or  grey -> + -> - -> grey  if we do not.
         if (qty == -2)
             selected_qty = 0;
         else if (selected_qty == 0)
-            selected_qty = item_needs_autopickup(*item) ? 2 : 1;
+            selected_qty = item_needs_autopickup(*item, true) ? 2 : 1;
+        else if (selected_qty == (item_needs_autopickup(*item, true) ? 2 : 1))
+            selected_qty = 3 - selected_qty; // 2 <-> 1
         else
-            ++selected_qty;
-
-        if (selected_qty > 2)
-            selected_qty = 1; //Set to 0 to allow triple toggle
+            selected_qty = 0;
 
         // Set the force_autopickup values
         const int forceval = (selected_qty == 2 ? -1 : selected_qty);
@@ -2566,7 +2581,7 @@ void check_item_knowledge(bool unknown_items)
                     if (!unknown_items)
                         ptmp->flags |= ISFLAG_KNOW_TYPE;
                     if (i == OBJ_WANDS)
-                        ptmp->plus = wand_max_charges(j);
+                        ptmp->plus = wand_max_charges(*ptmp);
                     items.push_back(ptmp);
 
                     if (you.force_autopickup[i][j] == 1)
@@ -2655,7 +2670,7 @@ void check_item_knowledge(bool unknown_items)
                 // Make chunks fresh, non-poisonous, etc.
                 if (ptmp->is_type(OBJ_FOOD, FOOD_CHUNK))
                 {
-                    ptmp->special = 100;
+                    ptmp->freshness = 100;
                     ptmp->mon_type = MONS_RAT;
                 }
 
@@ -2726,9 +2741,15 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
     if (entry->item->base_type == OBJ_RUNES)
     {
         auto rune = static_cast<rune_type>(entry->item->sub_type);
+        colour_t colour;
+        // Make Gloorx's rune more distinguishable from uncollected runes.
+        if (you.runes[rune])
+            colour = (rune == RUNE_GLOORX_VLOQ) ? LIGHTGREY : rune_colour(rune);
+        else
+            colour = DARKGREY;
+
         string text = "<";
-        text += you.runes[rune] ? colour_to_str(rune_colour(rune))
-                                : string("darkgrey");
+        text += colour_to_str(colour);
         text += ">";
         text += rune_type_name(rune);
         text += " rune of Zot";
@@ -2739,8 +2760,7 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
             text += ")";
         }
         text += "</";
-        text += you.runes[rune] ? colour_to_str(rune_colour(rune))
-                                : string("darkgrey");
+        text += colour_to_str(colour);
         text += ">";
         entry->text = text;
         // Use the generic tile for rune that haven't been gotten yet, to make
@@ -3086,7 +3106,7 @@ static string _random_consonant_set(int seed)
 /**
  * Write all possible scroll names to the given file.
  */
-static void _test_scroll_names(const string fname)
+static void _test_scroll_names(const string& fname)
 {
     FILE *f = fopen(fname.c_str(), "w");
     if (!f)
@@ -3113,7 +3133,7 @@ static void _test_scroll_names(const string fname)
 /**
  * Write one million random Jiyva names to the given file.
  */
-static void _test_jiyva_names(const string fname)
+static void _test_jiyva_names(const string& fname)
 {
     FILE *f = fopen(fname.c_str(), "w");
     if (!f)
@@ -3306,10 +3326,8 @@ bool is_bad_item(const item_def &item, bool temp)
 #if TAG_MAJOR_VERSION == 34
         case POT_SLOWING:
             return !you.stasis();
-#endif
         case POT_DEGENERATION:
             return true;
-#if TAG_MAJOR_VERSION == 34
         case POT_DECAY:
             return you.res_rotting(temp) <= 0;
         case POT_STRONG_POISON:
@@ -3331,6 +3349,8 @@ bool is_bad_item(const item_def &item, bool temp)
         case AMU_INACCURACY:
         case RING_LOUDNESS:
             return true;
+        case RING_TELEPORTATION:
+            return !(you.stasis() || crawl_state.game_is_sprint());
         case RING_EVASION:
         case RING_PROTECTION:
         case RING_STRENGTH:
@@ -3392,6 +3412,15 @@ bool is_dangerous_item(const item_def &item, bool temp)
             return true;
         case POT_AMBROSIA:
             return you.species != SP_DEEP_DWARF; // VERY good for dd
+        default:
+            return false;
+        }
+
+    case OBJ_MISCELLANY:
+        switch (item.sub_type)
+        {
+        case MISC_XOMS_CHESSBOARD:
+            return true;
         default:
             return false;
         }
@@ -3544,13 +3573,6 @@ bool is_useless_item(const item_def &item, bool temp)
         if (player_mutation_level(MUT_NO_ARTIFICE))
             return true;
 
-        if (item.sub_type == WAND_INVISIBILITY
-            && item_type_known(item)
-                && _invisibility_is_useless(temp))
-        {
-            return true;
-        }
-
         if (item.sub_type == WAND_ENSLAVEMENT
             && item_type_known(item)
             && player_mutation_level(MUT_NO_LOVE))
@@ -3646,8 +3668,6 @@ bool is_useless_item(const item_def &item, bool temp)
             return !you.can_device_heal();
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
-        case POT_AMBROSIA:
-            return you.clarity() || you.duration[DUR_DIVINE_STAMINA];
         }
 
         return false;
@@ -3672,13 +3692,7 @@ bool is_useless_item(const item_def &item, bool temp)
                    || you.species == SP_FORMICID
                    || player_mutation_level(MUT_NO_ARTIFICE);
 
-        case AMU_STASIS:
-            return you.stasis(false, false);
-
-        case AMU_CLARITY:
-            return you.clarity(false, false);
-
-        case AMU_RESIST_CORROSION:
+        case RING_RESIST_CORROSION:
             return you.res_corr(false, false);
 
         case AMU_THE_GOURMAND:
@@ -3689,7 +3703,8 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case AMU_FAITH:
             return (you.species == SP_DEMIGOD && !you.religion)
-                || (you.religion == GOD_RU && you.piety == piety_breakpoint(5));
+                    || you_worship(GOD_GOZAG)
+                    || (you_worship(GOD_RU) && you.piety == piety_breakpoint(5));
 
         case AMU_GUARDIAN_SPIRIT:
             return you.spirit_shield(false, false);
@@ -3702,6 +3717,9 @@ bool is_useless_item(const item_def &item, bool temp)
                    || temp && you.species == SP_VAMPIRE
                       && you.hunger_state <= HS_STARVING;
 
+        case AMU_MANA_REGENERATION:
+            return you_worship(GOD_PAKELLAS);
+
         case RING_SEE_INVISIBLE:
             return you.can_see_invisible(false, false);
 
@@ -3713,13 +3731,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return you_worship(GOD_TROG);
 
         case RING_TELEPORTATION:
-            return you.species == SP_FORMICID
-                   || crawl_state.game_is_sprint()
-                   || player_mutation_level(MUT_NO_ARTIFICE);
-
-        case RING_INVISIBILITY:
-            return _invisibility_is_useless(temp)
-                   || player_mutation_level(MUT_NO_ARTIFICE);
+            return !is_bad_item(item, temp);
 
         case RING_FLIGHT:
             return you.permanent_flight()
@@ -3813,6 +3825,7 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif
         // These can always be used.
         case MISC_LANTERN_OF_SHADOWS:
+        case MISC_ZIGGURAT:
             return false;
 
         // Purely summoning misc items don't work w/ sac love
@@ -3955,11 +3968,6 @@ string item_prefix(const item_def &item, bool temp)
             prefixes.push_back("spellbook");
         break;
 
-    case OBJ_GOLD:
-        if (item.special)
-            prefixes.push_back("distracting"); // better name for this?
-        break;
-
     default:
         break;
     }
@@ -4037,13 +4045,13 @@ void init_item_name_cache()
                 if (is_deck(item))
                 {
                     item.plus = 1;
-                    item.special = DECK_RARITY_COMMON;
+                    item.deck_rarity = DECK_RARITY_COMMON;
                     init_deck(item);
                 }
                 string name = item.name(plus || item.base_type == OBJ_RUNES ? DESC_PLAIN : DESC_DBNAME,
                                         true, true);
                 lowercase(name);
-                cglyph_t g = get_item_glyph(&item);
+                cglyph_t g = get_item_glyph(item);
 
                 if (base_type == OBJ_JEWELLERY && sub_type >= NUM_RINGS
                     && sub_type < AMU_FIRST_AMULET)
@@ -4089,7 +4097,7 @@ bool is_named_corpse(const item_def &corpse)
     return corpse.props.exists(CORPSE_NAME_KEY);
 }
 
-string get_corpse_name(const item_def &corpse, uint64_t *name_type)
+string get_corpse_name(const item_def &corpse, monster_flags_t *name_type)
 {
     ASSERT(corpse.base_type == OBJ_CORPSES);
 
@@ -4097,7 +4105,7 @@ string get_corpse_name(const item_def &corpse, uint64_t *name_type)
         return "";
 
     if (name_type != nullptr)
-        *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int64();
+        name_type->flags = corpse.props[CORPSE_NAME_TYPE_KEY].get_int64();
 
     return corpse.props[CORPSE_NAME_KEY].get_string();
 }

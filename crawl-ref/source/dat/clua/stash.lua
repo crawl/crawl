@@ -28,6 +28,14 @@ function ch_stash_search_annotate_item(it)
     annot = annot .. "{dropped} "
   end
 
+  if it.ininventory then
+    annot = annot .. "{inventory} "
+  end
+
+  if it.is_in_shop then
+    annot = annot .. "{in_shop} "
+  end
+
   if it.is_throwable then
     annot = annot .. "{throwable} "
   end
@@ -58,8 +66,6 @@ function ch_stash_search_annotate_item(it)
         annot = annot .. " rC+ rF-"
       elseif it.ego_type_terse == "Fire" then
         annot = annot .. " rF+ rC-"
-      elseif it.ego_type_terse == "Ward" then
-        annot = annot .. " rN+"
       elseif it.ego_type_terse == "Str" or it.ego_type_terse == "Int"
          or it.ego_type_terse == "Dex" or it.ego_type_terse == "Slay"
          or it.ego_type_terse == "EV" or it.ego_type_terse == "AC" then
@@ -130,6 +136,22 @@ function ch_stash_search_annotate_item(it)
       annot = annot .. "{"
   end
   annot = annot .. it.class(true) .. "}"
+
+  local resistances = {
+    ["MR+"] = "magic",
+    ["rC+"] = "cold",
+    ["rCorr"] = "corrosion",
+    ["rElec"] = "electricity",
+    ["rF+"] = "fire",
+    ["rMut"] = "mutation",
+    ["rN+"] = "negative energy",
+    ["rPois"] = "poison"
+  }
+  for inscription,res in pairs(resistances) do
+    if annot:find(inscription, 1, true) then
+      annot = annot .. " {resist " .. res .. "} {" .. res .. " resistance}"
+    end
+  end
 
   return annot
 end

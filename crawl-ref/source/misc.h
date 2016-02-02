@@ -55,8 +55,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool check_landing_only = false);
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
-                        coord_def beam_target, bool autohit_first = false,
-                        bool *prompted = nullptr,
+                        coord_def beam_target, bool *prompted = nullptr,
                         coord_def attack_pos = coord_def(0, 0),
                         bool check_landing_only = false);
 
@@ -77,26 +76,18 @@ unsigned int breakpoint_rank(int val, const int breakpoints[],
 struct position_node
 {
     position_node(const position_node & existing)
+        : pos(existing.pos), last(existing.last), estimate(existing.estimate),
+          path_distance(existing.path_distance),
+          connect_level(existing.connect_level),
+          string_distance(existing.string_distance),
+          departure(existing.departure)
     {
-        pos = existing.pos;
-        last = existing.last;
-        estimate = existing.estimate;
-        path_distance = existing.path_distance;
-        connect_level = existing.connect_level;
-        string_distance = existing.string_distance;
-        departure = existing.departure;
     }
 
     position_node()
+        : pos(), last(nullptr), estimate(0), path_distance(0),
+          connect_level(0), string_distance(0), departure(false)
     {
-        pos.x=0;
-        pos.y=0;
-        last = nullptr;
-        estimate = 0;
-        path_distance = 0;
-        connect_level = 0;
-        string_distance = 0;
-        departure = false;
     }
 
     coord_def pos;

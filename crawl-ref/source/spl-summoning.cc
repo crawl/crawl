@@ -88,7 +88,7 @@ spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
                 mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY, &you,
                           3, SPELL_SUMMON_BUTTERFLIES,
                           you.pos(), MHITYOU,
-                          0, god)))
+                          MG_NONE, god)))
         {
             success = true;
         }
@@ -196,24 +196,36 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
             snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
         }
     }
-    if (!count)
-        mpr("You fail to create any snakes.");
-    else if (count > 1)
-        mprf("You create %d snakes!",count);
+    if (count)
+    {
+        int sticks_left = num_sticks - count;
+
+        if (count > 1)
+            mprf("You create %d snakes!", count);
+        else
+            mpr("You create a snake!");
+
+        if (sticks_left)
+        {
+            mprf("You now have %d arrow%s.", sticks_left,
+                                             sticks_left > 1 ? "s" : "");
+        }
+        else
+            mpr("You now have no arrows remaining.");
+    }
     else
-        mpr("You create a snake!");
+        mpr("You fail to create any snakes.");
+
     return SPRET_SUCCESS;
 }
 
 monster_type pick_swarmer()
 {
-    return random_choose_weighted(3, MONS_KILLER_BEE,
-                                  3, MONS_WORKER_ANT,
-                                  2, MONS_SPIDER,
-                                  1, MONS_SCORPION,
-                                  1, MONS_WORM,
-                                  1, MONS_VAMPIRE_MOSQUITO,
+    return random_choose_weighted(4, MONS_KILLER_BEE,
+                                  3, MONS_SCORPION,
+                                  2, MONS_RIVER_RAT,
                                   1, MONS_WASP,
+                                  1, MONS_VAMPIRE_MOSQUITO,
                                   1, MONS_BUTTERFLY,
                                   0);
 }
@@ -339,7 +351,7 @@ spret_type cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool f
                                 MG_AUTOFOE | MG_DONT_CAP, god);
 
     if (caster->is_player())
-        mdata.hd = get_monster_data(type)->hpdice[0] +  hd_bonus;
+        mdata.hd = get_monster_data(type)->HD +  hd_bonus;
 
     bool seen = false;
     bool first = true;
@@ -392,13 +404,13 @@ spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
     const int heads = max(4, min(random2(pow) / 6, maxheads));
 
     // Duration is always very short - just 1.
-    if (monster *hydra = create_monster(
-            mgen_data(MONS_HYDRA, BEH_COPY, caster,
-                      1, SPELL_SUMMON_HYDRA, caster->pos(),
-                      (caster->is_player()) ?
-                          MHITYOU : caster->as_monster()->foe,
-                      MG_AUTOFOE, (god == GOD_NO_GOD) ? caster->deity() : god,
-                      MONS_HYDRA, heads)))
+    mgen_data mg(MONS_HYDRA, BEH_COPY, caster,
+                 1, SPELL_SUMMON_HYDRA, caster->pos(),
+                 (caster->is_player()) ?
+                    MHITYOU : caster->as_monster()->foe,
+                 MG_AUTOFOE, (god == GOD_NO_GOD) ? caster->deity() : god);
+    mg.props[MGEN_NUM_HEADS] = heads;
+    if (monster *hydra = create_monster(mg))
     {
         if (you.see_cell(hydra->pos()))
             mprf("%s appears.", hydra->name(DESC_A).c_str());
@@ -460,13 +472,8 @@ static bool _place_dragon()
 
     // Pick a random hostile in sight
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
-    {
-        if (!mons_aligned(&you, *mi)
-            && !mons_is_firewood(*mi))
-        {
+        if (!mons_aligned(&you, *mi) && mons_is_threatening(*mi))
             targets.push_back(*mi);
-        }
-    }
 
     shuffle_array(targets);
 
@@ -535,6 +542,74 @@ void do_dragon_call(int time)
     you.attribute[ATTR_NEXT_DRAGON_TIME] -= time;
 }
 
+/**
+ * Handle the Doom Howl status effect, possibly summoning hostile nasties
+ * around the player.
+ *
+ * @param time      The number of aut that the howling has been going on for
+ *                  since the last doom_howl call.
+ */
+void doom_howl(int time)
+{
+    // TODO: pull hound-count generation into a helper function
+    int howlcalled_count = 0;
+    if (!you.props.exists(NEXT_DOOM_HOUND_KEY))
+        you.props[NEXT_DOOM_HOUND_KEY] = random_range(30, 50);
+    // 1 nasty beast every 3-5 turns
+    while (time > 0)
+    {
+        const int time_to_call = you.props[NEXT_DOOM_HOUND_KEY].get_int();
+        if (time_to_call <= time)
+        {
+            you.props[NEXT_DOOM_HOUND_KEY] = random_range(30, 50);
+            ++howlcalled_count;
+        }
+        else
+            you.props[NEXT_DOOM_HOUND_KEY].get_int() -= time;
+        time -= time_to_call;
+    }
+
+    if (!howlcalled_count)
+        return;
+
+    const actor *target = &you;
+
+    for (int i = 0; i < howlcalled_count; ++i)
+    {
+        const monster_type howlcalled = random_choose(
+                MONS_BONE_DRAGON, MONS_SHADOW_DRAGON, MONS_SHADOW_DEMON,
+                MONS_REAPER, MONS_TORMENTOR, MONS_SHADOW_FIEND
+        );
+        vector<coord_def> spots;
+        for (adjacent_iterator ai(target->pos()); ai; ++ai)
+        {
+            if (monster_habitable_grid(howlcalled, grd(*ai))
+                && !actor_at(*ai))
+            {
+                spots.push_back(*ai);
+            }
+        }
+        if (spots.size() <= 0)
+            continue;
+
+        const coord_def pos = spots[random2(spots.size())];
+
+        monster *mons = create_monster(mgen_data(howlcalled, BEH_HOSTILE,
+                                                 NULL, 0, SPELL_NO_SPELL,
+                                                 pos, target->mindex(),
+                                                 MG_FORCE_BEH));
+        if (mons)
+        {
+            mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
+                                       INFINITE_DURATION));
+            mons->behaviour = BEH_SEEK;
+            mons_add_blame(mons, "called by a doom hound"); // assumption!
+            check_place_cloud(CLOUD_BLACK_SMOKE, mons->pos(),
+                              random_range(1,2), mons);
+        }
+    }
+}
+
 spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
 {
     // Dragons are always friendly. Dragon type depends on power and
@@ -594,7 +669,7 @@ spret_type cast_summon_mana_viper(int pow, god_type god, bool fail)
     viper.hd = (5 + div_rand_round(pow, 12));
 
     // Don't scale hp at the same time as their antimagic power
-    viper.hp = hit_points(9, 3, 5);
+    viper.hp = hit_points(495); // avg 50
 
     if (create_monster(viper))
         mpr("A mana viper appears with a sibilant hiss.");
@@ -809,20 +884,17 @@ static bool _check_tukima_validity(const actor *target)
 static void _animate_weapon(int pow, actor* target)
 {
     bool target_is_player = target == &you;
-    item_def* wpn = target->weapon();
+    item_def * const wpn = target->weapon();
+    ASSERT(wpn);
     if (target_is_player)
     {
         // Clear temp branding so we don't change the brand permanently.
         if (you.duration[DUR_WEAPON_BRAND])
-        {
-            ASSERT(you.weapon());
             end_weapon_brand(*wpn);
-        }
 
         // Mark weapon as "thrown", so we'll autopickup it later.
         wpn->flags |= ISFLAG_THROWN;
     }
-    item_def cp = *wpn;
     // If sac love, the weapon will go after you, not the target.
     const bool sac_love = player_mutation_level(MUT_NO_LOVE);
     // Self-casting haunts yourself! MUT_NO_LOVE overrides force friendly.
@@ -835,11 +907,11 @@ static void _animate_weapon(int pow, actor* target)
                  dur, SPELL_TUKIMAS_DANCE,
                  target->pos(),
                  (target_is_player || sac_love) ? MHITYOU : target->mindex(),
-                 sac_love ? 0 : MG_FORCE_BEH);
-    mg.props[TUKIMA_WEAPON] = cp;
+                 sac_love ? MG_NONE : MG_FORCE_BEH);
+    mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
 
-    monster *mons = create_monster(mg);
+    monster * const mons = create_monster(mg);
 
     if (!mons)
     {
@@ -863,7 +935,7 @@ static void _animate_weapon(int pow, actor* target)
         unwield_item();
     else
     {
-        monster* montarget = (monster*)target;
+        monster * const montarget = target->as_monster();
         const int primary_weap = montarget->inv[MSLOT_WEAPON];
         const mon_inv_type wp_slot = (primary_weap != NON_ITEM
                                       && &mitm[primary_weap] == wpn) ?
@@ -911,7 +983,7 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
     const int how_many = min(5, 2 + pow / 100 + random2(pow / 50 + 1));
 
     mgen_data cbl(MONS_BALL_LIGHTNING, BEH_FRIENDLY, &you, 0,
-                  SPELL_CONJURE_BALL_LIGHTNING, you.pos(), MHITNOT, 0, god);
+                  SPELL_CONJURE_BALL_LIGHTNING, you.pos(), MHITNOT, MG_NONE, god);
     cbl.hd = 5 + div_rand_round(pow, 20);
 
     for (int i = 0; i < how_many; ++i)
@@ -1134,7 +1206,7 @@ static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
     if (x_chance_in_y(chance, 100))
     {
         // tier 4
-        type = random_choose(MONS_BLUE_DEVIL,    MONS_RUST_DEVIL,
+        type = random_choose(MONS_ICE_DEVIL,     MONS_RUST_DEVIL,
                              MONS_ORANGE_DEMON,  MONS_RED_DEVIL,
                              MONS_SIXFIRHY,      MONS_HELLWING);
     }
@@ -1142,9 +1214,8 @@ static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
     {
         // tier 3
         type = random_choose(MONS_SUN_DEMON,     MONS_SOUL_EATER,
-                             MONS_ICE_DEVIL,     MONS_SMOKE_DEMON,
-                             MONS_NEQOXEC,       MONS_YNOXINUL,
-                             MONS_CHAOS_SPAWN);
+                             MONS_CHAOS_SPAWN,   MONS_SMOKE_DEMON,
+                             MONS_NEQOXEC,       MONS_YNOXINUL);
     }
 
     return _summon_demon_wrapper(pow, god, spell, type,
@@ -1211,7 +1282,7 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
                       (scroll ? 2 : 1),
                       st, you.pos(), MHITYOU,
                       MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD, god,
-                      MONS_NO_MONSTER, 0, COLOUR_INHERIT, PROX_ANYWHERE, place),
+                      MONS_NO_MONSTER, COLOUR_INHERIT, PROX_ANYWHERE, place),
             false))
         {
             // In the rare cases that a specific spell set of a monster will
@@ -1222,7 +1293,10 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
                 // Save the enchantments, particularly ENCH_SUMMON etc.
                 mon_enchant_list ench = mons->enchantments;
                 FixedBitVector<NUM_ENCHANTMENTS> cache = mons->ench_cache;
-                define_monster(mons);
+                if (mons_class_is_zombified(mons->type))
+                    define_zombie(mons, mons->base_monster, mons->type);
+                else
+                    define_monster(mons);
                 mons->enchantments = ench;
                 mons->ench_cache = cache;
             }
@@ -1423,7 +1497,7 @@ static bool _water_adjacent(coord_def p)
  * @param fail   Did this spell miscast? If true, abort the cast.
  * @return       SPRET_ABORT if a summoning area couldn't be found,
  *               SPRET_FAIL if one could be found but we miscast, and
- *               SPRET_SUCCESS if the spell was succesfully cast.
+ *               SPRET_SUCCESS if the spell was successfully cast.
 */
 spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 {
@@ -1447,13 +1521,13 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
         // of trees on unoccupied floor (such that they do not break connectivity)
         for (distance_iterator di(caster->pos(), false, true, LOS_RADIUS); di; ++di)
         {
-           if ((grd(*di) == DNGN_ROCK_WALL && x_chance_in_y(pow, 150))
-               || ((grd(*di) == DNGN_FLOOR && x_chance_in_y(pow, 1250)
-                    && !actor_at(*di) && !plant_forbidden_at(*di, true))))
-           {
+            if ((grd(*di) == DNGN_ROCK_WALL && x_chance_in_y(pow, 150))
+                    || ((grd(*di) == DNGN_FLOOR && x_chance_in_y(pow, 1250)
+                         && !actor_at(*di) && !plant_forbidden_at(*di, true))))
+            {
                 temp_change_terrain(*di, DNGN_TREE, duration,
-                                    TERRAIN_CHANGE_FORESTED);
-           }
+                        TERRAIN_CHANGE_FORESTED);
+            }
         }
 
         // Maybe make a pond
@@ -1524,153 +1598,46 @@ static bool _animatable_remains(const item_def& item)
             || mons_skeleton(item.mon_type));
 }
 
-// Try to equip the skeleton/zombie with the objects it died with. This
-// excludes holy items, items which were dropped by the player onto the
-// corpse, and corpses which were picked up and moved by the player, so
-// the player can't equip their undead slaves with items of their
-// choice.
-//
-// The item selection logic has one problem: if a first monster without
-// any items dies and leaves a corpse, and then a second monster with
-// items dies on the same spot but doesn't leave a corpse, then the
-// undead can be equipped with the second monster's items if the second
-// monster is either of the same type as the first, or if the second
-// monster wasn't killed by the player or a player's pet.
-static void _equip_undead(const coord_def &a, int corps, monster *mon, monster_type monnum)
+/**
+ * Equip the dearly departed with its ex-possessions.
+ *
+ * This excludes holy items (not wieldable by the undead, and items which were
+ * dropped onto the square, so the player can't equip their undead slaves with
+ * items of their choice.
+ *
+ * @param a      where to pull items from
+ * @param corpse the corpse of the dead monster.
+ * @param mon    the zombie/skeleton/etc. being reequipped.
+ */
+static void _equip_undead(const coord_def &a, const item_def& corpse, monster *mon)
 {
-    if (mons_class_itemuse(monnum) < MONUSE_STARTING_EQUIPMENT)
+    if (!corpse.props.exists(MONSTER_MID))
         return;
-
-    // If the player picked up and dropped the corpse, then all its
-    // original equipment fell off.
-    if (mitm[corps].flags & ISFLAG_DROPPED)
-        return;
-
-    // A monster's corpse is last in the linked list after its items,
-    // so (for example) the first item after the second-to-last corpse
-    // is the first item belonging to the last corpse.
-    int objl      = igrd(a);
-    int first_obj = NON_ITEM;
-
-    while (objl != NON_ITEM && objl != corps)
+    for (stack_iterator si(a); si; ++si)
     {
-        item_def item(mitm[objl]);
-
-        if (item.base_type != OBJ_CORPSES && first_obj == NON_ITEM)
-            first_obj = objl;
-
-        objl = item.link;
-    }
-
-    // If the corpse was being drained when it was raised the item is
-    // already destroyed.
-    ASSERT(objl == corps || objl == NON_ITEM);
-
-    if (first_obj == NON_ITEM)
-        return;
-
-    // Iterate backwards over the list, since the items earlier in the
-    // linked list were dropped most recently and hence more likely to
-    // be items the monster didn't die with.
-    vector<int> item_list;
-    objl = first_obj;
-    while (objl != NON_ITEM && objl != corps)
-    {
-        item_list.push_back(objl);
-        objl = mitm[objl].link;
-    }
-
-    for (int i = item_list.size() - 1; i >= 0; --i)
-    {
-        objl = item_list[i];
-        item_def &item(mitm[objl]);
-
-        // Stop equipping monster if the item probably didn't originally
-        // belong to the monster.
-        if ((origin_known(item) && item.orig_monnum != monnum)
-            || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN))
-            || item.base_type == OBJ_CORPSES)
+        if (!si->props.exists(DROPPER_MID_KEY)
+            || si->props[DROPPER_MID_KEY].get_int()
+               != corpse.props[MONSTER_MID].get_int())
         {
-            return;
+            continue;
         }
 
         // Don't equip the undead with holy items.
-        if (is_holy_item(item))
+        if (is_holy_item(*si))
             continue;
 
-        mon_inv_type mslot;
-
-        switch (item.base_type)
+        // Stupid undead can't use most items.
+        if (si->base_type != OBJ_WEAPONS
+            && si->base_type != OBJ_STAVES
+            && si->base_type != OBJ_RODS
+            && si->base_type != OBJ_ARMOUR
+            || is_range_weapon(*si))
         {
-        case OBJ_WEAPONS:
-        case OBJ_STAVES:
-        case OBJ_RODS:
-        {
-            const bool weapon = mon->inv[MSLOT_WEAPON] != NON_ITEM;
-            const bool alt_weapon = mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM;
-
-            if ((weapon && !alt_weapon) || (!weapon && alt_weapon))
-                mslot = !weapon ? MSLOT_WEAPON : MSLOT_ALT_WEAPON;
-            else
-                mslot = MSLOT_WEAPON;
-
-            // Stupid undead can't use ranged weapons.
-            if (!is_range_weapon(item))
-                break;
-
             continue;
         }
-
-        case OBJ_ARMOUR:
-            mslot = equip_slot_to_mslot(get_armour_slot(item));
-
-            // A piece of armour which can't be worn indicates that this
-            // and further items weren't the equipment the monster died
-            // with.
-            if (mslot == NUM_MONSTER_SLOTS)
-                return;
-            break;
-
-        // Stupid undead can't use missiles.
-        case OBJ_MISSILES:
-            continue;
-
-        // Stupid undead can't use gold.
-        case OBJ_GOLD:
-            continue;
-
-        // Stupid undead can't use wands.
-        case OBJ_WANDS:
-            continue;
-
-        // Stupid undead can't use scrolls.
-        case OBJ_SCROLLS:
-            continue;
-
-        // Stupid undead can't use potions.
-        case OBJ_POTIONS:
-            continue;
-
-        // Stupid undead can't use jewellery.
-        case OBJ_JEWELLERY:
-            continue;
-
-        // Stupid undead can't use miscellaneous objects.
-        case OBJ_MISCELLANY:
-            continue;
-
-        default:
-            continue;
-        }
-
-        // Two different items going into the same slot indicate that
-        // this and further items weren't equipment the monster died
-        // with.
-        if (mon->inv[mslot] != NON_ITEM)
-            return;
 
         unwind_var<int> save_speedinc(mon->speed_increment);
-        mon->pickup_item(mitm[objl], false, true);
+        mon->pickup_item(*si, false, true);
     }
 }
 
@@ -1703,12 +1670,6 @@ static void _display_undead_motions(int motions)
     }
 }
 
-static int _corpse_number(const item_def &item)
-{
-    return item.props.exists(MONSTER_NUMBER)
-           ? item.props[MONSTER_NUMBER].get_short(): 0;
-}
-
 static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
                            unsigned short hitting, actor *as, string nas,
                            god_type god, bool actual, bool force_beh,
@@ -1730,27 +1691,15 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (zombie_type == MONS_PRINCE_RIBBIT)
         zombie_type = MONS_HUMAN;
 
-    const int hd     = (item.props.exists(MONSTER_HIT_DICE)) ?
-                           item.props[MONSTER_HIT_DICE].get_short() : 0;
-    const int number = _corpse_number(item);
+    const int hd = (item.props.exists(MONSTER_HIT_DICE)) ?
+                    item.props[MONSTER_HIT_DICE].get_short() : 0;
 
     // Save the corpse name before because it can get destroyed if it is
     // being drained and the raising interrupts it.
-    uint64_t name_type = 0;
+    monster_flags_t name_type;
     string name;
     if (is_named_corpse(item))
         name = get_corpse_name(item, &name_type);
-
-    // Headless hydras cannot be raised, sorry.
-    if (zombie_type == MONS_HYDRA && number == 0)
-    {
-        if (you.see_cell(pos))
-        {
-            mprf("The headless hydra %s sways and immediately collapses!",
-                 item.sub_type == CORPSE_BODY ? "corpse" : "skeleton");
-        }
-        return false;
-    }
 
     monster_type mon = item.sub_type == CORPSE_BODY ? MONS_ZOMBIE
                                                     : MONS_SKELETON;
@@ -1774,7 +1723,22 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     // the proper stats from it.
     mgen_data mg(mon, beha, as, 0, 0, pos, hitting,
                  MG_FORCE_BEH|MG_FORCE_PLACE|MG_AUTOFOE,
-                 god, monnum, number);
+                 god, monnum);
+
+    if (item.props.exists(CORPSE_HEADS))
+    {
+        // Headless hydras cannot be raised, sorry.
+        if (item.props[CORPSE_HEADS].get_short() == 0)
+        {
+            if (you.see_cell(pos))
+            {
+                mprf("The headless hydra %s sways and immediately collapses!",
+                     item.sub_type == CORPSE_BODY ? "corpse" : "skeleton");
+            }
+            return false;
+        }
+        mg.props[MGEN_NUM_HEADS] = item.props[CORPSE_HEADS].get_short();
+    }
 
     // No experience for monsters animated by god wrath or the Sword of
     // Zonguldrok.
@@ -1803,13 +1767,14 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     }
 
     if (!name.empty()
-        && (name_type == 0 || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE))
+        && (!name_type || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE))
     {
         name_zombie(mons, monnum, name);
     }
 
     // Re-equip the zombie.
-    _equip_undead(pos, corps, mons, monnum);
+    if (mons_class_itemuse(monnum) >= MONUSE_STARTING_EQUIPMENT)
+        _equip_undead(pos, item, mons);
 
     // Destroy the monster's corpse, as it's no longer needed.
     item_was_destroyed(item);
@@ -2080,28 +2045,31 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     canned_msg(MSG_ANIMATE_REMAINS);
 
     item_def& corpse = mitm[co];
-    const int mon_number = _corpse_number(corpse);
     // How many simulacra can this particular monster give at maximum.
     int num_sim  = 1 + random2(max_corpse_chunks(corpse.mon_type));
     num_sim  = stepdown_value(num_sim, 4, 4, 12, 12);
 
     mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, &you, 0, SPELL_SIMULACRUM,
                  you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god,
-                 corpse.mon_type, mon_number);
+                 corpse.mon_type);
 
     // Can't create more than the max for the monster.
     int how_many = min(8, 4 + random2(pow) / 20);
     how_many = min<int>(how_many, num_sim);
 
-    // Avoid headless hydras. Unlike Animate Dead, still consume the flesh.
-    if (corpse.mon_type == MONS_HYDRA && mon_number == 0)
+    if (corpse.props.exists(CORPSE_HEADS))
     {
-        // No monster to conj_verb with :(
-        mprf("The headless hydra simulacr%s immediately collapse%s into snow!",
-             how_many == 1 ? "um" : "a", how_many == 1 ? "s" : "");
-        if (!turn_corpse_into_skeleton(corpse))
-            butcher_corpse(corpse, MB_FALSE, false);
-        return SPRET_SUCCESS;
+        // Avoid headless hydras. Unlike Animate Dead, still consume the flesh.
+        if (corpse.props[CORPSE_HEADS].get_short() == 0)
+        {
+            // No monster to conj_verb with :(
+            mprf("The headless hydra simulacr%s immediately collapse%s into snow!",
+                 how_many == 1 ? "um" : "a", how_many == 1 ? "s" : "");
+            if (!turn_corpse_into_skeleton(corpse))
+                butcher_corpse(corpse, MB_FALSE, false);
+            return SPRET_SUCCESS;
+        }
+        mg.props[MGEN_NUM_HEADS] = corpse.props[CORPSE_HEADS].get_short();
     }
 
     int count = 0;
@@ -2151,25 +2119,33 @@ bool monster_simulacrum(monster *mon, bool actual)
         // Search all the items on the ground for a corpse.
         for (stack_iterator si(*ri, true); si; ++si)
         {
-            // Safe on non-corpses.
-            const int mon_number = _corpse_number(*si);
-
             if (si->base_type != OBJ_CORPSES
                 || si->sub_type != CORPSE_BODY
-                || !mons_class_can_be_zombified(si->mon_type)
-                || si->mon_type == MONS_HYDRA && mon_number == 0)
+                || !mons_class_can_be_zombified(si->mon_type))
             {
                 continue;
+            }
+
+            mgen_data mg(MONS_SIMULACRUM, SAME_ATTITUDE(mon), mon, 0,
+                         SPELL_SIMULACRUM, *ri, mon->foe,
+                         MG_FORCE_BEH
+                         | (cast_visible ? MG_DONT_COME : MG_NONE),
+                         mon->god, si->mon_type);
+            if (si->props.exists(CORPSE_HEADS))
+            {
+                if (si->props[CORPSE_HEADS].get_short() == 0)
+                    continue;
+                else
+                    mg.props[MGEN_NUM_HEADS] = si->props[CORPSE_HEADS].get_short();
             }
 
             if (!actual)
                 return true;
 
-            int co = si->index();
             // Create half as many as the player version.
             int how_many = 1 + random2(
                                   div_rand_round(
-                                    max_corpse_chunks(mitm[co].mon_type), 2));
+                                    max_corpse_chunks(si->mon_type), 2));
             how_many  = stepdown_value(how_many, 2, 2, 6, 6);
             bool was_draining = is_being_drained(*si);
             bool was_butchering = is_being_butchered(*si);
@@ -2178,13 +2154,7 @@ bool monster_simulacrum(monster *mon, bool actual)
             {
                 // Use the original monster type as the zombified type here,
                 // to get the proper stats from it.
-                if (monster *sim = create_monster(
-                        mgen_data(MONS_SIMULACRUM, SAME_ATTITUDE(mon), mon, 0,
-                                  SPELL_SIMULACRUM, *ri, mon->foe,
-                                  MG_FORCE_BEH
-                                  | (cast_visible ? MG_DONT_COME : 0),
-                                  mon->god,
-                                  mitm[co].mon_type, mon_number)))
+                if (monster *sim = create_monster(mg))
                 {
                     was_successful = true;
                     player_angers_monster(sim);
@@ -2197,7 +2167,7 @@ bool monster_simulacrum(monster *mon, bool actual)
             if (was_successful)
             {
                 did_creation = true;
-                turn_corpse_into_skeleton(mitm[co]);
+                turn_corpse_into_skeleton(*si);
                 // Ignore quiet.
                 if (was_butchering || was_draining)
                 {
@@ -2269,7 +2239,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
 
                 if (mons_genus(si->mon_type) == MONS_ORC)
                     num_orcs++;
-                if (mons_class_holiness(si->mon_type) == MH_HOLY)
+                if (mons_class_holiness(si->mon_type) & MH_HOLY)
                     num_holy++;
 
                 total_max_chunks += max_corpse_chunks(si->mon_type);
@@ -2553,7 +2523,7 @@ void init_servitor(monster* servitor, actor* caster)
              caster->conj_verb("summon").c_str(),
              caster->pronoun(PRONOUN_POSSESSIVE).c_str());
     }
-    else if (servitor)
+    else
         simple_monster_message(servitor, " appears!");
 
     int shortest_range = LOS_RADIUS + 1;
@@ -2703,7 +2673,7 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
                       agent->is_player() ? BEH_FRIENDLY
                                          : SAME_ATTITUDE(agent->as_monster()),
                       agent, 0, SPELL_BATTLESPHERE, agent->pos(),
-                      agent->mindex(), 0, god);
+                      agent->mindex(), MG_NONE, god);
         mg.hd = 1 + div_rand_round(pow, 11);
         battlesphere = create_monster(mg);
 
@@ -2992,7 +2962,7 @@ bool fire_battlesphere(monster* mons)
         else
             beam.target = mons->props["firing_target"].get_coord();
 
-        // Sanity check: if we have somehow ended up targetting ourselves, bail
+        // Sanity check: if we have somehow ended up targeting ourselves, bail
         if (beam.target == mons->pos())
         {
             mprf(MSGCH_ERROR, "Battlesphere targeting itself? Fixing.");
@@ -3209,8 +3179,6 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
 
     fail_check();
 
-    item_def cp = *wpn;
-
     // Remove any existing spectral weapons. Only one should be alive at any
     // given time.
     monster *old_mons = find_spectral_weapon(agent);
@@ -3224,13 +3192,10 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
             dur, SPELL_SPECTRAL_WEAPON,
             agent->pos(),
             agent->mindex(),
-            0, god);
+            MG_NONE, god);
 
-    int skill_with_weapon = agent->skill(item_attack_skill(*wpn), 10, false);
-
-    mg.props[TUKIMA_WEAPON] = cp;
+    mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
-    mg.props[TUKIMA_SKILL] = skill_with_weapon;
 
     monster *mons = create_monster(mg);
     if (!mons)
@@ -3296,7 +3261,7 @@ bool trigger_spectral_weapon(actor* agent, const actor* target)
 {
     monster *spectral_weapon = find_spectral_weapon(agent);
 
-    // Don't try to attack with a nonexistant spectral weapon
+    // Don't try to attack with a nonexistent spectral weapon
     if (!spectral_weapon || !spectral_weapon->alive())
     {
         agent->props.erase("spectral_weapon");
@@ -3421,6 +3386,8 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_EMPEROR_SCORPIONS,   { 6, 2 } },
     { SPELL_SUMMON_SCARABS,             { 8, 1 } },
     { SPELL_SUMMON_HOLIES,              { 4, 2 } },
+    { SPELL_SUMMON_EXECUTIONERS,        { 3, 1 } },
+    { SPELL_AWAKEN_EARTH,               { 9, 2 } },
     // Rod specials
     { SPELL_SUMMON_SWARM,              { 12, 2 } },
     { SPELL_WEAVE_SHADOWS,              { 4, 2 } },

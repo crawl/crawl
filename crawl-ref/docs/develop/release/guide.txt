@@ -23,7 +23,7 @@ for those the list begins with step 3.
 
 2. Tag the branch point
 
-   git tag -s 0.X-b1
+   git tag -a 0.X-b1
    git push origin 0.X-b1
    Also, after the next diverging commit, tag the trunk as 0.${X+1}-a0; you
    need to make sure the commits pointed to by 0.X-b1 and 0.${X+1}-a0 are

@@ -52,7 +52,6 @@
 #include "macro.h"
 #include "mapmark.h"
 #include "message.h"
-#include "misc.h" // today_is_halloween()
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -90,7 +89,7 @@ static void _save_level(const level_id& lid);
 
 static bool _ghost_version_compatible(reader &ghost_reader);
 
-static bool _restore_tagged_chunk(package *save, const string name,
+static bool _restore_tagged_chunk(package *save, const string &name,
                                   tag_type tag, const char* complaint);
 static bool _read_char_chunk(package *save);
 
@@ -100,15 +99,13 @@ const int GHOST_LIMIT = 27; // max number of ghost files per level
 
 static void _redraw_all()
 {
-    you.redraw_hit_points   = true;
-    you.redraw_magic_points = true;
+    you.redraw_hit_points    = true;
+    you.redraw_magic_points  = true;
     you.redraw_stats.init(true);
-    you.redraw_armour_class = true;
-    you.redraw_evasion      = true;
-    you.redraw_experience   = true;
-
-    you.redraw_status_flags =
-        REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
+    you.redraw_armour_class  = true;
+    you.redraw_evasion       = true;
+    you.redraw_experience    = true;
+    you.redraw_status_lights = true;
 }
 
 static bool is_save_file_name(const string &name)
@@ -318,7 +315,7 @@ static bool _create_dirs(const string &dir)
 {
     string sep = " ";
     sep[0] = FILE_SEPARATOR;
-    vector<string> segments = split_string(sep.c_str(), dir, false, false);
+    vector<string> segments = split_string(sep, dir, false, false);
 
     string path;
     for (int i = 0, size = segments.size(); i < size; ++i)
@@ -641,9 +638,6 @@ static vector<player_save_info> _find_saved_characters()
 
     for (const string &filename : get_dir_files(searchpath))
     {
-        string::size_type point_pos = filename.find_first_of('.');
-        string basename = filename.substr(0, point_pos);
-
         if (is_save_file_name(filename))
         {
             try
@@ -809,7 +803,7 @@ static int _get_dest_stair_type(branch_type old_branch,
 
     if (feat_is_branch_exit(stair_taken))
     {
-        for (branch_iterator it; it; it++)
+        for (branch_iterator it; it; ++it)
             if (it->exit_stairs == stair_taken)
                 return it->entry_stairs;
         die("entrance corresponding to exit %d not found", stair_taken);
@@ -817,7 +811,7 @@ static int _get_dest_stair_type(branch_type old_branch,
 
     if (feat_is_branch_entrance(stair_taken))
     {
-        for (branch_iterator it; it; it++)
+        for (branch_iterator it; it; ++it)
             if (it->entry_stairs == stair_taken)
                 return it->exit_stairs;
         die("return corresponding to entry %d not found", stair_taken);
@@ -855,13 +849,6 @@ static void _clear_env_map()
 {
     env.map_knowledge.init(map_cell());
     env.map_forgotten.reset();
-}
-
-static void _clear_clouds()
-{
-    for (int clouty = 0; clouty < MAX_CLOUDS; ++clouty)
-        delete_cloud(clouty);
-    env.cgrid.init(EMPTY_CLOUD);
 }
 
 static bool _grab_follower_at(const coord_def &pos)
@@ -1094,26 +1081,6 @@ static bool _leave_level(dungeon_feature_type stair_taken,
     return popped;
 }
 
-/**
- * Warn the player that two ghost files have been loaded into the current
- * level, resulting in somewhere between two and twenty ghosts being present.
- *
- * Warnings may be more spooky than actually useful.
- *
- * @return  A message that will send shivers down players' spines, assuming
- *          they aren't in wisp form!
- */
-static const char* _double_ghost_spookmessage()
-{
-    static const char* spookmessages[] = {
-        "You are filled with an overwhelming sense of foreboding!",
-        "You feel a terrible frisson of fear!",
-        "You are flooded with an inexplicable sense of dread!",
-        "You feel that you have entered a very terrible place...",
-        "There is something very spooky about this place!"
-    };
-    return RANDOM_ELEMENT(spookmessages);
-}
 
 /**
  * Generate a new level.
@@ -1153,25 +1120,13 @@ static void _make_level(dungeon_feature_type stair_taken,
     _clear_env_map();
     builder(true, stair_type);
 
-    const bool is_halloween = today_is_halloween();
-
     if (!crawl_state.game_is_tutorial()
         && !Options.seed
         && !player_in_branch(BRANCH_ABYSS)
         && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
-        && one_chance_in(is_halloween ? 2 : 3))
+        && one_chance_in(3))
     {
-        // are we loading more than one ghost? (or trying, anyway)
-        bool doubleghost = is_halloween && coinflip();
-        if (doubleghost)
-            doubleghost = load_ghost(true);
-
-        const bool delete_ghost = !is_halloween;
-        doubleghost = load_ghost(true, delete_ghost) && doubleghost;
-
-        // did we actually manage to load more than one ghost (file)?
-        if (doubleghost)
-            mpr(_double_ghost_spookmessage());
+        load_ghost(true);
     }
     env.turns_on_level = 0;
     // sanctuary
@@ -1279,7 +1234,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // We clear twice - on save and on load.
     // Once would be enough...
     if (make_changes)
-        _clear_clouds();
+        delete_all_clouds();
 
     // Lose all listeners.
     dungeon_events.clear();
@@ -1361,7 +1316,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Here's the second cloud clearing, on load (see above).
     if (make_changes)
     {
-        _clear_clouds();
+        delete_all_clouds();
 
         _place_player(stair_taken, old_level.branch, return_pos, dest_pos);
     }
@@ -1523,6 +1478,22 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // exited it, have monsters lose track of where they are
     if (you.position != env.old_player_pos)
        shake_off_monsters(you.as_player());
+
+#if TAG_MAJOR_VERSION == 34
+    if (make_changes && you.props.exists("zig-fixup")
+        && you.where_are_you == BRANCH_TOMB
+        && you.depth == brdepth[BRANCH_TOMB])
+    {
+        if (!just_created_level)
+        {
+            int obj = items(false, OBJ_MISCELLANY, MISC_ZIGGURAT, 0);
+            ASSERT(obj != NON_ITEM);
+            bool success = move_item_to_grid(&obj, you.pos(), true);
+            ASSERT(success);
+        }
+        you.props.erase("zig-fixup");
+    }
+#endif
 
     return just_created_level;
 }
@@ -1724,10 +1695,9 @@ static string _find_ghost_file()
  * Attempt to load one or more ghosts into the level.
  *
  * @param creating_level    Whether a level is currently being generated.
- * @param delete_file       Whether to delete the ghost file after loading it.
  * @return                  Whether ghosts were actually generated.
  */
-bool load_ghost(bool creating_level, bool delete_file)
+bool load_ghost(bool creating_level)
 {
     const bool wiz_cmd = (crawl_state.prev_cmd == CMD_WIZARD);
 
@@ -1788,11 +1758,8 @@ bool load_ghost(bool creating_level, bool delete_file)
     }
     inf.close();
 
-    if (delete_file)
-    {
-        // Remove bones file - ghosts are hardly permanent.
-        unlink(ghost_filename.c_str());
-    }
+    // Remove bones file - ghosts are hardly permanent.
+    unlink(ghost_filename.c_str());
 
     if (!debug_check_ghosts())
     {
@@ -1830,8 +1797,6 @@ bool load_ghost(bool creating_level, bool delete_file)
         mons->bind_melee_flags();
         if (mons->has_spells())
             mons->bind_spell_flags();
-        mark_interesting_monst(mons,
-                               attitude_creation_behavior(mons->attitude));
 
         ghosts.erase(ghosts.begin());
 #ifdef BONES_DIAGNOSTICS
@@ -2183,7 +2148,7 @@ static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
     return true;
 }
 
-static bool _restore_tagged_chunk(package *save, const string name,
+static bool _restore_tagged_chunk(package *save, const string &name,
                                   tag_type tag, const char* complaint)
 {
     reader inf(save, name);

@@ -34,6 +34,7 @@ enum object_selector
     OSEL_BRANDABLE_WEAPON        = -16,
     OSEL_ENCHANTABLE_WEAPON      = -17,
     OSEL_BLESSABLE_WEAPON        = -18,
+    OSEL_SUPERCHARGE             = -19,
 };
 
 #define PROMPT_ABORT         -1
@@ -75,7 +76,6 @@ private:
 class InvEntry : public MenuEntry
 {
 private:
-    static bool show_prices;
     static bool show_glyph;
 
     mutable string basename;
@@ -85,12 +85,12 @@ private:
 protected:
     static bool show_cursor;
     // Should we show the floor tile, etc?
-    bool show_background;
+    bool show_background = true;
 
 public:
     const item_def *item;
 
-    InvEntry(const item_def &i, bool show_bg = false);
+    InvEntry(const item_def &i);
     string get_text(const bool need_cursor = false) const override;
     void set_show_glyph(bool doshow);
     static void set_show_cursor(bool doshow);
@@ -99,11 +99,11 @@ public:
     const string &get_qualname() const;
     const string &get_fullname() const;
     const string &get_dbname() const;
-    bool         is_item_cursed() const;
-    bool         is_item_glowing() const;
-    bool         is_item_ego() const;
-    bool         is_item_art() const;
-    bool         is_item_equipped() const;
+    bool         is_cursed() const;
+    bool         is_glowing() const;
+    bool         is_ego() const;
+    bool         is_art() const;
+    bool         is_equipped() const;
 
     virtual int highlight_colour() const override
     {
@@ -180,7 +180,7 @@ protected:
 
 void get_class_hotkeys(const int type, vector<char> &glyphs);
 
-bool is_item_selected(const item_def &item, int selector);
+bool item_is_selected(const item_def &item, int selector);
 bool any_items_of_type(int type_expect, int excluded_slot = -1);
 string no_selectables_message(int item_selector);
 

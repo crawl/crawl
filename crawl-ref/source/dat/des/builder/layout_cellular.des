@@ -214,8 +214,25 @@ ENDMAP
 #
 # A bit similar to stronghold but better architecture.
 #
-# TODO: Use "layout_type_corridors" tag for width-1 corrdiors and
-#       "layout_type_passages" tag for wider corridors.
+# This layout also used to generate width-1 corridors/buildings.
+#  They were removed because they were slow and involved too
+#  many doors.
+#
+# TODO:
+#  -> Better door placement.
+#  -> Windows on buildings.
+#    -> No way.  I (infiniplex) tried this idea on another
+#       layout, and they messed up autoexplore for no benefit.
+#       I am leaving this comment here to stop anyone
+#       re-suggesting it.
+#  -> Make the borders less bad.
+#  -> Sometimes add a central wall regions.
+#  -> Small chance for individual buildings to have different
+#     materials.
+#  -> Customise a little in different branches?
+#  -> For non-open version start with more areas then link
+#     them up?
+#  -> This layout regenerates a lot.  Figure out why and fix it.
 #
 NAME:   layout_gridville
 DEPTH:  D:4-, Depths, Zot, Dis, Pan
@@ -235,9 +252,9 @@ TAGS:   overwritable layout allow_dup unrand layout_type_passages
 
   local open = not crawl.one_chance_in(4)
   local room_materials = open and crawl.one_chance_in(3)
+  local min = crawl.random_range(4, 5)
+  local max = crawl.random_range(min, 10)
 
-  local min = crawl.random_range(3,5)
-  local max = crawl.random_range(math.max(min,4),10)
   local grid_opts = {
     minimum_size = min,
     maximum_size = max,
@@ -295,11 +312,22 @@ TAGS:   overwritable layout allow_dup unrand layout_type_passages
     end
   end
 
-  -- This shouldn't be needed once everything is working properly
+  -- These shouldn't be needed once everything is working properly
+  for x = 1, gxm - 2 do
+    for y = 1, gym - 2 do
+      if mapgrd[x][y] == '+' and crawl.random_real() < 0.6 then
+        -- replace the door with an adjacent wall type
+        if mapgrd[x + 1][y] ~= "." then
+          mapgrd[x][y] = mapgrd[x + 1][y]
+        else
+          mapgrd[x][y] = mapgrd[x][y + 1]
+        end
+      end
+    end
+  end
   zonify.map_fill_zones(_G, 1, 'x')
 
   if not room_materials then theme.level_material(_G) end
-
 }}
 MAP
 ENDMAP

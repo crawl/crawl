@@ -121,12 +121,6 @@ bool ranged_attack::attack()
     {
         if (ev_margin >= 0)
         {
-            if (attacker != defender && attack_warded_off())
-            {
-                handle_phase_end();
-                return false;
-            }
-
             if (!handle_phase_hit())
             {
                 if (!defender->alive())
@@ -180,17 +174,32 @@ bool ranged_attack::handle_phase_blocked()
     ASSERT(!attack_ignores_shield(false));
     string punctuation = ".";
     string verb = "block";
-    if (defender_shield && is_shield(*defender_shield)
-        && shield_reflects(*defender_shield))
+
+    const bool reflected_by_shield = defender_shield
+                                     && is_shield(*defender_shield)
+                                     && shield_reflects(*defender_shield);
+    if (reflected_by_shield || defender->reflection())
     {
         reflected = true;
         verb = "reflect";
         if (defender->observable())
         {
-            punctuation = " off " + defender->pronoun(PRONOUN_POSSESSIVE)
-                          + " " + defender_shield->name(DESC_PLAIN).c_str()
-                          + "!";
-            ident_reflector(defender_shield);
+            if (reflected_by_shield)
+            {
+                punctuation = " off " + defender->pronoun(PRONOUN_POSSESSIVE)
+                              + " " + defender_shield->name(DESC_PLAIN).c_str()
+                              + "!";
+                ident_reflector(defender_shield);
+            }
+            else
+            {
+                punctuation = " off an invisible shield around "
+                            + defender->pronoun(PRONOUN_OBJECTIVE) + "!";
+
+                item_def *amulet = defender->slot_item(EQ_AMULET, false);
+                if (amulet)
+                   ident_reflector(amulet);
+            }
         }
         else
             punctuation = "!";
@@ -487,7 +496,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
                 susceptible = false;
             break;
         case SPMSL_POISONED:
-            if (defender->holiness() == MH_UNDEAD)
+            if (defender->holiness() & MH_UNDEAD)
                 susceptible = false;
             break;
         case SPMSL_DISPERSAL:
@@ -495,7 +504,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
                 susceptible = false;
             break;
         case SPMSL_CONFUSION:
-            if (defender->holiness() == MH_PLANT)
+            if (defender->holiness() & MH_PLANT)
             {
                 susceptible = false;
                 break;
@@ -504,15 +513,11 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
         case SPMSL_SLOW:
         case SPMSL_SLEEP:
         case SPMSL_PARALYSIS:
-            if (defender->holiness() == MH_UNDEAD
-                || defender->holiness() == MH_NONLIVING)
-            {
+            if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING))
                 susceptible = false;
-            }
             break;
         case SPMSL_FRENZY:
-            if (defender->holiness() == MH_UNDEAD
-                || defender->holiness() == MH_NONLIVING
+            if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING)
                 || defender->is_player()
                    && !you.can_go_berserk(false, false, false)
                 || defender->is_monster()
@@ -556,8 +561,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
 
 bool ranged_attack::blowgun_check(special_missile_type type)
 {
-    if (defender->holiness() == MH_UNDEAD
-        || defender->holiness() == MH_NONLIVING)
+    if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING))
     {
         if (needs_message)
         {

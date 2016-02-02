@@ -51,9 +51,9 @@ void add_parsed_map(const map_def &md);
 
 vector<string> find_map_matches(const string &name);
 
-mapref_vector find_maps_for_tag (const string tag,
-                                 bool check_depth = false,
-                                 bool check_used = true);
+mapref_vector find_maps_for_tag(const string &tag,
+                                bool check_depth = false,
+                                bool check_used = true);
 
 void read_maps();
 void reread_maps();

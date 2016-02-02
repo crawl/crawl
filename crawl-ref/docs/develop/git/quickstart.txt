@@ -16,9 +16,9 @@ called git-core.
 Mac: Install git using Mac ports or Fink. The MacPorts port is called git-core
 (sudo port install git-core).
 
-Windows: Install msysgit (http://msysgit.github.io/#contribute). See the
-detailed instructions in INSTALL.txt so that you get a recent enough GCC. Be
-sure to download 'msysGit', as this also includes most of the necessary tools
+Windows: Install MSYS2 (git-for-windows.github.io/#contribute). See the detailed
+instructions in INSTALL.txt for further setup information. Be sure to download
+the 'Git for Windows SDK', as this also includes all of the necessary tools
 to build Crawl - other installers include only Git itself.
 
 Using git for Stone Soup development

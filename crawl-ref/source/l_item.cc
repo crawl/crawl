@@ -318,16 +318,17 @@ static int l_item_do_ego(lua_State *ls)
     if (lua_isboolean(ls, 1))
         terse = lua_toboolean(ls, 1);
 
-    const char *s = nullptr;
-
     if (item_type_known(*item) || item->base_type == OBJ_MISSILES)
-        s = ego_type_string(*item, terse).c_str();
+    {
+        const string s = ego_type_string(*item, terse);
+        if (!s.empty())
+        {
+            lua_pushstring(ls, s.c_str());
+            return 1;
+        }
+    }
 
-    if (s && *s)
-        lua_pushstring(ls, s);
-    else
-        lua_pushnil(ls);
-
+    lua_pushnil(ls);
     return 1;
 }
 
@@ -658,7 +659,7 @@ IDEF(god_gift)
     if (!item || !item->defined())
         return 0;
 
-    lua_pushboolean(ls, origin_is_god_gift(*item));
+    lua_pushboolean(ls, origin_as_god_gift(*item) != GOD_NO_GOD);
 
     return 1;
 }
@@ -687,7 +688,8 @@ IDEF(plus)
                    || item->sub_type == RING_SLAYING
                    || item->sub_type == RING_EVASION
                    || item->sub_type == RING_DEXTERITY
-                   || item->sub_type == RING_INTELLIGENCE)))
+                   || item->sub_type == RING_INTELLIGENCE
+                   || item->sub_type == AMU_REFLECTION)))
     {
         lua_pushnumber(ls, item->plus);
     }
@@ -818,6 +820,16 @@ IDEF(encumbrance)
         lua_pushnumber(ls, -property(*item, PARM_EVASION) / 10);
     else
         lua_pushnil(ls);
+
+    return 1;
+}
+
+IDEF(is_in_shop)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, is_shop_item(*item));
 
     return 1;
 }
@@ -1239,6 +1251,29 @@ static int l_item_get_items_at(lua_State *ls)
     return 1;
 }
 
+static int l_item_shop_inventory(lua_State *ls)
+{
+    shop_struct *shop = shop_at(you.pos());
+    if (!shop)
+        return 0;
+
+    lua_newtable(ls);
+
+    const vector<item_def> items = shop->stock;
+    int index = 0;
+    for (const auto &item : items)
+    {
+        lua_newtable(ls);
+        _clua_push_item_temp(ls, item);
+        lua_rawseti(ls, -2, 1);
+        lua_pushnumber(ls, item_price(item, *shop));
+        lua_rawseti(ls, -2, 2);
+        lua_rawseti(ls, -2, ++index);
+    }
+
+    return 1;
+}
+
 struct ItemAccessor
 {
     const char *attribute;
@@ -1292,6 +1327,7 @@ static ItemAccessor item_attrs[] =
     { "delay",             l_item_delay },
     { "ac",                l_item_ac },
     { "encumbrance",       l_item_encumbrance },
+    { "is_in_shop",        l_item_is_in_shop },
 
     // dlua only past this point
     { "pluses",            l_item_pluses },
@@ -1336,6 +1372,7 @@ static const struct luaL_reg item_lib[] =
     { "fired_item",        l_item_fired_item },
     { "inslot",            l_item_inslot },
     { "get_items_at",      l_item_get_items_at },
+    { "shop_inventory",    l_item_shop_inventory },
     { nullptr, nullptr },
 };
 

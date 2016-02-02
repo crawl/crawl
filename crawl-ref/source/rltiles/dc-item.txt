@@ -706,7 +706,7 @@ snake
 %rim 0
 #### These must be in the same order as the enum in itemprop-enum.h!
 # Remove regeneration when TAG_MAJOR_VERSION > 34 (and mark protection as 1st)
-i-regeneration RING_REGENERATION RING_ID_FIRST
+i-protection RING_REGENERATION RING_ID_FIRST
 i-protection RING_PROTECTION
 i-r-fire RING_PROTECTION_FROM_FIRE
 i-r-poison RING_POISON_RESISTANCE
@@ -714,7 +714,7 @@ i-r-cold RING_PROTECTION_FROM_COLD
 i-str RING_STRENGTH
 i-slaying RING_SLAYING
 i-see-invis RING_SEE_INVISIBLE
-i-invisibility RING_INVISIBILITY
+i-r-corrosion RING_RESIST_CORROSION
 i-loudness RING_LOUDNESS
 i-teleport RING_TELEPORTATION
 i-evasion RING_EVASION
@@ -769,19 +769,19 @@ eye_green AMU_COL_LAST
 %rim 0
 ### ID-ed amulet
 # These must be in the same order as the enum in itemprop-enum.h!
+# remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-rage AMU_RAGE AMU_ID_FIRST
-i-clarity AMU_CLARITY
-i-warding AMU_WARDING
-i-r-corrosion AMU_RESIST_CORROSION
+i-harm AMU_HARM
+i-dismissal AMU_DISMISSAL
+i-m-regeneration AMU_MANA_REGENERATION
 i-gourmand AMU_THE_GOURMAND
-# Remove i-c-flight & conservation when TAG_MAJOR_VERSION > 34
-i-conservation AMU_CONSERVATION
-i-c-flight AMU_CONTROLLED_FLIGHT
+i-rage AMU_REMOVEME1
+i-rage AMU_REMOVEME2
 i-inaccuracy AMU_INACCURACY
-i-r-mutation AMU_RESIST_MUTATION
-i-spirit AMU_SPIRIT_SHIELD
+i-rage AMU_NOTHING
+i-spirit AMU_GUARDIAN_SPIRIT
 i-faith AMU_FAITH
-i-stasis AMU_STASIS
+i-reflection AMU_REFLECTION
 i-regeneration AMU_REGENERATION AMU_ID_LAST
 
 ####################OBJ_POTIONS
@@ -830,8 +830,8 @@ i-cancel POT_CANCELLATION
 i-ambrosia POT_AMBROSIA
 i-invisibility POT_INVISIBILITY
 i-porridge POT_PORRIDGE
+# please remove these 3 when TAG_MAJOR_VERSION is bummped
 i-degeneration POT_DEGENERATION
-# please remove these 2 when TAG_MAJOR_VERSION is bumped
 i-decay POT_REMOVEME5
 i-confusion POT_REMOVE_ME
 i-experience POT_EXPERIENCE
@@ -954,7 +954,7 @@ i-rod_inaccuracy ROD_INACCURACY
 # Remove when TAG_MAJOR_VERSION > 34
 i-rod_warding ROD_WARDING
 i-rod_shadows ROD_SHADOWS
-i-rod_striking ROD_STRIKING
+i-rod_iron ROD_IRON
 # Remove when TAG_MAJOR_VERSION > 34
 i-rod_venom ROD_VENOM ROD_ID_LAST
 %rim 1
@@ -984,6 +984,14 @@ misc_disc MISC_DISC_OF_STORMS
 %rim 0
 misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR
+misc_zigfig MISC_ZIGGURAT
+misc_pawn MISC_CHESSPIECE_FIRST
+misc_rook
+misc_knight
+misc_bishop
+misc_queen
+misc_king
+misc_thimble MISC_CHESSPIECE_LAST
 misc_deck MISC_DECK
 %start
 %compose misc_deck

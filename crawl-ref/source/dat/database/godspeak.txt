@@ -116,6 +116,9 @@ Xom's power touches on you.
 Xom giggles.
 
 w:1
+"This scratches an itch."
+
+w:1
 "Running a series of toy crash tests now."
 %%%%
 Xom rearrange the pieces
@@ -125,6 +128,8 @@ Xom decides to rearrange the pieces.
 "First here, now there."
 
 "This might be better!"
+
+"This is how I like it!"
 %%%%
 Xom teleportation journey
 
@@ -187,7 +192,7 @@ Xom revert own banishment
 w:30
 "Kidding!"
 
-"On second thought, though..."
+"On second thoughts, though..."
 
 "No, I've changed my mind."
 
@@ -272,7 +277,7 @@ Xom vitrification
 
 You feel watched.
 
-Everything around seems to assume a strange transparency.
+Everything around you seems to assume a strange transparency.
 
 The walls suddenly lose part of their structure.
 
@@ -349,11 +354,11 @@ w:1
 %%%%
 Xom accidental homicide
 
-"Oops, I didn't mean to do *that*!"
+"Oops, I didn't mean to do that!"
 %%%%
 Xom weird death
 
-"How'd *that* happen? Weird."
+"How'd that happen? Weird."
 %%%%
 Xom resurrection
 
@@ -368,6 +373,11 @@ Xom's power revives you.
 Xom brings you back to life.
 
 Xom smiles on you.
+
+"Toy, don't you die on me yet!"
+
+w:1
+"One more [life|try|go]."
 %%%%
 Xom repel stairs
 
@@ -661,8 +671,6 @@ naughty
 ############################
 Gozag prayer
 
-Gozag says: Don't bother me unless you have something to purchase.
-
 Gozag says: Bring me some gold!
 
 Gozag says: Wasting time is wasting money!
@@ -675,14 +683,7 @@ Gozag says: A full purse beats having friends.
 
 Gozag says: The world belongs to the rich.
 
-w:4
-Gozag says: Eat the poor!
-
-w:3
-Gozag says: Kill the poor!
-
-w:3
-Gozag says: Defeat the poor!
+Gozag says: [Eat|Kill|Defeat] the poor!
 
 Gozag says: No better sound than the ting-a-ling of coins.
 
@@ -704,20 +705,25 @@ Gozag says: Money talks!
 
 Gozag says: Cash is king!
 
+Gozag says: I have no interest in the poor.
+
+w:5
+Gozag says: I guarantee the gold standard.
+
 w:5
 Gozag says: Gold! Gold! Gold!
 
-w:1
-Gozag says: Your prayer is important. Please continue to hold.
+w:5
+Gozag says: Don't bother me unless you have something to purchase.
+
+w:5
+Gozag says: Only money gets you out of stagnation and depression.
 
 w:1
-Gozag says: Please join the back of the queue.
+Gozag says: Let them eat cake!
 
 w:1
-Gozag says: This prayer may be monitored for quality assurance.
-
-w:1
-Gozag says: For potions, speak 1 now.
+Gozag says: I want my money back!
 %%%%
 ######################################
 # Welcome messages on game restoration
@@ -806,6 +812,37 @@ Okawaru says: Regain your honour in battle!
 Okawaru welcome
 
 Okawaru says: Bring me glory in combat!
+%%%%
+Pakellas penance
+
+Pakellas says: That's one approach which won't work here.
+
+Pakellas says: Disappointing results so far.
+
+Pakellas says: We may have to discontinue the experiment at this rate.
+
+Pakellas says: Do not stand in the way of progress!
+%%%%
+Pakellas welcome
+
+Pakellas says: Time to continue the experiment.
+
+Pakellas says: Time to find some more test subjects.
+
+Pakellas says: Ready to try out some more devices?
+
+Pakellas says: This is producing some very interesting results.
+
+Pakellas says: What solutions will you come up with next?
+
+Pakellas says: Progress or perish!
+
+# nicolae-
+w:5
+Pakellas says: No one tells a god not to play god!
+
+w:1
+Pakellas says: They called me mad... well, we'll show them!
 %%%%
 Qazlal penance
 

@@ -1659,7 +1659,7 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
     {
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_ENTER_ABYSS:
-        return yesno("If you enter this portal you will not be able to return "
+        return yesno("If you enter this portal you might not be able to return "
                      "immediately. Continue?", false, 'n');
 
     case DNGN_MALIGN_GATEWAY:
@@ -1899,11 +1899,9 @@ static void _do_rest()
 
     if (i_feel_safe())
     {
-        if ((you.hp == you.hp_max
-                || player_mutation_level(MUT_SLOW_REGENERATION) == 3
-                || (you.species == SP_VAMPIRE
-                    && you.hunger_state <= HS_STARVING))
-            && you.magic_points == you.max_magic_points)
+        if ((you.hp == you.hp_max || !player_regenerates_hp())
+            && (you.magic_points == you.max_magic_points
+                || !player_regenerates_mp()))
         {
             mpr("You start waiting.");
             _start_running(RDIR_REST, RMODE_WAIT_DURATION);
@@ -2083,8 +2081,6 @@ void process_command(command_type cmd)
         mprf("Autopickup is now %s.", Options.autopickup_on > 0 ? "on" : "off");
         break;
 
-    case CMD_TOGGLE_VIEWPORT_MONSTER_HP: toggle_viewport_monster_hp(); break;
-    case CMD_TOGGLE_VIEWPORT_WEAPONS: toggle_viewport_weapons(); break;
     case CMD_TOGGLE_TRAVEL_SPEED:        _toggle_travel_speed(); break;
 
         // Map commands.
@@ -2297,7 +2293,9 @@ void process_command(command_type cmd)
             = (Options.restart_after_game && Options.restart_after_save)
               ? "Save game and return to main menu?"
               : "Save game and exit?";
-        if (yesno(prompt, true, 'n'))
+        explicit_keymap map;
+        map['S'] = 'y';
+        if (yesno(prompt, true, 'n', true, true, false, &map))
             save_game(true);
         else
             canned_msg(MSG_OK);
@@ -2350,7 +2348,7 @@ static void _prep_input()
 
     textcolour(LIGHTGREY);
 
-    set_redraw_status(REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
+    you.redraw_status_lights = true;
     if (!player_stair_delay())
         print_stats();
 
@@ -2369,14 +2367,6 @@ static void _prep_input()
 
         you.seen_portals = 0;
     }
-    if (you.props.exists(GOZAG_ANNOUNCE_SHOP_KEY))
-    {
-        mpr_nojoin(MSGCH_GOD,
-                   you.props[GOZAG_ANNOUNCE_SHOP_KEY].get_string().c_str());
-        you.props.erase(GOZAG_ANNOUNCE_SHOP_KEY);
-    }
-    if (you.seen_invis)
-        you.seen_invis = false;
 }
 
 static void _check_banished()
@@ -2391,23 +2381,21 @@ static void _check_banished()
             mprf(MSGCH_BANISHMENT, "You are cast deeper into the Abyss!");
         else
             mprf(MSGCH_BANISHMENT, "The Abyss bends around you!");
-        more();
-        banished(you.banished_by);
+        // these are included in default force_more_message
+        banished(you.banished_by, you.banished_power);
     }
 }
 
 static void _check_shafts()
 {
-    for (int i = 0; i < MAX_TRAPS; ++i)
+    for (auto& entry : env.trap)
     {
-        trap_def &trap = env.trap[i];
-
-        if (trap.type != TRAP_SHAFT)
+        if (entry.second.type != TRAP_SHAFT)
             continue;
 
-        ASSERT_IN_BOUNDS(trap.pos);
+        ASSERT_IN_BOUNDS(entry.first);
 
-        handle_items_on_shaft(trap.pos, true);
+        handle_items_on_shaft(entry.first, true);
     }
 }
 
@@ -2471,7 +2459,7 @@ static void _update_golubria_traps()
     vector<coord_def> traps = find_golubria_on_level();
     for (auto c : traps)
     {
-        trap_def *trap = find_trap(c);
+        trap_def *trap = trap_at(c);
         if (trap && trap->type == TRAP_GOLUBRIA)
         {
             if (--trap->ammo_qty <= 0)
@@ -2765,9 +2753,9 @@ static bool _cancel_confused_move(bool stationary)
         else
         {
             string name = bad_mons->name(DESC_PLAIN);
-            if (name.find("the ") == 0)
+            if (starts_with(name, "the "))
                name.erase(0, 4);
-            if (bad_adj.find("your") != 0)
+            if (!starts_with(bad_adj, "your"))
                bad_adj = "the " + bad_adj;
             prompt += bad_adj + name + bad_suff;
         }
@@ -2856,7 +2844,7 @@ static void _swing_at_target(coord_def move)
             mpr("You swing at nothing.");
         make_hungry(3, true);
         // Take the usual attack delay.
-        you.time_taken = you.attack_delay(you.weapon());
+        you.time_taken = you.attack_delay().roll();
     }
     you.turn_is_over = true;
     return;
@@ -3182,7 +3170,7 @@ static void _move_player(coord_def move)
     bool moving = true;         // used to prevent eventual movement (swap)
     bool swap = false;
 
-    int additional_time_taken = 0; // Extra time independant of movement speed
+    int additional_time_taken = 0; // Extra time independent of movement speed
 
     ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
            || you.wizmode_teleported_into_rock);

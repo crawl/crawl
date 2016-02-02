@@ -47,8 +47,12 @@ enum attack_type
     AT_SPLASH,
 #endif
     AT_POUNCE,
+#if TAG_MAJOR_VERSION == 34
     AT_REACH_STING,
     AT_LAST_REAL_ATTACK = AT_REACH_STING,
+#else
+    AT_LAST_REAL_ATTACK = AT_POUNCE,
+#endif
 
     AT_CHERUB,
 #if TAG_MAJOR_VERSION == 34
@@ -116,15 +120,18 @@ enum attack_flavour
 #if TAG_MAJOR_VERSION == 34
     AF_PLAGUE,
 #endif
-    AF_WEAKNESS_POISON,
+    AF_REACH_STING,
     AF_SHADOWSTAB,
     AF_DROWN,
+#if TAG_MAJOR_VERSION == 34
     AF_FIREBRAND,
+#endif
     AF_CORRODE,
     AF_SCARAB,
     AF_KITE,  // Hops backwards if attacking with a polearm.
     AF_SWOOP, // Swoops in to perform a melee attack if far away.
     AF_TRAMPLE, // Trampling effect.
+    AF_WEAKNESS,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

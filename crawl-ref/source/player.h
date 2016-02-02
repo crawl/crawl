@@ -32,6 +32,9 @@
 #define POWERED_BY_DEATH_KEY "powered_by_death_strength"
 #define SONG_OF_SLAYING_KEY "song_of_slaying_bonus"
 #define FORCE_MAPPABLE_KEY "force_mappable"
+#define REGEN_AMULET_ACTIVE "regen_amulet_active"
+#define MANA_REGEN_AMULET_ACTIVE "mana_regen_amulet_active"
+#define SAP_MAGIC_KEY "sap_magic_amount"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -67,347 +70,349 @@ typedef FixedVector<int, NUM_DURATIONS> durations_t;
 class player : public actor
 {
 public:
-  // ---------------
-  // Character save chunk data:
-  // None of this is really necessary, except for some complicated
-  // hacks with player_save_info. Should only be used in tags.cc or
-  // player_save_info::operator=(player).
-  // ---------------
-  string chr_species_name;
-  string chr_class_name;
-  string chr_god_name;
+    // ---------------
+    // Character save chunk data:
+    // None of this is really necessary, except for some complicated
+    // hacks with player_save_info. Should only be used in tags.cc or
+    // player_save_info::operator=(player).
+    // ---------------
+    string chr_species_name;
+    string chr_class_name;
+    string chr_god_name;
 
-  // ---------------
-  // Permanent data:
-  // ---------------
-  string your_name;
-  species_type species;
-  job_type char_class;
+    // ---------------
+    // Permanent data:
+    // ---------------
+    string your_name;
+    species_type species;
+    job_type char_class;
 
-  // This field is here even in non-WIZARD compiles, since the
-  // player might have been playing previously under wiz mode.
-  bool          wizard;            // true if player has entered wiz mode.
-  bool          explore;           // true if player has entered explore mode.
-  time_t        birth_time;        // start time of game
+    // This field is here even in non-WIZARD compiles, since the
+    // player might have been playing previously under wiz mode.
+    bool          wizard;            // true if player has entered wiz mode.
+    bool          explore;           // true if player has entered explore mode.
+    time_t        birth_time;        // start time of game
 
 
-  // ----------------
-  // Long-term state:
-  // ----------------
-  int elapsed_time;        // total amount of elapsed time in the game
-  int elapsed_time_at_last_input; // used for elapsed_time delta display
+    // ----------------
+    // Long-term state:
+    // ----------------
+    int elapsed_time;        // total amount of elapsed time in the game
+    int elapsed_time_at_last_input; // used for elapsed_time delta display
 
-  int hp;
-  int hp_max;
-  int hp_max_adj_temp;        // temporary max HP loss (rotting)
-  int hp_max_adj_perm;        // base HPs from background (and permanent loss)
+    int hp;
+    int hp_max;
+    int hp_max_adj_temp;        // temporary max HP loss (rotting)
+    int hp_max_adj_perm;        // base HPs from background (and permanent loss)
 
-  int magic_points;
-  int max_magic_points;
-  int mp_max_adj;             // max MP loss (ability costs, tutorial bonus)
+    int magic_points;
+    int max_magic_points;
+    int mp_max_adj;             // max MP loss (ability costs, tutorial bonus)
 
-  FixedVector<int8_t, NUM_STATS> stat_loss;
-  FixedVector<int8_t, NUM_STATS> base_stats;
+    FixedVector<int8_t, NUM_STATS> stat_loss;
+    FixedVector<int8_t, NUM_STATS> base_stats;
 
-  int hunger;
-  int disease;
-  hunger_state_t hunger_state;
-  uint8_t max_level;
-  int hit_points_regeneration;
-  int magic_points_regeneration;
-  unsigned int experience;
-  unsigned int total_experience; // Unaffected by draining. Used for skill cost.
-  int experience_level;
-  int gold;
-  int zigs_completed, zig_max;
+    int hunger;
+    int disease;
+    hunger_state_t hunger_state;
+    uint8_t max_level;
+    int hit_points_regeneration;
+    int magic_points_regeneration;
+    unsigned int experience;
+    unsigned int total_experience; // Unaffected by draining. Used for skill cost.
+    int experience_level;
+    int gold;
+    int zigs_completed, zig_max;
 
-  FixedVector<int8_t, NUM_EQUIP> equip;
-  FixedBitVector<NUM_EQUIP> melded;
-  // Whether these are unrands that we should run the _*_world_reacts func for
-  FixedBitVector<NUM_EQUIP> unrand_reacts;
+    FixedVector<int8_t, NUM_EQUIP> equip;
+    FixedBitVector<NUM_EQUIP> melded;
+    // Whether these are unrands that we should run the _*_world_reacts func for
+    FixedBitVector<NUM_EQUIP> unrand_reacts;
 
-  FixedArray<int, NUM_OBJECT_CLASSES, MAX_SUBTYPES> force_autopickup;
+    FixedArray<int, NUM_OBJECT_CLASSES, MAX_SUBTYPES> force_autopickup;
 
-  // PC's symbol (usually @) and colour.
-  monster_type symbol;
-  transformation_type form;
+    // PC's symbol (usually @) and colour.
+    monster_type symbol;
+    transformation_type form;
 
-  FixedVector< item_def, ENDOFPACK > inv;
-  FixedBitVector<NUM_RUNE_TYPES> runes;
-  int obtainable_runes; // can be != 15 in Sprint
+    FixedVector< item_def, ENDOFPACK > inv;
+    FixedBitVector<NUM_RUNE_TYPES> runes;
+    int obtainable_runes; // can be != 15 in Sprint
 
-  FixedVector<spell_type, MAX_KNOWN_SPELLS> spells;
-  set<spell_type> old_vehumet_gifts, vehumet_gifts;
+    FixedVector<spell_type, MAX_KNOWN_SPELLS> spells;
+    set<spell_type> old_vehumet_gifts, vehumet_gifts;
 
-  uint8_t spell_no;
-  game_chapter chapter;
-  bool royal_jelly_dead;
-  bool transform_uncancellable;
-  bool fishtail; // Merfolk fishtail transformation
+    uint8_t spell_no;
+    game_chapter chapter;
+    bool royal_jelly_dead;
+    bool transform_uncancellable;
+    bool fishtail; // Merfolk fishtail transformation
 
-  unsigned short pet_target;
+    unsigned short pet_target;
 
-  durations_t duration;
-  int rotting;
-  bool apply_berserk_penalty;         // Whether to apply the berserk penalty at
-                                      // end of the turn.
-  int berserk_penalty;                // The penalty for moving while berserk
+    durations_t duration;
+    int rotting;
+    bool apply_berserk_penalty;         // Whether to apply the berserk penalty at
+    // end of the turn.
+    int berserk_penalty;                // The penalty for moving while berserk
 
-  FixedVector<int, NUM_ATTRIBUTES> attribute;
-  FixedVector<uint8_t, NUM_AMMO> quiver; // default items for quiver
-  FixedVector<int, NUM_TIMERS> last_timer_effect;
-  FixedVector<int, NUM_TIMERS> next_timer_effect;
+    FixedVector<int, NUM_ATTRIBUTES> attribute;
+    FixedVector<uint8_t, NUM_AMMO> quiver; // default items for quiver
+    FixedVector<int, NUM_TIMERS> last_timer_effect;
+    FixedVector<int, NUM_TIMERS> next_timer_effect;
 
-  bool dead; // ... but pending revival
-  int lives;
-  int deaths;
+    bool dead; // ... but pending revival
+    int lives;
+    int deaths;
 #if TAG_MAJOR_VERSION == 34
-  float temperature; // For lava orcs.
-  float temperature_last;
+    float temperature; // For lava orcs.
+    float temperature_last;
 #endif
 
-  FixedVector<uint8_t, NUM_SKILLS> skills; ///< skill level
-  FixedVector<int8_t, NUM_SKILLS>  train;  ///< 0: disabled, 1: normal, 2: focus
-  FixedVector<int8_t, NUM_SKILLS>  train_alt;      ///< config of the other mode
-  FixedVector<unsigned int, NUM_SKILLS>  training; ///< percentage of XP used
-  FixedBitVector<NUM_SKILLS> can_train; ///< Is training this skill allowed?
-  FixedVector<unsigned int, NUM_SKILLS> skill_points;
-  FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;///<track skill points
-                                                    ///<gained by crosstraining
-  FixedVector<uint8_t, NUM_SKILLS>  skill_order;
+    FixedVector<uint8_t, NUM_SKILLS> skills; ///< skill level
+    FixedVector<int8_t, NUM_SKILLS> train; ///< 0: disabled, 1: normal, 2: focus
+    FixedVector<int8_t, NUM_SKILLS> train_alt; ///< config of the other mode
+    FixedVector<unsigned int, NUM_SKILLS>  training; ///< percentage of XP used
+    FixedBitVector<NUM_SKILLS> can_train; ///< Is training this skill allowed?
+    FixedVector<unsigned int, NUM_SKILLS> skill_points;
 
-  bool auto_training;
-  list<skill_type> exercises;     ///< recent practise events
-  list<skill_type> exercises_all; ///< also include events for disabled skills
-  set<skill_type> stop_train;     ///< need to check if we can still train
-  set<skill_type> start_train;    ///< we can resume training
+    /// track skill points gained by crosstraining
+    FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
+    FixedVector<uint8_t, NUM_SKILLS>  skill_order;
 
-  // Skill menu states
-  skill_menu_state skill_menu_do;
-  skill_menu_state skill_menu_view;
+    bool auto_training;
+    list<skill_type> exercises;     ///< recent practise events
+    list<skill_type> exercises_all; ///< also include events for disabled skills
+    set<skill_type> stop_train;     ///< need to check if we can still train
+    set<skill_type> start_train;    ///< we can resume training
 
-  //Ashenzari transfer knowledge
-  skill_type    transfer_from_skill;
-  skill_type    transfer_to_skill;
-  unsigned int  transfer_skill_points;
-  unsigned int  transfer_total_skill_points;
+    // Skill menu states
+    skill_menu_state skill_menu_do;
+    skill_menu_state skill_menu_view;
 
-  int  skill_cost_level;
-  int  exp_available;
+    //Ashenzari transfer knowledge
+    skill_type    transfer_from_skill;
+    skill_type    transfer_to_skill;
+    unsigned int  transfer_skill_points;
+    unsigned int  transfer_total_skill_points;
 
-  FixedVector<int, NUM_GODS> exp_docked;
-  FixedVector<int, NUM_GODS> exp_docked_total; // XP-based wrath
+    int  skill_cost_level;
+    int  exp_available;
 
-  FixedArray<uint32_t, 6, MAX_SUBTYPES> item_description;
-  FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
-  FixedBitVector<NUM_MONSTERS> unique_creatures;
+    FixedVector<int, NUM_GODS> exp_docked;
+    FixedVector<int, NUM_GODS> exp_docked_total; // XP-based wrath
 
-  KillMaster kills;
+    FixedArray<uint32_t, 6, MAX_SUBTYPES> item_description;
+    FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
+    FixedBitVector<NUM_MONSTERS> unique_creatures;
 
-  branch_type where_are_you;
-  int depth;
+    KillMaster kills;
 
-  FixedVector<uint8_t, 30> branch_stairs;
+    branch_type where_are_you;
+    int depth;
 
-  god_type religion;
-  string jiyva_second_name;       // Random second name of Jiyva
-  uint8_t piety;
-  uint8_t piety_hysteresis;       // amount of stored-up docking
-  uint8_t gift_timeout;
-  uint8_t saved_good_god_piety;   // for if you "switch" between E/Z/1 by abandoning one first
-  god_type previous_good_god;
-  FixedVector<uint8_t, NUM_GODS>  penance;
-  FixedVector<uint8_t, NUM_GODS>  worshipped;
-  FixedVector<short,   NUM_GODS>  num_current_gifts;
-  FixedVector<short,   NUM_GODS>  num_total_gifts;
-  FixedBitVector<      NUM_GODS>  one_time_ability_used;
-  FixedVector<uint8_t, NUM_GODS>  piety_max;
+    FixedVector<uint8_t, 30> branch_stairs;
 
-  FixedVector<uint8_t, NUM_MUTATIONS> mutation;
-  FixedVector<uint8_t, NUM_MUTATIONS> innate_mutation;
-  FixedVector<uint8_t, NUM_MUTATIONS> temp_mutation;
-  FixedVector<uint8_t, NUM_MUTATIONS> sacrifices;
+    god_type religion;
+    string jiyva_second_name;       // Random second name of Jiyva
+    uint8_t piety;
+    uint8_t piety_hysteresis;       // amount of stored-up docking
+    uint8_t gift_timeout;
+    uint8_t saved_good_god_piety;   // for if you "switch" between E/Z/1 by abandoning one first
+    god_type previous_good_god;
+    FixedVector<uint8_t, NUM_GODS>  penance;
+    FixedVector<uint8_t, NUM_GODS>  worshipped;
+    FixedVector<short,   NUM_GODS>  num_current_gifts;
+    FixedVector<short,   NUM_GODS>  num_total_gifts;
+    FixedBitVector<      NUM_GODS>  one_time_ability_used;
+    FixedVector<uint8_t, NUM_GODS>  piety_max;
 
-  struct demon_trait
-  {
-      int           level_gained;
-      mutation_type mutation;
-  };
+    FixedVector<uint8_t, NUM_MUTATIONS> mutation;
+    FixedVector<uint8_t, NUM_MUTATIONS> innate_mutation;
+    FixedVector<uint8_t, NUM_MUTATIONS> temp_mutation;
+    FixedVector<uint8_t, NUM_MUTATIONS> sacrifices;
 
-  vector<demon_trait> demonic_traits;
+    FixedVector<uint8_t, NUM_ABILITIES> sacrifice_piety;
 
-  int magic_contamination;
+    struct demon_trait
+    {
+        int           level_gained;
+        mutation_type mutation;
+    };
 
-  FixedBitVector<NUM_FIXED_BOOKS> had_book;
-  FixedBitVector<NUM_SPELLS>      seen_spell;
-  FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
-  FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
-  FixedBitVector<NUM_MISCELLANY>     seen_misc;
-  uint8_t                            octopus_king_rings;
+    vector<demon_trait> demonic_traits;
 
-  uint8_t normal_vision;        // how far the species gets to see
-  uint8_t current_vision;       // current sight radius (cells)
+    int magic_contamination;
 
-  int           real_time;            // real time played (in seconds)
-  int           num_turns;            // number of turns taken
-  int           exploration;          // levels explored (16.16 bit real number)
+    FixedBitVector<NUM_FIXED_BOOKS> had_book;
+    FixedBitVector<NUM_SPELLS>      seen_spell;
+    FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
+    FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
+    FixedBitVector<NUM_MISCELLANY>     seen_misc;
+    uint8_t                            octopus_king_rings;
 
-  int           last_view_update;     // what turn was the view last updated?
+    uint8_t normal_vision;        // how far the species gets to see
+    uint8_t current_vision;       // current sight radius (cells)
 
-  // Warning: these two are quite different.
-  //
-  // The spell table is an index to a specific spell slot (you.spells).
-  // The ability table lists the ability (ABIL_*) which prefers that letter.
-  //
-  // In other words, the spell table contains hard links and the ability
-  // table contains soft links.
-  FixedVector<int, 52>           spell_letter_table;   // ref to spell by slot
-  FixedVector<ability_type, 52>  ability_letter_table; // ref to abil by enum
+    int           real_time;            // real time played (in seconds)
+    int           num_turns;            // number of turns taken
+    int           exploration;          // levels explored (16.16 bit real number)
 
-  // Maps without allow_dup that have been already used.
-  set<string> uniq_map_tags;
-  set<string> uniq_map_names;
-  // All maps, by level.
-  map<level_id, vector<string> > vault_list;
+    int           last_view_update;     // what turn was the view last updated?
 
-  PlaceInfo global_info;
-  player_quiver m_quiver;
+    // Warning: these two are quite different.
+    //
+    // The spell table is an index to a specific spell slot (you.spells).
+    // The ability table lists the ability (ABIL_*) which prefers that letter.
+    //
+    // In other words, the spell table contains hard links and the ability
+    // table contains soft links.
+    FixedVector<int, 52>           spell_letter_table;   // ref to spell by slot
+    FixedVector<ability_type, 52>  ability_letter_table; // ref to abil by enum
 
-  // monsters mesmerising player; should be protected, but needs to be saved
-  // and restored.
-  vector<mid_t> beholders;
+    // Maps without allow_dup that have been already used.
+    set<string> uniq_map_tags;
+    set<string> uniq_map_names;
+    // All maps, by level.
+    map<level_id, vector<string> > vault_list;
 
-  // monsters causing fear to the player; see above
-  vector<mid_t> fearmongers;
+    PlaceInfo global_info;
+    player_quiver m_quiver;
 
-  // Delayed level actions. This array is never trimmed, as usually D:1 won't
-  // be loaded again until the very end.
-  vector<daction_type> dactions;
+    // monsters mesmerising player; should be protected, but needs to be saved
+    // and restored.
+    vector<mid_t> beholders;
 
-  // Path back from portal levels.
-  vector<level_pos> level_stack;
+    // monsters causing fear to the player; see above
+    vector<mid_t> fearmongers;
 
-  // The player's knowledge about item types.
-  id_arr type_ids;
+    // Delayed level actions. This array is never trimmed, as usually D:1 won't
+    // be loaded again until the very end.
+    vector<daction_type> dactions;
 
-  // The version the save was last played with.
-  string prev_save_version;
+    // Path back from portal levels.
+    vector<level_pos> level_stack;
 
-  // The biggest assigned monster id so far.
-  mid_t last_mid;
+    // The player's knowledge about item types.
+    id_arr type_ids;
 
-  // Count of various types of actions made.
-  map<pair<caction_type, int>, FixedVector<int, 27> > action_count;
+    // The version the save was last played with.
+    string prev_save_version;
 
-  // Which branches have been noted to have been left during this game.
-  FixedBitVector<NUM_BRANCHES> branches_left;
+    // The biggest assigned monster id so far.
+    mid_t last_mid;
 
-  // For now, only control the speed of abyss morphing.
-  int abyss_speed;
+    // Count of various types of actions made.
+    map<pair<caction_type, int>, FixedVector<int, 27> > action_count;
 
-  // Prompts or actions the player must answer before continuing.
-  // A stack -- back() is the first to go.
-  vector<pair<uncancellable_type, int> > uncancel;
+    // Which branches have been noted to have been left during this game.
+    FixedBitVector<NUM_BRANCHES> branches_left;
 
-  // A list of allies awaiting an active recall
-  vector<mid_t> recall_list;
+    // For now, only control the speed of abyss morphing.
+    int abyss_speed;
 
-  // Hash seeds for deterministic stuff.
-  FixedVector<uint32_t, NUM_SEEDS> game_seeds;
+    // Prompts or actions the player must answer before continuing.
+    // A stack -- back() is the first to go.
+    vector<pair<uncancellable_type, int> > uncancel;
 
-  // -------------------
-  // Non-saved UI state:
-  // -------------------
-  unsigned short prev_targ;
-  coord_def      prev_grd_targ;
-  coord_def      prev_move;
+    // A list of allies awaiting an active recall
+    vector<mid_t> recall_list;
 
-  // Coordinates of last travel target; note that this is never used by
-  // travel itself, only by the level-map to remember the last travel target.
-  short travel_x, travel_y;
-  level_id travel_z;
+    // Hash seeds for deterministic stuff.
+    FixedVector<uint32_t, NUM_SEEDS> game_seeds;
 
-  runrest running;                    // Nonzero if running/traveling.
-  bool travel_ally_pace;
+    // -------------------
+    // Non-saved UI state:
+    // -------------------
+    unsigned short prev_targ;
+    coord_def      prev_grd_targ;
+    coord_def      prev_move;
 
-  bool received_weapon_warning;
-  bool received_noskill_warning;
-  bool wizmode_teleported_into_rock;
+    // Coordinates of last travel target; note that this is never used by
+    // travel itself, only by the level-map to remember the last travel target.
+    short travel_x, travel_y;
+    level_id travel_z;
 
-  delay_queue_type delay_queue;       // pending actions
+    runrest running;                    // Nonzero if running/traveling.
+    bool travel_ally_pace;
 
-  time_t last_keypress_time;
-  bool xray_vision;
-  int8_t bondage_level;  // how much an Ash worshipper is into bondage
-  int8_t bondage[NUM_ET];
-  map<skill_type, int8_t> skill_boost; // Skill bonuses.
-  bool digging;
+    bool received_weapon_warning;
+    bool received_noskill_warning;
+    bool wizmode_teleported_into_rock;
 
-  // The last spell cast by the player.
-  spell_type last_cast_spell;
-  map<int,int> last_pickup;
+    delay_queue_type delay_queue;       // pending actions
+
+    time_t last_keypress_time;
+    bool xray_vision;
+    int8_t bondage_level;  // how much an Ash worshipper is into bondage
+    int8_t bondage[NUM_ET];
+    map<skill_type, int8_t> skill_boost; // Skill bonuses.
+    bool digging;
+
+    // The last spell cast by the player.
+    spell_type last_cast_spell;
+    map<int,int> last_pickup;
 
 
-  // ---------------------------
-  // Volatile (same-turn) state:
-  // ---------------------------
-  bool turn_is_over; // flag signaling that player has performed a timed action
+    // ---------------------------
+    // Volatile (same-turn) state:
+    // ---------------------------
+    bool turn_is_over; // player has performed a timed action
 
-  // If true, player is headed to the Abyss.
-  bool banished;
-  string banished_by;
+    // If true, player is headed to the Abyss.
+    bool banished;
+    string banished_by;
+    int banished_power;
 
-  bool wield_change;          // redraw weapon
-  bool redraw_quiver;         // redraw quiver
-  uint64_t redraw_status_flags;
+    bool wield_change;          // redraw weapon
+    bool redraw_quiver;         // redraw quiver
 
-  bool redraw_title;
-  bool redraw_hit_points;
-  bool redraw_magic_points;
+    bool redraw_title;
+    bool redraw_hit_points;
+    bool redraw_magic_points;
 #if TAG_MAJOR_VERSION == 34
-  bool redraw_temperature;
+    bool redraw_temperature;
 #endif
-  FixedVector<bool, NUM_STATS> redraw_stats;
-  bool redraw_experience;
-  bool redraw_armour_class;
-  bool redraw_evasion;
+    FixedVector<bool, NUM_STATS> redraw_stats;
+    bool redraw_experience;
+    bool redraw_armour_class;
+    bool redraw_evasion;
+    bool redraw_status_lights;
 
-  colour_t flash_colour;
-  targetter *flash_where;
+    colour_t flash_colour;
+    targetter *flash_where;
 
-  int time_taken;
+    int time_taken;
 
-  int old_hunger;            // used for hunger delta-meter (see output.cc)
+    int old_hunger;            // used for hunger delta-meter (see output.cc)
 
-  // Set when the character is going to a new level, to guard against levgen
-  // failures
-  dungeon_feature_type transit_stair;
-  bool entering_level;
+    // Set when the character is going to a new level, to guard against levgen
+    // failures
+    dungeon_feature_type transit_stair;
+    bool entering_level;
 
-  int    escaped_death_cause;
-  string escaped_death_aux;
+    int    escaped_death_cause;
+    string escaped_death_aux;
 
-  int turn_damage;   // cumulative damage per turn
-  mid_t damage_source; // death source of last damage done to player
-  int source_damage; // cumulative damage for you.damage_source
+    int turn_damage;   // cumulative damage per turn
+    mid_t damage_source; // death source of last damage done to player
+    int source_damage; // cumulative damage for you.damage_source
 
-  // When other levels are loaded (e.g. viewing), is the player on this level?
-  bool on_current_level;
+    // When other levels are loaded (e.g. viewing), is the player on this level?
+    bool on_current_level;
 
-  // View code clears and needs new data in places where we can't announce the
-  // portal right away; delay the announcements then.
-  int seen_portals;
-  // Same with invisible monsters, for ring auto-id.
-  bool seen_invis;
+    // View code clears and needs new data in places where we can't announce
+    // the portal right away; delay the announcements then.
+    int seen_portals;
 
-  // Number of viewport refreshes.
-  unsigned int frame_no;
+    // Number of viewport refreshes.
+    unsigned int frame_no;
 
 
-  // ---------------------
-  // The save file itself.
-  // ---------------------
-  package *save;
+    // ---------------------
+    // The save file itself.
+    // ---------------------
+    package *save;
 
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES> branch_info;
@@ -510,7 +515,7 @@ public:
         override;
 
     int base_ac_from(const item_def &armour, int scale = 1) const;
-    void maybe_degrade_bone_armour(int mult);
+    void maybe_degrade_bone_armour(int mult, int trials = 1);
 
     int inaccuracy() const override;
 
@@ -549,10 +554,8 @@ public:
                           bool base = false) const override;
     brand_type  damage_brand(int which_attack = -1) override;
     int         damage_type(int which_attack = -1) override;
-    random_var  attack_delay(const item_def *weapon, const
-                             item_def *projectile = nullptr,
-                             bool random = true, bool scaled = true,
-                             bool do_shield = true) const override;
+    random_var  attack_delay(const item_def *projectile = nullptr,
+                             bool rescale = true) const override;
     int         constriction_damage() const override;
 
     int       has_claws(bool allow_tran = true) const override;
@@ -624,7 +627,8 @@ public:
     bool malmutate(const string &reason) override;
     bool polymorph(int pow) override;
     void backlight();
-    void banish(actor* /*agent*/, const string &who = "") override;
+    void banish(actor* /*agent*/, const string &who = "", const int power = 0,
+                bool force = false) override;
     void blink() override;
     void teleport(bool right_now = false,
                   bool wizard_tele = false) override;
@@ -643,7 +647,7 @@ public:
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
     void weaken(actor *attacker, int pow) override;
-    bool heal(int amount, bool max_too = false) override;
+    bool heal(int amount) override;
     bool drain_exp(actor *, bool quiet = false, int pow = 3) override;
     bool rot(actor *, int amount, bool quiet = false, bool no_cleanup = false)
         override;
@@ -702,6 +706,7 @@ public:
     bool gourmand(bool calc_unid = true, bool items = true) const override;
     bool res_corr(bool calc_unid = true, bool items = true) const override;
     bool clarity(bool calc_unid = true, bool items = true) const override;
+    int spec_evoke(bool calc_unid = true, bool items = true) const override;
     bool stasis(bool calc_unid = true, bool items = true) const override;
 
     bool airborne() const override;
@@ -912,6 +917,8 @@ int player_prot_life(bool calc_unid = true, bool temp = true,
                      bool items = true);
 
 int player_regen();
+void update_regen_amulet_attunement();
+void update_mana_regen_amulet_attunement();
 
 int player_res_cold(bool calc_unid = true, bool temp = true,
                     bool items = true);
@@ -942,6 +949,7 @@ int player_res_magic(bool calc_unid = true, bool temp = true);
 
 int player_shield_class();
 int player_displayed_shield_class();
+bool player_omnireflects();
 
 int player_spec_air();
 int player_spec_cold();
@@ -953,6 +961,9 @@ int player_spec_hex();
 int player_spec_charm();
 int player_spec_poison();
 int player_spec_summ();
+
+const int player_adjust_evoc_power(const int power);
+const int player_adjust_invoc_power(const int power);
 
 int player_speed();
 
@@ -1025,9 +1036,12 @@ string describe_contamination(int level);
 
 void set_mp(int new_amount);
 
+bool player_regenerates_hp();
+bool player_regenerates_mp();
+
 void contaminate_player(int change, bool controlled = false, bool msg = true);
 
-bool confuse_player(int amount, bool quiet = false);
+bool confuse_player(int amount, bool quiet = false, bool force = false);
 
 bool poison_player(int amount, string source, string source_aux = "",
                    bool force = false);
@@ -1062,6 +1076,7 @@ void player_open_door(coord_def doorpos);
 void player_close_door(coord_def doorpos);
 
 void dec_disease_player(int delay);
+void player_end_berserk();
 
 void handle_player_drowning(int delay);
 

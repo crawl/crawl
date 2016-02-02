@@ -55,7 +55,7 @@ static string _ability_type_descriptor(mon_spell_slot_flag type,
                                        mon_holy_type caster_holiness)
 {
     // special case (:
-    if (type == MON_SPELL_DEMONIC && caster_holiness == MH_HOLY)
+    if (type == MON_SPELL_DEMONIC && caster_holiness & MH_HOLY)
         return "angelic";
 
     static const map<mon_spell_slot_flag, string> descriptors =
@@ -139,11 +139,16 @@ static void _monster_spellbooks(const monster_info &mi,
                                               set_name.c_str(), (int) i + 1);
         }
 
+        // Does the monster have a spell that allows them to cast Abjuration?
+        bool mons_abjure = false;
+
         for (auto spell : book_spells)
         {
             if (spell != SPELL_SERPENT_OF_HELL_BREATH)
             {
                 output_book.spells.emplace_back(spell);
+                if (get_spell_flags(spell) & SPFLAG_MONS_ABJURE)
+                    mons_abjure = true;
                 continue;
             }
 
@@ -158,11 +163,14 @@ static void _monster_spellbooks(const monster_info &mi,
             const size_t *s_i_ptr = map_find(serpent_indices, mi.type);
             ASSERT(s_i_ptr);
             const size_t serpent_index = *s_i_ptr;
-            ASSERT_RANGE(serpent_index, 0, ARRAYSZ(serpent_of_hell_breaths));
+            ASSERT_LESS(serpent_index, ARRAYSZ(serpent_of_hell_breaths));
 
             for (auto breath : serpent_of_hell_breaths[serpent_index])
                 output_book.spells.emplace_back(breath);
         }
+
+        if (mons_abjure)
+            output_book.spells.emplace_back(SPELL_ABJURATION);
 
         // XXX: it seems like we should be able to just place this in the
         // vector at the start, without having to copy it in now...?
@@ -223,11 +231,8 @@ static vector<spell_type> _spellset_contents(const spellset &spells)
     {
         for (auto spell : book.spells)
         {
-            if (unique_spells.find(spell) != unique_spells.end())
-            {
-                unique_spells.erase(spell);
+            if (unique_spells.erase(spell) == 1)
                 spell_list.emplace_back(spell);
-            }
         }
     }
 

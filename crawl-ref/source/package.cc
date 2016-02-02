@@ -273,12 +273,12 @@ void package::seek(plen_t to)
         sysfail("failed to seek inside the save file");
 }
 
-chunk_writer* package::writer(const string name)
+chunk_writer* package::writer(const string &name)
 {
     return new chunk_writer(this, name);
 }
 
-chunk_reader* package::reader(const string name)
+chunk_reader* package::reader(const string &name)
 {
     if (plen_t *ch = map_find(directory, name))
         return new chunk_reader(this, *ch);
@@ -353,7 +353,7 @@ plen_t package::alloc_block(plen_t &size)
     return at;
 }
 
-void package::finish_chunk(const string name, plen_t at)
+void package::finish_chunk(const string &name, plen_t at)
 {
     free_chunk(name);
     directory[name] = at;
@@ -361,7 +361,7 @@ void package::finish_chunk(const string name, plen_t at)
     dirty = true;
 }
 
-void package::free_chunk(const string name)
+void package::free_chunk(const string &name)
 {
     auto ci = directory.find(name);
     if (ci == directory.end())
@@ -376,7 +376,7 @@ void package::free_chunk(const string name)
     dirty = true;
 }
 
-void package::delete_chunk(const string name)
+void package::delete_chunk(const string &name)
 {
     free_chunk(name);
     directory.erase(name);
@@ -556,7 +556,7 @@ void package::read_directory(plen_t start, uint8_t version)
     }
 }
 
-bool package::has_chunk(const string name)
+bool package::has_chunk(const string &name)
 {
     return !name.empty() && directory.count(name);
 }
@@ -635,7 +635,7 @@ plen_t package::get_slack()
     return slack;
 }
 
-plen_t package::get_chunk_fragmentation(const string name)
+plen_t package::get_chunk_fragmentation(const string &name)
 {
     load_traces();
     ASSERT(directory.count(name)); // not has_chunk(), "" is valid
@@ -651,7 +651,7 @@ plen_t package::get_chunk_fragmentation(const string name)
     return frags;
 }
 
-plen_t package::get_chunk_compressed_length(const string name)
+plen_t package::get_chunk_compressed_length(const string &name)
 {
     load_traces();
     ASSERT(directory.count(name)); // not has_chunk(), "" is valid
@@ -667,7 +667,7 @@ plen_t package::get_chunk_compressed_length(const string name)
     return len;
 }
 
-chunk_writer::chunk_writer(package *parent, const string _name)
+chunk_writer::chunk_writer(package *parent, const string &_name)
     : first_block(0), cur_block(0), block_len(0)
 {
     ASSERT(parent);
@@ -827,7 +827,7 @@ chunk_reader::chunk_reader(package *parent, plen_t start)
     init(start);
 }
 
-chunk_reader::chunk_reader(package *parent, const string _name)
+chunk_reader::chunk_reader(package *parent, const string &_name)
 {
     ASSERT(parent);
     if (!parent->has_chunk(_name))

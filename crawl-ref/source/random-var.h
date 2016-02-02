@@ -16,7 +16,7 @@ class random_var
     int total;                // sum of weights
 
 public:
-    random_var(int c);
+    explicit random_var(int c);
     random_var(int s, int e, weight_func w_ = nullptr);
     random_var(int s, int e, vector<int> ws);
 
@@ -24,10 +24,6 @@ public:
 
     int weight(int val) const;
     int roll() const;        // evaluate the random variable
-    operator int() const
-    {
-        return roll();
-    }
 
     double expected() const; // expected value
     int min() const;
@@ -39,7 +35,6 @@ protected:
     int roll2val(int r) const;
 };
 
-random_var constant(int n);
 random_var operator+(const random_var& x, const random_var& y);
 random_var negate(const random_var& x);
 random_var operator-(const random_var& x, const random_var& y);

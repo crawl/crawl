@@ -666,12 +666,6 @@ blood saint
 
 <demonspawn>
 %%%%
-blue devil
-
-A muscular horned humanoid figure originating from some frigid hell. It swoops
-through the air on powerful wings, taking sadistic joy from harrying those who
-would try to flee its grasp.
-%%%%
 bog body
 
 An undead figure preserved by the brackish waters of a bog. Though it has been
@@ -694,11 +688,6 @@ boulder beetle
 
 A huge grey beetle with an almost impenetrable rocky carapace, capable of
 rolling at its foes at high speed.
-%%%%
-brain worm
-
-A slimy mauve worm with a greatly distended head, this creature feeds on the
-intellects of sentient beings.
 %%%%
 briar patch
 
@@ -862,15 +851,15 @@ deep elf annihilator
 A deep elf who exults in conjured mayhem and destruction. It is widely hated
 and feared, both for the power and for the precision of its destructive magics.
 %%%%
+deep elf archer
+
+An experienced deep elf fighter with a penchant for ranged combat.
+%%%%
 deep elf blademaster
 
 A champion of the deep elves, who scorns magic and is devoted to the study of
 the sword. A blademaster wields two weapons with astonishing dexterity and
 speed.
-%%%%
-deep elf conjurer
-
-A deep elf well-versed in a variety of destructive magics.
 %%%%
 deep elf death mage
 
@@ -885,10 +874,8 @@ demonic forces and the creatures of the Abyss.
 deep elf elementalist
 
 The primal forces of the universe dance at this demented wizard's fingertips.
-%%%%
-deep elf fighter
-
-A strong deep elf soldier who wields weapons and battle magic.
+They are renowned for the ability to dig out and pin down even the most
+elusive foes with powerful, unavoidable magic.
 %%%%
 deep elf high priest
 
@@ -909,19 +896,10 @@ deep elf master archer
 A deep elf archer who has devoted a lifetime to the mastery of archery,
 dismissing magic as a frivolous distraction.
 %%%%
-deep elf priest
-
-This deep elf is a servant of the ancient dark god of the deep elves, and has
-been granted command of torturous energies by its enigmatic lord.
-%%%%
 deep elf sorcerer
 
 A mighty spellcaster who draws power from the very Hells, and possesses lethal
 arcane abilities of destruction, summoning and banishment.
-%%%%
-deep elf summoner
-
-A deep elf skilled at summoning plagues of insidious vermin.
 %%%%
 deep dwarf
 
@@ -946,7 +924,7 @@ demigod
 
 The aura of power around this human-like figure immediately betrays its divine
 ancestry. And with the good gods (at least officially) decrying fornication,
-betting on the good nature of this individual may be unwise...
+betting on the good nature of this individual may be unwise.
 %%%%
 demonic crawler
 
@@ -966,6 +944,13 @@ dire elephant
 
 A huge pachyderm, wilder and fiercer than normal elephants, with a very thick
 hide, powerful legs, and a memory to die for.
+%%%%
+doom hound
+
+A demon lapdog of the queen of Tartarus, bound to hunt her enemies. Though it
+may appear alone, it's unlikely to remain so for long - it has the terrible
+power to set creatures of nightmare on their victims' trails, though it can
+only ever use this power exactly once.
 %%%%
 draconian
 
@@ -1092,9 +1077,7 @@ dangerous, this freakish relative puts it to shame.
 entropy weaver
 
 A gaunt humanoid creature covered in a flaking, pale chitin. Its spindly limbs
-are capable of startlingly quick movement and end in razor-sharp talons. These
-creatures know a slow and ancient chant that temporarily accelerates the aging
-process of a foe's weapon and armour, corroding them badly.
+are capable of startlingly quick movement and end in razor-sharp talons.
 %%%%
 ettin
 
@@ -1399,7 +1382,9 @@ A frightful demon, covered in roaring hellfire.
 %%%%
 hellwing
 
-A hideous skeletal demon, with wings of ancient withered skin.
+A hideous skeletal demon. It swoops through the air on powerful wings of
+ancient withered skin, taking sadistic joy from harrying those who would try
+to flee its grasp.
 %%%%
 hill giant
 
@@ -1507,7 +1492,7 @@ iron elemental
 A rare and powerful spirit from the elemental plane of earth, it exists in this
 world by inhabiting a hulking mass of iron.
 %%%%
-the iron giant
+iron giant
 
 Huge, lumbering, and particularly dull, this rusting monolith packs quite the
 punch. It is quite possibly the largest giant you have ever seen.
@@ -1544,8 +1529,8 @@ searching for carrion to devour.
 %%%%
 jelly
 
-A pulsating mass of acidic protoplasm. It can and will eat almost anything, and
-grows a little each time...
+A pulsating mass of acidic protoplasm. It can and will eat almost anything,
+growing and splitting as it does so.
 %%%%
 jiangshi
 
@@ -1780,12 +1765,6 @@ A more intelligent cousin of the mighty kraken, capable of using tools and
 spells. They are fully amphibious, but most of their species choose to stay
 beneath the waves and serve their King.
 %%%%
-octopode crusher
-
-This unusually strong warrior has achieved mastery over the rocks as well as
-the waves. Its tentacles move with uncanny grace and seem capable of sending
-you hurtling through the air.
-%%%%
 ogre
 
 A large, ugly, and fat creature, distantly related to orcs and goblins. It is
@@ -1826,8 +1805,7 @@ minds of any who approach it.
 %%%%
 orange demon
 
-An amber-coloured demon with a tail not unlike that of a scorpion. It contains
-a potent venom that can render its victims weak and their blows feeble.
+An amber-coloured demon with a huge tail not unlike that of a scorpion.
 %%%%
 Orb Guardian
 
@@ -2042,7 +2020,7 @@ river rat
 A rodent with hair of a most peculiar green colour, and a powerful bite. It
 tends to form great swarms with its kin.
 %%%%
-the royal jelly
+the Royal Jelly
 
 A particularly rich and golden gelatinous thing. Smaller jellies swim and pulse
 just below its surface, ready to burst forth at the slightest touch.
@@ -2057,12 +2035,6 @@ salamander
 Not the common harmless amphibian, but the far more dangerous mythological
 beast with which that amphibian shares its name. A red, flaming half-human
 half-snake creature with a legendary affinity for fire.
-%%%%
-salamander firebrand
-
-The rarest of the salamander castes, possessed of fearsome agility and
-unparallelled martial prowess. Their mastery of fire is woven into every strike
-of their weapons, filling the air around their opponent with sweltering flames.
 %%%%
 salamander stormcaller
 
@@ -2212,7 +2184,7 @@ surely appreciate being freed.
 slime creature
 
 An icky glob of slime, which slithers along the ground, occasionally merging
-with other nearby globs...
+with other nearby globs.
 %%%%
 small abomination
 
@@ -2254,6 +2226,13 @@ soul eater
 This demon looks like a malignantly shifting shadow gliding through the air. It
 radiates an intense aura of negative force.
 %%%%
+spark wasp
+
+A profoundly unnatural insect covered in vaguely metallic plates. Its stinger
+crackles with electricity, capable of delivering a powerful shock to unwary
+victims, and is capable of closing the distance with them at shockingly
+lethal speed.
+%%%%
 spatial maelstrom
 
 A malevolent rift in reality, dissolving all terrain it passes by into swirling
@@ -2283,12 +2262,6 @@ sphinx
 
 A large creature with a woman's head, a lion's body and the wings of a huge
 bird, able to cloud the minds of its foes and wield fell magics.
-%%%%
-spider
-
-An ordinary orb-weaving spider with a distinctive white cross on its back.
-While not as grotesquely huge as other arachnids to be found in this
-environment, it is still as big as a small cat.
 %%%%
 spiny frog
 
@@ -2477,11 +2450,6 @@ torturous demonspawn
 training dummy
 
 A mannequin used for battle practice.
-%%%%
-trapdoor spider
-
-A fast-moving arachnid that both surprises its prey and evades its enemies by
-concealing itself in crannies in the dungeon floor.
 %%%%
 troll
 
@@ -2822,12 +2790,6 @@ The likeness of a beautiful elven archer, sculpted in finest marble. It holds a
 bow aloft, and appears to be magically animated, letting it use the bow to
 riddle you with arrows.
 %%%%
-big kobold necromancer
-
-A kobold that is not only bigger and smarter than most, but also a good deal
-more evil. Fortunately, from the looks of this place, it's unlikely it could
-get its grubby hands onto the corpse of anything dangerous.
-%%%%
 captured wizard
 
 With wild eyes, this wizard frantically mumbles and waves his arms, but is
@@ -2866,7 +2828,7 @@ Fortunately it appears to be harmless, but with demons you can never be sure.
 %%%%
 dimme
 
-A terrible demon, or perhaps a demigodess, with powers over death, disease,
+A terrible demon, or perhaps a demigoddess, with powers over death, disease,
 and suffering. Its presence is horrifying, but supernaturally compelling.
 %%%%
 drunken dwarf

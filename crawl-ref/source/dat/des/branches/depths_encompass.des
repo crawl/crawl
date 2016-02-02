@@ -28,8 +28,8 @@
         e.weight("5")
         e.mons("raiju band / spriggan air mage band / titan w:5 / " ..
                "storm dragon w:5 / shock serpent w:5 / " ..
-               "blizzard demon w:15 / salamander firebrand w:15")
-        e.mons("obsidian statue / ice statue / w:1 orange crystal statue")
+               "blizzard demon w:15 / salamander stormcaller w:15")
+        e.mons("w:20 obsidian statue / w:1 orange crystal statue")
         e.mons("glowing shapeshifter")
         e.mons("ugly thing / very ugly thing w:5")
         e.mons("ball lightning")
@@ -54,9 +54,8 @@
         e.shuffle("34")
         e.shuffle("m6")
         e.kitem("p = w:60 potion of mutation / " ..
-                "w:5 amulet of resist mutation ident:all / " ..
                 "w:1 potion of cure mutation")
-        e.kitem("P = amulet of resist mutation ident:all")
+        e.kitem("P = any jewellery good_item")
         e.kitem("Q = potion of cure mutation")
         e.kitem("R = potion of cure mutation / nothing")
         e.nsubst("u = 2:Q / 1:P / 1:R / *:u")
@@ -210,7 +209,7 @@ ORIENT:  encompass
 : local brnd = crawl.random2(3)
 : if brnd == 0 then
 MONS:   orc priest / orc high priest / orc sorcerer / orc knight / \
-        deep elf priest / deep elf conjurer / deep elf knight / nothing
+        deep elf mage w:20 / deep elf knight w:5 / deep elf archer w:5 / nothing
 MONS:   orc warlord / deep elf annihilator
 : elseif brnd == 1 then
 MONS:   spriggan rider w:12 / spriggan berserker w:12 / boggart / \
@@ -219,7 +218,7 @@ MONS:   spriggan air mage / fire giant
 : else
 MONS:   salamander w:8 / salamander mystic w:12 / \
         tengu conjurer / tengu warrior / nothing w:5
-MONS:   salamander firebrand / tengu reaver
+MONS:   salamander stormcaller / tengu reaver
 : end
 KMONS:   L = fire dragon
 KMONS:   ~ = ice dragon
@@ -227,7 +226,7 @@ KMONS:   z = killer bee
 KMONS:   Z = queen bee
 ITEM:    ring of teleportation
 ITEM:    scroll of teleportation
-ITEM:    amulet of stasis
+ITEM:    amulet of reflection
 KITEM:   gzZ = royal jelly w:10 / nothing w:40
 KFEAT:   L = l
 KFEAT:   ~ = w
@@ -456,7 +455,7 @@ TAGS: grunt_profane_temple no_monster_gen
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
 KMONS: 4 = red devil / hell hound / efreet w:5
 KMONS: 5 = sun demon
-KMONS: 6 = salamander firebrand / balrug
+KMONS: 6 = salamander stormcaller / balrug
 KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
 KMASK: 12345 = !no_monster_gen
@@ -487,7 +486,7 @@ NAME: grunt_profane_temple_coc
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
-KMONS: 4 = blue devil / simulacrum w:20 / freezing wraith
+KMONS: 4 = ice devil / simulacrum w:20 / freezing wraith
 KMONS: 5 = ice devil
 KMONS: 6 = blizzard demon / ice dragon
 KMONS: 8 = ice statue
@@ -646,11 +645,11 @@ default-depth: Depths:2-, !Depths:$
 NAME:    hangedman_crystal_crosses_colossus
 TAGS:    no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
 ORIENT:  encompass
-MONS:    deep elf conjurer / deep elf knight w:7 / wizard / ogre mage / \
+MONS:    deep elf mage / deep elf knight w:7 / wizard / ogre mage / \
          centaur warrior w:8 ; shortbow ego:flaming | shortbow ego:freezing . arrow / \
          two-headed ogre w:5 ; great mace ego:freezing ident:type . \
          great mace ego:flaming ident:type / efreet w:5 / \
-         rakshasa w:5 ; wand of flame | wand of frost . whip . robe
+         rakshasa w:5 ; wand of flame . whip . robe
 MONS:    ugly thing w:15 / shapeshifter / unseen horror w:15 / \
          chaos spawn / fire elemental / water elemental w:5 / \
          air elemental / earth elemental w:5 / mana viper w:5 / \
@@ -664,7 +663,7 @@ MONS:    ugly thing w:15 / shapeshifter / unseen horror w:15 / \
 MONS:    frost giant w:5 / fire giant w:5 / naga mage w:15 / hell knight w:5 / \
          salamander mystic w:5 / spriggan air mage / deep troll earth mage / \
          yaktaur captain ; arbalest ego:flaming | arbalest ego:freezing . bolt / \
-         rakshasa w:5 ; robe . wand of fire | wand of cold . \
+         rakshasa w:5 ; robe . wand of iceblast | wand of lightning . \
          glaive w:2 ego:flaming | glaive w:2 ego:freezing
 MONS:    lorocyproca w:5 / fire dragon perm_ench:shapeshifter w:12 / fire dragon w:3 / \
          ice dragon perm_ench:shapeshifter w:12 / ice dragon w:3 / \
@@ -677,7 +676,7 @@ MONS:    lorocyproca w:5 / fire dragon perm_ench:shapeshifter w:12 / fire dragon
          great mace ego:flaming | great mace ego:freezing
 KMONS:   A = fire giant ; battleaxe ego:freezing ident:type
 KMONS:   B = frost giant ; great sword ego:flaming ident:type
-KMONS:   C = rakshasa ; robe good_item . wand of cold | wand of fire | \
+KMONS:   C = rakshasa ; robe good_item . wand of iceblast | \
                       wand of lightning . \
                       glaive ego:freezing | glaive ego:flaming . \
                       potion of heal wounds | potion of might | \

@@ -117,11 +117,11 @@ void origin_purchased(item_def &item);
 void origin_acquired(item_def &item, int agent);
 void origin_set_startequip(item_def &item);
 void origin_set_unknown(item_def &item);
-bool origin_is_god_gift(const item_def& item, god_type *god = nullptr);
+god_type origin_as_god_gift(const item_def& item);
 bool origin_is_acquirement(const item_def& item,
                            item_source_type *type = nullptr);
 
-bool item_needs_autopickup(const item_def &);
+bool item_needs_autopickup(const item_def &, bool ignore_force = false);
 bool can_autopickup();
 
 bool need_to_autopickup();
@@ -171,4 +171,24 @@ private:
     int next_link;
 };
 
+class mon_inv_iterator : public iterator<forward_iterator_tag, item_def>
+{
+public:
+    explicit mon_inv_iterator(monster& _mon);
+
+    mon_inv_type slot() const
+    {
+        return type;
+    }
+
+    operator bool() const;
+    item_def& operator *() const;
+    item_def* operator->() const;
+
+    mon_inv_iterator& operator ++ ();
+    mon_inv_iterator operator ++ (int);
+private:
+    monster& mon;
+    mon_inv_type type;
+};
 #endif

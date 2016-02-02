@@ -232,13 +232,9 @@ static bool _monster_guesses_invis_player(const monster &mon)
     return false;
 }
 
-//---------------------------------------------------------------
-//
-// handle_behaviour
-//
-// 1. Evaluates current AI state
-// 2. Sets monster target x,y based on current foe
-//---------------------------------------------------------------
+/**
+ * Evaluates the monster's AI state, and sets its target based on its foe.
+ */
 void handle_behaviour(monster* mon)
 {
     // Test spawners should always be BEH_SEEK against a foe, since
@@ -484,12 +480,7 @@ void handle_behaviour(monster* mon)
             break;
 
         case BEH_LURK:
-            // Make sure trapdoor spiders are not hiding in plain sight
-            if (mon->type == MONS_TRAPDOOR_SPIDER && !mon->submerged())
-                mon->add_ench(ENCH_SUBMERGED);
-
-            // Fall through to get a target, but don't change to wandering.
-
+            // Get a target, but don't change to wandering.
         case BEH_SEEK:
             // No foe?  Then wander or seek the player.
             if (mon->foe == MHITNOT)
@@ -511,6 +502,13 @@ void handle_behaviour(monster* mon)
                 }
                 break;
             }
+
+            // just because a move takes us closer to the target doesn't mean
+            // that the move will stay in los of the target, and if it leaves
+            // los of the target, it's possible for just naively moving toward
+            // the target will not let us reach it (due to walls or whatever)
+            if (!mon->see_cell(mon->target))
+                try_pathfind(mon);
 
             // Foe gone out of LOS?
             if (!proxFoe
@@ -998,14 +996,16 @@ void set_nearest_monster_foe(monster* mon, bool near_player)
     }
 }
 
-//-----------------------------------------------------------------
-//
-// behaviour_event
-//
-// 1. Change any of: monster state, foe, and attitude
-// 2. Call handle_behaviour to re-evaluate AI state and target x, y
-//
-//-----------------------------------------------------------------
+/**
+ * Make a monster react to an event, possibly re-evaluating its attitude,
+ * foe, AI state, or target.
+ *
+ * @param mon the monster getting updated
+ * @param event what it's reacting to
+ * @param src who did it
+ * @param src_pos and where
+ * @param allow_shout whether the monster can shout in reaction.
+ */
 void behaviour_event(monster* mon, mon_event_type event, const actor *src,
                      coord_def src_pos, bool allow_shout)
 {
@@ -1046,7 +1046,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         {
             mon->behaviour = BEH_WANDER;
 
-            if (mons_near(mon))
+            if (you.can_see(*mon))
                 remove_auto_exclude(mon, true);
         }
 
@@ -1084,7 +1084,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // dies, and you'll get a warning prompt and penance once
         // *per hit*. This may not be the best way to address the
         // issue, though. -cao
-        if (!mons_class_gives_xp(mon->type)
+        if (!mons_is_threatening(mon)
             && mon->attitude != ATT_FRIENDLY
             && mon->attitude != ATT_GOOD_NEUTRAL)
         {
@@ -1093,7 +1093,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
         mon->foe = src_idx;
 
-        if (mon->asleep() && mons_near(mon))
+        if (mon->asleep() && you.can_see(*mon))
             remove_auto_exclude(mon, true);
 
         // If the monster can't reach its target and can't attack it
@@ -1174,7 +1174,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             break;
         }
 
-        if (mon->asleep() && mons_near(mon))
+        if (mon->asleep() && you.can_see(*mon))
             remove_auto_exclude(mon, true);
 
         // Will alert monster to <src> and turn them
@@ -1214,8 +1214,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         }
 
         // Neither do plants or nonliving beings.
-        if (mon->holiness() == MH_PLANT
-            || mon->holiness() == MH_NONLIVING)
+        if (mon->holiness() & (MH_PLANT | MH_NONLIVING))
         {
             mon->del_ench(ENCH_FEAR, true, true);
             break;

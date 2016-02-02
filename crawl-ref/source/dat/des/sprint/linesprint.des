@@ -98,11 +98,11 @@ KMONS:     b = Agnes / Aizul / Azrael band / Donald / Frances / Kirke band /\
 NSUBST:    b = 1:b. / 1:b.. / 1:ba.. / 1:baa.. / * = .:70 b:1
 KMONS:     c = Louise / Nikola / Norris / Frederick / Boris / Margery band /\
                Xtahua / Jory / Mennas / Mara
-NSUBST:    b = 1:c. / 1:cb. / 1:cb.. / 1:cbb.. / * = .:70 c:1
+NSUBST:    c = 2:c. / 2:cb. / 2:cb.. / 2:cbb.. / * = .:69 c:2
 MAP
-xxxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxxxx
-x{...AAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDD&....x
-xxxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxx.x
+xxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxxxx
+x{..AAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDD&....x
+xxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxx.x
 x..........a.........a..........a.........a.............a............x
 x.xxxxxxEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFGGGGGGGGGGGGGHHHHHHHHHxxxxxx
 x.......EEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFGGGGGGGGGGGGGHHHHHHHHH&....x
@@ -200,14 +200,15 @@ KFEAT:    r = altar_dithmenos
 KFEAT:    s = altar_qazlal
 KFEAT:    t = altar_gozag
 KFEAT:    u = altar_ru
+KFEAT:    v = altar_pakellas
 : line_setup(_G)
 : lua_marker('~', props_marker {
 :           door_description_suffix=" to the Temple",
 :           })
 MAP
-xxxxxxxxxxxxxxxxxxxxxx
-~abcdefghijklmnopqrstu
-xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx
+~abcdefghijklmnopqrstuv
+xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 
@@ -220,9 +221,9 @@ KITEM:    a = potion of curing q:4 ident:all, \
 KITEM:    b = scroll of blinking q:1 ident:all, \
               scroll of amnesia q:2 ident:all, \
               scroll of remove curse q:3 ident:all
-KITEM:    d = wand of fire charges:7 ident:all /\
-              wand of cold charges:7 ident:all /\
-              wand of draining charges:7 ident:all, \
+KITEM:    d = wand of iceblast charges:7 ident:all /\
+              wand of lightning charges:7 ident:all /\
+              wand of acid charges:7 ident:all, \
               staff of energy not_cursed ident:all
 KITEM:    e = rapier plus:2 ego:electrocution ident:all not_cursed /\
            rapier plus:2 ego:draining ident:all not_cursed /\
@@ -319,7 +320,7 @@ NAME:     lair_end
 TAGS:     lair_end
 KMONS:    1 = wolf w:15 / warg / hell hound w:8
 KMONS:    2 = yak / death yak w:15 / catoblepas w:5
-KMONS:    3 = worm w:15 / lindwurm / brain worm
+KMONS:    3 = worm w:15 / lindwurm / giant leech
 KMONS:    4 = black bear / polar bear
 KMONS:    5 = spiny frog / blink frog / vampire mosquito / giant frog /\
               giant leech
@@ -395,7 +396,7 @@ KFEAT:    S = any shop
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
-:           door_description_suffix=" to Orc:4",
+:           door_description_suffix=" to Orc:2",
 :           })
 MAP
 xxxxxxxxxxxxxxxxxx
@@ -583,7 +584,6 @@ NAME:     items_5
 TAGS:     items_5
 KITEM:    a = ring of slaying plus:2 ident:all not_cursed /\
           amulet of regeneration ident:all not_cursed /\
-          ring of invisibility ident:all not_cursed /\
           ring of protection plus:4 ident:all not_cursed /\
           ring of evasion plus:4 ident:all not_cursed /\
           ring of strength plus:6 ident:all not_cursed /\
@@ -786,12 +786,11 @@ TAGS:     items_6
 ORIENT:   encompass
 KITEM:    a = amulet of faith randart not_cursed ident:all /\
     amulet of guardian spirit randart not_cursed ident:all /\
-    amulet of resist corrosion randart not_cursed ident:all /\
-    amulet of resist mutation randart not_cursed ident:all /\
+    amulet of magic regeneration randart not_cursed ident:all /\
     amulet of rage randart not_cursed ident:all /\
-    amulet of stasis randart not_cursed ident:all /\
+    amulet of reflection randart not_cursed ident:all /\
     amulet of the gourmand randart not_cursed ident:all /\
-    amulet of warding randart not_cursed ident:all /\
+    amulet of dismissal randart not_cursed ident:all /\
     amulet of regeneration randart ident:all not_cursed /\
     ring of slaying plus:3 randart ident:all not_cursed /\
     any jewellery randart level:27 not_cursed ident:all w:40 /\
@@ -803,7 +802,7 @@ KITEM:    a = amulet of faith randart not_cursed ident:all /\
     ring of see invisible randart ident:all not_cursed /\
     ring of poison resistance randart ident:all not_cursed /\
     ring of slaying plus:3 ident:all not_cursed /\
-    ring of invisibility randart ident:all not_cursed /\
+    ring of resist corrosion randart ident:all not_cursed /\
     ring of protection plus:3 randart ident:all not_cursed /\
     ring of evasion plus:3 randart ident:all not_cursed /\
     ring of strength plus:3 randart ident:all not_cursed /\
@@ -1004,7 +1003,7 @@ NAME:     slime_end
 TAGS:     slime_end
 KMONS:    1 = azure jelly / acid blob w:20 / death ooze / giant eyeball w:4 /\
               golden eye w:4 / eye of draining w:2
-KMONS:    2 = the royal jelly
+KMONS:    2 = the Royal Jelly
 KITEM:    2 = slimy rune of zot
 COLOUR:   # = lightgreen
 COLOUR:   12 = green

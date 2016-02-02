@@ -21,7 +21,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
-#include "random-weight.h"
+#include "random.h"
 #include "terrain.h"
 #include "view.h"
 
@@ -292,7 +292,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     // Move it to its new home.
     mons->move_to_pos(newpos);
 
-    const bool now_visible = mons_near(mons);
+    const bool now_visible = you.see_cell(newpos);
     if (!silent && now_visible)
     {
         if (was_seen)

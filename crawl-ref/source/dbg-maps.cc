@@ -29,6 +29,7 @@
 
 static map<string, int> try_count;
 static map<string, int> use_count;
+static map<string, int> success_count;
 static vector<level_id> generated_levels;
 static int branch_count;
 static map<level_id, int> level_mapcounts;
@@ -120,7 +121,7 @@ static bool _do_build_level()
                 if (mons)
                     objstat_record_monster(mons);
 
-                const shop_struct * const shop = get_shop(pos);
+                const shop_struct * const shop = shop_at(pos);
                 if (shop && shop->defined())
                 {
                     for (const auto &item : shop->stock)
@@ -282,6 +283,11 @@ void mapstat_report_map_use(const map_def &map)
     map_levelsused[map.name].insert(level_id::current());
 }
 
+void mapstat_report_map_success(const string &map_name)
+{
+    success_count[map_name]++;
+}
+
 void mapstat_report_error(const map_def &map, const string &err)
 {
     last_error = err;
@@ -432,7 +438,7 @@ static void _write_map_stats()
         fprintf(outf, "------------\n\n");
     }
 
-    fprintf(outf, "\n\nMaps used:\n\n");
+    fprintf(outf, "\n\nMaps used (successful, placed incl. vetoed, tried):\n\n");
     multimap<int, string> usedmaps;
     for (const auto &entry : try_count)
         usedmaps.insert(make_pair(entry.second, entry.first));
@@ -441,10 +447,9 @@ static void _write_map_stats()
     {
         const int tries = entry.first;
         const int uses = lookup(use_count, entry.second, 0);
-        if (tries == uses)
-            fprintf(outf, "%4d       : %s\n", tries, entry.second.c_str());
-        else
-            fprintf(outf, "%4d (%4d): %s\n", uses, tries, entry.second.c_str());
+        const int succ = lookup(success_count, entry.second, 0);
+        fprintf(outf, "%4d, %4d, %4d: %s\n",
+                succ, uses, tries, entry.second.c_str());
     }
 
     fprintf(outf, "\n\nMaps and where used:\n\n");

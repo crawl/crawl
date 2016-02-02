@@ -221,11 +221,11 @@ const vault_placement *dgn_safe_place_map(const map_def *map,
 void level_clear_vault_memory();
 void run_map_epilogues();
 
-bool place_specific_trap(const coord_def& where, trap_type trap_spec, int charges = 0);
+void place_specific_trap(const coord_def& where, trap_type trap_spec, int charges = 0);
 
 struct shop_spec;
 void place_spec_shop(const coord_def& where, shop_type force_type);
-void place_spec_shop(const coord_def& where, shop_spec &spec);
+void place_spec_shop(const coord_def& where, shop_spec &spec, int shop_level = 0);
 int greed_for_shop_type(shop_type shop, int level_number);
 object_class_type item_in_shop(shop_type shop_type);
 bool seen_replace_feat(dungeon_feature_type replace,

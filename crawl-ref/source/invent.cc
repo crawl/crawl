@@ -64,8 +64,8 @@ string InvTitle::get_text(const bool) const
                    : MenuEntry::get_text();
 }
 
-InvEntry::InvEntry(const item_def &i, bool show_bg)
-    : MenuEntry("", MEL_ITEM), show_background(show_bg), item(&i)
+InvEntry::InvEntry(const item_def &i)
+    : MenuEntry("", MEL_ITEM), item(&i)
 {
     data = const_cast<item_def *>(item);
 
@@ -121,12 +121,12 @@ const string &InvEntry::get_dbname() const
     return dbname;
 }
 
-bool InvEntry::is_item_cursed() const
+bool InvEntry::is_cursed() const
 {
     return item_ident(*item, ISFLAG_KNOW_CURSE) && item->cursed();
 }
 
-bool InvEntry::is_item_glowing() const
+bool InvEntry::is_glowing() const
 {
     return !item_ident(*item, ISFLAG_KNOW_TYPE)
            && (get_equip_desc(*item)
@@ -136,23 +136,23 @@ bool InvEntry::is_item_glowing() const
                        || item->base_type == OBJ_BOOKS)));
 }
 
-bool InvEntry::is_item_ego() const
+bool InvEntry::is_ego() const
 {
     return item_ident(*item, ISFLAG_KNOW_TYPE) && !is_artefact(*item)
-           && item->special != 0
+           && item->brand != 0
            && (item->base_type == OBJ_WEAPONS
                || item->base_type == OBJ_MISSILES
                || item->base_type == OBJ_ARMOUR);
 }
 
-bool InvEntry::is_item_art() const
+bool InvEntry::is_art() const
 {
     return item_ident(*item, ISFLAG_KNOW_TYPE) && is_artefact(*item);
 }
 
-bool InvEntry::is_item_equipped() const
+bool InvEntry::is_equipped() const
 {
-    if (item->link == -1 || item->pos.x != -1 || item->pos.y != -1)
+    if (item->link == -1 || item->pos != ITEM_IN_INVENTORY)
         return false;
 
     for (int i = 0; i < NUM_EQUIP; i++)
@@ -208,7 +208,7 @@ string InvEntry::get_text(bool need_cursor) const
             tstr << ' ';
     }
     if (InvEntry::show_glyph)
-        tstr << "(" << glyph_to_tagstr(get_item_glyph(item)) << ")" << " ";
+        tstr << "(" << glyph_to_tagstr(get_item_glyph(*item)) << ")" << " ";
 
     tstr << text;
     const string str = tstr.str();
@@ -242,7 +242,6 @@ void get_class_hotkeys(const int type, vector<char> &glyphs)
         glyphs.push_back('%');
         break;
     case OBJ_BOOKS:
-        glyphs.push_back('+');
         glyphs.push_back(':');
         break;
     case OBJ_SCROLLS:
@@ -411,6 +410,7 @@ string no_selectables_message(int item_selector)
     case OSEL_UNIDENT:
         return "You don't have any unidentified items.";
     case OSEL_RECHARGE:
+    case OSEL_SUPERCHARGE:
         return "You aren't carrying any rechargeable items.";
     case OSEL_ENCH_ARM:
         return "You aren't carrying any armour which can be enchanted further.";
@@ -493,7 +493,6 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
         else if (item_known_cursed(*item))
             tileset.emplace_back(TILE_ITEM_SLOT_CURSED, TEX_DEFAULT);
 
-        tileset.emplace_back(TILE_ITEM_SLOT, TEX_FEAT);
         tileidx_t base_item = tileidx_known_base_item(idx);
         if (base_item)
             tileset.emplace_back(base_item, TEX_DEFAULT);
@@ -509,9 +508,7 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
             ? item->holding_monster()->pos()
             : item->pos;
         tileidx_t ch = 0;
-        if (!show_background || c.x == 0)
-            tileset.emplace_back(TILE_ITEM_SLOT, TEX_FEAT); // Store items.
-        else if (c != coord_def())
+        if (c != coord_def() && show_background)
         {
             ch = tileidx_feature(c);
             if (ch == TILE_FLOOR_NORMAL)
@@ -559,7 +556,7 @@ bool InvMenu::is_selectable(int index) const
     if (type == MT_DROP)
     {
         InvEntry *item = dynamic_cast<InvEntry*>(items[index]);
-        if (item->is_item_cursed() && item->is_item_equipped())
+        if (item->is_cursed() && item->is_equipped())
             return false;
 
         string text = item->get_text();
@@ -672,11 +669,11 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
           { "qualname",  compare_item_str<&InvEntry::get_qualname> },
           { "fullname",  compare_item_str<&InvEntry::get_fullname> },
           { "dbname",    compare_item_str<&InvEntry::get_dbname> },
-          { "curse",     compare_item<bool, &InvEntry::is_item_cursed> },
-          { "glowing",   compare_item_rev<bool, &InvEntry::is_item_glowing> },
-          { "ego",       compare_item_rev<bool, &InvEntry::is_item_ego> },
-          { "art",       compare_item_rev<bool, &InvEntry::is_item_art> },
-          { "equipped",  compare_item_rev<bool, &InvEntry::is_item_equipped> },
+          { "curse",     compare_item<bool, &InvEntry::is_cursed> },
+          { "glowing",   compare_item_rev<bool, &InvEntry::is_glowing> },
+          { "ego",       compare_item_rev<bool, &InvEntry::is_ego> },
+          { "art",       compare_item_rev<bool, &InvEntry::is_art> },
+          { "equipped",  compare_item_rev<bool, &InvEntry::is_equipped> },
           { "identified",compare_item_fn<bool, sort_item_identified> },
           { "charged",   compare_item_fn<bool, sort_item_charged>},
           { "qty",       compare_item_fn<int, sort_item_qty> },
@@ -774,7 +771,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         string subtitle = item_class_name(i);
 
         // Mention the class selection shortcuts.
-        if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
+        if (is_set(MF_MULTISELECT))
         {
             vector<char> glyphs;
             get_class_hotkeys(i, glyphs);
@@ -976,7 +973,7 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
     return selected;
 }
 
-bool is_item_selected(const item_def &i, int selector)
+bool item_is_selected(const item_def &i, int selector)
 {
     const int itype = i.base_type;
     if (selector == OSEL_ANY || selector == itype
@@ -1026,7 +1023,8 @@ bool is_item_selected(const item_def &i, int selector)
                || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL);
 
     case OSEL_RECHARGE:
-        return item_is_rechargeable(i, true);
+    case OSEL_SUPERCHARGE:
+        return item_is_rechargeable(i, selector == OSEL_RECHARGE);
 
     case OSEL_EVOKABLE:
         return item_is_evokable(i, true, true, true);
@@ -1081,7 +1079,7 @@ bool is_item_selected(const item_def &i, int selector)
                 || is_shield(i)
                 || i.base_type == OBJ_ARMOUR
                    && get_armour_slot(i) == EQ_BODY_ARMOUR)
-                && !is_item_selected(i, OSEL_CURSED_WORN);
+                && !item_is_selected(i, OSEL_CURSED_WORN);
 
     default:
         return false;
@@ -1095,7 +1093,7 @@ static void _get_inv_items_to_show(vector<const item_def*> &v,
     {
         if (item.defined()
             && item.link != excluded_slot
-            && is_item_selected(item, selector))
+            && item_is_selected(item, selector))
         {
             v.push_back(&item);
         }
@@ -1117,7 +1115,7 @@ bool any_items_of_type(int selector, int excluded_slot)
                   [=] (const item_def &item) -> bool
                   {
                       return item.defined() && item.link != excluded_slot
-                          && is_item_selected(item, selector);
+                          && item_is_selected(item, selector);
                   });
 }
 
@@ -1172,7 +1170,7 @@ void display_inventory()
             const int invidx = letter_to_index(select);
             if (you.inv[invidx].defined())
             {
-                if (!describe_item(you.inv[invidx], true))
+                if (!describe_item(you.inv[invidx]))
                     break;
             }
         }
@@ -1519,21 +1517,12 @@ static bool _is_known_no_tele_item(const item_def &item)
         return false;
 
     bool known;
-    int val = artefact_property(item, ARTP_PREVENT_TELEPORTATION, known);
-
-    if (known && val)
-        return true;
-    else
-        return false;
+    return artefact_property(item, ARTP_PREVENT_TELEPORTATION, known) && known;
 }
 
 bool nasty_stasis(const item_def &item, operation_types oper)
 {
-    return (oper == OPER_PUTON
-           && (item.is_type(OBJ_JEWELLERY, AMU_STASIS)
-               && (you.duration[DUR_HASTE] || you.duration[DUR_SLOW]
-                   || you.duration[DUR_TELEPORT] || you.duration[DUR_FINESSE])))
-            || (oper == OPER_PUTON || oper == OPER_WEAR
+    return (oper == OPER_PUTON || oper == OPER_WEAR
                 || oper == OPER_WIELD && !_is_wielded(item))
                 && (_is_known_no_tele_item(item) && you.duration[DUR_TELEPORT]);
 }
@@ -1557,8 +1546,17 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (item.base_type == OBJ_RODS && oper == OPER_ATTACK)
         return true;
 
+    // The consequences of evokables are generally known unless it's a deck
+    // and you don't know what kind of a deck it is.
+    if (item.base_type == OBJ_MISCELLANY && !is_deck(item)
+        && oper == OPER_EVOKE && god_hates_item(item))
+    {
+        penance = true;
+        return true;
+    }
+
     // Everything else depends on knowing the item subtype/brand.
-    if (!item_ident(item, ISFLAG_KNOW_TYPE))
+    if (!item_type_known(item))
         return false;
 
     if (oper == OPER_REMOVE
@@ -1571,10 +1569,14 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
     }
 
+    if (oper == OPER_REMOVE && item.is_type(OBJ_JEWELLERY, AMU_HARM))
+        return true;
+
     if (nasty_stasis(item, oper))
         return true;
 
-    if (oper == OPER_ATTACK && god_hates_item(item))
+    if (oper == OPER_ATTACK && god_hates_item(item)
+        && !you_worship(GOD_PAKELLAS))
     {
         penance = true;
         return true;
@@ -1606,8 +1608,11 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (is_artefact(item) && artefact_property(item, ARTP_DRAIN))
+        if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
+                                  || artefact_property(item, ARTP_FRAGILE)))
+        {
             return true;
+        }
     }
 
     if (oper == OPER_PUTON || oper == OPER_WEAR || oper == OPER_TAKEOFF
@@ -1623,8 +1628,17 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (is_artefact(item) && artefact_property(item, ARTP_DRAIN))
+        if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
+                                  || artefact_property(item, ARTP_FRAGILE)))
+        {
             return true;
+        }
+    }
+
+    if (oper == OPER_EVOKE && god_hates_item(item))
+    {
+        penance = true;
+        return true;
     }
 
     return false;
@@ -1982,7 +1996,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
 
     if (is_unrandom_artefact(item))
     {
-        const unrandart_entry* entry = get_unrand_entry(item.special);
+        const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
         if (entry->evoke_func && item_type_known(item))
         {

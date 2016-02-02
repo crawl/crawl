@@ -146,7 +146,7 @@ map_marker *map_feature_marker::read(reader &inf, map_marker_type)
 map_marker *map_feature_marker::parse(const string &s,
                                       const string &) throw (string)
 {
-    if (s.find("feat:") != 0)
+    if (!starts_with(s, "feat:"))
         return nullptr;
     string raw = s;
     strip_tag(raw, "feat:", true);
@@ -424,9 +424,9 @@ map_marker *map_lua_marker::parse(const string &s,
     string raw           = s;
     bool   mapdef_marker = true;
 
-    if (s.find("lua:") == 0)
+    if (starts_with(s, "lua:"))
         strip_tag(raw, "lua:", true);
-    else if (s.find("lua_mapless:") == 0)
+    else if (starts_with(s, "lua_mapless:"))
     {
         strip_tag(raw, "lua_mapless:", true);
         mapdef_marker = false;

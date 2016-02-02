@@ -53,7 +53,7 @@ https://www.debian.org/doc/manuals/maint-guide/index.en.html
    `date' command to update the timestamp. The format must match the previous
    entries. A command like the following will give you a valid timestamp:
 
-   date +'%a, %d %b %Y %z'
+   date +'%a, %d %b %Y %R:%S %z'
 
    Before you make the commit with the changelog entry, it's a good idea to
    make a version tag for testing purposes and try the steps 1 through 6 below

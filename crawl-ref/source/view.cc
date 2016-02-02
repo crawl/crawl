@@ -93,11 +93,8 @@ bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf)
     else
         aid.context = SC_NEWLY_SEEN;
 
-    if (!mons_is_safe(mons)
-        && (mons_class_gives_xp(mons->type) || mons_is_active_ballisto(mons)))
-    {
+    if (!mons_is_safe(mons))
         return interrupt_activity(AI_SEE_MONSTER, aid, msgs_buf);
-    }
 
     seen_monster(mons);
 
@@ -268,7 +265,7 @@ void update_monsters_in_view()
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mons_near(*mi))
+        if (you.see_cell(mi->pos()))
         {
             if (mi->attitude == ATT_HOSTILE)
                 num_hostile++;
@@ -390,7 +387,8 @@ void update_monsters_in_view()
             vector<monster *> mons;
             for (monster *mon : monsters)
             {
-                if (mon->wont_attack()
+                if (!mon->see_cell(you.pos()) // xray_vision
+                    || mon->wont_attack()
                     || mon->is_stationary()
                     || mons_is_object(mon->type)
                     || mons_is_tentacle_or_tentacle_segment(mon->type))
@@ -680,15 +678,6 @@ void fully_map_level()
     }
 }
 
-// Is the given monster near (in LOS of) the player?
-bool mons_near(const monster* mons)
-{
-    ASSERT(mons);
-    if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
-        return true;
-    return you.see_cell(mons->pos());
-}
-
 bool mon_enemies_around(const monster* mons)
 {
     // If the monster has a foe, return true.
@@ -705,12 +694,12 @@ bool mon_enemies_around(const monster* mons)
     {
         // Additionally, if an ally is nearby and *you* have a foe,
         // consider it as the ally's enemy too.
-        return mons_near(mons) && there_are_monsters_nearby(true);
+        return you.can_see(*mons) && there_are_monsters_nearby(true);
     }
     else
     {
         // For hostile monster* you* are the main enemy.
-        return mons_near(mons);
+        return mons->can_see(you);
     }
 }
 
@@ -916,23 +905,20 @@ static update_flags player_view_update_at(const coord_def &gc)
 
     // Set excludes in a radius of 1 around harmful clouds genereated
     // by neither monsters nor the player.
-    const int cloudidx = env.cgrid(gc);
-    if (cloudidx != EMPTY_CLOUD && !crawl_state.game_is_arena())
+    const cloud_struct* cloud = cloud_at(gc);
+    if (cloud && !crawl_state.game_is_arena())
     {
-        cloud_struct &cl   = env.cloud[cloudidx];
-        cloud_type   ctype = cl.type;
+        const cloud_struct &cl = *cloud;
 
         bool did_exclude = false;
         if (!cl.temporary() && is_damaging_cloud(cl.type, false))
         {
-            int size;
+            int size = cl.exclusion_radius();
 
             // Steam clouds are less dangerous than the other ones,
             // so don't exclude the neighbour cells.
-            if (ctype == CLOUD_STEAM && cl.exclusion_radius() == 1)
+            if (cl.type == CLOUD_STEAM && size == 1)
                 size = 0;
-            else
-                size = cl.exclusion_radius();
 
             bool was_exclusion = is_exclude_root(gc);
             set_exclude(gc, size, false, false, true);
@@ -1261,17 +1247,17 @@ void run_animation(animation_type anim, use_animation_type type, bool cleanup)
     }
 }
 
-//---------------------------------------------------------------
-//
-// Draws the main window using the character set returned
-// by get_show_glyph().
-//
-// If show_updates is set, env.show and dependent structures
-// are updated. Should be set if anything in view has changed.
-//
-// If tiles_only is set, only the tile view will be updated. This
-// is only relevant for Webtiles.
-//---------------------------------------------------------------
+/**
+ * Draws the main window using the character set returned
+ * by get_show_glyph().
+ *
+ * @param show_updates if true, env.show and dependent structures
+ *                     are updated. Should be set if anything in
+ *                     view has changed.
+ * @param tiles_only if true, only the tile view will be updated. This
+ *                   is only relevant for Webtiles.
+ * @param a[in] the animation to be showing, if any.
+ */
 void viewwindow(bool show_updates, bool tiles_only, animation *a)
 {
     // The player could be at (0,0) if we are called during level-gen; this can
@@ -1499,24 +1485,32 @@ static void _config_layers_menu()
     bool exit = false;
 
     _layers = _layers_saved;
+    crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+    crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
 
     msgwin_set_temporary(true);
     while (!exit)
     {
         viewwindow();
-        mprf(MSGCH_PROMPT, "Select layers to display: "
+        mprf(MSGCH_PROMPT, "Select layers to display:\n"
                            "<%s>(m)onsters</%s>|"
                            "<%s>(p)layer</%s>|"
                            "<%s>(i)tems</%s>|"
-                           "<%s>(c)louds</%s>",
-           _layers & LAYER_MONSTERS ? "lightgrey" : "darkgrey",
-           _layers & LAYER_MONSTERS ? "lightgrey" : "darkgrey",
-           _layers & LAYER_PLAYER   ? "lightgrey" : "darkgrey",
-           _layers & LAYER_PLAYER   ? "lightgrey" : "darkgrey",
-           _layers & LAYER_ITEMS    ? "lightgrey" : "darkgrey",
-           _layers & LAYER_ITEMS    ? "lightgrey" : "darkgrey",
-           _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey",
-           _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey"
+                           "<%s>(c)louds</%s>|"
+                           "<%s>monster (w)eapons</%s>|"
+                           "<%s>monster (h)ealth</%s>",
+           _layers & LAYER_MONSTERS        ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTERS        ? "lightgrey" : "darkgrey",
+           _layers & LAYER_PLAYER          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_PLAYER          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_ITEMS           ? "lightgrey" : "darkgrey",
+           _layers & LAYER_ITEMS           ? "lightgrey" : "darkgrey",
+           _layers & LAYER_CLOUDS          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_CLOUDS          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTER_WEAPONS ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTER_WEAPONS ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey"
         );
         mprf(MSGCH_PROMPT, "Press <w>%s</w> to return to normal view. "
                            "Press any other key to exit.",
@@ -1524,18 +1518,25 @@ static void _config_layers_menu()
 
         switch (get_ch())
         {
-        case 'm': _layers_saved = _layers ^= LAYER_MONSTERS; break;
-        case 'p': _layers_saved = _layers ^= LAYER_PLAYER;   break;
-        case 'i': _layers_saved = _layers ^= LAYER_ITEMS;    break;
-        case 'c': _layers_saved = _layers ^= LAYER_CLOUDS;   break;
+        case 'm': _layers_saved = _layers ^= LAYER_MONSTERS;        break;
+        case 'p': _layers_saved = _layers ^= LAYER_PLAYER;          break;
+        case 'i': _layers_saved = _layers ^= LAYER_ITEMS;           break;
+        case 'c': _layers_saved = _layers ^= LAYER_CLOUDS;          break;
+        case 'w': _layers_saved = _layers ^= LAYER_MONSTER_WEAPONS; break;
+        case 'h': _layers_saved = _layers ^= LAYER_MONSTER_HEALTH;  break;
 
         // Remaining cases fall through to exit.
         case '|':
             _layers = LAYERS_ALL;
+            crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+            crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
         default:
             exit = true;
             break;
         }
+
+        crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+        crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
 
         msgwin_clear_temporary();
     }
@@ -1564,6 +1565,8 @@ void reset_show_terrain()
         mprf(MSGCH_PROMPT, "Restoring view layers.");
 
     _layers = LAYERS_ALL;
+    crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+    crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
 }
 
 ////////////////////////////////////////////////////////////////////////////

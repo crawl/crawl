@@ -9,7 +9,6 @@
 
 #include "endianness.h"
 
-//-----------------------------------------------------------------------------
 // MurmurHash2, by Austin Appleby
 uint32_t hash32(const void *data, int len)
 {

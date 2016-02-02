@@ -50,7 +50,6 @@ struct body_facet_def
 {
     equipment_type eq;
     mutation_type mut;
-    int level_lost;
 };
 
 struct facet_def
@@ -77,24 +76,23 @@ enum class mutflag
     JIYVA   = 1 << 2, // jiyva-only muts
     QAZLAL  = 1 << 3, // qazlal wrath
     XOM     = 1 << 4, // xom being xom
-    CORRUPT = 1 << 5, // wretched stars
 
-    LAST    = CORRUPT
+    LAST    = XOM
 };
-DEF_BITFIELD(mutflags, mutflag, 5);
+DEF_BITFIELD(mutflags, mutflag, 4);
 COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::LAST);
 
 #include "mutation-data.h"
 
 static const body_facet_def _body_facets[] =
 {
-    //{ EQ_NONE, MUT_FANGS, 1 },
-    { EQ_HELMET, MUT_HORNS, 1 },
-    { EQ_HELMET, MUT_ANTENNAE, 1 },
-    //{ EQ_HELMET, MUT_BEAK, 1 },
-    { EQ_GLOVES, MUT_CLAWS, 3 },
-    { EQ_BOOTS, MUT_HOOVES, 3 },
-    { EQ_BOOTS, MUT_TALONS, 3 }
+    //{ EQ_NONE, MUT_FANGS },
+    { EQ_HELMET, MUT_HORNS },
+    { EQ_HELMET, MUT_ANTENNAE },
+    //{ EQ_HELMET, MUT_BEAK },
+    { EQ_GLOVES, MUT_CLAWS },
+    { EQ_BOOTS, MUT_HOOVES },
+    { EQ_BOOTS, MUT_TALONS }
 };
 
 /**
@@ -142,7 +140,6 @@ static const int conflict[][3] =
     { MUT_REGENERATION,        MUT_SLOW_REGENERATION,      1},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
     { MUT_FAST,                MUT_SLOW,                   1},
-    { MUT_BREATHE_FLAMES,      MUT_SPIT_POISON,           -1},
     { MUT_FANGS,               MUT_BEAK,                  -1},
     { MUT_ANTENNAE,            MUT_HORNS,                 -1},
     { MUT_HOOVES,              MUT_TALONS,                -1},
@@ -189,7 +186,6 @@ static int _mut_weight(const mutation_def &mut, mutflag use)
         case mutflag::JIYVA:
         case mutflag::QAZLAL:
         case mutflag::XOM:
-        case mutflag::CORRUPT:
             return 1;
         case mutflag::GOOD:
         case mutflag::BAD:
@@ -272,6 +268,13 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
             if (mut == MUT_STINGER && drag == MONS_SWAMP_DRAGON)
                 return MUTACT_FULL;
         }
+        // Vampire bats keep their fangs.
+        if (you.form == TRAN_BAT
+            && you.species == SP_VAMPIRE
+            && mut == MUT_FANGS)
+        {
+            return MUTACT_FULL;
+        }
         // Dex and HP changes are kept in all forms.
         if (mut == MUT_ROUGH_BLACK_SCALES || mut == MUT_RUGGED_BROWN_SCALES)
             return MUTACT_PARTIAL;
@@ -313,6 +316,12 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
 
     if (you_worship(GOD_DITHMENOS) && mut == MUT_IGNITE_BLOOD)
         return MUTACT_INACTIVE;
+
+    if ((you_worship(GOD_PAKELLAS) || player_under_penance(GOD_PAKELLAS))
+         && (mut == MUT_MANA_LINK || mut == MUT_MANA_REGENERATION))
+    {
+        return MUTACT_INACTIVE;
+    }
 
     return MUTACT_FULL;
 }
@@ -409,15 +418,15 @@ string describe_mutations(bool center_title)
 
     if (you.species == SP_OCTOPODE)
     {
-        const char * num_tentacles =
-               number_in_words(you.has_usable_tentacles(false)).c_str();
+        const string num_tentacles =
+               number_in_words(you.has_usable_tentacles(false));
         result += _annotate_form_based(
             make_stringf("You can wear up to %s rings at the same time.",
-                         num_tentacles),
+                         num_tentacles.c_str()),
             !get_form()->slot_available(EQ_RING_EIGHT));
         result += _annotate_form_based(
             make_stringf("You can use your tentacles to constrict %s enemies at once.",
-                         num_tentacles),
+                         num_tentacles.c_str()),
             !form_keeps_mutations());
     }
 
@@ -852,11 +861,6 @@ static mutation_type _get_random_xom_mutation()
     return mutat;
 }
 
-static mutation_type _get_random_corrupt_mutation()
-{
-    return _get_mut_with_use(mutflag::CORRUPT);
-}
-
 static mutation_type _get_random_qazlal_mutation()
 {
     return _get_mut_with_use(mutflag::QAZLAL);
@@ -874,6 +878,7 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
             mt = x_chance_in_y(3, 5) ? mutflag::GOOD : mutflag::BAD;
             break;
         case RANDOM_BAD_MUTATION:
+        case RANDOM_CORRUPT_MUTATION:
             mt = mutflag::BAD;
             break;
         case RANDOM_GOOD_MUTATION:
@@ -1048,13 +1053,9 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Draconians already get breath weapons.
-    if (species_is_draconian(you.species)
-        && (mutat == MUT_BREATHE_FLAMES
-            || mutat == MUT_SPIT_POISON))
-    {
+    // Only nagas can get upgraded poison spit.
+    if (you.species != SP_NAGA && mutat == MUT_SPIT_POISON)
         return true;
-    }
 
     // Only Draconians (and gargoyles) can get wings.
     if (!species_is_draconian(you.species) && you.species != SP_GARGOYLE
@@ -1119,8 +1120,11 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     // We can't use is_useless_skill() here, since species that can still wear
     // body armour can sacrifice armour skill with Ru.
-    if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL && mutat == MUT_DEFORMED)
+    if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL
+        && (mutat == MUT_DEFORMED || mutat == MUT_STURDY_FRAME))
+    {
         return true;
+    }
 
     equipment_type eq_type = EQ_NONE;
 
@@ -1307,6 +1311,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     case RANDOM_MUTATION:
     case RANDOM_GOOD_MUTATION:
     case RANDOM_BAD_MUTATION:
+    case RANDOM_CORRUPT_MUTATION:
         mutat = _get_random_mutation(which_mutation);
         break;
     case RANDOM_XOM_MUTATION:
@@ -1314,9 +1319,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         break;
     case RANDOM_SLIME_MUTATION:
         mutat = _get_random_slime_mutation();
-        break;
-    case RANDOM_CORRUPT_MUTATION:
-        mutat = _get_random_corrupt_mutation();
         break;
     case RANDOM_QAZLAL_MUTATION:
         mutat = _get_random_qazlal_mutation();
@@ -1949,6 +1951,8 @@ static const facet_def _demon_facets[] =
            MUT_THIN_SKELETAL_STRUCTURE },
       { -33, -33, 0 } },
     { 1, { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
+      { -33, -33, 0 } },
+    { 1, { MUT_STURDY_FRAME, MUT_STURDY_FRAME, MUT_STURDY_FRAME },
       { -33, -33, 0 } },
     // Tier 2 facets
     { 2, { MUT_HEAT_RESISTANCE, MUT_FLAME_CLOUD_IMMUNITY, MUT_IGNITE_BLOOD },

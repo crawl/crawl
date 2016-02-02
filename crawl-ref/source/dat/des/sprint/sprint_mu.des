@@ -231,7 +231,7 @@ TAGS: sprint_mu_temple no_rotate no_hmirror no_vmirror
 KFEAT: E = altar_elyvilon
 KFEAT: 1 = altar_the_shining_one
 KFEAT: Z = altar_zin
-KMONS: e = patrolling deep elf priest ; long sword ego:holy_wrath
+KMONS: e = patrolling deep elf mage ; long sword ego:holy_wrath
 KITEM: e = potion of curing / potion of heal wounds / potion of cure mutation
 KFEAT: O = altar_okawaru
 KFEAT: T = altar_trog
@@ -262,6 +262,7 @@ KFEAT: X = altar_xom
 KFEAT: M = altar_makhleb
 KFEAT: D = altar_dithmenos
 KFEAT: G = altar_gozag
+KFEAT: P = altar_pakellas
 KFEAT: Q = altar_qazlal
 KFEAT: R = altar_ru
 KMONS: l = patrolling spatial vortex
@@ -290,7 +291,7 @@ x.f.xGlxm..
 x...xNDx...
 x+xxxXJx...
 x.s5xMRx..*
-xVSKxQ.+..j
+xVSKxQP+..j
 ENDMAP
 
 ##############################################################################
@@ -342,9 +343,9 @@ TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror
 MONS: two-headed ogre hd:3 hp:40
 MONS: hill giant hd:5 hp:68
 MONS: Erolcha
-MONS: trapdoor spider, redback
+MONS: redback
 KFEAT: ~ = net trap
-NSUBST: ^ = 2:4 / 1:5 / 10:~ / *:.
+NSUBST: ^ = 2:4 / 10:~ / *:.
 COLOUR: # = yellow
 KFEAT: # = closed_door
 : lua_marker('#', props_marker {
@@ -409,10 +410,10 @@ ENDMAP
 # Elf 1, gauntlet
 NAME: sprint_mu_elf_gauntlet
 TAGS: sprint_mu_elf no_rotate no_hmirror no_vmirror
-MONS: deep elf knight / deep elf priest / deep elf summoner / deep elf conjurer
+MONS: deep elf knight / deep elf mage w:30
 MONS: deep elf annihilator ; robe ego:poison_resistance | robe ego:resistance | robe /\
       deep elf demonologist ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
-      w:5 deep elf conjurer ; robe ego:poison_resistance | robe ego:cold_resistance | robe
+      w:5 deep elf mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe
 MONS: deep elf death mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
       deep elf high priest ; robe ego:poison_resistance | robe ego:cold_resistance | robe
 MONS: deep elf blademaster ; chain mail ego:cold_resistance /\
@@ -504,7 +505,7 @@ KMONS: b = death yak
 KMONS: f = blink frog
 KMONS: d = black mamba
 KMONS: e = azure jelly
-KMONS: g = brain worm
+KMONS: g = giant leech
 KMONS: A = lindwurm
 KMONS: h = redback
 KMONS: i = hydra
@@ -515,7 +516,7 @@ KMONS: q = electric eel
 KFEAT: q = deep_water
 KMONS: r = hydra simulacrum / fire dragon simulacrum / polar bear simulacrum /\
  wolf simulacrum / black mamba simulacrum
-KITEM: r = any, any, any, any, any, superb_item / w:1 wand of fire /\
+KITEM: r = any, any, any, any, any, superb_item / w:1 wand of acid /\
  w:1 wand of disintegration
 KITEM: % = fruit q:6
 KFEAT: _ = altar_fedhas
@@ -556,7 +557,7 @@ ENDMAP
 # Slime 1, circle
 NAME: sprint_mu_slime_circle
 TAGS: sprint_mu_slime no_rotate no_hmirror no_vmirror
-MONS: the royal jelly, shining eye, giant eyeball, acid blob, azure jelly
+MONS: the Royal Jelly, shining eye, giant eyeball, acid blob, azure jelly
 SHUFFLE: 234
 SUBST: 4 = 45
 KFEAT: M = slimy_wall
@@ -946,8 +947,8 @@ NSUBST: . = 15:M / *:.
 KMONS: M = ugly thing / slime creature / glowing shapeshifter
 KITEM: % = silver rune of zot
 KITEM: " = ring of flight ident:all, potion of flight ident:all q:3, \
- scroll of acquirement q:1 ident:all, wand of disintegration / wand of fire, \
- acquire gold, ring of protection from fire ident:all
+ scroll of acquirement q:1 ident:all, wand of disintegration / \
+ wand of iceblast, acquire gold, ring of protection from fire ident:all
 
 COLOUR: #~^ = yellow
 KFEAT: # = closed_door
@@ -1270,7 +1271,7 @@ ENDMAP
 NAME: sprint_mu_dis_giant
 TAGS: sprint_mu_dis no_rotate no_hmirror no_vmirror
 MONS: patrolling iron elemental
-MONS: patrolling the iron giant ; giant club unrand:skullcrusher
+MONS: patrolling iron giant ; giant club unrand:skullcrusher
 MONS: iron dragon, rust devil, patrolling hell sentinel, war gargoyle, iron golem
 KMONS: & = dispater
 KITEM: * = superb_item, superb_item, superb_item

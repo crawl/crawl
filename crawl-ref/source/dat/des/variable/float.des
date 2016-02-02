@@ -43,7 +43,7 @@ end
 
 function grunt_megastairs_setup(e)
   e.orient("float")
-  e.tags("extra luniq_grunt_megastairs ruin_lair")
+  e.tags("extra luniq_grunt_megastairs transparent ruin_lair")
   e.depth("Lair, Depths, Crypt, Elf, Snake, Zot, Dis, Geh, Coc, Tar")
   e.nsubst("0 = 2:0 / 2:0. / *:.")
   e.subst("@ = @+")
@@ -1212,7 +1212,7 @@ MONS:    zombie
 MONS:    mummy / nothing
 SHUFFLE: 2F, cbv
 SUBST:   F = G:99 F:1
-KMONS:   F = orange crystal statue / obsidian statue / ice statue
+KMONS:   F = orange crystal statue / obsidian statue
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx3$$xxxxxxxxxxxxx
@@ -1804,14 +1804,8 @@ KMONS:  6 = air elemental
 KMONS:  7 = fire vortex
 #
 : if you.in_branch("elf") then
-KMONS:  Z = col:flash deep elf sorcerer \
-        name:deep_elf_elementalist n_rpl n_des n_noc \
-        tile:mons_deep_elf_elementalist \
-        spells:iron_shot.11.wizard;summon_air_elementals.11.wizard;\
-               sticky_flame_range.11.wizard;\
-               summon_water_elementals.11.wizard;\
-               haste.11.wizard;blink.11.wizard \
-        ; robe ego:fire_resistance | \
+KMONS:  Z = deep elf elementalist ; \
+        robe ego:fire_resistance | \
         robe ego:cold_resistance | \
         robe ego:resistance . dagger ego:freezing | \
         dagger ego:flaming | dagger ego:electrocution
@@ -2246,20 +2240,19 @@ NAME:    hangedman_opposites_gauntlet
 TAGS:    no_monster_gen patrolling
 ORIENT:  float
 DEPTH:   D:14-15, Depths, !Depths:$
-MONS:    orc knight ; wand of frost . arbalest ego:flaming . bolt ego:none . chain mail / \
-         orc knight ; wand of flame . arbalest ego:freezing . bolt ego:none . chain mail
+MONS:    orc knight ; wand of flame . arbalest ego:freezing . bolt ego:none . chain mail
 MONS:    ettin ; giant club ego:holy_wrath ident:type . great mace ego:draining ident:type
 MONS:    rakshasa ; scythe ego:antimagic | trident ego:antimagic / \
          siren ; chain mail . javelin ego:poisoned
 MONS:    fire giant ; battleaxe ego:freezing ident:type
 MONS:    frost giant ; great sword ego:flaming ident:type
 MONS:    golden dragon / crystal guardian w:8
-MONS:    vampire knight ; wand of lightning | wand of draining . \
+MONS:    vampire knight ; wand of lightning | wand of iceblast . \
          great sword . chain mail / tengu reaver ; chain mail . \
          halberd ego:antimagic ident:type | glaive ego:antimagic ident:type
 KMONS:   A = fire drake / salamander / fire elemental
 KMONS:   B = lindwurm / fire crab / efreet w:5
-KMONS:   C = salamander firebrand / ophan w:5 / balrug w:5
+KMONS:   C = salamander stormcaller / ophan w:5 / balrug w:5
 KMONS:   D = hydra simulacrum / bog body / polar bear
 KMONS:   E = freezing wraith / ice devil / harpy simulacrum
 KMONS:   F = blizzard demon / azure jelly
@@ -2276,7 +2269,7 @@ KMONS:   P = deep troll / skeletal warrior / spriggan rider w:5
 KMONS:   Q = naga warrior / orc warlord / minotaur
 KMONS:   R = spriggan defender / reaper / merfolk impaler w:5
 KMONS:   S = deep elf mage / wizard / boggart
-KMONS:   T = deep elf conjurer / orc sorcerer / giant orange brain
+KMONS:   T = deep elf mage / orc sorcerer / giant orange brain
 KMONS:   U = deep elf annihilator / sphinx w:5 / lich w:5
 KMONS:   V = cyclops / centaur warrior / naga sharpshooter
 KMONS:   W = manticore / yaktaur captain / stone giant
@@ -2376,15 +2369,16 @@ TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
 MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
-         deep elf conjurer / deep troll / boggart w:5 / efreet w:5 / \
+         deep elf mage / deep troll / boggart w:5 / efreet w:5 / \
          rakshasa w:5 / wizard / necromancer / spriggan rider w:5 / \
          vampire / deep elf mage w:5
 MONS:    orc high priest / orc sorcerer / naga warrior / naga mage / \
          skeletal warrior / yaktaur captain w:5 / ogre mage / \
-         deep elf knight / phantasmal warrior / spriggan berserker / \
-         guardian serpent w:5 / harpy w:5 / salamander mystic
+         deep elf knight w:5 / deep elf archer w:5 / phantasmal warrior / \
+         spriggan berserker / guardian serpent w:5 / harpy w:5 / \
+         salamander mystic
 MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
-         hell knight w:5 / orc warlord / minotaur / octopode crusher / \
+         hell knight w:5 / orc warlord / minotaur / \
          vampire knight / vampire mage / ghoul w:5 / base draconian / \
          spriggan berserker w:3 / spriggan air mage w:4 / \
          deep troll earth mage w:4 / deep elf death mage w:2
@@ -2506,8 +2500,9 @@ KMONS: I = frost giant w:5 / ice dragon / blizzard demon / white draconian / \
 KMONS: E = titan w:5 / storm dragon / black draconian / ball lightning
 KMONS: O = orc knight / orc sorcerer / orc warlord w:5 / orc high priest / \
            orc warrior
-KMONS: N = deep elf knight / deep elf annihilator w:5 / deep elf death mage / \
-           deep elf summoner / deep elf sorcerer
+KMONS: N = deep elf knight w:5 / deep elf archer w:5 / \
+           deep elf annihilator w:5 / deep elf death mage / \
+           deep elf mage / deep elf sorcerer
 KMONS: L = death yak / catoblepas w:5 / basilisk / lindwurm / blink frog
 KMONS: S = swamp dragon / hydra w:5 / thorn hunter / large slime creature / \
            alligator
@@ -2567,8 +2562,8 @@ MONS:    necromancer band / vampire mage band w:6
 MONS:    vampire knight w:25 / bone dragon / ghoul / lich
 SUBST:   x = e
 : else
-KMONS:   12 = deep elf conjurer / deep elf knight
-MONS:    deep elf fighter band w:6 / deep elf knight band
+KMONS:   12 = deep elf mage / deep elf knight w:5 / deep elf archer w:5
+MONS:    deep elf knight band / deep elf archer band
 MONS:    deep elf annihilator / deep elf sorcerer / deep elf high priest
 : end
 SUBST:   a : X., A : Y., b : XX., B : YY.
@@ -2693,15 +2688,8 @@ NAME: lightli_tower_of_babel
 ORIENT: float
 # Random interlopers look badly out of place here.
 TAGS: no_monster_gen no_item_gen
-DEPTH: Dis, !D:$, Depths, !Depths:$
-: if you.in_branch("Depths") then
-# A more worthy adversary badly wanted.
-# What about an obvious up-HD rename of hell knight? *duck*
-MONS: fire giant
-: else
-MONS: Hell Sentinel
-: end
-MONS: flying skull
+DEPTH: Dis, !Dis:$, Depths, !Depths:$
+MONS: patrolling iron giant, flying skull
 ITEM: bolt ego:exploding q:5
 ITEM: potion of heal wounds
 ITEM: plate armour good_item
@@ -2745,9 +2733,7 @@ TAGS:    transparent no_monster_gen no_item_gen
 DEPTH:   Depths, Geh, !Geh:$
 PLACE:   Depths:$
 WEIGHT:  5 (Depths:$, Geh), 10
-# Spell set is Hell Knight II; it has the more powerful ranged spell.
-MONS:    hell knight spells:pain.17.wizard;bolt_of_fire.17.wizard;\
-                     blink.17.wizard
+MONS:    hell knight
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 MONS:    mottled draconian, black draconian, ettin
 NSUBST:  2 = 2:2 / 2:3 / 2:4 / * = 222334
@@ -2884,75 +2870,69 @@ ENDMAP
 ## Plants, beasts, and humanoids alike gather in a splendid palace devoted to
 ## the worship of a life-bringing water deity.
 NAME:     gammafunk_depths_water_palace
-DEPTH:    Depths:2-, !Depths:$
+DEPTH:    Depths, !Depths:$
 ORIENT:   float
 TAGS:     no_monster_gen patrolling no_pool_fixup
 ## Plants or water monsters
-KMONS:    f = plant / fungus
-KMONS:    RS = electric eel / water elemental
+KMONS:    P = plant / fungus
+KMONS:    R = water elemental
+KMONS:    S = water elemental / w:2 merfolk impaler / w:2 merfolk javelineer
 ## Main monster sets
-KMONS:    1 = spriggan rider / spriggan berserker / centaur warrior \
-              / minotaur / satyr / merfolk impaler / deep elf knight
-KMONS:    2 = spriggan defender / deep elf blademaster / deep elf master archer\
-              / octopode crusher
-KMONS:    3 = spriggan air mage / spriggan druid / deep elf annihilator
-KMONS:    4 = ice statue / w:5 orange crystal statue
-KMONS:    5Z = catoblepas / dire elephant / emperor scorpion \
-              / alligator snapping turtle / shambling mangrove / thorn hunter
-KMONS:    6 = merfolk avatar
-KMONS:    7 = water nymph / wind drake / sphinx
-KMONS:    D = merfolk javelineer / octopode crusher / tengu reaver \
-              / spriggan air mage
-KMONS:    E = quicksilver dragon / storm dragon / titan / golden dragon \
-              / w:5 caustic shrike
-KMONS:    O = the Enchantress band
+KMONS:    1 = spriggan berserker / ettin / deep troll shaman
+KMONS:    2 = spriggan defender / yaktaur captain / stone giant
+KMONS:    3 = spriggan air mage / deep elf annihilator / entropy weaver \
+              / rakshasa
+KMONS:    4 = orange crystal statue
+KMONS:    5Z = fire dragon / ice dragon / iron dragon / w:5 spark wasp band \
+               / sphinx / emperor scorpion
+KMONS:    6 = storm dragon / golden dragon / quicksilver dragon
+KMONS:    7 = w:15 tengu reaver / stone giant / fire giant / frost giant
+KMONS:    D = titan / juggernaut / w:15 caustic shrike
+KMONS:    O = w:5 the Enchantress band / iron giant band, iron giant band
 ## The loot items need this to be placed in water
 KITEM:    % = %
 KITEM:    $ = $
 KITEM:    * = *
-KITEM:    E| = |
-KFEAT:    f5Z67DER%$*| = W
+KITEM:    D| = |
+KFEAT:    P5Z67DR%$*| = W
 KFEAT:    S = w
 KFEAT:    u = t
-KPROP:    ~`ZR = no_tele_into
+KPROP:    ~"ZR = no_tele_into
 SHUFFLE:  HI / JK
-NSUBST:   H = 1:4 / *:G, I = ', J = G, K = D, L = 2:6 / *:7
-SUBST:    B : cf, C : cf, ~" = ffffW, '` = W
+NSUBST:   H = 1:4 / *:G
+SUBST:    I = -, J = G, K = 7, L = 6 7 D:2, B : cP, C : cP, ~' = PPPPW, -" = W
 COLOUR:   c = white
 COLOUR:   x = cyan
 TILE:     u = dngn_mangrove
 TILE:     x = wall_pebble_cyan
-FTILE:    .+ctuGTUf1234O = floor_pebble_cyan
-veto {{
-  return crawl.game_started() and you.uniques("the Enchantress")
-}}
+FTILE:    .+ctuGTUP1234O = floor_pebble_cyan
 MAP
       ccccccccccccccccccccccccc
-    cccttct1t.t.'Gx'Hx'Hx'ucuTccc
-   cc'...+....3.''''''I''''+'wwwcc
-  ccG'.2.+.t2t.t''Gx'Hx'Hx'+'''wwcc
-  ccc'.GcccBBccccccccccccccc''''wwc
-  ccGR.cc~``cccccUGUccccc""'5x'''Sc
- cccc'.n~Z`cccc''*E*''cccc"'u'u''wcc
- cT'''.n``~ccc'''$%$'''ccc"''x7u'wwc
- ct1...cR~cccL'''ccc'''Lccc"'u'x''wc
- cccc++c`~ccc''cccGccc''ccc"''u5u'Sc
-cctGt..c~~cc''cc*%$%*cc''cc""''x''wcc
-c..1...c~ccc''cu''D''uc'5cccG'u'u'wTc
-+.''''.nucU|$''''...''''''++'D''''llc
-+.'ll'2nTcG||'D''.O.''D'''++'''U''lGc
-+.''''.nucU|$''''...''''''++'D''''llc
-c..1...c~ccc''cu''D''uc'5cccG'u'u'wTc
-cctGt..c~~cc''cc*%$%*cc''cc""''x''wcc
- cccc++c`~ccc''cccGccc''ccc"''u5u'Sc
- ct1...cR~cccL'''ccc'''Lccc"'u'x''wc
- cT'''.n``~ccc'''$%$'''ccc"''x7u'wwc
- cccc'.n~Z`cccc''*E*''cccc"'u'u''wcc
-  ccGR.cc~``cccccUGUccccc""'5x'''Sc
-  ccc'.GcccCCccccccccccccccc''''wwc
-  ccG'.2.+.t2t.t''''Jx'''''+'''wwcc
-   cc'...+....3.''''''K''''+'wwwcc
-    cccttct1t.t.'Gx''''Jx'ucuTccc
+    cccttct1t.t.-Gx-Hx-Hx-ucuTccc
+   cc-...+....3.------I----+-wwwcc
+  ccG-.2.+.t2t.t--Gx-Hx-Hx-+---wwcc
+  ccc-.GcccBBccccccccccccccc----wwc
+  ccGR.cc~""cccccUGUccccc''-5x---Sc
+ cccc-.n~Z"cccc--*D*--cccc'-u-u--wcc
+ cT---.n""~ccc---$%$---ccc'--x6u-wwc
+ ct1...c"~cccL---ccc---Lccc'-u-x--wc
+ cccc++cR~ccc--cccGccc--ccc'--u5u-Sc
+cctGt..c~~cc--cc*%$%*cc--cc''--x--wcc
+c..1...c~ccc--cu--7--uc--cccG-u-u-wTc
++.---..nucU|$----...------++-7----llc
++.-U-.2nUcGD|----.O.--7---++---U--lGc
++.---..nucU|$----...------++-7----llc
+c..1...c~ccc--cu--7--uc--cccG-u-u-wTc
+cctGt..c~~cc--cc*%$%*cc--cc''--x--wcc
+ cccc++cR~ccc--cccGccc--ccc'--u5u-Sc
+ ct1...c"~cccL---ccc---Lccc'-u-x--wc
+ cT---.n""~ccc---$%$---ccc'--x6u-wwc
+ cccc-.n~Z"cccc--*D*--cccc'-u-u--wcc
+  ccGR.cc~""cccccUGUccccc''-5x---Sc
+  ccc-.GcccCCccccccccccccccc----wwc
+  ccG-.2.+.t2t.t----Jx-----+---wwcc
+   cc-...+....3.------K----+-wwwcc
+    cccttct1t.t.-Gx----Jx-ucuTccc
      ccccccccccccccccccccccccccc
 ENDMAP
 
@@ -3388,7 +3368,7 @@ NAME:    lemuel_ice_statue
 MONS:    ice statue
 TAGS:    no_pool_fixup
 ORIENT:  float
-DEPTH:   D:7-, Elf, Depths
+DEPTH:   D:7-
 SUBST:   * : *$
 SUBST:   * = |:5 * .
 SUBST:   T = TU
@@ -5955,8 +5935,7 @@ KFEAT:  C = altar_lugonu
 KFEAT:  ' = floor
 KFEAT:  ~ = floor
 MONS:   kobold demonologist
-KMONS:  P = plant col:magenta name:demonic name_adjective \
-        tile:mons_demonic_plant
+KMONS:  P = demonic plant
 KMONS:  p = plant
 NSUBST: p = 3=xcbtvmnw.' / 5:P
 NSUBST: . = 30=Pxcbtvmnw / 5:. / 50:'

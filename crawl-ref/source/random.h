@@ -8,9 +8,6 @@
 
 #include "hash.h"
 
-#define RNG_GAMEPLAY 0
-#define RNG_UI 1
-
 void seed_rng();
 void seed_rng(uint32_t seed);
 void seed_rng(uint64_t[], int);
@@ -31,7 +28,6 @@ int random_range(int low, int high, int nrolls);
 double random_real();
 
 int random2avg(int max, int rolls);
-int bestroll(int max, int rolls);
 int biased_random2(int max, int n);
 int random2limit(int max, int limit);
 int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale = 100);
@@ -44,12 +40,30 @@ int ui_random(int max);
 
 /** Chooses one of the objects passed in at random (by value).
  *  @return One of the arguments.
+ *
+ *  @note All the arguments must be convertible to the type of the first.
  */
 template <typename T, typename... Ts>
 T random_choose(T first, Ts... rest)
 {
     const T elts[] = { first, rest... };
     return elts[random2(1 + sizeof...(rest))];
+}
+
+/** Chooses one of the objects passed in at random (by reference).
+ *
+ * @return A reference to one of the arguments.
+ *
+ * @note All the arguments must be of a type compatible with the type of the
+ *       first. Specifically, it must be possible to implicitly convert a
+ *       pointer to each argument into the same type as a pointer to the first
+ *       argument. So, for example, if the first argument is non-const, none
+ *       of the subsequent subsequent arguments may be const.
+ */
+template <typename T, typename... Ts>
+T& random_choose_ref(T& first, Ts&... rest)
+{
+    return *random_choose(&first, &rest...);
 }
 
 template <typename C>
@@ -59,6 +73,68 @@ auto random_iterator(C &container) -> decltype(container.begin())
     auto it = container.begin();
     advance(it, pos);
     return it;
+}
+
+/**
+ * Get a random weighted choice.
+ *
+ * Weights are assumed to be non-negative, but are allowed to be zero.
+ * @tparam  V  A map, vector of pairs, etc., with the values of the
+ *             map or the second elements of the pairs being integer
+ *             weights.
+ *
+ * @param   choices  The collection of choice-weight pairs to choose from.
+ *
+ * @return  A pointer to the item in the chosen pair, or nullptr if all
+ *          weights are zero. The pointer is const only if necessary.
+ */
+template <typename V>
+auto random_choose_weighted(V &choices) -> decltype(&(begin(choices)->first))
+{
+    int total = 0;
+    for (const auto &entry : choices)
+        total += entry.second;
+    int r = random2(total);
+    int sum = 0;
+    for (auto &entry : choices)
+    {
+        sum += entry.second;
+        if (sum > r)
+            return &entry.first;
+    }
+    return nullptr;
+}
+
+/**
+ * Get an index for a random weighted choice using a fixed vector of
+ * weights.
+ *
+ * Entries with a weight <= 0 are skipped.
+ * @param choices The fixed vector with weights for each item.
+ *
+ * @return  A index corresponding to the selected item, or -1 if all
+ *          weights were skipped.
+ */
+template <typename T, int SIZE>
+int random_choose_weighted(const FixedVector<T, SIZE>& choices)
+{
+    int total = 0;
+    for (auto weight : choices)
+        if (weight > 0)
+            total += weight;
+
+    int r = random2(total);
+    int sum = 0;
+    for (int i = 0; i < SIZE; ++i)
+    {
+        if (choices[i] <= 0)
+            continue;
+
+        sum += choices[i];
+        if (sum > r)
+            return i;
+    }
+    return -1;
 }
 
 template <typename T>
@@ -172,30 +248,15 @@ public:
 template<typename Iterator>
 int choose_random_weighted(Iterator beg, const Iterator end)
 {
-    ASSERT(beg < end);
-
-#ifdef DEBUG
-    int times_set = 0;
-#endif
-
     int totalweight = 0;
-    int count = 0, result = 0;
-    while (beg != end)
+    int result = -1;
+    for (int count = 0; beg != end; ++count, ++beg)
     {
         totalweight += *beg;
         if (random2(totalweight) < *beg)
-        {
             result = count;
-#ifdef DEBUG
-            times_set++;
-#endif
-        }
-        ++count;
-        ++beg;
     }
-#ifdef DEBUG
-    ASSERT(times_set > 0);
-#endif
+    ASSERT(result >= 0);
     return result;
 }
 

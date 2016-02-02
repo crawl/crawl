@@ -396,17 +396,17 @@ ITEM:   any good_item w:10 / nothing w:5
 : hard_axe_fighter(_G)
 #
 # Starting room flavour. You cannot actually get the axes.
-SUBST:  Y = ccn
-SUBST:  X : ccn
-KMASK:  Z = no_item_gen
-KITEM:  Z = unobtainable good_item broad axe w:5 / unobtainable broad axe /\
-            unobtainable war axe / unobtainable good_item war axe w:5 /\
-            unobtainable good_item executioner's axe w:1
-KFEAT:  Z = known permanent teleport trap
+SHUFFLE: BC/BC/oF
+SHUFFLE: DE/DE/oF
+SUBST:   B = X, C = X, D = X, E = X
+KMASK:   F = no_item_gen
+KPROP:   F = no_tele_into
+KITEM:   F = unobtainable good_item broad axe w:5 / unobtainable broad axe /\
+             unobtainable war axe / unobtainable good_item war axe w:5 /\
+             unobtainable good_item executioner's axe w:1
 #
-# Traps are alarm on the entrance and alarm/net near the loot. Yes, I want
-# everyone to wake up.
-KFEAT: ~ = known alarm trap / floor
+# Yes, I want everyone to wake up.
+KFEAT: ~ : known alarm trap / floor
 #
 # There is only one way up. You have to pass near the axe-throwing kobolds
 # twice. This is intended. Teleportation traps ensure you won't get
@@ -416,12 +416,12 @@ NSUBST: t = 1:T / *:.
 KFEAT:  T = known permanent teleport trap
 : bailey_setup(_G)
 MAP
-  ccccccccc
-  ccccZcccc
-  ccccYcccc
-  ccc~A~ccc
-  cZX~~~XZc
-  ccc~<~ccc
+  XXXXXXXXX
+  XXXXEXXXX
+  XXXXDXXXX
+  XXX.A.XXX
+  XCB~~~BCX
+  XXX.<.XXX
 cccccc+cccccc
 ct1..w.w..1sc
 c+cccw.wccc+c
@@ -835,7 +835,7 @@ ORIENT:  encompass
 WEIGHT:  5
 TAGS:    bailey_polearm no_rotate
 SHUFFLE: DF/EG
-SUBST:   D : d, E = 1.., F : 3, G : .
+SUBST:   D : d, E = 1.., F : 2, G : .
 NSUBST:  d = 3:d / *:$
 ITEM:    scroll of enchant armour q:2 / scroll of enchant weapon q:3 /\
          scroll of acquirement q:1 w:5 / scroll of silence q:3 /\
@@ -843,9 +843,9 @@ ITEM:    scroll of enchant armour q:2 / scroll of enchant weapon q:3 /\
          scroll of recharging q:3 / scroll of immolation q:3 /\
          any good_item book w:30 /\
          book of annihilations w:1 / grand grimoire w:1 / necronomicon w:1
-MONS:    deep elf fighter / deep elf mage w:4
-MONS:    deep elf mage / deep elf priest / nothing w:20
-MONS:    deep elf knight ; short sword . leather armour
+MONS:    deep elf mage
+MONS:    deep elf knight ; short sword . leather armour /\
+         deep elf archer ; shortbow . arrow . leather armour
 : bailey_setup(_G)
 MAP
          ccccc
@@ -856,13 +856,13 @@ MAP
    cc..cc+cccccc..cc
  cccccc...ccc...cc+ccc
 ccEEcc.....c.....cc..cc
-c.EE.c..<..c..2..c....c
-c.EE.c.....c.2...c..F.c
+c.EE.c..<..c.....c....c
+c.EE.c.....c.1...c..F.c
 cc..ccc....c....ccc..cc
 ccc+ccccccc+ccccccc+ccc
 cc..ccc....c....ccc..cc
-c.G..c...2.c.2...c.DD.c
-c....c..2..c..2..c.DD.c
+c.G..c...1.c.1...c.DD.c
+c....c.....c.....c.DD.c
 cc..cc.....c.....ccDDcc
  ccc+cc...ccc...cccccc
    cc..ccccc+ccc..cc

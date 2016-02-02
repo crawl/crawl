@@ -199,6 +199,9 @@ static void _delete_files()
 
 NORETURN void screen_end_game(string text)
 {
+#ifdef USE_TILE_WEB
+    tiles.send_exit_reason("quit");
+#endif
     crawl_state.cancel_cmd_all();
     _delete_files();
 
@@ -248,7 +251,7 @@ NORETURN void end_game(scorefile_entry &se)
             {
                 const mon_holy_type holi = you.holiness();
 
-                if (holi == MH_NONLIVING || holi == MH_UNDEAD)
+                if (holi & (MH_NONLIVING | MH_UNDEAD))
                 {
                     simple_god_message(" rasps: \"You have failed me! "
                                        "Welcome... oblivion!\"");
@@ -281,17 +284,17 @@ NORETURN void end_game(scorefile_entry &se)
                 break;
 
             case GOD_BEOGH:
-               if (actor* killer = se.killer())
-               {
+                if (actor* killer = se.killer())
+                {
                     if (killer->is_monster() && killer->deity() == GOD_BEOGH)
                     {
                         const string msg = " appreciates "
-                                           + killer->name(DESC_ITS)
-                                           + " killing of a heretic priest.";
+                            + killer->name(DESC_ITS)
+                            + " killing of a heretic priest.";
                         simple_god_message(msg.c_str());
                     }
-               }
-               break;
+                }
+                break;
 
             default:
                 break;

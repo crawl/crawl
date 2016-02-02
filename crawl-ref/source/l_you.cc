@@ -18,6 +18,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "jobs.h"
+#include "losglobal.h"
 #include "mapmark.h"
 #include "misc.h"
 #include "mutation.h"
@@ -182,6 +183,16 @@ LUARET1(you_see_cell_rel, boolean,
         you.see_cell(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
 LUARET1(you_see_cell_no_trans_rel, boolean,
         you.see_cell_no_trans(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
+LUARET1(you_see_cell_solid_rel, boolean,
+        cell_see_cell(you.pos(),
+                      (coord_def(luaL_checkint(ls, 1),
+                                 luaL_checkint(ls, 2)) + you.pos()),
+                      LOS_SOLID))
+LUARET1(you_see_cell_solid_see_rel, boolean,
+        cell_see_cell(you.pos(),
+                      (coord_def(luaL_checkint(ls, 1),
+                                 luaL_checkint(ls, 2)) + you.pos()),
+                      LOS_SOLID_SEE))
 LUARET1(you_piety_rank, number, piety_rank())
 LUARET1(you_constricted, boolean, you.is_constricted())
 LUARET1(you_constricting, boolean, you.is_constricting())
@@ -614,6 +625,8 @@ static const struct luaL_reg you_clib[] =
 
     { "see_cell",          you_see_cell_rel },
     { "see_cell_no_trans", you_see_cell_no_trans_rel },
+    { "see_cell_solid",    you_see_cell_solid_rel },
+    { "see_cell_solid_see",you_see_cell_solid_see_rel },
 
     { "mutation",          you_mutation },
     { "temp_mutation",     you_temp_mutation },

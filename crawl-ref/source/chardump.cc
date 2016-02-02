@@ -548,11 +548,6 @@ static void _sdump_notes(dump_params &par)
     text += "\n";
 }
 
- //---------------------------------------------------------------
- //
- // dump_location
- //
- //---------------------------------------------------------------
 static void _sdump_location(dump_params &par)
 {
     if (you.depth == 0 && player_in_branch(BRANCH_DUNGEON))
@@ -652,11 +647,6 @@ static bool _dump_item_origin(const item_def &item)
 #undef fs
 }
 
- //---------------------------------------------------------------
- //
- // dump_inventory
- //
- //---------------------------------------------------------------
 static void _sdump_inventory(dump_params &par)
 {
     int i;
@@ -722,11 +712,6 @@ static void _sdump_inventory(dump_params &par)
     text += "\n\n";
 }
 
-//---------------------------------------------------------------
-//
-// dump_skills
-//
-//---------------------------------------------------------------
 static void _sdump_skills(dump_params &par)
 {
     string &text(par.text);
@@ -738,11 +723,6 @@ static void _sdump_skills(dump_params &par)
     text += "\n";
 }
 
-//---------------------------------------------------------------
-//
-// Return string of the i-th spell type, with slash if required
-//
-//---------------------------------------------------------------
 static string spell_type_shortname(spschool_flag_type spell_class, bool slash)
 {
     string ret;
@@ -755,11 +735,6 @@ static string spell_type_shortname(spschool_flag_type spell_class, bool slash)
     return ret;
 }
 
-//---------------------------------------------------------------
-//
-// dump_spells
-//
-//---------------------------------------------------------------
 static void _sdump_spells(dump_params &par)
 {
     string &text(par.text);
@@ -1244,10 +1219,6 @@ static void _sdump_mutations(dump_params &par)
         text += "\n\n";
     }
 }
-
-// ========================================================================
-//      Public Functions
-// ========================================================================
 
 // Must match the order of hunger_state_t enums
 static const char* hunger_names[] =

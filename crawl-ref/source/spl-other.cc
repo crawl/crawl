@@ -17,6 +17,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-place.h"
+#include "mon-util.h"
 #include "place.h"
 #include "player-stats.h"
 #include "potion.h"
@@ -126,7 +127,7 @@ void start_recall(recall_t type)
 
         if (type == RECALL_YRED)
         {
-            if (mi->holiness() != MH_UNDEAD)
+            if (!(mi->holiness() & MH_UNDEAD))
                 continue;
         }
         else if (type == RECALL_BEOGH)
@@ -308,7 +309,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
     fail_check();
 
     // Below here, failing to cast yields information to the
-    // player, so we don't make the spell abort (return true).
+    // player, so we don't make the spell abort (return SPRET_SUCCESS).
     monster *mon = monster_at(dest);
     if (!in_bounds(dest))
         mpr("You sense an overwhelming volume of rock.");
@@ -340,8 +341,8 @@ static int _intoxicate_monsters(coord_def where, int pow)
     monster* mons = monster_at(where);
     if (mons == nullptr
         || mons_intel(mons) < I_HUMAN
-        || mons->holiness() != MH_NATURAL
-        || mons->res_poison() > 0)
+        || !(mons->holiness() & MH_NATURAL)
+        || monster_resists_this_poison(mons))
     {
         return 0;
     }
@@ -360,16 +361,20 @@ static int _intoxicate_monsters(coord_def where, int pow)
 spret_type cast_intoxicate(int pow, bool fail)
 {
     fail_check();
-    mpr("You radiate an intoxicating aura.");
-    if (x_chance_in_y(60 - pow/3, 100))
-        confuse_player(3+random2(10 + (100 - pow) / 10));
-
-    if (one_chance_in(20) && lose_stat(STAT_INT, 1 + random2(3)))
-        mpr("Your head spins!");
-
-    apply_area_visible([pow] (coord_def where) {
+    mpr("You attempt to intoxicate your foes!");
+    int count = apply_area_visible([pow] (coord_def where) {
         return _intoxicate_monsters(where, pow);
     }, you.pos());
+    if (count > 0)
+    {
+        if (x_chance_in_y(60 - pow/3, 100))
+        {
+            mprf(MSGCH_WARN, "The world spins around you!");
+            you.increase_duration(DUR_VERTIGO, 4 + random2(20 + (100 - pow) / 10));
+            you.redraw_evasion = true;
+        }
+    }
+
     return SPRET_SUCCESS;
 }
 
