@@ -487,6 +487,9 @@ static int _refrigerate_monster(actor* agent, monster* target, int pow, int avg,
 
         target->hurt(agent, hurted, BEAM_COLD);
 
+        if (target->alive() && you.can_see(*target))
+            print_wounds(target);
+
         if (agent && agent->is_player()
             && (is_sanctuary(you.pos()) || is_sanctuary(target->pos())))
         {
