@@ -361,6 +361,9 @@ bool is_hasty_item(const item_def& item)
 
 bool is_poisoned_item(const item_def& item)
 {
+    if (is_unrandom_artefact(item, UNRAND_OLGREB))
+        return true;
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
