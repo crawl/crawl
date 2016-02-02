@@ -6076,10 +6076,6 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     {
         loudness = explosion_noise(r);
 
-        // special case!
-        if (origin_spell == SPELL_ICEBLAST)
-            loudness /= 2;
-
         // Lee's Rapid Deconstruction can target the tiles on the map
         // boundary.
         const coord_def noise_position = clamp_in_bounds(pos());
