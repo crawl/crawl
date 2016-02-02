@@ -655,12 +655,6 @@ ring of wizardry
 
 Denne ring øger bærerens evne til at bruge magiske besværgelser.
 %%%%
-rod of destruction
-
-Denne stok kan vækkes til at udløse en skadelig besværgelse der udvalgt
-tilfældigt fra et lille sæt, som alle kan gennembore uhyrer og skade dem, der
-står bag dem.
-%%%%
 rod of inaccuracy
 
 Denne stok lader brugeren affyre en kraftfuld, men utroligt upræcis kraftkile.

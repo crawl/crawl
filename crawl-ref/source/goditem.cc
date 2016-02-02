@@ -136,11 +136,8 @@ bool is_potentially_evil_item(const item_def& item)
             return true;
         break;
     case OBJ_RODS:
-        if (item.sub_type == ROD_DESTRUCTION
-            || item.sub_type == ROD_CLOUDS)
-        {
+        if (item.sub_type == ROD_CLOUDS)
             return true;
-        }
         break;
     default:
         break;
@@ -401,11 +398,8 @@ static bool _is_potentially_fiery_item(const item_def& item)
             return true;
         break;
     case OBJ_RODS:
-        if (item.sub_type == ROD_DESTRUCTION
-            || item.sub_type == ROD_CLOUDS)
-        {
+        if (item.sub_type == ROD_CLOUDS)
             return true;
-        }
         break;
     default:
         break;

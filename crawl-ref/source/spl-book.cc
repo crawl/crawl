@@ -60,7 +60,9 @@ static const map<rod_type, spell_type> _rod_spells =
     { ROD_SWARM,       SPELL_SUMMON_SWARM },
     { ROD_IGNITION,    SPELL_EXPLOSIVE_BOLT },
     { ROD_CLOUDS,      SPELL_CLOUD_CONE  },
+#if TAG_MAJOR_VERSION == 34
     { ROD_DESTRUCTION, SPELL_RANDOM_BOLT },
+#endif
     { ROD_INACCURACY,  SPELL_BOLT_OF_INACCURACY },
     { ROD_SHADOWS,     SPELL_WEAVE_SHADOWS },
     { ROD_IRON,        SPELL_SCATTERSHOT },

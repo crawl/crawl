@@ -834,11 +834,6 @@ Ce sceptre permet à son utilisateur de libérer un cône de différents gaz
 destructeurs. Leur dangerosité augmente avec les capacités d’évocation de
 l'utilisateur.
 %%%%
-rod of destruction
-
-Ce sceptre contient un ensemble varié de sorts de destruction et
-d'extermination.
-%%%%
 rod of inaccuracy
 
 Ce sceptre permet à son possesseur de lancer une puissante boule d’énergie,

@@ -1117,7 +1117,9 @@ static const char* rod_type_name(int type)
 
     case ROD_IGNITION:        return "ignition";
     case ROD_CLOUDS:          return "clouds";
+#if TAG_MAJOR_VERSION == 34
     case ROD_DESTRUCTION:     return "destruction";
+#endif
 
     default: return "bugginess";
     }
