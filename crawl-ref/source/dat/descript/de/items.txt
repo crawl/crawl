@@ -606,10 +606,6 @@ rod of inaccuracy
 Dieser Stab erlaubt seinem Benutzer, einen kräftigen aber äußerst ungenauen
 Energieblitz abzuschießen.
 %%%%
-rod of the swarm
-
-Dieser Stab erlaubt seinem Benutzer einen Schwarm Insekten zu rufen.
-%%%%
 royal jelly
 
 Eine besonders reiche und goldene gallertartige Sache. Der Konsum wird

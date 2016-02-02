@@ -1621,7 +1621,7 @@ MONS:    shadow demon, deep elf demonologist, vampire mage
 KMONS:   8 = mummy priest
 ITEM:    book of callings w:5 / book of summonings / grand grimoire w:5 / \
          book of beasts / randbook disc:summoning numspells:6
-ITEM:    staff of summoning w:20 / rod of shadows w:5 / rod of the swarm w:5
+ITEM:    staff of summoning w:20 / rod of shadows
 ITEM:    amulet of dismissal w:5 ident:type / amulet of dismissal randart
 ITEM:    fan of gales / lamp of fire / \
          stone of tremors / phial of floods / lantern of shadows
@@ -1731,26 +1731,6 @@ MAP
                              ..bb14bb.
                               ..bbbb..
                                ......
-ENDMAP
-
-NAME:  lightli_swarmer
-DEPTH: D:10-
-: if you.absdepth() < 12 then
-MONS:  two-headed ogre ; rod of the swarm ident:type . giant club
-: elseif you.absdepth () < 16 then
-MONS:  hill giant ; rod of the swarm ident:type
-: else
-MONS:  ettin ; rod of the swarm ident:type . great mace
-: end
-MONS:  killer bee w:3 / wolf spider w:1 / scorpion w:1 / worm w:1
-MONS:  worker ant w:3 / vampire mosquito w:1 / wasp w:1
-ITEM: royal jelly
-MAP
-xxxxxx
-x32*dx
-x213*x
-x3232x
-xx+xxx
 ENDMAP
 
 NAME:  guppyfry_early_elven_hall

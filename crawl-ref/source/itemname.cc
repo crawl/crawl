@@ -1103,8 +1103,8 @@ static const char* rod_type_name(int type)
 {
     switch ((rod_type)type)
     {
-    case ROD_SWARM:           return "the swarm";
 #if TAG_MAJOR_VERSION == 34
+    case ROD_SWARM:           return "the swarm";
     case ROD_WARDING:         return "warding";
 #endif
     case ROD_LIGHTNING:       return "lightning";
@@ -3758,7 +3758,6 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
             case ROD_SHADOWS:
-            case ROD_SWARM:
                 if (item_type_known(item))
                     return player_mutation_level(MUT_NO_LOVE);
                 // intentional fallthrough

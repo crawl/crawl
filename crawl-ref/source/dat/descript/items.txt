@@ -1062,10 +1062,6 @@ rod of shadows
 
 This rod weaves creatures from shadows and ethereal matter.
 %%%%
-rod of the swarm
-
-This rod allows its wielder to summon a swarm of insects.
-%%%%
 royal jelly
 
 A particularly rich and golden gelatinous thing.

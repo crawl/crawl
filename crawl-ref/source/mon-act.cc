@@ -1223,7 +1223,6 @@ static bool _handle_rod(monster &mons, bolt &beem)
         }
         break;
 
-    case SPELL_SUMMON_SWARM:
     case SPELL_WEAVE_SHADOWS:
         _rod_fired_pre(mons);
         mons_cast(&mons, beem, mzap, MON_SPELL_NO_FLAGS, false);

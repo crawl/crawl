@@ -105,7 +105,6 @@ static const spell_type _xom_tension_spells[] =
     SPELL_CAUSE_FEAR,
     SPELL_ICE_FORM,
     SPELL_RING_OF_FLAMES,
-    SPELL_SUMMON_SWARM,
     SPELL_SHADOW_CREATURES,
     SPELL_EXCRUCIATING_WOUNDS,
     SPELL_WARP_BRAND,
