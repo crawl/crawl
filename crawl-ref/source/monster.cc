@@ -3438,7 +3438,7 @@ int monster::armour_class(bool calc_unid) const
 
     // corrosion hurts.
     if (has_ench(ENCH_CORROSION))
-        ac /= 2;
+        ac -= 8;
 
     return max(ac, 0);
 }
