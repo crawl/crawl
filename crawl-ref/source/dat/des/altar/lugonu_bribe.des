@@ -69,7 +69,6 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Zin="good_item " .. weapon .. " ego:draining ident:type /\
               good_item " .. weapon .. " ego:pain ident:type /\
               good_item " .. weapon .. " ego:chaos ident:type /\
-              wand of draining ident:type /\
               wand of polymorph ident:type",
        }
          data.triggered = true

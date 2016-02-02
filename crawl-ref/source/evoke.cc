@@ -461,8 +461,8 @@ static targetter *_wand_targetter(const item_def *wand)
 
     switch (wand->sub_type)
     {
-    case WAND_FIREBALL:
-        return new targetter_beam(&you, range, ZAP_FIREBALL, power, 1, 1);
+    case WAND_ICEBLAST:
+        return new targetter_beam(&you, range, ZAP_ICEBLAST, power, 1, 1);
     case WAND_LIGHTNING:
         return new targetter_beam(&you, range, ZAP_LIGHTNING_BOLT, power, 0, 0);
     case WAND_FLAME:

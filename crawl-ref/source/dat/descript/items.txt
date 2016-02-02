@@ -1439,6 +1439,10 @@ troll leather armour
 Armour made from the stiff and knobbly skin of a common troll. It magically
 regenerates its wearer's flesh.
 %%%%
+wand of acid
+
+A magical device which throws a bolt of corrosive acid.
+%%%%
 wand of confusion
 
 A magical device which induces confusion and bewilderment in a target creature.
@@ -1452,22 +1456,18 @@ wand of disintegration
 A magical device which disrupts the physical structure of anything but the
 hardest walls — even granite statues, to say nothing of flesh.
 %%%%
-wand of draining
-
-A magical device which throws a bolt of negative energy which drains the life
-essences of living creatures.
-%%%%
 wand of enslavement
 
 A magical device which causes slavish obedience in a creature.
 %%%%
-wand of fireball
-
-A magical device which throws exploding blasts of flame.
-%%%%
 wand of flame
 
 A magical device which throws little puffs of flame.
+%%%%
+wand of iceblast
+
+A magical device which throws exploding shards of ice, partially harming even
+creatures resistant to cold.
 %%%%
 wand of hasting
 
