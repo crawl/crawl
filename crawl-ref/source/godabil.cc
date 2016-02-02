@@ -6660,6 +6660,9 @@ static int _get_stomped(monster* mons)
 
     mons->hurt(&you, dmg, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
 
+    if (mons->alive() && you.can_see(*mons))
+        print_wounds(mons);
+
     return 1;
 }
 
