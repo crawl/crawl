@@ -950,6 +950,7 @@ i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
 i-rod_summoning ROD_SUMMONING
 i-rod_ignition ROD_IGNITION
 i-rod_clouds ROD_CLOUDS
+# Remove when TAG_MAJOR_VERSION > 34
 i-rod_destruction ROD_DESTRUCTION
 i-rod_inaccuracy ROD_INACCURACY
 # Remove when TAG_MAJOR_VERSION > 34
